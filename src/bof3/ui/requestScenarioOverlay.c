@@ -4,7 +4,7 @@
  * @source 0x801A7804
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void requestScenarioOverlay(void) {
   initStreamSlot(scenarioState.scenario_id + 661);

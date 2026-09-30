@@ -36,14 +36,14 @@ segments:
     - asm
     - func_801F2CE0
   - - 376
-    - asm
-    - func_801F2D78
+    - c
+    - retreatCounter2By10World03Area13113_801F2D78
   - - 416
     - asm
     - func_801F2DA0
   - - 456
-    - asm
-    - func_801F2DC8
+    - c
+    - retreatCounter2CloneWorld03Area13113_801F2DC8
   - - 496
     - asm
     - func_801F2DF0
@@ -60,11 +60,11 @@ segments:
     - asm
     - func_801F2E90
   - - 696
-    - asm
-    - func_801F2EB8
+    - c
+    - copyModeByteWorld03Area13113_801F2EB8
   - - 720
-    - asm
-    - func_801F2ED0
+    - c
+    - retreatCounter3CloneWorld03Area13113_801F2ED0
   - - 748
     - asm
     - func_801F2EEC
@@ -79,5 +79,5 @@ segments:
     - func_801F2F54
   - - 1140
     - asm
-    - func_801F3074
+    - D_801F3074
 - - 4348

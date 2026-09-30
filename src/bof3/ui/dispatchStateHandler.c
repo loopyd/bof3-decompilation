@@ -5,7 +5,7 @@
  * @source 0x801A7BF0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchStateHandler(void) {
   stateHandlerTable[(s32)D_801448EA]();

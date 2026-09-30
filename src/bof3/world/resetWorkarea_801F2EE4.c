@@ -7,6 +7,6 @@
  * table membership are unproven.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 WORKAREA_RESET(resetWorkarea)

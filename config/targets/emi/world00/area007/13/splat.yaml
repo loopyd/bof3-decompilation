@@ -42,18 +42,18 @@ segments:
     - asm
     - func_801F2C84
   - - 764
-    - asm
-    - func_801F2EFC
+    - c
+    - invokeTwoZeroArgsWorld00Area00713_801F2EFC
   - - 800
-    - asm
-    - func_801F2F20
+    - c
+    - retreatCounter2By10World00Area00713_801F2F20
   - - 840
-    - asm
-    - func_801F2F48
+    - c
+    - advanceCounter2By10World00Area00713_801F2F48
   - - 880
     - c
     - setTwoWorld00Area00713_801F2F70
   - - 908
     - asm
-    - func_801F2F8C
+    - D_801F2F8C
 - - 2548

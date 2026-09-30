@@ -13,7 +13,7 @@ struct GameSelState {
  * @source 0x80197068
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void selectionMainLoop(void) {
   const GameEntry0StateHandler* callbacks;

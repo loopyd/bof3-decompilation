@@ -13,7 +13,7 @@ extern EmiLoaderEntry D_8014677C[];
  * @source 0x801629F0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void selectPrimaryEmiDestination(void) {
   if (EMI_LOADER_STEP == 0) {

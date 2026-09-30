@@ -6,7 +6,7 @@
  * @source 0x80098408
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void armSecondaryGridAdvanceRoot(void) {
   u8* active_selection_slot;

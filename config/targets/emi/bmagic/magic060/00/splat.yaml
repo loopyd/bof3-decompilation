@@ -1,0 +1,137 @@
+name: bmagic_magic060_00
+sha1: c4b7436afa7ce2d88b43cd98e626c8b1b72094a4
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic060_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/bmagic/magic060/00.bin
+  asm_path: out/splat/emi/bmagic/magic060/00/asm
+  src_path: src/emi/bmagic/magic060/00
+  ld_script_path: out/splat/emi/bmagic/magic060/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/bmagic/magic060/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/bmagic/magic060/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/bmagic/magic060/00/.splache
+  asset_path: out/splat/emi/bmagic/magic060/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/bmagic/magic060/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 52
+  vram: 2149510196
+  subsegments:
+  - - 52
+    - asm
+    - func_801EEC34
+  - - 164
+    - asm
+    - func_801EECA4
+  - - 360
+    - asm
+    - func_801EED68
+  - - 512
+    - asm
+    - func_801EEE00
+  - - 644
+    - asm
+    - func_801EEE84
+  - - 772
+    - asm
+    - func_801EEF04
+  - - 848
+    - asm
+    - func_801EEF50
+  - - 1208
+    - asm
+    - func_801EF0B8
+  - - 1304
+    - asm
+    - func_801EF118
+  - - 1396
+    - asm
+    - func_801EF174
+  - - 1756
+    - asm
+    - func_801EF2DC
+  - - 2160
+    - asm
+    - func_801EF470
+  - - 2448
+    - asm
+    - func_801EF590
+  - - 2924
+    - asm
+    - func_801EF76C
+  - - 3364
+    - asm
+    - func_801EF924
+  - - 3840
+    - asm
+    - func_801EFB00
+  - - 4328
+    - asm
+    - func_801EFCE8
+  - - 4932
+    - asm
+    - func_801EFF44
+  - - 5000
+    - asm
+    - func_801EFF88
+  - - 5120
+    - asm
+    - func_801F0000
+  - - 5168
+    - asm
+    - func_801F0030
+  - - 5264
+    - asm
+    - func_801F0090
+  - - 5328
+    - asm
+    - func_801F00D0
+  - - 5420
+    - asm
+    - func_801F012C
+  - - 5716
+    - asm
+    - func_801F0254
+  - - 5836
+    - asm
+    - func_801F02CC
+  - - 5916
+    - asm
+    - func_801F031C
+  - - 6012
+    - asm
+    - func_801F037C
+  - - 6076
+    - asm
+    - func_801F03BC
+  - - 6184
+    - asm
+    - func_801F0428
+  - - 7144
+    - asm
+    - func_801F07E8
+  - - 7212
+    - asm
+    - func_801F082C
+  - - 7352
+    - asm
+    - func_801F08B8
+  - - 7648
+    - asm
+    - func_801F09E0
+  - - 8036
+    - asm
+    - D_801F0B64
+- - 8168

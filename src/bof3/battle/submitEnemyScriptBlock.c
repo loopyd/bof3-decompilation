@@ -5,7 +5,7 @@
  * @source 0x801DEA18
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void submitEnemyScriptBlock(u32 arg0) {
   s32 shift;

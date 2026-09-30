@@ -5,7 +5,7 @@
  * @behavior forwards selector 1 to func_800A403C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void forwardSelector1(void) {
   func_800A403C(1);

@@ -5,7 +5,7 @@
  * @behavior Resets the area state and, when bit zero is clear, arms two flags.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801F3618(void) {
   u8 flags;

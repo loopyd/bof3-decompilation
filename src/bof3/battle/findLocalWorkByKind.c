@@ -3,7 +3,7 @@
 /* @source 0x801DBB20
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 /* @behavior Returns the first of three local work records whose byte +0x79 matches the selector, or NULL. */
 Battle03LocalWork *findLocalWorkByKind(u8 arg0)

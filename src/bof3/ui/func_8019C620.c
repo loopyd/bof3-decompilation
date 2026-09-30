@@ -6,7 +6,7 @@
  * @source 0x8019C620
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS func_8019C620(void)
 {

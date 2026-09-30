@@ -5,7 +5,7 @@
  * @source 0x801D0D94
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void tickFadeTimer(void) {
   u16* timer_ptr;

@@ -1,0 +1,49 @@
+name: bmagic_magic010_00
+sha1: 8feed02f0e05f19bfddf826bc0954a5e7535578c
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic010_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/bmagic/magic010/00.bin
+  asm_path: out/splat/emi/bmagic/magic010/00/asm
+  src_path: src/emi/bmagic/magic010/00
+  ld_script_path: out/splat/emi/bmagic/magic010/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/bmagic/magic010/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/bmagic/magic010/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/bmagic/magic010/00/.splache
+  asset_path: out/splat/emi/bmagic/magic010/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/bmagic/magic010/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 20
+  vram: 2149510164
+  subsegments:
+  - - 20
+    - asm
+    - func_801EEC14
+  - - 128
+    - asm
+    - func_801EEC80
+  - - 268
+    - c
+    - incrementWorkByteBRecordCountersAndWorkByte1WhenWorkByte9Is10BmagicMagic01000_801EED0C
+    - '@source: src/bof3/bmagic/incrementWorkByteBRecordCountersAndWorkByte1WhenWorkByte9Is10BmagicMagic01000_801EED0C.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once per access and increments the +0, +1 and (via 0x80145BD8) +2 counter bytes of the 12-byte record at 0x80145BD6 selected by the work object''s byte 0xB, then increments the work object''s byte at offset 0x9 and its byte at offset 0x1 when the truncated result reaches 0x10.'
+  - - 544
+    - asm
+    - func_801EEE20
+  - - 856
+    - asm
+    - func_801EEF58
+- - 928

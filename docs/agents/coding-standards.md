@@ -76,6 +76,18 @@ Read after `SOUL.md` and `AGENTS.md`; lift-side C rules stay in `AGENTS.md`.
 
 ## Tests
 
+- Tests live in per-module unit folders under `tools/python/tests/`
+  (`analysis`, `application`, `build`, `commands`, `decomp`, `domain`, `emi`,
+  `macros`, `naming`, `perf`, `skills`, `toolchain`, `types`); shared harness
+  fixtures stay at `tools/python/tests/`. Run the scoped repository gate with
+  `just check` (ruff, `bin/harness source symbols check`, `validate_sources`; **no pytest
+  units**, so per-lift and parent checks stay fast), every unit with
+  `just check-all`, and one unit with `just check-unit <unit>`; `$bof3-test` owns the
+  [unit map](../../.pi/skills/bof3-test/references/unit-map.md) and reviewed
+  test-suite optimization. Moving a test file means fixing its `__file__`
+  relative paths and any cross-test bare import (unit dirs are on `pythonpath`,
+  and pytest's default `norecursedirs` is overridden so the `build` unit is
+  collected).
 - Establish the existing behavior before refactoring, using current checks or
   disposable characterization probes. Add tests only when the user explicitly
   requests expanded coverage. Update existing import/monkeypatch targets and

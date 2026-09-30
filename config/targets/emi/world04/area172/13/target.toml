@@ -1,0 +1,19 @@
+schema = "harness.target/v2"
+id = "emi/world04/area172/13"
+disc_id = "BIN/WORLD04/AREA172.EMI#13"
+kind = "emi"
+source_dir = "src/emi/world04/area172/13"
+binary = "out/binaries/emi/world04/area172/13.bin"
+splat = "config/targets/emi/world04/area172/13/splat.yaml"
+load_address = 0x801F2C00
+
+sources = []
+support_sources = [
+    "src/bof3/world04/setScratchWorkStateWorld04Area17213_801F4DC4.c",
+    "src/bof3/world04/invokeHelperArgsWorld04Area17213_801F4E68.c",
+    "src/bof3/world04/invokeHelperArgThenHelperWorld04Area17213_801F2D20.c",
+    "src/bof3/world04/clearSharedFlagBit4EWorld04Area17213_801F4324.c",
+    "src/bof3/world04/queueSharedUiElement9x3Size50World04Area17213_801F4D58.c",
+    "src/bof3/support/area172_13_psyq.c",
+]
+psyq_source = "src/bof3/support/area172_13_psyq.c"

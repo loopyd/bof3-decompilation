@@ -6,7 +6,7 @@
  * @source 0x800A2AE0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 s16 func_800A2AE0(u8 battler_index, u16 element_mask) {
   s32 result;

@@ -8,7 +8,7 @@ extern void func_8014E5A0(u8 arg0, u8 arg1);
  * @source 0x801AF2A0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void drawSprite(s16 x, s16 y, u8 sprite_id, u8 flags) {
   u8* rect;

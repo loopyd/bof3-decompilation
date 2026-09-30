@@ -37,7 +37,7 @@ artificial empty-asm matching barriers; no declaration-only or no-op shims.
 Preserve `WEAK_SYMBOL_AT` address-binding assembly, ordinary `NO_SIBLING_CALLS`
 compiler attributes, original disassembly, raw measurements and provenance.
 `include/base/compiler.h` replaces `include/base/barrier.h` for compiler attributes;
-the [source contract](../INDEX.md#source-and-duplicate-rules) owns current policy.
+the [source contract](../agents/matching.md#source-and-duplicate-rules) owns current policy.
 
 Parent reports removal from 50 C sources and the compiler-header rename applied.
 Initial persistent requeue tags were `@status partial`, `@match unavailable`, and
@@ -79,7 +79,7 @@ for all 50: 10 MATCH, 40 DIFFER, zero tool errors. `verification.json` beside th
 inventory binds each selector, source, return code and log; its SHA-256 is
 `22697c8a28352a4d65a2fcc49dfb9619510750b1f3d545d5782680be604253fb`.
 Its 50 source/selector pairs and 10/40 return-code split match this queue.
-Parent reported `bin/index --recover --timeout 180` succeeded at removal: all 50
+Parent reported `bin/harness analysis index --recover --timeout 180` succeeded at removal: all 50
 sources had requeue metadata, but only 49 affected functions were indexed as partial.
 `emi/scenario/scena16/00@0x801F6E30` (`seedRouteEnterState3_scena16.c`) is absent
 from `snapshot.functions`; the index builder iterates analyzer functions only.
@@ -165,7 +165,7 @@ Parent confirms independent source-semantics passes for `800AD26C`, `800AD69C`,
 `800AD9CC` and `800ADCC4`, plus the explicit `table.handlers` member repair in
 place of the whole-aggregate cast. All four candidate native gates passed;
 after final metadata (`@status exact`, `@match 100`, `@residual none`), all four
-`bin/byte-match` gates exited zero with MATCH. Parent accepts these four clean-C
+`bin/harness lift byte-match` gates exited zero with MATCH. Parent accepts these four clean-C
 sources. Receipts in the mission directory are `800AD26C-final.log`,
 `800AD69C-final.log`, `800AD9CC-final.log`, `800ADCC4-final.log` and
 `final-pins.txt` (SHA-256
@@ -915,7 +915,7 @@ double-counted after the final 55-pass rerun. The nine pytest failures and all
 
 Parent fresh native source validation reports **784 exact, 136 partial, zero
 invalid**; full Ruff, changed-file formatting and whitespace pass. Separately,
-`bin/symbols check` still exits **2** for `emi/battle/battle/03:D_801EB4F0`, debt
+`bin/harness source symbols check` still exits **2** for `emi/battle/battle/03:D_801EB4F0`, debt
 introduced in `604b567c`. Do not waive this baseline, invent a semantic name or
 claim composite `just check` is green; identity repair needs its own evidenced
 authorization. Pytest closure is not whole-game or aggregate-phase acceptance.
@@ -1326,7 +1326,7 @@ new action retains its **21:21:48 UTC** start from `2d1d125b`, **21:50 work /
 21:55 cleanup** cutoffs and one implementation/up to two repairs; the first
 implementation is consumed. Before repair, parent confirmed fresh battle03
 readiness with **189 rows: 85 functions, 104 data**. Actual
-`bin/agent-context cleanup audit-target emi/battle/battle/03` then failed because
+`bin/harness agent context cleanup audit-target emi/battle/battle/03` then failed because
 campaign history imported `common.inputs` and domain claims/layout requiring
 `yaml` under the wrapper's stdlib-only `-S` bootstrap.
 
@@ -2122,8 +2122,643 @@ Refresh 65854 exits **0**, snapshot/index ready, zero stale facts/preflight find
 Direct current `pdj 8` capture verifies all 32 original bytes through the unchanged owner;
 34719 exits **0**, including unfiltered full naming validation: **17 rows, complete:false**.
 This is technical boundary/refresh acceptance only: no SDK lift, identity edit, spent-audit
-replay or whole-coverage claim. Local config-plus-plan commit authorized, no push;
+replay or whole-coverage claim. Committed config-plus-plan locally **`5114a7d8`**, no push;
 all earlier consumption, original bounds and the unfinished full goal remain intact.
+
+### LOGO naming follow-up — 2026-09-14 (source rolled back; caller tooling accepted)
+
+Explicit follow-up **06:13:19–06:38:19**, cleanup **06:43:19**, uses accepted `5114a7d8`
+layout without replaying archived failed 29258. General authored FUNCTION proposals already
+work; no capability extension needed. Candidate check 85175 and publication 98106 exit **0**;
+semantic PASS `7c69343890920646ca362b387e7be35e12b9a2a90bb9ad5dbdeae279d5176e4f`, 61 proofs.
+Prepared report SHA `effb2330212fc961cd2cc95f3bc638c031bbfee507e3467bda5d67d658debe25` remains immutable.
+Separate [source admission](../../out/reviews/logo-ced48-naming-20260914/admission.json) **06:31:01** freezes five paths, one spelling
+attempt/one POST-review repair, work/review/cleanup **07:21:01 / 07:16:01 / 07:31:01**,
+2100s postwrite reserve. Five spelling-only replacements retained first-baseline **23/37**
+instruction exactness and eight native gates/all four live exact lifts. Initial missing-readiness
+seal rejection was corrected by normal refresh with the same gates, not a harness bug.
+Public verify 39273 then exposed a real validator bug: valid captured-caller receipts were
+incorrectly required to select the renamed entry. Separately admitted [four-file repair](../../out/reviews/naming-caller-receipts-20260914/scope-expansion.json)
+retains `reports.py` validation and moves unchanged `collect_function_checks` into `checks.py`,
+shared by application/snapshot, avoiding an import cycle. Exact captured selectors and every
+required gate remain mandatory; no arbitrary caller or receipt/freshness bypass.
+Changed tooling correctly invalidated old native closure; fresh 42706 gates pass **8/8**.
+Combined independent [PASS](../../out/reviews/naming-caller-receipts-20260914/review/review.json), SHA-256
+`2901216ac9a26637e34637ee302eaf5ed49c1bd4c62c002355ef36b1a9bb8250`, 85 proofs verified;
+fresh prepare-review/seal/public verify 55284 pass, `applied:true`, one row, before rollback.
+Parent accepts tooling only for retention: **642 tests passed / 2 skipped / 32.77s**, **11 DRY**
+passed; 49 audit checks overlap, not added. Code work bound **07:11:38** remains historical.
+Finalizer preview 4794 rejects summary **16** versus prepared predecessor **17**: additive
+reconciliation omitted summary coupling. Independently reviewed/scoped-approved count-only CAS
+then hit the history writer guard before publication; no bypass or alternate writer followed.
+[Rollback](../../out/reviews/logo-ced48-naming-20260914/rollback.json) at **07:14:22.759028** restores all five exact PRE pins;
+summary SHA `d4f03931da0a818651b697764fb3d18e06fb4e66fee49c691ce6c2930430a253` and report unchanged.
+No source finalization/adoption or count repair; one spelling attempt **spent**, POST successes
+historical only. Optional rollback compile was not executed: auto-review denied for model
+capacity/unacceptable risk; no retry, wrapper or bypass. Exact five PRE byte hashes are verified,
+but no fresh rollback native result is claimed. Noncompiler restore 37449 exits **0**:
+analysis/index ready, zero stale facts; full **17-row** validation exits **0**, `complete:false`
+(`rollback-checks.json`). Parent's [tooling acceptance](../../out/reviews/naming-caller-receipts-20260914/acceptance.json) confirms four reviewed pins;
+all five source-path diffs are zero, adopted dirty work unchanged. Root reconciliation/summary
+coupling is the next tooling priority before any separately admitted fresh name attempt.
+Four accepted code files plus plan remain uncommitted: [commit denial](../../out/reviews/naming-caller-receipts-20260914/commit-blocked.json) occurred before process start due approval-service capacity/unacceptable risk; no staging/commit, retry or wrapper, HEAD `5114a7d8` and empty staged index verified.
+Per-row identities need their own full gates, not target `complete:true`; successor finalization
+must finish before another report proposal. Preview `plan_sha256` binds the record, not this Markdown.
+At that checkpoint fresh-row `resumed` overcount was deferred telemetry debt, not replay; the prototype warning
+is an unproven type lead, not established pointer/SDK semantics. Full target/goal remain unfinished.
+
+### Naming reconciliation accounting — 2026-09-14 (tooling/accounting accepted)
+
+[Admission](../../out/reviews/naming-reconciliation-20260914/admission.json) at **07:31**, work/review/cleanup **08:01 / 08:06 / 08:11**,
+one implementation/one repair, covers `reconciliation.py`, tool usage and this plan.
+The accepted owner couples initial-report additions/upward cached-count repair under existing
+writer/report locks, preserving retained evidence, other target entries and history.
+Report-first then summary CAS is not atomic as a pair. No journal is used because
+counts are derivable from independently revalidated current inventory: a separately
+authorized rerun can repair interrupted accounting without rewriting proposal bytes.
+This is not attribution/replay authority; drift, failed validation and expired bounds stop.
+Retained-generation growth/completeness-transition recovery remain deferred; prepared digests and history guards
+stay strict. Cached-total consistency is not fresh full-target/all-target accounting.
+[Historical preview](../../out/reviews/naming-reconciliation-20260914/live-preview.json) validated **17 rows**, `complete:false`, with report
+`effb2330…`/summary `d4f03931…` unchanged and candidate summary `78e198…` only computed.
+Independent [PASS](../../out/reviews/naming-reconciliation-20260914/review/review.json) at **07:52:51**, SHA-256
+`af2324dc3c495cea2f6046bbe4ff03690422dea77f1bd39736c11337bc2b5816`;
+one R1 repair requires report-directory fsync on every apply, including summary-only/no-op recovery.
+Parent [accepted code](../../out/reviews/naming-reconciliation-20260914/parent-acceptance.json) after 31 proof pins/28 canonical PRE files verified;
+code SHA `7562c130d6b25a76c7d6574d2e5b3ec855d277c2bfae8cf9bbd6507ee372cc8a`,
+guide SHA `2a93cf1624b5ed2ecd7e4bedb9fffd8f41046bb9bf3ef381fdfdbb6739c4a027`.
+Owner apply 1322 exits **0** at **07:54:13**, `added: []`, report unchanged; [publication proof](../../out/reviews/naming-reconciliation-20260914/publication-verification.json)
+confirms only LOGO cached rows **16→17**, aggregate **1360→1361**, not fresh global debt.
+Summary SHA `78e198e5b9a4d5a74983f89badde7b47977eece7744f110ac1f396128db5f762`;
+27 other canonical JSON files/22 other target entries unchanged, no generation/checkpoint.
+Dry [replay](../../out/reviews/naming-reconciliation-20260914/replay.json) 23079 exits **0**, no additions/accounting change; `complete:false`.
+Final existing checks **699 passed / 2 skipped / 45.08s**; 22 filesystem probes include actual
+NTFS, plus 5 parent/7 independent durability cases (mocked, not power-loss proof); 104 refs valid.
+The earlier 653-test run remains historical, not added. Initial count parity is repaired;
+no local commit/push or permission to retry denied native/commit actions is inferred.
+No source edit, denied native/commit retry or new identity attempt; pending accepted
+caller-fix files and all prior dirty plan history remain preserved. Pre-admission accounting
+parity is an operator-stage obligation below, not an expansion of frozen snapshot code.
+
+### Naming resume count — 2026-09-14 (telemetry tooling accepted)
+
+[Admission](../../out/reviews/naming-resume-count-20260914/admission.json) **07:59**, work/review/cleanup **08:19 / 08:16 / 08:24**,
+one implementation/no review repairs. `run_evidence` now reports `len(reusable)`, not
+post-run `len(checkpoint)`; [single-expression proof](../../out/reviews/naming-resume-count-20260914/mechanical-proof.json) preserves collection/journal behavior.
+Real-fixture old/new resumed counts: cold **1→0**, mixed **3→1**, warm **3→3**, stale **3→0**;
+executed **[1,2,0,3]** and telemetry skips **[0,1,3,0]** unchanged; warm checkpoint bytes/mtime preserved.
+Independent [PASS](../../out/reviews/naming-resume-count-20260914/review/review.json) **08:04:53**, SHA-256
+`49350a3b3666f31e8b5d26fa1b7e88b3011031de43a959a170141a09894b9fa6`;
+parent [acceptance](../../out/reviews/naming-resume-count-20260914/acceptance.json) verifies both pins/18 proofs. Existing checks **699 passed / 2 skipped / 46.96s**;
+focused **70 / 36.25s** overlaps, not added. Code SHA
+`1f80fe0c57cc10dba3987c98b32f291b67ad17d2005c86dfd824910b67803b1e`, guide SHA
+`4396141044d6e0d50ad734ac9a6e7a1c82dde4e5c9db4793bd660d77030e3a16`.
+All 28 canonical campaign JSON files/receipts unchanged; [live no-op](../../out/reviews/naming-resume-count-20260914/live-noop.json)
+validates 17 rows, `complete:false`, no additions or accounting drift against summary `78e198…`.
+Telemetry defect closed, not production collection/source acceptance, denial retry or goal completion.
+
+Separate **08:03–08:13** read-only [proposal recovery assessment](../../out/reviews/naming-proposal-recovery-20260914/assessment.json),
+SHA-256 `171fc2b09f03912e42c1e964fc2be1d6c2ec74c3b3739eb27c7bfc244e9bb56c`, confirms
+`effb…` authored digests intact and all six snapshot file hashes/modes restored; one proposal/17 rows.
+**Default: retain the credible CED48 proposal unchanged**, pending separate explicit authority
+for any new source admission; retention itself needs no new capability or implementation.
+Another authored row in the same report invalidates its digest; successful finalization cannot
+stand in for withdrawal after rollback. Only if parent chooses optional withdrawal/suspension
+is a new typed, independently accepted owner transition needed: same inventory/counts, distinct
+from finalization's one-identity decrement, immutable history and spent authority preserved.
+Do not weaken that decrement guard or withdraw to sidestep native approval. No initializer reset, semantic exhaustion or receipt
+rebind authorized; current proposal, old PRE/POST and consumed source bounds remain preserved.
+
+### C1.3 configured-profile preflight — 2026-09-14 (seven-path tooling accepted)
+
+Mission **08:23–09:08** work, **09:13** review, **09:23** cleanup freezes seven
+[repair-2 implementation/guide pins](../../out/reviews/combiner-profiles-20260914/repair-2-pins.json).
+Read-only `combiner profile TARGET DESTINATION SOURCES...` compares same-target whole-file
+membership and pinned source/destination configured compiler profiles/ordered driver arguments.
+The supported complete CMake recipe digest fails closed on change; updating it requires
+substantive policy/parity review, never a mechanical hash replacement. No compiler/version
+probe, installation or production source/config/report/index mutation was performed.
+Two review repairs consumed: malformed grammar/comment semantics, aligned u32 geometry,
+and file/absent-path/ancestor-directory ABA protection. Independent [PASS](../../out/reviews/combiner-profiles-20260914/review/review-2.json)
+published **09:11:04**, SHA-256 `1aaf326cc0151317f167ad7e38488806a24e642dca6e6ea639a34c33b1d817cc`;
+parent [accepted seven code/guide paths](../../out/reviews/combiner-profiles-20260914/acceptance.json) at **09:12:29**, all seven mtimes before **09:08**.
+Seven current pins/18 proofs verified; final existing checks **169 passed / 2 deselected / 6.15s**,
+35 parent cases plus six grammar cases; 46 plan checks/91 plan refs and two guide refs valid.
+Fresh live profile/replay exits **0**; expired deadline exits **2**. Earlier 35/176-test runs
+included miniature `project(NONE)` CMake fixtures; final narrow suite excludes `test_build.py`.
+No production configuration or BOF3 compilation; counts are not summed across runs.
+[Original outcome](../../out/reviews/combiner-profiles-20260914/outcome.json) closes **09:13:35**: the plan checkpoint written at **09:08:13**
+was **13 seconds late, unaccepted and excluded** from tooling acceptance. Its historical
+lateness is not erased or retroactively authorized. Separate bookkeeping **09:14–09:24**,
+review **09:27**, cleanup **09:30**, only reconciles this text; independent review is required
+before parent acceptance of this plan update, with no implementation/attempt renewal.
+This is a configured-profile prerequisite, not full C1.3: profile migration/PRE–POST
+preservation, producer/include/full-toolchain proof, all-member native/cache/consumer closure
+remain open. Production consolidation and C1.4 ranking/transactions stay dependency-gated;
+no queue replacement, spent-attempt renewal, denial retry or reduced whole-goal scope.
+
+### C1.3 function extraction — 2026-09-14 (tooling and historical checkpoint accepted)
+
+Mission **09:25–10:15** work, **10:22** review, **10:30** cleanup freezes eleven
+[repair-2 implementation/guide pins](../../out/reviews/function-extraction-20260914/repair-2-pins.json), pins verified at that acceptance; two repairs consumed.
+Retained reproducer: a twelve-byte function's first eight bytes were incorrectly
+accepted as an exact eight-byte function. Shared ELF image ownership now extracts actual
+selected-symbol bytes, binds name/address/executable section, and supplies named scope to
+byte matching, flag search and grouped-kernel consumers. Valid longer/shorter extents
+remain mismatches; diagnostics use actual extent. Cache v4 rejects old/unknown schemas.
+Malformed-image guards include null entries, indices/alignment/binding order, overlapping
+allocated executable sections, and bounded PS-X zero-size local FILE/NOTYPE extras needed
+by retained ordinary images. Explicit/inherited-min deadlines cover parsing, pre/post flow
+and return; independent acceptance is recorded below.
+Popen-trapped existing checks: **37 passed / 5 deselected / 3.69s**; parent reports
+**59** ELF/payload/cache probes, **10** composed checks and **32** retained ordinary-format
+compatibility cases, without native execution. Earlier 42-check green runs included four
+fixture CMake cases and one read-only Git inventory of the real repository root: not process-free, not production native/
+configure/Git-write proof. No fresh compiler or production source-audit result claimed.
+Independent code [PASS](../../out/reviews/function-extraction-20260914/review/review-2.json) published **10:14:01**, SHA-256
+`0755af14fe6b380b8ffcdaa29b1d0eb78c7b8728c368966b2582bef4111d7d47`; 11 pins/48 proofs verified.
+Separate historical-checkpoint [PASS](../../out/reviews/function-extraction-20260914/review/plan-review.json) **10:16:19**, SHA-256
+`f34e7f84da77b1287fe900fcc842c80f1e547856b28fdd95090421eb350f79b4`, verifies 11 pins/7 proofs.
+Parent [accepted tooling and that dated checkpoint](../../out/reviews/function-extraction-20260914/acceptance.json) at **10:22:06**; both reviews met **10:22**.
+The writer's earlier untrapped 46-plan-test pass is historical. A later guarded run had
+16 passes/30 blocked CLI fixtures, not confirmed product regressions or a full guarded pass.
+Full C1.3 producer/input/include/cache/consumer proof, grouped public-pipeline integration,
+producer-enforced PRE–POST preservation and source audits remain open. No C1.4 admission, source
+attempt renewal, GCC/native/commit-denial retry or reduced whole-goal scope.
+
+### C1.3 compatible-profile preservation — 2026-09-14 (tooling accepted)
+
+[Admission](../../out/reviews/profile-preservation-20260914/admission.json) **10:25–11:15** work, **11:23** review, **11:30** cleanup,
+one implementation/two-repair ceiling; [four final code/guide pins](../../out/reviews/profile-preservation-20260914/repair-1-pins.json) verified at code acceptance.
+Standalone `preservation capture/verify` re-inspects live PRE, binds an external fingerprint
+and exact proposed POST source/manifest/Splat states, then verifies complete selector union/
+inventories and rederives old-path/destination profiles against unchanged captured configuration.
+Interphase proof covers SHA/mode, not continuous identity; a self-hash grants no authority.
+Initial NEEDS_FIX `8a9e40afa947a65a85abeb6746dc4fcd03d4820b18a7d079beaf9c60c85dbcfa` is retained.
+One batched repair fixes YAML typed-key coercion/duplicates and post-serialization expiry;
+terminal CLI success is required. Code frozen **10:59**; one repair consumed, one unused.
+Independent [repair-1 PASS](../../out/reviews/profile-preservation-20260914/review/review-1.json) **10:59:03**, SHA-256
+`7f904f65cbe2b4f2ebb0634bae0d8ccc95c3afa1f29bd41f7d66e29c575ca933`; parent verified pins/proofs.
+Parent checks: **42** transition/YAML cases, **2** publication controls, **104 existing /
+3 deselected / 3.76s**; reviewer **18** transition/YAML, **6** CLI controls, **93 existing /
+2 excluded**, without summing overlap. Initial two fixture CMake cases were blocked before launch,
+not successful configuration. Parent [accepted four code/guide paths only](../../out/reviews/profile-preservation-20260914/code-acceptance.json) at **11:05:37**,
+reverifying four pins/14 proofs; the plan is excluded. Plan checkpoint review/acceptance is a separate gate.
+Configured-profile preservation only: no configuration migration, `bin/cc` dispatch/producer
+enforcement, compilation or native proof; `native_verified`, `producer_freshness_verified` and
+`write_authorized` stay false; coverage remains unverified, with no coverage flag claimed.
+Full C1.3 producer/include/toolchain/cache/consumer/native integration, production source audits
+and C1.4 dependencies remain open. No LOGO attempt, denied native/commit action or goal reset.
+
+### C1.3 producer dispatch/input observation — 2026-09-14 (twelve-file tooling accepted)
+
+Original producer mission **11:32:26**, work/review/cleanup **12:27 / 12:35 / 12:42**,
+closed NEEDS_FIX: R1–R4 were resolved, but absent proof-input create/delete ABA (R5)
+was not latched. Its [review](../../out/reviews/producer-dispatch-20260914/review/review-1.json) and expired limits remain immutable; no old allowance reopened.
+[Separate input-observation admission](../../out/reviews/input-observation-20260914/admission.json) **12:32:24**, work/review/cleanup **13:10 / 13:20 / 13:28**,
+used one implementation/one repair of two. Thin `bin/cc` bootstrap/build driver, shared
+lower-layer preservation verification and `common.observation` enforce externally pinned
+actual source/compiler/argv before dispatch and after translation/private object production.
+Path-specific child/ancestor watches latch relevant events for present and absent inputs.
+R5 closed; R6 repair preserves compiler-stage failure across BrokenPipe and maps remaining
+driver pipe failures to exit 1, without changing unrelated CLI policy. C1 documentation
+clarifies conservative watch-installation behavior; no freshness or native proof inferred.
+Full twelve-file [PASS](../../out/reviews/input-observation-20260914/review/review-1.json) **13:14:26**, SHA-256
+`a7874d6d8bd631407126a5e6047c24c8f778649579391d7034dfefb891b0e006`;
+parent [code-only acceptance](../../out/reviews/input-observation-20260914/acceptance.json) **13:16:34** verifies 12 pins/64 proofs, not R5 alone.
+Script-only checks: **104 core / 3 deselected / 3.76s**, **4 wrapper / 1 deselected / 0.81s**,
+30 watch controls, 20 copied PRE/POST pipeline cases plus 10 ordinary/2 grouped-publication cases;
+four CLI pipe outcomes **17/1/17/0**. Counts overlap and are not summed. Non-UTF8 control used
+`/tmp` after retained NTFS EILSEQ rejection; no production compiler/configure or Git writer ran.
+Premature proof handoff/schema-count error was retained and corrected; final bundle verified.
+[Closed outcome](../../out/reviews/input-observation-20260914/outcome.json) preserves 20 prior paths, 28 campaign pins, HEAD `5114a7d8`,
+unchanged CMake/empty staging, and deferred plan publication; no post-13:10 authored edits.
+Intermittent fail-closed profile ancestor drift remains **UNKNOWN** despite final passing replay.
+Full C1.3 native/configuration migration/full freshness/persistent receipts and grouped
+public/cache/consumer closure remain open. No source attempt, denied native/commit retry,
+C1.4 admission or whole-goal closure. This later bookkeeping does not renew any old bound.
+
+### C1.3 preservation decoding — 2026-09-14 (three-path tooling accepted)
+
+Mission **13:51:35**, work/review/cleanup **14:25 / 14:35 / 14:43**, one implementation,
+no formal review repairs. Python-only event preflight followed by one validated
+composition/construction preserves guarded YAML semantics; the C-backend switch was
+discarded after three parity disagreements, not shipped. All **23** target layouts agree.
+Independent [PASS](../../out/reviews/preservation-decoding-20260914/review/review.json) **14:20:24**, SHA-256
+`003897f23df42cb554b5116b109db897e6b3c881db74ca16ecc1da1074381a45`;
+parent [code-only acceptance](../../out/reviews/preservation-decoding-20260914/code-acceptance.json) **14:21:39** verifies 3 pins/47 proofs,
+29 prior paths and 28 campaign files unchanged. Plan acceptance is a separate gate.
+**1389** parity cases and guarded serial **20/10/2** producer replay pass; these counts
+are not summed or production/native proof. Retained paired-fixture decoder gain is
+**1.413×**, faster in 10/10 pairs; whole-verifier gain is noisy and not established.
+**10666 stat calls** remain a measured cost, not an implemented optimization.
+Ancestor tuple diagnostics and controlled sibling creation reproduce a failure class,
+not the exact writer or historical cause. Earlier concurrent fail-closed observations
+remain retained; intermittent ancestor drift is **UNKNOWN**, not fixed by final replay.
+Full C1.3 native/config migration/input/include/toolchain freshness/persistent receipts/
+grouped cache/consumer closure and the full goal remain open. No source attempt,
+denied native/commit retry, dependency change or renewed prior allowance.
+
+### C1.3 profile observation — 2026-09-14 (four-path tooling accepted)
+
+Mission **14:30:43**, work/review/cleanup **15:12 / 15:24 / 15:32**, one implementation
+and one formal repair. Initial PASS was superseded by P1 and never accepted;
+the repaired late-absence fence preserves same-read observation and fresh verification,
+with the new reader owner pinned. Independent [repaired PASS](../../out/reviews/profile-observation-20260914/review/review-1.json)
+published **15:08:31**, SHA-256
+`58a57eab6110640089d8acc115d76c12503ca07679ca44cbbac21656773070a9`.
+Parent [code-only acceptance](../../out/reviews/profile-observation-20260914/code-acceptance.json)
+at **15:09:32** verifies 4 pins/102 proofs, 30 prior paths and 28 campaign files unchanged;
+34 pending paths are recorded, not committed. Plan review/acceptance is separate.
+Nine absence and 58 general controls plus serial **20/10/2** script producer cases pass;
+overlapping checks are not summed and provide no fresh native proof.
+Same-closure deep-fixture medians **673.39 → 581.43 ms (1.158×)**, faster in **12/12** pairs,
+with **1839 fewer stat calls / 200 fewer reads**, are not universal or whole-pipeline gains.
+Full transitive input/include/toolchain freshness, configuration migration, persistent
+receipts and native/grouped/cache/consumer closure remain open. Persistent Make/Ninja
+build invalidation is the next structural priority; historical ancestor-drift cause
+remains UNKNOWN. C1.3 and the full goal remain open, with no source attempt,
+denied native/commit retry or renewal of prior allowances.
+
+### C1.3 configured producer receipts — 2026-09-14 (limited tooling accepted)
+
+The [prior mission closed NEEDS_FIX](../../out/reviews/persistent-dependencies-20260914/outcome.json)
+at **16:06:26**: both reviews remained NEEDS_FIX. The intervening parent repair fixed
+terminal/flush/pipe failures but missed the pre-write deadline check. One formal repair
+was used and one unused allowance closed; no prior adoption or budget renewal.
+Separately admitted [receipt-publication](../../out/reviews/receipt-publication-20260914/admission.json)
+started **16:08:19**, work/review/cleanup **16:28 / 16:35 / 16:40**.
+One implementation, zero code-review repairs; JSON now renders locally and checks the
+effective minimum cutoff before stdout, retaining write/flush error and late-exit checks.
+Independent [five-path PASS](../../out/reviews/receipt-publication-20260914/review/review.json)
+published **16:16:00**, SHA-256
+`a69d9907817721e99e75e5274f899a9aee008f9490ce271b0be42cbf03ec62eb`.
+Parent [code-only acceptance](../../out/reviews/receipt-publication-20260914/code-acceptance.json)
+at **16:16:40** verifies 5 pins/131 proofs, 30 prior paths and 28 campaign files unchanged;
+35 paths remain pending, not committed. Plan review/acceptance is separate.
+Accepted scope is an always-compile, leased configured producer and externally pinned
+provenance checker, not reuse permission or historical terminal/deadline authority.
+Current evidence: 18 publication controls, 9 fresh copied smoke cases, 104 core and
+4 wrapper checks, 22 valid references; reviewer replayed 24 lifecycle cases and
+10 existing checks. Overlaps are not summed. Prior 35 pre-format script cases are
+historical unchanged-owner semantics, not current CLI execution; 26 toy scheduling
+cases do not establish production graph integration or fresh native proof.
+CMake graph consumption, complete include/toolchain freshness, configuration migration,
+native all-member proof and grouped/cache consumers remain open; persistent Make/Ninja
+dependency binding is still the next structural priority. C1.3/full goal remain open;
+no source promotion, native/Git denial retry or renewal of prior attempts.
+
+### C1.3 grouped producer graph — 2026-09-14 (limited tooling accepted)
+
+Parent [accepted eight code/guide paths](../../out/reviews/producer-graph-20260914/code-acceptance.json)
+at **17:14:27**, after independent [PASS](../../out/reviews/producer-graph-20260914/review/review.json)
+published **17:13:22**, SHA-256
+`f663719d3a86d22a37e5db93b496768e64c19171952b6bcb113c7202dd73e86e`.
+Scope: root CMake, `config/compiler/graph.cmake`, build inventory/CLI/profiles/operations,
+and the combiner/harness guides. Acceptance verifies 8 pins/74 proofs, 31 prior paths
+and 28 campaign files unchanged; **39 pending paths**, not committed. The old mission's
+**17:05 / 17:18 / 17:25** work/review/cleanup bounds closed with one implementation,
+zero formal repairs and two unused repairs closed. This plan checkpoint is separately admitted/reviewed.
+The [rejected SYMBOLIC prototype](../../out/reviews/producer-graph-20260914/outcome.json)
+allowed Ninja to skip with an old-mtime physical force file; that bypass remains rejected.
+Command-bearing grouped lift targets now always run the combined producer, even for
+unchanged/future-dated objects, under external preservation pins. Unique lift owners feed
+aggregates; a pinned, always-run live classifier checks membership/classes/owners.
+Source/classifier configure dependencies and frontend stale-inventory regeneration are
+wired; raw users reconfigure on rejection. Private headers are collected before target
+registration; ordinary C/ASM commands and unchanged-object skipping remain intact.
+Supported entrypoints are public friendly lift/group/all targets and Ninja object outputs,
+not Make's internal `build.make` fragments. Closed root/helper recipes and ordered flags
+were reviewed, not merely rehashed. Independent evidence comprises 22 graph cases
+(replay of the parent's corpus), 15 inventory and 6 CLI cases; no overlap totals.
+The exact helper ran in standalone `project(NONE)` fixtures with literal Python producers.
+Retained parent core/wrapper/publication/copied-compiler checks and live inventory
+(**977 C, zero grouped**) are not independent reruns or actual root configure/native proof.
+Actual root configure/native validation, parent-lease handoff, multi-group pin routing,
+complete include/toolchain closure, cache/transaction consumers and configuration migration
+remain open. No reuse, historical deadline authority, source promotion or denied-action
+renewal follows. All 24 obligations are retained; C1.3 and the full goal remain open.
+
+### C1.3 source-bound preservation routing — 2026-09-14 (limited tooling accepted)
+
+Parent [accepted the full five-path candidate](../../out/reviews/preservation-routing-20260914/code-acceptance.json)
+at **18:11:54**, after repaired independent [PASS](../../out/reviews/preservation-routing-20260914/review/review-1.json)
+published **18:09:51**, SHA-256
+`47aa087c52cd0cfa0ca5db7db77b4deb6cc7cc7e31bc198ef011ce9272619adb`.
+Scope: new `build.routing`, dispatch integration, profile-owner capture and both
+combiner/harness guides; 5 pins/158 proofs, 35 prior paths and 28 campaign files verified.
+**40 paths remain pending**, not committed. The old **18:02 / 18:12 / 18:16**
+work/review/cleanup bounds closed with one implementation/one formal repair used,
+one unused repair closed; this plan checkpoint has separate review/acceptance.
+Initial [NEEDS_FIX R1](../../out/reviews/preservation-routing-20260914/review/review.json)
+and its 89 proofs/five initial PRE archives remain immutable: ordinary primary or
+diagnostic output could overwrite the route table before later rejection.
+The shared precompiler reservation guard now rejects artifact collisions with the
+table and every referenced source/record before compiler inspection or publication.
+An externally raw-SHA-pinned, root-bound table selects the existing record/fingerprint
+for the actual grouped source; unlisted ordinary sources need no selected record.
+Strict legacy-pair compatibility remains, without environment mutation or pin clearing.
+Unselected entries are path/schema checked and reserved, not preservation-proven.
+Current parent evidence: 13 routed producer/receipt cases, 12 Make/Ninja
+`project(NONE)` cases, 104 core/4 wrapper checks and 22 valid references.
+Independent 38 selector/4 deadline replay and collision controls overlap existing
+corpora; no sums or actual native/root-project-build claims. Producers use copied
+Python stages. Retained NTFS first-capture directory-size **384 → 0** failures remain
+unfixed; fresh capture of the same stabilized, never-recorded PRE fixture under
+unchanged guards is not historical record repinning.
+V2 global source/manifest history composition remains unsupported: two map entries
+do not prove two valid grouped builds. Parent-lease handoff, full runtime/include/toolchain
+closure, configuration migration, grouped consumer/cache/transaction and native gates
+remain open. All 24 obligation states remain unchanged; C1.3/full goal stay open.
+No reuse, source promotion, historical deadline authority or denied-action renewal.
+
+### C1.3 directory observations — 2026-09-14 (qualified policy accepted)
+
+Parent [accepted four code/guide paths](../../out/reviews/profile-generation-20260914/code-acceptance.json)
+at **19:27:05**, following independent [PASS](../../out/reviews/profile-generation-20260914/review/review.json)
+published **19:25:55**, SHA-256
+`faefb83a97ddb77edce975138fe75483a86be73388da9aed34b1687f62832177`.
+Scope is shared `common.observation`, `build.profiles` and combiner/harness guides:
+4 pins/65 proofs, 36 prior paths and 28 campaign files verified; 40 paths pending,
+not committed. The old **19:32 / 19:42 / 19:46** work/review/cleanup bounds closed
+with one implementation, zero formal repairs and two unused repairs closed.
+This plan checkpoint has separately admitted review/acceptance.
+This is an explicit directory-size equality exception, not the old exact-directory
+policy: retain all nine raw fields and original observations; tolerate size alone
+only with unchanged location, the other eight fields and complete descriptor-backed
+direct-entry membership (raw names/device/inode/nofollow type). Enumeration, including
+ancestors above the repository, is bounded to **16,384 entries / 4 MiB** per directory;
+errors, overflow and expiry reject. Regular-file/symlink metadata and file-content
+checks remain exact; existing latched watches remain required. Endpoint membership
+does not prove continuity, absence of ABA or unchanged child content.
+Four first-attempt profile fixtures pass (three timed **0.77–0.91 s**); parent
+46 controls, 104 core/4 wrapper checks, 13 fresh serial Python producer/receipt cases
+and 22 references pass. Independent 43 plus 18 controls overlap other sets and are
+not summed. The parallel fixture trial correctly failed on actual sibling interference;
+separate serial fresh-root success is not a native run, retry of denied work or
+proof of the historical kernel/daemon cause. An accidentally rewritten prior closing
+timestamp was [restored to exact original bytes](../../out/reviews/profile-generation-20260914/recovery.json);
+old evidence producers are not replayed against accepted directories.
+Semantic manifest-generation binding (`*.toml` versus profile `target.toml` inventory),
+global history composition, parent-lease handoff, complete runtime/include/toolchain
+closure, configuration migration, consumers and native gates remain open.
+All 24 obligation states remain unchanged; C1.3/full goal are not complete.
+No production source promotion or renewal of earlier native/Git denial authority.
+
+### C1.3 captured manifest inputs — 2026-09-14 (limited tooling accepted)
+
+Parent [accepted eight repaired code/guide paths](../../out/reviews/manifest-inputs-20260914/code-acceptance.json)
+at **20:18:15**, following independent [repair-1 PASS](../../out/reviews/manifest-inputs-20260914/repair1/review/review.json)
+published **20:17:52**, SHA-256
+`a97f4f9d08f8fbdb41aaf4abfd218a320253d64ddb11194452dc36ce7f54f17b`.
+Scope: domain cache/manifests, build and combiner profile/preservation owners, and
+combiner/harness guides; 8 pins/105 proofs, 34 prior paths and 28 campaign files
+verified. **42 paths remain pending**, not committed. Original **20:14 / 20:24 / 20:28**
+work/review/cleanup bounds closed with one implementation/one formal repair used and
+one unused repair closed. This plan checkpoint has separate admission/review.
+One domain-owned bounded descriptor traversal discovers all `*.toml` inputs for
+loader and PRE–POST consumers; parse content and cache keys use the same immutable
+captured bytes. New domain/directory/root reader owners are pinned.
+Initial [NEEDS_FIX R1](../../out/reviews/manifest-inputs-20260914/review/review.json)
+remains immutable: temporarily hiding an existing manifest only during loading yielded
+subset models despite matching endpoint inventory. The repair requires each load's
+actual consumed set to equal the original inventory; missing, unexpected or duplicate
+reads reject, including cache hits and contexts with prior inputs. Inventory never refreshes.
+Current evidence: 113 existing pure checks pass (3 deselected), independent 6 read-set
+and 29 general controls, plus overlapping 113 checks; no summed totals.
+Fresh current-owner records pass 13 Python producer/receipt cases and alternate-TOML
+POST drift rejection; 22 references are valid. Earlier 22 discovery controls and
+4 wrapper checks remain pre-repair evidence, not current-candidate reruns.
+Python substitutes provide no native compilation, byte/semantic fidelity or source authority.
+Binary/source/header claim validation remains live: this is not atomic model-plus-claim
+closure or universal filesystem/ABA history proof. Existing content, metadata and event
+guards remain necessary; no old record is repinned or widened.
+Whole claim/runtime/include/toolchain closure, global history composition, parent-lease
+integration, configuration migration, native and consumer/transaction gates remain open.
+All 24 obligation states are preserved; C1.3/full goal are not complete.
+Earlier native/Git denials and consumed source attempts are not renewed.
+
+### C1.3 paired claim sampling — 2026-09-14 (correctness tooling accepted)
+
+The [prior claim-generation mission](../../out/reviews/claim-generation-20260914/outcome.json)
+closed NEEDS_FIX at **21:10:14**: an observed-present binary disappearing during
+sampling could be mislabeled optional absence. Its **21:04 / 21:16 / 21:20**
+bounds, one implementation and two unused repairs remain closed, not renewed.
+The [distinct sampling admission](../../out/reviews/claim-sampling-20260914/admission.json)
+retains **21:39 / 21:49 / 21:52** work/review/cleanup bounds; one implementation,
+zero formal repairs and two unused repairs closed. Independent full six-path
+[PASS](../../out/reviews/claim-sampling-20260914/review/finalreview.json) published **21:30:00**,
+SHA-256 `125ba78c32e1af2b2b2eda4af46aed24bb5ad157655247620bd716d2e3ec7a9f`;
+parent [accepted correctness only](../../out/reviews/claim-sampling-20260914/code-acceptance.json)
+at **21:40:20**, verifying six pins/157 proofs, 37 prior paths and 28 campaign files.
+Scope: domain cache/manifests/repository layout, build profiles and both guides;
+**43 paths remain pending**, not committed. This plan has separate review/acceptance.
+Each load returns isolated models with its immutable claim sample, not global
+latest-claims state; sizes/hashes and placement bounds derive from sampled bytes.
+Claims validate even on parsed-model cache hits; profiles bind exact TOML/claim
+read sets. Shared verified absence remains supported; observed-present read/final-stat
+failures propagate instead of becoming absence. Default alias containment and strict
+profile physical checks remain; paired samples do not make later layout reads atomic.
+Current evidence: **321 pure / 3 deselected**, **4 wrapper / 1 deselected** checks;
+23 sampling, 29 claim, 5 alias and 5 read-set controls; 22 valid references.
+Independent 63 controls and overlapping 321 checks are not additive.
+Thirteen fresh Python producer/receipt controls bind **1031 PRE / 1030 POST** claims,
+not 1030 in both states; they provide no native or source-fidelity proof.
+The substantial **58.39–59.42s** grouped-producer regression remains unresolved:
+**75s diagnostic** allowance is not 35s success, speedup or production timeout authority.
+Corrected profiling attributes **12.459s of 16.004s** to four preservation verifications,
+not additive timings. Post-freeze context-reuse scouting lacks verified terminal
+evidence and is excluded from review/acceptance; no optimization is established.
+Performance, whole runtime/include/toolchain and later-layout coherence, global history
+composition, parent-lease integration, configuration migration, native and consumer/
+transaction gates remain open. All 24 obligation states and the full goal are retained;
+C1.3 is unfinished, with no source attempt or native/Git denial authority renewed.
+
+### C1.3 pass-scoped input batching — 2026-09-14 (limited tooling accepted)
+
+Parent [accepted three paths](../../out/reviews/input-batch-20260914/code-acceptance.json)
+at **22:36:15**, after independent full [PASS](../../out/reviews/input-batch-20260914/review/review.json)
+published **22:33:21**, SHA-256
+`201dd873825c4d81279e85774fa6d9a18f967fd1fbdeedc48044c4b50bc64a74`.
+Scope: `common.inputs`, `build.profiles` and harness guide; 3 pins/264 proofs,
+40 prior paths and 28 campaign files verified. **43 paths remain pending**, not committed.
+Original **22:34 / 22:47 / 22:51** work/review/cleanup bounds closed with one
+implementation, zero formal repairs and two unused repairs closed; this plan has
+separate admission/review. `InputBatch` reuses directory descriptors only within
+manifest callbacks or one verification pass, not bytes, absence or validation success.
+Fresh parent-link checks precede canonical-path observations and every byte sample;
+nine leaf metadata fields and eight directory-signature fields remain checked,
+excluding only directory allocation size under the existing policy. Original bounded
+membership/watch guards remain unchanged; eviction never resets observations.
+Scalar AST compatibility is verified; non-atomic observations do not prove arbitrary ABA.
+Current parent checks: 321 pure / 3 deselected, 4 wrapper / 1 deselected, 13 Python
+producer controls, 23 sampling / 29 claim / 5 alias / 5 read-set controls and 22 refs.
+Independent 49 controls plus overlapping 321 checks are not additive or native proof.
+Eight child-free benchmark runs (two warmups, three alternating pairs) retain equal
+complete states, **1066 bound inputs / four preservation calls**: median scalar
+**10.730963s → batch 9.782682s (8.8369% lower)**, this local workload only.
+Full producers still take **54.8997–54.9780s** under the unchanged **75s diagnostic**
+allowance—not 35s success, production-budget authority or a whole-producer speedup.
+Initial directory-size mismatch failure and V1 measurements remain historical.
+Global history composition, runtime/include/toolchain/later-layout coherence,
+parent-lease integration, configuration migration, native and consumer/transaction
+gates remain open. All 24 states and other obligations are unchanged; C1.3/full goal
+remain unfinished, with no source attempt or native/Git denial authority renewed.
+
+### C1.3 captured Splat projection — 2026-09-14 (limited tooling accepted)
+
+Parent [accepted five code/guide paths](../../out/reviews/layout-sample-20260914/code-acceptance.json)
+at **23:36:21**, following independent full [PASS](../../out/reviews/layout-sample-20260914/review/review.json)
+published **23:36:01**, SHA-256
+`89ed5f3be7dcb89fd72797e09a8ef10f2a5fd7fea135f6e0233631d5e8d767e7`.
+Scope: domain layout, combiner profiles, build preservation and both guides;
+5 pins/411 proofs, 39 prior paths and 28 campaign files verified. **44 paths remain
+pending**, not committed. Original **23:35 / 23:48 / 23:52** work/review/cleanup
+bounds closed with one implementation, zero formal repairs and two unused repairs
+closed; this plan checkpoint has separate admission/review.
+`parse_splat_text` projects supplied text without I/O; `origin` labels diagnostics,
+not freshness. The file API retains its existing UTF-8/universal-newline behavior;
+raw CRLF text and normalized file text therefore retain distinct digest contracts.
+Profile inspection projects captured text without adding strict decoding; preservation
+strictly decodes and projects the same local sample. Final physical, inventory,
+read-set, watch, member, geometry, compiler and deadline guards remain unchanged.
+BEFORE2 capture/verify reopened Splat **2/1** times; AFTER2 uses **0/0**, with equal
+selected PRE raw SHA and POST layout semantics across distinct fresh records,
+not historical rebinding, an atomic repository snapshot or arbitrary ABA proof.
+Parent checks: **321 pure / 3 deselected**, **4 wrapper / 1 deselected**;
+23 sampling, 29 claim, 5 alias, 5 read-set controls, two real physical-drift rejections,
+13 fresh Python producer/receipt cases with **1030 POST claims**, and 22 valid refs.
+Independent 43 parser controls and overlapping 321 checks are not summed.
+Producer **54.332–57.708s** uses **75s diagnostics**, not 35s compliance, changed
+production budgets, native fidelity or an established timing improvement.
+Earlier observer/author/helper failures and lost-terminal logs remain historical;
+fresh corrected records and terminal rechecks supply the attributed evidence.
+Existing `domain/layout.py` omission from `record.inputs` and `profile.inputs`
+remains open implementation-owner closure; separate fixture hashes do not repair it.
+Global history, runtime/include/toolchain and later source/layout/translation reads,
+parent-lease integration, configuration migration, native and consumer/transaction
+gates remain open. All 24 states and other obligations survive; C1.3/full goal remain
+unfinished, without source promotion or renewed native/Git denial authority.
+
+### C1.3 explicit profile-owner coverage — 2026-09-15 (limited tooling accepted)
+
+Parent [accepted four code/guide paths](../../out/reviews/profile-owners-20260914/code-acceptance.json)
+at **00:07:16**, after independent full [PASS](../../out/reviews/profile-owners-20260914/review/review.json)
+published **00:06:57.019306**, SHA-256
+`826e55f4876e125a77028438efb656012101e1b63120aaf877c64da9f776eea2`.
+Build profiles/preservation and both guides bind 4 pins/598 proofs; 40 other
+pending paths and 28 campaign files were verified. **44 paths remain pending**,
+not committed. The [source outcome](../../out/reviews/profile-owners-20260914/outcome.json)
+closes one implementation, zero formal repairs and two unused repairs under the
+original **00:12 / 00:22 / 00:26** work/review/cleanup bounds, without renewal;
+this plan checkpoint has separate admission and review.
+Twelve explicit layout, PS-X, function/tag, claim/source, symbol-map, lexical,
+I/O, file/path and deadline owners are retained. Initial observed keys must be
+covered by the retained PRE-plus-POST map; after semantic reads the entire observed
+map must equal it, including hashes, modes and optional absence. Existing schema,
+physical, inventory, read-set, watch, compiler and deadline guards remain intact.
+This closes the dated persistent parser/semantic-owner omission for the enumerated
+owners only. Old records missing required inputs fail closed: fresh capture/review
+is required, never present-state backfill or historical fingerprint rebinding.
+BEFORE's seven old acceptances diagnose the bug, not correct behavior. Across
+distinct fresh AFTER and absent-catalog captures, **33 controls yield 29 rejections
+and 4 positives**; synthetic omission fingerprints are test-only. Parent evidence:
+**321 pure / 3 deselected**, **4 wrappers / 1 deselected**; 23 sampling, 29 claim,
+5 alias, 5 read-set controls and 22 refs. Independent 14 distinct logical controls
+and overlapping 321 tests are not summed. Thirteen fresh Python producer/receipt
+cases retain **1030 POST claims**, not native fidelity.
+Producer **55.156–56.398s** uses **75s diagnostics**, not measured speedup,
+35s compliance or changed production budgets. Complete imports/runtime/stdlib/
+PyYAML and loaded-code authentication, cc1/cpp/includes, hidden later reads,
+arbitrary ABA/atomic snapshots, global history, parent lease, configuration
+migration and native/consumer transaction gates remain open. All 24 states and
+other obligations survive; C1.3/full goal remain unfinished, with no production
+consolidation, source promotion or renewed native/Git denial authority.
+
+### C1.3 captured compiler configuration — 2026-09-15 (limited tooling accepted)
+
+Parent [accepted five code/guide paths](../../out/reviews/compiler-sampling-20260915/code-acceptance.json)
+at **00:40:30**, following independent full [PASS](../../out/reviews/compiler-sampling-20260915/review/review.json)
+published **00:39:21.187348**, SHA-256
+`2c377ff56409f1378117d0f5528ac248b08f79947975f2c0c2b7ff172ab0a4d2`.
+Build compiler/profiles, GCC variants and both guides bind 5 pins/723 proofs;
+40 other pending paths and 28 campaign files were verified. Newly dirty
+`gcc_variants.py` brings **45 paths pending**, not committed. The [source outcome](../../out/reviews/compiler-sampling-20260915/outcome.json)
+closes one implementation, zero formal repairs and two unused repairs under
+original **00:45 / 00:56 / 01:00** work/review/cleanup bounds; this separately
+admitted plan checkpoint does not renew them.
+Pure flags/compiler-ID and catalog parse/select owners preserve ordinary file
+adapters, ordered arguments, defaults and validation/error policies. Profiles
+derive flags/IDs from captured override text; selected catalog schema/models are
+constructed lazily from captured bytes and cached only within that context.
+The earlier constructor JSON syntax/unique-key decode remains: **not one total
+JSON decode**. Unused schema stays lazy, absent and present-empty catalogs remain
+distinct, and missing/unknown configured IDs reject without fallback. Neither
+parsed models nor the context gain reuse authority across output mutations.
+Eleven BEFORE controls observed **17 later text reads** (capture flags/catalog
+6/6; verification 2/3); eleven AFTER controls observe **0**. Synthetic later
+`Path.read_text` data previously yielded `-O3`/wrong identity despite original
+captured hashes and final physical checks; captured `-O1`/original identity now
+wins. This is API-data mismatch evidence, not physical ABA. Two actual flags/catalog
+drifts reject in each phase through unchanged physical/input/deadline guards.
+Fresh explicit-variant capture/verification executes no variant compiler. Normalized
+ordered arguments and identity metadata agree, not private-root stub bytes or whole
+record fingerprints; no historical rebinding or native identity proof follows.
+Parent checks: **321 pure / 3 deselected**, **36 catalog / 1 deselected**,
+**4 wrappers / 1 deselected**; 23 sampling, 29 claim, 5 alias, 5 read-set controls
+and 22 refs. Independent 87 parity/17 profile controls and overlapping 357 existing
+tests/22 refs are not summed. Thirteen fresh **default-compiler Python** producer/
+receipt cases retain **1030 POST claims**, not variant/native compilation.
+Producer **55.115–58.080s** uses **75s diagnostics**, not elapsed improvement,
+35s compliance or changed production budgets. Full runtime/import/stdlib/PyYAML/
+loaded-code, compiler-backend/include, hidden later-read, global history, parent
+lease, configuration migration and native/consumer closure remain open. All 24
+states and other obligations survive; no C1.3/full-goal completion, production
+consolidation or renewed source/native/Git denial authority.
+
+### C1.3 captured source and map semantics — 2026-09-15 (limited tooling accepted)
+
+Parent [accepted six code/guide paths](../../out/reviews/source-sampling-20260915/code-acceptance.json)
+at **01:28:24**, following independent [static semantic PASS](../../out/reviews/source-sampling-20260915/manual-review/review.json)
+published **01:27:45**, SHA-256
+`747c32eb17fb07e9e849eabd88922fc99e190e7e31bfd738968de0ca9f29a4e4`.
+Domain claims/sources, profile capture/preservation and both guides bind
+6 pins/845 independently hashed proofs; 41 unchanged pending paths and 28 campaign
+files were verified. **47 paths remain pending**, not committed. The
+[accepted source outcome](../../out/reviews/source-sampling-20260915/accepted-outcome.json)
+retains the original **01:35 / 01:47 / 01:51** work/review/cleanup bounds.
+Source implementation and diagnostic budgets are not renewed by this separate
+plan admission or by the safer read-only review.
+Explicit source readers preserve strict metadata, expected-lift, collision and
+ownership rules; only `None` selects ordinary UTF-8 file reads. Empty supplied
+text never falls back; existing support-file and legacy metadata semantics remain.
+Compiled names reuse canonical `parse_map` results from captured target-local
+text once per pass. `None` and an empty map remain distinct: an empty supplied
+map rejects missing names without disk fallback. No shared/SDK substitution or
+synthesized name is admitted; callers own supplied-data provenance/freshness.
+Both consumers use captured bytes while retaining complete observed-input-map,
+physical, inventory, boundary and deadline guards; no historical receipt rebind.
+Parent's **7 BEFORE / 7 AFTER** controls show **461 later text reads → 0**:
+capture 304 C + 4 map reads; POST verification 151 C + 2 map reads. Synthetic
+`Path.read_text` substitution is not physical ABA. Separate actual source/map
+mutations reject twice in each phase through unchanged ProfileContext guards.
+Parent tests: **321 pure / 3 deselected**, **15 map/function-ID** and
+**4 wrappers / 1 deselected**; 23 sampling, 29 claim, 5 alias, 5 read-set controls
+and 22 refs. Thirteen fresh Python producer/receipt cases retain **1030 POST
+claims**, not native fidelity. Counts/overlaps are not summed.
+The independent reviewer inspected semantics and verified hashes, **not rerun
+parent tests**. The [initial DEFERRED review](../../out/reviews/source-sampling-20260915/review/review.json)
+and [failed-review outcome](../../out/reviews/source-sampling-20260915/outcome.json)
+preserve incorrect metadata/API expectations, nonexistent test-file collection
+failure and the unadmitted v3 transformation failure/overrun. All remain excluded
+from passing validation; no new custom fixture or repaired runner was executed.
+Producer **55.125–55.590s** uses **75s diagnostics**, not elapsed improvement,
+35s compliance or changed production budgets. Full history/runtime/loaded-code/
+compiler-backend/include/later-read, parent-lease, configuration migration and
+native/consumer closure remain open. All 24 states and other obligations survive;
+no C1.3/full-goal completion or renewed source/native/Git denial authority.
+Plan review remains a separate gate; retained full-plan context plus this exact
+delta is not a claim to freshly reread every historical artifact.
 
 ## Current skill-only operator correction
 
@@ -2173,6 +2808,12 @@ Autonomous naming passes the original `--work-deadline` to public lifecycle node
 and a positive snapshot `--reserve-seconds` covering those remaining phases.
 Recheck the remaining budget immediately before editing; insufficient time defers
 before application. Reserve checks promise neither completion nor a fresh allowance.
+
+Before admitting a canonical naming source action, require a read-only owner
+`bin/harness naming reconcile TARGET` preview with `added: []` and `summary.changed: false`;
+retain report/summary pins. Any additions/count repair require separately authorized
+owner publication after independent code review, then a fresh no-change preview.
+Never spend a source attempt against stale accounting or use this check to renew a spent mission.
 
 Index refreshes and active-session reviews have standing authorization; no repetitive
 user prompts. Preserve frozen proofs before refresh and never invalidate an active
@@ -2453,7 +3094,7 @@ Macro-tooling continuation: reverse-index v13 repairs unique target-owned
 source/function associations for absolute and relative paths; ambiguous and
 generated owners remain unlinked. Native rebuild retains all 6,580 macro uses and
 links 1,010; an in-memory comparison preserves every other use fact. Read-only
-`bin/macro-audit describe ID [--target TARGET]` exposes member sources, existing
+`bin/harness macros describe ID [--target TARGET]` exposes member sources, existing
 file-level lexical macro context, and review gates without narrowing the global
 candidate fingerprint. The pilot report
 `out/reviews/codex-macro-resolution-panel.json` retains ten members (three focused,
@@ -2467,7 +3108,7 @@ completion.
 
 The subsequent impact lookup follows global indexed consumers and target-qualified
 definition-body dependencies, including cycles, without claiming preprocessor
-binding or expanding write scope. `bin/macro-audit impact DEFINITION_ID` and the
+binding or expanding write scope. `bin/harness macros impact DEFINITION_ID` and the
 descriptor's impact section expose fourteen `PANEL_ADVANCE_X` uses across three
 targets: ten with limit 320, four with limit 17. This is wider than both the focused
 pilot and its exact group. Evidence is retained in
@@ -2544,7 +3185,7 @@ parent compiler failures passed with approved sandbox escalation. Existing
 source/index/macro checks passed 139 cases; whitespace checks pass. No installed
 formatter was available; no dependencies were installed.
 
-All 23 snapshots remained fresh. After source acceptance, parent ran `bin/index`
+All 23 snapshots remained fresh. After source acceptance, parent ran `bin/harness analysis index`
 once: all three lifecycle rows now read exact, and the selected
 `exact_group:8e1ad03b4ba92303` query clears its registry-level no-exact-member
 blocker. `out/reviews/codex-panel-macro-after-index.json` still reports blocked
@@ -2804,7 +3445,7 @@ and semantics. The [signedness lesson](../agents/matching-playbook.md#signedness
 records the distinction between caller conversion and callee declaration.
 
 The user specifically authorized installing clang-format; version 23.1.0 is now
-local to `.venv`. All three candidate C files pass formatting and `bin/promote`;
+local to `.venv`. All three candidate C files pass formatting and `bin/harness lift promote`;
 target symbol checks and Splat regeneration pass. Existing header-wide formatter
 violations reproduce at HEAD and remain outside this source change. Source,
 header and map edits can stale analysis/cleanup evidence; no frozen index, naming
@@ -3291,7 +3932,7 @@ S3.2 and S4 remain unfinished; frozen production pins are unchanged.
 
 ### Native review transport rollout
 
-The reviewer transport (`bin/agent-run`, `context.dispatch/codex/journal`
+The reviewer transport (`bin/harness decomp`, `context.dispatch/codex/journal`
 and the `bof3-re` dispatch helper) is scoped to explicit read-only review. Its initial
 code review, private-artifact/hold/event probes and 320 distinct existing checks
 passed before the native attempt. Shared `run_bounded` now supports selector-driven
@@ -3375,7 +4016,7 @@ feature does not complete S3.2 or alter its frozen queues and authority gates.
 
 The symbol-naming routing prerequisite now follows the same concern ownership:
 `harness.naming.opportunities` owns target-local read-only leads and legacy
-inventory projection. `bin/naming-audit opportunities` / `describe-opportunity`
+inventory projection. `bin/harness naming opportunities` / `describe-opportunity`
 bind exact spelling and mapped address to one map-byte fingerprint; inventory
 no longer scans every target or authored-source filename. One explicit-only
 `bof3-naming` skill replaces the separate evidence and identity skills, retaining
@@ -3636,7 +4277,7 @@ must satisfy them before the corresponding phase is marked done.
 - Owner: domain and combiner owners
 - Depends: none
 - Blocker: none
-- Evidence: domain/functions.py and combiner/inspection.py expose address-selected records and lexical ranges; bounded independent release review 01a089de-ca01-7261-9efd-7a82f332d533 accepts this slice only, retained at out/reviews/combiner-foundation-c1-20260910/review.md. All 147 relevant checks pass (one known Git-writing mode check deselected); wrapper checks 48 pass with pre-existing HEAD inventory omission bin/agent-run left reported. Thirty disposable negative cases, mixed records and all 14 panel records pass; Ruff and 119 documentation references pass. Earlier reviewer findings fixed; actual handles closed, no native or source acceptance claimed.
+- Evidence: domain/functions.py and combiner/inspection.py expose address-selected records and lexical ranges; bounded independent release review 01a089de-ca01-7261-9efd-7a82f332d533 accepts this slice only, retained at out/reviews/combiner-foundation-c1-20260910/review.md. All 147 relevant checks pass (one known Git-writing mode check deselected); wrapper checks 48 pass with pre-existing HEAD inventory omission bin/harness decomp left reported. Thirty disposable negative cases, mixed records and all 14 panel records pass; Ruff and 119 documentation references pass. Earlier reviewer findings fixed; actual handles closed, no native or source acceptance claimed.
 - Acceptance: ordinary C89 bodies and body-emitting invocation records isolate metadata/progress; ambiguous, duplicate, nested or unsupported inputs reject; existing checks, disposable characterizations and independent review. Inspection never proves macro expansion or enables production combination.
 
 2. [C1.2] (in-progress) Migrate source claims, layout, index and all metadata consumers.
@@ -3676,7 +4317,7 @@ that separate metadata audit. Full C1.2 consumer migration remains unfinished.
 - Owner: build, toolchain and matching owners
 - Depends: C1.1
 - Blocker: none
-- Evidence: bin/cc now partitions one complete maspsx translation by attached records and reviewed ownership; scratch two-panel GCC/native proof passes. Path-keyed profile preservation, full producer freshness and native match/_asm_link.py text-prefix extraction still need migration; catalog/default GCC selection remains authoritative.
+- Evidence: Historical two-panel scratch partition/placement proof remains dated evidence with production sources unchanged. Accepted tooling now includes symbol-bounded ELF extraction/cache v4, configured and externally pinned PRE–POST profile validation, and twelve-file producer dispatch/input observation (2026-09-14 13:16:34; script-stub validation, not fresh native proof). Python-only preservation decoding optimization was accepted at 14:21:39; whole-verifier speedup and historical drift cause remain unproven. Invocation-local profile observation was accepted at 15:09:32 with the late-absence fence repaired; measured deep-fixture improvement does not close full freshness or persistent Make/Ninja build invalidation, the next structural priority. Compiler profiles remain path-keyed, including default GCC 2.7.2; no silent compiler/flag migration. Native all-member proof, configuration migration, full producer/input/include/toolchain freshness, persistent receipts, public grouped/cache/consumer parity and UNKNOWN intermittent ancestor drift remain open; see the dated checkpoints. Limited configured producer/checker receipts were accepted at 16:16:40; always-compile provenance does not close persistent graph consumption or authorize reuse, native proof or historical deadlines. The limited grouped graph/inventory stage was accepted at 17:14:27, superseding earlier graph-absence notes only for supported always-compile public Make/Ninja entrypoints; actual root configure/native proof, parent-lease handoff, multi-group routing and full closure/cache/configuration migration remain open. Source-bound routing was accepted at 18:11:54 for mixed ordinary/grouped selection with precompiler collision reservations, without environment mutation or pin clearing; multiple table entries do not establish composable v2 global histories, and parent-lease/full-closure/native gates remain open. At 19:27:05, a directory-size-only equality exception with retained raw fields and bounded descriptor-backed membership was accepted; endpoint equality is not continuity/ABA or kernel-cause proof, and semantic-generation binding, history/lease/full-closure/native gates remain open. Captured TOML parsing/cache and exact per-load inventory binding were accepted at 20:18:15 across profile/PRE–POST owners; this closes the TOML discovery/consumption mismatch only, not live claim validation, atomic model-plus-claim/history closure or remaining lease/native/consumer gates. Paired model/claim generation and observed-present failure propagation were accepted at 21:40:20; exact per-load samples/read sets close that correctness gap only. The measured producer regression, later-layout/runtime/include/toolchain/history/lease/native/consumer closure remain open; no optimization or full C1.3 acceptance follows. Pass-scoped directory-descriptor batching was accepted at 22:36:15 with fresh samples and unchanged original observation guards; the measured 8.8369% local elapsed reduction is not whole-producer/native proof or 35s compliance. History, full input/runtime/include/toolchain/later-layout, lease, configuration migration and consumer/native closure remain open. Captured Splat projection was accepted at 23:36:21 for the selected profile/preservation consumers only; persistent domain/layout.py owner-input omission and later-read/runtime/include/toolchain/history/lease/configuration/consumer/native closure remain open. Duplicate-I/O removal supplies no timing, production-budget or full C1.3 acceptance. Explicit semantic/helper owner coverage and complete observed PRE-plus-POST map equality were accepted at 2026-09-15 00:07:16, closing the enumerated persistent parser-owner omission only. Full import/runtime/loaded-code/toolchain/include/history/later-read/lease/configuration/native/consumer closure remains open; no timing, production-budget or full C1.3 acceptance follows. Captured compiler override/catalog interpretation was accepted at 2026-09-15 00:40:30 with unchanged adapters/defaults and context-local lazy selected models; initial JSON syntax/uniqueness decoding remains separate. This removes the measured later configuration-text reads only, not broader runtime/history/later-read/lease/configuration/native/consumer closure, elapsed-performance or full C1.3 obligations. Captured C ownership and canonical target-local map semantics were accepted at 2026-09-15 01:28:24 following independent static inspection/hash verification, not independent test execution. Optional reader/map seams preserve default file APIs and final physical/input-map guards; measured later reads fall to zero without elapsed/native/full-closure proof. Prior failed reviewer diagnostics and unadmitted overrun remain excluded; all broader C1.3 obligations and source/native/Git denial limits remain.
 - Acceptance: independently select whole-object placement or deterministic per-function compilation projections; preserve every effective compiler/flag profile or reject, no duplicated shared state or unbound generated inputs. Prove per-symbol original placement/relocation/size/instruction/byte checks including noncontiguous functions, calls and data sections; all-member native positive and negative probes. Scoped reviewed execution only; no sandbox changes or installs.
 
 Read-only scout `01a08a05-dac7-77c0-9588-81539af9a405` completed and closed within
@@ -3961,7 +4602,7 @@ classified every non-`D_` map name as a function despite the target-owned global
 declaration. The repair uses existing `header_claim` global type usages, rejects
 function-entry/prototype collisions, preserves unproven fallback and target
 isolation, and bumps the disposable index schema to v12. No domain identity or
-storage authority changed. Parent ran `bin/index --recover` (exit 0); subsequent
+storage authority changed. Parent ran `bin/harness analysis index --recover` (exit 0); subsequent
 live queries return `g_battle_work` as data. `describe` still reports unknown
 storage authority outside the payload: indexing is not fixed-RAM ownership proof.
 Battle15 snapshot is fresh; binary SHA-256 remains
@@ -4157,7 +4798,7 @@ and relevant naming lifecycle tests, then `just check` when practical. Tests
 assert behavior/parsed structures, not Markdown strings. Fixtures may demonstrate
 rejection/recovery but cannot substitute for actual native stop/resume and live
 owner-gate evidence. List NOT RUN paths explicitly. Plan-only checks are
-`bin/plans status autonomous-bof3-decompilation.md` and existing `test_plans.py`.
+`bin/harness plans status autonomous-bof3-decompilation.md` and existing `test_plans.py`.
 
 Proposed finite launch ceilings: five entries above, one writer, two repair rounds
 per entry, 60 total spawns, two hours campaign wall time; preserve stricter native
@@ -4229,7 +4870,7 @@ extension edits; only the current targeted test authorization above supersedes i
 
 Reviewer `3721cee2` (workflow `a2e7d74f`) accepted the exact battle15 additive
 operation. Parent verified all five reviewed code hashes and report hash, then
-ran `bin/naming-audit reconcile emi/battle/battle/15 --apply`. Only missing
+ran `bin/harness naming reconcile emi/battle/battle/15 --apply`. Only missing
 `function:func_800A3638` was appended; all 249 prior ordered rows, top-level
 values, mode 0770 and 23 other report-set files were preserved. Report SHA-256
 is `42451b711ee48eff8cc35641345d27f2cdd519a63341d2854454de7bdb1558af`.
@@ -4272,7 +4913,7 @@ candidate: `emi/battle/battle/15@0x800A3638`, subject to fresh mission checks.
 The owner-requested performance detour is complete: capture-local source lookup
 reduced profiled battle15 capture from 5.14s to 1.23s with identical snapshot JSON.
 Reusing existing manifest/PsyQ inputs and batch source lookup reduced profiled
-index rebuild from 555s to 10.0s; actual `bin/index` took 4.89s. All table contents
+index rebuild from 555s to 10.0s; actual `bin/harness analysis index` took 4.89s. All table contents
 were equal and 105 existing focused tests passed. No new cache, dependency or
 regression tests; these timings do not accept S3/S4 autonomy.
 

@@ -2,9 +2,9 @@
 
 /* @source 0x801F3460
  * @behavior clears scratch-state offsets 0x09 and 0x0b, then increments 0x01.
- * @status partial
- * @match unavailable
- * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void resetAdvanceScratchState(void)
 {

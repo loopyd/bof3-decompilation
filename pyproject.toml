@@ -32,8 +32,27 @@ package-dir = {"" = "tools/python"}
 where = ["tools/python"]
 
 [tool.pytest.ini_options]
-pythonpath = ["tools/python"]
+pythonpath = [
+    "tools/python",
+    "tools/python/tests",
+    "tools/python/tests/analysis",
+    "tools/python/tests/application",
+    "tools/python/tests/build",
+    "tools/python/tests/commands",
+    "tools/python/tests/decomp",
+    "tools/python/tests/domain",
+    "tools/python/tests/emi",
+    "tools/python/tests/macros",
+    "tools/python/tests/naming",
+    "tools/python/tests/perf",
+    "tools/python/tests/skills",
+    "tools/python/tests/toolchain",
+    "tools/python/tests/types",
+]
 testpaths = ["tools/python/tests"]
+# pytest's default norecursedirs excludes a directory named "build"; the
+# per-module unit folder of that name must still be collected.
+norecursedirs = ["*.egg", ".*", "_darcs", "CVS", "dist", "node_modules", "venv", "{arch}"]
 
 [tool.ruff]
 target-version = "py312"

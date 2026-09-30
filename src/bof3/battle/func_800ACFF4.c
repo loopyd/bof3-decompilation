@@ -4,7 +4,7 @@
  * @source 0x800ACFF4
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_800ACFF4(void) {
   g_battle_work[0] = 0;

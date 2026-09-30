@@ -72,11 +72,11 @@ segments:
     - asm
     - func_801F3608
   - - 2608
-    - asm
-    - func_801F3630
+    - c
+    - advanceCounter2By4World02Area10013_801F3630
   - - 2648
-    - asm
-    - func_801F3658
+    - c
+    - retreatCounter2By4World02Area10013_801F3658
   - - 2688
     - c
     - setTwoWorld02Area10013_801F3680
@@ -120,9 +120,9 @@ segments:
     - asm
     - func_801F3D70
   - - 5244
-    - asm
-    - func_801F407C
+    - rodata
+    - T_801F407C
   - - 5276
     - asm
-    - func_801F409C
+    - D_801F409C
 - - 9072

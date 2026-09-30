@@ -4,7 +4,7 @@
  * @source 0x801E0C20
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchCompanion(void) {
   dispatchArea030CompanionHandler();

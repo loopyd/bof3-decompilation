@@ -9,13 +9,17 @@ load_address = 0x801f2c00
 
 sources = [
     "src/bof3/world/func_801F2C48.c",
+    "src/bof3/world/func_801F2C80.c",
     "src/bof3/world/resetWorkareaSelectMode2.c",
     "src/bof3/world/seedWorkTable.c",
     "src/bof3/world/initSpriteSlot.c",
     "src/bof3/world/scanFreeSlot.c",
     "src/bof3/world/refreshSpriteSlots.c",
+    "src/bof3/world/func_801F2D3C_area02813.c",
+    "src/bof3/world/func_801F318C.c",
     "src/bof3/world/func_801F3414.c",
     "src/bof3/world/func_801F341C.c",
+    "src/bof3/world/func_801F3424_area02813.c",
 ]
 support_sources = [
     "src/bof3/support/area02813_symbols.c",

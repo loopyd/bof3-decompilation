@@ -79,8 +79,10 @@ segments:
     - '@source: src/bof3/ui/func_801D43A4.c'
     - '@behavior: shop phase sub-step reached through entry 2 of the phase table D_801E52F0, which the dispatcher func_801D41B0 selects with the UI sub-step byte D_80148652: appends the fullscreen dim tile through appendFullscreenDimTile, calls the shared cue dispatcher func_801636A0 with the constants 0 and 1, re-arms the frame timer phaseTimer with 0x96 and advances the UI sub-step byte D_80148652 by one.'
   - - 14320
-    - asm
-    - func_801D43F0
+    - c
+    - tickPhaseTimerThenAdvanceUiSubstep
+    - '@source: src/bof3/ui/tickPhaseTimerThenAdvanceUiSubstep.c'
+    - '@behavior: shop UI sub-step handler at entry 3 of the sub-step handler table D_801E52F0, which the dispatcher func_801D41B0 selects with the UI sub-step byte D_80148652: appends the fullscreen dim tile through appendFullscreenDimTile, then counts the shared frame timer phaseTimer down and, when the timer was already zero or its decrement reaches zero, polls the main-exe predicate func_80163EA0 and, only when that reports a nonzero low byte, advances the UI sub-step byte D_80148652 by one and switches the frontend-local mode through func_8014ECAC with the constant 1; a timer that is still running returns without either side effect.'
   - - 14444
     - asm
     - func_801D446C
@@ -163,8 +165,10 @@ segments:
     - asm
     - func_801D5CB0
   - - 20888
-    - asm
+    - c
     - func_801D5D98
+    - '@source: src/bof3/ui/func_801D5D98.c'
+    - '@behavior: shop sub-step handler at table entry 0x12 of the sub-step handler table D_801E530C (dispatched through func_801D46A4 with the UI sub-step byte D_80148652 as index): emits the shop panel strip through this EMI''s panel strip emitter func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth argument, then clears the UI sub-step byte D_80148652. It then tests the overlay flag byte D_801E60F0 against 2 and the saved-state byte D_8014865C against the -2 sentinel: when either matches and the main-RAM byte D_80143BB4 is set while the overlay byte D_801E6110 is clear, it clears the two halfword cells D_80145AC8/D_80145AC6 and the work-block byte D_8014865B, arms the sub-step byte D_80148652 with 0x14 (the following table entry) and plays the main-exe cue 0xD0 through the cue dispatcher func_80150284; when either matches otherwise it resets the frame timer phaseTimer and advances the UI phase byte D_80148651 by one. When neither gate byte matches it restarts the sequence at phase byte 1 with sub-step 1.'
   - - 21128
     - asm
     - func_801D5E88
@@ -194,8 +198,10 @@ segments:
     - '@source: src/bof3/ui/func_801D65A0.c'
     - '@behavior: shop phase sub-step: appends the fullscreen dim tile through appendFullscreenDimTile, calls the shared cue dispatcher func_801636A0 with the constants 0 and 1, re-arms the frame timer phaseTimer with 0x96 and advances the UI phase byte D_80148651 by one.'
   - - 23020
-    - asm
-    - func_801D65EC
+    - c
+    - tickPhaseTimerThenAdvanceUiPhase
+    - '@source: src/bof3/ui/tickPhaseTimerThenAdvanceUiPhase.c'
+    - '@behavior: shop UI phase step at entry 3 of the phase step table D_801E5360, which the dispatcher func_801D6184 selects with the UI phase byte D_80148651: appends the fullscreen dim tile through appendFullscreenDimTile, then counts the shared frame timer phaseTimer down. When the timer is already zero, or its decrement reaches zero, it polls the main-exe predicate func_80163EA0 and, only when that reports a nonzero low byte, advances the UI phase byte D_80148651 by one and switches the frontend-local mode through func_8014ECAC with the bare constant 1; a timer that is still running returns without either side effect.'
   - - 23144
     - c
     - func_801D6668
@@ -242,8 +248,10 @@ segments:
     - '@source: src/bof3/ui/func_801D7080_shop00.c'
     - '@behavior: clears the 0x40-byte main-RAM text buffer D_80145AD4, then formats the shop header row through sprintf into that buffer with the EMI format string D_801D0C98 and the seven digit strings of the char-pointer table D_801E5434 selected by the slot byte D_801E6108 and by the tens/units halves of the front-end clock bytes D_80144FC0 (hours) and D_80144FC1 (minutes) and of the level byte D_8014496E.'
   - - 26120
-    - asm
-    - func_801D7208
+    - c
+    - rebuildPanelRecordTable
+    - '@source: src/bof3/ui/rebuildPanelRecordTable.c'
+    - '@behavior: rebuilds the three 0x1C-byte records of the panel record table D_801E6098: the +0x15 slot byte of each record is first cleared to 0xFF, then for every record index i of 0..2 the 0x18-byte-stride main-RAM table D_8018E990 is scanned in order and the first entry whose byte at +0x11 minus 0x30 equals i is passed to func_801EEC30 together with the constants 1, 1, 0x1C and 0xEA0, after which the seven 32-bit words held at the fixed main-RAM address 0x800C26A0 are copied into that record and the matching entry index is stored into the record''s +0x15 slot byte.'
   - - 26436
     - c
     - func_801D7344
@@ -880,8 +888,10 @@ segments:
     - asm
     - func_801E45C0
   - - 81964
-    - asm
+    - c
     - func_801E4C2C
+    - '@source: src/bof3/ui/func_801E4C2C.c'
+    - '@behavior: shop entry requirement predicate reached from the shop list builder func_801E45C0, which calls it once per non-empty slot with the stored slot byte minus one: for the ids 0xB, 0xD and 0xE it reports whether bit 3, 4 or 5 of the main-RAM flag byte D_80144F59 is set and for the id 0xC whether flag 0x6C of the main-RAM flag bank D_80144F28 is set, which it reads through the shared flag tester func_8015B5D4; for every other id it selects the 0xFF-terminated requirement list of the EMI-local pointer table D_801E5FC0 with that id and returns 1 when the list is empty or every listed id is recorded in the skill lists scanned by func_801E4D4C, otherwise 0.'
   - - 82252
     - c
     - func_801E4D4C
@@ -891,8 +901,10 @@ segments:
     - asm
     - func_801E4DF4
   - - 82588
-    - asm
+    - c
     - func_801E4E9C
+    - '@source: src/bof3/ui/func_801E4E9C.c'
+    - '@behavior: shop panel emitter reached from the panel state dispatcher func_801E440C, which forwards the global panel task root: emits the panel backing through func_801AE3F0 with the task''s x/field-6 halfwords offset by 3, the constants 0x72 and 0x58, the constant 0 and the main-RAM CLUT-bank byte D_80144952. It then walks the eight 0xA4-byte-stride field records at D_80144952 + 0x1B, and for every record whose byte at +2 has bit 0 set and whose byte at +0x16 matches the main-RAM byte D_80148361 it emits that record through func_801E4FC8 at the task''s x/field-6 coordinates plus a running (x, y) icon offset (the record byte at +0 is the third argument). The x offset steps by 0x25 and wraps to 0 with the y offset stepping by 0x2A once it reaches 0x4B. Finally it draws the panel frame through func_801DD350 with the task''s x/field-6 halfwords and the constants 0xD and 0xA.'
   - - 82888
     - asm
     - func_801E4FC8

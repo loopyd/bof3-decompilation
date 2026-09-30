@@ -5,7 +5,7 @@
  * @source 0x80196CF0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 allocPaletteSlot(u8* owner, u8* source_table) {
   u8 slot_index;

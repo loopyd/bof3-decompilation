@@ -1,0 +1,690 @@
+--- a/src/cdrom/cdriso-sbi.cc
++++ b/src/cdrom/cdriso-sbi.cc
+@@ -18,6 +18,7 @@
+  ***************************************************************************/
+ 
+ #include "cdrom/cdriso.h"
++#include "core/transactions.h"
+ 
+ bool PCSX::CDRIso::LoadSBI(const char *filename) {
+     IO<File> sbihandle(new UvFile(filename));
+@@ -30,6 +31,7 @@
+ 
+     // init
+     sbicount = 0;
++    m_historySbiKnown = true;
+ 
+     // 4-byte SBI header
+     sbihandle->read(buffer, 4);
+@@ -44,6 +46,8 @@
+ }
+ 
+ bool PCSX::CDRIso::CheckSBI(const uint8_t *time) {
++    if (History::CD::active() && (!m_historySbiKnown || sbicount != 0))
++        History::fail(History::Failure::Unsupported);
+     int lcv;
+ 
+     // both BCD format
+@@ -54,7 +58,7 @@
+     return false;
+ }
+ 
+-void PCSX::CDRIso::UnloadSBI() { sbicount = 0; }
++void PCSX::CDRIso::UnloadSBI() { sbicount = 0; m_historySbiKnown = true; }
+ 
+ bool PCSX::CDRIso::opensbifile(const char *isoname) {
+     char sbiname[MAXPATHLEN];
+--- a/src/cdrom/cdriso.cc
++++ b/src/cdrom/cdriso.cc
+@@ -275,6 +275,7 @@
+     m_subChanMixed = false;
+     m_subChanRaw = false;
+     m_pregapOffset = 0;
++    m_historyPregapKnown = true;
+     m_cdrIsoMultidiskCount = 1;
+     m_multifile = false;
+ 
+@@ -445,7 +446,11 @@
+     int sector = time.toLBA() - 150;
+     long ret;
+ 
+-    if (!m_cdHandle || m_cdHandle->failed()) {
++    const bool present = bool(m_cdHandle);
++    const bool unavailable = present && m_cdHandle->failed();
++    History::CD::predicate(History::CD::Predicate::Availability,
++        {uint32_t(present), uint32_t(present), uint32_t(unavailable)});
++    if (!present || unavailable) {
+         PCSX::History::CD::mediaOutcome(5, 0);
+         return false;
+     }
+@@ -456,6 +461,8 @@
+             if (sector < m_pregapOffset) m_subChanMissing = true;
+         }
+     }
++    if (History::CD::active()) History::CD::predicate(History::CD::Predicate::SubchannelState,
++        {1, uint32_t(bool(m_subHandle)), uint32_t(m_subChanMixed), uint32_t(m_subChanMissing)});
+ 
+     ret = (*this.*m_cdimg_read_func)(m_cdHandle, 0, m_cdbuffer, sector);
+     if (ret < 0) {
+@@ -507,6 +514,8 @@
+ 
+ // gets subchannel data
+ const PCSX::IEC60908b::Sub *PCSX::CDRIso::getBufferSub() {
++    if (History::CD::active()) History::CD::predicate(History::CD::Predicate::SubchannelState,
++        {2, uint32_t(bool(m_subHandle)), uint32_t(m_subChanMixed), uint32_t(m_subChanMissing)});
+     if ((m_subHandle || m_subChanMixed) && !m_subChanMissing) {
+         return &m_subbuffer;
+     }
+@@ -576,3 +585,109 @@
+ }
+ 
+ bool PCSX::CDRIso::failed() { return !m_cdHandle && !m_ecm_savetable && !m_decoded_ecm; }
++
++uint32_t PCSX::CDRIso::historyFile(File* file, uint32_t depth) {
++    if (!file) return 0;
++    if (depth > 4) throw std::runtime_error("CD file graph depth");
++    for (uint32_t n = 0; n < m_historyFileCount; ++n) {
++        if (m_historyFiles[n] != file) continue;
++        if (depth + m_historyDepths[n] > 4) throw std::runtime_error("CD cached file graph depth");
++        return n+1;
++    }
++    if (m_historyFileCount == HistoryFiles) throw std::runtime_error("CD file graph bound");
++    uint32_t parent = 0, kind = 1;
++    uint64_t start = 0, size = 0;
++    std::u8string path;
++    if (auto* slice = dynamic_cast<SubFile*>(file)) {
++        kind = 2;
++        parent = historyFile(slice->m_file ? slice->m_file.operator->() : nullptr, depth+1);
++        if (!parent) throw std::runtime_error("CD slice without backing file");
++        start = slice->m_start; size = slice->m_size;
++    } else if (dynamic_cast<UvFile*>(file)) {
++        path = file->filename().generic_u8string();
++        if (path.empty() || path.size() > 4096 || path.find(u8'\0') != path.npos)
++            throw std::runtime_error("CD backing path bound");
++        size = file->size();
++    } else {
++        throw std::runtime_error("unsupported CD backing file");
++    }
++    if (m_historyFileCount == HistoryFiles) throw std::runtime_error("CD file graph bound");
++    const uint32_t ordinal = ++m_historyFileCount;
++    m_historyFiles[ordinal-1] = file;
++    m_historyDepths[ordinal-1] = parent ? m_historyDepths[parent-1]+1 : 0;
++    auto word = [&](uint32_t value) {
++        for (unsigned b = 0; b < 4; ++b) m_historyImage.push_back(value >> (b*8));
++    };
++    word(ordinal); word(kind); word(parent); word(path.size());
++    word(start); word(start >> 32); word(size); word(size >> 32);
++    m_historyImage.insert(m_historyImage.end(), path.begin(), path.end());
++    return ordinal;
++}
++
++bool PCSX::CDRIso::historyGeometry(std::array<uint32_t, HistoryWords>& words) {
++    if (m_numtracks < 0 || m_numtracks >= int(MAXTRACKS) || m_useCompressed || m_compr_img ||
++        m_ecm_file_detected || m_ecm_savetable || m_decoded_ecm || m_subHandle ||
++        m_subChanMixed || m_subChanRaw || !m_ppf.empty() || (m_historySbiKnown && sbicount)) return false;
++    uint32_t backend = 0;
++    if (m_cdimg_read_func == &CDRIso::cdread_normal) backend = 1;
++    else if (m_cdimg_read_func == &CDRIso::cdread_2048) backend = 2;
++    else if (m_cdimg_read_func) return false;
++    if (m_cdHandle && (!backend || !m_historyPregapKnown)) return false;
++    auto ordinal = [&](IO<File>& handle) {
++        if (!handle) return uint32_t(0);
++        auto* file = handle.operator->();
++        for (uint32_t n = 0; n < m_historyFileCount; ++n)
++            if (m_historyFiles[n] == file) return n+1;
++        return UINT32_MAX;
++    };
++    const auto main = ordinal(m_cdHandle);
++    if (main == UINT32_MAX) return false;
++    words = {};
++    words[0] = m_numtracks; words[1] = MAXTRACKS; words[2] = m_historyPregapKnown;
++    words[3] = m_historyPregapKnown ? m_pregapOffset : 0;
++    words[4] = m_multifile; words[5] = m_isMode1ISO; words[6] = m_cddaBigEndian;
++    words[7] = backend; words[8] = main; words[13] = m_historySbiKnown;
++    words[14] = 1;  // PPF empty, including in-memory patches.
++    const auto msf = [](IEC60908b::MSF value) {
++        return uint32_t(value.m) | (uint32_t(value.s) << 8) | (uint32_t(value.f) << 16);
++    };
++    for (unsigned n = 0; n < MAXTRACKS; ++n) {
++        auto& track = m_ti[n];
++        const auto file = ordinal(track.handle);
++        if (file == UINT32_MAX || track.cddatype == trackinfo::CCDDA) return false;
++        const unsigned first = 16 + n*7;
++        words[first] = uint32_t(track.type); words[first+1] = msf(track.start);
++        words[first+2] = msf(track.pregap); words[first+3] = msf(track.length);
++        words[first+4] = track.start_offset; words[first+5] = track.cddatype; words[first+6] = file;
++    }
++    return true;
++}
++
++bool PCSX::CDRIso::historyPrepare() {
++    if (History::active() || !History::CD::idle()) return false;
++    m_historyFileCount = 0; m_historyFiles.fill(nullptr);
++    m_historyImage.clear();
++    try {
++        m_historyImage.resize(HistoryWords * 4);
++        historyFile(m_cdHandle ? m_cdHandle.operator->() : nullptr, 0);
++        for (auto& track : m_ti) historyFile(track.handle ? track.handle.operator->() : nullptr, 0);
++        if (!historyGeometry(m_historyGeometry)) { m_historyImage.clear(); return false; }
++        for (unsigned n = 0; n < HistoryWords; ++n)
++            for (unsigned b = 0; b < 4; ++b) m_historyImage[n*4+b] = m_historyGeometry[n] >> (b*8);
++    } catch (...) {
++        m_historyImage.clear(); return false;
++    }
++    return true;
++}
++
++bool PCSX::CDRIso::historyValidate() {
++    std::array<uint32_t, HistoryWords> geometry{};
++    return !m_historyImage.empty() && historyGeometry(geometry) && geometry == m_historyGeometry;
++}
++
++void PCSX::CDRIso::history(uint32_t phase) {
++    if (!History::CD::active()) return;
++    if (phase > 1 || !historyValidate()) { History::fail(History::Failure::Discontinuity); return; }
++    History::emit(History::Kind::CdImage, phase, {2, uint32_t(HistoryWords), m_historyFileCount, MAXTRACKS},
++        0, m_historyImage.data(), m_historyImage.size(), 1);
++}
+--- a/src/cdrom/cdriso.h
++++ b/src/cdrom/cdriso.h
+@@ -23,6 +23,8 @@
+ #include <zlib.h>
+ 
+ #include <filesystem>
++#include <array>
++#include <vector>
+ 
+ #include "cdrom/ppf.h"
+ #include "core/psxemulator.h"
+@@ -65,6 +67,11 @@
+     unsigned m_cdrIsoMultidiskSelect;
+ 
+     bool CheckSBI(const uint8_t* time);
++    // Preparation runs only while capture is off; validation/emission do no I/O.
++    bool historyPrepare();
++    bool historyValidate();
++    uint32_t historyBytes() const { return m_historyImage.size(); }
++    void history(uint32_t phase);
+ 
+   private:
+     CDRIso();
+@@ -96,6 +103,7 @@
+      * not in the CD image, so that cdrom code can fake subchannel data instead.
+      * XXX: there could be multiple pregaps but PSX dumps only have one? */
+     unsigned int m_pregapOffset;
++    bool m_historyPregapKnown = false;
+ 
+     // compressed image stuff
+     struct compr_img_t {
+@@ -151,7 +159,20 @@
+ 
+     // redump.org SBI files
+     uint8_t sbitime[256][3], sbicount;
++    // Observer provenance: the native counter is not initialized on failed open.
++    // Nonzero tables are unsupported, including native short-read entries.
++    bool m_historySbiKnown = false;
+     PPF m_ppf;
++
++    static constexpr size_t HistoryWords = 16 + MAXTRACKS * 7;
++    static constexpr size_t HistoryFiles = 202;
++    std::array<uint32_t, HistoryWords> m_historyGeometry{};
++    std::array<File*, HistoryFiles> m_historyFiles{};
++    std::array<uint32_t, HistoryFiles> m_historyDepths{};
++    uint32_t m_historyFileCount = 0;
++    std::vector<uint8_t> m_historyImage;
++    bool historyGeometry(std::array<uint32_t, HistoryWords>& words);
++    uint32_t historyFile(File* file, uint32_t depth);
+ 
+     void decodeRawSubData();
+     bool parsetoc(const char* isofile);
+--- a/src/cdrom/ppf.h
++++ b/src/cdrom/ppf.h
+@@ -36,6 +36,7 @@
+   public:
+     ~PPF() { clear(); }
+     void clear() { m_patches.destroyAll(); }
++    bool empty() const { return m_patches.empty(); }
+     // given an input iso filename, attempt to load its corresponding ppf
+     bool load(std::filesystem::path iso);
+     // given an input iso filename, create a new ppf1 file for it from memory patches
+--- a/src/core/cdrom.cc
++++ b/src/core/cdrom.cc
+@@ -97,6 +97,7 @@
+             {uint32_t(m_mode), uint32_t(m_file), uint32_t(m_channel), uint32_t(m_firstSector), uint32_t(m_muted),
+              attenuation, pending, uint32_t(m_read) | (uint32_t(m_reading) << 8) | (uint32_t(m_play) << 16)},
+             H::CD::operation(), nullptr, 0, id);
++        historyContext(phase+1, id);
+     }
+     void historySeal(uint64_t operation) {
+         namespace H = PCSX::History;
+@@ -168,8 +169,25 @@
+             if (std::memcmp(m_historyBytes.data(), m_transfer, m_historyBytes.size()))
+                 H::fail(H::Failure::Association);
+         }
++        historyContext(phase, 0);
++        H::emit(H::Kind::CdBuffer, phase ? 2 : 0, {0, uint32_t(sizeof(m_transfer))}, 0,
++            m_transfer, sizeof(m_transfer), 0);
++        for (const auto slot : {PCSX::PSXINT_CDR, PCSX::PSXINT_CDREAD, PCSX::PSXINT_CDRPLAY,
++                               PCSX::PSXINT_CDRLID, PCSX::PSXINT_CDRDBUF, PCSX::PSXINT_CDRDMA}) {
++            const auto& regs = PCSX::g_emulator->m_cpu->m_regs;
++            const auto target = regs.intTargets[slot];
++            H::emit(H::Kind::CdSchedule, slot,
++                {phase ? 4u : 3u, 0, uint32_t(target), uint32_t(target >> 32), regs.interrupt,
++                 m_historyScheduled[slot].kind}, 0, nullptr, 0, m_historyScheduled[slot].owner);
++        }
++    }
++
++    void historyContext(uint32_t phase, uint64_t id) {
++        namespace H = PCSX::History;
++        if (!H::CD::active()) return;
++        if (!m_historyInitialized) { H::fail(H::Failure::Unsupported); return; }
+         const auto msf = [](MSF value) { return uint32_t(value.m) | (uint32_t(value.s) << 8) | (uint32_t(value.f) << 16); };
+-        std::array<uint32_t, 48> words = {m_ctrl, m_stat, m_statP, m_reg2, m_cmd, m_irq, m_irqRepeated, m_eCycle,
++        std::array<uint32_t, 56> words = {m_ctrl, m_stat, m_statP, m_reg2, m_cmd, m_irq, m_irqRepeated, m_eCycle,
+             m_paramC, m_resultC, m_resultP, m_resultReady, m_transferIndex, m_read, m_reading, uint32_t(m_play),
+             m_seeked, uint32_t(m_mode), uint32_t(m_file), uint32_t(m_channel), uint32_t(m_firstSector), uint32_t(m_curTrack),
+             uint32_t(m_muted), uint32_t(m_suceeded), m_setlocPending, uint32_t(m_locationChanged), msf(m_setSectorPlay),
+@@ -181,23 +199,26 @@
+         const std::array<uint64_t, 6> ids = {m_historyCommand, m_historyQueued, m_historyRead, m_historyPlay,
+             m_historyResponse.published(), m_historyMutation};
+         for (unsigned n = 0; n < ids.size(); ++n) { words[36 + n*2] = ids[n]; words[37 + n*2] = ids[n] >> 32; }
+-        std::array<uint8_t, 216> payload{};
++        words[48] = m_readRescheduled; words[49] = m_trackChanged; words[50] = m_track;
++        words[51] = m_historySubqMask; words[52] = m_historySubqSource;
++        // Hardware mirror only: do not invoke a device read from observation.
++        const auto* chcr = PCSX::g_emulator->m_mem->m_hard + 0x10b8;
++        for (unsigned b = 0; b < 4; ++b) words[53] |= uint32_t(chcr[b]) << (b*8);
++        words[54] = m_reg1Mode; words[55] = m_cmdProcess;
++        std::array<uint8_t, 256> payload{};
+         for (unsigned n = 0; n < words.size(); ++n)
+             for (unsigned b = 0; b < 4; ++b) payload[n*4+b] = words[n] >> (b*8);
+-        std::memcpy(payload.data()+192, m_param, 8); std::memcpy(payload.data()+200, m_result, 16);
++        std::memcpy(payload.data()+224, m_param, 8); std::memcpy(payload.data()+232, m_result, 16);
++        if (m_historySubqMask & 1) payload[248] = m_subq.track;
++        if (m_historySubqMask & 2) payload[249] = m_subq.index;
++        for (unsigned b = 0; b < 3; ++b) {
++            if (m_historySubqMask & (4u << b)) payload[250+b] = m_subq.relative[b];
++            if (m_historySubqMask & (32u << b)) payload[253+b] = m_subq.absolute[b];
++        }
+         const auto epoch = H::CD::epoch(), audio = H::CD::audioEpoch();
+-        H::emit(H::Kind::CdContext, phase, {1, uint32_t(H::CD::joined()), uint32_t(epoch), uint32_t(epoch >> 32),
+-            uint32_t(audio), uint32_t(audio >> 32), 48, 0}, 0, payload.data(), payload.size(), 0);
+-        H::emit(H::Kind::CdBuffer, phase ? 2 : 0, {0, uint32_t(sizeof(m_transfer))}, 0,
+-            m_transfer, sizeof(m_transfer), 0);
+-        for (const auto slot : {PCSX::PSXINT_CDR, PCSX::PSXINT_CDREAD, PCSX::PSXINT_CDRPLAY,
+-                               PCSX::PSXINT_CDRLID, PCSX::PSXINT_CDRDBUF, PCSX::PSXINT_CDRDMA}) {
+-            const auto& regs = PCSX::g_emulator->m_cpu->m_regs;
+-            const auto target = regs.intTargets[slot];
+-            H::emit(H::Kind::CdSchedule, slot,
+-                {phase ? 4u : 3u, 0, uint32_t(target), uint32_t(target >> 32), regs.interrupt,
+-                 m_historyScheduled[slot].kind}, 0, nullptr, 0, m_historyScheduled[slot].owner);
+-        }
++        H::emit(H::Kind::CdContext, phase, {2, uint32_t(H::CD::joined()), uint32_t(epoch), uint32_t(epoch >> 32),
++            uint32_t(audio), uint32_t(audio >> 32), 56, 0}, phase > 2 ? H::CD::operation() : 0,
++            payload.data(), payload.size(), id);
+     }
+ 
+     void historySchedule(uint32_t interrupt, uint32_t delay) {
+@@ -575,8 +596,12 @@
+ 
+         // check dbuf IRQ still active
+         if (!m_play) return;
+-        if ((PCSX::g_emulator->m_spu->readRegister(H_SPUctrl) & 0x40) == 0) return;
+-        if ((PCSX::g_emulator->m_spu->readRegister(H_SPUirqAddr) * 8) >= 0x800) return;
++        const auto control = PCSX::g_emulator->m_spu->readRegister(H_SPUctrl);
++        PCSX::History::CD::predicate(PCSX::History::CD::Predicate::SpuControl, {uint32_t(control)});
++        if ((control & 0x40) == 0) return;
++        const auto address = PCSX::g_emulator->m_spu->readRegister(H_SPUirqAddr);
++        PCSX::History::CD::predicate(PCSX::History::CD::Predicate::SpuAddress, {uint32_t(address)});
++        if ((address * 8) >= 0x800) return;
+ 
+         // turn off plugin SPU IRQ decoded buffer handling
+         // PCSX::g_emulator->m_spu->registerCallback(0);
+@@ -598,8 +623,19 @@
+         scheduleDecodeBufferIRQ(PCSX::g_emulator->m_psxClockSpeed / 44100 * 0x100);
+     }
+ 
++    bool historyMissing(uint32_t site) {
++        const bool missing = m_iso->failed();
++        PCSX::History::CD::predicate(PCSX::History::CD::Predicate::Missing, {site, uint32_t(missing)});
++        return missing;
++    }
++    uint8_t* historyBuffer(uint32_t site) {
++        auto* value = m_iso->getBuffer();
++        PCSX::History::CD::predicate(PCSX::History::CD::Predicate::Buffer, {site, uint32_t(value != nullptr)});
++        return value;
++    }
+     void getStatus(PCSX::CdrStat *stat) {
+-        if (isLidOpened()) {
++        const bool open = isLidOpened();
++        if (open) {
+             stat->Status = 0x10;
+         } else {
+             stat->Status = 0;
+@@ -614,6 +650,9 @@
+ 
+         // relative -> absolute time
+         stat->Time = m_setSectorPlay;
++        PCSX::History::CD::predicate(PCSX::History::CD::Predicate::Status,
++            {uint32_t(open), stat->Type, stat->Status,
++             uint32_t(stat->Time.m) | (uint32_t(stat->Time.s) << 8) | (uint32_t(stat->Time.f) << 16)});
+     }
+ 
+     // timing used in this function was taken from tests on real hardware
+@@ -733,6 +772,8 @@
+         m_subq.track = PCSX::IEC60908b::itob(m_curTrack);
+         MSF(relative_s).toBCD(m_subq.relative);
+         time.toBCD(m_subq.absolute);
++        m_historySubqMask = 0xff; m_historySubqSource = 1;
++        PCSX::History::CD::predicate(PCSX::History::CD::Predicate::SubQ, {1});
+     }
+ 
+     void readTrack(MSF time) {
+@@ -765,16 +806,19 @@
+         }
+ 
+         const PCSX::IEC60908b::Sub *sub = m_iso->getBufferSub();
++        H::CD::predicate(H::CD::Predicate::Subchannel, {uint32_t(sub != nullptr)});
+         if (sub && m_curTrack == 1) {
+             uint16_t calcCRC = PCSX::IEC60908b::subqCRC(sub->Q);
+             uint16_t actualCRC = sub->CRC[0];
+             actualCRC <<= 8;
+             actualCRC |= sub->CRC[1];
++            H::CD::predicate(H::CD::Predicate::SubQ, {2, calcCRC, actualCRC}, sub->Q, 12);
+             if (calcCRC == actualCRC) {
+                 m_subq.track = sub->TrackNumber;
+                 m_subq.index = sub->IndexNumber;
+                 memcpy(m_subq.relative, sub->RelativeAddress, 3);
+                 memcpy(m_subq.absolute, sub->AbsoluteAddress, 3);
++                m_historySubqMask = 0xff; m_historySubqSource = 2;
+             } else {
+                 CDROM_IO_LOG("subq bad crc @%02i:%02i:%02i\n", time.m, time.s, time.f);
+             }
+@@ -828,6 +872,8 @@
+ 
+             StopCdda(2);
+         } else if (m_mode & MODE_REPORT) {
++            if (PCSX::History::CD::active() && m_historySubqMask != 0xff)
++                PCSX::History::fail(PCSX::History::Failure::Unsupported);
+             m_result[0] = m_statP;
+             m_result[1] = m_subq.track;
+             m_result[2] = m_subq.index;
+@@ -1194,10 +1240,15 @@
+                 break;
+ 
+             case CdlGetlocP:
++                if (H::CD::active() && m_historySubqMask != 0xff) H::fail(H::Failure::Unsupported);
+                 SetResultSize(8);
+                 memcpy(&m_result, &m_subq, 8);
+ 
+-                if (!m_play && m_iso->CheckSBI(m_result + 5)) memset(m_result + 2, 0, 6);
++                if (!m_play) {
++                    const bool patched = m_iso->CheckSBI(m_result + 5);
++                    H::CD::predicate(H::CD::Predicate::SBI, {uint32_t(patched)}, m_result + 5, 3);
++                    if (patched) memset(m_result + 2, 0, 6);
++                }
+                 if (!m_play && !m_reading) m_result[1] = 0;  // HACK?
+                 break;
+ 
+@@ -1213,7 +1264,7 @@
+                 break;
+ 
+             case CdlGetTN:
+-                if (m_iso->failed()) {
++                if (historyMissing(1)) {
+                     m_stat = DiskError;
+                     m_result[0] |= STATUS_ERROR;
+                 } else {
+@@ -1225,7 +1276,7 @@
+                 break;
+ 
+             case CdlGetTD: {
+-                if (m_iso->failed()) {
++                if (historyMissing(2)) {
+                     m_stat = DiskError;
+                     m_result[0] |= STATUS_ERROR;
+                 } else {
+@@ -1290,7 +1341,7 @@
+             case CdlID + 0x100:
+                 SetResultSize(8);
+ 
+-                if (m_iso->failed()) {
++                if (historyMissing(3)) {
+                     m_result[0] = 0x08;
+                     m_result[1] = 0x40;
+                     memset((char *)&m_result[2], 0, 6);
+@@ -1369,7 +1420,7 @@
+                 // Crusaders of Might and Magic - update getlocl now
+                 // - fixes cutscene speech
+                 {
+-                    uint8_t *buf = m_iso->getBuffer();
++                    uint8_t *buf = historyBuffer(1);
+                     if (buf != NULL) {
+                         memcpy(m_transfer, buf, 8);
+                         historyMutation(0, 8, 1);
+@@ -1508,6 +1559,7 @@
+ 
+         uint32_t istat = PCSX::g_emulator->m_mem->readHardwareRegister<PCSX::Memory::ISTAT>();
+         uint32_t imask = PCSX::g_emulator->m_mem->readHardwareRegister<PCSX::Memory::IMASK>();
++        PCSX::History::CD::predicate(PCSX::History::CD::Predicate::ReadIRQ, {istat, imask});
+ 
+         if ((istat & imask & 4) && !m_readRescheduled) {
+             // HACK: with PCSX::Emulator::BIAS 2, emulated CPU is often slower than real thing,
+@@ -1526,7 +1578,7 @@
+ 
+         readTrack(m_setSectorPlay);
+ 
+-        buf = m_iso->getBuffer();
++        buf = historyBuffer(2);
+         if (buf == NULL) m_suceeded = false;
+ 
+         if (!m_suceeded) {
+@@ -1997,6 +2049,7 @@
+         m_subq.absolute[0] = 0;
+         m_subq.absolute[1] = 0;
+         m_subq.absolute[2] = 0;
++        m_historySubqMask |= 0xfe;
+         m_trackChanged = false;
+ 
+         m_curTrack = 1;
+@@ -2013,6 +2066,7 @@
+         m_attenuatorLeftToRight = 0x00;
+         m_attenuatorRightToLeft = 0x00;
+         m_attenuatorRightToRight = 0x80;
++        m_historyInitialized = true;
+ 
+         getCdInfo();
+     }
+--- a/src/core/cdrom.h
++++ b/src/core/cdrom.h
+@@ -69,6 +69,9 @@
+ 
+     virtual void reset() = 0;
+     virtual void history(uint32_t phase) = 0;
++    bool historyInitialized() const { return m_historyInitialized; }
++    // Observer provenance only; never serialized or used by guest behavior.
++    void historyRestored() { m_historyInitialized = true; m_historySubqMask = 0xff; m_historySubqSource = 3; }
+     virtual void attenuate(int16_t* buf, int samples, int stereo) = 0;
+ 
+     virtual void interrupt() = 0;
+@@ -161,6 +164,8 @@
+     bool m_trackChanged;
+     // end savestate
+     friend SaveStates::SaveState SaveStates::constructSaveState();
++    bool m_historyInitialized = false;
++    uint8_t m_historySubqMask = 0, m_historySubqSource = 0;
+ 
+   private:
+     friend class Widgets::IsoBrowser;
+--- a/src/core/history.cc
++++ b/src/core/history.cc
+@@ -82,7 +82,7 @@
+     const auto identity = g_emulator->m_spu->captureIdentity();
+     Status before;
+     if (!journal()->status(before) || before.state || (audio && identity[0] != 1)) return false;
+-    if (cd && !CD::prepare(bytes)) return false;
++    if (cd && !CD::prepare(events, bytes)) return false;
+     if (!journal()->begin(events, bytes, cycles())) return false;
+     requests.fill(0);
+     serial = 0;
+@@ -124,6 +124,7 @@
+     g_emulator->m_gpu->history(1);
+     if (CD::active()) {
+         CD::validate();
++        CD::boundary(1);
+         g_emulator->m_cdrom->history(1);
+     }
+     if (gpuDepth) fail(Failure::Association);
+--- a/src/core/history.h
++++ b/src/core/history.h
+@@ -16,7 +16,7 @@
+     ScheduleInitial, IRQInitial, DmaDevice, DmaBuffer, DmaCancel, DmaPeek,
+     GpuContext, GpuEnvironment, GpuInput, GpuResult,
+     CdContext, CdPort, CdCommand, CdSchedule, CdResponse, CdIRQ,
+-    CdMedia, CdBuffer, CdData, CdAudio, CdStream, CdTransition,
++    CdMedia, CdBuffer, CdData, CdAudio, CdStream, CdTransition, CdPredicate, CdImage,
+ };
+ 
+ // Called once when the main Lua state is initialized, never from device hooks.
+--- a/src/core/sstate.cc
++++ b/src/core/sstate.cc
+@@ -300,6 +300,7 @@
+     SaveStateWrapper wrapper(state);
+     PCSX::g_emulator->m_cpu->Reset();
+     state.commit();
++    g_emulator->m_cdrom->historyRestored();
+     g_emulator->m_cpu->m_regs.lowestTarget = g_emulator->m_cpu->m_regs.cycle;
+     g_emulator->m_cpu->m_regs.previousCycles = g_emulator->m_cpu->m_regs.cycle;
+     // x86-64 recompiler might make save states with an unaligned PC, since it ignores the bottom 2 bits
+--- a/src/core/transactions.cc
++++ b/src/core/transactions.cc
+@@ -5,6 +5,7 @@
+ #include <cmath>
+ 
+ #include "core/psxemulator.h"
++#include "core/cdrom.h"
+ #include "core/psxmem.h"
+ #include "core/r3000a.h"
+ #include "core/spu.h"
+@@ -22,6 +23,7 @@
+ bool feedFinished = false, feedCdda = false;
+ bool enabled = false, joinAudio = false;
+ SPU::Environment environment;
++std::weak_ptr<CDRIso> disc;
+ uint32_t clock = 0;
+ std::array<uint32_t, 15> scales{};
+ bool isPort(Operation kind) { return kind <= Operation::HandlerWrite; }
+@@ -36,13 +38,18 @@
+ 
+ bool idle() { return History::ownerThread() && !depth && !medium && !feeding; }
+ bool active() { return History::active() && enabled; }
+-bool prepare(uint32_t bytes) {
+-    if (!idle() || History::active()) return false;
++bool prepare(uint32_t events, uint32_t bytes) {
++    if (!idle() || History::active() || !g_emulator->m_cdrom->historyInitialized()) return false;
+     SPU::Environment candidate;
+     if (!g_emulator->m_spu->captureEnvironment(candidate)) return false;
++    auto nextDisc = g_emulator->m_cdrom->getIso();
++    if (!nextDisc || !nextDisc->historyPrepare()) return false;
+     // Slow-down scaling can overflow FeedXA's fixed stack buffer. Restrict this
+     // observer profile to the native unexpanded path, including fast-forward.
+-    if (candidate.settings[9] < 100 || bytes < 5308 + candidate.backend.size() + candidate.device.size()) return false;
++    // 42 initial + 11 final records, two buffers, controller/image contexts,
++    // and the SPU/clock environment. Device work requires additional capacity.
++    if (candidate.settings[9] < 100 || events < 53 ||
++        bytes < 5388 + candidate.backend.size() + candidate.device.size() + 2ull * nextDisc->historyBytes()) return false;
+     const auto nextClock = g_emulator->m_psxClockSpeed;
+     // Largest CD delay product is (clock / 75) * 290 in uint32 arithmetic.
+     if (!nextClock || nextClock > 100000000) return false;
+@@ -54,6 +61,7 @@
+         nextScales[n] = std::bit_cast<uint32_t>(scale);
+     }
+     environment = std::move(candidate); clock = nextClock; scales = nextScales;
++    disc = nextDisc;
+     return true;
+ }
+ void configure(bool value, uint64_t next, bool audio, uint64_t audioEpoch) {
+@@ -70,24 +78,42 @@
+         const auto backend = uint32_t(environment.backend.size()), device = uint32_t(environment.device.size());
+         std::copy(environment.backend.begin(), environment.backend.end(), payload.begin()+172);
+         std::copy(environment.device.begin(), environment.device.end(), payload.begin()+172+backend);
+-        History::emit(Kind::CdContext, 2, {1, clock, 14, 15, backend, device,
++        History::emit(Kind::CdContext, 2, {2, clock, 14, 15, backend, device,
+                       uint32_t(environment.initialized), uint32_t(environment.stream)},
+                       0, payload.data(), 172+backend+device, 0);
+-    }
++        boundary(0);
++    } else {
++        disc.reset();
++    }
++}
++void boundary(uint32_t phase) {
++    if (!active()) return;
++    const auto current = g_emulator->m_cdrom->getIso();
++    if (!current || disc.owner_before(current) || current.owner_before(disc)) {
++        History::fail(Failure::Discontinuity); return;
++    }
++    current->history(phase);
+ }
+ uint64_t epoch() { return active() ? generation : 0; }
+ uint64_t audioEpoch() { return active() ? audioGeneration : 0; }
+ bool joined() { return active() && joinAudio; }
+ uint64_t operation() { return active() && depth ? stack[0].id : 0; }
+ uint64_t access() { return active() && depth ? stack[depth - 1].id : 0; }
++void predicate(Predicate kind, std::array<uint32_t, 8> values, const void* payload, uint32_t length) {
++    if (!active()) return;
++    if (!access()) { History::fail(Failure::Association); return; }
++    History::emit(Kind::CdPredicate, uint32_t(kind), values, operation(), payload, length, access());
++}
+ void invalidate() {
+     // active() guards profile reads and marks wrong-thread calls itself.
+     if (active()) History::fail(Failure::Discontinuity);
+ }
+ bool validate() {
+     if (!active()) return true;
++    const auto current = g_emulator->m_cdrom->getIso();
+     bool valid = !g_emulator->m_cpu->isDynarec() && !g_emulator->m_mem->msanInitialized() &&
+-        g_emulator->m_psxClockSpeed == clock && g_emulator->m_spu->checkEnvironment(environment);
++        g_emulator->m_psxClockSpeed == clock && g_emulator->m_spu->checkEnvironment(environment) &&
++        current && !disc.owner_before(current) && !current.owner_before(disc) && current->historyValidate();
+     for (unsigned n = 0; n < scales.size(); ++n)
+         valid = valid && std::bit_cast<uint32_t>(g_emulator->m_cpu->m_interruptScales[n]) == scales[n];
+     if (!valid) { History::fail(Failure::Discontinuity); return false; }
+--- a/src/core/transactions.h
++++ b/src/core/transactions.h
+@@ -12,15 +12,24 @@
+ 
+ bool idle();
+ bool active();
+-bool prepare(uint32_t bytes);
++bool prepare(uint32_t events, uint32_t bytes);
+ void configure(bool enabled, uint64_t epoch, bool joined, uint64_t audioEpoch);
+ bool validate();
++void boundary(uint32_t phase);
+ void invalidate();
+ uint64_t epoch();
+ uint64_t audioEpoch();
+ bool joined();
+ uint64_t operation();
+ uint64_t access();
++
++enum class Predicate : uint32_t {
++    ReadIRQ = 1, Buffer, Subchannel, SubQ, SBI, Missing, Status, SpuControl, SpuAddress,
++    Availability, SubchannelState,
++};
++// Only values already obtained by the original execution path may be passed.
++void predicate(Predicate kind, std::array<uint32_t, 8> values = {},
++               const void* payload = nullptr, uint32_t length = 0);
+ 
+ // A controller media lookup encloses at most one backend operation. Backend
+ // reads without a controller owner invalidate observation-only capture.
+--- a/src/support/file.h
++++ b/src/support/file.h
+@@ -451,6 +451,7 @@
+ };
+ 
+ class SubFile : public File {
++    friend class CDRIso;  // Bounded observer identity; no additional file reads in hooks.
+   public:
+     SubFile(IO<File> file, size_t start, ssize_t size = -1)
+         : File(file->seekable() ? RO_SEEKABLE : RO_STREAM),

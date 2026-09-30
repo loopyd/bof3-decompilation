@@ -13,7 +13,9 @@ from ..domain.ids import FUNCTION_ID_HELP, parse_function_id
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="agent-context", description=__doc__)
+    parser = argparse.ArgumentParser(
+        prog="bin/harness agent context", description=__doc__
+    )
     parser.add_argument(
         "role", nargs="?", default="agents", choices=sorted(profile_names())
     )
@@ -52,7 +54,7 @@ def build_parser() -> argparse.ArgumentParser:
         handler=_run,
         argument_validator=_validate_arguments,
         error_prefix="",
-        example_text="bin/agent-context worker",
+        example_text="bin/harness agent context worker",
     )
     return parser
 
@@ -193,14 +195,14 @@ def _documented_placeholder_usage(role: str) -> str:
             "type-opportunity TARGET ID",
             "naming-opportunity TARGET ID",
         ),
-        "reverse": ("bin/agent-context reverse TARGET@0xADDRESS",),
-        "review": ("bin/agent-context review TARGET@0xADDRESS",),
+        "reverse": ("bin/harness agent context reverse TARGET@0xADDRESS",),
+        "review": ("bin/harness agent context review TARGET@0xADDRESS",),
     }[role]
     lines = [
         "===== context prefill contract =====",
         "This invocation is a documented placeholder quoted verbatim from the .pi",
-        "agent files (bin/agent-context cleanup CANONICAL_REQUEST... or",
-        "bin/agent-context reverse|review SELECTOR). It is a documentation",
+        "agent files (bin/harness agent context cleanup CANONICAL_REQUEST... or",
+        "bin/harness agent context reverse|review SELECTOR). It is a documentation",
         "self-check, not a request: nothing was parsed and no target context is",
         "emitted. The owning agent substitutes one real canonical invocation:",
     ]

@@ -3,7 +3,7 @@
 /* @source 0x801E7558
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 /* @behavior Decrements the active work timer by 0x2000 when nonzero; otherwise sets flag 0x40 and increments scratchpad state. */
 void countdownOrFlag40Advance(void) {

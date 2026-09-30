@@ -5,7 +5,7 @@
  *         clears state when reached.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void retreatPanelXTo140(void) {
   PanelTask* task_root;

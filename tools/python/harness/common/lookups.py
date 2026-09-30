@@ -137,8 +137,14 @@ class LookupBatch:
             raise ValueError("lookup batch is inactive or failed")
 
     def _read_file(self, parent: Path, name: str, before: os.stat_result) -> str:
-        if before.st_nlink != 1 or before.st_size > _MAX_FILE_BYTES:
-            raise ValueError("lookup file exceeds link or byte bounds")
+        if before.st_nlink != 1:
+            raise ValueError("lookup file exceeds link bounds")
+        if before.st_size > _MAX_FILE_BYTES:
+            # An oversized unrelated program on PATH (e.g. a version-manager
+            # binary) is bound by identity rather than read into memory.
+            return hashlib.sha256(
+                f"{before.st_dev}:{before.st_ino}:{before.st_size}:{before.st_mtime_ns}".encode()
+            ).hexdigest()
         descriptor = os.open(name, _FILE_FLAGS, dir_fd=self._directories[parent])
         try:
             if _identity(os.fstat(descriptor)) != _identity(before):

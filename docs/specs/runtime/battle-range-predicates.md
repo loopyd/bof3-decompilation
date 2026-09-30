@@ -11,7 +11,7 @@ This note records only evidence from the reviewed `battle/15` function ranges.
 Neither function has recovered callers, so parameter names describe observed
 roles rather than a proven gameplay contract.
 
-The [user-directed source ban](../../INDEX.md#source-and-duplicate-rules)
+The [user-directed source ban](../../agents/matching.md#source-and-duplicate-rules)
 supersedes the register-pin permission and aided exact status recorded below.
 Keep the original register/ABI evidence and historical measurements; remove the
 aid and requeue the source for fresh clean-C native matching and independent
@@ -86,7 +86,7 @@ locals. This caused canonical GCC to preserve `value` in `t0`, initialize the
 result in `v0`, and allocate the derived values as in the original. The signed
 threshold experiment was not retained: both range fields and thresholds are
 `u32`, consistent with the original `sltu` comparisons. A fresh live
-`bin/asm-diff` and `bin/byte-match` then matched all 19 instructions / 76 bytes
+`bin/harness lift asm-diff` and `bin/harness lift byte-match` then matched all 19 instructions / 76 bytes
 (`func_800AF66C`, `@status exact`). No object compiler override or generic
 macro was used. Those aided results remain historical evidence only; the removal
 requeue uses `@status partial`, `@match unavailable` pending fresh checks.

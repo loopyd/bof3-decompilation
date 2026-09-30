@@ -156,9 +156,9 @@ def _blocked_row(
     rungs: dict[str, Any] = {}
     for rung, missing in profiles:
         next_command = (
-            f"bin/rev-query --json owners {selector}"
+            f"bin/harness analysis query --json owners {selector}"
             if rung == "owner_resolution"
-            else f"bin/rev-query --json {'describe' if rung in {'selected_range', 'storage_class'} else 'xrefs'} {selector}"
+            else f"bin/harness analysis query --json {'describe' if rung in {'selected_range', 'storage_class'} else 'xrefs'} {selector}"
         )
         rungs[rung] = {
             "status": "open",
@@ -178,7 +178,7 @@ def _blocked_row(
         if partial:
             rungs["partial_baseline"] = {
                 "status": "open",
-                "next_command": f"bin/asm-diff {selector} --json --detail full; bin/byte-match {selector} --json",
+                "next_command": f"bin/harness lift asm-diff {selector} --json --detail full; bin/harness lift byte-match {selector} --json",
                 "observations": [
                     {
                         "id": f"{name}.partial_baseline.gap",
@@ -188,9 +188,9 @@ def _blocked_row(
                 "authority": "live asm-diff, byte-match, source progress metadata, and original bytes",
             }
     next_command = (
-        f"bin/rev-query --json owners {selector}"
+        f"bin/harness analysis query --json owners {selector}"
         if outside and kind == "function"
-        else f"bin/rev-query --json xrefs {selector}; bin/rz-project query {target} -c 'axt @ 0x{address:08X}'"
+        else f"bin/harness analysis query --json xrefs {selector}; bin/harness analysis rz-project query {target} -c 'axt @ 0x{address:08X}'"
     )
     return {
         "kind": kind,

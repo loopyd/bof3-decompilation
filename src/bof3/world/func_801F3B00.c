@@ -3,9 +3,9 @@
 /* @source 0x801F3B00
  * @behavior draws the AREA016 marker sprite layers selected by field state and
  * appends the transformed background panel.
- * @status partial
- * @match 78.19
- * @residual size and marker-loop control-flow scheduling differ
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801F3B00(s16 arg0, s16 arg1) {
   s32 marker;
@@ -28,18 +28,18 @@ void func_801F3B00(s16 arg0, s16 arg1) {
       !(PSX_REF(u16, 0x8014625au) & 0x1000)) {
     emitSemiTransparentSprite((s16)(arg0 + 0x30), (s16)arg1, 1);
     for (i = 0; i < 6; i++) {
-      if (WORLD00_AREA016_MARKER_TABLE[i].mask & D_80145AB4) {
+      if (D_80145AB4 & (D_801F5194[i].mask)) {
         emitSemiTransparentSprite(
-            (s16)(arg0 + 0x38), (s16)(arg1 + 8),
-            (u8)(WORLD00_AREA016_MARKER_TABLE[i].field_02 + 1));
+            (s16)(arg0 + 0x38), (s16)(arg1 + 0x8),
+            (u8)(D_801F5194[i].field_02 + 1));
         break;
       }
     }
   } else {
     for (i = 0; i < 6; i++) {
-      if (WORLD00_AREA016_MARKER_TABLE[i].mask & D_80145AB4) {
-        emitSemiTransparentSprite((s16)(arg0 + 0x38), (s16)(arg1 + 8),
-                                  WORLD00_AREA016_MARKER_TABLE[i].field_02);
+      if (D_80145AB4 & (D_801F5194[i].mask)) {
+        emitSemiTransparentSprite((s16)(arg0 + 0x38), (s16)(arg1 + 0x8),
+                                  D_801F5194[i].field_02);
         break;
       }
     }
@@ -48,18 +48,18 @@ void func_801F3B00(s16 arg0, s16 arg1) {
   if ((u32)((marker + 0x60) & 0xff) >= 2) {
     emitSemiTransparentSprite((s16)(arg0 + 0x30), (s16)(arg1 + 0x10), 2);
     for (i = 0; i < 8; i++) {
-      if (WORLD00_AREA016_MARKER_TABLE[i].mask & D_80145AC0) {
+      if (D_80145AC0 & (D_801F5194[i].mask)) {
         emitSemiTransparentSprite(
             (s16)(arg0 + 0x38), (s16)(arg1 + 0x10),
-            (u8)(WORLD00_AREA016_MARKER_TABLE[i].field_02 + 1));
+            (u8)(D_801F5194[i].field_02 + 1));
         break;
       }
     }
   } else {
     for (i = 0; i < 8; i++) {
-      if (WORLD00_AREA016_MARKER_TABLE[i].mask & D_80145AC0) {
+      if (D_80145AC0 & (D_801F5194[i].mask)) {
         emitSemiTransparentSprite((s16)(arg0 + 0x38), (s16)(arg1 + 0x10),
-                                  WORLD00_AREA016_MARKER_TABLE[i].field_02);
+                                  D_801F5194[i].field_02);
         break;
       }
     }

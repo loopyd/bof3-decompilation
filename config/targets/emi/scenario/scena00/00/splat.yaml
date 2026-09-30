@@ -19,50 +19,530 @@ options:
   - config/sdk/psyq-slus.txt
   - config/targets/emi/scenario/scena00/00/symbols.txt
 segments:
-- - 0
-  - bin
-  - header
+# The payload opens with the reviewed rodata tables for the lifted state
+# controllers (0x00..0x1C0) and continues with the overlay's own handler code;
+# the 0x801F6DC0 dispatcher and the table-referenced 0x801F6E04, 0x801F7134,
+# 0x801F7264 and 0x801F72A0 handlers are carved out so far, while the rest of
+# the code span stays an unaccounted raw blob.
+- name: header
+  type: bin
+  start: 0
+  vram: 2149542912
+- name: dispatchWorkByte1Handler
+  type: code
+  start: 448
+  vram: 2149543360
+  subsegments:
+  - - 448
+    - c
+    - dispatchWorkByte1Handler
+    - '@source: src/bof3/scenario/dispatchWorkByte1Handler.c'
+    - '@behavior: Dispatches the overlay''s per-frame handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its state byte at offset 1 selects an entry of the local handler table at 0x801FC980, and that entry is invoked; no other state is read or written.'
+- name: adoptSelectedRecordWord
+  type: code
+  start: 516
+  vram: 2149543428
+  subsegments:
+  - - 516
+    - c
+    - adoptSelectedRecordWord
+    - '@source: src/bof3/scenario/adoptSelectedRecordWord.c'
+    - '@behavior: Adopts the word at offset 0x54 of the shared 152-byte work record selected by the scratch pad work object''s word at offset 0x18 into that same work object and marks the work object''s dispatch byte at offset 0x01 with 1.'
+- name: drawAdoptedRecordCursorBeam
+  type: code
+  start: 584
+  vram: 2149543496
+  subsegments:
+  - - 584
+    - c
+    - drawAdoptedRecordCursorBeam
+    - '@source: src/bof3/scenario/drawAdoptedRecordCursorBeam.c'
+    - '@behavior: Adopts the 152-byte work-area record named by the shared scratchpad work object (pointer published at 0x1F800044) and draws that record cursor beam: the work object word at 0x18 selects the record at 0x80147A58 + index * 152, the record cursor words at 0x34/0x38/0x3C are copied into the work object at the same offsets, and the record pointer replaces the work object at 0x1F800044. The work object cursor pair is then linked through the shared grid-cell primitive linker func_80155A08 with kind 0x11 and size class 0x0C; before that call an 8-byte (x, y, w, h) rect of (0, 240, 16, 16) is written at the primitive cursor g_PrimCursor, the cursor is advanced by 8, and the 12-byte texture-window packet that follows the rect is built from it by the LIBGPU texture-window setter func_8017C1A8. The record fixed-point origin is then resolved through func_801AC1DC(origin, work byte 0x1C) and turned into a position vector whose x and y are ((origin + record word 0x34/0x38) >> 9) - 0x4000 and whose z is -(origin z + record halfword 0x3E) / 2; RotTransPers projects it into the flat textured quad found at the primitive cursor, so x0 = projected x - 8 and x2 = projected x - 8 while x1 = x3 = projected x + 8, y0 and y1 are zeroed, y2 and y3 keep the projected y, clut comes from GetClut(176, 483), tpage from GetTPage(0, 0, 704, 256), u0 = u2 = 0 and u1 = u3 = 16, the four v coordinates are ((D_80143E6C >> 2) & 0x15), with v2/v3 additionally adding the quad low byte at 0x1A, r0/g0/b0 are 0x80, the shade texture is cleared, and the projection depth is stored in the work object word at 0x60. The published scratchpad object is restored to the work object, its cursor pair is linked again with size class 0x28, a second rect of (0, 0, 256, 256) reserves one more texture-window packet through func_8017C1A8, and a final 0x0C-class link closes the frame.'
+- name: dispatchWorkByte1Handler_801F70F0
+  type: code
+  start: 1264
+  vram: 2149544176
+  subsegments:
+  - - 1264
+    - c
+    - dispatchWorkByte1Handler_801F70F0
+    - '@source: src/bof3/scenario/dispatchWorkByte1Handler_801F70F0.c'
+    - '@behavior: Dispatches the overlay''s per-frame handler for the scratchpad work object''s later states: the work-object pointer cell at 0x1F800044 is read, its state byte at offset 1 selects entry (state + 2) of the local handler table at 0x801FC980 whose 0x801FC988 word is the 0x801F7264 handler, and that entry is invoked; no other state is read or written. The 0x801F6DC0 dispatcher indexes the same table from its first entry.'
+- name: func_801F7134
+  type: code
+  start: 1332
+  vram: 2149544244
+  subsegments:
+  - - 1332
+    - c
+    - func_801F7134
+    - '@source: src/bof3/scenario/func_801F7134.c'
+    - '@behavior: Seeds the shared primitive cursor (g_PrimCursor) with one semi-transparent texture sprite: the drawing-mode tpage comes from the LIBGPU graph type (0x32D for graph types 1 and 2, 0xDD otherwise), SetDrawMode is issued on the cursor with zero dfe/dtd and a null tw, a 0x0C-byte primitive is appended, SetSprt lays the cursor out as an SPRT with x0/y0 = 32, u0 = 0, v0 = 32, w = 256, h = 1768 and clut = 0x7A80, its r0/g0/b0 come from bytes 0x5D/0x5E/0x5F of the scratchpad work object published at 0x1F800044, the shade texture is cleared, SetSemiTrans receives the low byte of the argument, and a 0x14-byte primitive is appended.'
+- name: func_801F7264
+  type: code
+  start: 1636
+  vram: 2149544548
+  subsegments:
+  - - 1636
+    - c
+    - func_801F7264
+    - '@source: src/bof3/scenario/func_801F7264.c'
+    - '@behavior: Handler for state 2 of the scratchpad work object per-frame dispatch (the object byte at offset 0x01 selects the entry of the handler table at 0x801FC980): it re-reads the work object pointer published at 0x1F800044, zeroes the three color channels at 0x5D/0x5E/0x5F of that object, stores 0xF0 in the object byte at 0x09 and moves the dispatch state byte at 0x01 to 1; no other state is read or written.'
+- name: brightenWorkObjectColorAndCommitProgress
+  type: code
+  start: 1696
+  vram: 2149544608
+  subsegments:
+  - - 1696
+    - c
+    - brightenWorkObjectColorAndCommitProgress
+    - '@source: src/bof3/scenario/brightenWorkObjectColorAndCommitProgress.c'
+    - '@behavior: Takes no arguments and returns nothing: seeds the scratchpad work object''s sprite through func_801F7134(1), then brightens that object''s three color channels (bytes 0x5D/0x5E/0x5F, the r0/g0/b0 the seeder copies into the SPRT) by 2 each, and once the channel at 0x5D reads exactly 0x80 commits the fade: writes 0x14 into the scenario progress byte g_ScenarioProgress, sets the object''s state byte at 0x01 to 2 and its byte at 0x09 to 0xFF.'
+- name: func_801F7350
+  type: code
+  start: 1872
+  vram: 2149544784
+  subsegments:
+  - - 1872
+    - c
+    - func_801F7350
+    - '@source: src/bof3/scenario/func_801F7350.c'
+    - '@behavior: Advances the per-frame work-object countdown after reseeding the scratchpad work object''s sprite through func_801F7134(1): while the object''s byte at 0x09 is non-zero it is decremented by one, and when it reads zero the object''s state byte at 0x01 is incremented and byte 0x09 is re-armed to 0xFF so the same handler runs again. Takes no arguments and returns nothing.'
+- name: func_801F73A8
+  type: code
+  start: 1960
+  vram: 2149544872
+  subsegments:
+  - - 1960
+    - c
+    - func_801F73A8
+    - '@source: src/bof3/scenario/func_801F73A8.c'
+    - '@behavior: Takes no arguments and returns nothing: reseeds the scratchpad work object''s sprite through func_801F7134(1), then darkens that object''s three color channels (bytes 0x5D/0x5E/0x5F, the r0/g0/b0 the seeder copies into the SPRT) by 2 each; once the channel at 0x5D reads exactly zero it clears the object''s byte at 0x09 and resets the shared work flags through func_80196070.'
+- name: func_801F7440
+  type: code
+  start: 2112
+  vram: 2149545024
+  subsegments:
+  - - 2112
+    - c
+    - func_801F7440
+    - '@source: src/bof3/scenario/func_801F7440.c'
+    - '@behavior: Dispatches the overlay''s second-level per-frame handler from the scratchpad work object: reads the work-object pointer cell at 0x1F800044, takes its dispatch byte at offset 1 and invokes that index of the overlay-local second-level handler table at 0x801FC99C, whose entries 0 through 13 are the overlay''s own handlers 0x801F7484 through 0x801F82B4; it reads no other state and writes none. Takes no arguments and returns nothing.'
+- name: seedWorkObjectPositionAndAdvance
+  type: code
+  start: 2180
+  vram: 2149545092
+  subsegments:
+  - - 2180
+    - c
+    - seedWorkObjectPositionAndAdvance
+    - '@source: src/bof3/scenario/seedWorkObjectPositionAndAdvance.c'
+    - '@behavior: Seeds the shared scratchpad work object for the scene fade: stores the fixed position pair 0xB0000/0xF8000 in the words at offsets 0x34 and 0x38, stores the func_8015477C distance of that pair in the halfword at offset 0x3E, sets the primitive index byte at offset 0x29 to 5 and advances the dispatch byte at offset 0x01 to 1. Takes no arguments and returns nothing.'
+- name: drawWorkObjectTrailToCell
+  type: code
+  start: 2284
+  vram: 2149545196
+  subsegments:
+  - - 2284
+    - c
+    - drawWorkObjectTrailToCell
+    - '@source: src/bof3/scenario/drawWorkObjectTrailToCell.c'
+    - '@behavior: Stamps the scratch work object''s cursor trail toward the work-area cell named by that object''s cell index at byte 0x06: copies the object''s cursor (x, y and scale word), starts the interpolated cursor at the object''s x with its y advanced by 0x8000, and keeps looping while the target cell''s y is not yet within that step by replacing the interpolated cursor''s scale-word high halfword with the func_8015477C distance of (x, y + 0x8000); once the target cell''s y is reached it snaps that cursor''s y and scale word to the cell''s own cursor and stops one stamp later. Each iteration emits one tinted sprite through func_801F78EC(interpolated cursor, object cursor, tint), the tint being the three signed channels of g_WorkObjectTint, then advances the object cursor to the interpolated one; when the shared mode byte D_80146866 reads 0x32 the object''s state byte at 0x01 is set to 2. Takes no arguments and returns nothing.'
+- name: func_801F7670
+  type: code
+  start: 2672
+  vram: 2149545584
+  subsegments:
+  - - 2672
+    - c
+    - func_801F7670
+    - '@source: src/bof3/scenario/func_801F7670.c'
+    - '@behavior: Stamps two tinted cursor trails from the scratch work object toward the work-area cell named by that object''s cell index at byte 0x06, then advances the object''s state byte at 0x01 to 3 once the shared mode byte D_80146866 reads 0x34. The first pass copies the object''s cursor (x, y and scale word) and the shared tint g_WorkObjectTint, starts the interpolated cursor at the object''s x with its y advanced by 0x8000 and keeps looping while the target cell''s y is not yet within that step, replacing the interpolated cursor''s scale-word high halfword with the func_8015477C distance of (x, y + 0x8000); once the target cell''s y is reached it snaps that cursor''s y and scale word to the cell''s own cursor and stops one stamp later. Each iteration emits one tinted sprite through func_801F78EC(interpolated cursor, object cursor, tint) and then advances the object cursor to the interpolated one. The second pass reseats the object cursor at the fixed position 0xB0000/0x138000 with its scale-word high halfword set to the func_8015477C distance of that pair, switches the tint to the fixed 0x30/0x30/0x30 and walks the interpolated cursor the other way (y minus 0x8000) toward the same cell cursor, snapping to the cell cursor as soon as the interpolated y drops below it, again emitting one sprite per iteration. Takes no arguments and returns nothing; the address is entry 9 of the per-frame handler table at 0x801FC980 indexed by byte 0x01 of the scratchpad work object published at 0x1F800044.'
+- name: func_801F78CC
+  type: code
+  start: 3276
+  vram: 2149546188
+  subsegments:
+  - - 3276
+    - c
+    - func_801F78CC
+    - '@source: src/bof3/scenario/func_801F78CC.c'
+    - '@behavior: Takes no arguments and returns nothing: resets the shared scratchpad work-flag block through the shared func_80196070 helper, which zeroes work-area bytes 0x00-0x04; no other state is read or written. The address is entry 10 of the per-frame handler table at 0x801FC980 indexed by byte 0x01 of the scratchpad work object published at 0x1F800044.'
+- name: func_801F78EC
+  type: code
+  start: 3308
+  vram: 2149546220
+  subsegments:
+  - - 3308
+    - c
+    - func_801F78EC
+    - '@source: src/bof3/scenario/func_801F78EC.c'
+    - '@behavior: Emits one tinted 0x10-byte primitive for a pair of 12-byte cursor positions: takes the current primitive published at g_PrimCursor, passes it to func_8017AA80, builds a local vertex from the second cursor (its x and y words shifted right by 9 and biased by -0x4000, its scale-word depth halfword negated and halved) and projects that vertex through RotTransPers into the first vertex pair of the primitive at offset 0x08, repeats the same conversion with the first cursor into the second vertex pair at offset 0x0C, copies the three tint bytes into the primitive colour bytes at offsets 0x04/0x05/0x06, and appends the primitive through func_8014E5A0 with the primitive index byte at 0x29 of the scratchpad work object published at 0x1F800044 and size 0x10. Takes the two cursors and the tint by value and returns nothing.'
+- name: func_801F7A18
+  type: code
+  start: 3608
+  vram: 2149546520
+  subsegments:
+  - - 3608
+    - c
+    - func_801F7A18
+    - '@source: src/bof3/scenario/func_801F7A18.c'
+    - '@behavior: Dispatches the overlay''s second-level per-frame handler from the scratchpad work object: reads the work-object pointer cell at 0x1F800044, takes its dispatch byte at offset 1 and invokes that index of the overlay-local second-level handler table at 0x801FC9AC, whose entries 0 through 9 are the overlay''s own handlers 0x801F7A5C through 0x801F82B4; it reads no other state and writes none. Takes no arguments and returns nothing; the address is also carried as a code pointer by the data of the concurrently loaded game/00 overlay, so it is an externally referenced entry.'
+- name: func_801F7A5C
+  type: code
+  start: 3676
+  vram: 2149546588
+  subsegments:
+  - - 3676
+    - c
+    - func_801F7A5C
+    - '@source: src/bof3/scenario/func_801F7A5C.c'
+    - '@behavior: Seeds the scratchpad work object published at 0x1F800044 for the trail phase: stores the fixed cursor 0x638000 (x) and 0xD0000 (y) in the words at offsets 0x34 and 0x38, stores 0x300 in the halfword at offset 0x3E, arms the countdown byte at offset 0x09 with 0x78, zeroes the words at offsets 0x64, 0x68 and 0x6C, sets the three tint channels at offsets 0x5F, 0x5E and 0x5D to 0xFF, stores 1 in the word at offset 0x0C, zeroes the words at offsets 0x10, 0x20, 0x1C and 0x18 and the bytes at offsets 0x0A, 0x0B, 0x08, 0x07 and 0x06, queues frontend cue 0x20E and advances the object''s dispatch byte at offset 0x01 to 1. Takes no arguments and returns nothing; the address is entry 11 of the per-frame handler table at 0x801FC980 indexed by byte 0x01 of that work object and the first entry of the second table level at 0x801FC9AC.'
+- name: func_801F7B0C
+  type: code
+  start: 3852
+  vram: 2149546764
+  subsegments:
+  - - 3852
+    - c
+    - func_801F7B0C
+    - '@source: src/bof3/scenario/func_801F7B0C.c'
+    - '@behavior: Runs one per-frame step of the scratchpad work object published at 0x1F800044: it passes the object''s word at offset 0x18 and the three fixed words 0x200/0/0 to func_801F85A8, then re-reads the object pointer, advances that word at offset 0x18 by 8, and once the word reads exactly 0x60 queues the frontend cue 0x20E and moves the object''s dispatch byte at offset 0x01 to 2. Takes no arguments and returns nothing.'
+- name: func_801F7B80
+  type: code
+  start: 3968
+  vram: 2149546880
+  subsegments:
+  - - 3968
+    - c
+    - func_801F7B80
+    - '@source: src/bof3/scenario/func_801F7B80.c'
+    - '@behavior: Advances the scratch work object''s entry-effect handler: re-reads the published work-object pointer cell at 0x1F800044 and emits two func_801F85A8 draws, the first from that object''s word at offset 0x18 with (0x200, 0, 0) and the second from the word at offset 0x1C with (0x71, 0, 0x8E3); then adds 0x10 to the word at offset 0x1C and queues frontend cue 0x20E when it reads 0x20, and queues the same cue and sets the object''s dispatch byte at offset 0x01 to 3 when it reads 0xA0. Takes no arguments and returns nothing.'
+- name: func_801F7C34
+  type: code
+  start: 4148
+  vram: 2149547060
+  subsegments:
+  - - 4148
+    - c
+    - func_801F7C34
+    - '@source: src/bof3/scenario/func_801F7C34.c'
+    - '@behavior: Advances the scratch work object''s entry-effect handler: re-reads the published work-object pointer cell at 0x1F800044 and emits two func_801F85A8 draws, the first from that object''s word at offset 0x18 with (0x200, 0, 0) and the second from the word at offset 0x1C with (0x71, 0, 0x8E3), then a third draw from the object''s byte at offset 0x0B with (0x155, 0, 0x200); it then adds 0x10 to that byte at offset 0x0B and, once the byte reads 0x60, queues frontend cue 0x20E and sets the object''s dispatch byte at offset 0x01 to 4. Takes no arguments and returns nothing; the address is entry 14 of the per-frame handler table at 0x801FC980 indexed by byte 0x01 of that work object.'
+- name: drawWorkObjectEntryEffectAndAdvance
+  type: code
+  start: 4336
+  vram: 2149547248
+  subsegments:
+  - - 4336
+    - c
+    - drawWorkObjectEntryEffectAndAdvance
+    - '@source: src/bof3/scenario/drawWorkObjectEntryEffectAndAdvance_801F7CF0.c'
+    - '@behavior: Emits the scratch work object''s staged entry-effect draws for the per-frame handler table at 0x801FC980 (entry 15, selected by the object''s dispatch byte at offset 0x01): re-reads the published work-object pointer cell at 0x1F800044 and passes four func_801F85A8 draws in order, the first from that object''s word at offset 0x18 with (0x200, 0, 0), the second from the word at offset 0x1C with (0x71, 0, 0x8E3), the third from the object''s byte at offset 0x0B with (0x155, 0, 0x200) and the fourth from the byte at offset 0x08 with (0xE3, 0, 0xE38); it then advances that byte at offset 0x08 by 8 and, once the byte reads exactly 0x60, queues frontend cue 0x20E and moves the object''s dispatch byte at offset 0x01 to 5. Takes no arguments and returns nothing.'
+- name: func_801F7DC8
+  type: code
+  start: 4552
+  vram: 2149547464
+  subsegments:
+  - - 4552
+    - c
+    - func_801F7DC8
+    - '@source: src/bof3/scenario/func_801F7DC8.c'
+    - '@behavior: Advances the scratch work object entry-effect handler: re-reads the published work-object pointer cell at 0x1F800044 and emits five func_801F85A8 draws, the first from that object word at offset 0x18 with (0x200, 0, 0) and the second from the word at offset 0x1C with (0x71, 0, 0x8E3), then three byte draws from the object bytes at offsets 0x0B, 0x08 and 0x0A with (0x155, 0, 0x200), (0xE3, 0, 0xE38) and (0x31C, 0, 0x555); it then adds 8 to the byte at offset 0x0A and, once that byte reads exactly 0x10 or exactly 0x60, queues frontend cue 0x20E, the 0x60 case also setting the object dispatch byte at offset 0x01 to 6. Takes no arguments and returns nothing; the address is entry 16 (word at 0x801FC9C0) of the per-frame handler table at 0x801FC980 indexed by byte 0x01 of that work object.'
+- name: func_801F7EE0
+  type: code
+  start: 4832
+  vram: 2149547744
+  subsegments:
+  - - 4832
+    - c
+    - func_801F7EE0
+    - '@source: src/bof3/scenario/func_801F7EE0.c'
+    - '@behavior: Advances the scratch work object''s entry-effect handler: re-reads the published work-object pointer cell at 0x1F800044 and emits six func_801F85A8 draws, the first from that object''s word at offset 0x18 with (0x200, 0, 0) and the second from the word at 0x1C with (0x71, 0, 0x8E3), then four byte draws from the object''s bytes at offsets 0x0B, 0x08, 0x0A and 0x06 with (0x155, 0, 0x200), (0xE3, 0, 0xE38), (0x31C, 0, 0x555) and (0x238, 0, 0xAAA); it then adds 8 to the byte at offset 0x06 and, once that byte reads exactly 0x10 or exactly 0x60, queues frontend cue 0x20E, the 0x60 case also setting the object''s dispatch byte at offset 0x01 to 7. Takes no arguments and returns nothing; the address is entry 17 (word at 0x801FC9C4) of the per-frame handler table at 0x801FC980 indexed by byte 0x01 of that work object.'
+- name: func_801F8014
+  type: code
+  start: 5140
+  vram: 2149548052
+  subsegments:
+  - - 5140
+    - c
+    - func_801F8014
+    - '@source: src/bof3/scenario/func_801F8014.c'
+    - '@behavior: Advances the scratch work object''s entry-effect handler: re-reads the published work-object pointer cell at 0x1F800044 and emits seven func_801F85A8 draws -- the object''s word at offset 0x18 with (0x200, 0, 0), the word at 0x1C with (0x71, 0, 0x8E3), and the bytes at 0x0B, 0x08, 0x0A, 0x06 and 0x07 with (0x155, 0, 0x200), (0xE3, 0, 0xE38), (0x31C, 0, 0x555), (0x238, 0, 0xAAA) and (0, 0, 0x71C); it then adds 8 to the byte at offset 0x07 and, once that byte reads exactly 0x60, queues frontend cue 0x20E and sets the object''s dispatch byte at offset 0x01 to 8. Takes no arguments and returns nothing; the address is the per-frame handler table entry selected by byte 0x01 of that work object.'
+- name: func_801F8140
+  type: code
+  start: 5440
+  vram: 2149548352
+  subsegments:
+  - - 5440
+    - c
+    - func_801F8140
+    - '@source: src/bof3/scenario/func_801F8140.c'
+    - '@behavior: Advances the scratchpad work object entry-effect handler to its higher stage: re-reads the published work-object pointer cell at 0x1F800044 and emits eight func_801F85A8 draws -- the object word at offset 0x18 with (0x200, 0, 0), the word at 0x1C with (0x71, 0, 0x8E3), the bytes at 0x0B, 0x08, 0x0A, 0x06 and 0x07 with (0x155, 0, 0x200), (0xE3, 0, 0xE38), (0x31C, 0, 0x555), (0x238, 0, 0xAAA) and (0, 0, 0x71C), and the word at 0x20 with (0, 0, 0xC00); it then adds 8 to the word at offset 0x20, queues frontend cue 0x20E once that word reads exactly 0x10, and once it reads 0x60 queues frontend cue 0x203, increments the scenario progress byte g_ScenarioProgress and sets the object dispatch byte at offset 0x01 to 9. Takes no arguments and returns nothing; the address is entry 19 of the per-frame handler table at 0x801FC980 indexed by byte 0x01 of that work object.'
+- name: func_801F82B4
+  type: code
+  start: 5812
+  vram: 2149548724
+  subsegments:
+  - - 5812
+    - c
+    - func_801F82B4
+    - '@source: src/bof3/scenario/func_801F82B4.c'
+    - '@behavior: Runs one frame of the scratchpad work object''s entry-effect fade for dispatch byte 0x14 (entry 20, the word at 0x801FC9D0, of the per-frame handler table at 0x801FC980 indexed by byte 0x01 of that object published at 0x1F800044): when the object''s byte at offset 0x09 is non-zero it runs func_801F8360, advances the object''s word at offset 0x0C by 4 while that word is below 0x80, raises its word at offset 0x10 by 2 while that word is below 0xB6 and otherwise pins the word at 0xB6, then decrements the byte at offset 0x09 by one; when the byte at offset 0x09 is already zero the frame is just the shared func_80196070 work-flag reset. Takes no arguments and returns nothing.'
+- name: func_801F8360
+  type: code
+  start: 5984
+  vram: 2149548896
+  subsegments:
+  - - 5984
+    - c
+    - func_801F8360
+    - '@source: src/bof3/scenario/func_801F8360.c'
+    - '@behavior: Emits the scratchpad work object''s entry-effect spin: the object''s fade countdown byte at offset 0x09 is converted from its 360-step unit into the local 0x1000-per-turn angle unit as (byte << 12) / 0x168 and stored in the object''s word at offset 0x6C, and the object''s word at 0x10 (an angle in that unit) and word at 0x0C (a radius) build two three-vertex shapes whose second vertex is (radius << 4, 0, 0) and whose third is ((radius * func_801783C8(angle)) >> 8, (radius * func_801782FC(angle)) >> 8, 0), the first shape using the object''s angle and the second the fixed angle 0xAC. Twenty-four times (counter < 0x18) it then re-reads the primitive published at g_PrimCursor, stamps it through func_8017A97C inside a PushMatrix/PopMatrix pair with the view matrix built by func_8015B410 and func_8015B4B0, projects the shape selected by the counter''s low bit (odd uses the object''s angle, even the fixed 0xAC) through RotTransPers3 into the primitive''s vertex pairs at offsets 0x08/0x10/0x18, writes the object''s tint bytes at 0x5D/0x5E/0x5F into the primitive''s colour bytes at 0x04/0x05/0x06 and the negated doubled countdown byte into the primitive''s bytes at 0x0C/0x0D/0x0E and 0x14/0x15/0x16, marks the primitive semi-transparent, appends it through func_8014E5A0(object byte 0x29, 0x1C) and advances the object''s word at 0x6C by 0xAA. Takes no arguments and returns nothing.'
+- name: func_801F85A8
+  type: code
+  start: 6568
+  vram: 2149549480
+  subsegments:
+  - - 6568
+    - c
+    - func_801F85A8
+    - '@source: src/bof3/scenario/func_801F85A8.c'
+    - '@behavior: Emits one flare of the scratchpad work object''s entry effect at a caller-supplied origin: the object published at 0x1F800044 has its words at 0x64/0x68/0x6C/0x70 saved into locals, the three origin arguments then replace the words at 0x64/0x68/0x6C, and the three-vertex shape (0, 0, 0), (arg0 << 4, 0, 0) and ((arg0 * func_801783C8(0x4F)) >> 8, (arg0 * func_801782FC(0x4F)) >> 8, 0) is built from the first argument (the flare radius, which the callers grow from 0 toward 0x60). The primitive published at g_PrimCursor is then stamped through func_8017A97C inside a PushMatrix/PopMatrix pair with the view matrix built by func_8015B410 and func_8015B4B0, the shape is projected by RotTransPers3 into that primitive''s vertex pairs at offsets 0x08/0x10/0x18, the primitive''s three colour triples are written with the fixed bytes 0x28 at 0x04/0x05/0x06, 0x6E at 0x0C/0x0D/0x0E and 0x64 at 0x14/0x15/0x16, the primitive is marked semi-transparent and appended through func_8014E5A0(object byte 0x29, 0x1C); the four saved origin words are written back last. Takes four arguments and returns nothing.'
+- name: func_801F8748
+  type: code
+  start: 6984
+  vram: 2149549896
+  subsegments:
+  - - 6984
+    - c
+    - func_801F8748
+    - '@source: src/bof3/scenario/func_801F8748.c'
+    - '@behavior: Dispatches the overlay second-level per-frame handler from the scratchpad work object: reads the work-object pointer cell at 0x1F800044, takes its dispatch byte at offset 1 and invokes that index of the overlay-local fade-step handler table at 0x801FC9D4, whose entries 0 through 4 are the overlay own handlers 0x801F878C through 0x801F8AB8; it reads no other state and writes none. Takes no arguments and returns nothing.'
+- name: func_801F878C
+  type: code
+  start: 7052
+  vram: 2149549964
+  subsegments:
+  - - 7052
+    - c
+    - func_801F878C
+    - '@source: src/bof3/scenario/func_801F878C.c'
+    - '@behavior: Seeds the scratchpad work object published at 0x1F800044 for the handler-table entry that owns this function: stores the two 16-bit cursor coordinates at offsets 0x2E and 0x30, each being the matching halfword of the 152-byte work-record block at 0x80147A58 (offsets 0x2E and 0x30) plus the matching signed byte of the two-byte cursor offset pair at 0x801FC9E8 (0x0C for the x coordinate and 0xC8 for the y coordinate), clears the countdown byte at offset 0x09, sets the primitive index byte at offset 0x06 to 0x20, sets the three tint channels at offsets 0x5F, 0x5E and 0x5D to -128 (0x80), runs the overlay-local sprite emitter func_801F8BCC, and finally copies the byte at offset 0x07 into the dispatch byte at offset 0x01. Takes no arguments and returns nothing; the address is entry 21 of the per-frame handler table at 0x801FC980 and the first word of the jump table at 0x801FC9D4 that the overlay secondary dispatcher at 0x801F8748 indexes with that dispatch byte.'
+- name: func_801F882C
+  type: code
+  start: 7212
+  vram: 2149550124
+  subsegments:
+  - - 7212
+    - c
+    - func_801F882C
+    - '@source: src/bof3/scenario/func_801F882C.c'
+    - '@behavior: Advances the scratchpad work object published at 0x1F800044 by one fade step: it drops the object''s halfword at offset 0x2E by 4 and adds the signed D_801FC9EC byte selected by the object''s countdown byte at offset 0x09 shifted right by two to the halfword at offset 0x30 and, when the object''s signed tint byte at offset 0x5D is nonzero, fades the three tint bytes at offsets 0x5D/0x5F/0x5E by 2 each, advances the countdown byte at offset 0x09 and increments the transition byte at offset 0x06 once the low two bits of that countdown byte are clear and runs the following handler func_801F8BCC; when the tint byte at offset 0x5D is already zero the step is just the shared func_80196070 work-flag reset. Takes no arguments and returns nothing; the address is entry 22 (word at 0x801FC9D8) of the per-frame handler table at 0x801FC980 indexed by byte 0x01 of that work object.'
+- name: func_801F8930
+  type: code
+  start: 7472
+  vram: 2149550384
+  subsegments:
+  - - 7472
+    - c
+    - func_801F8930
+    - '@source: src/bof3/scenario/func_801F8930.c'
+    - '@behavior: Advances the scratchpad work object published at 0x1F800044 by one fade step: subtracts 2 from the halfword at offset 0x30 of that object and, when the signed tint byte at offset 0x5D is nonzero, fades the three tint bytes at offsets 0x5D/0x5F/0x5E by 4 each, increments the transition byte at offset 0x06 once the low three bits of the byte at offset 0x09 are clear and runs the following handler func_801F8BCC; when that tint byte is already zero the step is just the shared func_80196070 work-flag reset. Takes no arguments and returns nothing; the address is entry 23 (word at 0x801FC9DC) of the per-frame handler table at 0x801FC980 indexed by byte 0x01 of that work object.'
+- name: func_801F89F0
+  type: code
+  start: 7664
+  vram: 2149550576
+  subsegments:
+  - - 7664
+    - c
+    - func_801F89F0
+    - '@source: src/bof3/scenario/func_801F89F0.c'
+    - '@behavior: Seeds the shared scratchpad work object published at 0x1F800044 from the 152-byte work-area record at 0x80147A58: copies the record''s cursor words at 0x34/0x38/0x3C and its origin words at 0x64/0x68/0x6C into the work object at the same offsets, resolves that work object''s fixed-point origin through func_801AC1DC(origin, work byte 0x1C), adds the resolved x and y words to the work object''s cursor words at 0x34/0x38, adds the resolved z word to the depth halfword at 0x3E and advances the dispatch byte at 0x01 by one. Takes no arguments and returns nothing; the address is entry 24 of the per-frame handler table at 0x801FC980 indexed by byte 0x01 of that work object.'
+- name: func_801F8AB8
+  type: code
+  start: 7864
+  vram: 2149550776
+  subsegments:
+  - - 7864
+    - c
+    - func_801F8AB8
+    - '@source: src/bof3/scenario/func_801F8AB8.c'
+    - '@behavior: Advances the scratchpad work object published at 0x1F800044 by one trail step: adds 0x20 to the object''s depth halfword at offset 0x3E, projects the object cursor words at offsets 0x34/0x38/0x3C through the shared projector func_801AFF04 into the scratchpad screen pair at 0x1F800034/0x1F800036, copies that pair back into the object''s halfwords at offsets 0x2E and 0x30 and, when the object''s signed tint byte at offset 0x5D is nonzero, fades the three tint bytes at offsets 0x5D/0x5F/0x5E by 4 each, increments the object''s transition byte at offset 0x06 once the low three bits of its byte at offset 0x09 are clear and runs the following handler func_801F8BCC, otherwise resets the shared work flags through func_80196070. Takes no arguments and returns nothing; the address is entry 25 (word at 0x801FC9E4) of the per-frame handler table at 0x801FC980 indexed by byte 0x01 of that work object.'
+- name: func_801F8BCC
+  type: code
+  start: 8140
+  vram: 2149551052
+  subsegments:
+  - - 8140
+    - c
+    - func_801F8BCC
+    - '@source: src/bof3/scenario/emitWorkObjectTexturedQuad_801F8BCC.c'
+    - '@behavior: Builds one screen-space flat textured quad for the scratchpad work object published at 0x1F800044 and appends it at the shared primitive cursor: takes the POLY_FT4 at g_PrimCursor, lays every corner at the object''s cursor halfwords at offsets 0x2E (x) and 0x30 (y) minus half the object''s transition byte at offset 0x06, adds that whole byte back on the right and bottom corners (x1 and x3 use x + 1, y2 and y3 use y + 1), fills the texture window with u = 0xE0/0xFF and v = 0x30/0x50, takes its clut from GetClut(160, 483) and its tpage from GetTPage(0, 1, 704, 256), copies the object''s three tint bytes at 0x5D/0x5E/0x5F into r0/g0/b0, clears the shade texture, turns semi-transparency on, and appends the 0x28-byte primitive through func_8014E5A0 with index 3 once the shared effect bank D_8014832E is armed. Takes no arguments and returns nothing; the address is a direct call target of the lifted handlers func_801F878C, func_801F882C, func_801F8930 and func_801F8AB8.'
+- name: func_801F8D70
+  type: code
+  start: 8560
+  vram: 2149551472
+  subsegments:
+  - - 8560
+    - c
+    - func_801F8D70
+    - '@source: src/bof3/scenario/func_801F8D70.c'
+    - '@behavior: Runs the overlay''s following beam entry drawLinkedRecordCursorBeam with the same no-argument image and returns: this 8-instruction wrapper passes nothing to the callee and neither reads nor writes overlay state of its own, and it keeps a real jal (a frame saving the return address) instead of a sibling tail call, exactly as the original does. The address is also carried as a code pointer by the data of the concurrently loaded game/00 overlay, so it is an externally referenced entry rather than an internal label. Takes no arguments and returns nothing.'
+- name: drawLinkedRecordCursorBeam
+  type: code
+  start: 8592
+  vram: 2149551504
+  subsegments:
+  - - 8592
+    - c
+    - drawLinkedRecordCursorBeam
+    - '@source: src/bof3/scenario/drawLinkedRecordCursorBeam.c'
+    - '@behavior: Draws one textured cursor beam between the cursors of the two 152-byte work-area records this overlay keeps at 0x80147A58, both selected through the shared scratchpad work object published at 0x1F800044: the work object word at 0x0C indexes the first record, whose cursor words at 0x34/0x38/0x3C are copied into the work object at the same offsets, and the work object word at 0x18 indexes the second; the first record''s cursor pair is linked through the shared grid-cell primitive linker func_80155A08 with kind 0x11 and size class 0x0C after an 8-byte (x, y, w, h) rect of (0, 240, 16, 16) is written at the primitive cursor g_PrimCursor, the cursor advanced by 8 and the 12-byte texture-window packet that follows the rect built from it by func_8017C1A8; the current primitive is then seeded as a POLY_FT4 and each record''s fixed-point origin, resolved through func_801AC1DC(origin, work byte 0x10) for the first record and (origin, work byte 0x1C) for the second, is turned into a position vector whose x and y are ((origin + record cursor word 0x34/0x38) >> 9) - 0x4000 and whose z is -(origin z + record halfword 0x3E) / 2; RotTransPers projects the first record''s vector into the quad''s first vertex pair and the second record''s into its second pair, each projection depth replacing the work object word at 0x60, and the two pairs are widened by 8 screen units (x1 = x0 + 8, y1 = y0, x0 = x0 - 8, then x3 = x2 + 8, y3 = y2, x2 = x2 - 8). The work object is restored at 0x1F800044, the quad takes clut 176/483, tpage (0, 0, 704, 256), u0 = u2 = 0 and u1 = u3 = 16, all four v coordinates ((u32)D_80143E6C >> 2) & 0x15 with v2 and v3 each adding the absolute difference of the quad''s signed halfwords at 0x1A and 0x0A, r0 = g0 = b0 = 0x80 and a cleared shade texture; the work object cursor pair is then linked again with size class 0x28, a second (0, 0, 256, 256) rect reserves one more texture-window packet through func_8017C1A8, and a final 0x0C-class link closes the frame. Takes no arguments and returns nothing.'
+- name: func_801F913C
+  type: code
+  start: 9532
+  vram: 2149552444
+  subsegments:
+  - - 9532
+    - c
+    - func_801F913C
+    - '@source: src/bof3/scenario/func_801F913C.c'
+    - '@behavior: Dispatches one frame of the overlay''s state machine from the signed main-RAM state byte D_80146872: that byte selects an entry of the overlay-local handler table at 0x801FCA10 (entries 0 through 14 are this overlay''s state handlers 0x801F9178 through 0x801FB924) and the selected entry is invoked; no other state is read and none is written. Takes no arguments and returns nothing.'
+- name: bootScenarioState
+  type: code
+  start: 9592
+  vram: 2149552504
+  subsegments:
+  - - 9592
+    - c
+    - bootScenarioState
+    - '@source: src/bof3/scenario/bootScenarioState.c'
+    - '@behavior: Boots state 0 of the overlay''s own state machine (the entry the code-span dispatcher func_801F913C selects from the main-RAM state byte D_80146872): it runs the front-end scene init func_801C1DF0(0), seeds the front selector bundle (selection seed 0x18, the channel pair 0x630000/0xC0000 and kind 3, both published in D_801448FC/D_801448FF/D_80144900/D_80144904 and handed to func_8019FA28), clears the two route work-area slot tables (6 four-byte slots at 0x80145500 and 12 at 0x80145518) to 0xFF, raises flag 0x40 in the mode word D_80146258, requests primary scene state 5 in D_80146874 with secondary state 0 in D_80146875, yields with func_8014B87C(1) until the EMI loader reports ready through func_80162D00, and finally clears the scenario progress word and advances D_80146872 to 1. Takes no arguments and returns nothing.'
+- name: func_801F92DC
+  type: code
+  start: 9948
+  vram: 2149552860
+  subsegments:
+  - - 9948
+    - c
+    - func_801F92DC
+    - '@source: src/bof3/scenario/func_801F92DC.c'
+    - '@behavior: Runs the SCENA00 route-stage handler for the route word D_80143F00: when that word reads 1 it runs func_801BE1B0(0) and then, for the shared mode byte D_80146866 reading 0, stores the object byte func_8019601C() in scratchpad 0x1F800000, seeds that object''s 0x74-byte row at 0x80143FC8 (+0 = 1, +5 = 0x10, word 2 at +0x18 and +0x1C, word 3 at +0x0C and the route word 1 at +0x10) unless that byte is 0xFF and then subtracts 0x155 from the shared fixed-point channel D_801492DC, while a mode byte reading 3 commits D_80147C38 = 1 and D_80147C3C = 4, arms D_80147C21 = 7 and adds 0x155 to D_801492DC; any other mode byte clears D_80146866 and D_80146875, and the block ends by storing 10 in D_80146874. It then runs func_801F9644() unconditionally; when the route word reads 4 it takes the two-stage wait func_8015B5D4(D_8014686C, 0) and, on a zero return, clears the effect bank D_8014832E, reruns func_8015B580(D_8014686C, 0) and func_8015C088() and requests front-selector mode 2 in D_80146874, and while the front-side byte D_80143F03 reads 2 it arms D_8014832E = 0x1F and runs func_8015C100(). It then runs func_801F9868() unconditionally; when the route word reads 25 it arms D_801468A0/D_801468A4 = 2 and D_80147BA0 = 1/D_80147BA4 = 3, queues frontend cue 0x200, requests front-selector mode 11 in D_80146874, arms the 0x14-frame countdown D_80146876 and clears D_8014832E; when it reads 31 it seeds the shared channel words D_801492D8 = 0x100, D_801492DC = 0, D_801492DA = 0 and D_8014932C = 0x100 and then waits through func_8015B5D4(D_8014686C, 1), clearing D_8014832E, rerunning func_8015B580(D_8014686C, 1) and requesting front-selector mode 3 on a zero return, or running func_801BE1B0(0) and requesting mode 9 otherwise. It finishes by storing 2 in the overlay state byte D_80146872 and returns; the address is entry 2 (the word reading 0x801F92DC) of the overlay''s handler table at 0x801FCA10. Takes no arguments and returns nothing.'
+- name: func_801F9644
+  type: code
+  start: 10820
+  vram: 2149553732
+  subsegments:
+  - - 10820
+    - c
+    - func_801F9644
+    - '@source: src/bof3/scenario/func_801F9644.c'
+    - '@behavior: Stages the SCENA00 route-path-2 resource/object setup sequence gated on the route word D_80143F00 being 2. When that gate holds it first runs the two-stage wait func_8015B5D4(D_8014686C, 2): on a zero return it clears the scenario progress word g_ScenarioProgress, reruns func_80154FD8(0x300) and func_801C601C(0), raises D_801492D8 by 0xAA, stores the object byte func_8019601C() in scratchpad 0x1F800000 and, unless that byte is 0xFF, seeds that object''s 0x74-byte row at 0x80143FC8 (+0 = 1, +5 = 0x13, word D_801492D8 - 0xAA at +0x64, the signed halfwords D_801492DA/D_801492DC at +0x68/+0x6C and +9 = 0x40); it then runs func_8015C100(), commits the front selector word pair D_80145EC4 = 0x330000/D_80145EC8 = 0x400000 and calls func_8015B580(D_8014686C, 2). When the first wait instead returns nonzero it retries through func_8015B5D4(D_8014686C, 10) and, on a zero return, calls func_8015B580(D_8014686C, 10), func_801BE1B0(0) and rebases the fixed-point channel pair D_80149308 = 0x260000/D_8014930C = 0x1B8000. Takes no arguments and returns nothing; the address is the single jal target of the SCENA00 sub-controller at 0x801F94AC.'
+- name: func_801F9868
+  type: code
+  start: 11368
+  vram: 2149554280
+  subsegments:
+  - - 11368
+    - c
+    - func_801F9868
+    - '@source: src/bof3/scenario/func_801F9868.c'
+    - '@behavior: Runs the SCENA00 route-path-3 (0x18) step gated on the route word D_80143F00 reading 0x18 and dispatched by the front-side byte D_80143F03; the route-stage handler func_801F92DC runs it as its unconditional third step. Case 0 clears the scenario progress word and waits through func_8015B5D4(D_8014686C, 6): on a zero return it requests primary state 8 by storing D_80146874 = 8 and D_80146875 = 0. Case 1 takes func_8015B5D4(D_8014686C, 3) and, on a nonzero return, copies the 16-halfword tails of the fixed buffers at 0x80033E00 and 0x80037E00 (elements 0x50..0x5F onto elements 0x40..0x4F), publishes 1 in D_80145988 and then, when func_8015B5D4(D_8014686C, 5) reports zero, arms the effect bank D_8014832E = 0x1F, clears the progress word and runs func_801BE1B0(1), otherwise just runs func_8015C058; on a zero return from that first wait it instead runs func_80161BBC(3), polls func_80162D00 in a loop that reruns func_8014B87C(1), then arms D_8014832E = 0x1F, clears the progress word, runs func_8015B580(D_8014686C, 3) and func_80154FD8(0x480), seeds D_8014932C = 0x480 and D_801492DC = 0x350, runs func_801BE1B0(0) and func_801C601C(0), stores the object byte func_8019601C() in scratchpad 0x1F800000 and, unless that byte is 0xFF, seeds that object''s 0x74-byte row at 0x80143FC8 (+0 = 1, +5 = 0x13, the signed channel words D_801492D8/D_801492DA at +0x64/+0x68, word 0x200 at +0x6C and +9 = 0x90). Cases 2 and 4 wait through func_8015B5D4(D_8014686C, 8) and func_8015B5D4(D_8014686C, 9) and, on a zero return, clear the progress word and request primary state 6 by storing D_80146874 = 6 and D_80146875 = 0. Takes no arguments and returns nothing.'
+- name: func_801F9B98
+  type: code
+  start: 12184
+  vram: 2149555096
+  subsegments:
+  - - 12184
+    - c
+    - func_801F9B98
+    - '@source: src/bof3/scenario/func_801F9B98.c'
+    - '@behavior: Dispatches one frame of the overlay''s primary state machine from the signed main-RAM state byte D_80146874: that byte is scaled by four and selects an entry of the overlay-local secondary handler table at 0x801FCA1C (its first entries are the empty handlers 0x801F9BD4 and 0x801F9BDC, followed by the primary controller 0x801F9BE4 and the middle controllers), and the selected entry is invoked; no state is read other than that byte and none is written. Takes no arguments and returns nothing.'
+- name: func_801F9BD4
+  type: code
+  start: 12244
+  vram: 2149555156
+  subsegments:
+  - - 12244
+    - c
+    - func_801F9BD4
+    - '@source: src/bof3/scenario/func_801F9BD4.c'
+    - '@behavior: Empty primary-state handler: takes no arguments, reads and writes no state and returns immediately. Its address is entry 3 of the overlay-local handler table D_801FCA10 and, equivalently, entry 0 of the secondary table D_801FCA1C, so primary state 0 of the state dispatcher func_801F9B98 has no per-frame work.'
+- name: func_801F9BDC
+  type: code
+  start: 12252
+  vram: 2149555164
+  subsegments:
+  - - 12252
+    - c
+    - func_801F9BDC
+    - '@source: src/bof3/scenario/func_801F9BDC.c'
+    - '@behavior: Empty primary-state handler: takes no arguments, reads and writes no state and returns immediately. Its address is entry 4 of the overlay-local handler table D_801FCA10 and, equivalently, entry 1 of the secondary table D_801FCA1C, so primary state 1 of the state dispatcher func_801F9B98 has no per-frame work.'
 - name: main
   type: code
-  start: 12688
-  vram: 2149555600
+  start: 12260
+  vram: 2149555172
   subsegments:
-  - - 12688
-    - asm
-    - func_801F9D90
+  - - 12260
+    - c
+    - func_801F9BE4
+    - '@source: src/bof3/scenario/func_801F9BE4.c'
+    - '@behavior: Runs the primary SCENA00 state controller selected by the state byte D_80146875: state 0 clears the tick word D_80146876 and raises flag 0x80 in the mode word D_80146258 when the gate word D_80143C40 is clear; state 1 ticks D_80146876 up to 0x7C before arming effect bank 0x1F in D_8014832E, D_80146867 = 1 and state 2; state 2 advances to state 3 when D_80146867 reads 0x54; state 3 clears D_8014832E and requests primary mode 2 in D_80143BB0; state 4 seeds the front selector context (4, 0x440000, 0x80000, 5); state 5 sets D_8014832E = 0x1F and advances to state 6; state 6, when the shared mode byte D_80146866 reads 0x23, stores the object byte func_8019601C() in scratchpad 0x1F800000 and seeds that object''s 0x74-byte row at 0x80143FC8 (+0 = 1, +5 = 0x13, +9 = 0x60 and the s16 words D_801492D8 + 0x180, D_801492DA, D_801492DC at +0x64/+0x68/+0x6C) unless the byte is 0xFF; state 7, when D_80146867 reads 0x60, seeds the front selector context (0x1F, 0x70000, 0x140000, 0) and requests primary state 3 by storing D_80146874 = 3 and D_80146875 = 0.'
   - - 13240
-    - asm
+    - c
     - func_801F9FB8
+    - '@source: src/bof3/scenario/func_801F9FB8.c'
+    - '@behavior: Runs the secondary SCENA00 state controller selected by the state byte D_80146875: state 0, when the shared mode byte D_80146866 reads 0x30, arms effect bank 0x1F in D_8014832E, requests frontend local mode 1 through func_8014ECAC, stores the object byte func_8019601C() in scratchpad 0x1F800000 and seeds that object''s 0x74-byte row at 0x80143FC8 (+0 = 1, +5 = 0x13, +9 = 0xFF and the s16 words D_801492D8 + 0x1C0, D_801492DA and D_801492DC at +0x64/+0x68/+0x6C) unless that byte is 0xFF, then advances the state byte to 1; state 1 advances to state 2 when D_80146866 reads 0x35 and otherwise, while D_80149314 still reads 0x4400, arms 0x6200 in D_80149314, subtracts 0x1E from D_80149322 and rebases D_8014930C, D_80147A90 and D_80143F80 by -0x1E0000 before running func_80154698; state 2 stores 0x37 in D_80146866 and advances the state byte to 3; state 3, when D_80146866 reads 0x38, queues frontend cue func_80161C20(2, 0x64, 0x20), seeds the front selector context (2, 0x340000, 0x430000, 3), requests primary state 4 in D_80146874 and returns the state byte to 0.'
   - - 13948
-    - asm
+    - c
     - func_801FA27C
+    - '@source: src/bof3/scenario/func_801FA27C.c'
+    - '@behavior: Ticks the SCENA00 progress controller selected by the state byte D_80146875: state 0, while the gate word D_80143C40 is clear, queues front-end mode 1 through func_80150224, arms D_80143BB0 = 2 and advances to state 1; state 1 advances to state 2 once that mode byte leaves 2; state 2 waits for scenario progress byte 3 and state 3 for progress byte 4, each queueing func_80150224(2)/func_80150224(3) and arming D_80143BB0 = 2, with state 3 also loading the 0x130-frame countdown D_80146876; state 4 counts that countdown down and, while it still runs, publishes the ramp ((0x130 - remaining) * 0x57943) >> 16 in D_8014932C, advancing to state 5 at zero; state 5, on progress byte 5, stores the object byte func_8019601C() in scratchpad 0x1F800000 and seeds that object''s 0x74-byte row at 0x80143FC8 (+0 = 1, +5 = 0x13, +9 = 0x60, the word -0x34A at +0x64 and the s16 words D_801492DA/D_801492DC at +0x68/+0x6C) unless that byte is 0xFF, then advances to state 6; state 6 repeats that seeding on progress byte 8 (+9 = 0x20, -0x2AC at +0x64), arms the 0x200-frame countdown and advances to state 7; state 7 counts that countdown down, publishing (remaining * 0xD) >> 2 in D_8014932C while it runs, and advances to state 8 at zero; state 8, on progress byte 0xB, runs func_8014ECAC(0) and advances to state 9; state 9, while D_80143C40 is clear, clears the effect bank D_8014832E, queues func_80150224(4), arms D_80143BB0 = 2 and queues the front-end cue func_80161CD0(2, 0x64, 0x20) before advancing to state 10; state 10, once D_80143BB0 leaves 2, seeds the front selector context (0x18, 0x630000, 0xC0000, 3), requests primary state 5 in D_80146874 and returns the state byte to 0.'
   - - 15320
-    - asm
+    - c
     - func_801FA7D8
+    - '@source: src/bof3/scenario/func_801FA7D8.c'
+    - '@behavior: Runs the third SCENA00 controller selected by the state byte D_80146875: while that byte sits in 4..6 and the shared frame word D_80143E6C has its low nibble clear, it reseeds D_80146867 with 1 << (rand() % 3) and bumps D_80146866 by 0x10 when that byte leaves 0/1; state 0 raises flag 0x80 in the mode word D_80146258, runs func_8015B580(D_8014686C, 0..3), arms D_80146876 = 0x90 and advances to state 1; states 1/2 count D_80146876 down while publishing (count * 8) in D_8014932C and, at zero, store 2 in D_80149333, clear D_8014932C and advance to state 3; state 3, on progress byte 0xC, arms 0x3C frames, clears D_80146866 and advances to state 4; state 4 counts down and, at zero, stores state 5 and increments the scenario progress byte before, while D_80146866 is set, decrementing it and stepping D_80147A96 by the signed D_801FCA4C entry for (D_80143E6C & 0xF) times 4; state 5 re-arms 0x3C frames and advances to state 6 on progress byte 0x11 and then repeats that decrement/step; state 6 counts down, stores the object byte func_8019601C() in scratchpad 0x1F800000 and, unless that byte is 0xFF, seeds that object row at 0x80143FC8 (+0 = 1, +5 = 0x1E, the D_80145EC4/D_80145EC8 pair at +0x34/+0x38, the func_8015477C distance of that pair scaled by 0x10000 at +0x3C and 0 at +0x29) before reloading 0x84 frames, incrementing the progress byte and requesting state 7; state 7 counts down and, at exactly 0x20, runs func_8014ECAC(8) and advances to state 8; state 8 counts down, clearing D_8014832E while D_80143C40 is clear, and at zero sets progress byte 0x14 and 0x40 frames before requesting state 10; state 9, on progress byte 0x14, runs func_80164020(0, 1) and arms 0x25C frames before requesting state 10; state 10 counts down and, at zero, runs func_8015B580(D_8014686C, 4), seeds the front selector context (0x18, 0x630000, 0x110000, 3), stores 9/0xFF in D_80143F1D/D_80143F1E and advances to state 11; state 11, while D_80143C40 is clear, stores progress byte 1 and advances to state 12; state 12, on progress byte 4 with func_80162D00 ready, queues the frontend cue func_80161C20(3, 0x69, 8) and advances to state 13; state 13, on progress byte 5, arms 0x20 frames and advances to state 14; state 14 counts down while adding the signed D_801FCA4C entry for (D_80143E6C & 0xF) shifted by 11 to D_801469EC and subtracting it from D_801469F0, advancing to state 15 at zero; state 15, on progress byte 7, passes the D_80145EC4/D_80145EC8 pair with 1 to func_801BFE34, runs func_801C7A54(1) and func_8015B580(D_8014686C, 5) before advancing to state 16; state 16 is not handled (its jump-table slot is the switch default) and state 17 increments the progress byte, runs func_8015C058 and func_801BE1B0(6) and clears D_80146874 and D_80146875.'
   - - 17260
-    - asm
+    - c
     - func_801FAF6C
+    - '@source: src/bof3/scenario/func_801FAF6C.c'
+    - '@behavior: Drives the SCENA00 route/exit state byte D_80146875: state 0 remaps that byte through the four-entry route table D_801FCA5C keyed by the front-side byte D_80143F03; states 10, 20 and 30, unless the shared gate byte D_80145E91 reads 2, run func_8015C088, func_801BE1B0 with 3/4/5 and func_8015B580 with the scenario flag word D_8014686C and flag index 7/8/9, advancing to state 0xB/0x15/0x1F; states 11, 21 and 31 wait for scenario progress byte 0xB/5/4, then pass the D_80145EC4/D_80145EC8 pair with 4/5/6 to func_801BFE34 and run func_801C7A54(4/5/6), advancing to state 0xC/0x16/0x20; states 13, 23 and 33 run func_8015C058, clear D_80146875 and D_80146874 and advance the scenario progress byte; state 50 seeds the front selector context through func_8019FA28(0x1F, 0x40000, 0x240000, 1), stores 4 in D_80143F1F and clears D_80146874 and D_80146875.'
   - - 17924
-    - asm
+    - c
     - func_801FB204
+    - '@source: src/bof3/scenario/func_801FB204.c'
+    - '@behavior: Runs the SCENA00 route-entry controller selected by the state byte D_80146875 with nine states: state 0 stores 10 in the scenario progress byte and runs func_801BE1B0(1) and func_801C601C(1) before advancing to state 1; state 1 waits for progress byte 0xD, passes the D_80145EC4/D_80145EC8 pair with 7 to func_801BFE34 and runs func_801C7A54(7) before advancing to state 2; state 2 is idle; state 3 raises flag 0x180 in the mode word D_80146258, queues func_80150224(0xE), arms D_80143BB0 = 2 and advances to state 4; state 4, once D_80143BB0 leaves 2, stores progress byte 0x1E, arms the effect bank D_8014832E = 0x1F, runs func_8014ECAC(3), rebases the D_80143F7C/D_80149308 pair to 0x2F0000 and the D_80143F80/D_8014930C pair to 0x1D0000, runs func_80153DE8, commits D_80143F84 = 0x5800000, runs func_80154FD8(0x580), seeds D_801492D8 = -0x30A, D_801492DC = 0x180, D_8014932C = 0x480 and the 0x1E-frame countdown D_80146876 and advances to state 5; state 5, while the gate word D_80143C40 is clear, decrements that countdown and, at zero, reruns func_801C601C(2), recommits D_80143F84 = 0x5800000, runs func_80154FD8 with the high halfword of that committed word, stores the object byte func_8019601C() in scratchpad 0x1F800000 and seeds that object''s 0x74-byte row at 0x80143FC8 (+0 = 1, +5 = 0x13, word -0x2AA at +0x64, lh D_801492DA at +0x68, word 0x200 at +0x6C, +9 = 0x20) unless that byte is 0xFF, then reloads the countdown with 0x20 and advances to state 6; state 6 counts that countdown down while subtracting 0x24 from the fixed-point channel D_8014932C and, at zero, arms state 7 before incrementing the scenario progress byte; state 7, on progress byte 0x24, queues the frontend cue func_80161C20(4, 0x69, 8) and advances to state 8; state 8, on progress byte 0x25, seeds the front selector context through func_8019FA28(0x1F, 0x40000, 0x240000, 1) and clears D_80146874 and D_80146875.'
   - - 18976
-    - asm
+    - c
     - func_801FB620
+    - '@source: src/bof3/scenario/func_801FB620.c'
+    - '@behavior: When the state byte D_80146875 is zero, passes the scenario flag word D_8014686C and flag bit 6 to func_8015B580, runs func_801BE1B0 with 2, then clears D_80146874 and D_80146875.'
   - - 19068
-    - asm
+    - c
     - func_801FB67C
+    - '@source: src/bof3/scenario/func_801FB67C.c'
+    - '@behavior: Ticks the scenario sub-state byte D_80146875: while it is zero, arms the 0x3C-frame countdown D_80146876 and moves the state byte to 2 when the shared mode byte D_80146866 reads 0x71; in state 2 it decrements that countdown and, when it reaches zero, seeds the front selector context (1, 0xF0000, 0x210000, 1), queues frontend cue 0x206, clears the scenario progress word and returns the state byte to 0 with D_80146874 = 0xA.'
   - - 19268
-    - asm
+    - c
     - func_801FB744
+    - '@source: src/bof3/scenario/func_801FB744.c'
+    - '@behavior: Ticks the SCENA00 route-entry controller selected by the state byte D_80146875: state 0 waits until func_8015BEA0(0x2D, 10) returns 0, then arms the 0x32-frame countdown D_80146876 and advances to state 1; state 1, while bit 0 of the shared mode byte D_80146866 is set, disturbs the world offsets D_80147C54 and D_80147C58 by (rand() & 7) - 3 scaled by 0x400 around their 0x1A8000/0x158000 baselines, and while D_80146866 reads 3 either counts D_80146876 down or, at zero, seeds the front selector context (1, 0x1A0000, 0x160000, 1) and advances to state 2; state 2 waits until func_8015BEA0(0xF, 10) returns 0, then stores 4 in D_80146866 and advances to state 3; state 3, when D_80146866 reads 9, clears flag 0x80 in the mode word D_80146258, seeds the front selector context (0x19, 0xB8000, 0x5A0000, 1), requests primary state 0xB in D_80146874, reloads the 0x258-frame countdown and clears the state byte.'
   - - 19748
-    - asm
+    - c
     - func_801FB924
+    - '@source: src/bof3/scenario/func_801FB924.c'
+    - '@behavior: Runs the SCENA00 turn controller selected by the state byte D_80146875: it gates on D_80146866 < 0x14 with D_80149314 still reading 0x5000 to rebase D_80149322, D_8014930C, D_80147A90, D_80147B28 and D_80143F80 by 0x200000 and run func_80154698; state 0 counts D_80146876 down and seeds 0x10/0x1F, func_8014ECAC(1), frontend cue 0x203 and 0x3C frames before advancing to state 3; state 3 branches on that countdown into 0x384 frames and state 4; state 4 clears D_80146865 and the progress byte, sets 0x12, runs applyFieldTurnInput and advances to state 5; state 5 clears D_80147BEC/D_80147BF0 and either steps the held-button nibble through the two-byte table D_801FCA64 into D_80146888/D_80146890/func_8014D8D4 or walks the progress byte, then arms state 6 once D_80146865 reaches 0x1F or the countdown expires; state 6 repoints scratchpad 0x1F800010 at the record delta pair, rolls both deltas into +-0x40 turn steps on D_80147BEC/D_80147BF0, refreshes the 0x1F800044 scratchpad pointer while D_80143E6C bit 1 is clear, queues frontend cue 0x204 and advances to state 7 on D_80146866 == 0x15; state 7 advances to state 8 on 0x17; state 8 runs func_8014ECAC(0) and advances to state 9; state 9, while D_80143C40 is clear, clears D_8014832E, masks D_80146258/D_80145EB4, seeds the front selector context (9, 0x570000, 0x40000, 7) and runs func_801A78F8.'
   - - 21128
-    - asm
-    - func_801FBE88
+    - c
+    - applyFieldTurnInput
+    - '@source: src/bof3/scenario/applyFieldTurnInput.c'
+    - '@behavior: Points the scratchpad delta cell at 0x1F800010 at the current world record delta pair, folds the held face-button bits of D_80145AA8 into those two signed halfwords, steps the matching turn accumulator D_80147BEC or D_80147BF0 by 0x40 and queues frontend cue 0x204.'
   - - 21532
-    - asm
+    - c
     - func_801FC01C
+    - '@source: src/bof3/scenario/func_801FC01C.c'
+    - '@behavior: Seeds the twelve fixed-point channels of every active scenario record: each 0x28-byte record''s twelve s16 output channels at 0x02..0x18 go into the high half of the matching D_801FD030 row, the record''s three s16 axis words at 0x1A/0x1C/0x1E fill the D_801FCA90 row left-shifted by 11 - (rand() & 3), and the twelve D_801FD5D0 offsets of the row are all set to (rand() & 7) + 1.'
   - - 22432
     - c
     - func_801FC3A0
@@ -74,13 +554,15 @@ segments:
     - '@source: src/bof3/scenario/dispatchRecordCallbackByByte7A.c'
     - '@behavior: Dispatches one record callback selected by byte 0x7a.'
   - - 23568
-    - asm
+    - c
     - func_801FC810
     - '@source: src/bof3/scenario/func_801FC810.c'
-    - '@behavior: UNKNOWN: recover the empty body from target-qualified assembly.'
+    - '@behavior: Empty body: returns to the caller immediately without reading or writing any state.'
   - - 23576
-    - asm
-    - func_801FC818
+    - c
+    - seedPrimaryStateOnRecordCallback
+    - '@source: src/bof3/scenario/seedPrimaryStateOnRecordCallback_801FC818.c'
+    - '@behavior: When the route word D_80143F00 is two, the argument''s high half selects kind 0x2B and flag bit 6 of D_8014686C is set, requests primary state 7 by storing D_80146874 = 7 and clears the secondary sub-state D_80146875; when D_80143F00 is 0x18 with D_80143F03 clear, kind 0x14 and flag bit 7 of D_8014686C clear, runs func_8015C088, requests primary state 6 the same way and returns 1; otherwise returns 0.'
   - - 23796
     - c
     - returnZero
@@ -92,6 +574,6 @@ segments:
     - '@source: src/bof3/scenario/resetEffectBank_801FC8FC.c'
     - '@behavior: Resets one local effect bank and marks the frontend flag byte.'
   - - 23936
-    - asm
+    - textbin
     - T_801FC980
 - - 28528

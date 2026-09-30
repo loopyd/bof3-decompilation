@@ -4,7 +4,7 @@
  * @behavior Dispatches a handler selected by scratchpad work byte +0x02, then calls resetEnemyScratchWhenBit4.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchByte2ThenReset2(void)
 {

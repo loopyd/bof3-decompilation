@@ -6,7 +6,7 @@ extern int rand(void);
  * @source 0x801E2948
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void pickTargetStoreGlobal(s8 arg0) {
   u8 target;

@@ -1,0 +1,95 @@
+# Matching decompilation and build/diff workflow
+
+## Milestones
+
+```mermaid
+flowchart LR
+    U[unexplored] --> B[boundary-confirmed] --> I[identified] --> P[prototype-draft] --> S[semantically-decompiled] --> R[runtime-validated] --> M{matching?}
+    M -->|no| N[nonmatching]
+    M -->|yes| MAT[matching]
+```
+
+Runtime-validated ≠ matching. Matching bytes do not independently prove names/types.
+
+## PS1 decompilation stack
+
+| Tool | Role |
+|---|---|
+| splat | split PSX binaries/sections/code/data; emit project config |
+| spimdisasm | MIPS disassembly + symbol-aware analysis |
+| maspsx | emulate PsyQ assembler behavior for matching builds |
+| mips2c / m2c | initial C hypothesis |
+| asm-differ | instruction-level comparison during iteration |
+| objdiff | object/function comparison + progress tracking |
+| decomp-permuter | explore equivalent C transformations |
+| decomp.me | isolated scratch/matching experiments |
+
+Real PS1 projects combine several; never rely on one decompiler.
+
+## Compiler identification
+
+Before tuning C:
+
+| Pin | Evidence |
+|---|---|
+| PsyQ/runtime library version; GCC/CC1 version + flags; assembler/preprocessor behavior; optimization level; small-data/GP options; signed-char + ABI details; source language extensions; linker ordering/alignment | library signatures; startup code; generated idioms; object metadata; debug strings; project/toolchain history; controlled compilation experiments |
+
+## Repository structure
+
+| Path | Role |
+|---|---|
+| `config/targets/` | per-target identity, layout, symbols, image, load address |
+| `include/memory/` | generic PS1 memory/accessor headers |
+| `include/bof3/` | shared + target-private declarations |
+| `src/bof3/<domain>/` | metadata-owned executable + EMI lifts |
+| `src/bof3/support/` | target-qualified support + generated bindings |
+| `src/shared/<domain>/` | cross-target embedded templates |
+| `build/` | generated objects/binaries |
+| `out/` | disposable snapshots, index, matching workspaces |
+
+Before BOF3 source work, read [target ownership](../../bof3-re/references/target-contract.md)
+and [matching protocol](../../bof3-re/references/match-loop.md). Manifest claims own
+identity; filenames never substitute. User documentation is not a runtime dependency.
+
+## Function iteration
+
+1. Extract exact original bytes/instructions.
+2. Confirm boundaries + relocations.
+3. Draft semantic C.
+4. Compile with pinned toolchain.
+5. Compare instructions + relocations.
+6. Diagnose control flow, expression ordering, register allocation, stack layout, delay slots.
+7. Apply one intentional change at a time.
+8. Preserve readability unless a matching idiom is proven necessary.
+9. Record score + first differing instruction.
+10. Runtime regression when integration is possible.
+
+## Common mismatch causes
+
+Signature/signedness · source expression order · temporary lifetime · switch lowering form · loop shape (`for`/`while`/`do`) · constant type/width · struct field type/alignment · inlining/macros · compiler version/flags · assembler macro expansion · section/order/relocation mismatch · data symbol alignment.
+
+## Build comparison
+
+> `bin/build-diff` is NOT wired in this repo. Use the wired entrypoints:
+
+```bash
+bin/harness lift asm-diff TARGET@0xADDRESS        # instruction-level diff of one authored lift
+bin/harness lift byte-match TARGET@0xADDRESS      # raw byte-equality acceptance check
+bin/harness lift permute TARGET@0xADDRESS --time-limit 60   # bounded source-shape search
+bin/harness lift status TARGET             # exact/partial/invalid lift audit
+```
+
+Generic projects outside this repo: a `build-diff`-style wrapper reads environment variables rather than imposing a build system:
+
+```bash
+PSX_BUILD_CMD='ninja -C build' \
+PSX_EXPECTED=expected/SLUS.bin \
+PSX_ACTUAL=build/SLUS.bin \
+build-diff
+```
+
+Such wrappers record SHA-256 + byte differences; prefer `bin/harness lift asm-diff`/`bin/harness lift byte-match` when they already cover the comparison.
+
+## Reproducibility
+
+Pin tools in lockfiles/containers where possible. Retain compiler/assembler hashes, commands, environment, generated linker scripts/maps, original/rebuilt object hashes, and diff reports. Never publish copyrighted binaries or large slices merely for CI.

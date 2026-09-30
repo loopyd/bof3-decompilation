@@ -5,7 +5,7 @@
  * the budget and companion state when the counter has caught up.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void consumePanelBudget(u8* arg0, u32 arg1, u32 arg2, u32 arg3, s16* arg4,
                    u8* arg5, s16* arg6, u8* arg7) {

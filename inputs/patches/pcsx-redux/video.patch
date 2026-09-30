@@ -1,0 +1,453 @@
+--- a/src/core/gpu.cc
++++ b/src/core/gpu.cc
+@@ -461,7 +461,44 @@
+     mem->dmaInterrupt<2>();
+ }
+ 
+-void PCSX::GPU::writeStatus(uint32_t value) {
++std::array<uint32_t, 8> PCSX::GPU::historyState() {
++    uint32_t processor = UINT32_MAX;
++    if (m_processor == &m_defaultProcessor) processor = 0;
++    else if (m_processor == &m_fastFill) processor = 2;
++    else if (m_processor == &m_blitVramVram) processor = 0x80;
++    else if (m_processor == &m_blitRamVram) processor = 0xa0;
++    else if (m_processor == &m_blitVramRam) processor = 0xc0;
++    else {
++        for (unsigned n = 0; n < 32; ++n) {
++            if (m_processor == m_polygons[n]) { processor = 0x20 + n; break; }
++            if (m_processor == m_lines[n]) { processor = 0x40 + n; break; }
++            if (m_processor == m_rects[n]) { processor = 0x60 + n; break; }
++        }
++    }
++    const auto size = m_readFifo->size();
++    if (size > UINT32_MAX || processor == UINT32_MAX) History::fail(History::Failure::Bounds);
++    bool ready = m_processor == &m_defaultProcessor && m_fastFill.historyReady() &&
++        m_blitVramVram.historyReady() && m_blitRamVram.historyReady() && m_blitVramRam.historyReady();
++    for (unsigned n = 0; n < 32 && ready; ++n) {
++        ready = m_polygons[n]->historyReady() && m_lines[n]->historyReady() && m_rects[n]->historyReady();
++    }
++    return {processor, uint32_t(std::min<uint64_t>(size, UINT32_MAX)), m_dataRet,
++            g_emulator->getRamMask<4>(), m_historyKnown, uint32_t(ready), 0, 0};
++}
++
++void PCSX::GPU::history(uint32_t phase) {
++    if (!History::active()) return;
++    History::emit(History::Kind::GpuContext, phase, historyState());
++    History::emit(History::Kind::GpuEnvironment, phase,
++        {(m_historyKnown & 1) ? m_lastTPage.raw : 0,
++         (m_historyKnown & 2) ? m_lastTWindow.raw : 0,
++         (m_historyKnown & 4) ? m_lastOffset.raw : 0,
++         m_textureWindowRaw, m_drawingStartRaw, m_drawingEndRaw, m_drawingOffsetRaw, 0});
++}
++
++void PCSX::GPU::writeStatus(uint32_t value, uint32_t address) {
++    History::Gpu observation(*this, address ? History::GpuSource::GP1 : History::GpuSource::HostGP1,
++                             address, 1, value);
+     uint32_t cmd = (value >> 24) & 0xff;
+     bool gotUnknown = false;
+ 
+@@ -536,11 +573,12 @@
+     }
+ }
+ 
+-uint32_t PCSX::GPU::readData() {
+-    if (m_readFifo->size() == 0) {
+-        return m_dataRet;
+-    }
+-    return m_readFifo.asA<File>()->read<uint32_t>();
++uint32_t PCSX::GPU::readData(uint32_t address) {
++    History::Gpu observation(*this, address ? History::GpuSource::ReadGP0 : History::GpuSource::HostRead,
++                             address, 1);
++    uint32_t value = m_readFifo->size() == 0 ? m_dataRet : m_readFifo.asA<File>()->read<uint32_t>();
++    observation.result(value);
++    return value;
+ }
+ 
+ void PCSX::GPU::write1(CtrlQuery *ctrl) {
+@@ -560,12 +598,15 @@
+     }
+ }
+ 
+-void PCSX::GPU::writeData(uint32_t value) {
++void PCSX::GPU::writeData(uint32_t value, uint32_t address) {
++    History::Gpu observation(*this, address ? History::GpuSource::GP0 : History::GpuSource::HostGP0,
++                             address, 1, value);
+     Buffer buf(value);
+     m_processor->processWrite(buf, Logged::Origin::DATAWRITE, value, 1);
+ }
+ 
+ void PCSX::GPU::directDMAWrite(const uint32_t *feed, int transferSize, uint32_t hwAddr) {
++    History::Gpu observation(*this, History::GpuSource::Direct, hwAddr, uint32_t(transferSize));
+     History::span(2, hwAddr, feed, uint32_t(transferSize) * 4, 1);
+     Buffer buf(feed, transferSize);
+     while (!buf.isEmpty()) {
+@@ -574,6 +615,7 @@
+ }
+ 
+ void PCSX::GPU::directDMARead(uint32_t *dest, int transferSize, uint32_t hwAddr) {
++    History::Gpu observation(*this, History::GpuSource::ReadDMA, hwAddr, uint32_t(transferSize));
+     uint32_t *historyDestination = dest;
+     int historySize = transferSize;
+     auto size = m_readFifo->size();
+@@ -627,6 +669,7 @@
+         // # 32-bit blocks to transfer
+         uint32_t transferWords = header >> 24;
+         History::emit(History::Kind::DmaHeader, 2, {addr, header, transferWords});
++        History::Gpu observation(*this, History::GpuSource::Chain, addr, transferWords);
+         History::span(2, addr + 4, feed, transferWords * 4, 1);
+         Buffer buf(feed, transferWords);
+         while (!buf.isEmpty()) {
+@@ -703,12 +746,14 @@
+                     case 1: {  // tpage
+                         TPage prim(packetInfo);
+                         m_gpu->m_lastTPage = TPage(packetInfo);
++                        m_gpu->m_historyKnown |= 1;
+                         g_emulator->m_gpuLogger->addNode(prim, origin, originValue, length);
+                         m_gpu->write0(&prim);
+                     } break;
+                     case 2: {  // twindow
+                         TWindow prim(packetInfo);
+                         m_gpu->m_lastTWindow = TWindow(packetInfo);
++                        m_gpu->m_historyKnown |= 2;
+                         g_emulator->m_gpuLogger->addNode(prim, origin, originValue, length);
+                         m_gpu->write0(&prim);
+                         m_gpu->m_textureWindowRaw = packetInfo & 0xfffff;
+@@ -728,6 +773,7 @@
+                     case 5: {  // drawing offset
+                         DrawingOffset prim(packetInfo);
+                         m_gpu->m_lastOffset = DrawingOffset(packetInfo);
++                        m_gpu->m_historyKnown |= 4;
+                         g_emulator->m_gpuLogger->addNode(prim, origin, originValue, length);
+                         m_gpu->write0(&prim);
+                         m_gpu->m_drawingOffsetRaw = packetInfo & 0x3fffff;
+--- a/src/core/gpu.h
++++ b/src/core/gpu.h
+@@ -22,6 +22,7 @@
+ #include <stdint.h>
+ 
+ #include <functional>
++#include <array>
+ #include <magic_enum/magic_enum_all.hpp>
+ #include <memory>
+ #include <stdexcept>
+@@ -120,13 +121,16 @@
+     int init(UI *);
+     virtual int initBackend(UI *) = 0;
+     virtual int shutdown() = 0;
+-    uint32_t readData();
++    uint32_t readData(uint32_t address = 0);
+     virtual uint32_t readStatusInternal() = 0;
+-    void writeData(uint32_t gdata);
++    void writeData(uint32_t gdata, uint32_t address = 0);
+     void directDMAWrite(const uint32_t *feed, int transferSize, uint32_t hwAddr);
+     void directDMARead(uint32_t *dest, int transferSize, uint32_t hwAddr);
+     void chainedDMAWrite(const uint32_t *memory, uint32_t hwAddr);
+-    void writeStatus(uint32_t gdata);
++    void writeStatus(uint32_t gdata, uint32_t address = 0);
++    // History calls these only after its CPU-owner check; no live MMIO read.
++    std::array<uint32_t, 8> historyState();
++    void history(uint32_t phase);
+     virtual void setOpenGLContext() {}
+ 
+     virtual void restoreStatus(uint32_t status) = 0;
+@@ -270,6 +274,7 @@
+         virtual ~Command() {}
+         virtual void processWrite(Buffer &, Logged::Origin, uint32_t value, uint32_t length);
+         virtual void reset() {}
++        virtual bool historyReady() const { return true; }
+         void setActive() { m_gpu->m_processor = this; }
+ 
+       protected:
+@@ -337,6 +342,7 @@
+         void getVertices(AddTri &&, PixelOp) override;
+         FastFill(GPU *parent) : Command(parent) {}
+         void processWrite(Buffer &, Logged::Origin, uint32_t value, uint32_t length) override;
++        bool historyReady() const override { return m_state == READ_COLOR; }
+         void reset() override { m_state = READ_COLOR; }
+         bool isInside(unsigned x, unsigned y) override {
+             return (x >= this->x) && (y >= this->y) && (x < this->x + this->w) && (y < this->y + this->h);
+@@ -364,6 +370,7 @@
+         void getVertices(AddTri &&, PixelOp) override;
+         BlitVramVram(GPU *parent) : Command(parent) {}
+         void processWrite(Buffer &, Logged::Origin, uint32_t value, uint32_t length) override;
++        bool historyReady() const override { return m_state == READ_COMMAND; }
+         void reset() override { m_state = READ_COMMAND; }
+         bool isInside(unsigned x, unsigned y) override {
+             return (x >= this->dX) && (y >= this->dY) && (x < this->dX + this->w) && (y < this->dY + this->h);
+@@ -399,6 +406,7 @@
+         }
+         BlitRamVram(BlitRamVram &&) = delete;
+         void processWrite(Buffer &, Logged::Origin, uint32_t value, uint32_t length) override;
++        bool historyReady() const override { return m_state == READ_COMMAND && m_data.empty(); }
+         void reset() override {
+             m_state = READ_COMMAND;
+             m_data.clear();
+@@ -430,6 +438,7 @@
+         void getVertices(AddTri &&, PixelOp) override;
+         BlitVramRam(GPU *parent) : Command(parent) {}
+         void processWrite(Buffer &, Logged::Origin, uint32_t value, uint32_t length) override;
++        bool historyReady() const override { return m_state == READ_COMMAND; }
+ 
+         unsigned x, y, w, h;
+ 
+@@ -555,6 +564,7 @@
+         void getVertices(AddTri &&, PixelOp) override;
+         Poly() {}
+         void processWrite(Buffer &, Logged::Origin, uint32_t value, uint32_t length) override;
++        bool historyReady() const override { return m_state == READ_COLOR && m_count == 0; }
+         void reset() override {
+             m_state = READ_COLOR;
+             m_count = 0;
+@@ -621,6 +631,11 @@
+         Line() {
+             if constexpr (lineType == LineType::Simple) m_count = 0;
+         }
++        bool historyReady() const override {
++            if (m_state != READ_COLOR) return false;
++            if constexpr (lineType == LineType::Simple) return m_count == 0;
++            else return x.empty() && y.empty() && colors.empty();
++        }
+         void processWrite(Buffer &, Logged::Origin, uint32_t value, uint32_t length) override;
+         void reset() override {
+             m_state = READ_COLOR;
+@@ -672,6 +687,7 @@
+         void getVertices(AddTri &&, PixelOp) override;
+         Rect() {}
+         void processWrite(Buffer &, Logged::Origin, uint32_t value, uint32_t length) override;
++        bool historyReady() const override { return m_state == READ_COLOR; }
+         void reset() override { m_state = READ_COLOR; }
+         bool isInside(unsigned x, unsigned y) override {
+             return (x >= (this->x + offset.x)) && (y >= (this->y + offset.y)) && (x < (this->x + offset.x) + this->w) &&
+@@ -895,6 +911,9 @@
+     TPage m_lastTPage;
+     TWindow m_lastTWindow;
+     DrawingOffset m_lastOffset;
++    // Last* objects have empty default constructors. Observe their raw fields
++    // only after an existing native assignment initialized the whole object.
++    uint32_t m_historyKnown = 0;
+ 
+     uint32_t m_dataRet = 0;
+     uint32_t m_textureWindowRaw = 0;
+--- a/src/core/history.cc
++++ b/src/core/history.cc
+@@ -8,6 +8,7 @@
+ #include "core/psxmem.h"
+ #include "core/r3000a.h"
+ #include "core/mdec.h"
++#include "core/gpu.h"
+ #include "core/psxcounters.h"
+ 
+ namespace PCSX::History {
+@@ -18,6 +19,8 @@
+ Journal* journal() { return published.load(std::memory_order_acquire); }
+ std::array<uint64_t, 7> requests{};
+ uint64_t serial = 0;
++uint64_t gpuSerial = 0;
++uint32_t gpuDepth = 0;
+ uint64_t bufferRequest = 0;
+ uint64_t inputRequest = 0, pendingRequest = 0, epoch = 0;
+ std::array<uint64_t, 15> scheduled{};
+@@ -26,8 +29,7 @@
+ std::array<uint32_t, 2> reading{};
+ 
+ bool paused() {
+-    return journal() && journal()->owner() && !g_system->running() && !g_system->quitting() &&
+-           !g_emulator->m_cpu->isDynarec();
++    return journal() && journal()->owner() && !g_system->running() && !g_system->quitting();
+ }
+ uint64_t cycles() { return g_emulator->m_cpu->m_regs.cycle; }
+ bool dmaKind(Kind kind) {
+@@ -67,10 +69,11 @@
+ }
+ bool active() { return recording(); }
+ bool begin(uint32_t events, uint32_t bytes) {
+-    if (!paused() || g_emulator->m_mem->msanInitialized()) return false;
++    if (!paused() || gpuDepth || g_emulator->m_cpu->isDynarec() || g_emulator->m_mem->msanInitialized()) return false;
+     if (!journal()->begin(events, bytes, cycles())) return false;
+     requests.fill(0);
+     serial = 0;
++    gpuSerial = 0;
+     bufferRequest = 0;
+     inputRequest = pendingRequest = 0;
+     scheduled.fill(0);
+@@ -95,14 +98,73 @@
+     emit(Kind::IRQInitial, 0, {mirror(0x1070), mirror(0x1074), cpu.CP0.n.Status, cpu.CP0.n.Cause});
+     g_emulator->m_mdec->observe(0);
+     g_emulator->m_counters->history();
++    g_emulator->m_gpu->history(0);
+     return true;
+ }
+-bool stop() { return paused() && journal()->stop(cycles()); }
++bool stop() {
++    if (!paused() || !recording()) return false;
++    if (g_emulator->m_cpu->isDynarec() || g_emulator->m_mem->msanInitialized()) fail(Failure::Unsupported);
++    g_emulator->m_gpu->history(1);
++    if (gpuDepth) fail(Failure::Association);
++    return journal()->stop(cycles());
++}
+ bool clear() { return paused() && journal()->clear(); }
+ bool status(Status* out) { return out && journal() && journal()->status(*out); }
+ bool record(uint32_t index, Record* out) { return out && paused() && journal()->record(index, *out); }
+ bool bytes(uint32_t offset, uint32_t length, void* out) { return paused() && journal()->bytes(offset, length, out); }
+ void fail(Failure reason) { if (journal()) journal()->fail(reason); }
++
++Gpu::Gpu(GPU& gpu, GpuSource source, uint32_t origin, uint32_t words, uint32_t value)
++    : m_source(source), m_origin(origin), m_words(words), m_value(value) {
++    // Track owner-thread scopes even outside recording: a Lua pause callback
++    // inside native processing cannot begin a falsely idle capture interval.
++    if (!journal()) return;
++    if (!journal()->owner()) { fail(Failure::Thread); return; }
++    if (gpuDepth == UINT32_MAX) { fail(Failure::Bounds); return; }
++    ++gpuDepth;
++    m_scope = true;
++    // No CPU/GPU fields are read until owner-thread recording is established.
++    if (!recording()) return;
++    if (&gpu != g_emulator->m_gpu.get() || g_emulator->m_cpu->isDynarec() ||
++        g_emulator->m_mem->msanInitialized()) { fail(Failure::Unsupported); return; }
++    // Reject signed-count conversions and byte-count overflow before an input
++    // can be represented as complete. Native execution is not changed here.
++    if (((source == GpuSource::Direct || source == GpuSource::ReadDMA) && words > 0x200000u) ||
++        (source == GpuSource::Chain && words > 255u)) { fail(Failure::Bounds); return; }
++    if (source == GpuSource::ReadDMA) {
++        const auto fifo = gpu.historyState()[1];
++        // Native directDMARead subtracts the entire FIFO, not only bytes read.
++        // An oversized FIFO would make its remaining-word loop negative.
++        if ((fifo & 3u) || fifo / 4 > words) { fail(Failure::Bounds); return; }
++    }
++    if (gpuSerial == UINT64_MAX) { fail(Failure::Bounds); return; }
++    m_gpu = &gpu;
++    m_id = ++gpuSerial;
++    m_epoch = epoch;
++    if (source == GpuSource::Direct || source == GpuSource::Chain || source == GpuSource::ReadDMA) {
++        m_request = owned[2] ? owners[2] : requests[2];
++    }
++    emit(Kind::GpuInput);
++    if (source == GpuSource::HostGP0 || source == GpuSource::HostGP1 || source == GpuSource::HostRead ||
++        source == GpuSource::HostReplay) {
++        fail(Failure::Discontinuity);
++    }
++}
++Gpu::~Gpu() {
++    if (m_scope) {
++        if (!journal()->owner()) { fail(Failure::Thread); return; }
++        if (!gpuDepth) { fail(Failure::Association); return; }
++        --gpuDepth;
++    }
++    if (!m_gpu || !recording() || m_epoch != epoch) return;
++    if (m_gpu != g_emulator->m_gpu.get()) { fail(Failure::Discontinuity); return; }
++    emit(Kind::GpuResult);
++}
++void Gpu::emit(Kind kind) {
++    const auto state = m_gpu->historyState();
++    History::emit(kind, 2, {uint32_t(m_source), m_origin, m_words, m_value,
++                  state[0], state[1], g_emulator->m_cpu->m_regs.pc, state[5]}, m_id, nullptr, 0, m_request);
++}
+ 
+ void emit(Kind kind, uint32_t device, std::array<uint32_t, 8> data,
+           uint64_t related, const void* payload, uint32_t length, uint64_t request) {
+--- a/src/core/history.h
++++ b/src/core/history.h
+@@ -3,6 +3,8 @@
+ 
+ #include "core/journal.h"
+ #include <optional>
++
++namespace PCSX { class GPU; }
+ 
+ namespace PCSX::History {
+ 
+@@ -12,6 +14,7 @@
+     IRQAssert, IRQClear, IRQAccept, TimerBefore, TimerAfter, TimerRead,
+     TimerWrite, TimerGate, Discontinuity, DmaEnd, TimerRate, TimerInitial,
+     ScheduleInitial, IRQInitial, DmaDevice, DmaBuffer, DmaCancel, DmaPeek,
++    GpuContext, GpuEnvironment, GpuInput, GpuResult,
+ };
+ 
+ // Called once when the main Lua state is initialized, never from device hooks.
+@@ -46,6 +49,25 @@
+ void cancel();
+ void cdbyte(uint32_t address, uint32_t source, uint8_t value);
+ void timerRead(uint32_t index, uint32_t selector, uint32_t value, uint32_t after = 0);
++
++// Effective GPU calls, not bus attempts. DMA payload stays in the enclosed
++// DmaData span; related identifies this before/after pair independently of DMA.
++enum class GpuSource : uint32_t { GP0, GP1, Direct, Chain, ReadDMA, ReadGP0, HostGP0, HostGP1, HostRead, HostReplay };
++class Gpu {
++  public:
++    Gpu(GPU& gpu, GpuSource source, uint32_t origin, uint32_t words, uint32_t value = 0);
++    ~Gpu();
++    void result(uint32_t value) { m_value = value; }
++    Gpu(const Gpu&) = delete;
++    Gpu& operator=(const Gpu&) = delete;
++  private:
++    void emit(Kind kind);
++    GPU* m_gpu = nullptr;
++    GpuSource m_source;
++    uint32_t m_origin, m_words, m_value;
++    uint64_t m_id = 0, m_epoch = 0, m_request = 0;
++    bool m_scope = false;
++};
+ 
+ class Register {
+   public:
+--- a/src/core/psxhw.cc
++++ b/src/core/psxhw.cc
+@@ -308,7 +308,7 @@
+             return hard;
+         }
+         case 0x1f801810:
+-            hard = g_emulator->m_gpu->readData();
++            hard = g_emulator->m_gpu->readData(add);
+             PSXHW_LOG("GPU DATA 32bit read %x\n", hard);
+             break;
+         case 0x1f801814:
+@@ -782,11 +782,11 @@
+             break;
+         case 0x1f801810:
+             PSXHW_LOG("GPU DATA 32bit write %x (CMD/MSB %x)\n", value, value >> 24);
+-            g_emulator->m_gpu->writeData(value);
++            g_emulator->m_gpu->writeData(value, add);
+             break;
+         case 0x1f801814:
+             PSXHW_LOG("GPU STATUS 32bit write %x\n", value);
+-            g_emulator->m_gpu->writeStatus(value);
++            g_emulator->m_gpu->writeStatus(value, add);
+             break;
+         case 0x1f801820:
+             g_emulator->m_mdec->write0(value);
+--- a/src/core/gpulogger.cc
++++ b/src/core/gpulogger.cc
+@@ -18,6 +18,7 @@
+  ***************************************************************************/
+ 
+ #include "core/gpulogger.h"
++#include "core/history.h"
+ 
+ #include <algorithm>
+ #include <limits>
+@@ -278,6 +279,7 @@
+ void PCSX::GPULogger::startNewFrame() { m_vram = g_emulator->m_gpu->getVRAM(GPU::Ownership::ACQUIRE); }
+ 
+ void PCSX::GPULogger::replay(GPU* gpu) {
++    History::Gpu observation(*gpu, History::GpuSource::HostReplay, 0, 0);
+     if (m_vram.data()) gpu->partialUpdateVRAM(0, 0, 1024, 512, m_vram.data<uint16_t>());
+     for (auto& node : m_list) {
+         if (node.enabled) node.execute(gpu);
+--- a/src/gui/gui.cc
++++ b/src/gui/gui.cc
+@@ -53,6 +53,7 @@
+ #include "core/gdb-server.h"
+ #include "core/gpu.h"
+ #include "core/gpulogger.h"
++#include "core/history.h"
+ #include "core/pad.h"
+ #include "core/psxemulator.h"
+ #include "core/psxmem.h"
+@@ -1787,6 +1788,7 @@
+                     newPixel = writtenByte | (vramData[maskedOffset + 1] << 8);
+                 }
+ 
++                History::fail(History::Failure::Discontinuity);
+                 g_emulator->m_gpu->partialUpdateVRAM(x, y, 1, 1, &newPixel);
+             };
+             m_vramEditor.editor.Cache.BulkReadFn = [vramData](void* dest, size_t off, size_t len) {

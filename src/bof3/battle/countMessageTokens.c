@@ -5,7 +5,7 @@
  * @source 0x801EAB6C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 countMessageTokens(u8* arg0) {
   u8  count;

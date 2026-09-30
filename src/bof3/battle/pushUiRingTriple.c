@@ -5,7 +5,7 @@
  * @source 0x801DE8C0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void pushUiRingTriple(s8 arg0, s8 arg1, u32 arg2) {
   u8 index;

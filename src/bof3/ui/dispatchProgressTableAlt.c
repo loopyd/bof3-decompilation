@@ -5,7 +5,7 @@
  *           progressHandlerTable, indexed by the signed byte fairyProgress[0].
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchProgressTableAlt(void)
 {

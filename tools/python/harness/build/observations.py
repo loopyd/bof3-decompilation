@@ -131,7 +131,7 @@ def validate_description(value: object) -> None:
         if kind == "file" and (
             identity[5] != 1
             or identity[6] < 0
-            or identity[6] > 64 * 1024 * 1024
+            or identity[6] > 128 * 1024 * 1024
             or not isinstance(node["sha256"], str)
             or len(node["sha256"]) != 64
             or any(character not in "0123456789abcdef" for character in node["sha256"])

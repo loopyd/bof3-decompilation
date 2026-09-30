@@ -4,7 +4,7 @@
  * @behavior Applies the indexed signed coordinate offsets while the gate is clear.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_8009B700(void)
 {

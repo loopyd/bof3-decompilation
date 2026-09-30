@@ -6,7 +6,7 @@
  * @source 0x8014B8B0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 
 /* @source 0x80143D40 @kind bss */

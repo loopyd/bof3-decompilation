@@ -1,4 +1,4 @@
-"""``bin/rz-project`` command surface."""
+"""``bin/harness analysis rz-project`` command surface."""
 
 from __future__ import annotations
 
@@ -57,9 +57,9 @@ def run_analyze(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="rz-project")
+    parser = argparse.ArgumentParser(prog="bin/harness analysis rz-project")
     add_root_argument(parser)
-    add_example_argument(parser, "bin/rz-project analyze exe/logo")
+    add_example_argument(parser, "bin/harness analysis rz-project analyze exe/logo")
     sub = parser.add_subparsers(dest="command", required=True)
     for name, handler, help_text in (
         ("open", run_open, "open a target-isolated interactive Rizin session"),

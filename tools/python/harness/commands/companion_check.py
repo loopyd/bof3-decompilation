@@ -19,7 +19,7 @@ def run(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="bin/companion-check",
+        prog="bin/harness lift companion-check",
         description="report whether companion evidence makes one lift safe",
     )
     parser.add_argument("function", help=FUNCTION_ID_HELP)

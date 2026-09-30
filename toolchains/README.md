@@ -11,7 +11,7 @@ remain separate from the signature database, and do not prove that the shipped
 game used that SDK.
 
 `third_party/rizin/` is a pinned Rizin source submodule. `just setup` builds and
-stages it under `toolchains/rizin/`; use `bin/rizin` rather than a host
+stages it under `toolchains/rizin/`; use `bin/harness analysis rizin` rather than a host
 installation. `just doctor` verifies its MIPS and JSON-analysis capabilities
 before snapshots are used.
 
@@ -20,12 +20,12 @@ are pinned Python source submodules. `just setup` installs both, including
 Splat's MIPS extras, into `.venv`. `third_party/decomp-permuter` is likewise a
 pinned submodule; setup installs its required `toml` module into `.venv`.
 It similarly installs the pinned `asm-differ` submodule and its declared
-dependencies. Use `bin/splat`, `bin/spimdisasm`, `bin/permute`, and
-`bin/asm-diff` rather than host installs.
+dependencies. Use `bin/harness source splat`, `bin/harness analysis spimdisasm`, `bin/harness lift permute`, and
+`bin/harness lift asm-diff` rather than host installs.
 
 The signature submodule is used only by the permanent, narrow
 `bin/harness psyq {scan|calls|proposal}` evidence adapter. Do not add other
-top-level command families; symbol-map mutation remains under `bin/symbols`.
+top-level command families; symbol-map mutation remains under `bin/harness source symbols`.
 
 ```sh
 git submodule update --init
@@ -38,13 +38,13 @@ headers remain the build-facing declaration baseline.
 
 ## Historical GCC variants
 
-Four verified opt-in candidates live in `config/compiler/variants.json`: `gcc-2.6.3-psx`, `gcc-2.8.0-psx`, `gcc-2.8.1-psx`, and `gcc-2.95.2-psx`. They remain comparison candidates unless an exact, target-qualified object selection is recorded; currently `bof3/audio/dispatchSoundCue.c` selects `gcc-2.6.3-psx`, while every other object uses canonical GCC 2.7.2. Add another candidate only with the same reviewed provenance. The `bin/compiler-variants` CLI manages the lifecycle:
+Four verified opt-in candidates live in `config/compiler/variants.json`: `gcc-2.6.3-psx`, `gcc-2.8.0-psx`, `gcc-2.8.1-psx`, and `gcc-2.95.2-psx`. They remain comparison candidates unless an exact, target-qualified object selection is recorded; currently `bof3/audio/dispatchSoundCue.c` selects `gcc-2.6.3-psx`, while every other object uses canonical GCC 2.7.2. Add another candidate only with the same reviewed provenance. The `bin/harness build variants` CLI manages the lifecycle:
 
 ```sh
-bin/compiler-variants list                    # show catalog entries
-bin/compiler-variants install <id>            # download and install a variant
-bin/compiler-variants verify <id>             # verify installed variant
-bin/compiler-variants path <id>               # print verified GCC path for CMake
+bin/harness build variants list                    # show catalog entries
+bin/harness build variants install <id>            # download and install a variant
+bin/harness build variants verify <id>             # verify installed variant
+bin/harness build variants path <id>               # print verified GCC path for CMake
 ```
 
 `config/compiler/variants.json` is reviewed, tracked metadata — the single
@@ -61,7 +61,7 @@ temporary file, validates the digest before atomically publishing the cache
 entry, extracts to a fresh sibling staging directory, verifies the staged
 `gcc --version` identity, and only then atomically replaces the install; a
 failed network, digest, extraction, or identity check preserves a prior
-verified install. `bin/compiler-variants path <id>` and generated
+verified install. `bin/harness build variants path <id>` and generated
 `compile_commands.json` resolve a selected compiler through the same
 ensure-installed operation, so a missing install self-heals from the
 verified cache. `just setup` primes the canonical compiler plus every host-compatible entry

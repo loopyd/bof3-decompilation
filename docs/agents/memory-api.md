@@ -14,7 +14,7 @@ for preserving a real `jal` instead of a tail call. It replaces the former
 
 `REGISTER_PIN`, direct asm register bindings, `CLOBBER_*`, `barrier()` and all
 artificial empty-asm matching barriers are banned under the
-[source contract](../INDEX.md#source-and-duplicate-rules), even after an exact
+[source contract](matching.md#source-and-duplicate-rules), even after an exact
 match or exhausted clean-C ladder. Handwritten inline assembly and
 `extern X asm("NAME")` renames remain forbidden; `INCLUDE_ASM` needs separate
 explicit approval. Bind fixed-address symbols with a plain

@@ -9,7 +9,7 @@
  */
 void NO_SIBLING_CALLS dispatchByte1PairFlagged(void)
 {
-    Battle03Handler handlers[2] = { func_801E679C, func_801E68EC };
+    Battle03Handler handlers[2] = { func_801E679C, clearQueuedSlotWhenReady };
 
     D_801459F0 = 0x800F0800;
     ((Battle03Handler*)handlers)[SPAD_PTR_SLOT(u8, 0x44)[1]]();

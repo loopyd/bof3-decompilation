@@ -1,0 +1,119 @@
+name: world03_area117_13
+sha1: e9b319cff91720cad497d87ecd4b40b2b7847b3e
+options:
+  platform: psx
+  compiler: psyq
+  basename: world03_area117_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world03/area117/13.bin
+  asm_path: out/splat/emi/world03/area117/13/asm
+  src_path: src/emi/world03/area117/13
+  ld_script_path: out/splat/emi/world03/area117/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world03/area117/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world03/area117/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world03/area117/13/.splache
+  asset_path: out/splat/emi/world03/area117/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world03/area117/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 28
+  vram: 2149526556
+  subsegments:
+  - - 28
+    - asm
+    - func_801F2C1C
+  - - 96
+    - asm
+    - func_801F2C60
+  - - 520
+    - asm
+    - func_801F2E08
+  - - 768
+    - asm
+    - func_801F2F00
+  - - 860
+    - asm
+    - func_801F2F5C
+  - - 1060
+    - asm
+    - func_801F3024
+  - - 1196
+    - asm
+    - func_801F30AC
+  - - 1356
+    - asm
+    - func_801F314C
+  - - 1972
+    - asm
+    - func_801F33B4
+  - - 2040
+    - asm
+    - func_801F33F8
+  - - 2248
+    - asm
+    - func_801F34C8
+  - - 2448
+    - asm
+    - func_801F3590
+  - - 2636
+    - asm
+    - func_801F364C
+  - - 2764
+    - asm
+    - func_801F36CC
+  - - 3204
+    - asm
+    - func_801F3884
+  - - 3832
+    - asm
+    - func_801F3AF8
+  - - 4464
+    - asm
+    - func_801F3D70
+  - - 4592
+    - asm
+    - func_801F3DF0
+  - - 4720
+    - asm
+    - func_801F3E70
+  - - 4848
+    - asm
+    - func_801F3EF0
+  - - 4976
+    - asm
+    - func_801F3F70
+  - - 5040
+    - asm
+    - func_801F3FB0
+  - - 5104
+    - asm
+    - func_801F3FF0
+  - - 5192
+    - asm
+    - func_801F4048
+  - - 5324
+    - asm
+    - func_801F40CC
+  - - 5392
+    - asm
+    - func_801F4110
+  - - 5592
+    - asm
+    - func_801F41D8
+  - - 6452
+    - asm
+    - func_801F4534
+  - - 6692
+    - asm
+    - D_801F4624
+- - 10740

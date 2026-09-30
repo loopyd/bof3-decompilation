@@ -29,10 +29,10 @@ def run(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="psyq-import")
+    parser = argparse.ArgumentParser(prog="bin/harness psyq import")
     add_root_argument(parser)
     add_example_argument(
-        parser, "bin/psyq-import --archive inputs/external/psyq-4.7.zip"
+        parser, "bin/harness psyq import --archive inputs/external/psyq-4.7.zip"
     )
     parser.add_argument("--version", default=DEFAULT_PSYQ_VERSION)
     parser.add_argument("--archive", type=Path)

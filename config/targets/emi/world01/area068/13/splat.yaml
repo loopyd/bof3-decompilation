@@ -111,8 +111,8 @@ segments:
     - asm
     - func_801F37BC
   - - 3056
-    - asm
-    - func_801F37F0
+    - c
+    - setSubstate8AndClearWorkFlagsWorld01Area06813_801F37F0
   - - 3100
     - asm
     - func_801F381C
@@ -123,8 +123,8 @@ segments:
     - asm
     - func_801F38C8
   - - 3376
-    - asm
-    - func_801F3930
+    - c
+    - setStatusFFFFAndHandlerIndex3WhenGateWorld01Area06813_801F3930
   - - 3424
     - asm
     - func_801F3960
@@ -178,5 +178,5 @@ segments:
     - func_801F3F48
   - - 5092
     - asm
-    - func_801F3FE4
+    - D_801F3FE4
 - - 8728

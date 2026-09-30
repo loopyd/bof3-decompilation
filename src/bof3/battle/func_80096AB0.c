@@ -5,7 +5,7 @@
 /* @source 0x80096AB0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_80096AB0(void) {
   func_801DE94C(0, 0);

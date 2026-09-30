@@ -1,0 +1,17 @@
+schema = "harness.target/v2"
+id = "emi/world01/area067/14"
+disc_id = "BIN/WORLD01/AREA067.EMI#14"
+kind = "emi"
+source_dir = "src/emi/world01/area067/14"
+binary = "out/binaries/emi/world01/area067/14.bin"
+splat = "config/targets/emi/world01/area067/14/splat.yaml"
+load_address = 0x801F2C00
+
+sources = []
+support_sources = [
+    "src/bof3/world01/advanceCounter2World01Area06714_801F4440.c",
+    "src/bof3/world01/advanceCounterWorld01Area06714_801F3EE4.c",
+    "src/bof3/world01/retreatCounter2World01Area06714_801F445C.c",
+    "src/bof3/support/area067_14_psyq.c",
+]
+psyq_source = "src/bof3/support/area067_14_psyq.c"

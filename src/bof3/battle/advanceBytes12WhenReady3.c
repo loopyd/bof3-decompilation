@@ -4,7 +4,7 @@
  * @behavior Resets scratchpad work byte +2 after enemyReadyOrHelper2 succeeds, incrementing byte +1.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void advanceBytes12WhenReady3(void)
 {

@@ -32,6 +32,18 @@ segments:
     - '@source: src/bof3/world/dispatchArea030CompanionHandler.c'
     - '@behavior: Dispatches through the handler table indexed by the selector byte.'
   - - 72
-    - asm
+    - c
     - func_800F5048
+    - '@source: src/bof3/world/func_800F5048.c'
+    - '@behavior: Dispatches the phase byte handlerPhase through the AREA030/05 handler table at its entry-3 base, relays the fixed panel arguments to the companion-overlay helper at 0x801D9534, then runs the three local setup phases.'
+  - - 180
+    - c
+    - func_800F50B4
+    - '@source: src/bof3/world/func_800F50B4.c'
+    - '@behavior: Enters the AREA030/05 local frontend mode 1 (companion helper 0x8014ECAC), clears the entry-flag byte at 0x800F723C, sets the mode byte at 0x800F7244, stores the companion record index returned by func_800F66D4 in the byte slot at 0x800F7240, then advances the handlerPhase byte.'
+  - - 268
+    - c
+    - func_800F510C
+    - '@source: src/bof3/world/func_800F510C.c'
+    - '@behavior: Second phase entry of the AREA030/05 companion dispatch; when the shared gate halfword D_80143C40 is clear it selects handlerIndex 1 and restarts handlerPhase at 0.'
 - - 8784

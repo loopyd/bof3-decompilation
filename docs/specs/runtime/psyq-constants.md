@@ -86,8 +86,8 @@ arithmetic until a caller is lifted to use the mapped name.
 For every promotion, run the owning function through both gates:
 
 ```sh
-bin/asm-diff TARGET@0xADDRESS
-bin/byte-match TARGET@0xADDRESS
+bin/harness lift asm-diff TARGET@0xADDRESS
+bin/harness lift byte-match TARGET@0xADDRESS
 ```
 
 `bin/harness psyq scan --all` remains the source for SDK object identity; it

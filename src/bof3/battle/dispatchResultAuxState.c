@@ -5,7 +5,7 @@
  * @source 0x801E862C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchResultAuxState(void) {
   Battle03Handler table[2];

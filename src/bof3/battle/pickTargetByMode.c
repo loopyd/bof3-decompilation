@@ -5,7 +5,7 @@
  * @source 0x801E2D4C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 pickTargetByMode(s8 arg0) {
   u8 value;

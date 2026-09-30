@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import base64
+import os
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
@@ -68,9 +69,87 @@ def _is_artifact(name: str) -> bool:
     )
 
 
+_WORKSPACE_STATE_CACHE: dict[Path, tuple[tuple, dict]] = {}
+_WORKSPACE_BACKUP_CACHE: dict[Path, tuple[tuple, WorkspaceSnapshot]] = {}
+
+
+def _workspace_token(root: Path) -> tuple | None:
+    """Cheap identity of the git index, HEAD and every worktree input.
+
+    Returns None when the shape cannot be summarised safely (external or
+    submodule Git directories), which disables caching for that root. File
+    identity, size and mtime are enough to detect any harness write, which
+    publishes through atomic replacement.
+    """
+    git = root / ".git"
+    if not git.is_dir():
+        return None
+    parts: list[tuple] = []
+    for dirpath, dirnames, filenames in os.walk(root, followlinks=False):
+        relative_dir = Path(dirpath).relative_to(root)
+        if relative_dir.parts and relative_dir.parts[0] in ARTIFACT_EXCLUSIONS:
+            dirnames[:] = []
+            continue
+        dirnames[:] = sorted(name for name in dirnames if name != ".git")
+        for name in sorted(filenames):
+            if name == ".git":
+                return None
+            path = Path(dirpath) / name
+            relative = path.relative_to(root).as_posix()
+            if _is_artifact(relative):
+                continue
+            try:
+                status = path.stat(follow_symlinks=False)
+            except OSError:
+                return None
+            parts.append(
+                (
+                    relative,
+                    status.st_dev,
+                    status.st_ino,
+                    status.st_size,
+                    status.st_mtime_ns,
+                    status.st_mode,
+                )
+            )
+    try:
+        head = (git / "HEAD").read_bytes()
+    except OSError:
+        return None
+    parts.append((".git/HEAD", head))
+    refs = [".git/index", ".git/packed-refs"]
+    if head.startswith(b"ref: "):
+        ref = head[5:].strip().decode("utf-8", "surrogateescape")
+        if ref and not ref.startswith("/") and ".." not in ref.split("/"):
+            refs.append(f".git/{ref}")
+    for name in refs:
+        try:
+            status = (root / name).stat(follow_symlinks=False)
+        except OSError:
+            parts.append((name, None))
+        else:
+            parts.append(
+                (
+                    name,
+                    status.st_dev,
+                    status.st_ino,
+                    status.st_size,
+                    status.st_mtime_ns,
+                )
+            )
+    return tuple(parts)
+
+
 def workspace_state(root: Path) -> dict[str, dict[str, str | None]]:
     if not (root / ".git").exists():
         return {}
+    token = _workspace_token(root)
+    if token is not None:
+        cached = _WORKSPACE_STATE_CACHE.get(root)
+        if cached is not None and cached[0] == token:
+            import copy as _copy
+
+            return _copy.deepcopy(cached[1])
     state = {}
     indexed, committed = collect_entries(root)
     gitlinks = {
@@ -113,7 +192,10 @@ def workspace_state(root: Path) -> dict[str, dict[str, str | None]]:
                 "kind": "gitlink",
                 "sha256": hashlib.sha256(snapshot.content).hexdigest(),
             }
-    return dict(sorted(state.items()))
+    result = dict(sorted(state.items()))
+    if token is not None:
+        _WORKSPACE_STATE_CACHE[root] = (token, result)
+    return result
 
 
 def workspace_baseline(root: Path) -> dict[str, Any]:
@@ -134,6 +216,20 @@ def adopted_baseline(root: Path, request: dict[str, Any]) -> dict[str, Any]:
 def workspace_backup(root: Path) -> WorkspaceSnapshot:
     if not (root / ".git").exists():
         return {}
+    token = _workspace_token(root)
+    if token is not None:
+        cached = _WORKSPACE_BACKUP_CACHE.get(root)
+        if cached is not None and cached[0] == token:
+            import copy as _copy
+
+            return _copy.deepcopy(cached[1])
+    backup: WorkspaceSnapshot = _capture_workspace_backup(root)
+    if token is not None:
+        _WORKSPACE_BACKUP_CACHE[root] = (token, backup)
+    return backup
+
+
+def _capture_workspace_backup(root: Path) -> WorkspaceSnapshot:
     indexed, committed = collect_entries(root)
     gitlinks = {
         name: checksum

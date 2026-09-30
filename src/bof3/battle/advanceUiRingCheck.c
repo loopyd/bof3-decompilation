@@ -5,7 +5,7 @@
  * @source 0x801EAB38
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 advanceUiRingCheck(void) {
   u8* const base = (u8*)0x801f0000u;

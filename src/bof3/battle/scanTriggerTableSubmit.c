@@ -5,7 +5,7 @@
  * @source 0x801DDF50
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 scanTriggerTableSubmit(u16 arg0, u32 arg1) {
   u32* table;

@@ -4,7 +4,7 @@
  * @behavior Copies byte +0x09 from the scratchpad-selected object to scratchpad bytes 0x00 through 0x02, then calls func_801D99AC(0, 0, 0xB).
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void broadcastByte9DrawDigits(void)
 {

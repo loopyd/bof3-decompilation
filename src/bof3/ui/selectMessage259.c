@@ -4,7 +4,7 @@
  * @behavior selects message 0x259 and advances its local state byte
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void selectMessage259(void) {
   func_80161FDC(0x259u);

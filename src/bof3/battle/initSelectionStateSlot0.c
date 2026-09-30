@@ -4,7 +4,7 @@
  * @behavior initializes battle selection/action state via setup mode 0x104, selects slot 0, sets active selection flags, resets state, and increments the counter.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void initSelectionStateSlot0(void) {
   u8 counter;

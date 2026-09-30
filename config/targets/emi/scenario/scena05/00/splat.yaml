@@ -33,8 +33,8 @@ segments:
     - asm
     - func_801F73F8
   - - 2108
-    - asm
-    - func_801F743C
+    - c
+    - incrementWorkByte1ClearCounterScenarioScena0500_801F743C
   - - 2140
     - asm
     - func_801F745C
@@ -45,8 +45,8 @@ segments:
     - asm
     - func_801F74EC
   - - 2352
-    - asm
-    - func_801F7530
+    - c
+    - incrementWorkByte1SetCounterScenarioScena0500_801F7530
   - - 2388
     - asm
     - func_801F7554
@@ -57,8 +57,10 @@ segments:
     - asm
     - func_801F7660
   - - 3704
-    - asm
-    - func_801F7A78
+    - c
+    - dispatchScenarioStateHandlerScenarioScena0500_801F7A78
+    - '@source: src/bof3/scenario/dispatchScenarioStateHandlerScenarioScena0500_801F7A78.c'
+    - '@behavior: Per-frame state dispatcher of this overlay: it reads the signed shared main-RAM state byte D_80146872, scales it by four and dispatches through the overlay-local three-word handler table at 0x801FD5DC, so that byte selects which of the overlay''s three states runs this frame; it returns nothing and its 0x18-byte frame only holds $ra across the indirect call.'
   - - 3764
     - c
     - setScenarioScena0500_801F7AB4
@@ -66,8 +68,10 @@ segments:
     - asm
     - func_801F7AC8
   - - 6124
-    - asm
-    - func_801F83EC
+    - c
+    - dispatchPrimaryStateHandlerScenarioScena0500_801F83EC
+    - '@source: src/bof3/scenario/dispatchPrimaryStateHandlerScenarioScena0500_801F83EC.c'
+    - '@behavior: Per-frame primary state dispatcher of this overlay: it reads the signed shared primary state byte D_80146874, scales it by four and dispatches through the overlay-local thirty-two-word handler table at 0x801FD5E8, so that byte selects which of the overlay''s primary states runs this frame; it returns nothing and its 0x18-byte frame only holds $ra across the indirect call.'
   - - 6184
     - c
     - noopHandlerScenarioScena0500_801F8428
@@ -204,11 +208,11 @@ segments:
     - c
     - invokeZeroArgScenarioScena0500_801FD36C
   - - 26508
-    - asm
-    - func_801FD38C
+    - c
+    - armEffectGroupThenInvokeTwoHelpersScenarioScena0500_801FD38C
   - - 26568
-    - asm
-    - func_801FD3C8
+    - c
+    - armEffectGroupThenInvokeTwoHelpersScenarioScena0500_801FD3C8
   - - 26628
     - asm
     - func_801FD404
@@ -222,20 +226,28 @@ segments:
     - asm
     - func_801FD49C
   - - 26840
-    - asm
-    - func_801FD4D8
+    - c
+    - invokeHelperTwiceThenHelperScenarioScena0500_801FD4D8
+    - '@source: src/bof3/scenario/invokeHelperTwiceThenHelperScenarioScena0500_801FD4D8.c'
+    - '@behavior: Thin overlay wrapper calling the helper at 0x801C1ABC with the constant argument 5, then 0x801C1ABC with the constant argument 1, then the helper at 0x801C1630 with no arguments; the 0x18-byte frame only keeps $ra across the three calls.'
   - - 26888
-    - asm
-    - func_801FD508
+    - c
+    - invokeHelperArgThenHelperScenarioScena0500_801FD508
   - - 26928
-    - asm
-    - func_801FD530
+    - c
+    - invokeHelperArgThenHelperScenarioScena0500_801FD530
+    - '@source: src/bof3/scenario/invokeHelperArgThenHelperScenarioScena0500_801FD530.c'
+    - '@behavior: Thin overlay wrapper calling the helper at 0x801C1ABC with the constant argument 5 and then the helper at 0x801C1630 with no arguments; the 0x18-byte frame only keeps $ra across the two calls.'
   - - 26968
-    - asm
-    - func_801FD558
+    - c
+    - invokeHelperArgThenHelperScenarioScena0500_801FD558
+    - '@source: src/bof3/scenario/invokeHelperArgThenHelperScenarioScena0500_801FD558.c'
+    - '@behavior: Thin overlay wrapper calling the helper at 0x801C1ABC with the constant argument 6 and then the helper at 0x801C1630 with no arguments; the 0x18-byte frame only keeps $ra across the two calls.'
   - - 27008
-    - asm
-    - func_801FD580
+    - c
+    - invokeHelperArgThenHelperScenarioScena0500_801FD580
+    - '@source: src/bof3/scenario/invokeHelperArgThenHelperScenarioScena0500_801FD580.c'
+    - '@behavior: Thin overlay wrapper calling the helper at 0x801C1ABC with the constant argument 0 and then the helper at 0x801C1630 with no arguments; the 0x18-byte frame only keeps $ra across the two calls.'
   - - 27048
     - asm
     - func_801FD5A8

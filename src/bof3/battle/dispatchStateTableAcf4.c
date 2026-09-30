@@ -4,7 +4,7 @@
  * @behavior invokes the handler selected by the battle-state byte.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchStateTableAcf4(void)
 {

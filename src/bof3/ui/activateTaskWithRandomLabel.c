@@ -5,7 +5,7 @@
  * @behavior activates a task slot and assigns it a small randomized label
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void activateTaskWithRandomLabel(u8 task_index) {
   u8 value;

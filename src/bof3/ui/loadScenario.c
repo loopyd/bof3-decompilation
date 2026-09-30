@@ -9,7 +9,7 @@ extern u32* D_8014686C;
  * @source 0x801A7704
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void loadScenario(u8 scenario_index) {
   GameScenarioState* state;

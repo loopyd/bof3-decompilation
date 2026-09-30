@@ -5,7 +5,7 @@
  * @source 0x801E1B2C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void resetScratchWhenGlobalBit4(void) {
   if ((BATTLE_GLOBAL_HALF_62E8 & 4u) == 0u) {

@@ -3,6 +3,6 @@
 from .base import _context_profile
 
 
-_context_profile("researcher", paths=("docs/agents/project-context.md",))(
-    lambda request: ()
-)
+_context_profile(
+    "researcher", paths=(".pi/skills/bof3-re/references/target-contract.md",)
+)(lambda request: ())

@@ -5,7 +5,7 @@
  * @source 0x801DD8AC
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 /* The volatile views on D_80145F10..D_80145F1C/D_80144974..D_80144980 pin the
  * original per-field load->store interleave; without them gcc hoists all loads

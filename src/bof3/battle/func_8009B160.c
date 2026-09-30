@@ -3,6 +3,8 @@
 /* @behavior Initializes a battle panel state from the active work record.
  * @source 0x8009B160
  * @status partial
+ * @match 83.72
+ * @residual same-CFG allocator/scheduling residual from +0x0000 (constant/register schedule differs; live byte-match DIFFER)
  */
 void func_8009B160(void) {
   u8 *work;

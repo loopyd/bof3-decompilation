@@ -5,7 +5,7 @@
  * @source 0x801E567C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void resetEnemyScratchState(void) {
   volatile Battle03EnemyWork **scratch = SPAD_PTR_TABLE(volatile Battle03EnemyWork);

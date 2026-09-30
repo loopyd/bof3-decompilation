@@ -4,7 +4,7 @@
  * @behavior emits a semi-transparent full-screen tile primitive
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void drawFullscreenFadeTile(void) {
   TILE* tile;

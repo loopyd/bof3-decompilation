@@ -5,7 +5,7 @@
  * @source 0x801D17D8
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8* drawGlyph(s32 x, s32 y, s32 glyph, s32 palette, u8 flags) {
   u8* primitive;

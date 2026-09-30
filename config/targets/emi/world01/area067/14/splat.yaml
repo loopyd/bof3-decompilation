@@ -1,0 +1,161 @@
+name: world01_area067_14
+sha1: 377a47ce886fdd3b3e69eaa8d706067d3ecf8898
+options:
+  platform: psx
+  compiler: psyq
+  basename: world01_area067_14
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world01/area067/14.bin
+  asm_path: out/splat/emi/world01/area067/14/asm
+  src_path: src/emi/world01/area067/14
+  ld_script_path: out/splat/emi/world01/area067/14/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world01/area067/14/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world01/area067/14/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world01/area067/14/.splache
+  asset_path: out/splat/emi/world01/area067/14/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world01/area067/14/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149526532
+  subsegments:
+  - - 4
+    - asm
+    - func_801F2C04
+  - - 72
+    - asm
+    - func_801F2C48
+  - - 416
+    - asm
+    - func_801F2DA0
+  - - 584
+    - asm
+    - func_801F2E48
+  - - 664
+    - asm
+    - func_801F2E98
+  - - 860
+    - asm
+    - func_801F2F5C
+  - - 1096
+    - asm
+    - func_801F3048
+  - - 1260
+    - asm
+    - func_801F30EC
+  - - 1420
+    - asm
+    - func_801F318C
+  - - 1480
+    - asm
+    - func_801F31C8
+  - - 1940
+    - asm
+    - func_801F3394
+  - - 2444
+    - asm
+    - func_801F358C
+  - - 3232
+    - asm
+    - func_801F38A0
+  - - 3500
+    - asm
+    - func_801F39AC
+  - - 3544
+    - asm
+    - func_801F39D8
+  - - 3740
+    - asm
+    - func_801F3A9C
+  - - 3800
+    - asm
+    - func_801F3AD8
+  - - 4436
+    - asm
+    - func_801F3D54
+  - - 4612
+    - asm
+    - func_801F3E04
+  - - 4688
+    - asm
+    - func_801F3E50
+  - - 4732
+    - asm
+    - func_801F3E7C
+  - - 4804
+    - asm
+    - func_801F3EC4
+  - - 4836
+    - c
+    - advanceCounterWorld01Area06714_801F3EE4
+    - '@source: src/bof3/world01/advanceCounterWorld01Area06714_801F3EE4.c'
+    - '@behavior: increments the shared 32-bit work counter at 0x801468BC by 0x800'
+  - - 4864
+    - asm
+    - func_801F3F00
+  - - 4992
+    - asm
+    - func_801F3F80
+  - - 5132
+    - asm
+    - func_801F400C
+  - - 5272
+    - asm
+    - func_801F4098
+  - - 5412
+    - asm
+    - func_801F4124
+  - - 5540
+    - asm
+    - func_801F41A4
+  - - 5668
+    - asm
+    - func_801F4224
+  - - 5796
+    - asm
+    - func_801F42A4
+  - - 5924
+    - asm
+    - func_801F4324
+  - - 6052
+    - asm
+    - func_801F43A4
+  - - 6180
+    - asm
+    - func_801F4424
+  - - 6208
+    - c
+    - advanceCounter2World01Area06714_801F4440
+    - '@source: src/bof3/world01/advanceCounter2World01Area06714_801F4440.c'
+    - '@behavior: increments the shared 32-bit work counter at 0x80146954 by 0x800'
+  - - 6236
+    - c
+    - retreatCounter2World01Area06714_801F445C
+    - '@source: src/bof3/world01/retreatCounter2World01Area06714_801F445C.c'
+    - '@behavior: decrements the shared 32-bit work counter at 0x80146954 by 0x800'
+  - - 6264
+    - asm
+    - func_801F4478
+  - - 6300
+    - asm
+    - func_801F449C
+  - - 6428
+    - asm
+    - func_801F451C
+  - - 6588
+    - asm
+    - func_801F45BC
+  - - 6628
+    - asm
+    - func_801F45E4
+  - - 6692
+    - asm
+    - D_801F4624
+- - 10152

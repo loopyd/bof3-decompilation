@@ -6,7 +6,7 @@
  * @source 0x8019A194
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 func_8019A194(void)
 {

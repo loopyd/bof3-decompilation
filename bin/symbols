@@ -1,8 +1,0 @@
-#!/bin/sh
-
-set -eu
-
-ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
-. "$ROOT/bin/python-env"
-python_env "$ROOT/.venv/bin/python" 2 'run `just setup` first'
-exec "$PYTHON" -m harness.commands.symbols "$@"

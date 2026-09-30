@@ -1,0 +1,107 @@
+name: bmagic_magic092_03
+sha1: bf7a24229b346aaa9028dce6847f5c6f4d7e4670
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic092_03
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/bmagic/magic092/03.bin
+  asm_path: out/splat/emi/bmagic/magic092/03/asm
+  src_path: src/emi/bmagic/magic092/03
+  ld_script_path: out/splat/emi/bmagic/magic092/03/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/bmagic/magic092/03/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/bmagic/magic092/03/undefined_syms_auto.txt
+  cache_path: out/splat/emi/bmagic/magic092/03/.splache
+  asset_path: out/splat/emi/bmagic/magic092/03/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/bmagic/magic092/03/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149510148
+  subsegments:
+  - - 4
+    - asm
+    - func_801EEC04
+  - - 260
+    - asm
+    - func_801EED04
+  - - 948
+    - asm
+    - func_801EEFB4
+  - - 1024
+    - asm
+    - func_801EF000
+  - - 1092
+    - asm
+    - func_801EF044
+  - - 1228
+    - asm
+    - func_801EF0CC
+  - - 1520
+    - asm
+    - func_801EF1F0
+  - - 1872
+    - asm
+    - func_801EF350
+  - - 1928
+    - asm
+    - func_801EF388
+  - - 2256
+    - asm
+    - func_801EF4D0
+  - - 2432
+    - asm
+    - func_801EF580
+  - - 3068
+    - asm
+    - func_801EF7FC
+  - - 3136
+    - asm
+    - func_801EF840
+  - - 3264
+    - asm
+    - func_801EF8C0
+  - - 3392
+    - asm
+    - func_801EF940
+  - - 3472
+    - asm
+    - func_801EF990
+  - - 3620
+    - asm
+    - func_801EFA24
+  - - 3844
+    - asm
+    - func_801EFB04
+  - - 5728
+    - asm
+    - func_801F0260
+  - - 5920
+    - asm
+    - func_801F0320
+  - - 6028
+    - asm
+    - func_801F038C
+  - - 6108
+    - asm
+    - func_801F03DC
+  - - 6176
+    - asm
+    - func_801F0420
+  - - 6332
+    - asm
+    - func_801F04BC
+  - - 7000
+    - asm
+    - func_801F0758
+  - - 7100
+    - asm
+    - func_801F07BC
+- - 12920

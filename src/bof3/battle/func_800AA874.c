@@ -5,7 +5,7 @@
  * @source 0x800AA874
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u32 func_800AA874(u32 arg0) {
   arg0 &= 0xFF;

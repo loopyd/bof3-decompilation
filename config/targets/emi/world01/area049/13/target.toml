@@ -9,6 +9,8 @@ load_address = 0x80117000
 
 sources = []
 support_sources = [
+    "src/bof3/world01/clearWorkFlagsWhenNoEntryHandledWorld01Area04913_801170A4.c",
+    "src/bof3/world01/findFreeWorkRecordAt800E4800World01Area04913_801178C4.c",
     "src/bof3/world01/incrementWorkByte2World01Area04913_80117C38.c",
     "src/bof3/support/area049_13_psyq.c",
 ]

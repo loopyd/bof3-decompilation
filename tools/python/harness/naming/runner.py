@@ -1,4 +1,4 @@
-"""``bin/naming-evidence-run``: one receipt-backed target evidence run.
+"""``bin/harness naming evidence``: one receipt-backed target evidence run.
 
 Native collection of the ``required_work`` for a single target v3 report:
 one process, one bulk context, one shared index connection, bounded
@@ -39,11 +39,11 @@ class _SingleValue(argparse.Action):
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="naming-evidence-run")
+    parser = argparse.ArgumentParser(prog="bin/harness naming evidence")
     add_root_argument(parser)
     add_example_argument(
         parser,
-        "bin/naming-evidence-run exe/test out/reviews/reports/exe__test.json",
+        "bin/harness naming evidence exe/test out/reviews/reports/exe__test.json",
     )
     parser.add_argument("target")
     parser.add_argument("report", type=Path)

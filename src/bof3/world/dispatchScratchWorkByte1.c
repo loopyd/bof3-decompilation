@@ -5,7 +5,7 @@
  * @source 0x801F30A8
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS dispatchScratchWorkByte1(void) {
   D_801F3F80[D_1F800044[1]]();

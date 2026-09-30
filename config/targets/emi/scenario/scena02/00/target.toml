@@ -9,6 +9,10 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/clearSharedByteAndProgressThenAdvanceStateScenarioScena0200_801F71D8.c",
+    "src/bof3/scenario/setScenarioFlagBit31ScenarioScena0200_801FD65C.c",
+    "src/bof3/scenario/setScenarioFlagBit0DScenarioScena0200_801FD290.c",
+    "src/bof3/scenario/setScenarioFlagBit0EScenarioScena0200_801FD2B8.c",
     "src/bof3/scenario/invokeHelperArgScenarioScena0200_801FE178.c",
     "src/bof3/scenario/setScenarioScena0200_801FD27C.c",
     "src/bof3/scenario/setScenarioScena0200_801FD268.c",
@@ -21,6 +25,16 @@ support_sources = [
     "src/bof3/scenario/noopHandlerScenarioScena0200_801FB0E8.c",
     "src/bof3/scenario/noopHandlerScenarioScena0200_801F8068.c",
     "src/bof3/scenario/noopHandlerScenarioScena0200_801F7C30.c",
+    "src/bof3/scenario/requestPrimaryState17AndClearSubstateScenarioScena0200_801FD574.c",
+    "src/bof3/scenario/requestPrimaryState1BSubstate10ScenarioScena0200_801FD53C.c",
+    "src/bof3/scenario/requestPrimaryState1ASubstate19ScenarioScena0200_801FD684.c",
+    "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena0200_801FE198.c",
     "src/bof3/support/scena02_00_psyq.c",
+    "src/bof3/scenario/dispatchProgressHandlerScenarioScena0200_801F719C.c",
+    "src/bof3/scenario/requestPrimaryState1BSubstate5ScenarioScena0200_801FD6BC.c",
+    "src/bof3/scenario/dispatchPrimaryStateHandlerScenarioScena0200_801F7A60.c",
+    "src/bof3/scenario/setProgress1FAndRequestPrimaryState7ScenarioScena0200_801FCB54.c",
+    "src/bof3/scenario/dispatchRecordCallbackByByte7AScenarioScena0200_801FD084.c",
+    "src/bof3/scenario/requestPrimaryState10Substate0FAndQueueCue106ScenarioScena0200_801FD450.c",
 ]
 psyq_source = "src/bof3/support/scena02_00_psyq.c"

@@ -5,7 +5,7 @@
  * @source 0x801F41D8
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void resetStateFlagA(void) {
   D_801490A8 = 0xFFFF;

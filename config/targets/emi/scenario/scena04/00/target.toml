@@ -7,7 +7,15 @@ binary = "out/binaries/emi/scenario/scena04/00.bin"
 splat = "config/targets/emi/scenario/scena04/00/splat.yaml"
 load_address = 0x801F6C00
 
-sources = []
+sources = [
+    "src/bof3/scenario/advanceStateAndClearSharedByteScenarioScena0400_801F8160.c",
+    "src/bof3/scenario/setFlagBit0RecordCallbackScenarioScena0400_801F9D88.c",
+    "src/bof3/scenario/dispatchProgressHandlerScenarioScena0400_801F8124.c",
+    "src/bof3/scenario/clearWorkTableByte25At800E4800ScenarioScena0400_801F7FCC.c",
+    "src/bof3/scenario/clearWorkTableByte25AndAdvanceWorkByte1ScenarioScena0400_801F7AC8.c",
+    "src/bof3/scenario/findFreeWorkRecordByte25ScenarioScena0400_801F7FF8.c",
+    "src/bof3/scenario/dispatchPrimaryStateHandlerScenarioScena0400_801F863C.c",
+]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioScena0400_801F7A64.c",
     "src/bof3/scenario/invokeHelperScenarioScena0400_801F7064.c",

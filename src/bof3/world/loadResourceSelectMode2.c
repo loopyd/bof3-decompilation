@@ -7,7 +7,7 @@ extern void func_8014D6B8(u32 flag);
  * @source 0x801F2C88
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void loadResourceSelectMode2(void) {
   volatile World00Area008State* previous;

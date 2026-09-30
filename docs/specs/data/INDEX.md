@@ -25,7 +25,7 @@ not a claim about a separately catalogued US retail revision.
 These totals are the tracked `third_party/references/vast-violence/tables/`
 catalog counts (25 named records minus 2 zero-byte placeholders); the corpus
 itself is a user-owned disc input. No standalone byte-verifier command is
-tracked in this repository, so no mismatch count is asserted. `bin/index` →
+tracked in this repository, so no mismatch count is asserted. `bin/harness analysis index` →
 `out/index/` is a query cache over Rizin snapshots and maps and is never an
 authority for binary layout.
 

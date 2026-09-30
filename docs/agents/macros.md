@@ -7,7 +7,7 @@ membership, and unfinished campaign work stay in
 [the active plan](../plans/autonomous-bof3-decompilation.md), not this guide.
 
 Parent-owned index refreshes and external review use the
-[standing autonomous authorization](../INDEX.md#autonomous-execution), not a new
+[standing autonomous authorization](codex.md#autonomous-execution), not a new
 user permission request. Preserve pinned transactions and frozen proofs.
 
 ## Contents
@@ -117,17 +117,18 @@ queries remain raw lead inventories, not the four-use block proposal policy.
 Block artifacts require explicit human-value evidence and membership in a pinned
 top-N selection. The CLI validates assessments supplied by an AI/reviewer; it does
 not invoke a model or implement an autonomous attempt loop.
-`rev-query --limit N` and `macro-audit blocks --limit N` limit **output rows**,
-not attempted cleanups; their default is 20 and zero means all rows.
+`bin/harness analysis query --limit N` and `bin/harness macros blocks --limit N`
+limit **output rows**, not attempted cleanups; their default is 20 and zero
+means all rows.
 
 ## Index and discovery
 
 ```sh
-bin/index
-bin/rev-query macros [NAME] [--target TARGET] [--classification KIND]
-bin/rev-query macro-uses [NAME] [--target TARGET]
-bin/rev-query [--limit N] macro-opportunities [--target TARGET] [--kind KIND]
-bin/rev-query [--limit N] near-duplicates [--target TARGET]
+bin/harness analysis index
+bin/harness analysis query macros [NAME] [--target TARGET] [--classification KIND]
+bin/harness analysis query macro-uses [NAME] [--target TARGET]
+bin/harness analysis query [--limit N] macro-opportunities [--target TARGET] [--kind KIND]
+bin/harness analysis query [--limit N] near-duplicates [--target TARGET]
 ```
 
 Square brackets denote optional arguments, not literal shell syntax. Use canonical
@@ -139,7 +140,7 @@ shared helper headers, and `src/shared/**/*.inc`. The index retains definition
 bodies, parameters, source hashes, conditions, provenance, restrictions, and lexical
 uses. Generated PsyQ bindings are generator-owned/noncandidates. Historical
 `matching_helper`/`sanctioned_helper` labels do not authorize the
-[banned register/empty-asm aids](../INDEX.md#source-and-duplicate-rules), extraction
+[banned register/empty-asm aids](matching.md#source-and-duplicate-rules), extraction
 of aliases, or no-op shims. Requeue affected consumers for clean-C matching;
 preserve address-binding assembly and original evidence.
 
@@ -160,10 +161,10 @@ Stale source/binary/index evidence rejects; an index lead is never source author
 ## Assembly blocks
 
 ```sh
-bin/macro-audit blocks --min-instructions 8 --target emi/battle/battle/15 --limit 5
-bin/macro-audit account out/reviews/macro-block-account.json --min-instructions 8
-bin/macro-audit validate-account out/reviews/macro-block-account.json
-bin/macro-audit describe assembly_block:f94b25f4546f9b39 --min-instructions 8 --target emi/battle/battle/15
+bin/harness macros blocks --min-instructions 8 --target emi/battle/battle/15 --limit 5
+bin/harness macros account out/reviews/macro-block-account.json --min-instructions 8
+bin/harness macros validate-account out/reviews/macro-block-account.json
+bin/harness macros describe assembly_block:f94b25f4546f9b39 --min-instructions 8 --target emi/battle/battle/15
 ```
 
 Eight is an example experiment floor, **not a project default**. `blocks` requires
@@ -209,9 +210,9 @@ lookup rather than rebinding its identity.
 ## Human-value ranking
 
 ```sh
-bin/macro-audit rank-input --min-instructions 8 --target emi/battle/battle/15 --pool-size 5 --top-n 2 --require-source > out/reviews/macro-ranking-request.json
-bin/macro-audit rank out/reviews/macro-ranking-request.json out/reviews/evidence/macro-ranking.json --expected-pool-digest POOL_DIGEST
-bin/macro-audit validate-ranking out/reviews/evidence/macro-ranking.json --expected-ranking-digest RANKING_DIGEST
+bin/harness macros rank-input --min-instructions 8 --target emi/battle/battle/15 --pool-size 5 --top-n 2 --require-source > out/reviews/macro-ranking-request.json
+bin/harness macros rank out/reviews/macro-ranking-request.json out/reviews/evidence/macro-ranking.json --expected-pool-digest POOL_DIGEST
+bin/harness macros validate-ranking out/reviews/evidence/macro-ranking.json --expected-ranking-digest RANKING_DIGEST
 ```
 
 Retain `pool_digest` externally before handing the request to the assessor. The
@@ -246,7 +247,7 @@ attempt ledger remain unfinished. Do not substitute output limits for that ledge
 
 ## Candidate and consumer inspection
 
-`bin/agent-context cleanup macro-opportunity TARGET ID` supplies a bounded prefill
+`bin/harness agent context cleanup macro-opportunity TARGET ID` supplies a bounded prefill
 for one caller-selected lead and routes only to `bof3-macros`. It retains the
 opaque ID, not a guessed replacement or target-local subset. This is context
 transport only: use the owner inspection below to verify existence, target
@@ -254,10 +255,10 @@ membership and current fingerprint against the caller's frozen evidence before
 proceeding. No ranking parameters or application authority are inferred.
 
 ```sh
-bin/macro-audit account out/reviews/macro-account.json
-bin/macro-audit validate-account out/reviews/macro-account.json
-bin/macro-audit describe exact_group:8e1ad03b4ba92303 --target emi/battle/battle/15
-bin/macro-audit impact __shared__:src/shared/ui/panel_task.inc:2:PANEL_ADVANCE_X
+bin/harness macros account out/reviews/macro-account.json
+bin/harness macros validate-account out/reviews/macro-account.json
+bin/harness macros describe exact_group:8e1ad03b4ba92303 --target emi/battle/battle/15
+bin/harness macros impact __shared__:src/shared/ui/panel_task.inc:2:PANEL_ADVANCE_X
 ```
 
 `account` uses `bof3.macro-candidate-account/v1`: every current opportunity in its
@@ -324,13 +325,13 @@ retained late-publication evidence. Check-only revalidation never restores sourc
 other macro subcommands do not gain this flag.
 
 ```sh
-bin/type-audit baseline
-bin/macro-audit prepare out/reviews/macro-request.json out/reviews/evidence/macro-manifest.json
-bin/macro-audit run out/reviews/evidence/macro-manifest.json out/reviews/macro-changes.json out/reviews/evidence/macro-application.json --implementation-run-id IMPLEMENTATION_RUN
-bin/macro-audit verify out/reviews/evidence/macro-application.json --expected-application-digest APPLICATION_DIGEST
+bin/harness types baseline
+bin/harness macros prepare out/reviews/macro-request.json out/reviews/evidence/macro-manifest.json
+bin/harness macros run out/reviews/evidence/macro-manifest.json out/reviews/macro-changes.json out/reviews/evidence/macro-application.json --implementation-run-id IMPLEMENTATION_RUN
+bin/harness macros verify out/reviews/evidence/macro-application.json --expected-application-digest APPLICATION_DIGEST
 ```
 
-`type-audit baseline` is the shared workspace-baseline owner. On a dirty worktree,
+`bin/harness types baseline` is the shared workspace-baseline owner. On a dirty worktree,
 explicitly adopt its exact current digest; adoption never excuses later drift.
 
 The request (`bof3.macro-transaction-request/v1`) identifies `target`, `concern`,
@@ -465,7 +466,7 @@ not enforced POSIX modes; see [the shared policy](harness.md). A pending index l
 rejects capture.
 
 ```sh
-bin/macro-audit inspect-recovery out/reviews/evidence/macro-recovery-NONCE.json --expected-recovery-digest INDEPENDENT_PIN
+bin/harness macros inspect-recovery out/reviews/evidence/macro-recovery-NONCE.json --expected-recovery-digest INDEPENDENT_PIN
 ```
 
 Inspection validates record integrity and structural bindings, reports PRE,
@@ -482,7 +483,7 @@ are not upgraded.
 For explicit parent-authorized source-only restoration:
 
 ```sh
-bin/macro-audit recover out/reviews/evidence/macro-recovery-NONCE.json --expected-recovery-digest RECOVERY_PIN --authorization out/reviews/evidence/recovery-authorization.json --expected-authorization-digest AUTHORIZATION_PIN
+bin/harness macros recover out/reviews/evidence/macro-recovery-NONCE.json --expected-recovery-digest RECOVERY_PIN --authorization out/reviews/evidence/recovery-authorization.json --expected-authorization-digest AUTHORIZATION_PIN
 ```
 
 The [shared authorization schema and recovery gates](harness.md#guarded-source-recovery)
@@ -581,8 +582,8 @@ confirmation remain mandatory before claiming an applied macro.
 ## Parent acceptance and replay
 
 ```sh
-bin/macro-audit review APPLICATION out/reviews/evidence/reviewed.json --parent-attestation PARENT_JSON --expected-application-digest APPLICATION_DIGEST
-bin/macro-audit final-verify out/reviews/evidence/reviewed.json --expected-envelope-digest ENVELOPE_DIGEST
+bin/harness macros review APPLICATION out/reviews/evidence/reviewed.json --parent-attestation PARENT_JSON --expected-application-digest APPLICATION_DIGEST
+bin/harness macros final-verify out/reviews/evidence/reviewed.json --expected-envelope-digest ENVELOPE_DIGEST
 ```
 
 After a distinct reviewer inspects the application and native receipts, the
@@ -611,8 +612,8 @@ reapplies changes. Historical success is not current acceptance after tooling dr
 To resume inspection of the original published work without applying it again:
 
 ```sh
-bin/macro-audit resume ORIGINAL_MANIFEST APPLICATION --expected-manifest-digest MANIFEST_PIN --expected-application-digest APPLICATION_PIN --implementation-run-id ORIGINAL_RUN
-bin/macro-audit resume ORIGINAL_MANIFEST APPLICATION --expected-manifest-digest MANIFEST_PIN --expected-application-digest APPLICATION_PIN --implementation-run-id ORIGINAL_RUN --reviewed-envelope REVIEWED_ENVELOPE --expected-envelope-digest ENVELOPE_PIN
+bin/harness macros resume ORIGINAL_MANIFEST APPLICATION --expected-manifest-digest MANIFEST_PIN --expected-application-digest APPLICATION_PIN --implementation-run-id ORIGINAL_RUN
+bin/harness macros resume ORIGINAL_MANIFEST APPLICATION --expected-manifest-digest MANIFEST_PIN --expected-application-digest APPLICATION_PIN --implementation-run-id ORIGINAL_RUN --reviewed-envelope REVIEWED_ENVELOPE --expected-envelope-digest ENVELOPE_PIN
 ```
 
 The first form returns `needs-review` only after current owner verification. The
@@ -640,10 +641,10 @@ proofs never authorize edits affecting uncovered consumers on any target.
 For private proofs requiring fresh check-only evidence:
 
 ```sh
-bin/macro-audit revalidate PRIVATE_ENVELOPE out/reviews/evidence/check.json --expected-envelope-digest PRIVATE_PIN --execution-run-id FRESH_RUN --adopted-baseline CURRENT_BASELINE --intervening ORDERED_PINS_JSON
-bin/macro-audit verify-revalidation out/reviews/evidence/check.json --expected-revalidation-digest CHECK_PIN
-bin/macro-audit review-revalidation out/reviews/evidence/check.json out/reviews/evidence/fresh.json --expected-revalidation-digest CHECK_PIN --parent-attestation FRESH_PARENT_JSON
-bin/macro-audit final-verify-revalidation out/reviews/evidence/fresh.json --expected-envelope-digest FRESH_PIN
+bin/harness macros revalidate PRIVATE_ENVELOPE out/reviews/evidence/check.json --expected-envelope-digest PRIVATE_PIN --execution-run-id FRESH_RUN --adopted-baseline CURRENT_BASELINE --intervening ORDERED_PINS_JSON
+bin/harness macros verify-revalidation out/reviews/evidence/check.json --expected-revalidation-digest CHECK_PIN
+bin/harness macros review-revalidation out/reviews/evidence/check.json out/reviews/evidence/fresh.json --expected-revalidation-digest CHECK_PIN --parent-attestation FRESH_PARENT_JSON
+bin/harness macros final-verify-revalidation out/reviews/evidence/fresh.json --expected-envelope-digest FRESH_PIN
 ```
 
 Omit `--intervening` for still-current private results. Otherwise supply the ordered
@@ -652,7 +653,7 @@ objects and external pins. Each original POST/intervening PRE and final/current
 state must agree, including native build closure, tools, environment, index, and
 unrelated adopted state. Only reviewed changed paths explain authoritative drift;
 original owned POST bytes/modes stay intact. Build changes are accepted only inside
-recorded owner `bin/build` transitions, never gaps. New check-only gates must leave
+recorded owner `bin/harness build` transitions, never gaps. New check-only gates must leave
 the resulting state unchanged. Unexpected writes require explicit recovery.
 
 Revalidation uses a fresh distinct execution ID and returns separate
@@ -719,13 +720,13 @@ opportunity already has a suitable abstraction. It never reconstructs missing
 private applications or authorizes shared promotion.
 
 ```sh
-bin/macro-audit prepare-existing REQUEST > MANIFEST
-bin/macro-audit check-existing MANIFEST --expected-manifest-digest DIGEST \
+bin/harness macros prepare-existing REQUEST > MANIFEST
+bin/harness macros check-existing MANIFEST --expected-manifest-digest DIGEST \
   --implementation-run-id RUN --deadline CUTOFF --output out/reviews/evidence/CHECK.json
-bin/macro-audit review-existing CHECK PARENT_REVIEW --expected-inspection-digest DIGEST \
+bin/harness macros review-existing CHECK PARENT_REVIEW --expected-inspection-digest DIGEST \
   --output out/reviews/evidence/DISPOSITION.json
-bin/macro-audit verify-existing DISPOSITION --expected-envelope-digest DIGEST
-bin/macro-audit account-existing REFERENCES
+bin/harness macros verify-existing DISPOSITION --expected-envelope-digest DIGEST
+bin/harness macros account-existing REFERENCES
 ```
 
 `bof3.macro-existing-request/v1` requires exactly `schema`, `target`, sorted distinct
@@ -803,7 +804,7 @@ All paths below are under `tools/python/harness/`:
 | Reviewed private-header admission | `domain/headers.py`, `macros/creation.py`; admission/application in the review and transaction owners above |
 | Parent acceptance | `macros/application.py`; shared review/revalidation in `common/` |
 | Existing-abstraction assessment and disposition | `macros/assessment.py`, `macros/disposition.py`; CLI in `macros/inspection.py` |
-| CLI | `macros/cli.py` owns `bin/macro-audit` and macro `rev-query` parsing/adapters; `commands/rev_query.py` composes domain registrations |
+| CLI | `macros/cli.py` owns `bin/harness macros` and macro `rev-query` parsing/adapters; `commands/rev_query.py` composes domain registrations |
 
 The [harness layout](harness.md) and [Python standards](coding-standards.md)
 own module structure. Evidence schemas, target identity and native gates do not
@@ -813,6 +814,6 @@ proofs still require their original closure or authorized fresh revalidation.
 Existing checks live in `tools/python/tests/test_macro_facts.py`,
 `test_macro_index.py`, `test_macro_opportunities.py`, `test_macro_accounting.py`,
 `test_macro_transactions.py`, and the reverse-index/command suites. Native acceptance
-still requires live `bin/asm-diff`, `bin/byte-match`, applicable target checks, and
+still requires live `bin/harness lift asm-diff`, `bin/harness lift byte-match`, applicable target checks, and
 independent review. Green tooling tests do not establish worthwhile macros or
 whole-codebase 1:1 source completion.

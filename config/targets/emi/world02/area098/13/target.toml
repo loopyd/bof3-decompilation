@@ -1,0 +1,18 @@
+schema = "harness.target/v2"
+id = "emi/world02/area098/13"
+disc_id = "BIN/WORLD02/AREA098.EMI#13"
+kind = "emi"
+source_dir = "src/emi/world02/area098/13"
+binary = "out/binaries/emi/world02/area098/13.bin"
+splat = "config/targets/emi/world02/area098/13/splat.yaml"
+load_address = 0x801F2C00
+
+sources = []
+support_sources = [
+    "src/bof3/world02/clearWorkTableAt800E4800World02Area09813_801F40A4.c",
+    "src/bof3/world02/clearWorkTableAt800E4800World02Area09813_801F5240.c",
+    "src/bof3/world02/setStatusFFFFAndHandlerIndex3WhenGateWorld02Area09813_801F5A68.c",
+    "src/bof3/world02/setStatusFFFFAndHandlerIndex5WhenGateWorld02Area09813_801F5A98.c",
+    "src/bof3/support/area098_13_psyq.c",
+]
+psyq_source = "src/bof3/support/area098_13_psyq.c"

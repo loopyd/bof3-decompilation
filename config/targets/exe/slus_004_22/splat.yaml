@@ -150,7 +150,7 @@ segments:
     start: 0xD04B0
     vram: 0x80166CB0
     subsegments:
-      - [0xD04B0, asm, func_80166CB0]
+      - [0xD04B0, c, func_80166CB0, '@source: src/bof3/world/func_80166CB0.c']
   - [0xD04EC, bin, post_map_byte_query]
   - name: cluster_0
     type: code

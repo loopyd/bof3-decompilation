@@ -6,7 +6,7 @@
  * @source 0x801DB058
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 markBattlersMeetingOpposingThresholds(void) {
   u8  result;

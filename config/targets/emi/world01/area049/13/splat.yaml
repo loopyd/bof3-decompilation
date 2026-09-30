@@ -33,8 +33,10 @@ segments:
     - asm
     - func_80117048
   - - 164
-    - asm
-    - func_801170A4
+    - c
+    - clearWorkFlagsWhenNoEntryHandledWorld01Area04913_801170A4
+    - '@source: src/bof3/world01/clearWorkFlagsWhenNoEntryHandledWorld01Area04913_801170A4.c'
+    - '@behavior: State-1 handler of this overlay''s two-word per-frame state-handler table at 0x8011818C (word 0 is the boot handler func_80117048): runs the work-record pass func_80117410, which walks the 16 records of 0x28-byte stride in the 0x800E4800 work table and runs each claimed record''s handler from 0x80118194 plus the record renderer func_801170D8, and, when that pass reports that no record was handled (its result masked to the low byte is zero), resets the scratchpad work object through the shared func_80196070 work-area clear. Takes no arguments and returns nothing.'
   - - 216
     - asm
     - func_801170D8
@@ -69,8 +71,10 @@ segments:
     - asm
     - func_80117864
   - - 2244
-    - asm
-    - func_801178C4
+    - c
+    - findFreeWorkRecordAt800E4800World01Area04913_801178C4
+    - '@source: src/bof3/world01/findFreeWorkRecordAt800E4800World01Area04913_801178C4.c'
+    - '@behavior: Work-record claim scan of this overlay''s 0x800E4800 work table: returns the address of the first of its 16 records of 0x28-byte stride whose lead byte (the record claim flag) reads zero, or zero when all 16 records are claimed. The unsigned byte counter is read back masked to 0xFF and compared below 0x10 at the loop back edge; takes no arguments, reads each record''s lead byte only, writes nothing and makes no call.'
   - - 2304
     - asm
     - func_80117900
@@ -103,5 +107,5 @@ segments:
     - func_80117E78
   - - 4492
     - asm
-    - func_8011818C
+    - D_8011818C
 - - 4576

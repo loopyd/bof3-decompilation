@@ -5,7 +5,7 @@
  * @source 0x800F500C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchArea030CompanionHandler(void) {
     handlerTable[handlerIndex]();

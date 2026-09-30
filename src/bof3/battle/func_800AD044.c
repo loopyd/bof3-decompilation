@@ -5,7 +5,7 @@
  * @source 0x800AD044
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u32 func_800AD044(u32 arg0) {
     u32 idx;

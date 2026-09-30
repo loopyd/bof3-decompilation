@@ -6,7 +6,7 @@
  * @source 0x801D150C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void drawLabelGroups(s16 x, s16 y, u8 selected, u8 alpha) {
   u8* primitive;

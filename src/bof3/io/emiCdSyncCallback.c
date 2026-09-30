@@ -8,7 +8,7 @@ extern u8           D_80146498[];
  * @source 0x801621E8
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void emiCdSyncCallback(s32 status, u8* result) {
   s32 i;

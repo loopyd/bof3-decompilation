@@ -9,6 +9,7 @@ import re
 
 from harness.domain.symbols import map_path
 from harness.domain.manifests import TargetManifest
+from harness.domain.splat_evidence import boundary_kind_evidence
 
 _RAW_FUNCTION = re.compile(r"func_[0-9A-F]{8}")
 _RAW_DATA = re.compile(r"D_[0-9A-F]{8}(?:_[A-Za-z0-9_]+)?")
@@ -36,7 +37,12 @@ class NamingDebt:
 
 
 def classify_raw_symbol(name: str) -> str | None:
-    """Return the naming-debt kind, not a proven storage or function boundary."""
+    """Return the naming-debt kind implied by the spelling alone.
+
+    This is only the fallback: a spelling is not a proven storage or function
+    boundary.  ``collect_symbol_debt`` overrides it with the target's own Splat
+    listing whenever that evidence exists (see ``domain/splat_evidence.py``).
+    """
     if _RAW_FUNCTION.fullmatch(name):
         return "function"
     if _RAW_DATA.fullmatch(name):
@@ -81,9 +87,22 @@ def collect_symbol_debt(
             name = match.group("name")
             row = f"{target}:{name}"
             kind = classify_raw_symbol(name)
+            if kind is None:
+                continue
+            # Evidence beats spelling.  A raw row whose own Splat listing proves
+            # the other kind is booked under the proven kind, so data ranges stop
+            # being routed and counted as function naming debt (and vice versa).
+            # The row's wrong spelling is a separate defect corrected by the
+            # naming/data owners; this only stops the kind from being inherited
+            # from a name that the target's own artifact contradicts.
+            proven = boundary_kind_evidence(root, target, name)
+            if proven == "data" and kind == "function":
+                kind = "data"
+            elif proven == "code" and kind == "data":
+                kind = "function"
             if kind == "function":
                 raw_functions.add(row)
-            elif kind == "data":
+            else:
                 raw_data.add(row)
 
     return frozenset(raw_functions), frozenset(raw_data)
@@ -95,6 +114,30 @@ def load_naming_baseline(root: Path) -> dict[str, set[str]]:
         raise ValueError(f"missing naming baseline: {_BASELINE}")
     data = json.loads(path.read_text(encoding="utf-8"))
     return {key: set(values) for key, values in data.items()}
+
+
+def merge_naming_baseline(root: Path, debt: NamingDebt) -> dict[str, list[str]]:
+    """Record current raw-spelling debt in the baseline; return the rows added.
+
+    The baseline is reviewed truth, so this only appends rows, never deletes,
+    and keeps every category sorted. Run it after an accepted transaction that
+    intentionally retains raw `func_`/`D_` spellings; `bin/harness source symbols check` then
+    reports only debt introduced by later unreviewed edits.
+    """
+    path = root / _BASELINE
+    baseline = load_naming_baseline(root)
+    added: dict[str, list[str]] = {}
+    for category, rows in debt.to_rows().items():
+        known = baseline.get(category, set())
+        new_rows = sorted(set(rows) - known)
+        if new_rows:
+            added[category] = new_rows
+        baseline[category] = known | set(rows)
+    payload = {key: sorted(values) for key, values in baseline.items()}
+    path.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    return added
 
 
 def naming_debt_regressions(

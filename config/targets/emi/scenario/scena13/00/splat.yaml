@@ -33,8 +33,8 @@ segments:
     - asm
     - func_801F6EA4
   - - 744
-    - asm
-    - func_801F6EE8
+    - c
+    - clearWorkTintArmCountdownAndAdvanceWorkByte1ScenarioScena1300_801F6EE8
   - - 804
     - asm
     - func_801F6F24
@@ -87,8 +87,8 @@ segments:
     - asm
     - func_801F7C24
   - - 4372
-    - asm
-    - func_801F7D14
+    - c
+    - dispatchScenarioStateHandlerScenarioScena1300_801F7D14
   - - 4432
     - asm
     - func_801F7D50
@@ -96,8 +96,8 @@ segments:
     - asm
     - func_801F7DBC
   - - 6260
-    - asm
-    - func_801F8474
+    - c
+    - dispatchPrimaryStateHandlerScenarioScena1300_801F8474
   - - 6320
     - c
     - noopHandlerScenarioScena1300_801F84B0
@@ -147,14 +147,14 @@ segments:
     - asm
     - func_801FB350
   - - 18320
-    - asm
-    - func_801FB390
+    - c
+    - incrementWorkHalfword7EScenarioScena1300_801FB390
   - - 18340
-    - asm
-    - func_801FB3A4
+    - c
+    - requestPrimaryState3Substate5ScenarioScena1300_801FB3A4
   - - 18396
-    - asm
-    - func_801FB3DC
+    - c
+    - requestPrimaryState6Substate19ScenarioScena1300_801FB3DC
   - - 18452
     - asm
     - func_801FB414
@@ -171,8 +171,8 @@ segments:
     - asm
     - func_801FBBC4
   - - 20616
-    - asm
-    - func_801FBC88
+    - c
+    - armEffectGroupThenClearWorkRecordsAndResetEffectScenarioScena1300_801FBC88
   - - 20676
     - asm
     - func_801FBCC4
@@ -183,15 +183,15 @@ segments:
     - asm
     - func_801FBDD8
   - - 21144
-    - asm
-    - func_801FBE98
+    - c
+    - invokeHelperArgThenHelperScenarioScena1300_801FBE98
   - - 21184
-    - asm
-    - func_801FBEC0
+    - c
+    - invokeHelperArgThenHelperScenarioScena1300_801FBEC0
   - - 21224
     - c
     - noopHandlerScenarioScena1300_801FBEE8
   - - 21232
     - asm
-    - func_801FBEF0
+    - D_801FBEF0
 - - 21488

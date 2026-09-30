@@ -42,17 +42,17 @@ segments:
     - asm
     - func_801F7200
   - - 1672
-    - asm
-    - func_801F7288
+    - c
+    - dispatchProgressHandlerScenarioScena1100_801F7288
   - - 1732
-    - asm
-    - func_801F72C4
+    - c
+    - armEffectBankAndAdvanceStateScenarioScena1100_801F72C4
   - - 1764
     - asm
     - func_801F72E4
   - - 2888
-    - asm
-    - func_801F7748
+    - c
+    - dispatchSecondaryStateScenarioScena1100_801F7748
   - - 2948
     - c
     - noopHandlerScenarioScena1100_801F7784
@@ -87,8 +87,8 @@ segments:
     - asm
     - func_801FA3A4
   - - 14776
-    - asm
-    - func_801FA5B8
+    - c
+    - dispatchRecordCallbackScenarioScena1100_801FA5B8
   - - 14840
     - c
     - noopHandlerScenarioScena1100_801FA5F8
@@ -96,23 +96,23 @@ segments:
     - asm
     - func_801FA600
   - - 14964
-    - asm
-    - func_801FA674
+    - c
+    - clearSharedStateBytesThenRequestPrimaryState3ScenarioScena1100_801FA674
   - - 15040
-    - asm
-    - func_801FA6C0
+    - c
+    - clearSharedStateBytesThenRequestPrimaryState5ScenarioScena1100_801FA6C0
   - - 15116
     - asm
     - func_801FA70C
   - - 15196
-    - asm
-    - func_801FA75C
+    - c
+    - clearSharedStateBytesThenRequestPrimaryState6ScenarioScena1100_801FA75C
   - - 15272
-    - asm
-    - func_801FA7A8
+    - c
+    - clearSharedStateBytesThenRequestPrimaryState7ScenarioScena1100_801FA7A8
   - - 15348
-    - asm
-    - func_801FA7F4
+    - c
+    - clearSharedStateBytesThenRequestPrimaryState9ScenarioScena1100_801FA7F4
   - - 15424
     - asm
     - func_801FA840
@@ -126,8 +126,8 @@ segments:
     - asm
     - func_801FA930
   - - 15752
-    - asm
-    - func_801FA988
+    - c
+    - clearSharedStateBytesThenRequestPrimaryState0EScenarioScena1100_801FA988
   - - 15828
     - asm
     - func_801FA9D4
@@ -141,51 +141,51 @@ segments:
     - c
     - zeroResultScenarioScena1100_801FAB64
   - - 16236
-    - asm
-    - func_801FAB6C
+    - c
+    - negativeOneResultScenarioScena1100_801FAB6C
   - - 16244
-    - asm
-    - func_801FAB74
+    - c
+    - armEffectGroupThenInvokeFourHelpersScenarioScena1100_801FAB74
   - - 16320
-    - asm
-    - func_801FABC0
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FABC0
   - - 16388
-    - asm
-    - func_801FAC04
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FAC04
   - - 16456
     - asm
     - func_801FAC48
   - - 16532
-    - asm
-    - func_801FAC94
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FAC94
   - - 16600
-    - asm
-    - func_801FACD8
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FACD8
   - - 16668
     - asm
     - func_801FAD1C
   - - 16744
-    - asm
-    - func_801FAD68
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FAD68
   - - 16812
     - asm
     - func_801FADAC
   - - 16888
-    - asm
-    - func_801FADF8
+    - c
+    - invokeHelperArgThenHelperScenarioScena1100_801FADF8
   - - 16928
-    - asm
-    - func_801FAE20
+    - c
+    - invokeHelperArgThenHelperScenarioScena1100_801FAE20
   - - 16968
-    - asm
-    - func_801FAE48
+    - c
+    - invokeHelperArgThenHelperScenarioScena1100_801FAE48
   - - 17008
-    - asm
-    - func_801FAE70
+    - c
+    - invokeHelperArgThenHelperScenarioScena1100_801FAE70
   - - 17048
-    - asm
-    - func_801FAE98
+    - c
+    - invokeHelperArgThenHelperScenarioScena1100_801FAE98
   - - 17088
     - asm
-    - func_801FAEC0
+    - D_801FAEC0
 - - 17304

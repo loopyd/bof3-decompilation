@@ -3,7 +3,7 @@
 /* @source 0x801B8234
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 /* @behavior set state byte and dispatch the current work handler */
 void func_801B8234(void)

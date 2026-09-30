@@ -1,0 +1,50 @@
+name: bmagic_magic216_00
+sha1: 7992f33c8db711712be4c369b41e769c6413b1f4
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic216_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/bmagic/magic216/00.bin
+  asm_path: out/splat/emi/bmagic/magic216/00/asm
+  src_path: src/emi/bmagic/magic216/00
+  ld_script_path: out/splat/emi/bmagic/magic216/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/bmagic/magic216/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/bmagic/magic216/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/bmagic/magic216/00/.splache
+  asset_path: out/splat/emi/bmagic/magic216/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/bmagic/magic216/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 16
+  vram: 2149510160
+  subsegments:
+  - - 16
+    - asm
+    - func_801EEC10
+  - - 112
+    - asm
+    - func_801EEC70
+  - - 220
+    - asm
+    - func_801EECDC
+  - - 856
+    - asm
+    - func_801EEF58
+  - - 920
+    - asm
+    - func_801EEF98
+  - - 1144
+    - asm
+    - func_801EF078
+- - 1152

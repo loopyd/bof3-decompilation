@@ -2,7 +2,9 @@
 
 /* @source 0x800A39B4
  * @behavior Adds a signed delta to byte 0x14 of the selected battle record and clamps it to [-25, 50].
- * @status review-pending
+ * @status partial
+ * @match 86.96
+ * @residual instruction-scheduling residual per live review, byte-match DIFFER
  */
 void clampIndexedBattleByte14(s16 delta, s32 index)
 {

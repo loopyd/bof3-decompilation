@@ -3,7 +3,7 @@
 /* @source 0x800B0118
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 /* @behavior Looks up a table index, then writes the selected pair values to BattleWork offsets 0x0C and 0x10. */
 void selectOffsetPairByMode(void) {

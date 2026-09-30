@@ -29,6 +29,7 @@ from __future__ import annotations
 import hashlib
 import os
 import shutil
+import signal
 import subprocess
 import tempfile
 import urllib.request
@@ -124,6 +125,11 @@ def _version_output(exe: Path, label: str) -> str:
         timeout=30,
     )
     if result.returncode != 0:
+        if result.returncode == -signal.SIGSYS:
+            raise RuntimeError(
+                f"{label}: gcc --version terminated by SIGSYS; the execution "
+                "environment rejected a system call (the pinned compiler is 32-bit)"
+            )
         raise RuntimeError(f"{label}: gcc --version exited {result.returncode}")
     return result.stdout.strip()
 

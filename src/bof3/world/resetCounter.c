@@ -4,7 +4,7 @@
  * @behavior resets the local selection counter, marks it active, and stops effect 0.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void resetCounter(void)
 {

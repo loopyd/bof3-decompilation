@@ -33,7 +33,7 @@ def run_preview(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="scratchpad")
+    parser = argparse.ArgumentParser(prog="bin/harness analysis scratchpad")
     subcommands = parser.add_subparsers(dest="command", required=True)
     for name, handler, help_text in (
         ("share", run_share, "create a public decomp.me scratch"),

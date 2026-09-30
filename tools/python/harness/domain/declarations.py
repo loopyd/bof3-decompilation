@@ -130,7 +130,14 @@ def build_declaration_occurrences(
             statement=record.statement or record.canonical,
         )
         tag_key = None
-        if record.kind in _AGGREGATES:
+        # A prototype that merely returns or accepts an aggregate references the
+        # tag; it never declares it, so emitting a tag occurrence would falsely
+        # conflict with the real definition.
+        declares_tag = not (
+            record.declarators
+            and all(item.relationship == "function" for item in record.declarators)
+        )
+        if record.kind in _AGGREGATES and declares_tag:
             tag_key = DeclarationKey(
                 scope,
                 "tag",

@@ -4,7 +4,7 @@
  * @behavior Advances scratch byte 11, then advances byte 10 by two while it is below 16; otherwise resets byte 9 to 60 and advances byte 3.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void advanceScratchProgressUntil16(void) {
   u8* scratch;

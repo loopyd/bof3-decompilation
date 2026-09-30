@@ -4,7 +4,7 @@
  * @behavior increments the area counter by 0x800
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void advanceCounter3(void) {
   s32 *counter;

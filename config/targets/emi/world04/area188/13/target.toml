@@ -11,6 +11,10 @@ sources = []
 support_sources = [
     "src/bof3/world04/setTwoWorld04Area18813_801F4930.c",
     "src/bof3/world04/invokeHelperWorld04Area18813_801F38C0.c",
+    "src/bof3/world04/advanceCounter2By2World04Area18813_801F48E0.c",
+    "src/bof3/world04/retreatCounter2By2World04Area18813_801F4908.c",
+    "src/bof3/world04/clearWorkByte9SelectWorkState1AndShade0FWorld04Area18813_801F2F30.c",
+    "src/bof3/world04/clearWorkTableByte0At800E4800World04Area18813_801F3DB4.c",
     "src/bof3/support/area188_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area188_13_psyq.c"

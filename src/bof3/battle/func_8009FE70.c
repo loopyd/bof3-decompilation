@@ -6,7 +6,7 @@
  * @source 0x8009FE70
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_8009FE70(void) {
   s16* ptr;

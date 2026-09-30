@@ -1,8 +1,0 @@
-#!/bin/sh
-# Live matching status for tracked target-qualified C lifts.
-set -eu
-
-ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
-. "$ROOT/bin/python-env"
-python_env "${PSX_PYTHON:-$ROOT/.venv/bin/python}" 2 'run `just setup` first'
-exec "$PYTHON" -m harness.commands.decomp_status "$@"

@@ -28,7 +28,7 @@ segments:
   subsegments:
   - - 4
     - asm
-    - func_800C1804
+    - D_800C1804
   - - 148
     - asm
     - func_800C1894
@@ -39,8 +39,8 @@ segments:
     - asm
     - func_800C19C0
   - - 616
-    - asm
-    - func_800C1A68
+    - c
+    - dispatchIndexedHandlerBossBoss02513_800C1A68
   - - 672
     - asm
     - func_800C1AA0
@@ -63,8 +63,8 @@ segments:
     - asm
     - func_800C1CB0
   - - 1324
-    - asm
-    - func_800C1D2C
+    - c
+    - dispatchIndexedHandlerBossBoss02513_800C1D2C
   - - 1380
     - c
     - setBossBoss02513_800C1D64
@@ -99,14 +99,14 @@ segments:
     - asm
     - func_800C2074
   - - 2288
-    - asm
-    - func_800C20F0
+    - c
+    - dispatchIndexedHandlerBossBoss02513_800C20F0
   - - 2344
-    - asm
-    - func_800C2128
+    - c
+    - storeThreeOrZeroByFlagBitThreeBossBoss02513_800C2128
   - - 2400
-    - asm
-    - func_800C2160
+    - c
+    - raiseFlagBit20BossBoss02513_800C2160
   - - 2428
     - c
     - noopHandlerBossBoss02513_800C217C
@@ -132,8 +132,8 @@ segments:
     - asm
     - func_800C2984
   - - 4908
-    - asm
-    - func_800C2B2C
+    - c
+    - raiseFlagBit2ThenEnterFrontendMode4BossBoss02513_800C2B2C
   - - 4960
     - asm
     - func_800C2B60
@@ -157,5 +157,5 @@ segments:
     - func_800C3088
   - - 6516
     - asm
-    - func_800C3174
+    - D_800C3174
 - - 6844

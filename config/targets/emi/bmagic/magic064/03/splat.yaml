@@ -120,8 +120,10 @@ segments:
     - asm
     - func_801F03D8
   - - 6216
-    - asm
-    - func_801F0448
+    - c
+    - dispatchWorkRecordByte1HandlerBmagicMagic06403_801F0448
+    - '@source: src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic06403_801F0448.c'
+    - '@behavior: Reads the current bmagic work record pointer from the cell at 0x801F28B4, seeds a two-entry local handler table with 0x801F04A0 and 0x801F05A4, and invokes the entry selected by the unsigned record byte at offset 1. Reads no other state and writes none; the 0x20-byte frame only keeps $ra across the indirect call.'
   - - 6304
     - asm
     - func_801F04A0
@@ -141,14 +143,20 @@ segments:
     - c
     - incrementWorkByte2BmagicMagic06403_801F0D14
   - - 8500
-    - asm
-    - func_801F0D34
+    - c
+    - submitWorkObjectThenInvokeHelperBmagicMagic06403_801F0D34
+    - '@source: src/bof3/bmagic/submitWorkObjectThenInvokeHelperBmagicMagic06403_801F0D34.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and passes that work object to the shared function at 0x80196718, then invokes the shared helper at 0x801E5988 with no arguments. Reads and writes no other state; the work-object load is issued before the 0x18-byte frame is created and that frame only keeps $ra across the two calls, each of which has a nop delay slot.'
   - - 8548
-    - asm
-    - func_801F0D64
+    - c
+    - dispatchWorkByte2HandlerBmagicMagic06403_801F0D64
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic06403_801F0D64.c'
+    - '@behavior: Overlay per-frame handler dispatcher: reads the scratchpad work object from the pointer cell at 0x1F800044, takes that object''s unsigned byte at offset 0x2, scales it by four and invokes the selected entry of the four-word in-image handler run based at 0x801F1394 (0x801F0DA8, 0x801F0DD8, 0x801F0E50, 0x801F0E90) with no arguments. Reads no other state and writes none; the work-object pointer is loaded before the 0x18-byte frame is created and that frame only keeps $ra across the indirect call, whose index load is followed by a load-delay nop.'
   - - 8616
-    - asm
-    - func_801F0DA8
+    - c
+    - clearWorkByte9AndIncrementWorkByte2BmagicMagic06403_801F0DA8
+    - '@source: src/bof3/bmagic/clearWorkByte9AndIncrementWorkByte2BmagicMagic06403_801F0DA8.c'
+    - '@behavior: Clears the scratchpad work-object byte at offset 0x9 with sb $zero and then increments the work-object byte at offset 0x2 with a byte-width add (lbu, addiu $v0,$v0,1, sb scheduled into the $ra delay slot). The pointer cell at 0x1F800044 is re-materialized and reloaded once per access, so the original keeps two separate lui $vN,0x1F80 / lw $vN,0x44($vN) pairs. Reads and writes no other state and the function has no frame.'
   - - 8664
     - asm
     - func_801F0DD8
@@ -169,5 +177,5 @@ segments:
     - func_801F12B8
   - - 10124
     - asm
-    - func_801F138C
+    - D_801F138C
 - - 15544

@@ -5,7 +5,7 @@
  * @behavior Sets the active object's state and dispatches a work-area handler.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801B78B4(void)
 {

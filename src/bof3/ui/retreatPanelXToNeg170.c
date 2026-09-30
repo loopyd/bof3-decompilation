@@ -6,6 +6,6 @@
  * @behavior retreats panel x with the template clamp behavior.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 PANEL_RETREAT_X(retreatPanelXToNeg170)

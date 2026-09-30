@@ -30,32 +30,40 @@ segments:
   vram: 2149543372
   subsegments:
   - - 460
-    - asm
-    - func_801F6DCC
+    - c
+    - dispatchWorkByte1HandlerScenarioScena0700_801F6DCC
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0700_801F6DCC.c'
+    - '@behavior: Overlay handler dispatcher for the scratchpad work object''s byte at offset 1: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 1, scales it by four and invokes that slot of the overlay-local in-image code-pointer run based at 0x801FDD14 with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call.'
   - - 528
-    - asm
-    - func_801F6E10
+    - c
+    - dispatchWorkByte2HandlerScenarioScena0700_801F6E10
+    - '@source: src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F6E10.c'
+    - '@behavior: Overlay handler dispatcher for the scratchpad work object''s byte at offset 2: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 2, scales it by four and invokes that slot of the overlay-local three-entry in-image code-pointer run based at 0x801FDD3C with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call.'
   - - 596
-    - asm
-    - func_801F6E54
+    - c
+    - clearWorkTableIncrementWorkByte2SetCountdownScenarioScena0700_801F6E54
+    - '@source: src/bof3/scenario/clearWorkTableIncrementWorkByte2SetCountdownScenarioScena0700_801F6E54.c'
+    - '@behavior: Overlay work-state handler for scratch work-object byte 2 = 0: calls the table-clearing helper at 0x801F8358 (zeroes the lead byte of each of the 0x8 entries of the 0x1C-byte-stride record table at 0x800E4800, then the two payload flag bytes at 0x801FDFC4 and 0x801FDFC8), then reloads the scratch work object at pointer slot 0x1F800044 + 0x44, stores 0x40 into its word at 0x0C and increments its byte at 0x02 so the run moves to the next handler; takes no arguments and returns nothing.'
   - - 656
     - asm
     - func_801F6E90
   - - 788
-    - asm
-    - func_801F6F14
+    - c
+    - clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F6F14
   - - 840
     - asm
     - func_801F6F48
   - - 908
-    - asm
-    - func_801F6F8C
+    - c
+    - incrementWorkByte2SetCounterScenarioScena0700_801F6F8C
   - - 944
     - asm
     - func_801F6FB0
   - - 1036
-    - asm
-    - func_801F700C
+    - c
+    - dispatchWorkByte2HandlerScenarioScena0700_801F700C
+    - '@source: src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F700C.c'
+    - '@behavior: Overlay state dispatcher for the scratchpad work object''s byte at offset 2: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 2, scales it by four and invokes that slot of the overlay-local eight-word in-image code-pointer run labelled D_801FDD50 at 0x801FDD50 with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. It is entry 2 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 2.'
   - - 1104
     - asm
     - func_801F7050
@@ -81,8 +89,10 @@ segments:
     - c
     - invokeHelperScenarioScena0700_801F73A4
   - - 1988
-    - asm
-    - func_801F73C4
+    - c
+    - dispatchWorkByte2HandlerScenarioScena0700_801F73C4
+    - '@source: src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F73C4.c'
+    - '@behavior: Overlay state dispatcher for the scratchpad work object''s byte at offset 2: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 2, scales it by four and invokes that slot of the overlay-local three-entry in-image code-pointer run labelled D_801FDD70 at 0x801FDD70 (0x801F7408 / 0x801F7480 / resetWorkStateWhenWorkTableIdleScenarioScena0700_801F75C0) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. It is entry 3 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 3.'
   - - 2056
     - asm
     - func_801F7408
@@ -90,11 +100,13 @@ segments:
     - asm
     - func_801F7480
   - - 2496
-    - asm
-    - func_801F75C0
+    - c
+    - resetWorkStateWhenWorkTableIdleScenarioScena0700_801F75C0
   - - 2548
-    - asm
-    - func_801F75F4
+    - c
+    - dispatchWorkByte2HandlerScenarioScena0700_801F75F4
+    - '@source: src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F75F4.c'
+    - '@behavior: Overlay state dispatcher for the work object''s byte at offset 0x02: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 0x02, scales it by four and invokes that entry of the overlay-local four-word in-image code-pointer run labelled D_801FDD8C at 0x801FDD8C (0x801F7638 / 0x801F76D0 / 0x801F77AC / 0x801F7810, closed by the data label D_801FDD9C, a byte table func_801F76D0 reads) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. The address is entry 4 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 4; it is instruction-for-instruction identical to the byte-2 dispatchers 0x801F6E10, 0x801F700C, 0x801F73C4 and 0x801F786C, differing only in instruction 9, the table-address immediate word.'
   - - 2616
     - asm
     - func_801F7638
@@ -108,8 +120,10 @@ segments:
     - asm
     - func_801F7810
   - - 3180
-    - asm
-    - func_801F786C
+    - c
+    - dispatchWorkByte2HandlerScenarioScena0700_801F786C
+    - '@source: src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F786C.c'
+    - '@behavior: Overlay state dispatcher for the work object''s byte at offset 0x02: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 0x02, scales it by four and invokes that entry of the overlay-local two-word in-image code-pointer run labelled D_801FDDAC at 0x801FDDAC (0x801F78B0 / 0x801F7960, closed by the data label D_801FDDB4, itself a separate three-word run 0x801F7A30 / 0x801F7AB0 / clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F7B68 that entry 6, dispatchWorkByte2HandlerScenarioScena0700_801F79EC, indexes) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. The address is entry 5 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 5; it is instruction-for-instruction identical to the byte-2 dispatchers 0x801F6E10, 0x801F700C, 0x801F73C4, 0x801F75F4, 0x801F79EC and 0x801F7B9C, differing only in instruction 9, the table-address immediate word.'
   - - 3248
     - asm
     - func_801F78B0
@@ -117,8 +131,10 @@ segments:
     - asm
     - func_801F7960
   - - 3564
-    - asm
-    - func_801F79EC
+    - c
+    - dispatchWorkByte2HandlerScenarioScena0700_801F79EC
+    - '@source: src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F79EC.c'
+    - '@behavior: Overlay handler dispatcher for the scratchpad work object''s byte at offset 0x02: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 0x02, scales it by four and invokes that slot of the overlay-local three-word in-image code-pointer run based at 0x801FDDB4 (0x801F7A30 / 0x801F7AB0 / clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F7B68, closed by the separate label D_801FDDC0) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. The address is entry 6 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 6; it is instruction-for-instruction identical to the byte-2 dispatchers 0x801F6E10, 0x801F700C, 0x801F73C4, 0x801F75F4, 0x801F786C and 0x801F7B9C, differing only in instruction 9, the table-address immediate word.'
   - - 3632
     - asm
     - func_801F7A30
@@ -126,11 +142,13 @@ segments:
     - asm
     - func_801F7AB0
   - - 3944
-    - asm
-    - func_801F7B68
+    - c
+    - clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F7B68
   - - 3996
-    - asm
-    - func_801F7B9C
+    - c
+    - dispatchWorkByte2HandlerScenarioScena0700_801F7B9C
+    - '@source: src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F7B9C.c'
+    - '@behavior: Overlay handler dispatcher for the scratchpad work object''s byte at offset 0x02: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 0x02, scales it by four and invokes that slot of the overlay-local in-image code-pointer run based at 0x801FDDC0 (0x801F7BE0 / 0x801F7C9C / 0x801F7D6C / 0x801F7DDC / 0x801F7E68 / 0x801F7EF8 / 0x801F7FA4 / 0x801F805C / 0x801F80F0 / incrementWorkByte2ScenarioScena0700_801F8174 / incrementWorkByte2ScenarioScena0700_801F8194 / invokeHelperScenarioScena0700_801F81B4, closed by the separate work-table callback row label D_801FDDF0) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. The address is entry 7 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 7; it is instruction-for-instruction identical to the byte-2 dispatchers 0x801F6E10, 0x801F700C, 0x801F73C4, 0x801F75F4, 0x801F786C and 0x801F79EC, differing only in instruction 9, the table-address immediate word.'
   - - 4064
     - asm
     - func_801F7BE0
@@ -138,8 +156,10 @@ segments:
     - asm
     - func_801F7C9C
   - - 4392
-    - asm
-    - func_801F7D28
+    - c
+    - dispatchWorkByte2HandlerScenarioScena0700_801F7D28
+    - '@source: src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F7D28.c'
+    - '@behavior: Overlay state dispatcher for the scratchpad work object''s byte at offset 2: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 2, scales it by four and invokes that slot of the overlay-local ten-word in-image code-pointer run based at 0x801FDDC8 (the D_801FDDC0 run''s suffix from its third word, closed by the data label D_801FDDF0) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. It is entry 8 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 8.'
   - - 4460
     - asm
     - func_801F7D6C
@@ -147,8 +167,10 @@ segments:
     - asm
     - func_801F7DDC
   - - 4644
-    - asm
-    - func_801F7E24
+    - c
+    - dispatchWorkByte2HandlerScenarioScena0700_801F7E24
+    - '@source: src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F7E24.c'
+    - '@behavior: Overlay state dispatcher for the scratchpad work object''s byte at offset 2: loads the work-object pointer cell at 0x1F800044, reads that object''s unsigned byte at offset 2, scales it by four and invokes that slot of the overlay-local eight-word in-image code-pointer run based at 0x801FDDD0 (the D_801FDDC0 run''s suffix from its fifth word, closed by the data label D_801FDDF0) with no arguments; reads nothing else, writes nothing, and its 0x18-byte frame only keeps $ra across the indirect call. It is entry 9 of the ten-word byte-1 handler run at 0x801FDD14, so dispatchWorkByte1HandlerScenarioScena0700_801F6DCC selects it when work byte 1 is 9.'
   - - 4712
     - asm
     - func_801F7E68
@@ -180,8 +202,10 @@ segments:
     - asm
     - func_801F8358
   - - 6036
-    - asm
-    - func_801F8394
+    - c
+    - findFreeWorkRecordScenarioScena0700_801F8394
+    - '@source: src/bof3/scenario/findFreeWorkRecordScenarioScena0700_801F8394.c'
+    - '@behavior: Work-record claim scan: walks the 0x8 entries of the 0x1C-byte-stride record table at 0x800E4800 with an unsigned byte counter and returns the address of the first entry whose lead byte reads zero, or zero when all 0x8 entries are claimed; reads only each entry lead byte, makes no call and has no frame.'
   - - 6096
     - asm
     - func_801F83D0
@@ -195,8 +219,10 @@ segments:
     - asm
     - func_801F86BC
   - - 6960
-    - asm
-    - func_801F8730
+    - c
+    - countdownReload32ThenAdvanceHandlerScenarioScena0700_801F8730
+    - '@source: src/bof3/scenario/countdownReload32ThenAdvanceHandlerScenarioScena0700_801F8730.c'
+    - '@behavior: Frame-countdown handler for one work-table entry: it decrements the entry byte at +0x02, returns while that unsigned count is nonzero, and when it reaches zero reloads the byte with the constant 0x20 and increments the handler-index byte at +0x01 so the entry moves to the next callback of its row. The entry pointer is the only argument and it returns nothing; the entry is one of the eight 0x1C-byte records of the 0x800E4800 work table walked by func_801F85D8, which indexes the overlay row at 0x801FDDF0 with the record byte +0x01, and this function is that row''s entry 1 (0x801F86BC / 0x801F8730 / 0x801F8764 / ...).'
   - - 7012
     - asm
     - func_801F8764
@@ -231,11 +257,11 @@ segments:
     - asm
     - func_801F9BDC
   - - 12712
-    - asm
-    - func_801F9DA8
+    - c
+    - clearWorkTableAt800E515CScenarioScena0700_801F9DA8
   - - 12756
-    - asm
-    - func_801F9DD4
+    - c
+    - findFreeWorkRecordAt800E515CScenarioScena0700_801F9DD4
   - - 12816
     - asm
     - func_801F9E10
@@ -249,17 +275,19 @@ segments:
     - asm
     - func_801FA38C
   - - 14940
-    - asm
-    - func_801FA65C
+    - c
+    - dispatchScenarioStateHandlerScenarioScena0700_801FA65C
   - - 15000
-    - asm
-    - func_801FA698
+    - c
+    - clearSharedByteAndAdvanceStateScenarioScena0700_801FA698
   - - 15028
     - asm
     - func_801FA6B4
   - - 15916
-    - asm
-    - func_801FAA2C
+    - c
+    - dispatchPrimaryStateHandlerScenarioScena0700_801FAA2C
+    - '@source: src/bof3/scenario/dispatchPrimaryStateHandlerScenarioScena0700_801FAA2C.c'
+    - '@behavior: Dispatches one frame of this overlay''s primary state machine from the signed shared main-RAM state byte D_80146874: that byte is scaled by four and selects one of the nine entries of the overlay-local handler table at 0x801FDE1C (entry 0 is the inert handler noopHandlerScenarioScena0700_801FAA68 and the run ends at 0x801FD35C), and the selected entry is invoked. It reads no state other than that byte and writes none, takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the indirect call. The address is itself entry 2 of the twelve-entry handler run at 0x801FDE10 that the exact scenario-state dispatcher dispatchScenarioStateHandlerScenarioScena0700_801FA65C indexes with the signed state byte D_80146872, and its 60 bytes are instruction-for-instruction identical to that dispatcher''s, differing only in the two symbol immediates.'
   - - 15976
     - c
     - noopHandlerScenarioScena0700_801FAA68
@@ -297,8 +325,10 @@ segments:
     - asm
     - func_801FD35C
   - - 26556
-    - asm
-    - func_801FD3BC
+    - c
+    - dispatchRecordCallbackByByte7AScenarioScena0700_801FD3BC
+    - '@source: src/bof3/scenario/dispatchRecordCallbackByByte7AScenarioScena0700_801FD3BC.c'
+    - '@behavior: Dispatches this overlay''s per-record callback selected by the record''s unsigned byte field at offset 0x7A through the overlay-local callback-pointer table at 0x801FDF8C (five entries: 0x801FD3FC, 0x801FD45C, 0x801FD4C4, 0x801FD524 and 0x801FD5A0), passing the record pointer unchanged and the word held in the shared main-RAM cell D_8014686C as the second argument. It reads no other state and writes none, takes the record as its only argument and returns nothing, and its 0x18-byte frame saves $ra because the target callback is an ordinary indirect call rather than a sibling tail call. The 64 bytes are instruction-for-instruction identical to the exact record-callback dispatchers dispatchRecordCallbackScenarioScena1500_801FDD80, dispatchRecordCallbackScenarioScena1100_801FA5B8 and dispatchRecordCallbackScenarioScena0800_801FE018, differing only in the table-entry load immediate; the address is entry 0 of the four-slot pointer run at 0x801FDE00.'
   - - 26620
     - asm
     - func_801FD3FC
@@ -330,8 +360,10 @@ segments:
     - asm
     - func_801FDA98
   - - 28412
-    - asm
-    - func_801FDAFC
+    - c
+    - requestPrimaryState6Substate10ScenarioScena0700_801FDAFC
+    - '@source: src/bof3/scenario/requestPrimaryState6Substate10ScenarioScena0700_801FDAFC.c'
+    - '@behavior: Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 6 with secondary sub-state 0x0A by storing 6 in the shared state byte D_80146874 and 0x0A in the shared sub-state byte D_80146875; it takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call. No in-image jal targets the address; its only image word is the first slot of the five-slot pointer run at 0x801FDFA8, which no code in this target reaches directly.'
   - - 28468
     - asm
     - func_801FDB34
@@ -339,8 +371,8 @@ segments:
     - asm
     - func_801FDB80
   - - 28620
-    - asm
-    - func_801FDBCC
+    - c
+    - invokeHelperByteArgScenarioScena0700_801FDBCC
   - - 28660
     - asm
     - func_801FDBF4

@@ -1,0 +1,104 @@
+name: bmagic_magic069_03
+sha1: b702227cb90499e416b41a24f8ce7e2e4daa8944
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic069_03
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/bmagic/magic069/03.bin
+  asm_path: out/splat/emi/bmagic/magic069/03/asm
+  src_path: src/emi/bmagic/magic069/03
+  ld_script_path: out/splat/emi/bmagic/magic069/03/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/bmagic/magic069/03/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/bmagic/magic069/03/undefined_syms_auto.txt
+  cache_path: out/splat/emi/bmagic/magic069/03/.splache
+  asset_path: out/splat/emi/bmagic/magic069/03/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/bmagic/magic069/03/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149510148
+  subsegments:
+  - - 4
+    - asm
+    - func_801EEC04
+  - - 92
+    - asm
+    - func_801EEC5C
+  - - 560
+    - asm
+    - func_801EEE30
+  - - 656
+    - asm
+    - func_801EEE90
+  - - 724
+    - asm
+    - func_801EEED4
+  - - 1076
+    - asm
+    - func_801EF034
+  - - 1220
+    - asm
+    - func_801EF0C4
+  - - 1372
+    - asm
+    - func_801EF15C
+  - - 1488
+    - asm
+    - func_801EF1D0
+  - - 1708
+    - asm
+    - func_801EF2AC
+  - - 1804
+    - asm
+    - func_801EF30C
+  - - 2096
+    - asm
+    - func_801EF430
+  - - 2240
+    - asm
+    - func_801EF4C0
+  - - 2336
+    - asm
+    - func_801EF520
+  - - 2404
+    - asm
+    - func_801EF564
+  - - 2852
+    - asm
+    - func_801EF724
+  - - 3124
+    - asm
+    - func_801EF834
+  - - 3524
+    - asm
+    - func_801EF9C4
+  - - 3664
+    - asm
+    - func_801EFA50
+  - - 3716
+    - asm
+    - func_801EFA84
+  - - 4096
+    - asm
+    - func_801EFC00
+  - - 4884
+    - asm
+    - func_801EFF14
+  - - 5380
+    - asm
+    - func_801F0104
+  - - 5748
+    - asm
+    - func_801F0274
+  - - 6392
+    - asm
+    - func_801F04F8
+- - 6456

@@ -4,7 +4,7 @@
  * @behavior When D_801485DC bit 0 is clear, sets state byte 0xE3 to 2, clears 0xE4, and clears bit 7 of 0xE5.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void enterState2WhenDcClear(void) {
     u8 *state;

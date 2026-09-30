@@ -50,7 +50,7 @@ def main():
     tool = root / "tools" / "c" / "psx-audio" / "build" / "bof3-audio"
     if not tool.is_file() or not os.access(tool, os.X_OK):
         print(
-            "error: audio tool not built; run `bin/psx-audio --help` "
+            "error: audio tool not built; run `bin/harness audio build --help` "
             "to configure and build it (requires CMake, a C compiler, and zlib development files)",
             file=sys.stderr,
         )

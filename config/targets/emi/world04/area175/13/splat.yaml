@@ -48,11 +48,15 @@ segments:
     - asm
     - func_801F30CC
   - - 1508
-    - asm
-    - func_801F31E4
+    - c
+    - dispatchWorkByte1HandlerWorld04Area17513_801F31E4
+    - '@source: src/bof3/world04/dispatchWorkByte1HandlerWorld04Area17513_801F31E4.c'
+    - '@behavior: Reads the non-volatile scratchpad work-object pointer cell at 0x1F800044, indexes the five-entry handler table D_801F45F8 at 0x801F45F8 with the byte at offset 0x01 of that object (scaled by four) and calls the selected handler; it takes no arguments, returns nothing and touches no other work byte.'
   - - 1576
-    - asm
-    - func_801F3228
+    - c
+    - setWorkByte9AndClearTintWorld04Area17513_801F3228
+    - '@source: src/bof3/world04/setWorkByte9AndClearTintWorld04Area17513_801F3228.c'
+    - '@behavior: Stores 0x10 into the byte at offset 0x09 and 1 into the byte at offset 0x01 of the scratchpad work object published through the non-volatile pointer cell at 0x1F800044, then zeroes the three tint channel bytes at offsets 0x5F, 0x5E and 0x5D of that object.'
   - - 1636
     - asm
     - func_801F3264
@@ -69,11 +73,15 @@ segments:
     - asm
     - func_801F3438
   - - 2348
-    - asm
-    - func_801F352C
+    - c
+    - dispatchWorkByte1Table460cWorld04Area17513_801F352C
+    - '@source: src/bof3/world04/dispatchWorkByte1Table460cWorld04Area17513_801F352C.c'
+    - '@behavior: Reads the non-volatile scratchpad work-object pointer cell at 0x1F800044 and calls the handler pointer selected by the dispatch byte at offset 0x01 of that object in the four-entry handler table D_801F460C at 0x801F460C; takes no arguments, returns nothing and reads or writes no other work-object byte.'
   - - 2416
-    - asm
-    - func_801F3570
+    - c
+    - clearWorkByte9AdvanceWorkByte1ThenQueueCue20EWorld04Area17513_801F3570
+    - '@source: src/bof3/world04/clearWorkByte9AdvanceWorkByte1ThenQueueCue20EWorld04Area17513_801F3570.c'
+    - '@behavior: Clears the byte at offset 0x09 of the scratchpad work object published through the pointer cell at 0x1F800044, advances the dispatch byte at offset 0x01 of that object by one and then queues the front-end cue 0x20E through func_8015DF18.'
   - - 2484
     - asm
     - func_801F35B4
@@ -87,20 +95,26 @@ segments:
     - asm
     - func_801F36DC
   - - 3180
-    - asm
-    - func_801F386C
+    - c
+    - setStatusFFFFSubstate2IfGateElse3World04Area17513_801F386C
+    - '@source: src/bof3/world04/setStatusFFFFSubstate2IfGateElse3World04Area17513_801F386C.c'
+    - '@behavior: Loads the shared gate byte D_801490C7, clears the shared status halfword D_801490A8 to 0xFFFF, and then stores 2 into the shared sub-state byte D_80146875 while the gate byte is nonzero, and 3 when the gate byte is zero.'
   - - 3228
     - asm
     - func_801F389C
   - - 3304
-    - asm
-    - func_801F38E8
+    - c
+    - setStatus5AAndPtrByte7AFFIfGateElseFFFFWorld04Area17513_801F38E8
+    - '@source: src/bof3/world04/setStatus5AAndPtrByte7AFFIfGateElseFFFFWorld04Area17513_801F38E8.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 and, while it equals 1, stores 0x5A into the shared status halfword D_801490A8 and 0xFF into the byte at offset 0x7A of the pointer held at 0x80148208; when the gate byte differs from 1 it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 3372
-    - asm
-    - func_801F392C
+    - c
+    - setStatus5FAndByte801448ECIfGateElseFFFFWorld04Area17513_801F392C
+    - '@source: src/bof3/world04/setStatus5FAndByte801448ECIfGateElseFFFFWorld04Area17513_801F392C.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 and, while it equals 1, stores 0x5F into the shared status halfword D_801490A8 and 1 into the shared byte at 0x801448EC; when the gate byte differs from 1 it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 3440
-    - asm
-    - func_801F3970
+    - c
+    - setStatus63IfGateElse62World04Area17513_801F3970
   - - 3480
     - asm
     - func_801F3998
@@ -108,11 +122,11 @@ segments:
     - asm
     - func_801F39EC
   - - 3636
-    - asm
-    - func_801F3A34
+    - c
+    - setStatus70IfGateElseFFFFWorld04Area17513_801F3A34
   - - 3676
-    - asm
-    - func_801F3A5C
+    - c
+    - setStatus70IfGateElseFFFFWorld04Area17513_801F3A5C
   - - 3716
     - asm
     - func_801F3A84
@@ -120,11 +134,13 @@ segments:
     - asm
     - func_801F3AC8
   - - 3916
-    - asm
-    - func_801F3B4C
+    - c
+    - setStatus7EIfGateElseFFFFWorld04Area17513_801F3B4C
   - - 3956
-    - asm
-    - func_801F3B74
+    - c
+    - setStatus7EIfGateElseFFFFWorld04Area17513_801F3B74
+    - '@source: src/bof3/world04/setStatus7EIfGateElseFFFFWorld04Area17513_801F3B74.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 and stores 0x7E into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0xFFFF when the gate byte is zero.'
   - - 3996
     - c
     - noopHandlerWorld04Area17513_801F3B9C
@@ -135,17 +151,23 @@ segments:
     - asm
     - func_801F3C08
   - - 4172
-    - asm
-    - func_801F3C4C
+    - c
+    - setStatus8AIfGateElseFFFFWorld04Area17513_801F3C4C
+    - '@source: src/bof3/world04/setStatus8AIfGateElseFFFFWorld04Area17513_801F3C4C.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 and stores 0x8A into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0xFFFF when the gate byte is zero.'
   - - 4212
-    - asm
-    - func_801F3C74
+    - c
+    - setStatus8AIfGateElseFFFFWorld04Area17513_801F3C74
+    - '@source: src/bof3/world04/setStatus8AIfGateElseFFFFWorld04Area17513_801F3C74.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 and stores 0x8A into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0xFFFF when the gate byte is zero.'
   - - 4252
     - c
     - noopHandlerWorld04Area17513_801F3C9C
   - - 4260
-    - asm
-    - func_801F3CA4
+    - c
+    - setStatusA0IfGateElse9FWorld04Area17513_801F3CA4
+    - '@source: src/bof3/world04/setStatusA0IfGateElse9FWorld04Area17513_801F3CA4.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 and stores 0xA0 into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0x9F when the gate byte is zero.'
   - - 4300
     - asm
     - func_801F3CCC
@@ -153,20 +175,24 @@ segments:
     - asm
     - func_801F3D18
   - - 4448
-    - asm
-    - func_801F3D60
+    - c
+    - setStatusEFAndByte2IfGateElse1World04Area17513_801F3D60
+    - '@source: src/bof3/world04/setStatusEFAndByte2IfGateElse1World04Area17513_801F3D60.c'
+    - '@behavior: Loads the shared gate byte D_801490C7, stores 2 into the byte at 0x801F294C while the gate byte is nonzero and 1 when the gate byte is zero, then stores 0xEF into the shared status halfword D_801490A8.'
   - - 4500
-    - asm
-    - func_801F3D94
+    - c
+    - publishGateByteSlot0World04Area17513_801F3D94
   - - 4536
-    - asm
-    - func_801F3DB8
+    - c
+    - publishGateByteSlot1World04Area17513_801F3DB8
   - - 4572
     - asm
     - func_801F3DDC
   - - 4648
-    - asm
-    - func_801F3E28
+    - c
+    - setStatusF8IfGateElseF9World04Area17513_801F3E28
+    - '@source: src/bof3/world04/setStatusF8IfGateElseF9World04Area17513_801F3E28.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 and stores 0xF8 into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0xF9 when the gate byte is zero.'
   - - 4688
     - asm
     - func_801F3E50
@@ -180,8 +206,10 @@ segments:
     - c
     - invokeHelperArgWorld04Area17513_801F3FBC
   - - 5084
-    - asm
-    - func_801F3FDC
+    - c
+    - copySharedXToWorkXIfInRangeWorld04Area17513_801F3FDC
+    - '@source: src/bof3/world04/copySharedXToWorkXIfInRangeWorld04Area17513_801F3FDC.c'
+    - '@behavior: Loads the shared X channel D_80149308 and, while it is at most 0x2E0000, stores it into the X field at offset 0x34 of the work record reached through the pointer slot at 0x1F800044.'
   - - 5132
     - asm
     - func_801F400C
@@ -192,8 +220,8 @@ segments:
     - asm
     - func_801F4204
   - - 5704
-    - asm
-    - func_801F4248
+    - c
+    - startWorkCountdownMode1World04Area17513_801F4248
   - - 5740
     - asm
     - func_801F426C
@@ -217,5 +245,5 @@ segments:
     - func_801F4594
   - - 6636
     - asm
-    - func_801F45EC
+    - D_801F45EC
 - - 10128

@@ -7,7 +7,7 @@ extern int rand(void);
  * @source 0x801DD448
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 checkLocalQueuedBranch(void) {
   volatile u16* gate;

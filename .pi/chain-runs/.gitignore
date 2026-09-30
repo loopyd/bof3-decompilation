@@ -1,4 +1,0 @@
-# Local chain-run artifacts (runtime state). Only the placeholders are tracked.
-*
-!.gitignore
-!.gitkeep

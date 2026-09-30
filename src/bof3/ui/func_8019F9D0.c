@@ -3,7 +3,7 @@
 /* @source 0x8019F9D0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 /* @behavior Copies the route state into the active state and clears transition fields. */
 void func_8019F9D0(void)

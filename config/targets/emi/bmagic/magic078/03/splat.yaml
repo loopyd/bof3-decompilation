@@ -1,0 +1,108 @@
+name: bmagic_magic078_03
+sha1: 7fec179eeb3d214c94551643a3d0ed2008c318d3
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic078_03
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/bmagic/magic078/03.bin
+  asm_path: out/splat/emi/bmagic/magic078/03/asm
+  src_path: src/emi/bmagic/magic078/03
+  ld_script_path: out/splat/emi/bmagic/magic078/03/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/bmagic/magic078/03/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/bmagic/magic078/03/undefined_syms_auto.txt
+  cache_path: out/splat/emi/bmagic/magic078/03/.splache
+  asset_path: out/splat/emi/bmagic/magic078/03/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/bmagic/magic078/03/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149510148
+  subsegments:
+  - - 4
+    - asm
+    - func_801EEC04
+  - - 252
+    - asm
+    - func_801EECFC
+  - - 644
+    - asm
+    - func_801EEE84
+  - - 740
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic07803_801EEEE4
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic07803_801EEEE4.c'
+    - '@behavior: Overlay per-frame handler dispatcher: reads the scratchpad work-object pointer cell at 0x1F800044, takes the object byte at offset 0x01 as an index, scales it by four and invokes the selected entry of the nine-word in-image code pointer run based at 0x801F0878 (0x801EEF28, 0x801EFF84, 0x801EF08C, 0x801EF0E0, 0x801EF12C, 0x801EF1CC, 0x801EF228, 0x801EF278, 0x801EF2CC) with no arguments. It reads no other state and writes none; the pointer cell is loaded before the 0x18-byte frame is created and that frame only keeps $ra across the indirect call.'
+  - - 808
+    - asm
+    - func_801EEF28
+  - - 1164
+    - asm
+    - func_801EF08C
+  - - 1248
+    - asm
+    - func_801EF0E0
+  - - 1324
+    - asm
+    - func_801EF12C
+  - - 1484
+    - asm
+    - func_801EF1CC
+  - - 1576
+    - asm
+    - func_801EF228
+  - - 1656
+    - asm
+    - func_801EF278
+  - - 1740
+    - asm
+    - func_801EF2CC
+  - - 1816
+    - asm
+    - func_801EF318
+  - - 4628
+    - asm
+    - func_801EFE14
+  - - 4792
+    - asm
+    - func_801EFEB8
+  - - 4996
+    - asm
+    - func_801EFF84
+  - - 5280
+    - asm
+    - func_801F00A0
+  - - 5356
+    - asm
+    - func_801F00EC
+  - - 5452
+    - asm
+    - func_801F014C
+  - - 5584
+    - asm
+    - func_801F01D0
+  - - 5680
+    - asm
+    - func_801F0230
+  - - 5812
+    - c
+    - incrementWorkByteAThenInvokeHelperAt8BmagicMagic07803_801F02B4
+    - '@source: src/bof3/bmagic/incrementWorkByteAThenInvokeHelperAt8BmagicMagic07803_801F02B4.c'
+    - '@behavior: Advances the scratchpad work object byte at offset 0x0A: the pointer cell at 0x1F800044 is read once, the byte is loaded with lbu, incremented by one and stored back with sb, and when the new byte value equals 8 the shared helper at 0x801E5988 is called with no arguments. It reads no other state; the 0x18-byte frame only keeps $ra across that call. 0x801F02B4 is also the sixth word (index 5) of the in-image code pointer run based at 0x801F08C4.'
+  - - 5884
+    - asm
+    - func_801F02FC
+  - - 7112
+    - asm
+    - func_801F07C8
+  - - 7288
+    - asm
+    - func_801F0878
+- - 7388

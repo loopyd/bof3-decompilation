@@ -5,7 +5,7 @@
  * @source 0x801DD858
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void submitCurrentWorkEffectVariant(u32 arg0) {
   u32 masked = arg0 & 0xffu;

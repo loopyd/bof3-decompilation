@@ -15,7 +15,7 @@ or target binary.
 
 | Stored bytes | Runtime interpretation | Logical asset | Lossless interchange | Lossless desktop derivative | Validator | Unresolved boundary |
 | --- | --- | --- | --- | --- | --- | --- |
-| EMI archive | Sector-aligned container and TOC | Ordered entry set | Original `.EMI` plus extracted entry bytes and manifest | Catalog only | `bin/emi-ex`; extracted-entry hashes | Archive is not one executable or asset. |
+| EMI archive | Sector-aligned container and TOC | Ordered entry set | Original `.EMI` plus extracted entry bytes and manifest | Catalog only | `bin/harness emi archive`; extracted-entry hashes | Archive is not one executable or asset. |
 | EMI type `0` | Direct RAM payload | Code, data, palette, or other bytes | Raw `.bin` | Domain-specific only | Catalog hash/load argument; promoted-target diff for code | Type does not identify content. |
 | EMI types `1`, `2` | Queued RAM transfer | Code or data bytes with loader bookkeeping | Raw `.bin` | Domain-specific only | Catalog hash/load argument and reviewed loader state | Exact semantic difference between types remains bounded by loader behavior. |
 | EMI type `3` | Packed VRAM upload descriptor plus raw chunks | Texture-page words | Raw `.img`/`.bin` plus descriptor | PNG after texture mode and CLUT are proven | `0x800` chunk geometry; [graphics invariants](../pseudocode.md#type-3-vram-upload-and-separate-palette-mapping) | Payload has no TIM header and does not name its palette. |
@@ -51,8 +51,8 @@ Retain enough information to reconstruct and audit every conversion:
 ## Repository commands
 
 ```sh
-bin/emi-ex --help
-bin/str-media inspect INPUT
+bin/harness emi archive --help
+bin/harness media str inspect INPUT
 just check
 ```
 
@@ -71,16 +71,16 @@ For every desktop mux, compute `video_seconds = frames / fps`,
 `audio_seconds = samples / rate`, and
 `pad_samples = max(0, round((video_seconds - audio_seconds) * rate))`; then
 require final durations to agree within one sample period. Two distinct
-timing attestations exist: `bin/str-media validate` checks source timing
+timing attestations exist: `bin/harness media str validate` checks source timing
 against a coarse tolerance (two video frames or two XA sectors) and never
-attests mux endpoint equality, while `bin/str-media convert` pads the primary
+attests mux endpoint equality, while `bin/harness media str convert` pads the primary
 stream to the video endpoint and then requires the muxed output to agree
 within one audio sample (`tools/python/harness/media/str_media.py`,
 `validate_str` vs `convert_str`). A passing `validate` therefore does not
 mean a desktop mux needs no padding. For the pinned `CAPCOM30.STR`
 extraction (SHA-256
 `0f9145e980e401ded21f4c315375bcb989f49b8b83582f46f4a2946dd33ff06d`),
-`bin/str-media validate out/extracted/LOGO/CAPCOM30.STR --expected-fps 30`
+`bin/harness media str validate out/extracted/LOGO/CAPCOM30.STR --expected-fps 30`
 passes because 203/30 = 6.7667 s
 video against 254016/37800 = 6.72 s stereo XA audio (delta 0.0467 s) is
 within its 0.1067 s tolerance, but the conversion formula requires
@@ -89,7 +89,7 @@ for the primary stream; the converter computes exactly that
 (`padding_samples_per_channel` in `conversion.json`). Treat any padding as
 derived desktop output, never as missing source sectors; the pinned
 extraction contains exactly one stereo XA stream, so there is no trailing
-mono stream to keep separate. `bin/str-media convert
+mono stream to keep separate. `bin/harness media str convert
 out/extracted/LOGO/CAPCOM30.STR --fps 30 -o out/str-media/CAPCOM30/CAPCOM30.mkv`
 exits 0 even when its result
 status is `fail`; require `status: pass` in `out/str-media/<stem>/conversion.json`
@@ -97,9 +97,9 @@ before treating a conversion as valid.
 
 The `out/str-media/<stem>/conversion.json` receipts are disposable per-run
 artifacts rather than durable facts. The reproducible contract is: run
-`bin/str-media convert out/extracted/LOGO/CAPCOM30.STR --fps 30 -o <out>.mkv`,
+`bin/harness media str convert out/extracted/LOGO/CAPCOM30.STR --fps 30 -o <out>.mkv`,
 then require `status: pass` in the generated `conversion.json` and record the
-output SHA-256 with `sha256sum` at conversion time. `bin/str-media convert`
+output SHA-256 with `sha256sum` at conversion time. `bin/harness media str convert`
 exits 0 even when its result status is `fail`, so CLI exit code alone is never
 conversion acceptance; a passing source validation is likewise not conversion
 acceptance.

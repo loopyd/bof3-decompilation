@@ -18,24 +18,26 @@ from .stable import (
 FULL_PATHS = (
     "SOUL.md",
     "AGENTS.md",
-    "docs/agents/coding-standards.md",
-    ".codex/skills/bof3-re/SKILL.md",
-    "docs/agents/memory-api.md",
-    "docs/agents/matching.md",
-    "docs/agents/matching-playbook.md",
-    "docs/agents/project-context.md",
-    "docs/agents/plan-authoring.md",
-    "docs/agents/lessons.md",
+    ".pi/skills/bof3-re/references/tooling-contract.md",
+    ".pi/skills/bof3-re/SKILL.md",
+    ".pi/skills/bof3-re/references/memory-api.md",
+    ".pi/skills/bof3-re/references/match-loop.md",
+    ".pi/skills/bof3-re/references/matching-knowledge.md",
+    ".pi/skills/bof3-re/references/target-contract.md",
+    ".pi/skills/plans/references/authoring.md",
+    ".pi/skills/bof3-naming/references/naming-style.md",
 )
 IDENTIFIER = re.compile(r"\b(?:D|func)_[0-9A-Fa-f]{8}\b")
 _CONTRACT_PATHS = (
     "SOUL.md",
     "AGENTS.md",
-    "docs/agents/memory-api.md",
-    "docs/agents/matching.md",
-    "docs/agents/matching-playbook.md",
-    "docs/agents/lessons.md",
+    ".pi/skills/bof3-re/references/target-contract.md",
+    ".pi/skills/bof3-re/references/memory-api.md",
+    ".pi/skills/bof3-re/references/match-loop.md",
+    ".pi/skills/bof3-re/references/matching-knowledge.md",
+    ".pi/skills/bof3-re/references/native-execution.md",
 )
+BOF3_PATHS = (*_CONTRACT_PATHS, ".pi/skills/bof3-re/SKILL.md")
 
 
 def contract_sections(root: Path, role: str) -> list[ContextSection]:
@@ -43,7 +45,7 @@ def contract_sections(root: Path, role: str) -> list[ContextSection]:
 
     paths = [*_CONTRACT_PATHS]
     if role == "reverse":
-        paths.append("docs/specs/bof3-eu/README.md")
+        paths.append(".pi/skills/bof3-re/references/regional-leads.md")
     sections = []
     for relative in paths:
         path = root / relative
@@ -148,11 +150,11 @@ def roster_sections(root: Path) -> list[ContextSection]:
         )
     agents.sort(key=lambda value: value.split(":", 1)[0])
     skills = sorted(
-        path.parent.name for path in (root / ".codex/skills").glob("*/SKILL.md")
+        path.parent.name for path in (root / ".pi/skills").glob("*/SKILL.md")
     )
     return [
         ContextSection("subagent roster (.pi/agents)", "\n".join(agents) + "\n"),
-        ContextSection("skills (.codex/skills)", "\n".join(skills) + "\n"),
+        ContextSection("skills (.pi/skills)", "\n".join(skills) + "\n"),
     ]
 
 
@@ -367,6 +369,7 @@ def _sections(root: Path, pairs: list[tuple[Path, str | None]]) -> list[ContextS
 
 
 __all__ = [
+    "BOF3_PATHS",
     "FULL_PATHS",
     "around",
     "asm_path",

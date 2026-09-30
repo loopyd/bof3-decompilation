@@ -1,0 +1,47 @@
+--- a/src/core/pcsxlua.cc
++++ b/src/core/pcsxlua.cc
+@@ -80,6 +80,14 @@
+ }
+ void pauseEmulator() { PCSX::g_system->pause(); }
+ void resumeEmulator() { PCSX::g_system->resume(); }
++bool debuggerStepInto() {
++    if (PCSX::g_system->running() || PCSX::g_system->quitting()) return false;
++    if (PCSX::g_emulator->m_cpu->isDynarec()) return false;
++    if (!PCSX::g_emulator->settings.get<PCSX::Emulator::SettingDebugSettings>()
++             .get<PCSX::Emulator::DebugSettings::Debug>()) return false;
++    PCSX::g_emulator->m_debug->stepIn();
++    return true;
++}
+ void softResetEmulator() { PCSX::g_system->softReset(); }
+ void hardResetEmulator() { PCSX::g_system->hardReset(); }
+ void luaMessage(const char* msg, bool error) { PCSX::g_system->luaMessage(msg, error); }
+@@ -156,6 +164,7 @@
+     REGISTER(L, removeBreakpoint);
+     REGISTER(L, pauseEmulator);
+     REGISTER(L, resumeEmulator);
++    REGISTER(L, debuggerStepInto);
+     REGISTER(L, softResetEmulator);
+     REGISTER(L, hardResetEmulator);
+     REGISTER(L, luaMessage);
+--- a/src/core/pcsxffi.lua
++++ b/src/core/pcsxffi.lua
+@@ -65,6 +65,7 @@
+ void removeBreakpoint(Breakpoint*);
+ void pauseEmulator();
+ void resumeEmulator();
++bool debuggerStepInto();
+ void softResetEmulator();
+ void hardResetEmulator();
+ void luaMessage(const char* msg, bool error);
+@@ -185,6 +186,11 @@
+     addBreakpoint = addBreakpoint,
+     pauseEmulator = function() C.pauseEmulator() end,
+     resumeEmulator = function() C.resumeEmulator() end,
++    Debugger = {
++        stepInto = function()
++            assert(C.debuggerStepInto(), 'step requires a paused, non-quitting interpreter with debugger enabled')
++        end,
++    },
+     softResetEmulator = function() C.softResetEmulator() end,
+     hardResetEmulator = function() C.hardResetEmulator() end,
+     invalidateCache = function() C.invalidateCache() end,

@@ -70,8 +70,10 @@ session-*.md
 # Legacy live-session symlink; remove after restarting Pi.
 /sessions
 ledger/
+# Codex discovery aliases: relative symlinks to .pi/skills owners only, no bodies.
 /.codex/*
 !/.codex/skills/
+!/.codex/skills/*
 
 # Project Pi runtime state (tracked configuration lives in .pi/)
 .pi/sessions/

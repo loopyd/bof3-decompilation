@@ -10,7 +10,7 @@ extern void* bootOrderingTableHeads[];
  * @source 0x8014E5A0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void appendRenderPrim(u32 ot_index, u32 primitive_size) {
   u8* primitive;

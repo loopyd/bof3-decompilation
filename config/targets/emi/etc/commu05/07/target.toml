@@ -1,0 +1,14 @@
+schema = "harness.target/v2"
+id = "emi/etc/commu05/07"
+disc_id = "BIN/ETC/COMMU05.EMI#7"
+kind = "emi"
+source_dir = "src/emi/etc/commu05/07"
+binary = "out/binaries/emi/etc/commu05/07.bin"
+splat = "config/targets/emi/etc/commu05/07/splat.yaml"
+load_address = 0x801D0C00
+
+sources = []
+support_sources = [
+    "src/bof3/support/commu05_07_psyq.c",
+]
+psyq_source = "src/bof3/support/commu05_07_psyq.c"

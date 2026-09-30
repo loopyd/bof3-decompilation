@@ -5,7 +5,7 @@
  * @behavior Advances the scratch state when the global mode and input flag permit it.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801F350C(void) {
   World00Area016Scratch* scratch;

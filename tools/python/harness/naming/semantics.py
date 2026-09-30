@@ -144,7 +144,30 @@ class RizinSession:
             assert process is not None
             results: list[evidence_native.SemanticResult] = []
             for command, selector in self.pending:
-                result = self._run_one(process, command, selector, timeout)
+                end = time.monotonic() + min(
+                    self.command_timeout,
+                    self.command_timeout if timeout is None else timeout,
+                )
+                # The stdin loop enables interactivity after startup; recheck each
+                # capture because commands in a reused session can change it.
+                for setup in ("e scr.interactive=false", "e scr.interactive"):
+                    handshake = self._run_one(
+                        process, setup, selector, max(0, end - time.monotonic())
+                    )
+                    if (
+                        handshake.exit != 0
+                        or handshake.killed
+                        or (
+                            setup == "e scr.interactive"
+                            and handshake.raw.strip() != "false"
+                        )
+                    ):
+                        raise ValueError(
+                            "Rizin refused verified noninteractive capture"
+                        )
+                result = self._run_one(
+                    process, command, selector, max(0, end - time.monotonic())
+                )
                 results.append(result)
                 self.results.append(result)
             self.pending.clear()

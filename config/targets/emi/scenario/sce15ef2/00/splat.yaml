@@ -1,0 +1,111 @@
+name: scenario_sce15ef2_00
+sha1: bda5e115ed9bdcbc7e60f915e774a02b8ecee629
+options:
+  platform: psx
+  compiler: psyq
+  basename: scenario_sce15ef2_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/scenario/sce15ef2/00.bin
+  asm_path: out/splat/emi/scenario/sce15ef2/00/asm
+  src_path: src/emi/scenario/sce15ef2/00
+  ld_script_path: out/splat/emi/scenario/sce15ef2/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/scenario/sce15ef2/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/scenario/sce15ef2/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/scenario/sce15ef2/00/.splache
+  asset_path: out/splat/emi/scenario/sce15ef2/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/scenario/sce15ef2/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149387268
+  subsegments:
+  - - 4
+    - asm
+    - func_801D0C04
+  - - 112
+    - asm
+    - func_801D0C70
+  - - 160
+    - asm
+    - func_801D0CA0
+  - - 256
+    - asm
+    - func_801D0D00
+  - - 348
+    - asm
+    - func_801D0D5C
+  - - 420
+    - asm
+    - func_801D0DA4
+  - - 488
+    - asm
+    - func_801D0DE8
+  - - 560
+    - asm
+    - func_801D0E30
+  - - 708
+    - asm
+    - func_801D0EC4
+  - - 760
+    - asm
+    - func_801D0EF8
+  - - 872
+    - asm
+    - func_801D0F68
+  - - 924
+    - asm
+    - func_801D0F9C
+  - - 1032
+    - asm
+    - func_801D1008
+  - - 1104
+    - asm
+    - func_801D1050
+  - - 1188
+    - asm
+    - func_801D10A4
+  - - 1256
+    - c
+    - armCountdownAndAdvanceWorkByte1ScenarioSce15ef200_801D10E8
+    - '@source: src/bof3/scenario/armCountdownAndAdvanceWorkByte1ScenarioSce15ef200_801D10E8.c'
+    - '@behavior: Entry 0 of the overlay handler table at 0x801D1B48 dispatched by func_801D10A4 with the work object byte at +0x1: arms the countdown byte at +0x9 with 0x10 and advances the work byte at +0x1.'
+  - - 1304
+    - asm
+    - func_801D1118
+  - - 1444
+    - asm
+    - func_801D11A4
+  - - 1560
+    - asm
+    - func_801D1218
+  - - 2068
+    - asm
+    - func_801D1414
+  - - 2480
+    - c
+    - clearWorkTableAt800E4800ScenarioSce15ef200_801D15B0
+    - '@source: src/bof3/scenario/clearWorkTableAt800E4800ScenarioSce15ef200_801D15B0.c'
+    - '@behavior: Clears the lead byte of each of the 0x10 entries of the 6-byte-stride record table at 0x800E4800 in a bottom-tested unsigned-byte loop; takes no arguments and returns nothing.'
+  - - 2524
+    - asm
+    - func_801D15DC
+  - - 2596
+    - asm
+    - func_801D1624
+  - - 2976
+    - asm
+    - func_801D17A0
+  - - 3496
+    - asm
+    - func_801D19A8
+  - - 3868
+    - asm
+    - func_801D1B1C
+- - 3924

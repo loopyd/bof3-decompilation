@@ -24,6 +24,17 @@ support_sources = [
     "src/bof3/scenario/noopHandlerScenarioScena0500_801F855C.c",
     "src/bof3/scenario/noopHandlerScenarioScena0500_801F8554.c",
     "src/bof3/scenario/noopHandlerScenarioScena0500_801F8428.c",
+    "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena0500_801FD508.c",
+    "src/bof3/scenario/incrementWorkByte1SetCounterScenarioScena0500_801F7530.c",
     "src/bof3/support/scena05_00_psyq.c",
+    "src/bof3/scenario/incrementWorkByte1ClearCounterScenarioScena0500_801F743C.c",
+    "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena0500_801FD530.c",
+    "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena0500_801FD558.c",
+    "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena0500_801FD580.c",
+    "src/bof3/scenario/invokeHelperTwiceThenHelperScenarioScena0500_801FD4D8.c",
+    "src/bof3/scenario/dispatchScenarioStateHandlerScenarioScena0500_801F7A78.c",
+    "src/bof3/scenario/dispatchPrimaryStateHandlerScenarioScena0500_801F83EC.c",
+    "src/bof3/scenario/armEffectGroupThenInvokeTwoHelpersScenarioScena0500_801FD38C.c",
+    "src/bof3/scenario/armEffectGroupThenInvokeTwoHelpersScenarioScena0500_801FD3C8.c",
 ]
 psyq_source = "src/bof3/support/scena05_00_psyq.c"

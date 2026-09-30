@@ -7,7 +7,7 @@
  * @source 0x801D0E9C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS func_801D0E9C(void) {
   ScenarioSce10effScratch* scratch;

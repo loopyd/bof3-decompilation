@@ -11,6 +11,9 @@ sources = []
 support_sources = [
     "src/bof3/world02/incrementWorkByte2World02Area10814_801F4108.c",
     "src/bof3/world02/incrementWorkByte2World02Area10814_801F403C.c",
+    "src/bof3/world02/clearSharedByteBitPair0World02Area10814_801F43A4.c",
+    "src/bof3/world02/clearSharedByteBitPair1World02Area10814_801F43C0.c",
+    "src/bof3/world02/clearSharedByteBitPair2World02Area10814_801F43DC.c",
     "src/bof3/world02/noopHandlerWorld02Area10814_801F56E0.c",
     "src/bof3/support/area108_14_psyq.c",
 ]

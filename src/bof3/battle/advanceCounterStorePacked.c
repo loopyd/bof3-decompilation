@@ -5,7 +5,7 @@
  * @source 0x801DDE7C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 advanceCounterStorePacked(u32 arg0, u32 arg1) {
   u32   table_index;

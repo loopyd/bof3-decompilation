@@ -5,7 +5,7 @@
  * @source 0x801F45CC
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS func_801F45CC(void) {
   D_801F51D0[WORLD00_AREA016_SCRATCH_PTR->mode]();

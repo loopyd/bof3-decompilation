@@ -4,7 +4,7 @@
  * @behavior Selects the local work array for selectors below three and the alternate region otherwise.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8* selectWorkRecordBase(u8 arg0) {
   if (arg0 < 3u) {

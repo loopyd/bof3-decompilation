@@ -4,7 +4,7 @@
  * @behavior Adds local-work fields +0x10 and +0x1C to field +0x44, then calls func_801E54EC when field +0x44 is negative.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void applyGravityOrReset(void)
 {

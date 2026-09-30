@@ -4,7 +4,7 @@
  * @behavior Sets frontend mode 4 and increments the volatile global battle byte when state bit 0 is set and gate 0xBD matches.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void enterFrontendMode4(void) {
     if ((D_80146328 & 1) != 0 && D_80143F04 == 0xBD) {

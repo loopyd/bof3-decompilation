@@ -6,7 +6,7 @@
  * current game-work state.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801B9048(void)
 {

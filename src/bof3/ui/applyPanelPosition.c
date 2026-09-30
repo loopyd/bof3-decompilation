@@ -4,7 +4,7 @@
  * @behavior passes the panel position and field six to the common UI helper.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void applyPanelPosition(void) {
   PanelTask* task = g_PanelTaskRoot;

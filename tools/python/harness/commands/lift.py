@@ -29,8 +29,8 @@ from ._lift_m2c import run_m2c, run_m2ctx
 
 def _example(command: str) -> str:
     if command == "m2c":
-        return "bin/m2c exe/logo@0x801CE758 -o candidate.c"
-    return f"bin/{command} exe/logo@0x801CE758"
+        return "bin/harness lift m2c exe/logo@0x801CE758 -o candidate.c"
+    return f"bin/harness lift {command} exe/logo@0x801CE758"
 
 
 def _run_match(
@@ -202,12 +202,17 @@ def run_promote(args: argparse.Namespace) -> int:
 
 
 def _parser(command: str) -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog=f"bin/{command}")
+    parser = argparse.ArgumentParser(prog=f"bin/harness lift {command}")
     add_example_argument(parser, _example(command))
     return parser
 
 
-def main(command: str, argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None) -> int:
+    """Run one lift command from ``[command, *args]``."""
+    args = sys.argv[1:] if argv is None else list(argv)
+    if not args:
+        raise SystemExit("bin/harness lift: action is required")
+    command, *arguments = args
     parser = _parser(command)
     if command == "m2ctx":
         parser.add_argument("function", nargs="?", help=FUNCTION_ID_HELP)
@@ -236,7 +241,7 @@ def main(command: str, argv: list[str] | None = None) -> int:
         parser.set_defaults(handler=run_promote)
     else:
         raise ValueError(f"unknown lift command: {command}")
-    args = parser.parse_args(argv)
+    args = parser.parse_args(arguments)
     if args.example:
         print(args.example_text)
         return 0

@@ -33,14 +33,20 @@ segments:
     - '@source: src/bof3/world/dispatchScratchMode.c'
     - '@behavior: dispatches the scratch mode byte at offset 1 through the local handler table at 0x801F4200.'
   - - 88
-    - asm
+    - c
     - func_801F2C58
+    - '@source: src/bof3/world/func_801F2C58.c'
+    - '@behavior: overlay init entry (slot 0 of the entry table D_801F4200): seeds the local spin-work table, the local work array and the remaining local tables, then clears scratch-work byte 0x09 and increments scratch-work byte 0x01.'
   - - 176
-    - asm
+    - c
     - func_801F2CB0
+    - '@source: src/bof3/world/func_801F2CB0_area02414.c'
+    - '@behavior: overlay step: passes scratch-work byte 0x09 to func_801F3E48, advances it by two, and at the 0x80 limit calls the shared cue dispatcher 0x8015DF18 with 0x206/0x20E/0x203 before restarting byte 0x09 and advancing scratch-work byte 0x01.'
   - - 348
-    - asm
+    - c
     - func_801F2D5C
+    - '@source: src/bof3/world/func_801F2D5C_area02414.c'
+    - '@behavior: overlay frame entry: draws the local spin work, advances the frame state, dispatches every active work-entry state handler, then increments scratch-work byte 0x01 when no active work was processed.'
   - - 436
     - c
     - resetScratchSelectEntry3
@@ -55,11 +61,15 @@ segments:
     - asm
     - func_801F2DF8
   - - 980
-    - asm
+    - c
     - func_801F2FD4
+    - '@source: src/bof3/world/func_801F2FD4_area02414.c'
+    - '@behavior: per-entry initializer of the local eight-entry work array: copies the three scratch words at 0x34/0x38/0x3c into one 0x28-byte work entry, seeds the entry''s vector components from rand(), hands that vector to the shared helper func_80178818 in place, then sets the entry''s leading bytes to 1/0/4/0x40, clears its size halfword and scales the vector z component by 256.'
   - - 1152
-    - asm
+    - c
     - func_801F3080
+    - '@source: src/bof3/world/func_801F3080.c'
+    - '@behavior: overlay init step called by func_801F2C58: seeds the local work cursor at 0x801f5b00 with the eight-entry work array base 0x800e4800 and calls the per-entry initializer func_801F2FD4 for each 0x28-byte slot.'
   - - 1260
     - c
     - dispatchWorkStates
@@ -86,34 +96,50 @@ segments:
     - '@source: src/bof3/world/advanceStateSelectMode3.c'
     - '@behavior: mode-3 handler of the work state dispatch table (stateTable): increments the byte at offset 1 of the current work pointer.'
   - - 1812
-    - asm
+    - c
     - func_801F3314
+    - '@source: src/bof3/world/initMotionRecords_area02414.c'
+    - '@behavior: overlay init step called by func_801F2C58: copies the 27-entry 0x28-byte quad source table into the local target array, averages each quad''s four corners into the matching 0x18-byte motion record at 0x800e4940, hands that average and the record''s velocity halfwords to func_80178804, trims each velocity to a signed byte, clears the record''s rotation halfwords and recenters all four corners around the average.'
   - - 2604
-    - asm
+    - c
     - func_801F362C
+    - '@source: src/bof3/world/advanceMotionRecords.c'
+    - '@behavior: integrates the 27-entry local motion table at 0x800e4940 (z velocity gains the shared frame-parity bit, then each position gains its matching velocity) and hands each matching 0x28-byte target/source record pair to func_801F3708.'
   - - 2824
-    - asm
+    - c
     - func_801F3708
+    - '@source: src/bof3/world/func_801F3708_area02414.c'
+    - '@behavior: reseeds the motion record''s three rotation halfwords from masked rand() values, builds the rotation matrix from them with a zeroed translation, publishes that matrix as both the current rotation and translation matrix, then rotates and translates the source quad''s four 6-byte corners through RotTrans and stores each transformed corner plus the matching motion-record position halfword into the destination quad.'
   - - 3396
-    - asm
+    - c
     - func_801F3944
+    - '@source: src/bof3/world/emitSpinTriangle_area02414.c'
+    - '@behavior: emits one translucent flat triangle for the spin-work record passed by drawSpin: projects the record''s own three-word point into the first vertex, builds the second and third vertices from its `+0x10`/`+0x12`/`+0x14` and `+0x18`/`+0x1a`/`+0x1c` halfwords rotated by the `+0x24` angle, scaled by the `+0x28` factor and translated by its `+0x00`/`+0x04`/`+0x08` words, then colours the first vertex from the clamped `+0x2a` halfword (blue is half of red/green), zeroes the other two colours and appends the 0x1c-byte primitive.'
   - - 4068
-    - asm
+    - c
     - func_801F3BE4
+    - '@source: src/bof3/world/func_801F3BE4.c'
+    - '@behavior: per-entry initializer of the 16-entry spin-work table: copies the scratchpad work object''s 0x34/0x38/0x3c words into the record, seeds its two SVECTOR components from func_801783C8/func_801782FC at +0x10 and -0x10, builds a scratch rotation matrix from three masked rand() angles (0x3ff for the negated second) applied through func_801AFF64/func_80179C58/func_80179DF8/func_80179F98, rotates both components through it between PushMatrix/PopMatrix, then arms the 0x28 factor to rand()&3 + 0xa and clears the 0x20/0x22/0x24/0x2a halfwords.'
   - - 4364
-    - asm
+    - c
     - initSpinWork
+    - '@source: src/bof3/world/initSpinWork.c'
+    - '@behavior: overlay init step called by func_801F2C58: seeds the local 16-entry spin-work table at 0x800e5000 by calling the per-entry initializer func_801F3BE4 on each 0x2c-byte slot.'
   - - 4444
     - c
     - drawSpin
     - '@source: src/bof3/world/drawSpin.c'
     - '@behavior: Draws the 16-entry spin table and advances each entry size/fade halfwords.'
   - - 4680
-    - asm
+    - c
     - func_801F3E48
+    - '@source: src/bof3/world/func_801F3E48_area02414.c'
+    - '@behavior: spin-line drawer: repoints the scratch cursor at D_80147A58, builds the view matrix through func_8015B410 and func_8015B4B0 inside a PushMatrix/PopMatrix pair, then walks the leading signed count byte''s 0x28-byte quad records of the source table, emits a semi-transparent 0x1c-byte LINE_F4 per record with the colour argument in its three colour bytes, projects the record''s four packed corners through RotTransPers and appends the primitive only when one of the quad''s two func_801F4158 cross products is positive.'
   - - 5464
-    - asm
+    - c
     - func_801F4158
+    - '@source: src/bof3/world/func_801F4158.c'
+    - '@behavior: signed 2D cross product of the edge from arg0 to arg1 against the edge from arg1 to arg2, read as unsigned halfwords; the spin-line drawer keeps a quad when either of its two cross products is positive.'
   - - 5592
     - c
     - resetStateFlagA

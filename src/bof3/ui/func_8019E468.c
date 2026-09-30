@@ -4,7 +4,7 @@
 /* @source 0x8019E468
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_8019E468(void) {
   g_game_work->pad_09[0] = 0;

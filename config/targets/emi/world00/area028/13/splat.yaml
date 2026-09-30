@@ -33,16 +33,20 @@ segments:
     - '@source: src/bof3/world/func_801F2C48.c'
     - '@behavior: seeds the work table, advances work byte one, and clears the current record halfword.'
   - - 128
-    - asm
+    - c
     - func_801F2C80
+    - '@source: src/bof3/world/func_801F2C80.c'
+    - '@behavior: gates on the scenario progress byte; at progress 0x19 it bumps the scratchpad record byte at offset 1, otherwise it refreshes the sprite slots and advances and clamps the record halfword at 0x2E.'
   - - 284
     - c
     - resetWorkareaSelectMode2
     - '@source: src/bof3/world/resetWorkareaSelectMode2.c'
     - '@behavior: mode-2 handler of the entry mode dispatch table; calls the shared work-area reset helper.'
   - - 316
-    - asm
+    - c
     - func_801F2D3C
+    - '@source: src/bof3/world/func_801F2D3C_area02813.c'
+    - '@behavior: re-seeds the current AREA028 work record with a scaled offset — it splits the record fields 0x04/0x06 shifted left by 7 by the record scale, adds each quotient to the trail entry 0 halfwords (0x800E4A00/0x800E4A02) and stores the sums into record words 0x0C/0x0E; then it walks the 32-entry ring, and for each step compares the signed cross product of the ring step (X/Y deltas of entry i+1 over entry i) with the vector from ring entry i to the record centre, leaving the walk early as soon as that product goes negative; only when the whole ring was walked does it emit the record centre as a translucent solid primitive through the shared prim cursor.'
   - - 860
     - c
     - seedWorkTable
@@ -64,8 +68,10 @@ segments:
     - '@source: src/bof3/world/refreshSpriteSlots.c'
     - '@behavior: refreshes active sprite slots and spawns replacements in free entries.'
   - - 1420
-    - asm
+    - c
     - func_801F318C
+    - '@source: src/bof3/world/func_801F318C.c'
+    - '@behavior: draws the 32-step rotation trail of the current AREA028 work record: projects the record''s own three-word centre into the first trail entry, then for each of the 32 ring angles rotates the passed radius through the shared angular helpers, offsets the record''s centre words by the scaled results, projects that point into the next trail entry and appends one translucent Gouraud triangle whose first vertex is the projected centre, whose second is the previous ring point and whose third is the new one.'
   - - 2068
     - c
     - func_801F3414
@@ -77,8 +83,10 @@ segments:
     - '@source: src/bof3/world/func_801F341C.c'
     - '@behavior: UNKNOWN: empty function body.'
   - - 2084
-    - asm
+    - c
     - func_801F3424
+    - '@source: src/bof3/world/func_801F3424_area02813.c'
+    - '@behavior: claims the next free front-end record from the allocator func_8019601C and, when the returned index is not 0xFF, marks the 0x74-byte record it selects at 0x80143FC8 as occupied (byte 0x00 set to 1), writes 0x40 into its byte 0x05, stores 0x150000 and 0x5B0000 in its words 0x34/0x38 and stores the distance returned by func_8015477C for that word pair, scaled by 0x10000, in its word 0x3C.'
   - - 2216
     - asm
     - T_801F34A8

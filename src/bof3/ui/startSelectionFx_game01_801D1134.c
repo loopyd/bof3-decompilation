@@ -6,7 +6,7 @@ extern u8 D_80181EBA[];
  * @source 0x801D1134
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void startSelectionFx(void) {
   u8 selection;

@@ -5,7 +5,7 @@
  * @source 0x801DDAB4
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void submitPositionalEffectBit80(u32 arg0) {
   if ((arg0 & 0x80u) != 0u) {

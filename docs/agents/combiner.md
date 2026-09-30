@@ -8,7 +8,7 @@ for rollout and unfinished gates.
 
 ## Current capability
 
-`sh bin/combiner inspect-source src/bof3/ui/advancePanelXTo17.c` reads one explicit
+`bin/harness combiner inspect-source src/bof3/ui/advancePanelXTo17.c` reads one explicit
 source without building, refreshing the index or writing. `harness.domain.functions`
 owns `parse_function_records` and `select_function_record`; `harness.combiner`
 owns inspection and CLI adaptation. Source claim enumeration and address-selected
@@ -171,7 +171,7 @@ consumer gates remain in place.
 Before planning a move, inspect two to 32 explicit source files in one target:
 
 ```sh
-bin/combiner profile emi/etc/game/00 src/bof3/ui/advancePanel_game00.c \
+bin/harness combiner profile emi/etc/game/00 src/bof3/ui/advancePanel_game00.c \
   src/bof3/ui/advancePanelXTo17_game00_8019982C.c \
   src/bof3/ui/advancePanelXTo320_game00_801996FC.c
 ```
@@ -257,9 +257,9 @@ prerequisite, not C1.3 completion, C1.4 ranking or production consolidation auth
 ### Profile preservation across a move
 
 ```sh
-bin/combiner preservation capture pre-profile.json post-states.json \
+bin/harness combiner preservation capture pre-profile.json post-states.json \
   --expected-profile-fingerprint PRE_SHA --expected-post-sha256 POST_FILE_SHA
-bin/combiner preservation verify preservation.json --expected-fingerprint RECORD_SHA
+bin/harness combiner preservation verify preservation.json --expected-fingerprint RECORD_SHA
 ```
 
 Both commands are read-only. Capture re-inspects live PRE and emits the record to
@@ -339,9 +339,9 @@ and successful terminal exit, not atomic publication if writing itself crosses t
 ### Joint transaction preparation
 
 ```sh
-bin/combiner transaction prepare pre-profile.json images.json \
+bin/harness combiner transaction prepare pre-profile.json images.json \
   --expected-profile-fingerprint PRE_SHA --expected-images-sha256 IMAGES_FILE_SHA
-bin/combiner transaction verify transaction.json --expected-fingerprint TRANSACTION_SHA
+bin/harness combiner transaction verify transaction.json --expected-fingerprint TRANSACTION_SHA
 ```
 
 These commands only prepare/recheck live PRE; neither applies nor accepts edits.
@@ -378,7 +378,7 @@ authority nor current compiler/dependency freshness.
 ```sh
 BOF3_PRESERVATION_RECORD=/absolute/repository/out/group-preservation.json \
 BOF3_PRESERVATION_FINGERPRINT=RECORD_SHA \
-bin/combiner transaction rehearse transaction.json \
+bin/harness combiner transaction rehearse transaction.json \
   --expected-fingerprint TRANSACTION_SHA --implementation-run-id RUN_ID \
   --object out/group-check/rehearsal.o \
   --output out/reviews/evidence/rehearsal.json \
@@ -425,8 +425,8 @@ POST admission: `accepted`, `reusable`, `write_authorized`, `native_verified` an
 `coverage_verified` remain false. Full compiler/consumer closure and actual native
 validation are separate production gates, not proven by synthetic characterization.
 
-`bin/combiner inspect-recovery RECORD --expected-recovery-digest PIN` reads shared
-recovery evidence without changing files. `bin/combiner recover RECORD
+`bin/harness combiner inspect-recovery RECORD --expected-recovery-digest PIN` reads shared
+recovery evidence without changing files. `bin/harness combiner recover RECORD
 --expected-recovery-digest PIN --authorization AUTHORIZATION
 --expected-authorization-digest AUTH_PIN` uses the same independently pinned parent
 authority, distinct run identities, actual terminal evidence, absent publication and
@@ -444,7 +444,7 @@ group through one fresh configured producer invocation:
 ```sh
 BOF3_PRESERVATION_RECORD=out/group-preservation.json \
 BOF3_PRESERVATION_FINGERPRINT=RECORD_SHA \
-bin/combiner compare src/bof3/ui/group.c \
+bin/harness combiner compare src/bof3/ui/group.c \
   --output out/group-check/attempt.o --work-deadline MONOTONIC_CUTOFF
 ```
 

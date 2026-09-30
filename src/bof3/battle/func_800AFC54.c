@@ -4,7 +4,7 @@
  * @source 0x800AFC54
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_800AFC54(void) {
   u32        i;

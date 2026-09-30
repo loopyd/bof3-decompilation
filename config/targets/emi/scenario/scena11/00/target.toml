@@ -9,10 +9,32 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/dispatchSecondaryStateScenarioScena1100_801F7748.c",
+    "src/bof3/scenario/dispatchRecordCallbackScenarioScena1100_801FA5B8.c",
+    "src/bof3/scenario/negativeOneResultScenarioScena1100_801FAB6C.c",
     "src/bof3/scenario/zeroResultScenarioScena1100_801FAB64.c",
     "src/bof3/scenario/noopHandlerScenarioScena1100_801FA5F8.c",
     "src/bof3/scenario/noopHandlerScenarioScena1100_801F917C.c",
     "src/bof3/scenario/noopHandlerScenarioScena1100_801F7784.c",
     "src/bof3/support/scena11_00_psyq.c",
+    "src/bof3/scenario/armEffectBankAndAdvanceStateScenarioScena1100_801F72C4.c",
+    "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena1100_801FADF8.c",
+    "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena1100_801FAE20.c",
+    "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena1100_801FAE48.c",
+    "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena1100_801FAE70.c",
+    "src/bof3/scenario/dispatchProgressHandlerScenarioScena1100_801F7288.c",
+    "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena1100_801FAE98.c",
+    "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FABC0.c",
+    "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FAC04.c",
+    "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FAC94.c",
+    "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FACD8.c",
+    "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FAD68.c",
+    "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState3ScenarioScena1100_801FA674.c",
+    "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState5ScenarioScena1100_801FA6C0.c",
+    "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState6ScenarioScena1100_801FA75C.c",
+    "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState7ScenarioScena1100_801FA7A8.c",
+    "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState9ScenarioScena1100_801FA7F4.c",
+    "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState0EScenarioScena1100_801FA988.c",
+    "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena1100_801FAB74.c",
 ]
 psyq_source = "src/bof3/support/scena11_00_psyq.c"

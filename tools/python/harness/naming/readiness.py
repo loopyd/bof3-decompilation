@@ -424,7 +424,7 @@ def progress_metadata_findings(
                 if exact_claim:
                     row["class"] = "safe_metadata_repair"
                     row["repair"] = (
-                        f"bin/naming-audit prepare {target} --repair; "
+                        f"bin/harness naming prepare {target} --repair; "
                         "live byte-match must prove exact before the rewrite"
                     )
                 findings.append(row)

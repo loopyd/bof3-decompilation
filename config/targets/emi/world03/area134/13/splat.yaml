@@ -42,14 +42,18 @@ segments:
     - asm
     - func_801F2DE8
   - - 616
-    - asm
-    - func_801F2E68
+    - c
+    - advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68
+    - '@source: src/bof3/world03/advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68.c'
+    - '@behavior: Overlay work-record handoff: publishes the record based at 0x80146888 at the scratchpad pointer slot 0x44, ramps its 32-bit word at offset 0x34 by 0x4000 four times, arms the saved record state byte at offset 0x01 with mode 5 and restores the saved record.'
   - - 700
     - asm
     - func_801F2EBC
   - - 828
-    - asm
-    - func_801F2F3C
+    - c
+    - advanceWorkWordAndSetScratchStateToMode7World03Area13413_801F2F3C
+    - '@source: src/bof3/world03/advanceWorkWordAndSetScratchStateToMode7World03Area13413_801F2F3C.c'
+    - '@behavior: Overlay work-record handoff: saves the scratchpad pointer cell 0x1F800044, publishes the record at 0x80146888 in its place, ramps the record word at offset 0x34 by 0x4000 four times with an unsigned-byte counter in a bottom-tested loop, then arms the saved record state byte at offset 0x01 with 7 and republishes the saved record; the same 0x54-byte shape as the exact sibling advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68 apart from that immediate.'
   - - 912
     - asm
     - func_801F2F90
@@ -60,26 +64,28 @@ segments:
     - asm
     - func_801F3064
   - - 1252
-    - asm
-    - func_801F30E4
+    - c
+    - advanceWorkWordAndSetScratchStateToMode11World03Area13413_801F30E4
+    - '@source: src/bof3/world03/advanceWorkWordAndSetScratchStateToMode11World03Area13413_801F30E4.c'
+    - '@behavior: Overlay work-record handoff: saves the scratchpad pointer cell 0x1F800044, publishes the record at 0x80146888 in its place, ramps the record word at offset 0x34 by 0x4000 four times with an unsigned-byte counter in a bottom-tested loop, then arms the saved record state byte at offset 0x01 with 11 and republishes the saved record; the same 0x54-byte shape as the exact sibling advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68 apart from that immediate.'
   - - 1336
     - asm
     - func_801F3138
   - - 1464
-    - asm
-    - func_801F31B8
+    - c
+    - clearScratchStateAndAreaStatusWorld03Area13413_801F31B8
   - - 1532
     - asm
     - func_801F31FC
   - - 1620
-    - asm
-    - func_801F3254
+    - c
+    - countdownScratchStateToMode15World03Area13413_801F3254
   - - 1676
     - asm
     - func_801F328C
   - - 1764
-    - asm
-    - func_801F32E4
+    - c
+    - countdownScratchStateToMode17World03Area13413_801F32E4
   - - 1820
     - asm
     - func_801F331C
@@ -102,11 +108,11 @@ segments:
     - asm
     - func_801F34DC
   - - 2400
-    - asm
-    - func_801F3560
+    - c
+    - dispatchStateByte1Table57a4World03Area13413_801F3560
   - - 2468
-    - asm
-    - func_801F35A4
+    - c
+    - resetScratchStateToMode1World03Area13413_801F35A4
   - - 2516
     - asm
     - func_801F35D4
@@ -147,14 +153,14 @@ segments:
     - asm
     - func_801F3B24
   - - 3964
-    - asm
-    - func_801F3B7C
+    - c
+    - countdownScratchStateToMode15World03Area13413_801F3B7C
   - - 4020
     - asm
     - func_801F3BB4
   - - 4108
-    - asm
-    - func_801F3C0C
+    - c
+    - countdownScratchStateToMode17World03Area13413_801F3C0C
   - - 4164
     - asm
     - func_801F3C44
@@ -177,11 +183,13 @@ segments:
     - asm
     - func_801F3D88
   - - 4620
-    - asm
-    - func_801F3E0C
+    - c
+    - dispatchStateByte1Table5804World03Area13413_801F3E0C
+    - '@source: src/bof3/world03/dispatchStateByte1Table5804World03Area13413_801F3E0C.c'
+    - '@behavior: Overlay step dispatch calling the handler pointer at the state byte 1 index of the local handler table based at 0x801F5804, the same shape as the exact sibling dispatchStateByte1Table57a4World03Area13413_801F3560.'
   - - 4688
-    - asm
-    - func_801F3E50
+    - c
+    - setScratchStateToMode1WhenPadMatchesWorld03Area13413_801F3E50
   - - 4748
     - asm
     - func_801F3E8C
@@ -195,8 +203,10 @@ segments:
     - c
     - invokeHelperWorld03Area13413_801F41B0
   - - 5584
-    - asm
-    - func_801F41D0
+    - c
+    - dispatchStateByte1Table581cWorld03Area13413_801F41D0
+    - '@source: src/bof3/world03/dispatchStateByte1Table581cWorld03Area13413_801F41D0.c'
+    - '@behavior: Overlay step dispatch calling the handler pointer at the state byte 1 index of the second local handler table based at 0x801F581C, the twin of the boundary at 0x801F3E0C.'
   - - 5652
     - asm
     - func_801F4214
@@ -204,11 +214,13 @@ segments:
     - asm
     - func_801F4288
   - - 5904
-    - asm
-    - func_801F4310
+    - c
+    - clearWorkFlagsWhenNoCallbackRanWorld03Area13413_801F4310
   - - 5956
-    - asm
-    - func_801F4344
+    - c
+    - dispatchStateByte1Table5828World03Area13413_801F4344
+    - '@source: src/bof3/world03/dispatchStateByte1Table5828World03Area13413_801F4344.c'
+    - '@behavior: Overlay step dispatch calling the handler pointer at the state byte 1 index of the third local handler table based at 0x801F5828, the twin of the boundaries at 0x801F581C, 0x801F5804 and 0x801F57A4.'
   - - 6024
     - asm
     - func_801F4388
@@ -243,11 +255,11 @@ segments:
     - asm
     - func_801F48B0
   - - 7480
-    - asm
-    - func_801F4938
+    - c
+    - findFreeWorkRecordAt800E4800World03Area13413_801F4938
   - - 7540
-    - asm
-    - func_801F4974
+    - c
+    - clearWorkTableAt800E4800World03Area13413_801F4974
   - - 7584
     - asm
     - func_801F49A0
@@ -264,11 +276,11 @@ segments:
     - asm
     - func_801F5114
   - - 9620
-    - asm
-    - func_801F5194
+    - c
+    - advanceCounter1By2World03Area13413_801F5194
   - - 9660
-    - asm
-    - func_801F51BC
+    - c
+    - retreatCounter1By2World03Area13413_801F51BC
   - - 9700
     - c
     - setTwoWorld03Area13413_801F51E4
@@ -276,11 +288,11 @@ segments:
     - asm
     - func_801F5200
   - - 9856
-    - asm
-    - func_801F5280
+    - c
+    - advanceCounter2By8World03Area13413_801F5280
   - - 9896
-    - asm
-    - func_801F52A8
+    - c
+    - retreatCounter2By8World03Area13413_801F52A8
   - - 9936
     - asm
     - func_801F52D0
@@ -310,5 +322,5 @@ segments:
     - func_801F5698
   - - 11044
     - asm
-    - func_801F5724
+    - D_801F5724
 - - 14264

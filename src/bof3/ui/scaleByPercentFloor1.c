@@ -5,7 +5,7 @@
  * @source 0x801D3654
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u32 scaleByPercentFloor1(u32 arg0, u32 arg1) {
   u32 var_v0;

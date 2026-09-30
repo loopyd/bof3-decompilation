@@ -3,7 +3,7 @@
 /* @source 0x80096E14
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 /* @behavior Initializes battle selection/action state, calls setup mode 0x104, resets relevant state bytes, selects slot 1, and increments the counter. */
 void initSelectionStateSlot1(void) {

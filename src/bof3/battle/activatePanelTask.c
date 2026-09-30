@@ -4,7 +4,7 @@
  * @source 0x801EA174
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void activatePanelTask(void) {
   u8* volatile* root = (u8* volatile*)0x80150000u;

@@ -27,14 +27,14 @@ segments:
   vram: 2148276228
   subsegments:
   - - 4
-    - asm
-    - func_800C1804
+    - c
+    - dispatchStateByte1Table2660BossBoss00816_800C1804
   - - 72
     - asm
     - func_800C1848
   - - 160
-    - asm
-    - func_800C18A0
+    - c
+    - dispatchStateByte2Table2690BossBoss00816_800C18A0
   - - 228
     - asm
     - func_800C18E4
@@ -57,8 +57,8 @@ segments:
     - c
     - invokeHelperBossBoss00816_800C1C68
   - - 1160
-    - asm
-    - func_800C1C88
+    - c
+    - dispatchIndexedHandlerBossBoss00816_800C1C88
   - - 1216
     - c
     - noopHandlerBossBoss00816_800C1CC0
@@ -69,14 +69,14 @@ segments:
     - c
     - noopHandlerBossBoss00816_800C1CD0
   - - 1240
-    - asm
-    - func_800C1CD8
+    - c
+    - dispatchStateByte1Table26ccBossBoss00816_800C1CD8
   - - 1308
     - asm
     - func_800C1D1C
   - - 1396
-    - asm
-    - func_800C1D74
+    - c
+    - dispatchIndexedHandlerBossBoss00816_800C1D74
   - - 1452
     - c
     - noopHandlerBossBoss00816_800C1DAC
@@ -87,14 +87,14 @@ segments:
     - c
     - noopHandlerBossBoss00816_800C1DBC
   - - 1476
-    - asm
-    - func_800C1DC4
+    - c
+    - dispatchStateByte1Table2708BossBoss00816_800C1DC4
   - - 1544
     - asm
     - func_800C1E08
   - - 1632
-    - asm
-    - func_800C1E60
+    - c
+    - dispatchIndexedHandlerBossBoss00816_800C1E60
   - - 1688
     - c
     - noopHandlerBossBoss00816_800C1E98
@@ -111,8 +111,8 @@ segments:
     - asm
     - func_800C1EF4
   - - 1868
-    - asm
-    - func_800C1F4C
+    - c
+    - dispatchIndexedHandlerBossBoss00816_800C1F4C
   - - 1924
     - c
     - noopHandlerBossBoss00816_800C1F84
@@ -123,8 +123,8 @@ segments:
     - c
     - noopHandlerBossBoss00816_800C1F94
   - - 1948
-    - asm
-    - func_800C1F9C
+    - c
+    - publishBattleHooksBossBoss00816_800C1F9C
   - - 2004
     - c
     - zeroResultBossBoss00816_800C1FD4
@@ -135,8 +135,8 @@ segments:
     - asm
     - func_800C2028
   - - 2184
-    - asm
-    - func_800C2088
+    - c
+    - publishBattleHooksBossBoss00816_800C2088
   - - 2240
     - c
     - zeroResultBossBoss00816_800C20C0
@@ -147,8 +147,8 @@ segments:
     - asm
     - func_800C2114
   - - 2436
-    - asm
-    - func_800C2184
+    - c
+    - publishBattleHooksBossBoss00816_800C2184
   - - 2492
     - c
     - zeroResultBossBoss00816_800C21BC
@@ -159,8 +159,8 @@ segments:
     - asm
     - func_800C2210
   - - 2688
-    - asm
-    - func_800C2280
+    - c
+    - publishBattleHooksBossBoss00816_800C2280
   - - 2744
     - c
     - zeroResultBossBoss00816_800C22B8
@@ -175,5 +175,5 @@ segments:
     - func_800C236C
   - - 3648
     - asm
-    - func_800C2640
+    - D_800C2640
 - - 3968

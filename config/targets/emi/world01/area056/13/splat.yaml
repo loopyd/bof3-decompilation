@@ -48,11 +48,11 @@ segments:
     - asm
     - func_801F2FFC
   - - 1188
-    - asm
-    - func_801F30A4
+    - c
+    - setStatusNineUnlessGateWorld01Area05613_801F30A4
   - - 1228
-    - asm
-    - func_801F30CC
+    - c
+    - setStatusTenUnlessGateWorld01Area05613_801F30CC
   - - 1268
     - asm
     - func_801F30F4
@@ -81,8 +81,8 @@ segments:
     - asm
     - func_801F3354
   - - 2112
-    - asm
-    - func_801F3440
+    - c
+    - clearWorldFlagAndWorkByte4World01Area05613_801F3440
   - - 2148
     - c
     - noopHandlerWorld01Area05613_801F3464
@@ -91,5 +91,5 @@ segments:
     - func_801F346C
   - - 2268
     - asm
-    - func_801F34DC
+    - D_801F34DC
 - - 3236

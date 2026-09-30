@@ -1,9 +1,31 @@
 """Native exact-match payloads for type and macro transaction integrations."""
 
+import hashlib
 from pathlib import Path
 
 from harness.domain.manifests import load_target_manifests
 from harness.match._asm_diff_payload import build_result_payload
+
+_NATIVE_BUILD_DIGESTS: dict[Path, str] = {}
+
+
+def _build_inputs_digest(root: Path) -> str:
+    """Digest every input a real cmake/ninja build depends on for one test root."""
+    digest = hashlib.sha256()
+    manifest = root / "CMakeLists.txt"
+    if manifest.is_file():
+        digest.update(b"CMakeLists.txt\0")
+        digest.update(manifest.read_bytes())
+    for directory in ("src", "config", "include"):
+        base = root / directory
+        if not base.is_dir():
+            continue
+        for path in sorted(item for item in base.rglob("*") if item.is_file()):
+            digest.update(path.relative_to(root).as_posix().encode())
+            digest.update(b"\0")
+            digest.update(path.read_bytes())
+            digest.update(b"\0")
+    return digest.hexdigest()
 
 
 def exact_payload(root: Path, tool: str) -> dict:
@@ -21,7 +43,7 @@ def exact_payload(root: Path, tool: str) -> dict:
         original_lines=["nop", "nop"],
         current_lines=["nop", "nop"],
     )
-    if tool == "bin/byte-match":
+    if tool == "byte-match":
         payload["schema"] = "harness.byte-match-one/v1"
         payload["outputs"] = {}
         del payload["instruction_count"], payload["first_mismatch"]
@@ -67,11 +89,20 @@ def execution_inputs(root: Path) -> None:
 
 
 def native_build(root: Path) -> None:
-    """Exercise real CMake regeneration/Ninja glob scripts without BOF3 mutation."""
+    """Exercise real CMake regeneration/Ninja glob scripts without BOF3 mutation.
+
+    Repeated identical ``bin/harness build`` checks for one unchanged test root reuse the
+    objects the first real build produced; any source/config change re-runs it.
+    """
     import subprocess
 
+    key = root.resolve()
+    digest = _build_inputs_digest(root)
+    if _NATIVE_BUILD_DIGESTS.get(key) == digest:
+        return
     for argv in (
         ["cmake", "-S", str(root), "-B", str(root / "build/cmake"), "-G", "Ninja"],
         ["ninja", "-C", str(root / "build/cmake")],
     ):
         subprocess.run(argv, check=True, capture_output=True, timeout=30)
+    _NATIVE_BUILD_DIGESTS[key] = digest

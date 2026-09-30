@@ -5,7 +5,7 @@
  * @source 0x801DEEB4
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchLocalStateTable(void) {
   if ((BATTLE_LOCAL_SCRATCH_PTR->flags_00 & 1u) != 0u) {

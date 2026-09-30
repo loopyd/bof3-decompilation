@@ -9,7 +9,8 @@
  */
 void NO_SIBLING_CALLS dispatchWorkByte1Pair(void)
 {
-    BattleSelectionHandler handlers[2] = { initRecordStateAdvanceWork, func_800A84FC };
+    BattleSelectionHandler handlers[2] = { initRecordStateAdvanceWork,
+                                           raiseFlag4WhenPendingBitsClear };
 
     handlers[SPAD_PTR_SLOT(u8, 0x44)[1]]();
 }

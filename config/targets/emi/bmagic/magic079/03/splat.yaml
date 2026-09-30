@@ -1,0 +1,119 @@
+name: bmagic_magic079_03
+sha1: 57b6b4cbb880268239dc0de814bf1eed789793fc
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic079_03
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/bmagic/magic079/03.bin
+  asm_path: out/splat/emi/bmagic/magic079/03/asm
+  src_path: src/emi/bmagic/magic079/03
+  ld_script_path: out/splat/emi/bmagic/magic079/03/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/bmagic/magic079/03/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/bmagic/magic079/03/undefined_syms_auto.txt
+  cache_path: out/splat/emi/bmagic/magic079/03/.splache
+  asset_path: out/splat/emi/bmagic/magic079/03/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/bmagic/magic079/03/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149510148
+  subsegments:
+  - - 4
+    - asm
+    - func_801EEC04
+  - - 92
+    - asm
+    - func_801EEC5C
+  - - 312
+    - asm
+    - func_801EED38
+  - - 408
+    - asm
+    - func_801EED98
+  - - 476
+    - asm
+    - func_801EEDDC
+  - - 612
+    - asm
+    - func_801EEE64
+  - - 740
+    - asm
+    - func_801EEEE4
+  - - 820
+    - asm
+    - func_801EEF34
+  - - 952
+    - asm
+    - func_801EEFB8
+  - - 1096
+    - asm
+    - func_801EF048
+  - - 1192
+    - asm
+    - func_801EF0A8
+  - - 1328
+    - asm
+    - func_801EF130
+  - - 1500
+    - asm
+    - func_801EF1DC
+  - - 1596
+    - asm
+    - func_801EF23C
+  - - 1724
+    - asm
+    - func_801EF2BC
+  - - 1864
+    - asm
+    - func_801EF348
+  - - 1960
+    - asm
+    - func_801EF3A8
+  - - 2136
+    - asm
+    - func_801EF458
+  - - 4076
+    - asm
+    - func_801EFBEC
+  - - 4212
+    - asm
+    - func_801EFC74
+  - - 4316
+    - asm
+    - func_801EFCDC
+  - - 4396
+    - asm
+    - func_801EFD2C
+  - - 4484
+    - asm
+    - func_801EFD84
+  - - 4608
+    - asm
+    - func_801EFE00
+  - - 4744
+    - asm
+    - func_801EFE88
+  - - 4872
+    - asm
+    - func_801EFF08
+  - - 4952
+    - asm
+    - func_801EFF58
+  - - 5040
+    - asm
+    - func_801EFFB0
+  - - 5164
+    - asm
+    - func_801F002C
+  - - 5796
+    - asm
+    - D_801F02A4
+- - 6076

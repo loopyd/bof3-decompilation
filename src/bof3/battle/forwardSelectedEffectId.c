@@ -5,7 +5,7 @@
  * @source 0x801DF34C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void forwardSelectedEffectId(void) {
   if ((BATTLE_LOCAL_FLAGS_80(BATTLE_LOCAL_WORK_PTR) & 0x0800u) != 0u) {

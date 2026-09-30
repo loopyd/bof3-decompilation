@@ -57,14 +57,14 @@ segments:
     - asm
     - func_801F3328
   - - 1952
-    - asm
-    - func_801F33A0
+    - c
+    - setSharedByteOneIfByte80144F5BFourWorld01Area04914_801F33A0
   - - 1988
-    - asm
-    - func_801F33C4
+    - c
+    - setSharedByteOneIfByte80144F5CFourWorld01Area04914_801F33C4
   - - 2024
-    - asm
-    - func_801F33E8
+    - c
+    - advanceCounterWorld01Area04914_801F33E8
   - - 2064
     - asm
     - func_801F3410
@@ -112,5 +112,5 @@ segments:
     - func_801F3908
   - - 3468
     - asm
-    - func_801F398C
+    - D_801F398C
 - - 12544

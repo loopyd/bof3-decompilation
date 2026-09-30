@@ -5,7 +5,7 @@
  * @source 0x801F2C30
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS dispatchScratchMode1(void) {
   handlerTable[WORLD00_AREA027_SCRATCH_PTR[1]]();

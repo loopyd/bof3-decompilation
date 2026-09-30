@@ -5,7 +5,7 @@
  * @behavior Dispatches the indexed handler for the current scenario.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801C1E3C(u8 index)
 {

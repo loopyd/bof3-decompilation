@@ -8,7 +8,7 @@ extern GameEntry0StateHandler D_801CD570[];
  * @source 0x801C5838
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801C5838(void) {
   D_801CD570[D_80143F4A]();

@@ -5,7 +5,7 @@
  * @source 0x801C5798
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void clearWorkWordsCTo14(void) {
   struct GameWorkArea** base;

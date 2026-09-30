@@ -4,7 +4,7 @@
  * @source 0x8014AE9C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void clearBootOtEntry(u8* work) {
   ClearOTagR((u_long*)(work + 0x70), 8);

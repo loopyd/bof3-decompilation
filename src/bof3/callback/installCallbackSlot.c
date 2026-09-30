@@ -5,7 +5,7 @@
  * @source 0x8014B854
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 extern GameCallbackEntry D_80143B44;
 extern u16               D_80143B40;

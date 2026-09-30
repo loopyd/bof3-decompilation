@@ -255,7 +255,7 @@ def _final_verify(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="macro-audit")
+    parser = argparse.ArgumentParser(prog="bin/harness macros")
     add_root_argument(parser)
     sub = parser.add_subparsers(dest="command", required=True)
     add_ranking_commands(sub, _read)

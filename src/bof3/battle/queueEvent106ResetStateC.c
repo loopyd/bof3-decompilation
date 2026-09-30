@@ -6,7 +6,7 @@
  * battle/03 evidence establishes func_8015DF18(u16) and func_801DEA64(s32).
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void queueEvent106ResetStateC(void) {
   func_8015DF18(0x106u);

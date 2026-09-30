@@ -68,12 +68,12 @@ frame. Pad the selected XA stream by the formula above, then trim it to exactly
 The extracted file is an exact multiple of `2336` bytes. For the pinned
 input `out/extracted/LOGO/CAPCOM30.STR` (SHA-256
 `0f9145e980e401ded21f4c315375bcb989f49b8b83582f46f4a2946dd33ff06d`),
-`bin/str-media inspect out/extracted/LOGO/CAPCOM30.STR` reports 1013
+`bin/harness media str inspect out/extracted/LOGO/CAPCOM30.STR` reports 1013
 sectors, 203 frame records (frames 1-203, no gaps, frame 203 incomplete), and
 one stereo XA stream (file 1,
 channel 1, 37800 Hz, 126 sectors, 254016 samples, 6.72 s). A reversible
 2352-byte sector wrapper preserves all inner sectors.
-`bin/str-media validate out/extracted/LOGO/CAPCOM30.STR --expected-fps 30` writes
+`bin/harness media str validate out/extracted/LOGO/CAPCOM30.STR --expected-fps 30` writes
 `out/str-media/CAPCOM30/validation.json` (schema `harness.str-validation/v1`)
 with status `pass`: 203/30 = 6.7667 s video against 6.72 s audio, delta
 0.0467 s within the 0.1067 s tolerance (two video frames or two primary XA
@@ -100,10 +100,10 @@ sectors, and lossless wrapping recovers both streams, so missing end padding is
 not supported as the cause. Padding is derived output only; the pinned
 extraction contains exactly one stereo XA stream, so there is no separate
 mono track to fold. Note
-that `bin/str-media convert` exits 0 regardless of result status: read
+that `bin/harness media str convert` exits 0 regardless of result status: read
 `out/str-media/<stem>/conversion.json` and require `status: pass` before
 treating a conversion as valid. `out/str-media/<stem>/conversion.json`
 receipts are disposable per-run artifacts, so the reproducible contract is to
-run `bin/str-media convert` and require `status: pass` in the generated
+run `bin/harness media str convert` and require `status: pass` in the generated
 manifest (computing the output SHA-256 at conversion time); the passing
 source validation is not conversion acceptance.

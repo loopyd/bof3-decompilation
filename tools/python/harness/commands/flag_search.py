@@ -54,14 +54,14 @@ def run(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="flag-search")
+    parser = argparse.ArgumentParser(prog="bin/harness lift flag-search")
     parser.add_argument("function", help=FUNCTION_ID_HELP)
     parser.add_argument("--catalog", type=Path)
     parser.add_argument(
         "--compiler", type=str, help="catalog ID for a historical GCC variant"
     )
     parser.add_argument("-o", "--out", type=Path)
-    add_example_argument(parser, "bin/flag-search exe/logo@0x801CE758")
+    add_example_argument(parser, "bin/harness lift flag-search exe/logo@0x801CE758")
     parser.set_defaults(handler=run)
     return parser
 

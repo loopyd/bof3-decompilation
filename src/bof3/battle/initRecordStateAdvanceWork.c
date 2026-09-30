@@ -3,7 +3,7 @@
 /* @source 0x800A8450
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 /* @behavior initializes selected D_80145E90 record state fields (01=6, 02/03=4, 04=0) then increments g_battle_work[1]. */
 void initRecordStateAdvanceWork(void) {

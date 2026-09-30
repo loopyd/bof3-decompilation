@@ -1,0 +1,447 @@
+from argparse import Namespace
+from contextlib import redirect_stdout
+import io
+import json
+from pathlib import Path
+import sqlite3
+import subprocess
+from typing import Any, cast
+
+import pytest
+
+from harness.commands import analysis_readiness, index
+
+
+def test_analysis_readiness_reports_unavailable_work_graphs_without_index(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setattr(
+        analysis_readiness,
+        "load_target_manifests",
+        lambda _root, _connection=None, _target=None, **_kwargs: {
+            "emi/test/archive/00": object()
+        },
+    )
+    monkeypatch.setattr(
+        analysis_readiness,
+        "project_status",
+        lambda _root, target, **_kwargs: {"target": target, "fresh": False},
+    )
+    monkeypatch.setattr(
+        analysis_readiness,
+        "_summaries",
+        lambda *_args: (_ for _ in ()).throw(FileNotFoundError("missing index")),
+    )
+
+    payload = analysis_readiness.readiness(tmp_path)
+
+    assert payload["schema"] == "bof3.analysis-readiness/v2"
+    assert payload["ready"] is False
+    assert payload["stale_facts"] == {
+        "count": 2,
+        "targets": ["emi/test/archive/00"],
+        "index": True,
+    }
+    summaries = payload["summaries"]
+    assert isinstance(summaries, dict)
+    assert summaries["naming"] == {
+        "available": False,
+        "error": "missing index",
+    }
+    assert payload["recovery"] == "bin/harness analysis index --recover"
+
+
+def test_analysis_readiness_includes_naming_type_macro_work_graphs(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setattr(
+        analysis_readiness,
+        "load_target_manifests",
+        lambda _root, _connection=None, _target=None, **_kwargs: {
+            "emi/test/archive/00": object()
+        },
+    )
+    monkeypatch.setattr(
+        analysis_readiness,
+        "project_status",
+        lambda _root, target, **_kwargs: {"target": target, "fresh": True},
+    )
+    summaries = {
+        concern: {"work_graph": []} for concern in ("naming", "types", "macros")
+    }
+    monkeypatch.setattr(analysis_readiness, "_summaries", lambda *_args: summaries)
+
+    payload = analysis_readiness.readiness(tmp_path, "emi/test/archive/00")
+
+    assert payload["ready"] is True
+    assert payload["stale_facts"] == {"count": 0, "targets": [], "index": False}
+    assert payload["summaries"] == summaries
+    assert payload["recovery"] is None
+
+
+def test_analysis_readiness_summary_filters_all_counts_and_work_to_target(
+    tmp_path: Path, monkeypatch
+) -> None:
+    database = sqlite3.connect(":memory:")
+    database.row_factory = sqlite3.Row
+    for table in ("type_fields", "type_usages", "type_conflicts", "macro_uses"):
+        database.execute(f"CREATE TABLE {table} (target_id TEXT)")
+    database.execute("CREATE TABLE type_declarations (target_id TEXT, diagnostic TEXT)")
+    database.execute("CREATE TABLE macro_definitions (owner_target TEXT)")
+    database.execute("CREATE TABLE macro_templates (owner_target TEXT)")
+    for target in ("a", "a", "b"):
+        database.execute("INSERT INTO type_declarations VALUES (?, NULL)", (target,))
+        database.execute("INSERT INTO type_fields VALUES (?)", (target,))
+        database.execute("INSERT INTO type_usages VALUES (?)", (target,))
+        database.execute("INSERT INTO type_conflicts VALUES (?)", (target,))
+        database.execute("INSERT INTO macro_definitions VALUES (?)", (target,))
+        database.execute("INSERT INTO macro_uses VALUES (?)", (target,))
+        database.execute("INSERT INTO macro_templates VALUES (?)", (target,))
+    database.execute("INSERT INTO macro_definitions VALUES ('__shared__')")
+    database.execute("INSERT INTO macro_templates VALUES ('__shared__')")
+    database.execute("UPDATE type_declarations SET diagnostic='x' WHERE rowid=1")
+    monkeypatch.setattr(analysis_readiness, "connect", lambda _root: database)
+    monkeypatch.setattr(
+        analysis_readiness,
+        "inventory_expected",
+        lambda _root, target, _manifests: (
+            {("function", "func_00000001")}
+            if target == "a"
+            else {("data", "D_00000002")}
+        ),
+    )
+
+    class Work:
+        def items(self, _address, _kind):
+            return ["one", "two"]
+
+    monkeypatch.setattr(
+        analysis_readiness, "required_work_snapshot", lambda *_args: Work()
+    )
+
+    class Debt:
+        def to_rows(self):
+            return {"raw_functions": ["a:x", "b:y"], "raw_data": []}
+
+    monkeypatch.setattr(analysis_readiness, "collect_naming_debt", lambda *_: Debt())
+    monkeypatch.setattr(
+        analysis_readiness,
+        "type_account",
+        lambda _root, _connection=None, _target=None, **_kwargs: {
+            "rows": [
+                {"id": "ta", "target": "a", "kind": "field", "status": "blocked"},
+                {"id": "tb", "target": "b", "kind": "prototype", "status": "proposed"},
+            ]
+        },
+    )
+    monkeypatch.setattr(
+        analysis_readiness,
+        "macro_account",
+        lambda _root, _connection=None, _target=None, **_kwargs: {
+            "rows": [
+                {
+                    "id": "ma",
+                    "kind": "constant",
+                    "status": "blocked",
+                    "targets": ["a"],
+                    "shared": False,
+                },
+                {
+                    "id": "mb",
+                    "kind": "accessor",
+                    "status": "accepted",
+                    "targets": ["a", "b"],
+                    "shared": False,
+                },
+                {
+                    "id": "mc",
+                    "kind": "constant",
+                    "status": "accepted",
+                    "targets": ["b"],
+                    "shared": False,
+                },
+            ]
+        },
+    )
+
+    summary = cast(
+        dict[str, Any],
+        analysis_readiness._summaries(
+            tmp_path,
+            cast(
+                Any,
+                {
+                    "a": Namespace(sources=()),
+                    "b": Namespace(sources=()),
+                },
+            ),
+            ["a"],
+            False,
+        ),
+    )
+
+    assert summary["naming"]["inventory_count"] == 1
+    assert summary["naming"]["required_work_count"] == 2
+    assert summary["naming"]["debt"] == {"raw_functions": 1, "raw_data": 0}
+    assert summary["types"] == {
+        "inventory_count": 2,
+        "field_count": 2,
+        "usage_count": 2,
+        "conflict_count": 2,
+        "diagnostic_count": 1,
+        "candidate_count": 1,
+        "proposed_transactions": 0,
+        "unresolved_evidence_ceiling_count": 1,
+        "work_graph": [{"status": "blocked", "count": 1}],
+    }
+    assert summary["macros"] == {
+        "inventory_count": 3,
+        "use_count": 2,
+        "template_count": 3,
+        "candidate_count": 2,
+        "proposed_transactions": 1,
+        "unresolved_evidence_ceiling_count": 1,
+        "work_graph": [
+            {"status": "accepted", "count": 1},
+            {"status": "blocked", "count": 1},
+        ],
+    }
+
+
+def test_target_macro_rows_are_canonical_global_subsets() -> None:
+    rows = [
+        {"id": "local-a", "targets": ["a"], "shared": False},
+        {"id": "cross", "targets": ["a", "b"], "shared": False},
+        {"id": "shared", "targets": [], "shared": True},
+        {"id": "local-b", "targets": ["b"], "shared": False},
+    ]
+
+    a_rows = analysis_readiness._target_macro_rows(rows, "a")
+    b_rows = analysis_readiness._target_macro_rows(rows, "b")
+
+    assert [row["id"] for row in a_rows] == ["local-a", "cross", "shared"]
+    assert [row["id"] for row in b_rows] == ["cross", "shared", "local-b"]
+    assert {row["id"] for row in a_rows + b_rows} == {row["id"] for row in rows}
+    assert all(row in rows for row in a_rows + b_rows)
+
+
+def test_analysis_readiness_default_output_has_strict_bounds(monkeypatch) -> None:
+    payload = {
+        "schema": "bof3.analysis-readiness/v2",
+        "ready": True,
+        "summaries": {
+            concern: {"inventory_count": 0, "work_graph": []}
+            for concern in ("naming", "types", "macros")
+        },
+    }
+    monkeypatch.setattr(analysis_readiness, "readiness", lambda *_args: payload)
+    output = io.StringIO()
+    with redirect_stdout(output):
+        assert (
+            analysis_readiness.run(
+                Namespace(root=Path("."), target=None, detail="summary")
+            )
+            == 0
+        )
+    encoded = output.getvalue().encode()
+    assert json.loads(encoded)["summaries"]["types"]["work_graph"] == []
+    assert len(encoded) <= 1024
+    assert encoded.count(b"\n") <= 40
+
+
+def test_all_target_macro_rows_partition_canonical_global_account() -> None:
+    targets = ["a", "b", "c"]
+    global_rows = [
+        {"id": "local-a", "targets": ["a"], "shared": False},
+        {"id": "cross", "targets": ["a", "b"], "shared": False},
+        {"id": "shared", "targets": [], "shared": True},
+        {"id": "local-c", "targets": ["c"], "shared": False},
+    ]
+    observed_union: set[str] = set()
+
+    for target in targets:
+        expected = [
+            row
+            for row in global_rows
+            if row["shared"] is True or target in row["targets"]
+        ]
+        actual = analysis_readiness._target_macro_rows(global_rows, target)
+        assert [row["id"] for row in actual] == [row["id"] for row in expected]
+        observed_union.update(str(row["id"]) for row in actual)
+
+    assert observed_union == {"local-a", "cross", "shared", "local-c"}
+
+
+def test_analysis_readiness_live_target_output_ceiling() -> None:
+    root = Path(__file__).parents[4]
+    result = subprocess.run(
+        [
+            root / "bin/harness",
+            "analysis",
+            "readiness",
+            "emi/battle/batl_re2/01",
+        ],
+        cwd=root,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr.decode()
+    assert json.loads(result.stdout)["schema"] == "bof3.analysis-readiness/v2"
+    assert len(result.stdout) <= 2_500
+    assert result.stdout.count(b"\n") <= 100
+
+
+def test_recover_reanalyzes_every_stale_target_before_rebuild(
+    tmp_path: Path, monkeypatch
+) -> None:
+    calls: list[tuple[str, str]] = []
+    monkeypatch.setattr(
+        index,
+        "load_target_manifests",
+        lambda _root, _connection=None, _target=None, **_kwargs: {
+            "fresh": object(),
+            "stale/a": object(),
+            "stale/b": object(),
+        },
+    )
+    recovered: set[str] = set()
+    monkeypatch.setattr(
+        index,
+        "status",
+        lambda _root, target, **_kwargs: {
+            "fresh": target == "fresh" or target in recovered
+        },
+    )
+
+    def analyze(_root: Path, target: str, timeout: int) -> None:
+        calls.append(("analyze", target))
+        recovered.add(target)
+
+    monkeypatch.setattr(index, "analyze_project", analyze)
+
+    def rebuild(_root: Path) -> Path:
+        calls.append(("rebuild", "index"))
+        output = tmp_path / "out/index/reverse.sqlite"
+        output.parent.mkdir(parents=True)
+        output.touch()
+        return output
+
+    monkeypatch.setattr(index, "rebuild", rebuild)
+
+    assert index.run(Namespace(root=tmp_path, recover=True, timeout=5)) == 0
+    assert calls == [
+        ("analyze", "stale/a"),
+        ("analyze", "stale/b"),
+        ("rebuild", "index"),
+    ]
+
+
+def test_recover_does_not_recheck_targets_that_were_initially_fresh(
+    tmp_path: Path, monkeypatch
+) -> None:
+    calls = {"fresh": 0}
+    rebuilt = False
+    monkeypatch.setattr(
+        index,
+        "load_target_manifests",
+        lambda _root, _connection=None, _target=None, **_kwargs: {
+            "fresh": object(),
+            "stale": object(),
+        },
+    )
+
+    def status(_root: Path, target: str, **_kwargs) -> dict[str, bool]:
+        if target == "fresh":
+            calls["fresh"] += 1
+            return {"fresh": calls["fresh"] == 1}
+        return {"fresh": False}
+
+    monkeypatch.setattr(index, "status", status)
+    monkeypatch.setattr(index, "analyze_project", lambda *_args, **_kwargs: None)
+
+    def rebuild(_root: Path) -> Path:
+        nonlocal rebuilt
+        rebuilt = True
+        return tmp_path / "out/index/reverse.sqlite"
+
+    monkeypatch.setattr(index, "rebuild", rebuild)
+    with pytest.raises(ValueError, match="stale targets: stale"):
+        index.run(Namespace(root=tmp_path, recover=True, timeout=5))
+    assert calls["fresh"] == 1
+    assert rebuilt is False
+
+
+def test_recover_noops_when_snapshots_and_index_are_fresh(
+    tmp_path: Path, monkeypatch
+) -> None:
+    manifests = {"fresh/a": object(), "fresh/b": object()}
+    status_calls: list[str] = []
+    rebuilt = False
+    connection = sqlite3.connect(":memory:")
+    monkeypatch.setattr(index, "load_target_manifests", lambda _root: manifests)
+
+    def fresh(_root: Path, target: str, *, manifest) -> dict[str, bool]:
+        assert manifest is manifests[target]
+        status_calls.append(target)
+        return {"fresh": True}
+
+    monkeypatch.setattr(index, "status", fresh)
+    monkeypatch.setattr(index, "connect", lambda _root, *, manifests: connection)
+    monkeypatch.setattr(
+        index, "index_path", lambda root: root / "out/index/reverse.sqlite"
+    )
+
+    def forbidden_rebuild(_root: Path) -> Path:
+        nonlocal rebuilt
+        rebuilt = True
+        raise AssertionError("fresh recovery must not rebuild")
+
+    monkeypatch.setattr(index, "rebuild", forbidden_rebuild)
+
+    output = io.StringIO()
+    with redirect_stdout(output):
+        assert index.run(Namespace(root=tmp_path, recover=True, timeout=5)) == 0
+    assert status_calls == ["fresh/a", "fresh/b"]
+    assert output.getvalue() == "out/index/reverse.sqlite\n"
+    assert rebuilt is False
+
+
+def test_recover_rebuilds_when_index_is_missing_despite_fresh_snapshots(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setattr(
+        index, "load_target_manifests", lambda _root: {"fresh": object()}
+    )
+    monkeypatch.setattr(index, "status", lambda *_args, **_kwargs: {"fresh": True})
+    monkeypatch.setattr(
+        index,
+        "connect",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(FileNotFoundError()),
+    )
+    output = tmp_path / "out/index/reverse.sqlite"
+    output.parent.mkdir(parents=True)
+    monkeypatch.setattr(index, "rebuild", lambda _root: output)
+
+    assert index.run(Namespace(root=tmp_path, recover=True, timeout=5)) == 0
+
+
+def test_recover_refuses_rebuild_when_target_remains_stale(
+    tmp_path: Path, monkeypatch
+) -> None:
+    rebuilt = False
+    monkeypatch.setattr(
+        index, "load_target_manifests", lambda _root: {"stale": object()}
+    )
+    monkeypatch.setattr(index, "status", lambda *_args, **_kwargs: {"fresh": False})
+    monkeypatch.setattr(index, "analyze_project", lambda *_args, **_kwargs: None)
+
+    def rebuild(_root: Path) -> Path:
+        nonlocal rebuilt
+        rebuilt = True
+        return tmp_path / "out/index/reverse.sqlite"
+
+    monkeypatch.setattr(index, "rebuild", rebuild)
+
+    with pytest.raises(ValueError, match="stale targets: stale"):
+        index.run(Namespace(root=tmp_path, recover=True, timeout=5))
+    assert rebuilt is False

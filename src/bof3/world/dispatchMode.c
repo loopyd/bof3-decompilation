@@ -5,7 +5,7 @@
  * @source 0x801F2C18
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchMode(void) {
   u8 mode;

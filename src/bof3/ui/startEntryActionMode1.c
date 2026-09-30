@@ -4,7 +4,7 @@
  * @behavior starts the selected entry's +4 action unless the local state is already two.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void startEntryActionMode1(void) {
   u8* state = &D_80143BB0;

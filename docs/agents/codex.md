@@ -5,7 +5,7 @@ the project harness owns deterministic domain tools, not Codex/model launchers.
 
 ## Skill-only operator
 
-[`bof3-lift-loop`](../../.codex/skills/bof3-lift-loop/SKILL.md) defines the bounded
+[`bof3-lift-loop`](../../.pi/skills/bof3-lift-loop/SKILL.md) defines the bounded
 mission protocol and lift → review → naming → types/macros → cleanup/final review
 sequence. Delegate only through actual tools exposed by the active session.
 Parallelize independent reads/reviews; serialize shared-checkout writes, native
@@ -43,9 +43,9 @@ The former `agent-run review`, `lift` and `review-lift` commands, their CLI
 configuration/process helpers and dispatch script are removed. Historical receipts,
 thread IDs, budget pins and failures remain immutable history, not live mission
 state or permission to replay. The abandoned auto-review child-configuration
-experiment is superseded by skill-only operation. `agent-run diagnose` and `audit`
-remain model-free measurement tools, not a replacement scheduler or acceptance
-shortcut. Independent review and final parent acceptance still bind actual source.
+experiment is superseded by skill-only operation. `bin/harness decomp diagnose`
+and `bin/harness decomp audit` remain model-free measurement tools, not a
+replacement scheduler or acceptance shortcut. Independent review and final parent acceptance still bind actual source.
 
 ## Native compiler execution
 
@@ -83,7 +83,7 @@ once before relying on this diagnosis. Ordinary Python inspection stays sandboxe
 
 ## Parent lift diagnosis
 
-`bin/agent-run diagnose REQUEST --expected-request-digest PIN --output
+`bin/harness decomp diagnose REQUEST --expected-request-digest PIN --output
 out/reviews/lift-diagnosis/NAME --deadline ORIGINAL_MONOTONIC_CUTOFF` measures an
 **existing claimed lift** before editing. The `bof3-re` `scripts/mission.py` helper forwards
 this local command. It launches no model, changes no source, and grants no review,
@@ -150,7 +150,7 @@ acceptance or stale-index handoff is established by this prerequisite.
 ## Retained lift audit
 
 ```sh
-bin/agent-run audit out/reviews/lift-diagnosis/BEFORE out/reviews/proposal.md \
+bin/harness decomp audit out/reviews/lift-diagnosis/BEFORE out/reviews/proposal.md \
   --expected-diagnosis-digest PIN --expected-proposal-sha256 SHA256 \
   --output out/reviews/lift-audit/AFTER
 ```
@@ -246,3 +246,43 @@ New binaries, dependencies, hooks and global configuration changes require expli
 approval of the specific installation. A capability table or marketplace result is
 not installation evidence. Keep project-specific language-server flags and trust
 boundaries explicit rather than blindly copying them into global launch arguments.
+
+## Autonomous execution
+
+
+The full BOF3 reconstruction goal is driven by `bof3-lift-loop` in the active
+session, with standing authorization for parent-owned index/analysis refreshes,
+reviews and bounded native compile/compare gates through available session tools.
+Do not request separate conversational confirmation for these operations; use the
+[reviewed native execution route](codex.md#native-compiler-execution).
+No harness Codex CLI invocation, model SDK/API launch, detached runner or Pi fallback.
+Review payloads may include relevant private
+source, diffs, agent instructions, target metadata and original-byte evidence;
+exclude credentials and unrelated user media. The parent selects bounded review
+scope and execution limits before launch. Keep original pins, consumed budgets,
+independent semantic review and live acceptance gates; never refresh inputs during
+a pinned transaction. Preserve frozen evidence before replacing working indexes.
+Local feature-completion commits are authorized; do not push or release. Standing
+authorization does not override sandbox decisions or authorize dependency installs.
+Ordinary agent reviews may [retry model-capacity failures](codex.md#review-capacity-retries)
+with backoff within their original bounds; auto-review denials are not retryable.
+
+## Codex skills
+
+Project definitions live in `.pi/skills/`; `.codex/skills/` and `.agents/skills/`
+hold relative discovery symlinks to those same owners, not copied skill bodies.
+Codex discovers repository skills through `.agents/skills` and Pi through
+`.pi/skills`; see the
+[official skill documentation](https://developers.openai.com/codex/skills/).
+Restart the session to refresh discovery after migration. `.pi/agents/` retains
+the lifter, namer, cleaner and reviewer definitions for bounded harness prefills,
+plus the [generic PSX emulator mission spec](../../.pi/agents/psx-emulator.md).
+The old Pi chain remains retired; agent definitions neither schedule Codex nor
+install extensions.
+
+
+Macro, type, naming and documentation skills dispatch invocation scripts to `bin/`;
+policy, parsing and editing remain in the harness owners. Naming, documentation
+and Rizin skills allow automatic invocation for relevant work without renewed user
+approval. The parent supplies bounded modes and inputs; discovery never expands
+mutation authority or bypasses sandbox, evidence, review or rollback gates.

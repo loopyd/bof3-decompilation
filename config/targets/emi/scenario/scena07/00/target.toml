@@ -9,6 +9,14 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0700_801F6DCC.c",
+    "src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F6E10.c",
+    "src/bof3/scenario/dispatchPrimaryStateHandlerScenarioScena0700_801FAA2C.c",
+    "src/bof3/scenario/dispatchRecordCallbackByByte7AScenarioScena0700_801FD3BC.c",
+    "src/bof3/scenario/clearWorkTableIncrementWorkByte2SetCountdownScenarioScena0700_801F6E54.c",
+    "src/bof3/scenario/findFreeWorkRecordScenarioScena0700_801F8394.c",
+    "src/bof3/scenario/countdownReload32ThenAdvanceHandlerScenarioScena0700_801F8730.c",
+    "src/bof3/scenario/requestPrimaryState6Substate10ScenarioScena0700_801FDAFC.c",
     "src/bof3/scenario/incrementWorkByte2ScenarioScena0700_801F8194.c",
     "src/bof3/scenario/incrementWorkByte2ScenarioScena0700_801F8174.c",
     "src/bof3/scenario/incrementWorkByte2ScenarioScena0700_801F7384.c",
@@ -16,6 +24,23 @@ support_sources = [
     "src/bof3/scenario/invokeHelperScenarioScena0700_801F81B4.c",
     "src/bof3/scenario/invokeHelperScenarioScena0700_801F73A4.c",
     "src/bof3/scenario/noopHandlerScenarioScena0700_801FAA68.c",
+    "src/bof3/scenario/clearSharedByteAndAdvanceStateScenarioScena0700_801FA698.c",
+    "src/bof3/scenario/dispatchScenarioStateHandlerScenarioScena0700_801FA65C.c",
+    "src/bof3/scenario/incrementWorkByte2SetCounterScenarioScena0700_801F6F8C.c",
+    "src/bof3/scenario/invokeHelperByteArgScenarioScena0700_801FDBCC.c",
     "src/bof3/support/scena07_00_psyq.c",
+    "src/bof3/scenario/clearWorkTableAt800E515CScenarioScena0700_801F9DA8.c",
+    "src/bof3/scenario/findFreeWorkRecordAt800E515CScenarioScena0700_801F9DD4.c",
+    "src/bof3/scenario/clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F6F14.c",
+    "src/bof3/scenario/resetWorkStateWhenWorkTableIdleScenarioScena0700_801F75C0.c",
+    "src/bof3/scenario/clearWorkFlagsWhenNoCallbackRanScenarioScena0700_801F7B68.c",
+    "src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F700C.c",
+    "src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F73C4.c",
+    "src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F75F4.c",
+    "src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F786C.c",
+    "src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F79EC.c",
+    "src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F7B9C.c",
+    "src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F7D28.c",
+    "src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0700_801F7E24.c",
 ]
 psyq_source = "src/bof3/support/scena07_00_psyq.c"

@@ -1,9 +1,6 @@
 {
-  "sessionDir": "sessions",
-  "subagents": {
-    "turnBudget": {
-      "maxTurns": 300,
-      "graceTurns": 10
-    }
-  }
+  "sessionDir": ".pi/sessions",
+  "defaultProvider": "ninerouter",
+  "defaultModel": "gpt-combo",
+  "defaultThinkingLevel": "high"
 }

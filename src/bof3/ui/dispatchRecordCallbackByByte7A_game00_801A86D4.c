@@ -5,7 +5,7 @@
  * @source 0x801A86D4
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 s32 dispatchRecordCallbackByByte7A(GameIndexedWork* work) {
   return D_801C85F0[work->handler_index_7A](work, D_80144F28);

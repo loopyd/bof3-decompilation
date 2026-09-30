@@ -4,7 +4,7 @@
  * @source 0x801E023C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void clearFlagState10(void) {
   if (D_80145E93 >= 10u) {

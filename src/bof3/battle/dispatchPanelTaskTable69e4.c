@@ -5,7 +5,7 @@
  * by the panel-task state byte at offset 0x02.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchPanelTaskTable69e4(void)
 {

@@ -4,7 +4,7 @@
  * @behavior selects active UI data, requests mode 23, and refreshes it.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 s32 selectUiMode23(u8* active_ui)
 {

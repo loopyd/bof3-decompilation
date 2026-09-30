@@ -220,7 +220,7 @@ def readiness(
         "snapshots": snapshots,
         "stale_facts": _stale_facts(snapshots, index_ready),
         "summaries": summaries,
-        "recovery": None if ready else "bin/index --recover",
+        "recovery": None if ready else "bin/harness analysis index --recover",
     }
 
 
@@ -231,7 +231,7 @@ def run(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="analysis-readiness")
+    parser = argparse.ArgumentParser(prog="bin/harness analysis readiness")
     add_root_argument(parser)
     parser.add_argument("target", nargs="?")
     parser.add_argument("--detail", choices=("summary", "full"), default="summary")

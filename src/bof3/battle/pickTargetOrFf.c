@@ -4,7 +4,7 @@
  * @behavior Returns 0xFF when D_801462F3 is 1; otherwise calls pickRandomUnblockedId with arg0 + 3 as u8.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 pickTargetOrFf(s8 arg0) {
     s32 result;

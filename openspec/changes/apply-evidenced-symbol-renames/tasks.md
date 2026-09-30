@@ -1,0 +1,26 @@
+# Tasks
+
+The renaming task groups this change previously carried are **withdrawn**, not deferred: the gates
+reject every authored proposal, so no evidence of any quality can implement them. What remains is the
+verified record and the handoff.
+
+## 1. Record the verified capability gap
+
+- [x] 1.1 Record the gate that rejects every `proposed`/`exhausted` row lacking a runner-recomputed capability — verify: cited by file and line with its verbatim error. RESULT: `tools/python/harness/naming/validation.py` `_reject_unsupported_semantic_facts` raises *"semantic fact capability is unsupported: receipt, checkpoint, and manifest bytes are recovery evidence, not an authenticity boundary; a trusted native-output typed analyzer is required"*. **Verified by the parent session reading the code**, not only by the mission that reported it.
+- [x] 1.2 Record the gate that makes function proposals unreachable — verify: cited with the exact condition. RESULT: `tools/python/harness/naming/equivalence.py` `_validated_capability`: `if row.get("kind") != "data" or len(entries) != 1: return None` — so the capability is **always `None` for function rows**. For data rows it additionally requires `rung_status == "exhausted"` (*"reviewed capability permits only allowlisted exhausted rows"*), so a **`proposed` data row is refused as well**.
+- [x] 1.3 Record the third and fourth gates — verify: both cited. RESULT: `validate_terminal_capability` (`equivalence.py`) requires a current exact capability, so the unfiltered full-report `validate … complete:true` gate cannot pass; and **no producer emits positive `selected_call`/`owner_body` facts** — both names occur only as required-rung/required-work descriptions in `naming/facts.py` and `naming/inventory.py`, never as an emitted fact, so those imported-function rungs can never close.
+- [x] 1.4 Record the repository's own tests as evidence that the rejection is intended — verify: named and re-run. RESULT: `tools/python/tests/naming/test_naming_conclusion.py` — `test_import_proposed_delegates_existing_proposal_validation` and `test_import_exhausted_and_idempotent` both expect `ValueError: semantic fact capability is unsupported`.
+- [x] 1.5 Record the live observations that confirm the reading — verify: exact commands and stderr. RESULT: `bin/harness naming conclude emi/bmagic/magic004/03 out/reviews/debt-func_801E5988-bmagic-magic004-03.json <input>` → **exit 2**, `error: receipt lacks runner-produced owner_resolution facts`, with the bound payload holding only plain `operation=owner` receipts and no `bof3.naming-evidence-facts/v1` facts (`derived.json` → `facts: []`, `conclusion_enabled: false`, owner ops `unavailable`). `bin/harness naming evidence … ` → **exit 0** but `rows: {completed 0, planned 0, skipped 10}` — the row is a committed checkpoint and is skipped, so collection cannot advance it either. The authored input is retained unimported at `out/reviews/debt-func_801E5988-bmagic-magic004-03.conclusion-input-attempt.json` with an `attempt_note` marking it non-applied.
+
+## 2. Record the blocked backlog and the handoff
+
+- [x] 2.1 Record the backlog the gap blocks — verify: measured counts, no rounding. RESULT: **75 findings = 14 `binding/map drift` + 61 `new naming debt`** over **9 symbols / 59 distinct targets** — `func_801E5988` ×22, `func_8014D978` ×11, `func_80196070` ×7 (`raw_functions`); `D_8014932A` ×11, `D_8014933B` ×4, `D_80146384` ×2, `D_801448EB` ×2, `D_80146865` ×1, `D_80149328` ×1 (`raw_data`). The drifts name functions beyond those nine (`func_801C187C`, `func_801F2C04`, `func_801F61F0`), so they remain blocked with them.
+- [x] 2.2 Record that no identity was applied and no map touched — verify: the transaction path refused every attempt. RESULT: no map, manifest or `psyq_source` file was written; `clearQueuedSlotBytes` was written nowhere; the only attempt was the refused import above. Nothing was fabricated to reach a count.
+- [x] 2.3 Record the handoff as its own harness change with its own prerequisite — verify: named with its required review. RESULT: `enable-function-naming-conclusions` owns positive typed facts for `selected_call`/`owner_body` plus a capability registry not limited to allowlisted `emi/battle/battle/15` data rows; because it changes harness behaviour it requires the ownership review in `docs/agents/harness.md`. This change adds no harness capability, not even a small one.
+
+## 3. Integration Verification
+
+- [ ] 3.1 Record the debt state truthfully: run `bin/harness source symbols check` and record its actual result — verify: exit code and finding count recorded as-is, with no claim of progress.
+- [ ] 3.2 Verify the baseline did not absorb the debt: compare `config/symbol-naming-baseline.json` against `afe50b04b1445d83…` — verify: byte-identical, and no `baseline --write` run occurred.
+- [ ] 3.3 Verify scope discipline: the touched-file set is recorded and contains no `config/targets/**`, no `src/bof3/support/*_psyq.c`, no `build/` and no `toolchains/` write — verify: the recorded set matches that description.
+- [ ] 3.4 Verify the superseded requirement is actually removed at archive time: `openspec archive` reports `totals.removed` — verify: `removed` equals 1, because the CLI does not validate `REMOVED` headers and an unremoved requirement would otherwise go unnoticed.

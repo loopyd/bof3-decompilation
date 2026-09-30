@@ -23,7 +23,7 @@ extern volatile u32 D_8014685C;
  * @source 0x80161FDC
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void initStreamSlot(u32 slot_id) {
   u32 cdBase;
@@ -63,15 +63,6 @@ void initStreamSlot(u32 slot_id) {
     D_8014685C = current_lba;
   }
 
-  /*
-   * MATCHING_AID:
-   * Splitting the D_80146468 load through current_lba keeps the call
-   * argument load in $a0 and the emiLoaderSlotLba result in $v0 (original:
-   * `lw $a0, %lo(D_80146468)`; after `jal`, `sw $v0` twice with no move).
-   * A single local made GCC either copy the result `move $a0,$v0` or load
-   * the argument into $v0 with a delay-slot `move $a0,$v0`. Permuter-found;
-   * remove when the allocator choice is understood.
-   */
   current_lba = D_80146468;
   active_lba = current_lba;
   D_80146858 = 0;

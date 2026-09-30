@@ -6,7 +6,7 @@
  * @source 0x800A4C44
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_800A4C44(void) {
   u8 *counter = (u8 *)&D_801462E4;

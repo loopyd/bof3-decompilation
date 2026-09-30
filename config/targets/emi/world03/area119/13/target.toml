@@ -10,6 +10,12 @@ load_address = 0x801F2C00
 sources = []
 support_sources = [
     "src/bof3/world03/setTwoWorld03Area11913_801F4208.c",
+    "src/bof3/world03/advanceCounter2By2World03Area11913_801F41B8.c",
+    "src/bof3/world03/retreatCounter2By2World03Area11913_801F41E0.c",
+    "src/bof3/world03/setScenarioFlagBit3CAndQueueCue203World03Area11913_801F4524.c",
+    "src/bof3/world03/clearScenarioFlagBit3CAndQueueCue203World03Area11913_801F4554.c",
+    "src/bof3/world03/countdownScratchStateToMode3World03Area11913_801F2CE0.c",
+    "src/bof3/world03/countdownScratchStateToMode6World03Area11913_801F2DC4.c",
     "src/bof3/support/area119_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area119_13_psyq.c"

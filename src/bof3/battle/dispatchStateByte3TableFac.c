@@ -6,7 +6,7 @@
  * Original table words are 0x801E927C, 0x801E9390, and 0x801EAB64.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchStateByte3TableFac(void) {
   Battle03DispatchTable handlers;

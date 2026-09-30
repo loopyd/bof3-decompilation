@@ -201,6 +201,9 @@ WEAK_SYMBOL_AT(D_801C80E0, 0x801c80e0);
 WEAK_SYMBOL_AT(D_801C80EC, 0x801c80ec);
 /* ---- Four-entry work-flag handler table dispatched by func_801B2D90 ---- */
 WEAK_SYMBOL_AT(D_801CD120, 0x801cd120);
+/* ---- Two-entry work-flag handler table dispatched by
+ * dispatchWorkFlags02HandlerThenReadyUpdate ---- */
+WEAK_SYMBOL_AT(D_801CD1B0, 0x801cd1b0);
 WEAK_SYMBOL_AT(D_801CD140, 0x801cd140);
 WEAK_SYMBOL_AT(D_801CD1C8, 0x801cd1c8);
 WEAK_SYMBOL_AT(D_801CD47C, 0x801cd47c);

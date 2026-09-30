@@ -24,9 +24,11 @@ from ..emi.catalog_bootstrap import materialize_reviewed_targets
 from ..emi.operations import emi_unpack
 from ..io import RepoLayout, repo_layout
 from ..toolchain import managed_lifecycle
+from ..toolchain.bios import BiosToolchain
 from ..toolchain.disc import DiscToolchain, find_disc_set
 from ..toolchain.gcc_variants import check_host_compatible, load_variants
 from ..toolchain.psyq import PsyqToolchain
+from ..toolchain.pcsx import PcsxReduxToolchain
 from .binaries import materialize_executables
 from .compile_commands import run as write_compile_commands
 
@@ -75,6 +77,8 @@ def _build_local_tools(layout: RepoLayout) -> None:
     for source, target in (
         (layout.harness_disk_src, layout.harness_disk_bin.parent.parent),
         (layout.emi_ex_src, layout.emi_ex_bin.parent.parent),
+        (layout.bof3_text_src, layout.bof3_text_bin.parent.parent),
+        (root / "tools/rust/bof3-audio", layout.out_dir / "audio"),
     ):
         _run(
             [
@@ -95,7 +99,9 @@ def _build_local_tools(layout: RepoLayout) -> None:
 def _extract_and_materialize(root: Path, cue: Path, *, force: bool) -> None:
     _run(
         [
-            str(root / "bin" / "bof3-disk"),
+            str(root / "bin" / "harness"),
+            "media",
+            "disc",
             "extract",
             "-i",
             str(cue),
@@ -106,7 +112,8 @@ def _extract_and_materialize(root: Path, cue: Path, *, force: bool) -> None:
         quiet=True,
     )
     emi_unpack(
-        tool_path=root / "bin" / "emi-ex",
+        tool_path=root / "bin" / "harness",
+        subcommand_prefix=("emi", "archive"),
         cwd=root,
         extracted_dir=root / "out" / "extracted",
         raw_emi_dir=root / "out" / "extracted",
@@ -173,8 +180,16 @@ def verify_setup(root: Path) -> None:
         raise FileNotFoundError(
             "missing PsyQ 4.7 members: " + ", ".join(missing_members)
         )
-    _run([str(root / "bin" / "bof3-disk"), "--example"], cwd=root, quiet=True)
-    _run([str(root / "bin" / "emi-ex"), "--example"], cwd=root, quiet=True)
+    _run(
+        [str(root / "bin" / "harness"), "media", "disc", "--example"],
+        cwd=root,
+        quiet=True,
+    )
+    _run(
+        [str(root / "bin" / "harness"), "emi", "archive", "--example"],
+        cwd=root,
+        quiet=True,
+    )
 
 
 @register_check("submodules", TASKS)
@@ -231,7 +246,7 @@ def _psyq(state: SetupState) -> str:
 @register_check("local tools", TASKS)
 def _tools(state: SetupState) -> str:
     _build_local_tools(state.layout)
-    return "bof3-disk, emi-ex"
+    return "bof3-disk, emi-ex, bof3-text, bof3-audio"
 
 
 @register_check("compile commands", TASKS)
@@ -249,6 +264,16 @@ def _images(state: SetupState) -> str:
     return f"{len(load_target_manifests(state.root))} images"
 
 
+@register_check("US BIOS", TASKS)
+def _bios(state: SetupState) -> str:
+    return BiosToolchain(state.layout).run(force=state.args.force)
+
+
+@register_check("PCSX-Redux + SDL3", TASKS)
+def _pcsx(state: SetupState) -> str:
+    return PcsxReduxToolchain(state.layout).run(force=state.args.force)
+
+
 @register_check("verification", TASKS)
 def _verification(state: SetupState) -> str:
     verify_setup(state.root)
@@ -258,18 +283,26 @@ def _verification(state: SetupState) -> str:
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
     state = SetupState(root=root, layout=repo_layout(root), args=args)
-    for task in TASKS:
+    selection = {"bios": _bios, "pcsx-redux": _pcsx}
+    tasks = (
+        TASKS
+        if args.component == "all"
+        else [task for task in TASKS if task.run is selection[args.component]]
+    )
+    for task in tasks:
         try:
-            render_task("PASS", task.label, task.run(state), TASKS)
+            render_task("PASS", task.label, task.run(state), tasks)
         except (
             FileNotFoundError,
             RuntimeError,
             ValueError,
             tomllib.TOMLDecodeError,
+            OSError,
+            subprocess.SubprocessError,
         ) as exc:
-            render_task("FAIL", task.label, str(exc).replace("\n", "; "), TASKS)
+            render_task("FAIL", task.label, str(exc).replace("\n", "; "), tasks)
             raise
-    print(f"setup: {len(TASKS)}/{len(TASKS)} tasks passed")
+    print(f"setup: {len(tasks)}/{len(tasks)} tasks passed")
     return 0
 
 
@@ -279,6 +312,12 @@ def build_parser() -> argparse.ArgumentParser:
         description="Stage authorized BOF3 media and required toolchains.",
     )
     add_root_argument(parser)
+    parser.add_argument(
+        "--component",
+        choices=("all", "bios", "pcsx-redux"),
+        default="all",
+        help="prepare everything, only the US BIOS, or build pinned PCSX-Redux and SDL3",
+    )
     parser.add_argument(
         "--psyq-archive", type=Path, help="PsyQ 4.7 archive under inputs/"
     )

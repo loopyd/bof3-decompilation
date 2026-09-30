@@ -5,7 +5,7 @@
  * @source 0x801DD14C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void clearBattlerActionFlags(u8 arg0) {
   u8 arg_copy;

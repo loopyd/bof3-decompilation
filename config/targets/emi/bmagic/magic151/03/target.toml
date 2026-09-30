@@ -1,0 +1,18 @@
+schema = "harness.target/v2"
+id = "emi/bmagic/magic151/03"
+disc_id = "BIN/BMAGIC/MAGIC151.EMI#3"
+kind = "emi"
+source_dir = "src/emi/bmagic/magic151/03"
+binary = "out/binaries/emi/bmagic/magic151/03.bin"
+splat = "config/targets/emi/bmagic/magic151/03/splat.yaml"
+load_address = 0x801EEC00
+
+sources = []
+support_sources = [
+    "src/bof3/bmagic/incrementWorkByte2WhenWorkByteBZeroBmagicMagic15103_801F00B4.c",
+    "src/bof3/bmagic/advanceWorkWord14By80ThenIncrementWorkByte2At400BmagicMagic15103_801F1D28.c",
+    "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByte1Is2BmagicMagic15103_801EFD80.c",
+    "src/bof3/bmagic/setGlobalWorkByteBTo2ThenInvokeHelperWhenWorkByteBZeroBmagicMagic15103_801EFDC0.c",
+    "src/bof3/support/magic151_03_psyq.c",
+]
+psyq_source = "src/bof3/support/magic151_03_psyq.c"

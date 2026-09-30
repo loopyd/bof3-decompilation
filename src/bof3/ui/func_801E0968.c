@@ -5,7 +5,7 @@
  *           advances the UI phase byte.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801E0968(void) {
   volatile u8* p = &phaseTimer;

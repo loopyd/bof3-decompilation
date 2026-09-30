@@ -5,7 +5,7 @@
  *           the sub-step byte D_80148652.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801E254C(void) {
   volatile u8* p = &phaseTimer;

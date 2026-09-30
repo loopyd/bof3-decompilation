@@ -216,7 +216,9 @@ def create_schema(connection: sqlite3.Connection, *, atomic: bool = False) -> No
     )
     prefix = "PRAGMA foreign_keys = ON;\n"
     if not atomic:
-        connection.executescript(prefix + script)
+        # One transaction avoids a commit/fsync per DDL statement on file-backed
+        # databases; executescript already commits any pending transaction.
+        connection.executescript(prefix + "BEGIN;\n" + script + "\nCOMMIT;")
         return
     try:
         connection.executescript(prefix + "BEGIN;\n" + script + "\nCOMMIT;")

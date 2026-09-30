@@ -5,7 +5,7 @@
  * @source 0x80196B20
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 locatePaletteColor(u8 value) {
   u8 row;

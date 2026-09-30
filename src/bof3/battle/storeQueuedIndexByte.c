@@ -5,7 +5,7 @@
  * @behavior decrements the queued battle index and writes one signed byte.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void storeQueuedIndexByte(s8 arg0) {
   volatile u8* index_ptr;

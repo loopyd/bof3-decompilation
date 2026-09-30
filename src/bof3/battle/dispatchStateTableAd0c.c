@@ -4,7 +4,7 @@
  * @behavior dispatches the byte-selected battle handler.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchStateTableAd0c(void) {
   D_801EAD0C[BATTLE_GLOBAL_BYTE_62E2]();

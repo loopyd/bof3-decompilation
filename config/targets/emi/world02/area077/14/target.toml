@@ -9,10 +9,23 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world02/dispatchStateByte2Table6284World02Area07714_801F4CDC.c",
+    "src/bof3/world02/dispatchStateByte2Table62a8World02Area07714_801F52F8.c",
     "src/bof3/world02/setTwoWorld02Area07714_801F5DE8.c",
     "src/bof3/world02/setWorld02Area07714_801F61DC.c",
     "src/bof3/world02/invokeHelperArgWorld02Area07714_801F60A4.c",
     "src/bof3/world02/invokeHelperArgWorld02Area07714_801F6084.c",
+    "src/bof3/world02/advanceCounterWorld02Area07714_801F5DC0.c",
+    "src/bof3/world02/clearStateQueueCue202World02Area07714_801F5A84.c",
+    "src/bof3/world02/setSharedFlagBit4World02Area07714_801F5BD8.c",
+    "src/bof3/world02/publishModeStatusWorld02Area07714_801F59DC.c",
+    "src/bof3/world02/setStateQueueCue202World02Area07714_801F5A58.c",
+    "src/bof3/world02/decrementCountdownId71InSlot1World02Area07714_801F5BAC.c",
+    "src/bof3/world02/setWorkHalfword320AndIncrementWorkByte2World02Area07714_801F533C.c",
+    "src/bof3/world02/initArea07714State.c",
+    "src/bof3/world02/retreatCounterAndQueueCue200World02Area07714_801F5D80.c",
+    "src/bof3/world02/dispatchStateByte1Table6268World02Area07714_801F3E04.c",
+    "src/bof3/world02/dispatchStateByte1Table6270World02Area07714_801F4034.c",
     "src/bof3/support/area077_14_psyq.c",
 ]
 psyq_source = "src/bof3/support/area077_14_psyq.c"

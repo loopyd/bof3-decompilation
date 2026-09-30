@@ -4,7 +4,7 @@
  * @behavior emits a textured semi-transparent battle sprite primitive
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void drawSpritePrimTpage1(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6) {

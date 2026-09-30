@@ -28,17 +28,25 @@ segments:
     - asm
     - T_801F2C00
   - - 72
-    - asm
+    - c
     - func_801F2C48
+    - '@source: src/bof3/world/func_801F2C48_area03213.c'
+    - '@behavior: Projects the camera position and azimuth at 0x80145EC4, 0x80145EC8 and 0x80145ECE into the scratchpad vertex at 0x1F800014, then stores the projected depth and screen pair into the scratch record at 0x1F800044, clearing its work byte 9 and advancing its state byte 1.'
   - - 280
-    - asm
+    - c
     - func_801F2D18
+    - '@source: src/bof3/world/func_801F2D18.c'
+    - '@behavior: Emits the scratch record quad ring, then advances its work byte by 0x0f; at 0x3d or above it parks that byte at 0xff and advances the state byte.'
   - - 428
-    - asm
+    - c
     - func_801F2DAC
+    - '@source: src/bof3/world/func_801F2DAC_area03213.c'
+    - '@behavior: Emits the scratch cursor record quad ring through func_801F2F04 with the record angle pair at 0x2E/0x30 and the work byte at 9 mapped to the 0x3C/0x3D ring selector, plays cue 0x203 through the shared dispatcher while that byte reads 0xD7, then decrements the work byte and, once it reaches zero, parks it at 0x3C and advances the state byte at 1.'
   - - 612
-    - asm
+    - c
     - func_801F2E64
+    - '@source: src/bof3/world/func_801F2E64.c'
+    - '@behavior: Emits the scratch record quad ring, then ticks its work byte and advances its state byte.'
   - - 740
     - c
     - resetWorkarea
@@ -55,17 +63,23 @@ segments:
     - '@source: src/bof3/world/dispatchScratchWorkByte1.c'
     - '@behavior: Dispatches scratch work byte 1 through the local handler table.'
   - - 1260
-    - asm
+    - c
     - func_801F30EC
+    - '@source: src/bof3/world/func_801F30EC_area03213.c'
+    - '@behavior: Stores the identifier returned by func_8015CA48 at offset 3 of the scratch cursor record at 0x1F800044 and, when that byte is not 0xFF, marks the 0x98-byte work record of 0x80146888 it selects as live; the second identifier from func_8015CA48 goes to cursor offset 4 and, when it is not 0xFF, the earlier record is released and the function returns. Otherwise it activates the two selected work records through func_801A4D54 with the local 0x801F3F8C data script, restores the previously published cursor, spreads the two selected records 0x34/0x38 accumulators by -/+0x1000, sets their 0x20 flag bit, clears their 0x5C byte, submits both records through func_8019651C with the 0xF mask, and finally sets cursor byte 9 to 4 and cursor byte 1 to 1.'
   - - 2176
     - c
     - func_801F3480
   - - 2484
-    - asm
+    - c
     - func_801F35B4
+    - '@source: src/bof3/world/func_801F35B4_area03213.c'
+    - '@behavior: Submits the 0x98-byte work record of 0x80146888 selected by byte 0x03 of the scratch cursor record at 0x1F800044 through func_80196718, submits the record selected by cursor byte 0x04 the same way, then runs the shared tick func_80196070.'
   - - 2620
-    - asm
+    - c
     - func_801F363C
+    - '@source: src/bof3/world/func_801F363C_area03213.c'
+    - '@behavior: Stores 0xFFFF at the shared flag D_801490A8; when the gate byte D_801490C7 equals 1, publishes the D_80145E90 work base as the scratchpad cursor at 0x1F800044, requests resource 0x80 through func_8014D6B8, and restores the previously published cursor.'
   - - 2720
     - c
     - func_801F36A0
@@ -77,34 +91,50 @@ segments:
     - '@source: src/bof3/world/func_801F36E4.c'
     - '@behavior: Dispatches scratch work byte 4 through the local handler table at 0x801F4900.'
   - - 2856
-    - asm
+    - c
     - func_801F3728
+    - '@source: src/bof3/world/func_801F3728_area03213.c'
+    - '@behavior: Arms the scratch cursor record after the 0x801C2438 palette setup call, setting its bytes 4 and 0x5C to 1 and advancing its 0x34 accumulator by the 0xC step, then consumes two units of the shared countdown word at 0x122 of the current work record.'
   - - 2956
-    - asm
+    - c
     - func_801F378C
+    - '@source: src/bof3/world/func_801F378C_area03213.c'
+    - '@behavior: Queries the cursor level state through func_801C29A0(8): when the query reports non-zero it clears byte 4 of the scratch cursor record at 0x1F800044, otherwise it consumes two units of the shared countdown word at 0x122 of the current work record and advances the cursor record 0x34 accumulator by its 0x0C step.'
   - - 3072
     - c
     - func_801F3800
     - '@source: src/bof3/world/func_801F3800.c'
     - '@behavior: Dispatches scratch work byte 4 through the local handler table at 0x801F4908.'
   - - 3140
-    - asm
+    - c
     - func_801F3844
+    - '@source: src/bof3/world/func_801F3844_area03213.c'
+    - '@behavior: Boots the scratch cursor record at 0x1F800044: submits the positional effect through func_8019651C and stores the submitted effect byte at 0x93 of the current work record at 0x80146884, then sets flag bit 0x20, clears flag bit 0x40, sets the 0x5C byte and the -0x80 level triple at 0x5D-0x5F, resets the 0x0C step to 0x2000, advances the 0x34 accumulator by 0x2000, selects handler byte 1, and consumes two units of the countdown word at 0x7E.'
   - - 3360
-    - asm
+    - c
     - func_801F3920
+    - '@source: src/bof3/world/func_801F3920_area03213.c'
+    - '@behavior: Advances the signed level bytes 0x5D, 0x5E and 0x5F of the scratch cursor record at 0x1F800044 by 4 while each stays below -0x40; when the word at 0x5C carries the 0xC0C0C000 colour marker it hands the work-record effect byte at 0x93 to func_80196670 and resets the record (clears flag bit 0x20, the 0x5C byte, the 0x5D-0x5F level triple and byte 4, and writes 2 into byte 0x78 of the work record), otherwise it advances the record 0x34 accumulator by its 0x0C step and consumes two units of the work-record countdown word at 0x7E.'
   - - 3704
-    - asm
+    - c
     - func_801F3A78
+    - '@source: src/bof3/world/func_801F3A78_area03213.c'
+    - '@behavior: Copies the work record published at the scratchpad cursor 0x1F800044 into the front-end record table at 0x80143FC8: stores the free-record index returned by func_8019601C into cursor byte 0x0B and, when that byte is not 0xFF, marks the selected 0x74-byte record occupied (byte 0x00 set to 1), writes 0x50 into its byte 0x05 and 0x78 into its byte 0x09, copies cursor byte 0x08 into record byte 0x06, and copies the cursor words at 0x34, 0x38 and 0x3C into the same record words, adding 0x4000 to the 0x38 word and 0x1000000 to the 0x3C word.'
   - - 4120
-    - asm
+    - c
     - func_801F3C18
+    - '@source: src/bof3/world/func_801F3C18_area03213.c'
+    - '@behavior: Stores the free-record index returned by func_8019601C into byte 0x0B of the current work record published at the scratchpad cursor 0x1F800044 and, when that byte is not 0xFF, marks the front-end record it selects at 0x80143FC8 as occupied (record byte 0x00 set to 1), writes 0x4F into the record byte 0x05, and stores the index of the current work record (the 0x80146884 minus 0x80146888 pointer difference) in the record byte 0x0B.'
   - - 4392
-    - asm
+    - c
     - func_801F3D28
+    - '@source: src/bof3/world/func_801F3D28_area03213.c'
+    - '@behavior: Stores the free-record index returned by func_8019601C into byte 0x0B of the current work record published at the scratchpad cursor 0x1F800044 and, when that byte is not 0xFF, marks the front-end record it selects at 0x80143FC8 as occupied (record byte 0x00 set to 1) and writes 0x4E into the record byte 0x05.'
   - - 4556
-    - asm
+    - c
     - func_801F3DCC
+    - '@source: src/bof3/world/func_801F3DCC_area03213.c'
+    - '@behavior: Copies the work record published at the scratchpad cursor 0x1F800044 into the front-end record table at 0x80143FC8: stores the free-record index returned by func_8019601C into cursor byte 0x0B and, when that byte is not 0xFF, marks the selected 0x74-byte record occupied (byte 0x00 set to 1), writes 0x50 into its byte 0x05, copies cursor byte 0x08 into record byte 0x06, copies the cursor words at 0x34, 0x38 and 0x3C into the same record words adding 0x8000 to the 0x38 word and 0x1000000 to the 0x3C word, and writes 0x3C into record byte 0x09.'
   - - 4972
     - data
     - T_801F3F6C

@@ -132,14 +132,14 @@ segments:
     - asm
     - func_801F4360
   - - 6052
-    - asm
-    - func_801F43A4
+    - c
+    - clearSharedByteBitPair0World02Area10814_801F43A4
   - - 6080
-    - asm
-    - func_801F43C0
+    - c
+    - clearSharedByteBitPair1World02Area10814_801F43C0
   - - 6108
-    - asm
-    - func_801F43DC
+    - c
+    - clearSharedByteBitPair2World02Area10814_801F43DC
   - - 6136
     - asm
     - func_801F43F8
@@ -199,5 +199,5 @@ segments:
     - noopHandlerWorld02Area10814_801F56E0
   - - 10984
     - asm
-    - func_801F56E8
+    - D_801F56E8
 - - 14320

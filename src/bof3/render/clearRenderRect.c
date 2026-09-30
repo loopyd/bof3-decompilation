@@ -4,7 +4,7 @@
  * @source 0x8014E564
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void clearRenderRect(s16 x, s16 y, s16 width, s16 height) {
   RECT rect;

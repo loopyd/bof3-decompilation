@@ -31,12 +31,15 @@ segments:
     vram: 0x801ce760
     subsegments:
       - [0x760, c, initWorkAreaAndStartSubsystems, '@source: src/bof3/boot/initWorkAreaAndStartSubsystems.c']
-      - [0x7f4, asm, func_801CE7F4]
-      - [0x930, asm, func_801CE930]
-      - [0xa98, asm, func_801CEA98]
-      - [0xbfc, asm, func_801CEBFC]
+      - [0x7f4, c, func_801CE7F4, '@source: src/bof3/boot/func_801CE7F4.c', '@behavior: resets the console and video mode, builds both 320x240 RGB24 display environments of the LOGO double buffer, clears the 960x480 work area, publishes the second environment and enables display output']
+      - [0x8dc, c, func_801CE8DC, '@source: src/bof3/boot/func_801CE8DC.c', '@behavior: publishes the LOGO display environment selected by the double buffer index D_801EB4A8 through PutDispEnv, then flips the index for the next frame']
+      - [0x930, c, func_801CE930, '@source: src/bof3/boot/func_801CE930.c', '@behavior: starts the CAPCOM30.STR stream: clears the buffer index, transfer flag and frame number, resets the DCT decoder, installs the func_801CECA4 MDEC output callback, arms the CD stream for D_801EB448, sets the D_801EB474/D_801EB475 flags, starts the disc read for the supplied LBA, repeats the readiness probes of func_801CFEF4 (modes 0xD and 2) and func_801D2180 (one 0x1C8-byte frame) while any probe reports not-ready, waits for func_801D2558 to publish the bitstream and header pointers, records the header frame number in D_801EB468, decodes the bitstream through DecDCTvlc and advances the decoder stream position, returning 0']
+      - [0xa98, c, func_801CEA98, '@source: src/bof3/boot/func_801CEA98.c', '@behavior: pumps one frame of the CAPCOM30.STR MDEC stream, waiting up to a 0x100000-iteration timeout for the next frame header and returning 1 on timeout; records the new frame number in D_801EB468 and the previous one in D_801EB464, resets the LOGO frame RECT D_801EB45C to a 24x240 column at the y offset of the buffer selected by D_801EB4A8, resets the DCT decoder, submits the CD buffer of the current index, decodes the bitstream into the buffer selected by the toggled index, advances the decoder stream position, advances the column through func_801CEC88 when the previous frame number is outside the 0xAD..0xFE window, then waits two vsyncs and flips the display buffer']
+      - [0xbfc, c, func_801CEBFC, '@source: src/bof3/boot/func_801CEBFC.c', '@behavior: tears down the CAPCOM30.STR stream by ramping the LOGO CD mixing record to zero, resetting the CD hook state, submitting the work-area buffer through the CD helpers and spinning on the CD dispatcher for modes 0xE then 9 before clearing the MDEC output callback']
+      - [0xc88, c, func_801CEC88, '@source: src/bof3/boot/func_801CEC88.c', '@behavior: waits for the LOGO.EXE stream transfer flag D_801EB46C to clear, spinning on the flag that the stream setup arms and the func_801CECA4 MDEC output callback completes']
+      - [0xca4, c, func_801CECA4, '@source: src/bof3/boot/func_801CECA4.c', '@behavior: MDEC output callback of the CAPCOM30.STR stream: clears the pending D_801EB678 word through func_801D263C when it is set, hands the LOGO frame column RECT D_801EB45C and the D_801EB444 work buffer to func_801D44D4, advances the column by 0x18 and, while the column stays inside the 0x1E0 line, resubmits the 0xB40-byte buffer through func_801D6FCC and publishes the D_801EB46C transfer flag; the flag is cleared once the column leaves the line']
       - [0xd48, c, func_801CED48, '@source: src/bof3/boot/rampCdMixLevel.c']
-      - [0xda4, asm, func_801CEDA4]
+      - [0xda4, c, func_801CEDA4, '@source: src/bof3/boot/func_801CEDA4.c', '@behavior: ramps the LOGO CD mixing record from 0x80 down to zero in steps of two, submitting each level to CdMix']
   - name: main
     type: code
     start: 0xdfc

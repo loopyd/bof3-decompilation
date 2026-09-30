@@ -1,4 +1,4 @@
-"""CLI adapter for ``bin/naming-audit``."""
+"""CLI adapter for ``bin/harness naming``."""
 
 from __future__ import annotations
 
@@ -23,6 +23,7 @@ from harness.naming.opportunities import (
     describe_opportunity,
 )
 from harness.naming.readiness import transaction_scope
+from harness.naming.source_cli import add_source_commands
 
 
 def add_query_commands(sub: argparse._SubParsersAction) -> None:
@@ -66,7 +67,7 @@ class _SingleEvidenceRoot(argparse.Action):
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="naming-audit")
+    parser = argparse.ArgumentParser(prog="bin/harness naming")
     add_root_argument(parser)
     sub = parser.add_subparsers(dest="command", required=True)
     opportunities = sub.add_parser(
@@ -81,6 +82,7 @@ def build_parser() -> argparse.ArgumentParser:
     describe.add_argument("id")
     describe.add_argument("--expected-fingerprint")
     describe.set_defaults(handler=_run_opportunities)
+    add_source_commands(sub)
     prep = sub.add_parser(
         "prepare", help="readiness preflight; --repair closes proven repairs"
     )

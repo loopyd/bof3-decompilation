@@ -1,0 +1,3948 @@
+diff --git a/deps/retdec/retdec/include/retdec/bin2llvmir/optimizations/stack/stack.h b/deps/retdec/retdec/include/retdec/bin2llvmir/optimizations/stack/stack.h
+index 8253298..6f695d1 100644
+--- a/deps/retdec/retdec/include/retdec/bin2llvmir/optimizations/stack/stack.h
++++ b/deps/retdec/retdec/include/retdec/bin2llvmir/optimizations/stack/stack.h
+@@ -35,6 +35,7 @@ class StackAnalysis : public llvm::ModulePass
+ 
+ 	private:
+ 		bool run();
++		void coalesceIndexedStack(llvm::Function& function);
+ 		void handleInstruction(
+ 				ReachingDefinitionsAnalysis& RDA,
+ 				llvm::Instruction* inst,
+@@ -56,6 +57,7 @@ class StackAnalysis : public llvm::ModulePass
+ 		DebugFormat* _dbgf = nullptr;
+ 
+ 		std::unordered_set<llvm::Value*> _toRemove;
++		std::unordered_set<llvm::Function*> _indexedStackFunctions;
+ };
+ 
+ } // namespace bin2llvmir
+diff --git a/deps/retdec/retdec/include/retdec/bin2llvmir/utils/counter_provenance.h b/deps/retdec/retdec/include/retdec/bin2llvmir/utils/counter_provenance.h
+new file mode 100644
+index 0000000..8985e90
+--- /dev/null
++++ b/deps/retdec/retdec/include/retdec/bin2llvmir/utils/counter_provenance.h
+@@ -0,0 +1,178 @@
++// Counter provenance: capture the machine increment/truncate/store/compare
++// relationship, re-establish it against the live optimized instructions, and
++// restore the value the comparison tests. Only a relationship re-derived from
++// the live IR is acted on; a surviving tag is never sufficient.
++#ifndef RETDEC_COUNTER_PROVENANCE_H
++#define RETDEC_COUNTER_PROVENANCE_H
++#include <llvm/ADT/Optional.h>
++#include <llvm/IR/Constants.h>
++#include <llvm/IR/Instructions.h>
++#include <llvm/IR/Module.h>
++#include <llvm/IR/Metadata.h>
++
++namespace retdec { namespace bin2llvmir {
++namespace counter_provenance {
++inline llvm::ConstantInt* constant(llvm::Value* value, uint64_t expected) {
++	auto* number = llvm::dyn_cast<llvm::ConstantInt>(value);
++	return number && number->getZExtValue() == expected ? number : nullptr;
++}
++inline llvm::Metadata* origin(llvm::Instruction* instruction) {
++	auto* node = instruction->getMetadata("insn.addr");
++	return node && node->getNumOperands() == 1 ? node->getOperand(0).get() : nullptr;
++}
++inline bool ordered(llvm::Instruction* first, llvm::Instruction* last) {
++	if (first->getParent() != last->getParent()) return false;
++	for (auto* item = first->getNextNode(); item; item = item->getNextNode())
++		if (item == last) return true;
++	return false;
++}
++
++// Run after register localization, before the first destructive LLVM pass.
++inline bool capture(llvm::Module& module) {
++	bool changed = false;
++	for (auto& function : module) for (auto& block : function) for (auto& instruction : block) {
++		auto* store = llvm::dyn_cast<llvm::StoreInst>(&instruction);
++		if (!store || store->isAtomic() || !store->getValueOperand()->getType()->isIntegerTy(8)) continue;
++		auto* trunc = llvm::dyn_cast<llvm::TruncInst>(store->getValueOperand());
++		auto* add = trunc ? llvm::dyn_cast<llvm::BinaryOperator>(trunc->getOperand(0)) : nullptr;
++		if (!add || add->getOpcode() != llvm::Instruction::Add || !add->getType()->isIntegerTy(32)
++				|| add->hasNoSignedWrap() || add->hasNoUnsignedWrap() || !constant(add->getOperand(1), 1)) continue;
++		auto* extend = llvm::dyn_cast<llvm::ZExtInst>(add->getOperand(0));
++		auto* load = extend ? llvm::dyn_cast<llvm::LoadInst>(extend->getOperand(0)) : nullptr;
++		if (!load || !load->getType()->isIntegerTy(8) || load->isAtomic()
++				|| !ordered(load, add) || !ordered(add, store)) continue;
++		for (auto* use : add->users()) {
++			auto* mask = llvm::dyn_cast<llvm::BinaryOperator>(use);
++			if (!mask || mask->getOpcode() != llvm::Instruction::And || !constant(mask->getOperand(1), 255)) continue;
++			for (auto* consumer : mask->users()) {
++				auto* compare = llvm::dyn_cast<llvm::ICmpInst>(consumer);
++				if (!compare || !compare->isEquality() || compare->getOperand(0) != mask || !ordered(store, compare)) continue;
++				auto* threshold = llvm::dyn_cast<llvm::ConstantInt>(compare->getOperand(1));
++				if (!threshold || threshold->getZExtValue() > 255) continue;
++				auto* a = origin(load); auto* b = origin(add); auto* c = origin(store); auto* d = origin(compare);
++				if (!a || !b || !c || !d) continue;
++				auto number = [&](uint64_t value) -> llvm::Metadata* {
++					return llvm::ConstantAsMetadata::get(llvm::ConstantInt::get(llvm::Type::getInt64Ty(module.getContext()), value));
++				};
++				// Version, original PCs, machine width, stored width, increment,
++				// original threshold, original predicate. No SSA pointer survives.
++				store->setMetadata("retdec.counter.origin", llvm::MDNode::get(module.getContext(),
++						{number(1), a, b, c, d, number(32), number(8), number(1),
++						 number(threshold->getZExtValue()), number(compare->getPredicate())}));
++				changed = true;
++			}
++		}
++	}
++	return changed;
++}
++
++// Which operand the live comparison tests. The original machine code tested
++// the incremented byte; canonicalization may rewrite that to the old byte
++// against threshold - 1.
++enum class TestedValue { Old, Incremented };
++
++// One counter update re-derived from the live instructions. Every field is
++// read from the IR; there is no partially known state. The pointers are
++// transient and are never cached outside the recovering call.
++struct CounterUpdate {
++	llvm::LoadInst* load;
++	llvm::BinaryOperator* add;
++	llvm::StoreInst* store;
++	llvm::ICmpInst* comparison;
++	uint64_t threshold;
++	TestedValue tested;
++};
++
++// Shared recognition for validation and recovery: the record layout, the
++// wrapping byte increment, load/store identity and order, and the comparison
++// pairing and original instruction identities. Returns nothing for a
++// malformed record, a stale live relationship, an ambiguous comparison, or
++// origin metadata that no longer matches the record.
++inline llvm::Optional<CounterUpdate> recognizedCounter(llvm::MDNode* record, llvm::StoreInst* store) {
++	if (!record || record->getNumOperands() != 10 || store->isAtomic()) return llvm::None;
++	auto number = [&](unsigned index) -> llvm::ConstantInt* {
++		return llvm::mdconst::dyn_extract<llvm::ConstantInt>(record->getOperand(index));
++	};
++	for (unsigned i = 0; i < 10; ++i)
++		if (!number(i)) return llvm::None;
++	if (number(0)->getZExtValue() != 1 || number(5)->getZExtValue() != 32
++			|| number(6)->getZExtValue() != 8 || number(7)->getZExtValue() != 1
++			|| number(8)->getZExtValue() > 255) return llvm::None;
++	auto* add = llvm::dyn_cast<llvm::BinaryOperator>(store->getValueOperand());
++	if (!add || add->getOpcode() != llvm::Instruction::Add || !add->getType()->isIntegerTy(8)
++			|| add->hasNoSignedWrap() || add->hasNoUnsignedWrap() || !constant(add->getOperand(1), 1))
++		return llvm::None;
++	auto* load = llvm::dyn_cast<llvm::LoadInst>(add->getOperand(0));
++	if (!load || load->isAtomic() || load->getPointerOperand() != store->getPointerOperand()
++			|| !ordered(load, add) || !ordered(add, store)) return llvm::None;
++	// Extra writes/calls would obstruct later single-expression recovery.
++	for (auto* item = load->getNextNode(); item != store; item = item->getNextNode())
++		if (item->mayHaveSideEffects()) return llvm::None;
++	// Both compared values are immutable SSA results. Intervening memory
++	// writes do not change this fact; the record grants no reordering permission.
++	uint64_t threshold = number(8)->getZExtValue();
++	llvm::ICmpInst* match = nullptr;
++	TestedValue tested = TestedValue::Old;
++	for (auto* item = store->getNextNode(); item; item = item->getNextNode()) {
++		auto* compare = llvm::dyn_cast<llvm::ICmpInst>(item);
++		if (!compare || !compare->isEquality()) continue;
++		TestedValue candidate;
++		if (compare->getOperand(0) == load && constant(compare->getOperand(1), (threshold - 1) & 255))
++			candidate = TestedValue::Old;
++		else if (compare->getOperand(0) == add && constant(compare->getOperand(1), threshold))
++			candidate = TestedValue::Incremented;
++		else continue;
++		if (origin(load) != record->getOperand(1).get()
++				|| origin(add) != record->getOperand(2).get()
++				|| origin(store) != record->getOperand(3).get()
++				|| origin(compare) != record->getOperand(4).get()) continue;
++		// Two comparisons matching one record are ambiguous; prefer none.
++		if (match) return llvm::None;
++		match = compare;
++		tested = candidate;
++	}
++	if (!match) return llvm::None;
++	return CounterUpdate{load, add, store, match, threshold, tested};
++}
++
++// Consume at source-recovery entry. A surviving tag alone is not permission
++// to restore the source form: re-establish the entire live relationship.
++inline void validate(llvm::Module& module) {
++	for (auto& function : module) for (auto& block : function) for (auto& instruction : block) {
++		auto* store = llvm::dyn_cast<llvm::StoreInst>(&instruction);
++		if (!store) continue;
++		auto* node = store->getMetadata("retdec.counter.origin");
++		if (!node) continue;
++		store->setMetadata("retdec.counter.origin", nullptr);
++		auto update = recognizedCounter(node, store);
++		if (!update) continue;
++		store->setMetadata("retdec.counter.validated", node);
++		update->comparison->setMetadata("retdec.counter.validated", node);
++	}
++}
++
++// Make every validated comparison test the stored byte against the recorded
++// threshold. Equality is invariant under the wrapping byte increment, so the
++// rewrite changes only which equivalent value is tested: no instruction is
++// created, moved or erased, and the predicate, block and successors stay as
++// optimized. Both consumed attachments are detached; a second call is a no-op.
++inline bool restoreTestedValue(llvm::Module& module) {
++	bool changed = false;
++	for (auto& function : module) for (auto& block : function) for (auto& instruction : block) {
++		auto* store = llvm::dyn_cast<llvm::StoreInst>(&instruction);
++		if (!store) continue;
++		auto* record = store->getMetadata("retdec.counter.validated");
++		if (!record) continue;
++		store->setMetadata("retdec.counter.validated", nullptr);
++		auto update = recognizedCounter(record, store);
++		if (!update || update->comparison->getMetadata("retdec.counter.validated") != record) continue;
++		update->comparison->setMetadata("retdec.counter.validated", nullptr);
++		if (update->tested == TestedValue::Incremented) continue;
++		update->comparison->setOperand(0, update->add);
++		update->comparison->setOperand(1, llvm::ConstantInt::get(update->add->getType(), update->threshold));
++		changed = true;
++	}
++	return changed;
++}
++} } }
++#endif
+diff --git a/deps/retdec/retdec/include/retdec/bin2llvmir/utils/ir_modifier.h b/deps/retdec/retdec/include/retdec/bin2llvmir/utils/ir_modifier.h
+index 6e1edf8..227b4ba 100644
+--- a/deps/retdec/retdec/include/retdec/bin2llvmir/utils/ir_modifier.h
++++ b/deps/retdec/retdec/include/retdec/bin2llvmir/utils/ir_modifier.h
+@@ -55,6 +55,17 @@ class IrModifier
+ 		static void eraseUnusedInstructionsRecursive(
+ 				std::unordered_set<llvm::Value*>& insns);
+ 
++		/// True when the supplied configuration declares a volatile object on
++		/// @a addr. Only such an explicit declaration may carry an address that
++		/// has no image data -- never the absence of image data alone.
++		static bool isDeclaredVolatileObject(
++				Config* config,
++				retdec::common::Address addr);
++
++		/// Marks every load/store that accesses a declared volatile object, so
++		/// the memory access itself survives the destructive LLVM passes.
++		static void markDeclaredVolatileAccesses(llvm::Module* module, Config* config);
++
+ 	public:
+ 		IrModifier(llvm::Module* m, Config* c);
+ 
+diff --git a/deps/retdec/retdec/include/retdec/capstone2llvmir/mips/stateful.h b/deps/retdec/retdec/include/retdec/capstone2llvmir/mips/stateful.h
+new file mode 100644
+index 0000000..0333b8f
+--- /dev/null
++++ b/deps/retdec/retdec/include/retdec/capstone2llvmir/mips/stateful.h
+@@ -0,0 +1,48 @@
++#ifndef RETDEC_CAPSTONE2LLVMIR_MIPS_STATEFUL_H
++#define RETDEC_CAPSTONE2LLVMIR_MIPS_STATEFUL_H
++
++#include <cstddef>
++#include <cstdint>
++#include <string>
++
++namespace llvm { class Module; class Function; }
++namespace retdec { namespace capstone2llvmir {
++
++/** Emit an opt-in R3000 register-state step function into an empty module.
++ * Signature: unsigned step(unsigned state[73], unsigned char ram[2097152]).
++ * ABI v2: state and RAM must be initialized, writable and nonoverlapping.
++ * Layout: GPR[0..31], HI=32, LO=33, PC=34, CP0[35..66],
++ * pending branch flag=67, pending target=68, pending load register=69,
++ * pending value=70, pending active=71, pending merge-preserve mask=72.
++ * Returns 0 after one instruction, 1 on exception entry, 2 for unmapped PC,
++ * 3 for a branch inside a taken branch delay slot, 4 for unsupported bus/cache
++ * access. Rejected/unmapped steps leave state and RAM unchanged.
++ * Code at every supplied aligned PC remains independently reachable.
++ * Supports register arithmetic, ordinary branches/jumps, BREAK/SYSCALL,
++ * BLTZ/BGEZ/BLTZAL/BGEZAL, MFC0/CFC0/MTC0/CTC0, RFE, LB/LBU/LH/LHU/LW/LWL/LWR and
++ * SB/SH/SW/SWL/SWR. RAM mirrors cover physical 0..8 MiB through low/KSEG0/KSEG1
++ * aliases. Misalignment raises address exceptions outside taken branch slots;
++ * misalignment inside such a slot rejects with code 4 pending oracle validation.
++ * Default ABI v2 rejects MMIO, ROM and scratchpad. With biosBus=true the
++ * signature is unsigned step(unsigned state[75], unsigned char ram[2097152],
++ * const unsigned char rom[524288], unsigned char scratch[1024]). ABI v3 adds
++ * ISTAT=73 and IMASK=74. All buffers must be valid and nonoverlapping.
++ * ROM reads and scratchpad reads/writes support physical/KSEG0/KSEG1 aliases.
++ * Halfword/word accesses to 1f801070/74 implement Redux ISTAT/IMASK semantics.
++ * ROM writes, other MMIO, cache isolation and unsupported instructions (GTE)
++ * reject. The caller dispatches original PC ranges, including ROM ranges, and
++ * must invalidate translations when code bytes change. No live instruction cache.
++ * Software interrupts are tested after Status/Cause writes and RFE; delivery in
++ * taken slots rejects unchanged with code 3. Hardware IRQ is sampled after a
++ * taken slot, as in Redux branchTest, with Cause=0x400 and EPC=next PC. The caller
++ * supplies device events by updating ISTAT between calls. No device scheduling,
++ * DMA, timers, cache or cycle model is implied. GTE IRQ deferral is unsupported.
++ * No ABI recovery or normal function-level optimizer pipeline may be applied.
++ * State belongs to the caller; no hidden CPU globals or host exception callback.
++ */
++llvm::Function* translateMips32Stateful(llvm::Module& module,
++        const uint8_t* bytes, std::size_t size, uint32_t base,
++        const std::string& name, bool biosBus = false);
++
++} }
++#endif
+diff --git a/deps/retdec/retdec/include/retdec/common/type.h b/deps/retdec/retdec/include/retdec/common/type.h
+index 9881719..8a4c52f 100644
+--- a/deps/retdec/retdec/include/retdec/common/type.h
++++ b/deps/retdec/retdec/include/retdec/common/type.h
+@@ -34,6 +34,23 @@ class Type
+ 		/// @{
+ 		void setLlvmIr(const std::string& t);
+ 		void setIsWideString(bool b);
++		// Source-language spelling is separate from signless LLVM/register types.
++		void setCType(const std::string& t) { _cType = t; }
++		const std::string& getCType() const { return _cType; }
++		void setIsVolatile(bool b) { _volatile = b; }
++		bool isVolatile() const { return _volatile; }
++		/// @}
++
++		/// @name Supplied source spelling queries.
++		///
++		/// The C spelling can carry information the signless LLVM/register type
++		/// cannot, e.g. the signedness of the base type. Only scalar integer base
++		/// spellings are supported.
++		/// @{
++		/// Width in bits of the spelling's base type, or 0 when unsupported.
++		unsigned getCBaseTypeWidth() const;
++		/// True when the spelling's base type is unsigned.
++		bool hasUnsignedBaseType() const;
+ 		/// @}
+ 
+ 		/// @name Type get methods.
+@@ -49,6 +66,8 @@ class Type
+ 		/// LLVM IR string representation.
+ 		/// Unique ID.
+ 		std::string _llvmIr = "i32";
++		std::string _cType;
++		bool _volatile = false;
+ 		/// Wide strings are in LLVM IR represented as int arrays.
+ 		/// This flag can be use to distinguish them from ordinary int arrays.
+ 		bool _wideString = false;
+diff --git a/deps/retdec/retdec/include/retdec/llvmir2hll/hll/hll_writers/c_hll_writer.h b/deps/retdec/retdec/include/retdec/llvmir2hll/hll/hll_writers/c_hll_writer.h
+index ad2dd9d..8fc093f 100644
+--- a/deps/retdec/retdec/include/retdec/llvmir2hll/hll/hll_writers/c_hll_writer.h
++++ b/deps/retdec/retdec/include/retdec/llvmir2hll/hll/hll_writers/c_hll_writer.h
+@@ -164,6 +164,8 @@ private:
+ 	void emitReturnType(ShPtr<FunctionType> funcType);
+ 	void emitNameOfVarIfExists(ShPtr<Variable> var);
+ 	void emitAssignment(ShPtr<Expression> lhs, ShPtr<Expression> rhs);
++	void emitWrappingArithmetic(const std::string &op, ShPtr<BinaryOpExpr> expr);
++	void emitBitPatternEquality(const std::string &op, ShPtr<BinaryOpExpr> expr);
+ 	void emitInitVarDefWhenNeeded(ShPtr<UForLoopStmt> loop);
+ 	void emitConstStruct(ShPtr<ConstStruct> constant, bool emitCast = true);
+ 	void emitStructDeclaration(ShPtr<StructType> structType,
+diff --git a/deps/retdec/retdec/include/retdec/llvmir2hll/ir/variable.h b/deps/retdec/retdec/include/retdec/llvmir2hll/ir/variable.h
+index 36b41a3..7df4aa7 100644
+--- a/deps/retdec/retdec/include/retdec/llvmir2hll/ir/variable.h
++++ b/deps/retdec/retdec/include/retdec/llvmir2hll/ir/variable.h
+@@ -43,6 +43,7 @@ public:
+ 	bool hasName() const;
+ 	bool isInternal() const;
+ 	bool isExternal() const;
++	bool isVolatile() const;
+ 	ShPtr<Variable> copy() const;
+ 
+ 	void setName(const std::string &newName);
+@@ -50,6 +51,7 @@ public:
+ 	void setAddress(Address a);
+ 	void markAsInternal();
+ 	void markAsExternal();
++	void markAsVolatile();
+ 
+ 	/// @name Visitor Interface
+ 	/// @{
+@@ -75,6 +77,8 @@ private:
+ 	/// Is the variable internal?
+ 	bool internal;
+ 
++	bool volatileObject;
++
+ 	/// Some variables may have addresses:
+ 	/// - Local variables created from temporary LLVM variables: LLVM insn addr.
+ 	/// - Global variables: address in global data sections.
+diff --git a/deps/retdec/retdec/include/retdec/llvmir2hll/llvm/source_recovery.h b/deps/retdec/retdec/include/retdec/llvmir2hll/llvm/source_recovery.h
+new file mode 100644
+index 0000000..a50a846
+--- /dev/null
++++ b/deps/retdec/retdec/include/retdec/llvmir2hll/llvm/source_recovery.h
+@@ -0,0 +1,16 @@
++#ifndef RETDEC_LLVMIR2HLL_LLVM_SOURCE_RECOVERY_H
++#define RETDEC_LLVMIR2HLL_LLVM_SOURCE_RECOVERY_H
++
++#include "retdec/llvmir2hll/support/smart_ptr.h"
++namespace llvm { class Module; }
++namespace retdec {
++namespace config { class Config; }
++namespace llvmir2hll {
++class Module;
++// Recover representations only after machine-level optimizations have finished.
++void recoverPointerExpressions(llvm::Module &module, const config::Config &config);
++void recoverSourceSignatures(ShPtr<Module> module, const config::Config &config);
++void applyDeclaredAccessQualifiers(ShPtr<Module> module, const config::Config &config);
++}
++}
++#endif
+diff --git a/deps/retdec/retdec/include/retdec/runtime/mips_exception.h b/deps/retdec/retdec/include/retdec/runtime/mips_exception.h
+new file mode 100644
+index 0000000..d8332e9
+--- /dev/null
++++ b/deps/retdec/retdec/include/retdec/runtime/mips_exception.h
+@@ -0,0 +1,61 @@
++/* R3000 exception-entry contract for emitted C. No host-trap fallback. */
++#ifndef RETDEC_RUNTIME_MIPS_EXCEPTION_H
++#define RETDEC_RUNTIME_MIPS_EXCEPTION_H
++
++#include <limits.h>
++
++/* The PSX C89 compiler has no stdint.h. The runtime ABI requires 32-bit words. */
++#if UINT_MAX != 0xffffffffU || CHAR_BIT != 8
++#error "MIPS exception runtime requires 32-bit unsigned int and 8-bit bytes"
++#endif
++
++#if defined(__GNUC__) || defined(__clang__)
++#define RETDEC_MIPS_NORETURN __attribute__((noreturn))
++#else
++#error "Define non-returning exception dispatch for this compiler"
++#endif
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++/* The embedding runtime owns this state and must keep Status current.
++ * Other guest registers/memory and pending loads remain the runtime's concern.
++ * Dispatch must enter state->pc and must not return to the decompiled C stack.
++ * Resumption requires a guest-PC dispatcher, not returning from this helper.
++ * Missing runtime bindings intentionally fail at link time.
++ */
++struct retdec_mips_exception_state {
++    unsigned int status;
++    unsigned int cause;
++    unsigned int epc;
++    unsigned int pc;
++    unsigned int hi;
++    unsigned int lo;
++};
++
++extern struct retdec_mips_exception_state *retdec_mips_exception_context(void);
++extern void retdec_mips_exception_dispatch(
++        struct retdec_mips_exception_state *state) RETDEC_MIPS_NORETURN;
++
++static __inline__ void __retdec_mips_break(
++        unsigned int instruction_pc, unsigned int delay_slot, unsigned int hi, unsigned int lo)
++        RETDEC_MIPS_NORETURN;
++static __inline__ void __retdec_mips_break(
++        unsigned int instruction_pc, unsigned int delay_slot, unsigned int hi, unsigned int lo)
++{
++    struct retdec_mips_exception_state *state = retdec_mips_exception_context();
++    state->epc = instruction_pc - (delay_slot ? 4u : 0u);
++    state->cause = 0x24u | (delay_slot ? 0x80000000u : 0u);
++    state->pc = (state->status & 0x00400000u) ? 0xbfc00180u : 0x80000080u;
++    state->status = (state->status & ~0x3fu) | ((state->status & 0x0fu) << 2);
++    state->hi = hi;
++    state->lo = lo;
++    retdec_mips_exception_dispatch(state);
++}
++
++#ifdef __cplusplus
++}
++#endif
++#undef RETDEC_MIPS_NORETURN
++#endif
+diff --git a/deps/retdec/retdec/src/bin2llvmir/CMakeLists.txt b/deps/retdec/retdec/src/bin2llvmir/CMakeLists.txt
+index de1e633..70da9b7 100644
+--- a/deps/retdec/retdec/src/bin2llvmir/CMakeLists.txt
++++ b/deps/retdec/retdec/src/bin2llvmir/CMakeLists.txt
+@@ -20,6 +20,8 @@ add_library(bin2llvmir STATIC
+ 	optimizations/decoder/ir_modifications.cpp
+ 	optimizations/decoder/jump_targets.cpp
+ 	optimizations/decoder/mips.cpp
++	optimizations/decoder/mips_call_effects.cpp
++	optimizations/decoder/mips_guard_proof.cpp
+ 	optimizations/decoder/patterns.cpp
+ 	optimizations/decoder/powerpc.cpp
+ 	optimizations/decoder/x86.cpp
+diff --git a/deps/retdec/retdec/src/bin2llvmir/optimizations/constants/constants.cpp b/deps/retdec/retdec/src/bin2llvmir/optimizations/constants/constants.cpp
+index 38ba873..e554af5 100644
+--- a/deps/retdec/retdec/src/bin2llvmir/optimizations/constants/constants.cpp
++++ b/deps/retdec/retdec/src/bin2llvmir/optimizations/constants/constants.cpp
+@@ -90,7 +90,15 @@ bool ConstantsAnalysis::run()
+ 				continue;
+ 			}
+ 
+-			checkForGlobalInInstruction(RDA, store, store->getValueOperand(), true);
++			// MIPS constructs addresses across register definitions (LUI plus
++			// ADDIU/ORI). Symbolizing an intermediate high half relocates the
++			// base before the complete address can be evaluated. Keep register
++			// state numeric; recover objects at the eventual memory use instead.
++			if (!_config->getConfig().architecture.isMipsOrPic32()
++					|| !_abi->isRegister(store->getPointerOperand()))
++			{
++				checkForGlobalInInstruction(RDA, store, store->getValueOperand(), true);
++			}
+ 
+ 			if (isa<GlobalVariable>(store->getPointerOperand()))
+ 			{
+@@ -110,6 +118,9 @@ bool ConstantsAnalysis::run()
+ 		}
+ 	}
+ 
++	// Must precede the passes that can merge, forward or delete these accesses.
++	IrModifier::markDeclaredVolatileAccesses(_module, _config);
++
+ 	IrModifier::eraseUnusedInstructionsRecursive(_toRemove);
+ 
+ 	return false;
+@@ -134,7 +145,9 @@ void ConstantsAnalysis::checkForGlobalInInstruction(
+ 
+ 	if (max && maxC && maxC->getValue().getActiveBits() <= 64 && maxC->getZExtValue() != 0)
+ 	if (userI || max == &root)
+-	if (_image->getImage()->hasDataOnAddress(maxC->getZExtValue()))
++	// Keyed on the declaration; image absence alone never creates a global.
++	if (_image->getImage()->hasDataOnAddress(maxC->getZExtValue())
++			|| IrModifier::isDeclaredVolatileObject(_config, maxC->getZExtValue()))
+ 	{
+ 		IrModifier irm(_module, _config);
+ 		auto* ngv = irm.getGlobalVariable(
+@@ -162,7 +175,10 @@ void ConstantsAnalysis::checkForGlobalInInstruction(
+ 	}
+ 
+ 	auto* gv = dyn_cast<GlobalVariable>(root.value);
+-	if (isa<LoadInst>(inst) && gv && root.ops.size() <= 1)
++	// A register global contains an address, not the memory at that address.
++	// Folding load(inttoptr(load @a0)) to load @a0 drops a dereference.
++	if (isa<LoadInst>(inst) && gv && !_abi->isRegister(gv)
++			&& root.ops.size() <= 1)
+ 	{
+ 		auto* conv = IrModifier::convertConstantToType(gv, val->getType());
+ 		_toRemove.insert(val);
+diff --git a/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/decoder.cpp b/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/decoder.cpp
+index bdc565d..7049174 100644
+--- a/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/decoder.cpp
++++ b/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/decoder.cpp
+@@ -6,6 +6,10 @@
+ 
+ #include <llvm/IR/Dominators.h>
+ #include <llvm/IR/PatternMatch.h>
++#include <stdexcept>
++#include "mips_call_effects.h"
++
++#include "retdec/fileformat/file_format/elf/elf_format.h"
+ 
+ #include "retdec/utils/conversion.h"
+ #include "retdec/utils/string.h"
+@@ -23,6 +27,125 @@ using namespace retdec::utils::io;
+ namespace retdec {
+ namespace bin2llvmir {
+ 
++// MIPS I has a one-instruction GPR load delay. Keep the loaded value's
++// store in place, but make reads in the following instruction observe the
++// pre-load value. A following write then naturally cancels the pending load.
++// Run before pseudo-call/CFG rewrites, while instruction ownership is intact.
++static void preserveMipsOneLoadDelay(llvm::Module* module, FileImage* image,
++		Abi* abi)
++{
++	auto* elf = dynamic_cast<ElfFormat*>(image->getFileFormat());
++	// ELF EF_MIPS_ARCH == 0 identifies MIPS I, not interlocked MIPS32.
++	if (!elf || elf->getTargetArchitecture() != retdec::fileformat::Architecture::MIPS
++			|| (elf->getFileFlags() & 0xf0000000) != 0)
++		return;
++
++	struct DelayedRead {
++		llvm::StoreInst* write;
++		std::vector<llvm::LoadInst*> reads;
++	};
++	std::vector<DelayedRead> pending;
++	for (auto& entry : AsmInstruction::getLlvmToCapstoneInsnMap(module))
++	{
++		auto* insn = entry.second;
++		switch (insn->id)
++		{
++			case MIPS_INS_LB: case MIPS_INS_LBU:
++			case MIPS_INS_LH: case MIPS_INS_LHU: case MIPS_INS_LW:
++			case MIPS_INS_LWL: case MIPS_INS_LWR:
++				break;
++			default: continue;
++		}
++		AsmInstruction current(entry.first);
++		llvm::StoreInst* write = nullptr;
++		for (auto& ir : current)
++			if (auto* store = llvm::dyn_cast<llvm::StoreInst>(&ir))
++				if (abi->isRegister(store->getPointerOperand())) write = store;
++		if (!write) continue; // Load into zero has no GPR result.
++
++		AsmInstruction next(module, current.getEndAddress());
++		if (!next || next.getBasicBlock() != current.getBasicBlock()) {
++			// NOPs can disappear from the IR, and branch targets split blocks.
++			// No old-register substitution is needed if the actual next MIPS I
++			// instruction does not consume the loaded GPR. Inspect original
++			// bytes, not IR that may also contain the branch delay slot.
++			auto* word = image->getConstantInt(llvm::Type::getInt32Ty(module->getContext()), current.getAddress());
++			auto* following = image->getConstantInt(llvm::Type::getInt32Ty(module->getContext()), current.getEndAddress());
++			auto* previous = image->getConstantInt(llvm::Type::getInt32Ty(module->getContext()), current.getAddress() - 4);
++			bool inDelaySlot = true;
++			if (previous) {
++				uint32_t bits = previous->getZExtValue();
++				unsigned op = bits >> 26, fn = bits & 63;
++				inDelaySlot = (op >= 1 && op <= 7) || (op == 0 && (fn == 8 || fn == 9))
++						|| (op >= 16 && op <= 19);
++			}
++			if (word && following && !inDelaySlot) {
++				unsigned destination = (word->getZExtValue() >> 16) & 31;
++				uint32_t bits = following->getZExtValue();
++				unsigned op = bits >> 26, rs = (bits >> 21) & 31, rt = (bits >> 16) & 31;
++				bool independent = bits == 0;
++				if (next) {
++					if (op == 2 || op == 3 || op == 15) independent = true;
++					if ((op >= 8 && op <= 14) || (op == 32 || op == 33 || op == 35 || op == 36 || op == 37))
++						independent = rs != destination;
++					if (op == 4 || op == 5 || op == 40 || op == 41 || op == 43)
++						independent = rs != destination && rt != destination;
++					if (op == 0) {
++						unsigned fn = bits & 63;
++						if (fn == 0 || fn == 2 || fn == 3) independent = rt != destination;
++						if (fn == 8 || fn == 9) independent = rs != destination;
++						if (fn == 4 || fn == 6 || fn == 7 || (fn >= 32 && fn <= 39) || fn == 42 || fn == 43)
++							independent = rs != destination && rt != destination;
++					}
++				}
++				if (independent) continue;
++			}
++		}
++		if (!next || next.getBasicBlock() != current.getBasicBlock())
++			throw std::runtime_error("MIPS I load delay crosses an unsupported decode boundary at "
++					+ current.getAddress().toHexString());
++		DelayedRead item{write, {}};
++		for (auto& ir : next)
++			if (auto* load = llvm::dyn_cast<llvm::LoadInst>(&ir))
++				if (load->getPointerOperand() == write->getPointerOperand()
++						&& !load->getMetadata("retdec.mips.merge"))
++					item.reads.push_back(load);
++		pending.push_back(item);
++	}
++	// Collect original reads first: a consecutive load's saved value must
++	// include the preceding load's commit, not be rewritten as an operand read.
++	for (auto& item : pending)
++	{
++		if (item.reads.empty()) continue;
++		llvm::IRBuilder<> irb(item.write);
++		auto* old = irb.CreateLoad(item.write->getPointerOperand(), "load_delay_old");
++		for (auto* read : item.reads)
++		{
++			read->replaceAllUsesWith(old);
++			read->eraseFromParent();
++		}
++	}
++}
++
++// Annotate the explicit exception boundary before delay-slot CFG rewriting.
++static void markMipsBreakDelaySlot(llvm::Instruction* instruction,
++		llvm::Value* branchTaken = nullptr)
++{
++	AsmInstruction slot(instruction);
++	for (auto& ir : slot)
++	{
++		auto* call = llvm::dyn_cast<llvm::CallInst>(&ir);
++		if (!call || !call->getCalledFunction()
++				|| call->getCalledFunction()->getName() != "__retdec_mips_break")
++			continue;
++		llvm::IRBuilder<> irb(call);
++		auto* type = call->getArgOperand(1)->getType();
++		// The pinned Redux interpreter marks only taken branches as BD.
++		call->setArgOperand(1, branchTaken ? irb.CreateZExtOrTrunc(branchTaken, type)
++				: llvm::ConstantInt::get(type, 1));
++	}
++}
++
+ char Decoder::ID = 0;
+ 
+ static llvm::RegisterPass<Decoder> X(
+@@ -113,6 +236,8 @@ bool Decoder::run()
+ 	LOG << _jumpTargets << std::endl;
+ 
+ 	decode();
++	if (_config->getConfig().architecture.isMipsOrPic32())
++		preserveMipsOneLoadDelay(_module, _image, _abi);
+ 
+ 	if (debug_enabled && fs::exists(_config->getOutputDirectory()))
+ 	{
+@@ -130,6 +255,10 @@ bool Decoder::run()
+ 	}
+ 
+ 	initConfigFunctions();
++	if (_config->getConfig().architecture.isMipsOrPic32()) {
++		annotateMipsLeafCalls(_module, _image);
++		simplifyMipsGuards(_module, _abi);
++	}
+ 
+ 	if (debug_enabled && fs::exists(_config->getOutputDirectory()))
+ 	{
+@@ -1403,6 +1532,9 @@ void Decoder::handleDelaySlotTypical(
+ 			break;
+ 		}
+ 		_llvm2capstone->emplace(r.llvmInsn, r.capstoneInsn);
++		markMipsBreakDelaySlot(r.llvmInsn,
++				_c2l->isCondBranchFunctionCall(res.branchCall)
++						? res.branchCall->getArgOperand(0) : nullptr);
+ 	}
+ 
+ 	irb.SetInsertPoint(oldIp);
+@@ -1460,6 +1592,7 @@ void Decoder::handleDelaySlotLikely(
+ 				break;
+ 			}
+ 			_llvm2capstone->emplace(res.llvmInsn, res.capstoneInsn);
++			markMipsBreakDelaySlot(res.llvmInsn);
+ 		}
+ 
+ 		_likelyBb2Target.emplace(newBb, target);
+@@ -1551,6 +1684,21 @@ void Decoder::finalizePseudoCalls()
+ 			continue;
+ 		}
+ 
++		// Resolved calls already have a real call following the pseudo-call.
++		// Preserve unresolved MIPS calls instead of dropping their side effects.
++		// The operand was evaluated by the translator before the delay slot.
++		if (icf && _config->getConfig().architecture.isMipsOrPic32()
++				&& !llvm::isa<llvm::CallInst>(pseudo->getNextNode()))
++		{
++			auto* retObj = getCallReturnObject();
++			auto* type = llvm::FunctionType::get(retObj->getValueType(), false);
++			llvm::IRBuilder<> builder(pseudo->getNextNode());
++			auto* target = builder.CreateIntToPtr(
++					pseudo->getArgOperand(0), type->getPointerTo());
++			auto* call = builder.CreateCall(target);
++			builder.CreateStore(call, retObj);
++		}
++
+ 		llvm::Instruction* it = pseudo->getPrevNode();
+ 		pseudo->eraseFromParent();
+ 
+diff --git a/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/ir_modifications.cpp b/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/ir_modifications.cpp
+index 8d29e0f..0ecc092 100644
+--- a/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/ir_modifications.cpp
++++ b/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/ir_modifications.cpp
+@@ -112,16 +112,14 @@ llvm::SwitchInst* Decoder::transformToSwitch(
+ 	auto* insn = dyn_cast<Instruction>(val);
+ 	if (insn && insn->getType())
+ 	{
+-		auto* gv = new GlobalVariable(
+-				*insn->getModule(),
+-				insn->getType(),
+-				false,
+-				GlobalValue::ExternalLinkage,
+-				nullptr);
+-		auto* s = new StoreInst(insn, gv);
++		// Keep the selector local to this invocation. An external global
++		// would introduce an observable store into the recovered program.
++		IRBuilder<> entry(&*pseudo->getFunction()->getEntryBlock().getFirstInsertionPt());
++		auto* selector = entry.CreateAlloca(insn->getType(), nullptr, "switch_selector");
++		auto* s = new StoreInst(insn, selector);
+ 		s->insertAfter(insn);
+ 
+-		val = new LoadInst(gv, "", pseudo);
++		val = new LoadInst(selector, "", pseudo);
+ 	}
+ 
+ 	auto* term = pseudo->getParent()->getTerminator();
+diff --git a/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/mips_call_effects.cpp b/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/mips_call_effects.cpp
+new file mode 100644
+index 0000000..9a0ffa8
+--- /dev/null
++++ b/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/mips_call_effects.cpp
+@@ -0,0 +1,132 @@
++// Bounded leaf effects derived from original MIPS I words, never stub IR.
++#include "mips_call_effects.h"
++#include <functional>
++#include <map>
++#include <set>
++#include <llvm/IR/Constants.h>
++#include <llvm/IR/Metadata.h>
++#include "retdec/bin2llvmir/providers/asm_instruction.h"
++#include "retdec/bin2llvmir/providers/fileimage.h"
++#include "retdec/bin2llvmir/providers/config.h"
++#include "retdec/fileformat/file_format/elf/elf_format.h"
++
++namespace retdec { namespace bin2llvmir {
++namespace {
++
++// Only nontrapping integer operations and ordinary loads are admitted.
++// Over-approximate writes even when an instruction writes its input unchanged.
++bool ordinary(uint32_t word, uint32_t& writes) {
++	unsigned op = word >> 26, rs = (word >> 21) & 31;
++	unsigned rt = (word >> 16) & 31, rd = (word >> 11) & 31;
++	unsigned shift = (word >> 6) & 31, fn = word & 63;
++	unsigned destination = 0;
++	if (op == 0) {
++		if (fn == 0 || fn == 2 || fn == 3) {
++			if (rs != 0) return false;
++		} else if (fn == 4 || fn == 6 || fn == 7 || fn == 33
++				|| fn == 35 || fn == 36 || fn == 37 || fn == 38
++				|| fn == 39 || fn == 42 || fn == 43) {
++			if (shift != 0) return false;
++		} else return false;
++		destination = rd;
++	} else if (op == 9 || (op >= 10 && op <= 15)
++			|| op == 32 || op == 33 || op == 35 || op == 36 || op == 37) {
++		if (op == 15 && rs != 0) return false;
++		destination = rt;
++	} else return false; // Stores, traps, coprocessors, calls, and merge loads.
++	if (destination) writes |= uint32_t(1) << destination;
++	return true;
++}
++
++bool mipsOne(FileImage* image) {
++	auto* elf = dynamic_cast<retdec::fileformat::ElfFormat*>(image->getFileFormat());
++	return elf && elf->getTargetArchitecture() == retdec::fileformat::Architecture::MIPS
++			&& (elf->getFileFlags() & 0xf0000000) == 0
++			&& elf->isLittleEndian();
++}
++
++} // namespace
++
++MipsLeafEffects inspectMipsLeaf(llvm::Module* module, FileImage* image,
++		uint32_t entry) {
++	MipsLeafEffects result;
++	if (!mipsOne(image) || (entry & 3) || entry > UINT32_MAX - 1024) return result;
++	std::map<uint32_t, unsigned> state;
++	std::set<uint32_t> slots, instructions;
++	auto read = [&](uint32_t pc, uint32_t& word) {
++		if (pc < entry || pc - entry >= 1024 || (pc & 3)) return false;
++		auto* value = image->getConstantInt(llvm::Type::getInt32Ty(module->getContext()), pc);
++		if (!value) return false;
++		word = value->getZExtValue();
++		instructions.insert(pc);
++		return instructions.size() <= 256;
++	};
++	std::function<bool(uint32_t)> visit = [&](uint32_t pc) {
++		if (slots.count(pc)) return false;
++		if (state[pc]) return state[pc] == 2;
++		state[pc] = 1;
++		uint32_t word;
++		if (!read(pc, word)) return false;
++		unsigned op = word >> 26, rt = (word >> 16) & 31;
++		bool ret = word == 0x03e00008;
++		bool branch = op == 4 || op == 5 || ((op == 6 || op == 7) && rt == 0);
++		bool jump = op == 2;
++		if (ret || branch || jump) {
++			uint32_t slot;
++			if (state.count(pc + 4) || !read(pc + 4, slot)
++					|| !ordinary(slot, result.writes)) return false;
++			slots.insert(pc + 4);
++			if (branch) {
++				int64_t destination = int64_t(pc) + 4 + int64_t(int16_t(word)) * 4;
++				if (destination < 0 || destination > UINT32_MAX
++						|| !visit(uint32_t(destination)) || !visit(pc + 8)) return false;
++			} else if (jump) {
++				uint32_t destination = ((pc + 4) & 0xf0000000) | ((word & 0x03ffffff) << 2);
++				if (!visit(destination)) return false;
++			}
++		} else if (!ordinary(word, result.writes) || !visit(pc + 4)) return false;
++		state[pc] = 2;
++		return true;
++	};
++	result.known = visit(entry) && !(result.writes & (uint32_t(1) << 31));
++	result.instructions = instructions.size();
++	if (!result.known) result.writes = UINT32_MAX;
++	return result;
++}
++
++void annotateMipsLeafCalls(llvm::Module* module, FileImage* image) {
++	if (!mipsOne(image)) return;
++	auto* config = ConfigProvider::getConfig(module);
++	if (!config) return;
++	std::map<uint32_t, MipsLeafEffects> summaries;
++	for (auto& pair : AsmInstruction::getLlvmToCapstoneInsnMap(module)) {
++		AsmInstruction instruction(pair.first);
++		auto address = instruction.getAddress();
++		auto* value = image->getConstantInt(llvm::Type::getInt32Ty(module->getContext()), address);
++		if (!value) continue;
++		uint32_t word = value->getZExtValue();
++		if ((word >> 26) != 3) continue;
++		uint32_t target = ((uint32_t(address) + 4) & 0xf0000000) | ((word & 0x03ffffff) << 2);
++		if (!summaries.count(target)) summaries[target] = inspectMipsLeaf(module, image, target);
++		const auto& effects = summaries.at(target);
++		if (!effects.known) continue;
++		// CFG finalization moves the call after the original delay-slot IR.
++		AsmInstruction slot(module, address + 4);
++		if (!slot) continue;
++		for (auto& ir : slot) {
++			auto* call = llvm::dyn_cast<llvm::CallInst>(&ir);
++			if (!call || !call->getCalledFunction()
++					|| config->getFunctionAddress(call->getCalledFunction()) != target)
++				continue;
++			auto& context = module->getContext();
++			auto number = [&](uint32_t n) -> llvm::Metadata* {
++				return llvm::ConstantAsMetadata::get(llvm::ConstantInt::get(
++						llvm::Type::getInt32Ty(context), n));
++			};
++			call->setMetadata("retdec.mips.leaf.effects", llvm::MDNode::get(context,
++					{number(target), number(effects.writes), number(effects.instructions)}));
++		}
++	}
++}
++
++} } // namespace retdec::bin2llvmir
+diff --git a/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/mips_call_effects.h b/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/mips_call_effects.h
+new file mode 100644
+index 0000000..2bd384d
+--- /dev/null
++++ b/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/mips_call_effects.h
+@@ -0,0 +1,22 @@
++// Original-byte evidence for bounded MIPS I leaf calls.
++#pragma once
++
++#include <cstdint>
++
++namespace llvm { class Module; }
++namespace retdec { namespace bin2llvmir {
++class FileImage;
++class Abi;
++
++struct MipsLeafEffects {
++	bool known = false;
++	uint32_t writes = 0;
++	unsigned instructions = 0;
++};
++
++MipsLeafEffects inspectMipsLeaf(llvm::Module* module, FileImage* image,
++		uint32_t entry);
++void annotateMipsLeafCalls(llvm::Module* module, FileImage* image);
++void simplifyMipsGuards(llvm::Module* module, Abi* abi);
++
++} }
+diff --git a/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/mips_guard_proof.cpp b/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/mips_guard_proof.cpp
+new file mode 100644
+index 0000000..2ba9206
+--- /dev/null
++++ b/deps/retdec/retdec/src/bin2llvmir/optimizations/decoder/mips_guard_proof.cpp
+@@ -0,0 +1,277 @@
++// Bounded path-sensitive interval proof on decoder IR. Unknowns retain guards.
++#include "mips_call_effects.h"
++#include <array>
++#include <deque>
++#include <map>
++#include <set>
++#include <tuple>
++#include <llvm/Analysis/LoopInfo.h>
++#include <llvm/IR/CFG.h>
++#include <llvm/IR/Dominators.h>
++#include <llvm/IR/Instructions.h>
++#include "retdec/bin2llvmir/providers/abi/abi.h"
++
++namespace retdec { namespace bin2llvmir {
++namespace {
++using namespace llvm;
++struct Range {
++	uint64_t lo = 0, hi = UINT32_MAX;
++	bool exact() const { return lo == hi; }
++};
++using Registers = std::array<Range, 32>;
++using Values = std::map<Value*, Range>;
++
++int reg(Value* value, Abi* abi) {
++	if (!abi->isGeneralPurposeRegister(value)) return -1;
++	return abi->getRegisterId(value) - MIPS_REG_0;
++}
++
++bool effects(CallInst* call, uint32_t& writes) {
++	auto* node = call->getMetadata("retdec.mips.leaf.effects");
++	if (!node || node->getNumOperands() != 3) return false;
++	auto* value = mdconst::dyn_extract<ConstantInt>(node->getOperand(1));
++	if (!value) return false;
++	writes = value->getZExtValue() | (uint32_t(1) << 31); // JAL itself writes RA.
++	return true;
++}
++
++Range valueRange(Value* value, const Values& values) {
++	if (auto* constant = dyn_cast<ConstantInt>(value))
++		return {constant->getZExtValue(), constant->getZExtValue()};
++	auto found = values.find(value);
++	if (found != values.end()) return found->second;
++	if (value->getType()->isIntegerTy() && value->getType()->getIntegerBitWidth() < 32)
++		return {0, (uint64_t(1) << value->getType()->getIntegerBitWidth()) - 1};
++	return {};
++}
++
++Range operation(Instruction& instruction, const Values& values) {
++	auto* type = instruction.getType();
++	if (!type->isIntegerTy() || type->getIntegerBitWidth() > 32) return {};
++	unsigned bits = type->getIntegerBitWidth();
++	uint64_t mask = (uint64_t(1) << bits) - 1;
++	Range top{0, mask};
++	for (auto& operand : instruction.operands())
++		if (operand->getType()->isIntegerTy()
++				&& operand->getType()->getIntegerBitWidth() > 32) return top;
++	Range a = valueRange(instruction.getOperand(0), values);
++	if (isa<ZExtInst>(instruction)) return a;
++	if (isa<TruncInst>(instruction)) {
++		if (a.exact()) return {a.lo & mask, a.lo & mask};
++		return a.hi <= mask ? a : top;
++	}
++	if (isa<SExtInst>(instruction)) {
++		unsigned from = instruction.getOperand(0)->getType()->getIntegerBitWidth();
++		if (a.hi < (uint64_t(1) << (from - 1))) return a;
++		return top;
++	}
++	if (instruction.getNumOperands() < 2) return top;
++	Range b = valueRange(instruction.getOperand(1), values);
++	if (auto* comparison = dyn_cast<ICmpInst>(&instruction)) {
++		bool yes = false, no = false;
++		switch (comparison->getPredicate()) {
++		case CmpInst::ICMP_EQ:
++			yes = a.exact() && b.exact() && a.lo == b.lo;
++			no = a.hi < b.lo || b.hi < a.lo; break;
++		case CmpInst::ICMP_NE:
++			no = a.exact() && b.exact() && a.lo == b.lo;
++			yes = a.hi < b.lo || b.hi < a.lo; break;
++		case CmpInst::ICMP_ULT: yes = a.hi < b.lo; no = a.lo >= b.hi; break;
++		case CmpInst::ICMP_ULE: yes = a.hi <= b.lo; no = a.lo > b.hi; break;
++		case CmpInst::ICMP_UGT: yes = a.lo > b.hi; no = a.hi <= b.lo; break;
++		case CmpInst::ICMP_UGE: yes = a.lo >= b.hi; no = a.hi < b.lo; break;
++		default: break;
++		}
++		return yes ? Range{1, 1} : no ? Range{0, 0} : Range{0, 1};
++	}
++	if (auto* select = dyn_cast<SelectInst>(&instruction)) {
++		Range c = valueRange(select->getFalseValue(), values);
++		if (a.exact()) return a.lo ? b : c;
++		return {std::min(b.lo, c.lo), std::max(b.hi, c.hi)};
++	}
++	switch (instruction.getOpcode()) {
++	case Instruction::Add:
++		if (a.exact() && b.exact()) return {(a.lo + b.lo) & mask, (a.lo + b.lo) & mask};
++		if (a.hi + b.hi <= mask) return {a.lo + b.lo, a.hi + b.hi};
++		break;
++	case Instruction::Sub:
++		if (a.exact() && b.exact()) return {(a.lo - b.lo) & mask, (a.lo - b.lo) & mask};
++		if (a.lo >= b.hi) return {a.lo - b.hi, a.hi - b.lo};
++		break;
++	case Instruction::And:
++		if (a.exact() && b.exact()) return {a.lo & b.lo, a.lo & b.lo};
++		if (a.exact()) return {0, std::min(a.lo, b.hi)};
++		if (b.exact()) return {0, std::min(b.lo, a.hi)};
++		break;
++	case Instruction::Or:
++		if (a.exact() && b.exact()) return {a.lo | b.lo, a.lo | b.lo};
++		break;
++	case Instruction::Shl:
++		if (b.exact() && b.lo < bits && (a.hi << b.lo) <= mask)
++			return {a.lo << b.lo, a.hi << b.lo};
++		break;
++	case Instruction::LShr:
++		if (b.exact() && b.lo < bits) return {a.lo >> b.lo, a.hi >> b.lo};
++		break;
++	default: break;
++	}
++	return top;
++}
++
++// Seed only constants proved on every incoming path. Never inspect callee IR.
++Range initial(BasicBlock* block, unsigned index, Abi* abi,
++		std::set<BasicBlock*> visiting, unsigned& budget) {
++	if (!budget || !visiting.insert(block).second) return {};
++	--budget;
++	for (auto it = block->rbegin(); it != block->rend(); ++it) {
++		if (auto* call = dyn_cast<CallInst>(&*it)) {
++			uint32_t writes;
++			if (!effects(call, writes) || (writes & (uint32_t(1) << index))) return {};
++		}
++		if (auto* store = dyn_cast<StoreInst>(&*it)) {
++			if (reg(store->getPointerOperand(), abi) != int(index)) continue;
++			auto* constant = dyn_cast<ConstantInt>(store->getValueOperand());
++			return constant ? Range{constant->getZExtValue(), constant->getZExtValue()} : Range{};
++		}
++	}
++	bool first = true;
++	Range answer;
++	for (auto* predecessor : predecessors(block)) {
++		Range candidate = initial(predecessor, index, abi, visiting, budget);
++		if (!candidate.exact()) return {};
++		if (!first && answer.lo != candidate.lo) return {};
++		answer = candidate;
++		first = false;
++	}
++	return answer;
++}
++
++bool isBreakBlock(BasicBlock* block, BasicBlock* continuation) {
++	auto* branch = dyn_cast<BranchInst>(block->getTerminator());
++	if (!branch || !branch->isUnconditional() || branch->getSuccessor(0) != continuation)
++		return false;
++	bool found = false;
++	for (auto& instruction : *block) {
++		auto* call = dyn_cast<CallInst>(&instruction);
++		if (call && call->getCalledFunction()
++				&& call->getCalledFunction()->getName() == "__retdec_mips_break") found = true;
++		else if (instruction.mayHaveSideEffects() && !isa<StoreInst>(instruction)
++				&& !isa<BranchInst>(instruction)) return false;
++		if (auto* store = dyn_cast<StoreInst>(&instruction))
++			if (store->getPointerOperand()->getName() != "_asm_program_counter") return false;
++	}
++	return found;
++}
++
++bool prove(Loop* loop, BranchInst* guard, unsigned safe, Abi* abi,
++		DominatorTree& dominators) {
++	auto* header = loop->getHeader();
++	auto* preheader = loop->getLoopPreheader();
++	if (!preheader || !loop->getSubLoops().empty()
++			|| !dominators.dominates(header, guard->getParent())) return false;
++	// Every path into the guard must pass through this header. Include all
++	// predecessors up to it, not just a convenient path from the loop exit.
++	std::set<BasicBlock*> region;
++	std::deque<BasicBlock*> pending{guard->getParent()};
++	while (!pending.empty()) {
++		auto* block = pending.front(); pending.pop_front();
++		if (!region.insert(block).second) continue;
++		if (region.size() > 64 || !dominators.dominates(header, block)) return false;
++		if (block != header)
++			for (auto* predecessor : predecessors(block)) pending.push_back(predecessor);
++	}
++	for (auto* block : loop->blocks()) region.insert(block);
++	Registers seed;
++	for (unsigned i = 0; i < 32; ++i) {
++		unsigned budget = 64;
++		seed[i] = initial(preheader, i, abi, {}, budget);
++	}
++	seed[0] = {0, 0};
++	using Key = std::pair<BasicBlock*, std::array<uint64_t, 64>>;
++	std::set<Key> seen;
++	std::deque<std::pair<BasicBlock*, Registers>> work{{header, seed}};
++	unsigned budget = 262144, states = 0;
++	bool reached = false;
++	while (!work.empty()) {
++		auto item = work.front(); work.pop_front();
++		auto* block = item.first;
++		auto registers = item.second;
++		Key key; key.first = block;
++		for (unsigned i = 0; i < 32; ++i) {
++			key.second[2*i] = registers[i].lo;
++			key.second[2*i+1] = registers[i].hi;
++		}
++		if (!seen.insert(key).second) continue;
++		if (++states > 4096) return false;
++		Values values;
++		for (auto& instruction : *block) {
++			if (!budget--) return false;
++			if (auto* load = dyn_cast<LoadInst>(&instruction)) {
++				if (!load->getType()->isIntegerTy()
++						|| load->getType()->getIntegerBitWidth() > 32) return false;
++				int index = reg(load->getPointerOperand(), abi);
++				values[load] = index >= 0 ? registers[index] : valueRange(load, {});
++			} else if (auto* store = dyn_cast<StoreInst>(&instruction)) {
++				int index = reg(store->getPointerOperand(), abi);
++				if (index > 0) registers[index] = valueRange(store->getValueOperand(), values);
++				else if (index < 0 && store->getPointerOperand()->getName() != "_asm_program_counter"
++						&& !abi->isRegister(store->getPointerOperand())) return false;
++			} else if (auto* call = dyn_cast<CallInst>(&instruction)) {
++				uint32_t writes;
++				if (!effects(call, writes)) return false;
++				for (unsigned i = 1; i < 32; ++i)
++					if (writes & (uint32_t(1) << i)) registers[i] = {};
++				values[call] = valueRange(call, {});
++			} else if (auto* branch = dyn_cast<BranchInst>(&instruction)) {
++				Range condition = branch->isConditional() ? valueRange(branch->getCondition(), values) : Range{1,1};
++				if (branch == guard) {
++					reached = true;
++					if (!condition.exact() || condition.lo != (safe == 0 ? 1u : 0u)) return false;
++					break;
++				}
++				for (unsigned edge = 0; edge < branch->getNumSuccessors(); ++edge) {
++					if (branch->isConditional() && condition.exact() && edge != (condition.lo ? 0u : 1u)) continue;
++					auto* next = branch->getSuccessor(edge);
++					if (region.count(next)) work.push_back({next, registers});
++				}
++			} else {
++				// Decoder expressions must be local to the block. PHIs or other
++				// cross-block SSA would need a richer state and are not admitted.
++				if (isa<PHINode>(instruction) || instruction.isTerminator()
++						|| instruction.mayHaveSideEffects()) return false;
++				for (auto& operand : instruction.operands())
++					if (auto* definition = dyn_cast<Instruction>(operand.get()))
++						if (definition->getParent() != block) return false;
++				values[&instruction] = instruction.getNumOperands() ? operation(instruction, values) : Range{};
++			}
++		}
++	}
++	return reached;
++}
++} // namespace
++
++void simplifyMipsGuards(llvm::Module* module, Abi* abi) {
++	for (auto& function : *module) {
++		if (function.empty()) continue;
++		llvm::DominatorTree dominators(function);
++		llvm::LoopInfo loops(dominators);
++		std::vector<std::pair<llvm::BranchInst*, unsigned>> proven;
++		for (auto& block : function) {
++			auto* guard = llvm::dyn_cast<llvm::BranchInst>(block.getTerminator());
++			if (!guard || !guard->isConditional()) continue;
++			for (unsigned safe = 0; safe < 2; ++safe) {
++				if (!isBreakBlock(guard->getSuccessor(1-safe), guard->getSuccessor(safe))) continue;
++				for (auto* loop : loops)
++					if (prove(loop, guard, safe, abi, dominators)) {
++						proven.push_back({guard, safe}); break;
++					}
++			}
++		}
++		// Do not mutate CFG while proofs still use the original dominance graph.
++		for (auto item : proven) {
++			item.first->setCondition(llvm::ConstantInt::get(
++					llvm::Type::getInt1Ty(module->getContext()), item.second == 0));
++		}
++	}
++}
++} }
+diff --git a/deps/retdec/retdec/src/bin2llvmir/optimizations/idioms/idioms_analysis.cpp b/deps/retdec/retdec/src/bin2llvmir/optimizations/idioms/idioms_analysis.cpp
+index cc1e82e..86e5023 100644
+--- a/deps/retdec/retdec/src/bin2llvmir/optimizations/idioms/idioms_analysis.cpp
++++ b/deps/retdec/retdec/src/bin2llvmir/optimizations/idioms/idioms_analysis.cpp
+@@ -228,8 +228,11 @@ bool IdiomsAnalysis::doAnalysis(Function & f, Pass * p) {
+ 
+ 		// all arch
+ 		// all compilers
+-		change_made |= analyse(bb, &IdiomsCommon::exchangeBitShiftUDiv,
+-									"IdiomsCommon::exchangeBitShiftUDiv");
++		// Keep MIPS high-product extraction as shifts. A wide division
++		// prevents the original compiler from selecting native HI/LO code.
++		if (arch != ARCH_MIPS)
++			change_made |= analyse(bb, &IdiomsCommon::exchangeBitShiftUDiv,
++										"IdiomsCommon::exchangeBitShiftUDiv");
+ 
+ 		// all arch
+ 		// all compilers
+diff --git a/deps/retdec/retdec/src/bin2llvmir/optimizations/inst_opt/inst_opt.cpp b/deps/retdec/retdec/src/bin2llvmir/optimizations/inst_opt/inst_opt.cpp
+index 9f66765..ca9914c 100644
+--- a/deps/retdec/retdec/src/bin2llvmir/optimizations/inst_opt/inst_opt.cpp
++++ b/deps/retdec/retdec/src/bin2llvmir/optimizations/inst_opt/inst_opt.cpp
+@@ -293,36 +293,6 @@ bool xor_i1(llvm::Instruction* insn)
+ 	return true;
+ }
+ 
+-/**
+- * a = and i1 x, y
+- *   =>
+- * a = icmp eq i1 x, y
+- */
+-bool and_i1(llvm::Instruction* insn)
+-{
+-	Value* op0;
+-	Value* op1;
+-
+-	if (!(match(insn, m_And(m_Value(op0), m_Value(op1)))
+-			&& insn->getType()->isIntegerTy(1)))
+-	{
+-		return false;
+-	}
+-
+-	auto* cmp = CmpInst::Create(
+-			Instruction::ICmp,
+-			ICmpInst::ICMP_EQ,
+-			op0,
+-			op1,
+-			"",
+-			insn);
+-	cmp->takeName(insn);
+-	insn->replaceAllUsesWith(cmp);
+-	insn->eraseFromParent();
+-
+-	return true;
+-}
+-
+ /**
+  * a = add x, c1
+  * b = add a, c2
+@@ -551,7 +521,6 @@ std::vector<bool (*)(llvm::Instruction*)> optimizations =
+ 		&xorLoadXX,
+ 		&xorXX,
+ 		&xor_i1,
+-		&and_i1,
+ 		&orAndLoadXX,
+ 		&orAndXX,
+ 		&addSequence,
+diff --git a/deps/retdec/retdec/src/bin2llvmir/optimizations/param_return/param_return.cpp b/deps/retdec/retdec/src/bin2llvmir/optimizations/param_return/param_return.cpp
+index 48d4d09..cf88e42 100644
+--- a/deps/retdec/retdec/src/bin2llvmir/optimizations/param_return/param_return.cpp
++++ b/deps/retdec/retdec/src/bin2llvmir/optimizations/param_return/param_return.cpp
+@@ -296,6 +296,16 @@ void ParamReturn::collectExtraData(DataFlowEntry* dataflow) const
+ 		{
+ 			auto* t = llvm_utils::stringToLlvmTypeDefault(
+ 					_module, a.type.getLlvmIr());
++			// A supplied narrow prototype is not evidence that incoming MIPS
++			// registers are already extended. Keep decoded argument registers
++			// full-width so ANDI/truncation/sign-extension stays in the body.
++			// Do not change debug/LTI declarations, pointers, or external stubs.
++			if (config.architecture.isMipsOrPic32()
++					&& !fnc->isDeclaration() && t->isIntegerTy()
++					&& t->getIntegerBitWidth() < _abi->getDefaultType()->getBitWidth())
++			{
++				t = _abi->getDefaultType();
++			}
+ 			if (!t->isSized())
+ 			{
+ 				continue;
+@@ -1059,6 +1069,13 @@ void ParamReturn::applyToIr(DataFlowEntry& de)
+ 		cf->callingConvention = de.getCallingConvention();
+ 	}
+ 
++	// modifyFunction rebuilds config parameters with machine-register types.
++	// Keep source type metadata independently for the late C recovery pass.
++	std::vector<std::string> sourceTypes;
++	if (cf) {
++		for (const auto& parameter : cf->parameters)
++			sourceTypes.push_back(parameter.type.getCType());
++	}
+ 	IrModifier irm(_module, _config);
+ 	auto* newFnc = irm.modifyFunction(
+ 			fnc,
+@@ -1071,6 +1088,14 @@ void ParamReturn::applyToIr(DataFlowEntry& de)
+ 			definitionArgs,
+ 			de.argNames()).first;
+ 
++	if (auto* updated = _config->getConfigFunction(newFnc)) {
++		std::size_t index = 0;
++		for (auto& parameter : updated->parameters) {
++			if (index < sourceTypes.size())
++				parameter.type.setCType(sourceTypes[index]);
++			++index;
++		}
++	}
+ 	de.setCalledValue(newFnc);
+ }
+ 
+diff --git a/deps/retdec/retdec/src/bin2llvmir/optimizations/stack/stack.cpp b/deps/retdec/retdec/src/bin2llvmir/optimizations/stack/stack.cpp
+index 42e5e91..c2a3b06 100644
+--- a/deps/retdec/retdec/src/bin2llvmir/optimizations/stack/stack.cpp
++++ b/deps/retdec/retdec/src/bin2llvmir/optimizations/stack/stack.cpp
+@@ -4,7 +4,11 @@
+ * @copyright (c) 2017 Avast Software, licensed under the MIT license
+ */
+ 
++#include <algorithm>
++#include <vector>
++
+ #include <llvm/IR/Constants.h>
++#include <llvm/IR/IRBuilder.h>
+ #include <llvm/IR/Function.h>
+ #include <llvm/IR/Instruction.h>
+ #include <llvm/IR/Instructions.h>
+@@ -69,6 +73,8 @@ bool StackAnalysis::run()
+ 		return false;
+ 	}
+ 
++	_indexedStackFunctions.clear();
++	_toRemove.clear();
+ 	ReachingDefinitionsAnalysis RDA;
+ 	RDA.runOnModule(*_module, _abi);
+ 
+@@ -124,6 +130,10 @@ bool StackAnalysis::run()
+ 	}
+ 
+ 	IrModifier::eraseUnusedInstructionsRecursive(_toRemove);
++	for (auto* function : _indexedStackFunctions)
++	{
++		coalesceIndexedStack(*function);
++	}
+ 
+ 	return false;
+ }
+@@ -167,6 +177,16 @@ void StackAnalysis::handleInstruction(
+ 	auto* ci = dyn_cast_or_null<ConstantInt>(root.value);
+ 	if (ci == nullptr)
+ 	{
++		// Fixed-offset slots must share storage with unresolved indexed
++		// accesses derived from SP. Otherwise aliasing is lost downstream.
++		auto* load = dyn_cast<LoadInst>(inst);
++		auto* store = dyn_cast<StoreInst>(inst);
++		if (_config->getConfig().architecture.isMipsOrPic32()
++				&& ((load && load->getPointerOperand() == val)
++					|| (store && store->getPointerOperand() == val)))
++		{
++			_indexedStackFunctions.insert(inst->getFunction());
++		}
+ 		return;
+ 	}
+ 
+@@ -246,6 +266,56 @@ void StackAnalysis::handleInstruction(
+ 	}
+ }
+ 
++void StackAnalysis::coalesceIndexedStack(llvm::Function& function)
++{
++	std::vector<std::pair<AllocaInst*, int64_t>> slots;
++	int64_t begin = 0;
++	int64_t end = 0;
++	const auto& layout = _module->getDataLayout();
++	for (auto& inst : function.getEntryBlock())
++	{
++		auto* slot = dyn_cast<AllocaInst>(&inst);
++		auto offset = slot ? _config->getStackVariableOffset(slot) : std::nullopt;
++		if (!offset || !slot->getAllocatedType()->isSized())
++		{
++			continue;
++		}
++		auto* count = dyn_cast<ConstantInt>(slot->getArraySize());
++		if (!count || !count->isOne())
++		{
++			return;
++		}
++		const int64_t size = layout.getTypeAllocSize(slot->getAllocatedType());
++		begin = std::min(begin, static_cast<int64_t>(*offset));
++		end = std::max(end, static_cast<int64_t>(*offset) + size);
++		slots.emplace_back(slot, *offset);
++	}
++	if (slots.empty() || end <= begin || end - begin > 1024 * 1024)
++	{
++		return;
++	}
++
++	// A byte array preserves overlapping and differently-sized accesses.
++	// GEPs are deliberately not inbounds: the recovered range is not proof
++	// that every runtime index stays within the statically observed frame.
++	IRBuilder<> builder(&*function.getEntryBlock().getFirstInsertionPt());
++	auto* bytes = ArrayType::get(builder.getInt8Ty(), end - begin);
++	auto* frame = builder.CreateAlloca(bytes, nullptr, "indexed_stack_frame");
++	// Do not invent alignment facts that the C emitter cannot preserve.
++	frame->setAlignment(1);
++	for (auto& entry : slots)
++	{
++		auto* pointer = builder.CreateGEP(frame,
++				{builder.getInt32(0), builder.getInt32(entry.second - begin)});
++		auto* typed = builder.CreateBitCast(pointer, entry.first->getType());
++		entry.first->replaceAllUsesWith(typed);
++	}
++	for (auto& entry : slots)
++	{
++		entry.first->eraseFromParent();
++	}
++}
++
+ std::optional<int> StackAnalysis::getBaseOffset(SymbolicTree& root)
+ {
+ 	std::optional<int> baseOffset;
+diff --git a/deps/retdec/retdec/src/bin2llvmir/optimizations/value_protect/value_protect.cpp b/deps/retdec/retdec/src/bin2llvmir/optimizations/value_protect/value_protect.cpp
+index edf2fe8..b2f2b64 100644
+--- a/deps/retdec/retdec/src/bin2llvmir/optimizations/value_protect/value_protect.cpp
++++ b/deps/retdec/retdec/src/bin2llvmir/optimizations/value_protect/value_protect.cpp
+@@ -14,6 +14,7 @@
+ #include "retdec/bin2llvmir/providers/names.h"
+ #include "retdec/bin2llvmir/utils/ir_modifier.h"
+ #include "retdec/bin2llvmir/utils/llvm.h"
++#include "retdec/bin2llvmir/utils/counter_provenance.h"
+ 
+ using namespace retdec::utils;
+ using namespace llvm;
+@@ -323,6 +324,8 @@ bool ValueProtect::protect()
+ 	changed |= protectStack();
+ 	changed |= protectRegisters();
+ 	changed |= protectLoadStores();
++	if (_config->getConfig().architecture.isMipsOrPic32())
++		changed |= counter_provenance::capture(*_module);
+ 
+ 	return changed;
+ }
+diff --git a/deps/retdec/retdec/src/bin2llvmir/providers/config.cpp b/deps/retdec/retdec/src/bin2llvmir/providers/config.cpp
+index c47421e..4a7f86b 100644
+--- a/deps/retdec/retdec/src/bin2llvmir/providers/config.cpp
++++ b/deps/retdec/retdec/src/bin2llvmir/providers/config.cpp
+@@ -325,6 +325,18 @@ const retdec::common::Object* Config::insertGlobalVariable(
+ 	{
+ 		cgv.type.setIsWideString(true);
+ 	}
++	// The rebuild cannot carry the supplied spelling or qualification.
++	const retdec::common::Object* previous =
++			_configDB.globals.getObjectByName(cgv.getName());
++	if (previous == nullptr)
++	{
++		previous = _configDB.globals.getObjectByAddress(address);
++	}
++	if (previous != nullptr)
++	{
++		cgv.type.setCType(previous->type.getCType());
++		cgv.type.setIsVolatile(previous->type.isVolatile());
++	}
+ 	auto p = _configDB.globals.insert(cgv);
+ 
+ 	return &(*p.first);
+diff --git a/deps/retdec/retdec/src/bin2llvmir/utils/ir_modifier.cpp b/deps/retdec/retdec/src/bin2llvmir/utils/ir_modifier.cpp
+index b44fc1b..e1de24a 100644
+--- a/deps/retdec/retdec/src/bin2llvmir/utils/ir_modifier.cpp
++++ b/deps/retdec/retdec/src/bin2llvmir/utils/ir_modifier.cpp
+@@ -4,7 +4,10 @@
+  * @copyright (c) 2017 Avast Software, licensed under the MIT license
+  */
+ 
++#include <set>
++
+ #include <llvm/IR/InstIterator.h>
++#include <llvm/IR/Instructions.h>
+ 
+ #include "retdec/utils/string.h"
+ #include "retdec/bin2llvmir/providers/abi/abi.h"
+@@ -416,6 +419,41 @@ Constant* detectGlobalVariableInitializerCycle(
+ 	return c;
+ }
+ 
++// Resolves the object a memory access designates through pointer casts and
++// zero-offset indexing; a non-zero index selects a different object.
++GlobalVariable* accessedObject(Value* value)
++{
++	if (auto* gv = dyn_cast<GlobalVariable>(value))
++	{
++		return gv;
++	}
++	if (auto* cast = dyn_cast<CastInst>(value))
++	{
++		return accessedObject(cast->getOperand(0));
++	}
++	if (auto* expr = dyn_cast<ConstantExpr>(value))
++	{
++		if (expr->isCast())
++		{
++			return accessedObject(expr->getOperand(0));
++		}
++		return nullptr;
++	}
++	if (auto* gep = dyn_cast<GetElementPtrInst>(value))
++	{
++		for (auto index = gep->idx_begin(); index != gep->idx_end(); ++index)
++		{
++			auto* constant = dyn_cast<ConstantInt>(index->get());
++			if (!constant || !constant->isZero())
++			{
++				return nullptr;
++			}
++		}
++		return accessedObject(gep->getPointerOperand());
++	}
++	return nullptr;
++}
++
+ bool globalVariableCanBeCreated(
+ 		Module* module,
+ 		Config* config,
+@@ -427,7 +465,9 @@ bool globalVariableCanBeCreated(
+ 	{
+ 		return false;
+ 	}
+-	if (!objf->getImage()->hasDataOnAddress(addr))
++	// Keyed on the declaration: image absence alone never creates a global.
++	if (!objf->getImage()->hasDataOnAddress(addr)
++			&& !IrModifier::isDeclaredVolatileObject(config, addr))
+ 	{
+ 		return false;
+ 	}
+@@ -502,6 +542,69 @@ IrModifier::IrModifier(llvm::Module* m, Config* c) :
+ 
+ }
+ 
++/**
++ * @return True when @a config declares a volatile object on @a addr.
++ */
++bool IrModifier::isDeclaredVolatileObject(
++		Config* config,
++		retdec::common::Address addr)
++{
++	if (config == nullptr)
++	{
++		return false;
++	}
++	const auto* object = config->getConfigGlobalVariable(addr);
++	return object != nullptr && object->type.isVolatile();
++}
++
++/**
++ * Marks every load/store that accesses a declared volatile object. The
++ * declaration qualifies the object, so the accesses to it must survive the
++ * destructive LLVM passes. Accesses through the object to its pointee are not
++ * marked.
++ */
++void IrModifier::markDeclaredVolatileAccesses(llvm::Module* module, Config* config)
++{
++	if (module == nullptr || config == nullptr)
++	{
++		return;
++	}
++
++	std::set<GlobalVariable*> declared;
++	for (auto& gv : module->globals())
++	{
++		const auto* object = config->getConfigGlobalVariable(&gv);
++		if (object != nullptr && object->type.isVolatile())
++		{
++			declared.insert(&gv);
++		}
++	}
++	if (declared.empty())
++	{
++		return;
++	}
++
++	for (auto& fnc : *module)
++	for (auto& bb : fnc)
++	for (auto& inst : bb)
++	{
++		if (auto* load = dyn_cast<LoadInst>(&inst))
++		{
++			if (declared.count(accessedObject(load->getPointerOperand())))
++			{
++				load->setVolatile(true);
++			}
++		}
++		else if (auto* store = dyn_cast<StoreInst>(&inst))
++		{
++			if (declared.count(accessedObject(store->getPointerOperand())))
++			{
++				store->setVolatile(true);
++			}
++		}
++	}
++}
++
+ IrModifier::FunctionPair IrModifier::renameFunction(
+ 		llvm::Function* fnc,
+ 		const std::string& fncName)
+@@ -667,6 +770,18 @@ GlobalVariable* IrModifier::getGlobalVariable(
+ 			c,
+ 			n);
+ 
++	if (c == nullptr && isDeclaredVolatileObject(_config, addr))
++	{
++		// Stay a declaration: allocating storage would define another object.
++		_config->insertGlobalVariable(
++				gv,
++				addr,
++				isFromDebug,
++				realName,
++				cryptoDesc);
++		return gv;
++	}
++
+ 	if (c == nullptr)
+ 	{
+ 		c = objf->getConstant(_config, dbgf, addr);
+@@ -771,6 +886,8 @@ llvm::Value* IrModifier::changeObjectDeclarationType(
+ 					ecgv->getStorage());
+ 			cgv.type.setLlvmIr(
+ 					llvmObjToString(ogv->getType()->getPointerElementType()));
++			cgv.type.setCType(ecgv->type.getCType());
++			cgv.type.setIsVolatile(ecgv->type.isVolatile());
+ 			cgv.type.setIsWideString(wideString);
+ 			_config->getConfig().globals.insert(cgv);
+ 		}
+diff --git a/deps/retdec/retdec/src/capstone2llvmir/CMakeLists.txt b/deps/retdec/retdec/src/capstone2llvmir/CMakeLists.txt
+index 84fef38..fbe7b9a 100644
+--- a/deps/retdec/retdec/src/capstone2llvmir/CMakeLists.txt
++++ b/deps/retdec/retdec/src/capstone2llvmir/CMakeLists.txt
+@@ -6,6 +6,7 @@ add_library(capstone2llvmir STATIC
+ 	arm64/arm64.cpp
+ 	mips/mips_init.cpp
+ 	mips/mips.cpp
++	mips/stateful.cpp
+ 	powerpc/powerpc_init.cpp
+ 	powerpc/powerpc.cpp
+ 	x86/x86_init.cpp
+@@ -17,6 +18,11 @@ add_library(capstone2llvmir STATIC
+ )
+ add_library(retdec::capstone2llvmir ALIAS capstone2llvmir)
+ 
++# Explicit experimental entry point; not installed and not used by normal pdzo.
++add_executable(retdec-mips-stateful EXCLUDE_FROM_ALL mips/stateful_main.cpp)
++target_link_libraries(retdec-mips-stateful PRIVATE retdec::capstone2llvmir
++	-Wl,--whole-archive retdec::llvmir2hll -Wl,--no-whole-archive)
++
+ target_compile_features(capstone2llvmir PUBLIC cxx_std_17)
+ 
+ target_include_directories(capstone2llvmir
+diff --git a/deps/retdec/retdec/src/capstone2llvmir/mips/mips.cpp b/deps/retdec/retdec/src/capstone2llvmir/mips/mips.cpp
+index f8b6d49..ca5d003 100644
+--- a/deps/retdec/retdec/src/capstone2llvmir/mips/mips.cpp
++++ b/deps/retdec/retdec/src/capstone2llvmir/mips/mips.cpp
+@@ -765,50 +765,18 @@ void Capstone2LlvmIrTranslatorMips_impl::translateCondBranchBinary(cs_insn* i, c
+  */
+ void Capstone2LlvmIrTranslatorMips_impl::translateBreak(cs_insn* i, cs_mips* mi, llvm::IRBuilder<>& irb)
+ {
+-	// TODO: Modeled as empty instruction in the original semantics.
+-	// Causes problems in some integration tests
+-	// (e.g. break 0,7 in gcd.mips.pspgcc-4.3.5.O0.g.elf)
+-	// because it is sometimes used in the bodies of decompiled functions.
+-	// Right now, we disable it here, but use a better solution in future --
+-	// it should be translated, and if decompiler wants it can remove it later.
+-	// Unit tests were also disabled, re-enable when fixed.
+-	//
+-	return;
+-
+-	EXPECT_IS_EXPR(i, mi, irb, (mi->op_count < 3));
+-
+-	if (mi->op_count == 0)
+-	{
+-		op0 = llvm::ConstantInt::get(getDefaultType(), 0);
+-	}
+-	else if (mi->op_count == 1)
+-	{
+-		op0 = loadOpUnary(mi, irb);
+-	}
+-	else if (mi->op_count == 2)
+-	{
+-		std::tie(op0, op1) = loadOpBinary(mi, irb);
+-	}
+-
+-	op0 = irb.CreateZExtOrTrunc(op0, getDefaultType());
+-	if (op1)
+-	{
+-		op1 = irb.CreateZExtOrTrunc(op1, getDefaultType());
+-
+-		llvm::Function* fnc = getPseudoAsmFunction(
+-				i,
+-				irb.getVoidTy(),
+-				llvm::ArrayRef<llvm::Type*>{op0->getType(), op1->getType()});
+-		irb.CreateCall(fnc, llvm::ArrayRef<llvm::Value*>{op0, op1});
+-	}
+-	else
+-	{
+-		llvm::Function* fnc = getPseudoAsmFunction(
+-				i,
+-				irb.getVoidTy(),
+-				llvm::ArrayRef<llvm::Type*>{op0->getType()});
+-		irb.CreateCall(fnc, llvm::ArrayRef<llvm::Value*>{op0});
+-	}
++	// BREAK is an exception boundary, never an empty instruction or a host trap.
++	// The runtime must transfer control using the original machine context.
++	// The decoder supplies BD for instructions translated in a branch delay slot.
++	auto* word = getDefaultType();
++	auto* fnc = getPseudoAsmFunction(i, irb.getVoidTy(),
++			llvm::ArrayRef<llvm::Type*>{word, word, word, word},
++			"__retdec_mips_break");
++	fnc->addFnAttr(llvm::Attribute::NoReturn);
++	irb.CreateCall(fnc, llvm::ArrayRef<llvm::Value*>{
++			llvm::ConstantInt::get(word, i->address),
++			llvm::ConstantInt::get(word, 0),
++			loadRegister(MIPS_REG_HI, irb), loadRegister(MIPS_REG_LO, irb)});
+ }
+ 
+ /**
+@@ -929,6 +897,42 @@ void Capstone2LlvmIrTranslatorMips_impl::translateClz(cs_insn* i, cs_mips* mi, l
+ 	storeOp(mi->operands[0], ctlz, irb);
+ }
+ 
++// Word merge operations use an aligned memory word and preserve the other
++// bytes. Register merge reads are commit-time inputs, not GPR operand reads;
++// the MIPS I delay pass must distinguish them from effective-address reads.
++void Capstone2LlvmIrTranslatorMips_impl::translateMergeMemory(cs_insn* i, cs_mips* mi, llvm::IRBuilder<>& irb)
++{
++	EXPECT_IS_BINARY(i, mi, irb);
++	if (getDefaultType()->getIntegerBitWidth() != 32
++			|| mi->operands[0].type != MIPS_OP_REG || mi->operands[1].type != MIPS_OP_MEM)
++		throw GenericError("word merge requires a 32-bit MIPS register/memory operand");
++	auto* address = loadOp(mi->operands[1], irb, nullptr, true);
++	auto* byte = irb.CreateAnd(address, irb.getInt32(3));
++	if (_module->getDataLayout().isBigEndian())
++		byte = irb.CreateXor(byte, irb.getInt32(3));
++	bool left = i->id == MIPS_INS_LWL || i->id == MIPS_INS_SWL;
++	bool load = i->id == MIPS_INS_LWL || i->id == MIPS_INS_LWR;
++	auto* shift = irb.CreateShl(left ? irb.CreateSub(irb.getInt32(3), byte) : byte, irb.getInt32(3));
++	auto* aligned = irb.CreateAnd(address, irb.getInt32(0xfffffffc));
++	auto* pointer = irb.CreateIntToPtr(aligned, irb.getInt32Ty()->getPointerTo());
++	auto* memory = irb.CreateLoad(pointer);
++	auto* value = loadRegister(mi->operands[0].reg, irb);
++	if (load) {
++		if (auto* merge = llvm::dyn_cast<llvm::LoadInst>(value))
++			merge->setMetadata("retdec.mips.merge", llvm::MDNode::get(_module->getContext(), {}));
++		auto* mask = left ? irb.CreateShl(irb.getInt32(0xffffffff), shift)
++				: irb.CreateLShr(irb.getInt32(0xffffffff), shift);
++		auto* incoming = left ? irb.CreateShl(memory, shift) : irb.CreateLShr(memory, shift);
++		storeRegister(mi->operands[0].reg,
++				irb.CreateOr(incoming, irb.CreateAnd(value, irb.CreateNot(mask))), irb);
++	} else {
++		auto* mask = left ? irb.CreateLShr(irb.getInt32(0xffffffff), shift)
++				: irb.CreateShl(irb.getInt32(0xffffffff), shift);
++		auto* incoming = left ? irb.CreateLShr(value, shift) : irb.CreateShl(value, shift);
++		irb.CreateStore(irb.CreateOr(incoming, irb.CreateAnd(memory, irb.CreateNot(mask))), pointer);
++	}
++}
++
+ /**
+  * MIPS_INS_DIV
+  */
+@@ -948,10 +952,22 @@ void Capstone2LlvmIrTranslatorMips_impl::translateDiv(cs_insn* i, cs_mips* mi, l
+ 
+ 		std::tie(op0, op1) = loadOpBinary(mi, irb, eOpConv::SEXT_TRUNC_OR_BITCAST);
+ 
+-		auto* div = irb.CreateSDiv(op0, op1);
+-		storeRegister(MIPS_REG_LO, div, irb);
+-		auto* rem = irb.CreateSRem(op0, op1);
+-		storeRegister(MIPS_REG_HI, rem, irb);
++		// R3000 DIV defines LO/HI even for zero divisors and INT_MIN / -1.
++		// Make the LLVM operation safe before selecting the architectural result.
++		auto* zero = llvm::ConstantInt::get(op0->getType(), 0);
++		auto* one = llvm::ConstantInt::get(op0->getType(), 1);
++		auto* minusOne = llvm::ConstantInt::getSigned(op0->getType(), -1);
++		auto* minimum = llvm::ConstantInt::get(op0->getType(),
++				llvm::APInt::getSignedMinValue(op0->getType()->getIntegerBitWidth()));
++		auto* isZero = irb.CreateICmpEQ(op1, zero);
++		auto* overflow = irb.CreateAnd(irb.CreateICmpEQ(op0, minimum),
++				irb.CreateICmpEQ(op1, minusOne));
++		auto* safeDivisor = irb.CreateSelect(irb.CreateOr(isZero, overflow), one, op1);
++		auto* quotient = irb.CreateSDiv(op0, safeDivisor);
++		auto* remainder = irb.CreateSRem(op0, safeDivisor);
++		auto* zeroQuotient = irb.CreateSelect(irb.CreateICmpSLT(op0, zero), one, minusOne);
++		storeRegister(MIPS_REG_LO, irb.CreateSelect(isZero, zeroQuotient, quotient), irb);
++		storeRegister(MIPS_REG_HI, irb.CreateSelect(isZero, op0, remainder), irb);
+ 	}
+ }
+ 
+@@ -963,10 +979,15 @@ void Capstone2LlvmIrTranslatorMips_impl::translateDivu(cs_insn* i, cs_mips* mi,
+ 	EXPECT_IS_BINARY(i, mi, irb);
+ 
+ 	std::tie(op0, op1) = loadOpBinary(mi, irb, eOpConv::SEXT_TRUNC_OR_BITCAST);
+-	auto* div = irb.CreateUDiv(op0, op1);
+-	storeRegister(MIPS_REG_LO, div, irb);
+-	auto* rem = irb.CreateURem(op0, op1);
+-	storeRegister(MIPS_REG_HI, rem, irb);
++	auto* zero = llvm::ConstantInt::get(op0->getType(), 0);
++	auto* one = llvm::ConstantInt::get(op0->getType(), 1);
++	auto* isZero = irb.CreateICmpEQ(op1, zero);
++	auto* safeDivisor = irb.CreateSelect(isZero, one, op1);
++	auto* quotient = irb.CreateUDiv(op0, safeDivisor);
++	auto* remainder = irb.CreateURem(op0, safeDivisor);
++	storeRegister(MIPS_REG_LO, irb.CreateSelect(isZero,
++			llvm::ConstantInt::getSigned(op0->getType(), -1), quotient), irb);
++	storeRegister(MIPS_REG_HI, irb.CreateSelect(isZero, op0, remainder), irb);
+ }
+ 
+ /**
+@@ -1680,6 +1701,12 @@ void Capstone2LlvmIrTranslatorMips_impl::translateSll(cs_insn* i, cs_mips* mi, l
+ 	EXPECT_IS_BINARY_OR_TERNARY(i, mi, irb);
+ 
+ 	std::tie(op1, op2) = loadOpBinaryOrTernaryOp1Op2(mi, irb, eOpConv::ZEXT_TRUNC_OR_BITCAST);
++	// Word variable shifts use only the low five count bits. LLVM shifts
++	// by the operand width or more are poison, not MIPS wraparound shifts.
++	if (i->id == MIPS_INS_SLLV && op1->getType()->isIntegerTy(32))
++	{
++		op2 = irb.CreateAnd(op2, llvm::ConstantInt::get(op2->getType(), 31));
++	}
+ 	auto* shl = irb.CreateShl(op1, op2);
+ 	storeOp(mi->operands[0], shl, irb);
+ }
+@@ -1718,6 +1745,10 @@ void Capstone2LlvmIrTranslatorMips_impl::translateSra(cs_insn* i, cs_mips* mi, l
+ 	EXPECT_IS_BINARY_OR_TERNARY(i, mi, irb);
+ 
+ 	std::tie(op1, op2) = loadOpBinaryOrTernaryOp1Op2(mi, irb, eOpConv::ZEXT_TRUNC_OR_BITCAST);
++	if (i->id == MIPS_INS_SRAV && op1->getType()->isIntegerTy(32))
++	{
++		op2 = irb.CreateAnd(op2, llvm::ConstantInt::get(op2->getType(), 31));
++	}
+ 	auto* sra = irb.CreateAShr(op1, op2);
+ 	storeOp(mi->operands[0], sra, irb);
+ }
+@@ -1730,6 +1761,10 @@ void Capstone2LlvmIrTranslatorMips_impl::translateSrl(cs_insn* i, cs_mips* mi, l
+ 	EXPECT_IS_BINARY_OR_TERNARY(i, mi, irb);
+ 
+ 	std::tie(op1, op2) = loadOpBinaryOrTernaryOp1Op2(mi, irb, eOpConv::ZEXT_TRUNC_OR_BITCAST);
++	if (i->id == MIPS_INS_SRLV && op1->getType()->isIntegerTy(32))
++	{
++		op2 = irb.CreateAnd(op2, llvm::ConstantInt::get(op2->getType(), 31));
++	}
+ 	auto* shr = irb.CreateLShr(op1, op2);
+ 	storeOp(mi->operands[0], shr, irb);
+ }
+diff --git a/deps/retdec/retdec/src/capstone2llvmir/mips/mips_impl.h b/deps/retdec/retdec/src/capstone2llvmir/mips/mips_impl.h
+index e751d54..4365ff1 100644
+--- a/deps/retdec/retdec/src/capstone2llvmir/mips/mips_impl.h
++++ b/deps/retdec/retdec/src/capstone2llvmir/mips/mips_impl.h
+@@ -136,6 +136,7 @@ class Capstone2LlvmIrTranslatorMips_impl :
+ 		void translateJ(cs_insn* i, cs_mips* mi, llvm::IRBuilder<>& irb);
+ 		void translateJal(cs_insn* i, cs_mips* mi, llvm::IRBuilder<>& irb);
+ 		void translateLoadMemory(cs_insn* i, cs_mips* mi, llvm::IRBuilder<>& irb);
++		void translateMergeMemory(cs_insn* i, cs_mips* mi, llvm::IRBuilder<>& irb);
+ 		void translateLui(cs_insn* i, cs_mips* mi, llvm::IRBuilder<>& irb);
+ 		void translateMadd(cs_insn* i, cs_mips* mi, llvm::IRBuilder<>& irb);
+ 		void translateMaddf(cs_insn* i, cs_mips* mi, llvm::IRBuilder<>& irb);
+diff --git a/deps/retdec/retdec/src/capstone2llvmir/mips/mips_init.cpp b/deps/retdec/retdec/src/capstone2llvmir/mips/mips_init.cpp
+index ea69e7e..45b57b4 100644
+--- a/deps/retdec/retdec/src/capstone2llvmir/mips/mips_init.cpp
++++ b/deps/retdec/retdec/src/capstone2llvmir/mips/mips_init.cpp
+@@ -704,12 +704,12 @@ Capstone2LlvmIrTranslatorMips_impl::_i2fm =
+ 		{MIPS_INS_LWC1, &Capstone2LlvmIrTranslatorMips_impl::translateLoadMemory},
+ 		{MIPS_INS_LWC2, nullptr},
+ 		{MIPS_INS_LWC3, nullptr},
+-		{MIPS_INS_LWL, &Capstone2LlvmIrTranslatorMips_impl::translatePseudoAsmOp0FncOp1},
++		{MIPS_INS_LWL, &Capstone2LlvmIrTranslatorMips_impl::translateMergeMemory},
+ 		{MIPS_INS_LWM16, nullptr},
+ 		{MIPS_INS_LWM32, nullptr},
+ 		{MIPS_INS_LWPC, nullptr},
+ 		{MIPS_INS_LWP, nullptr},
+-		{MIPS_INS_LWR, &Capstone2LlvmIrTranslatorMips_impl::translatePseudoAsmOp0FncOp1},
++		{MIPS_INS_LWR, &Capstone2LlvmIrTranslatorMips_impl::translateMergeMemory},
+ 		{MIPS_INS_LWUPC, nullptr},
+ 		{MIPS_INS_LWU, &Capstone2LlvmIrTranslatorMips_impl::translateLoadMemory},
+ 		{MIPS_INS_LWX, nullptr},
+@@ -912,11 +912,11 @@ Capstone2LlvmIrTranslatorMips_impl::_i2fm =
+ 		{MIPS_INS_SWC1, &Capstone2LlvmIrTranslatorMips_impl::translateStoreMemory},
+ 		{MIPS_INS_SWC2, nullptr},
+ 		{MIPS_INS_SWC3, nullptr},
+-		{MIPS_INS_SWL, &Capstone2LlvmIrTranslatorMips_impl::translatePseudoAsmFncOp0Op1},
++		{MIPS_INS_SWL, &Capstone2LlvmIrTranslatorMips_impl::translateMergeMemory},
+ 		{MIPS_INS_SWM16, nullptr},
+ 		{MIPS_INS_SWM32, nullptr},
+ 		{MIPS_INS_SWP, nullptr},
+-		{MIPS_INS_SWR, &Capstone2LlvmIrTranslatorMips_impl::translatePseudoAsmFncOp0Op1},
++		{MIPS_INS_SWR, &Capstone2LlvmIrTranslatorMips_impl::translateMergeMemory},
+ 		{MIPS_INS_SWXC1, nullptr},
+ 		{MIPS_INS_SYNC, nullptr},
+ 		{MIPS_INS_SYNCI, nullptr},
+diff --git a/deps/retdec/retdec/src/capstone2llvmir/mips/stateful.cpp b/deps/retdec/retdec/src/capstone2llvmir/mips/stateful.cpp
+new file mode 100644
+index 0000000..53cf613
+--- /dev/null
++++ b/deps/retdec/retdec/src/capstone2llvmir/mips/stateful.cpp
+@@ -0,0 +1,365 @@
++#include "retdec/capstone2llvmir/mips/stateful.h"
++#include "retdec/capstone2llvmir/capstone2llvmir.h"
++
++#include <stdexcept>
++#include <vector>
++#include <llvm/IR/IRBuilder.h>
++#include <llvm/IR/Module.h>
++#include <llvm/IR/Verifier.h>
++
++namespace retdec { namespace capstone2llvmir {
++
++llvm::Function* translateMips32Stateful(llvm::Module& module,
++        const uint8_t* bytes, std::size_t size, uint32_t base,
++        const std::string& name, bool biosBus)
++{
++    if (!bytes || !size || size % 4 || base % 4 || size > 0x100000000ULL - base
++            || !module.empty())
++        throw std::invalid_argument("stateful MIPS needs an empty module and aligned code");
++    // Reject unsupported opcodes before mutating the module. All memory uses
++    // explicit caller buffers; no guest address becomes a host pointer.
++    std::vector<uint32_t> words;
++    for (std::size_t offset = 0; offset < size; offset += 4) {
++        uint32_t w = uint32_t(bytes[offset]) | uint32_t(bytes[offset+1]) << 8
++                | uint32_t(bytes[offset+2]) << 16 | uint32_t(bytes[offset+3]) << 24;
++        unsigned op = w >> 26, sub = w & 63, rs = (w >> 21) & 31;
++        bool special = op == 0 && (sub == 0 || sub == 2 || sub == 3 || sub == 4
++                || sub == 6 || sub == 7 || sub == 8 || sub == 9 || sub == 12 || sub == 13
++                || (sub >= 16 && sub <= 19) || (sub >= 24 && sub <= 27)
++                || (sub >= 32 && sub <= 39) || sub == 42 || sub == 43);
++        bool cop0 = op == 16 && (rs == 0 || rs == 2 || rs == 4 || rs == 6
++                || w == 0x42000010);
++        unsigned rt = (w >> 16) & 31;
++        bool regimm = op == 1 && (rt == 0 || rt == 1 || rt == 16 || rt == 17);
++        bool memory = (op >= 32 && op <= 38) || op == 40 || op == 41
++                || op == 42 || op == 43 || op == 46;
++        if (!(special || regimm || (op >= 2 && op <= 15) || cop0 || memory))
++            throw std::invalid_argument("unsupported stateful MIPS instruction at " + std::to_string(base+offset));
++        words.push_back(w);
++    }
++    auto translator = Capstone2LlvmIrTranslator::createMips32(&module);
++    auto& context = module.getContext();
++    llvm::IRBuilder<> b(context);
++    auto* word = b.getInt32Ty();
++    std::vector<llvm::Type*> parameters = {word->getPointerTo(), b.getInt8PtrTy()};
++    if (biosBus) {
++        parameters.push_back(b.getInt8PtrTy()); // immutable 512 KiB ROM
++        parameters.push_back(b.getInt8PtrTy()); // writable 1 KiB scratchpad
++    }
++    auto* fn = llvm::Function::Create(llvm::FunctionType::get(word,
++            parameters, false),
++            llvm::GlobalValue::ExternalLinkage, name, &module);
++    auto* entry = llvm::BasicBlock::Create(context, "dispatch", fn);
++    b.SetInsertPoint(entry);
++    auto args = fn->arg_begin();
++    auto* state = &*args++; state->setName("state");
++    auto* ram = &*args++; ram->setName("ram");
++    llvm::Value* rom = nullptr;
++    llvm::Value* scratch = nullptr;
++    if (biosBus) {
++        rom = &*args++; rom->setName("rom");
++        scratch = &*args; scratch->setName("scratch");
++    }
++    std::vector<llvm::Value*> slots;
++    for (unsigned i = 0; i < (biosBus ? 75u : 73u); ++i)
++        slots.push_back(b.CreateGEP(state, b.getInt32(i)));
++    auto load = [&](unsigned i) { return b.CreateLoad(slots[i]); };
++    auto store = [&](unsigned i, llvm::Value* value) { b.CreateStore(value, slots[i]); };
++    auto* pc = load(34);
++    auto* branchActive = b.CreateICmpNE(load(67), b.getInt32(0));
++    auto* branchTarget = load(68);
++    auto* pending = load(69);
++    auto* pendingValue = load(70);
++    auto* pendingActive = b.CreateICmpNE(load(71), b.getInt32(0));
++    auto* pendingMask = load(72);
++    auto* missing = llvm::BasicBlock::Create(context, "unmapped", fn);
++    auto* dispatch = b.CreateSwitch(pc, missing, words.size());
++    b.SetInsertPoint(missing); b.CreateRet(b.getInt32(2));
++
++    for (std::size_t index = 0; index < words.size(); ++index) {
++        uint32_t w = words[index], address = base + index * 4;
++        unsigned op = w >> 26, sub = w & 63, rs = (w >> 21) & 31;
++        unsigned rt = (w >> 16) & 31, rd = (w >> 11) & 31;
++        bool branch = op == 1 || op == 2 || op == 3 || (op >= 4 && op <= 7)
++                || (op == 0 && (sub == 8 || sub == 9));
++        auto* block = llvm::BasicBlock::Create(context, "pc_"+std::to_string(address), fn);
++        dispatch->addCase(b.getInt32(address), block); b.SetInsertPoint(block);
++        // R3000 nested branches are not represented by this initial state ABI.
++        if (branch) {
++            auto* valid = llvm::BasicBlock::Create(context, "branch", fn);
++            auto* reject = llvm::BasicBlock::Create(context, "unsupported_delay", fn);
++            b.CreateCondBr(branchActive, reject, valid);
++            b.SetInsertPoint(reject); b.CreateRet(b.getInt32(3)); b.SetInsertPoint(valid);
++        }
++        // Redux tests software interrupts after Status/Cause writes and RFE.
++        // Its delayed-PC overwrite on software IRQ in a taken slot is not a
++        // resumable exception. Reject before changing any caller state.
++        bool testsSoftwareIrq = op == 16 && (w == 0x42000010
++                || ((rs == 4 || rs == 6) && (rd == 12 || rd == 13)));
++        llvm::Value* softwareIrq = b.getInt1(false);
++        if (testsSoftwareIrq) {
++            llvm::Value* status = load(47);
++            llvm::Value* cause = load(48);
++            if (w == 0x42000010)
++                status = b.CreateOr(b.CreateAnd(status,b.getInt32(0xfffffff0)),
++                        b.CreateLShr(b.CreateAnd(status,b.getInt32(0x3c)),2));
++            else if (rd == 12) status = rt ? static_cast<llvm::Value*>(load(rt)) : b.getInt32(0);
++            else cause = b.CreateAnd(rt ? static_cast<llvm::Value*>(load(rt)) : b.getInt32(0),b.getInt32(~0xfc00u));
++            softwareIrq = b.CreateAnd(b.CreateICmpNE(b.CreateAnd(status,b.getInt32(1)),b.getInt32(0)),
++                    b.CreateICmpNE(b.CreateAnd(b.CreateAnd(status,cause),b.getInt32(0x300)),b.getInt32(0)));
++            auto* valid = llvm::BasicBlock::Create(context,"cp0_write",fn);
++            auto* reject = llvm::BasicBlock::Create(context,"unsupported_slot_irq",fn);
++            b.CreateCondBr(b.CreateAnd(branchActive,softwareIrq),reject,valid);
++            b.SetInsertPoint(reject); b.CreateRet(b.getInt32(3)); b.SetInsertPoint(valid);
++        }
++        bool memory = op >= 32;
++        llvm::Value* memoryAddress = nullptr;
++        llvm::Value* busPointer = ram;
++        llvm::Value* busOffset = nullptr;
++        llvm::Value* irqAccess = b.getInt1(false);
++        llvm::Value* irqStatusAccess = b.getInt1(false);
++        llvm::Value* misaligned = b.getInt1(false);
++        bool isLoad = op >= 32 && op <= 38;
++        bool merge = op == 34 || op == 38 || op == 42 || op == 46;
++        unsigned width = (op == 32 || op == 36 || op == 40) ? 1
++                : (op == 33 || op == 37 || op == 41) ? 2 : 4;
++        if (memory) {
++            memoryAddress = b.CreateAdd(rs ? static_cast<llvm::Value*>(load(rs)) : b.getInt32(0),
++                    b.getInt32(int32_t(int16_t(w))));
++            misaligned = merge ? b.getInt1(false) : b.CreateICmpNE(
++                    b.CreateAnd(memoryAddress,b.getInt32(width-1)),b.getInt32(0));
++            auto* physical = b.CreateAnd(memoryAddress,b.getInt32(0x1fffffff));
++            auto* segment = b.CreateAnd(memoryAddress,b.getInt32(0xe0000000));
++            auto* allowedSegment = b.CreateOr(b.CreateICmpEQ(segment,b.getInt32(0)),
++                    b.CreateOr(b.CreateICmpEQ(segment,b.getInt32(0x80000000)),
++                            b.CreateICmpEQ(segment,b.getInt32(0xa0000000))));
++            auto* validRam = b.CreateAnd(allowedSegment,
++                    b.CreateICmpULT(physical,b.getInt32(0x800000)));
++            busOffset = b.CreateAnd(physical,b.getInt32(0x1fffff));
++            llvm::Value* validBus = validRam;
++            if (biosBus) {
++                auto* validScratch = b.CreateAnd(allowedSegment,b.CreateAnd(
++                        b.CreateICmpUGE(physical,b.getInt32(0x1f800000)),
++                        b.CreateICmpULT(physical,b.getInt32(0x1f800400))));
++                auto* validRom = b.CreateAnd(allowedSegment,b.CreateAnd(
++                        b.CreateICmpUGE(physical,b.getInt32(0x1fc00000)),
++                        b.CreateICmpULT(physical,b.getInt32(0x1fc80000))));
++                irqStatusAccess = b.CreateICmpEQ(physical,b.getInt32(0x1f801070));
++                irqAccess = b.CreateAnd(allowedSegment,b.CreateOr(irqStatusAccess,
++                        b.CreateICmpEQ(physical,b.getInt32(0x1f801074))));
++                if (merge || width == 1) irqAccess = b.getInt1(false);
++                validBus = b.CreateOr(validBus,b.CreateOr(validScratch,irqAccess));
++                if (isLoad) validBus = b.CreateOr(validBus,validRom);
++                busPointer = b.CreateSelect(validScratch,scratch,b.CreateSelect(validRom,rom,ram));
++                busOffset = b.CreateSelect(validScratch,b.CreateSub(physical,b.getInt32(0x1f800000)),
++                        b.CreateSelect(validRom,b.CreateSub(physical,b.getInt32(0x1fc00000)),busOffset));
++            }
++            auto* cacheNormal = b.CreateICmpEQ(b.CreateAnd(load(47),b.getInt32(0x10000)),b.getInt32(0));
++            auto* accepted = llvm::BasicBlock::Create(context,"ram_access",fn);
++            auto* reject = llvm::BasicBlock::Create(context,"unsupported_bus",fn);
++            // Misalignment traps before accessing the bus; isolation semantics
++            // are not modeled. Unsupported accesses do not retire pending state.
++            auto* supported = b.CreateAnd(cacheNormal,b.CreateOr(misaligned,validBus));
++            // Redux's current patch cancels delayed PC writes only for BREAK
++            // and SYSCALL. Do not assume the same for address-error paths.
++            supported = b.CreateAnd(supported,b.CreateNot(b.CreateAnd(branchActive,misaligned)));
++            b.CreateCondBr(supported,accepted,reject);
++            b.SetInsertPoint(reject); b.CreateRet(b.getInt32(4)); b.SetInsertPoint(accepted);
++        }
++        store(0, b.getInt32(0));
++        store(67, b.getInt32(0)); store(71, b.getInt32(0)); store(72,b.getInt32(0));
++        llvm::Value* next = b.CreateSelect(branchActive, branchTarget, b.getInt32(address+4));
++        unsigned written = 0;
++        llvm::Value* exception = b.getInt1(false);
++        unsigned cause = 0;
++        if (memory) {
++            exception = misaligned; cause = isLoad ? 0x10 : 0x14;
++            auto* access = llvm::BasicBlock::Create(context,"aligned",fn);
++            auto* fault = llvm::BasicBlock::Create(context,"address_error",fn);
++            auto* done = llvm::BasicBlock::Create(context,"memory_done",fn);
++            b.CreateCondBr(misaligned,fault,access);
++            b.SetInsertPoint(fault); store(43,memoryAddress); b.CreateBr(done);
++            b.SetInsertPoint(access);
++            llvm::Value* physical = busOffset;
++            if (merge) physical = b.CreateAnd(physical,b.getInt32(~3u));
++            auto* ordinary = llvm::BasicBlock::Create(context,"memory_bytes",fn);
++            if (biosBus) {
++                auto* irq = llvm::BasicBlock::Create(context,"irq_register",fn);
++                b.CreateCondBr(irqAccess,irq,ordinary); b.SetInsertPoint(irq);
++                auto* slot = b.CreateSelect(irqStatusAccess,slots[73],slots[74]);
++                auto* oldValue = b.CreateLoad(slot);
++                if (isLoad) {
++                    llvm::Value* value = oldValue;
++                    if (width == 2) {
++                        auto* half = b.CreateTrunc(value,b.getInt16Ty());
++                        value = op == 33 ? b.CreateSExt(half,word) : b.CreateZExt(half,word);
++                    }
++                    store(69,b.getInt32(rt)); store(70,value);
++                    store(71,b.getInt32(rt != 0)); store(72,b.getInt32(0));
++                } else {
++                    auto* value = load(rt);
++                    // Redux's SH ISTAT uses the entire source register.
++                    auto* mask = width == 2 ? b.CreateOr(b.CreateAnd(oldValue,b.getInt32(0xffff0000)),
++                            b.CreateAnd(value,b.getInt32(0xffff))) : value;
++                    b.CreateStore(b.CreateSelect(irqStatusAccess,b.CreateAnd(oldValue,value),mask),slot);
++                }
++                b.CreateBr(done);
++            } else b.CreateBr(ordinary);
++            b.SetInsertPoint(ordinary);
++            llvm::Value* value = b.getInt32(0);
++            if (isLoad || merge) {
++                for (unsigned byte = 0; byte < width; ++byte) {
++                    auto* p = b.CreateGEP(busPointer,b.CreateAdd(physical,b.getInt32(byte)));
++                    auto* v = b.CreateZExt(b.CreateLoad(p),word);
++                    value = b.CreateOr(value,b.CreateShl(v,byte*8));
++                }
++            }
++            auto* byteShift = b.CreateMul(b.CreateAnd(memoryAddress,b.getInt32(3)),b.getInt32(8));
++            auto* leftShift = b.CreateSub(b.getInt32(24),byteShift);
++            if (isLoad) {
++                if (op == 32 || op == 33)
++                    value = b.CreateSExt(b.CreateTrunc(value,b.getIntNTy(width*8)),word);
++                llvm::Value* mask = b.getInt32(0);
++                if (op == 34) {
++                    mask = b.CreateNot(b.CreateShl(b.getInt32(~0u),leftShift));
++                    value = b.CreateShl(value,leftShift);
++                } else if (op == 38) {
++                    mask = b.CreateNot(b.CreateLShr(b.getInt32(~0u),byteShift));
++                    value = b.CreateLShr(value,byteShift);
++                }
++                store(69,b.getInt32(rt)); store(70,value); store(71,b.getInt32(rt!=0)); store(72,mask);
++            } else {
++                auto* source = load(rt);
++                if (op == 42) value = b.CreateOr(b.CreateLShr(source,leftShift),
++                        b.CreateAnd(value,b.CreateNot(b.CreateLShr(b.getInt32(~0u),leftShift))));
++                else if (op == 46) value = b.CreateOr(b.CreateShl(source,byteShift),
++                        b.CreateAnd(value,b.CreateNot(b.CreateShl(b.getInt32(~0u),byteShift))));
++                else value = source;
++                for (unsigned byte = 0; byte < width; ++byte) {
++                    auto* p = b.CreateGEP(busPointer,b.CreateAdd(physical,b.getInt32(byte)));
++                    b.CreateStore(b.CreateTrunc(b.CreateLShr(value,byte*8),b.getInt8Ty()),p);
++                }
++            }
++            b.CreateBr(done); b.SetInsertPoint(done);
++        } else if (branch) {
++            llvm::Value* taken = b.getInt1(true);
++            llvm::Value* target = b.getInt32(((address+4)&0xf0000000u) | ((w&0x03ffffffu)<<2));
++            if (op == 1) {
++                auto* a = load(rs);
++                taken = (rt & 1) ? b.CreateICmpSGE(a,b.getInt32(0)) : b.CreateICmpSLT(a,b.getInt32(0));
++                target = b.getInt32(address+4+int32_t(int16_t(w))*4);
++            } else if (op >= 4 && op <= 7) {
++                auto* a = load(rs); auto* z = b.getInt32(0);
++                if (op == 4) taken = b.CreateICmpEQ(a, load(rt));
++                if (op == 5) taken = b.CreateICmpNE(a, load(rt));
++                if (op == 6) taken = b.CreateICmpSLE(a, z);
++                if (op == 7) taken = b.CreateICmpSGT(a, z);
++                target = b.getInt32(address+4+int32_t(int16_t(w))*4);
++            } else if (op == 0) target = load(rs);
++            if (op == 3 || (op == 1 && rt >= 16) || (op == 0 && sub == 9)) {
++                written = op == 0 ? rd : 31;
++                if (written) store(written, b.getInt32(address+8));
++            }
++            store(67, b.CreateZExt(taken, word)); store(68, target);
++        } else if (op == 0 && (sub == 12 || sub == 13)) {
++            exception = b.getInt1(true); cause = sub == 13 ? 0x24 : 0x20;
++        } else if (op == 16) {
++            if (w == 0x42000010) {
++                auto* sr = load(47);
++                store(47, b.CreateOr(b.CreateAnd(sr, b.getInt32(0xfffffff0)),
++                        b.CreateLShr(b.CreateAnd(sr,b.getInt32(0x3c)),2)));
++            } else if (rs == 0 || rs == 2) {
++                store(69, b.getInt32(rt)); store(70, load(35+rd));
++                store(71, b.getInt32(rt != 0));
++            } else {
++                llvm::Value* value = load(rt);
++                if (rd == 13) value = b.CreateAnd(value,b.getInt32(~0xfc00u));
++                store(35+rd,value);
++            }
++        } else if (op == 8 || (op == 0 && (sub == 32 || sub == 34))) {
++            auto* a = load(rs);
++            llvm::Value* c = op == 8 ? static_cast<llvm::Value*>(b.getInt32(int32_t(int16_t(w)))) : load(rt);
++            bool subtract = op == 0 && sub == 34;
++            auto* value = subtract ? b.CreateSub(a,c) : b.CreateAdd(a,c);
++            auto* sign = subtract ? b.CreateXor(a,c) : b.CreateXor(c,value);
++            exception = b.CreateICmpSLT(b.CreateAnd(b.CreateXor(a,value),sign),b.getInt32(0));
++            cause = 0x30; written = op == 8 ? rt : rd;
++            if (written) store(written,b.CreateSelect(exception,load(written),value));
++        } else {
++            auto result = translator->translate(bytes+index*4,4,address,b,1,false);
++            if (result.failed()) throw std::runtime_error("stateful instruction failed translation");
++            for (auto pair : result.insns) cs_free(pair.second,1);
++            if (op == 0) {
++                if (sub <= 7 || sub == 16 || sub == 18 || sub >= 32) written = rd;
++            } else written = rt;
++        }
++        // Commit the preceding load after the instruction reads old GPRs.
++        // Merge masks apply to the value at commit, including consecutive LWL/LWR.
++        // A current explicit write cancels the delayed write to that register.
++        for (unsigned reg = 1; reg != 32; ++reg) {
++            llvm::Value* commit = b.CreateAnd(pendingActive,b.CreateICmpEQ(pending,b.getInt32(reg)));
++            if (written == reg) commit = b.CreateAnd(commit,exception);
++            auto* previous = load(reg);
++            auto* merged = b.CreateOr(b.CreateAnd(previous,pendingMask),pendingValue);
++            store(reg,b.CreateSelect(commit,merged,previous));
++        }
++        if (cause) {
++            auto* trap = llvm::BasicBlock::Create(context,"exception",fn);
++            auto* finish = llvm::BasicBlock::Create(context,"retire",fn);
++            b.CreateCondBr(exception,trap,finish); b.SetInsertPoint(trap);
++            auto* sr = load(47);
++            store(48,b.CreateOr(b.getInt32(cause),b.CreateSelect(branchActive,b.getInt32(0x80000000),b.getInt32(0))));
++            store(49,b.CreateSelect(branchActive,b.getInt32(address-4),b.getInt32(address)));
++            store(34,b.CreateSelect(b.CreateICmpNE(b.CreateAnd(sr,b.getInt32(0x400000)),b.getInt32(0)),
++                    b.getInt32(0xbfc00180),b.getInt32(0x80000080)));
++            store(47,b.CreateOr(b.CreateAnd(sr,b.getInt32(~0x3fu)),b.CreateShl(b.CreateAnd(sr,b.getInt32(15)),2)));
++            store(67,b.getInt32(0)); b.CreateRet(b.getInt32(1)); b.SetInsertPoint(finish);
++        }
++        if (testsSoftwareIrq || biosBus) {
++            llvm::Value* interrupt = softwareIrq;
++            if (biosBus) {
++                // Native branchTest polls external interrupts after taken slots.
++                // Device producers update ISTAT between step calls; no fabricated
++                // cycles or device events are introduced here.
++                auto* hardwareIrq = b.CreateAnd(branchActive,b.CreateAnd(
++                        b.CreateICmpNE(b.CreateAnd(load(73),load(74)),b.getInt32(0)),
++                        b.CreateICmpEQ(b.CreateAnd(load(47),b.getInt32(0x401)),b.getInt32(0x401))));
++                interrupt = b.CreateOr(interrupt,hardwareIrq);
++            }
++            auto* irq = llvm::BasicBlock::Create(context,"interrupt",fn);
++            auto* finish = llvm::BasicBlock::Create(context,"no_interrupt",fn);
++            b.CreateCondBr(interrupt,irq,finish); b.SetInsertPoint(irq);
++            auto* sr = load(47);
++            store(48,b.CreateSelect(softwareIrq,load(48),b.getInt32(0x400)));
++            store(49,next);
++            store(34,b.CreateSelect(b.CreateICmpNE(b.CreateAnd(sr,b.getInt32(0x400000)),b.getInt32(0)),
++                    b.getInt32(0xbfc00180),b.getInt32(0x80000080)));
++            store(47,b.CreateOr(b.CreateAnd(sr,b.getInt32(~0x3fu)),b.CreateShl(b.CreateAnd(sr,b.getInt32(15)),2)));
++            store(67,b.getInt32(0)); b.CreateRet(b.getInt32(1)); b.SetInsertPoint(finish);
++        }
++        store(34,next); store(0,b.getInt32(0)); b.CreateRet(b.getInt32(0));
++    }
++    // Bind the existing translator's register semantics to the caller state.
++    // Per-instruction loads/stores remain visible across every return to dispatch.
++    for (unsigned i = 0; i != 34; ++i) {
++        unsigned reg = i < 32 ? unsigned(MIPS_REG_0)+i
++                : unsigned(i == 32 ? MIPS_REG_HI : MIPS_REG_LO);
++        auto* global = translator->getRegister(reg);
++        std::vector<llvm::Instruction*> users;
++        for (auto* user : global->users())
++            if (auto* instruction = llvm::dyn_cast<llvm::Instruction>(user))
++                if (instruction->getFunction() == fn) users.push_back(instruction);
++        for (auto* user : users) user->replaceUsesOfWith(global,slots[i]);
++    }
++    // Instruction-map stores are decoder bookkeeping, not guest state. This
++    // standalone path dispatches explicit PCs and has no consumer for the map.
++    std::vector<llvm::Instruction*> mappingStores;
++    for (auto& block : *fn)
++        for (auto& instruction : block)
++            if (translator->isSpecialAsm2LlvmInstr(&instruction))
++                mappingStores.push_back(&instruction);
++    for (auto* instruction : mappingStores) instruction->eraseFromParent();
++    if (llvm::verifyFunction(*fn)) throw std::runtime_error("invalid stateful MIPS IR");
++    return fn;
++}
++} }
+diff --git a/deps/retdec/retdec/src/capstone2llvmir/mips/stateful_main.cpp b/deps/retdec/retdec/src/capstone2llvmir/mips/stateful_main.cpp
+new file mode 100644
+index 0000000..5a52bd9
+--- /dev/null
++++ b/deps/retdec/retdec/src/capstone2llvmir/mips/stateful_main.cpp
+@@ -0,0 +1,80 @@
++#include "retdec/capstone2llvmir/mips/stateful.h"
++#include <fstream>
++#include <iostream>
++#include <iterator>
++#include <limits>
++#include <vector>
++#include <llvm/IR/Module.h>
++#include <llvm/IR/LegacyPassManager.h>
++#include <llvm/InitializePasses.h>
++#include <llvm/PassRegistry.h>
++#include "retdec/utils/io/log.h"
++#include "retdec/config/config.h"
++#include "retdec/llvmir2hll/llvmir2hll.h"
++#include <llvm/Support/raw_ostream.h>
++
++// Explicit opt-in frontend. No binary ABI recovery is applied to stateful IR.
++int main(int argc, char** argv)
++{
++    bool biosBus = false, emitC = false;
++    bool valid = argc >= 4;
++    for (int i = 4; i < argc; ++i) {
++        std::string option = argv[i];
++        if (option == "--bios-bus" && !biosBus) biosBus = true;
++        else if (option == "--emit-c" && !emitC) emitC = true;
++        else valid = false;
++    }
++    if (!valid) {
++        std::cerr << "Usage: retdec-mips-stateful RAW_CODE BASE_ADDRESS FUNCTION_NAME [--bios-bus] [--emit-c] > output\n"
++                  << "ABI v2: unsigned step(unsigned state[73], unsigned char ram[2097152]);\n"
++                  << "--bios-bus: ABI v3 step(state[75], ram[2097152], rom[524288], scratch[1024]).\n";
++        return 2;
++    }
++    try {
++        std::string address = argv[2], name = argv[3];
++        std::size_t consumed = 0;
++        auto base = std::stoull(address, &consumed, 0);
++        if (address.empty() || address.front() == '-' || consumed != address.size()
++                || base > std::numeric_limits<uint32_t>::max() || name.empty()
++                || name.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_") != std::string::npos
++                || (name.front() >= '0' && name.front() <= '9'))
++            throw std::invalid_argument("invalid base address or function name");
++        std::ifstream input(argv[1], std::ios::binary | std::ios::ate);
++        if (!input || input.tellg() <= 0 || input.tellg() > 65536)
++            throw std::invalid_argument("input must be 1..65536 bytes of raw little-endian MIPS code");
++        std::vector<uint8_t> bytes(static_cast<std::size_t>(input.tellg()));
++        input.seekg(0);
++        if (!input.read(reinterpret_cast<char*>(bytes.data()), bytes.size()))
++            throw std::runtime_error("cannot read input");
++        llvm::LLVMContext context;
++        llvm::Module module(biosBus ? "mips-stateful-v3" : "mips-stateful-v2", context);
++        retdec::capstone2llvmir::translateMips32Stateful(module,
++                bytes.data(), bytes.size(), static_cast<uint32_t>(base), name, biosBus);
++        if (emitC) {
++            auto& registry = *llvm::PassRegistry::getPassRegistry();
++            llvm::initializeLoopInfoWrapperPassPass(registry);
++            llvm::initializeScalarEvolutionWrapperPassPass(registry);
++            retdec::utils::io::Log::set(retdec::utils::io::Log::Type::Info,
++                    std::make_unique<retdec::utils::io::Logger>(std::cerr, false));
++            retdec::config::Config config;
++            config.parameters.setIsBackendKeepLibraryFuncs(true);
++            config.parameters.setIsBackendNoTimeVaryingInfo(true);
++            config.parameters.setIsBackendNoVarRenaming(true);
++            std::string output;
++            {
++                llvm::legacy::PassManager passes;
++                auto* writer = new retdec::llvmir2hll::LlvmIr2Hll(&config);
++                writer->setOutputString(&output);
++                passes.add(writer);
++                passes.run(module);
++                // Destroy the writer to flush its buffered raw_string_ostream.
++            }
++            if (output.empty()) throw std::runtime_error("C emission produced no output");
++            llvm::outs() << output;
++        } else module.print(llvm::outs(), nullptr);
++        return 0;
++    } catch (const std::exception& error) {
++        std::cerr << error.what() << '\n';
++        return 1;
++    }
++}
+diff --git a/deps/retdec/retdec/src/common/type.cpp b/deps/retdec/retdec/src/common/type.cpp
+index e7ba249..77544b9 100644
+--- a/deps/retdec/retdec/src/common/type.cpp
++++ b/deps/retdec/retdec/src/common/type.cpp
+@@ -4,6 +4,7 @@
+  * @copyright (c) 2017 Avast Software, licensed under the MIT license
+  */
+ 
++#include <algorithm>
+ #include <cassert>
+ 
+ #include "retdec/common/type.h"
+@@ -11,6 +12,60 @@
+ namespace retdec {
+ namespace common {
+ 
++namespace {
++
++struct CBaseType
++{
++	const char* spelling;
++	unsigned width;
++	bool isUnsigned;
++};
++
++const CBaseType cBaseTypes[] = {
++	{"char", 8, false},
++	{"signed char", 8, false},
++	{"unsigned char", 8, true},
++	{"s8", 8, false},
++	{"u8", 8, true},
++	{"int8_t", 8, false},
++	{"uint8_t", 8, true},
++	{"short", 16, false},
++	{"signed short", 16, false},
++	{"unsigned short", 16, true},
++	{"s16", 16, false},
++	{"u16", 16, true},
++	{"int16_t", 16, false},
++	{"uint16_t", 16, true},
++	{"int", 32, false},
++	{"signed", 32, false},
++	{"signed int", 32, false},
++	{"unsigned", 32, true},
++	{"unsigned int", 32, true},
++	{"s32", 32, false},
++	{"u32", 32, true},
++	{"int32_t", 32, false},
++	{"uint32_t", 32, true},
++};
++
++const CBaseType* findCBaseType(const std::string& spelling)
++{
++	std::string base = spelling.substr(0, spelling.find('*'));
++	auto notSpace = [](char c) { return c != ' ' && c != '\t'; };
++	base.erase(base.begin(), std::find_if(base.begin(), base.end(), notSpace));
++	base.erase(std::find_if(base.rbegin(), base.rend(), notSpace).base(), base.end());
++
++	for (const auto& candidate : cBaseTypes)
++	{
++		if (base == candidate.spelling)
++		{
++			return &candidate;
++		}
++	}
++	return nullptr;
++}
++
++} // anonymous namespace
++
+ /**
+  * Default type is i32.
+  */
+@@ -50,6 +105,25 @@ void Type::setLlvmIr(const std::string& t)
+ 	_llvmIr = t;
+ }
+ 
++/**
++ * @return Width in bits of the supplied C spelling's base type, or 0 when the
++ *         spelling has no supported scalar base type.
++ */
++unsigned Type::getCBaseTypeWidth() const
++{
++	const CBaseType* base = findCBaseType(_cType);
++	return base ? base->width : 0;
++}
++
++/**
++ * @return True when the supplied C spelling's base type is unsigned.
++ */
++bool Type::hasUnsignedBaseType() const
++{
++	const CBaseType* base = findCBaseType(_cType);
++	return base ? base->isUnsigned : false;
++}
++
+ /**
+  * @return Type's ID is its LLVM IR representation.
+  */
+diff --git a/deps/retdec/retdec/src/llvmir2hll/CMakeLists.txt b/deps/retdec/retdec/src/llvmir2hll/CMakeLists.txt
+index 07df10c..1fab761 100644
+--- a/deps/retdec/retdec/src/llvmir2hll/CMakeLists.txt
++++ b/deps/retdec/retdec/src/llvmir2hll/CMakeLists.txt
+@@ -1,5 +1,6 @@
+ 
+ add_library(llvmir2hll STATIC
++	llvm/source_recovery.cpp
+ 	analysis/alias_analysis/alias_analyses/basic_alias_analysis.cpp
+ 	analysis/alias_analysis/alias_analyses/simple_alias_analysis.cpp
+ 	analysis/alias_analysis/alias_analysis.cpp
+diff --git a/deps/retdec/retdec/src/llvmir2hll/hll/hll_writers/c_hll_writer.cpp b/deps/retdec/retdec/src/llvmir2hll/hll/hll_writers/c_hll_writer.cpp
+index 86d7c6a..670fff2 100644
+--- a/deps/retdec/retdec/src/llvmir2hll/hll/hll_writers/c_hll_writer.cpp
++++ b/deps/retdec/retdec/src/llvmir2hll/hll/hll_writers/c_hll_writer.cpp
+@@ -5,6 +5,7 @@
+ */
+ 
+ #include <cctype>
++#include <llvm/IR/Module.h>
+ #include <set>
+ #include <sstream>
+ 
+@@ -304,6 +305,11 @@ bool CHLLWriter::emitFileHeader() {
+ 		headerFiles.insert("stdlib.h");
+ 	}
+ 
++	// BREAK requires the MIPS exception runtime, not an implicit C declaration.
++	if (module->getFuncByName("__retdec_mips_break")) {
++		headerFiles.insert("retdec/runtime/mips_exception.h");
++	}
++
+ 	// Include headers for linked functions.
+ 	addToSet(HeadersForDeclaredFuncs::getHeaders(module), headerFiles);
+ 
+@@ -507,10 +513,35 @@ void CHLLWriter::visit(ShPtr<GlobalVarDef> varDef) {
+ 
+ 	out->addressPush(varDef->getAddress());
+ 	out->space(getCurrentIndent());
+-	emitVarWithType(var);
++	auto *machine = module->getLLVMModule();
++	auto *global = machine ? machine->getGlobalVariable(var->getInitialName()) : nullptr;
++	if (!global && machine) global = machine->getGlobalVariable(var->getName());
++	auto *array = global ? llvm::dyn_cast<llvm::ArrayType>(global->getValueType()) : nullptr;
++	// LLVM zero-length external arrays represent supplied incomplete arrays.
++	// Do not turn them into one-element definitions or allocate storage.
++	bool incomplete = array && array->getNumElements() == 0 && global->isDeclaration();
++	// A declaration-only volatile object must not become a definition.
++	bool externalObject = !incomplete && global && global->isDeclaration()
++		&& var->isVolatile();
++
++	if (incomplete) {
++		out->keyword("extern");
++		out->space();
++		cast<ArrayType>(var->getType())->getContainedType()->accept(this);
++		out->space();
++		var->accept(this);
++		out->punctuation('[');
++		out->punctuation(']');
++	} else if (externalObject) {
++		out->keyword("extern");
++		out->space();
++		emitVarWithType(var);
++	} else {
++		emitVarWithType(var);
++	}
+ 
+-	// Initializer.
+-	if (init) {
++	// Initializer. An external incomplete declaration never allocates storage.
++	if (init && !incomplete && !externalObject) {
+ 		emitConstantsInStructuredWay = true;
+ 		if (ShPtr<ConstArray> constArrayInit = cast<ConstArray>(init)) {
+ 			if (constArrayInit->isInitialized()) {
+@@ -623,12 +654,44 @@ void CHLLWriter::visit(ShPtr<NegOpExpr> expr) {
+ 	emitUnaryOpExpr("-", expr);
+ }
+ 
++void CHLLWriter::emitBitPatternEquality(const std::string &op, ShPtr<BinaryOpExpr> expr) {
++	auto operandType = [](ShPtr<Expression> operand) {
++		if (auto deref = cast<DerefOpExpr>(operand)) {
++			if (auto pointer = cast<PointerType>(deref->getOperand()->getType()))
++				return cast<IntType>(pointer->getContainedType());
++		}
++		return cast<IntType>(operand->getType());
++	};
++	auto lhs = operandType(expr->getFirstOperand());
++	auto rhs = operandType(expr->getSecondOperand());
++	// Same-width, same-interpretation equality is invariant under conversion
++	// to unsigned. Avoid unnecessary sign extension of narrow bit patterns.
++	if (!lhs || !rhs || lhs->getSize() != rhs->getSize()
++			|| lhs->isSigned() != rhs->isSigned()
++			|| (lhs->getSize() != 8 && lhs->getSize() != 16)) {
++		emitBinaryOpExpr(op, expr);
++		return;
++	}
++	auto type = IntType::create(lhs->getSize(), false);
++	out->punctuation('(');
++	for (unsigned i = 0; i < 2; ++i) {
++		if (i) out->operatorX(op, true, true);
++		out->punctuation('(');
++		type->accept(this);
++		out->punctuation(')');
++		out->punctuation('(');
++		(i ? expr->getSecondOperand() : expr->getFirstOperand())->accept(this);
++		out->punctuation(')');
++	}
++	out->punctuation(')');
++}
++
+ void CHLLWriter::visit(ShPtr<EqOpExpr> expr) {
+-	emitBinaryOpExpr("==", expr);
++	emitBitPatternEquality("==", expr);
+ }
+ 
+ void CHLLWriter::visit(ShPtr<NeqOpExpr> expr) {
+-	emitBinaryOpExpr("!=", expr);
++	emitBitPatternEquality("!=", expr);
+ }
+ 
+ void CHLLWriter::visit(ShPtr<LtOpExpr> expr) {
+@@ -662,16 +725,59 @@ void CHLLWriter::visit(ShPtr<TernaryOpExpr> expr) {
+ 	}
+ }
+ 
++void CHLLWriter::emitWrappingArithmetic(const std::string &op, ShPtr<BinaryOpExpr> expr) {
++	auto type = cast<IntType>(expr->getType());
++	if (!type || (type->getSize() != 8 && type->getSize() != 16
++			&& type->getSize() != 32 && type->getSize() != 64)) {
++		// Keep pointer and floating-point arithmetic unchanged.
++		emitBinaryOpExpr(op, expr);
++		return;
++	}
++
++	// C already gives unsigned 32/64-bit operands modular arithmetic.
++	// Narrow unsigned operands still undergo signed integer promotion.
++	auto lhsType = cast<IntType>(expr->getFirstOperand()->getType());
++	auto rhsType = cast<IntType>(expr->getSecondOperand()->getType());
++	if (type->isUnsigned() && type->getSize() >= 32 && lhsType && rhsType
++			&& lhsType->isUnsigned() && rhsType->isUnsigned()
++			&& lhsType->getSize() == type->getSize()
++			&& rhsType->getSize() == type->getSize()) {
++		emitBinaryOpExpr(op, expr);
++		return;
++	}
++
++	// LLVM integer arithmetic computes a bit pattern. Signedness inferred
++	// later must not introduce C signed overflow. Convert both operands before
++	// the operation, then restore the result width and interpretation.
++	auto unsignedType = IntType::create(type->getSize() < 32 ? 32 : type->getSize(), false);
++	out->punctuation('(');
++	out->punctuation('(');
++	type->accept(this);
++	out->punctuation(')');
++	out->punctuation('(');
++	for (unsigned index = 0; index != 2; ++index) {
++		if (index) out->operatorX(op, true, true);
++		out->punctuation('(');
++		unsignedType->accept(this);
++		out->punctuation(')');
++		out->punctuation('(');
++		(index ? expr->getSecondOperand() : expr->getFirstOperand())->accept(this);
++		out->punctuation(')');
++	}
++	out->punctuation(')');
++	out->punctuation(')');
++}
++
+ void CHLLWriter::visit(ShPtr<AddOpExpr> expr) {
+-	emitBinaryOpExpr("+", expr);
++	emitWrappingArithmetic("+", expr);
+ }
+ 
+ void CHLLWriter::visit(ShPtr<SubOpExpr> expr) {
+-	emitBinaryOpExpr("-", expr);
++	emitWrappingArithmetic("-", expr);
+ }
+ 
+ void CHLLWriter::visit(ShPtr<MulOpExpr> expr) {
+-	emitBinaryOpExpr("*", expr);
++	emitWrappingArithmetic("*", expr);
+ }
+ 
+ void CHLLWriter::visit(ShPtr<ModOpExpr> expr) {
+@@ -679,7 +785,31 @@ void CHLLWriter::visit(ShPtr<ModOpExpr> expr) {
+ }
+ 
+ void CHLLWriter::visit(ShPtr<DivOpExpr> expr) {
+-	emitBinaryOpExpr("/", expr);
++	ShPtr<IntType> types[2];
++	for (unsigned i = 0; i < 2; ++i) {
++		auto operand = i ? expr->getSecondOperand() : expr->getFirstOperand();
++		auto operandType = operand->getType();
++		if (auto deref = cast<DerefOpExpr>(operand)) {
++			if (auto pointer = cast<PointerType>(deref->getOperand()->getType()))
++				operandType = pointer->getContainedType();
++		}
++		types[i] = cast<IntType>(operandType);
++	}
++	if (expr->getVariant() != DivOpExpr::Variant::UDiv || !types[0] || !types[1]) {
++		emitBinaryOpExpr("/", expr);
++		return;
++	}
++	// Unsigned IR division must not inherit a recovered signed C type.
++	out->punctuation('(');
++	for (unsigned i = 0; i < 2; ++i) {
++		auto unsignedType = IntType::create(types[i]->getSize(), false);
++		if (i) out->operatorX("/", true, true);
++		out->punctuation('('); out->punctuation('(');
++		unsignedType->accept(this); out->punctuation(')'); out->punctuation('(');
++		(i ? expr->getSecondOperand() : expr->getFirstOperand())->accept(this);
++		out->punctuation(')'); out->punctuation(')');
++	}
++	out->punctuation(')');
+ }
+ 
+ void CHLLWriter::visit(ShPtr<AndOpExpr> expr) {
+@@ -703,14 +833,78 @@ void CHLLWriter::visit(ShPtr<BitXorOpExpr> expr) {
+ }
+ 
+ void CHLLWriter::visit(ShPtr<BitShlOpExpr> expr) {
+-	emitBinaryOpExpr("<<", expr);
++	auto operand = expr->getFirstOperand();
++	auto operandType = operand->getType();
++	if (auto deref = cast<DerefOpExpr>(operand)) {
++		if (auto pointer = cast<PointerType>(deref->getOperand()->getType())) {
++			operandType = pointer->getContainedType();
++		}
++	}
++	auto type = cast<IntType>(operandType);
++	if (!type || (type->getSize() != 8 && type->getSize() != 16
++			&& type->getSize() != 32 && type->getSize() != 64)) {
++		emitBinaryOpExpr("<<", expr);
++		return;
++	}
++
++	// Shift bits, not signed C values. Use at least unsigned 32 bits so
++	// integer promotions cannot turn an 8/16-bit operand back into int.
++	// Restore the operand's width and signedness before enclosing operations.
++	out->punctuation('(');
++	out->punctuation('(');
++	type->accept(this);
++	out->punctuation(')');
++	out->punctuation('(');
++	out->punctuation('(');
++	IntType::create(type->getSize() < 32 ? 32 : type->getSize(), false)->accept(this);
++	out->punctuation(')');
++	out->punctuation('(');
++	operand->accept(this);
++	out->punctuation(')');
++	out->operatorX("<<", true, true);
++	out->punctuation('(');
++	expr->getSecondOperand()->accept(this);
++	out->punctuation(')');
++	out->punctuation(')');
++	out->punctuation(')');
+ }
+ 
+ void CHLLWriter::visit(ShPtr<BitShrOpExpr> expr) {
+-	// TODO Distinguish between logical and arithmetical shifts (recall that if
+-	// the first operand is of a signed type with a negative value, it is
+-	// implementation-defined whether >> is logical or arithmetical).
+-	emitBinaryOpExpr(">>", expr);
++	auto operand = expr->getFirstOperand();
++	auto operandType = operand->getType();
++	if (auto deref = cast<DerefOpExpr>(operand)) {
++		if (auto pointer = cast<PointerType>(deref->getOperand()->getType())) {
++			operandType = pointer->getContainedType();
++		}
++	}
++	auto type = cast<IntType>(operandType);
++	if (!type || (type->getSize() != 8 && type->getSize() != 16
++			&& type->getSize() != 32 && type->getSize() != 64)) {
++		emitBinaryOpExpr(">>", expr);
++		return;
++	}
++
++	// The LLVM opcode, not the recovered variable type, defines the shift.
++	// Cast at the original width before C promotions, including loaded values.
++	// Arithmetic shifts rely on the target compiler's signed right shift.
++	auto shiftType = IntType::create(type->getSize(), expr->isArithmetical());
++	out->punctuation('(');
++	out->punctuation('(');
++	shiftType->accept(this);
++	out->punctuation(')');
++	out->punctuation('(');
++	out->punctuation('(');
++	shiftType->accept(this);
++	out->punctuation(')');
++	out->punctuation('(');
++	operand->accept(this);
++	out->punctuation(')');
++	out->operatorX(">>", true, true);
++	out->punctuation('(');
++	expr->getSecondOperand()->accept(this);
++	out->punctuation(')');
++	out->punctuation(')');
++	out->punctuation(')');
+ }
+ 
+ void CHLLWriter::visit(ShPtr<CallExpr> expr) {
+@@ -732,6 +926,31 @@ void CHLLWriter::visit(ShPtr<BitCastExpr> expr) {
+ }
+ 
+ void CHLLWriter::visit(ShPtr<ExtCastExpr> expr) {
++	auto sourceType = expr->getOperand()->getType();
++	// DerefOpExpr inherits UnaryOpExpr::getType(), which reports the
++	// pointer type rather than the type of the loaded value.
++	if (auto deref = cast<DerefOpExpr>(expr->getOperand())) {
++		if (auto pointer = cast<PointerType>(deref->getOperand()->getType())) {
++			sourceType = pointer->getContainedType();
++		}
++	}
++	auto source = cast<IntType>(sourceType);
++	if (source && !source->isBool()
++			&& expr->getVariant() != ExtCastExpr::Variant::FPExt) {
++		// LLVM integer types carry no signedness. The extension opcode,
++		// not a recovered variable type, defines how the source bits widen.
++		out->punctuation('(');
++		expr->getType()->accept(this);
++		out->punctuation(')');
++		out->punctuation('(');
++		IntType::create(source->getSize(),
++			expr->getVariant() == ExtCastExpr::Variant::SExt)->accept(this);
++		out->punctuation(')');
++		out->punctuation('(');
++		expr->getOperand()->accept(this);
++		out->punctuation(')');
++		return;
++	}
+ 	emitCastInStandardWay(expr);
+ }
+ 
+@@ -853,8 +1072,12 @@ void CHLLWriter::visit(ShPtr<AssignStmt> stmt) {
+ * @brief Emits the given assignment (without leading or trailing whitespace).
+ */
+ void CHLLWriter::emitAssignment(ShPtr<Expression> lhs, ShPtr<Expression> rhs) {
++	// Compound operations would bypass the visitors' explicit bit-vector types.
+ 	CompoundOpManager::CompoundOp compoundOp(
+-		compoundOpManager->tryOptimizeToCompoundOp(lhs, rhs));
++		(isa<BitShlOpExpr>(rhs) || isa<BitShrOpExpr>(rhs)
++			|| isa<AddOpExpr>(rhs) || isa<SubOpExpr>(rhs) || isa<MulOpExpr>(rhs))
++		? CompoundOpManager::CompoundOp("=", rhs)
++		: compoundOpManager->tryOptimizeToCompoundOp(lhs, rhs));
+ 	lhs->accept(this);
+ 	if (compoundOp.isUnaryOperator()) {
+ 		// ++ or --
+@@ -986,7 +1209,28 @@ void CHLLWriter::visit(ShPtr<SwitchStmt> stmt) {
+ 	out->space();
+ 	out->punctuation('(');
+ 
+-	stmt->getControlExpr()->accept(this);
++	// LLVM switches compare bit patterns. For a narrow truncation and
++	// nonnegative cases, unsigned C avoids an artificial sign-extension.
++	auto control = stmt->getControlExpr();
++	auto trunc = cast<TruncCastExpr>(control);
++	auto integer = trunc ? cast<IntType>(trunc->getType()) : nullptr;
++	bool unsignedSelector = integer && !integer->isBool();
++	for (auto i = stmt->clause_begin(); i != stmt->clause_end(); ++i) {
++		if (i->first) {
++			auto value = cast<ConstInt>(i->first);
++			if (!value || value->getValue().isNegative()) unsignedSelector = false;
++		}
++	}
++	if (unsignedSelector) {
++		out->punctuation('(');
++		IntType::create(integer->getSize(), false)->accept(this);
++		out->punctuation(')');
++		out->punctuation('(');
++		trunc->getOperand()->accept(this);
++		out->punctuation(')');
++	} else {
++		control->accept(this);
++	}
+ 
+ 	out->punctuation(')');
+ 	out->space();
+@@ -1036,8 +1280,25 @@ void CHLLWriter::visit(ShPtr<ForLoopStmt> stmt) {
+ 	out->keyword("for");
+ 	out->space();
+ 	out->punctuation('(');
+-	stmt->getIndVar()->getType()->accept(this);
+-	out->space();
++	// Declaration-preserving output already defines this induction variable
++	// at function entry. Redeclaring it here both shadows it and requires C99.
++	bool declaredAtEntry = false;
++	if (currFunc) {
++		for (auto s = currFunc->getBody(); s; s = s->getSuccessor()) {
++			if (auto definition = cast<VarDefStmt>(s)) {
++				if (definition->getVar() == stmt->getIndVar()) {
++					declaredAtEntry = true;
++					break;
++				}
++			} else if (!isa<EmptyStmt>(s)) {
++				break;
++			}
++		}
++	}
++	if (!declaredAtEntry) {
++		stmt->getIndVar()->getType()->accept(this);
++		out->space();
++	}
+ 	stmt->getIndVar()->accept(this);
+ 	out->operatorX("=", true, true);
+ 	stmt->getStartValue()->accept(this);
+@@ -1144,14 +1405,9 @@ void CHLLWriter::visit(ShPtr<IntType> type) {
+ 		return;
+ 	}
+ 
+-	// Emit 8-bit integers as chars, not as int8_t/uint8_t, because char is
+-	// more readable.
+-	if (type->getSize() == 8) {
+-		type->isUnsigned()
+-			? out->dataType("unsigned char")
+-			: out->dataType("char");
+-		return;
+-	}
++	// Integer signedness is semantic, including at eight bits. Plain char
++	// depends on compiler flags and can turn an inferred signed load into
++	// an unsigned one. String/character emission is handled separately.
+ 
+ 	out->dataType((type->isUnsigned() ? std::string("u") : std::string("")) + "int"
+ 		+ std::to_string(type->getSize()) + "_t");
+@@ -1564,6 +1820,11 @@ void CHLLWriter::emitVarWithType(ShPtr<Variable> var) {
+ 
+ 	varType->accept(this);
+ 	out->space();
++	// `T volatile name` is valid C for a pointer cell and for a scalar object.
++	if (var->isVolatile()) {
++		out->keyword("volatile");
++		out->space();
++	}
+ 	var->accept(this);
+ 
+ 	// For an array, emit its dimensions.
+diff --git a/deps/retdec/retdec/src/llvmir2hll/ir/variable.cpp b/deps/retdec/retdec/src/llvmir2hll/ir/variable.cpp
+index 19a1047..44f9c41 100644
+--- a/deps/retdec/retdec/src/llvmir2hll/ir/variable.cpp
++++ b/deps/retdec/retdec/src/llvmir2hll/ir/variable.cpp
+@@ -18,7 +18,8 @@ namespace llvmir2hll {
+ * See create() for more information.
+ */
+ Variable::Variable(const std::string &name, ShPtr<Type> type, Address a):
+-	initialName(name), name(name), type(type), internal(true), address(a) {}
++	initialName(name), name(name), type(type), internal(true),
++	volatileObject(false), address(a) {}
+ 
+ ShPtr<Value> Variable::clone() {
+ 	// Variables are not cloned (see the description of Value::clone()).
+@@ -31,7 +32,8 @@ bool Variable::isEqualTo(ShPtr<Value> otherValue) const {
+ 		return initialName == otherVariable->initialName &&
+ 			name == otherVariable->name &&
+ 			type->isEqualTo(otherVariable->type) &&
+-			internal == otherVariable->internal;
++			internal == otherVariable->internal &&
++			volatileObject == otherVariable->volatileObject;
+ 	}
+ 	return false;
+ }
+@@ -106,6 +108,18 @@ bool Variable::isExternal() const {
+ 	return !internal;
+ }
+ 
++/**
++* @brief Returns @c true if the variable denotes a volatile object, @c false
++*        otherwise.
++*
++* Volatility qualifies the object, not the access: every use of a volatile
++* object is a volatile access, so the qualification is kept on the variable and
++* emitted once at its declaration.
++*/
++bool Variable::isVolatile() const {
++	return volatileObject;
++}
++
+ /**
+ * @brief Returns a copy of this variable.
+ *
+@@ -117,6 +131,7 @@ ShPtr<Variable> Variable::copy() const {
+ 	ShPtr<Variable> varCopy(Variable::create(initialName, type));
+ 	varCopy->setName(name);
+ 	varCopy->internal = internal;
++	varCopy->volatileObject = volatileObject;
+ 	return varCopy;
+ }
+ 
+@@ -163,6 +178,13 @@ void Variable::markAsExternal() {
+ 	internal = false;
+ }
+ 
++/**
++* @brief Sets the variable as a volatile object.
++*/
++void Variable::markAsVolatile() {
++	volatileObject = true;
++}
++
+ /**
+ * @brief Creates a new variable.
+ *
+diff --git a/deps/retdec/retdec/src/llvmir2hll/llvm/llvmir2bir_converter/llvm_instruction_converter.cpp b/deps/retdec/retdec/src/llvmir2hll/llvm/llvmir2bir_converter/llvm_instruction_converter.cpp
+index 17c6cdc..46c763a 100644
+--- a/deps/retdec/retdec/src/llvmir2hll/llvm/llvmir2bir_converter/llvm_instruction_converter.cpp
++++ b/deps/retdec/retdec/src/llvmir2hll/llvm/llvmir2bir_converter/llvm_instruction_converter.cpp
+@@ -655,7 +655,10 @@ ShPtr<Expression> LLVMInstructionConverter::convertGetElementPtrToExpression(
+ 		auto index = getConverter()->convertValueToExpression(it.getOperand());
+ 		auto cInt = cast<ConstInt>(index);
+ 		if (cInt && cInt->isZero()) {
+-			base = getConverter()->convertValueToExpressionDirectly(pointedValue);
++			// A zero first index selects the pointee, not the pointer
++			// variable itself. Globals/allocas are already BIR lvalues;
++			// pointer arguments and loaded pointers need dereferencing.
++			base = getConverter()->convertValueToDerefExpression(pointedValue);
+ 			++it;
+ 		} else {
+ 			base = getConverter()->convertValueToExpression(pointedValue);
+diff --git a/deps/retdec/retdec/src/llvmir2hll/llvm/source_recovery.cpp b/deps/retdec/retdec/src/llvmir2hll/llvm/source_recovery.cpp
+new file mode 100644
+index 0000000..035a415
+--- /dev/null
++++ b/deps/retdec/retdec/src/llvmir2hll/llvm/source_recovery.cpp
+@@ -0,0 +1,504 @@
++#include <llvm/IR/IRBuilder.h>
++#include <llvm/Analysis/ValueTracking.h>
++#include <llvm/Support/KnownBits.h>
++#include "retdec/bin2llvmir/utils/llvm.h"
++#include <llvm/IR/Instructions.h>
++#include <llvm/IR/Module.h>
++#include <llvm/IR/Operator.h>
++#include <llvm/Transforms/Utils/Local.h>
++#include <set>
++#include "retdec/config/config.h"
++#include "retdec/llvmir2hll/ir/function.h"
++#include "retdec/llvmir2hll/ir/int_type.h"
++#include "retdec/llvmir2hll/ir/pointer_type.h"
++#include "retdec/llvmir2hll/ir/module.h"
++#include "retdec/llvmir2hll/ir/variable.h"
++#include "retdec/llvmir2hll/ir/const_int.h"
++#include "retdec/llvmir2hll/ir/assign_stmt.h"
++#include "retdec/llvmir2hll/ir/and_op_expr.h"
++#include "retdec/llvmir2hll/ir/or_op_expr.h"
++#include "retdec/llvmir2hll/ir/var_def_stmt.h"
++#include "retdec/llvmir2hll/ir/const_array.h"
++#include "retdec/llvmir2hll/ir/array_index_op_expr.h"
++#include "retdec/llvmir2hll/ir/neq_op_expr.h"
++#include "retdec/llvmir2hll/ir/eq_op_expr.h"
++#include "retdec/llvmir2hll/ir/cast_expr.h"
++#include "retdec/llvmir2hll/ir/if_stmt.h"
++#include "retdec/llvmir2hll/ir/return_stmt.h"
++#include "retdec/llvmir2hll/optimizer/func_optimizer.h"
++#include "retdec/llvmir2hll/analysis/goto_target_analysis.h"
++#include "retdec/llvmir2hll/analysis/alias_analysis/alias_analyses/simple_alias_analysis.h"
++#include "retdec/llvmir2hll/analysis/alias_analysis/alias_analysis.h"
++#include "retdec/llvmir2hll/support/expression_negater.h"
++#include "retdec/llvmir2hll/utils/ir.h"
++#include "retdec/llvmir2hll/llvm/source_recovery.h"
++#include "retdec/bin2llvmir/utils/counter_provenance.h"
++
++namespace retdec {
++namespace llvmir2hll {
++namespace {
++// Recognize only single-block, nonescaping tables. Mixed accesses keep the
++// conservative byte frame. Values outside the initialized table remain outside
++// this ordinary C reconstruction's defined input domain.
++bool fixedStackOffset(llvm::Value *value, llvm::AllocaInst *frame,
++		const llvm::DataLayout &layout, int64_t &offset) {
++	if (value == frame) { offset = 0; return true; }
++	if (auto *cast = llvm::dyn_cast<llvm::BitCastInst>(value))
++		return fixedStackOffset(cast->getOperand(0), frame, layout, offset);
++	if (auto *gep = llvm::dyn_cast<llvm::GetElementPtrInst>(value)) {
++		llvm::APInt delta(layout.getPointerSizeInBits(), 0);
++		if (!gep->accumulateConstantOffset(layout, delta)
++				|| !fixedStackOffset(gep->getPointerOperand(), frame, layout, offset)) return false;
++		offset += delta.getSExtValue();
++		return true;
++	}
++	return false;
++}
++
++void recoverStackTables(llvm::Module &module, const config::Config &config) {
++	if (module.getDataLayout().getPointerSizeInBits() != 32) return;
++	for (auto &function : module) {
++		if (function.size() != 1) continue;
++		auto &block = function.front();
++		for (auto it = block.begin(); it != block.end(); ++it) {
++			auto *call = llvm::dyn_cast<llvm::CallInst>(&*it);
++			if (!call) continue;
++			auto *target = llvm::dyn_cast<llvm::IntToPtrInst>(call->getCalledValue());
++			auto *load = target ? llvm::dyn_cast<llvm::LoadInst>(target->getOperand(0)) : nullptr;
++			auto *address = load ? llvm::dyn_cast<llvm::IntToPtrInst>(load->getPointerOperand()) : nullptr;
++			auto *sum = address ? llvm::dyn_cast<llvm::BinaryOperator>(address->getOperand(0)) : nullptr;
++			if (!sum || sum->getOpcode() != llvm::Instruction::Add || !load->hasOneUse()
++					|| load->isVolatile() || load->isAtomic() || !target->hasOneUse()) continue;
++			auto *base = llvm::dyn_cast<llvm::BinaryOperator>(sum->getOperand(0));
++			auto *scale = llvm::dyn_cast<llvm::BinaryOperator>(sum->getOperand(1));
++			if (!base || base->getOpcode() != llvm::Instruction::Add || !scale
++					|| scale->getOpcode() != llvm::Instruction::Mul) continue;
++			auto *start = llvm::dyn_cast<llvm::ConstantInt>(base->getOperand(1));
++			auto *stride = llvm::dyn_cast<llvm::ConstantInt>(scale->getOperand(1));
++			auto *ptr = llvm::dyn_cast<llvm::PtrToIntInst>(base->getOperand(0));
++			auto *frame = ptr ? llvm::dyn_cast<llvm::AllocaInst>(ptr->getPointerOperand()) : nullptr;
++			if (!frame || !start || !stride || stride->getZExtValue() != 4) continue;
++			std::map<int64_t, llvm::StoreInst*> stores;
++			std::set<llvm::Value*> seen;
++			std::vector<llvm::Value*> pending{frame};
++			bool safe = true;
++			while (!pending.empty() && safe) {
++				auto *value = pending.back(); pending.pop_back();
++				if (!seen.insert(value).second) continue;
++				for (auto *user : value->users()) {
++					if (user == ptr || user == base || user == sum || user == address || user == load) continue;
++					if (llvm::isa<llvm::BitCastInst>(user) || llvm::isa<llvm::GetElementPtrInst>(user)) {
++						pending.push_back(user); continue;
++					}
++					auto *store = llvm::dyn_cast<llvm::StoreInst>(user);
++					int64_t offset;
++					if (!store || store->getParent() != &block || store->isVolatile() || store->isAtomic()
++							|| !store->getValueOperand()->getType()->isIntegerTy(32)
++							|| !llvm::isa<llvm::ConstantInt>(store->getValueOperand())
++							|| !fixedStackOffset(store->getPointerOperand(), frame, module.getDataLayout(), offset)
++							|| !stores.emplace(offset, store).second) { safe = false; break; }
++				}
++			}
++			if (!safe || stores.empty() || !ptr->hasOneUse() || !base->hasOneUse()
++					|| !sum->hasOneUse() || !address->hasOneUse()) continue;
++			int64_t expected = start->getSExtValue();
++			for (const auto &entry : stores) {
++				bool before = false;
++				for (auto &instruction : block) {
++					if (&instruction == load) break;
++					if (&instruction == entry.second) before = true;
++				}
++				if (entry.first != expected || !before) safe = false;
++				expected += 4;
++			}
++			if (!safe) continue;
++			// Refine a void, argument-free dispatch only when every initialized
++			// address has an explicit matching source declaration.
++			std::vector<const common::Function*> declarations;
++			bool declared = call->arg_empty() && call->use_empty()
++					&& call->getCallingConv() == llvm::CallingConv::C
++					&& !call->isTailCall() && call->getNumOperandBundles() == 0
++					&& call->getAttributes().isEmpty();
++			for (const auto &entry : stores) {
++				auto address = llvm::cast<llvm::ConstantInt>(entry.second->getValueOperand())->getZExtValue();
++				auto *source = config.functions.getFunctionByStartAddress(address);
++				declared &= source && source->parameters.empty() && !source->isVariadic()
++						&& source->returnType.getLlvmIr() == "void";
++				declarations.push_back(source);
++			}
++			auto *handlerType = declared
++				? llvm::FunctionType::get(llvm::Type::getVoidTy(module.getContext()), false)->getPointerTo()
++				: target->getType();
++			if (declared) {
++				for (auto *source : declarations) {
++					auto *named = module.getNamedValue(source->getName());
++					if (named && named->getType() != handlerType) declared = false;
++				}
++				if (!declared) handlerType = target->getType();
++			}
++			llvm::IRBuilder<> builder(frame);
++			auto *tableType = llvm::ArrayType::get(handlerType, stores.size());
++			auto *table = builder.CreateAlloca(tableType, nullptr, "local_handlers");
++			table->setAlignment(4);
++			unsigned index = 0;
++			for (const auto &entry : stores) {
++				builder.SetInsertPoint(entry.second);
++				auto *slot = builder.CreateGEP(table, {builder.getInt32(0), builder.getInt32(index)});
++				llvm::Value *value = nullptr;
++				if (declared) {
++					auto *type = llvm::cast<llvm::FunctionType>(handlerType->getPointerElementType());
++					value = module.getOrInsertFunction(declarations[index]->getName(), type);
++				} else {
++					value = builder.CreateIntToPtr(entry.second->getValueOperand(), handlerType);
++				}
++				++index;
++				builder.CreateStore(value, slot);
++				auto *oldAddress = llvm::dyn_cast<llvm::Instruction>(entry.second->getPointerOperand());
++				entry.second->eraseFromParent();
++				if (oldAddress) llvm::RecursivelyDeleteTriviallyDeadInstructions(oldAddress);
++			}
++			builder.SetInsertPoint(load);
++			auto *slot = builder.CreateGEP(table, {builder.getInt32(0), scale->getOperand(0)});
++			auto *handler = builder.CreateLoad(slot);
++			if (declared) {
++				builder.SetInsertPoint(call);
++				builder.CreateCall(handler);
++				// Advance the outer iterator before deleting its current call.
++				it = call->eraseFromParent();
++				--it;
++			} else {
++				target->replaceAllUsesWith(handler);
++			}
++			llvm::RecursivelyDeleteTriviallyDeadInstructions(target);
++		}
++	}
++}
++
++// Recover only exact declared array bases. OR is address addition only when
++// its constant bits are proven zero in the dynamic offset. No nearest-symbol
++// guessing, inferred extent, inbounds promise, or volatile access rewrite.
++void recoverDeclaredArrays(llvm::Module &module, const config::Config &config) {
++	const auto &layout = module.getDataLayout();
++	if (layout.getPointerSizeInBits() != 32) return;
++	for (auto &function : module) for (auto &block : function) {
++		for (auto &instruction : block) {
++			auto *load = llvm::dyn_cast<llvm::LoadInst>(&instruction);
++			if (!load || load->isVolatile() || load->isAtomic()) continue;
++			auto *pointer = llvm::dyn_cast<llvm::IntToPtrInst>(load->getPointerOperand());
++			auto *add = pointer ? llvm::dyn_cast<llvm::BinaryOperator>(pointer->getOperand(0)) : nullptr;
++			if (!add || add->getOpcode() != llvm::Instruction::Add || !add->getType()->isIntegerTy(32)) continue;
++			auto *low = llvm::dyn_cast<llvm::ConstantInt>(add->getOperand(1));
++			auto *base = llvm::dyn_cast<llvm::BinaryOperator>(add->getOperand(0));
++			if (!low || !base || base->getOpcode() != llvm::Instruction::Or) continue;
++			auto *high = llvm::dyn_cast<llvm::ConstantInt>(base->getOperand(1));
++			if (!high) continue;
++			auto *offset = base->getOperand(0);
++			auto known = llvm::computeKnownBits(offset, layout);
++			if ((known.Zero & high->getValue()) != high->getValue()) continue;
++			auto address = (high->getValue() + low->getValue()).getZExtValue();
++			auto *source = config.globals.getObjectByAddress(address);
++			if (!source) continue;
++			auto *type = bin2llvmir::llvm_utils::stringToLlvmType(module.getContext(), source->type.getLlvmIr());
++			auto *array = llvm::dyn_cast_or_null<llvm::ArrayType>(type);
++			if (!array || array->getElementType() != load->getType()
++					|| source->type.getLlvmIr().compare(0, 5, "[0 x ") != 0) continue;
++			// The legacy type parser normalizes a zero bound to one. Preserve
++			// the explicitly supplied incomplete outer dimension instead.
++			if (source->type.getLlvmIr().compare(0, 5, "[0 x ") == 0) {
++				array = llvm::ArrayType::get(array->getElementType(), 0);
++				type = array;
++			}
++			auto size = layout.getTypeAllocSize(array->getElementType());
++			if (!size || (size & (size - 1)) || (known.Zero.getZExtValue() & (size - 1)) != size - 1) continue;
++			auto *named = module.getNamedValue(source->getName());
++			auto *global = llvm::dyn_cast_or_null<llvm::GlobalVariable>(named);
++			if (named && (!global || global->getValueType() != type)) continue;
++			if (!global) global = new llvm::GlobalVariable(module, type, false,
++				llvm::GlobalValue::ExternalLinkage, nullptr, source->getName());
++			llvm::IRBuilder<> builder(load);
++			auto *index = builder.CreateUDiv(offset, builder.getInt32(size));
++			load->setOperand(0, builder.CreateGEP(global, {builder.getInt32(0), index}));
++			// Keep dead arithmetic until ordinary conversion; erasing the next
++			// instruction while iterating would invalidate traversal.
++		}
++	}
++}
++
++// A switch whose cases all select the same continuation is a membership
++// condition, not a jump table. Keep evaluation once and retain both successors.
++void recoverMembershipPredicates(llvm::Module &module) {
++	for (auto &function : module) {
++		for (auto &block : function) {
++			auto *sw = llvm::dyn_cast<llvm::SwitchInst>(block.getTerminator());
++			if (!sw || sw->getNumCases() < 2 || sw->getNumCases() > 8) continue;
++			auto *destination = sw->case_begin()->getCaseSuccessor();
++			bool same = destination != sw->getDefaultDest();
++			for (auto &entry : sw->cases()) same &= entry.getCaseSuccessor() == destination;
++			// Changing predecessor edge multiplicity would need PHI repair.
++			if (!same || llvm::isa<llvm::PHINode>(destination->begin())
++					|| llvm::isa<llvm::PHINode>(sw->getDefaultDest()->begin())) continue;
++			llvm::IRBuilder<> builder(sw);
++			llvm::Value *condition = nullptr;
++			for (auto &entry : sw->cases()) {
++				auto *equal = builder.CreateICmpEQ(sw->getCondition(), entry.getCaseValue());
++				condition = condition ? builder.CreateOr(condition, equal) : equal;
++			}
++			builder.CreateCondBr(condition, destination, sw->getDefaultDest());
++			sw->eraseFromParent();
++		}
++	}
++}
++
++// GCC 2.x preserves a forward conditional around the main body more closely
++// than an early-return guard. Limit inversion to constant exits without labels.
++class ForwardGuardRecovery final : public FuncOptimizer {
++public:
++	explicit ForwardGuardRecovery(ShPtr<Module> module) : FuncOptimizer(module) {}
++	std::string getId() const override { return "ForwardGuardRecovery"; }
++private:
++	void visit(ShPtr<IfStmt> statement) override {
++		FuncOptimizer::visit(statement);
++		if (statement->hasElseClause() || statement->hasElseIfClauses()) return;
++		auto exit = cast<ReturnStmt>(skipEmptyStmts(statement->getFirstIfBody()));
++		auto following = statement->getSuccessor();
++		if (!exit || !isa<ConstInt>(exit->getRetVal()) || exit->getSuccessor()
++				|| !following || !endsWithRetOrUnreach(following)) return;
++		// Include nested bodies and empty statements, not only top-level labels.
++		if (GotoTargetAnalysis::hasGotoTargets(following)
++				|| GotoTargetAnalysis::hasGotoTargets(statement->getFirstIfBody())) return;
++		auto body = statement->getFirstIfBody();
++		statement->setFirstIfCond(ExpressionNegater::negate(statement->getFirstIfCond()));
++		statement->setSuccessor(body);
++		statement->setFirstIfBody(following);
++	}
++};
++
++// Recover consecutive function-address stores as an automatic array initializer.
++// No intervening read/effect is moved; all elements must be explicitly present.
++class TableInitializerRecovery final : public FuncOptimizer {
++public:
++	explicit TableInitializerRecovery(ShPtr<Module> module) : FuncOptimizer(module) {}
++	std::string getId() const override { return "TableInitializerRecovery"; }
++private:
++	void visit(ShPtr<VarDefStmt> definition) override {
++		FuncOptimizer::visit(definition);
++		auto type = cast<ArrayType>(definition->getVar()->getType());
++		if (!type || definition->getInitializer() || definition->getVar()->isExternal()
++				|| type->getDimensions().size() != 1 || type->getDimensions()[0] > 16
++				|| GotoTargetAnalysis::hasGotoTargets(definition)) return;
++		ConstArray::ArrayValue values;
++		std::vector<ShPtr<Statement>> stores;
++		auto next = skipEmptyStmts(definition->getSuccessor());
++		for (std::size_t i = 0; i < type->getDimensions()[0]; ++i) {
++			auto assign = cast<AssignStmt>(next);
++			auto slot = assign ? cast<ArrayIndexOpExpr>(assign->getLhs()) : nullptr;
++			auto index = slot ? cast<ConstInt>(slot->getIndex()) : nullptr;
++			auto handler = assign ? cast<Variable>(assign->getRhs()) : nullptr;
++			auto function = handler ? module->getFuncByName(handler->getName()) : nullptr;
++			if (!slot || slot->getBase() != definition->getVar() || !index
++					|| index->getValue() != i || !function || function->getAsVar() != handler
++					|| assign->isGotoTarget()) return;
++			values.push_back(cast<Expression>(handler->clone()));
++			stores.push_back(assign);
++			next = skipEmptyStmts(assign->getSuccessor());
++		}
++		if (values.empty()) return;
++		definition->setInitializer(ConstArray::create(values, type));
++		for (auto store : stores) Statement::removeStatement(store);
++	}
++};
++
++// Recover terminal Boolean results as ordered early returns. Membership
++// splitting permits only nonescaping scalar operands. The two-comparison form
++// retains its initialization and short-circuit order, including memory reads.
++class MembershipReturnRecovery final : public FuncOptimizer {
++public:
++	explicit MembershipReturnRecovery(ShPtr<Module> module) : FuncOptimizer(module), aliases(SimpleAliasAnalysis::create()) {
++		aliases->init(module);
++	}
++	std::string getId() const override { return "MembershipReturnRecovery"; }
++private:
++	bool scalar(ShPtr<Expression> expr, ShPtr<Variable> result) {
++		if (isa<ConstInt>(expr)) return true;
++		if (auto var = cast<Variable>(expr))
++			return var != result && currFunc->hasLocalVar(var) && !var->isExternal()
++				&& !aliases->mayBePointed(var) && isa<IntType>(var->getType());
++		if (auto conversion = cast<CastExpr>(expr)) return scalar(conversion->getOperand(), result);
++		return false;
++	}
++	bool terms(ShPtr<Expression> expr, ShPtr<Variable> result,
++			std::vector<ShPtr<Expression>> &out) {
++		if (auto conjunction = cast<AndOpExpr>(expr))
++			return terms(conjunction->getFirstOperand(), result, out)
++				&& terms(conjunction->getSecondOperand(), result, out);
++		auto unequal = cast<NeqOpExpr>(expr);
++		if (!unequal || !scalar(unequal->getFirstOperand(), result)
++				|| !scalar(unequal->getSecondOperand(), result)) return false;
++		out.push_back(expr);
++		return out.size() <= 8;
++	}
++	void visit(ShPtr<AssignStmt> init) override {
++		FuncOptimizer::visit(init);
++		auto result = cast<Variable>(init->getLhs());
++		auto initial = cast<ConstInt>(init->getRhs());
++		auto branch = cast<IfStmt>(skipEmptyStmts(init->getSuccessor()));
++		if (!result || !currFunc->hasLocalVar(result) || result->isExternal()
++				|| aliases->mayBePointed(result) || !initial
++				|| (!initial->isOne() && !initial->isZero())
++				|| !branch || branch->hasElseClause() || branch->hasElseIfClauses()) return;
++		auto update = cast<AssignStmt>(skipEmptyStmts(branch->getFirstIfBody()));
++		auto exit = cast<ReturnStmt>(skipEmptyStmts(branch->getSuccessor()));
++		if (!update || skipEmptyStmts(update->getSuccessor()) || update->getLhs() != result
++				|| !exit || exit->getRetVal() != result || exit->getSuccessor()
++				|| GotoTargetAnalysis::hasGotoTargets(init)) return;
++		if (initial->isZero()) {
++			if (!isa<NeqOpExpr>(branch->getFirstIfCond()) || !isa<NeqOpExpr>(update->getRhs())) return;
++			// Keep the initialization: conditions may read the result local.
++			// Both comparisons retain their original short-circuit order.
++			auto condition = OrOpExpr::create(
++				ExpressionNegater::negate(cast<Expression>(branch->getFirstIfCond()->clone())),
++				ExpressionNegater::negate(cast<Expression>(update->getRhs()->clone())));
++			init->setSuccessor(IfStmt::create(condition, ReturnStmt::create(cast<Expression>(initial->clone())),
++				ReturnStmt::create(ConstInt::create(1, 32))));
++			return;
++		}
++		auto final = cast<EqOpExpr>(update->getRhs());
++		if (!final || !scalar(final->getFirstOperand(), result)
++				|| !scalar(final->getSecondOperand(), result)) return;
++		std::vector<ShPtr<Expression>> conditions;
++		if (!terms(branch->getFirstIfCond(), result, conditions) || conditions.size() < 2) return;
++		ShPtr<Statement> chain = IfStmt::create(cast<Expression>(conditions.back()->clone()),
++			ReturnStmt::create(cast<Expression>(final->clone())),
++			ReturnStmt::create(cast<Expression>(initial->clone())));
++		conditions.pop_back();
++		for (auto it = conditions.rbegin(); it != conditions.rend(); ++it)
++			chain = IfStmt::create(ExpressionNegater::negate(cast<Expression>((*it)->clone())),
++				ReturnStmt::create(cast<Expression>(initial->clone())), chain);
++		init->removeSuccessor();
++		Statement::replaceStatement(init, chain);
++	}
++	ShPtr<AliasAnalysis> aliases;
++};
++
++// Reject escaping/full-width uses. A known narrow prototype alone cannot
++// justify discarding incoming MIPS register bits.
++bool onlyLowBitsUsed(const llvm::Argument &arg, unsigned bits) {
++	if (arg.use_empty()) return false;
++	for (auto *user : arg.users()) {
++		if (auto *trunc = llvm::dyn_cast<llvm::TruncInst>(user)) {
++			if (trunc->getType()->getIntegerBitWidth() <= bits) continue;
++		}
++		if (auto *op = llvm::dyn_cast<llvm::BinaryOperator>(user)) {
++			auto *c = llvm::dyn_cast<llvm::ConstantInt>(op->getOperand(1));
++			if (c && op->getOperand(0) == &arg) {
++				if (op->getOpcode() == llvm::Instruction::And
++						&& c->getValue().getActiveBits() <= bits) continue;
++				if (op->getOpcode() == llvm::Instruction::URem
++						&& c->getValue().isPowerOf2()
++						&& c->getValue().logBase2() <= bits) continue;
++			}
++		}
++		return false;
++	}
++	return true;
++}
++}
++
++void recoverPointerExpressions(llvm::Module &module, const config::Config &config) {
++	if (config.architecture.isMipsOrPic32()) {
++		bin2llvmir::counter_provenance::validate(module);
++		bin2llvmir::counter_provenance::restoreTestedValue(module);
++		recoverStackTables(module, config);
++		recoverDeclaredArrays(module, config);
++	}
++	recoverMembershipPredicates(module);
++	const auto &layout = module.getDataLayout();
++	std::vector<llvm::IntToPtrInst*> candidates;
++	for (auto &function : module)
++		for (auto &block : function)
++			for (auto &instruction : block)
++				if (auto *cast = llvm::dyn_cast<llvm::IntToPtrInst>(&instruction))
++					candidates.push_back(cast);
++	for (auto *cast : candidates) {
++		auto *add = llvm::dyn_cast<llvm::BinaryOperator>(cast->getOperand(0));
++		if (!add || add->getOpcode() != llvm::Instruction::Add) continue;
++		llvm::PtrToIntInst *base = nullptr;
++		llvm::ConstantInt *offset = nullptr;
++		for (unsigned i = 0; i < 2; ++i) {
++			base = llvm::dyn_cast<llvm::PtrToIntInst>(add->getOperand(i));
++			offset = llvm::dyn_cast<llvm::ConstantInt>(add->getOperand(1-i));
++			if (base && offset) break;
++		}
++		if (!base || !offset) continue;
++		auto *pointer = llvm::cast<llvm::PointerType>(base->getPointerOperand()->getType());
++		if (pointer->getAddressSpace() != 0 || cast->getType()->getPointerAddressSpace() != 0
++				|| base->getType()->getIntegerBitWidth() != layout.getPointerSizeInBits()) continue;
++		// No inbounds promise: pointer-width modular addressing is retained.
++		llvm::IRBuilder<> builder(cast);
++		auto *bytes = builder.CreateBitCast(base->getPointerOperand(), builder.getInt8PtrTy());
++		auto *address = builder.CreateGEP(bytes, offset);
++		auto *typed = builder.CreateBitCast(address, cast->getType());
++		cast->replaceAllUsesWith(typed);
++		cast->eraseFromParent();
++		if (add->use_empty()) add->eraseFromParent();
++		if (base->use_empty()) base->eraseFromParent();
++	}
++}
++
++void recoverSourceSignatures(ShPtr<Module> module, const config::Config &config) {
++	if (!config.architecture.isMipsOrPic32()) return;
++	ForwardGuardRecovery(module).optimize();
++	MembershipReturnRecovery(module).optimize();
++	TableInitializerRecovery(module).optimize();
++	for (auto f = module->func_begin(); f != module->func_end(); ++f) {
++		auto function = *f;
++		auto *machine = module->getLLVMModule()->getFunction(function->getInitialName());
++		auto *source = config.functions.getFunctionByName(function->getInitialName());
++		if (!machine || !source || machine->isDeclaration()
++				|| source->parameters.size() != function->getNumOfParams()) continue;
++		auto params = function->getParams();
++		auto arg = machine->arg_begin();
++		std::size_t index = 0;
++		for (const auto &parameter : source->parameters) {
++			const auto &spelling = parameter.type.getCType();
++			unsigned bits = spelling == "unsigned char" || spelling == "uint8_t" ? 8
++				: spelling == "unsigned short" || spelling == "uint16_t" ? 16 : 0;
++			if (bits && arg->getType()->isIntegerTy() && onlyLowBitsUsed(*arg, bits))
++				// Preserve the raw-register entry ABI. Narrow C parameters let
++				// optimizing compilers assume extension and delete the mask.
++				params[index]->setType(IntType::create(arg->getType()->getIntegerBitWidth(), false));
++			++arg; ++index;
++		}
++		function->setParams(params);
++	}
++}
++
++namespace {
++
++// The supplied declaration fixes the base type's signedness. LLVM's integer
++// types are signless, so the BIR type is signed by default and would emit a
++// different base type than the one the declaration supplies.
++ShPtr<Type> unsignedBaseType(ShPtr<Type> type) {
++	if (auto pointer = cast<PointerType>(type))
++		return PointerType::create(unsignedBaseType(pointer->getContainedType()));
++	if (auto integer = cast<IntType>(type))
++		return integer->isUnsigned() ? type : IntType::create(integer->getSize(), false);
++	return type;
++}
++
++}
++
++// Applies supplied object qualification to the declared objects only; the
++// pointee of a volatile pointer cell is not qualified.
++void applyDeclaredAccessQualifiers(ShPtr<Module> module, const config::Config &config) {
++	for (const auto &object : config.globals) {
++		if (!object.type.isVolatile()) continue;
++		auto variable = module->getGlobalVarByName(object.getName());
++		if (!variable) continue;
++		if (object.type.hasUnsignedBaseType())
++			variable->setType(unsignedBaseType(variable->getType()));
++		variable->markAsVolatile();
++	}
++}
++}
++}
+diff --git a/deps/retdec/retdec/src/llvmir2hll/llvmir2hll.cpp b/deps/retdec/retdec/src/llvmir2hll/llvmir2hll.cpp
+index 8c458d3..736f5c4 100644
+--- a/deps/retdec/retdec/src/llvmir2hll/llvmir2hll.cpp
++++ b/deps/retdec/retdec/src/llvmir2hll/llvmir2hll.cpp
+@@ -4,6 +4,7 @@
+ #include <memory>
+ 
+ #include "retdec/llvmir2hll/llvmir2hll.h"
++#include "retdec/llvmir2hll/llvm/source_recovery.h"
+ #include "retdec/utils/io/log.h"
+ 
+ using namespace llvm;
+@@ -157,6 +158,7 @@ bool LlvmIr2Hll::runOnModule(llvm::Module &m)
+ 		return false;
+ 	}
+ 
++	llvmir2hll::recoverPointerExpressions(m, *globalConfig);
+ 	Log::phase("conversion of LLVM IR into BIR");
+ 	decompilationShouldContinue = convertLLVMIRToBIR();
+ 	if (!decompilationShouldContinue)
+@@ -235,6 +237,8 @@ bool LlvmIr2Hll::runOnModule(llvm::Module &m)
+ 		emitCG();
+ 	}
+ 
++	llvmir2hll::applyDeclaredAccessQualifiers(resModule, *globalConfig);
++	llvmir2hll::recoverSourceSignatures(resModule, *globalConfig);
+ 	Log::phase("emission of the target code [" + hllWriter->getId() + "]");
+ 	emitTargetHLLCode();
+ 
+@@ -595,10 +599,20 @@ void LlvmIr2Hll::initAliasAnalysis()
+ */
+ void LlvmIr2Hll::runOptimizations()
+ {
++	auto disabledOpts = parseListOfOpts(globalConfig->parameters.getBackendDisabledOpts());
++	// The PSX compiler accepts C89, not mixed declarations and statements.
++	// Keep declarations at entry; assignments remain at their original sites.
++	if (globalConfig->architecture.isMipsOrPic32() && hllWriter->getId() == "c") {
++		disabledOpts.insert("VarDefStmt");
++		disabledOpts.insert("VarDefForLoop");
++		// Preserve instruction-level shifts. Turning 64-bit high-product shifts
++		// into division introduces unavailable compiler runtime helpers on PSX.
++		disabledOpts.insert("BitShift");
++	}
+ 	ShPtr<llvmir2hll::OptimizerManager> optManager(
+ 			new llvmir2hll::OptimizerManager(
+ 					parseListOfOpts(globalConfig->parameters.getBackendEnabledOpts()),
+-					parseListOfOpts(globalConfig->parameters.getBackendDisabledOpts()),
++					disabledOpts,
+ 					hllWriter,
+ 					llvmir2hll::ValueAnalysis::create(aliasAnalysis, true),
+ 					cio,
+diff --git a/deps/retdec/retdec/src/serdes/type.cpp b/deps/retdec/retdec/src/serdes/type.cpp
+index 8d48682..e230fbe 100644
+--- a/deps/retdec/retdec/src/serdes/type.cpp
++++ b/deps/retdec/retdec/src/serdes/type.cpp
+@@ -15,6 +15,7 @@ namespace {
+ 
+ const std::string JSON_llvmIr     = "llvmIr";
+ const std::string JSON_wideString = "isWideString";
++const std::string JSON_volatile   = "isVolatile";
+ 
+ } // anonymous namespace
+ 
+@@ -27,6 +28,8 @@ void serialize(Writer& writer, const common::Type& t)
+ 	writer.StartObject();
+ 
+ 	serializeString(writer, JSON_llvmIr, t.getLlvmIr(), t.isDefined());
++	serializeString(writer, "cType", t.getCType(), !t.getCType().empty());
++	serializeBool(writer, JSON_volatile, t.isVolatile(), t.isDefined() && t.isVolatile());
+ 	serializeBool(writer, JSON_wideString, t.isWideString(), t.isDefined() && t.isWideString());
+ 
+ 	writer.EndObject();
+@@ -41,6 +44,8 @@ void deserialize(const rapidjson::Value& val, common::Type& t)
+ 	}
+ 
+ 	t.setLlvmIr(deserializeString(val, JSON_llvmIr));
++	t.setCType(deserializeString(val, "cType"));
++	t.setIsVolatile(deserializeBool(val, JSON_volatile));
+ 	t.setIsWideString(deserializeBool(val, JSON_wideString));
+ }
+ 
+diff --git a/src/rz-plugin/data.cpp b/src/rz-plugin/data.cpp
+index c25fabe..937562f 100644
+--- a/src/rz-plugin/data.cpp
++++ b/src/rz-plugin/data.cpp
+@@ -7,6 +7,17 @@
+  * @brief Information gathering from Rizin and user.
+  */
+ 
++#include <algorithm>
++#include <cstdlib>
++#include <fstream>
++#include <iterator>
++#include <map>
++#include <stdexcept>
++#include <string>
++#include <vector>
++
++#include <rapidjson/document.h>
++
+ #include <retdec/utils/io/log.h>
+ 
+ #include "rz-plugin/data.h"
+@@ -18,6 +29,289 @@ using namespace retdec::rzplugin;
+ using fu = retdec::rzplugin::FormatUtils;
+ using retdec::utils::io::Log;
+ 
++namespace {
++
++// Explicit global declarations named by this environment variable are the only
++// admissible source of object-level qualification: Rizin's type model cannot
++// carry `volatile`.
++const char* declarationInputVariable = "DEC_OBJECT_DECLARATIONS";
++
++unsigned countPointerLevels(const std::string& spelling)
++{
++	return static_cast<unsigned>(std::count(spelling.begin(), spelling.end(), '*'));
++}
++
++bool spellingCarriesQualifier(const std::string& spelling)
++{
++	for (const char* token : {"volatile", "const", "restrict"})
++	{
++		if (spelling.find(token) != std::string::npos)
++		{
++			return true;
++		}
++	}
++	return false;
++}
++
++// The spelling must be the supported base type followed only by pointer levels;
++// a trailing identifier or declarator is malformed input.
++bool spellingIsBaseAndPointers(const std::string& spelling)
++{
++	std::string base = spelling.substr(0, spelling.find('*'));
++	std::string rest = spelling;
++	rest.erase(std::remove(rest.begin(), rest.end(), '*'), rest.end());
++	auto notSpace = [](char c) { return c != ' ' && c != '\t'; };
++	base.erase(base.begin(), std::find_if(base.begin(), base.end(), notSpace));
++	base.erase(std::find_if(base.rbegin(), base.rend(), notSpace).base(), base.end());
++	rest.erase(rest.begin(), std::find_if(rest.begin(), rest.end(), notSpace));
++	rest.erase(std::find_if(rest.rbegin(), rest.rend(), notSpace).base(), rest.end());
++	return base == rest;
++}
++
++bool parseScalarLlvmType(const std::string& llvmIr, unsigned& width, unsigned& levels)
++{
++	std::string text = llvmIr;
++	text.erase(std::remove_if(text.begin(), text.end(), [](char c) {
++		return c == ' ' || c == '\t'; }), text.end());
++
++	levels = 0;
++	while (!text.empty() && text.back() == '*')
++	{
++		++levels;
++		text.pop_back();
++	}
++	if (levels > 1 || text.size() < 2 || text[0] != 'i')
++	{
++		return false;
++	}
++	const std::string digits = text.substr(1);
++	if (!std::all_of(digits.begin(), digits.end(), [](char c) {
++			return c >= '0' && c <= '9'; }))
++	{
++		return false;
++	}
++	width = static_cast<unsigned>(std::strtoul(digits.c_str(), nullptr, 10));
++	return width >= 8 && width <= 64;
++}
++
++// Rejects every declaration this pipeline cannot carry unchanged.
++bool validateDeclaredObject(const Object& object, int addressBits, std::string& reason)
++{
++	if (object.getName().empty())
++	{
++		reason = "empty name";
++		return false;
++	}
++	const Address address = object.getStorage().getAddress();
++	if (!object.getStorage().isMemory() || address.isUndefined() || address.getValue() == 0)
++	{
++		reason = "storage is not a defined global address";
++		return false;
++	}
++	if (addressBits > 0 && addressBits < 64 && (address.getValue() >> addressBits) != 0)
++	{
++		reason = "address " + address.toHexPrefixString() + " does not fit the target's "
++				+ std::to_string(addressBits) + "-bit address space";
++		return false;
++	}
++	const Type& type = object.type;
++	if (!type.isDefined())
++	{
++		reason = "missing LLVM type";
++		return false;
++	}
++	if (!type.isVolatile())
++	{
++		reason = "missing object-level qualification";
++		return false;
++	}
++	const std::string& spelling = type.getCType();
++	if (spelling.empty())
++	{
++		reason = "missing C base type";
++		return false;
++	}
++	if (spellingCarriesQualifier(spelling))
++	{
++		reason = "qualifier inside the spelling would qualify the pointee: \"" + spelling + "\"";
++		return false;
++	}
++	if (!spellingIsBaseAndPointers(spelling))
++	{
++		reason = "spelling is not a base type followed by pointer levels: \"" + spelling + "\"";
++		return false;
++	}
++	unsigned width = 0;
++	unsigned levels = 0;
++	if (!parseScalarLlvmType(type.getLlvmIr(), width, levels))
++	{
++		reason = "unsupported LLVM type: \"" + type.getLlvmIr() + "\"";
++		return false;
++	}
++	const unsigned baseWidth = type.getCBaseTypeWidth();
++	if (baseWidth == 0)
++	{
++		reason = "unsupported base type: \"" + spelling + "\"";
++		return false;
++	}
++	if (baseWidth != width)
++	{
++		reason = "base type width " + std::to_string(baseWidth)
++				+ " disagrees with the LLVM type \"" + type.getLlvmIr() + "\"";
++		return false;
++	}
++	if (countPointerLevels(spelling) != levels)
++	{
++		reason = "pointer levels in \"" + spelling + "\" disagree with the LLVM type \""
++				+ type.getLlvmIr() + "\"";
++		return false;
++	}
++	return true;
++}
++
++// A name must resolve to one address and an address to one name; a declaration
++// for an existing identity replaces the metadata derived from Rizin. Nothing is
++// applied when any entry is rejected.
++void mergeDeclaredObjects(
++		Config& config,
++		const Config& supplied,
++		const std::string& path,
++		int addressBits)
++{
++	std::vector<std::string> rejected;
++	std::vector<const Object*> accepted;
++	std::map<std::string, Address> names;
++	std::map<Address, std::string> addresses;
++
++	for (const auto& object : supplied.globals)
++	{
++		const std::string label = object.getName().empty() ? std::string("<unnamed>") : object.getName();
++		std::string reason;
++		if (!validateDeclaredObject(object, addressBits, reason))
++		{
++			rejected.push_back(label + ": " + reason);
++			continue;
++		}
++
++		const Address address = object.getStorage().getAddress();
++		const Object* byName = config.globals.getObjectByName(object.getName());
++		const Object* byAddress = config.globals.getObjectByAddress(address);
++		const auto namedAt = names.find(object.getName());
++		const auto addressedAs = addresses.find(address);
++		if (byName && byName->getStorage().getAddress() != address)
++		{
++			rejected.push_back(label + ": name already declared at "
++					+ byName->getStorage().getAddress().toHexString());
++			continue;
++		}
++		if (byAddress && byAddress->getName() != object.getName())
++		{
++			rejected.push_back(label + ": address already declared as \""
++					+ byAddress->getName() + "\"");
++			continue;
++		}
++		if (namedAt != names.end() && namedAt->second != address)
++		{
++			rejected.push_back(label + ": declared twice with different addresses");
++			continue;
++		}
++		if (addressedAs != addresses.end() && addressedAs->second != object.getName())
++		{
++			rejected.push_back(label + ": address declared as \""
++					+ addressedAs->second + "\" as well");
++			continue;
++		}
++
++		names[object.getName()] = address;
++		addresses[address] = object.getName();
++		accepted.push_back(&object);
++	}
++
++	if (!rejected.empty())
++	{
++		Log::error() << declarationInputVariable << ": rejected \"" << path << "\": "
++				<< rejected.size() << " invalid declaration(s); none applied" << std::endl;
++		for (const auto& item : rejected)
++		{
++			Log::error() << "  " << item << std::endl;
++		}
++		return;
++	}
++
++	for (const Object* object : accepted)
++	{
++		config.globals.insert(*object);
++	}
++	Log::info() << declarationInputVariable << ": applied " << accepted.size()
++			<< " declaration(s) from \"" << path << "\"" << std::endl;
++}
++
++// The shared configuration deserializer drops an object whose storage is not a
++// global address and merges duplicate identities, so the same document is
++// compared with what it represents instead of ignoring such input silently.
++bool documentRepresents(const std::string& text, std::size_t represented, std::string& reason)
++{
++	rapidjson::Document document;
++	document.Parse(text.c_str());
++	if (document.HasParseError())
++	{
++		reason = "is not valid JSON";
++		return false;
++	}
++	if (!document.IsObject() || !document.HasMember("globals"))
++	{
++		return true;
++	}
++	const auto& globals = document["globals"];
++	if (!globals.IsArray())
++	{
++		reason = "\"globals\" is not an array";
++		return false;
++	}
++	if (globals.Size() != represented)
++	{
++		reason = "declares " + std::to_string(globals.Size()) + " global(s), but only "
++				+ std::to_string(represented) + " represent a distinct global object";
++		return false;
++	}
++	return true;
++}
++
++void applyDeclaredObjects(Config& config, int addressBits)
++{
++	const char* path = std::getenv(declarationInputVariable);
++	if (path == nullptr || *path == '\0')
++	{
++		return;
++	}
++	try
++	{
++		std::ifstream stream(path);
++		if (!stream)
++		{
++			throw std::runtime_error("cannot be opened");
++		}
++		const std::string text((std::istreambuf_iterator<char>(stream)),
++				std::istreambuf_iterator<char>());
++		const Config supplied = Config::fromJsonString(text);
++		std::string reason;
++		if (!documentRepresents(text, supplied.globals.size(), reason))
++		{
++			Log::error() << declarationInputVariable << ": rejected \"" << path << "\": "
++					<< reason << std::endl;
++			return;
++		}
++		mergeDeclaredObjects(config, supplied, path, addressBits);
++	}
++	catch (const std::exception& error)
++	{
++		Log::error() << declarationInputVariable << ": rejected \"" << path << "\": "
++				<< error.what() << std::endl;
++	}
++}
++
++} // anonymous namespace
++
+ /**
+  * Translation map between tokens representing calling convention type returned
+  * by Rizin and CallingConventionID that is recognized by RetDec.
+@@ -192,17 +486,13 @@ void RizinDatabase::fetchFunctionsAndGlobals(Config &rzconfig) const
+ void RizinDatabase::fetchGlobals(Config &config) const
+ {
+ 	RzBinObject *obj = rz_bin_cur_object(_rzcore.bin);
+-	if (obj == nullptr || obj->symbols == nullptr)
+-		return;
+-
+-
+ 	auto list = rz_analysis_var_global_get_all(_rzcore.analysis);
+ 
+ 	GlobalVarContainer globals;
+ 	FunctionContainer functions;
+ 
+ 	void **it;
+-	rz_pvector_foreach(obj->symbols, it) {
++	if (obj && obj->symbols) rz_pvector_foreach(obj->symbols, it) {
+ 		auto sym = reinterpret_cast<RzBinSymbol*>(*it);
+ 		if (sym == nullptr)
+ 			continue;
+@@ -235,16 +525,25 @@ void RizinDatabase::fetchGlobals(Config &config) const
+ 	}
+ 
+ 	// Searching through all globals
+-	for (RzListIter *it = list->head; it; it = rz_list_next(it)) {
++	for (RzListIter *it = list ? list->head : nullptr; it; it = rz_list_next(it)) {
+ 			auto glob = reinterpret_cast<RzAnalysisVarGlobal*>(rz_list_val(it));
+ 			if (glob == nullptr)
+ 				continue;
+ 
+ 			Object var(glob->name, Storage::inMemory(glob->addr));
+ 			var.setRealName(glob->name);
+-
++			var.setIsFromDebug(true);
++			if (glob->type) {
++				auto typedb = rz_analysis_get_type_db(_rzcore.analysis);
++				var.type = Type(fu::convertTypeToLlvm(typedb, glob->type));
++				if (char *spelling = rz_type_as_string(typedb, glob->type)) {
++					var.type.setCType(spelling);
++					rz_mem_free(spelling);
++				}
++			}
+ 			globals.insert(var);
+ 	}
++	rz_list_free(list);
+ 
+ 	// If we found at least one dynamically linked function.
+ 	if (!functions.empty()) {
+@@ -255,6 +554,8 @@ void RizinDatabase::fetchGlobals(Config &config) const
+ 	}
+ 
+ 	config.globals = globals;
++
++	applyDeclaredObjects(config, rz_analysis_get_bits(_rzcore.analysis));
+ }
+ 
+ /**
+@@ -359,6 +660,10 @@ void RizinDatabase::fetchExtraArgsData(ObjectSequentialContainer &args, RzAnalys
+ 			Object var(arg->name, Storage::undefined());
+ 			var.setRealName(arg->name);
+ 			var.type = Type(fu::convertTypeToLlvm(typedb, arg->orig_c_type));
++			if (char *spelling = rz_type_as_string(typedb, arg->orig_c_type)) {
++				var.type.setCType(spelling);
++				rz_mem_free(spelling);
++			}
+ 			args.push_back(var);
+ 		}
+ 		rz_list_free (list);
+diff --git a/src/rz-plugin/utils.cpp b/src/rz-plugin/utils.cpp
+index a11a770..1822b8a 100644
+--- a/src/rz-plugin/utils.cpp
++++ b/src/rz-plugin/utils.cpp
+@@ -145,6 +145,11 @@ const std::string FormatUtils::convertTypeToLlvm(const RzTypeDB *tdb, const RzTy
+ 	if (!type || !tdb) {
+ 		return "void";
+ 	}
++	if (type->kind == RZ_TYPE_KIND_ARRAY) {
++		auto element = convertTypeToLlvm(tdb, type->array.type);
++		if (element == "void") return "void";
++		return "[" + std::to_string(type->array.count) + " x " + element + "]";
++	}
+ 	char *typestr = rz_type_as_string(tdb, type);
+ 	if (!typestr) {
+ 		return "void";

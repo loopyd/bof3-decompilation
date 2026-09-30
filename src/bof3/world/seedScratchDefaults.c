@@ -5,7 +5,7 @@
  * @source 0x801F3400
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void seedScratchDefaults(void) {
   World00Area016Scratch* scratch;

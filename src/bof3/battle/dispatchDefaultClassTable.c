@@ -4,7 +4,7 @@
  * @source 0x801E1E7C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS dispatchDefaultClassTable(void) {
   D_801EB27C[D_1F800044->unk_02]();

@@ -5,7 +5,7 @@
  *           state when the clamp fires.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void retreatPanelXToNeg150C(void) {
   PanelTask* task = D_80148648;

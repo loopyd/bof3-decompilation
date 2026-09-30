@@ -9,10 +9,24 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
+    "src/bof3/bmagic/decrementMotionCountdownAndSubtractMotionPairThenAdvanceWorkByte2BmagicMagic00800_801F04DC.c",
+    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00800_801EFD30.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic00800_801F1BCC.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic00800_801F16E8.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic00800_801F1274.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic00800_801F0548.c",
+    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00800_801F0250.c",
+    "src/bof3/bmagic/initWorkMotionFieldsBmagicMagic00800_801F0330.c",
+    "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic00800_801EEFDC.c",
+    "src/bof3/bmagic/resolveKindResultCodeBmagicMagic00800_801F0230.c",
+    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00800_801EF058.c",
+    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00800_801EFA74.c",
+    "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic00800_801EF728.c",
+    "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic00800_801EFA40.c",
+    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00800_801EECF0.c",
+    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00800_801EF384.c",
+    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00800_801EF75C.c",
+    "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic00800_801F0964.c",
     "src/bof3/support/magic008_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/magic008_00_psyq.c"

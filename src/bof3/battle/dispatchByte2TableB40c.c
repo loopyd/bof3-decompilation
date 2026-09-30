@@ -5,7 +5,7 @@
  * scratchpad pointer cell at 0x1F800044.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS dispatchByte2TableB40c(void) {
   D_801EB40C[((Battle03LocalWork*)battleWork)->unk_02]();

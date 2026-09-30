@@ -6,7 +6,7 @@
  * @source 0x801D94D4
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void drawDecimalGlyphRun(s16 arg0, u16 arg1, u8 arg2, s16 arg3) {
   u8  index;
@@ -35,11 +35,6 @@ void drawDecimalGlyphRun(s16 arg0, u16 arg1, u8 arg2, s16 arg3) {
       packet[4] = 0x80;
       packet[5] = 0x80;
       packet[6] = 0x80;
-      /*
-       * MATCHING_AID (permuter-found): the packet+8 pointer temporary keeps the
-       * prologue entry-copy order s3,s5,s6,s2; without it GCC copies a2 first.
-       * Remove when the allocator ordering is understood.
-       */
       xpos = (s16*)(packet + 8);
       *xpos = arg0;
       *(u16*)(packet + 0xa) = arg1;

@@ -5,7 +5,7 @@
  * @source 0x801960C0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void clearRecord(u8 record_index) {
   recordTable[record_index].flags_00 = 0;

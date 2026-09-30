@@ -5,7 +5,7 @@
  * @source 0x80197A60
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void bank2Init(void) {
   u16* state;

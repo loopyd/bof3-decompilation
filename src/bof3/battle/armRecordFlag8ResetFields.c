@@ -3,7 +3,7 @@
 /* @source 0x8009F9E0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 /* @behavior Sets the state flag at +0x08 and resets the signed halfwords at +0x04/+0x06. */
 void armRecordFlag8ResetFields(void) {

@@ -57,8 +57,8 @@ segments:
     - c
     - noopHandlerBossBoss00716_800C19EC
   - - 500
-    - asm
-    - func_800C19F4
+    - c
+    - clearRecordHalfwordFourBossBoss00716_800C19F4
   - - 516
     - c
     - noopHandlerBossBoss00716_800C1A04
@@ -72,9 +72,9 @@ segments:
     - asm
     - func_800C1CB4
   - - 1360
-    - asm
-    - func_800C1D50
+    - c
+    - invokeHelperArgZeroThenOneBossBoss00716_800C1D50
   - - 1400
     - asm
-    - func_800C1D78
+    - D_800C1D78
 - - 1560

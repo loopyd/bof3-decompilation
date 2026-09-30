@@ -16,3 +16,101 @@ psyq_source = "src/bof3/support/bate_03_psyq.c"
 headers = [
     "include/bof3/battle/bate_03_internal.h",
 ]
+
+[[replicas]]
+disc_id = "BIN/ETC/COMMU01.EMI#2"
+payload_sha256 = "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb"
+load_address = 0x80033A00
+size = 512
+evidence = "byte-identical to BIN/ETC/BATE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/ETC/COMMU02.EMI#3"
+payload_sha256 = "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb"
+load_address = 0x80033A00
+size = 512
+evidence = "byte-identical to BIN/ETC/BATE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/ETC/COMMU02B.EMI#2"
+payload_sha256 = "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb"
+load_address = 0x80033A00
+size = 512
+evidence = "byte-identical to BIN/ETC/BATE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/ETC/COMMU03.EMI#1"
+payload_sha256 = "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb"
+load_address = 0x80033A00
+size = 512
+evidence = "byte-identical to BIN/ETC/BATE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/ETC/COMMU04.EMI#1"
+payload_sha256 = "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb"
+load_address = 0x80033A00
+size = 512
+evidence = "byte-identical to BIN/ETC/BATE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/ETC/COMMU05.EMI#2"
+payload_sha256 = "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb"
+load_address = 0x80033A00
+size = 512
+evidence = "byte-identical to BIN/ETC/BATE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/ETC/FIRST.EMI#9"
+payload_sha256 = "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb"
+load_address = 0x80033A00
+size = 512
+evidence = "byte-identical to BIN/ETC/BATE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/ETC/SHISU.EMI#3"
+payload_sha256 = "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb"
+load_address = 0x80033A00
+size = 512
+evidence = "byte-identical to BIN/ETC/BATE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/ETC/SHOP.EMI#3"
+payload_sha256 = "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb"
+load_address = 0x80033A00
+size = 512
+evidence = "byte-identical to BIN/ETC/BATE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/ETC/SISYOU.EMI#3"
+payload_sha256 = "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb"
+load_address = 0x80033A00
+size = 512
+evidence = "byte-identical to BIN/ETC/BATE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/ETC/STATUS.EMI#3"
+payload_sha256 = "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb"
+load_address = 0x80033A00
+size = 512
+evidence = "byte-identical to BIN/ETC/BATE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/WORLD00/AREA030.EMI#21"
+payload_sha256 = "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb"
+load_address = 0x80033A00
+size = 512
+evidence = "byte-identical to BIN/ETC/BATE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/WORLD02/AREA089.EMI#21"
+payload_sha256 = "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb"
+load_address = 0x80033A00
+size = 512
+evidence = "byte-identical to BIN/ETC/BATE.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/WORLD03/AREA129.EMI#21"
+payload_sha256 = "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb"
+load_address = 0x80033A00
+size = 512
+evidence = "byte-identical to BIN/ETC/BATE.EMI#3: same payload sha256 and load address"

@@ -6,7 +6,7 @@
  * @source 0x800A6870
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_800A6870(void) {
   D_801485BB = 4;

@@ -1,0 +1,193 @@
+name: bmagic_magic151_03
+sha1: 02fb1416bf57c5218edd3c18de5c0923fb9530d8
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic151_03
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/bmagic/magic151/03.bin
+  asm_path: out/splat/emi/bmagic/magic151/03/asm
+  src_path: src/emi/bmagic/magic151/03
+  ld_script_path: out/splat/emi/bmagic/magic151/03/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/bmagic/magic151/03/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/bmagic/magic151/03/undefined_syms_auto.txt
+  cache_path: out/splat/emi/bmagic/magic151/03/.splache
+  asset_path: out/splat/emi/bmagic/magic151/03/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/bmagic/magic151/03/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 80
+  vram: 2149510224
+  subsegments:
+  - - 80
+    - asm
+    - func_801EEC50
+  - - 176
+    - asm
+    - func_801EECB0
+  - - 480
+    - asm
+    - func_801EEDE0
+  - - 568
+    - asm
+    - func_801EEE38
+  - - 680
+    - asm
+    - func_801EEEA8
+  - - 804
+    - asm
+    - func_801EEF24
+  - - 1136
+    - asm
+    - func_801EF070
+  - - 1336
+    - asm
+    - func_801EF138
+  - - 1696
+    - asm
+    - func_801EF2A0
+  - - 1816
+    - asm
+    - func_801EF318
+  - - 1928
+    - asm
+    - func_801EF388
+  - - 2180
+    - asm
+    - func_801EF484
+  - - 3384
+    - asm
+    - func_801EF938
+  - - 3568
+    - asm
+    - func_801EF9F0
+  - - 3636
+    - asm
+    - func_801EFA34
+  - - 3756
+    - asm
+    - func_801EFAAC
+  - - 4012
+    - asm
+    - func_801EFBAC
+  - - 4200
+    - asm
+    - func_801EFC68
+  - - 4388
+    - asm
+    - func_801EFD24
+  - - 4480
+    - c
+    - incrementWorkByte2WhenGlobalWorkByte1Is2BmagicMagic15103_801EFD80
+    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByte1Is2BmagicMagic15103_801EFD80.c'
+    - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 and, only when that work record byte at offset 0x1 equals 2, reads the scratchpad work-object pointer cell at 0x1F800044 once and increments its byte at offset 0x2 by one.'
+  - - 4544
+    - c
+    - setGlobalWorkByteBTo2ThenInvokeHelperWhenWorkByteBZeroBmagicMagic15103_801EFDC0
+    - '@source: src/bof3/bmagic/setGlobalWorkByteBTo2ThenInvokeHelperWhenWorkByteBZeroBmagicMagic15103_801EFDC0.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and, only when the work-object byte at offset 0xB is zero, stores 2 into byte 0xB of the shared battle work record pointed to by 0x801EB4E0 and then invokes the shared helper at 0x801E5988.'
+  - - 4608
+    - asm
+    - func_801EFE00
+  - - 4752
+    - asm
+    - func_801EFE90
+  - - 4932
+    - asm
+    - func_801EFF44
+  - - 5012
+    - asm
+    - func_801EFF94
+  - - 5300
+    - c
+    - incrementWorkByte2WhenWorkByteBZeroBmagicMagic15103_801F00B4
+    - '@source: src/bof3/bmagic/incrementWorkByte2WhenWorkByteBZeroBmagicMagic15103_801F00B4.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and increments the work-object byte at offset 0x2 only when its byte at offset 0xB is zero; the sibling incrementWorkByte2BmagicMagic06403_801EF87C increments that same byte unguarded.'
+  - - 5352
+    - asm
+    - func_801F00E8
+  - - 5436
+    - asm
+    - func_801F013C
+  - - 5564
+    - asm
+    - func_801F01BC
+  - - 5740
+    - asm
+    - func_801F026C
+  - - 6728
+    - asm
+    - func_801F0648
+  - - 7880
+    - asm
+    - func_801F0AC8
+  - - 8104
+    - asm
+    - func_801F0BA8
+  - - 8272
+    - asm
+    - func_801F0C50
+  - - 8368
+    - asm
+    - func_801F0CB0
+  - - 8460
+    - asm
+    - func_801F0D0C
+  - - 9448
+    - asm
+    - func_801F10E8
+  - - 9696
+    - asm
+    - func_801F11E0
+  - - 9884
+    - asm
+    - func_801F129C
+  - - 10008
+    - asm
+    - func_801F1318
+  - - 10112
+    - asm
+    - func_801F1380
+  - - 10248
+    - asm
+    - func_801F1408
+  - - 10448
+    - asm
+    - func_801F14D0
+  - - 12348
+    - asm
+    - func_801F1C3C
+  - - 12492
+    - asm
+    - func_801F1CCC
+  - - 12584
+    - c
+    - advanceWorkWord14By80ThenIncrementWorkByte2At400BmagicMagic15103_801F1D28
+    - '@source: src/bof3/bmagic/advanceWorkWord14By80ThenIncrementWorkByte2At400BmagicMagic15103_801F1D28.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once, advances the work-object word at offset 0x14 by 0x80 and stores it back unconditionally, then increments the byte at offset 0x2 when that new word equals 0x400.'
+  - - 12640
+    - asm
+    - func_801F1D60
+  - - 12736
+    - asm
+    - func_801F1DC0
+  - - 12912
+    - asm
+    - func_801F1E70
+  - - 13704
+    - asm
+    - func_801F2188
+  - - 14500
+    - asm
+    - D_801F24A4
+- - 14616

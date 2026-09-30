@@ -8,6 +8,7 @@ import re
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Mapping
 
+from harness.common.commands import command_text
 from harness.domain.functions import require_single_source
 from harness.domain.claims import manifest_source_paths, resolve_source_for_paths
 from harness.naming.debt import address_of, collect_naming_debt
@@ -296,25 +297,25 @@ def naming_manifest(
         "collision": collision,
         "required_checks": sorted(
             (
-                ["bin/symbols check"]
-                + (["bin/splat TARGET"] if kind == "function" else [])
-                + ["bin/naming-audit verify"]
+                [command_text("symbols", "check")]
+                + ([command_text("splat", "TARGET")] if kind == "function" else [])
+                + [command_text("naming-audit", "verify")]
             )
         ),
     }
     if kind == "data" and "data" in binding["facts"]:
         manifest["required_checks"] = sorted(
             [
-                "bin/symbols normalize TARGET --write",
-                "bin/symbols check",
-                "bin/splat TARGET",
-                "bin/build TARGET",
-                "bin/naming-audit verify",
+                command_text("symbols", "normalize", "TARGET", "--write"),
+                command_text("symbols", "check"),
+                command_text("splat", "TARGET"),
+                command_text("build", "TARGET"),
+                command_text("naming-audit", "verify"),
             ]
             + [
-                f"{tool} {consumer['selector']}"
+                command_text(tool, consumer["selector"])
                 for consumer in binding["facts"]["data"]["consumers"]
-                for tool in ("bin/asm-diff", "bin/byte-match")
+                for tool in ("asm-diff", "byte-match")
             ]
         )
     return manifest

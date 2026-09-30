@@ -5,7 +5,7 @@
  * @behavior Subtracts 0x20 from PanelTask x; if signed x falls below 0x53, sets x=0x52 and state=0.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void panelStepLeftEnd53(void) {
     PanelTask* task;

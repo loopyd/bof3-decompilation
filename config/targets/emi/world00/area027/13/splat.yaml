@@ -32,41 +32,55 @@ segments:
     - '@source: src/bof3/world/dispatchScratchMode1.c'
     - '@behavior: Dispatches scratch mode byte 1 through the local handler table.'
   - - 116
-    - asm
+    - c
     - func_801F2C74
+    - '@source: src/bof3/world/func_801F2C74_area02713.c'
+    - '@behavior: Seeds the three local 0x98-byte world work records at 0x800e4800 with the fixed words 0x20000/0xc0000/0xb0000, the word 0x20000 and the per-record turn angle (index * 0x1000) / 3, hands each record to the local initializer 0x801f304c, then resets scratch-work byte 9 and advances scratch-work byte 1.'
   - - 348
-    - asm
+    - c
     - func_801F2D5C
+    - '@source: src/bof3/world/func_801F2D5C_area02713.c'
+    - '@behavior: Steps each of the three local 0x98-byte world work records at 0x800e4800 through four projections: subtracts 0x400 from the record word at 0x08, subtracts 0x200 from the word at 0x10, adds 0x40 to the halfword at 0x14 and re-projects the record trail through 0x801f2e3c, after which the record''s whole trail is emitted through emitTrailStrip; once all three records are done it counts scratch-work byte 9 down and, when that reaches zero, calls the shared 0x80196070 work-area reset helper.'
   - - 572
-    - asm
+    - c
     - func_801F2E3C
+    - '@source: src/bof3/world/func_801F2E3C.c'
+    - '@behavior: Shifts the 32-entry projected trail at 0x18 of one 0x98-byte world work record up by one entry and projects the rotated record position into the freed entry 0: the x and y components add the record radius scaled by the 12-bit angular helpers at 0x801783C8/0x801782FC to the record centre word pair, z is the record word at 0x08 in 8-bit fixed point.'
   - - 780
     - c
     - emitTrailStrip
     - '@source: src/bof3/world/emitTrailStrip.c'
     - '@behavior: Emits a 31-segment Gouraud line strip across the projected trail.'
   - - 1100
-    - asm
+    - c
     - func_801F304C
+    - '@source: src/bof3/world/func_801F304C.c'
+    - '@behavior: Seeds one 0x98-byte world work record''s projected trail from its fixed-point position/rotation pair: the x and y components add the record radius scaled by the two 12-bit angular helpers to the record centre word pair, z is the record word at 0x08 in 8-bit fixed point, and the projected entry 0 of the record trail at 0x18 is then copied into the remaining 31 entries.'
   - - 1312
     - c
     - dispatchScratchMode2
     - '@source: src/bof3/world/dispatchScratchMode2.c'
     - '@behavior: Dispatches scratch mode byte 2 through the local handler table.'
   - - 1380
-    - asm
+    - c
     - func_801F3164
+    - '@source: src/bof3/world/func_801F3164_area02713.c'
+    - '@behavior: Polls the shared loader on 0x80144E98 with request 0x17 and either seeds the local scratch mode byte at offset 2 with 3 before running 0x801F33A8, or advances that byte and emits the fixed world marker pair.'
   - - 1484
     - c
     - emitMarkerPair
     - '@source: src/bof3/world/emitMarkerPair.c'
     - '@behavior: Advances local scratch state and emits two fixed world markers.'
   - - 1712
-    - asm
+    - c
     - func_801F32B0
+    - '@source: src/bof3/world/func_801F32B0_area02713.c'
+    - '@behavior: Advances the local scratch cursor word at offset 0x0c by 0x20, raises scratch byte 2 once that cursor reaches 0x400, then emits the two fixed world markers through emitMarkerQuad with the cursor halfword and with 0x800 minus the cursor.'
   - - 1960
-    - asm
+    - c
     - func_801F33A8
+    - '@source: src/bof3/world/func_801F33A8_area02713.c'
+    - '@behavior: Selects the draw-mode texture depth by graphics type, sets the draw mode of the shared primitive cursor, submits the fixed line draw of the record anchor 0x468000/0x478000, projects that anchor minus the 0x4000 screen bias into a local three-halfword point and emits one textured marker quad for it, then submits the second fixed line draw of the same anchor.'
   - - 2176
     - asm
     - emitMarkerQuad
@@ -96,17 +110,25 @@ segments:
     - c
     - func_801F36D0
   - - 2832
-    - asm
+    - c
     - func_801F3710
+    - '@source: src/bof3/world/func_801F3710.c'
+    - '@behavior: Claims the first free front-end record slot by marking its occupancy byte and storing 0x2F in the record byte 0x05.'
   - - 2924
-    - asm
+    - c
     - func_801F376C
+    - '@source: src/bof3/world/func_801F376C_area02713.c'
+    - '@behavior: Queues the six shared UI elements of a 2x3 marker block through func_801A4BC0: the element at (0x27, 0x25) with size 0, the element at (0x27, 0x26) with size 0, the element at (0x27, 0x27) with size 0, the element at (0x28, 0x25) with size 0, the element at (0x28, 0x26) with size 0 and the element at (0x28, 0x27) with size 0.'
   - - 3044
-    - asm
+    - c
     - func_801F37E4
+    - '@source: src/bof3/world/func_801F37E4_area02713.c'
+    - '@behavior: Drives the shared front-end mode byte at 0x801448EC through this area''s five-step startup: mode 0 waits until the shared phase byte at 0x80143BB0 differs from 2, then runs func_8015C088, releases the shared 0x80144F28 block under bit 1 through func_8015B580 and advances to mode 1; mode 1 runs func_801BE1B0(1) and advances to 2; mode 2 waits for the shared counter byte at 0x80146867 to read 0x20, seeds the shared halfword at 0x801448EE with 0x10 and advances to 3; mode 3 counts that halfword down and, once it reaches zero, requests the shared front selector context (0x1B, 0x4B0000, 0x380000, 0x8F) through func_8019FA28, advances to 4 and increments the counter byte; mode 4, when the counter byte reaches 0x31, clears it, releases the area through func_8015C058, clears bit 1 of the shared 0x80144F28 block through func_8015B5A8 and resets the shared flag 0x801448EB together with the mode byte.'
   - - 3404
-    - asm
+    - c
     - func_801F394C
+    - '@source: src/bof3/world/func_801F394C_area02713.c'
+    - '@behavior: Drives the shared front-end mode byte at 0x801448EC through this area''s five-step startup: mode 0 waits until the shared phase byte 0x80143BB0 differs from 2, then runs func_8015C088, releases the shared 0x80144F28 block for bit 0 through func_8015B580 and advances to 1; mode 1 runs func_801BE1B0(2) and advances to 2; mode 2 waits for the shared counter byte 0x80146867 to read 0x10, seeds the shared halfword 0x801448EE with 0x10 and advances to 3; mode 3 counts that halfword down and, once it reaches zero, requests the shared front selector context (0x1B, 0x260000, 0x380000, 0x90) through func_8019FA28, advances to 4 and increments the counter byte; mode 4, when the counter byte reaches 0x31, clears it, releases the area through func_8015C058, clears bit 0 of the shared 0x80144F28 block through func_8015B5A8 and resets the shared flag 0x801448EB together with the mode byte.'
   - - 3764
     - data
     - T_801F3AB4

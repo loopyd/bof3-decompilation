@@ -5,7 +5,7 @@
  * @source 0x800975D4
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS resetStateWhenUnlocked(void) {
   volatile u8* battle_selection_state;

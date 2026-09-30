@@ -5,7 +5,7 @@
  * @source 0x801D5A60
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 func_801D5A60(void) {
   u8 index;

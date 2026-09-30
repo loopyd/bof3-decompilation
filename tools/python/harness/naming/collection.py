@@ -376,6 +376,7 @@ def _receipts_for(
     row: dict[str, Any],
     operations: list[tuple[dict[str, Any], str, str, list[dict[str, Any]], bool]],
     semantic: list[dict[str, Any]],
+    captures: tuple[dict, ...] = (),
 ) -> list[dict[str, Any]]:
     """Honest receipts for exactly the operations that were executed.
 
@@ -419,7 +420,11 @@ def _receipts_for(
             {
                 "command": str(result.get("command")),
                 "status": "passed" if result.get("semantic_success") else "failed",
-                "target": target,
+                "target": (
+                    str(result["selector"]).split("@", 1)[0]
+                    if result.get("instruction_id")
+                    else target
+                ),
                 "selector": str(result.get("selector")),
                 "output": (
                     str(result["raw"])
@@ -429,6 +434,24 @@ def _receipts_for(
             },
         )
         record["operation"] = "semantic"
+        capture = next(
+            (item for item in captures if item["selector"] == result.get("selector")),
+            None,
+        )
+        if capture is not None and row.get("kind") == "function":
+            from harness.naming.evidence import (
+                _RUNNER_TOKEN,
+                instruction_observations,
+            )
+
+            observations = instruction_observations(_RUNNER_TOKEN, target, row, capture)
+            path = namespace.resolve_record(record["receipt"])
+            receipt = json.loads(path.read_text())
+            receipt.update(observations)
+            check_deadline()
+            text = _json_lines(receipt)
+            path.write_text(text, encoding="utf-8")
+            record["sha256"] = hashlib.sha256(text.encode()).hexdigest()
         receipts.append(record)
     if not receipts:
         receipts.append(

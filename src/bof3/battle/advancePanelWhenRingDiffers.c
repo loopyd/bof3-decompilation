@@ -4,7 +4,7 @@
  * @behavior Advances the active panel state and raises its update flag when two gate bytes differ.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void advancePanelWhenRingDiffers(void) {
     if (uiRingTail != uiRingHead) {

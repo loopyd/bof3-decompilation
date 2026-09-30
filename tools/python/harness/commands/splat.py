@@ -158,10 +158,10 @@ def run(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="splat")
+    parser = argparse.ArgumentParser(prog="bin/harness source splat")
     add_root_argument(parser)
     parser.add_argument("target", help="target id, for example exe/logo")
-    add_example_argument(parser, "bin/splat exe/logo")
+    add_example_argument(parser, "bin/harness source splat exe/logo")
     parser.add_argument("--verbose", action="store_true", help="show full Splat output")
     parser.set_defaults(handler=run)
     return parser

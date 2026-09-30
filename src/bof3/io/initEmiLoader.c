@@ -13,7 +13,7 @@ extern u16          D_8014681A;
  * @source 0x80161F58
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void initEmiLoader(void) {
   s32           i;

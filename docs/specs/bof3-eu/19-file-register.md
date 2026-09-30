@@ -107,7 +107,7 @@ Total: 62 steps.
 |---|---|
 | `build-accession-vfx.ts` | Ryu's dragon transformation VFX (skill 151 "Accession" → MAGIC151) |
 | `build-accession-video.ts` | Reference MP4 of the child-Ryu Accession — 1:1 per the EMULATOR GT |
-| `build-ambient.ts` | AMBIENT ENTITY SPAWNS from the init scripts — op 0xe0 (7 bytes): [e0][typ][00][col][00][row][param] |
+| `build-ambient.ts` | AMBIENT ENTITY SPAWNS from the init scripts — op 0xe0 (7 bytes): \[e0\]\[typ\]\[00\]\[col\]\[00\]\[row\]\[param\] |
 | `build-area-catalog.ts` | AREA CATALOG: consolidates |
 | `build-bate-gfx.ts` | Cut FISHING GRAPHICS from the GT dumps. The catch screen shows the fish image, HUD digits, and the rank graphic as their own prim |
 | `build-bate-sheets.ts` | MAKE BATE GRAPHICS BLOCKS VISIBLE. sub[1]/[2] are 32 KB image data each, sub[3]/[4] are 512 B CLUT each (= 16 palettes of 16 colors |
@@ -170,13 +170,13 @@ Total: 62 steps.
 | `build-owwater-donor.ts` | Overworld deep-water waves via DONOR: area087/121 carry real GT water phases (W5s dump series, public/water). The remaining overworld areas use the SA… |
 | `build-party-battle-anims.ts` | PARTY BATTLE ANIMATIONS COMPLETE. Extends build-party-battle-sprites.ts (which only |
 | `build-party-battle-sprites.ts` | PARTY BATTLE SPRITES (battle sprite format). The BPLD/BPLU/BRTD/BRTU files in BIN/BPLCHAR bundle the party members as battle figures (D=front view, U=… |
-| `build-party-cues.ts` | Party battle CUES: the BPLD VAB trios carry their official battle cue records [0][0x80\|prog][note][vol] in ct8 (banks 3-5 in battle = party slots). |
+| `build-party-cues.ts` | Party battle CUES: the BPLD VAB trios carry their official battle cue records \[0\]\[0x80\|prog\]\[note\]\[vol\] in ct8 (banks 3-5 in battle = party slots). |
 | `build-plantblink.ts` | PLANT-BLINK UNIT (audit loop): type 14 @049 „Plant" = 5 mini quads (clut 224,483 · pg 704,256 · 4bpp, UV region ~[192,64..208,86]) — small machine/ |
 | `build-plchar-anim.ts` | Builds a CLEAN, directional field sprite set (Teepo + Ryu) from DuckStation savestates by decoding the PL034 ct1 geometry (the record DRAWN at runtime… |
 | `build-plchar-anims.ts` | PARTY FIELD ANIMATIONS COMPLETE. Extends build-plchar-frames.ts: instead of ONE |
 | `build-plchar-frames.ts` | FIELD CHARACTER SPRITESHEETS (RE roadmap L1.5 / sprite assets). FULLY STATIC from the |
 | `build-plchar-model.ts` | Extract the PLCHAR field character model (PL034 = the player character loaded in AREA007). STATUS(honest partial success) |
-| `build-plchar-sprite.ts` | Builds textured PL034 sprite-composite candidates: scans the decompressed ct1 for format-A sub-meshes (5-byte records [flag][Xs][Ys][U][V]), renders e… |
+| `build-plchar-sprite.ts` | Builds textured PL034 sprite-composite candidates: scans the decompressed ct1 for format-A sub-meshes (5-byte records \[flag\]\[Xs\]\[Ys\]\[U\]\[V\]), renders e… |
 | `build-portraits.ts` | MENU PORTRAITS disc-static. The 40×48 character portraits of the field menu sit |
 | `build-rgeo-from-grid.ts` | RGEO BAKE FROM THE WINDOW GRID: the "royal road" of the fork report on the 178/179 wall-stack mode as the bake path. The game fills the slot pool part… |
 | `build-rgeo-scene-from-dump.ts` | RGEO SCENE SOLVER (W14, generalized from scratchpad/w13b-bridge-solve.ts): resolves the per-area CODE quads (target page/CLUT) of a GT dump into REAL … |
@@ -334,7 +334,7 @@ the evidence for a claim is the probe that produced it.
 | `probe-w13-dumptex.ts` | F3: page-3 window (704,256) from the objpal108 dump VRAM with CLUT row 483 (column c) as PNG |
 | `probe-w13-feat.ts` | F2 diagnosis: why build-features emits nothing for certain areas (081 + 404 family 086/102/103/105/107) resp. which roof/bill records affected areas c… |
 | `probe-w13-flameinv.ts` | F3b: complete flame inventory — all TYPE-0x10 records with a 6-frame signature. Prints, per area, (col,row), w0 (=frame0 word → wall key 'w'+hex), ver… |
-| `probe-w13-flamescan.ts` | F3: world-wide scan for the torch/campfire class: TYPE 0x10, size>=13: [4 verts][2 span][6 frames] (+ optional 2nd crossed-quad set) = flame object |
+| `probe-w13-flamescan.ts` | F3: world-wide scan for the torch/campfire class: TYPE 0x10, size>=13: \[4 verts\]\[2 span\]\[6 frames\] (+ optional 2nd crossed-quad set) = flame object |
 | `probe-w13-k1.ts` | K1 diagnostic: which referenced map texture cells of an area are empty/wrong in our EMI reconstruction (runtime upload window), and where would a seed… |
 | `probe-w13-k3-browser.ts` | K3: browser wall simulation — replicates terrain.ts (edgeAt + emit) over the public/ assets |
 | `probe-w13-k3-scan.ts` | K3: global scan — how many S/E edges fall into the classes (a) key present, atlas entry <50% opaque (transparency class → alphaTest fix visible) |
@@ -432,7 +432,7 @@ the evidence for a claim is the probe that produced it.
 | `gdb-read.ts` | Reads PSX RAM from the running DuckStation via its GDB server (port 2345). Usage: npm run gdb:read -- <hexaddr> <len> e.g. 80104000 64 |
 | `gdb.ts` | Minimal GDB-RSP client for DuckStation's GDB server (port 2345) — promise API. |
 | `gpudump.ts` | Parser for DuckStation GPU dumps (magic "PSXGPUDUMPv1"). Structure: 14-byte magic, then packets. Packet header = 1×u32 (LE) |
-| `grid-tiles.ts` | GRID-TILE EXPORT: the savestate's window grid (0x8012c000, [tc][tr][slot], 56x28) IS the authoritative list of map cells drawn at the GT moment |
+| `grid-tiles.ts` | GRID-TILE EXPORT: the savestate's window grid (0x8012c000, \[tc\]\[tr\]\[slot\], 56x28) IS the authoritative list of map cells drawn at the GT moment |
 | `i18n-wrap.ts` | Tool: wrap German UI texts in `L(…)` and report the key inventory. `--check` (default) lists all L keys in the code and reports missing translations. |
 | `inspect-gpudump.ts` | Inspects a DuckStation GPU dump: packet/primitive statistics + VRAM as a PNG. Call: npm run inspect:gpu -- <path/to/file.gpudump> |
 | `inspect-subfiles.ts` | Diagnose: unbekannte AREA-EMI-Subfiles + Feature-Block des Map-Subfiles sichten. npx tsx extract/inspect-subfiles.ts [area=000] |

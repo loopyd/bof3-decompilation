@@ -4,7 +4,7 @@
  * @source 0x801E1450
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS dispatchAltState3Table(void) {
   volatile Battle03LocalWork* work;

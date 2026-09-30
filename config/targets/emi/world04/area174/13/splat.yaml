@@ -42,8 +42,8 @@ segments:
     - asm
     - func_801F2E28
   - - 604
-    - asm
-    - func_801F2E5C
+    - c
+    - clearWorkTableByte3At800E4800World04Area17413_801F2E5C
   - - 648
     - asm
     - func_801F2E88
@@ -153,8 +153,8 @@ segments:
     - asm
     - func_801F4F28
   - - 9068
-    - asm
-    - func_801F4F6C
+    - c
+    - setStatusFFFFSubstate1EIfGateElse0AWorld04Area17413_801F4F6C
   - - 9116
     - c
     - noopHandlerWorld04Area17413_801F4F9C
@@ -163,5 +163,5 @@ segments:
     - zeroResultWorld04Area17413_801F4FA4
   - - 9132
     - asm
-    - func_801F4FAC
+    - D_801F4FAC
 - - 15204

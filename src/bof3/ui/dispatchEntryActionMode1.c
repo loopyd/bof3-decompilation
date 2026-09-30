@@ -4,7 +4,7 @@
  * @behavior dispatches the selected entry's +0x11 action.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchEntryActionMode1(void) {
   func_801D10AC((u16)(masterActionBaseTable[masterIndex] + 0x11));

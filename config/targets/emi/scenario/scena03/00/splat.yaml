@@ -30,8 +30,10 @@ segments:
   vram: 2149543536
   subsegments:
   - - 624
-    - asm
-    - func_801F6E70
+    - c
+    - dispatchWorkByte1HandlerScenarioScena0300_801F6E70
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0300_801F6E70.c'
+    - '@behavior: Dispatches the SCENA03 per-frame handler from the scratchpad work object: reads the work-object pointer cell at 0x1F800044 before the frame is created, takes its unsigned state byte at offset 1, scales it by four and calls that entry of the overlay-local three-entry handler table at 0x801FCF24 (entries 0x801F6EB4, 0x801F7260, 0x801F7334). It reads no other state and writes none; the 0x18-byte frame only keeps $ra across the indirect call and the callee returns nothing of its own.'
   - - 692
     - asm
     - func_801F6EB4
@@ -60,8 +62,8 @@ segments:
     - asm
     - func_801F7A9C
   - - 3808
-    - asm
-    - func_801F7AE0
+    - c
+    - armCountdownAndAdvanceWorkByte1ScenarioScena0300_801F7AE0
   - - 3856
     - asm
     - func_801F7B10
@@ -81,8 +83,8 @@ segments:
     - asm
     - func_801F7DF0
   - - 4660
-    - asm
-    - func_801F7E34
+    - c
+    - queueCue209AndAdvanceWorkByte1ScenarioScena0300_801F7E34
   - - 4716
     - asm
     - func_801F7E6C
@@ -147,17 +149,17 @@ segments:
     - asm
     - func_801F8C04
   - - 8616
-    - asm
-    - func_801F8DA8
+    - c
+    - dispatchScenarioStateHandlerScenarioScena0300_801F8DA8
   - - 8676
-    - asm
-    - func_801F8DE4
+    - c
+    - advanceStateAndClearSharedByteScenarioScena0300_801F8DE4
   - - 8704
     - asm
     - func_801F8E00
   - - 9972
-    - asm
-    - func_801F92F4
+    - c
+    - dispatchPrimaryStateHandlerScenarioScena0300_801F92F4
   - - 10032
     - c
     - noopHandlerScenarioScena0300_801F9330
@@ -195,23 +197,23 @@ segments:
     - asm
     - func_801FC410
   - - 22636
-    - asm
-    - func_801FC46C
+    - c
+    - dispatchRecordCallbackScenarioScena0300_801FC46C
   - - 22700
     - asm
     - func_801FC4AC
   - - 22772
-    - asm
-    - func_801FC4F4
+    - c
+    - setScenarioFlagBit10ThenInvokeHelperScenarioScena0300_801FC4F4
   - - 22816
-    - asm
-    - func_801FC520
+    - c
+    - setScenarioFlagBit11ThenInvokeHelperScenarioScena0300_801FC520
   - - 22860
-    - asm
-    - func_801FC54C
+    - c
+    - setScenarioFlagBit12ThenInvokeHelperScenarioScena0300_801FC54C
   - - 22904
-    - asm
-    - func_801FC578
+    - c
+    - setScenarioFlagBit13ThenInvokeHelperScenarioScena0300_801FC578
   - - 22948
     - asm
     - func_801FC5A4
@@ -222,10 +224,15 @@ segments:
     - c
     - noopHandlerScenarioScena0300_801FC688
   - - 23184
-    - asm
+    - c
     - func_801FC690
+    - '@source: src/bof3/scenario/func_801FC690.c'
+    - '@status: partial'
+    - '@match: 84.62'
+    - '@residual: post-call constant store materialises 6 in $v0 where the shipped bytes use $v1 (insn=11/13, 52->52 bytes, frame 0x18 unchanged, first difference +0x0010 li v1,6 vs li v0,6).'
+    - '@behavior: Slot 7 of the overlay nine-pointer handler table at 0x801FD00C selected by record byte 0x7A in the record dispatcher func_801FC46C; runs the shared front-end startup helper func_8015C088, then requests primary scene state 6 with a cleared sub-state (D_80146874 = 6, D_80146875 = 0) and returns 0.'
   - - 23236
-    - asm
+    - c
     - func_801FC6C4
   - - 23300
     - asm
@@ -249,11 +256,13 @@ segments:
     - asm
     - func_801FCB4C
   - - 24732
-    - asm
-    - func_801FCC9C
+    - c
+    - queueFrontEndModeAndRequestPrimaryMode2ScenarioScena0300_801FCC9C
   - - 24796
-    - asm
-    - func_801FCCDC
+    - c
+    - forwardRoute47RecordScenarioScena0300_801FCCDC
+    - '@source: src/bof3/scenario/forwardRoute47RecordScenarioScena0300_801FCCDC.c'
+    - '@behavior: Route-0x47 gate in front of the overlay packed-record handler func_801FCD1C: when the shared route word D_80143F00 reads 0x47 it forwards its two incoming packed record words unchanged and returns the sign-extended low byte of that handler result, otherwise it returns 0 without reading or writing any other state; the 0x18-byte frame only keeps $ra across the call.'
   - - 24860
     - asm
     - func_801FCD1C
@@ -270,8 +279,8 @@ segments:
     - c
     - invokeHelperArgScenarioScena0300_801FCEDC
   - - 25340
-    - asm
-    - func_801FCEFC
+    - c
+    - invokeHelperArgThenHelperScenarioScena0300_801FCEFC
   - - 25380
     - asm
     - func_801FCF24

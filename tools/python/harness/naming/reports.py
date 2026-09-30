@@ -8,6 +8,7 @@ import re
 from pathlib import Path
 from typing import Any
 
+from harness.common.commands import command_text, tool_id, trailing_arguments
 from harness.domain.manifests import load_target_manifests
 from harness.domain.receipts import command_records
 from harness.domain.symbols import load_target_symbols
@@ -231,10 +232,14 @@ def _validation_receipts(
     passed = [record["command"] for record in records if record["status"] == "passed"]
     if len(passed) != len(records):
         raise ValueError(f"{old_name} post-apply receipt contains a failed command")
-    required = ["bin/symbols normalize", "bin/symbols check", "independent review"]
+    required = [
+        command_text("symbols", "normalize"),
+        command_text("symbols", "check"),
+        "independent review",
+    ]
     native_selectors = None
     if kind == "function":
-        required += ["bin/splat", "bin/build"]
+        required += [command_text("splat"), command_text("build")]
         if row.get("partial_used") is True:
             required += ["partial baseline"]
         else:
@@ -244,12 +249,12 @@ def _validation_receipts(
     elif "data" in row["pre_apply"]["facts"]:
         consumers = validate_data_shape(row["pre_apply"]["facts"]["data"])["consumers"]
         native_selectors = {consumer["selector"] for consumer in consumers}
-        required += ["bin/splat", "bin/build"]
+        required += [command_text("splat"), command_text("build")]
     if native_selectors is not None:
         required += [
-            f"{tool} {native_selector}"
+            command_text(tool, native_selector)
             for native_selector in sorted(native_selectors)
-            for tool in ("bin/asm-diff", "bin/byte-match")
+            for tool in ("asm-diff", "byte-match")
         ]
     for prefix in required:
         matching = [
@@ -266,21 +271,23 @@ def _validation_receipts(
         if record.get("target") != ctx.target:
             raise ValueError(f"{old_name} post-apply receipt target mismatch")
         selector_required = command.startswith(
-            ("bin/asm-diff", "bin/byte-match", "partial baseline", "independent review")
+            (
+                command_text("asm-diff"),
+                command_text("byte-match"),
+                "partial baseline",
+                "independent review",
+            )
         )
         expected_selector = selector
         if native_selectors is not None:
-            if command.startswith(("bin/asm-diff", "bin/byte-match")):
-                parts = command.split()
-                if (
-                    len(parts) < 2
-                    or parts[0] not in {"bin/asm-diff", "bin/byte-match"}
-                    or parts[1] not in native_selectors
-                ):
+            parts = command.split()
+            if tool_id(parts) in {"asm-diff", "byte-match"}:
+                selectors = trailing_arguments(parts)
+                if not selectors or selectors[0] not in native_selectors:
                     raise ValueError(
                         f"{old_name} receipt does not select a captured consumer"
                     )
-                expected_selector = parts[1]
+                expected_selector = selectors[0]
             elif command.startswith("partial baseline"):
                 raise ValueError(f"{kind} consumer partial baselines are unsupported")
             elif (

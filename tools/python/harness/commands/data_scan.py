@@ -28,7 +28,7 @@ def run(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="data-scan")
+    parser = argparse.ArgumentParser(prog="bin/harness analysis scan")
     add_root_argument(parser)
     parser.add_argument("targets", nargs="*")
     parser.add_argument("--json", action="store_true")

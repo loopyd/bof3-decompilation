@@ -5,18 +5,9 @@
  * @source 0x801D11E4
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void drawPrompt(void) {
-  /* MATCHING_AID: read the gate/mode bytes through a non-volatile view.
-   * cc1 (gcc-2.7.2-psx) emits an explicit zero-extension (andi 0xff after
-   * lbu, andi 0xffff after lhu) whenever a *volatile* narrow load feeds a
-   * non-zero comparison; the original binary has no such mask (lbu/li/bne
-   * directly, load in $v1, constant in $v0). Casting away volatile lets cc1
-   * absorb the zero-extension into the lbu/lhu and reproduces that register
-   * allocation. GAME_FRONT_EFFECT_BUSY stays volatile: its == 0u compare is a
-   * bnez that never triggers the mask. Remove if these symbols are ever
-   * re-declared non-volatile. */
   if (*(u8*)&D_80143BB0 == 5u && *(u16*)&D_80143B90 == 2u &&
       GAME_FRONT_EFFECT_BUSY == 0u) {
     D_80143C30 = 0u;

@@ -9,14 +9,13 @@ All paths are below `tools/python/harness/`.
 
 | Package | Owns | Entry points |
 | --- | --- | --- |
-| `macros/` | lexical facts, assembly/C opportunities, ranking, consumers, reviewed transactions and unchanged existing-abstraction dispositions | `bin/macro-audit` → `harness.macros.cli` |
-| `combiner/` | inspection, compiler preservation, joint images, grouped comparison and rollback-only rehearsal/recovery; ranking/permanent application remain queued | `sh bin/combiner` → `harness.combiner.cli`; [rollout contract](combiner.md) |
-| `naming/` | symbol naming opportunities, identity inventory, evidence collection, audits, proposals, application and acceptance | `bin/naming-audit` → `harness.naming.cli`; `bin/naming-evidence-run` → `harness.naming.runner` |
-| `types/` | C declarations, representation inference, type-use/candidate indexing, reviewed type transactions | `bin/type-audit` → `harness.types.cli` |
-| `docs/` | scoped Markdown references, snapshots, search, context, aggregation and edit/repair/compaction preparation | `bin/docs` → `harness.docs.cli` |
-| `decomp/` | lift inventory/mission pins, source scope, deterministic native diagnosis and candidate audit | `bin/agent-run diagnose` / `audit` → `harness.decomp.cli` |
+| `macros/` | lexical facts, assembly/C opportunities, ranking, consumers, reviewed transactions and unchanged existing-abstraction dispositions | `bin/harness macros` → `harness.macros.cli` |
+| `combiner/` | inspection, compiler preservation, joint images, grouped comparison and rollback-only rehearsal/recovery; ranking/permanent application remain queued | `bin/harness combiner` → `harness.combiner.cli`; [rollout contract](combiner.md) |
+| `naming/` | symbol naming opportunities, identity inventory, evidence collection, audits, proposals, application and acceptance | `bin/harness naming` → `harness.naming.cli`; `bin/harness naming evidence` → `harness.naming.runner` |
+| `types/` | C declarations, representation inference, type-use/candidate indexing, reviewed type transactions | `bin/harness types` → `harness.types.cli` |
+| `decomp/` | lift inventory/mission pins, source scope, deterministic native diagnosis and candidate audit | `bin/harness decomp diagnose` / `audit` → `harness.decomp.cli` |
 | `common/` | reusable CLI, digests, confined files, process lifecycle, workspace, native receipts and acceptance mechanisms | direct imports from the mechanism owner |
-| `analysis/` | cross-domain reverse index, graph, mission and query coordination | `bin/index`, `bin/rev-query` |
+| `analysis/` | cross-domain reverse index, graph, mission and query coordination | `bin/harness analysis index`, `bin/harness analysis query` |
 | `domain/` | manifests, target identity, original binary/layout, source claims and includes | shared repository facts, not candidate acceptance |
 
 Each domain uses noun files such as `index.py`, `queries.py`, `review.py`,
@@ -28,7 +27,7 @@ use `decomp.diagnosis`, `audit`, `missions`, `inventory`, `gates`, `execution` a
 `evidence`; `decomp.scope` owns directory/source policy and `common.journal` owns
 exclusive records and fsynced streams. Shared boot/cutoff checks live in
 `common.deadlines`. Neither gate command writes source or grants acceptance.
-The [lift-loop skill](../../.codex/skills/bof3-lift-loop/SKILL.md) instructs the
+The [lift-loop skill](../../.pi/skills/bof3-lift-loop/SKILL.md) instructs the
 active session to delegate domain missions and independently review outcomes.
 The harness never discovers, configures or launches Codex/model processes. Retired
 transport records remain historical; their writer/reviewer slots cannot be reused
@@ -50,6 +49,12 @@ remain representation evidence, not native byte-match or transaction acceptance.
 `naming.instructions.resolve_instructions` includes the target-qualified selector
 when refusing capture without a closed reviewed function boundary. The diagnostic
 does not admit raw/unreviewed caller ranges or relax the capture gate.
+`naming.evidence` derives `selected_call` observations from byte-validated instruction
+captures using `naming.calls`' bounded straight-line wrapper decoder. Typed receipts
+retain the executed command, complete output, observations and refusal reasons;
+journal replay re-derives them from current original bytes. Unsupported guards,
+arguments or transitions stay open. Function conclusion admission remains disabled;
+imported rows without caller work still need caller discovery.
 
 FUNCTION identity native checks cover the selected function and every changed C
 caller derived from frozen `source_locations`. `application.collect_function_checks`
@@ -295,7 +300,7 @@ gate. Recovery keeps manifest v1 and validates retained bindings without live PR
 Live transaction verification/rehearsal rejects historical v1–v3; recapture v4 rather
 than rewriting old pins. No schema support grants restoration or source authority.
 
-The decomp-status batch path loads a fresh catalog after each successful build and
+The `bin/harness lift status` batch path loads a fresh catalog after each successful build and
 reuses it only during read-only source resolution. Ownership winner/tie rules stay
 unchanged. Per-source fallback builds and native comparisons reload ownership;
 the phase catalog is not passed across those subprocess boundaries or stored in
@@ -400,7 +405,7 @@ The read-only cleanup context router selects one existing domain skill:
 | `type-opportunity TARGET ID` | `bof3-types` |
 | `naming-opportunity TARGET ID` | `bof3-naming` |
 
-Pass one form to `bin/agent-context cleanup`. The router checks a known target
+Pass one form to `bin/harness agent context cleanup`. The router checks a known target
 and one nonempty printable ID token, retains that opaque ID unchanged, and loads
 only the selected body. It performs no opportunity query, index rebuild, ranking,
 transaction or approval. Candidate existence, target membership, freshness and
@@ -411,7 +416,7 @@ target/ID. The parent retains those bindings independently. Existing
 `type TARGET OLD -> NEW` remains an identity route, not type representation work.
 Likewise naming-opportunity is read-only assessment, not whole-target
 `audit-target TARGET` or the approved `symbol TARGET OLD -> NEW` identity route.
-All three now select `bof3-naming`, with only the mode's direct references loaded.
+The `symbol`, `type` and `repair` identity routes now select `bof3-naming`, with only the mode's direct references loaded.
 Its audit, transaction, retained-lift and relocation contracts live in that one
 skill tree; the old naming-evidence and identity-maintenance skills are retired.
 One owner does not collapse authority: audit may write authorized disposable
@@ -420,7 +425,7 @@ Explicit-only invocation policy is preserved. Macro/type skills keep their own
 domain lifecycles; type spelling remains separate from type representation.
 
 Cleanup context and saved-proposal history must remain importable under the
-wrapper's stdlib-only `-S` bootstrap. `common.inputs` loads domain claims/includes/
+`bin/harness agent context` stdlib-only `-S` bootstrap. `common.inputs` loads domain claims/includes/
 manifests only inside `input_state`; `naming.proposal` imports `TargetContext` only
 under `TYPE_CHECKING` and loads context helpers inside live `validate_proposal`.
 Deferring imports preserves live ownership/closure validation and dependency
@@ -794,8 +799,9 @@ Exit zero means inspection succeeded, not that restoration or continuation is sa
 
 ## Guarded source recovery
 
-`type-audit recover` and `macro-audit recover` restore owned PRE only under an
-externally pinned parent authorization and a separately pinned v3 or v4 record.
+`bin/harness types recover` and `bin/harness macros recover` restore owned PRE
+only under an externally pinned parent authorization and a separately pinned
+v3 or v4 record.
 `common/authorization.py` validates authority bindings; `common/restoration.py`
 owns the fail-stop operation; `common/inspection.py::load_recovery` validates
 backing for both inspection and restoration. No discovered record grants authority.
@@ -850,8 +856,9 @@ current. Revalidation and original-byte/ABI/source-range preservation remain gat
 
 ## Request-bound resume
 
-`type-audit resume` and `macro-audit resume` inspect a published application for
-the original pinned manifest and implementation run. `common/continuation.py`
+`bin/harness types resume` and `bin/harness macros resume` inspect a published
+application for the original pinned manifest and implementation run.
+`common/continuation.py`
 returns a current disposition, not a scheduler or another persisted receipt:
 
 - `needs-review`: the owning live verifier confirms the application and captured
@@ -887,7 +894,7 @@ termination permits separately authorized recovery; no implicit retry follows.
 ## Bounded continuation
 
 The parent prepares review scopes and budgets under the
-[standing autonomous authorization](../INDEX.md#autonomous-execution), without
+[standing autonomous authorization](codex.md#autonomous-execution), without
 another user prompt for external review or safe-checkpoint index refresh.
 Validator fields do not confer authority by themselves or replace that authorization.
 
@@ -913,7 +920,7 @@ both debits. No checkpoint writer, reservation service, CLI, automatic recovery
 or accepted-source authority is implemented by this validator. Owner freshness,
 writer quiescence and independent parent acceptance remain separate gates.
 
-The active-session [skill operator](../../.codex/skills/bof3-lift-loop/SKILL.md)
+The active-session [skill operator](../../.pi/skills/bof3-lift-loop/SKILL.md)
 accounts original mission bounds and actual handles. No harness model-dispatch
 debit, detached controller or second campaign database owns orchestration.
 
@@ -982,7 +989,7 @@ rollback. A late revalidation publication can still verify against unchanged
 source; mechanical verification does not prove deadline compliance or authorize
 advancement. Retain the failed invocation and the parent's budget decision.
 
-Naming collection uses `bin/naming-evidence-run ... --work-deadline SECONDS` and
+Naming collection uses `bin/harness naming evidence ... --work-deadline SECONDS` and
 `run_evidence(..., work_deadline=...)` for the same absolute cutoff. Its existing
 `--deadline` remains a relative per-operation/index-request cap, not a campaign
 budget. The effective collection limit is the earlier of the inherited cutoff and
@@ -1004,7 +1011,24 @@ are not an automatic scheduler or the complete bounded Codex sequence.
 ## Validation
 
 Run the existing focused domain suites, shared application/history/revalidation
-checks, reverse-index/CLI checks, wrapper bootstrap checks and `test_harness_dry.py`.
+checks, reverse-index/CLI checks, entry/adapter bootstrap checks and `test_harness_dry.py`.
 Existing assertions must follow moved owners without losing behavioral coverage.
 No source acceptance follows from a passing Python suite; native checks and
 independent review still govern retained BOF3 changes.
+
+## Validation gates
+
+
+- `bin/harness lift asm-diff` proves instruction equivalence; `bin/harness lift byte-match` proves bytes.
+- Run `bin/harness source symbols check` after map edits; normalize with
+  `bin/harness source symbols normalize [TARGET] --write` when needed.
+- Run `bin/harness source symbols baseline --write` after an accepted transaction that retains
+  raw `func_`/`D_` spellings; it records the reviewed debt so `bin/harness source symbols check`
+  flags only later unreviewed names (`bin/harness source symbols baseline` alone is a dry run).
+- `bin/harness lift status [TARGET...]` is the live lift audit.
+- Run focused tests for changed behavior with `just check-unit <unit>` and the
+  scoped `just check` (ruff, `bin/harness source symbols check`, `validate_sources`; no pytest
+  units) before handoff when practical; the full suite is `just check-all`. List
+  every skipped check and residual risk.
+- Tests assert behavior or parsed structure, never literal wording from agent,
+  skill, prompt, or workflow Markdown.

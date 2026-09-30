@@ -5,7 +5,7 @@
  * 0x801E7634, 0x801E7778. The local targets have void(void) ABI.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchModeFiveTable(void) {
   Battle03FiveDispatchTable handlers;

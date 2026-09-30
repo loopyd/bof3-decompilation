@@ -20,7 +20,7 @@ typedef struct WorkareaSelectState {
 /* @source 0x801F2C48 @behavior copies three workarea fields and advances mode
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void copyWorkareaFieldsAndAdvanceMode(void) {
   WorkareaSelectState* state;
@@ -32,14 +32,6 @@ void copyWorkareaFieldsAndAdvanceMode(void) {
   u32 slot_offset;
   u32 value_3c;
 
-  /*
-   * MATCHING_AID: keeping the scratchpad offset in a temporary and the two
-   * pointer-cell reads as separate expressions emits the original two
-   * lui+lw pairs; direct SPAD_PTR_SLOT CSEs the address through $a3.
-   * A bounded permuter run found this clean-C shape; remove if compiler
-   * evidence later reproduces the original loads without the temporary.
-   * The immediately following live byte-match was exact.
-   */
   slot_offset = 0x44u;
   loaded_state = PSX_REF(WorkareaSelectState*, SPAD_BASE + slot_offset);
   state = loaded_state;

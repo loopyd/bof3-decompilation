@@ -5,6 +5,6 @@
  * D_801D4264 table.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801D3924(void) { D_801D4264[D_801D4286](); }

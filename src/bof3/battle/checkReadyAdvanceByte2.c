@@ -4,7 +4,7 @@
  * @behavior Calls localReadyOrHelper2 and increments byte 2 of scratchpad pointer slot 0x44.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void checkReadyAdvanceByte2(void) {
     localReadyOrHelper2();

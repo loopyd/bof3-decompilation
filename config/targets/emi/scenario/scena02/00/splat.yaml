@@ -30,17 +30,17 @@ segments:
   vram: 2149544348
   subsegments:
   - - 1436
-    - asm
-    - func_801F719C
+    - c
+    - dispatchProgressHandlerScenarioScena0200_801F719C
   - - 1496
-    - asm
-    - func_801F71D8
+    - c
+    - clearSharedByteAndProgressThenAdvanceStateScenarioScena0200_801F71D8
   - - 1532
     - asm
     - func_801F71FC
   - - 3680
-    - asm
-    - func_801F7A60
+    - c
+    - dispatchPrimaryStateHandlerScenarioScena0200_801F7A60
   - - 3740
     - asm
     - func_801F7A9C
@@ -171,8 +171,8 @@ segments:
     - asm
     - func_801FC9CC
   - - 24404
-    - asm
-    - func_801FCB54
+    - c
+    - setProgress1FAndRequestPrimaryState7ScenarioScena0200_801FCB54
   - - 24468
     - asm
     - func_801FCB94
@@ -186,8 +186,8 @@ segments:
     - asm
     - func_801FCECC
   - - 25732
-    - asm
-    - func_801FD084
+    - c
+    - dispatchRecordCallbackByByte7AScenarioScena0200_801FD084
   - - 25796
     - c
     - noopHandlerScenarioScena0200_801FD0C4
@@ -216,11 +216,11 @@ segments:
     - c
     - setScenarioScena0200_801FD27C
   - - 26256
-    - asm
-    - func_801FD290
+    - c
+    - setScenarioFlagBit0DScenarioScena0200_801FD290
   - - 26296
-    - asm
-    - func_801FD2B8
+    - c
+    - setScenarioFlagBit0EScenarioScena0200_801FD2B8
   - - 26336
     - asm
     - func_801FD2E0
@@ -237,8 +237,8 @@ segments:
     - asm
     - func_801FD40C
   - - 26704
-    - asm
-    - func_801FD450
+    - c
+    - requestPrimaryState10Substate0FAndQueueCue106ScenarioScena0200_801FD450
   - - 26768
     - asm
     - func_801FD490
@@ -249,11 +249,11 @@ segments:
     - asm
     - func_801FD4EC
   - - 26940
-    - asm
-    - func_801FD53C
+    - c
+    - requestPrimaryState1BSubstate10ScenarioScena0200_801FD53C
   - - 26996
-    - asm
-    - func_801FD574
+    - c
+    - requestPrimaryState17AndClearSubstateScenarioScena0200_801FD574
   - - 27048
     - asm
     - func_801FD5A8
@@ -261,14 +261,14 @@ segments:
     - asm
     - func_801FD5FC
   - - 27228
-    - asm
-    - func_801FD65C
+    - c
+    - setScenarioFlagBit31ScenarioScena0200_801FD65C
   - - 27268
-    - asm
-    - func_801FD684
+    - c
+    - requestPrimaryState1ASubstate19ScenarioScena0200_801FD684
   - - 27324
-    - asm
-    - func_801FD6BC
+    - c
+    - requestPrimaryState1BSubstate5ScenarioScena0200_801FD6BC
   - - 27380
     - c
     - zeroResultScenarioScena0200_801FD6F4
@@ -282,8 +282,8 @@ segments:
     - c
     - invokeHelperArgScenarioScena0200_801FE178
   - - 30104
-    - asm
-    - func_801FE198
+    - c
+    - invokeHelperArgThenHelperScenarioScena0200_801FE198
   - - 30144
     - asm
     - func_801FE1C0

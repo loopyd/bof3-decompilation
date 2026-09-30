@@ -10,6 +10,7 @@ import subprocess
 from pathlib import Path
 from typing import Any, Callable
 
+from harness.common.commands import command, tool_id
 from harness.common.process import run_command
 from harness.common.digests import digest
 from harness.domain.ids import normalize_target_id
@@ -36,8 +37,8 @@ _COMMON_KEYS = {
 }
 _ASM_KEYS = _COMMON_KEYS | {"instruction_count", "first_mismatch"}
 _SCHEMAS = {
-    "bin/asm-diff": ("harness.asm-diff-one/v2", _ASM_KEYS),
-    "bin/byte-match": ("harness.byte-match-one/v1", _COMMON_KEYS),
+    "asm-diff": ("harness.asm-diff-one/v2", _ASM_KEYS),
+    "byte-match": ("harness.byte-match-one/v1", _COMMON_KEYS),
 }
 
 
@@ -48,7 +49,7 @@ def _check(
     function: str | None = None,
     source: str | None = None,
 ) -> dict[str, Any]:
-    argv = [f"bin/{tool}", selector or target]
+    argv = command(tool, selector or target)
     if tool == "asm-diff":
         argv += ["--json", "--detail", "full"]
     elif tool == "byte-match":
@@ -169,7 +170,7 @@ def _validate_common(
     current = payload.get("current_size")
     outputs = payload.get("outputs")
     size_delta = payload.get("size_delta")
-    tool = check["argv"][0]
+    tool = tool_id(check["argv"])
     output_keys = (
         {
             "directory",
@@ -181,7 +182,7 @@ def _validate_common(
             "original_bytes",
             "build_log",
         }
-        if tool == "bin/asm-diff"
+        if tool == "asm-diff"
         else set()
     )
     if (
@@ -272,14 +273,14 @@ def _evidence(check: dict[str, Any], output: str, root: Path) -> dict[str, Any]:
         raise ValueError(
             "partial transaction check did not return JSON evidence"
         ) from error
-    expected = _SCHEMAS.get(check["argv"][0])
+    expected = _SCHEMAS.get(tool_id(check["argv"]))
     if not isinstance(payload, dict) or expected is None:
         raise ValueError("partial transaction check did not return JSON evidence")
     schema, keys = expected
     if set(payload) != keys or payload.get("schema") != schema:
         raise ValueError("partial transaction evidence has an invalid tool schema")
     _validate_common(payload, check, root)
-    if check["argv"][0] == "bin/asm-diff":
+    if tool_id(check["argv"]) == "asm-diff":
         _validate_asm(payload)
     return {
         "selector": check["selector"],
@@ -376,7 +377,7 @@ def required_checks(
 def _exact_evidence(check: dict[str, Any], output: str, root: Path) -> bool:
     try:
         payload = json.loads(output, object_pairs_hook=unique_object)
-        schema, keys = _SCHEMAS[check["argv"][0]]
+        schema, keys = _SCHEMAS[tool_id(check["argv"])]
         if (
             not isinstance(payload, dict)
             or set(payload) != keys
@@ -392,7 +393,7 @@ def _exact_evidence(check: dict[str, Any], output: str, root: Path) -> bool:
             is None
         ):
             return False
-        if check["argv"][0] == "bin/asm-diff":
+        if tool_id(check["argv"]) == "asm-diff":
             counts = payload["instruction_count"]
             if (
                 not isinstance(counts, dict)
@@ -421,7 +422,8 @@ def check_evidence(
             "passed": type(exit_code) is int
             and exit_code == 0
             and (
-                check["argv"][0] not in _SCHEMAS or _exact_evidence(check, output, root)
+                tool_id(check["argv"]) not in _SCHEMAS
+                or _exact_evidence(check, output, root)
             ),
             "metrics": None,
             "evidence_digest": None,

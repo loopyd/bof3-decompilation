@@ -5,7 +5,7 @@
  * @behavior marks the local counter active and retreats it by 20.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 COUNTER_RETREAT(retreatCounter, selectionCounter,
                 D_80149333)

@@ -1,7 +1,7 @@
 """Emit target manifest source claims for the CMake configure step.
 
 Prints one ``kind|owner_source_dir|path`` line per explicit claim.  The CMake
-grouping pass consumes this so ``bin/build TARGET`` compiles every claimed
+grouping pass consumes this so ``bin/harness build TARGET`` compiles every claimed
 lift and header regardless of physical location (semantic ``src/bof3/``
 folders may live far outside the manifest ``source_dir``).  Unmigrated
 targets emit nothing; CMake keeps the legacy ``source_dir`` inventory

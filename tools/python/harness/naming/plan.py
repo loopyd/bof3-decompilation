@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import shlex
-from pathlib import Path
 from typing import Any
 
+from harness.common.commands import command_text, tool_id, trailing_arguments
 from harness.domain.ids import parse_function_id
 from harness.naming.debt import address_of
 from harness.naming.capabilities import (
@@ -27,6 +27,17 @@ def _native_selector(row: dict[str, Any], target: str) -> str:
     return f"{target}@0x{address_of(str(row['name'])):08X}"
 
 
+def owner_instruction_selectors(row: dict[str, Any]) -> set[str]:
+    """Only open, generated owner work authorizes cross-target instructions."""
+    if row.get("kind") != "function" or row.get("outside_payload") is not True:
+        return set()
+    return {
+        str(parse_function_id(work["id"].split(":", 1)[1]))
+        for work in row.get("required_work", [])
+        if work.get("status") == "open" and str(work.get("id", "")).startswith("owner:")
+    }
+
+
 def semantic_operation_plan(row: dict[str, Any], target: str) -> list[dict[str, Any]]:
     """Return the only analyzer/native operations authorized for one row."""
 
@@ -35,7 +46,9 @@ def semantic_operation_plan(row: dict[str, Any], target: str) -> list[dict[str, 
     from harness.naming.instructions import INSTRUCTION_CAPTURE
 
     if row.get("kind") == "function" and INSTRUCTION_CAPTURE.get():
-        selectors = {_selected(row, target)}
+        selectors = (
+            set() if row.get("outside_payload") is True else {_selected(row, target)}
+        )
         for work in row.get("required_work", []):
             if not isinstance(work, dict) or work.get("status") != "open":
                 continue
@@ -45,6 +58,7 @@ def semantic_operation_plan(row: dict[str, Any], target: str) -> list[dict[str, 
                 if function.target.value != target:
                     raise ValueError("instruction work must be target-local")
                 selectors.add(str(function))
+        selectors.update(owner_instruction_selectors(row))
         result.extend(
             {
                 "kind": "instructions-v1",
@@ -60,7 +74,7 @@ def semantic_operation_plan(row: dict[str, Any], target: str) -> list[dict[str, 
                     "kind": kind,
                     "target": selected,
                     "args": list(args),
-                    "command": " ".join([f"bin/{kind}", selected, *args]),
+                    "command": command_text(kind, selected, *args),
                 }
             )
     return result
@@ -74,16 +88,18 @@ def parse_semantic_command(command: str) -> dict[str, Any] | None:
     tokens = shlex.split(command.strip())
     if not tokens:
         return None
-    name = Path(tokens[0]).name
-    if name == "rz-project":
-        if len(tokens) != 5 or tokens[1] != "query" or tokens[3] != "-c":
+    tool = tool_id(tokens)
+    if tool == "rz-project":
+        arguments = trailing_arguments(tokens)
+        if len(arguments) != 4 or arguments[0] != "query" or arguments[2] != "-c":
             raise ValueError(f"unsupported rz-project command: {command}")
-        return {"kind": name, "target": tokens[2], "rizin": tokens[4]}
-    if name in _NATIVE_ARGS:
-        if len(tokens) < 2:
+        return {"kind": tool, "target": arguments[1], "rizin": arguments[3]}
+    if tool in _NATIVE_ARGS:
+        arguments = trailing_arguments(tokens)
+        if not arguments:
             raise ValueError(f"missing selector: {command}")
-        return {"kind": name, "target": tokens[1], "args": tokens[2:]}
-    if name == "rev-query":
+        return {"kind": tool, "target": arguments[0], "args": arguments[1:]}
+    if tool == "rev-query":
         return None
     raise ValueError(f"unsupported semantic command: {command}")
 

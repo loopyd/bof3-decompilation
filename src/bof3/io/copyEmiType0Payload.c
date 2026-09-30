@@ -7,7 +7,7 @@ extern s32 D_8014646C;
  * @source 0x801625E4
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void copyEmiType0Payload(void) {
   s32* completed_entries;

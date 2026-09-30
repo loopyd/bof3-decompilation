@@ -9,7 +9,7 @@ extern u_long D_80143DB8;
  * @source 0x8014AEE0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void runLogoExe(void) {
   u_long* ordering_table;

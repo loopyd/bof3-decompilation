@@ -1,0 +1,107 @@
+name: bmagic_magic103_03
+sha1: 532ac25aed3bc1dab9b46e5a5174a95017ec0591
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic103_03
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/bmagic/magic103/03.bin
+  asm_path: out/splat/emi/bmagic/magic103/03/asm
+  src_path: src/emi/bmagic/magic103/03
+  ld_script_path: out/splat/emi/bmagic/magic103/03/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/bmagic/magic103/03/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/bmagic/magic103/03/undefined_syms_auto.txt
+  cache_path: out/splat/emi/bmagic/magic103/03/.splache
+  asset_path: out/splat/emi/bmagic/magic103/03/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/bmagic/magic103/03/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 16
+  vram: 2149510160
+  subsegments:
+  - - 16
+    - asm
+    - func_801EEC10
+  - - 112
+    - asm
+    - func_801EEC70
+  - - 568
+    - asm
+    - func_801EEE38
+  - - 660
+    - asm
+    - func_801EEE94
+  - - 712
+    - asm
+    - func_801EEEC8
+  - - 780
+    - asm
+    - func_801EEF0C
+  - - 916
+    - asm
+    - func_801EEF94
+  - - 1012
+    - asm
+    - func_801EEFF4
+  - - 1172
+    - asm
+    - func_801EF094
+  - - 1320
+    - asm
+    - func_801EF128
+  - - 1496
+    - asm
+    - func_801EF1D8
+  - - 3020
+    - asm
+    - func_801EF7CC
+  - - 3856
+    - asm
+    - func_801EFB10
+  - - 3976
+    - asm
+    - func_801EFB88
+  - - 4208
+    - asm
+    - func_801EFC70
+  - - 4340
+    - asm
+    - func_801EFCF4
+  - - 4468
+    - asm
+    - func_801EFD74
+  - - 4640
+    - asm
+    - func_801EFE20
+  - - 5820
+    - asm
+    - func_801F02BC
+  - - 5956
+    - asm
+    - func_801F0344
+  - - 6052
+    - asm
+    - func_801F03A4
+  - - 6160
+    - asm
+    - func_801F0410
+  - - 6240
+    - asm
+    - func_801F0460
+  - - 6368
+    - asm
+    - func_801F04E0
+  - - 7060
+    - asm
+    - D_801F0794
+- - 7140

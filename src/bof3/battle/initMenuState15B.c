@@ -4,7 +4,7 @@
  * @source 0x800A5DE0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void initMenuState15B(void) {
   u8 *counter;

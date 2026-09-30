@@ -13,7 +13,7 @@ from ..domain.manifests import load_target_manifests
 from ..docs.paths import validate_cleanup_paths
 from ..naming.campaign import resolve_campaign_report
 from .base import ContextRequest, ContextSection, _context_profile
-from .common import FULL_PATHS, selector_sections, target_audit_sections
+from .common import BOF3_PATHS, selector_sections, target_audit_sections
 
 
 _REPOSITORY_ROOT = Path(__file__).resolve().parents[4]
@@ -29,16 +29,16 @@ _ROW = re.compile(
 _SKILL_REFERENCES = {
     "bof3-naming": {
         "opportunity": (),
-        "audit": ("references/NAMING_AUDIT_V3.md",),
-        "identity": ("references/IDENTITY_TRANSACTIONS.md",),
+        "audit": ("references/naming-audit-v3.md",),
+        "identity": ("references/identity-transactions.md",),
         "retained": (
-            "references/IDENTITY_TRANSACTIONS.md",
-            "references/BYTE_SAFE_COSMETICS.md",
+            "references/identity-transactions.md",
+            "references/byte-safe-cosmetics.md",
         ),
-        "relocation": ("references/SOURCE_RELOCATION.md",),
+        "relocation": ("references/source-relocation.md",),
     },
     "bof3-docs": {
-        "docs": ("references/DOCUMENTATION_REPAIR.md",),
+        "docs": ("references/documentation-repair.md",),
     },
     "bof3-macros": {"opportunity": ()},
     "bof3-types": {"opportunity": ()},
@@ -107,10 +107,9 @@ def _selected_skill(mode: str) -> SelectedSkill:
     name, operation = _ROUTE[mode]
     return SelectedSkill(
         name,
-        f".codex/skills/{name}/SKILL.md",
+        f".pi/skills/{name}/SKILL.md",
         tuple(
-            f".codex/skills/{name}/{path}"
-            for path in _SKILL_REFERENCES[name][operation]
+            f".pi/skills/{name}/{path}" for path in _SKILL_REFERENCES[name][operation]
         ),
     )
 
@@ -353,7 +352,7 @@ def cleanup_sections(
 
 @_context_profile(
     "cleanup",
-    paths=FULL_PATHS,
+    paths=BOF3_PATHS,
     accepts_selector=True,
     accepts_target=True,
     stable_paths=(),

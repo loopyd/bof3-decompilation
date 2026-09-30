@@ -5,7 +5,7 @@
  * @source 0x801D1138
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void tickScratchCountdownAndAdvanceState(void) {
   u8* work;

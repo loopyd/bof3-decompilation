@@ -8,7 +8,7 @@ extern u32* bootOrderingTableHeads[];
  * @source 0x8014B0F0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void linkRenderOtPackets(void) {
   s32   index;

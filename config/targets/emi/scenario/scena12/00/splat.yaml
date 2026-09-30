@@ -30,14 +30,20 @@ segments:
   vram: 2149544308
   subsegments:
   - - 1396
-    - asm
-    - func_801F7174
+    - c
+    - dispatchWorkByte1HandlerScenarioScena1200_801F7174
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1200_801F7174.c'
+    - '@behavior: Overlay per-frame state dispatcher: reads the scratchpad work object published by the pointer cell at 0x1F800044, takes its unsigned state byte at offset 0x01, scales it by four and invokes that entry of the in-image code-pointer run based at 0x801FD178 with no arguments; entry 0 of the run is 0x801F71B8, the overlay handler for the object byte at offset 0x02, entry 8 (0x801FD198) is 0x801F7BEC, which advances that state byte from 8 to 9, and entry 11 is 0x801F7F28.'
   - - 1464
-    - asm
-    - func_801F71B8
+    - c
+    - dispatchWorkByte2HandlerScenarioScena1200_801F71B8
+    - '@source: src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena1200_801F71B8.c'
+    - '@behavior: Overlay state dispatcher for the scratch work object byte at offset 0x02: reads the object pointer cell at 0x1F800044, takes its unsigned byte at offset 0x02, scales it by four and invokes that entry of the in-image code-pointer run based at 0x801FD184 with no arguments; entry 0 of that run is 0x801F71FC, which increments exactly that byte, so the byte is the state index of the window this dispatcher reads.'
   - - 1532
-    - asm
-    - func_801F71FC
+    - c
+    - seedRandomSignAndAdvanceWorkByte2ScenarioScena1200_801F71FC
+    - '@source: src/bof3/scenario/seedRandomSignAndAdvanceWorkByte2ScenarioScena1200_801F71FC.c'
+    - '@behavior: Overlay per-frame work handler and entry 0 (the word at 0x801FD184) of the code-pointer run the byte-2 dispatcher dispatchWorkByte2HandlerScenarioScena1200_801F71B8 selects with the work object byte at offset 0x02: it stores (rand() & 1) << 15, that is 0x8000 or 0x0000, into the overlay-local halfword D_801FD288, whose bit 15 is the flag the next handler of that run func_801F7240 shifts down to select its phase-count threshold and keeps in the repacked halfword while that halfword low byte is a 0..0xC7 counter (func_801F75EC and func_801F9680 read the low byte back with lbu); it then reads the scratchpad work object published by the pointer cell at 0x1F800044, adds one to that object unsigned byte at offset 0x02 and stores it back with sb 0x2, so it advances the byte-2 state index of the window this run is selected by. The 0x18-byte frame only keeps $ra across the rand() call at 0x8017E3D4.'
   - - 1600
     - asm
     - func_801F7240
@@ -45,8 +51,10 @@ segments:
     - asm
     - func_801F7348
   - - 1996
-    - asm
-    - func_801F73CC
+    - c
+    - dispatchWorkByte2HandlerScenarioScena1200_801F73CC
+    - '@source: src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena1200_801F73CC.c'
+    - '@behavior: Overlay state dispatcher for the work object byte at offset 0x02: it reads the scratchpad work object published by the pointer cell at 0x1F800044, takes that object unsigned byte at offset 0x02, scales it by four and invokes that entry of the in-image code-pointer run based at 0x801FD190 (first two words 0x801F7410 and 0x801F7518) with no arguments. It writes no state; the pointer cell is loaded before the 0x18-byte frame is created and that frame only keeps $ra across the indirect call. The 68 bytes are instruction-for-instruction identical to the byte-2 dispatcher at 0x801F71B8 (this overlay, run 0x801FD184), differing only in that table-address word; the only in-image reference to 0x801F73CC is the pointer word at 0x801FD17C, entry 1 of the byte-1 run at 0x801FD178, so it is the frame handler for byte 1 == 1.'
   - - 2064
     - asm
     - func_801F7410
@@ -63,11 +71,15 @@ segments:
     - asm
     - func_801F765C
   - - 4008
-    - asm
-    - func_801F7BA8
+    - c
+    - dispatchWorkByte1HandlerScenarioScena1200_801F7BA8
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1200_801F7BA8.c'
+    - '@behavior: Overlay per-frame state dispatcher for the work object byte at offset 0x01: it reads the scratchpad work object published by the pointer cell at 0x1F800044, takes that object unsigned byte at offset 0x01, scales it by four and invokes that entry of the in-image code-pointer run based at 0x801FD198 with no arguments. Entry 0 of that run is 0x801F7BEC (clearFieldAdvanceStateAndQueueCue215ScenarioScena1200_801F7BEC), which adds one to exactly this byte and queues cue 0x215, and entry 1 is 0x801F7C24, so that byte is the state index of the window this dispatcher reads. It reads no other state and writes none; the pointer cell is loaded before the 0x18-byte frame is created and that frame only keeps $ra across the indirect call. The table address is built as lui $at, %hi(table) / addu $at, $at, index * 4 / lw $v0, %lo(table)($at). The 68 bytes are instruction-for-instruction identical to the byte-1 dispatchers at 0x801F7174 (dispatchWorkByte1HandlerScenarioScena1200_801F7174, whose window is 0x801FD178 and which reaches 0x801F7BEC as that window entry 8, where the byte moves from 8 to 9), 0x801F6F48 of emi/scenario/scena08/00 and 0x801F6F38 and 0x801F77F8 of emi/scenario/scena15/00, differing only in that table-address word. No in-image jal and no pointer word targets 0x801F7BA8, so the caller that selects this window is outside the overlay. The name records the proven role and the address anchor keeps it target-qualified.'
   - - 4076
-    - asm
-    - func_801F7BEC
+    - c
+    - clearFieldAdvanceStateAndQueueCue215ScenarioScena1200_801F7BEC
+    - '@source: src/bof3/scenario/clearFieldAdvanceStateAndQueueCue215ScenarioScena1200_801F7BEC.c'
+    - '@behavior: Overlay per-frame work handler: reads the scratchpad work object published by the pointer cell at 0x1F800044, saves the object''s state byte at offset 0x01, clears the object''s halfword at offset 0x2E, stores the saved state byte + 1 back to offset 0x01 and queues cue 0x215 through func_8015DF18; the address is table entry 8 of the overlay''s per-frame handler table at 0x801FD178 (the table word at 0x801FD198), and the state byte it advances moves the overlay from state 8 to state 9, the next table word 0x801F7C24.'
   - - 4132
     - asm
     - func_801F7C24
@@ -78,8 +90,10 @@ segments:
     - asm
     - func_801F7E34
   - - 4904
-    - asm
-    - func_801F7F28
+    - c
+    - dispatchProgressHandlerScenarioScena1200_801F7F28
+    - '@source: src/bof3/scenario/dispatchProgressHandlerScenarioScena1200_801F7F28.c'
+    - '@behavior: Dispatches one frame of the overlay state chain: the signed shared scenario state byte D_80146872 is scaled by four and selects an entry of the overlay-local handler table at 0x801FD1B8 (44 code pointers 0x801F7F64 through 0x801FC7D4), and the selected entry is then invoked with jalr and no arguments; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 4964
     - c
     - setScenarioScena1200_801F7F64
@@ -87,8 +101,10 @@ segments:
     - asm
     - func_801F7F78
   - - 7276
-    - asm
-    - func_801F886C
+    - c
+    - dispatchSecondaryStateScenarioScena1200_801F886C
+    - '@source: src/bof3/scenario/dispatchSecondaryStateScenarioScena1200_801F886C.c'
+    - '@behavior: Overlay-local second-level state dispatcher: the signed shared main-RAM state byte D_80146874 is scaled by four and selects a word of the overlay-local handler table at 0x801FD1C4 (ten code pointers, 0x801F88A8 through 0x801FB864), and the selected entry is then invoked with jalr and no arguments; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 7336
     - c
     - noopHandlerScenarioScena1200_801F88A8
@@ -120,8 +136,10 @@ segments:
     - asm
     - func_801FB864
   - - 22900
-    - asm
-    - func_801FC574
+    - c
+    - dispatchRecordCallbackByByte7AScenarioScena1200_801FC574
+    - '@source: src/bof3/scenario/dispatchRecordCallbackByByte7AScenarioScena1200_801FC574.c'
+    - '@behavior: Overlay-local record-callback dispatcher: the record passed in $a0 has its unsigned byte field at offset 0x7A scaled by four to select a callback word of the overlay-local table at 0x801FD1EC (fifteen code pointers, 0x801FC5B4 through 0x801FC7D4), and the selected callback is invoked with the record pointer and the shared word D_8014686C; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 22964
     - c
     - noopHandlerScenarioScena1200_801FC5B4
@@ -165,8 +183,10 @@ segments:
     - asm
     - func_801FC784
   - - 23508
-    - asm
-    - func_801FC7D4
+    - c
+    - requestPrimaryState1Substate10ScenarioScena1200_801FC7D4
+    - '@source: src/bof3/scenario/requestPrimaryState1Substate10ScenarioScena1200_801FC7D4.c'
+    - '@behavior: Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 1 with secondary sub-state 0x0A by storing 0x0A in the shared sub-state byte D_80146875 and 1 in the shared state byte D_80146874; the 0x18-byte frame only keeps $ra across the call.'
   - - 23564
     - asm
     - func_801FC80C
@@ -180,8 +200,8 @@ segments:
     - asm
     - func_801FCCBC
   - - 24888
-    - asm
-    - func_801FCD38
+    - c
+    - queueCueAndNegativeOneResultScenarioScena1200_801FCD38
   - - 24920
     - asm
     - func_801FCD58
@@ -189,17 +209,23 @@ segments:
     - asm
     - func_801FCDE0
   - - 25132
-    - asm
-    - func_801FCE2C
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena1200_801FCE2C
+    - '@source: src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena1200_801FCE2C.c'
+    - '@behavior: Overlay callback selected by the selector func_801FCC54 (0x801FCC54): that selector passes the four-byte overlay record at 0x801FD228 to func_801A7AD8 together with the length 4, indexes the code-pointer run at 0x801FD23C with the signed byte the helper returns and calls the selected word with jalr, returning its sign-extended byte; the word at 0x801FD250, index 5 of that run, is this address, its only in-image reference. It first re-arms the three-entry overlay effect group for ids 7, 8 and 5 through func_80166E88(7, 8, 5, 0), then calls the helper at 0x801C1400 with the constant argument 0, then the per-id teardown helper func_801C187C with the constant argument 8, and finally func_801C1630. It takes no arguments of its own, reads no memory and writes none; the 0x18-byte frame only keeps $ra across the four calls. The 68 bytes are byte-identical to the exact sibling armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FABC0 at 0x801FABC0 of emi/scenario/scena11/00, which carries the same four calls with the same constants 7 / 8 / 5 / 0, 0, 8, and the neighbouring word 0x801FCDE0 of this overlay is byte-identical to the scena11 sibling at 0x801FAB74, the same arm call and helper tail with one extra func_801C187C(5). The name records that proven behavior and the address anchor keeps it target-qualified.'
   - - 25200
-    - asm
-    - func_801FCE70
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena1200_801FCE70
+    - '@source: src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena1200_801FCE70.c'
+    - '@behavior: Overlay per-record callback and entry 6 (the word at 0x801FD254) of the code-pointer run at 0x801FD23C that the selector func_801FCC54 (0x801FCC54) indexes with the signed byte func_801A7AD8 returns for the four-byte overlay record at 0x801FD228; that run word is the only in-image reference to this address and no in-image jal targets it. It first re-arms the three-entry overlay effect group for ids 7, 8 and 5 through func_80166E88(7, 8, 5, 0), then calls the helper at 0x801C1400 with the constant argument 0, then the per-id teardown helper func_801C187C with the constant argument 5, and finally func_801C1630. It takes no arguments of its own, reads no memory and writes none; the 0x18-byte frame only keeps $ra across the four calls. The 68 bytes are byte-identical to the exact siblings armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FAC04 at 0x801FAC04 and armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FACD8 at 0x801FACD8 of emi/scenario/scena11/00, which carry the same four calls with the same constants 7 / 8 / 5 / 0, 0 and 5. The name records that proven behavior and the address anchor keeps it target-qualified.'
   - - 25268
     - asm
     - func_801FCEB4
   - - 25344
-    - asm
-    - func_801FCF00
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena1200_801FCF00
+    - '@source: src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena1200_801FCF00.c'
+    - '@behavior: Overlay per-record callback and entry 8 (the word at 0x801FD25C) of the code-pointer run at 0x801FD23C that the selector func_801FCC54 (0x801FCC54) indexes with the signed byte func_801A7AD8 returns for the four-byte overlay record at 0x801FD228; that run word is the only in-image reference to this address and no in-image jal targets it. It first re-arms the three-entry overlay effect group for ids 7, 2 and 5 through func_80166E88(7, 2, 5, 0), then calls the helper at 0x801C1400 with the constant argument 0, then the per-id teardown helper func_801C187C with the constant argument 5, and finally func_801C1630. It takes no arguments of its own, reads no memory and writes none; the 0x18-byte frame only keeps $ra across the four calls. The 68 bytes are byte-identical to the exact sibling armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FAC94 at 0x801FAC94 of emi/scenario/scena11/00, which carries the same four calls with the same constants 7 / 2 / 5 / 0, 0 and 5. The name records that proven behavior and the address anchor keeps it target-qualified.'
   - - 25412
     - asm
     - func_801FCF44
@@ -216,20 +242,22 @@ segments:
     - asm
     - func_801FD064
   - - 25776
-    - asm
-    - func_801FD0B0
+    - c
+    - invokeHelperArgThenHelperScenarioScena1200_801FD0B0
   - - 25816
-    - asm
-    - func_801FD0D8
+    - c
+    - invokeHelperArgThenHelperScenarioScena1200_801FD0D8
   - - 25856
-    - asm
-    - func_801FD100
+    - c
+    - invokeHelperArgThenHelperScenarioScena1200_801FD100
   - - 25896
-    - asm
-    - func_801FD128
+    - c
+    - invokeHelperArgThenHelperScenarioScena1200_801FD128
   - - 25936
-    - asm
-    - func_801FD150
+    - c
+    - invokeHelperArgThenHelperScenarioScena1200_801FD150
+    - '@source: src/bof3/scenario/invokeHelperArgThenHelperScenarioScena1200_801FD150.c'
+    - '@behavior: Thin overlay wrapper calling the helper at 0x801C1ABC with the constant argument 8 and then the helper at 0x801C1630 with no arguments; the 0x18-byte frame only keeps $ra across the two calls.'
   - - 25976
     - asm
     - func_801FD178

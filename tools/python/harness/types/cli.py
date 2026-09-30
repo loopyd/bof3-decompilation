@@ -225,7 +225,7 @@ def _final_verify(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="type-audit")
+    parser = argparse.ArgumentParser(prog="bin/harness types")
     add_root_argument(parser)
     sub = parser.add_subparsers(dest="command", required=True)
     account = sub.add_parser(

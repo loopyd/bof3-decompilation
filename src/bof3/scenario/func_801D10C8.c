@@ -4,7 +4,7 @@
  * @behavior Advances scratch byte 11, then advances byte 10 by two while it is below 18; otherwise resets byte 9 to 60 and advances byte 3.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801D10C8(void) {
   u8* scratch;

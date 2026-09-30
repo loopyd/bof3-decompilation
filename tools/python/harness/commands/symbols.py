@@ -24,6 +24,7 @@ from ..domain.manifests import load_target_manifests
 from harness.naming.debt import (
     collect_naming_debt,
     load_naming_baseline,
+    merge_naming_baseline,
     naming_debt_regressions,
 )
 from ..domain.sources import (
@@ -271,10 +272,38 @@ def run_bindings(args: argparse.Namespace) -> int:
     return 0
 
 
+def run_baseline(args: argparse.Namespace) -> int:
+    root = _root(args)
+    manifests = load_target_manifests(root)
+    debt = collect_naming_debt(root, manifests)
+    baseline = load_naming_baseline(root)
+    pending = {
+        category: sorted(set(rows) - baseline.get(category, set()))
+        for category, rows in debt.to_rows().items()
+    }
+    pending = {category: rows for category, rows in pending.items() if rows}
+    if not pending:
+        print("naming baseline: up to date")
+        return 0
+    if not args.write:
+        for category, rows in sorted(pending.items()):
+            for row in rows:
+                print(f"would record ({category}): {row}")
+        return 1
+    added = merge_naming_baseline(root, debt)
+    for category, rows in sorted(added.items()):
+        for row in rows:
+            print(f"recorded ({category}): {row}")
+    print("wrote config/symbol-naming-baseline.json")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="symbols")
+    parser = argparse.ArgumentParser(prog="bin/harness source symbols")
     add_root_argument(parser)
-    add_example_argument(parser, "bin/symbols normalize exe/logo --write")
+    add_example_argument(
+        parser, "bin/harness source symbols normalize exe/logo --write"
+    )
     sub = parser.add_subparsers(dest="command", required=True)
     normalize = sub.add_parser("normalize", help="format target map files")
     normalize.add_argument("target", nargs="?")
@@ -283,6 +312,12 @@ def build_parser() -> argparse.ArgumentParser:
     check = sub.add_parser("check", help="validate target map(s)")
     check.add_argument("target", nargs="?")
     check.set_defaults(handler=run_check)
+    baseline = sub.add_parser(
+        "baseline",
+        help="record current raw-spelling naming debt in the baseline",
+    )
+    baseline.add_argument("--write", action="store_true")
+    baseline.set_defaults(handler=run_baseline)
     bindings = sub.add_parser("bindings", help="generate target weak bindings")
     bindings.add_argument("target", nargs="?")
     bindings.add_argument("--write", action="store_true")

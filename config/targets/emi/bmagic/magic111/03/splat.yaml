@@ -48,8 +48,8 @@ segments:
     - asm
     - func_801EF03C
   - - 1216
-    - asm
-    - func_801EF0C0
+    - c
+    - setWorkByte29AndIncrementWorkByte2BmagicMagic11103_801EF0C0
   - - 1264
     - asm
     - func_801EF0F0

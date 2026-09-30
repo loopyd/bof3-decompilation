@@ -6,7 +6,7 @@ extern int rand(void);
  * @source 0x801D3844
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 resolveKindResultMode(void) {
   u16* state;

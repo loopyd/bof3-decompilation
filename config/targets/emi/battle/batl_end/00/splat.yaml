@@ -1,0 +1,132 @@
+name: battle_batl_end_00
+sha1: 0599f28de0ba49b4369f007e292038e314ff087d
+options:
+  platform: psx
+  compiler: psyq
+  basename: battle_batl_end_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/battle/batl_end/00.bin
+  asm_path: out/splat/emi/battle/batl_end/00/asm
+  src_path: src/emi/battle/batl_end/00
+  ld_script_path: out/splat/emi/battle/batl_end/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/battle/batl_end/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/battle/batl_end/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/battle/batl_end/00/.splache
+  asset_path: out/splat/emi/battle/batl_end/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/battle/batl_end/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 88
+  vram: 2149510232
+  subsegments:
+  - - 88
+    - asm
+    - func_801EEC58
+  - - 148
+    - asm
+    - func_801EEC94
+  - - 208
+    - asm
+    - func_801EECD0
+  - - 424
+    - asm
+    - func_801EEDA8
+  - - 588
+    - asm
+    - func_801EEE4C
+  - - 736
+    - asm
+    - func_801EEEE0
+  - - 788
+    - asm
+    - func_801EEF14
+  - - 972
+    - asm
+    - func_801EEFCC
+  - - 1048
+    - asm
+    - func_801EF018
+  - - 1108
+    - asm
+    - func_801EF054
+  - - 1344
+    - asm
+    - func_801EF140
+  - - 1804
+    - asm
+    - func_801EF30C
+  - - 1864
+    - asm
+    - func_801EF348
+  - - 2752
+    - asm
+    - func_801EF6C0
+  - - 2940
+    - asm
+    - func_801EF77C
+  - - 2996
+    - asm
+    - func_801EF7B4
+  - - 3184
+    - asm
+    - func_801EF870
+  - - 3368
+    - asm
+    - func_801EF928
+  - - 4504
+    - asm
+    - func_801EFD98
+  - - 4624
+    - asm
+    - func_801EFE10
+  - - 4700
+    - asm
+    - func_801EFE5C
+  - - 6044
+    - asm
+    - func_801F039C
+  - - 6736
+    - asm
+    - func_801F0650
+  - - 7016
+    - asm
+    - func_801F0768
+  - - 7104
+    - c
+    - advanceStateByte3BatlEnd00_801F07C0
+    - '@source: src/bof3/battle/advanceStateByte3BatlEnd00_801F07C0.c'
+    - '@behavior: Advances the shared panel state byte: increments byte +0x03 of the object published at 0x80148648 and returns nothing; byte-identical twin of advanceStateByte3BatlEnd00_801F09D4.'
+  - - 7136
+    - asm
+    - func_801F07E0
+  - - 7548
+    - asm
+    - func_801F097C
+  - - 7636
+    - c
+    - advanceStateByte3BatlEnd00_801F09D4
+    - '@source: src/bof3/battle/advanceStateByte3BatlEnd00_801F09D4.c'
+    - '@behavior: Advances the shared panel state byte: increments byte +0x03 of the object published at 0x80148648 and returns nothing; byte-identical twin of advanceStateByte3BatlEnd00_801F07C0.'
+  - - 7668
+    - asm
+    - func_801F09F4
+  - - 7796
+    - asm
+    - func_801F0A74
+  - - 8112
+    - asm
+    - func_801F0BB0
+  - - 8344
+    - asm
+    - D_801F0C98
+- - 8417

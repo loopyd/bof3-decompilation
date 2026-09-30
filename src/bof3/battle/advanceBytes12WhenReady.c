@@ -4,7 +4,7 @@
  * @behavior Increments scratchpad battle-work byte +1 and clears byte +2 when localReadyOrHelper2 succeeds.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void advanceBytes12WhenReady(void) {
     if (localReadyOrHelper2() != 0) {

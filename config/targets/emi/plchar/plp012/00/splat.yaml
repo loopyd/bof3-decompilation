@@ -1,0 +1,113 @@
+name: plchar_plp012_00
+sha1: 25acd9551b594fc91b3590cc28b51814c6a840fe
+options:
+  platform: psx
+  compiler: psyq
+  basename: plchar_plp012_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/plchar/plp012/00.bin
+  asm_path: out/splat/emi/plchar/plp012/00/asm
+  src_path: src/emi/plchar/plp012/00
+  ld_script_path: out/splat/emi/plchar/plp012/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/plchar/plp012/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/plchar/plp012/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/plchar/plp012/00/.splache
+  asset_path: out/splat/emi/plchar/plp012/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/plchar/plp012/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149377028
+  subsegments:
+  - - 4
+    - asm
+    - func_801CE404
+  - - 72
+    - asm
+    - func_801CE448
+  - - 552
+    - asm
+    - func_801CE628
+  - - 812
+    - asm
+    - func_801CE72C
+  - - 880
+    - asm
+    - func_801CE770
+  - - 1684
+    - asm
+    - func_801CEA94
+  - - 2096
+    - asm
+    - func_801CEC30
+  - - 2332
+    - asm
+    - func_801CED1C
+  - - 2836
+    - asm
+    - func_801CEF14
+  - - 3064
+    - asm
+    - func_801CEFF8
+  - - 3372
+    - asm
+    - func_801CF12C
+  - - 3440
+    - asm
+    - func_801CF170
+  - - 3644
+    - asm
+    - func_801CF23C
+  - - 3896
+    - asm
+    - func_801CF338
+  - - 3964
+    - asm
+    - func_801CF37C
+  - - 4244
+    - asm
+    - func_801CF494
+  - - 4352
+    - asm
+    - func_801CF500
+  - - 4420
+    - asm
+    - func_801CF544
+  - - 4624
+    - asm
+    - func_801CF610
+  - - 4876
+    - asm
+    - func_801CF70C
+  - - 4944
+    - asm
+    - func_801CF750
+  - - 5432
+    - asm
+    - func_801CF938
+  - - 5544
+    - asm
+    - func_801CF9A8
+  - - 5900
+    - asm
+    - func_801CFB0C
+  - - 6108
+    - asm
+    - func_801CFBDC
+  - - 6392
+    - asm
+    - func_801CFCF8
+  - - 6460
+    - asm
+    - func_801CFD3C
+  - - 6528
+    - asm
+    - func_801CFD80
+- - 6616

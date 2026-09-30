@@ -4,7 +4,7 @@
  * @source 0x801C7188
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 s16 absS16(s16 arg0) {
   if ((s32)arg0 < 0)

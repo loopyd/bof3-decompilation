@@ -4,7 +4,7 @@
  * @behavior Advances the panel task x position and ends its state at the limit.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 
 void panelStepRightClamp62(void) {

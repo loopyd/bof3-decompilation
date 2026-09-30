@@ -7,7 +7,7 @@
  * @source 0x801A782C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchScenarioHandlerAndState(void) {
   (*D_801C8454[scenarioState.scenario_id])();

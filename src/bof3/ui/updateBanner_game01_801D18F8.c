@@ -11,8 +11,8 @@ typedef struct GameFrontBannerState {
  * visible panel with its current alpha.
  * @source 0x801D18F8
  * @status partial
- * @match unavailable
- * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
+ * @match 93.08
+ * @residual live diff is only the two loop-carried values' saved registers: cc1 keeps the counter in s2 and marker in s1 (original: counter s1, marker s2); instruction stream, size and branch layout otherwise match (130/130). Initializing marker after the scroll/x block restored the original's separate x-base 320 copy (106/130 -> 121/130); the remaining allocation choice needs a clean-C lever (the removed pin/clobber aid supplied it).
  */
 void updateBanner(void) {
   volatile GameFrontBannerState* state;
@@ -44,11 +44,13 @@ void updateBanner(void) {
   state = (volatile GameFrontBannerState*)(phase_addr - 15);
   one = 1;
   alpha = (volatile u16*)(phase_addr - 13);
-  marker = 320;
-
+  /* Initialize marker after the scroll/x computation: cc1 then emits the
+   * x-base `li v1,320` copy separately from marker's own `li` (the original's
+   * shape) instead of reusing one 320 copy for both. */
   sc = GAME_FRONT_BANNER_SCROLL + 2;
   x = 320 - sc;
   GAME_FRONT_BANNER_SCROLL = sc;
+  marker = 320;
 
   for (; i < 4; x += 255, i++, marker += 128) {
     if (i < (s16)state->scroll / 640) {

@@ -5,7 +5,7 @@
  * @behavior Dispatches the battle selection handler indexed by D_801462E4.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchSubstateTable4cc8(void) {
   battleSelectionHandlerTable4CC8[D_801462E4]();

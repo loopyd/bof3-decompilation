@@ -87,8 +87,10 @@ segments:
     - asm
     - func_801F3BCC
   - - 4308
-    - asm
-    - func_801F3CD4
+    - c
+    - setStatusFFFFAndHandlerIndex3WhenGateWorld01Area04113_801F3CD4
+    - '@source: src/bof3/world01/setStatusFFFFAndHandlerIndex3WhenGateWorld01Area04113_801F3CD4.c'
+    - '@behavior: loads the shared gate byte D_801490C7; while that byte is nonzero it sets the handler index byte at 0x801D4286 to 3, and it then stores 0xFFFF into the shared status halfword D_801490A8 on every path.'
   - - 4356
     - asm
     - func_801F3D04
@@ -102,8 +104,10 @@ segments:
     - asm
     - func_801F3DBC
   - - 4608
-    - asm
-    - func_801F3E00
+    - c
+    - setHalfwordFF00AndTwoWorld01Area04113_801F3E00
+    - '@source: src/bof3/world01/setHalfwordFF00AndTwoWorld01Area04113_801F3E00.c'
+    - '@behavior: stores the signed halfword -0x100 (0xFF00) into 0x8014932C and then the constant 0x02 into the byte at 0x80149333.'
   - - 4640
     - c
     - setTwoWorld01Area04113_801F3E20
@@ -139,5 +143,5 @@ segments:
     - func_801F4288
   - - 5832
     - asm
-    - func_801F42C8
+    - D_801F42C8
 - - 10894

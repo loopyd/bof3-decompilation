@@ -10,7 +10,7 @@ extern void SysDeqIntRP(int pri, void* rp);
  * @source 0x8017F27C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 int dequeueIntRpIrq(void) {
   EnterCriticalSection();

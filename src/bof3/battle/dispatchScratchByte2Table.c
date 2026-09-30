@@ -5,7 +5,7 @@
  * its handler table.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS dispatchScratchByte2Table(void) {
   u8 state_index;

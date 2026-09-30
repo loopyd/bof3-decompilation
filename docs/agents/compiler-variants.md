@@ -6,7 +6,7 @@ target-specific results remain in [game research](../specs/runtime/compiler-vari
 ## Ownership
 
 - `config/compiler/variants.json` — schema: `harness.compiler-variants/v1`
-- `bin/compiler-variants` — CLI list/install/verify/path
+- `bin/harness build variants` — CLI list/install/verify/path
 - `tools/python/harness/toolchain/gcc_variants.py` — `CompilerVariant` / `EmptyCatalog`
 - `tools/python/harness/build/compiler.py` — attached metadata, path defaults and ordered compiler arguments
 - `tools/python/harness/commands/compiler_variants.py` — CLI commands
@@ -22,11 +22,11 @@ one archive lifecycle: cache-symlink/non-regular rejection, cache-local
 temporary download, digest validation before atomic cache publication, fresh
 sibling staging extraction, staged `gcc --version` identity verification, and
 an atomic install swap that preserves a prior verified install on any failed
-network, digest, extraction, or identity check. `bin/compiler-variants path
+network, digest, extraction, or identity check. `bin/harness build variants path
 <id>` and compilation database generation share installed-only resolution:
 they verify the selected compiler but never download, install or repair it,
 even when a cached archive exists. Missing installations report the explicit
-`bin/compiler-variants install <id>` remedy; run it only with installation
+`bin/harness build variants install <id>` remedy; run it only with installation
 authorization. Unsupported hosts, unknown IDs and corrupt installations reject,
 never falling back to canonical/host GCC. `just setup` primes the
 canonical compiler plus every host-compatible entry in the
@@ -72,7 +72,7 @@ before launch rather than silently ignoring metadata. The compiler environment
 uses that same selected executable. Installed-only CLI resolution verifies identity;
 dispatch itself does not perform another version check.
 
-`bin/flag-search` explicitly marks its existing scratch directory through
+`bin/harness lift flag-search` explicitly marks its existing scratch directory through
 `BOF3_COMPILER_TRIAL`. Only one ungrouped scratch object may use trial overrides;
 the marker is bound to the dispatch and cannot relax grouped preservation checks.
 Trial results do not update authored metadata or establish configured production
@@ -94,12 +94,12 @@ recovery, native checks and final acceptance remain required.
 
 ```sh
 # Check catalog state
-bin/compiler-variants list
-bin/compiler-variants verify <id>
+bin/harness build variants list
+bin/harness build variants verify <id>
 
 # Verify baseline build unchanged
 just check
-bin/symbols check
+bin/harness source symbols check
 ```
 
 `list` reports catalog membership; `verify <id>` validates an ignored local

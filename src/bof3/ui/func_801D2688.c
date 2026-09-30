@@ -5,7 +5,7 @@
  * D_801D41FC function-pointer table.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801D2688(void) {
   D_801D41FC[D_801D4286]();

@@ -1,0 +1,62 @@
+name: etc_commu05_07
+sha1: 9fc3fe17b7bf2fcc1b3be0272ec959104d12437c
+options:
+  platform: psx
+  compiler: psyq
+  basename: etc_commu05_07
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/etc/commu05/07.bin
+  asm_path: out/splat/emi/etc/commu05/07/asm
+  src_path: src/emi/etc/commu05/07
+  ld_script_path: out/splat/emi/etc/commu05/07/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/etc/commu05/07/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/etc/commu05/07/undefined_syms_auto.txt
+  cache_path: out/splat/emi/etc/commu05/07/.splache
+  asset_path: out/splat/emi/etc/commu05/07/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/etc/commu05/07/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149387268
+  subsegments:
+  - - 4
+    - asm
+    - D_801D0C04
+  - - 76
+    - asm
+    - func_801D0C4C
+  - - 332
+    - asm
+    - func_801D0D4C
+  - - 820
+    - asm
+    - func_801D0F34
+  - - 848
+    - asm
+    - func_801D0F50
+  - - 1096
+    - asm
+    - func_801D1048
+  - - 1692
+    - asm
+    - func_801D129C
+  - - 2248
+    - asm
+    - func_801D14C8
+  - - 2672
+    - asm
+    - func_801D1670
+  - - 2852
+    - asm
+    - func_801D1724
+  - - 3408
+    - asm
+    - D_801D1950
+- - 3576

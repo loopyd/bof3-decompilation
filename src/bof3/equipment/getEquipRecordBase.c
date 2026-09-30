@@ -7,7 +7,7 @@
  * @see docs/specs/data/equipment.md
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void* getEquipRecordBase(s32 item_type, s32 item_index) {
   u8 category;

@@ -4,7 +4,7 @@
  * @behavior Dispatches the handler selected by the panel task's state byte.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 
 void dispatchPanelTaskTable6e08(void) {

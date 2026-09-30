@@ -4,7 +4,7 @@
  * @behavior initializes three battle-global state bytes to 5, 1, and 0.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void initModeTuple510(void) {
   D_801462E0 = 5;

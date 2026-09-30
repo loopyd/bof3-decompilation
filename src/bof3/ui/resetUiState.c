@@ -4,7 +4,7 @@
  * @behavior sets D_80148650 to 1, and D_80148651/D_80148652 to 0.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void resetUiState(void) {
   D_80148650 = 1;

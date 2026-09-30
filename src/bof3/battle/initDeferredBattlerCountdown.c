@@ -5,7 +5,7 @@
  * @source 0x801DCEF8
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void initDeferredBattlerCountdown(u32 arg0) {
   arg0 &= 0xffu;

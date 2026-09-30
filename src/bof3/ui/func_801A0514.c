@@ -4,7 +4,7 @@
  * @source 0x801A0514
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 #define ENTITY_MAX       30
 #define ENTITY_SLOT_SIZE 0x98

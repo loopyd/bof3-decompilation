@@ -30,14 +30,16 @@ segments:
   vram: 2149544796
   subsegments:
   - - 1884
-    - asm
-    - func_801F735C
+    - c
+    - dispatchWorkByte1HandlerScenarioScena0900_801F735C
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0900_801F735C.c'
+    - '@behavior: Per-frame work-object handler dispatcher of this overlay: it reads the work-object pointer cell at 0x1F800044 (lui $v0,0x1F80 then lw $v0,0x44($v0)), takes that object''s unsigned byte at offset 1, scales it by four and invokes that entry of the overlay-local two-word handler table at 0x801FE384 with no arguments - entry 0 = func_801F73A0 (0x801F73A0) and entry 1 = resetWorkStateWhenNoRecordActiveScenarioScena0900_801F73F0 (0x801F73F0), which this target already lifts. It reads no other state and writes none; the 0x18-byte frame only keeps $ra across the indirect call and the pointer-cell load precedes frame creation. No in-image jal and no image data word in this payload addresses 0x801F735C, so its caller is outside the overlay. Its 0x44 bytes are instruction-for-instruction identical to the exact sibling dispatchWorkByte1HandlerScenarioScena0100_801F73B8 (0x801F73B8), differing only in the table-entry load immediate (0x801FE26C there).'
   - - 1952
     - asm
     - func_801F73A0
   - - 2032
-    - asm
-    - func_801F73F0
+    - c
+    - resetWorkStateWhenNoRecordActiveScenarioScena0900_801F73F0
   - - 2084
     - asm
     - func_801F7424
@@ -51,8 +53,10 @@ segments:
     - asm
     - func_801F76D0
   - - 3280
-    - asm
-    - func_801F78D0
+    - c
+    - dispatchScenarioStateHandlerScenarioScena0900_801F78D0
+    - '@source: src/bof3/scenario/dispatchScenarioStateHandlerScenarioScena0900_801F78D0.c'
+    - '@behavior: Per-frame state dispatcher of this overlay: it reads the signed shared main-RAM state byte D_80146872, scales it by four and dispatches through the pointer table at 0x801FE3E0 (entry 0 is setScenarioScena0900_801F790C, the state-0 handler that advances the state byte to 1), so that state byte selects which of the overlay''s scenario handlers runs this frame. It takes no arguments and returns nothing, and its 0x18-byte frame only holds $ra across the indirect call.'
   - - 3340
     - c
     - setScenarioScena0900_801F790C
@@ -60,8 +64,10 @@ segments:
     - asm
     - func_801F7920
   - - 6104
-    - asm
-    - func_801F83D8
+    - c
+    - dispatchPrimaryStateHandlerScenarioScena0900_801F83D8
+    - '@source: src/bof3/scenario/dispatchPrimaryStateHandlerScenarioScena0900_801F83D8.c'
+    - '@behavior: Per-frame primary state dispatcher of this overlay: it reads the signed shared primary state byte D_80146874 (0x80146874), scales it by four and dispatches through the overlay-local handler table at 0x801FE3EC, so that byte selects which of the overlay''s seventeen primary states runs this frame. It reads no state other than that byte and writes none, takes no arguments and returns nothing of its own, and its 0x18-byte frame exists only to hold $ra across the indirect call, with the state-byte read hoisted above the frame setup. No in-image jal targets the address: its only image word is 0x801FE3E8, word 2 of the twenty-word state-handler table at 0x801FE3E0 whose entry 0 is setScenarioScena0900_801F790C and whose word at 0x801FE430 (0xFF000100) is not a pointer, so the overlay reaches this dispatcher only indirectly, through the same-overlay state dispatcher dispatchScenarioStateHandlerScenarioScena0900_801F78D0 (0x801F78D0) that indexes that table with D_80146872. Its 60 bytes are instruction-for-instruction identical to that dispatcher and to the exact sibling dispatchPrimaryStateHandlerScenarioScena0600_801F7A00 (0x801F7A00), which dispatches the same D_80146874 byte through its own table at 0x801FE3E4; they differ only in the two symbol immediates.'
   - - 6164
     - c
     - noopHandlerScenarioScena0900_801F8414
@@ -117,56 +123,74 @@ segments:
     - c
     - noopHandlerScenarioScena0900_801FC5DC
   - - 23012
-    - asm
-    - func_801FC5E4
+    - c
+    - dispatchRecordCallbackScenarioScena0900_801FC5E4
+    - '@source: src/bof3/scenario/dispatchRecordCallbackScenarioScena0900_801FC5E4.c'
+    - '@behavior: Overlay-local record-callback dispatcher: it reads the record passed in $a0, takes its unsigned byte field at offset 0x7A, scales it by four and selects a callback word of the overlay-local table at 0x801FE434, then invokes that callback with jalr, passing the record pointer unchanged as the first argument and the shared word D_8014686C (0x8014686C, read with lw into $a1) as the second. The sixteen table words are the handlers 0x801FC624 (word 0) through 0x801FC8E4 (word 15), so the dispatch reaches the whole run of the overlay record callbacks, among them the state-5 handler at word 2 (0x801FC668). It reads no other state and writes none; the 0x18-byte frame only keeps $ra across the indirect call, and the word load of D_8014686C is scheduled between the record byte load and the index shift, so the original bytes read lbu 0x7A($a0), lui/lw D_8014686C, then sll and the lui $at/addu table address. No in-image jal targets the address; its only image word is the pointer word at 0x801FE3D0, the second slot of the five-word pointer run 0x801FE3CC..0x801FE3DC that immediately precedes the twenty-word state-handler table at 0x801FE3E0. Its 64 bytes are instruction-for-instruction identical to the exact sibling dispatchRecordCallbackByByte7A (0x801FC7D0) of the scena00 overlay, which differs only in the table-entry load immediate (0x801FCA84 there).'
   - - 23076
     - c
     - noopHandlerScenarioScena0900_801FC624
   - - 23084
-    - asm
-    - func_801FC62C
+    - c
+    - clearProgressThenRequestPrimaryState5Substate0ScenarioScena0900_801FC62C
+    - '@source: src/bof3/scenario/clearProgressThenRequestPrimaryState5Substate0ScenarioScena0900_801FC62C.c'
+    - '@behavior: Entry 1 of the 16-word in-image callback table at 0x801FE434 (word at 0x801FE438) that the overlay dispatcher func_801FC5E4 indexes with byte 0x7A of a record, so the overlay reaches this handler only indirectly. It runs the shared front-end startup helper func_8015C088 and then clears the shared scenario progress byte g_ScenarioProgress (0x80146864) to zero and requests primary scene state 5 with secondary sub-state 0: it stores 0 in the shared sub-state byte D_80146875 and then 5 in the shared state byte D_80146874. Takes no arguments and returns nothing; the 0x18-byte frame only keeps $ra across the call, each of the three byte stores materialises the 0x8014 page in $at on its own, and the stored constant 5 is materialised in $v0 (addiu $v0,$zero,5) ahead of the two zero stores, which is how the psyq compiler schedules that constant while it keeps the store order. Its 0x3C bytes keep the progress-clear-then-request shape of the exact sibling clearProgressThenRequestPrimaryState7Substate10ScenarioScena0800_801FE0A0 (0x801FE0A0), which clears the same progress byte and requests state 7 with sub-state 0x0A after the same helper call.'
   - - 23144
-    - asm
-    - func_801FC668
+    - c
+    - clearProgressThenRequestPrimaryState5Substate5ScenarioScena0900_801FC668
+    - '@source: src/bof3/scenario/clearProgressThenRequestPrimaryState5Substate5ScenarioScena0900_801FC668.c'
+    - '@behavior: Entry 2 of the 16-word in-image callback table at 0x801FE434 (word at 0x801FE43C) that the overlay dispatcher dispatchRecordCallbackScenarioScena0900_801FC5E4 indexes with byte 0x7A of a record, so the overlay reaches this handler only indirectly. It runs the shared front-end startup helper func_8015C088 and then clears the shared scenario progress byte g_ScenarioProgress (0x80146864) to zero and requests primary scene state 5 with secondary sub-state 5: it stores 5 in the shared sub-state byte D_80146875 and then 5 in the shared state byte D_80146874. Takes no arguments and returns nothing; the 0x18-byte frame only keeps $ra across the call, each of the three byte stores materialises the 0x8014 page in $at on its own, and the stored constant 5 is materialised in $v0 (addiu $v0,$zero,5) ahead of the zero store. Its 0x3C bytes keep the progress-clear-then-request shape of the exact sibling clearProgressThenRequestPrimaryState5Substate0ScenarioScena0900_801FC62C (0x801FC62C, the table entry 1), which clears the same progress byte and requests state 5 with sub-state 0 after the same helper call; the two handlers differ only in the sub-state constant, so the two stores share the register holding 5.'
   - - 23204
-    - asm
-    - func_801FC6A4
+    - c
+    - requestPrimaryState4Substate5ScenarioScena0900_801FC6A4
   - - 23260
-    - asm
-    - func_801FC6DC
+    - c
+    - requestPrimaryState0AAndClearSubstateScenarioScena0900_801FC6DC
   - - 23312
-    - asm
-    - func_801FC710
+    - c
+    - requestPrimaryState0ASubstate1ScenarioScena0900_801FC710
+    - '@source: src/bof3/scenario/requestPrimaryState0ASubstate1ScenarioScena0900_801FC710.c'
+    - '@behavior: Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 0x0A with secondary sub-state 1 by storing 0x0A in the shared state byte D_80146874 and then 1 in the shared sub-state byte D_80146875; it takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call. No in-image jal targets the address; its only image word is entry 5 of the 16-word handler table at 0x801FE434 that the overlay dispatcher func_801FC5E4 indexes with byte 0x7A of a record.'
   - - 23368
-    - asm
-    - func_801FC748
+    - c
+    - clearWorkByte0ThenRequestPrimaryState0DSubstate5ScenarioScena0900_801FC748
+    - '@source: src/bof3/scenario/clearWorkByte0ThenRequestPrimaryState0DSubstate5ScenarioScena0900_801FC748.c'
+    - '@behavior: Entry 6 of the 16-word in-image callback table at 0x801FE434 (word at 0x801FE44C) that the overlay dispatcher dispatchRecordCallbackScenarioScena0900_801FC5E4 (0x801FC5E4) indexes with byte 0x7A of a record and hands the shared word D_8014686C, so the overlay reaches this handler only indirectly. It clears byte 0 of the scratchpad work object whose pointer the cell at 0x1F800044 publishes (lui $v0,0x1F80 then lw $v0,0x44($v0) and sb $zero,0x0($v0)), runs the shared front-end startup helper func_8015C088 and then requests primary scene state 0x0D with secondary sub-state 5 by storing 0x0D in the shared state byte D_80146874 and then 5 in the shared sub-state byte D_80146875. It ignores the record pointer and the second argument its caller passes, takes no arguments of its own and returns nothing; the 0x18-byte frame only keeps $ra across the call, each of the two shared-byte stores materialises its constant in $v0 (addiu $v0,$zero,imm feeding each sb) and the work-byte store is sunk into the call''s delay slot, the same sinking the battle overlay''s exact initScratchWorkState (0x801E3334) shows. Its 0x40 bytes keep the request shape of the exact per-record sibling clearProgressThenRequestPrimaryState5Substate0ScenarioScena0900_801FC62C (0x801FC62C, table entry 1), which clears the shared progress byte g_ScenarioProgress instead of a work byte.'
   - - 23432
-    - asm
-    - func_801FC788
+    - c
+    - setScenarioFlagBit0EScenarioScena0900_801FC788
   - - 23472
-    - asm
-    - func_801FC7B0
+    - c
+    - requestPrimaryState6Substate100ScenarioScena0900_801FC7B0
+    - '@source: src/bof3/scenario/requestPrimaryState6Substate100ScenarioScena0900_801FC7B0.c'
+    - '@behavior: Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 6 with secondary sub-state 0x64 by storing 6 in the shared state byte D_80146874 and then 0x64 in the shared sub-state byte D_80146875; it takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call. No in-image jal targets the address; its only image word is entry 8 of the 16-word handler table at 0x801FE434 that the overlay dispatcher func_801FC5E4 indexes with byte 0x7A of a record.'
   - - 23528
-    - asm
-    - func_801FC7E8
+    - c
+    - setScenarioFlagBit10ScenarioScena0900_801FC7E8
   - - 23568
     - asm
     - func_801FC810
   - - 23608
-    - asm
-    - func_801FC838
+    - c
+    - requestPrimaryState8Substate0FScenarioScena0900_801FC838
+    - '@source: src/bof3/scenario/requestPrimaryState8Substate0FScenarioScena0900_801FC838.c'
+    - '@behavior: Entry 11 of the 16-word in-image callback table at 0x801FE434 (word at 0x801FE460) that the overlay dispatcher func_801FC5E4 indexes with byte 0x7A of a record and hands the shared word D_8014686C, so the overlay reaches this handler only indirectly. Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 8 with secondary sub-state 0x0F by storing 8 in the shared state byte D_80146874 and then 0x0F in the shared sub-state byte D_80146875; it takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call. Its 0x38 bytes are the same shape as the exact sibling requestPrimaryState0ASubstate1ScenarioScena0900_801FC710 (0x801FC710), differing only in the two stored constants.'
   - - 23664
     - c
     - noopHandlerScenarioScena0900_801FC870
   - - 23672
-    - asm
-    - func_801FC878
+    - c
+    - requestPrimaryState0FAndClearSubstateScenarioScena0900_801FC878
   - - 23724
-    - asm
-    - func_801FC8AC
+    - c
+    - requestPrimaryState0FSubstate14ScenarioScena0900_801FC8AC
+    - '@source: src/bof3/scenario/requestPrimaryState0FSubstate14ScenarioScena0900_801FC8AC.c'
+    - '@behavior: Entry 14 of the 16-word in-image callback table at 0x801FE434 (word at 0x801FE46C) that the overlay dispatcher func_801FC5E4 indexes with byte 0x7A of a record and hands the shared word D_8014686C, so the overlay reaches this handler only indirectly. Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 0x0F with secondary sub-state 0x14 by storing 0x0F in the shared state byte D_80146874 and then 0x14 in the shared sub-state byte D_80146875; it takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call. Its 0x38 bytes are the same shape as the exact sibling requestPrimaryState8Substate0FScenarioScena0900_801FC838 (0x801FC838), differing only in the two stored constants.'
   - - 23780
-    - asm
-    - func_801FC8E4
+    - c
+    - requestPrimaryState0FSubstate28ScenarioScena0900_801FC8E4
+    - '@source: src/bof3/scenario/requestPrimaryState0FSubstate28ScenarioScena0900_801FC8E4.c'
+    - '@behavior: Entry 15 of the 16-word in-image callback table at 0x801FE434 (word at 0x801FE470) that the overlay dispatcher func_801FC5E4 indexes with byte 0x7A of a record and hands the shared word D_8014686C, so the overlay reaches this handler only indirectly. Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 0x0F with secondary sub-state 0x28 by storing 0x0F in the shared state byte D_80146874 and then 0x28 in the shared sub-state byte D_80146875; it takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the call.'
   - - 23836
     - asm
     - func_801FC91C
@@ -219,32 +243,44 @@ segments:
     - asm
     - func_801FDC70
   - - 28916
-    - asm
-    - func_801FDCF4
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDCF4
+    - '@source: src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDCF4.c'
+    - '@behavior: Overlay handler reached only indirectly: the address is word 14 (the word stored at 0x801FE4F4) of the 38-entry in-image code-pointer table at 0x801FE4BC that func_801FD280 (0x801FD280) indexes with the signed byte returned by func_801A7AD8(0x801FE474, 0x0E) and calls with jalr, so no in-image jal targets this address. It re-arms the overlay effect group for the ids 7, 8 and 2 through func_80166E88(7, 8, 2, 0) (a0=7, a1=8, a2=2 and a3 zeroed in that call''s delay slot), then calls the helper at 0x801C1400 with the constant argument 0, the per-id helper func_801C187C with the constant argument 8, and finally func_801C1630 with no arguments; it takes no arguments, reads no memory and writes none, and its 0x18-byte frame only keeps $ra across the four calls. The 68 bytes are byte-identical to func_801FDD38 (0x801FDD38, the next table word) except for the immediate of the func_801C187C argument, and differ from the exact sibling armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FABC0 (0x801FABC0 of emi/scenario/scena11/00) in exactly one byte, the func_80166E88 third argument.'
   - - 28984
-    - asm
-    - func_801FDD38
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDD38
+    - '@source: src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDD38.c'
+    - '@behavior: Overlay handler reached only indirectly: the address is word 15 (the word stored at 0x801FE4F8) of the 38-entry in-image code-pointer table at 0x801FE4BC that func_801FD280 (0x801FD280) indexes with the signed byte returned by func_801A7AD8(0x801FE474, 0x0E) and calls with jalr, so no in-image jal targets this address. It re-arms the overlay effect group for the ids 7, 8 and 2 through func_80166E88(7, 8, 2, 0) (a0=7, a1=8, a2=2 and a3 zeroed in that call''s delay slot), then calls the helper at 0x801C1400 with the constant argument 0, the per-id helper func_801C187C with the constant argument 2, and finally func_801C1630 with no arguments; it takes no arguments, reads no memory and writes none, and its 0x18-byte frame only keeps $ra across the four calls. The 68 bytes are byte-identical to func_801FDCF4 (0x801FDCF4, the preceding table word) except for the immediate of the func_801C187C argument, and differ from the exact sibling armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FABC0 (0x801FABC0 of emi/scenario/scena11/00) in exactly two bytes, the func_80166E88 third argument and that same func_801C187C argument.'
   - - 29052
     - asm
     - func_801FDD7C
   - - 29128
-    - asm
-    - func_801FDDC8
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDDC8
+    - '@source: src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDDC8.c'
+    - '@behavior: Overlay handler reached only indirectly: the address is word 17 (the word stored at 0x801FE500) of the 38-entry in-image code-pointer run at 0x801FE4BC that func_801FD280 (0x801FD280) indexes with the signed byte returned by func_801A7AD8(0x801FE474, 0x0E) and calls with jalr, so no in-image jal targets this address. It first re-arms the overlay effect group for the ids 7, 8 and 5 through func_80166E88(7, 8, 5, 0) - a0=7, a1=8, a2=5 and a3 zeroed in that call''s delay slot - then calls the helper at 0x801C1400 with the constant argument 0, then the per-id helper func_801C187C with the constant argument 5, and finally func_801C1630 with no arguments. It takes no arguments of its own, reads no memory and writes none; the 0x18-byte frame only keeps $ra across the four calls, each constant is materialised by its own addiu before its jal and the func_801C1630 call keeps a nop slot. The 68 bytes are byte-identical to the gate-exact sibling armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FAC04 (0x801FAC04 of emi/scenario/scena11/00, compared directly in both shipped payloads), and they differ from func_801FDE0C (0x801FDE0C, index 18 of the same table) in exactly one byte, the immediate of the func_801C187C argument (5 here, 8 there).'
   - - 29196
-    - asm
-    - func_801FDE0C
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDE0C
+    - '@source: src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDE0C.c'
+    - '@behavior: Overlay handler reached only indirectly: the address is word 18 (the word stored at 0x801FE504) of the 38-entry in-image code-pointer run at 0x801FE4BC that func_801FD280 (0x801FD280) indexes with the signed byte returned by func_801A7AD8(0x801FE474, 0x0E) and calls with jalr, so no in-image jal targets this address. It first re-arms the overlay effect group for the ids 7, 8 and 5 through func_80166E88(7, 8, 5, 0) - a0=7, a1=8, a2=5 and a3 zeroed in that call''s delay slot - then calls the helper at 0x801C1400 with the constant argument 0, then the per-id helper func_801C187C with the constant argument 8, and finally func_801C1630 with no arguments. It takes no arguments of its own, reads no memory and writes none; the 0x18-byte frame only keeps $ra across the four calls, each constant is materialised by its own addiu before its jal and the func_801C1630 call keeps a nop slot. The 68 bytes are byte-identical to the gate-exact sibling armEffectGroupThenInvokeThreeHelpersScenarioScena1100_801FABC0 (0x801FABC0 of emi/scenario/scena11/00, compared directly in both shipped payloads), and they differ from func_801FDDC8 (0x801FDDC8, index 17 of the same table) in exactly one byte, the immediate of the func_801C187C argument (8 here, 5 there).'
   - - 29264
-    - asm
-    - func_801FDE50
+    - c
+    - invokeThreeHelpersScenarioScena0900_801FDE50
   - - 29312
     - asm
     - func_801FDE80
   - - 29388
-    - asm
-    - func_801FDECC
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDECC
+    - '@source: src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDECC.c'
+    - '@behavior: Overlay handler reached only indirectly: the address is word 21 (the word stored at 0x801FE510) of the 38-entry in-image code-pointer table at 0x801FE4BC that func_801FD280 (0x801FD280) indexes with the signed byte returned by func_801A7AD8(0x801FE474, 0x0E) and calls with jalr, so no in-image jal targets this address. It re-arms the overlay effect group for the ids 7, 6 and 5 through func_80166E88(7, 6, 5, 0) - a0=7, a1=6, a2=5 and a3 zeroed in that call''s delay slot - then calls the helper at 0x801C1400 with the constant argument 0, the per-id helper func_801C187C with the constant argument 6, and finally func_801C1630 with no arguments. It takes no arguments, reads no memory and writes none; the 0x18-byte frame only keeps $ra across the four calls, each constant is materialised by its own addiu before its jal and the func_801C1630 call keeps a nop slot. Its 68 bytes differ from func_801FDF10 (0x801FDF10, the next table word) in exactly one byte, the immediate of the func_801C187C argument (6 here, 5 there).'
   - - 29456
-    - asm
-    - func_801FDF10
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDF10
+    - '@source: src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDF10.c'
+    - '@behavior: Overlay handler reached only indirectly: the address is word 22 (the word stored at 0x801FE514) of the 38-entry in-image code-pointer table at 0x801FE4BC that func_801FD280 (0x801FD280) indexes with the signed byte returned by func_801A7AD8(0x801FE474, 0x0E) and calls with jalr, so no in-image jal targets this address. It re-arms the overlay effect group for the ids 7, 6 and 5 through func_80166E88(7, 6, 5, 0) - a0=7, a1=6, a2=5 and a3 zeroed in that call''s delay slot - then calls the helper at 0x801C1400 with the constant argument 0, the per-id helper func_801C187C with the constant argument 5, and finally func_801C1630 with no arguments. It takes no arguments, reads no memory and writes none; the 0x18-byte frame only keeps $ra across the four calls, each constant is materialised by its own addiu before its jal and the func_801C1630 call keeps a nop slot. Its 68 bytes differ from the gate-exact family sibling armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDECC (0x801FDECC, the preceding table word) in exactly one byte, the immediate of the func_801C187C argument (5 here, 6 there), and its remaining 67 bytes are byte-identical to that sibling.'
   - - 29524
     - asm
     - func_801FDF54
@@ -261,23 +297,23 @@ segments:
     - asm
     - func_801FE0E8
   - - 29996
-    - asm
-    - func_801FE12C
+    - c
+    - invokeHelperArgThenHelperScenarioScena0900_801FE12C
   - - 30036
-    - asm
-    - func_801FE154
+    - c
+    - invokeHelperTwiceThenHelperScenarioScena0900_801FE154
   - - 30084
-    - asm
-    - func_801FE184
+    - c
+    - invokeHelperArgThenHelperScenarioScena0900_801FE184
   - - 30124
-    - asm
-    - func_801FE1AC
+    - c
+    - invokeHelperTwiceThenHelperScenarioScena0900_801FE1AC
   - - 30172
-    - asm
-    - func_801FE1DC
+    - c
+    - invokeHelperTwiceThenHelperScenarioScena0900_801FE1DC
   - - 30220
-    - asm
-    - func_801FE20C
+    - c
+    - invokeHelperArgThenHelperScenarioScena0900_801FE20C
   - - 30260
     - asm
     - func_801FE234
@@ -285,11 +321,11 @@ segments:
     - asm
     - func_801FE30C
   - - 30516
-    - asm
-    - func_801FE334
+    - c
+    - invokeHelperArgThenHelperScenarioScena0900_801FE334
   - - 30556
-    - asm
-    - func_801FE35C
+    - c
+    - invokeHelperArgThenHelperScenarioScena0900_801FE35C
   - - 30596
     - asm
     - func_801FE384

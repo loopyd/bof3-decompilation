@@ -4,7 +4,7 @@
  * @behavior Increments scratchpad work byte +3 and calls func_801DEFE4 unless local-work flags +0x80 contain bit 2.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void advanceByte3UnlessFlag2(void) {
     Battle03LocalWork* work;

@@ -4,7 +4,7 @@
  * @behavior traverses PanelTask records 16 through 19 and calls func_80158E20 for each.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 
 void runPanelTasks16To19(void) {

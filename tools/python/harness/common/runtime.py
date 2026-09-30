@@ -10,6 +10,7 @@ import subprocess
 from pathlib import Path
 from typing import Any, Callable
 
+from harness.common.commands import tool_id
 from harness.common.process import ProcessCleanupError, run_command
 from harness.common.recovery import capture_recovery
 from harness.common.submodules import validate_mutations
@@ -103,7 +104,7 @@ def run_checks(
         evidence = check_evidence(check, result.returncode, result.stdout, root)
         output = (
             result.stdout
-            if check["argv"][0] in {"bin/asm-diff", "bin/byte-match"}
+            if tool_id(check["argv"]) in {"asm-diff", "byte-match"}
             else (result.stdout + result.stderr)[-16000:]
         )
         payload = {

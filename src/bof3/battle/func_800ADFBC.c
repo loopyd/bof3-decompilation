@@ -4,7 +4,7 @@
  * @behavior Dispatches an action-table handler when flag 0x800 is set and indexes it by battle-work byte 5.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_800ADFBC(void)
 {

@@ -14,6 +14,12 @@ support_sources = [
     "src/bof3/boss/noopHandlerBossBoss02513_800C1D80.c",
     "src/bof3/boss/noopHandlerBossBoss02513_800C1D78.c",
     "src/bof3/boss/noopHandlerBossBoss02513_800C1AF8.c",
+    "src/bof3/boss/raiseFlagBit20BossBoss02513_800C2160.c",
+    "src/bof3/boss/raiseFlagBit2ThenEnterFrontendMode4BossBoss02513_800C2B2C.c",
+    "src/bof3/boss/dispatchIndexedHandlerBossBoss02513_800C1A68.c",
+    "src/bof3/boss/dispatchIndexedHandlerBossBoss02513_800C1D2C.c",
+    "src/bof3/boss/dispatchIndexedHandlerBossBoss02513_800C20F0.c",
+    "src/bof3/boss/storeThreeOrZeroByFlagBitThreeBossBoss02513_800C2128.c",
     "src/bof3/support/boss025_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss025_13_psyq.c"

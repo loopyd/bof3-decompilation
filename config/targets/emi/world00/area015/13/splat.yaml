@@ -36,11 +36,11 @@ segments:
     - c
     - setWorld00Area01513_801F2CF8
   - - 268
-    - asm
-    - func_801F2D0C
+    - c
+    - retreatCounter2By20World00Area01513_801F2D0C
   - - 308
-    - asm
-    - func_801F2D34
+    - c
+    - advanceCounter2By20World00Area01513_801F2D34
   - - 348
     - c
     - setTwoWorld00Area01513_801F2D5C

@@ -58,5 +58,5 @@ segments:
     - noopHandlerBoss037_800C1988
   - - 400
     - asm
-    - func_800C1990
+    - D_800C1990
 - - 480

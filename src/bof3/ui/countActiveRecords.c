@@ -4,7 +4,7 @@
  * @behavior counts non-zero bytes in activeRecordBytes region with stride-8, returns masked count
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 countActiveRecords(void) {
   s32 count = 0;

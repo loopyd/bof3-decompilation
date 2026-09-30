@@ -30,17 +30,17 @@ segments:
   vram: 2149544600
   subsegments:
   - - 1688
-    - asm
-    - func_801F7298
+    - c
+    - dispatchScenarioStateHandlerScenarioScena0600_801F7298
   - - 1748
-    - asm
-    - func_801F72D4
+    - c
+    - seedSharedFieldsThenAdvanceStateScenarioScena0600_801F72D4
   - - 1792
     - asm
     - func_801F7300
   - - 3584
-    - asm
-    - func_801F7A00
+    - c
+    - dispatchPrimaryStateHandlerScenarioScena0600_801F7A00
   - - 3644
     - c
     - noopHandlerScenarioScena0600_801F7A3C
@@ -105,8 +105,8 @@ segments:
     - asm
     - func_801FCD38
   - - 25040
-    - asm
-    - func_801FCDD0
+    - c
+    - dispatchRecordCallbackScenarioScena0600_801FCDD0
   - - 25104
     - c
     - noopHandlerScenarioScena0600_801FCE10
@@ -123,8 +123,8 @@ segments:
     - asm
     - func_801FCF30
   - - 25496
-    - asm
-    - func_801FCF98
+    - c
+    - setScenarioFlagBit0CScenarioScena0600_801FCF98
   - - 25536
     - asm
     - func_801FCFC0
@@ -189,11 +189,11 @@ segments:
     - asm
     - func_801FDFFC
   - - 29768
-    - asm
-    - func_801FE048
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena0600_801FE048
   - - 29836
-    - asm
-    - func_801FE08C
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena0600_801FE08C
   - - 29904
     - asm
     - func_801FE0D0
@@ -204,42 +204,42 @@ segments:
     - c
     - invokeHelperArgScenarioScena0600_801FE13C
   - - 30044
-    - asm
-    - func_801FE15C
+    - c
+    - armEffectGroupThenInvokeTwoHelpersScenarioScena0600_801FE15C
   - - 30104
     - asm
     - func_801FE198
   - - 30164
-    - asm
-    - func_801FE1D4
+    - c
+    - armEffectGroupThenInvokeTwoHelpersScenarioScena0600_801FE1D4
   - - 30224
-    - asm
-    - func_801FE210
+    - c
+    - armEffectGroupThenInvokeThreeHelpersScenarioScena0600_801FE210
   - - 30292
-    - asm
-    - func_801FE254
+    - c
+    - invokeHelperTwiceThenHelperScenarioScena0600_801FE254
   - - 30340
-    - asm
-    - func_801FE284
+    - c
+    - invokeHelperTwiceThenHelperScenarioScena0600_801FE284
   - - 30388
-    - asm
-    - func_801FE2B4
+    - c
+    - invokeHelperTwiceThenHelperScenarioScena0600_801FE2B4
   - - 30436
-    - asm
-    - func_801FE2E4
+    - c
+    - invokeHelperArgThenHelperScenarioScena0600_801FE2E4
   - - 30476
-    - asm
-    - func_801FE30C
+    - c
+    - invokeHelperArgThenHelperScenarioScena0600_801FE30C
   - - 30516
     - asm
     - func_801FE334
   - - 30564
-    - asm
-    - func_801FE364
+    - c
+    - invokeHelperArgThenHelperScenarioScena0600_801FE364
   - - 30604
-    - asm
-    - func_801FE38C
+    - c
+    - invokeHelperTwiceThenHelperScenarioScena0600_801FE38C
   - - 30652
     - asm
-    - func_801FE3BC
+    - D_801FE3BC
 - - 30964

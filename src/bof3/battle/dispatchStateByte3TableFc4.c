@@ -6,7 +6,7 @@
  * bytes are 0x801E9530, 0x801E9538, and 0x801EAB64; each is void(void).
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchStateByte3TableFc4(void) {
   Battle03DispatchTable handlers;

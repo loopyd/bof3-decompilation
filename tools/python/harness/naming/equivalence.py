@@ -44,8 +44,8 @@ def _exact_capability_row(
     address = row_name.removeprefix("D_")
     target = capability["target"]
     next_command = (
-        f"bin/rev-query --json xrefs {target}@0x{address}; "
-        f"bin/rz-project query {target} -c 'axt @ 0x{address}'"
+        f"bin/harness analysis query --json xrefs {target}@0x{address}; "
+        f"bin/harness analysis rz-project query {target} -c 'axt @ 0x{address}'"
     )
     rungs = {
         name: {

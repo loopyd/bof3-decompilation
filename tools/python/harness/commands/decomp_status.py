@@ -40,9 +40,9 @@ def run(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="decomp-status")
+    parser = argparse.ArgumentParser(prog="bin/harness lift status")
     add_root_argument(parser)
-    add_example_argument(parser, "bin/decomp-status exe/logo")
+    add_example_argument(parser, "bin/harness lift status exe/logo")
     parser.add_argument(
         "--json",
         action="store_true",

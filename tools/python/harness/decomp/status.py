@@ -147,6 +147,81 @@ def build_report(
     }
 
 
+def _metadata_record(item: tuple) -> dict[str, Any]:
+    """One metadata-valid lift whose native status was deliberately not compared."""
+
+    target, source, address, source_name, _key, _manifest = item
+    return {
+        "target": target,
+        "function": source.stem,
+        "compiled_symbol": None,
+        "address": f"0x{address:08X}",
+        "source": source_name,
+        "status": "uncompared",
+        "reason": "",
+        "instruction_count": None,
+        "match_percent": None,
+        "original_size": None,
+        "current_size": None,
+        "size_delta": None,
+    }
+
+
+def build_metadata_report(root: Path, target_ids: Iterable[str] = ()) -> dict[str, Any]:
+    """Validate lift metadata, ownership and diff links without native compilation.
+
+    ``build_report`` owns live exact/partial status and its per-lift native
+    comparison. This report is the cheap metadata/link gate used by
+    ``validate-sources``: invalid discovery is the same ``_build_preflight``
+    pass, so no metadata, ownership or Splat-link error is skipped, while a
+    metadata-valid lift is reported ``uncompared`` instead of compiled.
+    """
+
+    manifests = select_manifests(root, target_ids)
+    ready, worklist = _build_preflight(root, manifests, None)
+    records = list(ready)
+    for items in worklist.values():
+        records.extend(_metadata_record(item) for item in items)
+    records.sort(key=lambda record: (record["target"], record["source"]))
+    try:
+        coverage, contains_data = index_coverage(root, manifests)
+        coverage_error: str | None = None
+    except (FileNotFoundError, ValueError) as exc:
+        coverage = {}
+        contains_data = {}
+        coverage_error = str(exc)
+
+    targets: list[dict[str, Any]] = []
+    valid = invalid = 0
+    for target, _ in manifests:
+        functions = [record for record in records if record["target"] == target]
+        counts = {
+            "valid": sum(row["status"] == "uncompared" for row in functions),
+            "invalid": sum(row["status"] == "invalid" for row in functions),
+        }
+        valid += counts["valid"]
+        invalid += counts["invalid"]
+        targets.append(
+            {
+                "target": target,
+                "lifts": {**counts, "total": len(functions)},
+                "indexed_functions": coverage.get(target),
+                "contains_data": contains_data.get(target, []),
+                "coverage_error": coverage_error,
+                "functions": functions,
+            }
+        )
+    return {
+        "schema": "bof3.decomp-status/v1",
+        "mode": "metadata",
+        "targets": targets,
+        "lifts": {"valid": valid, "invalid": invalid, "total": len(records)},
+        "indexed_functions": sum(coverage.values()) if coverage_error is None else None,
+        "contains_data": [row for rows in contains_data.values() for row in rows],
+        "coverage_error": coverage_error,
+    }
+
+
 def render_text(report: dict[str, Any], detail: str = "full") -> str:
     """Render deterministic status at the requested context budget."""
 

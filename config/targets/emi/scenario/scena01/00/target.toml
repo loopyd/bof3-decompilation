@@ -10,6 +10,11 @@ load_address = 0x801F6C00
 sources = []
 support_sources = [
     "src/bof3/scenario/invokeHelperArgScenarioScena0100_801FE224.c",
+    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0100_801F73B8.c",
+    "src/bof3/scenario/clearWorkTableAt800E4800ScenarioScena0100_801F7AB8.c",
+    "src/bof3/scenario/dispatchProgressHandlerScenarioScena0100_801F7FC4.c",
+    "src/bof3/scenario/dispatchProgressHandlerScenarioScena0100_801F8AA0.c",
+    "src/bof3/scenario/dispatchRecordCallbackByByte7AScenarioScena0100_801FD444.c",
     "src/bof3/scenario/setScenarioScena0100_801FD934.c",
     "src/bof3/scenario/setScenarioScena0100_801FD920.c",
     "src/bof3/scenario/setScenarioScena0100_801FD90C.c",
@@ -21,6 +26,8 @@ support_sources = [
     "src/bof3/scenario/noopHandlerScenarioScena0100_801FA244.c",
     "src/bof3/scenario/noopHandlerScenarioScena0100_801F986C.c",
     "src/bof3/scenario/noopHandlerScenarioScena0100_801F8ADC.c",
+    "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena0100_801FE244.c",
+    "src/bof3/scenario/resetWorkStateWhenNoEntryClearedScenarioScena0100_801F7644.c",
     "src/bof3/support/scena01_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/scena01_00_psyq.c"

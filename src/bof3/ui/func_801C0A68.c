@@ -5,7 +5,7 @@
  * @source 0x801C0A68
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801C0A68(void) {
   if (D_80146260 != 0) {

@@ -7,7 +7,7 @@ extern int rand(void);
  * @source 0x801E4368
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 checkEnemyQueuedPredicate(void) {
   if ((BATTLE_ENEMY_FLAGS_82(BATTLE_CURRENT_ENEMY_PTR) & 0x4064u) != 0u) {

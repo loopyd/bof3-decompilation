@@ -4,7 +4,7 @@
  * @behavior Clears local battle selection state when its gate flag is clear.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void clearStateWhenGateClear(void)
 {

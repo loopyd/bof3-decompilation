@@ -57,8 +57,8 @@ segments:
     - asm
     - func_800C1ADC
   - - 792
-    - asm
-    - func_800C1B18
+    - c
+    - dispatchIndexedHandlerBossBoss01816_800C1B18
   - - 848
     - asm
     - func_800C1B50
@@ -75,11 +75,11 @@ segments:
     - asm
     - func_800C1BC8
   - - 1132
-    - asm
-    - func_800C1C6C
+    - c
+    - dispatchIndexedHandlerBossBoss01816_800C1C6C
   - - 1188
-    - asm
-    - func_800C1CA4
+    - c
+    - setBossStateFiveWhenStateFourBossBoss01816_800C1CA4
   - - 1224
     - c
     - noopHandlerBossBoss01816_800C1CC8
@@ -102,8 +102,8 @@ segments:
     - asm
     - func_800C1FF8
   - - 2108
-    - asm
-    - func_800C203C
+    - c
+    - advanceWorkCursorOnFrameParityBossBoss01816_800C203C
   - - 2148
     - c
     - noopHandlerBossBoss01816_800C2064
@@ -114,8 +114,8 @@ segments:
     - asm
     - func_800C2074
   - - 2220
-    - asm
-    - func_800C20AC
+    - c
+    - clearBossStateByteBossBoss01816_800C20AC
   - - 2236
     - asm
     - func_800C20BC
@@ -169,5 +169,5 @@ segments:
     - func_800C2AA4
   - - 5176
     - asm
-    - func_800C2C38
+    - D_800C2C38
 - - 5588

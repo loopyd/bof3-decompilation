@@ -4,7 +4,7 @@
  * @behavior marks the task's scratchpad record active and writes its 0xC003 status word.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 extern u16 taskLabelWords[1];
 

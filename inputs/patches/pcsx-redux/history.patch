@@ -1,0 +1,1393 @@
+diff --git a/src/core/cdrom.cc b/src/core/cdrom.cc
+--- a/src/core/cdrom.cc
++++ b/src/core/cdrom.cc
+@@ -21,6 +21,7 @@
+  * Handles all CD-ROM registers and functions.
+  */
+ 
++#include "core/history.h"
+ #include "core/cdrom.h"
+ 
+ #include <magic_enum/magic_enum_all.hpp>
+@@ -1470,7 +1471,10 @@
+                 - Spams DMA3 and gets buffer overrun
+                 */
+                 for (i = 0; i < cdsize; ++i) {
+-                    memFile->write<uint8_t>(m_transfer[m_transferIndex++]);
++                    uint32_t historyIndex = m_transferIndex;
++                    uint8_t historyValue = m_transfer[m_transferIndex++];
++                    memFile->write<uint8_t>(historyValue);
++                    PCSX::History::cdbyte(madr + i, historyIndex, historyValue);
+                     adjustTransferIndex();
+                 }
+                 PCSX::g_emulator->m_mem->msanDmaWrite(madr, cdsize);
+diff --git a/src/core/gpu.cc b/src/core/gpu.cc
+--- a/src/core/gpu.cc
++++ b/src/core/gpu.cc
+@@ -19,6 +19,7 @@
+ 
+ #define IMGUI_DEFINE_MATH_OPERATORS
+ 
++#include "core/history.h"
+ #include "core/gpu.h"
+ 
+ #include <magic_enum/magic_enum_all.hpp>
+@@ -345,8 +346,8 @@
+             header = SWAP_LEu32(*g_emulator->m_mem->getPointer<uint32_t>(addr));
+         }
+ 
+-        if (DMACommandCounter++ > 2000000) break;
+-        if (CheckForEndlessLoop(addr)) break;
++        if (DMACommandCounter++ > 2000000) { History::fail(History::Failure::Bounds); break; }
++        if (CheckForEndlessLoop(addr)) { History::fail(History::Failure::Bounds); break; }
+ 
+         // # 32-bit blocks to transfer
+         size += (header >> 24) + 1;
+@@ -565,6 +566,7 @@
+ }
+ 
+ void PCSX::GPU::directDMAWrite(const uint32_t *feed, int transferSize, uint32_t hwAddr) {
++    History::span(2, hwAddr, feed, uint32_t(transferSize) * 4, 1);
+     Buffer buf(feed, transferSize);
+     while (!buf.isEmpty()) {
+         m_processor->processWrite(buf, Logged::Origin::DIRECT_DMA, hwAddr, transferSize);
+@@ -572,6 +574,8 @@
+ }
+ 
+ void PCSX::GPU::directDMARead(uint32_t *dest, int transferSize, uint32_t hwAddr) {
++    uint32_t *historyDestination = dest;
++    int historySize = transferSize;
+     auto size = m_readFifo->size();
+     m_readFifo->read(dest, transferSize * 4);
+     transferSize -= size / 4;
+@@ -580,6 +584,7 @@
+         *dest++ = m_dataRet;
+         transferSize--;
+     }
++    History::span(2, hwAddr, historyDestination, uint32_t(historySize) * 4, 0);
+ }
+ 
+ void PCSX::GPU::chainedDMAWrite(const uint32_t *memory, uint32_t hwAddr) {
+@@ -616,11 +621,13 @@
+             feed = memory + addr / 4 + 1;
+         }
+ 
+-        if (DMACommandCounter++ > 2000000) break;
+-        if (CheckForEndlessLoop(addr)) break;
++        if (DMACommandCounter++ > 2000000) { History::fail(History::Failure::Bounds); break; }
++        if (CheckForEndlessLoop(addr)) { History::fail(History::Failure::Bounds); break; }
+ 
+         // # 32-bit blocks to transfer
+         uint32_t transferWords = header >> 24;
++        History::emit(History::Kind::DmaHeader, 2, {addr, header, transferWords});
++        History::span(2, addr + 4, feed, transferWords * 4, 1);
+         Buffer buf(feed, transferWords);
+         while (!buf.isEmpty()) {
+             m_processor->processWrite(buf, Logged::Origin::CHAIN_DMA, addr, transferWords);
+@@ -634,6 +641,7 @@
+         }
+         addr = nextAddr;
+     } while (!(addr & 0x800000));  // contrary to some documentation, the end-of-linked-list marker is not actually
++    History::emit(History::Kind::DmaEnd, 2, {addr});
+ }  // 0xFF'FFFF any pointer with bit 23 set will do.
+ 
+ void PCSX::GPU::Command::processWrite(Buffer &buf, Logged::Origin origin, uint32_t originValue, uint32_t length) {
+diff --git a/src/core/history.cc b/src/core/history.cc
+new file mode 100644
+--- /dev/null
++++ b/src/core/history.cc
+@@ -0,0 +1,279 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include "core/history.h"
++
++#include <memory>
++#include <atomic>
++
++#include "core/psxemulator.h"
++#include "core/psxmem.h"
++#include "core/r3000a.h"
++#include "core/mdec.h"
++#include "core/psxcounters.h"
++
++namespace PCSX::History {
++namespace {
++std::unique_ptr<Journal> storage;
++std::atomic<Journal*> published{nullptr};
++std::once_flag initialization;
++Journal* journal() { return published.load(std::memory_order_acquire); }
++std::array<uint64_t, 7> requests{};
++uint64_t serial = 0;
++uint64_t bufferRequest = 0;
++uint64_t inputRequest = 0, pendingRequest = 0, epoch = 0;
++std::array<uint64_t, 15> scheduled{};
++std::array<uint64_t, 7> owners{};
++std::array<bool, 7> owned{};
++std::array<uint32_t, 2> reading{};
++
++bool paused() {
++    return journal() && journal()->owner() && !g_system->running() && !g_system->quitting() &&
++           !g_emulator->m_cpu->isDynarec();
++}
++uint64_t cycles() { return g_emulator->m_cpu->m_regs.cycle; }
++bool dmaKind(Kind kind) {
++    return kind == Kind::DmaStart || kind == Kind::DmaData || kind == Kind::DmaHeader ||
++           kind == Kind::DmaComplete || kind == Kind::DmaIRQ || kind == Kind::DmaDeferred ||
++           kind == Kind::DmaInitial || kind == Kind::DmaEnd ||
++           kind == Kind::DmaDevice || kind == Kind::DmaBuffer || kind == Kind::DmaCancel || kind == Kind::DmaPeek;
++}
++bool recording() {
++    if (!journal()) return false;
++    if (!journal()->owner()) { journal()->fail(Failure::Thread); return false; }
++    Status state;
++    return journal()->status(state) && state.state == 1;
++}
++uint32_t mirror(uint32_t address) {
++    const uint8_t* p = g_emulator->m_mem->m_hard + (address & 0xfffc);
++    return uint32_t(p[0]) | (uint32_t(p[1]) << 8) | (uint32_t(p[2]) << 16) | (uint32_t(p[3]) << 24);
++}
++int dmaInterrupt(uint32_t device) {
++    switch (device) {
++        case PSXINT_MDECINDMA: return 0;
++        case PSXINT_MDECOUTDMA: return 1;
++        case PSXINT_GPUDMA: return 2;
++        case PSXINT_CDRDMA: return 3;
++        case PSXINT_SPUDMA: return 4;
++        case PSXINT_GPUOTCDMA: return 6;
++        default: return -1;
++    }
++}
++}  // namespace
++
++void initialize() {
++    std::call_once(initialization, [] {
++        storage = std::make_unique<Journal>();
++        published.store(storage.get(), std::memory_order_release);
++    });
++}
++bool active() { return recording(); }
++bool begin(uint32_t events, uint32_t bytes) {
++    if (!paused() || g_emulator->m_mem->msanInitialized()) return false;
++    if (!journal()->begin(events, bytes, cycles())) return false;
++    requests.fill(0);
++    serial = 0;
++    bufferRequest = 0;
++    inputRequest = pendingRequest = 0;
++    scheduled.fill(0);
++    owners.fill(0);
++    owned.fill(false);
++    ++epoch;
++    reading = {};
++    for (uint32_t n = 0; n < 7; ++n) {
++        const auto* p = g_emulator->m_mem->m_hard + 0x1080 + 16 * n;
++        std::array<uint32_t, 8> data{};
++        for (unsigned r = 0; r < 3; ++r) {
++            for (unsigned b = 0; b < 4; ++b) data[r] |= uint32_t(p[4 * r + b]) << (8 * b);
++        }
++        emit(Kind::DmaInitial, n, data);
++    }
++    const auto &cpu = g_emulator->m_cpu->m_regs;
++    for (uint32_t irq = 0; irq < 15; ++irq) {
++        emit(Kind::ScheduleInitial, irq, {(cpu.interrupt >> irq) & 1}, cpu.intTargets[irq]);
++    }
++    emit(Kind::ScheduleInitial, UINT32_MAX, {cpu.interrupt}, cpu.lowestTarget);
++    if (cpu.interrupt & ~0x7fffu) fail(Failure::Unsupported);
++    emit(Kind::IRQInitial, 0, {mirror(0x1070), mirror(0x1074), cpu.CP0.n.Status, cpu.CP0.n.Cause});
++    g_emulator->m_mdec->observe(0);
++    g_emulator->m_counters->history();
++    return true;
++}
++bool stop() { return paused() && journal()->stop(cycles()); }
++bool clear() { return paused() && journal()->clear(); }
++bool status(Status* out) { return out && journal() && journal()->status(*out); }
++bool record(uint32_t index, Record* out) { return out && paused() && journal()->record(index, *out); }
++bool bytes(uint32_t offset, uint32_t length, void* out) { return paused() && journal()->bytes(offset, length, out); }
++void fail(Failure reason) { if (journal()) journal()->fail(reason); }
++
++void emit(Kind kind, uint32_t device, std::array<uint32_t, 8> data,
++          uint64_t related, const void* payload, uint32_t length, uint64_t request) {
++    if (!recording()) return;
++    Record event;
++    event.kind = static_cast<uint32_t>(kind);
++    event.device = device;
++    event.data = data;
++    event.related = related;
++    if (dmaKind(kind)) {
++        if (device >= requests.size()) { fail(Failure::Bounds); return; }
++        event.request = owned[device] ? owners[device] : requests[device];
++        if (kind == Kind::DmaComplete || kind == Kind::DmaIRQ) event.related = requests[device];
++    } else if (kind == Kind::Schedule) {
++        if (device >= scheduled.size()) { fail(Failure::Bounds); return; }
++        int channel = dmaInterrupt(device);
++        if (channel >= 0) event.request = owned[channel] ? owners[channel] : requests[channel];
++        event.data[4] = uint32_t(scheduled[device]);
++        event.data[5] = uint32_t(scheduled[device] >> 32);
++        scheduled[device] = event.request;
++    } else if (kind == Kind::Dispatch) {
++        if (device >= scheduled.size()) { fail(Failure::Bounds); return; }
++        event.request = scheduled[device];
++        scheduled[device] = 0;
++    }
++    if (request != UINT64_MAX) event.request = request;
++    journal()->append(event, cycles, payload, length);
++}
++
++Register::Register(uint32_t address, uint32_t value, uint32_t width, bool read)
++    : m_address(address), m_value(value), m_width(width), m_read(read) {
++    if (!recording()) return;
++    uint32_t physical = address & 0x1fffffff;
++    if (!((physical >= 0x1f801070 && physical < 0x1f801100) ||
++          (physical >= 0x1f801100 && physical < 0x1f80112c))) return;
++    m_observed = true;
++    m_previous = reading;
++    if (read) reading = {address, width};
++    emit(Kind::RegisterAttempt, physical, {address, value, width, mirror(address), uint32_t(read)});
++    if (!read && physical == 0x1f8010d8 && (value & 0x01000000)) fail(Failure::Unsupported);
++}
++Register::~Register() {
++    if (m_observed) {
++        emit(Kind::RegisterResult, m_address & 0x1fffffff,
++             {m_address, m_value, m_width, mirror(m_address), uint32_t(m_read)});
++        if (m_read) reading = m_previous;
++    }
++}
++Completion::Completion(uint32_t channel) : m_channel(channel) {
++    if (!recording()) return;
++    if (channel >= requests.size()) { fail(Failure::Bounds); return; }
++    m_observed = true;
++    emit(Kind::DmaIRQ, channel, {0, mirror(0x10f4)});
++}
++Completion::~Completion() {
++    if (!m_observed || !recording()) return;
++    emit(Kind::DmaIRQ, m_channel, {1, mirror(0x10f4)});
++    requests[m_channel] = 0;
++}
++
++void start(uint32_t channel, uint32_t original, uint32_t normalized, uint32_t bcr,
++           uint32_t chcr, uint32_t previous, uint32_t enabled) {
++    if (!recording()) return;
++    if (channel >= requests.size()) { fail(Failure::Bounds); return; }
++    uint64_t prior = requests[channel];
++    requests[channel] = ++serial;
++    emit(Kind::DmaStart, channel, {original, normalized, bcr, chcr, previous, enabled}, prior,
++         nullptr, 0, requests[channel]);
++    bool supported = false;
++    switch (channel) {
++        case 0: supported = chcr == 0x01000201; break;
++        case 1: supported = chcr == 0x01000200; break;
++        case 2: supported = chcr == 0x01000200 || chcr == 0x01000201 || chcr == 0x01000401; break;
++        case 3: supported = chcr == 0x11000000 || chcr == 0x11400100; break;
++        case 4: supported = chcr == 0x01000200 || chcr == 0x01000201; break;
++        case 6: supported = chcr == 0x11000002; break;
++    }
++    if (!supported) fail(Failure::Unsupported);
++}
++
++void scalar(uint32_t channel, uint32_t address, uint32_t destination,
++            uint32_t value, uint32_t width, uint32_t direction) {
++    if (!recording()) return;
++    if (width != 1 && width != 2 && width != 4) { fail(Failure::Bounds); return; }
++    uint8_t payload[4];
++    for (uint32_t b = 0; b < width; ++b) payload[b] = value >> (8 * b);
++    emit(Kind::DmaData, channel, {address, destination, width, direction}, 0, payload, width);
++}
++
++void span(uint32_t channel, uint32_t address, const void* data, uint32_t length, uint32_t direction, uint64_t related) {
++    if (!recording()) return;
++    uintptr_t first = reinterpret_cast<uintptr_t>(g_emulator->m_mem->m_wram);
++    uintptr_t pointer = reinterpret_cast<uintptr_t>(data);
++    // Main RAM's backing allocation is 8 MiB. This validates the native pointer;
++    // it does not fold the reported address or invent wrapping transfers.
++    if (pointer < first || pointer - first > 0x800000 || length > 0x800000 - (pointer - first)) {
++        fail(Failure::Bounds);
++        return;
++    }
++    emit(Kind::DmaData, channel, {address, 0, length, direction}, related, data, length);
++}
++
++uint64_t input() { return recording() ? inputRequest : 0; }
++void retain() {
++    if (recording()) inputRequest = requests[0];
++}
++void inputScalar(uint32_t address, uint16_t value, bool peek) {
++    if (!recording()) return;
++    uint8_t payload[2] = {uint8_t(value), uint8_t(value >> 8)};
++    emit(peek ? Kind::DmaPeek : Kind::DmaData, 0, {address, 0, 2, 1}, 0, payload, 2, inputRequest);
++}
++void defer(uint32_t address, uint32_t bcr, uint32_t chcr) {
++    if (!recording()) return;
++    uint64_t previous = pendingRequest;
++    pendingRequest = requests[1];
++    emit(Kind::DmaDeferred, 1, {address, bcr, chcr}, previous);
++}
++uint64_t pending() { return recording() ? pendingRequest : 0; }
++void release() { if (recording()) pendingRequest = 0; }
++uint64_t buffer() { return recording() ? bufferRequest : 0; }
++void buffer(const void* data, uint32_t length) {
++    if (!recording()) return;
++    if (!data || (length != 512 && length != 768)) { fail(Failure::Bounds); return; }
++    bufferRequest = inputRequest;
++    emit(Kind::DmaBuffer, 1, {length}, bufferRequest, data, length);
++}
++void cancel() {
++    if (!recording()) return;
++    emit(Kind::DmaCancel, 1, {}, bufferRequest);
++    // MDEC reset discards its pending work/buffer, but does not clear the DMA
++    // registers or cancel a scheduled completion callback. Keep those identities.
++    bufferRequest = 0;
++    pendingRequest = 0;
++}
++void cdbyte(uint32_t address, uint32_t source, uint8_t value) {
++    if (!recording()) return;
++    // MemoryAsFile writes through the READ lookup table, ignoring BIU isolation.
++    // Validate that the exact writeBlock path had a mapped main-RAM destination.
++    const uint8_t* page = g_emulator->m_mem->m_readLUT[address >> 16];
++    if (!page) { fail(Failure::Bounds); return; }
++    uintptr_t first = reinterpret_cast<uintptr_t>(g_emulator->m_mem->m_wram);
++    uintptr_t pointer = reinterpret_cast<uintptr_t>(page) + (address & 0xffff);
++    if (pointer < first || pointer - first >= 0x800000) { fail(Failure::Bounds); return; }
++    emit(Kind::DmaData, 3, {address, source, 1, 0, uint32_t(pointer - first)}, 0, &value, 1);
++}
++void timerRead(uint32_t index, uint32_t selector, uint32_t value, uint32_t after) {
++    if (!recording()) return;
++    emit(Kind::TimerRead, index, {selector, value, after, reading[0], reading[1]});
++}
++
++Owner::Owner(uint32_t channel, uint64_t request) : m_channel(channel) {
++    if (!recording()) return;
++    if (channel >= owners.size()) { fail(Failure::Bounds); return; }
++    m_observed = true;
++    m_epoch = epoch;
++    m_previous = owners[channel];
++    m_prior = owned[channel];
++    owners[channel] = request;
++    owned[channel] = true;
++}
++Owner::~Owner() {
++    if (!m_observed || !recording() || m_epoch != epoch) return;
++    owners[m_channel] = m_previous;
++    owned[m_channel] = m_prior;
++}
++Dispatch::Dispatch(uint32_t interrupt, uint64_t target) {
++    if (!recording()) return;
++    if (interrupt >= scheduled.size()) { fail(Failure::Bounds); return; }
++    int channel = dmaInterrupt(interrupt);
++    if (channel >= 0) m_owner.emplace(channel, scheduled[interrupt]);
++    emit(Kind::Dispatch, interrupt, {}, target);
++}
++
++}  // namespace PCSX::History
+diff --git a/src/core/history.h b/src/core/history.h
+new file mode 100644
+--- /dev/null
++++ b/src/core/history.h
+@@ -0,0 +1,90 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#pragma once
++
++#include "core/journal.h"
++#include <optional>
++
++namespace PCSX::History {
++
++enum class Kind : uint32_t {
++    RegisterAttempt = 1, RegisterResult, DmaStart, DmaData, DmaHeader,
++    DmaComplete, DmaIRQ, DmaDeferred, DmaInitial, Schedule, Dispatch,
++    IRQAssert, IRQClear, IRQAccept, TimerBefore, TimerAfter, TimerRead,
++    TimerWrite, TimerGate, Discontinuity, DmaEnd, TimerRate, TimerInitial,
++    ScheduleInitial, IRQInitial, DmaDevice, DmaBuffer, DmaCancel, DmaPeek,
++};
++
++// Called once when the main Lua state is initialized, never from device hooks.
++void initialize();
++bool active();
++bool begin(uint32_t events, uint32_t bytes);
++bool stop();
++bool clear();
++bool status(Status* out);
++bool record(uint32_t index, Record* out);
++bool bytes(uint32_t offset, uint32_t length, void* out);
++void fail(Failure reason);
++void emit(Kind kind, uint32_t device, std::array<uint32_t, 8> data = {},
++          uint64_t related = 0, const void* payload = nullptr, uint32_t length = 0,
++          uint64_t request = UINT64_MAX);
++void start(uint32_t channel, uint32_t original, uint32_t normalized, uint32_t bcr,
++           uint32_t chcr, uint32_t previous, uint32_t enabled);
++// Record already-transferred little-endian scalar values without rereading RAM.
++void scalar(uint32_t channel, uint32_t address, uint32_t destination,
++            uint32_t value, uint32_t width, uint32_t direction);
++// Bounded spans in main RAM at the native consumption/production boundary.
++void span(uint32_t channel, uint32_t address, const void* data, uint32_t length, uint32_t direction,
++          uint64_t related = 0);
++uint64_t input();
++void retain();
++void inputScalar(uint32_t address, uint16_t value, bool peek = false);
++void defer(uint32_t address, uint32_t bcr, uint32_t chcr);
++uint64_t pending();
++void release();
++uint64_t buffer();
++void buffer(const void* data, uint32_t length);
++void cancel();
++void cdbyte(uint32_t address, uint32_t source, uint8_t value);
++void timerRead(uint32_t index, uint32_t selector, uint32_t value, uint32_t after = 0);
++
++class Register {
++  public:
++    Register(uint32_t address, uint32_t value, uint32_t width, bool read = false);
++    ~Register();
++  private:
++    uint32_t m_address, m_value, m_width;
++    bool m_observed = false;
++    bool m_read;
++    std::array<uint32_t, 2> m_previous{};
++};
++
++class Completion {
++  public:
++    explicit Completion(uint32_t channel);
++    ~Completion();
++  private:
++    uint32_t m_channel;
++    bool m_observed = false;
++};
++
++// Bind native deferred execution to the work which scheduled it. A channel's
++// current CHCR/request can already describe different work at that boundary.
++class Owner {
++  public:
++    Owner(uint32_t channel, uint64_t request);
++    ~Owner();
++    Owner(const Owner&) = delete;
++    Owner& operator=(const Owner&) = delete;
++  private:
++    uint32_t m_channel = 0;
++    uint64_t m_previous = 0, m_epoch = 0;
++    bool m_prior = false, m_observed = false;
++};
++class Dispatch {
++  public:
++    Dispatch(uint32_t interrupt, uint64_t target);
++  private:
++    std::optional<Owner> m_owner;
++};
++
++}  // namespace PCSX::History
+diff --git a/src/core/journal.h b/src/core/journal.h
+new file mode 100644
+--- /dev/null
++++ b/src/core/journal.h
+@@ -0,0 +1,150 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++// Bounded diagnostic storage for native device observations.
++#pragma once
++
++#include <array>
++#include <cstdint>
++#include <cstring>
++#include <limits>
++#include <mutex>
++#include <thread>
++#include <vector>
++
++namespace PCSX::History {
++
++enum class Failure : uint32_t {
++    Events = 1, Bytes = 2, Thread = 4, Unsupported = 8,
++    Association = 16, Discontinuity = 32, Bounds = 64, Clock = 128,
++};
++
++struct Record {
++    uint64_t sequence = 0, cycle = 0, request = 0, related = 0;
++    uint32_t kind = 0, device = 0;
++    std::array<uint32_t, 8> data{};
++    uint32_t offset = 0, length = 0;
++};
++static_assert(sizeof(Record) == 80);
++
++struct Status {
++    uint64_t beginCycle = 0, endCycle = 0;
++    uint32_t version = 1, state = 0, events = 0, bytes = 0;
++    uint32_t failures = 0, firstFailure = 0, dropped = 0;
++};
++static_assert(sizeof(Status) == 48);
++
++// Lifecycle: empty -> recording -> frozen -> explicitly cleared. Every method
++// serializes access; a foreign hook only marks failure, never calls the clock.
++class Journal {
++  public:
++    explicit Journal(std::thread::id owner = std::this_thread::get_id()) : m_owner(owner) {}
++    bool begin(uint32_t events, uint32_t bytes, uint64_t cycle) {
++        std::lock_guard guard(m_mutex);
++        if (!owner() || m_status.state != 0 || events == 0 || events > 65536 || bytes > 8 * 1024 * 1024) return false;
++        std::vector<Record> records;
++        std::vector<uint8_t> payload;
++        try {
++            records.reserve(events);
++            payload.reserve(bytes);
++        } catch (...) {
++            return false;
++        }
++        m_records.swap(records);
++        m_payload.swap(payload);
++        m_eventLimit = events;
++        m_byteLimit = bytes;
++        m_status = {};
++        m_status.state = 1;
++        m_status.beginCycle = cycle;
++        m_status.endCycle = cycle;
++        return true;
++    }
++
++    template <typename Clock>
++    bool append(Record record, Clock clock, const void* bytes = nullptr, uint32_t length = 0) {
++        std::lock_guard guard(m_mutex);
++        if (m_status.state != 1) return false;
++        if (!owner()) return drop(Failure::Thread);
++        if (m_status.failures) return drop();
++        if (m_records.size() >= m_eventLimit) return drop(Failure::Events);
++        if (length > m_byteLimit - m_payload.size()) return drop(Failure::Bytes);
++        if (length && !bytes) return drop(Failure::Bounds);
++        uint64_t cycle = clock();
++        if (cycle < m_status.endCycle) return drop(Failure::Clock);
++        record.sequence = m_records.size() + 1;
++        record.cycle = cycle;
++        record.offset = m_payload.size();
++        record.length = length;
++        if (length) {
++            const auto* first = static_cast<const uint8_t*>(bytes);
++            m_payload.insert(m_payload.end(), first, first + length);
++        }
++        m_records.push_back(record);
++        m_status.endCycle = cycle;
++        m_status.events = m_records.size();
++        m_status.bytes = m_payload.size();
++        return true;
++    }
++
++    void fail(Failure failure) {
++        std::lock_guard guard(m_mutex);
++        if (m_status.state == 1) {
++            mark(owner() ? failure : Failure::Thread);
++        }
++    }
++    bool stop(uint64_t cycle) {
++        std::lock_guard guard(m_mutex);
++        if (!owner() || m_status.state != 1) return false;
++        if (cycle < m_status.endCycle) mark(Failure::Clock);
++        else m_status.endCycle = cycle;
++        m_status.state = 2;
++        return true;
++    }
++    bool clear() {
++        std::lock_guard guard(m_mutex);
++        if (!owner() || m_status.state == 1) return false;
++        m_records.clear();
++        m_payload.clear();
++        m_status = {};
++        return true;
++    }
++    bool status(Status& out) const {
++        std::lock_guard guard(m_mutex);
++        if (!owner()) return false;
++        out = m_status;
++        return true;
++    }
++    bool record(uint32_t index, Record& out) const {
++        std::lock_guard guard(m_mutex);
++        if (!owner() || m_status.state != 2 || index >= m_records.size()) return false;
++        out = m_records[index];
++        return true;
++    }
++    bool bytes(uint32_t offset, uint32_t length, void* out) const {
++        std::lock_guard guard(m_mutex);
++        if (!owner() || m_status.state != 2 || offset > m_payload.size() ||
++            length > m_payload.size() - offset || (length && !out)) return false;
++        if (length) std::memcpy(out, m_payload.data() + offset, length);
++        return true;
++    }
++    bool owner() const { return std::this_thread::get_id() == m_owner; }
++
++  private:
++    void mark(Failure failure) {
++        uint32_t bit = static_cast<uint32_t>(failure);
++        if (!m_status.firstFailure) m_status.firstFailure = bit;
++        m_status.failures |= bit;
++    }
++    bool drop(Failure failure) { mark(failure); return drop(); }
++    bool drop() {
++        if (m_status.dropped != std::numeric_limits<uint32_t>::max()) ++m_status.dropped;
++        return false;
++    }
++    const std::thread::id m_owner;
++    mutable std::mutex m_mutex;
++    std::vector<Record> m_records;
++    std::vector<uint8_t> m_payload;
++    Status m_status;
++    uint32_t m_eventLimit = 0, m_byteLimit = 0;
++};
++
++}  // namespace PCSX::History
+diff --git a/src/core/mdec.cc b/src/core/mdec.cc
+--- a/src/core/mdec.cc
++++ b/src/core/mdec.cc
+@@ -18,6 +18,7 @@
+  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.           *
+  ***************************************************************************/
+ 
++#include "core/history.h"
+ #include "core/mdec.h"
+ 
+ #include "core/debug.h"
+@@ -192,7 +193,11 @@
+ 
+ void PCSX::MDEC::iqtab_init(int *iqtab, unsigned char *iq_y) {
+     for (int i = 0; i < DSIZE2; i++) {
+-        iqtab[i] = (iq_y[i] * SCALER(aanscales[zscan[i]], AAN_PRESCALE_SCALE));
++        uint8_t historyValue = iq_y[i];
++        iqtab[i] = (historyValue * SCALER(aanscales[zscan[i]], AAN_PRESCALE_SCALE));
++        History::scalar(0, uint32_t(reinterpret_cast<uintptr_t>(iq_y + i) -
++                        reinterpret_cast<uintptr_t>(g_emulator->m_mem->m_wram)),
++                        0, historyValue, 1, 1);
+     }
+ }
+ 
+@@ -209,11 +214,15 @@
+         if (i == 2) iqtab = iq_y;
+ 
+         rl = SWAP_LE16(*mdec_rl);
++        History::inputScalar(uint32_t(reinterpret_cast<uintptr_t>(mdec_rl) -
++                             reinterpret_cast<uintptr_t>(g_emulator->m_mem->m_wram)), uint16_t(rl));
+         mdec_rl++;
+         q_scale = RLE_RUN(rl);
+         blk[0] = SCALER(iqtab[0] * RLE_VAL(rl), AAN_EXTRA - 3);
+         for (k = 0, used_col = 0;;) {
+             rl = SWAP_LE16(*mdec_rl);
++        History::inputScalar(uint32_t(reinterpret_cast<uintptr_t>(mdec_rl) -
++                             reinterpret_cast<uintptr_t>(g_emulator->m_mem->m_wram)), uint16_t(rl));
+             mdec_rl++;
+             if (rl == MDEC_END_OF_DATA) break;
+             k += RLE_RUN(rl) + 1;  // skip zero-coefficients
+@@ -367,7 +376,33 @@
+     }
+ }
+ 
++void PCSX::MDEC::observe(uint32_t reason) {
++    if (!History::active()) return;
++    auto address = [](const void *pointer) -> uint32_t {
++        uintptr_t first = reinterpret_cast<uintptr_t>(g_emulator->m_mem->m_wram);
++        uintptr_t value = reinterpret_cast<uintptr_t>(pointer);
++        if (!pointer || value < first || value - first > 0x800000) return UINT32_MAX;
++        return uint32_t(value - first);
++    };
++    uint32_t offset = UINT32_MAX;
++    if (mdec.block_buffer_pos) {
++        uintptr_t first = reinterpret_cast<uintptr_t>(mdec.block_buffer);
++        uintptr_t pointer = reinterpret_cast<uintptr_t>(mdec.block_buffer_pos);
++        if (pointer < first || pointer - first > sizeof(mdec.block_buffer)) {
++            History::fail(History::Failure::Bounds);
++            return;
++        }
++        offset = uint32_t(pointer - first);
++    }
++    History::emit(History::Kind::DmaDevice, 0,
++                  {reason, mdec.reg0, mdec.reg1, mdec.pending_dma1.adr,
++                   mdec.pending_dma1.bcr, mdec.pending_dma1.chcr, offset}, History::buffer());
++    History::emit(History::Kind::DmaDevice, 1,
++                  {reason, address(mdec.rl), address(mdec.rl_end), offset}, History::input());
++}
++
+ void PCSX::MDEC::init(void) {
++    History::fail(History::Failure::Discontinuity);
+     memset(&mdec, 0, sizeof(mdec));
+     memset(iq_y, 0, sizeof(iq_y));
+     memset(iq_uv, 0, sizeof(iq_uv));
+@@ -375,18 +410,25 @@
+ }
+ 
+ // command register
+-void PCSX::MDEC::write0(uint32_t data) { mdec.reg0 = data; }
++void PCSX::MDEC::write0(uint32_t data) {
++    observe(1);
++    mdec.reg0 = data;
++    observe(2);
++}
+ 
+ uint32_t PCSX::MDEC::read0(void) { return mdec.reg0; }
+ 
+ // status register
+ void PCSX::MDEC::write1(uint32_t data) {
++    observe(3);
+     if (data & MDEC1_RESET) {  // mdec reset
++        History::cancel();
+         mdec.reg0 = 0;
+         mdec.reg1 = 0;
+         mdec.pending_dma1.adr = 0;
+         mdec.block_buffer_pos = 0;
+     }
++    observe(4);
+ }
+ 
+ uint32_t PCSX::MDEC::read1(void) {
+@@ -413,6 +455,7 @@
+     switch (cmd >> 28) {
+         case 0x3:  // decode
+             mdec.rl = g_emulator->m_mem->getPointer<uint16_t>(adr);
++            History::retain();
+             /* now the mdec is busy till all data are decoded */
+             mdec.reg1 |= MDEC1_BUSY;
+             /* detect the end of decoding */
+@@ -426,9 +469,11 @@
+ 
+             /* process the pending dma1 */
+             if (mdec.pending_dma1.adr) {
++                History::Owner pending(1, History::pending());
+                 dma1(mdec.pending_dma1.adr, mdec.pending_dma1.bcr, mdec.pending_dma1.chcr);
+             }
+             mdec.pending_dma1.adr = 0;
++            History::release();
+             return;
+ 
+         case 0x4:  // quantization table upload
+@@ -445,12 +490,14 @@
+             return;
+ 
+         case 0x6:  // cosine table
++            History::fail(History::Failure::Unsupported);
+             // printf("mdec cosine table\n");
+ 
+             scheduleMDECINDMAIRQ(size / 4);
+             return;
+ 
+         default:
++            History::fail(History::Failure::Unsupported);
+             // printf("mdec unknown command\n");
+             break;
+     }
+@@ -486,10 +533,12 @@
+     }
+ 
+     if (!(mdec.reg1 & MDEC1_BUSY)) {
++        History::defer(adr, bcr, chcr);
+         /* add to pending */
+         mdec.pending_dma1.adr = adr;
+         mdec.pending_dma1.bcr = bcr;
+         mdec.pending_dma1.chcr = chcr;
++        observe(6);
+         /* do not free the dma */
+     } else {
+         image = g_emulator->m_mem->getPointer<uint8_t>(adr);
+@@ -504,6 +553,8 @@
+                 int n = mdec.block_buffer - mdec.block_buffer_pos + SIZE_OF_16B_BLOCK;
+                 /* TODO: check if partial block do not  larger than size */
+                 memcpy(image, mdec.block_buffer_pos, n);
++                History::span(1, adr + uint32_t(reinterpret_cast<uintptr_t>(image) - reinterpret_cast<uintptr_t>(g_emulator->m_mem->getPointer<uint8_t>(adr))),
++                              image, uint32_t(n), 0, History::buffer());
+                 image += n;
+                 size -= n;
+                 mdec.block_buffer_pos = 0;
+@@ -512,6 +563,8 @@
+             while (size >= SIZE_OF_16B_BLOCK) {
+                 mdec.rl = rl2blk(blk, mdec.rl);
+                 yuv2rgb15(blk, (uint16_t *)image);
++                History::span(1, adr + uint32_t(reinterpret_cast<uintptr_t>(image) - reinterpret_cast<uintptr_t>(g_emulator->m_mem->getPointer<uint8_t>(adr))),
++                              image, SIZE_OF_16B_BLOCK, 0, History::input());
+                 image += SIZE_OF_16B_BLOCK;
+                 size -= SIZE_OF_16B_BLOCK;
+             }
+@@ -519,7 +572,10 @@
+             if (size != 0) {
+                 mdec.rl = rl2blk(blk, mdec.rl);
+                 yuv2rgb15(blk, (uint16_t *)mdec.block_buffer);
++                History::buffer(mdec.block_buffer, SIZE_OF_16B_BLOCK);
+                 memcpy(image, mdec.block_buffer, size);
++                History::span(1, adr + uint32_t(reinterpret_cast<uintptr_t>(image) - reinterpret_cast<uintptr_t>(g_emulator->m_mem->getPointer<uint8_t>(adr))),
++                              image, uint32_t(size), 0, History::buffer());
+                 mdec.block_buffer_pos = mdec.block_buffer + size;
+             }
+ 
+@@ -533,6 +589,8 @@
+                 int n = mdec.block_buffer - mdec.block_buffer_pos + SIZE_OF_24B_BLOCK;
+                 /* TODO: check if partial block do not  larger than size */
+                 memcpy(image, mdec.block_buffer_pos, n);
++                History::span(1, adr + uint32_t(reinterpret_cast<uintptr_t>(image) - reinterpret_cast<uintptr_t>(g_emulator->m_mem->getPointer<uint8_t>(adr))),
++                              image, uint32_t(n), 0, History::buffer());
+                 image += n;
+                 size -= n;
+                 mdec.block_buffer_pos = 0;
+@@ -541,6 +599,8 @@
+             while (size >= SIZE_OF_24B_BLOCK) {
+                 mdec.rl = rl2blk(blk, mdec.rl);
+                 yuv2rgb24(blk, image);
++                History::span(1, adr + uint32_t(reinterpret_cast<uintptr_t>(image) - reinterpret_cast<uintptr_t>(g_emulator->m_mem->getPointer<uint8_t>(adr))),
++                              image, SIZE_OF_24B_BLOCK, 0, History::input());
+                 image += SIZE_OF_24B_BLOCK;
+                 size -= SIZE_OF_24B_BLOCK;
+             }
+@@ -548,11 +608,15 @@
+             if (size != 0) {
+                 mdec.rl = rl2blk(blk, mdec.rl);
+                 yuv2rgb24(blk, mdec.block_buffer);
++                History::buffer(mdec.block_buffer, SIZE_OF_24B_BLOCK);
+                 memcpy(image, mdec.block_buffer, size);
++                History::span(1, adr + uint32_t(reinterpret_cast<uintptr_t>(image) - reinterpret_cast<uintptr_t>(g_emulator->m_mem->getPointer<uint8_t>(adr))),
++                              image, uint32_t(size), 0, History::buffer());
+                 mdec.block_buffer_pos = mdec.block_buffer + size;
+             }
+         }
+ 
++        observe(5);
+         /* define the power of mdec */
+         scheduleMDECOUTDMAIRQ((int)((dmacnt * MDEC_BIAS)));
+     }
+@@ -586,12 +650,19 @@
+     /* this else if avoid to read outside memory */
+     if (mdec.rl >= mdec.rl_end) {
+         mdec.reg1 &= ~MDEC1_STP;
++        History::Owner input(0, History::input());
+         mdec0Interrupt();
+         mdec.reg1 &= ~MDEC1_BUSY;
+-    } else if (SWAP_LE16(*(mdec.rl)) == MDEC_END_OF_DATA) {
+-        mdec.reg1 &= ~MDEC1_STP;
+-        mdec0Interrupt();
+-        mdec.reg1 &= ~MDEC1_BUSY;
++    } else {
++        uint16_t marker = SWAP_LE16(*(mdec.rl));
++        History::inputScalar(uint32_t(reinterpret_cast<uintptr_t>(mdec.rl) -
++                             reinterpret_cast<uintptr_t>(g_emulator->m_mem->m_wram)), marker, true);
++        if (marker == MDEC_END_OF_DATA) {
++            mdec.reg1 &= ~MDEC1_STP;
++            History::Owner input(0, History::input());
++            mdec0Interrupt();
++            mdec.reg1 &= ~MDEC1_BUSY;
++        }
+     }
+ 
+     auto &mem = g_emulator->m_mem;
+diff --git a/src/core/mdec.h b/src/core/mdec.h
+--- a/src/core/mdec.h
++++ b/src/core/mdec.h
+@@ -30,6 +30,7 @@
+ 
+ class MDEC {
+   public:
++    void observe(uint32_t reason);
+     void init();
+     void write0(uint32_t data);
+     void write1(uint32_t data);
+diff --git a/src/core/pcsxffi.lua b/src/core/pcsxffi.lua
+--- a/src/core/pcsxffi.lua
++++ b/src/core/pcsxffi.lua
+@@ -66,6 +66,21 @@
+ void pauseEmulator();
+ void resumeEmulator();
+ bool debuggerStepInto();
++typedef struct {
++    uint64_t sequence, cycle, request, related;
++    uint32_t kind, device, data[8], offset, length;
++} HistoryRecord;
++typedef struct {
++    uint64_t beginCycle, endCycle;
++    uint32_t version, state, events, bytes, failures, firstFailure, dropped;
++} HistoryStatus;
++bool historyBegin(uint32_t events, uint32_t bytes);
++bool historyStop();
++bool historyClear();
++bool historyStatus(HistoryStatus* out);
++bool historyRecord(uint32_t index, HistoryRecord* out);
++bool historyBytes(uint32_t offset, uint32_t length, void* out);
++
+ void softResetEmulator();
+ void hardResetEmulator();
+ void luaMessage(const char* msg, bool error);
+@@ -95,6 +110,41 @@
+ ]]
+ 
+ local C = ffi.load 'PCSX'
++
++local function historyInteger(value, maximum, label)
++    assert(type(value) == 'number' and value >= 0 and value <= maximum and value == math.floor(value),
++           'invalid history ' .. label)
++    return value
++end
++
++local history = {
++    begin = function(events, bytes)
++        historyInteger(events, 65536, 'event limit')
++        historyInteger(bytes, 8388608, 'byte limit')
++        assert(events > 0 and C.historyBegin(events, bytes),
++               'history begin requires an empty recorder and paused owner-thread interpreter without MSAN')
++    end,
++    stop = function() assert(C.historyStop(), 'history stop requires a paused active recorder') end,
++    clear = function() assert(C.historyClear(), 'history clear requires a paused inactive recorder') end,
++    status = function()
++        local result = ffi.new('HistoryStatus[1]')
++        assert(C.historyStatus(result), 'history status requires the owner thread')
++        return ffi.new("HistoryStatus", result[0])
++    end,
++    record = function(index)
++        historyInteger(index, 65535, 'record index')
++        local result = ffi.new('HistoryRecord[1]')
++        assert(C.historyRecord(index, result), 'history record requires paused frozen capture and a valid index')
++        return ffi.new("HistoryRecord", result[0])
++    end,
++    bytes = function(offset, length)
++        historyInteger(offset, 8388608, 'payload offset')
++        historyInteger(length, 8388608, 'payload length')
++        local result = ffi.new('uint8_t[?]', math.max(1, length))
++        assert(C.historyBytes(offset, length, result), 'history bytes require paused frozen capture and a valid range')
++        return ffi.string(result, length)
++    end,
++}
+ 
+ local function removeBreakpoint(bp)
+     C.removeBreakpoint(ffi.gc(bp._wrapper, nil))
+@@ -186,6 +236,7 @@
+     addBreakpoint = addBreakpoint,
+     pauseEmulator = function() C.pauseEmulator() end,
+     resumeEmulator = function() C.resumeEmulator() end,
++    History = history,
+     Debugger = {
+         stepInto = function()
+             assert(C.debuggerStepInto(), 'step requires a paused, non-quitting interpreter with debugger enabled')
+diff --git a/src/core/pcsxlua.cc b/src/core/pcsxlua.cc
+--- a/src/core/pcsxlua.cc
++++ b/src/core/pcsxlua.cc
+@@ -17,6 +17,7 @@
+  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.           *
+  ***************************************************************************/
+ 
++#include "core/history.h"
+ #include "core/pcsxlua.h"
+ 
+ #include "core/debug.h"
+@@ -88,6 +89,12 @@
+     PCSX::g_emulator->m_debug->stepIn();
+     return true;
+ }
++bool historyBegin(uint32_t events, uint32_t bytes) { return PCSX::History::begin(events, bytes); }
++bool historyStop() { return PCSX::History::stop(); }
++bool historyClear() { return PCSX::History::clear(); }
++bool historyStatus(PCSX::History::Status* status) { return PCSX::History::status(status); }
++bool historyRecord(uint32_t index, PCSX::History::Record* record) { return PCSX::History::record(index, record); }
++bool historyBytes(uint32_t offset, uint32_t length, void* output) { return PCSX::History::bytes(offset, length, output); }
+ void softResetEmulator() { PCSX::g_system->softReset(); }
+ void hardResetEmulator() { PCSX::g_system->hardReset(); }
+ void luaMessage(const char* msg, bool error) { PCSX::g_system->luaMessage(msg, error); }
+@@ -165,6 +172,13 @@
+     REGISTER(L, pauseEmulator);
+     REGISTER(L, resumeEmulator);
+     REGISTER(L, debuggerStepInto);
++    REGISTER(L, historyBegin);
++    REGISTER(L, historyStop);
++    REGISTER(L, historyClear);
++    REGISTER(L, historyStatus);
++    REGISTER(L, historyRecord);
++    REGISTER(L, historyBytes);
++
+     REGISTER(L, softResetEmulator);
+     REGISTER(L, hardResetEmulator);
+     REGISTER(L, luaMessage);
+@@ -184,6 +198,7 @@
+ }
+ 
+ void PCSX::LuaFFI::open_pcsx(Lua L) {
++    History::initialize();
+     static int lualoader = 1;
+     static const char* pcsxFFI = (
+ #include "core/pcsxffi.lua"
+diff --git a/src/core/psxcounters.cc b/src/core/psxcounters.cc
+--- a/src/core/psxcounters.cc
++++ b/src/core/psxcounters.cc
+@@ -21,6 +21,7 @@
+  * Internal PSX counters.
+  */
+ 
++#include "core/history.h"
+ #include "core/psxcounters.h"
+ 
+ #include "core/debug.h"
+@@ -62,6 +63,7 @@
+         m_rcnts[index].counterState = CountToOverflow;
+     }
+     verboseLog(5, "[RCNT %i] scount: %x\n", index, value);
++    observe(index, History::Kind::TimerWrite, value);
+ }
+ 
+ inline uint32_t PCSX::Counters::readCounterInternal(uint32_t index) {
+@@ -99,7 +101,18 @@
+     m_psxNextCounter += next;
+ }
+ 
++void PCSX::Counters::history() {
++    for (uint32_t index = 0; index < 4; ++index) observe(index, History::Kind::TimerInitial);
++}
++
++void PCSX::Counters::observe(uint32_t index, History::Kind kind, uint32_t reason) {
++    const auto &r = m_rcnts[index];
++    History::emit(kind, index, {r.mode, r.target, r.rate, r.irq, r.counterState,
++                               r.irqState, r.gateStarted, reason}, r.cycleStart);
++}
++
+ void PCSX::Counters::reset(uint32_t index) {
++    observe(index, History::Kind::TimerBefore);
+     uint64_t count;
+ 
+     if (m_rcnts[index].counterState == CountToTarget) {
+@@ -153,6 +166,7 @@
+     }
+ 
+     set();
++    observe(index, History::Kind::TimerAfter);
+ }
+ 
+ void PCSX::Counters::update() {
+@@ -199,6 +213,7 @@
+ 
+         // Counter 0 gate: triggered by Hblank
+         if (isGateEnabled(0, m_rcnts[0].mode)) {
++            observe(0, History::Kind::TimerGate, 1);
+             switch (gateSyncMode(m_rcnts[0].mode)) {
+                 case 1:  // Reset at Hblank
+                 case 2:  // Reset at Hblank + pause outside
+@@ -236,6 +251,7 @@
+ 
+             // Counter 1 gate: triggered by VBlank start
+             if (isGateEnabled(1, m_rcnts[1].mode)) {
++            observe(1, History::Kind::TimerGate, 2);
+                 switch (gateSyncMode(m_rcnts[1].mode)) {
+                     case 1:  // Reset at VBlank
+                     case 2:  // Reset at VBlank + pause outside
+@@ -312,6 +328,7 @@
+             }
+             break;
+     }
++    observe(index, History::Kind::TimerRate);
+ }
+ 
+ void PCSX::Counters::writeMode(uint32_t index, uint32_t value) {
+@@ -383,6 +400,7 @@
+     }
+ 
+     verboseLog(2, "[RCNT %i] rcount: %x\n", index, count);
++    History::timerRead(index, 0, count, m_rcnts[index].mode);
+     return count;
+ }
+ 
+@@ -391,6 +409,7 @@
+ 
+     uint16_t mode = m_rcnts[index].mode;
+     m_rcnts[index].mode &= 0xe7ff;
++    History::timerRead(index, 4, mode, m_rcnts[index].mode);
+ 
+     verboseLog(2, "[RCNT %i] rmode: %x\n", index, mode);
+     return mode;
+@@ -398,6 +417,7 @@
+ 
+ uint32_t PCSX::Counters::readTarget(uint32_t index) {
+     verboseLog(2, "[RCNT %i] rtarget: %x\n", index, m_rcnts[index].target);
++    History::timerRead(index, 8, m_rcnts[index].target);
+     return m_rcnts[index].target;
+ }
+ 
+diff --git a/src/core/psxcounters.h b/src/core/psxcounters.h
+--- a/src/core/psxcounters.h
++++ b/src/core/psxcounters.h
+@@ -35,6 +35,7 @@
+ 
+     void set();
+     void reset(uint32_t index);
++    void observe(uint32_t index, History::Kind kind, uint32_t reason = 0);
+     void calculateHsync();
+     void recalculateRate(uint32_t index);
+ 
+@@ -91,6 +92,7 @@
+ 
+     uint32_t m_HSyncTotal[PCSX::Emulator::PSX_TYPE_PAL + 1];  // 2
+   public:
++    void history();
+     uint64_t m_psxNextCounter;
+     bool m_pollSIO1 = false;
+     void init();
+diff --git a/src/core/psxdma.cc b/src/core/psxdma.cc
+--- a/src/core/psxdma.cc
++++ b/src/core/psxdma.cc
+@@ -17,6 +17,7 @@
+  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.           *
+  ***************************************************************************/
+ 
++#include "core/history.h"
+ #include "core/psxdma.h"
+ 
+ #include "core/debug.h"
+@@ -111,11 +112,14 @@
+             PCSX::g_emulator->m_mem->write32(madr, 0xffffff);
+         } else {
+             while (bcr--) {
+-                *mem-- = SWAP_LE32((madr - 4) & 0xffffff);
++                uint32_t historyValue = (madr - 4) & 0xffffff;
++                *mem-- = SWAP_LE32(historyValue);
++                PCSX::History::scalar(6, madr, 0, historyValue, 4, 0);
+                 madr -= 4;
+             }
+             mem++;
+             *mem = 0xffffff;
++            PCSX::History::scalar(6, madr + 4, 0, 0xffffff, 4, 0);
+         }
+         PCSX::g_emulator->m_mem->msanDmaWrite(madr, size * 4);
+         if (PCSX::g_emulator->settings.get<PCSX::Emulator::SettingDebugSettings>()
+diff --git a/src/core/psxhw.cc b/src/core/psxhw.cc
+--- a/src/core/psxhw.cc
++++ b/src/core/psxhw.cc
+@@ -17,6 +17,7 @@
+  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.           *
+  ***************************************************************************/
+ 
++#include "core/history.h"
+ #include "core/psxhw.h"
+ 
+ #include <stdint.h>
+@@ -53,6 +54,7 @@
+ }
+ 
+ void PCSX::HW::reset() {
++    History::fail(History::Failure::Discontinuity);
+     if (g_emulator->settings.get<Emulator::SettingSpuIrq>()) g_emulator->m_mem->setIRQ(0x200);
+ 
+     memset(g_emulator->m_mem->m_hard, 0, 0x10000);
+@@ -64,6 +66,7 @@
+ }
+ 
+ uint8_t PCSX::HW::read8(uint32_t add) {
++    History::Register observation(add, 0, 8, true);
+     uint8_t hard;
+     uint32_t hwadd = add & 0x1fffffff;
+ 
+@@ -133,6 +136,7 @@
+ }
+ 
+ uint16_t PCSX::HW::read16(uint32_t add) {
++    History::Register observation(add, 0, 16, true);
+     uint16_t hard;
+     uint32_t hwadd = add & 0x1fffffff;
+ 
+@@ -262,6 +266,7 @@
+ }
+ 
+ uint32_t PCSX::HW::read32(uint32_t add) {
++    History::Register observation(add, 0, 32, true);
+     uint32_t hard;
+     uint32_t hwadd = add & 0x1fffffff;
+ 
+@@ -406,6 +411,7 @@
+ }
+ 
+ void PCSX::HW::write8(uint32_t add, uint32_t rawvalue) {
++    History::Register observation(add, rawvalue, 8);
+     uint8_t value = (uint8_t)rawvalue;
+     uint32_t hwadd = add & 0x1fffffff;
+ 
+@@ -477,6 +483,7 @@
+             g_emulator->m_debug->m_checkKernel = value;
+             break;
+         case 0x1f802089:
++            History::fail(History::Failure::Unsupported);
+             g_emulator->m_mem->initMsan(value);
+             break;
+         default:
+@@ -506,6 +513,7 @@
+ }
+ 
+ void PCSX::HW::write16(uint32_t add, uint32_t rawvalue) {
++    History::Register observation(add, rawvalue, 16);
+     uint16_t value = (uint16_t)rawvalue;
+     uint32_t hwadd = add & 0x1fffffff;
+ 
+@@ -648,6 +656,7 @@
+ }
+ 
+ void PCSX::HW::write32(uint32_t add, uint32_t value) {
++    History::Register observation(add, value, 32);
+     uint32_t hwadd = add & 0x1fffffff;
+ 
+     switch (hwadd) {
+diff --git a/src/core/psxhw.h b/src/core/psxhw.h
+--- a/src/core/psxhw.h
++++ b/src/core/psxhw.h
+@@ -19,6 +19,7 @@
+ 
+ #pragma once
+ 
++#include "core/history.h"
+ #include "core/psxcounters.h"
+ #include "core/psxdma.h"
+ #include "core/psxemulator.h"
+@@ -46,6 +47,7 @@
+     template <unsigned n>
+     void dmaExec(uint32_t chcr) {
+         auto &mem = g_emulator->m_mem;
++        uint32_t previous = mem->template getCHCR<n>();
+         mem->setCHCR<n>(chcr);
+         if ((chcr & 0x01000000) && mem->template isDMAEnabled<n>()) {
+             uint32_t madr = mem->template getMADR<n>();
+@@ -57,6 +59,8 @@
+             }
+             uint32_t bcr = mem->template getBCR<n>();
+             uint32_t mode = (chcr & 0x00000600) >> 9;
++            History::start(n, mem->template getMADR<n>(), madr, bcr, chcr, previous,
++                           mem->template readHardwareRegister<Memory::DMA_PCR>());
+             if constexpr (n == 0) {
+                 dma0(madr, bcr, chcr);
+             } else if constexpr (n == 1) {
+diff --git a/src/core/psxmem.h b/src/core/psxmem.h
+--- a/src/core/psxmem.h
++++ b/src/core/psxmem.h
+@@ -19,6 +19,7 @@
+ 
+ #pragma once
+ 
++#include "core/history.h"
+ #include <string_view>
+ #include <unordered_map>
+ #include <vector>
+@@ -145,6 +146,7 @@
+ 
+     template <unsigned n>
+     void dmaInterrupt() {
++        History::Completion observation(n);
+         uint32_t icr = readHardwareRegister<DMA_ICR>();
+         if ((icr & 0x00800000) == 0) return;
+         bool triggeredIRQ = false;
+@@ -188,6 +190,7 @@
+     void clearDMABusy() {
+         uint32_t chcr = readHardwareRegister<DMA_BASE + DMA_CHCR + n * 0x10>();
+         writeHardwareRegister<DMA_BASE + DMA_CHCR + n * 0x10>(chcr & ~0x01000000);
++        History::emit(History::Kind::DmaComplete, n, {chcr, chcr & ~0x01000000});
+     }
+ 
+     template <unsigned n>
+@@ -245,14 +248,18 @@
+ 
+     void setIRQ(uint32_t irq) {
+         uint32_t istat = readHardwareRegister<ISTAT>();
++        uint32_t previous = istat;
+         istat |= irq;
+         writeHardwareRegister<ISTAT>(istat);
++        History::emit(History::Kind::IRQAssert, 0, {irq, previous, istat});
+     }
+ 
+     void clearIRQ(uint32_t irq) {
+         uint32_t istat = readHardwareRegister<ISTAT>();
++        uint32_t previous = istat;
+         istat &= ~irq;
+         writeHardwareRegister<ISTAT>(istat);
++        History::emit(History::Kind::IRQClear, 0, {irq, previous, istat});
+     }
+ 
+     uint32_t getBiosCRC32() { return m_biosCRC; }
+diff --git a/src/core/r3000a.cc b/src/core/r3000a.cc
+--- a/src/core/r3000a.cc
++++ b/src/core/r3000a.cc
+@@ -21,6 +21,7 @@
+  * R3000A CPU functions.
+  */
+ 
++#include "core/history.h"
+ #include "core/r3000a.h"
+ 
+ #include <magic_enum/magic_enum_all.hpp>
+@@ -379,6 +380,7 @@
+             } else {                                                                      \
+                 m_regs.interrupt &= ~mask;                                                \
+                 PSXIRQ_LOG("Triggering interrupt %08x\n", magic_enum::enum_integer(irq)); \
++                History::Dispatch historyDispatch(irq, target);                  \
+                 act();                                                                    \
+             }                                                                             \
+         }                                                                                 \
+@@ -413,6 +415,7 @@
+         }
+ 
+         PSXIRQ_LOG("Interrupt: %x %x\n", istat, imask);
++        History::emit(History::Kind::IRQAccept, 0, {istat, imask, m_regs.CP0.n.Status, m_regs.pc});
+         exception(0x400, 0);
+     }
+ }
+diff --git a/src/core/r3000a.h b/src/core/r3000a.h
+--- a/src/core/r3000a.h
++++ b/src/core/r3000a.h
+@@ -19,6 +19,7 @@
+ 
+ #pragma once
+ 
++#include "core/history.h"
+ #include <atomic>
+ #include <cassert>
+ #include <cstdint>
+@@ -310,6 +311,9 @@
+         PSXIRQ_LOG("Scheduling interrupt %08x at %08x\n", interrupt, eCycle);
+         const uint64_t cycle = m_regs.cycle;
+         uint64_t target = cycle + uint64_t(eCycle * m_interruptScales[interrupt]);
++        History::emit(History::Kind::Schedule, interrupt,
++                      {eCycle, m_regs.interrupt, uint32_t(m_regs.intTargets[interrupt]),
++                       uint32_t(m_regs.intTargets[interrupt] >> 32)}, target);
+         m_regs.interrupt |= (1 << interrupt);
+         m_regs.intTargets[interrupt] = target;
+         if (target < m_regs.lowestTarget) m_regs.lowestTarget = target;
+diff --git a/src/core/sstate.cc b/src/core/sstate.cc
+--- a/src/core/sstate.cc
++++ b/src/core/sstate.cc
+@@ -17,6 +17,7 @@
+  *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.           *
+  ***************************************************************************/
+ 
++#include "core/history.h"
+ #include "core/sstate.h"
+ 
+ #include "core/callstacks.h"
+@@ -281,6 +282,7 @@
+ }
+ 
+ bool PCSX::SaveStates::load(std::string_view data) {
++    History::fail(History::Failure::Discontinuity);
+     SaveState state = constructSaveState();
+ 
+     Protobuf::InSlice slice(reinterpret_cast<const uint8_t*>(data.data()), data.size());
+diff --git a/src/spu/dma.cc b/src/spu/dma.cc
+--- a/src/spu/dma.cc
++++ b/src/spu/dma.cc
+@@ -24,6 +24,9 @@
+ //
+ //*************************************************************************//
+ 
++#include "core/history.h"
++#include "core/psxemulator.h"
++#include "core/psxmem.h"
+ #include "spu/externals.h"
+ #include "spu/interface.h"
+ 
+@@ -32,7 +35,12 @@
+     if (pMixIrq) cbMtx.lock();
+ 
+     for (int i = 0; i < size; i++) {
+-        *mainMem++ = spuMem[spuAddr >> 1];  // Copy 2 bytes
++        uint16_t historyValue = spuMem[spuAddr >> 1];
++        *mainMem = historyValue;
++        History::scalar(4, uint32_t(reinterpret_cast<uintptr_t>(mainMem) -
++                        reinterpret_cast<uintptr_t>(g_emulator->m_mem->m_wram)),
++                        spuAddr, historyValue, 2, 0);
++        ++mainMem;
+         spuAddr = (spuAddr + 2) & 0x7ffff;  // Increment SPU address and wrap around
+     }
+     if (pMixIrq) cbMtx.unlock();
+@@ -61,7 +69,12 @@
+     if (pMixIrq) cbMtx.lock();
+ 
+     for (int i = 0; i < size; i++) {
+-        spuMem[spuAddr >> 1] = *mainMem++;  // Copy 2 bytes
++        uint16_t historyValue = *mainMem;
++        spuMem[spuAddr >> 1] = historyValue;
++        History::scalar(4, uint32_t(reinterpret_cast<uintptr_t>(mainMem) -
++                        reinterpret_cast<uintptr_t>(g_emulator->m_mem->m_wram)),
++                        spuAddr, historyValue, 2, 1);
++        ++mainMem;
+         spuAddr = (spuAddr + 2) & 0x7ffff;  // Increment SPU address and wrap around
+     }
+ 

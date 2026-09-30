@@ -7,7 +7,7 @@
  * @source 0x800AE438
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_800AE438(void) {
   volatile u8* sp_byte;

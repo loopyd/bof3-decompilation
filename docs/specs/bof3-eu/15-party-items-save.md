@@ -265,7 +265,7 @@ prepare routine `0x801d69e0`, memory-card write `0x801d5220`, load-time verify
 | `0x090` | `partyRecords[8]` × 164 bytes | `0x80144968` | yes — the party record above |
 | `0x678` | `zenny` (u32) | `0x80144f50` | yes |
 | `0x682` | `partyOrder[8]` | `0x80144f5a` | — |
-| `0x6e8` | `playTime` [H][M][S][tick] | `0x80144fc0` | yes |
+| `0x6e8` | `playTime` \[H\]\[M\]\[S\]\[tick\] | `0x80144fc0` | yes |
 | `0x774` | inventory item IDs (≤512, `0`-terminated) | `0x8014504c` | — |
 | `0x974` | inventory item counts | `0x8014524c` | — |
 | `~0x5c0..0xc90` | story flags, 7 `FLAG_SET` blocks | `0x80144eb8..` | yes |

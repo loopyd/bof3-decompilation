@@ -4,7 +4,7 @@
  * @behavior Copies the local handler table then dispatches by battle work byte 5.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchSlotByte5TableD1c(void)
 {

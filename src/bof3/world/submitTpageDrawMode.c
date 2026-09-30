@@ -5,7 +5,7 @@
  * @source 0x801E0C80
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void submitTpageDrawMode(s32 arg0, s32 arg1) {
   s32 tpage;

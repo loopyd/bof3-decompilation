@@ -4,7 +4,7 @@
  * @source 0x801DB494
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void clearRankingScratch(void) {
   u8 index;

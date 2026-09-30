@@ -74,7 +74,9 @@ def dispatch(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
+    parser = argparse.ArgumentParser(
+        prog="bin/harness plans", description=__doc__, allow_abbrev=False
+    )
     add_root_argument(parser)
     # Shared root declaration, with the same singular-option safety as local flags.
     action = parser._option_string_actions["--root"]

@@ -1,0 +1,16 @@
+schema = "harness.target/v2"
+id = "emi/scenario/sce15ef2/00"
+disc_id = "BIN/SCENARIO/SCE15EF2.EMI#0"
+kind = "emi"
+source_dir = "src/emi/scenario/sce15ef2/00"
+binary = "out/binaries/emi/scenario/sce15ef2/00.bin"
+splat = "config/targets/emi/scenario/sce15ef2/00/splat.yaml"
+load_address = 0x801D0C00
+
+sources = []
+support_sources = [
+    "src/bof3/support/sce15ef2_00_psyq.c",
+    "src/bof3/scenario/armCountdownAndAdvanceWorkByte1ScenarioSce15ef200_801D10E8.c",
+    "src/bof3/scenario/clearWorkTableAt800E4800ScenarioSce15ef200_801D15B0.c",
+]
+psyq_source = "src/bof3/support/sce15ef2_00_psyq.c"

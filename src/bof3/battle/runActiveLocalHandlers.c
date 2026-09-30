@@ -5,7 +5,7 @@
  * @source 0x801DED54
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void runActiveLocalHandlers(void) {
   u8 index;

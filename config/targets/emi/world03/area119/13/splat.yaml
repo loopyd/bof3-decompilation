@@ -36,8 +36,8 @@ segments:
     - asm
     - func_801F2C88
   - - 224
-    - asm
-    - func_801F2CE0
+    - c
+    - countdownScratchStateToMode3World03Area11913_801F2CE0
   - - 280
     - asm
     - func_801F2D18
@@ -45,8 +45,8 @@ segments:
     - asm
     - func_801F2D6C
   - - 452
-    - asm
-    - func_801F2DC4
+    - c
+    - countdownScratchStateToMode6World03Area11913_801F2DC4
   - - 508
     - asm
     - func_801F2DFC
@@ -120,11 +120,11 @@ segments:
     - asm
     - func_801F4138
   - - 5560
-    - asm
-    - func_801F41B8
+    - c
+    - advanceCounter2By2World03Area11913_801F41B8
   - - 5600
-    - asm
-    - func_801F41E0
+    - c
+    - retreatCounter2By2World03Area11913_801F41E0
   - - 5640
     - c
     - setTwoWorld03Area11913_801F4208
@@ -147,15 +147,15 @@ segments:
     - asm
     - func_801F44A4
   - - 6436
-    - asm
-    - func_801F4524
+    - c
+    - setScenarioFlagBit3CAndQueueCue203World03Area11913_801F4524
   - - 6484
-    - asm
-    - func_801F4554
+    - c
+    - clearScenarioFlagBit3CAndQueueCue203World03Area11913_801F4554
   - - 6532
     - asm
     - func_801F4584
   - - 6596
     - asm
-    - func_801F45C4
+    - D_801F45C4
 - - 10080

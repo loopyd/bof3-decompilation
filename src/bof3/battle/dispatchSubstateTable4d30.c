@@ -4,7 +4,7 @@
  * @source 0x800A5FF0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchSubstateTable4d30(void) {
   battleSelectionHandlerTable4D30[D_801462E4]();

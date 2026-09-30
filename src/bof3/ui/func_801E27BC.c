@@ -6,7 +6,7 @@
  *           no sibling call).
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS func_801E27BC(void) {
   D_801E5D68[g_PanelTaskRoot->unk_00[2]]();

@@ -4,6 +4,6 @@
  * @source 0x801C5830
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801C5830(void) {}

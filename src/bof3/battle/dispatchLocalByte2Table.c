@@ -4,7 +4,7 @@
  * @source 0x801DFA1C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS dispatchLocalByte2Table(void) {
   u8 state_index;

@@ -1,6 +1,6 @@
 {
   "authority": "expert review and original image",
-  "ceiling_next_command": "bin/rev-query --json owners exe/test@0x80100000",
+  "ceiling_next_command": "bin/harness analysis query --json owners exe/test@0x80100000",
   "corroborators": {
     "bytes": {
       "mechanism": "selected_original_instructions"

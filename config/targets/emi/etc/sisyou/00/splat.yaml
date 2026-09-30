@@ -26,42 +26,71 @@ segments:
   - - 0
     - asm
     - T_801D0C00
+  - - 24
+    - c
+    - func_801D0C18
+    - '@source: src/bof3/ui/func_801D0C18_sisyou00.c'
+    - '@behavior: clears the five shared mode and handler bytes at 0x801D4285 through 0x801D4289, each through its own fixed-address byte symbol.'
   - - 72
-    - asm
+    - c
     - func_801D0C48
+    - '@source: src/bof3/ui/func_801D0C48_sisyou00.c'
+    - '@behavior: queues frontend cue 0x102 through the EXE-side dispatcher, writes the phase byte at 0x801D4289 as 4, then advances the handler index.'
   - - 136
-    - asm
+    - c
     - func_801D0C88
+    - '@source: src/bof3/ui/func_801D0C88_sisyou00.c'
+    - '@behavior: decrements the shared step byte at 0x801D4289, draws every one of the D_80146254 0x140-byte-stride records at 0x80145FCC through func_801D177C and func_801D1444, emits the shared panel strip through func_801D1E54, then clears the 0x801D428A step byte and advances the handler index once the step byte reaches 0.'
   - - 468
-    - asm
+    - c
     - func_801D0DD4
+    - '@source: src/bof3/ui/func_801D0DD4.c'
+    - '@behavior: handles the pad selector of the master-list entry action: when the shared pad-state word at 0x80145AA8 shares a bit with the 0x80145AC2 mask it takes the shared cue-0x107 path when the owner byte of the 164-byte record selected by the D_801D428A step matches masterIndex and the flag is clear or when it differs and the flag is set, and otherwise queues cue 0x104, clears D_801D4284 and advances the handler index; a 0x80145AC4 mask match sets D_801D4284, queues cues 0x102 and 0x106 and stores handler index 4; when neither mask matches the func_8014E640 direction result steps the D_801D428A step byte down on its 0x1000 bit (wrapping to the D_80146254 limit) and up on its 0x4000 bit (wrapping to 0), each queueing cue 0x100. It then draws every one of the D_80146254 0x140-byte-stride records at 0x80145FCC through func_801D177C and func_801D1444, emits the panel rectangle through func_801D1CC0 and the shared panel strip through func_801D1E54, and draws the texture whose handle is the main-RAM base 0x80010000 plus the D_80010000 offset-table entry selected by the argument through func_8014F800.'
   - - 1196
-    - asm
+    - c
     - func_801D10AC
+    - '@source: src/bof3/ui/func_801D10AC_sisyou00.c'
+    - '@behavior: reads the shared pad-state word at 0x80145AA8: a shared bit with the 0x80145AC2 pressed-button mask steps the handler index D_801D4286 down when D_801D4284 is set and otherwise queues frontend cue 0x102 and steps it up, then queues cue 0x104; a shared bit with the 0x80145AC4 mask sets D_801D4284, steps the handler index down and queues cue 0x106; when neither matches and the func_8014E640 direction mask has a set low halfword bit it queues cue 0x100 and toggles D_801D4284; it then draws every one of the D_80146254 0x140-byte-stride records at 0x80145FCC through func_801D177C and func_801D1444, emits the panel rectangle through func_801D1CC0 and the shared panel strip through func_801D1E54, draws the texture named by the D_80010000 offset table entry selected by the argument through func_8014F800, and submits the panel task at (D_801D4284 * 32 + 0xF3, 0x15) through func_801647C4.'
   - - 1788
-    - asm
+    - c
     - func_801D12FC
+    - '@source: src/bof3/ui/func_801D12FC_sisyou00.c'
+    - '@behavior: advances the shared step byte at 0x801D4289, draws every one of the D_80146254 0x140-byte-stride records at 0x80145FCC through func_801D177C and func_801D1444, emits the shared panel strip through func_801D1E54, then advances the handler index once the step byte reaches 4.'
   - - 2116
-    - asm
+    - c
     - func_801D1444
+    - '@source: src/bof3/ui/func_801D1444_sisyou00.c'
+    - '@behavior: draws the 164-byte record of the table at 0x80144968 selected by the entry byte as a master-summary panel at the (x, y) argument: the panel rectangle through func_801AE3F0, the four row-label textures "Pwr", "Def", "Int" and "Agl" through func_8014F800 with each row value read from the record and formatted through sprintf into the shared D_80145AD4 buffer and emitted through func_80150098, the selected badge texture through func_801502D0 and func_8016620C once the record badge byte is not 0xFF, and finally the panel row streams at 0x801D3FE8, 0x801D4014 (once per each of the sixteen cells at x + cell*8) and 0x801D4020 through func_801AF390.'
   - - 2940
-    - asm
+    - c
     - func_801D177C
+    - '@source: src/bof3/ui/func_801D177C_sisyou00.c'
+    - '@behavior: draws one master-list record of the 164-byte record table at 0x80144968 selected by the entry byte: the record icon kind through func_801D23A0, the record texture through func_8014F800, then three value rows formatted through sprintf into the shared D_80145AD4 buffer and emitted through func_80150098 with the vertical position taken from the record status bits; the highlight marker selected by the record status word is emitted through func_8014FC90, the record stream at 0x801D3F58 through func_801AF390, the record numeric row through func_801D1B28, and finally the draw mode, the panel primitive append and the icon primitive whose kind is the icon byte offset by three.'
   - - 3880
-    - asm
+    - c
     - func_801D1B28
+    - '@source: src/bof3/ui/func_801D1B28_sisyou00.c'
+    - '@behavior: emits the numeric value row of one master-list record as a flat 0x10-byte semi-transparent line primitive at (arg0, arg1): sums the first arg3 and the first arg3+1 entries of the arg2-selected row of the shared 0x801CB8DC value table through func_801D1C44 and, when the two sums differ, stretches the line''s second corner along x by (arg4 - first) * 57 / (second - first); when they are equal both corners keep arg0. The colour bytes are 0x80/0/0 and the primitive is queued through func_8014E5A0(1, 0x10).'
   - - 4164
-    - asm
+    - c
     - func_801D1C44
+    - '@source: src/bof3/ui/func_801D1C44.c'
+    - '@behavior: sums the first count values of the selected row in the shared 0x801CB8DC value table.'
   - - 4288
-    - asm
+    - c
     - func_801D1CC0
+    - '@source: src/bof3/ui/func_801D1CC0_sisyou00.c'
+    - '@behavior: builds the three-byte colour-channel mask of the emitted flat-line rectangle from the low three bits of the mask argument: each set bit selects the flat colour (0x3F | ((D_80143E6C & 8) ? (D_80143E6C & 6) : (~D_80143E6C & 6)) << 5 when the colour-enable argument is set, 0xFF otherwise) and each clear bit selects black; it then draws an open three-point flat line from (x+4, y) to (x, y+4) to (x, y+h-1) with SetLineF3 and the closed four-corner border (x+4, y), (x+w-1, y), (x+w-1, y+h-1), (x, y+h-1) with SetLineF4, queueing each 0x18/0x1C-byte primitive through func_8014E5A0(1, size).'
   - - 4692
-    - asm
+    - c
     - func_801D1E54
+    - '@source: src/bof3/ui/func_801D1E54_sisyou00.c'
+    - '@behavior: draws the shared translucent panel strip at the masked coordinates (arg0, arg1) sized arg2 by arg3: a first FT4 border quad around the 0x10 by 0x10 texture window at (0, 0xF0) whose CLUT column is arg4 * 32 + 0x10 and whose flat colour is 0xAC, then the top/bottom span, the right-inner span and the right edge quads, each queued at texture page 0xF after a GetGraphType call; finally a second 0x100 by 0x100 texture window draw mode followed by the inner fill rectangle from (arg0 + 2, arg1 + 2) to (arg0 + arg2 - 4, arg1 + arg3 - 4) through func_801AEBA0.'
   - - 6048
-    - asm
+    - c
     - func_801D23A0
+    - '@source: src/bof3/ui/func_801D23A0_sisyou00.c'
+    - '@behavior: emits one free-size panel sprite for the requested icon kind: when the kind byte is 4 and the stream index hint byte 0x80145024 (masked with 0x7F) is neither 5 nor 0x0C the kind is replaced with 0x0B, then the drawing-mode primitive is queued at the shared cursor with the texture page selected by GetGraphType (0x2E for graph types 1 and 2, 0x1E otherwise) before the sprite record is filled with the channel colour selected by the draw-state byte (0x808080 for 0, 0x303030 for 1 and 0x40/0x40/0x80 otherwise), the coordinates, the kind''s four-byte texture record and the fixed 0x28 by 0x30 size.'
   - - 6432
     - c
     - emitPanelIconPrim
@@ -73,64 +102,90 @@ segments:
     - '@source: src/bof3/ui/func_801D25D8.c'
     - '@behavior: dispatches the mode handler selected by modeIndex through the D_801D41E0 function-pointer table.'
   - - 6676
-    - asm
+    - c
     - func_801D2614
+    - '@source: src/bof3/ui/func_801D2614_sisyou00.c'
+    - '@behavior: when the EXE-side flag helper func_8015B5D4 reports the D_8014554F byte flag as set, stores mode index 5; otherwise, when masterIndex is 9, starts action 46 through func_80150224, writes the phase byte D_80143BB0 as 2 and stores mode index 6; every other master index stores mode index 1.'
   - - 6792
     - c
     - func_801D2688
     - '@source: src/bof3/ui/func_801D2688.c'
     - '@behavior: dispatches the handler selected by D_801D4286 through the D_801D41FC function-pointer table.'
   - - 6852
-    - asm
+    - c
     - func_801D26C4
+    - '@source: src/bof3/ui/func_801D26C4_sisyou00.c'
+    - '@behavior: passes D_8014554C and masterIndex to the EXE-side flag helper func_8015B580, starts the selected master''s unoffset action through func_80150224, writes the phase byte D_80143BB0 as 2, then advances the handler index D_801D4286.'
   - - 6968
-    - asm
+    - c
     - func_801D2738
+    - '@source: src/bof3/ui/func_801D2738_sisyou00.c'
+    - '@behavior: when the phase byte D_80143BB0 is not 2, passes D_8014554F and masterIndex to the EXE-side flag helper func_8015B580, sets modeIndex to 3, then clears the handler index D_801D4286.'
   - - 7052
     - c
     - func_801D278C
     - '@source: src/bof3/ui/func_801D278C.c'
     - '@behavior: dispatches the handler selected by D_801D4286 through the D_801D4204 function-pointer table.'
   - - 7112
-    - asm
+    - c
     - func_801D27C8
+    - '@source: src/bof3/ui/func_801D27C8_sisyou00.c'
+    - '@behavior: starts the selected master''s +5 action through func_80150224, writes the phase byte at 0x80143BB0 as 2, then advances the handler index.'
   - - 7212
-    - asm
+    - c
     - func_801D282C
+    - '@source: src/bof3/ui/func_801D282C_sisyou00.c'
+    - '@behavior: when the phase byte at 0x80143BB0 is not 2, starts the selected master''s +6 action through func_80150224, writes the phase byte as 2, then advances the handler index D_801D4286.'
   - - 7344
-    - asm
+    - c
     - func_801D28B0
+    - '@source: src/bof3/ui/func_801D28B0_sisyou00.c'
+    - '@behavior: when the phase byte D_80143BB0 is not 2, switches modeIndex to 3 and clears the handler index D_801D4286 as soon as one of the D_80146254 0x140-byte-stride records at D_80145FCC selects a 164-byte record whose owner byte in D_80144983 differs from masterIndex; only while every visible record still belongs to the selected master does it start that master''s +7 action through func_80150224, write the phase byte as 2 and advance the handler index.'
   - - 7624
-    - asm
+    - c
     - func_801D29C8
+    - '@source: src/bof3/ui/func_801D29C8_sisyou00.c'
+    - '@behavior: when the phase byte D_80143BB0 is not 2, starts the selected master''s +8 action through func_80150224, writes the phase byte as 2, then advances the handler index D_801D4286.'
   - - 7756
-    - asm
+    - c
     - func_801D2A4C
+    - '@source: src/bof3/ui/func_801D2A4C_sisyou00.c'
+    - '@behavior: when the phase byte D_80143BB0 is not 2, switches modeIndex to 4 and clears the handler index D_801D4286 as soon as one of the D_80146254 0x140-byte-stride records at D_80145FCC selects a 164-byte record whose owner byte in D_80144983 equals masterIndex; only when no visible record belongs to the selected master does it start that master''s +9 action through func_80150224, write the phase byte as 2 and advance the handler index.'
   - - 8036
-    - asm
+    - c
     - func_801D2B64
+    - '@source: src/bof3/ui/func_801D2B64_sisyou00.c'
+    - '@behavior: when the phase byte D_80143BB0 is not 2, starts the selected master''s +4 action through func_80150224, writes the phase byte as 2, sets the mode index to 6, and clears the handler index D_801D4286.'
   - - 8168
     - c
     - func_801D2BE8
     - '@source: src/bof3/ui/func_801D2BE8.c'
     - '@behavior: dispatches the handler selected by D_801D4286 through the D_801D421C function-pointer table.'
   - - 8228
-    - asm
+    - c
     - func_801D2C24
+    - '@source: src/bof3/ui/func_801D2C24.c'
+    - '@behavior: starts the selected master''s +0xF action through func_801D0DD4.'
   - - 8292
     - c
     - dispatchEntryActionMode0
     - '@source: src/bof3/ui/dispatchEntryActionMode0.c'
     - '@behavior: dispatches the selected entry''s +0x11 action.'
   - - 8356
-    - asm
+    - c
     - func_801D2CA4
+    - '@source: src/bof3/ui/func_801D2CA4_sisyou00.c'
+    - '@behavior: when the D_801D4284 byte is set, starts the selected master''s +4 action through func_80150224, writes the phase byte D_80143BB0 as 2, sets modeIndex to 6 and clears the handler index D_801D4286; otherwise copies the first five bytes of the record selected by the D_801D428A step through D_80145FCC into the D_801490D8 work buffer and clears its terminator, sets that record''s owner byte D_80144983 to masterIndex, copies that record''s own byte +6 into record offset 0x84, copies the six per-master bytes D_801D4154[masterIndex*6 .. +5] into record offsets 0x85..0x8A, then starts the selected master''s +0xA action through func_80150224, writes the phase byte as 2 and advances the handler index.'
   - - 9412
-    - asm
+    - c
     - func_801D30C4
+    - '@source: src/bof3/ui/func_801D30C4_sisyou00.c'
+    - '@behavior: when the phase byte D_80143BB0 is not 2, starts the selected master''s +0xB action through func_80150224, writes the phase byte as 2, then advances the handler index D_801D4286.'
   - - 9544
-    - asm
+    - c
     - func_801D3148
+    - '@source: src/bof3/ui/func_801D3148_sisyou00.c'
+    - '@behavior: when the phase byte D_80143BB0 is not 2, clears the handler index D_801D4286 as soon as one of the D_80146254 records at D_80145FCC selects a 164-byte record whose owner byte in D_80144983 differs from masterIndex; while every record still belongs to the selected master it starts that master''s +7 action through func_80150224, writes the phase byte as 2 and advances the handler index.'
   - - 9816
     - c
     - startEntryActionMode0
@@ -142,22 +197,30 @@ segments:
     - '@source: src/bof3/ui/func_801D32D4.c'
     - '@behavior: dispatches the handler selected by D_801D4286 from the D_801D4240 table.'
   - - 10000
-    - asm
+    - c
     - func_801D3310
+    - '@source: src/bof3/ui/func_801D3310.c'
+    - '@behavior: starts the selected master''s +0x10 action through func_801D0DD4, passing a nonzero second argument.'
   - - 10064
     - c
     - dispatchEntryActionMode1
     - '@source: src/bof3/ui/dispatchEntryActionMode1.c'
     - '@behavior: dispatches the selected entry''s +0x11 action.'
   - - 10128
-    - asm
+    - c
     - func_801D3390
+    - '@source: src/bof3/ui/func_801D3390_sisyou00.c'
+    - '@behavior: when the D_801D4284 byte is set, starts the selected master''s +4 action through func_80150224, writes the phase byte D_80143BB0 as 2, sets modeIndex to 6 and clears the handler index D_801D4286; otherwise copies the first five bytes of the record selected by the D_801D428A step through D_80145FCC into the D_801490D8 work buffer and clears its terminator, sets that record''s owner byte D_80144983 to 0xFF and clears the seven bytes at record offsets 0x84..0x8A, then starts the selected master''s +0xC action through func_80150224, writes the phase byte as 2 and advances the handler index.'
   - - 11028
-    - asm
+    - c
     - func_801D3714
+    - '@source: src/bof3/ui/func_801D3714_sisyou00.c'
+    - '@behavior: when the phase byte D_80143BB0 is not 2, starts the selected master''s +0xD action through func_80150224, writes the phase byte as 2, then advances the handler index D_801D4286.'
   - - 11160
-    - asm
+    - c
     - func_801D3798
+    - '@source: src/bof3/ui/func_801D3798_sisyou00.c'
+    - '@behavior: when the phase byte D_80143BB0 is not 2, scans the D_80146254 0x140-byte-stride records at D_80145FCC and clears the handler index D_801D4286 as soon as one of them selects a 164-byte record whose owner byte in D_80144983 equals masterIndex; only when no visible record belongs to the selected master does it start that master''s +9 action through func_80150224, write the phase byte as 2 and advance the handler index.'
   - - 11432
     - c
     - startEntryActionMode1
@@ -169,22 +232,30 @@ segments:
     - '@source: src/bof3/ui/func_801D3924.c'
     - '@behavior: dispatches the handler selected by D_801D4286 from the D_801D4264 table.'
   - - 11616
-    - asm
+    - c
     - func_801D3960
+    - '@source: src/bof3/ui/func_801D3960_sisyou00.c'
+    - '@behavior: starts the selected master''s +5 action through func_80150224, writes the phase byte at 0x80143BB0 as 2, clears the 0x801D428A step byte, then advances the handler index.'
   - - 11724
     - c
     - copySelectedRecordPrefixToWorkBuffer
     - '@source: src/bof3/ui/copySelectedRecordPrefixToWorkBuffer.c'
     - '@behavior: Copies five bytes from the selected 164-byte main-RAM record into a shared work buffer, then clears its terminator.'
   - - 11812
-    - asm
+    - c
     - func_801D3A24
+    - '@source: src/bof3/ui/func_801D3A24_sisyou00.c'
+    - '@behavior: when the phase byte 0x80143BB0 is not 2, reads the record byte selected by the 0x801D428A step through 0x80145FCC and compares the owner byte of that 164-byte record in 0x80144983 with masterIndex; when they differ nothing starts. Otherwise the difference between the record byte +6 and its byte +0x84 selects the master confirmation path keyed by the owner byte: 0xB, 0xD and 0xE set bit 3, 4 or 5 of 0x80144F59 and 0xC additionally tests the flag 0x6C of the flag bank at masterIndex + 0x63B through func_8015B5D4, runs the func_801650B4 gate and sets that flag through func_8015B580; each of those paths copies the record prefix into the shared work buffer only once the difference reaches three. Every other owner byte scans the twelve-byte per-master descriptor at 0x801D4088, whose six (limit, gate bit) pairs are tested in order: the first pair whose limit the difference does not fall short of, whose bit is clear in the masterIndex + 0x693 gate table and which func_801651DC confirms copies the same prefix, fills the 0x801490F8 name buffer from the 0x801CA70C ability record selected by the gate byte and sets that gate bit. Whenever one of those paths ran, the selected master''s +0xE action is started through func_80150224 and the phase byte is written as 2; the handler index 0x801D4286 is advanced either way.'
   - - 12912
     - c
     - func_801D3E70
+    - '@source: src/bof3/ui/func_801D3E70.c'
+    - '@behavior: when the phase byte D_80143BB0 is not 2, increments the shared step byte 0x801D428A, sets modeIndex to 2 once the incremented value reaches the 0x80146254 limit, then writes the handler index 0x801D4286 as 1.'
   - - 13008
     - c
     - commitMasterSelectionAndResetMode
+    - '@source: src/bof3/ui/commitMasterSelectionAndResetMode.c'
+    - '@behavior: when the phase byte D_80143BB0 is not 2, copies the byte of the 0x801D4270 selection table selected by masterIndex into the 152-byte-stride 0x80146889 record selected by 0x80146867 unless that byte is 0xFF, then clears modeIndex and advances the 0x801448EC counter.'
   - - 13148
     - asm
     - T_801D3F5C

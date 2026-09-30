@@ -1,22 +1,102 @@
 #!/bin/sh
-# Narrow compatibility entry point retained solely for Psy-Q signature evidence.
+# Canonical repository command tree: bin/harness <domain> <action> [options].
+# Dispatch lives in harness.cli.  This wrapper only selects the interpreter
+# policy the retired per-tool entry points used, sharing the project Python
+# bootstrap helper:
+#   override = PSX_PYTHON replaces the project interpreter (default)
+#   fixed    = the project interpreter only
+#   native   = native tools ignore PSX_PYTHON; project venv, else system python3
+#   agent    = agent-context stdlib-only bootstrap with system fallback
 set -eu
 
 ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
+domain="${1:-}"
+action="${2:-}"
+
+policy=override
+missing_status=2
+missing_hint=''
+isolated=''
+case "$domain $action" in
+    "agent context")
+        policy=agent
+        isolated=-S
+        ;;
+  "audio "* | "emi archive" | "media disc" | "text "*)
+        policy=native
+        ;;
+    "lift permute")
+        policy=fixed
+        missing_status=1
+        missing_hint='run `just venv` from '"$ROOT"
+        ;;
+    "source symbols" | "build variants")
+        policy=fixed
+        missing_hint='run `just setup` first'
+        ;;
+    # `build variants` reached the fixed-interpreter arm above; every other
+    # build request keeps the default interpreter with the setup hint.
+    "build "* | "lift asm-diff" | "lift byte-match" | "lift m2c" | \
+        "lift m2ctx" | "lift promote" | "lift status" | "lift next" | \
+        "source splat" | "analysis rizin" | "analysis spimdisasm")
+        missing_hint='run `just setup` first'
+        ;;
+    "lift companion-check" | "naming evidence" | "analysis query" | \
+        "analysis rz-project")
+        missing_hint='run `just venv` first'
+        ;;
+esac
+
 . "$ROOT/bin/python-env"
-python_env "${PSX_PYTHON:-$ROOT/.venv/bin/python}" 2 ''
-if [ "${1-}" = "--help" ] || [ "${1-}" = "-h" ]; then
-    printf '%s\n' 'usage: bin/harness psyq {scan|calls|proposal} --all'
-    exit 0
+
+case "$policy" in
+    fixed)
+        python_env "$ROOT/.venv/bin/python" "$missing_status" "$missing_hint"
+        ;;
+    native)
+        if [ -x "$ROOT/.venv/bin/python" ]; then
+            python="$ROOT/.venv/bin/python"
+        else
+            python="$(command -v python3 || true)"
+        fi
+        if [ -z "$python" ] || [ ! -x "$python" ]; then
+            printf 'invalid Python interpreter: %s\n' "${python:-python3}" >&2
+            exit 2
+        fi
+        python_env "$python" 2 ''
+        ;;
+    agent)
+        if [ -n "${PSX_PYTHON:-}" ]; then
+            python="$PSX_PYTHON"
+        elif [ -x "$ROOT/.venv/bin/python" ]; then
+            python="$ROOT/.venv/bin/python"
+        else
+            python="$(command -v python3 || true)"
+        fi
+        if [ -z "$python" ] || [ ! -x "$python" ]; then
+            printf 'invalid Python interpreter: %s\n' "${python:-python3}" >&2
+            exit 2
+        fi
+        python_env "$python" 2 ''
+        ;;
+    *)
+        python_env "${PSX_PYTHON:-$ROOT/.venv/bin/python}" "$missing_status" "$missing_hint"
+        ;;
+esac
+
+if [ "$domain $action" = "agent context" ]; then
+    # The bounded compatibility mode needs the ambient interpreter; the stable
+    # default stays site-isolated. Both require a stdlib-only-capable Python.
+    for arg in "$@"; do
+        case "$arg" in
+            --mode=compatibility | compatibility) isolated='' ;;
+        esac
+    done
+    probe="$("$PYTHON" -S -c 'import sys; print("agent-context-python") if sys.version_info >= (3, 11) else None' 2>/dev/null || true)"
+    if [ "$probe" != "agent-context-python" ]; then
+        printf 'invalid Python interpreter (requires Python 3.11+): %s\n' "$PYTHON" >&2
+        exit 2
+    fi
 fi
-if [ "${1-}" = "--example" ]; then
-    printf '%s\n' 'bin/harness psyq scan --all'
-    printf '%s\n' 'bin/harness psyq calls --all'
-    exit 0
-fi
-if [ "${1-}" != "psyq" ]; then
-    printf '%s\n' 'usage: bin/harness psyq {scan|calls|proposal} --all' >&2
-    exit 2
-fi
-shift
-exec "$PYTHON" -m harness.commands.psyq "$@"
+
+exec "$PYTHON" $isolated -m harness.cli "$@"

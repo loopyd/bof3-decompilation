@@ -62,7 +62,7 @@ handlers and addresses are listed in the [loader dispatch table](runtime/emi-loa
 
 Testable invariants:
 
-- `bin/emi-ex` can extract and inspect an EMI archive without changing tracked
+- `bin/harness emi archive` can extract and inspect an EMI archive without changing tracked
   target facts; generated evidence remains under `out/`.
 - Every payload offset is `0x800`-aligned and every next offset uses
   `(size + 0x7ff) & ~0x7ff`.
@@ -132,19 +132,19 @@ function tint_primitive(primitive, alpha):
 The first flow is evidenced by exact-matching `GAME.EMI#0 @ 0x801af2a0`;
 the tint helper is exact at `GAME.EMI#1 @ 0x801d18e8`. Frontend glyph geometry
 is table-driven and its constructor at `0x801d17d8` is an exact match
-(`drawGlyph`, `bin/asm-diff emi/etc/game/01@0x801D17D8 --detail minimal`:
+(`drawGlyph`, `bin/harness lift asm-diff emi/etc/game/01@0x801D17D8 --detail minimal`:
 MATCH 68/68, 272 bytes, `@status exact`). Do not generalize these layouts to
 every PSX primitive.
 
 Executable checks:
 
 ```sh
-bin/asm-diff emi/etc/game/00@0x801AF2A0
-bin/byte-match emi/etc/game/00@0x801AF2A0
-bin/asm-diff emi/etc/game/01@0x801D18E8
-bin/byte-match emi/etc/game/01@0x801D18E8
-bin/asm-diff emi/etc/game/01@0x801D17D8
-bin/byte-match emi/etc/game/01@0x801D17D8
+bin/harness lift asm-diff emi/etc/game/00@0x801AF2A0
+bin/harness lift byte-match emi/etc/game/00@0x801AF2A0
+bin/harness lift asm-diff emi/etc/game/01@0x801D18E8
+bin/harness lift byte-match emi/etc/game/01@0x801D18E8
+bin/harness lift asm-diff emi/etc/game/01@0x801D17D8
+bin/harness lift byte-match emi/etc/game/01@0x801D17D8
 ```
 
 All three primitives must report exact instruction and byte matches. A visual
@@ -181,7 +181,7 @@ Testable invariants:
 - Preserve the original extracted bytes and hash as the archival source. The
   desktop derivative is Matroska with lossless H.264 (`libx264 -qp 0`) plus
   FLAC, without scaling or pixel-format/range changes.
-- Decoder-generated A/V files are disposable derivatives. `bin/str-media`
+- Decoder-generated A/V files are disposable derivatives. `bin/harness media str`
   (`inspect`/`validate`/`convert`; `tools/python/harness/commands/str_media.py`,
   `tools/python/harness/media/str_media.py`) is the tracked producer and
   validator: it computes sector/frame/audio facts and writes
@@ -191,11 +191,11 @@ Testable invariants:
 - The extracted `CAPCOM30.STR` is an exact multiple of `2336` bytes. For the
   pinned input `out/extracted/LOGO/CAPCOM30.STR` (SHA-256
   `0f9145e980e401ded21f4c315375bcb989f49b8b83582f46f4a2946dd33ff06d`),
-  `bin/str-media inspect out/extracted/LOGO/CAPCOM30.STR` reports 1013
+  `bin/harness media str inspect out/extracted/LOGO/CAPCOM30.STR` reports 1013
   sectors, 203 frame records (frames
   1-203, no gaps), frame 203 incomplete, and one stereo XA stream (file 1,
   channel 1, 37800 Hz, 126 sectors, 254016 samples, 6.72 s).
-  `bin/str-media validate out/extracted/LOGO/CAPCOM30.STR --expected-fps 30`
+  `bin/harness media str validate out/extracted/LOGO/CAPCOM30.STR --expected-fps 30`
   reports status `pass` (203/30 =
   6.7667 s video against 6.72 s audio, delta 0.0467 s within the 0.1067 s
   tolerance). These numbers are reproducible by running the tracked commands

@@ -5,7 +5,7 @@
  * @source 0x801DC708
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS func_801DC708(void) {
     D_801E22C8[D_1F800044[3]]();

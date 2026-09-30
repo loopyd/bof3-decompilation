@@ -112,18 +112,34 @@ def _configure_locked(root: Path) -> Path:
                         for path in inputs
                     )
                 )
-                if (
-                    generated is not None
-                    and not stale
-                    and cached_home == str(root.resolve())
-                ):
-                    return build_tree
-                if stale and cached_home == str(root.resolve()):
-                    break
+                if generated is not None and cached_home == str(root.resolve()):
+                    if not stale:
+                        return build_tree
+                    # Reconfigure in place. Deleting the tree here would force a
+                    # full recompile of every object whenever a lane adds or
+                    # removes a source (adding a lift legitimately changes the
+                    # inventory), which was the dominant batch wall-clock cost.
+                    try:
+                        return _reconfigure_in_place(root, build_tree)
+                    except RuntimeError:
+                        shutil.rmtree(build_tree)
+                        break
                 break
         # CMake cannot overwrite either a foreign cache or an incomplete cache
         # from another generator, so start this disposable tree afresh.
         shutil.rmtree(build_tree)
+    command = ["cmake", "-S", str(root), "-B", str(build_tree)]
+    if shutil.which("ninja"):
+        command.extend(["-G", "Ninja"])
+    result = subprocess.run(command, cwd=root, text=True, capture_output=True)
+    if result.returncode:
+        raise RuntimeError(result.stdout + result.stderr)
+    return build_tree
+
+
+def _reconfigure_in_place(root: Path, build_tree: Path) -> Path:
+    """Regenerate an existing same-home CMake tree without deleting objects."""
+
     command = ["cmake", "-S", str(root), "-B", str(build_tree)]
     if shutil.which("ninja"):
         command.extend(["-G", "Ninja"])

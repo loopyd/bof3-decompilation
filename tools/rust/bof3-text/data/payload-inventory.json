@@ -1,0 +1,114 @@
+{
+  "schema": "bof3.payload-inventory/v1",
+  "version": 1,
+  "note": "Payload families that are known not to be text, each derived from a named in-repo record and confirmed by a positive structural check. The filters read this file; an absent or unreadable inventory must fail closed rather than exclude nothing. Nothing enters this file on a signature alone.",
+  "exclusions": [
+    {
+      "magic": "pBAV",
+      "head": "pBAV",
+      "family": "audio",
+      "format": "PSX VAB header (VABp, content type 6)",
+      "records": [
+        "docs/specs/bof3-eu/02-disc-emi-containers.md:102",
+        "docs/specs/bof3-eu/13-audio.md:14"
+      ],
+      "check": {
+        "kind": "vab_header_size",
+        "detail": "numProg is a u16 LE at +0x12; the header must be exactly 0x20 + 128*16 + numProg*16*32 + 512 bytes, which is the subfile's size"
+      },
+      "measured": {
+        "payloads": 1020,
+        "passed": 1020,
+        "removed": 472,
+        "removed_subfiles": 472,
+        "removed_marginal": 0,
+        "basis": "standalone (removed, removed_subfiles): measured with --no-windows --no-readable against --no-windows --no-payloads --no-readable, so the figure is what the exclusion accounts for on its own. marginal (removed_marginal): measured with the shape rule active, so it is what the exclusion still removes once unreadable runs are gone. Both are corpus-wide measurements made once and recorded here, because an excluded payload is never parsed at run time."
+      }
+    },
+    {
+      "magic": "pQES",
+      "head": "pQES",
+      "family": "music",
+      "format": "PSX SEQ sequence data (SEQp, content type 10)",
+      "records": [
+        "docs/specs/bof3-eu/02-disc-emi-containers.md:105",
+        "docs/specs/bof3-eu/13-audio.md:20"
+      ],
+      "check": {
+        "kind": "seq_event_chain",
+        "detail": "track 0 has a 19-byte header whose eventLen is a u32 BE at +15; each of up to three further tracks has a 13-byte header whose eventLen is a u32 BE at +9; chaining must consume the subfile exactly"
+      },
+      "measured": {
+        "payloads": 119,
+        "passed": 119,
+        "removed": 3,
+        "removed_subfiles": 3,
+        "removed_marginal": 0,
+        "basis": "standalone (removed, removed_subfiles): measured with --no-windows --no-readable against --no-windows --no-payloads --no-readable, so the figure is what the exclusion accounts for on its own. marginal (removed_marginal): measured with the shape rule active, so it is what the exclusion still removes once unreadable runs are gone. Both are corpus-wide measurements made once and recorded here, because an excluded payload is never parsed at run time."
+      }
+    }
+  ],
+  "identified_without_signature": [
+    {
+      "family": "audio",
+      "what": "VAB body: concatenated raw PSX 4-bit ADPCM samples (content type 7)",
+      "records": [
+        "docs/specs/bof3-eu/02-disc-emi-containers.md:103",
+        "docs/specs/bof3-eu/13-audio.md:27",
+        "docs/specs/bof3-eu/02-disc-emi-containers.md:138"
+      ],
+      "basis": "pairing, not a signature: within the same container the body is the subfile whose size equals the preceding VAB header's VAG-size-table sum multiplied by 8",
+      "measured": {
+        "headers": 1020,
+        "containers_where_the_pairing_holds": 840,
+        "removed": 399,
+        "removed_subfiles": 319,
+        "removed_marginal": 0,
+        "basis": "standalone (removed, removed_subfiles): measured with --no-windows --no-readable against --no-windows --no-payloads --no-readable, so the figure is what the exclusion accounts for on its own. marginal (removed_marginal): measured with the shape rule active, so it is what the exclusion still removes once unreadable runs are gone. Both are corpus-wide measurements made once and recorded here, because an excluded payload is never parsed at run time."
+      },
+      "magic": "",
+      "check": {
+        "kind": "vab_body_pairing",
+        "detail": "pairing, not a signature: within the same container the body is the subfile whose size equals the preceding VAB header's VAG-size-table sum multiplied by 8"
+      },
+      "format": "VAB body: concatenated raw PSX 4-bit ADPCM samples (content type 7)"
+    }
+  ],
+  "not_machine_identifiable": [
+    {
+      "family": "texture",
+      "what": "ct1 sprite packages (texel bands + CLUT + animation programs), ct3 finished VRAM pages, ct8 cue tables",
+      "records": [
+        "docs/specs/bof3-eu/02-disc-emi-containers.md:97",
+        "docs/specs/bof3-eu/02-disc-emi-containers.md:99",
+        "docs/specs/bof3-eu/02-disc-emi-containers.md:104"
+      ],
+      "why": "the register names them by content type, but their payloads carry no documented signature and our tooling cannot derive the content type from the container's type-dependent load argument"
+    },
+    {
+      "family": "3d-model",
+      "what": "object-mesh blocks and the mesh-group containers",
+      "records": [
+        "docs/specs/bof3-eu/02-disc-emi-containers.md:88",
+        "docs/specs/bof3-eu/02-disc-emi-containers.md:89"
+      ],
+      "why": "the register states that the mesh block format belongs to the features/meshes chapter and names no payload signature for it"
+    },
+    {
+      "family": "map-data",
+      "what": "map geometry: tile and wall textures, corner heights, collision, visibility tables",
+      "records": [
+        "docs/specs/bof3-eu/04-map-geometry.md"
+      ],
+      "why": "described by structure and address, with no payload signature documented"
+    }
+  ],
+  "signature_census": {
+    "subfiles": 6344,
+    "repeated_ascii_signatures": {
+      "pBAV": 1020,
+      "pQES": 119
+    },
+    "note": "A census of every subfile's first four bytes finds only these two repeated ASCII-looking signatures; the other repeated heads are zero words, little-endian address words such as 0x320A8000, and similar non-signature content that no record names, so none of them is excluded."
+  }
+}

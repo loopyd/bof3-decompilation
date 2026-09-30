@@ -4,7 +4,7 @@
  * @behavior Sets battle global flag 0x4 and dispatches the update when the scratchpad gate is clear.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void raiseFlag4AndUpdate(void) {
     u16* global_half;

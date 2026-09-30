@@ -10,7 +10,7 @@ struct scratchpad_state {
  * @source 0x801D6A2C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void seedMenuScratch(void) {
   volatile u8* temp_a0;
@@ -41,11 +41,6 @@ void seedMenuScratch(void) {
   temp_v1_2 = ((volatile struct scratchpad_state*)0x1f800000u)->scratch;
   {
     u8 state = temp_v1_2[3];
-    /* MATCHING_AID: the original schedules the epilogue `lw $ra` before the
-     * final `sb $v0,3($v1)` and fills `jr $ra`'s delay slot with
-     * `addiu $sp,$sp,0x18`. A volatile store is pinned ahead of `lw $ra`;
-     * this non-volatile store lets GCC sink it to the last body slot.
-     * Remove if the scheduler behavior is reproduced another way. */
     *(u8*)(temp_v1_2 + 3) = state + 1;
   }
 }

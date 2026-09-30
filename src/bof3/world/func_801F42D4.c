@@ -4,6 +4,9 @@
  * @behavior selects a halfword from the local mode table, stores it to the
  * shared area value, and maps modes zero and one to scenario flags one and
  * zero respectively.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801F42D4(void) {
   s32 mode;

@@ -75,7 +75,11 @@ def run_query(args: argparse.Namespace) -> int:
         payload = args.query_handler(args, None)
         _print(payload, args.json, labeled=getattr(args, "query_labeled", False))
         return 0
-    connection = connect(resolved_root(args))
+    root = resolved_root(args)
+    if getattr(args, "allow_stale", False):
+        connection = connect(root, allow_stale=True)
+    else:
+        connection = connect(root)
     try:
         if getattr(args, "target", None):
             args.target = normalize_target_id(args.target).value
@@ -227,10 +231,15 @@ def run_mission(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="rev-query")
+    parser = argparse.ArgumentParser(prog="bin/harness analysis query")
     add_root_argument(parser)
-    add_example_argument(parser, "bin/rev-query symbols func_")
+    add_example_argument(parser, "bin/harness analysis query symbols func_")
     parser.add_argument("--json", action="store_true")
+    parser.add_argument(
+        "--allow-stale",
+        action="store_true",
+        help="use the cached index without revalidating target snapshots (ranking only)",
+    )
 
     def nonnegative(value: str) -> int:
         parsed = int(value)

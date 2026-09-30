@@ -75,8 +75,10 @@ segments:
     - asm
     - func_801EFF24
   - - 5004
-    - asm
-    - func_801EFF8C
+    - c
+    - clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic06703_801EFF8C
+    - '@source: src/bof3/bmagic/clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic06703_801EFF8C.c'
+    - '@behavior: Resets two bytes of the scratchpad work object and advances a third: the object byte at offset 0x9 is cleared with sb $zero, the object byte at offset 0xA is set to the literal 0x88 (addiu $v0,$zero,0x88 then sb) and the object byte at offset 0x2 is incremented by one with a byte-width add (lbu, addiu 1, sb, the store scheduled into the $ra delay slot). The work-object pointer cell at 0x1F800044 is re-materialized and reloaded once per access, so the original keeps three separate lui $vN,0x1F80 / lw $vN,0x44($vN) pairs; nothing is returned, no other state is read or written and the function has no frame.'
   - - 5068
     - asm
     - func_801EFFCC

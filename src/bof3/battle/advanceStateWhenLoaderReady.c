@@ -5,7 +5,7 @@
  * @source 0x801D6EAC
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void advanceStateWhenLoaderReady(void) {
   if (func_80162D00() != 0) {

@@ -5,7 +5,7 @@
  * @behavior Copies the selected record-kind byte into the task-indexed UI record.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 copySelectedRecordKindToTaskRecord(Commu00TaskSlot *slot)
 {

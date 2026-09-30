@@ -26,7 +26,7 @@ def run(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="tool")
+    parser = argparse.ArgumentParser(prog="bin/harness analysis")
     add_root_argument(parser)
     parser.add_argument("name", choices=("maspsx", "rizin", "spimdisasm"))
     parser.add_argument("arguments", nargs=argparse.REMAINDER)

@@ -5,7 +5,7 @@
  * @behavior Initialize fields in the current game work record from shared state.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_8019EE10(void)
 {

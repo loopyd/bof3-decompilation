@@ -6,7 +6,7 @@ from .base import SubmoduleToolchain
 class PsyqSignaturesToolchain(SubmoduleToolchain):
     label = "PsyQ signatures"
     submodule = "toolchains/psx_psyq_signatures"
-    command = ("bin/symbols", "--help")
+    command = ("bin/harness", "source", "symbols", "--help")
 
     def verify(self) -> str:
         if not (self.source / ".git").exists() or not any(self.source.iterdir()):

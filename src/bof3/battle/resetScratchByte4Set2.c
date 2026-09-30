@@ -4,7 +4,7 @@
  * @behavior clears byte four then sets byte two in the scratchpad work target.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void resetScratchByte4Set2(void) {
   u8** scratch_slots;

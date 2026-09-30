@@ -5,7 +5,7 @@
  * @behavior clears the battle selection flag and decrements its counter when the gate is clear.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void retreatStateWhenGateClear(void) {
   volatile u8* counter;

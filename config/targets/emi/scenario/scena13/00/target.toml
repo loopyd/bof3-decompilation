@@ -9,9 +9,18 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectScenarioScena1300_801FBC88.c",
+    "src/bof3/scenario/clearWorkTintArmCountdownAndAdvanceWorkByte1ScenarioScena1300_801F6EE8.c",
+    "src/bof3/scenario/dispatchPrimaryStateHandlerScenarioScena1300_801F8474.c",
+    "src/bof3/scenario/dispatchScenarioStateHandlerScenarioScena1300_801F7D14.c",
+    "src/bof3/scenario/incrementWorkHalfword7EScenarioScena1300_801FB390.c",
+    "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena1300_801FBE98.c",
+    "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena1300_801FBEC0.c",
     "src/bof3/scenario/invokeTwoHelpersScenarioScena1300_801F6FD0.c",
-    "src/bof3/scenario/noopHandlerScenarioScena1300_801FBEE8.c",
     "src/bof3/scenario/noopHandlerScenarioScena1300_801F84B0.c",
+    "src/bof3/scenario/noopHandlerScenarioScena1300_801FBEE8.c",
+    "src/bof3/scenario/requestPrimaryState3Substate5ScenarioScena1300_801FB3A4.c",
+    "src/bof3/scenario/requestPrimaryState6Substate19ScenarioScena1300_801FB3DC.c",
     "src/bof3/support/scena13_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/scena13_00_psyq.c"

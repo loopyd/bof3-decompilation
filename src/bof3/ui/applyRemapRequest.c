@@ -12,7 +12,7 @@ extern u8  requestRemapTable[];
  * @source 0x801B5BDC
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void applyRemapRequest(u8 arg0) {
   u32 index;

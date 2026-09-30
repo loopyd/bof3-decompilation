@@ -5,7 +5,7 @@
  * 0x801462E1..0x801462E3 and calls runPanelTasks16To19.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS resetStateWhenUnlockedB(void) {
   volatile u8* battle_selection_state;

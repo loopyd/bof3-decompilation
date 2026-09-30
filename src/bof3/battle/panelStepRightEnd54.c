@@ -5,7 +5,7 @@
  * sets x to 0x52 and state to 0.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void panelStepRightEnd54(void) {
     PanelTask* task;

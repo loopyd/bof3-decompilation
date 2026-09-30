@@ -6,7 +6,7 @@
  * @source 0x801D64C4
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 isBattlerBlockedOrUnavailable(u32 arg0) {
   u8  idx;

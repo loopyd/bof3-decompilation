@@ -8,6 +8,7 @@ import shutil
 import sys
 from pathlib import Path
 
+from harness.common.commands import is_tool
 from harness.common.digests import digest
 from harness.common.deadlines import check_deadline
 from harness.common.evidence import write_evidence_output
@@ -45,7 +46,22 @@ OVERRIDES = (
 )
 
 
-def _evidence_paths(value) -> set[str]:
+def _evidence_paths(value, _memo: dict[int, set[str]] | None = None) -> set[str]:
+    # Evidence values are read-only during extraction and frequently share
+    # subtrees, so memoizing by object identity collapses the DAG walk without
+    # changing the result.
+    if _memo is None:
+        _memo = {}
+    key = id(value)
+    cached = _memo.get(key)
+    if cached is not None:
+        return cached
+    result = _evidence_paths_uncached(value, _memo)
+    _memo[key] = result
+    return result
+
+
+def _evidence_paths_uncached(value, _memo: dict[int, set[str]]) -> set[str]:
     if isinstance(value, dict):
         if value.get("schema") in {
             f"bof3.{owner}-{kind}/v1"
@@ -64,7 +80,7 @@ def _evidence_paths(value) -> set[str]:
             # not a repo-relative native input or an authorized mutation path.
             return set().union(
                 *(
-                    _evidence_paths(v)
+                    _evidence_paths(v, _memo)
                     for k, v in value.items()
                     if k != "review_artifact"
                 )
@@ -75,9 +91,9 @@ def _evidence_paths(value) -> set[str]:
             and ("sha256" in value or "expected_ranking_digest" in value)
             else set()
         )
-        return paths.union(*(_evidence_paths(v) for v in value.values()))
+        return paths.union(*(_evidence_paths(v, _memo) for v in value.values()))
     if isinstance(value, list):
-        return set().union(*(_evidence_paths(v) for v in value))
+        return set().union(*(_evidence_paths(v, _memo) for v in value))
     return set()
 
 
@@ -293,7 +309,7 @@ def checked(root: Path, manifest: dict, context, check: dict, receipt: dict) -> 
         raise ValueError("execution context input drift during gate")
     after = build_state(root)
     before = context["final_build"]
-    if after != before and check["argv"][0] != "bin/build":
+    if after != before and not is_tool(check["argv"], "build"):
         raise ValueError("execution context unexpected build mutation")
     context["gates"].append(
         {
@@ -430,7 +446,7 @@ def _validate_context_history(application: dict) -> None:
         if (
             gate["build_before"] != prior
             or gate["state_digest"] != digest(final)
-            or (gate["build_after"] != prior and check["argv"][0] != "bin/build")
+            or (gate["build_after"] != prior and not is_tool(check["argv"], "build"))
         ):
             raise ValueError("execution gate transition mismatch")
         prior = gate["build_after"]

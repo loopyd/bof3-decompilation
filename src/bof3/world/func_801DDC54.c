@@ -5,7 +5,7 @@
  * @source 0x801DDC54
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801DDC54(void) {
   u8* work;

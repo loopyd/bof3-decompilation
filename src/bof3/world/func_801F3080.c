@@ -3,19 +3,19 @@
 /* @behavior seeds the local eight-entry work array at `0x800e4800` and calls the
  * per-entry initializer for each `0x28`-byte slot.
  * @source 0x801F3080
- * @status partial
- * @match 46.43
- * @residual non-exact live audit: 13/27 instructions; 108 original bytes versus 112 current.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801F3080(void) {
   u8 i;
 
+  workCursor = WORLD00_AREA024_WORK_BASE;
   i = 0u;
-  WORLD00_AREA024_WORK_PTR = WORLD00_AREA024_WORK_BASE;
 
   do {
-    func_801F2FD4(WORLD00_AREA024_WORK_PTR);
-    WORLD00_AREA024_WORK_PTR += 0x28u;
+    func_801F2FD4(workCursor);
     i += 1u;
+    workCursor += 0x28u;
   } while (i < 8u);
 }

@@ -4,7 +4,7 @@
  * @behavior retreats panel x by 32 and clamps it to 152.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void retreatPanelXTo152(void) {
   PanelTask* task = g_PanelTaskRoot;

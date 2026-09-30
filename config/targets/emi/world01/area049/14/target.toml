@@ -12,6 +12,9 @@ support_sources = [
     "src/bof3/world01/setTwoWorld01Area04914_801F3750.c",
     "src/bof3/world01/setTwoWorld01Area04914_801F3438.c",
     "src/bof3/world01/noopHandlerWorld01Area04914_801F36F8.c",
+    "src/bof3/world01/setSharedByteOneIfByte80144F5BFourWorld01Area04914_801F33A0.c",
+    "src/bof3/world01/setSharedByteOneIfByte80144F5CFourWorld01Area04914_801F33C4.c",
+    "src/bof3/world01/advanceCounterWorld01Area04914_801F33E8.c",
     "src/bof3/support/area049_14_psyq.c",
 ]
 psyq_source = "src/bof3/support/area049_14_psyq.c"

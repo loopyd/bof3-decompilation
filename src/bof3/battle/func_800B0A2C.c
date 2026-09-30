@@ -7,7 +7,7 @@
  * @source 0x800B0A2C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_800B0A2C(void) {
   BattlePanelTask* task;

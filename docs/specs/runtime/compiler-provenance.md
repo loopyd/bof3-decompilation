@@ -10,7 +10,7 @@ tags: [runtime, compiler, matching, evidence]
 The canonical matching chain is `gcc-2.7.2-psx`, `maspsx`, and ASPSX 2.56
 emulation. It is a reproducible comparison toolchain, not proof that every
 retail BOF3 object was built by precisely that compiler revision or scheduler
-configuration. A source lift is accepted only when `bin/byte-match` is exact.
+configuration. A source lift is accepted only when `bin/harness lift byte-match` is exact.
 
 ## `exe/slus_004_22@0x80162B08`
 
@@ -22,7 +22,7 @@ residual that is now an exact byte match:
 | Reviewed function range | `0x80162B08–0x80162C14` (half-open; last instruction at `0x80162C10`), 67 instructions, 268 bytes |
 | Original at `0x80162BA4` | `j 0x80162C0C; nop` |
 | Canonical GCC output | `j 0x80162C0C; li v0, 1` |
-| Current live result | `bin/byte-match` MATCH, 67/67 instructions, 268 bytes, commit `01e5779d` |
+| Current live result | `bin/harness lift byte-match` MATCH, 67/67 instructions, 268 bytes, commit `01e5779d` |
 
 ### Historical residual analysis
 
@@ -36,7 +36,7 @@ nop. The canonical raw GCC assembly contains the `li`; therefore neither
 maspsx nor ASPSX object conversion is its cause.
 
 The exact C shape that reproduces the original uses a branch-local `return 1`
-plus an empty `do/while (0)` `MATCHING_AID` at
+plus an empty `do/while (0)` at
 `src/bof3/io/stageEmiTransferSlot.c:44-57`. The empty loop and branch-local
 return prevent GCC's cross-jumping from duplicating `li v0,1` into the zero
 branch's `j epilogue` delay slot (original: nop); the zero branch reaches the
@@ -48,14 +48,14 @@ scheduler produced the object).
 ### Negative evidence
 
 The following clean-C or profile classes were tested in disposable workspaces
-and restored because none produced `bin/byte-match` equality before the
+and restored because none produced `bin/harness lift byte-match` equality before the
 branch-local-return resolution:
 
 - declaration/volatile forms for loader globals;
 - branch inversion, early-return, `goto`, local-result, and return-expression
   shapes;
 - then-sanctioned `barrier()`/`CLOBBER_*` placement attempts (permission now
-  superseded by the [source ban](../../INDEX.md#source-and-duplicate-rules));
+  superseded by the [source ban](../../agents/matching.md#source-and-duplicate-rules));
 - reviewed flag-catalog candidates plus scheduling, peephole, CSE, ABI, and
   MIPS-mode deltas;
 - bounded permuter search (best score improved but did not yield credible C);
@@ -69,10 +69,9 @@ The rejected alternatives above are historical: none reproduced the original
 bytes before the branch-local-return resolution, and none is a current
 residual. Do not replace the exact lift with inline assembly, register
 pinning, `INCLUDE_ASM`, Splat asm, or a per-object profile override. The
-retained exact lift keeps the `MATCHING_AID` comment that names the
-original/current instruction placement and the following exact live
-byte-match; remove the aid only if the compiler's tail-merge/delay-slot
-behavior for this shape is understood structurally. A future attempt that
+retained exact lift (see `src/bof3/io/stageEmiTransferSlot.c:44-57`) relies on
+that empty `do/while (0)`; remove the shape only if the compiler's
+tail-merge/delay-slot behavior for it is understood structurally. A future attempt that
 seeks a pure clean-C shape without the aid requires independent evidence for a
 BOF3-specific compiler patch or build option and must preserve the target's
 clean-C byte-match gate.
@@ -80,8 +79,8 @@ clean-C byte-match gate.
 ## Verification
 
 ```sh
-bin/asm-diff exe/slus_004_22@0x80162B08 --detail full
-bin/byte-match exe/slus_004_22@0x80162B08
+bin/harness lift asm-diff exe/slus_004_22@0x80162B08 --detail full
+bin/harness lift byte-match exe/slus_004_22@0x80162B08
 ```
 
 The expected current state is an exact match: 67/67 instructions, 268 bytes,

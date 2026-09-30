@@ -6,7 +6,7 @@
  * Original table words are 0x800B0A2C, 0x800B0A54, and 0x800B0AB0.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchPanelStateTable6a08(void)
 {

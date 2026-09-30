@@ -5,7 +5,7 @@
  * @behavior Saves work coordinates and clears scenario/work flags.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_8019AAFC(void) {
   s32* coord_68;

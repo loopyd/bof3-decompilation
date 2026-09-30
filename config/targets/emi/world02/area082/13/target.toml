@@ -1,0 +1,22 @@
+schema = "harness.target/v2"
+id = "emi/world02/area082/13"
+disc_id = "BIN/WORLD02/AREA082.EMI#13"
+kind = "emi"
+source_dir = "src/emi/world02/area082/13"
+binary = "out/binaries/emi/world02/area082/13.bin"
+splat = "config/targets/emi/world02/area082/13/splat.yaml"
+load_address = 0x801F2C00
+
+sources = []
+support_sources = [
+    "src/bof3/world02/applyPaletteScaleSet8014933AIncrementWorkByte2World02Area08213_801F4AFC.c",
+    "src/bof3/world02/clearWorkTableAt800E4800World02Area08213_801F3910.c",
+    "src/bof3/world02/dispatchStateByte2Table576cWorld02Area08213_801F3B5C.c",
+    "src/bof3/world02/dispatchStateByte2Table57d0World02Area08213_801F49D4.c",
+    "src/bof3/world02/decrementCountdownRearmTo12IncrementWorkByte1World02Area08213_801F2CF0.c",
+    "src/bof3/world02/setWorkCountdownClearOriginIncrementWorkByte1World02Area08213_801F2C6C.c",
+    "src/bof3/world02/setWorkHalfwordsIncrementWorkByte1World02Area08213_801F336C.c",
+    "src/bof3/world02/setWorkWord5World02Area08213_801F55F4.c",
+    "src/bof3/support/area082_13_psyq.c",
+]
+psyq_source = "src/bof3/support/area082_13_psyq.c"

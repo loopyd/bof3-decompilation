@@ -99,7 +99,7 @@ include("${BOF3_OBJECT_FLAGS_FILE}" OPTIONAL)
 
 # Target metadata roots: every manifest's source_dir.
 # Nested subsystem folders below a root share that root's build target so
-# `bin/build TARGET` compiles every descendant lift.
+# `bin/harness build TARGET` compiles every descendant lift.
 set(BOF3_MANIFEST_SOURCE_DIRS)
 file(GLOB_RECURSE BOF3_MANIFEST_TOMLS CONFIGURE_DEPENDS
      "${CMAKE_SOURCE_DIR}/config/targets/*.toml")
@@ -187,7 +187,7 @@ foreach(source IN LISTS BOF3_C_SOURCES BOF3_ASM_SOURCES)
     if(_compiler_type STREQUAL "STRING")
       string(JSON _variant_id GET "${_inventory_json}" profiles "src/${relative}" compiler_id)
       execute_process(
-        COMMAND "${CMAKE_SOURCE_DIR}/bin/compiler-variants" "path" "${_variant_id}"
+        COMMAND "${CMAKE_SOURCE_DIR}/bin/harness" "build" "variants" "path" "${_variant_id}"
         OUTPUT_VARIABLE _variant_gcc_path
         OUTPUT_STRIP_TRAILING_WHITESPACE
         RESULT_VARIABLE _variant_result
@@ -210,7 +210,7 @@ foreach(source IN LISTS BOF3_C_SOURCES BOF3_ASM_SOURCES)
     endif()
   endif()
 
-  # The public bin/build command resolves friendly function IDs to this stable
+  # The public bin/harness build command resolves friendly function IDs to this stable
   # internal target; callers never need to know the encoded target name.
   string(SHA1 target_hash "src/${relative}")
   string(SUBSTRING "${target_hash}" 0 16 target_hash)
@@ -218,7 +218,7 @@ foreach(source IN LISTS BOF3_C_SOURCES BOF3_ASM_SOURCES)
   list(APPEND BOF3_LIFT_TARGETS "${lift_target}")
 
   # Group every source under the deepest owning manifest source_dir so a
-  # relocated (nested) lift still builds with `bin/build TARGET`.  An explicit
+  # relocated (nested) lift still builds with `bin/harness build TARGET`.  An explicit
   # manifest claim wins over path containment and may point far outside every
   # manifest root (semantic src/bof3/<class>/ folders); directories outside
   # any manifest root without a claim keep their own grouping.  For a target
@@ -250,7 +250,7 @@ foreach(source IN LISTS BOF3_C_SOURCES BOF3_ASM_SOURCES)
       else()
         # Explicit-claim target: unclaimed files under its legacy source_dir
         # are not owned by it. Keep them compiling via the global `lifts`
-        # target but give them no target group (no bin/build TARGET claim).
+        # target but give them no target group (no bin/harness build TARGET claim).
         set(group_directory "")
       endif()
     endif()

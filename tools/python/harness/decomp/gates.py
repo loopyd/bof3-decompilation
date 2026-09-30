@@ -8,6 +8,8 @@ from typing import Callable
 
 from harness.build.operations import cmake_target_for_source
 from harness.common.checks import check_evidence, validate_partial_evidence
+from harness.common.commands import command as canonical
+from harness.common.commands import tool_id
 from harness.common.deadlines import check_deadline, resolve_deadline
 from harness.common.digests import digest
 from harness.common.lease import require_writer
@@ -141,8 +143,8 @@ def check_candidate(
     if metadata_changed:
         for position, command in enumerate(
             (
-                ["bin/symbols", "check", target],
-                ["bin/splat", target],
+                canonical("symbols", "check", target),
+                canonical("splat", target),
             ),
             1,
         ):
@@ -189,8 +191,8 @@ def check_candidate(
     gates = []
     for position, command in enumerate(
         (
-            ["bin/asm-diff", gate_selector, "--json", "--detail", "full"],
-            ["bin/byte-match", gate_selector, "--json"],
+            canonical("asm-diff", gate_selector, "--json", "--detail", "full"),
+            canonical("byte-match", gate_selector, "--json"),
         ),
         1,
     ):
@@ -208,7 +210,7 @@ def check_candidate(
         if gate["exit_code"] == 1:
             validate_partial_evidence(
                 root,
-                tool=command[0].removeprefix("bin/"),
+                tool=tool_id(command),
                 target=target,
                 selector=gate_selector,
                 function=function,

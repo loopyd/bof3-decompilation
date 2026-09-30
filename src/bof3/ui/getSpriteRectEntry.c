@@ -10,7 +10,7 @@ extern u8 spriteRectTableAlt[];
  * @source 0x801AF270
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8* getSpriteRectEntry(u8 sprite_id, u8 flags) {
   if (flags & 0xff)

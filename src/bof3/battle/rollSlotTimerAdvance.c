@@ -3,7 +3,7 @@
 /* @source 0x801E6088
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 /* @behavior Decrements the timer; when its post-decrement value is zero, increments the selector and resets the timer to 4. */
 void rollSlotTimerAdvance(void) {

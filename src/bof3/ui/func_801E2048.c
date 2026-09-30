@@ -5,7 +5,7 @@
  *           indexing the phase handler table with the UI sub-step byte.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801E2048(void) {
   D_801E5D48[D_80148652]();

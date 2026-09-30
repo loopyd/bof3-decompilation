@@ -5,7 +5,7 @@
  * @behavior Advances the active scratch work record while its timer is nonzero.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801E0394(void)
 {

@@ -46,6 +46,7 @@ sources = [
     "src/bof3/ui/func_801D6184.c",
     "src/bof3/ui/func_801D6CE4_shop00.c",
     "src/bof3/ui/func_801D7080_shop00.c",
+    "src/bof3/ui/rebuildPanelRecordTable.c",
     "src/bof3/ui/func_801DF9B4_shop00.c",
     "src/bof3/ui/func_801D7344.c",
     "src/bof3/ui/func_801D7380.c",
@@ -129,6 +130,7 @@ sources = [
     "src/bof3/ui/tickPhaseTimerThenBeginFrame.c",
     "src/bof3/ui/rebuildShopListState.c",
     "src/bof3/ui/isSkillRecorded.c",
+    "src/bof3/ui/func_801E4C2C.c",
     "src/bof3/ui/func_801E4224_shop00.c",
     "src/bof3/ui/func_801E4338_shop00.c",
     "src/bof3/ui/func_801E440C_shop00.c",
@@ -141,8 +143,12 @@ sources = [
     "src/bof3/ui/func_801D65A0.c",
     "src/bof3/ui/func_801D408C_shop00.c",
     "src/bof3/ui/func_801D43A4.c",
+    "src/bof3/ui/tickPhaseTimerThenAdvanceUiSubstep.c",
+    "src/bof3/ui/tickPhaseTimerThenAdvanceUiPhase.c",
     "src/bof3/ui/func_801D4970.c",
     "src/bof3/ui/func_801DB938_shop00.c",
+    "src/bof3/ui/func_801D5D98.c",
+    "src/bof3/ui/func_801E4E9C.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",

@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801D0D38
   - - 380
-    - asm
-    - func_801D0D7C
+    - c
+    - armCountdownAndAdvanceWorkByte1ScenarioSce15ef300_801D0D7C
+    - '@source: src/bof3/scenario/armCountdownAndAdvanceWorkByte1ScenarioSce15ef300_801D0D7C.c'
+    - '@behavior: Entry 0 of the overlay work-state handler table at 0x801D27CC (D_801D27CC), which the dispatcher at 0x801D0D38 selects with the unsigned work byte at scratchpad pointer slot 0x1F800044 + 0x1 and calls with no arguments: it stores 8 into that work object byte at +0x9, then advances the work byte at +0x1 to 1 so the next dispatch selects entry 1 (0x801D0DAC). Takes no arguments, returns nothing and reads no other state. Its 0x30-byte instruction stream is byte-identical apart from the immediate (0xF there, 8 here) to the exact lift armCountdownAndAdvanceWorkByte1ScenarioScena0300_801F7AE0, whose documentation reads the +0x9 byte as the work object countdown.'
   - - 428
     - asm
     - func_801D0DAC
@@ -147,8 +149,10 @@ segments:
     - asm
     - func_801D2424
   - - 6592
-    - asm
-    - func_801D25C0
+    - c
+    - clearWorkTableAt800E60A0ScenarioSce15ef300_801D25C0
+    - '@source: src/bof3/scenario/clearWorkTableAt800E60A0ScenarioSce15ef300_801D25C0.c'
+    - '@behavior: Overlay init helper: clears the lead byte of each of the 16 6-byte-stride entries of the record table at 0x800E60A0 in main RAM, walking the table with an unsigned byte counter in a bottom-tested loop; it takes no arguments, returns nothing and touches no other state. Its only in-payload caller is the work-state handler at 0x801D15CC (entry 16 of the handler table at 0x801D27CC), and the same table is swept at 0x801D2634, which reads those lead bytes as active flags. The 44-byte instruction shape is already exact in this tree as clearWorkTableAt800E4800ScenarioScena0100_801F7AB8; only the base, stride and count immediates differ.'
   - - 6636
     - asm
     - func_801D25EC

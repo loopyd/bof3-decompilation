@@ -1,4 +1,4 @@
-"""``bin/naming-audit``: one grouped naming-audit command.
+"""``bin/harness naming``: one grouped naming-audit command.
 
 ``prepare`` is the readiness preflight (with optional safe metadata repair
 behind live exact proof; a prepared-row selector restricts the repair to the
@@ -20,6 +20,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, Mapping
 
+from harness.common.commands import command_at
 from harness.common.deadlines import check_deadline
 from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
 from harness.naming.context import SCHEMA_V2, SCHEMA_V3, TargetContext
@@ -65,8 +66,8 @@ from .proposal import (
 def _live_exact(root: Path, target: str, address: int) -> tuple[bool, list[str]]:
     selector = f"{target}@0x{address:08X}"
     commands = [
-        [str(root / "bin/asm-diff"), selector, "--detail", "normal"],
-        [str(root / "bin/byte-match"), selector],
+        command_at(root, "asm-diff", selector, "--detail", "normal"),
+        command_at(root, "byte-match", selector),
     ]
     results = []
     exact = True
@@ -194,7 +195,7 @@ def initialize(root: Path, target: str) -> dict[str, Any]:
     snapshot = project_status(root, target)
     if not snapshot.get("fresh"):
         raise ValueError(
-            f"analysis snapshot is stale for {target}; run bin/index --recover"
+            f"analysis snapshot is stale for {target}; run bin/harness analysis index --recover"
         )
     manifests = load_target_manifests(root)
     return initialize_with_context(

@@ -5,7 +5,7 @@
  * invokes the entry selected by queued-slot byte +0x05.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchSlotByte5TableEd4(void)
 {

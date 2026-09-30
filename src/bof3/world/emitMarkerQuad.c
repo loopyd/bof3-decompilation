@@ -6,7 +6,7 @@
  * @source 0x801F3480
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 POLY_FT4* emitMarkerQuad(const void* arg0, s32 arg1, u32 arg2) {
   const World00Area027Point* point;

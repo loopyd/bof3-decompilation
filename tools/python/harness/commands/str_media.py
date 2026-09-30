@@ -56,9 +56,11 @@ def run_convert(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="str-media")
+    parser = argparse.ArgumentParser(prog="bin/harness media str")
     add_root_argument(parser)
-    add_example_argument(parser, "bin/str-media inspect out/extracted/INTRO.STR")
+    add_example_argument(
+        parser, "bin/harness media str inspect out/extracted/INTRO.STR"
+    )
     sub = parser.add_subparsers(dest="command")
     for name, handler in (
         ("inspect", run_inspect),

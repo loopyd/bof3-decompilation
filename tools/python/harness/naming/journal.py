@@ -385,6 +385,8 @@ def journal_is_fresh(
                 }
                 for item in evidence_payload["items"]
             )
+            from harness.naming.instructions import analyzer_instructions
+
             recomputed = _analyze_validated_records(
                 _RUNNER_TOKEN,
                 target=target,
@@ -392,6 +394,7 @@ def journal_is_fresh(
                 row=collection_row(report_row_values[row], target, registry=registry),
                 operations=operations,
                 registry=registry,
+                instructions=analyzer_instructions(root, evidence_payload["semantic"]),
             )
             derived = _artifact_path(root, namespace, entry.get("derived"))
             if derived != namespace / row.split(":", 1)[1] / "derived.json":

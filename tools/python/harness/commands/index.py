@@ -47,7 +47,7 @@ def run(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="index")
+    parser = argparse.ArgumentParser(prog="bin/harness analysis index")
     add_root_argument(parser)
     parser.add_argument(
         "--recover",

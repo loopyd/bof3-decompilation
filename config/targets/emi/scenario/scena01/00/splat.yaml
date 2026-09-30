@@ -36,8 +36,8 @@ segments:
     - asm
     - func_801F729C
   - - 1976
-    - asm
-    - func_801F73B8
+    - c
+    - dispatchWorkByte1HandlerScenarioScena0100_801F73B8
   - - 2044
     - asm
     - func_801F73FC
@@ -51,8 +51,8 @@ segments:
     - asm
     - func_801F75C8
   - - 2628
-    - asm
-    - func_801F7644
+    - c
+    - resetWorkStateWhenNoEntryClearedScenarioScena0100_801F7644
   - - 2680
     - asm
     - func_801F7678
@@ -60,8 +60,8 @@ segments:
     - asm
     - func_801F7A24
   - - 3768
-    - asm
-    - func_801F7AB8
+    - c
+    - clearWorkTableAt800E4800ScenarioScena0100_801F7AB8
   - - 3812
     - asm
     - func_801F7AE4
@@ -78,8 +78,8 @@ segments:
     - asm
     - func_801F7EDC
   - - 5060
-    - asm
-    - func_801F7FC4
+    - c
+    - dispatchProgressHandlerScenarioScena0100_801F7FC4
   - - 5120
     - asm
     - func_801F8000
@@ -87,8 +87,8 @@ segments:
     - asm
     - func_801F8050
   - - 7840
-    - asm
-    - func_801F8AA0
+    - c
+    - dispatchProgressHandlerScenarioScena0100_801F8AA0
   - - 7900
     - c
     - noopHandlerScenarioScena0100_801F8ADC
@@ -165,8 +165,8 @@ segments:
     - asm
     - func_801FD28C
   - - 26692
-    - asm
-    - func_801FD444
+    - c
+    - dispatchRecordCallbackByByte7AScenarioScena0100_801FD444
   - - 26756
     - c
     - noopHandlerScenarioScena0100_801FD484
@@ -243,8 +243,8 @@ segments:
     - c
     - invokeHelperArgScenarioScena0100_801FE224
   - - 30276
-    - asm
-    - func_801FE244
+    - c
+    - invokeHelperArgThenHelperScenarioScena0100_801FE244
   - - 30316
     - asm
     - func_801FE26C

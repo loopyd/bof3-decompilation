@@ -9,10 +9,17 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world03/dispatchState01World03Area12114_801F418C.c",
+    "src/bof3/world03/dispatchState04World03Area12114_801F2C3C.c",
     "src/bof3/world03/resetAdvanceScratchStateCloneWorld03Area12114_801F3478.c",
     "src/bof3/world03/setWorkHalfwordsWorld03Area12114_801F3418.c",
     "src/bof3/world03/invokeTwoHelpersWorld03Area12114_801F4754.c",
     "src/bof3/world03/invokeTwoHelpersWorld03Area12114_801F34B8.c",
+    "src/bof3/world03/resetMode3AndWorkStateWorld03Area12114_801F564C.c",
+    "src/bof3/world03/dispatchState02World03Area12114_801F34E0.c",
+    "src/bof3/world03/dispatchState03World03Area12114_801F36A4.c",
+    "src/bof3/world03/dispatchStateByte1Table6894World03Area12114_801F45E0.c",
+    "src/bof3/world03/dispatchStateByte1Table68a4World03Area12114_801F5918.c",
     "src/bof3/support/area121_14_psyq.c",
 ]
 psyq_source = "src/bof3/support/area121_14_psyq.c"

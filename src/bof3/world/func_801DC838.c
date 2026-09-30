@@ -5,7 +5,7 @@
  * @behavior Appends the dim tile, then dispatches the scratch work-record mode.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801DC838(void)
 {

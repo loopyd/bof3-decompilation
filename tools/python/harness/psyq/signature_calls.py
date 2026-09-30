@@ -133,7 +133,7 @@ def write_calls(root: Path) -> dict[str, Any]:
 def promotion_proposal(root: Path) -> dict[str, Any]:
     """Extract exact, reviewable external function-map candidates.
 
-    This is intentionally an evidence export only. ``bin/symbols import-psyq``
+    This is intentionally an evidence export only. ``bin/harness source symbols import-psyq``
     remains the sole map mutation path and still requires explicit selectors
     plus ``--write``.
     """

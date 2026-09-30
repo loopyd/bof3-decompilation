@@ -49,6 +49,10 @@ def load(path: Path):
     return json.loads(path.read_bytes(), object_pairs_hook=unique_object)
 
 
+_READ_INPUT_CACHE: dict[tuple, tuple[dict, bytes]] = {}
+_READ_INPUT_CACHE_LIMIT = 8192
+
+
 def read_input(path: Path) -> tuple[dict | None, bytes | None]:
     """Bind input state to the exact bytes read between stable metadata samples."""
     check_deadline()
@@ -73,16 +77,29 @@ def read_input(path: Path) -> tuple[dict | None, bytes | None]:
     mode = before.st_mode
     if not stat.S_ISREG(mode):
         raise ValueError(f"not a regular input: {path}")
+    # The key binds identity, mode and mutation metadata, so a changed file is
+    # always re-read; repeated stable reads of the same input reuse the hash.
+    cache_key = (str(path), _capture_metadata(before))
+    cached = _READ_INPUT_CACHE.get(cache_key)
+    if cached is not None:
+        return cached
     content = path.read_bytes()
     check_deadline()
     after = path.stat(follow_symlinks=False)
     # Reading may update atime; identity and mutation metadata must stay stable.
     if _capture_metadata(before) != _capture_metadata(after):
         raise ValueError(f"moving input: {path}")
-    return {
-        "sha256": hashlib.sha256(content).hexdigest(),
-        "mode": stat.S_IMODE(mode),
-    }, content
+    result = (
+        {
+            "sha256": hashlib.sha256(content).hexdigest(),
+            "mode": stat.S_IMODE(mode),
+        },
+        content,
+    )
+    if len(_READ_INPUT_CACHE) >= _READ_INPUT_CACHE_LIMIT:
+        _READ_INPUT_CACHE.clear()
+    _READ_INPUT_CACHE[cache_key] = result
+    return result
 
 
 class InputBatch:

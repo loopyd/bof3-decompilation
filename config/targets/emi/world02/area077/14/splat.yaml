@@ -78,8 +78,10 @@ segments:
     - asm
     - func_801F3D24
   - - 4612
-    - asm
-    - func_801F3E04
+    - c
+    - dispatchStateByte1Table6268World02Area07714_801F3E04
+    - '@source: src/bof3/world02/dispatchStateByte1Table6268World02Area07714_801F3E04.c'
+    - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044 and calls the handler at the record byte +0x01 index of the local handler table based at 0x801F6268.'
   - - 4680
     - asm
     - func_801F3E48
@@ -87,8 +89,10 @@ segments:
     - asm
     - func_801F3F08
   - - 5172
-    - asm
-    - func_801F4034
+    - c
+    - dispatchStateByte1Table6270World02Area07714_801F4034
+    - '@source: src/bof3/world02/dispatchStateByte1Table6270World02Area07714_801F4034.c'
+    - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044 and calls the handler at the record byte +0x01 index of the local handler table based at 0x801F6270.'
   - - 5240
     - asm
     - func_801F4078
@@ -120,8 +124,10 @@ segments:
     - asm
     - func_801F4B80
   - - 8412
-    - asm
-    - func_801F4CDC
+    - c
+    - dispatchStateByte2Table6284World02Area07714_801F4CDC
+    - '@source: src/bof3/world02/dispatchStateByte2Table6284World02Area07714_801F4CDC.c'
+    - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the work record byte at +0x02 as an index and calls the handler pointer at that index of the local handler table based at 0x801F6284.'
   - - 8480
     - asm
     - func_801F4D20
@@ -141,11 +147,15 @@ segments:
     - asm
     - func_801F529C
   - - 9976
-    - asm
-    - func_801F52F8
+    - c
+    - dispatchStateByte2Table62a8World02Area07714_801F52F8
+    - '@source: src/bof3/world02/dispatchStateByte2Table62a8World02Area07714_801F52F8.c'
+    - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the work record byte at +0x02 as an index and calls the handler pointer at that index of the local handler table based at 0x801F62A8.'
   - - 10044
-    - asm
-    - func_801F533C
+    - c
+    - setWorkHalfword320AndIncrementWorkByte2World02Area07714_801F533C
+    - '@source: src/bof3/world02/setWorkHalfword320AndIncrementWorkByte2World02Area07714_801F533C.c'
+    - '@behavior: loads the scratch work-record cursor from the scratchpad pointer cell 0x1F800044, writes the halfword 0x320 to the record +0x3E field, increments the record +0x02 step byte, then runs the local panel update at 0x801F54B8.'
   - - 10100
     - asm
     - func_801F5374
@@ -180,20 +190,22 @@ segments:
     - asm
     - func_801F5880
   - - 11676
-    - asm
-    - func_801F599C
+    - c
+    - initArea07714State
+    - '@source: src/bof3/world02/initArea07714State.c'
+    - '@behavior: runs the shared front-end startup helper at 0x8015C088 and then writes 0x2C, 0 and 7 to the three consecutive shared mode bytes at 0x801448EB, 0x801448EC and 0x801448ED.'
   - - 11740
-    - asm
-    - func_801F59DC
+    - c
+    - publishModeStatusWorld02Area07714_801F59DC
   - - 11784
     - asm
     - func_801F5A08
   - - 11864
-    - asm
-    - func_801F5A58
+    - c
+    - setStateQueueCue202World02Area07714_801F5A58
   - - 11908
-    - asm
-    - func_801F5A84
+    - c
+    - clearStateQueueCue202World02Area07714_801F5A84
   - - 11948
     - asm
     - func_801F5AAC
@@ -201,11 +213,13 @@ segments:
     - asm
     - func_801F5B2C
   - - 12204
-    - asm
-    - func_801F5BAC
+    - c
+    - decrementCountdownId71InSlot1World02Area07714_801F5BAC
+    - '@source: src/bof3/world02/decrementCountdownId71InSlot1World02Area07714_801F5BAC.c'
+    - '@behavior: asks the same-binary helper at 0x801665A0 for one unit of the shared countdown entry with identifier 71 (0x47) in slot 1, passing (1, 71, 1, 0) and discarding its status byte.'
   - - 12248
-    - asm
-    - func_801F5BD8
+    - c
+    - setSharedFlagBit4World02Area07714_801F5BD8
   - - 12288
     - asm
     - func_801F5C00
@@ -216,11 +230,13 @@ segments:
     - asm
     - func_801F5D00
   - - 12672
-    - asm
-    - func_801F5D80
+    - c
+    - retreatCounterAndQueueCue200World02Area07714_801F5D80
+    - '@source: src/bof3/world02/retreatCounterAndQueueCue200World02Area07714_801F5D80.c'
+    - '@behavior: reads the shared halfword counter at 0x8014932A, sets the shared area status byte at 0x80149333 to 2, retreats that counter by 0x14 and then queues the fixed cue 0x200 through the main-exe cue dispatcher at 0x8015DF18.'
   - - 12736
-    - asm
-    - func_801F5DC0
+    - c
+    - advanceCounterWorld02Area07714_801F5DC0
   - - 12776
     - c
     - setTwoWorld02Area07714_801F5DE8
@@ -256,8 +272,8 @@ segments:
     - func_801F61F0
   - - 13904
     - asm
-    - func_801F6250
+    - D_801F6250
   - - 14280
     - asm
-    - func_801F63C8
+    - D_801F63C8
 - - 16248

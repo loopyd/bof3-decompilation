@@ -10,7 +10,7 @@ extern s8           D_80146489;
  * @source 0x80162C14
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void copyEmiTransferChunk(void) {
   u32  transfer_words;

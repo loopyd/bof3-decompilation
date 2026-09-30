@@ -4,7 +4,7 @@
  * @behavior sets two bytes in the current scratchpad work record to 2 and 0.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void setWorkBytes20(void) {
   D_1F800044->unk_01 = 2;

@@ -5,7 +5,7 @@
  * @behavior Resets a state value and conditionally enables a pair of flags.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801F35E0(void) {
   WORLD00_AREA027_STATE_90A8 = 0xFFFF;

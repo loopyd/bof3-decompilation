@@ -7,8 +7,8 @@ scoped effort. The directory is intentionally empty when no such plan exists.
 
 1. Read this file, [`AGENTS.md`](../../AGENTS.md), and the relevant plan under
    `docs/plans/` when one exists.
-2. Establish current evidence with the owning commands (`bin/decomp-status`,
-   `bin/symbols check`, `just doctor`, focused tests).
+2. Establish current evidence with the owning commands (`bin/harness lift status`,
+   `bin/harness source symbols check`, `just doctor`, focused tests).
 3. Keep durable runtime or file-format findings in `../specs/`, not plans.
 
 ## Plan format
@@ -44,8 +44,8 @@ of commits.
 
 ## Persistent plans management
 
-`$plans` owns semantic reconciliation. `bin/plans list` and
-`bin/plans status [plan]` parse canonical Markdown on each invocation; no session
+`$plans` owns semantic reconciliation. `bin/harness plans list` and
+`bin/harness plans status [plan]` parse canonical Markdown on each invocation; no session
 or review JSON is needed afterward. The optional selector is an exact direct-child
 kebab-case `.md` filename. Empty inventory is not completion; omitted status
 selection requires exactly one plan. Malformed plans fail, never disappear.
@@ -92,7 +92,7 @@ item IDs. State edits require reviewed evidence, not a state-setter command.
 
 ### Reviewed consolidation
 
-`bin/plans consolidate REVIEW.json` is read-only preview. Apply requires
+`bin/harness plans consolidate REVIEW.json` is read-only preview. Apply requires
 `--apply --backup-dir ABSOLUTE_DIRECTORY`, a fresh external directory whose parent
 exists. Single options cannot repeat. Review/candidate/source/backup ancestors
 must not be symlinks; source files must be regular, single-link direct children.

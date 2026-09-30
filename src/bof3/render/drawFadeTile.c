@@ -9,7 +9,7 @@ extern TILE* g_PrimCursor;
  * @source 0x8014F704
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 drawFadeTile(s16* value, s32 arg, u8 arg2, u8 arg3, u8 arg4) {
   TILE* tile;

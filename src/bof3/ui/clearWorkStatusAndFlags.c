@@ -4,7 +4,7 @@
 /* @source 0x8019A7D4
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void clearWorkStatusAndFlags(void) {
   struct GameWorkArea* work = g_game_work;

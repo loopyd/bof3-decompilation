@@ -209,7 +209,9 @@ def run_evidence(
     )
     index = index_path(root)
     if not index.is_file():
-        raise ValueError("reverse index is missing; run bin/index --recover")
+        raise ValueError(
+            "reverse index is missing; run bin/harness analysis index --recover"
+        )
     inputs = JournalInputs(
         target,
         _report_digest(report),
@@ -273,8 +275,15 @@ def run_evidence(
                 for op in semantic_operation_plan(row, target):
                     result = None
                     check_deadline()
-                    if op["target"] != target and not op["target"].startswith(
-                        f"{target}@"
+                    from harness.naming.plan import owner_instruction_selectors
+
+                    planned_owner = op["kind"] == "instructions-v1" and op[
+                        "target"
+                    ] in owner_instruction_selectors(row)
+                    if (
+                        not planned_owner
+                        and op["target"] != target
+                        and not op["target"].startswith(f"{target}@")
                     ):
                         raise ValueError(
                             f"semantic target does not match run target: {op['target']}"
@@ -290,8 +299,27 @@ def run_evidence(
                         )
 
                         binding, original = resolve_instructions(root, op["target"])
-                        rizin.queue(binding["rizin"], op["target"])
-                        result = rizin.run_queued(min(deadline, remaining))[-1]
+                        owner_target = op["target"].split("@", 1)[0]
+                        if owner_target == target:
+                            rizin.queue(binding["rizin"], op["target"])
+                            result = rizin.run_queued(min(deadline, remaining))[-1]
+                        else:
+                            from harness.naming.semantics import RizinSession
+
+                            owner_session = RizinSession(
+                                root,
+                                owner_target,
+                                command_timeout=deadline,
+                                executable=rizin_executable,
+                                work_deadline=rizin.work_deadline,
+                            )
+                            try:
+                                owner_session.queue(binding["rizin"], op["target"])
+                                result = owner_session.run_queued(
+                                    min(deadline, remaining)
+                                )[-1]
+                            finally:
+                                owner_session.close()
                         if result.killed or result.exit != 0:
                             raise ValueError(
                                 f"instruction operation failed: {result.command} "
@@ -375,6 +403,9 @@ def run_evidence(
                     }
                     for operation in operations
                 )
+                from harness.naming.instructions import analyzer_instructions
+
+                captures = analyzer_instructions(root, semantic)
                 derived = _analyze_validated_records(
                     _RUNNER_TOKEN,
                     target=target,
@@ -382,9 +413,12 @@ def run_evidence(
                     row=row,
                     operations=operation_records,
                     registry=registry,
+                    instructions=captures,
                 )
                 check_deadline()
-                receipts = _receipts_for(namespace, target, row, operations, semantic)
+                receipts = _receipts_for(
+                    namespace, target, row, operations, semantic, captures
+                )
                 checkpoint[key] = _commit_row(
                     namespace,
                     report,

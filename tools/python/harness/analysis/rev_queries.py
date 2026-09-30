@@ -348,4 +348,17 @@ def analyzer_candidates_payload(
     )
 
 
-__all__ = ['analyzer_candidates_payload', 'calls_payload', 'describe_payload', 'duplicates_payload', 'known_target', 'owner_payload', 'owners_payload', 'status_payload', 'symbol_at', 'symbols_payload', 'variables_payload', 'xrefs_payload']
+__all__ = [
+    "analyzer_candidates_payload",
+    "calls_payload",
+    "describe_payload",
+    "duplicates_payload",
+    "known_target",
+    "owner_payload",
+    "owners_payload",
+    "status_payload",
+    "symbol_at",
+    "symbols_payload",
+    "variables_payload",
+    "xrefs_payload",
+]

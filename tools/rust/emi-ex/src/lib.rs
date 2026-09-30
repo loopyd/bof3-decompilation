@@ -1,3 +1,7 @@
+//! EMI archive parsing, extraction, construction, and byte-preserving images.
+
+pub mod image;
+
 use std::fmt;
 use std::fs::{self, File};
 use std::io::{Read, Seek, SeekFrom, Write};
@@ -16,6 +20,8 @@ pub struct Entry {
     pub ram_ptr: u32,
     pub first4: u32,
     pub file_type: u16,
+    /// Opaque final word of the on-disc table entry.
+    pub table_padding: u16,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -91,49 +97,7 @@ impl Archive {
         let source = path.as_ref().to_path_buf();
         let mut file = File::open(&source)?;
         let file_len = file.metadata()?.len();
-        let count = read_u32(&mut file)? as usize;
-        let version = read_u32(&mut file)?;
-        let mut magic = [0; 8];
-        file.read_exact(&mut magic)?;
-        if &magic != MAGIC {
-            return Err(Error::InvalidArchive("bad magic"));
-        }
-
-        let toc_size = (count as u64)
-            .checked_mul(TOC_ENTRY_SIZE)
-            .ok_or(Error::InvalidArchive("entry table overflows"))?;
-        let toc_end = 0x10_u64
-            .checked_add(toc_size)
-            .ok_or(Error::InvalidArchive("entry table overflows"))?;
-        if toc_end > SECTOR_SIZE || toc_end > file_len {
-            return Err(Error::InvalidArchive(
-                "entry table does not fit before data",
-            ));
-        }
-
-        let mut offset = SECTOR_SIZE;
-        let mut entries = Vec::with_capacity(count);
-        for _ in 0..count {
-            let size = read_u32(&mut file)?;
-            let ram_ptr = read_u32(&mut file)?;
-            let first4 = read_u32(&mut file)?;
-            let file_type = read_u16(&mut file)?;
-            let _padding = read_u16(&mut file)?;
-            let end = offset
-                .checked_add(size as u64)
-                .ok_or(Error::InvalidArchive("entry range overflows"))?;
-            if end > file_len {
-                return Err(Error::InvalidArchive("entry extends beyond end of file"));
-            }
-            entries.push(Entry {
-                size,
-                offset,
-                ram_ptr,
-                first4,
-                file_type,
-            });
-            offset = align_sector(end)?;
-        }
+        let (version, entries) = parse_layout(&mut file, file_len)?;
 
         Ok(Self {
             source,
@@ -450,4 +414,52 @@ fn pad_to_sector(file: &mut File) -> Result<(), Error> {
         file.write_all(&vec![0; padding])?;
     }
     Ok(())
+}
+
+fn parse_layout(reader: &mut impl Read, file_len: u64) -> Result<(u32, Vec<Entry>), Error> {
+    let count = read_u32(reader)? as usize;
+    let version = read_u32(reader)?;
+    let mut magic = [0; 8];
+    reader.read_exact(&mut magic)?;
+    if &magic != MAGIC {
+        return Err(Error::InvalidArchive("bad magic"));
+    }
+
+    let toc_size = (count as u64)
+        .checked_mul(TOC_ENTRY_SIZE)
+        .ok_or(Error::InvalidArchive("entry table overflows"))?;
+    let toc_end = 0x10_u64
+        .checked_add(toc_size)
+        .ok_or(Error::InvalidArchive("entry table overflows"))?;
+    if toc_end > SECTOR_SIZE || toc_end > file_len {
+        return Err(Error::InvalidArchive(
+            "entry table does not fit before data",
+        ));
+    }
+
+    let mut offset = SECTOR_SIZE;
+    let mut entries = Vec::with_capacity(count);
+    for _ in 0..count {
+        let size = read_u32(reader)?;
+        let ram_ptr = read_u32(reader)?;
+        let first4 = read_u32(reader)?;
+        let file_type = read_u16(reader)?;
+        let table_padding = read_u16(reader)?;
+        let end = offset
+            .checked_add(size as u64)
+            .ok_or(Error::InvalidArchive("entry range overflows"))?;
+        if end > file_len {
+            return Err(Error::InvalidArchive("entry extends beyond end of file"));
+        }
+        entries.push(Entry {
+            size,
+            offset,
+            ram_ptr,
+            first4,
+            file_type,
+            table_padding,
+        });
+        offset = align_sector(end)?;
+    }
+    Ok((version, entries))
 }

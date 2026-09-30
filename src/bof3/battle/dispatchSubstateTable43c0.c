@@ -5,7 +5,7 @@
  * @source 0x80096AE8
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchSubstateTable43c0(void) {
   D_800B43C0[D_801462E4]();

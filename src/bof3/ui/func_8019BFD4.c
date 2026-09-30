@@ -6,7 +6,7 @@
  * fields, and negates the signed value at D_80149330.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_8019BFD4(void) {
   u32 value_0;

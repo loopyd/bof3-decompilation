@@ -7,10 +7,9 @@
  * current scratchpad screen position from adjacent angular samples, reusing
  * each iteration's second sample as the next iteration's first sample.
  * @source 0x801D240C
- * @status partial
- * @match 99.32
- * @residual the SetDrawMode zero argument is materialized after, rather than
- * before, the loop counter and scratchpad-radius initialization
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void emitRadialTranslucentQuads(void) {
   u8* primitive;
@@ -32,10 +31,10 @@ void emitRadialTranslucentQuads(void) {
   }
 
   zero = 0;
-  i = 0;
-  radius = &D_1F800000;
   SetDrawMode((DR_MODE*)g_PrimCursor, zero, 1, graph_value, 0);
   func_8014E5A0(2, 12);
+  i = 0;
+  radius = &D_1F800000;
 
   do {
     primitive = g_PrimCursor;

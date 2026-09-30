@@ -28,7 +28,7 @@ segments:
   subsegments:
   - - 4
     - asm
-    - func_800C1804
+    - D_800C1804
   - - 2124
     - asm
     - func_800C204C
@@ -42,20 +42,22 @@ segments:
     - asm
     - func_800C2158
   - - 2532
-    - asm
-    - func_800C21E4
+    - c
+    - callEnemyReadyUnlessKindFlagBossBoss05516_800C21E4
+    - '@source: src/bof3/boss/callEnemyReadyUnlessKindFlagBossBoss05516_800C21E4.c'
+    - '@behavior: Overlay entry that tests bit 0x800 of the 0x14-byte kind record selected by the current battle id in the 0x801CA71C table and calls the EXE-side enemy-readiness helper 0x801E3160 only when that bit is clear.'
   - - 2612
     - c
     - getAndClearBossBoss05516_800C2234
   - - 2628
-    - asm
-    - func_800C2244
+    - c
+    - resetScratchStateBossBoss05516_800C2244
   - - 2684
     - asm
     - func_800C227C
   - - 2800
-    - asm
-    - func_800C22F0
+    - c
+    - dispatchIndexedHandlerBossBoss05516_800C22F0
   - - 2856
     - c
     - noopHandlerBossBoss05516_800C2328
@@ -66,14 +68,16 @@ segments:
     - c
     - noopHandlerBossBoss05516_800C2338
   - - 2880
-    - asm
-    - func_800C2340
+    - c
+    - queueSlotThenRaisePendingFlagBossBoss05516_800C2340
+    - '@source: src/bof3/boss/queueSlotThenRaisePendingFlagBossBoss05516_800C2340.c'
+    - '@behavior: Queues one D_801EC330 slot-store record through func_800C238C with its first two arguments masked to bytes, then raises byte +0xB of the scratchpad work object at 0x1F800044 and stores the third masked byte into the battle halfword 0x801463BE.'
   - - 2956
     - asm
     - func_800C238C
   - - 3232
-    - asm
-    - func_800C24A0
+    - c
+    - publishBattleHooksBossBoss05516_800C24A0
   - - 3288
     - c
     - zeroResultBossBoss05516_800C24D8
@@ -153,8 +157,12 @@ segments:
     - asm
     - func_800C31F0
   - - 6740
-    - asm
-    - func_800C3254
+    - c
+    - fixedPointToUnitsBossBoss05516_800C3254
+    - '@source: src/bof3/boss/fixedPointToUnitsBossBoss05516_800C3254.c'
+    - '@status: partial'
+    - '@match: 58.33'
+    - '@residual: original is 48 bytes (12 instructions) and the best candidate is 44 (11). The (u16) test produces the original second andi, but this shape leaves the low-half andi in a scratch register, so the reorg pass fills the bltz delay slot where the original keeps nop, and the body operand order differs. Allocation/scheduling class; no clean-C lever left inside the one-sweep probe ceiling.'
   - - 6788
     - asm
     - func_800C3284

@@ -52,11 +52,11 @@ def run(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="bin/build",
+        prog="bin/harness build",
         description="build all lifts, one TARGET, or one TARGET@0xADDRESS",
     )
     parser.add_argument("selector", nargs="?", default="all")
-    add_example_argument(parser, "bin/build exe/logo@0x801CE758")
+    add_example_argument(parser, "bin/harness build exe/logo@0x801CE758")
     parser.set_defaults(handler=run)
     return parser
 

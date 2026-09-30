@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from harness.common.commands import command_at
 from harness.common.process import owned_popen
 from harness.common.deadlines import resolve_deadline
 
@@ -50,7 +51,7 @@ class NativeByteOps:
         self, operation: dict[str, Any], timeout: float | None = None
     ) -> SemanticResult:
         kind = operation["kind"]
-        argv = [str(self.root / "bin" / kind), operation["target"], *operation["args"]]
+        argv = command_at(self.root, kind, operation["target"], *operation["args"])
         limit = min(self.deadline, timeout) if timeout is not None else self.deadline
         cutoff = (
             min(time.monotonic() + limit, self.work_deadline)

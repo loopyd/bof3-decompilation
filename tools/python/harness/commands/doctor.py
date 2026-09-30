@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import subprocess
+import tempfile
 import tomllib
 from pathlib import Path
 
@@ -19,8 +20,11 @@ from ..build.compiler import load_object_compilers
 from ..domain.manifests import load_target_manifests
 from ..io import repo_layout
 from ..toolchain import managed_lifecycle
+from ..toolchain.bios import BiosToolchain
 from ..toolchain.disc import DiscToolchain
 from ..toolchain.psyq import PsyqToolchain
+from ..toolchain.pcsx import PcsxReduxToolchain
+from ..toolchain.sdl import SdlToolchain
 from .setup import REQUIRED_TOOLS, _psyq_47_members
 
 TASKS: list[Check[Path]] = []
@@ -69,6 +73,32 @@ def _disc(root: Path) -> str:
     return DiscToolchain(repo_layout(root)).verify()
 
 
+@register_check("US BIOS", TASKS)
+def _bios(root: Path) -> str:
+    return BiosToolchain(repo_layout(root)).verify()
+
+
+@register_check("Redux prerequisites", TASKS)
+def _redux_prerequisites(root: Path) -> str:
+    tool = PcsxReduxToolchain(repo_layout(root))
+    tool.prerequisites()
+    identity = tool.source_identity()
+    return (
+        f"approved dependencies; {len(identity['recursive_revisions'])} pinned source repositories; "
+        "approved customization and source integrity verified"
+    )
+
+
+@register_check("SDL3 build", TASKS)
+def _sdl(root: Path) -> str:
+    return SdlToolchain(repo_layout(root)).verify()
+
+
+@register_check("PCSX-Redux build", TASKS)
+def _redux(root: Path) -> str:
+    return PcsxReduxToolchain(repo_layout(root)).verify()
+
+
 @register_check("target images", TASKS)
 def _target_images(root: Path) -> str:
     manifests = load_target_manifests(root)
@@ -84,29 +114,40 @@ def _target_images(root: Path) -> str:
 
 @register_check("tool wrappers", TASKS)
 def _tools(root: Path) -> str:
+    with tempfile.TemporaryDirectory(prefix="bof3-doctor-") as directory:
+        source = Path(directory) / "probe.c"
+        source.write_text("int bof3_doctor_probe;\n", encoding="ascii")
+        return _verify_wrappers(root, source)
+
+
+def _verify_wrappers(root: Path, source: Path) -> str:
     layout = repo_layout(root)
     commands = (
-        (root / "bin" / "cc", "-x", "c", "-E", "-"),
+        (root / "bin" / "cc", "-x", "c", "-E", source),
         *((root / tool, "--version") for tool in REQUIRED_TOOLS),
-        (root / "bin" / "rizin", "-V"),
+        (root / "bin" / "harness", "analysis", "rizin", "-V"),
         (root / "bin" / "maspsx", "--help"),
-        (root / "bin" / "spimdisasm", "--version"),
+        (root / "bin" / "harness", "analysis", "spimdisasm", "--version"),
         (layout.harness_disk_bin, "--help"),
         (layout.emi_ex_bin, "--help"),
+        (layout.bof3_text_bin, "--help"),
     )
+    failures: list[str] = []
     for command in commands:
         result = subprocess.run(
             [str(part) for part in command],
             cwd=root,
-            stdin=None if command[0] == root / "bin" / "cc" else subprocess.DEVNULL,
+            stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             check=False,
         )
         if result.returncode:
-            raise RuntimeError(
-                f"{' '.join(map(str, command))} exited {result.returncode}"
-            )
+            failures.append(f"{' '.join(map(str, command))} exited {result.returncode}")
+    if failures:
+        # Report every offender rather than only the first: one stale wrapper must not hide the
+        # state of the tools checked after it.
+        raise RuntimeError("; ".join(failures))
     return f"{len(commands)} commands"
 
 
@@ -117,7 +158,7 @@ def run(args: argparse.Namespace) -> int:
         try:
             render_task("PASS", task.label, task.run(root), TASKS)
         except (
-            FileNotFoundError,
+            OSError,
             RuntimeError,
             ValueError,
             tomllib.TOMLDecodeError,

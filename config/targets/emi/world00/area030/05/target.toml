@@ -10,6 +10,9 @@ load_address = 0x800F5000
 
 sources = [
     "src/bof3/world/dispatchArea030CompanionHandler.c",
+    "src/bof3/world/func_800F5048.c",
+    "src/bof3/world/func_800F50B4.c",
+    "src/bof3/world/func_800F510C.c",
 ]
 support_sources = [
     "src/bof3/support/area03005_symbols.c",
@@ -19,3 +22,17 @@ psyq_source = "src/bof3/support/area03005_psyq.c"
 headers = [
     "include/bof3/world/area03005_internal.h",
 ]
+
+[[replicas]]
+disc_id = "BIN/WORLD02/AREA089.EMI#5"
+payload_sha256 = "9e8a6a98911ad64ea8c22d59ee39ae551f82da004d4e1b73fca8d1ab67ea9145"
+load_address = 0x800F5000
+size = 8784
+evidence = "byte-identical to BIN/WORLD00/AREA030.EMI#5: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/WORLD03/AREA129.EMI#5"
+payload_sha256 = "9e8a6a98911ad64ea8c22d59ee39ae551f82da004d4e1b73fca8d1ab67ea9145"
+load_address = 0x800F5000
+size = 8784
+evidence = "byte-identical to BIN/WORLD00/AREA030.EMI#5: same payload sha256 and load address"

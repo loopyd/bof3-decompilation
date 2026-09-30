@@ -1,0 +1,14 @@
+schema = "harness.target/v2"
+id = "emi/world00/area004/09"
+disc_id = "BIN/WORLD00/AREA004.EMI#9"
+kind = "emi"
+source_dir = "src/emi/world00/area004/09"
+binary = "out/binaries/emi/world00/area004/09.bin"
+splat = "config/targets/emi/world00/area004/09/splat.yaml"
+load_address = 0x801F2C00
+
+sources = []
+support_sources = [
+    "src/bof3/support/area004_09_psyq.c",
+]
+psyq_source = "src/bof3/support/area004_09_psyq.c"

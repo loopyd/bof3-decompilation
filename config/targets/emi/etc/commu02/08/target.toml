@@ -1,0 +1,21 @@
+schema = "harness.target/v2"
+id = "emi/etc/commu02/08"
+disc_id = "BIN/ETC/COMMU02.EMI#8"
+kind = "emi"
+source_dir = "src/emi/etc/commu02/08"
+binary = "out/binaries/emi/etc/commu02/08.bin"
+splat = "config/targets/emi/etc/commu02/08/splat.yaml"
+load_address = 0x801D0C00
+
+sources = []
+support_sources = [
+    "src/bof3/support/commu02_08_psyq.c",
+]
+psyq_source = "src/bof3/support/commu02_08_psyq.c"
+
+[[replicas]]
+disc_id = "BIN/ETC/COMMU02B.EMI#7"
+payload_sha256 = "c3b427f7db75b5cef294fd5f3e9adca9e1a6cb4657a440a4c6730c8be2a9070c"
+load_address = 0x801D0C00
+size = 42208
+evidence = "byte-identical to BIN/ETC/COMMU02.EMI#8: same payload sha256 and load address"

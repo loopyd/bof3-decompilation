@@ -40,13 +40,13 @@ levers: [matching playbook](matching-playbook.md); iteration:
 
 ### Diagnose toolchain failures before editing C
 
-- If `bin/asm-diff TARGET@0xADDRESS` cannot compile a new lift, diff a known
+- If `bin/harness lift asm-diff TARGET@0xADDRESS` cannot compile a new lift, diff a known
   function from the same target; failure on both means a workspace/toolchain
   problem, not wrong candidate C.
 - A compiler exit without diagnostics is not a comparison result; preserve the
   last verified diff and fix the compile path before tuning source shape.
   After creating a lift source, regenerate the compile database before
-  `bin/flag-search`; a failed compiler/permuter invocation is not ladder
+  `bin/harness lift flag-search`; a failed compiler/permuter invocation is not ladder
   exhaustion until it produces a real comparison result.
 - The historical compiler is a statically linked 32-bit i386 executable; under
   a managed sandbox it can exit `225`/`159` before processing arguments.
@@ -64,7 +64,7 @@ levers: [matching playbook](matching-playbook.md); iteration:
   `PanelTask*`); levers: [playbook §Volatility](matching-playbook.md#volatility).
 - Tail-dispatch prologue between index load and `sll`: the historical advice
   combined dropping `const`, a local copy and `barrier()` before trying pins.
-  The [current ban](../INDEX.md#source-and-duplicate-rules) supersedes its barrier
+  The [current ban](matching.md#source-and-duplicate-rules) supersedes its barrier
   and pin permissions. Investigate evidenced table qualifiers and local lifetime
   in clean C; do not reproduce the empty-asm constraint.
 - Recover stable field offsets into a target-local struct before permuting.
@@ -124,7 +124,7 @@ is data everywhere — else bogus contains-data functions appear.
 the target's `reviewed.rz`; `af-` does not survive the replay (`aa`
 re-creates it).
 - Check the shared SDK maps (`config/sdk/psyq-*.txt`) before adding to a
-target-local map: Splat composes both and a duplicate name aborts `bin/splat`;
+target-local map: Splat composes both and a duplicate name aborts `bin/harness source splat`;
 keep each symbol in exactly one map.
 - PsyQ/BIOS runtime SDK spaces, maps, and binding addresses: AGENTS.md
   §Source and symbols (always loaded above); keep verified names/addresses in
@@ -146,7 +146,7 @@ keep each symbol in exactly one map.
   breaks gcc-2.6.3. Every
   non-address-named map symbol (SDK exempt) needs one @source-tagged
   definition: lift file, header/source declaration, or `WEAK_SYMBOL_AT`
-  binding. `bin/symbols check` enforces raw-prefix spelling and origin tracking,
+  binding. `bin/harness source symbols check` enforces raw-prefix spelling and origin tracking,
   not `@kind` evidence or semantic acceptance; those remain audit obligations.
 - Preserve pre-promotion evidence with an `INFERRED:` comment beside the owning metadata-tagged declaration (what was observed, what would verify promotion); never create a semantic alias from a hint alone.
 - Equal addresses across targets are insufficient — overlays and PsyQ copies
@@ -154,7 +154,7 @@ keep each symbol in exactly one map.
 - Every `WEAK_SYMBOL_AT` in a hand-maintained, explicitly claimed
   `src/bof3/support/*_symbols.c` needs a target-map entry; a different name at a
   mapped address is a deliberate typed alias (e.g. u8 view of a u16 global).
-  `bin/symbols check` flags bindings whose address no map owns.
+  `bin/harness source symbols check` flags bindings whose address no map owns.
 - Splat regenerates root stubs keyed by the Splat **boundary name**, never by
   the authored `@source` basename. After a collision-renamed relocation
   (`advancePanelXTo320_game00_801996FC.c` under boundary

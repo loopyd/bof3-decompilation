@@ -4,7 +4,7 @@
  * @behavior clears the three frontend UI selection-state bytes.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void clearUiSelectionState(void)
 {

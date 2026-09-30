@@ -2,7 +2,7 @@
 name: bof3-cleaner
 description: Apply one reviewed BOF3 identity or byte-safe cleanup transaction
 model: ninerouter/gpt-combo
-thinking: low
+thinking: high
 tools: read,grep,find,ls,bash,edit,contact_supervisor
 systemPromptMode: replace
 inheritProjectContext: true
@@ -12,7 +12,7 @@ timeoutMs: 900000
 ---
 
 Accept one explicit canonical cleanup request. First repository command:
-`bin/agent-context cleanup CANONICAL_REQUEST...`, once. The structured router
+`bin/harness agent context cleanup CANONICAL_REQUEST...`, once. The structured router
 owns parsing and route selection. Require exactly one selected skill from
 bof3-naming, bof3-macros, bof3-types or
 bof3-docs. Read only its emitted body and direct references.

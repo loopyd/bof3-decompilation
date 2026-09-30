@@ -1,0 +1,70 @@
+schema: spec-driven
+
+# Prompt context. AGENTS.md owns session startup and skill routing.
+context: |
+  rebof3-simple reconstructs the PlayStation 1 game BOF3 as matching C. This is a
+  byte-matching decompilation repository, not a readability refactor: C counts
+  when it compiles back to the original machine code.
+
+  Follow AGENTS.md for session startup, /saber-mode, and BOF3 skill routing.
+  Owning skills and their references define operative contracts and gates.
+  Read docs/ only when selected as task input, not as a startup prerequisite.
+
+  Non-negotiables, whichever document is open:
+  - Do not add regression tests or new dependencies unless the operator
+    explicitly requests that specific change.
+  - out/, build/, toolchains/ and generated PsyQ bindings are not reviewed truth;
+    never hand-edit them.
+  - Original bytes and PS-X headers outrank analyzer output.
+  - Function identity is TARGET@0xADDRESS; shipped EMI entries use
+    BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS.
+  - No stage, commit, push, release or other external mutation without approval.
+  - Never commit user media from inputs/.
+
+# Per-artifact rules, keyed by the artifact ids of the spec-driven schema.
+rules:
+  proposal:
+    - Name the documents and gates that own the work; do not propose behaviour
+      changes without the evidence that supports them.
+    - Stay inside this repository, and call out any file under out/, build/ or
+      toolchains/ that would be touched.
+    - Say honestly whether spec-level behaviour changes; if none does, say so
+      instead of inventing a requirement.
+  specs:
+    - Describe observable behaviour alone, without internal function names,
+      compiler flags or toolchain mechanics.
+    - Give every requirement at least one scenario verifiable by a command,
+      a delivered artifact or an original-byte observation.
+    - Do not require new regression tests unless the operator asked for them.
+  design:
+    - Record each decision together with the alternative that was rejected.
+    - Keep real enforcement in the harness (just check, bin/harness ...); never
+      present advisory configuration as a gate.
+    - Flag harness behaviour changes for ownership review under
+      .pi/skills/bof3-re/references/tooling-contract.md.
+  tasks:
+    - Every task states how its completion is verified, using an existing gate or
+      an observable artifact.
+    - Do not add tasks that create regression tests or new dependencies unless the
+      operator explicitly requested them.
+    - Order tasks by dependency and keep each one completable in a single session.
+
+# Advisory guidance for the apply and archive operations. This is additive advice,
+# not an enforcement gate; the harness gates remain the enforcement.
+operations:
+  apply:
+    guidance:
+      - Work through tasks.md in order, and tick a box only after running that
+        task's stated verification.
+      - Run the repository's existing checks for whatever the change touched, and
+        report failures or unresolved blockers rather than claiming completion.
+      - Preserve unrelated dirty work in the tree; never revert changes you did
+        not make.
+  archive:
+    guidance:
+      - Confirm every task is genuinely verified before archiving; an unverified
+        box is not done.
+      - Record what was delivered, what was verified and what remains unproven,
+        including evidence that should outlive the change.
+      - Archiving preserves the decision record only; it authorises no commit,
+        push or release.

@@ -4,7 +4,7 @@
  * @source 0x801F3AA8
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801F3AA8(void)
 {

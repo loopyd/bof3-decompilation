@@ -5,7 +5,7 @@
  * @behavior Increments scratch-record byte 3 while state byte 0x80144281 is 3.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801DC904(void)
 {

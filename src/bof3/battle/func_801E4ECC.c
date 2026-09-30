@@ -5,7 +5,7 @@
  * then advances scratchpad work byte +0x09.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801E4ECC(void) {
   u16 index;

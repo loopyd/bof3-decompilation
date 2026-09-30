@@ -78,8 +78,8 @@ segments:
     - asm
     - func_801F7A84
   - - 3784
-    - asm
-    - func_801F7AC8
+    - c
+    - clearWorkTableByte25AndAdvanceWorkByte1ScenarioScena0400_801F7AC8
   - - 3840
     - asm
     - func_801F7B00
@@ -96,26 +96,30 @@ segments:
     - asm
     - func_801F7EC0
   - - 5068
-    - asm
-    - func_801F7FCC
+    - c
+    - clearWorkTableByte25At800E4800ScenarioScena0400_801F7FCC
   - - 5112
-    - asm
-    - func_801F7FF8
+    - c
+    - findFreeWorkRecordByte25ScenarioScena0400_801F7FF8
+    - '@source: src/bof3/scenario/findFreeWorkRecordByte25ScenarioScena0400_801F7FF8.c'
+    - '@behavior: Free-record claim scan of the 0x80-entry, 0x28-byte-stride work table at 0x800E4800: returns the first entry whose byte at offset 0x25 reads zero, or zero when none is free; it reads only that byte, makes no call and carries no frame.'
   - - 5172
     - asm
     - func_801F8034
   - - 5412
-    - asm
-    - func_801F8124
+    - c
+    - dispatchProgressHandlerScenarioScena0400_801F8124
   - - 5472
-    - asm
-    - func_801F8160
+    - c
+    - advanceStateAndClearSharedByteScenarioScena0400_801F8160
   - - 5500
     - asm
     - func_801F817C
   - - 6716
-    - asm
-    - func_801F863C
+    - c
+    - dispatchPrimaryStateHandlerScenarioScena0400_801F863C
+    - '@source: src/bof3/scenario/dispatchPrimaryStateHandlerScenarioScena0400_801F863C.c'
+    - '@behavior: Per-frame primary state dispatcher: reads the signed shared main-RAM primary state byte D_80146874, scales it by four and calls the overlay-local handler table word at 0x801FA210 for that index, so the byte selects which primary state runs this frame; nothing is written and the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 6776
     - c
     - noopHandlerScenarioScena0400_801F8678
@@ -132,8 +136,8 @@ segments:
     - asm
     - func_801F9D48
   - - 12680
-    - asm
-    - func_801F9D88
+    - c
+    - setFlagBit0RecordCallbackScenarioScena0400_801F9D88
   - - 12716
     - c
     - zeroResultScenarioScena0400_801F9DAC

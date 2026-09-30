@@ -16,6 +16,7 @@ ResetGraph = 0x801D3D50;
 SetDispMask = 0x801D4174;
 DrawSync = 0x801D4210;
 ClearImage = 0x801D43A4;
+LoadImage = 0x801D44D4;
 PutDispEnv = 0x801D4ADC;
 DecDCTReset = 0x801D6DE4;
 DecDCTin = 0x801D6F50;

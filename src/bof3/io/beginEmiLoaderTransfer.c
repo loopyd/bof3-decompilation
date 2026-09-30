@@ -14,7 +14,7 @@ extern volatile u32 D_80146808;
  * @source 0x80162178
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void beginEmiLoaderTransfer(void) {
   volatile u8* read_progress;

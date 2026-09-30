@@ -25,32 +25,53 @@ segments:
   vram: 2149526528
   subsegments:
   - - 0
-    - asm
+    - rodata
     - T_801F2C00
+  - - 4
+    - c
+    - func_801F2C04
+    - '@source: src/bof3/world/func_801F2C04_area01613.c'
+    - '@behavior: writes 2 to the shared mode byte at 0x801448EC when the shared gate byte at 0x801490C7 is zero, and stores -1 into the shared status halfword at 0x801490A8 on every path.'
   - - 56
-    - asm
+    - c
     - func_801F2C38
+    - '@source: src/bof3/world/func_801F2C38_area01613.c'
+    - '@behavior: while the shared mode byte at 0x801448EC is 0, calls the shared func_8015C088 helper and probes the shared scroll pair 0x80145EC6/0x80145ECA through func_80166CB0; a 0xA1 probe searches the local 0x801F4FC4 table (16 halfwords per entry) for the entry matching the shared 0x80143F10 word and chooses the halfword at its 0x80146870 column, otherwise the four-byte rows at 0x801F4DA0 are scanned for the row matching 0x80145EC6/0x80145ECA and that row''s byte 3 selects one of the three five-byte records at 0x801F50E4 whose four codes fill the 0x20-byte records at 0x801490D8 with twelve 0x5C bytes, with the 0x801F50F4 table, or with func_80165D48(0, code + 0x38) while clearing 0x801490E4 for each record, and starts action selection + 0x16 through func_80150224; every path then writes 2 to the shared phase byte 0x80143BB0 and increments the mode byte, while a mode byte of 1 with a phase byte other than 2 calls the shared func_8015C058 helper and clears 0x801448EB, the mode byte and 0x801448ED.'
   - - 748
-    - asm
+    - c
     - func_801F2EEC
+    - '@source: src/bof3/world/func_801F2EEC_area01613.c'
+    - '@behavior: projects the shared scroll offsets 0x80145E9C/0x80145EA0 scaled by the shared scale byte 0x80145E99 onto the scratch words at offsets 0x0C and 0x10, then selects the scratch byte at offset 0x0B from the probe helper''s code 0xA1, 0xA0, 0xAE, else 4 when shared flag word 0x8014625A has bit 0x1000 set, else 0, and finally dispatches the scratch mode byte at offset 1 through the local handler table at 0x801F5100.'
   - - 1120
-    - asm
+    - c
     - func_801F3060
+    - '@source: src/bof3/world/func_801F3060_area01613.c'
+    - '@behavior: writes 0x80 to scratch offset 0x24, calls func_8014DD3C with 0x0F, writes 5 to offset 0x29, clears offsets 0x2A and 0x5D..0x5F, and sets the mode byte at offset 0x01 to 1.'
   - - 1260
-    - asm
+    - c
     - func_801F30EC
+    - '@source: src/bof3/world/func_801F30EC_area01613.c'
+    - '@behavior: refreshes the scratch byte at offset 0x07 from offset 0x0B, then, when the scratch byte at 0x0B is 1, searches the local seed record table at 0x801F4D7C for the record whose mask matches the shared seed word at 0x80143F10 and seeds offsets 0x18/0x40/0x44/0x48/0x09 before calling the shared func_8014D6B8 helper with the record byte at offset 2; scratch bytes 2, 3 and 4 seed offsets 0x40/0x44/0x48/0x09 and call the same helper with 3, 0 and 1, and any other byte returns without a call; every calling path sets the mode byte at offset 0x01 to 2.'
   - - 1572
-    - asm
+    - c
     - func_801F3224
+    - '@source: src/bof3/world/func_801F3224_area01613.c'
+    - '@behavior: seeds the shared scratch defaults, decrements the scratch counter byte at offset 0x09, advances the scratch word at offset 0x40 by 0x2000, then, once that counter reaches zero, clears the scratch byte at offset 0x48 and sets the mode byte at offset 0x01 to 3 before calling the shared func_8014D4E0 helper.'
   - - 1696
-    - asm
+    - c
     - func_801F32A0
+    - '@source: src/bof3/world/func_801F32A0_area01613.c'
+    - '@behavior: seeds the shared scratch defaults and then, unless the shared state word at 0x80143B90 is 1, resets the area scratch record when scratch byte 0x0B differs from the byte at 0x07, or the shared mode byte at 0x80143BB0 is 5, or scratch byte 0x0B is 1 while the scratch word at 0x18 differs from the shared context seed at 0x80143F10; the reset stores 2 at offset 0x48, 8 at offset 0x09 and 4 at the mode byte offset 0x01, then the shared func_8014D4E0 helper runs.'
   - - 1888
-    - asm
+    - c
     - func_801F3360
+    - '@source: src/bof3/world/func_801F3360_area01613.c'
+    - '@behavior: seeds the shared scratch defaults, decrements the scratch counter byte at offset 0x09 and retreats the scratch word at offset 0x40 by 0x2000, then, once that counter reaches zero, calls the shared 0x80196070 helper when the shared mode byte at 0x80143BB0 is 5 and otherwise clears the scratch byte at offset 0x48 and sets the mode byte at offset 0x01 to 1, while a still-non-zero counter calls the shared 0x8014D4E0 helper instead.'
   - - 2048
-    - asm
+    - c
     - seedScratchDefaults
+    - '@source: src/bof3/world/seedScratchDefaults.c'
+    - '@behavior: seeds the local scratchpad halfwords at offsets 0x2e and 0x30 with the fixed area defaults 0xA0 and 0x50.'
   - - 2076
     - c
     - func_801F341C
@@ -67,8 +88,10 @@ segments:
     - '@source: src/bof3/world/dispatchAdvanceStates.c'
     - '@behavior: dispatches both advance states in order.'
   - - 2248
-    - asm
+    - c
     - dispatchState02
+    - '@source: src/bof3/world/dispatchState02.c'
+    - '@behavior: dispatches the scratchpad state byte at offset 0x02 through the local handler table at 0x801F511C.'
   - - 2316
     - c
     - func_801F350C
@@ -80,33 +103,50 @@ segments:
     - '@source: src/bof3/world/advanceScratchHeightState02.c'
     - '@behavior: advances the scratch height and updates state after reaching the threshold.'
   - - 2488
-    - asm
+    - c
     - advanceState02Step
+    - '@source: src/bof3/world/advanceState02Step.c'
+    - '@behavior: sets the scratchpad state byte at offset 0x02 to 3 when the shared byte at 0x801454F2 is 2, then calls the local 0x801F3B00 step with 0x10 and the scratch halfword at 0x2e.'
   - - 2568
-    - asm
+    - c
     - func_801F3608
+    - '@source: src/bof3/world/func_801F3608.c'
+    - '@behavior: retreats the scratch height at 0x2e by 0x10, clears state 0x02 below the -0x2f threshold, then arms state 0x02 when the shared mode byte is not 2 and calls the 0x801f3b00 local step.'
   - - 2700
-    - asm
+    - c
     - dispatchState03
+    - '@source: src/bof3/world/dispatchState03.c'
+    - '@behavior: dispatches the scratchpad state byte at offset 0x03 through the local handler table at 0x801F512C.'
   - - 2768
-    - asm
+    - c
     - func_801F36D0
+    - '@source: src/bof3/world/func_801F36D0_area01613.c'
+    - '@behavior: resets the scratch height at 0x30 to 0xF0 and advances the local state byte at 0x03 when the shared mode bytes permit it.'
   - - 2896
-    - asm
+    - c
     - func_801F3750
+    - '@source: src/bof3/world/func_801F3750_area01613.c'
+    - '@behavior: retreats the scratch height at 0x30 by 0x0A and increments local state 0x03 while the signed height stays below 0xC9, then arms state 0x03 at 3 when the shared mode byte and second scratch byte are set or the shared mode byte at 0x80143BB0 is 2 or the shared mask bit 0x100 is set, and finally calls the 0x801f40c4 local emitter with the scratch height.'
   - - 3112
-    - asm
+    - c
     - func_801F3828
+    - '@source: src/bof3/world/func_801F3828_area01613.c'
+    - '@behavior: counts the scratch byte at 0x09 while scratch byte 0x0b is clear and sets 0x0b once that count reaches 0x5a, then arms local state 0x03 when the shared mode byte and scratch byte 0x0b are set or the shared mode byte at 0x80143bb0 is 2 or the shared mask bit 0x100 is set, and finally calls the 0x801f40c4 local emitter with the scratch height.'
   - - 3368
-    - asm
+    - c
     - func_801F3928
+    - '@source: src/bof3/world/func_801F3928_area01613.c'
+    - '@behavior: advances the scratch height at 0x30 by 0xA, clears state 0x03 once the height reaches 0xF0, then arms state 0x03 when the shared mode bytes permit it and calls the 0x801f40c4 local emitter with the scratch height.'
   - - 3544
     - c
     - emitSemiTransparentSprite
+    - '@source: src/bof3/world/emitSemiTransparentSprite.c'
+    - '@behavior: emits one semi-transparent sprite primitive through g_PrimCursor, selecting tpage 0x22C for graphics types 1 and 2 and 0x9C otherwise, and filling x0/y0 from the first two arguments with clut 0x7B80 and the four halfwords of D_801F513C selected by the third argument.'
   - - 3840
     - c
     - func_801F3B00
     - '@source: src/bof3/world/func_801F3B00.c'
+    - '@behavior: returns immediately unless any bit of the shared mask 0x8014832E in 0x1B is set; otherwise it selects the tpage draw mode, draws the local marker sprite layers chosen by the shared probes 0x8014930A/0x8014930E and the shared mask words 0x80145AB4/0x80145AC0 through the local table 0x801F5194, adds the third marker layer when the shared 0x80145024/0x80146258/0x8014625A conditions hold, and appends the transformed G4 panel.'
   - - 4812
     - asm
     - appendTransformedG4Panel
@@ -122,31 +162,43 @@ segments:
     - '@source: src/bof3/world/dispatchArea016ScratchMode.c'
     - '@behavior: dispatches the scratch mode byte at offset 1 through the local handler table.'
   - - 5564
-    - asm
+    - c
     - func_801F41BC
+    - '@source: src/bof3/world/func_801F41BC_area01613.c'
+    - '@behavior: when bit 0 of the shared byte at 0x80146871 is set it runs the shared 0x80196070 helper and returns; otherwise, while the low ten bits of the shared frame counter at 0x80143E6C are clear, it fills a random number of front-end records (the count is rand() & 3 and the field stored at record offset 0x08 is (rand() & 0x33) >> 4), taking the next free record index from the allocator func_8019601C each iteration and returning as soon as that index is 0xFF, and otherwise marking the record at 0x80143FC8 selected by that index (0x74 bytes per record) with the occupancy byte 0x00 = 1, the selector 0x16 at 0x05, the byte at 0x01 = 1, the loop counter at 0x06 and the random field at 0x08, then storing the shared cursor pair 0x80145EC4/0x80145EC8 passed through the shared func_8015477C distance helper, biased by 0x400, into the signed timer at record offset 0x3E.'
   - - 5880
-    - asm
+    - c
     - func_801F42F8
+    - '@source: src/bof3/world/func_801F42F8_area01613.c'
+    - '@behavior: calls the shared func_8014DD3C helper with 0x46, clears scratch offsets 0x48 and 0x24 and writes 5 to 0x29, copies the signed pair selected by the scratch step index at offset 0x08 from the local table 0x801F51B8 into the scratch words at 0x0C and 0x10, reloads the scratch words at 0x34/0x38 from 0x80145EC4/0x80145EC8, and, while the scratch byte at 0x06 is set, applies the top-three-bit signed field of that table pair to the scratch halves at 0x36/0x3A and nudges one of them by 2 when the copied word at 0x0C is clear; it then applies the top-seven-bit signed field of the same pair to those halves, clears the scratch byte at 0x0B, increments the mode byte at 0x01, calls the shared func_8014D6B8 helper with the first byte of the local pair at 0x801F51C8 selected by the step index, stores that pair''s second byte to scratch offset 0x2A and finally calls the shared func_8014D290 helper.'
   - - 6440
-    - asm
+    - c
     - func_801F4528
+    - '@source: src/bof3/world/func_801F4528_area01613.c'
+    - '@behavior: reads the scratch pointer at 0x1F800044 and, when the scratch byte at offset 0x0B is set while bit 0x80 of the scratch byte at offset 0x00 is also set, calls the shared func_80196070 helper and returns; otherwise it sets that byte to 1 when both it and the bit are clear, then advances the scratch words at offsets 0x34 and 0x38 by the words at offsets 0x0C and 0x10 and calls the shared func_8014D978 and func_8014D290 helpers in that order.'
   - - 6604
     - c
     - func_801F45CC
     - '@source: src/bof3/world/func_801F45CC.c'
     - '@behavior: dispatches the scratch mode byte at offset 1 through the local handler table.'
   - - 6672
-    - asm
+    - c
     - func_801F4610
+    - '@source: src/bof3/world/func_801F4610_area01613.c'
+    - '@behavior: when the shared byte at 0x8014496D is 9, or bit 0 of the shared byte at 0x80146871 is set, calls the shared 0x80196070 helper and returns; otherwise it calls the shared 0x8019A194 helper, requests resource 0x205 through the shared func_8014DD3C helper, clears the scratch bytes at offsets 0x48, 0x24, 0x2A and 0x5D..0x5F, stamps 0xA0 into the map byte at the column and row held by the four-byte record at 0x801F4DA0 selected by the scratch byte at offset 0x0B (0x8014931C + row * 0x80104000 + column), calls the shared func_8014D6B8 helper with 0 and sets the mode byte at offset 0x01 to 1.'
   - - 6976
-    - asm
+    - c
     - func_801F4740
+    - '@source: src/bof3/world/func_801F4740_area01613.c'
+    - '@behavior: calls the shared helpers func_8014D978 and func_8014D260 with no arguments in that order, ignores both results, and returns.'
   - - 7016
-    - asm
+    - c
     - func_801F4768
+    - '@source: src/bof3/world/func_801F4768_area01613.c'
+    - '@behavior: on the first active frame advances the scratch byte at 0x02 and adds the shared frame counter''s low four bits at 0x80143E6C to the scratch halfword at 0x3A, then returns unless bit 0x04 of the shared byte at 0x8014832E is set; derives the panel layer from the scratch byte at 0x0B (value - 2), advances the scratch scroll word at 0x38 by 0x800 + (layer << 10), clamps the scratch halfword at 0x3A to -8 once the shared map height byte at 0x80104001 plus 8 no longer exceeds it, and returns unless the scratch halfwords at 0x36/0x3A are within 0x1A of the shared halfwords at 0x8014930A/0x8014930E; projects one shared 0x28-byte textured quad (clut 0x78CB, tpage 0x12B for graphics types 1 and 2 and 0x5B otherwise, flat colour 0x28) through RotTransPers4 over the four scratchpad vectors at 0x1F800014, whose halfsize pulses by |0x0F - (frame counter and 0x1F)| around the projected scratch halfwords at 0x34/0x38 scaled by >> 9 and biased by -0x3FC0, then closes with func_80155560(layer | 0xBB509100, prim, 1) and func_8014E5A0(4, 0x28); finally walks a ((2 - layer) * 4 + 1) by ((2 - layer) * 4) grid, looking the two scratch halfwords biased by - 2 + layer plus the cell column/row up in the shared 0x801559AC lookup and, when that returns a record, re-seeding the current primitive from g_PrimCursor, copying the record''s four projected position words at 0x08/0x10/0x18/0x20 into it and filling its texture window from the target-local byte columns D_801F51D8 (u origin), D_801F51DC (v origin) and D_801F51E0 (tile size) at index layer, scrolling v by (size * (scratch u16 at 0x38)) / 0x10000, before queueing the cell through func_80155A08(..., 1, 0x28) with both coordinates shifted left by 16.'
   - - 8572
-    - asm
-    - T_801F4D7C
+    - bin
+    - D_801F4D7C
 - - 9696
   - bin
   - data

@@ -371,8 +371,10 @@ segments:
     - '@source: src/bof3/battle/func_8009DE8C_battle15.c'
     - '@behavior: Negates the halfword selected by the active battler index byte and stores it in field 0x04 of the selection record pointer D_801463A0, or stores -1 and sets bit 2 of the enemy status byte at 0x801EB72C when the enemy-work halfword is the 0xFFFF sentinel.'
   - - 30576
-    - asm
-    - func_8009DF70
+    - c
+    - setRecordField4Neg5ApplyFlags68WhenRandomUnder39
+    - '@source: src/bof3/battle/setRecordField4Neg5ApplyFlags68WhenRandomUnder39.c'
+    - '@behavior: Stores -5 into the signed halfword at byte offset 4 of the selection record pointer D_801463A0, then, when the seven-bit masked random value is below 0x27, applies the 0x68 flags value to the active battler index byte D_80146394 through func_800A36F0.'
   - - 30652
     - c
     - func_8009DFBC
@@ -609,8 +611,10 @@ segments:
     - asm
     - func_8009FA20
   - - 37604
-    - asm
+    - c
     - func_8009FAE4
+    - '@source: src/bof3/battle/func_8009FAE4.c'
+    - '@behavior: Raises bit 0x4000 of the battle global halfword D_801462E8, copies the battle bytes D_80146374 and D_80146384 into D_801463CA and D_801463CB, then runs the selection-input refresh pass func_800A3F28.'
   - - 37688
     - asm
     - func_8009FB38
@@ -776,8 +780,10 @@ segments:
     - asm
     - func_800A243C
   - - 48396
-    - asm
-    - func_800A250C
+    - c
+    - runSelectionPassThenApplyMask8WhenRollClear
+    - '@source: src/bof3/battle/runSelectionPassThenApplyMask8WhenRollClear.c'
+    - '@behavior: Runs the selection-input pass func_800A3F28, then, when the selection roll func_800A3B6C returns zero for (D_80146374, D_80146394, 0x80), applies the 0x8 input mask to the byte D_80146394 through func_800A31E0.'
   - - 48480
     - c
     - func_800A2560
@@ -877,8 +883,10 @@ segments:
     - c
     - dispatchSubstateTable4cc8
   - - 57088
-    - asm
-    - func_800A4700
+    - c
+    - initSelectionStreamSlotWhenStateClear
+    - '@source: src/bof3/battle/initSelectionStreamSlotWhenStateClear.c'
+    - '@behavior: Selection-handler step 0 - while the battle selection state byte D_80148573 is 0, starts EMI stream slot 0 through func_80161FDC and advances the selection handler index D_801462E4.'
   - - 57156
     - asm
     - func_800A4744
@@ -901,8 +909,10 @@ segments:
     - asm
     - func_800A4B2C
   - - 58292
-    - asm
+    - c
     - func_800A4BB4
+    - '@source: src/bof3/battle/func_800A4BB4.c'
+    - '@behavior: Once the EXE-side EMI loader reports ready through func_80162D00, requests engine action 0x1B through func_8014E3A0, raises the shared flag byte D_80145988, and arms the battle selection state bytes D_801462E2 = 1, D_801462E3 = 1, D_801462E4 = 0.'
   - - 58376
     - c
     - dispatchSubstateTable4ce4
@@ -1076,8 +1086,10 @@ segments:
     - '@source: src/bof3/battle/initRecordStateAdvanceWork.c'
     - '@behavior: Initializes the selected local battle-work record and advances work state.'
   - - 72956
-    - asm
-    - func_800A84FC
+    - c
+    - raiseFlag4WhenPendingBitsClear
+    - '@source: src/bof3/battle/raiseFlag4WhenPendingBitsClear.c'
+    - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and invokes the shared helper at 0x801E5988 while the shared halfword at 0x801463C2 is zero.'
   - - 73024
     - asm
     - func_800A8540
@@ -1109,8 +1121,10 @@ segments:
     - asm
     - func_800A8CC8
   - - 75068
-    - asm
-    - func_800A8D3C
+    - c
+    - pollReadyThenInvokeHelperWhenWorkByte1Is5
+    - '@source: src/bof3/battle/pollReadyThenInvokeHelperWhenWorkByte1Is5.c'
+    - '@behavior: Invokes the shared readiness helper at 0x801DEE4C, then invokes the shared helper at 0x801E5988 while byte 0x01 of the local battle-work record pointed to by 0x801EB4E0 equals 5.'
   - - 75136
     - asm
     - func_800A8D80
@@ -1212,8 +1226,10 @@ segments:
     - asm
     - func_800AB910
   - - 86948
-    - asm
-    - func_800ABBA4
+    - c
+    - dispatchByBattleMode
+    - '@source: src/bof3/battle/dispatchByBattleMode.c'
+    - '@behavior: Runs the battle mode pass func_800ABBE0 (func_800ABF5C then the mode handler D_800B5108[D_801462EA]) when the battle mode byte D_801462EA is nonzero, and the mode-zero reset/apply pass func_800ABC30 when it is clear.'
   - - 87008
     - c
     - func_800ABBE0
@@ -1566,8 +1582,10 @@ segments:
     - asm
     - func_800B0D54
   - - 108068
-    - asm
-    - func_800B0E24
+    - c
+    - panelStepRightSettle5B
+    - '@source: src/bof3/battle/panelStepRightSettle5B.c'
+    - '@behavior: Runs the panel-task pass func_800B0F9C, then steps the panel x right by 0x20 while it is below 0x5B and resets it to 0x5B otherwise.'
   - - 108140
     - asm
     - func_800B0E6C
@@ -1587,8 +1605,10 @@ segments:
     - asm
     - func_800B13EC
   - - 109756
-    - asm
-    - func_800B14BC
+    - c
+    - panelStepLeftSettle5B
+    - '@source: src/bof3/battle/panelStepLeftSettle5B.c'
+    - '@behavior: Runs the panel-task pass func_800B1728, then resets the panel x to 0x5B while it is below 0x5C and steps it left by 0x20 otherwise.'
   - - 109828
     - asm
     - func_800B1504
@@ -1626,8 +1646,10 @@ segments:
     - c
     - func_800B20D4
   - - 112900
-    - asm
-    - func_800B2104
+    - c
+    - dispatchPanelStateTable6e20
+    - '@source: src/bof3/battle/dispatchPanelStateTable6e20.c'
+    - '@behavior: Dispatches the handler selected by the panel task state byte from the table at 0x800B6E20, then forwards the panel task to func_800B25C0.'
   - - 112984
     - c
     - name: panelStepLeftEndNegC8
@@ -1645,8 +1667,10 @@ segments:
     - c
     - func_800B2218
   - - 113240
-    - asm
-    - func_800B2258
+    - c
+    - dispatchPanelStateTable6e34
+    - '@source: src/bof3/battle/dispatchPanelStateTable6e34.c'
+    - '@behavior: Dispatches the handler selected by the panel task state byte from the table at 0x800B6E34, then forwards the panel task to func_800B2C90.'
   - - 113324
     - c
     - func_800B22AC
@@ -1668,8 +1692,10 @@ segments:
     - c
     - panelStepRightClamp62
   - - 113784
-    - asm
-    - func_800B2478
+    - c
+    - dispatchPanelStateTable6e50
+    - '@source: src/bof3/battle/dispatchPanelStateTable6e50.c'
+    - '@behavior: Dispatches the handler selected by the panel task state byte +0x03 from the table at 0x800B6E50, then forwards the panel task to func_800B3AE8.'
   - - 113868
     - c
     - panelStepRightClamp98

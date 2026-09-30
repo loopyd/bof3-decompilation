@@ -254,11 +254,15 @@ segments:
     - asm
     - func_80199308
   - - 15208
-    - asm
-    - func_80199368
+    - c
+    - dispatchScenarioAndFinalizeFrame
+    - '@source: src/bof3/ui/dispatchScenarioAndFinalizeFrame.c'
+    - '@behavior: runs the scenario-local handler/state dispatch, then the shared update slice func_801D1740, then finalizes one shared front-end frame through func_80158C80.'
   - - 15256
-    - asm
+    - c
     - func_80199398
+    - '@source: src/bof3/ui/func_80199398.c'
+    - '@behavior: runs the shared frame-service sequence func_801527E4, func_8015A758, func_801BDAB8, func_801A0514, func_8019A0E4 and func_8014BA54, then finalizes one shared front-end frame through func_80158C80 and finally runs the func_801D0EA0 slice.'
   - - 15344
     - c
     - finalizeFrame
@@ -379,8 +383,10 @@ segments:
     - '@source: src/bof3/ui/func_8019A2E8.c'
     - '@behavior: calls handler 3 of the eleven 0x1C-byte world-slot records at 0x801C7F5C for the world-slot index func_8019A194 returns for the current world state ID.'
   - - 19248
-    - asm
-    - func_8019A330
+    - c
+    - dispatchAreaOverlayStateByte1ForPendingWorld_game00_8019A330
+    - '@source: src/bof3/ui/dispatchAreaOverlayStateByte1ForPendingWorld_game00_8019A330.c'
+    - '@behavior: Overlay trampoline selected by the pending world id D_80143F00: when that u16 reads 0x68 it calls the concurrently resident per-area overlay routine at 0x801F53D4, otherwise the one at 0x801F5918; both resident routines dispatch their overlay work-state-byte-1 handler table.'
   - - 19312
     - c
     - func_8019A370
@@ -442,8 +448,10 @@ segments:
     - '@source: src/bof3/ui/func_8019AAFC.c'
     - '@behavior: Saves work coordinates and clears scenario/work flags.'
   - - 21340
-    - asm
-    - func_8019AB5C
+    - c
+    - clearFlag1CAndWorkFlagsWhenCountdownExpires
+    - '@source: src/bof3/ui/clearFlag1CAndWorkFlagsWhenCountdownExpires.c'
+    - '@behavior: Decrements the scratch work-area countdown byte at 0x09 while it is nonzero; once the countdown has already reached zero it clears bit 0x1C of the shared main-RAM flag bank at 0x80144F28 through the shared bit-clear service func_8015B5A8 and then clears the work-area flags through clearWorkFlags.'
   - - 21424
     - asm
     - func_8019ABB0
@@ -561,8 +569,10 @@ segments:
     - asm
     - func_8019C794
   - - 28944
-    - asm
-    - func_8019C910
+    - c
+    - clearWorkFlagsWhenReady
+    - '@source: src/bof3/ui/clearWorkFlagsWhenReady.c'
+    - '@behavior: runs the shared readiness helper func_8014DAEC and, when it reports ready (non-zero byte), clears the scratchpad work-area flags through clearWorkFlags; while the helper is not ready the shared main-executable service func_8014D290 runs instead.'
   - - 29012
     - asm
     - func_8019C954
@@ -994,8 +1004,10 @@ segments:
     - asm
     - func_801ABD68
   - - 91872
-    - asm
-    - func_801ABEE0
+    - c
+    - clearWorkFlag24Bit5AndResetStateWhenReady
+    - '@source: src/bof3/ui/clearWorkFlag24Bit5AndResetStateWhenReady.c'
+    - '@behavior: Clears bit 5 of the scratchpad work-area byte at offset 0x24 and then, when the main-executable helper func_8015C148 reports exactly 1, clears the work-area state byte at offset 0x02.'
   - - 91952
     - asm
     - func_801ABF30
@@ -1022,8 +1034,10 @@ segments:
     - '@source: src/bof3/ui/dispatchWorkModeHandler.c'
     - '@behavior: Dispatches the mode handler table (0x801C88FC) indexed by the work-area mode byte (work+0x04) through a tail-style jalr call.'
   - - 94740
-    - asm
+    - c
     - func_801ACA14
+    - '@source: src/bof3/ui/func_801ACA14.c'
+    - '@behavior: Boots the current scratch work record: submits the positional effect through func_8019651C and stores the returned effect byte at 0x93 of the work record published at D_80146884, sets scratch flag bit 0x20, resets the three signed tint channels at 0x5D/0x5E/0x5F to the -0x40 level, sets the 0x5C flag byte and the 0x04 handler index to 1, and consumes one unit of the countdown halfword at 0x7E of the D_80146884 work record.'
   - - 94912
     - asm
     - func_801ACAC0
@@ -1033,8 +1047,10 @@ segments:
     - '@source: src/bof3/ui/dispatchSecondaryWorkModeHandler.c'
     - '@behavior: Dispatches the handler table (0x801C8904) indexed by the work-area mode byte (work+0x04) through a tail-style jalr call.'
   - - 95240
-    - asm
+    - c
     - func_801ACC08
+    - '@source: src/bof3/ui/func_801ACC08.c'
+    - '@behavior: Boots the current scratch work record and steps the entry-0 work mode: submits the positional effect through func_8019651C with the scratch work pointer and stores the returned effect byte at 0x93 of the work record published at D_80146884, sets scratch flag bit 0x20, clears flag bit 0x40, sets the 0x5C flag byte and the 0x04 handler index to 1, resets the three signed tint channels at 0x5D/0x5E/0x5F to the -0x80 level, and consumes one unit of the countdown halfword at 0x7E of the D_80146884 work record.'
   - - 95448
     - asm
     - func_801ACCD8
@@ -1154,8 +1170,10 @@ segments:
     - asm
     - func_801B0DA0
   - - 112124
-    - asm
-    - func_801B0DFC
+    - c
+    - advanceWorkThenConditionalSharedUpdate_game00_801B0DFC
+    - '@source: src/bof3/ui/advanceWorkThenConditionalSharedUpdate_game00_801B0DFC.c'
+    - '@behavior: advances the work record position by its current delta step (func_801C57B4 adds the work-area words at 0x0C and 0x10 and the packed word at 0x14 into the coordinate words at 0x34 / 0x38 and the counter halfword at 0x3E) and then runs the shared no-argument update func_8014D978 only when the shared-work mode byte at D_80146250 + 0x11C is at least 4 under an unsigned compare.'
   - - 112196
     - asm
     - func_801B0E44
@@ -1165,8 +1183,10 @@ segments:
     - '@source: src/bof3/ui/routeIndexStepSign.c'
     - '@behavior: classifies a requested route index against the scratchpad work area route_index_08 inside a wrapped 8-entry window; returns -1 when the reference bound lies 1 to 4 entries above the requested index and 1 otherwise.'
   - - 120148
-    - asm
+    - c
     - func_801B2D54
+    - '@source: src/bof3/ui/func_801B2D54.c'
+    - '@behavior: runs the shared readiness helper func_8014DAEC and, when it reports ready (non-zero byte), clears byte 0x12B of the shared work record pointer D_80146250.'
   - - 120208
     - c
     - func_801B2D90
@@ -1203,17 +1223,25 @@ segments:
     - asm
     - func_801B3314
   - - 121736
-    - asm
-    - func_801B3388
+    - c
+    - advanceHandlerIndexTo2WhenReady
+    - '@source: src/bof3/ui/advanceHandlerIndexTo2WhenReady.c'
+    - '@behavior: runs the shared work-area service func_801C4E14 and, when it reports success, publishes handler index 2 into the work-area byte at offset 0x03, the handler index of the D_801CD140/D_801CD154 dispatch tables.'
   - - 121796
-    - asm
-    - func_801B33C4
+    - c
+    - advanceHandlerIndexTo3WhenReady
+    - '@source: src/bof3/ui/advanceHandlerIndexTo3WhenReady.c'
+    - '@behavior: runs the shared work-area service func_801C4EC4 and, when it reports success, publishes handler index 3 into the work-area byte at offset 0x03, the handler index of the D_801CD140/D_801CD154 dispatch tables.'
   - - 121856
-    - asm
-    - func_801B3400
+    - c
+    - advanceHandlerIndexTo4WhenReady
+    - '@source: src/bof3/ui/advanceHandlerIndexTo4WhenReady.c'
+    - '@behavior: runs the shared work-area service func_801C4F88 and, when it reports success, publishes handler index 4 into the work-area byte at offset 0x03, the handler index of the D_801CD140/D_801CD154 dispatch tables.'
   - - 121916
-    - asm
-    - func_801B343C
+    - c
+    - advanceStateToTwoAndResetHandlerIndexWhenReady_game00_801B343C
+    - '@source: src/bof3/ui/advanceStateToTwoAndResetHandlerIndexWhenReady_game00_801B343C.c'
+    - '@behavior: runs the shared work-area service func_801C4FE0 and, when it reports success, publishes state 2 into the work-area byte at offset 0x02, the index of the D_801CD130 dispatch table, and clears the work-area byte at offset 0x03, the handler index of the D_801CD140/D_801CD154 dispatch tables.'
   - - 121992
     - asm
     - func_801B3488
@@ -1228,8 +1256,10 @@ segments:
     - '@source: src/bof3/ui/func_801B3584.c'
     - '@behavior: runs the shared work-area scratchpad service func_801C51B0, then advances the work-area byte at offset 0x03 (the handler index of the D_801CD140/D_801CD154 dispatch tables) to 1.'
   - - 122288
-    - asm
-    - func_801B35B0
+    - c
+    - advanceHandlerIndexTo2WhenReady_game00_801B35B0
+    - '@source: src/bof3/ui/advanceHandlerIndexTo2WhenReady_game00_801B35B0.c'
+    - '@behavior: runs the shared work-area service func_801C520C and, when it reports success, publishes handler index 2 into the work-area byte at offset 0x03, the handler index of the D_801CD140/D_801CD154 dispatch tables.'
   - - 122348
     - asm
     - func_801B35EC
@@ -1240,8 +1270,10 @@ segments:
     - asm
     - func_801B3690
   - - 122652
-    - asm
-    - func_801B371C
+    - c
+    - dispatchWorkFlags02HandlerThenReadyUpdate
+    - '@source: src/bof3/ui/dispatchWorkFlags02HandlerThenReadyUpdate.c'
+    - '@behavior: Dispatches the two-entry handler table (0x801CD1B0) indexed by the work-area flags byte (work+0x02) through a framed jalr call, then runs the shared ready helper func_8014D978.'
   - - 122728
     - asm
     - func_801B3768
@@ -1249,8 +1281,10 @@ segments:
     - asm
     - func_801B3A3C
   - - 123900
-    - asm
-    - func_801B3BFC
+    - c
+    - callAreaOverlayRoutineForPendingWorld_game00_801B3BFC
+    - '@source: src/bof3/ui/callAreaOverlayRoutineForPendingWorld_game00_801B3BFC.c'
+    - '@behavior: Overlay trampoline selected by the pending world id D_80143F00: when that u16 reads 0x68 it calls the concurrently resident per-area overlay routine at 0x801F45BC, otherwise the one at 0x801F4B00.'
   - - 123964
     - c
     - func_801B3C3C
@@ -1269,8 +1303,10 @@ segments:
     - asm
     - func_801B43D0
   - - 126100
-    - asm
-    - func_801B4494
+    - c
+    - dispatchWorkHandlerBySpeedByte_game00_801B4494
+    - '@source: src/bof3/ui/dispatchWorkHandlerBySpeedByte_game00_801B4494.c'
+    - '@behavior: selects one of two sibling work routines by the work-area speed byte at 0x70 and returns the byte status of the selected routine, masking the request id to eight bits at each of the two call sites.'
   - - 126172
     - asm
     - func_801B44DC
@@ -1383,11 +1419,15 @@ segments:
     - '@source: src/bof3/ui/func_801B6FDC.c'
     - '@behavior: Unless state byte D_80143BB0 is 2, clears bit 0x20 in the record byte at D_80146250+0x118 and clears work-area byte 0x03.'
   - - 137252
-    - asm
-    - func_801B7024
+    - c
+    - clearStatusBit1AndAdvanceHandlerIndexTo1WhenTintFadeCompletes
+    - '@source: src/bof3/ui/clearStatusBit1AndAdvanceHandlerIndexTo1WhenTintFadeCompletes.c'
+    - '@behavior: runs the shared tint step func_801C29A0 with the 4-unit delta and, when that step reports the three signed tint channels have reached the -0x80 floor (non-zero byte result), clears bit 0x02 of the record byte at D_80146250 + 0x118 and publishes handler index 1 into the work-area handler index byte at 0x03.'
   - - 137340
-    - asm
-    - func_801B707C
+    - c
+    - clearStatusBit2AndAdvanceHandlerIndexTo1WhenTintFadeCompletes
+    - '@source: src/bof3/ui/clearStatusBit2AndAdvanceHandlerIndexTo1WhenTintFadeCompletes.c'
+    - '@behavior: runs the shared tint-fade ramp func_801C27E0 with the 4-unit delta and, when that step reports the fade complete (non-zero byte result), clears bit 0x04 of the record byte at D_80146250 + 0x118 and publishes handler index 1 into the work-area handler index byte at 0x03.'
   - - 137428
     - asm
     - func_801B70D4
@@ -1410,8 +1450,13 @@ segments:
     - '@source: src/bof3/ui/func_801B73B0.c'
     - '@behavior: Dispatches the handler table (0x801CD2F4) indexed by the work-area byte (work+0x03) through a framed jalr call.'
   - - 138228
-    - asm
+    - c
     - func_801B73F4
+    - '@source: src/bof3/ui/func_801B73F4.c'
+    - '@status: exact'
+    - '@match: 100.00'
+    - '@residual: none'
+    - '@behavior: entry 0 of the D_801CD2F4 work-state table: submits the route-index-selected selection effect id to the shared helper func_8014D8D4 (0x38 when the scratchpad work-area route index reads 3, 0x39 otherwise), publishes 3 into the active record selector byte at D_80146250 + 0x11C and advances the work-area handler index byte at 0x03 to 1, the next entry of that table.'
   - - 138316
     - asm
     - func_801B744C
@@ -1449,11 +1494,15 @@ segments:
     - asm
     - func_801B7B54
   - - 140304
-    - asm
-    - func_801B7C10
+    - c
+    - advanceWorkHandlerIndexWhenReady
+    - '@source: src/bof3/ui/advanceWorkHandlerIndexWhenReady.c'
+    - '@behavior: runs the shared work-area readiness service func_801C520C and, when it reports success, advances the work-state handler index byte at g_game_work + 0x04 by one.'
   - - 140376
-    - asm
-    - func_801B7C58
+    - c
+    - advanceWorkHandlerIndexWhenReady_game00_801B7C58
+    - '@source: src/bof3/ui/advanceWorkHandlerIndexWhenReady_game00_801B7C58.c'
+    - '@behavior: runs the shared work-area readiness service func_801C539C and, when it reports success, advances the work-state handler index byte at g_game_work + 0x04 by one.'
   - - 140448
     - asm
     - func_801B7CA0
@@ -1468,17 +1517,25 @@ segments:
     - '@source: src/bof3/ui/func_801B7D44.c'
     - '@behavior: Entry 0 of the work-state table D_801CD330: runs the shared work-area reset service func_801C4D58, raises bit 3 of the world-flags halfword D_8014625A and advances the scratchpad work area handler index (g_game_work + 0x04) to state 1.'
   - - 140676
-    - asm
-    - func_801B7D84
+    - c
+    - advanceWorkHandlerIndexTo2WhenReady
+    - '@source: src/bof3/ui/advanceWorkHandlerIndexTo2WhenReady.c'
+    - '@behavior: runs the shared work-area service func_801C4E14 and, when it reports success, publishes handler index 2 into the work-area byte at offset 0x04, the handler index of the D_801CD330 work-state dispatch table.'
   - - 140736
-    - asm
-    - func_801B7DC0
+    - c
+    - advanceWorkHandlerIndexTo3WhenReady
+    - '@source: src/bof3/ui/advanceWorkHandlerIndexTo3WhenReady.c'
+    - '@behavior: runs the shared work-area service func_801C4EC4 and, when it reports success, publishes handler index 3 into the work-area byte at offset 0x04, the handler index of the D_801CD330 work-state dispatch table.'
   - - 140796
-    - asm
-    - func_801B7DFC
+    - c
+    - advanceWorkHandlerIndexTo4WhenReady
+    - '@source: src/bof3/ui/advanceWorkHandlerIndexTo4WhenReady.c'
+    - '@behavior: runs the shared work-area service func_801C4F88 and, when it reports success, publishes handler index 4 into the work-area byte at offset 0x04, the handler index of the D_801CD330 work-state dispatch table.'
   - - 140856
-    - asm
-    - func_801B7E38
+    - c
+    - advanceWorkHandlerIndexTo5WhenReady
+    - '@source: src/bof3/ui/advanceWorkHandlerIndexTo5WhenReady.c'
+    - '@behavior: Runs the shared work-area service func_801C4FE0 and, when it reports success, publishes handler index 5 into the work-area byte at offset 0x04, the handler index of the D_801CD330 work-state dispatch table (entry 4).'
   - - 140916
     - asm
     - func_801B7E74
@@ -1492,8 +1549,10 @@ segments:
     - asm
     - func_801B80B4
   - - 141804
-    - asm
-    - func_801B81EC
+    - c
+    - advanceWorkHandlerIndexWhenTintFadeCompletes
+    - '@source: src/bof3/ui/advanceWorkHandlerIndexWhenTintFadeCompletes.c'
+    - '@behavior: runs the shared tint-fade step func_801C27E0 with the +8 ramp delta and, when it reports the fade complete, advances the work-area handler index byte at 0x04 (the index byte of the D_801CD310 / D_801CD330 dispatch tables) by one.'
   - - 141876
     - c
     - func_801B8234
@@ -1509,8 +1568,10 @@ segments:
     - asm
     - func_801B8394
   - - 142712
-    - asm
-    - func_801B8578
+    - c
+    - advanceHandlerIndexWhenTintFadeCompletes
+    - '@source: src/bof3/ui/advanceHandlerIndexWhenTintFadeCompletes.c'
+    - '@behavior: runs the shared tint-fade step func_801C27E0 with the +8 ramp delta and, when it reports the fade complete, advances the work-area handler index byte at 0x03 (the index byte of the D_801CD140 / D_801CD154 dispatch tables) by one.'
   - - 142784
     - asm
     - func_801B85C0
@@ -1560,8 +1621,10 @@ segments:
     - asm
     - func_801B9478
   - - 146840
-    - asm
-    - func_801B9598
+    - c
+    - dispatchWorkRoutineBySpeedByte_game00_801B9598
+    - '@source: src/bof3/ui/dispatchWorkRoutineBySpeedByte_game00_801B9598.c'
+    - '@behavior: selects one of two sibling argument-less work routines by the work-area speed byte at 0x70 (speed_70) reached through the scratchpad pointer slot 0x1F800044: a zero speed byte calls func_801B95E0 and a non-zero speed byte calls func_801BA678, and the byte status returned by the selected routine is returned.'
   - - 146912
     - asm
     - func_801B95E0
@@ -1590,8 +1653,13 @@ segments:
     - '@source: src/bof3/ui/func_801BB6F0_game00.c'
     - '@behavior: reports whether arg0 selects the current route index: the high nibble must be 0xB0 and the low nibble must equal route_index_08, except that nibble 8 instead accepts route index 3 or 5.'
   - - 155488
-    - asm
+    - c
     - func_801BB760
+    - '@source: src/bof3/ui/func_801BB760.c'
+    - '@status: partial'
+    - '@match: 65.00'
+    - '@residual: Two register roles differ; everything else (block shape, branch direction, delay-slot content, 80-byte frame) matches. The original copies the func_80154F78 result out of the return register into $a0 (`move a0,v0` at +0x1C) and keeps the compared result in $v0; this spelling leaves the call result in $v0 and allocates the result pseudo to $a0, so the entry copy is missing and the epilogue gains `move v0,a0` (19 insns / 76 bytes vs 20 / 80). First difference: the absent `move a0,v0`. One four-variant `lift sweep` (in-process route) measured the two-return spellings higher at 17/20, 80 bytes, but they invert the branch (`bne` into the compare block plus a spare `j`) against the original `beqz` over it, so this topologically faithful spelling is retained as the frontier candidate. Next untried rung: clean-C temporary/lifetime levers that move the result pseudo into $v0 without register pins. /'
+    - '@behavior: Queries the shared route-parameterised position service func_80154F78 with the two incoming coordinates and the scratch work-area route index, then reports whether the returned value shifted up by 16 bits exceeds 0x400000; the report is suppressed to zero while the scratchpad byte at 0x1F800000 is zero.'
   - - 155568
     - c
     - func_801BB7B0
@@ -1665,11 +1733,10 @@ segments:
     - asm
     - func_801BEDD0
   - - 169564
-    - asm
+    - c
     - func_801BEE5C
-  - - 169584
-    - asm
-    - func_801BEE70
+    - '@source: src/bof3/ui/func_801BEE5C.c'
+    - '@behavior: walks the 0x140-byte-stride local work records at D_80145E90: with a nonzero D_80146254 record count it first scans the records'' leading bytes for the first cleared one and, while that index is still inside the count, publishes each record at D_80146250 and the scratchpad work pointer and selects one of four per-record paths from the flags word of the 164-byte game input record D_80144974[record 0x13C] and from the record route byte at 0x08 measured against D_801CD478[D_801462EC] - flags bit 0x4000 uploads through func_8014D664 with the record 0x4B byte and clears the record 0x0B byte, a differing route byte advances that byte by the record 0x0B step modulo 8 before the same upload from the reloaded work record 0x08 byte, a matching route byte with a nonzero 0x0B byte uploads and clears it, and the remaining case only runs the func_8014D978 ready helper; with the walk finished (or the count non-positive) and bit 2 of D_80146325 clear it walks the same records once more, copying each 32-entry halfword row selected by the record 0x05 byte from the 0x80035600 table into the row 0xC0 bytes higher, calls func_801C2438, clears the work record 0x0B byte and stores tint bytes -0x40 at 0x5D-0x5F with 1 at 0x5C, returning 0 from the first walk and 1 from the second.'
   - - 170268
     - asm
     - func_801BF11C
@@ -1846,11 +1913,15 @@ segments:
     - asm
     - func_801C364C
   - - 188304
-    - asm
-    - func_801C3790
+    - c
+    - requestRouteStepWithValue89
+    - '@source: src/bof3/ui/requestRouteStepWithValue89.c'
+    - '@behavior: Gated request wrapper around func_801C364C: when bit 0x400 of the world flags word D_80146258 is set it reports 0, otherwise it runs the route-step positioning attempt with the tile-query value 0x89 and the step byte 2 (the third argument is the caller byte masked to eight bits) and reports whether that attempt succeeded.'
   - - 188380
-    - asm
-    - func_801C37DC
+    - c
+    - requestRouteStepWithValue8A
+    - '@source: src/bof3/ui/requestRouteStepWithValue8A.c'
+    - '@behavior: Gated request wrapper around func_801C364C: when bit 0x400 of the world flags word D_80146258 is set it reports 0, otherwise it runs the route-step positioning attempt with the tile-query value 0x8A and the step byte 1 (the caller byte is masked to eight bits) and reports whether that attempt succeeded.'
   - - 188456
     - asm
     - func_801C3828
@@ -1869,8 +1940,10 @@ segments:
     - asm
     - func_801C3B78
   - - 190016
-    - asm
-    - func_801C3E40
+    - c
+    - dispatchPositionCheckBySpeed
+    - '@source: src/bof3/ui/dispatchPositionCheckBySpeed.c'
+    - '@behavior: forwards the position check of the supplied x/y coordinates and signed 16-bit reference to the sibling routine selected by the record speed byte: a nonzero speed byte calls func_801C41D0 and a zero speed byte calls func_801C4040, and the byte result of that routine is returned.'
   - - 190080
     - asm
     - func_801C3E80
@@ -1893,8 +1966,13 @@ segments:
     - asm
     - func_801C4C48
   - - 193820
-    - asm
+    - c
     - func_801C4D1C
+    - '@source: src/bof3/ui/func_801C4D1C.c'
+    - '@status: partial'
+    - '@match: 93.33'
+    - '@residual: one instruction position: the original issues the scratchpad work-area load (lui/lw 0x1F800044) before the frame setup (addiu sp,sp,-0x18) and this build issues it after. Identical instruction count, size and multiset; invariant across four clean-C shapes, and the same ordering occurs in the still-asm sibling func_801B73F4.'
+    - '@behavior: Shared work-area select service: forwards the route-index-selected selection effect id to the shared EXE-side helper func_8014D8D4, 0x3C when the scratchpad work area route index (g_game_work->route_index_08) reads 7 and 0x3D otherwise.'
   - - 193880
     - asm
     - func_801C4D58

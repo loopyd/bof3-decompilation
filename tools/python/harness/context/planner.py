@@ -7,12 +7,12 @@ _context_profile(
     "planner",
     paths=(
         "AGENTS.md",
-        "docs/agents/project-context.md",
-        "docs/agents/plan-authoring.md",
+        ".pi/skills/bof3-re/references/target-contract.md",
+        ".pi/skills/plans/references/authoring.md",
     ),
     stable_paths=(
-        "docs/agents/project-context.md",
-        "docs/agents/plan-authoring.md",
+        ".pi/skills/bof3-re/references/target-contract.md",
+        ".pi/skills/plans/references/authoring.md",
     ),
     byte_limit=14_000,
 )(lambda request: ())

@@ -5,7 +5,7 @@
  * @behavior Dispatches the handler selected by the work area's field_04.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801AD6BC(void) {
   GameEntry0DispatchSet handlers = D_80195F44;

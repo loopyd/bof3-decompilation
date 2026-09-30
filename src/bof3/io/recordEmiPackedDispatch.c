@@ -14,7 +14,7 @@ extern u8  D_8018B4AC;
  * @source 0x80162698
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void recordEmiPackedDispatch(void) {
   u32* loader_step;
@@ -41,14 +41,6 @@ void recordEmiPackedDispatch(void) {
   D_801464A0[D_80146489] = state;
   slot = &dispatch_base[D_80146489];
   next_index = D_8018B4AC + 1;
-  /*
-   * MATCHING_AID:
-   * Splitting the shift result through a temporary keeps the original
-   * register web in the join block (dispatch stays in $v0, the shift chain
-   * issues after the slot-address addu). Permuter-found; a plain assignment
-   * lets GCC hoist the D_8018B4A4 load early and sink the slot address.
-   * Remove if a cleaner shape reproduces the same allocation.
-   */
   dispatch_hi = (D_8018B4AC + D_8018B4A0) << 24;
   dispatch = dispatch_hi;
   D_8018B4AC = next_index;

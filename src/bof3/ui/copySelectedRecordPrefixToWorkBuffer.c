@@ -4,7 +4,7 @@
  * main-RAM record into a shared work buffer, then clears its terminator.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void copySelectedRecordPrefixToWorkBuffer(u8 record_index)
 {

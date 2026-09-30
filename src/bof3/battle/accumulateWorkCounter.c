@@ -5,7 +5,7 @@
  * then accumulates that counter into `0x30`; increments byte `0x01` when `0x09` reaches 0x10.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void accumulateWorkCounter(void)
 {

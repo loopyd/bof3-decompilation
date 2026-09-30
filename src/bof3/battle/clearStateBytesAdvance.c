@@ -5,7 +5,7 @@
  * @behavior clears two battle-state bytes and increments one global counter.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void clearStateBytesAdvance(void) {
   D_8014864C = 0;

@@ -9,8 +9,11 @@ extern SPRT_8* g_PrimCursor;
  * advancing eight pixels per byte and wrapping on newline.
  * @source 0x80150098
  * @status partial
- * @match 54.22
- * @residual non-exact live audit: 45/83 instructions; 332 original bytes versus 312 current.
+ * @match 60.24
+ * @residual non-exact live audit: 50/83 instructions, 332 bytes both sides; the
+ * residual is the callee-saved register permutation (text/x/y/primitive) plus the
+ * zero-extension `andi` pair that the volatile byte view forces around the glyph
+ * row/column loads.
  */
 void drawGlyphString8x8(s16 x, s16 y, u32 clut, const u8* text) {
   SPRT_8* primitive;
@@ -35,17 +38,18 @@ void drawGlyphString8x8(s16 x, s16 y, u32 clut, const u8* text) {
       primitive->b0 = 0x80;
 
       {
-        s32 glyph_byte_u = (s32)(*text);
-        s32 glyph_index_u = glyph_byte_u - 0x20;
+        s32 glyph_byte_u = (s32)(*(volatile const u8*)text);
+        s32 glyph_row_u = glyph_byte_u - 0x20;
+        s32 glyph_index_u = glyph_row_u;
 
         if (glyph_index_u < 0) {
           glyph_index_u = glyph_byte_u - 1;
         }
         primitive->u0 =
-            (u8)(((glyph_byte_u - 0x20) - ((glyph_index_u >> 5) << 5)) << 3);
+            (u8)((glyph_row_u - ((glyph_index_u >> 5) << 5)) << 3);
       }
       {
-        s32 glyph_byte_v = (s32)(*text);
+        s32 glyph_byte_v = (s32)(*(volatile const u8*)text);
         s32 glyph_index_v = glyph_byte_v - 0x20;
 
         if (glyph_index_v < 0) {

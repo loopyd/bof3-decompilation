@@ -8,7 +8,7 @@
  * @source 0x801655F4
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 s32 adjustBoundedCounter(u8* counter, s32 delta) {
   s32 signed_delta;

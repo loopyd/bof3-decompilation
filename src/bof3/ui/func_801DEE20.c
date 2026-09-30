@@ -5,7 +5,7 @@
  * @behavior Resets the shop phase state when the global gate is clear.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801DEE20(void) {
   if (D_80143C40 == 0) {

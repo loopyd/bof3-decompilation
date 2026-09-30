@@ -5,7 +5,7 @@
  * @source 0x801D4850
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801D4850(void) {
   if ((D_80146375 != 4u) ||

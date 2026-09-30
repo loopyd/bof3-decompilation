@@ -5,7 +5,7 @@
  * @behavior Initializes movement fields and advances the work state.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_8019F310(void)
 {

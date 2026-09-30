@@ -5,7 +5,7 @@
  * @behavior Selects a signed record value and records which slot was used.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void selectRecordValueAndSlot(void) {
   if (D_1F800044[9] != 0) {

@@ -4,7 +4,7 @@
  * @behavior submits the current panel x and field-six coordinates to the panel helper.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void submitPanelPosition(void) {
   PanelTask* task = g_PanelTaskRoot;

@@ -4,7 +4,7 @@
  * @source 0x801DE92C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 hasUiRingWork(void) {
   s16 target_offset;

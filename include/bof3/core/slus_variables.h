@@ -3,6 +3,12 @@
 
 #include "bof3/bof3.h"
 
+/* Map query state referenced by func_80166CB0. */
+/* @source 0x80104000 @kind unknown */
+extern u8  D_80104000;
+/* @source 0x8014931C @kind unknown */
+extern u32 D_8014931C;
+
 /* Core runtime state near the SLUS callback scheduler. */
 /* @source 0x80143D44 @kind unknown */
 extern u8  D_80143D44;

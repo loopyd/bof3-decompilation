@@ -5,7 +5,7 @@
  * @source 0x801D0FB8
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void updatePrompt(void) {
   if (D_80143B40 == 0u) {

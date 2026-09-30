@@ -6,7 +6,7 @@ extern int rand(void);
  * @source 0x800AB760
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 pickRandomUnblockedId(u8 arg0) {
   u8  choices[8];

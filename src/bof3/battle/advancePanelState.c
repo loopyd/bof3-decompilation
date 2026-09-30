@@ -5,7 +5,7 @@
  * +3, otherwise adds 8 to state.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void advancePanelState(void) {
     u8* panel = (u8*)D_80148648;

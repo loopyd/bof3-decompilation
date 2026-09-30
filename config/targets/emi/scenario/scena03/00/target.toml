@@ -9,12 +9,28 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/advanceStateAndClearSharedByteScenarioScena0300_801F8DE4.c",
+    "src/bof3/scenario/armCountdownAndAdvanceWorkByte1ScenarioScena0300_801F7AE0.c",
+    "src/bof3/scenario/dispatchPrimaryStateHandlerScenarioScena0300_801F92F4.c",
+    "src/bof3/scenario/dispatchRecordCallbackScenarioScena0300_801FC46C.c",
+    "src/bof3/scenario/dispatchScenarioStateHandlerScenarioScena0300_801F8DA8.c",
+    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0300_801F6E70.c",
+    "src/bof3/scenario/forwardRoute47RecordScenarioScena0300_801FCCDC.c",
+    "src/bof3/scenario/func_801FC690.c",
+    "src/bof3/scenario/func_801FC6C4.c",
+    "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena0300_801FCEFC.c",
     "src/bof3/scenario/invokeHelperArgScenarioScena0300_801FCEDC.c",
     "src/bof3/scenario/invokeHelperScenarioScena0300_801F88DC.c",
     "src/bof3/scenario/invokeHelperScenarioScena0300_801F85DC.c",
     "src/bof3/scenario/invokeHelperScenarioScena0300_801F842C.c",
     "src/bof3/scenario/noopHandlerScenarioScena0300_801FC688.c",
     "src/bof3/scenario/noopHandlerScenarioScena0300_801F9330.c",
+    "src/bof3/scenario/queueCue209AndAdvanceWorkByte1ScenarioScena0300_801F7E34.c",
+    "src/bof3/scenario/queueFrontEndModeAndRequestPrimaryMode2ScenarioScena0300_801FCC9C.c",
+    "src/bof3/scenario/setScenarioFlagBit10ThenInvokeHelperScenarioScena0300_801FC4F4.c",
+    "src/bof3/scenario/setScenarioFlagBit11ThenInvokeHelperScenarioScena0300_801FC520.c",
+    "src/bof3/scenario/setScenarioFlagBit12ThenInvokeHelperScenarioScena0300_801FC54C.c",
+    "src/bof3/scenario/setScenarioFlagBit13ThenInvokeHelperScenarioScena0300_801FC578.c",
     "src/bof3/support/scena03_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/scena03_00_psyq.c"

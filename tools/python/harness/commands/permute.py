@@ -98,7 +98,7 @@ def ensure_target_assembly(
         f"no original assembly found for {function}; looked for:\n"
         f"  {canonical}\n"
         "run the Splat split workflow before starting the permuter, then retry "
-        f"`bin/permute {source_relative}`"
+        f"`bin/harness lift permute {source_relative}`"
     )
 
 
@@ -244,7 +244,7 @@ def run(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Prepare and optionally run decomp-permuter for one function.",
-        prog="permute",
+        prog="bin/harness lift permute",
     )
     add_root_argument(parser)
     parser.add_argument(
@@ -253,7 +253,9 @@ def build_parser() -> argparse.ArgumentParser:
         nargs="?",
         help="TARGET@0xADDRESS (preferred) or an existing lift source path",
     )
-    add_example_argument(parser, "bin/permute exe/logo@0x801CE758 --time-limit 30")
+    add_example_argument(
+        parser, "bin/harness lift permute exe/logo@0x801CE758 --time-limit 30"
+    )
     parser.add_argument(
         "function",
         nargs="?",

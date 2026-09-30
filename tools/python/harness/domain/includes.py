@@ -14,6 +14,17 @@ _LOCAL_INCLUDE_RE = re.compile(
 _COMMENTS_AND_LITERALS = re.compile(
     r'"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'|//[^\n]*|/\*[\s\S]*?\*/'
 )
+_RESOLVE_CACHE: dict[str, Path] = {}
+
+
+def _resolve(path: Path) -> Path:
+    """Memoize symlink resolution; the filesystem layout is stable per command."""
+    key = str(path)
+    resolved = _RESOLVE_CACHE.get(key)
+    if resolved is None:
+        resolved = path.resolve()
+        _RESOLVE_CACHE[key] = resolved
+    return resolved
 
 
 def _strip_comments(text: str) -> str:
@@ -150,7 +161,7 @@ def local_include_files(
             resolved = next(
                 (
                     candidate
-                    for candidate in (path.resolve() for path in candidates)
+                    for candidate in (_resolve(path) for path in candidates)
                     if candidate in replacements or candidate.is_file()
                 ),
                 None,

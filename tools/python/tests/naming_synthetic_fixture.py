@@ -67,7 +67,7 @@ SYNTHETIC_WORDS = (
 def _synthetic_report_row() -> dict:
     gap = {
         "status": "open",
-        "next_command": "bin/rev-query --json xrefs exe/test@0x80100080",
+        "next_command": "bin/harness analysis query --json xrefs exe/test@0x80100080",
         "observations": [{"id": "gap", "text": "Evidence Gap: synthetic fixture"}],
         "authority": "target manifest, reviewed Splat, original image",
     }
@@ -99,8 +99,8 @@ def _synthetic_report_row() -> dict:
         "interpretation": "No semantic name is accepted.",
         "authority": "target manifest, reviewed Splat, original image",
         "smallest_repair": (
-            "bin/rev-query --json xrefs exe/test@0x80100080; "
-            "bin/rz-project query exe/test -c 'axt @ 0x80100080'"
+            "bin/harness analysis query --json xrefs exe/test@0x80100080; "
+            "bin/harness analysis rz-project query exe/test -c 'axt @ 0x80100080'"
         ),
         "missing_fact": "consumer",
         "ceiling_next_command": "",

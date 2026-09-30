@@ -1,0 +1,910 @@
+diff --git a/src/core/psxhw.cc b/src/core/psxhw.cc
+--- a/src/core/psxhw.cc
++++ b/src/core/psxhw.cc
+@@ -53,6 +53,18 @@
+             between(masked_addr, 0x1f801120, 0x1f80112b));                // Timer 2
+ }
+ 
++namespace {
++class AudioAccess {
++  public:
++    AudioAccess(uint32_t address, uint32_t value, uint32_t width, bool read = false)
++        : m_spu(PCSX::g_emulator->m_spu.get()), m_parent(m_spu->captureAccess(address, value, width, read)) {}
++    ~AudioAccess() { m_spu->captureEnd(m_parent); }
++  private:
++    PCSX::SPUInterface* m_spu;
++    uint64_t m_parent;
++};
++}  // namespace
++
+ void PCSX::HW::reset() {
+     History::fail(History::Failure::Discontinuity);
+     if (g_emulator->settings.get<Emulator::SettingSpuIrq>()) g_emulator->m_mem->setIRQ(0x200);
+@@ -66,6 +78,13 @@
+ }
+ 
+ uint8_t PCSX::HW::read8(uint32_t add) {
++    AudioAccess audio(add, 0, 8, true);
++    const auto value = read8Value(add);
++    g_emulator->m_spu->captureReturn(add, value, 8);
++    return value;
++}
++
++uint8_t PCSX::HW::read8Value(uint32_t add) {
+     History::Register observation(add, 0, 8, true);
+     uint8_t hard;
+     uint32_t hwadd = add & 0x1fffffff;
+@@ -136,6 +155,13 @@
+ }
+ 
+ uint16_t PCSX::HW::read16(uint32_t add) {
++    AudioAccess audio(add, 0, 16, true);
++    const auto value = read16Value(add);
++    g_emulator->m_spu->captureReturn(add, value, 16);
++    return value;
++}
++
++uint16_t PCSX::HW::read16Value(uint32_t add) {
+     History::Register observation(add, 0, 16, true);
+     uint16_t hard;
+     uint32_t hwadd = add & 0x1fffffff;
+@@ -266,6 +292,13 @@
+ }
+ 
+ uint32_t PCSX::HW::read32(uint32_t add) {
++    AudioAccess audio(add, 0, 32, true);
++    const auto value = read32Value(add);
++    g_emulator->m_spu->captureReturn(add, value, 32);
++    return value;
++}
++
++uint32_t PCSX::HW::read32Value(uint32_t add) {
+     History::Register observation(add, 0, 32, true);
+     uint32_t hard;
+     uint32_t hwadd = add & 0x1fffffff;
+@@ -412,6 +445,7 @@
+ 
+ void PCSX::HW::write8(uint32_t add, uint32_t rawvalue) {
+     History::Register observation(add, rawvalue, 8);
++    AudioAccess audio(add, rawvalue, 8);
+     uint8_t value = (uint8_t)rawvalue;
+     uint32_t hwadd = add & 0x1fffffff;
+ 
+@@ -483,6 +517,7 @@
+             g_emulator->m_debug->m_checkKernel = value;
+             break;
+         case 0x1f802089:
++            g_emulator->m_spu->invalidateCapture();
+             History::fail(History::Failure::Unsupported);
+             g_emulator->m_mem->initMsan(value);
+             break;
+@@ -514,6 +549,7 @@
+ 
+ void PCSX::HW::write16(uint32_t add, uint32_t rawvalue) {
+     History::Register observation(add, rawvalue, 16);
++    AudioAccess audio(add, rawvalue, 16);
+     uint16_t value = (uint16_t)rawvalue;
+     uint32_t hwadd = add & 0x1fffffff;
+ 
+@@ -657,6 +693,7 @@
+ 
+ void PCSX::HW::write32(uint32_t add, uint32_t value) {
+     History::Register observation(add, value, 32);
++    AudioAccess audio(add, value, 32);
+     uint32_t hwadd = add & 0x1fffffff;
+ 
+     switch (hwadd) {
+diff --git a/src/core/psxhw.h b/src/core/psxhw.h
+--- a/src/core/psxhw.h
++++ b/src/core/psxhw.h
+@@ -39,6 +39,9 @@
+     void write32(uint32_t add, uint32_t value);
+ 
+   private:
++    uint8_t read8Value(uint32_t add);
++    uint16_t read16Value(uint32_t add);
++    uint32_t read32Value(uint32_t add);
+     void dma0(uint32_t madr, uint32_t bcr, uint32_t chcr);
+     void dma1(uint32_t madr, uint32_t bcr, uint32_t chcr);
+     void dma2(uint32_t madr, uint32_t bcr, uint32_t chcr);
+diff --git a/src/core/spu.h b/src/core/spu.h
+--- a/src/core/spu.h
++++ b/src/core/spu.h
+@@ -60,6 +60,10 @@
+     virtual void waitForGoal(uint32_t goal) = 0;
+     virtual uint32_t getFrameCount() = 0;
+     virtual void setLua(Lua L) = 0;
++    virtual uint64_t captureAccess(uint32_t, uint32_t, uint32_t, bool) = 0;
++    virtual void captureEnd(uint64_t) = 0;
++    virtual void captureReturn(uint32_t, uint32_t, uint32_t) = 0;
++    virtual void invalidateCapture() = 0;
+ 
+     bool m_showDebug = false;
+     bool m_showCfg = false;
+diff --git a/src/core/sstate.cc b/src/core/sstate.cc
+--- a/src/core/sstate.cc
++++ b/src/core/sstate.cc
+@@ -282,6 +282,7 @@
+ }
+ 
+ bool PCSX::SaveStates::load(std::string_view data) {
++    g_emulator->m_spu->invalidateCapture();
+     History::fail(History::Failure::Discontinuity);
+     SaveState state = constructSaveState();
+ 
+diff --git a/src/spu/capture.cc b/src/spu/capture.cc
+new file mode 100644
+--- /dev/null
++++ b/src/spu/capture.cc
+@@ -0,0 +1,215 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include "spu/sdlaudio.h"
++
++#include <cmath>
++#include <limits>
++#include <string>
++
++#include "core/psxemulator.h"
++#include "core/psxmem.h"
++#include "core/r3000a.h"
++#include "core/system.h"
++#include "lua/luawrapper.h"
++
++namespace {
++// Never call Lua while this guard exists: Lua errors may bypass destructors.
++class StreamGuard {
++    SDL_AudioStream* m_stream;
++  public:
++    explicit StreamGuard(SDL_AudioStream* stream) : m_stream(stream), valid(!stream || SDL_LockAudioStream(stream)) {}
++    ~StreamGuard() { if (valid && m_stream) SDL_UnlockAudioStream(m_stream); }
++    bool valid;
++};
++bool paused(const PCSX::SPU::Capture& capture) {
++    return capture.ownerThread() && !PCSX::g_system->running() && !PCSX::g_system->quitting();
++}
++uint32_t integer(PCSX::Lua L, int index, uint32_t maximum) {
++    const auto value = L.checknumber(index);
++    if (!std::isfinite(value) || value < 0 || value > maximum || std::floor(value) != value) {
++        L.error("audio argument must be an integer within its documented bound");
++        return 0;
++    }
++    return uint32_t(value);
++}
++void number(PCSX::Lua L, const char* key, uint32_t value) { L.push(key); L.push(lua_Number(value)); L.settable(); }
++void wide(PCSX::Lua L, const char* key, uint64_t value) { L.push(key); L.push(std::to_string(value)); L.settable(); }
++void string(PCSX::Lua L, const char* key, std::string_view value) { L.push(key); L.push(value); L.settable(); }
++const char* const settingNames[] = {"volume", "interpolation", "reverb", "mute", "mono", "streaming",
++    "null_sync", "irq_wait", "decode_irq", "scaler", "forced_irq", "voice_mute", "voice_solo", "xa"};
++}  // namespace
++
++std::array<int64_t, 14> PCSX::SPU::SDLAudio::captureSettings() const {
++    const auto voices = m_influences ? m_influences() : std::array<uint32_t, 2>{};
++    return {m_settings.get<Volume>().value, m_settings.get<Interpolation>().value, m_settings.get<Reverb>().value,
++        m_settings.get<Mute>().value, m_settings.get<Mono>().value, m_settings.get<Streaming>().value,
++        m_settings.get<NullSync>().value, m_settings.get<SPUIRQWait>().value, m_settings.get<DBufIRQ>().value,
++        g_emulator->settings.get<Emulator::SettingScaler>().value,
++        g_emulator->settings.get<Emulator::SettingSpuIrq>().value, voices[0], voices[1],
++        g_emulator->settings.get<Emulator::SettingXa>().value};
++}
++
++void PCSX::SPU::SDLAudio::checkCaptureSettings() {
++    if (!m_capture.ownerThread()) { m_capture.fail(Capture::Thread); return; }
++    if (!m_capture.active()) return;
++    if (g_emulator->m_cpu->isDynarec() || g_emulator->m_mem->msanInitialized()) {
++        m_capture.fail(Capture::Discontinuity);
++        return;
++    }
++    if (captureSettings() != m_captureSettings || m_settings.get<Backend>().value != m_captureBackend ||
++        m_settings.get<Device>().value != m_captureDevice) m_capture.fail(Capture::Discontinuity);
++}
++
++void PCSX::SPU::SDLAudio::setCaptureLua(Lua L, std::function<std::array<uint32_t, 2>()> influences) {
++    static_assert(sizeof(float) == 4 && std::numeric_limits<float>::is_iec559);
++    static_assert(VoiceStream::BUFFER_SIZE == Capture::MAX_CHUNK);
++    m_influences = std::move(influences);
++    L.getfieldtable("PCSX", LUA_GLOBALSINDEX);
++    L.getfieldtable("Audio");
++    L.declareFunc("begin", [this](Lua L) -> int {
++        if (L.gettop() != 3) return L.error("Audio.begin requires frame, block and event limits");
++        const auto frames = integer(L, 1, Capture::MAX_FRAMES);
++        const auto blocks = integer(L, 2, Capture::MAX_RECORDS);
++        const auto events = integer(L, 3, Capture::MAX_RECORDS);
++        if (!frames || !blocks || !events || !paused(m_capture) || !m_stream || !m_audioInitialized ||
++            g_emulator->m_cpu->isDynarec() || g_emulator->m_mem->msanInitialized()) return L.error("audio begin requires paused interpreter, initialized stream and positive limits without MSAN");
++        const auto settings = captureSettings();
++        if (settings[0] < 0 || settings[0] > 3 || settings[1] < 0 || settings[1] > 3 ||
++            settings[2] < 0 || settings[2] > 2 || settings[9] <= 0) return L.error("unsupported mixer settings");
++        bool okay = false;
++        {
++            StreamGuard lock(m_stream);
++            if (lock.valid) {
++                // Stage metadata before activation; begin can reject a nonempty recorder.
++                Capture::Status before;
++                if (m_capture.status(before) && before.state == 0) {
++                    m_captureSettings = settings;
++                    m_captureBackend = m_settings.get<Backend>().value;
++                    m_captureDevice = m_settings.get<Device>().value;
++                    const auto driver = SDL_GetCurrentAudioDriver();
++                    m_captureDriver = driver ? driver : "unavailable";
++                    m_captureInitial = {uint32_t(m_voicesStream.buffered()), uint32_t(m_audioStream.buffered())};
++                    m_captureFinal = {};
++                    okay = m_capture.begin(frames, blocks, events, g_emulator->m_cpu->m_regs.cycle);
++                }
++            }
++        }
++        if (!okay) return L.error("audio begin rejected: recorder not empty, stream lock or allocation failed");
++        return 0;
++    }, -1);
++    L.declareFunc("stop", [this](Lua L) -> int {
++        if (L.gettop() || !paused(m_capture)) return L.error("audio stop requires paused owner and no arguments");
++        checkCaptureSettings();
++        bool okay = false;
++        {
++            StreamGuard lock(m_stream);
++            if (lock.valid && m_capture.active()) {
++                m_captureFinal = {uint32_t(m_voicesStream.buffered()), uint32_t(m_audioStream.buffered())};
++                okay = m_capture.stop(g_emulator->m_cpu->m_regs.cycle);
++            }
++        }
++        if (!okay) return L.error("audio stop requires an active recorder and stream exclusion");
++        return 0;
++    }, -1);
++    L.declareFunc("clear", [this](Lua L) -> int {
++        if (L.gettop() || !paused(m_capture)) return L.error("audio clear requires paused owner and no arguments");
++        bool okay = false;
++        {
++            StreamGuard lock(m_stream);
++            if (lock.valid) okay = m_capture.clear();
++        }
++        if (!okay) return L.error("audio clear requires an inactive recorder and stream exclusion");
++        return 0;
++    }, -1);
++    L.declareFunc("status", [this](Lua L) -> int {
++        if (L.gettop() || !m_capture.ownerThread()) return L.error("audio status requires owner and no arguments");
++        checkCaptureSettings();
++        Capture::Status result;
++        bool okay = false;
++        {
++            StreamGuard lock(m_stream);
++            if (lock.valid) okay = m_capture.status(result);
++        }
++        if (!okay) return L.error("audio status requires stream exclusion");
++        L.newtable();
++        number(L, "version", result.version); number(L, "state", result.state);
++        number(L, "rate", 44100); number(L, "channels", 2);
++        string(L, "format", "f32le"); string(L, "stage", "post-mixer-mute-mono/pre-SDL-conversion");
++        number(L, "frames", result.frames); number(L, "blocks", result.blocks); number(L, "events", result.events);
++        number(L, "frame_limit", result.frameLimit); number(L, "block_limit", result.blockLimit);
++        number(L, "event_limit", result.eventLimit); number(L, "failures", result.failures);
++        number(L, "first_failure", result.firstFailure); number(L, "dropped_events", result.droppedEvents);
++        wide(L, "begin_cycle", result.beginCycle); wide(L, "end_cycle", result.endCycle);
++        wide(L, "dropped_frames", result.droppedFrames); wide(L, "streaming_dropped", result.streamingDropped);
++        if (result.state) {
++            number(L, "initial_voice_queue", m_captureInitial[0]); number(L, "initial_disc_queue", m_captureInitial[1]);
++            if (result.state == 2) {
++                number(L, "final_voice_queue", m_captureFinal[0]); number(L, "final_disc_queue", m_captureFinal[1]);
++            }
++            L.push("settings"); L.newtable();
++            for (unsigned n = 0; n < m_captureSettings.size(); ++n) number(L, settingNames[n], m_captureSettings[n]);
++            string(L, "configured_backend", m_captureBackend); string(L, "configured_device", m_captureDevice);
++            string(L, "active_driver", m_captureDriver);
++            L.settable();
++        }
++        return 1;
++    }, -1);
++    L.declareFunc("block", [this](Lua L) -> int {
++        if (L.gettop() != 1 || !paused(m_capture)) return L.error("audio block requires paused owner and one index");
++        const auto index = integer(L, 1, Capture::MAX_RECORDS - 1);
++        Capture::Block result;
++        bool okay = false;
++        {
++            StreamGuard lock(m_stream);
++            if (lock.valid) okay = m_capture.block(index, result);
++        }
++        if (!okay) return L.error("audio block requires frozen capture and valid index");
++        L.newtable(); number(L, "index", index);
++        wide(L, "observed_cpu_cycle", result.cycle);
++        number(L, "offset", result.offset); number(L, "frames", result.frames);
++        number(L, "voice_frames", result.voices); number(L, "disc_frames", result.disc);
++        number(L, "flags", result.flags);
++        return 1;
++    }, -1);
++    L.declareFunc("event", [this](Lua L) -> int {
++        if (L.gettop() != 1 || !paused(m_capture)) return L.error("audio event requires paused owner and one index");
++        const auto index = integer(L, 1, Capture::MAX_RECORDS - 1);
++        Capture::Event result;
++        bool okay = false;
++        {
++            StreamGuard lock(m_stream);
++            if (lock.valid) okay = m_capture.event(index, result);
++        }
++        if (!okay) return L.error("audio event requires frozen capture and valid index");
++        L.newtable(); number(L, "id", index + 1); number(L, "kind", result.kind);
++        wide(L, "cycle", result.cycle); wide(L, "observed_frame", result.frame); wide(L, "parent", result.parent);
++        if (result.kind == uint32_t(Capture::Kind::Feed)) {
++            number(L, "source_rate", result.address); number(L, "output_frames", result.value);
++            number(L, "source_frames", result.width); number(L, "stereo", result.detail);
++            number(L, "accepted", result.flags & 1); number(L, "cdda", (result.flags >> 1) & 1);
++        } else {
++            number(L, "address", result.address); number(L, "value", result.value); number(L, "width", result.width);
++        }
++        return 1;
++    }, -1);
++    L.declareFunc("samples", [this](Lua L) -> int {
++        if (L.gettop() != 2 || !paused(m_capture)) return L.error("audio samples requires paused owner, offset and frame count");
++        const auto offset = integer(L, 1, Capture::MAX_FRAMES);
++        const auto frames = integer(L, 2, 65536);
++        std::vector<float> samples(size_t(frames) * 2);
++        bool okay = false;
++        {
++            StreamGuard lock(m_stream);
++            if (lock.valid) okay = m_capture.samples(offset, frames, samples.data());
++        }
++        if (!okay) throw std::runtime_error("audio samples requires frozen capture and valid range");
++        std::string bytes(size_t(frames) * 8, '\0');
++        for (size_t n = 0; n < samples.size(); ++n) {
++            uint32_t bits;
++            std::memcpy(&bits, &samples[n], sizeof(bits));
++            for (unsigned b = 0; b < 4; ++b) bytes[n * 4 + b] = uint8_t(bits >> (b * 8));
++        }
++        L.push(bytes);
++        return 1;
++    }, -1);
++    L.pop(); L.pop();
++}
+diff --git a/src/spu/capture.h b/src/spu/capture.h
+new file mode 100644
+--- /dev/null
++++ b/src/spu/capture.h
+@@ -0,0 +1,208 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#pragma once
++
++#include <algorithm>
++#include <atomic>
++#include <cstdint>
++#include <cstring>
++#include <limits>
++#include <thread>
++#include <vector>
++
++namespace PCSX::SPU {
++
++// The owning SDLAudio integration must hold
++// SDL_LockAudioStream for begin/stop/clear/status/export. PCM is written only
++// from that stream's serialized callback. CPU operations stay on the owner
++// thread; the two producers share atomics, never emulator CPU/DSP pointers.
++class Capture {
++    static_assert(std::atomic<uint64_t>::is_always_lock_free);
++  public:
++    enum Failure : uint32_t {
++        Frames = 1, Blocks = 2, Events = 4, Thread = 8, Bounds = 16,
++        Clock = 32, Discontinuity = 64, StreamingLoss = 128, Output = 256,
++    };
++    enum class Kind : uint32_t { Access = 1, Write = 2, Feed = 3, Read = 4, Result = 5, Return = 6 };
++    struct Block {
++        uint64_t cycle = 0;  // Last CPU publication, NOT a sample execution cycle.
++        uint32_t offset = 0, frames = 0, voices = 0, disc = 0, flags = 0;
++    };
++    struct Event {
++        uint64_t cycle = 0, frame = 0, parent = 0;
++        uint32_t kind = 0, address = 0, value = 0, width = 0, detail = 0, flags = 0;
++    };
++    struct Status {
++        uint64_t beginCycle = 0, endCycle = 0, droppedFrames = 0, streamingDropped = 0;
++        uint32_t version = 1, state = 0, frames = 0, blocks = 0, events = 0;
++        uint32_t frameLimit = 0, blockLimit = 0, eventLimit = 0;
++        uint32_t failures = 0, firstFailure = 0, droppedEvents = 0;
++    };
++    static constexpr uint32_t MAX_FRAMES = 44100 * 60;
++    static constexpr uint32_t MAX_RECORDS = 65536;
++    static constexpr uint32_t MAX_CHUNK = 2048;
++
++    Capture() : m_owner(std::this_thread::get_id()) {}
++    bool ownerThread() const { return std::this_thread::get_id() == m_owner; }
++    bool active() const { return (m_lifecycle.load(std::memory_order_acquire) & STATE_MASK) == 1; }
++
++    // The caller additionally enforces paused interpreter, initialized device,
++    // stable settings and stream exclusion. No flush/queue mutation is implied.
++    bool begin(uint32_t frames, uint32_t blocks, uint32_t events, uint64_t cycle) {
++        if (!owner() || (m_lifecycle.load() & STATE_MASK) != 0 || !frames || frames > MAX_FRAMES ||
++            !blocks || blocks > MAX_RECORDS || !events || events > MAX_RECORDS || m_epoch == MAX_EPOCH) return false;
++        // Allocate separately before publication. A failed allocation leaves an
++        // empty recorder, never a partially armed callback.
++        try {
++            std::vector<float> pcm(size_t(frames) * 2);
++            std::vector<Block> records(blocks);
++            std::vector<Event> writes(events);
++            m_pcm.swap(pcm); m_blocks.swap(records); m_events.swap(writes);
++        } catch (...) { return false; }
++        m_status = {};
++        m_status.beginCycle = m_status.endCycle = cycle;
++        m_status.frameLimit = frames; m_status.blockLimit = blocks; m_status.eventLimit = events;
++        m_cycle.store(cycle); m_frame.store(0);
++        m_lastCycle = cycle;
++        m_lifecycle.store((++m_epoch << EPOCH_SHIFT) | 1, std::memory_order_release);
++        return true;
++    }
++
++    bool stop(uint64_t cycle) {
++        if (!owner() || !active()) return false;
++        publish(cycle);
++        m_status.endCycle = cycle;
++        // Preserve failures which arrive before this transition; a late failure
++        // CAS sees the frozen state and cannot publish into it.
++        auto state = m_lifecycle.load();
++        while (!m_lifecycle.compare_exchange_weak(state, (state & ~STATE_MASK) | 2)) {}
++        return true;
++    }
++    bool clear() {
++        if (!owner() || active()) return false;
++        std::vector<float>().swap(m_pcm);
++        std::vector<Block>().swap(m_blocks);
++        std::vector<Event>().swap(m_events);
++        m_status = {};
++        m_cycle.store(0); m_frame.store(0);
++        m_lifecycle.store(m_epoch << EPOCH_SHIFT, std::memory_order_release);
++        return true;
++    }
++    bool status(Status& result) {
++        if (!owner()) return false;
++        result = m_status;
++        const auto state = m_lifecycle.load(std::memory_order_acquire);
++        result.state = state & STATE_MASK;
++        result.failures = (state >> FAILURE_SHIFT) & FAILURE_MASK;
++        result.firstFailure = (state >> FIRST_SHIFT) & FAILURE_MASK;
++        return true;
++    }
++
++    // Called by the CPU owner at its audited SPU access/async boundaries only.
++    void publish(uint64_t cycle) {
++        if (!owner() || !active()) return;
++        if (cycle < m_lastCycle) { fail(Clock); return; }
++        m_lastCycle = cycle;
++        m_cycle.store(cycle, std::memory_order_release);
++    }
++    uint64_t event(uint64_t cycle, Kind kind, uint32_t address, uint32_t value, uint32_t width,
++                   uint64_t parent = 0, uint32_t detail = 0, uint32_t flags = 0) {
++        if (!owner() || !active()) return 0;
++        publish(cycle);
++        if (failures() || m_status.events == m_events.size()) {
++            if (!failures()) fail(Events);
++            if (m_status.droppedEvents != UINT32_MAX) ++m_status.droppedEvents;
++            return 0;
++        }
++        Event result;
++        result.cycle = cycle;
++        result.frame = m_frame.load(std::memory_order_acquire);
++        result.kind = uint32_t(kind); result.address = address;
++        result.value = value; result.width = width; result.parent = parent;
++        result.detail = detail; result.flags = flags;
++        m_events[m_status.events++] = result;
++        return m_status.events;
++    }
++
++    // Invoked with the actual final float32 buffer while the SDL callback owns
++    // the stream lock. A failed put is still retained as attempted output and
++    // makes the capture fail. Flags: bit0 mono, bit1 mute, bit2 put succeeded.
++    void pcm(const float* data, uint32_t frames, uint32_t voices, uint32_t disc, uint32_t flags) {
++        if (!active()) return;
++        if (!data || !frames || frames > MAX_CHUNK || voices > frames || disc > frames || (flags & ~7u)) {
++            fail(Bounds);
++            if (!(flags & 4)) fail(Output);
++            drop(frames); return;
++        }
++        auto rejected = [&] {
++            if (!(flags & 4)) fail(Output);
++            drop(frames);
++        };
++        if (failures()) { rejected(); return; }
++        if (frames > m_status.frameLimit - m_status.frames) { fail(Frames); rejected(); return; }
++        if (m_status.blocks == m_blocks.size()) { fail(Blocks); rejected(); return; }
++        Block block;
++        block.cycle = m_cycle.load(std::memory_order_acquire);
++        block.offset = m_status.frames; block.frames = frames;
++        block.voices = voices; block.disc = disc; block.flags = flags;
++        std::memcpy(m_pcm.data() + size_t(m_status.frames) * 2, data, size_t(frames) * 2 * sizeof(float));
++        m_blocks[m_status.blocks++] = block;
++        m_status.frames += frames;
++        m_frame.store(m_status.frames, std::memory_order_release);
++        if (!(flags & 4)) fail(Output);
++    }
++    void streamingLoss(uint32_t frames) {
++        if (!owner() || !active()) return;
++        m_status.streamingDropped += std::min<uint64_t>(frames, UINT64_MAX - m_status.streamingDropped);
++        fail(StreamingLoss);
++    }
++    void fail(Failure reason) {
++        auto state = m_lifecycle.load(std::memory_order_acquire);
++        const auto epoch = state >> EPOCH_SHIFT;
++        while ((state & STATE_MASK) == 1 && (state >> EPOCH_SHIFT) == epoch) {
++            auto update = state | (uint64_t(reason) << FAILURE_SHIFT);
++            if (!((state >> FIRST_SHIFT) & FAILURE_MASK)) update |= uint64_t(reason) << FIRST_SHIFT;
++            if (m_lifecycle.compare_exchange_weak(state, update, std::memory_order_acq_rel)) return;
++        }
++    }
++
++    bool block(uint32_t index, Block& out) {
++        if (!frozen() || index >= m_status.blocks) return false;
++        out = m_blocks[index]; return true;
++    }
++    bool event(uint32_t index, Event& out) {
++        if (!frozen() || index >= m_status.events) return false;
++        out = m_events[index]; return true;
++    }
++    bool samples(uint32_t offset, uint32_t frames, float* out) {
++        if (!frozen() || offset > m_status.frames || frames > m_status.frames - offset || (!out && frames)) return false;
++        if (frames) std::memcpy(out, m_pcm.data() + size_t(offset) * 2, size_t(frames) * 2 * sizeof(float));
++        return true;
++    }
++
++  private:
++    bool owner() {
++        if (std::this_thread::get_id() == m_owner) return true;
++        fail(Thread); return false;
++    }
++    bool frozen() { return owner() && (m_lifecycle.load(std::memory_order_acquire) & STATE_MASK) == 2; }
++    void drop(uint32_t frames) {
++        m_status.droppedFrames += std::min<uint64_t>(frames, UINT64_MAX - m_status.droppedFrames);
++    }
++    static constexpr uint64_t STATE_MASK = 3, FAILURE_MASK = 511;
++    static constexpr unsigned FAILURE_SHIFT = 2, FIRST_SHIFT = 11, EPOCH_SHIFT = 20;
++    static constexpr uint64_t MAX_EPOCH = UINT64_MAX >> EPOCH_SHIFT;
++    uint32_t failures() const { return (m_lifecycle.load(std::memory_order_acquire) >> FAILURE_SHIFT) & FAILURE_MASK; }
++    const std::thread::id m_owner;
++    uint64_t m_epoch = 0;
++    // State, generation, failures and first failure publish in one atomic word.
++    // A foreign failure caller cannot modify a frozen or subsequent generation.
++    std::atomic<uint64_t> m_lifecycle{0};
++    std::atomic<uint64_t> m_cycle{0}, m_frame{0};
++    uint64_t m_lastCycle = 0;
++    Status m_status;
++    std::vector<float> m_pcm;
++    std::vector<Block> m_blocks;
++    std::vector<Event> m_events;
++};
++
++}  // namespace PCSX::SPU
+diff --git a/src/spu/cfg.cc b/src/spu/cfg.cc
+--- a/src/spu/cfg.cc
++++ b/src/spu/cfg.cc
+@@ -90,5 +90,6 @@
+         _("Activates SPU IRQs based on writes to the decode/capture buffer. This option is necessary for some games."));
+ 
+     ImGui::End();
++    if (changed) invalidateCapture();
+     return changed;
+ }
+diff --git a/src/spu/debug.cc b/src/spu/debug.cc
+--- a/src/spu/debug.cc
++++ b/src/spu/debug.cc
+@@ -219,6 +219,7 @@
+     auto& mute = GetChannelMute(channels, channel);
+     auto& solo = GetChannelSolo(channels, channel);
+     if (DrawMuteSoloButton(channel, button, mute)) {
++        PCSX::g_emulator->m_spu->invalidateCapture();
+         HandleChannelMute(channels, mute, solo);
+     }
+ }
+@@ -227,6 +228,7 @@
+     auto& mute = GetChannelMute(channels, channel);
+     auto& solo = GetChannelSolo(channels, channel);
+     if (DrawMuteSoloButton(channel, button, solo)) {
++        PCSX::g_emulator->m_spu->invalidateCapture();
+         HandleChannelSolo(channels, channel, mute, solo);
+     }
+ }
+diff --git a/src/spu/dma.cc b/src/spu/dma.cc
+--- a/src/spu/dma.cc
++++ b/src/spu/dma.cc
+@@ -55,6 +55,7 @@
+ void PCSX::SPU::impl::unlockSPURAM() { cbMtx.unlock(); }
+ 
+ void PCSX::SPU::impl::resetCaptureBuffer() {
++    invalidateCapture();
+     if (settings.get<DBufIRQ>().value) pMixIrq = spuMemC;  // enable decoded buffer irqs by setting the address
+     memset(captureBuffer.CDCapLeft, 0, CaptureBuffer::CB_SIZE);
+     memset(captureBuffer.CDCapRight, 0, CaptureBuffer::CB_SIZE);
+diff --git a/src/spu/freeze.cc b/src/spu/freeze.cc
+--- a/src/spu/freeze.cc
++++ b/src/spu/freeze.cc
+@@ -38,6 +38,7 @@
+ #include "spu/registers.h"
+ 
+ void PCSX::SPU::impl::save(SaveStates::SPU &spu) {
++    invalidateCapture();
+     RemoveThread();
+ 
+     // Capture buffer
+@@ -91,6 +92,7 @@
+ }
+ 
+ void PCSX::SPU::impl::load(const SaveStates::SPU &spu) {
++    invalidateCapture();
+     RemoveThread();  // we stop processing while doing the save!
+ 
+     spu.get<SaveStates::CBCDLeft>().copyTo(reinterpret_cast<uint8_t *>(captureBuffer.CDCapLeft));
+diff --git a/src/spu/interface.h b/src/spu/interface.h
+--- a/src/spu/interface.h
++++ b/src/spu/interface.h
+@@ -59,6 +59,13 @@
+     void load(const SaveStates::SPU &) final;
+ 
+     virtual void setLua(Lua L) override;
++    uint64_t captureAccess(uint32_t, uint32_t, uint32_t, bool) final;
++    void captureEnd(uint64_t parent) final {
++        if (m_audioOut.capture().ownerThread()) m_captureParent = parent;
++        else m_audioOut.capture().fail(Capture::Thread);
++    }
++    void captureReturn(uint32_t, uint32_t, uint32_t) final;
++    void invalidateCapture() final { m_audioOut.capture().fail(Capture::Discontinuity); }
+ 
+     void async(uint32_t) final;
+     void playCDDAchannel(int16_t *, int) final;
+@@ -77,6 +84,7 @@
+     bool configure() final;
+     json getCfg() final { return settings.serialize(); }
+     void setCfg(const json &j) final {
++        invalidateCapture();
+         if (j.count("SPU") && j["SPU"].is_object()) {
+             settings.deserialize(j["SPU"]);
+         } else {
+@@ -87,6 +95,9 @@
+     void waitForGoal(uint32_t goal) override { m_audioOut.waitForGoal(goal); }
+ 
+   private:
++    uint64_t m_captureParent = 0;
++    uint16_t readRegisterValue(uint32_t);
++    std::array<uint32_t, 2> captureInfluences() const;
+     struct ADSRFlags {
+         enum : uint16_t {
+             AttackMode = 1 << 15,      // 15 0=Linear, 1=Exponential
+@@ -192,7 +203,7 @@
+     int MixREVERBRight();
+ 
+     // xa
+-    void FeedXA(xa_decode_t *xap);
++    void FeedXA(xa_decode_t *xap, bool cdda = false);
+ 
+     int bSPUIsOpen;
+ 
+diff --git a/src/spu/observation.cc b/src/spu/observation.cc
+new file mode 100644
+--- /dev/null
++++ b/src/spu/observation.cc
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include "spu/interface.h"
++
++uint64_t PCSX::SPU::impl::captureAccess(uint32_t address, uint32_t value, uint32_t width, bool read) {
++    if (!m_audioOut.capture().ownerThread()) { m_audioOut.capture().fail(Capture::Thread); return 0; }
++    const auto parent = m_captureParent;
++    const uint32_t physical = address & 0x1fffffff;
++    if (physical >= 0x1f801c00 && physical < 0x1f801e00) {
++        m_audioOut.checkCaptureSettings();
++        const auto next = m_audioOut.capture().event(g_emulator->m_cpu->m_regs.cycle,
++            read ? Capture::Kind::Read : Capture::Kind::Access, address, value, width, parent);
++        m_captureParent = next;
++    }
++    return parent;
++}
++
++void PCSX::SPU::impl::captureReturn(uint32_t address, uint32_t value, uint32_t width) {
++    if (!m_audioOut.capture().ownerThread()) { m_audioOut.capture().fail(Capture::Thread); return; }
++    const uint32_t physical = address & 0x1fffffff;
++    if (physical >= 0x1f801c00 && physical < 0x1f801e00) {
++        m_audioOut.capture().event(g_emulator->m_cpu->m_regs.cycle, Capture::Kind::Return,
++                                   address, value, width, m_captureParent);
++    }
++}
++
++std::array<uint32_t, 2> PCSX::SPU::impl::captureInfluences() const {
++    std::array<uint32_t, 2> result{};
++    for (unsigned n = 0; n < MAXCHAN; ++n) {
++        if (s_chan[n].data.get<Chan::Mute>().value) result[0] |= 1u << n;
++        if (s_chan[n].data.get<Chan::Solo>().value) result[1] |= 1u << n;
++    }
++    return result;
++}
+diff --git a/src/spu/registers.cc b/src/spu/registers.cc
+--- a/src/spu/registers.cc
++++ b/src/spu/registers.cc
+@@ -68,6 +68,11 @@
+ ////////////////////////////////////////////////////////////////////////
+ 
+ void PCSX::SPU::impl::writeRegister(uint32_t reg, uint16_t val) {
++    if (m_audioOut.capture().ownerThread()) {
++        m_audioOut.checkCaptureSettings();
++        m_audioOut.capture().event(g_emulator->m_cpu->m_regs.cycle, Capture::Kind::Write,
++                                   reg, val, 16, m_captureParent);
++    } else m_audioOut.capture().fail(Capture::Thread);
+     const uint32_t r = reg & 0xfff;
+ 
+     regArea[(r - 0xc00) >> 1] = val;
+@@ -496,6 +501,16 @@
+ ////////////////////////////////////////////////////////////////////////
+ 
+ uint16_t PCSX::SPU::impl::readRegister(uint32_t reg) {
++    const uint16_t value = readRegisterValue(reg);
++    if (m_audioOut.capture().ownerThread()) {
++        m_audioOut.checkCaptureSettings();
++        m_audioOut.capture().event(g_emulator->m_cpu->m_regs.cycle, Capture::Kind::Result,
++                                   reg, value, 16, m_captureParent);
++    } else m_audioOut.capture().fail(Capture::Thread);
++    return value;
++}
++
++uint16_t PCSX::SPU::impl::readRegisterValue(uint32_t reg) {
+     const uint32_t r = reg & 0xfff;
+ 
+     iSpuAsyncWait = 0;
+diff --git a/src/spu/sdlaudio.cc b/src/spu/sdlaudio.cc
+--- a/src/spu/sdlaudio.cc
++++ b/src/spu/sdlaudio.cc
+@@ -57,6 +57,7 @@
+ }
+ 
+ void PCSX::SPU::SDLAudio::init(bool safe) {
++    m_capture.fail(Capture::Discontinuity);
+     // Pick the audio driver. SDL_HINT_AUDIO_DRIVER must be set before SDL_InitSubSystem.
+     if (safe) {
+         SDL_SetHint(SDL_HINT_AUDIO_DRIVER, "dummy");
+@@ -169,6 +170,7 @@
+ }
+ 
+ void PCSX::SPU::SDLAudio::uninit() {
++    m_capture.fail(Capture::Discontinuity);
+     stopNullThread();
+     if (m_stream) {
+         SDL_DestroyAudioStream(m_stream);
+@@ -209,10 +211,12 @@
+     // mixing scratch buffer.
+     while (requested > 0) {
+         const uint32_t chunk = std::min<uint32_t>(requested, VoiceStream::BUFFER_SIZE);
++        std::array<uint32_t, STREAMS> available{};
+ 
+         for (unsigned i = 0; i < STREAMS; i++) {
+             size_t a = (i == 0) ? m_voicesStream.dequeue(m_mixBuffers[i].data(), chunk)
+                                 : m_audioStream.dequeue(m_mixBuffers[i].data(), chunk);
++            available[i] = a;
+             for (size_t f = (muted ? 0 : a); f < chunk; f++) {
+                 // Same as the previous backend: silently zero-fill on underflow.
+                 // CDDA underflow on stream 1 is expected and fine.
+@@ -239,7 +243,9 @@
+             }
+         }
+ 
+-        SDL_PutAudioStreamData(stream, m_outputBuffer.data(), chunk * kFrameSizeBytes);
++        const bool submitted = SDL_PutAudioStreamData(stream, m_outputBuffer.data(), chunk * kFrameSizeBytes);
++        m_capture.pcm(m_outputBuffer.data(), chunk, available[0], available[1],
++                      uint32_t(mono) | (uint32_t(muted) << 1) | (uint32_t(submitted) << 2));
+ 
+         // When NullSync is off, the real audio callback is the timing source. When it's
+         // on, the dedicated null thread drives timing instead.
+diff --git a/src/spu/sdlaudio.h b/src/spu/sdlaudio.h
+--- a/src/spu/sdlaudio.h
++++ b/src/spu/sdlaudio.h
+@@ -24,6 +24,7 @@
+ #include <array>
+ #include <atomic>
+ #include <condition_variable>
++#include <functional>
+ #include <mutex>
+ #include <stdexcept>
+ #include <string>
+@@ -33,6 +34,7 @@
+ #include <SDL3/SDL.h>
+ 
+ #include "spu/settings.h"
++#include "spu/capture.h"
+ #include "support/circular.h"
+ #include "support/eventbus.h"
+ 
+@@ -43,6 +45,7 @@
+ #endif
+ 
+ namespace PCSX {
++class Lua;
+ namespace SPU {
+ 
+ class SDLAudio {
+@@ -51,6 +54,9 @@
+         int16_t L = 0, R = 0;
+     };
+     SDLAudio(SettingsType& settings);
++    Capture& capture() { return m_capture; }
++    void setCaptureLua(Lua, std::function<std::array<uint32_t, 2>()>);
++    void checkCaptureSettings();
+     ~SDLAudio() { uninit(); }
+     uint32_t getFrameCount() { return m_frameCount.load(); }
+     void reinit() {
+@@ -104,6 +110,12 @@
+     }
+ 
+   private:
++    Capture m_capture;
++    std::function<std::array<uint32_t, 2>()> m_influences;
++    std::array<int64_t, 14> captureSettings() const;
++    std::array<int64_t, 14> m_captureSettings{};
++    std::string m_captureBackend, m_captureDevice, m_captureDriver;
++    std::array<uint32_t, 2> m_captureInitial{}, m_captureFinal{};
+     static constexpr unsigned STREAMS = 2;
+     static constexpr int kSampleRate = 44100;
+     static constexpr int kChannels = 2;
+diff --git a/src/spu/spu.cc b/src/spu/spu.cc
+--- a/src/spu/spu.cc
++++ b/src/spu/spu.cc
+@@ -850,6 +850,10 @@
+ ////////////////////////////////////////////////////////////////////////
+ 
+ void PCSX::SPU::impl::async(uint32_t cycle) {
++    if (m_audioOut.capture().ownerThread()) {
++        m_audioOut.checkCaptureSettings();
++        m_audioOut.capture().publish(g_emulator->m_cpu->m_regs.cycle);
++    } else m_audioOut.capture().fail(Capture::Thread);
+     if (iSpuAsyncWait) {
+         iSpuAsyncWait++;
+         if (iSpuAsyncWait <= 64) return;
+@@ -983,6 +987,7 @@
+ ////////////////////////////////////////////////////////////////////////
+ 
+ bool PCSX::SPU::impl::open() {
++    invalidateCapture();
+     if (bSPUIsOpen) return true;  // security for some stupid main emus
+ 
+     iReverbOff = -1;
+@@ -1015,6 +1020,7 @@
+ ////////////////////////////////////////////////////////////////////////
+ 
+ long PCSX::SPU::impl::close(void) {
++    invalidateCapture();
+     if (!bSPUIsOpen) return 0;  // some security
+ 
+     bSPUIsOpen = 0;  // no more open
+@@ -1047,10 +1053,11 @@
+     m_cdda.stereo = 1;
+     m_cdda.nbits = 16;
+     memcpy(m_cdda.pcm, data, size);
+-    FeedXA(&m_cdda);
++    FeedXA(&m_cdda, true);
+ }
+ 
+ void PCSX::SPU::impl::setLua(Lua L) {
++    m_audioOut.setCaptureLua(L, [this] { return captureInfluences(); });
+     L.getfieldtable("PCSX", LUA_GLOBALSINDEX);
+     L.getfieldtable("settings");
+     L.push("spu");
+diff --git a/src/spu/xa.cc b/src/spu/xa.cc
+--- a/src/spu/xa.cc
++++ b/src/spu/xa.cc
+@@ -40,7 +40,7 @@
+ // FEED XA
+ ////////////////////////////////////////////////////////////////////////
+ 
+-void PCSX::SPU::impl::FeedXA(xa_decode_t *xap) {
++void PCSX::SPU::impl::FeedXA(xa_decode_t *xap, bool cdda) {
+     int sinc, spos, i, iSize, vl, vr, voldiv = 4 - settings.get<Volume>();
+ 
+     SDLAudio::Frame XABuffer[32 * 1024];
+@@ -159,5 +159,20 @@
+     }
+     if (pMixIrq) cbMtx.unlock();
+ 
+-    m_audioOut.feedStreamData(reinterpret_cast<SDLAudio::Frame *>(XABuffer), (XAFeed - XABuffer), 1);
++    const uint32_t frames = XAFeed - XABuffer;
++    const auto observe = [&](bool accepted) {
++        if (!m_audioOut.capture().ownerThread()) { m_audioOut.capture().fail(Capture::Thread); return; }
++        m_audioOut.checkCaptureSettings();
++        m_audioOut.capture().event(g_emulator->m_cpu->m_regs.cycle, Capture::Kind::Feed,
++                                   xap->freq, frames, xap->nsamples, 0, xap->stereo,
++                                   uint32_t(accepted) | (uint32_t(cdda) << 1));
++        if (!accepted) m_audioOut.capture().streamingLoss(frames);
++    };
++    try {
++        const bool accepted = m_audioOut.feedStreamData(XABuffer, frames, 1);
++        observe(accepted);  // Queue lock has been released before recorder work.
++    } catch (...) {
++        observe(false);
++        throw;
++    }
+ }

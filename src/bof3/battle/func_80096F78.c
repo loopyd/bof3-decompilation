@@ -10,7 +10,7 @@
  * of func_800983C4.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_80096F78(void) {
   u32 temp = func_801502D0(0x4000);

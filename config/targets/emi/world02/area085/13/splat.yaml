@@ -69,8 +69,8 @@ segments:
     - asm
     - func_801F37C0
   - - 3280
-    - asm
-    - func_801F38D0
+    - c
+    - setWorkByte6ClearWorkByte92World02Area08513_801F38D0
   - - 3312
     - asm
     - func_801F38F0
@@ -84,11 +84,11 @@ segments:
     - asm
     - func_801F3B5C
   - - 4004
-    - asm
-    - func_801F3BA4
+    - c
+    - invokeHelperWithWorkWorld02Area08513_801F3BA4
   - - 4044
-    - asm
-    - func_801F3BCC
+    - c
+    - advanceWorkHalfwordWorld02Area08513_801F3BCC
   - - 4076
     - asm
     - func_801F3BEC
@@ -100,5 +100,5 @@ segments:
     - func_801F3C3C
   - - 4396
     - asm
-    - func_801F3D2C
+    - D_801F3D2C
 - - 5948

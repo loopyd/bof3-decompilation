@@ -6,7 +6,7 @@
  * @source 0x801D1000
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void finalizeExit(void) {
   volatile u16* effect_busy;

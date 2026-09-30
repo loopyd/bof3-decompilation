@@ -134,7 +134,7 @@ def _run_rehearsal(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="combiner")
+    parser = argparse.ArgumentParser(prog="bin/harness combiner")
     add_root_argument(parser)
     commands = parser.add_subparsers(dest="command", required=True)
     add_recovery_commands(commands, "combiner", validate_recovery_manifest)

@@ -11,7 +11,7 @@ from ..domain.ids import normalize_target_id
 
 CAMPAIGN_REPORT_DIRECTORY = Path("out/reviews/plan-audit-naming")
 CAMPAIGN_ACCOUNT_SCHEMA = "bof3.naming-audit-account/v1"
-_CAMPAIGN_REPAIR = "rerun bin/naming-audit init-all out/reviews/plan-audit-naming"
+_CAMPAIGN_REPAIR = "rerun bin/harness naming init-all out/reviews/plan-audit-naming"
 
 
 def campaign_report_filename(target: str) -> str:

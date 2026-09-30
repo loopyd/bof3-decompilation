@@ -4,7 +4,7 @@
  * @behavior Calls func_801D8450 with D_801462F4 when D_80144955 is zero.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void callD8450WhenIdle(void)
 {

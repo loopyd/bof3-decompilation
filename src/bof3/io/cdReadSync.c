@@ -6,7 +6,7 @@
  * @source 0x8014E0A8
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 s32 cdReadSync(s32 size, void* buffer, s32 sectors) {
   s32 sector_count;

@@ -7,7 +7,16 @@ binary = "out/binaries/emi/scenario/scena15/00.bin"
 splat = "config/targets/emi/scenario/scena15/00/splat.yaml"
 load_address = 0x801F6C00
 
-sources = []
+sources = [
+    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1500_801F6F38.c",
+    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1500_801F77F8.c",
+    "src/bof3/scenario/clearWorkTableAt800E4800ScenarioScena1500_801F75AC.c",
+    "src/bof3/scenario/invokeHelperTwiceThenHelperScenarioScena1500_801FE49C.c",
+    "src/bof3/scenario/resetWorkStateWhenNoEntryClearedScenarioScena1500_801F717C.c",
+    "src/bof3/scenario/invokeStartupThenIncrementRecordHalfword7EScenarioScena1500_801FDFEC.c",
+    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1500_801F7AA8.c",
+    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1500_801F8488.c",
+]
 support_sources = [
     "src/bof3/scenario/invokeTwoHelpersScenarioScena1500_801F8930.c",
     "src/bof3/scenario/invokeTwoHelpersScenarioScena1500_801F85F0.c",
@@ -17,6 +26,9 @@ support_sources = [
     "src/bof3/scenario/noopHandlerScenarioScena1500_801FE574.c",
     "src/bof3/scenario/noopHandlerScenarioScena1500_801FA9D4.c",
     "src/bof3/scenario/noopHandlerScenarioScena1500_801F79BC.c",
+    "src/bof3/scenario/dispatchProgressHandlerScenarioScena1500_801F9CAC.c",
+    "src/bof3/scenario/dispatchProgressHandlerScenarioScena1500_801FA998.c",
+    "src/bof3/scenario/dispatchRecordCallbackScenarioScena1500_801FDD80.c",
     "src/bof3/support/scena15_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/scena15_00_psyq.c"

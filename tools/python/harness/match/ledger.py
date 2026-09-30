@@ -74,7 +74,9 @@ class LedgerRow:
             raise LedgerError("ledger entry requires a row object")
         selector = entry.get("selector")
         if not isinstance(selector, str) or selector.count("@") != 1:
-            raise LedgerError(f"ledger entry requires a TARGET@0xADDRESS selector: {selector!r}")
+            raise LedgerError(
+                f"ledger entry requires a TARGET@0xADDRESS selector: {selector!r}"
+            )
         attempt = row.get("attempt")
         if not isinstance(attempt, int) or isinstance(attempt, bool):
             raise LedgerError(f"{selector} ledger row requires an integer attempt")
@@ -83,18 +85,32 @@ class LedgerRow:
         score = _number(row.get("score"), f"{selector} ledger score")
         rung = row.get("rung")
         if rung not in LADDER:
-            raise LedgerError(f"{selector} ledger row has unknown rung {rung!r}; ladder is {list(LADDER)}")
+            raise LedgerError(
+                f"{selector} ledger row has unknown rung {rung!r}; ladder is {list(LADDER)}"
+            )
         lever = row.get("lever")
         hypothesis = row.get("hypothesis_id")
-        if not isinstance(lever, str) or not isinstance(hypothesis, str) or not hypothesis.strip():
-            raise LedgerError(f"{selector} ledger row requires a lever and a hypothesis_id")
+        if (
+            not isinstance(lever, str)
+            or not isinstance(hypothesis, str)
+            or not hypothesis.strip()
+        ):
+            raise LedgerError(
+                f"{selector} ledger row requires a lever and a hypothesis_id"
+            )
         expected = row.get("expected_effect", row.get("predicted", ""))
         actual = row.get("actual_effect", "")
         retained = row.get("retained_status", "retained")
-        if not isinstance(expected, str) or not isinstance(actual, str) or not isinstance(retained, str):
+        if (
+            not isinstance(expected, str)
+            or not isinstance(actual, str)
+            or not isinstance(retained, str)
+        ):
             raise LedgerError(f"{selector} ledger row effects must be strings")
         if retained and retained not in RETAINED_STATES and retained != "retained":
-            raise LedgerError(f"{selector} ledger retained_status must be one of {sorted(RETAINED_STATES)}")
+            raise LedgerError(
+                f"{selector} ledger retained_status must be one of {sorted(RETAINED_STATES)}"
+            )
         variants = tuple(str(item) for item in row.get("variants", ()))
         key = lane_key or entry.get("lane_key")
         if not isinstance(key, str):
@@ -167,9 +183,16 @@ class Ledger:
     def evaluate(self) -> dict[str, Any]:
         """Typed state evaluator: ladder legality, stalls, terminal verdict."""
         if not self.rows:
-            return {"selector": self.selector, "verdict": "open", "reasons": [], "rung_index": 0}
+            return {
+                "selector": self.selector,
+                "verdict": "open",
+                "reasons": [],
+                "rung_index": 0,
+            }
         if self.rows[0].lever not in ("baseline", "interruption recovery"):
-            raise LedgerError(f"{self.selector} ledger must start with the baseline row")
+            raise LedgerError(
+                f"{self.selector} ledger must start with the baseline row"
+            )
         problems: list[str] = []
         best = self.rows[0].score
         rung_index = LADDER.index(self.rows[0].rung)
@@ -187,13 +210,20 @@ class Ledger:
                 row_rung = rung_index
             one_shot = row.rung in ("compiler-profile", "permuter", "compiler-ceiling")
             limit = 1 if one_shot else STALL_LIMIT
-            if not improved and stalls >= limit and row_rung > rung_index and row.lever not in LEAD_LEVERS:
+            if (
+                not improved
+                and stalls >= limit
+                and row_rung > rung_index
+                and row.lever not in LEAD_LEVERS
+            ):
                 problems.append(f"row {row.attempt} stayed on an exhausted rung")
             rung_index = row_rung
             if row.score > 100.0:
                 problems.append(f"row {row.attempt} score exceeds 100")
-        terminal = "exact" if best >= 100.0 else (
-            "ladder-exhausted" if rung_index == len(LADDER) - 1 else "open"
+        terminal = (
+            "exact"
+            if best >= 100.0
+            else ("ladder-exhausted" if rung_index == len(LADDER) - 1 else "open")
         )
         reasons = problems + (
             [] if terminal == "open" else [f"terminal: {terminal} at best {best}"]
@@ -232,7 +262,12 @@ def evaluate_lane_state(state: dict[str, Any]) -> dict[str, Any]:
         verdict = "restored"
     else:
         verdict = "improved-partial"
-    return {"selector": selector, "verdict": verdict, "final_score": final, "best_score": best}
+    return {
+        "selector": selector,
+        "verdict": verdict,
+        "final_score": final,
+        "best_score": best,
+    }
 
 
 __all__ = [

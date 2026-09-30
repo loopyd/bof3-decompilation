@@ -12,7 +12,7 @@ extern const u8     D_80183224[];
  * @source 0x80162500
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void validateEmiLoaderHeader(void) {
   u8*           header;
@@ -45,15 +45,6 @@ void validateEmiLoaderHeader(void) {
       loader_state[-0x14] = 1;
       return;
     }
-    /*
-     * MATCHING_AID:
-     * The explicit prev_count copy reproduces the original's `move $v0,$a0`
-     * in the tag-compare beq delay slot and the `addiu $a0,-1; bnez $v0;
-     * addiu $a1,-1` tail order (asm-diff first=+0x005c before this aid).
-     * Writing `tag_index--; } while (tag_count-- != 0);` lets GCC swap the
-     * two independent decrements around the bnez. Remove if the scheduler
-     * behavior is reproduced without the temp.
-     */
     prev_count = tag_count;
     tag_count--;
     tag_index--;

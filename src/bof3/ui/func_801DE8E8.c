@@ -5,7 +5,7 @@
  *           when it reaches zero, advances the phase byte.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801DE8E8(void) {
   volatile u8* p = &phaseTimer;

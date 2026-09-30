@@ -5,7 +5,7 @@
  * @source 0x801F3A64
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801F3A64(void) {
   D_801F46EC[g_areaWork->mode]();

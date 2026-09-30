@@ -6,7 +6,7 @@
  * buffers, then advances the battle state byte.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_800A6488(void) {
   s16 *dst_row = &D_801485EC;

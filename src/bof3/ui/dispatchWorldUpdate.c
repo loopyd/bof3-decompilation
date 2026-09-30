@@ -5,7 +5,7 @@
  * @source 0x80198170
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchWorldUpdate(void) {
   if (D_80143B92 == 0) {

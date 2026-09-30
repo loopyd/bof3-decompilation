@@ -6,7 +6,7 @@ extern int rand(void);
  * @source 0x801E5704
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void raiseBit80AllocSlot(void) {
   u16* flags;

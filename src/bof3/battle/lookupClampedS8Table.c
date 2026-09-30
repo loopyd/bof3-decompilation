@@ -4,7 +4,7 @@
  * @behavior Adds 2 to signed index, clamps it to [0,4], then returns D_800B4E8C[index].
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 s8 lookupClampedS8Table(s8 index) {
     index += 2;

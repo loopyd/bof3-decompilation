@@ -13,11 +13,11 @@ from harness.decomp.cli import register_commands
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(prog="bin/harness decomp", description=__doc__)
     add_root_argument(parser)
     add_example_argument(
         parser,
-        "bin/agent-run diagnose out/mission-request.json --expected-request-digest PIN --output out/reviews/lift-diagnosis/BEFORE --deadline ORIGINAL_MONOTONIC_CUTOFF",
+        "bin/harness decomp diagnose out/mission-request.json --expected-request-digest PIN --output out/reviews/lift-diagnosis/BEFORE --deadline ORIGINAL_MONOTONIC_CUTOFF",
     )
     commands = parser.add_subparsers(dest="command", required=True)
     register_commands(commands)

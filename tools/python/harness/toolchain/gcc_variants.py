@@ -227,11 +227,11 @@ def resolve_variant(layout: RepoLayout, variant: CompilerVariant) -> str:
     if dest.exists():
         raise RuntimeError(
             f"{variant.id}: existing installation at {dest} is corrupt or "
-            f"incomplete; run `bin/compiler-variants install --force {variant.id}`"
+            f"incomplete; run `bin/harness build variants install --force {variant.id}`"
         )
     raise FileNotFoundError(
         f"missing compiler variant {variant.id}; "
-        f"explicit installation required: bin/compiler-variants install {variant.id}"
+        f"explicit installation required: bin/harness build variants install {variant.id}"
     )
 
 

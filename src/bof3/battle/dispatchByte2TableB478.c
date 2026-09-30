@@ -5,7 +5,7 @@
  * selects its byte at offset 0x02, and calls that entry of D_801EB478.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchByte2TableB478(void)
 {

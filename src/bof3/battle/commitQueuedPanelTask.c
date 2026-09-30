@@ -5,7 +5,7 @@
  * @source 0x801EA1A4
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void commitQueuedPanelTask(void) {
   u8* volatile* root;

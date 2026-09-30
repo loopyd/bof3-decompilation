@@ -30,8 +30,10 @@ segments:
   vram: 2149543896
   subsegments:
   - - 984
-    - asm
-    - func_801F6FD8
+    - c
+    - dispatchScenarioStateHandlerScenarioScena1400_801F6FD8
+    - '@source: src/bof3/scenario/dispatchScenarioStateHandlerScenarioScena1400_801F6FD8.c'
+    - '@behavior: Per-frame state dispatcher of this overlay: it reads the signed shared scenario state byte D_80146872, scales it by four and dispatches through the overlay-local pointer table at 0x801FC418 (thirteen handler words, 0x801FC418 through 0x801FC448), so the state byte selects which of the overlay''s scenario handlers runs this frame. It reads no state other than that byte and writes none; it takes no arguments and returns nothing, and the 0x18-byte frame only keeps $ra across the indirect call. No in-image jal targets the address; its only image word is 0x801F6FD8 itself, word 0 of the five-word pointer run at 0x801FC404.'
   - - 1044
     - c
     - setScenarioScena1400_801F7014
@@ -45,8 +47,10 @@ segments:
     - asm
     - func_801F7A18
   - - 3932
-    - asm
-    - func_801F7B5C
+    - c
+    - dispatchPrimaryStateHandlerScenarioScena1400_801F7B5C
+    - '@source: src/bof3/scenario/dispatchPrimaryStateHandlerScenarioScena1400_801F7B5C.c'
+    - '@behavior: Per-frame primary state dispatcher of this overlay: it reads the signed shared main-RAM primary state byte D_80146874, scales it by four and dispatches through the overlay-local handler table at 0x801FC424 (ten handler words, 0x801FC424 through 0x801FC448), so that byte selects which of the overlay''s primary-state entries runs this frame. It reads no state other than that byte and writes none; it takes no arguments and returns nothing, and the 0x18-byte frame only keeps $ra across the indirect call, with the state-byte read hoisted above the frame setup. No in-image jal targets the address; its only image word is 0x801FC420, entry 2 of the three-word pointer run at 0x801FC418 that func_801F6FD8 indexes with D_80146872.'
   - - 3992
     - c
     - noopHandlerScenarioScena1400_801F7B98
@@ -87,8 +91,10 @@ segments:
     - c
     - noopHandlerScenarioScena1400_801FB374
   - - 18300
-    - asm
-    - func_801FB37C
+    - c
+    - dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C
+    - '@source: src/bof3/scenario/dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C.c'
+    - '@behavior: Overlay-local record-callback dispatcher: it reads the record passed in $a0, takes its unsigned byte field at offset 0x7A, scales it by four and selects a callback word of the overlay-local table at 0x801FC468 (twenty-two words, 0x801FC468 through 0x801FC4BC), then invokes that callback with jalr, passing the record pointer unchanged as the first argument and the shared word D_8014686C as the second. It reads no other state and writes none; the 0x18-byte frame only keeps $ra across the indirect call. No in-image jal targets the address; its only image word is 0x801FC408, entry 1 of the five-word pointer run at 0x801FC404.'
   - - 18364
     - asm
     - func_801FB3BC
@@ -105,8 +111,10 @@ segments:
     - asm
     - func_801FB51C
   - - 18804
-    - asm
-    - func_801FB574
+    - c
+    - requestPrimaryState5Substate5ScenarioScena1400_801FB574
+    - '@source: src/bof3/scenario/requestPrimaryState5Substate5ScenarioScena1400_801FB574.c'
+    - '@behavior: Runs the shared front-end startup helper func_8015C088 and then requests primary scene state 5 with secondary sub-state 5 by storing 5 in the shared primary state byte D_80146874 and 5 in the shared secondary sub-state byte D_80146875. It takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the call; the constant 5 is materialised once in $v0 and reused by both byte stores. No in-image jal targets the address; its only image word is 0x801FC47C, entry 5 of the twenty-two-word pointer run at 0x801FC468 that func_801FB37C indexes with the byte at offset 0x7A of its first argument.'
   - - 18856
     - asm
     - func_801FB5A8
@@ -120,14 +128,20 @@ segments:
     - asm
     - func_801FB84C
   - - 20780
-    - asm
-    - func_801FBD2C
+    - c
+    - armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1400_801FBD2C
+    - '@source: src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1400_801FBD2C.c'
+    - '@behavior: Overlay per-record callback (entry 8 of the twenty-two-word callback run at 0x801FC468, 0x801FC468 through 0x801FC4BC, which dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C selects with the unsigned record byte at offset 0x7A; the word at 0x801FC488 holds this address, its only image word). It re-arms the three-entry overlay effect group for ids 7, 8 and 4 through func_80166E88(7, 8, 4, 0), clears the shared live-local work-record count byte D_80146254, then runs the per-id effect teardown func_801C187C for ids 7, 4 and 8 in that order and returns without the func_801C1630 tail its neighbour 0x801FBF18 carries. It ignores the record pointer and second argument its dispatcher passes, reads no memory of its own, writes none, and its 0x18-byte frame only keeps $ra across the four calls.'
   - - 20856
-    - asm
-    - func_801FBD78
+    - c
+    - armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1400_801FBD78
+    - '@source: src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1400_801FBD78.c'
+    - '@behavior: Overlay per-record callback (entry 9 of the twenty-two-word callback run at 0x801FC468, 0x801FC468 through 0x801FC4BC, which dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C selects with the unsigned record byte at offset 0x7A; the word at 0x801FC48C holds this address, its only image word). It re-arms the three-entry overlay effect group for ids 7, 4 and 6 through func_80166E88(7, 4, 6, 0), clears the shared live-local work-record count byte D_80146254, then runs the per-id effect teardown func_801C187C for ids 7, 4 and 6 in that order and returns without the func_801C1630 tail its neighbour 0x801FBF18 carries. It ignores the record pointer and the second argument its dispatcher passes, reads no memory of its own and writes only that D_80146254 byte; the 0x18-byte frame only keeps $ra across the four calls, the three leading arm immediates are materialised in $a0/$a1/$a2 before the first jal with the zero fourth one in that jal''s delay slot, and each teardown id is materialised in $a0 inside its own jal''s delay slot. No in-image jal reaches the address.'
   - - 20932
-    - asm
-    - func_801FBDC4
+    - c
+    - armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1400_801FBDC4
+    - '@source: src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1400_801FBDC4.c'
+    - '@behavior: Overlay per-record callback (entry 10 of the twenty-two-word callback run at 0x801FC468, 0x801FC468 through 0x801FC4BC, which dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C selects with the unsigned record byte at offset 0x7A; the word at 0x801FC490 holds this address, its only image word). It re-arms the three-entry overlay effect group for ids 7, 5 and 6 through func_80166E88(7, 5, 6, 0), clears the shared live-local work-record count byte D_80146254, then runs the per-id effect teardown func_801C187C for ids 7, 5 and 6 in that order and returns without the func_801C1630 tail its neighbour 0x801FBF18 carries. It ignores the record pointer and the second argument its dispatcher passes, reads no memory of its own and writes only that D_80146254 byte; the 0x18-byte frame only keeps $ra across the four calls, the three leading arm immediates are materialised in $a0/$a1/$a2 before the first jal with the zero fourth one in that jal''s delay slot, and each teardown id is materialised in $a0 inside its own jal''s delay slot. No in-image jal reaches the address. Its bytes are instruction-for-instruction identical to its neighbour 0x801FBD78 apart from the second arm and teardown immediate (5 where that one has 4).'
   - - 21008
     - asm
     - func_801FBE10
@@ -150,8 +164,10 @@ segments:
     - asm
     - func_801FC130
   - - 21992
-    - asm
-    - func_801FC1E8
+    - c
+    - armEffectGroupThenClearWorkRecordsAndResetEffectSlotScenarioScena1400_801FC1E8
+    - '@source: src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectSlotScenarioScena1400_801FC1E8.c'
+    - '@behavior: Overlay per-record callback (entry 18 of the twenty-two-word callback run at 0x801FC468, 0x801FC468 through 0x801FC4BC, which dispatchRecordCallbackByByte7AScenarioScena1400_801FB37C selects with the unsigned record byte at offset 0x7A; the word at 0x801FC4B0 holds this address, its only image word). It re-arms the three-entry overlay effect group for ids 7, 2 and 6 through func_80166E88(7, 2, 6, 0), clears the shared live-local work-record count byte D_80146254, runs the per-id effect teardown func_801C187C for id 7 and finishes with the helper func_801C1630. It ignores the record pointer and second argument its dispatcher passes, reads no memory of its own, writes none, and its 0x18-byte frame only keeps $ra across the four calls.'
   - - 22060
     - asm
     - func_801FC22C
@@ -163,5 +179,5 @@ segments:
     - func_801FC328
   - - 22532
     - asm
-    - func_801FC404
+    - D_801FC404
 - - 22724

@@ -5,7 +5,7 @@
  * @source 0x801DCC74
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801DCC74(void) {
     D_801E22E4[D_80144286]();

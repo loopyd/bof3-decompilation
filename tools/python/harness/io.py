@@ -49,6 +49,10 @@ class RepoLayout:
     gcc272_psx_root: Path
     gcc_variants_root: Path
     psyq_root: Path
+    # Appended after the original fields so existing positional construction keeps
+    # its field order.
+    bof3_text_src: Path = Path()
+    bof3_text_bin: Path = Path()
 
     @property
     def external_inputs_dir(self) -> Path:
@@ -98,6 +102,8 @@ def repo_layout(
         gcc272_psx_root=toolchains / "gcc-2.7.2-psx",
         gcc_variants_root=toolchains / "gcc-variants",
         psyq_root=toolchains / "psyq" / psyq,
+        bof3_text_src=resolved / "tools" / "rust" / "bof3-text",
+        bof3_text_bin=build / "tools" / "rust" / "bof3-text" / "release" / "bof3-text",
     )
 
 

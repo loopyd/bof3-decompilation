@@ -79,7 +79,7 @@ def main() -> int:
                     except ValueError as error:
                         raise ValueError(
                             "generated work target is invalid; run "
-                            "bin/naming-audit init-all out/reviews/plan-audit-naming"
+                            "bin/harness naming init-all out/reviews/plan-audit-naming"
                         ) from error
                     external_owner = (
                         operation == "owner"
@@ -94,7 +94,7 @@ def main() -> int:
                     if external_owner and operation_target not in manifests:
                         raise ValueError(
                             "external owner target is absent from manifests; "
-                            "run bin/index --recover"
+                            "run bin/harness analysis index --recover"
                         )
                     operations.append(
                         {

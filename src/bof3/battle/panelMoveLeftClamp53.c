@@ -4,7 +4,7 @@
  * @behavior Moves the panel left by 32 pixels, clamping it to x=83 and clearing its state.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 
 void panelMoveLeftClamp53(void) {

@@ -4,7 +4,7 @@
 /* @source 0x801A7C2C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void resetFrontendState(void) {
   u32 i;

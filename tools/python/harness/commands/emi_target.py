@@ -31,7 +31,7 @@ def run(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="emi-target",
+        prog="bin/harness emi target",
         description="Preview or create one bin-only EMI reverse-engineering target.",
     )
     parser.add_argument(
@@ -43,8 +43,8 @@ def build_parser() -> argparse.ArgumentParser:
     add_root_argument(parser)
     add_example_argument(
         parser,
-        "bin/emi-target BIN/BATTLE/BATL_END.EMI#0\n"
-        "bin/emi-target BIN/BATTLE/BATL_END.EMI#0 --apply",
+        "bin/harness emi target BIN/BATTLE/BATL_END.EMI#0\n"
+        "bin/harness emi target BIN/BATTLE/BATL_END.EMI#0 --apply",
     )
     parser.set_defaults(handler=run)
     return parser

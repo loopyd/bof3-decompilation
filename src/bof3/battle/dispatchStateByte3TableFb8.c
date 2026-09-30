@@ -8,7 +8,7 @@
  * `a0` before its direct call and does not consume caller-provided arguments.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchStateByte3TableFb8(void) {
   Battle03DispatchTable handlers;

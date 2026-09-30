@@ -5,7 +5,7 @@
  *           of 100 or greater.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 s32 func_801DAA78(u8 row, u8 count) {
   u8 i;

@@ -5,7 +5,7 @@
  * D_801D41E0 function-pointer table.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801D25D8(void) {
   D_801D41E0[modeIndex]();

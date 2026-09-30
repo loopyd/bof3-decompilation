@@ -5,7 +5,7 @@
  * @source 0x801E5988
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void clearQueuedSlotBytes(void) {
   ((volatile u8*)D_801EC2E0)[0x00] = 0u;

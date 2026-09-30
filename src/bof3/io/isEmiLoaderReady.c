@@ -4,7 +4,7 @@
  * @source 0x80162D00
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 s32 isEmiLoaderReady(void) {
   volatile const u8* emiStateBase;

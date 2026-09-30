@@ -1,7 +1,0 @@
-#!/bin/sh
-set -eu
-
-ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
-. "$ROOT/bin/python-env"
-python_env "$ROOT/.venv/bin/python" 1 'run `just venv` from '"$ROOT"
-exec "$PYTHON" -m harness.commands.permute "$@"

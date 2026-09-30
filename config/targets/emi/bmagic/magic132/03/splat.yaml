@@ -1,0 +1,83 @@
+name: bmagic_magic132_03
+sha1: 9fc6c8d3d883cd6c1a9a35cce0be5694f544722c
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic132_03
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/bmagic/magic132/03.bin
+  asm_path: out/splat/emi/bmagic/magic132/03/asm
+  src_path: src/emi/bmagic/magic132/03
+  ld_script_path: out/splat/emi/bmagic/magic132/03/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/bmagic/magic132/03/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/bmagic/magic132/03/undefined_syms_auto.txt
+  cache_path: out/splat/emi/bmagic/magic132/03/.splache
+  asset_path: out/splat/emi/bmagic/magic132/03/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/bmagic/magic132/03/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 24
+  vram: 2149510168
+  subsegments:
+  - - 24
+    - asm
+    - func_801EEC18
+  - - 136
+    - asm
+    - func_801EEC88
+  - - 464
+    - asm
+    - func_801EEDD0
+  - - 756
+    - asm
+    - func_801EEEF4
+  - - 1084
+    - asm
+    - func_801EF03C
+  - - 1188
+    - asm
+    - func_801EF0A4
+  - - 1300
+    - asm
+    - func_801EF114
+  - - 1368
+    - asm
+    - func_801EF158
+  - - 1536
+    - asm
+    - func_801EF200
+  - - 1828
+    - asm
+    - func_801EF324
+  - - 1928
+    - asm
+    - func_801EF388
+  - - 2016
+    - asm
+    - func_801EF3E0
+  - - 2124
+    - asm
+    - func_801EF44C
+  - - 2212
+    - asm
+    - func_801EF4A4
+  - - 2480
+    - asm
+    - func_801EF5B0
+  - - 3348
+    - asm
+    - func_801EF914
+  - - 4440
+    - asm
+    - func_801EFD58
+- - 4464

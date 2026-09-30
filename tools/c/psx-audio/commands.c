@@ -47,7 +47,7 @@ int cmd_list(int argc, char** argv) {
   }
   printf("  %.*s\n", 62,
          "──────────────────────────────────────────────────────────────");
-  printf("  bin/psx-audio play <name>    e.g. bin/psx-audio play BGM000\n\n");
+  printf("  bin/harness audio build play <name>    e.g. bin/harness audio build play BGM000\n\n");
   free(tracks);
   return 0;
 }

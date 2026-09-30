@@ -22,6 +22,7 @@ Agent policy, harness tooling and session workflows live in [agents](../agents/I
 | [runtime/battle-dispatch-tables.md](runtime/battle-dispatch-tables.md) | reviewed Battle 15 dispatch-table ranges and consumers |
 | [data/INDEX.md](data/INDEX.md) | data-spec map and recorded table families |
 | [formats/emi.md](formats/emi.md) | EMI container and entry format |
+| [formats/dialogue-text.md](formats/dialogue-text.md) | Area dialogue subfile layout, character table, command bytecodes and the editable text grammar |
 | [formats/audio.md](formats/audio.md) | XA, VAB, SEP, PSF1, and SPU formats/runtime |
 | [formats/str-xa.md](formats/str-xa.md) | extracted STR/XA sectors and playback |
 | [formats/graphics.md](formats/graphics.md) | VRAM uploads, textures, palettes, and graphics formats |

@@ -6,7 +6,7 @@
  * and sets byte 2 through a separately reloaded cell.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void copyScratchToLocalWork(void) {
   volatile Battle03LocalWork* work;

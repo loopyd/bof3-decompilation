@@ -4,7 +4,7 @@
  * @source 0x801AD44C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void clearWorkAnimBit0(void) {
   struct GameWorkArea* work;

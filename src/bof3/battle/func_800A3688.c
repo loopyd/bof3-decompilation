@@ -7,7 +7,7 @@
  * @source 0x800A3688
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 s32 func_800A3688(s32 arg0, s32 arg1) {
   volatile u8* entry;

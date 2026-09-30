@@ -9,6 +9,11 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world03/copyModeByteWorld03Area13113_801F2EB8.c",
+    "src/bof3/world03/retreatCounter2By10World03Area13113_801F2D78.c",
+    "src/bof3/world03/retreatCounter3CloneWorld03Area13113_801F2ED0.c",
+    "src/bof3/support/emi_world03_area131_13_symbols.c",
+    "src/bof3/world03/retreatCounter2CloneWorld03Area13113_801F2DC8.c",
     "src/bof3/world03/setWorld03Area13113_801F2F08.c",
     "src/bof3/support/area131_13_psyq.c",
 ]

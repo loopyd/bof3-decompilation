@@ -4,7 +4,7 @@
  * @behavior clears work byte nine and increments work byte one.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void clearByte9AdvanceByte1(void) {
   u8* work;

@@ -6,6 +6,6 @@
  * @behavior retreats panel field six by 16 and clamps it to -20.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 PANEL_RETREAT_FIELD6(retreatPanelField6ToNeg20, 0x10, -0x14)

@@ -9,6 +9,12 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world03/advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68.c",
+    "src/bof3/world03/dispatchStateByte1Table5828World03Area13413_801F4344.c",
+    "src/bof3/world03/setScratchStateToMode1WhenPadMatchesWorld03Area13413_801F3E50.c",
+    "src/bof3/world03/findFreeWorkRecordAt800E4800World03Area13413_801F4938.c",
+    "src/bof3/world03/resetScratchStateToMode1World03Area13413_801F35A4.c",
+    "src/bof3/world03/clearWorkFlagsWhenNoCallbackRanWorld03Area13413_801F4310.c",
     "src/bof3/world03/setTwoWorld03Area13413_801F53D0.c",
     "src/bof3/world03/setTwoWorld03Area13413_801F51E4.c",
     "src/bof3/world03/getAndClearWorld03Area13413_801F3B14.c",
@@ -22,6 +28,21 @@ support_sources = [
     "src/bof3/world03/noopHandlerWorld03Area13413_801F3D40.c",
     "src/bof3/world03/noopHandlerWorld03Area13413_801F3D38.c",
     "src/bof3/world03/noopHandlerWorld03Area13413_801F33B8.c",
+    "src/bof3/world03/advanceCounter1By2World03Area13413_801F5194.c",
+    "src/bof3/world03/retreatCounter1By2World03Area13413_801F51BC.c",
+    "src/bof3/world03/advanceCounter2By8World03Area13413_801F5280.c",
+    "src/bof3/world03/retreatCounter2By8World03Area13413_801F52A8.c",
+    "src/bof3/world03/clearWorkTableAt800E4800World03Area13413_801F4974.c",
     "src/bof3/support/area134_13_psyq.c",
+    "src/bof3/world03/countdownScratchStateToMode15World03Area13413_801F3254.c",
+    "src/bof3/world03/countdownScratchStateToMode17World03Area13413_801F32E4.c",
+    "src/bof3/world03/countdownScratchStateToMode15World03Area13413_801F3B7C.c",
+    "src/bof3/world03/countdownScratchStateToMode17World03Area13413_801F3C0C.c",
+    "src/bof3/world03/clearScratchStateAndAreaStatusWorld03Area13413_801F31B8.c",
+    "src/bof3/world03/dispatchStateByte1Table57a4World03Area13413_801F3560.c",
+    "src/bof3/world03/dispatchStateByte1Table5804World03Area13413_801F3E0C.c",
+    "src/bof3/world03/dispatchStateByte1Table581cWorld03Area13413_801F41D0.c",
+    "src/bof3/world03/advanceWorkWordAndSetScratchStateToMode7World03Area13413_801F2F3C.c",
+    "src/bof3/world03/advanceWorkWordAndSetScratchStateToMode11World03Area13413_801F30E4.c",
 ]
 psyq_source = "src/bof3/support/area134_13_psyq.c"

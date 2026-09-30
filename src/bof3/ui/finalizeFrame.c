@@ -4,7 +4,7 @@
  * @source 0x801993F0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void finalizeFrame(void) {
   func_801D0D9C();

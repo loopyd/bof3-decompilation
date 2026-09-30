@@ -5,7 +5,7 @@
  * by the non-volatile scratchpad pointer cell battleWork.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS dispatchByte3TableB424(void) {
   D_801EB424[((Battle03LocalWork*)battleWork)->unk_03]();

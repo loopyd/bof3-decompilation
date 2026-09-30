@@ -4,7 +4,7 @@
  * @source 0x800AA8A4
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 s32 func_800AA8A4(u8 entry)
 {

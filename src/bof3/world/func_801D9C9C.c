@@ -5,7 +5,7 @@
  * @behavior Advances the shared counters and clears work byte 3 in mode 4.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801D9C9C(void)
 {

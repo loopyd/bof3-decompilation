@@ -1,0 +1,140 @@
+name: etc_commu01_07
+sha1: 1d03e7c9c4ddabad4d00e16c48630b5f05db8c02
+options:
+  platform: psx
+  compiler: psyq
+  basename: etc_commu01_07
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/etc/commu01/07.bin
+  asm_path: out/splat/emi/etc/commu01/07/asm
+  src_path: src/emi/etc/commu01/07
+  ld_script_path: out/splat/emi/etc/commu01/07/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/etc/commu01/07/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/etc/commu01/07/undefined_syms_auto.txt
+  cache_path: out/splat/emi/etc/commu01/07/.splache
+  asset_path: out/splat/emi/etc/commu01/07/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/etc/commu01/07/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149387268
+  subsegments:
+  - - 4
+    - asm
+    - D_801D0C04
+  - - 104
+    - asm
+    - func_801D0C68
+  - - 172
+    - asm
+    - func_801D0CAC
+  - - 580
+    - asm
+    - func_801D0E44
+  - - 640
+    - asm
+    - func_801D0E80
+  - - 700
+    - asm
+    - func_801D0EBC
+  - - 1368
+    - asm
+    - func_801D1158
+  - - 1832
+    - asm
+    - func_801D1328
+  - - 1892
+    - asm
+    - func_801D1364
+  - - 2608
+    - asm
+    - func_801D1630
+  - - 2936
+    - asm
+    - func_801D1778
+  - - 3732
+    - asm
+    - func_801D1A94
+  - - 4680
+    - asm
+    - func_801D1E48
+  - - 5392
+    - asm
+    - func_801D2110
+  - - 6972
+    - asm
+    - func_801D273C
+  - - 7332
+    - asm
+    - func_801D28A4
+  - - 8600
+    - asm
+    - func_801D2D98
+  - - 9272
+    - asm
+    - func_801D3038
+  - - 10644
+    - asm
+    - func_801D3594
+  - - 11004
+    - asm
+    - func_801D36FC
+  - - 11652
+    - asm
+    - func_801D3984
+  - - 11848
+    - asm
+    - func_801D3A48
+  - - 11936
+    - asm
+    - func_801D3AA0
+  - - 12044
+    - asm
+    - func_801D3B0C
+  - - 13052
+    - asm
+    - func_801D3EFC
+  - - 13360
+    - asm
+    - func_801D4030
+  - - 13688
+    - asm
+    - func_801D4178
+  - - 14044
+    - asm
+    - func_801D42DC
+  - - 14452
+    - asm
+    - func_801D4474
+  - - 14560
+    - asm
+    - func_801D44E0
+  - - 14996
+    - asm
+    - func_801D4694
+  - - 15300
+    - asm
+    - func_801D47C4
+  - - 15404
+    - asm
+    - func_801D482C
+  - - 15812
+    - asm
+    - func_801D49C4
+  - - 16044
+    - asm
+    - func_801D4AAC
+  - - 16216
+    - asm
+    - func_801D4B58
+  - - 16312
+    - asm
+    - D_801D4BB8
+- - 16948

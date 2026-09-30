@@ -11,6 +11,8 @@ sources = []
 support_sources = [
     "src/bof3/world04/zeroResultWorld04Area17413_801F4FA4.c",
     "src/bof3/world04/noopHandlerWorld04Area17413_801F4F9C.c",
+    "src/bof3/world04/clearWorkTableByte3At800E4800World04Area17413_801F2E5C.c",
+    "src/bof3/world04/setStatusFFFFSubstate1EIfGateElse0AWorld04Area17413_801F4F6C.c",
     "src/bof3/support/area174_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area174_13_psyq.c"

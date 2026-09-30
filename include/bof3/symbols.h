@@ -1,6 +1,8 @@
 #ifndef BOF3_SYMBOLS_H
 #define BOF3_SYMBOLS_H
 
+#include "base/types.h"
+
 /*
  * Weak original-binary address bindings. A normal strong C definition with
  * the same name overrides the absolute symbol, so data and functions can be

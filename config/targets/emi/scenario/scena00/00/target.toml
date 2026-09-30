@@ -8,11 +8,69 @@ splat = "config/targets/emi/scenario/scena00/00/splat.yaml"
 load_address = 0x801f6c00
 
 sources = [
+    "src/bof3/scenario/adoptSelectedRecordWord.c",
+    "src/bof3/scenario/applyFieldTurnInput.c",
+    "src/bof3/scenario/bootScenarioState.c",
+    "src/bof3/scenario/brightenWorkObjectColorAndCommitProgress.c",
     "src/bof3/scenario/dispatchRecordCallbackByByte7A.c",
+    "src/bof3/scenario/dispatchWorkByte1Handler.c",
+    "src/bof3/scenario/dispatchWorkByte1Handler_801F70F0.c",
+    "src/bof3/scenario/drawAdoptedRecordCursorBeam.c",
+    "src/bof3/scenario/drawWorkObjectEntryEffectAndAdvance_801F7CF0.c",
+    "src/bof3/scenario/emitWorkObjectTexturedQuad_801F8BCC.c",
+    "src/bof3/scenario/func_801F7134.c",
+    "src/bof3/scenario/func_801F7264.c",
+    "src/bof3/scenario/func_801F7350.c",
+    "src/bof3/scenario/func_801F73A8.c",
+    "src/bof3/scenario/func_801F7440.c",
+    "src/bof3/scenario/func_801F7670.c",
+    "src/bof3/scenario/func_801F78CC.c",
+    "src/bof3/scenario/func_801F78EC.c",
+    "src/bof3/scenario/func_801F7A18.c",
+    "src/bof3/scenario/func_801F7A5C.c",
+    "src/bof3/scenario/func_801F7B0C.c",
+    "src/bof3/scenario/func_801F7B80.c",
+    "src/bof3/scenario/func_801F7C34.c",
+    "src/bof3/scenario/func_801F7DC8.c",
+    "src/bof3/scenario/func_801F7EE0.c",
+    "src/bof3/scenario/func_801F8014.c",
+    "src/bof3/scenario/func_801F8140.c",
+    "src/bof3/scenario/func_801F82B4.c",
+    "src/bof3/scenario/func_801F8360.c",
+    "src/bof3/scenario/func_801F85A8.c",
+    "src/bof3/scenario/func_801F8748.c",
+    "src/bof3/scenario/func_801F878C.c",
+    "src/bof3/scenario/func_801F882C.c",
+    "src/bof3/scenario/func_801F89F0.c",
+    "src/bof3/scenario/func_801F8930.c",
+    "src/bof3/scenario/func_801F8AB8.c",
+    "src/bof3/scenario/func_801F8D70.c",
+    "src/bof3/scenario/drawLinkedRecordCursorBeam.c",
+    "src/bof3/scenario/func_801F9644.c",
+    "src/bof3/scenario/func_801F9868.c",
+    "src/bof3/scenario/func_801F913C.c",
+    "src/bof3/scenario/func_801F92DC.c",
+    "src/bof3/scenario/func_801F9B98.c",
+    "src/bof3/scenario/func_801F9BD4.c",
+    "src/bof3/scenario/func_801F9BDC.c",
+    "src/bof3/scenario/func_801F9BE4.c",
+    "src/bof3/scenario/func_801F9FB8.c",
+    "src/bof3/scenario/func_801FA27C.c",
+    "src/bof3/scenario/func_801FA7D8.c",
+    "src/bof3/scenario/func_801FAF6C.c",
+    "src/bof3/scenario/func_801FB204.c",
+    "src/bof3/scenario/func_801FB620.c",
+    "src/bof3/scenario/func_801FB67C.c",
+    "src/bof3/scenario/func_801FB744.c",
+    "src/bof3/scenario/func_801FB924.c",
+    "src/bof3/scenario/func_801FC01C.c",
     "src/bof3/scenario/func_801FC3A0.c",
     "src/bof3/scenario/func_801FC810.c",
     "src/bof3/scenario/returnZero_801FC8F4.c",
     "src/bof3/scenario/resetEffectBank_801FC8FC.c",
+    "src/bof3/scenario/seedPrimaryStateOnRecordCallback_801FC818.c",
+    "src/bof3/scenario/drawWorkObjectTrailToCell.c",
+    "src/bof3/scenario/seedWorkObjectPositionAndAdvance.c",
 ]
 support_sources = [
     "src/bof3/support/scena00_symbols.c",
@@ -22,3 +80,39 @@ psyq_source = "src/bof3/support/scena00_psyq.c"
 headers = [
     "include/bof3/scenario/scena00_internal.h",
 ]
+
+[[matching.section_placements]]
+function = 0x801FA7D8
+section = ".rodata"
+address = 0x801F6C58
+size = 0x48
+
+[[matching.section_placements]]
+function = 0x801F9BE4
+section = ".rodata"
+address = 0x801F6C08
+size = 0x20
+
+[[matching.section_placements]]
+function = 0x801FB204
+section = ".rodata"
+address = 0x801F6D70
+size = 0x24
+
+[[matching.section_placements]]
+function = 0x801FA27C
+section = ".rodata"
+address = 0x801F6C28
+size = 0x2C
+
+[[matching.section_placements]]
+function = 0x801FAF6C
+section = ".rodata"
+address = 0x801F6CA0
+size = 0xCC
+
+[[matching.section_placements]]
+function = 0x801FB924
+section = ".rodata"
+address = 0x801F6D98
+size = 0x28

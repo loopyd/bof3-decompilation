@@ -6,7 +6,7 @@
  * @source 0x8009F978
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_8009F978(void) {
   resetSelectionApplyInput(0x8);

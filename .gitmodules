@@ -28,3 +28,6 @@
 [submodule "third_party/spimdisasm"]
 	path = third_party/spimdisasm
 	url = https://github.com/Decompollaborate/spimdisasm.git
+[submodule "third_party/pcsx-redux"]
+	path = third_party/pcsx-redux
+	url = https://github.com/grumpycoders/pcsx-redux.git

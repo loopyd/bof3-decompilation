@@ -4,7 +4,7 @@
  * @source 0x801E63C0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchSlotByte1TableF20(void) {
   Battle03DispatchTable handlers;

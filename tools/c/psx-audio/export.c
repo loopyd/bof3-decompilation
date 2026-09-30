@@ -24,7 +24,7 @@ int cmd_play_bgm(int argc, char** argv) {
     printf("  %s + %s + %s\n", argv[2], argv[3], argv[4]);
   } else {
     if (find_track_path(target, path, sizeof(path)) != 0) {
-      fprintf(stderr, "error: track '%s' not found (try: bin/psx-audio list)\n",
+      fprintf(stderr, "error: track '%s' not found (try: bin/harness audio build list)\n",
               target);
       return 1;
     }

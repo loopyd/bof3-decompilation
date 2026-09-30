@@ -6,7 +6,7 @@
  * @source 0x8009E804
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void resetSelectionApplyInput40(void) {
   resetSelectionApplyInput(0x40);

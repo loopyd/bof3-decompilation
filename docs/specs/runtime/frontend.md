@@ -55,7 +55,7 @@ yet identify the transition that selects area 31.
 The callback-table and direct-call recovery pass established these boundaries:
 
 - `0x80197378` is an exact lift (`updateStateMachine`,
-  `bin/asm-diff emi/etc/game/00@0x80197378 --detail minimal`: MATCH 155/155,
+  `bin/harness lift asm-diff emi/etc/game/00@0x80197378 --detail minimal`: MATCH 155/155,
   620 bytes, `@status exact`).
 - `0x80198170`, `0x801981b4`, and `0x801981d4` split the former
   `0x80198170..0x80198234` span and match exactly.

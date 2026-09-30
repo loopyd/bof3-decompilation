@@ -1,0 +1,78 @@
+schema = "harness.target/v2"
+id = "emi/bmagic/magic004/03"
+disc_id = "BIN/BMAGIC/MAGIC004.EMI#3"
+kind = "emi"
+source_dir = "src/emi/bmagic/magic004/03"
+binary = "out/binaries/emi/bmagic/magic004/03.bin"
+splat = "config/targets/emi/bmagic/magic004/03/splat.yaml"
+load_address = 0x801EEC00
+
+sources = []
+support_sources = [
+    "src/bof3/bmagic/invokeBmagicHelperMagic004.c",
+    "src/bof3/support/magic004_03_psyq.c",
+]
+psyq_source = "src/bof3/support/magic004_03_psyq.c"
+
+[[replicas]]
+disc_id = "BIN/BMAGIC/MAGIC005.EMI#3"
+payload_sha256 = "26f107474c0654c22cc9ee4a927bf0c75cee83bab0117d8c764dbf56d4367e98"
+load_address = 0x801EEC00
+size = 4716
+evidence = "byte-identical to BIN/BMAGIC/MAGIC004.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BMAGIC/MAGIC029.EMI#3"
+payload_sha256 = "26f107474c0654c22cc9ee4a927bf0c75cee83bab0117d8c764dbf56d4367e98"
+load_address = 0x801EEC00
+size = 4716
+evidence = "byte-identical to BIN/BMAGIC/MAGIC004.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BMAGIC/MAGIC049.EMI#3"
+payload_sha256 = "26f107474c0654c22cc9ee4a927bf0c75cee83bab0117d8c764dbf56d4367e98"
+load_address = 0x801EEC00
+size = 4716
+evidence = "byte-identical to BIN/BMAGIC/MAGIC004.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BMAGIC/MAGIC133.EMI#3"
+payload_sha256 = "26f107474c0654c22cc9ee4a927bf0c75cee83bab0117d8c764dbf56d4367e98"
+load_address = 0x801EEC00
+size = 4716
+evidence = "byte-identical to BIN/BMAGIC/MAGIC004.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BMAGIC/MAGIC134.EMI#3"
+payload_sha256 = "26f107474c0654c22cc9ee4a927bf0c75cee83bab0117d8c764dbf56d4367e98"
+load_address = 0x801EEC00
+size = 4716
+evidence = "byte-identical to BIN/BMAGIC/MAGIC004.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BMAGIC/MAGIC135.EMI#3"
+payload_sha256 = "26f107474c0654c22cc9ee4a927bf0c75cee83bab0117d8c764dbf56d4367e98"
+load_address = 0x801EEC00
+size = 4716
+evidence = "byte-identical to BIN/BMAGIC/MAGIC004.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BMAGIC/MAGIC136.EMI#3"
+payload_sha256 = "26f107474c0654c22cc9ee4a927bf0c75cee83bab0117d8c764dbf56d4367e98"
+load_address = 0x801EEC00
+size = 4716
+evidence = "byte-identical to BIN/BMAGIC/MAGIC004.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BMAGIC/MAGIC156.EMI#3"
+payload_sha256 = "26f107474c0654c22cc9ee4a927bf0c75cee83bab0117d8c764dbf56d4367e98"
+load_address = 0x801EEC00
+size = 4716
+evidence = "byte-identical to BIN/BMAGIC/MAGIC004.EMI#3: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BMAGIC/MAGIC157.EMI#3"
+payload_sha256 = "26f107474c0654c22cc9ee4a927bf0c75cee83bab0117d8c764dbf56d4367e98"
+load_address = 0x801EEC00
+size = 4716
+evidence = "byte-identical to BIN/BMAGIC/MAGIC004.EMI#3: same payload sha256 and load address"

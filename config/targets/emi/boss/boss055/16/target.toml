@@ -9,6 +9,12 @@ load_address = 0x800C1800
 
 sources = []
 support_sources = [
+    "src/bof3/boss/callEnemyReadyUnlessKindFlagBossBoss05516_800C21E4.c",
+    "src/bof3/boss/dispatchIndexedHandlerBossBoss05516_800C22F0.c",
+    "src/bof3/boss/publishBattleHooksBossBoss05516_800C24A0.c",
+    "src/bof3/boss/queueSlotThenRaisePendingFlagBossBoss05516_800C2340.c",
+    "src/bof3/boss/resetScratchStateBossBoss05516_800C2244.c",
+    "src/bof3/boss/fixedPointToUnitsBossBoss05516_800C3254.c",
     "src/bof3/boss/invokeZeroArgBossBoss05516_800C26B4.c",
     "src/bof3/boss/getAndClearBossBoss05516_800C2234.c",
     "src/bof3/boss/zeroResultBossBoss05516_800C24D8.c",

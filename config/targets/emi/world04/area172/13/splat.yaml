@@ -1,0 +1,192 @@
+name: world04_area172_13
+sha1: 1d48e074e6ea18536b840bb01befc452e220ba46
+options:
+  platform: psx
+  compiler: psyq
+  basename: world04_area172_13
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/world04/area172/13.bin
+  asm_path: out/splat/emi/world04/area172/13/asm
+  src_path: src/emi/world04/area172/13
+  ld_script_path: out/splat/emi/world04/area172/13/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/world04/area172/13/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/world04/area172/13/undefined_syms_auto.txt
+  cache_path: out/splat/emi/world04/area172/13/.splache
+  asset_path: out/splat/emi/world04/area172/13/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/world04/area172/13/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149526532
+  subsegments:
+  - - 4
+    - asm
+    - func_801F2C04
+  - - 72
+    - asm
+    - func_801F2C48
+  - - 132
+    - asm
+    - func_801F2C84
+  - - 288
+    - c
+    - invokeHelperArgThenHelperWorld04Area17213_801F2D20
+  - - 328
+    - asm
+    - func_801F2D48
+  - - 408
+    - asm
+    - func_801F2D98
+  - - 500
+    - asm
+    - func_801F2DF4
+  - - 728
+    - asm
+    - func_801F2ED8
+  - - 1008
+    - asm
+    - func_801F2FF0
+  - - 1076
+    - asm
+    - func_801F3034
+  - - 1124
+    - asm
+    - func_801F3064
+  - - 1272
+    - asm
+    - func_801F30F8
+  - - 1488
+    - asm
+    - func_801F31D0
+  - - 1768
+    - asm
+    - func_801F32E8
+  - - 1908
+    - asm
+    - func_801F3374
+  - - 1964
+    - asm
+    - func_801F33AC
+  - - 2032
+    - asm
+    - func_801F33F0
+  - - 2092
+    - asm
+    - func_801F342C
+  - - 2264
+    - asm
+    - func_801F34D8
+  - - 2520
+    - asm
+    - func_801F35D8
+  - - 2752
+    - asm
+    - func_801F36C0
+  - - 3260
+    - asm
+    - func_801F38BC
+  - - 3304
+    - asm
+    - func_801F38E8
+  - - 3460
+    - asm
+    - func_801F3984
+  - - 3640
+    - asm
+    - func_801F3A38
+  - - 4092
+    - asm
+    - func_801F3BFC
+  - - 4752
+    - asm
+    - func_801F3E90
+  - - 5036
+    - asm
+    - func_801F3FAC
+  - - 5216
+    - asm
+    - func_801F4060
+  - - 5432
+    - asm
+    - func_801F4138
+  - - 5924
+    - c
+    - clearSharedFlagBit4EWorld04Area17213_801F4324
+    - '@source: src/bof3/world04/clearSharedFlagBit4EWorld04Area17213_801F4324.c'
+    - '@behavior: Clears bit 0x4E of the shared main-RAM flag bank at 0x80144F28 through the shared bit-clear helper func_8015B5A8; takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the call.'
+  - - 5964
+    - asm
+    - func_801F434C
+  - - 6088
+    - asm
+    - func_801F43C8
+  - - 6156
+    - asm
+    - func_801F440C
+  - - 6340
+    - asm
+    - func_801F44C4
+  - - 6940
+    - asm
+    - func_801F471C
+  - - 7008
+    - asm
+    - func_801F4760
+  - - 7152
+    - asm
+    - func_801F47F0
+  - - 7452
+    - asm
+    - func_801F491C
+  - - 7644
+    - asm
+    - func_801F49DC
+  - - 7852
+    - asm
+    - func_801F4AAC
+  - - 7924
+    - asm
+    - func_801F4AF4
+  - - 7996
+    - asm
+    - func_801F4B3C
+  - - 8128
+    - asm
+    - func_801F4BC0
+  - - 8388
+    - asm
+    - func_801F4CC4
+  - - 8536
+    - c
+    - queueSharedUiElement9x3Size50World04Area17213_801F4D58
+    - '@source: src/bof3/world04/queueSharedUiElement9x3Size50World04Area17213_801F4D58.c'
+    - '@behavior: Queues the shared world-marker element at (0x9, 0x3) with size 0x50 through the shared marker queue func_801A4BC0; takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the call.'
+  - - 8576
+    - asm
+    - func_801F4D80
+  - - 8644
+    - c
+    - setScratchWorkStateWorld04Area17213_801F4DC4
+  - - 8672
+    - asm
+    - func_801F4DE0
+  - - 8808
+    - c
+    - invokeHelperArgsWorld04Area17213_801F4E68
+  - - 8844
+    - asm
+    - func_801F4E8C
+  - - 9072
+    - asm
+    - func_801F4F70
+  - - 9340
+    - asm
+    - D_801F507C
+- - 15260

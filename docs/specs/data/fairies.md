@@ -23,7 +23,7 @@ coordinates; they are not offsets into the extracted fairy roster pointer map.
 
 The archive offsets and record counts come from the tracked
 `third_party/references/vast-violence/tables/tables_list_1.1.txt`;
-`bin/decomp-status` is a lift match-status report and its `out/matching/`
+`bin/harness lift status` is a lift match-status report and its `out/matching/`
 cache is a match cache — neither verifies record bytes or hashes, and no
 tracked command in this repository reproduces row hashes. The COMMU00 entry-0
 payload is loaded at
@@ -75,6 +75,6 @@ progression behavior are recorded, but exact function promotion remains pending.
   verifier is tracked in this repository.
 - Runtime COMMU00 payload base: per-archive manifest
   `out/extracted/BIN/ETC/COMMU00/emi.json` (generated during extraction,
-  consumed in memory by `load_catalog`; `bin/emi-target` does not emit a
+  consumed in memory by `load_catalog`; `bin/harness emi target` does not emit a
   reusable catalog).
 - Runtime consumer semantics and COMMU02 entry mapping remain unresolved.

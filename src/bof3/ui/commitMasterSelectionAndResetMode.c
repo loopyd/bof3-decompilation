@@ -8,6 +8,9 @@
  * @behavior If the global state is not 2, copy the selected master's byte
  * into the active 152-byte record unless it is 0xFF, reset modeIndex, and
  * increment the shared selection counter.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void commitMasterSelectionAndResetMode(void)
 {

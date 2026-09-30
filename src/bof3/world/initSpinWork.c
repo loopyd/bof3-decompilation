@@ -6,7 +6,7 @@
  * @source 0x801F3D0C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void initSpinWork(void) {
   u8* work;

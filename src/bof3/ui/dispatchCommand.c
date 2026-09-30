@@ -5,7 +5,7 @@
  *           zero-extended command id scaled by 4 as the handler argument.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchCommand(u8 arg0) {
   u32 index = (u32)arg0 << 2;

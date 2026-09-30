@@ -8,7 +8,7 @@ extern volatile u8 D_80146494;
  * @source 0x80162CD8
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void selectEmiLoaderMode6(void) {
   emiLoaderMode = 6;

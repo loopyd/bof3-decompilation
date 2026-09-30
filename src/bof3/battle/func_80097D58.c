@@ -5,7 +5,7 @@
  * @behavior Configure the active selection slot from its selection-kind flags.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_80097D58(void)
 {

@@ -3,6 +3,9 @@
 /**
  * @source 0x801FC3A0
  * @behavior Advances twelve fixed-point channels for each active scenario record and subtracts their per-channel offsets from a companion record.
+ * @status partial
+ * @match 68.03
+ * @residual Register-allocation permutation (class 1): the original keeps the i*0x28 row stride in $a2, the channel value in $v1 and the output pointer in $a1; this build keeps the stride in $a1, the value in $v0 and the output pointer in $a2, and therefore hoists move a3,zero out of the blez delay slot (269 vs 268 instructions). Eight measured clean-C shapes (operand swap, symbol pointers, shared row offset, declaration-init loop, both pointers early, in-place accumulation, first-operand local, narrowed output store) moved the score only downward (74-171/269).
  */
 void func_801FC3A0(void)
 {

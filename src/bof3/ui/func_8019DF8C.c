@@ -4,7 +4,7 @@
  * @source 0x8019DF8C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_8019DF8C(void) {
   D_8014932C = 0;

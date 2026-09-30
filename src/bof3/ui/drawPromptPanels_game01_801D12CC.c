@@ -5,7 +5,7 @@
  * @source 0x801D12CC
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void drawPromptPanels(u8 selected, u8 alpha) {
   u8* primitive;

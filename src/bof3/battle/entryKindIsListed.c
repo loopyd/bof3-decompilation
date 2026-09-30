@@ -5,7 +5,7 @@
 /* @source 0x800AB470
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 s32 entryKindIsListed(u8 arg0) {
   u16 value;

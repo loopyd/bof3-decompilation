@@ -73,6 +73,7 @@ def _analyze_validated_records(
     row: dict[str, Any],
     operations: tuple[dict[str, Any], ...],
     registry: ExactCapabilityRegistry = PRODUCTION_EXACT_CAPABILITIES,
+    instructions: tuple[dict[str, Any], ...] = (),
 ) -> dict[str, Any]:
     """Analyze records from the canonical runner boundary."""
     if (
@@ -135,6 +136,7 @@ def _analyze_validated_records(
             "row": selector,
             "operations": normalized_operations,
             "analyzer": SCHEMA,
+            **({"instructions": instructions} if instructions else {}),
         }
     )
     facts: list[dict[str, Any]] = []
@@ -316,6 +318,32 @@ def _analyze_validated_records(
                 "reason": "consumer semantics require reviewed original-byte decoding",
             }
         )
+    if row.get("kind") == "function":
+        seen = set()
+        for capture in instructions:
+            observations = instruction_observations(_RUNNER_TOKEN, target, row, capture)
+            for observation in observations["observations"]:
+                seen.add(observation["class"])
+                facts.append(
+                    {
+                        **observation,
+                        "source_id": _source(
+                            "original-instructions",
+                            target,
+                            observation["value"],
+                            input_digest,
+                        ),
+                    }
+                )
+            opened.extend(observations["open"])
+        for fact_class in ("selected_call", "owner_body"):
+            if fact_class not in seen:
+                opened.append(
+                    {
+                        "class": fact_class,
+                        "reason": f"capability gap: {fact_class}: no supported original body captured; use --instructions; only canonical straight-line call wrappers are supported",
+                    }
+                )
     result = {
         "schema": SCHEMA,
         "target": target,
@@ -353,3 +381,78 @@ def _analyze_validated_records(
                 "missing_fact": _CAPABILITY_MISSING_FACT,
             }
     return result
+
+
+def selected_call_observations(
+    token: object, target: str, row: dict, capture: dict
+) -> tuple[list[dict], list[str]]:
+    """Produce observations only at the runner's original-instruction boundary."""
+    from harness.naming.calls import decode_selected_call
+
+    if token is not _RUNNER_TOKEN:
+        raise ValueError("selected_call requires the native runner")
+    function = parse_function_id(capture["selector"])
+    if function.target.value != target:
+        raise ValueError("selected_call target mismatch")
+    selected = address_of(str(row["name"]))
+    try:
+        value = decode_selected_call(
+            bytes.fromhex(capture["bytes"]), capture["start"], selected
+        )
+    except ValueError as error:
+        return [], [f"{function}: {error}"]
+    return [{"caller": str(function), "binding": capture["binding"], **value}], []
+
+
+def instruction_observations(
+    token: object, target: str, row: dict, capture: dict
+) -> dict:
+    """Share receipt production and replay at the native original-byte boundary."""
+    from harness.naming.calls import decode_owner_body
+
+    if token is not _RUNNER_TOKEN:
+        raise ValueError("instruction observations require the native runner")
+    function = parse_function_id(capture["selector"])
+    from harness.naming.plan import owner_instruction_selectors
+
+    owners = owner_instruction_selectors(row)
+    if function.target.value != target and str(function) not in owners:
+        raise ValueError("instruction capture is not a planned owner selector")
+    observations, opened = [], []
+    if function.target.value == target:
+        values, reasons = selected_call_observations(token, target, row, capture)
+        observations.extend(
+            {"class": "selected_call", "polarity": "positive", "value": value}
+            for value in values
+        )
+        opened.extend(
+            {"class": "selected_call", "reason": reason} for reason in reasons
+        )
+    if str(function) in owners:
+        try:
+            value = decode_owner_body(bytes.fromhex(capture["bytes"]), capture["start"])
+        except ValueError as error:
+            opened.append(
+                {
+                    "class": "owner_body",
+                    "reason": f"capability gap: owner_body: {function}: {error}",
+                }
+            )
+        else:
+            observations.append(
+                {
+                    "class": "owner_body",
+                    "polarity": "positive",
+                    "value": {
+                        "owner": str(function),
+                        "binding": capture["binding"],
+                        **value,
+                    },
+                }
+            )
+    return {
+        "schema": "bof3.naming-evidence-facts/v1",
+        "facts": sorted({observation["class"] for observation in observations}),
+        "observations": observations,
+        "open": opened,
+    }

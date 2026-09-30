@@ -6,7 +6,7 @@
  * @source 0x8009EF08
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_8009EF08(void) {
   func_800A403C(3);

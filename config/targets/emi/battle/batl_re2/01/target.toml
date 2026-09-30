@@ -15,3 +15,304 @@ psyq_source = "src/bof3/support/batl_re2_01_psyq.c"
 headers = [
     "include/bof3/battle/batl_re2_01_internal.h",
 ]
+
+[[replicas]]
+disc_id = "BIN/BATTLE/BATL_RET.EMI#4"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BATTLE/BATTLE.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BATTLE/BATTLE2.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS001.EMI#3"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS002.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS004.EMI#3"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS007.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS008.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS012.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS013.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS014.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS015.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS017.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS018.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS019.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS020.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS021.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS022.EMI#3"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS023.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS024.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS025.EMI#3"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS027.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS028.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS029.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS030.EMI#9"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS031.EMI#3"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS032.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS033.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS034.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS035.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS036.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS037.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS038.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS040.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS042.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS046.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS047.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS049.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS050.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS051.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS052.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS054.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"
+
+[[replicas]]
+disc_id = "BIN/BOSS/BOSS055.EMI#6"
+payload_sha256 = "37f812d1c20e62e4ab5c6750aedc05f6590ad47caef8d5adba49945007b19290"
+load_address = 0x80036E00
+size = 512
+evidence = "byte-identical to BIN/BATTLE/BATL_RE2.EMI#1: same payload sha256 and load address"

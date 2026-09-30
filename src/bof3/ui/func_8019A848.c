@@ -6,7 +6,7 @@
  * applies signed coordinate deltas to the halfwords at offsets 0x2E/0x30.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_8019A848(void)
 {

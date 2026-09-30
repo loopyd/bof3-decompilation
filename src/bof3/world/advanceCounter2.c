@@ -5,7 +5,7 @@
  * @behavior marks the local counter active and advances it by 20.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 COUNTER_ADVANCE(advanceCounter2, counter2,
                 D_80149333)

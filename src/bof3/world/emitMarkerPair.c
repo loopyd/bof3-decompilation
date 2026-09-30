@@ -5,7 +5,7 @@
  * @source 0x801F31CC
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void emitMarkerPair(void) {
   s16 point[3];

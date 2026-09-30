@@ -5,7 +5,7 @@
  * @source 0x801DB434
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u32 findThresholdRank(u8 arg0, u32 arg1) {
   u8 index;

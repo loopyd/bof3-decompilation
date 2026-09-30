@@ -80,7 +80,7 @@ def _validate_next_command(command: object) -> None:
     """Reject malformed commands in shape-only fixture validation."""
 
     if not isinstance(command, str) or command not in {
-        "bin/rev-query --json owners exe/test@0x80100010"
+        "bin/harness analysis query --json owners exe/test@0x80100010"
     }:
         raise ValueError("next command requires canonical eight-digit uppercase form")
 

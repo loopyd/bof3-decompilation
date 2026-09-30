@@ -4,7 +4,7 @@
  * @behavior dispatches through the shared byte-selected battle handler table.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchSubstateTableAcd4(void) {
   D_801EACD4[D_801462E1[0]]();

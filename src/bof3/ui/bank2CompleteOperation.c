@@ -5,7 +5,7 @@
  * @source 0x80197E54
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void bank2CompleteOperation(void) {
   u8   local_ready;

@@ -3,7 +3,7 @@
 /* @source 0x8009EA8C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 /* @behavior Stores the signed half of the battle selection result in the active record. */
 void storeHalvedSelectionResult(void) {

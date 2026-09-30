@@ -1,7 +1,0 @@
-#!/bin/sh
-set -eu
-
-ROOT="$(CDPATH='' cd -- "$(dirname "$0")/.." && pwd)"
-. "$ROOT/bin/python-env"
-python_env "${PSX_PYTHON:-$ROOT/.venv/bin/python}" 2 'run `just setup` first'
-exec "$PYTHON" -c "from harness.commands.lift import main; raise SystemExit(main('m2ctx'))" "$@"

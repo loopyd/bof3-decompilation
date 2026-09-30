@@ -16,6 +16,8 @@ sources = [
     "src/bof3/world/configureSpriteClut.c",
     "src/bof3/world/dispatchCompanion.c",
     "src/bof3/world/func_801D11C0_area03004.c",
+    "src/bof3/world/func_801D12C8_area03004.c",
+    "src/bof3/world/func_801D130C_area03004.c",
     "src/bof3/world/func_801D1744_area03004.c",
     "src/bof3/world/func_801D1818_area03004.c",
     "src/bof3/world/func_801D18CC_area03004.c",
@@ -127,9 +129,11 @@ sources = [
     "src/bof3/world/func_801E1C10.c",
     "src/bof3/world/func_801E1C7C_area03004.c",
     "src/bof3/world/queueIconStrip.c",
+    "src/bof3/world/runArea030FrameServices.c",
     "src/bof3/world/seedMenuScratch.c",
     "src/bof3/world/submitPanelPair.c",
     "src/bof3/world/submitTpageDrawMode.c",
+    "src/bof3/world/updateArea030OverlayFrame.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",

@@ -5,7 +5,7 @@
  * @source 0x801D0DF0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void openSelection(void) {
   volatile u16* timer_ptr;

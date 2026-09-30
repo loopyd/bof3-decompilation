@@ -11,6 +11,8 @@ sources = []
 support_sources = [
     "src/bof3/world00/setTwoWorld00Area01513_801F2D5C.c",
     "src/bof3/world00/setWorld00Area01513_801F2CF8.c",
+    "src/bof3/world00/retreatCounter2By20World00Area01513_801F2D0C.c",
+    "src/bof3/world00/advanceCounter2By20World00Area01513_801F2D34.c",
     "src/bof3/support/area015_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area015_13_psyq.c"

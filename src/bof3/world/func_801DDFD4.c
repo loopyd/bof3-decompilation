@@ -6,7 +6,7 @@
  * state according to the masked controller input.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801DDFD4(void)
 {

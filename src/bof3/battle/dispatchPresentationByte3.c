@@ -5,7 +5,7 @@
  * @source 0x801E4490
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void NO_SIBLING_CALLS dispatchPresentationByte3(void) {
   volatile u8* scratch;

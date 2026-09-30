@@ -1,0 +1,14 @@
+schema = "harness.target/v2"
+id = "emi/bmagic/magic222/03"
+disc_id = "BIN/BMAGIC/MAGIC222.EMI#3"
+kind = "emi"
+source_dir = "src/emi/bmagic/magic222/03"
+binary = "out/binaries/emi/bmagic/magic222/03.bin"
+splat = "config/targets/emi/bmagic/magic222/03/splat.yaml"
+load_address = 0x801EEC00
+
+sources = []
+support_sources = [
+    "src/bof3/support/magic222_03_psyq.c",
+]
+psyq_source = "src/bof3/support/magic222_03_psyq.c"

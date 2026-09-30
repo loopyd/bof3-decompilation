@@ -4,7 +4,7 @@
  * @source 0x801D9484
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void initUiBundleSlot0(void) {
   func_80158DB8(0u, 3u);

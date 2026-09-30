@@ -6,7 +6,7 @@
  * @source 0x80196F78
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void altMainLoop(void) {
   const GameEntry0StateHandler* callbacks;

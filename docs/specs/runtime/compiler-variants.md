@@ -10,7 +10,7 @@ tags: [compiler, research, gcc, mips, negative-evidence, pipeline]
 
 Research into historical GCC compilers that may have produced BOF3 objects.
 
-The [current source ban](../../INDEX.md#source-and-duplicate-rules) supersedes
+The [current source ban](../../agents/matching.md#source-and-duplicate-rules) supersedes
 all register-pin and artificial empty-asm permissions and aided acceptance claims
 below. Preserve these dated measurements and provenance; affected sources require
 aid removal, fresh clean-C native matching and independent review.
@@ -28,7 +28,7 @@ now requeued for clean-C matching/review; its old exact result is not current
 acceptance. The other
 three candidates have no object selection; each produced only negative
 target-qualified probe results (historical matrices below). The framework
-(`bin/compiler-variants`, `tools/python/harness/toolchain/gcc_variants.py`)
+(`bin/harness build variants`, `tools/python/harness/toolchain/gcc_variants.py`)
 verifies archive digest, host, extraction containment, and executable identity
 before the compiler may run.
 
@@ -71,7 +71,7 @@ The user-authorized clean-C revival tested the source shape then retained at
 `0x18E6C..0x18EB8` (76 original bytes). At the time, its canonical residual
 was 5/20 instructions (25.00%), 76→80 bytes, first at `+0x0000`
 (`move t0,a1` absent). Each row ran all 52 flag-catalog profiles through
-`bin/flag-search`; no `BOF3_OBJCOMPILER_` or flag override was retained.
+`bin/harness lift flag-search`; no `BOF3_OBJCOMPILER_` or flag override was retained.
 
 | GCC | Compiled profiles | Compile errors | Best profile | Best match | Exact |
 | --- | ---: | ---: | --- | ---: | --- |
@@ -126,7 +126,7 @@ The catalog entry records old-gcc release `0.13` (commit
 `gcc-2.6.3-psx.tar.gz`, digest
 `sha256:db98510a8cece2f9e37665cc16b4f1f7ad17f282f900d2791b62ed74f50e40b2`,
 GPL-2.0-or-later licensing, `linux-x86_64`, flat `gcc` executable path, and
-observed `gcc --version` output `2.6.3`. `bin/compiler-variants install`,
+observed `gcc --version` output `2.6.3`. `bin/harness build variants install`,
 `verify`, and `path` passed locally.
 
 The initial disposable clean-C pilot was a 76-byte entry-register residual;
@@ -149,7 +149,7 @@ instructions).
 
 The residual later byte-matched without a flag override: a local
 `REGISTER_PIN(u32, result, "v0")` recovered the entry register web, and live
-`bin/asm-diff`/`bin/byte-match` then reported 19/19 instructions, 76 bytes
+`bin/harness lift asm-diff`/`bin/harness lift byte-match` then reported 19/19 instructions, 76 bytes
 (`func_800AF66C`, `@status exact`). See
 [`battle-range-predicates.md`](battle-range-predicates.md) for the historical
 record. That aided exact status is superseded; fresh clean-C matching/review

@@ -1,0 +1,116 @@
+name: plchar_plp025_00
+sha1: 7b21009b566b08e07184f276192064d4d6aa3aff
+options:
+  platform: psx
+  compiler: psyq
+  basename: plchar_plp025_00
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/plchar/plp025/00.bin
+  asm_path: out/splat/emi/plchar/plp025/00/asm
+  src_path: src/emi/plchar/plp025/00
+  ld_script_path: out/splat/emi/plchar/plp025/00/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/plchar/plp025/00/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/plchar/plp025/00/undefined_syms_auto.txt
+  cache_path: out/splat/emi/plchar/plp025/00/.splache
+  asset_path: out/splat/emi/plchar/plp025/00/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/plchar/plp025/00/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- name: main
+  type: code
+  start: 4
+  vram: 2149377028
+  subsegments:
+  - - 4
+    - asm
+    - func_801CE404
+  - - 72
+    - asm
+    - func_801CE448
+  - - 552
+    - asm
+    - func_801CE628
+  - - 812
+    - asm
+    - func_801CE72C
+  - - 880
+    - asm
+    - func_801CE770
+  - - 1684
+    - asm
+    - func_801CEA94
+  - - 2096
+    - asm
+    - func_801CEC30
+  - - 2332
+    - asm
+    - func_801CED1C
+  - - 2836
+    - asm
+    - func_801CEF14
+  - - 3064
+    - asm
+    - func_801CEFF8
+  - - 3372
+    - asm
+    - func_801CF12C
+  - - 3440
+    - asm
+    - func_801CF170
+  - - 3644
+    - asm
+    - func_801CF23C
+  - - 3896
+    - asm
+    - func_801CF338
+  - - 3964
+    - asm
+    - func_801CF37C
+  - - 4452
+    - asm
+    - func_801CF564
+  - - 4564
+    - asm
+    - func_801CF5D4
+  - - 4920
+    - asm
+    - func_801CF738
+  - - 5128
+    - asm
+    - func_801CF808
+  - - 5412
+    - asm
+    - func_801CF924
+  - - 5480
+    - asm
+    - func_801CF968
+  - - 5684
+    - asm
+    - func_801CFA34
+  - - 5936
+    - asm
+    - func_801CFB30
+  - - 6004
+    - asm
+    - func_801CFB74
+  - - 6464
+    - asm
+    - func_801CFD40
+  - - 6732
+    - asm
+    - func_801CFE4C
+  - - 6944
+    - asm
+    - func_801CFF20
+  - - 7012
+    - asm
+    - func_801CFF64
+  - - 7080
+    - asm
+    - func_801CFFA8
+- - 7172

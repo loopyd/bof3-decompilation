@@ -1,0 +1,1798 @@
+diff --git a/src/cdrom/cdriso.cc b/src/cdrom/cdriso.cc
+--- a/src/cdrom/cdriso.cc
++++ b/src/cdrom/cdriso.cc
+@@ -18,6 +18,7 @@
+  ***************************************************************************/
+ 
+ #include "cdrom/cdriso.h"
++#include "core/transactions.h"
+ 
+ #include "supportpsx/iec-60908b.h"
+ 
+@@ -258,6 +259,7 @@
+ }
+ 
+ bool PCSX::CDRIso::open(IO<File> isoFile) {
++    if (History::CD::active()) History::fail(History::Failure::Discontinuity);
+     m_cdHandle = isoFile;
+     if (m_cdHandle->failed()) {
+         m_cdHandle.reset();
+@@ -359,6 +361,7 @@
+ }
+ 
+ void PCSX::CDRIso::close() {
++    if (History::CD::active()) History::fail(History::Failure::Discontinuity);
+     m_cdHandle.reset();
+     m_subHandle.reset();
+ 
+@@ -443,6 +446,7 @@
+     long ret;
+ 
+     if (!m_cdHandle || m_cdHandle->failed()) {
++        PCSX::History::CD::mediaOutcome(5, 0);
+         return false;
+     }
+     if (m_pregapOffset) {
+@@ -454,7 +458,11 @@
+     }
+ 
+     ret = (*this.*m_cdimg_read_func)(m_cdHandle, 0, m_cdbuffer, sector);
+-    if (ret < 0) return false;
++    if (ret < 0) {
++        if (History::CD::active()) History::CD::mediaOutcome(6, ret, 0, 0, uint32_t(sector),
++            12 | (m_useCompressed ? 1 : 0) | (m_isMode1ISO ? 16 : 0) | (m_subChanMixed ? 32 : 0));
++        return false;
++    }
+ 
+     if (m_subHandle) {
+         m_subHandle->rSeek(sector * IEC60908b::SUB_FRAMESIZE, SEEK_SET);
+@@ -465,10 +473,15 @@
+ 
+     m_ppf.maybePatchSector(m_cdbuffer, time);
+ 
++    if (History::CD::active()) History::CD::mediaOutcome(7, ret, 0, 0, uint32_t(sector),
++        12 | (m_useCompressed ? 1 : 0) | (m_isMode1ISO ? 16 : 0) | (m_subChanMixed ? 32 : 0));
+     return true;
+ }
+ 
+ unsigned PCSX::CDRIso::readSectors(uint32_t lba, void *buffer_, unsigned count) {
++    // Host sector export bypasses the guest controller and may replace the
++    // compressed backend's shared selector. It cannot join an observation run.
++    if (History::CD::active()) History::fail(History::Failure::Association);
+     unsigned actual = 0;
+     uint8_t *buffer = reinterpret_cast<uint8_t *>(buffer_);
+ 
+@@ -518,12 +531,14 @@
+     // data tracks play silent
+     if (m_ti[track].type != TrackType::CDDA) {
+         memset(buffer, 0, IEC60908b::FRAMESIZE_RAW);
++        PCSX::History::CD::mediaOutcome(1, 0, track);
+         return true;
+     }
+ 
+     // if above the track's end (likely next track's pregap), play silence
+     if (lba >= (track_start + m_ti[track].length.toLBA())) {
+         memset(buffer, 0, IEC60908b::FRAMESIZE_RAW);
++        PCSX::History::CD::mediaOutcome(2, 0, track);
+         return true;
+     }
+ 
+@@ -538,6 +553,9 @@
+     ret = (*this.*m_cdimg_read_func)(m_ti[file].handle, m_ti[track].start_offset, buffer, lba - track_start);
+     if (ret != IEC60908b::FRAMESIZE_RAW) {
+         memset(buffer, 0, IEC60908b::FRAMESIZE_RAW);
++        if (History::CD::active()) History::CD::mediaOutcome(3, ret, track, file, lba-track_start,
++            8 | (m_useCompressed ? 5 : 0) | (m_isMode1ISO ? 16 : 0) | (m_subChanMixed ? 32 : 0),
++            m_ti[track].start_offset);
+         return false;
+     }
+ 
+@@ -551,6 +569,9 @@
+         }
+     }
+ 
++    if (History::CD::active()) History::CD::mediaOutcome(4, ret, track, file, lba-track_start,
++        8 | (m_useCompressed ? 5 : 0) | (m_cddaBigEndian ? 2 : 0) |
++        (m_isMode1ISO ? 16 : 0) | (m_subChanMixed ? 32 : 0), m_ti[track].start_offset);
+     return true;
+ }
+ 
+diff --git a/src/core/cdrom.cc b/src/core/cdrom.cc
+--- a/src/core/cdrom.cc
++++ b/src/core/cdrom.cc
+@@ -23,6 +23,8 @@
+ 
+ #include "core/history.h"
+ #include "core/cdrom.h"
++#include "core/provenance.h"
++#include "core/transactions.h"
+ 
+ #include <magic_enum/magic_enum_all.hpp>
+ 
+@@ -37,6 +39,312 @@
+ namespace {
+ 
+ class CDRomImpl : public PCSX::CDRom {
++    PCSX::History::CD::Origins m_historyOrigins;
++    std::array<uint8_t, PCSX::History::CD::Origins::Size> m_historyBytes{};
++    PCSX::History::CD::Response m_historyResponse;
++    uint64_t m_historyCommand = 0, m_historyQueued = 0;
++    uint64_t m_historyRead = 0, m_historyPlay = 0, m_historyMutation = 0;
++    uint64_t m_historyExecuting = 0;
++    uint64_t m_historyLookup = 0, m_historyAudio = 0;
++    bool m_historyExecutingCommand = false;
++    uint64_t m_historyStream = 0, m_historyOperationOwner = 0;
++    uint64_t m_historyReadCommand = 0, m_historyPlayCommand = 0;
++    uint32_t m_historyOperationKind = 0;
++    struct Scheduled { uint64_t owner = 0; uint32_t kind = 0; };
++    std::array<Scheduled, 15> m_historyScheduled{};
++
++    static int historySlot(PCSX::History::CD::Operation kind) {
++        using O = PCSX::History::CD::Operation;
++        switch (kind) {
++            case O::Command: return PCSX::PSXINT_CDR;
++            case O::Read: return PCSX::PSXINT_CDREAD;
++            case O::Play: return PCSX::PSXINT_CDRPLAY;
++            case O::LidSeek: return PCSX::PSXINT_CDRLID;
++            case O::DmaComplete: return PCSX::PSXINT_CDRDMA;
++            case O::Decode: return PCSX::PSXINT_CDRDBUF;
++            default: return -1;
++        }
++    }
++    void historyDispatch(PCSX::History::CD::Operation kind, bool root) {
++        namespace H = PCSX::History;
++        if (!H::CD::active()) return;
++        const auto slot = historySlot(kind);
++        if (kind == H::CD::Operation::Dma || kind == H::CD::Operation::DmaComplete) {
++            m_historyOperationOwner = H::dmaRequest(3); m_historyOperationKind = 4;
++        }
++        if (slot < 0) return;
++        const auto owner = root ? m_historyScheduled[slot] : Scheduled{m_historyOperationOwner, m_historyOperationKind};
++        m_historyOperationOwner = owner.owner; m_historyOperationKind = owner.kind;
++        if (root) m_historyScheduled[slot] = {};
++        const auto& regs = PCSX::g_emulator->m_cpu->m_regs;
++        const auto target = regs.intTargets[slot];
++        H::emit(H::Kind::CdSchedule, slot,
++            {1, uint32_t(kind), uint32_t(target), uint32_t(target >> 32), regs.interrupt, owner.kind, uint32_t(!root)},
++            H::CD::access(), nullptr, 0, owner.owner);
++    }
++
++    void historyState(uint32_t phase, uint64_t id) {
++        namespace H = PCSX::History;
++        if (!H::CD::active()) return;
++        H::emit(H::Kind::CdTransition, phase,
++            {m_ctrl, m_stat, m_reg2, m_paramC, m_resultC, m_resultP, m_resultReady, m_transferIndex},
++            H::CD::operation(), nullptr, 0, id);
++        const uint32_t attenuation = uint32_t(m_attenuatorLeftToLeft) | (uint32_t(m_attenuatorLeftToRight) << 8) |
++            (uint32_t(m_attenuatorRightToLeft) << 16) | (uint32_t(m_attenuatorRightToRight) << 24);
++        const uint32_t pending = uint32_t(m_attenuatorLeftToLeftT) | (uint32_t(m_attenuatorLeftToRightT) << 8) |
++            (uint32_t(m_attenuatorRightToLeftT) << 16) | (uint32_t(m_attenuatorRightToRightT) << 24);
++        H::emit(H::Kind::CdTransition, phase+2,
++            {uint32_t(m_mode), uint32_t(m_file), uint32_t(m_channel), uint32_t(m_firstSector), uint32_t(m_muted),
++             attenuation, pending, uint32_t(m_read) | (uint32_t(m_reading) << 8) | (uint32_t(m_play) << 16)},
++            H::CD::operation(), nullptr, 0, id);
++    }
++    void historySeal(uint64_t operation) {
++        namespace H = PCSX::History;
++        if (!H::CD::active() || !m_historyResponse.building()) return;
++        H::CD::Response::Draft draft;
++        if (!m_historyResponse.seal(operation, true, draft) || draft.size != m_resultC || draft.size > 16) {
++            H::fail(H::Failure::Association); return;
++        }
++        H::emit(H::Kind::CdResponse, 1, {draft.size, draft.revision, m_resultReady, m_resultP, m_stat},
++            operation, m_result, draft.size, draft.id);
++    }
++    // Controller state is sampled only after Scope establishes the owner guard.
++    // Callback completion publishes the final response, including revised size.
++    class Observation {
++        CDRomImpl& m_cd;
++        PCSX::History::CD::Scope m_scope;
++        uint64_t m_previousExecuting = 0;
++        uint64_t m_previousOwner = 0;
++        uint32_t m_previousKind = 0;
++        bool m_command = false, m_previousCommand = false;
++      public:
++        Observation(CDRomImpl& cd, PCSX::History::CD::Operation kind,
++                    uint32_t address = 0, uint32_t width = 0, uint32_t value = 0)
++            : m_cd(cd), m_scope(kind, address, width, value) {
++            if (m_scope.observed()) {
++                m_previousOwner = m_cd.m_historyOperationOwner;
++                m_previousKind = m_cd.m_historyOperationKind;
++                m_cd.historyDispatch(kind, m_scope.root());
++            }
++            if (m_scope.observed() && kind == PCSX::History::CD::Operation::Command) {
++                m_command = true;
++                m_previousExecuting = m_cd.m_historyExecuting;
++                m_previousCommand = m_cd.m_historyExecutingCommand;
++                m_cd.m_historyExecuting = m_cd.m_historyOperationOwner;
++                m_cd.m_historyExecutingCommand = true;
++            }
++            if (m_scope.observed()) m_cd.historyState(2, m_scope.id());
++        }
++        ~Observation() {
++            if (m_scope.root()) m_cd.historySeal(m_scope.id());
++            if (m_scope.observed()) m_cd.historyState(3, m_scope.id());
++            if (m_command && PCSX::History::CD::active()) {
++                m_cd.m_historyExecuting = m_previousExecuting;
++                m_cd.m_historyExecutingCommand = m_previousCommand;
++            }
++            if (m_scope.observed() && PCSX::History::CD::active()) {
++                m_cd.m_historyOperationOwner = m_previousOwner;
++                m_cd.m_historyOperationKind = m_previousKind;
++            }
++        }
++        void result(uint32_t value) { m_scope.result(value); }
++    };
++
++    void history(uint32_t phase) final {
++        namespace H = PCSX::History;
++        if (!H::CD::active()) return;
++        if (phase > 1 || m_paramC > 8 || m_resultC > 16) { H::fail(H::Failure::Bounds); return; }
++        if (!phase) {
++            m_historyOrigins.reset(); m_historyResponse.reset();
++            std::memcpy(m_historyBytes.data(), m_transfer, m_historyBytes.size());
++            m_historyCommand = m_historyQueued = m_historyRead = m_historyPlay = m_historyMutation = 0;
++            m_historyExecuting = 0; m_historyExecutingCommand = false;
++            m_historyLookup = m_historyAudio = 0;
++            m_historyStream = m_historyOperationOwner = 0; m_historyOperationKind = 0;
++            m_historyReadCommand = m_historyPlayCommand = 0;
++            m_historyScheduled.fill({});
++        } else {
++            if (m_historyResponse.building()) H::fail(H::Failure::Association);
++            if (std::memcmp(m_historyBytes.data(), m_transfer, m_historyBytes.size()))
++                H::fail(H::Failure::Association);
++        }
++        const auto msf = [](MSF value) { return uint32_t(value.m) | (uint32_t(value.s) << 8) | (uint32_t(value.f) << 16); };
++        std::array<uint32_t, 48> words = {m_ctrl, m_stat, m_statP, m_reg2, m_cmd, m_irq, m_irqRepeated, m_eCycle,
++            m_paramC, m_resultC, m_resultP, m_resultReady, m_transferIndex, m_read, m_reading, uint32_t(m_play),
++            m_seeked, uint32_t(m_mode), uint32_t(m_file), uint32_t(m_channel), uint32_t(m_firstSector), uint32_t(m_curTrack),
++            uint32_t(m_muted), uint32_t(m_suceeded), m_setlocPending, uint32_t(m_locationChanged), msf(m_setSectorPlay),
++            msf(m_setSector), msf(m_setSectorEnd), msf(m_prev), uint32_t(m_driveState), uint32_t(m_fastForward),
++            uint32_t(m_fastBackward), uint32_t(m_attenuatorLeftToLeft) | (uint32_t(m_attenuatorLeftToRight) << 8) |
++            (uint32_t(m_attenuatorRightToLeft) << 16) | (uint32_t(m_attenuatorRightToRight) << 24),
++            uint32_t(m_attenuatorLeftToLeftT) | (uint32_t(m_attenuatorLeftToRightT) << 8) |
++            (uint32_t(m_attenuatorRightToLeftT) << 16) | (uint32_t(m_attenuatorRightToRightT) << 24), 0};
++        const std::array<uint64_t, 6> ids = {m_historyCommand, m_historyQueued, m_historyRead, m_historyPlay,
++            m_historyResponse.published(), m_historyMutation};
++        for (unsigned n = 0; n < ids.size(); ++n) { words[36 + n*2] = ids[n]; words[37 + n*2] = ids[n] >> 32; }
++        std::array<uint8_t, 216> payload{};
++        for (unsigned n = 0; n < words.size(); ++n)
++            for (unsigned b = 0; b < 4; ++b) payload[n*4+b] = words[n] >> (b*8);
++        std::memcpy(payload.data()+192, m_param, 8); std::memcpy(payload.data()+200, m_result, 16);
++        const auto epoch = H::CD::epoch(), audio = H::CD::audioEpoch();
++        H::emit(H::Kind::CdContext, phase, {1, uint32_t(H::CD::joined()), uint32_t(epoch), uint32_t(epoch >> 32),
++            uint32_t(audio), uint32_t(audio >> 32), 48, 0}, 0, payload.data(), payload.size(), 0);
++        H::emit(H::Kind::CdBuffer, phase ? 2 : 0, {0, uint32_t(sizeof(m_transfer))}, 0,
++            m_transfer, sizeof(m_transfer), 0);
++        for (const auto slot : {PCSX::PSXINT_CDR, PCSX::PSXINT_CDREAD, PCSX::PSXINT_CDRPLAY,
++                               PCSX::PSXINT_CDRLID, PCSX::PSXINT_CDRDBUF, PCSX::PSXINT_CDRDMA}) {
++            const auto& regs = PCSX::g_emulator->m_cpu->m_regs;
++            const auto target = regs.intTargets[slot];
++            H::emit(H::Kind::CdSchedule, slot,
++                {phase ? 4u : 3u, 0, uint32_t(target), uint32_t(target >> 32), regs.interrupt,
++                 m_historyScheduled[slot].kind}, 0, nullptr, 0, m_historyScheduled[slot].owner);
++        }
++    }
++
++    void historySchedule(uint32_t interrupt, uint32_t delay) {
++        namespace H = PCSX::History;
++        if (!H::CD::active()) return;
++        Scheduled owner{m_historyOperationOwner, m_historyOperationKind};
++        if (m_historyExecutingCommand) owner = {m_historyExecuting, 1};
++        if (interrupt == PCSX::PSXINT_CDR) owner = {m_historyQueued, 1};
++        else if (interrupt == PCSX::PSXINT_CDREAD) owner = {m_historyRead, 2};
++        else if ((interrupt == PCSX::PSXINT_CDRPLAY || interrupt == PCSX::PSXINT_CDRDBUF) && m_play)
++            owner = {m_historyPlay, 3};
++        else if (interrupt == PCSX::PSXINT_CDRDMA) owner = {H::dmaRequest(3), 4};
++        const auto previous = m_historyScheduled[interrupt];
++        m_historyScheduled[interrupt] = owner;
++        const auto& regs = PCSX::g_emulator->m_cpu->m_regs;
++        const auto target = regs.intTargets[interrupt];
++        std::array<uint8_t, 8> payload{};
++        for (unsigned b = 0; b < 8; ++b) payload[b] = previous.owner >> (b*8);
++        H::emit(H::Kind::CdSchedule, interrupt,
++            {0, delay, uint32_t(target), uint32_t(target >> 32), regs.interrupt, owner.kind, previous.kind, m_irq},
++            H::CD::access(), payload.data(), payload.size(), owner.owner);
++    }
++
++    void historyStream(bool play, bool start, uint32_t reason = 0) {
++        namespace H = PCSX::History;
++        if (!H::CD::active()) return;
++        if (start && m_historyStream == UINT64_MAX) { H::fail(H::Failure::Bounds); return; }
++        auto& stream = play ? m_historyPlay : m_historyRead;
++        auto& command = play ? m_historyPlayCommand : m_historyReadCommand;
++        const auto previous = stream;
++        const auto trigger = reason == 0 ? (m_historyExecutingCommand ? m_historyExecuting : m_historyCommand) : 0;
++        const auto owner = start ? trigger : command;
++        const auto slot = play ? PCSX::PSXINT_CDRPLAY : PCSX::PSXINT_CDREAD;
++        const auto before = play ? uint32_t(m_play) : uint32_t(m_reading);
++        const auto id = start ? ++m_historyStream : previous;
++        std::array<uint8_t, 40> payload{};
++        const std::array<uint64_t, 5> ids = {previous, H::CD::access(), m_historyMutation, m_historyScheduled[slot].owner, trigger};
++        for (unsigned n = 0; n < ids.size(); ++n)
++            for (unsigned b = 0; b < 8; ++b) payload[n*8+b] = ids[n] >> (b*8);
++        const auto& regs = PCSX::g_emulator->m_cpu->m_regs;
++        const auto time = m_setSectorPlay;
++        const uint32_t msf = uint32_t(time.m) | (uint32_t(time.s) << 8) | (uint32_t(time.f) << 16);
++        H::emit(H::Kind::CdStream, play ? 1 : 0,
++            {uint32_t(start), reason, before, regs.interrupt, msf, m_cmd, m_statP, m_historyScheduled[slot].kind},
++            owner, payload.data(), payload.size(), id);
++        stream = start ? id : 0;
++        command = start ? owner : 0;
++    }
++    void historyCancelRead() {
++        namespace H = PCSX::History;
++        if (!H::CD::active()) return;
++        const auto slot = PCSX::PSXINT_CDREAD;
++        const auto previous = m_historyScheduled[slot];
++        const auto& regs = PCSX::g_emulator->m_cpu->m_regs;
++        const auto target = regs.intTargets[slot];
++        H::emit(H::Kind::CdSchedule, slot,
++            {2, 0, uint32_t(target), uint32_t(target >> 32), regs.interrupt, previous.kind},
++            H::CD::access(), nullptr, 0, previous.owner);
++        // branchTest snapshots pending bits before dispatching CDR and CDREAD.
++        // A canceled read may still dispatch in that same pass. Retain its
++        // ancestry until an actual dispatch or a replacement schedule; the
++        // live interrupt bit, not owner presence, determines pending status.
++    }
++
++    // A mutation changes only its exact range. The first eight bytes of a new
++    // header must not relabel the previous delivered sector body.
++    void historyMutation(uint32_t offset, uint32_t length, uint32_t reason) {
++        namespace H = PCSX::History;
++        if (!H::CD::active()) return;
++        if (!H::CD::access() || m_historyMutation == UINT64_MAX || !length ||
++            offset >= sizeof(m_transfer) || length > sizeof(m_transfer) - offset) {
++            H::fail(H::Failure::Bounds); return;
++        }
++        const auto previous = m_historyMutation;
++        if (!m_historyOrigins.assign(offset, length, ++m_historyMutation)) {
++            H::fail(H::Failure::Association); return;
++        }
++        std::array<uint8_t, 32 + sizeof(m_transfer)> payload{};
++        const auto read = m_historyOperationKind == 2 ? m_historyOperationOwner : m_historyRead;
++        const auto play = m_historyOperationKind == 3 ? m_historyOperationOwner : m_historyPlay;
++        const std::array<uint64_t, 4> ids = {H::CD::access(), previous, read, play};
++        for (unsigned n = 0; n < ids.size(); ++n)
++            for (unsigned b = 0; b < 8; ++b) payload[n*8+b] = ids[n] >> (b*8);
++        std::memcpy(payload.data()+32, m_transfer+offset, length);
++        std::memcpy(m_historyBytes.data()+offset, m_transfer+offset, length);
++        const uint32_t msf = uint32_t(m_setSectorPlay.m) | (uint32_t(m_setSectorPlay.s) << 8) |
++                             (uint32_t(m_setSectorPlay.f) << 16);
++        const auto source = reason == 5 ? previous : (reason == 4 ? m_historyAudio : m_historyLookup);
++        H::emit(H::Kind::CdBuffer, 1, {offset, length, reason, msf, m_setSectorPlay.toLBA(),
++                reason == 5 ? 2u : 1u}, source,
++                payload.data(), 32 + length, m_historyMutation);
++    }
++    struct Consumption {
++        uint32_t index = 0, reading = 0;
++        uint64_t mutation = 0;
++        uint8_t value = 0;
++        bool observed = false;
++    };
++    void historyDecision(bool cdda, uint32_t phase, int result = 0) {
++        namespace H = PCSX::History;
++        if (!H::CD::active()) return;
++        const uint32_t flags = uint32_t(bool(m_muted)) | (uint32_t(bool(m_mode & MODE_STRSND)) << 1) |
++            (uint32_t(bool(PCSX::g_emulator->settings.get<PCSX::Emulator::SettingXa>())) << 2) |
++            (uint32_t(m_firstSector != -1) << 3) | (uint32_t(m_channel != 255) << 4) |
++            (uint32_t(m_transfer[4] == m_file) << 5) | (uint32_t(m_transfer[5] == m_channel) << 6) |
++            (uint32_t(bool(m_transfer[6] & 4)) << 7) | (uint32_t(m_play) << 8) | (uint32_t(bool(m_reading)) << 9);
++        const auto stream = cdda ? (m_historyOperationKind == 3 ? m_historyOperationOwner : m_historyPlay) :
++                                  (m_historyOperationKind == 2 ? m_historyOperationOwner : m_historyRead);
++        std::array<uint8_t, 16> payload{};
++        const std::array<uint64_t, 2> ids = {H::CD::access(), stream};
++        for (unsigned n = 0; n < ids.size(); ++n)
++            for (unsigned b = 0; b < 8; ++b) payload[n*8+b] = ids[n] >> (b*8);
++        const uint32_t header = uint32_t(m_transfer[4]) | (uint32_t(m_transfer[5]) << 8) |
++                               (uint32_t(m_transfer[6]) << 16) | (uint32_t(m_transfer[7]) << 24);
++        H::emit(H::Kind::CdAudio, phase,
++            {flags, uint32_t(m_mode), uint32_t(m_file), uint32_t(m_channel), uint32_t(m_firstSector),
++             cdda ? 0u : header, uint32_t(result), uint32_t(cdda)},
++            cdda ? m_historyAudio : m_historyLookup, payload.data(), payload.size(), m_historyMutation);
++    }
++    Consumption historyConsume(bool dma) {
++        namespace H = PCSX::History;
++        Consumption value;
++        if (!H::CD::active()) return value;
++        value.observed = true;
++        value.index = m_transferIndex; value.reading = m_read;
++        // PIO returns zero when not ready; native DMA keeps reading after a
++        // wrap clears m_read. Preserve those distinct native semantics.
++        if (!dma && !m_read) return value;
++        if (!m_historyOrigins.get(value.index, value.mutation)) {
++            H::fail(H::Failure::Bounds); return value;
++        }
++        value.value = m_historyBytes[value.index];
++        return value;
++    }
++    void historyConsumed(const Consumption& before, uint8_t value, bool dma, uint32_t address) {
++        namespace H = PCSX::History;
++        if (!H::CD::active() || !before.observed) return;
++        if (before.value != value) H::fail(H::Failure::Association);
++        const auto request = dma ? H::dmaRequest(3) : 0;
++        std::array<uint8_t, 8> payload{};
++        for (unsigned b = 0; b < 8; ++b) payload[b] = request >> (b*8);
++        H::emit(H::Kind::CdData, dma ? 1 : 0,
++            {before.index, address, value, before.reading, m_transferIndex, m_read,
++             uint32_t((dma || before.reading) && m_transferIndex <= before.index), 0},
++            H::CD::access(), payload.data(), payload.size(), before.mutation);
++    }
++
+     /* CD-ROM magic numbers */
+     enum Commands {
+         CdlSync = 0,
+@@ -156,43 +464,52 @@
+     static const uint32_t H_SPUctrl = 0x1f801daa;
+ 
+     // interrupt
+-    static inline void scheduleCDIRQ(uint32_t eCycle) {
++    inline void scheduleCDIRQ(uint32_t eCycle) {
+         PCSX::g_emulator->m_cpu->scheduleInterrupt(PCSX::PSXINT_CDR, eCycle);
++        historySchedule(PCSX::PSXINT_CDR, eCycle);
+     }
+ 
+     // readInterrupt
+-    static inline void scheduleCDReadIRQ(uint32_t eCycle) {
++    inline void scheduleCDReadIRQ(uint32_t eCycle) {
+         PCSX::g_emulator->m_cpu->scheduleInterrupt(PCSX::PSXINT_CDREAD, eCycle);
++        historySchedule(PCSX::PSXINT_CDREAD, eCycle);
+     }
+ 
+     // decodedBufferInterrupt
+-    static inline void scheduleDecodeBufferIRQ(uint32_t eCycle) {
++    inline void scheduleDecodeBufferIRQ(uint32_t eCycle) {
+         PCSX::g_emulator->m_cpu->scheduleInterrupt(PCSX::PSXINT_CDRDBUF, eCycle);
++        historySchedule(PCSX::PSXINT_CDRDBUF, eCycle);
+     }
+ 
+     // lidSeekInterrupt
+-    static inline void scheduleCDLidIRQ(uint32_t eCycle) {
++    inline void scheduleCDLidIRQ(uint32_t eCycle) {
+         PCSX::g_emulator->m_cpu->scheduleInterrupt(PCSX::PSXINT_CDRLID, eCycle);
++        historySchedule(PCSX::PSXINT_CDRLID, eCycle);
+     }
+ 
+     // playInterrupt
+-    static inline void scheduleCDPlayIRQ(uint32_t eCycle) {
++    inline void scheduleCDPlayIRQ(uint32_t eCycle) {
+         PCSX::g_emulator->m_cpu->scheduleInterrupt(PCSX::PSXINT_CDRPLAY, eCycle);
+-    }
+-
+-    static inline void scheduleCDDMAIRQ(uint32_t eCycle) {
++        historySchedule(PCSX::PSXINT_CDRPLAY, eCycle);
++    }
++
++    inline void scheduleCDDMAIRQ(uint32_t eCycle) {
+         PCSX::g_emulator->m_cpu->scheduleInterrupt(PCSX::PSXINT_CDRDMA, eCycle);
+-    }
+-
+-    inline void StopReading() {
++        historySchedule(PCSX::PSXINT_CDRDMA, eCycle);
++    }
++
++    inline void StopReading(uint32_t reason = 0) {
++        historyStream(false, false, reason);
+         if (m_reading) {
+             m_reading = 0;
+             PCSX::g_emulator->m_cpu->m_regs.interrupt &= ~(1 << PCSX::PSXINT_CDREAD);
++            historyCancelRead();
+         }
+         m_statP &= ~(STATUS_READ | STATUS_SEEK);
+     }
+ 
+-    inline void StopCdda() {
++    inline void StopCdda(uint32_t reason = 0) {
++        historyStream(true, false, reason);
+         if (m_play) {
+             m_statP &= ~STATUS_PLAY;
+             m_play = false;
+@@ -203,12 +520,24 @@
+     }
+ 
+     inline void SetResultSize(uint8_t size) {
++        namespace H = PCSX::History;
++        if (H::CD::active()) {
++            H::CD::Response::Draft draft;
++            if (!m_historyResponse.resize(H::CD::operation(), size, draft)) H::fail(H::Failure::Association);
++            else H::emit(H::Kind::CdResponse, 0,
++                {size, draft.revision, uint32_t(draft.displaced), uint32_t(draft.displaced >> 32)},
++                draft.operation, nullptr, 0, draft.id);
++        }
+         m_resultP = 0;
+         m_resultC = size;
+         m_resultReady = 1;
+     }
+ 
+     inline void setIrq(void) {
++        namespace H = PCSX::History;
++        if (H::CD::active()) H::emit(H::Kind::CdIRQ, 0,
++            {m_stat, m_reg2, uint32_t(bool(m_stat & m_reg2)), uint32_t(m_historyResponse.building())},
++            H::CD::access(), nullptr, 0, m_historyResponse.current());
+         if (m_stat & m_reg2) PCSX::g_emulator->m_mem->setIRQ(4);
+     }
+ 
+@@ -239,6 +568,7 @@
+ 
+     // FIXME: do this in SPU instead
+     void decodedBufferInterrupt() final {
++        Observation observation(*this, PCSX::History::CD::Operation::Decode);
+ #if 0
+     return;
+ #endif
+@@ -289,6 +619,7 @@
+     // timing used in this function was taken from tests on real hardware
+     // (yes it's slow, but you probably don't want to modify it)
+     void lidSeekInterrupt() final {
++        Observation observation(*this, PCSX::History::CD::Operation::LidSeek);
+         switch (m_driveState) {
+             default:
+             case DRIVESTATE_STANDBY:
+@@ -297,7 +628,7 @@
+                 getStatus(&cdr_stat);
+ 
+                 if (cdr_stat.Status & STATUS_SHELLOPEN) {
+-                    StopCdda();
++                    StopCdda(3);
+                     m_driveState = DRIVESTATE_LID_OPEN;
+                     scheduleCDLidIRQ(8 * irqReschedule);
+                 }
+@@ -308,7 +639,7 @@
+ 
+                 // 02, 12, 10
+                 if (!(m_statP & STATUS_SHELLOPEN)) {
+-                    StopReading();
++                    StopReading(3);
+                     m_statP |= STATUS_SHELLOPEN;
+ 
+                     // could generate error irq here, but real hardware
+@@ -405,15 +736,29 @@
+     }
+ 
+     void readTrack(MSF time) {
+-        if (m_prev == time) return;
++        namespace H = PCSX::History;
++        std::optional<H::CD::Media> medium;
++        if (H::CD::active()) {
++            const uint32_t msf = uint32_t(time.m) | (uint32_t(time.s) << 8) | (uint32_t(time.f) << 16);
++            medium.emplace(1, msf, time.toLBA(), H::CD::backing());
++            m_historyLookup = medium->id();
++        }
++        if (m_prev == time) {
++            if (medium) medium->result(m_suceeded, 1);  // Native cache leaves success and buffer unchanged.
++            return;
++        }
+ 
+         CDROM_LOG("ReadTrack *** %02i:%02i:%02i\n", time.m, time.s, time.f);
+ 
+         m_prev.reset();
+         if (m_iso->getTrackType(m_curTrack) == PCSX::CDRIso::TrackType::CDDA) {
+             m_suceeded = false;
++            if (medium) medium->result(false, 2);  // Data read rejected before backend call.
+         } else {
+             m_suceeded = m_iso->readTrack(time);
++            if (medium) {
++                medium->result(m_suceeded, 0);
++            }
+             if (m_suceeded) m_prev = time;
+             PCSX::g_emulator->m_cdromLogger->recordAccess(time.toLBA(), PCSX::CDRomLogger::AccessType::Data,
+                                                           PCSX::g_emulator->m_cpu->m_regs.cycle);
+@@ -442,6 +787,18 @@
+     }
+ 
+     void AddIrqQueue(unsigned short irq, unsigned long ecycle) {
++        namespace H = PCSX::History;
++        // A repeated submission reschedules the existing queued command. Keep
++        // that owner and native eCycle separate from this triggering access.
++        if (H::CD::active()) {
++            const bool repeated = m_irq && (irq == m_irq || irq + 0x100 == m_irq);
++            const auto previous = m_historyQueued;
++            if (!repeated) m_historyQueued = m_historyExecutingCommand ? m_historyExecuting : m_historyCommand;
++            H::emit(H::Kind::CdCommand, 2,
++                {m_irq, m_eCycle, uint32_t(m_irqRepeated), irq, uint32_t(ecycle), uint32_t(repeated),
++                 uint32_t(previous), uint32_t(previous >> 32)},
++                H::CD::access(), nullptr, 0, m_historyQueued);
++        }
+         if (m_irq != 0) {
+             if (irq == m_irq || irq + 0x100 == m_irq) {
+                 m_irqRepeated = 1;
+@@ -469,7 +826,7 @@
+             m_stat = DataEnd;
+             setIrq();
+ 
+-            StopCdda();
++            StopCdda(2);
+         } else if (m_mode & MODE_REPORT) {
+             m_result[0] = m_statP;
+             m_result[1] = m_subq.track;
+@@ -507,6 +864,7 @@
+ 
+     // also handles seek
+     void playInterrupt() final {
++        Observation observation(*this, PCSX::History::CD::Operation::Play);
+         if (m_seeked == SEEK_PENDING) {
+             if (m_stat) {
+                 scheduleCDPlayIRQ(irqReschedule);
+@@ -536,19 +894,36 @@
+         if (!m_play) return;
+         CDROM_LOG("CDDA - %02d:%02d:%02d\n", m_setSectorPlay.m, m_setSectorPlay.s, m_setSectorPlay.f);
+         if (m_setSectorPlay == m_setSectorEnd) {
+-            StopCdda();
++            StopCdda(1);
+             m_trackChanged = true;
+         }
+ 
+-        m_iso->readCDDA(m_setSectorPlay, m_transfer);
++        {
++            namespace H = PCSX::History;
++            std::optional<H::CD::Media> medium;
++            if (H::CD::active()) {
++                const auto time = m_setSectorPlay;
++                const uint32_t msf = uint32_t(time.m) | (uint32_t(time.s) << 8) | (uint32_t(time.f) << 16);
++                medium.emplace(2, msf, time.toLBA(), 0);
++            }
++            const auto success = m_iso->readCDDA(m_setSectorPlay, m_transfer);
++            if (medium) { medium->result(success, 0); m_historyAudio = medium->id(); }
++        }
++        historyMutation(0, sizeof(m_transfer), 4);
+         PCSX::g_emulator->m_cdromLogger->recordAccess(m_setSectorPlay.toLBA(), PCSX::CDRomLogger::AccessType::Audio,
+                                                       PCSX::g_emulator->m_cpu->m_regs.cycle);
+         if (!m_irq && !m_stat && (m_mode & (MODE_AUTOPAUSE | MODE_REPORT))) cdrPlayInterrupt_Autopause();
+ 
++        historyDecision(true, 5);
+         if (!m_play) return;
+ 
+         if (!m_muted) {
+             attenuate((int16_t *)m_transfer, PCSX::IEC60908b::FRAMESIZE_RAW / 4, 1);
++            historyMutation(0, sizeof(m_transfer), 5);
++            std::optional<PCSX::History::CD::Feed> feed;
++            if (PCSX::History::CD::active()) feed.emplace(true, m_historyAudio, m_historyMutation,
++                m_historyOperationKind == 3 ? m_historyOperationOwner : m_historyPlay, 44100,
++                PCSX::IEC60908b::FRAMESIZE_RAW / 4, 1);
+             PCSX::g_emulator->m_spu->playCDDAchannel((short *)m_transfer, PCSX::IEC60908b::FRAMESIZE_RAW);
+         }
+ 
+@@ -566,6 +941,11 @@
+     }
+ 
+     void interrupt() final {
++        Observation observation(*this, PCSX::History::CD::Operation::Command);
++        namespace H = PCSX::History;
++        if (H::CD::active()) H::emit(H::Kind::CdCommand, 1,
++            {m_irq, m_cmd, m_paramC, m_stat, m_eCycle, uint32_t(m_irqRepeated)},
++            H::CD::operation(), m_param, sizeof(m_param), m_historyExecuting);
+         uint16_t irq = m_irq;
+         int no_busy_error = 0;
+         int start_rotating = 0;
+@@ -657,6 +1037,7 @@
+                 m_statP |= STATUS_PLAY;
+ 
+                 // BIOS player - set flag again
++                historyStream(true, true);
+                 m_play = true;
+ 
+                 scheduleCDPlayIRQ(cdReadTime);
+@@ -977,6 +1358,7 @@
+                     goto do_CdlPlay;
+                 }
+ 
++                historyStream(false, true);
+                 m_reading = 1;
+                 m_firstSector = 1;
+ 
+@@ -988,7 +1370,10 @@
+                 // - fixes cutscene speech
+                 {
+                     uint8_t *buf = m_iso->getBuffer();
+-                    if (buf != NULL) memcpy(m_transfer, buf, 8);
++                    if (buf != NULL) {
++                        memcpy(m_transfer, buf, 8);
++                        historyMutation(0, 8, 1);
++                    }
+                 }
+ 
+                 /*
+@@ -1111,6 +1496,7 @@
+     }
+ 
+     void readInterrupt() final {
++        Observation observation(*this, PCSX::History::CD::Operation::Read);
+         uint8_t *buf;
+ 
+         if (!m_reading) return;
+@@ -1146,6 +1532,7 @@
+         if (!m_suceeded) {
+             CDROM_LOG("readInterrupt() Log: err\n");
+             memset(m_transfer, 0, PCSX::IEC60908b::DATA_SIZE);
++            historyMutation(0, PCSX::IEC60908b::DATA_SIZE, 3);
+             m_stat = DiskError;
+             m_result[0] |= STATUS_ERROR;
+             setIrq();
+@@ -1153,10 +1540,12 @@
+         }
+ 
+         memcpy(m_transfer, buf, PCSX::IEC60908b::DATA_SIZE);
++        historyMutation(0, PCSX::IEC60908b::DATA_SIZE, 2);
+         m_ctrl |= DRQSTS;  // Data fifo not empty
+ 
+         CDROM_LOG("readInterrupt() Log: cdr.m_transfer %x:%x:%x\n", m_transfer[0], m_transfer[1], m_transfer[2]);
+ 
++        historyDecision(false, 2);
+         if ((!m_muted) && (m_mode & MODE_STRSND) && (PCSX::g_emulator->settings.get<PCSX::Emulator::SettingXa>()) &&
+             (m_firstSector != -1)) {  // CD-XA
+             // Firemen 2: Multi-XA files - briefings, cutscenes
+@@ -1164,6 +1553,7 @@
+                 m_file = m_transfer[4 + 0];
+                 m_channel = m_transfer[4 + 1];
+             }
++            historyDecision(false, 3);
+ 
+             /* Gameblabla - Ignore sectors with channel 255.
+              * This fixes the missing sound in Blue's Clues : Blue's Big Musical.
+@@ -1172,8 +1562,13 @@
+             if ((m_transfer[4 + 2] & 0x4) && (m_transfer[4 + 1] == m_channel) && (m_transfer[4 + 0] == m_file) &&
+                 m_channel != 255) {
+                 int ret = xa_decode_sector(&m_xa, m_transfer + 4, m_firstSector);
++                historyDecision(false, 4, ret);
+                 if (!ret) {
+                     attenuate(m_xa.pcm, m_xa.nsamples, m_xa.stereo);
++                    std::optional<PCSX::History::CD::Feed> feed;
++                    if (PCSX::History::CD::active()) feed.emplace(false, m_historyLookup, m_historyMutation,
++                        m_historyOperationKind == 2 ? m_historyOperationOwner : m_historyRead,
++                        m_xa.freq, m_xa.nsamples, m_xa.stereo);
+                     PCSX::g_emulator->m_spu->playADPCMchannel(&m_xa);
+                     m_firstSector = 0;
+                 } else {
+@@ -1221,6 +1616,7 @@
+     */
+ 
+     uint8_t read0(void) final {
++        Observation observation(*this, PCSX::History::CD::Operation::HandlerRead, 0x1f801800, 8);
+         if (m_resultReady) {
+             m_ctrl |= RSLRRDY;  // Response fifo not empty
+         } else {
+@@ -1230,26 +1626,36 @@
+         m_ctrl |= (PRMEMPT | PRMWRDY);  // Parameter fifo empty, parameter not fifo full
+ 
+         CDROM_IO_LOG("cdr r0: %02x\n", m_ctrl);
++        observation.result(m_ctrl);
+         return m_ctrl;
+     }
+ 
+     void write0(uint8_t rt) final {
++        Observation observation(*this, PCSX::History::CD::Operation::HandlerWrite, 0x1f801800, 8, rt);
+         CDROM_IO_LOG("cdr w0: %02x\n", rt);
+         m_ctrl = (rt & 3) | (m_ctrl & ~3);
+     }
+ 
+     uint8_t read1(void) final {
++        Observation observation(*this, PCSX::History::CD::Operation::HandlerRead, 0x1f801801, 8);
+         uint8_t ret = 0;
+         if ((m_resultP & 0xf) < m_resultC) {
+             ret = m_result[m_resultP & 0xf];
+         }
++        namespace H = PCSX::History;
++        if (H::CD::active()) H::emit(H::Kind::CdResponse, 2,
++            {m_resultP, uint32_t(m_resultP & 0xf), m_resultC, m_resultReady,
++             uint32_t((m_resultP & 0xf) < m_resultC), ret},
++            H::CD::access(), nullptr, 0, m_historyResponse.published());
+         m_resultP++;
+         if (m_resultP == m_resultC) m_resultReady = 0;
+         CDROM_IO_LOG("cdr r1: %02x\n", ret);
++        observation.result(ret);
+         return ret;
+     }
+ 
+     void write1(uint8_t rt) final {
++        Observation observation(*this, PCSX::History::CD::Operation::HandlerWrite, 0x1f801801, 8, rt);
+         MSF set_loc;
+         int i;
+         CDROM_IO_LOG("cdr w1: %02x\n", rt);
+@@ -1264,6 +1670,12 @@
+         }
+ 
+         m_cmd = rt;
++        namespace H = PCSX::History;
++        if (H::CD::active()) {
++            m_historyCommand = H::CD::access();
++            H::emit(H::Kind::CdCommand, 0, {rt, m_paramC, m_irq, m_stat, m_resultReady},
++                H::CD::operation(), m_param, sizeof(m_param), m_historyCommand);
++        }
+         if (PCSX::g_emulator->settings.get<PCSX::Emulator::SettingDebugSettings>()
+                 .get<PCSX::Emulator::DebugSettings::LoggingCDROM>()) {
+             logCDROM(rt);
+@@ -1339,6 +1751,8 @@
+     }
+ 
+     uint8_t read2(void) final {
++        Observation observation(*this, PCSX::History::CD::Operation::HandlerRead, 0x1f801802, 8);
++        const auto consumption = historyConsume(false);
+         unsigned char ret;
+ 
+         if (m_read == 0) {
+@@ -1350,10 +1764,13 @@
+             adjustTransferIndex();
+         }
+         CDROM_IO_LOG("cdr r2: %02x\n", ret);
++        historyConsumed(consumption, ret, false, 0x1f801802);
++        observation.result(ret);
+         return ret;
+     }
+ 
+     void write2(uint8_t rt) final {
++        Observation observation(*this, PCSX::History::CD::Operation::HandlerWrite, 0x1f801802, 8, rt);
+         CDROM_IO_LOG("cdr w2: %02x\n", rt);
+         switch (m_ctrl & 3) {
+             case 0:
+@@ -1362,6 +1779,8 @@
+                 }
+                 return;
+             case 1:
++                if (PCSX::History::CD::active()) PCSX::History::emit(PCSX::History::Kind::CdIRQ, 1,
++                    {m_stat, m_reg2, rt}, PCSX::History::CD::access(), nullptr, 0, 0);
+                 m_reg2 = rt;
+                 setIrq();
+                 return;
+@@ -1375,6 +1794,7 @@
+     }
+ 
+     uint8_t read3(void) final {
++        Observation observation(*this, PCSX::History::CD::Operation::HandlerRead, 0x1f801803, 8);
+         uint8_t ret;
+         if (m_ctrl & 0x1) {
+             ret = m_stat | 0xE0;
+@@ -1382,15 +1802,20 @@
+             ret = m_reg2 | 0xE0;
+         }
+         CDROM_IO_LOG("cdr r3: %02x\n", ret);
++        observation.result(ret);
+         return ret;
+     }
+ 
+     void write3(uint8_t rt) final {
++        Observation observation(*this, PCSX::History::CD::Operation::HandlerWrite, 0x1f801803, 8, rt);
+         CDROM_IO_LOG("cdr w3: %02x\n", rt);
+         switch (m_ctrl & 3) {
+             case 0:
+                 break;  // transfer
+             case 1:
++                if (PCSX::History::CD::active()) PCSX::History::emit(PCSX::History::Kind::CdIRQ, 2,
++                    {m_stat, rt, uint32_t(m_stat & ~rt), m_reg2},
++                    PCSX::History::CD::access(), nullptr, 0, 0);
+                 m_stat &= ~rt;
+ 
+                 if (rt & 0x40) m_paramC = 0;
+@@ -1428,6 +1853,7 @@
+     }
+ 
+     void dma(uint32_t madr, uint32_t bcr, uint32_t chcr) final {
++        Observation observation(*this, PCSX::History::CD::Operation::Dma);
+         uint32_t cdsize;
+         unsigned i;
+         uint8_t *ptr;
+@@ -1471,11 +1897,13 @@
+                 - Spams DMA3 and gets buffer overrun
+                 */
+                 for (i = 0; i < cdsize; ++i) {
++                    const auto consumption = historyConsume(true);
+                     uint32_t historyIndex = m_transferIndex;
+                     uint8_t historyValue = m_transfer[m_transferIndex++];
+                     memFile->write<uint8_t>(historyValue);
+                     PCSX::History::cdbyte(madr + i, historyIndex, historyValue);
+                     adjustTransferIndex();
++                    historyConsumed(consumption, historyValue, true, madr + i);
+                 }
+                 PCSX::g_emulator->m_mem->msanDmaWrite(madr, cdsize);
+                 if (PCSX::g_emulator->settings.get<PCSX::Emulator::SettingDebugSettings>()
+@@ -1501,6 +1929,7 @@
+     }
+ 
+     void dmaInterrupt() final {
++        Observation observation(*this, PCSX::History::CD::Operation::DmaComplete);
+         auto &mem = PCSX::g_emulator->m_mem;
+         if (mem->isDMABusy<3>()) {
+             mem->clearDMABusy<3>();
+@@ -1514,6 +1943,7 @@
+     }
+ 
+     void reset() final {
++        if (PCSX::History::CD::active()) PCSX::History::fail(PCSX::History::Failure::Discontinuity);
+         m_reg1Mode = 0;
+         m_cmdProcess = 0;
+         m_ctrl = 0;
+@@ -1588,6 +2018,7 @@
+     }
+ 
+     void load() final {
++        if (PCSX::History::CD::active()) PCSX::History::fail(PCSX::History::Failure::Discontinuity);
+         getCdInfo();
+ 
+         // read right sub data
+@@ -1600,8 +2031,9 @@
+     }
+ 
+     void lidInterrupt() final {
++        Observation observation(*this, PCSX::History::CD::Operation::Lid);
+         getCdInfo();
+-        StopCdda();
++        StopCdda(3);
+         lidSeekInterrupt();
+     }
+ 
+diff --git a/src/core/cdrom.h b/src/core/cdrom.h
+--- a/src/core/cdrom.h
++++ b/src/core/cdrom.h
+@@ -68,6 +68,7 @@
+     const std::string& getCDRomLabel() { return m_cdromLabel; }
+ 
+     virtual void reset() = 0;
++    virtual void history(uint32_t phase) = 0;
+     virtual void attenuate(int16_t* buf, int samples, int stereo) = 0;
+ 
+     virtual void interrupt() = 0;
+diff --git a/src/core/history.cc b/src/core/history.cc
+--- a/src/core/history.cc
++++ b/src/core/history.cc
+@@ -9,6 +9,9 @@
+ #include "core/r3000a.h"
+ #include "core/mdec.h"
+ #include "core/gpu.h"
++#include "core/cdrom.h"
++#include "core/spu.h"
++#include "core/transactions.h"
+ #include "core/psxcounters.h"
+ 
+ namespace PCSX::History {
+@@ -68,8 +71,18 @@
+     });
+ }
+ bool active() { return recording(); }
+-bool begin(uint32_t events, uint32_t bytes) {
+-    if (!paused() || gpuDepth || g_emulator->m_cpu->isDynarec() || g_emulator->m_mem->msanInitialized()) return false;
++bool ownerThread() {
++    if (!journal()) return false;
++    if (journal()->owner()) return true;
++    journal()->fail(Failure::Thread); return false;
++}
++static bool beginProfile(uint32_t events, uint32_t bytes, bool cd, bool audio) {
++    if (!paused() || !CD::idle() || gpuDepth || epoch == UINT64_MAX ||
++        g_emulator->m_cpu->isDynarec() || g_emulator->m_mem->msanInitialized()) return false;
++    const auto identity = g_emulator->m_spu->captureIdentity();
++    Status before;
++    if (!journal()->status(before) || before.state || (audio && identity[0] != 1)) return false;
++    if (cd && !CD::prepare(bytes)) return false;
+     if (!journal()->begin(events, bytes, cycles())) return false;
+     requests.fill(0);
+     serial = 0;
+@@ -80,6 +93,7 @@
+     owners.fill(0);
+     owned.fill(false);
+     ++epoch;
++    CD::configure(cd, epoch, audio, audio ? identity[1] : 0);
+     reading = {};
+     for (uint32_t n = 0; n < 7; ++n) {
+         const auto* p = g_emulator->m_mem->m_hard + 0x1080 + 16 * n;
+@@ -99,16 +113,26 @@
+     g_emulator->m_mdec->observe(0);
+     g_emulator->m_counters->history();
+     g_emulator->m_gpu->history(0);
++    if (cd) g_emulator->m_cdrom->history(0);
+     return true;
+ }
++bool begin(uint32_t events, uint32_t bytes) { return beginProfile(events, bytes, false, false); }
++bool beginCD(uint32_t events, uint32_t bytes, bool audio) { return beginProfile(events, bytes, true, audio); }
+ bool stop() {
+-    if (!paused() || !recording()) return false;
++    if (!paused() || !recording() || !CD::idle()) return false;
+     if (g_emulator->m_cpu->isDynarec() || g_emulator->m_mem->msanInitialized()) fail(Failure::Unsupported);
+     g_emulator->m_gpu->history(1);
++    if (CD::active()) {
++        CD::validate();
++        g_emulator->m_cdrom->history(1);
++    }
+     if (gpuDepth) fail(Failure::Association);
+     return journal()->stop(cycles());
+ }
+-bool clear() { return paused() && journal()->clear(); }
++bool clear() {
++    if (!paused() || !CD::idle() || !journal()->clear()) return false;
++    CD::configure(false, epoch, false, 0); return true;
++}
+ bool status(Status* out) { return out && journal() && journal()->status(*out); }
+ bool record(uint32_t index, Record* out) { return out && paused() && journal()->record(index, *out); }
+ bool bytes(uint32_t offset, uint32_t length, void* out) { return paused() && journal()->bytes(offset, length, out); }
+@@ -310,6 +334,11 @@
+     if (pointer < first || pointer - first >= 0x800000) { fail(Failure::Bounds); return; }
+     emit(Kind::DmaData, 3, {address, source, 1, 0, uint32_t(pointer - first)}, 0, &value, 1);
+ }
++uint64_t dmaRequest(uint32_t channel) {
++    if (!recording()) return 0;
++    if (channel >= requests.size()) { fail(Failure::Bounds); return 0; }
++    return owned[channel] ? owners[channel] : requests[channel];
++}
+ void timerRead(uint32_t index, uint32_t selector, uint32_t value, uint32_t after) {
+     if (!recording()) return;
+     emit(Kind::TimerRead, index, {selector, value, after, reading[0], reading[1]});
+diff --git a/src/core/history.h b/src/core/history.h
+--- a/src/core/history.h
++++ b/src/core/history.h
+@@ -15,12 +15,16 @@
+     TimerWrite, TimerGate, Discontinuity, DmaEnd, TimerRate, TimerInitial,
+     ScheduleInitial, IRQInitial, DmaDevice, DmaBuffer, DmaCancel, DmaPeek,
+     GpuContext, GpuEnvironment, GpuInput, GpuResult,
++    CdContext, CdPort, CdCommand, CdSchedule, CdResponse, CdIRQ,
++    CdMedia, CdBuffer, CdData, CdAudio, CdStream, CdTransition,
+ };
+ 
+ // Called once when the main Lua state is initialized, never from device hooks.
+ void initialize();
+ bool active();
++bool ownerThread();
+ bool begin(uint32_t events, uint32_t bytes);
++bool beginCD(uint32_t events, uint32_t bytes, bool audio);
+ bool stop();
+ bool clear();
+ bool status(Status* out);
+@@ -48,6 +52,7 @@
+ void buffer(const void* data, uint32_t length);
+ void cancel();
+ void cdbyte(uint32_t address, uint32_t source, uint8_t value);
++uint64_t dmaRequest(uint32_t channel);
+ void timerRead(uint32_t index, uint32_t selector, uint32_t value, uint32_t after = 0);
+ 
+ // Effective GPU calls, not bus attempts. DMA payload stays in the enclosed
+diff --git a/src/core/pcsxffi.lua b/src/core/pcsxffi.lua
+--- a/src/core/pcsxffi.lua
++++ b/src/core/pcsxffi.lua
+@@ -75,6 +75,7 @@
+     uint32_t version, state, events, bytes, failures, firstFailure, dropped;
+ } HistoryStatus;
+ bool historyBegin(uint32_t events, uint32_t bytes);
++bool historyBeginCD(uint32_t events, uint32_t bytes, bool audio);
+ bool historyStop();
+ bool historyClear();
+ bool historyStatus(HistoryStatus* out);
+@@ -118,6 +119,13 @@
+ end
+ 
+ local history = {
++    beginCD = function(events, bytes, audio)
++        historyInteger(events, 65536, 'event limit')
++        historyInteger(bytes, 8388608, 'byte limit')
++        assert(type(audio) == 'boolean', 'CD capture requires explicit joined-audio boolean')
++        assert(events > 0 and bytes >= 5308 and C.historyBeginCD(events, bytes, audio),
++               'CD begin requires empty recorder, context capacity, idle paused interpreter and active joined Audio')
++    end,
+     begin = function(events, bytes)
+         historyInteger(events, 65536, 'event limit')
+         historyInteger(bytes, 8388608, 'byte limit')
+diff --git a/src/core/pcsxlua.cc b/src/core/pcsxlua.cc
+--- a/src/core/pcsxlua.cc
++++ b/src/core/pcsxlua.cc
+@@ -90,6 +90,7 @@
+     return true;
+ }
+ bool historyBegin(uint32_t events, uint32_t bytes) { return PCSX::History::begin(events, bytes); }
++bool historyBeginCD(uint32_t events, uint32_t bytes, bool audio) { return PCSX::History::beginCD(events, bytes, audio); }
+ bool historyStop() { return PCSX::History::stop(); }
+ bool historyClear() { return PCSX::History::clear(); }
+ bool historyStatus(PCSX::History::Status* status) { return PCSX::History::status(status); }
+@@ -173,6 +174,7 @@
+     REGISTER(L, resumeEmulator);
+     REGISTER(L, debuggerStepInto);
+     REGISTER(L, historyBegin);
++    REGISTER(L, historyBeginCD);
+     REGISTER(L, historyStop);
+     REGISTER(L, historyClear);
+     REGISTER(L, historyStatus);
+diff --git a/src/core/provenance.h b/src/core/provenance.h
+new file mode 100644
+--- /dev/null
++++ b/src/core/provenance.h
+@@ -0,0 +1,71 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#pragma once
++
++#include <array>
++#include <cstdint>
++#include <limits>
++
++namespace PCSX::History::CD {
++
++// CPU-owner metadata only. The integration guards the thread/epoch before use.
++// Partial writes never reassign untouched bytes to the newest sector.
++class Origins {
++  public:
++    static constexpr uint32_t Size = 2352;
++    void reset() { m_origins.fill(0); m_latest = 0; }
++    bool assign(uint32_t offset, uint32_t length, uint64_t mutation) {
++        if (!length || offset >= Size || length > Size - offset || mutation <= m_latest) return false;
++        for (uint32_t n = offset; n < offset + length; ++n) m_origins[n] = mutation;
++        m_latest = mutation;
++        return true;
++    }
++    bool get(uint32_t offset, uint64_t& mutation) const {
++        if (offset >= Size) return false;
++        mutation = m_origins[offset];
++        return true;
++    }
++  private:
++    std::array<uint64_t, Size> m_origins{};
++    uint64_t m_latest = 0;
++};
++
++// SetResultSize revises a response under construction; only callback completion
++// publishes its bytes. Native result/cursor storage remains in the controller.
++class Response {
++  public:
++    struct Draft {
++        uint64_t id = 0, operation = 0, displaced = 0;
++        uint32_t revision = 0, size = 0;
++    };
++    void reset() { m_serial = m_published = 0; m_draft = {}; }
++    bool resize(uint64_t operation, uint32_t size, Draft& result) {
++        if (!operation || size > 16 || (m_draft.id && m_draft.operation != operation)) return false;
++        if (m_draft.id) {
++            if (m_draft.revision == UINT32_MAX) return false;
++            ++m_draft.revision;
++            m_draft.displaced = 0;
++        } else {
++            if (m_serial == UINT64_MAX) return false;
++            m_draft = {++m_serial, operation, m_published, 1, 0};
++            m_published = 0;
++        }
++        m_draft.size = size;
++        result = m_draft;
++        return true;
++    }
++    bool seal(uint64_t operation, bool publish, Draft& result) {
++        if (!m_draft.id || operation != m_draft.operation) return false;
++        result = m_draft;
++        m_published = publish ? m_draft.id : 0;
++        m_draft = {};
++        return true;
++    }
++    uint64_t published() const { return m_published; }
++    uint64_t current() const { return m_draft.id ? m_draft.id : m_published; }
++    bool building() const { return m_draft.id != 0; }
++  private:
++    uint64_t m_serial = 0, m_published = 0;
++    Draft m_draft{};
++};
++
++}  // namespace PCSX::History::CD
+diff --git a/src/core/psxhw.cc b/src/core/psxhw.cc
+--- a/src/core/psxhw.cc
++++ b/src/core/psxhw.cc
+@@ -23,6 +23,7 @@
+ #include <stdint.h>
+ 
+ #include "core/cdrom.h"
++#include "core/transactions.h"
+ #include "core/debug.h"
+ #include "core/gpu.h"
+ #include "core/logger.h"
+@@ -78,8 +79,10 @@
+ }
+ 
+ uint8_t PCSX::HW::read8(uint32_t add) {
++    History::CD::Scope cd(History::CD::Operation::CpuRead, add, 8);
+     AudioAccess audio(add, 0, 8, true);
+     const auto value = read8Value(add);
++    cd.result(value);
+     g_emulator->m_spu->captureReturn(add, value, 8);
+     return value;
+ }
+@@ -155,8 +158,10 @@
+ }
+ 
+ uint16_t PCSX::HW::read16(uint32_t add) {
++    History::CD::Scope cd(History::CD::Operation::CpuRead, add, 16);
+     AudioAccess audio(add, 0, 16, true);
+     const auto value = read16Value(add);
++    cd.result(value);
+     g_emulator->m_spu->captureReturn(add, value, 16);
+     return value;
+ }
+@@ -292,8 +297,10 @@
+ }
+ 
+ uint32_t PCSX::HW::read32(uint32_t add) {
++    History::CD::Scope cd(History::CD::Operation::CpuRead, add, 32);
+     AudioAccess audio(add, 0, 32, true);
+     const auto value = read32Value(add);
++    cd.result(value);
+     g_emulator->m_spu->captureReturn(add, value, 32);
+     return value;
+ }
+@@ -444,6 +451,7 @@
+ }
+ 
+ void PCSX::HW::write8(uint32_t add, uint32_t rawvalue) {
++    History::CD::Scope cd(History::CD::Operation::CpuWrite, add, 8, rawvalue);
+     History::Register observation(add, rawvalue, 8);
+     AudioAccess audio(add, rawvalue, 8);
+     uint8_t value = (uint8_t)rawvalue;
+@@ -548,6 +556,7 @@
+ }
+ 
+ void PCSX::HW::write16(uint32_t add, uint32_t rawvalue) {
++    History::CD::Scope cd(History::CD::Operation::CpuWrite, add, 16, rawvalue);
+     History::Register observation(add, rawvalue, 16);
+     AudioAccess audio(add, rawvalue, 16);
+     uint16_t value = (uint16_t)rawvalue;
+@@ -692,6 +701,7 @@
+ }
+ 
+ void PCSX::HW::write32(uint32_t add, uint32_t value) {
++    History::CD::Scope cd(History::CD::Operation::CpuWrite, add, 32, value);
+     History::Register observation(add, value, 32);
+     AudioAccess audio(add, value, 32);
+     uint32_t hwadd = add & 0x1fffffff;
+diff --git a/src/core/spu.h b/src/core/spu.h
+--- a/src/core/spu.h
++++ b/src/core/spu.h
+@@ -19,6 +19,8 @@
+ 
+ #pragma once
+ 
++#include <array>
++
+ #include "core/decode_xa.h"
+ #include "core/psxemulator.h"
+ #include "core/psxmem.h"
+@@ -26,6 +28,7 @@
+ #include "core/sstate.h"
+ #include "json.hpp"
+ #include "lua/luawrapper.h"
++#include "spu/environment.h"
+ 
+ namespace PCSX {
+ 
+@@ -64,6 +67,9 @@
+     virtual void captureEnd(uint64_t) = 0;
+     virtual void captureReturn(uint32_t, uint32_t, uint32_t) = 0;
+     virtual void invalidateCapture() = 0;
++    virtual std::array<uint64_t, 2> captureIdentity() = 0;
++    virtual bool captureEnvironment(SPU::Environment&) = 0;
++    virtual bool checkEnvironment(const SPU::Environment&) = 0;
+ 
+     bool m_showDebug = false;
+     bool m_showCfg = false;
+diff --git a/src/core/transactions.cc b/src/core/transactions.cc
+new file mode 100644
+--- /dev/null
++++ b/src/core/transactions.cc
+@@ -0,0 +1,212 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include "core/transactions.h"
++
++#include <bit>
++#include <cmath>
++
++#include "core/psxemulator.h"
++#include "core/psxmem.h"
++#include "core/r3000a.h"
++#include "core/spu.h"
++
++namespace PCSX::History::CD {
++namespace {
++struct Frame { Operation kind{}; uint64_t id = 0; };
++std::array<Frame, 16> stack{};
++uint32_t depth = 0;
++uint64_t generation = 0, serial = 0, audioGeneration = 0;
++uint64_t medium = 0;
++uint64_t backingSelection = 0;
++uint32_t mediaOutcomes = 0;
++uint64_t feeding = 0;
++bool feedFinished = false, feedCdda = false;
++bool enabled = false, joinAudio = false;
++SPU::Environment environment;
++uint32_t clock = 0;
++std::array<uint32_t, 15> scales{};
++bool isPort(Operation kind) { return kind <= Operation::HandlerWrite; }
++bool isRead(Operation kind) { return kind == Operation::CpuRead || kind == Operation::HandlerRead; }
++bool nested(Operation parent, Operation child) {
++    return (parent == Operation::CpuRead && child == Operation::HandlerRead) ||
++           (parent == Operation::CpuWrite && child == Operation::HandlerWrite) ||
++           (parent == Operation::Dma && child == Operation::DmaComplete) ||
++           (parent == Operation::Lid && child == Operation::LidSeek);
++}
++}
++
++bool idle() { return History::ownerThread() && !depth && !medium && !feeding; }
++bool active() { return History::active() && enabled; }
++bool prepare(uint32_t bytes) {
++    if (!idle() || History::active()) return false;
++    SPU::Environment candidate;
++    if (!g_emulator->m_spu->captureEnvironment(candidate)) return false;
++    // Slow-down scaling can overflow FeedXA's fixed stack buffer. Restrict this
++    // observer profile to the native unexpanded path, including fast-forward.
++    if (candidate.settings[9] < 100 || bytes < 5308 + candidate.backend.size() + candidate.device.size()) return false;
++    const auto nextClock = g_emulator->m_psxClockSpeed;
++    // Largest CD delay product is (clock / 75) * 290 in uint32 arithmetic.
++    if (!nextClock || nextClock > 100000000) return false;
++    std::array<uint32_t, 15> nextScales{};
++    for (unsigned n = 0; n < nextScales.size(); ++n) {
++        const float scale = g_emulator->m_cpu->m_interruptScales[n];
++        // eCycle is uint32: this bounds its float product well below uint64 max.
++        if (!std::isfinite(scale) || scale <= 0 || scale > 16) return false;
++        nextScales[n] = std::bit_cast<uint32_t>(scale);
++    }
++    environment = std::move(candidate); clock = nextClock; scales = nextScales;
++    return true;
++}
++void configure(bool value, uint64_t next, bool audio, uint64_t audioEpoch) {
++    if (!idle()) { History::fail(Failure::Association); return; }
++    enabled = value; generation = next; serial = 0;
++    joinAudio = audio; audioGeneration = audioEpoch;
++    backingSelection = 0;
++    if (value) {
++        std::array<uint8_t, 172 + 2048> payload{};
++        for (unsigned n = 0; n < environment.settings.size(); ++n)
++            for (unsigned b = 0; b < 8; ++b) payload[n*8+b] = uint64_t(environment.settings[n]) >> (b*8);
++        for (unsigned n = 0; n < scales.size(); ++n)
++            for (unsigned b = 0; b < 4; ++b) payload[112+n*4+b] = scales[n] >> (b*8);
++        const auto backend = uint32_t(environment.backend.size()), device = uint32_t(environment.device.size());
++        std::copy(environment.backend.begin(), environment.backend.end(), payload.begin()+172);
++        std::copy(environment.device.begin(), environment.device.end(), payload.begin()+172+backend);
++        History::emit(Kind::CdContext, 2, {1, clock, 14, 15, backend, device,
++                      uint32_t(environment.initialized), uint32_t(environment.stream)},
++                      0, payload.data(), 172+backend+device, 0);
++    }
++}
++uint64_t epoch() { return active() ? generation : 0; }
++uint64_t audioEpoch() { return active() ? audioGeneration : 0; }
++bool joined() { return active() && joinAudio; }
++uint64_t operation() { return active() && depth ? stack[0].id : 0; }
++uint64_t access() { return active() && depth ? stack[depth - 1].id : 0; }
++void invalidate() {
++    // active() guards profile reads and marks wrong-thread calls itself.
++    if (active()) History::fail(Failure::Discontinuity);
++}
++bool validate() {
++    if (!active()) return true;
++    bool valid = !g_emulator->m_cpu->isDynarec() && !g_emulator->m_mem->msanInitialized() &&
++        g_emulator->m_psxClockSpeed == clock && g_emulator->m_spu->checkEnvironment(environment);
++    for (unsigned n = 0; n < scales.size(); ++n)
++        valid = valid && std::bit_cast<uint32_t>(g_emulator->m_cpu->m_interruptScales[n]) == scales[n];
++    if (!valid) { History::fail(Failure::Discontinuity); return false; }
++    if (!joinAudio) return true;
++    const auto identity = g_emulator->m_spu->captureIdentity();
++    if (identity[0] == 1 && identity[1] == audioGeneration) return true;
++    History::fail(Failure::Discontinuity);
++    return false;
++}
++
++Media::Media(uint32_t kind, uint32_t msf, uint32_t lba, uint64_t prior) : m_kind(kind) {
++    if (!active()) return;
++    if (!access() || medium || serial == UINT64_MAX) { History::fail(Failure::Association); return; }
++    m_id = ++serial; m_epoch = generation; medium = m_id; mediaOutcomes = 0;
++    History::emit(Kind::CdMedia, 0, {kind, msf, lba, uint32_t(prior), uint32_t(prior >> 32)},
++                  access(), nullptr, 0, m_id);
++}
++void Media::result(bool success, uint32_t disposition) {
++    if (!m_id || !active()) return;
++    if (m_epoch != generation || medium != m_id || m_finished) { History::fail(Failure::Association); return; }
++    if (disposition > 2 || (m_kind == 2 && disposition != 0) ||
++        mediaOutcomes != (disposition == 0 ? 1u : 0u)) History::fail(Failure::Association);
++    History::emit(Kind::CdMedia, 1, {m_kind, uint32_t(success), disposition}, access(), nullptr, 0, m_id);
++    m_finished = true;
++}
++Media::~Media() {
++    if (!m_id || !History::ownerThread()) return;
++    if (m_epoch != generation || medium != m_id || !m_finished) History::fail(Failure::Association);
++    if (medium == m_id) medium = 0;
++}
++uint64_t backing() { return active() ? backingSelection : 0; }
++void mediaOutcome(uint32_t reason, int64_t count, uint32_t track, uint32_t file,
++                  uint32_t sector, uint32_t flags, uint32_t base) {
++    if (!active()) return;
++    if (!medium || !access()) { History::fail(Failure::Association); return; }
++    if (mediaOutcomes) { History::fail(Failure::Association); return; }
++    mediaOutcomes = 1;
++    if (flags & 4) backingSelection = medium;
++    const auto bits = uint64_t(count);
++    History::emit(Kind::CdMedia, 2, {reason, uint32_t(bits), uint32_t(bits >> 32), track, file, sector, flags, base},
++                  access(), nullptr, 0, medium);
++}
++
++Feed::Feed(bool cdda, uint64_t media, uint64_t mutation, uint64_t stream,
++           uint32_t rate, uint32_t frames, uint32_t stereo) {
++    if (!active()) return;
++    if (!access() || feeding || serial == UINT64_MAX) { History::fail(Failure::Association); return; }
++    m_id = ++serial; m_epoch = generation; feeding = m_id; feedFinished = false; feedCdda = cdda;
++    std::array<uint8_t, 24> payload{};
++    const std::array<uint64_t, 3> ids = {media, mutation, stream};
++    for (unsigned n = 0; n < ids.size(); ++n)
++        for (unsigned b = 0; b < 8; ++b) payload[n*8+b] = ids[n] >> (b*8);
++    History::emit(Kind::CdAudio, 0, {uint32_t(cdda), rate, frames, stereo}, access(),
++                  payload.data(), payload.size(), m_id);
++}
++Feed::~Feed() {
++    if (!m_id || !History::ownerThread()) return;
++    if (m_epoch != generation || feeding != m_id || !feedFinished) History::fail(Failure::Association);
++    if (feeding == m_id) feeding = 0;
++}
++bool feedActive() { return active() && feeding && !feedFinished; }
++void feedOutcome(uint32_t reason, uint32_t rate, uint32_t sourceFrames, uint32_t stereo,
++                 uint32_t outputFrames, bool cdda, uint64_t audioState, uint64_t epoch, uint64_t event) {
++    if (!active()) return;
++    if (!feeding || feedFinished || cdda != feedCdda || reason < 1 || reason > 7 || audioState > 2) {
++        History::fail(Failure::Association); return;
++    }
++    feedFinished = true;
++    const bool submitted = reason >= 6;
++    const uint32_t disposition = !submitted ? 0 : (audioState != 1 ? 1 : (event ? 2 : 3));
++    std::array<uint8_t, 16> payload{};
++    const std::array<uint64_t, 2> ids = {epoch, access()};
++    for (unsigned n = 0; n < ids.size(); ++n)
++        for (unsigned b = 0; b < 8; ++b) payload[n*8+b] = ids[n] >> (b*8);
++    History::emit(Kind::CdAudio, 1, {reason, rate, sourceFrames, stereo, outputFrames,
++                  uint32_t(audioState), disposition, uint32_t(cdda)}, event, payload.data(), payload.size(), feeding);
++    if (joinAudio && (audioState != 1 || epoch != audioGeneration || (submitted && !event)))
++        History::fail(Failure::Association);
++}
++
++Scope::Scope(Operation kind, uint32_t address, uint32_t width, uint32_t value)
++    : m_kind(kind), m_address(address), m_width(width), m_value(value) {
++    if (kind == Operation::CpuRead || kind == Operation::CpuWrite) {
++        const auto physical = address & 0x1fffffff;
++        if (physical < 0x1f801800 || physical >= 0x1f801804) return;
++    }
++    if (!History::ownerThread()) return;
++    if (depth == stack.size()) { History::fail(Failure::Bounds); return; }
++    const bool recording = active();
++    if (recording) {
++        if (g_emulator->m_cpu->isDynarec() || g_emulator->m_mem->msanInitialized())
++            History::fail(Failure::Unsupported);
++        if ((depth && !nested(stack[depth - 1].kind, kind)) ||
++            (!depth && (kind == Operation::HandlerRead || kind == Operation::HandlerWrite)))
++            History::fail(Failure::Association);
++        if (isPort(kind) && width != 8) History::fail(Failure::Unsupported);
++        if (serial == UINT64_MAX) { History::fail(Failure::Bounds); return; }
++        m_id = ++serial; m_parent = depth ? stack[depth - 1].id : 0; m_epoch = generation;
++        validate();
++    }
++    stack[depth++] = {kind, m_id}; m_entered = true;
++    if (recording) emit(0);
++}
++Scope::~Scope() {
++    if (!m_entered || !History::ownerThread()) return;
++    if (!depth || stack[depth - 1].kind != m_kind || stack[depth - 1].id != m_id) {
++        History::fail(Failure::Association); return;
++    }
++    if (m_id && active()) {
++        if (m_epoch != generation || (isRead(m_kind) && !m_returned)) History::fail(Failure::Association);
++        validate(); emit(1);
++    }
++    --depth;
++}
++void Scope::emit(uint32_t phase) {
++    if (!active()) return;
++    History::emit(isPort(m_kind) ? Kind::CdPort : Kind::CdTransition, phase,
++        {uint32_t(m_kind), m_address, m_width, m_value, g_emulator->m_cpu->m_regs.pc,
++         uint32_t(m_returned), uint32_t(depth), 0}, m_parent, nullptr, 0, m_id);
++}
++
++}  // namespace PCSX::History::CD
+diff --git a/src/core/transactions.h b/src/core/transactions.h
+new file mode 100644
+--- /dev/null
++++ b/src/core/transactions.h
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#pragma once
++
++#include "core/history.h"
++
++namespace PCSX::History::CD {
++
++enum class Operation : uint32_t {
++    CpuRead = 1, CpuWrite, HandlerRead, HandlerWrite, Command,
++    Read, Play, Lid, LidSeek, Dma, DmaComplete, Decode,
++};
++
++bool idle();
++bool active();
++bool prepare(uint32_t bytes);
++void configure(bool enabled, uint64_t epoch, bool joined, uint64_t audioEpoch);
++bool validate();
++void invalidate();
++uint64_t epoch();
++uint64_t audioEpoch();
++bool joined();
++uint64_t operation();
++uint64_t access();
++
++// A controller media lookup encloses at most one backend operation. Backend
++// reads without a controller owner invalidate observation-only capture.
++uint64_t backing();
++void mediaOutcome(uint32_t reason, int64_t count, uint32_t track = 0, uint32_t file = 0,
++                  uint32_t sector = 0, uint32_t flags = 0, uint32_t base = 0);
++class Media {
++  public:
++    Media(uint32_t kind, uint32_t msf, uint32_t lba, uint64_t prior);
++    ~Media();
++    void result(bool success, uint32_t disposition);
++    uint64_t id() const { return m_id; }
++    Media(const Media&) = delete;
++    Media& operator=(const Media&) = delete;
++  private:
++    uint64_t m_id = 0, m_epoch = 0;
++    uint32_t m_kind = 0;
++    bool m_finished = false;
++};
++
++class Feed {
++  public:
++    Feed(bool cdda, uint64_t media, uint64_t mutation, uint64_t stream,
++         uint32_t rate, uint32_t frames, uint32_t stereo);
++    ~Feed();
++    Feed(const Feed&) = delete;
++    Feed& operator=(const Feed&) = delete;
++  private:
++    uint64_t m_id = 0, m_epoch = 0;
++};
++bool feedActive();
++void feedOutcome(uint32_t reason, uint32_t rate, uint32_t sourceFrames, uint32_t stereo,
++                 uint32_t outputFrames, bool cdda, uint64_t audioState, uint64_t audioEpoch, uint64_t event);
++
++// Owner-thread scopes also exist while capture is off, preventing begin inside
++// native callbacks. A valid native helper inherits the outer operation identity.
++class Scope {
++  public:
++    explicit Scope(Operation kind, uint32_t address = 0, uint32_t width = 0, uint32_t value = 0);
++    ~Scope();
++    void result(uint32_t value) { m_value = value; m_returned = true; }
++    bool observed() const { return m_id != 0; }
++    bool root() const { return m_id && !m_parent; }
++    uint64_t id() const { return m_id; }
++    Scope(const Scope&) = delete;
++    Scope& operator=(const Scope&) = delete;
++  private:
++    void emit(uint32_t phase);
++    Operation m_kind;
++    uint32_t m_address, m_width, m_value;
++    uint64_t m_epoch = 0, m_id = 0, m_parent = 0;
++    bool m_entered = false, m_returned = false;
++};
++
++}  // namespace PCSX::History::CD
+diff --git a/src/spu/capture.cc b/src/spu/capture.cc
+--- a/src/spu/capture.cc
++++ b/src/spu/capture.cc
+@@ -46,6 +46,25 @@
+         g_emulator->settings.get<Emulator::SettingScaler>().value,
+         g_emulator->settings.get<Emulator::SettingSpuIrq>().value, voices[0], voices[1],
+         g_emulator->settings.get<Emulator::SettingXa>().value};
++}
++
++bool PCSX::SPU::SDLAudio::captureEnvironment(Environment& value) {
++    if (!m_capture.ownerThread()) { m_capture.fail(Capture::Thread); return false; }
++    const auto& backend = m_settings.get<Backend>().value;
++    const auto& device = m_settings.get<Device>().value;
++    if (backend.size() > 1024 || device.size() > 1024) return false;
++    const auto settings = captureSettings();
++    if (settings[0] < 0 || settings[0] > 3 || settings[1] < 0 || settings[1] > 3 ||
++        settings[2] < 0 || settings[2] > 2 || settings[9] <= 0) return false;
++    value = {settings, backend, device, m_audioInitialized, m_stream != nullptr};
++    return true;
++}
++
++bool PCSX::SPU::SDLAudio::checkEnvironment(const Environment& value) {
++    if (!m_capture.ownerThread()) { m_capture.fail(Capture::Thread); return false; }
++    return value.settings == captureSettings() && value.backend == m_settings.get<Backend>().value &&
++        value.device == m_settings.get<Device>().value && value.initialized == m_audioInitialized &&
++        value.stream == (m_stream != nullptr);
+ }
+ 
+ void PCSX::SPU::SDLAudio::checkCaptureSettings() {
+@@ -132,6 +151,7 @@
+         if (!okay) return L.error("audio status requires stream exclusion");
+         L.newtable();
+         number(L, "version", result.version); number(L, "state", result.state);
++        wide(L, "epoch", m_capture.identity()[1]);
+         number(L, "rate", 44100); number(L, "channels", 2);
+         string(L, "format", "f32le"); string(L, "stage", "post-mixer-mute-mono/pre-SDL-conversion");
+         number(L, "frames", result.frames); number(L, "blocks", result.blocks); number(L, "events", result.events);
+diff --git a/src/spu/capture.h b/src/spu/capture.h
+--- a/src/spu/capture.h
++++ b/src/spu/capture.h
+@@ -2,6 +2,7 @@
+ #pragma once
+ 
+ #include <algorithm>
++#include <array>
+ #include <atomic>
+ #include <cstdint>
+ #include <cstring>
+@@ -44,6 +45,11 @@
+     Capture() : m_owner(std::this_thread::get_id()) {}
+     bool ownerThread() const { return std::this_thread::get_id() == m_owner; }
+     bool active() const { return (m_lifecycle.load(std::memory_order_acquire) & STATE_MASK) == 1; }
++    std::array<uint64_t, 2> identity() {
++        if (!owner()) return {};
++        const auto value = m_lifecycle.load(std::memory_order_acquire);
++        return {value & STATE_MASK, value >> EPOCH_SHIFT};
++    }
+ 
+     // The caller additionally enforces paused interpreter, initialized device,
+     // stable settings and stream exclusion. No flush/queue mutation is implied.
+diff --git a/src/spu/environment.h b/src/spu/environment.h
+new file mode 100644
+--- /dev/null
++++ b/src/spu/environment.h
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#pragma once
++
++#include <array>
++#include <cstdint>
++#include <string>
++
++namespace PCSX::SPU {
++// CPU-owner configuration only; no queue or SDL callback state.
++struct Environment {
++    std::array<int64_t, 14> settings{};
++    std::string backend, device;
++    bool initialized = false, stream = false;
++};
++}  // namespace PCSX::SPU
+diff --git a/src/spu/interface.h b/src/spu/interface.h
+--- a/src/spu/interface.h
++++ b/src/spu/interface.h
+@@ -65,7 +65,10 @@
+         else m_audioOut.capture().fail(Capture::Thread);
+     }
+     void captureReturn(uint32_t, uint32_t, uint32_t) final;
+-    void invalidateCapture() final { m_audioOut.capture().fail(Capture::Discontinuity); }
++    void invalidateCapture() final;
++    std::array<uint64_t, 2> captureIdentity() final { return m_audioOut.capture().identity(); }
++    bool captureEnvironment(Environment& value) final { return m_audioOut.captureEnvironment(value); }
++    bool checkEnvironment(const Environment& value) final { return m_audioOut.checkEnvironment(value); }
+ 
+     void async(uint32_t) final;
+     void playCDDAchannel(int16_t *, int) final;
+@@ -204,6 +207,8 @@
+ 
+     // xa
+     void FeedXA(xa_decode_t *xap, bool cdda = false);
++    void observeCDFeed(uint32_t reason, const xa_decode_t* xap, uint32_t frames = 0,
++                       bool cdda = false, uint64_t event = 0);
+ 
+     int bSPUIsOpen;
+ 
+diff --git a/src/spu/observation.cc b/src/spu/observation.cc
+--- a/src/spu/observation.cc
++++ b/src/spu/observation.cc
+@@ -1,5 +1,27 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ #include "spu/interface.h"
++#include "core/transactions.h"
++
++void PCSX::SPU::impl::invalidateCapture() {
++    m_audioOut.capture().fail(Capture::Discontinuity);
++    History::CD::invalidate();
++}
++
++void PCSX::SPU::impl::observeCDFeed(uint32_t reason, const xa_decode_t* xap,
++                                 uint32_t frames, bool cdda, uint64_t event) {
++    // Both checks touch only immutable owner identity / guarded recorder state.
++    // A foreign caller must invalidate both active recorders before any input,
++    // CPU, profile or device metadata is inspected.
++    if (!m_audioOut.capture().ownerThread() || !History::ownerThread()) {
++        m_audioOut.capture().fail(Capture::Thread);
++        History::fail(History::Failure::Thread); return;
++    }
++    if (!History::CD::active()) return;
++    if (!History::CD::feedActive()) { History::fail(History::Failure::Association); return; }
++    const auto identity = m_audioOut.capture().identity();
++    History::CD::feedOutcome(reason, xap ? xap->freq : 0, xap ? xap->nsamples : 0,
++        xap ? xap->stereo : 0, frames, cdda, identity[0], identity[1], event);
++}
+ 
+ uint64_t PCSX::SPU::impl::captureAccess(uint32_t address, uint32_t value, uint32_t width, bool read) {
+     if (!m_audioOut.capture().ownerThread()) { m_audioOut.capture().fail(Capture::Thread); return 0; }
+diff --git a/src/spu/sdlaudio.cc b/src/spu/sdlaudio.cc
+--- a/src/spu/sdlaudio.cc
++++ b/src/spu/sdlaudio.cc
+@@ -27,6 +27,7 @@
+ #include <string>
+ 
+ #include "core/system.h"
++#include "core/transactions.h"
+ #include "spu/interface.h"
+ 
+ PCSX::SPU::SDLAudio::SDLAudio(PCSX::SPU::SettingsType& settings)
+@@ -58,6 +59,7 @@
+ 
+ void PCSX::SPU::SDLAudio::init(bool safe) {
+     m_capture.fail(Capture::Discontinuity);
++    History::CD::invalidate();
+     // Pick the audio driver. SDL_HINT_AUDIO_DRIVER must be set before SDL_InitSubSystem.
+     if (safe) {
+         SDL_SetHint(SDL_HINT_AUDIO_DRIVER, "dummy");
+@@ -171,6 +173,7 @@
+ 
+ void PCSX::SPU::SDLAudio::uninit() {
+     m_capture.fail(Capture::Discontinuity);
++    History::CD::invalidate();
+     stopNullThread();
+     if (m_stream) {
+         SDL_DestroyAudioStream(m_stream);
+diff --git a/src/spu/sdlaudio.h b/src/spu/sdlaudio.h
+--- a/src/spu/sdlaudio.h
++++ b/src/spu/sdlaudio.h
+@@ -35,6 +35,7 @@
+ 
+ #include "spu/settings.h"
+ #include "spu/capture.h"
++#include "spu/environment.h"
+ #include "support/circular.h"
+ #include "support/eventbus.h"
+ 
+@@ -57,6 +58,8 @@
+     Capture& capture() { return m_capture; }
+     void setCaptureLua(Lua, std::function<std::array<uint32_t, 2>()>);
+     void checkCaptureSettings();
++    bool captureEnvironment(Environment&);
++    bool checkEnvironment(const Environment&);
+     ~SDLAudio() { uninit(); }
+     uint32_t getFrameCount() { return m_frameCount.load(); }
+     void reinit() {
+diff --git a/src/spu/spu.cc b/src/spu/spu.cc
+--- a/src/spu/spu.cc
++++ b/src/spu/spu.cc
+@@ -866,9 +866,9 @@
+ ////////////////////////////////////////////////////////////////////////
+ 
+ void PCSX::SPU::impl::playADPCMchannel(xa_decode_t *xap) {
+-    if (!settings.get<Streaming>()) return;  // no XA? bye
+-    if (!xap) return;
+-    if (!xap->freq) return;  // no xa freq ? bye
++    if (!settings.get<Streaming>()) { observeCDFeed(1, nullptr); return; }  // Input is not examined on this path.
++    if (!xap) { observeCDFeed(2, nullptr); return; }
++    if (!xap->freq) { observeCDFeed(3, nullptr); return; }
+ 
+     FeedXA(xap);  // call main XA feeder
+ }
+diff --git a/src/spu/xa.cc b/src/spu/xa.cc
+--- a/src/spu/xa.cc
++++ b/src/spu/xa.cc
+@@ -46,14 +46,14 @@
+     SDLAudio::Frame XABuffer[32 * 1024];
+     SDLAudio::Frame *XAFeed = XABuffer;
+ 
+-    if (!bSPUIsOpen) return;
++    if (!bSPUIsOpen) { observeCDFeed(4, nullptr, 0, cdda); return; }
+ 
+     xapGlobal = xap;  // store info for save states
+ 
+     iSize = ((44100 * xap->nsamples) / xap->freq);  // get size
+     iSize *= 100;
+     iSize /= std::min(100, g_emulator->settings.get<Emulator::SettingScaler>().value);
+-    if (!iSize) return;  // none? bye
++    if (!iSize) { observeCDFeed(5, xap, 0, cdda); return; }
+ 
+     assert(iSize <= 32 * 1024);
+ 
+@@ -161,11 +161,16 @@
+ 
+     const uint32_t frames = XAFeed - XABuffer;
+     const auto observe = [&](bool accepted) {
+-        if (!m_audioOut.capture().ownerThread()) { m_audioOut.capture().fail(Capture::Thread); return; }
++        if (!m_audioOut.capture().ownerThread()) {
++            m_audioOut.capture().fail(Capture::Thread);
++            observeCDFeed(accepted ? 6 : 7, nullptr, frames, cdda);
++            return;
++        }
+         m_audioOut.checkCaptureSettings();
+-        m_audioOut.capture().event(g_emulator->m_cpu->m_regs.cycle, Capture::Kind::Feed,
++        const auto event = m_audioOut.capture().event(g_emulator->m_cpu->m_regs.cycle, Capture::Kind::Feed,
+                                    xap->freq, frames, xap->nsamples, 0, xap->stereo,
+                                    uint32_t(accepted) | (uint32_t(cdda) << 1));
++        observeCDFeed(accepted ? 6 : 7, xap, frames, cdda, event);
+         if (!accepted) m_audioOut.capture().streamingLoss(frames);
+     };
+     try {

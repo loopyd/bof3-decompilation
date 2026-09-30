@@ -15,7 +15,7 @@ extern u16            D_8014678E[];
  * @source 0x80162A6C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void selectAlternateEmiDestination(void) {
   u32 entry_offset;

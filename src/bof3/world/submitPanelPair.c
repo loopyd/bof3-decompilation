@@ -5,7 +5,7 @@
  * @source 0x801E0ED0
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void submitPanelPair(s16 arg0, s16 arg1) {
   submitTpageDrawMode(0, 1);

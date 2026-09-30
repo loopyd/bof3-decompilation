@@ -5,7 +5,7 @@
  * from the non-volatile scratchpad pointer cell at 0x1F800044, then invokes it.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchByte1PairTable(void)
 {

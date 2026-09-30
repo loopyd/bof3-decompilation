@@ -4,7 +4,7 @@
 /* @source 0x801E0DCC
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8* func_801E0DCC(s32 arg0, s32 arg1, s16 arg2, s16 arg3) {
   SPRT* primitive;

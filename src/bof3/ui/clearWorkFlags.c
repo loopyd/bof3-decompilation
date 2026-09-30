@@ -4,7 +4,7 @@
  * @source 0x80196070
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void clearWorkFlags(void) {
   g_game_work->flags_00 = 0;

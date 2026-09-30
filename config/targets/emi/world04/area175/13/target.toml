@@ -9,12 +9,33 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world04/clearWorkByte9AdvanceWorkByte1ThenQueueCue20EWorld04Area17513_801F3570.c",
+    "src/bof3/world04/copySharedXToWorkXIfInRangeWorld04Area17513_801F3FDC.c",
+    "src/bof3/world04/dispatchWorkByte1HandlerWorld04Area17513_801F31E4.c",
+    "src/bof3/world04/dispatchWorkByte1Table460cWorld04Area17513_801F352C.c",
     "src/bof3/world04/invokeHelperArgWorld04Area17513_801F3FBC.c",
     "src/bof3/world04/invokeHelperWorld04Area17513_801F36BC.c",
     "src/bof3/world04/invokeHelperWorld04Area17513_801F3418.c",
     "src/bof3/world04/invokeHelperWorld04Area17513_801F2E0C.c",
     "src/bof3/world04/noopHandlerWorld04Area17513_801F3C9C.c",
     "src/bof3/world04/noopHandlerWorld04Area17513_801F3B9C.c",
+    "src/bof3/world04/publishGateByteSlot0World04Area17513_801F3D94.c",
+    "src/bof3/world04/publishGateByteSlot1World04Area17513_801F3DB8.c",
+    "src/bof3/world04/setStatus63IfGateElse62World04Area17513_801F3970.c",
+    "src/bof3/world04/setStatus5AAndPtrByte7AFFIfGateElseFFFFWorld04Area17513_801F38E8.c",
+    "src/bof3/world04/setStatus5FAndByte801448ECIfGateElseFFFFWorld04Area17513_801F392C.c",
+    "src/bof3/world04/setStatus70IfGateElseFFFFWorld04Area17513_801F3A34.c",
+    "src/bof3/world04/setStatus70IfGateElseFFFFWorld04Area17513_801F3A5C.c",
+    "src/bof3/world04/setStatus7EIfGateElseFFFFWorld04Area17513_801F3B4C.c",
+    "src/bof3/world04/setStatus7EIfGateElseFFFFWorld04Area17513_801F3B74.c",
+    "src/bof3/world04/setStatus8AIfGateElseFFFFWorld04Area17513_801F3C4C.c",
+    "src/bof3/world04/setStatus8AIfGateElseFFFFWorld04Area17513_801F3C74.c",
+    "src/bof3/world04/setStatusA0IfGateElse9FWorld04Area17513_801F3CA4.c",
+    "src/bof3/world04/setStatusEFAndByte2IfGateElse1World04Area17513_801F3D60.c",
+    "src/bof3/world04/startWorkCountdownMode1World04Area17513_801F4248.c",
+    "src/bof3/world04/setStatusF8IfGateElseF9World04Area17513_801F3E28.c",
+    "src/bof3/world04/setWorkByte9AndClearTintWorld04Area17513_801F3228.c",
+    "src/bof3/world04/setStatusFFFFSubstate2IfGateElse3World04Area17513_801F386C.c",
     "src/bof3/support/area175_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area175_13_psyq.c"

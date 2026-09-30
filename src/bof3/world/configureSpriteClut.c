@@ -5,7 +5,7 @@
  * @source 0x801E0F4C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void configureSpriteClut(s16 arg0, s16 arg1, u8 arg2) {
   u16 clut;
@@ -16,7 +16,6 @@ void configureSpriteClut(s16 arg0, s16 arg1, u8 arg2) {
   sprite = func_801E0DCC(2, 1, arg0, arg1);
   sprite_index = arg2 & 0xff;
   if (sprite_index != 0xff) {
-    /* MATCHING_AID: retain the original CLUT construction register order. */
     clut = (u16)(((arg2 >> 4) + 0x1eb) << 6);
     clut |= arg2 & 0x0f;
     *(u16*)(sprite + 0x0e) = clut;

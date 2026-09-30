@@ -5,7 +5,7 @@
  * @source 0x801DEE4C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u8 localReadyOrHelper2(void) {
   volatile u8* battle_work = (volatile u8*)BATTLE_LOCAL_WORK_PTR;

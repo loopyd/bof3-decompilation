@@ -5,7 +5,7 @@
  * @source 0x80198BC4
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void waitTransition(u32 arg0) {
   u8 force_update;

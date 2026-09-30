@@ -4,7 +4,7 @@
  * @behavior Tests whether an 8-bit value occurs in the active byte list.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 u32 func_800A82A0(u8 value)
 {

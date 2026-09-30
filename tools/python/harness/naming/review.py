@@ -6,6 +6,8 @@ import copy
 import json
 from pathlib import Path
 
+from harness.common.commands import command as canonical
+from harness.common.commands import tool_id
 from harness.common.inputs import file_state
 from harness.common.deadlines import check_deadline
 from harness.common.files import atomic_write
@@ -241,7 +243,8 @@ def validate_review(root: Path, bundle, row):
     import json
 
     if (
-        readiness["argv"] != ["bin/analysis-readiness", bundle["binding"]["target"]]
+        readiness["argv"]
+        != canonical("analysis-readiness", bundle["binding"]["target"])
         or readiness["exit_code"] != 0
         or readiness["failure"] is not None
         or json.loads(readiness["stdout"], object_pairs_hook=unique_object).get("ready")
@@ -265,7 +268,7 @@ def ingest(
     original = file_state(parent)
     value = load(parent)
     attestation(root, bundle, row, value)
-    readiness = _execute(root, ["bin/analysis-readiness", target])
+    readiness = _execute(root, canonical("analysis-readiness", target))
     hygiene = _execute(root, ["git", "diff", "--check"])
     output = directory(root)
     write_json(output / "readiness.json", readiness)
@@ -314,13 +317,13 @@ def verify_external(
     result = validate(copied)
     recheck(root, bundle, row)
     validate_review(root, bundle, row)
-    for argv in (["bin/analysis-readiness", target], ["git", "diff", "--check"]):
+    for argv in (canonical("analysis-readiness", target), ["git", "diff", "--check"]):
         check = _execute(root, argv)
         if (
             check["exit_code"] != 0
             or check["failure"] is not None
             or (
-                argv[0] == "bin/analysis-readiness"
+                tool_id(argv) == "analysis-readiness"
                 and json.loads(check["stdout"]).get("ready") is not True
             )
         ):

@@ -3,6 +3,8 @@
 /* @behavior emits one semi-transparent sprite using the selected sprite record.
  * @source 0x801F39D8
  * @status exact
+ * @match 100.00
+ * @residual none
  */
 void emitSemiTransparentSprite(s16 arg0, s16 arg1, u8 arg2) {
   SPRT* primitive;

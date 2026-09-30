@@ -4,7 +4,7 @@
  * @behavior Stores selection slot 3, resets selection state, and advances phase.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void storeSlot3AdvanceSubstate(void) {
   u8 value;

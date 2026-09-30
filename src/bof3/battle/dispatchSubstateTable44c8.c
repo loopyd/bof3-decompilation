@@ -4,7 +4,7 @@
  * @behavior dispatches the battle selection handler indexed by the current state.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchSubstateTable44c8(void) {
   battleSelectionHandlerTable44C8[D_801462E3]();

@@ -130,7 +130,9 @@ def _parse_declarators(
         if pointer and "(" in item[: pointer.start()]:
             pointer = None
         function = re.fullmatch(r"(.*?)\b([A-Za-z_]\w*)\s*(\([^{};]*\))", item)
-        ordinary = re.fullmatch(r"(.*?)([A-Za-z_]\w*)\s*((?:\[[^]]*\]\s*)*)", item)
+        ordinary = re.fullmatch(
+            r"(.*?)([A-Za-z_]\w*)\s*((?:\[[^]]*\]\s*)*)(?::\s*[^,;]+)?", item
+        )
         match = pointer or function or ordinary
         if match is None:
             diagnostic = "unsupported declarator"

@@ -14,7 +14,7 @@ extern s32 D_80145E2C;
  * @source 0x8014B1A4
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void openBootEventSet(void) {
   EnterCriticalSection();

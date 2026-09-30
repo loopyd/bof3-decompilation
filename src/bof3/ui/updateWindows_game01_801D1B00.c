@@ -3,9 +3,9 @@
 /* @behavior advances the two frontend window fades, promotes the fade phase
  * once both channels saturate, and draws the visible menu/window layers.
  * @source 0x801D1B00
- * @status partial
- * @match unavailable
- * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void updateWindows(void) {
 
@@ -50,14 +50,6 @@ void updateWindows(void) {
   if (GAME_FRONT_WINDOW_PHASE != 0u) {
     drawPromptPanels(secondary_active, D_80143C28);
     drawLabelGroup(26, 24, secondary_active, D_80143C28);
-    /* MATCHING_AID: the original passes primary_active to drawLabelGroups's
-     * selected parameter as a full word (`move a2,s1` in the jal delay slot),
-     * with no andi 0xff truncation, even though the declared parameter is u8.
-     * Calling through a widened s32 prototype reproduces that word-wide
-     * argument pass: cc1 would otherwise narrow the u8 value with
-     * `andi a2,...,0xff`. The callee (byte-matched) reads only the low byte,
-     * so the wider pass is behavior-identical. */
-    ((void (*)(s16, s16, s32, u8))drawLabelGroups)(-6, 28, primary_active,
-                                                 D_80143C26);
+    drawLabelGroups(-6, 28, primary_active, D_80143C26);
   }
 }

@@ -4,7 +4,7 @@
  * @behavior Clears local-work flag bit 6, invokes func_801E2314(0), and initializes scratchpad work state.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void initScratchWorkState(void)
 {

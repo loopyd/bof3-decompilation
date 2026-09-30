@@ -42,8 +42,8 @@ segments:
     - asm
     - func_801F2EEC
   - - 816
-    - asm
-    - func_801F2F30
+    - c
+    - clearWorkByte9SelectWorkState1AndShade0FWorld04Area18813_801F2F30
   - - 876
     - asm
     - func_801F2F6C
@@ -93,8 +93,8 @@ segments:
     - asm
     - func_801F3ADC
   - - 4532
-    - asm
-    - func_801F3DB4
+    - c
+    - clearWorkTableByte0At800E4800World04Area18813_801F3DB4
   - - 4576
     - asm
     - func_801F3DE0
@@ -132,11 +132,11 @@ segments:
     - asm
     - func_801F4840
   - - 7392
-    - asm
-    - func_801F48E0
+    - c
+    - advanceCounter2By2World04Area18813_801F48E0
   - - 7432
-    - asm
-    - func_801F4908
+    - c
+    - retreatCounter2By2World04Area18813_801F4908
   - - 7472
     - c
     - setTwoWorld04Area18813_801F4930
@@ -166,5 +166,5 @@ segments:
     - func_801F4D88
   - - 8688
     - asm
-    - func_801F4DF0
+    - D_801F4DF0
 - - 15524

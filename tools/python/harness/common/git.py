@@ -47,6 +47,61 @@ def _index_state(
     )
 
 
+# Only subcommands whose result is a pure function of the index and refs are cached;
+# working-tree queries (status, diff, grep) are never cached.
+_CACHEABLE_GIT = frozenset(
+    {"rev-parse", "ls-files", "ls-tree", "show-ref", "for-each-ref", "symbolic-ref"}
+)
+_READ_GIT_CACHE: dict[tuple[str, tuple[str, ...]], tuple[tuple, str]] = {}
+
+
+def _git_state_token(root: Path) -> tuple | None:
+    """Cheap index/ref identity token; None disables caching for this root."""
+    git = root / ".git"
+    if not git.is_dir():
+        return None
+    entries: list[tuple] = []
+    for name in ("index", "packed-refs"):
+        try:
+            status = os.stat(git / name, follow_symlinks=False)
+        except OSError:
+            entries.append((name, None))
+        else:
+            entries.append(
+                (
+                    name,
+                    status.st_dev,
+                    status.st_ino,
+                    status.st_size,
+                    status.st_mtime_ns,
+                )
+            )
+    try:
+        head = (git / "HEAD").read_bytes()
+    except OSError:
+        return None
+    entries.append(("HEAD", head))
+    if head.startswith(b"ref: "):
+        ref = head[5:].strip().decode("utf-8", "surrogateescape")
+        if not ref or ref.startswith("/") or ".." in ref.split("/"):
+            return None
+        try:
+            status = os.stat(git / ref, follow_symlinks=False)
+        except OSError:
+            entries.append((ref, None))
+        else:
+            entries.append(
+                (
+                    ref,
+                    status.st_dev,
+                    status.st_ino,
+                    status.st_size,
+                    status.st_mtime_ns,
+                )
+            )
+    return tuple(entries)
+
+
 def read_git(root: Path, arguments: list[str]) -> str:
     """Run a captured Git query within the owner's cutoff, preserving filename bytes."""
     for key in os.environ:
@@ -69,6 +124,14 @@ def read_git(root: Path, arguments: list[str]) -> str:
             raise ValueError(f"Git environment override prevents snapshot: {key}")
     if os.environ.get("GIT_CONFIG_GLOBAL") not in {None, "/dev/null"}:
         raise ValueError("custom global Git configuration prevents snapshot")
+    key = (str(root), tuple(arguments))
+    token = (
+        _git_state_token(root) if arguments and arguments[0] in _CACHEABLE_GIT else None
+    )
+    if token is not None:
+        cached = _READ_GIT_CACHE.get(key)
+        if cached is not None and cached[0] == token:
+            return cached[1]
     command = [
         "git",
         "--no-optional-locks",
@@ -103,6 +166,8 @@ def read_git(root: Path, arguments: list[str]) -> str:
         )
         reason = result["failure"] or f"exit {code}"
         raise RuntimeError(f"Git snapshot query failed: {reason}") from cause
+    if token is not None:
+        _READ_GIT_CACHE[key] = (token, result["stdout"])
     return result["stdout"]
 
 

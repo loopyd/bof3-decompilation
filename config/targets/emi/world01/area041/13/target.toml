@@ -10,6 +10,8 @@ load_address = 0x801F2C00
 sources = []
 support_sources = [
     "src/bof3/world01/setTwoWorld01Area04113_801F3E20.c",
+    "src/bof3/world01/setStatusFFFFAndHandlerIndex3WhenGateWorld01Area04113_801F3CD4.c",
+    "src/bof3/world01/setHalfwordFF00AndTwoWorld01Area04113_801F3E00.c",
     "src/bof3/world01/invokeHelperArgWorld01Area04113_801F4230.c",
     "src/bof3/support/area041_13_psyq.c",
 ]

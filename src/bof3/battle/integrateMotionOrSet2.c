@@ -5,7 +5,7 @@
  * +0x18 while signed +0x40 is at most 0x13FFF; otherwise sets byte +0x03 to 2.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void integrateMotionOrSet2(void) {
     Battle03LocalWork* work;

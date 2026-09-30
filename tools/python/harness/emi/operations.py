@@ -39,6 +39,7 @@ def emi_unpack(
     cwd: Path,
     extracted_dir: Path,
     raw_emi_dir: Path,
+    subcommand_prefix: tuple[str, ...] = (),
 ) -> int:
     archive_paths = _find_emi_archives(extracted_dir)
     if not archive_paths:
@@ -54,6 +55,7 @@ def emi_unpack(
         run_command(
             [
                 str(tool_path),
+                *subcommand_prefix,
                 "extract",
                 "--quiet",
                 "-J",
@@ -73,6 +75,7 @@ def emi_pack(
     cwd: Path,
     raw_emi_dir: Path,
     extracted_dir: Path,
+    subcommand_prefix: tuple[str, ...] = (),
 ) -> int:
     archive_dirs = _find_unpacked_emi_dirs(raw_emi_dir)
     if not archive_dirs:
@@ -88,6 +91,7 @@ def emi_pack(
         run_command(
             [
                 str(tool_path),
+                *subcommand_prefix,
                 "pack",
                 "--quiet",
                 "-o",

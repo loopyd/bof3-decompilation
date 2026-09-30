@@ -8,7 +8,7 @@ extern s32 D_80143B48;
  * @source 0x8014B900
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void closeCallbackSlot(s32 slot_index) {
   s32 slot_offset;

@@ -7,7 +7,7 @@
  * @source 0x801BB8E8
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void updateWorkRouteIndex(u8 arg_a, u8 arg_b, u8 arg_c) {
   struct GameWorkArea* work;

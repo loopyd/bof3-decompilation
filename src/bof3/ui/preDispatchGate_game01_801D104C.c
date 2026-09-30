@@ -5,7 +5,7 @@
  * @source 0x801D104C
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void preDispatchGate(void) {
   /* The original keeps &GAME_FRONT_INPUT_GATE in s0 and reaches the nearby

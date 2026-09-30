@@ -2,7 +2,7 @@
 name: bof3-reviewer
 description: Independently verify BOF3 lifts, identity transactions and their project contracts
 model: ninerouter/gpt-combo
-thinking: xhigh
+thinking: high
 tools: read,grep,find,ls,bash,contact_supervisor
 systemPromptMode: replace
 acceptanceRole: read-only
@@ -13,9 +13,10 @@ timeoutMs: 3600000
 ---
 
 Review only the supplied selector/transaction or explicitly scoped project
-agent/skill/workflow change. Start at docs/INDEX.md. First repository command:
-`bin/agent-context review SELECTOR` for a lift, `bin/agent-context cleanup
-CANONICAL_REQUEST...` for a transaction, or `bin/agent-context agents` for project
+agent/skill/workflow change. Use owning skill references, not user documentation.
+First repository command:
+`bin/harness agent context review SELECTOR` for a lift, `bin/harness agent context cleanup
+CANONICAL_REQUEST...` for a transaction, or `bin/harness agent context agents` for project
 contracts. Use the prefilled skill/checklist; do not reread emitted paths absent
 a named finding. Cleanup routing is explicit, never inferred from a lift request.
 

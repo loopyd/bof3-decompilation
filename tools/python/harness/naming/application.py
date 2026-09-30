@@ -7,6 +7,8 @@ import os
 import secrets
 from pathlib import Path
 
+from harness.common.commands import command as canonical
+from harness.common.commands import tool_id, trailing_arguments
 from harness.common.deadlines import resolve_deadline
 from harness.common.inputs import file_state
 from harness.common.process import run_bounded
@@ -43,16 +45,16 @@ def plan(root: Path, target: str, row) -> list[list[str]]:
         else [check["selector"] for check in collect_function_checks(root, row)]
     )
     commands = [
-        ["bin/symbols", "normalize", target, "--write"],
-        ["bin/symbols", "check", target],
-        ["bin/splat", target],
-        ["bin/build", target],
+        canonical("symbols", "normalize", target, "--write"),
+        canonical("symbols", "check", target),
+        canonical("splat", target),
+        canonical("build", target),
     ]
     for selector in selectors:
         commands.extend(
             [
-                ["bin/asm-diff", selector, "--json", "--detail", "full"],
-                ["bin/byte-match", selector, "--json"],
+                canonical("asm-diff", selector, "--json", "--detail", "full"),
+                canonical("byte-match", selector, "--json"),
             ]
         )
     return commands
@@ -76,8 +78,8 @@ def evidence(root: Path, result: dict, row) -> bool:
         or result["failure"] is not None
     ):
         return False
-    tool = result["argv"][0]
-    if tool not in {"bin/asm-diff", "bin/byte-match"}:
+    tool = tool_id(result["argv"])
+    if tool not in {"asm-diff", "byte-match"}:
         return True
     from harness.domain.manifests import load_target_manifests
 
@@ -88,7 +90,7 @@ def evidence(root: Path, result: dict, row) -> bool:
             consumers = [
                 consumer
                 for consumer in validate_data_shape(facts.get("data"))["consumers"]
-                if consumer["selector"] == result["argv"][1]
+                if consumer["selector"] == trailing_arguments(result["argv"])[0]
             ]
             if len(consumers) != 1:
                 return False
@@ -103,7 +105,7 @@ def evidence(root: Path, result: dict, row) -> bool:
             checks = [
                 check
                 for check in collect_function_checks(root, row)
-                if check["selector"] == result["argv"][1]
+                if check["selector"] == trailing_arguments(result["argv"])[0]
             ]
             if len(checks) != 1:
                 return False
@@ -121,7 +123,7 @@ def evidence(root: Path, result: dict, row) -> bool:
             payload["schema"]
             == (
                 "harness.asm-diff-one/v2"
-                if tool == "bin/asm-diff"
+                if tool == "asm-diff"
                 else "harness.byte-match-one/v1"
             )
             and payload["status"] == "exact_match"
@@ -295,7 +297,9 @@ def produce(
                 output / f"receipt-{number}.json",
                 " ".join(argv),
                 target,
-                argv[1] if argv[0] in {"bin/asm-diff", "bin/byte-match"} else None,
+                trailing_arguments(argv)[0]
+                if tool_id(argv) in {"asm-diff", "byte-match"}
+                else None,
                 result["stdout"] + result["stderr"],
             )
             bundle["gates"].append(
@@ -384,7 +388,11 @@ def validate_bundle(
             or record["status"] != "passed"
             or record["target"] != target
             or record["selector"]
-            != (argv[1] if argv[0] in {"bin/asm-diff", "bin/byte-match"} else None)
+            != (
+                trailing_arguments(argv)[0]
+                if tool_id(argv) in {"asm-diff", "byte-match"}
+                else None
+            )
             or record["output"] != result["stdout"] + result["stderr"]
         ):
             raise ValueError("receipt differs from native execution")

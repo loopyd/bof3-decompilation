@@ -5,7 +5,7 @@
  * @source 0x801A7CAC
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void dispatchIndexedStateHandler(void) {
   D_801C84BC[(s32)D_801448EB]();

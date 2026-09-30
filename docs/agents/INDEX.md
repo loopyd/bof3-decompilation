@@ -11,7 +11,7 @@ BOF3 runtime, format and data evidence belongs in [specs](../specs/INDEX.md).
 | [Harness](harness.md) | Domain modules, transactions, native lifecycles and recovery |
 | [Tool usage](tool-usage.md) | Ordered CLI workflows, flags and evidence gates |
 | [Codex](codex.md) | Skill-only session orchestration, local mission diagnosis/audit, global MCP and Pi migration |
-| [Lift loop](../../.codex/skills/bof3-lift-loop/SKILL.md) | Bounded skill missions, parallel evidence/review, serialized writes, recovery and completion |
+| [Lift loop](../../.pi/skills/bof3-lift-loop/SKILL.md) | Bounded skill missions, parallel evidence/review, serialized writes, recovery and completion |
 | [Macros](macros.md) | Opportunity indexing, human-value ranking and reviewed resolution |
 | [Combiner](combiner.md) | Attached function metadata inspection and planned reviewed source consolidation |
 | [Documentation](documentation.md) | Markdown references, search/context, editing, repair and compaction |
@@ -23,6 +23,7 @@ BOF3 runtime, format and data evidence belongs in [specs](../specs/INDEX.md).
 | [Memory API](memory-api.md) | Evidence lookup and session handoff |
 | [Plan authoring](plan-authoring.md) | Persistent scoped plans and acceptance state |
 | [Lessons](lessons.md) | Reusable reverse-engineering workflow lessons |
+| [Observation folder](../observations/INDEX.md) | Central per-skill self-improvement ledgers: audit metrics, converged directives and bundled harness improvements |
 
-Follow the root [placement and naming rules](../INDEX.md#documentation-placement-and-names).
+Follow the root [placement and naming rules](documentation.md#documentation-placement-and-names).
 Keep one owner per contract; register guides here and update root routing when it changes.

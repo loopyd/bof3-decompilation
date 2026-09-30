@@ -7,7 +7,7 @@ extern u16 taskLabelWords[1];
  * @behavior sets scratchpad slot 6 and writes 0xC00A to task-dependent u16 entry in taskLabelWords
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void activateTaskStatusC00A(u8 task_index) {
   volatile s8* ptr = (volatile s8*)(*((void**)0x1F800044));

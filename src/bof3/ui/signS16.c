@@ -5,7 +5,7 @@
  * @source 0x801C71AC
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 s32 signS16(s32 arg0) {
   s32 v0;

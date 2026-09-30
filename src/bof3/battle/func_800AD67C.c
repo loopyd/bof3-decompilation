@@ -4,7 +4,7 @@
  * @behavior UNKNOWN: exact behavior is not yet documented.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 
 void func_800AD67C(void) {

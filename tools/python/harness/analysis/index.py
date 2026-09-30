@@ -28,6 +28,7 @@ def connect(
     *,
     manifests: Mapping[str, TargetManifest] | None = None,
     shared: bool = False,
+    allow_stale: bool = False,
 ) -> sqlite3.Connection:
     path = index_path(root)
     if not path.is_file():
@@ -37,6 +38,12 @@ def connect(
     connection = sqlite3.connect(path, check_same_thread=not shared)
     connection.execute("PRAGMA foreign_keys = ON")
     connection.row_factory = sqlite3.Row
+    if allow_stale:
+        # Read-only ranking queries only need the cached index. Skipping the
+        # every-target snapshot revalidation keeps candidate ranking usable
+        # while sibling lanes' writes have invalidated snapshots; callers must
+        # still verify candidates live before acceptance.
+        return connection
     try:
         validate_index(
             connection,

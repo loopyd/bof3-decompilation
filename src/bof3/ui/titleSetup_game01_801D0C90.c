@@ -5,7 +5,7 @@
  * @source 0x801D0C90
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void titleSetup(void) {
   u16 state;
@@ -18,9 +18,6 @@ void titleSetup(void) {
   }
 
   game_stage_shared_palette_bank();
-  /* MATCHING_AID: serial +=1 folded into a2 via comma so the store schedules
-   * before the call and a2=8 lands in the jal delay slot; serial is
-   * non-volatile here (only user in this overlay). */
   func_80161C20(0x8du, 100u,
                                 (GAME_FRONT_PALETTE_STAGE_SERIAL += 1u, 8u));
 

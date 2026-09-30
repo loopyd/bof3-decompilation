@@ -4,7 +4,7 @@
  * @behavior Decrements the active work countdown or flags it and advances scratchpad work.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void countdownOrFlag40Advance2(void) {
     Battle03LocalWork* work;

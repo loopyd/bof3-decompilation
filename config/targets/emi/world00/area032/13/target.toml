@@ -9,13 +9,28 @@ load_address = 0x801f2c00
 
 
 sources = [
+    "src/bof3/world/func_801F2C48_area03213.c",
+    "src/bof3/world/func_801F2D18.c",
+    "src/bof3/world/func_801F2DAC_area03213.c",
+    "src/bof3/world/func_801F2E64.c",
     "src/bof3/world/resetWorkarea_801F2EE4.c",
     "src/bof3/world/dispatchScratchWorkByte1.c",
     "src/bof3/world/func_801F2F04.c",
+    "src/bof3/world/func_801F30EC_area03213.c",
     "src/bof3/world/func_801F3480.c",
+    "src/bof3/world/func_801F35B4_area03213.c",
+    "src/bof3/world/func_801F363C_area03213.c",
     "src/bof3/world/func_801F36A0.c",
     "src/bof3/world/func_801F36E4.c",
+    "src/bof3/world/func_801F3728_area03213.c",
+    "src/bof3/world/func_801F378C_area03213.c",
     "src/bof3/world/func_801F3800.c",
+    "src/bof3/world/func_801F3844_area03213.c",
+    "src/bof3/world/func_801F3920_area03213.c",
+    "src/bof3/world/func_801F3A78_area03213.c",
+    "src/bof3/world/func_801F3C18_area03213.c",
+    "src/bof3/world/func_801F3D28_area03213.c",
+    "src/bof3/world/func_801F3DCC_area03213.c",
 ]
 support_sources = [
     "src/bof3/support/area03213_symbols.c",

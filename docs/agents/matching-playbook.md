@@ -2,7 +2,7 @@
 
 Symptom-to-lever reference after the [function-matching
 loop](matching.md) set target, boundary, types, signatures, calls. Classify the
-first live `bin/asm-diff` difference, one structural change, re-run; a
+first live `bin/harness lift asm-diff` difference, one structural change, re-run; a
 percentage alone is not a diagnosis.
 ## Symptom-to-lever table
 
@@ -41,7 +41,7 @@ objects in one target — can differ in compiler version, optimization level,
 `-G` value, signed-char setting.
 
 ```sh
-bin/flag-search TARGET@0xADDRESS
+bin/harness lift flag-search TARGET@0xADDRESS
 ```
 
 Levers: compiler version/patch, optimization (`-O0`–`-O3`), `-G` value,
@@ -184,24 +184,34 @@ is the most common partial-lift root cause. Levers:
   store-before-volatile-store order.
 ---
 
-## `MATCHING_AID` comments
+## Knowledge capture
 
-Every opaque clean-C matching aid has an adjacent comment saying what it
-controls, the `asm-diff`-observed original/current instruction or register
-placement, the exhausted ladder rung, and what future evidence removes it.
+The lifting skill improves itself: every residual class, decisive clean-C shape
+and exhausted rung found during a lift is scanned for reusable value and
+committed to these references (this playbook, `lessons.md`, or a skill
+reference), so later selectors match faster. Record the observed symptom, the
+shape that resolved it, the measured before/after (`asm-diff` first difference,
+`byte-match`) and the selector class only — no selector, address or timestamp.
+Ordinary readable C needs no in-source workaround annotation; keep the guidance
+here instead.
+
+Recorded shapes (measured): a `volatile` narrow lvalue read followed by several
+comparisons splits into `lbu`+`andi` and merges the arms; reading the same byte
+through a non-volatile view restores the single `lbu` fold and the arm topology,
+and per-arm stores (not one hoisted label local) let cross-jumping merge only the
+identical store suffix so the constant materialises in the jump delay slot.
+Returning a shared dominating zero from six failure branches (one `$v0=0`) is a
+reservation ceiling not reachable by the measured clean-C spellings.
+
 Comments and historical exact results never authorize the
-[banned register/empty-asm aids](../INDEX.md#source-and-duplicate-rules).
-Never retain an aid on a percentage improvement.
+[banned register/empty-asm aids](matching.md#source-and-duplicate-rules).
+Never retain a shape on a percentage improvement.
 
 ```c
-/* MATCHING_AID: produces the li $t2,2 feeding the next comparison; both
- * branches are identical; the condition keeps $t2 live and $a3 holding count.
- * Remove when $t2 allocation is understood. */
+/* both branches are identical; the condition keeps $t2 live and $a3 holding
+ * count, so the compiler emits the li $t2,2 feeding the next comparison. */
 if (count == 2) { flags |= 0x20; } else { flags |= 0x20; }
 ```
-
-Reserve `MATCHING_AID` for shape decisions opaque to readers without the
-matching diff; ordinary readable C needs no workaround annotation.
 
 ---
 
@@ -316,7 +326,7 @@ optimization; removing them changes register lifetimes and the instruction
 stream.
 
 ```c
-/* MATCHING_AID: the distance calculation and following dead branch survive
+/* the distance calculation and following dead branch survive
  * partial optimization in the original; removing them shifts allocation. */
 distance = SquareRoot0((x * x) + (y * y) + (z * z));
 if ((distance * 2) == 0) { distance = 2; } else { distance *= 2; }
@@ -458,7 +468,7 @@ resolve; or prepend jump-table data manually to the function assembly:
 m2c context: typedefs, structs, enums, prototypes and `extern` declarations,
 required macros and `static inline` functions; usually **not** unrelated
 function definitions, local static data, or unrelated `.rodata` (inclusion can
-shift target rodata offsets). See `bin/m2ctx`.
+shift target rodata offsets). See `bin/harness lift m2ctx`.
 
 ---
 
@@ -479,27 +489,24 @@ matching technique.
 ## Allocation ladder
 
 `REGISTER_PIN`, direct asm register bindings (numeric or named), `CLOBBER_*`,
-`barrier()` and every artificial empty-asm matching barrier are banned.
-The [current source contract](../INDEX.md#source-and-duplicate-rules) supersedes
-all previous bounded-experiment and exact-retention permissions. Use clean C:
+`barrier()` and every artificial empty-asm matching barrier are banned; never
+replace them with declaration-only or no-op shims. The
+[current source contract](matching.md#source-and-duplicate-rules) supersedes all
+previous bounded-experiment and exact-retention permissions. Apply clean C in
+order; the first rung that byte-matches ends the ladder:
 
-1. Correct types and declarations
-2. Correct control-flow structure
-3. Reorder declarations and statements
-4. Introduce or remove temporaries
-5. Hoist pointer dereferences
-6. Try separate loop counter vs pointer induction variable
-7. Check the compiler profile (`bin/flag-search`); if a non-canonical profile
-   byte-matches clean C, record it in `config/compiler/object-flags.cmake`
-   (per-object override)
-8. Bind fixed-address symbols with `WEAK_SYMBOL_AT` in `symbols.c`, not
-   `extern X asm("NAME")` renames
-9. Run one bounded permuter attempt when appropriate, then report the remaining
-   allocator or entry-register residual. `INCLUDE_ASM` still requires separate
-   explicit approval and cannot close the aid-removal clean-C requeue.
+1. Correct types and declarations — gate: live `bin/harness lift byte-match TARGET@0xADDRESS` applies and its mismatch set changes or clears.
+2. Correct control-flow structure — gate: the branch/jump-topology mismatch clears.
+3. Reorder declarations and statements — gate: the scheduling/allocation residual changes.
+4. Introduce or remove temporaries — gate: the register web or spill set changes.
+5. Hoist pointer dereferences — gate: the reload order changes.
+6. Separate the loop counter from the pointer induction variable — gate: the induction residual clears.
+7. Check the compiler profile (`bin/harness lift flag-search`) — gate: exit 0 with non-empty `exact_matches` on a non-canonical profile, recorded per object in `config/compiler/object-flags.cmake`.
+8. Bind fixed-address symbols with `WEAK_SYMBOL_AT` in `symbols.c` — gate: the address-form residual clears and no `extern X asm("NAME")` rename remains.
+9. Run one bounded permuter attempt — gate: the attempt completes and the remaining allocator or entry-register residual is reported. `INCLUDE_ASM` still requires separate explicit approval and cannot close the aid-removal clean-C requeue.
 
 Preserve ordinary `NO_SIBLING_CALLS` compiler attributes and address-binding
-assembly. Do not replace banned aids with declaration-only or no-op shims.
+assembly.
 
 ---
 
@@ -540,12 +547,12 @@ clean-C residual; never add an assembly-backed source stub.
 
 ## Permuter
 
-Use `bin/permute TARGET@0xADDRESS --time-limit 60 -j N` for source-shape
+Use `bin/harness lift permute TARGET@0xADDRESS --time-limit 60 -j N` for source-shape
 search (60s hard cap; `--allow-long-run` is interactive-only). Lessons: fix
 structure/declarations first; search only clean-C candidates. The permuter
 handles scheduling/allocation changes, not wrong control-flow shape;
-pointer-hoist mutations can unlock inaccessible allocations; mark
-permuter-found aids with `MATCHING_AID`.
+pointer-hoist mutations can unlock inaccessible allocations; record
+permuter-found shapes in the skill references (knowledge capture).
 
 
 
@@ -553,7 +560,7 @@ permuter-found aids with `MATCHING_AID`.
 
 ## Historical GCC catalog
 
-`config/compiler/variants.json` + `bin/compiler-variants` manage four
+`config/compiler/variants.json` + `bin/harness build variants` manage four
 SHA-256-verified candidates (`gcc-2.6.3-psx`, `gcc-2.8.0-psx`,
 `gcc-2.8.1-psx`, `gcc-2.95.2-psx`). One object selects `gcc-2.6.3-psx`:
 `src/bof3/audio/dispatchSoundCue.c`, historically byte-exact at
@@ -562,9 +569,9 @@ superseded: the source is in the [clean-C requeue](../plans/autonomous-bof3-deco
 pending fresh native matching and review; compiler selection alone proves neither.
 
 Add a candidate catalog-first, probe second: add full provenance to
-`config/compiler/variants.json` (`bin/compiler-variants list` validates);
+`config/compiler/variants.json` (`bin/harness build variants list` validates);
 `install <id>` (SHA-256 gate) then `verify <id>` (binary + `--version`);
-probe with `bin/flag-search TARGET@0xADDRESS --compiler <id>` (exit 0 +
+probe with `bin/harness lift flag-search TARGET@0xADDRESS --compiler <id>` (exit 0 +
 non-empty `exact_matches` = exact; exit 1 + empty = negative; exit 2/invalid
 payload = probe failure); retain only with verified provenance plus a
 recorded exact-or-negative probe. Selection is separate: a fresh exact match

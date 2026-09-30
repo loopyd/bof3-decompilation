@@ -10,7 +10,7 @@
  * @source 0x801D4D44
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_801D4D44(void) {
   u8  index;

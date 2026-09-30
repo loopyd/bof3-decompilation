@@ -4,7 +4,7 @@
  * @behavior clamps the middle argument between the other two signed bounds.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 s32 clampS32(s32 arg0, s32 arg1, s32 arg2) {
   s32 arg0_is_less;

@@ -20,6 +20,7 @@ EXCLUDED_ROOTS = {
     ".git",
     ".venv",
     ".agents",
+    ".codex",
     "sessions",
     "ledger",
     ".pi-subagents",
@@ -35,8 +36,11 @@ def is_authored_path(name: str) -> bool:
     return (
         bool(path.parts)
         and path.parts[0] not in EXCLUDED_ROOTS
-        and (path.parts[0] != ".pi" or name.startswith(".pi/agents/"))
-        and (path.parts[0] != ".codex" or name.startswith(".codex/skills/"))
+        and (
+            path.parts[0] != ".pi"
+            or name.startswith(".pi/agents/")
+            or name.startswith(".pi/skills/")
+        )
         and not (len(path.parts) == 1 and name.startswith("session-"))
     )
 

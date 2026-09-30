@@ -11,7 +11,15 @@ psyq_source = "src/bof3/support/logo_psyq.c"
 sources = [
     "src/bof3/boot/func_801CE758.c",
     "src/bof3/boot/initWorkAreaAndStartSubsystems.c",
+    "src/bof3/boot/func_801CE7F4.c",
+    "src/bof3/boot/func_801CEDA4.c",
     "src/bof3/boot/rampCdMixLevel.c",
+    "src/bof3/boot/func_801CEBFC.c",
+    "src/bof3/boot/func_801CEC88.c",
+    "src/bof3/boot/func_801CE8DC.c",
+    "src/bof3/boot/func_801CECA4.c",
+    "src/bof3/boot/func_801CEA98.c",
+    "src/bof3/boot/func_801CE930.c",
     "src/bof3/boot/playCapcomStream.c",
 ]
 support_sources = [

@@ -30,8 +30,8 @@ segments:
   vram: 2149526588
   subsegments:
   - - 60
-    - asm
-    - func_801F2C3C
+    - c
+    - dispatchState04World03Area12114_801F2C3C
   - - 128
     - asm
     - func_801F2C80
@@ -78,8 +78,8 @@ segments:
     - c
     - invokeTwoHelpersWorld03Area12114_801F34B8
   - - 2272
-    - asm
-    - func_801F34E0
+    - c
+    - dispatchState02World03Area12114_801F34E0
   - - 2340
     - asm
     - func_801F3524
@@ -93,8 +93,8 @@ segments:
     - asm
     - func_801F3620
   - - 2724
-    - asm
-    - func_801F36A4
+    - c
+    - dispatchState03World03Area12114_801F36A4
   - - 2792
     - asm
     - func_801F36E8
@@ -120,8 +120,8 @@ segments:
     - asm
     - func_801F40DC
   - - 5516
-    - asm
-    - func_801F418C
+    - c
+    - dispatchState01World03Area12114_801F418C
   - - 5584
     - asm
     - func_801F41D0
@@ -132,8 +132,8 @@ segments:
     - asm
     - func_801F453C
   - - 6624
-    - asm
-    - func_801F45E0
+    - c
+    - dispatchStateByte1Table6894World03Area12114_801F45E0
   - - 6692
     - asm
     - func_801F4624
@@ -174,8 +174,8 @@ segments:
     - asm
     - func_801F55EC
   - - 10828
-    - asm
-    - func_801F564C
+    - c
+    - resetMode3AndWorkStateWorld03Area12114_801F564C
   - - 10884
     - asm
     - func_801F5684
@@ -186,8 +186,8 @@ segments:
     - asm
     - func_801F5798
   - - 11544
-    - asm
-    - func_801F5918
+    - c
+    - dispatchStateByte1Table68a4World03Area12114_801F5918
   - - 11612
     - asm
     - func_801F595C
@@ -223,5 +223,5 @@ segments:
     - func_801F6390
   - - 14552
     - asm
-    - func_801F64D8
+    - D_801F64D8
 - - 15547

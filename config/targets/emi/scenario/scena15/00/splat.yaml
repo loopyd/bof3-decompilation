@@ -30,8 +30,10 @@ segments:
   vram: 2149543736
   subsegments:
   - - 824
-    - asm
-    - func_801F6F38
+    - c
+    - dispatchWorkByte1HandlerScenarioScena1500_801F6F38
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1500_801F6F38.c'
+    - '@behavior: Dispatches the SCENA15 per-frame handler from the scratchpad work object: reads the work-object pointer cell at 0x1F800044, takes its unsigned state byte at offset 1, scales it by four and calls that entry of the overlay-local 27-entry handler table at 0x801FE57C (entries 0..4 = 0x801F6F7C, 0x801F6FCC, 0x801F7078, 0x801F7100, 0x801F717C; entry 26 = 0x801F9000). It reads no other state and writes none; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 892
     - asm
     - func_801F6F7C
@@ -45,8 +47,10 @@ segments:
     - asm
     - func_801F7100
   - - 1404
-    - asm
-    - func_801F717C
+    - c
+    - resetWorkStateWhenNoEntryClearedScenarioScena1500_801F717C
+    - '@source: src/bof3/scenario/resetWorkStateWhenNoEntryClearedScenarioScena1500_801F717C.c'
+    - '@behavior: Last handler of the per-frame work-state chain: calls the overlay-local work-table sweeper at 0x801F7748 (it walks the 0x80 0x14-byte-stride entries of the work table at 0x800E4800 and returns 1 once it has cleared an entry''s lead byte), masks the result to the low byte and calls the shared work-state reset helper at 0x80196070 only when that low byte is zero; takes no arguments, returns nothing and reads no state of its own, and the 0x18-byte frame only keeps $ra across the calls. It is entry 4 of the per-frame handler table at 0x801FE57C, and its 0x34 bytes are the same instruction shape as the exact siblings resetWorkStateWhenNoEntryClearedScenarioScena0100_801F7644 (0x801F7644), resetWorkStateWhenNoRecordActiveScenarioScena0900_801F73F0 (0x801F73F0) and resetWorkFlagsOnZeroRefreshScenarioScena0800_801F7A9C (0x801F7A9C).'
   - - 1456
     - asm
     - func_801F71B0
@@ -54,8 +58,10 @@ segments:
     - asm
     - func_801F752C
   - - 2476
-    - asm
-    - func_801F75AC
+    - c
+    - clearWorkTableAt800E4800ScenarioScena1500_801F75AC
+    - '@source: src/bof3/scenario/clearWorkTableAt800E4800ScenarioScena1500_801F75AC.c'
+    - '@behavior: Overlay init helper: clears the lead byte of each of the 0x80 entries of the 0x14-byte-stride work table at 0x800E4800, walking the table with an unsigned byte counter in a bottom-tested loop; it takes no arguments, returns nothing and reads no other state. Its 44 bytes are byte-identical to clearWorkTableAt800E4800ScenarioScena0100_801F7AB8 (0x801F7AB8 in emi/scenario/scena01/00).'
   - - 2520
     - asm
     - func_801F75D8
@@ -63,8 +69,10 @@ segments:
     - asm
     - func_801F7748
   - - 3064
-    - asm
-    - func_801F77F8
+    - c
+    - dispatchWorkByte1HandlerScenarioScena1500_801F77F8
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1500_801F77F8.c'
+    - '@behavior: Dispatches the SCENA15 per-frame handler from the scratchpad work object: reads the work-object pointer cell at 0x1F800044, takes its unsigned state byte at offset 1, scales it by four and calls that entry of the overlay-local handler table continuation at 0x801FE590 (entries 0..3 = 0x801F783C, 0x801F7900, 0x801F7920, 0x801F79BC). It reads no other state and writes none; the 0x18-byte frame only keeps $ra across the indirect call. The 0x801F6F38 dispatcher reads the same work byte through this table''s first five entries at 0x801FE57C.'
   - - 3132
     - asm
     - func_801F783C
@@ -81,8 +89,10 @@ segments:
     - asm
     - func_801F79C4
   - - 3752
-    - asm
-    - func_801F7AA8
+    - c
+    - dispatchWorkByte1HandlerScenarioScena1500_801F7AA8
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1500_801F7AA8.c'
+    - '@behavior: Dispatches the SCENA15 per-frame handler from the scratchpad work object: reads the work-object pointer cell at 0x1F800044 before the frame is created, takes its unsigned state byte at offset 1, scales it by four and calls that entry of the overlay-local handler table continuation at 0x801FE5A0 (entry 9 of the 27-entry handler run at 0x801FE57C; the 18 in-image entries run from 0x801F7AEC to 0x801F9000). It reads no other state and writes none; the 0x18-byte frame only keeps $ra across the indirect call and the callee''s $v0 is discarded. The 0x801F6F38 and 0x801F77F8 dispatchers read the same work byte through the run''s earlier entries at 0x801FE57C and 0x801FE590. No word inside this overlay stores this address; the in-image reference is the shared handler-pointer word 0x801C7EE4 inside the data blob D_801C7C70 of the concurrently loaded etc/game overlay.'
   - - 3820
     - asm
     - func_801F7AEC
@@ -105,8 +115,10 @@ segments:
     - asm
     - func_801F83AC
   - - 6280
-    - asm
-    - func_801F8488
+    - c
+    - dispatchWorkByte1HandlerScenarioScena1500_801F8488
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1500_801F8488.c'
+    - '@behavior: Dispatches the SCENA15 per-frame handler from the scratchpad work object: reads the work-object pointer cell at 0x1F800044 before the frame is created, takes its unsigned state byte at offset 1, scales it by four and calls that entry of the overlay-local handler table continuation at 0x801FE5B0 (entry 13 of the 27-entry handler run at 0x801FE57C; the 14 in-image entries run from 0x801F84CC to 0x801F9000). It reads no other state and writes none; the 0x18-byte frame only keeps $ra across the indirect call and the callee''s $v0 is discarded. The 0x801F6F38, 0x801F77F8 and 0x801F7AA8 dispatchers read the same work byte through the run''s earlier entries at 0x801FE57C, 0x801FE590 and 0x801FE5A0. No word inside this overlay stores this address; the in-image reference is the shared handler-pointer word 0x801C7EEC inside the data blob D_801C7C70 of the concurrently loaded etc/game overlay.'
   - - 6348
     - asm
     - func_801F84CC
@@ -177,8 +189,10 @@ segments:
     - asm
     - func_801F9A20
   - - 12460
-    - asm
-    - func_801F9CAC
+    - c
+    - dispatchProgressHandlerScenarioScena1500_801F9CAC
+    - '@source: src/bof3/scenario/dispatchProgressHandlerScenarioScena1500_801F9CAC.c'
+    - '@behavior: Dispatches one frame of the SCENA15 progress chain from the signed shared scenario-progress byte D_80146872: the byte is scaled by four and selects an entry of the overlay-local handler table at 0x801FE66C (entry 0 = 0x801F9CE8, entry 1 = 0x801F9CFC, entry 2 = 0x801FA998), and the selected entry is called with no arguments. It reads no state other than that byte and writes none; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 12520
     - c
     - setScenarioScena1500_801F9CE8
@@ -192,8 +206,10 @@ segments:
     - asm
     - func_801FA854
   - - 15768
-    - asm
-    - func_801FA998
+    - c
+    - dispatchProgressHandlerScenarioScena1500_801FA998
+    - '@source: src/bof3/scenario/dispatchProgressHandlerScenarioScena1500_801FA998.c'
+    - '@behavior: Dispatches one frame of the SCENA15 second-level handler chain from the signed shared byte D_80146874: the byte is scaled by four and selects an entry of the overlay-local handler table at 0x801FE678 (entry 0 = 0x801FA9D4, entry 1 = 0x801FA9DC, entry 2 = 0x801FADFC, entry 3 = 0x801FAFA8, entry 4 = 0x801FB788, entry 5 = 0x801FC1D8, entry 6 = 0x801FCBAC), and the selected entry is called with no arguments. It reads no state other than that byte and writes none; the 0x18-byte frame only keeps $ra across the indirect call. This function is entry 2 of the outer table at 0x801FE66C that the signed byte D_80146872 indexes.'
   - - 15828
     - c
     - noopHandlerScenarioScena1500_801FA9D4
@@ -231,8 +247,10 @@ segments:
     - asm
     - func_801FDC6C
   - - 29056
-    - asm
-    - func_801FDD80
+    - c
+    - dispatchRecordCallbackScenarioScena1500_801FDD80
+    - '@source: src/bof3/scenario/dispatchRecordCallbackScenarioScena1500_801FDD80.c'
+    - '@behavior: Dispatches the SCENA15 per-record callback selected by the record unsigned byte field at offset 0x7A through the overlay-local callback-pointer table at 0x801FE6EC (twelve entries: 0x801FDDC0 five times, then 0x801FDE2C, 0x801FDE64, 0x801FDEB4, 0x801FDF04, 0x801FDF4C, 0x801FDF9C and 0x801FDFEC), passing the record pointer unchanged and the word held in the shared cell D_8014686C as the second argument.'
   - - 29120
     - asm
     - func_801FDDC0
@@ -255,8 +273,10 @@ segments:
     - asm
     - func_801FDF9C
   - - 29676
-    - asm
-    - func_801FDFEC
+    - c
+    - invokeStartupThenIncrementRecordHalfword7EScenarioScena1500_801FDFEC
+    - '@source: src/bof3/scenario/invokeStartupThenIncrementRecordHalfword7EScenarioScena1500_801FDFEC.c'
+    - '@behavior: Per-record callback: takes the record pointer in $a0, runs the shared helper at 0x8015C088 and then increments the record''s unsigned 16-bit field at offset 0x7E in place; it returns nothing, keeps only the record pointer (copied into $s0 in the call''s delay slot) and the 0x18-byte frame saves $ra and $s0. It is entry 11, the last of the twelve callback pointers of the per-record table at 0x801FE6EC.'
   - - 29732
     - asm
     - func_801FE024
@@ -267,8 +287,10 @@ segments:
     - asm
     - func_801FE3C8
   - - 30876
-    - asm
-    - func_801FE49C
+    - c
+    - invokeHelperTwiceThenHelperScenarioScena1500_801FE49C
+    - '@source: src/bof3/scenario/invokeHelperTwiceThenHelperScenarioScena1500_801FE49C.c'
+    - '@behavior: Thin overlay wrapper calling the helper at 0x801C187C with the constant argument 4, then the same helper with the constant argument 2, and finally the helper at 0x801C1630 with no arguments; it takes no arguments, returns nothing and touches no state of its own. The 0x18-byte frame only keeps $ra across the three calls.'
   - - 30924
     - asm
     - func_801FE4CC

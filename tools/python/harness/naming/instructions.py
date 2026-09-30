@@ -44,7 +44,7 @@ def resolve_instructions(root: Path, selector: str) -> tuple[dict, bytes]:
         "binary_sha256": hashlib.sha256(image).hexdigest(),
         "splat_sha256": layout.sha256,
         "replay_sha256": spec.replay_sha256,
-        "command": f"bin/rz-project query {function.target.value} -c '{command}'",
+        "command": f"bin/harness analysis rz-project query {function.target.value} -c '{command}'",
         "rizin": command,
     }, image[offset : offset + size]
 
@@ -94,8 +94,6 @@ def replay_instructions(root: Path, payload: dict, semantic: list) -> bool:
         if not isinstance(selector, str):
             raise ValueError("instruction selector must be a string")
         function = parse_function_id(selector)
-        if function.target.value != payload.get("target"):
-            raise ValueError("instruction target mismatch")
         if item["instruction_id"] != f"semantic:instructions-v1:{function}":
             raise ValueError("instruction identity mismatch")
         binding, original = resolve_instructions(root, selector)
@@ -114,4 +112,69 @@ def replay_instructions(root: Path, payload: dict, semantic: list) -> bool:
             or receipts[0].get("selector") != selector
         ):
             raise ValueError("instruction receipt does not retain complete output")
+        from harness.naming.evidence import _RUNNER_TOKEN, instruction_observations
+
+        kind, name = payload["row"].split(":", 1)
+        if kind == "function":
+            # The caller has already compared these items to the report-owned plan.
+            row = {
+                "kind": kind,
+                "name": name,
+                "outside_payload": True,
+                "required_work": [
+                    {"id": item["id"], "status": "open"}
+                    for item in payload["items"]
+                    if item.get("operation") == "owner"
+                    and item.get("supplemental") is False
+                ],
+            }
+            capture = {
+                "selector": selector,
+                "start": binding["start"],
+                "bytes": original.hex(),
+                "binding": binding,
+            }
+            expected = instruction_observations(
+                _RUNNER_TOKEN, payload["target"], row, capture
+            )
+            receipt = json.loads((root / receipts[0]["receipt"]).read_text())
+            if any(receipt.get(key) != value for key, value in expected.items()):
+                raise ValueError(
+                    "instruction receipt observations differ from original bytes"
+                )
+            if receipts[0].get("target") != function.target.value:
+                raise ValueError(
+                    "instruction receipt target differs from original owner"
+                )
     return True
+
+
+def analyzer_instructions(root: Path, semantic: list) -> tuple[dict, ...]:
+    """Re-read live original bytes; never promote authored disassembly semantics."""
+    captures = []
+    for item in semantic:
+        if item.get("instruction_id") is None:
+            continue
+        selector = item["selector"]
+        binding, original = resolve_instructions(root, selector)
+        if item.get("binding") != binding or item.get("command") != binding["command"]:
+            raise ValueError("selected_call instruction binding is stale")
+        if (
+            item.get("exit") != 0
+            or item.get("killed") is not False
+            or item.get("semantic_success") is not True
+        ):
+            raise ValueError("selected_call instruction execution failed")
+        raw = item.get("raw")
+        if raw is None:
+            raw = (root / item["raw_file"]).read_text()
+        validate_instructions(raw, binding, original)
+        captures.append(
+            {
+                "selector": selector,
+                "start": binding["start"],
+                "bytes": original.hex(),
+                "binding": binding,
+            }
+        )
+    return tuple(captures)

@@ -6,7 +6,7 @@
  * @source 0x8009FEAC
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void func_8009FEAC(void) {
   ((u8*)D_801463A0)[8] = 2;

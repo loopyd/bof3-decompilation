@@ -1,0 +1,143 @@
+name: bmagic_magic003_03
+sha1: 503aef26433f6673db11721e433581d0dba617dd
+options:
+  platform: psx
+  compiler: psyq
+  basename: bmagic_magic003_03
+  base_path: ../../../../../..
+  target_path: out/binaries/emi/bmagic/magic003/03.bin
+  asm_path: out/splat/emi/bmagic/magic003/03/asm
+  src_path: src/emi/bmagic/magic003/03
+  ld_script_path: out/splat/emi/bmagic/magic003/03/linker.ld
+  undefined_funcs_auto_path: out/splat/emi/bmagic/magic003/03/undefined_funcs_auto.txt
+  undefined_syms_auto_path: out/splat/emi/bmagic/magic003/03/undefined_syms_auto.txt
+  cache_path: out/splat/emi/bmagic/magic003/03/.splache
+  asset_path: out/splat/emi/bmagic/magic003/03/assets
+  symbol_addrs_path:
+  - config/targets/shared/symbols.txt
+  - config/sdk/psyq-slus.txt
+  - config/targets/emi/bmagic/magic003/03/symbols.txt
+segments:
+- - 0
+  - bin
+  - header
+- - 4
+  - bin
+  - tabledata
+- name: main
+  type: code
+  start: 40
+  vram: 2149510184
+  subsegments:
+  - - 40
+    - asm
+    - func_801EEC28
+  - - 276
+    - asm
+    - func_801EED14
+  - - 428
+    - asm
+    - func_801EEDAC
+  - - 552
+    - asm
+    - func_801EEE28
+  - - 676
+    - asm
+    - func_801EEEA4
+  - - 844
+    - asm
+    - func_801EEF4C
+  - - 1100
+    - asm
+    - func_801EF04C
+  - - 1192
+    - asm
+    - func_801EF0A8
+  - - 1324
+    - asm
+    - func_801EF12C
+  - - 1532
+    - asm
+    - func_801EF1FC
+  - - 1640
+    - asm
+    - func_801EF268
+  - - 1740
+    - asm
+    - func_801EF2CC
+  - - 1828
+    - asm
+    - func_801EF324
+  - - 1992
+    - asm
+    - func_801EF3C8
+  - - 2168
+    - asm
+    - func_801EF478
+  - - 2424
+    - asm
+    - func_801EF578
+  - - 2628
+    - asm
+    - func_801EF644
+  - - 2764
+    - asm
+    - func_801EF6CC
+  - - 2824
+    - asm
+    - func_801EF708
+  - - 2984
+    - asm
+    - func_801EF7A8
+  - - 3352
+    - asm
+    - func_801EF918
+  - - 3500
+    - asm
+    - func_801EF9AC
+  - - 3580
+    - asm
+    - func_801EF9FC
+  - - 3740
+    - asm
+    - func_801EFA9C
+  - - 3808
+    - asm
+    - func_801EFAE0
+  - - 3980
+    - asm
+    - func_801EFB8C
+  - - 4344
+    - asm
+    - func_801EFCF8
+  - - 4428
+    - asm
+    - func_801EFD4C
+  - - 4808
+    - asm
+    - func_801EFEC8
+  - - 5240
+    - asm
+    - func_801F0078
+  - - 5476
+    - asm
+    - func_801F0164
+  - - 6128
+    - asm
+    - func_801F03F0
+  - - 6480
+    - asm
+    - func_801F0550
+  - - 7088
+    - asm
+    - func_801F07B0
+  - - 7620
+    - asm
+    - func_801F09C4
+  - - 7720
+    - c
+    - clearWorkBytesBmagicMagic00303_801F0A28
+  - - 7800
+    - asm
+    - D_801F0A78
+- - 11832

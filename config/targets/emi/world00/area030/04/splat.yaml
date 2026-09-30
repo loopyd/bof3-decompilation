@@ -32,8 +32,21 @@ segments:
     - '@source: src/bof3/world/func_801D11C0_area03004.c'
     - '@behavior: AREA030 scratch-record publish step: when the shared phase byte 0x80145E92 reads 1 it clears the work-record state byte at scratch offset 2 and returns; otherwise, once the shared halfword 0x8014930E has reached 0x39, it sets that state byte to 3 and copies the shared template bytes 0x80145EBA/0x80145ED9/0x80145EDA/0x80145EDB into scratch offsets 0x2A/0x49/0x4A/0x4B, the shared words 0x80145EE0/0x80145EE4 into scratch offsets 0x50/0x54 and the shared halfwords 0x80145EE8/0x80145EEA into scratch offsets 0x58/0x5A, then calls func_8014D4E0 without arguments.'
   - - 1736
-    - asm
+    - c
     - func_801D12C8
+    - '@source: src/bof3/world/func_801D12C8_area03004.c'
+    - '@behavior: dispatches the AREA030 work-record stage byte at scratch offset 3 of the record cursor 0x1F800044 through the three-entry overlay stage-handler table at 0x801E1D00 (handlers 0x801D130C, 0x801D1434, 0x801D1538), discarding the handler result.'
+  - - 1804
+    - c
+    - func_801D130C
+    - '@source: src/bof3/world/func_801D130C_area03004.c'
+    - '@behavior: AREA030 color-row builder: copies 30 halfwords (row elements 0x61..0x7E) of the 32-halfword color row at 0x800396C0 from the 0x40-byte row of the 0x80037800 color block selected by the shared row byte 0x80145EB7, setting the high bit of each copied halfword, clears the row end elements 0x800396C0/0x800396FE, then publishes that row byte into scratch work byte 0xB, sets bit 5 of work byte 0, writes 0x7B into work byte 0x27, seeds work bytes 0x5C..0x5F with 1/0xC0/0xC0/0xC0, publishes 1 into the palette-stage serial 0x80145988, advances the work-record stage byte at work offset 3 and calls func_8014D4E0 without arguments.'
+  - - 2100
+    - asm
+    - func_801D1434
+  - - 2360
+    - asm
+    - func_801D1538
   - - 2460
     - asm
     - func_801D159C
@@ -703,16 +716,20 @@ segments:
     - '@source: src/bof3/world/func_801E0B6C_area03004.c'
     - '@behavior: sums the AREA030 summary value reported by func_801E0ABC (0x801E0ABC) for every nonzero amount byte among the 32 shared amount bytes at 0x80144FE4, masked to 16 bits.'
   - - 65488
-    - asm
-    - func_801E0BD0
+    - c
+    - updateArea030OverlayFrame
+    - '@source: src/bof3/world/updateArea030OverlayFrame.c'
+    - '@behavior: AREA030 overlay per-frame entry invoked by the main-executable front-end substate-4 handler func_801984E8 (direct jal at 0x80198578): publishes the shared active work area through func_80199440, dispatches the area work records through func_801DE4AC and then runs the shared frame-service chain func_801527E4, func_801BDAB8, func_801E09B4, func_8019A0E4 and func_8014BA54 in that order.'
   - - 65568
     - c
     - dispatchCompanion
     - '@source: src/bof3/world/dispatchCompanion.c'
     - '@behavior: invokes the AREA030 companion dispatch entry.'
   - - 65600
-    - asm
-    - func_801E0C40
+    - c
+    - runArea030FrameServices
+    - '@source: src/bof3/world/runArea030FrameServices.c'
+    - '@behavior: runs the shared AREA030 frame-service chain func_801527E4, func_801BDAB8, func_801E09B4, func_8019A0E4 and func_8014BA54 in that order; the main-executable front-end substate-4 handler func_801985C8 calls it inside both of its wait loops (direct jals at 0x80198614 and 0x80198694) and updateArea030OverlayFrame runs the same five services after its work-area publish and record dispatch.'
   - - 65664
     - c
     - submitTpageDrawMode

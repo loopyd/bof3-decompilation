@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801F2D44
   - - 556
-    - asm
-    - func_801F2E2C
+    - c
+    - setScratchWorkByte2WhenFrontEndModeNot5World03Area14514_801F2E2C
+    - '@source: src/bof3/world03/setScratchWorkByte2WhenFrontEndModeNot5World03Area14514_801F2E2C.c'
+    - '@behavior: Overlay mode gate reading the shared front-end mode byte D_80143BB0 and, unless it reads 5, storing 1 into byte 0x02 of the work object published at scratchpad cell 0x1F800044.'
   - - 600
     - asm
     - func_801F2E58
@@ -117,11 +119,11 @@ segments:
     - asm
     - func_801F4304
   - - 5964
-    - asm
-    - func_801F434C
+    - c
+    - invokeHelperByteArgWorld03Area14514_801F434C
   - - 6004
-    - asm
-    - func_801F4374
+    - c
+    - invokeHelperByteArgWorld03Area14514_801F4374
   - - 6044
     - asm
     - func_801F439C
@@ -157,11 +159,11 @@ segments:
     - func_801F532C
   - - 10292
     - asm
-    - func_801F5434
+    - D_801F5434
   - - 10860
     - asm
-    - func_801F566C
+    - D_801F566C
   - - 10892
     - asm
-    - func_801F568C
+    - D_801F568C
 - - 12588

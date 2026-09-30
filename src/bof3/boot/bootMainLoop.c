@@ -5,7 +5,7 @@
  * @source 0x8014AAC8
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void bootMainLoop(void) {
   u8* work;

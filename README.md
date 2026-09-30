@@ -19,7 +19,7 @@ checks.
   and `ninja` (>= 1.8.2) — Meson's native build backend compiles the Rizin
   toolchain and fails closed without either
 - `cmake` (>= 3.20) — every lift verification rebuilds the authored object
-  through CMake; `bin/asm-diff` and `bin/build` fail closed without it
+  through CMake; `bin/harness lift asm-diff` and `bin/harness build` fail closed without it
 - `7z` — first-time setup downloads and extracts a staged PsyQ `.7z`, and the
   same host tool extracts the `BreathOfFireIIIv1.1.7z` media archive when no
   already-extracted CUE/BIN set exists
@@ -44,12 +44,12 @@ Original bytes and target manifests are the source of truth.
 ## Lift one function
 
 ```sh
-bin/splat TARGET
-bin/m2ctx TARGET@0xADDRESS
-bin/m2c TARGET@0xADDRESS -o out/candidate.c
+bin/harness source splat TARGET
+bin/harness lift m2ctx TARGET@0xADDRESS
+bin/harness lift m2c TARGET@0xADDRESS -o out/candidate.c
 # Edit the metadata-owned lift source under src/bof3/<subsystem>/.
-bin/asm-diff TARGET@0xADDRESS
-bin/byte-match TARGET@0xADDRESS
+bin/harness lift asm-diff TARGET@0xADDRESS
+bin/harness lift byte-match TARGET@0xADDRESS
 ```
 
 Lift identity and target ownership come from explicit manifest claims, maps,
@@ -60,8 +60,8 @@ proposing a lift.
 ## Status
 
 ```sh
-bin/decomp-status [TARGET...]   # live matching status of tracked lifts
-bin/symbols check               # symbol maps and naming debt
+bin/harness lift status [TARGET...]   # live matching status of tracked lifts
+bin/harness source symbols check               # symbol maps and naming debt
 just check                      # full practical validation gate
 ```
 

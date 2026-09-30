@@ -18,6 +18,8 @@ support_sources = [
     "src/bof3/world01/noopHandlerWorld01Area06813_801F3054.c",
     "src/bof3/world01/noopHandlerWorld01Area06813_801F304C.c",
     "src/bof3/world01/noopHandlerWorld01Area06813_801F2F1C.c",
+    "src/bof3/world01/setSubstate8AndClearWorkFlagsWorld01Area06813_801F37F0.c",
+    "src/bof3/world01/setStatusFFFFAndHandlerIndex3WhenGateWorld01Area06813_801F3930.c",
     "src/bof3/support/area068_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area068_13_psyq.c"

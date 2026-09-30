@@ -71,7 +71,7 @@ def _cmd_path(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="compiler-variants")
+    parser = argparse.ArgumentParser(prog="bin/harness build variants")
     subparsers = parser.add_subparsers(dest="command")
 
     p = subparsers.add_parser("list", help="Show catalog entries")

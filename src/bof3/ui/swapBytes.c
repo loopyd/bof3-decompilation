@@ -4,7 +4,7 @@
  * @behavior swaps two u8 values pointed to by arg0 and arg1.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void swapBytes(u8* arg0, u8* arg1) {
   u8 temp;

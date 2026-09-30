@@ -7,7 +7,7 @@
  * @source 0x8014F514
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void fadeLoop(s32 a0, s32 a1, s32 a2) {
   u16 p0 = a0;

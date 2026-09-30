@@ -4,7 +4,7 @@
  * @behavior Advances the queued-slot position or marks its state when the target is reached.
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void advanceSlotPosition(void) {
     Battle03QueuedSlot *work;

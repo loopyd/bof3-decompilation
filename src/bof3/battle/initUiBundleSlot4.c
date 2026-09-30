@@ -5,7 +5,7 @@
  * @source 0x801D9428
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void initUiBundleSlot4(u8 arg0) {
   volatile u8*  state8;

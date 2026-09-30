@@ -4,7 +4,7 @@
  * @source 0x801D2034
  * @status exact
  * @match 100.00
- * @residual none; live audit is instruction- and byte-exact.
+ * @residual none
  */
 void queueIconStrip(s16 arg0, s16 arg1, u8 arg2, s8 arg3) {
   submitTpageDrawMode(0, arg2);
