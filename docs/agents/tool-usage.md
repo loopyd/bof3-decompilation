@@ -1112,7 +1112,7 @@ not establish an end-to-end status speedup.
 | `bin/harness naming evidence` | one receipt-backed naming evidence run | `out/reviews/reports/` |
 | `bin/harness audio build` / `package` | Cargo release build / Rust source package | `out/audio/release/bof3-audio` / `out/bof3-audio-source.zip` |
 | `bin/harness audio index` / `query` / `map` / `extract` / `render` / `pack` / `verify` | invoke Rust audio operations; native `--help` describes supported inputs | selected output location |
-| `just setup --component bios` / `--component pcsx-redux` | prepare pinned US BIOS / recursive PCSX-Redux reference submodule | `inputs/external/bios/scph5501.bin` / `out/setup/pcsx-redux.json` |
+| `just setup --component bios` / `--component pcsx-redux` | prepare pinned US BIOS / build PCSX-Redux Agentic with local SDL3 | `inputs/external/bios/scph5501.bin` / `out/setup/pcsx-redux.json` |
 
 `just doctor` scans `inputs/external/bios/` for a regular file matching the US
 BIOS SHA-256 embedded in the BIOS tool, regardless of name or extension. It needs
@@ -1124,7 +1124,8 @@ tests and dependency licenses, excluding proprietary media. TUI, live playback,
 standalone PSF commands and FLAC are retired from this command surface. Full PSX
 rendering and MP3/Ogg delivery remain incomplete; host C source is retained until
 migration acceptance. [Reference setup](../reference/audio-runtime-setup.md)
-documents BIOS management and PCSX-Redux source preparation.
+documents BIOS management and SDL3 policy. [Emulator integration](pcsx-redux.md)
+covers the fork build, embedded missions and skill installation.
 
 The shared panel-task implementation template lives at `src/shared/ui/panel_task.inc`; target-local wrappers compile it and retain symbol/address ownership.
 

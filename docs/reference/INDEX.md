@@ -20,7 +20,7 @@ from [game specifications](../specs/INDEX.md).
 - [PSX CPU and BIOS execution](psx-kernel.md): COP0, critical sections and
   CD-driver removal sources, with explicit runtime-evidence limits.
 
-- [Audio runtime reference setup](audio-runtime-setup.md): pinned PCSX-Redux
-  submodule, BIOS collection preparation and local provenance inventories.
+- [Audio runtime reference setup](audio-runtime-setup.md): PCSX-Redux Agentic
+  integration, SDL3 policy and single US BIOS preparation, validation and reuse.
 
 Return to the [documentation index](../INDEX.md).

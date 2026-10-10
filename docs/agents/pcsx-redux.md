@@ -20,8 +20,8 @@ bin/harness runtime status
 bin/harness runtime missions
 ```
 
-The verified catalogue contains 19 entry missions and 35 shared modules. Canonical
-Lua is embedded in the emulator; no loose canonical files are required at runtime.
+Use `runtime missions` for the verified catalogue. Canonical Lua is embedded in
+the emulator; no loose canonical files are required at runtime.
 Both builtin and trusted external-script routes preload those modules. External
 modules cannot shadow their names.
 

@@ -9,6 +9,7 @@ All paths are below `tools/python/harness/`.
 
 | Package | Owns | Entry points |
 | --- | --- | --- |
+| `runtime/` | emulator staging, launch, completion, receipts and origin validation | `bin/harness runtime` → `harness.runtime.cli` |
 | `macros/` | lexical facts, assembly/C opportunities, ranking, consumers, reviewed transactions and unchanged existing-abstraction dispositions | `bin/harness macros` → `harness.macros.cli` |
 | `combiner/` | inspection, compiler preservation, joint images, grouped comparison and rollback-only rehearsal/recovery; ranking/permanent application remain queued | `bin/harness combiner` → `harness.combiner.cli`; [rollout contract](combiner.md) |
 | `naming/` | symbol naming opportunities, identity inventory, evidence collection, audits, proposals, application and acceptance | `bin/harness naming` → `harness.naming.cli`; `bin/harness naming evidence` → `harness.naming.runner` |

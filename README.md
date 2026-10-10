@@ -89,6 +89,7 @@ Start with [docs/INDEX.md](docs/INDEX.md) for the request-oriented documentation
 | Task | Reference |
 | --- | --- |
 | Complete ordered tool workflow | [Tool usage](docs/agents/tool-usage.md) |
+| Build and run PS1 emulator missions | [Emulator integration](docs/agents/pcsx-redux.md) |
 | Lift and match one function | [Function matching](docs/agents/matching.md) |
 | Resolve asm-diff symptoms | [Matching playbook](docs/agents/matching-playbook.md) |
 | Memory macros and qualifiers | [Memory API](docs/agents/memory-api.md) |
