@@ -19,7 +19,7 @@ from ..patches.inventory import list_patches
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="bin/harness patch", description=__doc__)
     add_root_argument(parser)
-    add_example_argument(parser, "bin/harness patch check --target pcsx-redux")
+    add_example_argument(parser, "bin/harness patch list")
     actions = parser.add_subparsers(dest="action", required=True)
     for action, description in (
         ("list", "list patch files, optionally with application status"),

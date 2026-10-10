@@ -20,10 +20,46 @@ class Emulator:
         self.arguments = []
 
     def runtime_identity(self):
+        names = [f"fixture{index:02}" for index in range(53)] + ["support"]
+        rows = [
+            {
+                "name": name,
+                "role": "mission" if index < 19 else "module",
+                "path": f"src/lua/missions/{name}.lua",
+                "source_sha256": "a" * 64,
+                "source_bytes": 1,
+                "chunk_sha256": "b" * 64,
+                "chunk_bytes": 1,
+            }
+            for index, name in enumerate(names)
+        ]
+        data = b"".join(
+            (
+                "\0".join(
+                    row[key]
+                    for key in ("name", "role", "path", "source_sha256", "chunk_sha256")
+                )
+                + "\n"
+            ).encode()
+            for row in rows
+        )
         return {
+            "source_owner": "pcsx-redux-agentic",
             "revision": "pinned",
-            "binary_sha256": "fixture",
-            "sdl_sha256": "fixture-sdl",
+            "source_manifest_sha256": "f" * 64,
+            "binary_sha256": "d" * 64,
+            "sdl_sha256": "e" * 64,
+            "resources": {
+                "schema": "psx.mission-bundle/v1",
+                "resources": rows,
+                "bundle_sha256": hashlib.sha256(data).hexdigest(),
+                "state": {
+                    "version": 6,
+                    "version_string": "PCSX-Redux Agentic SaveState v6",
+                    "schema_sha256": "c" * 64,
+                    "schema_bytes": 1,
+                },
+            },
         }
 
     def verify(self):
@@ -264,14 +300,14 @@ def test_disc_track_bound_rejects_before_hashing_or_launch(mission, tmp_path):
 
 
 def test_declared_assets_are_staged_hashed_and_passed_literally(mission, tmp_path):
-    module = tmp_path / "support with spaces.lua"
+    module = tmp_path / "auditmodule with spaces.lua"
     module.write_text("return {}\n")
     state = tmp_path / "state with spaces.pbuf"
     state.write_bytes(b"snapshot\0bytes")
     emulator = Emulator(
         "import os; from pathlib import Path; "
         "assert Path(os.environ['PSX_RUNTIME_INPUT_STATE']).read_bytes() == b'snapshot\\0bytes'; "
-        "assert Path('lua/support.lua').read_text() == 'return {}\\n'; "
+        "assert Path('lua/auditmodule.lua').read_text() == 'return {}\\n'; "
         "assert os.environ['PSX_RUNTIME_ARGUMENT_NAMES'] == 'ACTION'; "
         "assert os.environ['LUA_PATH'].endswith('/lua/?.lua'); "
         "assert os.environ['LUA_CPATH'] == ''; " + completed_program()
@@ -279,12 +315,12 @@ def test_declared_assets_are_staged_hashed_and_passed_literally(mission, tmp_pat
     receipt = session.run_session(
         emulator,
         **mission,
-        modules=[f"support={module}"],
+        modules=[f"auditmodule={module}"],
         files=[f"state={state}"],
         arguments=["action=query"],
     )
     assert receipt["assets"] == {
-        "module:support": "lua/support.lua",
+        "module:auditmodule": "lua/auditmodule.lua",
         "file:STATE": "inputs/STATE",
     }
     assert (
@@ -296,11 +332,11 @@ def test_declared_assets_are_staged_hashed_and_passed_literally(mission, tmp_pat
 @pytest.mark.parametrize("kind", ["module", "file"])
 def test_asset_edits_in_staged_copy_invalidate_run(mission, kind):
     values = (
-        {"modules": [f"support={mission['script']}"]}
+        {"modules": [f"auditmodule={mission['script']}"]}
         if kind == "module"
         else {"files": [f"state={mission['script']}"]}
     )
-    path = "lua/support.lua" if kind == "module" else "inputs/STATE"
+    path = "lua/auditmodule.lua" if kind == "module" else "inputs/STATE"
     emulator = Emulator(
         f"from pathlib import Path; Path({path!r}).write_text('changed'); "
         + completed_program()
@@ -318,7 +354,7 @@ def test_asset_edits_in_staged_copy_invalidate_run(mission, kind):
     [
         {"modules": ["../escape=PATH"]},
         {"files": ["state=PATH", "STATE=PATH"]},
-        {"modules": ["support=PATH", "support=PATH"]},
+        {"modules": ["auditmodule=PATH", "auditmodule=PATH"]},
     ],
 )
 def test_invalid_asset_names_fail_before_output_creation(mission, values):
@@ -378,7 +414,7 @@ def test_bios_only_mission_transports_literal_arguments_and_clears_inherited_val
     emulator = Emulator(program)
     receipt = session.run_session(emulator, **mission, arguments=[f"label={value}"])
     assert receipt["status"] == "passed"
-    assert receipt["schema"] == "psx.runtime-session/v1"
+    assert receipt["schema"] == "psx.runtime-session/v2"
     assert receipt["arguments"] == {"LABEL": value}
     assert "executable" not in receipt["inputs"]
     assert "-exe" not in emulator.arguments

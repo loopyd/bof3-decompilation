@@ -2,14 +2,22 @@
 
 from __future__ import annotations
 
-from ..runtime.patches import create_target
 from .catalog import NAME
 
-TARGETS = {"pcsx-redux": create_target}
+TARGETS = {}
 
 
 def select_names(layout, names: list[str] | None, *, registered: bool = True):
     folder = layout.root / "inputs/patches"
+    if (
+        not registered
+        and not names
+        and folder.resolve() == folder.absolute()
+        and not folder.exists()
+        and not folder.is_symlink()
+        and (not folder.parent.exists() or folder.parent.is_dir())
+    ):
+        return []
     if folder.resolve() != folder.absolute() or not folder.is_dir():
         raise ValueError("inputs/patches must be a regular directory")
     selected = (

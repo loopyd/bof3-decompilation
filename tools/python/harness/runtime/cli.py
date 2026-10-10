@@ -14,6 +14,7 @@ from harness.common.cli import (
     run_main,
 )
 from harness.io import repo_layout
+from harness.common.deadlines import use_deadline
 from harness.runtime.session import run_session
 from harness.toolchain.pcsx import PcsxReduxToolchain
 
@@ -26,11 +27,21 @@ def build_parser() -> argparse.ArgumentParser:
     commands.add_parser(
         "status", help="inspect pinned source, emulator and SDL identities"
     ).set_defaults(handler=run_runtime)
+    catalogue = commands.add_parser(
+        "missions",
+        aliases=["catalog"],
+        help="inspect verified embedded mission resources",
+    )
+    add_work_deadline_argument(catalogue)
+    catalogue.set_defaults(handler=run_runtime)
     command = commands.add_parser(
         "run", help="execute a trusted Lua mission with bounded process ownership"
     )
-    for name in ("bios", "script", "output"):
+    for name in ("bios", "output"):
         command.add_argument(f"--{name}", type=Path, required=True)
+    selection = command.add_mutually_exclusive_group(required=True)
+    selection.add_argument("--script", type=Path)
+    selection.add_argument("--mission")
     command.add_argument("--executable", type=Path, help="optional PS-X EXE to load")
     command.add_argument(
         "--origin",
@@ -73,12 +84,17 @@ def run_runtime(args: argparse.Namespace) -> int:
     if args.command == "status":
         toolchain.verify()
         report = {"schema": "psx.runtime-status/v1", **toolchain.runtime_identity()}
+    elif args.command in {"missions", "catalog"}:
+        with use_deadline(args.work_deadline):
+            toolchain.verify()
+            report = toolchain.runtime_identity()["resources"]
     else:
         report = run_session(
             toolchain,
             bios=args.bios,
             executable=args.executable,
             script=args.script,
+            mission=args.mission,
             output=args.output,
             timeout=args.timeout,
             output_limit=args.output_limit,

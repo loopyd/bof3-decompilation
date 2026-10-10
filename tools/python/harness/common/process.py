@@ -8,6 +8,7 @@ import os
 import selectors
 import subprocess
 import sys
+import tempfile
 import time
 from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
@@ -15,13 +16,23 @@ from typing import IO, Any
 
 from harness.common.children import adopt_children, open_child_exit, reap_children
 from harness.common.deadlines import resolve_deadline, validate_deadline
+from harness.common.digests import file_record
 
 
 class ProcessCleanupError(RuntimeError):
     """Descendant termination is unconfirmed; mutation recovery must stop."""
 
+    observed: dict[str, Any] | None = None
+    capture_failures: tuple[tuple[str, str, str, str], ...] = ()
 
-def _supervise(owner_fd: int, argv: Sequence[str], deadline: float | None) -> int:
+
+def _supervise(
+    owner_fd: int,
+    argv: Sequence[str],
+    deadline: float | None,
+    *,
+    env: Mapping[str, str],
+) -> int:
     """Reap owned descendants after direct exit or loss of the owner pipe."""
 
     adopt_children()
@@ -31,7 +42,7 @@ def _supervise(owner_fd: int, argv: Sequence[str], deadline: float | None) -> in
         if deadline is not None and time.monotonic() >= deadline:
             os.close(owner_fd)
             return 124
-        child = subprocess.Popen(argv, start_new_session=True)
+        child = subprocess.Popen(argv, env=env, start_new_session=True)
         child_exit = None
         try:
             child_exit = open_child_exit(child.pid)
@@ -136,9 +147,29 @@ class OwnedProcess:
         return result
 
 
+ISOLATED_SUPERVISOR_FLAGS = ("-S",)
+_SUPERVISOR_ENTRY = (
+    "-c",
+    "import sys\n"
+    "trusted_root = sys.argv.pop(1)\n"
+    "sys.path.insert(0, trusted_root)\n"
+    "import runpy\n"
+    "runpy.run_module('harness.common.process', run_name='__main__', alter_sys=True)\n",
+    str(Path(__file__).resolve().parents[2]),
+)
+
+
 def resolve_supervisor() -> tuple[str, ...]:
     """Describe the Python launcher actually used by owned process execution."""
-    return (sys.executable, "-m", "harness.common.process")
+    return (sys.executable, *_SUPERVISOR_ENTRY)
+
+
+def resolve_isolated_supervisor() -> tuple[str, ...]:
+    return (sys.executable, *ISOLATED_SUPERVISOR_FLAGS, *_SUPERVISOR_ENTRY)
+
+
+def supervisor_variants() -> frozenset[tuple[str, ...]]:
+    return frozenset({resolve_supervisor(), resolve_isolated_supervisor()})
 
 
 def owned_popen(
@@ -161,48 +192,73 @@ def owned_popen(
     validate_deadline(deadline)
     if deadline is not None and time.monotonic() >= deadline:
         raise subprocess.TimeoutExpired(argv, 0)
-    current_supervisor = resolve_supervisor()
-    if supervisor is not None and supervisor != current_supervisor:
-        raise ValueError("owned process supervisor differs from its captured command")
-    command = json.dumps([os.fspath(item) for item in argv])
-    owner_read, owner_write = os.pipe()
-    try:
-        completion_read, completion_write = os.pipe()
-    except BaseException:
-        os.close(owner_read)
-        os.close(owner_write)
-        raise
-    launcher = [
-        *(current_supervisor if supervisor is None else supervisor),
-        str(owner_read),
-        str(completion_write),
-        command,
-        json.dumps(deadline),
-    ]
-    try:
-        os.set_blocking(completion_read, False)
-        if deadline is not None and time.monotonic() >= deadline:
-            raise subprocess.TimeoutExpired(argv, 0)
-        process = subprocess.Popen(
-            launcher,
-            cwd=cwd,
-            env=env,
-            stdin=stdin,
-            stdout=stdout,
-            stderr=stderr,
-            text=text,
-            bufsize=bufsize,
-            pass_fds=(owner_read, completion_write),
-            start_new_session=True,
+    if supervisor is not None and tuple(supervisor) not in supervisor_variants():
+        raise ValueError(
+            "owned process supervisor differs from its reviewed launch policies"
         )
+    target_environment = dict(os.environ) if env is None else dict(env)
+    if any(
+        not isinstance(key, str) or not isinstance(value, str)
+        for key, value in target_environment.items()
+    ):
+        raise TypeError("process environment keys and values must be strings")
+    environment_bytes = json.dumps(target_environment).encode("utf-8")
+    command = json.dumps([os.fspath(item) for item in argv])
+    selected = resolve_supervisor() if supervisor is None else tuple(supervisor)
+    context = tempfile.TemporaryFile(mode="w+b")
+    try:
+        context.write(environment_bytes)
+        context.flush()
+        context.seek(0)
+        owner_read, owner_write = os.pipe()
+        try:
+            completion_read, completion_write = os.pipe()
+        except BaseException:
+            os.close(owner_read)
+            os.close(owner_write)
+            raise
+        launcher = [
+            *selected,
+            str(owner_read),
+            str(completion_write),
+            command,
+            json.dumps(deadline),
+            str(context.fileno()),
+        ]
+        forwarded = (owner_read, completion_write, context.fileno())
+        try:
+            os.set_blocking(completion_read, False)
+            if deadline is not None and time.monotonic() >= deadline:
+                raise subprocess.TimeoutExpired(argv, 0)
+            process = subprocess.Popen(
+                launcher,
+                cwd=cwd,
+                env=env,
+                stdin=stdin,
+                stdout=stdout,
+                stderr=stderr,
+                text=text,
+                bufsize=bufsize,
+                pass_fds=forwarded,
+                start_new_session=True,
+            )
+        except BaseException:
+            os.close(owner_write)
+            os.close(completion_read)
+            raise
+        finally:
+            os.close(owner_read)
+            os.close(completion_write)
+        owned = OwnedProcess(process, owner_write, completion_read)
     except BaseException:
-        os.close(owner_write)
-        os.close(completion_read)
+        context.close()
         raise
-    finally:
-        os.close(owner_read)
-        os.close(completion_write)
-    return OwnedProcess(process, owner_write, completion_read)
+    try:
+        context.close()
+    except BaseException:
+        owned.terminate_tree()
+        raise
+    return owned
 
 
 def run_bounded(
@@ -259,6 +315,7 @@ def run_bounded(
         return {
             "argv": argv,
             "exit_code": 124,
+            "raw_exit": None,
             "failure": "timeout",
             "stdout": "",
             "stderr": "work deadline expired before launch\n",
@@ -273,6 +330,31 @@ def run_bounded(
             callback(*arguments)
         except BaseException:
             callback_failed = True
+            raise
+
+    def retain_observed(error: ProcessCleanupError) -> None:
+        if error.observed is None:
+            error.observed = {
+                "argv": [str(item) for item in argv],
+                "stdout": bytes(streams["stdout"]).decode("utf-8", "replace"),
+                "stderr": bytes(streams["stderr"]).decode("utf-8", "replace"),
+                "failure": failure,
+                "pid": process.pid,
+                "seconds": round(time.monotonic() - started, 3),
+            }
+
+    def terminate_owned() -> None:
+        try:
+            process.terminate_tree(timeout=2)
+        except ProcessCleanupError as error:
+            retain_observed(error)
+            raise
+
+    def wait_owned(timeout: float) -> None:
+        try:
+            process.wait(timeout=timeout)
+        except ProcessCleanupError as error:
+            retain_observed(error)
             raise
 
     try:
@@ -324,23 +406,23 @@ def run_bounded(
         if failure is None and time.monotonic() >= deadline:
             failure = "timeout"
         if failure:
-            process.terminate_tree(timeout=2)
+            terminate_owned()
         else:
-            process.wait(timeout=max(0.01, deadline - time.monotonic()))
+            wait_owned(max(0.01, deadline - time.monotonic()))
             if time.monotonic() >= deadline:
                 failure = "timeout"
     except subprocess.TimeoutExpired:
         if callback_failed:
-            process.terminate_tree(timeout=2)
+            terminate_owned()
             raise
         failure = "timeout"
-        process.terminate_tree(timeout=2)
+        terminate_owned()
     except ProcessCleanupError:
         if callback_failed:
-            process.terminate_tree(timeout=2)
+            terminate_owned()
         raise
     except BaseException:
-        process.terminate_tree(timeout=2)
+        terminate_owned()
         raise
     finally:
         if input_data is not None:
@@ -350,12 +432,136 @@ def run_bounded(
     return {
         "argv": argv,
         "exit_code": process.returncode,
+        "raw_exit": process.returncode,
         "failure": failure,
         **{
             name: bytes(value).decode("utf-8", errors="replace" if failure else errors)
             for name, value in streams.items()
         },
     }
+
+
+def capture(
+    cwd: Path,
+    argv: Sequence[str | Path],
+    *,
+    environment: Mapping[str, str],
+    deadline: float,
+    output_limit: int,
+    name: str,
+    timeout: float,
+    input_data: bytes | None = None,
+) -> dict:
+    remaining = deadline - time.monotonic()
+    if not remaining > 0:
+        raise ValueError("original work deadline expired")
+    timeout = min(timeout, remaining)
+    paths = {channel: cwd / f"{name}.{channel}.bin" for channel in ("stdout", "stderr")}
+    failure = None
+    result = {}
+    record = {}
+    streams = {}
+    errors = []
+    for channel, path in paths.items():
+        try:
+            streams[channel] = path.open("xb")
+        except Exception as error:
+            errors.append(("open", str(path), error))
+            break
+    if len(streams) == 2:
+
+        def retain(channel, chunk):
+            if streams[channel].write(chunk) != len(chunk):
+                raise ValueError("raw capture write failed")
+
+        try:
+            result = run_bounded(
+                cwd,
+                argv,
+                timeout=timeout,
+                output_limit=output_limit,
+                deadline=deadline,
+                env=environment,
+                supervisor=resolve_isolated_supervisor(),
+                input_data=input_data,
+                on_output=retain,
+            )
+        except Exception as error:
+            failure = error
+    for channel, stream in streams.items():
+        try:
+            stream.close()
+        except Exception as error:
+            errors.append(("close", str(paths[channel]), error))
+    identities = {}
+    for channel in streams:
+        try:
+            identities[channel] = file_record(paths[channel])
+        except Exception as error:
+            errors.append(("hash", str(paths[channel]), error))
+    if len(identities) == 2:
+        retained_failure = failure or (errors[0][2] if errors else None)
+        record = {
+            "argv": argv,
+            "cwd": str(cwd),
+            "environment": environment,
+            "deadline": deadline,
+            "timeout": timeout,
+            "exit_code": result.get("exit_code"),
+            "raw_exit": result.get("raw_exit"),
+            "raw_exit_owner": "common.process owned supervisor",
+            "failure": str(retained_failure)
+            if retained_failure
+            else result.get("failure"),
+            "owner_observation": getattr(failure, "observed", None),
+            "capture_complete": failure is None
+            and not errors
+            and result.get("failure") is None,
+            "streams": identities,
+        }
+        record_path = cwd / f"{name}.json"
+        phase = "serialize"
+        stream = None
+        try:
+            data = (
+                json.dumps(record, sort_keys=True, indent=2, allow_nan=False).encode()
+                + b"\n"
+            )
+            phase = "open"
+            stream = record_path.open("xb")
+            phase = "write"
+            if stream.write(data) != len(data):
+                raise ValueError("file write was incomplete")
+        except Exception as error:
+            errors.append((phase, str(record_path), error))
+        if stream is not None:
+            try:
+                stream.close()
+            except Exception as error:
+                errors.append(("close", str(record_path), error))
+            try:
+                record_path.chmod(0o600)
+            except Exception as error:
+                errors.append(("chmod", str(record_path), error))
+    primary = (
+        failure
+        if isinstance(failure, ProcessCleanupError)
+        else errors[0][2]
+        if errors
+        else None
+    )
+    if primary is not None:
+        facts = tuple(
+            (phase, path, type(error).__name__, str(error))
+            for phase, path, error in errors
+        )
+        setattr(
+            primary,
+            "capture_failures",
+            (*getattr(primary, "capture_failures", ()), *facts),
+        )
+        raise primary
+    return record
 
 
 def run_command(
@@ -409,11 +615,15 @@ def run_analyzer(
 
 
 def _main() -> int:
-    """Finish descendant cleanup and close its acknowledgement before worker exit."""
     completion = int(sys.argv[2])
     try:
+        with os.fdopen(int(sys.argv[5]), "rb") as context:
+            environment = json.load(context)
         result = _supervise(
-            int(sys.argv[1]), json.loads(sys.argv[3]), json.loads(sys.argv[4])
+            int(sys.argv[1]),
+            json.loads(sys.argv[3]),
+            json.loads(sys.argv[4]),
+            env=environment,
         )
         os.write(completion, b"complete\n")
         return result

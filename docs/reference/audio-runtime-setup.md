@@ -27,22 +27,20 @@ Upstream build instructions and licenses remain in the submodule's
 audio rendering remains Rust; external execution is reference evidence, not a
 fallback renderer. Source preparation alone is not runtime/audio validation.
 
-Setup automatically applies the user-approved customization in
-`inputs/patches/pcsx-redux/debugger.patch` before the Redux build. The patch exposes
-guarded native step-into to Lua; it adds no packages. Its SHA-256 is
-`cd90b2e8e64aafb7b60da9091ca6ab127d5f9fc6dfc4fa9acccf502308850600`.
-The runtime target pins its base revision and reconstructs exact before/after images, accepts
-an already applied copy, and rejects partial application or unrelated tracked
-edits without resetting them. Doctor and runtime receipts include the patch hash;
-old binary receipts fail after customization until setup rebuilds successfully.
+Setup builds committed source from `third_party/pcsx-redux-agentic`.
+Source inspection verifies the registered gitlink, recursive revisions, indexes
+and tracked source bytes. It rejects unknown or ignored build inputs.
+Named generated LuaJIT sources require the exact preceding successful v2 build
+receipt. Doctor and runtime require a matching build receipt, verified build
+prerequisites, SDL3 and dynamic linkage.
 See [native boundary limits](../../.pi/skills/psx-emulator/references/native.md).
 
-`bin/harness patch list` inventories `inputs/patches/<target>/` without a checkout;
-`list --status` adds applied/pristine/unresolved state. `check`, `apply` and
-`revert` use the same framework and target policy as setup/doctor. All commands
-default to all targets and patches; repeat `--target NAME` to narrow targets or
-use `--patch FILE.patch` with one explicit target. Invalid or unresolved state
-exits with code 2. Patch changes invalidate the build receipt until setup rebuilds.
+`bin/harness patch list` inventories `inputs/patches/<target>/` without a checkout.
+Unnamed listing of an absent canonical patch directory returns an empty inventory.
+The generic patch registry has no built-in targets. `check`, `apply` and `revert`
+refuse unregistered targets with exit code 2; `list --status` reports an existing
+unregistered target as unresolved. Native customizations belong to committed
+`third_party/pcsx-redux-agentic` source and its build receipts.
 
 The earlier missing-prerequisite check is retained in
 `out/audio-migration/driver-redux-prerequisites.log`. Following user authorization,

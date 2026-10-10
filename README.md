@@ -41,6 +41,23 @@ local toolchains. `just doctor` verifies the result. See
 Work on an extracted executable image or EMI entry — never the EMI archive.
 Original bytes and target manifests are the source of truth.
 
+## Observe PS1 behavior
+
+The managed emulator is [PCSX-Redux Agentic](third_party/pcsx-redux-agentic/README.md),
+our fork for bounded reverse-engineering missions. It embeds the Lua mission
+library and owns the [psx-emulator skill](third_party/pcsx-redux-agentic/skills/psx-emulator/SKILL.md).
+
+```sh
+just setup --component pcsx-redux
+bin/harness runtime missions
+bin/harness runtime run --bios inputs/external/bios/scph5501.bin --mission frames --argument target=0xbfc00004 --argument frames=1 --output out/runtime/frames --timeout 30
+```
+
+The example captures one frame after the first BIOS instruction. Supply licensed inputs
+and the mission arguments listed by the skill. Each run
+records its emulator, inputs, limits, completion, and captures in its output
+receipt. See [Runtime setup](docs/reference/audio-runtime-setup.md).
+
 ## Lift one function
 
 ```sh

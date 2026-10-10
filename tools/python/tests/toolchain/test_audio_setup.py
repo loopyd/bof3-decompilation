@@ -11,7 +11,7 @@ import pytest
 
 from harness.commands import doctor, setup
 from harness.io import repo_layout
-from harness.toolchain import bios
+from harness.toolchain import bios, pcsx
 from harness.toolchain.pcsx import PcsxReduxToolchain
 
 
@@ -206,15 +206,34 @@ def test_redux_refuses_changed_checkout_without_update(tmp_path, monkeypatch):
     (source / ".git").write_text("gitdir: fixture")
     calls = []
 
-    def git(*args):
+    def registered(*args):
         calls.append(args)
         if args[0] == "ls-files":
             return f"160000 {'a' * 40} 0\t{tool.submodule}"
-        if args[-1] == "HEAD":
+        if args[:4] == ("config", "--file", ".gitmodules", "--get"):
+            return (
+                tool.submodule
+                if args[-1].endswith(".path")
+                else "https://github.com/loopyd/pcsx-redux-agentic.git"
+            )
+        pytest.fail("setup must not mutate a changed checkout")
+
+    def owned(directory, *args):
+        calls.append((str(directory), *args))
+        if directory == tmp_path and args[0] == "ls-files":
+            return f"160000 {'a' * 40} 0\t{tool.submodule}"
+        if directory == source and args == ("rev-parse", "HEAD"):
             return "b" * 40
         pytest.fail("setup must not mutate a changed checkout")
 
-    monkeypatch.setattr(tool, "_git", git)
-    with pytest.raises(ValueError, match="differs from the gitlink"):
+    def configured(command, **kwargs):
+        calls.append(tuple(command))
+        assert command == ["git", "config", "--get", f"submodule.{tool.submodule}.url"]
+        return subprocess.CompletedProcess(command, 1, "", "")
+
+    monkeypatch.setattr(tool, "_git", registered)
+    monkeypatch.setattr(pcsx, "git_text", owned)
+    monkeypatch.setattr(pcsx.subprocess, "run", configured)
+    with pytest.raises(ValueError, match="Fork recursive revision differs"):
         tool.install(force=True)
-    assert len(calls) == 2
+    assert len(calls) == 6

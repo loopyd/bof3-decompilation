@@ -59,7 +59,7 @@ DOMAINS: Mapping[str, Domain] = {
             "list, apply, check or revert target patches",
             "harness.commands.patch",
             kind="passthrough",
-            example="bin/harness patch check --target pcsx-redux",
+            example="bin/harness patch list",
         ),
     ),
     "runtime": Domain(

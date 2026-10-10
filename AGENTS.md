@@ -32,6 +32,20 @@ Inspect starting dirty work and preserve unrelated changes. Run applicable exist
 checks and report failures or unresolved blockers without claiming completion.
 Domain-specific evidence and rollback obligations remain intact.
 
+## Delivery focus
+
+Prioritize the requested shipped result. Use existing local builds, static checks,
+and focused runtime runs to verify changed behavior. Keep verification proportional
+to the change; repeat checks only after relevant changes, failures, or unresolved
+concerns. Finish each deliverable through its authorized commit and push.
+
+Disposable verification supports the deliverable; it is not a separate product.
+Do not build bespoke proof/grant frameworks, recursive source inventories, or
+design/review campaigns around temporary checking scripts without an explicit user
+request. Prefer one small check over layers of generators, controllers and receipts.
+Preserve authorization, runtime bounds, rollback obligations and truthful evidence.
+These focus rules take precedence over broader skill workflow suggestions.
+
 Do not modify installed Pi extensions or add/install dependencies unless the user explicitly authorizes that specific change. Task execution, troubleshooting, and workflow recovery do not imply authorization.
 
 Do not add regression tests unless the user specifically requests expanded test coverage. Running existing checks does not authorize adding tests.
