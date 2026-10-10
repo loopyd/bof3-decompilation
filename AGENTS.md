@@ -46,6 +46,25 @@ request. Prefer one small check over layers of generators, controllers and recei
 Preserve authorization, runtime bounds, rollback obligations and truthful evidence.
 These focus rules take precedence over broader skill workflow suggestions.
 
+## Documentation
+
+Keep README files, guides, and API references focused on current supported behavior,
+setup, usage, contracts, and lasting limitations. Include versions and numeric limits
+when readers need them to use the product. Prefer a discovery command to a copied
+inventory that changes with each release.
+
+Keep session progress, one-off benchmarks, test counts, delivery SHAs, temporary
+paths, and implementation diaries out of user-facing documentation. Put run results
+in existing task evidence, disposable reports in ignored `out/`, task status in its
+owning plan, and delivery details in commit or PR descriptions. Preserve frozen audit
+records and existing release history.
+
+Apply `$unslop` to every prose edit, including README files, guides, and agent
+instructions. Use plain words and complete sentences. Preserve exact commands,
+schemas, protocol literals, licenses, and technical meaning. Before committing,
+remove paragraphs that report the editing session rather than help the reader use
+or understand the maintained product. Run applicable existing documentation checks.
+
 Do not modify installed Pi extensions or add/install dependencies unless the user explicitly authorizes that specific change. Task execution, troubleshooting, and workflow recovery do not imply authorization.
 
 Do not add regression tests unless the user specifically requests expanded test coverage. Running existing checks does not authorize adding tests.
