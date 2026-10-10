@@ -61,7 +61,7 @@ def validate_native_bundle(bundle: dict) -> dict:
         names.append(name)
     if (
         names != sorted(set(names))
-        or sum(row["role"] == "mission" for row in rows) != 19
+        or sum(row["role"] == "mission" for row in rows) != 20
     ):
         raise ValueError("Builtin resource ordering or roles differ")
     data = b"".join(

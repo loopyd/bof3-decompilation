@@ -24,7 +24,7 @@ class Emulator:
         rows = [
             {
                 "name": name,
-                "role": "mission" if index < 19 else "module",
+                "role": "mission" if index < 20 else "module",
                 "path": f"src/lua/missions/{name}.lua",
                 "source_sha256": "a" * 64,
                 "source_bytes": 1,
