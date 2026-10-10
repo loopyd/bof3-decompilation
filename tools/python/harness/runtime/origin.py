@@ -27,7 +27,7 @@ def validate_native_bundle(bundle: dict) -> dict:
             "Builtin runtime resource bundle differs from emulator identity"
         )
     rows = bundle["resources"]
-    if not isinstance(rows, list) or len(rows) != 54:
+    if not isinstance(rows, list) or len(rows) != 53:
         raise ValueError("Builtin runtime resource census differs")
     names = []
     for row in rows:

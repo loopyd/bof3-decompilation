@@ -20,7 +20,7 @@ class Emulator:
         self.arguments = []
 
     def runtime_identity(self):
-        names = [f"fixture{index:02}" for index in range(53)] + ["support"]
+        names = [f"fixture{index:02}" for index in range(52)] + ["support"]
         rows = [
             {
                 "name": name,

@@ -668,9 +668,9 @@ def _qualify_catalogue(source: Path, raw: str) -> dict:
     rows.sort(key=lambda row: row["name"])
     if [row["name"] for row in resources] != sorted(names):
         raise ValueError("Native catalogue resources must be sorted")
-    if len(rows) != 54 or sum(row["role"] == "mission" for row in rows) != 19:
+    if len(rows) != 53 or sum(row["role"] == "mission" for row in rows) != 19:
         raise ValueError(
-            "Current native resource census differs from 54 resources / 19 missions"
+            "Current native resource census differs from 53 resources / 19 missions"
         )
     state = value["state"]
     if (
