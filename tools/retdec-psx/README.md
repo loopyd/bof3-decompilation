@@ -55,8 +55,13 @@ always identifies the sibling sources used by this build.
 
 Setup configures the plugin from `third_party/rz-psxdec`, uses
 `BUILD_BUNDLED_RETDEC=ON`, and builds only the `rz-psxdec` target with
-`cmake --build` and `--parallel 24`. The configure and build argv, working
-directory, raw exit, failure, and output identities remain in the attempt.
+`cmake --build` and `--parallel N`. When the component build begins, the harness
+samples idle CPU capacity for 200 ms and chooses 75%, rounded down to at least
+one job. CPU affinity and cgroup v2 CPU quotas cap the available capacity. The same
+job count limits the bundled RetDec and nested dependency builds.
+
+The configure and build argv, working directory, raw exit, failure, and output
+identities remain in the attempt.
 The component sets `CMAKE_INSTALL_PREFIX` to the attempt's `prefix` directory.
 RetDec's configure-time support cleanup stays in that disposable directory.
 The component does not run a top-level install or mutate installed support paths.

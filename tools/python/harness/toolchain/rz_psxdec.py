@@ -15,6 +15,7 @@ import zipfile
 
 from harness.common.digests import file_record
 from harness.common.process import capture
+from harness.common.resources import select_build_jobs
 from harness.io import RepoLayout
 from .base import Toolchain
 from .nativebuild import (
@@ -92,12 +93,25 @@ class RzPsxdecToolchain(Toolchain):
         }
 
     def _execute(
-        self, argv: list[str], directory: Path, name: str, *, timeout=14400
+        self,
+        argv: list[str],
+        directory: Path,
+        name: str,
+        *,
+        timeout=14400,
+        jobs: int | None = None,
     ) -> dict:
+        environment = self._environment(directory)
+        if jobs is not None:
+            environment.update(
+                CMAKE_BUILD_PARALLEL_LEVEL=str(jobs),
+                OMP_NUM_THREADS=str(jobs),
+                OMP_THREAD_LIMIT=str(jobs),
+            )
         record = capture(
             directory,
             argv,
-            environment=self._environment(directory),
+            environment=environment,
             deadline=time.monotonic() + timeout,
             timeout=timeout,
             output_limit=128 << 20,
@@ -251,6 +265,7 @@ class RzPsxdecToolchain(Toolchain):
             return str(self.receipt)
         if self.attempt is None or self.inputs is None:
             raise RuntimeError("rz-psxdec inputs have not been staged")
+        jobs = select_build_jobs()
         attempt, inputs = self.attempt, self.inputs
         build = attempt / "build"
         tools = inputs["tools"]
@@ -291,7 +306,7 @@ class RzPsxdecToolchain(Toolchain):
             f"-D{role}_LOCAL_DIR={row['root']}"
             for role, row in inputs["prerequisites"].items()
         ]
-        configure = self._execute(command, attempt, "configure")
+        configure = self._execute(command, attempt, "configure", jobs=jobs)
         configured = link_paths(build, Path(cxx))
         configured = {path for path in configured if not path.is_relative_to(build)}
         inputs["external"] = _records(
@@ -306,12 +321,13 @@ class RzPsxdecToolchain(Toolchain):
                 "--build",
                 str(build),
                 "--parallel",
-                "24",
+                str(jobs),
                 "--target",
                 "rz-psxdec",
             ],
             attempt,
             "build",
+            jobs=jobs,
         )
         sources_after = self._sources()
         if sources_after != inputs["sources"] or self._tools() != tools:
