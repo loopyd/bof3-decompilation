@@ -134,7 +134,10 @@ def scan_tree(
         try:
             descriptor = descriptors[-1]
             before = describe_identity(os.fstat(descriptor))
-            budget.charge()
+            if depth == 0:
+                budget.charge()
+            else:
+                check_deadline()
             entries = []
             with os.scandir(descriptor) as directory:
                 for entry in directory:

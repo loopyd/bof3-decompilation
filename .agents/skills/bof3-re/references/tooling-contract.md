@@ -53,6 +53,9 @@ validators or evidence checks need not be equivalent.
 Workspace recovery excludes root `build/` outputs and refuses indexed or committed
 paths there. Native compilation still pins consumed build tools and outputs through
 its input guards.
+Namespace scans charge each directory entry once and charge the root visit.
+Recursive visits retain fresh deadline checks. Verification rescans the namespace
+and rereads captured files against the same cumulative budget.
 
 Stdlib first, then installed dependencies; no new dependency without explicit user
 approval. Prefer smallest working diff and deletion over speculative abstraction.
