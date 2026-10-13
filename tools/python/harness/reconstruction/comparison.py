@@ -543,13 +543,12 @@ def _adapt_submission(result, run, result_record, run_record, limit):
     _require_rebuild(
         type(selected) is dict
         and selected.get("catalog_id") == catalog.CATALOG_ID
-        and selected.get("pipeline_id") == catalog.PIPELINE_ID
+        and selected.get("pipeline_id") == recipe.CANONICAL_PROFILE_ID
         and type(selected.get("profiles")) is list
         and bool(selected["profiles"])
-        and "generic_catalog" in selected
         and "profiles_digest" in selected
         and "staged_shared" in selected,
-        "submission lacks the complete generic compiler catalog",
+        "submission lacks the complete selected compiler profiles",
     )
     profiles = selected["profiles"]
     expected_profiles = []
@@ -565,7 +564,7 @@ def _adapt_submission(result, run, result_record, run_record, limit):
             (profile["profile_id"], profile["identity"], profile["ordinal"])
         )
     _require_rebuild(
-        profiles[0]["profile_id"] == catalog.PIPELINE_ID
+        profiles[0]["profile_id"] == recipe.CANONICAL_PROFILE_ID
         and len({row[0] for row in expected_profiles}) == len(profiles),
         "submitted compiler profile inventory differs",
     )
@@ -885,7 +884,7 @@ def rebuild_candidate(
             prelude_path=prelude.PRELUDE_PATH,
             tools=selected,
             immutable=records,
-            root_profile_id=catalog.PIPELINE_ID,
+            root_profile_id=recipe.CANONICAL_PROFILE_ID,
             artifact_limit=artifact_limit,
         )
         retained.update(deepcopy(syntax.record))
@@ -903,7 +902,7 @@ def rebuild_candidate(
         execution = recipe.execute_profiles(
             selected["profiles"],
             workspace=workspace,
-            root_profile_id=catalog.PIPELINE_ID,
+            root_profile_id=recipe.CANONICAL_PROFILE_ID,
             inputs=syntax.inputs,
             include_roots=[str(workspace / "include")],
             attempts=attempts,

@@ -195,7 +195,7 @@ The capture retains raw output and 14 state listings before aids, before
 decompilation and afterward. It requires complete token, console and source
 equality before qualifying a source. It does not compile that source. Pass the
 completed capture as `--generation` to `verify` for the independent first C89
-check and generic-profile rebuild. The verifier derives the mode from observed
+check and canonical-profile rebuild. The verifier derives the mode from observed
 inputs. Adding a requested mode label cannot establish its provenance.
 
 ## Results and limits
@@ -205,8 +205,10 @@ directories retain native status, raw streams, generated C, PC spans and compile
 stage records. `report.json` contains exactly 118 admitted rows. Unselected,
 unresolved and failed members remain visible.
 
-The strict C89 and uninitialized-return diagnostic precedes generic
-GCC 2.7.2, maspsx and assembler stages. The generated C is compiled unchanged.
+The strict C89 and uninitialized-return diagnostic precedes the canonical
+GCC 2.7.2-PSX, maspsx and assembler stages. Reconstruction selects this single
+profile; historical compilers remain available for explicit comparisons through
+the compiler catalog. The generated C is compiled unchanged.
 Each stage records the exact rendered environment and command. A recorded
 `raw_exit` belongs to the managed supervisor process; it does not identify a
 native child's kernel signal status. Missing or uncertain exits remain missing.
@@ -214,8 +216,8 @@ native child's kernel signal status. Missing or uncertain exits remain missing.
 Each fresh compiler directory contains a read-only empty `specs` file. The recipe
 records and independently consumes this input. The canonical driver reads it before
 fallback configuration. The verifier grants a 32-bit signed `int` fact only when
-the driver, cc1 and cpp match the pinned canonical release. Other profiles and
-signed representation remain unknown. The complete literal-zero source rule can
+the driver, cc1 and cpp match the pinned canonical release. Signed representation
+remains unknown. The complete literal-zero source rule can
 use this width; it does not establish an original declaration or entry domain.
 
 Object extraction proves ELF correspondence only. It does not establish Original

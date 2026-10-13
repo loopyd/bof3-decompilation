@@ -3,20 +3,19 @@
 from __future__ import annotations
 
 import hashlib
-import json
 import subprocess
 import time
 from collections.abc import Callable
 from pathlib import Path
 
 from harness.build import recipe
+from harness.build.compiler import DEFAULT_COMPILER_ID
 from harness.common import digests
 from harness.common.failures import FailureEvent, PolicyFailure, primary, retain
 from harness.io import repo_layout
-from harness.toolchain import gcc_archive, gcc_variants
+from harness.toolchain import gcc, gcc_variants
 
 CATALOG_ID = "retdec118-psx"
-PIPELINE_ID = "retdec118-gcc272-maspsx-as"
 TOOL_PATHS = {
     "driver": "toolchains/gcc-2.7.2-psx/gcc",
     "cc1": "toolchains/gcc-2.7.2-psx/cc1",
@@ -138,14 +137,14 @@ def _observe(
 def select(
     root: Path,
     *,
-    all_generic=False,
+    with_profiles=False,
     deadline=None,
     retained=None,
     events: list[FailureEvent] | None = None,
 ) -> dict:
     names = (
         TOOL_PATHS
-        if not all_generic
+        if not with_profiles
         else {
             name: path
             for name, path in TOOL_PATHS.items()
@@ -156,17 +155,17 @@ def select(
     shared_paths.update(
         maspsx_interpreter="/usr/bin/python3.12", syntax_compiler="/usr/bin/cc"
     )
-    shared = _observe(shared_paths, follow_symlinks=True) if all_generic else {}
+    shared = _observe(shared_paths, follow_symlinks=True) if with_profiles else {}
     files = (
         {name: row["file"] for name, row in shared.items() if row["file"] is not None}
-        if all_generic
+        if with_profiles
         else {
             name: digests.file_record(Path(path)) for name, path in shared_paths.items()
         }
     )
     selection = {
         "catalog_id": CATALOG_ID,
-        "pipeline_id": PIPELINE_ID,
+        "pipeline_id": recipe.CANONICAL_PROFILE_ID,
         "pipeline_digest": recipe.pipeline_digest(),
         "files": files,
         "options": list(recipe.REQUIRED_OPTIONS),
@@ -178,125 +177,75 @@ def select(
     }
     if retained is not None:
         retained.update(selection)
-    if not all_generic:
+    if not with_profiles:
         return selection
     layout = repo_layout(root)
-    path = root / "config/compiler/variants.json"
-    try:
-        catalog_before = digests.file_record(path)
-    except Exception as error:
-        if events is not None:
-            retain(events, error, phase="catalog-read", path=path, origin="ordinary")
-        raise
-    if catalog_before["bytes"] > 1 << 20:
-        raise ValueError("generic compiler catalog exceeds 1 MiB")
-    local, stream, raw = [], None, None
-    try:
-        stream = path.open("rb")
-        raw = stream.read((1 << 20) + 1)
-    except Exception as error:
-        retain(local, error, phase="catalog-read", path=path, origin="ordinary")
-    if stream is not None:
-        try:
-            stream.close()
-        except Exception as error:
-            retain(local, error, phase="catalog-close", path=path, origin="ordinary")
-    if events is not None:
-        events.extend(local)
-    if local:
-        raise local[0][3]
-    if len(raw) > 1 << 20:
-        raise ValueError("generic compiler catalog exceeds 1 MiB")
-    data = raw.decode("utf-8")
-    variants = gcc_variants.parse_variants(data, validate=True)
-    entries = json.loads(data)["candidates"]
-    canonical = {
-        "id": "gcc-2.7.2-psx",
-        "identity": "2.7.2",
+    entry = {
+        "id": DEFAULT_COMPILER_ID,
+        "identity": gcc.OLD_GCC_IDENTITY,
         "host": "linux-x86_64",
         "assembler": "maspsx --aspsx-version=2.56",
         "executable_relpath": "gcc",
     }
-    profiles = []
-    for ordinal, (entry, variant) in enumerate(
-        [(canonical, None), *zip(entries, variants, strict=True)]
-    ):
-        directory = (
-            layout.gcc272_psx_root if variant is None else variant.install_path(layout)
+    directory = layout.gcc272_psx_root
+    paths = {
+        name: str(
+            directory / (entry["executable_relpath"] if name == "driver" else name)
         )
-        paths = {
-            name: str(
-                directory / (entry["executable_relpath"] if name == "driver" else name)
+        for name in ("driver", "cc1", "cpp")
+    }
+    paths["directory"] = str(directory)
+    observed = _observe(paths)
+    profile = {
+        "profile_id": recipe.CANONICAL_PROFILE_ID,
+        "ordinal": 0,
+        "entry": entry,
+        "original": observed,
+        "availability": "refused",
+        "refusal": None,
+        "staged": {},
+    }
+    try:
+        if deadline is not None and time.monotonic() >= deadline:
+            raise TimeoutError(
+                "original work deadline expired before compiler validation"
             )
+        gcc_variants.check_host_compatible(entry["host"])
+        if entry["assembler"] != f"maspsx --aspsx-version={recipe.MASPSX_VERSION}":
+            raise ValueError("assembler is incompatible with the canonical recipe")
+        if any(row["symlink"] or not row["exists"] for row in observed.values()):
+            raise ValueError("compiler component or directory is absent or symlinked")
+        if any(
+            observed[name]["file"] is None
+            or directory.resolve() not in Path(paths[name]).resolve().parents
             for name in ("driver", "cc1", "cpp")
-        }
-        paths["directory"] = str(directory)
-        observed = _observe(paths)
-        profile = {
-            "profile_id": PIPELINE_ID
-            if ordinal == 0
-            else f"retdec118-{entry['id']}-maspsx-as",
-            "ordinal": ordinal,
+        ):
+            raise ValueError(
+                "compiler components must be regular files within their installation"
+            )
+        gcc.GccToolchain(layout).verify()
+        if deadline is not None and time.monotonic() >= deadline:
+            raise TimeoutError(
+                "original work deadline expired during compiler validation"
+            )
+        if _observe(paths) != observed:
+            raise ValueError("compiler changed during identity validation")
+        profile["availability"] = "available"
+    except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as error:
+        expired = deadline is not None and time.monotonic() >= deadline
+        profile["availability"] = "unverified-deadline" if expired else "refused"
+        profile["refusal"] = f"{type(error).__name__}: {error}"
+    profile["identity"] = digests.digest(
+        {
             "entry": entry,
             "original": observed,
-            "availability": "refused",
-            "refusal": None,
-            "staged": {},
+            "shared": shared,
+            "options": selection["options"],
+            "pipeline": selection["pipeline_digest"],
         }
-        try:
-            if deadline is not None and time.monotonic() >= deadline:
-                raise TimeoutError(
-                    "original work deadline expired before compiler validation"
-                )
-            gcc_variants.check_host_compatible(entry["host"])
-            if entry["assembler"] != f"maspsx --aspsx-version={recipe.MASPSX_VERSION}":
-                raise ValueError(
-                    "generic assembler is incompatible with the fixed recipe"
-                )
-            if any(row["symlink"] or not row["exists"] for row in observed.values()):
-                raise ValueError(
-                    "compiler component or directory is absent or symlinked"
-                )
-            if any(
-                observed[name]["file"] is None
-                or directory.resolve() not in Path(paths[name]).resolve().parents
-                for name in ("driver", "cc1", "cpp")
-            ):
-                raise ValueError(
-                    "compiler components must be regular files within their installation"
-                )
-            if variant is None:
-                gcc_archive.verify_installed(
-                    dest=directory,
-                    executable_relpath="gcc",
-                    expected_identity="2.7.2",
-                    label="canonical GCC 2.7.2",
-                )
-            else:
-                gcc_variants.resolve_variant(layout, variant)
-            if deadline is not None and time.monotonic() >= deadline:
-                raise TimeoutError(
-                    "original work deadline expired during compiler validation"
-                )
-            if _observe(paths) != observed:
-                raise ValueError("compiler changed during identity validation")
-            profile["availability"] = "available"
-        except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as error:
-            expired = deadline is not None and time.monotonic() >= deadline
-            profile["availability"] = "unverified-deadline" if expired else "refused"
-            profile["refusal"] = f"{type(error).__name__}: {error}"
-        profile["identity"] = digests.digest(
-            {
-                "entry": entry,
-                "original": observed,
-                "shared": shared,
-                "options": selection["options"],
-                "pipeline": selection["pipeline_digest"],
-            }
-        )
-        profiles.append(profile)
+    )
+    profiles = [profile]
     selection.update(
-        generic_catalog=catalog_before,
         profiles=profiles,
         shared_observation=shared,
         staged_shared={},
@@ -325,14 +274,14 @@ def stage(
     root: Path,
     destination: Path,
     *,
-    all_generic=False,
+    with_profiles=False,
     deadline=None,
     retained=None,
     events: list[FailureEvent] | None = None,
 ) -> tuple[dict, dict]:
     selection = select(
         root,
-        all_generic=all_generic,
+        with_profiles=with_profiles,
         deadline=deadline,
         retained=retained,
         events=events,
@@ -363,7 +312,7 @@ def stage(
         copies = []
         specs = {"bytes": 0, "sha256": hashlib.sha256(b"").hexdigest()}
         for name, relative in paths.items():
-            if all_generic and name in {"driver", "cc1", "cpp", "specs"}:
+            if with_profiles and name in {"driver", "cc1", "cpp", "specs"}:
                 continue
             record = (
                 selection["bootstrap"]
@@ -447,7 +396,7 @@ def stage(
         selection["staged_shared"] = {
             name: digests.file_record(destination / relative)
             for name, relative in paths.items()
-            if not all_generic or name not in {"driver", "cc1", "cpp", "specs"}
+            if not with_profiles or name not in {"driver", "cc1", "cpp", "specs"}
         }
         for profile in selection.get("profiles", []):
             profile["staged"] = (
@@ -458,7 +407,7 @@ def stage(
                 if "tools" in profile
                 else {}
             )
-        if all_generic:
+        if with_profiles:
             selection["profiles_digest"] = digests.digest(selection["profiles"])
         verify(selection, events=events)
         return selection, canonical
@@ -511,8 +460,7 @@ def verify(
                 recipe.REQUIRED_OPTIONS
             ):
                 raise CatalogDrift("selected compiler options changed")
-            if phase == "shared" and "generic_catalog" in selection:
-                records.append(selection["generic_catalog"])
+            if phase == "shared" and "profiles" in selection:
                 if selection["profiles_digest"] != digests.digest(
                     selection["profiles"]
                 ):

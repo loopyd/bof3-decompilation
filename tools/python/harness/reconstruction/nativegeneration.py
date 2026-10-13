@@ -55,13 +55,21 @@ class ByteScore:
     profile_ordinal: int
 
 
-def _score_links(measured, binding, run_dir, member, form_ordinal):
+def _score_links(measured, binding, run_dir, member, form_ordinal, expected_profiles):
     _require(
         measured["status"] == "measured-unverified"
         and measured["failure"] is None
         and not measured["secondary_failures"]
-        and [link["ordinal"] for link in measured["links"]] == list(range(5)),
-        "source search requires five complete authenticated comparisons",
+        and bool(expected_profiles)
+        and [
+            (link["ordinal"], link["profile_id"], link["profile_identity"])
+            for link in measured["links"]
+        ]
+        == [
+            (profile["ordinal"], profile["profile_id"], profile["identity"])
+            for profile in expected_profiles
+        ],
+        "source search requires complete authenticated profile comparisons",
     )
     sliced = provenance.original_slice(
         binding,
@@ -396,9 +404,6 @@ def _request_identity(binding, arguments):
         driver=PreparedInputs.tree(
             Path(__file__).resolve().parents[1], python_only=True
         ),
-        generic_catalog=file_record(
-            arguments["root"] / "config/compiler/variants.json"
-        ),
         output_limit=arguments["output_limit"],
     )
 
@@ -706,7 +711,8 @@ def _generation_disposition(attempt, binding, arguments):
     profiles = run["tools"]["profiles"]
     attempts = submitted["profile_attempts"]
     _require(
-        len(profiles) == len(attempts) == 5
+        bool(profiles)
+        and len(profiles) == len(attempts)
         and [
             (row["ordinal"], row["profile_id"], row["profile_identity"])
             for row in attempts
@@ -1288,6 +1294,7 @@ def _authenticate_attempt(attempt, binding, arguments, reservations):
         and measured["deadline"] == rebuilt["deadline"] == final["cutoff"],
         "feedback reparents or changes its original pair/cutoff",
     )
+    expected_profiles = _document(attempt["run"])["tools"]["profiles"]
     profiles = tuple(
         _score_links(
             measured,
@@ -1295,6 +1302,7 @@ def _authenticate_attempt(attempt, binding, arguments, reservations):
             arguments["run_dir"],
             binding.member(attempt["member_key"]),
             attempt["form_ordinal"],
+            expected_profiles,
         )
     )
     return _TerminalCandidate(attempt, "measured", profiles)
@@ -2507,7 +2515,7 @@ def _prepare_run(
         report["tools"], _ = catalog.stage(
             root,
             destination / "tools",
-            all_generic=True,
+            with_profiles=True,
             deadline=report["deadline"],
             retained=selection,
             events=events,
@@ -2692,7 +2700,7 @@ def _compile(
         stages=[],
         semantic_admission=False,
         placement="unverified",
-        selected_profile_id=catalog.PIPELINE_ID,
+        selected_profile_id=recipe.CANONICAL_PROFILE_ID,
         profile_attempts=attempts,
     )
     syntax = None
@@ -2714,7 +2722,7 @@ def _compile(
             prelude_path=prelude.PRELUDE_PATH,
             tools=selection,
             immutable=native_attempt.required_files,
-            root_profile_id=catalog.PIPELINE_ID,
+            root_profile_id=recipe.CANONICAL_PROFILE_ID,
             artifact_limit=ARTIFACT_LIMIT,
         )
         result.update(syntax.record)
@@ -2734,7 +2742,7 @@ def _compile(
             execution = recipe.execute_profiles(
                 selection["profiles"],
                 workspace=workspace,
-                root_profile_id=catalog.PIPELINE_ID,
+                root_profile_id=recipe.CANONICAL_PROFILE_ID,
                 inputs=syntax.inputs,
                 include_roots=[str(workspace / "include")],
                 attempts=attempts,

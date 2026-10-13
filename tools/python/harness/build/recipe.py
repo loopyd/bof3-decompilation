@@ -14,6 +14,7 @@ from pathlib import Path
 import shutil
 from typing import cast
 
+from harness.build.compiler import DEFAULT_COMPILER_ID
 from harness.common.artifacts import (
     active_reader,
     ConsumedFile,
@@ -29,6 +30,7 @@ from harness.common.process import ProcessCleanupError, capture
 from harness.common.failures import FailureEvent, PolicyFailure, facts, primary, retain
 from harness.toolchain import gcc
 
+CANONICAL_PROFILE_ID = f"{DEFAULT_COMPILER_ID}-maspsx-as"
 MASPSX_VERSION = "2.56"
 CC1_OPTIONS = ("-O2", "-G0", "-funsigned-char", "-msoft-float", "-gcoff")
 ASSEMBLER_OPTIONS = ("-G0", "-EL", "-mips1")

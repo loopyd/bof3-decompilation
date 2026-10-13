@@ -3261,7 +3261,7 @@ def capture_supplied_run(
             selection, _ = catalog.stage(
                 root,
                 destination / "tools",
-                all_generic=True,
+                with_profiles=True,
                 deadline=cutoff,
                 events=events,
             )

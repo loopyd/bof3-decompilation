@@ -41,6 +41,10 @@ headers remain the build-facing declaration baseline.
 
 ## Historical GCC variants
 
+PSX-RetDec reconstruction uses the canonical GCC 2.7.2-PSX and maspsx
+profile, with ASPSX 2.56 behavior. Historical compilers remain available
+through the catalog for explicitly selected comparisons.
+
 `config/compiler/variants.json` owns the reviewed compiler catalog. Variants
 remain comparison candidates until an exact, target-qualified selection is
 recorded. Use the CLI to discover available IDs and manage installed versions:
