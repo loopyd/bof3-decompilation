@@ -10,6 +10,11 @@ from typing import Any
 
 from harness.analysis.index import connect
 from harness.domain.claims import manifest_binding_sources, manifest_source_paths
+from harness.domain.functions import (
+    canonical_exact_lift_progress,
+    collect_lift_metadata,
+    select_lift_metadata,
+)
 from harness.domain.ids import normalize_target_id
 from harness.domain.includes import local_include_files
 from harness.domain.layout import parse_splat_layout
@@ -17,7 +22,6 @@ from harness.domain.manifests import load_target_manifests
 from harness.naming.debt import address_of
 from harness.domain.psx import binary_offset_for
 from harness.domain.registry import payload_end_for
-from harness.domain.sources import LiftMetadataError
 from harness.domain.symbols import (
     load_target_symbols,
     map_path,
@@ -28,7 +32,6 @@ from harness.domain.tags import (
     STATUS_TAG_RE,
     canonical_exact_progress,
     parse_progress_tags,
-    parse_source_tag,
 )
 
 _KINDS = {"bss", "rodata", "data"}
@@ -365,13 +368,18 @@ def required_work_items(
         connection.close()
 
 
-def repair_exact_progress(source: Path) -> str:
+def repair_exact_progress(source: Path, *, address: int | None = None) -> str:
     """Rewrite one live-proven exact lift's progress block."""
 
-    text = source.read_text(encoding="utf-8")
-    if not STATUS_TAG_RE.search(text):
+    text = source.read_bytes().decode("utf-8")
+    metadata = text if address is None else select_lift_metadata(text, address)
+    fixed, changed = (
+        canonical_exact_progress(text)
+        if address is None
+        else canonical_exact_lift_progress(text, address)
+    )
+    if not STATUS_TAG_RE.search(metadata):
         return "no-status-tags"
-    fixed, changed = canonical_exact_progress(text)
     if not changed:
         return "already-canonical"
     source.write_text(fixed, encoding="utf-8")
@@ -389,6 +397,7 @@ def progress_metadata_findings(
     """
 
     findings: list[dict[str, Any]] = []
+    owners: dict[int, list[str]] = {}
     try:
         sources = [
             path
@@ -413,35 +422,51 @@ def progress_metadata_findings(
         }
         try:
             text = source.read_text(encoding="utf-8")
-            address = parse_source_tag(text)
-            if address is None:
+            records = collect_lift_metadata(text)
+            if not records:
                 if BEHAVIOR_TAG_RE.search(text):
                     row["reason"] = "function metadata has @behavior but no @source"
                     findings.append(row)
                 continue
-            row["row"] = f"function:func_{address:08X}"
-            try:
-                parse_progress_tags(text)
-            except ValueError as error:
-                status = STATUS_TAG_RE.search(text)
-                match = MATCH_TAG_RE.search(text)
-                exact_claim = (
-                    status is not None
-                    and status.group(1) == "exact"
-                    and match is not None
-                    and match.group(1) in {"100", "100.00"}
-                )
-                row["reason"] = f"malformed progress metadata: {error}"
-                if exact_claim:
-                    row["class"] = "safe_metadata_repair"
-                    row["repair"] = (
-                        f"bin/harness naming prepare {target} --repair; "
-                        "live byte-match must prove exact before the rewrite"
+            for address, metadata in records.items():
+                owners.setdefault(address, []).append(row["file"])
+                finding = {**row, "row": f"function:func_{address:08X}"}
+                try:
+                    parse_progress_tags(metadata)
+                except ValueError as error:
+                    status = STATUS_TAG_RE.search(metadata)
+                    match = MATCH_TAG_RE.search(metadata)
+                    exact_claim = (
+                        status is not None
+                        and status.group(1) == "exact"
+                        and match is not None
+                        and match.group(1) in {"100", "100.00"}
                     )
-                findings.append(row)
-        except LiftMetadataError as error:
+                    finding["reason"] = f"malformed progress metadata: {error}"
+                    if exact_claim:
+                        finding["class"] = "safe_metadata_repair"
+                        finding["repair"] = (
+                            f"bin/harness naming prepare {target} --repair; "
+                            "live byte-match must prove exact before the rewrite"
+                        )
+                    findings.append(finding)
+        except ValueError as error:
             row["reason"] = str(error)
             findings.append(row)
+    for address, paths in owners.items():
+        if len(paths) < 2:
+            continue
+        selector = f"function:func_{address:08X}"
+        findings = [finding for finding in findings if finding["row"] != selector]
+        findings.extend(
+            {
+                "row": selector,
+                "class": "review_required",
+                "file": path,
+                "reason": f"duplicate source ownership for 0x{address:08X}",
+            }
+            for path in paths
+        )
     return findings
 
 

@@ -195,12 +195,17 @@ def canonical_exact_progress(text: str) -> tuple[str, bool]:
                 raise ValueError("residual insertion requires a C comment")
             line_end = fixed.find("\n", match.start())
             line_end = len(fixed) if line_end < 0 else line_end
+            if line_end and fixed[line_end - 1] == "\r":
+                line_end -= 1
             line_start = fixed.rfind("\n", 0, match.start()) + 1
             prefix = fixed[line_start : match.start()]
             if comment.group().startswith("/*") and comment.end() - 2 < line_end:
                 line_end = comment.end() - 2
                 prefix = prefix.replace("/*", " *", 1)
-            fixed = fixed[:line_end] + f"\n{prefix}@residual none" + fixed[line_end:]
+            newline = "\r\n" if "\r\n" in fixed else "\n"
+            fixed = (
+                fixed[:line_end] + f"{newline}{prefix}@residual none" + fixed[line_end:]
+            )
     return fixed, fixed != text
 
 

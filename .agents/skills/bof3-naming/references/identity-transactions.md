@@ -45,6 +45,14 @@ Native comparison gates remain required before transaction acceptance.
 
 Run `bin/harness analysis readiness [TARGET]` before application; close or explicitly retain blockers. Refresh disposable indexes only after authoritative edits pass. After recovery, rerun readiness against the fresh index before declaring readiness. Safe metadata repair requires caller-approved `bin/harness naming prepare TARGET --repair` and live asm-diff/byte-match exactness before progress metadata canonicalization; ownership/layout remain blocked. One transaction at a time; regeneration failure blocks.
 
+Grouped claimed C sources expose each attached `@source` and `@behavior` record
+to progress preflight. `--rows` selects those records by address. Every selected
+row must pass both live exactness checks before the batch writes each file once.
+Repairs change only selected progress metadata and preserve other records, C text
+and file modes. Duplicate addresses or ownership and ambiguous attachments refuse
+repair. Grouped repair still requires native comparison support for every selected
+member; parsing alone does not supply exact proof.
+
 ## Rollback
 
 Scope/exactness/metadata/ownership/build/map/Splat/review failure: restore every

@@ -10,6 +10,7 @@ from harness.common.lexicon import iter_c_lexemes
 
 from .tags import (
     SOURCE_TAG_RE,
+    canonical_exact_progress,
     count_function_metadata,
     lift_lifecycle,
     parse_behavior_tag,
@@ -235,6 +236,25 @@ def select_lift_metadata(text: str, address: int) -> str:
     if address not in records:
         raise ValueError(f"no function metadata for 0x{address:08X}")
     return records[address]
+
+
+def canonical_exact_lift_progress(text: str, address: int) -> tuple[str, bool]:
+    """Canonicalize only the selected lift's existing progress metadata."""
+
+    if count_function_metadata(text) <= 1:
+        select_lift_metadata(text, address)
+        return canonical_exact_progress(text)
+    records = parse_function_records(text, validate_progress=False)
+    record = next((item for item in records if item.address == address), None)
+    if record is None:
+        raise ValueError(f"no function metadata for 0x{address:08X}")
+    metadata, changed = canonical_exact_progress(record.metadata)
+    if not changed:
+        return text, False
+    return (
+        text[: record.metadata_start] + metadata + text[record.metadata_end :],
+        True,
+    )
 
 
 def require_single_source(source: Path) -> None:

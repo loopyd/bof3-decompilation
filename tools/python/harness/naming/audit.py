@@ -119,16 +119,12 @@ def prepare(
             address_of(row) for row in selected_rows if row.startswith("function:")
         }
         by_address = source_addresses(root, manifest) if selected_addresses else {}
-        addresses = selected_addresses & by_address.keys()
-        proofs = {address: _live_exact(root, target, address) for address in addresses}
         repaired, notes = repair_selected_rows(
             root,
             findings,
             by_address,
             rows=list(rows) if rows is not None else None,
-            live_exact=lambda address: proofs.get(
-                address, (False, [f"live exact proof missing 0x{address:08X}"])
-            ),
+            live_exact=lambda address: _live_exact(root, target, address),
         )
         findings = merge_findings_notes(
             progress_metadata_findings(root, target, manifest), notes

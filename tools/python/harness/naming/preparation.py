@@ -11,17 +11,23 @@ from __future__ import annotations
 
 import os
 import re
+import stat
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
 from harness.domain.claims import manifest_source_paths
+from harness.domain.functions import (
+    canonical_exact_lift_progress,
+    collect_lift_metadata,
+    select_lift_metadata,
+)
 from harness.naming.debt import address_of
 from harness.domain.tags import (
     STATUS_TAG_RE,
     canonical_exact_progress,
-    parse_source_tag,
+    count_function_metadata,
 )
 
 ROW_SELECTOR_RE = re.compile(r"^(function:func_[0-9A-F]{8}|data:D_[0-9A-F]{8})$")
@@ -41,6 +47,7 @@ class _RepairTransaction:
 
     entries: list[dict[str, Any]]
     snapshots: dict[str, str] = field(default_factory=dict)
+    modes: dict[str, int] = field(default_factory=dict)
     written: list[str] = field(default_factory=list)
 
     def restore(self, root: Path) -> None:
@@ -57,6 +64,7 @@ def _atomic_write(root: Path, relative: str, text: str) -> None:
     target = root / relative
     temp = target.with_name(f"{target.name}.rollback-tmp")
     temp.write_text(text, encoding="utf-8")
+    os.chmod(temp, stat.S_IMODE(target.stat().st_mode))
     os.replace(temp, target)
 
 
@@ -95,8 +103,9 @@ def source_addresses(root: Path, manifest: Any) -> dict[int, Path]:
     for source in sources:
         if source.suffix != ".c":
             continue
-        address = parse_source_tag(source.read_text(encoding="utf-8"))
-        if address is not None:
+        for address in collect_lift_metadata(source.read_text(encoding="utf-8")):
+            if address in by_address:
+                raise ValueError(f"duplicate source ownership for 0x{address:08X}")
             by_address[address] = source
     return by_address
 
@@ -144,7 +153,15 @@ def repair_selected_rows(
             continue
         source = by_address.get(address_of(row))
         if source is None:
+            finding["class"] = "review_required"
+            finding["reason"] = (
+                "selected source is missing; no selected row was written"
+            )
+            notes[row] = finding
             continue
+        relative = source.relative_to(root).as_posix()
+        transaction.snapshots.setdefault(relative, source.read_bytes().decode("utf-8"))
+        transaction.modes.setdefault(relative, stat.S_IMODE(source.stat().st_mode))
         exact, commands = live_exact(address_of(row))
         if not exact:
             finding["class"] = "review_required"
@@ -152,32 +169,51 @@ def repair_selected_rows(
             finding["validation"] = commands
             notes[row] = finding
             continue
-        relative = source.relative_to(root).as_posix()
-        text = source.read_text(encoding="utf-8")
         transaction.entries.append(
             {"row": row, "file": relative, "validation": commands}
         )
-        transaction.snapshots.setdefault(relative, text)
     if notes:
         return [], notes
     repaired: list[dict[str, Any]] = []
     current: dict[str, Any] | None = None
     try:
+        images = dict(transaction.snapshots)
         for entry in transaction.entries:
             current = entry
             relative = entry["file"]
-            before = transaction.snapshots[relative]
-            fixed, changed = canonical_exact_progress(before)
-            if changed:
-                _atomic_write(root, relative, fixed)
-                transaction.written.append(relative)
+            before = images[relative]
+            address = address_of(entry["row"])
+            metadata = select_lift_metadata(before, address)
+            fixed, changed = (
+                canonical_exact_lift_progress(before, address)
+                if count_function_metadata(before) > 1
+                else canonical_exact_progress(before)
+            )
+            images[relative] = fixed
             if changed:
                 entry["repair"] = "repaired"
-            elif STATUS_TAG_RE.search(before):
+            elif STATUS_TAG_RE.search(metadata):
                 entry["repair"] = "already-canonical"
             else:
                 entry["repair"] = "no-status-tags"
             repaired.append(entry)
+        for relative, before in transaction.snapshots.items():
+            current = next(
+                entry for entry in transaction.entries if entry["file"] == relative
+            )
+            source = root / relative
+            if (
+                source.read_bytes().decode("utf-8") != before
+                or stat.S_IMODE(source.stat().st_mode) != transaction.modes[relative]
+            ):
+                raise ValueError("selected source changed during live proof")
+        for relative, fixed in images.items():
+            current = next(
+                entry for entry in transaction.entries if entry["file"] == relative
+            )
+            if fixed != transaction.snapshots[relative]:
+                _atomic_write(root, relative, fixed)
+                transaction.written.append(relative)
     except (OSError, ValueError, UnicodeError):
         try:
             transaction.restore(root)
