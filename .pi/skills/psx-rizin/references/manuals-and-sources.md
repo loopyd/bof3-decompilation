@@ -10,7 +10,7 @@ never bundle their contents.
 Contents: [tiers](#tiers), [Rizin](#rizin--tier-a),
 [PS1 hardware](#ps1-hardwarespecification--tier-b-provenance-warning),
 [MIPS/ABI](#mips-cpu--abi-manuals--tier-ac),
-[PCSX-Redux](#pcsx-redux-runtimedebugging--tier-b),
+[PCSX-Redux Agentic](#pcsx-redux-agentic-runtimedebugging--tier-b),
 [replays](#replaystas--alternative-emulator-traces--tier-bd),
 [Symbols/signatures](#symbols-and-signatures--tier-d),
 [matching tools](#matching-decompilation-tools--tier-d),
@@ -77,18 +77,20 @@ Pin installed Rizin version and record commands with retained evidence.
 
 Use PSX-specific ABI observations from PSX-SPX with original MIPS manuals. Generic System V ABI may differ from PsyQ compiler conventions in edge cases; prove stack/frame behavior in the actual binary.
 
-## PCSX-Redux runtime/debugging — Tier B
+## PCSX-Redux Agentic runtime/debugging — Tier B
 
-- Documentation root: https://pcsx-redux.consoledev.net/
-- Debugging introduction: https://pcsx-redux.consoledev.net/Debugging/introduction/
-- GDB server: https://pcsx-redux.consoledev.net/Debugging/gdb-server/
-- Lua breakpoints: https://pcsx-redux.consoledev.net/Lua/breakpoints/
-- Lua memory/register access: https://pcsx-redux.consoledev.net/Lua/memory-and-registers/
-- Handling PSX binaries: https://pcsx-redux.consoledev.net/Lua/binary/
-- GPU logger: https://pcsx-redux.consoledev.net/Debugging/gpu-logger/
-- Repository: https://github.com/grumpycoders/pcsx-redux
+- Emulator setup: [fork README](../../../../third_party/pcsx-redux-agentic/README.md).
+- Bounded missions and Lua API: [psx-emulator skill](../../psx-emulator/SKILL.md).
+- Runtime invocation: [runtime procedures](../../psx-emulator/references/runtime.md).
+- Breakpoints and watchpoints: [watch reference](../../psx-emulator/references/watch.md).
+- Memory and registers: [memory](../../psx-emulator/references/memory.md) and [CPU](../../psx-emulator/references/cpu.md).
+- Binary loading: [startup procedures](../../psx-emulator/references/startup.md).
+- GPU observation: [GPU reference](../../psx-emulator/references/gpu.md).
+- Manual GDB server implementation: [src/core/gdb-server.cc](../../../../third_party/pcsx-redux-agentic/src/core/gdb-server.cc).
+- Repository: https://github.com/loopyd/pcsx-redux-agentic.
 
-Preferred structured runtime evidence tool in this workflow.
+Use the fork for structured runtime evidence. Maintained missions keep GDB disabled;
+separately authorized manual sessions follow [runtime analysis](runtime-and-replays.md).
 
 ## Replays/TAS + alternative emulator traces — Tier B/D
 
@@ -100,11 +102,11 @@ Preferred structured runtime evidence tool in this workflow.
 - DuckStation CLI args: https://github.com/stenzek/duckstation/wiki/Command-Line-Arguments
 - DuckStation logging: https://github.com/stenzek/duckstation/wiki/Logging
 
-BizHawk = reproducible input-movie corpus; PCSX-Redux = detailed breakpoints/tracing; DuckStation CPU logs only in constrained windows.
+BizHawk supplies an input-movie corpus; PCSX-Redux Agentic supplies detailed breakpoints and tracing. Constrain DuckStation CPU logs to bounded windows.
 
 ## Symbols and signatures — Tier D
 - PsyQ signature database: https://github.com/lab313ru/psx_psyq_signatures
-- PsyQ format research/decompilation: https://github.com/grumpycoders/pcsx-redux/tree/main/src/mips/psyq
+- PsyQ format research/decompilation: [fork's pinned src/mips/psyq sources](../../../../third_party/pcsx-redux-agentic/src/mips/psyq/).
 - `psx_mnd_sym` symbol parser: https://github.com/mefistotelis/psx_mnd_sym
 
 Repo names/locations move. Pin a commit when using signatures in a reproducible case.

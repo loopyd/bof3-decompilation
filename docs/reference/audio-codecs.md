@@ -67,7 +67,7 @@ alone is not production acceptance.
 ## MP3 timing and consumer limits
 
 The encoder has a 481-frame filterbank delay plus one 576-frame granule. The
-[FFmpeg 6.1.1 MP3 reader](https://github.com/FFmpeg/FFmpeg/blob/n6.1.1/libavformat/mp3dec.c)
+[FFmpeg 6.1.1 MP3 reader](https://github.com/FFmpeg/FFmpeg), `libavformat/mp3dec.c`,
 requires a following frame while probing and recognizes delay fields for
 specific encoder identifiers. Its recognized tags add 529 decoder frames to
 the reported encoder delay. Tag writers must identify the actual encoder.
@@ -81,11 +81,12 @@ frame/byte counts and the 36-byte gapless extension. It records 528 encoder
 delay frames, separately reports 529 decoder frames, and derives end padding
 from the original PCM length. The extension identifies the actual codec as
 `OxAV0.1.3`; its audio/tag CRCs use CRC-16/IBM. The binary layout follows the
-[published tag writer](https://github.com/lameproject/lame/blob/master/libmp3lame/VbrTag.c).
+[LAME tag writer](https://github.com/lameproject/lame), `libmp3lame/VbrTag.c`.
 No third-party C implementation is included in production.
 
 The Rust-only ignored consumer test dynamically loads the already installed
-mpg123 library on Linux. Its [tag reader](https://github.com/libsdl-org/mpg123/blob/master/src/libmpg123/parse.c)
+mpg123 library on Linux. Its [tag reader](https://github.com/libsdl-org/mpg123),
+`src/libmpg123/parse.c`,
 accepts this encoder identifier. A published-source defect in `stream_encoder.rs`
 allocates 4508/5660 bits per granule at 32000 Hz mono, 256/320 kbit/s, exceeding
 the 4095-bit `part2_3_length` field. `main_data.rs` does not reject overflow;

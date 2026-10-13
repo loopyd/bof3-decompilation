@@ -8,7 +8,7 @@ execution and integration evidence live in the
 | --- | --- | --- |
 | [psx-spx SPU sample and pitch reference](https://psx-spx.consoledev.net/soundprocessingunitspu/#spu-adpcm-samples) | Block flags, address units, pitch modulation and interpolation arithmetic | Published descriptions require independent hardware validation. |
 | [Interpolation ROM values](https://psx-spx.consoledev.net/soundprocessingunitspu/#4-point-gaussian-interpolation) | Numeric hardware coefficient table | Reproducing the table does not validate fetch timing or the final mixer. |
-| [DuckStation SPU implementation](https://raw.githubusercontent.com/stenzek/duckstation/master/src/core/spu.cpp) | Independent comparison of coefficients, rounding, pitch ceiling and voice state | A moving branch inspected on the date above, not an immutable hardware oracle. No implementation code or dependency is imported. |
+| [DuckStation SPU implementation](https://github.com/stenzek/duckstation), `src/core/spu.cpp` | Independent comparison of coefficients, rounding, pitch ceiling and voice state | A moving branch inspected on the date above, not an immutable hardware oracle. No implementation code or dependency is imported. |
 
 All 512 numeric coefficients agree between the inspected sources. Encoded as
 little-endian signed 16-bit values, their SHA-256 is
@@ -101,12 +101,13 @@ after playback has advanced can hold another value.
 
 [Reader tests](../../tools/rust/bof3-audio/tests/spu_samples.rs) cover both Rust
 sample models, initial/frozen positions, fetch counts and history reset. The
-[inspected DuckStation source](https://raw.githubusercontent.com/stenzek/duckstation/master/src/core/spu.cpp)
+[inspected DuckStation source](https://github.com/stenzek/duckstation), `src/core/spu.cpp`,
 also clears interpolation history at key-on and retains a zero step; this is
 behavioral corroboration, not copied implementation or independent hardware
-validation. PCSX-Redux commit `28438546c781fbe372a06399c82bed43ca2c6f4d`,
-`src/spu/spu.cc`, instead substitutes a minimum increment of one and starts its
-Gaussian reader with three sample advances. It is not an exact zero-step oracle.
+validation. The current [PCSX-Redux Agentic interpolator](../../third_party/pcsx-redux-agentic/src/spu/interpolation.h)
+in `src/spu/interpolation.h` substitutes a minimum increment of one in `setStep`
+and starts its Gaussian reader with three sample advances in `keyOn`.
+It is not an exact zero-step oracle.
 
 The [corpus probe](../../tools/rust/bof3-audio/examples/zero_pitch_probe.rs)
 resolves 311 in-table zero-step tone/key rows across 219 tones in 100 banks.
@@ -120,7 +121,7 @@ source identities and archive hashes. See the explicit
 
 ## Disable transition
 
-The [inspected DuckStation control-write implementation](https://raw.githubusercontent.com/stenzek/duckstation/master/src/core/spu.cpp)
+The [inspected DuckStation control-write implementation](https://github.com/stenzek/duckstation), `src/core/spu.cpp`,
 handles a falling SPUCNT enable bit by forcing active envelopes off. Its comment
 attributes immediate rather than next-frame behavior to hardware tests, but this
 project has not reproduced those measurements. Its `ForceOff` leaves an

@@ -4,10 +4,10 @@ Sources inspected 2026-09-24 UTC:
 
 - [psx-spx: SPU volume and ADSR generator](https://psx-spx.consoledev.net/soundprocessingunitspu/#spu-volume-and-adsr-generator)
   describes register fields and envelope arithmetic.
-- [DuckStation's SPU implementation](https://raw.githubusercontent.com/stenzek/duckstation/master/src/core/spu.cpp),
+- [DuckStation's SPU implementation](https://github.com/stenzek/duckstation), `src/core/spu.cpp`,
   particularly `VolumeEnvelope::Reset`, `VolumeEnvelope::Tick`,
   `Voice::UpdateADSREnvelope` and `Voice::TickADSR`, supplies independent emulator
-  behavior to compare. This URL tracks a live branch; no immutable revision was
+  behavior to compare. The inspected source tracked a live branch; no immutable revision was
   established by the research fetch. No emulator code or dependency is vendored.
 
 ## Unresolved differences
@@ -72,15 +72,15 @@ active-state byte for each mode/rate/start context:
 
 ## SoundFont approximation target
 
-The approved RustySynth 1.3.6 published source was inspected locally for envelope
+The approved [RustySynth](https://github.com/sinshu/rustysynth) 1.3.6 published source was inspected locally for envelope
 fitting. Its `.cargo_vcs_info.json` pins repository commit
 `8cc11fc0b10422adb54107757f100d3d6ae0ef96`, package path `rustysynth`:
 
-- [Volume envelope](https://github.com/sinshu/rustysynth/blob/8cc11fc0b10422adb54107757f100d3d6ae0ef96/rustysynth/src/volume_envelope.rs):
+- Volume envelope in `rustysynth/src/volume_envelope.rs`:
   linear attack and exponential decay/release with coefficient 9.226.
-- [Region envelope setup](https://github.com/sinshu/rustysynth/blob/8cc11fc0b10422adb54107757f100d3d6ae0ef96/rustysynth/src/region_ex.rs):
+- Region envelope setup in `rustysynth/src/region_ex.rs`:
   release is clamped to at least 0.01 seconds.
-- [SoundFont math](https://github.com/sinshu/rustysynth/blob/8cc11fc0b10422adb54107757f100d3d6ae0ef96/rustysynth/src/soundfont_math.rs):
+- SoundFont math in `rustysynth/src/soundfont_math.rs`:
   float timecents/gain conversion and the approximately 0.001 audibility cutoff.
 
 This consumer behavior is an explicit approximation target, not a replacement

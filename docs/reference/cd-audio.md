@@ -7,7 +7,7 @@ seek state and timing require separate original-runtime evidence.
   seven 29-coefficient phases and a six-input/seven-output schedule for 37.8 kHz.
   The description explicitly does not establish exact hardware rounding or a
   complete 18.9 kHz algorithm.
-- [DuckStation CD implementation](https://raw.githubusercontent.com/stenzek/duckstation/master/src/core/cdrom.cpp):
+- [DuckStation CD implementation](https://github.com/stenzek/duckstation), `src/core/cdrom.cpp`:
   inspected decoder/resampler alignment, separate 18.9 kHz interpolation and drive
   gain application. Moving branch, not an immutable hardware oracle. No source
   implementation or dependency is imported; only numeric coefficient facts are
@@ -59,7 +59,7 @@ Inspected 2026-09-24:
 - [psx-spx CD data ports](https://psx-spx.consoledev.net/cdromdrive/) documents
   2,048-/2,340-byte data blocks and byte/halfword reads. Its stated overread
   behaviour repeats bytes near the end of the block.
-- [DuckStation CD implementation](https://raw.githubusercontent.com/stenzek/duckstation/master/src/core/cdrom.cpp),
+- [DuckStation CD implementation](https://github.com/stenzek/duckstation), `src/core/cdrom.cpp`,
   inspected as a moving upstream source, instead zero-fills overreads. It rewinds
   a partial block when BFRD is cleared and clears BFRD/readiness on consumption.
   Repeated assertion preserves the cursor. This is emulator comparison evidence,
@@ -80,7 +80,7 @@ delivery. GetlocL reports the newest buffered header, including sectors outside
 the selected audible channel. Data delivery has a documented deferred-retry
 filtering difference; the Rust functional path covers the first delivery only.
 
-[DuckStation's drive implementation](https://raw.githubusercontent.com/stenzek/duckstation/master/src/core/cdrom.cpp)
+[DuckStation's drive implementation](https://github.com/stenzek/duckstation), `src/core/cdrom.cpp`,
 updates the latest header before routing. Its routing contains unresolved filter
 behaviour and its queue model is comparison evidence, not a hardware trace. The
 Rust path follows the explicitly documented first-delivery rules and rejects
@@ -93,7 +93,8 @@ STR files contain 2,336-byte sectors and cannot supply original position headers
 
 ## Serialized data selection
 
-Inspected 2026-09-24: [DuckStation's asynchronous interrupt delivery](https://raw.githubusercontent.com/stenzek/duckstation/master/src/core/cdrom.cpp)
+Inspected 2026-09-24: [DuckStation's asynchronous interrupt delivery](https://github.com/stenzek/duckstation)
+in `src/core/cdrom.cpp`
 selects its current written sector buffer when delivering INT1. Its eight-buffer
 ring, delayed interrupts and retry rules are separate from that selection step.
 [psx-spx read documentation](https://psx-spx.consoledev.net/cdromdrive/#readnreads)
@@ -111,7 +112,8 @@ verification open.
 
 ## XA queue admission and output
 
-Inspected 2026-09-24: [DuckStation's CD audio implementation](https://raw.githubusercontent.com/stenzek/duckstation/master/src/core/cdrom.cpp)
+Inspected 2026-09-24: [DuckStation's CD audio implementation](https://github.com/stenzek/duckstation)
+in `src/core/cdrom.cpp`
 drops incoming XA when more than ten frames remain buffered, before committing
 decoder history. For accepted muted audio it decodes ADPCM but skips resampling
 and queue insertion. Its output routine applies current drive-matrix gain after
@@ -129,7 +131,8 @@ it does not establish initial phase, game tick timing or audible cue endpoints.
 
 ## Decoder reset and command mute
 
-Inspected 2026-09-24: [DuckStation's command and drive transitions](https://raw.githubusercontent.com/stenzek/duckstation/master/src/core/cdrom.cpp)
+Inspected 2026-09-24: [DuckStation's command and drive transitions](https://github.com/stenzek/duckstation)
+in `src/core/cdrom.cpp`
 clear audio decoder/queue state on seek/read startup and Pause. Seek clears data
 buffers too; Pause does not perform that data-buffer reset. Mute/Demute change a
 separate flag from ADPCTL mute. A read already continuing at the requested next
@@ -144,7 +147,8 @@ implemented separately below.
 
 ## XA selection and EOF
 
-Inspected 2026-09-24: [DuckStation's Setfilter and ProcessXAADPCMSector](https://raw.githubusercontent.com/stenzek/duckstation/master/src/core/cdrom.cpp)
+Inspected 2026-09-24: [DuckStation's Setfilter and ProcessXAADPCMSector](https://github.com/stenzek/duckstation)
+in `src/core/cdrom.cpp`
 separate current file/channel selection from decoder history. Setfilter clears
 selection; a selected EOF clears it before the backlog check. Unselected EOF
 cannot do so. Automatic selection skips channel 255 unless explicitly filtered.
@@ -158,7 +162,8 @@ handoff evidence is synthetic. Coding-format transitions are covered below.
 
 ## XA coding transitions
 
-Inspected 2026-09-24: [DuckStation's XA decoder and resamplers](https://raw.githubusercontent.com/stenzek/duckstation/master/src/core/cdrom.cpp)
+Inspected 2026-09-24: [DuckStation's XA decoder and resamplers](https://github.com/stenzek/duckstation)
+in `src/core/cdrom.cpp`
 read coding per admitted sector and retain device history across changes.
 Mono leaves the right predictor and interpolation ring untouched; output
 duplicates interpolated left. Both rates share cursor/phase state. Mute skips

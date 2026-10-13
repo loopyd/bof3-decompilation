@@ -1,15 +1,18 @@
 # PSX CPU and BIOS execution references
 
-These are external hardware/BIOS
-references, not proof of BOF3 execution or timing. Original US observations and
+These hardware/BIOS references do not prove BOF3 execution or timing. Original US observations and
 implementation limits live in the [audio specification](../specs/formats/audio.md#rust-system-control-and-critical-sections).
+
+Emulator source links point to the local `pcsx-redux-agentic` checkout. Its
+`src/mips` files belong to the separately pinned Nugget submodule. Historical
+Rust execution observations do not establish acceptance of the current fork.
 
 | Source | Retained use | Limits |
 | --- | --- | --- |
 | [psx-spx CPU specification](https://psx-spx.consoledev.net/cpuspecifications/#cop0-exception-handling) | COP0 status stack, exception codes/vectors, EPC, branch-delay information, BadVaddr and RFE | No complete CPU or hardware-timing acceptance from implementing these rules. |
 | [psx-spx BIOS specification](https://psx-spx.consoledev.net/kernelbios/#bios-interruptexception-handling) | Critical-section syscall semantics; BIOS exception chains and CD removal limitations | A service name does not establish its effects or permit a success stub. |
-| [DuckStation CPU register definitions](https://github.com/stenzek/duckstation/blob/master/src/core/cpu_types.h) | Independent comparison of status and cause writable-bit masks | Implementation evidence; no DuckStation code is linked or used as a production fallback. |
-| [OpenBIOS CD driver](https://github.com/grumpycoders/pcsx-redux/blob/main/src/mips/openbios/cdrom/cdrom.c) | `_96_remove` comparison: critical section, five event closures, handler removal | Replacement BIOS behavior is not original Sony BIOS equivalence. |
+| [DuckStation CPU register definitions](https://github.com/stenzek/duckstation), `src/core/cpu_types.h` | Independent comparison of status and cause writable-bit masks | Implementation evidence; no DuckStation code is linked or used as a production fallback. |
+| [OpenBIOS CD driver](../../third_party/pcsx-redux-agentic/src/mips/openbios/cdrom/cdrom.c) | `_96_remove` comparison: critical section, five event closures, handler removal | Replacement BIOS behavior is not original Sony BIOS equivalence. |
 
 RFE changes the status stack; it does not select a return PC. Critical-section
 entry tests and clears saved interrupt-enable and interrupt-mask bits; exit
@@ -20,7 +23,7 @@ the Rust machine must not silently replace that with a corrected list operation.
 The [BIOS event reference](https://psx-spx.consoledev.net/kernelbios/#bios-event-functions)
 and [control-block layout](https://psx-spx.consoledev.net/kernelbios/#bios-control-blocks)
 describe the guest RAM descriptor and `0x1C`-byte EvCB records, allocation,
-polling/consumption and callback modes. [OpenBIOS event code](https://github.com/grumpycoders/pcsx-redux/blob/main/src/mips/openbios/kernel/events.c)
+polling/consumption and callback modes. [OpenBIOS event code](../../third_party/pcsx-redux-agentic/src/mips/openbios/kernel/events.c)
 provides a separate implementation comparison. Invalid handles can reach beyond
 the table in BIOS implementations; the Rust model rejects that unresolved case.
 Its pending-wait state is functional scheduling support, not a reproduction of
@@ -47,7 +50,7 @@ second function depends on a nonzero first-function result. Non-head removal is
 documented as reading an uninitialized stack location; a correct general list
 removal would change that behavior.
 
-[OpenBIOS registration code](https://raw.githubusercontent.com/grumpycoders/pcsx-redux/main/src/mips/openbios/handlers/setup.c),
+[OpenBIOS registration code](../../third_party/pcsx-redux-agentic/src/mips/openbios/handlers/setup.c),
 inspected 2026-09-24, provides a separate comparison: enqueue returns zero;
 successful head removal returns the removed pointer and leaves its link intact.
 Its non-head search is repaired, so it is not evidence for original bug behavior.
@@ -63,7 +66,7 @@ and [exception-return contract](https://psx-spx.consoledev.net/kernelbios/#bios-
 describe the PCB's current-thread pointer and TCB register image. Exception entry
 records GPRs other than zero/K0, return PC, HI/LO, status and diagnostic cause;
 return restores the current thread's saved state without reloading cause.
-[OpenBIOS vector assembly](https://raw.githubusercontent.com/grumpycoders/pcsx-redux/main/src/mips/openbios/kernel/vectors.s)
+[OpenBIOS vector assembly](../../third_party/pcsx-redux-agentic/src/mips/openbios/kernel/vectors.s)
 provides a separate comparison for register offsets, K0 as return target and RFE
 status restoration. It also exposes a COP2 interrupt-PC adjustment, which the
 Rust capture path rejects pending GTE evidence. Replacement-BIOS assembly is not
@@ -76,7 +79,7 @@ separate obligations.
 
 Inspected 2026-09-24: the [priority-chain reference](https://psx-spx.consoledev.net/kernelbios/#priority-chains)
 describes priorities zero through three, verifier-dependent second handlers and
-early `ReturnFromException` exits. [OpenBIOS vector assembly](https://raw.githubusercontent.com/grumpycoders/pcsx-redux/main/src/mips/openbios/kernel/vectors.s)
+early `ReturnFromException` exits. [OpenBIOS vector assembly](../../third_party/pcsx-redux-agentic/src/mips/openbios/kernel/vectors.s)
 provides implementation comparison: capture both handler pointers before calling
 the verifier, pass its nonzero result in A0 to the second handler, then read the
 next link. Later priority heads are read after earlier handlers run. Its final
@@ -99,7 +102,7 @@ does not supply CPU pipeline, device or clock state.
 
 The [BIOS CD functions](https://psx-spx.consoledev.net/kernelbios/#bios-cdrom-functions)
 identify `_96_remove` as A0 services `56`/`72` and document broken handler removal.
-[OpenBIOS CD driver code](https://github.com/grumpycoders/pcsx-redux/blob/main/src/mips/openbios/cdrom/cdrom.c)
+[OpenBIOS CD driver code](../../third_party/pcsx-redux-agentic/src/mips/openbios/cdrom/cdrom.c)
 provides a separate comparison: enter a critical section, close ACK/DNE/RDY/END/ERR
 events, then dequeue CD handlers. It does not establish Sony BIOS globals, stack
 contents or bug effects. Implementing a success-only return would omit these
@@ -122,9 +125,9 @@ timing and independent audio remain open.
 
 ## Reference reset and original BIOS memory setup
 
-The pinned PCSX-Redux revision
-`28438546c781fbe372a06399c82bed43ca2c6f4d` initializes CPU PC/SR to
-`0xBFC00000`/`0x10900000` in `src/core/r3000a.cc:56–83`. SR includes bit 23,
+PCSX-Redux Agentic initializes CPU PC/SR to `0xBFC00000`/`0x10900000` in
+[src/core/r3000a.cc](../../third_party/pcsx-redux-agentic/src/core/r3000a.cc).
+SR includes bit 23,
 which the [CPU specification](https://psx-spx.consoledev.net/cpuspecifications/#cop0r12-sr-system-status-register-rw)
 marks unused. Its adjacent source comment does not correctly describe the
 constant's BEV/TS bits. Rust exposes this literal seed as `pcsx_redux_reset`,
@@ -150,7 +153,8 @@ describe physical tags, per-word validity, forward refill and stale instructions
 after ordinary RAM writes. Rust implements these effects, including two-word
 refill configuration and full refill on an invalid word with a matching tag.
 KUSEG/KSEG0 aliases share entries; KSEG1 bypasses them. This is functional state,
-not measured cache-miss timing. PCSX-Redux supplies the reset/BIU sequence reference;
+not measured cache-miss timing. The [PCSX-Redux Agentic CPU](../../third_party/pcsx-redux-agentic/src/core/r3000a.h)
+supplies the reset/BIU sequence reference;
 its bulk invalidation/refill shortcuts are not hardware timing evidence.
 
 The [BIU/isolation description](https://psx-spx.consoledev.net/memorycontrol/#fffe0130h-bcc-biu-cache-configuration-register-rw)
@@ -166,7 +170,7 @@ A hash-gated ROM test seeds dirty cache and nonzero RAM, executes the BIOS throu
 SR zero and BIU `0x1E988`. COP0 also retains disabled-breakpoint address/mask
 registers and accepts DCIC zero. Active breakpoint control stays unsupported.
 The BIOS's zero TAR write is accepted only while TAR is already zero: both the
-documented read-only register and Redux's writable storage yield that same state;
+documented read-only register and the emulator's writable storage yield that same state;
 other TAR writes remain unresolved and rejected.
 
 Cache behavior checks do not establish complete BIOS boot, device clocks, or
@@ -179,11 +183,12 @@ physical aliases and exposes the last byte to the host boot probe. Reads,
 other widths, masked stores and adjacent dev-board ports remain unsupported.
 The diagnostic sink has no interrupt effect. This follows the register purpose
 in [psx-spx expansion ports](https://psx-spx.consoledev.net/expansionportpio/#exp2-post-registers)
-and the pinned PCSX-Redux byte-write handler in `src/core/psxhw.cc`.
+and the [PCSX-Redux Agentic byte-write handler](../../third_party/pcsx-redux-agentic/src/core/psxhw.cc).
 
 After EXP1 base/delay configuration, reads within its 512 KiB window return all
-ones for an absent cartridge. This adopts the emulator's empty-ROM convention
-(`src/core/psxmem.cc`); it does not establish electrical open-bus behavior.
+ones for an absent cartridge. This adopts the emulator's
+[empty-ROM convention](../../third_party/pcsx-redux-agentic/src/core/psxmem.cc);
+it does not establish electrical open-bus behavior.
 Other windows, unaligned reads and expansion writes still fail. The BIOS itself
 checks the missing cartridge signature and chooses its normal continuation.
 
@@ -200,7 +205,7 @@ disable behavior and reverb, plus an optional `transfer_clock`. It records these
 choices and the final SPU RAM hash, FIFO occupancy and transfer address. Existing
 contexts without models retain their prior behavior. Unknown choices, missing
 required arithmetic selections and extra SPU fields are rejected. The transfer
-clock requires the explicit PCSX-Redux CPU reset profile. The bounded probe cap
+clock requires the explicit `pcsx_redux_reset` CPU profile. The bounded probe cap
 is now 100 million transitions; a numeric trace ring avoids allocating JSON on
 every instruction. Neither the larger cap nor model selection declares a BIOS
 revision supported for production rendering.
@@ -209,20 +214,24 @@ Key-on/off MMIO now preserves each written halfword for readback separately from
 pending frame events. Reads retain unused upper bits and survive event consumption;
 they do not report voice activity or retrigger previously consumed keys. This
 matches [psx-spx's voice-flag readback notes](https://psx-spx.consoledev.net/soundprocessingunitspu/#spu-voice-flags)
-and the pinned PCSX-Redux `src/spu/registers.cc` register array. The BIOS reaches
+and the [PCSX-Redux Agentic register array](../../third_party/pcsx-redux-agentic/src/spu/registers.cc). The BIOS reaches
 `0x800543B4` and reads key-on state after configuring voices; the previous
 write-only model rejected that valid access.
 
 `machine::spu_clock` advances FIFO/RAM transfers at an explicitly selected
 16 system ticks per halfword, with retained partial progress and no accumulated
 idle-time credit. Its source is the `TRANSFER_TICKS_PER_HALFWORD` behavior in
-[DuckStation's SPU implementation](https://raw.githubusercontent.com/stenzek/duckstation/master/src/core/spu.cpp),
+[DuckStation's SPU implementation](https://github.com/stenzek/duckstation), `src/core/spu.cpp`,
 inspected 2026-09-24 on a moving branch, not an immutable hardware oracle.
 Control applies at an advance call; DMA FIFO handshakes still use the existing
 untimed interconnect. The probe supplies two base ticks per executed instruction
-or entered syscall, following pinned Redux interpreter `BIAS=2`; memory stalls,
-voice frames, timer/CD clocks and DMA arbitration are absent. Redux itself writes
-manual SPU data directly; this FIFO model does not claim identical Redux timing.
+or entered syscall, taking `BIAS=2` from the [PCSX-Redux Agentic CPU constants](../../third_party/pcsx-redux-agentic/src/core/psxemulator.h).
+The [current interpreter](../../third_party/pcsx-redux-agentic/src/core/psxinterpreter.cc)
+and [memory handlers](../../third_party/pcsx-redux-agentic/src/core/psxmem.cc)
+add ROM and access costs that this clock omits. Memory stalls, voice frames,
+timer/CD clocks and DMA arbitration are absent. The emulator's
+[SPU register handler](../../third_party/pcsx-redux-agentic/src/spu/registers.cc)
+writes manual SPU data directly; this FIFO model does not claim identical emulator timing.
 The clock establishes bounded, reproducible device progress, not final PSX timing
 or PCM fidelity. No reference implementation code is imported or executed.
 
@@ -235,13 +244,17 @@ remain separate gates.
 
 ## BIOS shell handoff and original sound initialization
 
-Pinned PCSX-Redux has a PS-X EXE loading path separate from its FastBoot option.
-`src/core/r3000a.h::executionFlowTrace` signals shell entry at `0x80030000`;
-`src/core/ui.cc::shellReached` can load a requested executable there. Its
-`src/supportpsx/binloader.cc::loadPSEXE` copies only the declared payload and sets
+PCSX-Redux Agentic has a PS-X EXE loading path separate from its FastBoot option.
+The [CPU shell check](../../third_party/pcsx-redux-agentic/src/core/r3000a.h),
+`src/core/r3000a.h::hasToRun`, signals shell entry at `0x80030000`;
+the [UI shell handler](../../third_party/pcsx-redux-agentic/src/core/ui.cc),
+`src/core/ui.cc::shellReached`, can load a requested executable there. Its
+[PS-X EXE loader](../../third_party/pcsx-redux-agentic/src/supportpsx/binloader.cc),
+`src/supportpsx/binloader.cc::loadPSEXE`, copies only the declared payload and sets
 PC plus nonzero stack base. It does not assign the EXE GP field, zero BSS or
 reset devices. The separate FastBoot branch returns to RA and enables the display;
-that branch is not required for EXE loading. `MemoryAsFile::writeBlock` changes
+that branch is not required for EXE loading. The [host memory writer](../../third_party/pcsx-redux-agentic/src/core/psxmem.cc),
+`MemoryAsFile::writeBlock`, changes
 backing memory without applying guest cache isolation or clearing unrelated RAM.
 
 `machine::boot::load_us` now reproduces this EXE-load handoff for the exact US
@@ -269,8 +282,9 @@ latches, consistent with [psx-spx's read/write notes](https://psx-spx.consoledev
 The next scheduled frame refreshes readback from voice state. That boundary is
 an explicit functional approximation: exact sub-frame overwrite timing still
 requires independent evidence. Tests prove writes do not fabricate or erase
-voice end flags. Redux's register storage also accepts these writes; its backend
-readback behavior is not used as a hardware timing oracle.
+voice end flags. The [PCSX-Redux Agentic register handler](../../third_party/pcsx-redux-agentic/src/spu/registers.cc)
+stores these writes in `regArea` but reads ENDX from voice loop-end flags.
+That comparison does not verify the Rust transient-readback model or hardware timing.
 
 BIOS shell loading does not establish complete disc boot or hardware timing.
 C retirement remains gated on complete device scheduling and independent
@@ -378,9 +392,11 @@ records. It stops sequence zero through original code, settles its stop flag,
 then plays sequence one and verifies that sequence zero and all other inactive
 records remain unchanged. No event cursor, guest routine or BIOS service is
 patched. Independent runtime/PCM comparison remains required. The
-reference-emulator constants must remain explicit: pinned PCSX-Redux uses
+reference-emulator constants must remain explicit: PCSX-Redux Agentic uses
 33,868,800 system ticks per second, integer 60 Hz / 263-line NTSC counter setup,
-and VBlank start line 243 in `src/core/psxcounters.{cc,h}`. Those constants
+and VBlank start line 243 when `VSyncWA` is disabled. See
+[src/core/psxcounters.cc](../../third_party/pcsx-redux-agentic/src/core/psxcounters.cc)
+and [src/core/psxcounters.h](../../third_party/pcsx-redux-agentic/src/core/psxcounters.h). Those constants
 alone do not prove hardware cadence, CPU stall timing or audio fidelity.
 
 
@@ -399,10 +415,11 @@ models; it does not claim cycle-level SPU RAM arbitration. This source was
 consulted on 2026-09-24; its hardware observations and remaining uncertainty
 must not be conflated with the emulator models used here.
 
-The NTSC line clock follows PCSX-Redux commit
-`28438546c781fbe372a06399c82bed43ca2c6f4d`,
-`src/core/psxcounters.cc::init/calculateHsync` and the constants in
-`src/core/psxcounters.h`: 33,868,800 / (60 × 263), truncated to 2146 system ticks
+The NTSC line clock uses the PCSX-Redux Agentic base counter setup in
+[src/core/psxcounters.cc](../../third_party/pcsx-redux-agentic/src/core/psxcounters.cc),
+`init`/`calculateHsync`, and the constants in
+[src/core/psxcounters.h](../../third_party/pcsx-redux-agentic/src/core/psxcounters.h):
+33,868,800 / (60 × 263), truncated to 2146 system ticks
 per line, with VBlank starting at line 243 and ending on line wrap. Each line
 also supplies a pulse for timer 1's HBlank clock. Root counters, the existing
 SPU FIFO/DMA transfer clock, scanline events and output frames advance on the

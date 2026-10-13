@@ -65,7 +65,7 @@ Start with [docs/INDEX.md](docs/INDEX.md) to find the guide for your task.
 | Task | Reference |
 | --- | --- |
 | Complete ordered tool workflow | [Tool usage](docs/agents/tool-usage.md) |
-| Build and run PS1 emulator missions | [Emulator integration](docs/agents/pcsx-redux.md) |
+| Build and run PS1 emulator missions | [Emulator integration](docs/agents/pcsx-redux-agentic.md) |
 | Build and use the PS1 decompiler | [rz-psxdec](third_party/rz-psxdec/README.md) and [workspace lifecycle](tools/retdec-psx/README.md) |
 | Lift and match one function | [Function matching](docs/agents/matching.md) |
 | Resolve asm-diff symptoms | [Matching playbook](docs/agents/matching-playbook.md) |

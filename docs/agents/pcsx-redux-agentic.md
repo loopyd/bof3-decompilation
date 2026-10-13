@@ -1,4 +1,4 @@
-# PCSX-Redux harness
+# PCSX-Redux Agentic harness
 
 This guide owns BOF3's integration with the Linux PCSX-Redux Agentic fork. The
 [fork README](../../third_party/pcsx-redux-agentic/README.md) covers the emulator;

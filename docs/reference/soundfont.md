@@ -71,17 +71,17 @@ in centibels (0..1440). See the
 An equal-power pan curve is an explicit fitting-model choice here, not a claim
 that every compatible consumer has identical pan or modulation behavior.
 
-Inspected the local published RustySynth 1.3.6 source, pinned to commit
+Inspected the local published [RustySynth](https://github.com/sinshu/rustysynth) 1.3.6 source, pinned to commit
 `8cc11fc0b10422adb54107757f100d3d6ae0ef96`:
 
-- [Voice setup and mixing](https://github.com/sinshu/rustysynth/blob/8cc11fc0b10422adb54107757f100d3d6ae0ef96/rustysynth/src/voice.rs)
+- Voice setup and mixing in `rustysynth/src/voice.rs`
   applies 40% of the specified initial attenuation, squares velocity and channel
   volume/expression, and combines channel/instrument pan before sine/cosine gains.
-- [Region generator conversion](https://github.com/sinshu/rustysynth/blob/8cc11fc0b10422adb54107757f100d3d6ae0ef96/rustysynth/src/region_pair.rs)
+- Region generator conversion in `rustysynth/src/region_pair.rs`
   converts reverb units to percent; voice setup subsequently multiplies by 0.01.
   The complete path therefore uses the specified reverb-send scale. Reading only
   the first conversion incorrectly suggests saturation at generator 10.
-- [Synthesizer mixer](https://github.com/sinshu/rustysynth/blob/8cc11fc0b10422adb54107757f100d3d6ae0ef96/rustysynth/src/synthesizer.rs)
+- The mixer in `rustysynth/src/synthesizer.rs`
   omits a channel block when both previous/current gains are below 0.001.
 
 Synthetic PCM tests confirm the attenuation model and half/full reverb scaling.

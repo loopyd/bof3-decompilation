@@ -4,7 +4,7 @@
 
 | Tool | Role |
 |---|---|
-| PCSX-Redux | primary runtime evidence: exec/read/write breakpoints, GDB server, Lua scripting + memory/register access, GPU logger, deterministic narrow experiments |
+| PCSX-Redux Agentic | primary runtime evidence: exec/read/write breakpoints, Lua scripting, memory/register access, GPU logger, bounded experiments; GDB for separately authorized manual sessions |
 | BizHawk | input-movie corpus: deterministic replays, TAStudio editing, savestate scenarios, Lua/debug interfaces |
 | DuckStation | cross-check: broad CPU trace logging, gameplay/replay testing (logs can reach GBs — constrained windows only) |
 
@@ -47,7 +47,7 @@ relevant object/global snapshots
 
 At return capture `v0`, `v1`, mutated memory, return path. Nested/recursive calls: maintain a call-depth or invocation ID.
 
-## PCSX-Redux breakpoint pattern
+## PCSX-Redux Agentic breakpoint pattern
 
 Exec breakpoints for entry/return; read/write watchpoints for fields or overlay load destinations. Lua callbacks → structured JSONL/CSV with frame + address context. No unbounded logging; filter by frame range, caller/RA, argument value, overlay ID, object pointer range, invocation count.
 

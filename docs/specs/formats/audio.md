@@ -146,9 +146,9 @@ by this decoder; the separate [CD processing component](#rust-cdxa-sample-proces
 now owns explicit resampling and drive gain.
 
 Reference arithmetic differs: the inspected
-[DuckStation CD decoder](https://raw.githubusercontent.com/stenzek/duckstation/master/src/core/cdrom.cpp)
+[DuckStation](https://github.com/stenzek/duckstation) CD decoder in `src/core/cdrom.cpp`
 separately floors each predictor product divided by 64; the
-[FFmpeg 6.1.1 XA decoder](https://raw.githubusercontent.com/FFmpeg/FFmpeg/n6.1.1/libavcodec/adpcm.c)
+[FFmpeg](https://github.com/FFmpeg/FFmpeg) 6.1.1 XA decoder in `libavcodec/adpcm.c`
 adds the products and 32 before the arithmetic right shift. `SplitFloor` and
 `CombinedRounded` expose those choices explicitly. Both clip the result before
 retaining history. Neither is accepted here as proof of hardware playback.
@@ -2454,7 +2454,7 @@ Use each source only for the layer it owns:
 | Original `SLUS_004.22` bytes and linked routines | BOF3/PsyQ SEP parsing, VAB interpretation, note-to-pitch conversion, voice allocation, and scheduler behavior | Undocumented electrical/timing behavior inside the SPU |
 | Sony PsyQ 4.7 headers in `toolchains/psyq/4.7/include/` | Public structure layouts, field types, and API contracts | Linked implementation details or BOF3 call policy |
 | [psx-spx SPU specification](https://psx-spx.consoledev.net/soundprocessingunitspu/) | Hardware registers, ADPCM, pitch counter, interpolation, ADSR, volume, transfer, noise, modulation, and reverb behavior | BOF3's sequence semantics or game scheduler |
-| [DuckStation `src/core/spu.cpp`](https://github.com/stenzek/duckstation/blob/master/src/core/spu.cpp) | Tested implementation cross-check for the hardware specification | BOF3/PsyQ-specific parsing and allocation |
+| [DuckStation](https://github.com/stenzek/duckstation), `src/core/spu.cpp` | Tested implementation cross-check for the hardware specification | BOF3/PsyQ-specific parsing and allocation |
 
 External implementations are corroboration, not code to import blindly. Preserve
 their license boundaries and verify constants or algorithms against psx-spx and,
@@ -2518,7 +2518,7 @@ retained from the loop end instead of replaying a cached PCM loop.
 ### ADPCM decode
 
 Integer predictor formula used by the host decoder and independently present
-in [DuckStation's SPU decoder](https://raw.githubusercontent.com/stenzek/duckstation/master/src/core/spu.cpp):
+in the [DuckStation](https://github.com/stenzek/duckstation) SPU decoder, `src/core/spu.cpp`:
 
 ```c
 sample = (int16_t)(nibble << 12) >> shift;   // sign-extend + shift
@@ -2619,8 +2619,8 @@ independently recomputed error metrics, alignment/capacity rejection, explicit
 padding, full-scale discontinuities and eight further loop traversals. Two opt-in
 checks cover an independent consumer and bounded edited corpus excerpts:
 
-- FFmpeg 6.1.1 accepts a generated VAG wrapper containing 2,240 encoded frames.
-  Its [PSX decoder](https://github.com/FFmpeg/FFmpeg/blob/n6.1.1/libavcodec/adpcm.c#L2033-L2075)
+- [FFmpeg](https://github.com/FFmpeg/FFmpeg) 6.1.1 accepts a generated VAG wrapper containing 2,240 encoded frames.
+  Its PSX decoder in `libavcodec/adpcm.c`
   combines predictor terms with truncation toward zero and retains unclipped
   predictor history. The SPU model separately floors products and clips feedback.
   This fixture matches the independent consumer's arithmetic exactly, while its
@@ -2754,8 +2754,9 @@ parsed content. This follows the relevant
 [XML character and normalization rules](https://www.w3.org/TR/xml/#AVNormalize),
 not raw string matching of serialized XML.
 
-The pinned parser has a permissive behavior that the reader must not inherit:
-[its character-reference conversion](https://github.com/RazrFalcon/roxmltree/blob/67644e16f43c34cadc9e163163dd1aaf7ebe205e/src/tokenizer.rs#L990)
+The pinned [roxmltree parser](https://github.com/RazrFalcon/roxmltree) has a
+permissive behavior that the reader must not inherit:
+its character-reference conversion in `src/tokenizer.rs`
 replaces invalid Unicode scalar references with U+FFFD. An initial malformed-input
 test exposed this for `&#xD800;`. A lexical validation pass now rejects invalid
 numeric references and unsupported declarations before parsing, while retaining
@@ -3435,33 +3436,39 @@ and `out/audio-migration/cd-removal-*` retain the research boundary.
 
 ### Independent BIOS handoff and sound initialization comparison
 
-The prepared US BIOS supersedes the earlier missing-ROM limitation. The generic
-PCSX-Redux mission harness and Rust [capture reader](../../../tools/rust/bof3-audio/tests/reference/runtime.rs)
-bind ROM/EXE/script/capture hashes and the pinned emulator revision. Live evidence
-under `out/audio-migration/redux-generic-exe/` establishes equality of all 2 MiB
-RAM, 32 GPRs and PC at `exe/slus_004_22@0x8014AA0C`, before its first instruction.
-RAM SHA-256 is `6e9f0ab9998c4703ff1168dfd0d614a817561026a5463e199d42697d271b403a`.
-The Rust ROM path retires 2,695,618 instructions; Redux reports 6,284,283 cycles.
-Those counters measure different quantities and are not a timing equality claim.
+The prepared US BIOS supersedes the earlier missing-ROM limitation. The current
+emulator owner is [PCSX-Redux Agentic](../../../third_party/pcsx-redux-agentic/).
+The Rust [capture reader](../../../tools/rust/bof3-audio/tests/reference/runtime.rs)
+binds the retained ROM/EXE/script/capture hashes and recorded emulator revision.
+Historical evidence under `out/audio-migration/redux-generic-exe/` establishes
+equality of all 2 MiB RAM, 32 GPRs and PC at `exe/slus_004_22@0x8014AA0C`, before
+its first instruction. RAM SHA-256 is
+`6e9f0ab9998c4703ff1168dfd0d614a817561026a5463e199d42697d271b403a`.
+The Rust ROM path retires 2,695,618 instructions; the reference emulator reports
+6,284,283 cycles. Those counters measure different quantities and are not a
+timing equality claim.
 
 Starting from that context, host-directed calls set PC, RA=`0x80010000` and zero
 A0..A3, preserving other CPU state. The callback initializer at `0x801748E4`
-returns with identical RAM, GPRs and PC. The sound initializer at `0x8015CD00`
-returns with identical GPRs and PC but **27 differing RAM bytes**. The unmasked
-opt-in [comparison](../../../tools/rust/bof3-audio/tests/boot.rs) remains failing.
+returned with identical RAM, GPRs and PC. The sound initializer at `0x8015CD00`
+returned with identical GPRs and PC but **27 differing RAM bytes**. The recorded
+unmasked opt-in [comparison](../../../tools/rust/bof3-audio/tests/boot.rs) failed.
 
 At `0x80170714` (full EXE offset `0xDA714`), the original `lhu v0,12(a1)` reads
 each voice's ENVX; `0x80170720` (`0xDA720`) stores it at
 `0x8018DBF6 + voice*0x34`. When zero, the code at `0x8017072C..0x80170738`
-sets that voice's bit in the mask at `0x80190C1C`. A 24-event Redux trace at
-`0x80170720` records `v0=1` for every voice. Rust leaves these 24 fields zero,
-and its mask is `0x00FFFFFF` versus Redux's zero, accounting for all 27 bytes.
-The pinned Redux `src/spu/registers.cc:498` explicitly returns one for a newly
-started voice or a pending envelope before sample processing. This explains a
-reference behavior; it does not establish physical key/envelope timing or justify
-hardcoding one in the Rust model. Resolve scheduled SPU frames and readback before
-claiming sound-state parity. Device state, pending loads, full CPU state and PCM
-are not captured by these missions.
+sets that voice's bit in the mask at `0x80190C1C`. A retained 24-event reference
+trace at `0x80170720` records `v0=1` for every voice. In that comparison, Rust left
+these 24 fields zero, and its mask was `0x00FFFFFF` versus the captured mask's zero, accounting
+for all 27 bytes. The earlier reference implementation returned one for a newly
+started voice or a pending envelope before sample processing. This explains the
+recorded behavior; it does not establish physical key/envelope timing or justify
+hardcoding one in the Rust model. The current fork's
+[SPU register reader](../../../third_party/pcsx-redux-agentic/src/spu/registers.cc)
+reconstructs ENVX at the CPU read cycle and no longer forces that value. The
+retained captures have not been reproduced on the current fork. Scheduled SPU
+frames, readback and sound-state parity remain open. Device state, pending loads,
+full CPU state and PCM are not captured by these missions.
 
 Evidence: `out/audio-migration/redux-initialization/{callback,sound,sound-envelope-all}/`,
 `redux-review/{boot-comparison,initialization-comparison,initialization-accesses}.log`
@@ -3960,15 +3967,15 @@ standalone initialization image. They connect the preceding playback re-entry
 at `0x80174AE4` to the original setjmp/hook setup. Mutable state ownership,
 register liveness and independently initialized replacements remain to be proven.
 
-PCSX-Redux at commit `28438546c781fbe372a06399c82bed43ca2c6f4d` pins its Nugget
-submodule to `77adff516017044f2c6d9b21f66c124b9593959a`. Nugget maps A0:A3 to
-`dequeueCDRomHandlers` in
-[its dispatch table](https://github.com/pcsx-redux/nugget/blob/77adff516017044f2c6d9b21f66c124b9593959a/openbios/kernel/handlers.c#L208).
-[CD deinitialization](https://github.com/pcsx-redux/nugget/blob/77adff516017044f2c6d9b21f66c124b9593959a/openbios/cdrom/cdrom.c#L66-L74)
+The current PCSX-Redux Agentic fork keeps Nugget/OpenBIOS in its `src/mips`
+submodule. Its [dispatch table](../../../third_party/pcsx-redux-agentic/src/mips/openbios/kernel/handlers.c)
+maps A0:A3 to `dequeueCDRomHandlers`.
+[CD deinitialization](../../../third_party/pcsx-redux-agentic/src/mips/openbios/cdrom/cdrom.c)
 closes five events and removes the two handlers described by
-[its CD state machine](https://github.com/pcsx-redux/nugget/blob/77adff516017044f2c6d9b21f66c124b9593959a/openbios/cdrom/statemachine.c#L794-L797).
-This corroborates the original BIOS trace; it does not authorize substituting
-OpenBIOS behavior for unverified retail behavior or importing that implementation.
+[its CD state machine](../../../third_party/pcsx-redux-agentic/src/mips/openbios/cdrom/statemachine.c).
+This source comparison corroborates the original BIOS trace; it does not
+authorize substituting OpenBIOS behavior for unverified retail behavior or
+importing that implementation.
 
 BGM053 upload executes 486,071 observed instructions and uses 24 B0:07 event
 deliveries, 5,399 B0:0B event tests and 24 B0:17 returns. BGM004 uses 1,740,618
@@ -4463,9 +4470,9 @@ bounded `driver-startup-*-rizin.txt` listings.
 
 ### Original CD reset and host reset state
 
-The [Rust drive](../../../tools/rust/bof3-audio/src/machine/cd_drive.rs) now handles
-command `0x0A`, named `CdlReset` in the pinned PCSX-Redux source. On accepted
-reset it stops reading, unmutes, sets mode `0x20`, releases XA selection and
+The [Rust drive](../../../tools/rust/bof3-audio/src/machine/cd_drive.rs) retains
+its existing reset model for command `0x0A`. On accepted reset it stops reading,
+unmutes, sets mode `0x20`, releases XA selection and
 acknowledges with INT3/status `0x02`. A separate caller-supplied completion
 boundary produces INT2/status `0x02` and leaves the drive paused. Pending
 mechanical transitions still reject overlapping reset commands. Bad parameter
@@ -4473,14 +4480,17 @@ counts return INT5 without changing drive state.
 
 Reset preserves the filter, pending Setloc target, current position and latest
 transfer header. The [host integration](../../../tools/rust/bof3-audio/src/machine/interconnect/cd.rs)
-also preserves the data cursor and already queued XA output; Init does not imply
+also preserves the data cursor and already queued XA output; in this model, Init does not imply
 an immediate audio-buffer flush. Subsequent read/seek operations retain their
-separately documented behavior. These semantics follow the inspected
-[CD implementation](https://github.com/grumpycoders/pcsx-redux/blob/28438546c781fbe372a06399c82bed43ca2c6f4d/src/core/cdrom.cc), including
-`StopReading`, the `CdlReset` command/IRQ cases, and the SPU stream submission
-path in [xa.cc](https://github.com/grumpycoders/pcsx-redux/blob/28438546c781fbe372a06399c82bed43ca2c6f4d/src/spu/xa.cc#L43-L163), at submodule commit
-`28438546c781fbe372a06399c82bed43ca2c6f4d`. Reset latency and hardware fidelity are
-not inferred from those source paths.
+separately documented behavior. These semantics retain the earlier reference
+model. The current PCSX-Redux Agentic
+[CD implementation](../../../third_party/pcsx-redux-agentic/src/core/cdrom.cc)
+names `0x0A` as `CdlInit` and `0x1C` as `CdlReset`. Its `cdlInit` path resets the
+current and seek positions and clears pending Setloc, unlike the retained-position
+policy above. Recorded PCM comparisons do not establish parity with the current
+[XA submission path](../../../third_party/pcsx-redux-agentic/src/spu/xa.cc). Current-fork reset-state
+and PCM parity require a new bounded comparison. Reset latency and hardware
+fidelity are not inferred from these source paths.
 
 The [host reset constructor](../../../tools/rust/bof3-audio/src/machine/cd_host.rs)
 explicitly selects the emulator-reference reset state: interrupt mask `0x1F`,

@@ -13,7 +13,7 @@ scoped documentation as maintenance/research input, not required runtime reading
 | --- | --- | --- |
 | One hand-guided target-qualified lift, match, duplicate normalization, source/map/Splat edit | [Function matching](agents/matching.md) | [Matching playbook](agents/matching-playbook.md), [Memory API](agents/memory-api.md), `$bof3-re` |
 | Concrete Rizin analyzer question | [Project context](agents/project-context.md) | `$psx-rizin` |
-| PS1 emulator commands, breakpoints or captures | [`$psx-emulator`](../.pi/skills/psx-emulator/SKILL.md) | Harness `runtime`; [action catalog](../.pi/skills/psx-emulator/references/catalog.md) for mission discovery; [emulator integration](agents/pcsx-redux.md); `psx-rizin` for static interpretation |
+| PS1 emulator commands, breakpoints or captures | [`$psx-emulator`](../.pi/skills/psx-emulator/SKILL.md) | Harness `runtime`; [action catalog](../.pi/skills/psx-emulator/references/catalog.md) for mission discovery; [emulator integration](agents/pcsx-redux-agentic.md); `psx-rizin` for static interpretation |
 | Function/global index conflict or isolated `textbin` probe | [Boundary evidence](agents/boundary-evidence.md) | Tooling route for implementation; matching route before target edits |
 | Area dialogue text extraction, editing or repacking | [Dialogue text](specs/formats/dialogue-text.md) | [Tool usage](agents/tool-usage.md#area-text); binary-format evidence only, no runtime acceptance |
 | Tooling, Python harness, CLI, tests | [Coding standards](agents/coding-standards.md) | [Harness ownership](agents/harness.md), [Tool usage](agents/tool-usage.md) and owning code/tests |
