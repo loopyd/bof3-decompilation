@@ -14,6 +14,7 @@ from harness.common.cli import (
     run_main,
 )
 from harness.combiner.inspection import inspect_source
+from harness.combiner.opportunities import discover_pairs
 from harness.combiner.profiles import inspect_profiles
 from harness.common.deadlines import check_deadline
 from harness.build.preservation import (
@@ -32,6 +33,24 @@ from harness.combiner.recovery import validate_recovery_manifest
 
 def _inspect_source(args: argparse.Namespace) -> int:
     print(json.dumps(inspect_source(resolved_root(args), args.source), indent=2))
+    return 0
+
+
+def _discover(args: argparse.Namespace) -> int:
+    payload = discover_pairs(
+        resolved_root(args),
+        args.target,
+        args.members,
+        method=args.method,
+        minimum_members=args.minimum_members,
+        minimum_shared_callees=args.minimum_shared_callees,
+        top_n=args.top_n,
+        overlap_policy=args.overlap_policy,
+        expected_fingerprint=args.expected_fingerprint,
+    )
+    rendered = json.dumps(payload, indent=2, sort_keys=True)
+    check_deadline()
+    print(rendered)
     return 0
 
 
@@ -138,6 +157,23 @@ def build_parser() -> argparse.ArgumentParser:
     add_root_argument(parser)
     commands = parser.add_subparsers(dest="command", required=True)
     add_recovery_commands(commands, "combiner", validate_recovery_manifest)
+    discovery = commands.add_parser(
+        "discover", help="rank a complete finite pool of direct-call pairs"
+    )
+    discovery.add_argument("target")
+    discovery.add_argument("members", nargs="+")
+    discovery.add_argument(
+        "--method", choices=("helper-call-cluster",), default="helper-call-cluster"
+    )
+    discovery.add_argument("--minimum-members", type=int, choices=(2,), default=2)
+    discovery.add_argument("--minimum-shared-callees", type=int, default=1)
+    discovery.add_argument("--top-n", type=int, default=1)
+    discovery.add_argument(
+        "--overlap-policy", choices=("retain-all",), default="retain-all"
+    )
+    discovery.add_argument("--expected-fingerprint")
+    add_work_deadline_argument(discovery)
+    discovery.set_defaults(handler=_discover)
     inspect = commands.add_parser(
         "inspect-source", help="inspect leading function metadata"
     )

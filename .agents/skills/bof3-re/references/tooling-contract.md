@@ -63,6 +63,31 @@ Toolchain wrappers declare class attributes/minimal overrides on `toolchain/base
 Managed toolchain owns installation, executable path, invocation environment and
 verification; wrappers dispatch only. Harness never launches model processes.
 
+## Combiner discovery
+
+`bin/harness combiner discover TARGET TARGET@0xADDRESS TARGET@0xADDRESS`
+runs the `helper-call-cluster` method over two to 32 distinct, explicitly owned C
+functions of one target. Each member needs attached source metadata, map/layout
+agreement and a finite aligned original range. The command validates the complete
+reverse index and corroborates indexed direct calls through the domain MIPS
+decoder. It retains unresolved and unsupported indexed edges.
+
+The method enumerates every unordered pair. `--minimum-members` is fixed at two;
+`--minimum-shared-callees` sets the positive threshold for distinct target-qualified
+callees. Eligible pairs rank by descending shared-callee count, then canonical
+member IDs. Below-threshold pairs retain their reasons. The `retain-all` overlap
+policy records every pair sharing a member, including excluded pairs. `--top-n`
+selects a view from the full ranking without truncating the pool.
+
+The result pins membership, thresholds, method version, captured input bytes and
+modes, exact queried index facts, overlaps and ordering. Retain its `fingerprint` externally and pass
+it as `--expected-fingerprint` when rechecking the same pool. A changed pin, stale
+index, duplicate or cross-target member, invalid threshold, unsupported method or
+overlap policy, ownership drift, original JAL disagreement, moving input, more
+than 4,096 indexed call edges or an expired `--work-deadline` causes refusal.
+Individual files are capped at 16 MiB and the original image at 64 MiB.
+Discovery records neither human-value approval nor native or mutation acceptance.
+
 ## Validation
 
 Establish behavior with existing checks or disposable characterization before
