@@ -1,9 +1,8 @@
-"""Direct-execution contract for the two Pi status scripts after typed-manifest migration.
+"""Verify standalone skill status execution with typed manifests.
 
-Both scripts are run as standalone subprocesses against a minimal
-production-shaped manifest workspace with no inherited ``PYTHONPATH``, proving
-their local ``tools/python`` import bootstrap and ``harness.domain`` manifest
-loading preserve public ordering and selected report fields.
+Run the script against a minimal manifest workspace without inherited
+``PYTHONPATH``. Check the local ``tools/python`` bootstrap, target ordering
+and selected report fields.
 """
 
 from __future__ import annotations
@@ -17,7 +16,7 @@ from pathlib import Path
 
 SNAPSHOT_STATUS = (
     Path(__file__).resolve().parents[4]
-    / ".pi"
+    / ".agents"
     / "skills"
     / "psx-rizin"
     / "scripts"

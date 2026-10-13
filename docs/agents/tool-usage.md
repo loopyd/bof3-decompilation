@@ -76,7 +76,7 @@ is indexed in `out/text-format/README.md`.
 
 ## Cleanup opportunity routing
 
-Use [`bof3-lift-loop`](../../.pi/skills/bof3-lift-loop/SKILL.md) for bounded
+Use [`bof3-lift-loop`](../../.agents/skills/bof3-lift-loop/SKILL.md) for bounded
 active-session worker/reviewer missions. The harness does not launch Codex or model
 processes. `bin/harness decomp diagnose` and `audit` remain deterministic local tools;
 their [mission contract](codex.md#parent-lift-diagnosis) preserves evidence, original
@@ -176,8 +176,8 @@ binds the PRE source SHA-256, the exact implementation span and a `.pre` backup;
 the PRE bytes. Scope escape, a new name already present in file code, a keyword,
 and any object-byte change are refused. The route is exact-lift only; a retained
 partial reports a gap instead of weakening the gate. Argument and local types stay
-with [`$bof3-types`](../../.pi/skills/bof3-types/SKILL.md); the full contract is
-[Source identifier naming](../../.pi/skills/bof3-naming/references/source-identifiers.md).
+with [`$bof3-types`](../../.agents/skills/bof3-types/SKILL.md); the full contract is
+[Source identifier naming](../../.agents/skills/bof3-naming/references/source-identifiers.md).
 
 ## Naming conclusion import
 

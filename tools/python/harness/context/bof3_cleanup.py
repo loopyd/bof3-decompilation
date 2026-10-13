@@ -107,9 +107,10 @@ def _selected_skill(mode: str) -> SelectedSkill:
     name, operation = _ROUTE[mode]
     return SelectedSkill(
         name,
-        f".pi/skills/{name}/SKILL.md",
+        f".agents/skills/{name}/SKILL.md",
         tuple(
-            f".pi/skills/{name}/{path}" for path in _SKILL_REFERENCES[name][operation]
+            f".agents/skills/{name}/{path}"
+            for path in _SKILL_REFERENCES[name][operation]
         ),
     )
 

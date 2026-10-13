@@ -26,7 +26,7 @@ named generated LuaJIT inputs require the exact preceding successful v2 receipt.
 Doctor/runtime require matching source, prerequisites, SDL3 hashes and dynamic
 linkage. Doctor inspects only; it never downloads, installs or builds.
 [Emulator integration](../agents/pcsx-redux-agentic.md) owns build, mission invocation and
-skill installation; [Native](../../.pi/skills/psx-emulator/references/native.md)
+skill installation; [Native](../../.agents/skills/psx-emulator/references/native.md)
 owns checked boundaries and extension validation.
 
 Select exactly one builtin `--mission NAME` or trusted external `--script PATH`.

@@ -88,20 +88,20 @@ def test_canonical_routes_load_exact_selected_body_and_direct_refs(
         tuple(Path(path).name for path in request.selected_skill.direct_references)
         == references
     )
-    assert reads[0] == ROOT / f".pi/skills/{skill}/SKILL.md"
+    assert reads[0] == ROOT / f".agents/skills/{skill}/SKILL.md"
     assert tuple(path.name for path in reads[1:]) == references
     assert len(reads) == 1 + len(references)
     rendered = json.loads(sections[0].text)
     assert rendered["mode"] == mode
     selected = rendered["selected_skill"]
     assert selected["name"] == skill
-    assert selected["body"] == f".pi/skills/{skill}/SKILL.md"
+    assert selected["body"] == f".agents/skills/{skill}/SKILL.md"
     emitted_references = selected["direct_references"]
     assert len(emitted_references) == len(set(emitted_references))
     assert [Path(ref).name for ref in emitted_references] == list(references)
     # emitted references point only at the one selected skill tree
     for ref in emitted_references:
-        assert ref.startswith(f".pi/skills/{skill}/")
+        assert ref.startswith(f".agents/skills/{skill}/")
     loaded_bytes = sum(len(section.text.encode()) for section in sections[1:])
     # Bounds one route's prefill (selected body + its direct references). The
     # largest measured route is bof3-naming/audit-target at 16,362 bytes; the
@@ -198,16 +198,18 @@ def test_missing_unknown_or_ambiguous_selection_reads_zero_bodies() -> None:
         replace(request, selected_skill=SelectedSkill("", "", ())),
         replace(
             request,
-            selected_skill=SelectedSkill("unknown", ".pi/skills/unknown/SKILL.md", ()),
+            selected_skill=SelectedSkill(
+                "unknown", ".agents/skills/unknown/SKILL.md", ()
+            ),
         ),
         replace(
             request,
             selected_skill=SelectedSkill(
                 "bof3-docs",
-                ".pi/skills/bof3-docs/SKILL.md",
+                ".agents/skills/bof3-docs/SKILL.md",
                 (
-                    ".pi/skills/bof3-docs/references/documentation-repair.md",
-                    ".pi/skills/bof3-naming/SKILL.md",
+                    ".agents/skills/bof3-docs/references/documentation-repair.md",
+                    ".agents/skills/bof3-naming/SKILL.md",
                 ),
             ),
         ),

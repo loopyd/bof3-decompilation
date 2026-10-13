@@ -767,9 +767,9 @@ def test_atomic_apply_receipts_attestation_expected_digest_and_rollback(
         ],
         check=True,
     )
-    link = tmp_path / ".agents/skills/example"
+    link = tmp_path / ".pi/skills/example"
     link.parent.mkdir(parents=True)
-    link.symlink_to("../../.pi/skills/example")
+    link.symlink_to("../../.agents/skills/example")
     link_identity = link.lstat().st_ino
     report = _setup(tmp_path, monkeypatch, git=True)
     report["rows"][0]["kind"] = "statement_window"
@@ -821,7 +821,7 @@ def test_atomic_apply_receipts_attestation_expected_digest_and_rollback(
     assert (tmp_path / config).read_text() == before
     assert (tmp_path / source).read_text() == SOURCE_TEXT
     assert link.lstat().st_ino == link_identity
-    assert link.readlink().as_posix() == "../../.pi/skills/example"
+    assert link.readlink().as_posix() == "../../.agents/skills/example"
     application = macro_transactions.run_transaction(
         tmp_path, manifest, changes, runner=_runner()
     )

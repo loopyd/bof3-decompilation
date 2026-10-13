@@ -5,7 +5,7 @@ the project harness owns deterministic domain tools, not Codex/model launchers.
 
 ## Skill-only operator
 
-[`bof3-lift-loop`](../../.pi/skills/bof3-lift-loop/SKILL.md) defines the bounded
+[`bof3-lift-loop`](../../.agents/skills/bof3-lift-loop/SKILL.md) defines the bounded
 mission protocol and lift → review → naming → types/macros → cleanup/final review
 sequence. Delegate only through actual tools exposed by the active session.
 Parallelize independent reads/reviews; serialize shared-checkout writes, native
@@ -269,10 +269,9 @@ with backoff within their original bounds; auto-review denials are not retryable
 
 ## Codex skills
 
-Project definitions live in `.pi/skills/`; `.codex/skills/` and `.agents/skills/`
-hold relative discovery symlinks to those same owners, not copied skill bodies.
-Codex discovers repository skills through `.agents/skills` and Pi through
-`.pi/skills`; see the
+Project skills live in `.agents/skills/`. Codex discovers them there; Pi discovers
+the same bodies through relative symlinks in `.pi/skills/`. The emulator entry
+links directly to its owner in the fork. Keep one authored body per skill; see the
 [official skill documentation](https://developers.openai.com/codex/skills/).
 Restart the session to refresh discovery after migration. `.pi/agents/` retains
 the lifter, namer, cleaner and reviewer definitions for bounded harness prefills,

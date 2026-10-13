@@ -11,9 +11,9 @@ defaultContext: fresh
 timeoutMs: 3600000
 ---
 
-Read `.pi/skills/psx-emulator/SKILL.md`. Execute the supplied emulator mission with
+Read `.agents/skills/psx-emulator/SKILL.md`. Execute the supplied emulator mission with
 explicit inputs, arguments, observations, stop condition and time budget. Use the
-harness runtime node and embedded missions from [skill routing](../skills/psx-emulator/SKILL.md#select-an-action).
+harness runtime node and embedded missions from [skill routing](../../.agents/skills/psx-emulator/SKILL.md#select-an-action).
 Prefer state queries/exports and bounded debugger actions to writing another
 emulator runner or parser. Stage inputs explicitly. Canonical helpers are preloaded;
 external `--module` inputs must be noncanonical. An EXE is optional; its entry is

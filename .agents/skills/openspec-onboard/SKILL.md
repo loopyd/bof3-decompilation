@@ -39,7 +39,7 @@ openspec --version 2>&1 || echo "CLI_NOT_INSTALLED"
 ```
 
 **If CLI not installed:**
-> OpenSpec CLI is not installed. Install it first, then come back to `$openspec-onboard (Codex) or /openspec-onboard (other agents)`.
+> OpenSpec CLI is not installed. Install it first, then come back to `$openspec-onboard (Codex) or /opsx-onboard (Pi)`.
 
 Stop here if not installed.
 
@@ -166,7 +166,7 @@ Spend 1-2 minutes investigating the relevant code:
 │   [Optional: ASCII diagram if helpful]  │
 └─────────────────────────────────────────┘
 
-Explore mode (`$openspec-explore (Codex) or /openspec-explore (other agents)`) is for this kind of thinking—investigating before implementing. You can use it anytime you need to think through a problem.
+Explore mode (`$openspec-explore (Codex) or /opsx-explore (Pi)`) is for this kind of thinking—investigating before implementing. You can use it anytime you need to think through a problem.
 
 Now let's create a change to hold our work.
 ```
@@ -501,20 +501,20 @@ This same rhythm works for any size change—a small fix or a major feature.
 
  | Command          | What it does                               |
  |------------------|--------------------------------------------|
- | `$openspec-propose (Codex) or /openspec-propose (other agents)` | Create a change and generate all artifacts |
- | `$openspec-explore (Codex) or /openspec-explore (other agents)` | Think through problems before/during work  |
- | `$openspec-apply-change (Codex) or /openspec-apply-change (other agents)`   | Implement tasks from a change              |
- | `$openspec-archive-change (Codex) or /openspec-archive-change (other agents)` | Archive a completed change                 |
- | `$openspec-new-change (Codex) or /openspec-new-change (other agents)`     | Start a new change, one artifact at a time |
- | `$openspec-continue-change (Codex) or /openspec-continue-change (other agents)` | Continue working on an existing change    |
- | `$openspec-ff-change (Codex) or /openspec-ff-change (other agents)`      | Fast-forward: create all artifacts at once |
- | `$openspec-verify-change (Codex) or /openspec-verify-change (other agents)`  | Verify implementation matches artifacts    |
+ | `$openspec-propose (Codex) or /opsx-propose (Pi)` | Create a change and generate all artifacts |
+ | `$openspec-explore (Codex) or /opsx-explore (Pi)` | Think through problems before/during work  |
+ | `$openspec-apply-change (Codex) or /opsx-apply (Pi)`   | Implement tasks from a change              |
+ | `$openspec-archive-change (Codex) or /opsx-archive (Pi)` | Archive a completed change                 |
+ | `$openspec-new-change (Codex) or /opsx-new (Pi)`     | Start a new change, one artifact at a time |
+ | `$openspec-continue-change (Codex) or /opsx-continue (Pi)` | Continue working on an existing change    |
+ | `$openspec-ff-change (Codex) or /opsx-ff (Pi)`      | Fast-forward: create all artifacts at once |
+ | `$openspec-verify-change (Codex) or /opsx-verify (Pi)`  | Verify implementation matches artifacts    |
 
 ---
 
 ## What's Next?
 
-Try `$openspec-propose (Codex) or /openspec-propose (other agents)` on something you actually want to build. You've got the rhythm now!
+Try `$openspec-propose (Codex) or /opsx-propose (Pi)` on something you actually want to build. You've got the rhythm now!
 ```
 
 ---
@@ -529,8 +529,8 @@ If the user says they need to stop, want to pause, or seem disengaged:
 No problem! Your change is saved at the `changeRoot` reported by `openspec status --change "<name>" --json`.
 
 To pick up where we left off later, `openspec status --change "<name>" --json` shows exactly where the change stands.
-- `$openspec-continue-change (Codex) or /openspec-continue-change (other agents) <name>` - Resume artifact creation
-- `$openspec-apply-change (Codex) or /openspec-apply-change (other agents) <name>` - Jump to implementation (if tasks exist)
+- `$openspec-continue-change (Codex) or /opsx-continue (Pi) <name>` - Resume artifact creation
+- `$openspec-apply-change (Codex) or /opsx-apply (Pi) <name>` - Jump to implementation (if tasks exist)
 
 The work won't be lost. Come back whenever you're ready.
 ```
@@ -548,16 +548,16 @@ If the user says they just want to see the commands or skip the tutorial:
 
  | Command                  | What it does                               |
  |--------------------------|--------------------------------------------|
- | `$openspec-propose (Codex) or /openspec-propose (other agents) <name>`  | Create a change and generate all artifacts |
- | `$openspec-explore (Codex) or /openspec-explore (other agents)`         | Think through problems (no code changes)   |
- | `$openspec-apply-change (Codex) or /openspec-apply-change (other agents) <name>`    | Implement tasks                            |
- | `$openspec-archive-change (Codex) or /openspec-archive-change (other agents) <name>`  | Archive when done                          |
- | `$openspec-new-change (Codex) or /openspec-new-change (other agents) <name>`      | Start a new change, step by step           |
- | `$openspec-continue-change (Codex) or /openspec-continue-change (other agents) <name>` | Continue an existing change                |
- | `$openspec-ff-change (Codex) or /openspec-ff-change (other agents) <name>`       | Fast-forward: all artifacts at once        |
- | `$openspec-verify-change (Codex) or /openspec-verify-change (other agents) <name>`   | Verify implementation                      |
+ | `$openspec-propose (Codex) or /opsx-propose (Pi) <name>`  | Create a change and generate all artifacts |
+ | `$openspec-explore (Codex) or /opsx-explore (Pi)`         | Think through problems (no code changes)   |
+ | `$openspec-apply-change (Codex) or /opsx-apply (Pi) <name>`    | Implement tasks                            |
+ | `$openspec-archive-change (Codex) or /opsx-archive (Pi) <name>`  | Archive when done                          |
+ | `$openspec-new-change (Codex) or /opsx-new (Pi) <name>`      | Start a new change, step by step           |
+ | `$openspec-continue-change (Codex) or /opsx-continue (Pi) <name>` | Continue an existing change                |
+ | `$openspec-ff-change (Codex) or /opsx-ff (Pi) <name>`       | Fast-forward: all artifacts at once        |
+ | `$openspec-verify-change (Codex) or /opsx-verify (Pi) <name>`   | Verify implementation                      |
 
-Try `$openspec-propose (Codex) or /openspec-propose (other agents)` to start your first change.
+Try `$openspec-propose (Codex) or /opsx-propose (Pi)` to start your first change.
 ```
 
 Exit gracefully.

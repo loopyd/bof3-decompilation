@@ -11,9 +11,9 @@ Work on existing canonical repository-relative authored `.md` files that the par
 names explicitly; there is no implicit whole-repository scan and no edit by default.
 Generated output, builds, installations, local inputs, scratch, sessions, ledgers
 and caches are not authored truth. Maintained guides such as `toolchains/README.md`
-remain eligible when explicitly scoped. Within `.pi/`, only authored agents and
-skills qualify. BOF3 skills use `.pi/skills/` owners and discovery aliases;
-OpenSpec entries also live in `.agents/skills/`. The emulator skill is owned by
+remain eligible when explicitly scoped. Authored skills live in `.agents/skills/`;
+within `.pi/`, only authored agents qualify. Pi discovers the same skills through
+`.pi/skills/` symlinks. The emulator skill is owned by
 the [fork](pcsx-redux-agentic.md#skill-installation) and linked into this project.
 Do not replace aliases with copied bodies. Other authored Markdown, including root
 and agent files, requires explicit scope; read access is not edit approval.

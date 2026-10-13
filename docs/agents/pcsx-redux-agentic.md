@@ -2,7 +2,7 @@
 
 This guide owns BOF3's integration with the Linux PCSX-Redux Agentic fork. The
 [fork README](../../third_party/pcsx-redux-agentic/README.md) covers the emulator;
-the [psx-emulator skill](../../.pi/skills/psx-emulator/SKILL.md) owns mission
+the [psx-emulator skill](../../.agents/skills/psx-emulator/SKILL.md) owns mission
 selection, arguments, capture interpretation, and native API procedures.
 
 ## Build and discover
@@ -39,14 +39,14 @@ Select exactly one of `--mission NAME` and `--script TRUSTED_LUA`. The external
 route accepts noncanonical `--module NAME=PATH` inputs. Lua runs as trusted host
 code, without a sandbox. The harness stages inputs and fresh settings, bounds the
 process, cleans it up, and validates captures and completion before issuing a
-passed receipt. See [runtime procedures](../../.pi/skills/psx-emulator/references/runtime.md)
+passed receipt. See [runtime procedures](../../.agents/skills/psx-emulator/references/runtime.md)
 for arguments, origins, state continuation, limits, and evidence requirements.
 
 ## Skill installation
 
 The skill lives in the fork's `.agents/skills/psx-emulator`. The manager links it
-at this project's `.pi/skills/psx-emulator` and maintains existing `.agents` and
-`.codex` aliases without replacing sibling skills:
+at this project's `.agents/skills/psx-emulator`, with a Pi alias at
+`.pi/skills/psx-emulator`. It leaves sibling skills in place:
 
 ```sh
 third_party/pcsx-redux-agentic/scripts/manage-psx-emulator-skill.sh install .

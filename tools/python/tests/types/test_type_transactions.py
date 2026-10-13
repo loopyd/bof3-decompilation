@@ -395,9 +395,9 @@ def test_atomic_run_and_immutable_runner_receipts(tmp_path: Path, monkeypatch) -
         ],
         check=True,
     )
-    link = tmp_path / ".agents/skills/example"
+    link = tmp_path / ".pi/skills/example"
     link.parent.mkdir(parents=True)
-    link.symlink_to("../../.pi/skills/example")
+    link.symlink_to("../../.agents/skills/example")
     link_identity = link.lstat().st_ino
     _repo(tmp_path, git=True)
     monkeypatch.setattr(transactions, "connect", _connect)
@@ -410,7 +410,7 @@ def test_atomic_run_and_immutable_runner_receipts(tmp_path: Path, monkeypatch) -
     )
     expected_digest = application["digest"]
     assert link.lstat().st_ino == link_identity
-    assert link.readlink().as_posix() == "../../.pi/skills/example"
+    assert link.readlink().as_posix() == "../../.agents/skills/example"
     assert (dependency / "input.txt").read_text() == "dependency PRE\n"
     assert transactions.verify_application(tmp_path, application, expected_digest)[
         "applied"

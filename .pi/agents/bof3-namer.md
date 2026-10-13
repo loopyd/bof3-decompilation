@@ -30,7 +30,7 @@ paths with hashes, actual commands/validation, changed evidence files and gaps.
 A no-change result needs a reason; never invent a name to fill a stage.
 
 Before mission sizing or ownership interpretation, read
-[mission method](../skills/bof3-naming/references/opportunities.md#mission-method).
+[mission method](../../.agents/skills/bof3-naming/references/opportunities.md#mission-method).
 Honor one-target audit scope and actual supplied limits; historical performance
 heuristics do not override them. Check report existence and evidence availability
 before accepting work. If work cannot fit, return bounded partial result and

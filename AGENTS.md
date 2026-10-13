@@ -1,5 +1,9 @@
 # AGENTS.md — BOF3
 
+Project skills live in `.agents/skills/`; `.pi/skills/` contains relative symlinks
+for Pi. Keep one authored body per skill. The emulator skill is owned by the fork
+and linked into `.agents/skills/`.
+
 Route each request to its BOF3 owner below. Repository contracts and task-specific
 authorization govern scope and acceptance. Skills and their references own the
 operative rules. `docs/` is user documentation, not required agent reading.
@@ -9,16 +13,16 @@ dependencies.
 
 | Request | Owner |
 | --- | --- |
-| Lift, match, target/source/map/layout, duplicates | `.pi/skills/bof3-re/SKILL.md` |
-| Autonomous campaign or resume | `.pi/skills/bof3-lift-loop/SKILL.md` |
-| Naming, identity, source identifiers | `.pi/skills/bof3-naming/SKILL.md` |
-| Type representation / macro work | `.pi/skills/bof3-types/SKILL.md` / `.pi/skills/bof3-macros/SKILL.md` |
-| Python harness, CLI, skill scripts | `.pi/skills/bof3-re/references/tooling-contract.md` |
-| Tests / Markdown | `.pi/skills/bof3-test/SKILL.md` / `.pi/skills/bof3-docs/SKILL.md` |
+| Lift, match, target/source/map/layout, duplicates | `.agents/skills/bof3-re/SKILL.md` |
+| Autonomous campaign or resume | `.agents/skills/bof3-lift-loop/SKILL.md` |
+| Naming, identity, source identifiers | `.agents/skills/bof3-naming/SKILL.md` |
+| Type representation / macro work | `.agents/skills/bof3-types/SKILL.md` / `.agents/skills/bof3-macros/SKILL.md` |
+| Python harness, CLI, skill scripts | `.agents/skills/bof3-re/references/tooling-contract.md` |
+| Tests / Markdown | `.agents/skills/bof3-test/SKILL.md` / `.agents/skills/bof3-docs/SKILL.md` |
 | Change planning / implementation | `.agents/skills/openspec-propose/SKILL.md` / `.agents/skills/openspec-apply-change/SKILL.md` |
-| Static PSX evidence / runtime missions | `.pi/skills/psx-rizin/SKILL.md` / `.pi/skills/psx-emulator/SKILL.md` |
+| Static PSX evidence / runtime missions | `.agents/skills/psx-rizin/SKILL.md` / `.agents/skills/psx-emulator/SKILL.md` |
 
-Read `.pi/skills/bof3-re/references/target-contract.md` before target work.
+Read `.agents/skills/bof3-re/references/target-contract.md` before target work.
 Keep reference Markdown lowercase kebab-case. Preserve loader `SKILL.md`, root
 instruction filenames and exact commands, schemas, constants and protocol literals.
 

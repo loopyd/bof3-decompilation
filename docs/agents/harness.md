@@ -30,7 +30,7 @@ use `decomp.diagnosis`, `audit`, `missions`, `inventory`, `gates`, `execution` a
 `evidence`; `decomp.scope` owns directory/source policy and `common.journal` owns
 exclusive records and fsynced streams. Shared boot/cutoff checks live in
 `common.deadlines`. Neither gate command writes source or grants acceptance.
-The [lift-loop skill](../../.pi/skills/bof3-lift-loop/SKILL.md) instructs the
+The [lift-loop skill](../../.agents/skills/bof3-lift-loop/SKILL.md) instructs the
 active session to delegate domain missions and independently review outcomes.
 The harness never discovers, configures or launches Codex/model processes. Retired
 transport records remain historical; their writer/reviewer slots cannot be reused
@@ -908,7 +908,7 @@ both debits. No checkpoint writer, reservation service, CLI, automatic recovery
 or accepted-source authority is implemented by this validator. Owner freshness,
 writer quiescence and independent parent acceptance remain separate gates.
 
-The active-session [skill operator](../../.pi/skills/bof3-lift-loop/SKILL.md)
+The active-session [skill operator](../../.agents/skills/bof3-lift-loop/SKILL.md)
 accounts original mission bounds and actual handles. No harness model-dispatch
 debit, detached controller or second campaign database owns orchestration.
 

@@ -86,7 +86,7 @@ Read after `SOUL.md` and `AGENTS.md`; lift-side C rules stay in `AGENTS.md`.
   drift, text tests and corpus checks, symbol checks and source validation.
   `just check-all` adds every Python unit; `just check-unit <unit>` runs one unit
   followed by that shared gate. `$bof3-test` owns the
-  [unit map](../../.pi/skills/bof3-test/references/unit-map.md) and reviewed
+  [unit map](../../.agents/skills/bof3-test/references/unit-map.md) and reviewed
   test-suite optimization. Moving a test file means fixing its `__file__`
   relative paths and any cross-test bare import (unit dirs are on `pythonpath`,
   and pytest's default `norecursedirs` is overridden so the `build` unit is
