@@ -40,6 +40,7 @@ from harness.domain import functions as source_functions
 from harness.domain.sources import expected_lift_sources, source_expected_key
 from harness.domain.tags import count_function_metadata
 from harness.types.proofs import private_proofs, validate_shared_header
+from harness.types import links
 from harness.types.review import artifact_paths, validate_reviewed_candidate
 from harness.types.review import candidate_account as _candidate_account
 
@@ -294,10 +295,16 @@ def _private_proofs(
 
 
 def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
-    if not isinstance(request, dict) or request.get("schema") != REQUEST_SCHEMA:
+    if not isinstance(request, dict) or request.get("schema") not in {
+        REQUEST_SCHEMA,
+        links.REQUEST_SCHEMA,
+    }:
         raise ValueError(f"type transaction request schema must be {REQUEST_SCHEMA}")
     concern = request.get("concern")
-    if concern not in CONCERNS:
+    linked = request["schema"] == links.REQUEST_SCHEMA
+    if linked:
+        links.validate_request(request)
+    elif concern not in CONCERNS:
         raise ValueError(f"unknown type transaction concern: {concern}")
     manifests = load_target_manifests(root)
     target = _target(request.get("target"), manifests)
@@ -332,15 +339,36 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
     if len(paths) != len(rows):
         raise ValueError("every index lead requires one reviewed candidate artifact")
     reviewed = [
-        validate_reviewed_candidate(root, path, concern, row)
+        validate_reviewed_candidate(
+            root,
+            path,
+            ("alias" if row["id"] == links.STORAGE_ID else "layout")
+            if linked
+            else concern,
+            row,
+        )
         for path, row in zip(paths, rows)
     ]
+    pair = links.capture_pair(root, request, reviewed) if linked else None
+    if pair is not None:
+        connection = connect(root)
+        try:
+            links.validate_consumers(root, connection, rows, functions, pair)
+        finally:
+            connection.close()
     proofs = (
         _private_proofs(root, request.get("private_transaction_proofs"), manifests)
         if concern == "shared"
         else []
     )
     if concern == "shared":
+        if any(
+            item["application"]["concern"] == "linked"
+            or item["application"]["manifest"].get("schema") == links.MANIFEST_SCHEMA
+            or "linked_pair" in item["application"]["manifest"]
+            for item in proofs
+        ):
+            raise ValueError("linked type pairs cannot supply shared promotion")
         candidate_targets = {item["candidate"]["target"] for item in reviewed}
         proof_targets = {item["application"]["target"] for item in proofs}
         if candidate_targets != targets or proof_targets != targets:
@@ -353,7 +381,7 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
     pre_state = file_state(root, allowed)
     partial_baselines = capture_partial_baselines(root, functions)
     facts = {
-        "schema": MANIFEST_SCHEMA,
+        "schema": links.MANIFEST_SCHEMA if linked else MANIFEST_SCHEMA,
         "target": target,
         "targets": sorted(targets),
         "concern": concern,
@@ -370,6 +398,8 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
         ),
         "request": request,
     }
+    if pair is not None:
+        facts["linked_pair"] = pair
     if proofs:
         facts.update(shared_pre.freeze(root, facts, proofs))
     return {**facts, "digest": digest(facts)}
@@ -379,8 +409,14 @@ def _manifest(root: Path, value: object, *, rederive: bool = False) -> dict[str,
     if not isinstance(value, dict):
         raise ValueError("type transaction manifest must be an object")
     facts = {key: item for key, item in value.items() if key != "digest"}
-    if facts.get("schema") != MANIFEST_SCHEMA or value.get("digest") != digest(facts):
+    if facts.get("schema") not in {MANIFEST_SCHEMA, links.MANIFEST_SCHEMA} or value.get(
+        "digest"
+    ) != digest(facts):
         raise ValueError("type transaction manifest drifted")
+    if facts["schema"] == links.MANIFEST_SCHEMA:
+        links.validate_manifest(root, value)
+    elif value.get("concern") == "linked" or "linked_pair" in value:
+        raise ValueError("linked type manifest cannot use a legacy schema")
     if "participation_limit" in value:
         raise ValueError("type transactions do not support a participation override")
     if rederive:
@@ -423,6 +459,7 @@ def run_transaction(
     deadline: float | None = None,
 ) -> dict[str, Any]:
     manifest = _manifest(root, manifest_value, rederive=True)
+    links.validate_participation(manifest, implementation_run_id, participating_targets)
     _validate_source_changes(root, manifest, changes)
     allowed = validate_paths(root, manifest["allowed_paths"])
     if (
@@ -491,11 +528,18 @@ def run_transaction(
             manifest["digest"], manifest["pre_state"], post, changed, receipts
         )
         candidate = manifest["reviewed_candidates"][0]
+        summaries = (
+            links.summaries(manifest)
+            if manifest["schema"] == links.MANIFEST_SCHEMA
+            else {
+                "representation": candidate["representation"],
+                "semantics": candidate["semantics"],
+            }
+        )
         application.update(
             target=manifest["target"],
             concern=manifest["concern"],
-            representation=candidate["representation"],
-            semantics=candidate["semantics"],
+            **summaries,
             manifest=manifest,
             receipts=receipts,
             quarantine_paths={
@@ -547,6 +591,7 @@ def verify_application(
     manifest = validate_application_history(
         root, value, expected_application_digest, "type", _manifest
     )
+    links.validate_application(value)
     allowed = validate_paths(root, manifest["allowed_paths"])
     if file_state(root, allowed) != value["post_state"]:
         raise ValueError("type application post-state drifted")

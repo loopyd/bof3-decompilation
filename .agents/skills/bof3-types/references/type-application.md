@@ -63,6 +63,69 @@ proof. Integrity pins or legacy `expected_application_digest` never substitute.
 
 ## Parent review
 
+### Linked storage and aggregate route
+
+`bof3.type-transaction-request/v3` uses the `linked` concern for exactly
+`emi/battle/battle/15@1F800044:storage` and
+`emi/battle/battle/15@1F800044:aggregate_region`. It requires target
+`emi/battle/battle/15` and its existing
+`include/bof3/battle/battle15_internal.h`. V2 requests retain their isolated
+concerns. Linked proofs cannot supply shared promotion.
+
+The v3 request retains `schema`, `target`, `concern`, `header`,
+`index_candidate_ids`, `candidate_artifacts`, `affected_functions` and optional
+`adopted_baseline`. It adds `linked_pair`, with exactly `storage_id`,
+`aggregate_id`, `relation`, `artifact`, `artifact_sha256` and `artifact_digest`.
+The relation is `pointer-cell-pointee`. Candidate artifacts follow sorted index-ID
+order and pass the existing `alias` and `layout` reviews separately. Both retain
+the lead anchor `0x1F800044..0x1F800048` and original-backed observations.
+
+The pinned joint artifact is `bof3.type-linked-candidate/v1`, with exactly
+`schema`, `target`, `storage`, `aggregate`, `link`, `review` and `digest`.
+All nested records are closed:
+
+| Record | Required keys |
+| --- | --- |
+| `storage` | `binding`, `cell`, `semantics` |
+| `aggregate` | `binding`, `object`, `semantics` |
+| Each `binding` | `index_id`, `index_row_digest`, `artifact`, `artifact_sha256`, `artifact_digest` |
+| `cell` | `owner`, `address`, `end`, `width`, `alignment`, `pointer_depth`, `cell_qualifiers`, `pointee_qualifiers`, `initialization`, `lifetime`, `observations` |
+| `object` | `owner`, `base`, `extent`, `alignment`, `fields`, `padding`, `observations` |
+| Each `semantics` | `role`, `observations` |
+| `link` | `relation`, `storage_id`, `aggregate_id`, `storage_artifact_digest`, `aggregate_artifact_digest`, `entry_conditions`, `observations` |
+| `review` | `verdict`, `reviewer`, `artifact`, `artifact_sha256` |
+
+Each owner has `target` and unique manifest-backed `paths`. The cell is four
+bytes at `0x1F800044`, with end `0x1F800048` and pointer depth one. Cell and
+pointee qualifiers are separate unique arrays of `const` and `volatile`.
+A fixed base has `kind: fixed` and `address`; its extent must fit a finite
+reviewed owner range. A runtime base has `kind: runtime`, `storage_id`,
+`indirection`, `producer`, `entry_conditions` and `observations`. Its producer
+is a canonical original function selector and indirection is one.
+
+Fields have `offset`, `width`, `type`, `signedness`, `role` and `observations`.
+Padding has `offset`, `width` and `observations`. Offsets are nonnegative;
+widths, extents and alignments are positive integers, excluding booleans.
+Disjoint fields and padding cover the complete extent. Field types must resolve
+to C89 scalars or existing complete indexed declarations. Signedness is `signed`,
+`unsigned` or `not-applicable`. Observations resolve to accepted role IDs;
+link observations have separate `storage` and `aggregate` arrays. Empty entry
+conditions require the joint review artifact to state `unconditional entry coverage`.
+Joint, role and reviewer artifacts are distinct, bounded, canonical files.
+
+The v3 manifest retains the full joint record and immutable artifact inputs under
+`linked_pair`, with contract revision `bof3.type-linked-storage-layout/v1`.
+Application `representation` and `semantics` each retain `storage`, `aggregate`
+and `link`. Replay rejects omitted roles and changed summaries. The parent review
+artifact names both frozen IDs and the joint digest. Existing parent bindings,
+native receipts, history, deadlines and rollback rules still apply. Additional
+proof owners require explicit participation without writable paths.
+
+Preparation includes indexed original uses and transitive private-header consumers.
+Independent review must establish the complete original transfer, aliases, entries,
+residency, initialization, lifetime and compiler layout. Indexed membership and
+structural validation do not supply those facts or native preservation.
+
 ```sh
 bin/harness types review APPLICATION REVIEWED --parent-attestation PARENT_JSON --expected-application-digest APPLICATION_PIN
 bin/harness types final-verify REVIEWED --expected-envelope-digest ENVELOPE_PIN

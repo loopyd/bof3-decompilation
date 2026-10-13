@@ -7,11 +7,14 @@ from pathlib import Path
 from harness.common.process import run_command
 from harness.common.review import _review, _verify_reviewed
 from harness.types import transactions as type_transactions
+from harness.types import links
 
 
 def review_application(
     root: Path, application: object, parent: object, expected_application_digest: str
 ) -> dict:
+    if isinstance(application, dict) and isinstance(parent, dict):
+        links.validate_parent(root, application, parent)
     return _review(
         root,
         application,
@@ -26,6 +29,7 @@ def review_application(
 def verify_reviewed_application(
     root: Path, value: object, expected_envelope_digest: str
 ) -> dict:
+    links.validate_envelopes(root, value)
     return _verify_reviewed(
         root,
         value,
@@ -50,6 +54,11 @@ def revalidate_application(
 ) -> dict:
     from harness.common.revalidation import revalidate
 
+    links.validate_envelopes(root, envelope)
+    if isinstance(intervening, list):
+        for pin in intervening:
+            if isinstance(pin, dict):
+                links.validate_envelopes(root, pin.get("envelope"))
     return revalidate(
         root,
         envelope,
@@ -71,6 +80,7 @@ def verify_revalidation(
 ) -> dict:
     from harness.common.revalidation import verify_revalidation as verify
 
+    links.validate_envelopes(root, value)
     return verify(
         root,
         value,
@@ -86,6 +96,13 @@ def review_revalidation(
 ) -> dict:
     from harness.common.revalidation import review_revalidation as review
 
+    links.validate_envelopes(root, value)
+    if (
+        isinstance(value, dict)
+        and isinstance(parent, dict)
+        and isinstance(value.get("prerequisite"), dict)
+    ):
+        links.validate_parent(root, value["prerequisite"].get("application"), parent)
     return review(
         root,
         value,
@@ -102,6 +119,7 @@ def verify_reviewed_revalidation(
 ) -> dict:
     from harness.common.revalidation import verify_reviewed_revalidation as verify
 
+    links.validate_envelopes(root, value)
     return verify(
         root,
         value,
