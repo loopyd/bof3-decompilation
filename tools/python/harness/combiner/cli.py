@@ -45,6 +45,7 @@ def _discover(args: argparse.Namespace) -> int:
         minimum_members=args.minimum_members,
         minimum_shared_callees=args.minimum_shared_callees,
         minimum_shared_macros=args.minimum_shared_macros,
+        minimum_shared_relations=args.minimum_shared_relations,
         top_n=args.top_n,
         overlap_policy=args.overlap_policy,
         expected_fingerprint=args.expected_fingerprint,
@@ -165,12 +166,13 @@ def build_parser() -> argparse.ArgumentParser:
     discovery.add_argument("members", nargs="+")
     discovery.add_argument(
         "--method",
-        choices=("helper-call-cluster", "macro-family"),
+        choices=("helper-call-cluster", "macro-family", "shared-state-type"),
         default="helper-call-cluster",
     )
     discovery.add_argument("--minimum-members", type=int, choices=(2,), default=2)
     discovery.add_argument("--minimum-shared-callees", type=int, default=1)
     discovery.add_argument("--minimum-shared-macros", type=int, default=1)
+    discovery.add_argument("--minimum-shared-relations", type=int, default=1)
     discovery.add_argument("--top-n", type=int, default=1)
     discovery.add_argument(
         "--overlap-policy", choices=("retain-all",), default="retain-all"

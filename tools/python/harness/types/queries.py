@@ -20,8 +20,14 @@ def types_payload(
     untyped: bool,
     limit: int,
     detail: str = "full",
+    names: list[str] | None = None,
 ) -> list[dict[str, Any]]:
     clauses, params = [], []
+    if names is not None:
+        if not names:
+            return []
+        clauses.append(f"d.name IN ({','.join('?' for _ in names)})")
+        params.extend(names)
     if target:
         clauses.append("d.target_id = ?")
         params.append(target)
@@ -132,8 +138,14 @@ def type_usages_payload(
     target: str | None,
     pattern: str | None,
     limit: int,
+    function_ids: list[str] | None = None,
 ) -> list[dict[str, Any]]:
     clauses, params = [], []
+    if function_ids is not None:
+        if not function_ids:
+            return []
+        clauses.append(f"function_id IN ({','.join('?' for _ in function_ids)})")
+        params.extend(function_ids)
     if target:
         clauses.append("target_id = ?")
         params.append(target)
@@ -160,8 +172,14 @@ def type_candidates_payload(
     status: str | None,
     kind: str | None = None,
     limit: int,
+    addresses: list[int] | None = None,
 ) -> list[dict[str, Any]]:
     clauses, params = [], []
+    if addresses is not None:
+        if not addresses:
+            return []
+        clauses.append(f"address IN ({','.join('?' for _ in addresses)})")
+        params.extend(addresses)
     if target:
         clauses.append("target_id = ?")
         params.append(target)

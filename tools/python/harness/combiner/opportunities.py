@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 from contextlib import closing
 from hashlib import sha256
@@ -9,11 +10,13 @@ from itertools import combinations
 from pathlib import Path
 
 from harness.analysis.index import connect, validate_index
+from harness.common import lexicon
 from harness.common.deadlines import check_deadline
 from harness.common.digests import digest
 from harness.common.directory import validate_repo_path
 from harness.common.inputs import InputBatch
 from harness.domain import includes as include_facts
+from harness.domain import c_context, declarations, mips
 from harness.domain.functions import parse_function_records
 from harness.domain.ids import normalize_target_id, parse_function_id
 from harness.domain.layout import parse_splat_text
@@ -24,11 +27,22 @@ from harness.domain.psx import (
     reviewed_range_digest,
     validate_psx_header,
 )
-from harness.domain.registry import resolve_function, resolve_target
+from harness.domain.registry import (
+    lookup_target_manifest,
+    resolve_function,
+    resolve_target,
+)
 from harness.macros import (
     facts as macro_facts,
     index as macro_index,
     queries as macro_queries,
+)
+from harness.types import (
+    index as type_index,
+    inputs as type_inputs,
+    queries as type_queries,
+    representation as type_representation,
+    usages as type_usages,
 )
 
 _POOL_LIMIT = 32
@@ -107,9 +121,11 @@ def _rank_pairs(members, relations, minimum_shared, top_n, *, feature="shared_ca
                     []
                     if len(shared) >= minimum_shared
                     else [
-                        "below minimum shared direct callees"
-                        if feature == "shared_callees"
-                        else "below minimum shared target-private macros"
+                        {
+                            "shared_callees": "below minimum shared direct callees",
+                            "shared_macros": "below minimum shared target-private macros",
+                            "shared_relations": "below minimum shared storage/type relations",
+                        }[feature]
                     ]
                 ),
                 "rank": None,
@@ -306,12 +322,311 @@ def _macro_relations(root, resolved, connection, members, functions, read):
             or definition["restrictions"]
             or use["restrictions"]
         ):
-            reason = "macro definition is not an ordinary unrestricted function-like macro"
+            reason = (
+                "macro definition is not an ordinary unrestricted function-like macro"
+            )
         use["qualified"] = reason is None
         use["exclusion_reason"] = reason
         if reason is None:
             relations[member].add(definition["id"])
     return relations, definitions, uses
+
+
+def _private_type_relations(root, resolved, connection, members, functions, read):
+    manifest = lookup_target_manifest(root, resolved.id.value)
+    if manifest is None:
+        raise ValueError("type discovery requires the selected target manifest")
+    uses = type_queries.type_usages_payload(
+        connection,
+        target=resolved.id.value,
+        pattern=None,
+        limit=_EDGE_LIMIT + 1,
+        function_ids=members,
+    )
+    if len(uses) > _EDGE_LIMIT:
+        raise ValueError("discovery pool exceeds 4096 indexed type uses")
+    names = sorted({use["type_name"] for use in uses})
+    definitions = []
+    entities = {}
+    occurrences = {resolved.id.value: [], "__shared__": []}
+    for path, provenance in type_inputs.authored_type_headers(root, manifest):
+        check_deadline()
+        source = path.relative_to(root).as_posix()
+        scope = resolved.id.value if provenance == "header_claim" else "__shared__"
+        records = c_context.declaration_records(read(path).decode("utf-8"))
+        occurrences[scope].extend(
+            declarations.build_declaration_occurrences(
+                records, origin=source, scope=scope
+            )
+        )
+    for scope, rows in occurrences.items():
+        for entity in declarations.reconcile_declarations(rows):
+            entities[
+                type_index._identity(
+                    scope,
+                    entity.key.namespace,
+                    entity.key.name,
+                    entity.key.origin,
+                    str(entity.key.ordinal),
+                )
+            ] = entity
+        definitions.extend(
+            type_queries.types_payload(
+                connection,
+                target=scope,
+                pattern=None,
+                untyped=False,
+                limit=_EDGE_LIMIT + 1,
+                names=names,
+            )
+        )
+    if len(definitions) > _EDGE_LIMIT:
+        raise ValueError("discovery pool exceeds 4096 referenced type declarations")
+    for definition in definitions:
+        check_deadline()
+        entity = entities.get(definition["id"])
+        if entity is None:
+            raise ValueError(
+                "indexed type declaration lacks its current owner identity"
+            )
+        selected = entity.selected_definition or entity.representative
+        expected_occurrence = (
+            type_index._identity(
+                definition["target_id"],
+                entity.selected_definition.origin,
+                str(entity.selected_definition.ordinal),
+            )
+            if entity.selected_definition is not None
+            else None
+        )
+        expected = {
+            "namespace": entity.key.namespace,
+            "name": entity.key.name,
+            "kind": entity.kind,
+            "canonical": entity.canonical,
+            "source_path": selected.origin,
+            "complete": int(entity.complete),
+            "diagnostic": entity.diagnostic,
+            "type_expression": entity.type_expression,
+            "alias_kind": entity.alias_kind,
+            "definition_occurrence": expected_occurrence,
+        }
+        if any(definition[key] != value for key, value in expected.items()):
+            raise ValueError(
+                "indexed type declaration differs from its current owner facts"
+            )
+    relations = {member: set() for member in members}
+    sources, closures, actual, tag_positions, offsets = {}, {}, {}, {}, {}
+    for member in members:
+        source = functions[member]["source"]
+        if source in sources:
+            continue
+        raw = read(root / source)
+        text = raw.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n")
+        sources[source] = raw
+        records = parse_function_records(text)
+        identities = {
+            functions[item]["address"]: item
+            for item in members
+            if functions[item]["source"] == source
+        }
+        actual[source] = type_usages._collect_occurrences(
+            text, set(names), records, identities
+        )
+        offsets[source] = [0] + [match.end() for match in re.finditer("\n", text)]
+        tag_positions[source] = {
+            match.start(2): match.group(1)
+            for match in re.finditer(
+                r"\b(struct|union|enum)\s+([A-Za-z_]\w*)", c_context._mask_lexemes(text)
+            )
+        }
+        closures[source] = {
+            source,
+            *(
+                path.relative_to(root).as_posix()
+                for path in include_facts.local_include_files(
+                    root,
+                    [root / source],
+                    strict=True,
+                    require_literal=True,
+                    include_angle=True,
+                    read_source=lambda path: read(path).decode("utf-8"),
+                )
+            ),
+        }
+    owned_headers = {
+        path.relative_to(root).as_posix() for path in resolved.header_paths
+    }
+    for use in uses:
+        check_deadline()
+        member, source = use["function_id"], use["source_path"]
+        if source != functions[member]["source"]:
+            raise ValueError("indexed type use differs from its function source")
+        evidence = json.loads(use["evidence"])
+        positions = actual[source].get((member, use["type_name"]), [])
+        expected = {
+            "class": "lexical",
+            "binding": "unresolved",
+            "scope": "function",
+            "positions": positions,
+            "source_sha256": sha256(sources[source]).hexdigest(),
+            "metadata_diagnostic": None,
+        }
+        if (
+            use["use_kind"] != "lexical"
+            or use["provenance"] != "source_claim"
+            or use["subject"] != use["type_name"]
+            or not positions
+            or evidence != expected
+        ):
+            raise ValueError(
+                "indexed type use differs from its fingerprint-bound lexical owner"
+            )
+        use["evidence"] = evidence
+        use["declaration_candidates"] = []
+        grouped = {}
+        for position in positions:
+            offset = offsets[source][position["line"] - 1] + position["column"] - 1
+            kind = tag_positions[source].get(offset)
+            grouped.setdefault(("tag" if kind else "ordinary", kind), []).append(
+                position
+            )
+        for (namespace, kind), selected_positions in sorted(grouped.items()):
+            matching = [
+                item
+                for item in definitions
+                if item["name"] == use["type_name"]
+                and item["namespace"] == namespace
+                and (kind is None or item["kind"] == kind)
+            ]
+            visible = [
+                item for item in matching if item["source_path"] in closures[source]
+            ]
+            for definition in matching:
+                reason = None
+                if (
+                    definition["target_id"] != resolved.id.value
+                    or definition["source_path"] not in owned_headers
+                ):
+                    reason = "type declaration is not private to the selected target"
+                elif definition["source_path"] not in closures[source]:
+                    reason = "type declaration is outside the source include closure"
+                elif len(visible) != 1:
+                    reason = (
+                        "lexical namespace has multiple current declaration candidates"
+                    )
+                elif (
+                    definition["review_status"] != "reviewed"
+                    or definition["diagnostic"] is not None
+                    or definition["kind"] not in {"typedef", "struct", "union", "enum"}
+                ):
+                    reason = "type declaration is unsupported or unreviewed"
+                candidate = {
+                    "declaration_id": definition["id"],
+                    "namespace": namespace,
+                    "positions": selected_positions,
+                    "binding": "unresolved",
+                    "qualified": reason is None,
+                    "exclusion_reason": reason,
+                }
+                use["declaration_candidates"].append(candidate)
+                if reason is None:
+                    relations[member].add("type:" + definition["id"])
+            if not matching:
+                use["declaration_candidates"].append(
+                    {
+                        "declaration_id": None,
+                        "namespace": namespace,
+                        "positions": selected_positions,
+                        "binding": "unresolved",
+                        "qualified": False,
+                        "exclusion_reason": "lexical namespace lacks a current declaration candidate",
+                    }
+                )
+    return relations, definitions, uses
+
+
+def _storage_relations(root, resolved, connection, members, functions, payload, binary):
+    placeholders = ",".join("?" for _ in members)
+    references = [
+        dict(row)
+        for row in connection.execute(
+            "SELECT target_id, function_id, source, address, access_kind, opcode "
+            f"FROM data_references WHERE target_id = ? AND function_id IN ({placeholders}) "
+            "ORDER BY function_id, source, address, access_kind, opcode LIMIT ?",
+            (resolved.id.value, *members, _EDGE_LIMIT + 1),
+        )
+    ]
+    original = []
+    for member in members:
+        check_deadline()
+        function = functions[member]
+        start = payload.binary_offset + function["address"] - payload.load_address
+        for offset, address, access, opcode in mips.data_references(
+            binary[start : start + function["original_bytes"]]
+        ):
+            original.append(
+                {
+                    "function_id": member,
+                    "source": function["address"] + offset,
+                    "address": address,
+                    "access_kind": access,
+                    "opcode": opcode,
+                }
+            )
+    if len(references) > _EDGE_LIMIT or len(original) > _EDGE_LIMIT:
+        raise ValueError("discovery pool exceeds 4096 storage-reference facts")
+    keys = ("function_id", "source", "address", "access_kind", "opcode")
+    if {tuple(row[key] for key in keys) for row in references} != {
+        tuple(row[key] for key in keys) for row in original
+    }:
+        raise ValueError(
+            "indexed storage references differ from the original-range decoder"
+        )
+    candidates = type_queries.type_candidates_payload(
+        connection,
+        target=resolved.id.value,
+        status=None,
+        kind="storage",
+        limit=_EDGE_LIMIT + 1,
+        addresses=sorted({row["address"] for row in references}),
+    )
+    if (
+        len(candidates) > _EDGE_LIMIT
+        or sum(len(row["evidence"]) for row in candidates) > _EDGE_LIMIT
+    ):
+        raise ValueError("discovery pool exceeds 4096 storage candidate facts")
+    by_address = {int(row["address"], 16): row for row in candidates}
+    relations = {member: set() for member in members}
+    for reference in references:
+        check_deadline()
+        reason = None
+        candidate = by_address.get(reference["address"])
+        if reference["access_kind"] not in {"load", "store"}:
+            reason = "address materialization is not a memory access"
+        elif candidate is None:
+            reason = "type owner has no supported storage candidate for this access"
+        else:
+            if (
+                candidate["id"]
+                != f"{resolved.id.value}@{reference['address']:08X}:storage"
+            ):
+                raise ValueError(
+                    "storage candidate differs from its target/address identity"
+                )
+            expected = {
+                "function": reference["function_id"],
+                "source": f"0x{reference['source']:08X}",
+                "access": reference["access_kind"],
+                "opcode": reference["opcode"],
+                "evidence_class": "representation",
+            }
+            if expected not in candidate["evidence"]:
+                raise ValueError("storage candidate lacks its indexed access evidence")
+            relations[reference["function_id"]].add("storage:" + candidate["id"])
+        reference["qualified"] = reason is None
+        reference["exclusion_reason"] = reason
+    return relations, references, original, candidates
 
 
 def discover_pairs(
@@ -323,6 +638,7 @@ def discover_pairs(
     minimum_members: int = 2,
     minimum_shared_callees: int = 1,
     minimum_shared_macros: int = 1,
+    minimum_shared_relations: int = 1,
     top_n: int = 1,
     overlap_policy: str = "retain-all",
     expected_fingerprint: str | None = None,
@@ -330,11 +646,11 @@ def discover_pairs(
     """Rank every unordered pair in an explicit target-local reviewed C pool."""
     check_deadline()
     if (
-        method not in {"helper-call-cluster", "macro-family"}
+        method not in {"helper-call-cluster", "macro-family", "shared-state-type"}
         or overlap_policy != "retain-all"
     ):
         raise ValueError(
-            "only helper-call-cluster or macro-family with retain-all overlap is supported"
+            "only helper-call-cluster, macro-family or shared-state-type with retain-all overlap is supported"
         )
     if type(minimum_members) is not int or minimum_members != 2:
         raise ValueError(
@@ -342,8 +658,14 @@ def discover_pairs(
         )
     _require_integer(minimum_shared_callees, "minimum shared callees", _EDGE_LIMIT)
     _require_integer(minimum_shared_macros, "minimum shared macros", _EDGE_LIMIT)
-    if (method == "helper-call-cluster" and minimum_shared_macros != 1) or (
-        method == "macro-family" and minimum_shared_callees != 1
+    _require_integer(minimum_shared_relations, "minimum shared relations", _EDGE_LIMIT)
+    if any(
+        value != 1 and method != owner
+        for owner, value in (
+            ("helper-call-cluster", minimum_shared_callees),
+            ("macro-family", minimum_shared_macros),
+            ("shared-state-type", minimum_shared_relations),
+        )
     ):
         raise ValueError("discovery rejects a threshold for another method")
     _require_integer(top_n, "top N", _POOL_LIMIT * (_POOL_LIMIT - 1) // 2)
@@ -388,6 +710,20 @@ def discover_pairs(
             read(path)
         if method == "macro-family":
             for module in (macro_facts, macro_index, macro_queries, include_facts):
+                read(Path(module.__file__))
+        elif method == "shared-state-type":
+            for module in (
+                type_index,
+                type_inputs,
+                type_queries,
+                type_representation,
+                type_usages,
+                c_context,
+                declarations,
+                include_facts,
+                mips,
+                lexicon,
+            ):
                 read(Path(module.__file__))
         binary = read(resolved.binary_path, _IMAGE_LIMIT)
         if is_psx_exe(binary):
@@ -493,6 +829,13 @@ def discover_pairs(
             ).fetchone()
         )
         macro_definitions, macro_uses = [], []
+        (
+            type_definitions,
+            lexical_uses,
+            references,
+            original_references,
+            storage_candidates,
+        ) = [], [], [], [], []
         if method == "macro-family":
             direct_callees, macro_definitions, macro_uses = _macro_relations(
                 root,
@@ -502,6 +845,29 @@ def discover_pairs(
                 functions,
                 read,
             )
+        elif method == "shared-state-type":
+            direct_callees, type_definitions, lexical_uses = _private_type_relations(
+                root,
+                resolved,
+                connection,
+                members,
+                functions,
+                read,
+            )
+            storage, references, original_references, storage_candidates = (
+                _storage_relations(
+                    root,
+                    resolved,
+                    connection,
+                    members,
+                    functions,
+                    payload,
+                    binary,
+                )
+            )
+            direct_callees = {
+                member: direct_callees[member] | storage[member] for member in members
+            }
         validate_index(connection, root)
         for name in sorted(pins):
             state, _ = inputs.read(
@@ -514,11 +880,15 @@ def discover_pairs(
         direct_callees,
         minimum_shared_callees
         if method == "helper-call-cluster"
-        else minimum_shared_macros,
+        else minimum_shared_macros
+        if method == "macro-family"
+        else minimum_shared_relations,
         top_n,
         feature="shared_callees"
         if method == "helper-call-cluster"
-        else "shared_macros",
+        else "shared_macros"
+        if method == "macro-family"
+        else "shared_relations",
     )
     result = {
         "schema": "bof3.combiner-discovery/v1",
@@ -577,6 +947,48 @@ def discover_pairs(
                 "macro_uses": macro_uses,
                 "calls": calls,
                 "unresolved_calls": unresolved,
+            }
+        )
+        result["fingerprint"] = digest(
+            {key: value for key, value in result.items() if key != "fingerprint"}
+        )
+    elif method == "shared-state-type":
+        result.pop("minimum_shared_callees")
+        for pair in pairs:
+            pair["shared_type_declarations"] = [
+                item.removeprefix("type:")
+                for item in pair["shared_relations"]
+                if item.startswith("type:")
+            ]
+            pair["shared_storage_candidates"] = [
+                item.removeprefix("storage:")
+                for item in pair["shared_relations"]
+                if item.startswith("storage:")
+            ]
+        result.update(
+            minimum_shared_relations=minimum_shared_relations,
+            type_declarations=type_definitions,
+            type_usages=lexical_uses,
+            data_references=references,
+            original_data_references=original_references,
+            storage_candidates=storage_candidates,
+            relation_policy={
+                "types": "target-private declaration spellings; lexical binding remains unresolved",
+                "storage": "exact decoded load/store addresses; object identity, extent and semantics remain unproven",
+                "coverage": "complete fixed pool and decoder relation, not complete memory-access or semantic coverage",
+            },
+        )
+        result["ranking_fingerprint"] = digest(pairs)
+        result["index_snapshot_fingerprint"] = digest(
+            {
+                "target": index_target,
+                "functions": result["functions"],
+                "calls": calls,
+                "unresolved_calls": unresolved,
+                "type_declarations": type_definitions,
+                "type_usages": lexical_uses,
+                "data_references": references,
+                "storage_candidates": storage_candidates,
             }
         )
         result["fingerprint"] = digest(

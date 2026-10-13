@@ -66,7 +66,7 @@ verification; wrappers dispatch only. Harness never launches model processes.
 ## Combiner discovery
 
 `bin/harness combiner discover TARGET TARGET@0xADDRESS TARGET@0xADDRESS`
-runs `helper-call-cluster` or `macro-family` over two to 32 distinct, explicitly
+runs `helper-call-cluster`, `macro-family` or `shared-state-type` over two to 32 distinct, explicitly
 owned C functions of one target. Each member needs attached source metadata, map/layout
 agreement and a finite aligned original range. The command validates the complete
 reverse index and corroborates indexed direct calls through the domain MIPS
@@ -76,9 +76,11 @@ Each method enumerates every unordered pair. `--minimum-members` is fixed at two
 For `helper-call-cluster`, `--minimum-shared-callees` sets the positive threshold
 for distinct target-qualified callees. For `--method macro-family`,
 `--minimum-shared-macros` sets the threshold for shared target-private function-like
-definitions. Nondefault thresholds for the other method cause refusal.
+definitions. For `--method shared-state-type`, `--minimum-shared-relations` sets
+the threshold for distinct shared storage addresses and private declaration
+spellings. Nondefault thresholds for another method cause refusal.
 
-Eligible pairs rank by descending shared-callee or shared-definition count, then
+Eligible pairs rank by descending count of their method's shared relations, then
 canonical member IDs. Below-threshold pairs retain their reasons. The `retain-all`
 overlap policy records every pair sharing a member, including excluded pairs.
 `--top-n` selects a view from the full ranking without truncating the pool.
@@ -99,12 +101,32 @@ shared definition do not prove active preprocessing, original semantics, native
 equivalence or useful source ownership. Complete human-value review and the
 source-consolidation acceptance gates remain required before grouping.
 
+The shared-state/type method queries selected function identities and type names.
+It checks lexical occurrence positions and source hashes through the type owner,
+reconciles current claimed header declarations through the declaration owner, and
+captures literal include inputs. Tag and ordinary namespaces stay separate.
+Shared, ambiguous, unsupported and out-of-closure declarations remain visible
+with reasons. A qualified private declaration spelling retains unresolved lexical
+binding; it does not establish a semantic type use or active preprocessing.
+
+Storage relations use exact target-qualified load/store addresses. Indexed rows
+must match the domain MIPS decoder over each member's original range and be
+present in the type owner's storage-candidate evidence. Address materialization
+and accesses without a supported storage candidate retain exclusion reasons.
+Candidate blockers and representation status remain unchanged. The decoder covers
+direct `lui`/low-half uses within its fixed instruction window; absence does not
+prove a missing access. Equal addresses do not prove aliases, pointer producers,
+object extent, lifetime, semantic state ownership or safe grouping. The result
+separates shared declaration IDs from storage-candidate IDs and caps queried uses,
+declarations, references and storage evidence at 4,096 facts per category.
+
 The result pins membership, thresholds, method version, captured input bytes and
 modes, exact queried index facts, overlaps and ordering. Retain its `fingerprint` externally and pass
 it as `--expected-fingerprint` when rechecking the same pool. A changed pin, stale
 index, duplicate or cross-target member, invalid threshold, unsupported method or
 overlap policy, ownership drift, original JAL disagreement, moving input, more
-than 4,096 indexed call edges or an expired `--work-deadline` causes refusal.
+than 4,096 indexed call edges, storage-decoder disagreement or an expired
+`--work-deadline` causes refusal.
 Individual files are capped at 16 MiB and the original image at 64 MiB.
 Discovery records neither human-value approval nor native or mutation acceptance.
 
