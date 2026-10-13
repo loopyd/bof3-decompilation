@@ -273,7 +273,8 @@ Project skills live in `.agents/skills/`. Codex discovers them there; Pi discove
 the same bodies through relative symlinks in `.pi/skills/`. The emulator entry
 links directly to its owner in the fork. Keep one authored body per skill; see the
 [official skill documentation](https://developers.openai.com/codex/skills/).
-Restart the session to refresh discovery after migration. `.pi/agents/` retains
+OpenSpec skills and Pi `/opsx-*` commands come from the home-level installation.
+Restart the session to refresh skill discovery after changes. `.pi/agents/` retains
 the lifter, namer, cleaner and reviewer definitions for bounded harness prefills,
 plus the [generic PSX emulator mission spec](../../.pi/agents/psx-emulator.md).
 The old Pi chain remains retired; agent definitions neither schedule Codex nor

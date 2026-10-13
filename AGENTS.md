@@ -4,6 +4,8 @@ Project skills live in `.agents/skills/`; `.pi/skills/` contains relative symlin
 for Pi. Keep one authored body per skill. The emulator skill is owned by the fork
 and linked into `.agents/skills/`.
 
+Use the home-level OpenSpec installation for shared change workflows.
+
 Route each request to its BOF3 owner below. Repository contracts and task-specific
 authorization govern scope and acceptance. Skills and their references own the
 operative rules. `docs/` is user documentation, not required agent reading.
@@ -19,7 +21,7 @@ dependencies.
 | Type representation / macro work | `.agents/skills/bof3-types/SKILL.md` / `.agents/skills/bof3-macros/SKILL.md` |
 | Python harness, CLI, skill scripts | `.agents/skills/bof3-re/references/tooling-contract.md` |
 | Tests / Markdown | `.agents/skills/bof3-test/SKILL.md` / `.agents/skills/bof3-docs/SKILL.md` |
-| Change planning / implementation | `.agents/skills/openspec-propose/SKILL.md` / `.agents/skills/openspec-apply-change/SKILL.md` |
+| Change planning / implementation | Shared `openspec-propose` / `openspec-apply-change` skills in `~/.agents/skills/` |
 | Static PSX evidence / runtime missions | `.agents/skills/psx-rizin/SKILL.md` / `.agents/skills/psx-emulator/SKILL.md` |
 
 Read `.agents/skills/bof3-re/references/target-contract.md` before target work.
