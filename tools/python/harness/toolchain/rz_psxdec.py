@@ -8,9 +8,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-import tempfile
 import time
-import uuid
 import zipfile
 
 from harness.common.digests import file_record
@@ -20,6 +18,7 @@ from harness.io import RepoLayout
 from .base import Toolchain
 from .nativebuild import (
     PREREQUISITES,
+    archive_manifest,
     compiler_paths,
     link_paths,
     fork_record,
@@ -40,9 +39,8 @@ class RzPsxdecToolchain(Toolchain):
 
     def __init__(self, layout: RepoLayout) -> None:
         super().__init__(layout)
-        self.attempts = layout.build_dir / "third_party/rz-psxdec"
+        self.directory = layout.build_dir / "third_party/rz-psxdec"
         self.receipt: Path | None = None
-        self.attempt: Path | None = None
         self.inputs: dict | None = None
 
     def _sources(self) -> dict:
@@ -84,11 +82,11 @@ class RzPsxdecToolchain(Toolchain):
             paths[role] = Path(path).resolve()
         return {name: file_record(path) for name, path in paths.items()}
 
-    def _environment(self, attempt: Path) -> dict[str, str]:
+    def _environment(self, directory: Path) -> dict[str, str]:
         return {
             "PATH": "/usr/bin:/bin",
             "LC_ALL": "C",
-            "HOME": str(attempt / "home"),
+            "HOME": str(directory / "home"),
             "RZ_NOPLUGINS": "1",
         }
 
@@ -108,6 +106,8 @@ class RzPsxdecToolchain(Toolchain):
                 OMP_NUM_THREADS=str(jobs),
                 OMP_THREAD_LIMIT=str(jobs),
             )
+        for suffix in ("stdout.bin", "stderr.bin", "json"):
+            (directory / f"{name}.{suffix}").unlink(missing_ok=True)
         record = capture(
             directory,
             argv,
@@ -126,21 +126,12 @@ class RzPsxdecToolchain(Toolchain):
         return result
 
     def _select_receipt(self) -> Path:
-        for path in sorted(self.attempts.glob("*/native-build.json"), reverse=True):
-            try:
-                read_native_build(path)
-            except (
-                OSError,
-                ValueError,
-                KeyError,
-                TypeError,
-                subprocess.SubprocessError,
-            ):
-                continue
-            return path
-        raise FileNotFoundError(
-            "no complete rz-psxdec receipt matches current forks; run bin/harness setup --component rz-psxdec"
-        )
+        path = self.directory / "native-build.json"
+        if not path.is_file():
+            raise FileNotFoundError(
+                "missing rz-psxdec build receipt; run bin/harness setup --component rz-psxdec"
+            )
+        return path
 
     def _external_inputs(self, tools: dict) -> list[dict]:
         paths = set()
@@ -186,18 +177,28 @@ class RzPsxdecToolchain(Toolchain):
     def install(self, *, force: bool = False) -> str:
         if not force:
             try:
-                self.receipt = self._select_receipt()
+                receipt = self._select_receipt()
+                read_native_build(receipt)
+                self.receipt = receipt
                 return str(self.receipt)
-            except FileNotFoundError:
+            except (
+                OSError,
+                ValueError,
+                KeyError,
+                TypeError,
+                subprocess.SubprocessError,
+            ):
                 pass
         self.receipt = None
-        self.attempt = None
         self.inputs = None
         sources = self._sources()
         tools = self._tools()
-        self.attempts.mkdir(parents=True, exist_ok=True)
-        self.attempt = Path(tempfile.mkdtemp(prefix="attempt-", dir=self.attempts))
-        (self.attempt / "home").mkdir()
+        if force:
+            for name in ("build", "prerequisites", "prefix"):
+                shutil.rmtree(self.directory / name, ignore_errors=True)
+        self.directory.mkdir(parents=True, exist_ok=True)
+        (self.directory / "home").mkdir(exist_ok=True)
+        (self.directory / "native-build.json").unlink(missing_ok=True)
         prerequisites = {}
         for role, (relative, expected, directory) in PREREQUISITES.items():
             archive = Path(
@@ -206,25 +207,26 @@ class RzPsxdecToolchain(Toolchain):
             before = file_record(archive)
             if before["sha256"] != expected:
                 raise ValueError(f"{role} archive differs from the pinned dependency")
-            staged = self.attempt / "archives" / f"{role.lower()}.zip"
-            staged.parent.mkdir(exist_ok=True)
-            shutil.copyfile(archive, staged)
-            identity = file_record(staged)
-            if file_record(archive) != before or any(
-                identity[key] != before[key] for key in ("bytes", "sha256")
-            ):
-                raise ValueError(f"{role} archive changed while staging")
-            extracted = self.attempt / "prerequisites" / role.lower()
-            extract_archive(staged, extracted)
-            with zipfile.ZipFile(staged) as contents:
-                for member in contents.infolist():
-                    if not member.is_dir() and (member.external_attr >> 16) & 0o111:
-                        (extracted / member.filename).chmod(0o755)
+            pristine = archive_manifest(archive, directory)
+            extracted = self.directory / "prerequisites" / role.lower()
             root = extracted / directory
+            if not root.is_dir():
+                shutil.rmtree(extracted, ignore_errors=True)
+                extract_archive(archive, extracted)
+                with zipfile.ZipFile(archive) as contents:
+                    for member in contents.infolist():
+                        if not member.is_dir() and (member.external_attr >> 16) & 0o111:
+                            (extracted / member.filename).chmod(0o755)
+            if role != "YARA" and tree_manifest(root) != pristine:
+                raise ValueError(
+                    f"{role} cached source differs; rerun setup with --force"
+                )
+            if file_record(archive) != before:
+                raise ValueError(f"{role} archive changed while preparing its source")
             prerequisites[role] = {
                 "root": str(root),
-                "archive": identity,
-                "before": tree_manifest(root),
+                "archive": before,
+                "before": pristine,
                 "preparation": {
                     "operation": "harness.toolchain.releases.extract_archive",
                     "executable_modes": "ZIP external_attr",
@@ -236,14 +238,14 @@ class RzPsxdecToolchain(Toolchain):
             "external": self._external_inputs(tools),
             "prerequisites": prerequisites,
         }
-        (self.attempt / "staged-inputs.json").write_text(
+        (self.directory / "staged-inputs.json").write_text(
             json.dumps(self.inputs, indent=2) + "\n"
         )
-        return str(self.attempt)
+        return str(self.directory)
 
     def _probe(self, dso: Path, directory: Path) -> dict:
-        directory.mkdir()
-        (directory / "home").mkdir()
+        directory.mkdir(parents=True, exist_ok=True)
+        (directory / "home").mkdir(exist_ok=True)
         return self._execute(
             [
                 str(RizinToolchain(self.layout).executable),
@@ -263,11 +265,11 @@ class RzPsxdecToolchain(Toolchain):
     def build(self) -> str:
         if self.receipt is not None:
             return str(self.receipt)
-        if self.attempt is None or self.inputs is None:
+        if self.inputs is None:
             raise RuntimeError("rz-psxdec inputs have not been staged")
         jobs = select_build_jobs()
-        attempt, inputs = self.attempt, self.inputs
-        build = attempt / "build"
+        directory, inputs = self.directory, self.inputs
+        build = directory / "build"
         tools = inputs["tools"]
         cxx = tools["cxx"]["path"]
         filesystem = Path(
@@ -286,7 +288,7 @@ class RzPsxdecToolchain(Toolchain):
             "-G",
             "Unix Makefiles",
             "-DCMAKE_BUILD_TYPE=Release",
-            f"-DCMAKE_INSTALL_PREFIX={attempt / 'prefix'}",
+            f"-DCMAKE_INSTALL_PREFIX={directory / 'prefix'}",
             f"-DCMAKE_C_COMPILER={tools['cc']['path']}",
             f"-DCMAKE_CXX_COMPILER={cxx}",
             f"-DCMAKE_MAKE_PROGRAM={tools['make']['path']}",
@@ -306,13 +308,13 @@ class RzPsxdecToolchain(Toolchain):
             f"-D{role}_LOCAL_DIR={row['root']}"
             for role, row in inputs["prerequisites"].items()
         ]
-        configure = self._execute(command, attempt, "configure", jobs=jobs)
+        configure = self._execute(command, directory, "configure", jobs=jobs)
         configured = link_paths(build, Path(cxx))
         configured = {path for path in configured if not path.is_relative_to(build)}
         inputs["external"] = _records(
             [*(Path(row["path"]) for row in inputs["external"]), *configured]
         )
-        (attempt / "external-inputs-before-build.json").write_text(
+        (directory / "external-inputs-before-build.json").write_text(
             json.dumps(inputs["external"], indent=2) + "\n"
         )
         execution = self._execute(
@@ -325,7 +327,7 @@ class RzPsxdecToolchain(Toolchain):
                 "--target",
                 "rz-psxdec",
             ],
-            attempt,
+            directory,
             "build",
             jobs=jobs,
         )
@@ -352,7 +354,7 @@ class RzPsxdecToolchain(Toolchain):
             }
             for role, before in inputs["sources"].items()
         }
-        probe = self._probe(Path(dso["path"]), attempt / "probe")
+        probe = self._probe(Path(dso["path"]), directory / "probe")
         roots = tuple(Path(row["root"]) for row in sources.values())
         roots += tuple(Path(row["root"]) for row in prerequisites.values())
         consumed = _records(compiler_paths(build, roots))
@@ -375,10 +377,10 @@ class RzPsxdecToolchain(Toolchain):
             "build_files": tree_manifest(build),
             "dso": dso,
         }
-        pending = attempt / "native-build.pending.json"
+        pending = directory / "native-build.pending.json"
         pending.write_text(json.dumps(document, indent=2, sort_keys=True) + "\n")
         read_native_build(pending)
-        receipt = attempt / "native-build.json"
+        receipt = directory / "native-build.json"
         os.replace(pending, receipt)
         self.receipt = receipt
         return str(receipt)
@@ -386,9 +388,8 @@ class RzPsxdecToolchain(Toolchain):
     def verify(self) -> str:
         receipt = self.receipt or self._select_receipt()
         native = read_native_build(receipt)
-        if self.attempt is None:
-            directory = receipt.parent / "probes" / uuid.uuid4().hex
-            directory.parent.mkdir(exist_ok=True)
+        if self.inputs is None:
+            directory = receipt.parent / "verify"
             execution = self._probe(native.dso.path, directory)
             streams = json.loads(Path(execution["log"]["path"]).read_bytes())["streams"]
             output = b"".join(

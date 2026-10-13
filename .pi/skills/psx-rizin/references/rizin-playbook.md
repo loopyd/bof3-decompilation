@@ -20,7 +20,7 @@ rizin -N -n -a mips -b 32 -E little \
 `-m` maps raw data at its proven runtime address. Confirm the installed CLI with `rizin -h`; options evolve.
 
 For PS1 decompilation, build the sibling `rz-psxdec` and `retdec-psx` forks through
-`bin/harness setup --component rz-psxdec --force`. Load the printed `rz-psxdec.so`
+`bin/harness setup --component rz-psxdec`. Load the printed `rz-psxdec.so`
 explicitly with `RZ_NOPLUGINS=1` and `-l`; see the
 [workspace guide](../../../../tools/retdec-psx/README.md). Ordinary `pdz` uses Rizin
 context. Original-only `pdzar /absolute/workspace` requires the validated fixed

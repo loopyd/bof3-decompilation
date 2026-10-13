@@ -83,10 +83,7 @@ def _redux_prerequisites(root: Path) -> str:
     tool = PcsxReduxToolchain(repo_layout(root))
     tool.prerequisites()
     identity = tool.source_identity()
-    return (
-        f"approved dependencies; {len(identity['recursive_revisions'])} pinned source repositories; "
-        "approved customization and source integrity verified"
-    )
+    return f"dependencies and {len(identity['source_forests'])} pinned source repositories verified"
 
 
 @register_check("SDL3 build", TASKS)

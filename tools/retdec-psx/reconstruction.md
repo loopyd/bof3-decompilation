@@ -48,8 +48,9 @@ native build and prerequisites, and loads the plugin from its managed build path
 It uses these files directly without copying source or build trees, archives or
 native build inputs into each attempt. It rechecks their identities before each
 native execution and afterward. Changed sources, original inputs, configuration
-or selected build inputs refuse reuse. Retain the referenced managed build,
-prerequisites and receipt while its runs are needed. Fresh attempts contain their
+or selected build inputs refuse reuse. Setup reuses one managed build directory
+and overwrites its current receipt. Prepare a fresh run when rebuilding changes
+the referenced inputs. Reconstruction attempts contain their
 bounded mission inputs, compiler workspace files and outputs. No symlinks or
 separate snapshot store are required.
 

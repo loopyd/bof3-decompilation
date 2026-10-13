@@ -8,19 +8,19 @@ boundary; the [reconstruction guide](reconstruction.md) describes original-only
 runs and their evidence limits.
 
 ```sh
-bin/harness setup --component rz-psxdec --force
+bin/harness setup --component rz-psxdec
 bin/harness doctor --component rz-psxdec
 ```
 
-Setup prints the actual DSO and receipt paths after verification. Every fresh
-attempt has its own directory under `build/third_party/rz-psxdec/attempt-*`.
-The DSO is `build/src/rz-plugin/rz-psxdec.so` inside that attempt. The receipt
-is `native-build.json` beside the attempt's `build` directory. Failed attempts
-retain their command logs and publish no successful receipt.
+Setup uses one directory, `build/third_party/rz-psxdec`, and prints the verified
+DSO and receipt paths. The DSO is `build/src/rz-plugin/rz-psxdec.so` under that
+directory; the receipt is `native-build.json`. Rebuilds overwrite the current
+logs and receipt while retaining CMake's incremental build files. A failed build
+retains its current logs and publishes no successful receipt.
 
 Without `--force`, setup can reuse a complete receipt only after rehashing its
 inputs. Doctor verifies a matching receipt and explicitly loads its DSO with
-managed Rizin. It does not rebuild.
+managed Rizin. It does not rebuild. Use `--force` for a clean rebuild.
 
 ## Supply the existing prerequisites
 
@@ -39,10 +39,11 @@ The three cached archives remain pinned by SHA-256. Their default paths are:
 
 To select another copy of the same archive, set `LLVM_ARCHIVE`,
 `CAPSTONE_ARCHIVE`, or `YARA_ARCHIVE`. The digest must match the pin in
-[nativebuild.py](../python/harness/toolchain/nativebuild.py). Each attempt
-copies and verifies the archives, then extracts disposable prerequisite trees.
-YARA's patch and generated files remain in its disposable tree. The receipt
-records its complete before and after inventories and every observed mutation.
+[nativebuild.py](../python/harness/toolchain/nativebuild.py). Setup reads the
+cached archives directly and extracts prerequisites once under the fixed build
+directory. Incremental builds reuse those trees. YARA's patch and generated files
+remain there. The receipt compares each pinned archive's pristine inventory with
+its prepared tree and records every observed mutation.
 Owned fork sources must remain unchanged.
 
 ## Inspect the build evidence
@@ -61,9 +62,10 @@ one job. CPU affinity and cgroup v2 CPU quotas cap the available capacity. The s
 job count limits the bundled RetDec and nested dependency builds.
 
 The configure and build argv, working directory, raw exit, failure, and output
-identities remain in the attempt.
-The component sets `CMAKE_INSTALL_PREFIX` to the attempt's `prefix` directory.
-RetDec's configure-time support cleanup stays in that disposable directory.
+identities remain in the fixed build directory. Verification probes also use
+one fixed directory and overwrite their previous logs.
+The component sets `CMAKE_INSTALL_PREFIX` to its local `prefix` directory.
+RetDec's configure-time support cleanup stays in that build-owned directory.
 The component does not run a top-level install or mutate installed support paths.
 
 The receipt binds both actual fork commits and complete source inventories.

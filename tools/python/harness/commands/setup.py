@@ -6,6 +6,7 @@ import argparse
 import contextlib
 import io
 import subprocess
+import tempfile
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
@@ -158,7 +159,14 @@ def verify_setup(root: Path) -> None:
     missing = [str(path.relative_to(root)) for path in required if not path.exists()]
     if missing:
         raise FileNotFoundError("missing staged files: " + ", ".join(missing))
-    _run([str(root / "bin" / "cc"), "-x", "c", "-E", "-"], cwd=root, quiet=True)
+    with tempfile.TemporaryDirectory(prefix="bof3-setup-") as directory:
+        source = Path(directory) / "probe.c"
+        source.write_text("int bof3_setup_probe;\n", encoding="ascii")
+        _run(
+            [str(root / "bin" / "cc"), "-x", "c", "-E", str(source)],
+            cwd=root,
+            quiet=True,
+        )
     for tool in REQUIRED_TOOLS:
         _run([str(root / tool), "--version"], cwd=root, quiet=True)
     cue, tracks = find_disc_set(layout.external_inputs_dir)
