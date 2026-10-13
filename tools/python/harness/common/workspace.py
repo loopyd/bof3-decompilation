@@ -34,11 +34,18 @@ from harness.common.trees import (
 )
 
 WorkspaceSnapshot = dict[str, bytes | SymlinkSnapshot | SubmoduleSnapshot]
-ARTIFACT_EXCLUSIONS = frozenset({"out", "sessions/subagent-artifacts", ".pi/subagents"})
+ARTIFACT_EXCLUSIONS = frozenset(
+    {"build", "out", "sessions/subagent-artifacts", ".pi/subagents"}
+)
 
 
 @contextmanager
 def _capture_root(root: Path, indexed: dict, committed: dict, gitlinks: dict):
+    if any(
+        name == "build" or name.startswith("build/")
+        for name in indexed.keys() | committed.keys()
+    ):
+        raise ValueError("tracked build paths prevent artifact exclusion")
     gitdir = Path(read_git(root, ["rev-parse", "--absolute-git-dir"]).strip())
     try:
         relative = gitdir.relative_to(root).as_posix()

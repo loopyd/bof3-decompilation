@@ -50,6 +50,10 @@ agree. Domain adapters supply policy; shared mechanisms never import domain
 adapters to discover it. Keep specialized helpers local; similar hash formats,
 validators or evidence checks need not be equivalent.
 
+Workspace recovery excludes root `build/` outputs and refuses indexed or committed
+paths there. Native compilation still pins consumed build tools and outputs through
+its input guards.
+
 Stdlib first, then installed dependencies; no new dependency without explicit user
 approval. Prefer smallest working diff and deletion over speculative abstraction.
 Toolchain wrappers declare class attributes/minimal overrides on `toolchain/base.py`.
