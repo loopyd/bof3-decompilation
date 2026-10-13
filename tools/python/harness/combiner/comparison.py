@@ -172,7 +172,7 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
     output, linked, artifacts = resolve_comparison_outputs(root, output_name)
     layout = repo_layout(root)
     execution = NativeExecution(root, cutoff, output_limit)
-    tools = layout.psn00b_toolchain_root / "bin"
+    tools = layout.psyqo_toolchain_root / "bin"
     with ExitStack() as stack:
         selection = stack.enter_context(
             closing(select_preservation(root, [source_path], [source_path]))

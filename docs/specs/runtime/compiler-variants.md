@@ -173,9 +173,9 @@ Tool versions as of 2026-07-30:
 | GCC | 2.7.2 (decompals/old-gcc 0.13) |
 | maspsx | third_party/maspsx (HEAD) |
 | ASPSX emulation | 2.56 (bin/cc default) |
-| GNU assembler | 2.40 (PSn00b) |
-| GNU ld | 2.40 (PSn00b) |
-| GNU objcopy | 2.40 (PSn00b) |
+| GNU assembler | 2.40 |
+| GNU ld | 2.40 |
+| GNU objcopy | 2.40 |
 
 ### Reviewed nondefault optimization control
 

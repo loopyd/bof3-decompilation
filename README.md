@@ -11,6 +11,8 @@ using target-qualified evidence and byte checks.
 - `git` (fetches submodules), `cargo` (builds the local Rust
   tools), and `meson` (>= 0.58.0) with a host C compiler (`gcc` or `clang`)
   and `ninja` (>= 1.8.2) to build the Rizin toolchain
+- `make`, `wget`, `bzip2`, `xz`, `bison`, `flex`, and a host C++ compiler
+  to build the native PSYQo toolchain from the pinned Nugget integration
 - `cmake` (>= 3.20) — every lift verification rebuilds the authored object
   through CMake; `bin/harness lift asm-diff` and `bin/harness build` fail closed without it
 - `7z` — first-time setup downloads and extracts a staged PsyQ `.7z`, and the
@@ -30,6 +32,8 @@ just doctor
 `just setup` initializes retained dependencies, user-authorized media, and
 local toolchains. `just doctor` verifies the result. See
 [Tool usage](docs/agents/tool-usage.md) for the complete ordered workflow.
+The [toolchain guide](toolchains/README.md#psyqo-and-nugget) describes the
+PSYQo SDK and the GCC 2.7.2-PSX plus maspsx reconstruction profile.
 
 Work on an extracted executable image or EMI entry — never the EMI archive.
 Original bytes and target manifests are the source of truth.

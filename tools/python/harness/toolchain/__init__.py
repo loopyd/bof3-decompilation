@@ -15,7 +15,7 @@ def _managed_types() -> tuple[tuple[str, type[Toolchain]], ...]:
     from .m2c import M2cToolchain  # noqa: PLC0415
     from .maspsx import MaspsxToolchain  # noqa: PLC0415
     from .permuter import DecompPermuterToolchain  # noqa: PLC0415
-    from .psn00b import Psn00bToolchain  # noqa: PLC0415
+    from .psyqo import PsyqoToolchain  # noqa: PLC0415
     from .rizin import RizinToolchain  # noqa: PLC0415
     from .rz_psxdec import RzPsxdecToolchain  # noqa: PLC0415
     from .signatures import PsyqSignaturesToolchain  # noqa: PLC0415
@@ -23,7 +23,7 @@ def _managed_types() -> tuple[tuple[str, type[Toolchain]], ...]:
     from .spimdisasm import SpimdisasmToolchain  # noqa: PLC0415
 
     registry = (
-        ("psn00b", Psn00bToolchain),
+        ("psyqo", PsyqoToolchain),
         ("gcc", GccToolchain),
         ("maspsx", MaspsxToolchain),
         ("rizin", RizinToolchain),

@@ -37,7 +37,7 @@ def test_setup_managed_toolchains_factory_contains_all(tmp_path: Path) -> None:
     toolchains = managed_toolchains(layout)
     labels = [t.label for t in toolchains]
     assert labels == [
-        "PSn00b",
+        "PSYQo",
         "GCC 2.7.2",
         "maspsx",
         "Rizin",

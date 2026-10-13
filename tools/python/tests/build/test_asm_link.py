@@ -1,12 +1,12 @@
 """Fixture-local test for relocation-aware function comparison.
 
-Uses the real PSn00b binutils (as/ld/objcopy/nm) available in the repo's
-toolchains/psn00b_toolchain directory to verify that:
+Uses the real PSYQo binutils (as/ld/objcopy/nm) available in the repo's
+toolchains/psyqo directory to verify that:
   1. A minimal MIPS object can be assembled.
   2. link_object_at_address links it at a chosen text address.
   3. read_function_image selects the complete named function in linked output.
 
-This requires PSn00b toolchain binutils on the host at the standard repo path.
+This requires PSYQo toolchain binutils on the host at the standard repo path.
 """
 
 from __future__ import annotations
@@ -20,19 +20,19 @@ import pytest
 _REPO_ROOT = Path(__file__).resolve().parents[4]
 
 
-def _psn00b_toolchain_root() -> Path | None:
-    """Return the PSn00b toolchain root if available, else None."""
-    candidate = _REPO_ROOT / "toolchains" / "psn00b_toolchain"
+def _psyqo_toolchain_root() -> Path | None:
+    """Return the PSYQo toolchain root if available, else None."""
+    candidate = _REPO_ROOT / "toolchains" / "psyqo"
     ld = candidate / "bin" / "mipsel-none-elf-ld"
     return candidate if ld.is_file() else None
 
 
-_TOOLCHAIN = _psn00b_toolchain_root()
+_TOOLCHAIN = _psyqo_toolchain_root()
 
 pytestmark = [
     pytest.mark.skipif(
         _TOOLCHAIN is None,
-        reason="PSn00b toolchain not installed at toolchains/psn00b_toolchain",
+        reason="PSYQo toolchain not installed at toolchains/psyqo",
     ),
 ]
 
@@ -67,7 +67,7 @@ class TestLinkAtAddress:
     @pytest.fixture(autouse=True)
     def _setup(self, tmp_path: Path) -> None:
         self.tmp = tmp_path
-        root = _psn00b_toolchain_root()
+        root = _psyqo_toolchain_root()
         assert root is not None  # skipif guard
         self.as_path = root / "bin" / "mipsel-none-elf-as"
         self.ld_path = root / "bin" / "mipsel-none-elf-ld"

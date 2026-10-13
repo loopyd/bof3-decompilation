@@ -163,7 +163,7 @@ def _compiler_environment(
         "PATH": os.pathsep.join(
             [
                 directory,
-                str(root / "toolchains/psn00b_toolchain/bin"),
+                str(root / "toolchains/psyqo/bin"),
                 environment.get("PATH", ""),
             ]
         ),

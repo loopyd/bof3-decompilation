@@ -115,7 +115,7 @@ def _exactly_placeable_object(
             adjustments[section] = reduced
     if not adjustments:
         return object_path
-    objcopy = layout.psn00b_toolchain_root / "bin" / "mipsel-none-elf-objcopy"
+    objcopy = layout.psyqo_toolchain_root / "bin" / "mipsel-none-elf-objcopy"
     adjusted = object_path.with_suffix(".placed.o")
     command = [str(objcopy)]
     for section, alignment in sorted(adjustments.items()):
@@ -165,7 +165,7 @@ def link_object_at_address(
     section_addresses: dict[str, int] | None = None,
 ) -> Path:
     repo = layout or repo_layout()
-    ld = repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-ld"
+    ld = repo.psyqo_toolchain_root / "bin" / "mipsel-none-elf-ld"
     symbols_c = symbols_c_path or (repo.root / "src" / "boot" / "symbols.c")
     bindings = (
         dict(canonical_bindings)
@@ -207,7 +207,7 @@ def extract_section_bytes(
     layout: RepoLayout | None = None,
 ) -> bytes:
     repo = layout or repo_layout()
-    objcopy = repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-objcopy"
+    objcopy = repo.psyqo_toolchain_root / "bin" / "mipsel-none-elf-objcopy"
     flat = subprocess.run(
         [str(objcopy), "-O", "binary", "-j", section, str(linked_path), "/dev/stdout"],
         capture_output=True,
@@ -234,7 +234,7 @@ def function_bytes_match(
             "byte comparison requires the complete aligned original extent"
         )
     repo = layout or repo_layout()
-    nm = repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-nm"
+    nm = repo.psyqo_toolchain_root / "bin" / "mipsel-none-elf-nm"
     nm_result = subprocess.run(
         [str(nm), "-u", str(object_path)], capture_output=True, text=True
     )

@@ -63,7 +63,7 @@ def execution_inputs(root: Path) -> None:
     for name in (
         "bin",
         "toolchains/gcc-2.7.2-psx",
-        "toolchains/psn00b_toolchain/bin",
+        "toolchains/psyqo/bin",
         "config/compiler",
     ):
         (root / name).mkdir(parents=True, exist_ok=True)

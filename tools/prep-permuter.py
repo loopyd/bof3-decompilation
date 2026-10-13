@@ -84,7 +84,7 @@ def assemble_target(directory: Path) -> None:
     prepared.write_text("\n".join(prepared_lines) + "\n", encoding="ascii")
     subprocess.run(
         [
-            str(ROOT / "toolchains/psn00b_toolchain/bin/mipsel-none-elf-as"),
+            str(ROOT / "toolchains/psyqo/bin/mipsel-none-elf-as"),
             "-EL",
             "-march=r3000",
             "-mips1",
@@ -97,7 +97,7 @@ def assemble_target(directory: Path) -> None:
 
 
 def write_settings(directory: Path, function: str) -> None:
-    objdump = ROOT / "toolchains/psn00b_toolchain/bin/mipsel-none-elf-objdump"
+    objdump = ROOT / "toolchains/psyqo/bin/mipsel-none-elf-objdump"
     settings = f'''func_name = "{function}"
 compiler_type = "gcc"
 objdump_command = "{objdump} -drz -m mips:3000"

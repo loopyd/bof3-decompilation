@@ -15,7 +15,7 @@ from harness.toolchain.base import Toolchain
 
 
 EXPECTED_LABELS = (
-    "PSn00b",
+    "PSYQo",
     "GCC 2.7.2",
     "maspsx",
     "Rizin",

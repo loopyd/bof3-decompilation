@@ -136,7 +136,7 @@ def search_flags(
     catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
     objdump = os.environ.get(
         "PSX_OBJDUMP",
-        str(layout.psn00b_toolchain_root / "bin" / "mipsel-none-elf-objdump"),
+        str(layout.psyqo_toolchain_root / "bin" / "mipsel-none-elf-objdump"),
     )
 
     # Resolve variant environment when a compiler_id is given.

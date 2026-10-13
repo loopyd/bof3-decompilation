@@ -121,7 +121,7 @@ def describe_seeds(invocation: Invocation) -> list[dict]:
                 path=os.get_exec_path(environment),
                 assembler=environment.get("PSX_AS")
                 or str(
-                    policy.root / "toolchains/psn00b_toolchain/bin/mipsel-none-elf-as"
+                    policy.root / "toolchains/psyqo/bin/mipsel-none-elf-as"
                 ),
             )
         seeds.append(seed)

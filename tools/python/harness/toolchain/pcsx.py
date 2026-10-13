@@ -349,6 +349,19 @@ def is_redux_artifact(submodule: str, relative: str, path: Path) -> bool:
                 or (path.parts[0] == "deps" and path.suffix == ".dep")
             )
         )
+    if relative == f"{submodule}/src/mips":
+        return (
+            str(path) == "psyqo/libpsyqo.a"
+            or (path.parts[0] in {"common", "psyqo"} and path.suffix in {".o", ".dep"})
+            or (
+                path.parts[:3] == ("third_party", "EASTL", "source")
+                and path.suffix in {".o", ".dep"}
+            )
+            or (
+                path.parts[:2] == ("psyqo", "examples")
+                and path.suffix in {".elf", ".map", ".ps-exe"}
+            )
+        )
     if relative == f"{submodule}/third_party/luajit":
         return str(path) in {
             "src/host/buildvm",

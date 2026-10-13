@@ -175,8 +175,8 @@ Directory indexes change: archive the index URL + access date in the case manife
 
 ## Additional dev/debug tool references
 
-- PSn00bSDK: https://github.com/Lameguy64/PSn00bSDK
-- PSn00b Debugger: https://github.com/Lameguy64/PSn00bSDK/tree/master/tools
+- PSYQo SDK and Nugget: https://github.com/pcsx-redux/nugget
+- Nugget documentation: https://pcsx-redux.github.io/nugget/
 - no$psx / nocash docs: https://problemkaputt.de/psx.htm
 - psx.dev community/documentation: https://www.psx.dev/
 

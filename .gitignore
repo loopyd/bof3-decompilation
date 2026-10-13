@@ -51,10 +51,7 @@ inputs/external/private-assets/toolchains/gcc/
 toolchains/downloads/
 toolchains/gcc-2.7.2-psx/*
 !toolchains/gcc-2.7.2-psx/.gitkeep
-toolchains/psn00b_toolchain/*
-!toolchains/psn00b_toolchain/.gitkeep
-toolchains/psn00bsdk/*
-!toolchains/psn00bsdk/.gitkeep
+toolchains/psyqo/
 toolchains/rizin/*
 toolchains/pcsx-redux-agentic/
 toolchains/aspsx-psyq-binaries/*

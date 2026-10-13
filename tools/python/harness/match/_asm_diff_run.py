@@ -173,8 +173,8 @@ def _asm_diff_compare(
     if not binary_path.is_file():
         raise FileNotFoundError(f"original binary not found: {binary_path}")
 
-    objdump_path = repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-objdump"
-    nm_path = repo.psn00b_toolchain_root / "bin" / "mipsel-none-elf-nm"
+    objdump_path = repo.psyqo_toolchain_root / "bin" / "mipsel-none-elf-objdump"
+    nm_path = repo.psyqo_toolchain_root / "bin" / "mipsel-none-elf-nm"
     if request.diagnostics and not os.access(objdump_path, os.X_OK):
         raise FileNotFoundError(f"missing executable {objdump_path}; run `just setup`")
     if not os.access(nm_path, os.X_OK):

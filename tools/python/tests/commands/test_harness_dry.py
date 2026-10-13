@@ -331,7 +331,7 @@ def test_toolchain_initializer_imports_base_plus_concrete_registrations() -> Non
         "m2c",
         "maspsx",
         "permuter",
-        "psn00b",
+        "psyqo",
         "rizin",
         "rz_psxdec",
         "signatures",

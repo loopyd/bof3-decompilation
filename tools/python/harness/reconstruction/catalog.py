@@ -20,8 +20,8 @@ TOOL_PATHS = {
     "driver": "toolchains/gcc-2.7.2-psx/gcc",
     "cc1": "toolchains/gcc-2.7.2-psx/cc1",
     "cpp": "toolchains/gcc-2.7.2-psx/cpp",
-    "assembler": "toolchains/psn00b_toolchain/bin/mipsel-none-elf-as",
-    "linker": "toolchains/psn00b_toolchain/bin/mipsel-none-elf-ld",
+    "assembler": "toolchains/psyqo/bin/mipsel-none-elf-as",
+    "linker": "toolchains/psyqo/bin/mipsel-none-elf-ld",
     "maspsx_entry": "third_party/maspsx/maspsx.py",
     "maspsx_package": "third_party/maspsx/maspsx/__init__.py",
 }

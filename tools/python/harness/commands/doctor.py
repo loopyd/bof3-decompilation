@@ -148,15 +148,21 @@ def _verify_wrappers(root: Path, source: Path) -> str:
     return f"{len(commands)} commands"
 
 
-def _rz_psxdec(root: Path) -> str:
+def _managed_component(root: Path, component: str) -> str:
     return ", ".join(
-        managed_lifecycle(repo_layout(root), verify_only=True, component="rz-psxdec")
+        managed_lifecycle(repo_layout(root), verify_only=True, component=component)
     )
 
 
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
-    tasks = TASKS if args.component == "all" else [Check("rz-psxdec", _rz_psxdec)]
+    tasks = (
+        TASKS
+        if args.component == "all"
+        else [
+            Check(args.component, lambda root: _managed_component(root, args.component))
+        ]
+    )
     failed = 0
     for task in tasks:
         try:
@@ -177,7 +183,9 @@ def run(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="doctor")
     add_root_argument(parser)
-    parser.add_argument("--component", choices=("all", "rz-psxdec"), default="all")
+    parser.add_argument(
+        "--component", choices=("all", "psyqo", "rz-psxdec"), default="all"
+    )
     parser.set_defaults(handler=run)
     return parser
 

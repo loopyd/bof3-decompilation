@@ -44,8 +44,8 @@ class RepoLayout:
     emi_ex_src: Path
     harness_disk_bin: Path
     emi_ex_bin: Path
-    psn00b_toolchain_root: Path
-    psn00b_sdk_root: Path
+    psyqo_toolchain_root: Path
+    psyqo_sdk_root: Path
     gcc272_psx_root: Path
     gcc_variants_root: Path
     psyq_root: Path
@@ -97,8 +97,13 @@ def repo_layout(
         / "release"
         / "bof3-disk",
         emi_ex_bin=build / "tools" / "rust" / "emi-ex" / "release" / "emi-ex",
-        psn00b_toolchain_root=toolchains / "psn00b_toolchain",
-        psn00b_sdk_root=toolchains / "psn00bsdk",
+        psyqo_toolchain_root=toolchains / "psyqo",
+        psyqo_sdk_root=resolved
+        / "third_party"
+        / "pcsx-redux-agentic"
+        / "src"
+        / "mips"
+        / "psyqo",
         gcc272_psx_root=toolchains / "gcc-2.7.2-psx",
         gcc_variants_root=toolchains / "gcc-variants",
         psyq_root=toolchains / "psyq" / psyq,

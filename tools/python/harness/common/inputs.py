@@ -458,7 +458,7 @@ def input_state(root: Path, target: str, transaction_paths: set[str]) -> dict:
     paths.update(
         p.relative_to(root).as_posix() for p in (root / "bin").iterdir() if p.is_file()
     )
-    for directory in ("toolchains/gcc-2.7.2-psx", "toolchains/psn00b_toolchain/bin"):
+    for directory in ("toolchains/gcc-2.7.2-psx", "toolchains/psyqo/bin"):
         paths.update(
             p.relative_to(root).as_posix()
             for p in (root / directory).iterdir()

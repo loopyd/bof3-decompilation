@@ -263,7 +263,7 @@ def _link_object(
     data_sections: Mapping[str, int] | None,
 ) -> None:
     script = output.with_suffix(output.suffix + ".ld")
-    tools = layout.psn00b_toolchain_root / "bin"
+    tools = layout.psyqo_toolchain_root / "bin"
     objdump = tools / "mipsel-none-elf-objdump"
     placements = _placements(functions, data_sections or {})
     sections = read_allocated_sections(object_path, objdump, execution=execution)
@@ -362,7 +362,7 @@ def _extract_function(
         raise ValueError("reviewed function address must be an aligned 32-bit integer")
     if size > execution.output_limit:
         raise ValueError("reviewed function exceeds native extraction output limit")
-    tools = layout.psn00b_toolchain_root / "bin"
+    tools = layout.psyqo_toolchain_root / "bin"
     section = function_section(name)
     sections = read_allocated_sections(
         linked, tools / "mipsel-none-elf-objdump", execution=execution

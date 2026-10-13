@@ -269,7 +269,7 @@ class TestExplicitCompilerOverride:
             return SimpleNamespace(returncode=1)
 
         monkeypatch.setattr(flag_search.subprocess, "run", run)
-        layout = SimpleNamespace(root=tmp_path, psn00b_toolchain_root=tmp_path)
+        layout = SimpleNamespace(root=tmp_path, psyqo_toolchain_root=tmp_path)
         flag_search.search_flags(layout=layout, source=source, catalog_path=catalog)
         flag_search.search_flags(
             layout=layout, source=source, catalog_path=catalog, compiler_id="requested"
@@ -291,7 +291,7 @@ class TestDefaultObjdump:
 
         _root = _pl.Path(__file__).resolve().parents[2]
         _src = (_root / "harness" / "match" / "flag_search.py").read_text()
-        assert 'psn00b_toolchain_root / "bin" / "mipsel-none-elf-objdump"' in _src
+        assert 'psyqo_toolchain_root / "bin" / "mipsel-none-elf-objdump"' in _src
 
 
 class TestResolveBindings:

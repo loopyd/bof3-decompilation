@@ -16,8 +16,9 @@ of truth for compiler IDs, archive digests, and executable paths. GCC archives
 are cached, SHA-256-verified, under
 `inputs/external/private-assets/toolchains/gcc/`; installed variants live in
 ignored local state under `toolchains/gcc-variants/` and the canonical
-compiler under `toolchains/gcc-2.7.2-psx/` (unrelated PSn00b/Rizin downloads
-stay in `toolchains/downloads/`). Canonical GCC and every catalog variant share
+compiler under `toolchains/gcc-2.7.2-psx/`. Other downloaded assets stay in
+`toolchains/downloads/`; PSYQo's GNU source archives stay in
+`build/third_party/psyqo-toolchain/`. Canonical GCC and every catalog variant share
 one archive lifecycle: cache-symlink/non-regular rejection, cache-local
 temporary download, digest validation before atomic cache publication, fresh
 sibling staging extraction, staged `gcc --version` identity verification, and

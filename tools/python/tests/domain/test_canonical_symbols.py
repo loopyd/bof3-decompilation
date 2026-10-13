@@ -252,7 +252,7 @@ def test_link_uses_supplied_bindings_without_map_reload(
         undefined_symbols=["PadRead"],
         symbols_c_path=tmp_path / "symbols.c",
         canonical_bindings={"PadRead": 0x801CE760},
-        layout=SimpleNamespace(psn00b_toolchain_root=tmp_path, root=tmp_path),
+        layout=SimpleNamespace(psyqo_toolchain_root=tmp_path, root=tmp_path),
     )
     assert f"--defsym=PadRead={0x801CE760}" in commands[0]
 
