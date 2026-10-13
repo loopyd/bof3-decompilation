@@ -1,0 +1,18 @@
+{
+  "provider": "ninerouter",
+  "model": "gpt-combo",
+  "disabled": false,
+  "oracle": {
+    "enabled": true,
+    "provider": "ninerouter",
+    "model": "gpt-combo",
+    "thinkingLevel": "high",
+    "projectResources": true,
+    "maxFailedAttemptsPerBlocker": 3
+  },
+  "hideUnfocusedBanner": true,
+  "hideUnfocusedPrompt": true,
+  "autoSelectSingleGoal": true,
+  "strictExecutionContract": true,
+  "thinking_level": "medium"
+}

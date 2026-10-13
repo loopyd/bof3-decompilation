@@ -79,6 +79,8 @@ ledger/
 !/.codex/skills/*
 
 # Project Pi runtime state (tracked configuration lives in .pi/)
+.pi/goals/
+.pi/.goals-pool-snapshot.json
 .pi/sessions/
 .pi/memory/*.db
 .pi/memory/*.db-shm
