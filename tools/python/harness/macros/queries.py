@@ -27,6 +27,7 @@ def macros_payload(
     pattern: str | None,
     classification: str | None,
     limit: int,
+    definition_ids: list[str] | None = None,
 ) -> list[dict[str, Any]]:
     clauses, params = [], []
     if target:
@@ -38,6 +39,11 @@ def macros_payload(
     if classification:
         clauses.append("classification = ?")
         params.append(classification)
+    if definition_ids is not None:
+        if not definition_ids:
+            return []
+        clauses.append("id IN (" + ",".join("?" for _ in definition_ids) + ")")
+        params.extend(definition_ids)
     where = "WHERE " + " AND ".join(clauses) if clauses else ""
     params.append(-1 if limit == 0 else limit)
     return [
@@ -58,6 +64,7 @@ def macro_uses_payload(
     target: str | None,
     pattern: str | None,
     limit: int,
+    function_ids: list[str] | None = None,
 ) -> list[dict[str, Any]]:
     clauses, params = [], []
     if target:
@@ -66,6 +73,11 @@ def macro_uses_payload(
     if pattern:
         clauses.append("u.name LIKE ?")
         params.append(f"%{pattern}%")
+    if function_ids is not None:
+        if not function_ids:
+            return []
+        clauses.append("u.function_id IN (" + ",".join("?" for _ in function_ids) + ")")
+        params.extend(function_ids)
     where = "WHERE " + " AND ".join(clauses) if clauses else ""
     params.append(-1 if limit == 0 else limit)
     return [

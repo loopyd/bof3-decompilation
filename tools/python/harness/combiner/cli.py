@@ -44,6 +44,7 @@ def _discover(args: argparse.Namespace) -> int:
         method=args.method,
         minimum_members=args.minimum_members,
         minimum_shared_callees=args.minimum_shared_callees,
+        minimum_shared_macros=args.minimum_shared_macros,
         top_n=args.top_n,
         overlap_policy=args.overlap_policy,
         expected_fingerprint=args.expected_fingerprint,
@@ -158,15 +159,18 @@ def build_parser() -> argparse.ArgumentParser:
     commands = parser.add_subparsers(dest="command", required=True)
     add_recovery_commands(commands, "combiner", validate_recovery_manifest)
     discovery = commands.add_parser(
-        "discover", help="rank a complete finite pool of direct-call pairs"
+        "discover", help="rank a complete finite pool of target-local C pairs"
     )
     discovery.add_argument("target")
     discovery.add_argument("members", nargs="+")
     discovery.add_argument(
-        "--method", choices=("helper-call-cluster",), default="helper-call-cluster"
+        "--method",
+        choices=("helper-call-cluster", "macro-family"),
+        default="helper-call-cluster",
     )
     discovery.add_argument("--minimum-members", type=int, choices=(2,), default=2)
     discovery.add_argument("--minimum-shared-callees", type=int, default=1)
+    discovery.add_argument("--minimum-shared-macros", type=int, default=1)
     discovery.add_argument("--top-n", type=int, default=1)
     discovery.add_argument(
         "--overlap-policy", choices=("retain-all",), default="retain-all"
