@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from hashlib import sha256
 from pathlib import Path
 
 from harness.common.inputs import InputBatch
@@ -51,6 +52,12 @@ def inspect_source(root: Path, value: str) -> dict[str, object]:
                 "spelling": record.spelling,
                 "line": record.line,
                 "status": record.status,
+                "metadata_sha256": sha256(record.metadata.encode("utf-8")).hexdigest(),
+                "implementation_sha256": sha256(
+                    text[
+                        record.implementation_start : record.implementation_end
+                    ].encode("utf-8")
+                ).hexdigest(),
                 "metadata_range": [record.metadata_start, record.metadata_end],
                 "implementation_range": [
                     record.implementation_start,

@@ -66,9 +66,10 @@ verification; wrappers dispatch only. Harness never launches model processes.
 ## Combiner discovery
 
 `bin/harness combiner discover TARGET TARGET@0xADDRESS TARGET@0xADDRESS`
-runs `helper-call-cluster`, `macro-family` or `shared-state-type` over two to 32 distinct, explicitly
-owned C functions of one target. Each member needs attached source metadata, map/layout
-agreement and a finite aligned original range. The command validates the complete
+runs `helper-call-cluster`, `macro-family`, `shared-state-type` or
+`functional-subcategory` over two to 32 distinct, explicitly owned C functions of
+one target. Each member needs attached source metadata, map/layout agreement and
+a finite aligned original range. The command validates the complete
 reverse index and corroborates indexed direct calls through the domain MIPS
 decoder. It retains unresolved and unsupported indexed edges.
 
@@ -78,7 +79,9 @@ for distinct target-qualified callees. For `--method macro-family`,
 `--minimum-shared-macros` sets the threshold for shared target-private function-like
 definitions. For `--method shared-state-type`, `--minimum-shared-relations` sets
 the threshold for distinct shared storage addresses and private declaration
-spellings. Nondefault thresholds for another method cause refusal.
+spellings. For `--method functional-subcategory`,
+`--minimum-shared-subcategories` sets the threshold for distinct shared authored
+category IDs. Nondefault thresholds for another method cause refusal.
 
 Eligible pairs rank by descending count of their method's shared relations, then
 canonical member IDs. Below-threshold pairs retain their reasons. The `retain-all`
@@ -120,12 +123,37 @@ object extent, lifetime, semantic state ownership or safe grouping. The result
 separates shared declaration IDs from storage-candidate IDs and caps queried uses,
 declarations, references and storage evidence at 4,096 facts per category.
 
+The functional method requires `--subcategories FILE`, a canonical
+repository-relative JSON input, and `--expected-subcategories-sha256 SHA`.
+The document has exactly `schema`, `target`, `subcategories` and `members`;
+`schema` is `bof3.combiner-subcategories/v1` and `target` is the canonical target
+ID. Each category has exactly `id` and `description`. IDs use lowercase kebab-case
+and at most 80 characters; descriptions and rationales are nonempty trimmed text
+of at most 4,096 characters. Each member has exactly `id`, `source`,
+`source_sha256`, `original_sha256`, `metadata_sha256`, `implementation_sha256`
+and `subcategories`. Member IDs match the complete canonical pool exactly.
+Each member's `subcategories` entry has exactly `id` and `rationale` and refers
+to one declared category. Duplicate JSON keys, categories, members or assignments
+cause refusal. Categories and total assignments are each capped at 4,096.
+
+Bindings must match the current claimed source, its complete attached metadata,
+its ordinary C implementation and the complete reviewed original range. Use
+`bin/harness combiner inspect-source SOURCE` for source, metadata and implementation
+hashes and Unicode ranges; a discovery result supplies canonical member IDs and
+complete original-range hashes. Discovery captures literal transitive includes
+and the metadata providers. The full metadata block remains visible, including
+behavior continuation lines. Category descriptions and rationales remain authored
+classification leads. A current binding or shared category does not establish
+original semantics, a return contract, type facts, safe grouping or edit authority.
+Every member and pair still needs independent human-value assessment.
+
 The result pins membership, thresholds, method version, captured input bytes and
 modes, exact queried index facts, overlaps and ordering. Retain its `fingerprint` externally and pass
 it as `--expected-fingerprint` when rechecking the same pool. A changed pin, stale
 index, duplicate or cross-target member, invalid threshold, unsupported method or
 overlap policy, ownership drift, original JAL disagreement, moving input, more
-than 4,096 indexed call edges, storage-decoder disagreement or an expired
+than 4,096 indexed call edges, stale classification bindings, classification SHA
+disagreement, storage-decoder disagreement or an expired
 `--work-deadline` causes refusal.
 Individual files are capped at 16 MiB and the original image at 64 MiB.
 Discovery records neither human-value approval nor native or mutation acceptance.

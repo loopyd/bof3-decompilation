@@ -9,6 +9,7 @@ from hashlib import sha256
 from itertools import combinations
 from pathlib import Path
 
+from harness import io as harness_io
 from harness.analysis.index import connect, validate_index
 from harness.common import lexicon
 from harness.common.deadlines import check_deadline
@@ -16,8 +17,8 @@ from harness.common.digests import digest
 from harness.common.directory import validate_repo_path
 from harness.common.inputs import InputBatch
 from harness.domain import includes as include_facts
-from harness.domain import c_context, declarations, mips
-from harness.domain.functions import parse_function_records
+from harness.domain import c_context, declarations, mips, tags
+from harness.domain import functions as function_facts
 from harness.domain.ids import normalize_target_id, parse_function_id
 from harness.domain.layout import parse_splat_text
 from harness.domain.mips import static_jals
@@ -80,7 +81,9 @@ def _describe_function(root, resolved, layout, payload, binary, read, *, member)
     source = None
     if resolved.source is not None:
         source = resolved.source.relative_to(root).as_posix()
-        records = parse_function_records(read(resolved.source).decode("utf-8"))
+        records = function_facts.parse_function_records(
+            read(resolved.source).decode("utf-8")
+        )
         selected = [record for record in records if record.address == address]
         if len(selected) != 1 or selected[0].spelling != resolved.compiled_symbol:
             raise ValueError(
@@ -125,6 +128,7 @@ def _rank_pairs(members, relations, minimum_shared, top_n, *, feature="shared_ca
                             "shared_callees": "below minimum shared direct callees",
                             "shared_macros": "below minimum shared target-private macros",
                             "shared_relations": "below minimum shared storage/type relations",
+                            "shared_subcategories": "below minimum shared authored functional subcategories",
                         }[feature]
                     ]
                 ),
@@ -186,7 +190,7 @@ def _macro_relations(root, resolved, connection, members, functions, read):
         source = functions[member]["source"]
         path = root / source
         text = read(path).decode("utf-8")
-        records = parse_function_records(text)
+        records = function_facts.parse_function_records(text)
         selected[member] = next(
             record
             for record in records
@@ -424,7 +428,7 @@ def _private_type_relations(root, resolved, connection, members, functions, read
         raw = read(root / source)
         text = raw.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n")
         sources[source] = raw
-        records = parse_function_records(text)
+        records = function_facts.parse_function_records(text)
         identities = {
             functions[item]["address"]: item
             for item in members
@@ -629,6 +633,157 @@ def _storage_relations(root, resolved, connection, members, functions, payload, 
     return relations, references, original, candidates
 
 
+def _require_subcategory_fields(value, fields, label):
+    if not isinstance(value, dict) or set(value) != fields:
+        raise ValueError(f"{label} requires exactly {', '.join(sorted(fields))}")
+
+
+def _require_subcategory_text(value, label, *, identifier=False):
+    if (
+        not isinstance(value, str)
+        or not value.strip()
+        or value != value.strip()
+        or len(value) > (80 if identifier else 4096)
+        or (identifier and not re.fullmatch(r"[a-z][a-z0-9]*(?:-[a-z0-9]+)*", value))
+    ):
+        raise ValueError(f"invalid functional subcategory {label}")
+    return value
+
+
+def _collect_functional_relations(
+    root, members, functions, read, path, expected_sha256
+):
+    raw = read(root / validate_repo_path(path))
+    if sha256(raw).hexdigest() != expected_sha256:
+        raise ValueError("functional subcategory input differs from its external SHA")
+    document = json.loads(
+        raw.decode("utf-8"), object_pairs_hook=harness_io.unique_object
+    )
+    _require_subcategory_fields(
+        document, {"schema", "target", "subcategories", "members"}, "subcategory input"
+    )
+    if (
+        document["schema"] != "bof3.combiner-subcategories/v1"
+        or document["target"] != parse_function_id(members[0]).target.value
+    ):
+        raise ValueError(
+            "functional subcategory schema or target differs from the pool"
+        )
+    categories, assignments = document["subcategories"], document["members"]
+    if (
+        not isinstance(categories, list)
+        or len(categories) > _EDGE_LIMIT
+        or not isinstance(assignments, list)
+        or len(assignments) != len(members)
+    ):
+        raise ValueError("functional subcategories require a bounded exact member pool")
+    by_category = {}
+    for category in categories:
+        check_deadline()
+        _require_subcategory_fields(category, {"id", "description"}, "subcategory")
+        identity = _require_subcategory_text(category["id"], "ID", identifier=True)
+        _require_subcategory_text(category["description"], "description")
+        if identity in by_category:
+            raise ValueError("duplicate functional subcategory ID")
+        by_category[identity] = category
+    by_member = {}
+    for assignment in assignments:
+        check_deadline()
+        _require_subcategory_fields(
+            assignment,
+            {
+                "id",
+                "source",
+                "source_sha256",
+                "original_sha256",
+                "metadata_sha256",
+                "implementation_sha256",
+                "subcategories",
+            },
+            "subcategory member",
+        )
+        identity = assignment["id"]
+        if not isinstance(identity, str) or identity not in members:
+            raise ValueError("subcategory member is not a canonical ID in the pool")
+        if identity in by_member:
+            raise ValueError("duplicate functional subcategory member")
+        by_member[identity] = assignment
+    if set(by_member) != set(members):
+        raise ValueError(
+            "functional subcategory membership differs from the exact pool"
+        )
+    relations, evidence, count = {}, [], 0
+    for member in members:
+        check_deadline()
+        function = functions[member]
+        source = function["source"]
+        raw = read(root / source)
+        text = raw.decode("utf-8")
+        record = next(
+            item
+            for item in function_facts.parse_function_records(text)
+            if item.address == function["address"]
+        )
+        if record.kind != "function":
+            raise ValueError(
+                "functional subcategories require an ordinary C function body"
+            )
+        binding = {
+            "source": source,
+            "source_sha256": sha256(raw).hexdigest(),
+            "original_sha256": function["original_sha256"],
+            "metadata_sha256": sha256(record.metadata.encode("utf-8")).hexdigest(),
+            "implementation_sha256": sha256(
+                text[record.implementation_start : record.implementation_end].encode(
+                    "utf-8"
+                )
+            ).hexdigest(),
+        }
+        assignment = by_member[member]
+        if any(assignment[key] != value for key, value in binding.items()):
+            raise ValueError(f"functional subcategory binding is stale: {member}")
+        selected = assignment["subcategories"]
+        if not isinstance(selected, list):
+            raise ValueError("functional member subcategories must be a list")
+        count += len(selected)
+        if count > _EDGE_LIMIT:
+            raise ValueError("functional pool exceeds 4096 subcategory assignments")
+        relations[member] = set()
+        for category in selected:
+            check_deadline()
+            _require_subcategory_fields(
+                category, {"id", "rationale"}, "subcategory assignment"
+            )
+            identity = _require_subcategory_text(category["id"], "ID", identifier=True)
+            _require_subcategory_text(category["rationale"], "rationale")
+            if identity not in by_category or identity in relations[member]:
+                raise ValueError("unknown or duplicate functional member subcategory")
+            relations[member].add(identity)
+        evidence.append(
+            {
+                **assignment,
+                "subcategories": sorted(selected, key=lambda item: item["id"]),
+                "metadata": record.metadata,
+                "metadata_range": [record.metadata_start, record.metadata_end],
+                "implementation_range": [
+                    record.implementation_start,
+                    record.implementation_end,
+                ],
+                "binding_current": True,
+                "semantic_verified": False,
+            }
+        )
+    include_facts.local_include_files(
+        root,
+        [root / functions[member]["source"] for member in members],
+        strict=True,
+        require_literal=True,
+        include_angle=True,
+        read_source=lambda path: read(path).decode("utf-8"),
+    )
+    return relations, [by_category[key] for key in sorted(by_category)], evidence
+
+
 def discover_pairs(
     root: Path,
     target: str,
@@ -639,6 +794,9 @@ def discover_pairs(
     minimum_shared_callees: int = 1,
     minimum_shared_macros: int = 1,
     minimum_shared_relations: int = 1,
+    minimum_shared_subcategories: int = 1,
+    subcategories: str | None = None,
+    expected_subcategories_sha256: str | None = None,
     top_n: int = 1,
     overlap_policy: str = "retain-all",
     expected_fingerprint: str | None = None,
@@ -646,12 +804,16 @@ def discover_pairs(
     """Rank every unordered pair in an explicit target-local reviewed C pool."""
     check_deadline()
     if (
-        method not in {"helper-call-cluster", "macro-family", "shared-state-type"}
+        method
+        not in {
+            "helper-call-cluster",
+            "macro-family",
+            "shared-state-type",
+            "functional-subcategory",
+        }
         or overlap_policy != "retain-all"
     ):
-        raise ValueError(
-            "only helper-call-cluster, macro-family or shared-state-type with retain-all overlap is supported"
-        )
+        raise ValueError("unsupported discovery method or overlap policy")
     if type(minimum_members) is not int or minimum_members != 2:
         raise ValueError(
             "combiner discovery enumerates pairs; minimum members must be two"
@@ -659,15 +821,27 @@ def discover_pairs(
     _require_integer(minimum_shared_callees, "minimum shared callees", _EDGE_LIMIT)
     _require_integer(minimum_shared_macros, "minimum shared macros", _EDGE_LIMIT)
     _require_integer(minimum_shared_relations, "minimum shared relations", _EDGE_LIMIT)
+    _require_integer(
+        minimum_shared_subcategories, "minimum shared subcategories", _EDGE_LIMIT
+    )
     if any(
         value != 1 and method != owner
         for owner, value in (
             ("helper-call-cluster", minimum_shared_callees),
             ("macro-family", minimum_shared_macros),
             ("shared-state-type", minimum_shared_relations),
+            ("functional-subcategory", minimum_shared_subcategories),
         )
     ):
         raise ValueError("discovery rejects a threshold for another method")
+    if method == "functional-subcategory":
+        validate_repo_path(subcategories)
+        if not isinstance(expected_subcategories_sha256, str) or not re.fullmatch(
+            r"[0-9a-f]{64}", expected_subcategories_sha256
+        ):
+            raise ValueError("functional subcategories require an external SHA-256 pin")
+    elif subcategories is not None or expected_subcategories_sha256 is not None:
+        raise ValueError("subcategory input belongs only to functional-subcategory")
     _require_integer(top_n, "top N", _POOL_LIMIT * (_POOL_LIMIT - 1) // 2)
     target = normalize_target_id(target).value
     parsed = [parse_function_id(selector) for selector in selectors]
@@ -710,6 +884,15 @@ def discover_pairs(
             read(path)
         if method == "macro-family":
             for module in (macro_facts, macro_index, macro_queries, include_facts):
+                read(Path(module.__file__))
+        elif method == "functional-subcategory":
+            for module in (
+                function_facts,
+                tags,
+                lexicon,
+                include_facts,
+                harness_io,
+            ):
                 read(Path(module.__file__))
         elif method == "shared-state-type":
             for module in (
@@ -829,6 +1012,7 @@ def discover_pairs(
             ).fetchone()
         )
         macro_definitions, macro_uses = [], []
+        functional_categories, functional_assignments = [], []
         (
             type_definitions,
             lexical_uses,
@@ -844,6 +1028,17 @@ def discover_pairs(
                 members,
                 functions,
                 read,
+            )
+        elif method == "functional-subcategory":
+            direct_callees, functional_categories, functional_assignments = (
+                _collect_functional_relations(
+                    root,
+                    members,
+                    functions,
+                    read,
+                    subcategories,
+                    expected_subcategories_sha256,
+                )
             )
         elif method == "shared-state-type":
             direct_callees, type_definitions, lexical_uses = _private_type_relations(
@@ -875,20 +1070,21 @@ def discover_pairs(
             )
             if state != pins[name]:
                 raise ValueError(f"discovery input changed during enumeration: {name}")
+    minimum_shared, feature = {
+        "helper-call-cluster": (minimum_shared_callees, "shared_callees"),
+        "macro-family": (minimum_shared_macros, "shared_macros"),
+        "shared-state-type": (minimum_shared_relations, "shared_relations"),
+        "functional-subcategory": (
+            minimum_shared_subcategories,
+            "shared_subcategories",
+        ),
+    }[method]
     pairs, ranking, selection = _rank_pairs(
         members,
         direct_callees,
-        minimum_shared_callees
-        if method == "helper-call-cluster"
-        else minimum_shared_macros
-        if method == "macro-family"
-        else minimum_shared_relations,
+        minimum_shared,
         top_n,
-        feature="shared_callees"
-        if method == "helper-call-cluster"
-        else "shared_macros"
-        if method == "macro-family"
-        else "shared_relations",
+        feature=feature,
     )
     result = {
         "schema": "bof3.combiner-discovery/v1",
@@ -948,6 +1144,21 @@ def discover_pairs(
                 "calls": calls,
                 "unresolved_calls": unresolved,
             }
+        )
+        result["fingerprint"] = digest(
+            {key: value for key, value in result.items() if key != "fingerprint"}
+        )
+    elif method == "functional-subcategory":
+        result.pop("minimum_shared_callees")
+        result.update(
+            minimum_shared_subcategories=minimum_shared_subcategories,
+            subcategories=functional_categories,
+            subcategory_assignments=functional_assignments,
+            classification_policy={
+                "authority": "authored functional classification leads requiring independent review",
+                "binding": "current source, attached metadata, ordinary implementation and complete original-range hashes",
+                "coverage": "complete fixed classification pool, not complete semantic or native coverage",
+            },
         )
         result["fingerprint"] = digest(
             {key: value for key, value in result.items() if key != "fingerprint"}
