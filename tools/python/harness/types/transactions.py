@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -14,7 +15,7 @@ from harness.common.process import run_command
 from harness.common.checks import capture_partial_baselines, required_checks
 from harness.common.digests import digest
 from harness.common.deadlines import bind_deadline, suspend_work_deadline
-from harness.common.files import preflight_existing_replacements
+from harness.common.files import preflight_existing_replacements, read_file
 from harness.common.history import validate_application_history
 from harness.common.lease import exclude_writers, verify_writer
 from harness.common.submodules import protect_artifacts
@@ -31,9 +32,13 @@ from harness.common.workspace import adopted_baseline as _adopted_baseline
 from harness.common.workspace import workspace_baseline as _workspace_baseline
 from harness.common.workspace import workspace_state as _workspace_state
 from harness.domain.ids import normalize_target_id
+from harness.domain.claims import collect_manifest_source_addresses
+from harness.domain.layout import parse_splat_layout
 from harness.domain.manifests import load_target_manifests
 from harness.domain.registry import resolve_function
 from harness.domain import functions as source_functions
+from harness.domain.sources import expected_lift_sources, source_expected_key
+from harness.domain.tags import count_function_metadata
 from harness.types.proofs import private_proofs, validate_shared_header
 from harness.types.review import artifact_paths, validate_reviewed_candidate
 from harness.types.review import candidate_account as _candidate_account
@@ -147,7 +152,6 @@ def _functions(
             raise ValueError(
                 f"affected function must be exact/partial and manifest-claimed: {selector}"
             )
-        source_functions.require_single_source(resolved.source)
         result.append(
             {
                 "selector": selector,
@@ -158,7 +162,124 @@ def _functions(
                 "source": resolved.source.relative_to(root).as_posix(),
             }
         )
+    _validate_function_groups(root, connection, result)
     return result
+
+
+def _validate_function_groups(
+    root: Path, connection: Any, functions: list[dict[str, str]]
+) -> None:
+    manifests = load_target_manifests(root)
+    groups = {}
+    for function in functions:
+        groups.setdefault((function["target"], function["source"]), []).append(function)
+    for (target, name), selected in groups.items():
+        raw = read_file(root, name, max_bytes=4 * 1024 * 1024)
+        text = raw.decode("utf-8")
+        if count_function_metadata(text) <= 1:
+            source_functions.validate_single_source_changes({name: text})
+            continue
+        records = source_functions.parse_function_records(text)
+        manifest = manifests[target]
+        owners = [
+            entry.id.value
+            for entry in manifests.values()
+            if name in entry.sources + entry.support_sources
+        ]
+        if owners != [target] or name not in manifest.sources:
+            raise ValueError(
+                f"grouped type source requires one explicit lift owner: {name}"
+            )
+        layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
+        expected = expected_lift_sources(layout, root / manifest.source_dir)
+        addresses = expected.get(
+            source_expected_key(root / manifest.source_dir, root / name)
+        )
+        addresses = set(addresses) if isinstance(addresses, tuple) else {addresses}
+        claimed = {
+            address
+            for path, address in collect_manifest_source_addresses(
+                root, manifest, expected_lifts=expected
+            )
+            if path == root / name
+        }
+        identities = {
+            (record.address, record.spelling, record.status) for record in records
+        }
+        supplied = {
+            (int(function["address"], 16), function["function"], function["status"])
+            for function in selected
+        }
+        indexed = connection.execute(
+            "SELECT address, compiled_symbol, lift_status FROM functions "
+            "WHERE target_id=? AND source IN (?, ?)",
+            (target, name, str(root / name)),
+        ).fetchall()
+        fingerprint = connection.execute(
+            "SELECT sha256 FROM source_fingerprints WHERE target_id=? AND source_path=?",
+            (target, name),
+        ).fetchone()
+        if (
+            any(record.kind != "function" for record in records)
+            or {record.address for record in records} != addresses
+            or claimed != addresses
+            or supplied != identities
+            or len(selected) != len(records)
+            or len(indexed) != len(records)
+            or {tuple(row) for row in indexed} != identities
+            or fingerprint is None
+            or fingerprint[0] != hashlib.sha256(raw).hexdigest()
+        ):
+            raise ValueError(f"grouped type source membership or index differs: {name}")
+
+
+def _source_context(
+    text: str, records: tuple[source_functions.FunctionRecord, ...]
+) -> str:
+    parts, position = [], 0
+    for record in records:
+        parts.append(text[position : record.implementation_start])
+        position = record.implementation_end
+    return "".join(parts) + text[position:]
+
+
+def _validate_source_changes(
+    root: Path, manifest: dict[str, Any], changes: object
+) -> None:
+    if not isinstance(changes, dict):
+        return
+    for name, content in changes.items():
+        if (
+            not isinstance(name, str)
+            or not name.endswith(".c")
+            or not isinstance(content, str)
+        ):
+            continue
+        if name not in manifest["allowed_paths"]:
+            source_functions.validate_single_source_changes({name: content})
+            continue
+        before = read_file(root, name, max_bytes=4 * 1024 * 1024).decode("utf-8")
+        if count_function_metadata(before) <= 1:
+            source_functions.validate_single_source_changes({name: content})
+            continue
+        old = source_functions.parse_function_records(before)
+        new = source_functions.parse_function_records(content)
+
+        def identity(record):
+            return (
+                record.address,
+                record.metadata,
+                record.spelling,
+                record.kind,
+                record.status,
+            )
+
+        if tuple(map(identity, old)) != tuple(map(identity, new)) or _source_context(
+            before, old
+        ) != _source_context(content, new):
+            raise ValueError(
+                f"grouped type edit must preserve records and source context: {name}"
+            )
 
 
 def _private_proofs(
@@ -302,7 +423,7 @@ def run_transaction(
     deadline: float | None = None,
 ) -> dict[str, Any]:
     manifest = _manifest(root, manifest_value, rederive=True)
-    source_functions.validate_single_source_changes(changes)
+    _validate_source_changes(root, manifest, changes)
     allowed = validate_paths(root, manifest["allowed_paths"])
     if (
         file_state(root, allowed) != manifest["pre_state"]

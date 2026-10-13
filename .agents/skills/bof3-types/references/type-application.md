@@ -47,6 +47,14 @@ not aggregate bound. Admission capture never replaces live rederivation.
 
 Changes JSON maps only manifest-owned paths to complete replacement text. Owner
 runs checks/immutable receipts and ordinary-failure rollback under lifecycle rules.
+Existing grouped C sources require one explicit lift owner and every attached
+ordinary function in `affected_functions`. Preparation reconciles complete records
+with reviewed boundaries, claims, indexed symbols and statuses, and source hashes.
+Proposed images preserve record order, metadata, spellings and every byte outside
+implementation spans; type edits may change bodies and signatures. Captured C files
+are capped at 4 MiB. Native checks still run for every member and currently reject
+grouped ordinary compilation. Preparation does not establish native preservation
+or authorize source consolidation.
 Externally retain application digest before verification; never derive expected pin
 from supplied artifact. Shared preparation requires two independently accepted
 private envelopes, distinct targets/paths/digests, identical representation and
