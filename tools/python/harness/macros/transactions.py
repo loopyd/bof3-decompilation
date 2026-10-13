@@ -31,7 +31,6 @@ from harness.common.paths import validate_paths
 from harness.common.workspace import workspace_backup, verify_workspace
 from harness.common.runtime import write_attestation
 from harness.domain.manifests import load_target_manifests
-from harness.domain import functions as source_functions
 from harness.macros import accounting as macro_accounting
 from harness.macros import creation as macro_creation
 from harness.macros import owners as macro_owners
@@ -229,7 +228,7 @@ def run_transaction(
     deadline: float | None = None,
 ) -> dict[str, Any]:
     manifest = _manifest(root, manifest_value, rederive=True)
-    source_functions.validate_single_source_changes(changes)
+    macro_owners.validate_source_changes(root, manifest, changes)
     macro_creation.validate_changes(root, manifest, changes)
     allowed = validate_paths(root, manifest["allowed_paths"])
     validate_proof_inputs(root, manifest["exact_function_proofs"])

@@ -54,6 +54,16 @@ Compact directives, comments and continuations supported; commented-out includes
 excluded. Conditional/computed selection remains unproven. Lexical coverage never
 replaces actual preprocessor binding or independent `all_use_sites`.
 
+Grouped C sources require one explicit lift owner, complete Splat/claim/index
+membership and a current indexed macro-source hash. Every attached ordinary
+function must appear in `affected_functions` for preservation checks. Capture is
+limited to 4 MiB. Proposed images preserve ordered addresses, metadata, spellings,
+kinds, progress and text outside implementations. Template replacement, C-owner
+macro-definition changes and new includes remain refused for grouped images.
+Legacy single-function behavior is unchanged. Per-member native checks remain
+required and currently refuse ordinary grouped sources; preparation grants no
+native preservation or production acceptance.
+
 CHANGES maps allowed paths to complete text. Owner rederives, confines writes,
 gates and publishes immutable receipts. Context requires actual implementation ID;
 legacy omission cannot gain final acceptance. Ordinary failure restores owned PRE
