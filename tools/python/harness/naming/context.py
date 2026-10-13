@@ -14,6 +14,7 @@ from harness.domain.claims import manifest_source_paths, resolve_source_for_path
 from harness.naming.debt import address_of, collect_naming_debt
 from harness.domain.registry import payload_end_for
 from harness.naming.annotations import expected_reviewed_digest, reviewed_annotations
+from harness.naming.checks import caller_records
 from harness.naming.annotations import reviewed_scope_digest as _reviewed_scope_digest
 from harness.naming.facts import corroborators as _corroborators
 from harness.naming.facts import name_terms_v3 as _name_terms_v3
@@ -169,7 +170,14 @@ def pre_apply_facts(
     )
     for relative in facts["scope"]["source_locations"]:
         if relative.endswith(".c"):
-            require_single_source(ctx.root / relative)
+            source = ctx.root / relative
+            if (
+                relative != facts["scope"]["definition"]
+                and relative in ctx.manifest.sources
+            ):
+                caller_records(ctx.root, ctx.target, relative)
+            else:
+                require_single_source(source)
     if destination is not None:
         require_single_source(destination)
     facts["destination"] = (

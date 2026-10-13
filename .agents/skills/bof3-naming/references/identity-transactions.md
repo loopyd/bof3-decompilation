@@ -34,6 +34,15 @@ Immutable parent order: audit preflight → caller-approved safe `bin/harness na
 
 ## Repair and readiness
 
+Function checks enumerate every attached exact record in affected C callers and
+verify each target-owned source and compiled spelling. Empty, partial, duplicate
+or ambiguous caller records refuse the check. Grouped callers require one
+explicit lift owner and exact equality among attached records, claims and
+reviewed Splat boundaries. The selected definition remains a single function.
+Declared support units with the selected `WEAK_SYMBOL_AT` address remain binding
+locations; they do not become function callers.
+Native comparison gates remain required before transaction acceptance.
+
 Run `bin/harness analysis readiness [TARGET]` before application; close or explicitly retain blockers. Refresh disposable indexes only after authoritative edits pass. After recovery, rerun readiness against the fresh index before declaring readiness. Safe metadata repair requires caller-approved `bin/harness naming prepare TARGET --repair` and live asm-diff/byte-match exactness before progress metadata canonicalization; ownership/layout remain blocked. One transaction at a time; regeneration failure blocks.
 
 ## Rollback

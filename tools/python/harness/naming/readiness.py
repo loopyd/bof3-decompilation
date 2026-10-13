@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from harness.analysis.index import connect
-from harness.domain.claims import manifest_source_paths
+from harness.domain.claims import manifest_binding_sources, manifest_source_paths
 from harness.domain.ids import normalize_target_id
 from harness.domain.includes import local_include_files
 from harness.domain.layout import parse_splat_layout
@@ -18,7 +18,11 @@ from harness.naming.debt import address_of
 from harness.domain.psx import binary_offset_for
 from harness.domain.registry import payload_end_for
 from harness.domain.sources import LiftMetadataError
-from harness.domain.symbols import load_target_symbols, map_path
+from harness.domain.symbols import (
+    load_target_symbols,
+    map_path,
+    parse_weak_symbol_bindings,
+)
 from harness.domain.tags import (
     BEHAVIOR_TAG_RE,
     STATUS_TAG_RE,
@@ -118,6 +122,13 @@ def transaction_scope(
     owned = _owned_files(root, target, manifest)
     owned_rel = set(_files_containing(root, old_name, owned))
     bindings = [path for path in owned_rel if path.endswith("symbols.txt")]
+    bindings += [
+        path.relative_to(root).as_posix()
+        for path in manifest_binding_sources(root, manifest)
+        if path.relative_to(root).as_posix() in owned_rel
+        and parse_weak_symbol_bindings(path.read_text(encoding="utf-8")).get(old_name)
+        == address
+    ]
     source_locations = [path for path in owned_rel if path not in bindings]
     manifest_rel = f"config/targets/{target}/target.toml"
     if manifest_rel not in source_locations:
