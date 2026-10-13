@@ -45,11 +45,11 @@ class SdlToolchain(Toolchain):
 
     @property
     def prefix(self) -> Path:
-        return self.layout.toolchains_dir / f"pcsx-redux/sdl3-{VERSION}"
+        return self.layout.toolchains_dir / f"pcsx-redux-agentic/sdl3-{VERSION}"
 
     @property
     def source(self) -> Path:
-        return self.layout.toolchains_dir / f"pcsx-redux/source/SDL3-{VERSION}"
+        return self.layout.toolchains_dir / f"pcsx-redux-agentic/source/SDL3-{VERSION}"
 
     @property
     def library(self) -> Path:
@@ -101,7 +101,7 @@ class SdlToolchain(Toolchain):
         return expected
 
     def build(self) -> str:
-        build = self.layout.toolchains_dir / f"pcsx-redux/build/sdl3-{VERSION}"
+        build = self.layout.toolchains_dir / f"pcsx-redux-agentic/build/sdl3-{VERSION}"
         arguments = [
             "cmake",
             "-S",

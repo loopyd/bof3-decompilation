@@ -1,4 +1,4 @@
-# toolchains
+# Toolchains
 
 Local SDKs and compilers live here. Generated/staged toolchains are untracked;
 the pinned `psx_psyq_signatures/` Git submodule is the sole tracked exception.
@@ -15,13 +15,16 @@ stages it under `toolchains/rizin/`; use `bin/harness analysis rizin` rather tha
 installation. `just doctor` verifies its MIPS and JSON-analysis capabilities
 before snapshots are used.
 
-`third_party/splat` (tag `0.41.1`) and `third_party/spimdisasm` (tag `1.42.2`)
-are pinned Python source submodules. `just setup` installs both, including
-Splat's MIPS extras, into `.venv`. `third_party/decomp-permuter` is likewise a
-pinned submodule; setup installs its required `toml` module into `.venv`.
-It similarly installs the pinned `asm-differ` submodule and its declared
-dependencies. Use `bin/harness source splat`, `bin/harness analysis spimdisasm`, `bin/harness lift permute`, and
-`bin/harness lift asm-diff` rather than host installs.
+Splat, spimdisasm, decomp-permuter, and asm-differ are pinned source submodules
+under `third_party/`. `just setup` installs their Python dependencies, including
+Splat's MIPS extras, into `.venv`. Use `bin/harness source splat`,
+`bin/harness analysis spimdisasm`, `bin/harness lift permute`, and
+`bin/harness lift asm-diff` to run the managed versions.
+
+The emulator source and embedded Lua live in `third_party/pcsx-redux-agentic/`.
+Its local SDL source, build, and installation live under
+`toolchains/pcsx-redux-agentic/`. See the
+[emulator guide](../docs/agents/pcsx-redux.md) for setup and invocation.
 
 The signature submodule is used only by the permanent, narrow
 `bin/harness psyq {scan|calls|proposal}` evidence adapter. Do not add other
@@ -38,7 +41,9 @@ headers remain the build-facing declaration baseline.
 
 ## Historical GCC variants
 
-Four verified opt-in candidates live in `config/compiler/variants.json`: `gcc-2.6.3-psx`, `gcc-2.8.0-psx`, `gcc-2.8.1-psx`, and `gcc-2.95.2-psx`. They remain comparison candidates unless an exact, target-qualified object selection is recorded; currently `bof3/audio/dispatchSoundCue.c` selects `gcc-2.6.3-psx`, while every other object uses canonical GCC 2.7.2. Add another candidate only with the same reviewed provenance. The `bin/harness build variants` CLI manages the lifecycle:
+`config/compiler/variants.json` owns the reviewed compiler catalog. Variants
+remain comparison candidates until an exact, target-qualified selection is
+recorded. Use the CLI to discover available IDs and manage installed versions:
 
 ```sh
 bin/harness build variants list                    # show catalog entries
@@ -61,10 +66,11 @@ temporary file, validates the digest before atomically publishing the cache
 entry, extracts to a fresh sibling staging directory, verifies the staged
 `gcc --version` identity, and only then atomically replaces the install; a
 failed network, digest, extraction, or identity check preserves a prior
-verified install. `bin/harness build variants path <id>` and generated
-`compile_commands.json` resolve a selected compiler through the same
-ensure-installed operation, so a missing install self-heals from the
-verified cache. `just setup` primes the canonical compiler plus every host-compatible entry
+verified install. `bin/harness build variants path <id>` and compilation database
+generation verify the selected installation without downloading or repairing it.
+A missing installation requires `bin/harness build variants install <id>` with
+specific installation authorization. `just setup` primes the canonical compiler
+plus every host-compatible entry
 in the `config/compiler/variants.json` catalog; a host-incompatible
 candidate is skipped with its ID and host reported, an invalid catalog fails
 setup closed, and a catalog with no candidates installs nothing. Setup never
@@ -72,4 +78,8 @@ sets `PSX_GCC`, adds an object override, or changes the default compilation
 selection. A corrupt or malformed existing install fails closed
 rather than falling back to canonical or host GCC.
 
-A catalog entry never changes the compiler until an exact, target-qualified object selection is added as `BOF3_OBJCOMPILER_<sanitized-source-path>` in `config/compiler/object-flags.cmake`. That file is the reviewed object-selection authority; absent an entry, the canonical compiler remains selected.
+Function metadata can select `@compiler` or `@gcc`; those tags take precedence
+over legacy `BOF3_OBJCOMPILER_<sanitized-source-path>` entries in
+`config/compiler/object-flags.cmake`. With neither selection, the canonical
+compiler remains selected. See [compiler settings](../docs/agents/compiler-variants.md#function-compiler-settings)
+for the complete resolution and evidence contract.

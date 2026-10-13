@@ -1,7 +1,5 @@
 # Contributing
 
-Thanks for helping improve this reverse-engineering project.
-
 ## Ground rules
 
 - Never submit game assets, extracted binaries, copyrighted source, or large
@@ -19,8 +17,7 @@ Thanks for helping improve this reverse-engineering project.
   only with `MATCHING_AID`, a live byte match, and independent review), and
   `WEAK_SYMBOL_AT` for address binding. Direct numeric register spelling and
   `INCLUDE_ASM` require explicit approval. See
-  [Function matching](docs/agents/matching.md) for the matching workflow and
-  [AGENTS.md](AGENTS.md) for the complete sanctioned-helper contract.
+  [Function matching](docs/agents/matching.md) for the workflow and helper contract.
 
 Read [AGENTS.md](AGENTS.md), [Tool usage](docs/agents/tool-usage.md), and
 [Function matching](docs/agents/matching.md) before proposing a lift.

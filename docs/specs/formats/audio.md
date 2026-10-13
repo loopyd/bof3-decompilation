@@ -116,7 +116,6 @@ This gives 224 mono frames or 112 stereo frames per group.
 For 8-bit data, four signed-byte units use parameters 4–7 and one column each,
 giving 112 mono or 56 stereo frames. These layouts follow
 [PSX-SPX's XA format research](https://psx-spx.consoledev.net/cdromformat/#cdrom-xa-audio-adpcm-compression).
-The previous contiguous-group/interleaved-nibble description was incorrect.
 
 ### Coding byte
 
@@ -710,8 +709,7 @@ reconstruct into 119 byte-identical complete SEP entries. Consistent note-veloci
 edits change 231,340 source events across all 119 entries; complete retranslation
 agrees with the edited MIDI and RustySynth independently parses those SMFs. These
 checks establish preservation and bounded inverse behavior, not independent
-gameplay fidelity or full song-folder packing. Evidence is retained under
-`out/audio-migration/sequence-edit-*`.
+gameplay fidelity or full song-folder packing.
 
 ### MIDI timing reconstruction
 
@@ -800,8 +798,6 @@ bank and compares preset/instrument counts with independent RustySynth parsing.
 The 178 existing conversion rejections remain: 133 pitch-table contexts, four
 tuning ranges and 41 zero pitches. This validates generated-bank structure and
 sample reading, not those rejected contexts or arbitrary external SF2 semantics.
-Twenty-five focused tests with local media pass; evidence is retained under
-`out/audio-migration/sf2-read-*`.
 
 ## Rust SoundFont sample packing
 
@@ -1124,9 +1120,7 @@ sample starts after that prefix; later starts accumulate the declared sample
 sizes. `Bank.body_prefix_bytes` and sample offsets retain this layout. The original
 loader agrees with all 1,020 corpus banks, all 8,385 sample starts, packed tone
 block indices and total transfer extents. All corpus prefixes are zero; synthetic
-banks verify nonzero prefixes. An older catalog fixture assumed the field was
-opaque and failed after the correction; its body and expected offsets now include
-the prefix rather than suppressing that coverage.
+banks verify nonzero prefixes.
 
 The corpus has 25 raw zero references and one other out-of-range reference:
 `BIN/BPLCHAR/DRG04_00.EMI` uses sample 3 with only two declared allocations.
@@ -1445,8 +1439,6 @@ gameplay or proof across every possible game state.
 
 Receipt: `out/audio-migration/earlier-pitch-active-rom-observer.json`, including BIOS,
 executable/archive identities, initialization calls, lookup witnesses and hashes.
-Initial diagnostic attempts exposed IRQ interference and an undrained output
-queue; the completed probe explicitly isolates and drains its synthetic phase.
 All 12,623 earlier-table corpus rows now map within half a cent, reducing rejected
 key rows from 17,599 to 4,976. Full-bank totals remain 842 strict / 843 with the
 stopped-pitch approximation: remaining adjacent-data failures still reject those
@@ -1593,8 +1585,7 @@ This is an executable consumption check, not a PSX audio comparison.
 BGM000 and BGM002 currently fail because tone key 0 reaches outside the verified
 pitch-table context. Their rejected tone ranges are retained rather than silently
 omitted. Resolving these initialized-game pitch contexts, complete music coverage,
-semantic music packing and full playback acceptance remain required. Logs and
-the BGM004 review artifacts are under `out/audio-migration/music-extract-*`.
+semantic music packing and full playback acceptance remain required.
 
 ### Music-folder packing
 
@@ -2411,8 +2402,7 @@ The media check scans all 3,536 raw VOICE sectors: 71 selected channel-0 sectors
 one EOF and 333,984 frames equal continuous decoding under the same model. That
 extent has no cross-channel handoff after the selected EOF; synthetic cases
 exercise handoffs. It drains output per selected sector and makes no clock or
-independent reference-audio claim. Original SDK, scheduler and cue-restart
-checks remain passing. Evidence uses `out/audio-migration/cd-selection-*`;
+independent reference-audio claim. Evidence uses `out/audio-migration/cd-selection-*`;
 [selection references](../../reference/cd-audio.md#xa-selection-and-eof) retain
 the external comparison boundary. Emphasis filtering, runtime bootstrap, device
 clocks and independent audio validation remain open.
@@ -2448,8 +2438,7 @@ transition test compares every generated count/hash with the unchanged
 Its initial full-rate tap direction was corrected against the primary source;
 the failed probe remains in `out/audio-migration/xa-coding-focused.log`.
 
-Existing fixed-format vectors, raw VOICE and original game scheduler/restart
-checks pass. Evidence uses `out/audio-migration/xa-coding-*` and
+Evidence uses `out/audio-migration/xa-coding-*` and
 [coding references](../../reference/cd-audio.md#xa-coding-transitions).
 These synthetic transitions establish the selected model's functional state
 behaviour, not measured hardware filters, clocks or independent game PCM.
@@ -3864,7 +3853,6 @@ verify layered reconstruction and exact PC playback after re-export.
 [Music integration](../../../tools/rust/bof3-audio/tests/music/programs.rs)
 checks whole-file unchanged BGM053 equality, failed capacity publication, and
 both original-runtime and PC playback before and after program 1 gains a tone.
-Receipts are `out/audio-migration/program-population-*.log`.
 
 
 ## Standalone driver reachability audit
@@ -3971,12 +3959,13 @@ standalone initialization image. They connect the preceding playback re-entry
 at `0x80174AE4` to the original setjmp/hook setup. Mutable state ownership,
 register liveness and independently initialized replacements remain to be proven.
 
-PCSX-Redux at commit `28438546c781fbe372a06399c82bed43ca2c6f4d` maps A0:A3 to
+PCSX-Redux at commit `28438546c781fbe372a06399c82bed43ca2c6f4d` pins its Nugget
+submodule to `77adff516017044f2c6d9b21f66c124b9593959a`. Nugget maps A0:A3 to
 `dequeueCDRomHandlers` in
-[its dispatch table](../../../third_party/pcsx-redux/src/mips/openbios/kernel/handlers.c).
-[CD deinitialization](../../../third_party/pcsx-redux/src/mips/openbios/cdrom/cdrom.c)
+[its dispatch table](https://github.com/pcsx-redux/nugget/blob/77adff516017044f2c6d9b21f66c124b9593959a/openbios/kernel/handlers.c#L208).
+[CD deinitialization](https://github.com/pcsx-redux/nugget/blob/77adff516017044f2c6d9b21f66c124b9593959a/openbios/cdrom/cdrom.c#L66-L74)
 closes five events and removes the two handlers described by
-[its CD state machine](../../../third_party/pcsx-redux/src/mips/openbios/cdrom/statemachine.c).
+[its CD state machine](https://github.com/pcsx-redux/nugget/blob/77adff516017044f2c6d9b21f66c124b9593959a/openbios/cdrom/statemachine.c#L794-L797).
 This corroborates the original BIOS trace; it does not authorize substituting
 OpenBIOS behavior for unverified retail behavior or importing that implementation.
 
@@ -4208,9 +4197,9 @@ all 24 original masks, live envelopes versus stale/refreshed snapshots, equal
 and lower arbitration, rejection without updating accepted history, and a change
 of first voice. It edits only in-memory auxiliary data, never patches guest
 activity flags. [Schedule checks](../../../tools/rust/bof3-audio/examples/support/events.rs)
-reject malformed, out-of-order and oversized schedules. Fifteen focused driver
-checks pass. Receipts are `driver-history-common.json`,
-`driver-history-priority.json`, `driver-history-single.json` and bounded
+reject malformed, out-of-order and oversized schedules. Receipts are
+`driver-history-common.json`, `driver-history-priority.json`,
+`driver-history-single.json` and bounded
 `driver-history-*-rizin.txt` under `out/audio-migration/`.
 
 Reproduce the unmodified history with EVENTS
@@ -4250,8 +4239,8 @@ lookup is rejected before guest execution.
 actual handler entry, SDK bank identity, bounded staging and nonzero PCM using
 BGM004, COMN_SE, AREA102, DRG08_00, DRG08_02, DRG08_01 and ENEMY086. The DRG08
 checks use row 4: their row-0 tones are silent. A separate check covers ENEMY086
-row 6's program alias and rejection of a corrupted lookup. All 17 focused driver
-checks pass. Per-slot row-0 probes and the program-3 probe retain JSON/WAV
+row 6's program alias and rejection of a corrupted lookup. Per-slot row-0 probes
+and the program-3 probe retain JSON/WAV
 receipts under `out/audio-migration/driver-slots-probes/` and
 `driver-slots-program3.*`; these observed original PCs are all covered by their
 conservative closures. These are representative checks, not full PCM coverage.
@@ -4331,7 +4320,7 @@ The updated corpus audit prepares all 904 tables and visits all 8,608 rows:
 No rows are skipped. [Focused checks](../../../tools/rust/bof3-audio/tests/driver/limits.rs)
 cover exact call arguments and return values, audible and silent outcomes,
 corrupt sample references, out-of-bank SDK tone pointers and the remaining
-source cue. Twenty focused driver checks pass. Receipts are
+source cue. Receipts are
 `out/audio-migration/driver-range-coverage.json`, `driver-range-comparison.json`,
 `driver-range-limits.json` and `driver-range-{keyon,setup}-rizin.txt`.
 Standalone extraction must retain referenced physical tone slots even when
@@ -4403,8 +4392,8 @@ setting `BOF3_AUDIO_EXE` and `BOF3_AUDIO_TRACK`. JSON lines use
 `bof3.audio.driver-transport/v1`; local receipts are
 `out/audio-migration/driver-transport-{0000,1000,2000}-{1,4}.json`.
 Three synthetic observer tests validate nonmutation, changed-instruction
-rejection and host-call boundary handling; all 23 driver and five XA runtime
-checks pass. This is A6.01 evidence, not standalone-driver acceptance.
+rejection and host-call boundary handling. This is A6.01 evidence, not
+standalone-driver acceptance.
 
 
 ### XA callback initialization and original ROM dispatch
@@ -4468,8 +4457,7 @@ The report schema is `bof3.audio.driver-transport/v2`, identifying the kernel
 model, boot hashes, service arguments, outcomes and consumed raw-sector hashes.
 Receipts are `out/audio-migration/driver-startup-original_us_rom-*-*.json`,
 `driver-startup-supplied_kernel-*-*.json`, `driver-startup-comparison.log`, and
-bounded `driver-startup-*-rizin.txt` listings. All six original XA runtime tests
-pass, including the ROM/supplied-kernel comparison.
+bounded `driver-startup-*-rizin.txt` listings.
 
 
 ### Original CD reset and host reset state
@@ -4487,9 +4475,9 @@ transfer header. The [host integration](../../../tools/rust/bof3-audio/src/machi
 also preserves the data cursor and already queued XA output; Init does not imply
 an immediate audio-buffer flush. Subsequent read/seek operations retain their
 separately documented behavior. These semantics follow the inspected
-[CD implementation](../../../third_party/pcsx-redux/src/core/cdrom.cc), including
+[CD implementation](https://github.com/grumpycoders/pcsx-redux/blob/28438546c781fbe372a06399c82bed43ca2c6f4d/src/core/cdrom.cc), including
 `StopReading`, the `CdlReset` command/IRQ cases, and the SPU stream submission
-path in [xa.cc](../../../third_party/pcsx-redux/src/spu/xa.cc), at submodule commit
+path in [xa.cc](https://github.com/grumpycoders/pcsx-redux/blob/28438546c781fbe372a06399c82bed43ca2c6f4d/src/spu/xa.cc#L43-L163), at submodule commit
 `28438546c781fbe372a06399c82bed43ca2c6f4d`. Reset latency and hardware fidelity are
 not inferred from those source paths.
 
@@ -4662,10 +4650,7 @@ Receipts are `out/audio-migration/driver-candidate-comparison.json`, the six
 hashes and both substituted words. Run `--test xa_loop_runtime
 negative_vsync_candidate_preserves_full_reset_and_interrupt_execution` with
 `-- --ignored --nocapture` and the same absolute EXE/BIOS/track variables as
-the preceding checks. All nine XA runtime cases pass; the default suite passes
-362 checks with 144 media cases ignored, and strict Clippy and Rust 1.88 checks
-pass. In this session the scoped mise config was untrusted, so validation used
-the already-installed pinned Rust 1.98.1 directly without changing trust settings.
+the preceding checks.
 
 ### Retired XA instruction and memory dependencies
 

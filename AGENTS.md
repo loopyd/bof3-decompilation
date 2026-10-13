@@ -1,10 +1,10 @@
 # AGENTS.md — BOF3
 
 Route each request to its BOF3 owner below. Repository contracts and task-specific
-authorization govern scope and acceptance.
-Operative rules live in skills/references. `docs/` is user documentation, not required
-agent reading. During authorized maintenance, extract useful knowledge into relevant
-references. Caller-selected documents/plans remain task inputs, not standing dependencies.
+authorization govern scope and acceptance. Skills and their references own the
+operative rules. `docs/` is user documentation, not required agent reading.
+During authorized maintenance, extract useful knowledge into relevant references.
+Caller-selected documents and plans are task inputs, not standing dependencies.
 
 | Request | Owner |
 | --- | --- |
@@ -60,8 +60,13 @@ schemas, protocol literals, licenses, and technical meaning. Before committing,
 remove paragraphs that report the editing session rather than help the reader use
 or understand the maintained product. Run applicable existing documentation checks.
 
-Do not modify installed Pi extensions or add/install dependencies unless the user explicitly authorizes that specific change. Task execution, troubleshooting, and workflow recovery do not imply authorization.
+Do not modify installed Pi extensions or add or install dependencies without
+specific user authorization. Task execution, troubleshooting, and workflow
+recovery do not imply authorization.
 
-Do not add regression tests unless the user specifically requests expanded test coverage. Running existing checks does not authorize adding tests.
+Do not add regression tests unless the user requests expanded test coverage.
+Running existing checks does not authorize adding tests.
 
-After project agent or skill Markdown edits, compact the changed text directly without weakening its contracts and run applicable existing checks. Do not restore the retired agent-skill-compaction machinery.
+After project agent or skill Markdown edits, compact the changed text directly
+without weakening its contracts and run applicable existing checks. Do not restore
+the retired agent-skill-compaction machinery.

@@ -1,23 +1,16 @@
 # BOF3 reverse-engineering workspace
 
-A reverse-engineering project that recovers independently loaded *Breath of
-Fire III* binaries as readable C89, backed by target-qualified evidence and byte
-checks.
+Recover independently loaded *Breath of Fire III* binaries as readable C89,
+using target-qualified evidence and byte checks.
 
 ## Prerequisites
 
-- **Linux on x86_64** — the supported host. First-time setup downloads
-  Linux-only managed binaries: the canonical compiler is a statically linked
-  Linux ELF (`toolchains/gcc-2.7.2-psx/gcc`), PSn00b ships
-  `*-linux.zip` artifacts, and the compiler-variant catalog is pinned to
-  `linux-x86_64`. macOS and Windows are not supported; a compatibility layer
-  (for example WSL or a VM) may work but is not tested.
+- **Linux on x86_64.** Managed compiler and SDK binaries require this host.
 - `just` and `uv` (used by `just setup` to create the Python 3.12+ virtual
   environment)
-- `git` (fetches submodules), `cargo` (builds the local `bof3-disk`/`emi-ex`
+- `git` (fetches submodules), `cargo` (builds the local Rust
   tools), and `meson` (>= 0.58.0) with a host C compiler (`gcc` or `clang`)
-  and `ninja` (>= 1.8.2) — Meson's native build backend compiles the Rizin
-  toolchain and fails closed without either
+  and `ninja` (>= 1.8.2) to build the Rizin toolchain
 - `cmake` (>= 3.20) — every lift verification rebuilds the authored object
   through CMake; `bin/harness lift asm-diff` and `bin/harness build` fail closed without it
 - `7z` — first-time setup downloads and extracts a staged PsyQ `.7z`, and the
@@ -60,14 +53,14 @@ proposing a lift.
 ## Status
 
 ```sh
-bin/harness lift status [TARGET...]   # live matching status of tracked lifts
-bin/harness source symbols check               # symbol maps and naming debt
-just check                      # full practical validation gate
+bin/harness lift status [TARGET...]  # matching status of tracked lifts
+bin/harness source symbols check    # symbol maps and naming debt
+just check                          # practical validation gate
 ```
 
 ## Documentation
 
-Start with [docs/INDEX.md](docs/INDEX.md) for the request-oriented documentation map.
+Start with [docs/INDEX.md](docs/INDEX.md) to find the guide for your task.
 
 | Task | Reference |
 | --- | --- |
@@ -81,5 +74,5 @@ Start with [docs/INDEX.md](docs/INDEX.md) for the request-oriented documentation
 | Read reviewed format/runtime/data findings | [Specs](docs/specs/) |
 | Avoid known reverse-engineering mistakes | [Lessons](docs/agents/lessons.md) |
 
-Run `--help` or `--example` on commands. Want to help? Read
-[CONTRIBUTING.md](CONTRIBUTING.md).
+Run commands with `--help` or `--example` for usage. Read
+[CONTRIBUTING.md](CONTRIBUTING.md) before contributing.

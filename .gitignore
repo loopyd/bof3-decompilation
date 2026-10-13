@@ -56,6 +56,7 @@ toolchains/psn00b_toolchain/*
 toolchains/psn00bsdk/*
 !toolchains/psn00bsdk/.gitkeep
 toolchains/rizin/*
+toolchains/pcsx-redux-agentic/
 toolchains/aspsx-psyq-binaries/*
 toolchains/psyq/*
 !toolchains/psyq/4.7/
@@ -119,8 +120,17 @@ ledger/
 # Cache
 .cache/
 compile_commands.json
-tools/rust/bof3-disk/target/
-tools/rust/emi-ex/target/
 
-# splat regenerates this on every run (file_presets); deliberately untracked since f067a9a
+# Rust build and temporary files
+/tools/rust/**/target/
+/tools/rust/**/*.rlib
+/tools/rust/**/*.rmeta
+/tools/rust/bof3-text/**/*.tmp
+/tools/rust/bof3-text/**/*.temp
+/tools/rust/bof3-text/**/*.rs.bk
+/tools/rust/bof3-audio/**/*.tmp
+/tools/rust/bof3-audio/**/*.temp
+/tools/rust/bof3-audio/**/*.rs.bk
+
+# Splat regenerates this file through file_presets.
 include/include_asm.h

@@ -1,8 +1,7 @@
 # SoundFont research reference
 
-Research checked 2026-09-24 UTC for the
-[Rust audio migration](../plans/bof3-audio-rust-migration.md).
-The inspected primary document is Creative/E-mu's
+This reference supports the [Rust audio migration](../plans/bof3-audio-rust-migration.md).
+Its primary source is Creative/E-mu's
 [SoundFont Technical Specification, version 2.04](https://www.synthfont.com/sfspec24.pdf),
 hosted by SynthFont. The cover identifies 2.04; inherited page footers sometimes
 say 2.01. This reference describes the 16-bit subset emitted by the repository,
@@ -43,7 +42,7 @@ Unspecified synthesis behavior uses consumer defaults. BOF3-specific translation
 and measured differences remain owned by the
 [audio specification](../specs/formats/audio.md#rust-soundfont-writing).
 
-[Six tests](../../tools/rust/bof3-audio/tests/soundfont.rs) inspect table bounds and
+[SoundFont tests](../../tools/rust/bof3-audio/tests/soundfont/) inspect table bounds and
 guard points, then load output in the independent RustySynth 1.3.6 consumer.
 Synthetic playback checks shared-sample layers, pan, key/velocity limits, octave
 tuning, sustained and release-only loops, and release tails. A generated format-1
@@ -52,22 +51,20 @@ program changes and 100/200 Hz sections. This establishes writer interoperabilit
 on synthetic data; it does not accept BOF3 bank conversion or audio fidelity.
 
 The separate [VAB binder](../specs/formats/audio.md#vab-bank-binding-with-explicit-rendering-contexts)
-now connects decoded samples, source identities, explicit gain/pan, original-routine
-pitch contexts and fitted envelopes to this writer. Its synthetic interoperability
-checks pass. Static gain fitting and explicit reverb policy now allow structural
-construction of 842 corpus banks after
-[US sample-reference resolution](../specs/formats/audio.md#us-runtime-sample-reference-resolution),
-including an explicit silent-tone representation that retains original PCM.
-The other 178 first failures are pitch-related; an out-of-bank sample reference
-also remains unresolved behind an earlier pitch rejection.
-Full real-bank playback and song export remain unaccepted. The
+connects decoded samples, source identities, explicit gain/pan, original-routine
+pitch contexts and fitted envelopes to this writer. Static gain fitting,
+explicit reverb policy, and
+[US sample-reference resolution](../specs/formats/audio.md#us-runtime-sample-reference-resolution)
+support bank construction, including silent-tone representations that retain
+original PCM. Unsupported pitch contexts and sample references remain explicit
+failures. Bank construction does not establish complete song fidelity. The
 [envelope fit](../specs/formats/audio.md#measured-sf2-envelope-fitting) and
 [tuning calibration](../specs/formats/audio.md#sf2-note-on-tuning-calibration)
 retain their own approximation and unsupported-context reports.
 
 ## Gain and effects consumer differences
 
-Checked 2026-09-24 UTC. Specification physical pages 32, 36 and 38 define
+Specification physical pages 32, 36 and 38 define
 reverb generator 16 in tenths of a percent (0..1000) and attenuation generator 48
 in centibels (0..1440). See the
 [publisher-authored specification](https://www.synthfont.com/sfspec24.pdf#page=32).
@@ -95,8 +92,8 @@ equivalence or complete song fidelity.
 
 ## Reader research and preservation
 
-Rechecked the publisher-authored [2.04 specification](https://www.synthfont.com/sfspec24.pdf)
-on 2026-09-24. Physical page 20, section 6.2 pairs each PCM16 word with the low
+The publisher-authored [2.04 specification](https://www.synthfont.com/sfspec24.pdf),
+physical page 20, section 6.2 pairs each PCM16 word with the low
 byte in `sm24`; the latter payload includes an extra byte when needed for even
 length. Physical pages 21–29, sections 7.2–7.10 define monotonic table indices,
 terminal counts, first global zones and sample links. Terminal payloads are
@@ -147,37 +144,19 @@ contexts. Adjacent-data contexts remain explicit conversion failures; reads
 inside either verified pitch table are covered by the follow-up below. Zero-step
 rows need the separate opt-in policy below.
 
-Receipts: `out/audio-migration/tuning-initialized-probe.json` (before root fix),
-`tuning-initialized-probe-after-sources.json` (observed initialized loads, source
-identities and alternate-root mapping), and `tuning-root-*.log`. BIOS, executable,
-archive hashes and original initialization calls are included in the latter probe.
-No proprietary payload is included in source or packaged references.
-
-Validation: 339 default Rust tests pass (116 media checks ignored); all 15
-focused tuning/bank/pitch-packing checks pass with media, including the complete
-1,020-bank audit. RustySynth parsing and retained-source reconstruction remain
-covered for 842 constructible banks. Clippy, Rust 1.88 all-target checks, formatting,
-references, plan parsing and all 15 harness/package checks pass. The initial
-corpus assertions correctly detected changed failure counts; revised expectations
-retain all 178 unsupported banks and pass. Logs use `out/audio-migration/tuning-root-*`.
-
 ## Earlier-table playback snapshot
 
 The extended original-runtime probe covers 1,700,000 BGM004 sequence-0 output
 frames, then 30,119 distinct corpus pitch inputs in an IRQ-isolated snapshot.
 It observes 78 table reads, no CPU table-store attempts, unchanged hashes for
 both 193-entry tables, and the same three changed adjacent halfwords/14 changed
-returns as the initial-state probe. The completed receipt is
-`out/audio-migration/earlier-pitch-active-rom-observer.json`; it observes both
-RAM and immutable BIOS-ROM instructions. Failed diagnostic
-attempts are retained separately. See [addresses, scope and controls](../specs/formats/audio.md#verified-earlier-table-reads).
+returns as the initial-state probe. It observes both RAM and immutable BIOS-ROM
+instructions. See [addresses, scope and controls](../specs/formats/audio.md#verified-earlier-table-reads).
 
-The converter now verifies both table hashes and supports witnessed reads inside
+The converter verifies both table hashes and supports witnessed reads inside
 either table. It retains signed source indices and actual lookup identities.
-The 12,623 earlier-table rows become representable; 4,976 corpus rows still fail.
-Adjacent runtime data remains rejected. Complete-bank totals stay 842 strict and
-843 with stopped-pitch approximation because later keys expose those remaining
-failures. This is bounded original-execution evidence, not a hardware PCM oracle
+Adjacent runtime data remains rejected. Supporting either pitch table does not
+make every bank representable. This is bounded original-execution evidence, not a hardware PCM oracle
 or unconditional claim about every gameplay state.
 
 ## Stopped-pitch approximation
@@ -197,8 +176,7 @@ runtime with an edited BGM000 fixture: key 108, center 60, shift 0, bend range
 12 semitones and a held envelope. No bend gives peak 0; a downward bend produces
 peak 6977, with first audible frame 11715. An upward octave remains zero through
 16-bit pitch wrapping, so it cannot demonstrate activation. The trace probe
-records original pitch calls and SPU writes in
-`out/audio-migration/zero-runtime-probe-downward.json`. This verifies behavior
+records original pitch calls and SPU writes. This verifies behavior
 within the Rust machine, not independent hardware PCM or timing fidelity.
 
 [Packing tests](../../tools/rust/bof3-audio/tests/bank/) preserve unchanged
@@ -207,18 +185,13 @@ VH/VB bytes and a complete edited-fixture EMI through CLI extraction/repacking.
 whose re-encoded first sample changes the held value](../../tools/rust/bof3-audio/tests/soundfont/packing/) reject explicitly. Later
 PCM edits retaining a zero held value remain supported with encoding-loss reports.
 
-With this opt-in, the complete 1,020-bank audit accepts 843 banks, each parsed by
-RustySynth and reconstructed byte-exactly. The added bank is
-`BIN/PLCHAR/PL034.EMI#entry=0`, with four stopped-key rows. Forty of the previous
-41 first zero-pitch failures expose later table failures, leaving 177 unresolved
-banks. Strict conversion remains 842 accepted / 178 rejected. See
-`out/audio-migration/zero-pitch-final-tests.log` and the pinned corpus probe;
-these counts do not establish full music conversion or rendering acceptance.
-
+This opt-in can make stopped-key banks representable, but later keys may still
+expose unsupported table contexts. It does not establish complete conversion or
+rendering fidelity.
 
 ## Empty VAB program interchange
 
-The BOF3 exporter now represents all 128 program IDs, including zero-tone slots,
+The BOF3 exporter represents all 128 program IDs, including zero-tone slots,
 with explicit presets and percussion aliases. Empty presets use a separate
 nonlooping zero sample. A compatible consumer can allocate a short silent voice;
 the original US game allocates none. This is a documented approximation, not

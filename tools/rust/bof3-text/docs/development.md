@@ -20,18 +20,15 @@ on nothing local, so the shared vocabulary stays importable and cycle-free.
 
 ## Toolchain
 
-The crate targets **edition 2024** and declares `rust-version = "1.85"` as its
-minimum. The user account manages Rust with mise (`rust = "latest"`, currently
-1.98.1) and the build is verified with that toolchain:
+The crate uses edition 2024 and requires Rust 1.85 or newer. Build with the
+versions selected by `Cargo.toml` and `Cargo.lock`:
 
 ```sh
-mise up rust                       # keep the global toolchain current
-RUSTUP_TOOLCHAIN=1.98.1 CARGO_TARGET_DIR=build/tools/rust/bof3-text \
-  cargo build --release --manifest-path tools/rust/bof3-text/Cargo.toml
+CARGO_TARGET_DIR=build/tools/rust/bof3-text \
+  cargo build --locked --release --manifest-path tools/rust/bof3-text/Cargo.toml
 ```
 
-Dependencies stay on their pinned versions in `Cargo.toml`; a build with a newer
-compiler must not require source changes, and this one did not.
+Building with a newer compiler must not require source or dependency changes.
 
 ## Invariants
 
@@ -86,21 +83,21 @@ cargo test --locked --release --manifest-path tools/rust/bof3-text/Cargo.toml \
 # corpus gates: every text subfile round-trips, and the index describes the archives
 bin/harness text prepare              # bootstrap missing artifacts after disc extraction
 bin/harness text build-index          # rebuilds only when stale; a no-op when fresh
-bin/harness text verify               # expect 244/244 (dialogue 200/200, battle 44/44)
-bin/harness text search --verify-entries   # expect 46057/46057 reproduced
+bin/harness text verify               # require every selected entry to round-trip
+bin/harness text search --verify-entries   # require every indexed entry to reproduce
 
 # the whole gate, including the docs drift check
 just check
 ```
 
-`just check` runs these plus the documentation drift check, so a change that leaves the docs,
-the index or the round trip inconsistent fails the gate rather than being discovered later. The
-full evidence set, including the gap audit and the class-promotion refutation, is indexed in
-`out/text-format/README.md` at the repository root.
+`just check` includes the documentation drift check. Corpus commands report
+their own coverage and failures; successful unit checks do not replace them.
+The [dialogue specification](../../../../docs/specs/formats/dialogue-text.md)
+records the verified format and remaining limits.
 
 ## Conventions
 
-- No new dependency without a reason; versions are pinned in `Cargo.toml`.
+- New dependencies require specific user authorization.
 - Errors are `models::Error` variants. `Invalid` is a usage/data error; `Unsupported`
   means the data is outside the verified model. Both print as `error: …` and exit 1.
 - Public items carry a doc comment; command output goes to stdout and logs to stderr.

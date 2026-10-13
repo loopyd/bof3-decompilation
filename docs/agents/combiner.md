@@ -114,22 +114,25 @@ effective selections reject; no setting is silently discarded. Profile migration
 must freeze old paths/settings before moves, require one compatible effective
 profile and reproduce it at the new path.
 
-`build.sections` partitions output; `match.placement` serves explicit grouped
-comparison, not ordinary production matching. The kernel rejects unsupported text subsections/attributes, unplaced allocated sections,
-incorrect symbols/ranges and non-ELF32 little-endian MIPS inputs. `match.flow`
-checks reachable branches and delay slots, conservatively rejecting unproved
-indirect/exception transfers. This proves isolation, not original-byte fidelity.
+`build.sections` partitions output. `match.placement` supports explicit grouped
+comparison; ordinary production matching retains its grouped-source guards.
+The kernel rejects unsupported text subsections or attributes, unplaced allocated
+sections, incorrect symbols or ranges, and inputs other than ELF32 little-endian
+MIPS. `match.flow` checks reachable branches and delay slots, conservatively
+rejecting unproved indirect or exception transfers. These isolation checks do not
+establish original-byte fidelity or grouped-source acceptance.
+
 `match.execution` supervises every native command under one caller-owned absolute
 deadline and output bound. Linking validates a private snapshot before confined,
-exclusive script/ELF publication; the pair is not atomic. Failure retains scratch
-and partial outputs, including when descendant cleanup is unconfirmed. Concurrent
-artifacts are never replaced. These kernel fixes pass disposable native probes
-and independent review, not grouped-source acceptance. A scratch two-panel unit
-also passes original-byte/instruction comparison after one configured GCC run.
-Complete producer/include/toolchain freshness, shared
-data, instruction selection, complete member coverage and grouped status/cache admission
-remain open; do not bypass existing guards. Current CMake ownership
-dependencies are conservative across targets, not a performance optimization.
+exclusive script and ELF publication. Publication of the pair is not atomic.
+Failure retains scratch and partial outputs, including when descendant cleanup
+is unconfirmed. Concurrent artifacts are never replaced.
+
+Complete producer, include and toolchain freshness, shared data, instruction
+selection, complete member coverage and grouped status/cache admission remain
+open. Preserve the existing admission and acceptance guards. CMake ownership
+dependencies remain conservative across targets, without a performance
+optimization claim.
 
 ## Symbol-qualified comparison
 

@@ -539,13 +539,11 @@ Migration does not authorize bulk permission changes or repair of captured pins.
 
 ### File publication
 
-The current ext4 project backing supports native `renameat2(RENAME_NOREPLACE)`.
-`common.rename.publish_file` uses only that native no-replace move. A collision
-fails without replacing either name. An unsupported platform or filesystem raises
-`UnsupportedRenameNoReplaceError` without moving either path or selecting an
-alternate publisher. No empty reservation or hard-link fallback
-is used. The [2026-09-13 NTFS checkpoint](../plans/autonomous-bof3-decompilation.md#in-place-ntfs-publication--2026-09-13-reviewed-tooling-checkpoint)
-retains the then-current authorization and accepted fallback as historical evidence.
+`common.rename.publish_file` uses native `renameat2(RENAME_NOREPLACE)` on
+the ext4 project filesystem. A collision fails without replacing either
+path. Unsupported platforms or filesystems raise
+`UnsupportedRenameNoReplaceError` without moving either path. The publisher
+does not create empty reservations or use hard links.
 
 Native no-replace protects destination occupancy; surrounding identity checks and
 multi-file transitions remain cooperative and non-atomic. Manual writers can race
@@ -618,14 +616,11 @@ and symlink-owned mutation remains refused.
 
 ### Submodule isolation candidate
 
-The [successor checkpoint](../plans/autonomous-bof3-decompilation.md#submodule-isolation-successor--2026-09-13-acceptance-pending)
-records parent acceptance of the exact frozen candidate after independent Pasteur
-review: PASS with no confirmed open findings, within the support ceiling below.
-Both repairs are consumed; the original six findings and three repair-one residuals
-are closed. This accepts only the submodule prerequisite. The whole-game goal is
-active and incomplete; the separate publication prerequisite is accepted, while
-C/macros retain their own readiness/review gates. The prior rejected implementation
-remains historical.
+Submodule isolation uses the owners and support limits below. Acceptance
+of this prerequisite does not accept C or macros; their readiness and
+review gates remain separate. Historical repairs retain their consumed
+budgets in the [campaign plan](../plans/autonomous-bof3-decompilation.md).
+Tooling acceptance does not establish whole-game completion.
 
 | Common owner | Responsibility |
 | --- | --- |
@@ -647,10 +642,10 @@ structurally readable, but live observation verification requires v3, including
 absent/uninitialized dependencies. Never rewrite historical records or their external
 pins to claim compatibility; recapture and independently rebind a new transaction.
 
-Root status and workspace backup use an independent metadata/worktree mirror;
-submodule-suppression flags alone did not prevent live dependency reads. Separate HEAD/index
-enumeration protects both current and staged-removed gitlinks; baseline composition
-retains staged changes, module HEAD-versus-gitlink differences, tracked changes and
+Root status and workspace backup use an independent metadata/worktree mirror.
+Separate HEAD/index enumeration protects both current and staged-removed
+gitlinks. Baseline composition retains staged changes, module HEAD-versus-gitlink
+differences, tracked changes and
 recursive untracked state. Clean modules remain absent from the dirty map but
 present in preservation evidence. Absent, empty uninitialized and initialized
 modules remain distinct; marker selection and final namespace/identity observations
@@ -669,14 +664,14 @@ rechecked against their live origins after queries; scratch consistency alone is
 insufficient. Host configuration is parsed initially, then freshly recaptured with
 environment, control-path, absence, identity, mode and content/hash checks before
 unchanged inputs can avoid reparsing. This is not a cross-transaction cache:
-fresh Git/workspace boundaries remain mandatory. See the
-[reviewed performance checkpoint](../plans/autonomous-bof3-decompilation.md#transaction-validation-performance--2026-09-13-reviewed-tooling-checkpoint)
-for measurements and remaining validation debt. Captured module `*.lock` files
+fresh Git/workspace boundaries remain mandatory. The
+[campaign plan](../plans/autonomous-bof3-decompilation.md#transaction-validation-performance--2026-09-13-reviewed-tooling-checkpoint)
+retains unresolved validation debt. Captured module `*.lock` files
 are observed, excluded from query
 copies and never deleted. The superproject index-lock capture refusal still applies.
 Optional multi-pack-index and commit-graph files retain raw observations but are
 not copied or interpreted; scratch queries disable both accelerators. Their
-presence alone does not reject capture: the real root contains a commit graph.
+presence alone does not reject capture.
 
 Worktree mirrors capture regular `.gitignore`/`.gitattributes` controls and
 tracked/unignored content; literal symlink bytes are compared without referent
@@ -722,11 +717,10 @@ checks still require parent review. Snapshots grant no dependency
 restoration, reset, initialization, deinitialization or repair authority. Drift
 preserves dependency state for parent review; observations remain non-atomic.
 
-Acceptance does not exclude manual concurrent edits; root Git metadata remains
-trusted. Arbitrary Git-layout compatibility and arbitrary index-extension confinement
-are unassessed: no extension escape was demonstrated and no projection hardening
-is claimed. The inspected real root and ten root-module indexes contain checksum-valid
-v2 TREE extensions only; that inventory proves nothing about other formats.
+Acceptance does not exclude manual concurrent edits; root Git metadata
+remains trusted. Arbitrary Git-layout compatibility and arbitrary
+index-extension confinement remain unassessed. No projection hardening
+is established.
 
 ### Recovery evidence and rollback
 

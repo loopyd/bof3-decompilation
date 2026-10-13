@@ -57,7 +57,7 @@ its curl license with component terms; libuv principally uses MIT with exception
 SDL3 uses the official [3.4.16 release](https://github.com/libsdl-org/SDL/releases/tag/release-3.4.16),
 archive SHA-256 `7322236cd12090c3eb40b9728be4d49c76f66ad17d04369584d4ecad5cf77c68`.
 Its top-level license is [zlib](https://www.libsdl.org/license.php); HIDAPI/YUV
-notices remain. Build/install only under `toolchains/pcsx-redux/sdl3-3.4.16` with
+notices remain. Build/install only under `toolchains/pcsx-redux-agentic/sdl3-3.4.16` with
 existing tools/libraries; no implicit package installation or optional dependencies.
 Changed SDL source refuses overwrite. Shared Release builds disable SDL tests/
 examples and retain available audio/video backends. Emulator Make uses the local

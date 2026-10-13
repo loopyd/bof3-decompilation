@@ -1,8 +1,7 @@
 # Standard MIDI Files research reference
 
-Research checked 2026-09-24 UTC for the
-[Rust audio migration](../plans/bof3-audio-rust-migration.md).
-These authored notes retain source provenance and implementation decisions;
+These notes support the [Rust audio migration](../plans/bof3-audio-rust-migration.md)
+and retain source provenance and implementation decisions;
 the linked publisher documents remain the specification authority.
 
 ## Sources and locations
@@ -56,7 +55,7 @@ Compact paraphrase of the
 
 ## MIDI channel messages and controller assignments
 
-Additional primary sources checked 2026-09-24 UTC:
+Additional primary sources:
 
 - [MIDI Association message summary](https://midi.org/summary-of-midi-1-0-messages),
   table 1: channel-message layouts and pitch-bend representation.
@@ -140,10 +139,9 @@ before implementing expansion, duration or loop-count policies. Hardware cadence
 and audible fidelity are still separate acceptance gates.
 
 The [forward SEP translator](../specs/formats/audio.md#sep-execution-order-midi-translation)
-now uses a conductor track plus an ordered performance track. Its execution-order
+uses a conductor track plus an ordered performance track. Its execution-order
 timeline handles live running status after loop jumps and records an explicit
-finite boundary for infinite loops. This is separate from the generic codec;
-song-folder publication, bank binding and reconstruction remain unfinished. The
+finite boundary for infinite loops. This is separate from the generic codec. The
 migration contract prioritizes playback with the accompanying BOF3 SoundFont;
 stock GM timbres are not the fidelity target.
 
@@ -166,7 +164,7 @@ cadence. The fixture exercises program changes, same-tick note ordering and
 bend encoding as well as tempo. Its independent consumer check measures MIDI
 duration; it does not establish game playback fidelity.
 
-| Work to resume | Owning source |
+| Functionality | Owning source |
 | --- | --- |
 | SMF parsing, preservation and edited serialization | [interchange/midi.rs](../../tools/rust/bof3-audio/src/interchange/midi.rs) |
 | Game sequence execution order and finite loop expansion | [sequence/timeline.rs](../../tools/rust/bof3-audio/src/sequence/timeline.rs) |
@@ -175,15 +173,14 @@ duration; it does not establish game playback fidelity.
 | Accompanying instrument format and synthesis differences | [SoundFont reference](soundfont.md) |
 
 Keep publisher rules, observed BOF3 behavior and current implementation limits
-distinct when extending these notes. The online specification and message-table
-links above were rechecked on 2026-09-24 UTC. This file retains the research
-summary for offline use; it does not embed the copyrighted specification PDF.
+distinct when extending these notes. This file retains the research summary
+for offline use; it does not embed the copyrighted specification PDF.
 
 ## Current Rust implementation and verification
 
 [interchange/midi.rs](../../tools/rust/bof3-audio/src/interchange/midi.rs) owns framing and preservation;
 [the audio spec](../specs/formats/audio.md#rust-midi-interchange) owns its public
-scope. As of this research checkpoint:
+scope:
 
 - Formats 0/1 with PPQN 1–32767 are supported. Format 2, SMPTE timing and zero
   PPQN are rejected explicitly.
@@ -199,7 +196,7 @@ scope. As of this research checkpoint:
   ticks and excessive deltas fail. Changing track count requires constructing a
   new file explicitly rather than silently reusing an incompatible layout.
 
-[Five MIDI tests](../../tools/rust/bof3-audio/tests/interchange/midi.rs) cover exact unchanged
+[MIDI tests](../../tools/rust/bof3-audio/tests/interchange/midi.rs) cover exact unchanged
 preservation, isolated edits, malformed inputs, all channel-message shapes,
 VLQ boundaries and opaque metadata. The independent RustySynth 1.3.6 MIDI reader
 accepts a synthetic two-track fixture: 96 PPQN, two quarter notes at 500000 then
@@ -207,12 +204,7 @@ accepts a synthetic two-track fixture: 96 PPQN, two quarter notes at 500000 then
 250000 gives 0.75 seconds. This checks consumer parsing and timing, not SoundFont
 structure, rendered PCM or BOF3 sequence translation.
 
-The implementation checkpoint passed 86 default tests with 44 opt-in cases
-skipped. Historical logs live under ignored `out/audio-migration/`; source tests
-and the [plan](../plans/bof3-audio-rust-migration.md) retain reproducible scope
-and outstanding acceptance work. No proprietary media is included here.
-
-The subsequent [PC playback path](../specs/formats/audio.md#rust-pc-interchange-rendering)
+The [PC playback path](../specs/formats/audio.md#rust-pc-interchange-rendering)
 uses stricter event validation before passing messages to RustySynth. It rejects
 unsupported semantic events and missing bank/program presets, accumulates rational
 tempo time, preserves same-tick ordering, and reports frame/block quantization.

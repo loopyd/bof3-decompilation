@@ -104,12 +104,5 @@ bin/harness source symbols check
 
 `list` reports catalog membership; `verify <id>` validates an ignored local
 installation. Unoverridden objects keep the canonical compiler. Reviewed object
-selections and dated negative matrices stay in [game research](../specs/runtime/compiler-variants.md),
-not a second selection inventory here. Historical checks below are not live proof.
-
-## Historical checks (2026-07-30)
-
-| Test file | Tests | Status |
-|-----------|-------|--------|
-| `test_bin_cc_pipeline.py` | 3 hermetic stub tests for GCC→maspsx→assembler arg flow | PASS |
-| `test_asm_link.py` | 4 fixture-local tests for relocation-aware linking + byte extraction | PASS |
+selections and dated negative matrices remain in
+[game research](../specs/runtime/compiler-variants.md).

@@ -496,56 +496,23 @@ publication and workspace/Git drift require separate reconciliation.
 
 ### Reviewed private-header creation
 
-Parent confirms `bof3.reviewed-macro-opportunity/v2` admission for one new
-target-private `local_template` header is committed in `c9f884b6`, with independent
-review and 165 passing checks. The [authoritative plan](../plans/autonomous-bof3-decompilation.md#reviewed-private-header-creation--2026-09-13-acceptance-pending)
-owns application scope, pins, consumed budgets, review identities and check receipts.
-The user explicitly reopened the same macro after prerequisite commit `452498ad`;
-the [reopening checkpoint](../plans/autonomous-bof3-decompilation.md#battle-dispatch-macro-reopening--2026-09-13)
-records fresh PRE approval and its consumed owner entry. The original failure and
-expired bounds remain historical; no automatic retry or allowance reset follows.
+`bof3.reviewed-macro-opportunity/v2` admits one new target-private
+`local_template` header. V1 remains existing-only; shared-header and type
+creation are not added.
 
-Parent accepts the exact frozen [submodule isolation candidate](harness.md#submodule-isolation-candidate)
-after independent Pasteur PASS within its documented support ceiling. Both repairs
-are consumed; the original six findings and all three repair-one residuals close.
-Immutable root/dependency mirrors, observational safeguard v3 and historical v1/v2
-readers remain; unbound rollback and direct receipt/attestation guards now close
-their gaps, and empty unignored embedded roots reject independently of descendants.
-Bound-image rollback remains independent of a corrupted index.
-The [successor checkpoint](../plans/autonomous-bof3-decompilation.md#submodule-isolation-successor--2026-09-13-acceptance-pending)
-separates final gates, historical failures and unrelated test debt. Observations remain
-non-atomic, manual concurrency is not excluded and root Git metadata is trusted.
-Arbitrary Git layouts/index-extension confinement remain unassessed; no extension
-escape or projection hardening is established. The root/ten-module checksum-valid
-v2 TREE inventory does not prove other formats. The full goal is active/incomplete.
-The consumed `-02` macro entry failed before source publication: same-leaf
-`RENAME_NOREPLACE` falsely passed while distinct `fuseblk` moves failed, and the
-retained-hard-link fallback violated the prepared-image single-link guard. No
-recovery record, owner command receipts, application, header or POST acceptance
-followed; empty rollback maps prove no restoration. PRE and the adopted baseline
-were unchanged at that failure checkpoint.
+Use the [submodule isolation contract](harness.md#submodule-isolation-candidate)
+within its support limits and the [file publication contract](harness.md#file-publication).
+Dependency snapshots do not authorize restoration, repair, retries,
+acceptance, budget resets or evidence rebinding.
 
-At the 2026-09-13 checkpoint, the user rejected migration and authorized the
-[in-place NTFS publication correction](../plans/autonomous-bof3-decompilation.md#in-place-ntfs-publication--2026-09-13-reviewed-tooling-checkpoint).
-Parent accepted the six repaired code/test files after independent Bernoulli ACCEPT,
-202 final focused passes and actual repaired NTFS apply/rollback, cancellation,
-Git-index and adverse-publication probes. Initial 196 passes and the deliberately
-interrupted broader revalidation run remain separate evidence in that checkpoint.
-The implementation and single repair are consumed; no test inventory was added.
-That authorization and those NTFS probes are historical. The current ext4
-[shared contract](harness.md#file-publication) requires native no-replace only,
-failure on unsupported operations and preserved identity/recovery controls. The old
-fallback required initially regular, empty, single-link reservations with unchanged
-descriptor/path identity before cleanup; zero length alone never authorized deletion.
-That historical mechanism is no longer a publication option. The checkpoint
-resolved its filesystem tooling blocker; no macro was applied or accepted and no
-C/native compiler stage ran. A subsequent macro entry needs separately recorded
-finite scope and fresh readiness/review. Failed 04:45/04:48 and 08:10/08:15 bounds
-remain consumed; the
-08:45/08:50 tooling scope grants no automatic retry or aggregate completion.
-Dependency snapshots grant no restoration/repair, retry, acceptance, budget reset
-or evidence rebinding. Native/application review and frozen obligations remain.
-V1 stays existing-only; shared-header and type creation are not added.
+Before another macro attempt, record finite scope and obtain fresh readiness
+and review. Preserve consumed attempts, original deadlines and frozen
+obligations. Tooling acceptance does not establish an applied macro or
+whole-game completion. Native validation, independent application review and
+parent confirmation remain mandatory.
+
+Historical approvals, failures, consumed budgets and unresolved validation
+debt remain in the [campaign plan](../plans/autonomous-bof3-decompilation.md).
 
 V2 retains all v1 evidence fields and adds exactly one `creation` object with
 `target`, `header`, `header_text`, `manifest_before` and `manifest_after`.
@@ -576,12 +543,10 @@ aggregate history is not absence proof and grants no history reconstruction or
 shared promotion. Guarded retained-history verification checks original `None`
 PRE; generic revalidation uses POST as adopted PRE and `structural_manifest`
 without rederivation, not fresh creation admission. Its exact retained POST shape
-rejects ordinary run. Parent-reported read-only probes verify these boundaries,
-including rejection of missing historical membership; they do not prove fresh
-full acceptance or native revalidation. No dummy header scaffolding or manual
-extraction substitutes for the reviewed
-transaction. Later native gates, independent application review and parent
-confirmation remain mandatory before claiming an applied macro.
+rejects ordinary run. Structural history checks do not establish fresh full
+acceptance or native revalidation. Do not substitute dummy headers or manual
+extraction for the reviewed transaction. Native gates, independent application
+review and parent confirmation remain mandatory before claiming an applied macro.
 
 ## Parent acceptance and replay
 

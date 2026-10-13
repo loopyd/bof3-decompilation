@@ -1,6 +1,6 @@
 # PSX CPU and BIOS execution references
 
-Inspected 2026-09-24 for the Rust audio machine. These are external hardware/BIOS
+These are external hardware/BIOS
 references, not proof of BOF3 execution or timing. Original US observations and
 implementation limits live in the [audio specification](../specs/formats/audio.md#rust-system-control-and-critical-sections).
 
@@ -113,13 +113,12 @@ The [interrupt controller reference](https://psx-spx.consoledev.net/interrupts/)
 separates the edge-latched I_STAT source, I_MASK, COP0 pending bit and CPU enable
 bits; acknowledging a controller bit does not replace device acknowledgement.
 The [original US hook integration](../specs/formats/audio.md#original-sdk-cd-interrupt-hook-integration)
-now exercises that route through the SDK dispatcher and BIOS context restore.
+exercises that route through the SDK dispatcher and BIOS context restore.
 Its hook is installed by original executable instructions, while the empty
 priority chain and live thread allocation are supplied fixture context.
-The initializer prefix stops at `A0:72`; separate callback checks do not prove
-completion of BIOS removal or sound initialization. The initially missing BIOS
-is now prepared by [US BIOS setup](audio-runtime-setup.md); physical timing and
-independent audio remain open.
+The fixture does not establish complete game initialization. The
+[US BIOS setup](audio-runtime-setup.md) supplies the required ROM; physical
+timing and independent audio remain open.
 
 ## Reference reset and original BIOS memory setup
 
@@ -142,14 +141,6 @@ unsupported. Bus delays are recorded; CPU/device clocks are not modeled by these
 register latches. Common-delay upper bits read zero, including after the original
 BIOS writes `0x31125`; the initial CD bus setting `0x20843` is retained separately
 from the SDK's later `0x20943` setting.
-
-With the hash-verified US `scph5501.bin`, an ignored corpus test executes 87
-original instructions through memory-controller setup and register clearing,
-stopping before PC `0xBFC00234`. At that checkpoint, the next instruction's write
-of `0x804` to cache control `0xFFFE0130` was unsupported. No instruction, BIOS service or
-device response is skipped to reach this boundary. This is a boot-prefix check,
-not completed kernel initialization or audio rendering. The probe context,
-instruction tail and test logs are under `out/audio-migration/redux-*`.
 
 ## BIOS cache clearing and debug initialization
 
@@ -178,14 +169,8 @@ The BIOS's zero TAR write is accepted only while TAR is already zero: both the
 documented read-only register and Redux's writable storage yield that same state;
 other TAR writes remain unresolved and rejected.
 
-At the cache checkpoint, the original-ROM prefix reached 17,378 instructions, at PC
-`0xBFC01A74` in a branch delay slot. The next byte store targets POST status
-`0x1F802041` and was unsupported at that checkpoint. Cache behavior checks and this prefix do
-not establish complete BIOS boot, device clocks or sound fidelity. Evidence:
-`out/audio-migration/redux-cache-*`; full suite 324 passed/106 ignored, 12 focused
-cache/firmware checks including both original-ROM fixtures passed, Clippy and
-Rust 1.88 checks passed.
-
+Cache behavior checks do not establish complete BIOS boot, device clocks, or
+sound fidelity.
 
 ## BIOS POST and absent expansion ROM
 
@@ -202,23 +187,11 @@ ones for an absent cartridge. This adopts the emulator's empty-ROM convention
 Other windows, unaligned reads and expansion writes still fail. The BIOS itself
 checks the missing cartridge signature and chooses its normal continuation.
 
-Evidence: `out/audio-migration/redux-post-probe.json` advances past POST to the
-EXP1 signature read at 17,407 instructions. `redux-exp1-probe.json` reaches its
-one-million-transition limit during a copy loop. `redux-exp1-long-probe.json`
-uses the explicit ten-million limit and completes 2,727,265 instructions plus
-one guest syscall exception before stopping at `0x8005429C`, instruction
-`0xA602018C`, a halfword key-off write to `0x1F801D8C`. POST is `7`.
-The BIOS has copied code into RAM and entered SPU initialization; the next
-requirement is an explicit SPU arithmetic model in the probe. This is not full
-boot, clock scheduling, independent trace agreement or audio fidelity evidence.
-
-The hash-gated original-ROM test reaches the same boundary through the guest
+The hash-gated original-ROM test exercises these behaviors through the guest
 exception handler without HLE interception. Two synthetic checks cover POST
 width/alias/error behavior and absent EXP1 mapping, alignment and RAM
-preservation. Full suite: 326 passed, 106 ignored; all 14 focused firmware/cache
-checks pass including both original-ROM fixtures. Clippy and Rust 1.88 checks
-pass. Logs: `out/audio-migration/redux-post-*`.
-
+preservation. These checks do not establish full boot, clock scheduling,
+independent trace agreement, or audio fidelity.
 
 ## BIOS SPU initialization and transfer clock
 
@@ -253,31 +226,12 @@ manual SPU data directly; this FIFO model does not claim identical Redux timing.
 The clock establishes bounded, reproducible device progress, not final PSX timing
 or PCM fidelity. No reference implementation code is imported or executed.
 
-Retained probes under `out/audio-migration/`:
-
-- `redux-spu-probe.json`: arithmetic models selected; key-read stop at 2,740,182
-  instructions. `redux-spu-keys-probe.json`: readback implemented; FIFO overflow
-  at 2,778,021 instructions because no device time advances.
-- `redux-spu-clock-probe.json`: ten million transitions, 23,720 halfwords moved.
-  The longer `redux-spu-clock-long-probe.json` reaches reverb configuration after
-  12,759,644 instructions and 32,776 halfwords, then requests a reverb model.
-- `redux-spu-reverb-probe.json`: reverb explicitly selected; 19,247,628
-  instructions, four guest syscall exceptions, 38,495,264 base ticks and 54,328
-  transferred halfwords. FIFO is empty and POST remains `7`. SPU RAM SHA-256 is
-  `35eff894304fb8c68065a11b9942b685a660fd39cbad4f31815c12afd4332416`.
-  The next unsupported operation is GPU-status read `0x1F801814` at RAM PC
-  `0x8005A4E8`, instruction `0x8C4E0000`. This supersedes the SPU initialization
-  stop, not the full boot/audio acceptance gates.
-
-The new hash-gated ROM fixture reproduces that boundary and RAM snapshot; it is
-regression evidence under this clock model, not an independent trace. Clock
+The hash-gated ROM fixture exercises initialization under this clock model;
+it is regression evidence, not an independent trace. Clock
 checks exercise split-step equivalence, exact transfer boundaries, idle/stopped
 behavior, invalid control and DMA-read completion. Key-latch checks distinguish
-readback from consumed events. Full suite: 330 passed/107 ignored; 21 focused
-checks pass including three ROM fixtures and the original game register-flush
-fixture. Nine probe context checks pass. Clippy and Rust 1.88 checks pass. Logs
-and context receipts: `out/audio-migration/redux-spu-*`.
-
+readback from consumed events. Full boot and independent audio acceptance
+remain separate gates.
 
 ## BIOS shell handoff and original sound initialization
 
@@ -298,39 +252,17 @@ cache before this handoff. No boot-animation code or HLE BIOS service runs on
 this path. This is a reference-emulator executable-launch contract, not proof
 that full disc boot, video, CD or sound scheduling has completed.
 
-`out/audio-migration/redux-shell-probe.json` records shell entry after 2,695,618
-instructions and no syscall exceptions. POST is `7`, return address
-`0xBFC0702C`, SP `0x801FFDE0`, GP `0xA0010FF0`, SR zero. Shell RAM SHA-256 is
-`f13eea28e17c8a559cd3381d581488d86e3e1fdadcff844d121ad57bc587541c`.
-After loading the US EXE, PC is `0x8014AA0C`, SP `0x801FFFF0`, GP unchanged, and
-RAM SHA-256 is
-`6e9f0ab9998c4703ff1168dfd0d614a817561026a5463e199d42697d271b403a`.
-The test compares all RAM outside the payload and all inherited GPRs against a
+The handoff test compares all RAM outside the payload and all inherited GPRs against a
 separately executed pre-handoff ROM context, checks the BIOS-created PCB/TCB and
 executes the first original EXE instruction.
 
-The new `examples/runtime_probe.rs` accepts `BIOS EXE entry|callback-init|sound-init`.
+`examples/runtime_probe.rs` accepts `BIOS EXE entry|callback-init|sound-init`.
 `entry` executes the original EXE startup. The other modes are explicitly marked
 diagnostic calls: they retain handoff GPR/COP0 state, select the original routine,
 set zero arguments/HI/LO and a return sentinel. They do not claim that the game
 has run its full startup. All modes select the existing emulator-reference SPU
 models and transfer clock; BIOS services execute through guest vectors and ROM,
 without the host `Kernel` dispatcher or synthetic kernel tables.
-
-Evidence under `out/audio-migration/`:
-
-- `redux-handoff-entry.json`: original startup advances 40,741 instructions and
-  two guest syscall exceptions before CD MMIO `0x1F801800` requests a configured
-  CD host at `0x80176E80`. The original entry has set GP to `0x8018B2B4`.
-- `redux-handoff-callback-init.json`: original `0x801748E4` returns after 5,281
-  instructions and two guest syscall exceptions. This resolves the former
-  `A0:72` callback-bootstrap stop with real BIOS kernel execution.
-- `redux-handoff-sound-init.json` initially stopped after 55,218 instructions on
-  ENDX initialization. `redux-handoff-sound-endx.json` then records original
-  `0x8015CD00` returning after 67,615 instructions and four syscall exceptions.
-  Tests verify return/stack, live kernel thread metadata, two sequence handles
-  with four sequences each, their original table addresses, tick-mode values
-  and SPU RAM-control configuration.
 
 ENDX writes now have transient readback separate from actual voice loop-end
 latches, consistent with [psx-spx's read/write notes](https://psx-spx.consoledev.net/soundprocessingunitspu/#spu-voice-flags).
@@ -340,14 +272,9 @@ requires independent evidence. Tests prove writes do not fabricate or erase
 voice end flags. Redux's register storage also accepts these writes; its backend
 readback behavior is not used as a hardware timing oracle.
 
-Full suite: 332 passed/109 ignored. Seven focused boot/voice checks pass with the
-original BIOS and executable, including handoff preservation and both original
-initializers. Clippy and Rust 1.88 checks pass. Logs: `redux-handoff-*`.
-The profile reports that BIOS shell loading is available but the audio scheduler
-is unverified. PSX rendering and C retirement remain gated on media/bank loading,
-complete device scheduling and independent runtime/PCM comparisons. The GPU stop
-from the full-shell probe remains real; it is outside the chosen EXE-load path.
-
+BIOS shell loading does not establish complete disc boot or hardware timing.
+C retirement remains gated on complete device scheduling and independent
+runtime/PCM comparisons.
 
 ## Original VAB transfer and SEP opening through the BIOS
 
@@ -374,11 +301,6 @@ connects the game loader to these routines:
   archive padding beyond the declared VB data when its length is not a
   multiple of 64 bytes. Padding cannot be synthesized as zero.
 
-Disassembly receipts are `out/audio-migration/bank-transfer-disassembly.txt`,
-`bank-body-callback-disassembly.txt` and `vab-dma-*-disassembly.txt` in the same
-directory, produced with Rizin 1.0.0 at
-`cc06c1dedbe47901faecc7e9825ca957aca81216`.
-
 `examples/bank_probe.rs BIOS US_EXE BGM_EMI` boots the verified US ROM, loads
 the executable at the shell handoff, runs original sound/layout initialization,
 stages the archive buffers, and executes the original head/body/SEP routines.
@@ -393,20 +315,14 @@ call outcomes. Host staging does not establish original CD loader execution.
 | BGM021.EMI | 244768 | 244800 | 120 | Complete |
 | BGM068.EMI | 239168 | 239168 | 117 | Complete |
 
-Receipts: `out/audio-migration/bios-bank-BGM000.json`,
-`bios-bank-BGM021.json` and `bios-bank-BGM068.json`. BGM000's final 32 bytes
+BGM000's final 32 bytes
 are `0x5F`; the media regression also verifies unchanged SPU RAM outside the
 transfer, intermediate/final transfer results, completion waits, guest IRQ
 execution and SEP handle zero. Default synthetic checks cover preserved call
 state, invalid entry/fuel requests and guest IRQ acknowledgement/RFE.
 
-Validation: 334 default tests pass, 110 media tests remain ignored by default;
-the new bank regression passes separately with the local US BIOS, executable
-and BGM000 archive. Clippy and Rust 1.88 checks pass. Logs are
-`out/audio-migration/bios-bank-{all-tests,runtime-test,clippy,msrv}.log`.
-Sequence scheduling, frame generation and independent PCM comparison remain
-required before claiming PSX rendering or retiring the host C tool.
-
+Bank-transfer checks do not establish independent PCM fidelity or permit
+retirement of the host C tool.
 
 ## Original sequence scheduler through VBlank interrupts
 
@@ -456,22 +372,12 @@ without video timing or SPU output frames; register activity is not PCM evidence
 | BGM021 / 0 | 120 | 21 |
 | BGM068 / 0 | 120 | 9 |
 
-Receipts are `out/audio-migration/sequence-bios-BGM000-{0,1}.json`,
-`sequence-bios-BGM021-0.json` and `sequence-bios-BGM068-0.json`. Disassembly
-receipts are `sequence-{game-start,clock-selection,tick-registration,scheduler,
-voice-flush}-disassembly.txt` in that directory, using the previously pinned
-Rizin 1.0.0 tool and US payload hash.
-
 The BGM000 media regression now verifies game callback registration, IRQ
 acknowledgement, cursor advancement, key-on writes and byte-identical inactive
 records. It stops sequence zero through original code, settles its stop flag,
 then plays sequence one and verifies that sequence zero and all other inactive
 records remain unchanged. No event cursor, guest routine or BIOS service is
-patched. The media test, 334 default tests (110 ignored), Clippy and Rust 1.88
-checks pass; logs are `out/audio-migration/sequence-bios-*.log`.
-
-Next required work is timed VBlank and SPU frame execution on one device clock,
-followed by loop/end controls and independent runtime/PCM comparison. The
+patched. Independent runtime/PCM comparison remains required. The
 reference-emulator constants must remain explicit: pinned PCSX-Redux uses
 33,868,800 system ticks per second, integer 60 Hz / 263-line NTSC counter setup,
 and VBlank start line 243 in `src/core/psxcounters.{cc,h}`. Those constants
@@ -504,8 +410,7 @@ same clock. Guest instructions retain the explicit two-tick base cost; IRQs
 enter the guest BIOS at the next instruction boundary.
 
 The BIOS leaves timer 1 mode `0x0507`, using HBlank pulses and synchronization
-with VBlank. An initial experiment omitted this source and is not the accepted
-clock receipt. The final implementation services it. Timer 0 HBlank gating and
+with VBlank. The implementation services this clock source. Timer 0 HBlank gating and
 dot-clock modes are rejected before advancement because HBlank duration and
 GPU dot clocks are unimplemented. CPU stalls, GPU command/display timing, CD
 sector/input scheduling and hardware DMA arbitration remain separate gates.
@@ -530,41 +435,18 @@ write event cursors. Real BIOS IRQ handling reaches the original game callback
 and produces SPU writes. The WAV is written to a temporary sibling, synced,
 parsed back and atomically linked into place without overwriting an existing
 file. The mode without a WAV retains the earlier injected-IRQ diagnostic.
-These are bounded diagnostics, not the finished `render --psx` command or an
-implementation of user-facing duration, loop-count and release-tail controls.
-
-| Archive / sequence | Timed VBlanks | Stereo frames | Peak magnitude |
-| --- | ---: | ---: | ---: |
-| BGM000 / 0 | 120 | 88171 | 24760 |
-| BGM000 / 1 | 120 | 88143 | 17913 |
-| BGM021 / 0 | 120 | 88140 | 32766 |
-| BGM068 / 0 | 120 | 88139 | 19241 |
-| BGM000 / 0 | 3600 | 2645574 | 28520 |
-| BGM021 / 0 | 3600 | 2645571 | 32766 |
-
-Frame totals include guest IRQ execution through return after the last VBlank,
-so they differ by sequence workload. They are not exact requested durations.
-The longer runs exercise roughly 60 seconds each. ffprobe independently
-recognizes the artifacts as stereo 44.1 kHz PCM16 and reports their durations;
-this validates WAV consumption, not PCM agreement with hardware or Redux.
-
-Accepted receipts are `out/audio-migration/clocked-v3-BGM*.json` and
-`clocked-long-BGM*.json`; local WAVs use matching basenames. Hashes, clocks and
-ffprobe results are retained in `output-clock-wav-validation.json` and
-`output-clock-long-validation.json` in that directory. Conflicting publication
-preserves the existing WAV and cleans its temporary file, as recorded in
-`output-clock-conflict.json`. No game or BIOS payload is added to source files.
+These are bounded diagnostics. Use the renderer below for duration, loop-count,
+and release-tail controls. Diagnostic frame totals include guest IRQ execution
+through return after the last VBlank, so they vary with sequence workload and
+do not represent exact requested durations.
 
 Default tests prove partition-invariant output, root-counter/transfer clock
 advancement, exact model VBlank boundaries, interrupt acknowledgement,
 unsupported timer modes and bounded-output failure. The expanded BGM000 media
-test produces nonzero clocked PCM for the selected second sequence and checks
-120 delivered IRQs, frame accounting and repeated-enable rejection. Validation:
-336 default tests pass (110 ignored), the release media test passes, Clippy,
-Rust 1.88 and formatting checks pass. Logs use `out/audio-migration/output-clock-*`.
+test checks nonzero clocked PCM, frame accounting, and repeated-enable rejection.
 
-Independent execution traces and reference audio, broader song/SFX/XA coverage,
-loop/end controls and production command integration remain required. The
+Independent execution traces, reference audio, and broader song/SFX/XA coverage
+remain required. The
 approximate C renderer is not an audio oracle and C retirement stays blocked
 on the complete migration acceptance gates.
 
@@ -584,9 +466,7 @@ single-bank loading contract, not proof that all game contexts reserve those
 banks simultaneously. Fresh disassembly confirms direct base loads from
 `0x80182348`; the sole direct executable call at `0x8014EAAC` passes layout zero
 in its delay slot. Cue-specific alternate-layout selection in overlays remains
-unverified. Receipts: `out/audio-migration/psx-render-layout-disassembly.txt`
-and `psx-render-layout-caller-disassembly.txt` with the previously pinned US
-payload/Rizin identities.
+unverified.
 
 `psx_render` and `render --mode music --engine psx` expose this runtime with
 `--archive`, `--executable`, `--bios`, explicit `--sequence`, and optional
@@ -619,48 +499,9 @@ hashes, initialization/play/stop call evidence, explicit model limitations and
 `independent_pcm_validated: false` accompany the output. Unsupported execution
 fails without publishing a successful rendering directory.
 
-BGM000 sequence zero rendered a two-second body and two-second tail: 176400
-stereo frames, peak magnitude 24760. The original stop began at frame 88200 and
-returned at 88202. The media regression confirms audible body, decaying tail,
-exact frame count, matching persisted report and preservation of existing
-output on a second publication attempt. ffprobe identifies the result as
-four-second stereo PCM16. Evidence: `out/audio-migration/psx-render-BGM000-0/`,
-`psx-render-wave-validation.json` and `psx-render-runtime-tests.log`.
-
-A short corpus run used every one of the 165 verified cue selections across
-81 BGM archives, with 0.5-second bodies and 0.05-second tails. Layout zero passed
-162 selections and correctly rejected the two BGMEND selections and BGMOPN
-selection whose transfers cross its next bank base. All three pass with explicit
-layout two. Their transfer sizes are 428928 and 419328 bytes respectively,
-within layout two's next base at 444112. This does not infer original scene
-layout associations. The initially silent short prefixes are not audible-playback
-proof. Longer ten-second bodies plus one-second tails separately exercise those
-three selections.
-
-Corpus receipts are `out/audio-migration/psx-render-corpus-validated/summary.json`,
-`psx-render-*-layout2.json` and `psx-render-*-audible.json`; the script retains
-original executable/archive hash checks and independently enumerates the 165
-cue records. Earlier receipts without the next-bank boundary check are
-superseded for capacity acceptance.
-
-Validation: 338 default Rust tests pass (112 ignored); four focused renderer
-checks pass with local media. Clippy, Rust 1.88, formatting, and 15 Python audio
-surface/package checks pass. The package test builds and tests extracted sources
-without proprietary media using the populated Cargo cache. A first invocation
-with the default empty cache failed to resolve roxmltree offline; the configured
-cache run passes without installing dependencies. Live harness rendering also
-passes. Logs use `out/audio-migration/psx-render-*` and `harness-psx-render.*`.
 Production command availability does not close independent fidelity, complete
-runtime coverage, codec, loop-control or C-retirement gates.
-
-Automatic layout follow-up (2026-09-24): all 165 corpus selections pass without
-`--layout`; 162 select layout zero and three opening/ending selections select
-two. Five focused renderer checks pass, including byte-only archive preparation
-for both large archives and explicit insufficient-layout rejection. The default
-suite passes 338 tests (113 ignored); Clippy and Rust 1.88 checks pass. Receipts:
-`out/audio-migration/auto-layout-*.log` and
-`psx-render-corpus-auto-layout/summary.json`. These are short execution checks,
-not independent audio fidelity validation.
+runtime coverage, codec, or C-retirement gates. The
+[audio README](../../tools/rust/bof3-audio/README.md) provides runnable commands.
 
 ## Original-runtime loop-count stopping
 
@@ -690,37 +531,14 @@ call return. Tail timing includes that delay and original deferred voice flush.
 Reports add `requested_body` and `progress`, including loop/end counters and the
 latched reason. Independent PCM fidelity remains unverified.
 
-A reduced SEP fixture exposed a bootstrap assumption: opening always requested
-four sequences. Preparation now passes the parsed sequence count (at most four)
+Preparation passes the parsed sequence count (at most four)
 to original `0x8016B38C` (EXE offset `0xD538C`). Its `a2` count controls the loop
 calling `0x8016B4B8`; it is not a capacity argument. Original four-sequence assets
 retain four, and a valid single-sequence archive no longer parses zero padding
 as additional headers or divides by a zero tempo.
 
-Evidence uses the same pinned US executable/payload and Rizin identities above:
-`out/audio-migration/render-loop-handler-disassembly.txt`,
-`render-eot-handler-disassembly.txt`, and `loop-render-sep-open-disassembly.txt`.
-Ten original sequence tests pass, including finite/infinite/end observers and
-unselected-handle isolation. The execution test checks actual observed PCs
-through an admitted IRQ and its return, including delay slots.
-
-BGM000 sequence zero reaches one traversal at frame 4,864,948 (110.316281 s)
-and the default two at frame 9,215,516 (208.968617 s). The intro runs once. The
-one-loop body's PCM is byte-equal to the corresponding prefix of the default
-render. Both WAVs pass ffprobe PCM16/stereo/44100-Hz inspection. Receipts:
-`out/audio-migration/loop-render-validation.json`, `loop-render-BGM000-one/`,
-and `loop-render-BGM000-default/`. These are original-runtime execution and
-host-policy checks, not independent reference-audio agreement.
-
-Seven focused renderer tests pass, covering default/explicit loop limits,
-finite repeat preservation, EOT, audible equal prefixes, exact body/tail frames,
-reduced SEP sets, automatic layouts, timeout/no-publication, and nonreturning
-callbacks. The default Rust suite passes 338 tests (116 ignored); Clippy,
-Rust 1.88, and all 15 Python harness/package tests pass. Logs use
-`out/audio-migration/loop-render-*`.
-
-After the parsed SEP-count fix and loop observers, all 165 short corpus renders
-pass again; every WAV is byte-equal to its previous automatic-layout render.
-Receipts: `out/audio-migration/psx-render-corpus-loops/summary.json` and
-`loop-render-duration-comparison.json`. Long BGM000 traces used four sequences;
-the parsed-count fix preserves that call argument.
+Sequence and renderer tests cover finite/infinite/end observers, unselected-handle
+isolation, admitted IRQs and delay slots, loop limits, exact body/tail frames,
+reduced SEP sets, layout selection, timeouts, and nonreturning callbacks.
+These are original-runtime execution and host-policy checks; independent
+reference-audio agreement remains unverified.
