@@ -111,6 +111,14 @@ def build_parser() -> argparse.ArgumentParser:
     reconcile.add_argument("target")
     reconcile.add_argument("--apply", action="store_true")
     reconcile.add_argument(
+        "--successor",
+        action="store_true",
+        help="preview a reviewed immutable inventory-recovery successor",
+    )
+    reconcile.add_argument("--expected-report-sha256")
+    reconcile.add_argument("--expected-summary-sha256")
+    reconcile.add_argument("--expected-plan-sha256")
+    reconcile.add_argument(
         "--evidence-root",
         action=_SingleEvidenceRoot,
         help="canonical absolute evidence root used for retained receipts",
@@ -336,7 +344,17 @@ def _run_reconcile(args: argparse.Namespace) -> int:
     from harness.naming.reconciliation import reconcile
 
     with _evidence_context(args.evidence_root):
-        _print(reconcile(resolved_root(args), args.target, apply=args.apply))
+        _print(
+            reconcile(
+                resolved_root(args),
+                args.target,
+                apply=args.apply,
+                successor=args.successor,
+                expected_report_sha256=args.expected_report_sha256,
+                expected_summary_sha256=args.expected_summary_sha256,
+                expected_plan_sha256=args.expected_plan_sha256,
+            )
+        )
     return 0
 
 

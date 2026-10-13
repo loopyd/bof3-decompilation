@@ -37,6 +37,26 @@ after full validation, preserving existing rows and other reports. Duplicate or
 extra rows and invalid evidence block. This neither closes the audit nor permits
 identity edits. Never use `init-all` for reconciliation: it replaces all reports.
 
+Retained inventory drift requires a separately reviewed recovery successor.
+Preview `bin/harness naming reconcile TARGET --successor` with externally pinned
+`--expected-report-sha256` and `--expected-summary-sha256`, the retained evidence
+root and original work deadline. Recovery preserves the predecessor and receipts,
+keeps valid rows unchanged, refreshes only fully unreviewed initializer gaps and
+records obsolete raw identities with their current named bindings. Closed work,
+observed evidence and invalid conclusions block initializer refresh.
+
+After independent review, repeat that command with `--apply` and the retained
+`--expected-plan-sha256`. The owner publishes an immutable generation and distinct
+inventory checkpoint, then activates its accounting by compare-and-swap. Inspect
+ambiguous publication before retrying. This route never verifies an old naming
+application or supplies semantic acceptance. Verify the full successor and a
+no-change reconciliation preview before further naming work.
+
+Exact-capability validation also recognizes the owner's exact historical optional
+command hints. All receipt, provenance, journal and recomputed capability checks
+still apply. Mixed hints or other row changes reject; stored receipts and rows
+are never normalized in place.
+
 Structural validation/capability exhaustion never grants independent semantic acceptance.
 Autonomous no-op/exhaustion requires the read-only parent-pinned
 [terminal verification](terminal-acceptance.md):

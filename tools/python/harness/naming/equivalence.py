@@ -406,5 +406,17 @@ def validate_terminal_capability(
     payload = json.loads(resolved.read_text(encoding="utf-8"))
     expected = _exact_capability_row(validated, payload["commands"][0])
     actual = {key: value for key, value in row.items() if key != PROVENANCE_FIELD}
-    if actual != expected:
+    legacy = dict(expected)
+    legacy_hint = (
+        expected["ceiling_next_command"]
+        .replace(
+            "bin/harness analysis query --json xrefs ", "bin/rev-query --json xrefs ", 1
+        )
+        .replace(
+            "; bin/harness analysis rz-project query ", "; bin/rz-project query ", 1
+        )
+    )
+    legacy["ceiling_next_command"] = legacy_hint
+    legacy["smallest_repair"] = legacy_hint
+    if actual != expected and actual != legacy:
         raise ValueError("terminal row differs from its current exact capability")
