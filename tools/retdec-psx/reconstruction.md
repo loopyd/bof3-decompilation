@@ -284,5 +284,5 @@ results separately. Assisted evidence cannot grant autonomous exactness.
 
 Private original images, generated material containing those bytes and captures
 stay local. Remove obsolete runs and disposable checks when they are no longer
-needed. The active [tasks](../../openspec/changes/automate-retdec-118-function-reconstruction/tasks.md)
-record remaining implementation and acceptance work.
+needed. Use `openspec list` to discover the current reconstruction change and its
+remaining implementation and acceptance tasks.

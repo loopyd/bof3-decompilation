@@ -511,7 +511,7 @@ screening throughput.
 | Reference material | Document target-specific pin, scheduling and operand-order evidence with the observed asm diff; warn that promising local pins do not authorize generalization | Comparable targets reproduce the claimed residual change with the same compiler/profile and unchanged source scope |
 | Harness tooling | Add explicit review-end and reconciliation timestamps; isolate candidate/seed workspaces; validate heuristic rankings against native `asm-diff` and bind each result to source/object hashes | Matched 128/192-block windows report active blocks/min, chars/min, display density, clips/rereads and reconciliation time; heuristic/native rank disagreement and workspace collisions are counted; all source hashes reconcile |
 
-### 2026-09-27 `0309437d` transcript: throughput baseline and pending checkpoint
+### 2026-09-27 `0309437d` transcript: throughput baseline and 2026-10-05 checkpoint
 
 The pinned child transcript `.pi-subagents/artifacts/0309437d_bof3-reverse_0_transcript.jsonl`
 (SHA-256 `72bc45054bff23d919bb7939d633511f5be2933ead23fb47ee04cd3ab6c87988`)
@@ -550,13 +550,24 @@ while the backlog averages 3,380.0; neither projection is a calendar ETA or a
 matched forecast. Use the divergence as evidence to size cycles by both blocks
 and characters and stratify throughput by content mix.
 
-All screened bodies and origins were verified, but two SQLite commit attempts
-returned `database is locked` on the `fuseblk`-backed coverage database. The 114
-blocks remain pending and receive **zero coverage credit**: global coverage stays
-**19,894/379,196 (5.246363%)**, with 359,302 pending. The hash-verified screening
-receipt is retained at
-`../../tmp/observation-ingest/bof3-re-0309437d-screened-not-checkpointed.jsonl`;
-resume its checkpoint after the lock clears.
+All screened bodies and origins were verified. The first two SQLite commit
+attempts returned `database is locked` on the `fuseblk`-backed coverage database.
+At that time, the 114 blocks remained pending and received **zero coverage
+credit**. The contemporaneous global coverage was **19,894/379,196 (5.246363%)**,
+with 359,302 pending. The body-free screening receipt remains at
+`../../tmp/observation-ingest/bof3-re-0309437d-screened-not-checkpointed.jsonl`.
+
+The resumed checkpoint completed on 2026-10-05 at 22:49:13 UTC. It pinned 673
+source files, revalidated 4,399 origin pointers, and committed all 114 blocks
+and 163,075 indexed characters. The global ledger found no previously reviewed
+hashes in this receipt. Coverage advanced from **20,688/379,196** to
+**20,802/379,196 (5.485817%)**, leaving **358,394 pending**. Cycle 6 remained
+**6,006/7,000** because this RE cohort is outside that cycle. The checkpoint
+sidecar is
+`../../tmp/observation-ingest/bof3-re-0309437d-checkpoints.jsonl`; progress and
+SQLite agree. The 263.358-second screening interval remains **25.972 blocks/minute**
+and **37,152.9 characters/minute**. These are screening rates, not `bof3-re`
+execution throughput.
 
 | Improvement destination | Evidence-based proposal | Acceptance measurement |
 | --- | --- | --- |
@@ -669,18 +680,35 @@ raising batch counts for compact bodies while sizing each call by remaining
 context/output budget, not a fixed block or character cap. Record blocks and
 characters per display, clipping, rereads and active versus operational time.
 
-Coverage remains **19,894/379,196 (5.246363%)**, with **359,302 blocks** and
-**1,214,455,686 characters** pending. At this sample's operational rate, simple
-homogeneous projections are **313.04 hours / 13.04 days by blocks** and
-**1,314.12 hours / 54.75 days by characters**. The sample averages 805 characters
-per block versus 3,380 in the pending corpus (4.2× larger), so neither is a
-corpus ETA; use both rates and content mix for planning. This cohort remains
-screened but uncheckpointed and receives **zero coverage credit** because the
-same database already has a persistent `database is locked` failure. Future
-handoffs should join reports by exact target and measure paired-review coverage
-plus orphan writer/reviewer counts before deriving accepted exacts/hour. These
-observations suggest batching and pairing improvements; they do not establish a
-skill speedup or change its directives.
+At the **2026-09-27 pre-checkpoint snapshot**, coverage stood at
+**19,894/379,196 (5.246363%)**, with **359,302 blocks** and **1,214,455,686
+characters** pending. At this sample's operational rate, the then-current
+homogeneous projections were **313.04 hours / 13.04 days by blocks** and
+**1,314.12 hours / 54.75 days by characters**. The sample averaged 805 characters
+per block versus 3,380 in the pending corpus (4.2× larger), so neither projection
+was a corpus ETA. At that snapshot, this cohort remained screened but
+uncheckpointed and received **zero coverage credit** after the checkpoint attempt
+failed with `database is locked`. That status was superseded on 2026-10-05 below.
+Future handoffs should join reports by exact target and measure paired-review
+coverage plus orphan writer/reviewer counts before deriving accepted exacts/hour.
+These observations suggest batching and pairing improvements; they do not
+establish a skill speedup or change its directives.
+
+On **2026-10-05**, the source-pinned area026 receipt was checkpointed after
+revalidating its **198 hashes** and **421 origin pointers across 13 files**.
+SQLite showed **191 hashes pending** and **seven already reviewed** under the
+`0309437d` label. The checkpoint credited only **191 new blocks / 159,227
+characters**; the seven duplicates, totaling 191 characters, received no duplicate
+credit. Coverage is now **20,993/379,196 (5.536187%)**, with **358,203 blocks**
+and **1,213,742,901 characters** pending. Reconciliation corrected the
+pre-existing **163,075-character** excess in the progress file's pending count
+and applied the new reviewed characters; progress and SQLite now agree, and
+SQLite `integrity_check` is `ok`. Nine screened receipts covering **3,610 block
+occurrences** remain pending. Cycle 6 remains **6,006/7,000**. Over the original
+621-second screening interval, the checkpointed yield was **18.454 new blocks**
+and **15,384.3 new characters per minute**; active review and skill-execution
+time remain unknown. These are observation-screening rates, not skill-execution
+throughput or an accepted-lift rate.
 
 ### 2026-08-11 area01613 child workflow: non-exact checkpoint and ABI ownership gap
 

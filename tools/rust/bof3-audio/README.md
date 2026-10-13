@@ -103,3 +103,7 @@ SFX/XA runtime rendering, MP3/Ogg delivery and full verification evidence remain
 open. Unsupported operations fail explicitly. C source retirement is separately gated; this
 package is not a claim of full parity. TUI, live playback, standalone PSF
 commands and FLAC are retired from the replacement command surface.
+
+Use [PCSX-Redux Agentic](../../../third_party/pcsx-redux-agentic/) for SPU/CD
+implementation comparisons and runtime captures. Agreement with the fork alone
+does not establish hardware fidelity.

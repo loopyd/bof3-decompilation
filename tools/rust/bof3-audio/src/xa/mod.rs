@@ -80,9 +80,9 @@ impl Format {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Arithmetic {
-    /// Separately floor each predictor product, as in DuckStation's CD decoder.
+    /// Floor each predictor product separately.
     SplitFloor,
-    /// Round the combined predictor, as in PSX-SPX pseudocode and FFmpeg 6.1.1.
+    /// Round the combined predictor, as in PCSX-Redux Agentic's CD decoder.
     CombinedRounded,
 }
 

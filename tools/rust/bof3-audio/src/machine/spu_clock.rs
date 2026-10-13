@@ -1,4 +1,4 @@
-//! Clocked FIFO/RAM service using an explicit reference-emulator transfer rate.
+//! Clocked FIFO/RAM service using a fixed diagnostic transfer rate.
 //! This does not schedule voice frames or establish CPU/DMA bus arbitration.
 use super::{interconnect::Interconnect, spu_transfer::Mode};
 use crate::Result;
@@ -7,8 +7,9 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Model {
-    /// DuckStation's TRANSFER_TICKS_PER_HALFWORD: 16 system-clock ticks.
-    /// Control applies at the next advance call; not hardware latency evidence.
+    /// Fixed diagnostic rate: 16 system-clock ticks per halfword.
+    /// Control applies at the next advance call; compare timing with
+    /// PCSX-Redux Agentic before treating it as hardware latency evidence.
     EmulatorReference,
 }
 

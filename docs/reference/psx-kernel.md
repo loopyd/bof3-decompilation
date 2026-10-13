@@ -11,8 +11,14 @@ Rust execution observations do not establish acceptance of the current fork.
 | --- | --- | --- |
 | [psx-spx CPU specification](https://psx-spx.consoledev.net/cpuspecifications/#cop0-exception-handling) | COP0 status stack, exception codes/vectors, EPC, branch-delay information, BadVaddr and RFE | No complete CPU or hardware-timing acceptance from implementing these rules. |
 | [psx-spx BIOS specification](https://psx-spx.consoledev.net/kernelbios/#bios-interruptexception-handling) | Critical-section syscall semantics; BIOS exception chains and CD removal limitations | A service name does not establish its effects or permit a success stub. |
-| [DuckStation CPU register definitions](https://github.com/stenzek/duckstation), `src/core/cpu_types.h` | Independent comparison of status and cause writable-bit masks | Implementation evidence; no DuckStation code is linked or used as a production fallback. |
+| [PCSX-Redux Agentic COP0 write handler](../../third_party/pcsx-redux-agentic/src/core/psxinterpreter.cc) | Native status/cause writes and software-interrupt checks | Its write behavior differs from the Rust masks and does not establish hardware acceptance. |
 | [OpenBIOS CD driver](../../third_party/pcsx-redux-agentic/src/mips/openbios/cdrom/cdrom.c) | `_96_remove` comparison: critical section, five event closures, handler removal | Replacement BIOS behavior is not original Sony BIOS equivalence. |
+
+The native interpreter stores the full MTC0 status value and replaces cause with
+`value & ~0xFC00`. The [Rust COP0 model](../../tools/rust/bof3-audio/src/machine/cop0.rs)
+retains status mask `0xF27FFF3F` and updates only cause bits `0x300`. These rules
+remain distinct; native comparison cannot silently replace the Rust policy or
+close its hardware evidence gate.
 
 RFE changes the status stack; it does not select a return PC. Critical-section
 entry tests and clears saved interrupt-enable and interrupt-mask bits; exit
@@ -218,11 +224,11 @@ and the [PCSX-Redux Agentic register array](../../third_party/pcsx-redux-agentic
 `0x800543B4` and reads key-on state after configuring voices; the previous
 write-only model rejected that valid access.
 
-`machine::spu_clock` advances FIFO/RAM transfers at an explicitly selected
+[The Rust transfer clock](../../tools/rust/bof3-audio/src/machine/spu_clock.rs)
+advances FIFO/RAM transfers at an explicitly selected
 16 system ticks per halfword, with retained partial progress and no accumulated
-idle-time credit. Its source is the `TRANSFER_TICKS_PER_HALFWORD` behavior in
-[DuckStation's SPU implementation](https://github.com/stenzek/duckstation), `src/core/spu.cpp`,
-inspected 2026-09-24 on a moving branch, not an immutable hardware oracle.
+idle-time credit. This retained `EmulatorReference` timing policy does not
+reproduce the current native transfer path or establish hardware timing.
 Control applies at an advance call; DMA FIFO handshakes still use the existing
 untimed interconnect. The probe supplies two base ticks per executed instruction
 or entered syscall, taking `BIAS=2` from the [PCSX-Redux Agentic CPU constants](../../third_party/pcsx-redux-agentic/src/core/psxemulator.h).

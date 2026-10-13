@@ -1,8 +1,8 @@
 //! Per-output-frame SPU ADSR state. MMIO/key-on latency and mixing are separate.
 //!
-//! The published SPX pseudocode and inspected DuckStation behavior disagree at
-//! the exponential-increase threshold and slow-rate floor. Callers must choose
-//! a named evidence model; neither is presented as hardware-validated here.
+//! Callers choose a named arithmetic model for the exponential-increase
+//! threshold and slow-rate floor. Neither model establishes hardware fidelity;
+//! runtime comparisons use PCSX-Redux Agentic.
 
 use serde::{Deserialize, Serialize};
 

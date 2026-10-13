@@ -1,6 +1,6 @@
 # SPU sample playback references
 
-Inspected 2026-09-24. These describe hardware or emulator behavior; original-game
+These describe hardware or emulator behavior; original-game
 execution and integration evidence live in the
 [audio specification](../specs/formats/audio.md#rust-spu-sample-and-voice-execution).
 
@@ -8,26 +8,31 @@ execution and integration evidence live in the
 | --- | --- | --- |
 | [psx-spx SPU sample and pitch reference](https://psx-spx.consoledev.net/soundprocessingunitspu/#spu-adpcm-samples) | Block flags, address units, pitch modulation and interpolation arithmetic | Published descriptions require independent hardware validation. |
 | [Interpolation ROM values](https://psx-spx.consoledev.net/soundprocessingunitspu/#4-point-gaussian-interpolation) | Numeric hardware coefficient table | Reproducing the table does not validate fetch timing or the final mixer. |
-| [DuckStation SPU implementation](https://github.com/stenzek/duckstation), `src/core/spu.cpp` | Independent comparison of coefficients, rounding, pitch ceiling and voice state | A moving branch inspected on the date above, not an immutable hardware oracle. No implementation code or dependency is imported. |
+| [PCSX-Redux Agentic interpolator](../../third_party/pcsx-redux-agentic/src/spu/interpolation.cc), [Gaussian table](../../third_party/pcsx-redux-agentic/src/spu/gauss.h) and [register handler](../../third_party/pcsx-redux-agentic/src/spu/registers.cc) | Current native coefficients, rounding, pitch ceiling and voice observations | Native implementation comparison requires separate runtime and hardware evidence. No emulator implementation is imported into the Rust component. |
 
-All 512 numeric coefficients agree between the inspected sources. Encoded as
+All 512 numeric coefficients agree between the published table and the fork's
+`gauss512` table. Encoded as
 little-endian signed 16-bit values, their SHA-256 is
 `3e221a5b25de34ca9ad1ea945ad90fbe8171c5e3f7c52af15b232f9c36fbd40d`.
 The [Rust ROM data](../../tools/rust/bof3-audio/src/machine/gaussian.rs) preserves
 those values literally. Replacing them with a mathematical Gaussian approximation
 would change the output.
 
-Two unresolved arithmetic differences matter:
+The retained Rust policies and current native arithmetic differ:
 
-- Published interpolation shifts each product before summing; the inspected
-  emulator shifts the sum. At phase zero, four input samples equal to one yield
-  negative one versus zero.
-- The published pitch limit is `0x4000`; the inspected emulator limits to
-  `0x3FFF`. This changes both phase accumulation and block-boundary timing.
+- Rust `Published` interpolation shifts each product by 15 before summing;
+  `EmulatorReference` shifts the sum by 15. At phase zero, four input samples
+  equal to one yield negative one versus zero. The native Gaussian interpolator
+  shifts each product by 14, then shifts the sum by one, retaining a guard bit.
+- The published pitch limit is `0x4000`; Rust `EmulatorReference` and the native
+  pitch register handler limit to `0x3FFF`. This changes both phase accumulation
+  and block-boundary timing. Native zero-step behavior also differs as described
+  below.
 
 [The Rust reader](../../tools/rust/bof3-audio/src/machine/spu_sample.rs) requires an
-explicit source model. Its shared block-snapshot and retrigger state follows the
-inspected emulator comparison; neither model claims complete hardware behavior.
+explicit arithmetic model. Its shared block-snapshot and retrigger state is a
+scheduled component policy. Neither model reproduces the full native reader or
+claims complete hardware behavior.
 The existing [ADSR source differences](spu-envelopes.md) remain independently
 selectable. A future accepted PSX renderer must resolve these discrepancies from
 independent traces/audio, rather than silently choose whichever source passes.
@@ -48,17 +53,20 @@ uses feedback bits 15, 12, 11 and 10, XORed with one. Each output frame subtract
 `4 + step` from a shared countdown; underflow shifts the level once and adds
 `0x20000 >> shift`, twice if needed. SPUCNT bits 8–9 select step and 10–13 select
 shift. The Rust implementation requires caller-supplied initial state. The
-inspected DuckStation source instead uses a fractional timer with different
-increments and thresholds. This discrepancy is retained as an unresolved
-hardware-validation obligation, not silently reconciled.
+[native noise generator](../../third_party/pcsx-redux-agentic/src/spu/noise.cc)
+uses a fractional accumulator with different increments and thresholds. This
+discrepancy remains an unresolved hardware-validation obligation.
 
 The [same SPU register reference](https://psx-spx.consoledev.net/soundprocessingunitspu/)
 documents fixed signed main gain, independent CD/external/reverb gains, routing
-flags and the four capture rings. The inspected emulator provides an ordering
-cross-check: noise before envelope, mute on summed voices, enabled CD input after
-voice mute, reverb return before final clipping/main gain, and capture of CD before
-SPU input gain plus voices 1/3 after ADSR. No emulator code is imported. In
-particular, the `-32768 × -32768` final-gain edge produces an intermediate
+flags and the four capture rings. The
+[native mixer](../../third_party/pcsx-redux-agentic/src/spu/spu.cc) applies noise
+before ADSR, captures voices 1/3 after ADSR and before voice gain, and adds reverb
+before output clipping. CD audio enters a separate stream through
+[FeedXA](../../third_party/pcsx-redux-agentic/src/spu/xa.cc). The native register
+handler leaves main and external input gain writes unimplemented, so this
+comparison does not validate the Rust gain/routing model. The
+`-32768 × -32768` final-gain edge produces an intermediate
 `+32768`; wrap versus saturation is not established here, so Rust rejects it.
 
 The [implementation and checks](../specs/formats/audio.md#rust-spu-noise-mixing-and-capture)
@@ -70,19 +78,20 @@ accepted PSX audio fidelity.
 
 The [published register/network description](https://psx-spx.consoledev.net/soundprocessingunitspu/#spu-reverb-formula)
 and [numeric presets/filter](https://psx-spx.consoledev.net/soundprocessingunitspu/#reverb-buffer-resampling)
-were inspected 2026-09-24. The page distinguishes algebraic network behavior from
-unresolved bit-level rounding and reports SCPH-1001 measurements; those reports
+distinguish algebraic network behavior from
+unresolved bit-level rounding and report SCPH-1001 measurements; those reports
 are external evidence, not captures independently reproduced in this project.
 The 39 coefficients sum to 32766. The twenty even-index coefficients sum to
 16382, so one upsampling phase is slightly below unity gain.
 
-The previously linked DuckStation source supplies a comparison for intermediate
-quantization, saturation, phase scheduling, aliased channel ordering and numeric
-edge cases. Its address fold uses one conditional base addition, allowing some
-negative/large offsets below the nominal work area. That is not the same as
-modulo by work-area size implied by a strict reading of the published buffer
-description. Rust retains this as an explicit source model, with a regression
-vector for that alias; original hardware behavior remains unresolved.
+The [native reverb unit](../../third_party/pcsx-redux-agentic/src/spu/reverb.cc)
+supplies the current comparison for quantization, saturation and alternating
+left/right scheduling. Its `wrapOffset` repeatedly folds offsets at the work-area
+boundaries. The [Rust reverb model](../../tools/rust/bof3-audio/src/machine/spu_reverb.rs)
+retains one conditional base addition, allowing some negative/large offsets
+below the nominal work area. This differs from the native fold and from strict
+modulo by work-area size. The existing alias vector preserves that diagnostic
+policy; original hardware behavior remains unresolved.
 
 [Implementation evidence](../specs/formats/audio.md#rust-spu-reverb-execution)
 includes exact Room preset identity in the supplied US executable, separate
@@ -101,11 +110,8 @@ after playback has advanced can hold another value.
 
 [Reader tests](../../tools/rust/bof3-audio/tests/spu_samples.rs) cover both Rust
 sample models, initial/frozen positions, fetch counts and history reset. The
-[inspected DuckStation source](https://github.com/stenzek/duckstation), `src/core/spu.cpp`,
-also clears interpolation history at key-on and retains a zero step; this is
-behavioral corroboration, not copied implementation or independent hardware
-validation. The current [PCSX-Redux Agentic interpolator](../../third_party/pcsx-redux-agentic/src/spu/interpolation.h)
-in `src/spu/interpolation.h` substitutes a minimum increment of one in `setStep`
+current [PCSX-Redux Agentic interpolator](../../third_party/pcsx-redux-agentic/src/spu/interpolation.h)
+substitutes a minimum increment of one in `setStep`
 and starts its Gaussian reader with three sample advances in `keyOn`.
 It is not an exact zero-step oracle.
 
@@ -121,14 +127,17 @@ source identities and archive hashes. See the explicit
 
 ## Disable transition
 
-The [inspected DuckStation control-write implementation](https://github.com/stenzek/duckstation), `src/core/spu.cpp`,
-handles a falling SPUCNT enable bit by forcing active envelopes off. Its comment
-attributes immediate rather than next-frame behavior to hardware tests, but this
-project has not reproduced those measurements. Its `ForceOff` leaves an
-already-off voice unchanged, including a manually written ENVX. Pending key
-latches, sample state, gains and ENDX are not reset by that transition.
+[Rust control writes](../../tools/rust/bof3-audio/src/machine/spu_voice_ports.rs)
+retain an explicit `EmulatorReference` policy that forces active envelopes off
+when SPUCNT enable falls. Already-off voices retain manually written ENVX;
+pending key latches, sample state, gains and ENDX remain unchanged. The
+[native control-write handler](../../third_party/pcsx-redux-agentic/src/spu/registers.cc)
+updates control/noise state and IRQ acknowledgement without that forced-off
+transition. ENVX reflects the envelope steps elapsed at the reader's cycle.
+These differences require
+focused native and hardware evidence.
 
-Rust exposes this as an explicit emulator-reference choice for control writes;
+The retained Rust policy does not establish native control-write behavior;
 disabled-frame execution remains unsupported. Original low-level initialization
 can now run repeatedly, with [bounded execution evidence](../specs/formats/audio.md#rust-spu-disable-and-original-hardware-initialization).
 This does not verify boot state, write latency, disabled capture/CD behavior or

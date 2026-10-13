@@ -1,7 +1,8 @@
 //! PSX SPU ADPCM sample decoding, before pitch interpolation, ADSR or mixing.
 //! Sample data has no intrinsic playback rate. Unsupported header values fail.
-//! Coefficients/rounding were checked against independent SPU documentation and
-//! DuckStation's decoder; hardware/rendering acceptance remains separate.
+//! Predictor coefficients and separate product shifts match PCSX-Redux Agentic.
+//! This decoder saturates each sample to i16; native predictor history is wider.
+//! Hardware/rendering acceptance remains separate.
 
 pub mod encoder;
 

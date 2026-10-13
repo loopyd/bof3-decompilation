@@ -120,7 +120,9 @@ main.c                  CLI dispatch + TUI
 ## Format references
 
 - [PSX SPU](https://psx-spx.consoledev.net/soundprocessingunitspu/) — hardware SPU spec
-- [DuckStation](https://github.com/stenzek/duckstation), `src/core/spu.cpp` — reference SPU implementation
+- [PCSX-Redux Agentic](../../../third_party/pcsx-redux-agentic/) provides the SPU
+  implementation and runtime reference. See `src/spu/` for ADPCM, interpolation
+  and ADSR behavior. Hardware fidelity requires separate evidence.
 - VAB: Sony PsyQ VAB specification
 - SEP: Sony PsyQ sequence format
 - EMI: BOF3 archive format (VH + VB + SEP containers)

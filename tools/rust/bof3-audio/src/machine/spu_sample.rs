@@ -3,14 +3,14 @@ use super::{gaussian::GAUSS, spu_transfer::RAM_BYTES};
 use crate::{codec::adpcm::History, Result};
 use serde::{Deserialize, Serialize};
 
-/// Sources disagree on rounding and the pitch ceiling. Selection is mandatory;
-/// neither model has independently recorded hardware acceptance in this project.
+/// Select rounding and the pitch ceiling explicitly. Compare with
+/// PCSX-Redux Agentic; neither model establishes hardware fidelity.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Model {
     /// Round each interpolation product separately; pitch ceiling 0x4000.
     Published,
-    /// Round the sum once; pitch ceiling 0x3fff (inspected DuckStation behavior).
+    /// Diagnostic alternate: round the sum once; pitch ceiling 0x3fff.
     EmulatorReference,
 }
 

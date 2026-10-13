@@ -70,6 +70,8 @@ toolchains/psyq-stock/
 # Local planning and temporary files
 /openspec/
 /tmp/
+/completion.json
+/.goals-pool-snapshot.json
 session-*.md
 # Legacy live-session symlink; remove after restarting Pi.
 /sessions

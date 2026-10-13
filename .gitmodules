@@ -1,15 +1,15 @@
 [submodule "third_party/asm-differ"]
 	path = third_party/asm-differ
-	url = https://github.com/raulcorreia7/asm-differ.git
+	url = https://github.com/simonlindholm/asm-differ.git
 [submodule "third_party/decomp-permuter"]
 	path = third_party/decomp-permuter
-	url = https://github.com/raulcorreia7/decomp-permuter.git
+	url = https://github.com/simonlindholm/decomp-permuter.git
 [submodule "third_party/m2c"]
 	path = third_party/m2c
-	url = https://github.com/raulcorreia7/m2c.git
+	url = https://github.com/matt-kempster/m2c.git
 [submodule "third_party/maspsx"]
 	path = third_party/maspsx
-	url = https://github.com/raulcorreia7/maspsx.git
+	url = https://github.com/mkst/maspsx.git
 [submodule "third_party/references/bof3-data-doc"]
 	path = third_party/references/bof3-data-doc
 	url = https://github.com/GlitchedDragon-dev/BoF3-Data-Doc.git

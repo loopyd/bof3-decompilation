@@ -77,8 +77,9 @@ static const int PSX_FILTER_NEG[5] = {0, 0, -52, -55, -60};
 
 /* clang-format off */
 /* PS1 SPU 4-point gaussian interpolation table (512 entries).
-   Extracted from DuckStation (hardware-verified). Source: stenzek/duckstation src/core/spu.cpp
-   Each 4-tuple gauss[0xFF-i]+gauss[0x1FF-i]+gauss[0x100+i]+gauss[i] sums to ~0x8000. */
+   Coefficients match PCSX-Redux Agentic's src/spu/gauss.h.
+   Each 4-tuple gauss[0xFF-i]+gauss[0x1FF-i]+gauss[0x100+i]+gauss[i]
+   sums to 0x7F7F..0x7F81. Emulator agreement does not establish hardware fidelity. */
 static const int16_t PSX_GAUSS[512] = {
 -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
         -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,

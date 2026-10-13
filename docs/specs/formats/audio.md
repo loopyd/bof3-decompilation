@@ -145,13 +145,12 @@ No error correction, de-emphasis, CD resampling, mixing or drive timing is impli
 by this decoder; the separate [CD processing component](#rust-cdxa-sample-processing)
 now owns explicit resampling and drive gain.
 
-Reference arithmetic differs: the inspected
-[DuckStation](https://github.com/stenzek/duckstation) CD decoder in `src/core/cdrom.cpp`
-separately floors each predictor product divided by 64; the
-[FFmpeg](https://github.com/FFmpeg/FFmpeg) 6.1.1 XA decoder in `libavcodec/adpcm.c`
-adds the products and 32 before the arithmetic right shift. `SplitFloor` and
-`CombinedRounded` expose those choices explicitly. Both clip the result before
-retaining history. Neither is accepted here as proof of hardware playback.
+The current [PCSX-Redux Agentic XA decoder](../../../third_party/pcsx-redux-agentic/src/core/decode_xa.cc)
+adds both predictor products and 32 before the arithmetic right shift, then
+clips the result before retaining history. This is the `CombinedRounded`
+arithmetic also used by the [FFmpeg](https://github.com/FFmpeg/FFmpeg) 6.1.1 XA
+decoder in `libavcodec/adpcm.c`. `SplitFloor` retains separate product floors
+as a diagnostic alternate. Neither choice establishes hardware playback.
 
 [Synthetic checks](../../../tools/rust/bof3-audio/tests/xa/cases.rs) cover ordering,
 rates/depths, all four predictors, shifts 0–12, clipping, history, EOF and malformed
@@ -532,7 +531,7 @@ libsnd:
 | `spu_pitch_from_note` | faithful | disasm `0x80171B20` |
 | `pitch_table` | byte-identical | dump @`0x8018445C` |
 | `voice_pitch` bend arithmetic | faithful | disasm `_SsVmPBVoice@0x801726E0` |
-| SPU pitch counter / Gaussian / key-on | matches | psx-spx + DuckStation |
+| SPU pitch counter / Gaussian / key-on | Current-fork parity remains open | psx-spx; [host and native differences](#gaussian-interpolation) |
 | VagAtr center/shift parse | correct (`[4]`/`[5]`) | disasm + VGMTrans |
 | note-on bend folding | **bug** | libsnd uses base pitch; bend only via events |
 
@@ -1457,10 +1456,12 @@ forced-off behavior. A zero sustain level does not automatically turn a voice of
 The returned level is after the tick; the [voice owner](#rust-spu-sample-and-voice-execution)
 uses the current level for output before advancing this envelope.
 
-Callers must choose `Published` or `EmulatorReference` arithmetic. The references
-disagree on exponential slowdown at the threshold and the ordering of the
-slow-rate minimum; shared transition/write semantics follow the inspected
-emulator. See [source provenance and exact differences](../../reference/spu-envelopes.md).
+Callers must choose `Published` or `EmulatorReference` arithmetic. These names
+retain existing choices for the exponential slowdown threshold and slow-rate
+minimum; shared transition/write semantics remain host model behavior.
+`EmulatorReference` does not establish parity with the current
+[native ADSR implementation](../../../third_party/pcsx-redux-agentic/src/spu/adsr.cc).
+See [source provenance and exact differences](../../reference/spu-envelopes.md).
 Neither model is accepted as hardware-validated. Sample interpolation and bounded
 mixing are now connected below; MMIO timing, key-on delay and full runtime/device
 integration remain unimplemented.
@@ -1839,14 +1840,17 @@ Reserved decoder headers still fail explicitly. Whole-block fetches are snapshot
 concurrent RAM writes, internal fetch cadence and IRQ comparisons are not modeled.
 
 The four-tap interpolation ROM contains 512 signed values, independently compared
-between the published reference and inspected emulator. Its little-endian `i16`
+with the published reference. Its little-endian `i16`
 SHA-256 is `3e221a5b25de34ca9ad1ea945ad90fbe8171c5e3f7c52af15b232f9c36fbd40d`.
 No emulator implementation or new dependency is included. Callers must select
 `Published` (separate product rounding, pitch ceiling `0x4000`) or
 `EmulatorReference` (sum rounding, ceiling `0x3FFF`). Both retain signed pitch
-modulation and low-16-bit wrapping before clamping. These are conflicting source
-models, not accepted hardware alternatives; [retained research](../../reference/spu-samples.md)
-records the discrepancy and remaining evidence obligation.
+modulation and low-16-bit wrapping before clamping. These names retain host
+choices and do not establish current-fork parity. Native Gaussian rounding,
+zero-pitch stepping and key-on priming differ as described under
+[Gaussian interpolation](#gaussian-interpolation). Neither host model is
+hardware-accepted; [retained research](../../reference/spu-samples.md) records
+the discrepancy and remaining evidence obligation.
 
 [Voice execution](../../../tools/rust/bof3-audio/src/machine/spu_voices.rs) connects
 24 sample readers to explicitly selected ADSR models, manual envelope writes,
@@ -2243,7 +2247,11 @@ reset, end padding or tail flush. Extraction remains at encoded rate.
 
 `Published37800` implements the published seven-phase filter alignment and rejects
 18.9 kHz, for which that source gives no complete algorithm. `EmulatorReference`
-uses the inspected emulator's 37.8 kHz alignment and distinct half-rate filter.
+retains the earlier comparison model's 37.8 kHz alignment and distinct half-rate
+filter. Its name does not establish parity with the current
+[native XA/CDDA submission path](../../../third_party/pcsx-redux-agentic/src/spu/xa.cc);
+resampling and attenuation still require independent comparison of captured
+settings, feeds and samples.
 Both require explicit selection; neither establishes hardware fidelity. See
 [coefficient provenance and differences](../../reference/cd-audio.md). Reset
 contexts have zero filter history, position zero and phase six. Phase/history
@@ -2454,7 +2462,7 @@ Use each source only for the layer it owns:
 | Original `SLUS_004.22` bytes and linked routines | BOF3/PsyQ SEP parsing, VAB interpretation, note-to-pitch conversion, voice allocation, and scheduler behavior | Undocumented electrical/timing behavior inside the SPU |
 | Sony PsyQ 4.7 headers in `toolchains/psyq/4.7/include/` | Public structure layouts, field types, and API contracts | Linked implementation details or BOF3 call policy |
 | [psx-spx SPU specification](https://psx-spx.consoledev.net/soundprocessingunitspu/) | Hardware registers, ADPCM, pitch counter, interpolation, ADSR, volume, transfer, noise, modulation, and reverb behavior | BOF3's sequence semantics or game scheduler |
-| [DuckStation](https://github.com/stenzek/duckstation), `src/core/spu.cpp` | Tested implementation cross-check for the hardware specification | BOF3/PsyQ-specific parsing and allocation |
+| [PCSX-Redux Agentic SPU sources](../../../third_party/pcsx-redux-agentic/src/spu/) | Current implementation and runtime comparison reference | Hardware fidelity or BOF3/PsyQ-specific parsing and allocation |
 
 External implementations are corroboration, not code to import blindly. Preserve
 their license boundaries and verify constants or algorithms against psx-spx and,
@@ -2510,15 +2518,20 @@ execution but not to an offline `fast` event scheduled on output frames.
 | Manual/DMA transfer FIFO timing and IRQ | Data transfer implemented; FIFO timing and IRQ incomplete | Not applicable |
 | CD/XA and external-input mixing/capture | Not implemented | Separate XA decoder; not mixed through SPU |
 
-DuckStation explicitly zeroes the previous-block interpolation samples at key-on
-to avoid clicks in *Breath of Fire III*. Keep this as a BOF3 regression invariant.
-The fast path now decodes loop starts again with predictor and Gaussian history
+The current fork's [voice start](../../../third_party/pcsx-redux-agentic/src/spu/spu.cc)
+resets ADSR and ADPCM history; [interpolator key-on](../../../third_party/pcsx-redux-agentic/src/spu/interpolation.h)
+clears its sample window. Zero interpolation history on key-on remains a BOF3
+playback requirement. Native priming and startup-delay settings still need a
+timed comparison. The fast path decodes loop starts again with predictor and Gaussian history
 retained from the loop end instead of replaying a cached PCM loop.
 
 ### ADPCM decode
 
-Integer predictor formula used by the host decoder and independently present
-in the [DuckStation](https://github.com/stenzek/duckstation) SPU decoder, `src/core/spu.cpp`:
+The host decoder uses this integer predictor formula. The current
+[native SPU decoder](../../../third_party/pcsx-redux-agentic/src/spu/adpcm.cc)
+uses the same five coefficients and separate product shifts, but retains wider,
+unclipped predictor history. The host C and Rust decoders clip each sample before
+retaining history, so this formula does not establish native or hardware parity:
 
 ```c
 sample = (int16_t)(nibble << 12) >> shift;   // sign-extend + shift
@@ -2537,8 +2550,11 @@ Filter coefficients:
 | 3 | 98 | −55 |
 | 4 | 122 | −60 |
 
-Reserved shifts 13–15 decode as shift 9; reserved filters 5–15 use zero
-coefficients. On hardware, ADPCM predictor and Gaussian sample history continue
+The retained C decoder treats reserved shifts 13–15 as shift 9 and reserved
+filters 5–15 as zero coefficients. Rust rejects those headers. The native decoder
+uses literal shifts and bounds reserved filters to filter 4; its source explicitly
+leaves their hardware behavior unknown. These are distinct host policies.
+On hardware, ADPCM predictor and Gaussian sample history continue
 across loop jumps rather than resetting at the loop-start block. Both the
 register-driven device and the `fast` renderer preserve this history because
 the renderer routes through the same live decoder; no predecoded loop cache is
@@ -2912,8 +2928,9 @@ remain open.
 
 ### Gaussian interpolation
 
-4-point interpolation using the hardware's 512-entry gaussian table
-(extracted from DuckStation, verified against nocash specs):
+The host uses four-point interpolation with the published 512-entry SPU Gaussian
+table. Its coefficients match the current [native table](../../../third_party/pcsx-redux-agentic/src/spu/gauss.h).
+Table equality does not establish rendering fidelity. The host arithmetic is:
 
 ```c
 out  = (gauss[0x0FF - i] * oldest) >> 15;
@@ -2922,14 +2939,25 @@ out += (gauss[0x100 + i] * old)    >> 15;
 out += (gauss[0x000 + i] * new)    >> 15;
 ```
 
-The interpolation index is pitch-counter bits 4–11. Bits 12 and above select
+The host interpolation index is pitch-counter bits 4–11. Bits 12 and above select
 the decoded source sample. Steps above `0x4000` clamp to `0x4000` after optional
 pitch modulation, so high pitches may skip decoded samples while still using
 the same four-point interpolation window.
 
+The current [native interpolator](../../../third_party/pcsx-redux-agentic/src/spu/interpolation.cc)
+shifts each product by 14, then the four-product sum by one. This differs from
+both Rust choices, which shift each product by 15 or shift the sum by 15.
+Native pitch stepping uses a 16.16 counter with phase bits 8–15. The
+[pitch writer](../../../third_party/pcsx-redux-agentic/src/spu/registers.cc)
+caps the raw pitch at `0x3FFF`; the interpolator uses a minimum step of one for
+zero pitch. Gaussian key-on clears the window and seeds the counter at `0x30000`
+to prime it before output. The retained host counter and zero-pitch policies
+remain unchanged; current-fork captures and hardware acceptance are still required.
+
 ### ADSR envelope
 
-From nocash PSX specs, cross-referenced with DuckStation:
+Published envelope equations, with the unresolved reference differences retained
+in the [Rust ADSR models](#rust-adsr-state-and-evidence-models):
 
 ```text
 AdsrCycles = 1 << max(0, shift - 11)
@@ -2941,6 +2969,13 @@ if exponential AND increasing AND level > 0x6000:
 if exponential AND decreasing:
     AdsrStep = AdsrStep * level / 0x8000
 ```
+
+The current [native ADSR implementation](../../../third_party/pcsx-redux-agentic/src/spu/adsr.cc)
+uses numerator/denominator rate tables, an inclusive `level >= 0x6000` knee and
+`min(rate + 8, 127)` above that knee. Decay compares the upper four level bits
+with the sustain field. Shared register layouts do not establish identical
+slow-rate, phase-boundary or write behavior. The retained host models still need
+current-fork comparison and independent hardware evidence.
 
 | Phase | Mode | Direction | Step |
 | --- | --- | --- | --- |
@@ -3745,8 +3780,9 @@ timing.
 
 ### C tool (`tools/c/psx-audio/`)
 
-Self-contained C11 library + CLI. Uses miniaudio for playback.
-Gaussian table and ADSR from DuckStation (hardware-verified).
+The C11 library and CLI use miniaudio for playback. Gaussian and ADSR comparisons
+use the current PCSX-Redux Agentic fork under the [evidence boundary](#evidence-boundary).
+Hardware fidelity remains open.
 
 ```sh
 bin/harness audio build <command>           # incrementally builds, then runs ignored build/bof3-audio

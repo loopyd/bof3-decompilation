@@ -1,35 +1,39 @@
 # SPU envelope research
 
-Sources inspected 2026-09-24 UTC:
+Hardware descriptions and the current native comparator:
 
 - [psx-spx: SPU volume and ADSR generator](https://psx-spx.consoledev.net/soundprocessingunitspu/#spu-volume-and-adsr-generator)
   describes register fields and envelope arithmetic.
-- [DuckStation's SPU implementation](https://github.com/stenzek/duckstation), `src/core/spu.cpp`,
-  particularly `VolumeEnvelope::Reset`, `VolumeEnvelope::Tick`,
-  `Voice::UpdateADSREnvelope` and `Voice::TickADSR`, supplies independent emulator
-  behavior to compare. The inspected source tracked a live branch; no immutable revision was
-  established by the research fetch. No emulator code or dependency is vendored.
+- [PCSX-Redux Agentic ADSR](../../third_party/pcsx-redux-agentic/src/spu/adsr.cc)
+  and [register handler](../../third_party/pcsx-redux-agentic/src/spu/registers.cc)
+  supply native envelope arithmetic and guest read/write behavior to compare.
+  No emulator implementation is imported into the Rust component. Native
+  behavior still requires independent hardware validation.
 
 ## Unresolved differences
 
 The published pseudocode starts exponential-increase slowdown above `0x6000`;
-the inspected emulator includes equality. The published minimum counter increment
-is applied after exponential adjustment; the emulator applies its minimum before
-the adjustment. At sufficiently slow increasing exponential rates, those orders
-can distinguish continued progression from a frozen envelope.
+Rust `EmulatorReference` includes equality. Rust `Published` applies its minimum
+counter increment after exponential adjustment; `EmulatorReference` applies it
+before. At sufficiently slow increasing exponential rates, those orders can
+distinguish continued progression from a frozen envelope.
 
-The emulator also makes phase-target checks on frames without an envelope step.
-That matters after manual envelope-level writes. Counter reset on register writes
-and signed manual-level behavior require device-level validation, including when
-writes take effect relative to output frames. The two sources do not constitute
-independently captured hardware traces.
+The native ADSR unit also includes equality at `0x6000`, but slows by adding eight
+to a rate-table index, capped at 127. Its numerator/denominator and fractional
+accumulator do not establish either Rust counter-floor policy. Native ENVX reads
+reconstruct the level at the reader's cycle, including zero before the first
+key-on envelope step. Manual ENVX writes are unimplemented there. Rust's
+non-step-frame target checks, counter reset on register writes and signed
+manual-level behavior therefore remain explicit component policies requiring
+device-level validation. Neither source supplies independently captured hardware
+traces or write timing.
 
 ## Repository evidence and boundaries
 
 [The Rust ADSR component](../../tools/rust/bof3-audio/src/machine/adsr.rs) requires
-an explicit arithmetic model. Shared state-transition behavior follows the
-inspected emulator; the `Published` model selects the two published arithmetic
-rules above, not a separately verified full hardware implementation.
+an explicit arithmetic model. The models select the threshold and counter-floor
+rules above within shared frame-driven state transitions. They do not constitute
+separately verified hardware implementations or complete native device models.
 
 [Tests](../../tools/rust/bof3-audio/tests/adsr.rs) retain literal boundary traces,
 counter-rate alias checks, phase transitions, frozen rates and write/retrigger
@@ -52,15 +56,18 @@ direction; exponential decrease computes its step independently of phase, but
 phase still selects the saturation range. Fixed-to-sweep writes require a
 hardware delay that the frame-driven Rust component does not establish.
 
-The inspected emulator preserves current gain on sweep setup, resets its counter,
-stops at the relevant endpoint and clocks gains after applying them to output.
-Its current main-volume writes change level without rearming a stopped sweep.
-Current voice-volume reads are implemented there, but corresponding writes are
-not established; Rust rejects them. The emulator can also skip inactive voices
-when IRQ9 is disabled. Rust currently clocks all voice sweeps per requested frame,
-an interpretation of the published generator rather than independently validated
-inactive-voice timing. The two existing arithmetic models choose threshold/floor
-rules only, not complete alternative device timing models.
+The [Rust sweep component](../../tools/rust/bof3-audio/src/machine/spu_volume.rs)
+preserves current gain on sweep setup, resets its counter, stops at the relevant
+endpoint and clocks gains after applying them to output. Its current main-volume
+writes change level without rearming a stopped sweep; current voice-volume writes
+remain rejected. Rust clocks all voice sweeps per requested frame, leaving
+inactive-voice timing unvalidated.
+
+The [native voice-volume decoder](../../third_party/pcsx-redux-agentic/src/spu/volume.cc)
+approximates a sweep-mode write as a fixed level. It does not run the hardware
+sweep envelope, and the native register handler leaves main-volume writes
+unimplemented. The two Rust arithmetic models choose threshold/floor rules only;
+native comparison and independent device timing remain separate obligations.
 
 [Implementation and validation](../specs/formats/audio.md#rust-spu-volume-sweeps)
 retain these boundaries. The independent integer-vector hashes include 512
@@ -68,7 +75,7 @@ little-endian signed samples followed by a little-endian `u32` counter and one
 active-state byte for each mode/rate/start context:
 
 - Published: `a2f5dc635564de06a2b8554ade8d5ce234098c58d1c70c4de181687a1d989316`.
-- Emulator arithmetic: `7388ac278502c579d5758840515eeee52682d7e05e4b63890527f5924a85635e`.
+- EmulatorReference arithmetic: `7388ac278502c579d5758840515eeee52682d7e05e4b63890527f5924a85635e`.
 
 ## SoundFont approximation target
 
