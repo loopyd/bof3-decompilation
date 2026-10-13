@@ -19,6 +19,7 @@ EXPECTED_LABELS = (
     "GCC 2.7.2",
     "maspsx",
     "Rizin",
+    "rz-psxdec",
     "m2c",
     "asm-differ",
     "decomp-permuter",

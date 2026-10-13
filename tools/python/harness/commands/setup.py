@@ -280,6 +280,12 @@ def _verification(state: SetupState) -> str:
     return "ready"
 
 
+def _rz_psxdec(state: SetupState) -> str:
+    return ", ".join(
+        managed_lifecycle(state.layout, force=state.args.force, component="rz-psxdec")
+    )
+
+
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
     state = SetupState(root=root, layout=repo_layout(root), args=args)
@@ -287,6 +293,8 @@ def run(args: argparse.Namespace) -> int:
     tasks = (
         TASKS
         if args.component == "all"
+        else [Check("rz-psxdec", _rz_psxdec)]
+        if args.component == "rz-psxdec"
         else [task for task in TASKS if task.run is selection[args.component]]
     )
     for task in tasks:
@@ -314,9 +322,9 @@ def build_parser() -> argparse.ArgumentParser:
     add_root_argument(parser)
     parser.add_argument(
         "--component",
-        choices=("all", "bios", "pcsx-redux"),
+        choices=("all", "bios", "pcsx-redux", "rz-psxdec"),
         default="all",
-        help="prepare everything, only the US BIOS, or build pinned PCSX-Redux and SDL3",
+        help="prepare everything, the US BIOS, PCSX-Redux and SDL3, or the sibling RetDec forks",
     )
     parser.add_argument(
         "--psyq-archive", type=Path, help="PsyQ 4.7 archive under inputs/"

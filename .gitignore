@@ -66,6 +66,9 @@ toolchains/psyq-stock/
 !toolchains/README.md
 
 # Session / agent artifacts
+# Local planning and temporary files
+/openspec/
+/tmp/
 session-*.md
 # Legacy live-session symlink; remove after restarting Pi.
 /sessions

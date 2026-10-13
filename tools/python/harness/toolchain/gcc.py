@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
+
+from ..common.artifacts import FileIdentity
 from ..io import RepoLayout
 from .base import Toolchain, ensure_gitkeep
 from .gcc_archive import install_archive, verify_installed
@@ -21,6 +24,37 @@ OLD_GCC_SHA256 = (
     "sha256:aca64479041aa2d645dc52ebcaace276c0aa06f258c0e3f190ccf6d76701ffbc"
 )
 OLD_GCC_IDENTITY = "2.7.2"
+CANONICAL_INTEGER_RULE = "gcc-2.7.2-psx-int32/v1"
+CANONICAL_INTEGER_COMPONENTS = (
+    (
+        "driver",
+        816856,
+        "4eb1d9e0335ef61aa484afe1c671e807f54a2526c483a48ee6ae9e5e98f408c6",
+    ),
+    (
+        "cc1",
+        2832972,
+        "11f093cbb18b9ef132782bd2f37a50320069fa452acaf9e74e6a32cb28676cdb",
+    ),
+    (
+        "cpp",
+        1022964,
+        "7b1da3e118fe4c015e71bdf31b6a5d2ca916f6ddf86918d42088433e7840aa03",
+    ),
+)
+
+
+def inspect_canonical_int_bits(components: Mapping[str, FileIdentity]) -> int | None:
+    if set(components) != {name for name, _, _ in CANONICAL_INTEGER_COMPONENTS}:
+        return None
+    return (
+        32
+        if all(
+            (components[name].bytes, components[name].sha256) == (size, sha256)
+            for name, size, sha256 in CANONICAL_INTEGER_COMPONENTS
+        )
+        else None
+    )
 
 
 class GccToolchain(Toolchain):

@@ -1,4 +1,4 @@
-"""Adversarial race tests for confined transaction file writes and quarantine."""
+"""atomic_write, safe_unlink, and restore_git_index retain unexpected inodes."""
 
 from __future__ import annotations
 
@@ -200,7 +200,7 @@ def test_existing_replacement_preflight_skips_native_probe_without_state(
 
     def unsupported(*_args, **_kwargs):
         raise rename_noreplace.UnsupportedRenameNoReplaceError(
-            "renameat2(RENAME_NOREPLACE) is unsupported by fuseblk"
+            "renameat2(RENAME_NOREPLACE) is unsupported by this filesystem"
         )
 
     monkeypatch.setattr(rename_noreplace, "rename_noreplace", unsupported)
@@ -242,12 +242,13 @@ def test_rename_noreplace_linux_native_path(tmp_path: Path) -> None:
     assert destination.read_bytes() == b"source"
 
 
-def test_publish_file_fallback_moves_source_and_refuses_collision(
+def test_publish_file_unsupported_preserves_source_and_destination(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     source = tmp_path / "source"
     destination = tmp_path / "destination"
     source.write_bytes(b"source")
+    source_state = source.stat()
     monkeypatch.setattr(
         rename_noreplace,
         "rename_noreplace",
@@ -257,22 +258,31 @@ def test_publish_file_fallback_moves_source_and_refuses_collision(
     )
     directory = os.open(tmp_path, os.O_RDONLY | os.O_DIRECTORY)
     try:
-        publication = rename_noreplace.publish_file(
-            "source", "destination", src_dir_fd=directory, dst_dir_fd=directory
-        )
-        assert not source.exists()
-        source.write_bytes(b"next source")
-        with pytest.raises(FileExistsError):
+        with pytest.raises(rename_noreplace.UnsupportedRenameNoReplaceError):
             rename_noreplace.publish_file(
                 "source", "destination", src_dir_fd=directory, dst_dir_fd=directory
             )
+        assert source.stat() == source_state
+        assert not destination.exists()
+        assert {path.name for path in tmp_path.iterdir()} == {"source"}
+        assert source.read_bytes() == b"source"
+
+        destination.write_bytes(b"destination")
+        source_state = source.stat()
+        destination_state = destination.stat()
+        with pytest.raises(rename_noreplace.UnsupportedRenameNoReplaceError):
+            rename_noreplace.publish_file(
+                "source", "destination", src_dir_fd=directory, dst_dir_fd=directory
+            )
+        assert source.stat() == source_state
+        assert destination.stat() == destination_state
     finally:
         os.close(directory)
 
-    assert publication == rename_noreplace.Publication("reserved-rename")
-    assert source.read_bytes() == b"next source"
-    assert destination.read_bytes() == b"source"
+    assert source.read_bytes() == b"source"
+    assert destination.read_bytes() == b"destination"
     assert destination.stat().st_nlink == 1
+    assert {path.name for path in tmp_path.iterdir()} == {"source", "destination"}
 
 
 def test_safe_unlink_moves_matching_leaf_to_durable_quarantine(tmp_path: Path) -> None:

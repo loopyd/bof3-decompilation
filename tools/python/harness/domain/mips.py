@@ -1,9 +1,9 @@
 """MIPS32 little-endian byte-level facts for executable payloads.
 
-The domain owns raw executable-byte parsing: lui/%lo data-reference
-decoding, static JAL decoding, and the trivial return-void classifier.
-Analysis and command layers consume these typed facts; they never re-parse
-instruction bytes.
+The domain owns raw executable-byte parsing: instruction field extraction,
+lui/%lo data-reference decoding, static JAL decoding, and the trivial
+return-void classifier. Analysis and command layers consume these typed
+facts; they never re-parse instruction bytes or word layout.
 """
 
 from __future__ import annotations
@@ -18,6 +18,58 @@ class NormalizedInstructionStream:
 
     words: tuple[int, ...]
     parameters: tuple[tuple[int, str, int], ...]
+
+
+@dataclass(frozen=True)
+class WordFields:
+    """Raw MIPS-I fields of one 32-bit instruction word.
+
+    ``immediate`` keeps the raw low 16 bits and ``target26`` the raw low 26 bits of a
+    direct jump encoding. Sign extension and PC combination are address semantics and
+    stay with the decoder that knows the instruction.
+    """
+
+    word: int
+    opcode: int
+    rs: int
+    rt: int
+    rd: int
+    shift: int
+    funct: int
+    immediate: int
+    target26: int
+
+    @property
+    def signed_immediate(self) -> int:
+        """The immediate as a signed 16-bit offset."""
+
+        return self.immediate - 0x10000 if self.immediate & 0x8000 else self.immediate
+
+
+def word_fields(word: int) -> WordFields:
+    """Extract the raw fields of one instruction word, or refuse a non-word value.
+
+    A boolean, a non-integer, or a value outside the unsigned 32-bit domain is refused
+    rather than masked into a plausible instruction.
+    """
+
+    if isinstance(word, bool) or not isinstance(word, int):
+        raise ValueError(
+            f"instruction word must be an integer, not {type(word).__name__}"
+        )
+    if not 0 <= word <= 0xFFFFFFFF:
+        raise ValueError(f"instruction word is outside the 32-bit domain: {word!r}")
+    return WordFields(
+        word=word,
+        opcode=word >> 26,
+        rs=(word >> 21) & 0x1F,
+        rt=(word >> 16) & 0x1F,
+        rd=(word >> 11) & 0x1F,
+        shift=(word >> 6) & 0x1F,
+        funct=word & 0x3F,
+        immediate=word & 0xFFFF,
+        target26=word & 0x03FFFFFF,
+    )
 
 
 # Only operand-immediate fields are erased. Branch displacements remain part of
@@ -186,8 +238,10 @@ def static_jals(data: bytes, base_address: int) -> list[tuple[int, int]]:
 
 __all__ = [
     "NormalizedInstructionStream",
+    "WordFields",
     "data_references",
     "normalized_instruction_stream",
     "static_jals",
     "trivial_kind",
+    "word_fields",
 ]

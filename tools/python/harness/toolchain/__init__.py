@@ -17,6 +17,7 @@ def _managed_types() -> tuple[tuple[str, type[Toolchain]], ...]:
     from .permuter import DecompPermuterToolchain  # noqa: PLC0415
     from .psn00b import Psn00bToolchain  # noqa: PLC0415
     from .rizin import RizinToolchain  # noqa: PLC0415
+    from .rz_psxdec import RzPsxdecToolchain  # noqa: PLC0415
     from .signatures import PsyqSignaturesToolchain  # noqa: PLC0415
     from .splat import SplatToolchain  # noqa: PLC0415
     from .spimdisasm import SpimdisasmToolchain  # noqa: PLC0415
@@ -26,6 +27,7 @@ def _managed_types() -> tuple[tuple[str, type[Toolchain]], ...]:
         ("gcc", GccToolchain),
         ("maspsx", MaspsxToolchain),
         ("rizin", RizinToolchain),
+        ("rz-psxdec", RzPsxdecToolchain),
         ("m2c", M2cToolchain),
         ("asm-differ", AsmDifferToolchain),
         ("decomp-permuter", DecompPermuterToolchain),
@@ -57,8 +59,19 @@ def managed_toolchain(layout: RepoLayout, key: str) -> ExecutableToolchain:
 
 
 def managed_lifecycle(
-    layout: RepoLayout, *, force: bool = False, verify_only: bool = False
+    layout: RepoLayout,
+    *,
+    force: bool = False,
+    verify_only: bool = False,
+    component: str | None = None,
 ) -> Iterator[str]:
     """Run the base-owned lifecycle in registry order and yield actual labels."""
-    for toolchain in managed_toolchains(layout):
+    if component is None:
+        toolchains = managed_toolchains(layout)
+    else:
+        matches = [kind for key, kind in _managed_types() if key == component]
+        if not matches:
+            raise ValueError(f"unknown managed toolchain: {component}")
+        toolchains = (matches[0](layout),)
+    for toolchain in toolchains:
         yield toolchain.verify() if verify_only else toolchain.run(force=force)

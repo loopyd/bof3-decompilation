@@ -1,13 +1,15 @@
-"""Read complete, symbol-qualified function images from linked PSX ELF files."""
+"""Read linked MIPS ELF facts and complete symbol-qualified function images."""
 
 from __future__ import annotations
 
 import struct
+import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 
 from harness.common.deadlines import check_deadline
 from harness.common.files import read_file
+from harness.common.artifacts import active_reader, read_bytes
 
 _HEADER = struct.Struct("<16sHHIIIIIHHHHHH")
 _SECTION = struct.Struct("<IIIIIIIIII")
@@ -39,18 +41,79 @@ class FunctionImage:
     content: bytes
 
 
+@dataclass(frozen=True)
+class LinkedSymbol:
+    table: int
+    index: int
+    name: str
+    value: int
+    size: int
+    info: int
+    visibility: int
+    section: int
+
+
+@dataclass(frozen=True)
+class LinkedStorage:
+    index: int
+    name: str
+    kind: int
+    flags: int
+    address: int
+    size: int
+    alignment: int
+    file_offset: int | None
+    content: bytes | None
+
+
+@dataclass(frozen=True)
+class LoadSegment:
+    index: int
+    offset: int
+    address: int
+    file_size: int
+    memory_size: int
+    flags: int
+    alignment: int
+
+
+@dataclass(frozen=True)
+class LinkedContainerLayout:
+    elf_header: tuple[int, int]
+    section_table: tuple[int, int]
+    program_table: tuple[int, int]
+    name_section: int
+    flags: int
+    entry: int
+    sections: tuple[Section, ...]
+    programs: tuple[tuple[int, ...], ...]
+    padding: tuple[tuple[int, int, bool], ...]
+
+
+@dataclass(frozen=True)
+class LinkedImage:
+    sha256: str
+    sections: tuple[LinkedStorage, ...]
+    symbols: tuple[LinkedSymbol, ...]
+    segments: tuple[LoadSegment, ...]
+    relocations: tuple[dict, ...]
+    layout: LinkedContainerLayout | None = None
+
+
 def _read_range(content: bytes, offset: int, size: int, label: str) -> bytes:
     if offset < 0 or size < 0 or offset + size > len(content):
         raise ValueError(f"ELF {label} exceeds file bounds")
     return content[offset : offset + size]
 
 
-def _read_string(strings: bytes, offset: int) -> str:
+def _read_string(strings: bytes, offset: int, *, symbol: bool = False) -> str:
     if offset >= len(strings):
         raise ValueError("ELF string offset exceeds string table")
     end = strings.find(b"\0", offset)
     if end < 0 or end - offset > 4096:
         raise ValueError("ELF string is unterminated or oversized")
+    if symbol:
+        return strings[offset:end].decode("utf-8", "surrogateescape")
     try:
         return strings[offset:end].decode("ascii")
     except UnicodeDecodeError as error:
@@ -127,6 +190,66 @@ def _read_sections(content: bytes) -> tuple[list[Section], list[str]]:
     return sections, [_read_string(names, section.name_offset) for section in sections]
 
 
+def _read_symbols(content: bytes, sections: list[Section]) -> tuple[LinkedSymbol, ...]:
+    records = []
+    for table_index, section in enumerate(sections):
+        if section.kind != 2:
+            continue
+        if (
+            section.entry_size != _SYMBOL.size
+            or section.offset % 4
+            or section.size < _SYMBOL.size
+            or section.size % _SYMBOL.size
+            or not 0 < section.link < len(sections)
+            or not 1 <= section.info <= section.size // _SYMBOL.size
+        ):
+            raise ValueError("unsupported ELF symbol table layout")
+        strings_section = sections[section.link]
+        if strings_section.kind != 3:
+            raise ValueError("ELF symbols do not reference a string table")
+        strings = _read_range(
+            content, strings_section.offset, strings_section.size, "symbol names"
+        )
+        if not strings or strings[0] != 0 or strings[-1] != 0:
+            raise ValueError("invalid ELF symbol-name string table")
+        symbols = _read_range(content, section.offset, section.size, "symbols")
+        if any(_SYMBOL.unpack_from(symbols)):
+            raise ValueError("ELF reserved symbol entry must be all zero")
+        seen_nonlocal = False
+        for index, symbol in enumerate(_SYMBOL.iter_unpack(symbols)):
+            check_deadline()
+            local = symbol[3] >> 4 == 0
+            if (
+                (not local and index < section.info)
+                or (local and seen_nonlocal)
+                or (
+                    local
+                    and index >= section.info
+                    and (symbol[3] & 15 not in {0, 4} or symbol[2] != 0)
+                )
+            ):
+                raise ValueError(
+                    "ELF symbol binding disagrees with the local partition"
+                )
+            seen_nonlocal = seen_nonlocal or not local
+            if symbol[5] == 0xFFFF or len(sections) <= symbol[5] < 0xFF00:
+                raise ValueError("ELF symbol has an unsupported section index")
+            name_offset = symbol[0]
+            if name_offset >= len(strings):
+                raise ValueError("ELF symbol name exceeds its string table")
+            records.append(
+                LinkedSymbol(
+                    table_index,
+                    index,
+                    _read_string(strings, name_offset, symbol=True),
+                    *symbol[1:],
+                )
+            )
+            if len(records) > 65536:
+                raise ValueError("ELF symbol inventory exceeds its bound")
+    return tuple(records)
+
+
 def _find_symbol(content: bytes, sections: list[Section], name: str) -> tuple:
     encoded = name.encode("ascii") + b"\0"
     matches = []
@@ -182,10 +305,7 @@ def _find_symbol(content: bytes, sections: list[Section], name: str) -> tuple:
     return matches[0]
 
 
-def read_function_image(
-    path: Path, *, function_name: str, address: int
-) -> FunctionImage:
-    """Select the full actual function extent; expected original length is not a bound."""
+def _require_function_selection(function_name: str, address: int) -> None:
     check_deadline()
     if (
         not isinstance(function_name, str)
@@ -200,9 +320,28 @@ def read_function_image(
         raise ValueError(
             "function extraction requires a name and aligned 32-bit address"
         )
-    content = read_file(path.parent, path.name, max_bytes=_MAX_FILE_SIZE)
+
+
+def read_function_image(
+    path: Path, *, function_name: str, address: int
+) -> FunctionImage:
+    _require_function_selection(function_name, address)
+    content = (
+        read_file(path.parent, path.name, max_bytes=_MAX_FILE_SIZE)
+        if active_reader() is None
+        else read_bytes(path, _MAX_FILE_SIZE)
+    )
     if content is None:
         raise ValueError("missing linked ELF image")
+    return read_function_bytes(content, function_name=function_name, address=address)
+
+
+def read_function_bytes(
+    content: bytes, *, function_name: str, address: int
+) -> FunctionImage:
+    _require_function_selection(function_name, address)
+    if type(content) is not bytes or len(content) > _MAX_FILE_SIZE:
+        raise ValueError("function extraction requires bounded immutable ELF bytes")
     sections, names = _read_sections(content)
     symbol = _find_symbol(content, sections, function_name)
     _, value, size, info, visibility, section_index = symbol
@@ -257,4 +396,151 @@ def read_function_image(
         section_address=section.address,
         section_size=section.size,
         content=selected,
+    )
+
+
+def read_linked_image(data: bytes, *, limit: int) -> LinkedImage:
+    if (
+        type(data) is not bytes
+        or type(limit) is not int
+        or limit <= 0
+        or len(data) > min(limit, _MAX_FILE_SIZE)
+    ):
+        raise ValueError("linked image requires bounded immutable bytes")
+    sections, names = _read_sections(data)
+    if len(sections) > 4096:
+        raise ValueError("linked section inventory exceeds its bound")
+    if any(section.kind == 11 for section in sections):
+        raise ValueError("associated linked census does not support SHT_DYNSYM")
+    symbols = _read_symbols(data, sections)
+    storage = tuple(
+        LinkedStorage(
+            index,
+            names[index],
+            row.kind,
+            row.flags,
+            row.address,
+            row.size,
+            row.alignment,
+            None if row.kind == 8 else row.offset,
+            None
+            if row.kind == 8
+            else _read_range(data, row.offset, row.size, "section"),
+        )
+        for index, row in enumerate(sections)
+    )
+    header = _HEADER.unpack_from(data)
+    segments = []
+    if header[10] > 4096:
+        raise ValueError("ELF segment inventory exceeds its bound")
+    for index in range(header[10]):
+        check_deadline()
+        kind, offset, address, _, file_size, memory_size, flags, alignment = (
+            struct.unpack_from("<IIIIIIII", data, header[5] + index * header[9])
+        )
+        if kind != 1:
+            continue
+        if (
+            file_size > memory_size
+            or address + memory_size > 2**32
+            or alignment not in {0, 1}
+            and (
+                alignment & (alignment - 1) or address % alignment != offset % alignment
+            )
+        ):
+            raise ValueError("invalid PT_LOAD size, address or declared alignment")
+        _read_range(data, offset, file_size, "load segment")
+        segments.append(
+            LoadSegment(
+                index, offset, address, file_size, memory_size, flags, alignment
+            )
+        )
+    relocations = []
+    for index, row in enumerate(sections):
+        if row.kind in {19, 0x60000001, 0x60000002}:
+            raise ValueError("unsupported packed linked relocation table")
+        if row.kind not in {4, 9}:
+            continue
+        width = 12 if row.kind == 4 else 8
+        if (
+            row.entry_size != width
+            or row.size % width
+            or not 0 < row.info < len(sections)
+            or not 0 < row.link < len(sections)
+            or sections[row.link].kind != 2
+        ):
+            raise ValueError("invalid linked relocation table")
+        for ordinal in range(row.size // width):
+            check_deadline()
+            offset, info = struct.unpack_from("<II", data, row.offset + ordinal * width)
+            referenced = [
+                symbol
+                for symbol in symbols
+                if symbol.table == row.link and symbol.index == info >> 8
+            ]
+            if len(referenced) != 1:
+                raise ValueError("linked relocation symbol index exceeds its table")
+            target = sections[row.info]
+            storage_size = 4 if info & 255 == 2 else 1
+            if (
+                offset < target.address
+                or offset + storage_size > target.address + target.size
+            ):
+                raise ValueError("linked relocation storage exceeds its target section")
+            relocations.append(
+                dict(
+                    section_index=index,
+                    target_section=row.info,
+                    offset=offset,
+                    symbol_index=info >> 8,
+                    symbol_table=row.link,
+                    symbol_name=referenced[0].name,
+                    kind=info & 255,
+                    addend=struct.unpack_from(
+                        "<i", data, row.offset + ordinal * width + 8
+                    )[0]
+                    if row.kind == 4
+                    else None,
+                )
+            )
+            if len(relocations) > 65536:
+                raise ValueError("linked relocation inventory exceeds its bound")
+    physical_ranges = [
+        (0, _HEADER.size),
+        (header[6], header[6] + header[11] * header[12]),
+    ]
+    if header[10]:
+        physical_ranges.append((header[5], header[5] + header[9] * header[10]))
+    physical_ranges.extend(
+        (row.offset, row.offset + row.size)
+        for row in sections
+        if row.kind not in {0, 8} and row.size
+    )
+    padding, last = [], 0
+    for first, end in sorted(physical_ranges):
+        if first > last:
+            padding.append((last, first - last, not any(data[last:first])))
+        last = max(last, end)
+    if last < len(data):
+        padding.append((last, len(data) - last, not any(data[last:])))
+    return LinkedImage(
+        hashlib.sha256(data).hexdigest(),
+        storage,
+        symbols,
+        tuple(segments),
+        tuple(relocations),
+        LinkedContainerLayout(
+            (0, _HEADER.size),
+            (header[6], header[11] * header[12]),
+            (header[5], header[9] * header[10]),
+            header[13],
+            header[7],
+            header[4],
+            tuple(sections),
+            tuple(
+                struct.unpack_from("<IIIIIIII", data, header[5] + index * header[9])
+                for index in range(header[10])
+            ),
+            tuple(padding),
+        ),
     )

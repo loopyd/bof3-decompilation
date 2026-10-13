@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import secrets
 import stat
+import re
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -13,6 +14,80 @@ from harness.common.rename import describe_locations, publish_file
 from harness.common.lease import verify_writer
 from harness.common.deadlines import resolve_deadline
 from harness.common.process import run_bounded
+from harness.common.artifacts import read_bytes
+from harness.common.deadlines import check_deadline
+
+
+def read_head(root: Path, *, reader=None) -> str:
+    """Consume current HEAD and loose/packed reference bytes without a Git process."""
+    check_deadline()
+    if any(
+        os.environ.get(key)
+        for key in (
+            "GIT_DIR",
+            "GIT_WORK_TREE",
+            "GIT_INDEX_FILE",
+            "GIT_COMMON_DIR",
+            "GIT_OBJECT_DIRECTORY",
+            "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+            "GIT_CONFIG",
+            "GIT_CONFIG_COUNT",
+            "GIT_CONFIG_PARAMETERS",
+            "GIT_CONFIG_SYSTEM",
+        )
+    ):
+        raise ValueError("Git environment override prevents direct HEAD inspection")
+    if os.environ.get("GIT_CONFIG_GLOBAL") not in {None, "/dev/null"}:
+        raise ValueError("custom global Git configuration prevents snapshot")
+    consume = reader if reader is not None else read_bytes
+
+    def raw(path, bound):
+        if path.is_symlink() or not path.is_file() or path.resolve() != path:
+            raise ValueError("Git metadata must be canonical regular files")
+        value = consume(path, bound, None)
+        if len(value) > bound:
+            raise ValueError("Git metadata exceeds direct inspection bound")
+        return value
+
+    root = root.resolve()
+    git = root / ".git"
+    if git.is_symlink():
+        raise ValueError("symlinked Git directory is unsupported")
+    if git.is_file():
+        pointer = raw(git, 4096)
+        if not pointer.startswith(b"gitdir: ") or pointer.count(b"\n") > 1:
+            raise ValueError("unsupported gitdir pointer")
+        name = pointer[8:].strip().decode("utf-8", "strict")
+        git = (root / name).resolve()
+    if not git.is_dir() or (git / "commondir").exists():
+        raise ValueError("unsupported shared/worktree Git reference layout")
+    head = raw(git / "HEAD", 4096).strip()
+    if re.fullmatch(rb"[0-9a-f]{40}", head):
+        return head.decode("ascii")
+    if not head.startswith(b"ref: "):
+        raise ValueError("unsupported HEAD representation")
+    name = head[5:].decode("ascii")
+    if not re.fullmatch(r"refs/[A-Za-z0-9_./-]+", name) or any(
+        part in {"", ".", ".."} for part in name.split("/")
+    ):
+        raise ValueError("unsupported HEAD reference")
+    loose = git / name
+    if loose.exists() or loose.is_symlink():
+        value = raw(loose, 4096).strip()
+        if not re.fullmatch(rb"[0-9a-f]{40}", value):
+            raise ValueError("unsupported symbolic or malformed loose reference")
+        return value.decode("ascii")
+    entries = {}
+    for line in raw(git / "packed-refs", 4 << 20).splitlines():
+        if line.startswith(b"#") or re.fullmatch(rb"\^[0-9a-f]{40}", line):
+            continue
+        match = re.fullmatch(rb"([0-9a-f]{40}) (refs/[A-Za-z0-9_./-]+)", line)
+        if match is None or match[2] in entries:
+            raise ValueError("unsupported packed reference record")
+        entries[match[2]] = match[1]
+    if name.encode() not in entries:
+        raise ValueError("current HEAD reference is missing")
+    return entries[name.encode()].decode("ascii")
 
 
 @dataclass(frozen=True)

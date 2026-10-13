@@ -441,13 +441,17 @@ def probe_carve(
     ):
         raise ValueError("carve boundary does not match the requested range")
     expected = [b for b in before.boundaries if b.is_function]
-    actual = [b for b in projected.boundaries if b.is_function and b is not new_boundaries[0]]
+    actual = [
+        b for b in projected.boundaries if b.is_function and b is not new_boundaries[0]
+    ]
     if expected != actual:
         raise ValueError("carve changed another function boundary")
 
     tool = SplatToolchain(repo_layout(root))
     if not tool.executable.is_file():
-        raise ValueError("missing Splat executable; probe does not install dependencies")
+        raise ValueError(
+            "missing Splat executable; probe does not install dependencies"
+        )
     parent, _ = open_parent_fd(root, "out/boundary-probes/reserved", create=True)
     os.close(parent)
     workspace = Path(
@@ -510,7 +514,11 @@ def probe_carve(
         (directory / "stdout.txt").write_text(run.stdout)
         (directory / "stderr.txt").write_text(run.stderr)
         result["runs"].append(
-            {"phase": label, "argv": tool.invocation(argv), "returncode": run.returncode}
+            {
+                "phase": label,
+                "argv": tool.invocation(argv),
+                "returncode": run.returncode,
+            }
         )
         if run.returncode:
             return result
@@ -535,15 +543,11 @@ def probe_carve(
     # A carve necessarily *adds* a .text object; the criterion is that every
     # pre-existing .text input survives in the same relative order.
     before_entries = scripts[0]
-    after_entries = [
-        entry for entry in scripts[1] if "<selected>" not in entry
-    ]
+    after_entries = [entry for entry in scripts[1] if "<selected>" not in entry]
     order_preserved = before_entries == after_entries
     result.update(
         {
-            "status": "supported"
-            if order_preserved and emits_text
-            else "mismatch",
+            "status": "supported" if order_preserved and emits_text else "mismatch",
             "text_input_order_preserved": order_preserved,
             "emits_text": emits_text,
             "emitted_assembly": str(emitted[0]) if emitted else None,

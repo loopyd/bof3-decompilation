@@ -72,14 +72,15 @@ manifest/run/publication, PRE bytes/hash/mode/inode, prepared POST hash/mode/ino
 fresh staging and reserved PRE/POST quarantines. Same filesystem and single-link
 images required. Capture failure blocks edits but may leave images.
 
-Native `RENAME_NOREPLACE` first. Unsupported filesystem permits cooperative
-exclusive-empty-reservation, source/reservation identity checks, rename, destination
-identity/source-absence checks and directory fsync. Not atomic CAS against manual
-writers: check/rename and cleanup/unlink races, visible reservations, crash leftovers
-remain. Detected foreign names stay untouched. Failure after move/sync may have
-effect; inspect locations. Empty size alone never authorizes cleanup; reservation
-must have captured regular, empty, single-link identity unchanged. No hard-link
-fallback, migration, permission weakening or power-loss guarantee.
+The current ext4 project uses native `RENAME_NOREPLACE` only. Unsupported platform
+or filesystem errors fail without an alternate publisher. No empty reservation or
+hard-link fallback is used. Surrounding identity checks and multi-file transitions
+remain cooperative; manual writers are not excluded. Detected foreign names stay
+untouched. Failure after move/sync may have effect; inspect locations and retain
+prepared/displaced images. Empty size alone never authorizes cleanup. No permission
+weakening, atomic multi-file commit or power-loss guarantee follows. The
+[shared publication contract](../../../../docs/agents/harness.md#file-publication)
+retains historical NTFS authorization separately from current behavior.
 
 Git-backed v3 captures untouched tracked/unignored workspace PRE bytes/metadata and
 exact index bytes/state, excluding shared generated-artifact roots. Missing guards
@@ -87,8 +88,9 @@ are unavailable, not clean. Pending index lock blocks capture. Unrelated symlink
 are literal no-follow evidence, never referent reads or restoration targets.
 Dependency snapshots preserve content/identity but grant no mutation/restoration
 or complete arbitrary-Git-layout confinement. Observations are non-atomic; root
-Git metadata trusted. Evidence uses filesystem-native permissions, not enforced
-POSIX mode. Keep source-bearing backing nonpublic/uncommitted.
+Git metadata trusted. Ext4 honors requested POSIX creation modes subject to umask;
+exact captured modes and drift checks remain required, without a uniform owner-only
+permission policy. Keep source-bearing backing nonpublic/uncommitted.
 
 V4 supports separately authorized deletion-aware common owners: present PRE,
 `post:null`, exact declared deletion set and reserved PRE quarantine. It does not

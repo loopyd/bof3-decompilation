@@ -48,6 +48,7 @@ def test_managed_toolchains_factory_order(tmp_path: Path) -> None:
         "GCC 2.7.2",
         "maspsx",
         "Rizin",
+        "rz-psxdec",
         "m2c",
         "asm-differ",
         "decomp-permuter",

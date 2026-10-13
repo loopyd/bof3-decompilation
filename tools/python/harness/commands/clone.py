@@ -93,7 +93,9 @@ def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
     representative = Path(args.source)
     if not representative.is_file():
-        raise CloneUnsupported(f"representative source does not exist: {representative}")
+        raise CloneUnsupported(
+            f"representative source does not exist: {representative}"
+        )
     representative_text = representative.read_text()
     representative_address = source_address(representative)
     representative_manifest = owning_manifest(root, representative.resolve())
@@ -161,10 +163,14 @@ def run(args: argparse.Namespace) -> int:
                 print(f"  rewrite {old} -> {new}")
             print(report["limits"])
         return 0
-    return _apply(root, representative, target, clone_manifest, clone_address, plan, report, args)
+    return _apply(
+        root, representative, target, clone_manifest, clone_address, plan, report, args
+    )
 
 
-def _apply(root, representative, target, clone_manifest, clone_address, plan, report, args) -> int:
+def _apply(
+    root, representative, target, clone_manifest, clone_address, plan, report, args
+) -> int:
     """Write the clone wiring, gate it, and keep only on PASS."""
 
     manifest_path = root / "config" / "targets" / target / "target.toml"
@@ -182,7 +188,9 @@ def _apply(root, representative, target, clone_manifest, clone_address, plan, re
     }
     try:
         source_path.write_text(plan.source_text)
-        splat_path.write_text(wire_splat_text(previous[splat_path], offset, plan.clone_name))
+        splat_path.write_text(
+            wire_splat_text(previous[splat_path], offset, plan.clone_name)
+        )
         symbols_path.write_text(
             wire_symbols_text(previous[symbols_path], clone_address, plan.clone_name)
         )
@@ -207,8 +215,11 @@ def _apply(root, representative, target, clone_manifest, clone_address, plan, re
             return 0
         _restore(previous)
         report["status"] = "reverted"
-        print(json.dumps(report, indent=2, sort_keys=True) if args.json
-              else f"clone {plan.clone_name}: gate FAILED, reverted byte-for-byte")
+        print(
+            json.dumps(report, indent=2, sort_keys=True)
+            if args.json
+            else f"clone {plan.clone_name}: gate FAILED, reverted byte-for-byte"
+        )
         return 1
     except Exception:
         _restore(previous)

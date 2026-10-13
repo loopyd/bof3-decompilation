@@ -151,27 +151,36 @@ def _verify_wrappers(root: Path, source: Path) -> str:
     return f"{len(commands)} commands"
 
 
+def _rz_psxdec(root: Path) -> str:
+    return ", ".join(
+        managed_lifecycle(repo_layout(root), verify_only=True, component="rz-psxdec")
+    )
+
+
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
+    tasks = TASKS if args.component == "all" else [Check("rz-psxdec", _rz_psxdec)]
     failed = 0
-    for task in TASKS:
+    for task in tasks:
         try:
-            render_task("PASS", task.label, task.run(root), TASKS)
+            render_task("PASS", task.label, task.run(root), tasks)
         except (
             OSError,
             RuntimeError,
             ValueError,
             tomllib.TOMLDecodeError,
+            subprocess.SubprocessError,
         ) as exc:
             failed += 1
-            render_task("FAIL", task.label, str(exc).replace("\n", "; "), TASKS)
-    print(f"doctor: {len(TASKS) - failed}/{len(TASKS)} checks passed")
+            render_task("FAIL", task.label, str(exc).replace("\n", "; "), tasks)
+    print(f"doctor: {len(tasks) - failed}/{len(tasks)} checks passed")
     return 2 if failed else 0
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="doctor")
     add_root_argument(parser)
+    parser.add_argument("--component", choices=("all", "rz-psxdec"), default="all")
     parser.set_defaults(handler=run)
     return parser
 

@@ -20,29 +20,51 @@ from harness.common.digests import file_record
 
 
 class ProcessCleanupError(RuntimeError):
-    """Descendant termination is unconfirmed; mutation recovery must stop."""
+    """Descendant termination is unconfirmed; mutation recovery must stop.
+
+    ``observed`` retains the bounded execution details one supervised run actually
+    produced before cleanup could not be confirmed: the launched argv, the
+    retained stdout/stderr, the launched process id and the elapsed seconds.  It
+    is ``None`` when no bounded launch was observed, and it never carries an exit
+    code or a completed record for unconfirmed cleanup.
+    """
 
     observed: dict[str, Any] | None = None
     capture_failures: tuple[tuple[str, str, str, str], ...] = ()
+
+
+def _close_inherited(fds: Sequence[int]) -> None:
+    for descriptor in fds:
+        try:
+            os.close(descriptor)
+        except OSError:
+            pass
 
 
 def _supervise(
     owner_fd: int,
     argv: Sequence[str],
     deadline: float | None,
+    pass_fds: tuple[int, ...] = (),
     *,
     env: Mapping[str, str],
 ) -> int:
-    """Reap owned descendants after direct exit or loss of the owner pipe."""
-
     adopt_children()
     validate_deadline(deadline)
     with selectors.DefaultSelector() as poll:
         poll.register(owner_fd, selectors.EVENT_READ)
         if deadline is not None and time.monotonic() >= deadline:
             os.close(owner_fd)
+            _close_inherited(pass_fds)
             return 124
-        child = subprocess.Popen(argv, env=env, start_new_session=True)
+        try:
+            child = subprocess.Popen(
+                argv, env=env, start_new_session=True, pass_fds=tuple(pass_fds)
+            )
+        except BaseException:
+            _close_inherited(pass_fds)
+            raise
+        _close_inherited(pass_fds)
         child_exit = None
         try:
             child_exit = open_child_exit(child.pid)
@@ -97,8 +119,7 @@ class OwnedProcess:
     def poll(self) -> int | None:
         result = self._process.poll()
         if result is not None:
-            self._release_owner()
-            self._confirm_cleanup()
+            self._complete_exit()
         return result
 
     def _confirm_cleanup(self) -> None:
@@ -115,6 +136,10 @@ class OwnedProcess:
                 "process supervisor exited without confirmed descendant cleanup"
             )
 
+    def _complete_exit(self) -> None:
+        self._release_owner()
+        self._confirm_cleanup()
+
     def _release_owner(self) -> None:
         if self._owner_fd is not None:
             os.close(self._owner_fd)
@@ -122,8 +147,10 @@ class OwnedProcess:
 
     def terminate_tree(self, timeout: float = 5) -> None:
         """Close ownership, then reap the supervisor after complete-tree cleanup."""
-
         self._release_owner()
+        self._wait_cleanup(timeout)
+
+    def _wait_cleanup(self, timeout: float) -> None:
         try:
             self._process.wait(timeout=timeout)
         except subprocess.TimeoutExpired as error:
@@ -137,16 +164,46 @@ class OwnedProcess:
             return self._process.communicate(*args, **kwargs)
         finally:
             if self._process.poll() is not None:
-                self._release_owner()
-                self._confirm_cleanup()
+                self._complete_exit()
 
     def wait(self, *args: Any, **kwargs: Any) -> int:
         result = self._process.wait(*args, **kwargs)
-        self._release_owner()
-        self._confirm_cleanup()
+        self._complete_exit()
         return result
 
 
+def validate_pass_fds(pass_fds: Sequence[int]) -> tuple[int, ...]:
+    """Validate caller-owned descriptors that a supervised child must inherit.
+
+    Only explicit descriptors at or above 3 are accepted, so stdio and the
+    supervisor's own control descriptors can never be forwarded by accident.
+    Each must be a unique, currently open integer descriptor; validation runs
+    before any internal pipe is opened, so an internal descriptor can never be
+    named by a caller.  The caller retains ownership of the returned
+    descriptors; only the supervisor's inherited copies are closed.
+    """
+
+    validated: list[int] = []
+    seen: set[int] = set()
+    for descriptor in pass_fds:
+        if type(descriptor) is not int or descriptor < 3:
+            raise ValueError("pass_fds must be integer descriptors at or above 3")
+        if descriptor in seen:
+            raise ValueError("pass_fds descriptors must be unique")
+        seen.add(descriptor)
+        try:
+            os.fstat(descriptor)
+        except OSError as error:
+            raise ValueError(
+                f"pass_fds descriptor is not open: {descriptor}"
+            ) from error
+        validated.append(descriptor)
+    return tuple(validated)
+
+
+#: Reviewed startup-isolating supervisor flag: ``-S`` disables ``site`` and
+#: therefore user-site and ``sitecustomize``/``usercustomize`` processing for the
+#: owning supervisor process.
 ISOLATED_SUPERVISOR_FLAGS = ("-S",)
 _SUPERVISOR_ENTRY = (
     "-c",
@@ -165,10 +222,12 @@ def resolve_supervisor() -> tuple[str, ...]:
 
 
 def resolve_isolated_supervisor() -> tuple[str, ...]:
+    """The same launcher with Python startup customization disabled."""
     return (sys.executable, *ISOLATED_SUPERVISOR_FLAGS, *_SUPERVISOR_ENTRY)
 
 
 def supervisor_variants() -> frozenset[tuple[str, ...]]:
+    """Every reviewed supervisor launch policy owned process execution accepts."""
     return frozenset({resolve_supervisor(), resolve_isolated_supervisor()})
 
 
@@ -184,14 +243,20 @@ def owned_popen(
     bufsize: int = -1,
     deadline: float | None = None,
     supervisor: tuple[str, ...] | None = None,
+    pass_fds: Sequence[int] = (),
 ) -> OwnedProcess:
-    """Start one Linux-owned tree with subreaper and cleanup acknowledgement."""
+    """Start one Linux-owned tree with subreaper and cleanup acknowledgement.
+
+    ``pass_fds`` names caller-owned descriptors that only the supervised child
+    must inherit; they are validated before any internal pipe is opened.
+    """
 
     if not sys.platform.startswith("linux"):
         raise RuntimeError("native process ownership requires Linux subreaper support")
     validate_deadline(deadline)
     if deadline is not None and time.monotonic() >= deadline:
         raise subprocess.TimeoutExpired(argv, 0)
+    extra_fds = validate_pass_fds(pass_fds)
     if supervisor is not None and tuple(supervisor) not in supervisor_variants():
         raise ValueError(
             "owned process supervisor differs from its reviewed launch policies"
@@ -223,9 +288,16 @@ def owned_popen(
             str(completion_write),
             command,
             json.dumps(deadline),
+            json.dumps(list(extra_fds)),
             str(context.fileno()),
         ]
-        forwarded = (owner_read, completion_write, context.fileno())
+        forwarded = (owner_read, completion_write, context.fileno(), *extra_fds)
+        if len(set(forwarded)) != len(forwarded):
+            os.close(owner_read)
+            os.close(owner_write)
+            os.close(completion_read)
+            os.close(completion_write)
+            raise ValueError("pass_fds overlaps an internal control descriptor")
         try:
             os.set_blocking(completion_read, False)
             if deadline is not None and time.monotonic() >= deadline:
@@ -274,12 +346,16 @@ def run_bounded(
     on_spawn: Callable[[OwnedProcess], None] | None = None,
     env: Mapping[str, str] | None = None,
     supervisor: tuple[str, ...] | None = None,
+    pass_fds: Sequence[int] = (),
 ) -> dict[str, Any]:
     """Bound owned work by pre-spawn timeout and an optional monotonic deadline.
 
     Optional input bytes are written concurrently with output reads. Trusted
     callbacks observe the spawned supervisor and retained output chunks; their
     exceptions require cleanup and retain identity unless cleanup is uncertain.
+    ``pass_fds`` forwards caller-owned descriptors to the child only.
+    ``raw_exit`` is the owned supervisor's process return code after cleanup;
+    it is ``None`` when no supervisor was launched.
     """
     if (
         type(timeout) not in {int, float}
@@ -307,6 +383,7 @@ def run_bounded(
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             deadline=deadline,
+            pass_fds=pass_fds,
             **({"supervisor": supervisor} if supervisor is not None else {}),
             **({"env": env} if env is not None else {}),
             **({"stdin": subprocess.PIPE} if input_data is not None else {}),
@@ -617,12 +694,14 @@ def run_analyzer(
 def _main() -> int:
     completion = int(sys.argv[2])
     try:
-        with os.fdopen(int(sys.argv[5]), "rb") as context:
+        forwarded = tuple(json.loads(sys.argv[5]))
+        with os.fdopen(int(sys.argv[6]), "rb") as context:
             environment = json.load(context)
         result = _supervise(
             int(sys.argv[1]),
             json.loads(sys.argv[3]),
             json.loads(sys.argv[4]),
+            forwarded,
             env=environment,
         )
         os.write(completion, b"complete\n")

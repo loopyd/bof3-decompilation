@@ -269,7 +269,8 @@ checks prerequisites/recursive source, SDL3 built identity and Redux built
 identity/linkage separately. `bin/harness runtime status|run`, maintained Lua
 missions, the Pi skill/agent and discovery links replace the short-lived Rust
 emulator runner (removed). Command registration moved to `harness.registry` to
-keep dispatch modules below the existing 600-line ceiling.
+keep dispatch modules below the then-current 600-line ceiling. The current
+[module ceiling](../agents/coding-standards.md#module-organization) is 4,000 lines.
 
 Receipts are under `out/setup/` and `out/audio-migration/redux-review/`; independent
 captures are in `redux-smoke/`, `redux-boot/` and `redux-boot-verified/`. The boot

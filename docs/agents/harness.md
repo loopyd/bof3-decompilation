@@ -529,43 +529,35 @@ separate. Direct low-level helpers do not acquire a lease. Neither a free lock
 nor its file establishes prior native-worker termination or restoration authority.
 Read-only proof verification and recovery inspection acquire no writer lease.
 
-Repository locks, staging and evidence use filesystem-native permissions. Creation
-requests restrictive modes where supported, but no fixed POSIX mode is enforced
-on NTFS. This does not guarantee confidentiality: keep source-bearing records out
-of public logs and commits. Source/PRE/POST mode capture and drift checks remain
-part of identity-preserving rollback, not an owner-only permission policy.
-Recovery records, completion receipts and plan review artifacts use creation hints
-without requiring `chmod`. Explicit captured-mode restoration remains strict.
+The project now resides on ext4, which honors requested POSIX creation modes
+subject to the process umask. Repository locks, staging and evidence retain their
+owners' creation modes. Source/PRE/POST mode capture and drift checks remain part
+of identity-preserving rollback, not a uniform owner-only permission policy.
+Keep source-bearing records out of public logs and commits; mode bits alone do not
+guarantee confidentiality. Explicit captured-mode restoration remains strict.
+Migration does not authorize bulk permission changes or repair of captured pins.
 
 ### File publication
 
-The [in-place NTFS checkpoint](../plans/autonomous-bof3-decompilation.md#in-place-ntfs-publication--2026-09-13-reviewed-tooling-checkpoint)
-records parent acceptance of the independently reviewed repaired implementation. The user
-refuses migration and authorizes only this cooperative fallback, not home, mount,
-settings or sandbox changes. `common.rename.publish_file` first attempts strict
-native `RENAME_NOREPLACE`; collisions retain native no-replace behavior. Only an
-unsupported platform/filesystem result selects cooperative publication: open the
-regular single-link source without following links, exclusively create an empty
-destination reservation, compare source/reservation descriptor and path identities,
-rename over the checked reservation, then verify source absence and published
-identity and fsync both directories. Rename-sensitive ctime is excluded from POST
-comparison; a displaced reservation's descriptor link count is not a FUSE invariant.
+The current ext4 project backing supports native `renameat2(RENAME_NOREPLACE)`.
+`common.rename.publish_file` uses only that native no-replace move. A collision
+fails without replacing either name. An unsupported platform or filesystem raises
+`UnsupportedRenameNoReplaceError` without moving either path or selecting an
+alternate publisher. No empty reservation or hard-link fallback
+is used. The [2026-09-13 NTFS checkpoint](../plans/autonomous-bof3-decompilation.md#in-place-ntfs-publication--2026-09-13-reviewed-tooling-checkpoint)
+retains the then-current authorization and accepted fallback as historical evidence.
 
-This fallback is not atomic CAS against noncooperating writers. An external writer
-can race source/reservation checks before rename or the reservation-cleanup check
-before unlink; undetected substitution can affect foreign names. Detected foreign
-names are preserved. Readers can observe the empty reservation, and crashes can
-leave reservations, prepared images or displaced files. Failure after movement or
-sync does not imply no effect: retain evidence and inspect actual locations before
-reviewed recovery. Cleanup requires an initially regular, empty, single-link
-reservation whose captured descriptor/path identity remains unchanged, subject to
-that check/unlink race. Nonempty or multiply linked captures are ineligible;
-zero length alone never authorizes deleting crash residue. No race-free or
-power-loss guarantee follows.
+Native no-replace protects destination occupancy; surrounding identity checks and
+multi-file transitions remain cooperative and non-atomic. Manual writers can race
+observations. Detected foreign names stay untouched. Failure after movement or
+directory sync may have effect: retain evidence and inspect actual locations before
+reviewed recovery. Prepared images and displaced files can survive crashes.
+Zero length alone never authorizes deleting crash residue. No atomic multi-file
+commit, race-free recovery or power-loss guarantee follows.
 
 `common.files` creation, quarantine/restoration and `common.git` index moves use
-this publisher. Retained-hard-link publication and its alias return field are
-removed; same-leaf preflight no longer claims native capability. Source/images
+this publisher. Retained-hard-link publication and its alias return field remain
+removed; same-leaf preflight alone does not prove distinct-leaf capability. Source/images
 stay single-link, prepared images stay on the destination filesystem, and source
 bytes/mode/identity, root confinement, leases, submodule exclusion and guarded
 rollback remain required. Shared `common.rename.describe_locations` supplies
@@ -644,9 +636,9 @@ remains historical.
 | `workspace.py`, `safeguards.py` | composed baseline, dependency verification and durable observational guards |
 | `recovery.py`, `runtime.py`, `images.py`, `evidence.py` | dependency exclusion before source/image/evidence writes, even without optional workspace/index snapshots |
 
-`inventory.describe_identity` omits directory allocation size: NTFS/FUSE can report
-different sizes for an unchanged directory during observation. Directory membership,
-device/inode, mode, link count, ownership and modification/change times remain bound;
+`inventory.describe_identity` omits directory allocation size, a filesystem storage
+detail that can vary as directories grow. Directory membership, device/inode, mode,
+link count, ownership and modification/change times remain bound;
 non-directory size and file-content hashes remain exact. This removes an unstable
 storage detail, not namespace, content, confinement or mutation checks.
 
@@ -770,7 +762,7 @@ staging path or reserved POST quarantine; unexpected bytes, mode, inode, links o
 location combinations reject before that path is changed. PRE/POST byte equality
 does not bypass identity checks. `common/observation.py` shares non-atomic file
 observations with inspection; actual moves use the checked [publication backend](#file-publication)
-with its explicit cooperative race limitations.
+with native no-replace semantics and non-atomic surrounding observations.
 This low-level mechanism does not validate external record authority, acquire an
 absent lease, reconcile publication or restore workspace/Git state. Legacy
 byte-only rollback has no identity-replay guarantee. A no-op replay does not
@@ -995,9 +987,14 @@ Naming collection uses `bin/harness naming evidence ... --work-deadline SECONDS`
 `--deadline` remains a relative per-operation/index-request cap, not a campaign
 budget. The effective collection limit is the earlier of the inherited cutoff and
 the existing 600-second shard wall. `naming.session` owns client acquisition and
-cleanup; index, native-byte and Rizin clients pass the cutoff to their guardians
-and clip foreground waits. Cleanup attempts all acquired clients and preserves
-`ProcessCleanupError` over ordinary failures; shutdown/drain is not work.
+cleanup; index, native-byte and Rizin clients pass the cutoff to
+`common.process.owned_popen` and clip foreground waits. Cleanup attempts all
+acquired clients and preserves `ProcessCleanupError` over ordinary failures;
+shutdown/drain is not work.
+
+`toolchain/rizin.py` owns the managed Rizin executable. The PS1 decompiler plugin
+uses `toolchain/rz_psxdec.py` for its sibling-fork build and `nativebuild.py` for
+receipt validation. See the [build and usage guide](../../tools/retdec-psx/README.md).
 
 Naming checks before receipt/journal writes and finalization stop further forward
 work on expiry. They do not make filesystem operations atomic or interruptible:

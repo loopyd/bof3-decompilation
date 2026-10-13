@@ -10,6 +10,7 @@ from pathlib import Path
 from harness.build.runtime import derive_candidates
 from harness.common.deadlines import check_deadline
 from harness.common.lookups import resolve_lookup
+from harness.common.process import resolve_supervisor
 
 MAX_CANDIDATES = 2048
 _MAX_RECORD_BYTES = 512 * 1024
@@ -240,7 +241,7 @@ def validate_description(value: object) -> None:
             if (
                 request["operand"] is not None
                 or not isinstance(command, list)
-                or command != [request["spelling"], "-m", "harness.common.process"]
+                or command != [request["spelling"], *resolve_supervisor()[1:]]
             ):
                 raise ValueError("program supervisor binding differs")
         elif role in {"runtime-source", "runtime-executable"}:

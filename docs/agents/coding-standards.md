@@ -20,9 +20,11 @@ Read after `SOUL.md` and `AGENTS.md`; lift-side C rules stay in `AGENTS.md`.
 
 ## Module organization
 
-- Hard ceiling: 600 lines per module, enforced by
-  `test_harness_dry.py::test_harness_modules_stay_decomposed`. Decompose
-  mechanically before growing into noun categories or a cohesive subpackage.
+- Hard ceiling: 4,000 lines per module, enforced by
+  `test_harness_dry.py::test_harness_modules_stay_decomposed`. Reuse compatible
+  common helpers and bundle related operations by domain. Avoid size-driven
+  slices and maintained `.before` or `.after` modules. Retain current inputs and
+  requested deliverables; remove obsolete audit evidence when authorized.
   Dependencies flow toward the owner; do not hide cycles behind facade imports.
 - Use a single noun for each module: `ranking.py`, `transactions.py`,
   `review.py`, `editing.py`, `cli.py`. The package supplies the domain, not a

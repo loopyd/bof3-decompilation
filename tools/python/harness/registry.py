@@ -59,7 +59,7 @@ DOMAINS: Mapping[str, Domain] = {
             "list, apply, check or revert target patches",
             "harness.commands.patch",
             kind="passthrough",
-            example="bin/harness patch list",
+            example="bin/harness patch check --target pcsx-redux",
         ),
     ),
     "runtime": Domain(
@@ -70,6 +70,16 @@ DOMAINS: Mapping[str, Domain] = {
             "harness.runtime.cli",
             kind="passthrough",
             example="bin/harness runtime status",
+        ),
+    ),
+    "reconstruction": Domain(
+        help="prepare the 118-function corpus or run a bounded plugin pilot",
+        actions={},
+        passthrough=Action(
+            help="prepare the corpus or run the selected plugin",
+            module="harness.reconstruction.cli",
+            kind="passthrough",
+            example="bin/harness reconstruction prepare --help",
         ),
     ),
     "agent": Domain(

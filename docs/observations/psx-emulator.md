@@ -41,7 +41,7 @@ Add one row per mission. A row that changes nothing is itself a finding.
 ## Converged directives
 
 None recorded yet. Directives for this skill live in `.pi/skills/psx-emulator/SKILL.md`, its
-[references catalogue](../../.pi/skills/psx-emulator/references/CATALOG.md) and the delegated agent spec; record the pointer here when
+[references catalogue](../../.pi/skills/psx-emulator/references/catalog.md) and the delegated agent spec; record the pointer here when
 one is added.
 
 ## Bundled harness improvements

@@ -237,7 +237,8 @@ Input hashes and mutation metadata remain stable throughout capture. Directory
 observations retain all nine stat fields plus a descriptor-bound fingerprint of
 direct names, devices, inodes and nofollow types. Only directory size may differ
 when the original location, other eight fields and membership remain equal;
-directory allocation size can vary without a namespace edit on FUSE/NTFS.
+directory allocation size is a filesystem storage detail that can vary as
+directories grow.
 Regular files and symlinks retain exact metadata checks. Complete enumeration is
 bounded to 16,384 entries and 4 MiB per directory, including ancestors above the
 repository; errors, overflow and expiry reject. Original snapshots never refresh.
@@ -681,12 +682,14 @@ even from unrelated siblings. Setup races, malformed/overflowed queues and lost 
 closed. Event tracking supplements content and identity checks, not full include
 or toolchain provenance.
 Object and diagnostic
-assembly outputs are staged privately, then use the existing owned publication
-backend; this is not atomic publication of a multi-file bundle. Validation failure
+assembly outputs are staged privately, then use
+[native no-replace publication](harness.md#file-publication).
+Unsupported platforms or filesystems fail without an alternate publisher. This is not
+atomic publication of a multi-file bundle. Validation failure
 before publication preserves existing outputs. Unconfirmed child cleanup retains
 staging instead of racing live descendants; publication/durability failures require
 inspection of retained output/quarantine state, not blind rollback. Publication that
-crosses the cutoff fails with retained recovery information; the existing cooperative
+crosses the cutoff fails with retained recovery information; the native no-replace
 backend cannot promise an atomic time fence or rollback after publication.
 Compiler pipe failures remain nonzero instead of inheriting the shared CLI's pipe-success
 policy; failed-stage exit status is preserved when its diagnostics encounter a closed pipe.

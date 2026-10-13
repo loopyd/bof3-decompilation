@@ -1,13 +1,7 @@
 # AGENTS.md — BOF3
 
-At the start of every session, invoke `/saber-mode` before task work. Read its
-entire `SKILL.md`, including the full Actions and Playbooks routing ladder. If slash
-invocation is unavailable, read `~/.agents/skills/saber-mode/SKILL.md` directly.
-Follow that ladder and read each triggered leaf skill before applying it; load
-branch references as needed. Report an unavailable mode rather than silently skipping it.
-
-Route each request to its BOF3 owner below. Saber mode governs workflow; repository
-contracts and task-specific authorization still govern scope and acceptance.
+Route each request to its BOF3 owner below. Repository contracts and task-specific
+authorization govern scope and acceptance.
 Operative rules live in skills/references. `docs/` is user documentation, not required
 agent reading. During authorized maintenance, extract useful knowledge into relevant
 references. Caller-selected documents/plans remain task inputs, not standing dependencies.
@@ -56,8 +50,9 @@ inventory that changes with each release.
 Keep session progress, one-off benchmarks, test counts, delivery SHAs, temporary
 paths, and implementation diaries out of user-facing documentation. Put run results
 in existing task evidence, disposable reports in ignored `out/`, task status in its
-owning plan, and delivery details in commit or PR descriptions. Preserve frozen audit
-records and existing release history.
+owning plan, and delivery details in commit or PR descriptions. Old audit bundles
+and disposable checks may be removed when authorized. Preserve current corpus
+inputs, requested deliverables and existing release history.
 
 Apply `$unslop` to every prose edit, including README files, guides, and agent
 instructions. Use plain words and complete sentences. Preserve exact commands,

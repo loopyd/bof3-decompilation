@@ -2200,7 +2200,9 @@ with both local Rust crates, lockfiles, tests and licenses, excluding proprietar
 media. The unpacked package built and passed Cargo tests using cached registry
 dependencies. Live build, package and BGM000 structural verification passed. The
 original five C harness/package checks passed before switching; all 15 replacement
-audio checks pass. Shared dispatch types keep the expanded CLI below 600 lines.
+audio checks pass. Shared dispatch types kept the expanded CLI below the
+then-current 600-line ceiling. The current
+[module ceiling](../agents/coding-standards.md#module-organization) is 4,000 lines.
 
 The final 25 focused setup/doctor tests pass, covering download integrity, failed
 publication/refresh, conflicting output, offline reuse, filename-independent BIOS

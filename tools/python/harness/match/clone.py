@@ -25,7 +25,9 @@ import re
 from dataclasses import dataclass
 
 #: ``name = 0xADDR;`` rows of a composed target symbol map.
-_MAP_ROW = re.compile(r"^\s*([A-Za-z_]\w*)\s*=\s*(0x[0-9A-Fa-f]+)\s*;\s*$", re.MULTILINE)
+_MAP_ROW = re.compile(
+    r"^\s*([A-Za-z_]\w*)\s*=\s*(0x[0-9A-Fa-f]+)\s*;\s*$", re.MULTILINE
+)
 _SOURCE_TAG = re.compile(r"@source\s+0x([0-9A-Fa-f]+)")
 _INTERNAL_INCLUDE = re.compile(r'#include\s+["<][^">]*_internal\.h[">]')
 _CALL = re.compile(r"\b([A-Za-z_]\w*)\s*\(")
@@ -51,7 +53,9 @@ class ClonePlan:
 def parse_symbol_map(text: str) -> dict[str, int]:
     """Return ``name -> address`` for every ``name = 0xADDR;`` row in a map."""
 
-    return {match.group(1): int(match.group(2), 16) for match in _MAP_ROW.finditer(text)}
+    return {
+        match.group(1): int(match.group(2), 16) for match in _MAP_ROW.finditer(text)
+    }
 
 
 def raw_spelling(name: str, address: int, *, is_function: bool) -> str:
@@ -94,7 +98,9 @@ def generate_clone_source(
             "representative includes a target-local *_internal.h header"
         )
     representative_address = _source_address(representative_text)
-    representative_name = _representative_name(representative_text, representative_address)
+    representative_name = _representative_name(
+        representative_text, representative_address
+    )
     if clone_name is None:
         clone_name = f"func_{clone_address:08X}"
     if not re.fullmatch(r"[A-Za-z_]\w*", clone_name):
@@ -110,9 +116,7 @@ def generate_clone_source(
         f"0x{representative_address:08X}", f"0x{clone_address:08X}"
     )
     # Rename the definition (and any self-recursion) before touching externals.
-    text = re.sub(
-        rf"\b{re.escape(representative_name)}\b", clone_name, text
-    )
+    text = re.sub(rf"\b{re.escape(representative_name)}\b", clone_name, text)
     for name, address in sorted(symbols.items()):
         if not re.search(rf"\b{re.escape(name)}\b", text):
             continue
@@ -200,7 +204,9 @@ def wire_manifest_text(text: str, source_path: str) -> str:
         if match is None:
             continue
         # Prefer a non-empty `sources` list; otherwise use `support_sources`.
-        body_match = re.compile(rf"^{key}\s*=\s*\[(.*?)\]", re.MULTILINE | re.DOTALL).search(text)
+        body_match = re.compile(
+            rf"^{key}\s*=\s*\[(.*?)\]", re.MULTILINE | re.DOTALL
+        ).search(text)
         if key == "sources" and (body_match is None or not body_match.group(1).strip()):
             continue
         insert_at = match.end()

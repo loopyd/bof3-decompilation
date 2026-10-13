@@ -1,4 +1,4 @@
-"""Canonical structured evidence digests."""
+"""Compute structured digests and streaming file identities."""
 
 from __future__ import annotations
 

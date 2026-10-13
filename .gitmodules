@@ -28,6 +28,12 @@
 [submodule "third_party/spimdisasm"]
 	path = third_party/spimdisasm
 	url = https://github.com/Decompollaborate/spimdisasm.git
+[submodule "third_party/rz-psxdec"]
+	path = third_party/rz-psxdec
+	url = https://github.com/loopyd/rz-psxdec.git
+[submodule "third_party/retdec-psx"]
+	path = third_party/retdec-psx
+	url = https://github.com/loopyd/retdec-psx.git
 [submodule "third_party/pcsx-redux-agentic"]
 	path = third_party/pcsx-redux-agentic
 	url = https://github.com/loopyd/pcsx-redux-agentic.git

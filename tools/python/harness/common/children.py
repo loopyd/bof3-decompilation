@@ -11,10 +11,15 @@ import subprocess
 import time
 
 
-def adopt_children() -> None:
+def _establish_subreaper():
     library = ctypes.CDLL(None, use_errno=True)
     if library.prctl(36, 1, 0, 0, 0) != 0:
         raise OSError(ctypes.get_errno(), "cannot establish child subreaper")
+    return library
+
+
+def adopt_children() -> None:
+    _establish_subreaper()
     child_list = Path(f"/proc/self/task/{os.getpid()}/children")
     if child_list.read_text().strip():
         raise RuntimeError("process supervisor started with unexpected children")

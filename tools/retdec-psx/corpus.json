@@ -1,0 +1,3262 @@
+{
+  "counts": {
+    "admitted_members": 118,
+    "exclusions": 7
+  },
+  "exclusions": [
+    {
+      "address": 2149300456,
+      "case_id": "case-029",
+      "reason": "Splat interval differs from native function extent",
+      "reason_code": "extent-mismatch",
+      "selector": "emi/etc/game/00@0x801bb8e8",
+      "size": 8656,
+      "target": "emi/etc/game/00"
+    },
+    {
+      "address": 2149398840,
+      "case_id": "case-032",
+      "reason": "Splat interval differs from native function extent",
+      "reason_code": "extent-mismatch",
+      "selector": "emi/world00/area030/04@0x801d3938",
+      "size": 8720,
+      "target": "emi/world00/area030/04"
+    },
+    {
+      "address": 2148487436,
+      "case_id": "case-033",
+      "reason": "Splat interval differs from native function extent",
+      "reason_code": "extent-mismatch",
+      "selector": "emi/world00/area030/05@0x800f510c",
+      "size": 8516,
+      "target": "emi/world00/area030/05"
+    },
+    {
+      "address": 2149393388,
+      "case_id": "case-035",
+      "reason": "Splat interval differs from native function extent",
+      "reason_code": "extent-mismatch",
+      "selector": "emi/world00/area030/04@0x801d23ec",
+      "size": 1780,
+      "target": "emi/world00/area030/04"
+    },
+    {
+      "address": 2149392436,
+      "case_id": "case-052",
+      "reason": "Splat interval differs from native function extent",
+      "reason_code": "extent-mismatch",
+      "selector": "emi/world00/area030/04@0x801d2034",
+      "size": 952,
+      "target": "emi/world00/area030/04"
+    },
+    {
+      "address": 2149469852,
+      "case_id": "case-072",
+      "reason": "reference native byte check failed or incomplete",
+      "reason_code": "native-byte-check",
+      "selector": "emi/etc/shop/00@0x801e4e9c",
+      "size": 300,
+      "target": "emi/etc/shop/00"
+    },
+    {
+      "address": 2149400272,
+      "case_id": "case-107",
+      "reason": "Splat interval differs from native function extent",
+      "reason_code": "extent-mismatch",
+      "selector": "emi/etc/sisyou/00@0x801d3ed0",
+      "size": 140,
+      "target": "emi/etc/sisyou/00"
+    }
+  ],
+  "members": [
+    {
+      "address": 2148837892,
+      "case_id": "case-001",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148837892,
+        2148837900
+      ],
+      "range_sha256": "6d64edf91449c1b17746c1ef18afa2eb25c70bdf1322ab3df5a2630993b7e2f1",
+      "selector": "exe/slus_004_22@0x8014aa04",
+      "size": 8,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148838088,
+      "case_id": "case-002",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148838088,
+        2148838560
+      ],
+      "range_sha256": "4ec1fbedf3f4f49fdfd1ac55243f2780695db5cb65bc9b41e9b3ee4d6ad5a07e",
+      "selector": "exe/slus_004_22@0x8014aac8",
+      "size": 472,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148838560,
+      "case_id": "case-003",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148838560,
+        2148838696
+      ],
+      "range_sha256": "5bc58989cfb1f2f065a9891ca70c1f8113130f155fe55925cb3f318ce7a5a3ff",
+      "selector": "exe/slus_004_22@0x8014aca0",
+      "size": 136,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148838696,
+      "case_id": "case-004",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148838696,
+        2148838920
+      ],
+      "range_sha256": "e815ecc52fee89773282df87088818fc1408c3b905a529b95f8ff5b6cb953d3b",
+      "selector": "exe/slus_004_22@0x8014ad28",
+      "size": 224,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148838920,
+      "case_id": "case-005",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148838920,
+        2148839068
+      ],
+      "range_sha256": "87ed7c0e0d3e177f8ba02e9578586d39c48d19ccca86efcf60eb0fb2bfad9c97",
+      "selector": "exe/slus_004_22@0x8014ae08",
+      "size": 148,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148839068,
+      "case_id": "case-006",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148839068,
+        2148839136
+      ],
+      "range_sha256": "b7aa981f9283ec68437027db8a0745563702dafc74d4932375d52005147a64b1",
+      "selector": "exe/slus_004_22@0x8014ae9c",
+      "size": 68,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148839136,
+      "case_id": "case-007",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148839136,
+        2148839360
+      ],
+      "range_sha256": "aa775375032eaee3d3ad230e1db06a07282daf84519424d74096baafe6491bfa",
+      "selector": "exe/slus_004_22@0x8014aee0",
+      "size": 224,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148839664,
+      "case_id": "case-008",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148839664,
+        2148839804
+      ],
+      "range_sha256": "b53402a17946cf582ae30aea36cd553a783c4b6856b15d582efb3a5234b57175",
+      "selector": "exe/slus_004_22@0x8014b0f0",
+      "size": 140,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148839804,
+      "case_id": "case-009",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148839804,
+        2148839844
+      ],
+      "range_sha256": "f3971d1b363fa6d77c39c9a37e5139d1c2334f68b10778da171d58946449e203",
+      "selector": "exe/slus_004_22@0x8014b17c",
+      "size": 40,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148839844,
+      "case_id": "case-010",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148839844,
+        2148840252
+      ],
+      "range_sha256": "51818a480404ffadaa7a996d147604264f907055e90190fcba0efab6f5016197",
+      "selector": "exe/slus_004_22@0x8014b1a4",
+      "size": 408,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148841728,
+      "case_id": "case-011",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148841728,
+        2148841812
+      ],
+      "range_sha256": "0f5bee538421d808942bc21859d1bd1dd28cbc4d711a76b29a15cca6ebba8b51",
+      "selector": "exe/slus_004_22@0x8014b900",
+      "size": 84,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148933464,
+      "case_id": "case-012",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148933464,
+        2148933596
+      ],
+      "range_sha256": "bdd3f669abf8425b743bf96431c7264da50e586487300e3719c9e969352601b0",
+      "selector": "exe/slus_004_22@0x80161f58",
+      "size": 132,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148933596,
+      "case_id": "case-013",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148933596,
+        2148933984
+      ],
+      "range_sha256": "d18fe69b98cc66650573469b9411609a39ee5734ede673c8e2e3726cdc0fccdd",
+      "selector": "exe/slus_004_22@0x80161fdc",
+      "size": 388,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148934008,
+      "case_id": "case-014",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148934008,
+        2148934120
+      ],
+      "range_sha256": "bc34c11cf43cec6f81668d9a92d1d8b37f608b672b645838aabe210edd80b765",
+      "selector": "exe/slus_004_22@0x80162178",
+      "size": 112,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148934120,
+      "case_id": "case-015",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148934120,
+        2148934192
+      ],
+      "range_sha256": "76a57438fb61b581cdb0bb9622d1d89d8bb13132118a44bb55ccc92562cd5d07",
+      "selector": "exe/slus_004_22@0x801621e8",
+      "size": 72,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148934912,
+      "case_id": "case-016",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148934912,
+        2148935140
+      ],
+      "range_sha256": "9c77262c028355f225c0e6a08f6c2a5eb500c13658b5092fc4223b7ed0d1114e",
+      "selector": "exe/slus_004_22@0x80162500",
+      "size": 228,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148935140,
+      "case_id": "case-017",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148935140,
+        2148935192
+      ],
+      "range_sha256": "38eec4f56ec78aa19ecc02e8e21e37ca0229b69aa8b0f0f90fc51b7302f56e02",
+      "selector": "exe/slus_004_22@0x801625e4",
+      "size": 52,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148935320,
+      "case_id": "case-018",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148935320,
+        2148935568
+      ],
+      "range_sha256": "449580346bf711fd1a3a3af3ad670402bd9cd6eac938fe5f4ff538c44c637f0c",
+      "selector": "exe/slus_004_22@0x80162698",
+      "size": 248,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148935832,
+      "case_id": "case-019",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148935832,
+        2148936176
+      ],
+      "range_sha256": "d899310d6c7522bc8f34af920c940e8195f4fd495951b3c5d984327731819203",
+      "selector": "exe/slus_004_22@0x80162898",
+      "size": 344,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148936176,
+      "case_id": "case-020",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148936176,
+        2148936300
+      ],
+      "range_sha256": "00f8cb92e4930555395d45745461f586cafeeb387655eae56599eeb5f1e3644a",
+      "selector": "exe/slus_004_22@0x801629f0",
+      "size": 124,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148936300,
+      "case_id": "case-021",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148936300,
+        2148936456
+      ],
+      "range_sha256": "9d5b2848118f14d990ced0bf37824cc7532a4d5c3943fe1fda3240a24579ecba",
+      "selector": "exe/slus_004_22@0x80162a6c",
+      "size": 156,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148936724,
+      "case_id": "case-022",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148936724,
+        2148936920
+      ],
+      "range_sha256": "8d223e33f0fbaaab0d6dd94041dcaa29a4d7c84fd0d51ee5f828f902415b4cd4",
+      "selector": "exe/slus_004_22@0x80162c14",
+      "size": 196,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148936920,
+      "case_id": "case-023",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148936920,
+        2148936960
+      ],
+      "range_sha256": "154589f2f7bfa9d810fe329b10cf44363b6dfa8cca9b9468fe6c25ddcf9d1c86",
+      "selector": "exe/slus_004_22@0x80162cd8",
+      "size": 40,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148936960,
+      "case_id": "case-024",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148936960,
+        2148936984
+      ],
+      "range_sha256": "63c674e120d76af7804df31bc0d0435c3a31f02a48b4fc345199b4c63d311907",
+      "selector": "exe/slus_004_22@0x80162d00",
+      "size": 24,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148947444,
+      "case_id": "case-025",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148947444,
+        2148947604
+      ],
+      "range_sha256": "45aa25fe8ea7b7b746ca31fc85a7d4e0f7183a953370e7ec4cab6a7e09533569",
+      "selector": "exe/slus_004_22@0x801655f4",
+      "size": 160,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148949320,
+      "case_id": "case-026",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148949320,
+        2148949508
+      ],
+      "range_sha256": "e9442c48f07fbb821eca183bcd36da60990c23a6ff14559ded305a6d9b03d650",
+      "selector": "exe/slus_004_22@0x80165d48",
+      "size": 188,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2148953264,
+      "case_id": "case-027",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148953264,
+        2148953324
+      ],
+      "range_sha256": "28a16abd69158140a10914e0cf3291673593ea2a7590f8a2f6ea394c22471cb1",
+      "selector": "exe/slus_004_22@0x80166cb0",
+      "size": 60,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2149053052,
+      "case_id": "case-028",
+      "image": "out/binaries/exe/slus_004_22.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "677754d0d22c88151a5022cd98b8e89af1b0882177d9850faf62676eb7089eff",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2149053052,
+        2149053108
+      ],
+      "range_sha256": "b6f0381b17b74aa5c96b10b35fa730480e8123a931cc05c238a10e282a3c64d1",
+      "selector": "exe/slus_004_22@0x8017f27c",
+      "size": 56,
+      "target": "exe/slus_004_22"
+    },
+    {
+      "address": 2149395620,
+      "case_id": "case-030",
+      "image": "out/binaries/emi/etc/sisyou/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "42accff83b45c5ef99947f70a6c968fdf2a2a4afd0abdc3fca8874db20ecc8af",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149395620,
+        2149396676
+      ],
+      "range_sha256": "8bc703adaf9982a68dea371552ae6e400a2a55b1ab46a8e4ba43407325f96a84",
+      "selector": "emi/etc/sisyou/00@0x801d2ca4",
+      "size": 1056,
+      "target": "emi/etc/sisyou/00"
+    },
+    {
+      "address": 2149556860,
+      "case_id": "case-031",
+      "image": "out/binaries/emi/scenario/scena00/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "c5bda6ff8260b59a361a49f80720bb6942d9eed8d6497d3cc9d1d2b483c3089e",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149556860,
+        2149558232
+      ],
+      "range_sha256": "d9897d83def727d062de977e80074abc32fb97e451b71abd16c0806f586d8973",
+      "selector": "emi/scenario/scena00/00@0x801fa27c",
+      "size": 1372,
+      "target": "emi/scenario/scena00/00"
+    },
+    {
+      "address": 2149560836,
+      "case_id": "case-034",
+      "image": "out/binaries/emi/scenario/scena00/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "c5bda6ff8260b59a361a49f80720bb6942d9eed8d6497d3cc9d1d2b483c3089e",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149560836,
+        2149561888
+      ],
+      "range_sha256": "55fef56810edb0b7e8ff965041dbbd51ba75c4ae470653269a703af37464f753",
+      "selector": "emi/scenario/scena00/00@0x801fb204",
+      "size": 1052,
+      "target": "emi/scenario/scena00/00"
+    },
+    {
+      "address": 2149446648,
+      "case_id": "case-036",
+      "image": "out/binaries/emi/battle/battle/03.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149446648,
+        2149447528
+      ],
+      "range_sha256": "878d6cf6fe49b478b8585df5abac3a36c0df4b6b685bede318aa1cda79843c63",
+      "selector": "emi/battle/battle/03@0x801df3f8",
+      "size": 880,
+      "target": "emi/battle/battle/03"
+    },
+    {
+      "address": 2148125884,
+      "case_id": "case-037",
+      "image": "out/binaries/emi/battle/battle/15.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148125884,
+        2148126592
+      ],
+      "range_sha256": "f6ce840570d2517442ccf3f96d111521a7482a44d3779ce9d312928fad8cc6f8",
+      "selector": "emi/battle/battle/15@0x8009ccbc",
+      "size": 708,
+      "target": "emi/battle/battle/15"
+    },
+    {
+      "address": 2149522376,
+      "case_id": "case-038",
+      "image": "out/binaries/emi/etc/commu00/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a",
+      "load_address": 2149510144,
+      "payload_offset": 0,
+      "range": [
+        2149522376,
+        2149523060
+      ],
+      "range_sha256": "c2ecf3e87272303e779b0458ff3e967e5fc601c32a298545db95c98cef6e945a",
+      "selector": "emi/etc/commu00/00@0x801f1bc8",
+      "size": 684,
+      "target": "emi/etc/commu00/00"
+    },
+    {
+      "address": 2149389004,
+      "case_id": "case-039",
+      "image": "out/binaries/emi/etc/game/01.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "4085bb55d18007389e57c8400eeb51be7026e17a10b33af1ae8a5665d5d381af",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149389004,
+        2149389580
+      ],
+      "range_sha256": "f39878f5ad6f93e2fe27f6535cafc8c572905c12301e33c64f24cab27a4e6ac8",
+      "selector": "emi/etc/game/01@0x801d12cc",
+      "size": 576,
+      "target": "emi/etc/game/01"
+    },
+    {
+      "address": 2149412992,
+      "case_id": "case-040",
+      "image": "out/binaries/emi/etc/shop/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "b9b26c0d387ebbbaa211ed949806f76f5a3cc6ae891df39793ef12335c158219",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149412992,
+        2149413384
+      ],
+      "range_sha256": "0c03732273aeaa3fcaea2702ccf2ca14f43ebe283a5d83a4f150905fa02e0a8c",
+      "selector": "emi/etc/shop/00@0x801d7080",
+      "size": 392,
+      "target": "emi/etc/shop/00"
+    },
+    {
+      "address": 2149393420,
+      "case_id": "case-041",
+      "image": "out/binaries/emi/scenario/sce10eff/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "a40c9c496614c26fb8696627451d0d91773b7ada6168a01b569315ebdf745ba4",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149393420,
+        2149394008
+      ],
+      "range_sha256": "54896fcae575a59715b693a32efde779d55462c1976b14d081c228acbf6a250d",
+      "selector": "emi/scenario/sce10eff/00@0x801d240c",
+      "size": 588,
+      "target": "emi/scenario/sce10eff/00"
+    },
+    {
+      "address": 2149528560,
+      "case_id": "case-042",
+      "image": "out/binaries/emi/world00/area008/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "fc975f0e5af78455d3c6f073589d2662a81d9ca194585e840c75f0cac4f37d91",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149528560,
+        2149528828
+      ],
+      "range_sha256": "d629e36aded8d3c2b61a804375c2260038e5be16a57db12649451b5d9aad02ed",
+      "selector": "emi/world00/area008/13@0x801f33f0",
+      "size": 268,
+      "target": "emi/world00/area008/13"
+    },
+    {
+      "address": 2149530368,
+      "case_id": "case-043",
+      "image": "out/binaries/emi/world00/area016/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "8ea930afa24a36cc9ff3e801d698e8ff20a2fa252c6a43ae8ca22249e8b4147e",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149530368,
+        2149531340
+      ],
+      "range_sha256": "654d8a8498b0683f180d35cb9687025d5b9fa051779961b9770b7b33b132f285",
+      "selector": "emi/world00/area016/13@0x801f3b00",
+      "size": 972,
+      "target": "emi/world00/area016/13"
+    },
+    {
+      "address": 2149528340,
+      "case_id": "case-044",
+      "image": "out/binaries/emi/world00/area024/14.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "fc5eaa1e7ea8b1127256ff2c13ff5d3c21c3cf978aaa3144c8521dabc14c4a8e",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149528340,
+        2149529132
+      ],
+      "range_sha256": "b579a1df48284334a09f29ce4b0eea349083e3483829f65f7cb4db177bf4de47",
+      "selector": "emi/world00/area024/14@0x801f3314",
+      "size": 792,
+      "target": "emi/world00/area024/14"
+    },
+    {
+      "address": 2149527044,
+      "case_id": "case-045",
+      "image": "out/binaries/emi/world00/area026/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "9100e0669a3ace33bddcc504ae0734fca4b8f0d33e26245f69d382cfb1b4745b",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149527044,
+        2149527564
+      ],
+      "range_sha256": "aca020a0d34718e9727172d4600008843d60e72084594d2c6e241bf081d42eef",
+      "selector": "emi/world00/area026/13@0x801f2e04",
+      "size": 520,
+      "target": "emi/world00/area026/13"
+    },
+    {
+      "address": 2149529572,
+      "case_id": "case-046",
+      "image": "out/binaries/emi/world00/area027/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "f2999018dc8e575c9d1758c699bd4f41431af2ed2bb2c8429d93a03d70a4be9b",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149529572,
+        2149529932
+      ],
+      "range_sha256": "6ac240d2bb4759371e3fdb01989740de66b7012ea9068f2aff99b3355fde1776",
+      "selector": "emi/world00/area027/13@0x801f37e4",
+      "size": 360,
+      "target": "emi/world00/area027/13"
+    },
+    {
+      "address": 2149527648,
+      "case_id": "case-047",
+      "image": "out/binaries/emi/world00/area028/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "638f7c7ad30fbf119f4268bd6df39cecb2610be1b94c41910f3357394605d03a",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149527648,
+        2149527948
+      ],
+      "range_sha256": "527ff9aa369cc484d7f751e538e84996a9c288cc25be140cd82883ab9c6eed4e",
+      "selector": "emi/world00/area028/13@0x801f3060",
+      "size": 300,
+      "target": "emi/world00/area028/13"
+    },
+    {
+      "address": 2149530232,
+      "case_id": "case-048",
+      "image": "out/binaries/emi/world00/area032/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "a2bbf9d6fbfc5029e1b07e23c7a671bccb32804b6b1fba332347b19c5cec5716",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149530232,
+        2149530648
+      ],
+      "range_sha256": "b8f114d17c399aa86ea1feaf3bbf69b38bcaa14fa2e3ea19795287323f4f01e4",
+      "selector": "emi/world00/area032/13@0x801f3a78",
+      "size": 416,
+      "target": "emi/world00/area032/13"
+    },
+    {
+      "address": 2149294712,
+      "case_id": "case-049",
+      "image": "out/binaries/emi/etc/game/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "1663ff2e78134fe15f3cae6fb4074acf14b68b79cfa02be0c7651eaf6a1728ff",
+      "load_address": 2149144576,
+      "payload_offset": 0,
+      "range": [
+        2149294712,
+        2149295736
+      ],
+      "range_sha256": "344ed336cfc5ad07c33b0c67e2c24661e5bd7498e9256c71b3a0b2565abdf3c8",
+      "selector": "emi/etc/game/00@0x801ba278",
+      "size": 1024,
+      "target": "emi/etc/game/00"
+    },
+    {
+      "address": 2149397392,
+      "case_id": "case-050",
+      "image": "out/binaries/emi/etc/sisyou/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "42accff83b45c5ef99947f70a6c968fdf2a2a4afd0abdc3fca8874db20ecc8af",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149397392,
+        2149398292
+      ],
+      "range_sha256": "e9342fe313326e1efa037846393c85d8a60de2d50315f98299219894e3dab8b5",
+      "selector": "emi/etc/sisyou/00@0x801d3390",
+      "size": 900,
+      "target": "emi/etc/sisyou/00"
+    },
+    {
+      "address": 2149555172,
+      "case_id": "case-051",
+      "image": "out/binaries/emi/scenario/scena00/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "c5bda6ff8260b59a361a49f80720bb6942d9eed8d6497d3cc9d1d2b483c3089e",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149555172,
+        2149556152
+      ],
+      "range_sha256": "e3b79ababe4a42fc7776e5efd582608bef4d8ed93f34ab1017c3ccf9362e9da6",
+      "selector": "emi/scenario/scena00/00@0x801f9be4",
+      "size": 980,
+      "target": "emi/scenario/scena00/00"
+    },
+    {
+      "address": 2149429336,
+      "case_id": "case-053",
+      "image": "out/binaries/emi/battle/battle/03.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149429336,
+        2149430008
+      ],
+      "range_sha256": "6f2cc0eb4f2eb121ac54f6aea7ea7e0546c69c76b0bcf0b01a48511dde0a262b",
+      "selector": "emi/battle/battle/03@0x801db058",
+      "size": 672,
+      "target": "emi/battle/battle/03"
+    },
+    {
+      "address": 2148149984,
+      "case_id": "case-054",
+      "image": "out/binaries/emi/battle/battle/15.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148149984,
+        2148150640
+      ],
+      "range_sha256": "43a25a30345ba39d7c3d451763a8c18e6acb09087b524598b4e032cb517320de",
+      "selector": "emi/battle/battle/15@0x800a2ae0",
+      "size": 656,
+      "target": "emi/battle/battle/15"
+    },
+    {
+      "address": 2149521656,
+      "case_id": "case-055",
+      "image": "out/binaries/emi/etc/commu00/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a",
+      "load_address": 2149510144,
+      "payload_offset": 0,
+      "range": [
+        2149521656,
+        2149522172
+      ],
+      "range_sha256": "c2873bd0f2ae86341c08466e55e0fab55cbd52d7c3cd6c683c11e9b95667fe3b",
+      "selector": "emi/etc/commu00/00@0x801f18f8",
+      "size": 516,
+      "target": "emi/etc/commu00/00"
+    },
+    {
+      "address": 2149389580,
+      "case_id": "case-056",
+      "image": "out/binaries/emi/etc/game/01.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "4085bb55d18007389e57c8400eeb51be7026e17a10b33af1ae8a5665d5d381af",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149389580,
+        2149390044
+      ],
+      "range_sha256": "602ad22d6306e1e36eaf5eb4de41bc98b3b2ffee85c960f87573e615980e6076",
+      "selector": "emi/etc/game/01@0x801d150c",
+      "size": 464,
+      "target": "emi/etc/game/01"
+    },
+    {
+      "address": 2149415796,
+      "case_id": "case-057",
+      "image": "out/binaries/emi/etc/shop/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "b9b26c0d387ebbbaa211ed949806f76f5a3cc6ae891df39793ef12335c158219",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149415796,
+        2149416136
+      ],
+      "range_sha256": "8e077351517e8029904915e3eafac7916cf333feb3140a020f84e0bbef5c5957",
+      "selector": "emi/etc/shop/00@0x801d7b74",
+      "size": 340,
+      "target": "emi/etc/shop/00"
+    },
+    {
+      "address": 2149387376,
+      "case_id": "case-058",
+      "image": "out/binaries/emi/scenario/sce10eff/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "a40c9c496614c26fb8696627451d0d91773b7ada6168a01b569315ebdf745ba4",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149387376,
+        2149387876
+      ],
+      "range_sha256": "2fda3434b34c4197f853fb23c42c8813604ddf6cc3935673397759c1b635b8e6",
+      "selector": "emi/scenario/sce10eff/00@0x801d0c70",
+      "size": 500,
+      "target": "emi/scenario/sce10eff/00"
+    },
+    {
+      "address": 2149527068,
+      "case_id": "case-059",
+      "image": "out/binaries/emi/world00/area008/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "fc975f0e5af78455d3c6f073589d2662a81d9ca194585e840c75f0cac4f37d91",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149527068,
+        2149527332
+      ],
+      "range_sha256": "64bcd241bc451c34f73578a32790898728bda6b5e0604e900ea299e99984d857",
+      "selector": "emi/world00/area008/13@0x801f2e1c",
+      "size": 264,
+      "target": "emi/world00/area008/13"
+    },
+    {
+      "address": 2149527276,
+      "case_id": "case-060",
+      "image": "out/binaries/emi/world00/area016/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "8ea930afa24a36cc9ff3e801d698e8ff20a2fa252c6a43ae8ca22249e8b4147e",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149527276,
+        2149527648
+      ],
+      "range_sha256": "5df7d4a78dbc6f4dc330653077cb30211b1a412370839545049351d5dbc075f5",
+      "selector": "emi/world00/area016/13@0x801f2eec",
+      "size": 372,
+      "target": "emi/world00/area016/13"
+    },
+    {
+      "address": 2149531208,
+      "case_id": "case-061",
+      "image": "out/binaries/emi/world00/area024/14.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "fc5eaa1e7ea8b1127256ff2c13ff5d3c21c3cf978aaa3144c8521dabc14c4a8e",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149531208,
+        2149531992
+      ],
+      "range_sha256": "75df2c4b2ecf7db5fad6b0a7d3b4885ce44756c27c504639e5dd0f05746bf35c",
+      "selector": "emi/world00/area024/14@0x801f3e48",
+      "size": 784,
+      "target": "emi/world00/area024/14"
+    },
+    {
+      "address": 2149529932,
+      "case_id": "case-062",
+      "image": "out/binaries/emi/world00/area027/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "f2999018dc8e575c9d1758c699bd4f41431af2ed2bb2c8429d93a03d70a4be9b",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149529932,
+        2149530292
+      ],
+      "range_sha256": "3d337c570ae077624388c64fbc0f04c0c02723de37008b6555bb58fad4a2441a",
+      "selector": "emi/world00/area027/13@0x801f394c",
+      "size": 360,
+      "target": "emi/world00/area027/13"
+    },
+    {
+      "address": 2149531084,
+      "case_id": "case-063",
+      "image": "out/binaries/emi/world00/area032/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "a2bbf9d6fbfc5029e1b07e23c7a671bccb32804b6b1fba332347b19c5cec5716",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149531084,
+        2149531500
+      ],
+      "range_sha256": "850aad135dd582a622df8a5604b5b81e5a90d3a689c628ab9c8dd05677d90a07",
+      "selector": "emi/world00/area032/13@0x801f3dcc",
+      "size": 416,
+      "target": "emi/world00/area032/13"
+    },
+    {
+      "address": 2149322652,
+      "case_id": "case-064",
+      "image": "out/binaries/emi/etc/game/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "1663ff2e78134fe15f3cae6fb4074acf14b68b79cfa02be0c7651eaf6a1728ff",
+      "load_address": 2149144576,
+      "payload_offset": 0,
+      "range": [
+        2149322652,
+        2149323348
+      ],
+      "range_sha256": "2998410473c30a586db08041a94d835b44726b74dd7b47d1bada0812831cf5dc",
+      "selector": "emi/etc/game/00@0x801c0f9c",
+      "size": 696,
+      "target": "emi/etc/game/00"
+    },
+    {
+      "address": 2149387732,
+      "case_id": "case-065",
+      "image": "out/binaries/emi/etc/sisyou/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "42accff83b45c5ef99947f70a6c968fdf2a2a4afd0abdc3fca8874db20ecc8af",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149387732,
+        2149388460
+      ],
+      "range_sha256": "b33b3d13797f06580a55148c90693da174c31a52c2514838feeea2b8c3cb0a4a",
+      "selector": "emi/etc/sisyou/00@0x801d0dd4",
+      "size": 728,
+      "target": "emi/etc/sisyou/00"
+    },
+    {
+      "address": 2149551504,
+      "case_id": "case-066",
+      "image": "out/binaries/emi/scenario/scena00/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "c5bda6ff8260b59a361a49f80720bb6942d9eed8d6497d3cc9d1d2b483c3089e",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149551504,
+        2149552444
+      ],
+      "range_sha256": "6b1df6b07746b6dd079230832f4b973e7031335b348aeb866f7f33c810555f91",
+      "selector": "emi/scenario/scena00/00@0x801f8d90",
+      "size": 940,
+      "target": "emi/scenario/scena00/00"
+    },
+    {
+      "address": 2149421308,
+      "case_id": "case-067",
+      "image": "out/binaries/emi/world00/area030/04.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "d869b1540648c3fb98fe64cb9ec62a95b4f8082a111cfd15331a102b0d7a7dd2",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149421308,
+        2149421900
+      ],
+      "range_sha256": "5190e15c4cbb46510c6696810bb4a590d711b06e68d058b2063c7597c8405eaa",
+      "selector": "emi/world00/area030/04@0x801d90fc",
+      "size": 592,
+      "target": "emi/world00/area030/04"
+    },
+    {
+      "address": 2149450252,
+      "case_id": "case-068",
+      "image": "out/binaries/emi/battle/battle/03.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149450252,
+        2149450860
+      ],
+      "range_sha256": "4a8aa520733d05bb559bd93abdfe3a64e60cece30a0567978d2bf4db6f6a70bb",
+      "selector": "emi/battle/battle/03@0x801e020c",
+      "size": 608,
+      "target": "emi/battle/battle/03"
+    },
+    {
+      "address": 2148169364,
+      "case_id": "case-069",
+      "image": "out/binaries/emi/battle/battle/15.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148169364,
+        2148169912
+      ],
+      "range_sha256": "ffd4d60e189575bf53255e8a6d692029013284421487c0c4f9a582f042a0259c",
+      "selector": "emi/battle/battle/15@0x800a7694",
+      "size": 548,
+      "target": "emi/battle/battle/15"
+    },
+    {
+      "address": 2149511700,
+      "case_id": "case-070",
+      "image": "out/binaries/emi/etc/commu00/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a",
+      "load_address": 2149510144,
+      "payload_offset": 0,
+      "range": [
+        2149511700,
+        2149512088
+      ],
+      "range_sha256": "42fc6802e07ccfc86c2851806eac188b50846b4b88ae9b348150e2f57a7614eb",
+      "selector": "emi/etc/commu00/00@0x801ef214",
+      "size": 388,
+      "target": "emi/etc/commu00/00"
+    },
+    {
+      "address": 2149391104,
+      "case_id": "case-071",
+      "image": "out/binaries/emi/etc/game/01.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "4085bb55d18007389e57c8400eeb51be7026e17a10b33af1ae8a5665d5d381af",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149391104,
+        2149391436
+      ],
+      "range_sha256": "07ef54eded5373e8243101ae578dd6f7e1b6ed963eae0388bbad09dc085dc17e",
+      "selector": "emi/etc/game/01@0x801d1b00",
+      "size": 332,
+      "target": "emi/etc/game/01"
+    },
+    {
+      "address": 2149392484,
+      "case_id": "case-073",
+      "image": "out/binaries/emi/scenario/sce10eff/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "a40c9c496614c26fb8696627451d0d91773b7ada6168a01b569315ebdf745ba4",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149392484,
+        2149392780
+      ],
+      "range_sha256": "72940faf41837e49ecf07b32abc874bcea4bbf909af6c8a16d703bc676cc4067",
+      "selector": "emi/scenario/sce10eff/00@0x801d2064",
+      "size": 296,
+      "target": "emi/scenario/sce10eff/00"
+    },
+    {
+      "address": 2149533200,
+      "case_id": "case-074",
+      "image": "out/binaries/emi/world00/area016/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "8ea930afa24a36cc9ff3e801d698e8ff20a2fa252c6a43ae8ca22249e8b4147e",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149533200,
+        2149533504
+      ],
+      "range_sha256": "07ffc648646d40182a9a9b368a7ed2e165d33d398f0aff6555cdba1b380934da",
+      "selector": "emi/world00/area016/13@0x801f4610",
+      "size": 304,
+      "target": "emi/world00/area016/13"
+    },
+    {
+      "address": 2149529924,
+      "case_id": "case-075",
+      "image": "out/binaries/emi/world00/area024/14.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "fc5eaa1e7ea8b1127256ff2c13ff5d3c21c3cf978aaa3144c8521dabc14c4a8e",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149529924,
+        2149530596
+      ],
+      "range_sha256": "eb9470ed3ded15b253b3b2ebca1a74dcf83e8aa3cc32fc77ae557b985becca9b",
+      "selector": "emi/world00/area024/14@0x801f3944",
+      "size": 672,
+      "target": "emi/world00/area024/14"
+    },
+    {
+      "address": 2149528704,
+      "case_id": "case-076",
+      "image": "out/binaries/emi/world00/area027/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "f2999018dc8e575c9d1758c699bd4f41431af2ed2bb2c8429d93a03d70a4be9b",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149528704,
+        2149529056
+      ],
+      "range_sha256": "7b07cbf68e19bce29ca63bf754d9c7e75db77a32c581403d4844a7b474aea15b",
+      "selector": "emi/world00/area027/13@0x801f3480",
+      "size": 352,
+      "target": "emi/world00/area027/13"
+    },
+    {
+      "address": 2149529888,
+      "case_id": "case-077",
+      "image": "out/binaries/emi/world00/area032/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "a2bbf9d6fbfc5029e1b07e23c7a671bccb32804b6b1fba332347b19c5cec5716",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149529888,
+        2149530232
+      ],
+      "range_sha256": "dcadc73e51cfc474a767bd2dd491b4db87ed19c0bcf8a275c27112f3c5f74bb5",
+      "selector": "emi/world00/area032/13@0x801f3920",
+      "size": 344,
+      "target": "emi/world00/area032/13"
+    },
+    {
+      "address": 2149158060,
+      "case_id": "case-078",
+      "image": "out/binaries/emi/etc/game/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "1663ff2e78134fe15f3cae6fb4074acf14b68b79cfa02be0c7651eaf6a1728ff",
+      "load_address": 2149144576,
+      "payload_offset": 0,
+      "range": [
+        2149158060,
+        2149158684
+      ],
+      "range_sha256": "e6760b31be0d1efe241f82fb4010e3e33398f7c1ecea8963996e2dd03db724f7",
+      "selector": "emi/etc/game/00@0x80198cac",
+      "size": 624,
+      "target": "emi/etc/game/00"
+    },
+    {
+      "address": 2149388460,
+      "case_id": "case-079",
+      "image": "out/binaries/emi/etc/sisyou/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "42accff83b45c5ef99947f70a6c968fdf2a2a4afd0abdc3fca8874db20ecc8af",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149388460,
+        2149389052
+      ],
+      "range_sha256": "dfec4b4a1135bb568ce60fff943fab34894c7a7cb671b73af7c97cdff79161e1",
+      "selector": "emi/etc/sisyou/00@0x801d10ac",
+      "size": 592,
+      "target": "emi/etc/sisyou/00"
+    },
+    {
+      "address": 2149552860,
+      "case_id": "case-080",
+      "image": "out/binaries/emi/scenario/scena00/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "c5bda6ff8260b59a361a49f80720bb6942d9eed8d6497d3cc9d1d2b483c3089e",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149552860,
+        2149553732
+      ],
+      "range_sha256": "fd380c34e74314a65c96f737fabce49c72352f3094f47fa2d50af851a4ef5de1",
+      "selector": "emi/scenario/scena00/00@0x801f92dc",
+      "size": 872,
+      "target": "emi/scenario/scena00/00"
+    },
+    {
+      "address": 2149414788,
+      "case_id": "case-081",
+      "image": "out/binaries/emi/world00/area030/04.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "d869b1540648c3fb98fe64cb9ec62a95b4f8082a111cfd15331a102b0d7a7dd2",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149414788,
+        2149415324
+      ],
+      "range_sha256": "b188e0c0ea24c80540473d6de277558b63f2edb9e07aecf3cd0b91a994473262",
+      "selector": "emi/world00/area030/04@0x801d7784",
+      "size": 536,
+      "target": "emi/world00/area030/04"
+    },
+    {
+      "address": 2149463608,
+      "case_id": "case-082",
+      "image": "out/binaries/emi/battle/battle/03.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149463608,
+        2149464124
+      ],
+      "range_sha256": "d66ae3bfe09b921025732de888a7eb075dcc24417d1181b4c4d8aacc632674a9",
+      "selector": "emi/battle/battle/03@0x801e3638",
+      "size": 516,
+      "target": "emi/battle/battle/03"
+    },
+    {
+      "address": 2148192424,
+      "case_id": "case-083",
+      "image": "out/binaries/emi/battle/battle/15.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148192424,
+        2148192876
+      ],
+      "range_sha256": "0846d17d8acab676bfb1ae295c109672608509f424b28c47c250c4943705934e",
+      "selector": "emi/battle/battle/15@0x800ad0a8",
+      "size": 452,
+      "target": "emi/battle/battle/15"
+    },
+    {
+      "address": 2149524388,
+      "case_id": "case-084",
+      "image": "out/binaries/emi/etc/commu00/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a",
+      "load_address": 2149510144,
+      "payload_offset": 0,
+      "range": [
+        2149524388,
+        2149524732
+      ],
+      "range_sha256": "7e4f4b4aeebbcf9d21e7e4c32af438913ae10becfe8a635a248a8f61738302fd",
+      "selector": "emi/etc/commu00/00@0x801f23a4",
+      "size": 344,
+      "target": "emi/etc/commu00/00"
+    },
+    {
+      "address": 2149390296,
+      "case_id": "case-085",
+      "image": "out/binaries/emi/etc/game/01.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "4085bb55d18007389e57c8400eeb51be7026e17a10b33af1ae8a5665d5d381af",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149390296,
+        2149390568
+      ],
+      "range_sha256": "354dd76006c9d312e08c29a314181b412bd2386d6a4fe8e7a168e24c87898ad9",
+      "selector": "emi/etc/game/01@0x801d17d8",
+      "size": 272,
+      "target": "emi/etc/game/01"
+    },
+    {
+      "address": 2149512808,
+      "case_id": "case-086",
+      "image": "out/binaries/emi/bmagic/magic131/03.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "c42833816d38a5747d41550f2750653aca9b30258505f80ec06dd8c0917b18e1",
+      "load_address": 2149510144,
+      "payload_offset": 0,
+      "range": [
+        2149512808,
+        2149512876
+      ],
+      "range_sha256": "ad8cdc776b09d2998a16954eff31a9eddeb3e073c0731b6e0f596f2ad613cc2b",
+      "selector": "emi/bmagic/magic131/03@0x801ef668",
+      "size": 68,
+      "target": "emi/bmagic/magic131/03"
+    },
+    {
+      "address": 2149543736,
+      "case_id": "case-087",
+      "image": "out/binaries/emi/scenario/scena15/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "5cd3be9ecd3bffd4648556109377c58f767daadd5eff6a2e23c785141cf65473",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149543736,
+        2149543804
+      ],
+      "range_sha256": "941c90d1a8450c91778db72e236858c39ddffbefa99390710f7a78d6f48a66d5",
+      "selector": "emi/scenario/scena15/00@0x801f6f38",
+      "size": 68,
+      "target": "emi/scenario/scena15/00"
+    },
+    {
+      "address": 2149543116,
+      "case_id": "case-088",
+      "image": "out/binaries/emi/scenario/scena16/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "6312b5a09f8b70a7e49a43d148782c0bb628ea5ef6101e9a10c353eadbad943c",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149543116,
+        2149543312
+      ],
+      "range_sha256": "732fd78147422d6f752c911581b3d576d9812f379906bdd7119826ccad6b29c2",
+      "selector": "emi/scenario/scena16/00@0x801f6ccc",
+      "size": 196,
+      "target": "emi/scenario/scena16/00"
+    },
+    {
+      "address": 2149543172,
+      "case_id": "case-089",
+      "image": "out/binaries/emi/scenario/scena18/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "c668b29337371c8b6efb280954fbcfc5288e9a8c98798ea82a2d7e89fbd712b9",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149543172,
+        2149543248
+      ],
+      "range_sha256": "09e9a977400a7bf695eb45651aa7b59abade5b4b9326d53a8b732541dfbebeb2",
+      "selector": "emi/scenario/scena18/00@0x801f6d04",
+      "size": 76,
+      "target": "emi/scenario/scena18/00"
+    },
+    {
+      "address": 2149543076,
+      "case_id": "case-090",
+      "image": "out/binaries/emi/scenario/scena19/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "7caaa76c772c55419494a9c65e19fd3e4478d765b994648ad06ba1003c963180",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149543076,
+        2149543184
+      ],
+      "range_sha256": "635d5704243b98247d68cf13ba3f72231a8b2234680d65d6ac023a87efd901ac",
+      "selector": "emi/scenario/scena19/00@0x801f6ca4",
+      "size": 108,
+      "target": "emi/scenario/scena19/00"
+    },
+    {
+      "address": 2149526532,
+      "case_id": "case-091",
+      "image": "out/binaries/emi/world03/area127/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "6d086c57545d4d47ca25c8547654b218a5ca05d9381807d5bb8cab887c6059c3",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149526532,
+        2149526644
+      ],
+      "range_sha256": "6778e47725fe089b459035257a765af9d9bfe39e60b1978825385621ebc6f227",
+      "selector": "emi/world03/area127/13@0x801f2c04",
+      "size": 112,
+      "target": "emi/world03/area127/13"
+    },
+    {
+      "address": 2149526876,
+      "case_id": "case-092",
+      "image": "out/binaries/emi/world00/area026/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "9100e0669a3ace33bddcc504ae0734fca4b8f0d33e26245f69d382cfb1b4745b",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149526876,
+        2149527044
+      ],
+      "range_sha256": "4339ee78feed111f6a7d09681b3f2139b5ca6c79e827d4584493ab9c941041d7",
+      "selector": "emi/world00/area026/13@0x801f2d5c",
+      "size": 168,
+      "target": "emi/world00/area026/13"
+    },
+    {
+      "address": 2149526656,
+      "case_id": "case-093",
+      "image": "out/binaries/emi/world00/area028/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "638f7c7ad30fbf119f4268bd6df39cecb2610be1b94c41910f3357394605d03a",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149526656,
+        2149526812
+      ],
+      "range_sha256": "588959c70df3812c51b160f2e5884a0eaef85b8dd000a54012fbbca921c7c7a1",
+      "selector": "emi/world00/area028/13@0x801f2c80",
+      "size": 156,
+      "target": "emi/world00/area028/13"
+    },
+    {
+      "address": 2148487240,
+      "case_id": "case-094",
+      "image": "out/binaries/emi/world00/area030/05.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "9e8a6a98911ad64ea8c22d59ee39ae551f82da004d4e1b73fca8d1ab67ea9145",
+      "load_address": 2148487168,
+      "payload_offset": 0,
+      "range": [
+        2148487240,
+        2148487348
+      ],
+      "range_sha256": "73b42811cfde37c72c4ede732b54299b979ddf5daa9091f943e47fb0d429ba94",
+      "selector": "emi/world00/area030/05@0x800f5048",
+      "size": 108,
+      "target": "emi/world00/area030/05"
+    },
+    {
+      "address": 2149526820,
+      "case_id": "case-095",
+      "image": "out/binaries/emi/world00/area008/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "fc975f0e5af78455d3c6f073589d2662a81d9ca194585e840c75f0cac4f37d91",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149526820,
+        2149527068
+      ],
+      "range_sha256": "5c900bbe4facb23cb578d803ef4238dae056ee9f9535a2ded0847810a1fb00c7",
+      "selector": "emi/world00/area008/13@0x801f2d24",
+      "size": 248,
+      "target": "emi/world00/area008/13"
+    },
+    {
+      "address": 2149457032,
+      "case_id": "case-096",
+      "image": "out/binaries/emi/etc/shop/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "b9b26c0d387ebbbaa211ed949806f76f5a3cc6ae891df39793ef12335c158219",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149457032,
+        2149457284
+      ],
+      "range_sha256": "476dcc4ad669ae92b3812b0e6b2a71f7151f4bffa070da17e8d5e09241ae9cb6",
+      "selector": "emi/etc/shop/00@0x801e1c88",
+      "size": 252,
+      "target": "emi/etc/shop/00"
+    },
+    {
+      "address": 2149388000,
+      "case_id": "case-097",
+      "image": "out/binaries/emi/scenario/sce10eff/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "a40c9c496614c26fb8696627451d0d91773b7ada6168a01b569315ebdf745ba4",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149388000,
+        2149388204
+      ],
+      "range_sha256": "930e8794a6bcd68e8c9d566396a5898392045a5246a23b47d98b0a03082c5198",
+      "selector": "emi/scenario/sce10eff/00@0x801d0ee0",
+      "size": 204,
+      "target": "emi/scenario/sce10eff/00"
+    },
+    {
+      "address": 2149529640,
+      "case_id": "case-098",
+      "image": "out/binaries/emi/world00/area016/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "8ea930afa24a36cc9ff3e801d698e8ff20a2fa252c6a43ae8ca22249e8b4147e",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149529640,
+        2149529896
+      ],
+      "range_sha256": "14caaeb544a86e10194edd439f23b14ae8f572111d0df7732b3a2dc601bfce10",
+      "selector": "emi/world00/area016/13@0x801f3828",
+      "size": 256,
+      "target": "emi/world00/area016/13"
+    },
+    {
+      "address": 2149530972,
+      "case_id": "case-099",
+      "image": "out/binaries/emi/world00/area024/14.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "fc5eaa1e7ea8b1127256ff2c13ff5d3c21c3cf978aaa3144c8521dabc14c4a8e",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149530972,
+        2149531208
+      ],
+      "range_sha256": "c0b454632e30b83bfe7b4a90245cab1f10c636fef408bec9e006e3d70241c0f3",
+      "selector": "emi/world00/area024/14@0x801f3d5c",
+      "size": 236,
+      "target": "emi/world00/area024/14"
+    },
+    {
+      "address": 2149528240,
+      "case_id": "case-100",
+      "image": "out/binaries/emi/world00/area027/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "f2999018dc8e575c9d1758c699bd4f41431af2ed2bb2c8429d93a03d70a4be9b",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149528240,
+        2149528488
+      ],
+      "range_sha256": "30b3e65012abaf4d56765519bb9620c3dff4afaeca4b62f562d813cfdf3fac75",
+      "selector": "emi/world00/area027/13@0x801f32b0",
+      "size": 248,
+      "target": "emi/world00/area027/13"
+    },
+    {
+      "address": 2149526600,
+      "case_id": "case-101",
+      "image": "out/binaries/emi/world00/area032/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "a2bbf9d6fbfc5029e1b07e23c7a671bccb32804b6b1fba332347b19c5cec5716",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149526600,
+        2149526808
+      ],
+      "range_sha256": "9ccb2b7a75a37b48214290cc8f3738e61733ef342d7bbb0d419c9168a0db68df",
+      "selector": "emi/world00/area032/13@0x801f2c48",
+      "size": 208,
+      "target": "emi/world00/area032/13"
+    },
+    {
+      "address": 2149423108,
+      "case_id": "case-102",
+      "image": "out/binaries/emi/battle/battle/03.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149423108,
+        2149423360
+      ],
+      "range_sha256": "fd66d9114358d678f84d8b62b11b9f364eefc9d843ed9d5ebd8b18219a741294",
+      "selector": "emi/battle/battle/03@0x801d9804",
+      "size": 252,
+      "target": "emi/battle/battle/03"
+    },
+    {
+      "address": 2148193492,
+      "case_id": "case-103",
+      "image": "out/binaries/emi/battle/battle/15.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140",
+      "load_address": 2148100096,
+      "payload_offset": 0,
+      "range": [
+        2148193492,
+        2148193736
+      ],
+      "range_sha256": "d819bc53f88d6e82dda16398dcbbf33edea26f5cdc5b3f40c1ac7fc3e1df427c",
+      "selector": "emi/battle/battle/15@0x800ad4d4",
+      "size": 244,
+      "target": "emi/battle/battle/15"
+    },
+    {
+      "address": 2149519632,
+      "case_id": "case-104",
+      "image": "out/binaries/emi/etc/commu00/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a",
+      "load_address": 2149510144,
+      "payload_offset": 0,
+      "range": [
+        2149519632,
+        2149519876
+      ],
+      "range_sha256": "be40d25f0e10293df69bc409f250ef4dee1f32ccd58365d41ce2b76c2dac4668",
+      "selector": "emi/etc/commu00/00@0x801f1110",
+      "size": 244,
+      "target": "emi/etc/commu00/00"
+    },
+    {
+      "address": 2149218052,
+      "case_id": "case-105",
+      "image": "out/binaries/emi/etc/game/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "1663ff2e78134fe15f3cae6fb4074acf14b68b79cfa02be0c7651eaf6a1728ff",
+      "load_address": 2149144576,
+      "payload_offset": 0,
+      "range": [
+        2149218052,
+        2149218308
+      ],
+      "range_sha256": "c879b96200f61318903281aee5ec2fbfe4a0a778193bbd38324768192c8cd9ee",
+      "selector": "emi/etc/game/00@0x801a7704",
+      "size": 256,
+      "target": "emi/etc/game/00"
+    },
+    {
+      "address": 2149390044,
+      "case_id": "case-106",
+      "image": "out/binaries/emi/etc/game/01.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "4085bb55d18007389e57c8400eeb51be7026e17a10b33af1ae8a5665d5d381af",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149390044,
+        2149390296
+      ],
+      "range_sha256": "40bc01a0a0f515a82f35c465b1494fc3c91da9fedd44d20fa412ceeab7e02bbf",
+      "selector": "emi/etc/game/01@0x801d16dc",
+      "size": 252,
+      "target": "emi/etc/game/01"
+    },
+    {
+      "address": 2149566488,
+      "case_id": "case-108",
+      "image": "out/binaries/emi/scenario/scena00/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "c5bda6ff8260b59a361a49f80720bb6942d9eed8d6497d3cc9d1d2b483c3089e",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149566488,
+        2149566708
+      ],
+      "range_sha256": "c6f15a5a6331dfe296f80401baf580c5e4c0c395275b624f577fb4e286ad5f9e",
+      "selector": "emi/scenario/scena00/00@0x801fc818",
+      "size": 220,
+      "target": "emi/scenario/scena00/00"
+    },
+    {
+      "address": 2149407884,
+      "case_id": "case-109",
+      "image": "out/binaries/emi/world00/area030/04.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "d869b1540648c3fb98fe64cb9ec62a95b4f8082a111cfd15331a102b0d7a7dd2",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149407884,
+        2149408136
+      ],
+      "range_sha256": "67cf36d6fd37193c5c234b4e71fe039bba04980a40085c6749243486bb0c29e1",
+      "selector": "emi/world00/area030/04@0x801d5c8c",
+      "size": 252,
+      "target": "emi/world00/area030/04"
+    },
+    {
+      "address": 2149545976,
+      "case_id": "case-110",
+      "image": "out/binaries/emi/scenario/scena15/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "5cd3be9ecd3bffd4648556109377c58f767daadd5eff6a2e23c785141cf65473",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149545976,
+        2149546044
+      ],
+      "range_sha256": "4332bad07aded1169c10b369ec8b78b15f4876cc3ae9def276201f4c7ce3d0b4",
+      "selector": "emi/scenario/scena15/00@0x801f77f8",
+      "size": 68,
+      "target": "emi/scenario/scena15/00"
+    },
+    {
+      "address": 2149548024,
+      "case_id": "case-111",
+      "image": "out/binaries/emi/scenario/scena04/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "cb0ff0c46ea33d5c9eef07493b7b2c2673278dbb97373c3eb8f77b8adfdbcb9f",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149548024,
+        2149548084
+      ],
+      "range_sha256": "db85e3de018dfaed4bda829f64166d36575b4710c36ecda14db799a0e125c776",
+      "selector": "emi/scenario/scena04/00@0x801f7ff8",
+      "size": 60,
+      "target": "emi/scenario/scena04/00"
+    },
+    {
+      "address": 2149526532,
+      "case_id": "case-112",
+      "image": "out/binaries/emi/world02/area093/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "23a3be7ec4dc5490f06066016b3d19604f71b073fd59620c8ff0ac6309e674bd",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149526532,
+        2149526596
+      ],
+      "range_sha256": "ce74ede483edff2ead48abfdac0fe313dd6cd23ff5001eed5d1f9735fc082643",
+      "selector": "emi/world02/area093/13@0x801f2c04",
+      "size": 64,
+      "target": "emi/world02/area093/13"
+    },
+    {
+      "address": 2149515640,
+      "case_id": "case-113",
+      "image": "out/binaries/emi/bmagic/magic131/03.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "c42833816d38a5747d41550f2750653aca9b30258505f80ec06dd8c0917b18e1",
+      "load_address": 2149510144,
+      "payload_offset": 0,
+      "range": [
+        2149515640,
+        2149515688
+      ],
+      "range_sha256": "aa18d81502c09d3139474b74ac346c3d57a7bf9915e74ea929e59346cd7d70ff",
+      "selector": "emi/bmagic/magic131/03@0x801f0178",
+      "size": 48,
+      "target": "emi/bmagic/magic131/03"
+    },
+    {
+      "address": 2149543056,
+      "case_id": "case-114",
+      "image": "out/binaries/emi/scenario/scena16/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "6312b5a09f8b70a7e49a43d148782c0bb628ea5ef6101e9a10c353eadbad943c",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149543056,
+        2149543116
+      ],
+      "range_sha256": "73f1b65915bc3d20fee2fcb91ed3cda0d50be4ee8dcd5199c8138161fba4f11b",
+      "selector": "emi/scenario/scena16/00@0x801f6c90",
+      "size": 60,
+      "target": "emi/scenario/scena16/00"
+    },
+    {
+      "address": 2149543084,
+      "case_id": "case-115",
+      "image": "out/binaries/emi/scenario/scena18/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "c668b29337371c8b6efb280954fbcfc5288e9a8c98798ea82a2d7e89fbd712b9",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149543084,
+        2149543148
+      ],
+      "range_sha256": "f7d94d76f78828614346bfb09bb2119d7c4500d895c8d4774d0e45aa8a71c7e1",
+      "selector": "emi/scenario/scena18/00@0x801f6cac",
+      "size": 64,
+      "target": "emi/scenario/scena18/00"
+    },
+    {
+      "address": 2149543184,
+      "case_id": "case-116",
+      "image": "out/binaries/emi/scenario/scena19/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "7caaa76c772c55419494a9c65e19fd3e4478d765b994648ad06ba1003c963180",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149543184,
+        2149543248
+      ],
+      "range_sha256": "fa7e6394d418646ddac961dca707ea4263aefd3228ae69e9fb5cb093f69bc403",
+      "selector": "emi/scenario/scena19/00@0x801f6d10",
+      "size": 64,
+      "target": "emi/scenario/scena19/00"
+    },
+    {
+      "address": 2149572588,
+      "case_id": "case-117",
+      "image": "out/binaries/emi/scenario/scena15/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "5cd3be9ecd3bffd4648556109377c58f767daadd5eff6a2e23c785141cf65473",
+      "load_address": 2149542912,
+      "payload_offset": 0,
+      "range": [
+        2149572588,
+        2149572644
+      ],
+      "range_sha256": "32ff7398400dcdb68c39d1aaa0c12f1ba23fb2da15d15b0ab56ad83502424d22",
+      "selector": "emi/scenario/scena15/00@0x801fdfec",
+      "size": 56,
+      "target": "emi/scenario/scena15/00"
+    },
+    {
+      "address": 2149527644,
+      "case_id": "case-118",
+      "image": "out/binaries/emi/world00/area026/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "9100e0669a3ace33bddcc504ae0734fca4b8f0d33e26245f69d382cfb1b4745b",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149527644,
+        2149527708
+      ],
+      "range_sha256": "108b2c675bb23c6211643a2ff5fbf9b079e929a2f860d2748f46cb73095b82d5",
+      "selector": "emi/world00/area026/13@0x801f305c",
+      "size": 64,
+      "target": "emi/world00/area026/13"
+    },
+    {
+      "address": 2149526600,
+      "case_id": "case-119",
+      "image": "out/binaries/emi/world00/area028/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "638f7c7ad30fbf119f4268bd6df39cecb2610be1b94c41910f3357394605d03a",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149526600,
+        2149526656
+      ],
+      "range_sha256": "1dc35bc19dffe80bbce1e935ed0d1d14e4a070b48a375d45849bb0adfe2e05c1",
+      "selector": "emi/world00/area028/13@0x801f2c48",
+      "size": 56,
+      "target": "emi/world00/area028/13"
+    },
+    {
+      "address": 2148487180,
+      "case_id": "case-120",
+      "image": "out/binaries/emi/world00/area030/05.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "9e8a6a98911ad64ea8c22d59ee39ae551f82da004d4e1b73fca8d1ab67ea9145",
+      "load_address": 2148487168,
+      "payload_offset": 0,
+      "range": [
+        2148487180,
+        2148487240
+      ],
+      "range_sha256": "9bc11ebdb242ebff6423ff72d0a6355bc7e850d19d1ade3779bca5e6b20975d5",
+      "selector": "emi/world00/area030/05@0x800f500c",
+      "size": 60,
+      "target": "emi/world00/area030/05"
+    },
+    {
+      "address": 2149530280,
+      "case_id": "case-121",
+      "image": "out/binaries/emi/world00/area008/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "fc975f0e5af78455d3c6f073589d2662a81d9ca194585e840c75f0cac4f37d91",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149530280,
+        2149530344
+      ],
+      "range_sha256": "bf84b11ae357b950201fdefc97d621789fc95e71c798f4e2c5bd6f202dea21a8",
+      "selector": "emi/world00/area008/13@0x801f3aa8",
+      "size": 64,
+      "target": "emi/world00/area008/13"
+    },
+    {
+      "address": 2149460360,
+      "case_id": "case-122",
+      "image": "out/binaries/emi/etc/shop/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "b9b26c0d387ebbbaa211ed949806f76f5a3cc6ae891df39793ef12335c158219",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149460360,
+        2149460424
+      ],
+      "range_sha256": "e93857c7dfd438f9ef817614f2928db6f84d3772540ac91ef915c4f398c76236",
+      "selector": "emi/etc/shop/00@0x801e2988",
+      "size": 64,
+      "target": "emi/etc/shop/00"
+    },
+    {
+      "address": 2149387876,
+      "case_id": "case-123",
+      "image": "out/binaries/emi/scenario/sce10eff/00.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "a40c9c496614c26fb8696627451d0d91773b7ada6168a01b569315ebdf745ba4",
+      "load_address": 2149387264,
+      "payload_offset": 0,
+      "range": [
+        2149387876,
+        2149387932
+      ],
+      "range_sha256": "6d3dd51c1ffba9112ed8d47b0a56dbb7f04bf218cacf67452672edb141c71094",
+      "selector": "emi/scenario/sce10eff/00@0x801d0e64",
+      "size": 56,
+      "target": "emi/scenario/sce10eff/00"
+    },
+    {
+      "address": 2149528672,
+      "case_id": "case-124",
+      "image": "out/binaries/emi/world00/area016/13.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "8ea930afa24a36cc9ff3e801d698e8ff20a2fa252c6a43ae8ca22249e8b4147e",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149528672,
+        2149528736
+      ],
+      "range_sha256": "8221570b892515f3260dfa5b4dbd34c31d16f89c31eeb4cb08d49867b792e40f",
+      "selector": "emi/world00/area016/13@0x801f3460",
+      "size": 64,
+      "target": "emi/world00/area016/13"
+    },
+    {
+      "address": 2149526964,
+      "case_id": "case-125",
+      "image": "out/binaries/emi/world00/area024/14.bin",
+      "image_format": "raw-payload",
+      "image_sha256": "fc5eaa1e7ea8b1127256ff2c13ff5d3c21c3cf978aaa3144c8521dabc14c4a8e",
+      "load_address": 2149526528,
+      "payload_offset": 0,
+      "range": [
+        2149526964,
+        2149527000
+      ],
+      "range_sha256": "d88a8804aa676b2dd304c499cc9e686bc05cc3313bf563cd2e501af9914981b2",
+      "selector": "emi/world00/area024/14@0x801f2db4",
+      "size": 36,
+      "target": "emi/world00/area024/14"
+    }
+  ],
+  "references": {
+    "case-001": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "bootNoop",
+      "signature": "void bootNoop(void)",
+      "source": "src/bof3/boot/bootNoop.c",
+      "source_sha256": "6aea97254c8d62e22c8f3a19a1333f2a8d66e0e8ed81e1db81112a4b90107dc5",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-002": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "bootMainLoop",
+      "signature": "void bootMainLoop(void)",
+      "source": "src/bof3/boot/bootMainLoop.c",
+      "source_sha256": "00e0c24cde27fc4e7d736abf10709f8c268aeb6de63b9841bc346911245d761c",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-003": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "initBootRuntime",
+      "signature": "void initBootRuntime(void)",
+      "source": "src/bof3/boot/initBootRuntime.c",
+      "source_sha256": "e07ef60ccc33738beab4f3e732d409f22966fdc409141a234722ecb62f6413e5",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-004": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "initBootDiscEvents",
+      "signature": "void initBootDiscEvents(void)",
+      "source": "src/bof3/boot/initBootDiscEvents.c",
+      "source_sha256": "2b5e5b0db55b560fc78be8a7ef10b9314bbf77ee7823848c4efc947dc86b80a0",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-005": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "initBootDisplayEnvs",
+      "signature": "void initBootDisplayEnvs(void)",
+      "source": "src/bof3/boot/initBootDisplayEnvs.c",
+      "source_sha256": "dcfeff1d87dc943f4dc2aab131409eff4812972df6e0cfef34e57eed0244430d",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-006": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "clearBootOtEntry",
+      "signature": "void clearBootOtEntry(u8* work)",
+      "source": "src/bof3/boot/clearBootOtEntry.c",
+      "source_sha256": "3c5c6252e3a53575b45e614c51e4e33e3f32942a84f1181bf2ee16ac794ce871",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-007": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "runLogoExe",
+      "signature": "void runLogoExe(void)",
+      "source": "src/bof3/boot/runLogoExe.c",
+      "source_sha256": "db0746ec1008d9605778f9ea58f7ea508647770b60a4d1ff617261510c4ce917",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-008": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "linkRenderOtPackets",
+      "signature": "void linkRenderOtPackets(void)",
+      "source": "src/bof3/boot/linkRenderOtPackets.c",
+      "source_sha256": "212ad5f642708da00b1983af3d4c7c680d502fc3acec7868873e01e803a8669a",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-009": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "captureBootVsync",
+      "signature": "void captureBootVsync(void)",
+      "source": "src/bof3/boot/captureBootVsync.c",
+      "source_sha256": "b778888c8922f84130f13ced3ea3295459159b14a85c80b80a57988e47a25686",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-010": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "openBootEventSet",
+      "signature": "void openBootEventSet(void)",
+      "source": "src/bof3/boot/openBootEventSet.c",
+      "source_sha256": "0edc35c71b2a5ed1205e520443e00266e31cc067fbcc873015ac70bad179b40d",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-011": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "closeCallbackSlot",
+      "signature": "void closeCallbackSlot(s32 slot_index)",
+      "source": "src/bof3/callback/closeCallbackSlot.c",
+      "source_sha256": "e1326b5773974d6b3829655e3160cb346fe1ec65425eef55a3c3198ba1a8b59e",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-012": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "initEmiLoader",
+      "signature": "void initEmiLoader(void)",
+      "source": "src/bof3/io/initEmiLoader.c",
+      "source_sha256": "27bacb3e3fa7c392980182a56022735aa5fc04e252ebdfa95cc0149024779791",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-013": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "initStreamSlot",
+      "signature": "void initStreamSlot(u32 slot_id)",
+      "source": "src/bof3/io/initStreamSlot.c",
+      "source_sha256": "01f932b41fe113091ca6fb3b1aaad75d14b905f26c5947e21b65b0e3477caa8e",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-014": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "beginEmiLoaderTransfer",
+      "signature": "void beginEmiLoaderTransfer(void)",
+      "source": "src/bof3/io/beginEmiLoaderTransfer.c",
+      "source_sha256": "6a47236c73846c9cb81229cd8655e389c6c200fec744a4f89e97e54fe2a7849a",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-015": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "emiCdSyncCallback",
+      "signature": "void emiCdSyncCallback(s32 status, u8* result)",
+      "source": "src/bof3/io/emiCdSyncCallback.c",
+      "source_sha256": "54fe56ebce5d4237616ea234fda474b069dabf3cb83264590b8a3d69fd026e5a",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-016": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "validateEmiLoaderHeader",
+      "signature": "void validateEmiLoaderHeader(void)",
+      "source": "src/bof3/io/validateEmiLoaderHeader.c",
+      "source_sha256": "b6e29f79bee1dbd857f870e6ff0757bb2b9633d103f87d9c18849bb14f6d941a",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-017": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "copyEmiType0Payload",
+      "signature": "void copyEmiType0Payload(void)",
+      "source": "src/bof3/io/copyEmiType0Payload.c",
+      "source_sha256": "a20d18e6019c21ceb0877104493b819755c34c1d23726ba38a8f6a3f8b084681",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-018": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "recordEmiPackedDispatch",
+      "signature": "void recordEmiPackedDispatch(void)",
+      "source": "src/bof3/io/recordEmiPackedDispatch.c",
+      "source_sha256": "66f8c030470b8c122630d4b9312232e9811838b8d582a66f963b129aac97adaa",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-019": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "startEmiEntryTransfer",
+      "signature": "void startEmiEntryTransfer(void)",
+      "source": "src/bof3/io/startEmiEntryTransfer.c",
+      "source_sha256": "1d987427060831e019ef773af0874229900897cab62b766f79b79a1bfa121a90",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-020": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "selectPrimaryEmiDestination",
+      "signature": "void selectPrimaryEmiDestination(void)",
+      "source": "src/bof3/io/selectPrimaryEmiDestination.c",
+      "source_sha256": "9931c7020c38100c0d733b1354732c3dc1a7e3a3aa3f3a82cdaaefba99ab4103",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-021": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "selectAlternateEmiDestination",
+      "signature": "void selectAlternateEmiDestination(void)",
+      "source": "src/bof3/io/selectAlternateEmiDestination.c",
+      "source_sha256": "d257b4665754711457760a8ab2bbf302d4c2fe1de25d8f01f8af6a840f7cfcaa",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-022": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "copyEmiTransferChunk",
+      "signature": "void copyEmiTransferChunk(void)",
+      "source": "src/bof3/io/copyEmiTransferChunk.c",
+      "source_sha256": "152ef0ec561029b9d9fdd8c1102fdd26065f8e5fab8ca2785203bee2b6934b13",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-023": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "selectEmiLoaderMode6",
+      "signature": "void selectEmiLoaderMode6(void)",
+      "source": "src/bof3/io/selectEmiLoaderMode6.c",
+      "source_sha256": "30721aeb8ac9afd1a742492315d07cee4dc6948f392d8604c3d81cf0c84cfeff",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-024": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "isEmiLoaderReady",
+      "signature": "s32 isEmiLoaderReady(void)",
+      "source": "src/bof3/io/isEmiLoaderReady.c",
+      "source_sha256": "dfbf3961d6a66a91db7d18dfde4c47f7d2ef9f808f771767f925002d10a84393",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-025": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "adjustBoundedCounter",
+      "signature": "s32 adjustBoundedCounter(u8* counter, s32 delta)",
+      "source": "src/bof3/equipment/adjustBoundedCounter.c",
+      "source_sha256": "1ab15da369a4d158ebbbd33525b07484113f4383ba71647fd16d3f420873ef5e",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-026": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "getEquipRecordBase",
+      "signature": "void* getEquipRecordBase(s32 item_type, s32 item_index)",
+      "source": "src/bof3/equipment/getEquipRecordBase.c",
+      "source_sha256": "4f3b72f7bdd597b7c2c00ad29959046288f6e554ac2b81a11e587be8c7ee8ad1",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-027": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "func_80166CB0",
+      "signature": "u8 func_80166CB0(s16 arg0, s16 arg1)",
+      "source": "src/bof3/world/func_80166CB0.c",
+      "source_sha256": "48f7696453ed3a4da7cd7440abb8a3124a79410d19b13069bf9f2859431aff75",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-028": {
+      "manifest": "config/targets/exe/slus_004_22/target.toml",
+      "manifest_sha256": "99613eac3653f214748bb6ee5e0abcbf3cdf56f6e80e26a0e6e7224650690ca6",
+      "name": "dequeueIntRpIrq",
+      "signature": "int dequeueIntRpIrq(void)",
+      "source": "src/bof3/callback/dequeueIntRpIrq.c",
+      "source_sha256": "05943b86ad8a97754548908d87a6ee599bd0104e0e4f172e05fcfc19a87c3b15",
+      "splat": "config/targets/exe/slus_004_22/splat.yaml",
+      "splat_sha256": "ed89e84bc0703f4a6f79035d11787dd4fa8c293c46fc2f05f0fb8546c9a98666"
+    },
+    "case-030": {
+      "manifest": "config/targets/emi/etc/sisyou/00/target.toml",
+      "manifest_sha256": "2f6fce5861a9f72f451dbff0c3e9030b90bdc9c659d5c2563f5b38f4d0f8a6da",
+      "name": "func_801D2CA4",
+      "signature": "void func_801D2CA4(void)",
+      "source": "src/bof3/ui/func_801D2CA4_sisyou00.c",
+      "source_sha256": "2537475f23b2c2a938b1eb0a454a3510917ac8e43938269fe694c8d4a675fbfd",
+      "splat": "config/targets/emi/etc/sisyou/00/splat.yaml",
+      "splat_sha256": "52172e0abfe44b0e44c276add0fcccb048e40efde698eff65dea33c0783f7e3f"
+    },
+    "case-031": {
+      "manifest": "config/targets/emi/scenario/scena00/00/target.toml",
+      "manifest_sha256": "8d90a30d26f676695b746a2e811fb462ed07210a47a7fb95e9c7070a14072783",
+      "name": "func_801FA27C",
+      "signature": "void func_801FA27C(void)",
+      "source": "src/bof3/scenario/func_801FA27C.c",
+      "source_sha256": "ed7183e8d3d27afc09fe50896b8bface7076f4d8b46a2fb7f5eddd67fccc21ce",
+      "splat": "config/targets/emi/scenario/scena00/00/splat.yaml",
+      "splat_sha256": "add5163d03e22ea80ac7b54adf33ee3369587b1ea4b29f8da13afb8a59b22c3b"
+    },
+    "case-034": {
+      "manifest": "config/targets/emi/scenario/scena00/00/target.toml",
+      "manifest_sha256": "8d90a30d26f676695b746a2e811fb462ed07210a47a7fb95e9c7070a14072783",
+      "name": "func_801FB204",
+      "signature": "void func_801FB204(void)",
+      "source": "src/bof3/scenario/func_801FB204.c",
+      "source_sha256": "8f807307068fefcaf2e7bfe8ffbbe1c5595d91f12d7fd5f19f7c930a1f8f926d",
+      "splat": "config/targets/emi/scenario/scena00/00/splat.yaml",
+      "splat_sha256": "add5163d03e22ea80ac7b54adf33ee3369587b1ea4b29f8da13afb8a59b22c3b"
+    },
+    "case-036": {
+      "manifest": "config/targets/emi/battle/battle/03/target.toml",
+      "manifest_sha256": "79301ff4aaba7440b98e592305822af1318077e86b2840e563f868d6a0bf306a",
+      "name": "func_801DF3F8",
+      "signature": "void func_801DF3F8(void)",
+      "source": "src/bof3/battle/func_801DF3F8.c",
+      "source_sha256": "b5b6855b3020ab9f23a52183cb26f057bac0f47628ccc3bbb0d9bfa5379d8bb5",
+      "splat": "config/targets/emi/battle/battle/03/splat.yaml",
+      "splat_sha256": "e1110e44569edc774eb6a57af5b4d6ec71eba00a03fed3d9b21aed8324e8f95c"
+    },
+    "case-037": {
+      "manifest": "config/targets/emi/battle/battle/15/target.toml",
+      "manifest_sha256": "f95afa0b0f61781e14cbab9f2d6ff132c35cacd4df9606e2417abb63a6453114",
+      "name": "func_8009CCBC",
+      "signature": "void func_8009CCBC(u8 *obj, u8 index, u8 value)",
+      "source": "src/bof3/battle/func_8009CCBC_battle15.c",
+      "source_sha256": "d87ccf0d5f4230fb5cd81ed324e81fe9e9f852891404f6d8e8574f692009e992",
+      "splat": "config/targets/emi/battle/battle/15/splat.yaml",
+      "splat_sha256": "0a5af65232e66ab6374ae4bd8c340a9e106d6dc3e53357344250629614bf8245"
+    },
+    "case-038": {
+      "manifest": "config/targets/emi/etc/commu00/00/target.toml",
+      "manifest_sha256": "3e6f527ed0dd3ec220aab0d4153276b694db1ddea6d1d177b269cb628b7c1d30",
+      "name": "func_801F1BC8",
+      "signature": "void func_801F1BC8(void)",
+      "source": "src/bof3/ui/func_801F1BC8_commu00.c",
+      "source_sha256": "4905662cb1d80d69825e2918b6f13e2c81436cab848ecbc80e9453cfd9968ead",
+      "splat": "config/targets/emi/etc/commu00/00/splat.yaml",
+      "splat_sha256": "bdbf81035dff90ba8ff067d49e8c2d2c454bfb0ebddee059d56439e4b65ebdd4"
+    },
+    "case-039": {
+      "manifest": "config/targets/emi/etc/game/01/target.toml",
+      "manifest_sha256": "75e9509c5e2583e3753cb39599994c68ad018768e1867229d7b006c7eaa9a0ea",
+      "name": "drawPromptPanels",
+      "signature": "void drawPromptPanels(u8 selected, u8 alpha)",
+      "source": "src/bof3/ui/drawPromptPanels_game01_801D12CC.c",
+      "source_sha256": "adae907a477d0d35f3e01a9f4c5b731c16f5ed4d03d0526897bdfee1abbc4bd5",
+      "splat": "config/targets/emi/etc/game/01/splat.yaml",
+      "splat_sha256": "2f54597a73d412c887a64c32d68b276d16b1abab5dfcfab7550b55824326445d"
+    },
+    "case-040": {
+      "manifest": "config/targets/emi/etc/shop/00/target.toml",
+      "manifest_sha256": "3b323593efd7e28e2efdd183d10663707836506f9b5f40bc6426dca37d890e69",
+      "name": "func_801D7080",
+      "signature": "void func_801D7080(void)",
+      "source": "src/bof3/ui/func_801D7080_shop00.c",
+      "source_sha256": "40df2d77656215d11eed21bae2a0c2842e99dcc333218d6a4cc071bd60204df0",
+      "splat": "config/targets/emi/etc/shop/00/splat.yaml",
+      "splat_sha256": "5b5ff7cadc4b55d6aa7be8369b872a6a4f722558eace216dcaa635973ea03f46"
+    },
+    "case-041": {
+      "manifest": "config/targets/emi/scenario/sce10eff/00/target.toml",
+      "manifest_sha256": "a7ac6977ba63d2c92f9589eb1750b590dabb764483822fe6a9ab2aa18c846d07",
+      "name": "emitRadialTranslucentQuads",
+      "signature": "void emitRadialTranslucentQuads(void)",
+      "source": "src/bof3/scenario/emitRadialTranslucentQuads.c",
+      "source_sha256": "e509482ed9947c393186957b88f0d388d924b964fb6b6197532ee3d2b45baff3",
+      "splat": "config/targets/emi/scenario/sce10eff/00/splat.yaml",
+      "splat_sha256": "1f6b0f1e0b571dbf279aa8527267e45a48f6385d15270f0652c5913960a38fb4"
+    },
+    "case-042": {
+      "manifest": "config/targets/emi/world00/area008/13/target.toml",
+      "manifest_sha256": "9b0406bd7e41063874268816502c04c10a002d74b18d1506d1ef51c26e229a20",
+      "name": "func_801F33F0",
+      "signature": "void func_801F33F0(void)",
+      "source": "src/bof3/world/func_801F33F0_area00813.c",
+      "source_sha256": "1c61fa9e42b47bd0de7ac3ea71bcbd5f09febdcf0c5a44c17660c27112baac98",
+      "splat": "config/targets/emi/world00/area008/13/splat.yaml",
+      "splat_sha256": "5def31f22a1bc0a5f5d4a262a2e4d0e5c58a1380b77088342a8e31a3adb9592f"
+    },
+    "case-043": {
+      "manifest": "config/targets/emi/world00/area016/13/target.toml",
+      "manifest_sha256": "e0675871540c85b249048dd334e8c432c30e922cc892bba7b6a3c2123470e3d8",
+      "name": "func_801F3B00",
+      "signature": "void func_801F3B00(s16 arg0, s16 arg1)",
+      "source": "src/bof3/world/func_801F3B00.c",
+      "source_sha256": "19e947f595504e34d691f19665b9aac190f821f6a4ecc6f7680c5e782061844e",
+      "splat": "config/targets/emi/world00/area016/13/splat.yaml",
+      "splat_sha256": "cee282a78da96fb68d505b9adcbec82b6cd3acd01cff7c7957474e5b1a38a48e"
+    },
+    "case-044": {
+      "manifest": "config/targets/emi/world00/area024/14/target.toml",
+      "manifest_sha256": "04e12cca96bb877beddb1fed872e82f7d1b4d6df7c2e7556675800f342a5e28a",
+      "name": "func_801F3314",
+      "signature": "void func_801F3314(void)",
+      "source": "src/bof3/world/initMotionRecords_area02414.c",
+      "source_sha256": "e4ee2895954d7d9aaead2086290c5d0c8f41be4b6988df22209423d5c15e6032",
+      "splat": "config/targets/emi/world00/area024/14/splat.yaml",
+      "splat_sha256": "880f150f40c5a5b4b23e9359691b671912e4224bb41d497ff74f64e9cc8fffec"
+    },
+    "case-045": {
+      "manifest": "config/targets/emi/world00/area026/13/target.toml",
+      "manifest_sha256": "5b7683a00d9e5f8a31dec0443657860dc6cd6fb4b965fb52b579cbd2f370d527",
+      "name": "func_801F2E04",
+      "signature": "void func_801F2E04(VECTOR* center, s32 scale, s32 start_angle, s32 xofs,\n                   s32 yofs)",
+      "source": "src/bof3/world/func_801F2E04_area02613.c",
+      "source_sha256": "da210802cbc47a51cc64d7871eaffe429c7f86752e481e11d82a4250bdc4fc17",
+      "splat": "config/targets/emi/world00/area026/13/splat.yaml",
+      "splat_sha256": "878214d7b00499fa4680c4a756ca5c86ff04a0f300dcca322fb48165b300202a"
+    },
+    "case-046": {
+      "manifest": "config/targets/emi/world00/area027/13/target.toml",
+      "manifest_sha256": "60bbbfef873d7d9ae4841be87d98606c15273b1a84dd3ba08d66dc89e29995dd",
+      "name": "func_801F37E4",
+      "signature": "void func_801F37E4(void)",
+      "source": "src/bof3/world/func_801F37E4_area02713.c",
+      "source_sha256": "03cbf98e0ce44285305ff0bb257dc974c65c4866c51aeedd1368820611b51d9d",
+      "splat": "config/targets/emi/world00/area027/13/splat.yaml",
+      "splat_sha256": "e665ad41b690a06573bb6fef889763a2d2b020eef5f2e78f387dad340cce63db"
+    },
+    "case-047": {
+      "manifest": "config/targets/emi/world00/area028/13/target.toml",
+      "manifest_sha256": "67b5a66e30b2995bcb7211b27a59b526bdf4fd0b0d77d22dcc817db0e0f4becf",
+      "name": "refreshSpriteSlots",
+      "signature": "void refreshSpriteSlots(void)",
+      "source": "src/bof3/world/refreshSpriteSlots.c",
+      "source_sha256": "9fb6e9c2a8f90e9a3ac498fa84de5794add26627e1a8fad95d88d249c6d32b4d",
+      "splat": "config/targets/emi/world00/area028/13/splat.yaml",
+      "splat_sha256": "1d9b93783316ebe3ddd9f92979474ee14abf43f10de6951928edc9bceb78bec4"
+    },
+    "case-048": {
+      "manifest": "config/targets/emi/world00/area032/13/target.toml",
+      "manifest_sha256": "429713a3039dd93e7c9182df882d00002dcdb5320d110631250fdc96fa3b2400",
+      "name": "func_801F3A78",
+      "signature": "void func_801F3A78(void)",
+      "source": "src/bof3/world/func_801F3A78_area03213.c",
+      "source_sha256": "45e024b76d666737aa87889221f1c7bb5dd55f5b1dd94509b4853e3f88daa25b",
+      "splat": "config/targets/emi/world00/area032/13/splat.yaml",
+      "splat_sha256": "557d3194ce7bd67e5066020a620c74a5e2cea847697d729e814a29132b6052e7"
+    },
+    "case-049": {
+      "manifest": "config/targets/emi/etc/game/00/target.toml",
+      "manifest_sha256": "b5ee09b47667603de1eeb3e452e37bdf06ad85fda459d1352e56f5c084dfd6a4",
+      "name": "func_801BA278",
+      "signature": "s32 func_801BA278(u8 arg0, u8 arg1, u8 arg2, u8 arg3, u8 arg4)",
+      "source": "src/bof3/ui/func_801BA278.c",
+      "source_sha256": "aaa8d734e684c950293dddbde320a741e81f1068ff1e8e1d19faa6111b47634c",
+      "splat": "config/targets/emi/etc/game/00/splat.yaml",
+      "splat_sha256": "b926ce0f550d9333eaf32d72947ee8f80d41e19aebcc8e6b0a509d43049e5c9b"
+    },
+    "case-050": {
+      "manifest": "config/targets/emi/etc/sisyou/00/target.toml",
+      "manifest_sha256": "2f6fce5861a9f72f451dbff0c3e9030b90bdc9c659d5c2563f5b38f4d0f8a6da",
+      "name": "func_801D3390",
+      "signature": "void func_801D3390(void)",
+      "source": "src/bof3/ui/func_801D3390_sisyou00.c",
+      "source_sha256": "f7216d6072d6ca68ab1cccf013a5d5b15c68c4effc5bc4d2017db2a1f6097b1b",
+      "splat": "config/targets/emi/etc/sisyou/00/splat.yaml",
+      "splat_sha256": "52172e0abfe44b0e44c276add0fcccb048e40efde698eff65dea33c0783f7e3f"
+    },
+    "case-051": {
+      "manifest": "config/targets/emi/scenario/scena00/00/target.toml",
+      "manifest_sha256": "8d90a30d26f676695b746a2e811fb462ed07210a47a7fb95e9c7070a14072783",
+      "name": "func_801F9BE4",
+      "signature": "void func_801F9BE4(void)",
+      "source": "src/bof3/scenario/func_801F9BE4.c",
+      "source_sha256": "6b36a35e90ae8d3f6cb2a0f6688595ac2ae9ed0d91a5303788deca780be7012a",
+      "splat": "config/targets/emi/scenario/scena00/00/splat.yaml",
+      "splat_sha256": "add5163d03e22ea80ac7b54adf33ee3369587b1ea4b29f8da13afb8a59b22c3b"
+    },
+    "case-053": {
+      "manifest": "config/targets/emi/battle/battle/03/target.toml",
+      "manifest_sha256": "79301ff4aaba7440b98e592305822af1318077e86b2840e563f868d6a0bf306a",
+      "name": "markBattlersMeetingOpposingThresholds",
+      "signature": "u8 markBattlersMeetingOpposingThresholds(void)",
+      "source": "src/bof3/battle/markBattlersMeetingOpposingThresholds.c",
+      "source_sha256": "255d813add053c868aa74e7aa427553a926623271ca114bf6003838ad860ec87",
+      "splat": "config/targets/emi/battle/battle/03/splat.yaml",
+      "splat_sha256": "e1110e44569edc774eb6a57af5b4d6ec71eba00a03fed3d9b21aed8324e8f95c"
+    },
+    "case-054": {
+      "manifest": "config/targets/emi/battle/battle/15/target.toml",
+      "manifest_sha256": "f95afa0b0f61781e14cbab9f2d6ff132c35cacd4df9606e2417abb63a6453114",
+      "name": "func_800A2AE0",
+      "signature": "s16 func_800A2AE0(u8 battler_index, u16 element_mask)",
+      "source": "src/bof3/battle/func_800A2AE0.c",
+      "source_sha256": "a83120ecf620eeaf294c6dea7d2542a90277254f61f5a01ecfa2b8ff2783e74d",
+      "splat": "config/targets/emi/battle/battle/15/splat.yaml",
+      "splat_sha256": "0a5af65232e66ab6374ae4bd8c340a9e106d6dc3e53357344250629614bf8245"
+    },
+    "case-055": {
+      "manifest": "config/targets/emi/etc/commu00/00/target.toml",
+      "manifest_sha256": "3e6f527ed0dd3ec220aab0d4153276b694db1ddea6d1d177b269cb628b7c1d30",
+      "name": "func_801F18F8",
+      "signature": "void func_801F18F8(void)",
+      "source": "src/bof3/ui/func_801F18F8_commu00.c",
+      "source_sha256": "2c7d0022b59e487eaf5ccee9f0840ee3edae8e1e3538294fd299cefdfc67471f",
+      "splat": "config/targets/emi/etc/commu00/00/splat.yaml",
+      "splat_sha256": "bdbf81035dff90ba8ff067d49e8c2d2c454bfb0ebddee059d56439e4b65ebdd4"
+    },
+    "case-056": {
+      "manifest": "config/targets/emi/etc/game/01/target.toml",
+      "manifest_sha256": "75e9509c5e2583e3753cb39599994c68ad018768e1867229d7b006c7eaa9a0ea",
+      "name": "drawLabelGroups",
+      "signature": "void drawLabelGroups(s16 x, s16 y, u8 selected, u8 alpha)",
+      "source": "src/bof3/ui/drawLabelGroups_game01_801D150C.c",
+      "source_sha256": "7bee92ef34558946d3f35dab7c74c1c60f00a190744dc65e69c5ef5ba1b5a0b6",
+      "splat": "config/targets/emi/etc/game/01/splat.yaml",
+      "splat_sha256": "2f54597a73d412c887a64c32d68b276d16b1abab5dfcfab7550b55824326445d"
+    },
+    "case-057": {
+      "manifest": "config/targets/emi/etc/shop/00/target.toml",
+      "manifest_sha256": "3b323593efd7e28e2efdd183d10663707836506f9b5f40bc6426dca37d890e69",
+      "name": "func_801D7B74",
+      "signature": "void func_801D7B74(void)",
+      "source": "src/bof3/ui/func_801D7B74_shop00.c",
+      "source_sha256": "ae568bba917977c4a43c8186d42acb6c5d48399d5da7587d32f24093bf32b98b",
+      "splat": "config/targets/emi/etc/shop/00/splat.yaml",
+      "splat_sha256": "5b5ff7cadc4b55d6aa7be8369b872a6a4f722558eace216dcaa635973ea03f46"
+    },
+    "case-058": {
+      "manifest": "config/targets/emi/scenario/sce10eff/00/target.toml",
+      "manifest_sha256": "a7ac6977ba63d2c92f9589eb1750b590dabb764483822fe6a9ab2aa18c846d07",
+      "name": "func_801D0C70",
+      "signature": "void func_801D0C70(void)",
+      "source": "src/bof3/scenario/func_801D0C70.c",
+      "source_sha256": "c2ef44349513a2de183320a18f615827138ff7ec975ce20f21fa269c3aee1b2d",
+      "splat": "config/targets/emi/scenario/sce10eff/00/splat.yaml",
+      "splat_sha256": "1f6b0f1e0b571dbf279aa8527267e45a48f6385d15270f0652c5913960a38fb4"
+    },
+    "case-059": {
+      "manifest": "config/targets/emi/world00/area008/13/target.toml",
+      "manifest_sha256": "9b0406bd7e41063874268816502c04c10a002d74b18d1506d1ef51c26e229a20",
+      "name": "func_801F2E1C",
+      "signature": "void func_801F2E1C(void)",
+      "source": "src/bof3/world/func_801F2E1C_area00813.c",
+      "source_sha256": "596ee5111d850fb324ef8e15b31ff785c0d21d4cc9c684f5a1b74b4f291be26d",
+      "splat": "config/targets/emi/world00/area008/13/splat.yaml",
+      "splat_sha256": "5def31f22a1bc0a5f5d4a262a2e4d0e5c58a1380b77088342a8e31a3adb9592f"
+    },
+    "case-060": {
+      "manifest": "config/targets/emi/world00/area016/13/target.toml",
+      "manifest_sha256": "e0675871540c85b249048dd334e8c432c30e922cc892bba7b6a3c2123470e3d8",
+      "name": "func_801F2EEC",
+      "signature": "void NO_SIBLING_CALLS func_801F2EEC(void)",
+      "source": "src/bof3/world/func_801F2EEC_area01613.c",
+      "source_sha256": "cf04276646f07e013fca1ed2c4a142cd35d84bcb23ad08ba5cc571c8fd5dad7b",
+      "splat": "config/targets/emi/world00/area016/13/splat.yaml",
+      "splat_sha256": "cee282a78da96fb68d505b9adcbec82b6cd3acd01cff7c7957474e5b1a38a48e"
+    },
+    "case-061": {
+      "manifest": "config/targets/emi/world00/area024/14/target.toml",
+      "manifest_sha256": "04e12cca96bb877beddb1fed872e82f7d1b4d6df7c2e7556675800f342a5e28a",
+      "name": "func_801F3E48",
+      "signature": "s32 func_801F3E48(u8 color)",
+      "source": "src/bof3/world/func_801F3E48_area02414.c",
+      "source_sha256": "541a6fa8cb94c4dc0d1b7389773e09081e10ba27c3c15eabf8a1d3ec4ef94ae1",
+      "splat": "config/targets/emi/world00/area024/14/splat.yaml",
+      "splat_sha256": "880f150f40c5a5b4b23e9359691b671912e4224bb41d497ff74f64e9cc8fffec"
+    },
+    "case-062": {
+      "manifest": "config/targets/emi/world00/area027/13/target.toml",
+      "manifest_sha256": "60bbbfef873d7d9ae4841be87d98606c15273b1a84dd3ba08d66dc89e29995dd",
+      "name": "func_801F394C",
+      "signature": "void func_801F394C(void)",
+      "source": "src/bof3/world/func_801F394C_area02713.c",
+      "source_sha256": "3a0992a0eb3dfa804c3d5ca9bbb137c1a2e4ca1476bc9aa231b4b24f30c93872",
+      "splat": "config/targets/emi/world00/area027/13/splat.yaml",
+      "splat_sha256": "e665ad41b690a06573bb6fef889763a2d2b020eef5f2e78f387dad340cce63db"
+    },
+    "case-063": {
+      "manifest": "config/targets/emi/world00/area032/13/target.toml",
+      "manifest_sha256": "429713a3039dd93e7c9182df882d00002dcdb5320d110631250fdc96fa3b2400",
+      "name": "func_801F3DCC",
+      "signature": "void func_801F3DCC(void)",
+      "source": "src/bof3/world/func_801F3DCC_area03213.c",
+      "source_sha256": "972bc77e13ea27a01186ea438b7dc251a0258323278d3c9ec0f0e035114c7de4",
+      "splat": "config/targets/emi/world00/area032/13/splat.yaml",
+      "splat_sha256": "557d3194ce7bd67e5066020a620c74a5e2cea847697d729e814a29132b6052e7"
+    },
+    "case-064": {
+      "manifest": "config/targets/emi/etc/game/00/target.toml",
+      "manifest_sha256": "b5ee09b47667603de1eeb3e452e37bdf06ad85fda459d1352e56f5c084dfd6a4",
+      "name": "func_801C0F9C",
+      "signature": "s32 func_801C0F9C(s32 arg0)",
+      "source": "src/bof3/ui/func_801C0F9C.c",
+      "source_sha256": "1f4facac9790c873dcb54d103872d24d4768351d3a9844cd70d0b4561c1a4c72",
+      "splat": "config/targets/emi/etc/game/00/splat.yaml",
+      "splat_sha256": "b926ce0f550d9333eaf32d72947ee8f80d41e19aebcc8e6b0a509d43049e5c9b"
+    },
+    "case-065": {
+      "manifest": "config/targets/emi/etc/sisyou/00/target.toml",
+      "manifest_sha256": "2f6fce5861a9f72f451dbff0c3e9030b90bdc9c659d5c2563f5b38f4d0f8a6da",
+      "name": "func_801D0DD4",
+      "signature": "void func_801D0DD4(u16 action, s32 flag)",
+      "source": "src/bof3/ui/func_801D0DD4.c",
+      "source_sha256": "47735d9f4c364617cac436ebac4e33d4e9710b980e15c86f58fdeb15dc7b6a63",
+      "splat": "config/targets/emi/etc/sisyou/00/splat.yaml",
+      "splat_sha256": "52172e0abfe44b0e44c276add0fcccb048e40efde698eff65dea33c0783f7e3f"
+    },
+    "case-066": {
+      "manifest": "config/targets/emi/scenario/scena00/00/target.toml",
+      "manifest_sha256": "8d90a30d26f676695b746a2e811fb462ed07210a47a7fb95e9c7070a14072783",
+      "name": "drawLinkedRecordCursorBeam",
+      "signature": "void drawLinkedRecordCursorBeam(void)",
+      "source": "src/bof3/scenario/drawLinkedRecordCursorBeam.c",
+      "source_sha256": "7f8c298e5c100991fbe6acb34f8c3bf4eabf6b1764335161c32829e7d8959a6c",
+      "splat": "config/targets/emi/scenario/scena00/00/splat.yaml",
+      "splat_sha256": "add5163d03e22ea80ac7b54adf33ee3369587b1ea4b29f8da13afb8a59b22c3b"
+    },
+    "case-067": {
+      "manifest": "config/targets/emi/world00/area030/04/target.toml",
+      "manifest_sha256": "08907740286a2114b94a4d449c93351df5322ce600fceedc864e3770cb47db25",
+      "name": "func_801D90FC",
+      "signature": "void func_801D90FC(s16 x, s16 y)",
+      "source": "src/bof3/world/func_801D90FC_area03004.c",
+      "source_sha256": "b4de711b3445fd76abe970bae3b1126c2394feb0b1dbaa679f181578c25fc0ec",
+      "splat": "config/targets/emi/world00/area030/04/splat.yaml",
+      "splat_sha256": "46dfe72b04aa5f78f90db1c67695f880186ebc54584d78488021f4394b331143"
+    },
+    "case-068": {
+      "manifest": "config/targets/emi/battle/battle/03/target.toml",
+      "manifest_sha256": "79301ff4aaba7440b98e592305822af1318077e86b2840e563f868d6a0bf306a",
+      "name": "func_801E020C",
+      "signature": "void func_801E020C(void)",
+      "source": "src/bof3/battle/func_801E020C.c",
+      "source_sha256": "e82d44e1db900e0a825483488c34743fcb3370d6396a3b8fbb9b4783b2f512b9",
+      "splat": "config/targets/emi/battle/battle/03/splat.yaml",
+      "splat_sha256": "e1110e44569edc774eb6a57af5b4d6ec71eba00a03fed3d9b21aed8324e8f95c"
+    },
+    "case-069": {
+      "manifest": "config/targets/emi/battle/battle/15/target.toml",
+      "manifest_sha256": "f95afa0b0f61781e14cbab9f2d6ff132c35cacd4df9606e2417abb63a6453114",
+      "name": "func_800A7694",
+      "signature": "void func_800A7694(s8 a0, s8 a1, s8 a2, s8 a3, s8 a4)",
+      "source": "src/bof3/battle/func_800A7694_battle15.c",
+      "source_sha256": "280cd6831f201f8fb3df20f6c5d1cb562ab027c1959efc768e5c07b196d7c6b5",
+      "splat": "config/targets/emi/battle/battle/15/splat.yaml",
+      "splat_sha256": "0a5af65232e66ab6374ae4bd8c340a9e106d6dc3e53357344250629614bf8245"
+    },
+    "case-070": {
+      "manifest": "config/targets/emi/etc/commu00/00/target.toml",
+      "manifest_sha256": "3e6f527ed0dd3ec220aab0d4153276b694db1ddea6d1d177b269cb628b7c1d30",
+      "name": "func_801EF214",
+      "signature": "void func_801EF214(void)",
+      "source": "src/bof3/ui/func_801EF214_commu00.c",
+      "source_sha256": "ae23d9e033fb3a0e824b289cb28e491ea65faaf7579ae2c3b78a206e085ad3a3",
+      "splat": "config/targets/emi/etc/commu00/00/splat.yaml",
+      "splat_sha256": "bdbf81035dff90ba8ff067d49e8c2d2c454bfb0ebddee059d56439e4b65ebdd4"
+    },
+    "case-071": {
+      "manifest": "config/targets/emi/etc/game/01/target.toml",
+      "manifest_sha256": "75e9509c5e2583e3753cb39599994c68ad018768e1867229d7b006c7eaa9a0ea",
+      "name": "updateWindows",
+      "signature": "void updateWindows(void)",
+      "source": "src/bof3/ui/updateWindows_game01_801D1B00.c",
+      "source_sha256": "189a125a132c6bb51fffcd67de358937b19503d0869fb856f33a5fbfa73536b0",
+      "splat": "config/targets/emi/etc/game/01/splat.yaml",
+      "splat_sha256": "2f54597a73d412c887a64c32d68b276d16b1abab5dfcfab7550b55824326445d"
+    },
+    "case-073": {
+      "manifest": "config/targets/emi/scenario/sce10eff/00/target.toml",
+      "manifest_sha256": "a7ac6977ba63d2c92f9589eb1750b590dabb764483822fe6a9ab2aa18c846d07",
+      "name": "func_801D2064",
+      "signature": "void func_801D2064(void)",
+      "source": "src/bof3/scenario/func_801D2064.c",
+      "source_sha256": "8df8593af29a03e39846faf32dcea6d19b2d9993d47a5646dfd999be6b2e9973",
+      "splat": "config/targets/emi/scenario/sce10eff/00/splat.yaml",
+      "splat_sha256": "1f6b0f1e0b571dbf279aa8527267e45a48f6385d15270f0652c5913960a38fb4"
+    },
+    "case-074": {
+      "manifest": "config/targets/emi/world00/area016/13/target.toml",
+      "manifest_sha256": "e0675871540c85b249048dd334e8c432c30e922cc892bba7b6a3c2123470e3d8",
+      "name": "func_801F4610",
+      "signature": "void func_801F4610(void)",
+      "source": "src/bof3/world/func_801F4610_area01613.c",
+      "source_sha256": "af8201119ec166fec2c1c2cb64467736815c41c880ccc287317178de87d2a7f7",
+      "splat": "config/targets/emi/world00/area016/13/splat.yaml",
+      "splat_sha256": "cee282a78da96fb68d505b9adcbec82b6cd3acd01cff7c7957474e5b1a38a48e"
+    },
+    "case-075": {
+      "manifest": "config/targets/emi/world00/area024/14/target.toml",
+      "manifest_sha256": "04e12cca96bb877beddb1fed872e82f7d1b4d6df7c2e7556675800f342a5e28a",
+      "name": "func_801F3944",
+      "signature": "void func_801F3944(World00Area024SpinWork* work)",
+      "source": "src/bof3/world/emitSpinTriangle_area02414.c",
+      "source_sha256": "81ca241ea56bacaf5e760a2daff301b8492ba5edf2891281e5e75278f7697f4f",
+      "splat": "config/targets/emi/world00/area024/14/splat.yaml",
+      "splat_sha256": "880f150f40c5a5b4b23e9359691b671912e4224bb41d497ff74f64e9cc8fffec"
+    },
+    "case-076": {
+      "manifest": "config/targets/emi/world00/area027/13/target.toml",
+      "manifest_sha256": "60bbbfef873d7d9ae4841be87d98606c15273b1a84dd3ba08d66dc89e29995dd",
+      "name": "emitMarkerQuad",
+      "signature": "POLY_FT4* emitMarkerQuad(const void* arg0, s32 arg1, u32 arg2)",
+      "source": "src/bof3/world/emitMarkerQuad.c",
+      "source_sha256": "301be874c80804e7595d5a54211f6d552ed08710f368a09adba1d074ed488ac1",
+      "splat": "config/targets/emi/world00/area027/13/splat.yaml",
+      "splat_sha256": "e665ad41b690a06573bb6fef889763a2d2b020eef5f2e78f387dad340cce63db"
+    },
+    "case-077": {
+      "manifest": "config/targets/emi/world00/area032/13/target.toml",
+      "manifest_sha256": "429713a3039dd93e7c9182df882d00002dcdb5320d110631250fdc96fa3b2400",
+      "name": "func_801F3920",
+      "signature": "void func_801F3920(void)",
+      "source": "src/bof3/world/func_801F3920_area03213.c",
+      "source_sha256": "e4724ce9fe910f526088afbc3c227d759f98a3722e51c0912cb3b77892896ebc",
+      "splat": "config/targets/emi/world00/area032/13/splat.yaml",
+      "splat_sha256": "557d3194ce7bd67e5066020a620c74a5e2cea847697d729e814a29132b6052e7"
+    },
+    "case-078": {
+      "manifest": "config/targets/emi/etc/game/00/target.toml",
+      "manifest_sha256": "b5ee09b47667603de1eeb3e452e37bdf06ad85fda459d1352e56f5c084dfd6a4",
+      "name": "func_80198CAC",
+      "signature": "void func_80198CAC(void)",
+      "source": "src/bof3/ui/func_80198CAC_game00.c",
+      "source_sha256": "c5b5eaedfb32ec362c015ba546401b6ca1d3f6f0df0c6f10a703f989d4b4b67a",
+      "splat": "config/targets/emi/etc/game/00/splat.yaml",
+      "splat_sha256": "b926ce0f550d9333eaf32d72947ee8f80d41e19aebcc8e6b0a509d43049e5c9b"
+    },
+    "case-079": {
+      "manifest": "config/targets/emi/etc/sisyou/00/target.toml",
+      "manifest_sha256": "2f6fce5861a9f72f451dbff0c3e9030b90bdc9c659d5c2563f5b38f4d0f8a6da",
+      "name": "func_801D10AC",
+      "signature": "void func_801D10AC(u32 arg0)",
+      "source": "src/bof3/ui/func_801D10AC_sisyou00.c",
+      "source_sha256": "b4899edfe02ec1a5b8702320bcac6f19d12229f0641123481fc03a6d3426b6c4",
+      "splat": "config/targets/emi/etc/sisyou/00/splat.yaml",
+      "splat_sha256": "52172e0abfe44b0e44c276add0fcccb048e40efde698eff65dea33c0783f7e3f"
+    },
+    "case-080": {
+      "manifest": "config/targets/emi/scenario/scena00/00/target.toml",
+      "manifest_sha256": "8d90a30d26f676695b746a2e811fb462ed07210a47a7fb95e9c7070a14072783",
+      "name": "func_801F92DC",
+      "signature": "void func_801F92DC(void)",
+      "source": "src/bof3/scenario/func_801F92DC.c",
+      "source_sha256": "b89dd2f92d9d92f4cd7d44f555a863d84c4c194f40e299f2b4ac65ff04dfdfbe",
+      "splat": "config/targets/emi/scenario/scena00/00/splat.yaml",
+      "splat_sha256": "add5163d03e22ea80ac7b54adf33ee3369587b1ea4b29f8da13afb8a59b22c3b"
+    },
+    "case-081": {
+      "manifest": "config/targets/emi/world00/area030/04/target.toml",
+      "manifest_sha256": "08907740286a2114b94a4d449c93351df5322ce600fceedc864e3770cb47db25",
+      "name": "func_801D7784",
+      "signature": "void func_801D7784(s16 x, s16 y)",
+      "source": "src/bof3/world/func_801D7784_area03004.c",
+      "source_sha256": "26a99e75914f9e0cc876d9c80bcf62ff5f6e3b8277e3674b18f5f039f227bdec",
+      "splat": "config/targets/emi/world00/area030/04/splat.yaml",
+      "splat_sha256": "46dfe72b04aa5f78f90db1c67695f880186ebc54584d78488021f4394b331143"
+    },
+    "case-082": {
+      "manifest": "config/targets/emi/battle/battle/03/target.toml",
+      "manifest_sha256": "79301ff4aaba7440b98e592305822af1318077e86b2840e563f868d6a0bf306a",
+      "name": "func_801E3638",
+      "signature": "void func_801E3638(void)",
+      "source": "src/bof3/battle/func_801E3638_battle03.c",
+      "source_sha256": "6fe41d5fa3a3aee59f3e870571d0ddac9774d22fb327e5b8d7e5736f2103d33c",
+      "splat": "config/targets/emi/battle/battle/03/splat.yaml",
+      "splat_sha256": "e1110e44569edc774eb6a57af5b4d6ec71eba00a03fed3d9b21aed8324e8f95c"
+    },
+    "case-083": {
+      "manifest": "config/targets/emi/battle/battle/15/target.toml",
+      "manifest_sha256": "f95afa0b0f61781e14cbab9f2d6ff132c35cacd4df9606e2417abb63a6453114",
+      "name": "func_800AD0A8",
+      "signature": "void func_800AD0A8(u8 index, u16 class_id)",
+      "source": "src/bof3/battle/func_800AD0A8_battle15.c",
+      "source_sha256": "7835fe28b4efcc54a0c19d980c47326ad611c5259a48124a30543391e9242c63",
+      "splat": "config/targets/emi/battle/battle/15/splat.yaml",
+      "splat_sha256": "0a5af65232e66ab6374ae4bd8c340a9e106d6dc3e53357344250629614bf8245"
+    },
+    "case-084": {
+      "manifest": "config/targets/emi/etc/commu00/00/target.toml",
+      "manifest_sha256": "3e6f527ed0dd3ec220aab0d4153276b694db1ddea6d1d177b269cb628b7c1d30",
+      "name": "func_801F23A4",
+      "signature": "void func_801F23A4(void)",
+      "source": "src/bof3/ui/func_801F23A4_commu00.c",
+      "source_sha256": "d4667cef8dd95aba1b664dbe161fa215091a43fa13e3c6a325f826f541baa8d5",
+      "splat": "config/targets/emi/etc/commu00/00/splat.yaml",
+      "splat_sha256": "bdbf81035dff90ba8ff067d49e8c2d2c454bfb0ebddee059d56439e4b65ebdd4"
+    },
+    "case-085": {
+      "manifest": "config/targets/emi/etc/game/01/target.toml",
+      "manifest_sha256": "75e9509c5e2583e3753cb39599994c68ad018768e1867229d7b006c7eaa9a0ea",
+      "name": "drawGlyph",
+      "signature": "u8* drawGlyph(s32 x, s32 y, s32 glyph, s32 palette, u8 flags)",
+      "source": "src/bof3/ui/drawGlyph_game01_801D17D8.c",
+      "source_sha256": "13218da22be8234647dc1848a322d6ead859cc51a370ef69cf3ce00e0e115d86",
+      "splat": "config/targets/emi/etc/game/01/splat.yaml",
+      "splat_sha256": "2f54597a73d412c887a64c32d68b276d16b1abab5dfcfab7550b55824326445d"
+    },
+    "case-086": {
+      "manifest": "config/targets/emi/bmagic/magic131/03/target.toml",
+      "manifest_sha256": "31a8be23f5c5d087fd780baf37143a173944c8ec3a442cd1e597799f8d85a436",
+      "name": "dispatchWorkByte1HandlerBmagicMagic13103_801EF668",
+      "signature": "void dispatchWorkByte1HandlerBmagicMagic13103_801EF668(void)",
+      "source": "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic13103_801EF668.c",
+      "source_sha256": "d32ef42359db1b9ae963c2f6c5adb807e3f27cf10a26ba7f137cfe0ecb4f7072",
+      "splat": "config/targets/emi/bmagic/magic131/03/splat.yaml",
+      "splat_sha256": "b30fa49accc8d0e6a9b5c93c5cab275c267b1ebfcab5e193d9d668391fa1641f"
+    },
+    "case-087": {
+      "manifest": "config/targets/emi/scenario/scena15/00/target.toml",
+      "manifest_sha256": "64c58fd1bbc5c7e6a5f61e44ddbbdf3bc86da6554e74fd2f2f89dfaa67ddeaa8",
+      "name": "dispatchWorkByte1HandlerScenarioScena1500_801F6F38",
+      "signature": "void dispatchWorkByte1HandlerScenarioScena1500_801F6F38(void)",
+      "source": "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1500_801F6F38.c",
+      "source_sha256": "1640f41ec90611e59f3aa613b6853f1f7befcbaa5919fb988e2e2edc1e746645",
+      "splat": "config/targets/emi/scenario/scena15/00/splat.yaml",
+      "splat_sha256": "e723c0ecb2d9bf6945059437d2a5ed6d91b9c7aecdeee541742c9706afad1f3a"
+    },
+    "case-088": {
+      "manifest": "config/targets/emi/scenario/scena16/00/target.toml",
+      "manifest_sha256": "cea478ca40c02093120d55c22e04a3d96dc464166dc32ea70b61529b9563991e",
+      "name": "bootPrimaryState",
+      "signature": "void bootPrimaryState(void)",
+      "source": "src/bof3/scenario/bootPrimaryState_scena16.c",
+      "source_sha256": "69e849bd6aeaa0df9a9b539374aa7e2c73dbfd2f0ca3e3e968d22d50ea891303",
+      "splat": "config/targets/emi/scenario/scena16/00/splat.yaml",
+      "splat_sha256": "7940ea9cb396e9890363b7d968856b369bf232eb4ca006dd7144277595a0c0ac"
+    },
+    "case-089": {
+      "manifest": "config/targets/emi/scenario/scena18/00/target.toml",
+      "manifest_sha256": "62952f4de252fbbdb463b602c3ee5631085350d8bfc93d47a29c038e2e7f850f",
+      "name": "clearWorkRecordsAndResetEffectSlots_scena18",
+      "signature": "void clearWorkRecordsAndResetEffectSlots_scena18(void)",
+      "source": "src/bof3/scenario/clearWorkRecordsAndResetEffectSlots_scena18.c",
+      "source_sha256": "3322a91fe23ca28f5760ccef58970f1e6fcc7291fd8fa5afefc585d251329b67",
+      "splat": "config/targets/emi/scenario/scena18/00/splat.yaml",
+      "splat_sha256": "d6162b93e19d913106c638cf6003ab6b509fc557271a91c5b7e6163e2bb64759"
+    },
+    "case-090": {
+      "manifest": "config/targets/emi/scenario/scena19/00/target.toml",
+      "manifest_sha256": "5008915524a527d68ef0e87c18dce27a5bb2a83464b9a9f96af2c4b04b0017a0",
+      "name": "seedRecordWhenFlag8Set_scena19",
+      "signature": "void seedRecordWhenFlag8Set_scena19(void)",
+      "source": "src/bof3/scenario/seedRecordWhenFlag8Set_scena19.c",
+      "source_sha256": "b319b5b12312f914eaeeab43409b4003aa29946f0019d0ffb3e6864d7173c57c",
+      "splat": "config/targets/emi/scenario/scena19/00/splat.yaml",
+      "splat_sha256": "0ea265dbba50f43655595af76fbe518e041d32672e7adff971da902d91838370"
+    },
+    "case-091": {
+      "manifest": "config/targets/emi/world03/area127/13/target.toml",
+      "manifest_sha256": "03a37630dbbcf218f51b0cd0151cd2ef4b0baa03b6891ce5cbcdc06b04170e48",
+      "name": "updateArea127RecordState",
+      "signature": "void updateArea127RecordState(void)",
+      "source": "src/bof3/world/updateArea127RecordState.c",
+      "source_sha256": "646642552ec4d38da37f762536d4d7be16a7d8511b8c4be8e76b1f7b3cad34ac",
+      "splat": "config/targets/emi/world03/area127/13/splat.yaml",
+      "splat_sha256": "9316e71646e0559852613c0d198de5fee89f1e3abe7d8f5e4eb38848d2b89d79"
+    },
+    "case-092": {
+      "manifest": "config/targets/emi/world00/area026/13/target.toml",
+      "manifest_sha256": "5b7683a00d9e5f8a31dec0443657860dc6cd6fb4b965fb52b579cbd2f370d527",
+      "name": "func_801F2D5C",
+      "signature": "void func_801F2D5C(u32* arg0, u32 arg1)",
+      "source": "src/bof3/world/func_801F2D5C_area02613.c",
+      "source_sha256": "77c2d9444dafcd8753bae6234769cf4a40d39ad5d8e5d730c92bbefec292a6dd",
+      "splat": "config/targets/emi/world00/area026/13/splat.yaml",
+      "splat_sha256": "878214d7b00499fa4680c4a756ca5c86ff04a0f300dcca322fb48165b300202a"
+    },
+    "case-093": {
+      "manifest": "config/targets/emi/world00/area028/13/target.toml",
+      "manifest_sha256": "67b5a66e30b2995bcb7211b27a59b526bdf4fd0b0d77d22dcc817db0e0f4becf",
+      "name": "func_801F2C80",
+      "signature": "void func_801F2C80(void)",
+      "source": "src/bof3/world/func_801F2C80.c",
+      "source_sha256": "66410b57197d07db7921f08a2f4e080bcad09b1448c20f27227bb4deecf4079e",
+      "splat": "config/targets/emi/world00/area028/13/splat.yaml",
+      "splat_sha256": "1d9b93783316ebe3ddd9f92979474ee14abf43f10de6951928edc9bceb78bec4"
+    },
+    "case-094": {
+      "manifest": "config/targets/emi/world00/area030/05/target.toml",
+      "manifest_sha256": "63f2963917e1e04eed428070318a9cd96f8096b1d58dd57b35820adeb556d51b",
+      "name": "func_800F5048",
+      "signature": "void func_800F5048(void)",
+      "source": "src/bof3/world/func_800F5048.c",
+      "source_sha256": "3e8966730a2bc2a1703ee177dcb3267571b2d2deb1fb8e4ce23d63140d337758",
+      "splat": "config/targets/emi/world00/area030/05/splat.yaml",
+      "splat_sha256": "92ecbd1b14d785bc0e6aa19c4e68800372530b73970e0a96ef6665fad932b442"
+    },
+    "case-095": {
+      "manifest": "config/targets/emi/world00/area008/13/target.toml",
+      "manifest_sha256": "9b0406bd7e41063874268816502c04c10a002d74b18d1506d1ef51c26e229a20",
+      "name": "func_801F2D24",
+      "signature": "void func_801F2D24(void)",
+      "source": "src/bof3/world/func_801F2D24_area00813.c",
+      "source_sha256": "44c797ef480bfb508b403d9252918eff54ccb254f4de99654115aa6e04a0ade9",
+      "splat": "config/targets/emi/world00/area008/13/splat.yaml",
+      "splat_sha256": "5def31f22a1bc0a5f5d4a262a2e4d0e5c58a1380b77088342a8e31a3adb9592f"
+    },
+    "case-096": {
+      "manifest": "config/targets/emi/etc/shop/00/target.toml",
+      "manifest_sha256": "3b323593efd7e28e2efdd183d10663707836506f9b5f40bc6426dca37d890e69",
+      "name": "sortSkillNotesByCostDescending",
+      "signature": "void sortSkillNotesByCostDescending(u32 arg0)",
+      "source": "src/bof3/ui/sortSkillNotesByCostDescending.c",
+      "source_sha256": "0224011323f64a64f0e929419176c4d6bb0d6e75db304a9f1b893305a1d643d2",
+      "splat": "config/targets/emi/etc/shop/00/splat.yaml",
+      "splat_sha256": "5b5ff7cadc4b55d6aa7be8369b872a6a4f722558eace216dcaa635973ea03f46"
+    },
+    "case-097": {
+      "manifest": "config/targets/emi/scenario/sce10eff/00/target.toml",
+      "manifest_sha256": "a7ac6977ba63d2c92f9589eb1750b590dabb764483822fe6a9ab2aa18c846d07",
+      "name": "setupSceneObjectTransform",
+      "signature": "void setupSceneObjectTransform(void)",
+      "source": "src/bof3/scenario/setupSceneObjectTransform.c",
+      "source_sha256": "f73af7b3983c64bd634f4d8c8b77915b41625af10d63b8df26571afebc087e27",
+      "splat": "config/targets/emi/scenario/sce10eff/00/splat.yaml",
+      "splat_sha256": "1f6b0f1e0b571dbf279aa8527267e45a48f6385d15270f0652c5913960a38fb4"
+    },
+    "case-098": {
+      "manifest": "config/targets/emi/world00/area016/13/target.toml",
+      "manifest_sha256": "e0675871540c85b249048dd334e8c432c30e922cc892bba7b6a3c2123470e3d8",
+      "name": "func_801F3828",
+      "signature": "void func_801F3828(void)",
+      "source": "src/bof3/world/func_801F3828_area01613.c",
+      "source_sha256": "76da1b1067975f8ca22c08227bf54fd211d29663124c5098bf074a57ed38b2f9",
+      "splat": "config/targets/emi/world00/area016/13/splat.yaml",
+      "splat_sha256": "cee282a78da96fb68d505b9adcbec82b6cd3acd01cff7c7957474e5b1a38a48e"
+    },
+    "case-099": {
+      "manifest": "config/targets/emi/world00/area024/14/target.toml",
+      "manifest_sha256": "04e12cca96bb877beddb1fed872e82f7d1b4d6df7c2e7556675800f342a5e28a",
+      "name": "drawSpin",
+      "signature": "void drawSpin(void)",
+      "source": "src/bof3/world/drawSpin.c",
+      "source_sha256": "3fcd26f1e70f786b08cfbb2813ec93b3e86bdc06780b3f1e69ea317586951d91",
+      "splat": "config/targets/emi/world00/area024/14/splat.yaml",
+      "splat_sha256": "880f150f40c5a5b4b23e9359691b671912e4224bb41d497ff74f64e9cc8fffec"
+    },
+    "case-100": {
+      "manifest": "config/targets/emi/world00/area027/13/target.toml",
+      "manifest_sha256": "60bbbfef873d7d9ae4841be87d98606c15273b1a84dd3ba08d66dc89e29995dd",
+      "name": "func_801F32B0",
+      "signature": "void func_801F32B0(void)",
+      "source": "src/bof3/world/func_801F32B0_area02713.c",
+      "source_sha256": "31d6937dc1563fc7ad2ca9069d659d7e28ac84a20d55a7fe05fabdd85c931191",
+      "splat": "config/targets/emi/world00/area027/13/splat.yaml",
+      "splat_sha256": "e665ad41b690a06573bb6fef889763a2d2b020eef5f2e78f387dad340cce63db"
+    },
+    "case-101": {
+      "manifest": "config/targets/emi/world00/area032/13/target.toml",
+      "manifest_sha256": "429713a3039dd93e7c9182df882d00002dcdb5320d110631250fdc96fa3b2400",
+      "name": "func_801F2C48",
+      "signature": "void func_801F2C48(void)",
+      "source": "src/bof3/world/func_801F2C48_area03213.c",
+      "source_sha256": "868c70f91316628f3dec7f29a5d2e6bca2efb99c9c1dc6207c622bc0f61aa43f",
+      "splat": "config/targets/emi/world00/area032/13/splat.yaml",
+      "splat_sha256": "557d3194ce7bd67e5066020a620c74a5e2cea847697d729e814a29132b6052e7"
+    },
+    "case-102": {
+      "manifest": "config/targets/emi/battle/battle/03/target.toml",
+      "manifest_sha256": "79301ff4aaba7440b98e592305822af1318077e86b2840e563f868d6a0bf306a",
+      "name": "drawIconStrip24x8",
+      "signature": "void drawIconStrip24x8(s16 arg0, s16 arg1, s32 arg2, s32 arg3)",
+      "source": "src/bof3/battle/drawIconStrip24x8.c",
+      "source_sha256": "16b36d09ef43c2bbe7923171eaee88b619d25e5d32b40889c482149b4d1c1b04",
+      "splat": "config/targets/emi/battle/battle/03/splat.yaml",
+      "splat_sha256": "e1110e44569edc774eb6a57af5b4d6ec71eba00a03fed3d9b21aed8324e8f95c"
+    },
+    "case-103": {
+      "manifest": "config/targets/emi/battle/battle/15/target.toml",
+      "manifest_sha256": "f95afa0b0f61781e14cbab9f2d6ff132c35cacd4df9606e2417abb63a6453114",
+      "name": "func_800AD4D4",
+      "signature": "void func_800AD4D4(void)",
+      "source": "src/bof3/battle/func_800AD4D4_battle15.c",
+      "source_sha256": "6d91bbbda77c49eb600e1201419af8af533297528e09c02f3827d04fc646d2dd",
+      "splat": "config/targets/emi/battle/battle/15/splat.yaml",
+      "splat_sha256": "0a5af65232e66ab6374ae4bd8c340a9e106d6dc3e53357344250629614bf8245"
+    },
+    "case-104": {
+      "manifest": "config/targets/emi/etc/commu00/00/target.toml",
+      "manifest_sha256": "3e6f527ed0dd3ec220aab0d4153276b694db1ddea6d1d177b269cb628b7c1d30",
+      "name": "func_801F1110",
+      "signature": "void func_801F1110(u8 task_index, u8 record_kind_index)",
+      "source": "src/bof3/ui/func_801F1110_commu00.c",
+      "source_sha256": "25e23d19c4d718ec350c52ce351939e4dbaa6da99406eb0a404170aca7a5c2fc",
+      "splat": "config/targets/emi/etc/commu00/00/splat.yaml",
+      "splat_sha256": "bdbf81035dff90ba8ff067d49e8c2d2c454bfb0ebddee059d56439e4b65ebdd4"
+    },
+    "case-105": {
+      "manifest": "config/targets/emi/etc/game/00/target.toml",
+      "manifest_sha256": "b5ee09b47667603de1eeb3e452e37bdf06ad85fda459d1352e56f5c084dfd6a4",
+      "name": "loadScenario",
+      "signature": "void loadScenario(u8 scenario_index)",
+      "source": "src/bof3/ui/loadScenario.c",
+      "source_sha256": "3476cd75eff2a1d8c806401f628a91af0a65ad57d1cd66a3764cd6fd6d49f22a",
+      "splat": "config/targets/emi/etc/game/00/splat.yaml",
+      "splat_sha256": "b926ce0f550d9333eaf32d72947ee8f80d41e19aebcc8e6b0a509d43049e5c9b"
+    },
+    "case-106": {
+      "manifest": "config/targets/emi/etc/game/01/target.toml",
+      "manifest_sha256": "75e9509c5e2583e3753cb39599994c68ad018768e1867229d7b006c7eaa9a0ea",
+      "name": "drawLabelGroup",
+      "signature": "void drawLabelGroup(s16 x, s16 y, u8 selected, u8 alpha)",
+      "source": "src/bof3/ui/drawLabelGroup_game01_801D16DC.c",
+      "source_sha256": "c6acc5ff068053832ecf3ac523938a512743bb3ad80e3f411e1e66ebe218a476",
+      "splat": "config/targets/emi/etc/game/01/splat.yaml",
+      "splat_sha256": "2f54597a73d412c887a64c32d68b276d16b1abab5dfcfab7550b55824326445d"
+    },
+    "case-108": {
+      "manifest": "config/targets/emi/scenario/scena00/00/target.toml",
+      "manifest_sha256": "8d90a30d26f676695b746a2e811fb462ed07210a47a7fb95e9c7070a14072783",
+      "name": "seedPrimaryStateOnRecordCallback",
+      "signature": "s32 seedPrimaryStateOnRecordCallback(s32 packed_kind)",
+      "source": "src/bof3/scenario/seedPrimaryStateOnRecordCallback_801FC818.c",
+      "source_sha256": "ce7c4b0b342b0b7f85e4b48c1398d2d6c98f4af63261d68e99b2369c1f61e5ea",
+      "splat": "config/targets/emi/scenario/scena00/00/splat.yaml",
+      "splat_sha256": "add5163d03e22ea80ac7b54adf33ee3369587b1ea4b29f8da13afb8a59b22c3b"
+    },
+    "case-109": {
+      "manifest": "config/targets/emi/world00/area030/04/target.toml",
+      "manifest_sha256": "08907740286a2114b94a4d449c93351df5322ce600fceedc864e3770cb47db25",
+      "name": "func_801D5C8C",
+      "signature": "void func_801D5C8C(void)",
+      "source": "src/bof3/world/func_801D5C8C_area03004.c",
+      "source_sha256": "7701e2a2bc8b3a889dda97979d7dd6c9436de2e6864ae2522af85778bf87957b",
+      "splat": "config/targets/emi/world00/area030/04/splat.yaml",
+      "splat_sha256": "46dfe72b04aa5f78f90db1c67695f880186ebc54584d78488021f4394b331143"
+    },
+    "case-110": {
+      "manifest": "config/targets/emi/scenario/scena15/00/target.toml",
+      "manifest_sha256": "64c58fd1bbc5c7e6a5f61e44ddbbdf3bc86da6554e74fd2f2f89dfaa67ddeaa8",
+      "name": "dispatchWorkByte1HandlerScenarioScena1500_801F77F8",
+      "signature": "void dispatchWorkByte1HandlerScenarioScena1500_801F77F8(void)",
+      "source": "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1500_801F77F8.c",
+      "source_sha256": "c45790445d1d2313799a1ebf891e4b81ac0a3a6695a5740b56d2c7a066506a01",
+      "splat": "config/targets/emi/scenario/scena15/00/splat.yaml",
+      "splat_sha256": "e723c0ecb2d9bf6945059437d2a5ed6d91b9c7aecdeee541742c9706afad1f3a"
+    },
+    "case-111": {
+      "manifest": "config/targets/emi/scenario/scena04/00/target.toml",
+      "manifest_sha256": "6fa546d46eb729249720108d9490d9836031f081cf5fa8af3c7082c55bd40899",
+      "name": "findFreeWorkRecordByte25ScenarioScena0400_801F7FF8",
+      "signature": "u8* findFreeWorkRecordByte25ScenarioScena0400_801F7FF8(void)",
+      "source": "src/bof3/scenario/findFreeWorkRecordByte25ScenarioScena0400_801F7FF8.c",
+      "source_sha256": "5cff33ccfcf53d69440a06bd983d9db3dfa04160acdb98d7335da2d1e3cb32aa",
+      "splat": "config/targets/emi/scenario/scena04/00/splat.yaml",
+      "splat_sha256": "a32f0288f217e8e86a313309d31bade58890663821ac8028615340f4a73e60ec"
+    },
+    "case-112": {
+      "manifest": "config/targets/emi/world02/area093/13/target.toml",
+      "manifest_sha256": "daf3fa4804de060c79396da247d9628d6f630ab6ac7c1633f7488a1a1a923eb2",
+      "name": "initArea093State",
+      "signature": "void initArea093State(void)",
+      "source": "src/bof3/world/initArea093State.c",
+      "source_sha256": "9d3286768017d920dc180b6e61b2f63ae4e186df4e2a2123407ba43afc93b38b",
+      "splat": "config/targets/emi/world02/area093/13/splat.yaml",
+      "splat_sha256": "c3b62531423534a8c5684902440764c38c9c046172d6b2fcb9594389fe76f29d"
+    },
+    "case-113": {
+      "manifest": "config/targets/emi/bmagic/magic131/03/target.toml",
+      "manifest_sha256": "31a8be23f5c5d087fd780baf37143a173944c8ec3a442cd1e597799f8d85a436",
+      "name": "clearWorkByte9AndIncrementWorkByte2BmagicMagic13103_801F0178",
+      "signature": "void clearWorkByte9AndIncrementWorkByte2BmagicMagic13103_801F0178(void)",
+      "source": "src/bof3/bmagic/clearWorkByte9AndIncrementWorkByte2BmagicMagic13103_801F0178.c",
+      "source_sha256": "55559912f24e6ee31d42b4d90d328e1bb41b8f85deb9d3cd04f088bd9eb9b499",
+      "splat": "config/targets/emi/bmagic/magic131/03/splat.yaml",
+      "splat_sha256": "b30fa49accc8d0e6a9b5c93c5cab275c267b1ebfcab5e193d9d668391fa1641f"
+    },
+    "case-114": {
+      "manifest": "config/targets/emi/scenario/scena16/00/target.toml",
+      "manifest_sha256": "cea478ca40c02093120d55c22e04a3d96dc464166dc32ea70b61529b9563991e",
+      "name": "dispatchPrimaryState",
+      "signature": "void dispatchPrimaryState(void)",
+      "source": "src/bof3/scenario/dispatchPrimaryState_scena16.c",
+      "source_sha256": "5052b006890b73851153858226bab742e3720beb57feab1fcd8cc9e132bd2fd2",
+      "splat": "config/targets/emi/scenario/scena16/00/splat.yaml",
+      "splat_sha256": "7940ea9cb396e9890363b7d968856b369bf232eb4ca006dd7144277595a0c0ac"
+    },
+    "case-115": {
+      "manifest": "config/targets/emi/scenario/scena18/00/target.toml",
+      "manifest_sha256": "62952f4de252fbbdb463b602c3ee5631085350d8bfc93d47a29c038e2e7f850f",
+      "name": "dispatchRecordCallback_scena18",
+      "signature": "void dispatchRecordCallback_scena18(u8* record)",
+      "source": "src/bof3/scenario/dispatchRecordCallback_scena18.c",
+      "source_sha256": "b1ef56938170ce06179b10a423ecf814dddcca45a06d11b3550158c13486c0ed",
+      "splat": "config/targets/emi/scenario/scena18/00/splat.yaml",
+      "splat_sha256": "d6162b93e19d913106c638cf6003ab6b509fc557271a91c5b7e6163e2bb64759"
+    },
+    "case-116": {
+      "manifest": "config/targets/emi/scenario/scena19/00/target.toml",
+      "manifest_sha256": "5008915524a527d68ef0e87c18dce27a5bb2a83464b9a9f96af2c4b04b0017a0",
+      "name": "dispatchRecordCallback_scena19",
+      "signature": "void dispatchRecordCallback_scena19(u8* record)",
+      "source": "src/bof3/scenario/dispatchRecordCallback_scena19.c",
+      "source_sha256": "f9b75743b771b335baa4373af78469e1e24424dfaa7a9e324abc181ac08e8128",
+      "splat": "config/targets/emi/scenario/scena19/00/splat.yaml",
+      "splat_sha256": "0ea265dbba50f43655595af76fbe518e041d32672e7adff971da902d91838370"
+    },
+    "case-117": {
+      "manifest": "config/targets/emi/scenario/scena15/00/target.toml",
+      "manifest_sha256": "64c58fd1bbc5c7e6a5f61e44ddbbdf3bc86da6554e74fd2f2f89dfaa67ddeaa8",
+      "name": "invokeStartupThenIncrementRecordHalfword7EScenarioScena1500_801FDFEC",
+      "signature": "void invokeStartupThenIncrementRecordHalfword7EScenarioScena1500_801FDFEC(u8 *record)",
+      "source": "src/bof3/scenario/invokeStartupThenIncrementRecordHalfword7EScenarioScena1500_801FDFEC.c",
+      "source_sha256": "062e756222b52dfa0c80eed7b279ac4ca0c5e9ffb7e587574a74407180eff7eb",
+      "splat": "config/targets/emi/scenario/scena15/00/splat.yaml",
+      "splat_sha256": "e723c0ecb2d9bf6945059437d2a5ed6d91b9c7aecdeee541742c9706afad1f3a"
+    },
+    "case-118": {
+      "manifest": "config/targets/emi/world00/area026/13/target.toml",
+      "manifest_sha256": "5b7683a00d9e5f8a31dec0443657860dc6cd6fb4b965fb52b579cbd2f370d527",
+      "name": "func_801F305C",
+      "signature": "void func_801F305C(void)",
+      "source": "src/bof3/world/func_801F305C.c",
+      "source_sha256": "b8037b4a3cc35866e86aacff6a41a0f6313d0ea56657bf05fb2ce1ba1cbf81b6",
+      "splat": "config/targets/emi/world00/area026/13/splat.yaml",
+      "splat_sha256": "878214d7b00499fa4680c4a756ca5c86ff04a0f300dcca322fb48165b300202a"
+    },
+    "case-119": {
+      "manifest": "config/targets/emi/world00/area028/13/target.toml",
+      "manifest_sha256": "67b5a66e30b2995bcb7211b27a59b526bdf4fd0b0d77d22dcc817db0e0f4becf",
+      "name": "func_801F2C48",
+      "signature": "void func_801F2C48(void)",
+      "source": "src/bof3/world/func_801F2C48.c",
+      "source_sha256": "b70fe6786f580ad01337035d4e8d1db08390bcd89b117d82b286f7341531d47d",
+      "splat": "config/targets/emi/world00/area028/13/splat.yaml",
+      "splat_sha256": "1d9b93783316ebe3ddd9f92979474ee14abf43f10de6951928edc9bceb78bec4"
+    },
+    "case-120": {
+      "manifest": "config/targets/emi/world00/area030/05/target.toml",
+      "manifest_sha256": "63f2963917e1e04eed428070318a9cd96f8096b1d58dd57b35820adeb556d51b",
+      "name": "dispatchArea030CompanionHandler",
+      "signature": "void dispatchArea030CompanionHandler(void)",
+      "source": "src/bof3/world/dispatchArea030CompanionHandler.c",
+      "source_sha256": "8b81e06de4366a26e885e2e55d5a890166379af65fa14ec63821fe45f9e21a61",
+      "splat": "config/targets/emi/world00/area030/05/splat.yaml",
+      "splat_sha256": "92ecbd1b14d785bc0e6aa19c4e68800372530b73970e0a96ef6665fad932b442"
+    },
+    "case-121": {
+      "manifest": "config/targets/emi/world00/area008/13/target.toml",
+      "manifest_sha256": "9b0406bd7e41063874268816502c04c10a002d74b18d1506d1ef51c26e229a20",
+      "name": "func_801F3AA8",
+      "signature": "void func_801F3AA8(void)",
+      "source": "src/bof3/world/func_801F3AA8.c",
+      "source_sha256": "c6beddbab83f7a29eabeb56481ec6151c50b8e9e6c6c6d310800c2a1211fc8f3",
+      "splat": "config/targets/emi/world00/area008/13/splat.yaml",
+      "splat_sha256": "5def31f22a1bc0a5f5d4a262a2e4d0e5c58a1380b77088342a8e31a3adb9592f"
+    },
+    "case-122": {
+      "manifest": "config/targets/emi/etc/shop/00/target.toml",
+      "manifest_sha256": "3b323593efd7e28e2efdd183d10663707836506f9b5f40bc6426dca37d890e69",
+      "name": "advancePanelField6To16",
+      "signature": "void advancePanelField6To16(void)",
+      "source": "src/bof3/ui/advancePanelField6To16.c",
+      "source_sha256": "8d2128f9c8257727c0dff962d66468b67443284fcc74615e70afd97ee40cac1a",
+      "splat": "config/targets/emi/etc/shop/00/splat.yaml",
+      "splat_sha256": "5b5ff7cadc4b55d6aa7be8369b872a6a4f722558eace216dcaa635973ea03f46"
+    },
+    "case-123": {
+      "manifest": "config/targets/emi/scenario/sce10eff/00/target.toml",
+      "manifest_sha256": "a7ac6977ba63d2c92f9589eb1750b590dabb764483822fe6a9ab2aa18c846d07",
+      "name": "func_801D0E64",
+      "signature": "void func_801D0E64(void)",
+      "source": "src/bof3/scenario/func_801D0E64.c",
+      "source_sha256": "048a7ea52a6265bebdb8f01370f5759cbcaef058d810ba735f317cb72029d791",
+      "splat": "config/targets/emi/scenario/sce10eff/00/splat.yaml",
+      "splat_sha256": "1f6b0f1e0b571dbf279aa8527267e45a48f6385d15270f0652c5913960a38fb4"
+    },
+    "case-124": {
+      "manifest": "config/targets/emi/world00/area016/13/target.toml",
+      "manifest_sha256": "e0675871540c85b249048dd334e8c432c30e922cc892bba7b6a3c2123470e3d8",
+      "name": "resetAdvanceScratchState",
+      "signature": "void resetAdvanceScratchState(void)",
+      "source": "src/bof3/world/resetAdvanceScratchState.c",
+      "source_sha256": "49db82620a0ae6143f7d18bf31cc17951ed1b1244966e45a25f0c6d971a140ac",
+      "splat": "config/targets/emi/world00/area016/13/splat.yaml",
+      "splat_sha256": "cee282a78da96fb68d505b9adcbec82b6cd3acd01cff7c7957474e5b1a38a48e"
+    },
+    "case-125": {
+      "manifest": "config/targets/emi/world00/area024/14/target.toml",
+      "manifest_sha256": "04e12cca96bb877beddb1fed872e82f7d1b4d6df7c2e7556675800f342a5e28a",
+      "name": "resetScratchSelectEntry3",
+      "signature": "void resetScratchSelectEntry3(void)",
+      "source": "src/bof3/world/resetScratchSelectEntry3.c",
+      "source_sha256": "67fa26ab8934e88cc17b43419f05b29f1e358fb1281095ac72293558af3bca14",
+      "splat": "config/targets/emi/world00/area024/14/splat.yaml",
+      "splat_sha256": "880f150f40c5a5b4b23e9359691b671912e4224bb41d497ff74f64e9cc8fffec"
+    }
+  },
+  "schema": "retdec118.corpus/v1"
+}

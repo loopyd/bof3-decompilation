@@ -1,20 +1,30 @@
 # Rizin playbook for PS1 binaries
 
-> In this repo prefer `bin/harness analysis rz-project analyze TARGET`, `bin/harness analysis rz-project status TARGET`, and `bin/harness analysis rz-project open TARGET` (writes `out/reverse/snapshots/<encoded-target>.json`). Outside this workspace use the generic fallback below. Generic command lookup: [command-reference.md](command-reference.md).
+Use `bin/harness analysis rz-project analyze TARGET` to write
+`out/reverse/snapshots/<encoded-target>.json`.
+`bin/harness analysis rz-project status TARGET` checks it, and
+`bin/harness analysis rz-project open TARGET` loads the reviewed replay.
+Outside this workspace, use the raw mapping below. Command lookup:
+[command-reference.md](command-reference.md).
 
 ## Canonical raw mapping
 
 Extract a PS-X EXE payload or prove a raw overlay base, then:
 
 ```bash
-rizin -a mips -b 32 \
-  -e cfg.bigendian=false \
+rizin -N -n -a mips -b 32 -E little \
   -m 0x80010000 \
-  -i assets/rizin/psx-init.rz \
   payload.bin
 ```
 
 `-m` maps raw data at its proven runtime address. Confirm the installed CLI with `rizin -h`; options evolve.
+
+For PS1 decompilation, build the sibling `rz-psxdec` and `retdec-psx` forks through
+`bin/harness setup --component rz-psxdec --force`. Load the printed `rz-psxdec.so`
+explicitly with `RZ_NOPLUGINS=1` and `-l`; see the
+[workspace guide](../../../../tools/retdec-psx/README.md). Ordinary `pdz` uses Rizin
+context. Original-only `pdzar /absolute/workspace` requires the validated fixed
+inputs; it does not establish semantic acceptance.
 
 ## Staged analysis
 

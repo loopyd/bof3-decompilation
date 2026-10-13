@@ -125,7 +125,9 @@ def _ninja_compile_commands(
         if match:
             working = match.group(1)
             body = match.group(2)
-        segments = [segment.strip() for segment in body.split(" && ") if segment.strip()]
+        segments = [
+            segment.strip() for segment in body.split(" && ") if segment.strip()
+        ]
         commands: list[list[str]] = []
         for segment in segments:
             if any(character in segment for character in "|;<>$`*"):
@@ -190,9 +192,7 @@ def _measure_compiled(context: _FastContext) -> tuple[str, str, str]:
     insns = f"{matching}/{original}" if matching is not None else "-"
     current = payload.get("current_size")
     bytes_text = (
-        f"{payload.get('original_size')}->{current}"
-        if current is not None
-        else "-"
+        f"{payload.get('original_size')}->{current}" if current is not None else "-"
     )
     return insns, bytes_text, payload.get("first_mismatch") or "-"
 

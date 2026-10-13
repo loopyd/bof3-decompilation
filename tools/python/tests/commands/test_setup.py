@@ -41,6 +41,7 @@ def test_setup_managed_toolchains_factory_contains_all(tmp_path: Path) -> None:
         "GCC 2.7.2",
         "maspsx",
         "Rizin",
+        "rz-psxdec",
         "m2c",
         "asm-differ",
         "decomp-permuter",

@@ -302,4 +302,3 @@ def collect_drift(root: Path) -> list[dict[str, str]]:
                 )
 
     return findings
-

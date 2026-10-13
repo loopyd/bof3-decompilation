@@ -447,10 +447,10 @@ at `out/reviews/evidence/macro-recovery-<nonce>.json`. It retains PRE source ima
 mode/inode facts, exact prepared POST identity/mode, manifest/run bindings and
 reserved PRE/POST quarantine destinations. Single-link POST images are staged on
 the destination filesystem and installed through the [publication backend](harness.md#file-publication):
-strict native no-replace first, cooperative reservation/check/rename only when
-unsupported. The fallback admits external check/rename and check/cleanup races,
-visible empty reservations and crash leftovers; it is not atomic CAS against
-noncooperating writers. Source/images retain one link. Capture failure prevents
+native no-replace only. Unsupported platforms or filesystems fail without an alternate
+publisher. Surrounding identity checks and multi-file transitions remain cooperative;
+native no-replace does not exclude manual writers or make the transaction atomic.
+Source/images retain one link. Capture failure prevents
 source writes but may retain images; publication failure requires location
 inspection and does not establish no effect.
 Records require independently pinned inspection, not automatic restoration. They do
@@ -461,8 +461,9 @@ index bytes/state from the owner's existing snapshots. Regular-file archival
 reuses captured bytes; dependency verification recaptures its evidence. Inventory covers tracked/unignored files except
 the shared generated-artifact exclusions; missing snapshots mean unavailable
 guards, not a clean workspace. Records can include local unignored content and
-must remain nonpublic. Repository evidence uses filesystem-native permissions,
-not enforced POSIX modes; see [the shared policy](harness.md). A pending index lock
+must remain nonpublic. Ext4 evidence retains filesystem-native creation modes and
+observed mode/type bindings; this grants no permission changes or confidentiality
+guarantee. See [the shared policy](harness.md). A pending index lock
 rejects capture.
 
 ```sh
@@ -524,17 +525,20 @@ recovery record, owner command receipts, application, header or POST acceptance
 followed; empty rollback maps prove no restoration. PRE and the adopted baseline
 were unchanged at that failure checkpoint.
 
-The user rejects migration and permits only the [in-place publication correction](../plans/autonomous-bof3-decompilation.md#in-place-ntfs-publication--2026-09-13-reviewed-tooling-checkpoint).
-Parent accepts the six repaired code/test files after independent Bernoulli ACCEPT,
+At the 2026-09-13 checkpoint, the user rejected migration and authorized the
+[in-place NTFS publication correction](../plans/autonomous-bof3-decompilation.md#in-place-ntfs-publication--2026-09-13-reviewed-tooling-checkpoint).
+Parent accepted the six repaired code/test files after independent Bernoulli ACCEPT,
 202 final focused passes and actual repaired NTFS apply/rollback, cancellation,
 Git-index and adverse-publication probes. Initial 196 passes and the deliberately
 interrupted broader revalidation run remain separate evidence in that checkpoint.
 The implementation and single repair are consumed; no test inventory was added.
-The [shared contract](harness.md#file-publication) owns native-first publication,
-cooperative race/crash limitations and preserved identity controls. Reservation
-cleanup requires an initially regular, empty, single-link capture and unchanged
-descriptor/path identity; zero length alone does not authorize crash-residue deletion.
-The filesystem tooling blocker is resolved; no macro is applied or accepted and no
+That authorization and those NTFS probes are historical. The current ext4
+[shared contract](harness.md#file-publication) requires native no-replace only,
+failure on unsupported operations and preserved identity/recovery controls. The old
+fallback required initially regular, empty, single-link reservations with unchanged
+descriptor/path identity before cleanup; zero length alone never authorized deletion.
+That historical mechanism is no longer a publication option. The checkpoint
+resolved its filesystem tooling blocker; no macro was applied or accepted and no
 C/native compiler stage ran. A subsequent macro entry needs separately recorded
 finite scope and fresh readiness/review. Failed 04:45/04:48 and 08:10/08:15 bounds
 remain consumed; the

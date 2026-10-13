@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 import subprocess
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from ..domain.manifests import TargetManifest
@@ -127,6 +127,32 @@ def _exactly_placeable_object(
     return adjusted
 
 
+def object_link_command(
+    *,
+    linker: Path,
+    object_path: Path,
+    output_path: Path,
+    text_address: int,
+    bindings: Sequence[tuple[str, int]],
+    section_addresses: Mapping[str, int],
+    entry_symbol: str | None = None,
+) -> list[str]:
+    return [
+        str(linker),
+        "-EL",
+        f"-Ttext={text_address:#x}",
+        *[
+            f"--section-start={section}={address:#x}"
+            for section, address in sorted(section_addresses.items())
+        ],
+        *[f"--defsym={symbol}={address}" for symbol, address in bindings],
+        *([] if entry_symbol is None else ["-e", entry_symbol]),
+        str(object_path),
+        "-o",
+        str(output_path),
+    ]
+
+
 def link_object_at_address(
     *,
     object_path: Path,
@@ -146,33 +172,26 @@ def link_object_at_address(
         if canonical_bindings is not None
         else _target_map_bindings(repo, symbols_c)
     )
-    defsym_args: list[str] = []
+    resolved_bindings: list[tuple[str, int]] = []
     for sym in undefined_symbols:
         addr = resolve_symbol_address(
             sym, symbols_c_path=symbols_c, canonical_bindings=bindings
         )
         if addr is not None:
-            defsym_args.extend([f"--defsym={sym}={addr}"])
+            resolved_bindings.append((sym, addr))
     out = output_path or object_path.with_suffix(".linked.o")
     linked_input = _exactly_placeable_object(
         object_path, section_addresses, layout=repo
     )
     result = subprocess.run(
-        [
-            str(ld),
-            "-EL",
-            f"-Ttext={address:#x}",
-            *[
-                f"--section-start={section}={section_address:#x}"
-                for section, section_address in sorted(
-                    (section_addresses or {}).items()
-                )
-            ],
-            *defsym_args,
-            str(linked_input),
-            "-o",
-            str(out),
-        ],
+        object_link_command(
+            linker=ld,
+            object_path=linked_input,
+            output_path=out,
+            text_address=address,
+            bindings=resolved_bindings,
+            section_addresses=section_addresses or {},
+        ),
         capture_output=True,
         text=True,
     )

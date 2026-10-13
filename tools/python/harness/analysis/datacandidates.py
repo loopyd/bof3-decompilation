@@ -120,7 +120,12 @@ def collect_data_candidates(
             )
 
     # Largest evidence-backed ranges first; pointer tables outrank other shapes.
-    order = {"pointer_table": 0, "string_block": 1, "numeric_table": 2, "no_function_shape": 3}
+    order = {
+        "pointer_table": 0,
+        "string_block": 1,
+        "numeric_table": 2,
+        "no_function_shape": 3,
+    }
     candidates.sort(key=lambda row: (order.get(row["kind"], 9), -row["size"]))
     return {
         "schema": "bof3.data-candidates/v1",

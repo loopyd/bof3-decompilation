@@ -10,11 +10,15 @@ Read before changing Python harness, CLI or skill scripts. Source lifting follow
   verb-led `snake_case`; predicates `is_`/`has_`/`can_`. Constructors/protocols keep
   conventional names. Classes `PascalCase`, constants `UPPER_SNAKE`. Private
   functions may use one leading underscore; filenames do not advertise privacy.
-- Module ceiling 600 lines, enforced by
-  `test_harness_dry.py::test_harness_modules_stay_decomposed`. Decompose mechanically
-  before growth. Noun modules/subpackages: `ranking.py`, `transactions.py`,
+- Module ceiling 4,000 lines, enforced by
+  `test_harness_dry.py::test_harness_modules_stay_decomposed`. Reuse compatible common
+  helpers and bundle related operations by domain; avoid size-driven slices and
+  maintained `.before` or `.after` modules. Keep current inputs and requested
+  deliverables; remove obsolete audit evidence when authorized.
+  Noun modules/subpackages: `ranking.py`, `transactions.py`,
   `review.py`, `editing.py`, `cli.py`. Package supplies domain; no repeated prefix
   or opaque synonyms. `__init__.py`/`__main__.py` remain protocol exceptions.
+  Count normally Ruff-formatted lines; do not compress lines to fit.
 - `harness.naming` owns identity/evidence/audits; `types` owns representation/layout;
   `macros` owns extraction; `combiner` owns source consolidation. Shared function
   identity/metadata stays in `domain`, compiler selection in `build`, Markdown

@@ -50,12 +50,32 @@ Verify against installed `rizin -h` and `<cmd>?`; commands evolve. For PS1 decis
 ## Headless shell pattern
 
 ```bash
-rizin -q -e scr.color=false -e log.quiet=true \
-  -a mips -b 32 -m 0x80010000 \
+rizin -N -n -q -e scr.color=false -e log.quiet=true \
+  -a mips -b 32 -E little -m 0x80010000 \
   -c 'aa;aac;aar;aflj;q' payload.bin
 ```
 
 Production scripts: one independent Rizin invocation per JSON command (reduces interactive-state ambiguity), or `rzpipe`; store stderr separately.
+
+## PS1 decompiler plugin
+
+Build and explicitly load `rz-psxdec.so` as described in the
+[workspace guide](../../../../tools/retdec-psx/README.md). Inspect `pdz?` and
+`pdza?` on the loaded plugin. `Lcj` reports core-plugin names and build versions.
+
+| Command | Meaning |
+| --- | --- |
+| `pdz` | Decompile the current Rizin function |
+| `pdzo` | Show code with offsets |
+| `pdzj` | Print decompilation JSON |
+| `pdz*` | Print commands that add decompilation comments |
+| `pdza [start [end]]` / `pdzaa` | Analyze a range / all functions |
+| `pdzar /absolute/workspace` | Generate from the validated fixed original-only inputs |
+| `pdze` | Show the output-directory environment setting (`DEC_SAVE_DIR`) |
+
+Ordinary function commands use the current Rizin analysis and supplied context.
+Original-only generation keeps authored references outside its inputs. Generated
+C remains a hypothesis until byte, contract, data and placement review.
 
 ## Runtime starting commands
 
