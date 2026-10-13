@@ -1,8 +1,8 @@
 # Standard MIDI Files research reference
 
-These notes support the [Rust audio migration](../plans/bof3-audio-rust-migration.md)
-and retain source provenance and implementation decisions;
-the linked publisher documents remain the specification authority.
+These notes support [BOF3 MIDI interchange](../specs/formats/audio.md#rust-midi-interchange)
+and retain source provenance and implementation decisions.
+The linked publisher documents remain the specification authority.
 
 ## Sources and locations
 

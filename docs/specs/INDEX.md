@@ -29,7 +29,7 @@ Agent policy, harness tooling and session workflows live in [agents](../agents/I
 | [formats/conversion.md](formats/conversion.md) | lossless interchange and provenance |
 
 Add game findings to the narrowest existing spec; register new topics here.
-Tool contracts belong in `docs/agents/`, active work in `docs/plans/`, and
+Tool contracts belong in `docs/agents/`, active work in OpenSpec changes, and
 other external reference material in `docs/reference/`. The imported BOF3JS EU
 knowledgebase is preserved here with its provenance and regional limits;
 placement does not make its claims reviewed US facts. No transient execution state.

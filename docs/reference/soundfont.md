@@ -1,6 +1,6 @@
 # SoundFont research reference
 
-This reference supports the [Rust audio migration](../plans/bof3-audio-rust-migration.md).
+This reference supports [BOF3 SoundFont interchange](../specs/formats/audio.md#rust-soundfont-writing).
 Its primary source is Creative/E-mu's
 [SoundFont Technical Specification, version 2.04](https://www.synthfont.com/sfspec24.pdf),
 hosted by SynthFont. The cover identifies 2.04; inherited page footers sometimes

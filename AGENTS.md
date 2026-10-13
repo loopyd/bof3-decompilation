@@ -4,7 +4,8 @@ Route each request to its BOF3 owner below. Repository contracts and task-specif
 authorization govern scope and acceptance. Skills and their references own the
 operative rules. `docs/` is user documentation, not required agent reading.
 During authorized maintenance, extract useful knowledge into relevant references.
-Caller-selected documents and plans are task inputs, not standing dependencies.
+Caller-selected documents and change artifacts are task inputs, not standing
+dependencies.
 
 | Request | Owner |
 | --- | --- |
@@ -14,7 +15,7 @@ Caller-selected documents and plans are task inputs, not standing dependencies.
 | Type representation / macro work | `.pi/skills/bof3-types/SKILL.md` / `.pi/skills/bof3-macros/SKILL.md` |
 | Python harness, CLI, skill scripts | `.pi/skills/bof3-re/references/tooling-contract.md` |
 | Tests / Markdown | `.pi/skills/bof3-test/SKILL.md` / `.pi/skills/bof3-docs/SKILL.md` |
-| Plans | `.pi/skills/plans/SKILL.md` |
+| Change planning / implementation | `.agents/skills/openspec-propose/SKILL.md` / `.agents/skills/openspec-apply-change/SKILL.md` |
 | Static PSX evidence / runtime missions | `.pi/skills/psx-rizin/SKILL.md` / `.pi/skills/psx-emulator/SKILL.md` |
 
 Read `.pi/skills/bof3-re/references/target-contract.md` before target work.
@@ -50,9 +51,9 @@ inventory that changes with each release.
 Keep session progress, one-off benchmarks, test counts, delivery SHAs, temporary
 paths, and implementation diaries out of user-facing documentation. Put run results
 in existing task evidence, disposable reports in ignored `out/`, task status in its
-owning plan, and delivery details in commit or PR descriptions. Old audit bundles
-and disposable checks may be removed when authorized. Preserve current corpus
-inputs, requested deliverables and existing release history.
+owning OpenSpec change, and delivery details in commit or PR descriptions. Old
+audit bundles and disposable checks may be removed when authorized. Preserve
+current corpus inputs, requested deliverables and existing release history.
 
 Apply `$unslop` to every prose edit, including README files, guides, and agent
 instructions. Use plain words and complete sentences. Preserve exact commands,

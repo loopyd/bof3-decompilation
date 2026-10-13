@@ -196,8 +196,8 @@ Then `bin/harness agent context cleanup audit-target TARGET` resolves the active
 report generation; pass its `TARGET` and `REPORT` unchanged to the runner. Do not
 reinitialize retained history. Explicit report paths bind provenance. Derived
 analysis can be rebuilt, but retain campaign reports, checkpoints and referenced
-proof while their chain uses them; canonical plans remain persistent intent
-authority.
+proof while their chain uses them. Owning OpenSpec changes retain persistent
+intent and task status.
 
 ```sh
 bin/harness agent context cleanup audit-target TARGET
@@ -1147,22 +1147,18 @@ See [function matching](matching.md) for C iteration rules,
 [build analysis evidence](#3-build-analysis-evidence) for analyzer contracts, and
 [project context](project-context.md) for ownership.
 
-## Plans
+## OpenSpec
 
 ```sh
-bin/harness plans list
-bin/harness plans status autonomous-bof3-decompilation.md
-bin/harness plans consolidate /absolute/review.json
-# Only after independent semantic review of these exact bytes:
-bin/harness plans consolidate /absolute/review.json --apply --backup-dir /absolute/new-recovery
+openspec list
+openspec status --change CHANGE_NAME
 ```
 
-Omit the status filename only with exactly one plan. Lists/status read persistent
-Markdown, not session history. Consolidation previews by default; apply requires
-a fresh external recovery directory and hash-bound reviewed candidate/mappings.
-See [plan authoring](plan-authoring.md) and `$plans`. These commands
-neither infer semantic completion nor execute the plan's domain commands.
-
+Use `$openspec-propose` to create planning artifacts, `$openspec-continue-change`
+to add the next artifact, and `$openspec-update-change` to revise an existing
+change. Use `$openspec-apply-change` for implementation after planning review.
+Keep task status in its owning change. Artifact status does not establish source
+acceptance; BOF3 evidence, native gates, independent review and rollback still apply.
 
 ### Bounded shared PRE preparation
 
@@ -1194,8 +1190,9 @@ unrelated adopted workspace. It never compares old private closure to intended
 shared POST, rewrites proofs, reruns gates or substitutes current facts for missing
 history. Existing contracts, exact wrappers and ownership restrictions remain at
 preparation; participation is capture scope, not write authority. Local parent/runtime
-trust is not cryptographic authentication. This bounded tooling integration was independently accepted (see the canonical
-plan); it is not live BOF3 type/template promotion or full S3.4 closure.
+trust is not cryptographic authentication. Retained review evidence records
+independent acceptance of this bounded tooling integration. That verdict does not
+establish live BOF3 type/template promotion or full campaign closure.
 
 ### Naming terminal acceptance (read-only)
 

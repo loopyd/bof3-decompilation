@@ -5,6 +5,6 @@ from .base import _context_profile
 
 _context_profile(
     "reviewer",
-    paths=("AGENTS.md", ".pi/skills/plans/references/authoring.md"),
+    paths=("AGENTS.md",),
     stable_paths=(),
 )(lambda request: ())

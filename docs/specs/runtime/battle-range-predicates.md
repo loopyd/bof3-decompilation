@@ -120,6 +120,6 @@ type/macro/naming stages.
 
 The historical 52-profile search and 300-second permuter above were not rerun
 for this continuation and establish no exhaustion of other clean-C shapes.
-No register aid is permitted. Mission limits, consumption and deferred naming
-stay in the [canonical continuation](../../plans/autonomous-bof3-decompilation.md#bounded-clean-c-continuation--2026-09-13);
-the range/ABI evidence and historical aided receipt remain unchanged.
+No register aid is permitted. The owning OpenSpec change retains mission limits,
+consumption and deferred naming. The range/ABI evidence and historical aided
+receipt remain unchanged.

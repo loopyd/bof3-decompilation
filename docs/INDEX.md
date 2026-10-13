@@ -23,11 +23,11 @@ scoped documentation as maintenance/research input, not required runtime reading
 | Parent pre-edit native lift diagnosis / retained candidate audit | [Parent lift diagnosis](agents/codex.md#parent-lift-diagnosis) | [Retained audit](agents/codex.md#retained-lift-audit), `$bof3-re`; original pins/cutoff, no model or source edits |
 | Scoped worker or independent review mission | [Skill-only operator](agents/codex.md#skill-only-operator) | `$bof3-lift-loop` delegates `$bof3-re` or the selected domain skill through actual session tools; no self-acceptance |
 | Macro opportunity indexing, ranking or resolution | [Macro resolution guide](agents/macros.md) | [Explicit cleanup routing](agents/tool-usage.md#cleanup-opportunity-routing), owning code/checks; matching or tooling route when making changes |
-| Multi-function C metadata or function consolidation | [Combiner](agents/combiner.md) | [Active rollout](plans/autonomous-bof3-decompilation.md#multi-function-consolidation); tooling/matching owners; production consolidation remains gated |
+| Multi-function C metadata or function consolidation | [Combiner](agents/combiner.md) | Tooling/matching owners; production consolidation remains gated; OpenSpec records remaining work |
 | Type representation opportunities and reviewed application | [Tool usage](agents/tool-usage.md#3b-target-analysis-freshness--rebuild--query) | [Cleanup routing](agents/tool-usage.md#cleanup-opportunity-routing), `$bof3-types`; [harness ownership](agents/harness.md) |
 | Symbol naming opportunity discovery or assessment | [Naming opportunities](agents/tool-usage.md#symbol-naming-opportunities) | `$bof3-naming`; [harness ownership](agents/harness.md); evidence and identity routes remain separate |
 | Function-argument or local-variable naming | [Source identifier naming](agents/tool-usage.md#source-identifier-naming) | `$bof3-naming`; [harness ownership](agents/harness.md); PRE-bound, single-function, native byte-identity gate |
-| Plan creation, management or execution | [Plan authoring](agents/plan-authoring.md) | `$plans`; selected file under `plans/`; refresh live evidence |
+| Change planning or implementation | `openspec list` | `$openspec-propose`, `$openspec-update-change` or `$openspec-apply-change`; refresh live evidence before implementation |
 | Skill performance audit, converged directives, bundled harness improvements | [Observation folder](observations/INDEX.md) | The owning skill's ledger; directives stay in `.pi/skills/<skill>/` and its agent instructions |
 | Symbol/type/metadata identity maintenance | [Project context](agents/project-context.md) | `$bof3-naming` transaction mode |
 | Naming evidence/audit closure | [Naming audit contract](../.pi/skills/bof3-naming/references/naming-audit-v3.md) | `$bof3-naming` audit mode |
@@ -60,7 +60,7 @@ scoped documentation as maintenance/research input, not required runtime reading
 | [`$bof3-types`](../.pi/skills/bof3-types/SKILL.md) | established C types, representation opportunities and reviewed application |
 | [`$bof3-naming`](../.pi/skills/bof3-naming/SKILL.md) | naming opportunities, evidence, audits, source-identifier naming and reviewed identity transactions |
 | [`$bof3-test`](../.pi/skills/bof3-test/SKILL.md) | per-module pytest units, scoped runs and reviewed test-suite optimization |
-| [`$plans`](../.pi/skills/plans/SKILL.md) | persistent plan management |
+| `$openspec-propose`, `$openspec-update-change`, `$openspec-apply-change` | change planning, revision and implementation |
 | [`$psx-rizin`](../.pi/skills/psx-rizin/SKILL.md) | concrete analyzer questions |
 | [`$psx-emulator`](../.pi/skills/psx-emulator/SKILL.md) | bounded PCSX-Redux Agentic missions and independent captures |
 | [`$bof3-docs`](../.pi/skills/bof3-docs/SKILL.md) | scoped Markdown reference inspection, search, context, aggregation, editing, repair and one-document compaction |
@@ -75,7 +75,6 @@ scoped documentation as maintenance/research input, not required runtime reading
 - [Function matching](agents/matching.md)
 - [Matching playbook](agents/matching-playbook.md)
 - [Memory API](agents/memory-api.md)
-- [Plan authoring](agents/plan-authoring.md)
 - [Lessons](agents/lessons.md)
 - [Specifications index](specs/INDEX.md)
 - [External research references](reference/INDEX.md)

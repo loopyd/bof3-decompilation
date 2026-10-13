@@ -3,7 +3,7 @@
 `bof3-docs` owns explicitly scoped Markdown reference inspection, search, editing,
 repair and compaction, performed with the native read, search and edit tools — the
 harness exposes no Markdown transport. Read [docs/INDEX.md](../INDEX.md) first.
-Domain facts, plan authority and source acceptance remain with their owners.
+Domain facts, change planning and source acceptance remain with their owners.
 
 ## Working scope
 
@@ -55,7 +55,8 @@ transport, so link hygiene is the skill's responsibility now.
 Find each disputed fact's implementation, configuration, specification or policy
 owner before changing it. Preserve historical context; analyzer prose and
 disposable outputs are not reviewed truth. Follow [placement and naming](documentation.md#documentation-placement-and-names):
-game facts in `docs/specs/`, agent/tooling contracts in `docs/agents/`, scoped work in `docs/plans/`.
+game facts in `docs/specs/`, agent/tooling contracts in `docs/agents/`, and scoped
+work in OpenSpec changes.
 
 Compact by removing redundant wording and linking to a single authority, not by
 deleting requirements, evidence gates, exceptions, dependencies, owners, stable
@@ -66,9 +67,9 @@ run applicable existing checks and `git diff --check`, and report actual edits,
 validation and outstanding questions. Agent/skill Markdown must be compacted
 directly without weakening contracts.
 
-Plan consolidation, state transitions, deletion and recovery still follow
-[`plans`](../../.pi/skills/plans/SKILL.md). Ordinary Markdown editing does not
-authorize those operations, source refactors, invented policy or domain approval.
+OpenSpec workflows own change artifacts and task acceptance. Ordinary Markdown
+editing does not authorize task completion, source refactors, invented policy or
+domain approval.
 
 ## Ownership
 
@@ -92,7 +93,7 @@ extensions and historical logs are not modified.
 | --- | --- |
 | `docs/agents/` | Agent/session policy, harness and CLI contracts, matching and evidence workflows |
 | `docs/specs/` | BOF3 game knowledge: runtime behavior, binary formats, layouts and target-specific evidence |
-| `docs/plans/` | Active scoped work, dependencies and acceptance status |
+| `openspec/changes/` | Local scoped work, dependencies and acceptance status |
 | `docs/reference/` | External research and leads, with provenance and authority limits |
 
 Use lowercase kebab-case Markdown filenames; `INDEX.md` and `README.md` are

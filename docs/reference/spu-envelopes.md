@@ -41,8 +41,8 @@ threshold after eight ticks; the ninth yields levels 27648 versus 25344.
 Those results compare models, not measured game output. They do not account for
 game-time ADSR overrides, key scheduling, ADPCM termination or volume controls.
 [The audio specification](../specs/formats/audio.md#rust-adsr-state-and-evidence-models)
-owns integration status; the [migration plan](../plans/bof3-audio-rust-migration.md)
-retains the unresolved rendering and SoundFont approximation gates.
+owns integration status. Rendering fidelity and SoundFont approximation still
+require independent validation.
 
 ## Volume sweeps
 

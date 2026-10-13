@@ -48,7 +48,8 @@ another.
 | `src/`, `include/` | Authored C89 (`src/bof3/` semantic root; metadata and manifest claims own target identity) | Yes |
 | `docs/specs/` | Reviewed BOF3 runtime, format and data knowledge | Yes |
 | `docs/agents/` | Agent/tooling contracts and matching workflows | Yes |
-| `docs/plans/`, `docs/reference/` | Active scoped work; external research leads | Yes |
+| `docs/reference/` | External research leads | Yes |
+| `openspec/changes/` | Local change proposals, requirements, design and tasks | No |
 | `bin/`, `tools/` | Command entrypoints and implementations | Yes |
 | `third_party/` | Pinned upstream source | Yes |
 | `inputs/external/` | User-owned CUE/BIN media or `BreathOfFireIIIv1.1.7z`, plus private inputs | No |
@@ -111,5 +112,5 @@ context docs for the complete source/symbol contract.
 | `include/loader/`, `include/panel/`, `include/battle/` | loader, panel, battle runtime |
 | `include/data/`, `include/media/`, `include/ui/`, `include/game/` | records, media, UI and game templates |
 
-Completed implementation history is in `git log`; current scoped work belongs
-under `docs/plans/` only while active.
+Completed implementation history is in `git log`. OpenSpec changes hold current
+work, dependencies and acceptance gates. Use `openspec list` to discover them.

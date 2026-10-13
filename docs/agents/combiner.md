@@ -3,8 +3,8 @@
 The combiner groups cohesive implementations into readable C89 translation units;
 it does not merge function identities or extract macros. Macro discovery and
 semantic acceptance remain in [macros](macros.md); symbol changes belong to naming
-and representations to types. See the [active plan](../plans/autonomous-bof3-decompilation.md#multi-function-consolidation)
-for rollout and unfinished gates.
+and representations to types. Owning OpenSpec changes track rollout and
+unfinished acceptance gates.
 
 ## Current capability
 

@@ -2,9 +2,9 @@
 
 This guide owns macro opportunity ranking, review and resolution tooling for
 BOF3 cleanup and source finalization.
-Start at [the documentation index](../INDEX.md). Execution history, frozen pilot
-membership, and unfinished campaign work stay in
-[the active plan](../plans/autonomous-bof3-decompilation.md), not this guide.
+Start at [the documentation index](../INDEX.md). Owning OpenSpec changes retain
+frozen pilot membership and unfinished campaign work. Retained owner evidence
+records execution history.
 
 Parent-owned index refreshes and external review use the
 [standing autonomous authorization](codex.md#autonomous-execution), not a new
@@ -511,8 +511,8 @@ obligations. Tooling acceptance does not establish an applied macro or
 whole-game completion. Native validation, independent application review and
 parent confirmation remain mandatory.
 
-Historical approvals, failures, consumed budgets and unresolved validation
-debt remain in the [campaign plan](../plans/autonomous-bof3-decompilation.md).
+Owning OpenSpec changes preserve historical approval and failure limits,
+consumed budgets and unresolved validation debt.
 
 V2 retains all v1 evidence fields and adds exactly one `creation` object with
 `target`, `header`, `header_text`, `manifest_before` and `manifest_after`.

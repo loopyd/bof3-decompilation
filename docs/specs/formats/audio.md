@@ -3042,9 +3042,10 @@ its first call reaches the BIOS B0/0x4C memory-card routine. The map is unchange
 The Rust bootstrap probe executes original game/libsnd instructions and modeled
 kernel services; it currently stops at unsupported BIOS CD-ROM removal `A0:72`
 after 4,550 integer instructions. It does not skip this service or claim playback.
-See [Rust profile](../../../tools/rust/bof3-audio/src/machine/profile.rs),
-[runtime checks](../../../tools/rust/bof3-audio/tests/runtime.rs), and the
-[migration plan](../../plans/bof3-audio-rust-migration.md) for remaining gates.
+See the [Rust profile](../../../tools/rust/bof3-audio/src/machine/profile.rs) and
+[runtime checks](../../../tools/rust/bof3-audio/tests/runtime.rs) for this bounded
+probe. Independent sound-state, timing and PCM acceptance, complete driver closure
+and standalone initialization remain open.
 
 ### Rust SPU disable and original hardware initialization
 
@@ -4392,8 +4393,8 @@ setting `BOF3_AUDIO_EXE` and `BOF3_AUDIO_TRACK`. JSON lines use
 `bof3.audio.driver-transport/v1`; local receipts are
 `out/audio-migration/driver-transport-{0000,1000,2000}-{1,4}.json`.
 Three synthetic observer tests validate nonmutation, changed-instruction
-rejection and host-call boundary handling. This is A6.01 evidence, not
-standalone-driver acceptance.
+rejection and host-call boundary handling. These checks support the driver audit.
+Standalone-driver acceptance remains open.
 
 
 ### XA callback initialization and original ROM dispatch
@@ -4444,7 +4445,7 @@ The comparison fixture explicitly supplies GPU status, ready host/drive state,
 prior SDK completion, response boundaries, sector phase and dry SPU context.
 It neither proves full device initialization nor eliminates BIOS dependencies.
 Memory footprints still exclude kernel/host/DMA data accesses. No RAM snapshot
-is shipped, no code is pruned and A6.01 remains incomplete.
+is shipped, no code is pruned and complete driver closure remains unaccepted.
 
 Reproduce from the repository root with `BOF3_AUDIO_EXE`, `BOF3_AUDIO_BIOS` and
 `BOF3_AUDIO_TRACK` set to absolute local media paths:
@@ -4603,7 +4604,7 @@ then run `--test xa_loop_runtime original_audio_vsync_calls_do_not_depend_on_gpu
 with `-- --ignored --nocapture`. Receipts are
 `out/audio-migration/driver-vsync-{0000,1000,2000}-{1,4}.json`,
 `driver-vsync-rizin.txt`, `driver-vsync-peripherals.log` and
-`driver-vsync-media-final.log`. A6.01 and pruning acceptance remain open.
+`driver-vsync-media-final.log`. Driver closure and pruning acceptance remain open.
 
 ### Negative VSync candidate through original interrupts
 
@@ -4689,4 +4690,5 @@ visibility gap for these scenarios. It does not identify every data producer:
 host writes, DMA and HLE dispatch remain outside retired CPU access records.
 Full cue histories, music/SFX coverage of this observer, initialization ownership,
 independent timing/audio evidence and standalone startup remain open. No code or
-data is pruned, no BIOS state is shipped, and A6.01/A6.02 are not accepted.
+data is pruned, no BIOS state is shipped, and driver closure and pruning are not
+accepted.

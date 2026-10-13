@@ -619,7 +619,7 @@ and symlink-owned mutation remains refused.
 Submodule isolation uses the owners and support limits below. Acceptance
 of this prerequisite does not accept C or macros; their readiness and
 review gates remain separate. Historical repairs retain their consumed
-budgets in the [campaign plan](../plans/autonomous-bof3-decompilation.md).
+budgets. Owning OpenSpec changes track remaining work and its acceptance gates.
 Tooling acceptance does not establish whole-game completion.
 
 | Common owner | Responsibility |
@@ -664,11 +664,10 @@ rechecked against their live origins after queries; scratch consistency alone is
 insufficient. Host configuration is parsed initially, then freshly recaptured with
 environment, control-path, absence, identity, mode and content/hash checks before
 unchanged inputs can avoid reparsing. This is not a cross-transaction cache:
-fresh Git/workspace boundaries remain mandatory. The
-[campaign plan](../plans/autonomous-bof3-decompilation.md#transaction-validation-performance--2026-09-13-reviewed-tooling-checkpoint)
-retains unresolved validation debt. Captured module `*.lock` files
-are observed, excluded from query
-copies and never deleted. The superproject index-lock capture refusal still applies.
+fresh Git/workspace boundaries remain mandatory. The owning OpenSpec change
+retains unresolved validation debt. Captured module `*.lock` files are observed,
+excluded from query copies and never deleted. The superproject index-lock capture
+refusal still applies.
 Optional multi-pack-index and commit-graph files retain raw observations but are
 not copied or interpreted; scratch queries disable both accelerators. Their
 presence alone does not reject capture.

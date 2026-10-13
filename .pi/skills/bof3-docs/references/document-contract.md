@@ -9,9 +9,9 @@ sessions, ledgers and caches as authored truth. Other root files require explici
 scope. Read access grants no edit authority. Preserve concurrent and dirty work.
 
 Skills obtain operative rules from their entry and bundled references, not user
-documentation or named plans. During authorized skill maintenance, extract durable
-knowledge from supplied documentation into relevant references; preserve evidence
-limits. Documentation is source material, not a runtime reading dependency.
+documentation or change artifacts. During authorized skill maintenance, extract
+durable knowledge into relevant references and preserve evidence limits.
+Documentation is source material, not a runtime reading dependency.
 
 ## Reference inspection
 
@@ -39,7 +39,7 @@ limits. Documentation is source material, not a runtime reading dependency.
 ## Placement and compaction
 
 User-facing game knowledge belongs in specifications, user-facing tooling guides
-in agent documentation, scoped work in caller-selected planning files, external
+in agent documentation, scoped work in caller-selected OpenSpec changes, external
 research with provenance and authority limits. Operative skill instructions and
 reusable knowledge belong in the relevant skill's `references/`.
 
@@ -56,10 +56,10 @@ links. No-op beats information loss. Byte reduction is not semantic parity.
 
 Validate edited links/anchors, affected indexes and applicable existing checks;
 run scoped `git diff --check`. Record paths, changes, failures and remaining gaps.
-No semantic source approval, plan transition, deletion or source refactor follows.
-Plan lifecycle belongs to `$plans` with caller-supplied inputs. No retired Markdown
-transport or agent-skill-compaction machinery. `bin/harness source docs` reports
-drift only; native tools own Markdown work.
+No semantic source approval, task transition, deletion or source refactor follows.
+Change planning and task acceptance belong to OpenSpec workflows. No retired
+Markdown transport or agent-skill-compaction machinery. `bin/harness source docs`
+reports drift only; native tools own Markdown work.
 
 ## Measurement
 

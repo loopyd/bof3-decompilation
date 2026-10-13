@@ -565,8 +565,8 @@ SHA-256-verified candidates (`gcc-2.6.3-psx`, `gcc-2.8.0-psx`,
 `gcc-2.8.1-psx`, `gcc-2.95.2-psx`). One object selects `gcc-2.6.3-psx`:
 `src/bof3/audio/dispatchSoundCue.c`, historically byte-exact at
 `exe/slus_004_22@0x8015DF18` (671/671, 2684 bytes). Its aided acceptance is
-superseded: the source is in the [clean-C requeue](../plans/autonomous-bof3-decompilation.md#durable-clean-c-requeue)
-pending fresh native matching and review; compiler selection alone proves neither.
+superseded. Its owning OpenSpec change retains the clean-C requeue pending fresh
+native matching and review. Compiler selection alone proves neither.
 
 Add a candidate catalog-first, probe second: add full provenance to
 `config/compiler/variants.json` (`bin/harness build variants list` validates);

@@ -93,4 +93,4 @@ subdirectories, for the expected SHA-256. Names/extensions and unrelated files d
 not affect a match; symlinks are skipped. Missing hash or unreadable scan without a
 match fails without downloading or modifying files. This validates bytes, not BIOS
 bootstrap. Bootstrap, device timing and independent audio comparison require
-validation under the [migration plan](../plans/bof3-audio-rust-migration.md).
+validation against the [audio contract](../specs/formats/audio.md#ps1-spu-emulation).

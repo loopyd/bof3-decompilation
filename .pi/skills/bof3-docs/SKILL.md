@@ -28,8 +28,8 @@ user documentation is maintenance input, never required runtime reading.
 5. **Validate.** Resolve edited links/anchors and affected indexes. Run applicable
    existing checks and `git diff --check`. Broken/unchecked references remain findings.
 6. **Report.** Paths, actual changes, validation and outstanding gaps. Documentation
-   scope grants no semantic source approval or deletion authority. Plan status,
-   consolidation and recovery route to `$plans` with caller-supplied inputs.
+   scope grants no semantic source approval or deletion authority. OpenSpec
+   workflows own change artifacts and task acceptance.
 
 ## Reference routing
 

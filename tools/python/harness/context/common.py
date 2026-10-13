@@ -24,7 +24,6 @@ FULL_PATHS = (
     ".pi/skills/bof3-re/references/match-loop.md",
     ".pi/skills/bof3-re/references/matching-knowledge.md",
     ".pi/skills/bof3-re/references/target-contract.md",
-    ".pi/skills/plans/references/authoring.md",
     ".pi/skills/bof3-naming/references/naming-style.md",
 )
 IDENTIFIER = re.compile(r"\b(?:D|func)_[0-9A-Fa-f]{8}\b")

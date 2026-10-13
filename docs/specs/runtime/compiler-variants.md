@@ -179,8 +179,8 @@ Tool versions as of 2026-07-30:
 
 ### Reviewed nondefault optimization control
 
-The `game/01` control below is historical aided evidence, now superseded by its
-[clean-C requeue](../../plans/autonomous-bof3-decompilation.md#durable-clean-c-requeue).
+The `game/01` control below is historical aided evidence. Its owning OpenSpec
+change retains the clean-C requeue and acceptance gates.
 Its cleaned source has no fresh accepted match in this record.
 
 | Target | asm-diff | byte-match | Flags |

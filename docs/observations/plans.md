@@ -1,8 +1,8 @@
 # plans observations
 
-One skill ledger in the [observation folder](INDEX.md). The
-[plans skill](../../.pi/skills/plans/SKILL.md) owns current procedures; this file
-records historical evidence, performance gaps and proposed improvements.
+This ledger in the [observation folder](INDEX.md) records historical legacy-plan
+observations, performance gaps and proposed improvements. OpenSpec owns current
+change planning.
 
 ## Measured performance
 

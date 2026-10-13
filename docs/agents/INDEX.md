@@ -22,7 +22,6 @@ BOF3 runtime, format and data evidence belongs in [specs](../specs/INDEX.md).
 | [Compiler variants](compiler-variants.md) | Compiler catalog lifecycle, invocation and validation |
 | [Data discovery](data-discovery.md) | Pointer maps, consumer-derived layouts and verification |
 | [Memory API](memory-api.md) | Evidence lookup and session handoff |
-| [Plan authoring](plan-authoring.md) | Persistent scoped plans and acceptance state |
 | [Lessons](lessons.md) | Reusable reverse-engineering workflow lessons |
 | [Observation folder](../observations/INDEX.md) | Central per-skill self-improvement ledgers: audit metrics, converged directives and bundled harness improvements |
 
