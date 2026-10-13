@@ -262,12 +262,30 @@ just doctor
 ```
 
 First-time setup requires the host tools listed in the
-[README prerequisites](../../README.md#prerequisites); see that list for which
-`cmake`/`7z` roles are required and why. `setup` validates one complete CUE/BIN
-set under `inputs/external/`. If it is not present, it accepts `inputs/external/BreathOfFireIIIv1.1.7z` and extracts it
-to the private-assets cache. It then downloads/stages the required toolchains,
-extracts reviewed target images, and validates the result. `doctor` repeats
-setup validation. Run `bin/harness source symbols check` separately to validate symbol maps.
+[README prerequisites](../../README.md#prerequisites). `setup` validates a complete
+CUE/BIN set under `inputs/external/`, or extracts
+`inputs/external/BreathOfFireIIIv1.1.7z` into the private-assets cache. It stages
+the pinned toolchains, builds local tools, extracts reviewed target images and
+validates the result. `doctor` verifies the existing installation without rebuilding
+or downloading. Run `bin/harness source symbols check` separately for symbol maps.
+
+Use component setup when only one tool needs rebuilding:
+
+```sh
+bin/harness setup --component psyqo
+bin/harness doctor --component psyqo
+bin/harness setup --component rz-psxdec
+bin/harness doctor --component rz-psxdec
+bin/harness setup --component pcsx-redux
+```
+
+The [toolchain guide](../../toolchains/README.md) covers PSYQo/Nugget and the
+GCC 2.7.2-PSX plus maspsx reconstruction profile. The
+[native decompiler guide](../../tools/retdec-psx/README.md) covers the shared
+build directory, idle-CPU job selection and build receipts. The
+[emulator guide](pcsx-redux-agentic.md) covers embedded missions and skill links.
+Use `setup --help` and `doctor --help` to discover supported component selections;
+`just doctor` runs the complete check.
 
 Use `bin/harness media disc` to inspect original disc media, `bin/harness emi archive` to list or
 extract an EMI archive, and `bin/harness media str inspect|validate|convert` for STR
@@ -411,7 +429,7 @@ identities; other occurrences retain conservative source context. Comments and
 literals are excluded. Same-spelled variables, fields or macros can still be
 lexical candidates: these rows never satisfy `types --untyped`, prove a type
 binding, close include consumers or grant transaction/native acceptance.
-Reverse index v16 invalidates older cached inference; refresh explicitly with
+Older index schemas are rejected; refresh explicitly with
 `bin/harness analysis index` after snapshot freshness checks. Queries never rebuild it implicitly.
 Both full and status readers validate the exact generated index definitions on
 required tables, including partial uniqueness predicates. Missing, altered or
@@ -431,7 +449,7 @@ uses that generation for function, symbol, type and macro facts and fingerprints
 including its fixed shared-helper inventory. Lexical type-use scans retain their
 4 MiB byte limit and strict source-alias rejection. Publication remains atomic;
 per-input consistency does not imply a simultaneous repository snapshot.
-Index schema v17 fingerprints all source inputs, including legacy snapshot
+The reverse index fingerprints all source inputs, including legacy snapshot
 fallbacks when a target has no explicit source claims. Fallbacks must name regular
 `.c` files under `src/`, without source aliases, in an identity-checked snapshot.
 Canonical snapshot encoding is shared by capture and lookup; old indexes rebuild.
@@ -1026,8 +1044,9 @@ git diff --check
 `build` compiles authored objects; it does not reconstruct a complete image.
 `bin/harness lift status --detail minimal` prints totals, `normal` adds target
 totals and invalid details, and `full` prints every function. `just check` runs
-repository tests, lint, maps, and a cached repository audit of retained lifts;
-it is not acceptance evidence for an individual lift.
+lint, documentation drift, text-tool tests and corpus checks, symbol validation
+and source validation. `just check-all` adds the full Python suite. Neither
+command supplies live acceptance evidence for an individual lift.
 
 On a cold or partially invalidated cache, `bin/harness lift status` batch-builds all
 valid cache-miss objects per owning target in a single CMake invocation, then
@@ -1045,7 +1064,7 @@ or unreadable target metadata yields uncached invalid records, without compariso
 or fallback using the queued model. Unchanged models retain fallback; work-deadline
 expiry propagates. This boundary check does not prove continuity through later
 native steps.
-Cache v6 retires prior summaries and binds the supplied target model, including
+The cache also binds the supplied target model, including
 nested placements and companion metadata loaded from alternate TOML names, plus
 object flags and the variant catalog.
 Those two files use bounded confined reads (4 MiB each); missing and empty differ,
@@ -1113,6 +1132,10 @@ not establish an end-to-end status speedup.
 | `bin/harness audio build` / `package` | Cargo release build / Rust source package | `out/audio/release/bof3-audio` / `out/bof3-audio-source.zip` |
 | `bin/harness audio index` / `query` / `map` / `extract` / `render` / `pack` / `verify` | invoke Rust audio operations; native `--help` describes supported inputs | selected output location |
 | `just setup --component bios` / `--component pcsx-redux` | prepare pinned US BIOS / build PCSX-Redux Agentic with local SDL3 | `inputs/external/bios/scph5501.bin` / `out/setup/pcsx-redux.json` |
+| `bin/harness setup --component psyqo` | build the native Nugget toolchain and PSYQo SDK | `toolchains/psyqo/`, `build/third_party/psyqo-toolchain/` |
+| `bin/harness setup --component rz-psxdec` | build the sibling native decompiler forks | `build/third_party/rz-psxdec/` |
+| `bin/harness reconstruction` | prepare, generate and compare bounded original-only proposals | fresh selected run directory; [reconstruction guide](../../tools/retdec-psx/reconstruction.md) |
+| `bin/harness runtime` | discover embedded emulator missions and execute bounded captures | fresh selected output directory |
 
 `just doctor` scans `inputs/external/bios/` for a regular file matching the US
 BIOS SHA-256 embedded in the BIOS tool, regardless of name or extension. It needs
@@ -1142,6 +1165,10 @@ dispatch only and every domain keeps its own policy and parser.
 CMake and the compiler pipeline invoke `bin/cc`/`bin/as` by absolute path,
 `just setup` verifies the rest, and `bin/python-env` is the one sourced shared
 bootstrap. Workflow users call the `bin/harness` commands, not the adapters.
+
+`bin/cc` uses the historical GCC 2.7.2-PSX and maspsx pipeline. The binutils
+adapters use `toolchains/psyqo/bin/mipsel-none-elf-*`. Explicit compiler variants
+remain available through `bin/harness build variants`.
 
 See [function matching](matching.md) for C iteration rules,
 [build analysis evidence](#3-build-analysis-evidence) for analyzer contracts, and

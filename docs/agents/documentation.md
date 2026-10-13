@@ -1,20 +1,22 @@
 # Documentation operations
 
 `bof3-docs` owns explicitly scoped Markdown reference inspection, search, editing,
-repair and compaction, performed with the native read, search and edit tools — the
-harness exposes no Markdown transport. Read [docs/INDEX.md](../INDEX.md) first.
+repair and compaction through native tools. The harness exposes no Markdown
+transport. Read [docs/INDEX.md](../INDEX.md) first.
 Domain facts, change planning and source acceptance remain with their owners.
 
 ## Working scope
 
 Work on existing canonical repository-relative authored `.md` files that the parent
 names explicitly; there is no implicit whole-repository scan and no edit by default.
-Authored Markdown is what counts as input: `out/`, `build/`, `toolchains/`, `inputs/`,
-`tmp/`, `sessions/`, `ledger/`, caches and disposable state are not authored truth,
-and within `.pi/` only authored `.pi/agents/` and `.pi/skills/` Markdown is eligible.
-`.codex/` and `.agents/` hold only relative discovery symlinks to `.pi/skills/`
-owners, never authored bodies. Other authored Markdown, including root and agent
-files, is available only when explicitly named; read access is not edit approval.
+Generated output, builds, installations, local inputs, scratch, sessions, ledgers
+and caches are not authored truth. Maintained guides such as `toolchains/README.md`
+remain eligible when explicitly scoped. Within `.pi/`, only authored agents and
+skills qualify. BOF3 skills use `.pi/skills/` owners and discovery aliases;
+OpenSpec entries also live in `.agents/skills/`. The emulator skill is owned by
+the [fork](pcsx-redux-agentic.md#skill-installation) and linked into this project.
+Do not replace aliases with copied bodies. Other authored Markdown, including root
+and agent files, requires explicit scope; read access is not edit approval.
 Preserve unrelated dirty work, and never overwrite a concurrent change.
 
 ## Reference inspection

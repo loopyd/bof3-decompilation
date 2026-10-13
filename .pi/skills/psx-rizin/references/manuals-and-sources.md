@@ -11,7 +11,7 @@ Contents: [tiers](#tiers), [Rizin](#rizin--tier-a),
 [PS1 hardware](#ps1-hardwarespecification--tier-b-provenance-warning),
 [MIPS/ABI](#mips-cpu--abi-manuals--tier-ac),
 [PCSX-Redux Agentic](#pcsx-redux-agentic-runtimedebugging--tier-b),
-[replays](#replaystas--alternative-emulator-traces--tier-bd),
+[replays](#external-replay-research--tier-bd),
 [Symbols/signatures](#symbols-and-signatures--tier-d),
 [matching tools](#matching-decompilation-tools--tier-d),
 [projects](#representative-ps1-decompreversing-projects--tier-d),
@@ -92,17 +92,15 @@ Use PSX-specific ABI observations from PSX-SPX with original MIPS manuals. Gener
 Use the fork for structured runtime evidence. Maintained missions keep GDB disabled;
 separately authorized manual sessions follow [runtime analysis](runtime-and-replays.md).
 
-## Replays/TAS + alternative emulator traces — Tier B/D
+## External replay research — Tier B/D
 
 - BizHawk project/docs: https://tasvideos.org/Bizhawk · source: https://github.com/TASEmulators/BizHawk
 - BizHawk Lua functions: https://tasvideos.org/Bizhawk/LuaFunctions
 - Rerecording/movie guidance: https://tasvideos.org/Bizhawk/Rerecording
 - BizHawk PSX notes: https://tasvideos.org/Bizhawk/PSX
-- DuckStation repo: https://github.com/stenzek/duckstation
-- DuckStation CLI args: https://github.com/stenzek/duckstation/wiki/Command-Line-Arguments
-- DuckStation logging: https://github.com/stenzek/duckstation/wiki/Logging
-
-BizHawk supplies an input-movie corpus; PCSX-Redux Agentic supplies detailed breakpoints and tracing. Constrain DuckStation CPU logs to bounded windows.
+These sources describe external input movies. Record their format, tool and settings
+when using them as research inputs. Run this project's runtime analysis through
+PCSX-Redux Agentic's [bounded missions](../../psx-emulator/SKILL.md).
 
 ## Symbols and signatures — Tier D
 - PsyQ signature database: https://github.com/lab313ru/psx_psyq_signatures

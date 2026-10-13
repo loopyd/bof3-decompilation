@@ -10,6 +10,8 @@ All paths are below `tools/python/harness/`.
 | Package | Owns | Entry points |
 | --- | --- | --- |
 | `runtime/` | emulator staging, launch, completion, receipts and origin validation | `bin/harness runtime` → `harness.runtime.cli` |
+| `toolchain/` | pinned tool setup, native builds and installation verification | `bin/harness setup`, `bin/harness doctor` |
+| `reconstruction/` | prepared original-only inputs, native generation and independent comparison | `bin/harness reconstruction` → `harness.reconstruction.cli` |
 | `macros/` | lexical facts, assembly/C opportunities, ranking, consumers, reviewed transactions and unchanged existing-abstraction dispositions | `bin/harness macros` → `harness.macros.cli` |
 | `combiner/` | inspection, compiler preservation, joint images, grouped comparison and rollback-only rehearsal/recovery; ranking/permanent application remain queued | `bin/harness combiner` → `harness.combiner.cli`; [rollout contract](combiner.md) |
 | `naming/` | symbol naming opportunities, identity inventory, evidence collection, audits, proposals, application and acceptance | `bin/harness naming` → `harness.naming.cli`; `bin/harness naming evidence` → `harness.naming.runner` |
@@ -1018,8 +1020,9 @@ independent review still govern retained BOF3 changes.
   flags only later unreviewed names (`bin/harness source symbols baseline` alone is a dry run).
 - `bin/harness lift status [TARGET...]` is the live lift audit.
 - Run focused tests for changed behavior with `just check-unit <unit>` and the
-  scoped `just check` (ruff, `bin/harness source symbols check`, `validate_sources`; no pytest
-  units) before handoff when practical; the full suite is `just check-all`. List
-  every skipped check and residual risk.
+  shared `just check` before handoff when practical. The shared gate includes
+  lint, documentation drift, text tests and corpus checks, symbols and source
+  validation; `just check-all` adds every Python unit. Report skipped checks and
+  residual risks.
 - Tests assert behavior or parsed structure, never literal wording from agent,
   skill, prompt, or workflow Markdown.

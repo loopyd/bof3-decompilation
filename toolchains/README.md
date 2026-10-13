@@ -1,7 +1,7 @@
 # Toolchains
 
-Local SDKs and compilers live here. Generated/staged toolchains are untracked;
-the pinned `psx_psyq_signatures/` Git submodule is the sole tracked exception.
+Local SDKs and compilers live here. Generated installations are untracked;
+Git retains this guide, placeholders and the pinned `psx_psyq_signatures/` submodule.
 
 `just setup` downloads the official PsyQ 4.7 Runtime Library ZIP for headers
 and `.LIB` archives, then stages it under `psyq/4.7/`. It also downloads a
@@ -54,6 +54,22 @@ Its local SDL source, build, and installation live under
 `toolchains/pcsx-redux-agentic/`. See the
 [emulator guide](../docs/agents/pcsx-redux-agentic.md) for setup and invocation.
 
+## PS1 decompiler
+
+The maintained `third_party/rz-psxdec/` and `third_party/retdec-psx/` forks
+build together against managed Rizin:
+
+```sh
+bin/harness setup --component rz-psxdec
+bin/harness doctor --component rz-psxdec
+```
+
+Setup reuses `build/third_party/rz-psxdec/`. The
+[native build guide](../tools/retdec-psx/README.md) owns prerequisites, CPU-based
+job selection, receipt validation and reconstruction invocation.
+
+## PsyQ signature evidence
+
 The signature submodule is used only by the permanent, narrow
 `bin/harness psyq {scan|calls|proposal}` evidence adapter. Do not add other
 top-level command families; symbol-map mutation remains under `bin/harness source symbols`.
@@ -84,8 +100,7 @@ bin/harness build variants verify <id>             # verify installed variant
 bin/harness build variants path <id>               # print verified GCC path for CMake
 ```
 
-`config/compiler/variants.json` is reviewed, tracked metadata — the single
-source of truth for compiler IDs, archive digests, and executable paths.
+`config/compiler/variants.json` owns compiler IDs, archive digests and executable paths.
 GCC archives are cached (digest-verified) under
 `inputs/external/private-assets/toolchains/gcc/`; installed variants live in
 ignored local state under `toolchains/gcc-variants/` and the canonical

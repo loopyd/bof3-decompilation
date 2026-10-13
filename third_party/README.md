@@ -2,9 +2,21 @@
 
 Pinned tool repositories live here. Git records their exact revisions.
 
-Treat these as third-party code, not as the home for repo-owned tooling.
-Do not patch a fork without documenting the BOF3-specific reason and comparing
-it with the current upstream project first.
+Canonical sources are recorded in [.gitmodules](../.gitmodules). Inspect the
+checked-out revisions with `git submodule status --recursive`; setup uses these
+pins rather than following upstream branch tips.
+
+The maintained forks have their own source and documentation owners:
+
+| Fork | Role | Integration guide |
+| --- | --- | --- |
+| [pcsx-redux-agentic](pcsx-redux-agentic/README.md) | Linux emulator, embedded Lua missions and native capture APIs | [Emulator harness](../docs/agents/pcsx-redux-agentic.md) |
+| [rz-psxdec](rz-psxdec/README.md) | Rizin plugin, overlay mounts and original-only generation | [Native build](../tools/retdec-psx/README.md) |
+| [retdec-psx](retdec-psx/README.md) | PS1 decoder, analysis and C output backend | [Reconstruction](../tools/retdec-psx/reconstruction.md) |
+
+Commit fork changes in their repositories, then update this project's gitlinks.
+Compare dependency changes with the canonical upstream and document their reason.
+BOF3 harness code and game-specific integration stay in this repository.
 
 `references/` contains pinned BOF3 research inputs:
 

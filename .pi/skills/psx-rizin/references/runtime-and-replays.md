@@ -2,18 +2,16 @@
 
 ## Tool roles
 
-| Tool | Role |
-|---|---|
-| PCSX-Redux Agentic | primary runtime evidence: exec/read/write breakpoints, Lua scripting, memory/register access, GPU logger, bounded experiments; GDB for separately authorized manual sessions |
-| BizHawk | input-movie corpus: deterministic replays, TAStudio editing, savestate scenarios, Lua/debug interfaces |
-| DuckStation | cross-check: broad CPU trace logging, gameplay/replay testing (logs can reach GBs — constrained windows only) |
-
-Use [bounded emulator missions](../../psx-emulator/SKILL.md) for CPU inspection and
-captures. Maintained runtime uses interpreter/debugger; its GDB server stays disabled.
+PCSX-Redux Agentic owns runtime evidence: execution and memory breakpoints, native
+CPU/device queries, bounded trace capture and embedded Lua missions. Use the
+[emulator skill](../../psx-emulator/SKILL.md) for inspection and captures.
+Maintained runtime uses interpreter/debugger; its GDB server stays disabled.
 Separately authorized manual GDB sessions need explicit server settings and recorded
 port; examples use 3333. Keep Rizin as reproducible static database. Record core,
 firmware/BIOS, sync settings, disc hash, region and movie format/version. Movies
-are not portable between emulators.
+from external tools are research inputs, not interchangeable emulator replays.
+Passed receipts establish captured inputs and behavior, not deterministic replay
+or hardware fidelity.
 
 ## Replay corpus definition
 

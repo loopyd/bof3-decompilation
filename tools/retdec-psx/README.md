@@ -111,9 +111,10 @@ bin/harness reconstruction run --prepared-run "$prepared" \
   --configuration "$configuration" --native-receipt "$native_receipt"
 ```
 
-Reconstruction validates the receipt, snapshots both forks and the native build
-inputs, and loads the selected DSO with `RZ_NOPLUGINS=1`. It rechecks the
-snapshots before native execution. Its generic compilation remains owned by
+Reconstruction validates the receipt and records content identities for both
+forks and the native build inputs. It uses those files directly, rechecks their
+identities before native execution, and loads the selected DSO with
+`RZ_NOPLUGINS=1`. It copies no source or build trees. Generic compilation belongs to
 [build/recipe.py](../python/harness/build/recipe.py).
 
 Keep original-only inputs separate from fresh supplied-context captures. Authored

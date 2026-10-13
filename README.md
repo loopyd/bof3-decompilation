@@ -11,13 +11,16 @@ using target-qualified evidence and byte checks.
 - `git` (fetches submodules), `cargo` (builds the local Rust
   tools), and `meson` (>= 0.58.0) with a host C compiler (`gcc` or `clang`)
   and `ninja` (>= 1.8.2) to build the Rizin toolchain
-- `make`, `wget`, `bzip2`, `xz`, `bison`, `flex`, and a host C++ compiler
-  to build the native PSYQo toolchain from the pinned Nugget integration
+- `make`, `wget`, `bzip2`, `xz`, `bison`, and `flex` to build the native
+  PSYQo toolchain from the pinned Nugget integration
+- A host C++23 compiler and the development packages in the
+  [emulator build guide](third_party/pcsx-redux-agentic/README.md#build-locally)
+  for PCSX-Redux Agentic; `autoconf`, `automake`, `libtoolize`, `pkg-config`,
+  OpenSSL and zlib development packages for the native RetDec build
 - `cmake` (>= 3.20) — every lift verification rebuilds the authored object
   through CMake; `bin/harness lift asm-diff` and `bin/harness build` fail closed without it
-- `7z` — first-time setup downloads and extracts a staged PsyQ `.7z`, and the
-  same host tool extracts the `BreathOfFireIIIv1.1.7z` media archive when no
-  already-extracted CUE/BIN set exists
+- `7z` to extract the PsyQ archives and `BreathOfFireIIIv1.1.7z` when no
+  extracted CUE/BIN set exists
 - A licensed CUE/BIN set of *Breath of Fire III* (US release) under
   `inputs/external/`
 - Internet access for the first-time toolchain download

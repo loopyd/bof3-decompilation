@@ -15,7 +15,7 @@ not unit-map loading unless diagnosing a file/unit failure.
 | Mode | Action / completion |
 | --- | --- |
 | `unit-map FILE...` | Resolve every file/module via unit map; report unmapped entries |
-| `run-check` | `just check`; recipe-owned repository gates, no pytest units |
+| `run-check` | `just check`; recipe-owned shared gates, including text tests and corpus checks |
 | `run-unit UNIT` | `just check-unit UNIT` or `sh .pi/skills/bof3-test/scripts/check-unit.sh UNIT`; unit tests plus shared gate |
 | `run-all` | `just check-all`; every unit undeselected plus shared gate |
 | `optimize` | Read [optimization protocol](references/optimization.md); reviewed changes, preserved assertions and measured before/after |

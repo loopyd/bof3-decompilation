@@ -36,7 +36,8 @@ Read after `SOUL.md` and `AGENTS.md`; lift-side C rules stay in `AGENTS.md`.
   Naming identifies symbols; types own C representation and layout decisions.
   `harness.combiner` owns source-consolidation policy; shared function identity and
   attached metadata stay in `harness.domain`, compiler selection in `harness.build`.
-  `harness.docs` owns Markdown operations, not the domain facts or approvals described.
+  `harness.docs` reports documentation drift; the docs skill owns Markdown edits.
+  Domain facts and approvals stay with their owners.
   An `opportunities.py` owner discovers and describes leads; `cli.py` only adapts
   arguments. Lead enumeration is not ranking, evidence closure or edit authority.
   Cross-domain queries dispatch to these owners instead of re-exporting them.
@@ -81,10 +82,10 @@ Read after `SOUL.md` and `AGENTS.md`; lift-side C rules stay in `AGENTS.md`.
 - Tests live in per-module unit folders under `tools/python/tests/`
   (`analysis`, `application`, `build`, `commands`, `decomp`, `domain`, `emi`,
   `macros`, `naming`, `perf`, `skills`, `toolchain`, `types`); shared harness
-  fixtures stay at `tools/python/tests/`. Run the scoped repository gate with
-  `just check` (ruff, `bin/harness source symbols check`, `validate_sources`; **no pytest
-  units**, so per-lift and parent checks stay fast), every unit with
-  `just check-all`, and one unit with `just check-unit <unit>`; `$bof3-test` owns the
+  fixtures stay at `tools/python/tests/`. `just check` runs lint, documentation
+  drift, text tests and corpus checks, symbol checks and source validation.
+  `just check-all` adds every Python unit; `just check-unit <unit>` runs one unit
+  followed by that shared gate. `$bof3-test` owns the
   [unit map](../../.pi/skills/bof3-test/references/unit-map.md) and reviewed
   test-suite optimization. Moving a test file means fixing its `__file__`
   relative paths and any cross-test bare import (unit dirs are on `pythonpath`,

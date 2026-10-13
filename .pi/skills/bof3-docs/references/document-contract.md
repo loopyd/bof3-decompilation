@@ -4,9 +4,10 @@
 
 Caller names authored repository-relative Markdown; no implicit whole-tree scan or
 edit. Within `.pi/`, only authored agents/skills qualify. Discovery symlinks carry
-no copied bodies. Exclude generated output, builds, toolchains, inputs, scratch,
-sessions, ledgers and caches as authored truth. Other root files require explicit
-scope. Read access grants no edit authority. Preserve concurrent and dirty work.
+no copied bodies. Generated output, builds, installed toolchains, local inputs,
+scratch, sessions, ledgers and caches are not authored truth. Maintained guides
+inside those directories require explicit scope, as do other root files.
+Read access grants no edit authority. Preserve concurrent and dirty work.
 
 Skills obtain operative rules from their entry and bundled references, not user
 documentation or change artifacts. During authorized skill maintenance, extract

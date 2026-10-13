@@ -80,8 +80,8 @@ Reviewed source expectations retain every boundary address: singleton values rem
 integers and grouped values are sorted tuples. Scans require complete agreement and
 reject duplicate owners; they do not choose the first path. Layout promotion remains
 pending. Status cache v7 keys each target/source/address and checks record identity;
-grouped native status/cache admission remains gated. Index v16 invalidates older derived
-semantics; preserve the old index before rebuilding. A rejected candidate never
+grouped native status/cache admission remains gated. Older index schemas are rejected;
+preserve the old index before rebuilding. A rejected candidate never
 replaces it, and an older schema is historical evidence, not current acceptance.
 
 Type-use indexing retains known type spellings from fingerprinted source claims.
@@ -152,7 +152,7 @@ Ordinary byte comparison and flag search compare that whole function, not a
 `.text` prefix. A valid longer or shorter function is `different`, with its actual
 size retained. Diagnostics disassemble the actual address range, including extra
 instructions. Instruction-only agreement or inconsistent sizes cannot yield native
-exactness. Status-cache v6 discards older entries and binds the supplied target
+exactness. The status cache rejects older schemas and binds the supplied target
 model plus object flags/catalog bytes or absence. Nested metadata and sequence
 order survive; dictionary order is immaterial. This does not establish atomic
 input capture, complete compiler/runtime closure, a production re-audit or renewed
@@ -546,7 +546,7 @@ fingerprints; rendering never substitutes substrings in literal options. Relativ
 compiler PATH entries resolve from the captured working directory. The driver
 consumes that recipe rather than reselecting stage controls from ambient state.
 
-Producer v6 records `build.execution` v3 edges: successful child commands/environment
+Producer v7 records `build.execution` v3 edges: successful child commands/environment
 digests, stdin/generated-image hashes, partitioning and final publication. Evidence
 returns directly from the driver after cleanup and terminal checks. Invocation,
 recipe and execution fingerprints stay distinct; comparison v6 binds the producer's

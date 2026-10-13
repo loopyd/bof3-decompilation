@@ -50,7 +50,7 @@ Verify against installed `rizin -h` and `<cmd>?`; commands evolve. For PS1 decis
 ## Headless shell pattern
 
 ```bash
-rizin -N -n -q -e scr.color=false -e log.quiet=true \
+bin/harness analysis rizin -N -n -q -e scr.color=false -e log.quiet=true \
   -a mips -b 32 -E little -m 0x80010000 \
   -c 'aa;aac;aar;aflj;q' payload.bin
 ```
@@ -71,21 +71,29 @@ Build and explicitly load `rz-psxdec.so` as described in the
 | `pdz*` | Print commands that add decompilation comments |
 | `pdza [start [end]]` / `pdzaa` | Analyze a range / all functions |
 | `pdzar /absolute/workspace` | Generate from the validated fixed original-only inputs |
+| `pdzaom /absolute/metadata.json image-id...` | Mount verified original images in order |
+| `pdzaou image-id...` | Dismount images and reveal earlier static mappings |
+| `pdzao` | Inspect the active native memory context |
 | `pdze` | Show the output-directory environment setting (`DEC_SAVE_DIR`) |
 
 Ordinary function commands use the current Rizin analysis and supplied context.
 Original-only generation keeps authored references outside its inputs. Generated
 C remains a hypothesis until byte, contract, data and placement review.
+The [overlay command guide](../../../../third_party/rz-psxdec/README.md#overlay-state)
+owns metadata, address evidence, mount ordering and context limits.
 
 ## Runtime starting commands
 
 ```bash
-pcsx-redux -iso game.cue
-bizhawk --movie scenario.bk2 game.cue
-duckstation-qt -batch -fullscreen game.cue
-gdb-multiarch
-(gdb) set architecture mips
-(gdb) target remote localhost:3333
+bin/harness runtime status
+bin/harness runtime missions
+bin/harness runtime run --bios "$bios" --disc "$disc" \
+  --mission "$mission" --output "$fresh_output" --timeout 30
 ```
 
-Confirm installed flags; emulator CLIs change. Record emulator CLI/settings in the case rather than relying on GUI state.
+Select an embedded mission and its arguments through the
+[runtime procedures](../../psx-emulator/references/runtime.md). Supply licensed
+inputs and a fresh output directory. The harness records settings and input
+identities, bounds execution and validates captures. Maintained missions keep GDB
+disabled; separately authorized manual sessions follow
+[runtime analysis](runtime-and-replays.md).
