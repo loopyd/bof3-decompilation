@@ -12,6 +12,10 @@ from harness.common.workspace import workspace_state
 PRESERVATION = dict.fromkeys(
     ("scope", "body", "abi", "range", "index", "adopted_baseline"), True
 )
+PARENT_REVIEW_KEYS = (
+    "schema accepted parent_run_id implementation_run_id reviewer_run_id "
+    "review_artifact binding preservation"
+)
 
 
 def _keys(value, names: str) -> None:
@@ -40,10 +44,7 @@ def _binding(application: dict) -> dict:
 def _validate_parent(
     parent: object, schema: str, binding: dict, implementation_run_id: str
 ) -> None:
-    _keys(
-        parent,
-        "schema accepted parent_run_id implementation_run_id reviewer_run_id review_artifact binding preservation",
-    )
+    _keys(parent, PARENT_REVIEW_KEYS)
     if parent["schema"] != schema or parent["accepted"] is not True:
         raise ValueError("explicit accepted owner parent review required")
     origins = [

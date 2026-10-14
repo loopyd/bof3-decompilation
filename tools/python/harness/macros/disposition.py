@@ -12,7 +12,7 @@ from harness.common.lease import exclude_writers
 from harness.common.submodules import protect_artifacts
 from harness.common.paths import require_absent
 from harness.common.process import run_command
-from harness.common.review import _binding, _keys, _validate_parent
+from harness.common.review import PARENT_REVIEW_KEYS, _binding, _keys, _validate_parent
 from harness.common.runtime import (
     application_record,
     run_checks,
@@ -160,6 +160,7 @@ def verify_inspection(root: Path, record: object, expected_digest: str) -> dict:
 def review_existing(
     root: Path, record: object, parent: object, expected_digest: str
 ) -> dict:
+    _keys(parent, PARENT_REVIEW_KEYS)
     manifest = verify_inspection(root, record, expected_digest)
     _validate_parent(
         parent,
