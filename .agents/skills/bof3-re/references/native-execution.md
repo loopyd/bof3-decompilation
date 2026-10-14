@@ -32,6 +32,10 @@ refuses changed headers, newly present candidates and discoveries outside the
 pinned closure. Profile capture rejects other include-search settings. Active
 preprocessing and complete compiler-input closure retain their existing gates.
 
+Path-watch refusals retain the first refusing event's registered directory paths,
+escaped entry bytes, watch ID, mask and cookie. Freshness guards remain effective.
+These fields identify the observed event, not its writer or a historical cause.
+
 CLI adapters, lift gates and decompilation comparisons propagate
 `ProcessCleanupError` unchanged. Unconfirmed cleanup stops retries, fallback
 comparisons and later members. Keep POST and owned recovery until child

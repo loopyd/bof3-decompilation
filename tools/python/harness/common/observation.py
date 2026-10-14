@@ -121,6 +121,7 @@ class PathWatch:
         self._directories: dict[Path, int] = {}
         self._identities: dict[Path, tuple[int, ...]] = {}
         self._entries: dict[int, set[bytes]] = {}
+        self._watch_paths: dict[int, set[Path]] = {}
         self._memberships: set[int] = set()
         self._failure: str | None = None
         directories = set() if directories is None else set(directories)
@@ -175,6 +176,7 @@ class PathWatch:
                         ctypes.get_errno(), f"cannot watch input parent: {path}"
                     )
                 self._entries.setdefault(watch, set()).update(entries[path])
+                self._watch_paths.setdefault(watch, set()).add(path)
                 if path in directories:
                     self._memberships.add(watch)
                 after = os.fstat(directory)
@@ -203,7 +205,7 @@ class PathWatch:
         while cursor < len(content):
             if len(content) - cursor < _EVENT_HEADER.size:
                 self._fail("truncated input watch event header")
-            watch, mask, _cookie, length = _EVENT_HEADER.unpack_from(content, cursor)
+            watch, mask, cookie, length = _EVENT_HEADER.unpack_from(content, cursor)
             cursor += _EVENT_HEADER.size
             if length > len(content) - cursor or length % 4:
                 self._fail("malformed input watch event length")
@@ -229,7 +231,12 @@ class PathWatch:
                 or (watch in self._memberships and mask & self._membership_events)
                 or name in self._entries[watch]
             ):
-                self._fail("watched input entry or ancestor changed")
+                paths = tuple(str(path) for path in sorted(self._watch_paths[watch]))
+                self._fail(
+                    "watched input entry or ancestor changed: "
+                    f"directories={paths!r}, entry={name!r}, watch={watch}, "
+                    f"mask=0x{mask:08x}, cookie={cookie}"
+                )
 
     def _drain(self) -> None:
         for _attempt in range(64):
