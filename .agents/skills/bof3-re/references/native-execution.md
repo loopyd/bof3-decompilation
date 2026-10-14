@@ -22,6 +22,12 @@ in `config/compiler/variants.json`; generated compile database and `bin/cc` carr
 selection. Grouped functions require compatible effective profiles. Changing
 execution route never changes compiler/flags or substitutes host GCC.
 
+Native status fingerprints include literal source/header dependencies resolved
+through `src`, `include` and `toolchains/psyq/4.7/include`. A consumed header change
+invalidates the target's cached function results. This conservative lexical check
+leaves active preprocessing, complete compiler-input closure and grouped native
+comparison subject to their existing gates.
+
 ## Host capability
 
 Canonical driver, `cpp`, `cc1` are static i386 ELF. Known Codex sandbox failure is

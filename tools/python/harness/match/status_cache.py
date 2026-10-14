@@ -12,11 +12,12 @@ from typing import Any, Iterable
 from harness.common.files import read_file
 from harness.common.directory import validate_repo_path
 from harness.domain.ids import normalize_target_id
+from harness.domain.includes import local_include_files
 
 from ..io import file_sha256
 from ..domain.manifests import TargetManifest
 
-_SCHEMA = "harness.decomp-status-cache/v7"
+_SCHEMA = "harness.decomp-status-cache/v8"
 _CONFIGURATION = (
     "config/compiler/object-flags.cmake",
     "config/compiler/variants.json",
@@ -58,6 +59,20 @@ def _paths(root: Path, manifest: TargetManifest) -> Iterable[Path]:
     # sources is covered per-source by source_fingerprint.
     for claimed in manifest.sources + manifest.support_sources:
         yield root / claimed
+    yield from local_include_files(
+        root,
+        [
+            root / name
+            for name in manifest.sources + manifest.support_sources + manifest.headers
+        ],
+        include_roots=(
+            root / "src",
+            root / "include",
+            root / "toolchains/psyq/4.7/include",
+        ),
+        include_angle=True,
+        strict=True,
+    )
 
 
 def target_fingerprint(root: Path, manifest: TargetManifest) -> str:
