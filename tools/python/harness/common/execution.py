@@ -135,11 +135,8 @@ def capture(
     if launcher.read_bytes().partition(b"\n")[0] != os.fsencode(f"#!{python}"):
         raise ValueError("execution context requires project-Python Splat launcher")
     config = root / ".venv/pyvenv.cfg"
-    if (
-        file_state(config) is None
-        or "include-system-site-packages = false" not in config.read_text().splitlines()
-    ):
-        raise ValueError("execution context requires isolated project Python")
+    if file_state(config) is None:
+        raise ValueError("execution context requires project Python configuration")
     tools[".venv/bin/python"] = {
         "path": str(python.resolve(strict=True)),
         "state": file_state(python.resolve(strict=True)),

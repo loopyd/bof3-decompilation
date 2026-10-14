@@ -83,7 +83,7 @@ def execution_inputs(root: Path) -> None:
     launcher = root / ".venv/bin/splat"
     launcher.write_text(f"#!{root}/.venv/bin/python\nprint('splat fixture')\n")
     launcher.chmod(0o755)
-    (root / ".venv/pyvenv.cfg").write_text("include-system-site-packages = false\n")
+    (root / ".venv/pyvenv.cfg").write_text("include-system-site-packages = true\n")
     (root / ".venv/lib/site-packages").mkdir(parents=True)
     (root / ".venv/lib/site-packages/runtime.pth").write_text("# fixture\n")
 

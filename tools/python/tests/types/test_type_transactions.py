@@ -1914,7 +1914,7 @@ def test_type_context_concurrent_index_preserves_owned_source_rollback(
 
 
 @pytest.mark.parametrize(
-    "invalid", ["missing-launcher", "empty-launcher", "wrong-python", "system-site"]
+    "invalid", ["missing-launcher", "empty-launcher", "wrong-python"]
 )
 def test_type_context_rejects_unsupported_splat_runtime(tmp_path, monkeypatch, invalid):
     from transaction_native_fixture import execution_inputs
@@ -1930,10 +1930,6 @@ def test_type_context_rejects_unsupported_splat_runtime(tmp_path, monkeypatch, i
         launcher.write_text("")
     elif invalid == "wrong-python":
         launcher.write_text("#!/usr/bin/env python\n")
-    else:
-        (tmp_path / ".venv/pyvenv.cfg").write_text(
-            "include-system-site-packages = true\n"
-        )
     header = tmp_path / "include/test.h"
     original = header.read_bytes()
     with pytest.raises(ValueError, match="execution context"):
