@@ -195,9 +195,8 @@ MCP server definitions and configured credentials belong in `~/.codex/config.tom
 not this repository's `.codex` directory. The migration source is
 `~/.pi/agent/mcp.json`, overlaid by `.pi/mcp.json` when it defines project servers.
 The project file was empty at migration. Preserve unrelated Codex settings and a
-private backup before changing global configuration; keep credential-bearing
-configuration and backups mode `0600`. Never print tokens, connection strings or
-credential-bearing command arguments in reports or commit them to the project.
+private backup before changing global configuration. Never print tokens, connection
+strings or credential-bearing command arguments in reports or commit them to the project.
 
 The migrated servers are `sqlitecloud-mcp-server`, `github-mcp-server`,
 `markitdown`, `context7`, `context-mode`, `playwright`, and `vercel`. Command

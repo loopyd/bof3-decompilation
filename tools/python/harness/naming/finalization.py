@@ -166,7 +166,6 @@ def _finalize(
             "path": successor_path.relative_to(root).as_posix(),
             "state": {
                 "sha256": compute_sha256(encode(successor)),
-                "mode": report_state["mode"],
             },
         },
         "verification": verification,
@@ -197,7 +196,7 @@ def _finalize(
         raise ValueError(
             "finalization plan changed or expected plan SHA-256 mismatches"
         )
-    write_exclusive(successor_path, encode(successor), report_state["mode"])
+    write_exclusive(successor_path, encode(successor))
     live_validation = audit.validate(
         root, request["target"], load(successor_path), report_path=successor_path
     )
@@ -218,7 +217,7 @@ def _finalize(
         != record["artifacts"]
     ):
         raise ValueError("retained evidence changed before activation")
-    write_exclusive(checkpoint_path, encode(record), report_state["mode"])
+    write_exclusive(checkpoint_path, encode(record))
     validate_record(root, checkpoint_path, plan_sha256)
     if read_state(successor_path) != record["successor"]["state"]:
         raise ValueError("successor changed before activation")

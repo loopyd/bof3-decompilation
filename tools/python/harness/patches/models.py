@@ -35,5 +35,4 @@ class Series:
     groups: list[list[int]]
     counts: list[int]
     observed: dict[str, bytes | None]
-    modes: dict[str, int]
     evidence: dict

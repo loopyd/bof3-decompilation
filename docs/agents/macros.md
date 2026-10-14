@@ -400,9 +400,9 @@ filenames to preserve evidence: preparation can overwrite an existing destinatio
 and does not enforce that freshness recommendation.
 
 Context-bearing native runs bind source/header/config/binary, resolver catalog
-(including absence), tooling, modes, adopted baseline, index, environment, native
+(including absence), tooling, adopted baseline, index, environment, native
 tools, and Ninja transitions before edits, around gates, and at publication. Only
-explicit replacements may alter authoritative inputs; permissions survive.
+explicit replacements may alter authoritative inputs.
 Configured tools, explicit-source companion-free owners, and Ninja are required.
 No installation or automatic index recovery follows. Omitting the implementation
 ID retains the legacy route, which cannot supply context-bearing parent acceptance.
@@ -435,9 +435,9 @@ guarded restoration rather than overwriting another writer's work. This does not
 exclude manual editors or establish that an interrupted native worker terminated;
 see [shared lease contracts](harness.md). Read-only commands acquire no lease.
 
-Macro runs persist a `bof3.transaction-recovery/v3` record before source mutation
+Macro runs persist a `bof3.transaction-recovery/v5` record before source mutation
 at `out/reviews/evidence/macro-recovery-<nonce>.json`. It retains PRE source images,
-mode/inode facts, exact prepared POST identity/mode, manifest/run bindings and
+device/inode facts, exact prepared POST identity, manifest/run bindings and
 reserved PRE/POST quarantine destinations. Single-link POST images are staged on
 the destination filesystem and installed through the [publication backend](harness.md#file-publication):
 native no-replace only. Unsupported platforms or filesystems fail without an alternate
@@ -449,14 +449,14 @@ inspection and does not establish no effect.
 Records require independently pinned inspection, not automatic restoration. They do
 not replace application receipts, parent acceptance or publication reconciliation.
 
-Git-backed runs capture nested `bof3.recovery-safeguards/v4` with Git state,
+Git-backed runs capture nested `bof3.recovery-safeguards/v5` with Git state,
 digests of unrelated dirty paths, HEAD and exact raw index bytes/identity.
 Only explicit changed paths retain PRE/POST source images; clean sources and
 dependency trees are not copied. Existing consumed-input guards verify required
 dependency inputs. Missing observations mean unavailable guards, not a clean
-workspace. Source images remain nonpublic. Ext4 retains observed creation modes
-and mode/type bindings; this grants no permission changes or confidentiality
-guarantee. See [the shared policy](harness.md). A pending index lock rejects capture.
+workspace. Source images remain nonpublic and use OS-default creation. File-type,
+symlink, inode and single-link guards remain. See [the shared policy](harness.md).
+A pending index lock rejects capture.
 
 ```sh
 bin/harness macros inspect-recovery out/reviews/evidence/macro-recovery-NONCE.json --expected-recovery-digest INDEPENDENT_PIN
@@ -468,7 +468,7 @@ quarantine identity and publication presence without printing source images.
 It neither re-derives the manifest against live inputs nor establishes atomic
 state, writer termination/exclusion or publication authenticity. Exit zero does
 not authorize restoration or a retry.
-Current v3 records with nested safeguards v4 report dirty-path drift, HEAD and
+Current v5 records with nested safeguards v5 report dirty-path drift, HEAD and
 index agreement, and index locks. A `null` safeguards value reports unavailable
 guards and blocks guarded recovery. Inspection rejects older recovery and
 safeguard formats. Obtain fresh independently pinned backing without rewriting
@@ -483,7 +483,7 @@ bin/harness macros recover out/reviews/evidence/macro-recovery-NONCE.json --expe
 
 The [shared authorization schema and recovery gates](harness.md#guarded-source-recovery)
 require independent parent-pinned authority, reviewed terminal writer evidence,
-an outer v3 record with matching nested safeguards v4 and known absent publication.
+an outer v5 record with matching nested safeguards v5 and known absent publication.
 This command restores original owned PRE; it never resolves the macro opportunity, accepts
 source, consumes a ranked attempt budget or permits automatic retry. Unexpected
 publication and workspace/Git drift require separate reconciliation.
@@ -615,7 +615,7 @@ closed `{envelope, expected_envelope_digest}` list with full retained private
 objects and external pins. Each original POST/intervening PRE and final/current
 state must agree, including native build closure, tools, environment, index, and
 unrelated adopted state. Only reviewed changed paths explain authoritative drift;
-original owned POST bytes/modes stay intact. Build changes are accepted only inside
+original owned POST bytes stay intact. Build changes are accepted only inside
 recorded owner `bin/harness build` transitions, never gaps. New check-only gates must leave
 the resulting state unchanged. Unexpected writes require explicit recovery.
 
@@ -724,9 +724,8 @@ and runs owner-derived native gates under writer exclusion. PRE/POST source, ind
 tooling, environment, full adopted workspace and captured build closure must remain
 unchanged, including across every gate and publication. Outputs are exclusive new
 files under `out/reviews/evidence`; evidence-path reuse rejects before native work.
-Adopted entries also retain observed file modes/types; this does not require
-restrictive permission bits or authorize changing permissions. Failed gates, unexpected
-writes or cleanup uncertainty grant no source rollback authority: preserve state
+Adopted entries retain file-type and identity guards. Failed gates, unexpected writes
+or cleanup uncertainty grant no source rollback authority: preserve state
 for separately scoped recovery.
 
 Checking returns `checked:true`, not acceptance. Parent review uses

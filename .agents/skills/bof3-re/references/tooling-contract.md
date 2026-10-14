@@ -55,6 +55,10 @@ cleanup, owned-only restoration and native/semantic gates. Do not require whole-
 workspace snapshots, recursive source inventories or new proof/grant frameworks
 for bounded naming/type/macro/combiner work.
 
+Use OS-default file creation. Only tool setup may set executable bits. Preserve
+file-type, symlink, inode and hardlink guards; captures and rollback omit permission
+fields and checks.
+
 Stdlib first, then installed dependencies; no new dependency without explicit user
 approval. Prefer smallest working diff and deletion over speculative abstraction.
 Toolchain wrappers declare class attributes/minimal overrides on `toolchain/base.py`.
@@ -137,9 +141,10 @@ including behavior continuations. Treat category descriptions/rationales as auth
 leads; current bindings/shared categories prove no semantics, return contract, type
 facts, safe grouping or edit authority. Independently assess every member/pair's human value.
 
-The result pins membership, thresholds, method version, captured input bytes and
-modes, exact queried index facts, overlaps and ordering. Retain its `fingerprint` externally and pass
-it as `--expected-fingerprint` when rechecking the same pool. A changed pin, stale
+The result pins membership, thresholds, method version, captured input bytes,
+exact queried index facts, overlaps and ordering. Retain its `fingerprint`
+externally and pass it as `--expected-fingerprint` when rechecking the same pool.
+A changed pin, stale
 index, duplicate or cross-target member, invalid threshold, unsupported method or
 overlap policy, ownership drift, original JAL disagreement, moving input, more
 than 4,096 indexed call edges, stale classification bindings, classification SHA

@@ -469,7 +469,7 @@ def _candidate_failure(member, path, generation, error, phase):
 def _verify_attempt(
     candidate, member, generation, shared, prepared_run, workspace, allowance, limits
 ):
-    workspace.mkdir(mode=0o700)
+    workspace.mkdir()
     result_record = comparison._bounded_file_record(
         candidate / "result.json",
         limits.artifact_limit,
@@ -703,7 +703,7 @@ def _run(request, operation):
             "report destination overlaps immutable source evidence",
         )
         if operation == "verify":
-            destination.mkdir(mode=0o700)
+            destination.mkdir()
             owned = True
         with (
             using_reader(allowance.read_bytes),
@@ -756,7 +756,7 @@ def _run(request, operation):
                 prepared_run, runs, allowance.read_bytes
             )
             if operation == "report":
-                destination.mkdir(mode=0o700)
+                destination.mkdir()
                 owned = True
             document["generations"] = [
                 dict(
@@ -781,7 +781,7 @@ def _run(request, operation):
                     and set(selected) <= {row.key for row in corpus.members},
                     "selection must contain distinct authenticated member keys",
                 )
-                (destination / "candidates").mkdir(mode=0o700)
+                (destination / "candidates").mkdir()
                 for generation in shared.generations:
                     if generation.prepared is None:
                         continue
@@ -1040,9 +1040,7 @@ def _run(request, operation):
             )
             allowance.bind_final_output(pending_identity)
             document["attempted_output"] = pending_identity.as_record()
-            write_bytes(
-                pending, data, readonly=True, create_parents=False, events=events
-            )
+            write_bytes(pending, data, create_parents=False, events=events)
             _require(
                 allowance.read_bytes(pending, len(data), events) == data,
                 "pending report bytes changed before publication",
@@ -1094,9 +1092,7 @@ def _run(request, operation):
                     len(raw) <= request.limits.output_limit,
                     "retained refusal exceeds output allowance",
                 )
-                write_bytes(
-                    refusal, raw, readonly=True, create_parents=False, events=events
-                )
+                write_bytes(refusal, raw, create_parents=False, events=events)
                 published.append(
                     FileIdentity(refusal, len(raw), hashlib.sha256(raw).hexdigest())
                 )

@@ -29,7 +29,7 @@ def _capture_directory_metadata(status: os.stat_result) -> tuple[int, ...]:
     return (
         status.st_dev,
         status.st_ino,
-        status.st_mode,
+        stat.S_IFMT(status.st_mode),
         status.st_nlink,
         status.st_uid,
         status.st_gid,
@@ -98,7 +98,7 @@ def _capture_directory_identity(status: os.stat_result) -> tuple[int, ...]:
     return (
         status.st_dev,
         status.st_ino,
-        status.st_mode,
+        stat.S_IFMT(status.st_mode),
         status.st_uid,
         status.st_gid,
     )
@@ -360,7 +360,6 @@ def observe_file(root: Path, name: str) -> dict[str, Any] | None:
     fields = (
         "st_dev",
         "st_ino",
-        "st_mode",
         "st_nlink",
         "st_size",
         "st_mtime_ns",
@@ -374,7 +373,6 @@ def observe_file(root: Path, name: str) -> dict[str, Any] | None:
         return None
     return {
         "sha256": hashlib.sha256(content).hexdigest(),
-        "mode": stat.S_IMODE(after.st_mode),
         "device": after.st_dev,
         "inode": after.st_ino,
         "links": after.st_nlink,

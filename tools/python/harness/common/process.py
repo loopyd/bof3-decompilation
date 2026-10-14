@@ -548,10 +548,6 @@ def capture(
                 stream.close()
             except Exception as error:
                 errors.append(("close", str(record_path), error))
-            try:
-                record_path.chmod(0o600)
-            except Exception as error:
-                errors.append(("chmod", str(record_path), error))
     primary = (
         failure
         if isinstance(failure, ProcessCleanupError)

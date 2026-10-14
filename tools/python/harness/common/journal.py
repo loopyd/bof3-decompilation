@@ -32,7 +32,7 @@ def open_stream(root: Path, name: str) -> BinaryIO:
         descriptor = os.open(
             leaf,
             os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC,
-            0o600,
+            0o666,
             dir_fd=parent,
         )
         try:

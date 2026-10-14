@@ -149,7 +149,7 @@ def attestation(root: Path, bundle, row, value) -> None:
     for item in retained["files"]:
         keys(
             item,
-            "path exists sha256 mode" if item.get("exists") is True else "path exists",
+            "path exists sha256" if item.get("exists") is True else "path exists",
         )
         name = relative(item["path"])
         if name not in paths or name in seen or type(item["exists"]) is not bool:
@@ -157,11 +157,9 @@ def attestation(root: Path, bundle, row, value) -> None:
         seen.add(name)
         snapshot_files[name] = item
         actual = file_state(snapshot.parent / name)
-        expected = (
-            {"sha256": item["sha256"], "mode": item["mode"]} if item["exists"] else None
-        )
+        expected = {"sha256": item["sha256"]} if item["exists"] else None
         if actual != expected:
-            raise ValueError("retained snapshot bytes/mode/absence changed")
+            raise ValueError("retained snapshot bytes/absence changed")
     facts = row["pre_apply"]["facts"]
     old, new = facts["scope"]["definition"], facts["destination"]
     if row["kind"] == "data":
@@ -170,9 +168,7 @@ def attestation(root: Path, bundle, row, value) -> None:
             if (
                 item.get("exists") is not True
                 or item.get("sha256") != captured["before"]
-                or item.get("mode") != captured["mode"]
-                or bundle["final_state"].get(name)
-                != {"sha256": captured["after"], "mode": captured["mode"]}
+                or bundle["final_state"].get(name) != {"sha256": captured["after"]}
             ):
                 raise ValueError(
                     "snapshot does not bind data preapply and postapply images"
@@ -183,11 +179,8 @@ def attestation(root: Path, bundle, row, value) -> None:
         raise ValueError("snapshot is not a preapply source migration baseline")
     for name, item in snapshot_files.items():
         destination = new if name == old else name
-        if item["exists"] and (
-            bundle["final_state"].get(destination) is None
-            or bundle["final_state"][destination]["mode"] != item["mode"]
-        ):
-            raise ValueError("applied file mode differs from cleaner snapshot")
+        if item["exists"] and (bundle["final_state"].get(destination) is None):
+            raise ValueError("applied file is absent from cleaner snapshot")
     binding = bundle["binding"]
     expected_frozen = {
         binding["report"]: binding["report_state"]["sha256"],
@@ -199,8 +192,7 @@ def attestation(root: Path, bundle, row, value) -> None:
     }
     if retained["frozen"] != expected_frozen:
         raise ValueError("snapshot frozen bindings changed")
-    # Legacy cleaner snapshot stores raw index SHA-256, while native state also
-    # binds mode. Match its raw digest to the live index without changing it.
+    # Match the retained raw index digest to the live index without changing it.
     import os
     import subprocess
 

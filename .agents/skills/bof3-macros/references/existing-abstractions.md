@@ -31,7 +31,7 @@ leads prove neither definition selection nor argument safety.
 Warm the native build before freezing. Check under writer exclusion; preserve
 PRE/POST source/index/tooling/environment/full adopted workspace/build closure
 around every gate/publication. Use exclusive new canonical `out/reviews/evidence`
-outputs; reject reuse before native work. Preserve modes/types/permissions.
+outputs; reject reuse before native work. Preserve file-type and identity guards.
 Failure, unexpected writes or uncertain cleanup grants no rollback authority;
 retain state for scoped recovery.
 

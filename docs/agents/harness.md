@@ -139,7 +139,7 @@ lexical owners, plus shared I/O and confined file/path helpers.
 Preservation requires every observed input, including optional absence, in the
 retained PRE-plus-POST map: initial omissions and later unbound reads reject.
 The initial retained-input read loop also uses a fresh `InputBatch`, closed before
-semantic validation. State/hash/mode and optional-absence comparisons remain;
+semantic validation. Content-state and optional-absence comparisons remain;
 each verification still rereads inputs and runs its complete guards. No batch,
 content or validation-success cache crosses passes or output mutations.
 Newly required owners require fresh capture/review, never current-state backfill.
@@ -186,8 +186,9 @@ directories, including the filesystem root, retain full uncached observations.
 single-link checks, ancestor comparisons or either manifest-inventory check.
 No membership sample or validation result survives the pass.
 
-`common.inputs.read_input` returns state and the exact bytes hashed under one
-stable metadata sample; `file_state` retains its state-only schema. Profile capture
+`common.inputs.read_input` returns a `{sha256}` state, or `null` for absence, with
+the exact bytes hashed under one stable metadata sample. `file_state` retains its
+state-only schema. Profile capture
 uses those bytes without a duplicate read, but verification always reopens and
 rehashes inputs. All file mutation fields, ancestor symlink checks and profile-only
 single-link checks remain enforced. Only `ENOENT`/`ENOTDIR` denote absence;
@@ -214,10 +215,10 @@ participate in the existing preallocation temporary-family collision guard.
 `build.invocation` supplies the immutable recipe consumed by dispatch
 and driver. `build.execution` captures successful process, partition and publication
 edges and verifies them against that recipe without recreating deleted staging.
-The driver returns evidence in-process after cleanup; producer v7 and comparison v6
+The driver returns evidence in-process after cleanup; producer v8 and comparison v6
 bind it separately from live invocation identity. Profile compatibility remains
 independent of source/output paths; older restoration records remain versioned history.
-Producer v7 persists forced-input roles; older receipts are not upgraded or admitted
+Producer v8 persists forced-input roles; older receipts are not upgraded or admitted
 as fresh provenance. The invocation recipe shape is unchanged.
 Receipt production lends its live dispatch to the synchronous compiler call. The
 driver checks the exact root/arguments before staging and retains every validation
@@ -244,7 +245,7 @@ GCC_EXEC_PREFIX, COMPILER_PATH and PATH. It records initial specs and cpp/cc1
 candidates, including machine/version prefixes, compiled default roots and PATH
 fallbacks; repeated roots retain their order. Alternate binaries and search-control
 options remain explicit unresolved cases, never default substitutions. Retained
-graphs require `bof3.program-inputs/v2`. Live owner pins and stage fingerprints
+graphs require `bof3.program-inputs/v3`. Live owner pins and stage fingerprints
 require fresh evidence after policy edits.
 These observations do not prove effective import, shell or GCC selection.
 Executable suffixes, specs expansion, post-specs prefixes, other language backends
@@ -292,9 +293,9 @@ Full input closure and native/transaction integration remain open.
 See the [combiner contract](combiner.md) for supported entrypoints, invocation,
 invalid markers and retained recovery handling.
 
-`combiner.images` owns joint text/mode preparation; `combiner.history` validates
-transaction v4 with its exact owner set, preservation v7, profile v5 and program
-graph v2. Transaction v4 pins `build.runtime` and `build.observations` with the
+`combiner.images` owns joint text preparation; `combiner.history` validates
+transaction v5 with its exact owner set, preservation v8, profile v6 and program
+graph v3. Transaction v5 pins `build.runtime` and `build.observations` with the
 other owners. The history owner rejects older formats. Obtain fresh preparation
 without rewriting old records or their pins. Recovery keeps manifest v1 and
 validates retained bindings without live PRE. These checks grant neither
@@ -351,7 +352,7 @@ rebinding existing proposals. See the [invocation contract](tool-usage.md#frozen
 `naming.snapshot.create_snapshot` owns physical PRE capture for a pinned prepared
 FUNCTION/DATA transaction. It composes `inputs.frozen`/`transaction_paths`,
 `common.inventory.capture_file`, actual-index capture and
-`history.read_snapshot_states`: exact source scope, bytes/modes/absence and frozen
+`history.read_snapshot_states`: exact source scope, bytes/absence and frozen
 report/reviewed/index pins. It checks retained copies before manifest-last
 publication, then the manifest and live inputs/index/report before return.
 Copies cover selected transaction paths only; `inputs.state` conservatively hashes
@@ -514,13 +515,10 @@ separate. Direct low-level helpers do not acquire a lease. Neither a free lock
 nor its file establishes prior native-worker termination or restoration authority.
 Read-only proof verification and recovery inspection acquire no writer lease.
 
-The project now resides on ext4, which honors requested POSIX creation modes
-subject to the process umask. Repository locks, staging and evidence retain their
-owners' creation modes. Source/PRE/POST mode capture and drift checks remain part
-of identity-preserving rollback, not a uniform owner-only permission policy.
-Keep source-bearing records out of public logs and commits; mode bits alone do not
-guarantee confidentiality. Explicit captured-mode restoration remains strict.
-Migration does not authorize bulk permission changes or repair of captured pins.
+Repository files use OS-default creation. Captures, preservation and rollback
+omit permission fields and checks. Only tool setup may set executable bits.
+File-type, symlink, inode, hardlink, root-confinement and owned-rollback guards
+remain. Keep source-bearing records out of public logs and commits.
 
 ### File publication
 
@@ -542,22 +540,22 @@ commit, race-free recovery or power-loss guarantee follows.
 this publisher. Retained-hard-link publication and its alias return field remain
 removed; same-leaf preflight alone does not prove distinct-leaf capability. Source/images
 stay single-link, prepared images stay on the destination filesystem, and source
-bytes/mode/identity, root confinement, leases, submodule exclusion and guarded
+bytes/identity, root confinement, leases, submodule exclusion and guarded
 rollback remain required. Shared `common.rename.describe_locations` supplies
 files/Git publication and restoration errors with observed names and uncertainty,
 never inferred retained source after post-move failure. `safe_unlink` classifies failed movement by device/inode,
-mode, link count, size and mtime, excluding ctime. This changes publication support,
+file type, link count, size and mtime, excluding ctime. This changes publication support,
 not restoration authority or the scope of workspace/Git guards.
 
 ### Recovery capture
 
 Native tool cancellation can bypass Python exception handlers entirely. Macro/type
 transactions now use `common/recovery.py` to persist
-`bof3.transaction-recovery/v3` evidence before the first source mutation.
+`bof3.transaction-recovery/v5` evidence before the first source mutation.
 `common/quarantine.py` reserves exact displaced-file destinations in advance.
 The record binds root identity, owner, manifest, implementation run ID (nullable
-for legacy applications), publication path, PRE bytes/hash/mode/inode, intended
-POST hash/exact mode/inode, staging path and reserved PRE/POST quarantine mapping.
+for legacy applications), publication path, PRE bytes/hash/device/inode, intended
+POST hash/device/inode, staging path and reserved PRE/POST quarantine mapping.
 `common/images.py` prepares POST images under fresh staging directories before
 record capture, then installs the bound inode through [file publication](#file-publication).
 Images must share the destination filesystem and retain one link. Failed capture
@@ -566,9 +564,9 @@ Shared `common.runtime.apply_changes` additionally accepts an exact `deletions`
 path set and `null` content for those paths only. The default remains text-only;
 extra, undeclared, unowned or already-absent deletions reject before source mutation.
 Deleted files move to their reserved PRE quarantine, never to an empty placeholder.
-Mixed edits capture `bof3.transaction-recovery/v4`: each deleted path has present
+Mixed edits capture `bof3.transaction-recovery/v6`: each deleted path has present
 PRE and `post: null`; replacements retain prepared POST images. Text-only capture
-remains v3. The common owner vocabulary includes `combiner`, but this mechanism
+remains v5. The common owner vocabulary includes `combiner`, but this mechanism
 does not supply its domain transaction, audit, native gates or recovery CLI.
 `common.execution.applied` can bind absent POST only with an exact, canonical,
 manifest-owned `deletions` set and captured present PRE. Other calls remain
@@ -579,7 +577,7 @@ binds proposed images separately and remains read-only.
 `common/directory.py` owns confined descriptor traversal. Files and directory links are
 synced before mutation; capture failure aborts before moving sources.
 
-`common/safeguards.py` captures `bof3.recovery-safeguards/v4` with
+`common/safeguards.py` captures `bof3.recovery-safeguards/v5` with
 unrelated dirty-path observations, current HEAD and exact raw Git-index
 bytes/path/state. Changed owned paths are covered by their PRE/POST images.
 A pending index lock rejects capture. Runs without Git/index observations
@@ -616,10 +614,9 @@ confinement remain unassessed.
 
 Records live at `out/reviews/evidence/{macro,type,combiner}-recovery-<nonce>.json`.
 They contain source text: retain them as nonpublic evidence. Their digest
-detects drift against a separately retained pin; neither that digest, file mode
-nor writer PID authenticates restoration authority or proves writer termination.
-For new files, creation mode remains `0644` masked by the process umask; v3/v4 bind
-the resulting exact mode. Exception rollback checks POST/PRE identities.
+detects drift against a separately retained pin; neither that digest nor writer
+PID authenticates restoration authority or proves writer termination. New files
+use OS-default creation. Exception rollback checks POST/PRE identities.
 
 Ordinary type/macro failure restores only the transaction's captured owned source
 images. Unexpected workspace or Git-index changes are not proof of ownership:
@@ -633,7 +630,7 @@ an unreadable unrelated path cannot suppress otherwise safe owned restoration.
 is uncertain.
 
 These observations are non-atomic. The non-Git fallback lacks workspace/Git
-guards and cannot claim verified recovery. Nested safeguards v4 excludes changed
+guards and cannot claim verified recovery. Nested safeguards v5 excludes changed
 paths and archives no unrelated source contents. Owner rollback never restores
 unrelated files or Git state.
 
@@ -641,7 +638,7 @@ Identity-bound source rollback is replayable: it requires complete backup/image
 coverage, recognizes original PRE as a no-op, and resumes a missing destination
 only with its original PRE quarantine. Originally absent paths remain absent.
 `common/images.py` requires exactly one original POST image at the source,
-staging path or reserved POST quarantine; unexpected bytes, mode, inode, links or
+staging path or reserved POST quarantine; unexpected bytes, inode, links or
 location combinations reject before that path is changed. PRE/POST byte equality
 does not bypass identity checks. `common/observation.py` shares non-atomic file
 observations with inspection; actual moves use the checked [publication backend](#file-publication)
@@ -651,12 +648,12 @@ absent lease, reconcile publication or restore workspace/Git state. Unbound
 byte-only rollback has no identity-replay guarantee. A no-op replay does not
 complete interrupted directory syncing or establish power-loss durability.
 
-V4 deletion rollback requires an absent source and its original single-link PRE
+V6 deletion rollback requires an absent source and its original single-link PRE
 inode in the reserved quarantine; restored PRE with an absent quarantine is a
 replayable no-op. Missing backing, duplicate locations or foreign replacements
 reject without overwriting them. Deletions have no POST inode to authenticate.
 Read-only inspection reports `deleted` only with that PRE backing, and distinguishes
-lost backing as `missing` or `drifted`. Neither observed absence nor a v4 record
+lost backing as `missing` or `drifted`. Neither observed absence nor a v6 record
 grants restoration authority or establishes an atomic multi-file commit.
 
 `common/inspection.py` supplies read-only `inspect-recovery RECORD
@@ -666,11 +663,11 @@ quarantine identities. It reports original PRE, missing, exact identity-bound PO
 or drifted files, staged/displaced POST, unchanged-path hashes and publication
 presence without printing source images. Manifest validation is structural, not
 live re-derivation.
-Inspection accepts transaction-recovery v3/v4 and, when present, safeguards v4.
+Inspection accepts transaction-recovery v5/v6 and, when present, safeguards v5.
 A `null` safeguards value reports unavailable guards and blocks guarded recovery.
 Inspection rejects all other recovery and safeguard formats. Obtain fresh
 independently pinned backing without rewriting old records or their pins.
-Safeguards v4 report dirty-path additions/removals/drift, HEAD and raw-index
+Safeguards v5 report dirty-path additions/removals/drift, HEAD and raw-index
 agreement, and index locks. `matches` means these observations agree, not complete
 workspace/Git verification. Observations are non-atomic; termination, exclusion
 and publication authenticity remain unverified.
@@ -680,7 +677,7 @@ Exit zero means inspection succeeded, not that restoration or continuation is sa
 
 `bin/harness types recover` and `bin/harness macros recover` restore owned PRE
 only under an externally pinned parent authorization and a separately pinned
-v3 or v4 record with nested safeguards v4.
+v5 or v6 record with nested safeguards v5.
 `common/authorization.py` validates authority bindings; `common/restoration.py`
 owns the fail-stop operation; `common/inspection.py::load_recovery` validates
 backing for both inspection and restoration. No discovered record grants authority.
@@ -721,7 +718,7 @@ Unexpected unrelated or Git-index changes are never overwritten.
 
 Completion writes an exclusive private `bof3.source-restoration/v1` receipt bound
 to both pins, authority binding, terminal attestation and restored PRE identities.
-It omits source bytes. Identical replay requires valid receipt bytes/mode/link
+It omits source bytes. Identical replay requires valid receipt bytes/link
 count and fresh authority, guards and PRE checks; a receipt alone never proves
 current success. Partial restoration or publication failure stops and retains
 original evidence for reviewed retry; the original recovery record is not rewritten.

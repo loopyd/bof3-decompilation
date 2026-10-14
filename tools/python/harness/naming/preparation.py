@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import os
 import re
-import stat
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -47,7 +46,6 @@ class _RepairTransaction:
 
     entries: list[dict[str, Any]]
     snapshots: dict[str, str] = field(default_factory=dict)
-    modes: dict[str, int] = field(default_factory=dict)
     written: list[str] = field(default_factory=list)
 
     def restore(self, root: Path) -> None:
@@ -64,7 +62,6 @@ def _atomic_write(root: Path, relative: str, text: str) -> None:
     target = root / relative
     temp = target.with_name(f"{target.name}.rollback-tmp")
     temp.write_text(text, encoding="utf-8")
-    os.chmod(temp, stat.S_IMODE(target.stat().st_mode))
     os.replace(temp, target)
 
 
@@ -161,7 +158,6 @@ def repair_selected_rows(
             continue
         relative = source.relative_to(root).as_posix()
         transaction.snapshots.setdefault(relative, source.read_bytes().decode("utf-8"))
-        transaction.modes.setdefault(relative, stat.S_IMODE(source.stat().st_mode))
         exact, commands = live_exact(address_of(row))
         if not exact:
             finding["class"] = "review_required"
@@ -202,10 +198,7 @@ def repair_selected_rows(
                 entry for entry in transaction.entries if entry["file"] == relative
             )
             source = root / relative
-            if (
-                source.read_bytes().decode("utf-8") != before
-                or stat.S_IMODE(source.stat().st_mode) != transaction.modes[relative]
-            ):
+            if source.read_bytes().decode("utf-8") != before:
                 raise ValueError("selected source changed during live proof")
         for relative, fixed in images.items():
             current = next(

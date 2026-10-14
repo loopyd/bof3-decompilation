@@ -110,7 +110,7 @@ def _index_state(
     return (
         value.st_dev,
         value.st_ino,
-        value.st_mode,
+        stat.S_IFMT(value.st_mode),
         value.st_uid,
         value.st_gid,
         value.st_size,
@@ -356,14 +356,13 @@ def _write_index_artifact(
     descriptor = os.open(
         leaf,
         os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
-        stat.S_IMODE(state[2]) if state is not None else 0o600,
+        0o666,
         dir_fd=parent,
     )
     with os.fdopen(descriptor, "wb") as stream:
         stream.write(content)
         stream.flush()
         if state is not None:
-            os.fchmod(stream.fileno(), stat.S_IMODE(state[2]))
             os.utime(stream.fileno(), ns=(state[6], state[6]))
         os.fsync(stream.fileno())
         identity = os.fstat(stream.fileno())
@@ -530,7 +529,7 @@ def restore_git_index(
         lock = os.open(
             lock_leaf,
             os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
-            0o600,
+            0o666,
             dir_fd=parent,
         )
         lock_state = os.fstat(lock)

@@ -8,13 +8,13 @@ Before type/macro execution, read the domain application reference too. Select
 
 Pin original request, membership, PRE, external digests and adopted dirty baseline.
 Rederive the live manifest before edits. Map permitted repo-relative paths to
-complete replacements; preserve generated files/permissions. Require configured
+complete replacements; preserve generated files. Require configured
 tools, explicit-source companion-free owners and Ninja. Do not install, override
 toolchains, ignore missing compilers or recover the index.
 
 Require actual `--implementation-run-id` for context-bearing runs. Capture
 owner-derived source/header/config/binary, resolver catalog including absence,
-tooling/modes, adopted baseline, raw index, environment, native tools and Ninja
+tooling, adopted baseline, raw index, environment, native tools and Ninja
 transitions before edits, around gates and at publication. Legacy omitted-ID runs
 cannot gain context-bearing final acceptance; context is not reviewer attestation.
 
@@ -40,9 +40,9 @@ proves no termination or manual-writer exclusion. Read-only checks acquire no le
 
 ## Publication
 
-Before edits, persist `bof3.transaction-recovery/v3` under
+Before edits, persist `bof3.transaction-recovery/v5` under
 `out/reviews/evidence/{macro,type}-recovery-<nonce>.json`. Bind root, owner,
-manifest/run/publication, PRE bytes/hash/mode/inode, prepared POST hash/mode/inode,
+manifest/run/publication, PRE bytes/hash/device/inode, prepared POST hash/device/inode,
 fresh staging and reserved PRE/POST quarantines. Same filesystem and single-link
 images required. Capture failure blocks edits but may leave images.
 
@@ -50,25 +50,25 @@ Use native `RENAME_NOREPLACE` on current ext4. Unsupported platforms/filesystem
 errors fail without empty reservations or hard-link/alternate publishers. Identity
 checks/multi-file transitions remain cooperative; manual writers are not excluded.
 Preserve foreign names. After move/sync failure, inspect locations and retain
-prepared/displaced images; empty size grants no cleanup. Do not weaken permissions
-or claim atomic multi-file/power-loss guarantees. The
+prepared/displaced images; empty size grants no cleanup. Do not claim atomic
+multi-file/power-loss guarantees. The
 [shared publication contract](../../../../docs/agents/harness.md#file-publication)
 retains historical NTFS authorization separately from current behavior.
 
 Retain recovery PRE/POST images only for changed paths. Git-backed
-`bof3.recovery-safeguards/v4` pins HEAD, exact index bytes/identity, and unrelated
+`bof3.recovery-safeguards/v5` pins HEAD, exact index bytes/identity, and unrelated
 Git status with dirty-path digests, excluding shared artifact roots. Capture dirty
 symlink bytes without following links and submodule checkout identities/protected
 boundaries without recursive contents. Pin consumed dependencies through owner
 guards; unchanged files supply no rollback images. Missing guards are unavailable,
 not clean; index locks block capture. Observations are non-atomic and trust root
-Git metadata. Ext4 creation respects umask; preserve exact modes/drift checks and
-keep source-bearing backing nonpublic/uncommitted.
+Git metadata. Use OS-default file creation and keep source-bearing backing
+nonpublic/uncommitted. File-type, symlink, inode and single-link guards remain.
 
-V4 supports separately authorized deletion-aware common owners: present PRE,
+V6 supports separately authorized deletion-aware common owners: present PRE,
 `post:null`, exact declared deletion set and reserved PRE quarantine. It does not
 add type/macro deletion authority, combiner acceptance or automatic recovery.
-Inspection accepts transaction-recovery v3/v4 and, when present, safeguards v4.
+Inspection accepts transaction-recovery v5/v6 and, when present, safeguards v5.
 A `null` safeguards value reports unavailable guards and blocks guarded recovery.
 Inspection rejects older formats. Obtain fresh scoped backing without rewriting
 old records or their pins.
@@ -81,9 +81,9 @@ files. Compare allowed PRE, adopted workspace, raw index, HEAD and scoped
 safeguards. Drift/failed inspection means incomplete rollback, not retry permission.
 
 Identity replay requires complete backing, exactly one original POST at source,
-staging or reserved POST quarantine, exact bytes/mode/inode/link/location. PRE
+staging or reserved POST quarantine, exact bytes/device/inode/link/location. PRE
 already present is no-op; missing destination needs original PRE quarantine;
-original absence stays absence. Equal PRE/POST bytes do not waive identity. V4
+original absence stays absence. Equal PRE/POST bytes do not waive identity. V6
 needs absent source and original single-link quarantined PRE; foreign replacements
 or lost/duplicate backing block. Replay does not prove interrupted fsync completed.
 
@@ -119,12 +119,12 @@ Artifact paths canonical repo-relative evidence paths; hashes cover bytes.
 Authorization, record, completion, publication and both artifacts distinct.
 Retain authorization/record pins externally before use.
 
-Recovery leases before validation; requires v3/v4, implementation identity,
+Recovery leases before validation; requires v5/v6, implementation identity,
 workspace/Git guards matching, known absent publication and consistent images.
 Recheck every image before each transition, completed PRE, authority/guards around
 completion. Stop on singleton failure. Never overwrite unrelated/index state.
 Exclusive `bof3.source-restoration/v1` receipt binds pins, authority, termination and
-restored identities, no source text. Replay needs valid receipt bytes/mode/links
+restored identities, no source text. Replay needs valid receipt bytes/links
 and fresh guards/PRE/authority. Partial failure retains backing for reviewed retry.
 No acceptance, automatic retry, published-application reconciliation, workspace/Git
 restoration or automatic worker recovery. Never rewrite proofs after tooling moves.

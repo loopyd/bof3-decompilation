@@ -99,20 +99,14 @@ def read_snapshot_states(snapshot: Path) -> dict:
     for item in retained["files"]:
         if type(item.get("exists")) is not bool:
             raise ValueError("snapshot existence must be boolean")
-        require_keys(
-            item, "path exists sha256 mode" if item["exists"] else "path exists"
-        )
+        require_keys(item, "path exists sha256" if item["exists"] else "path exists")
         backup = resolve_contained_path(snapshot.parent, item["path"])
         name = str(backup)
         if name in result:
             raise ValueError("duplicate retained snapshot file")
-        expected = (
-            {"sha256": item["sha256"], "mode": item["mode"]} if item["exists"] else None
-        )
+        expected = {"sha256": item["sha256"]} if item["exists"] else None
         if expected is not None:
             require_pin(expected["sha256"])
-            if type(expected["mode"]) is not int:
-                raise ValueError("snapshot mode must be an integer")
         if file_state(backup) != expected:
             raise ValueError(f"retained snapshot differs from declared PRE: {backup}")
         result[name] = expected
@@ -164,7 +158,7 @@ def collect_evidence_states(
             for key, item in value.items():
                 if key in {"execution", "attestation"} and isinstance(item, str):
                     expected = value.get(key + "_state")
-                    require_keys(expected, "sha256 mode")
+                    require_keys(expected, "sha256")
                     capture(item, expected_state=expected)
                 elif key in {"receipt", "evidence"} and isinstance(item, str):
                     pin = value.get("sha256" if key == "receipt" else "evidence_sha256")
@@ -425,18 +419,14 @@ def validate_record(root: Path, path: Path, expected_sha256: str) -> dict:
         raise ValueError("checkpoint is not its deterministic owner path")
     for name in ("predecessor", "bundle", "successor"):
         require_keys(record[name], "path state")
-        require_keys(record[name]["state"], "sha256 mode")
+        require_keys(record[name]["state"], "sha256")
         require_pin(record[name]["state"]["sha256"])
-        if type(record[name]["state"]["mode"]) is not int:
-            raise ValueError("invalid checkpoint file mode")
     if (
         record["predecessor"]["path"] != request["report"]
         or record["predecessor"]["state"]["sha256"] != request["report_sha256"]
         or record["bundle"]["path"] != request["bundle"]
         or record["bundle"]["state"]["sha256"] != request["bundle_sha256"]
         or record["successor"]["path"] != successor.relative_to(root).as_posix()
-        or record["successor"]["state"]["mode"]
-        != record["predecessor"]["state"]["mode"]
     ):
         raise ValueError("checkpoint input or successor binding mismatch")
     predecessor = resolve_contained_path(root, request["report"])
@@ -487,11 +477,8 @@ def validate_record(root: Path, path: Path, expected_sha256: str) -> dict:
     }:
         raise ValueError("checkpoint successor validation mismatch")
     require_keys(record["summary"], "state text")
-    require_keys(record["summary"]["state"], "sha256 mode")
-    if (
-        not isinstance(record["summary"]["text"], str)
-        or type(record["summary"]["state"]["mode"]) is not int
-    ):
+    require_keys(record["summary"]["state"], "sha256")
+    if not isinstance(record["summary"]["text"], str):
         raise ValueError("invalid retained recovery account")
     if (
         compute_sha256(record["summary"]["text"].encode()) != request["summary_sha256"]
@@ -551,18 +538,14 @@ def _validate_recovery_record(
         raise ValueError("recovery checkpoint is not its deterministic owner path")
     for key in ("predecessor", "successor"):
         require_keys(record[key], "path state")
-        require_keys(record[key]["state"], "sha256 mode")
+        require_keys(record[key]["state"], "sha256")
         require_pin(record[key]["state"]["sha256"])
-        if type(record[key]["state"]["mode"]) is not int:
-            raise ValueError("invalid recovery file mode")
     predecessor = resolve_contained_path(root, request["report"])
     if (
         record["predecessor"]["path"] != request["report"]
         or record["predecessor"]["state"]["sha256"] != request["report_sha256"]
         or read_state(predecessor) != record["predecessor"]["state"]
         or record["successor"]["path"] != successor.relative_to(root).as_posix()
-        or record["successor"]["state"]["mode"]
-        != record["predecessor"]["state"]["mode"]
     ):
         raise ValueError("recovery predecessor or successor binding changed")
     report = load(predecessor)
@@ -604,8 +587,6 @@ def _validate_active(root: Path, path: Path, record: dict) -> None:
     before = read_state(path)
     if before == record["successor"]["state"]:
         return
-    if before["mode"] != record["successor"]["state"]["mode"]:
-        raise ValueError("active naming generation mode changed")
     predecessor = load(resolve_contained_path(root, record["predecessor"]["path"]))
     if record["schema"] == RECOVERY_CHECKPOINT_SCHEMA:
         baseline = recovery_successor(predecessor, record["delta"])["rows"]
@@ -733,20 +714,17 @@ def require_mutable_report(path: Path) -> None:
             raise ValueError("unpublished naming generation is immutable")
 
 
-def write_exclusive(path: Path, content: bytes, mode: int) -> None:
+def write_exclusive(path: Path, content: bytes) -> None:
     if path.exists() or path.is_symlink():
-        if read_state(path) != {"sha256": compute_sha256(content), "mode": mode}:
+        if read_state(path) != {"sha256": compute_sha256(content)}:
             raise ValueError(
                 f"retained publication differs; refusing overwrite: {path}"
             )
         return
-    descriptor = os.open(
-        path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, mode
-    )
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW)
     with os.fdopen(descriptor, "wb") as stream:
         stream.write(content)
         stream.flush()
-        os.fchmod(stream.fileno(), mode)
         os.fsync(stream.fileno())
     sync_directory(path.parent)
 

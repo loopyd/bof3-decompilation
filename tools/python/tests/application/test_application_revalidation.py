@@ -68,7 +68,6 @@ def test_check_only_revalidation_executes_new_gates_without_reapplication(review
     assert all((root / p).read_bytes() == b for p, b in retained.items())
     assert envelope == original
     assert (root / "include/test.h").read_bytes() == before
-    assert (root / "include/test.h").stat().st_mode & 0o7777 == 0o750
     assert (root / ".git/index").read_bytes() == index
     assert transactions.verify_application(root, app, app["digest"])["applied"]
     # Fresh check-only evidence is not independent acceptance or a shared pin.
@@ -165,9 +164,7 @@ def test_revalidation_existing_output_preserves_prerequisites(
         output,
         *(root / r["path"] for r in app["receipts"]),
     ]
-    for path in paths:
-        path.chmod(0o750)
-    retained = {p: (p.read_bytes(), p.stat().st_mode) for p in paths}
+    retained = {p: (p.read_bytes(), p.stat().st_ino) for p in paths}
     destination = {
         "receipt": root / app["receipts"][0]["path"],
         "application": application,
@@ -195,7 +192,7 @@ def test_revalidation_existing_output_preserves_prerequisites(
             **options,
         )
     assert all(
-        (p.read_bytes(), p.stat().st_mode) == state for p, state in retained.items()
+        (p.read_bytes(), p.stat().st_ino) == state for p, state in retained.items()
     )
     assert transactions.verify_application(root, app, app["digest"])["applied"]
     assert review.verify_reviewed_application(root, envelope, envelope["digest"])[
@@ -215,7 +212,7 @@ def test_revalidation_late_output_creation_never_clobbers(
     retained = {
         root / r["path"]: (
             (root / r["path"]).read_bytes(),
-            (root / r["path"]).stat().st_mode,
+            (root / r["path"]).stat().st_ino,
         )
         for r in app["receipts"]
     }
@@ -227,12 +224,11 @@ def test_revalidation_late_output_creation_never_clobbers(
         if leaf == destination.name:
             if alias == "direct":
                 destination.write_bytes(b"concurrent output\n")
-                destination.chmod(0o750)
             elif alias == "symlink":
                 destination.symlink_to(root / app["receipts"][0]["path"])
             else:
                 os.link(root / app["receipts"][0]["path"], destination)
-            collided.append((destination.read_bytes(), destination.stat().st_mode))
+            collided.append((destination.read_bytes(), destination.stat().st_ino))
         return publish(source, leaf, **kwargs)
 
     monkeypatch.setattr(transaction_files, "publish_file", create_at_publication)
@@ -260,9 +256,9 @@ def test_revalidation_late_output_creation_never_clobbers(
             **options,
         )
     assert commands == [c["argv"] for c in app["manifest"]["required_checks"]]
-    assert collided == [(destination.read_bytes(), destination.stat().st_mode)]
+    assert collided == [(destination.read_bytes(), destination.stat().st_ino)]
     assert all(
-        (p.read_bytes(), p.stat().st_mode) == state for p, state in retained.items()
+        (p.read_bytes(), p.stat().st_ino) == state for p, state in retained.items()
     )
     assert envelope == original
     assert transactions.verify_application(root, app, app["digest"])["applied"]
@@ -323,12 +319,12 @@ def test_fresh_parent_acceptance_of_no_drift_revalidation(reviewed_run):
     retained = {
         root / r["path"]: (
             (root / r["path"]).read_bytes(),
-            (root / r["path"]).stat().st_mode,
+            (root / r["path"]).stat().st_ino,
         )
         for r in app["receipts"] + record["receipts"]
     }
     source = root / "include/test.h"
-    retained[source] = (source.read_bytes(), source.stat().st_mode)
+    retained[source] = (source.read_bytes(), source.stat().st_ino)
     index = (root / ".git/index").read_bytes()
     frozen = copy.deepcopy((original, record, parent))
     envelope = review.review_revalidation(root, record, parent, record["digest"])
@@ -394,7 +390,7 @@ def test_fresh_parent_acceptance_of_no_drift_revalidation(reviewed_run):
     assert (original, record, parent) == frozen
     assert (root / ".git/index").read_bytes() == index
     assert all(
-        (p.read_bytes(), p.stat().st_mode) == state for p, state in retained.items()
+        (p.read_bytes(), p.stat().st_ino) == state for p, state in retained.items()
     )
     # Retained reviewer and original/new native evidence remain live prerequisites.
     for path in (

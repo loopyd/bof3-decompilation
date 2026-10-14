@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import io
+import stat
 from dataclasses import dataclass
 from pathlib import Path
 from types import MappingProxyType
@@ -125,7 +126,9 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
             return None
         content, metadata, resolved = captured
         identity = tuple(
-            getattr(metadata, field)
+            stat.S_IFMT(metadata.st_mode)
+            if field == "st_mode"
+            else getattr(metadata, field)
             for field in (
                 "st_dev",
                 "st_ino",

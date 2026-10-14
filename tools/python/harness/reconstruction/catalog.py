@@ -83,9 +83,6 @@ def _observe(
                     "exists": path.exists(),
                     "symlink": path.is_symlink(),
                 }
-            row["mode"] = (
-                path.lstat().st_mode if path.exists() or path.is_symlink() else None
-            )
             if (
                 path.is_file()
                 and not blocked

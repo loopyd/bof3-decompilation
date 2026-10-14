@@ -13,7 +13,7 @@ from harness.common.git import GitIndexSnapshot, capture_git_state, git_index_ba
 from harness.common.paths import file_state
 from harness.common.workspace import WorkspaceState, verify_workspace, workspace_state
 
-SCHEMA = "bof3.recovery-safeguards/v4"
+SCHEMA = "bof3.recovery-safeguards/v5"
 
 
 def verify_restored_state(

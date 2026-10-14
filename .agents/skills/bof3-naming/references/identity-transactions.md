@@ -30,7 +30,7 @@ Immutable parent order: audit preflight → caller-approved safe `bin/harness na
 6. Validate every touched selector by transaction class per [Byte-safe cosmetics](byte-safe-cosmetics.md#naming-and-validation). Map/Splat changes also require `bin/harness source splat TARGET` and fresh `bof3-reviewer`. Any failure reverts the transaction, never fixes forward.
 7. Run `bin/harness source symbols normalize TARGET --write` then `bin/harness source symbols check TARGET`; require sorted `name = 0xADDRESS;` entries.
 8. After authoritative edits and normal symbol/Splat/build/byte gates pass, inspect source/build graph readiness. Regenerate stale graph metadata through `bin/harness build TARGET`, never edit `build/`; require every manifest source present and superseded path absent. Run `bin/harness analysis rz-project status TARGET --json` then `bin/harness analysis query --json status`. If either is stale, run one batch `bin/harness analysis index --recover`, require both fresh, rerun readiness, and never rebuild per file.
-9. Require `git diff --check`; preserve the caller's staged index. Record any pre-existing non-empty or mode-only index and prove identical paths/modes/content afterward. Unexpected candidate/index overlap blocks: restore the transaction rather than staging, unstaging, or fixing forward.
+9. Require `git diff --check`; preserve the caller's staged index. Record pre-existing staged changes and prove identical raw index bytes afterward. Unexpected candidate/index overlap blocks: restore the transaction rather than staging, unstaging, or fixing forward.
 
 ## Repair and readiness
 
@@ -48,8 +48,8 @@ Run `bin/harness analysis readiness [TARGET]` before application; close or expli
 Grouped claimed C sources expose each attached `@source` and `@behavior` record
 to progress preflight. `--rows` selects those records by address. Every selected
 row must pass both live exactness checks before the batch writes each file once.
-Repairs change only selected progress metadata and preserve other records, C text
-and file modes. Duplicate addresses or ownership and ambiguous attachments refuse
+Repairs change only selected progress metadata and preserve other records and C
+text. Duplicate addresses or ownership and ambiguous attachments refuse
 repair. Grouped repair still requires native comparison support for every selected
 member; parsing alone does not supply exact proof.
 

@@ -53,7 +53,7 @@ def _load_restoration_images(
             images[name] = {**entry, "installed": None}
             classify_restoration(root, name, backup[name], images[name])
             continue
-        expected = {key: post[key] for key in ("sha256", "mode", "device", "inode")}
+        expected = {key: post[key] for key in ("sha256", "device", "inode")}
         expected["links"] = 1
         locations = [
             path
@@ -172,7 +172,7 @@ def restore_sources(
         _verify_restoration_states(root, backup, images, set(images))
         verify_writer(root)
         if existing is None:
-            atomic_write(root, output, encoded, expected=None, creation_mode=0o600)
+            atomic_write(root, output, encoded, expected=None)
         if read_file(root, output) != encoded:
             raise ValueError("source restoration receipt changed during publication")
         published = observe_file(root, output)

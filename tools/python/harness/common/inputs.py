@@ -35,12 +35,17 @@ class InputBoundaryError(ValueError):
 
 
 def _capture_metadata(status: os.stat_result) -> tuple[int, ...]:
-    return tuple(getattr(status, field) for field in _INPUT_FIELDS)
+    return tuple(
+        stat.S_IFMT(status.st_mode) if field == "st_mode" else getattr(status, field)
+        for field in _INPUT_FIELDS
+    )
 
 
 def _capture_parent_metadata(status: os.stat_result) -> tuple[int, ...]:
     return tuple(
-        getattr(status, field) for field in _INPUT_FIELDS if field != "st_size"
+        stat.S_IFMT(status.st_mode) if field == "st_mode" else getattr(status, field)
+        for field in _INPUT_FIELDS
+        if field != "st_size"
     )
 
 
@@ -70,10 +75,9 @@ def read_input(path: Path) -> tuple[dict | None, bytes | None]:
         except (FileNotFoundError, NotADirectoryError):
             return None, None
         raise ValueError(f"input appeared during observation: {path}")
-    mode = before.st_mode
-    if not stat.S_ISREG(mode):
+    if not stat.S_ISREG(before.st_mode):
         raise ValueError(f"not a regular input: {path}")
-    # The key binds identity, mode and mutation metadata, so a changed file is
+    # The key binds identity, file type and mutation metadata, so a changed file is
     # always re-read; repeated stable reads of the same input reuse the hash.
     cache_key = (str(path), _capture_metadata(before))
     cached = _READ_INPUT_CACHE.get(cache_key)
@@ -87,7 +91,6 @@ def read_input(path: Path) -> tuple[dict | None, bytes | None]:
     result = (
         {
             "sha256": hashlib.sha256(content).hexdigest(),
-            "mode": stat.S_IMODE(mode),
         },
         content,
     )
@@ -312,7 +315,6 @@ class InputBatch:
                 raise ValueError(f"moving input: {path}")
             state = {
                 "sha256": hashlib.sha256(content).hexdigest(),
-                "mode": stat.S_IMODE(before.st_mode),
             }
             if include_metadata:
                 state["metadata"] = dict(zip(_INPUT_FIELDS, expected, strict=True))

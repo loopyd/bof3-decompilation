@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import hashlib
-import stat
 from pathlib import Path
 
 from harness.common.files import atomic_write
@@ -63,8 +62,6 @@ def create_snapshot(
                 raise ValueError(f"naming snapshot is not the expected PRE: {name}")
             if row["kind"] == "data" and (
                 metadata["sha256"] != facts["data"]["files"][name]["before"]
-                or stat.S_IMODE(metadata["mode"])
-                != facts["data"]["files"][name]["mode"]
             ):
                 raise ValueError(f"data snapshot differs from prepared PRE: {name}")
         frozen_files = {
@@ -78,9 +75,8 @@ def create_snapshot(
         for name, (metadata, content) in observations.items():
             item = {"path": name, "exists": metadata is not None}
             if metadata is not None:
-                mode = stat.S_IMODE(metadata["mode"])
-                atomic_write(output, name, content, exclusive=True, mode=mode)
-                item.update(sha256=metadata["sha256"], mode=mode)
+                atomic_write(output, name, content, exclusive=True)
+                item.update(sha256=metadata["sha256"])
             files.append(item)
         pinned = {
             name: metadata["sha256"] for name, (metadata, _) in frozen_files.items()
@@ -101,11 +97,7 @@ def create_snapshot(
             require_writer(root)
 
         for item in files:
-            expected = (
-                {"sha256": item["sha256"], "mode": item["mode"]}
-                if item["exists"]
-                else None
-            )
+            expected = {"sha256": item["sha256"]} if item["exists"] else None
             if file_state(output / item["path"]) != expected:
                 raise ValueError("retained PRE changed before manifest publication")
         verify_inputs()

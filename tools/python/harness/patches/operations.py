@@ -43,7 +43,7 @@ def select_state(
     return desired
 
 
-def publish_file(path: Path, data: bytes | None, mode: int) -> None:
+def publish_file(path: Path, data: bytes | None) -> None:
     if data is None:
         path.unlink(missing_ok=True)
         return
@@ -51,7 +51,6 @@ def publish_file(path: Path, data: bytes | None, mode: int) -> None:
     descriptor, temporary = tempfile.mkstemp(prefix=".patch-", dir=path.parent)
     try:
         with os.fdopen(descriptor, "wb") as output:
-            os.fchmod(output.fileno(), mode)
             output.write(data)
             output.flush()
             os.fsync(output.fileno())
@@ -92,9 +91,8 @@ def run_operation(target: Target, action: str, names: list[str] | None = None) -
     for name in changed:
         data = series.observed[name]
         if data is not None:
-            publish_file(recovery / "before" / name, data, series.modes[name])
+            publish_file(recovery / "before" / name, data)
         manifest[name] = {
-            "mode": series.modes[name],
             "existed": data is not None,
             "sha256": hashlib.sha256(data).hexdigest() if data is not None else None,
         }
@@ -104,7 +102,6 @@ def run_operation(target: Target, action: str, names: list[str] | None = None) -
     fresh = inspect_series(target)
     if (
         fresh.observed != series.observed
-        or fresh.modes != series.modes
         or fresh.patches != series.patches
         or fresh.evidence != series.evidence
     ):
@@ -113,10 +110,10 @@ def run_operation(target: Target, action: str, names: list[str] | None = None) -
         )
     try:
         for name in changed:
-            current, _ = read_sources(target.source, {name})
+            current = read_sources(target.source, {name})
             if current[name] != series.observed[name]:
                 raise ValueError(f"source changed before publication: {name}")
-            publish_file(target.source / name, desired[name], series.modes[name])
+            publish_file(target.source / name, desired[name])
         after = inspect_series(target)
         if after.observed != desired:
             raise ValueError("published patch state differs from expected bytes")
@@ -132,11 +129,9 @@ def run_operation(target: Target, action: str, names: list[str] | None = None) -
         conflicts = []
         for name in reversed(changed):
             try:
-                current, _ = read_sources(target.source, {name})
+                current = read_sources(target.source, {name})
                 if current[name] == desired[name]:
-                    publish_file(
-                        target.source / name, series.observed[name], series.modes[name]
-                    )
+                    publish_file(target.source / name, series.observed[name])
                 elif current[name] != series.observed[name]:
                     conflicts.append(name)
             except (OSError, ValueError):

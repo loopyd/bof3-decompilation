@@ -38,7 +38,7 @@ def open_parent_chain(
             except FileNotFoundError:
                 if not create:
                     raise
-                os.mkdir(part, 0o755, dir_fd=descriptors[-1])
+                os.mkdir(part, dir_fd=descriptors[-1])
                 os.fsync(descriptors[-1])
                 child = os.open(
                     part,

@@ -493,11 +493,6 @@ def verify_native(command, original, attempt, *, receipt=True, source_form=None)
                         not path.is_symlink() and path.is_file(),
                         "native retained file differs",
                     )
-                    mode = 0o600 if path == workspace / "pcs.json" else 0o400
-                    _require(
-                        path.stat().st_mode & 0o777 == mode,
-                        "native staged copy mode differs",
-                    )
                     recipe.verify_inputs([record], events=events)
             except Exception as error:
                 retain(
@@ -706,7 +701,6 @@ def capture_native(
         [],
         [],
     )
-    modes = {}
     phase, path = "prepare", workspace
     unit = None
     try:
@@ -760,10 +754,9 @@ def capture_native(
                 for index, image in enumerate(contexts.images)
             )
         result["expected_inputs"] = list(expected)
-        modes.update({record["path"]: 0o400 for record in expected})
         for name in ("input", "native", "work", "home", "config"):
             try:
-                (workspace / name).mkdir(mode=0o700, parents=True)
+                (workspace / name).mkdir(parents=True)
             except Exception as error:
                 retain(
                     events,
@@ -775,7 +768,7 @@ def capture_native(
                 raise
         for name, data in files.items():
             phase, path = "stage", workspace / name
-            write_bytes(path, data, readonly=True, events=events)
+            write_bytes(path, data, events=events)
         if original is not None:
             phase, path = "stage-contexts", workspace / "input"
             calltargets.stage_native_contexts(original.contexts, workspace / "input")
@@ -930,17 +923,9 @@ def capture_native(
                     for name, data in copies.items()
                 ]
                 expected.extend(result["expected_outputs"])
-                modes.update(
-                    {
-                        str(workspace / "generated.c"): 0o400,
-                        str(workspace / "pcs.json"): 0o600,
-                    }
-                )
                 for name, data in copies.items():
                     phase, path = "output-copy", workspace / name
-                    write_bytes(
-                        path, data, readonly=name == "generated.c", events=events
-                    )
+                    write_bytes(path, data, events=events)
                 recipe.verify_inputs(result["expected_outputs"], events=events)
                 result.update(
                     source=result["expected_outputs"][0],
@@ -3197,7 +3182,7 @@ def capture_supplied_run(
         ),
         "ordinary destination overlaps immutable inputs or already exists",
     )
-    destination.mkdir(mode=0o700)
+    destination.mkdir()
     selected = [row.entry.member.key for row in plans]
     report = dict(
         operation="capture-supplied",
@@ -3266,9 +3251,7 @@ def capture_supplied_run(
             Path(snapshots["retdec-source"]["source"])
         )
         support = [{**file_record(support_root / name), "path": name} for name in names]
-        write_bytes(
-            destination / "contexts.json", content, readonly=True, events=events
-        )
+        write_bytes(destination / "contexts.json", content, events=events)
         record.update(
             problem=dict(
                 run_dir=str(prepared_run),
@@ -3348,9 +3331,9 @@ def _capture_supplied_member(
     events = []
     row["supplied"] = supplied = dict(workspace=str(workspace), plan=plan.as_record())
     try:
-        workspace.mkdir(mode=0o700)
+        workspace.mkdir()
         for name in (*_ORDINARY_DIRECTORIES, "input"):
-            (workspace / name).mkdir(mode=0o700)
+            (workspace / name).mkdir()
         image, original, payload = nativegeneration._original(
             binding, prepared_run, plan.entry.member, events
         )
@@ -3359,7 +3342,7 @@ def _capture_supplied_member(
             ("payload.raw", payload),
             ("original.elf", _loader_image(payload, image, plan.entry.member)),
         ):
-            write_bytes(workspace / "input" / name, raw, readonly=True, events=events)
+            write_bytes(workspace / "input" / name, raw, events=events)
         support_root, names, plugin_home, _ = _generic_supplied_inputs(
             run, _read, events
         )
@@ -3371,7 +3354,7 @@ def _capture_supplied_member(
                 name[:-5] + ".yarac" if name.endswith(".yara") else name
             )
             raw = _read(source, SUPPLIED_LIMIT, events)
-            write_bytes(destination, raw, readonly=True, events=events)
+            write_bytes(destination, raw, events=events)
             supplied["support"].append(
                 dict(
                     source=file_record(source),
@@ -3393,7 +3376,6 @@ def _capture_supplied_member(
                 write_bytes(
                     workspace / "input/objects.json",
                     aid.content,
-                    readonly=True,
                     events=events,
                 )
         supplied["inputs"] = _directory_inventory(workspace / "input", _read, events)
@@ -3417,11 +3399,10 @@ def _capture_supplied_member(
         source, tokens, console, _, _ = _ordinary_source(
             workspace, plan, run, _read, events
         )
-        write_bytes(workspace / "generated.c", source, readonly=True, events=events)
+        write_bytes(workspace / "generated.c", source, events=events)
         write_bytes(
             workspace / prelude.PRELUDE_PATH,
             prelude.STDINT_PRELUDE,
-            readonly=True,
             events=events,
         )
         row.update(

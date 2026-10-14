@@ -267,7 +267,6 @@ def produce(
         **initial,
         map_name: {
             "sha256": hashlib.sha256(normalized).hexdigest(),
-            "mode": initial[map_name]["mode"],
         },
     }
     try:
@@ -343,16 +342,13 @@ def validate_bundle(
     if row["kind"] == "data" and initial != final:
         raise ValueError("data native gates must preserve exact postapply inputs")
     map_name = row["pre_apply"]["facts"]["scope"]["map"]
-    if (
-        any(initial[p] != final[p] for p in initial if p != map_name)
-        or initial[map_name]["mode"] != final[map_name]["mode"]
-    ):
+    if any(initial[p] != final[p] for p in initial if p != map_name):
         raise ValueError("unsupported normalization transition")
     import hashlib
 
     from harness.domain.symbols import parse_map
 
-    keys(initial[map_name], "sha256 mode")
+    keys(initial[map_name], "sha256")
     normalized = format_map(parse_map(bundle["normalization_input"]))
     if (
         hashlib.sha256(bundle["normalization_input"].encode()).hexdigest()

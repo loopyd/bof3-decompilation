@@ -241,7 +241,6 @@ def apply_changes(
                     name,
                     expected=current,
                     expected_identity=(image["pre"]["device"], image["pre"]["inode"]),
-                    expected_mode=image["pre"]["mode"],
                     quarantine=image["quarantine"],
                 )
                 assert quarantine is not None
@@ -301,7 +300,6 @@ def rollback(
                             image["post"]["device"],
                             image["post"]["inode"],
                         ),
-                        expected_mode=image["post"]["mode"],
                         quarantine=image["post"]["quarantine"],
                     )
                 if content is not None:
@@ -316,7 +314,6 @@ def rollback(
                             image["pre"]["device"],
                             image["pre"]["inode"],
                         ),
-                        expected_mode=image["pre"]["mode"],
                     )
                 guard()
                 if classify_restoration(root, name, content, image) != "pre":

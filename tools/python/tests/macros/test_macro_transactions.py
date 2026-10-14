@@ -1199,7 +1199,6 @@ def test_macro_execution_context_binds_actual_gates(tmp_path, monkeypatch, drift
         tmp_path, _request(tmp_path, report)
     )
     header = tmp_path / "include/test.h"
-    header.chmod(0o750)
     original = header.read_bytes()
     native = _runner()
     calls = []
@@ -1210,7 +1209,7 @@ def test_macro_execution_context_binds_actual_gates(tmp_path, monkeypatch, drift
             native_build(tmp_path)
         result = native(argv, **kwargs)
         if drift:
-            (tmp_path / "CMakeLists.txt").chmod(0o600)
+            (tmp_path / "CMakeLists.txt").write_text("changed compiler input\n")
         return result
 
     if drift:
@@ -1224,7 +1223,6 @@ def test_macro_execution_context_binds_actual_gates(tmp_path, monkeypatch, drift
             )
         assert len(calls) == 1
         assert header.read_bytes() == original
-        assert header.stat().st_mode & 0o7777 == 0o750
         return
     app = macro_transactions.run_transaction(
         tmp_path,
@@ -1233,7 +1231,6 @@ def test_macro_execution_context_binds_actual_gates(tmp_path, monkeypatch, drift
         runner=run,
         implementation_run_id="macro-implementation",
     )
-    assert header.stat().st_mode & 0o7777 == 0o750
     assert (
         app["review_context"]["final_build"]["build/cmake/CMakeFiles/VerifyGlobs.cmake"]
         is not None
@@ -1266,7 +1263,6 @@ def test_macro_context_concurrent_index_preserves_owned_source_rollback(
     report = _setup(tmp_path, monkeypatch, git=True)
     request = _request(tmp_path, report)
     execution_inputs(tmp_path)
-    (tmp_path / "include/test.h").chmod(0o750)
     request["adopted_baseline"] = macro_transactions.workspace_baseline(tmp_path)[
         "digest"
     ]
@@ -1292,7 +1288,6 @@ def test_macro_context_concurrent_index_preserves_owned_source_rollback(
     assert "concurrently" in str(error.value.__cause__)
     assert index.read_bytes() == concurrent
     assert header.read_bytes() == original
-    assert header.stat().st_mode & 0o7777 == 0o750
 
 
 @pytest.mark.parametrize("failure", [None, "before", "after", "write", "index"])
@@ -1305,7 +1300,6 @@ def test_macro_cli_publication_rolls_back_owned_edits(tmp_path, monkeypatch, fai
     request = _request(tmp_path, report)
     execution_inputs(tmp_path)
     header = tmp_path / "include/test.h"
-    header.chmod(0o750)
     original = header.read_bytes()
     unrelated = tmp_path / "unrelated.txt"
     unrelated.write_text("adopted dirty work\n")
@@ -1388,7 +1382,6 @@ def test_macro_cli_publication_rolls_back_owned_edits(tmp_path, monkeypatch, fai
             app = json.loads((tmp_path / output).read_text())
             with pytest.raises(ValueError, match="post-state drifted"):
                 macro_transactions.verify_application(tmp_path, app, app["digest"])
-    assert header.stat().st_mode & 0o7777 == 0o750
     assert unrelated.read_text() == "adopted dirty work\n"
     assert index.read_bytes() == original_index + (
         b"concurrent" if failure == "index" else b""

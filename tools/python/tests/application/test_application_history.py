@@ -46,12 +46,12 @@ def test_private_history_preserves_proofs_without_accepting_current_drift(review
     paths.add(Path(parent["review_artifact"]["path"]))
     assert paths
     for path in sorted(paths):
-        before, mode = path.read_bytes(), path.stat().st_mode
+        before, inode = path.read_bytes(), path.stat().st_ino
         path.write_bytes(b"replaced retained prerequisite\n")
         with pytest.raises(ValueError):
             historical()
         path.write_bytes(before)
-        assert path.stat().st_mode == mode
+        assert path.stat().st_ino == inode
         assert historical() is None
 
     for field in ("manifest", "receipts", "review_context", "attestation"):

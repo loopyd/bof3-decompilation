@@ -14,7 +14,7 @@ from harness.common.observation import PathWatch
 from harness.common.process import resolve_supervisor
 from harness.common.quarantine import QUARANTINE_DIRECTORY
 
-_SCHEMA = "bof3.program-inputs/v2"
+_SCHEMA = "bof3.program-inputs/v3"
 
 
 def describe_requests(invocation: Invocation) -> list[dict]:

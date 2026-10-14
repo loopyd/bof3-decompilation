@@ -6,7 +6,6 @@ import hashlib
 import json
 import os
 import re
-import stat
 import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -237,14 +236,12 @@ def atomic_write_if_unchanged(
     if path.read_bytes() != expected:
         raise ValueError("proposal report changed concurrently")
     rendered = (json.dumps(payload, indent=2, sort_keys=True) + "\n").encode()
-    mode = stat.S_IMODE(path.stat().st_mode)
     descriptor, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
     try:
         with os.fdopen(descriptor, "wb") as stream:
             stream.write(rendered)
             stream.flush()
             os.fsync(stream.fileno())
-        os.chmod(temporary, mode)
         if path.read_bytes() != expected:
             raise ValueError("proposal report changed concurrently")
         os.replace(temporary, path)

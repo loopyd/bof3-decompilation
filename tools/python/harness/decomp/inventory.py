@@ -56,13 +56,19 @@ def observe_path(root: Path, name: str) -> dict | None:
             "st_mtime_ns",
             "st_ctime_ns",
         )
-        if any(getattr(before, field) != getattr(after, field) for field in fields):
+        if any(
+            (
+                stat.S_IFMT(before.st_mode) != stat.S_IFMT(after.st_mode)
+                if field == "st_mode"
+                else getattr(before, field) != getattr(after, field)
+            )
+            for field in fields
+        ):
             raise ValueError(f"lift inventory observation raced: {name}")
         return {
             **payload,
             "device": after.st_dev,
             "inode": after.st_ino,
-            "mode": stat.S_IMODE(after.st_mode),
             "links": after.st_nlink,
             "uid": after.st_uid,
             "gid": after.st_gid,
@@ -167,8 +173,7 @@ def verify_scope(before: dict, after: dict, paths: list[str]) -> list[str]:
             raise ValueError(f"unsafe retained lift path: {name}")
         original = before["entries"].get(name)
         if original is not None and (
-            state is None
-            or any(original[key] != state[key] for key in ("mode", "uid", "gid"))
+            state is None or any(original[key] != state[key] for key in ("uid", "gid"))
         ):
-            raise ValueError(f"lift removed or changed owned mode/ownership: {name}")
+            raise ValueError(f"lift removed or changed owned ownership: {name}")
     return changed

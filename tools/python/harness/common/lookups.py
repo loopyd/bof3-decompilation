@@ -23,7 +23,7 @@ def _identity(status: os.stat_result) -> list[int]:
     values = [
         status.st_dev,
         status.st_ino,
-        status.st_mode,
+        stat.S_IFMT(status.st_mode),
         status.st_uid,
         status.st_gid,
     ]

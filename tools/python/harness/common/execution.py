@@ -279,10 +279,6 @@ def applied(
             continue
         if (
             actual is None
-            or (
-                context["initial_state"]["inputs"][name] is not None
-                and actual["mode"] != context["initial_state"]["inputs"][name]["mode"]
-            )
             or actual["sha256"] != hashlib.sha256(text.encode()).hexdigest()
         ):
             raise ValueError("execution context intended edit mismatch")
@@ -427,12 +423,6 @@ def _validate_context_history(application: dict) -> None:
                 name
             ]:
                 raise ValueError("execution application state mismatch")
-        if (
-            before[name] is not None
-            and after[name] is not None
-            and before[name]["mode"] != after[name]["mode"]
-        ):
-            raise ValueError("execution input mode transition mismatch")
     prior = context["initial_build"]
     for gate, check in zip(context["gates"], manifest["required_checks"]):
         _keys(gate, {"receipt_digest", "state_digest", "build_before", "build_after"})
@@ -468,12 +458,9 @@ def _file_fact(value) -> None:
 
     if value is None:
         return
-    _keys(value, {"sha256", "mode"})
-    if (
-        not isinstance(value["sha256"], str)
-        or not re.fullmatch(r"[0-9a-f]{64}", value["sha256"])
-        or type(value["mode"]) is not int
-        or not 0 <= value["mode"] <= 0o7777
+    _keys(value, {"sha256"})
+    if not isinstance(value["sha256"], str) or not re.fullmatch(
+        r"[0-9a-f]{64}", value["sha256"]
     ):
         raise ValueError("invalid execution file state")
 

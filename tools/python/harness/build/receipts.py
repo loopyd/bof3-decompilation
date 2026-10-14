@@ -19,7 +19,7 @@ from harness.common.observation import PathWatch
 from harness.common.paths import leaf_stat
 from harness.io import unique_object
 
-_SCHEMA = "bof3.grouped-producer/v7"
+_SCHEMA = "bof3.grouped-producer/v8"
 _LIMIT = 16 * 1024 * 1024
 
 
@@ -54,7 +54,6 @@ def _collect_outputs(dispatch) -> dict:
             raise ValueError(f"empty producer output: {name}")
         result[name] = {
             "sha256": hashlib.sha256(content).hexdigest(),
-            "mode": stat.S_IMODE(status.st_mode),
         }
     return result
 

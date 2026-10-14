@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import re
-import stat
 from pathlib import Path
 from typing import Any
 
@@ -217,7 +216,6 @@ def capture_data(context: TargetContext, row: dict, scope: dict) -> dict[str, An
         files[relative] = {
             "before": _digest(content),
             "after": _digest(replacement),
-            "mode": stat.S_IMODE(path.stat().st_mode),
         }
     return {"files": files, "consumers": _collect_consumers(context, images, old)}
 
@@ -239,19 +237,15 @@ def validate_data_shape(data: object) -> dict[str, Any]:
             or path.as_posix() != relative
             or ".." in path.parts
             or not isinstance(item, dict)
-            or set(item) != {"before", "after", "mode"}
+            or set(item) != {"before", "after"}
         ):
             raise ValueError("invalid data file record")
-        if (
-            any(
-                not isinstance(item[key], str)
-                or not re.fullmatch(r"[0-9a-f]{64}", item[key])
-                for key in ("before", "after")
-            )
-            or type(item["mode"]) is not int
-            or not 0 <= item["mode"] <= 0o7777
+        if any(
+            not isinstance(item[key], str)
+            or not re.fullmatch(r"[0-9a-f]{64}", item[key])
+            for key in ("before", "after")
         ):
-            raise ValueError("invalid data file hash or mode")
+            raise ValueError("invalid data file hash")
     selectors = []
     for consumer in data["consumers"]:
         if not isinstance(consumer, dict) or set(consumer) != {
@@ -297,10 +291,7 @@ def validate_data_preservation(
         ):
             raise ValueError("data input disappeared or escaped ownership")
         content = path.read_bytes()
-        if (
-            _digest(content) != item["after" if post_apply else "before"]
-            or stat.S_IMODE(path.stat().st_mode) != item["mode"]
-        ):
+        if _digest(content) != item["after" if post_apply else "before"]:
             raise ValueError(f"data representation or scope drift: {relative}")
         if post_apply and item["before"] != item["after"]:
             content = (

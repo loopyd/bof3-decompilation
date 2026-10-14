@@ -26,7 +26,7 @@ from transaction_native_fixture import execution_inputs, native_build
     [
         (distinct, gap)
         for distinct in (False, True)
-        for gap in (None, "workspace", "input", "build", "mode")
+        for gap in (None, "workspace", "input", "build")
     ]
     + [(True, "missing_scope"), (True, "mismatched_scope")],
 )
@@ -112,8 +112,6 @@ def test_sequential_private_common_state(
     scope = {"participating_targets": ["exe/second", "exe/test"]} if distinct else {}
     (root / ".gitignore").write_text("out/\nbuild/\n")
     (root / "unrelated.txt").write_text("adopted unrelated bytes\n")
-    (root / "include/test.h").chmod(0o750)
-    (root / "include/second.h").chmod(0o740)
     native = (types if owner == "type" else macros)._runner()
     calls = []
 
@@ -258,8 +256,6 @@ def test_sequential_private_common_state(
     elif gap == "build":
         with (root / "build/cmake/build.ninja").open("a") as stream:
             stream.write("\n# unreviewed build gap\n")
-    elif gap == "mode":
-        (root / "include/test.h").chmod(0o700)
     proposal["adopted_baseline"] = transactions.workspace_baseline(root)["digest"]
     second_manifest = transactions.prepare_transaction(root, proposal)
     second_app = transactions.run_transaction(

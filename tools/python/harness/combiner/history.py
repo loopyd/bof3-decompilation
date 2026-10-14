@@ -41,7 +41,7 @@ _OWNERS = (
 
 def collect_transaction_owners(schema: str) -> tuple[str, ...]:
     """Return the exact owner set for the current transaction schema."""
-    if schema == "bof3.combiner-transaction/v4":
+    if schema == "bof3.combiner-transaction/v5":
         return _OWNERS
     raise ValueError("transaction requires a fresh current capture")
 
@@ -137,13 +137,7 @@ def validate_transaction_history(
             or record["post"] != post
             or {name: record["inputs"][name] for name in post} != pre
             or any(
-                (after is None and pre[name] is None)
-                or (
-                    after is not None
-                    and pre[name] is not None
-                    and after["mode"] != pre[name]["mode"]
-                )
-                for name, after in post.items()
+                (after is None and pre[name] is None) for name, after in post.items()
             )
         ):
             raise ValueError("transaction preservation differs from joint states")

@@ -210,10 +210,10 @@ def test_publication_failure_rolls_back_owned_bytes(workspace, monkeypatch):
     target, _ = workspace
     publish = operations.publish_file
 
-    def fail(path, data, mode):
+    def fail(path, data):
         if path == target.source / "b.txt" and data == b"TWO\n":
             raise OSError("fixture publication failure")
-        publish(path, data, mode)
+        publish(path, data)
 
     monkeypatch.setattr(operations, "publish_file", fail)
     assert invoke(target, "apply") == 2
@@ -228,10 +228,10 @@ def test_rollback_preserves_concurrent_edits(workspace, monkeypatch):
     target, _ = workspace
     publish = operations.publish_file
 
-    def change(path, data, mode):
+    def change(path, data):
         if path == target.source / "a.txt" and data == b"THREE\n":
             (target.source / "b.txt").write_text("concurrent\n")
-        publish(path, data, mode)
+        publish(path, data)
 
     monkeypatch.setattr(operations, "publish_file", change)
     assert invoke(target, "apply") == 2

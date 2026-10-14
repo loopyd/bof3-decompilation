@@ -58,7 +58,7 @@ class CoverageInputs:
             return (
                 s.st_dev,
                 s.st_ino,
-                s.st_mode,
+                stat.S_IFMT(s.st_mode),
                 s.st_size,
                 s.st_mtime_ns,
                 s.st_ctime_ns,
@@ -71,7 +71,6 @@ class CoverageInputs:
         row = {
             "bytes": len(data),
             "sha256": hashlib.sha256(data).hexdigest(),
-            "mode": stat.S_IMODE(before.st_mode),
         }
         if relative in self.files and self.files[relative] != row:
             raise ValueError(f"changed input: {relative}")

@@ -49,14 +49,8 @@ def discover_patches(target: Target) -> list[Patch]:
     patches = []
     for path, data in read_patch_inputs(target.root / "inputs/patches" / target.name):
         summary = run_git(target.source, "apply", "--summary", data=data).decode()
-        if any(word in summary for word in ("mode change", "rename ", "copy ")) or any(
-            " mode " in line
-            and not (" mode 100644 " in line or "delete mode 100755 " in line)
-            for line in summary.splitlines()
-        ):
-            raise ValueError(
-                f"patch mode/rename/copy changes are unsupported: {path.name}"
-            )
+        if any(word in summary for word in ("rename ", "copy ")):
+            raise ValueError(f"patch rename/copy changes are unsupported: {path.name}")
         files = []
         for record in run_git(
             target.source, "apply", "--numstat", "-z", data=data

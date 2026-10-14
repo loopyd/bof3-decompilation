@@ -13,16 +13,14 @@ from .models import Patch, Series, Target
 MAX_BYTES = 128 * 1024 * 1024
 
 
-def read_sources(
-    source: Path, names: set[str]
-) -> tuple[dict[str, bytes | None], dict[str, int]]:
-    contents, modes, total = {}, {}, 0
+def read_sources(source: Path, names: set[str]) -> dict[str, bytes | None]:
+    contents, total = {}, 0
     for name in sorted(names):
         path = source / name
         if path.resolve() != path.absolute():
             raise ValueError(f"symlink in patch source path: {name}")
         if not path.exists():
-            contents[name], modes[name] = None, 0o644
+            contents[name] = None
             continue
         info = path.stat()
         if (
@@ -31,11 +29,11 @@ def read_sources(
             or info.st_size > 16 * 1024 * 1024
         ):
             raise ValueError(f"patch source must be a bounded regular file: {name}")
-        contents[name], modes[name] = path.read_bytes(), stat.S_IMODE(info.st_mode)
+        contents[name] = path.read_bytes()
         total += len(contents[name])
         if total > MAX_BYTES:
             raise ValueError("patch source snapshot exceeds 128 MiB")
-    return contents, modes
+    return contents
 
 
 def collect_groups(patches: list[Patch]) -> list[list[int]]:
@@ -82,10 +80,10 @@ def inspect_series(target: Target) -> Series:
             f"target has tracked changes outside its patch series: {sorted(changed - names)}"
         )
     summary = git_text(target.source, "diff", "--summary", "HEAD", "--")
-    if "mode change" in summary or "rename " in summary:
-        raise ValueError("target has unexpected tracked mode or rename changes")
+    if "rename " in summary:
+        raise ValueError("target has unexpected tracked rename changes")
     evidence = target.inspect(names)
-    observed, modes = read_sources(target.source, names)
+    observed = read_sources(target.source, names)
     versions = []
     with tempfile.TemporaryDirectory(prefix="harness-patches-") as temporary:
         sandbox = Path(temporary)
@@ -96,8 +94,8 @@ def inspect_series(target: Target) -> Series:
             if not entry:
                 base[name] = None
                 continue
-            mode, kind, _ = entry.split(b"\t", 1)[0].split()
-            if mode not in {b"100644", b"100755"} or kind != b"blob":
+            file_type, kind, _ = entry.split(b"\t", 1)[0].split()
+            if int(file_type, 8) & 0o170000 != 0o100000 or kind != b"blob":
                 raise ValueError(
                     f"patches cannot cross submodules or modify symlinks: {name}"
                 )
@@ -109,13 +107,11 @@ def inspect_series(target: Target) -> Series:
             path = sandbox / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
-            if observed[name] is None:
-                modes[name] = int(mode, 8) & 0o777
         versions.append(base)
         for patch in patches:
             run_git(sandbox, "apply", "--no-index", "--check", data=patch.data)
             run_git(sandbox, "apply", "--no-index", data=patch.data)
-            after, _ = read_sources(sandbox, names)
+            after = read_sources(sandbox, names)
             if after == versions[-1]:
                 raise ValueError(f"patch has no observable change: {patch.name}")
             total += sum(len(data) for data in after.values() if data is not None)
@@ -136,7 +132,7 @@ def inspect_series(target: Target) -> Series:
                 f"target files are modified, partially patched or ambiguous in group: {[patches[i].name for i in group]}"
             )
         counts.append(matches[0])
-    return Series(target, patches, versions, groups, counts, observed, modes, evidence)
+    return Series(target, patches, versions, groups, counts, observed, evidence)
 
 
 def describe_series(series: Series) -> dict:

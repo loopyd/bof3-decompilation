@@ -326,11 +326,6 @@ def seal_bundle(
             contract.require(
                 destination.read_bytes() == data, f"bundle write differs: {path}"
             )
-            destination.chmod(0o444)
-        for child in sorted(directory.rglob("*"), reverse=True):
-            if child.is_dir():
-                child.chmod(0o555)
-        directory.chmod(0o555)
     except OSError as error:
         raise contract.PreparationRefused(
             f"fresh bundle {name} could not be written: {error}"

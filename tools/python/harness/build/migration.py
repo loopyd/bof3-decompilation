@@ -178,6 +178,4 @@ def validate_configuration_migration(
         or expected["sha256"] != hashlib.sha256(after.encode("utf-8")).hexdigest()
     ):
         raise ValueError("POST must pin the exact compiler configuration migration")
-    if state is not None and expected["mode"] != state["mode"]:
-        raise ValueError("configuration migration must preserve the existing file mode")
     return value

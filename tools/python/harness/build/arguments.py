@@ -126,7 +126,7 @@ def observe_input(path: Path) -> list:
         str(current),
         status.st_dev,
         status.st_ino,
-        status.st_mode,
+        stat.S_IFMT(status.st_mode),
     ]
     if stat.S_ISDIR(status.st_mode):
         return identity

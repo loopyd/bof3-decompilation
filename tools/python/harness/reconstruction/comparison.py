@@ -2685,10 +2685,10 @@ def compare_rebuilt_candidate(
         linker = _regular_record(linker_record, limit)
         records = _record_inventory([*records, linker_record], limit)
         _forward_rebuild(events)
-        workspace.mkdir(mode=0o700)
+        workspace.mkdir()
         workspace_owned = True
         for name in ("home", "tmp", "profiles"):
-            (workspace / name).mkdir(mode=0o700)
+            (workspace / name).mkdir()
         retained["status"] = "linking"
         for row in retained["links"]:
             active_row = row
@@ -2719,7 +2719,7 @@ def compare_rebuilt_candidate(
             )
             row.update(placement)
             directory = workspace / "profiles" / f"{row['ordinal']:03d}"
-            directory.mkdir(mode=0o700)
+            directory.mkdir()
             output = directory / "linked.elf"
             call = _link_call(workspace, row, linker, placement, output_limit)
             argv = call["argv"]
@@ -2939,7 +2939,7 @@ def _publish_comparison_refusal(
         _require_rebuild(
             len(data) <= limit, "terminal comparison refusal exceeds its bound"
         )
-        write_bytes(pending, data, readonly=True, create_parents=False, events=events)
+        write_bytes(pending, data, create_parents=False, events=events)
         pending.rename(destination)
     except Exception as error:
         retain(events, error, phase="comparison-refusal-publication", path=workspace)
@@ -3845,7 +3845,7 @@ def verify_associated_candidate(
                     input_read_attempts=input_read_attempts,
                 )
             else:
-                workspace.mkdir(mode=0o700)
+                workspace.mkdir()
             destination = workspace / "associated-result.json"
             data = encode_json(retained, path=destination, events=events)
             published = contract.parse_json(data, "associated terminal result")
@@ -3865,9 +3865,7 @@ def verify_associated_candidate(
                 sha256=hashlib.sha256(data).hexdigest(),
                 write_completed=False,
             )
-            write_bytes(
-                pending, data, readonly=True, create_parents=False, events=events
-            )
+            write_bytes(pending, data, create_parents=False, events=events)
             attempted_output["write_completed"] = True
             recipe.verify_inputs(records, events=events, reader=reader)
             _authenticated_bytes(terminal, limit, events, reader=reader)

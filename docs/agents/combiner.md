@@ -186,12 +186,12 @@ compiler overrides and malformed or unattached compiler annotations reject. An e
 destination must be a selected member; its independently resolved profile must
 equal every retained member profile.
 
-Preservation v7 authenticates retained PRE source text against the captured hashes
+Preservation v8 authenticates retained PRE source text against the captured hashes
 before resolving original annotations, including removed files and an overwritten
 destination. POST settings resolve from live captured destination text, never from
 the retained PRE image. Older preservation records are not upgraded or rebound.
 For a new or overwritten destination, pass `--destination-source DRAFT.c` and
-`--expected-destination-sha256 SHA` together. Profile v5 embeds that bounded UTF-8
+`--expected-destination-sha256 SHA` together. Profile v6 embeds that bounded UTF-8
 image without writing it: attached records must cover all selected members, ordinary
 definition names must match, and the draft's effective metadata/path/default profile
 must equal every PRE profile. Template expansion and C semantics still need their
@@ -235,11 +235,10 @@ Profile inspection and preservation project layout semantics from their captured
 Splat text rather than reopening it; final physical checks remain. Other layout
 and source consumers are not thereby snapshot-based.
 Input hashes and mutation metadata remain stable throughout capture. Directory
-observations retain all nine stat fields plus a descriptor-bound fingerprint of
-direct names, devices, inodes and nofollow types. Only directory size may differ
-when the original location, other eight fields and membership remain equal;
-directory allocation size is a filesystem storage detail that can vary as
-directories grow.
+observations retain file type, identity and mutation metadata plus a
+descriptor-bound fingerprint of direct names, devices, inodes and nofollow types.
+Only directory size may differ when the original location, other captured fields
+and membership remain equal. Directory allocation size can vary as directories grow.
 Regular files and symlinks retain exact metadata checks. Complete enumeration is
 bounded to 16,384 entries and 4 MiB per directory, including ancestors above the
 repository; errors and overflow reject. Original snapshots never refresh.
@@ -266,22 +265,21 @@ bin/harness combiner preservation verify preservation.json --expected-fingerprin
 Both commands are read-only. Capture re-inspects live PRE and emits the record to
 stdout; retain its canonical fingerprint externally before any transaction. POST
 JSON maps exactly the destination, every old source, target manifest and Splat path
-to `{ "sha256": "…", "mode": 420 }` file states; superseded sources use `null`.
-Modes describe observed images, not permission-changing operations. The POST-file
-digest binds actual JSON bytes. If profile v5 embeds a draft, the destination POST
+to `{ "sha256": "…" }` file states; superseded sources use `null`. The POST-file
+digest binds actual JSON bytes. If profile v6 embeds a draft, the destination POST
 hash must match its exact UTF-8 bytes; capture replays that draft against live PRE,
 and verification checks live POST against both pins. Profiles and preservation
 records share the 4 MiB serialized-document bound; older schemas require fresh
 capture, never rehashing or rebinding. A configuration migration requires its exact
-POST hash in that same complete source/manifest/layout map, preserving the existing
-file mode. PRE text and settings authenticate against PRE pins; only the computed
-selected-key edit is permitted. Verification replays PRE profiles with retained
+POST hash in that same complete source/manifest/layout map. PRE text and settings
+authenticate against PRE pins; only the computed selected-key edit is permitted.
+Verification replays PRE profiles with retained
 configuration and checks POST profiles against live configuration. Partial or
 unrelated configuration changes reject.
 These commands do not apply the migration, edit/delete sources, refresh indexes or
 build. A deletion-aware combiner apply, owned rollback, native all-member
 checks and independent final acceptance remain required before production use.
-The shared runtime now supports explicit owned deletions, v4 absent-POST recovery
+The shared runtime now supports explicit owned deletions, v6 absent-POST recovery
 and identity-backed restoration alongside replacement images; see
 [recovery capture](harness.md#recovery-capture). This prerequisite does not create
 a combiner application or authorize consolidation. Its domain adapter must bind
@@ -312,7 +310,7 @@ PRE-plus-POST states, including optional absence and later reads. Missing owner
 pins require fresh capture and review, not silent present-state backfill. Explicit
 repository-owner pins are not full runtime/import or loaded-code authentication.
 The initial retained-input read loop uses its own fresh `InputBatch`, closed before
-semantic checks. State/hash/mode and absence comparisons stay exact; every full
+semantic checks. Content-state and absence comparisons stay exact; every full
 verification and final guard remains. Batches are never shared across passes or
 output mutations, and no prior validation success substitutes for fresh reads.
 Configured flags and compiler IDs use captured override text; selected variants
@@ -330,9 +328,9 @@ Full destination code and metadata review remains mandatory: membership does not
 The repository-bound record requires an independently retained fingerprint; its
 self-hash gives no review authority. Success proves configured preservation only,
 not native equality, complete toolchain/include identity or producer freshness.
-`bin/cc` consumes v7 preservation records through the build-owned driver described
+`bin/cc` consumes v8 preservation records through the build-owned driver described
 below; older records require fresh capture. Production consolidation remains gated.
-Checks fence mutations during each observation; matching SHA/mode endpoints do not
+Checks fence mutations during each observation; matching SHA endpoints do not
 prove inode continuity between PRE and POST. Callers still require complete output
 and successful terminal exit; stdout publication is not atomic.
 
@@ -347,9 +345,8 @@ bin/harness combiner transaction verify transaction.json --expected-fingerprint 
 These commands only prepare/recheck live PRE; neither applies nor accepts edits.
 The profile must embed the exact destination draft. `images.json` maps every
 destination, superseded source, manifest, Splat and planned configuration path to
-`{ "text": "complete UTF-8 file contents", "mode": 420 }`, or `null` for an
-explicit deletion. Preserve observed modes for existing files; a new destination
-declares its intended mode. The CLI pins the images file's actual bytes.
+`{ "text": "complete UTF-8 file contents" }`, or `null` for an explicit deletion.
+Files use OS-default creation. The CLI pins the images file's actual bytes.
 
 Preparation checks the complete path/deletion set, compiler preservation, proposed
 manifest/source-list and Splat-marker relocation, and exact configuration migration
@@ -357,15 +354,15 @@ before any mutation. It retains joint text, PRE/POST states, owner/input pins an
 inventories under one externally retained fingerprint. Verification re-derives the
 record against live PRE and rejects changed images, owners, inventory or inputs;
 it is not the preservation command's live-POST check. Records share the 4 MiB bound.
-Permission changes, source writes, index refreshes
-and native commands are not performed. `native_verified`, `coverage_verified`,
-`write_authorized` and `accepted` remain false. The separate rehearsal below exercises
+Source writes, index refreshes and native commands are not performed.
+`native_verified`, `coverage_verified`, `write_authorized` and `accepted` remain
+false. The separate rehearsal below exercises
 temporary application and owned restoration; permanent application, complete consumer
 gates and independent production acceptance remain open.
 
-Preparation and retained validation require transaction v4, preservation v7,
-profile v5 and program graph v2, with the exact owner set including `build.runtime`
-and `build.observations`. Fingerprints, images, modes, ownership and false acceptance
+Preparation and retained validation require transaction v5, preservation v8,
+profile v6 and program graph v3, with the exact owner set including `build.runtime`
+and `build.observations`. Fingerprints, images, ownership and false acceptance
 flags remain mandatory. The history owner rejects older formats. Obtain fresh
 preparation without rewriting old records or pins. Recovery manifest v1 is unchanged.
 Retained validation remains structural, without live PRE, and grants neither
@@ -391,7 +388,7 @@ An initialized Git index and existing canonical source/object parents are requir
 The report, `OUTPUT.recovery.json` and every native artifact must be absent and
 disjoint from retained inputs.
 
-Rehearsal holds one writer lease, rechecks live PRE, and captures shared v4 deletion
+Rehearsal holds one writer lease, rechecks live PRE, and captures shared v6 deletion
 recovery before applying exactly the prepared images. Before the first source edit,
 `OUTPUT.recovery.json` retains that invocation's recovery path, structured digest and
 raw-file SHA, run ID and transaction pin; callback/publication failure prevents edits.
@@ -532,14 +529,14 @@ fingerprints; rendering never substitutes substrings in literal options. Relativ
 compiler PATH entries resolve from the captured working directory. The driver
 consumes that recipe rather than reselecting stage controls from ambient state.
 
-Producer v7 records `build.execution` v3 edges: successful child commands/environment
+Producer v8 records `build.execution` v3 edges: successful child commands/environment
 digests, stdin/generated-image hashes, partitioning and final publication. Evidence
 returns directly from the driver after cleanup and terminal checks. Invocation,
 recipe and execution fingerprints stay distinct; comparison v6 binds the producer's
 execution fingerprint. Verification renders the recorded temporary binding without
 allocating or rereading deleted staging. Unknown environment values are not printed.
 Older receipts cannot acquire these bindings retroactively. New compilation requires
-profile v5/preservation v7 and current owner pins. Retained transition validation
+profile v6/preservation v8 and current owner pins. Retained transition validation
 admits those versions only and does not rederive live PRE. Older formats require
 fresh capture.
 Recorded execution is not authenticated native proof: endpoint samples do not
@@ -566,7 +563,7 @@ Repository and external-host roots have distinct observational types; the extern
 or inconsistent trails, terminals and root bindings without live filesystem reads.
 
 `build.runtime` attaches typed policies to the actual maspsx and assembler stages,
-not a second profile/receipt file list. Program graph v2 binds policy settings and
+not a second profile/receipt file list. Program graph v3 binds policy settings and
 causal edges. A recognized maspsx entry hash derives `maspsx/__init__.py`,
 `maspsx.py` and their adjacent sourceless `.pyc` candidates at each effective
 PYTHONPATH root. These are finite source candidates, not ordered loader selection:
@@ -597,9 +594,9 @@ substitutes for a fresh validation.
 Profiles omit incidental source/output operands from this common program graph;
 concrete recipes bind those separately. Dispatch retains the graph in its invocation
 fingerprint, transitively binding execution and producer/comparison receipts.
-Profile v5 and preservation v7 require program graph v2. The validator rejects graph
-v1. Obtain fresh capture without relabeling schemas. GCC backend/spec searches, effective
-import/startup/shell resolution and ELF loaders/libraries remain open. `complete:false`,
+Profile v6 and preservation v8 require program graph v3. The validator rejects older
+graphs. Obtain fresh capture without relabeling schemas. GCC backend/spec searches,
+effective import/startup/shell resolution and ELF loaders/libraries remain open. `complete:false`,
 configured provenance and non-reuse remain mandatory; native fidelity is unverified.
 
 For an explicitly admitted grouped-unit compile, supply

@@ -483,49 +483,47 @@ def _inspect_sources(
         committed, staged, rows, mismatches = {}, {}, [], []
         for entry in filter(None, tree.split(b"\0")):
             metadata, name = entry.split(b"\t", 1)
-            mode, kind, oid = metadata.decode().split()
-            committed[name.decode()] = (mode, oid)
+            file_type, kind, oid = metadata.decode().split()
+            file_type = f"{int(file_type, 8) & 0o170000:06o}"
+            committed[name.decode()] = (file_type, oid)
         for entry in filter(None, index.split(b"\0")):
             metadata, name = entry.split(b"\t", 1)
-            mode, oid, stage = metadata.decode().split()
+            file_type, oid, stage = metadata.decode().split()
             if stage != "0" or name.decode() in staged:
                 raise ValueError("Fork source index has conflicts")
-            staged[name.decode()] = (mode, oid)
+            file_type = f"{int(file_type, 8) & 0o170000:06o}"
+            staged[name.decode()] = (file_type, oid)
         if committed != staged:
             raise ValueError(
                 f"Fork source index differs from committed tree: {relative}"
             )
-        for name, (mode, oid) in sorted(committed.items()):
+        for name, (file_type, oid) in sorted(committed.items()):
             path = directory / name
             if not name or Path(name).is_absolute() or ".." in Path(name).parts:
                 raise ValueError("Invalid committed source path")
             if path.parent.resolve() != path.parent.absolute():
                 raise ValueError("Committed source parent traverses a symlink")
-            if mode == "160000":
+            if file_type == "160000":
                 pending.append((f"{relative}/{name}", oid, relative, name))
-                rows.append({"path": name, "mode": mode, "oid": oid})
+                rows.append({"path": name, "file_type": file_type, "oid": oid})
                 continue
             observed = path.lstat()
-            if mode == "120000":
+            if file_type == "120000":
                 if not stat.S_ISLNK(observed.st_mode):
                     raise ValueError("Committed source symlink changed type")
                 data = os.readlink(path).encode()
-            elif mode in {"100644", "100755"}:
-                if not stat.S_ISREG(observed.st_mode) or bool(
-                    observed.st_mode & 0o111
-                ) != (mode == "100755"):
-                    raise ValueError(
-                        "Committed source file changed type or executable mode"
-                    )
+            elif file_type == "100000":
+                if not stat.S_ISREG(observed.st_mode):
+                    raise ValueError("Committed source file changed type")
                 data = path.read_bytes()
             else:
-                raise ValueError("Unsupported committed source mode")
-            if _blob(data) != oid and mode == "120000":
+                raise ValueError("Unsupported committed source type")
+            if _blob(data) != oid and file_type == "120000":
                 raise ValueError(f"Fork tracked source differs: {relative}/{name}")
             rows.append(
                 {
                     "path": name,
-                    "mode": mode,
+                    "file_type": file_type,
                     "oid": oid,
                     "bytes": len(data),
                     "sha256": hashlib.sha256(data).hexdigest(),

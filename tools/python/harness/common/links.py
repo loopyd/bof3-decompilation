@@ -23,7 +23,7 @@ class SymlinkSnapshot:
     """Literal link bytes and identity, never the referent's contents."""
 
     content: bytes
-    mode: int
+    file_type: int
     device: int
     inode: int
     uid: int
@@ -36,7 +36,7 @@ class SymlinkSnapshot:
 def _snapshot(content: bytes, metadata: os.stat_result) -> SymlinkSnapshot:
     return SymlinkSnapshot(
         content,
-        metadata.st_mode,
+        stat.S_IFMT(metadata.st_mode),
         metadata.st_dev,
         metadata.st_ino,
         metadata.st_uid,

@@ -21,7 +21,7 @@ It never advances branches or resets dirty source. Build receipts and logs live
 in `out/setup/`; query status and receipts for source/binary identities.
 
 The root stage-0 gitlink, fork HEAD and recursive revisions must agree. Tracked
-bytes/modes must match committed source. Unknown or ignored build inputs refuse;
+bytes must match committed source. Unknown or ignored build inputs refuse;
 named generated LuaJIT inputs require the exact preceding successful v2 receipt.
 Doctor/runtime require matching source, prerequisites, SDL3 hashes and dynamic
 linkage. Doctor inspects only; it never downloads, installs or builds.

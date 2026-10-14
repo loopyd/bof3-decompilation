@@ -98,7 +98,7 @@ def validate_endpoint(applications, endpoint, state, build, workspace):
 
 def _state_equal(before: dict, left: dict, after: dict, right: dict) -> None:
     # Manifest evidence has different paths per transaction; history validation
-    # checks each retained byte/mode independently, never excludes native inputs.
+    # checks each retained byte independently, never excludes native inputs.
     evidence = context._evidence_paths(before["manifest"]) | context._evidence_paths(
         after["manifest"]
     )

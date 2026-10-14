@@ -131,7 +131,6 @@ def write_bytes(
     path: Path,
     content: bytes,
     *,
-    readonly=False,
     create_parents=True,
     events=None,
     write_phase="write",
@@ -139,11 +138,10 @@ def write_bytes(
     """Create one captured artifact without replacing an existing file."""
     try:
         if create_parents:
-            path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+            path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("xb") as stream:
             if stream.write(content) != len(content):
                 raise IncompleteWrite(f"incomplete artifact write: {path}")
-        path.chmod(0o400 if readonly else 0o600)
     except Exception as error:
         if events is not None:
             retain(events, error, phase=write_phase, path=path, origin="ordinary")

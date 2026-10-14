@@ -61,7 +61,6 @@ def read_leaf_state(
                 for field in (
                     "st_dev",
                     "st_ino",
-                    "st_mode",
                     "st_nlink",
                     "st_uid",
                     "st_gid",
@@ -130,16 +129,9 @@ def atomic_write(
     *,
     expected: bytes | None | object = _MISSING,
     exclusive: bool = False,
-    mode: int | None = None,
-    creation_mode: int = 0o644,
 ) -> str | None:
     """Publish verified content through the native or cooperative move backend."""
 
-    if mode is not None and (type(mode) is not int or not 0 <= mode <= 0o7777):
-        raise ValueError("invalid transaction file mode")
-    if type(creation_mode) is not int or not 0 <= creation_mode <= 0o7777:
-        raise ValueError("invalid transaction creation mode")
-    explicit_mode = mode
     descriptors, leaf = open_parent_chain(root, name, create=True)
     parent = descriptors[-1]
     temporary = f".{leaf}.transaction-{secrets.token_hex(12)}"
@@ -154,24 +146,16 @@ def atomic_write(
             )
         if exclusive and current is not None:
             raise FileExistsError(name)
-        if mode is None:
-            mode = (
-                (current_stat.st_mode & 0o777)
-                if current_stat is not None
-                else creation_mode
-            )
         descriptor = os.open(
             temporary,
             os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,
-            mode,
+            0o666,
             dir_fd=parent,
         )
         with os.fdopen(descriptor, "wb") as stream:
             descriptor = -1
             stream.write(content)
             stream.flush()
-            if explicit_mode is not None:
-                os.fchmod(stream.fileno(), explicit_mode)
             os.fsync(stream.fileno())
         verify_parent_chain(root, name, descriptors)
         if current_stat is not None:
@@ -269,7 +253,6 @@ def restore_quarantined(
     *,
     expected: bytes,
     expected_identity: tuple[int, int] | None = None,
-    expected_mode: int | None = None,
     create: bool = False,
 ) -> None:
     """Restore one recorded quarantine only when its destination is absent."""
@@ -289,16 +272,9 @@ def restore_quarantined(
         if content is None or content != expected:
             raise ValueError(f"transaction quarantine drifted: {quarantine}")
         if (
-            (
-                expected_identity is not None
-                and (source_stat.st_dev, source_stat.st_ino) != expected_identity
-            )
-            or (
-                expected_mode is not None
-                and stat.S_IMODE(source_stat.st_mode) != expected_mode
-            )
-            or source_stat.st_nlink != 1
-        ):
+            expected_identity is not None
+            and (source_stat.st_dev, source_stat.st_ino) != expected_identity
+        ) or source_stat.st_nlink != 1:
             raise ValueError(f"transaction quarantine identity drifted: {quarantine}")
         _restore_quarantine(
             root,
@@ -321,7 +297,6 @@ def safe_unlink(
     expected: bytes | None | object = _MISSING,
     expected_identity: tuple[int, int] | None = None,
     quarantine: str | None = None,
-    expected_mode: int | None = None,
 ) -> str | None:
     """Move a regular file to durable quarantine without deleting any inode."""
 
@@ -368,11 +343,6 @@ def safe_unlink(
                 f"transaction path inode drifted immediately before rollback: {name}"
             )
 
-        if (
-            expected_mode is not None
-            and stat.S_IMODE(source_stat.st_mode) != expected_mode
-        ):
-            raise ValueError(f"transaction path mode drifted before quarantine: {name}")
         quarantine_descriptors, quarantine_leaf = open_parent_chain(
             root, quarantine, create=True
         )
@@ -400,14 +370,14 @@ def safe_unlink(
                 moved = (
                     quarantine_state.st_dev,
                     quarantine_state.st_ino,
-                    quarantine_state.st_mode,
+                    stat.S_IFMT(quarantine_state.st_mode),
                     quarantine_state.st_nlink,
                     quarantine_state.st_size,
                     quarantine_state.st_mtime_ns,
                 ) == (
                     source_stat.st_dev,
                     source_stat.st_ino,
-                    source_stat.st_mode,
+                    stat.S_IFMT(source_stat.st_mode),
                     source_stat.st_nlink,
                     source_stat.st_size,
                     source_stat.st_mtime_ns,

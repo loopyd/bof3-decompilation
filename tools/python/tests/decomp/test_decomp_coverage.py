@@ -605,7 +605,7 @@ def test_malformed_stable_input_identity(tmp_path, monkeypatch, field):
         ),
     )
     inputs = CoverageInputs(tmp_path)
-    if field == "st_atime_ns":
+    if field in {"st_atime_ns", "st_mode"}:
         assert inputs.read("file") == b"data"
     else:
         with pytest.raises(ValueError, match="moving input"):

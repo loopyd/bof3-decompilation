@@ -11,7 +11,7 @@ bin/harness naming terminal-verify TARGET REPORT --transaction data:NAME --paren
 Omit root only for default-root evidence. Preparation uses read-only
 `harness.naming.terminal.terminal_binding(root,target,report,transaction)` under
 same evidence context. Binding covers canonical target/selector/transaction/report
-bytes/mode, row/capability digests, retained namespace evidence digest, missing fact
+bytes, row/capability digests, retained namespace evidence digest, missing fact
 and owner-derived current repository/scope/tooling digest. Inventory/index/manifest/
 row/receipt/capability validators must pass. Derived open/unavailable evidence
 rejects. Unrelated row failures remain separate `full_report.blocker`.

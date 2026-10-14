@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-import stat
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -110,10 +109,9 @@ def _validate_conclusion(
     return row
 
 
-def _atomic_write(path: Path, data: bytes, mode: int) -> None:
+def _atomic_write(path: Path, data: bytes) -> None:
     descriptor, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
     try:
-        os.fchmod(descriptor, mode)
         with os.fdopen(descriptor, "wb") as stream:
             stream.write(data)
             stream.flush()
@@ -302,8 +300,7 @@ def _import_conclusion(
         if report_path.read_bytes() != original:
             raise ValueError("report changed concurrently; stale import rejected")
         rendered = (json.dumps(report, indent=2, sort_keys=True) + "\n").encode()
-        mode = stat.S_IMODE(report_path.stat().st_mode)
-        _atomic_write(report_path, rendered, mode)
+        _atomic_write(report_path, rendered)
     return {
         "schema": SCHEMA,
         "target": target,

@@ -242,7 +242,7 @@ validation. Replay is a no-op only when the exact stored conclusion and its
 original evidence path/digest match, even though the report digest changed.
 Missing/stale evidence, forged cross-target receipts, authored-row overwrite,
 and concurrent report changes fail closed. Untouched rows retain structural
-values and order, and the report file mode is preserved.
+values and order.
 
 ## Ordered workflow
 
@@ -475,7 +475,7 @@ bin/harness naming validate TARGET out/reviews/audit.json
 asm-diff JSON/full and byte-match JSON, in that order, with 2 MiB output per
 command. It accepts no supplied success status and needs no review.
 It retains execution outputs, exact report bytes/hash binding, derived input
-closure, modes/absence, normalization transition, final Ninja graph and index
+closure, absence, normalization transition, final Ninja graph and index
 fingerprint. The closure includes transaction/provenance paths, all CMake source
 and header/manifest glob inputs, target binary/Splat/maps/reviewed includes,
 compiler configuration, installed configured variants, native tooling and
@@ -526,7 +526,7 @@ bin/harness naming prepare-transaction TARGET REPORT --transaction data:OLD --ca
 
 This produces distinct `proposed-data-transaction/v1` provenance (`DATA_KIND`).
 Preparation pins every owned source/header and map/manifest/Splat input's PRE and
-expected spelling-only POST hashes and mode, plus canonical storage. No file move,
+expected spelling-only POST hashes, plus canonical storage. No file move,
 type/qualifier/layout/extent change or extra normalization byte change is allowed.
 The cleaner snapshot must cover every pinned input, not merely renamed files.
 Exact direct consumers bind metadata-owned source, compiled name, address and
@@ -554,7 +554,7 @@ bin/harness naming snapshot TARGET REPORT --transaction KIND:OLD --expected-repo
 
 Omit `--evidence-root` only for default-root evidence. The command returns
 `snapshot`, a canonical absolute manifest path; retain its byte SHA-256 externally.
-It captures exactly the transaction paths, original file bytes/modes and expected
+It captures exactly the transaction paths, original file bytes and expected
 absence and pins the report/reviewed inputs and actual Git index. It checks copies
 before publishing the manifest last, then validates the manifest and rechecks live
 inputs/index/report before returning. Copies cover selected transaction
@@ -614,13 +614,13 @@ The resulting parent JSON is a closed `bof3.naming-parent-review/v1` object with
 These are explicit parent authority assertions, never inferred from review prose.
 The actual accepted reviewer artifact must be retained. Snapshot is the cleaner's
 `{"files":[...],"frozen":{...}}` manifest: each transaction path has `path`,
-`exists`, and (when present) `sha256`/`mode`; preserved copies live beneath the
+`exists`, and (when present) `sha256`; preserved copies live beneath the
 manifest directory at those relative paths. It must cover every captured
 binding/source path; FUNCTION also covers old definition and destination,
 including absence, while DATA requires all pinned owned inputs at their exact
-PRE hashes/modes and matching expected POST images.
+PRE hashes and matching expected POST images.
 `frozen` binds report, reviewed paths and raw `.git/index` SHA-256. Ingestion
-checks retained snapshot bytes/modes/absence, not just the manifest hash.
+checks retained snapshot bytes/absence, not just the manifest hash.
 
 Trust is the local repository runtime and supervising parent, like local
 application attestations—not remote authentication or protection from malicious
@@ -736,11 +736,11 @@ sections document type transactions.
 For context-bearing native runs add `--implementation-run-id IMPLEMENTATION_RUN`
 to type `run`. The application retains `review_context` bound before edits,
 around every gate and at publication: owner-derived source/header/config/binary,
-resolver catalog (including absence), tooling, modes, adopted baseline, index,
+resolver catalog (including absence), tooling, adopted baseline, index,
 environment digest, native tool resolution and Ninja build transitions. Only
-explicit text replacements may change authoritative inputs; original permissions
-are preserved. Toolchain overrides, missing configured compiler installs and
-unexpected drift reject. New runs require explicit-source, companion-free owners
+explicit text replacements may change authoritative inputs. Toolchain overrides,
+missing configured compiler installs and unexpected drift reject. New runs require
+explicit-source, companion-free owners
 and Ninja; no installation or index recovery is authorized. Context-bearing
 integrity replay rechecks live closure; omission preserves the legacy route.
 Context is not a reviewer attestation and cannot establish final acceptance.
@@ -768,21 +768,21 @@ editors and other nonparticipating commands are outside this cooperative contrac
 Read-only verification/inspection acquire no lease. See
 [harness ownership](harness.md) for identity-loss and recovery limitations.
 
-Before modifying sources, macro/type runs persist v3 recovery records at
+Before modifying sources, macro/type runs persist v5 recovery records at
 `out/reviews/evidence/{macro,type}-recovery-<nonce>.json`. They bind root,
-manifest/run/publication, PRE images, exact prepared POST inode/mode, fresh
+manifest/run/publication, PRE images, exact prepared POST device/inode, fresh
 staging and reserved PRE/POST quarantines. Images require the same filesystem and
-native no-replace support; source modes are captured as observed. Repository
-evidence uses filesystem-native permissions, not enforced POSIX modes; keep its
+native no-replace support. Repository files use OS-default creation; keep their
 source-bearing content out of public logs and commits.
-Git-backed runs use nested `bof3.recovery-safeguards/v4` to retain digests of
+Git-backed runs use nested `bof3.recovery-safeguards/v5` to retain digests of
 unrelated dirty paths, current HEAD and exact raw index bytes/identity. PRE/POST
 source images cover only explicit changed paths; clean sources and dependency
 trees are not copied. Existing owner guards verify consumed inputs. Inspection
 reports scoped drift and index locks without source bytes; unavailable guards
 remain explicit. Matching observations are non-atomic and grant no restoration
-authority. Historical outer v1/v2 records and nested safeguards v1-v3 remain
-inspectable; legacy nested guards cannot report a current match or authorize recovery.
+authority. Inspection accepts recovery v5/v6 and optional safeguards v5; older
+formats reject. Null safeguards report unavailable guards and block guarded recovery.
+Obtain fresh pinned backing without rewriting old records or their pins.
 Keep its digest independently when supervising a run. Inspect without mutation:
 
 ```sh
@@ -798,7 +798,7 @@ bin/harness types recover out/reviews/evidence/type-recovery-NONCE.json --expect
 ```
 
 Follow the [shared authorization and recovery gates](harness.md#guarded-source-recovery).
-Recovery requires pinned outer v3 backing with matching nested safeguards v4,
+Recovery requires pinned outer v5/v6 backing with matching nested safeguards v5,
 parent-attested writer termination and absent known publication. It restores owned
 PRE only; source acceptance, automatic retry and unrelated workspace/Git-index recovery are
 not granted. Macro invocation belongs to [macros.md](macros.md).
@@ -899,7 +899,7 @@ parent acceptance. Retained history is checked without rebinding; consecutive
 original POST/intervening PRE and POST/current states must agree, including native
 build closure, tools/environment/index and unrelated adopted workspace. Only the
 reviewed transaction's changed paths explain authoritative drift; original owned
-POST bytes/modes remain intact. Manifest-specific retained evidence membership is
+POST bytes remain intact. Manifest-specific retained evidence membership is
 validated separately, not treated as native input mutation authority. Build changes
 are accepted only inside original owner `bin/harness build` receipt transitions, never in
 gaps. New check-only gates must leave this final state unchanged. Both results can
@@ -1216,7 +1216,7 @@ bin/harness naming terminal-verify TARGET REPORT --transaction data:NAME --paren
 Omit the root only for default-root evidence. Preparation calls the read-only
 Python `harness.naming.terminal.terminal_binding(root,target,report,transaction)`
 under the same evidence context. This returns integrity/scope binding, **not
-acceptance**: exact canonical target/selector/transaction/report bytes and mode,
+acceptance**: exact canonical target/selector/transaction/report bytes,
 row/capability digests, retained namespace evidence digest, missing naming fact,
 and owner-derived current repository/scope/tooling digest. Current inventory,
 index/manifest freshness, row/receipt and capability validators must pass. Derived

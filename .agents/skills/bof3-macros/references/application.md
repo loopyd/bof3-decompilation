@@ -62,7 +62,7 @@ ordinary grouped sources. Preparation proves no native preservation or acceptanc
 Map CHANGES from allowed paths to complete text. Let the owner rederive scope,
 confine writes, run gates and publish immutable receipts. Context/final acceptance
 requires the actual implementation ID. Follow lifecycle rules for lease, 2 MiB
-native output, publication, v3 backing, rollback and uncertain cleanup.
+native output, publication, v5 backing, rollback and uncertain cleanup.
 `verify` checks integrity/native evidence; parent review supplies final acceptance.
 
 ## Private-header creation
@@ -149,7 +149,7 @@ New canonical CHECK/FRESH under `out/reviews/evidence`. Omit intervening only fo
 still-current proof; otherwise ordered closed `{envelope,expected_envelope_digest}`
 full accepted private records and external pins. Original POST/intervening PRE and
 final/current state must agree across build/tools/environment/index/adopted state.
-Only reviewed changed paths explain drift; original owned POST bytes/modes intact.
+Only reviewed changed paths explain drift; original owned POST bytes stay intact.
 Build transitions only inside recorded owner gates, never gaps. Check-only gates
 leave state unchanged; unexpected writes need explicit recovery.
 

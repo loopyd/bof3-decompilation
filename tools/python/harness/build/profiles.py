@@ -151,7 +151,7 @@ def _observe_input(path: Path, directories: DirectoryBatch | None = None) -> tup
         str(location),
         state.st_dev,
         state.st_ino,
-        state.st_mode,
+        stat.S_IFMT(state.st_mode),
         state.st_nlink,
         state.st_uid,
         state.st_gid,

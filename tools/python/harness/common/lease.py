@@ -75,7 +75,7 @@ def _open_lease(root: Path) -> int:
         flags = os.O_RDWR | os.O_NOFOLLOW | os.O_CLOEXEC | os.O_NONBLOCK
         try:
             descriptor = os.open(
-                leaf, flags | os.O_CREAT | os.O_EXCL, 0o600, dir_fd=parent
+                leaf, flags | os.O_CREAT | os.O_EXCL, 0o666, dir_fd=parent
             )
         except FileExistsError:
             descriptor = os.open(leaf, flags, dir_fd=parent)

@@ -11,7 +11,6 @@ from typing import Any
 import pytest
 from harness.analysis.index import SCHEMA_VERSION
 from harness.analysis.schema import create_schema
-from harness.common import files as transaction_files
 from harness.common import workspace as transaction_workspace
 from harness.common import quarantine as transaction_quarantine
 from harness.common import runtime
@@ -1692,7 +1691,6 @@ def test_native_exact_gate_rejects_exit_zero_without_owner_evidence(
     [
         None,
         "catalog",
-        "mode",
         "source",
         "index",
         "tooling",
@@ -1712,7 +1710,6 @@ def test_type_execution_context_binds_actual_gates(tmp_path, monkeypatch, drift)
     monkeypatch.setattr(transactions, "connect", _connect)
     manifest = transactions.prepare_transaction(tmp_path, _request(tmp_path))
     header = tmp_path / "include/test.h"
-    header.chmod(0o750)
     original = header.read_bytes()
     native = _runner()
     calls = []
@@ -1730,12 +1727,9 @@ def test_type_execution_context_binds_actual_gates(tmp_path, monkeypatch, drift)
             "build": "build/cmake/build.ninja",
             "publication": "out/catalog/emi.json",
         }
-        if drift == "mode":
-            (tmp_path / "CMakeLists.txt").chmod(0o600)
-        else:
-            path = tmp_path / paths[drift]
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(b"drift")
+        path = tmp_path / paths[drift]
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"drift")
 
     def run(argv, **kwargs):
         calls.append(argv)
@@ -1765,7 +1759,6 @@ def test_type_execution_context_binds_actual_gates(tmp_path, monkeypatch, drift)
                 implementation_run_id="implementation-1",
             )
         assert header.read_bytes() == original
-        assert header.stat().st_mode & 0o7777 == 0o750
         assert len(calls) == (
             len(manifest["required_checks"]) if drift == "publication" else 1
         )
@@ -1781,7 +1774,6 @@ def test_type_execution_context_binds_actual_gates(tmp_path, monkeypatch, drift)
         app["review_context"]["final_build"]["build/cmake/CMakeFiles/VerifyGlobs.cmake"]
         is not None
     )
-    assert header.stat().st_mode & 0o7777 == 0o750
     context = app["review_context"]
     assert context["initial_state"]["inputs"]["out/catalog/emi.json"] is None
     assert (
@@ -1793,13 +1785,6 @@ def test_type_execution_context_binds_actual_gates(tmp_path, monkeypatch, drift)
     (tmp_path / "CMakeLists.txt").write_text("changed")
     with pytest.raises(ValueError, match="execution context"):
         transactions.verify_application(tmp_path, app, app["digest"])
-
-
-@pytest.mark.parametrize("mode", [True, -1, 0o10000, "644"])
-def test_atomic_write_rejects_invalid_explicit_mode(tmp_path, mode):
-    with pytest.raises(ValueError, match="file mode"):
-        transaction_files.atomic_write(tmp_path, "new/file", b"x", mode=mode)
-    assert not (tmp_path / "new").exists()
 
 
 @pytest.mark.parametrize("invalid", ["", " ", False])
@@ -1853,14 +1838,12 @@ def test_type_execution_context_rejects_rebound_shape_and_transition(
     elif field == "catalog":
         ctx["initial_state"]["inputs"]["out/catalog/emi.json"] = {
             "sha256": "0" * 64,
-            "mode": 0o644,
         }
     elif field == "environment":
         ctx["initial_state"]["environment_digest"] = "forged"
     else:
         ctx["gates"][0]["build_before"]["build/cmake/build.ninja"] = {
             "sha256": "0" * 64,
-            "mode": 0o644,
         }
     with pytest.raises(ValueError, match="execution"):
         validate_context(tmp_path, app)
@@ -1886,7 +1869,6 @@ def test_type_context_concurrent_index_preserves_owned_source_rollback(
     monkeypatch.setattr(transactions, "connect", _connect)
     request = _request(tmp_path)
     execution_inputs(tmp_path)
-    (tmp_path / "include/test.h").chmod(0o750)
     request["adopted_baseline"] = transactions.workspace_baseline(tmp_path)["digest"]
     manifest = transactions.prepare_transaction(tmp_path, request)
     header = tmp_path / "include/test.h"
@@ -1910,7 +1892,6 @@ def test_type_context_concurrent_index_preserves_owned_source_rollback(
     assert "concurrently" in str(error.value.__cause__)
     assert index.read_bytes() == concurrent
     assert header.read_bytes() == original
-    assert header.stat().st_mode & 0o7777 == 0o750
 
 
 @pytest.mark.parametrize(
@@ -1954,7 +1935,6 @@ def test_type_cli_publication_rolls_back_owned_edits(tmp_path, monkeypatch, fail
     request = _request(tmp_path)
     execution_inputs(tmp_path)
     header = tmp_path / "include/test.h"
-    header.chmod(0o750)
     original = header.read_bytes()
     unrelated = tmp_path / "unrelated.txt"
     unrelated.write_text("adopted dirty work\n")
@@ -2033,7 +2013,6 @@ def test_type_cli_publication_rolls_back_owned_edits(tmp_path, monkeypatch, fail
             app = json.loads((tmp_path / output).read_text())
             with pytest.raises(ValueError, match="post-state drifted"):
                 transactions.verify_application(tmp_path, app, app["digest"])
-    assert header.stat().st_mode & 0o7777 == 0o750
     assert unrelated.read_text() == "adopted dirty work\n"
     assert index.read_bytes() == original_index + (
         b"concurrent" if failure == "index" else b""

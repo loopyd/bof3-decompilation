@@ -7,7 +7,6 @@ import hashlib
 import json
 import os
 import secrets
-import stat
 from pathlib import Path
 from typing import Any, Callable
 
@@ -21,8 +20,8 @@ from harness.common.safeguards import capture_safeguards
 from harness.common.submodules import validate_mutations
 from harness.common.workspace import WorkspaceState
 
-SCHEMA = "bof3.transaction-recovery/v3"
-DELETION_SCHEMA = "bof3.transaction-recovery/v4"
+SCHEMA = "bof3.transaction-recovery/v5"
+DELETION_SCHEMA = "bof3.transaction-recovery/v6"
 RECOVERY_OWNERS = frozenset({"macro", "type", "combiner"})
 
 
@@ -81,7 +80,6 @@ def capture_recovery(
                 "sha256": hashlib.sha256(before).hexdigest()
                 if before is not None
                 else None,
-                "mode": stat.S_IMODE(metadata.st_mode) if metadata else None,
                 "device": metadata.st_dev if metadata else None,
                 "inode": metadata.st_ino if metadata else None,
             },
@@ -89,7 +87,6 @@ def capture_recovery(
                 root,
                 name,
                 content.encode("utf-8"),
-                stat.S_IMODE(metadata.st_mode) if metadata else None,
             )
             if content is not None
             else None,
@@ -118,7 +115,7 @@ def capture_recovery(
     path = f"out/reviews/evidence/{binding['owner']}-recovery-{nonce}.json"
     encoded = (json.dumps(record, indent=2, sort_keys=True) + "\n").encode("utf-8")
     validate_mutations(root, {path})
-    atomic_write(root, path, encoded, expected=None, creation_mode=0o600)
+    atomic_write(root, path, encoded, expected=None)
     if on_capture is not None:
         metadata = leaf_stat(root, path)
         if (

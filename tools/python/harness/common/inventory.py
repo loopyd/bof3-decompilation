@@ -38,7 +38,6 @@ def describe_identity(metadata: os.stat_result) -> dict:
         for field in (
             "st_dev",
             "st_ino",
-            "st_mode",
             "st_uid",
             "st_gid",
             "st_nlink",
@@ -47,6 +46,7 @@ def describe_identity(metadata: os.stat_result) -> dict:
             "st_ctime_ns",
         )
     }
+    identity["file_type"] = stat.S_IFMT(metadata.st_mode)
     if stat.S_ISDIR(metadata.st_mode):
         del identity["size"]
     return identity

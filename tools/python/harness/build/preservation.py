@@ -33,8 +33,8 @@ from harness.domain.sources import compiled_symbol_name, expected_lift_sources
 from harness.domain.symbols import parse_map
 from harness.io import unique_object
 
-PROFILE_SCHEMA = "bof3.combiner-profile/v5"
-PRESERVATION_SCHEMA = "bof3.combiner-preservation/v7"
+PROFILE_SCHEMA = "bof3.combiner-profile/v6"
+PRESERVATION_SCHEMA = "bof3.combiner-preservation/v8"
 PRESERVATION_OWNERS = (
     "tools/python/harness/combiner/preservation.py",
     "tools/python/harness/build/preservation.py",
@@ -145,11 +145,9 @@ def validate_states(states: object) -> dict:
             raise ValueError("POST requires canonical repository paths")
         if state is None:
             continue
-        if not isinstance(state, dict) or set(state) != {"sha256", "mode"}:
-            raise ValueError("POST states require exactly sha256 and mode")
+        if not isinstance(state, dict) or set(state) != {"sha256"}:
+            raise ValueError("POST states require exactly sha256")
         validate_fingerprint(state["sha256"])
-        if type(state["mode"]) is not int or not 0 <= state["mode"] <= 0o7777:
-            raise ValueError("POST state has an invalid file mode")
     return states
 
 

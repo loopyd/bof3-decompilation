@@ -474,7 +474,7 @@ def _derive_search(report, grant, authenticated):
 
 def _publish_progress(report, destination, ordinal):
     path = destination / f"progress-{ordinal:03d}.json"
-    write_bytes(path, encode_json(report, path=path), readonly=True)
+    write_bytes(path, encode_json(report, path=path))
     return file_record(path)
 
 
@@ -528,9 +528,9 @@ def _member_budget(report, grant, key):
         owner_run=report["run"],
     )
     directory = Path(report["destination"]) / "member-admissions"
-    directory.mkdir(mode=0o700, exist_ok=True)
+    directory.mkdir(exist_ok=True)
     path = directory / f"{len(report['member_budgets']):06d}.json"
-    write_bytes(path, encode_json(admission, path=path), readonly=True)
+    write_bytes(path, encode_json(admission, path=path))
     budget = _MemberBudget(key, grant.grant_id, file_record(path))
     report["member_budgets"].append(asdict(budget))
     return budget
@@ -538,7 +538,7 @@ def _member_budget(report, grant, key):
 
 def _write_terminal(path, value):
     value = deepcopy(value)
-    write_bytes(path, encode_json(value, path=path), readonly=True)
+    write_bytes(path, encode_json(value, path=path))
     return file_record(path)
 
 
@@ -1593,9 +1593,9 @@ def _search_forms(*, binding, arguments):
             *prior.get("prior_preparations", []),
             *([prior["prepared_inputs"]] if "prepared_inputs" in prior else []),
         ]
-    destination.mkdir(mode=0o700)
-    (destination / "attempts").mkdir(mode=0o700)
-    (destination / "feedback").mkdir(mode=0o700)
+    destination.mkdir()
+    (destination / "attempts").mkdir()
+    (destination / "feedback").mkdir()
     authenticated, progress = [], 0
     fatal = None
     active = None
@@ -1634,7 +1634,7 @@ def _search_forms(*, binding, arguments):
                 else owner_prior_grant,
             )
             path = destination / "run.json"
-            write_bytes(path, encode_json(owner, path=path), readonly=True)
+            write_bytes(path, encode_json(owner, path=path))
             report["run"] = file_record(path)
             if owner["grant_origin"]:
                 report["grant_owners"].append(
@@ -1742,7 +1742,7 @@ def _search_forms(*, binding, arguments):
                 checkpoint=checkpoint,
             )
             prepared_root = destination / "prepared"
-            prepared_root.mkdir(mode=0o700)
+            prepared_root.mkdir()
             shared_record, config_bytes, shared = _prepare_run(
                 arguments["root"],
                 prepared_root,
@@ -1769,7 +1769,7 @@ def _search_forms(*, binding, arguments):
             )
             path = prepared_root / "inputs.json"
             shared.verify()
-            write_bytes(path, encode_json(shared_record, path=path), readonly=True)
+            write_bytes(path, encode_json(shared_record, path=path))
             report["prepared_inputs"] = file_record(path)
             _require(
                 any(member_available(key) for key, _ in pending),
@@ -1886,7 +1886,7 @@ def _search_forms(*, binding, arguments):
                     active["restart_phase"] = "rebuild"
                     checkpoint()
                 else:
-                    workspace.mkdir(mode=0o700)
+                    workspace.mkdir()
                     run_record = deepcopy(shared_record)
                     run_record.update(
                         selected=[key],
@@ -1901,7 +1901,6 @@ def _search_forms(*, binding, arguments):
                     write_bytes(
                         path,
                         encode_json(run_record, path=path),
-                        readonly=True,
                     )
                     active.update(
                         run=file_record(path),
@@ -1989,7 +1988,6 @@ def _search_forms(*, binding, arguments):
                         write_bytes(
                             path,
                             encode_json(child, path=path),
-                            readonly=True,
                         )
                         active["report"] = file_record(path)
                     disposition, requests = _generation_disposition(
@@ -2026,7 +2024,7 @@ def _search_forms(*, binding, arguments):
                     if isinstance(item, _TerminalCandidate):
                         active = None
                         continue
-                feedback_root.mkdir(mode=0o700)
+                feedback_root.mkdir()
                 rebuilt, measured = {}, {}
                 try:
                     _admit_work(
@@ -2171,7 +2169,7 @@ def _search_forms(*, binding, arguments):
             report["reuse_refusals"].append(reason)
     checkpoint()
     path = destination / "report.json"
-    write_bytes(path, encode_json(report, path=path), readonly=True)
+    write_bytes(path, encode_json(report, path=path))
     if fatal is not None and (
         not isinstance(fatal, Exception)
         or isinstance(fatal, (ProcessCleanupError, OSError))
@@ -2866,7 +2864,7 @@ def run(
                 "new_budget_id": new_budget_id,
             },
         )
-    destination.mkdir(mode=0o700)
+    destination.mkdir()
     report = {
         "operation": "run",
         "status": "failed",
@@ -2927,11 +2925,9 @@ def run(
                 entry_receipt, entry_cpu_receipt, contexts, overlay_mounts
             )
             directory = destination / "entry-observation"
-            directory.mkdir(mode=0o700)
+            directory.mkdir()
             for name, raw in observation.files.items():
-                write_bytes(
-                    directory / f"entry-{name}", raw, readonly=True, events=run_events
-                )
+                write_bytes(directory / f"entry-{name}", raw, events=run_events)
             run_record["entry_observation"] = observation.descriptor
             run_record["entry_observation_inputs"] = {
                 "directory": str(directory),

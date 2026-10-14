@@ -43,14 +43,14 @@ def _validate_file(
     deletions: bool = False,
 ) -> None:
     entry = _require_fields(value, "pre post quarantine")
-    pre = _require_fields(entry["pre"], "content_base64 sha256 mode device inode")
+    pre = _require_fields(entry["pre"], "content_base64 sha256 device inode")
     deleted = entry["post"] is None
     if deleted and (not deletions or pre["content_base64"] is None):
         raise ValueError("invalid recovery POST deletion")
     post = (
         _require_fields(
             entry["post"],
-            "sha256 mode device inode staging quarantine",
+            "sha256 device inode staging quarantine",
         )
         if not deleted
         else None
@@ -58,13 +58,8 @@ def _validate_file(
     if not deleted and not _is_hash(post["sha256"]):
         raise ValueError("invalid recovery POST hash")
     if not deleted:
-        if (
-            type(post["mode"]) is not int
-            or not 0 <= post["mode"] <= 0o7777
-            or any(
-                type(post[key]) is not int or post[key] < 0
-                for key in ("device", "inode")
-            )
+        if any(
+            type(post[key]) is not int or post[key] < 0 for key in ("device", "inode")
         ):
             raise ValueError("invalid recovery POST identity")
         validate_image_path(name, post["staging"])
@@ -90,13 +85,7 @@ def _validate_file(
     if (
         base64.b64encode(content).decode("ascii") != encoded
         or hashlib.sha256(content).hexdigest() != pre["sha256"]
-        or type(pre["mode"]) is not int
-        or not 0 <= pre["mode"] <= 0o7777
         or any(type(pre[key]) is not int or pre[key] < 0 for key in ("device", "inode"))
-        or (
-            not deleted
-            and (type(post["mode"]) is not int or post["mode"] != pre["mode"])
-        )
     ):
         raise ValueError("invalid recovery PRE content or identity")
     validate_quarantine(name, entry["quarantine"])

@@ -5,6 +5,7 @@ from __future__ import annotations
 import ctypes
 import errno
 import os
+import stat
 from dataclasses import dataclass
 
 _RENAME_NOREPLACE = 1
@@ -54,7 +55,7 @@ def _state(value: os.stat_result) -> tuple[int, ...]:
     return (
         value.st_dev,
         value.st_ino,
-        value.st_mode,
+        stat.S_IFMT(value.st_mode),
         value.st_nlink,
         value.st_size,
         value.st_mtime_ns,

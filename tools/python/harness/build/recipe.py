@@ -344,7 +344,6 @@ def execute(
         with inputs_path.open("xb") as stream:
             if stream.write(data) != len(data):
                 raise IncompleteWrite("file write was incomplete")
-        inputs_path.chmod(0o600)
         process = capture(
             workspace,
             stage["argv"],
@@ -567,8 +566,6 @@ def verify_syntax(
                 ):
                     if path.is_symlink() or not path.is_file():
                         raise PolicyFailure("retained compiler input/output differs")
-                    if copied and path.stat().st_mode & 511 != 256:
-                        raise PolicyFailure("compiler copy mode differs")
                     verify_inputs([record], events=events, reader=reader)
             except Exception as error:
                 retain(
@@ -743,15 +740,15 @@ def check_syntax(
         )
         inputs = FrozenInputs(expected[0], expected[1], tools, [*expected, *immutable])
         try:
-            workspace.mkdir(mode=448)
+            workspace.mkdir()
         except Exception as error:
             retain(events, error, phase="mkdir", path=workspace, origin="ordinary")
             raise
         for name, data in copies.items():
-            write_bytes(workspace / name, data, events=events, readonly=True)
+            write_bytes(workspace / name, data, events=events)
         for name in ("home", "tmp"):
             try:
-                (workspace / name).mkdir(mode=448)
+                (workspace / name).mkdir()
             except Exception as error:
                 retain(
                     events,
@@ -1628,9 +1625,7 @@ def execute_profiles(
                         else workspace / f"profiles/{profile['ordinal']:03d}"
                     )
                     try:
-                        directory.mkdir(
-                            mode=448, parents=True, exist_ok=profile["ordinal"] == 0
-                        )
+                        directory.mkdir(parents=True, exist_ok=profile["ordinal"] == 0)
                     except Exception as error:
                         retain(
                             events,

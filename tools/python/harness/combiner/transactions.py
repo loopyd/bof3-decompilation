@@ -21,7 +21,7 @@ from harness.combiner.preservation import capture_preservation
 from harness.common.inputs import InputBatch
 from harness.domain.cache import collect_manifest_paths
 
-SCHEMA = "bof3.combiner-transaction/v4"
+SCHEMA = "bof3.combiner-transaction/v5"
 OWNERS = collect_transaction_owners(SCHEMA)
 
 
@@ -79,8 +79,6 @@ def prepare_transaction(
         before = pre[name]
         if after is None and before is None:
             raise ValueError(f"transaction deletion has no PRE file: {name}")
-        if before is not None and after is not None and before["mode"] != after["mode"]:
-            raise ValueError(f"transaction must preserve observed file mode: {name}")
     validate_ownership_images(
         record, changes[record["manifest"]], changes[record["layout"]]
     )

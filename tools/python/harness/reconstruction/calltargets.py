@@ -518,10 +518,9 @@ def _catalog_record(contexts):
 
 
 def _write_context(path, data):
-    path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+    path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("xb") as stream:
         _require(stream.write(data) == len(data), "catalog copy incomplete")
-    path.chmod(0o400)
 
 
 def prepare_native_contexts(binding, run_dir, destination):
@@ -541,7 +540,7 @@ def prepare_native_contexts(binding, run_dir, destination):
         and len(members) == 118,
         "catalog preallocation bounds",
     )
-    destination.mkdir(mode=0o700)
+    destination.mkdir()
     for index, image in enumerate(images):
         target = next(t.target for t in targets if t.image_id == image.image_id)
         data = provenance.read_original_image(

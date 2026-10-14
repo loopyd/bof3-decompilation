@@ -325,7 +325,6 @@ def _recover(
             "path": successor.relative_to(root).as_posix(),
             "state": {
                 "sha256": compute_sha256(encode(candidate)),
-                "mode": report_state["mode"],
             },
         },
         "delta": delta,
@@ -340,10 +339,10 @@ def _recover(
     if apply:
         if pin != expected_plan_sha256:
             raise ValueError("reviewed recovery plan changed")
-        write_exclusive(successor, encode(candidate), report_state["mode"])
+        write_exclusive(successor, encode(candidate))
         if validate(root, target, load(successor), report_path=successor) != validation:
             raise ValueError("published recovery validation differs from preview")
-        write_exclusive(checkpoint, encode(record), report_state["mode"])
+        write_exclusive(checkpoint, encode(record))
         validate_record(root, checkpoint, pin)
         if (
             read_state(summary_path) != summary_state

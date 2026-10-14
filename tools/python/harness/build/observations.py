@@ -19,7 +19,7 @@ def validate_description(value: object) -> None:
     """Validate retained observational structure without asserting live freshness."""
     if (
         not isinstance(value, dict)
-        or value.get("schema") != "bof3.program-inputs/v2"
+        or value.get("schema") != "bof3.program-inputs/v3"
         or set(value)
         != {
             "schema",
@@ -113,18 +113,18 @@ def validate_description(value: object) -> None:
                 or any(type(item) is not int for item in identity)
             ):
                 raise ValueError("program node identity is invalid")
-            mode = identity[2]
+            file_type = identity[2]
             expected_kind = (
                 "directory"
-                if stat.S_ISDIR(mode)
+                if stat.S_ISDIR(file_type)
                 else "file"
-                if stat.S_ISREG(mode)
+                if stat.S_ISREG(file_type)
                 else "symlink"
-                if stat.S_ISLNK(mode)
+                if stat.S_ISLNK(file_type)
                 else "nonregular"
             )
             if kind != expected_kind:
-                raise ValueError("program node kind differs from its mode")
+                raise ValueError("program node kind differs from its file type")
         if kind == "file" and (
             identity[5] != 1
             or identity[6] < 0

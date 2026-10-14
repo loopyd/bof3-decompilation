@@ -6,15 +6,16 @@ import hashlib
 import os
 import re
 import secrets
+import stat
 
 QUARANTINE_DIRECTORY = "out/reviews/evidence/quarantine"
 
 
 def matches_identity(current: os.stat_result, expected: os.stat_result) -> bool:
-    return (current.st_dev, current.st_ino, current.st_mode) == (
+    return (current.st_dev, current.st_ino, stat.S_IFMT(current.st_mode)) == (
         expected.st_dev,
         expected.st_ino,
-        expected.st_mode,
+        stat.S_IFMT(expected.st_mode),
     )
 
 

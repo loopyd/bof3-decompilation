@@ -176,7 +176,7 @@ CHECK/FRESH must be new canonical paths under `out/reviews/evidence`. Omit
 and original external pins. Original POST/intervening PRE, consecutive transitions
 and final/current state must agree across native build/tools/environment/index and
 unrelated adopted workspace. Only reviewed changed paths explain drift; original
-owned POST bytes/modes intact. Build drift valid only inside recorded owner build
+owned POST bytes stay intact. Build drift valid only inside recorded owner build
 transitions, never gaps. Manifest evidence membership is not mutation authority.
 No source reapplication; new gates must leave current state unchanged. Unexpected
 writes require explicit recovery. Adoption alone never excuses drift.

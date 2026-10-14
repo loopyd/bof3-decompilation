@@ -6,7 +6,6 @@ import hashlib
 import json
 import os
 import re
-import stat
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -318,26 +317,23 @@ def sync_directory(path: Path) -> None:
         os.close(fd)
 
 
-def write_copy(path: Path, raw: bytes, mode: int | None = None) -> None:
-    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+def write_copy(path: Path, raw: bytes) -> None:
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL)
     with os.fdopen(descriptor, "wb") as stream:
         stream.write(raw)
         stream.flush()
-        if mode is not None:
-            os.fchmod(stream.fileno(), mode)
         os.fsync(stream.fileno())
     if read_regular(path) != raw:
         raise ValueError(f"copy verification failed: {path}")
 
 
-def publish(path: Path, raw: bytes, mode: int) -> None:
+def publish(path: Path, raw: bytes) -> None:
     fd, temporary = tempfile.mkstemp(prefix=".plans-", dir=path.parent)
     temp = Path(temporary)
     try:
         with os.fdopen(fd, "wb") as stream:
             stream.write(raw)
             stream.flush()
-            os.fchmod(stream.fileno(), mode)
             os.fsync(stream.fileno())
         os.replace(temp, path)
         sync_directory(path.parent)
@@ -379,19 +375,15 @@ def consolidate(root: Path, review: Path, apply: bool, backup: Path | None) -> i
         return 0
     assert backup is not None
     directory = root / "docs" / "plans"
-    modes = {name: stat.S_IMODE((directory / name).stat().st_mode) for name in sources}
     changed: dict[str, bytes | None] = {}
     try:
-        backup.mkdir(mode=0o700)
-        (backup / "sources").mkdir(mode=0o700)
+        backup.mkdir()
+        (backup / "sources").mkdir()
         for name, raw in sources.items():
-            write_copy(backup / "sources" / name, raw, modes[name])
+            write_copy(backup / "sources" / name, raw)
         write_copy(backup / "candidate.md", candidate)
         write_copy(backup / "review.json", review_raw)
-        manifest = {
-            name: {"sha256": digest(raw), "mode": modes[name]}
-            for name, raw in sources.items()
-        }
+        manifest = {name: {"sha256": digest(raw)} for name, raw in sources.items()}
         write_copy(
             backup / "manifest.json",
             (json.dumps(manifest, indent=2) + "\n").encode(),
@@ -407,7 +399,7 @@ def consolidate(root: Path, review: Path, apply: bool, backup: Path | None) -> i
             raise ValueError("stale input immediately before publication")
         # Record intent before replace: even a post-replace fsync failure is recoverable.
         changed[canonical] = candidate
-        publish(directory / canonical, candidate, modes[canonical])
+        publish(directory / canonical, candidate)
         for name, raw in sources.items():
             if name == canonical:
                 continue
@@ -433,7 +425,7 @@ def consolidate(root: Path, review: Path, apply: bool, backup: Path | None) -> i
                 original = read_regular(backup / "sources" / name)
                 if original != sources[name]:
                     raise ValueError("recovery copy changed")
-                publish(path, original, modes[name])
+                publish(path, original)
             except (OSError, ValueError) as restore_error:
                 failures.append(f"{name}: {restore_error}")
         raise ValueError(

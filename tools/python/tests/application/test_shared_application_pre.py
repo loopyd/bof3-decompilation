@@ -281,7 +281,7 @@ def shared_pre_checks(root, owner, transactions, review, accepted, runner, calls
     header = root / "include/shared.h"
     baseline = (
         header.read_bytes(),
-        header.stat().st_mode,
+        header.stat().st_ino,
         (root / ".git/index").read_bytes(),
     )
     for failed in range(len(manifest["required_checks"])):
@@ -306,7 +306,7 @@ def shared_pre_checks(root, owner, transactions, review, accepted, runner, calls
         assert count == failed + 1
         assert (
             header.read_bytes(),
-            header.stat().st_mode,
+            header.stat().st_ino,
             (root / ".git/index").read_bytes(),
         ) == baseline
     with patch.object(
@@ -325,7 +325,7 @@ def shared_pre_checks(root, owner, transactions, review, accepted, runner, calls
             )
     assert (
         header.read_bytes(),
-        header.stat().st_mode,
+        header.stat().st_ino,
         (root / ".git/index").read_bytes(),
     ) == baseline
     application = transactions.run_transaction(
@@ -421,13 +421,6 @@ def shared_pre_checks(root, owner, transactions, review, accepted, runner, calls
                 historical=True,
                 manifest_validator=transactions._manifest,
             )
-    for name in ("include/shared.h", "include/second.h"):
-        path = root / name
-        mode = path.stat().st_mode
-        path.chmod(0o750)
-        with pytest.raises(ValueError):
-            review.verify_reviewed_application(root, envelope, external_pin)
-        path.chmod(mode)
     # Rehash-consistent nested edits cannot replace the retained externally pinned bytes.
     broken = copy.deepcopy(envelope)
     broken["application"]["manifest"]["shared_pre"]["build"] = {}

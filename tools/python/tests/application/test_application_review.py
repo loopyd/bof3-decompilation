@@ -38,7 +38,6 @@ def reviewed_run(tmp_path, monkeypatch, request):
     with (tmp_path / ".gitignore").open("a") as stream:
         stream.write("\nbuild/\n")
     (tmp_path / "unrelated.txt").write_text("adopted dirty work\n")
-    (tmp_path / "include/test.h").chmod(0o750)
     proposal["adopted_baseline"] = transactions.workspace_baseline(tmp_path)["digest"]
     manifest = transactions.prepare_transaction(tmp_path, proposal)
     native = tests._runner()
@@ -137,7 +136,6 @@ def test_owner_parent_review_and_cli_final_verify(reviewed_run):
     )
     assert args.handler(args) == 0
     assert (root / "unrelated.txt").read_text() == "adopted dirty work\n"
-    assert (root / "include/test.h").stat().st_mode & 0o7777 == 0o750
     # Review/final verification are read-only replay, not application execution.
     assert review.verify_reviewed_application(root, envelope, pin)["digest"] == pin
 
@@ -213,7 +211,6 @@ def test_owner_parent_review_rejects_invalid_acceptance(reviewed_run, fault):
         "retained-receipt",
         "attestation",
         "source",
-        "mode",
         "tooling",
         "catalog",
         "index",
@@ -247,7 +244,6 @@ def test_owner_final_verify_rejects_drift_and_rebinding(reviewed_run, fault):
             "attestation": root / app["attestation"]["path"],
             "retained-receipt": root / app["receipts"][0]["path"],
             "source": root / "include/test.h",
-            "mode": root / "include/test.h",
             "tooling": root / "CMakeLists.txt",
             "catalog": root / "out/catalog/emi.json",
             "index": root / ".git/index",
@@ -255,8 +251,6 @@ def test_owner_final_verify_rejects_drift_and_rebinding(reviewed_run, fault):
         }
         if fault == "receipt":
             envelope["application"]["receipts"][0]["digest"] = "0" * 64
-        elif fault == "mode":
-            paths[fault].chmod(0o600)
         else:
             paths[fault].parent.mkdir(parents=True, exist_ok=True)
             paths[fault].write_text("drift\n")

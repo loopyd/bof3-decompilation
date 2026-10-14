@@ -6,7 +6,6 @@ import hashlib
 import os
 import re
 import secrets
-import stat
 from pathlib import Path
 from typing import Any
 
@@ -48,28 +47,25 @@ def validate_image_path(name: str, path: object) -> str:
     return path
 
 
-def prepare_image(
-    root: Path, name: str, content: bytes, mode: int | None
-) -> dict[str, Any]:
+def prepare_image(root: Path, name: str, content: bytes) -> dict[str, Any]:
     fingerprint = hashlib.sha256(name.encode()).hexdigest()[:16]
     directory = f"{IMAGE_DIRECTORY}/{secrets.token_hex(16)}-{fingerprint}"
     validate_mutations(root, {name, directory})
     parent, leaf = open_parent_fd(root, directory, create=True)
     try:
-        os.mkdir(leaf, 0o700, dir_fd=parent)
+        os.mkdir(leaf, dir_fd=parent)
         os.fsync(parent)
     finally:
         os.close(parent)
     path = f"{directory}/post"
     verify_writer(root)
-    atomic_write(root, path, content, expected=None, mode=mode)
+    atomic_write(root, path, content, expected=None)
     _verify_image_filesystem(root, name, path)
     metadata = leaf_stat(root, path)
     if metadata is None or metadata.st_nlink != 1 or read_file(root, path) != content:
         raise ValueError(f"prepared POST changed: {name}")
     return {
         "sha256": hashlib.sha256(content).hexdigest(),
-        "mode": stat.S_IMODE(metadata.st_mode),
         "device": metadata.st_dev,
         "inode": metadata.st_ino,
         "staging": path,
@@ -92,7 +88,6 @@ def install_image(
         path,
         expected=content,
         expected_identity=(image["device"], image["inode"]),
-        expected_mode=image["mode"],
         create=True,
     )
     verify_writer(root)
@@ -111,7 +106,7 @@ def classify_restoration(
         ):
             raise ValueError(f"transaction deletion recovery content drifted: {name}")
         expected = {
-            **{key: pre[key] for key in ("sha256", "mode", "device", "inode")},
+            **{key: pre[key] for key in ("sha256", "device", "inode")},
             "links": 1,
         }
         quarantine = validate_quarantine(name, image["quarantine"])
@@ -127,7 +122,7 @@ def classify_restoration(
         or hashlib.sha256(image["installed"]).hexdigest() != post["sha256"]
     ):
         raise ValueError(f"transaction recovery content drifted: {name}")
-    keys = ("sha256", "mode", "device", "inode")
+    keys = ("sha256", "device", "inode")
     expected_pre = (
         {**{key: pre[key] for key in keys}, "links": 1} if content is not None else None
     )

@@ -133,7 +133,7 @@ def _observe_claim_parent(path: Path) -> tuple | None:
     return (
         status.st_dev,
         status.st_ino,
-        status.st_mode,
+        stat.S_IFMT(status.st_mode),
         status.st_mtime_ns,
         status.st_ctime_ns,
     )
