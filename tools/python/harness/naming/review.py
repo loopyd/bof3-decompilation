@@ -257,7 +257,17 @@ def ingest(
     value = load(parent)
     attestation(root, bundle, row, value)
     readiness = _execute(root, canonical("analysis-readiness", target))
-    hygiene = _execute(root, ["git", "diff", "--check"])
+    hygiene = _execute(
+        root,
+        [
+            "git",
+            "--no-optional-locks",
+            "-c",
+            "diff.autoRefreshIndex=false",
+            "diff",
+            "--check",
+        ],
+    )
     output = directory(root)
     write_json(output / "readiness.json", readiness)
     write_json(output / "diff-check.json", hygiene)
@@ -305,7 +315,17 @@ def verify_external(
     result = validate(copied)
     recheck(root, bundle, row)
     validate_review(root, bundle, row)
-    for argv in (canonical("analysis-readiness", target), ["git", "diff", "--check"]):
+    for argv in (
+        canonical("analysis-readiness", target),
+        [
+            "git",
+            "--no-optional-locks",
+            "-c",
+            "diff.autoRefreshIndex=false",
+            "diff",
+            "--check",
+        ],
+    ):
         check = _execute(root, argv)
         if (
             check["exit_code"] != 0

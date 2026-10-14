@@ -1,22 +1,4 @@
-"""``bin/harness lift gate``: combined per-selector native lift gates.
-
-One call runs the per-selector native gates plus the target metadata gates and
-prints a compact PASS/FAIL summary, retrying the shared build-tree / sibling-lane
-manifest races in-process so a lane spends one tool call instead of several.
-
-Cost contract (measured): the five stages used to sum to ~13.8 s while the command
-took 53-128 s under 8-lane fan-out, because every stage was its own ``bin/harness``
-subprocess and ``asm-diff`` plus ``byte-match`` were two separate native passes over
-the one shared ``build/cmake`` tree.  This owner now
-
-* resolves the selector once and takes **one** in-process native measurement, whose
-  payload carries both the instruction diff and the byte match;
-* runs the target metadata stages in the **same interpreter** instead of spawning
-  ``bin/harness`` per stage, and skips ``symbols normalize --write`` when the map is
-  already sorted (it was the single largest stage);
-* accepts several selectors for one target (``--target``), so the target-scoped
-  stages run once per target rather than once per selector.
-"""
+"""Combined per-selector native and target metadata lift gates."""
 
 from __future__ import annotations
 
@@ -229,7 +211,19 @@ def _run(args: argparse.Namespace) -> int:
             rc = 1
 
     print("== git diff --check (informational) ==")
-    diff = subprocess.run(["git", "-C", str(root), "diff", "--check"], check=False)
+    diff = subprocess.run(
+        [
+            "git",
+            "--no-optional-locks",
+            "-c",
+            "diff.autoRefreshIndex=false",
+            "-C",
+            str(root),
+            "diff",
+            "--check",
+        ],
+        check=False,
+    )
     if diff.returncode == 0:
         print("diff-check: clean")
     else:
