@@ -22,13 +22,14 @@ in `config/compiler/variants.json`; generated compile database and `bin/cc` carr
 selection. Grouped functions require compatible effective profiles. Changing
 execution route never changes compiler/flags or substitutes host GCC.
 
-Native status fingerprints include literal source/header dependencies resolved
-through `src`, `include` and `toolchains/psyq/4.7/include`. A consumed header change
-invalidates the target's cached function results. Preservation profiles pin literal
-transitive headers and negative lookups for current, retained and prospective source
-images and forced inputs. Verification refuses changed headers, newly present lookup
-candidates and discoveries outside the pinned closure. This profile route requires
-the configured search roots and rejects other include-search settings. Active
+Native status fingerprints use the guarded literal include snapshot through `src`,
+`include` and `toolchains/psyq/4.7/include`. Consumed headers and negative lookups
+bind every claimed source, support source and header. Unsupported directives,
+unresolved includes and compiler header mappings refuse cached inspection.
+Preservation profiles pin literal transitive headers and negative lookups for
+current, retained and prospective source images and forced inputs. Verification
+refuses changed headers, newly present candidates and discoveries outside the
+pinned closure. Profile capture rejects other include-search settings. Active
 preprocessing and complete compiler-input closure retain their existing gates.
 
 Grouped lift comparisons require an explicit member address and externally pinned

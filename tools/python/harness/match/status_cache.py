@@ -4,20 +4,21 @@ from __future__ import annotations
 
 import hashlib
 import json
+from contextlib import closing
 from dataclasses import asdict
 from pathlib import Path
 import sqlite3
 from typing import Any, Iterable
 
+from harness.build.dependencies import IncludeSnapshot
 from harness.common.files import read_file
 from harness.common.directory import validate_repo_path
 from harness.domain.ids import normalize_target_id
-from harness.domain.includes import local_include_files
 
 from ..io import file_sha256
 from ..domain.manifests import TargetManifest
 
-_SCHEMA = "harness.decomp-status-cache/v8"
+_SCHEMA = "harness.decomp-status-cache/v9"
 _CONFIGURATION = (
     "config/compiler/object-flags.cmake",
     "config/compiler/variants.json",
@@ -59,20 +60,6 @@ def _paths(root: Path, manifest: TargetManifest) -> Iterable[Path]:
     # sources is covered per-source by source_fingerprint.
     for claimed in manifest.sources + manifest.support_sources:
         yield root / claimed
-    yield from local_include_files(
-        root,
-        [
-            root / name
-            for name in manifest.sources + manifest.support_sources + manifest.headers
-        ],
-        include_roots=(
-            root / "src",
-            root / "include",
-            root / "toolchains/psyq/4.7/include",
-        ),
-        include_angle=True,
-        strict=True,
-    )
 
 
 def target_fingerprint(root: Path, manifest: TargetManifest) -> str:
@@ -101,6 +88,20 @@ def target_fingerprint(root: Path, manifest: TargetManifest) -> str:
             fingerprint = file_sha256(path).encode() if path.is_file() else b"missing"
         digest.update(fingerprint)
         digest.update(b"\0")
+    seeds = tuple(
+        root / name
+        for name in dict.fromkeys(
+            manifest.sources + manifest.support_sources + manifest.headers
+        )
+    )
+    if seeds:
+        with closing(IncludeSnapshot(root, seeds[0], forced=seeds[1:])) as snapshot:
+            for name, state in snapshot.describe_inputs().items():
+                digest.update(name.encode())
+                digest.update(b"\0")
+                digest.update(state["sha256"].encode() if state else b"missing")
+                digest.update(b"\0")
+            snapshot.validate()
     binary = root / manifest.binary
     digest.update(manifest.binary.encode())
     digest.update(b"\0")
