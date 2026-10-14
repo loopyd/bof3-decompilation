@@ -6,9 +6,13 @@ from pathlib import Path
 import re
 from typing import Any, Callable, Iterable
 
-from harness.domain.functions import collect_lift_metadata
+from collections import Counter
+import hashlib
+
+from harness.domain.functions import FunctionRecord, parse_function_records
 from harness.domain.tags import count_function_metadata
 from harness.domain.policy import validate_matching_source
+from harness.domain.symbols import load_map, map_path
 
 from ..build.operations import batch_build, cmake_target_for_source
 from ..domain.manifests import TargetManifest, load_target_manifests
@@ -16,6 +20,7 @@ from ..domain.claims import manifest_source_paths
 from ..domain.layout import ReviewedSplatLayout, parse_splat_layout
 from ..domain.sources import (
     expected_lift_sources,
+    reviewed_function_name,
     source_expected_key,
 )
 from ..domain.tags import parse_behavior_tag, parse_source_tag
@@ -97,6 +102,72 @@ def _batch_result(
     }
 
 
+def _validate_grouped_owner(root: Path, source: Path, manifest: TargetManifest) -> None:
+    name = source.relative_to(root).as_posix()
+    owners = [
+        entry.id.value
+        for entry in load_target_manifests(root).values()
+        if name in entry.sources + entry.support_sources
+    ]
+    if owners != [manifest.id.value] or name not in manifest.sources:
+        raise ValueError("grouped comparison requires one explicit lift owner")
+
+
+def _grouped_fingerprint(root: Path, source: Path, manifest: TargetManifest) -> str:
+    """Pin reviewed preflight inputs without granting build or cache reuse."""
+    _validate_grouped_owner(root, source, manifest)
+    digest = hashlib.sha256()
+    for path in (
+        root / "config" / "targets" / manifest.id.value / "target.toml",
+        root / manifest.splat,
+        map_path(root, manifest.id.value),
+    ):
+        digest.update(path.relative_to(root).as_posix().encode())
+        digest.update(b"\0")
+        digest.update(hashlib.sha256(path.read_bytes()).digest())
+    return source_fingerprint(source, digest.hexdigest())
+
+
+def _validate_grouped_source(
+    root: Path,
+    source: Path,
+    manifest: TargetManifest,
+    records: tuple[FunctionRecord, ...],
+    layout: ReviewedSplatLayout | None,
+    expected: dict[str, int | tuple[int, ...]],
+) -> None:
+    name = source.relative_to(root).as_posix()
+    _validate_grouped_owner(root, source, manifest)
+    addresses = expected.get(source_expected_key(root / manifest.source_dir, source))
+    if (
+        layout is None
+        or not isinstance(addresses, tuple)
+        or {record.address for record in records} != set(addresses)
+    ):
+        raise ValueError("grouped metadata differs from complete Splat membership")
+    symbols = load_map(map_path(root, manifest.id.value))
+    for record in records:
+        boundaries = [
+            row for row in layout.boundaries if row.virtual_start == record.address
+        ]
+        if (
+            record.kind != "function"
+            or len(boundaries) != 1
+            or boundaries[0].kind != "c"
+            or boundaries[0].source != name
+            or reviewed_function_name(
+                root,
+                manifest.id.value,
+                record.address,
+                layout=layout,
+                manifest=manifest,
+                symbols=[row for row in symbols if row.name == record.spelling],
+            )
+            != record.spelling
+        ):
+            raise ValueError("grouped implementation differs from reviewed identity")
+
+
 def _build_preflight(
     root: Path,
     manifests: Iterable[tuple[str, TargetManifest]],
@@ -110,7 +181,8 @@ def _build_preflight(
     - worklist_by_target groups valid cache misses by owning manifest target
       so the caller can batch-build per target.
 
-    Ordering, cache semantics, and label rules are unchanged.
+    Ordinary sources retain cache lookup. Complete groups always take the fresh
+    public route until grouped summary reuse has accepted input closure.
     """
     ready: list[_Record] = []
     worklist: dict[str, list[_WorkItem]] = {}
@@ -125,6 +197,7 @@ def _build_preflight(
             )
             expected = expected_lift_sources(layout, source_dir)
         except (OSError, ValueError):
+            layout = None
             expected = {}
         claimed: dict[int, Path] = {}
         for source in sorted(
@@ -139,18 +212,50 @@ def _build_preflight(
                 continue
             if count_function_metadata(text) > 1:
                 try:
-                    records = collect_lift_metadata(text)
+                    records = parse_function_records(text, validate_progress=False)
                 except ValueError as error:
                     ready.append(_invalid_record(root, target, source, str(error)))
                     continue
-                for address in records:
-                    previous = claimed.get(address)
+                duplicates = {}
+                for record in records:
+                    previous = claimed.get(record.address)
                     if previous is None:
-                        claimed[address] = source
-                        reason = "multi-function native comparison requires compilation-unit migration"
+                        claimed[record.address] = source
                     else:
-                        reason = f"duplicate address claim 0x{address:08X} (also {previous.name})"
-                    ready.append(_invalid_record(root, target, source, reason, address))
+                        duplicates[record.address] = previous
+                reason = ""
+                key = ""
+                try:
+                    records = parse_function_records(text)
+                    _validate_grouped_source(
+                        root, source, manifest, records, layout, expected
+                    )
+                    validate_matching_source(root, source, checked=checked)
+                    if not duplicates:
+                        key = _grouped_fingerprint(root, source, manifest)
+                except (OSError, RuntimeError, ValueError) as error:
+                    reason = str(error)
+                source_name = source.relative_to(root).as_posix()
+                for record in records:
+                    previous = duplicates.get(record.address)
+                    failure = (
+                        f"duplicate address claim 0x{record.address:08X} (also {previous.name})"
+                        if previous is not None
+                        else "grouped source has duplicate member ownership"
+                        if duplicates
+                        else reason
+                    )
+                    if failure:
+                        ready.append(
+                            _invalid_record(
+                                root, target, source, failure, record.address
+                            )
+                        )
+                    else:
+                        # Grouped receipts grant no cache or object-reuse authority.
+                        worklist.setdefault(target, []).append(
+                            (target, source, record.address, source_name, key, manifest)
+                        )
                 continue
             address = parse_source_tag(text)
             try:
@@ -248,6 +353,7 @@ def _request_for_source(
         load_address=manifest.load_address,
         output_root=root / "out" / "matching",
         section_placements=manifest.section_placements.get(address, ()),
+        diagnostics=True,
     )
 
 
@@ -303,6 +409,64 @@ def _object_key(root: Path, object_path: Path) -> str:
         return str(object_path)
 
 
+def _run_grouped_misses(
+    root: Path, items: list[_WorkItem], diff_runner: DiffRunner
+) -> list[_Record]:
+    records = []
+    membership: dict[Path, set[int]] = {}
+    for _, source, address, _, _, _ in items:
+        membership.setdefault(source, set()).add(address)
+    for target, source, address, source_name, key, queued_manifest in items:
+        try:
+            current = load_target_manifests(root).get(target)
+            if (
+                current != queued_manifest
+                or _grouped_fingerprint(root, source, current) != key
+            ):
+                raise ValueError("grouped reviewed inputs changed after preflight")
+            attached = parse_function_records(source.read_text(encoding="utf-8"))
+            layout = parse_splat_layout(root / current.splat, current.load_address)
+            expected = expected_lift_sources(layout, root / current.source_dir)
+            _validate_grouped_source(root, source, current, attached, layout, expected)
+            if (
+                len(attached) < 2
+                or {row.address for row in attached} != membership[source]
+            ):
+                raise ValueError("grouped worklist omits or changes an attached member")
+            request = _request_for_source(root, source, address, current)
+            result = diff_runner(request)
+            if (
+                _grouped_fingerprint(root, source, current) != key
+                or load_target_manifests(root).get(target) != queued_manifest
+            ):
+                raise ValueError("grouped reviewed inputs changed during comparison")
+            records.append(
+                _batch_result(root, target, source, address, source_name, result)
+            )
+        except (OSError, RuntimeError, ValueError) as error:
+            records.append(
+                _invalid_record(root, target, source, _failure_detail(error), address)
+            )
+    drift = {}
+    for target, source, _, _, key, queued_manifest in items:
+        if source in drift:
+            continue
+        try:
+            if (
+                _grouped_fingerprint(root, source, queued_manifest) != key
+                or load_target_manifests(root).get(target) != queued_manifest
+            ):
+                raise ValueError("grouped reviewed inputs changed during comparison")
+        except (OSError, RuntimeError, ValueError) as error:
+            drift[source] = _failure_detail(error)
+    return [
+        _invalid_record(root, target, source, drift[source], address)
+        if source in drift
+        else record
+        for (target, source, address, _, _, _), record in zip(items, records)
+    ]
+
+
 def _run_batch_misses(
     root: Path,
     worklist: dict[str, list[_WorkItem]],
@@ -312,14 +476,29 @@ def _run_batch_misses(
     """
     Phase 2.3.2 — build selected source objects once per target.
 
-    For each owning target, batch-build all valid cache-miss lifts, then
-    compare individually without rebuilding.  Falls back to per-source builds
-    when a batch fails, preserving individual error attribution.
+    Ordinary misses batch-build and compare without rebuilding, with per-source
+    fallback after failure. Groups use fresh complete-group comparison for every
+    selected member, without object or summary reuse.
     """
     records: list[_Record] = []
     repo = repo_layout(root)
 
     for target, items in worklist.items():
+        counts = Counter(item[1] for item in items)
+        grouped_sources = {source for source, count in counts.items() if count > 1}
+        for source in counts:
+            if source in grouped_sources:
+                continue
+            try:
+                if count_function_metadata(source.read_text(encoding="utf-8")) > 1:
+                    grouped_sources.add(source)
+            except (OSError, UnicodeError):
+                grouped_sources.add(source)
+        grouped = [item for item in items if item[1] in grouped_sources]
+        records.extend(_run_grouped_misses(root, grouped, diff_runner))
+        items = [item for item in items if item[1] not in grouped_sources]
+        if not items:
+            continue
         sources = [item[1] for item in items]
         cmake_targets = [cmake_target_for_source(root, s) for s in sources]
 

@@ -41,6 +41,11 @@ complete function; reachable entry past the leading nop is refused. Other comput
 jumps, BSS and C binding overrides are refused. Input and consumer closure and
 production consolidation acceptance retain their owner gates.
 
+Decompilation preflight requires complete reviewed membership, one explicit lift
+owner and matching attached spellings for a grouped source. Every member uses the
+fresh public comparison route. Groups bypass ordinary batch-object and cached-status
+reuse until their complete input and consumer closure has accepted owner evidence.
+
 ## Host capability
 
 Canonical driver, `cpp`, `cc1` are static i386 ELF. Known Codex sandbox failure is
