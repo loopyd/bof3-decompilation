@@ -14,6 +14,58 @@ from harness.domain.symbols import load_target_symbols, parse_map
 _LIMIT = 64 * 1024 * 1024
 
 
+def _capture_data(manifest, payload, binary: bytes, functions: list[dict]) -> dict:
+    sections = {}
+    for member in functions:
+        for placement in manifest.section_placements.get(member["address"], ()):
+            if not any(
+                placement.section == name or placement.section.startswith(name + ".")
+                for name in (".data", ".rodata", ".rdata", ".sdata")
+            ):
+                raise ValueError("grouped data requires a reviewed initialized section")
+            address, size = placement.address, placement.size
+            if (
+                not payload.load_address
+                <= address
+                < address + size
+                <= payload.payload_end
+            ):
+                raise ValueError(
+                    "grouped initialized data exceeds the original payload"
+                )
+            first = payload.binary_offset + address - payload.load_address
+            section = {
+                "section": placement.section,
+                "address": address,
+                "file_start": first,
+                "original": binary[first : first + size],
+            }
+            previous = sections.get(placement.section)
+            if previous is not None and any(
+                previous[key] != value for key, value in section.items()
+            ):
+                raise ValueError("grouped members disagree on shared data placement")
+            if previous is None:
+                sections[placement.section] = {**section, "owners": []}
+            sections[placement.section]["owners"].append(member["selector"])
+    ranges = [
+        (
+            member["address"],
+            member["address"] + len(member["original"]),
+            member["symbol"],
+        )
+        for member in functions
+    ] + [
+        (section["address"], section["address"] + len(section["original"]), name)
+        for name, section in sections.items()
+    ]
+    ranges.sort()
+    for previous, following in zip(ranges, ranges[1:]):
+        if previous[1] > following[0]:
+            raise ValueError("grouped original function or data ranges overlap")
+    return sections
+
+
 def capture_members(root: Path, record: dict, preserved: dict) -> dict:
     """Read only preserved paths; the caller retains the dispatch watch and lease."""
     profile = record["profile"]
@@ -134,6 +186,7 @@ def capture_members(root: Path, record: dict, preserved: dict) -> dict:
                 )
         if len(functions) < 2 or sorted(selectors) != preserved["selectors"]:
             raise ValueError("comparison must cover every preserved group member")
+        data_sections = _capture_data(manifest, payload, binary, functions)
     return {
         "target": manifest.id.value,
         "binary": manifest.binary,
@@ -143,5 +196,6 @@ def capture_members(root: Path, record: dict, preserved: dict) -> dict:
             for member in functions
         },
         "bindings": {symbol.canonical_name: symbol.address for symbol in symbols},
+        "data_sections": data_sections,
         "functions": sorted(functions, key=lambda member: member["selector"]),
     }

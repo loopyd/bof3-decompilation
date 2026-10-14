@@ -37,10 +37,10 @@ from harness.match._asm_diff_payload import (
 from harness.match._asm_disasm import extract_instructions, render_normalized
 from harness.match._asm_resolve import format_hex
 from harness.match.execution import NativeExecution
-from harness.match.extraction import read_function_image
+from harness.match.extraction import read_function_image, read_linked_image
 from harness.match.placement import extract_grouped_function, place_grouped_object
 
-SCHEMA = "bof3.combiner-comparison/v6"
+SCHEMA = "bof3.combiner-comparison/v7"
 _LIMIT = 64 * 1024 * 1024
 _OWNERS = (
     "tools/python/harness/match/grouped.py",
@@ -166,6 +166,70 @@ def compare_members(
     return _compare_members(root, source, output, output_limit)
 
 
+def _compare_data(
+    linked: Path, sections: dict, execution: NativeExecution
+) -> list[dict]:
+    if not sections:
+        return []
+    image = read_linked_image(
+        read_file(
+            execution.root,
+            linked.relative_to(execution.root).as_posix(),
+            max_bytes=_LIMIT,
+        ),
+        limit=_LIMIT,
+    )
+    comparisons = []
+    for name, expected in sorted(sections.items()):
+        candidates = [section for section in image.sections if section.name == name]
+        if len(candidates) != 1:
+            raise ValueError(
+                "linked image omits or duplicates reviewed initialized data"
+            )
+        section = candidates[0]
+        if (
+            section.kind != 1
+            or not section.flags & 2
+            or section.flags & (4 | 0xC00)
+            or section.address != expected["address"]
+            or section.content is None
+            or section.size > execution.output_limit
+            or any(row["target_section"] == section.index for row in image.relocations)
+        ):
+            raise ValueError(
+                "linked initialized data has unsupported storage or relocation"
+            )
+        original, current = expected["original"], section.content
+        mismatch = (
+            None
+            if original == current
+            else next(
+                (
+                    offset
+                    for offset, pair in enumerate(zip(original, current))
+                    if pair[0] != pair[1]
+                ),
+                min(len(original), len(current)),
+            )
+        )
+        comparisons.append(
+            {
+                "section": name,
+                "owners": expected["owners"],
+                "address": section.address,
+                "original_file_start": expected["file_start"],
+                "original_size": len(original),
+                "current_size": section.size,
+                "size_delta": section.size - len(original),
+                "original_sha256": hashlib.sha256(original).hexdigest(),
+                "current_sha256": hashlib.sha256(current).hexdigest(),
+                "byte_match": original == current,
+                "first_mismatch_offset": mismatch,
+            }
+        )
+    return comparisons
+
+
 def compare_selected_member(request: AsmDiffRequest, *, layout: RepoLayout) -> dict:
     """Compare the complete preserved group before reporting its selected member."""
     root = layout.root.resolve(strict=True)
@@ -232,8 +296,12 @@ def _select_request(root: Path, request: AsmDiffRequest, members: dict) -> dict:
         raise ValueError(
             "grouped comparison requires target-map bindings without a C override"
         )
-    if request.section_placements or any(members["section_placements"].values()):
-        raise ValueError("grouped data placement requires its complete native contract")
+    if (
+        request.section_placements is not None
+        and tuple(request.section_placements)
+        != members["section_placements"][member["address"]]
+    ):
+        raise ValueError("grouped data placement differs from the preserved manifest")
     if type(request.diagnostics) is not bool:
         raise ValueError("grouped comparison diagnostics must be boolean")
     return member
@@ -257,16 +325,29 @@ def _render_selected(root, request, member, result, output, linked, execution):
     comparison = next(
         item for item in result["members"] if item["address"] == member["address"]
     )
-    if comparison["byte_match"] and not result["all_function_bytes_match"]:
+    if comparison["byte_match"] and not result["all_native_bytes_match"]:
         failed = ", ".join(
             item["selector"]
             for item in result["members"]
             if not item["byte_match"] or not item["flow_verified"]
         )
-        raise ValueError(
-            f"grouped source has differing members: {failed}; see {output_dir / 'fullgroup.json'}"
+        failed_data = ", ".join(
+            item["section"]
+            for item in result["data_sections"]
+            if not item["byte_match"]
         )
-    exact = result["all_function_bytes_match"]
+        reason = "; ".join(
+            label
+            for label in (
+                f"differing members: {failed}" if failed else "",
+                f"differing initialized data: {failed_data}" if failed_data else "",
+            )
+            if label
+        )
+        raise ValueError(
+            f"grouped source has {reason}; see {output_dir / 'fullgroup.json'}"
+        )
+    exact = result["all_native_bytes_match"]
     payload = {
         "schema": "harness.byte-match-one/v1",
         "status": "exact_match" if exact else "different",
@@ -470,6 +551,10 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
             layout=layout,
             execution=execution,
             bindings=members["bindings"],
+            data_sections={
+                name: section["address"]
+                for name, section in members["data_sections"].items()
+            },
         )
         if placed["path"] != str(linked) or placed["script"] != str(
             linked.with_suffix(linked.suffix + ".ld")
@@ -495,6 +580,7 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
             producer_watch.validate()
             linked_watch.validate()
             comparisons.append(_compare_function(layout, execution, linked, member))
+        data_comparisons = _compare_data(linked, members["data_sections"], execution)
         guard()
         producer_watch.validate()
         linked_watch.validate()
@@ -506,12 +592,14 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
             or _capture_states(root, linked_paths) != linked_states
         ):
             raise ValueError("comparison native inputs or outputs changed")
-        exact = all(
+        functions_exact = all(
             member["byte_match"] and member["flow_verified"] for member in comparisons
         )
+        data_exact = all(section["byte_match"] for section in data_comparisons)
+        exact = functions_exact and data_exact
         result = {
             "schema": SCHEMA,
-            "scope": "all-selected-function-bytes",
+            "scope": "all-selected-function-and-initialized-data-bytes",
             "target": preserved["target"],
             "source": source,
             "original_binary": members["binary"],
@@ -524,7 +612,10 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
             "member_count": len(comparisons),
             "members": comparisons,
             "status": "exact" if exact else "different",
-            "all_function_bytes_match": exact,
+            "all_function_bytes_match": functions_exact,
+            "data_sections": data_comparisons,
+            "all_data_bytes_match": data_exact,
+            "all_native_bytes_match": exact,
             "native_inputs": native_inputs,
             "include_inputs": includes.describe_inputs(),
             "source_image": includes.image.describe(),

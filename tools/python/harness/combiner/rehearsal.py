@@ -37,7 +37,7 @@ from harness.common.workspace import (
 )
 from harness.domain.policy import validate_matching_text
 
-SCHEMA = "bof3.combiner-rehearsal-result/v2"
+SCHEMA = "bof3.combiner-rehearsal-result/v3"
 _LIMIT = 64 * 1024 * 1024
 
 
@@ -238,6 +238,8 @@ def rehearse_transaction(
                 "status": "restored",
                 "comparison_status": comparison["status"],
                 "all_function_bytes_match": comparison["all_function_bytes_match"],
+                "all_data_bytes_match": comparison["all_data_bytes_match"],
+                "all_native_bytes_match": comparison["all_native_bytes_match"],
                 "native_verified": False,
                 "coverage_verified": False,
                 "accepted": False,

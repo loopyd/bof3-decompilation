@@ -13,6 +13,7 @@ from pathlib import Path
 from harness.build.sections import function_section
 from harness.common.files import atomic_write
 from harness.common.paths import require_absent
+from harness.domain.symbols import resolve_address_symbol
 from harness.io import RepoLayout
 from harness.match.execution import NativeExecution
 from harness.match.extraction import read_function_image
@@ -267,15 +268,17 @@ def _link_object(
         [str(tools / "mipsel-none-elf-nm"), "-u", str(object_path)]
     ).splitlines():
         fields = line.split()
-        if len(fields) != 2 or fields[0] != "U" or fields[1] not in (bindings or {}):
+        if len(fields) != 2 or fields[0] != "U":
             raise ValueError(
                 f"undefined symbol has no explicit target binding: {line.strip()}"
             )
         name = fields[1]
         function_section(name)
-        address = (bindings or {})[name]
+        address = (
+            bindings[name] if name in (bindings or {}) else resolve_address_symbol(name)
+        )
         if type(address) is not int or not 0 <= address <= 0xFFFFFFFF:
-            raise ValueError(f"invalid target binding: {name}")
+            raise ValueError(f"undefined symbol has no valid target binding: {name}")
         definitions.append(f"--defsym={name}=0x{address:08X}")
     lines = ["SECTIONS", "{"]
     for name, address in sorted(

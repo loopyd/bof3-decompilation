@@ -122,7 +122,7 @@ def _run_comparison(args: argparse.Namespace) -> int:
         )
         rendered = json.dumps(payload, indent=2, sort_keys=True)
         print(rendered)
-    return 0 if payload["all_function_bytes_match"] else 1
+    return 0 if payload["all_native_bytes_match"] else 1
 
 
 def _run_rehearsal(args: argparse.Namespace) -> int:
@@ -138,7 +138,7 @@ def _run_rehearsal(args: argparse.Namespace) -> int:
     )
     rendered = json.dumps(payload, indent=2, sort_keys=True)
     print(rendered)
-    return 0 if payload["all_function_bytes_match"] else 1
+    return 0 if payload["all_native_bytes_match"] else 1
 
 
 def build_parser() -> argparse.ArgumentParser:

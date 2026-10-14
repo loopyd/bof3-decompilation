@@ -2,20 +2,18 @@
 
 from __future__ import annotations
 
-import re
 import subprocess
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 
 from ..domain.manifests import TargetManifest
-from ..domain.symbols import load_target_symbols, load_weak_symbol_bindings
+from ..domain.symbols import (
+    load_target_symbols,
+    load_weak_symbol_bindings,
+    resolve_address_symbol,
+)
 from ..io import RepoLayout, repo_layout
 from .extraction import _HEADER, _SECTION, Section, read_function_image
-
-# Raw address-encoding names are exactly `func_XXXXXXXX`/`D_XXXXXXXX`;
-# overlay-prefixed variants (`SCENA16_D_*`) are banned — conflicts resolve by
-# a different name or a suffix, never an overlay-name prefix.
-_HEX_SUFFIX_RE = re.compile(r"^(?:func|D)_([0-9a-fA-F]{8})$")
 
 
 def _target_map_bindings(
@@ -44,9 +42,9 @@ def resolve_symbol_address(
     symbols_c_path: Path,
     canonical_bindings: Mapping[str, int] | None = None,
 ) -> int | None:
-    m = _HEX_SUFFIX_RE.search(name)
-    if m is not None:
-        return int(m.group(1), 16)
+    address = resolve_address_symbol(name)
+    if address is not None:
+        return address
     if canonical_bindings is not None and name in canonical_bindings:
         return canonical_bindings[name]
     return load_weak_symbol_bindings(symbols_c_path).get(name)

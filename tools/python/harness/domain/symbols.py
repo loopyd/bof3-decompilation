@@ -27,6 +27,13 @@ _ALIAS = re.compile(
 )
 _RAW_FUNCTION = re.compile(r"^func_[0-9A-F]{8}$")
 _RAW_DATA = re.compile(r"^(?:D|DAT)_[0-9A-F]{8}$")
+_ENCODED_ADDRESS = re.compile(r"(?:func|D)_([0-9a-fA-F]{8})")
+
+
+def resolve_address_symbol(name: str) -> int | None:
+    """Resolve an exact ordinary address-encoding label without reading bindings."""
+    match = _ENCODED_ADDRESS.fullmatch(name)
+    return None if match is None else int(match.group(1), 16)
 
 
 @dataclass(frozen=True, order=True)

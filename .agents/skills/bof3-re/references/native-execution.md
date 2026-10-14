@@ -31,8 +31,12 @@ Grouped lift comparisons require an explicit member address and externally pinne
 preservation routing. They freshly compile the whole source and compare every
 complete member range. A differing neighbor fails the selected command. Requests
 must retain the reviewed image, load, range and canonical target-map bindings.
-Grouped data placement and C binding overrides are refused. Input and consumer
-closure, data/BSS and production consolidation acceptance retain their owner gates.
+Canonical bindings take precedence; exact address-encoding labels share the ordinary
+linker's resolver. Initialized sections require compatible member declarations in
+the pinned manifest and complete linked-byte comparison at their reviewed placement.
+Any differing initialized section fails the group. Computed jumps, BSS and C binding
+overrides are refused. Input and consumer closure and production consolidation
+acceptance retain their owner gates.
 
 ## Host capability
 
