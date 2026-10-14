@@ -32,6 +32,11 @@ refuses changed headers, newly present candidates and discoveries outside the
 pinned closure. Profile capture rejects other include-search settings. Active
 preprocessing and complete compiler-input closure retain their existing gates.
 
+CLI adapters, lift gates and decompilation comparisons propagate
+`ProcessCleanupError` unchanged. Unconfirmed cleanup stops retries, fallback
+comparisons and later members. Keep POST and owned recovery until child
+termination is established.
+
 Grouped lift comparisons require an explicit member address and externally pinned
 preservation routing. They freshly compile the whole source and compare every
 complete member range. A differing neighbor fails the selected command. Requests

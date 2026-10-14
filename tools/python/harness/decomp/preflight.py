@@ -9,6 +9,7 @@ from typing import Any, Callable, Iterable
 from collections import Counter
 import hashlib
 
+from harness.common.process import ProcessCleanupError
 from harness.domain.functions import FunctionRecord, parse_function_records
 from harness.domain.tags import count_function_metadata
 from harness.domain.policy import validate_matching_source
@@ -233,6 +234,8 @@ def _build_preflight(
                     validate_matching_source(root, source, checked=checked)
                     if not duplicates:
                         key = _grouped_fingerprint(root, source, manifest)
+                except ProcessCleanupError:
+                    raise
                 except (OSError, RuntimeError, ValueError) as error:
                     reason = str(error)
                 source_name = source.relative_to(root).as_posix()
@@ -393,6 +396,8 @@ def _batch_failed_objects(root: Path, cmake_targets: list[str]) -> set[str] | No
 
     try:
         result = batch_build(root, cmake_targets)
+    except ProcessCleanupError:
+        raise
     except (RuntimeError, ValueError, FileNotFoundError):
         return None
     if result.returncode == 0:
@@ -443,6 +448,8 @@ def _run_grouped_misses(
             records.append(
                 _batch_result(root, target, source, address, source_name, result)
             )
+        except ProcessCleanupError:
+            raise
         except (OSError, RuntimeError, ValueError) as error:
             records.append(
                 _invalid_record(root, target, source, _failure_detail(error), address)
@@ -457,6 +464,8 @@ def _run_grouped_misses(
                 or load_target_manifests(root).get(target) != queued_manifest
             ):
                 raise ValueError("grouped reviewed inputs changed during comparison")
+        except ProcessCleanupError:
+            raise
         except (OSError, RuntimeError, ValueError) as error:
             drift[source] = _failure_detail(error)
     return [
@@ -512,6 +521,8 @@ def _run_batch_misses(
 
         try:
             manifests = load_target_manifests(root)
+        except ProcessCleanupError:
+            raise
         except (OSError, RuntimeError, ValueError) as error:
             for _, source, address, _, _, _manifest in items:
                 records.append(
@@ -565,6 +576,8 @@ def _run_batch_misses(
                     stale_items.append(item)
                     continue
                 resolved_items.append((item, request, resolved))
+            except ProcessCleanupError:
+                raise
             except (FileNotFoundError, RuntimeError, ValueError):
                 stale_items.append(item)
 
@@ -575,6 +588,8 @@ def _run_batch_misses(
             request = _request_for_source(root, source, address, current_manifest)
             try:
                 result = diff_runner(request)
+            except ProcessCleanupError:
+                raise
             except (FileNotFoundError, RuntimeError, ValueError) as exc:
                 records.append(
                     _invalid_record(root, target, source, _failure_detail(exc), address)
@@ -589,6 +604,8 @@ def _run_batch_misses(
             _, source, address, source_name, key, _manifest = item
             try:
                 result = _asm_diff_compare(repo, request, resolved, manifests=manifests)
+            except ProcessCleanupError:
+                raise
             except (FileNotFoundError, RuntimeError, ValueError) as exc:
                 records.append(
                     _invalid_record(root, target, source, _failure_detail(exc), address)

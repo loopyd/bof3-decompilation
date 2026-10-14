@@ -14,6 +14,7 @@ import sys
 from pathlib import Path
 
 from harness.common.cli import add_example_argument, resolve_function_selector
+from harness.common.process import ProcessCleanupError
 
 from ..domain.ids import FUNCTION_ID_HELP, FunctionId
 from ..domain.manifests import TargetManifest
@@ -264,6 +265,8 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("candidate.c is required")
     try:
         return args.handler(args)
+    except ProcessCleanupError:
+        raise
     except (FileNotFoundError, RuntimeError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2

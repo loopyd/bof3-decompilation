@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Generic, TypeVar
 
+from harness.common.process import ProcessCleanupError
 from harness.domain.ids import FunctionId
 from harness.domain.manifests import TargetManifest
 from harness.io import repo_layout
@@ -108,6 +109,8 @@ def run_main(
         return handler(args)
     except BrokenPipeError:
         return 0
+    except ProcessCleanupError:
+        raise
     except (FileNotFoundError, RuntimeError, ValueError) as exc:
         print(f"{getattr(args, 'error_prefix', 'error: ')}{exc}", file=sys.stderr)
         return 2

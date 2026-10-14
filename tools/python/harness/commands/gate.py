@@ -13,6 +13,7 @@ import time
 from pathlib import Path
 
 from harness.common.cli import add_example_argument, resolve_function_selector, run_main
+from harness.common.process import ProcessCleanupError
 from harness.domain.ids import normalize_target_id
 from harness.io import repo_layout
 
@@ -64,6 +65,8 @@ def _run_module(
                 rc = int(handler(list(argv)))
             except SystemExit as exit_signal:  # run_main exits with the stage code
                 rc = int(exit_signal.code or 0)
+            except ProcessCleanupError:
+                raise
             except (OSError, RuntimeError, ValueError) as error:
                 buffer.write(str(error))
                 rc = 1
@@ -126,6 +129,8 @@ def _measure_native(root: Path, selector: str, retries: int) -> tuple[int, str, 
     while True:
         try:
             payload = _run_match(function, manifest, source, diagnostics=True)
+        except ProcessCleanupError:
+            raise
         except (OSError, RuntimeError, ValueError) as error:
             text = str(error)
             if _RACE_RE.search(text) and attempt < retries:
