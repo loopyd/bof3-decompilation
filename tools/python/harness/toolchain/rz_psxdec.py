@@ -317,6 +317,7 @@ class RzPsxdecToolchain(Toolchain):
                 command[0],
                 "--build",
                 str(build),
+                "--clean-first",
                 "--parallel",
                 str(jobs),
                 "--target",

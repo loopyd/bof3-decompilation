@@ -356,16 +356,17 @@ def read_native_build(path: Path) -> NativeBuildReceipt:
         and f"-DRETDEC_PSX_REVISION={retdec.commit}" in configure.argv
         and f"-DCMAKE_INSTALL_PREFIX={path.parent / 'prefix'}" in configure.argv
         and "-DBUILD_BUNDLED_RETDEC=ON" in configure.argv
-        and len(build.argv) == 7
-        and build.argv[:4]
+        and len(build.argv) == 8
+        and build.argv[:5]
         == (
             configure.argv[0],
             "--build",
             str(build_root),
+            "--clean-first",
             "--parallel",
         )
-        and re.fullmatch("[1-9][0-9]*", build.argv[4])
-        and build.argv[5:] == ("--target", "rz-psxdec"),
+        and re.fullmatch("[1-9][0-9]*", build.argv[5])
+        and build.argv[6:] == ("--target", "rz-psxdec"),
         "native build commands differ from the sibling target",
     )
     _require(
