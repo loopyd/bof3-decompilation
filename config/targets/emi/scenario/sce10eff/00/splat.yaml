@@ -48,7 +48,7 @@ segments:
     - '@source: src/bof3/scenario/func_801D0E9C.c'
     - '@behavior: Dispatches byte 2 of the scratchpad-resident state object through its handler table.'
   - - 736
-    - asm
+    - c
     - setupSceneObjectTransform
     - '@source: src/bof3/scenario/setupSceneObjectTransform.c'
     - '@behavior: Builds a temporary transform from scratchpad camera state and submits it through the local scene object pipeline.'
