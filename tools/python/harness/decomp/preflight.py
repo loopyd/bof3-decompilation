@@ -143,16 +143,14 @@ def _build_preflight(
                 except ValueError as error:
                     ready.append(_invalid_record(root, target, source, str(error)))
                     continue
-                ready.extend(
-                    _invalid_record(
-                        root,
-                        target,
-                        source,
-                        "multi-function native comparison requires compilation-unit migration",
-                        address,
-                    )
-                    for address in records
-                )
+                for address in records:
+                    previous = claimed.get(address)
+                    if previous is None:
+                        claimed[address] = source
+                        reason = "multi-function native comparison requires compilation-unit migration"
+                    else:
+                        reason = f"duplicate address claim 0x{address:08X} (also {previous.name})"
+                    ready.append(_invalid_record(root, target, source, reason, address))
                 continue
             address = parse_source_tag(text)
             try:
