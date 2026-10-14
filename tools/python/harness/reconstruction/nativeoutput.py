@@ -796,12 +796,16 @@ def validate_status(data: bytes, request: bytes, configuration: bytes) -> dict:
         "native reason bound",
     )
     for prefix, expected in (("request", request), ("configuration", configuration)):
+        failure = f"native consumed {prefix} identity differs"
+        if prefix == "configuration" and status["status"] == "refused":
+            reason = json.dumps(status["reason"], ensure_ascii=True)
+            failure += f"; native reported refusal: {reason}"
         _require(
             status[prefix + "_bytes_hex"] == expected.hex()
             and type(status[prefix + "_byte_count"]) is int
             and status[prefix + "_byte_count"] == len(expected)
             and status[prefix + "_sha256"] == hashlib.sha256(expected).hexdigest(),
-            f"native consumed {prefix} identity differs",
+            failure,
         )
     _require(
         status["release_configuration_sha256"] == CONFIG_SHA256,
