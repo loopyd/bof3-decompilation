@@ -128,11 +128,15 @@ def capture_entry_observation(entry_receipt, cpu_receipt, contexts, mounts):
         sources.append({**record, "path": str(path.resolve())})
     registers = nativeoutput.parse_json(files["registers.json"], 64 << 10)
     pc = registers["pc"]
+    target = entry["arguments"].get("TARGET")
     _require(
         registers.get("schema") == "psx.runtime-registers/v1"
         and type(pc) is int
         and pc % 4 == 0
-        and entry["arguments"] == {"TARGET": f"0x{pc:08x}", "SAVESTATE": "1"}
+        and type(target) is str
+        and re.fullmatch(r"(?:0[xX][0-9a-fA-F]+|[0-9]+)", target)
+        and int(target, 16 if target.lower().startswith("0x") else 10) == pc
+        and entry["arguments"] == {"TARGET": target, "SAVESTATE": "1"}
         and len(files["ram.bin"]) == 2 << 20,
         "entry capture PC or RAM differs",
     )
