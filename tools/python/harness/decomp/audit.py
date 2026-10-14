@@ -1,4 +1,4 @@
-"""Audit retained lift proposals against pinned diagnosis without resetting its clock."""
+"""Audit retained lift proposals against pinned diagnosis and retained evidence."""
 
 from __future__ import annotations
 
@@ -6,7 +6,6 @@ import hashlib
 import math
 from pathlib import Path
 
-from harness.common.deadlines import bind_deadline, check_deadline, validate_work_clock
 from harness.common.digests import digest
 from harness.common.directory import validate_repo_path
 from harness.common.files import read_file
@@ -24,7 +23,7 @@ from harness.decomp.inventory import verify_scope
 from harness.decomp.missions import validate_mission_record
 
 
-def validate_diagnosis(diagnosis: dict, expected_digest: str) -> float:
+def validate_diagnosis(diagnosis: dict, expected_digest: str) -> None:
     if (
         diagnosis.get("digest") != expected_digest
         or digest({key: value for key, value in diagnosis.items() if key != "digest"})
@@ -54,7 +53,6 @@ def validate_diagnosis(diagnosis: dict, expected_digest: str) -> float:
         )
     ):
         raise ValueError("audit diagnosis pin or disposition is invalid")
-    return validate_work_clock(diagnosis.get("clock"))
 
 
 def load_diagnosis(
@@ -94,13 +92,10 @@ def load_diagnosis(
     invocation = read_record(root, directory + "/invocation.json")
     if invocation != {
         "request_digest": digest(mission["request"]),
-        "work_deadline": diagnosis["clock"]["deadline"],
         "budget_debit_performed": False,
         "model_dispatched": False,
     }:
-        raise ValueError(
-            "diagnosis invocation differs from the retained request or clock"
-        )
+        raise ValueError("diagnosis invocation differs from the retained request")
     wrapper = read_record(root, directory + "/policy.json")
     if (
         set(wrapper) != {"policy", "digest"}
@@ -125,7 +120,7 @@ def run_audit(
     unmeasured: bool = False,
 ) -> dict:
     diagnosis = read_record(root, validate_repo_path(directory) + "/result.json")
-    deadline = validate_diagnosis(diagnosis, expected_diagnosis_digest)
+    validate_diagnosis(diagnosis, expected_diagnosis_digest)
     return execute_audit(
         root,
         directory,
@@ -133,12 +128,10 @@ def run_audit(
         expected_diagnosis_digest=expected_diagnosis_digest,
         expected_proposal_sha256=expected_proposal_sha256,
         output=output,
-        deadline=deadline,
         unmeasured=unmeasured,
     )
 
 
-@bind_deadline
 def execute_audit(
     root: Path,
     directory: str,
@@ -147,7 +140,6 @@ def execute_audit(
     expected_diagnosis_digest: str,
     expected_proposal_sha256: str,
     output: str,
-    deadline: float,
     unmeasured: bool = False,
 ) -> dict:
     reserved = False
@@ -156,8 +148,6 @@ def execute_audit(
             diagnosis, mission, policy = load_diagnosis(
                 root, directory, expected_diagnosis_digest
             )
-            if deadline != validate_work_clock(diagnosis["clock"]):
-                raise ValueError("audit cannot replace the original diagnosis cutoff")
             proposal = read_file(root, proposal_path)
             if (
                 len(proposal) > 131072
@@ -197,7 +187,6 @@ def execute_audit(
                 },
                 "proposal_sha256": expected_proposal_sha256,
                 "proposal_format": "unmeasured" if unmeasured else "mission",
-                "clock": diagnosis["clock"],
                 "comparison": {
                     "before_match_percent": diagnosis["match_percent"],
                     "after_match_percent": checked["match_percent"],
@@ -212,10 +201,8 @@ def execute_audit(
                 "artifacts": hash_files(root, output, ["proposal.md", *artifacts]),
             }
             result["digest"] = digest(result)
-            check_deadline()
             require_writer(root)
             write_record(root, output + "/result.json", result)
-            check_deadline()
             require_writer(root)
         return {
             "directory": output,

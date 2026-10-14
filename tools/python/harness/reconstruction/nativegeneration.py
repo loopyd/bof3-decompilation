@@ -6,23 +6,11 @@ from copy import deepcopy
 from dataclasses import asdict, astuple, dataclass
 import hashlib
 from itertools import zip_longest
-import math
-import os
 from pathlib import Path
 import re
-import time
 
 from harness.build import recipe
 from harness.common.artifacts import encode_json, read_bytes, write_bytes
-from harness.common.deadlines import (
-    DeadlineExpired,
-    capture_work_clock,
-    check_deadline,
-    resolve_deadline,
-    use_deadline,
-    validate_deadline,
-    validate_work_clock,
-)
 from harness.common.digests import file_record
 from harness.common.process import ProcessCleanupError
 from harness.common.failures import PolicyFailure, facts, primary, retain
@@ -87,7 +75,6 @@ def _score_links(measured, binding, run_dir, member, form_ordinal, expected_prof
     )
     scores = []
     for link in measured["links"]:
-        check_deadline()
         _require(
             link["status"] == "measured" and link["failure"] is None,
             "source search cannot score a refused link",
@@ -124,7 +111,6 @@ def _score_links(measured, binding, run_dir, member, form_ordinal, expected_prof
             link["ordinal"],
         )
         recipe.verify_inputs([link["linked"]])
-        check_deadline()
         scores.append(
             {
                 "ordinal": link["ordinal"],
@@ -138,7 +124,6 @@ def _score_links(measured, binding, run_dir, member, form_ordinal, expected_prof
             }
         )
     provenance.require_active_binding(binding, run_dir, io_mode="exact")
-    check_deadline()
     return scores
 
 
@@ -152,30 +137,8 @@ class _ResumePin:
 
 
 @dataclass(frozen=True)
-class _WorkClock:
-    boot_id: str
-    deadline: float
-
-    @classmethod
-    def parse(cls, value):
-        _require(
-            type(value) is dict
-            and set(value) == {"boot_id", "deadline"}
-            and type(value["boot_id"]) is str
-            and bool(value["boot_id"]),
-            "campaign clock differs",
-        )
-        validate_deadline(value["deadline"])
-        _require(value["deadline"] is not None, "campaign clock is not finite")
-        return cls(**value)
-
-
-@dataclass(frozen=True)
 class _CampaignGrant:
     grant_id: str
-    clock: _WorkClock
-    work_seconds: float
-    member_seconds: float
     member_limit: int
     campaign_limit: int
 
@@ -186,9 +149,6 @@ class _CampaignGrant:
             and set(value)
             == {
                 "grant_id",
-                "clock",
-                "work_seconds",
-                "member_seconds",
                 "member_limit",
                 "campaign_limit",
             },
@@ -199,13 +159,6 @@ class _CampaignGrant:
             and re.fullmatch(r"[A-Za-z0-9._-]{1,128}", value["grant_id"]),
             "grant id must be a bounded ASCII label",
         )
-        for name in ("work_seconds", "member_seconds"):
-            _require(
-                type(value[name]) in {int, float}
-                and math.isfinite(value[name])
-                and 0 < value[name] <= 600,
-                f"{name} must be finite and at most 600",
-            )
         for name, maximum in (
             ("member_limit", len(selected)),
             ("campaign_limit", 4250),
@@ -214,27 +167,24 @@ class _CampaignGrant:
                 type(value[name]) is int and 1 <= value[name] <= maximum,
                 f"{name} differs from its finite bounds",
             )
-        return cls(**{**value, "clock": _WorkClock.parse(value["clock"])})
+        return cls(**value)
 
 
 @dataclass(frozen=True)
 class _MemberBudget:
     key: str
     grant_id: str
-    clock: _WorkClock
     admission: dict
 
     @classmethod
     def parse(cls, value):
         _require(
-            type(value) is dict
-            and set(value) == {"key", "grant_id", "clock", "admission"},
+            type(value) is dict and set(value) == {"key", "grant_id", "admission"},
             "member budget differs",
         )
         return cls(
             value["key"],
             value["grant_id"],
-            _WorkClock.parse(value["clock"]),
             value["admission"],
         )
 
@@ -368,7 +318,6 @@ def _adapt_retained_native(result, run, result_record, *, reader=read_bytes):
         candidate,
         Path(run["binaries"]["rizin"]["path"]),
         Path(run["binaries"]["plugin"]["path"]),
-        run["limits"]["deadline"],
         run["limits"]["process_output_bytes"],
     )
     _require(
@@ -391,7 +340,6 @@ def _adapt_retained_native(result, run, result_record, *, reader=read_bytes):
 
 
 def _request_identity(binding, arguments):
-    check_deadline()
     return dict(
         problem=dict(
             run_dir=str(arguments["run_dir"]),
@@ -484,12 +432,10 @@ def _derive_search(report, grant, authenticated):
     report["remaining"] = dict(
         units=remaining_units,
         member_admissions=remaining_members,
-        seconds=_remaining_clock(grant.clock),
     )
     report["grant_balances"] = [
         dict(
             grant_id=value["grant_id"],
-            seconds=_remaining_clock(_WorkClock.parse(value["clock"])),
             units=value["campaign_limit"]
             - sum(
                 item["units"]
@@ -526,13 +472,6 @@ def _derive_search(report, grant, authenticated):
     return complete
 
 
-def _remaining_clock(clock):
-    try:
-        return max(0.0, validate_work_clock(asdict(clock)) - time.monotonic())
-    except ValueError:
-        return "unavailable-after-reboot"
-
-
 def _publish_progress(report, destination, ordinal):
     path = destination / f"progress-{ordinal:03d}.json"
     write_bytes(path, encode_json(report, path=path), readonly=True)
@@ -551,14 +490,6 @@ def _admit_work(
     attempt_id=None,
 ):
     report["cursor"] = asdict(cursor)
-    check_deadline()
-    cutoff = min(
-        grant.clock.deadline,
-        member.clock.deadline if member is not None else grant.clock.deadline,
-        report["deadline"],
-    )
-    if time.monotonic() >= cutoff:
-        raise _BudgetExhausted("owning member or campaign time exhausted")
     spent = sum(
         item["units"]
         for item in report["operation_reservations"]
@@ -574,14 +505,10 @@ def _admit_work(
         member_key=None if member is None else member.key,
         attempt_id=attempt_id,
         terminal_slot=None if terminal_slot is None else str(terminal_slot),
-        cutoff=cutoff,
         owner_run=report["run"],
     )
     report["operation_reservations"].append(reservation)
     checkpoint()
-    check_deadline()
-    if time.monotonic() >= cutoff:
-        raise _BudgetExhausted("reservation publication exhausted owning time")
     return reservation
 
 
@@ -589,67 +516,30 @@ def _member_budget(report, grant, key):
     for record in report["member_budgets"]:
         if record["key"] == key and record["grant_id"] == grant.grant_id:
             budget = _MemberBudget.parse(record)
-            if time.monotonic() >= budget.clock.deadline:
-                raise _BudgetExhausted("original admitted member time exhausted")
             return budget
     charged = sum(
         item["grant_id"] == grant.grant_id for item in report["member_budgets"]
     )
     if charged >= grant.member_limit:
         raise _BudgetExhausted("campaign member admissions exhausted")
-    started = time.monotonic()
-    clock = _WorkClock(
-        grant.clock.boot_id, min(grant.clock.deadline, started + grant.member_seconds)
-    )
     admission = dict(
         key=key,
         grant_id=grant.grant_id,
-        clock=asdict(clock),
-        started_monotonic=started,
         owner_run=report["run"],
     )
     directory = Path(report["destination"]) / "member-admissions"
     directory.mkdir(mode=0o700, exist_ok=True)
     path = directory / f"{len(report['member_budgets']):06d}.json"
     write_bytes(path, encode_json(admission, path=path), readonly=True)
-    budget = _MemberBudget(key, grant.grant_id, clock, file_record(path))
+    budget = _MemberBudget(key, grant.grant_id, file_record(path))
     report["member_budgets"].append(asdict(budget))
     return budget
 
 
-def _write_terminal(path, value, cutoff):
+def _write_terminal(path, value):
     value = deepcopy(value)
-    value["finished_monotonic"] = time.monotonic()
-    value["publication_clock"] = dict(
-        monotonic=time.monotonic(), wall_ns=time.time_ns()
-    )
-    _require(
-        value["finished_monotonic"] < cutoff,
-        "terminal completed after its owning cutoff",
-    )
     write_bytes(path, encode_json(value, path=path), readonly=True)
-    _require(
-        time.monotonic() < cutoff, "terminal publication exceeded its owning cutoff"
-    )
     return file_record(path)
-
-
-def _terminal_clock(pin, terminal, cutoff):
-    clock = terminal["publication_clock"]
-    _require(
-        type(terminal["finished_monotonic"]) in {int, float}
-        and math.isfinite(terminal["finished_monotonic"])
-        and terminal["finished_monotonic"] < cutoff
-        and type(clock) is dict
-        and set(clock) == {"monotonic", "wall_ns"}
-        and type(clock["monotonic"]) in {int, float}
-        and math.isfinite(clock["monotonic"])
-        and terminal["finished_monotonic"] <= clock["monotonic"] < cutoff
-        and type(clock["wall_ns"]) is int
-        and Path(pin["path"]).stat().st_mtime_ns
-        < clock["wall_ns"] + int((cutoff - clock["monotonic"]) * 1e9),
-        "terminal persistence does not precede its owning cutoff",
-    )
 
 
 def _profile_rows(selection, selected=True):
@@ -679,23 +569,26 @@ def _generation_disposition(attempt, binding, arguments):
     _require(
         Path(attempt["run"]["path"]) == workspace / "run.json"
         and Path(attempt["submission"]["path"]) == workspace / "member-000/result.json"
-        and Path(attempt["report"]["path"]) == workspace / "report.json"
-        and run["selected"] == [member.key]
-        and run["source_form"] == attempt["source_form"]
-        and run["campaign"]["id"] == attempt["origin_campaign"]
-        and run["campaign"]["grant_id"] == attempt["generation_grant_id"]
-        and run["limits"]["deadline"] == attempt["generation_cutoff"]
-        and submitted["identity"] == asdict(member)
-        and child["selected"] == [member.key]
-        and [row["identity"] for row in child["members"]]
-        == [asdict(item) for item in binding.members]
-        and child["members"][[item.key for item in binding.members].index(member.key)]
-        == submitted
-        and child.get("snapshots_unchanged") is True
-        and not submitted.get("secondary_failures")
-        and not child.get("secondary_failures")
-        and not submitted.get("owner_observation")
-        and not child.get("owner_observation"),
+        and (Path(attempt["report"]["path"]) == workspace / "report.json")
+        and (run["selected"] == [member.key])
+        and (run["source_form"] == attempt["source_form"])
+        and (run["campaign"]["id"] == attempt["origin_campaign"])
+        and (run["campaign"]["grant_id"] == attempt["generation_grant_id"])
+        and (submitted["identity"] == asdict(member))
+        and (child["selected"] == [member.key])
+        and (
+            [row["identity"] for row in child["members"]]
+            == [asdict(item) for item in binding.members]
+        )
+        and (
+            child["members"][[item.key for item in binding.members].index(member.key)]
+            == submitted
+        )
+        and (child.get("snapshots_unchanged") is True)
+        and (not submitted.get("secondary_failures"))
+        and (not child.get("secondary_failures"))
+        and (not submitted.get("owner_observation"))
+        and (not child.get("owner_observation")),
         "generation terminal does not bind its original run, result, complete census and guards",
     )
     prepared = PreparedInputs.attach(run, run_directory=workspace)
@@ -752,7 +645,6 @@ def _generation_disposition(attempt, binding, arguments):
             candidate,
             arguments["rizin"],
             Path(run["binaries"]["plugin"]["path"]),
-            run["limits"]["deadline"],
             arguments["output_limit"],
         )
         events.extend(
@@ -843,7 +735,6 @@ def _generation_disposition(attempt, binding, arguments):
         recipe.c89_call(
             workspace=candidate / "build",
             tools=run["tools"],
-            deadline=run["limits"]["deadline"],
             output_limit=arguments["output_limit"],
         ),
     )
@@ -879,7 +770,6 @@ def _generation_disposition(attempt, binding, arguments):
             syntax,
             attempts,
             workspace=candidate / "build",
-            deadline=run["limits"]["deadline"],
             output_limit=arguments["output_limit"],
             contexts=contexts,
             receipts=receipts,
@@ -945,7 +835,7 @@ def _generation_disposition(attempt, binding, arguments):
 
 def _terminal_association(attempt, pin, terminal, reservations, *, generation):
     fields = (
-        {"run", "report", "submission", "generation_cutoff", "generation_grant_id"}
+        {"run", "report", "submission", "generation_grant_id"}
         if generation
         else {
             "run",
@@ -961,7 +851,6 @@ def _terminal_association(attempt, pin, terminal, reservations, *, generation):
         if generation
         else attempt["id"]
     )
-    cutoff = attempt["generation_cutoff"] if generation else attempt["feedback_cutoff"]
     slot = (
         Path(attempt["workspace"]) / "member-000/terminal-member.json"
         if generation
@@ -970,37 +859,27 @@ def _terminal_association(attempt, pin, terminal, reservations, *, generation):
     reservation = terminal["reservation"]
     _require(
         set(terminal)
-        == {
-            "attempt_id",
-            "reservation",
-            "disposition",
-            "cutoff",
-            "evidence",
-            "finished_monotonic",
-            "publication_clock",
-        }
+        == {"attempt_id", "reservation", "disposition", "evidence"}
         | ({"evidence_requests"} if generation else set())
         and type(terminal["evidence"]) is dict
-        and set(terminal["evidence"]) == fields
-        and terminal["attempt_id"] == attempt_id
-        and terminal["cutoff"] == cutoff
-        and Path(pin["path"]) == slot
-        and reservation in reservations
-        and reservation["attempt_id"] == attempt_id
-        and reservation["member_key"] == attempt["member_key"]
-        and reservation["cursor"]["phase"] == ("native" if generation else "compare")
-        and reservation["terminal_slot"] == str(slot)
-        and reservation["cutoff"] == cutoff
-        and reservation["grant_id"]
-        == (attempt["generation_grant_id"] if generation else attempt["grant_id"])
-        and (generation or cutoff <= attempt["member_budget"]["clock"]["deadline"]),
-        "terminal differs from its original named reservation, evidence or cutoff",
+        and (set(terminal["evidence"]) == fields)
+        and (terminal["attempt_id"] == attempt_id)
+        and (Path(pin["path"]) == slot)
+        and (reservation in reservations)
+        and (reservation["attempt_id"] == attempt_id)
+        and (reservation["member_key"] == attempt["member_key"])
+        and (reservation["cursor"]["phase"] == ("native" if generation else "compare"))
+        and (reservation["terminal_slot"] == str(slot))
+        and (
+            reservation["grant_id"]
+            == (attempt["generation_grant_id"] if generation else attempt["grant_id"])
+        ),
+        "terminal differs from its original named reservation or evidence",
     )
     _require(
         all(attempt.get(name) == value for name, value in terminal["evidence"].items()),
         "terminal replaces previously pinned evidence",
     )
-    _terminal_clock(pin, terminal, cutoff)
 
 
 def _authenticate_retained_outputs(attempt, binding, arguments):
@@ -1214,8 +1093,6 @@ def _authenticate_attempt(attempt, binding, arguments, reservations):
                     )
                 attempt = recovered
                 attempt["recovered_terminal"] = pin
-            except DeadlineExpired:
-                raise
             except Exception as error:
                 attempt.setdefault("recovery_failures", []).append(
                     f"{type(error).__name__}: {error}"
@@ -1243,7 +1120,6 @@ def _authenticate_attempt(attempt, binding, arguments, reservations):
     disposition, requests = _generation_disposition(attempt, binding, arguments)
     _require(
         terminal["disposition"] == disposition
-        and terminal["cutoff"] == attempt["generation_cutoff"]
         and terminal["evidence_requests"] == requests,
         "generation terminal disposition or evidence differs",
     )
@@ -1269,17 +1145,13 @@ def _authenticate_attempt(attempt, binding, arguments, reservations):
     _require(
         final["attempt_id"] == attempt["id"]
         and final["disposition"] == "measured"
-        and final["cutoff"]
-        == attempt["feedback_cutoff"]
-        <= attempt["member_budget"]["clock"]["deadline"]
-        and final["reservation"] in reservations
-        and final["reservation"]["cursor"]["phase"] == "compare"
+        and (final["reservation"] in reservations)
+        and (final["reservation"]["cursor"]["phase"] == "compare")
         and all(
-            attempt.get(name) == value for name, value in final["evidence"].items()
+            (attempt.get(name) == value for name, value in final["evidence"].items())
         ),
         "measured terminal association differs",
     )
-    _terminal_clock(attempt["terminal"], final, final["cutoff"])
     measured = comparison.inspect_original_feedback(
         comparison_record=attempt["comparison"],
         prepared_run=arguments["run_dir"],
@@ -1290,9 +1162,8 @@ def _authenticate_attempt(attempt, binding, arguments, reservations):
     _require(
         measured["rebuild_record"] == attempt["rebuild"]
         and rebuilt["submitted_result"] == attempt["submission"]
-        and rebuilt["submitted_run"] == attempt["run"]
-        and measured["deadline"] == rebuilt["deadline"] == final["cutoff"],
-        "feedback reparents or changes its original pair/cutoff",
+        and (rebuilt["submitted_run"] == attempt["run"]),
+        "feedback reparents or changes its original pair",
     )
     expected_profiles = _document(attempt["run"])["tools"]["profiles"]
     profiles = tuple(
@@ -1361,12 +1232,6 @@ def _read_resume(pin, binding, arguments):
         and owner["search_version"] == SEARCH_VERSION,
         "resume campaign owner differs",
     )
-    validate_deadline(owner["deadline"])
-    _require(
-        owner["deadline"] == prior["deadline"]
-        and owner["deadline"] <= owner["grant"]["clock"]["deadline"],
-        "outer invocation changes its inherited cutoff",
-    )
     if owner["resumed_from"] is not None:
         predecessor = _document(owner["resumed_from"])
         _require(
@@ -1401,9 +1266,7 @@ def _read_resume(pin, binding, arguments):
                 "workspace",
                 "feedback_workspace",
                 "member_budget",
-                "generation_cutoff",
                 "generation_grant_id",
-                "feedback_cutoff",
                 "run",
                 "report",
                 "submission",
@@ -1440,7 +1303,6 @@ def _read_resume(pin, binding, arguments):
             "grant owner identity differs",
         )
         original = _document(origin["run"])
-        validate_deadline(original["deadline"])
         _require(
             original["search_version"] == SEARCH_VERSION
             and original["campaign"] == prior["campaign"]
@@ -1454,10 +1316,8 @@ def _read_resume(pin, binding, arguments):
             "imported grant differs from its immutable original outer-run owner",
         )
         _require(
-            original["deadline"] is not None
-            and original["deadline"] <= grant.clock.deadline
-            and Path(origin["run"]["path"]).name == "run.json",
-            "original grant owner changes its invocation cutoff or slot",
+            Path(origin["run"]["path"]).name == "run.json",
+            "original grant owner changes its invocation slot",
         )
         previous = origin["run"]
     _require(
@@ -1473,34 +1333,23 @@ def _read_resume(pin, binding, arguments):
         budget = _MemberBudget.parse(record_budget)
         grant = by_grant[budget.grant_id]
         _require(
-            budget.key in arguments["member_keys"]
-            and budget.clock.boot_id == grant.clock.boot_id
-            and budget.clock.deadline <= grant.clock.deadline,
-            "retained member clock differs",
+            budget.key in arguments["member_keys"],
+            "retained member identity differs",
         )
         admission = _document(budget.admission)
         admitting_owner = _document(admission["owner_run"])
-        started = admission["started_monotonic"]
         _require(
-            type(started) in {int, float}
-            and math.isfinite(started)
-            and admission
+            admission
             == dict(
                 key=budget.key,
                 grant_id=budget.grant_id,
-                clock=asdict(budget.clock),
-                started_monotonic=started,
                 owner_run=admission["owner_run"],
             )
-            and budget.clock.deadline
-            == min(grant.clock.deadline, started + grant.member_seconds)
-            and started < budget.clock.deadline
-            and started < admitting_owner["deadline"]
             and admitting_owner["campaign"] == prior["campaign"]
             and admitting_owner["grant"] == asdict(grant)
             and Path(budget.admission["path"]).parent
             == Path(admission["owner_run"]["path"]).parent / "member-admissions",
-            "member admission renews or changes its immutable clock",
+            "member admission changes its immutable owner",
         )
     _require(
         len({(row["key"], row["grant_id"]) for row in prior["member_budgets"]})
@@ -1527,7 +1376,6 @@ def _read_resume(pin, binding, arguments):
                 "member_key",
                 "attempt_id",
                 "terminal_slot",
-                "cutoff",
                 "owner_run",
             }
             and reservation["id"] == index
@@ -1535,19 +1383,11 @@ def _read_resume(pin, binding, arguments):
             "retained reservation identity differs",
         )
         cursor = _Cursor.parse(reservation["cursor"], arguments["member_keys"])
-        validate_deadline(reservation["cutoff"])
         reserving_owner = _document(reservation["owner_run"])
         _require(
-            reservation["cutoff"] is not None
-            and reservation["cutoff"]
-            <= by_grant[reservation["grant_id"]].clock.deadline
-            and reserving_owner["grant"] == asdict(by_grant[reservation["grant_id"]])
+            reserving_owner["grant"] == asdict(by_grant[reservation["grant_id"]])
             and reserving_owner["campaign"] == prior["campaign"],
-            "reservation cutoff or original owner differs",
-        )
-        _require(
-            reservation["cutoff"] <= reserving_owner["deadline"],
-            "reservation exceeds its original invocation cutoff",
+            "reservation original owner differs",
         )
         expected_units = {
             "prepare": 1,
@@ -1575,10 +1415,8 @@ def _read_resume(pin, binding, arguments):
                 "reservation attempt association differs",
             )
             _require(
-                attempt["member_budget"] in prior["member_budgets"]
-                and reservation["cutoff"]
-                <= attempt["member_budget"]["clock"]["deadline"],
-                "attempt reservation changes its admitted member cutoff",
+                attempt["member_budget"] in prior["member_budgets"],
+                "attempt reservation changes its admitted member",
             )
             if reservation["terminal_slot"] is not None:
                 expected = (
@@ -1649,46 +1487,22 @@ def _search_forms(*, binding, arguments):
     _require(
         new_id is None or prior is not None, "new_budget_id requires a resumed campaign"
     )
-    unavailable = False
     if prior is not None and new_id is None:
         grant = grants[-1]
-        for name in (
-            "work_seconds",
-            "member_seconds",
-            "member_limit",
-            "campaign_limit",
-        ):
+        for name in ("member_limit", "campaign_limit"):
             _require(
                 arguments[name] is None or arguments[name] == getattr(grant, name),
                 "same-grant resume cannot change finite allowances",
             )
-        try:
-            cutoff = resolve_deadline(validate_work_clock(asdict(grant.clock)))
-        except ValueError:
-            unavailable = True
-            cutoff = grant.clock.deadline
     else:
         if new_id is not None:
             _require(
                 all(
                     arguments[name] is not None
-                    for name in (
-                        "work_seconds",
-                        "member_seconds",
-                        "member_limit",
-                        "campaign_limit",
-                    )
+                    for name in ("member_limit", "campaign_limit")
                 ),
                 "a new grant requires all explicit finite allowances",
             )
-        work_seconds = (
-            120.0 if arguments["work_seconds"] is None else arguments["work_seconds"]
-        )
-        member_seconds = (
-            300.0
-            if arguments["member_seconds"] is None
-            else arguments["member_seconds"]
-        )
         member_limit = (
             len(selected)
             if arguments["member_limit"] is None
@@ -1699,20 +1513,9 @@ def _search_forms(*, binding, arguments):
             if arguments["campaign_limit"] is None
             else arguments["campaign_limit"]
         )
-        _require(
-            type(work_seconds) in {int, float}
-            and math.isfinite(work_seconds)
-            and 0 < work_seconds <= 600,
-            "work_seconds must be finite and at most 600",
-        )
-        cutoff = arguments["initial_clock"]["deadline"]
-        clock = _WorkClock.parse(arguments["initial_clock"])
         grant = _CampaignGrant.parse(
             dict(
                 grant_id=new_id or "initial",
-                clock=asdict(clock),
-                work_seconds=work_seconds,
-                member_seconds=member_seconds,
                 member_limit=member_limit,
                 campaign_limit=campaign_limit,
             ),
@@ -1737,14 +1540,12 @@ def _search_forms(*, binding, arguments):
         binding_digest=binding.digest,
         destination=str(destination),
         selected=list(selected),
-        deadline=cutoff,
         search_forms=True,
         search_version=SEARCH_VERSION,
         source_forms=[form.value for form in forms],
         campaign=campaign,
         grants=[asdict(value) for value in grants],
         grant_owners=[] if prior is None else deepcopy(prior["grant_owners"]),
-        work_clock=asdict(grant.clock),
         resumed_from=resume_record,
         requested=None if prior is None else deepcopy(prior["requested"]),
         operation_reservations=[]
@@ -1821,7 +1622,6 @@ def _search_forms(*, binding, arguments):
                     binding_digest=binding.digest,
                     problem_sha256=binding.problem_doc_sha256,
                 ),
-                deadline=cutoff,
                 resumed_from=resume_record,
                 grant_origin=prior is None or new_id is not None,
                 grant_owner=None
@@ -1842,603 +1642,513 @@ def _search_forms(*, binding, arguments):
                 )
 
     try:
-        if unavailable or time.monotonic() >= cutoff:
-            report["budget_status"] = (
-                "unavailable-after-reboot" if unavailable else "campaign-time-exhausted"
+        requested = _request_identity(binding, arguments)
+        if prior is not None:
+            _require(
+                requested == prior["requested"],
+                "current configuration, executable, receipt, compiler catalog or complete driver identity differs",
             )
-            report["authentication"] = "retained-unverified"
-            publish_owner()
-            checkpoint()
-        else:
-            with use_deadline(cutoff):
-                requested = _request_identity(binding, arguments)
-                if prior is not None:
-                    _require(
-                        requested == prior["requested"],
-                        "current configuration, executable, receipt, compiler catalog or complete driver identity differs",
-                    )
-                report["requested"] = arguments["requested"] = requested
-                publish_owner()
-                if prior is not None:
-                    for pin in report.get("prior_preparations", []):
-                        prepared = PreparedInputs.open_owner(pin)
-                        prepared.verify()
-                        prepared_owner = prepared._record
-                        _require(
-                            prepared_owner["campaign"]["id"] == campaign
-                            and prepared_owner["campaign"]["grant_id"]
-                            in {value.grant_id for value in grants}
-                            and prepared_owner["problem"] == requested["problem"]
-                            and all(
-                                prepared_owner["binaries"][name] == requested[argument]
-                                for name, argument in (
-                                    ("receipt", "native_receipt"),
-                                    ("configuration", "configuration"),
-                                    ("rizin", "rizin"),
-                                )
-                            ),
-                            "imported preparation differs from its problem, caller or grant",
+        report["requested"] = arguments["requested"] = requested
+        publish_owner()
+        if prior is not None:
+            for pin in report.get("prior_preparations", []):
+                prepared = PreparedInputs.open_owner(pin)
+                prepared.verify()
+                prepared_owner = prepared._record
+                _require(
+                    prepared_owner["campaign"]["id"] == campaign
+                    and prepared_owner["campaign"]["grant_id"]
+                    in {value.grant_id for value in grants}
+                    and prepared_owner["problem"] == requested["problem"]
+                    and all(
+                        prepared_owner["binaries"][name] == requested[argument]
+                        for name, argument in (
+                            ("receipt", "native_receipt"),
+                            ("configuration", "configuration"),
+                            ("rizin", "rizin"),
                         )
-                    imported = []
-                    for row in report["members"]:
-                        for attempt in row["attempts"]:
-                            item = _authenticate_attempt(
-                                attempt,
-                                binding,
-                                arguments,
-                                report["operation_reservations"],
-                            )
-                            imported.append(item)
-                        row["attempts"] = [
-                            item.attempt
-                            for item in imported
-                            if item.attempt["member_key"] == row["identity"]["key"]
-                        ]
-                    recipe.verify_inputs([resume_record, prior["run"]])
-                    authenticated.extend(imported)
-                report["authentication"] = "authenticated"
-                completed = _derive_search(report, grant, authenticated)
-                checkpoint()
-                pending = [
-                    (key, index)
-                    for key in selected
-                    for index in range(2)
-                    if (key, index) not in completed
+                    ),
+                    "imported preparation differs from its problem, caller or grant",
+                )
+            imported = []
+            for row in report["members"]:
+                for attempt in row["attempts"]:
+                    item = _authenticate_attempt(
+                        attempt,
+                        binding,
+                        arguments,
+                        report["operation_reservations"],
+                    )
+                    imported.append(item)
+                row["attempts"] = [
+                    item.attempt
+                    for item in imported
+                    if item.attempt["member_key"] == row["identity"]["key"]
                 ]
-                shared = contexts = config_bytes = shared_record = None
-                has_native = any(
-                    not any(
-                        isinstance(item, _UnresolvedAttempt)
+            recipe.verify_inputs([resume_record, prior["run"]])
+            authenticated.extend(imported)
+        report["authentication"] = "authenticated"
+        completed = _derive_search(report, grant, authenticated)
+        checkpoint()
+        pending = [
+            (key, index)
+            for key in selected
+            for index in range(2)
+            if (key, index) not in completed
+        ]
+        shared = contexts = config_bytes = shared_record = None
+        has_native = any(
+            not any(
+                isinstance(item, _UnresolvedAttempt)
+                and item.generation_terminal is not None
+                and item.attempt["member_key"] == key
+                and item.attempt["form_ordinal"] == index
+                for item in authenticated
+            )
+            for key, index in pending
+        )
+
+        def member_available(key):
+            budget = next(
+                (
+                    row
+                    for row in report["member_budgets"]
+                    if row["key"] == key and row["grant_id"] == grant.grant_id
+                ),
+                None,
+            )
+            return budget is not None or report["remaining"]["member_admissions"] > 0
+
+        if has_native:
+            _require(
+                any(member_available(key) for key, _ in pending),
+                "no member admission remains before preparation",
+            )
+            if (
+                report["remaining"]["units"] == 0
+                or report["remaining"]["member_admissions"] == 0
+                and not any(
+                    row["grant_id"] == grant.grant_id
+                    for row in report["member_budgets"]
+                )
+            ):
+                raise _BudgetExhausted("no work or member allowance before preparation")
+            _admit_work(
+                report,
+                grant,
+                _Cursor(None, None, "prepare"),
+                units=1,
+                member=None,
+                checkpoint=checkpoint,
+            )
+            prepared_root = destination / "prepared"
+            prepared_root.mkdir(mode=0o700)
+            shared_record, config_bytes, shared = _prepare_run(
+                arguments["root"],
+                prepared_root,
+                arguments["native_receipt"],
+                arguments["configuration"],
+                arguments["rizin"],
+                report,
+                [],
+            )
+            contexts = calltargets.prepare_native_contexts(
+                binding, arguments["run_dir"], prepared_root / "binding-inputs"
+            )
+            shared_record.update(
+                binding_inputs=dict(
+                    directory=str(contexts.input_directory),
+                    files=PreparedInputs.tree(contexts.input_directory),
+                ),
+                problem=owner["problem"],
+                campaign=dict(
+                    id=campaign,
+                    grant_id=grant.grant_id,
+                    owner_run=report["run"],
+                ),
+            )
+            path = prepared_root / "inputs.json"
+            shared.verify()
+            write_bytes(path, encode_json(shared_record, path=path), readonly=True)
+            report["prepared_inputs"] = file_record(path)
+            _require(
+                any(member_available(key) for key, _ in pending),
+                "no member admission remains before self-check",
+            )
+            _admit_work(
+                report,
+                grant,
+                _Cursor(None, None, "self-check"),
+                units=1,
+                member=None,
+                checkpoint=checkpoint,
+            )
+            self_check = invocation.capture_native(
+                _native_command(
+                    prepared_root / "self-check",
+                    arguments["rizin"],
+                    Path(shared_record["binaries"]["plugin"]["path"]),
+                    arguments["output_limit"],
+                ),
+                configuration=config_bytes,
+                original=None,
+            )
+            report["self_check"] = dict(
+                prepared_inputs=report["prepared_inputs"],
+                evidence=self_check.evidence,
+            )
+            report["cleanup_uncertainties"].extend(
+                dict(attempt_id=None, owner_observation=observed)
+                for observed in _cleanup_observations(self_check.evidence)
+            )
+            if self_check.pending is not None:
+                raise self_check.pending
+            _require(
+                self_check.launch == "observed"
+                and self_check.status == "self-check-complete"
+                and self_check.raw_exit == 0
+                and self_check.process_failure is None,
+                "shared native self-check failed",
+            )
+            checkpoint()
+        for member_index, key in enumerate(selected):
+            unresolved = [index for index in range(2) if (key, index) not in completed]
+            if not unresolved:
+                continue
+            report["cursor"] = asdict(_Cursor(member_index, unresolved[0], "native"))
+            try:
+                member_budget = _member_budget(report, grant, key)
+            except _BudgetExhausted as error:
+                report["failures"].append(str(error))
+                report["budget_status"] = "member-admissions-exhausted"
+                break
+            for form_index in unresolved:
+                prior_generation = next(
+                    (
+                        item
+                        for item in reversed(authenticated)
+                        if isinstance(item, _UnresolvedAttempt)
                         and item.generation_terminal is not None
                         and item.attempt["member_key"] == key
-                        and item.attempt["form_ordinal"] == index
-                        for item in authenticated
-                    )
-                    for key, index in pending
+                        and item.attempt["form_ordinal"] == form_index
+                    ),
+                    None,
                 )
+                ordinal = 1 + max(
+                    (attempt["attempt_ordinal"] for attempt in _attempts(report)),
+                    default=-1,
+                )
+                workspace = destination / "attempts" / f"{ordinal:06d}"
+                feedback_root = destination / "feedback" / f"{ordinal:06d}"
+                active = dict(
+                    id=f"{campaign}/{ordinal}",
+                    attempt_ordinal=ordinal,
+                    member_key=key,
+                    source_form=forms[form_index].value,
+                    form_ordinal=form_index,
+                    grant_id=grant.grant_id,
+                    origin_campaign=campaign,
+                    member_budget=asdict(member_budget),
+                    workspace=str(workspace),
+                    feedback_workspace=str(feedback_root),
+                    status="unresolved",
+                    failure=None,
+                    evidence_requests=[],
+                )
+                row = next(
+                    row for row in report["members"] if row["identity"]["key"] == key
+                )
+                row["attempts"].append(active)
 
-                def member_available(key):
-                    budget = next(
-                        (
-                            row
-                            for row in report["member_budgets"]
-                            if row["key"] == key and row["grant_id"] == grant.grant_id
-                        ),
-                        None,
-                    )
-                    return (
-                        time.monotonic() < min(cutoff, budget["clock"]["deadline"])
-                        if budget is not None
-                        else report["remaining"]["member_admissions"] > 0
-                        and time.monotonic() < cutoff
+                def cursor(phase, profile=None):
+                    return _Cursor(
+                        member_index,
+                        form_index,
+                        phase,
+                        profile,
+                        ordinal,
                     )
 
-                if has_native:
-                    _require(
-                        any(member_available(key) for key, _ in pending),
-                        "no member time or admission remains before preparation",
-                    )
-                    if (
-                        report["remaining"]["units"] == 0
-                        or report["remaining"]["member_admissions"] == 0
-                        and not any(
-                            row["grant_id"] == grant.grant_id
-                            for row in report["member_budgets"]
-                        )
+                if prior_generation is not None:
+                    for name in (
+                        "workspace",
+                        "run",
+                        "report",
+                        "submission",
+                        "generation_terminal",
+                        "generation_grant_id",
                     ):
-                        raise _BudgetExhausted(
-                            "no work or member allowance before preparation"
-                        )
-                    _admit_work(
-                        report,
-                        grant,
-                        _Cursor(None, None, "prepare"),
-                        units=1,
-                        member=None,
-                        checkpoint=checkpoint,
+                        active[name] = prior_generation.attempt[name]
+                    active["generation_attempt_id"] = prior_generation.attempt.get(
+                        "generation_attempt_id",
+                        prior_generation.attempt["id"],
                     )
-                    prepared_root = destination / "prepared"
-                    prepared_root.mkdir(mode=0o700)
-                    shared_record, config_bytes, shared = _prepare_run(
-                        arguments["root"],
-                        prepared_root,
-                        arguments["native_receipt"],
-                        arguments["configuration"],
-                        arguments["rizin"],
-                        report,
-                        [],
-                    )
-                    contexts = calltargets.prepare_native_contexts(
-                        binding, arguments["run_dir"], prepared_root / "binding-inputs"
-                    )
-                    shared_record.update(
-                        binding_inputs=dict(
-                            directory=str(contexts.input_directory),
-                            files=PreparedInputs.tree(contexts.input_directory),
-                        ),
-                        problem=owner["problem"],
-                        campaign=dict(
-                            id=campaign,
-                            grant_id=grant.grant_id,
-                            owner_run=report["run"],
-                        ),
-                    )
-                    path = prepared_root / "inputs.json"
-                    shared.verify()
-                    write_bytes(
-                        path, encode_json(shared_record, path=path), readonly=True
-                    )
-                    report["prepared_inputs"] = file_record(path)
-                    _require(
-                        any(member_available(key) for key, _ in pending),
-                        "no member time or admission remains before self-check",
-                    )
-                    _admit_work(
-                        report,
-                        grant,
-                        _Cursor(None, None, "self-check"),
-                        units=1,
-                        member=None,
-                        checkpoint=checkpoint,
-                    )
-                    self_check = invocation.capture_native(
-                        _native_command(
-                            prepared_root / "self-check",
-                            arguments["rizin"],
-                            Path(shared_record["binaries"]["plugin"]["path"]),
-                            cutoff,
-                            arguments["output_limit"],
-                        ),
-                        configuration=config_bytes,
-                        original=None,
-                    )
-                    report["self_check"] = dict(
+                    active["restart_phase"] = "rebuild"
+                    checkpoint()
+                else:
+                    workspace.mkdir(mode=0o700)
+                    run_record = deepcopy(shared_record)
+                    run_record.update(
+                        selected=[key],
+                        source_form=forms[form_index].value,
                         prepared_inputs=report["prepared_inputs"],
-                        deadline=cutoff,
-                        evidence=self_check.evidence,
+                        limits=dict(
+                            process_output_bytes=arguments["output_limit"],
+                            artifact_bytes=ARTIFACT_LIMIT,
+                        ),
                     )
-                    report["cleanup_uncertainties"].extend(
-                        dict(attempt_id=None, owner_observation=observed)
-                        for observed in _cleanup_observations(self_check.evidence)
+                    path = workspace / "run.json"
+                    write_bytes(
+                        path,
+                        encode_json(run_record, path=path),
+                        readonly=True,
                     )
-                    if self_check.pending is not None:
-                        raise self_check.pending
-                    _require(
-                        self_check.launch == "observed"
-                        and self_check.status == "self-check-complete"
-                        and self_check.raw_exit == 0
-                        and self_check.process_failure is None,
-                        "shared native self-check failed",
+                    active.update(
+                        run=file_record(path),
+                        generation_grant_id=grant.grant_id,
+                        restart_phase="native",
+                    )
+                    reservation = _admit_work(
+                        report,
+                        grant,
+                        cursor("native"),
+                        units=1,
+                        member=member_budget,
+                        checkpoint=checkpoint,
+                        terminal_slot=workspace / "member-000/terminal-member.json",
+                        attempt_id=active["id"],
+                    )
+                    submitted = dict(
+                        identity=asdict(binding.member(key)),
+                        reader="unattempted",
+                        generation="unattempted",
+                        compilation="unattempted",
+                        profile_attempts=_profile_rows(shared_record["tools"]),
+                    )
+                    member_events = []
+                    try:
+                        _run_member(
+                            binding=binding,
+                            run_dir=arguments["run_dir"],
+                            member=binding.member(key),
+                            row=submitted,
+                            workspace=workspace / "member-000",
+                            run_record=run_record,
+                            inputs=shared,
+                            contexts=contexts,
+                            rizin=arguments["rizin"],
+                            plugin=Path(run_record["binaries"]["plugin"]["path"]),
+                            output_limit=arguments["output_limit"],
+                            config_bytes=config_bytes,
+                            source_form=forms[form_index],
+                            run_events=member_events,
+                            retained_receipts=[],
+                            before_compile=lambda phase, profile: _admit_work(
+                                report,
+                                grant,
+                                cursor(phase, profile),
+                                units=1,
+                                member=member_budget,
+                                checkpoint=checkpoint,
+                                attempt_id=active["id"],
+                            ),
+                        )
+                    finally:
+                        observations = _cleanup_observations(submitted)
+                        if observations:
+                            active["cleanup_uncertainties"] = observations
+                        path = workspace / "member-000/result.json"
+                        if path.is_file():
+                            active["submission"] = file_record(path)
+                        child = dict(
+                            operation="run",
+                            status="failed",
+                            exit=1,
+                            run_id=binding.run_id,
+                            binding_digest=binding.digest,
+                            denominator=MEMBER_COUNT,
+                            selected=[key],
+                            source_form=forms[form_index].value,
+                            semantic_admission=False,
+                            autonomous_exact=False,
+                            secondary_failures=facts(member_events),
+                            members=[
+                                submitted
+                                if member.key == key
+                                else dict(
+                                    identity=asdict(member),
+                                    reader="unattempted",
+                                    generation="unattempted",
+                                    compilation="unattempted",
+                                )
+                                for member in binding.members
+                            ],
+                            snapshots_unchanged=not member_events,
+                        )
+                        path = workspace / "report.json"
+                        write_bytes(
+                            path,
+                            encode_json(child, path=path),
+                            readonly=True,
+                        )
+                        active["report"] = file_record(path)
+                    disposition, requests = _generation_disposition(
+                        active, binding, arguments
+                    )
+                    evidence = {
+                        name: active[name]
+                        for name in (
+                            "run",
+                            "report",
+                            "submission",
+                            "generation_grant_id",
+                        )
+                    }
+                    active["generation_terminal"] = _write_terminal(
+                        Path(reservation["terminal_slot"]),
+                        dict(
+                            attempt_id=active["id"],
+                            reservation=reservation,
+                            disposition=disposition,
+                            evidence=evidence,
+                            evidence_requests=requests,
+                        ),
+                    )
+                    item = _authenticate_attempt(
+                        active,
+                        binding,
+                        arguments,
+                        report["operation_reservations"],
+                    )
+                    authenticated.append(item)
+                    active.update(evidence_requests=requests, status=disposition)
+                    checkpoint()
+                    if isinstance(item, _TerminalCandidate):
+                        active = None
+                        continue
+                feedback_root.mkdir(mode=0o700)
+                rebuilt, measured = {}, {}
+                try:
+                    _admit_work(
+                        report,
+                        grant,
+                        cursor("rebuild"),
+                        units=6,
+                        member=member_budget,
+                        checkpoint=checkpoint,
+                        attempt_id=active["id"],
+                    )
+                    comparison.rebuild_candidate(
+                        result_record=active["submission"],
+                        run_record=active["run"],
+                        workspace=feedback_root / "rebuild",
+                        output_limit=arguments["output_limit"],
+                        artifact_limit=ARTIFACT_LIMIT,
+                        retained=rebuilt,
+                    )
+                    active["rebuild"] = file_record(
+                        feedback_root / "rebuild/rebuild-result.json"
                     )
                     checkpoint()
-                for member_index, key in enumerate(selected):
-                    unresolved = [
-                        index for index in range(2) if (key, index) not in completed
-                    ]
-                    if not unresolved:
-                        continue
-                    report["cursor"] = asdict(
-                        _Cursor(member_index, unresolved[0], "native")
+                    reservation = _admit_work(
+                        report,
+                        grant,
+                        cursor("compare"),
+                        units=5,
+                        member=member_budget,
+                        checkpoint=checkpoint,
+                        terminal_slot=feedback_root / "terminal.json",
+                        attempt_id=active["id"],
                     )
-                    try:
-                        member_budget = _member_budget(report, grant, key)
-                    except _BudgetExhausted as error:
-                        report["failures"].append(str(error))
-                        if "member time" in str(error):
-                            continue
-                        report["budget_status"] = "member-admissions-exhausted"
-                        break
-                    for form_index in unresolved:
-                        cutoff_member = min(cutoff, member_budget.clock.deadline)
-                        try:
-                            with use_deadline(cutoff_member):
-                                prior_generation = next(
-                                    (
-                                        item
-                                        for item in reversed(authenticated)
-                                        if isinstance(item, _UnresolvedAttempt)
-                                        and item.generation_terminal is not None
-                                        and item.attempt["member_key"] == key
-                                        and item.attempt["form_ordinal"] == form_index
-                                    ),
-                                    None,
+                    comparison.compare_rebuilt_candidate(
+                        rebuild_record=active["rebuild"],
+                        prepared_run=arguments["run_dir"],
+                        workspace=feedback_root / "comparison",
+                        output_limit=arguments["output_limit"],
+                        artifact_limit=ARTIFACT_LIMIT,
+                        retained=measured,
+                    )
+                    active["comparison"] = file_record(
+                        feedback_root / "comparison/comparison-result.json"
+                    )
+                    comparison.inspect_original_feedback(
+                        comparison_record=active["comparison"],
+                        prepared_run=arguments["run_dir"],
+                        artifact_limit=ARTIFACT_LIMIT,
+                        output_limit=arguments["output_limit"],
+                    )
+                    active["terminal"] = _write_terminal(
+                        Path(reservation["terminal_slot"]),
+                        dict(
+                            attempt_id=active["id"],
+                            reservation=reservation,
+                            disposition="measured",
+                            evidence={
+                                name: active[name]
+                                for name in (
+                                    "run",
+                                    "report",
+                                    "submission",
+                                    "generation_terminal",
+                                    "rebuild",
+                                    "comparison",
                                 )
-                                ordinal = 1 + max(
-                                    (
-                                        attempt["attempt_ordinal"]
-                                        for attempt in _attempts(report)
-                                    ),
-                                    default=-1,
-                                )
-                                workspace = destination / "attempts" / f"{ordinal:06d}"
-                                feedback_root = (
-                                    destination / "feedback" / f"{ordinal:06d}"
-                                )
-                                active = dict(
-                                    id=f"{campaign}/{ordinal}",
-                                    attempt_ordinal=ordinal,
-                                    member_key=key,
-                                    source_form=forms[form_index].value,
-                                    form_ordinal=form_index,
-                                    grant_id=grant.grant_id,
-                                    origin_campaign=campaign,
-                                    member_budget=asdict(member_budget),
-                                    workspace=str(workspace),
-                                    feedback_workspace=str(feedback_root),
-                                    feedback_cutoff=cutoff_member,
-                                    status="unresolved",
-                                    failure=None,
-                                    evidence_requests=[],
-                                )
-                                row = next(
-                                    row
-                                    for row in report["members"]
-                                    if row["identity"]["key"] == key
-                                )
-                                row["attempts"].append(active)
-
-                                def cursor(phase, profile=None):
-                                    return _Cursor(
-                                        member_index,
-                                        form_index,
-                                        phase,
-                                        profile,
-                                        ordinal,
-                                    )
-
-                                if prior_generation is not None:
-                                    for name in (
-                                        "workspace",
-                                        "run",
-                                        "report",
-                                        "submission",
-                                        "generation_terminal",
-                                        "generation_cutoff",
-                                        "generation_grant_id",
-                                    ):
-                                        active[name] = prior_generation.attempt[name]
-                                    active["generation_attempt_id"] = (
-                                        prior_generation.attempt.get(
-                                            "generation_attempt_id",
-                                            prior_generation.attempt["id"],
-                                        )
-                                    )
-                                    active["restart_phase"] = "rebuild"
-                                    checkpoint()
-                                else:
-                                    workspace.mkdir(mode=0o700)
-                                    run_record = deepcopy(shared_record)
-                                    run_record.update(
-                                        selected=[key],
-                                        source_form=forms[form_index].value,
-                                        prepared_inputs=report["prepared_inputs"],
-                                        limits=dict(
-                                            work_seconds=grant.work_seconds,
-                                            deadline=cutoff_member,
-                                            process_output_bytes=arguments[
-                                                "output_limit"
-                                            ],
-                                            artifact_bytes=ARTIFACT_LIMIT,
-                                        ),
-                                    )
-                                    path = workspace / "run.json"
-                                    write_bytes(
-                                        path,
-                                        encode_json(run_record, path=path),
-                                        readonly=True,
-                                    )
-                                    active.update(
-                                        run=file_record(path),
-                                        generation_cutoff=cutoff_member,
-                                        generation_grant_id=grant.grant_id,
-                                        restart_phase="native",
-                                    )
-                                    reservation = _admit_work(
-                                        report,
-                                        grant,
-                                        cursor("native"),
-                                        units=1,
-                                        member=member_budget,
-                                        checkpoint=checkpoint,
-                                        terminal_slot=workspace
-                                        / "member-000/terminal-member.json",
-                                        attempt_id=active["id"],
-                                    )
-                                    submitted = dict(
-                                        identity=asdict(binding.member(key)),
-                                        reader="unattempted",
-                                        generation="unattempted",
-                                        compilation="unattempted",
-                                        profile_attempts=_profile_rows(
-                                            shared_record["tools"]
-                                        ),
-                                    )
-                                    member_events = []
-                                    try:
-                                        _run_member(
-                                            binding=binding,
-                                            run_dir=arguments["run_dir"],
-                                            member=binding.member(key),
-                                            row=submitted,
-                                            workspace=workspace / "member-000",
-                                            run_record=run_record,
-                                            inputs=shared,
-                                            contexts=contexts,
-                                            rizin=arguments["rizin"],
-                                            plugin=Path(
-                                                run_record["binaries"]["plugin"]["path"]
-                                            ),
-                                            cutoff=cutoff_member,
-                                            output_limit=arguments["output_limit"],
-                                            config_bytes=config_bytes,
-                                            source_form=forms[form_index],
-                                            run_events=member_events,
-                                            retained_receipts=[],
-                                            before_compile=lambda phase, profile: (
-                                                _admit_work(
-                                                    report,
-                                                    grant,
-                                                    cursor(phase, profile),
-                                                    units=1,
-                                                    member=member_budget,
-                                                    checkpoint=checkpoint,
-                                                    attempt_id=active["id"],
-                                                )
-                                            ),
-                                        )
-                                    finally:
-                                        observations = _cleanup_observations(submitted)
-                                        if observations:
-                                            active["cleanup_uncertainties"] = (
-                                                observations
-                                            )
-                                        path = workspace / "member-000/result.json"
-                                        if path.is_file():
-                                            active["submission"] = file_record(path)
-                                        child = dict(
-                                            operation="run",
-                                            status="failed",
-                                            exit=1,
-                                            run_id=binding.run_id,
-                                            binding_digest=binding.digest,
-                                            denominator=MEMBER_COUNT,
-                                            selected=[key],
-                                            source_form=forms[form_index].value,
-                                            deadline=cutoff_member,
-                                            semantic_admission=False,
-                                            autonomous_exact=False,
-                                            secondary_failures=facts(member_events),
-                                            members=[
-                                                submitted
-                                                if member.key == key
-                                                else dict(
-                                                    identity=asdict(member),
-                                                    reader="unattempted",
-                                                    generation="unattempted",
-                                                    compilation="unattempted",
-                                                )
-                                                for member in binding.members
-                                            ],
-                                            snapshots_unchanged=not member_events,
-                                        )
-                                        path = workspace / "report.json"
-                                        write_bytes(
-                                            path,
-                                            encode_json(child, path=path),
-                                            readonly=True,
-                                        )
-                                        active["report"] = file_record(path)
-                                    disposition, requests = _generation_disposition(
-                                        active, binding, arguments
-                                    )
-                                    evidence = {
-                                        name: active[name]
-                                        for name in (
-                                            "run",
-                                            "report",
-                                            "submission",
-                                            "generation_cutoff",
-                                            "generation_grant_id",
-                                        )
-                                    }
-                                    active["generation_terminal"] = _write_terminal(
-                                        Path(reservation["terminal_slot"]),
-                                        dict(
-                                            attempt_id=active["id"],
-                                            reservation=reservation,
-                                            disposition=disposition,
-                                            cutoff=cutoff_member,
-                                            evidence=evidence,
-                                            evidence_requests=requests,
-                                        ),
-                                        cutoff_member,
-                                    )
-                                    item = _authenticate_attempt(
-                                        active,
-                                        binding,
-                                        arguments,
-                                        report["operation_reservations"],
-                                    )
-                                    authenticated.append(item)
-                                    active.update(
-                                        evidence_requests=requests, status=disposition
-                                    )
-                                    checkpoint()
-                                    if isinstance(item, _TerminalCandidate):
-                                        active = None
-                                        continue
-                                feedback_root.mkdir(mode=0o700)
-                                rebuilt, measured = {}, {}
-                                try:
-                                    _admit_work(
-                                        report,
-                                        grant,
-                                        cursor("rebuild"),
-                                        units=6,
-                                        member=member_budget,
-                                        checkpoint=checkpoint,
-                                        attempt_id=active["id"],
-                                    )
-                                    comparison.rebuild_candidate(
-                                        result_record=active["submission"],
-                                        run_record=active["run"],
-                                        workspace=feedback_root / "rebuild",
-                                        deadline=cutoff_member,
-                                        output_limit=arguments["output_limit"],
-                                        artifact_limit=ARTIFACT_LIMIT,
-                                        retained=rebuilt,
-                                    )
-                                    active["rebuild"] = file_record(
-                                        feedback_root / "rebuild/rebuild-result.json"
-                                    )
-                                    checkpoint()
-                                    reservation = _admit_work(
-                                        report,
-                                        grant,
-                                        cursor("compare"),
-                                        units=5,
-                                        member=member_budget,
-                                        checkpoint=checkpoint,
-                                        terminal_slot=feedback_root / "terminal.json",
-                                        attempt_id=active["id"],
-                                    )
-                                    comparison.compare_rebuilt_candidate(
-                                        rebuild_record=active["rebuild"],
-                                        prepared_run=arguments["run_dir"],
-                                        workspace=feedback_root / "comparison",
-                                        deadline=cutoff_member,
-                                        output_limit=arguments["output_limit"],
-                                        artifact_limit=ARTIFACT_LIMIT,
-                                        retained=measured,
-                                    )
-                                    active["comparison"] = file_record(
-                                        feedback_root
-                                        / "comparison/comparison-result.json"
-                                    )
-                                    comparison.inspect_original_feedback(
-                                        comparison_record=active["comparison"],
-                                        prepared_run=arguments["run_dir"],
-                                        artifact_limit=ARTIFACT_LIMIT,
-                                        output_limit=arguments["output_limit"],
-                                    )
-                                    active["terminal"] = _write_terminal(
-                                        Path(reservation["terminal_slot"]),
-                                        dict(
-                                            attempt_id=active["id"],
-                                            reservation=reservation,
-                                            disposition="measured",
-                                            cutoff=cutoff_member,
-                                            evidence={
-                                                name: active[name]
-                                                for name in (
-                                                    "run",
-                                                    "report",
-                                                    "submission",
-                                                    "generation_terminal",
-                                                    "rebuild",
-                                                    "comparison",
-                                                )
-                                            },
-                                        ),
-                                        cutoff_member,
-                                    )
-                                    item = _authenticate_attempt(
-                                        active,
-                                        binding,
-                                        arguments,
-                                        report["operation_reservations"],
-                                    )
-                                    _require(
-                                        isinstance(item, _TerminalCandidate),
-                                        "feedback did not authenticate a terminal candidate",
-                                    )
-                                    authenticated.append(item)
-                                    active.update(
-                                        status="measured", profiles=list(item.profiles)
-                                    )
-                                finally:
-                                    observations = _cleanup_observations(
-                                        rebuilt
-                                    ) + _cleanup_observations(measured)
-                                    if observations:
-                                        active["cleanup_uncertainties"] = observations
-                                    for name in ("rebuild", "comparison"):
-                                        path = (
-                                            feedback_root / name / f"{name}-result.json"
-                                        )
-                                        if path.is_file():
-                                            active[name] = file_record(path)
-                                checkpoint()
-                                active = None
-                        except (
-                            _BudgetExhausted,
-                            DeadlineExpired,
-                            PolicyFailure,
-                        ) as error:
-                            if (
-                                cutoff_member >= cutoff
-                                or time.monotonic() < cutoff_member
-                            ):
-                                raise
-                            reason = f"{type(error).__name__}: {error}"
-                            report["failures"].append(reason)
-                            if active is not None:
-                                active.update(status="unresolved", failure=reason)
-                            checkpoint()
-                            active = None
-                            break
-                if shared is not None:
-                    shared.verify()
-                provenance.require_active_binding(
-                    binding, arguments["run_dir"], io_mode="exact"
-                )
-                check_deadline()
-                report["snapshots_unchanged"] = True
-                completed = _derive_search(report, grant, authenticated)
-                if len(completed) == len(selected) * 2:
-                    report.update(
-                        status="cleanup-uncertain"
-                        if report["cleanup_uncertainties"]
-                        else "measured-unverified"
-                        if report["summary"]["local_best"] == len(selected)
-                        else "failed",
-                        exit=int(
-                            bool(report["cleanup_uncertainties"])
-                            or report["summary"]["local_best"] != len(selected)
+                            },
                         ),
-                        budget_status="complete",
-                        cursor=asdict(_Cursor(None, None, "done")),
                     )
-                else:
-                    report.setdefault("budget_status", "member-time-exhausted")
+                    item = _authenticate_attempt(
+                        active,
+                        binding,
+                        arguments,
+                        report["operation_reservations"],
+                    )
+                    _require(
+                        isinstance(item, _TerminalCandidate),
+                        "feedback did not authenticate a terminal candidate",
+                    )
+                    authenticated.append(item)
+                    active.update(status="measured", profiles=list(item.profiles))
+                finally:
+                    observations = _cleanup_observations(
+                        rebuilt
+                    ) + _cleanup_observations(measured)
+                    if observations:
+                        active["cleanup_uncertainties"] = observations
+                    for name in ("rebuild", "comparison"):
+                        path = feedback_root / name / f"{name}-result.json"
+                        if path.is_file():
+                            active[name] = file_record(path)
+                checkpoint()
+                active = None
+        if shared is not None:
+            shared.verify()
+        provenance.require_active_binding(
+            binding, arguments["run_dir"], io_mode="exact"
+        )
+        report["snapshots_unchanged"] = True
+        completed = _derive_search(report, grant, authenticated)
+        if len(completed) == len(selected) * 2:
+            report.update(
+                status="cleanup-uncertain"
+                if report["cleanup_uncertainties"]
+                else "measured-unverified"
+                if report["summary"]["local_best"] == len(selected)
+                else "failed",
+                exit=int(
+                    bool(report["cleanup_uncertainties"])
+                    or report["summary"]["local_best"] != len(selected)
+                ),
+                budget_status="complete",
+                cursor=asdict(_Cursor(None, None, "done")),
+            )
+        else:
+            report.setdefault("budget_status", "incomplete")
     except BaseException as error:
         fatal = error
         reason = f"{type(error).__name__}: {error}"
         report["failures"].append(reason)
         report["budget_status"] = (
-            "exhausted"
-            if isinstance(error, (_BudgetExhausted, DeadlineExpired))
-            else "interrupted"
+            "exhausted" if isinstance(error, _BudgetExhausted) else "interrupted"
         )
         if active is not None:
             active.update(status="unresolved", failure=reason)
@@ -2457,27 +2167,11 @@ def _search_forms(*, binding, arguments):
             publish_owner()
         if prior is not None and report.get("authentication") != "authenticated":
             authenticated.clear()
-            report["authentication"] = (
-                "refused"
-                if not isinstance(error, DeadlineExpired)
-                else "retained-unverified"
-            )
+            report["authentication"] = "refused"
             report["reuse_refusals"].append(reason)
-    report["finished_monotonic"] = time.monotonic()
-    if report["exit"] == 0 and report["finished_monotonic"] >= cutoff:
-        report.update(
-            status="incomplete", exit=1, budget_status="terminal-time-exhausted"
-        )
     checkpoint()
     path = destination / "report.json"
     write_bytes(path, encode_json(report, path=path), readonly=True)
-    if report.get("budget_status") == "complete" and time.monotonic() >= cutoff:
-        report.update(
-            status="incomplete", exit=1, budget_status="late-report-publication"
-        )
-        correction = destination / "late-report-publication.json"
-        write_bytes(correction, encode_json(report, path=correction), readonly=True)
-        os.replace(correction, path)
     if fatal is not None and (
         not isinstance(fatal, Exception)
         or isinstance(fatal, (ProcessCleanupError, OSError))
@@ -2516,7 +2210,6 @@ def _prepare_run(
             root,
             destination / "tools",
             with_profiles=True,
-            deadline=report["deadline"],
             retained=selection,
             events=events,
         )
@@ -2554,7 +2247,7 @@ def _prepare_run(
     return record, config_bytes, inputs
 
 
-def _native_command(workspace, rizin, plugin, cutoff, output_limit):
+def _native_command(workspace, rizin, plugin, output_limit):
     workspace_text = str(workspace)
     _require(
         not any(char in workspace_text for char in '\\"\n\r'),
@@ -2577,9 +2270,7 @@ def _native_command(workspace, rizin, plugin, cutoff, output_limit):
             "LC_ALL": "C",
             "RZ_NOPLUGINS": "1",
         },
-        cutoff,
         output_limit,
-        30.0,
     )
 
 
@@ -2652,7 +2343,7 @@ def _call_scope(binding, run_dir, member, events=None):
 
 
 def _compiler_guards(
-    syntax, attempts, *, workspace, deadline, output_limit, contexts=(), receipts=()
+    syntax, attempts, *, workspace, output_limit, contexts=(), receipts=()
 ):
     events = []
     if syntax is not None:
@@ -2665,7 +2356,6 @@ def _compiler_guards(
                         recipe.verify_attempts(
                             attempts,
                             syntax.inputs,
-                            deadline=deadline,
                             output_limit=output_limit,
                             contexts=contexts,
                         )
@@ -2681,7 +2371,6 @@ def _compile(
     workspace,
     row,
     run_record,
-    cutoff,
     output_limit,
     command,
     original_input,
@@ -2710,7 +2399,6 @@ def _compile(
         call = recipe.c89_call(
             workspace=workspace,
             tools=selection,
-            deadline=cutoff,
             output_limit=output_limit,
         )
         if before_compile is not None:
@@ -2736,7 +2424,7 @@ def _compile(
                     status="source-refused",
                     failure="C89 diagnostic refused the unchanged unit"
                     if result["c89_launch"] == "observed"
-                    else "C89 command did not launch before its deadline",
+                    else "C89 command did not launch",
                 )
         else:
             execution = recipe.execute_profiles(
@@ -2746,7 +2434,6 @@ def _compile(
                 inputs=syntax.inputs,
                 include_roots=[str(workspace / "include")],
                 attempts=attempts,
-                deadline=cutoff,
                 output_limit=output_limit,
                 artifact_limit=ARTIFACT_LIMIT,
             )
@@ -2769,7 +2456,6 @@ def _compile(
                         syntax,
                         attempts,
                         workspace=workspace,
-                        deadline=cutoff,
                         output_limit=output_limit,
                         contexts=contexts,
                         receipts=receipts,
@@ -2837,7 +2523,6 @@ def _compile(
             syntax,
             attempts,
             workspace=workspace,
-            deadline=cutoff,
             output_limit=output_limit,
             contexts=contexts,
             receipts=receipts,
@@ -2878,7 +2563,6 @@ def _run_member(
     contexts,
     rizin,
     plugin,
-    cutoff,
     output_limit,
     config_bytes,
     source_form,
@@ -2886,7 +2570,6 @@ def _run_member(
     retained_receipts,
     before_compile=None,
 ):
-    _require(time.monotonic() < cutoff, "original work deadline expired")
     compiled, pending, command, abrupt = None, None, None, None
     events = []
     observed, original_input, syntax = None, None, None
@@ -2897,7 +2580,7 @@ def _run_member(
         row["reader"] = "verified-original"
         row["generation"] = "attempted"
         inputs.verify(events=events)
-        command = _native_command(workspace, rizin, plugin, cutoff, output_limit)
+        command = _native_command(workspace, rizin, plugin, output_limit)
         original_input = invocation.OriginalInput(
             member,
             image,
@@ -2944,7 +2627,6 @@ def _run_member(
                 workspace / "build",
                 row,
                 run_record,
-                cutoff,
                 output_limit,
                 command,
                 original_input,
@@ -3006,7 +2688,6 @@ def _run_member(
                         syntax,
                         row["profile_attempts"],
                         workspace=workspace,
-                        deadline=cutoff,
                         output_limit=output_limit,
                         contexts=profile_contexts,
                         receipts=receipts,
@@ -3075,7 +2756,6 @@ def run(
     configuration: Path,
     rizin: Path,
     all_members: bool = False,
-    work_seconds: float | None = None,
     output_limit: int = 16 << 20,
     source_form: nativeoutput.SourceForm | None = None,
     overlay_mounts: tuple[str, ...] = (),
@@ -3084,12 +2764,10 @@ def run(
     search_forms: bool = False,
     resume_from: Path | None = None,
     resume_sha256: str | None = None,
-    member_seconds: float | None = None,
     member_limit: int | None = None,
     campaign_limit: int | None = None,
     new_budget_id: str | None = None,
 ) -> dict:
-    started_monotonic = time.monotonic()
     _require(
         (entry_receipt is None) == (entry_cpu_receipt is None)
         and (
@@ -3139,7 +2817,6 @@ def run(
             for value in (
                 resume_from,
                 resume_sha256,
-                member_seconds,
                 member_limit,
                 campaign_limit,
                 new_budget_id,
@@ -3148,29 +2825,9 @@ def run(
         "resume and campaign allowances require original-only source search",
     )
     _require(
-        work_seconds is None
-        or type(work_seconds) in {int, float}
-        and math.isfinite(work_seconds)
-        and 0 < work_seconds <= 600,
-        "work_seconds must be finite and at most 600",
-    )
-    _require(
         type(output_limit) is int and 0 < output_limit <= ARTIFACT_LIMIT,
         "raw process output limit must be at most 64 MiB",
     )
-    initial_clock = None
-    if search_forms and (resume_from is None or new_budget_id is not None):
-        initial_cutoff = resolve_deadline(
-            started_monotonic + (120.0 if work_seconds is None else work_seconds)
-        )
-        try:
-            with use_deadline(initial_cutoff):
-                initial_clock = capture_work_clock()
-        except DeadlineExpired:
-            initial_clock = dict(
-                boot_id=Path("/proc/sys/kernel/random/boot_id").read_text().strip(),
-                deadline=initial_cutoff,
-            )
     _require(
         (all_members or 1 <= len(member_keys) <= MEMBER_COUNT)
         and len(set(member_keys)) == len(member_keys),
@@ -3202,19 +2859,14 @@ def run(
                 "native_receipt": native_receipt,
                 "configuration": configuration,
                 "rizin": rizin,
-                "work_seconds": work_seconds,
                 "output_limit": output_limit,
                 "resume_from": resume_from,
                 "resume_sha256": resume_sha256,
-                "member_seconds": member_seconds,
                 "member_limit": member_limit,
                 "campaign_limit": campaign_limit,
                 "new_budget_id": new_budget_id,
-                "initial_clock": initial_clock,
             },
         )
-    work_seconds = 120.0 if work_seconds is None else work_seconds
-    cutoff = resolve_deadline(time.monotonic() + work_seconds)
     destination.mkdir(mode=0o700)
     report = {
         "operation": "run",
@@ -3225,7 +2877,6 @@ def run(
         "binding_digest": binding.digest,
         "destination": str(destination),
         "selected": list(member_keys),
-        "deadline": cutoff,
         "members": [
             {
                 "identity": asdict(member),
@@ -3263,8 +2914,6 @@ def run(
                 "problem_sha256": binding.problem_doc_sha256,
             },
             limits={
-                "work_seconds": work_seconds,
-                "deadline": cutoff,
                 "process_output_bytes": output_limit,
                 "artifact_bytes": ARTIFACT_LIMIT,
             },
@@ -3297,9 +2946,7 @@ def run(
         )
         inputs.verify(events=run_events)
         self_check = invocation.capture_native(
-            _native_command(
-                destination / "self-check", rizin, plugin, cutoff, output_limit
-            ),
+            _native_command(destination / "self-check", rizin, plugin, output_limit),
             configuration=config_bytes,
             original=None,
         )
@@ -3326,7 +2973,6 @@ def run(
                 contexts=contexts,
                 rizin=rizin,
                 plugin=plugin,
-                cutoff=cutoff,
                 output_limit=output_limit,
                 config_bytes=config_bytes,
                 source_form=source_form,
@@ -3348,7 +2994,6 @@ def run(
             )
         inputs.verify(events=run_events)
         recipe.verify_inputs(entry_sources, events=run_events)
-        _require(time.monotonic() < cutoff, "original work deadline expired")
         report["snapshots_unchanged"] = True
         attempted = [rows[key] for key in member_keys]
         report["exit"] = (
@@ -3391,9 +3036,7 @@ def run(
                 try:
                     if attempt["status"] == "native-unattempted":
                         attempt.update(
-                            status="deadline"
-                            if time.monotonic() >= cutoff
-                            else "native-refused",
+                            status="native-refused",
                             failure=row.get("failure")
                             or "; ".join(report["failures"])
                             or row["generation"],

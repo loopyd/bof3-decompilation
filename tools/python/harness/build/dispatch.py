@@ -30,7 +30,6 @@ from harness.build.routing import (
     Selection,
     select_preservation,
 )
-from harness.common.deadlines import check_deadline
 from harness.common.files import read_file
 from harness.common.observation import PathWatch
 from harness.domain.tags import count_function_metadata
@@ -368,7 +367,6 @@ def _capture_dispatch(
     }
     contents = {}
     for path in sorted(paths):
-        check_deadline()
         observations[str(path)] = observe_input(path)
         if path.is_file():
             contents[str(path)] = hashlib.sha256(
@@ -418,7 +416,6 @@ def _capture_dispatch(
 
 def validate_dispatch(dispatch: Dispatch) -> None:
     """Reject source, configuration or argument drift through a live invocation."""
-    check_deadline()
     dispatch.selection.validate()
     dispatch.selection.protect_outputs(dispatch.output)
     dispatch.watch.validate()
@@ -544,4 +541,3 @@ def validate_dispatch(dispatch: Dispatch) -> None:
         raise ValueError("compiler working directory changed during validation")
     if state.get("environment_fingerprint") != hash_preservation(dict(os.environ)):
         raise ValueError("compiler environment changed during validation")
-    check_deadline()

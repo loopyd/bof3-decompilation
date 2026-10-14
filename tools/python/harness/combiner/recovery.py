@@ -7,7 +7,6 @@ from pathlib import Path
 
 from harness.combiner.history import validate_transaction_history
 from harness.combiner.transactions import verify_transaction
-from harness.common.deadlines import validate_deadline
 from harness.common.digests import digest
 from harness.common.directory import validate_repo_path
 
@@ -15,7 +14,7 @@ SCHEMA = "bof3.combiner-rehearsal-manifest/v1"
 
 
 def prepare_recovery_manifest(
-    root: Path, transaction: dict, baseline: dict, run_id: str, clock: dict
+    root: Path, transaction: dict, baseline: dict, run_id: str
 ) -> dict:
     """Describe the exact PRE restoration set without granting recovery authority."""
     pre = {
@@ -34,7 +33,6 @@ def prepare_recovery_manifest(
         "pre_state_digest": digest(pre),
         "workspace_baseline": baseline,
         "implementation_run_id": run_id,
-        "clock": clock,
         "accepted": False,
     }
     return {**result, "digest": digest(result)}
@@ -55,9 +53,8 @@ def validate_recovery_manifest(
         transaction = validate_transaction_history(
             value["transaction"], expected_fingerprint=value["transaction_fingerprint"]
         )
-        baseline, clock, run_id = (
+        baseline, run_id = (
             value["workspace_baseline"],
-            value["clock"],
             value["implementation_run_id"],
         )
         if (
@@ -69,23 +66,11 @@ def validate_recovery_manifest(
             or not isinstance(baseline["state"], dict)
             or baseline["digest"] != digest(baseline["state"])
             or baseline["adopted"] is not bool(baseline["state"])
-            or not isinstance(clock, dict)
-            or set(clock) != {"boot_id", "deadline", "cleanup_deadline"}
-            or not isinstance(clock["boot_id"], str)
-            or not clock["boot_id"].strip()
         ):
-            raise ValueError("combiner recovery baseline or clock differs")
+            raise ValueError("combiner recovery baseline differs")
         for name in baseline["state"]:
             validate_repo_path(name)
-        for name in ("deadline", "cleanup_deadline"):
-            validate_deadline(clock[name])
-            if clock[name] is None:
-                raise ValueError("combiner recovery requires original cutoffs")
-        if clock["cleanup_deadline"] <= clock["deadline"]:
-            raise ValueError("combiner cleanup cutoff does not follow work")
-        if value != prepare_recovery_manifest(
-            root, transaction, baseline, run_id, clock
-        ):
+        if value != prepare_recovery_manifest(root, transaction, baseline, run_id):
             raise ValueError("combiner recovery manifest fields differ")
         if rederive:
             verify_transaction(

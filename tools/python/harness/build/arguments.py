@@ -7,7 +7,6 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
-from harness.common.deadlines import check_deadline
 from harness.common.files import read_file
 
 _LIMIT = 16 * 1024 * 1024
@@ -33,7 +32,6 @@ def parse_arguments(
     arguments: list[str] | tuple[str, ...], *, generated_output: bool = False
 ) -> tuple[Argument, ...]:
     """Preserve supported preprocessing/output spans without interpreting cpp specs."""
-    check_deadline()
     if not isinstance(generated_output, bool):
         raise ValueError("generated output admission must be boolean")
     allowance = 2 if generated_output else 0
@@ -49,13 +47,11 @@ def iter_arguments(
     arguments: list[str] | tuple[str, ...], *, partial: bool = False
 ) -> Iterator[Argument]:
     """Read spans; stored flag fragments may end before an operand is supplied."""
-    check_deadline()
     if any("\x00" in arg or arg.startswith("@") for arg in arguments):
         raise ValueError("response files and stdin compiler inputs are unsupported")
     index = 0
     operands = False
     while index < len(arguments):
-        check_deadline()
         token = arguments[index]
         index += 1
         if token == "-" and not partial:
@@ -97,7 +93,6 @@ def iter_arguments(
         else:
             role = "option" if not operands and token.startswith("-") else "source"
             yield Argument(role, token, (token,))
-    check_deadline()
 
 
 @dataclass(frozen=True, slots=True)
@@ -163,7 +158,6 @@ def inspect_arguments(arguments: list[str], *, cwd: Path | None = None) -> Opera
     forced = []
     output = None
     for argument in parsed:
-        check_deadline()
         if argument.role in _FORCED_OPTIONS:
             path = cwd / argument.value
             read_source(path)

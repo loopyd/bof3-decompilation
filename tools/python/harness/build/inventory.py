@@ -14,7 +14,6 @@ from harness.build.compiler import (
     resolve_compiler_settings,
     validate_object_configuration,
 )
-from harness.common.deadlines import check_deadline
 from harness.common.files import read_file
 from harness.common.observation import PathWatch
 from harness.domain.cache import collect_manifest_paths
@@ -57,7 +56,6 @@ def _list_sources(root: Path) -> list[str]:
 def capture_inventory(root: Path) -> dict:
     """Bind configured metadata and source classes without object reuse authority."""
     root = root.resolve()
-    check_deadline()
     sources = _list_sources(root)
     manifests = collect_manifest_paths(root)
     paths = {root / name for name in [*sources, *manifests, *_OWNERS, *_CONFIGURATION]}
@@ -66,7 +64,6 @@ def capture_inventory(root: Path) -> dict:
         configuration = {}
         configuration_text = {}
         for name in _CONFIGURATION:
-            check_deadline()
             content = read_file(root, name, missing_ok=True, max_bytes=_LIMIT)
             configuration[name] = (
                 hashlib.sha256(content).hexdigest() if content is not None else None
@@ -81,7 +78,6 @@ def capture_inventory(root: Path) -> dict:
         classified = {}
         profiles = {}
         for name in sources:
-            check_deadline()
             content = read_file(root, name, max_bytes=_LIMIT)
             text = content.decode("utf-8")
             classified[name] = count_function_metadata(text) >= 2
@@ -90,13 +86,11 @@ def capture_inventory(root: Path) -> dict:
             )
         owners = {}
         for name in _OWNERS:
-            check_deadline()
             owners[name] = hashlib.sha256(
                 read_file(root, name, max_bytes=_LIMIT)
             ).hexdigest()
         manifest_inputs = {}
         for name in manifests:
-            check_deadline()
             manifest_inputs[name] = hashlib.sha256(
                 read_file(root, name, max_bytes=_LIMIT)
             ).hexdigest()
@@ -105,7 +99,6 @@ def capture_inventory(root: Path) -> dict:
         if collect_manifest_paths(root) != manifests:
             raise ValueError("build manifest inventory changed during capture")
         watch.validate()
-        check_deadline()
         return {
             "schema": "bof3.build-inventory/v4",
             "sources": classified,
@@ -120,7 +113,6 @@ def check_inventory(root: Path, snapshot: Path, expected_sha256: str) -> None:
     """Reject stale generated topology, including restored-mtime transitions."""
     root = root.resolve()
     name = snapshot.relative_to(root).as_posix()
-    check_deadline()
     with closing(PathWatch({snapshot})) as watch:
         content = read_file(root, name, max_bytes=_LIMIT)
         if hashlib.sha256(content).hexdigest() != expected_sha256:
@@ -141,7 +133,6 @@ def check_inventory(root: Path, snapshot: Path, expected_sha256: str) -> None:
                 "stale configured build inventory; reconfigure the build tree"
             )
         watch.validate()
-        check_deadline()
 
 
 def has_current_inventory(root: Path, snapshot: Path) -> bool:

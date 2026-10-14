@@ -8,7 +8,6 @@ import stat
 from pathlib import Path
 
 from harness.build.runtime import derive_candidates
-from harness.common.deadlines import check_deadline
 from harness.common.lookups import resolve_lookup
 from harness.common.process import resolve_supervisor
 
@@ -18,7 +17,6 @@ _MAX_RECORD_BYTES = 512 * 1024
 
 def validate_description(value: object) -> None:
     """Validate retained observational structure without asserting live freshness."""
-    check_deadline()
     if (
         not isinstance(value, dict)
         or not isinstance(value.get("schema"), str)
@@ -82,7 +80,6 @@ def validate_description(value: object) -> None:
     total_bytes = 0
     directories = 0
     for name, node in nodes.items():
-        check_deadline()
         if not isinstance(name, str) or not isinstance(node, dict):
             raise ValueError("program node is invalid")
         path = Path(name)
@@ -172,7 +169,6 @@ def validate_description(value: object) -> None:
     count = 0
     stage_directories = {}
     for request in requests:
-        check_deadline()
         if not isinstance(request, dict) or set(request) != {
             "stage",
             "role",
@@ -320,14 +316,12 @@ def validate_description(value: object) -> None:
         ]
         if expected != actual or edges != value["runtime_edges"]:
             raise ValueError("runtime candidate causes differ")
-    check_deadline()
 
 
 def _validate_edges(value: object, count: int, boundary: int, requests: int) -> None:
     if not isinstance(value, list) or len(value) != count:
         raise ValueError("runtime edge count differs")
     for edge in value:
-        check_deadline()
         if (
             not isinstance(edge, dict)
             or set(edge)

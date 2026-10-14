@@ -19,15 +19,6 @@ from harness.combiner.recovery import (
     validate_recovery_manifest,
 )
 from harness.combiner.transactions import verify_transaction
-from harness.common.deadlines import (
-    bind_deadline,
-    capture_work_clock,
-    check_deadline,
-    resolve_deadline,
-    suspend_work_deadline,
-    use_deadline,
-    validate_deadline,
-)
 from harness.common.digests import digest
 from harness.common.evidence import evidence_output_path, write_new_evidence_output
 from harness.common.files import preflight_existing_replacements, read_file
@@ -69,26 +60,21 @@ def _verify_post(root: Path, transaction: dict) -> None:
 
 
 def _restore_pre(root, manifest, backup, images, index, safeguards) -> None:
-    with suspend_work_deadline(), use_deadline(manifest["clock"]["cleanup_deadline"]):
-        try:
-            require_writer(root)
-            rollback(
-                root, backup, images, deadline=manifest["clock"]["cleanup_deadline"]
-            )
-            verify_restored_state(root, manifest, index, safeguards)
-            validate_recovery_manifest(root, manifest, rederive=True)
-            require_writer(root)
-            check_deadline()
-        except ProcessCleanupError:
-            raise
-        except BaseException as error:
-            raise RuntimeError(
-                "combiner rehearsal restoration failed or is unverified; "
-                "preserve recovery evidence and external state for parent review"
-            ) from error
+    try:
+        require_writer(root)
+        rollback(root, backup, images)
+        verify_restored_state(root, manifest, index, safeguards)
+        validate_recovery_manifest(root, manifest, rederive=True)
+        require_writer(root)
+    except ProcessCleanupError:
+        raise
+    except BaseException as error:
+        raise RuntimeError(
+            "combiner rehearsal restoration failed or is unverified; "
+            "preserve recovery evidence and external state for parent review"
+        ) from error
 
 
-@bind_deadline
 @protect_artifacts
 @exclude_writers
 def rehearse_transaction(
@@ -100,16 +86,10 @@ def rehearse_transaction(
     object_path: str,
     output: str,
     adopted_workspace: str | None = None,
-    deadline: float | None = None,
-    cleanup_deadline: float | None = None,
     output_limit: int = 2 * 1024 * 1024,
 ) -> dict:
     """Always restore PRE; a comparison result never accepts a consolidation."""
     require_writer(root)
-    cutoff = resolve_deadline(deadline)
-    validate_deadline(cleanup_deadline)
-    if cutoff is None or cleanup_deadline is None or cleanup_deadline <= cutoff:
-        raise ValueError("rehearsal requires original work and later cleanup cutoffs")
     if not isinstance(implementation_run_id, str) or not implementation_run_id.strip():
         raise ValueError("rehearsal requires a nonempty implementation run ID")
     if type(output_limit) is not int or not 1 <= output_limit <= _LIMIT:
@@ -155,7 +135,6 @@ def rehearse_transaction(
             transaction,
             baseline,
             implementation_run_id,
-            {**capture_work_clock(), "cleanup_deadline": cleanup_deadline},
         )
         validate_recovery_manifest(root, manifest)
         index = git_index_backup(root)
@@ -171,7 +150,6 @@ def rehearse_transaction(
 
         def retain_recovery(reference):
             require_writer(root)
-            check_deadline()
             if reference["path"] in {output, recovery_output}:
                 raise ValueError("recovery record collides with rehearsal publication")
             receipt = {
@@ -192,12 +170,10 @@ def rehearse_transaction(
             recovery_receipt.update(
                 path=recovery_output, sha256=hashlib.sha256(encoded).hexdigest()
             )
-            check_deadline()
 
         with closing(PathWatch({root / name for name in names})) as watch:
 
             def guard():
-                check_deadline()
                 require_writer(root)
                 selection.validate()
                 watch.validate()
@@ -229,7 +205,6 @@ def rehearse_transaction(
                     workspace=baseline["state"],
                     index=index,
                     deletions=set(transaction["deletions"]),
-                    cleanup_deadline=cleanup_deadline,
                     recovery_callback=retain_recovery,
                 )
                 guard()
@@ -238,7 +213,6 @@ def rehearse_transaction(
                     root,
                     source.relative_to(root).as_posix(),
                     object_path,
-                    deadline=cutoff,
                     output_limit=output_limit,
                 )
                 guard()

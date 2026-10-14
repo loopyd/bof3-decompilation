@@ -111,7 +111,6 @@ class ExecutableToolchain(Toolchain):
         *,
         capture_output: bool = False,
         text: bool = False,
-        timeout: float | None = None,
         quiet: bool = False,
     ) -> subprocess.CompletedProcess[str]:
         """Execute the tool in its owned environment without raising on failure.
@@ -128,7 +127,6 @@ class ExecutableToolchain(Toolchain):
                 check=False,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
-                timeout=timeout,
             )
         return subprocess.run(
             self.invocation(arguments),
@@ -137,7 +135,6 @@ class ExecutableToolchain(Toolchain):
             check=False,
             capture_output=capture_output,
             text=text,
-            timeout=timeout,
         )
 
 

@@ -6,7 +6,6 @@ from copy import deepcopy
 from pathlib import Path
 
 from harness.common import execution
-from harness.common.deadlines import bind_deadline, check_deadline
 from harness.common.digests import digest
 from harness.common.evidence import evidence_output_path, write_new_evidence_output
 from harness.common.lease import exclude_writers
@@ -31,7 +30,6 @@ ATTESTATION_SCHEMA = "bof3.macro-existing-attestation/v1"
 ENVELOPE_SCHEMA = "bof3.macro-existing-disposition/v1"
 
 
-@bind_deadline
 @protect_artifacts
 @exclude_writers
 def inspect_existing(
@@ -42,7 +40,6 @@ def inspect_existing(
     implementation_run_id: str,
     runner=run_command,
     output: str | None = None,
-    deadline: float | None = None,
 ) -> dict:
     manifest = validate_assessment(root, value)
     if manifest["digest"] != expected_manifest_digest:
@@ -96,11 +93,9 @@ def inspect_existing(
     )
     verify_inspection(root, record, record["digest"])
     if output is not None:
-        check_deadline()
         write_new_evidence_output(root, output, record)
         execution.recheck(root, manifest, context)
         _validate_workspace(root, manifest)
-    check_deadline()
     return record
 
 

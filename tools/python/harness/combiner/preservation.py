@@ -20,7 +20,6 @@ from harness.build.preservation import (
     validate_transition,
 )
 from harness.combiner.profiles import inspect_profiles
-from harness.common.deadlines import check_deadline
 from harness.domain.cache import collect_manifest_paths
 
 
@@ -33,7 +32,6 @@ def _relocate_layout(layout: object, sources: list[str], destination: str) -> ob
         if not isinstance(segment, dict):
             continue
         for row in segment.get("subsegments", []):
-            check_deadline()
             if not isinstance(row, list) or len(row) < 3 or row[1] != "c":
                 continue
             markers = [
@@ -133,5 +131,4 @@ def capture_preservation(
     fingerprint = hash_preservation(result)
     result = {**result, "fingerprint": fingerprint}
     validate_preservation_size(result)
-    check_deadline()
     return result

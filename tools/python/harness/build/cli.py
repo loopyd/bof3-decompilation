@@ -4,12 +4,10 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 from pathlib import Path
 import sys
 
 from harness.common.cli import add_root_argument, run_main
-from harness.common.deadlines import check_deadline, use_deadline
 from harness.build.driver import run_compiler
 from harness.build.inventory import capture_inventory, check_inventory
 from harness.build.receipts import run_producer, verify_production
@@ -91,16 +89,12 @@ def _run_inventory(args: argparse.Namespace) -> int:
 
 
 def _run_report(operation) -> int:
-    deadline = os.environ.get("BOF3_WORK_DEADLINE")
     try:
-        with use_deadline(float(deadline) if deadline else None):
-            result = operation()
-            if result is not None:
-                rendered = json.dumps(result, sort_keys=True)
-                check_deadline()
-                print(rendered)
-                sys.stdout.flush()
-            check_deadline()
+        result = operation()
+        if result is not None:
+            rendered = json.dumps(result, sort_keys=True)
+            print(rendered)
+            sys.stdout.flush()
         return 0
     except BrokenPipeError:
         return 1

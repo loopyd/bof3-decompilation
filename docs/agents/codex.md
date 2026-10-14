@@ -17,7 +17,7 @@ index refreshes; do not repeatedly request user consent. The host session owns
 its own approvals and configuration. The harness must not invoke `codex`, launch
 a model SDK/API, discover MCP via Codex CLI or rewrite child permission profiles.
 No detached controller, background model session or second campaign database.
-Local native compiler processes retain existing ownership/deadline/cleanup guards.
+Local native compiler processes retain existing ownership and cleanup guards.
 
 ## Review capacity retries
 
@@ -25,7 +25,7 @@ Ordinary active-session agent reviews have standing authorization to retry expli
 model-capacity failures without renewed user consent. Confirm the prior attempt is
 terminal, then repeat the same scoped request on the same model after 30 seconds;
 double subsequent delays up to 300 seconds. Preserve input pins, consumed attempts,
-original cutoff and independent-review requirements; stop when bounds are exhausted.
+and independent-review requirements; stop when attempts are exhausted.
 Record each failure and retry. Never replace a live reviewer: observation timeouts
 require polling the same handle, not a new launch. No silent model substitution.
 
@@ -71,7 +71,7 @@ exact bounded native gate with `exec_command`'s `sandbox_permissions:
 commands below, whose inner sandbox keeps source/Git/evidence read-only and limits
 generated writes. Direct scoped asm-diff/byte-match commands also require that
 reviewed execution route; a worker without it returns unverified, not another
-sandboxed compiler attempt. Keep original scope, cutoff, evidence and cleanup.
+sandboxed compiler attempt. Keep original scope, evidence and cleanup.
 
 Standing user authorization covers bounded native gates in the autonomous loop;
 do not add a separate conversational permission checkpoint before requesting the
@@ -84,7 +84,7 @@ once before relying on this diagnosis. Ordinary Python inspection stays sandboxe
 ## Parent lift diagnosis
 
 `bin/harness decomp diagnose REQUEST --expected-request-digest PIN --output
-out/reviews/lift-diagnosis/NAME --deadline ORIGINAL_MONOTONIC_CUTOFF` measures an
+out/reviews/lift-diagnosis/NAME` measures an
 **existing claimed lift** before editing. The `bof3-re` `scripts/mission.py` helper forwards
 this local command. It launches no model, changes no source, and grants no review,
 restoration, retry or campaign advancement. New unlifted functions still need the
@@ -101,10 +101,8 @@ PS-X header, source/configuration ownership, native inputs/tools/environment,
 workspace metadata and exact raw Git index. Stale analysis stops; it is never
 refreshed or replaced here.
 
-The parent supplies its already-accounted original monotonic work cutoff; diagnosis
-does not create/debit a campaign budget or infer permission to retry. Preparation,
-each native command and publication retain that cutoff, with each command capped
-at 120 seconds and 1 MiB combined output. Keep the separate parent cleanup hard-stop.
+Diagnosis does not create/debit a campaign attempt budget or infer permission to
+retry. Each native command caps combined output at 1 MiB.
 The shared writer lease excludes cooperating writers throughout; it neither proves
 prior-worker termination nor excludes manual editors.
 
@@ -137,10 +135,10 @@ compared with parent measurement; neither parsing nor matching bytes supplies th
 independent semantic review needed for acceptance.
 
 Only a fresh direct-child output directory is allowed. It retains the pinned
-`mission.json`, `policy.json`, invocation cutoff, started/spawn/terminal records,
+`mission.json`, `policy.json`, started/spawn/terminal records,
 fsynced stdout/stderr and `bof3.lift-diagnosis/v1` result. Stdout reports only paths,
-pins and measured status. The result pins its boot/original cutoff in `clock` and
-hashes all 23 retained input/native artifacts. Evidence can contain source/PRE images; keep it out of
+pins and measured status. The result hashes all 23 retained input/native artifacts.
+Evidence can contain source/PRE images; keep it out of
 public logs and commits. Existing output rejects unchanged. Failure retains evidence
 and records no restoration/retry authority; a leftover result alongside failure is
 not a successful handoff. Native cleanup uncertainty remains distinct. Saved PIDs
@@ -156,10 +154,9 @@ bin/harness decomp audit out/reviews/lift-diagnosis/BEFORE out/reviews/proposal.
 ```
 
 The parent uses this after a separately authorized edit and confirmed writer
-termination. It reuses the original mission, policy and boot-bound cutoff, not a
-new baseline/deadline; the CLI has no replacement-clock flag. Supply externally
+termination. It reuses the original mission and policy. Supply externally
 retained diagnosis/proposal pins. Missing, failed, altered or legacy diagnostics
-without clock/artifact coverage reject; never upgrade or silently repin old evidence.
+without artifact coverage reject; never upgrade or silently repin old evidence.
 The original manifest/native inputs, index, unrelated workspace and source-directory
 guards remain active. Do not refresh analysis between diagnosis and audit; report
 required refresh for the later parent checkpoint. A free lease is not quiescence.

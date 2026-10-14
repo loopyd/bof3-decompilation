@@ -1,68 +1,42 @@
 # Shared transaction lifecycle
 
-Applies to type/macro owners. Read domain application reference too. Branches:
-[execution](#execution), [deadlines](#deadlines), [publication](#publication),
+Before type/macro execution, read the domain application reference too. Select
+[execution](#execution), [publication](#publication),
 [recovery](#recovery), [resume](#resume). Mechanisms never grant domain approval.
 
 ## Execution
 
-Pin original request, membership, PRE, external digests and explicitly adopted
-dirty baseline. Re-derive live manifest before edits. Changes map permitted
-repo-relative paths to complete replacement text; generated files remain untouched.
-Only explicit replacements may change authoritative inputs; preserve permissions.
-Configured tools, explicit-source companion-free owners and Ninja required. No
-installation, toolchain override, silently missing compiler or index recovery.
+Pin original request, membership, PRE, external digests and adopted dirty baseline.
+Rederive the live manifest before edits. Map permitted repo-relative paths to
+complete replacements; preserve generated files/permissions. Require configured
+tools, explicit-source companion-free owners and Ninja. Do not install, override
+toolchains, ignore missing compilers or recover the index.
 
-Context-bearing runs require actual `--implementation-run-id`. Capture owner-derived
-source/header/config/binary, resolver catalog including absence, tooling/modes,
-adopted baseline, raw index, environment, native tools and Ninja transitions before
-edits, around gates and at publication. Legacy omitted-ID route cannot supply
-context-bearing final acceptance. Context is not reviewer attestation.
+Require actual `--implementation-run-id` for context-bearing runs. Capture
+owner-derived source/header/config/binary, resolver catalog including absence,
+tooling/modes, adopted baseline, raw index, environment, native tools and Ninja
+transitions before edits, around gates and at publication. Legacy omitted-ID runs
+cannot gain context-bearing final acceptance; context is not reviewer attestation.
 
-Native receipts need correct JSON schemas, positive exact/byte-match semantics,
-selector/source/address, target-owned binary and size agreement. Exit 0 warnings or
-malformed payloads fail. Retain stdout JSON separately from stderr; replay validates
-both evidence and closure. Splat/build use native plain-output exit contracts.
-Partial baselines retain exact-output pins. `verify` is integrity/native evidence,
-not final semantic acceptance.
+Require native receipt schemas, positive exact/byte-match semantics and matching
+selector/source/address/target-owned binary/size. Reject exit 0 warnings and malformed
+payloads. Separate stdout JSON/stderr; replay checks evidence/closure. Use native
+plain-output exit contracts for Splat/build. Retain partial exact-output pins.
+`verify` supplies integrity/native evidence, not semantic acceptance; check-only
+revalidation grants no source-restoration authority.
 
-Shared process owner caps gates at 120s and 2 MiB combined output; timeout 124 and
-overflow 125 are failed receipts, never positive evidence. Linux guardian subreaper
-kills/reaps descendants, including redirected-stdio/`setsid` escapees. Completion
-requires private cleanup ACK, not direct-child exit. Missing ACK or uncertain
-cleanup raises `ProcessCleanupError`; retain POST/backing, stop for parent. Never
-kill guardian and pretend writers stopped. Process cleanup is not source rollback.
+Cap combined gate output at 2 MiB; overflow 125 is failed evidence. The Linux
+guardian subreaper kills/reaps descendants, including redirected-stdio/`setsid`
+escapees. Require private cleanup ACK, not direct-child exit. Missing ACK/uncertain
+cleanup raises `ProcessCleanupError`; retain POST/backing and stop for parent.
+Do not kill the guardian as termination proof or treat cleanup as source rollback.
+Naming cleanup attempts every client and prioritizes `ProcessCleanupError`.
 
-One nonblocking cooperative writer lease spans manifest rederivation, edits,
-gates, publication and ordinary-failure rollback. Contention blocks before edits.
-Persistent `out/reviews/evidence/transaction.lock` is owned single-link regular
-file, not stale-PID debris to delete. Identity loss stops guarded restoration.
-Free/reacquired lease proves neither termination nor exclusion of manual writers.
-Read-only verification/inspection acquires no lease.
-
-## Deadlines
-
-Type/macro `run` and `revalidate --deadline SECONDS` use original absolute monotonic
-work cutoff, not duration/UTC. Invalid/nonfinite/boolean and expired values reject;
-nested cutoffs only tighten. Preserve separate cleanup hard-stop and consumed
-budgets. Native runner uses earlier of cutoff and 120s. Threads/subprocess entry
-points need explicit propagation; injected runners are not made interruptible by
-return checks.
-
-Forward checks surround reads, transitions, gates and publication. Expiry stops
-forward work, not owned rollback with safeguards under original cleanup tail.
-Filesystem/Git work can stall; supervise through cleanup hard-stop. Uncertain
-native cleanup still prohibits restoration. Late publication can survive failed
-invocation or rollback; retain failure status and inspect current owner state,
-never infer success from file existence or delete evidence to manufacture it.
-Check-only revalidation never gains source-restoration authority. Late mechanically
-valid evidence does not prove deadline compliance or authorize advancement.
-
-Naming differs: `evidence --deadline` is relative per-operation cap;
-`--work-deadline` is original absolute cutoff, clipped by 600s shard wall. Lifecycle
-commands also accept `--work-deadline`. Receipt/journal/finalization writes stop on
-expiry; earlier/in-flight evidence may remain. Cleanup attempts every client and
-prioritizes `ProcessCleanupError`. Standalone limits are not campaign budgets.
+Hold one nonblocking cooperative writer lease through rederivation, edits, gates,
+publication and ordinary-failure rollback. Block contention before edits. Preserve
+the owned single-link regular `out/reviews/evidence/transaction.lock`; it is not
+stale-PID debris. Stop guarded restoration on identity loss. A free/reacquired lease
+proves no termination or manual-writer exclusion. Read-only checks acquire no lease.
 
 ## Publication
 
@@ -72,26 +46,24 @@ manifest/run/publication, PRE bytes/hash/mode/inode, prepared POST hash/mode/ino
 fresh staging and reserved PRE/POST quarantines. Same filesystem and single-link
 images required. Capture failure blocks edits but may leave images.
 
-The current ext4 project uses native `RENAME_NOREPLACE` only. Unsupported platform
-or filesystem errors fail without an alternate publisher. No empty reservation or
-hard-link fallback is used. Surrounding identity checks and multi-file transitions
-remain cooperative; manual writers are not excluded. Detected foreign names stay
-untouched. Failure after move/sync may have effect; inspect locations and retain
-prepared/displaced images. Empty size alone never authorizes cleanup. No permission
-weakening, atomic multi-file commit or power-loss guarantee follows. The
+Use native `RENAME_NOREPLACE` on current ext4. Unsupported platforms/filesystem
+errors fail without empty reservations or hard-link/alternate publishers. Identity
+checks/multi-file transitions remain cooperative; manual writers are not excluded.
+Preserve foreign names. After move/sync failure, inspect locations and retain
+prepared/displaced images; empty size grants no cleanup. Do not weaken permissions
+or claim atomic multi-file/power-loss guarantees. The
 [shared publication contract](../../../../docs/agents/harness.md#file-publication)
 retains historical NTFS authorization separately from current behavior.
 
-Recovery records retain PRE/POST images only for changed paths. Git-backed
+Retain recovery PRE/POST images only for changed paths. Git-backed
 `bof3.recovery-safeguards/v4` pins HEAD, exact index bytes/identity, and unrelated
-Git status with dirty-path digests, excluding shared artifact roots. Dirty symlinks
-use literal no-follow link bytes. Submodule checkout identities and protected
-boundaries do not require recursive content capture; existing owner guards pin
-consumed dependency inputs. Unchanged workspace and dependency files are not
-rollback images. Missing guards are unavailable, not clean; an index lock blocks
-capture. Observations are non-atomic and root Git metadata is trusted. Ext4 honors
-POSIX creation modes subject to umask; preserve exact captured modes and drift
-checks. Keep source-bearing backing nonpublic/uncommitted.
+Git status with dirty-path digests, excluding shared artifact roots. Capture dirty
+symlink bytes without following links and submodule checkout identities/protected
+boundaries without recursive contents. Pin consumed dependencies through owner
+guards; unchanged files supply no rollback images. Missing guards are unavailable,
+not clean; index locks block capture. Observations are non-atomic and trust root
+Git metadata. Ext4 creation respects umask; preserve exact modes/drift checks and
+keep source-bearing backing nonpublic/uncommitted.
 
 V4 supports separately authorized deletion-aware common owners: present PRE,
 `post:null`, exact declared deletion set and reserved PRE quarantine. It does not
@@ -104,11 +76,10 @@ newer safeguards.
 
 ## Recovery
 
-Ordinary failure restores captured owned source images only after confirmed native
-cleanup. Restore owned images before checking unrelated state; never overwrite
-unexpected workspace/index edits or new files. Compare allowed PRE, adopted
-workspace, raw index, HEAD and scoped safeguards. Drift or failed
-inspection means incomplete rollback, not retry permission.
+After ordinary failure and confirmed native cleanup, restore captured owned images
+before checking unrelated state. Preserve unexpected workspace/index edits/new
+files. Compare allowed PRE, adopted workspace, raw index, HEAD and scoped
+safeguards. Drift/failed inspection means incomplete rollback, not retry permission.
 
 Identity replay requires complete backing, exactly one original POST at source,
 staging or reserved POST quarantine, exact bytes/mode/inode/link/location. PRE
@@ -127,9 +98,9 @@ structural root/owner/manifest/backing/quarantine bindings, reports locations, s
 drift/index locks/publication without source bytes. It proves neither atomic state,
 live rederivation, authentic publication, termination nor recovery readiness.
 
-Parent must verify actual native handle terminal and full writer tree stopped,
-then obtain independent recovery review. PID, stopped launcher or free lock is
-insufficient. CLI validates retained attestations, not actor authenticity.
+Parent verifies the actual native handle terminal/full writer tree stopped, then
+obtains independent recovery review. PID, stopped launcher or free lock is
+insufficient; CLI checks attestations, not actor authenticity.
 
 Closed `bof3.source-recovery-authorization/v1`, single-link regular JSON under
 `out/reviews/evidence/`:

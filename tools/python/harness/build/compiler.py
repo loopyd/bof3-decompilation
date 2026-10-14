@@ -8,7 +8,6 @@ from pathlib import Path
 
 from harness.build.arguments import iter_arguments
 from harness.common.files import read_file
-from harness.common.deadlines import check_deadline
 from harness.common.lexicon import iter_c_lexemes
 from harness.domain.functions import parse_function_records
 from harness.toolchain.gcc import OLD_GCC_IDENTITY
@@ -139,12 +138,10 @@ def parse_compiler_configuration(
     text: str,
 ) -> tuple[dict[str, list[str]], dict[str, str]]:
     """Decode bounded literal settings without evaluating CMake statements."""
-    check_deadline()
     if not isinstance(text, str) or len(text.encode("utf-8")) > 4 * 1024 * 1024:
         raise ValueError("object compiler configuration exceeds the text bound")
     validate_object_configuration(text)
     result = parse_object_flags(text), parse_object_compilers(text)
-    check_deadline()
     return result
 
 

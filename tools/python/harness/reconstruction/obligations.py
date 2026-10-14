@@ -8,7 +8,6 @@ import hashlib
 import re
 from typing import Literal
 
-from harness.common.deadlines import check_deadline
 from harness.match.extraction import LinkedImage, LinkedStorage
 from harness.reconstruction.objectfile import ObjectImage, ObjectStorage
 from harness.domain.ids import parse_function_id
@@ -356,7 +355,6 @@ def derive_symbol_producer_facts(
         return None
     definitions = []
     for content in assemblies:
-        check_deadline()
         definitions.append(
             Counter(re.findall(rb"(?m)^[ \t]*([A-Za-z_.$][A-Za-z0-9_.$]*):", content))
         )
@@ -396,7 +394,6 @@ def _producer_symbol_ids(
         key = (row["owner"], row.get("symbol_table", 0), row["symbol_index"])
         references.setdefault(key, []).append(row)
     for symbol in object_image.symbols:
-        check_deadline()
         counterpart = linked_by_name.get(symbol.name)
         if (
             not symbol.name
@@ -434,7 +431,6 @@ def _producer_symbol_ids(
         ):
             qualified.update(identities)
     for symbol in linked_image.symbols:
-        check_deadline()
         identity = ("linked", symbol.table, symbol.index)
         if (
             symbol.name
@@ -784,7 +780,6 @@ def derive_associated_closure(
         )
     supported_leaf = original_leaf.leaf is not None and compiled_leaf.leaf is not None
     for owner, image in (("object", object_image), ("linked", linked_image)):
-        check_deadline()
         if image is None or image.layout is None:
             uncovered_sections.append((owner, -1))
             continue
@@ -812,7 +807,6 @@ def derive_associated_closure(
             if row.file_offset is not None and row.size
         ]
         for index, (first, end, section_index) in enumerate(ranges):
-            check_deadline()
             for other_first, other_end, other_index in ranges[index + 1 :]:
                 if first < other_end and other_first < end:
                     uncovered_sections.extend(
@@ -1087,7 +1081,6 @@ def derive_associated_closure(
         function_loads = metadata_loads = abi_programs = 0
         accepted_loads = []
         for program in linked_image.layout.programs:
-            check_deadline()
             (
                 kind,
                 offset,
@@ -1141,7 +1134,6 @@ def derive_associated_closure(
                 (descriptor.address, descriptor.address + descriptor.size)
             )
         for index, first in enumerate(accepted_loads):
-            check_deadline()
             for other in accepted_loads[index + 1 :]:
                 if (
                     first[0] < other[1]
@@ -1810,7 +1802,6 @@ def _relocation_predicates(
     matches = []
     unmapped = []
     for row in object_image.relocations:
-        check_deadline()
         section = object_image.sections[row.target_section]
         linked = _section_mapping(section, object_image, image)
         if linked is None:
@@ -1963,7 +1954,6 @@ def measure_associated_requirements(
 ) -> ProfileRequirementsResult:
     rows = []
     for requirement in requirements.known:
-        check_deadline()
         if isinstance(requirement, InitializedRequirement):
             category = "initialized_data"
         elif isinstance(requirement, ZeroRequirement):

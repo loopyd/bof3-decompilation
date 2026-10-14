@@ -173,9 +173,7 @@ def prepare_target(
     )
 
 
-def analyze_project(
-    root: Path, target_id: str, *, timeout: int = 120
-) -> RizinProjectSpec:
+def analyze_project(root: Path, target_id: str) -> RizinProjectSpec:
     target = prepare_target(root, target_id)
     engine = find_engine("rizin", root=root)
     snapshot = build_snapshot(
@@ -190,7 +188,6 @@ def analyze_project(
         source_dir=target.source_dir,
         source_paths=target.source_paths or None,
         expected_lifts=target.expected_lifts,
-        timeout=timeout,
     )
     write_snapshot(snapshot, target.snapshot)
     return target

@@ -7,11 +7,9 @@ from collections.abc import Mapping
 from dataclasses import asdict, dataclass, replace
 import hashlib
 import json
-import math
 from pathlib import Path
 import re
 import struct
-import time
 from types import MappingProxyType
 
 from harness.build import recipe
@@ -24,7 +22,6 @@ from harness.common.artifacts import (
     using_reader,
     write_bytes,
 )
-from harness.common.deadlines import check_deadline, resolve_deadline, use_deadline
 from harness.common.digests import file_record
 from harness.common.captureproof import CaptureProofRefused, verify_capture
 from harness.common.failures import FailureEvent, PolicyFailure, facts, primary, retain
@@ -48,9 +45,7 @@ class NativeCommand:
     cwd: Path
     argv: tuple[str, ...]
     environment: Mapping[str, str]
-    deadline: float
     output_limit: int
-    timeout: float
 
 
 @dataclass(frozen=True)
@@ -332,7 +327,6 @@ def inspect_native(candidate, result, run, binding, prepared_run, reader):
             candidate,
             Path(run["binaries"]["rizin"]["path"]),
             Path(run["binaries"]["plugin"]["path"]),
-            run["limits"]["deadline"],
             run["limits"]["process_output_bytes"],
         )
         events.extend(
@@ -453,10 +447,8 @@ def verify_native(command, original, attempt, *, receipt=True, source_form=None)
         ):
             _require(
                 _read(request_path, 64 << 10, events)
-                == _request(
-                    command.deadline, original, events, source_form=source_form
-                ),
-                "native retained request differs from original inputs, cutoff or source form",
+                == _request(original, events, source_form=source_form),
+                "native retained request differs from original inputs or source form",
             )
     except Exception as error:
         retain(
@@ -624,10 +616,8 @@ def verify_native(command, original, attempt, *, receipt=True, source_form=None)
                 workspace,
                 command.argv,
                 environment=command.environment,
-                deadline=command.deadline,
                 output_limit=command.output_limit,
                 name="native",
-                timeout=command.timeout,
                 origin=result.get("process_origin", "direct"),
                 events=events,
                 reader=active_reader(),
@@ -649,7 +639,7 @@ def verify_native(command, original, attempt, *, receipt=True, source_form=None)
     return tuple(events)
 
 
-def _request(cutoff, original, events, *, source_form=None):
+def _request(original, events, *, source_form=None):
     _require(
         source_form is None or type(source_form) is nativeoutput.SourceForm,
         "native source form must be validated",
@@ -662,7 +652,6 @@ def _request(cutoff, original, events, *, source_form=None):
         "schema": "retdec118.native-request/v1",
         "operation": "self-check" if original is None else "generate",
         "config_sha256": nativeoutput.CONFIG_SHA256,
-        "cutoff": cutoff,
         "member": None,
         "image": None,
     }
@@ -721,7 +710,7 @@ def capture_native(
     phase, path = "prepare", workspace
     unit = None
     try:
-        request = _request(command.deadline, original, events, source_form=source_form)
+        request = _request(original, events, source_form=source_form)
         files = {
             "input/request.json": request,
             "native/fixed-config.json": configuration,
@@ -804,10 +793,8 @@ def capture_native(
             workspace,
             command.argv,
             environment=command.environment,
-            deadline=command.deadline,
             output_limit=command.output_limit,
             name="native",
-            timeout=command.timeout,
         )
         result["process"] = process
         phase, path = "proof", workspace / "native.json"
@@ -816,10 +803,8 @@ def capture_native(
             workspace,
             command.argv,
             environment=command.environment,
-            deadline=command.deadline,
             output_limit=command.output_limit,
             name="native",
-            timeout=command.timeout,
             origin="direct",
             events=events,
             reader=active_reader(),
@@ -997,10 +982,8 @@ def capture_native(
                 workspace,
                 command.argv,
                 environment=command.environment,
-                deadline=command.deadline,
                 output_limit=command.output_limit,
                 name="native",
-                timeout=command.timeout,
                 origin="persisted",
                 events=events,
                 reader=active_reader(),
@@ -1334,7 +1317,6 @@ def _directory_inventory(directory, reader, events):
     )
     files, directories, total = [], ["."], 0
     for path in sorted(directory.rglob("*")):
-        check_deadline()
         _require(not path.is_symlink(), "ordinary tree contains a symlink")
         relative = path.relative_to(directory).as_posix()
         if path.is_dir():
@@ -1950,9 +1932,7 @@ def _ordinary_command(workspace, run, plan):
             str(workspace / "input/original.elf"),
         ),
         environment,
-        run["limits"]["deadline"],
         run["limits"]["process_output_bytes"],
-        60.0,
     )
 
 
@@ -2685,10 +2665,8 @@ def _ordinary_source(workspace, plan, run, reader, events):
         workspace,
         command.argv,
         environment=command.environment,
-        deadline=command.deadline,
         output_limit=command.output_limit,
         name="ordinary",
-        timeout=command.timeout,
         origin="persisted",
         events=events,
         reader=reader,
@@ -2947,9 +2925,7 @@ def inspect_supplied_attempt(candidate, result, run, binding, prepared_run, read
                 == dict(
                     argv=list(command.argv),
                     environment=dict(command.environment),
-                    deadline=command.deadline,
                     output_limit=command.output_limit,
-                    timeout=command.timeout,
                 ),
                 "ordinary invocation differs",
             )
@@ -2959,10 +2935,8 @@ def inspect_supplied_attempt(candidate, result, run, binding, prepared_run, read
                 candidate,
                 command.argv,
                 environment=command.environment,
-                deadline=command.deadline,
                 output_limit=command.output_limit,
                 name="ordinary",
-                timeout=command.timeout,
                 origin="persisted",
                 events=events,
                 reader=consume,
@@ -3190,7 +3164,6 @@ def capture_supplied_run(
     native_receipt,
     rizin,
     context,
-    work_seconds=120.0,
     output_limit=16 << 20,
 ):
     root, prepared_run, destination, native_receipt, rizin, context = (
@@ -3198,195 +3171,174 @@ def capture_supplied_run(
         for path in (root, prepared_run, destination, native_receipt, rizin, context)
     )
     _require(
-        type(work_seconds) in {int, float}
-        and math.isfinite(work_seconds)
-        and 0 < work_seconds <= 600,
-        "ordinary work duration must be finite and at most 600 seconds",
-    )
-    _require(
         type(output_limit) is int and 0 < output_limit <= SUPPLIED_LIMIT,
         "ordinary raw output bound differs",
     )
     events = []
-    cutoff = resolve_deadline(time.monotonic() + work_seconds)
-    with use_deadline(cutoff):
-        binding = provenance.open_problem_binding(
-            prepared_run, io_mode="exact", events=events
-        )
-        _require(
-            len(binding.members) == 118,
-            "ordinary run must preserve all 118 admitted members",
-        )
-        _regular(context)
-        content = _read(context, CONTEXT_LIMIT, events)
-        plans, answer = _supplied_plans(content, binding, prepared_run, events)
-        _require(
-            not destination.exists()
-            and destination.parent.is_dir()
-            and not destination.is_symlink()
-            and not any(
-                destination == path
-                or destination.is_relative_to(path)
-                or path.is_relative_to(destination)
-                for path in (prepared_run, context)
-            ),
-            "ordinary destination overlaps immutable inputs or already exists",
-        )
-        destination.mkdir(mode=0o700)
-        selected = [row.entry.member.key for row in plans]
-        report = dict(
-            operation="capture-supplied",
-            status="failed",
-            exit=1,
-            denominator=118,
-            run_id=binding.run_id,
-            binding_digest=binding.digest,
-            destination=str(destination),
-            selected=selected,
-            deadline=cutoff,
-            semantic_admission=False,
-            autonomous_exact=False,
-            failures=[],
-            members=[
-                dict(
-                    identity=asdict(member),
-                    generation="unattempted",
-                    compilation="unattempted",
-                )
-                for member in binding.members
-            ],
-        )
-        try:
-            check_deadline()
-            selection, _ = catalog.stage(
-                root,
-                destination / "tools",
-                with_profiles=True,
-                deadline=cutoff,
-                events=events,
+    binding = provenance.open_problem_binding(
+        prepared_run, io_mode="exact", events=events
+    )
+    _require(
+        len(binding.members) == 118,
+        "ordinary run must preserve all 118 admitted members",
+    )
+    _regular(context)
+    content = _read(context, CONTEXT_LIMIT, events)
+    plans, answer = _supplied_plans(content, binding, prepared_run, events)
+    _require(
+        not destination.exists()
+        and destination.parent.is_dir()
+        and not destination.is_symlink()
+        and not any(
+            destination == path
+            or destination.is_relative_to(path)
+            or path.is_relative_to(destination)
+            for path in (prepared_run, context)
+        ),
+        "ordinary destination overlaps immutable inputs or already exists",
+    )
+    destination.mkdir(mode=0o700)
+    selected = [row.entry.member.key for row in plans]
+    report = dict(
+        operation="capture-supplied",
+        status="failed",
+        exit=1,
+        denominator=118,
+        run_id=binding.run_id,
+        binding_digest=binding.digest,
+        destination=str(destination),
+        selected=selected,
+        semantic_admission=False,
+        autonomous_exact=False,
+        failures=[],
+        members=[
+            dict(
+                identity=asdict(member),
+                generation="unattempted",
+                compilation="unattempted",
             )
-            record = {}
-            prepared = PreparedInputs.prepare(
-                record,
-                destination=destination,
-                native_receipt=native_receipt,
-                configuration=root
-                / "third_party/rz-psxdec/src/rz-plugin/decompiler-config.h",
-                rizin=rizin,
-                selection=selection,
-                driver_root=Path(__file__).resolve().parents[1],
-            )
-            check_deadline()
-            for row in report["members"]:
-                row["profile_attempts"] = [
-                    dict(
-                        profile_id=profile["profile_id"],
-                        profile_identity=profile["identity"],
-                        ordinal=profile["ordinal"],
-                        disposition="unattempted",
-                        terminal=False,
-                        status="evaluator-unattempted"
-                        if row["identity"]["key"] in selected
-                        else "not-selected",
-                        raw_exit=None,
-                        exit_code=None,
-                        failure=None,
-                        stages=[],
-                    )
-                    for profile in selection["profiles"]
-                ]
-            for source, name in (
-                (rizin.parents[1] / "share/rizin", "rizin-data"),
-                (root / "third_party/rizin/librz/arch/types", "rizin-type-origins"),
-            ):
-                _directory_inventory(source, _read, events)
-                record["snapshots"].append(PreparedInputs.snapshot(source, name))
-            snapshots = PreparedInputs.snapshot_records(record)
-            support_root, names = _support_sources(
-                Path(snapshots["retdec-source"]["source"])
-            )
-            support = [
-                {**file_record(support_root / name), "path": name} for name in names
-            ]
-            write_bytes(
-                destination / "contexts.json", content, readonly=True, events=events
-            )
-            record.update(
-                problem=dict(
-                    run_dir=str(prepared_run),
-                    binding_digest=binding.digest,
-                    problem_sha256=binding.problem_doc_sha256,
-                ),
-                selected=selected,
-                limits=dict(
-                    work_seconds=work_seconds,
-                    deadline=cutoff,
-                    process_output_bytes=output_limit,
-                    artifact_bytes=SUPPLIED_LIMIT,
-                ),
-                producer=dict(
-                    kind=SUPPLIED_KIND,
-                    context=_identity(context, content).as_record(),
-                    context_copy=file_record(destination / "contexts.json"),
-                    answer=answer.as_record(),
-                    plans=[row.as_record() for row in plans],
-                    generic=dict(
-                        origins=REVIEWED_GENERIC_ORIGINS.copy(),
-                        support=support,
-                        rizin_data=str(rizin.parents[1] / "share/rizin"),
-                        rizin_types=[
-                            row
-                            for row in snapshots["rizin-type-origins"]["files"]
-                            if row["path"].endswith(".sdb.txt")
-                        ],
-                        rizin_header=file_record(
-                            rizin.parents[1] / "include/librz/rz_userconf.h"
-                        ),
-                    ),
-                ),
-            )
-            write_bytes(
-                destination / "run.json",
-                encode_json(record, path=destination, events=events),
-                events=events,
-            )
-            with use_deadline(cutoff):
-                prepared.verify(events=events)
-                for index, plan in enumerate(plans):
-                    check_deadline()
-                    workspace = destination / f"member-{index:03d}"
-                    row = next(
-                        row
-                        for row in report["members"]
-                        if row["identity"]["key"] == plan.entry.member.key
-                    )
-                    _capture_supplied_member(
-                        workspace, record, plan, binding, prepared_run, row, events
-                    )
-                prepared.verify(events=events)
-                provenance.require_active_binding(
-                    binding, prepared_run, io_mode="exact", events=events
-                )
-                check_deadline()
-            report.update(
-                status="captured-unverified", exit=0, snapshots_unchanged=True
-            )
-        except Exception as error:
-            retain(events, error, phase="ordinary-run", path=destination)
-        report["secondary_failures"] = facts(events)
-        report["failures"] = [
-            f"{type(error).__name__}: {error}" for _, _, _, error in events
-        ]
-        if events:
-            report.update(status="failed", exit=1)
-        write_bytes(
-            destination / "report.json",
-            encode_json(report, path=destination, events=events),
+            for member in binding.members
+        ],
+    )
+    try:
+        selection, _ = catalog.stage(
+            root,
+            destination / "tools",
+            with_profiles=True,
             events=events,
         )
-        if isinstance(primary(events), ProcessCleanupError):
-            raise primary(events)
-        return report
+        record = {}
+        prepared = PreparedInputs.prepare(
+            record,
+            destination=destination,
+            native_receipt=native_receipt,
+            configuration=root
+            / "third_party/rz-psxdec/src/rz-plugin/decompiler-config.h",
+            rizin=rizin,
+            selection=selection,
+            driver_root=Path(__file__).resolve().parents[1],
+        )
+        for row in report["members"]:
+            row["profile_attempts"] = [
+                dict(
+                    profile_id=profile["profile_id"],
+                    profile_identity=profile["identity"],
+                    ordinal=profile["ordinal"],
+                    disposition="unattempted",
+                    terminal=False,
+                    status="evaluator-unattempted"
+                    if row["identity"]["key"] in selected
+                    else "not-selected",
+                    raw_exit=None,
+                    exit_code=None,
+                    failure=None,
+                    stages=[],
+                )
+                for profile in selection["profiles"]
+            ]
+        for source, name in (
+            (rizin.parents[1] / "share/rizin", "rizin-data"),
+            (root / "third_party/rizin/librz/arch/types", "rizin-type-origins"),
+        ):
+            _directory_inventory(source, _read, events)
+            record["snapshots"].append(PreparedInputs.snapshot(source, name))
+        snapshots = PreparedInputs.snapshot_records(record)
+        support_root, names = _support_sources(
+            Path(snapshots["retdec-source"]["source"])
+        )
+        support = [{**file_record(support_root / name), "path": name} for name in names]
+        write_bytes(
+            destination / "contexts.json", content, readonly=True, events=events
+        )
+        record.update(
+            problem=dict(
+                run_dir=str(prepared_run),
+                binding_digest=binding.digest,
+                problem_sha256=binding.problem_doc_sha256,
+            ),
+            selected=selected,
+            limits=dict(
+                process_output_bytes=output_limit,
+                artifact_bytes=SUPPLIED_LIMIT,
+            ),
+            producer=dict(
+                kind=SUPPLIED_KIND,
+                context=_identity(context, content).as_record(),
+                context_copy=file_record(destination / "contexts.json"),
+                answer=answer.as_record(),
+                plans=[row.as_record() for row in plans],
+                generic=dict(
+                    origins=REVIEWED_GENERIC_ORIGINS.copy(),
+                    support=support,
+                    rizin_data=str(rizin.parents[1] / "share/rizin"),
+                    rizin_types=[
+                        row
+                        for row in snapshots["rizin-type-origins"]["files"]
+                        if row["path"].endswith(".sdb.txt")
+                    ],
+                    rizin_header=file_record(
+                        rizin.parents[1] / "include/librz/rz_userconf.h"
+                    ),
+                ),
+            ),
+        )
+        write_bytes(
+            destination / "run.json",
+            encode_json(record, path=destination, events=events),
+            events=events,
+        )
+        prepared.verify(events=events)
+        for index, plan in enumerate(plans):
+            workspace = destination / f"member-{index:03d}"
+            row = next(
+                row
+                for row in report["members"]
+                if row["identity"]["key"] == plan.entry.member.key
+            )
+            _capture_supplied_member(
+                workspace, record, plan, binding, prepared_run, row, events
+            )
+        prepared.verify(events=events)
+        provenance.require_active_binding(
+            binding, prepared_run, io_mode="exact", events=events
+        )
+        report.update(status="captured-unverified", exit=0, snapshots_unchanged=True)
+    except Exception as error:
+        retain(events, error, phase="ordinary-run", path=destination)
+    report["secondary_failures"] = facts(events)
+    report["failures"] = [
+        f"{type(error).__name__}: {error}" for _, _, _, error in events
+    ]
+    if events:
+        report.update(status="failed", exit=1)
+    write_bytes(
+        destination / "report.json",
+        encode_json(report, path=destination, events=events),
+        events=events,
+    )
+    if isinstance(primary(events), ProcessCleanupError):
+        raise primary(events)
+    return report
 
 
 def _capture_supplied_member(
@@ -3454,18 +3406,14 @@ def _capture_supplied_member(
         supplied["command"] = dict(
             argv=list(command.argv),
             environment=dict(command.environment),
-            deadline=command.deadline,
             output_limit=command.output_limit,
-            timeout=command.timeout,
         )
         supplied["process"] = capture(
             workspace,
             list(command.argv),
             environment=command.environment,
-            deadline=command.deadline,
             output_limit=command.output_limit,
             name="ordinary",
-            timeout=command.timeout,
         )
         source, tokens, console, _, _ = _ordinary_source(
             workspace, plan, run, _read, events

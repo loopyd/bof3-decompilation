@@ -11,7 +11,6 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from harness.build.sections import function_section
-from harness.common.deadlines import check_deadline, use_deadline
 from harness.common.files import atomic_write
 from harness.common.paths import require_absent
 from harness.io import RepoLayout
@@ -202,7 +201,6 @@ def place_grouped_object(
 
     if execution.root != layout.root:
         raise ValueError("native execution root differs from placement root")
-    execution.check_deadline()
     output = output if output.is_absolute() else layout.root / output
     script = output.with_suffix(output.suffix + ".ld")
     output_name = output.relative_to(layout.root).as_posix()
@@ -229,7 +227,6 @@ def place_grouped_object(
             bindings=bindings,
             data_sections=data_sections,
         )
-        execution.check_deadline()
         script_content = private_script.read_bytes()
         linked_content = private_output.read_bytes()
         result = {
@@ -239,7 +236,6 @@ def place_grouped_object(
             "script_sha256": hashlib.sha256(script_content).hexdigest(),
         }
         atomic_write(layout.root, script_name, script_content, exclusive=True)
-        execution.check_deadline()
         atomic_write(layout.root, output_name, linked_content, exclusive=True)
     except BaseException as error:
         error.add_note(
@@ -247,8 +243,6 @@ def place_grouped_object(
         )
         raise
     shutil.rmtree(scratch)
-    execution.check_deadline()
-    check_deadline()
     return result
 
 
@@ -322,8 +316,6 @@ def extract_grouped_function(
 
     if execution.root != layout.root:
         raise ValueError("native execution root differs from extraction root")
-    execution.check_deadline()
-    check_deadline()
     scratch = Path(tempfile.mkdtemp(prefix="bof3-grouped-extract-"))
     try:
         private_input = scratch / "linked.elf"
@@ -340,8 +332,6 @@ def extract_grouped_function(
         error.add_note(f"grouped native scratch retained at {scratch}")
         raise
     shutil.rmtree(scratch)
-    execution.check_deadline()
-    check_deadline()
     return content
 
 
@@ -379,21 +369,16 @@ def _extract_function(
         or symbol != (address, section, size)
     ):
         raise ValueError("linked function does not occupy exactly the reviewed range")
-    with use_deadline(execution.deadline):
-        image = read_function_image(linked, function_name=name, address=address)
-        check_deadline()
-        if (
-            image.section != section
-            or image.section_address != address
-            or image.section_size != size
-            or len(image.content) != size
-        ):
-            raise RuntimeError(
-                "grouped function extraction failed or returned a short range"
-            )
-        content = image.content
-        check_deadline()
-        validate_function_flow(content, address)
-        check_deadline()
-        execution.check_deadline()
-        return content
+    image = read_function_image(linked, function_name=name, address=address)
+    if (
+        image.section != section
+        or image.section_address != address
+        or image.section_size != size
+        or len(image.content) != size
+    ):
+        raise RuntimeError(
+            "grouped function extraction failed or returned a short range"
+        )
+    content = image.content
+    validate_function_flow(content, address)
+    return content

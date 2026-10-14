@@ -40,7 +40,6 @@ _C_KEYWORDS = frozenset(
 _SCALAR_TYPES = frozenset("bool s8 s16 s32 s64 u8 u16 u32 u64 f32 f64".split())
 _QUALIFIERS = frozenset("const volatile static register auto".split())
 _TYPE_HEADS = frozenset("struct union enum".split())
-_NATIVE_TIMEOUT = 180
 _NATIVE_OUTPUT_LIMIT = 2 * 1024 * 1024
 
 
@@ -488,7 +487,6 @@ def native_byte_identity(root: Path, selector: str) -> dict[str, Any]:
         result = run_bounded(
             root,
             argv,
-            timeout=_NATIVE_TIMEOUT,
             output_limit=_NATIVE_OUTPUT_LIMIT,
         )
         if result["exit_code"] != 0 or result["failure"] is not None:

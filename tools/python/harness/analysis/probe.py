@@ -6,7 +6,6 @@ import copy
 import hashlib
 import os
 import re
-import subprocess
 import tempfile
 from pathlib import Path
 
@@ -327,11 +326,7 @@ def probe_textbin(root, manifest, boundary, inputs, chunk: bytes) -> dict:
         config_path = directory / "splat.yaml"
         config_path.write_text(yaml.safe_dump(config, sort_keys=False))
         argv = ["split", "--make-full-disasm-for-code", str(config_path)]
-        try:
-            run = tool.execute(argv, capture_output=True, text=True, timeout=120)
-        except subprocess.TimeoutExpired:
-            result["runs"].append({"phase": label, "status": "timeout"})
-            return result
+        run = tool.execute(argv, capture_output=True, text=True)
         (directory / "stdout.txt").write_text(run.stdout)
         (directory / "stderr.txt").write_text(run.stderr)
         result["runs"].append(
@@ -506,11 +501,7 @@ def probe_carve(
         config_path = directory / "splat.yaml"
         config_path.write_text(yaml.safe_dump(config, sort_keys=False))
         argv = ["split", "--make-full-disasm-for-code", str(config_path)]
-        try:
-            run = tool.execute(argv, capture_output=True, text=True, timeout=120)
-        except subprocess.TimeoutExpired:
-            result["runs"].append({"phase": label, "status": "timeout"})
-            return result
+        run = tool.execute(argv, capture_output=True, text=True)
         (directory / "stdout.txt").write_text(run.stdout)
         (directory / "stderr.txt").write_text(run.stderr)
         result["runs"].append(

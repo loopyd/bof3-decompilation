@@ -8,11 +8,10 @@ systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: false
 defaultContext: fresh
-timeoutMs: 3600000
 ---
 
 Read `.agents/skills/psx-emulator/SKILL.md`. Execute the supplied emulator mission with
-explicit inputs, arguments, observations, stop condition and time budget. Use the
+explicit inputs, arguments, observations and stop condition. Use the
 harness runtime node and embedded missions from [skill routing](../../.agents/skills/psx-emulator/SKILL.md#select-an-action).
 Prefer state queries/exports and bounded debugger actions to writing another
 emulator runner or parser. Stage inputs explicitly. Canonical helpers are preloaded;

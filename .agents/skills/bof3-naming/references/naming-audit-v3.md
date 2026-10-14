@@ -1,69 +1,58 @@
 # Naming audit v3
 
-Read by branch: [run contract](#run-contract), [evidence gate](#evidence-gate),
-[recursive inventory](#recursive-inventory-and-audit-authority),
-[receipt and rung schema](#audit-evidence).
+Read the selected branch: [run](#run-contract), [gate](#evidence-gate),
+[inventory](#recursive-inventory-and-audit-authority), [schema](#audit-evidence).
 
 ## Run contract
 
-`audit-target TARGET`: one canonical report; read-only except authorized disposable
-evidence/report writes. No identity, annotation, docs, relocation or lift edits.
+For `audit-target TARGET`, use one canonical report and write only authorized
+disposable evidence/reports. Do not edit identities, annotations, docs, relocations or lifts.
 
-Run `bin/harness naming evidence TARGET REPORT` with both tokens copied exactly from
-the frozen cleanup request; never construct, search, substitute or accept a
-caller-supplied path. Missing/noncanonical state blocks with the initialization
-prerequisite `bin/harness naming init-all out/reviews/plan-audit-naming`; do not
-initialize implicitly or choose another report. Convert initializer rows
-only to receipt-backed `exhausted`/`proposed` conclusions. Return proposals to
-the parent for separately approved identity application.
+Copy both tokens from the frozen request into `bin/harness naming evidence TARGET REPORT`.
+Never construct, search, substitute or accept a caller-supplied path. Missing or
+noncanonical state blocks on `bin/harness naming init-all out/reviews/plan-audit-naming`;
+never initialize implicitly or choose another report. Convert initializer rows only
+to receipt-backed `exhausted`/`proposed` conclusions. Parent approval is required for
+identity application.
 
-Each invocation: at most 10 rows, 600-second shard wall, 120-second relative
-per-operation cap (`--deadline`). Bounded parent run: pass original absolute
-monotonic `--work-deadline`; retain separate cleanup hard-stop. Follow [owner work deadlines](../../bof3-types/references/transaction-lifecycle.md#deadlines):
-expiry stops forward writes/finalization, not client cleanup; partial evidence
-remains for inspection. Resume only within the original budget, same canonical
-command, no replay of completed checkpoint rows. Keep output 8 KiB max; cite report/receipt
-paths with SHA-256, not report bodies. A shard/query success is not
-target completion: require successful `bin/harness naming validate TARGET REPORT`
-without a transaction filter and `complete:true`. If collection/import used an
-explicit evidence root, validation must use the same canonical absolute
-`--evidence-root PATH`; never substitute roots or rewrite receipts. Incomplete
-or blocked rows remain gaps even when the runner exits successfully.
+Process at most 10 rows and emit at most 8 KiB per invocation. Cite report/receipt
+paths and SHA-256, not bodies. Resume the canonical command within original attempts;
+do not replay completed checkpoint rows. Require successful unfiltered
+`bin/harness naming validate TARGET REPORT` and `complete:true` for target closure.
+Validate explicit collection/import roots with the same canonical absolute
+`--evidence-root PATH`; preserve roots/receipts. Runner or shard/query success
+cannot close incomplete/blocked rows.
 
-For missing inventory rows in an existing canonical report, preview
-`bin/harness naming reconcile TARGET` with the same explicit evidence root.
-Only with reconciliation authority use `--apply`: append missing blocked rows
-after full validation, preserving existing rows and other reports. Duplicate or
-extra rows and invalid evidence block. This neither closes the audit nor permits
-identity edits. Never use `init-all` for reconciliation: it replaces all reports.
+Preview missing inventory rows with `bin/harness naming reconcile TARGET` and the
+same explicit evidence root. Only authorized `--apply` appends blocked rows after
+full validation, preserving existing rows and other reports. Duplicate/extra rows
+or invalid evidence block. Reconciliation neither closes the audit nor permits
+identity edits. Never reconcile with `init-all`: it replaces all reports.
 
-Retained inventory drift requires a separately reviewed recovery successor.
+For retained inventory drift, require a separately reviewed recovery successor.
 Preview `bin/harness naming reconcile TARGET --successor` with externally pinned
-`--expected-report-sha256` and `--expected-summary-sha256`, the retained evidence
-root and original work deadline. Recovery preserves the predecessor and receipts,
-keeps valid rows unchanged, refreshes only fully unreviewed initializer gaps and
-records obsolete raw identities with their current named bindings. Closed work,
-observed evidence and invalid conclusions block initializer refresh.
+`--expected-report-sha256` and `--expected-summary-sha256` and the retained evidence root.
+Preserve predecessor/receipts and valid rows. Refresh only fully unreviewed
+initializer gaps; record obsolete raw identities with current named bindings.
+Closed work, observed evidence and invalid conclusions block refresh.
 
-After independent review, repeat that command with `--apply` and the retained
-`--expected-plan-sha256`. The owner publishes an immutable generation and distinct
-inventory checkpoint, then activates its accounting by compare-and-swap. Inspect
-ambiguous publication before retrying. This route never verifies an old naming
-application or supplies semantic acceptance. Verify the full successor and a
-no-change reconciliation preview before further naming work.
+After independent review, repeat with `--apply` and retained `--expected-plan-sha256`.
+Let the owner publish an immutable generation/distinct inventory checkpoint and
+activate accounting by compare-and-swap. Inspect ambiguous publication before retrying.
+Recovery verifies no old applications or semantics. Verify the full successor and
+no-change reconciliation preview before further naming.
 
-Exact-capability validation also recognizes the owner's exact historical optional
-command hints. All receipt, provenance, journal and recomputed capability checks
-still apply. Mixed hints or other row changes reject; stored receipts and rows
-are never normalized in place.
+Exact-capability validation recognizes exact historical optional owner command hints.
+Require receipt/provenance/journal/recomputed-capability checks. Reject mixed hints
+or other row changes; never normalize stored receipts/rows in place.
 
-Structural validation/capability exhaustion never grants independent semantic acceptance.
-Autonomous no-op/exhaustion requires the read-only parent-pinned
+Structural validation/capability exhaustion grants no semantic acceptance.
+Autonomous no-op/exhaustion requires read-only parent-pinned
 [terminal verification](terminal-acceptance.md):
 distinct preparation/reviewer/parent runs, exact current binding, retained ceiling
-evidence and no unresolved executable leads. It neither rewrites history nor
-authorizes identities. Selected-row acceptance never replaces the full-report gate.
-Links to transaction/cosmetic modes are handoffs, not edit permission.
+evidence and no unresolved executable leads. It neither rewrites history nor authorizes
+identities. Selected-row acceptance never replaces the full-report gate.
+Transaction/cosmetic links grant no edit permission.
 
 ## Evidence gate
 
@@ -83,13 +72,12 @@ Under two corroborators is not a ceiling:
 
 ## Recursive inventory and audit authority
 
-Recursively inventory every descendant manifest and owned map, Splat, claimed
-sources/support files, headers, reviewed annotations and local include edges.
-Enumerate all owned/named `*.h`, including headers outside source include walk.
-Audit manifest-less shared configuration separately; directory proximity grants
-no ownership.
+Inventory every descendant manifest and owned map, Splat, claimed sources/support
+files, headers, reviewed annotations and local include edges. Include all owned/named
+`*.h`, including outside the source include walk. Audit manifest-less shared configuration
+separately; directory proximity grants no ownership.
 
-Each finding reports these six audit-target fields exactly once: `path`, `contract`, `evidence`, `smallest repair`, `validation`, `human approval`. Separately record these recursive inventory counts and identities exactly once: target count, header count, target paths, header paths, resolved target identities, resolved header identities—the paths and identities deriving those counts. Exclude known false-positive drift: a large `internal.h`, raw compiled address spellings, and metadata-owned semantic filenames are not drift alone. Directory ancestry and filenames never grant source authority; explicit manifest claims, maps, Splat, and parsable function-level `@source`/`@behavior` metadata do.
+Each finding reports `path`, `contract`, `evidence`, `smallest repair`, `validation` and `human approval` exactly once. Record target count, header count, target paths, header paths, resolved target identities and resolved header identities exactly once; counts derive from those paths/identities. A large `internal.h`, raw compiled address spellings or metadata-owned semantic filenames alone are not drift. Directory ancestry and filenames grant no source authority; require explicit manifest claims, maps, Splat and parsable function-level `@source`/`@behavior` metadata.
 
 ## Audit evidence
 
@@ -127,8 +115,8 @@ addresses/effects. No fabricated receipts; command list alone is not evidence.
 | `one_level_beyond` | next selector/consumer/caller context required by step 8 |
 | `partial_baseline` | live status, percentage, byte sizes, first mismatch, residual, and original-byte verification before a retained-partial spelling transaction |
 
-Partial evidence requires `partial_baseline`. Tool-generated `required_work` covers indexed callers/callees/accesses/owners; for each item, record commands + typed observations and evidence-deduplicate it, or leave it open. Concrete discoveries expand this bounded graph. `exhausted` requires all closed; open/failed work means `blocked`, never optional ceiling work. `optional_work`/`ceiling_next_command` hold only post-ceiling experiments. Proposals record `semantic_status`, `transaction_status: ready|repairable|blocked`, and `readiness_blockers`; proposed data storage exactly equals `describe`.
+Partial evidence requires `partial_baseline`. Tool-generated `required_work` covers indexed callers/callees/accesses/owners. Record each item's commands and typed observations with evidence deduplication, or leave it open. Concrete discoveries expand the bounded graph. `exhausted` requires all closed; open/failed work is `blocked`, never optional. `optional_work`/`ceiling_next_command` hold only post-ceiling experiments. Proposals retain `semantic_status`, `transaction_status: ready|repairable|blocked` and `readiness_blockers`; proposed data storage equals `describe` exactly.
 
-For proposals and contested unresolved claims, separate `observation` (bytes/instructions + half-open range), `interpretation` (only their proof), and `authority` (manifest/Splat/map/owner). Recheck payload bounds, opcode widths, element counts, exclusive function ends, live/cached/analyzer distinctions, and all name terms. Review reproduces evidence without trusting analyzer labels/prose.
+Proposals and contested unresolved claims separate `observation` (bytes/instructions, half-open range), `interpretation` (their proof only) and `authority` (manifest/Splat/map/owner). Recheck payload bounds, opcode widths, element counts, exclusive function ends, live/cached/analyzer distinctions and all name terms. Review reproduces evidence without trusting analyzer labels/prose.
 
-Immutable rename dimensions, their application, and shared fixed-RAM promotion are owned only by [Identity transactions](identity-transactions.md#authority-ceiling); this audit emits evidence and readiness, not edits.
+Only [Identity transactions](identity-transactions.md#authority-ceiling) owns immutable rename dimensions, application and shared fixed-RAM promotion. This audit emits evidence/readiness, not edits.

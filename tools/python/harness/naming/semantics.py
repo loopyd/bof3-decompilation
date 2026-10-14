@@ -6,8 +6,7 @@ read-only mode (``-N``, no project write-back) with its verified replay
 recipe, commands are queued in order and executed serially, and every
 command returns bounded output plus an honest exit status.  Sentinel
 markers around each command delimit its output in the single interleaved
-stdout stream.  A hung command is terminated and reaped within its
-deadline; the session never outlives the run.
+stdout stream. The session is terminated and reaped when the run ends.
 """
 
 from __future__ import annotations
@@ -17,18 +16,14 @@ import secrets
 import select
 import subprocess
 import threading
-import time
 from pathlib import Path
 from typing import Any
 
 from harness.analysis.engine import EngineIdentity, find_engine
 from harness.analysis.project import prepare_target, rizin_argv
 from harness.common.process import OwnedProcess, owned_popen
-from harness.common.deadlines import resolve_deadline
 from harness.domain.manifests import load_target_manifests
 from harness.naming import native as evidence_native
-
-DEFAULT_COMMAND_TIMEOUT = 120
 
 
 def _complete_lines(text: str) -> list[str]:
@@ -45,15 +40,11 @@ class RizinSession:
         root: Path,
         target: str,
         *,
-        command_timeout: int = DEFAULT_COMMAND_TIMEOUT,
         executable: str | Path | None = None,
-        work_deadline: float | None = None,
     ) -> None:
         self.root = root
         self.target = target
-        self.command_timeout = command_timeout
         self.executable = executable
-        self.work_deadline = resolve_deadline(work_deadline)
         self.process: OwnedProcess | None = None
         self.commands_executed = 0
         self.commands_killed = 0
@@ -96,11 +87,6 @@ class RizinSession:
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                **(
-                    {"deadline": self.work_deadline}
-                    if self.work_deadline is not None
-                    else {}
-                ),
             )
             assert self.process.stderr is not None
             self._stderr_thread = threading.Thread(
@@ -132,9 +118,7 @@ class RizinSession:
 
         self.pending.append((command, selector))
 
-    def run_queued(
-        self, timeout: float | None = None
-    ) -> list[evidence_native.SemanticResult]:
+    def run_queued(self) -> list[evidence_native.SemanticResult]:
         """Run every queued command on the single session, in order."""
 
         with self._lock:
@@ -144,16 +128,10 @@ class RizinSession:
             assert process is not None
             results: list[evidence_native.SemanticResult] = []
             for command, selector in self.pending:
-                end = time.monotonic() + min(
-                    self.command_timeout,
-                    self.command_timeout if timeout is None else timeout,
-                )
                 # The stdin loop enables interactivity after startup; recheck each
                 # capture because commands in a reused session can change it.
                 for setup in ("e scr.interactive=false", "e scr.interactive"):
-                    handshake = self._run_one(
-                        process, setup, selector, max(0, end - time.monotonic())
-                    )
+                    handshake = self._run_one(process, setup, selector)
                     if (
                         handshake.exit != 0
                         or handshake.killed
@@ -165,9 +143,7 @@ class RizinSession:
                         raise ValueError(
                             "Rizin refused verified noninteractive capture"
                         )
-                result = self._run_one(
-                    process, command, selector, max(0, end - time.monotonic())
-                )
+                result = self._run_one(process, command, selector)
                 results.append(result)
                 self.results.append(result)
             self.pending.clear()
@@ -178,7 +154,6 @@ class RizinSession:
         process: OwnedProcess,
         command: str,
         selector: str,
-        timeout: float | None = None,
     ) -> evidence_native.SemanticResult:
         with self._lock:
             if process.poll() is not None:
@@ -195,14 +170,8 @@ class RizinSession:
             end_marker = f"BOF3_FRAME_{nonce}_END"
             stderr_marker = f"BOF3_FRAME_{nonce}_STDERR_END"
             self.commands_executed += 1
-            started = time.monotonic()
             stderr_start = self._stderr_size()
             try:
-                if (
-                    self.work_deadline is not None
-                    and time.monotonic() >= self.work_deadline
-                ):
-                    return self.expire_command(command, selector)
                 # The deliberately invalid final command makes Rizin write a
                 # unique marker to stderr.  Waiting until the drain thread has
                 # acknowledged that marker establishes a cross-pipe command
@@ -223,18 +192,7 @@ class RizinSession:
                     killed=True,
                 )
             raw = b""
-            limit = (
-                self.command_timeout
-                if timeout is None
-                else min(self.command_timeout, timeout)
-            )
-            if self.work_deadline is not None:
-                limit = min(limit, max(0, self.work_deadline - started))
             while True:
-                if time.monotonic() - started > limit:
-                    return self.expire_command(
-                        command, selector, raw=raw.decode(errors="replace")
-                    )
                 ready, _, _ = select.select(
                     [process.stdout] if process.stdout else [], [], [], 0.05
                 )
@@ -282,21 +240,22 @@ class RizinSession:
                                 )
                                 if boundary_index is not None:
                                     break
-                                remaining = limit - (time.monotonic() - started)
-                                if remaining <= 0:
-                                    self.kill()
+                                if process.poll() is not None and (
+                                    self._stderr_thread is None
+                                    or not self._stderr_thread.is_alive()
+                                ):
                                     self.commands_killed += 1
                                     return evidence_native.SemanticResult(
                                         command=command,
                                         selector=selector,
-                                        exit=124,
+                                        exit=process.returncode or 1,
                                         output=(
-                                            "deadline exceeded waiting for rizin "
-                                            "stderr boundary"
+                                            "rizin session exited before the stderr "
+                                            "boundary was captured"
                                         ),
                                         killed=True,
                                     )
-                                self._stderr_changed.wait(min(remaining, 0.05))
+                                self._stderr_changed.wait(0.05)
                         diagnostic_lines = [
                             line.rstrip("\r\n")
                             for line in stderr_lines[:boundary_index]
@@ -307,10 +266,6 @@ class RizinSession:
                             for line in diagnostic_lines
                         )
                         forensic = output + stderr
-                        if time.monotonic() - started >= limit:
-                            return self.expire_command(
-                                command, selector, raw=output, stderr=stderr
-                            )
                         return evidence_native.SemanticResult(
                             command=command,
                             selector=selector,
@@ -328,21 +283,6 @@ class RizinSession:
                         output="rizin session exited before command completed",
                         killed=True,
                     )
-
-    def expire_command(
-        self, command: str, selector: str, *, raw: str = "", stderr: str = ""
-    ) -> evidence_native.SemanticResult:
-        self.kill()
-        self.commands_killed += 1
-        return evidence_native.SemanticResult(
-            command=command,
-            selector=selector,
-            exit=124,
-            output=f"deadline exceeded: rizin command {command!r} killed",
-            killed=True,
-            raw=raw,
-            stderr=stderr,
-        )
 
     def kill(self) -> None:
         """Terminate and reap the session so nothing outlives the run."""

@@ -14,7 +14,6 @@ from typing import Literal
 
 from harness.common.failures import FailureEvent, retain
 from harness.common.artifacts import read_bytes as read_bounded_bytes
-from harness.common.deadlines import check_deadline
 from harness.common.digests import digest
 from harness.io import unique_object
 
@@ -149,7 +148,6 @@ def read_bytes(
     )
     limits = [value for value in (max_bytes, _READ_BOUND.get()) if value is not None]
     if limits:
-        check_deadline()
         limit = min(limits)
         reader = _READER.get()
         try:
@@ -170,7 +168,6 @@ def read_bytes(
                 dict(path=str(path), bytes=len(data), sha256=sha256_bytes(data))
             )
         require(len(data) <= limit, f"{subject} exceeds its input read bound")
-        check_deadline()
         return data
     if io_mode == "exact":
         local, stream, data = [], None, None

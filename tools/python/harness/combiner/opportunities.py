@@ -12,7 +12,6 @@ from pathlib import Path
 from harness import io as harness_io
 from harness.analysis.index import connect, validate_index
 from harness.common import lexicon
-from harness.common.deadlines import check_deadline
 from harness.common.digests import digest
 from harness.common.directory import validate_repo_path
 from harness.common.inputs import InputBatch
@@ -112,7 +111,6 @@ def _describe_function(root, resolved, layout, payload, binary, read, *, member)
 def _rank_pairs(members, relations, minimum_shared, top_n, *, feature="shared_callees"):
     pairs = []
     for left, right in combinations(members, 2):
-        check_deadline()
         shared = sorted(relations[left] & relations[right])
         pairs.append(
             {
@@ -142,7 +140,6 @@ def _rank_pairs(members, relations, minimum_shared, top_n, *, feature="shared_ca
     for rank, pair in enumerate(ranking, 1):
         pair["rank"] = rank
     for pair in pairs:
-        check_deadline()
         pair["overlaps"] = [
             other["id"]
             for other in pairs
@@ -186,7 +183,6 @@ def _macro_relations(root, resolved, connection, members, functions, read):
         {},
     )
     for member in members:
-        check_deadline()
         source = functions[member]["source"]
         path = root / source
         text = read(path).decode("utf-8")
@@ -220,7 +216,6 @@ def _macro_relations(root, resolved, connection, members, functions, read):
                 for use in macro_facts.parse_macro_uses(text, names)
             }
     for definition in definitions:
-        check_deadline()
         source = validate_repo_path(definition["source_path"])
         raw = read(root / source)
         if sha256(raw).hexdigest() != definition["source_sha256"]:
@@ -275,7 +270,6 @@ def _macro_relations(root, resolved, connection, members, functions, read):
         functions[member]["source"] for member in members
     }
     for use in uses:
-        check_deadline()
         member, source = use["function_id"], use["source_path"]
         if source != functions[member]["source"]:
             raise ValueError("indexed macro use differs from its function source")
@@ -354,7 +348,6 @@ def _private_type_relations(root, resolved, connection, members, functions, read
     entities = {}
     occurrences = {resolved.id.value: [], "__shared__": []}
     for path, provenance in type_inputs.authored_type_headers(root, manifest):
-        check_deadline()
         source = path.relative_to(root).as_posix()
         scope = resolved.id.value if provenance == "header_claim" else "__shared__"
         records = c_context.declaration_records(read(path).decode("utf-8"))
@@ -387,7 +380,6 @@ def _private_type_relations(root, resolved, connection, members, functions, read
     if len(definitions) > _EDGE_LIMIT:
         raise ValueError("discovery pool exceeds 4096 referenced type declarations")
     for definition in definitions:
-        check_deadline()
         entity = entities.get(definition["id"])
         if entity is None:
             raise ValueError(
@@ -462,7 +454,6 @@ def _private_type_relations(root, resolved, connection, members, functions, read
         path.relative_to(root).as_posix() for path in resolved.header_paths
     }
     for use in uses:
-        check_deadline()
         member, source = use["function_id"], use["source_path"]
         if source != functions[member]["source"]:
             raise ValueError("indexed type use differs from its function source")
@@ -563,7 +554,6 @@ def _storage_relations(root, resolved, connection, members, functions, payload, 
     ]
     original = []
     for member in members:
-        check_deadline()
         function = functions[member]
         start = payload.binary_offset + function["address"] - payload.load_address
         for offset, address, access, opcode in mips.data_references(
@@ -603,7 +593,6 @@ def _storage_relations(root, resolved, connection, members, functions, payload, 
     by_address = {int(row["address"], 16): row for row in candidates}
     relations = {member: set() for member in members}
     for reference in references:
-        check_deadline()
         reason = None
         candidate = by_address.get(reference["address"])
         if reference["access_kind"] not in {"load", "store"}:
@@ -679,7 +668,6 @@ def _collect_functional_relations(
         raise ValueError("functional subcategories require a bounded exact member pool")
     by_category = {}
     for category in categories:
-        check_deadline()
         _require_subcategory_fields(category, {"id", "description"}, "subcategory")
         identity = _require_subcategory_text(category["id"], "ID", identifier=True)
         _require_subcategory_text(category["description"], "description")
@@ -688,7 +676,6 @@ def _collect_functional_relations(
         by_category[identity] = category
     by_member = {}
     for assignment in assignments:
-        check_deadline()
         _require_subcategory_fields(
             assignment,
             {
@@ -714,7 +701,6 @@ def _collect_functional_relations(
         )
     relations, evidence, count = {}, [], 0
     for member in members:
-        check_deadline()
         function = functions[member]
         source = function["source"]
         raw = read(root / source)
@@ -750,7 +736,6 @@ def _collect_functional_relations(
             raise ValueError("functional pool exceeds 4096 subcategory assignments")
         relations[member] = set()
         for category in selected:
-            check_deadline()
             _require_subcategory_fields(
                 category, {"id", "rationale"}, "subcategory assignment"
             )
@@ -802,7 +787,6 @@ def discover_pairs(
     expected_fingerprint: str | None = None,
 ) -> dict:
     """Rank every unordered pair in an explicit target-local reviewed C pool."""
-    check_deadline()
     if (
         method
         not in {
@@ -962,7 +946,6 @@ def discover_pairs(
             raise ValueError("discovery pool exceeds 4096 indexed call edges")
         direct_callees = {member: set() for member in members}
         for call in calls:
-            check_deadline()
             caller = functions[call["caller"]]
             callee = parse_function_id(call["callee"])
             pc = call["callsite"]
@@ -1210,5 +1193,4 @@ def discover_pairs(
         and result["fingerprint"] != expected_fingerprint
     ):
         raise ValueError("discovery fingerprint differs from the external pin")
-    check_deadline()
     return result

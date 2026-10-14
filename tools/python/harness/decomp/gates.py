@@ -10,7 +10,6 @@ from harness.build.operations import cmake_target_for_source
 from harness.common.checks import check_evidence, validate_partial_evidence
 from harness.common.commands import command as canonical
 from harness.common.commands import tool_id
-from harness.common.deadlines import check_deadline, resolve_deadline
 from harness.common.digests import digest
 from harness.common.lease import require_writer
 from harness.common.process import run_bounded
@@ -59,7 +58,6 @@ def audit_candidate(
     if report["mission"]["status"] == "exact" and not checks["byte_exact"]:
         raise ValueError("lift byte-match claim differs from parent native gates")
     validate_handoff(report, after)
-    check_deadline()
     require_writer(root)
     result = {
         **{key: value for key, value in checks.items() if key != "digest"},
@@ -87,10 +85,6 @@ def check_candidate(
     verify_policy(root, policy, expected_policy_digest, before_dispatch=False)
     if policy["paths"] != record["request"]["paths"]:
         raise ValueError("lift native policy differs from the pinned source scope")
-    check_deadline()
-    deadline = resolve_deadline()
-    if deadline is None:
-        raise ValueError("lift gates require the original work cutoff")
     selector = record["request"]["selector"]
     identity = parse_function_id(selector)
     target, address = identity.target.value, identity.address
@@ -100,7 +94,6 @@ def check_candidate(
 
     def run_gate(label: str, command: list[str]) -> dict:
         require_writer(root)
-        check_deadline()
         verify_scope(
             before["inventory"], inspect_candidate(root, record)["inventory"], []
         )
@@ -115,8 +108,6 @@ def check_candidate(
         gate = run_bounded(
             root,
             wrapped,
-            timeout=120,
-            deadline=deadline,
             output_limit=1024 * 1024,
             on_output=lambda stream, chunk: stream_gate(label, stream, chunk),
             on_spawn=lambda process: publish(
@@ -237,7 +228,6 @@ def check_candidate(
     outcomes = {gate["payload"]["byte_match"] for gate in gates}
     if len(outcomes) != 1:
         raise ValueError("lift native byte gates disagree")
-    check_deadline()
     require_writer(root)
     result = {
         "schema": "bof3.lift-check/v1",

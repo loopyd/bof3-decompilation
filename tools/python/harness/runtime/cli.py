@@ -9,12 +9,10 @@ from pathlib import Path
 from harness.common.cli import (
     add_example_argument,
     add_root_argument,
-    add_work_deadline_argument,
     resolved_root,
     run_main,
 )
 from harness.io import repo_layout
-from harness.common.deadlines import use_deadline
 from harness.runtime.session import run_session
 from harness.toolchain.pcsx import PcsxReduxToolchain
 
@@ -32,7 +30,6 @@ def build_parser() -> argparse.ArgumentParser:
         aliases=["catalog"],
         help="inspect verified embedded mission resources",
     )
-    add_work_deadline_argument(catalogue)
     catalogue.set_defaults(handler=run_runtime)
     command = commands.add_parser(
         "run", help="execute a trusted Lua mission with bounded process ownership"
@@ -72,9 +69,7 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="NAME=VALUE",
         help="mission argument exposed as PSX_RUNTIME_ARG_NAME (repeatable)",
     )
-    command.add_argument("--timeout", type=float, default=60)
     command.add_argument("--output-limit", type=int, default=2 * 1024 * 1024)
-    add_work_deadline_argument(command)
     command.set_defaults(handler=run_runtime)
     return parser
 
@@ -85,9 +80,8 @@ def run_runtime(args: argparse.Namespace) -> int:
         toolchain.verify()
         report = {"schema": "psx.runtime-status/v1", **toolchain.runtime_identity()}
     elif args.command in {"missions", "catalog"}:
-        with use_deadline(args.work_deadline):
-            toolchain.verify()
-            report = toolchain.runtime_identity()["resources"]
+        toolchain.verify()
+        report = toolchain.runtime_identity()["resources"]
     else:
         report = run_session(
             toolchain,
@@ -96,9 +90,7 @@ def run_runtime(args: argparse.Namespace) -> int:
             script=args.script,
             mission=args.mission,
             output=args.output,
-            timeout=args.timeout,
             output_limit=args.output_limit,
-            deadline=args.work_deadline,
             arguments=args.argument,
             modules=args.module,
             files=args.input,

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from harness.common.deadlines import check_deadline
 from harness.common.inputs import InputBatch
 from harness.common.paths import leaf_stat
 from harness.domain.layout import parse_splat_text
@@ -17,7 +16,6 @@ _LIMIT = 64 * 1024 * 1024
 
 def capture_members(root: Path, record: dict, preserved: dict) -> dict:
     """Read only preserved paths; the caller retains the dispatch watch and lease."""
-    check_deadline()
     profile = record["profile"]
     if (
         record["fingerprint"] != preserved["preservation_fingerprint"]
@@ -83,7 +81,6 @@ def capture_members(root: Path, record: dict, preserved: dict) -> dict:
         selectors, names = set(), set()
         for member in profile["members"]:
             for function in member["functions"]:
-                check_deadline()
                 selector, symbol = function["selector"], function["symbol"]
                 target, raw_address = selector.rsplit("@", 1)
                 address = int(raw_address, 16)
@@ -142,7 +139,6 @@ def capture_members(root: Path, record: dict, preserved: dict) -> dict:
                 )
         if len(functions) < 2 or sorted(selectors) != preserved["selectors"]:
             raise ValueError("comparison must cover every preserved group member")
-    check_deadline()
     return {
         "target": manifest.id.value,
         "binary": manifest.binary,

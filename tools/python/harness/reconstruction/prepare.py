@@ -14,7 +14,6 @@ from harness.common.artifacts import (
     FileIdentity,
     read_bytes,
 )
-from harness.common.deadlines import check_deadline, use_deadline
 from harness.common.failures import FailureEvent, PolicyFailure, primary, retain
 from harness.common.digests import file_record
 from harness.io import file_sha256
@@ -449,43 +448,41 @@ class SharedProvenanceFacts:
     failures: tuple[FailureEvent, ...]
 
 
-def discover_generation_runs(directories, reader, deadline):
+def discover_generation_runs(directories, reader):
     import hashlib
 
     runs, seen = [], set()
-    with use_deadline(deadline):
-        for directory in directories:
-            events, consumed = [], None
-            path = directory / "run.json"
-            try:
-                check_deadline()
-                _require(
-                    directory.is_absolute()
-                    and directory.resolve() == directory
-                    and directory.is_dir()
-                    and not directory.is_symlink(),
-                    "generation directory must be canonical and regular",
-                )
-                _require(
-                    path.is_file() and not path.is_symlink(),
-                    "canonical generation run.json is missing",
-                )
-                data = reader(path, 64 << 20, events)
-                consumed = ConsumedFile(
-                    FileIdentity(path, len(data), hashlib.sha256(data).hexdigest()),
-                    data,
-                )
-                key = (path, consumed.identity.bytes, consumed.identity.sha256)
-                if key in seen:
-                    continue
-                seen.add(key)
-            except Exception as error:
-                retain(events, error, phase="generation-discovery", path=path)
-            runs.append(GenerationRunInput(directory, consumed, tuple(events)))
+    for directory in directories:
+        events, consumed = [], None
+        path = directory / "run.json"
+        try:
+            _require(
+                directory.is_absolute()
+                and directory.resolve() == directory
+                and directory.is_dir()
+                and not directory.is_symlink(),
+                "generation directory must be canonical and regular",
+            )
+            _require(
+                path.is_file() and not path.is_symlink(),
+                "canonical generation run.json is missing",
+            )
+            data = reader(path, 64 << 20, events)
+            consumed = ConsumedFile(
+                FileIdentity(path, len(data), hashlib.sha256(data).hexdigest()),
+                data,
+            )
+            key = (path, consumed.identity.bytes, consumed.identity.sha256)
+            if key in seen:
+                continue
+            seen.add(key)
+        except Exception as error:
+            retain(events, error, phase="generation-discovery", path=path)
+        runs.append(GenerationRunInput(directory, consumed, tuple(events)))
     return tuple(runs)
 
 
-def inspect_shared_provenance(prepared_run, runs, reader, deadline):
+def inspect_shared_provenance(prepared_run, runs, reader):
     from harness.common.artifacts import using_reader
     from harness.reconstruction import provenance
     from harness.reconstruction.nativeoutput import parse_json, parse_source_form
@@ -502,7 +499,6 @@ def inspect_shared_provenance(prepared_run, runs, reader, deadline):
         return content
 
     with (
-        use_deadline(deadline),
         using_reader(common_reader),
         contract.bounded_reads(64 << 20, reader=common_reader),
     ):
@@ -627,8 +623,6 @@ def inspect_shared_provenance(prepared_run, runs, reader, deadline):
                         type(record["limits"]) is dict
                         and set(record["limits"])
                         == {
-                            "work_seconds",
-                            "deadline",
                             "process_output_bytes",
                             "artifact_bytes",
                         },

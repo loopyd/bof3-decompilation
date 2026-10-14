@@ -313,7 +313,7 @@ def test_recover_reanalyzes_every_stale_target_before_rebuild(
         },
     )
 
-    def analyze(_root: Path, target: str, timeout: int) -> None:
+    def analyze(_root: Path, target: str) -> None:
         calls.append(("analyze", target))
         recovered.add(target)
 
@@ -328,7 +328,7 @@ def test_recover_reanalyzes_every_stale_target_before_rebuild(
 
     monkeypatch.setattr(index, "rebuild", rebuild)
 
-    assert index.run(Namespace(root=tmp_path, recover=True, timeout=5)) == 0
+    assert index.run(Namespace(root=tmp_path, recover=True)) == 0
     assert calls == [
         ("analyze", "stale/a"),
         ("analyze", "stale/b"),
@@ -366,7 +366,7 @@ def test_recover_does_not_recheck_targets_that_were_initially_fresh(
 
     monkeypatch.setattr(index, "rebuild", rebuild)
     with pytest.raises(ValueError, match="stale targets: stale"):
-        index.run(Namespace(root=tmp_path, recover=True, timeout=5))
+        index.run(Namespace(root=tmp_path, recover=True))
     assert calls["fresh"] == 1
     assert rebuilt is False
 
@@ -400,7 +400,7 @@ def test_recover_noops_when_snapshots_and_index_are_fresh(
 
     output = io.StringIO()
     with redirect_stdout(output):
-        assert index.run(Namespace(root=tmp_path, recover=True, timeout=5)) == 0
+        assert index.run(Namespace(root=tmp_path, recover=True)) == 0
     assert status_calls == ["fresh/a", "fresh/b"]
     assert output.getvalue() == "out/index/reverse.sqlite\n"
     assert rebuilt is False
@@ -422,7 +422,7 @@ def test_recover_rebuilds_when_index_is_missing_despite_fresh_snapshots(
     output.parent.mkdir(parents=True)
     monkeypatch.setattr(index, "rebuild", lambda _root: output)
 
-    assert index.run(Namespace(root=tmp_path, recover=True, timeout=5)) == 0
+    assert index.run(Namespace(root=tmp_path, recover=True)) == 0
 
 
 def test_recover_refuses_rebuild_when_target_remains_stale(
@@ -443,5 +443,5 @@ def test_recover_refuses_rebuild_when_target_remains_stale(
     monkeypatch.setattr(index, "rebuild", rebuild)
 
     with pytest.raises(ValueError, match="stale targets: stale"):
-        index.run(Namespace(root=tmp_path, recover=True, timeout=5))
+        index.run(Namespace(root=tmp_path, recover=True))
     assert rebuilt is False

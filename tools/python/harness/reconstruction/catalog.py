@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import subprocess
-import time
 from collections.abc import Callable
 from pathlib import Path
 
@@ -138,7 +137,6 @@ def select(
     root: Path,
     *,
     with_profiles=False,
-    deadline=None,
     retained=None,
     events: list[FailureEvent] | None = None,
 ) -> dict:
@@ -206,10 +204,6 @@ def select(
         "staged": {},
     }
     try:
-        if deadline is not None and time.monotonic() >= deadline:
-            raise TimeoutError(
-                "original work deadline expired before compiler validation"
-            )
         gcc_variants.check_host_compatible(entry["host"])
         if entry["assembler"] != f"maspsx --aspsx-version={recipe.MASPSX_VERSION}":
             raise ValueError("assembler is incompatible with the canonical recipe")
@@ -224,16 +218,11 @@ def select(
                 "compiler components must be regular files within their installation"
             )
         gcc.GccToolchain(layout).verify()
-        if deadline is not None and time.monotonic() >= deadline:
-            raise TimeoutError(
-                "original work deadline expired during compiler validation"
-            )
         if _observe(paths) != observed:
             raise ValueError("compiler changed during identity validation")
         profile["availability"] = "available"
     except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as error:
-        expired = deadline is not None and time.monotonic() >= deadline
-        profile["availability"] = "unverified-deadline" if expired else "refused"
+        profile["availability"] = "refused"
         profile["refusal"] = f"{type(error).__name__}: {error}"
     profile["identity"] = digests.digest(
         {
@@ -254,10 +243,7 @@ def select(
         if len(files) != len(shared_paths)
         else None,
         preparation_probe_limit={
-            "per_probe_seconds": 30,
             "maximum_probes": len(profiles),
-            "maximum_seconds": 30 * len(profiles),
-            "campaign_interruptible": False,
         },
     )
     for name in ("driver", "cc1", "cpp"):
@@ -275,14 +261,12 @@ def stage(
     destination: Path,
     *,
     with_profiles=False,
-    deadline=None,
     retained=None,
     events: list[FailureEvent] | None = None,
 ) -> tuple[dict, dict]:
     selection = select(
         root,
         with_profiles=with_profiles,
-        deadline=deadline,
         retained=retained,
         events=events,
     )

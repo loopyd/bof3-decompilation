@@ -7,7 +7,6 @@ import fcntl
 import os
 import re
 import subprocess
-import sys
 from pathlib import Path
 
 from harness.common.cli import add_example_argument, add_root_argument, run_main
@@ -169,13 +168,6 @@ def run(args: argparse.Namespace) -> int:
     source, function, directory, preparer = validate(args, root)
     if args.jobs is not None and args.jobs < 0:
         raise ValueError("--jobs must not be negative")
-    if args.time_limit is not None and args.time_limit <= 0:
-        raise ValueError("--time-limit must be positive")
-    if args.time_limit is not None and args.time_limit > 60 and not args.allow_long_run:
-        raise ValueError(
-            "--time-limit is capped at 60s per run (matching rule); "
-            "pass --allow-long-run for interactive search only"
-        )
     if args.prepare_only and args.prepared:
         raise ValueError("--prepare-only cannot be combined with --prepared")
 
@@ -221,17 +213,8 @@ def run(args: argparse.Namespace) -> int:
         if args.prepare_only:
             return 0
         toolchain = DecompPermuterToolchain(repo_layout(root))
-        result = toolchain.execute(
-            [*permuter_arguments(args), str(directory)],
-            timeout=args.time_limit,
-        )
+        result = toolchain.execute([*permuter_arguments(args), str(directory)])
         return result.returncode
-    except subprocess.TimeoutExpired:
-        print(
-            f"time limit reached after {args.time_limit:g}s; retained workspace {directory.relative_to(root)}",
-            file=sys.stderr,
-        )
-        return 0
     finally:
         lock.close()
         if acquired:
@@ -253,9 +236,7 @@ def build_parser() -> argparse.ArgumentParser:
         nargs="?",
         help="TARGET@0xADDRESS (preferred) or an existing lift source path",
     )
-    add_example_argument(
-        parser, "bin/harness lift permute exe/logo@0x801CE758 --time-limit 30"
-    )
+    add_example_argument(parser, "bin/harness lift permute exe/logo@0x801CE758")
     parser.add_argument(
         "function",
         nargs="?",
@@ -315,18 +296,6 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--speed", type=int, nargs="?", const=100)
     parser.add_argument("--seed")
     parser.add_argument("-j", "--jobs", type=int)
-    parser.add_argument(
-        "--time-limit",
-        type=float,
-        default=30.0,
-        metavar="SECONDS",
-        help="stop this coordinator after SECONDS (default 30, capped at 60; the upstream permuter has no native timer)",
-    )
-    parser.add_argument(
-        "--allow-long-run",
-        action="store_true",
-        help="override the 60s --time-limit cap (interactive search only)",
-    )
     parser.add_argument("--debug", action="store_true")
     parser.set_defaults(
         quiet=False, best_only=True, stop_on_zero=True, handler=_resolve_and_run

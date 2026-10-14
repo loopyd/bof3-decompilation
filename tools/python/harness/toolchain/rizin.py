@@ -77,7 +77,7 @@ class RizinToolchain(ExecutableToolchain):
     def verify(self) -> str:
         if not self.executable.is_file():
             raise FileNotFoundError(f"missing Rizin executable: {self.executable}")
-        result = self.execute(["-V"], capture_output=True, text=True, timeout=10)
+        result = self.execute(["-V"], capture_output=True, text=True)
         if result.returncode:
             raise RuntimeError(f"Rizin version check failed: {result.stderr.strip()}")
         original_path = os.environ.get("PATH", "")

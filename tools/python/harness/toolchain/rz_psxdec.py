@@ -8,7 +8,6 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-import time
 import zipfile
 
 from harness.common.digests import file_record
@@ -96,7 +95,6 @@ class RzPsxdecToolchain(Toolchain):
         directory: Path,
         name: str,
         *,
-        timeout=14400,
         jobs: int | None = None,
     ) -> dict:
         environment = self._environment(directory)
@@ -112,8 +110,6 @@ class RzPsxdecToolchain(Toolchain):
             directory,
             argv,
             environment=environment,
-            deadline=time.monotonic() + timeout,
-            timeout=timeout,
             output_limit=128 << 20,
             name=name,
         )
@@ -259,7 +255,6 @@ class RzPsxdecToolchain(Toolchain):
             ],
             directory,
             "probe",
-            timeout=30,
         )
 
     def build(self) -> str:

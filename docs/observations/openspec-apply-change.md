@@ -1383,7 +1383,7 @@ was about 20 minutes and completed. One malformed `sed` expression broke artifac
 listing. A later directory listing showed 23 top-level entries and JSON filenames,
 not operation equality, despite being presented as artifact verification. Its
 58,532,317-byte trace demonstrates retained capture size, not completeness of the
-write inventory. Use process handles, actual deadlines and parsed results for those
+write inventory. Use actual process handles and parsed results for those
 claims; filenames and schema validity do not replace semantic checks.
 
 The writer checked task 1.6 before independent review. The parent called the box
@@ -1560,7 +1560,7 @@ than an untested mechanism. Baseline: premature implementation/restoration wordi
 and one stale mechanism requirement in this episode. Acceptance: every completion
 statement cites returned evidence, and failed approaches leave no contradictory
 active criterion. Proposed **diagnostic reference/tooling**: capture invocation
-settings, timeout stage, effective deadline, elapsed time and output bytes before
+settings, failure stage, elapsed time and output bytes before
 choosing a layer to repair. Compare failed diagnostic edits and time to reproduced
 cause per comparable capture incident, preserving the motivating case and identity
 gates. The [naming ledger](bof3-naming.md#owner-body-scouting-and-timeout-diagnosis)
@@ -1651,7 +1651,7 @@ in task 1.9. Historical observation growth, 106→119 lines, is not benefit meas
 | Proposed improvement | Baseline and acceptance measurement |
 | --- | --- |
 | Apply directive/reference: compare equivalent invocation modes before approving or prohibiting a mechanism; inspect transport ownership before adding conditions | One incompatible stdin condition and one unproved no-op prohibition here. Compare corrective supervisor decisions / comparable incidents; every causal ruling cites a discriminating observation. |
-| Harness diagnostics: expose effective mode, framed stdout/stderr, deadline stage and distinct startup/capture timings | A standalone success and aggregate failure were overinterpreted. Measure diagnostic retries and time to reproduced cause without weakening byte or deadline gates. |
+| Harness diagnostics: expose effective mode, framed stdout/stderr, failure stage and distinct startup/capture timings | A standalone success and aggregate failure were overinterpreted. Measure diagnostic retries and time to reproduced cause while preserving byte gates. |
 | Artifact tooling: await edits, use disjoint anchors and retain full validator diagnostics | Two failed edits, one misplaced task and one dependent-read race. Compare repair calls per coherent update; no obsolete directive remains active after a correction. |
 | Recovery reference: baseline-relative diff, actual terminal handle and linked attempts | Timeout was established, but mtime/string presence was overstated. Preserve partial work, distinguish restoration evidence, and report accepted task units separately from attempts. |
 

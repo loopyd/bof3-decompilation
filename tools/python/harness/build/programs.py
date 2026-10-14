@@ -9,7 +9,6 @@ from pathlib import Path
 from harness.build.invocation import Invocation
 from harness.build.observations import MAX_CANDIDATES, validate_description
 from harness.build.runtime import derive_candidates, describe_seeds
-from harness.common.deadlines import check_deadline
 from harness.common.lookups import LookupBatch
 from harness.common.observation import PathWatch
 from harness.common.process import resolve_supervisor
@@ -23,7 +22,6 @@ def describe_requests(invocation: Invocation) -> list[dict]:
     requests = []
     count = 0
     for stage in invocation.stages:
-        check_deadline()
         environment = dict(stage.environment)
         if stage.supervisor != resolve_supervisor():
             raise ValueError("compiler supervisor command changed")
@@ -68,7 +66,6 @@ def describe_requests(invocation: Invocation) -> list[dict]:
                     "candidates": candidates,
                 }
             )
-    check_deadline()
     return requests
 
 
@@ -81,7 +78,6 @@ def describe_inputs(invocation: Invocation) -> dict:
 
 
 def _capture(root: Path, inputs: dict) -> dict:
-    check_deadline()
     requests, seeds = inputs["requests"], inputs["runtime_seeds"]
     with LookupBatch() as batch:
         repository = batch.observe(str(root), cwd=root)
@@ -89,7 +85,6 @@ def _capture(root: Path, inputs: dict) -> dict:
             raise ValueError("program observation root is not a canonical directory")
         observations = []
         for request in requests:
-            check_deadline()
             lookups = [
                 batch.observe(name, cwd=Path(request["cwd"]))
                 for name in request["candidates"]
@@ -104,7 +99,6 @@ def _capture(root: Path, inputs: dict) -> dict:
         ):
             raise ValueError("combined program candidate budget exceeded")
         for request in derived:
-            check_deadline()
             observations.append(
                 {
                     **request,
@@ -139,7 +133,6 @@ def _capture(root: Path, inputs: dict) -> dict:
         "complete": False,
     }
     validate_description(result)
-    check_deadline()
     return result
 
 
@@ -173,7 +166,6 @@ class ProgramSnapshot:
 
     def _require_active(self) -> None:
         try:
-            check_deadline()
             if self._closed or self._failed:
                 raise ValueError("program snapshot is closed or failed")
         except BaseException:
@@ -186,7 +178,6 @@ class ProgramSnapshot:
 
     def validate(self, invocation: Invocation) -> None:
         try:
-            check_deadline()
             if self._closed or self._failed or self._watch is None:
                 raise ValueError("program snapshot is closed or failed")
             self._watch.validate()
@@ -196,7 +187,6 @@ class ProgramSnapshot:
             ):
                 raise ValueError("compiler program inputs changed")
             self._watch.validate()
-            check_deadline()
         except BaseException:
             self._failed = True
             raise
@@ -222,7 +212,6 @@ class ProgramSnapshot:
             for output in outputs:
                 for artifact in {output, output.resolve()}:
                     for path, kind in paths:
-                        check_deadline()
                         if (
                             artifact == path
                             or path.is_relative_to(artifact)
@@ -241,7 +230,6 @@ class ProgramSnapshot:
                             raise ValueError(
                                 "compiler artifact collides with a program dependency"
                             )
-            check_deadline()
         except BaseException:
             self._failed = True
             raise
@@ -256,14 +244,12 @@ class ProgramSnapshot:
             paths.update(path.absolute() for path in inputs)
             paths.update(path.resolve() for path in inputs)
             for path in paths:
-                check_deadline()
                 for parent in {directory.absolute(), directory.resolve()}:
                     if path.is_relative_to(parent) and path != parent:
                         if path.relative_to(parent).parts[0].startswith(prefix):
                             raise ValueError(
                                 "compiler staging family collides with a dependency"
                             )
-            check_deadline()
         except BaseException:
             self._failed = True
             raise

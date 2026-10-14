@@ -5,9 +5,7 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import asdict, dataclass
 import hashlib
-import math
 from pathlib import Path
-import time
 
 from harness.build import recipe
 
@@ -17,7 +15,6 @@ from harness.common.artifacts import (
     using_reader,
     write_bytes,
 )
-from harness.common.deadlines import check_deadline, resolve_deadline, use_deadline
 from harness.common.failures import FailureEvent, PolicyFailure, facts, retain
 from harness.io import repo_layout
 from harness.reconstruction import (
@@ -56,7 +53,6 @@ EXACT = (*SEMANTIC, "complete-function-bytes")
 
 @dataclass(frozen=True)
 class Limits:
-    work_seconds: float
     input_read_limit: int
     input_open_limit: int
     artifact_limit: int
@@ -490,7 +486,6 @@ def _verify_attempt(
             result_record=result_record,
             run_record=generation.run.as_record(),
             workspace=workspace / "rebuild",
-            deadline=allowance.cutoff,
             output_limit=limits.output_limit,
             artifact_limit=limits.artifact_limit,
             retained=rebuilt,
@@ -505,7 +500,6 @@ def _verify_attempt(
             rebuild_record=rebuild_record,
             prepared_run=prepared_run,
             workspace=workspace / "comparison",
-            deadline=allowance.cutoff,
             output_limit=limits.output_limit,
             artifact_limit=limits.artifact_limit,
             retained=measured,
@@ -514,7 +508,6 @@ def _verify_attempt(
             comparison_record=workspace / "comparison/comparison-result.json",
             prepared_run=prepared_run,
             workspace=workspace / "associated",
-            deadline=allowance.cutoff,
             output_limit=limits.output_limit,
             artifact_limit=limits.artifact_limit,
             input_read_limit=limits.input_read_limit,
@@ -662,11 +655,8 @@ def _run(request, operation):
     try:
         limits = request.limits
         _require(
-            request.required_mode in MODES
-            and type(limits.work_seconds) in {int, float}
-            and math.isfinite(limits.work_seconds)
-            and limits.work_seconds > 0,
-            "reporting requires a supported mode and positive finite work seconds",
+            request.required_mode in MODES,
+            "reporting requires a supported mode",
         )
         _require(
             all(
@@ -680,9 +670,7 @@ def _run(request, operation):
             ),
             "reporting consumption/output limits must be positive integers",
         )
-        cutoff = resolve_deadline(time.monotonic() + limits.work_seconds)
         allowance = comparison.ConsumptionAllowance(
-            cutoff=cutoff,
             read_limit=limits.input_read_limit,
             open_limit=limits.input_open_limit,
             artifact_limit=limits.artifact_limit,
@@ -718,7 +706,6 @@ def _run(request, operation):
             destination.mkdir(mode=0o700)
             owned = True
         with (
-            use_deadline(cutoff),
             using_reader(allowance.read_bytes),
             contract.bounded_reads(limits.artifact_limit, reader=allowance.read_bytes),
         ):
@@ -729,15 +716,12 @@ def _run(request, operation):
                 baseline_sha256=corpus.baseline_sha256,
                 member_set_sha256=corpus.member_set_sha256,
                 exclusion_set_sha256=corpus.exclusion_set_sha256,
-                deadline=cutoff,
                 limits=asdict(limits),
             )
             accounts = ()
             discovery = None
             if operation == "verify":
-                runs = prepare.discover_generation_runs(
-                    sources, allowance.read_bytes, cutoff
-                )
+                runs = prepare.discover_generation_runs(sources, allowance.read_bytes)
             else:
                 discovery = comparison.discover_verification_accounts(
                     sources,
@@ -769,7 +753,7 @@ def _run(request, operation):
                     accounts, allowance, events, attempts=discovery.attempts
                 )
             shared = prepare.inspect_shared_provenance(
-                prepared_run, runs, allowance.read_bytes, cutoff
+                prepared_run, runs, allowance.read_bytes
             )
             if operation == "report":
                 destination.mkdir(mode=0o700)
@@ -808,7 +792,6 @@ def _run(request, operation):
                         member = shared.binding.member(key)
                         candidate = generation.directory / f"member-{index:03d}"
                         try:
-                            check_deadline()
                             if generation.failures:
                                 raise PolicyFailure(
                                     "this generation's current physical provenance was refused"
@@ -941,10 +924,9 @@ def _run(request, operation):
             fresh_runs = prepare.discover_generation_runs(
                 tuple(row.directory for row in shared.generations),
                 allowance.read_bytes,
-                cutoff,
             )
             fresh_shared = prepare.inspect_shared_provenance(
-                prepared_run, fresh_runs, allowance.read_bytes, cutoff
+                prepared_run, fresh_runs, allowance.read_bytes
             )
             _require(
                 not fresh_shared.failures
@@ -1065,7 +1047,6 @@ def _run(request, operation):
                 allowance.read_bytes(pending, len(data), events) == data,
                 "pending report bytes changed before publication",
             )
-            check_deadline()
             _require(
                 not events and not allowance.failed_reserved_bytes,
                 "terminal publication has retained consumption failures",

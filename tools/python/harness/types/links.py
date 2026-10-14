@@ -6,7 +6,6 @@ import json
 import re
 from pathlib import Path
 
-from harness.common.deadlines import check_deadline
 from harness.common.digests import digest
 from harness.common.directory import validate_repo_path
 from harness.common.inputs import InputBatch
@@ -101,14 +100,12 @@ def _observations(value, candidate: dict, label: str) -> None:
 
 
 def _json(content: bytes) -> dict:
-    check_deadline()
     try:
         value = json.loads(content.decode("utf-8"), object_pairs_hook=unique_object)
     except (ValueError, UnicodeDecodeError, RecursionError) as error:
         raise ValueError("linked type artifact is not bounded JSON") from error
     if not isinstance(value, dict):
         raise ValueError("linked type artifact must be an object")
-    check_deadline()
     return value
 
 
@@ -223,7 +220,6 @@ def _owner(root: Path, value, manifests: dict) -> str:
     }
     with InputBatch(root) as batch:
         for name in _strings(owner["paths"], "owner paths"):
-            check_deadline()
             name = validate_repo_path(name)
             if (
                 name not in claimed
@@ -319,7 +315,6 @@ def _object(
         if not isinstance(obj[key], list):
             raise ValueError(f"linked type object {key} must be an array")
         for span in obj[key]:
-            check_deadline()
             _closed(
                 span,
                 "offset width type signedness role observations"
@@ -490,7 +485,6 @@ def validate_consumers(
     required = set()
     for row in rows:
         for item in row["evidence"]:
-            check_deadline()
             if not isinstance(item, dict):
                 raise ValueError("linked type indexed consumer evidence is unsupported")
             values = ([item["function"]] if "function" in item else []) + item.get(
@@ -510,7 +504,6 @@ def validate_consumers(
         for row in connection.execute(
             "SELECT target_id,address,source FROM functions WHERE source IS NOT NULL"
         ):
-            check_deadline()
             target, address, source = row
             path = Path(source)
             if not path.is_absolute():

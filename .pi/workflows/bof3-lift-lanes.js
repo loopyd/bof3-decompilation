@@ -25,7 +25,7 @@
 //  - one target per lane, disjoint target-local write sets;
 //  - a `lift gate` PASS is exact, so NO review is spent on an exact selector;
 //  - a non-exact selector goes to a reviewer, then to a bounded repair round;
-//  - per-lane failure isolation: a lane timeout/error becomes that lane's result
+//  - per-lane failure isolation: an error becomes that lane's result
 //    and never rejects the batch;
 //  - bounded concurrency (the caller's globalConcurrencyLimit), never 20;
 //  - lanes never run `just check`, never touch another target or shared config.
@@ -36,12 +36,7 @@ const rawLanes = Array.isArray(args.lanes) ? args.lanes : [];
 const maxSelectors = Number.isInteger(args.maxSelectors) ? args.maxSelectors : 2;
 const repairRounds = Number.isInteger(args.repairRounds) ? args.repairRounds : 1;
 const harnessCallLimit = 12; // cumulative writer calls across lift and every repair
-const laneTimeoutMs = Number.isInteger(args.laneTimeoutMs) ? args.laneTimeoutMs : 3600000;
-const reviewTimeoutMs = Number.isInteger(args.reviewTimeoutMs) ? args.reviewTimeoutMs : 2400000;
-// A repair round is a bounded second attempt, not a fresh campaign: the tool budget
-// and short clock stop a hard selector from eating the batch (batch-007 lane-1 spent
-// 18+ min re-sweeping a known clean-C ceiling).
-const repairTimeoutMs = Number.isInteger(args.repairTimeoutMs) ? args.repairTimeoutMs : 900000;
+// A repair round keeps the cumulative tool budget from the original attempt.
 
 if (rawLanes.length === 0) {
   return { ok: false, error: "bof3-lift-lanes: args.lanes must list at least one { key, target, refs } lane" };
@@ -224,7 +219,6 @@ const laneChain = (lane) => {
       agent: "bof3-lifter",
       output: false,
       task: liftBrief(lane),
-      timeoutMs: laneTimeoutMs,
     })
     .then(
       (lift) => {
@@ -276,7 +270,6 @@ const reviewOnce = (lane, proposedText, round) => {
       agent: "bof3-reviewer",
       output: false,
       task: reviewBrief(lane, proposedText),
-      timeoutMs: reviewTimeoutMs,
     })
     .then(
       (review) => {
@@ -293,7 +286,6 @@ const reviewOnce = (lane, proposedText, round) => {
             agent: "bof3-lifter",
             output: false,
             task: repairBrief(lane, text, proposedText),
-            timeoutMs: repairTimeoutMs,
             toolBudget: { soft: 24, hard: 40 },
           })
           .then(

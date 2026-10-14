@@ -1,9 +1,8 @@
-"""Own external process trees across normal exit, timeout, and owner death."""
+"""Own external process trees across normal exit, interruption, and owner death."""
 
 from __future__ import annotations
 
 import json
-import math
 import os
 import selectors
 import subprocess
@@ -15,7 +14,6 @@ from pathlib import Path
 from typing import IO, Any
 
 from harness.common.children import adopt_children, open_child_exit, reap_children
-from harness.common.deadlines import resolve_deadline, validate_deadline
 from harness.common.digests import file_record
 
 
@@ -44,19 +42,13 @@ def _close_inherited(fds: Sequence[int]) -> None:
 def _supervise(
     owner_fd: int,
     argv: Sequence[str],
-    deadline: float | None,
     pass_fds: tuple[int, ...] = (),
     *,
     env: Mapping[str, str],
 ) -> int:
     adopt_children()
-    validate_deadline(deadline)
     with selectors.DefaultSelector() as poll:
         poll.register(owner_fd, selectors.EVENT_READ)
-        if deadline is not None and time.monotonic() >= deadline:
-            os.close(owner_fd)
-            _close_inherited(pass_fds)
-            return 124
         try:
             child = subprocess.Popen(
                 argv, env=env, start_new_session=True, pass_fds=tuple(pass_fds)
@@ -71,12 +63,7 @@ def _supervise(
             if child_exit is not None:
                 poll.register(child_exit, selectors.EVENT_READ)
             while child.poll() is None:
-                remaining = (
-                    deadline - time.monotonic() if deadline is not None else 0.05
-                )
-                if remaining <= 0:
-                    break
-                events = poll.select(min(0.05, remaining))
+                events = poll.select(0.05)
                 if any(key.fd == owner_fd for key, _ in events) and not os.read(
                     owner_fd, 1
                 ):
@@ -241,7 +228,6 @@ def owned_popen(
     stderr: int | IO[Any] | None = None,
     text: bool = False,
     bufsize: int = -1,
-    deadline: float | None = None,
     supervisor: tuple[str, ...] | None = None,
     pass_fds: Sequence[int] = (),
 ) -> OwnedProcess:
@@ -253,9 +239,6 @@ def owned_popen(
 
     if not sys.platform.startswith("linux"):
         raise RuntimeError("native process ownership requires Linux subreaper support")
-    validate_deadline(deadline)
-    if deadline is not None and time.monotonic() >= deadline:
-        raise subprocess.TimeoutExpired(argv, 0)
     extra_fds = validate_pass_fds(pass_fds)
     if supervisor is not None and tuple(supervisor) not in supervisor_variants():
         raise ValueError(
@@ -287,7 +270,6 @@ def owned_popen(
             str(owner_read),
             str(completion_write),
             command,
-            json.dumps(deadline),
             json.dumps(list(extra_fds)),
             str(context.fileno()),
         ]
@@ -300,8 +282,6 @@ def owned_popen(
             raise ValueError("pass_fds overlaps an internal control descriptor")
         try:
             os.set_blocking(completion_read, False)
-            if deadline is not None and time.monotonic() >= deadline:
-                raise subprocess.TimeoutExpired(argv, 0)
             process = subprocess.Popen(
                 launcher,
                 cwd=cwd,
@@ -337,10 +317,8 @@ def run_bounded(
     root: Path,
     argv: Sequence[str | Path],
     *,
-    timeout: float,
     output_limit: int,
     errors: str = "replace",
-    deadline: float | None = None,
     input_data: bytes | None = None,
     on_output: Callable[[str, bytes], None] | None = None,
     on_spawn: Callable[[OwnedProcess], None] | None = None,
@@ -348,7 +326,7 @@ def run_bounded(
     supervisor: tuple[str, ...] | None = None,
     pass_fds: Sequence[int] = (),
 ) -> dict[str, Any]:
-    """Bound owned work by pre-spawn timeout and an optional monotonic deadline.
+    """Run owned work with bounded output.
 
     Optional input bytes are written concurrently with output reads. Trusted
     callbacks observe the spawned supervisor and retained output chunks; their
@@ -357,46 +335,25 @@ def run_bounded(
     ``raw_exit`` is the owned supervisor's process return code after cleanup;
     it is ``None`` when no supervisor was launched.
     """
-    if (
-        type(timeout) not in {int, float}
-        or not math.isfinite(timeout)
-        or timeout <= 0
-        or type(output_limit) is not int
-        or output_limit < 1
-    ):
-        raise ValueError("command timeout and output limit must be positive")
+    if type(output_limit) is not int or output_limit < 1:
+        raise ValueError("command output limit must be positive")
     if (
         (input_data is not None and type(input_data) is not bytes)
         or (on_output is not None and not callable(on_output))
         or (on_spawn is not None and not callable(on_spawn))
     ):
         raise ValueError("invalid command input bytes or stream callbacks")
-    validate_deadline(deadline)
     started = time.monotonic()
-    deadline = (
-        min(started + timeout, deadline) if deadline is not None else started + timeout
+    process = owned_popen(
+        argv,
+        cwd=root,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        pass_fds=pass_fds,
+        **({"supervisor": supervisor} if supervisor is not None else {}),
+        **({"env": env} if env is not None else {}),
+        **({"stdin": subprocess.PIPE} if input_data is not None else {}),
     )
-    try:
-        process = owned_popen(
-            argv,
-            cwd=root,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            deadline=deadline,
-            pass_fds=pass_fds,
-            **({"supervisor": supervisor} if supervisor is not None else {}),
-            **({"env": env} if env is not None else {}),
-            **({"stdin": subprocess.PIPE} if input_data is not None else {}),
-        )
-    except subprocess.TimeoutExpired:
-        return {
-            "argv": argv,
-            "exit_code": 124,
-            "raw_exit": None,
-            "failure": "timeout",
-            "stdout": "",
-            "stderr": "work deadline expired before launch\n",
-        }
     streams = {"stdout": bytearray(), "stderr": bytearray()}
     failure = None
     callback_failed = False
@@ -427,9 +384,9 @@ def run_bounded(
             retain_observed(error)
             raise
 
-    def wait_owned(timeout: float) -> None:
+    def wait_owned() -> None:
         try:
-            process.wait(timeout=timeout)
+            process.wait()
         except ProcessCleanupError as error:
             retain_observed(error)
             raise
@@ -447,12 +404,7 @@ def run_bounded(
             elif input_data is not None:
                 process.stdin.close()
             while poll.get_map():
-                if time.monotonic() >= deadline:
-                    failure = "timeout"
-                    break
-                for key, _ in poll.select(
-                    min(0.2, max(0, deadline - time.monotonic()))
-                ):
+                for key, _ in poll.select(0.2):
                     if key.data == "stdin":
                         try:
                             offset += os.write(
@@ -480,20 +432,10 @@ def run_bounded(
                             break
                 if failure:
                     break
-        if failure is None and time.monotonic() >= deadline:
-            failure = "timeout"
         if failure:
             terminate_owned()
         else:
-            wait_owned(max(0.01, deadline - time.monotonic()))
-            if time.monotonic() >= deadline:
-                failure = "timeout"
-    except subprocess.TimeoutExpired:
-        if callback_failed:
-            terminate_owned()
-            raise
-        failure = "timeout"
-        terminate_owned()
+            wait_owned()
     except ProcessCleanupError:
         if callback_failed:
             terminate_owned()
@@ -523,16 +465,10 @@ def capture(
     argv: Sequence[str | Path],
     *,
     environment: Mapping[str, str],
-    deadline: float,
     output_limit: int,
     name: str,
-    timeout: float,
     input_data: bytes | None = None,
 ) -> dict:
-    remaining = deadline - time.monotonic()
-    if not remaining > 0:
-        raise ValueError("original work deadline expired")
-    timeout = min(timeout, remaining)
     paths = {channel: cwd / f"{name}.{channel}.bin" for channel in ("stdout", "stderr")}
     failure = None
     result = {}
@@ -555,9 +491,7 @@ def capture(
             result = run_bounded(
                 cwd,
                 argv,
-                timeout=timeout,
                 output_limit=output_limit,
-                deadline=deadline,
                 env=environment,
                 supervisor=resolve_isolated_supervisor(),
                 input_data=input_data,
@@ -582,8 +516,6 @@ def capture(
             "argv": argv,
             "cwd": str(cwd),
             "environment": environment,
-            "deadline": deadline,
-            "timeout": timeout,
             "exit_code": result.get("exit_code"),
             "raw_exit": result.get("raw_exit"),
             "raw_exit_owner": "common.process owned supervisor",
@@ -647,34 +579,27 @@ def run_command(
     cwd: str | Path,
     text: bool = True,
     capture_output: bool = True,
-    deadline: float | None = None,
 ) -> subprocess.CompletedProcess[str]:
-    """Run one native transaction gate within 120 seconds and 2 MiB of output."""
+    """Run one owned native transaction gate with up to 2 MiB of output."""
     if text is not True or capture_output is not True:
         raise ValueError("transaction commands require captured text output")
-    deadline = resolve_deadline(deadline)
-    options = {"deadline": deadline} if deadline is not None else {}
     result = run_bounded(
         Path(cwd),
         argv,
-        timeout=120,
         output_limit=2 * 1024 * 1024,
         errors="strict",
-        **options,
     )
     failure = result["failure"]
     return subprocess.CompletedProcess(
         argv,
-        (124 if failure == "timeout" else 125) if failure else result["exit_code"],
+        125 if failure else result["exit_code"],
         result["stdout"].replace("\r\n", "\n").replace("\r", "\n"),
         result["stderr"].replace("\r\n", "\n").replace("\r", "\n")
         + (f"\ncommand aborted: {failure}\n" if failure else ""),
     )
 
 
-def run_analyzer(
-    argv: Sequence[str], *, timeout: int
-) -> subprocess.CompletedProcess[str]:
+def run_analyzer(argv: Sequence[str]) -> subprocess.CompletedProcess[str]:
     """Run an analyzer in an owned process tree and reap it on interruption."""
 
     process = owned_popen(
@@ -684,7 +609,7 @@ def run_analyzer(
         text=True,
     )
     try:
-        stdout, stderr = process.communicate(timeout=timeout)
+        stdout, stderr = process.communicate()
     except BaseException:
         process.terminate_tree()
         raise
@@ -694,13 +619,12 @@ def run_analyzer(
 def _main() -> int:
     completion = int(sys.argv[2])
     try:
-        forwarded = tuple(json.loads(sys.argv[5]))
-        with os.fdopen(int(sys.argv[6]), "rb") as context:
+        forwarded = tuple(json.loads(sys.argv[4]))
+        with os.fdopen(int(sys.argv[5]), "rb") as context:
             environment = json.load(context)
         result = _supervise(
             int(sys.argv[1]),
             json.loads(sys.argv[3]),
-            json.loads(sys.argv[4]),
             forwarded,
             env=environment,
         )

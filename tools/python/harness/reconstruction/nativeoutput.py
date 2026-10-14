@@ -11,7 +11,6 @@ from enum import Enum
 from typing import TYPE_CHECKING
 
 from harness.common.artifacts import encode_json
-from harness.common.deadlines import check_deadline
 from harness.reconstruction import callcontracts, calltargets, proofvalues, provenance
 
 if TYPE_CHECKING:
@@ -34,7 +33,7 @@ TOKEN_KINDS = frozenset(
 STATUS_KEYS = frozenset(
     "schema status reason request_bytes_hex request_byte_count request_sha256 "
     "configuration_bytes_hex configuration_byte_count configuration_sha256 "
-    "release_configuration_sha256 operation cutoff requested_range invoked_range "
+    "release_configuration_sha256 operation requested_range invoked_range "
     "range_convention retdec_invoked retdec_returned retdec_failed backend_ranges "
     "backend_selected_ranges initial_input_invariants".split()
 ) | frozenset(
@@ -211,14 +210,12 @@ def derive_source_facts(
         reproduced.extend(token["val"].encode("utf-8", "strict"))
     _require(bytes(reproduced) == source, "whole source/token concatenation differs")
     clean_tokens = []
-    from harness.common.deadlines import check_deadline
 
     token_pattern = re.compile(
         rb"[A-Za-z_][A-Za-z_0-9]*|[0-9]+|<stdint\.h>|==|[{}();#-]"
     )
     cursor, lexical_ok = 0, all(0 < char < 128 for char in source)
     while lexical_ok and cursor < len(source):
-        check_deadline()
         char = source[cursor]
         if char in b" \t\r\n\f\v":
             cursor += 1
@@ -754,7 +751,7 @@ def validate_status(data: bytes, request: bytes, configuration: bytes) -> dict:
             or (
                 status["source_form"] is None
                 and status["status"] == "refused"
-                and status["operation"] is status["cutoff"] is None
+                and status["operation"] is None
                 and status["retdec_invoked"] is False
             ),
             "native source form status echo differs",
@@ -894,8 +891,7 @@ def validate_self_check(data: bytes, request: bytes, configuration: bytes) -> di
     _clean_input(status)
     _require(
         status["status"] == "self-check-complete"
-        and status["operation"] == "self-check"
-        and status["cutoff"] == wanted["cutoff"],
+        and status["operation"] == "self-check",
         "self-check binding",
     )
     _require(
@@ -972,7 +968,7 @@ def validate_generation(
         "native request version byte bound",
     )
     request_fields = set(
-        "schema operation request_id config_sha256 cutoff member image".split()
+        "schema operation request_id config_sha256 member image".split()
     )
     if revised:
         request_fields |= {"problem_sha256", "callees"}
@@ -1010,11 +1006,9 @@ def validate_generation(
             "retdec118.native-request/v6",
         }
         and wanted["config_sha256"] == CONFIG_SHA256
-        and type(wanted["request_id"]) is str
-        and re.fullmatch(r"[0-9a-f]{64}", wanted["request_id"])
-        and type(wanted["cutoff"]) in {int, float}
-        and math.isfinite(wanted["cutoff"]),
-        "native generation request identity/clock",
+        and (type(wanted["request_id"]) is str)
+        and re.fullmatch("[0-9a-f]{64}", wanted["request_id"]),
+        "native generation request identity",
     )
     source_form = parse_source_form(wanted["source_form"]) if forms else None
     if forms or overlays:
@@ -1085,9 +1079,7 @@ def validate_generation(
             f"native {prefix} artifact identity differs",
         )
     _require(
-        observed["operation"] == "generate"
-        and observed["cutoff"] == wanted["cutoff"]
-        and observed["retdec_invoked"] is True,
+        observed["operation"] == "generate" and observed["retdec_invoked"] is True,
         "native generation invocation",
     )
     if require_success:
@@ -1302,7 +1294,6 @@ def validate_generation(
 def _external_prototype_end(tokens, start, function):
     state = "return-type"
     for index in range(start, len(tokens)):
-        check_deadline()
         token = _keys(tokens[index], {"kind", "val"}, "external prototype token")
         kind, value = token["kind"], token["val"]
         _require(
@@ -1622,7 +1613,6 @@ def _validate_stack_word_signature(tokens, selected, symbol):
 
 def _validate_source_forms(configuration: dict, *, require_success: bool) -> None:
     for function in _rows(configuration["functions"], 4096, "source form function"):
-        check_deadline()
         witnesses = _rows(
             function.get("originalSourceExpressions", []), 4096, "source expression"
         )
@@ -1630,7 +1620,6 @@ def _validate_source_forms(configuration: dict, *, require_success: bool) -> Non
             _require(bool(witnesses), "empty serialized source expression inventory")
         seen = set()
         for witness in witnesses:
-            check_deadline()
             _keys(
                 witness,
                 {
@@ -1733,7 +1722,6 @@ def _validate_source_forms(configuration: dict, *, require_success: bool) -> Non
                 "source expression shift chain",
             )
             for pc in range(pcs[0], pcs[1], 4):
-                check_deadline()
                 edges = [edge for edge in evidence["edges"] if edge["from"] == pc]
                 _require(
                     edges
@@ -1771,7 +1759,6 @@ def _validate_source_forms(configuration: dict, *, require_success: bool) -> Non
         applications = _rows(census["applications"], 4096, "source form application")
         indexes, unresolved = [], bool(remaining)
         for application in applications:
-            check_deadline()
             _require(type(application) is dict, "source form application object")
             ready = application.get("status") == "ready"
             _keys(

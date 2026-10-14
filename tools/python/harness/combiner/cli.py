@@ -6,17 +6,10 @@ import argparse
 import json
 from pathlib import Path
 
-from harness.common.cli import (
-    add_root_argument,
-    add_work_deadline_argument,
-    SingleValue,
-    resolved_root,
-    run_main,
-)
+from harness.common.cli import add_root_argument, resolved_root, run_main
 from harness.combiner.inspection import inspect_source
 from harness.combiner.opportunities import discover_pairs
 from harness.combiner.profiles import inspect_profiles
-from harness.common.deadlines import check_deadline
 from harness.build.preservation import (
     read_destination_source,
     read_preservation_document,
@@ -54,7 +47,6 @@ def _discover(args: argparse.Namespace) -> int:
         expected_fingerprint=args.expected_fingerprint,
     )
     rendered = json.dumps(payload, indent=2, sort_keys=True)
-    check_deadline()
     print(rendered)
     return 0
 
@@ -73,7 +65,6 @@ def _inspect_profiles(args: argparse.Namespace) -> int:
         migrate_configuration=args.migrate_configuration,
     )
     rendered = json.dumps(payload, indent=2)
-    check_deadline()
     print(rendered)
     return 0
 
@@ -95,7 +86,6 @@ def _run_preservation(args: argparse.Namespace) -> int:
             expected_fingerprint=args.expected_fingerprint,
         )
     rendered = json.dumps(payload, indent=2, sort_keys=True)
-    check_deadline()
     print(rendered)
     return 0
 
@@ -117,7 +107,6 @@ def _run_transaction(args: argparse.Namespace) -> int:
             expected_fingerprint=args.expected_fingerprint,
         )
     rendered = json.dumps(payload, indent=2, sort_keys=True)
-    check_deadline()
     print(rendered)
     return 0
 
@@ -129,11 +118,9 @@ def _run_comparison(args: argparse.Namespace) -> int:
             root,
             args.source,
             args.output,
-            deadline=args.work_deadline,
             output_limit=args.output_limit,
         )
         rendered = json.dumps(payload, indent=2, sort_keys=True)
-        check_deadline()
         print(rendered)
     return 0 if payload["all_function_bytes_match"] else 1
 
@@ -147,12 +134,9 @@ def _run_rehearsal(args: argparse.Namespace) -> int:
         object_path=args.object,
         output=args.output,
         adopted_workspace=args.adopted_baseline,
-        deadline=args.work_deadline,
-        cleanup_deadline=args.cleanup_deadline,
         output_limit=args.output_limit,
     )
     rendered = json.dumps(payload, indent=2, sort_keys=True)
-    check_deadline()
     print(rendered)
     return 0 if payload["all_function_bytes_match"] else 1
 
@@ -189,7 +173,6 @@ def build_parser() -> argparse.ArgumentParser:
         "--overlap-policy", choices=("retain-all",), default="retain-all"
     )
     discovery.add_argument("--expected-fingerprint")
-    add_work_deadline_argument(discovery)
     discovery.set_defaults(handler=_discover)
     inspect = commands.add_parser(
         "inspect-source", help="inspect leading function metadata"
@@ -206,7 +189,6 @@ def build_parser() -> argparse.ArgumentParser:
     profile.add_argument("--destination-source", type=Path)
     profile.add_argument("--expected-destination-sha256")
     profile.add_argument("--migrate-configuration", action="store_true")
-    add_work_deadline_argument(profile)
     profile.set_defaults(handler=_inspect_profiles)
     preservation = commands.add_parser(
         "preservation", help="freeze or verify a pinned PRE-to-POST profile transition"
@@ -219,14 +201,12 @@ def build_parser() -> argparse.ArgumentParser:
     capture.add_argument("post", type=Path)
     capture.add_argument("--expected-profile-fingerprint", required=True)
     capture.add_argument("--expected-post-sha256", required=True)
-    add_work_deadline_argument(capture)
     capture.set_defaults(handler=_run_preservation)
     verify = stages.add_parser(
         "verify", help="verify live POST against an external PRE pin"
     )
     verify.add_argument("record", type=Path)
     verify.add_argument("--expected-fingerprint", required=True)
-    add_work_deadline_argument(verify)
     verify.set_defaults(handler=_run_preservation)
     transaction = commands.add_parser(
         "transaction", help="prepare or verify exact joint images without applying"
@@ -237,14 +217,12 @@ def build_parser() -> argparse.ArgumentParser:
     prepare.add_argument("images", type=Path)
     prepare.add_argument("--expected-profile-fingerprint", required=True)
     prepare.add_argument("--expected-images-sha256", required=True)
-    add_work_deadline_argument(prepare)
     prepare.set_defaults(handler=_run_transaction)
     verify = stages.add_parser(
         "verify", help="recheck a prepared record against live PRE"
     )
     verify.add_argument("record", type=Path)
     verify.add_argument("--expected-fingerprint", required=True)
-    add_work_deadline_argument(verify)
     verify.set_defaults(handler=_run_transaction)
     rehearse = stages.add_parser(
         "rehearse", help="temporarily compare a joint transaction and restore PRE"
@@ -256,10 +234,6 @@ def build_parser() -> argparse.ArgumentParser:
     rehearse.add_argument("--output", required=True)
     rehearse.add_argument("--adopted-baseline")
     rehearse.add_argument("--output-limit", type=int, default=2 * 1024 * 1024)
-    rehearse.add_argument(
-        "--cleanup-deadline", type=float, action=SingleValue, required=True
-    )
-    add_work_deadline_argument(rehearse)
     rehearse.set_defaults(handler=_run_rehearsal)
     compare = commands.add_parser(
         "compare", help="compile and compare all preserved group members"
@@ -267,7 +241,6 @@ def build_parser() -> argparse.ArgumentParser:
     compare.add_argument("source")
     compare.add_argument("--output", required=True)
     compare.add_argument("--output-limit", type=int, default=2 * 1024 * 1024)
-    add_work_deadline_argument(compare)
     compare.set_defaults(handler=_run_comparison)
     return parser
 

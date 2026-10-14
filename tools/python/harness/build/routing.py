@@ -9,7 +9,6 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from harness.build.preservation import read_preservation_document, validate_fingerprint
-from harness.common.deadlines import check_deadline
 from harness.common.directory import validate_repo_path
 from harness.common.files import read_file
 from harness.common.observation import PathWatch
@@ -38,7 +37,6 @@ class Selection:
             self.watch.close()
 
     def validate(self) -> None:
-        check_deadline()
         if self.environment != {
             name: os.environ.get(name) for name in PRESERVATION_ENVIRONMENT
         }:
@@ -49,7 +47,6 @@ class Selection:
             if hashlib.sha256(content).hexdigest() != self.routes_sha256:
                 raise ValueError("preservation routes differ from external SHA-256")
             self.watch.validate()
-        check_deadline()
 
     def protect_outputs(
         self, output: Path | None, *, inputs: Iterable[Path] = ()
@@ -65,7 +62,6 @@ class Selection:
             output.with_name(output.name + ".s"),
             output.with_name(output.name + ".producer.json"),
         ):
-            check_deadline()
             if artifact in protected or artifact.resolve() in protected:
                 raise ValueError("compiler output collides with a preserved input")
 
@@ -111,7 +107,6 @@ def _select_record(root: Path, document: dict, source: Path, grouped: bool) -> t
     used_records = set()
     reserved = set()
     for name, entry in records.items():
-        check_deadline()
         path = _confine_path(root, name)
         if not path.is_relative_to(root / "src/bof3") or path.suffix != ".c":
             raise ValueError("preservation routes require src/bof3/ C source keys")

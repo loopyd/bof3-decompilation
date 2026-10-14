@@ -23,7 +23,6 @@ from harness.build.profiles import (
     collect_profile_sources,
 )
 from harness.build.observations import validate_description
-from harness.common.deadlines import check_deadline
 from harness.common.files import read_file
 from harness.common.inputs import InputBatch, relative
 from harness.domain.claims import collect_manifest_source_addresses
@@ -45,7 +44,6 @@ _LAYOUT_LOADER = yaml.SafeLoader
 
 
 def hash_preservation(value: object) -> str:
-    check_deadline()
     try:
         encoded = json.dumps(
             value, sort_keys=True, separators=(",", ":"), allow_nan=False
@@ -54,9 +52,7 @@ def hash_preservation(value: object) -> str:
         raise ValueError(
             "preservation requires bounded JSON-compatible values"
         ) from error
-    check_deadline()
     result = hashlib.sha256(encoded).hexdigest()
-    check_deadline()
     return result
 
 
@@ -67,13 +63,11 @@ def validate_fingerprint(value: object) -> None:
 
 def validate_preservation_size(document: dict) -> None:
     """Keep captured records readable within the CLI's existing document bound."""
-    check_deadline()
     content = (
         json.dumps(document, indent=2, sort_keys=True, allow_nan=False) + "\n"
     ).encode("utf-8")
     if len(content) > _LIMIT:
         raise ValueError("preservation document exceeds the byte bound")
-    check_deadline()
 
 
 def _read_document_bytes(path: Path, *, expected_sha256: str | None = None) -> bytes:
@@ -98,7 +92,6 @@ def read_preservation_document(
         raise ValueError("preservation JSON nesting exceeds the bound") from error
     if not isinstance(value, dict):
         raise ValueError("preservation document must be an object")
-    check_deadline()
     return value
 
 
@@ -122,7 +115,6 @@ def validate_destination_text(
     text: str | None, target: str, members: list[dict]
 ) -> None:
     """Bind prospective attached records to the complete selected member set."""
-    check_deadline()
     if text is None:
         return
     if not isinstance(text, str) or len(text.encode("utf-8")) > _LIMIT:
@@ -143,7 +135,6 @@ def validate_destination_text(
         for selector, record in actual.items()
     ):
         raise ValueError("destination function spelling differs from PRE identity")
-    check_deadline()
 
 
 def validate_states(states: object) -> dict:
@@ -167,7 +158,6 @@ def _validate_layout_events(text: str) -> None:
     depth = 0
     try:
         for event in events:
-            check_deadline()
             if (
                 isinstance(event, yaml.events.AliasEvent)
                 or getattr(event, "anchor", None) is not None
@@ -192,7 +182,6 @@ def _validate_layout_events(text: str) -> None:
 
 
 def _validate_layout_node(node: yaml.Node, depth: int = 0) -> None:
-    check_deadline()
     if depth > 64:
         raise ValueError("preservation layout nesting exceeds the bound")
     if isinstance(node, yaml.ScalarNode):
@@ -217,24 +206,19 @@ def _validate_layout_node(node: yaml.Node, depth: int = 0) -> None:
 
 
 def decode_layout(text: str) -> object:
-    check_deadline()
     if len(text.encode()) > _LIMIT:
         raise ValueError("preservation layout exceeds the byte bound")
     try:
         _validate_layout_events(text)
-        check_deadline()
         loader = _LAYOUT_LOADER(text)
         try:
             document = loader.get_single_node()
-            check_deadline()
             _validate_layout_node(document)
             result = loader.construct_document(document)
-            check_deadline()
         finally:
             loader.dispose()
     except (yaml.YAMLError, RecursionError) as error:
         raise ValueError("preservation requires bounded valid YAML") from error
-    check_deadline()
     hash_preservation(result)
     return result
 
@@ -353,7 +337,6 @@ def validate_ownership_images(
     record: dict, manifest_text: str, layout_text: str
 ) -> None:
     """Require proposed ownership text to make only the captured source relocation."""
-    check_deadline()
     profile = record["profile"]
     destination = profile["destination"]
     members = {member["source"] for member in profile["members"]}
@@ -374,7 +357,6 @@ def validate_ownership_images(
         record["layout_post"]
     ):
         raise ValueError("POST Splat changes more than selected source ownership")
-    check_deadline()
 
 
 def verify_preservation(
@@ -590,5 +572,4 @@ def verify_preservation(
         "producer_freshness_verified": False,
         "write_authorized": False,
     }
-    check_deadline()
     return {**result, "fingerprint": hash_preservation(result)}

@@ -34,7 +34,6 @@ def run_query(args: argparse.Namespace) -> int:
     completed = subprocess.run(
         rizin_argv(project, engine, commands=tuple(args.execute), quiet=True),
         cwd=root,
-        timeout=args.timeout,
         check=False,
     )
     return completed.returncode
@@ -51,7 +50,7 @@ def run_status(args: argparse.Namespace) -> int:
 
 
 def run_analyze(args: argparse.Namespace) -> int:
-    project = analyze_project(_root(args), args.target, timeout=args.timeout)
+    project = analyze_project(_root(args), args.target)
     print(project.snapshot.relative_to(_root(args)))
     return 0
 
@@ -72,7 +71,6 @@ def build_parser() -> argparse.ArgumentParser:
     status_parser.add_argument("--json", action="store_true")
     analyze = sub.add_parser("analyze", help="rebuild generated snapshot using Rizin")
     analyze.add_argument("target")
-    analyze.add_argument("--timeout", type=int, default=120)
     analyze.set_defaults(handler=run_analyze)
     query = sub.add_parser("query", help="run bounded commands on a target and exit")
     query.add_argument("target")
@@ -83,7 +81,6 @@ def build_parser() -> argparse.ArgumentParser:
         required=True,
         help="Rizin command to execute; repeat for multiple commands",
     )
-    query.add_argument("--timeout", type=int, default=120)
     query.set_defaults(handler=run_query)
     return parser
 

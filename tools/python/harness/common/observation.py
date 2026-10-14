@@ -11,7 +11,6 @@ from pathlib import Path
 from typing import Any
 
 from harness.common.files import read_file
-from harness.common.deadlines import check_deadline
 from harness.common.paths import leaf_stat
 
 _ENTRY_EVENTS = 0x000003C6
@@ -42,7 +41,6 @@ def _capture_directory_metadata(status: os.stat_result) -> tuple[int, ...]:
 
 def observe_directory(path: Path) -> tuple:
     """Capture raw metadata and bounded membership through one directory descriptor."""
-    check_deadline()
     descriptor = os.open(path, _DIRECTORY_FLAGS)
     try:
         before = _capture_directory_metadata(os.fstat(descriptor))
@@ -50,7 +48,6 @@ def observe_directory(path: Path) -> tuple:
         total = 0
         with os.scandir(descriptor) as entries:
             for entry in entries:
-                check_deadline()
                 name = os.fsencode(entry.name)
                 if (
                     not name
@@ -83,21 +80,17 @@ def observe_directory(path: Path) -> tuple:
                     or total > _DIRECTORY_BYTE_LIMIT
                 ):
                     raise ValueError(f"directory observation exceeds its bound: {path}")
-        check_deadline()
         digest = hashlib.sha256()
         for name in sorted(records):
-            check_deadline()
             digest.update(records[name])
         after = _capture_directory_metadata(os.fstat(descriptor))
         linked = _capture_directory_metadata(path.stat(follow_symlinks=False))
         for state in (after, linked):
             if before[:6] != state[:6] or before[7:] != state[7:]:
                 raise ValueError(f"directory changed during observation: {path}")
-        check_deadline()
         result = (*linked, digest.hexdigest())
     finally:
         os.close(descriptor)
-    check_deadline()
     return result
 
 
@@ -136,12 +129,10 @@ class PathWatch:
             raise ValueError("path watch input count is outside supported bounds")
         entries: dict[Path, set[bytes]] = {path: set() for path in directories}
         for path in inputs:
-            check_deadline()
             if not path.is_absolute() or ".." in path.parts or path == path.parent:
                 raise ValueError("path watch requires absolute named inputs")
             child = path
             while child != child.parent:
-                check_deadline()
                 entries.setdefault(child.parent, set()).add(os.fsencode(child.name))
                 if len(entries) > 32768:
                     raise ValueError("path watch ancestor count exceeds limit")
@@ -159,7 +150,6 @@ class PathWatch:
                 raise OSError(ctypes.get_errno(), "path event observation unavailable")
             self._descriptor = descriptor
             for path in sorted(entries, key=lambda item: (len(item.parts), item)):
-                check_deadline()
                 if path == path.parent:
                     directory = os.open(path, _DIRECTORY_FLAGS)
                 elif path.parent not in self._directories:
@@ -211,7 +201,6 @@ class PathWatch:
     def _consume(self, content: bytes) -> None:
         cursor = 0
         while cursor < len(content):
-            check_deadline()
             if len(content) - cursor < _EVENT_HEADER.size:
                 self._fail("truncated input watch event header")
             watch, mask, _cookie, length = _EVENT_HEADER.unpack_from(content, cursor)
@@ -244,7 +233,6 @@ class PathWatch:
 
     def _drain(self) -> None:
         for _attempt in range(64):
-            check_deadline()
             try:
                 content = os.read(self._descriptor, 65536)
             except BlockingIOError:
@@ -265,7 +253,6 @@ class PathWatch:
 
     def validate(self) -> None:
         """Latch selected-entry events and the chosen explicit-directory child events."""
-        check_deadline()
         if self._failure is not None:
             raise ValueError(self._failure)
         if self._descriptor is None:
@@ -273,7 +260,6 @@ class PathWatch:
         self._drain()
         try:
             for path, descriptor in self._directories.items():
-                check_deadline()
                 linked = (
                     os.stat(path, follow_symlinks=False)
                     if path == path.parent
@@ -292,7 +278,6 @@ class PathWatch:
         except OSError as error:
             self._fail(f"input watch directory became unavailable: {error}")
         self._drain()
-        check_deadline()
 
     def close(self) -> None:
         """Close owned descriptors without allowing a failed watch to be revived."""
@@ -323,7 +308,6 @@ class DirectoryBatch:
         self._failed = False
 
     def __enter__(self) -> DirectoryBatch:
-        check_deadline()
         if self._active or self._closed:
             raise ValueError("directory batch cannot be reused")
         try:
@@ -340,7 +324,6 @@ class DirectoryBatch:
     def __exit__(self, error_type, error, traceback) -> None:
         try:
             if error_type is None:
-                check_deadline()
                 if self._failed:
                     raise ValueError("directory batch observation failed")
                 if self._watch is not None:
@@ -355,7 +338,6 @@ class DirectoryBatch:
     def observe(self, path: Path) -> tuple:
         """Return fresh raw metadata; membership reuse requires successful batch exit."""
         try:
-            check_deadline()
             if not self._active or self._closed or self._failed:
                 raise ValueError("directory batch is inactive or failed")
             if path not in self._directories:
@@ -365,7 +347,6 @@ class DirectoryBatch:
                 self._memberships[path] = observed[-1]
                 return observed
             metadata = _capture_directory_metadata(path.stat(follow_symlinks=False))
-            check_deadline()
             return (*metadata, self._memberships[path])
         except BaseException:
             self._failed = True

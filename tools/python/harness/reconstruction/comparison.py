@@ -7,7 +7,6 @@ from collections.abc import Callable
 from dataclasses import asdict, dataclass
 import hashlib
 from pathlib import Path
-import time
 from typing import Literal
 
 from harness.build import recipe
@@ -22,13 +21,6 @@ from harness.common.artifacts import (
     write_bytes,
 )
 from harness.common.captureproof import verify_capture
-from harness.common.deadlines import (
-    DeadlineExpired,
-    check_deadline,
-    resolve_deadline,
-    validate_deadline,
-    use_deadline,
-)
 from harness.common.failures import FailureEvent, PolicyFailure, facts, primary, retain
 from harness.common.process import ProcessCleanupError, capture
 from harness.match._asm_link import object_link_command
@@ -57,7 +49,7 @@ from harness.reconstruction import (
 
 
 class ConsumptionAllowance:
-    def __init__(self, *, cutoff, read_limit, open_limit, artifact_limit):
+    def __init__(self, *, read_limit, open_limit, artifact_limit):
         _require_rebuild(
             all(
                 type(value) is int and value > 0
@@ -65,10 +57,7 @@ class ConsumptionAllowance:
             ),
             "consumption limits must be positive integers",
         )
-        validate_deadline(cutoff)
-        _require_rebuild(cutoff is not None, "consumption requires one finite cutoff")
-        self.cutoff, self.read_limit, self.open_limit, self.artifact_limit = (
-            cutoff,
+        self.read_limit, self.open_limit, self.artifact_limit = (
             read_limit,
             open_limit,
             artifact_limit,
@@ -82,9 +71,6 @@ class ConsumptionAllowance:
         self._final_authenticated = set()
 
     def read_bytes(self, path, bound, events=None):
-        check_deadline()
-        if time.monotonic() >= self.cutoff:
-            raise DeadlineExpired("original reporting cutoff expired")
         _require_rebuild(
             isinstance(path, Path) and type(bound) is int and bound >= 0,
             "physical read requires a path and bounded artifact size",
@@ -137,9 +123,6 @@ class ConsumptionAllowance:
                     identity == expected,
                     "physical input changed during final consumption",
                 )
-            check_deadline()
-            if time.monotonic() >= self.cutoff:
-                raise DeadlineExpired("original reporting cutoff expired")
         except BaseException:
             self.failed_reserved_bytes += reservation
             raise
@@ -343,13 +326,11 @@ class FunctionComparison:
 def compare_linked_function(
     path: Path, *, function_name: str, original: OriginalFunction
 ) -> FunctionComparison:
-    check_deadline()
     actual = read_function_image(
         path, function_name=function_name, address=original.start
     )
     comparison = FunctionComparison(original=original, actual=actual)
     _ = comparison.outcome, comparison.first_difference
-    check_deadline()
     return comparison
 
 
@@ -657,7 +638,6 @@ def _rebuild_checks(
     attempts,
     contexts,
     receipts,
-    deadline,
     output_limit,
     events,
     *,
@@ -691,7 +671,6 @@ def _rebuild_checks(
                     recipe.verify_attempts(
                         attempts,
                         syntax.inputs,
-                        deadline=deadline,
                         output_limit=output_limit,
                         contexts=contexts,
                         reader=reader,
@@ -705,13 +684,10 @@ def _rebuild_checks(
         retain(events, error, phase="rebuild-receipts", path="compiler")
 
 
-def _forward_rebuild(deadline: float, events: list[FailureEvent]) -> None:
+def _forward_rebuild(events: list[FailureEvent]) -> None:
     pending = primary(events)
     if pending is not None:
         raise pending
-    check_deadline()
-    if time.monotonic() >= deadline:
-        raise DeadlineExpired("independent rebuild deadline expired")
 
 
 def _retain_outcome(outcome, retained, contexts, receipts) -> None:
@@ -752,7 +728,6 @@ def rebuild_candidate(
     result_record: dict,
     run_record: dict,
     workspace: Path,
-    deadline: float,
     output_limit: int,
     artifact_limit: int,
     retained: dict,
@@ -785,36 +760,29 @@ def rebuild_candidate(
     receipts: list[recipe.ProfileReceipt] = []
     selected, syntax = None, None
     attempts = retained["profile_attempts"]
-    cutoff = deadline
     try:
         retained["status"] = "preparing"
         result_record, run_record = deepcopy((result_record, run_record))
-        resolved = resolve_deadline(deadline)
-        if resolved is None:
-            raise PolicyFailure(
-                "rebuild requires a finite deadline and positive integer limits"
-            )
-        cutoff = resolved
         _require_rebuild(
-            cutoff is not None
-            and all(
-                type(limit) is int and limit > 0
-                for limit in (output_limit, artifact_limit)
+            all(
+                (
+                    type(limit) is int and limit > 0
+                    for limit in (output_limit, artifact_limit)
+                )
             ),
-            "rebuild requires a finite deadline and positive integer limits",
+            "rebuild requires positive integer limits",
         )
         retained.update(
             submitted_result=deepcopy(result_record),
             submitted_run=deepcopy(run_record),
-            deadline=cutoff,
             output_limit=output_limit,
             artifact_limit=artifact_limit,
         )
-        _forward_rebuild(cutoff, events)
+        _forward_rebuild(events)
         metadata_limit = min(artifact_limit, 64 << 20)
         records = [result_record, run_record]
         result = _submitted_document(result_record, metadata_limit, events)
-        _forward_rebuild(cutoff, events)
+        _forward_rebuild(events)
         run = _submitted_document(run_record, metadata_limit, events)
         submission = _adapt_submission(
             result, run, result_record, run_record, metadata_limit
@@ -855,11 +823,10 @@ def rebuild_candidate(
             attempts,
             contexts,
             receipts,
-            cutoff,
             output_limit,
             events,
         )
-        _forward_rebuild(cutoff, events)
+        _forward_rebuild(events)
         if isinstance(submission.producer, invocation.OriginalOnlySource):
             invocation.verify_submitted_original_outputs(
                 submission.producer.outputs, metadata_limit, events
@@ -870,13 +837,12 @@ def rebuild_candidate(
             bool(source) and header == prelude.STDINT_PRELUDE,
             "rebuild requires nonempty unchanged source and the uniform submitted prelude",
         )
-        _forward_rebuild(cutoff, events)
+        _forward_rebuild(events)
         retained["status"] = "syntax"
         syntax = recipe.check_syntax(
             recipe.c89_call(
                 workspace=workspace,
                 tools=selected,
-                deadline=cutoff,
                 output_limit=output_limit,
             ),
             source=source,
@@ -906,7 +872,6 @@ def rebuild_candidate(
             inputs=syntax.inputs,
             include_roots=[str(workspace / "include")],
             attempts=attempts,
-            deadline=cutoff,
             output_limit=output_limit,
             artifact_limit=artifact_limit,
         )
@@ -918,11 +883,10 @@ def rebuild_candidate(
                 attempts,
                 contexts,
                 receipts,
-                cutoff,
                 output_limit,
                 events,
             )
-            _forward_rebuild(cutoff, events)
+            _forward_rebuild(events)
             outcome = next(execution, None)
             if outcome is None:
                 break
@@ -976,7 +940,6 @@ def rebuild_candidate(
         attempts,
         contexts,
         receipts,
-        cutoff,
         output_limit,
         events,
     )
@@ -1000,7 +963,7 @@ def rebuild_candidate(
     pending = primary(events)
     if pending is None:
         try:
-            _forward_rebuild(cutoff, events)
+            _forward_rebuild(events)
         except Exception as error:
             retain(events, error, phase="rebuild-completion", path=workspace)
         pending = primary(events)
@@ -1013,9 +976,7 @@ def rebuild_candidate(
                 else f"{type(pending).__name__}: {pending}"
             )
             attempt.update(
-                status="deadline"
-                if isinstance(pending, DeadlineExpired)
-                else "source-refused"
+                status="source-refused"
                 if syntax is not None
                 and syntax.record.get("c89", {}).get("raw_exit") not in {None, 0}
                 else "rebuild-interrupted",
@@ -1036,11 +997,6 @@ def rebuild_candidate(
                 "terminal rebuild result exceeds its artifact bound",
             )
             write_bytes(pending_file, data, events=events, create_parents=False)
-            check_deadline()
-            if time.monotonic() >= cutoff:
-                raise DeadlineExpired(
-                    "independent rebuild deadline expired before terminal publication"
-                )
             pending_file.rename(destination)
         except Exception as error:
             retain(events, error, phase="rebuild-result", path=workspace)
@@ -1815,7 +1771,6 @@ def inspect_candidate(
             comparison_record=Path(account["comparison_record"]["path"]),
             prepared_run=prepared_run,
             workspace=associated_directory,
-            deadline=allowance.cutoff,
             output_limit=account["output_limit"],
             artifact_limit=allowance.artifact_limit,
             input_read_limit=allowance.read_limit,
@@ -2132,9 +2087,7 @@ def inspect_candidate(
             )
         runtime_dir = candidate / "runtime"
         if runtime_dir.exists():
-            capture_facts = inspect_runtime_capture(
-                runtime_dir, allowance.read_bytes, allowance.cutoff
-            )
+            capture_facts = inspect_runtime_capture(runtime_dir, allowance.read_bytes)
             raw["runtime_capture"] = dict(
                 receipt=capture_facts.receipt.as_record(),
                 status=capture_facts.status,
@@ -2144,7 +2097,7 @@ def inspect_candidate(
                 row.path.name == "comparison.json" for row in capture_facts.captures
             ):
                 state_facts = inspect_state_comparison(
-                    capture_facts, allowance.read_bytes, allowance.cutoff
+                    capture_facts, allowance.read_bytes
                 )
                 raw["runtime_capture"]["selected_subtree"] = dict(
                     path=state_facts.subtree,
@@ -2238,10 +2191,8 @@ def _load_rebuild(
         and rebuilt.get("autonomous_exact") is False,
         "comparison requires an externally bound successful unverified rebuild",
     )
-    validate_deadline(rebuilt.get("deadline"))
     _require_rebuild(
-        rebuilt.get("deadline") is not None
-        and all(
+        all(
             type(rebuilt.get(name)) is int and rebuilt[name] > 0
             for name in ("output_limit", "artifact_limit")
         ),
@@ -2334,7 +2285,6 @@ def _load_rebuild(
         call=recipe.c89_call(
             workspace=root,
             tools=selected,
-            deadline=rebuilt["deadline"],
             output_limit=rebuilt["output_limit"],
         ),
     )
@@ -2447,7 +2397,6 @@ def _load_rebuild(
             rebuilt["profile_attempts"],
             contexts,
             receipts,
-            rebuilt["deadline"],
             rebuilt["output_limit"],
             events,
             reader=reader,
@@ -2458,7 +2407,7 @@ def _load_rebuild(
     return rebuilt, run, records, selected, syntax, contexts, receipts
 
 
-def _link_call(root, row, linker, placement, deadline, output_limit):
+def _link_call(root, row, linker, placement, output_limit):
     directory = root / "profiles" / f"{row['ordinal']:03d}"
     return dict(
         cwd=directory,
@@ -2477,10 +2426,8 @@ def _link_call(root, row, linker, placement, deadline, output_limit):
             HOME=str(root / "home"),
             TMPDIR=str(root / "tmp"),
         ),
-        deadline=deadline,
         output_limit=output_limit,
         name="link",
-        timeout=30.0,
     )
 
 
@@ -2507,7 +2454,6 @@ def _comparison_checks(
         rebuilt["profile_attempts"],
         contexts,
         receipts,
-        rebuilt["deadline"],
         rebuilt["output_limit"],
         events,
     )
@@ -2648,7 +2594,6 @@ def compare_rebuilt_candidate(
     rebuild_record: dict,
     prepared_run: Path,
     workspace: Path,
-    deadline: float,
     output_limit: int,
     artifact_limit: int,
     retained: dict,
@@ -2676,33 +2621,25 @@ def compare_rebuilt_candidate(
     calls: list[tuple[dict, dict]] = []
     rebuilt = selected = syntax = binding = member = original_slice = original = None
     records, contexts, receipts = [], [], []
-    cutoff = deadline
     active_row = None
     workspace_owned = False
     try:
         retained["status"] = "preparing"
-        resolved = resolve_deadline(deadline)
-        if resolved is None:
-            raise PolicyFailure(
-                "comparison requires a finite deadline and positive integer limits"
-            )
-        cutoff = resolved
         _require_rebuild(
             all(
                 type(limit) is int and limit > 0
                 for limit in (output_limit, artifact_limit)
             ),
-            "comparison requires a finite deadline and positive integer limits",
+            "comparison requires positive integer limits",
         )
         rebuild_record = deepcopy(rebuild_record)
         retained.update(
             rebuild_record=rebuild_record,
             prepared_run=str(prepared_run),
-            deadline=cutoff,
             output_limit=output_limit,
             artifact_limit=artifact_limit,
         )
-        _forward_rebuild(cutoff, events)
+        _forward_rebuild(events)
         limit = min(artifact_limit, 64 << 20)
         rebuilt, run, records, selected, syntax, contexts, receipts = _load_rebuild(
             rebuild_record, limit, events
@@ -2747,7 +2684,7 @@ def compare_rebuilt_candidate(
         linker_record = selected["staged_shared"].get("linker")
         linker = _regular_record(linker_record, limit)
         records = _record_inventory([*records, linker_record], limit)
-        _forward_rebuild(cutoff, events)
+        _forward_rebuild(events)
         workspace.mkdir(mode=0o700)
         workspace_owned = True
         for name in ("home", "tmp", "profiles"):
@@ -2771,7 +2708,7 @@ def compare_rebuilt_candidate(
                 limit,
                 events,
             )
-            _forward_rebuild(cutoff, events)
+            _forward_rebuild(events)
             blob = _authenticated_bytes(row["object"], limit, events)
             placement, placeable = calltargets.measurement_placement(
                 blob, row["entry_symbol"], original, limit, unit=unit
@@ -2784,7 +2721,7 @@ def compare_rebuilt_candidate(
             directory = workspace / "profiles" / f"{row['ordinal']:03d}"
             directory.mkdir(mode=0o700)
             output = directory / "linked.elf"
-            call = _link_call(workspace, row, linker, placement, cutoff, output_limit)
+            call = _link_call(workspace, row, linker, placement, output_limit)
             argv = call["argv"]
             calls.append((call, row))
             row.update(
@@ -2794,7 +2731,7 @@ def compare_rebuilt_candidate(
                 link_origin="direct",
                 launch="prelaunch",
             )
-            _forward_rebuild(cutoff, events)
+            _forward_rebuild(events)
             row["launch"] = "unknown"
             try:
                 row["link"] = capture(**call)
@@ -2882,7 +2819,7 @@ def compare_rebuilt_candidate(
                 limit,
                 events,
             )
-            _forward_rebuild(cutoff, events)
+            _forward_rebuild(events)
         active_row = None
         _require_rebuild(
             all(row["status"] == "measured" for row in retained["links"]),
@@ -2904,7 +2841,7 @@ def compare_rebuilt_candidate(
             limit,
             events,
         )
-        _forward_rebuild(cutoff, events)
+        _forward_rebuild(events)
         _require_rebuild(
             workspace.resolve() == workspace
             and workspace.is_dir()
@@ -2929,7 +2866,7 @@ def compare_rebuilt_candidate(
             "terminal comparison result exceeds its artifact bound",
         )
         write_bytes(pending_file, data, events=events, create_parents=False)
-        _forward_rebuild(cutoff, events)
+        _forward_rebuild(events)
         pending_file.rename(destination)
     except Exception as error:
         retain(
@@ -2969,9 +2906,7 @@ def compare_rebuilt_candidate(
         for row in retained["links"]:
             if row["status"] == "unattempted":
                 row.update(
-                    status="deadline"
-                    if isinstance(pending, DeadlineExpired)
-                    else "interrupted",
+                    status="interrupted",
                     failure=reason,
                     launch="prelaunch",
                 )
@@ -3085,7 +3020,6 @@ def _associated_authority(prepared_run: Path, identity: dict, limit: int, events
     targets = {member.target, *(row["target"] for row in value["external_bindings"])}
     images = []
     for target in sorted(targets):
-        check_deadline()
         bound_targets = [row for row in binding.targets if row.target == target]
         if not bound_targets:
             continue
@@ -3193,7 +3127,6 @@ def _associated_profiles(
     for ordinal, (row, profile, attempt) in enumerate(
         zip(rows, profiles, rebuilt["profile_attempts"])
     ):
-        check_deadline()
         _require_rebuild(
             type(row) is dict
             and base_fields <= set(row) <= base_fields | extra_fields
@@ -3203,7 +3136,7 @@ def _associated_profiles(
             and row["ordinal"] == ordinal
             and row["object"] == attempt["artifact"]
             and row["entry_symbol"] == rebuilt["entry_symbol"]
-            and row["status"] in {"measured", "refused", "deadline", "interrupted"}
+            and row["status"] in {"measured", "refused", "interrupted"}
             and type(row["secondary_failures"]) is list,
             "terminal comparison profile identity or shape differs",
         )
@@ -3245,7 +3178,6 @@ def _associated_profiles(
             row,
             linker,
             derived,
-            comparison["deadline"],
             comparison["output_limit"],
         )
         argv = call["argv"]
@@ -3432,7 +3364,6 @@ def inspect_original_feedback(
             rebuilt["profile_attempts"],
             contexts,
             receipts,
-            rebuilt["deadline"],
             rebuilt["output_limit"],
             events,
             reader=reader,
@@ -3489,7 +3420,6 @@ def _load_comparison(
     identity_fields = {
         "rebuild_record",
         "prepared_run",
-        "deadline",
         "output_limit",
         "artifact_limit",
         "identity",
@@ -3510,13 +3440,11 @@ def _load_comparison(
         and type(comparison["secondary_failures"]) is list,
         "physical terminal comparison shape or admission differs",
     )
-    validate_deadline(comparison["deadline"])
     _require_rebuild(
-        comparison["deadline"] is not None
-        and type(comparison["output_limit"]) is int
+        type(comparison["output_limit"]) is int
         and 0 < comparison["output_limit"] <= output_limit
-        and type(comparison["artifact_limit"]) is int
-        and 0 < comparison["artifact_limit"] <= artifact_limit,
+        and (type(comparison["artifact_limit"]) is int)
+        and (0 < comparison["artifact_limit"] <= artifact_limit),
         "original comparison limits are absent or exceed replay bounds",
     )
     _require_rebuild(
@@ -3560,7 +3488,6 @@ def verify_associated_candidate(
     comparison_record: Path,
     prepared_run: Path,
     workspace: Path,
-    deadline: float,
     output_limit: int,
     artifact_limit: int,
     input_read_limit: int,
@@ -3604,13 +3531,8 @@ def verify_associated_candidate(
             ),
             "associated verification requires positive integer bounds",
         )
-        cutoff = resolve_deadline(deadline)
-        _require_rebuild(
-            cutoff is not None, "associated verification requires a finite work cutoff"
-        )
         limit = min(artifact_limit, 64 << 20)
         shared_allowance = allowance or ConsumptionAllowance(
-            cutoff=cutoff,
             read_limit=input_read_limit,
             open_limit=65536,
             artifact_limit=limit,
@@ -3629,7 +3551,6 @@ def verify_associated_candidate(
             path: Path, bound: int, read_events: list[FailureEvent] | None
         ) -> bytes:
             nonlocal input_read_attempts, failed_read_reserved_bytes, charged_read_bytes
-            check_deadline()
             _require_rebuild(
                 isinstance(path, Path) and type(bound) is int and bound >= 0,
                 "associated snapshot requires a physical path and nonnegative bound",
@@ -3657,18 +3578,15 @@ def verify_associated_candidate(
                 len(data) <= min(bound, limit),
                 "associated snapshot exceeds its bounded allowance",
             )
-            check_deadline()
             return data
 
         retained.update(
-            deadline=cutoff,
             output_limit=output_limit,
             artifact_limit=artifact_limit,
             input_read_limit=input_read_limit,
             prepared_run=str(prepared_run),
         )
         with (
-            use_deadline(cutoff),
             using_reader(reader),
             contract.bounded_reads(limit, observations=observations, reader=reader),
         ):
@@ -3792,13 +3710,11 @@ def verify_associated_candidate(
             identities = {row["path"]: row for row in records}
             observed_identities = {}
             for row in observations:
-                check_deadline()
                 _require_rebuild(
                     observed_identities.setdefault(row["path"], row) == row,
                     "associated input changed between bounded snapshots",
                 )
             for row in [*_nested_records(rebuilt), *observations]:
-                check_deadline()
                 _require_rebuild(
                     type(row) is dict
                     and set(row) == {"path", "bytes", "sha256"}
@@ -3836,7 +3752,6 @@ def verify_associated_candidate(
                     )
             unique = {}
             for row in records:
-                check_deadline()
                 _require_rebuild(
                     unique.setdefault(row["path"], row) == row,
                     "associated physical census has conflicting identities",
@@ -3895,7 +3810,7 @@ def verify_associated_candidate(
             _associated_read_bounds(
                 observations, records, local_read_limit, local_open_limit
             )
-            _forward_rebuild(cutoff, events)
+            _forward_rebuild(events)
             expected_read_bytes = (
                 sum(row["bytes"] for row in observations)
                 + sum(row["bytes"] for row in records)
@@ -3936,7 +3851,7 @@ def verify_associated_candidate(
             published = contract.parse_json(data, "associated terminal result")
             retained.clear()
             retained.update(published)
-            _forward_rebuild(cutoff, events)
+            _forward_rebuild(events)
             if not publish:
                 return retained
             pending = workspace / "associated-result.pending.json"
@@ -3965,7 +3880,7 @@ def verify_associated_candidate(
             _associated_read_bounds(
                 observations, records, local_read_limit, local_open_limit
             )
-            _forward_rebuild(cutoff, events)
+            _forward_rebuild(events)
             pending.rename(destination)
     except Exception as error:
         retain(

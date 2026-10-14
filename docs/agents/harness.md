@@ -28,8 +28,8 @@ Package initializers are inert: import the actual owner, not a compatibility fac
 Parent [lift diagnosis](codex.md#parent-lift-diagnosis) and [audit](codex.md#retained-lift-audit)
 use `decomp.diagnosis`, `audit`, `missions`, `inventory`, `gates`, `execution` and
 `evidence`; `decomp.scope` owns directory/source policy and `common.journal` owns
-exclusive records and fsynced streams. Shared boot/cutoff checks live in
-`common.deadlines`. Neither gate command writes source or grants acceptance.
+exclusive records and fsynced streams. Neither gate command writes source or grants
+acceptance.
 The [lift-loop skill](../../.agents/skills/bof3-lift-loop/SKILL.md) instructs the
 active session to delegate domain missions and independently review outcomes.
 The harness never discovers, configures or launches Codex/model processes. Retired
@@ -99,11 +99,11 @@ context inputs cannot stand in for this load's missing or unexpected reads.
 Descriptor-based discovery never suppresses a failed subtree scan or follows
 directory symlinks. Nonregular TOML inputs reject; only an absent initial target
 tree is empty. Limits are 16,384 visited directories and 65,536 total entries;
-aliases, traversal failures and deadlines reject instead of truncating the set.
+aliases and traversal failures reject instead of truncating the set.
 The cache, manifest parser, target-ID and confined traversal owners are also pinned.
 Missing fields, wrong table/value shapes and numeric overflow during one captured
 model's parsing become path-qualified `ValueError` failures. This boundary does
-not catch manifest/claim reader exceptions or deadlines; accepted model values,
+not catch manifest/claim reader exceptions; accepted model values,
 cache isolation and per-load claim validation are unchanged.
 `load_manifest_generation` returns each load's isolated models and immutable claim
 sample together; there is no global latest-claims lookup. Every load validates
@@ -135,7 +135,7 @@ performs no I/O and hashes the supplied UTF-8 text. Its `origin` labels diagnost
 not freshness. The file parser retains its existing newline normalization;
 raw CRLF samples therefore retain their distinct digest. Final input checks stay.
 Profiles also pin the layout, PS-X, source-claim, function/tag, symbol-map and C
-lexical owners, plus shared I/O, confined file/path and deadline helpers.
+lexical owners, plus shared I/O and confined file/path helpers.
 Preservation requires every observed input, including optional absence, in the
 retained PRE-plus-POST map: initial omissions and later unbound reads reject.
 The initial retained-input read loop also uses a fresh `InputBatch`, closed before
@@ -160,7 +160,7 @@ for target-local names, and supplied empty maps never trigger file fallback.
 Repository layout consumes the returned claim
 sample, but its later file/layout reads are not an atomic repository snapshot.
 Expanded claim capture makes repeated preservation proofs more expensive; no
-cross-sample validation-success cache or relaxed producer deadline is implied.
+cross-sample validation-success cache is implied.
 
 `common.observation.observe_directory` binds bounded, nofollow membership to an
 opened directory and checks path linkage. Profiles retain raw directory metadata;
@@ -197,7 +197,7 @@ Absence is rechecked after the ancestor walk; newly present entries reject.
 `build.receipts` owns grouped producer receipts: `build-adapter producer` always
 compiles under the writer lease, while `build-adapter receipt` requires an external
 receipt SHA and freshly checks configured provenance. Receipts cannot authorize
-reuse, native equality or deadline compliance. Translation binds every supplied
+reuse or native equality. Translation binds every supplied
 dispatch to the requested root/source and validates it before reading metadata,
 including ordinary-source passthrough. It reuses the bounded compiler source
 reader rather than reopening text without an admission limit; later dispatch
@@ -344,8 +344,8 @@ authority; an annotation containing another progress tag is rejected, not erased
 
 `naming.audit.prepare_transaction(check_only=True)` uses the same validation and
 report lock as publication, including prospective full-report provenance checks,
-but leaves the bound report in memory. It checks the original report bytes and
-inherited deadline before returning `checked:true`, `prepared:false`; the CLI
+but leaves the bound report in memory. It checks the original report bytes before
+returning `checked:true`, `prepared:false`; the CLI
 exposes this as `prepare-transaction --check`. The sibling lock may be created;
 source, report and receipt publication remain disabled. This catches candidate
 schema/scope defects before independent review without granting acceptance or
@@ -356,7 +356,7 @@ FUNCTION/DATA transaction. It composes `inputs.frozen`/`transaction_paths`,
 `common.inventory.capture_file`, actual-index capture and
 `history.read_snapshot_states`: exact source scope, bytes/modes/absence and frozen
 report/reviewed/index pins. It checks retained copies before manifest-last
-publication, then the manifest and live inputs/index/report/deadline before return.
+publication, then the manifest and live inputs/index/report before return.
 Copies cover selected transaction paths only; `inputs.state` conservatively hashes
 the native build closure, including unrelated source paths. It does not read
 `.pi/settings.json`. Source and report bytes remain unchanged.
@@ -366,9 +366,9 @@ This evidence is not macro/type recovery or unattended restoration authority.
 through the existing attestation validator. It derives bundle bindings/digests,
 requires actual distinct run IDs and retained review/snapshot proofs. After
 exclusive publication it revalidates bundle/source/execution pins, the attestation,
-parent-decision/report/gates pins and deadline. Both producers finally compare
+parent-decision/report/gates pins. Both producers finally compare
 published byte SHA-256 with the originally encoded payload, then recheck writer
-lease/deadline. Valid replacement JSON cannot substitute another reviewer identity
+lease. Valid replacement JSON cannot substitute another reviewer identity
 or snapshot manifest. Failures retain artifacts, including manifests, for
 inspection without implying validity or restoration authority.
 Neither producer infers acceptance or preservation from prose.
@@ -390,15 +390,20 @@ Unexplained differences require explicit `--force` on the module CLI. Replacemen
 use expected-content publication and report retained quarantine paths; extracted
 originals stay unchanged. EMI restoration stays with `emi.catalog_bootstrap`.
 
-`common.git.read_git` bounds workspace/index snapshot queries by 30 seconds,
-2 MiB and the inherited absolute work cutoff. It retains filename bytes and
-propagates cleanup uncertainty; timeout or truncated output is never a baseline.
+`common.git.read_git` caps workspace/index snapshot query output at 2 MiB. It
+retains filename bytes and propagates cleanup uncertainty; failed or truncated
+output is never a baseline.
 Gitlink discovery groups HEAD and index-path queries, but still compares fresh HEAD
 and physical index snapshots before/after reading staged and committed entries.
 No persistent cache or subprocess-supervision bypass is used.
-Type/macro exception handlers suspend only the forward cutoff around owned rollback
-and `common.safeguards.verify_restored_state`. They still require the parent's cleanup
-hard-stop; this grants no new budget, forward gates, retry or restoration authority.
+Type/macro exception handlers retain owned rollback and
+`common.safeguards.verify_restored_state`; neither grants new attempts, forward
+gates, retry or restoration authority. Check-only revalidation grants no
+source-restoration authority. Unexpected gate writes require parent inspection.
+Failed invocation or source rollback may leave published artifacts. Retain the
+failure status and inspect current owner state; never delete or rewrite failed
+publication to manufacture acceptance. Mechanical revalidation does not authorize
+advancement.
 
 The read-only cleanup context router selects one existing domain skill:
 
@@ -452,8 +457,8 @@ owner and validation policy. Similar-looking path or digest checks are not
 interchangeable unless their semantics agree.
 
 `common/process.py` owns application/revalidation command lifetimes and bounded
-capture. Naming postapply and macro/type native gates use 120-second deadlines
-and retain at most 2 MiB of native output per command. Supported native ownership
+capture. Naming postapply and macro/type native gates retain at most 2 MiB of
+native output per command. Supported native ownership
 requires Linux; other platforms reject before spawning rather than claim process
 groups provide complete descendant closure. `common/children.py` establishes a
 fresh single-threaded subreaper before launch. Owner-pipe EOF or direct-child exit
@@ -464,7 +469,7 @@ direct-child exit status.
 After `_main` finishes cleanup and closes the completion pipe, the supervisor
 flushes its available Python output streams and exits directly with the retained status.
 This avoids interpreter-finalization overhead for short commands; it does not
-skip child reaping, the cleanup ACK, output capture or deadline checks. Exceptions
+skip child reaping, the cleanup ACK or output capture. Exceptions
 before this point retain Python's failing-exit path. No supervisor state is pooled.
 
 The bounded supervisor observes its direct child's exit through libc
@@ -474,8 +479,8 @@ replaces the private cleanup ACK; descriptor errors retain guarded cleanup.
 
 A private completion pipe, not inherited by gates, acknowledges only finished
 cleanup. `poll`, `wait`, `communicate` and terminal `returncode` require that ACK.
-Timeout/overflow produces failed gate evidence (124/125) only after confirmed
-cleanup. Missing ACK or cleanup wait expiry raises `ProcessCleanupError`: callers
+Output overflow produces failed gate evidence (125) only after confirmed
+cleanup. Missing ACK raises `ProcessCleanupError`: callers
 do not kill the still-cleaning guardian and pretend its descendants stopped. Type
 and macro owners retain POST and recovery backing instead of restoring source,
 workspace or index while writers may remain. Naming evidence propagates uncertainty
@@ -485,25 +490,6 @@ both owned clients still receive cleanup attempts.
 Ordinary naming collection failures retain the error and full last-operation
 command, selector, exit, killed state, raw output and stderr in a failed receipt.
 That forensic record never commits a successful row or closes semantic work.
-
-Naming lifecycle `validate`, `prepare-transaction`, `snapshot`, `postapply-gates`,
-`prepare-review`, `postapply-review`, `verify`, `finalize-transaction` and
-`terminal-verify` accept one `--work-deadline`: the original absolute monotonic
-cutoff. Shared CLI dispatch binds the stricter inherited/supplied cutoff, restores
-the caller's context on exit and rejects late success. These are cooperative guards
-and owned-subprocess budgets, not asynchronous Python cancellation or automatic
-rollback; always inspect exit status, not just emitted JSON. Cleanup retains its
-separately frozen tail, never charged by extending work time.
-
-Before autonomous identity application, `snapshot --reserve-seconds SECONDS`
-requires a positive reserve under a bound work cutoff. Freeze a realistic remaining
-native/index/independent-POST/finalization budget, with margin, in the mission; do
-not compress review to fit a nearly spent window. Admission checks precede capture
-and output creation and recur before publication/return. Expiry may retain
-unaccepted PRE artifacts but grants no source permission. A snapshot is not durable
-timing admission: recheck the same remaining-time reserve immediately before editing.
-Insufficient time defers before application; never reset consumed attempts or
-rebind a failed transaction. Reserve estimates cannot guarantee completion.
 
 The guardian can remain active when termination cannot be confirmed; callers stop
 for parent inspection, not automatic retry. Lease release/reacquisition alone is
@@ -784,7 +770,7 @@ execution loop remains unfinished.
 
 Unpublished POST after `ProcessCleanupError` uses `inspect-recovery`, not the
 published-application `resume` route. Retain the original budget, latest consumption
-pins and failure evidence across fresh invocation. Remaining time/launches and an
+pins and failure evidence across fresh invocation. Remaining launches and an
 available lease do not clear the parent's cleanup-unconfirmed stop. Inspection
 does not authenticate termination; retain native process handles in their owning
 PID namespace rather than interpreting saved PIDs in another tool invocation.
@@ -801,23 +787,22 @@ Validator fields do not confer authority by themselves or replace that authoriza
 
 `common.continuation.check_budget` is a read-only validator, not a scheduler or
 launch permission. Its `bof3.execution-budget/v1` contract pins the canonical
-root path/device/inode, ordered unique queue IDs and fingerprints, same-boot
-monotonic start/deadline, UTC start, global launch ceiling and per-entry repair
-ceilings. All integer counters reject booleans. There are no implicit defaults.
+root path/device/inode, ordered unique queue IDs and fingerprints, global launch
+ceiling and per-entry repair ceilings. All integer counters reject booleans.
+There are no implicit defaults.
 
 Supply the externally retained budget digest, latest checkpoint digest and
 sequence, plus the complete `bof3.execution-consumption/v1` chain from zero.
 Each checkpoint pins the contract and previous checkpoint; each transition
 consumes exactly one launch or one entry repair, never refunds or resets.
-Queue membership, counters, ceilings, root and boot must remain bound.
-`bof3.execution-budget-status/v1` reports remaining time/counts and exhaustion
+Queue membership, counters, ceilings and root must remain bound.
+`bof3.execution-budget-status/v1` reports remaining counts and exhaustion
 with `launch_authorized:false`. Latestness depends on the parent's external
 high-water pin: a mutually consistent stale prefix and stale pin cannot be
 detected internally. Queue fingerprints are bound, not freshly re-queried.
 
-The controller must durably pre-debit before dispatch and preserve the original
-deadline across fresh invocations. Repair work that launches a process owes
-both debits. No checkpoint writer, reservation service, CLI, automatic recovery
+The controller must durably pre-debit before dispatch. Repair work that launches
+a process owes both debits. No checkpoint writer, reservation service, CLI, automatic recovery
 or accepted-source authority is implemented by this validator. Owner freshness,
 writer quiescence and independent parent acceptance remain separate gates.
 
@@ -832,87 +817,20 @@ only retained bytes within the combined cap. These trusted owner callbacks do no
 confer child/semantic authority; callback failure still requires original-owner
 cleanup, and cleanup uncertainty takes priority over the callback error.
 
-`common.process.run_bounded(..., deadline=...)` accepts an optional finite absolute
-`time.monotonic()` deadline; the earlier of that deadline and the per-call timeout
-applies, including startup. Already-expired work does not spawn. The Linux
-supervisor also enforces the deadline without parent polling, then reaps owned
-descendants before completion ACK. Capture, wait and confirmed completion all
-respect expiry. Cleanup may finish after the work deadline but grants no further
-work; uncertain cleanup raises `ProcessCleanupError`, not a successful timeout
-receipt. `owned_popen` accepts the same optional deadline and rejects prelaunch
-expiry with `subprocess.TimeoutExpired`. Convert a validated nanosecond deadline
-to monotonic seconds without replacing it with a fresh relative allowance.
-
-### Owner work deadlines
-
-Public `common.files.read_file` checks the inherited deadline before traversal,
-before reading an acquired leaf, and after descriptor cleanup; missing-parent
-success also checks expiry. Byte limits and confined path rules are unchanged.
-These are cooperative checkpoints, not kernel-I/O interruption or a hard time
-bound. Low-level reads used within publication/quarantine stay deadline-neutral.
-`apply_changes` suspends failed forward work for its no-explicit-tail rollback;
-an explicit cleanup cutoff remains bound. Direct rollback/restoration callers
-still own their cleanup context; reads never silently discard that cutoff.
-
-Type/macro `run` and `revalidate` commands accept `--deadline SECONDS`, an optional
-**absolute monotonic work cutoff**, not a duration or UTC timestamp. Their
-`run_transaction(..., deadline=...)` and `revalidate_application(..., deadline=...)`
-APIs expose the same control. The caller must validate original budget/consumption pins and
-freeze a separate cleanup hard-stop; a numeric cutoff grants no authority and is
-not an execution-budget validator. Do not replace either endpoint on a retry.
-
-`common.deadlines` binds this limit to the synchronous owner invocation before
-writer-lease acquisition. Invalid/nonfinite/boolean values reject; already-expired
-work raises `DeadlineExpired` without entering the writer. Nested bindings can
-only tighten the current limit and reset in `finally`. The native default runner
-inherits the limit, including hidden partial-function baseline gates during
-manifest rederivation. It retains the earlier of the work cutoff and its normal
-120-second command ceiling. Injected runner call signatures remain unchanged;
-checks around their return do not make a custom runner interruptible. New threads
-and subprocess entry points require explicit deadline propagation.
-
-Forward checks surround source transitions, gate execution and proof publication.
-After expiry, owned-image rollback and its safeguards run without that expired
-work limit; the parent must supervise the owner until the original cleanup
-hard-stop. Filesystem/Git inspection or restoration can still stall, so this is
-bounded cooperation, not guaranteed automatic recovery. `ProcessCleanupError`
-still prevents rollback while descendant termination is unconfirmed.
-
-Expiry after a gate may leave no ordinary command receipt. If publication itself
-crosses the cutoff, an output/attestation may remain as retained failure evidence
-after source rollback. A file's existence is not success: retain native terminal
-status, verify current owner state and use the existing inspection/recovery gates.
-Never delete or rewrite failed publication to manufacture acceptance.
-
-Check-only revalidation acquires no source-restoration authority. Expiry or an
-unexpected gate write leaves current source for parent inspection, never automatic
-rollback. A late revalidation publication can still verify against unchanged
-source; mechanical verification does not prove deadline compliance or authorize
-advancement. Retain the failed invocation and the parent's budget decision.
-
-Naming collection uses `bin/harness naming evidence ... --work-deadline SECONDS` and
-`run_evidence(..., work_deadline=...)` for the same absolute cutoff. Its existing
-`--deadline` remains a relative per-operation/index-request cap, not a campaign
-budget. The effective collection limit is the earlier of the inherited cutoff and
-the existing 600-second shard wall. `naming.session` owns client acquisition and
-cleanup; index, native-byte and Rizin clients pass the cutoff to
-`common.process.owned_popen` and clip foreground waits. Cleanup attempts all
-acquired clients and preserves `ProcessCleanupError` over ordinary failures;
-shutdown/drain is not work.
+`common.process.run_bounded` and `owned_popen` have no default work time limit.
+Ordinary transport operations may supply a relative timeout. The Linux supervisor
+reaps owned descendants before completion ACK; uncertain cleanup raises
+`ProcessCleanupError`. `naming.session` owns client acquisition and cleanup.
+Cleanup attempts all acquired clients and preserves `ProcessCleanupError` over
+ordinary failures.
 
 `toolchain/rizin.py` owns the managed Rizin executable. The PS1 decompiler plugin
 uses `toolchain/rz_psxdec.py` for its sibling-fork build and `nativebuild.py` for
 receipt validation. See the [build and usage guide](../../tools/retdec-psx/README.md).
 
-Naming checks before receipt/journal writes and finalization stop further forward
-work on expiry. They do not make filesystem operations atomic or interruptible:
-in-flight writes and earlier completed checkpoints may remain. Expiry skips later
-manifest/telemetry/report finalization, not retained evidence; never delete it to
-manufacture success. Collection still cannot approve identities or satisfy an
-unfiltered full-target naming audit by itself.
-
-Without an absolute cutoff, existing standalone limits remain. These owner controls
-are not an automatic scheduler or the complete bounded Codex sequence.
+Naming collection cannot approve identities or satisfy an unfiltered full-target
+naming audit by itself. Emitted artifacts never replace a successful terminal
+status and current owner verification.
 
 ## Validation
 

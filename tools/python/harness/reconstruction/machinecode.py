@@ -85,10 +85,8 @@ class LeafFacts:
 
 
 def derive_byte_comparison_leaf(member, source) -> LeafFacts:
-    from harness.common.deadlines import check_deadline
     from harness.reconstruction.obligations import PredicateResult
 
-    check_deadline()
     content = getattr(source, "instruction_bytes", getattr(source, "content", None))
     address = getattr(source, "pc", getattr(source, "address", None))
     pcs = tuple(range(member.start, member.end, 4))
@@ -197,10 +195,8 @@ def derive_byte_comparison_leaf(member, source) -> LeafFacts:
 
 
 def derive_empty_return_leaf(member, source) -> LeafFacts:
-    from harness.common.deadlines import check_deadline
     from harness.reconstruction.obligations import PredicateResult
 
-    check_deadline()
     content = getattr(source, "instruction_bytes", getattr(source, "content", None))
     address = getattr(source, "pc", getattr(source, "address", None))
     expected = tuple(range(member.start, member.end, 4))
@@ -275,7 +271,6 @@ def derive_empty_return_leaf(member, source) -> LeafFacts:
 
 
 def derive_zero_return_leaf(member, source) -> LeafFacts:
-    from harness.common.deadlines import check_deadline
     from harness.reconstruction.obligations import PredicateResult
 
     content = getattr(source, "instruction_bytes", getattr(source, "content", None))
@@ -340,7 +335,6 @@ def derive_zero_return_leaf(member, source) -> LeafFacts:
     return_pc = pcs[0] if len(words) == 2 else pcs[1]
     rows, constant = [], None
     for pc, word in zip(pcs, words, strict=True):
-        check_deadline()
         fields = word_fields(word)
         before = constant
         if word in zeros:

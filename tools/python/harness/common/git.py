@@ -12,15 +12,12 @@ from pathlib import Path
 
 from harness.common.rename import describe_locations, publish_file
 from harness.common.lease import verify_writer
-from harness.common.deadlines import resolve_deadline
 from harness.common.process import run_bounded
 from harness.common.artifacts import read_bytes
-from harness.common.deadlines import check_deadline
 
 
 def read_head(root: Path, *, reader=None) -> str:
     """Consume current HEAD and loose/packed reference bytes without a Git process."""
-    check_deadline()
     if any(
         os.environ.get(key)
         for key in (
@@ -178,7 +175,7 @@ def _git_state_token(root: Path) -> tuple | None:
 
 
 def read_git(root: Path, arguments: list[str]) -> str:
-    """Run a captured Git query within the owner's cutoff, preserving filename bytes."""
+    """Run a captured Git query, preserving filename bytes."""
     for key in os.environ:
         if (
             key
@@ -219,17 +216,11 @@ def read_git(root: Path, arguments: list[str]) -> str:
     result = run_bounded(
         root,
         command,
-        timeout=30,
         output_limit=2 * 1024 * 1024,
-        deadline=resolve_deadline(),
         errors="surrogateescape",
     )
     if result["failure"] or result["exit_code"] != 0:
-        code = (
-            (124 if result["failure"] == "timeout" else 125)
-            if result["failure"]
-            else result["exit_code"]
-        )
+        code = 125 if result["failure"] else result["exit_code"]
         cause = subprocess.CalledProcessError(
             code,
             command,

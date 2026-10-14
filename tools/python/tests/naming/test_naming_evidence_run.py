@@ -369,9 +369,9 @@ def test_index_worker_isolates_non_word_dispatch_extent(tmp_path: Path) -> None:
 
     worker = IndexWorker(tmp_path, TARGET, report_payload)
     try:
-        assert worker.receive(10) == {"ready": True}
-        operations = worker.request(1, data_row, 10)
-        assert worker.request(2, later_row, 10) is not None
+        assert worker.receive() == {"ready": True}
+        operations = worker.request(1, data_row)
+        assert worker.request(2, later_row) is not None
     finally:
         worker.close()
         _INDEX_FIXTURE = shared_fixture
@@ -699,39 +699,6 @@ def test_index_worker_kill_tolerates_dead_child_and_broken_streams() -> None:
     assert [stream.close_count for stream in streams] == [2, 2, 2]
 
 
-def test_index_worker_timeout_kills_reaps_and_never_commits(tmp_path: Path) -> None:
-    """A killed child cannot perform its instrumented late durable write."""
-    from harness.naming.client import IndexWorker
-
-    late_write = tmp_path / "parent-owned-checkpoint"
-    script = tmp_path / "hang_worker.py"
-    script.write_text(
-        "import pathlib,sys,time\n"
-        "time.sleep(.5)\n"
-        "pathlib.Path(sys.argv[1]).write_text('late')\n",
-        encoding="utf-8",
-    )
-    worker = IndexWorker.__new__(IndexWorker)
-    worker.process = subprocess.Popen(  # type: ignore[assignment]
-        [sys.executable, str(script), str(late_write)],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-    )
-    started = time.perf_counter()
-    try:
-        worker.receive(0.1)
-    except TimeoutError:
-        pass
-    else:
-        raise AssertionError("hung worker was accepted")
-    assert time.perf_counter() - started < 3
-    assert worker.process.poll() is not None
-    time.sleep(0.6)
-    assert not late_write.exists()
-
-
 def test_real_kill_after_row_then_resume_matches_uninterrupted(tmp_path: Path) -> None:
     """SIGKILL after row N leaves committed evidence reusable and deterministic."""
     clean = tmp_path / "clean"
@@ -861,7 +828,6 @@ def test_bounds_and_trust_fail_before_side_effects(tmp_path: Path) -> None:
         {"shard": 11},
         {"concurrency": 0},
         {"concurrency": 5},
-        {"deadline": 0},
         {"rows": ["function:func_80100001"]},
         {"rows": ["function:func_80100000"] * 2},
         {"rows": ["function:func_80100000"], "all_rows": True},
@@ -1226,7 +1192,7 @@ def test_semantic_parser_rizin_and_native_argv(tmp_path: Path) -> None:
             f"bin/harness lift {name} exe/test@0x80100000 {args}"
         )
         assert operation is not None
-        result = NativeByteOps(tmp_path, 2).run(operation)
+        result = NativeByteOps(tmp_path).run(operation)
         assert result.exit == 0
         expected = ["exe/test@0x80100000", "--json"]
         if name == "asm-diff":
@@ -1297,7 +1263,7 @@ def test_rizin_protocol_exact_output_single_session(tmp_path: Path) -> None:
     _repo(tmp_path)
     session = RizinSession(tmp_path, TARGET, executable=engine)
     session.queue("px 4 @ 0x80100000", TARGET)
-    result = session.run_queued(2)[0]
+    result = session.run_queued()[0]
     assert result.output == "EXACT:px 4 @ 0x80100000"
     assert session.process_count == 1
     session.close()
@@ -1324,7 +1290,7 @@ def test_rizin_protocol_reports_command_failure(tmp_path: Path) -> None:
     _repo(tmp_path)
     session = RizinSession(tmp_path, TARGET, executable=engine)
     session.queue("invalid-command", TARGET)
-    result = session.run_queued(2)[0]
+    result = session.run_queued()[0]
     assert result.exit == 1 and "ERROR: invalid-command" in result.output
     session.close()
 
@@ -1359,7 +1325,7 @@ def test_rizin_stderr_boundary_waits_for_delayed_reader(
     monkeypatch.setattr(RizinSession, "_drain_stderr", delayed)
     session = RizinSession(tmp_path, TARGET, executable=engine)
     session.queue("invalid-command", TARGET)
-    result = session.run_queued(2)[0]
+    result = session.run_queued()[0]
     session.close()
     assert result.exit == 1
     assert "ERROR: invalid-command" in result.stderr
@@ -1396,7 +1362,7 @@ def test_rizin_random_exact_framing_preserves_colliding_fragmented_payload(
     _repo(tmp_path)
     session = semantic.RizinSession(tmp_path, TARGET, executable=engine)
     session.queue("payload", TARGET)
-    result = session.run_queued(3)[0]
+    result = session.run_queued()[0]
     session.close()
     assert "BEFORE BOF3_FRAME_" in result.raw and "_END AFTER" in result.raw
     assert "ERROR: token-substring" in result.stderr
@@ -1404,9 +1370,9 @@ def test_rizin_random_exact_framing_preserves_colliding_fragmented_payload(
 
 
 def _wait_for_path(path: Path) -> None:
-    deadline = time.monotonic() + 3
+    expires_at = time.monotonic() + 3
     while not path.exists():
-        assert time.monotonic() < deadline, f"timed out waiting for {path.name}"
+        assert time.monotonic() < expires_at, f"timed out waiting for {path.name}"
         time.sleep(0.001)
 
 
@@ -1452,7 +1418,7 @@ def test_rizin_boundaries_require_complete_lines_without_cross_command_leak(
     session.queue("first", TARGET)
     session.queue("second", TARGET)
     with ThreadPoolExecutor(max_workers=1) as pool:
-        result = pool.submit(session.run_queued, 5)
+        result = pool.submit(session.run_queued)
         _wait_for_path(tmp_path / "stdout.ready")
         _wait_for_path(tmp_path / "stderr.ready")
         assert not result.done()
@@ -1478,7 +1444,7 @@ def test_pinned_rizin_protocol_distinguishes_success_error_and_old_markers() -> 
     session = RizinSession(root, "exe/logo", executable=engine)
     session.queue("echo BEFORE; echo BOF3_0_END; echo AFTER", "exe/logo")
     session.queue("?e BOF3_0_STDERR_END", "exe/logo")
-    success, failure = session.run_queued(5)
+    success, failure = session.run_queued()
     session.close()
     assert success.exit == 0 and all(
         text in success.raw for text in ("BEFORE", "BOF3_0_END", "AFTER")
@@ -1486,12 +1452,8 @@ def test_pinned_rizin_protocol_distinguishes_success_error_and_old_markers() -> 
     assert failure.exit == 1 and "BOF3_0_STDERR_END" in failure.stderr
 
 
-def test_one_shard_deadline_rejects_report_owned_semantic_arguments(
-    tmp_path: Path, monkeypatch: Any
-) -> None:
+def test_runner_rejects_report_owned_semantic_arguments(tmp_path: Path) -> None:
     """Arbitrary report-owned native arguments fail before execution."""
-    import harness.naming.execution as evidence_run
-
     _repo(tmp_path)
     _index(tmp_path)
     row = _blocked_row("func_80100000", _callee_work())
@@ -1507,11 +1469,8 @@ def test_one_shard_deadline_rejects_report_owned_semantic_arguments(
     wrapper = tmp_path / "bin/harness"
     wrapper.write_text("#!/bin/sh\nsleep .3\necho ok\n", encoding="utf-8")
     wrapper.chmod(0o755)
-    monkeypatch.setattr(evidence_run, "SHARD_WALL_CLOCK", 0.5)
     with pytest.raises(ValueError, match="not code-owned"):
-        run_evidence(
-            tmp_path, TARGET, report, rows=["function:func_80100000"], deadline=2
-        )
+        run_evidence(tmp_path, TARGET, report, rows=["function:func_80100000"])
     assert not (tmp_path / "out/reviews/evidence").exists()
 
 
@@ -1583,10 +1542,10 @@ def test_partial_runner_commits_strict_exit_one_evidence(
     monkeypatch.setattr(registry, "resolve_function", lambda *_: resolved)
 
     class Worker:
-        def __init__(self, *_args: Any, work_deadline: float | None = None) -> None:
+        def __init__(self, *_args: Any) -> None:
             pass
 
-        def receive(self, _timeout: float) -> dict[str, Any]:
+        def receive(self) -> dict[str, Any]:
             return {"status": "ready"}
 
         def request(self, *_args: Any) -> list[Any]:
@@ -1694,25 +1653,6 @@ def test_partial_runner_commits_strict_exit_one_evidence(
     bad = run_evidence(tmp_path, TARGET, report, rows=["function:func_80100000"])
     assert bad["executed"] == 0 and bad["errors"]
     assert load_checkpoint(tmp_path, report) == {}
-
-
-def test_native_timeout_kills_grandchild_before_late_write(tmp_path: Path) -> None:
-    from harness.naming.native import NativeByteOps
-
-    late = tmp_path / "late"
-    (tmp_path / "bin").mkdir(exist_ok=True)
-    wrapper = tmp_path / "bin/harness"
-    wrapper.write_text(
-        '#!/bin/sh\n(sleep .4; echo late > "$3") &\nsleep 5\n',
-        encoding="utf-8",
-    )
-    wrapper.chmod(0o755)
-    result = NativeByteOps(tmp_path, 1).run(
-        {"kind": "asm-diff", "target": str(late), "args": []}, timeout=0.1
-    )
-    assert result.killed and result.exit == 124
-    time.sleep(0.6)
-    assert not late.exists()
 
 
 def test_large_raw_output_is_complete_and_summary_bounded(tmp_path: Path) -> None:

@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Any, Callable
 
 from harness.common.digests import digest
-from harness.common.deadlines import check_deadline
 from harness.common.directory import validate_repo_path
 from harness.common.inputs import InputBatch
 from harness.common.paths import file_state, validate_paths
@@ -192,13 +191,11 @@ def candidate_observations(kind: str) -> frozenset[str]:
 
 
 def _capture_artifact(root: Path, value: object, limit: int) -> tuple[str, str, dict]:
-    check_deadline()
     name = validate_repo_path(value)
     with InputBatch(root) as batch:
         state, content = batch.read(root / name, max_bytes=limit)
     if state is None:
         raise ValueError(f"macro transaction path is invalid: {name}")
-    check_deadline()
     try:
         artifact = json.loads(content.decode("utf-8"), object_pairs_hook=unique_object)
     except (json.JSONDecodeError, UnicodeDecodeError, RecursionError) as error:
@@ -207,7 +204,6 @@ def _capture_artifact(root: Path, value: object, limit: int) -> tuple[str, str, 
         ) from error
     if not isinstance(artifact, dict):
         raise ValueError("macro review artifact must be an object")
-    check_deadline()
     return name, state["sha256"], artifact
 
 
@@ -329,7 +325,6 @@ def reviewed_artifact(
             raise ValueError(
                 "private macro opportunity paths are not all owned by one target"
             )
-    check_deadline()
     return {
         "artifact": name,
         "artifact_sha256": checksum,
@@ -390,7 +385,6 @@ def exact_proofs(
             verify_reviewed_application,
             manifest_validator=_manifest,
         )
-        check_deadline()
         target = normalize_target(value["target"], manifests)
         if (
             verified["target"] != target
@@ -430,7 +424,6 @@ def exact_proofs(
             "shared template proof contracts differ or contain address leaks"
         )
     result = sorted(proofs, key=lambda item: (item["target"], item["path"]))
-    check_deadline()
     return result
 
 

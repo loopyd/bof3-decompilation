@@ -31,7 +31,7 @@ def run(args: argparse.Namespace) -> int:
                 print(path.relative_to(root))
                 return 0
         for target in stale:
-            analyze_project(root, target, timeout=args.timeout)
+            analyze_project(root, target)
         remaining = [
             target
             for target in stale
@@ -54,7 +54,6 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="reanalyze every stale generated snapshot before rebuilding",
     )
-    parser.add_argument("--timeout", type=int, default=120)
     parser.set_defaults(handler=run)
     return parser
 

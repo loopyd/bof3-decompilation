@@ -6,7 +6,7 @@ Read before changing Python harness, CLI or skill scripts. Source lifting follow
 
 ## Names and ownership
 
-- One concept, one name; keep owning definition, migrate importers. Functions use
+- Keep one owning definition and migrate importers. Functions use
   verb-led `snake_case`; predicates `is_`/`has_`/`can_`. Constructors/protocols keep
   conventional names. Classes `PascalCase`, constants `UPPER_SNAKE`. Private
   functions may use one leading underscore; filenames do not advertise privacy.
@@ -33,31 +33,27 @@ Read before changing Python harness, CLI or skill scripts. Source lifting follow
 
 ## Commands and shared mechanisms
 
-`main()` is `return run_main(build_parser, argv)`. Domain CLI lives in domain
-`cli.py`; `harness.commands` owns cross-domain commands. `bin/` and skill scripts
-only dispatch; never duplicate parsing, validation, mutation or recovery policy.
+Implement `main()` as `return run_main(build_parser, argv)`. Put domain CLI in
+`cli.py` and cross-domain commands in `harness.commands`. Dispatch from `bin/` and
+skill scripts without duplicating parsing, validation, mutation or recovery policy.
 
-Use `harness.common.cli` helpers `add_root_argument(parser)`,
-`add_example_argument(parser, text)`, `add_work_deadline_argument(parser)`.
-Deadline opt-in binds original monotonic cutoff, rejects late success, never
-renews duration or controls cleanup. No raw argv scans or hand-rolled
+Use `harness.common.cli` helpers `add_root_argument(parser)` and
+`add_example_argument(parser, text)`. No raw argv scans or hand-rolled
 `--root`/`--example` parsing.
 
-`harness.common` owns shared `cli`, `digests`, `files`, `paths`, `process`,
-`workspace`, `evidence`, `execution`, `review`, `revalidation` mechanisms, not
-second copies of domain policy. Extract only where semantics/trust boundaries
-agree. Domain adapters supply policy; shared mechanisms never import domain
-adapters to discover it. Keep specialized helpers local; similar hash formats,
-validators or evidence checks need not be equivalent.
+Keep shared `cli`, `digests`, `files`, `paths`, `process`, `workspace`, `evidence`,
+`execution`, `review`, `revalidation` mechanisms in `harness.common`. Extract only
+matching semantics/trust boundaries. Domain adapters supply policy; common must
+not import them. Keep specialized helpers local; similar formats/checks need not
+share semantics.
 
-Shared transactions retain rollback images only for explicit changed paths.
-Observe unrelated Git state and hash reported dirty paths; do not copy clean
-sources or recursively capture dependency contents. Pin explicitly consumed inputs
-through their existing owner guards. Recovery excludes root `build/` outputs and
-refuses indexed or committed paths there. Preserve raw index bytes and identity,
-writer cleanup, owned-only restoration, and all native and semantic gates.
-Whole-workspace snapshots, recursive source inventories, and new proof or grant
-frameworks are not prerequisites for bounded naming, type, macro, or combiner work.
+Retain rollback images only for explicit changed paths. Observe unrelated Git state
+and hash reported dirty paths without copying clean sources/dependency trees. Pin
+consumed inputs through owner guards. Exclude root `build/` outputs from recovery
+and refuse indexed/committed paths there. Preserve raw index bytes/identity, writer
+cleanup, owned-only restoration and native/semantic gates. Do not require whole-
+workspace snapshots, recursive source inventories or new proof/grant frameworks
+for bounded naming/type/macro/combiner work.
 
 Stdlib first, then installed dependencies; no new dependency without explicit user
 approval. Prefer smallest working diff and deletion over speculative abstraction.
@@ -75,55 +71,49 @@ a finite aligned original range. The command validates the complete
 reverse index and corroborates indexed direct calls through the domain MIPS
 decoder. It retains unresolved and unsupported indexed edges.
 
-Each method enumerates every unordered pair. `--minimum-members` is fixed at two.
-For `helper-call-cluster`, `--minimum-shared-callees` sets the positive threshold
-for distinct target-qualified callees. For `--method macro-family`,
-`--minimum-shared-macros` sets the threshold for shared target-private function-like
-definitions. For `--method shared-state-type`, `--minimum-shared-relations` sets
-the threshold for distinct shared storage addresses and private declaration
-spellings. For `--method functional-subcategory`,
-`--minimum-shared-subcategories` sets the threshold for distinct shared authored
-category IDs. Nondefault thresholds for another method cause refusal.
+Enumerate every unordered pair; `--minimum-members` is fixed at two. Select the
+method's threshold below and reject nondefault thresholds for other methods.
+
+| Method | Threshold |
+| --- | --- |
+| `helper-call-cluster` | positive `--minimum-shared-callees` for distinct target-qualified callees |
+| `--method macro-family` | `--minimum-shared-macros` for shared target-private function-like definitions |
+| `--method shared-state-type` | `--minimum-shared-relations` for distinct shared storage addresses/private declaration spellings |
+| `--method functional-subcategory` | `--minimum-shared-subcategories` for distinct shared authored category IDs |
 
 Eligible pairs rank by descending count of their method's shared relations, then
 canonical member IDs. Below-threshold pairs retain their reasons. The `retain-all`
 overlap policy records every pair sharing a member, including excluded pairs.
 `--top-n` selects a view from the full ranking without truncating the pool.
 
-The macro owner queries only selected function identities and referenced definition
-IDs. Discovery binds each use to its lexical line, column, arguments, conditions
-and selected implementation, and each definition to current source bytes and
-parsed body, parameters and conditions. It captures literal transitive include
-inputs. Shared, generated, unsupported, restricted, matching-helper, object-like,
-ambiguous and out-of-closure uses remain visible with exclusion reasons. Only
-ordinary `function_like` definitions without owner restrictions qualify. Multiple
-definitions of one use do not supply a qualified shared macro. The method refuses
-more than 4,096 queried uses and preserves the existing reviewed C-source and
-original-range gates.
+Query selected function identities/referenced definition IDs through the macro
+owner. Bind uses to lexical line/column/arguments/conditions/selected implementation
+and definitions to current source bytes/body/parameters/conditions. Capture literal
+transitive includes. Retain shared/generated/unsupported/restricted/matching-helper/
+object-like/ambiguous/out-of-closure uses with exclusion reasons. Qualify only
+ordinary `function_like` definitions without owner restrictions; multiple
+definitions for one use cannot qualify. Refuse more than 4,096 queried uses and
+preserve reviewed C-source/original-range gates.
 
-Macro use records describe lexical grouping leads. Conditional records and a
-shared definition do not prove active preprocessing, original semantics, native
-equivalence or useful source ownership. Complete human-value review and the
-source-consolidation acceptance gates remain required before grouping.
+Treat macro records as lexical grouping leads; conditional/shared definitions prove
+no active preprocessing, original semantics, native equivalence or useful ownership.
+Require human-value review and source-consolidation acceptance before grouping.
 
-The shared-state/type method queries selected function identities and type names.
-It checks lexical occurrence positions and source hashes through the type owner,
-reconciles current claimed header declarations through the declaration owner, and
-captures literal include inputs. Tag and ordinary namespaces stay separate.
-Shared, ambiguous, unsupported and out-of-closure declarations remain visible
-with reasons. A qualified private declaration spelling retains unresolved lexical
-binding; it does not establish a semantic type use or active preprocessing.
+For shared-state/type, query selected function identities/type names, check lexical
+positions/source hashes through the type owner, reconcile claimed headers through
+the declaration owner and capture literal includes. Keep tag/ordinary namespaces
+separate. Retain shared/ambiguous/unsupported/out-of-closure declarations with
+reasons. Qualified private spellings still have unresolved lexical bindings;
+they prove neither semantic type uses nor active preprocessing.
 
-Storage relations use exact target-qualified load/store addresses. Indexed rows
-must match the domain MIPS decoder over each member's original range and be
-present in the type owner's storage-candidate evidence. Address materialization
-and accesses without a supported storage candidate retain exclusion reasons.
-Candidate blockers and representation status remain unchanged. The decoder covers
-direct `lui`/low-half uses within its fixed instruction window; absence does not
-prove a missing access. Equal addresses do not prove aliases, pointer producers,
-object extent, lifetime, semantic state ownership or safe grouping. The result
-separates shared declaration IDs from storage-candidate IDs and caps queried uses,
-declarations, references and storage evidence at 4,096 facts per category.
+Use exact target-qualified load/store addresses. Require indexed rows to match
+the domain MIPS decoder over each original range and the type owner's storage
+evidence. Retain exclusion reasons for address materialization/unsupported storage
+accesses, without changing candidate blockers/representation status. The decoder
+covers direct `lui`/low-half uses in a fixed instruction window; absence proves no
+missing access. Equal addresses prove no aliases, pointer producers, extent,
+lifetime, state ownership or safe grouping. Separate declaration/storage-candidate
+IDs and cap uses/declarations/references/storage evidence at 4,096 facts per category.
 
 The functional method requires `--subcategories FILE`, a canonical
 repository-relative JSON input, and `--expected-subcategories-sha256 SHA`.
@@ -138,16 +128,14 @@ Each member's `subcategories` entry has exactly `id` and `rationale` and refers
 to one declared category. Duplicate JSON keys, categories, members or assignments
 cause refusal. Categories and total assignments are each capped at 4,096.
 
-Bindings must match the current claimed source, its complete attached metadata,
-its ordinary C implementation and the complete reviewed original range. Use
+Match bindings to current claimed source, complete attached metadata, ordinary C
+implementation and complete reviewed original range. Use
 `bin/harness combiner inspect-source SOURCE` for source, metadata and implementation
-hashes and Unicode ranges; a discovery result supplies canonical member IDs and
-complete original-range hashes. Discovery captures literal transitive includes
-and the metadata providers. The full metadata block remains visible, including
-behavior continuation lines. Category descriptions and rationales remain authored
-classification leads. A current binding or shared category does not establish
-original semantics, a return contract, type facts, safe grouping or edit authority.
-Every member and pair still needs independent human-value assessment.
+hashes and Unicode ranges; discovery supplies member IDs/original-range hashes.
+Capture literal transitive includes/metadata providers and retain full metadata,
+including behavior continuations. Treat category descriptions/rationales as authored
+leads; current bindings/shared categories prove no semantics, return contract, type
+facts, safe grouping or edit authority. Independently assess every member/pair's human value.
 
 The result pins membership, thresholds, method version, captured input bytes and
 modes, exact queried index facts, overlaps and ordering. Retain its `fingerprint` externally and pass
@@ -155,8 +143,7 @@ it as `--expected-fingerprint` when rechecking the same pool. A changed pin, sta
 index, duplicate or cross-target member, invalid threshold, unsupported method or
 overlap policy, ownership drift, original JAL disagreement, moving input, more
 than 4,096 indexed call edges, stale classification bindings, classification SHA
-disagreement, storage-decoder disagreement or an expired
-`--work-deadline` causes refusal.
+disagreement or storage-decoder disagreement causes refusal.
 Individual files are capped at 16 MiB and the original image at 64 MiB.
 Discovery records neither human-value approval nor native or mutation acceptance.
 

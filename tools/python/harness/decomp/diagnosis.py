@@ -7,12 +7,6 @@ import os
 import secrets
 from typing import Callable
 
-from harness.common.deadlines import (
-    bind_deadline,
-    capture_work_clock,
-    check_deadline,
-    resolve_deadline,
-)
 from harness.common.digests import digest
 from harness.common.directory import open_parent_fd
 from harness.common.lease import acquire_writer, require_writer
@@ -39,7 +33,6 @@ def diagnose_mission(
     stream_gate: Callable[[str, str, bytes], None],
 ) -> dict:
     require_writer(root)
-    check_deadline()
     verify_mission(root, record, expected_mission_digest)
     if not record["facts"]["existing_source"]:
         raise ValueError("native pre-edit diagnosis requires an existing claimed lift")
@@ -57,12 +50,10 @@ def diagnose_mission(
         raise ValueError("pre-edit diagnosis observed a changed candidate")
     verify_mission(root, record, expected_mission_digest)
     verify_policy(root, policy, expected_policy_digest, before_dispatch=True)
-    check_deadline()
     require_writer(root)
     result = {
         **{key: value for key, value in checked.items() if key != "digest"},
         "schema": "bof3.lift-diagnosis/v1",
-        "clock": capture_work_clock(),
         "status": "diagnosed-not-accepted",
         "source_write_authorized": False,
         "model_dispatched": False,
@@ -70,19 +61,15 @@ def diagnose_mission(
     return {**result, "digest": digest(result)}
 
 
-@bind_deadline
 def run_diagnosis(
     root: Path,
     request: dict,
     *,
     expected_request_digest: str,
     output: str,
-    deadline: float,
 ) -> dict:
     if digest(request) != expected_request_digest:
         raise ValueError("lift diagnosis request pin drifted")
-    if resolve_deadline() is None:
-        raise ValueError("lift diagnosis requires the original parent work cutoff")
     reserved = False
     try:
         with acquire_writer(root):
@@ -112,7 +99,6 @@ def run_diagnosis(
                 output + "/invocation.json",
                 {
                     "request_digest": expected_request_digest,
-                    "work_deadline": resolve_deadline(),
                     "budget_debit_performed": False,
                     "model_dispatched": False,
                 },
@@ -135,7 +121,6 @@ def run_diagnosis(
             )
             result["digest"] = digest(result)
             write_record(root, output + "/result.json", result)
-            check_deadline()
             require_writer(root)
         return {
             "directory": output,

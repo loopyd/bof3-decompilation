@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
 from pathlib import Path
 import re
-import time
 from typing import Any, Callable
 
 from harness.common.digests import digest
@@ -42,9 +40,7 @@ def check_budget(
     expected_checkpoint_digest: str,
     expected_sequence: int,
 ) -> dict[str, Any]:
-    contract = _validate_budget_fields(
-        contract, "schema id root queue clock limits digest"
-    )
+    contract = _validate_budget_fields(contract, "schema id root queue limits digest")
     _validate_budget_pin(contract, expected_budget_digest)
     if (
         contract["schema"] != "bof3.execution-budget/v1"
@@ -75,24 +71,6 @@ def check_budget(
         identities.append(item["id"])
     if len(set(identities)) != len(identities):
         raise ValueError("execution budget queue contains duplicates")
-    clock = _validate_budget_fields(
-        contract["clock"], "boot_id started_ns deadline_ns started_utc"
-    )
-    started = _validate_budget_integer(clock["started_ns"])
-    deadline = _validate_budget_integer(clock["deadline_ns"])
-    try:
-        audit_time = datetime.fromisoformat(clock["started_utc"])
-    except (TypeError, ValueError) as error:
-        raise ValueError("execution budget audit time must be UTC ISO-8601") from error
-    if (
-        deadline <= started
-        or clock["boot_id"]
-        != Path("/proc/sys/kernel/random/boot_id").read_text().strip()
-        or not isinstance(clock["started_utc"], str)
-        or not clock["started_utc"].strip()
-        or audit_time.utcoffset() != timedelta(0)
-    ):
-        raise ValueError("execution budget boot or original deadline is invalid")
     limits = _validate_budget_fields(contract["limits"], "launches repairs")
     launch_limit = _validate_budget_integer(limits["launches"])
     repairs = limits["repairs"]
@@ -147,9 +125,6 @@ def check_budget(
             )
         previous = checkpoint
     _validate_budget_pin(checkpoints[-1], expected_checkpoint_digest)
-    now = time.monotonic_ns()
-    if now < started:
-        raise ValueError("execution budget clock precedes the original start")
     remaining = launch_limit - sum(previous["launches"].values())
     return {
         "schema": "bof3.execution-budget-status/v1",
@@ -157,14 +132,12 @@ def check_budget(
         "checkpoint_digest": expected_checkpoint_digest,
         "sequence": sequence,
         "queue_digest": digest(queue),
-        "deadline_ns": deadline,
-        "remaining_ns": max(0, deadline - now),
         "remaining_launches": remaining,
         "remaining_repairs": {
             identity: repairs[identity] - previous["repairs"][identity]
             for identity in identities
         },
-        "exhausted": now >= deadline or remaining == 0,
+        "exhausted": remaining == 0,
         "launch_authorized": False,
         "latestness_basis": "parent-pinned high-water checkpoint; not independently discovered",
     }

@@ -14,7 +14,6 @@ from ..io import file_sha256, write_json
 from .base import ExecutableToolchain
 from ..patches.git import run_git, git_text
 from ..common.process import run_bounded
-from ..common.deadlines import check_deadline, use_deadline
 from ..runtime.origin import decode_object
 from .sdl import SdlToolchain, build_command
 
@@ -76,33 +75,27 @@ class PcsxReduxToolchain(ExecutableToolchain):
     def runtime_identity(self) -> dict:
         return self._runtime_identity(self.source_identity())
 
-    def catalogue(self, *, source=None, binary_sha256=None, deadline=None) -> dict:
-        with use_deadline(deadline):
-            check_deadline()
-            source = self.source_identity() if source is None else source
-            binary_sha256 = (
-                file_sha256(self.executable) if binary_sha256 is None else binary_sha256
-            )
-            result = run_bounded(
-                self.layout.root,
-                [str(self.executable), "-mission-catalog"],
-                timeout=15,
-                output_limit=2 * 1024 * 1024,
-                deadline=deadline,
-                env=self.environment,
-            )
-            if result["exit_code"] or result["failure"] or result["stderr"]:
-                raise ValueError("Native mission catalogue query failed")
-            report = _qualify_catalogue(
-                self.layout.root / self.submodule, result["stdout"]
-            )
-            if (
-                file_sha256(self.executable) != binary_sha256
-                or _inspect_sources(self.layout, self.submodule, use=_SourceUse.OBSERVE)
-                != source
-            ):
-                raise ValueError("Native catalogue binary/source identity changed")
-            return report
+    def catalogue(self, *, source=None, binary_sha256=None) -> dict:
+        source = self.source_identity() if source is None else source
+        binary_sha256 = (
+            file_sha256(self.executable) if binary_sha256 is None else binary_sha256
+        )
+        result = run_bounded(
+            self.layout.root,
+            [str(self.executable), "-mission-catalog"],
+            output_limit=2 * 1024 * 1024,
+            env=self.environment,
+        )
+        if result["exit_code"] or result["failure"] or result["stderr"]:
+            raise ValueError("Native mission catalogue query failed")
+        report = _qualify_catalogue(self.layout.root / self.submodule, result["stdout"])
+        if (
+            file_sha256(self.executable) != binary_sha256
+            or _inspect_sources(self.layout, self.submodule, use=_SourceUse.OBSERVE)
+            != source
+        ):
+            raise ValueError("Native catalogue binary/source identity changed")
+        return report
 
     def prerequisites(self) -> dict:
         tools = {}
@@ -132,7 +125,6 @@ class PcsxReduxToolchain(ExecutableToolchain):
             capture_output=True,
             text=True,
             check=False,
-            timeout=30,
         )
         rows = [row.split("\t") for row in result.stdout.splitlines()]
         installed = sorted(
@@ -162,7 +154,6 @@ class PcsxReduxToolchain(ExecutableToolchain):
             capture_output=True,
             text=True,
             check=False,
-            timeout=30,
         )
         if result.returncode:
             raise ValueError(
@@ -259,7 +250,6 @@ class PcsxReduxToolchain(ExecutableToolchain):
             capture_output=True,
             text=True,
             check=False,
-            timeout=30,
         )
         if configured.returncode not in {0, 1} or (
             configured.returncode == 0
@@ -311,7 +301,6 @@ class PcsxReduxToolchain(ExecutableToolchain):
             capture_output=True,
             text=True,
             check=False,
-            timeout=30,
         )
         if (
             linked.returncode
@@ -421,7 +410,6 @@ def _checkout_representations(directory: Path, mismatches: list) -> None:
         input=b"\0".join(name.encode() for name in names) + b"\0",
         capture_output=True,
         check=False,
-        timeout=60,
         env=environment,
     )
     values = result.stdout.split(b"\0")
@@ -474,7 +462,6 @@ def _inspect_sources(
     pending = [(submodule, revision, "", submodule)]
     forests, generated, missing = [], {}, []
     while pending:
-        check_deadline()
         relative, expected, owner, source_name = pending.pop(0)
         directory = root / relative
         if directory.resolve() != directory.absolute():

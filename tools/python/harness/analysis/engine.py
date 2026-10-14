@@ -53,7 +53,6 @@ def _get_version(executable: Path) -> str:
         [str(executable), flag],
         capture_output=True,
         text=True,
-        timeout=10,
     )
     output = (result.stdout or result.stderr).strip()
     if not output:
@@ -76,7 +75,7 @@ def _run_probe(executable: Path, commands: list[str]) -> str:
     for command in commands:
         argv.extend(["-c", command])
     argv.append("/dev/null")
-    result = subprocess.run(argv, capture_output=True, text=True, timeout=10)
+    result = subprocess.run(argv, capture_output=True, text=True)
     return result.stdout or ""
 
 
@@ -160,7 +159,6 @@ def _run_analysis(
     load_address: int,
     *,
     replay_commands: list[str],
-    timeout: int = 120,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Run one staged analysis and return functions and xrefs or fail closed."""
 
@@ -181,7 +179,7 @@ def _run_analysis(
     for command in replay_commands:
         argv.extend(["-c", command])
     argv.extend(["-c", "aa", "-c", "aflj", "-c", "axlj", str(binary_path)])
-    result = run_analyzer(argv, timeout=timeout)
+    result = run_analyzer(argv)
     if result.returncode != 0:
         diagnostic = (result.stderr or result.stdout).strip()
         raise RuntimeError(
@@ -215,7 +213,6 @@ def build_snapshot(
     source_dir: Path | None = None,
     source_paths: Iterable[Path] | None = None,
     expected_lifts: dict[str, int | tuple[int, ...]] | None = None,
-    timeout: int = 120,
 ) -> AnalysisSnapshot:
     """Build a portable snapshot from one stateless analyzer invocation set."""
 
@@ -228,7 +225,6 @@ def build_snapshot(
         binary_path,
         load_address - binary_offset,
         replay_commands=commands,
-        timeout=timeout,
     )
     functions: list[SnapshotFunction] = []
     function_ids: dict[int, str] = {}
@@ -360,7 +356,7 @@ def build_snapshot(
     )
 
 
-def write_target_snapshot(root: Path, target_id: str, *, timeout: int = 120) -> Path:
+def write_target_snapshot(root: Path, target_id: str) -> Path:
     """Analyze a manifest-backed target and atomically write its snapshot."""
 
     from ..domain.ids import normalize_target_id
@@ -375,7 +371,7 @@ def write_target_snapshot(root: Path, target_id: str, *, timeout: int = 120) -> 
     from .project import analyze_project
 
     # Keep this legacy entry point on the same composed replay as rz-project.
-    analyze_project(root, manifest.id.value, timeout=timeout)
+    analyze_project(root, manifest.id.value)
     output = snapshot_path(root, manifest.id.value)
     return output
 

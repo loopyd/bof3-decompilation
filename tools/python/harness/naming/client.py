@@ -14,7 +14,6 @@ from pathlib import Path
 from typing import Any
 
 from harness.common.process import OwnedProcess, owned_popen
-from harness.common.deadlines import resolve_deadline
 from harness.naming.namespace import selected_evidence_root
 
 OUTPUT_BUDGET = 65536
@@ -22,7 +21,6 @@ REPORT_SCHEMA = "bof3.naming-audit/v3"
 FUNCTION_RE = re.compile(r"func_[0-9A-F]{8}")
 DATA_RE = re.compile(r"D_[0-9A-F]{8}(?:_[A-Za-z0-9_]+)?")
 MAX_SHARDS = 10
-MAX_DEADLINE = 600
 
 
 class IndexWorker:
@@ -33,11 +31,7 @@ class IndexWorker:
         root: Path,
         target: str,
         report: dict[str, Any],
-        timeout: float = MAX_DEADLINE,
-        *,
-        work_deadline: float | None = None,
     ) -> None:
-        self.work_deadline = resolve_deadline(work_deadline)
         environment = dict(os.environ)
         environment.pop("BOF3_NAMING_EVIDENCE_ROOT", None)
         environment["PYTHONPATH"] = str(Path(__file__).resolve().parents[2])
@@ -53,42 +47,30 @@ class IndexWorker:
             stderr=subprocess.PIPE,
             text=True,
             bufsize=1,
-            **(
-                {"deadline": self.work_deadline}
-                if self.work_deadline is not None
-                else {}
-            ),
         )
-        self._send({"root": str(root), "target": target, "report": report}, timeout)
-
-    def resolve_cutoff(self, timeout: float, *, cleanup: bool = False) -> float:
-        cutoff = time.monotonic() + timeout
-        inherited = getattr(self, "work_deadline", None)
-        return (
-            min(cutoff, inherited) if inherited is not None and not cleanup else cutoff
-        )
+        self._send({"root": str(root), "target": target, "report": report})
 
     def _send(
         self,
         value: dict[str, Any],
-        timeout: float = MAX_DEADLINE,
         *,
         cleanup: bool = False,
     ) -> None:
         if self.process.stdin is None:
             raise RuntimeError("index worker stdin closed")
-        deadline = self.resolve_cutoff(timeout, cleanup=cleanup)
+        cleanup_until = time.monotonic() + 2 if cleanup else None
         try:
             pending = memoryview((json.dumps(value) + "\n").encode())
             descriptor = self.process.stdin.fileno()
             os.set_blocking(descriptor, False)
             while pending:
-                remaining = deadline - time.monotonic()
-                if (
-                    remaining <= 0
-                    or not select.select([], [descriptor], [], remaining)[1]
-                ):
-                    raise TimeoutError("index worker deadline exceeded")
+                remaining = (
+                    None if cleanup_until is None else cleanup_until - time.monotonic()
+                )
+                if (remaining is not None and remaining <= 0) or not select.select(
+                    [], [descriptor], [], remaining
+                )[1]:
+                    raise TimeoutError("index worker cleanup send timed out")
                 try:
                     written = os.write(descriptor, pending)
                 except BlockingIOError:
@@ -98,10 +80,9 @@ class IndexWorker:
             self.kill()
             raise
 
-    def receive(self, timeout: float) -> dict[str, Any]:
+    def receive(self) -> dict[str, Any]:
         if self.process.stdout is None:
             raise RuntimeError("index worker stdout closed")
-        deadline = self.resolve_cutoff(timeout)
         stdout = self.process.stdout.fileno()
         stderr = (
             self.process.stderr.fileno() if self.process.stderr is not None else None
@@ -111,10 +92,7 @@ class IndexWorker:
         detail = getattr(self, "_stderr_buffer", b"")
         try:
             while b"\n" not in pending:
-                remaining = deadline - time.monotonic()
-                ready = select.select(descriptors, [], [], max(0, remaining))[0]
-                if remaining <= 0 or not ready:
-                    raise TimeoutError("index worker deadline exceeded")
+                ready = select.select(descriptors, [], [])[0]
                 for descriptor in sorted(ready, key=lambda item: item == stdout):
                     chunk = os.read(descriptor, 65536)
                     if descriptor == stderr:
@@ -127,8 +105,6 @@ class IndexWorker:
                         raise RuntimeError(
                             f"index worker failed: {detail.decode(errors='replace')}"
                         )
-            if time.monotonic() >= deadline:
-                raise TimeoutError("index worker deadline exceeded")
             line, self._stdout_buffer = pending.split(b"\n", 1)
             self._stderr_buffer = detail
             return json.loads(line)
@@ -136,12 +112,9 @@ class IndexWorker:
             self.kill()
             raise
 
-    def request(
-        self, request_id: int, row: dict[str, Any], timeout: float
-    ) -> list[dict[str, Any]]:
-        deadline = self.resolve_cutoff(timeout)
-        self._send({"id": request_id, "row": row}, timeout)
-        response = self.receive(max(0, deadline - time.monotonic()))
+    def request(self, request_id: int, row: dict[str, Any]) -> list[dict[str, Any]]:
+        self._send({"id": request_id, "row": row})
+        response = self.receive()
         if response.get("id") != request_id or not isinstance(
             response.get("operations"), list
         ):
@@ -164,7 +137,7 @@ class IndexWorker:
     def close(self) -> None:
         try:
             if self.process.poll() is None:
-                self._send({"op": "close"}, 2, cleanup=True)
+                self._send({"op": "close"}, cleanup=True)
                 self.process.wait(timeout=2)
         except (BrokenPipeError, subprocess.TimeoutExpired, TimeoutError):
             pass
@@ -221,7 +194,6 @@ def _validate_run_arguments(
     all_rows: bool,
     shard: int,
     concurrency: int,
-    deadline: int,
     rows_budget: int,
     report_rows: Sequence[dict[str, Any]],
 ) -> None:
@@ -229,8 +201,6 @@ def _validate_run_arguments(
         raise ValueError("--rows cannot be combined with --all-rows")
     if concurrency != 1:
         raise ValueError("indexed concurrency must be 1 (one serial index worker)")
-    if not 1 <= deadline <= MAX_DEADLINE:
-        raise ValueError(f"deadline must be within 1-{MAX_DEADLINE} seconds")
     if shard < 1 or (not all_rows and shard > MAX_SHARDS):
         raise ValueError(f"shard must be within 1-{MAX_SHARDS}")
     if rows is not None:

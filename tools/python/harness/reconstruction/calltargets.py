@@ -8,7 +8,6 @@ import json
 from pathlib import Path
 import re
 
-from harness.common.deadlines import check_deadline
 from harness.common.artifacts import read_bytes
 from harness.reconstruction import (
     callcontracts,
@@ -271,7 +270,6 @@ def _data_view_bindings(entry, views, *, independent_byte_writes=False):
         pending = []
         paired = False
         for row in uses:
-            check_deadline()
             offset = row.offset - entry.value
             _require(
                 row.symbol_section == 0
@@ -362,7 +360,6 @@ def _measurement_bindings(unit, entry):
     }
     bindings = []
     for symbol in sorted(symbols, key=lambda name: name or ""):
-        check_deadline()
         _require(
             type(symbol) is str and symbol in direct,
             "measurement direct-call symbol has no unique native function",
@@ -471,7 +468,6 @@ def _catalog_record(contexts):
     )
     images, total = [], 0
     for index, image in enumerate(contexts.images):
-        check_deadline()
         data = _original_file(_context_file(contexts.input_directory, index), image)
         payload = data[image.payload_offset : image.payload_offset + image.payload_size]
         total += len(data) + len(payload)
@@ -547,7 +543,6 @@ def prepare_native_contexts(binding, run_dir, destination):
     )
     destination.mkdir(mode=0o700)
     for index, image in enumerate(images):
-        check_deadline()
         target = next(t.target for t in targets if t.image_id == image.image_id)
         data = provenance.read_original_image(
             binding, run_dir, target=target, image_id=image.image_id
@@ -605,7 +600,6 @@ def stage_native_contexts(contexts, directory):
         (contexts.input_directory / "image-catalog.json").read_bytes(),
     )
     for index, image in enumerate(contexts.images):
-        check_deadline()
         _write_context(
             _context_file(directory, index),
             _original_file(_context_file(contexts.input_directory, index), image),
@@ -648,7 +642,7 @@ def validate_native_bindings(
         or (overlays and "source_form" in request)
     )
     fields = set(
-        "schema operation request_id config_sha256 cutoff member image problem_sha256 callees image_catalog_sha256".split()
+        "schema operation request_id config_sha256 member image problem_sha256 callees image_catalog_sha256".split()
     )
     if forms:
         fields.add("source_form")
@@ -768,7 +762,6 @@ def validate_native_bindings(
     }
     entry_words = {}
     for index, image in enumerate(contexts.images):
-        check_deadline()
         data = _original_file(_context_file(contexts.input_directory, index), image)
         for address in addresses:
             offset = address - image.load_address
@@ -788,7 +781,6 @@ def validate_native_bindings(
     scoped = {member["key"] for member in [root, *request["callees"]]}
     total = 0
     for call, (pc, word) in zip(observed, calls, strict=True):
-        check_deadline()
         _keys(
             call,
             set(

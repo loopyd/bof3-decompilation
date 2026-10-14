@@ -86,12 +86,7 @@ explicit size floor, four-use eligibility, and largest-first machine ordering;
 AI readability assessments now feed a validated, pinned top-N selection;
 bounded autonomous execution remains unfinished.
 
-`blocks`, `rank-input`, `rank` and `validate-ranking` accept `--work-deadline`
-as the original absolute monotonic cutoff. Discovery and ranking cooperatively
-check it; expiry is an error, not a successful partial ranking. This does not
-preempt filesystem reads or built-in sorts, renew the cutoff, or prove native
-cancellation/recovery. Output already emitted or published may remain after expiry;
-the error is not acceptance. Ranking remains distinct from application authority.
+Ranking remains distinct from application authority and native recovery.
 
 Lexical discovery hashes and decodes one byte sample per source; constant evidence
 uses that same verified digest. Token line numbers use an incremental scan.
@@ -318,11 +313,9 @@ readability judgment or proof that arbitrary future macro arguments are safe.
 
 ## Reviewed application
 
-For bounded cleanup, `run` and `revalidate` accept the original absolute `--deadline` work cutoff;
-the parent separately supervises its retained cleanup tail. See
-[owner work deadlines](harness.md#owner-work-deadlines) for expiry, rollback and
-retained late-publication evidence. Check-only revalidation never restores source;
-other macro subcommands do not gain this flag.
+Follow the [transaction and recovery contract](harness.md#policy-versus-mechanism)
+for execution, rollback and retained publication evidence. Check-only revalidation
+never restores source.
 
 ```sh
 bin/harness types baseline
@@ -364,7 +357,7 @@ hashes use the same sample, without an unbounded preliminary read. Larger record
 reject rather than truncate; the envelope cap is a new admission restriction, not
 an assertion that all historical chains fit. Canonical paths, external proof pins,
 semantic checks and later rederivation remain mandatory. Capture does not prove
-later freshness; cooperative deadline checks reject late success, not interrupt parsing.
+later freshness.
 
 Preparation currently rejects **known omitted consumers** of existing macros in
 writable owner/affected-source files. It follows indexed transitive uses and maps
@@ -420,9 +413,9 @@ exit zero. JSON stdout and stderr remain separate. Splat/build use their native 
 contracts; existing partial baselines are pinned to exact output. `verify` checks
 integrity/native evidence, **not independent final acceptance**.
 
-Application and revalidation gates use the shared bounded process owner: 120
-seconds and 2 MiB of captured native output per command. Timeout or overflow
-fails the gate (exit 124 or 125), never supplies positive evidence. Owner-death
+Application and revalidation gates use the shared process owner, with 2 MiB of
+captured native output per command. Overflow fails the gate, exit 125, and never
+supplies positive evidence. Owner-death
 process cleanup does not itself prove file rollback; interrupted transactions
 require owned-PRE reconciliation before reuse.
 
@@ -506,7 +499,7 @@ Dependency observations do not authorize restoration, repair, retries,
 acceptance, budget resets or evidence rebinding.
 
 Before another macro attempt, record finite scope and obtain fresh readiness
-and review. Preserve consumed attempts, original deadlines and frozen
+and review. Preserve consumed attempts and frozen
 obligations. Tooling acceptance does not establish an applied macro or
 whole-game completion. Native validation, independent application review and
 parent confirmation remain mandatory.
@@ -691,7 +684,7 @@ private applications or authorizes shared promotion.
 ```sh
 bin/harness macros prepare-existing REQUEST > MANIFEST
 bin/harness macros check-existing MANIFEST --expected-manifest-digest DIGEST \
-  --implementation-run-id RUN --deadline CUTOFF --output out/reviews/evidence/CHECK.json
+  --implementation-run-id RUN --output out/reviews/evidence/CHECK.json
 bin/harness macros review-existing CHECK PARENT_REVIEW --expected-inspection-digest DIGEST \
   --output out/reviews/evidence/DISPOSITION.json
 bin/harness macros verify-existing DISPOSITION --expected-envelope-digest DIGEST
@@ -731,8 +724,7 @@ tooling, environment, full adopted workspace and captured build closure must rem
 unchanged, including across every gate and publication. Outputs are exclusive new
 files under `out/reviews/evidence`; evidence-path reuse rejects before native work.
 Adopted entries also retain observed file modes/types; this does not require
-restrictive permission bits or authorize changing permissions. `--deadline` is the
-original absolute monotonic cutoff, not a fresh duration. Failed gates, unexpected
+restrictive permission bits or authorize changing permissions. Failed gates, unexpected
 writes or cleanup uncertainty grant no source rollback authority: preserve state
 for separately scoped recovery.
 

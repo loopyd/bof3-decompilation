@@ -16,7 +16,6 @@ from harness.build.compiler import (
     sanitize_identifier,
     validate_compiler_flags,
 )
-from harness.common.deadlines import check_deadline
 from harness.common.inputs import relative
 
 
@@ -67,7 +66,6 @@ def migrate_configuration(
     text: str, sources: list[str], destination: str, settings: CompilerSettings
 ) -> str:
     """Render only selected legacy-key changes, preserving unrelated input bytes."""
-    check_deadline()
     flags, compilers = parse_compiler_configuration(text)
     keys = _collect_source_keys(sources, destination)
     owned = set(keys.values())
@@ -89,7 +87,6 @@ def migrate_configuration(
     seen = set()
     result = []
     for line in text.splitlines(keepends=True):
-        check_deadline()
         match = OBJECT_FLAGS_RE.fullmatch(line.strip())
         kind = "flags"
         if match is None:
@@ -127,7 +124,6 @@ def migrate_configuration(
             updated += "\n"
         updated += "".join(additions)
     parse_compiler_configuration(updated)
-    check_deadline()
     return updated
 
 
@@ -154,7 +150,6 @@ def validate_configuration_migration(
     value: object, sources: list[str], destination: str, inputs: dict, post: dict
 ) -> dict | None:
     """Bind the exact scoped edit to authenticated PRE and joint POST states."""
-    check_deadline()
     if value is None:
         return None
     if not isinstance(value, dict) or set(value) != {"before", "after", "settings"}:
@@ -185,5 +180,4 @@ def validate_configuration_migration(
         raise ValueError("POST must pin the exact compiler configuration migration")
     if state is not None and expected["mode"] != state["mode"]:
         raise ValueError("configuration migration must preserve the existing file mode")
-    check_deadline()
     return value

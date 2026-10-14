@@ -9,7 +9,6 @@ import re
 import stat
 from pathlib import Path
 
-from harness.common.deadlines import check_deadline
 from harness.io import unique_object
 
 _INPUT_FIELDS = (
@@ -55,10 +54,8 @@ _READ_INPUT_CACHE_LIMIT = 8192
 
 def read_input(path: Path) -> tuple[dict | None, bytes | None]:
     """Bind input state to the exact bytes read between stable metadata samples."""
-    check_deadline()
     before = None
     for part in (path, *path.parents):
-        check_deadline()
         try:
             observed = part.stat(follow_symlinks=False)
         except (FileNotFoundError, NotADirectoryError):
@@ -71,7 +68,6 @@ def read_input(path: Path) -> tuple[dict | None, bytes | None]:
         try:
             path.stat(follow_symlinks=False)
         except (FileNotFoundError, NotADirectoryError):
-            check_deadline()
             return None, None
         raise ValueError(f"input appeared during observation: {path}")
     mode = before.st_mode
@@ -84,7 +80,6 @@ def read_input(path: Path) -> tuple[dict | None, bytes | None]:
     if cached is not None:
         return cached
     content = path.read_bytes()
-    check_deadline()
     after = path.stat(follow_symlinks=False)
     # Reading may update atime; identity and mutation metadata must stay stable.
     if _capture_metadata(before) != _capture_metadata(after):
@@ -138,7 +133,6 @@ class InputBatch:
             self._close()
 
     def _require_active(self) -> None:
-        check_deadline()
         if not self._active or self._closed or self._failed:
             raise ValueError("input batch is inactive or failed")
 
@@ -211,7 +205,6 @@ class InputBatch:
             )
             self._chains[path] = chain
         for ancestor, parent in chain:
-            check_deadline()
             linked = (
                 os.stat(ancestor, follow_symlinks=False)
                 if ancestor == parent
@@ -233,7 +226,6 @@ class InputBatch:
         try:
             os.stat(path.name, dir_fd=parent, follow_symlinks=False)
         except FileNotFoundError:
-            check_deadline()
             self._missing.add(path)
             return
         raise ValueError(f"input appeared during observation: {path}")
@@ -259,11 +251,9 @@ class InputBatch:
                 try:
                     status = os.stat(path.name, dir_fd=parent, follow_symlinks=False)
                 except FileNotFoundError:
-                    check_deadline()
                     return
                 if stat.S_ISLNK(status.st_mode):
                     raise ValueError(f"symlink input: {path}")
-            check_deadline()
         except BaseException:
             self._failed = True
             raise
@@ -285,7 +275,6 @@ class InputBatch:
         parent = self._prepare_parent(path)
         if parent is None:
             self._missing.add(path)
-            check_deadline()
             return None, None
         try:
             before = os.stat(path.name, dir_fd=parent, follow_symlinks=False)
@@ -313,7 +302,6 @@ class InputBatch:
                 )
             if max_bytes is not None and len(content) > max_bytes:
                 raise ValueError(f"input exceeds batch byte limit: {path}")
-            check_deadline()
             if (
                 _capture_metadata(os.fstat(descriptor)) != expected
                 or _capture_metadata(
@@ -362,7 +350,6 @@ class InputBatch:
             if parent is not None:
                 self._observe_missing(parent, path)
         for path, expected in self._metadata.items():
-            check_deadline()
             descriptor = self._open_directory(path)
             if descriptor is None:
                 raise ValueError(f"input parent disappeared: {path}")
@@ -380,7 +367,6 @@ class InputBatch:
                 or _capture_parent_metadata(os.fstat(descriptor)) != expected
             ):
                 raise ValueError(f"input parent detached or changed: {path}")
-        check_deadline()
 
     def _close(self) -> None:
         descriptors = tuple(self._directories.values())

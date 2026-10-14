@@ -17,7 +17,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_root_argument(parser)
     add_example_argument(
         parser,
-        "bin/harness decomp diagnose out/mission-request.json --expected-request-digest PIN --output out/reviews/lift-diagnosis/BEFORE --deadline ORIGINAL_MONOTONIC_CUTOFF",
+        "bin/harness decomp diagnose out/mission-request.json --expected-request-digest PIN --output out/reviews/lift-diagnosis/BEFORE",
     )
     commands = parser.add_subparsers(dest="command", required=True)
     register_commands(commands)

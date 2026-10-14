@@ -4,20 +4,12 @@ from __future__ import annotations
 
 import hashlib
 import json
-import time
-from functools import partial
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
 from harness.analysis.index import index_path
 from harness.common.process import ProcessCleanupError
-from harness.common.deadlines import (
-    DeadlineExpired,
-    bind_deadline,
-    check_deadline,
-    resolve_deadline,
-)
 from harness.domain.ids import normalize_target_id, parse_function_id
 from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
 from harness.naming.client import (
@@ -59,8 +51,6 @@ from harness.naming.telemetry import RunTelemetry, artifact_bytes, write_telemet
 SHARD_ROWS = 10
 DEFAULT_CONCURRENCY = 1
 MAX_CONCURRENCY = 1
-DEFAULT_DEADLINE = 120
-SHARD_WALL_CLOCK = 600
 DEFAULT_ROWS_BUDGET = 128
 
 
@@ -177,7 +167,6 @@ def _semantic_succeeded(
     return True
 
 
-@partial(bind_deadline, argument="work_deadline")
 @guard_report_operation
 def run_evidence(
     root: Path,
@@ -188,12 +177,10 @@ def run_evidence(
     all_rows: bool = False,
     shard: int = SHARD_ROWS,
     concurrency: int = DEFAULT_CONCURRENCY,
-    deadline: int = DEFAULT_DEADLINE,
     rows_budget: int = DEFAULT_ROWS_BUDGET,
     rizin_executable: str | Path | None = None,
     terminalize: bool = False,
     registry=PRODUCTION_EXACT_CAPABILITIES,
-    work_deadline: float | None = None,
 ) -> dict[str, Any]:
     telemetry = RunTelemetry()
     report = canonical_report_path(root, report)
@@ -205,7 +192,7 @@ def run_evidence(
     report_rows = _validate_report_shape(report_payload, target)
     validate_report_operations(report_rows, target)
     _validate_run_arguments(
-        rows, all_rows, shard, concurrency, deadline, rows_budget, report_rows
+        rows, all_rows, shard, concurrency, rows_budget, report_rows
     )
     index = index_path(root)
     if not index.is_file():
@@ -224,7 +211,6 @@ def run_evidence(
             for path in sorted(root.glob("config/targets/**/target.toml"))
         },
     )
-    check_deadline()
     loaded, corrupt = load_journal(root, report, target)
     fresh = bool(loaded) and journal_is_fresh(
         root, report, target, inputs, registry=registry
@@ -243,38 +229,25 @@ def run_evidence(
     telemetry.rows_planned = len(selected)
     telemetry.rows_skipped = len(reusable)
     telemetry.phase("prepare")
-    shard_end = time.monotonic() + SHARD_WALL_CLOCK
-    if resolve_deadline() is not None:
-        shard_end = min(shard_end, resolve_deadline())
     executed = 0
     errors: list[str] = []
     with open_session(
         root,
         target,
         report_payload,
-        deadline,
-        shard_end,
-        work_deadline=resolve_deadline(),
         rizin_executable=rizin_executable,
     ) as (worker, rizin, byte_ops):
         telemetry.external_processes += 1
         telemetry.index_opens += 1
-        worker.receive(min(deadline, max(0, shard_end - time.monotonic())))
+        worker.receive()
         for request_id, report_row in enumerate(selected):
-            check_deadline()
             key = _row_key(report_row)
             row = collection_row(report_row, target, registry=registry)
-            remaining = shard_end - time.monotonic()
-            if remaining <= 0:
-                worker.kill()
-                errors.append(f"{key}: shard wall clock exceeded")
-                break
             result = None
             try:
                 semantic: list[dict[str, Any]] = []
                 for op in semantic_operation_plan(row, target):
                     result = None
-                    check_deadline()
                     from harness.naming.plan import owner_instruction_selectors
 
                     planned_owner = op["kind"] == "instructions-v1" and op[
@@ -288,9 +261,6 @@ def run_evidence(
                         raise ValueError(
                             f"semantic target does not match run target: {op['target']}"
                         )
-                    remaining = shard_end - time.monotonic()
-                    if remaining <= 0:
-                        raise TimeoutError("shard wall clock exceeded")
                     instruction = {}
                     if op["kind"] == "instructions-v1":
                         from harness.naming.instructions import (
@@ -302,22 +272,18 @@ def run_evidence(
                         owner_target = op["target"].split("@", 1)[0]
                         if owner_target == target:
                             rizin.queue(binding["rizin"], op["target"])
-                            result = rizin.run_queued(min(deadline, remaining))[-1]
+                            result = rizin.run_queued()[-1]
                         else:
                             from harness.naming.semantics import RizinSession
 
                             owner_session = RizinSession(
                                 root,
                                 owner_target,
-                                command_timeout=deadline,
                                 executable=rizin_executable,
-                                work_deadline=rizin.work_deadline,
                             )
                             try:
                                 owner_session.queue(binding["rizin"], op["target"])
-                                result = owner_session.run_queued(
-                                    min(deadline, remaining)
-                                )[-1]
+                                result = owner_session.run_queued()[-1]
                             finally:
                                 owner_session.close()
                         if result.killed or result.exit != 0:
@@ -334,9 +300,9 @@ def run_evidence(
                         op = {**op, "command": binding["command"]}
                     elif op["kind"] == "rz-project":
                         rizin.queue(op["rizin"], op["target"])
-                        result = rizin.run_queued(min(deadline, remaining))[-1]
+                        result = rizin.run_queued()[-1]
                     else:
-                        result = byte_ops.run(op, min(deadline, remaining))
+                        result = byte_ops.run(op)
                     semantic.append(
                         {
                             **instruction,
@@ -360,7 +326,6 @@ def run_evidence(
                     worker.request(
                         request_id,
                         row,
-                        min(deadline, max(0, shard_end - time.monotonic())),
                     ),
                     target,
                     row,
@@ -415,7 +380,6 @@ def run_evidence(
                     registry=registry,
                     instructions=captures,
                 )
-                check_deadline()
                 receipts = _receipts_for(
                     namespace, target, row, operations, semantic, captures
                 )
@@ -432,14 +396,13 @@ def run_evidence(
                 write_journal_manifest(root, report, target, inputs, checkpoint)
                 executed += 1
                 telemetry.rows_completed += 1
-            except (ProcessCleanupError, DeadlineExpired):
+            except ProcessCleanupError:
                 raise
             except Exception as error:
                 worker.kill()
                 write_failed_receipt(namespace, target, row, error, result)
                 errors.append(f"{key}: {error}")
                 break
-    check_deadline()
     telemetry.phase("collect")
     entries = load_journal(root, report, target)[0]
     manifest = write_journal_manifest(root, report, target, inputs, entries)
@@ -448,15 +411,12 @@ def run_evidence(
     )
     telemetry_path = evidence_dir(root, report, target) / "telemetry.json"
     summary = telemetry.payload(manifest["sha256"])
-    check_deadline()
     write_telemetry(telemetry_path, summary)
-    check_deadline()
     terminalized = (
         terminalize
         and not errors
         and terminalize_report(root, report, target, report_rows, entries)
     )
-    check_deadline()
     return {
         "schema": "bof3.naming-evidence-run/v2",
         "target": target,
@@ -475,10 +435,8 @@ def run_evidence(
 
 __all__ = [
     "DEFAULT_CONCURRENCY",
-    "DEFAULT_DEADLINE",
     "DEFAULT_ROWS_BUDGET",
     "MAX_CONCURRENCY",
     "SHARD_ROWS",
-    "SHARD_WALL_CLOCK",
     "run_evidence",
 ]

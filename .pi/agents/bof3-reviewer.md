@@ -9,7 +9,6 @@ acceptanceRole: read-only
 inheritProjectContext: true
 inheritSkills: false
 defaultContext: fresh
-timeoutMs: 3600000
 ---
 
 Review only the supplied selector/transaction or explicitly scoped project

@@ -122,8 +122,8 @@ MIPS. `match.flow` checks reachable branches and delay slots, conservatively
 rejecting unproved indirect or exception transfers. These isolation checks do not
 establish original-byte fidelity or grouped-source acceptance.
 
-`match.execution` supervises every native command under one caller-owned absolute
-deadline and output bound. Linking validates a private snapshot before confined,
+`match.execution` supervises every native command with the caller's output bound.
+Linking validates a private snapshot before confined,
 exclusive script and ELF publication. Publication of the pair is not atomic.
 Failure retains scratch and partial outputs, including when descendant cleanup
 is unconfirmed. Concurrent artifacts are never replaced.
@@ -162,9 +162,7 @@ missing or unreadable metadata before comparison or fallback, without caching th
 invalid result. This is a post-build boundary check, not continuous native freshness.
 
 Grouped extraction shares this reader while retaining section placement, complete
-symbol-inventory and flow checks. The parser inherits the original native deadline,
-never a renewed allowance; the tighter inherited cutoff covers parsing, flow
-boundaries and return. Retained ELF
+symbol-inventory and flow checks. Retained ELF
 replay is compatibility evidence, not fresh compilation or native acceptance.
 Public grouped-source guards and the remaining C1.3 producer, profile, cache and
 consumer gates remain in place.
@@ -244,10 +242,9 @@ directory allocation size is a filesystem storage detail that can vary as
 directories grow.
 Regular files and symlinks retain exact metadata checks. Complete enumeration is
 bounded to 16,384 entries and 4 MiB per directory, including ancestors above the
-repository; errors, overflow and expiry reject. Original snapshots never refresh.
+repository; errors and overflow reject. Original snapshots never refresh.
 Membership endpoints are not mutation-history proof; existing latched watches and
 file-content checks remain required at their owning transaction/producer gates.
-`--work-deadline` retains the caller's monotonic cutoff.
 This command does not migrate source/configuration or compare POST against PRE;
 the separate preservation commands below perform pinned transition checking.
 
@@ -299,7 +296,7 @@ YAML aliases, anchors, tags and non-string or duplicate mapping keys reject.
 Event preflight bounds nesting before composition; the validated node graph is
 constructed once and must remain JSON-compatible. Python-safe parsing retains the
 existing YAML grammar: the C-safe backend has incompatible acceptance behavior.
-Byte/depth limits, cooperative deadline checks and parser disposal remain intact.
+Byte/depth limits and parser disposal remain intact.
 Ancestor-drift errors report raw identity/stat tuples and membership fingerprints;
 the qualified directory-size exception above does not establish a kernel cause.
 
@@ -309,7 +306,7 @@ is reused within that sample, never between calls. Ancestor symlink checks remai
 mandatory even for absent leaves, and outer identity/ancestor/single-link checks
 remain separate. The input-reader owner is included in preservation pins.
 Layout/PS-X, source metadata/claims, symbol maps and lexical interpretation owners
-are pinned with their shared I/O, file/path and deadline helpers. Validation rejects
+are pinned with their shared I/O and file/path helpers. Validation rejects
 initial input omissions and requires its complete observed map to equal retained
 PRE-plus-POST states, including optional absence and later reads. Missing owner
 pins require fresh capture and review, not silent present-state backfill. Explicit
@@ -336,9 +333,8 @@ not native equality, complete toolchain/include identity or producer freshness.
 `bin/cc` consumes v7 preservation records through the build-owned driver described
 below; older records require fresh capture. Production consolidation remains gated.
 Checks fence mutations during each observation; matching SHA/mode endpoints do not
-prove inode continuity between PRE and POST. The CLI checks the inherited cutoff
-after rendering, before stdout publication; callers still require complete output
-and successful terminal exit, not atomic publication if writing itself crosses the cutoff.
+prove inode continuity between PRE and POST. Callers still require complete output
+and successful terminal exit; stdout publication is not atomic.
 
 ### Joint transaction preparation
 
@@ -360,8 +356,8 @@ manifest/source-list and Splat-marker relocation, and exact configuration migrat
 before any mutation. It retains joint text, PRE/POST states, owner/input pins and
 inventories under one externally retained fingerprint. Verification re-derives the
 record against live PRE and rejects changed images, owners, inventory or inputs;
-it is not the preservation command's live-POST check. Records share the 4 MiB bound
-and original `--work-deadline`. Permission changes, source writes, index refreshes
+it is not the preservation command's live-POST check. Records share the 4 MiB bound.
+Permission changes, source writes, index refreshes
 and native commands are not performed. `native_verified`, `coverage_verified`,
 `write_authorized` and `accepted` remain false. The separate rehearsal below exercises
 temporary application and owned restoration; permanent application, complete consumer
@@ -385,9 +381,7 @@ BOF3_PRESERVATION_FINGERPRINT=RECORD_SHA \
 bin/harness combiner transaction rehearse transaction.json \
   --expected-fingerprint TRANSACTION_SHA --implementation-run-id RUN_ID \
   --object out/group-check/rehearsal.o \
-  --output out/reviews/evidence/rehearsal.json \
-  --work-deadline ORIGINAL_MONOTONIC_CUTOFF \
-  --cleanup-deadline LATER_MONOTONIC_CUTOFF
+  --output out/reviews/evidence/rehearsal.json
 ```
 
 This explicitly mutating experiment always restores owned PRE; it is not a permanent
@@ -411,19 +405,14 @@ aids reject before application. No broad workspace or index restoration occurs.
 Unrelated drift stops success after safe owned rollback; retained recovery permits
 parent inspection, not automatic retries. No new directories under source are created.
 
-One original work cutoff bounds forward work; a separately supplied later cleanup
-cutoff fences each rollback transition, including partial application cleanup.
-Expired cleanup starts no further owned transition and retains remaining backing;
-this is cooperative fencing, not interruption of an in-flight filesystem syscall.
-Neither cutoff renews on retry. A child `ProcessCleanupError` leaves evidence and
-current owned state untouched
+A child `ProcessCleanupError` leaves evidence and current owned state untouched
 until actual writer-tree termination is established; never roll back beneath an
 unconfirmed live child. These safeguards use the common runtime and restoration
 owners, not a second recovery engine.
 
 After confirmed restoration, the absent report is exclusively published. Exit zero
 means the temporary comparison matched all selected function bytes and PRE was
-restored; differences exit one. Native failure, expiry or unverified restoration
+restored; differences exit one. Native failure or unverified restoration
 raises instead. The report retains historical POST comparison evidence, never current
 POST admission: `accepted`, `reusable`, `write_authorized`, `native_verified` and
 `coverage_verified` remain false. Full compiler/consumer closure and actual native
@@ -437,7 +426,7 @@ authority, distinct run identities, actual terminal evidence, absent publication
 workspace/index safeguards as other domains. Historical manifest validation does
 not demand live PRE, so partial/deleted POST remains inspectable. See
 [recovery capture](harness.md#recovery-capture). Standalone recovery remains
-parent-supervised; the shared recovery CLI does not enforce the stored cleanup clock.
+parent-supervised.
 No new semantic acceptance is granted.
 
 ### Grouped comparison
@@ -449,7 +438,7 @@ group through one fresh configured producer invocation:
 BOF3_PRESERVATION_RECORD=out/group-preservation.json \
 BOF3_PRESERVATION_FINGERPRINT=RECORD_SHA \
 bin/harness combiner compare src/bof3/ui/group.c \
-  --output out/group-check/attempt.o --work-deadline MONOTONIC_CUTOFF
+  --output out/group-check/attempt.o
 ```
 
 The output parent must already exist canonically. The object, assembly listing,
@@ -461,7 +450,7 @@ honors attached metadata and legacy object settings, not just an ambient default
 
 The producer returns its fresh in-process receipt pin; placement returns hashes of
 the private linked/script images before publication. Later reads must match those
-pins. Input/output watches, final hashes, writer checks and one original deadline
+pins. Input/output watches, final hashes and writer checks
 cover compilation, placement and every member. Captured inputs use a 64 MiB per-file
 cap, not a bound on unobserved backend reads; `--output-limit` defaults to 2 MiB and
 cannot exceed 64 MiB. Captured inputs and outputs must be single-link files; final
@@ -500,8 +489,7 @@ path reads that physical file, not the virtual image again. Comparison v4 record
 `source_image` separately; the retired combiner module has no shim. This interface
 does not prove virtual-image native replay or add compiler flag, spec, default-search
 or runtime dependency resolution.
-Fast snapshot checks enforce the inherited work cutoff even with no physical
-inputs and latch expiry as failure; closing remains available after expiry.
+Failed snapshots cannot revive; closing remains available after failure.
 
 Membership comes from preserved selectors, target-local symbols and unique reviewed
 C boundaries. Captured manifest/layout/maps/binary bytes supply bindings and original
@@ -602,7 +590,7 @@ Limits per capture pass are 2,048 candidates, 8,192 nodes, 512 directory descrip
 256 MiB total bytes and 512 KiB serialized graph, shared by primary and derived
 requests. Policies allow at most 16 seeds and 16 search roots each. A concurrent watch has additional
 descriptors. Discovery is followed by watch installation and a complete recapture;
-later checks bracket fresh reads with latched events. Failure/expiry cannot revive
+later checks bracket fresh reads with latched events. Failure cannot revive
 a snapshot; closure remains available. Output, publication scratch/quarantine and
 staging-family collisions reject before their creation. No successful prior check
 substitutes for a fresh validation.
@@ -672,9 +660,8 @@ CLI translation alone cannot admit a grouped unit without its active invocation.
 
 The in-process invocation binding is retained across compiler, translation and
 assembler checks, including source grouping, profile, argument, compiler/environment
-identity and input observations. Native children use the common supervised runner;
-`BOF3_WORK_DEADLINE`, when present, is an absolute monotonic cutoff and never renews
-the inherited budget. Inputs are rechecked between diagnostic/object publication,
+identity and input observations. Native children use the common supervised runner.
+Inputs are rechecked between diagnostic/object publication,
 after publication/stdout, and after cleanup before success. Resolved compiler or
 delegated-executable bytes are bound even for ordinary sources. `common.observation`
 owns descriptor-bound Linux path watches: input-entry changes and ancestor moves
@@ -691,9 +678,8 @@ Unsupported platforms or filesystems fail without an alternate publisher. This i
 atomic publication of a multi-file bundle. Validation failure
 before publication preserves existing outputs. Unconfirmed child cleanup retains
 staging instead of racing live descendants; publication/durability failures require
-inspection of retained output/quarantine state, not blind rollback. Publication that
-crosses the cutoff fails with retained recovery information; the native no-replace
-backend cannot promise an atomic time fence or rollback after publication.
+inspection of retained output/quarantine state, not blind rollback. The native
+no-replace backend cannot promise rollback after publication.
 Compiler pipe failures remain nonzero instead of inheriting the shared CLI's pipe-success
 policy; failed-stage exit status is preserved when its diagnostics encounter a closed pipe.
 
@@ -738,8 +724,8 @@ Both commands require either
 the explicit preservation pair or the source-bound routing pair. Receipts expressly
 deny reuse authority: complete input
 closure, native consumer integration and byte equality remain open. A successful
-configured-provenance check never permits skipping compilation or proves a prior
-invocation finished within its deadline; retain terminal status separately.
+configured-provenance check never permits skipping compilation; retain terminal
+status separately.
 
 ## Planned discovery and ranking
 
@@ -763,7 +749,7 @@ one clear name, improve navigation/local reasoning, preserve useful boundaries a
 avoid hiding different lifecycles? Record accept/reject/defer with evidence and
 counterevidence. Score, string similarity and file-count savings never authorize edits.
 Overlapping candidates compete for the same functions; freeze the selected set and
-original attempt/deadline budgets before trying configurable top N.
+original attempt budgets before trying configurable top N.
 
 ## Consolidation safety contract
 

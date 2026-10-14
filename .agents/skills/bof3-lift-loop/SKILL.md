@@ -1,23 +1,22 @@
 ---
 name: bof3-lift-loop
-description: Execute or resume BOF3 lift, naming, type, macro and cleanup campaigns through bounded active-session missions, target-local lanes and serialized shared writes. No harness model launcher.
+description: Run or resume BOF3 lift, naming, type, macro and cleanup campaigns through active-session missions, target-local lanes and serialized shared writes.
 ---
 
 # BOF3 lift loop
 
-Use this skill and branch references, not user documentation. Bind caller-supplied mission scope,
-evidence pins and original budgets; never bind this skill to a named plan file.
-Goal: 100% 1:1 human-readable BOF3 source, with evidenced names, types, useful C89
-macros and required independent acceptance. Finite missions bound work, not goal.
-This skill instructs the active-session operator; not a script or scheduler.
+Bind caller-supplied scope, evidence pins and original budgets, never a named plan
+file. Use this skill's branch references. Work toward 100% 1:1 human-readable BOF3
+source with evidenced names, types, useful C89 macros and independent acceptance.
+Finite missions bound work without shrinking that goal. Act in the current session.
 
 ## Session and ownership
 
-- Use exposed session tools for delegation, observation and closure. Inspect host
-  capability first. No `codex`, model SDK/API, Pi runner or detached substitute
-  through shell, Python, MCP or wrappers. Workers spawn no orchestration layer.
-- Missing delegation permits safe local inspection/tooling, not invented worker IDs,
-  parallelism or self-review counted as independent review.
+- Inspect host capability, then delegate, observe and close with exposed session
+  tools. Do not launch `codex`, model SDK/API, Pi runner or detached substitutes
+  through shell, Python, MCP or wrappers. Workers must not add orchestration.
+- If delegation is unavailable, inspect or run safe local tools. Do not invent
+  worker IDs/parallelism or count self-review as independent review.
 - All lift lanes use [canonical workflow](../../../.pi/workflows/bof3-lift-lanes.js).
   One disjoint target per lane. Serialize shared writes; preserve unrelated dirty
   work. Never discard/stage it to manufacture worktree isolation.
@@ -25,41 +24,39 @@ This skill instructs the active-session operator; not a script or scheduler.
   `target.toml`. Parent owns shared headers, `config/splat.yaml`, index, audit/status
   caches, naming baseline and Git.
 - Parent refreshes/reviews and feature commits have standing authority. Preserve
-  frozen proofs; no push, installs, permission weakening or retry after denial.
+  frozen proofs; do not push, install, weaken permissions or retry after denial.
 - Select `bof3-naming`, `bof3-docs`, `psx-rizin` when relevant without repeated skill
   approval. Parent supplies bounded mode, paths and inputs. Domain, sandbox,
   evidence, independent-review and rollback gates remain binding.
 
 ## Mission protocol
 
-Before delegation, read [mission and recovery protocol](references/mission-protocol.md).
-Freeze finite queue, original deadlines, attempts/repairs, owner inputs and external
-pins. Resume consumption, never replace frozen five-entry pilot or reset budgets.
-Active session/selected plan owns dispositions; artifacts supply evidence, not a
-new campaign database or model launcher.
+Before delegation, read [mission and recovery protocol](references/mission-protocol.md)
+for frozen handoffs, consumption, recovery and completion gates.
 
 ## Batch and lane protocol
 
 Before selecting or launching lanes, read [lane protocol](references/lane-protocol.md).
-Invoke workflow file with registry refs, `maxSelectors`, `repairRounds` and bounded
-concurrency. No session-built lane loop. One combined target gate measures edited
-selectors; exact PASS skips lane reviewer, non-exact routes to bounded review/repair.
+Invoke the workflow with registry refs, `maxSelectors`, `repairRounds` and bounded
+concurrency. Do not build a session lane loop. One combined target gate measures
+edited selectors; exact PASS skips the lane reviewer, non-exact routes to bounded
+review/repair.
 
-Every writer harness invocation counts toward cumulative 12, including queries,
-help/examples and failures. One sweep, at most four variants across all repairs.
-Carry complete ledger; missing consumption evidence blocks experiments.
+Count every writer harness invocation toward cumulative 12, including queries,
+help/examples and failures. Allow one sweep and at most four variants across all
+repairs. Carry the complete ledger; missing consumption evidence blocks experiments.
 
 ## Operator stages
 
-Read selected domain skill before its stage. Each stage must return evidence-bound
+Read the selected domain skill before its stage. Each stage must return an evidence-bound
 disposition before successor starts.
 
 1. **Reconcile.** Inspect dirty tree and real handles. Skip accepted work only after
    current owner verification. Uncertain application/cleanup stops guarded writes.
 2. **Select/scout.** Freeze fresh target-qualified opportunities and original bytes;
-   exclude duplicates, accepted/owned work and unresolved shared effects. Parallel
-   independent reads allowed. Bulk template/carve/clean-C-requeue levers measured
-   exhausted. Select per-function via `bin/harness lift next`, shortest surviving
+   exclude duplicates, accepted/owned work and unresolved shared effects. Read
+   independent inputs in parallel. Bulk template/carve/clean-C-requeue levers are
+   measured exhausted. Select per-function via `bin/harness lift next`, shortest surviving
    boundaries, then partials missing an instruction/constant. Allocation/ordering
    residuals mark measured clean-C ceiling, not spelling debt.
 3. **Lift.** `$bof3-re`, one function, explicit paths, pre-edit diagnosis, clean C89,

@@ -79,18 +79,10 @@ is indexed in `out/text-format/README.md`.
 Use [`bof3-lift-loop`](../../.agents/skills/bof3-lift-loop/SKILL.md) for bounded
 active-session worker/reviewer missions. The harness does not launch Codex or model
 processes. `bin/harness decomp diagnose` and `audit` remain deterministic local tools;
-their [mission contract](codex.md#parent-lift-diagnosis) preserves evidence, original
-cutoffs and independent acceptance. Transport success never authorizes a transaction.
-
-Type/macro `run` and `revalidate` accept the parent's original `--deadline` in
-absolute monotonic seconds. Naming collection uses `--work-deadline` for that
-cutoff; its existing `--deadline` stays a relative per-operation cap. Freeze a
-separate cleanup hard-stop; neither flag permits resetting the campaign budget. See
-[owner work deadlines](harness.md#owner-work-deadlines) for rollback and
-late-publication handling and check-only revalidation's no-restoration boundary.
-The supported [frozen naming lifecycle](#frozen-naming-postapply-lifecycle) nodes
-also accept the original `--work-deadline`. These are per-command options, not
-implicitly inherited CLI flags.
+their [mission contract](codex.md#parent-lift-diagnosis) preserves evidence and
+independent acceptance. Transport success never authorizes a transaction. Type,
+macro and naming owners retain their [rollback and recovery gates](harness.md#policy-versus-mechanism).
+Check-only revalidation grants no source-restoration authority.
 
 ```sh
 bin/harness agent context cleanup macro-opportunity TARGET ID
@@ -480,8 +472,8 @@ bin/harness naming validate TARGET out/reviews/audit.json
 ### Frozen naming postapply lifecycle
 
 `postapply-gates` executes only normalize/write, symbol check, Splat, target build,
-asm-diff JSON/full and byte-match JSON, in that order (120 seconds and 2 MiB
-output per command). It accepts no supplied success status and needs no review.
+asm-diff JSON/full and byte-match JSON, in that order, with 2 MiB output per
+command. It accepts no supplied success status and needs no review.
 It retains execution outputs, exact report bytes/hash binding, derived input
 closure, modes/absence, normalization transition, final Ninja graph and index
 fingerprint. The closure includes transaction/provenance paths, all CMake source
@@ -557,25 +549,15 @@ Before the authorized spelling application, capture physical PRE for the prepare
 FUNCTION or DATA transaction:
 
 ```sh
-bin/harness naming snapshot TARGET REPORT --transaction KIND:OLD --expected-report-sha256 REPORT_PIN --evidence-root "$ROOT" --work-deadline "$WORK_DEADLINE" --reserve-seconds "$POST_RESERVE_SECONDS"
+bin/harness naming snapshot TARGET REPORT --transaction KIND:OLD --expected-report-sha256 REPORT_PIN --evidence-root "$ROOT"
 ```
-
-For autonomous missions, `WORK_DEADLINE` is the already frozen absolute monotonic
-cutoff, never `now + duration` on retry. `POST_RESERVE_SECONDS` is the positive,
-parent-budgeted remaining native/index/independent-POST/finalization time plus
-margin, excluding the separately retained cleanup tail. Pass the same
-`--work-deadline` to the subsequent lifecycle commands below. Snapshot admission
-refuses insufficient time before application; do not shorten the reserve or review
-budget to force a fit. Recheck the same reserve immediately before editing; its
-successful check is not durable timing permission. Unbounded manual calls may omit
-both options; a reserve without a bound cutoff rejects.
 
 Omit `--evidence-root` only for default-root evidence. The command returns
 `snapshot`, a canonical absolute manifest path; retain its byte SHA-256 externally.
 It captures exactly the transaction paths, original file bytes/modes and expected
 absence and pins the report/reviewed inputs and actual Git index. It checks copies
 before publishing the manifest last, then validates the manifest and rechecks live
-inputs/index/report/deadline before returning. Copies cover selected transaction
+inputs/index/report before returning. Copies cover selected transaction
 PRE only; state checks also hash the native build closure. Source/report bytes stay
 unchanged. Retained copies supply review evidence, not unattended restoration
 authority. Both preparation commands hold the cooperative source
@@ -612,10 +594,10 @@ below. Actual run IDs must be nonempty and distinct; implementation must match
 the gates. Acceptance and preservation are explicit parent decisions, never
 inferred from prose. The owner derives only mechanical bundle bindings/digests,
 validates through the existing attestation checker, then revalidates
-bundle/source/execution pins, the attestation, parent-decision/report/gates pins and
-deadline after exclusive publication. Both producers finally require the published
+bundle/source/execution pins, the attestation and parent-decision/report/gates pins
+after exclusive publication. Both producers finally require the published
 byte SHA-256 to match the originally encoded payload, then recheck writer
-lease/deadline; structurally valid substitutions still fail. Failures retain
+lease; structurally valid substitutions still fail. Failures retain
 artifacts, including manifests, without implying validity or restoration authority.
 The returned `parent_attestation` still requires
 existing `postapply-review` ingestion and public `verify`; packaging runs no native
@@ -673,15 +655,11 @@ Cached aggregate totals are not a fresh audit of every target.
 
 Apply holds the repository writer lease and active-report lock, retains input
 states, and durably publishes the report before compare-and-swapping the summary.
-`--work-deadline` binds the original monotonic cutoff; each atomic replacement
-checks it after temporary-file fsync and the final byte comparison. Postapply gates
-inherit that cutoff without extending their per-command timeout or output cap.
 These are two writes, not one atomic pair. If interrupted between them, preserve
 the report and rerun reconciliation: it revalidates live inventory/evidence and
 repairs accounting without rewriting existing proposal bytes. A failed run grants
-no acceptance. Publication errors retain before/current states; deadline failures
-preserve their type, using the cleanup tail only for diagnostic reads. Retry requires
-remaining bounds and authorization, never bypassing a denial. A completeness
+no acceptance. Publication errors retain before/current states. Retry requires
+remaining attempts and authorization, never bypassing a denial. A completeness
 transition interrupted between writes remains blocked for separate owner recovery.
 Inspect `summary.changed`, before/after hashes and counts; `applied`
 can be true for an accounting-only repair. Neither operation approves a rename,
@@ -777,8 +755,8 @@ baselines remain exact-output pins. Parent-review envelopes add independent priv
 preparation consumes reviewed envelopes, not legacy integrity pins.
 
 Production macro/type application and revalidation checks share naming
-postapply's bounded process owner: 120 seconds and 2 MiB of native output per
-command. Timeout and overflow produce failed receipts (124 and 125). Abrupt
+postapply's bounded process owner, with 2 MiB of native output per command.
+Overflow produces a failed receipt, exit 125. Abrupt
 owner death still requires owned-PRE reconciliation, not only process cleanup.
 
 Type `run` and `revalidate` acquire the same nonblocking writer lease as macro
@@ -987,7 +965,7 @@ When readable semantics are credible but code shape differs:
 
 ```sh
 bin/harness lift flag-search TARGET@0xADDRESS
-bin/harness lift permute TARGET@0xADDRESS --time-limit 60 --quiet -j N
+bin/harness lift permute TARGET@0xADDRESS --quiet -j N
 ```
 
 `bin/harness analysis scan [TARGET...]` lists unlabeled in-image data regions referenced
@@ -1064,8 +1042,8 @@ the preflight guard still rejects grouped sources before cache reuse.
 Post-build ownership refresh and per-source fallback remain mandatory.
 After every successful or failed batch, status reloads manifests. Missing, changed
 or unreadable target metadata yields uncached invalid records, without comparison
-or fallback using the queued model. Unchanged models retain fallback; work-deadline
-expiry propagates. This boundary check does not prove continuity through later
+or fallback using the queued model. Unchanged models retain fallback. This
+boundary check does not prove continuity through later
 native steps.
 The cache also binds the supplied target model, including
 nested placements and companion metadata loaded from alternate TOML names, plus

@@ -7,7 +7,6 @@ import re
 from pathlib import Path
 
 from harness.build.invocation import Artifact, Invocation, Stage
-from harness.common.deadlines import check_deadline
 from harness.common.digests import digest
 from harness.common.files import read_file
 
@@ -36,7 +35,6 @@ def _read_inputs(stage: Stage, temporary: Path) -> dict[str, str]:
 
 def capture_stage(stage: Stage, temporary: Path) -> tuple[dict, list, dict, str | None]:
     """Capture the actual command mapping and stdin passed to one native boundary."""
-    check_deadline()
     arguments, environment = stage.render(temporary)
     content = (
         read_file(temporary, stage.stdin.name, max_bytes=_LIMIT)
@@ -62,7 +60,6 @@ def capture_stage(stage: Stage, temporary: Path) -> tuple[dict, list, dict, str 
 
 def complete_stage(entry: dict, stage: Stage, temporary: Path, stdout: str) -> dict:
     """Finish an entry only after the supervised child returned successfully."""
-    check_deadline()
     if _read_inputs(stage, temporary) != entry["inputs"]:
         raise ValueError("compiler generated input changed during execution")
     return {
@@ -148,7 +145,6 @@ class Execution:
 
     def finish(self) -> dict:
         """Called by the driver only after cleanup and terminal dispatch checks."""
-        check_deadline()
         result = {
             "schema": _SCHEMA,
             "invocation_fingerprint": self.fingerprint,
@@ -183,7 +179,6 @@ def verify_execution(
     outputs: dict[str, str] | None = None,
 ) -> str:
     """Check retained execution edges, never rerun stages or reread removed staging."""
-    check_deadline()
     if not isinstance(value, dict) or set(value) != {
         "schema",
         "invocation_fingerprint",
@@ -224,7 +219,6 @@ def verify_execution(
     products: dict[str, str] = {}
     stdout = None
     for stage in invocation.stages:
-        check_deadline()
         if invocation.mode == "c" and stage.name == "assembler":
             entry = events[cursor]
             if not isinstance(entry, dict):
@@ -298,5 +292,4 @@ def verify_execution(
         cursor += 1
     if outputs is not None and outputs != expected_outputs:
         raise ValueError("compiler execution publications differ from current outputs")
-    check_deadline()
     return digest(value)

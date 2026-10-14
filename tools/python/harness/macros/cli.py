@@ -8,12 +8,7 @@ import sqlite3
 from pathlib import Path
 from typing import Any
 
-from harness.common.cli import (
-    add_root_argument,
-    add_work_deadline_argument,
-    resolved_root,
-    run_main,
-)
+from harness.common.cli import add_root_argument, resolved_root, run_main
 from harness.common.evidence import evidence_output_path, write_evidence_output
 from harness.common.verification import (
     add_recovery_commands,
@@ -201,8 +196,6 @@ def _run(args: argparse.Namespace) -> int:
     )
     if getattr(args, "participating_targets", None) is not None:
         options["participating_targets"] = args.participating_targets
-    if getattr(args, "deadline", None) is not None:
-        options["deadline"] = args.deadline
     application = run_transaction(
         root, _read(args.manifest), _read(args.changes), output=output, **options
     )
@@ -263,7 +256,6 @@ def build_parser() -> argparse.ArgumentParser:
     blocks = sub.add_parser(
         "blocks", help="rank four-use assembly blocks, largest first"
     )
-    add_work_deadline_argument(blocks)
     blocks.add_argument("--min-instructions", type=_positive, required=True)
     blocks.add_argument(
         "--target", help="focus results without dropping global members"
@@ -315,11 +307,6 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("changes", type=Path)
     run.add_argument("output", type=Path)
     run.add_argument("--implementation-run-id")
-    run.add_argument(
-        "--deadline",
-        type=float,
-        help="original absolute monotonic work cutoff; not a duration",
-    )
     run.add_argument(
         "--participating-targets",
         nargs="+",

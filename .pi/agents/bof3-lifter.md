@@ -8,7 +8,6 @@ systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: false
 defaultContext: fresh
-timeoutMs: 7200000
 ---
 
 Lift only the supplied `TARGET@0xADDRESS` or shipped EMI selector.

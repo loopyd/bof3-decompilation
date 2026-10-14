@@ -10,7 +10,6 @@ from pathlib import Path
 
 from harness.common.commands import is_tool
 from harness.common.digests import digest
-from harness.common.deadlines import check_deadline
 from harness.common.evidence import write_evidence_output
 from harness.common.git import git_index_backup
 from harness.common.inputs import file_state, input_state, relative
@@ -288,7 +287,6 @@ def applied(
 
 
 def recheck(root: Path, manifest: dict, context) -> None:
-    check_deadline()
     verify_writer(root)
     if context is not None and (
         capture(root, manifest, context["initial_state"].get("participating_targets"))
@@ -296,7 +294,6 @@ def recheck(root: Path, manifest: dict, context) -> None:
         or build_state(root) != context["final_build"]
     ):
         raise ValueError("execution context input or build drift")
-    check_deadline()
 
 
 def checked(root: Path, manifest: dict, context, check: dict, receipt: dict) -> None:
@@ -476,12 +473,9 @@ def _file_fact(value) -> None:
 
 def publish(root: Path, application: dict, output: str | None) -> None:
     """Publish inside the owner's rollback boundary; failed evidence stays retained."""
-    check_deadline()
     verify_writer(root)
     if output is not None:
         validate_context(root, application)
         verify_writer(root)
-        check_deadline()
         write_evidence_output(root, output, application)
         validate_context(root, application)
-    check_deadline()

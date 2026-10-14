@@ -8,8 +8,6 @@ from dataclasses import dataclass
 import builtins
 import hashlib
 import json
-import math
-import time
 from pathlib import Path
 import shutil
 from typing import cast
@@ -328,7 +326,6 @@ def execute(
     rendered: dict,
     *,
     source: dict,
-    deadline: float,
     output_limit: int,
     artifact_limit: int,
 ) -> dict:
@@ -353,10 +350,8 @@ def execute(
             workspace,
             stage["argv"],
             environment=stage["environment"],
-            deadline=deadline,
             output_limit=output_limit,
             name=stage["name"],
-            timeout=30.0,
             input_data=input_data,
         )
         if stage["stdout"]:
@@ -693,7 +688,7 @@ def verify_syntax(
     return tuple(events)
 
 
-def c89_call(*, workspace, tools, deadline, output_limit) -> dict:
+def c89_call(*, workspace, tools, output_limit) -> dict:
     return dict(
         cwd=workspace,
         argv=[
@@ -716,10 +711,8 @@ def c89_call(*, workspace, tools, deadline, output_limit) -> dict:
             HOME=str(workspace / "home"),
             TMPDIR=str(workspace / "tmp"),
         ),
-        deadline=deadline,
         output_limit=output_limit,
         name="c89",
-        timeout=30.0,
     )
 
 
@@ -1107,7 +1100,6 @@ def verify_attempts(
     attempts,
     inputs,
     *,
-    deadline,
     output_limit,
     contexts: Sequence[DeclaredProfileContext] | None = None,
     receipts: Sequence[ProfileReceipt] = (),
@@ -1372,10 +1364,8 @@ def verify_attempts(
                         directory,
                         stage["argv"],
                         environment=stage["environment"],
-                        deadline=deadline,
                         output_limit=output_limit,
                         name=stage["name"],
-                        timeout=30.0,
                         origin="persisted",
                         events=cast("list[tuple[str, str, str, Exception]]", events),
                         reader=reader,
@@ -1423,7 +1413,7 @@ def verify_attempts(
     return tuple(events)
 
 
-def _profile_evidence(rendered, attempt, deadline, output_limit, events):
+def _profile_evidence(rendered, attempt, output_limit, events):
     directory = Path(rendered["artifact"]).parent
     attempt.update(
         captures=[], partial_processes=[], consumed_inputs=[], launch="unknown"
@@ -1489,10 +1479,8 @@ def _profile_evidence(rendered, attempt, deadline, output_limit, events):
                 directory,
                 stage["argv"],
                 environment=stage["environment"],
-                deadline=deadline,
                 output_limit=output_limit,
                 name=stage["name"],
-                timeout=30.0,
                 origin="persisted",
                 events=local,
                 reader=active_reader(),
@@ -1573,7 +1561,6 @@ def execute_profiles(
     inputs: FrozenInputs,
     include_roots: Sequence[str],
     attempts: list[dict],
-    deadline: float,
     output_limit: int,
     artifact_limit: int,
 ) -> Iterator[ProfileOutcome]:
@@ -1584,8 +1571,6 @@ def execute_profiles(
         or len(profiles) != len(attempts)
         or profiles[0]["profile_id"] != root_profile_id
         or (len({profile["profile_id"] for profile in profiles}) != len(profiles))
-        or (type(deadline) not in {int, float})
-        or (not math.isfinite(deadline))
         or any(
             (
                 type(limit) is not int or limit <= 0
@@ -1629,16 +1614,11 @@ def execute_profiles(
                         "caller-owned compiler attempt identity changed"
                     )
                 verify_inputs(inputs.immutable, events=events)
-                if (
-                    profile["availability"] != "available"
-                    or time.monotonic() >= deadline
-                ):
+                if profile["availability"] != "available":
                     attempt.update(
-                        status="catalog-refused"
-                        if profile["availability"] != "available"
-                        else "deadline",
+                        status="catalog-refused",
                         launch="prelaunch",
-                        failure=profile["refusal"] or "original work deadline expired",
+                        failure=profile["refusal"],
                     )
                 else:
                     directory = (
@@ -1683,88 +1663,71 @@ def execute_profiles(
                         create_parents=False,
                         write_phase="receipt-write",
                     )
-                    if time.monotonic() >= deadline:
+                    try:
+                        phase = "execute"
+                        completed = execute(
+                            rendered,
+                            source=inputs.source,
+                            output_limit=output_limit,
+                            artifact_limit=artifact_limit,
+                        )
                         attempt.update(
-                            status="deadline",
-                            launch="prelaunch",
-                            failure="original work deadline expired before recipe invocation",
+                            completed,
+                            terminal=True,
                         )
-                    else:
-                        try:
-                            phase = "execute"
-                            completed = execute(
-                                rendered,
-                                source=inputs.source,
-                                deadline=deadline,
-                                output_limit=output_limit,
-                                artifact_limit=artifact_limit,
-                            )
-                            attempt.update(
-                                completed,
-                                terminal=True,
-                                deadline_expired=time.monotonic() >= deadline,
-                            )
-                            last = completed["stages"][-1]["process"]
-                            attempt.update(
-                                raw_exit=last["raw_exit"], exit_code=last["exit_code"]
-                            )
-                            if completed["status"] != "compiled-unverified":
-                                attempt["failure"] = (
-                                    last["failure"]
-                                    or "recipe refused process exit or produced artifacts"
-                                )
-                        except Exception as error:
-                            interrupted = error
-                            abort = error
-                            retain(
-                                events,
-                                error,
-                                phase=phase,
-                                path=directory,
-                                origin="cleanup"
-                                if isinstance(error, ProcessCleanupError)
-                                else "policy"
-                                if isinstance(
-                                    error, (PolicyFailure, ImmutableInputDrift)
-                                )
-                                else "ordinary"
-                                if isinstance(error, IncompleteWrite)
-                                else "unknown",
-                            )
-                            attempt.update(
-                                status="interrupted",
-                                raw_exit=None,
-                                exit_code=None,
-                                failure=f"{type(error).__name__}: {error}",
-                            )
-                            if isinstance(error, ProcessCleanupError):
-                                attempt["owner_observation"] = error.observed
-                                attempt["capture_failures"] = error.capture_failures
-                        phase = "evidence"
-                        _profile_evidence(
-                            rendered, attempt, deadline, output_limit, events
+                        last = completed["stages"][-1]["process"]
+                        attempt.update(
+                            raw_exit=last["raw_exit"], exit_code=last["exit_code"]
                         )
-                        if (
-                            attempt["terminal"]
-                            and [row["process"] for row in attempt["stages"]]
-                            != attempt["partial_processes"]
-                        ):
-                            raise ImmutableInputDrift(
-                                "returned compiler stages differ from retained captures"
+                        if completed["status"] != "compiled-unverified":
+                            attempt["failure"] = (
+                                last["failure"]
+                                or "recipe refused process exit or produced artifacts"
                             )
-                        if interrupted is not None and attempt["launch"] == "prelaunch":
-                            attempt["status"] = "deadline"
-                        if isinstance(interrupted, ProcessCleanupError):
-                            abort = interrupted
-                        elif any(
-                            (
-                                process["owner_observation"] is not None
-                                for process in attempt["partial_processes"]
-                            )
-                        ):
-                            raise ImmutableInputDrift(
-                                "compiler ownership is unresolved"
-                            )
+                    except Exception as error:
+                        interrupted = error
+                        abort = error
+                        retain(
+                            events,
+                            error,
+                            phase=phase,
+                            path=directory,
+                            origin="cleanup"
+                            if isinstance(error, ProcessCleanupError)
+                            else "policy"
+                            if isinstance(error, (PolicyFailure, ImmutableInputDrift))
+                            else "ordinary"
+                            if isinstance(error, IncompleteWrite)
+                            else "unknown",
+                        )
+                        attempt.update(
+                            status="interrupted",
+                            raw_exit=None,
+                            exit_code=None,
+                            failure=f"{type(error).__name__}: {error}",
+                        )
+                        if isinstance(error, ProcessCleanupError):
+                            attempt["owner_observation"] = error.observed
+                            attempt["capture_failures"] = error.capture_failures
+                    phase = "evidence"
+                    _profile_evidence(rendered, attempt, output_limit, events)
+                    if (
+                        attempt["terminal"]
+                        and [row["process"] for row in attempt["stages"]]
+                        != attempt["partial_processes"]
+                    ):
+                        raise ImmutableInputDrift(
+                            "returned compiler stages differ from retained captures"
+                        )
+                    if isinstance(interrupted, ProcessCleanupError):
+                        abort = interrupted
+                    elif any(
+                        (
+                            process["owner_observation"] is not None
+                            for process in attempt["partial_processes"]
+                        )
+                    ):
+                        raise ImmutableInputDrift("compiler ownership is unresolved")
                 verify_inputs(inputs.immutable, events=events)
             except Exception as error:
                 attempt.setdefault("launch", "unknown")
@@ -1786,7 +1749,6 @@ def execute_profiles(
                 verify_attempts(
                     [attempt],
                     inputs,
-                    deadline=deadline,
                     output_limit=output_limit,
                     contexts=() if context is None else (context,),
                 )

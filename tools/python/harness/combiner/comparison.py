@@ -17,7 +17,6 @@ from harness.build.preservation import (
 from harness.build.receipts import produce_object, verify_production
 from harness.build.routing import select_preservation
 from harness.combiner.members import capture_members
-from harness.common.deadlines import check_deadline, resolve_deadline, use_deadline
 from harness.common.files import read_file
 from harness.common.inputs import InputBatch, relative
 from harness.common.lease import require_writer
@@ -87,7 +86,6 @@ def resolve_comparison_outputs(root: Path, name: str) -> tuple[Path, Path, set[P
 
 
 def _compare_function(layout, execution, linked: Path, member: dict) -> dict:
-    execution.check_deadline()
     image = read_function_image(
         linked, function_name=member["symbol"], address=member["address"]
     )
@@ -119,7 +117,6 @@ def _compare_function(layout, execution, linked: Path, member: dict) -> dict:
             ),
             min(len(original), len(current)),
         )
-    execution.check_deadline()
     return {
         "selector": member["selector"],
         "symbol": member["symbol"],
@@ -141,22 +138,17 @@ def compare_members(
     source: str,
     output: str,
     *,
-    deadline: float | None = None,
     output_limit: int = 2 * 1024 * 1024,
 ) -> dict:
     """Require a writer lease and fresh routed production; never accept source edits."""
     root = root.resolve(strict=True)
     require_writer(root)
-    cutoff = resolve_deadline(deadline)
-    if cutoff is None:
-        raise ValueError("grouped comparison requires an original work deadline")
     if type(output_limit) is not int or not 1 <= output_limit <= _LIMIT:
         raise ValueError("comparison output limit must be between 1 and 64 MiB")
-    with use_deadline(cutoff):
-        return _compare_members(root, source, output, cutoff, output_limit)
+    return _compare_members(root, source, output, output_limit)
 
 
-def _compare_members(root, source, output_name, cutoff, output_limit):
+def _compare_members(root, source, output_name, output_limit):
     if (
         relative(source) != source
         or not source.startswith("src/bof3/")
@@ -171,7 +163,7 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
         raise ValueError("comparison requires a complete grouped translation unit")
     output, linked, artifacts = resolve_comparison_outputs(root, output_name)
     layout = repo_layout(root)
-    execution = NativeExecution(root, cutoff, output_limit)
+    execution = NativeExecution(root, output_limit)
     tools = layout.psyqo_toolchain_root / "bin"
     with ExitStack() as stack:
         selection = stack.enter_context(
@@ -247,8 +239,6 @@ def _compare_members(root, source, output_name, cutoff, output_limit):
         members = capture_members(root, record, preserved)
 
         def guard():
-            check_deadline()
-            execution.check_deadline()
             require_writer(root)
             selection.validate()
             dispatch.watch.validate()

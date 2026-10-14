@@ -6,7 +6,6 @@ import re
 from collections.abc import Callable
 from pathlib import Path
 
-from harness.common.deadlines import check_deadline
 
 _LOCAL_INCLUDE_RE = re.compile(
     r'^\s*#\s*include\s*(?:"([^"]+)"|<([^>]+)>)', re.MULTILINE
@@ -44,7 +43,6 @@ def _include_text(text: str) -> str:
 
 def parse_literal_includes(text: str, *, source: str) -> list[tuple[str, bool]]:
     """Parse conservative literal dependencies, rejecting unsupported directives."""
-    check_deadline()
     if (
         "\x00" in text
         or "??" in text
@@ -54,7 +52,6 @@ def parse_literal_includes(text: str, *, source: str) -> list[tuple[str, bool]]:
         raise ValueError(f"unsupported preprocessing spelling in {source}")
     text = re.sub(r"\\\r?\n", "", text)
     for token in _COMMENTS_AND_LITERALS.finditer(text):
-        check_deadline()
         prefix = text[text.rfind("\n", 0, token.start()) + 1 : token.start()]
         if token.group().startswith(("/*", "//")) and re.fullmatch(
             r"\s*#\s*include\s*<[^>]*", _strip_comments(prefix)
@@ -65,7 +62,6 @@ def parse_literal_includes(text: str, *, source: str) -> list[tuple[str, bool]]:
                 raise ValueError(f"unsupported multiline directive comment in {source}")
     result = []
     for directive in re.finditer(r"^\s*#[^\n]*", _strip_comments(text), re.MULTILINE):
-        check_deadline()
         value = directive.group().strip()
         keyword = re.match(r"#\s*([A-Za-z_][A-Za-z_0-9]*)", value)
         if keyword is None:
@@ -102,7 +98,6 @@ def parse_literal_includes(text: str, *, source: str) -> list[tuple[str, bool]]:
         result.append((filename, quoted is not None))
         if len(result) > 16384:
             raise ValueError(f"include directive count exceeds its bound: {source}")
-    check_deadline()
     return result
 
 

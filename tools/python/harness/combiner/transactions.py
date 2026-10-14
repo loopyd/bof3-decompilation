@@ -18,7 +18,6 @@ from harness.combiner.history import (
 )
 from harness.combiner.images import prepare_images
 from harness.combiner.preservation import capture_preservation
-from harness.common.deadlines import check_deadline
 from harness.common.inputs import InputBatch
 from harness.domain.cache import collect_manifest_paths
 
@@ -37,7 +36,6 @@ def _verify_pre(root: Path, record: dict, owners: dict) -> None:
         or collect_manifest_paths(root) != record["manifest_inventory"]
     ):
         raise ValueError("transaction PRE ownership inventory changed")
-    check_deadline()
 
 
 def prepare_transaction(
@@ -48,7 +46,6 @@ def prepare_transaction(
     expected_profile_fingerprint: str,
 ) -> dict:
     """Pin complete proposed text, observed PRE and explicit absent POST paths."""
-    check_deadline()
     root = root.resolve(strict=True)
     validate_fingerprint(expected_profile_fingerprint)
     profile, images = copy.deepcopy(profile), copy.deepcopy(images)

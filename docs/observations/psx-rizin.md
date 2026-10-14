@@ -52,7 +52,7 @@ proposed setting before comparing equivalent modes. Two invalid probe forms and
 clipped config/output searches added friction without establishing that prohibition.
 Use this measured failure case to evaluate D13-style mode-aware guidance: count
 invalid comparisons and corrective handoffs per comparable diagnosis, while
-requiring complete output, identical bytes and preserved deadlines for acceptance.
+requiring complete output and identical bytes for acceptance.
 
 ### Boundary inference after transport recovery
 
@@ -112,7 +112,7 @@ Cherry-picked from `LESSONS.md` Level 5 — this is the ledger for the skill tha
 | Measured evidence | Proposed owner/change | Acceptance measurement |
 | --- | --- | --- |
 | Startup probe said noninteractive; live command loop was interactive | Rizin operation reference: reproduce configuration in the actual invocation mode and record framing diagnostics | Same command returns complete, byte-identical output in the live loop; no confirmation consumes command/frame input |
-| Set/read-back dominates capture-only latency but costs under half a second in two controls | Harness profiling: separate startup, verified configuration, capture and validation costs before optimizing transport | Any optimization retains per-command verified state, identical bytes, refusal on unknown/true responses and the same total deadline |
+| Set/read-back dominates capture-only latency but costs under half a second in two controls | Harness profiling: separate startup, verified configuration, capture and validation costs before optimizing transport | Any optimization retains per-command verified state, identical bytes and refusal on unknown/true responses |
 | 290/1,098 captured records violate 4-byte instruction validation | Boundary-analysis guidance: distinguish transport success from reviewed code/data extent | Classify the reviewed range from original evidence; no truncation to the analyzer's 164-byte guess and no weakened size/byte check |
 
 ## Important observations
@@ -123,7 +123,7 @@ skill contracts still govern new work.
 - An interactive confirmation consumed the leading `e` of the following `echo`
   frame marker, producing `Command 'cho' does not exist`. Reading faster in Python
   could not fix output withheld by the child. Probe the child mode before blaming
-  the parent read loop or enlarging timeouts (diagnosis `7271abd9…`).
+  the parent read loop (diagnosis `7271abd9…`).
 - Successful capture is not valid instruction evidence. The recovered shop range
   stayed 4,392 reviewed bytes/1,098 records; 290 records had size 1. Both writer
   and reviewer observed canonical refusal with zero committed rows, so neither

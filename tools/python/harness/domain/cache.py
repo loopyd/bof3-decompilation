@@ -10,7 +10,6 @@ from pathlib import Path
 from types import MappingProxyType
 from typing import Any, Callable, Mapping
 
-from harness.common.deadlines import check_deadline
 from harness.common.directory import open_parent_fd
 from harness.common.inputs import InputBoundaryError, read_input, relative
 from harness.common.links import read_linked_input
@@ -35,13 +34,11 @@ _CACHE: dict[tuple[Path, ManifestFingerprint], dict[str, TargetManifest]] = {}
 
 def collect_manifest_paths(root: Path) -> list[str]:
     """Discover the complete repository-relative TOML set consumed by the loader."""
-    check_deadline()
     paths = []
     pending = ["config/targets"]
     seen = set()
     entries_seen = 0
     while pending:
-        check_deadline()
         name = pending.pop()
         try:
             parent, leaf = open_parent_fd(root, name)
@@ -55,7 +52,6 @@ def collect_manifest_paths(root: Path) -> list[str]:
                 os.close(parent)
         except FileNotFoundError:
             if name == "config/targets":
-                check_deadline()
                 return []
             raise
         try:
@@ -66,7 +62,6 @@ def collect_manifest_paths(root: Path) -> list[str]:
             seen.add(identity)
             with os.scandir(descriptor) as entries:
                 for entry in entries:
-                    check_deadline()
                     entries_seen += 1
                     if entries_seen > 65536:
                         raise ValueError("manifest tree entry count exceeds its bound")
@@ -85,7 +80,6 @@ def collect_manifest_paths(root: Path) -> list[str]:
         finally:
             os.close(descriptor)
     paths.sort()
-    check_deadline()
     return paths
 
 
@@ -95,7 +89,6 @@ def read_manifest_inputs(
     """Read each manifest once and return its content-keyed generation."""
     contents = {}
     for name in collect_manifest_paths(root):
-        check_deadline()
         path = root / name
         content = (
             read_linked_input(root, name)
@@ -109,7 +102,6 @@ def read_manifest_inputs(
         (path.as_posix(), hashlib.sha256(content).hexdigest())
         for path, content in contents.items()
     )
-    check_deadline()
     return fingerprint, contents
 
 
@@ -134,7 +126,6 @@ def collect_claim_paths(manifests: Mapping[str, TargetManifest]) -> list[str]:
 
 
 def _observe_claim_parent(path: Path) -> tuple | None:
-    check_deadline()
     try:
         status = path.stat(follow_symlinks=False)
     except (FileNotFoundError, NotADirectoryError):
@@ -161,7 +152,6 @@ def collect_claim_files(
     parents = {}
     aliases = {}
     for relative_path in collect_claim_paths(manifests):
-        check_deadline()
         path = root / relative_path
         resolved = path
         if read_claim is not None:
@@ -216,7 +206,6 @@ def collect_claim_files(
     for path, expected in aliases.items():
         if path.resolve(strict=False) != expected:
             raise ValueError(f"manifest claim alias changed during validation: {path}")
-    check_deadline()
     return ClaimFiles(tuple(rows), MappingProxyType(canonical), MappingProxyType(sizes))
 
 

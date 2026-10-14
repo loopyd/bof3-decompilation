@@ -487,15 +487,12 @@ def test_success_pins_inputs_isolates_settings_and_validates_completion(mission)
 @pytest.mark.parametrize(
     "program,failure",
     [
-        ("import time; time.sleep(5)", "timeout"),
         ("print('x' * 4096)", "output limit"),
         ("raise SystemExit(7)", None),
     ],
 )
 def test_process_failure_cannot_publish_success(mission, program, failure):
-    receipt = session.run_session(
-        Emulator(program), **mission, timeout=0.3, output_limit=1024
-    )
+    receipt = session.run_session(Emulator(program), **mission, output_limit=1024)
     assert receipt["status"] == "failed"
     assert receipt["process"]["failure"] == failure
     assert "completion" not in receipt

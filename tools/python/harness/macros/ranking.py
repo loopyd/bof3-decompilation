@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any
 
 from harness.common.digests import digest
-from harness.common.deadlines import check_deadline
 from harness.common.files import read_file
 from harness.common.directory import validate_repo_path
 from harness.io import unique_object
@@ -43,7 +42,6 @@ def _policy(value: object) -> dict[str, Any]:
 
 
 def _pool(root: Path, policy: dict) -> dict:
-    check_deadline()
     report = block_report(
         root,
         min_instructions=policy["min_instructions"],
@@ -56,7 +54,6 @@ def _pool(root: Path, policy: dict) -> dict:
         if not policy["require_source"]
         or all(member["source_path"] for member in row["members"])
     ]
-    check_deadline()
     return {
         "policy": policy,
         "population": {
@@ -69,7 +66,6 @@ def _pool(root: Path, policy: dict) -> dict:
 
 
 def create_ranking_request(root: Path, policy: object) -> dict:
-    check_deadline()
     pool = _pool(root, _policy(policy))
     result = {
         "schema": REQUEST_SCHEMA,
@@ -91,7 +87,6 @@ def create_ranking_request(root: Path, policy: object) -> dict:
             for row in pool["candidates"]
         ],
     }
-    check_deadline()
     return result
 
 
@@ -118,7 +113,6 @@ def _assessments(value: object, candidates: list[dict]) -> list[dict]:
         by_id[row["id"]] = row
     result = []
     for machine_rank, candidate in enumerate(candidates, 1):
-        check_deadline()
         row = by_id.get(candidate["id"])
         if row is None or row["candidate_fingerprint"] != digest(candidate):
             raise ValueError("macro ranking candidate fingerprint drifted")
@@ -174,7 +168,6 @@ def _assessments(value: object, candidates: list[dict]) -> list[dict]:
 
 
 def rank_candidates(root: Path, request: object, *, expected_pool_digest: str) -> dict:
-    check_deadline()
     required = {
         "schema",
         "policy",
@@ -238,14 +231,12 @@ def rank_candidates(root: Path, request: object, *, expected_pool_digest: str) -
         "execution_started": False,
     }
     result = {**facts, "digest": digest(facts)}
-    check_deadline()
     return result
 
 
 def validate_ranking(
     root: Path, value: object, *, expected_ranking_digest: str
 ) -> dict:
-    check_deadline()
     if not isinstance(value, dict) or value.get("schema") != SCHEMA:
         raise ValueError("macro ranking report schema is invalid")
     facts = {key: item for key, item in value.items() if key != "digest"}
@@ -258,7 +249,6 @@ def validate_ranking(
     )
     if current != value or current["digest"] != expected_ranking_digest:
         raise ValueError("macro ranking report is not canonical")
-    check_deadline()
     return current
 
 

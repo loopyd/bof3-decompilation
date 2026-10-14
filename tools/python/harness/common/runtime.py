@@ -16,14 +16,6 @@ from harness.common.recovery import capture_recovery
 from harness.common.submodules import validate_mutations
 from harness.common.checks import check_evidence
 from harness.common.digests import digest
-from harness.common.deadlines import (
-    DeadlineExpired,
-    check_deadline,
-    resolve_deadline,
-    suspend_work_deadline,
-    use_deadline,
-    validate_deadline,
-)
 from harness.common.files import atomic_write as _atomic_write
 from harness.common.files import restore_quarantined
 from harness.common.directory import validate_repo_path
@@ -95,11 +87,9 @@ def run_checks(
 ) -> tuple[list[dict[str, Any]], bool]:
     receipts, passed = [], True
     for index, check in enumerate(checks, start_index):
-        check_deadline()
         verify_writer(root)
         argv = check["argv"]
         result = runner(argv, cwd=root, text=True, capture_output=True)
-        check_deadline()
         verify_writer(root)
         evidence = check_evidence(check, result.returncode, result.stdout, root)
         output = (
@@ -120,7 +110,6 @@ def run_checks(
             "selector": check["selector"],
             "post_state_digest": post_state_digest,
         }
-        check_deadline()
         ref = _write_receipt(
             root, index, payload, schema=receipt_schema, prefix=evidence_prefix
         )
@@ -202,15 +191,8 @@ def apply_changes(
     workspace: WorkspaceState | None = None,
     index: GitIndexSnapshot | None = None,
     deletions: set[str] | None = None,
-    cleanup_deadline: float | None = None,
     recovery_callback: Callable[[dict[str, str]], None] | None = None,
 ) -> tuple[dict[str, bytes | None], dict[str, dict[str, Any]]]:
-    check_deadline()
-    validate_deadline(cleanup_deadline)
-    if cleanup_deadline is not None and (
-        resolve_deadline() is None or cleanup_deadline <= resolve_deadline()
-    ):
-        raise ValueError("cleanup cutoff must follow the original work cutoff")
     safe_allowed = validate_paths(root, allowed)
     validate_mutations(root, safe_allowed)
     if not isinstance(changes, dict) or not changes:
@@ -232,7 +214,6 @@ def apply_changes(
     if any(backup[name] is None for name in safe_deletions):
         raise ValueError("transaction deletion requires an existing PRE")
     verify_writer(root)
-    check_deadline()
     images = capture_recovery(
         root,
         recovery,
@@ -246,7 +227,6 @@ def apply_changes(
     records: dict[str, dict[str, Any]] = {}
     try:
         for name, content in changes.items():
-            check_deadline()
             verify_writer(root)
             validate_mutations(root, safe_allowed)
             current = backup[name]
@@ -256,7 +236,6 @@ def apply_changes(
             records[name] = {**image, "installed": installed}
             quarantine = None
             if current is not None:
-                check_deadline()
                 quarantine = _safe_unlink(
                     root,
                     name,
@@ -267,27 +246,19 @@ def apply_changes(
                 )
                 assert quarantine is not None
             verify_writer(root)
-            check_deadline()
             if installed is not None:
                 install_image(root, name, installed, image=image["post"])
         for name in safe_deletions:
-            check_deadline()
             verify_writer(root)
             if (
                 classify_restoration(root, name, backup[name], records[name])
                 != "deleted"
             ):
                 raise ValueError(f"transaction deletion POST drifted: {name}")
-        check_deadline()
     except ProcessCleanupError:
         raise
     except BaseException:
-        if cleanup_deadline is None:
-            with suspend_work_deadline():
-                rollback(root, changed, records)
-        else:
-            with suspend_work_deadline(), use_deadline(cleanup_deadline):
-                rollback(root, changed, records, deadline=cleanup_deadline)
+        rollback(root, changed, records)
         raise
     return backup, records
 
@@ -296,22 +267,12 @@ def rollback(
     root: Path,
     backup: dict[str, bytes | None],
     records: dict[str, dict[str, Any]] | None = None,
-    *,
-    deadline: float | None = None,
 ) -> None:
-    validate_deadline(deadline)
-
     def guard():
-        if deadline is None:
-            verify_writer(root)
-        else:
-            with use_deadline(deadline):
-                verify_writer(root)
+        verify_writer(root)
 
     if records is not None and set(records) != set(backup):
         raise RuntimeError("type transaction rollback failed: recovery paths differ")
-    if deadline is not None:
-        guard()
     errors = []
     for name, content in backup.items():
         try:
@@ -361,15 +322,11 @@ def rollback(
                 if classify_restoration(root, name, content, image) != "pre":
                     raise ValueError(f"transaction PRE restoration failed: {name}")
         except (OSError, ValueError, RuntimeError) as error:
-            if isinstance(error, ProcessCleanupError) or (
-                deadline is not None and isinstance(error, DeadlineExpired)
-            ):
+            if isinstance(error, ProcessCleanupError):
                 raise
             errors.append(f"{name}: {error}")
     if errors:
         raise RuntimeError("type transaction rollback failed: " + "; ".join(errors))
-    if deadline is not None:
-        guard()
 
 
 def application_record(
@@ -402,7 +359,6 @@ def write_attestation(
     schema: str = ATTESTATION_SCHEMA,
     prefix: str = "type",
 ) -> dict[str, str]:
-    check_deadline()
     attestation_id = secrets.token_hex(16)
     facts = {
         "schema": schema,
@@ -413,7 +369,6 @@ def write_attestation(
     }
     record = {**facts, "digest": digest(facts)}
     relative = f"out/reviews/evidence/{prefix}-attestation-{attestation_id}.json"
-    check_deadline()
     validate_mutations(root, {relative})
     _atomic_write(
         root,

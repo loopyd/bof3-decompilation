@@ -48,7 +48,6 @@ def index_digest(root: Path) -> str:
         cwd=root,
         capture_output=True,
         check=True,
-        timeout=120,
     )
     state = file_state(Path(os.fsdecode(result.stdout.rstrip(b"\n"))))
     return digest(state)

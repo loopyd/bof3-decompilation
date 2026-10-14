@@ -106,14 +106,14 @@ def test_analyzer_passes_canonical_target_after_lookup(
     calls: list[tuple] = []
     monkeypatch.setattr(
         "harness.analysis.project.analyze_project",
-        lambda root, target, timeout=120: calls.append((root, target, timeout)),
+        lambda root, target: calls.append((root, target)),
     )
     monkeypatch.setattr(
         "harness.analysis.engine.snapshot_path",
         lambda root, target: root / "out/reverse" / target / "snapshot.json",
     )
     output = analyzer.write_target_snapshot(tmp_path, SHIPPED)
-    assert calls == [(tmp_path, CANONICAL, 120)]
+    assert calls == [(tmp_path, CANONICAL)]
     assert output == tmp_path / "out/reverse" / CANONICAL / "snapshot.json"
 
 

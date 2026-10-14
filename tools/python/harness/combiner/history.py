@@ -13,7 +13,6 @@ from harness.build.preservation import (
     validate_states,
 )
 from harness.combiner.images import prepare_images
-from harness.common.deadlines import check_deadline
 
 _OWNERS_V1 = (
     "tools/python/harness/combiner/transactions.py",
@@ -64,7 +63,6 @@ def validate_transaction_history(
     transaction: dict, *, expected_fingerprint: str
 ) -> dict:
     """Validate retained images and bindings without asserting current PRE or POST."""
-    check_deadline()
     validate_fingerprint(expected_fingerprint)
     if not isinstance(transaction, dict):
         raise ValueError("transaction must be an object")

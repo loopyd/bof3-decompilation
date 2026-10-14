@@ -15,87 +15,82 @@ bin/harness macros run MANIFEST CHANGES APPLICATION --implementation-run-id RUN
 bin/harness macros verify APPLICATION --expected-application-digest APPLICATION_PIN
 ```
 
-Use original absolute `--deadline` for bounded run/revalidation; separate cleanup
-tail. Prepare/run outputs canonical repo-relative paths under `out/reviews/evidence`,
-not generic `out/reviews`. Choose fresh filenames; prepare may overwrite existing
-output. Externally retain every digest, never derive expected pin from supplied file.
+Use fresh canonical repo-relative outputs under `out/reviews/evidence`; prepare
+may overwrite existing files. Retain digests externally, never from supplied files.
 
-`bof3.macro-transaction-request/v1` identifies `target`, `concern`,
-`candidate_artifact`, nonempty canonical `affected_functions`, adopted baseline
-when dirty. Concerns `constant|expression|local_template|shared_template`; local
-requires independently exact wrappers. Block requests additionally pin positive
-`block_min_instructions` and `ranking:{path,expected_ranking_digest}`. Candidate/
-fingerprint must be selected under same floor/global-or-matching target focus.
-Revalidate ranking at prepare/pre-write; execution context retains ranking file
-state for history without reranking intended POST. Blocks support template concerns
-only. Membership does not waive coverage, private proofs or parent review.
+Bind `bof3.macro-transaction-request/v1` to `target`, `concern`,
+`candidate_artifact`, nonempty canonical `affected_functions` and adopted dirty
+baseline. Use `constant|expression|local_template|shared_template`; local concerns
+require independently exact wrappers. For blocks, use template concerns and pin
+positive `block_min_instructions` and `ranking:{path,expected_ranking_digest}`.
+Select candidate/fingerprint under the same floor and global-or-matching target
+focus. Revalidate ranking at prepare/pre-write; retain its file state in execution
+history without reranking intended POST. Membership waives no coverage, private
+proof or parent review.
 
-Closed `bof3.reviewed-macro-opportunity/v1`: `schema`, `candidate_id`,
+Use closed `bof3.reviewed-macro-opportunity/v1`: `schema`, `candidate_id`,
 `candidate_fingerprint`, `concern`, `owners`, `owner_fingerprints`,
 `semantic_guards`, `observations`, `review`, `digest`. Named independent reviewer
-must accept; guards/observations follow discovery reference. V1 private paths must
-already belong to one manifest. Shared owners sanctioned templates/public headers
-with wrapper dependency/private-proof evidence.
+must accept the discovery guards/observations. V1 private paths must already belong
+to one manifest. Shared owners require sanctioned templates/public headers and
+wrapper dependency/private-proof evidence.
 
-Opportunity capture cap 4 MiB, proof-envelope cap 64 MiB each. One confined
-metadata-checked sample supplies parsing/raw hash; reject symlinks, oversize or
-observed mutation. Capture is not later freshness or aggregate memory bound.
+Cap opportunity capture at 4 MiB and each proof envelope at 64 MiB. Parse/hash one
+confined metadata-checked sample; reject symlinks, oversize or observed mutation.
+Capture proves no later freshness and supplies no aggregate memory bound.
 
-Preparation rejects known omitted consumers across whole writable owner/affected
-files, not merely selected macro. Follow indexed transitive uses; grouped source
-hashes/metadata ranges must map each use to exactly one indexed function. Contextual
-source/header-through-includer uses conservatively cover all source members; direct
-uses do not make unreferenced siblings consumers. Ambiguous identity blocks;
-a covered sibling never substitutes. Repeat before writes.
+Reject omitted consumers across whole writable owner/affected files. Follow indexed
+transitive uses and map grouped-source hashes/metadata ranges to exactly one indexed
+function per use. Contextual source/header-through-includer uses cover all source
+members; direct uses exclude unreferenced siblings. Block ambiguous identities;
+covered siblings cannot substitute. Repeat before writes.
 
-Literal quoted/angle includes traverse source/include/PsyQ roots with containment
-and cycle detection. Quotes first search including directory; angles do not.
-Compact directives, comments and continuations supported; commented-out includes
-excluded. Conditional/computed selection remains unproven. Lexical coverage never
-replaces actual preprocessor binding or independent `all_use_sites`.
+Traverse literal quoted/angle includes through source/include/PsyQ roots with
+containment and cycle checks. Quotes first search the including directory; angles
+do not. Support compact directives, comments and continuations; exclude commented
+includes. Conditional/computed selection remains unproven. Require actual
+preprocessor binding and independent `all_use_sites` beyond lexical coverage.
 
-Grouped C sources require one explicit lift owner, complete Splat/claim/index
-membership and a current indexed macro-source hash. Every attached ordinary
-function must appear in `affected_functions` for preservation checks. Capture is
-limited to 4 MiB. Proposed images preserve ordered addresses, metadata, spellings,
-kinds, progress and text outside implementations. Template replacement, C-owner
-macro-definition changes and new includes remain refused for grouped images.
-Legacy single-function behavior is unchanged. Per-member native checks remain
-required and currently refuse ordinary grouped sources; preparation grants no
-native preservation or production acceptance.
+For grouped C, require one explicit lift owner, complete Splat/claim/index
+membership, current indexed macro-source hash and every attached ordinary function
+in `affected_functions`. Cap capture at 4 MiB. Preserve address order, metadata,
+spellings, kinds, progress and text outside implementations. Refuse template
+replacement, C-owner macro-definition changes and new includes. Keep legacy
+single-function behavior. Require per-member native checks, which currently refuse
+ordinary grouped sources. Preparation proves no native preservation or acceptance.
 
-CHANGES maps allowed paths to complete text. Owner rederives, confines writes,
-gates and publishes immutable receipts. Context requires actual implementation ID;
-legacy omission cannot gain final acceptance. Ordinary failure restores owned PRE
-after confirmed cleanup; uncertain descendants retain POST/backing. See lifecycle
-for lease, native 120s/2 MiB bounds, publication races, v3 backing and guarded recovery.
-`verify` checks integrity/native evidence, not final acceptance.
+Map CHANGES from allowed paths to complete text. Let the owner rederive scope,
+confine writes, run gates and publish immutable receipts. Context/final acceptance
+requires the actual implementation ID. Follow lifecycle rules for lease, 2 MiB
+native output, publication, v3 backing, rollback and uncertain cleanup.
+`verify` checks integrity/native evidence; parent review supplies final acceptance.
 
 ## Private-header creation
 
-V2 permits one new target-private `local_template` header, not shared-header/type
-creation. No dummy scaffolding/manual extraction. Fresh caller authority/bounds
-required; historical failures/consumed entries stay consumed.
+V2 permits one new target-private `local_template` header. Require fresh caller
+authority/bounds and retain consumed failures/entries. Do not create shared
+headers/types, dummy scaffolding or manual extractions.
 
-`bof3.reviewed-macro-opportunity/v2` keeps v1 fields plus exactly
+Use v1 fields in `bof3.reviewed-macro-opportunity/v2` plus exactly
 `creation:{target,header,header_text,manifest_before,manifest_after}`. Digest pins
-complete header and both manifest texts. Only append header to target `headers`;
-identity/all other facts unchanged. `owners` only absent header;
-`owner_fingerprints` value null. Canonical `include/` path ends `_internal.h`, parent
-exists, no existing file/manifest claim. Ordinary loader still requires live files.
+complete header and both manifest texts. Append only to target `headers`; preserve
+identity/all other facts. Set `owners` to the absent header only and that header's
+`owner_fingerprints` entry to null. Require a canonical `include/` path ending
+`_internal.h`, an existing parent and no file/manifest claim. Ordinary loading
+still requires live files.
 
-Bind exact header/manifest POST plus affected sources. Planned-POST validation
-normalizes include aliases, literal closure, all new-header consumers equal affected
-source set, support-source ownership, no cross-target reach, no new macro identifier
-already present in C/header/templates. Preserve target/null PRE/config PRE hashes.
-Semantic/all-use/human-value/exact-wrapper review remains mandatory.
+Bind exact header/manifest POST and affected sources. Validate include aliases,
+literal closure, support-source ownership, new-header consumers equal to the
+affected source set, no cross-target reach and no new identifier already in
+C/header/templates. Preserve target/null PRE/config PRE hashes and require
+semantic/all-use/human-value/exact-wrapper review.
 
-Recovery captures absent PRE; no-overwrite install and identity-safe restoration
-preserve foreign changes. Missing history membership is not absence proof or
-shared promotion authority. Retained history checks original null PRE; generic
-revalidation uses POST as adopted PRE plus `structural_manifest`, not fresh creation
-admission. That retained POST form rejects ordinary run. Native gates, independent
-application review and parent acceptance still required.
+Capture absent PRE and preserve foreign changes through no-overwrite installation
+and identity-safe restoration. Missing history membership proves neither absence
+nor shared promotion authority. History checks original null PRE; generic
+revalidation adopts POST plus `structural_manifest` as PRE. That form cannot admit
+fresh creation or ordinary run. Require native gates, independent application
+review and parent acceptance.
 
 ## Parent review
 
@@ -118,10 +113,10 @@ context baseline. Structured digests `v1:` SHA-256 compact sorted-key JSON; arti
 hashes cover bytes. Closed `bof3.macro-reviewed-application/v1`: `schema`, original
 `application`, `parent_review`, `digest` over other fields. Externally pin envelope.
 
-Final verification rechecks original proof/receipts/current closure/reviewer/unrelated
-adopted state without writes/gates/rebinding. Same-state replay valid; changed state,
-owner/application rejects. Historical success after tooling drift is not current
-acceptance. Local attestation is not remote signature or malicious-writer defense.
+Final verification rechecks original proof/receipts/current closure/reviewer and
+unrelated adopted state without writes/gates/rebinding. Allow same-state replay;
+reject changed state/owner/application. Historical tooling success is not current
+acceptance; local attestation is no remote signature or malicious-writer defense.
 
 Published resume uses original pins:
 
@@ -129,9 +124,9 @@ Published resume uses original pins:
 bin/harness macros resume ORIGINAL_MANIFEST APPLICATION --expected-manifest-digest MANIFEST_PIN --expected-application-digest APPLICATION_PIN --implementation-run-id ORIGINAL_RUN
 ```
 
-Optional paired `--reviewed-envelope REVIEWED --expected-envelope-digest ENVELOPE_PIN`
-checks current acceptance. Lifecycle owns `needs-review|skip-accepted` semantics;
-no extraction, durable skip token, termination proof or budget renewal.
+Pair optional `--reviewed-envelope REVIEWED --expected-envelope-digest ENVELOPE_PIN`
+to check current acceptance. Follow lifecycle `needs-review|skip-accepted` rules;
+resume grants no extraction, durable skip token, termination proof or budget renewal.
 
 ## Revalidation and shared promotion
 

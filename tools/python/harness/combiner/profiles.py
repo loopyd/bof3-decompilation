@@ -20,7 +20,6 @@ from harness.build.preservation import (
     validate_destination_text,
     validate_preservation_size,
 )
-from harness.common.deadlines import check_deadline
 from harness.common.inputs import relative
 from harness.domain.claims import collect_manifest_source_addresses
 from harness.domain.functions import collect_lift_metadata
@@ -268,5 +267,4 @@ def inspect_profiles(
         raise ValueError("compiler profile fingerprint drifted")
     result = {**result, "fingerprint": digest}
     validate_preservation_size(result)
-    check_deadline()
     return result

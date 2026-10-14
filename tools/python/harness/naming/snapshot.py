@@ -6,7 +6,6 @@ import hashlib
 import stat
 from pathlib import Path
 
-from harness.common.deadlines import check_reserve
 from harness.common.files import atomic_write
 from harness.common.git import capture_git_index
 from harness.common.inputs import file_state
@@ -34,10 +33,8 @@ def create_snapshot(
     transaction: str,
     *,
     expected_report_sha256: str,
-    reserve_seconds: float | None = None,
 ) -> Path:
     """Capture exact validated PRE files without editing source or report bytes."""
-    check_reserve(reserve_seconds)
     root = root.resolve()
     path = canonical_report_path(root, report_path)
     require_pin(expected_report_sha256)
@@ -76,7 +73,6 @@ def create_snapshot(
         }
         if frozen_files[binding["report"]][0]["sha256"] != expected_report_sha256:
             raise ValueError("snapshot report changed during capture")
-        check_reserve(reserve_seconds)
         output = directory(root)
         files = []
         for name, (metadata, content) in observations.items():
@@ -103,7 +99,6 @@ def create_snapshot(
             ):
                 raise ValueError("naming inputs changed during snapshot")
             require_writer(root)
-            check_reserve(reserve_seconds)
 
         for item in files:
             expected = (
@@ -122,5 +117,4 @@ def create_snapshot(
         if read_state(result)["sha256"] != compute_sha256(content):
             raise ValueError("published snapshot differs from captured PRE")
         require_writer(root)
-        check_reserve(reserve_seconds)
         return result

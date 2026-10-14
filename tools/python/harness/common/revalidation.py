@@ -9,7 +9,6 @@ from pathlib import Path
 from harness.common import execution as execution_context
 from harness.common.process import run_command
 from harness.common.digests import digest
-from harness.common.deadlines import bind_deadline, check_deadline
 from harness.common.evidence import evidence_output_path
 from harness.common.files import atomic_write
 from harness.common.paths import require_absent
@@ -112,7 +111,6 @@ def _context_record(record: dict) -> dict:
     }
 
 
-@bind_deadline
 @protect_artifacts
 @exclude_writers
 def revalidate(
@@ -128,7 +126,6 @@ def revalidate(
     runner=run_command,
     output: str | None = None,
     intervening: list | None = None,
-    deadline: float | None = None,
 ) -> dict:
     if intervening is None:
         intervening = []
@@ -212,7 +209,6 @@ def revalidate(
         manifest_validator=manifest_validator,
     )
     if output is not None:
-        check_deadline()
         verify_writer(root)
         atomic_write(
             root,
@@ -228,7 +224,6 @@ def revalidate(
             verify=verify,
             manifest_validator=manifest_validator,
         )
-    check_deadline()
     return record
 
 

@@ -547,9 +547,8 @@ clean-C residual; never add an assembly-backed source stub.
 
 ## Permuter
 
-Use `bin/harness lift permute TARGET@0xADDRESS --time-limit 60 -j N` for source-shape
-search (60s hard cap; `--allow-long-run` is interactive-only). Lessons: fix
-structure/declarations first; search only clean-C candidates. The permuter
+Use `bin/harness lift permute TARGET@0xADDRESS -j N` for source-shape search.
+Fix structure and declarations first; search only clean-C candidates. The permuter
 handles scheduling/allocation changes, not wrong control-flow shape;
 pointer-hoist mutations can unlock inaccessible allocations; record
 permuter-found shapes in the skill references (knowledge capture).

@@ -48,9 +48,8 @@ not reviewed maps: promote only verified target-local facts into `symbols.txt`.
    boundary when evidence requires; rerun `bin/harness source symbols check TARGET` and
    `bin/harness source splat TARGET` after configuration changes.
 5. `bin/harness lift asm-diff` for instructions; `bin/harness lift byte-match` for raw equality.
-6. Credible semantics but wrong source shape: one bounded
-   `bin/harness lift permute TARGET@0xADDRESS --time-limit 60 -j N` coordinator (60s cap;
-   `--allow-long-run` is interactive-only).
+6. With credible semantics but wrong source shape, use one
+   `bin/harness lift permute TARGET@0xADDRESS -j N` coordinator.
 
 Permuter scores rank candidates, never accept a match. Never run two
 coordinators for one function.

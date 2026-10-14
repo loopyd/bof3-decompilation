@@ -271,9 +271,9 @@ DOMAINS: Mapping[str, Domain] = {
                 example="bin/harness lift flag-search exe/logo@0x801CE758",
             ),
             "permute": Action(
-                "bounded source-shape search",
+                "source-shape search",
                 "harness.commands.permute",
-                example="bin/harness lift permute exe/logo@0x801CE758 --time-limit 30",
+                example="bin/harness lift permute exe/logo@0x801CE758",
             ),
             "status": Action(
                 "audit exact/partial/invalid lifts",

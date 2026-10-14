@@ -8,7 +8,6 @@ import os
 import stat
 from pathlib import Path
 
-from harness.common.deadlines import check_deadline
 from harness.common.directory import open_parent_fd, validate_repo_path
 from harness.common.files import read_file
 from harness.common.git import git_index_backup, read_git
@@ -41,7 +40,6 @@ def observe_path(root: Path, name: str) -> dict | None:
                     raise ValueError(f"lift inventory open raced: {name}")
                 checksum = hashlib.sha256()
                 while chunk := stream.read(1024 * 1024):
-                    check_deadline()
                     checksum.update(chunk)
                 payload = {"sha256": checksum.hexdigest()}
         else:
@@ -80,7 +78,6 @@ def list_workspace(root: Path) -> set[str]:
     pending = [""]
     while pending:
         prefix = pending.pop()
-        check_deadline()
         output = read_git(
             root,
             [
@@ -110,13 +107,11 @@ def list_workspace(root: Path) -> set[str]:
 
 
 def capture_inventory(root: Path, paths: list[str]) -> dict:
-    check_deadline()
     if not (root / ".git").exists():
         raise ValueError("native lifting requires a Git-aware workspace")
     names = list_workspace(root) | set(paths)
     entries = {}
     for name in sorted(names):
-        check_deadline()
         entries[name] = observe_path(root, name)
     index = git_index_backup(root)
     if index is None or index.path.with_name(index.path.name + ".lock").exists():

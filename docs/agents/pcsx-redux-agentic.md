@@ -32,13 +32,13 @@ BIOS, executables, and disc images; keep proprietary inputs and captures local.
 
 ```sh
 mkdir -p out/runtime
-bin/harness runtime run --bios inputs/external/bios/scph5501.bin --mission smoke --output out/runtime/smoke --timeout 30
+bin/harness runtime run --bios inputs/external/bios/scph5501.bin --mission smoke --output out/runtime/smoke
 ```
 
 Select exactly one of `--mission NAME` and `--script TRUSTED_LUA`. The external
 route accepts noncanonical `--module NAME=PATH` inputs. Lua runs as trusted host
-code, without a sandbox. The harness stages inputs and fresh settings, bounds the
-process, cleans it up, and validates captures and completion before issuing a
+code, without a sandbox. The harness stages inputs and fresh settings, cleans up
+the process, and validates captures and completion before issuing a
 passed receipt. See [runtime procedures](../../.agents/skills/psx-emulator/references/runtime.md)
 for arguments, origins, state continuation, limits, and evidence requirements.
 

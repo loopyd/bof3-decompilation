@@ -9,7 +9,6 @@ from pathlib import Path
 from harness.common.commands import command as canonical
 from harness.common.commands import tool_id
 from harness.common.inputs import file_state
-from harness.common.deadlines import check_deadline
 from harness.common.files import atomic_write
 from harness.common.lease import acquire_writer, require_writer
 from harness.io import unique_object
@@ -86,7 +85,6 @@ def prepare_attestation(
         recheck(root, bundle, row)
         for reference in references:
             _artifact(reference)
-        check_deadline()
         require_writer(root)
         output = directory(root) / "parent-attestation.json"
         content = encode(payload)
@@ -99,7 +97,6 @@ def prepare_attestation(
             _artifact(reference)
         _artifact({"path": str(output), "sha256": compute_sha256(content)})
         require_writer(root)
-        check_deadline()
         return output
 
 
@@ -212,7 +209,6 @@ def attestation(root: Path, bundle, row, value) -> None:
         cwd=root,
         capture_output=True,
         check=True,
-        timeout=120,
     ).stdout.rstrip(b"\n")
     if (
         file_state(Path(os.fsdecode(path)))["sha256"]

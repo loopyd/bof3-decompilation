@@ -1,4 +1,4 @@
-"""Bounded Git subprocess transport without index or repository mutation."""
+"""Git subprocess transport without index or repository mutation."""
 
 from __future__ import annotations
 
@@ -16,7 +16,6 @@ def run_git(directory: Path, *arguments: str, data: bytes | None = None) -> byte
         input=data,
         capture_output=True,
         check=False,
-        timeout=60,
         env=environment,
     )
     if result.returncode:

@@ -6,7 +6,6 @@ import os
 from pathlib import Path
 import stat
 
-from harness.common.deadlines import check_deadline
 from harness.common.digests import digest
 from harness.common.directory import open_parent_fd, validate_repo_path
 from harness.decomp.inventory import observe_path
@@ -49,11 +48,9 @@ def capture_members(root: Path, paths: list[str]) -> dict:
     result = {}
     for name in parents:
         validate_repo_path(name)
-        check_deadline()
         before = capture_directory(root, name)
         entries = {}
         for child in sorted((root / name).iterdir()):
-            check_deadline()
             relative = child.relative_to(root).as_posix()
             entries[relative] = observe_path(root, relative)
         if before != capture_directory(root, name):

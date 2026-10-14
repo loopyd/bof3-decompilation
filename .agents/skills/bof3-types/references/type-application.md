@@ -9,12 +9,12 @@ Branches: [discovery](#discovery), [prepare/run](#prepare-and-run),
 ## Discovery
 
 Check `bin/harness analysis rz-project status TARGET --json` and
-`bin/harness analysis query --json status`. Stale evidence blocks preparation;
-parent refreshes at safe checkpoint only. `analysis index --recover` refreshes
-all stale manifest snapshots then rebuilds disposable index; require both statuses
-fresh. Never refresh during pinned transaction. Inspect `bin/harness analysis query
---help` for `types`, `type-uses`, `type-candidates` and owner queries. Target-qualified
-original accesses/callers/consumers outrank analyzer representations.
+`bin/harness analysis query --json status`; stale evidence blocks preparation.
+Parent alone refreshes at safe checkpoints with `analysis index --recover`, which
+refreshes all stale snapshots/rebuilds disposable index. Require both statuses
+fresh; never refresh pinned transactions. Inspect `bin/harness analysis query --help`
+for `types`, `type-uses`, `type-candidates` and owners. Prioritize target-qualified
+original accesses/callers/consumers over analyzer representations.
 
 Reuse target/shared/PsyQ types before new alias/aggregate/prototype. Prove width,
 signedness, pointer depth, alignment, offsets, qualifiers and ABI. Unaligned `u32`
@@ -37,48 +37,46 @@ bin/harness types run MANIFEST CHANGES APPLICATION --implementation-run-id RUN
 bin/harness types verify APPLICATION --expected-application-digest APPLICATION_PIN
 ```
 
-Accounted inventory is not accepted cleanup. Candidate requires separate independent
-review, current fingerprint, resolved representation/semantics and two independent
-observations. Dirty request explicitly adopts exact current preflight/baseline
-digest; no later drift exemption. Canonical repo-relative opportunity capture is
-confined, metadata-checked, capped 4 MiB; parsing/hash share same sample. Symlinks,
-oversize or observed mutation reject. Shared private-proof capture cap 64 MiB each,
-not aggregate bound. Admission capture never replaces live rederivation.
+Account inventory separately from acceptance. Require independent candidate review,
+current fingerprint, resolved representation/semantics and two independent
+observations. Adopt exact dirty preflight/baseline digest without later drift
+exemption. Parse/hash one confined metadata-checked canonical repo-relative
+opportunity sample capped at 4 MiB; reject symlinks, oversize or observed mutation.
+Cap each shared private proof at 64 MiB, not aggregate memory. Rederive live inputs
+after admission capture.
 
-Changes JSON maps only manifest-owned paths to complete replacement text. Owner
-runs checks/immutable receipts and ordinary-failure rollback under lifecycle rules.
-Existing grouped C sources require one explicit lift owner and every attached
-ordinary function in `affected_functions`. Preparation reconciles complete records
-with reviewed boundaries, claims, indexed symbols and statuses, and source hashes.
-Proposed images preserve record order, metadata, spellings and every byte outside
-implementation spans; type edits may change bodies and signatures. Captured C files
-are capped at 4 MiB. Native checks still run for every member and currently reject
-grouped ordinary compilation. Preparation does not establish native preservation
-or authorize source consolidation.
-Externally retain application digest before verification; never derive expected pin
-from supplied artifact. Shared preparation requires two independently accepted
-private envelopes, distinct targets/paths/digests, identical representation and
-semantic contracts, no target addresses, private/exact-wrapper and shared dependency
-proof. Integrity pins or legacy `expected_application_digest` never substitute.
+Map Changes JSON only from manifest-owned paths to complete replacements. Follow
+lifecycle checks/immutable receipts/ordinary-failure rollback. For grouped C,
+require one explicit lift owner and every attached ordinary function in
+`affected_functions`. Reconcile complete records with reviewed boundaries, claims,
+indexed symbols/statuses/source hashes. Preserve record order, metadata, spellings
+and bytes outside implementations; bodies/signatures may change. Cap C capture at
+4 MiB. Run per-member native checks, which currently reject ordinary grouped
+compilation. Preparation grants no native preservation or consolidation authority.
+Retain application digest externally before verification, never from the supplied
+artifact. For shared preparation,
+require two independently accepted private envelopes with distinct targets/paths/
+digests, identical address-free representation/semantic contracts, private/exact
+wrappers and shared dependency proof. Integrity pins or legacy
+`expected_application_digest` cannot substitute.
 
 ## Parent review
 
 ### Linked storage and aggregate route
 
-`bof3.type-transaction-request/v3` uses the `linked` concern for exactly
+Use `bof3.type-transaction-request/v3` with the `linked` concern for exactly
 `emi/battle/battle/15@1F800044:storage` and
 `emi/battle/battle/15@1F800044:aggregate_region`. It requires target
-`emi/battle/battle/15` and its existing
-`include/bof3/battle/battle15_internal.h`. V2 requests retain their isolated
-concerns. Linked proofs cannot supply shared promotion.
+`emi/battle/battle/15` and existing `include/bof3/battle/battle15_internal.h`.
+Keep V2 concerns isolated; linked proofs cannot supply shared promotion.
 
-The v3 request retains `schema`, `target`, `concern`, `header`,
+Retain v3 `schema`, `target`, `concern`, `header`,
 `index_candidate_ids`, `candidate_artifacts`, `affected_functions` and optional
-`adopted_baseline`. It adds `linked_pair`, with exactly `storage_id`,
+`adopted_baseline`. Add `linked_pair`, with exactly `storage_id`,
 `aggregate_id`, `relation`, `artifact`, `artifact_sha256` and `artifact_digest`.
-The relation is `pointer-cell-pointee`. Candidate artifacts follow sorted index-ID
-order and pass the existing `alias` and `layout` reviews separately. Both retain
-the lead anchor `0x1F800044..0x1F800048` and original-backed observations.
+Use `pointer-cell-pointee`; sort artifacts by index ID and pass `alias`/`layout`
+reviews separately. Retain `0x1F800044..0x1F800048` and original-backed observations
+in both.
 
 The pinned joint artifact is `bof3.type-linked-candidate/v1`, with exactly
 `schema`, `target`, `storage`, `aggregate`, `link`, `review` and `digest`.
@@ -118,7 +116,7 @@ The v3 manifest retains the full joint record and immutable artifact inputs unde
 Application `representation` and `semantics` each retain `storage`, `aggregate`
 and `link`. Replay rejects omitted roles and changed summaries. The parent review
 artifact names both frozen IDs and the joint digest. Existing parent bindings,
-native receipts, history, deadlines and rollback rules still apply. Additional
+native receipts, history and rollback rules still apply. Additional
 proof owners require explicit participation without writable paths.
 
 Preparation includes indexed original uses and transitive private-header consumers.

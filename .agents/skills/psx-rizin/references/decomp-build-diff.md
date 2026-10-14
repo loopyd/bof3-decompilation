@@ -9,7 +9,7 @@ flowchart LR
     M -->|yes| MAT[matching]
 ```
 
-Runtime-validated ≠ matching. Matching bytes do not independently prove names/types.
+Keep runtime validation, byte matching and semantic names/types as separate gates.
 
 ## PS1 decompilation stack
 
@@ -24,7 +24,7 @@ Runtime-validated ≠ matching. Matching bytes do not independently prove names/
 | decomp-permuter | explore equivalent C transformations |
 | decomp.me | isolated scratch/matching experiments |
 
-Real PS1 projects combine several; never rely on one decompiler.
+Combine tool evidence; do not rely on one decompiler.
 
 ## Compiler identification
 
@@ -47,22 +47,22 @@ Before tuning C:
 | `build/` | generated objects/binaries |
 | `out/` | disposable snapshots, index, matching workspaces |
 
-Before BOF3 source work, read [target ownership](../../bof3-re/references/target-contract.md)
-and [matching protocol](../../bof3-re/references/match-loop.md). Manifest claims own
-identity; filenames never substitute. User documentation is not a runtime dependency.
+Before source work, read [target ownership](../../bof3-re/references/target-contract.md)
+and [matching protocol](../../bof3-re/references/match-loop.md). Use manifest claims
+for identity, never filenames or user documentation as runtime contracts.
 
 ## Function iteration
 
 1. Extract exact original bytes/instructions.
-2. Confirm boundaries + relocations.
+2. Confirm boundaries/relocations.
 3. Draft semantic C.
 4. Compile with pinned toolchain.
-5. Compare instructions + relocations.
+5. Compare instructions/relocations.
 6. Diagnose control flow, expression ordering, register allocation, stack layout, delay slots.
 7. Apply one intentional change at a time.
 8. Preserve readability unless a matching idiom is proven necessary.
-9. Record score + first differing instruction.
-10. Runtime regression when integration is possible.
+9. Record score/first differing instruction.
+10. Validate runtime behavior when integration is possible.
 
 ## Common mismatch causes
 
@@ -70,16 +70,16 @@ Signature/signedness · source expression order · temporary lifetime · switch 
 
 ## Build comparison
 
-> `bin/build-diff` is NOT wired in this repo. Use the wired entrypoints:
+Use harness comparisons; `bin/build-diff` is not wired:
 
 ```bash
 bin/harness lift asm-diff TARGET@0xADDRESS        # instruction-level diff of one authored lift
 bin/harness lift byte-match TARGET@0xADDRESS      # raw byte-equality acceptance check
-bin/harness lift permute TARGET@0xADDRESS --time-limit 60   # bounded source-shape search
+bin/harness lift permute TARGET@0xADDRESS        # source-shape search
 bin/harness lift status TARGET             # exact/partial/invalid lift audit
 ```
 
-Generic projects outside this repo: a `build-diff`-style wrapper reads environment variables rather than imposing a build system:
+Outside this repo, a `build-diff`-style wrapper can read build settings from environment variables:
 
 ```bash
 PSX_BUILD_CMD='ninja -C build' \
@@ -88,8 +88,8 @@ PSX_ACTUAL=build/SLUS.bin \
 build-diff
 ```
 
-Such wrappers record SHA-256 + byte differences; prefer `bin/harness lift asm-diff`/`bin/harness lift byte-match` when they already cover the comparison.
+Record SHA-256/byte differences; prefer `bin/harness lift asm-diff`/`bin/harness lift byte-match` for covered comparisons.
 
 ## Reproducibility
 
-Pin tools in lockfiles/containers where possible. Retain compiler/assembler hashes, commands, environment, generated linker scripts/maps, original/rebuilt object hashes, and diff reports. Never publish copyrighted binaries or large slices merely for CI.
+Pin tools in lockfiles/containers where possible. Retain compiler/assembler hashes, commands, environment, generated linker scripts/maps, original/rebuilt object hashes and diffs. Do not publish copyrighted binaries/large slices for CI.

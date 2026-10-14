@@ -14,7 +14,6 @@ from harness.common import promotion as shared_pre
 from harness.common.process import run_command
 from harness.common.checks import capture_partial_baselines, required_checks
 from harness.common.digests import digest
-from harness.common.deadlines import bind_deadline, suspend_work_deadline
 from harness.common.files import preflight_existing_replacements, read_file
 from harness.common.history import validate_application_history
 from harness.common.lease import exclude_writers, verify_writer
@@ -444,7 +443,6 @@ def _manifest(root: Path, value: object, *, rederive: bool = False) -> dict[str,
     return value
 
 
-@bind_deadline
 @protect_artifacts
 @exclude_writers
 def run_transaction(
@@ -456,7 +454,6 @@ def run_transaction(
     implementation_run_id: str | None = None,
     participating_targets: list[str] | None = None,
     output: str | None = None,
-    deadline: float | None = None,
 ) -> dict[str, Any]:
     manifest = _manifest(root, manifest_value, rederive=True)
     links.validate_participation(manifest, implementation_run_id, participating_targets)
@@ -565,23 +562,22 @@ def run_transaction(
     except ProcessCleanupError:
         raise
     except BaseException:
-        with suspend_work_deadline():
-            try:
-                verify_writer(root)
-                rollback(root, backup, quarantines)
-            except ProcessCleanupError:
-                raise
-            except BaseException as error:
-                raise RuntimeError("type transaction rollback failed") from error
-            try:
-                verify_restored_state(root, manifest, index_backup, safeguards)
-            except ProcessCleanupError:
-                raise
-            except BaseException as error:
-                raise RuntimeError(
-                    "type transaction rollback failed or is unverified; "
-                    "external state preserved; parent review required"
-                ) from error
+        try:
+            verify_writer(root)
+            rollback(root, backup, quarantines)
+        except ProcessCleanupError:
+            raise
+        except BaseException as error:
+            raise RuntimeError("type transaction rollback failed") from error
+        try:
+            verify_restored_state(root, manifest, index_backup, safeguards)
+        except ProcessCleanupError:
+            raise
+        except BaseException as error:
+            raise RuntimeError(
+                "type transaction rollback failed or is unverified; "
+                "external state preserved; parent review required"
+            ) from error
         raise
 
 

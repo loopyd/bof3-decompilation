@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from typing import Literal
-from harness.common.deadlines import check_deadline
 from harness.common.failures import FailureEvent
 
 import json
@@ -572,7 +571,6 @@ def _verify_references(
     pending.extend((kind, name, ref) for kind, ref in roots)
     reached = 0
     while pending:
-        check_deadline()
         reached += 1
         contract.require(
             max_entries is None or reached + len(pending) <= max_entries,

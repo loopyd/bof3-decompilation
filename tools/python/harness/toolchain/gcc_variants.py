@@ -72,7 +72,6 @@ class CompilerVariant:
             [str(exe), "--version"],
             capture_output=True,
             text=True,
-            timeout=30,
         )
         if result.returncode != 0:
             raise RuntimeError(f"{self.id}: gcc --version exited {result.returncode}")

@@ -8,7 +8,6 @@ from contextvars import ContextVar
 from dataclasses import dataclass
 from pathlib import Path
 
-from harness.common.deadlines import check_deadline
 from harness.common.failures import PolicyFailure, retain
 
 
@@ -53,7 +52,6 @@ def physical_read_bytes(
 ) -> bytes:
     """Read at most the declared byte limit without invoking an installed reader."""
     try:
-        check_deadline()
         if type(bound) is not int or bound < 0:
             raise PolicyFailure("artifact read limit must be a nonnegative integer")
         if not path.is_file():
@@ -79,7 +77,6 @@ def physical_read_bytes(
                 raise
         if len(content) > bound:
             raise PolicyFailure(f"artifact exceeds its read limit: {path}")
-        check_deadline()
         return content
     except Exception as error:
         if events is not None:
@@ -141,14 +138,12 @@ def write_bytes(
 ) -> None:
     """Create one captured artifact without replacing an existing file."""
     try:
-        check_deadline()
         if create_parents:
             path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         with path.open("xb") as stream:
             if stream.write(content) != len(content):
                 raise IncompleteWrite(f"incomplete artifact write: {path}")
         path.chmod(0o400 if readonly else 0o600)
-        check_deadline()
     except Exception as error:
         if events is not None:
             retain(events, error, phase=write_phase, path=path, origin="ordinary")

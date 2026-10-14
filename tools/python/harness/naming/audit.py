@@ -21,7 +21,6 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from harness.common.commands import command_at
-from harness.common.deadlines import check_deadline
 from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
 from harness.naming.context import SCHEMA_V2, SCHEMA_V3, TargetContext
 from harness.naming.editing import report_mutation
@@ -345,7 +344,6 @@ def prepare_transaction(
             root, path, report, row, result["pre_apply"], result["manifest"]
         )
         validate(root, target, report, report_path=path)
-        check_deadline()
         if check_only:
             if path.read_bytes() != original:
                 raise ValueError("proposal report changed concurrently")
@@ -357,7 +355,6 @@ def prepare_transaction(
                 "prepared": False,
                 "report_sha256": hashlib.sha256(original).hexdigest(),
             }
-            check_deadline()
             return result
         atomic_write_if_unchanged(path, original, report)
     return {

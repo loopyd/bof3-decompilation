@@ -295,16 +295,6 @@ def test_run_rejects_negative_jobs(tmp_path: Path) -> None:
         permute.run(ns)
 
 
-def test_run_rejects_zero_time_limit(tmp_path: Path) -> None:
-    _stub_tools(tmp_path)
-    src = _lift_env(tmp_path)
-    ns = permute.build_parser().parse_args(
-        ["--root", str(tmp_path), str(src), "--time-limit", "0"]
-    )
-    with pytest.raises(ValueError, match="--time-limit must be positive"):
-        permute.run(ns)
-
-
 def test_run_rejects_prepare_only_with_prepared(tmp_path: Path) -> None:
     _stub_tools(tmp_path)
     src = _lift_env(tmp_path)
@@ -440,7 +430,7 @@ def test_run_delegates_permuter_through_toolchain(
     assert call_root == tmp_path
     assert "-u" not in call_args  # interpreter flag, now owned by toolchain
     assert str(workspace) == call_args[-1]
-    assert call_kwargs.get("timeout") == 30.0
+    assert "timeout" not in call_kwargs
 
 
 def test_run_propagates_permuter_exit_code(
@@ -467,46 +457,6 @@ def test_run_propagates_permuter_exit_code(
     )
     rc = permute.run(ns)
     assert rc == 5
-
-
-# ---------------------------------------------------------------------------
-# run — timeout handling
-# ---------------------------------------------------------------------------
-
-
-def test_run_timeout_returns_zero(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    _stub_tools(tmp_path)
-    src = _lift_env(tmp_path)
-    workspace = tmp_path / "workspace"
-    workspace.mkdir()
-    for name in ("base.c", "target.o", "compile.sh", "settings.toml"):
-        (workspace / name).touch()
-
-    monkeypatch.setattr(permute.fcntl, "flock", lambda fd, op: None)
-    monkeypatch.setattr(
-        DecompPermuterToolchain,
-        "execute",
-        lambda self, args, **kw: (_ for _ in ()).throw(
-            subprocess.TimeoutExpired(args, timeout=5)
-        ),
-    )
-
-    ns = permute.build_parser().parse_args(
-        [
-            "--root",
-            str(tmp_path),
-            str(src),
-            "f",
-            "--prepared",
-            str(workspace),
-            "--time-limit",
-            "5",
-        ]
-    )
-    rc = permute.run(ns)
-    assert rc == 0
 
 
 # ---------------------------------------------------------------------------

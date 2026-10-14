@@ -1,6 +1,6 @@
 # Rizin command reference
 
-Verify against installed `rizin -h` and `<cmd>?`; commands evolve. For PS1 decision/safety rules see [rizin-playbook.md](rizin-playbook.md).
+Verify commands with installed `rizin -h`/`<cmd>?`. Read the [PS1 playbook](rizin-playbook.md) for decisions/safety.
 
 ## Core
 
@@ -55,13 +55,12 @@ bin/harness analysis rizin -N -n -q -e scr.color=false -e log.quiet=true \
   -c 'aa;aac;aar;aflj;q' payload.bin
 ```
 
-Production scripts: one independent Rizin invocation per JSON command (reduces interactive-state ambiguity), or `rzpipe`; store stderr separately.
+Use one independent Rizin invocation per JSON command or `rzpipe`; store stderr separately.
 
 ## PS1 decompiler plugin
 
-Build and explicitly load `rz-psxdec.so` as described in the
-[workspace guide](../../../../tools/retdec-psx/README.md). Inspect `pdz?` and
-`pdza?` on the loaded plugin. `Lcj` reports core-plugin names and build versions.
+Build/load `rz-psxdec.so` through the [workspace guide](../../../../tools/retdec-psx/README.md).
+Inspect loaded `pdz?`/`pdza?`; use `Lcj` for plugin names/build versions.
 
 | Command | Meaning |
 | --- | --- |
@@ -76,9 +75,9 @@ Build and explicitly load `rz-psxdec.so` as described in the
 | `pdzao` | Inspect the active native memory context |
 | `pdze` | Show the output-directory environment setting (`DEC_SAVE_DIR`) |
 
-Ordinary function commands use the current Rizin analysis and supplied context.
-Original-only generation keeps authored references outside its inputs. Generated
-C remains a hypothesis until byte, contract, data and placement review.
+Use current Rizin analysis/supplied context for ordinary function commands. Exclude
+authored references from original-only inputs. Treat generated C as a hypothesis
+until byte/contract/data/placement review.
 The [overlay command guide](../../../../third_party/rz-psxdec/README.md#overlay-state)
 owns metadata, address evidence, mount ordering and context limits.
 
@@ -88,12 +87,10 @@ owns metadata, address evidence, mount ordering and context limits.
 bin/harness runtime status
 bin/harness runtime missions
 bin/harness runtime run --bios "$bios" --disc "$disc" \
-  --mission "$mission" --output "$fresh_output" --timeout 30
+  --mission "$mission" --output "$fresh_output"
 ```
 
-Select an embedded mission and its arguments through the
-[runtime procedures](../../psx-emulator/references/runtime.md). Supply licensed
-inputs and a fresh output directory. The harness records settings and input
-identities, bounds execution and validates captures. Maintained missions keep GDB
-disabled; separately authorized manual sessions follow
-[runtime analysis](runtime-and-replays.md).
+Select embedded missions/arguments through [runtime procedures](../../psx-emulator/references/runtime.md).
+Supply licensed inputs and fresh output; the harness records settings/input
+identities and validates captures. Keep GDB disabled for maintained missions.
+Follow [runtime analysis](runtime-and-replays.md) for authorized manual sessions.

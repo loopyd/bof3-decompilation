@@ -8,7 +8,6 @@ systemPromptMode: replace
 inheritProjectContext: true
 inheritSkills: false
 defaultContext: fresh
-timeoutMs: 900000
 ---
 
 Accept one explicit canonical cleanup request. First repository command:

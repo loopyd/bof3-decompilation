@@ -18,7 +18,6 @@ from harness.build.dispatch import (
 from harness.build.execution import Execution, capture_stage, complete_stage
 from harness.build.invocation import Stage, select_mode
 from harness.build.translation import prepare_translation
-from harness.common.deadlines import check_deadline, resolve_deadline, use_deadline
 from harness.common.files import atomic_write, read_file
 from harness.common.process import ProcessCleanupError, run_bounded
 
@@ -27,13 +26,11 @@ _STAGING_PREFIX = ".bof3-cc-"
 
 def select_staging_directory() -> Path:
     """Select a POSIX staging directory without tempfile's write probe."""
-    check_deadline()
     if tempfile.tempdir is not None:
         return Path(os.fsdecode(tempfile.tempdir)).absolute()
     candidates = [os.environ.get(name) for name in ("TMPDIR", "TEMP", "TMP")]
     candidates.extend(("/tmp", "/var/tmp", "/usr/tmp", str(Path.cwd())))
     for candidate in candidates:
-        check_deadline()
         if candidate:
             directory = Path(candidate).absolute()
             if directory.is_dir() and os.access(directory, os.W_OK | os.X_OK):
@@ -69,15 +66,13 @@ def _execute(
     result = run_bounded(
         cwd,
         arguments,
-        timeout=300.0,
-        deadline=resolve_deadline(),
         input_data=input_text.encode() if input_text is not None else None,
         output_limit=64 * 1024 * 1024,
         env=environment,
         supervisor=supervisor,
     )
     failed = result["exit_code"] != 0 or result["failure"]
-    status = result["exit_code"] or (124 if result["failure"] == "timeout" else 2)
+    status = result["exit_code"] or 2
     status = 128 - status if status < 0 else status
     try:
         if result["stderr"]:
@@ -111,15 +106,7 @@ def _execute_stage(stage: Stage, temporary: Path, execution: Execution) -> str:
 
 
 def _publish(output: Path, content: bytes, original: bytes | None) -> None:
-    check_deadline()
     quarantine = atomic_write(output.parent, output.name, content, expected=original)
-    try:
-        check_deadline()
-    except BaseException:
-        sys.stderr.write(
-            f"compiler publication crossed cutoff; inspect output {output}; quarantine {quarantine!r}\n"
-        )
-        raise
     if quarantine is not None:
         retained = output.parent / quarantine
         if (
@@ -127,7 +114,6 @@ def _publish(output: Path, content: bytes, original: bytes | None) -> None:
             == original
         ):
             retained.unlink()
-    check_deadline()
 
 
 def _publish_recorded(
@@ -292,14 +278,10 @@ def execute_compiler(
     root: Path, arguments: list[str], *, dispatch: Dispatch | None = None
 ) -> tuple[int, dict | None]:
     """Return checked execution evidence; a supplied dispatch remains caller-owned."""
-    deadline = os.environ.get("BOF3_WORK_DEADLINE")
     try:
-        with use_deadline(float(deadline) if deadline else None):
-            execution = _run(root.resolve(), arguments, dispatch=dispatch)
-            check_deadline()
-            evidence = execution.finish()
-            check_deadline()
-            return 0, evidence
+        execution = _run(root.resolve(), arguments, dispatch=dispatch)
+        evidence = execution.finish()
+        return 0, evidence
     except CompilerFailure as error:
         return error.status, None
     except BrokenPipeError:

@@ -381,7 +381,7 @@ def test_recover_atomically_repairs_orphan_selected_map_fingerprint(
         )
     before = output.stat().st_ino
 
-    assert index_command.run(Namespace(root=tmp_path, recover=True, timeout=5)) == 0
+    assert index_command.run(Namespace(root=tmp_path, recover=True)) == 0
 
     assert output.stat().st_ino != before
     connection = connect(tmp_path)
@@ -432,7 +432,7 @@ def test_connectors_reject_and_recover_repairs_foreign_key_schema(
         with pytest.raises(ValueError, match="table schema mismatch"):
             opener(tmp_path)
 
-    assert index_command.run(Namespace(root=tmp_path, recover=True, timeout=5)) == 0
+    assert index_command.run(Namespace(root=tmp_path, recover=True)) == 0
     assert output.stat().st_ino != before
     with sqlite3.connect(output) as connection:
         assert connection.execute(

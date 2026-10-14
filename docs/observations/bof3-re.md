@@ -32,7 +32,7 @@ Two one-hour worker timeouts consumed **7,200.288 seconds / 218 calls** across t
 
 The disjoint [K800 run metrics](../../tmp/observation-ingest/cycle6-k-window800-20260928/agent-run-metrics.json) record ten reverse workers over ten functions, with six exact claims and four escalations in **15,019.854 summed worker-seconds / 504 calls**. Five exact selectors match a reviewer pass (**1.438 worker claims per summed worker-hour; 1.159 reviewer-confirmed exacts per combined worker-and-reviewer hour**); the sixth claim is unjoined at the selected-source cutoff. Seven reviewer runs produced seven pass verdicts in **510.542 seconds / 33 calls**, covering five unique selectors because two cleanup edits required re-review. One read-only pass report incorrectly exited as failed after **62.192 seconds / three calls**; the project reviewer completion guard was disabled and later review runs returned normal status. Keep report verdict and process exit separate, and keep direct parent skill runtime unmeasured.
 
-Three one-hour timeouts consumed **10,800.086 seconds / 269 calls**, or **71.905%** of reverse-worker time, with no exacts; parent rollback restored all candidate edits, though one out-of-scope compiler-flags residue needed a separate restore. Five cleanup runs took **427.142 seconds / 20 calls** and produced two edits plus three no-change results. These measures support joining current partial queues to prior outcomes, tracking per-target progress before hard deadlines, checking the full write set after rollback, and separating cleanup yield from lift yield. They do not prove that extending or shortening the deadline would improve exact-match throughput.
+Three one-hour timeouts consumed **10,800.086 seconds / 269 calls**, or **71.905%** of reverse-worker time, with no exacts; parent rollback restored all candidate edits, though one out-of-scope compiler-flags residue needed a separate restore. Five cleanup runs took **427.142 seconds / 20 calls** and produced two edits plus three no-change results. These measures support joining current partial queues to prior outcomes, tracking per-target progress, checking the full write set after rollback, and separating cleanup yield from lift yield. They do not prove that extending or shortening the deadline would improve exact-match throughput.
 
 The 2026-09-26 metadata audit finds **260 explicit skill selections**, dated
 2026-07-23 through 2026-08-01 UTC. Recorded cost exists for 188/260 (72 missing):
@@ -1061,8 +1061,8 @@ check metadata/load/scope and assess the residual; reviewer launch completed at
 1028. The queue was labeled partial at 1029 while review remained pending.
 Proposed **mission reference**: define attempts and repairs in terms of recorded
 experiments, distinguish score/length/byte identity, and list required manifest
-writes before dispatch. Proposed **tooling investigation**: trace time limits to
-the actual worker process and verify descendant termination. Acceptance requires
+writes before dispatch. Proposed **tooling investigation**: retain actual worker
+process handles and verify descendant termination. Acceptance requires
 reproduced measurements, an accounted original budget and independent review;
 this observation makes no new acceptance or tooling-defect confirmation claim.
 The [subsequent repair and review](#first-campaign-review-repair-and-exact-acceptance)

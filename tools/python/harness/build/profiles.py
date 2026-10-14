@@ -20,7 +20,6 @@ from harness.build.compiler import (
 from harness.build.dependencies import SourceImage
 from harness.build.invocation import Invocation, plan_invocation
 from harness.build.programs import capture_description, describe_inputs
-from harness.common.deadlines import check_deadline
 from harness.common.digests import digest
 from harness.common.inputs import InputBatch, read_input, relative
 from harness.common.observation import DirectoryBatch, observe_directory
@@ -131,7 +130,6 @@ def _validate_cmake_configuration(root: Path, text: str) -> None:
 def _observe_input(path: Path, directories: DirectoryBatch | None = None) -> tuple:
     location = path
     while True:
-        check_deadline()
         try:
             state = location.stat(follow_symlinks=False)
         except (FileNotFoundError, NotADirectoryError):
@@ -252,7 +250,6 @@ class ProfileContext:
             "tools/python/harness/build/cli.py",
             "tools/python/harness/build/sections.py",
             "tools/python/harness/build/translation.py",
-            "tools/python/harness/common/deadlines.py",
             "tools/python/harness/common/digests.py",
             "tools/python/harness/common/files.py",
             "tools/python/harness/common/quarantine.py",
@@ -287,7 +284,6 @@ class ProfileContext:
     def read(
         self, relative: str, *, required: bool = True, batch: InputBatch | None = None
     ) -> bytes:
-        check_deadline()
         if relative in self.content:
             if required and self.inputs[relative] is None:
                 raise ValueError(f"missing profile input: {relative}")
@@ -368,7 +364,6 @@ class ProfileContext:
         configuration_text: str | None = None,
     ) -> CompilerSettings:
         """Resolve metadata against captured current or digest-bound virtual bytes."""
-        check_deadline()
         if image is not None and (
             not isinstance(image, SourceImage) or image.source != source
         ):
@@ -395,7 +390,6 @@ class ProfileContext:
                 )
             flags, compilers = self._configurations[configuration_text]
         result = resolve_compiler_settings(source, text, flags, compilers)
-        check_deadline()
         return result
 
     def resolve(
@@ -464,7 +458,6 @@ class ProfileContext:
 
     def verify(self) -> None:
         """Reject moving files or changed configuration instead of publishing stale pins."""
-        check_deadline()
         self.verify_manifest_inventory()
         parents = {
             Path(observation[0])
@@ -475,7 +468,6 @@ class ProfileContext:
             self._verify_ancestors(directories)
             with InputBatch(self.root) as batch:
                 for relative, state in self.inputs.items():
-                    check_deadline()
                     path = self.root / relative
                     observation = self.observations[relative]
                     if not _has_same_observation(
@@ -501,7 +493,6 @@ class ProfileContext:
 
     def _verify_ancestors(self, directories: DirectoryBatch | None = None) -> None:
         for ancestor, observation in self.ancestors.items():
-            check_deadline()
             current = _observe_input(ancestor, directories)
             if not _has_same_observation(observation, current):
                 raise ValueError(

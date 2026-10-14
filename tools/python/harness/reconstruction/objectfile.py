@@ -23,7 +23,6 @@ import struct
 from dataclasses import dataclass, fields
 
 from harness.reconstruction import contract
-from harness.common.deadlines import check_deadline
 
 ELF_MAGIC = b"\x7fELF"
 ELFCLASS32 = 1
@@ -567,7 +566,6 @@ def read_object_image(data: bytes, entry_symbol: str, *, limit: int) -> ObjectIm
     resolve = _name_reader(data, strings)
     storage = []
     for index, row in enumerate(sections):
-        check_deadline()
         alignment = row["alignment"]
         _require(
             not alignment or alignment & (alignment - 1) == 0,
@@ -613,7 +611,6 @@ def read_object_image(data: bytes, entry_symbol: str, *, limit: int) -> ObjectIm
     )
     symbols = _symbols(data, sections, table)
     for symbol in symbols:
-        check_deadline()
         section = symbol["section"]
         _require(
             section < len(sections) or section in {0xFFF1, 0xFFF2},

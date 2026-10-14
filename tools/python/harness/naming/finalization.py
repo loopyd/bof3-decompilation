@@ -6,7 +6,6 @@ import json
 from contextlib import nullcontext
 from pathlib import Path
 
-from harness.common.deadlines import check_deadline
 from harness.common.inputs import load
 from harness.common.lease import acquire_writer
 from harness.domain.manifests import load_target_manifests
@@ -47,7 +46,6 @@ def _read_pinned_state(path: Path, expected: str) -> dict:
 def _verify(
     root: Path, target: str, path: Path, transaction: str, bundle: Path
 ) -> dict:
-    check_deadline()
     result = audit.verify(
         root,
         target,
@@ -199,7 +197,6 @@ def _finalize(
         raise ValueError(
             "finalization plan changed or expected plan SHA-256 mismatches"
         )
-    check_deadline()
     write_exclusive(successor_path, encode(successor), report_state["mode"])
     live_validation = audit.validate(
         root, request["target"], load(successor_path), report_path=successor_path
@@ -221,14 +218,12 @@ def _finalize(
         != record["artifacts"]
     ):
         raise ValueError("retained evidence changed before activation")
-    check_deadline()
     write_exclusive(checkpoint_path, encode(record), report_state["mode"])
     validate_record(root, checkpoint_path, plan_sha256)
     if read_state(successor_path) != record["successor"]["state"]:
         raise ValueError("successor changed before activation")
     if read_state(summary_path) != summary_before:
         raise ValueError("summary state changed before activation")
-    check_deadline()
     atomic_write_if_unchanged(summary_path, summary_bytes, updated)
     sync_directory(directory)
     if resolve_campaign_report(root, request["target"]) != successor_path:
@@ -286,7 +281,6 @@ def finalize_transaction(
     directory = root / CAMPAIGN_REPORT_DIRECTORY
     if path.parent != directory:
         raise ValueError("finalization requires the canonical campaign directory")
-    check_deadline()
     with acquire_writer(root) if apply else nullcontext():
         with report_mutation(directory) if apply else nullcontext():
             return _finalize(

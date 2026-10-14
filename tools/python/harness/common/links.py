@@ -14,7 +14,6 @@ from harness.common.directory import (
     open_parent_chain,
     verify_parent_chain,
 )
-from harness.common.deadlines import check_deadline
 from harness.common.files import read_leaf_state
 from harness.common.inputs import InputBoundaryError
 
@@ -115,7 +114,6 @@ def _resolve_target(root: Path, name: str, content: bytes, stack: ExitStack) -> 
         parts = list(Path(name).parent.parts)
         components = path.parts
     for component in components:
-        check_deadline()
         if component == "..":
             if not parts:
                 raise InputBoundaryError(name)
@@ -140,7 +138,6 @@ def read_linked_state(
     current = name
     with ExitStack() as stack:
         for depth in range(41):
-            check_deadline()
             if current in aliases:
                 raise ValueError(f"input link cycle: {name}")
             snapshot, parent, leaf, metadata = stack.enter_context(
@@ -152,7 +149,6 @@ def read_linked_state(
                 content, captured = read_leaf_state(
                     parent, leaf, current, missing_ok=False, expected=metadata
                 )
-                check_deadline()
                 return content, captured, root / current
             if depth == 40:
                 raise ValueError(f"input link hop limit exceeded: {name}")

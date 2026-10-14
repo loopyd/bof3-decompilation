@@ -5,12 +5,12 @@ Read [native execution](native-execution.md) before either command.
 ## Diagnose existing C
 
 ```sh
-bin/harness decomp diagnose REQUEST --expected-request-digest PIN --output out/reviews/lift-diagnosis/NAME --deadline ORIGINAL_MONOTONIC_CUTOFF
+bin/harness decomp diagnose REQUEST --expected-request-digest PIN --output out/reviews/lift-diagnosis/NAME
 ```
 
-`scripts/mission.py diagnose` forwards unchanged. Existing claimed lift only;
-absent C requires first-source protocol. No source edit, model, restoration,
-acceptance, budget debit/renewal or campaign advancement.
+`scripts/mission.py diagnose` forwards unchanged. Diagnose existing claimed lifts;
+use first-source protocol for absent C. Diagnosis grants no source edits, model,
+restoration, acceptance, budget debit/renewal or campaign advancement.
 
 Closed `bof3.lift-request/v1`: `schema`, canonical `selector`, `source`, sorted
 unique `paths` of at most 12 entries, nonempty `task` at most 8 KiB,
@@ -18,23 +18,20 @@ current `adopted_baseline`, `capabilities:"mission-scoped-source-edit"`.
 Potential write scope is not diagnosis write authority. Existing ownership must
 match; shared source/header edits reject. Externally retain request digest.
 
-Capture validates mission/index freshness, original span/PS-X header, source/config
-ownership, native inputs/tools/environment, workspace metadata and exact raw index.
-Stale analysis blocks; never refresh or repin here. Supply original monotonic work
-cutoff plus separate cleanup hard-stop. Each native command cap 120s/1 MiB combined
-output. Lease excludes cooperating writers, not manual editors or prior workers.
+Validate mission/index freshness, original span/PS-X header, source/config ownership,
+native inputs/tools/environment, workspace metadata and exact raw index. Block stale
+analysis without refresh/repinning. Cap each native command's combined output at
+1 MiB. The lease excludes cooperating writers only, not manual editors/prior workers.
 
-Cold checks configure CMake/Ninja, remove selected object and verify absence, run
-full JSON asm-diff plus byte-match, validate schemas/identity/span/instruction-byte
-agreement and unchanged PRE/native inputs. Exact and valid partial results are
-diagnostics, not acceptance.
+Configure CMake/Ninja, remove the selected object and verify absence, then run full
+JSON asm-diff/byte-match. Validate schemas/identity/span/instruction-byte agreement
+and unchanged PRE/native inputs. Exact/valid partial results remain diagnostics.
 
-Fresh direct-child output directory only. Retain mission/policy, invocation cutoff,
-started/spawn/terminal records, fsynced stdout/stderr and `bof3.lift-diagnosis/v1`.
-Result `clock` binds boot/original cutoff and hashes all 23 input/native artifacts.
-Stdout paths/pins/status only. PRE/source evidence stays nonpublic and uncommitted.
-Existing output rejects unchanged. Failure preserves evidence; leftover result is
-not success. Saved PID/free lease never proves cleanup or termination.
+Use a fresh direct-child output directory; reject existing output unchanged.
+Retain mission/policy, started/spawn/terminal records, fsynced stdout/stderr and
+`bof3.lift-diagnosis/v1`, hashing all 23 input/native artifacts. Print only paths/
+pins/status; keep PRE/source evidence nonpublic/uncommitted. Preserve failure
+evidence without claiming success. PID/free lease proves no cleanup or termination.
 
 ## Writer report
 
@@ -53,12 +50,11 @@ claims to measurement; parsing or byte equality never supplies semantic review.
 bin/harness decomp audit DIAGNOSIS PROPOSAL --expected-diagnosis-digest PIN --expected-proposal-sha256 SHA256 --output out/reviews/lift-audit/AFTER
 ```
 
-Run only after authorized edit and confirmed writer-tree termination. Helper
-`scripts/mission.py audit` forwards unchanged. Reuse original mission/policy,
-boot-bound cutoff and external pins. No replacement-clock flag. Missing/failed/
-altered/legacy diagnosis without clock/artifact coverage rejects. Retired CLI
-writer/reviewer slots remain historical; never strip slots or upgrade proofs.
-Prepare fresh mission only at authorized checkpoint.
+After authorized edits and confirmed writer-tree termination, run
+`scripts/mission.py audit` with unchanged arguments and original mission/policy/pins.
+Reject missing/failed/altered/legacy diagnosis without artifact coverage. Preserve
+historical retired writer/reviewer slots without upgrading proofs. Prepare fresh
+missions only at authorized checkpoints.
 
 Manifest/native inputs, index, unrelated workspace and source-directory guards
 remain. No index refresh between diagnosis/audit. Report refresh for later parent
@@ -74,6 +70,6 @@ against this diagnosis, not best-of-history or semantics. Exact/partial remains
 `needs-independent-review` unless restoration review required. Exit 0 is not
 acceptance; affected consumers, aids, semantics and domain gates remain owed.
 
-Fresh direct-child audit output only. Failure retains candidate/evidence, grants
-no retry/restore/acceptance. Parent accounts every invocation against original
-budget; neither command runs a model, repair scheduler or recovery loop.
+Use fresh direct-child audit output. Retain failed candidates/evidence without
+retry/restore/acceptance permission. Parent accounts every invocation against the
+original budget; neither command runs a model, repair scheduler or recovery loop.

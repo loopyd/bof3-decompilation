@@ -7,7 +7,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from harness.common.deadlines import check_deadline
 
 if TYPE_CHECKING:
     from harness.build.invocation import Invocation
@@ -80,7 +79,6 @@ def describe_seeds(invocation: Invocation) -> list[dict]:
     """Bind provider inputs to actual stage operands and effective lookup settings."""
     seeds = []
     for stage in invocation.stages:
-        check_deadline()
         if stage.runtime is None:
             continue
         policy = stage.runtime
@@ -120,9 +118,7 @@ def describe_seeds(invocation: Invocation) -> list[dict]:
             seed.update(
                 path=os.get_exec_path(environment),
                 assembler=environment.get("PSX_AS")
-                or str(
-                    policy.root / "toolchains/psyqo/bin/mipsel-none-elf-as"
-                ),
+                or str(policy.root / "toolchains/psyqo/bin/mipsel-none-elf-as"),
             )
         seeds.append(seed)
     validate_seeds(seeds)
@@ -135,7 +131,6 @@ def validate_seeds(seeds: object) -> None:
         raise ValueError("runtime policy seed budget exceeded")
     identities = set()
     for seed in seeds:
-        check_deadline()
         if (
             not isinstance(seed, dict)
             or not isinstance(seed.get("provider"), str)
@@ -206,7 +201,6 @@ def validate_seeds(seeds: object) -> None:
         if identity in identities:
             raise ValueError("duplicate runtime stage policy")
         identities.add(identity)
-    check_deadline()
 
 
 def derive_candidates(
@@ -217,7 +211,6 @@ def derive_candidates(
     requests = []
     edges = []
     for seed in seeds:
-        check_deadline()
         if seed["root"] != str(root):
             raise ValueError("runtime seed is bound to a different repository")
         python = seed["provider"] == MASPSX_POLICY
@@ -335,5 +328,4 @@ def derive_candidates(
                 ),
             }
         )
-    check_deadline()
     return requests, edges

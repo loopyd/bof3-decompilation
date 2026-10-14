@@ -9,7 +9,6 @@ from pathlib import Path
 from harness.common.cli import (
     add_example_argument,
     add_root_argument,
-    add_work_deadline_argument,
     resolved_root,
     run_main,
 )
@@ -83,16 +82,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="select all 118 frozen Problem members in recorded order",
     )
     command.add_argument(
-        "--work-seconds",
-        type=float,
-        help="finite campaign seconds; fresh default 120, same-grant resume preserves its original cutoff",
-    )
-    command.add_argument(
-        "--member-seconds",
-        type=float,
-        help="finite member seconds across both forms and feedback; provisional fresh default 300",
-    )
-    command.add_argument(
         "--member-limit",
         type=int,
         help="maximum distinct member admissions per grant; fresh default selected count",
@@ -112,7 +101,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     command.add_argument(
         "--new-budget-id",
-        help="explicit unique new grant id on resume; requires all finite allowance fields",
+        help="explicit unique new grant id on resume; requires both count allowance fields",
     )
     command.add_argument("--output-limit", type=int, default=16 << 20)
     command.add_argument(
@@ -143,7 +132,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="compare both original-only source forms and retain each member's best complete-byte result",
     )
     command.add_argument("--json", action="store_true")
-    add_work_deadline_argument(command)
     command.set_defaults(handler=run_native)
     command = commands.add_parser(
         "capture-supplied",
@@ -161,10 +149,8 @@ def build_parser() -> argparse.ArgumentParser:
     command.add_argument(
         "--rizin", type=Path, default=repo_layout().root / "toolchains/rizin/bin/rizin"
     )
-    command.add_argument("--work-seconds", type=float, required=True)
     command.add_argument("--output-limit", type=int, required=True)
     command.add_argument("--json", action="store_true")
-    add_work_deadline_argument(command)
     command.set_defaults(handler=run_supplied)
     for operation in ("verify", "report"):
         command = commands.add_parser(
@@ -190,7 +176,6 @@ def build_parser() -> argparse.ArgumentParser:
             selection = command.add_mutually_exclusive_group(required=True)
             selection.add_argument("--member", action="append")
             selection.add_argument("--all-members", action="store_true")
-        command.add_argument("--work-seconds", type=float, required=True)
         for name in (
             "input-read-limit",
             "input-open-limit",
@@ -200,7 +185,6 @@ def build_parser() -> argparse.ArgumentParser:
             command.add_argument(f"--{name}", type=int, required=True)
         command.add_argument("--require-mode", choices=reporting.MODES, required=True)
         command.add_argument("--json", action="store_true")
-        add_work_deadline_argument(command)
         command.set_defaults(handler=run_reporting)
     return parser
 
@@ -256,7 +240,6 @@ def run_native(args: argparse.Namespace) -> int:
         native_receipt=args.native_receipt,
         configuration=args.configuration,
         rizin=args.rizin,
-        work_seconds=args.work_seconds,
         output_limit=args.output_limit,
         source_form=nativeoutput.parse_source_form(args.source_form)
         if args.source_form is not None
@@ -267,7 +250,6 @@ def run_native(args: argparse.Namespace) -> int:
         entry_cpu_receipt=args.entry_cpu_receipt,
         resume_from=args.resume_from,
         resume_sha256=args.resume_sha256,
-        member_seconds=args.member_seconds,
         member_limit=args.member_limit,
         campaign_limit=args.campaign_limit,
         new_budget_id=args.new_budget_id,
@@ -303,7 +285,6 @@ def run_supplied(args: argparse.Namespace) -> int:
         native_receipt=args.native_receipt,
         context=args.context,
         rizin=args.rizin,
-        work_seconds=args.work_seconds,
         output_limit=args.output_limit,
     )
     if args.json:
@@ -325,7 +306,6 @@ def run_reporting(args: argparse.Namespace) -> int:
     if not destination.is_absolute():
         destination = resolved_root(args) / destination
     limits = reporting.Limits(
-        args.work_seconds,
         args.input_read_limit,
         args.input_open_limit,
         args.artifact_limit,

@@ -89,7 +89,7 @@ def test_normal_child_exit_kills_redirected_stdio_grandchild(tmp_path: Path) -> 
         "import time; time.sleep(.2)"
     )
     started = time.monotonic()
-    result = run_analyzer([sys.executable, "-c", child_code], timeout=5)
+    result = run_analyzer([sys.executable, "-c", child_code])
     assert result.returncode == 0
     pid = _read_pid(descendant_pid, time.monotonic() + 2)
     state = _process_state(pid)
@@ -124,7 +124,7 @@ def test_analyzer_dies_when_launcher_is_sigkilled(tmp_path: Path) -> None:
     )
     launcher_code = (
         "from harness.common.process import run_analyzer; "
-        f"run_analyzer([{sys.executable!r}, '-c', {child_code!r}], timeout=120)"
+        f"run_analyzer([{sys.executable!r}, '-c', {child_code!r}])"
     )
     launcher = subprocess.Popen(
         [sys.executable, "-c", launcher_code],

@@ -69,17 +69,6 @@ def add_root_argument(
     parser.add_argument("--root", type=Path, default=default or repo_layout().root)
 
 
-def add_work_deadline_argument(parser: argparse.ArgumentParser) -> None:
-    """Opt a command into shared original-work-cutoff binding."""
-    parser.add_argument(
-        "--work-deadline",
-        type=float,
-        action=SingleValue,
-        help="original absolute monotonic work cutoff, never a renewed duration",
-    )
-    parser.set_defaults(bind_work_deadline=True)
-
-
 def resolved_root(args: argparse.Namespace) -> Path:
     """Resolve the shared --root argument once for command handlers."""
     return args.root.resolve()
@@ -116,16 +105,6 @@ def run_main(
     if handler is None:
         parser.error("missing command handler")
     try:
-        if getattr(args, "bind_work_deadline", False):
-            from harness.common.deadlines import check_deadline, use_deadline
-
-            with use_deadline(args.work_deadline):
-                try:
-                    result = handler(args)
-                except BrokenPipeError:
-                    result = 0
-                check_deadline()
-                return result
         return handler(args)
     except BrokenPipeError:
         return 0

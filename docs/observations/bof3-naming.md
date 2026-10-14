@@ -68,8 +68,8 @@ still need mission-level attribution before joining this skill's denominator.
 
 **Next measurements for H3/H4:** annotate each failed run's lock owner, wait and
 retry calls, target count and retained artifacts; compare serialized missions
-of comparable scope. Acceptance remains no lock-retry loops and no deadline
-kills, with unchanged evidence/transaction gates. Track timeouts/N, calls per
+of comparable scope. Acceptance requires no lock-retry loops and retains the
+evidence/transaction gates. Track timeouts/N, calls per
 valid evidence result and unresolved rows separately from proposed renames.
 
 ### Parent/child reconciliation and pilot outcomes
@@ -938,10 +938,10 @@ to less naming debt, nor establish that the documented review ordering was follo
 11. **A probe is not a canonical run.** A synthesized artifact can carry a fact, a receipt digest
     and `replay: true` while failing journal freshness. Require payload, checkpoint and
     report-derived operation plans to AGREE, and never weaken that comparison to obtain it.
-12. **Measure before naming a layer.** `exit=124` is `timeout`'s own code: something was killed
-    at a deadline, not necessarily the native command. Compare the command's standalone wall time
-    and byte count against the harness run before blaming the read path, the deadline or the
-    decoder — and do not build a workaround for a problem the measurement has not confirmed.
+12. **Measure before naming a layer.** `exit=124` is `timeout`'s own code; it does not
+    identify which layer stopped work. Compare the command's standalone wall time and byte count
+    against the harness run before blaming the read path or decoder. Do not build a workaround
+    for a problem the measurement has not confirmed.
 13. **A config probe does not transfer across invocation modes.** A standalone
     `rizin -N -q -c 'e scr.interactive'` reads `false`, while inside Rizin's live stdin command
     loop the same variable is `true` — the mode the harness uses. Reproduce in the mode that
@@ -1052,8 +1052,8 @@ The historical observation “a timed-out capture is usually a duration problem�
 was written without a frequency denominator or direct timing. The proposed
 `os.read` replacement failed to repair `pdj 1098`; that rejects this attempted fix,
 but establishes neither the timeout layer nor its cause. D12's narrower diagnostic
-rule governs this ledger: compare equivalent invocation settings, deadlines,
-wall time and output bytes before assigning a cause. Here 4,392 means original
+rule governs this ledger: compare equivalent invocation settings, wall time
+and output bytes before assigning a cause. Here 4,392 means original
 code bytes, not JSON output size. The requested rollback and standalone timing
 remain unverified at the review boundary.
 
@@ -1062,8 +1062,7 @@ source role, observation versus hypothesis, and acceptance state. Baseline: one
 overgeneralized scout and two successive unsupported causal diagnoses in this
 episode. Accept the improvement when comparable supervised missions preserve
 those distinctions through task and ledger edits. Proposed **capture tooling**:
-report timeout stage, effective deadline, invocation mode, elapsed time and
-captured bytes together; assess diagnostic retries and time to a reproduced cause,
+report failure stage, invocation mode, elapsed time and captured bytes together; assess diagnostic retries and time to a reproduced cause,
 retaining refusal on incomplete evidence. No speedup is measured here.
 
 ## Capture diagnosis lessons and recovery cost

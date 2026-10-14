@@ -31,9 +31,7 @@ def source_digest(directory: Path) -> str:
 
 
 def build_command(root: Path, argv: list[str], log: Path, *, env=None) -> None:
-    result = run_bounded(
-        root, argv, timeout=1800, output_limit=32 * 1024 * 1024, env=env
-    )
+    result = run_bounded(root, argv, output_limit=32 * 1024 * 1024, env=env)
     log.parent.mkdir(parents=True, exist_ok=True)
     write_json(log, result)
     if result["failure"] or result["exit_code"]:

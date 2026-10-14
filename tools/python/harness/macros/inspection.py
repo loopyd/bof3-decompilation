@@ -44,7 +44,6 @@ def add_inspection_commands(sub, read) -> None:
             args.expected_manifest_digest,
             implementation_run_id=args.implementation_run_id,
             output=args.output.as_posix(),
-            deadline=args.deadline,
         )
         print(
             json.dumps(
@@ -109,7 +108,6 @@ def add_inspection_commands(sub, read) -> None:
     command.add_argument("--expected-manifest-digest", required=True)
     command.add_argument("--implementation-run-id", required=True)
     command.add_argument("--output", type=Path, required=True)
-    command.add_argument("--deadline", type=float)
     command.set_defaults(handler=inspect)
     command = sub.add_parser(
         "review-existing", help="accept independently reviewed unchanged macro evidence"

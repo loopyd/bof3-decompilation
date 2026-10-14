@@ -9,7 +9,6 @@ from pathlib import Path
 
 from harness.common.commands import command as canonical
 from harness.common.commands import tool_id, trailing_arguments
-from harness.common.deadlines import resolve_deadline
 from harness.common.inputs import file_state
 from harness.common.process import run_bounded
 from harness.domain.receipts import command_records, write_receipt
@@ -65,8 +64,6 @@ def _execute(root: Path, argv: list[str]) -> dict:
     return run_bounded(
         root,
         argv,
-        deadline=resolve_deadline(),
-        timeout=120,
         output_limit=OUTPUT_LIMIT,
     )
 

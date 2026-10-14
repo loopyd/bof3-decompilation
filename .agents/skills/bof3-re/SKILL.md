@@ -7,11 +7,11 @@ description: Lift or review a target-qualified BOF3 function, match original byt
 
 ## Authority
 
-[Standing authorization](references/native-execution.md#authority-and-profile) covers
-parent index refreshes/external review; no repeated consent. Mission scope and
-original budgets still bind. Workers never refresh pinned inputs or self-accept.
-[Operator](../bof3-lift-loop/SKILL.md) delegates through active-session tools only;
-no harness Codex/model SDK/API/detached fallback. Worker output remains proposal.
+Use [standing authority](references/native-execution.md#authority-and-profile) for
+parent index refreshes/external review within original scope/budgets. Workers must
+not refresh pinned inputs or self-accept. The [operator](../bof3-lift-loop/SKILL.md)
+delegates through session tools only; harness Codex/model SDK/API/detached fallbacks
+are forbidden. Return proposals for parent acceptance.
 
 ## Route before work
 
@@ -26,13 +26,13 @@ no harness Codex/model SDK/API/detached fallback. Worker output remains proposal
 | Data/fragment/clone/shape eligibility | [Levers](references/match-loop.md#eligible-condition-levers) |
 | Existing lift diagnosis/audit | [Parent diagnosis and audit](references/parent-diagnosis.md) |
 
-Explicit cleanup uses structured router and selected skill. Ordinary lift/match/
-review/pipeline work must not load naming-evidence or documentation-repair bodies.
+Route explicit cleanup through its selected skill. Keep ordinary lift/match/
+review/pipeline contexts free of naming-evidence/documentation-repair bodies.
 
-Selector: `TARGET@0xADDRESS` or `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`.
-First lifter/reviewer command: `bin/harness agent context <reverse|review> SELECTOR`,
-once. Reuse bounded tracked prefill; never reread bundled paths. Generated asm/index
-reads need concrete task; `$psx-rizin` needs concrete question. Repository `bin` wins.
+Use `TARGET@0xADDRESS` or `BIN/FAMILY/ARCHIVE.EMI#INDEX@0xADDRESS`. First run
+`bin/harness agent context <reverse|review> SELECTOR` once; reuse its tracked prefill
+without rereading bundled paths. Read generated asm/index for concrete tasks and
+invoke `$psx-rizin` for concrete questions. Prefer repository `bin`.
 
 ## Invariants
 
@@ -54,10 +54,8 @@ reads need concrete task; `$psx-rizin` needs concrete question. Repository `bin`
 
 ## Fast evidence
 
-Before first native build, follow [compiler execution route](references/native-execution.md).
-Verified i386/SIGSYS host needs reviewed scoped parent-native gate via escalated tool;
-never repeat known sandbox failure, alter policy or retry denial. Live acceptance
-never cached.
+Before first native build, follow [compiler execution](references/native-execution.md)
+for host-profile, parent-native approval and live-gate requirements.
 
 | Need | Command / limit |
 | --- | --- |
@@ -67,8 +65,8 @@ never cached.
 | Accept/review | `bin/harness lift byte-match TARGET@0xADDRESS`, live not cached |
 | Relevant declared companion | `bin/harness lift companion-check TARGET@0xADDRESS`; no global catalog scan |
 
-`source splat`/`m2ctx`/`m2c` only for missing evidence. `lift status` is parent-only
-disposable audit. Report map/Splat-caused Rizin/index staleness; parent refreshes.
+Use `source splat`/`m2ctx`/`m2c` only for missing evidence. Reserve `lift status` for
+parent disposable audits; report map/Splat-caused Rizin/index staleness to parent.
 
 ## Scope + evidence
 
@@ -86,17 +84,15 @@ disposable audit. Report map/Splat-caused Rizin/index staleness; parent refreshe
 5. Signatures come from callers/callees, not m2c stubs. Edit owned C and only
    evidence-required header/map/Splat.
 
-Parent `scripts/mission.py diagnose REQUEST ...` captures cold existing-lift evidence.
-After scoped edit and confirmed writer termination, `scripts/mission.py audit
-DIAGNOSIS PROPOSAL ...` checks retained result. Keep original cutoff/external pins;
-unmeasured results `unverified`/null. Neither edits/restores source, bypasses stale
-analysis, grants acceptance/retry, launches model or completes operator loop.
+Use parent `scripts/mission.py diagnose REQUEST ...` for cold existing-lift evidence
+and `scripts/mission.py audit DIAGNOSIS PROPOSAL ...` after scoped edits and confirmed
+writer termination. Read the [parent contract](references/parent-diagnosis.md) for
+pins, `unverified`/null results and read-only audit limits.
 
 ## Match loop
 
-Read [clean-C ladder and probe ceiling](references/match-loop.md) before editing.
-Existing C requires live pre-edit diff. First-source route, cumulative attempt
-ledger, best-candidate retention, independent review and native gates remain binding.
+Before editing, read the [clean-C ladder and probe ceiling](references/match-loop.md)
+for existing/first-source gates, cumulative attempts, candidate retention and review.
 
 ### Eligible-condition levers
 
@@ -119,8 +115,8 @@ New raw `func_`/`D_` spellings require recorded naming debt through
 symbols check reports new debt. In lanes baseline is parent-owned, report need only.
 Never rewrite baseline to hide existing debt.
 
-Complete lift gate; no mission `just check`/`bin/harness lift status` except explicit
-request or parent-owned tooling/config work. `just check` owns scoped gates;
+Complete the lift gate. Use mission `just check`/`bin/harness lift status` only for
+explicit requests or parent-owned tooling/config work. `just check` owns scoped gates;
 `just check-all` owns full pytest. Report checks/skips/risks/next and reusable
 residual/shape/before-after evidence in references, not source annotations.
 

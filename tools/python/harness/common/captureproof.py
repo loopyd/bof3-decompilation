@@ -59,15 +59,13 @@ def verify_capture(
     argv: Sequence[str | Path],
     *,
     environment: Mapping[str, str],
-    deadline: float,
     output_limit: int,
     name: str,
-    timeout: float,
     origin: Literal["direct", "persisted"],
     events: list[tuple[str, str, str, Exception]] | None = None,
     reader: Callable[[Path, int, list[tuple[str, str, str, Exception]] | None], bytes]
     | None = None,
-) -> Literal["observed", "prelaunch"]:
+) -> Literal["observed"]:
     if type(origin) is not str or origin not in {"direct", "persisted"}:
         raise CaptureProofRefused("capture record origin differs")
     expected_argv = argv if origin == "direct" else [str(item) for item in argv]
@@ -75,11 +73,10 @@ def verify_capture(
         argv=expected_argv,
         cwd=str(cwd),
         environment=environment,
-        deadline=deadline,
         raw_exit_owner="common.process owned supervisor",
     )
     extra = set(
-        "timeout exit_code raw_exit failure owner_observation capture_complete streams".split()
+        "exit_code raw_exit failure owner_observation capture_complete streams".split()
     )
     if (
         type(record) is not dict
@@ -92,13 +89,7 @@ def verify_capture(
             type(key) is not str or type(value) is not str
             for key, value in record["environment"].items()
         )
-        or type(record["deadline"]) is not type(deadline)
-        or type(record["deadline"]) not in {int, float}
-        or not math.isfinite(record["deadline"])
         or type(record["raw_exit_owner"]) is not str
-        or type(record["timeout"]) not in {int, float}
-        or not math.isfinite(record["timeout"])
-        or not 0 < record["timeout"] <= timeout
         or type(record["capture_complete"]) is not bool
         or record["failure"] is not None
         and type(record["failure"]) is not str
@@ -181,13 +172,4 @@ def verify_capture(
         and record["raw_exit"] == record["exit_code"]
     ):
         return "observed"
-    if (
-        owner is None
-        and record["raw_exit"] is None
-        and type(record["exit_code"]) is int
-        and record["exit_code"] == 124
-        and record["failure"] == "timeout"
-        and not any(raw_streams.values())
-    ):
-        return "prelaunch"
     raise CaptureProofRefused("capture launch proof is unknown")

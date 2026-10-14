@@ -7,11 +7,6 @@ import json
 from contextlib import nullcontext
 from pathlib import Path
 
-from harness.common.deadlines import (
-    DeadlineExpired,
-    check_deadline,
-    suspend_work_deadline,
-)
 from harness.common.lease import acquire_writer
 from harness.domain.ids import normalize_target_id
 from harness.io import unique_object
@@ -106,7 +101,6 @@ def _publish(
     expected_report = dict(report_state)
     expected_summary = dict(summary_state)
     try:
-        check_deadline()
         if missing:
             atomic_write_if_unchanged(path, original, candidate)
             expected_report["sha256"] = hashlib.sha256(encode(candidate)).hexdigest()
@@ -117,7 +111,6 @@ def _publish(
         ):
             raise ValueError("inputs changed before accounting publication")
         if summary_changed:
-            check_deadline()
             atomic_write_if_unchanged(summary_path, summary_bytes, updated)
             sync_directory(path.parent)
             expected_summary["sha256"] = hashlib.sha256(encode(updated)).hexdigest()
@@ -128,22 +121,19 @@ def _publish(
             raise ValueError("publication changed before acceptance")
     except Exception as error:
         states = {}
-        with suspend_work_deadline():
-            for selected_path, before in (
-                (path, report_state),
-                (summary_path, summary_state),
-            ):
-                try:
-                    current = read_state(selected_path)
-                except (OSError, ValueError) as inspection_error:
-                    current = {"inspection_error": str(inspection_error)}
-                states[str(selected_path)] = {"before": before, "current": current}
+        for selected_path, before in (
+            (path, report_state),
+            (summary_path, summary_state),
+        ):
+            try:
+                current = read_state(selected_path)
+            except (OSError, ValueError) as inspection_error:
+                current = {"inspection_error": str(inspection_error)}
+            states[str(selected_path)] = {"before": before, "current": current}
         message = (
             "reconciliation publication failed; retain state and inspect before "
             f"authorized retry; states={json.dumps(states, sort_keys=True)}; {error}"
         )
-        if isinstance(error, DeadlineExpired):
-            raise DeadlineExpired(message) from error
         raise ValueError(message) from error
     return expected_report, expected_summary
 
@@ -350,11 +340,9 @@ def _recover(
     if apply:
         if pin != expected_plan_sha256:
             raise ValueError("reviewed recovery plan changed")
-        check_deadline()
         write_exclusive(successor, encode(candidate), report_state["mode"])
         if validate(root, target, load(successor), report_path=successor) != validation:
             raise ValueError("published recovery validation differs from preview")
-        check_deadline()
         write_exclusive(checkpoint, encode(record), report_state["mode"])
         validate_record(root, checkpoint, pin)
         if (
@@ -364,7 +352,6 @@ def _recover(
             raise ValueError(
                 "recovery publication changed; retain state for inspection"
             )
-        check_deadline()
         atomic_write_if_unchanged(summary_path, summary_bytes, updated)
         sync_directory(path.parent)
         if resolve_campaign_report(root, target) != successor:

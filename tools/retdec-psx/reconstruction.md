@@ -79,15 +79,12 @@ bin/harness reconstruction run \
   --rizin toolchains/rizin/bin/rizin \
   --member exe/slus_004_22@8014aa04 \
   --member exe/slus_004_22@80166cb0 \
-  --work-seconds 120 \
   --output-limit 16777216 \
   --json
 ```
 
-The run uses one absolute work cutoff. `--work-deadline` can further restrict it
-to an already established monotonic cutoff. Timeout, output-limit, process or
-cleanup failures remain failed attempts. Retrying uses a fresh destination and
-records new limits.
+Output-limit, process or cleanup failures remain failed attempts. Retrying uses a
+fresh destination and records new limits.
 
 To select an original-dataflow source alternative, add `--source-form
 signed-narrow-cast` or `--source-form unsigned-mask-subtract`. Omitting the option
@@ -97,14 +94,13 @@ Unsupported evidence remains a refusal.
 ## Measure all frozen members
 
 In the command above, replace both `--member` arguments with `--all-members`, use
-a fresh destination and set `--work-seconds 600`. The CLI derives all 118 keys from
-the verified Problem in recorded order. The budget remains one cutoff for the
-whole run; exhaustion leaves remaining rows unattempted.
+a fresh destination. The CLI derives all 118 keys from the verified Problem in
+recorded order. Attempt exhaustion leaves remaining rows unattempted.
 
 ## Continue a bounded source-form search
 
 Add `--search-source-forms` to compare both supported forms and retain each
-member's best complete-byte result. Set finite time, member and operation limits:
+member's best complete-byte result. Set finite member and operation limits:
 
 ```sh
 bin/harness reconstruction run \
@@ -116,7 +112,6 @@ bin/harness reconstruction run \
 	--member exe/slus_004_22@80166cb0 \
 	--member exe/slus_004_22@8014aa04 \
 	--search-source-forms \
-	--work-seconds 600 --member-seconds 240 \
 	--member-limit 2 --campaign-limit 74 --json
 ```
 
@@ -145,12 +140,12 @@ bin/harness reconstruction run \
 ```
 
 Resume verifies retained outputs and current inputs. A different hash or input
-identity refuses reuse. The original deadline and consumed allowances remain in
-force. Completed results are reused only after verification.
+identity refuses reuse. Consumed allowances remain in force. Completed results are
+reused only after verification.
 
-To continue after exhaustion, add a unique `--new-budget-id` and all four finite
-allowances: `--work-seconds`, `--member-seconds`, `--member-limit` and
-`--campaign-limit`. The new allowance retains earlier attempts and their costs.
+To continue after exhaustion, add a unique `--new-budget-id` and both finite
+allowances, `--member-limit` and `--campaign-limit`. The new allowance retains
+earlier attempts and their costs.
 Exhaustion leaves unfinished work visible and grants no acceptance credit.
 
 ## Capture fresh supplied context
@@ -187,7 +182,6 @@ bin/harness reconstruction capture-supplied \
   --native-receipt "$native_receipt" \
   --rizin "$rizin" \
   --context "$context" \
-  --work-seconds 300 \
   --output-limit 16777216 \
   --json
 ```
@@ -244,7 +238,6 @@ bin/harness reconstruction verify \
   --member exe/slus_004_22@8014aa04 \
   --destination selected-pair-verification \
   --require-mode autonomous \
-  --work-seconds 1200 \
   --input-read-limit 274877906944 \
   --input-open-limit 8388608 \
   --artifact-limit 134217728 \
@@ -257,7 +250,6 @@ bin/harness reconstruction report \
   --verification out/retdec-118-reconstruction/selected-pair-verification \
   --destination selected-pair-report \
   --require-mode autonomous \
-  --work-seconds 600 \
   --input-read-limit 68719476736 \
   --input-open-limit 2097152 \
   --artifact-limit 134217728 \
@@ -268,9 +260,8 @@ bin/harness reconstruction report \
 Use `--all-members` instead of both `--member` arguments to verify all frozen keys.
 Repeat `--generation` or `--verification` to consume multiple completed inputs.
 `report` reproduces verification evidence without executing native or compiler
-tools. Both commands require explicit finite time, physical-read, open and artifact
-bounds. Add `--work-deadline` to share an existing monotonic cutoff. The limits above
-are separate per-run experiment envelopes, not cumulative campaign defaults.
+tools. Both commands require explicit physical-read, open and artifact bounds.
+The limits above are separate per-run experiment envelopes, not cumulative campaign defaults.
 Choose bounds for the selected inputs; these examples do not guarantee capacity
 for a full 118-candidate verification.
 

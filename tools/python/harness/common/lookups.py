@@ -10,7 +10,6 @@ from collections import deque
 from collections.abc import Callable
 from pathlib import Path
 
-from harness.common.deadlines import check_deadline
 
 _DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 _FILE_FLAGS = os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC | os.O_NONBLOCK
@@ -57,7 +56,6 @@ def resolve_lookup(
     terminal = parent
     status = "directory"
     while pending:
-        check_deadline()
         steps += 1
         if steps > 256:
             raise ValueError("lookup path-step budget exceeded")
@@ -91,7 +89,6 @@ def resolve_lookup(
         elif pending:
             status = "not-directory"
             break
-    check_deadline()
     return {
         "spelling": name,
         "cwd": str(cwd),
@@ -114,7 +111,6 @@ class LookupBatch:
 
     def __enter__(self) -> LookupBatch:
         try:
-            check_deadline()
             if self._active or self._closed:
                 raise ValueError("lookup batch cannot be reused")
             self._active = True
@@ -132,7 +128,6 @@ class LookupBatch:
             raise
 
     def _require_active(self) -> None:
-        check_deadline()
         if not self._active or self._closed or self._failed:
             raise ValueError("lookup batch is inactive or failed")
 
@@ -152,7 +147,6 @@ class LookupBatch:
             checksum = hashlib.sha256()
             size = 0
             while True:
-                check_deadline()
                 allowance = min(
                     1024 * 1024,
                     _MAX_FILE_BYTES - size,
@@ -241,7 +235,6 @@ class LookupBatch:
     def _verify(self) -> None:
         self._require_active()
         for name, node in self._nodes.items():
-            check_deadline()
             path = Path(name)
             try:
                 status = (
@@ -270,7 +263,6 @@ class LookupBatch:
                 != node["target"]
             ):
                 raise ValueError("lookup alias changed before batch exit")
-        check_deadline()
 
     def close(self) -> None:
         """Release owned descriptors even after expiry or partial setup failure."""

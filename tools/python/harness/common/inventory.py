@@ -8,7 +8,6 @@ import stat
 from dataclasses import dataclass
 from pathlib import Path
 
-from harness.common.deadlines import check_deadline
 from harness.common.directory import (
     close_descriptors,
     open_parent_chain,
@@ -26,7 +25,6 @@ class CaptureBudget:
     size: int = 0
 
     def charge(self, size: int = 0) -> None:
-        check_deadline()
         self.files += 1
         self.size += size
         if self.files > 200000 or self.size > 2 * 1024 * 1024 * 1024:

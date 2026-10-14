@@ -122,7 +122,6 @@ def _version_output(exe: Path, label: str) -> str:
         [str(exe), "--version"],
         capture_output=True,
         text=True,
-        timeout=30,
     )
     if result.returncode != 0:
         if result.returncode == -signal.SIGSYS:

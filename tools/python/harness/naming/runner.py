@@ -23,7 +23,6 @@ from harness.common.cli import (
 )
 from harness.naming.execution import (
     DEFAULT_CONCURRENCY,
-    DEFAULT_DEADLINE,
     DEFAULT_ROWS_BUDGET,
     MAX_CONCURRENCY,
     SHARD_ROWS,
@@ -56,7 +55,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--all-rows",
         action="store_true",
-        help="select every still-open row under the run deadline",
+        help="select every still-open row within the row budget",
     )
     parser.add_argument(
         "--shard",
@@ -87,21 +86,9 @@ def build_parser() -> argparse.ArgumentParser:
         help="attempt semantic terminalization; fail closed without report mutation when evidence is insufficient",
     )
     parser.add_argument(
-        "--deadline",
-        type=int,
-        default=DEFAULT_DEADLINE,
-        help=f"relative per-operation/index-request limit in seconds (default {DEFAULT_DEADLINE})",
-    )
-    parser.add_argument(
         "--instructions",
         action="store_true",
         help="capture complete original instructions for function rows and their direct work",
-    )
-    parser.add_argument(
-        "--work-deadline",
-        type=float,
-        action=_SingleValue,
-        help="original absolute monotonic work cutoff; --deadline remains a relative per-operation cap",
     )
     parser.set_defaults(handler=_run)
     return parser
@@ -134,14 +121,8 @@ def _run(args: argparse.Namespace) -> int:
             all_rows=args.all_rows,
             shard=args.shard,
             concurrency=args.concurrency,
-            deadline=args.deadline,
             rows_budget=args.rows_budget,
             terminalize=args.terminalize,
-            **(
-                {"work_deadline": args.work_deadline}
-                if getattr(args, "work_deadline", None) is not None
-                else {}
-            ),
         )
     finally:
         reset_receipt_root(receipt_token)

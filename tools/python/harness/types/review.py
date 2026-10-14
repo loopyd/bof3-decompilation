@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any
 
 from harness.common.digests import digest
-from harness.common.deadlines import check_deadline
 from harness.common.directory import validate_repo_path
 from harness.common.inputs import InputBatch
 from harness.domain.receipts import validate_candidate
@@ -35,7 +34,6 @@ _INDEX_FOR_CONCERN = {
 
 
 def _record(content: bytes, artifact: str) -> dict[str, Any]:
-    check_deadline()
     try:
         value = json.loads(content.decode("utf-8"), object_pairs_hook=unique_object)
     except (json.JSONDecodeError, UnicodeDecodeError, RecursionError) as error:
@@ -44,7 +42,6 @@ def _record(content: bytes, artifact: str) -> dict[str, Any]:
         ) from error
     if not isinstance(value, dict):
         raise ValueError("reviewed type candidate must be an object")
-    check_deadline()
     return value
 
 
@@ -114,7 +111,6 @@ def validate_reviewed_candidate(
         or not review["reviewer"].strip()
     ):
         raise ValueError("reviewed type candidate has unresolved review contract")
-    check_deadline()
     return {
         "artifact": artifact,
         "artifact_sha256": state["sha256"],

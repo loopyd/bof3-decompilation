@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import shutil
 import subprocess
-import time
 from pathlib import Path
 
 from harness.common.process import capture
@@ -76,7 +75,6 @@ class PsyqoToolchain(Toolchain):
         directory.mkdir(parents=True, exist_ok=True)
         for suffix in ("stdout.bin", "stderr.bin", "json"):
             (directory / f"{name}.{suffix}").unlink(missing_ok=True)
-        timeout = 14400
         record = capture(
             directory,
             argv,
@@ -87,8 +85,6 @@ class PsyqoToolchain(Toolchain):
                 "JOBS": str(select_build_jobs()),
                 "MAKEINFO": "true",
             },
-            deadline=time.monotonic() + timeout,
-            timeout=timeout,
             output_limit=128 << 20,
             name=name,
         )
@@ -146,12 +142,10 @@ class PsyqoToolchain(Toolchain):
                 check=True,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
-                timeout=10,
             )
         target = subprocess.check_output(
             [str(binaries / "mipsel-none-elf-gcc"), "-dumpmachine"],
             text=True,
-            timeout=10,
         ).strip()
         if target != "mipsel-none-elf":
             raise RuntimeError(f"unexpected PSYQo compiler target: {target}")

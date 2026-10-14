@@ -9,7 +9,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from types import MappingProxyType
 
-from harness.common.deadlines import check_deadline
 from harness.common.inputs import InputBatch, relative
 from harness.common.observation import PathWatch
 from harness.domain.includes import parse_literal_includes
@@ -29,7 +28,6 @@ class SourceImage:
     sha256: str
 
     def __post_init__(self) -> None:
-        check_deadline()
         if relative(self.source) != self.source or "\x00" in self.source:
             raise ValueError("source image requires a canonical repository path")
         if self.kind not in ("current", "retained", "prospective"):
@@ -42,7 +40,6 @@ class SourceImage:
             raise ValueError("source image requires an expected SHA-256")
         if hashlib.sha256(self.content).hexdigest() != self.sha256:
             raise ValueError("source image differs from its expected digest")
-        check_deadline()
 
     def decode_text(self) -> str:
         """Decode this image without reopening its current filesystem spelling."""
@@ -113,7 +110,6 @@ class IncludeSnapshot:
                     scheduled.add(path)
                     pending.append((path, content))
             while pending:
-                check_deadline()
                 path, content = pending.pop()
                 try:
                     text = content.decode("utf-8")
@@ -158,7 +154,6 @@ class IncludeSnapshot:
             raise
 
     def _read(self, batch: InputBatch, path: Path) -> bytes | None:
-        check_deadline()
         if path not in self._states:
             if len(self._states) >= _INPUT_LIMIT:
                 raise ValueError("include search exceeds its input bound")
@@ -194,7 +189,6 @@ class IncludeSnapshot:
         try:
             with InputBatch(self.root) as batch:
                 for path, expected in self._states.items():
-                    check_deadline()
                     state, _ = batch.read(
                         path,
                         max_bytes=_FILE_LIMIT,
@@ -213,7 +207,6 @@ class IncludeSnapshot:
         if self._failed or not self._active:
             raise ValueError("include snapshot is closed or failed")
         try:
-            check_deadline()
             if self._watch is not None:
                 self._watch.validate()
         except BaseException:

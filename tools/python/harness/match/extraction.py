@@ -7,7 +7,6 @@ import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 
-from harness.common.deadlines import check_deadline
 from harness.common.files import read_file
 from harness.common.artifacts import active_reader, read_bytes
 
@@ -162,7 +161,6 @@ def _read_sections(content: bytes) -> tuple[list[Section], list[str]]:
     if any(_SECTION.unpack_from(table)):
         raise ValueError("unsupported ELF null section or extended numbering")
     for section in sections:
-        check_deadline()
         if section.alignment and section.alignment & (section.alignment - 1):
             raise ValueError("invalid ELF section alignment")
         if section.alignment and (
@@ -217,7 +215,6 @@ def _read_symbols(content: bytes, sections: list[Section]) -> tuple[LinkedSymbol
             raise ValueError("ELF reserved symbol entry must be all zero")
         seen_nonlocal = False
         for index, symbol in enumerate(_SYMBOL.iter_unpack(symbols)):
-            check_deadline()
             local = symbol[3] >> 4 == 0
             if (
                 (not local and index < section.info)
@@ -278,7 +275,6 @@ def _find_symbol(content: bytes, sections: list[Section], name: str) -> tuple:
             raise ValueError("ELF reserved symbol entry must be all zero")
         seen_nonlocal = False
         for index, symbol in enumerate(_SYMBOL.iter_unpack(symbols)):
-            check_deadline()
             local = symbol[3] >> 4 == 0
             if (
                 (not local and index < section.info)
@@ -306,7 +302,6 @@ def _find_symbol(content: bytes, sections: list[Section], name: str) -> tuple:
 
 
 def _require_function_selection(function_name: str, address: int) -> None:
-    check_deadline()
     if (
         not isinstance(function_name, str)
         or not function_name
@@ -388,7 +383,6 @@ def read_function_bytes(
         if other.kind in {4, 9} and other.size and other.info == section_index:
             raise ValueError("function section retains unsupported relocation records")
     selected = _read_range(content, section.offset + relative, size, "function")
-    check_deadline()
     return FunctionImage(
         name=function_name,
         address=value,
@@ -434,7 +428,6 @@ def read_linked_image(data: bytes, *, limit: int) -> LinkedImage:
     if header[10] > 4096:
         raise ValueError("ELF segment inventory exceeds its bound")
     for index in range(header[10]):
-        check_deadline()
         kind, offset, address, _, file_size, memory_size, flags, alignment = (
             struct.unpack_from("<IIIIIIII", data, header[5] + index * header[9])
         )
@@ -471,7 +464,6 @@ def read_linked_image(data: bytes, *, limit: int) -> LinkedImage:
         ):
             raise ValueError("invalid linked relocation table")
         for ordinal in range(row.size // width):
-            check_deadline()
             offset, info = struct.unpack_from("<II", data, row.offset + ordinal * width)
             referenced = [
                 symbol

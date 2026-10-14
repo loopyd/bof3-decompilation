@@ -1016,7 +1016,7 @@ unattributed elapsed time remain in the residual.
 Proposed **operating reference**: identify repeated calls by object lifetime,
 stage and required revalidation before considering reuse. Proposed **cache
 review/harness evidence**: list every state dependency, invalidation trigger,
-mutable return boundary, budget/deadline check and retention bound alongside
+mutable return boundary, attempt/resource checks and retention bound alongside
 matched timing results. Acceptance: required freshness/refusal behavior has
 existing-check or explicit-gap evidence; scope stays authorized; no completion
 claim rests only on green tests and reduced elapsed time. Measure covered cache

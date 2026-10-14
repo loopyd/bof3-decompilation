@@ -7,7 +7,6 @@ import secrets
 import stat
 from pathlib import Path
 
-from harness.common.deadlines import check_deadline
 from harness.common.quarantine import (
     matches_identity,
     reserve_quarantine,
@@ -89,18 +88,15 @@ def _read_leaf(parent: int, leaf: str, name: str, *, missing_ok: bool) -> bytes 
 def read_file(
     root: Path, name: str, *, missing_ok: bool = False, max_bytes: int | None = None
 ) -> bytes | None:
-    check_deadline()
     if max_bytes is not None and (type(max_bytes) is not int or max_bytes < 0):
         raise ValueError("invalid transaction file capture limit")
     try:
         parent, leaf = open_parent_fd(root, name)
     except FileNotFoundError:
         if missing_ok:
-            check_deadline()
             return None
         raise
     try:
-        check_deadline()
         if max_bytes is not None:
             content = read_leaf_state(
                 parent, leaf, name, missing_ok=missing_ok, max_bytes=max_bytes
@@ -109,7 +105,6 @@ def read_file(
             content = _read_leaf(parent, leaf, name, missing_ok=missing_ok)
     finally:
         os.close(parent)
-    check_deadline()
     return content
 
 

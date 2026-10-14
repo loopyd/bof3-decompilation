@@ -6,7 +6,6 @@ from pathlib import Path
 import re
 from typing import Any, Callable, Iterable
 
-from harness.common.deadlines import DeadlineExpired
 from harness.domain.functions import collect_lift_metadata
 from harness.domain.tags import count_function_metadata
 from harness.domain.policy import validate_matching_source
@@ -290,8 +289,6 @@ def _batch_failed_objects(root: Path, cmake_targets: list[str]) -> set[str] | No
 
     try:
         result = batch_build(root, cmake_targets)
-    except DeadlineExpired:
-        raise
     except (RuntimeError, ValueError, FileNotFoundError):
         return None
     if result.returncode == 0:
@@ -338,8 +335,6 @@ def _run_batch_misses(
 
         try:
             manifests = load_target_manifests(root)
-        except DeadlineExpired:
-            raise
         except (OSError, RuntimeError, ValueError) as error:
             for _, source, address, _, _, _manifest in items:
                 records.append(
@@ -393,8 +388,6 @@ def _run_batch_misses(
                     stale_items.append(item)
                     continue
                 resolved_items.append((item, request, resolved))
-            except DeadlineExpired:
-                raise
             except (FileNotFoundError, RuntimeError, ValueError):
                 stale_items.append(item)
 
@@ -405,8 +398,6 @@ def _run_batch_misses(
             request = _request_for_source(root, source, address, current_manifest)
             try:
                 result = diff_runner(request)
-            except DeadlineExpired:
-                raise
             except (FileNotFoundError, RuntimeError, ValueError) as exc:
                 records.append(
                     _invalid_record(root, target, source, _failure_detail(exc), address)
@@ -421,8 +412,6 @@ def _run_batch_misses(
             _, source, address, source_name, key, _manifest = item
             try:
                 result = _asm_diff_compare(repo, request, resolved, manifests=manifests)
-            except DeadlineExpired:
-                raise
             except (FileNotFoundError, RuntimeError, ValueError) as exc:
                 records.append(
                     _invalid_record(root, target, source, _failure_detail(exc), address)

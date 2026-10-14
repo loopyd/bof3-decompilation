@@ -6,7 +6,6 @@ from pathlib import Path
 
 from harness.build.arguments import read_source
 from harness.build.dispatch import Dispatch, validate_dispatch
-from harness.common.deadlines import check_deadline
 from harness.domain.functions import parse_function_records
 from harness.domain.layout import parse_splat_layout
 from harness.domain.manifests import load_target_manifests
@@ -25,7 +24,6 @@ def prepare_translation(
     The caller retains its configured compiler and full translation-unit flags.
     """
 
-    check_deadline()
     root = root.resolve()
     source = source.resolve()
     if dispatch is not None:
@@ -37,11 +35,9 @@ def prepare_translation(
             raise ValueError("translation source differs from its compiler invocation")
         validate_dispatch(dispatch)
     text = read_source(source).replace("\r\n", "\n").replace("\r", "\n")
-    check_deadline()
     if count_function_metadata(text) < 2:
         if dispatch is not None:
             validate_dispatch(dispatch)
-        check_deadline()
         return assembly
     if dispatch is None:
         raise ValueError(
@@ -71,5 +67,4 @@ def prepare_translation(
         names.append(name)
     result = partition_assembly(assembly, names)
     validate_dispatch(dispatch)
-    check_deadline()
     return result

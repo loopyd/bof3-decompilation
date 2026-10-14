@@ -19,7 +19,6 @@ def register_commands(commands: argparse._SubParsersAction) -> None:
     diagnosis.add_argument("request")
     diagnosis.add_argument("--expected-request-digest", required=True)
     diagnosis.add_argument("--output", required=True)
-    diagnosis.add_argument("--deadline", required=True, type=float)
     diagnosis.set_defaults(handler=diagnose_request)
     audit = commands.add_parser(
         "audit",
@@ -57,7 +56,6 @@ def diagnose_request(args: argparse.Namespace) -> int:
         read_record(root, args.request),
         expected_request_digest=args.expected_request_digest,
         output=args.output,
-        deadline=args.deadline,
     )
     print(json.dumps(result), flush=True)
     return 0
