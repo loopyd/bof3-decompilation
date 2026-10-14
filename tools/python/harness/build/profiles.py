@@ -7,6 +7,7 @@ import json
 import os
 import re
 import stat
+from contextlib import closing
 from pathlib import Path
 
 from harness.build.arguments import parse_arguments
@@ -17,7 +18,7 @@ from harness.build.compiler import (
     parse_compiler_configuration,
     resolve_compiler_settings,
 )
-from harness.build.dependencies import SourceImage
+from harness.build.dependencies import IncludeSnapshot, SourceImage
 from harness.build.invocation import Invocation, plan_invocation
 from harness.build.programs import capture_description, describe_inputs
 from harness.common.digests import digest
@@ -268,6 +269,7 @@ class ProfileContext:
             "tools/python/harness/domain/layout.py",
             "tools/python/harness/domain/manifests.py",
             "tools/python/harness/domain/ids.py",
+            "tools/python/harness/domain/includes.py",
             "tools/python/harness/domain/psx.py",
             "tools/python/harness/domain/sources.py",
             "tools/python/harness/domain/symbols.py",
@@ -425,8 +427,10 @@ class ProfileContext:
         self.read(executable_name)
         arguments = build_compiler_arguments(self.root, settings.flags)
         cwd = Path.cwd()
-        for name in sorted(collect_forced_paths(self.root, arguments, cwd)):
+        forced = sorted(collect_forced_paths(self.root, arguments, cwd))
+        for name in forced:
             self.read(name)
+        self._capture_include_inputs(source, image, arguments, forced)
         output = self.root / "build" / Path(source).with_suffix(".o")
         invocation = plan_invocation(
             self.root,
@@ -455,6 +459,74 @@ class ProfileContext:
             "arguments": arguments,
             "programs": self._programs[program_key][1],
         }
+
+    def _capture_include_inputs(
+        self,
+        source: str,
+        image: SourceImage | None,
+        arguments: list[str],
+        forced: list[str],
+    ) -> None:
+        """Pin literal dependencies and negative lookups from the supplied image."""
+        parsed = parse_arguments(arguments[1:])
+        roots = [
+            str(self.root / name)
+            for name in ("src", "include", "toolchains/psyq/4.7/include")
+        ]
+        if [
+            argument.value for argument in parsed if argument.role == "-I"
+        ] != roots or any(
+            argument.role
+            in {
+                "-isystem",
+                "-idirafter",
+                "-iprefix",
+                "-iwithprefix",
+                "-iwithprefixbefore",
+            }
+            or argument.tokens[0] in {"-I-", "-nostdinc", "-nostdinc++"}
+            or argument.tokens[0].startswith(
+                (
+                    "-isystem",
+                    "-idirafter",
+                    "-iprefix",
+                    "-iwithprefix",
+                    "-iquote",
+                    "-isysroot",
+                    "-imultilib",
+                    "-imultiarch",
+                    "-Wp,",
+                    "-Xpreprocessor",
+                    "--",
+                )
+            )
+            for argument in parsed
+        ):
+            raise ValueError(
+                "profile includes require the configured literal search roots"
+            )
+        if image is None:
+            content = self.content[source]
+            image = SourceImage(
+                source,
+                content,
+                "current" if self.inputs[source] is not None else "prospective",
+                hashlib.sha256(content).hexdigest(),
+            )
+        with closing(
+            IncludeSnapshot(
+                self.root,
+                self.root / source,
+                image=image,
+                forced=tuple(self.root / name for name in forced),
+            )
+        ) as snapshot:
+            for name, sampled in snapshot.describe_inputs().items():
+                self.read(name, required=sampled is not None)
+                expected = None if sampled is None else {"sha256": sampled["sha256"]}
+                if self.inputs[name] != expected:
+                    raise ValueError(f"profile include input changed: {name}")
+            snapshot.validate()
 
     def verify(self) -> None:
         """Reject moving files or changed configuration instead of publishing stale pins."""

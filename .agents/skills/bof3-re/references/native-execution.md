@@ -24,8 +24,12 @@ execution route never changes compiler/flags or substitutes host GCC.
 
 Native status fingerprints include literal source/header dependencies resolved
 through `src`, `include` and `toolchains/psyq/4.7/include`. A consumed header change
-invalidates the target's cached function results. Active preprocessing and complete
-compiler-input closure retain their existing gates.
+invalidates the target's cached function results. Preservation profiles pin literal
+transitive headers and negative lookups for current, retained and prospective source
+images and forced inputs. Verification refuses changed headers, newly present lookup
+candidates and discoveries outside the pinned closure. This profile route requires
+the configured search roots and rejects other include-search settings. Active
+preprocessing and complete compiler-input closure retain their existing gates.
 
 Grouped lift comparisons require an explicit member address and externally pinned
 preservation routing. They freshly compile the whole source and compare every
