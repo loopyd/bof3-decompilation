@@ -572,6 +572,10 @@ def read_object_image(data: bytes, entry_symbol: str, *, limit: int) -> ObjectIm
             "invalid object section alignment",
         )
         _require(
+            row["type"] == 0 or not alignment or row["address"] % alignment == 0,
+            "object section address violates declared alignment",
+        )
+        _require(
             row["address"] + row["size"] <= 2**32,
             "object section exceeds the address space",
         )
@@ -583,10 +587,6 @@ def read_object_image(data: bytes, entry_symbol: str, *, limit: int) -> ObjectIm
                     and table_offset < row["offset"] + row["size"]
                 ),
                 "object section payload overlaps header metadata",
-            )
-            _require(
-                not alignment or row["offset"] % alignment == 0,
-                "object section payload violates declared alignment",
             )
         storage.append(
             ObjectStorage(
