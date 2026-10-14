@@ -4,11 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
-import tempfile
 from pathlib import Path
 from typing import Any
 
+from ..common.files import atomic_write
 from ..domain.symbols import load_map
 from ..io import file_sha256
 from ..domain.manifests import load_target_manifests
@@ -183,18 +182,7 @@ def _write_new(path: Path, content: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         raise ValueError(f"refusing to overwrite: {path}")
-    descriptor, temporary_name = tempfile.mkstemp(
-        dir=path.parent, prefix=f".{path.name}."
-    )
-    temporary = Path(temporary_name)
-    try:
-        with os.fdopen(descriptor, "wb") as stream:
-            stream.write(content)
-            stream.flush()
-            os.fsync(stream.fileno())
-        os.link(temporary, path)
-    finally:
-        temporary.unlink(missing_ok=True)
+    atomic_write(path.parent, path.name, content, exclusive=True)
 
 
 def _destination(root: Path, relative: str) -> Path:

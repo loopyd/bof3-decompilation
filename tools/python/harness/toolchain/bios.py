@@ -9,6 +9,7 @@ import tempfile
 import urllib.request
 from pathlib import Path
 
+from ..common.files import atomic_write
 from .base import Toolchain
 from .releases import extract_archive
 from ..io import file_sha256
@@ -119,7 +120,7 @@ class BiosToolchain(Toolchain):
                 raise ValueError("US BIOS ROM size/SHA-256 mismatch")
             if not target.exists():
                 # Publish without replacing a file created concurrently.
-                os.link(rom, target)
+                atomic_write(root, BIOS_FILENAME, rom.read_bytes(), exclusive=True)
             elif target.is_symlink() or file_sha256(target) != BIOS_SHA256:
                 raise ValueError(f"{BIOS_FILENAME} changed during download")
         finally:

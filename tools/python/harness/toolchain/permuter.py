@@ -35,6 +35,10 @@ class DecompPermuterToolchain(PythonScriptSubmoduleToolchain):
         for path in self.preparation_tools:
             if not path.is_file():
                 raise FileNotFoundError(f"missing permuter preparation tool: {path}")
+            if path.is_symlink() or path.stat().st_nlink != 1:
+                raise ValueError(
+                    f"permuter preparation tool must be an independent file: {path}"
+                )
         result = subprocess.run(
             [
                 str(self.python),

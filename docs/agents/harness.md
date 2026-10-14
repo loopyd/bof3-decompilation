@@ -21,6 +21,11 @@ All paths are below `tools/python/harness/`.
 | `analysis/` | cross-domain reverse index, graph, mission and query coordination | `bin/harness analysis index`, `bin/harness analysis query` |
 | `domain/` | manifests, target identity, original binary/layout, source claims and includes | shared repository facts, not candidate acceptance |
 
+`bin/harness setup --component psyqo` replaces installer-created hardlinks in the
+installed PSYQo toolchain with independent files.
+`bin/harness doctor --component psyqo` verifies that each installed regular file
+has one link.
+
 `toolchain/permuter.py` owns managed decomp-permuter setup, workspace preparation
 and execution. Use `bin/harness setup --component decomp-permuter` to set it up
 and `bin/harness doctor --component decomp-permuter` to verify it.

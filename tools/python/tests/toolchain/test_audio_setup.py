@@ -85,10 +85,10 @@ def test_bios_failed_publication_leaves_no_rom(collection, monkeypatch):
         bios.urllib.request, "urlopen", lambda *a, **kw: io.BytesIO(data)
     )
 
-    def fail(*args):
+    def fail(*args, **kwargs):
         raise OSError("publication fixture failure")
 
-    monkeypatch.setattr(bios.os, "link", fail)
+    monkeypatch.setattr(bios, "atomic_write", fail)
     with pytest.raises(OSError, match="publication fixture failure"):
         tool.run()
     assert not list(tool.directory.iterdir())
