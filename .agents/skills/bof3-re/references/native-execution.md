@@ -45,6 +45,17 @@ complete function; reachable entry past the leading nop is refused. Other comput
 jumps, BSS and C binding overrides are refused. Input and consumer closure and
 production consolidation acceptance retain their owner gates.
 
+Source-bound routes can verify up to 32 preservation records captured from one
+shared PRE state. Each group must own a different target and disjoint edits, with
+no configuration migration. Every record retains its original compiler profile
+and source images. Verification checks every group against the joint POST
+inventory and input closure. Shared PRE states must agree; retained, destination
+and forced dependencies must still match their original pins. Routes refuse
+overlapping targets or edits, sequential captures, changed dependencies and
+destination compiler-key collisions. Capture all profiles and transactions before
+applying any group. Keep recovery ownership and producer lease handoff explicit.
+An active compiler override must match every group.
+
 Decompilation preflight requires complete reviewed membership, one explicit lift
 owner and matching attached spellings for a grouped source. Every member uses the
 fresh public comparison route. Groups bypass ordinary batch-object and cached-status

@@ -7,11 +7,12 @@ import hashlib
 import json
 import re
 import tomllib
+from contextlib import closing
 from pathlib import Path
 
 import yaml
 
-from harness.build.compiler import CONFIGURATION_PATH
+from harness.build.compiler import CONFIGURATION_PATH, sanitize_identifier
 from harness.build.dependencies import SourceImage
 from harness.build.migration import (
     read_migration_settings,
@@ -25,6 +26,7 @@ from harness.build.profiles import (
 from harness.build.observations import validate_description
 from harness.common.files import read_file
 from harness.common.inputs import InputBatch, relative
+from harness.common.observation import PathWatch
 from harness.domain.claims import collect_manifest_source_addresses
 from harness.domain.cache import collect_manifest_paths
 from harness.domain.functions import collect_lift_metadata, parse_function_records
@@ -344,14 +346,13 @@ def validate_ownership_images(
         raise ValueError("POST Splat changes more than selected source ownership")
 
 
-def verify_preservation(
+def _validate_record(
     root: Path,
     record: dict,
     *,
     expected_fingerprint: str,
-    compiler: Path | None = None,
 ) -> dict:
-    """Verify exact POST ownership and configured identity against an external PRE pin."""
+    """Validate one externally pinned history without claiming live freshness."""
     validate_fingerprint(expected_fingerprint)
     if not isinstance(record, dict):
         raise ValueError("preservation record must be an object")
@@ -409,17 +410,120 @@ def verify_preservation(
         raise ValueError("preservation requires the PRE manifest")
     if record["manifest"] != manifest_path or record["layout"] != layout_path:
         raise ValueError("preservation target paths differ")
+    return record
+
+
+def _compose_records(records: list[dict]) -> tuple[dict, list[str]]:
+    """Combine disjoint transitions from the same captured PRE generation."""
+    inputs = {}
+    post = {}
+    targets = set()
+    inventory = None
+    members = set()
+    destinations = set()
+    for record in records:
+        profile = record["profile"]
+        destination = profile["destination"]
+        sources = {member["source"] for member in profile["members"]}
+        baseline = set(record["source_inventory"])
+        if record["inputs"].get(destination) is None:
+            baseline.discard(destination)
+        if len(records) > 1:
+            if profile["configuration"] is not None:
+                raise ValueError("joint preservation refuses configuration migrations")
+            if profile["target"] in targets or post.keys() & record["post"].keys():
+                raise ValueError(
+                    "joint preservation requires disjoint targets and edits"
+                )
+            if inventory is not None and baseline != inventory:
+                raise ValueError("joint preservation PRE source inventories differ")
+            if record["manifest_inventory"] != records[0]["manifest_inventory"]:
+                raise ValueError("joint preservation PRE manifest inventories differ")
+            if not record["post"].keys() <= record["inputs"].keys():
+                raise ValueError("joint preservation lacks changed-path PRE states")
+        for path, state in record["inputs"].items():
+            if path in inputs and inputs[path] != state:
+                raise ValueError(f"joint preservation PRE input differs: {path}")
+            inputs[path] = state
+        targets.add(profile["target"])
+        inventory = baseline
+        members.update(sources)
+        destinations.add(destination)
+        post.update(record["post"])
+    expected_inventory = sorted((inventory - members) | destinations)
+    keys = {}
+    for source in expected_inventory:
+        key = sanitize_identifier(Path(source).relative_to("src").as_posix())
+        keys.setdefault(key, []).append(source)
+    if any(
+        len(keys[sanitize_identifier(Path(source).relative_to("src").as_posix())]) != 1
+        for source in destinations
+    ):
+        raise ValueError("joint preservation destination compiler keys collide")
+    return {**inputs, **post}, expected_inventory
+
+
+def verify_preservation(
+    root: Path,
+    record: dict,
+    *,
+    expected_fingerprint: str,
+    compiler: Path | None = None,
+    companions: tuple[tuple[dict, str], ...] = (),
+) -> dict:
+    """Verify every disjoint shared-PRE history and return the selected group proof."""
+    if not isinstance(companions, tuple) or len(companions) > 31:
+        raise ValueError("joint preservation requires at most 32 records")
+    root = root.resolve()
+    histories = ((record, expected_fingerprint), *companions)
+    records = [
+        _validate_record(root, value, expected_fingerprint=pin)
+        for value, pin in histories
+    ]
+    expected_inputs, expected_inventory = _compose_records(records)
+    with closing(PathWatch({root / name for name in expected_inputs})) as watch:
+        selected = _verify_record(
+            root,
+            records[0],
+            fingerprint=expected_fingerprint,
+            expected_inputs=expected_inputs,
+            expected_inventory=expected_inventory,
+            compiler=compiler,
+        )
+        watch.validate()
+        for current, (_, pin) in zip(records[1:], histories[1:], strict=True):
+            _verify_record(
+                root,
+                current,
+                fingerprint=pin,
+                expected_inputs=expected_inputs,
+                expected_inventory=expected_inventory,
+                compiler=root
+                / current["profile"]["common_profile"]["compiler"]["executable"],
+            )
+            watch.validate()
+    return selected
+
+
+def _verify_record(
+    root: Path,
+    record: dict,
+    *,
+    fingerprint: str,
+    expected_inputs: dict,
+    expected_inventory: list[str],
+    compiler: Path | None,
+) -> dict:
+    """Check one retained group against the complete joint live input closure."""
+    profile = record["profile"]
+    manifest_path, layout_path, sources = validate_transition(profile, record["post"])
     destination = profile["destination"]
-    expected_inventory = sorted(
-        (set(record["source_inventory"]) - set(sources)) | {destination}
-    )
     if (
         collect_profile_sources(root, destination) != expected_inventory
         or collect_manifest_paths(root) != record["manifest_inventory"]
     ):
         raise ValueError("POST source or manifest inventory differs")
     context = ProfileContext(root, compiler=compiler)
-    expected_inputs = {**record["inputs"], **post}
     if not context.inputs.keys() <= expected_inputs.keys():
         raise ValueError("POST input closure differs")
     with InputBatch(root) as batch:
@@ -464,13 +568,18 @@ def verify_preservation(
                 "configuration migration settings differ from retained PRE source"
             )
         if (
-            context.resolve(source, image=image, configuration_text=configuration_text)
+            context.resolve(
+                source,
+                image=image,
+                configuration_text=configuration_text,
+                preserved_inputs=profile["inputs"],
+            )
             != common
             or member["profile"] != common
         ):
             raise ValueError("PRE member compiler profile was not preserved")
     if (
-        context.resolve(destination) != common
+        context.resolve(destination, preserved_inputs=profile["inputs"]) != common
         or profile["destination_profile"] != common
     ):
         raise ValueError("POST destination compiler profile differs")

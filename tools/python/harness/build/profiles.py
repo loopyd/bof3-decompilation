@@ -400,6 +400,7 @@ class ProfileContext:
         *,
         image: SourceImage | None = None,
         configuration_text: str | None = None,
+        preserved_inputs: dict | None = None,
     ) -> dict:
         """Resolve the selected compiler and ordered options with captured inputs."""
         settings = self.resolve_settings(
@@ -430,7 +431,9 @@ class ProfileContext:
         forced = sorted(collect_forced_paths(self.root, arguments, cwd))
         for name in forced:
             self.read(name)
-        self._capture_include_inputs(source, image, arguments, forced)
+        self._capture_include_inputs(
+            source, image, arguments, forced, preserved_inputs=preserved_inputs
+        )
         output = self.root / "build" / Path(source).with_suffix(".o")
         invocation = plan_invocation(
             self.root,
@@ -466,6 +469,8 @@ class ProfileContext:
         image: SourceImage | None,
         arguments: list[str],
         forced: list[str],
+        *,
+        preserved_inputs: dict | None = None,
     ) -> None:
         """Pin literal dependencies and negative lookups from the supplied image."""
         parsed = parse_arguments(arguments[1:])
@@ -524,6 +529,15 @@ class ProfileContext:
             for name, sampled in snapshot.describe_inputs().items():
                 self.read(name, required=sampled is not None)
                 expected = None if sampled is None else {"sha256": sampled["sha256"]}
+                if (
+                    preserved_inputs is not None
+                    and not (name == source and image.kind == "current")
+                    and (
+                        name not in preserved_inputs
+                        or preserved_inputs[name] != expected
+                    )
+                ):
+                    raise ValueError(f"preserved include input differs: {name}")
                 if self.inputs[name] != expected:
                     raise ValueError(f"profile include input changed: {name}")
             snapshot.validate()

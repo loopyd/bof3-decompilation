@@ -15,10 +15,9 @@ from harness.build.preservation import (
     hash_preservation,
     read_preservation_document,
     validate_preservation_size,
-    verify_preservation,
 )
 from harness.build.receipts import produce_object, verify_production
-from harness.build.routing import select_preservation
+from harness.build.routing import select_preservation, verify_selection
 from harness.match.members import capture_members
 from harness.common.files import read_file
 from harness.common.files import atomic_write
@@ -449,9 +448,7 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
                 "comparison requires externally pinned preservation routing"
             )
         record = read_preservation_document(selection.record)
-        preserved = verify_preservation(
-            root, record, expected_fingerprint=selection.fingerprint
-        )
+        preserved = verify_selection(root, selection)
         if preserved["destination"] != source:
             raise ValueError("comparison source differs from its preserved destination")
         arguments = [

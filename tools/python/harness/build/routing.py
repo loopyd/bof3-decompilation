@@ -8,7 +8,11 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
-from harness.build.preservation import read_preservation_document, validate_fingerprint
+from harness.build.preservation import (
+    read_preservation_document,
+    validate_fingerprint,
+    verify_preservation,
+)
 from harness.common.directory import validate_repo_path
 from harness.common.files import read_file
 from harness.common.observation import PathWatch
@@ -31,6 +35,7 @@ class Selection:
     environment: dict[str, str | None]
     watch: PathWatch | None
     reserved: frozenset[Path] = frozenset()
+    history: tuple[tuple[Path, Path, str], ...] = ()
 
     def close(self) -> None:
         if self.watch is not None:
@@ -106,6 +111,7 @@ def _select_record(root: Path, document: dict, source: Path, grouped: bool) -> t
     selected = None
     used_records = set()
     reserved = set()
+    history = []
     for name, entry in records.items():
         path = _confine_path(root, name)
         if not path.is_relative_to(root / "src/bof3") or path.suffix != ".c":
@@ -118,6 +124,7 @@ def _select_record(root: Path, document: dict, source: Path, grouped: bool) -> t
             raise ValueError("one preservation record cannot route multiple sources")
         used_records.add(record)
         reserved.update((path, record))
+        history.append((path, record, entry["fingerprint"]))
         if source == path:
             selected = record, entry["fingerprint"]
     if grouped and selected is None:
@@ -127,7 +134,9 @@ def _select_record(root: Path, document: dict, source: Path, grouped: bool) -> t
             "preservation route selects a source that is no longer grouped"
         )
     record, fingerprint = selected if selected is not None else (None, None)
-    return record, fingerprint, frozenset(reserved)
+    if grouped and len(history) > 32:
+        raise ValueError("joint preservation requires at most 32 records")
+    return record, fingerprint, frozenset(reserved), tuple(history) if grouped else ()
 
 
 def select_preservation(
@@ -170,9 +179,18 @@ def select_preservation(
     watch = PathWatch({routes})
     try:
         document = read_preservation_document(routes, expected_sha256=routes_sha256)
-        record, fingerprint, reserved = _select_record(
+        record, fingerprint, reserved, history = _select_record(
             root, document, source, bool(grouped)
         )
+        if history:
+            history_watch = PathWatch({routes, *(path for _, path, _ in history)})
+            try:
+                watch.validate()
+            except BaseException:
+                history_watch.close()
+                raise
+            watch.close()
+            watch = history_watch
         selection = Selection(
             record,
             fingerprint,
@@ -181,9 +199,40 @@ def select_preservation(
             environment,
             watch,
             reserved | {routes},
+            history,
         )
         selection.validate()
         return selection
     except BaseException:
         watch.close()
         raise
+
+
+def verify_selection(
+    root: Path, selection: Selection, *, compiler: Path | None = None
+) -> dict:
+    """Verify all source-bound histories under the retained routing watch."""
+    if selection.record is None or selection.fingerprint is None:
+        raise ValueError("verification requires selected preservation history")
+    selection.validate()
+    record = read_preservation_document(selection.record)
+    companions = []
+    for source, path, pin in selection.history:
+        value = record if path == selection.record else read_preservation_document(path)
+        if (
+            not isinstance(value.get("profile"), dict)
+            or value["profile"].get("destination")
+            != source.relative_to(root).as_posix()
+        ):
+            raise ValueError("preservation route differs from its record destination")
+        if path != selection.record:
+            companions.append((value, pin))
+    proof = verify_preservation(
+        root,
+        record,
+        expected_fingerprint=selection.fingerprint,
+        compiler=compiler,
+        companions=tuple(companions),
+    )
+    selection.validate()
+    return proof

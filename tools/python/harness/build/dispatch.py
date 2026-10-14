@@ -21,14 +21,13 @@ from harness.build.invocation import Invocation, plan_dispatch, plan_invocation
 from harness.build.programs import ProgramSnapshot
 from harness.build.preservation import (
     hash_preservation,
-    read_preservation_document,
-    verify_preservation,
 )
 from harness.build.profiles import select_compiler
 from harness.build.routing import (
     PRESERVATION_ENVIRONMENT,
     Selection,
     select_preservation,
+    verify_selection,
 )
 from harness.common.files import read_file
 from harness.common.observation import PathWatch
@@ -247,12 +246,7 @@ def _prepare_selected(
             or not any(output.is_relative_to(root / name) for name in ("build", "out"))
         ):
             raise ValueError("grouped output must be a canonical build/ or out/ object")
-        proof = verify_preservation(
-            root,
-            read_preservation_document(record_path),
-            expected_fingerprint=record_fingerprint,
-            compiler=compiler,
-        )
+        proof = verify_selection(root, selection, compiler=compiler)
         if proof["destination"] != source.relative_to(root).as_posix():
             raise ValueError(
                 "preservation destination differs from the actual compiler source"
@@ -278,6 +272,7 @@ def _prepare_selected(
     if proof:
         paths.update(root / name for name in proof["inputs"])
         paths.add(record_path)
+        paths.update(path for _, path, _ in selection.history)
     selection.protect_outputs(output, inputs=paths)
     environment = dict(os.environ)
     invocation = plan_invocation(
@@ -510,11 +505,8 @@ def validate_dispatch(dispatch: Dispatch) -> None:
     if grouped:
         if not dispatch.record_path or not dispatch.record_fingerprint:
             raise ValueError("grouped compilation lacks preserved history")
-        proof = verify_preservation(
-            dispatch.root,
-            read_preservation_document(dispatch.record_path),
-            expected_fingerprint=dispatch.record_fingerprint,
-            compiler=dispatch.compiler,
+        proof = verify_selection(
+            dispatch.root, dispatch.selection, compiler=dispatch.compiler
         )
         if (
             proof["destination"]
