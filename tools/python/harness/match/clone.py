@@ -24,6 +24,8 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
+from harness.domain.functions import collect_lift_metadata, parse_function_records
+
 #: ``name = 0xADDR;`` rows of a composed target symbol map.
 _MAP_ROW = re.compile(
     r"^\s*([A-Za-z_]\w*)\s*=\s*(0x[0-9A-Fa-f]+)\s*;\s*$", re.MULTILINE
@@ -71,16 +73,39 @@ def byte_identity(representative: bytes, clone: bytes) -> bool:
     return len(representative) == len(clone) and representative == clone
 
 
-def _source_address(text: str) -> int:
-    match = _SOURCE_TAG.search(text)
-    if match is None:
+def _select_representative(text: str, address: int | None) -> tuple[str, int, str]:
+    records = collect_lift_metadata(text)
+    if not records:
         raise CloneUnsupported("representative source has no @source address")
-    return int(match.group(1), 16)
+    if address is None:
+        if len(records) != 1:
+            raise CloneUnsupported(
+                "grouped representative requires an explicit address"
+            )
+        address = next(iter(records))
+    if address not in records:
+        raise CloneUnsupported(f"representative has no function at 0x{address:08X}")
+    if len(records) == 1:
+        return text, address, _representative_name(text, address)
+    pieces: list[str] = []
+    cursor = 0
+    name = ""
+    for record in parse_function_records(text):
+        pieces.append(text[cursor : record.metadata_start])
+        if record.address == address:
+            if record.kind != "function":
+                raise CloneUnsupported("grouped clone requires an ordinary function")
+            name = record.spelling
+            pieces.append(text[record.metadata_start : record.implementation_end])
+        cursor = record.implementation_end
+    pieces.append(text[cursor:])
+    return "".join(pieces), address, name
 
 
 def generate_clone_source(
     representative_text: str,
     *,
+    representative_address: int | None = None,
     clone_address: int,
     clone_name: str | None = None,
     symbols: dict[str, int] | None = None,
@@ -91,15 +116,16 @@ def generate_clone_source(
     ``symbols`` maps the representative target's identifiers to addresses and
     ``function_names`` marks which of those are functions; both default to empty,
     which only supports representatives that are already self-contained.
+    Grouped representatives require an explicit address and retain only that
+    attached function plus the source's common declarations and includes.
     """
 
     if _INTERNAL_INCLUDE.search(representative_text):
         raise CloneUnsupported(
             "representative includes a target-local *_internal.h header"
         )
-    representative_address = _source_address(representative_text)
-    representative_name = _representative_name(
-        representative_text, representative_address
+    representative_text, representative_address, representative_name = (
+        _select_representative(representative_text, representative_address)
     )
     if clone_name is None:
         clone_name = f"func_{clone_address:08X}"
@@ -112,8 +138,18 @@ def generate_clone_source(
     symbols.pop(clone_name, None)
 
     rewrites: list[tuple[str, str]] = []
-    text = representative_text.replace(
-        f"0x{representative_address:08X}", f"0x{clone_address:08X}"
+    tags = [
+        match
+        for match in _SOURCE_TAG.finditer(representative_text)
+        if int(match.group(1), 16) == representative_address
+    ]
+    if len(tags) != 1:
+        raise CloneUnsupported("representative requires one unambiguous source tag")
+    tag = tags[0]
+    text = (
+        representative_text[: tag.start(1)]
+        + f"{clone_address:08X}"
+        + representative_text[tag.end(1) :]
     )
     # Rename the definition (and any self-recursion) before touching externals.
     text = re.sub(rf"\b{re.escape(representative_name)}\b", clone_name, text)
@@ -134,6 +170,7 @@ def _representative_name(text: str, address: int) -> str:
     so the match requires the parameter list to be followed by a body brace.
     """
 
+    definitions: set[str] = set()
     for match in _CALL.finditer(text):
         name = match.group(1)
         if name in {"if", "for", "while", "switch", "return", "sizeof"}:
@@ -143,9 +180,11 @@ def _representative_name(text: str, address: int) -> str:
             re.MULTILINE,
         )
         if definition.search(text):
-            return name
+            definitions.add(name)
+    if len(definitions) == 1:
+        return next(iter(definitions))
     raise CloneUnsupported(
-        f"representative source has no function definition for 0x{address:08X}"
+        f"representative source requires one unambiguous function definition for 0x{address:08X}"
     )
 
 

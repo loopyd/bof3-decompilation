@@ -18,10 +18,12 @@ import subprocess
 from pathlib import Path
 
 from harness.common.cli import add_example_argument, add_root_argument, run_main
+from harness.domain.functions import collect_lift_metadata
+from harness.domain.ids import parse_function_id
 from harness.domain.layout import parse_splat_text
 from harness.domain.manifests import load_target_manifests
-from harness.domain.sources import owning_manifest, source_address
-from harness.match._asm_resolve import infer_original_size
+from harness.domain.psx import binary_offset_for, is_psx_exe, validate_psx_header
+from harness.domain.registry import resolve_function
 from harness.match.clone import (
     CloneUnsupported,
     byte_identity,
@@ -40,20 +42,74 @@ _SHARED_MAP = "config/targets/shared/symbols.txt"
 
 
 def _resolve_selector(selector: str) -> tuple[str, int]:
-    if "@" not in selector:
-        raise CloneUnsupported("clone selector must be TARGET@0xADDRESS")
-    target, address_text = selector.split("@", 1)
-    return target, int(address_text, 0)
+    function = parse_function_id(selector)
+    return function.target.value, function.address
 
 
 def _read_range(root: Path, manifest, address: int, size: int) -> bytes:
     image = (root / manifest.binary).read_bytes()
+    if is_psx_exe(image):
+        validate_psx_header(image, manifest.load_address, binary_name=manifest.binary)
+    payload_offset = binary_offset_for(image)
     offset = address - manifest.load_address
-    if offset < 0 or offset + size > len(image):
+    if size <= 0 or offset < 0 or offset + size > len(image) - payload_offset:
         raise CloneUnsupported(
             f"range 0x{address:08X}+{size} is outside {manifest.binary}"
         )
-    return image[offset : offset + size]
+    start = payload_offset + offset
+    return image[start : start + size]
+
+
+def _reviewed_size(root: Path, manifest, address: int) -> int:
+    layout = _projected(root, manifest)
+    if layout is None:
+        raise CloneUnsupported(f"missing reviewed layout: {manifest.splat}")
+    boundaries = [
+        boundary
+        for boundary in layout.boundaries
+        if boundary.is_function and boundary.virtual_start == address
+    ]
+    if len(boundaries) != 1:
+        raise CloneUnsupported(f"expected one reviewed function at 0x{address:08X}")
+    size = boundaries[0].virtual_size
+    if size is None or size <= 0 or address % 4 or size % 4:
+        raise CloneUnsupported(f"missing finite aligned range at 0x{address:08X}")
+    return size
+
+
+def _resolve_representative(root: Path, value: str):
+    if "@" in value:
+        resolved = resolve_function(root, value)
+    else:
+        source = (root / value).resolve()
+        if not source.is_file():
+            raise CloneUnsupported(f"representative source does not exist: {source}")
+        records = collect_lift_metadata(source.read_text())
+        if not records:
+            raise CloneUnsupported("representative source has no @source address")
+        if len(records) != 1:
+            raise CloneUnsupported(
+                "use --from TARGET@0xADDRESS for a grouped representative"
+            )
+        relative = source.relative_to(root).as_posix()
+        owners = [
+            manifest
+            for manifest in load_target_manifests(root).values()
+            if relative in manifest.sources + manifest.support_sources
+        ]
+        if len(owners) != 1:
+            raise CloneUnsupported(
+                "representative source requires exactly one target owner"
+            )
+        address = next(iter(records))
+        resolved = resolve_function(root, f"{owners[0].id.value}@0x{address:08X}")
+        if resolved.source != source:
+            raise CloneUnsupported(
+                "representative source disagrees with its function claim"
+            )
+    if resolved.source is None:
+        raise CloneUnsupported("representative function has no claimed source")
+    return resolved.source, resolved.id.address, resolved.manifest
 
 
 def _projected(root: Path, manifest):
@@ -91,16 +147,10 @@ def _symbol_rows(root: Path, manifest) -> dict[str, int]:
 
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
-    representative = Path(args.source)
-    if not representative.is_file():
-        raise CloneUnsupported(
-            f"representative source does not exist: {representative}"
-        )
+    representative, representative_address, representative_manifest = (
+        _resolve_representative(root, args.source)
+    )
     representative_text = representative.read_text()
-    representative_address = source_address(representative)
-    representative_manifest = owning_manifest(root, representative.resolve())
-    if representative_manifest is None:
-        raise CloneUnsupported("representative source is not claimed by a manifest")
 
     target, clone_address = _resolve_selector(args.selector)
     manifests = load_target_manifests(root)
@@ -110,13 +160,11 @@ def run(args: argparse.Namespace) -> int:
     if clone_manifest.binary == representative_manifest.binary:
         raise CloneUnsupported("clone target is the representative's own target")
 
-    size = infer_original_size(
-        representative,
-        address=representative_address,
-        binary_path=root / representative_manifest.binary,
-        load_address=representative_manifest.load_address,
-        root=root,
-    )
+    size = _reviewed_size(root, representative_manifest, representative_address)
+    if _reviewed_size(root, clone_manifest, clone_address) != size:
+        raise CloneUnsupported(
+            "clone and representative complete ranges differ in size"
+        )
     if not byte_identity(
         _read_range(root, representative_manifest, representative_address, size),
         _read_range(root, clone_manifest, clone_address, size),
@@ -127,6 +175,7 @@ def run(args: argparse.Namespace) -> int:
 
     plan = generate_clone_source(
         representative_text,
+        representative_address=representative_address,
         clone_address=clone_address,
         clone_name=args.name,
         symbols=_symbol_rows(root, representative_manifest),
@@ -238,7 +287,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="bin/harness lift clone", description=__doc__)
     parser.add_argument("selector", help="clone selector TARGET@0xADDRESS")
     parser.add_argument(
-        "--from", dest="source", required=True, help="representative lifted source"
+        "--from",
+        dest="source",
+        required=True,
+        help="representative lifted source or TARGET@0xADDRESS; grouped sources require the selector",
     )
     parser.add_argument("--name", help="clone function name (default func_<ADDR>)")
     parser.add_argument(

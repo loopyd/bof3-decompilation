@@ -71,6 +71,12 @@ ineligible/declined reasons; revisit only with new evidence.
 
 Search these four levers before exhaustion. Byte identity proves no shared ownership.
 
+For a grouped representative, use `--from TARGET@0xADDRESS` to select one attached
+function. Clone retains common declarations and includes and rejects target-local
+`*_internal.h` headers. It compares both complete reviewed ranges using validated
+PS-X payload placement. Address rewriting changes only the selected source tag;
+body literals stay unchanged.
+
 ## Review and stop
 
 Non-exact review proposes 1–3 ranked untried experiments with expected instruction
