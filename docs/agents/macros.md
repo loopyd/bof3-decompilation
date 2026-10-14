@@ -463,16 +463,17 @@ bin/harness macros inspect-recovery out/reviews/evidence/macro-recovery-NONCE.js
 ```
 
 Inspection validates record integrity and structural bindings, reports PRE,
-exact v2/v3 POST, staging/displaced POST, missing/drifted files, quarantine identity and publication
-presence, and does not print source images. It neither re-derives the manifest
-against live inputs nor establishes an atomic snapshot,
-writer termination/exclusion or publication authenticity. Exit zero does not
-authorize restoration or a retry. Historical v1 records retain content-only POST
-inspection; v2 has no workspace/index guards. Outer v3 records with nested
-safeguards v4 report dirty-path drift, HEAD and index agreement, and index locks.
-A matching guard is not restoration authority or complete atomic verification.
-Historical nested safeguards v1-v3 remain structurally readable but cannot report
-a current match or authorize guarded recovery. Historical records are not upgraded.
+exact identity-bound POST, staging/displaced POST, missing/drifted files,
+quarantine identity and publication presence without printing source images.
+It neither re-derives the manifest against live inputs nor establishes atomic
+state, writer termination/exclusion or publication authenticity. Exit zero does
+not authorize restoration or a retry.
+Current v3 records with nested safeguards v4 report dirty-path drift, HEAD and
+index agreement, and index locks. A `null` safeguards value reports unavailable
+guards and blocks guarded recovery. Inspection rejects older recovery and
+safeguard formats. Obtain fresh independently pinned backing without rewriting
+old records or their pins. Matching guards do not grant restoration authority or
+complete atomic verification.
 
 For explicit parent-authorized source-only restoration:
 

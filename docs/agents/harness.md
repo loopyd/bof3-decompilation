@@ -243,9 +243,9 @@ The canonical GCC policy pins the captured driver binary and binds its effective
 GCC_EXEC_PREFIX, COMPILER_PATH and PATH. It records initial specs and cpp/cc1
 candidates, including machine/version prefixes, compiled default roots and PATH
 fallbacks; repeated roots retain their order. Alternate binaries and search-control
-options remain explicit unresolved cases, never default substitutions. Existing
-policy replay and historical graph shapes remain unchanged; live owner pins and
-stage fingerprints require fresh evidence after policy edits.
+options remain explicit unresolved cases, never default substitutions. Retained
+graphs require `bof3.program-inputs/v2`. Live owner pins and stage fingerprints
+require fresh evidence after policy edits.
 These observations do not prove effective import, shell or GCC selection.
 Executable suffixes, specs expansion, post-specs prefixes, other language backends
 and preprocessor inputs remain unresolved; native and consolidation gates stay closed.
@@ -276,7 +276,7 @@ Configured profiles capture explicit repository-local `-include`/`-imacros` file
 against the invocation's CWD, including when replaying retained source images.
 They join the unchanged PRE input set: missing or changed files reject, and no
 header edits are added to the POST allowlist. Old records lacking these inputs
-cannot pass fresh verification; historical decoding is unchanged. This does not
+cannot pass verification and require fresh capture. This does not
 resolve transitive headers, forwarded options, default paths or compiler support.
 Grouped comparison seeds its literal snapshot from dispatch's physical forced
 files too. Their descendants and negative lookups join mutation/output guards;
@@ -292,16 +292,13 @@ Full input closure and native/transaction integration remain open.
 See the [combiner contract](combiner.md) for supported entrypoints, invocation,
 invalid markers and retained recovery handling.
 
-`combiner.images` owns joint text/mode preparation; `combiner.history` owns strict
-transaction v1–v4 history and their exact owner sets. Current preparation emits v4
-with runtime/observation owners pinned and preservation v7/profile v5. Historical
-v1/v2 retain preservation v5/profile v3; v3 retains preservation v6/profile v4.
-Retained profile versions use
-`build.preservation.validate_profile_history`, independent of current admission
-schema constants; new captures still use `validate_transition`'s current-version
-gate. Recovery keeps manifest v1 and validates retained bindings without live PRE.
-Live transaction verification/rehearsal rejects historical v1–v3; recapture v4 rather
-than rewriting old pins. No schema support grants restoration or source authority.
+`combiner.images` owns joint text/mode preparation; `combiner.history` validates
+transaction v4 with its exact owner set, preservation v7, profile v5 and program
+graph v2. Transaction v4 pins `build.runtime` and `build.observations` with the
+other owners. The history owner rejects older formats. Obtain fresh preparation
+without rewriting old records or their pins. Recovery keeps manifest v1 and
+validates retained bindings without live PRE. These checks grant neither
+restoration nor source authority.
 
 The `bin/harness lift status` batch path loads a fresh catalog after each successful build and
 reuses it only during read-only source resolution. Ownership winner/tie rules stay
@@ -611,11 +608,6 @@ Scoped consumed-input freshness, owned PRE/POST identities, raw index checks,
 writer exclusion and cleanup checks remain required. Naming's physical PRE
 snapshot retains only its explicit transaction paths.
 
-Historical safeguards v1-v3 and their embedded submodule snapshots remain
-structurally readable. They cannot satisfy the current match check or gain new
-recovery authority. Never rewrite historical records or their external pins;
-new transactions require independently pinned scoped backing.
-
 Observations remain non-atomic and do not exclude manual edits. Root Git
 metadata remains trusted. Arbitrary Git-layout compatibility and index-extension
 confinement remain unassessed.
@@ -626,7 +618,7 @@ Records live at `out/reviews/evidence/{macro,type,combiner}-recovery-<nonce>.jso
 They contain source text: retain them as nonpublic evidence. Their digest
 detects drift against a separately retained pin; neither that digest, file mode
 nor writer PID authenticates restoration authority or proves writer termination.
-For new files, creation mode remains `0644` masked by the process umask; v2/v3/v4 bind
+For new files, creation mode remains `0644` masked by the process umask; v3/v4 bind
 the resulting exact mode. Exception rollback checks POST/PRE identities.
 
 Ordinary type/macro failure restores only the transaction's captured owned source
@@ -642,9 +634,8 @@ is uncertain.
 
 These observations are non-atomic. The non-Git fallback lacks workspace/Git
 guards and cannot claim verified recovery. Nested safeguards v4 excludes changed
-paths and archives no unrelated source contents. Legacy safeguards v1-v3 remain
-readable but cannot report a current match. Owner rollback never restores unrelated
-files or Git state.
+paths and archives no unrelated source contents. Owner rollback never restores
+unrelated files or Git state.
 
 Identity-bound source rollback is replayable: it requires complete backup/image
 coverage, recognizes original PRE as a no-op, and resumes a missing destination
@@ -656,7 +647,7 @@ does not bypass identity checks. `common/observation.py` shares non-atomic file
 observations with inspection; actual moves use the checked [publication backend](#file-publication)
 with native no-replace semantics and non-atomic surrounding observations.
 This low-level mechanism does not validate external record authority, acquire an
-absent lease, reconcile publication or restore workspace/Git state. Legacy
+absent lease, reconcile publication or restore workspace/Git state. Unbound
 byte-only rollback has no identity-replay guarantee. A no-op replay does not
 complete interrupted directory syncing or establish power-loss durability.
 
@@ -671,17 +662,18 @@ grants restoration authority or establishes an atomic multi-file commit.
 `common/inspection.py` supplies read-only `inspect-recovery RECORD
 --expected-recovery-digest PIN` to both owner CLIs. It checks the independent
 pin, recovery record, root/owner/manifest bindings, PRE encoding and reserved
-quarantine identities. It reports original PRE, missing, exact v2/v3/v4 POST or
-drifted files, staged/displaced POST, unchanged-path hashes and publication presence without printing
-source images. Manifest validation is structural, not live re-derivation.
-For transaction-recovery v3/v4 records with nested safeguards v4, inspection
-also reports dirty-path additions/removals/drift, HEAD and raw-index agreement,
-and index locks. `matches` means these observations agree, not complete workspace/Git
-verification. Nested safeguards v1-v3 remain structurally readable but always report
-`matches: false`.
-Historical v1 records retain content-only POST evidence; v2 retains exact POST
-identity but no workspace/index guards. Neither is upgraded. Observations are
-non-atomic; termination, exclusion and publication authenticity remain unverified.
+quarantine identities. It reports original PRE, missing, exact identity-bound POST
+or drifted files, staged/displaced POST, unchanged-path hashes and publication
+presence without printing source images. Manifest validation is structural, not
+live re-derivation.
+Inspection accepts transaction-recovery v3/v4 and, when present, safeguards v4.
+A `null` safeguards value reports unavailable guards and blocks guarded recovery.
+Inspection rejects all other recovery and safeguard formats. Obtain fresh
+independently pinned backing without rewriting old records or their pins.
+Safeguards v4 report dirty-path additions/removals/drift, HEAD and raw-index
+agreement, and index locks. `matches` means these observations agree, not complete
+workspace/Git verification. Observations are non-atomic; termination, exclusion
+and publication authenticity remain unverified.
 Exit zero means inspection succeeded, not that restoration or continuation is safe.
 
 ## Guarded source recovery

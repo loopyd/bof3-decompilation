@@ -238,15 +238,10 @@ def validate_transition(profile: dict, post: dict) -> tuple[str, str, list[str]]
 
 
 def validate_profile_history(profile: dict, post: dict) -> tuple[str, str, list[str]]:
-    """Validate retained transitions independently of current admission versions."""
+    """Validate current-format transitions without asserting live freshness."""
     if (
         not isinstance(profile, dict)
-        or profile.get("schema")
-        not in {
-            "bof3.combiner-profile/v3",
-            "bof3.combiner-profile/v4",
-            "bof3.combiner-profile/v5",
-        }
+        or profile.get("schema") != PROFILE_SCHEMA
         or "destination_text" not in profile
         or "configuration" not in profile
     ):
@@ -290,22 +285,14 @@ def validate_profile_history(profile: dict, post: dict) -> tuple[str, str, list[
         profile.get("destination_profile"), dict
     ):
         raise ValueError("preservation requires complete configured profiles")
-    if profile["schema"] != "bof3.combiner-profile/v3":
-        for configured in [
-            profile["common_profile"],
-            profile["destination_profile"],
-            *(member["profile"] for member in members),
-        ]:
-            if set(configured) != {"compiler", "arguments", "programs"}:
-                raise ValueError("retained compiler profile lacks program inputs")
-            validate_description(configured["programs"])
-            expected_programs = (
-                "bof3.program-inputs/v1"
-                if profile["schema"] == "bof3.combiner-profile/v4"
-                else "bof3.program-inputs/v2"
-            )
-            if configured["programs"]["schema"] != expected_programs:
-                raise ValueError("retained program schema differs from its profile")
+    for configured in [
+        profile["common_profile"],
+        profile["destination_profile"],
+        *(member["profile"] for member in members),
+    ]:
+        if set(configured) != {"compiler", "arguments", "programs"}:
+            raise ValueError("retained compiler profile lacks program inputs")
+        validate_description(configured["programs"])
     layouts = [path for path in inputs if path.endswith("/splat.yaml")]
     if len(layouts) != 1:
         raise ValueError("preservation requires one pinned target Splat layout")

@@ -1,10 +1,12 @@
-"""Validate versioned retained consolidation history without live admission."""
+"""Validate current consolidation records without live admission."""
 
 from __future__ import annotations
 
 import copy
 
 from harness.build.preservation import (
+    PRESERVATION_SCHEMA,
+    PROFILE_SCHEMA,
     hash_preservation,
     validate_fingerprint,
     validate_ownership_images,
@@ -14,7 +16,7 @@ from harness.build.preservation import (
 )
 from harness.combiner.images import prepare_images
 
-_OWNERS_V1 = (
+_OWNERS = (
     "tools/python/harness/combiner/transactions.py",
     "tools/python/harness/combiner/cli.py",
     "tools/python/harness/combiner/rehearsal.py",
@@ -28,35 +30,20 @@ _OWNERS_V1 = (
     "tools/python/harness/common/workspace.py",
     "tools/python/harness/common/verification.py",
     "tools/python/harness/domain/policy.py",
-)
-_OWNERS_V2 = (
-    *_OWNERS_V1,
     "tools/python/harness/combiner/history.py",
     "tools/python/harness/combiner/images.py",
-)
-_OWNERS_V3 = (
-    *_OWNERS_V2,
     "tools/python/harness/build/programs.py",
     "tools/python/harness/common/lookups.py",
-)
-_OWNERS_V4 = (
-    *_OWNERS_V3,
     "tools/python/harness/build/runtime.py",
     "tools/python/harness/build/observations.py",
 )
 
 
 def collect_transaction_owners(schema: str) -> tuple[str, ...]:
-    """Return the exact owner set attached to one supported historical version."""
-    if schema == "bof3.combiner-transaction/v1":
-        return _OWNERS_V1
-    if schema == "bof3.combiner-transaction/v2":
-        return _OWNERS_V2
-    if schema == "bof3.combiner-transaction/v3":
-        return _OWNERS_V3
+    """Return the exact owner set for the current transaction schema."""
     if schema == "bof3.combiner-transaction/v4":
-        return _OWNERS_V4
-    raise ValueError("unsupported retained transaction schema")
+        return _OWNERS
+    raise ValueError("transaction requires a fresh current capture")
 
 
 def validate_transaction_history(
@@ -67,24 +54,6 @@ def validate_transaction_history(
     if not isinstance(transaction, dict):
         raise ValueError("transaction must be an object")
     required_owners = collect_transaction_owners(transaction.get("schema"))
-    preservation_schema, profile_schema = {
-        "bof3.combiner-transaction/v1": (
-            "bof3.combiner-preservation/v5",
-            "bof3.combiner-profile/v3",
-        ),
-        "bof3.combiner-transaction/v2": (
-            "bof3.combiner-preservation/v5",
-            "bof3.combiner-profile/v3",
-        ),
-        "bof3.combiner-transaction/v3": (
-            "bof3.combiner-preservation/v6",
-            "bof3.combiner-profile/v4",
-        ),
-        "bof3.combiner-transaction/v4": (
-            "bof3.combiner-preservation/v7",
-            "bof3.combiner-profile/v5",
-        ),
-    }[transaction["schema"]]
     validate_preservation_size(transaction)
     transaction = copy.deepcopy(transaction)
     if (
@@ -132,7 +101,7 @@ def validate_transaction_history(
         or set(owners) != set(required_owners)
         or any(state is None for state in owners.values())
         or not isinstance(record, dict)
-        or record.get("schema") != preservation_schema
+        or record.get("schema") != PRESERVATION_SCHEMA
         or record.get("root") != transaction["root"]
         or record.get("fingerprint")
         != hash_preservation(
@@ -150,7 +119,7 @@ def validate_transaction_history(
     ):
         raise ValueError("transaction images or retained bindings differ")
     try:
-        if record["profile"].get("schema") != profile_schema:
+        if record["profile"].get("schema") != PROFILE_SCHEMA:
             raise ValueError("retained transaction/profile versions differ")
         manifest, layout, _ = validate_profile_history(record["profile"], post)
         if (

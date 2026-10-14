@@ -68,11 +68,10 @@ keep source-bearing backing nonpublic/uncommitted.
 V4 supports separately authorized deletion-aware common owners: present PRE,
 `post:null`, exact declared deletion set and reserved PRE quarantine. It does not
 add type/macro deletion authority, combiner acceptance or automatic recovery.
-Historical v1 is content-only POST; v2 lacks workspace/index guards. Nested
-safeguards v1-v3 remain inspectable, but their full-workspace guards are not
-revalidated or silently converted and cannot authorize guarded recovery. New
-transactions require scoped backing. Never upgrade historical records to claim
-newer safeguards.
+Inspection accepts transaction-recovery v3/v4 and, when present, safeguards v4.
+A `null` safeguards value reports unavailable guards and blocks guarded recovery.
+Inspection rejects older formats. Obtain fresh scoped backing without rewriting
+old records or their pins.
 
 ## Recovery
 

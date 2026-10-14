@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import base64
-import hashlib
 import os
 import stat
 from pathlib import Path
@@ -13,11 +12,7 @@ from harness.common.directory import validate_repo_path
 from harness.common.git import GitIndexSnapshot, capture_git_state, git_index_backup
 from harness.common.paths import file_state
 from harness.common.workspace import WorkspaceState, verify_workspace, workspace_state
-from harness.common.submodules import validate_snapshot
 
-LEGACY_SCHEMA = "bof3.recovery-safeguards/v1"
-LINK_SCHEMA = "bof3.recovery-safeguards/v2"
-CONTENT_SCHEMA = "bof3.recovery-safeguards/v3"
 SCHEMA = "bof3.recovery-safeguards/v4"
 
 
@@ -109,87 +104,18 @@ def _validate_workspace(value: object, changed: set[str]) -> None:
 def _validate_safeguards(value: object, changed: set[str]) -> dict:
     if not isinstance(value, dict):
         raise ValueError("invalid recovery safeguards")
-    scoped = value.get("schema") == SCHEMA
-    fields = (
-        {"schema", "workspace", "head", "index"}
-        if scoped
-        else {"schema", "untouched", "index"}
-    )
-    if set(value) != fields:
+    if value.get("schema") != SCHEMA:
+        raise ValueError("recovery safeguards require a fresh scoped capture")
+    if set(value) != {"schema", "workspace", "head", "index"}:
         raise ValueError("invalid recovery safeguards")
-    if scoped:
-        _validate_workspace(value["workspace"], changed)
-        head = value["head"]
-        if head is not None and (
-            not isinstance(head, str)
-            or len(head) != 40
-            or any(c not in "0123456789abcdef" for c in head)
-        ):
-            raise ValueError("invalid recovery HEAD")
-    elif value["schema"] not in {
-        CONTENT_SCHEMA,
-        LINK_SCHEMA,
-        LEGACY_SCHEMA,
-    } or not isinstance(value["untouched"], dict):
-        raise ValueError("invalid recovery safeguards schema")
-    for name, entry in value.get("untouched", {}).items():
-        validate_repo_path(name)
-        fields = {
-            "sha256",
-            "mode",
-            "device",
-            "inode",
-            "uid",
-            "gid",
-            "links",
-            "content_base64",
-        }
-        if value["schema"] != LEGACY_SCHEMA:
-            if not isinstance(entry, dict) or entry.get("kind") not in {
-                "file",
-                "symlink",
-            } | ({"gitlink"} if value["schema"] == CONTENT_SCHEMA else set()):
-                raise ValueError("invalid recovery untouched kind")
-            fields.add("kind")
-            if entry["kind"] == "symlink":
-                fields.update({"mtime_ns", "ctime_ns"})
-            if entry["kind"] == "gitlink":
-                fields = {"kind", "sha256", "content_base64"}
-        if name in changed or not isinstance(entry, dict) or set(entry) != fields:
-            raise ValueError("invalid recovery untouched path")
-        checksum = entry["sha256"]
-        if (
-            not isinstance(checksum, str)
-            or len(checksum) != 64
-            or any(character not in "0123456789abcdef" for character in checksum)
-            or any(
-                type(entry[key]) is not int or entry[key] < 0
-                for key in entry
-                if key not in {"sha256", "content_base64", "kind"}
-            )
-        ):
-            raise ValueError("invalid recovery untouched identity")
-        if entry.get("kind") != "gitlink" and (
-            entry["mode"] > 0o7777 or entry["links"] < 1
-        ):
-            raise ValueError("invalid recovery untouched mode or link count")
-        if not isinstance(entry["content_base64"], str):
-            raise ValueError("invalid recovery untouched encoding")
-        content = base64.b64decode(entry["content_base64"], validate=True)
-        if (
-            base64.b64encode(content).decode("ascii") != entry["content_base64"]
-            or hashlib.sha256(content).hexdigest() != checksum
-        ):
-            raise ValueError("invalid recovery untouched image")
-        if entry.get("kind") == "gitlink":
-            if any(
-                path == name
-                or path.startswith(name + "/")
-                or name.startswith(path + "/")
-                for path in changed
-            ):
-                raise ValueError("recovery mutation overlaps protected submodule")
-            validate_snapshot(name, content)
+    _validate_workspace(value["workspace"], changed)
+    head = value["head"]
+    if head is not None and (
+        not isinstance(head, str)
+        or len(head) != 40
+        or any(c not in "0123456789abcdef" for c in head)
+    ):
+        raise ValueError("invalid recovery HEAD")
     index = value["index"]
     if not isinstance(index, dict) or set(index) != {"path", "content_base64", "state"}:
         raise ValueError("invalid recovery index fields")
@@ -223,13 +149,6 @@ def inspect_safeguards(root: Path, value: object, changed: set[str]) -> dict[str
     index = git_index_backup(root)
     if index is None:
         return {"available": True, "matches": False, "git_present": False}
-    if expected["schema"] != SCHEMA:
-        return {
-            "available": True,
-            "matches": False,
-            "legacy_schema": expected["schema"],
-            "reason": "legacy full-workspace safeguards require a fresh scoped transaction",
-        }
     git = capture_git_state(root)
     current = {
         name: entry

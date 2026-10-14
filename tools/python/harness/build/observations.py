@@ -1,4 +1,4 @@
-"""Validate versioned retained compiler program observations without live reads."""
+"""Validate current compiler program observations without live reads."""
 
 from __future__ import annotations
 
@@ -19,18 +19,17 @@ def validate_description(value: object) -> None:
     """Validate retained observational structure without asserting live freshness."""
     if (
         not isinstance(value, dict)
-        or not isinstance(value.get("schema"), str)
-        or value.get("schema")
-        not in {"bof3.program-inputs/v1", "bof3.program-inputs/v2"}
+        or value.get("schema") != "bof3.program-inputs/v2"
         or set(value)
-        != (
-            {"schema", "roots", "requests", "nodes", "complete"}
-            | (
-                {"runtime_seeds", "runtime_edges"}
-                if value["schema"] == "bof3.program-inputs/v2"
-                else set()
-            )
-        )
+        != {
+            "schema",
+            "roots",
+            "requests",
+            "nodes",
+            "complete",
+            "runtime_seeds",
+            "runtime_edges",
+        }
         or value["complete"] is not False
     ):
         raise ValueError("program input record fields differ")
@@ -183,14 +182,13 @@ def validate_description(value: object) -> None:
         if (
             not isinstance(request["role"], str)
             or request["role"]
-            not in (
-                {"executable", "script", "supervisor"}
-                | (
-                    {"runtime-source", "runtime-executable"}
-                    if value["schema"] == "bof3.program-inputs/v2"
-                    else set()
-                )
-            )
+            not in {
+                "executable",
+                "script",
+                "supervisor",
+                "runtime-source",
+                "runtime-executable",
+            }
             or any(
                 not isinstance(request[name], str)
                 or not request[name]
@@ -292,30 +290,28 @@ def validate_description(value: object) -> None:
             raise ValueError("program script is not one regular file")
     if reached != set(nodes):
         raise ValueError("program graph contains undeclared nodes")
-    if value["schema"] == "bof3.program-inputs/v2":
-        boundary = next(
-            (
-                index
-                for index, request in enumerate(requests)
-                if request["role"].startswith("runtime-")
-            ),
-            len(requests),
-        )
-        if any(
-            not request["role"].startswith("runtime-")
-            for request in requests[boundary:]
-        ):
-            raise ValueError("runtime candidates precede primary requests")
-        expected, edges = derive_candidates(
-            repository, value["runtime_seeds"], requests[:boundary], nodes
-        )
-        _validate_edges(value["runtime_edges"], len(edges), boundary, len(requests))
-        actual = [
-            {key: item for key, item in request.items() if key != "lookups"}
-            for request in requests[boundary:]
-        ]
-        if expected != actual or edges != value["runtime_edges"]:
-            raise ValueError("runtime candidate causes differ")
+    boundary = next(
+        (
+            index
+            for index, request in enumerate(requests)
+            if request["role"].startswith("runtime-")
+        ),
+        len(requests),
+    )
+    if any(
+        not request["role"].startswith("runtime-") for request in requests[boundary:]
+    ):
+        raise ValueError("runtime candidates precede primary requests")
+    expected, edges = derive_candidates(
+        repository, value["runtime_seeds"], requests[:boundary], nodes
+    )
+    _validate_edges(value["runtime_edges"], len(edges), boundary, len(requests))
+    actual = [
+        {key: item for key, item in request.items() if key != "lookups"}
+        for request in requests[boundary:]
+    ]
+    if expected != actual or edges != value["runtime_edges"]:
+        raise ValueError("runtime candidate causes differ")
 
 
 def _validate_edges(value: object, count: int, boundary: int, requests: int) -> None:

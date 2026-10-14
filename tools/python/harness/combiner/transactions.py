@@ -114,8 +114,6 @@ def verify_transaction(
     transaction = validate_transaction_history(
         transaction, expected_fingerprint=expected_fingerprint
     )
-    if transaction["schema"] != SCHEMA:
-        raise ValueError("historical transaction is not current PRE admission")
     try:
         current = prepare_transaction(
             root,

@@ -21,8 +21,6 @@ from harness.common.safeguards import capture_safeguards
 from harness.common.submodules import validate_mutations
 from harness.common.workspace import WorkspaceState
 
-LEGACY_SCHEMA = "bof3.transaction-recovery/v1"
-IDENTITY_SCHEMA = "bof3.transaction-recovery/v2"
 SCHEMA = "bof3.transaction-recovery/v3"
 DELETION_SCHEMA = "bof3.transaction-recovery/v4"
 RECOVERY_OWNERS = frozenset({"macro", "type", "combiner"})

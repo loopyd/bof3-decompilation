@@ -18,8 +18,6 @@ from harness.common.quarantine import validate_quarantine
 from harness.common.images import validate_image_path
 from harness.common.recovery import (
     DELETION_SCHEMA,
-    IDENTITY_SCHEMA,
-    LEGACY_SCHEMA,
     RECOVERY_OWNERS,
     SCHEMA,
 )
@@ -42,7 +40,6 @@ def _validate_file(
     value: object,
     manifest: dict[str, Any],
     *,
-    legacy: bool,
     deletions: bool = False,
 ) -> None:
     entry = _require_fields(value, "pre post quarantine")
@@ -53,16 +50,14 @@ def _validate_file(
     post = (
         _require_fields(
             entry["post"],
-            "sha256 mode creation_mode"
-            if legacy
-            else "sha256 mode device inode staging quarantine",
+            "sha256 mode device inode staging quarantine",
         )
         if not deleted
         else None
     )
     if not deleted and not _is_hash(post["sha256"]):
         raise ValueError("invalid recovery POST hash")
-    if not legacy and not deleted:
+    if not deleted:
         if (
             type(post["mode"]) is not int
             or not 0 <= post["mode"] <= 0o7777
@@ -84,11 +79,6 @@ def _validate_file(
             or entry["quarantine"] is not None
         ):
             raise ValueError("invalid absent recovery PRE")
-        if legacy and (
-            post["mode"] is not None
-            or post["creation_mode"] != ("0644 masked by the process umask")
-        ):
-            raise ValueError("invalid recovery creation mode policy")
         return
     encoded = pre["content_base64"]
     if not isinstance(encoded, str):
@@ -107,15 +97,12 @@ def _validate_file(
             not deleted
             and (type(post["mode"]) is not int or post["mode"] != pre["mode"])
         )
-        or (legacy and post["creation_mode"] is not None)
     ):
         raise ValueError("invalid recovery PRE content or identity")
     validate_quarantine(name, entry["quarantine"])
 
 
-def _describe_file(
-    root: Path, name: str, entry: dict[str, Any], *, legacy: bool
-) -> dict[str, Any]:
+def _describe_file(root: Path, name: str, entry: dict[str, Any]) -> dict[str, Any]:
     current = observe_file(root, name)
     pre = {key: value for key, value in entry["pre"].items() if key != "content_base64"}
     quarantine = entry["quarantine"]
@@ -152,14 +139,8 @@ def _describe_file(
         state = "pre"
     elif current is None:
         state = "missing"
-    elif not legacy and current == expected_post:
+    elif current == expected_post:
         state = "post"
-    elif legacy and (
-        current["sha256"] == entry["post"]["sha256"]
-        and current["links"] == 1
-        and (entry["post"]["mode"] is None or current["mode"] == entry["post"]["mode"])
-    ):
-        state = "post-content-only"
     else:
         state = "drifted"
     result = {
@@ -171,29 +152,28 @@ def _describe_file(
         else "original-pre"
         if displaced == expected
         else "drifted",
-        "post_identity_bound": not legacy,
+        "post_identity_bound": True,
     }
-    if not legacy:
-        staging = entry["post"]["staging"]
-        staged = observe_file(root, staging)
-        result["staging"] = staging
-        result["staging_state"] = (
-            "absent"
-            if staged is None
-            else "prepared-post"
-            if staged == expected_post
-            else "drifted"
-        )
-        post_quarantine = entry["post"]["quarantine"]
-        displaced_post = observe_file(root, post_quarantine)
-        result["post_quarantine"] = post_quarantine
-        result["post_quarantine_state"] = (
-            "absent"
-            if displaced_post is None
-            else "original-post"
-            if displaced_post == expected_post
-            else "drifted"
-        )
+    staging = entry["post"]["staging"]
+    staged = observe_file(root, staging)
+    result["staging"] = staging
+    result["staging_state"] = (
+        "absent"
+        if staged is None
+        else "prepared-post"
+        if staged == expected_post
+        else "drifted"
+    )
+    post_quarantine = entry["post"]["quarantine"]
+    displaced_post = observe_file(root, post_quarantine)
+    result["post_quarantine"] = post_quarantine
+    result["post_quarantine_state"] = (
+        "absent"
+        if displaced_post is None
+        else "original-post"
+        if displaced_post == expected_post
+        else "drifted"
+    )
     return result
 
 
@@ -223,15 +203,18 @@ def load_recovery(
     if hashlib.sha256(content).hexdigest() != metadata["sha256"]:
         raise ValueError("recovery record changed during inspection")
     record = json.loads(content, object_pairs_hook=unique_object)
-    fields = "schema nonce root writer_pid binding files recovery_scope restoration_authority digest"
-    if isinstance(record, dict) and record.get("schema") in {SCHEMA, DELETION_SCHEMA}:
-        fields += " safeguards"
-    record = _require_fields(record, fields)
+    if not isinstance(record, dict) or record.get("schema") not in {
+        SCHEMA,
+        DELETION_SCHEMA,
+    }:
+        raise ValueError("recovery record requires a fresh capture")
+    record = _require_fields(
+        record,
+        "schema nonce root writer_pid binding files recovery_scope restoration_authority digest safeguards",
+    )
     facts = {key: value for key, value in record.items() if key != "digest"}
     if (
-        record["schema"]
-        not in (LEGACY_SCHEMA, IDENTITY_SCHEMA, SCHEMA, DELETION_SCHEMA)
-        or record["digest"] != expected_recovery_digest
+        record["digest"] != expected_recovery_digest
         or record["digest"] != digest(facts)
         or record["restoration_authority"] is not False
         or record["recovery_scope"]
@@ -274,13 +257,11 @@ def load_recovery(
         or not set(record["files"]) <= allowed
     ):
         raise ValueError("invalid recovery owned PRE or changed paths")
-    legacy = record["schema"] == LEGACY_SCHEMA
     for path, entry in record["files"].items():
         _validate_file(
             path,
             entry,
             manifest,
-            legacy=legacy,
             deletions=record["schema"] == DELETION_SCHEMA,
         )
     if record["schema"] == DELETION_SCHEMA and not any(
@@ -327,9 +308,7 @@ def inspect_recovery(
     allowed = set(manifest["allowed_paths"])
     pre_state = manifest["pre_state"]
     files = {
-        path: _describe_file(
-            root, path, entry, legacy=record["schema"] == LEGACY_SCHEMA
-        )
+        path: _describe_file(root, path, entry)
         for path, entry in record["files"].items()
     }
     unchanged = {}

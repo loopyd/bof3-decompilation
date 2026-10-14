@@ -363,15 +363,13 @@ and native commands are not performed. `native_verified`, `coverage_verified`,
 temporary application and owned restoration; permanent application, complete consumer
 gates and independent production acceptance remain open.
 
-New preparation emits transaction v4, adding `build.runtime` and `build.observations`
-to the v3 owners. The history owner validates exact versioned owner sets: v1/v2
-retain preservation v5/profile v3; v3 retains preservation v6/profile v4; v4
-requires preservation v7/profile v5 and runtime-candidate graphs.
-Fingerprints, images, modes, ownership and false acceptance flags remain mandatory.
-Older transactions are restoration history only: live verification and rehearsal
-require fresh v4 preparation, never automatic backfill.
-Recovery manifest v1 is unchanged; historical validation grants neither restoration
-authority nor current compiler/dependency freshness.
+Preparation and retained validation require transaction v4, preservation v7,
+profile v5 and program graph v2, with the exact owner set including `build.runtime`
+and `build.observations`. Fingerprints, images, modes, ownership and false acceptance
+flags remain mandatory. The history owner rejects older formats. Obtain fresh
+preparation without rewriting old records or pins. Recovery manifest v1 is unchanged.
+Retained validation remains structural, without live PRE, and grants neither
+restoration authority nor current compiler/dependency freshness.
 
 ### Transaction rehearsal and recovery
 
@@ -423,7 +421,7 @@ recovery evidence without changing files. `bin/harness combiner recover RECORD
 --expected-recovery-digest PIN --authorization AUTHORIZATION
 --expected-authorization-digest AUTH_PIN` uses the same independently pinned parent
 authority, distinct run identities, actual terminal evidence, absent publication and
-workspace/index safeguards as other domains. Historical manifest validation does
+workspace/index safeguards as other domains. Retained manifest validation does
 not demand live PRE, so partial/deleted POST remains inspectable. See
 [recovery capture](harness.md#recovery-capture). Standalone recovery remains
 parent-supervised.
@@ -541,8 +539,9 @@ recipe and execution fingerprints stay distinct; comparison v6 binds the produce
 execution fingerprint. Verification renders the recorded temporary binding without
 allocating or rereading deleted staging. Unknown environment values are not printed.
 Older receipts cannot acquire these bindings retroactively. New compilation requires
-profile v5/preservation v7 and current owner pins. Older retained transitions keep
-their strict historical-restoration validation, not current admission.
+profile v5/preservation v7 and current owner pins. Retained transition validation
+admits those versions only and does not rederive live PRE. Older formats require
+fresh capture.
 Recorded execution is not authenticated native proof: endpoint samples do not
 detect reverted mutations or establish complete compiler search/import/runtime
 dependencies. Reuse, native equality and source-adoption authority remain denied.
@@ -598,8 +597,8 @@ substitutes for a fresh validation.
 Profiles omit incidental source/output operands from this common program graph;
 concrete recipes bind those separately. Dispatch retains the graph in its invocation
 fingerprint, transitively binding execution and producer/comparison receipts.
-Profile v5 and preservation v7 require graph v2; historical profile v4 retains
-direct-only graph v1 and is never backfilled. GCC backend/spec searches, effective
+Profile v5 and preservation v7 require program graph v2. The validator rejects graph
+v1. Obtain fresh capture without relabeling schemas. GCC backend/spec searches, effective
 import/startup/shell resolution and ELF loaders/libraries remain open. `complete:false`,
 configured provenance and non-reuse remain mandatory; native fidelity is unverified.
 
@@ -647,8 +646,8 @@ no process-global environment mutation or automatic record discovery occurs.
 Routes reserve the table and every named source/record, even for ordinary calls.
 Direct and routed grouped dispatch also protect every selected preserved input
 against primary, diagnostic and receipt outputs, including resolved aliases.
-V3 records also bind global source and manifest state: another consolidation can
-stale an earlier record. Routing does not compose or rebase those histories;
+Preservation records also bind global source and manifest state. Another consolidation
+can invalidate an earlier record. Routing does not compose or rebase those histories;
 multi-group build acceptance still requires mutually valid preservation evidence.
 
 Detected grouped inputs reject before native launch without this external pin, even

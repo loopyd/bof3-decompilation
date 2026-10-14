@@ -1,20 +1,12 @@
-"""Gitlink mutation boundaries and legacy dependency record validation."""
+"""Gitlink boundaries for transaction mutations and evidence outputs."""
 
 from __future__ import annotations
 
-import json
 from functools import wraps
 from pathlib import Path
 
 from harness.common.directory import validate_repo_path
 from harness.common.git import capture_git_state, read_git
-
-SCHEMA = "bof3.submodule-snapshot/v3"
-LEGACY_SCHEMA = "bof3.submodule-snapshot/v2"
-
-
-def _encode(value: dict) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
 
 
 def _parse_entries(output: str, *, tree: bool = False) -> dict[str, tuple[str, str]]:
@@ -89,29 +81,3 @@ def protect_artifacts(function):
         return function(root, *arguments, **options)
 
     return execute
-
-
-def validate_snapshot(name: str, content: bytes) -> None:
-    value = json.loads(content)
-    fields = {"schema", "path", "gitlink", "state", "identity", "marker"}
-    if isinstance(value, dict) and value.get("state") == "initialized":
-        fields.update(
-            {
-                "gitdir",
-                "git_identity",
-                "head",
-                "controls",
-                "files",
-                "namespace",
-                "dirty",
-            }
-        )
-    if (
-        not isinstance(value, dict)
-        or set(value) != fields
-        or value["schema"] not in (SCHEMA, LEGACY_SCHEMA)
-        or value["path"] != name
-        or value["state"] not in {"absent", "uninitialized", "initialized"}
-        or _encode(value) != content
-    ):
-        raise ValueError("invalid submodule snapshot")
