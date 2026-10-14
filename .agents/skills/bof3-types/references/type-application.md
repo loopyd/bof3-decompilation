@@ -46,8 +46,9 @@ Cap each shared private proof at 64 MiB, not aggregate memory. Rederive live inp
 after admission capture.
 
 Map Changes JSON only from manifest-owned paths to complete replacements. Follow
-lifecycle checks/immutable receipts/ordinary-failure rollback. For grouped C,
-require one explicit lift owner and every attached ordinary function in
+lifecycle checks/immutable receipts/ordinary-failure rollback. Derive grouped C
+membership from reviewed Splat even when an attached record is missing. Require
+one explicit lift owner and every attached ordinary function in
 `affected_functions`. Reconcile complete records with reviewed boundaries, claims,
 indexed symbols/statuses/source hashes. Preserve record order, metadata, spellings
 and bytes outside implementations; bodies/signatures may change. Cap C capture at

@@ -176,11 +176,16 @@ def _validate_function_groups(
     for (target, name), selected in groups.items():
         raw = read_file(root, name, max_bytes=4 * 1024 * 1024)
         text = raw.decode("utf-8")
-        if count_function_metadata(text) <= 1:
+        manifest = manifests[target]
+        layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
+        expected = expected_lift_sources(layout, root / manifest.source_dir)
+        addresses = expected.get(
+            source_expected_key(root / manifest.source_dir, root / name)
+        )
+        if count_function_metadata(text) <= 1 and not isinstance(addresses, tuple):
             source_functions.validate_single_source_changes({name: text})
             continue
         records = source_functions.parse_function_records(text)
-        manifest = manifests[target]
         owners = [
             entry.id.value
             for entry in manifests.values()
@@ -190,11 +195,6 @@ def _validate_function_groups(
             raise ValueError(
                 f"grouped type source requires one explicit lift owner: {name}"
             )
-        layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
-        expected = expected_lift_sources(layout, root / manifest.source_dir)
-        addresses = expected.get(
-            source_expected_key(root / manifest.source_dir, root / name)
-        )
         addresses = set(addresses) if isinstance(addresses, tuple) else {addresses}
         claimed = {
             address
