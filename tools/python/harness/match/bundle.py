@@ -19,6 +19,7 @@ def write_bundle(
     *,
     target: str | None = None,
     html_output: bool = False,
+    directory: Path | None = None,
 ) -> Path:
     """Materialize the normalized diff and adapter settings under ``out``."""
 
@@ -40,7 +41,11 @@ def write_bundle(
             owner = source_parent.removeprefix("src/")
     else:
         owner = target
-    bundle = root / "out" / "matching" / owner / function / "asm-differ"
+    bundle = directory or root / "out" / "matching" / owner / function / "asm-differ"
+    if directory is not None and (
+        not directory.is_relative_to(root / "out") or directory.resolve() != directory
+    ):
+        raise ValueError("adapter bundle requires a canonical out/ directory")
     bundle.mkdir(parents=True, exist_ok=True)
     outputs = payload["outputs"]
     for source_name, destination_name in (

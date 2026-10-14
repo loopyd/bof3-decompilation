@@ -13,7 +13,7 @@ from harness.build.preservation import (
     validate_preservation_size,
 )
 from harness.build.routing import select_preservation
-from harness.combiner.comparison import compare_members, resolve_comparison_outputs
+from harness.match.grouped import compare_members, resolve_comparison_outputs
 from harness.combiner.recovery import (
     prepare_recovery_manifest,
     validate_recovery_manifest,

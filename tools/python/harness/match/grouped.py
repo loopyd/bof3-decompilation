@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import hashlib
-from contextlib import ExitStack, closing
+import json
+import tempfile
+from contextlib import ExitStack, closing, nullcontext
 from pathlib import Path
 
 from harness.build.dependencies import IncludeSnapshot
@@ -12,19 +14,28 @@ from harness.build.driver import protect_staging
 from harness.build.preservation import (
     hash_preservation,
     read_preservation_document,
+    validate_preservation_size,
     verify_preservation,
 )
 from harness.build.receipts import produce_object, verify_production
 from harness.build.routing import select_preservation
-from harness.combiner.members import capture_members
+from harness.match.members import capture_members
 from harness.common.files import read_file
+from harness.common.files import atomic_write
 from harness.common.inputs import InputBatch, relative
-from harness.common.lease import require_writer
+from harness.common.lease import ACTIVE_WRITER, acquire_writer, require_writer
 from harness.common.observation import PathWatch
 from harness.common.paths import require_absent
 from harness.domain.functions import parse_function_records
 from harness.domain.policy import validate_matching_text
-from harness.io import repo_layout
+from harness.io import RepoLayout, repo_layout
+from harness.match._asm_diff_payload import (
+    AsmDiffRequest,
+    build_result_payload,
+    render_diff,
+)
+from harness.match._asm_disasm import extract_instructions, render_normalized
+from harness.match._asm_resolve import format_hex
 from harness.match.execution import NativeExecution
 from harness.match.extraction import read_function_image
 from harness.match.placement import extract_grouped_function, place_grouped_object
@@ -32,9 +43,9 @@ from harness.match.placement import extract_grouped_function, place_grouped_obje
 SCHEMA = "bof3.combiner-comparison/v6"
 _LIMIT = 64 * 1024 * 1024
 _OWNERS = (
-    "tools/python/harness/combiner/comparison.py",
+    "tools/python/harness/match/grouped.py",
     "tools/python/harness/build/dependencies.py",
-    "tools/python/harness/combiner/members.py",
+    "tools/python/harness/match/members.py",
     "tools/python/harness/combiner/cli.py",
     "tools/python/harness/build/receipts.py",
     "tools/python/harness/match/placement.py",
@@ -46,6 +57,13 @@ _OWNERS = (
     "tools/python/harness/common/observation.py",
     "tools/python/harness/domain/policy.py",
     "tools/python/harness/domain/includes.py",
+    "tools/python/harness/domain/symbols.py",
+    "tools/python/harness/match/asm_diff.py",
+    "tools/python/harness/match/bundle.py",
+    "tools/python/harness/match/_asm_diff_payload.py",
+    "tools/python/harness/match/_asm_disasm.py",
+    "tools/python/harness/match/_asm_resolve.py",
+    "tools/python/harness/commands/lift.py",
 )
 
 
@@ -148,7 +166,180 @@ def compare_members(
     return _compare_members(root, source, output, output_limit)
 
 
-def _compare_members(root, source, output_name, output_limit):
+def compare_selected_member(request: AsmDiffRequest, *, layout: RepoLayout) -> dict:
+    """Compare the complete preserved group before reporting its selected member."""
+    root = layout.root.resolve(strict=True)
+    source = request.source_path.expanduser().resolve(strict=True)
+    if type(request.address) is not int:
+        raise ValueError(
+            "grouped native comparison requires an explicit member address"
+        )
+    output_root = (request.output_root or layout.out_dir / "matching").absolute()
+    if (
+        not output_root.is_relative_to(root / "out")
+        or output_root.resolve() != output_root
+    ):
+        raise ValueError("grouped comparison diagnostics require a canonical out/ path")
+    lease = acquire_writer(root) if ACTIVE_WRITER.get() is None else nullcontext()
+    with lease:
+        require_writer(root)
+        output_root.mkdir(parents=True, exist_ok=True)
+        output_dir = Path(tempfile.mkdtemp(prefix="grouped-", dir=output_root))
+        return _compare_members(
+            root,
+            source.relative_to(root).as_posix(),
+            (output_dir / "group.o").relative_to(root).as_posix(),
+            2 * 1024 * 1024,
+            request=request,
+        )
+
+
+def _select_request(root: Path, request: AsmDiffRequest, members: dict) -> dict:
+    selected = [
+        member
+        for member in members["functions"]
+        if member["address"] == request.address
+    ]
+    if len(selected) != 1:
+        raise ValueError("selected address is absent from the complete preserved group")
+    member = selected[0]
+    if (
+        request.binary_path is not None
+        and request.binary_path.expanduser().resolve() != root / members["binary"]
+    ):
+        raise ValueError(
+            "grouped comparison cannot replace the preserved original image"
+        )
+    if (
+        request.load_address is not None
+        and request.load_address != members["load_address"]
+    ):
+        raise ValueError("grouped comparison cannot replace the preserved load address")
+    if request.size is not None and (
+        type(request.size) is not int or request.size != len(member["original"])
+    ):
+        raise ValueError(
+            "grouped comparison requires the complete reviewed member range"
+        )
+    if request.canonical_bindings is not None and (
+        any(type(value) is not int for value in request.canonical_bindings.values())
+        or dict(request.canonical_bindings) != members["bindings"]
+    ):
+        raise ValueError(
+            "grouped comparison bindings differ from the preserved target maps"
+        )
+    if request.symbols_c_path is not None:
+        raise ValueError(
+            "grouped comparison requires target-map bindings without a C override"
+        )
+    if request.section_placements or any(members["section_placements"].values()):
+        raise ValueError("grouped data placement requires its complete native contract")
+    if type(request.diagnostics) is not bool:
+        raise ValueError("grouped comparison diagnostics must be boolean")
+    return member
+
+
+def _render_selected(root, request, member, result, output, linked, execution):
+    output_dir = output.parent
+    validate_preservation_size(result)
+
+    def write(name, content):
+        atomic_write(
+            root,
+            (output_dir / name).relative_to(root).as_posix(),
+            content,
+            exclusive=True,
+        )
+
+    write(
+        "fullgroup.json", (json.dumps(result, indent=2, sort_keys=True) + "\n").encode()
+    )
+    comparison = next(
+        item for item in result["members"] if item["address"] == member["address"]
+    )
+    if comparison["byte_match"] and not result["all_function_bytes_match"]:
+        failed = ", ".join(
+            item["selector"]
+            for item in result["members"]
+            if not item["byte_match"] or not item["flow_verified"]
+        )
+        raise ValueError(
+            f"grouped source has differing members: {failed}; see {output_dir / 'fullgroup.json'}"
+        )
+    exact = result["all_function_bytes_match"]
+    payload = {
+        "schema": "harness.byte-match-one/v1",
+        "status": "exact_match" if exact else "different",
+        "exact_match": exact,
+        "byte_match": exact,
+        "source": str(request.source_path.expanduser().resolve()),
+        "function": member["symbol"],
+        "address": format_hex(member["address"]),
+        "original_size": comparison["original_size"],
+        "current_size": comparison["current_size"],
+        "size_delta": comparison["size_delta"],
+        "original_binary": str(root / result["original_binary"]),
+        "current_object": str(output),
+        "outputs": {},
+    }
+    if not request.diagnostics:
+        return payload
+    write("original.bin", member["original"])
+    objdump = repo_layout(root).psyqo_toolchain_root / "bin/mipsel-none-elf-objdump"
+    original_dump = execution.run_text(
+        [
+            objdump,
+            "-D",
+            "-b",
+            "binary",
+            "-m",
+            "mips:3000",
+            "-EL",
+            f"--adjust-vma={format_hex(member['address'])}",
+            output_dir / "original.bin",
+        ]
+    )
+    current_dump = execution.run_text(
+        [
+            objdump,
+            "-d",
+            f"--start-address=0x{member['address']:X}",
+            f"--stop-address=0x{member['address'] + comparison['current_size']:X}",
+            linked,
+        ]
+    )
+    original_lines, current_lines = (
+        extract_instructions(original_dump),
+        extract_instructions(current_dump),
+    )
+    write("original.s", render_normalized(original_lines).encode())
+    write("current.s", render_normalized(current_lines).encode())
+    write("linked.s", current_dump.encode())
+    write("diff.patch", render_diff(original_lines, current_lines).encode())
+    write("compiler.s", output.with_name(output.name + ".s").read_bytes())
+    write(
+        "build.log",
+        f"Fresh grouped producer receipt: {result['producer']['receipt']}\nComplete group comparison: {output_dir / 'fullgroup.json'}\n".encode(),
+    )
+    payload = build_result_payload(
+        source_path=Path(payload["source"]),
+        function_name=member["symbol"],
+        address=member["address"],
+        original_size=comparison["original_size"],
+        current_size=comparison["current_size"],
+        byte_match=exact,
+        binary_path=Path(payload["original_binary"]),
+        object_path=output,
+        output_dir=output_dir,
+        original_lines=original_lines,
+        current_lines=current_lines,
+        linked_path=linked,
+    )
+    write("summary.json", (json.dumps(payload, indent=2) + "\n").encode())
+    return payload
+
+
+def _compare_members(root, source, output_name, output_limit, *, request=None):
     if (
         relative(source) != source
         or not source.startswith("src/bof3/")
@@ -237,6 +428,7 @@ def _compare_members(root, source, output_name, output_limit):
             if not path.is_relative_to(root / "toolchains"):
                 validate_matching_text(content.decode("utf-8"))
         members = capture_members(root, record, preserved)
+        selected = None if request is None else _select_request(root, request, members)
 
         def guard():
             require_writer(root)
@@ -344,7 +536,25 @@ def _compare_members(root, source, output_name, output_limit):
             "write_authorized": False,
         }
         result["fingerprint"] = hash_preservation(result)
-        guard()
-        producer_watch.validate()
-        linked_watch.validate()
-        return result
+        try:
+            return (
+                result
+                if request is None
+                else _render_selected(
+                    root, request, selected, result, output, linked, execution
+                )
+            )
+        finally:
+            guard()
+            producer_watch.validate()
+            linked_watch.validate()
+            includes.validate()
+            validate_dispatch(dispatch)
+            if (
+                _capture_states(root, extra_paths) != native_inputs
+                or _capture_states(root, producer_paths) != producer_states
+                or _capture_states(root, linked_paths) != linked_states
+            ):
+                raise ValueError(
+                    "comparison native inputs or outputs changed during rendering"
+                )

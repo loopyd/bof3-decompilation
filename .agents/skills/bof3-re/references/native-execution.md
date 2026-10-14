@@ -24,9 +24,15 @@ execution route never changes compiler/flags or substitutes host GCC.
 
 Native status fingerprints include literal source/header dependencies resolved
 through `src`, `include` and `toolchains/psyq/4.7/include`. A consumed header change
-invalidates the target's cached function results. This conservative lexical check
-leaves active preprocessing, complete compiler-input closure and grouped native
-comparison subject to their existing gates.
+invalidates the target's cached function results. Active preprocessing and complete
+compiler-input closure retain their existing gates.
+
+Grouped lift comparisons require an explicit member address and externally pinned
+preservation routing. They freshly compile the whole source and compare every
+complete member range. A differing neighbor fails the selected command. Requests
+must retain the reviewed image, load, range and canonical target-map bindings.
+Grouped data placement and C binding overrides are refused. Input and consumer
+closure, data/BSS and production consolidation acceptance retain their owner gates.
 
 ## Host capability
 

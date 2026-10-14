@@ -17,7 +17,7 @@ from harness.build.preservation import (
 )
 from harness.combiner.preservation import capture_preservation
 from harness.combiner.transactions import prepare_transaction, verify_transaction
-from harness.combiner.comparison import compare_members
+from harness.match.grouped import compare_members
 from harness.common.lease import acquire_writer
 from harness.common.verification import add_recovery_commands
 from harness.combiner.rehearsal import rehearse_transaction

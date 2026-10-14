@@ -9,7 +9,7 @@ from harness.common.paths import leaf_stat
 from harness.domain.layout import parse_splat_text
 from harness.domain.manifests import _parse_manifest
 from harness.domain.psx import is_psx_exe, payload_for, validate_psx_header
-from harness.domain.symbols import parse_map, validate_symbols
+from harness.domain.symbols import load_target_symbols, parse_map
 
 _LIMIT = 64 * 1024 * 1024
 
@@ -60,23 +60,18 @@ def capture_members(root: Path, record: dict, preserved: dict) -> dict:
             manifest.load_address,
             origin=root / manifest.splat,
         )
-        by_address = {}
-        local = []
-        for name in (
-            "config/targets/shared/symbols.txt",
-            f"config/sdk/psyq-{manifest.psyq_space}.txt",
-            f"config/targets/{manifest.id.value}/symbols.txt",
-        ):
-            symbols = parse_map(
-                read(name, required=name != "config/targets/shared/symbols.txt").decode(
-                    "utf-8"
-                ),
-                source=name,
-            )
-            by_address.update({symbol.address: symbol for symbol in symbols})
-            local = symbols
-        validate_symbols(list(by_address.values()), source="comparison target bindings")
-        local_by_address = {symbol.address: symbol.canonical_name for symbol in local}
+        local_name = f"config/targets/{manifest.id.value}/symbols.txt"
+        local = parse_map(read(local_name).decode("utf-8"), source=local_name)
+        symbols = load_target_symbols(
+            root,
+            manifest.id.value,
+            psyq_space=manifest.psyq_space,
+            read_file=lambda path: read(
+                path.relative_to(root).as_posix(),
+                required=path != root / "config/targets/shared/symbols.txt",
+            ),
+        )
+        local_by_name = {symbol.canonical_name: symbol.address for symbol in local}
         functions = []
         selectors, names = set(), set()
         for member in profile["members"]:
@@ -88,7 +83,7 @@ def capture_members(root: Path, record: dict, preserved: dict) -> dict:
                     target != manifest.id.value
                     or selector in selectors
                     or symbol in names
-                    or local_by_address.get(address) != symbol
+                    or local_by_name.get(symbol) != address
                 ):
                     raise ValueError(
                         "comparison member identity is duplicate or unbound"
@@ -143,8 +138,10 @@ def capture_members(root: Path, record: dict, preserved: dict) -> dict:
         "target": manifest.id.value,
         "binary": manifest.binary,
         "load_address": manifest.load_address,
-        "bindings": {
-            symbol.canonical_name: symbol.address for symbol in by_address.values()
+        "section_placements": {
+            member["address"]: manifest.section_placements.get(member["address"], ())
+            for member in functions
         },
+        "bindings": {symbol.canonical_name: symbol.address for symbol in symbols},
         "functions": sorted(functions, key=lambda member: member["selector"]),
     }

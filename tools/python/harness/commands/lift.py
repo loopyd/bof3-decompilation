@@ -18,6 +18,7 @@ from harness.common.cli import add_example_argument, resolve_function_selector
 from ..domain.ids import FUNCTION_ID_HELP, FunctionId
 from ..domain.manifests import TargetManifest
 from ..domain.symbols import load_target_symbols, weak_bindings_c
+from ..domain.tags import count_function_metadata
 from ..io import repo_layout
 from ..match._asm_diff_payload import AsmDiffRequest
 from ..match.asm_diff import run_asm_diff_one
@@ -45,10 +46,15 @@ def _run_match(
     symbols = load_target_symbols(
         root, function.target.value, psyq_space=manifest.psyq_space
     )
-    binding_text = weak_bindings_c(symbols)
-    bindings.parent.mkdir(parents=True, exist_ok=True)
-    if not bindings.is_file() or bindings.read_text(encoding="utf-8") != binding_text:
-        bindings.write_text(binding_text, encoding="utf-8")
+    grouped = count_function_metadata(source.read_text(encoding="utf-8")) > 1
+    if not grouped:
+        binding_text = weak_bindings_c(symbols)
+        bindings.parent.mkdir(parents=True, exist_ok=True)
+        if (
+            not bindings.is_file()
+            or bindings.read_text(encoding="utf-8") != binding_text
+        ):
+            bindings.write_text(binding_text, encoding="utf-8")
     payload = run_asm_diff_one(
         AsmDiffRequest(
             source_path=source,
@@ -56,7 +62,7 @@ def _run_match(
             binary_path=root / manifest.binary,
             load_address=manifest.load_address,
             output_root=root / "out" / "asm-diff",
-            symbols_c_path=bindings,
+            symbols_c_path=None if grouped else bindings,
             canonical_bindings={
                 symbol.canonical_name: symbol.address for symbol in symbols
             },
@@ -65,7 +71,14 @@ def _run_match(
         )
     )
     if diagnostics:
-        write_bundle(root, payload, target=function.target.value)
+        write_bundle(
+            root,
+            payload,
+            target=function.target.value,
+            directory=Path(payload["outputs"]["directory"]) / "asm-differ"
+            if grouped
+            else None,
+        )
     return payload
 
 
