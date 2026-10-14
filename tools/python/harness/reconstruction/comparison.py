@@ -48,18 +48,17 @@ from harness.reconstruction import (
 )
 
 
-class ConsumptionAllowance:
-    def __init__(self, *, read_limit, open_limit, artifact_limit):
+class ConsumptionReader:
+    def __init__(self, *, read_limit, artifact_limit):
         _require_rebuild(
             all(
                 type(value) is int and value > 0
-                for value in (read_limit, open_limit, artifact_limit)
+                for value in (read_limit, artifact_limit)
             ),
             "consumption limits must be positive integers",
         )
-        self.read_limit, self.open_limit, self.artifact_limit = (
+        self.read_limit, self.artifact_limit = (
             read_limit,
-            open_limit,
             artifact_limit,
         )
         self.charged_bytes = self.attempted_opens = self.failed_reserved_bytes = 0
@@ -90,9 +89,8 @@ class ConsumptionAllowance:
         reservation = bound + 1
         if self.final_identities is None:
             _require_rebuild(
-                self.charged_bytes + reservation <= self.read_limit
-                and self.attempted_opens < self.open_limit,
-                "command input consumption allowance exhausted",
+                self.charged_bytes + reservation <= self.read_limit,
+                "command input byte limit exhausted",
             )
         else:
             protected_output = (
@@ -206,9 +204,8 @@ class ConsumptionAllowance:
             "final requests omit observed inputs or the reserved output",
         )
         _require_rebuild(
-            self.charged_bytes + total <= self.read_limit
-            and self.attempted_opens + len(requests) <= self.open_limit,
-            "complete final consumption exceeds remaining allowance",
+            self.charged_bytes + total <= self.read_limit,
+            "complete final consumption exceeds the remaining byte limit",
         )
         self.final_bytes, self.final_opens = total, len(requests)
         self.final_identities = known
@@ -3378,14 +3375,8 @@ def inspect_original_feedback(
 
 def _associated_read_bounds(
     observations: list[dict],
-    records: list[dict],
     input_read_limit: int,
-    input_open_limit: int,
 ) -> None:
-    _require_rebuild(
-        len(observations) + len(records) <= input_open_limit,
-        "associated evidence census exceeds its entry bound",
-    )
     _require_rebuild(
         sum(row["bytes"] for row in observations) <= input_read_limit,
         "associated evidence exceeds its aggregate read bound",
@@ -3492,7 +3483,7 @@ def verify_associated_candidate(
     artifact_limit: int,
     input_read_limit: int,
     retained: dict,
-    allowance: ConsumptionAllowance | None = None,
+    allowance: ConsumptionReader | None = None,
     publish: bool = True,
     inspection: dict | None = None,
 ) -> dict:
@@ -3532,9 +3523,8 @@ def verify_associated_candidate(
             "associated verification requires positive integer bounds",
         )
         limit = min(artifact_limit, 64 << 20)
-        shared_allowance = allowance or ConsumptionAllowance(
+        shared_allowance = allowance or ConsumptionReader(
             read_limit=input_read_limit,
-            open_limit=65536,
             artifact_limit=limit,
         )
         started_bytes, started_opens, started_failed = (
@@ -3542,7 +3532,6 @@ def verify_associated_candidate(
             shared_allowance.attempted_opens,
             shared_allowance.failed_reserved_bytes,
         )
-        local_open_limit = shared_allowance.open_limit - started_opens
         local_read_limit = min(
             input_read_limit, shared_allowance.read_limit - started_bytes
         )
@@ -3554,10 +3543,6 @@ def verify_associated_candidate(
             _require_rebuild(
                 isinstance(path, Path) and type(bound) is int and bound >= 0,
                 "associated snapshot requires a physical path and nonnegative bound",
-            )
-            _require_rebuild(
-                input_read_attempts < local_open_limit,
-                "associated physical read attempts exceed their entry bound",
             )
             try:
                 data = shared_allowance.read_bytes(path, min(bound, limit), read_events)
@@ -3576,7 +3561,7 @@ def verify_associated_candidate(
             )
             _require_rebuild(
                 len(data) <= min(bound, limit),
-                "associated snapshot exceeds its bounded allowance",
+                "associated snapshot exceeds its artifact byte limit",
             )
             return data
 
@@ -3627,9 +3612,7 @@ def verify_associated_candidate(
                 ),
                 "associated report workspace overlaps immutable inputs",
             )
-            _associated_read_bounds(
-                observations, records, local_read_limit, local_open_limit
-            )
+            _associated_read_bounds(observations, local_read_limit)
             (
                 binding,
                 member,
@@ -3757,9 +3740,7 @@ def verify_associated_candidate(
                     "associated physical census has conflicting identities",
                 )
             records = deepcopy(list(unique.values()))
-            _associated_read_bounds(
-                observations, records, local_read_limit, local_open_limit
-            )
+            _associated_read_bounds(observations, local_read_limit)
             recipe.verify_inputs(records, events=events, reader=reader)
             fresh_rebuild = _load_rebuild(
                 comparison["rebuild_record"], limit, events, reader=reader
@@ -3807,9 +3788,7 @@ def verify_associated_candidate(
             )
             _authenticated_bytes(terminal, limit, events, reader=reader)
             recipe.verify_inputs(records, events=events, reader=reader)
-            _associated_read_bounds(
-                observations, records, local_read_limit, local_open_limit
-            )
+            _associated_read_bounds(observations, local_read_limit)
             _forward_rebuild(events)
             expected_read_bytes = (
                 sum(row["bytes"] for row in observations)
@@ -3823,9 +3802,8 @@ def verify_associated_candidate(
             _require_rebuild(
                 not publish
                 or failed_read_reserved_bytes == 0
-                and charged_read_bytes + final_request_upper <= local_read_limit
-                and expected_read_attempts + len(records) <= local_open_limit,
-                "associated final reauthentication exceeds its remaining allowance",
+                and charged_read_bytes + final_request_upper <= local_read_limit,
+                "associated final reauthentication exceeds its remaining byte limit",
             )
             retained.update(
                 status="measured-failed"
@@ -3875,9 +3853,7 @@ def verify_associated_candidate(
                 and failed_read_reserved_bytes == 0,
                 "associated final physical read counters differ from the pending result",
             )
-            _associated_read_bounds(
-                observations, records, local_read_limit, local_open_limit
-            )
+            _associated_read_bounds(observations, local_read_limit)
             _forward_rebuild(events)
             pending.rename(destination)
     except Exception as error:

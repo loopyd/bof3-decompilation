@@ -197,7 +197,6 @@ def build_parser() -> argparse.ArgumentParser:
             selection.add_argument("--all-members", action="store_true")
         for name in (
             "input-read-limit",
-            "input-open-limit",
             "artifact-limit",
             "output-limit",
         ):
@@ -327,7 +326,6 @@ def run_reporting(args: argparse.Namespace) -> int:
         destination = resolved_root(args) / destination
     limits = reporting.Limits(
         args.input_read_limit,
-        args.input_open_limit,
         args.artifact_limit,
         args.output_limit,
     )

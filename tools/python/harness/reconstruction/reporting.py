@@ -56,7 +56,6 @@ EXACT = (*SEMANTIC, "complete-function-bytes")
 @dataclass(frozen=True)
 class Limits:
     input_read_limit: int
-    input_open_limit: int
     artifact_limit: int
     output_limit: int
 
@@ -670,16 +669,14 @@ def _run(request, operation):
                 type(value) is int and value > 0
                 for value in (
                     limits.input_read_limit,
-                    limits.input_open_limit,
                     limits.artifact_limit,
                     limits.output_limit,
                 )
             ),
             "reporting consumption/output limits must be positive integers",
         )
-        allowance = comparison.ConsumptionAllowance(
+        allowance = comparison.ConsumptionReader(
             read_limit=limits.input_read_limit,
-            open_limit=limits.input_open_limit,
             artifact_limit=limits.artifact_limit,
         )
         sources = (
@@ -1023,7 +1020,8 @@ def _run(request, operation):
                 recipe.verify_inputs([row], events=events, reader=allowance.read_bytes)
             consumed = allowance.as_record()
             output_bytes = 0
-            for _ in range(16):
+            seen_output_sizes = {output_bytes}
+            while True:
                 document["consumption"] = {
                     **consumed,
                     "charged_bytes": consumed["charged_bytes"] + output_bytes,
@@ -1036,13 +1034,16 @@ def _run(request, operation):
                 data = encode_json(document, path=terminal, events=events)
                 _require(
                     len(data) <= output_bound,
-                    "complete fixed-denominator account exceeds output/artifact allowance",
+                    "complete fixed-denominator account exceeds its output/artifact byte limit",
                 )
                 if len(data) == output_bytes:
                     break
+                _require(
+                    len(data) not in seen_output_sizes,
+                    "terminal consumption encoding repeated an unstable size",
+                )
+                seen_output_sizes.add(len(data))
                 output_bytes = len(data)
-            else:
-                raise PolicyFailure("terminal consumption encoding did not stabilize")
             pending_identity = FileIdentity(
                 pending, len(data), hashlib.sha256(data).hexdigest()
             )
@@ -1102,7 +1103,7 @@ def _run(request, operation):
                 raw = encode_json(document, path=refusal, events=events)
                 _require(
                     len(raw) <= request.limits.output_limit,
-                    "retained refusal exceeds output allowance",
+                    "retained refusal exceeds its output byte limit",
                 )
                 write_bytes(refusal, raw, create_parents=False, events=events)
                 published.append(

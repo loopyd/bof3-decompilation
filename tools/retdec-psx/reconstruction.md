@@ -267,7 +267,6 @@ bin/harness reconstruction verify \
   --destination selected-pair-verification \
   --require-mode autonomous \
   --input-read-limit 274877906944 \
-  --input-open-limit 8388608 \
   --artifact-limit 134217728 \
   --output-limit 536870912 \
   --attempt-ledger "$attempt_ledger" --expected-ledger-digest "$ledger_digest" \
@@ -280,7 +279,6 @@ bin/harness reconstruction report \
   --destination selected-pair-report \
   --require-mode autonomous \
   --input-read-limit 68719476736 \
-  --input-open-limit 2097152 \
   --artifact-limit 134217728 \
   --output-limit 536870912 \
   --json
@@ -289,8 +287,8 @@ bin/harness reconstruction report \
 Use `--all-members` instead of both `--member` arguments to verify all frozen keys.
 Repeat `--generation` or `--verification` to consume multiple completed inputs.
 `report` reproduces verification evidence without executing native or compiler
-tools. Both commands require explicit physical-read, open and artifact bounds.
-The limits above are separate per-run experiment envelopes, not cumulative campaign defaults.
+tools. Both commands require explicit input, artifact and output byte limits.
+Physical reads are counted without a read-count ceiling or execution allowance.
 Choose bounds for the selected inputs; these examples do not guarantee capacity
 for a full 118-candidate verification.
 
