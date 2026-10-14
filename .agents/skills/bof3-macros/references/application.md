@@ -51,13 +51,14 @@ do not. Support compact directives, comments and continuations; exclude commente
 includes. Conditional/computed selection remains unproven. Require actual
 preprocessor binding and independent `all_use_sites` beyond lexical coverage.
 
-For grouped C, require one explicit lift owner, complete Splat/claim/index
-membership, current indexed macro-source hash and every attached ordinary function
-in `affected_functions`. Cap capture at 4 MiB. Preserve address order, metadata,
+For grouped C, derive membership from reviewed Splat even when metadata is missing.
+Require one explicit lift owner, complete Splat/claim/index membership, current
+indexed macro-source hash and every attached ordinary function in
+`affected_functions`. Cap capture at 4 MiB. Preserve address order, metadata,
 spellings, kinds, progress and text outside implementations. Refuse template
-replacement, C-owner macro-definition changes and new includes. Keep legacy
-single-function behavior. Require per-member native checks, which currently refuse
-ordinary grouped sources. Preparation proves no native preservation or acceptance.
+replacement, C-owner macro-definition changes and new includes. Preserve
+single-function validation. Per-member native checks remain required; preparation
+provides neither preservation routing nor native acceptance.
 
 Map CHANGES from allowed paths to complete text. Let the owner rederive scope,
 confine writes, run gates and publish immutable receipts. Context/final acceptance
