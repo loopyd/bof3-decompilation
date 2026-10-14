@@ -83,12 +83,26 @@ def test_decomp_permuter_toolchain_installs_toml(
     toolchain.executable.parent.mkdir(parents=True)
     toolchain.executable.touch()
 
+    for path in toolchain.preparation_tools:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.touch()
+
     assert toolchain.install() == "decomp-permuter"
     assert toolchain.verify() == "decomp-permuter"
     assert calls == [
         ["git", "submodule", "update", "--init", "third_party/decomp-permuter"],
         ["uv", "pip", "install", "--python", str(toolchain.python), "toml"],
         [str(toolchain.python), "-P", "-u", str(toolchain.executable), "--help"],
+        [
+            str(toolchain.python),
+            "-P",
+            "-c",
+            "from src import ast_util; "
+            "from strip_other_fns import strip_other_fns; "
+            "from harness.toolchain.permuter import DecompPermuterToolchain",
+        ],
+        [str(tmp_path / "bin/cc"), "-x", "c", "-E", calls[4][-1]],
+        *([str(path), "--version"] for path in toolchain.preparation_tools[1:]),
     ]
     assert toolchain.environment["PYTHONSAFEPATH"] == "1"
     assert toolchain.environment["PYTHONPATH"] == os.pathsep.join(

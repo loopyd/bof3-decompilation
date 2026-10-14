@@ -304,7 +304,7 @@ def run(args: argparse.Namespace) -> int:
         TASKS
         if args.component == "all"
         else [Check(args.component, _managed_component)]
-        if args.component in {"psyqo", "rz-psxdec"}
+        if args.component in {"psyqo", "rz-psxdec", "decomp-permuter"}
         else [task for task in TASKS if task.run is selection[args.component]]
     )
     for task in tasks:
@@ -332,7 +332,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_root_argument(parser)
     parser.add_argument(
         "--component",
-        choices=("all", "bios", "pcsx-redux", "psyqo", "rz-psxdec"),
+        choices=("all", "bios", "pcsx-redux", "psyqo", "rz-psxdec", "decomp-permuter"),
         default="all",
         help="prepare everything or one toolchain component",
     )

@@ -184,7 +184,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="doctor")
     add_root_argument(parser)
     parser.add_argument(
-        "--component", choices=("all", "psyqo", "rz-psxdec"), default="all"
+        "--component",
+        choices=("all", "psyqo", "rz-psxdec", "decomp-permuter"),
+        default="all",
     )
     parser.set_defaults(handler=run)
     return parser

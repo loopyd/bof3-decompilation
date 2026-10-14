@@ -6,7 +6,6 @@ import argparse
 import fcntl
 import os
 import re
-import subprocess
 from pathlib import Path
 
 from harness.common.cli import add_example_argument, add_root_argument, run_main
@@ -101,7 +100,7 @@ def ensure_target_assembly(
     )
 
 
-def validate(args: argparse.Namespace, root: Path) -> tuple[Path, str, Path, Path]:
+def validate(args: argparse.Namespace, root: Path) -> tuple[Path, str, Path]:
     source = args.source.expanduser().resolve()
     if not source.is_file():
         raise FileNotFoundError(f"source does not exist: {source}")
@@ -122,12 +121,7 @@ def validate(args: argparse.Namespace, root: Path) -> tuple[Path, str, Path, Pat
         raise FileNotFoundError(f"permuter directory does not exist: {directory}")
     if directory.exists() and not directory.is_dir():
         raise ValueError(f"permuter directory is not a directory: {directory}")
-    preparer = root / "tools" / "prep-permuter.py"
-    if not preparer.is_file():
-        raise FileNotFoundError(
-            f"decomp-permuter workflow is not wired: expected {preparer}"
-        )
-    return source, function, directory, preparer
+    return source, function, directory
 
 
 def permuter_arguments(args: argparse.Namespace) -> list[str]:
@@ -165,7 +159,8 @@ def permuter_arguments(args: argparse.Namespace) -> list[str]:
 
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
-    source, function, directory, preparer = validate(args, root)
+    source, function, directory = validate(args, root)
+    toolchain = DecompPermuterToolchain(repo_layout(root))
     if args.jobs is not None and args.jobs < 0:
         raise ValueError("--jobs must not be negative")
     if args.prepare_only and args.prepared:
@@ -189,20 +184,9 @@ def run(args: argparse.Namespace) -> int:
 
         if not args.prepared:
             ensure_target_assembly(source, function, directory, root)
-            toolchain = DecompPermuterToolchain(repo_layout(root))
-            prepare = subprocess.run(
-                [
-                    str(toolchain.python),
-                    str(preparer),
-                    str(source),
-                    function,
-                    str(directory),
-                ],
-                cwd=root,
-                check=False,
-            )
-            if prepare.returncode != 0:
-                return prepare.returncode
+            result = toolchain.prepare(source, function, directory)
+            if result != 0:
+                return result
         else:
             required = ("base.c", "target.o", "compile.sh", "settings.toml")
             missing = [name for name in required if not (directory / name).is_file()]
@@ -212,7 +196,6 @@ def run(args: argparse.Namespace) -> int:
                 )
         if args.prepare_only:
             return 0
-        toolchain = DecompPermuterToolchain(repo_layout(root))
         result = toolchain.execute([*permuter_arguments(args), str(directory)])
         return result.returncode
     finally:

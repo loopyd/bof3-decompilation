@@ -21,6 +21,12 @@ All paths are below `tools/python/harness/`.
 | `analysis/` | cross-domain reverse index, graph, mission and query coordination | `bin/harness analysis index`, `bin/harness analysis query` |
 | `domain/` | manifests, target identity, original binary/layout, source claims and includes | shared repository facts, not candidate acceptance |
 
+`toolchain/permuter.py` owns managed decomp-permuter setup, workspace preparation
+and execution. Use `bin/harness setup --component decomp-permuter` to set it up
+and `bin/harness doctor --component decomp-permuter` to verify it.
+`bin/harness lift permute TARGET@0xADDRESS --prepare-only` creates the function
+workspace using the configured project Python and installed native tools.
+
 Each domain uses noun files such as `index.py`, `queries.py`, `review.py`,
 `transactions.py`, `application.py`, and `cli.py`. Naming's finer categories include
 `collection.py`, `journal.py`, `namespace.py`, `equivalence.py`, and `terminal.py`.
