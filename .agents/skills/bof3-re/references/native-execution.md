@@ -37,6 +37,10 @@ CLI adapters, lift gates and decompilation comparisons propagate
 comparisons and later members. Keep POST and owned recovery until child
 termination is established.
 
+Shared CMake configuration retries newly observed race signatures under its
+existing lock. A recurring signature, nontransient error or unconfirmed cleanup
+propagates unchanged; retries have no numerical ceiling.
+
 Grouped lift comparisons require an explicit member address and externally pinned
 preservation routing. They freshly compile the whole source and compare every
 complete member range. A differing neighbor fails the selected command. Requests

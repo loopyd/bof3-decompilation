@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import errno
 import fcntl
 import hashlib
 import re
@@ -11,6 +12,7 @@ import time
 from pathlib import Path
 
 from harness.build.inventory import has_current_inventory
+from harness.common.process import ProcessCleanupError
 from harness.domain.cache import collect_manifest_paths
 
 
@@ -39,48 +41,51 @@ def _has_missing_source(root: Path, generated: Path) -> bool:
 
 
 def configure(root: Path) -> Path:
-    """Configure the shared CMake tree under a cross-process lock.
+    """Serialize configuration and retry newly observed shared-tree races.
 
-    Concurrent lift lanes reconfigure the same ``build/cmake`` tree; without a
-    lock they race on ``shutil.rmtree`` and the generated ninja files, which is
-    the dominant wall-clock stall under fan-out. The lock serializes configure
-    while leaving already-current trees fast (the cached fast path still runs
-    inside the lock and returns immediately).
-
-    A second bounded retry absorbs the remaining shared-tree race observed in
-    30/30 fan-out runs (a sibling lane rewriting ``CMakeFiles`` between the
-    inventory check and the build).
+    Recurring races, unrelated errors and unconfirmed cleanup propagate unchanged.
     """
     lock_path = root / "build" / ".configure.lock"
     lock_path.parent.mkdir(parents=True, exist_ok=True)
-    attempts = 3
+    failures = set()
     with open(lock_path, "w", encoding="utf-8") as lock_stream:
         fcntl.flock(lock_stream.fileno(), fcntl.LOCK_EX)
         try:
-            for attempt in range(attempts):
+            while True:
                 try:
                     return _configure_locked(root)
+                except ProcessCleanupError:
+                    raise
                 except (OSError, RuntimeError) as error:
-                    if attempt + 1 >= attempts or not _is_shared_tree_race(str(error)):
+                    if isinstance(error, OSError) and error.errno not in {
+                        errno.ENOENT,
+                        errno.EEXIST,
+                        errno.ENOTEMPTY,
+                    }:
                         raise
+                    signature = _shared_tree_race_signature(str(error))
+                    if signature is None or signature in failures:
+                        raise
+                    failures.add(signature)
                     time.sleep(2)
-            raise AssertionError("unreachable")
         finally:
             fcntl.flock(lock_stream.fileno(), fcntl.LOCK_UN)
 
 
-def _is_shared_tree_race(message: str) -> bool:
-    """Recognize the shared build-tree races fan-out lanes hit constantly."""
+def _shared_tree_race_signature(message: str) -> str | None:
+    """Identify transient shared-tree failures without matching filenames alone."""
+    if "No such file or directory" in message:
+        for filename in ("build.ninja", "CMakeFiles"):
+            if filename in message:
+                return f"missing {filename}"
     markers = (
         "Directory not empty",
-        "build.ninja",
-        "CMakeFiles",
         "stale configured build inventory",
         "Build inventory changed during configure",
         "GLOB mismatch",
         "reconfigure the build tree",
     )
-    return any(marker in message for marker in markers)
+    return next((marker for marker in markers if marker in message), None)
 
 
 def _configure_locked(root: Path) -> Path:
@@ -121,6 +126,8 @@ def _configure_locked(root: Path) -> Path:
                     # inventory), which was the dominant batch wall-clock cost.
                     try:
                         return _reconfigure_in_place(root, build_tree)
+                    except ProcessCleanupError:
+                        raise
                     except RuntimeError:
                         shutil.rmtree(build_tree)
                         break
