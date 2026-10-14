@@ -4,6 +4,8 @@
  * the active work region is zero and neither input status has bit 3 set.
  * @source 0x801C24D0
  * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801C24D0(void) {
   func_801C2538();

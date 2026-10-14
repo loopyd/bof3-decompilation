@@ -176,12 +176,18 @@ def canonical_exact_progress(text: str) -> tuple[str, bool]:
     require_single_function(text)
     if not STATUS_TAG_RE.search(text):
         return text, False
+    if not exact_progress_repair_candidate(text):
+        raise ValueError("exact progress repair requires noncontradictory metadata")
     fixed, _ = _set_single_tag_line(text, "status", "exact")
-    fixed, _ = _set_single_tag_line(fixed, "match", "100.00")
-    fixed, residual = _set_single_tag_line(fixed, "residual", "none")
-    if not residual:
-        match = MATCH_TAG_RE.search(fixed)
-        if match:
+    for tag, value, anchor in (
+        ("match", "100.00", STATUS_TAG_RE),
+        ("residual", "none", MATCH_TAG_RE),
+    ):
+        fixed, present = _set_single_tag_line(fixed, tag, value)
+        if not present:
+            match = anchor.search(fixed)
+            if match is None:
+                raise ValueError(f"{tag} insertion requires a preceding progress tag")
             comment = next(
                 (
                     comment
@@ -191,21 +197,25 @@ def canonical_exact_progress(text: str) -> tuple[str, bool]:
                 ),
                 None,
             )
-            if comment is None:
-                raise ValueError("residual insertion requires a C comment")
+            if comment is None or re.search(r"\\(?:\r?\n|\r?$)", comment.group()):
+                raise ValueError(f"{tag} insertion requires an unspliced C comment")
             line_end = fixed.find("\n", match.start())
             line_end = len(fixed) if line_end < 0 else line_end
             if line_end and fixed[line_end - 1] == "\r":
                 line_end -= 1
             line_start = fixed.rfind("\n", 0, match.start()) + 1
             prefix = fixed[line_start : match.start()]
-            if comment.group().startswith("/*") and comment.end() - 2 < line_end:
-                line_end = comment.end() - 2
+            if not re.fullmatch(r"[ \t]*(?:/\*|\*|//)?[ \t]*", prefix):
+                raise ValueError(f"{tag} insertion requires a progress comment line")
+            if comment.group().startswith("/*"):
                 prefix = prefix.replace("/*", " *", 1)
+                if comment.end() - 2 < line_end:
+                    line_end = comment.end() - 2
             newline = "\r\n" if "\r\n" in fixed else "\n"
             fixed = (
-                fixed[:line_end] + f"{newline}{prefix}@residual none" + fixed[line_end:]
+                fixed[:line_end] + f"{newline}{prefix}@{tag} {value}" + fixed[line_end:]
             )
+    parse_progress_tags(fixed)
     return fixed, fixed != text
 
 
@@ -247,6 +257,19 @@ def parse_progress_tags(text: str) -> tuple[str, float | None, str] | None:
     if status == "partial" and (match == 100.0 or residual == "none"):
         raise ValueError("partial progress requires a non-100 match and residual")
     return status, match, residual
+
+
+def exact_progress_repair_candidate(text: str) -> bool:
+    """Classify missing exact metrics without treating the claim as live proof."""
+
+    candidate = text
+    for tag, value in (("match", "100.00"), ("residual", "none")):
+        if not _TAG_OCCURRENCES[tag].search(text):
+            candidate += f"\n/* @{tag} {value} */"
+    try:
+        return parse_progress_tags(candidate) == ("exact", 100.0, "none")
+    except ValueError:
+        return False
 
 
 def lift_lifecycle(text: str | None) -> str:

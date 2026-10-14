@@ -31,6 +31,7 @@ from harness.domain.tags import (
     BEHAVIOR_TAG_RE,
     STATUS_TAG_RE,
     canonical_exact_progress,
+    exact_progress_repair_candidate,
     parse_progress_tags,
 )
 
@@ -412,8 +413,6 @@ def progress_metadata_findings(
                 "reason": "target has no explicit source claims",
             }
         ]
-    from harness.domain.tags import MATCH_TAG_RE
-
     for source in sources:
         row = {
             "row": "target",
@@ -434,16 +433,8 @@ def progress_metadata_findings(
                 try:
                     parse_progress_tags(metadata)
                 except ValueError as error:
-                    status = STATUS_TAG_RE.search(metadata)
-                    match = MATCH_TAG_RE.search(metadata)
-                    exact_claim = (
-                        status is not None
-                        and status.group(1) == "exact"
-                        and match is not None
-                        and match.group(1) in {"100", "100.00"}
-                    )
                     finding["reason"] = f"malformed progress metadata: {error}"
-                    if exact_claim:
+                    if exact_progress_repair_candidate(metadata):
                         finding["class"] = "safe_metadata_repair"
                         finding["repair"] = (
                             f"bin/harness naming prepare {target} --repair; "

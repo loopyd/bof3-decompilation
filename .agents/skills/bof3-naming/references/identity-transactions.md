@@ -48,6 +48,10 @@ Run `bin/harness analysis readiness [TARGET]` before application; close or expli
 Grouped claimed C sources expose each attached `@source` and `@behavior` record
 to progress preflight. `--rows` selects those records by address. Every selected
 row must pass both live exactness checks before the batch writes each file once.
+An exact-status record may lack match or residual metrics. It becomes a repair
+candidate only when existing tags are unique and consistent with exactness.
+The rewrite adds missing metrics after live proof. Malformed, duplicate or
+contradictory progress tags remain blocked.
 Repairs change only selected progress metadata and preserve other records and C
 text. Duplicate addresses or ownership and ambiguous attachments refuse
 repair. Grouped repair still requires native comparison support for every selected
