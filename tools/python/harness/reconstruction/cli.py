@@ -16,6 +16,7 @@ from harness.io import repo_layout
 from harness.reconstruction import (
     contract,
     invocation,
+    ledger,
     nativegeneration,
     nativeoutput,
     prepare,
@@ -27,6 +28,11 @@ EXAMPLE = (
     "--baseline tools/retdec-psx/corpus.json "
     '--native-receipt "$native_receipt"'
 )
+
+
+def _ledger_arguments(command):
+    command.add_argument("--attempt-ledger", type=Path, required=True)
+    command.add_argument("--expected-ledger-digest", required=True)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -132,6 +138,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="compare both original-only source forms and retain each member's best complete-byte result",
     )
     command.add_argument("--json", action="store_true")
+    _ledger_arguments(command)
     command.set_defaults(handler=run_native)
     command = commands.add_parser(
         "capture-supplied",
@@ -151,7 +158,36 @@ def build_parser() -> argparse.ArgumentParser:
     )
     command.add_argument("--output-limit", type=int, required=True)
     command.add_argument("--json", action="store_true")
+    _ledger_arguments(command)
     command.set_defaults(handler=run_supplied)
+    account = commands.add_parser(
+        "ledger", help="retain cumulative attempts and explicit continuation grants"
+    )
+    stages = account.add_subparsers(dest="ledger_operation", required=True)
+    for operation in ("init", "status", "import", "grant", "close"):
+        command = stages.add_parser(operation)
+        command.add_argument("path", type=Path)
+        command.set_defaults(handler=run_ledger)
+        if operation == "init":
+            command.add_argument("--prepared-run", type=Path, required=True)
+            command.add_argument("--mission", required=True)
+        elif operation != "status":
+            command.add_argument("--expected-ledger-digest", required=True)
+        if operation == "import":
+            command.add_argument("--operation-id", required=True)
+            command.add_argument("--units", type=int, required=True)
+        if operation in {"import", "close"}:
+            command.add_argument("--evidence", type=Path, required=True)
+            command.add_argument("--expected-evidence-sha256", required=True)
+        if operation == "grant":
+            command.add_argument("--grant-id", required=True)
+            command.add_argument("--units", type=int, required=True)
+            command.add_argument("--member", action="append", required=True)
+        if operation == "close":
+            command.add_argument("--epoch", required=True)
+            command.add_argument(
+                "--writer-tree-stopped", action="store_true", required=True
+            )
     for operation in ("verify", "report"):
         command = commands.add_parser(
             operation,
@@ -173,6 +209,7 @@ def build_parser() -> argparse.ArgumentParser:
             required=operation == "report",
         )
         if operation == "verify":
+            _ledger_arguments(command)
             selection = command.add_mutually_exclusive_group(required=True)
             selection.add_argument("--member", action="append")
             selection.add_argument("--all-members", action="store_true")
@@ -253,6 +290,8 @@ def run_native(args: argparse.Namespace) -> int:
         member_limit=args.member_limit,
         campaign_limit=args.campaign_limit,
         new_budget_id=args.new_budget_id,
+        attempt_ledger=args.attempt_ledger,
+        expected_ledger_digest=args.expected_ledger_digest,
     )
     if args.json:
         print(json.dumps(report, indent=2, sort_keys=True))
@@ -286,6 +325,8 @@ def run_supplied(args: argparse.Namespace) -> int:
         context=args.context,
         rizin=args.rizin,
         output_limit=args.output_limit,
+        attempt_ledger=args.attempt_ledger,
+        expected_ledger_digest=args.expected_ledger_digest,
     )
     if args.json:
         print(json.dumps(report, indent=2, sort_keys=True))
@@ -328,7 +369,9 @@ def run_reporting(args: argparse.Namespace) -> int:
                 generation_directories=tuple(
                     path.resolve() for path in (args.generation or ())
                 ),
-            )
+            ),
+            attempt_ledger=args.attempt_ledger,
+            expected_ledger_digest=args.expected_ledger_digest,
         )
     else:
         outcome = reporting.report(
@@ -358,3 +401,46 @@ def run_reporting(args: argparse.Namespace) -> int:
                 f"sha256={artifact.sha256}"
             )
     return outcome.exit_code
+
+
+def run_ledger(args: argparse.Namespace) -> int:
+    from harness.reconstruction import provenance
+
+    root = repo_layout().root
+    operation = args.ledger_operation
+    if operation == "init":
+        binding = provenance.open_problem_binding(
+            args.prepared_run.resolve(), io_mode="exact"
+        )
+        result = ledger.initialize(root, args.path, binding, args.mission)
+    elif operation == "status":
+        result = ledger.inspect(root, args.path)
+    elif operation == "import":
+        result = ledger.import_operation(
+            root,
+            args.path,
+            args.expected_ledger_digest,
+            args.operation_id,
+            args.units,
+            args.evidence,
+            args.expected_evidence_sha256,
+        )
+    elif operation == "grant":
+        result = ledger.update(
+            root,
+            args.path,
+            args.expected_ledger_digest,
+            "grant",
+            dict(id=args.grant_id, units=args.units, members=args.member),
+        )
+    else:
+        result = ledger.close_execution(
+            root,
+            args.path,
+            args.expected_ledger_digest,
+            args.epoch,
+            args.evidence,
+            args.expected_evidence_sha256,
+        )
+    print(json.dumps(result, indent=2, sort_keys=True))
+    return 0

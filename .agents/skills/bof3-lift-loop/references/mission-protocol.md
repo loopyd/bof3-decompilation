@@ -29,6 +29,12 @@ help and contracts before constructing pinned inputs; they only capture/check
 bounded missions. Use local compiler subprocesses and existing supervision, never
 model subprocesses. Keep active transaction inputs pinned.
 
+Reconstruction `run`, `capture-supplied` and `verify` share one cumulative
+`reconstruction ledger` through `--attempt-ledger` and `--expected-ledger-digest`.
+Reserve before owner calls; recapture never renews consumption. Retain missing
+history explicitly and require a separate authorized allowance. Interrupted
+epochs block execution until terminal-writer review; closing them refunds nothing.
+
 Before native baseline compilation, follow
 [native compiler execution](../../bof3-re/references/native-execution.md).
 On a known i386/SIGSYS host, require a reviewed scoped parent-native tool call.

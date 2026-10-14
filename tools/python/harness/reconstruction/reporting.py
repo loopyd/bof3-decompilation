@@ -16,6 +16,7 @@ from harness.common.artifacts import (
     write_bytes,
 )
 from harness.common.failures import FailureEvent, PolicyFailure, facts, retain
+from harness.common.process import ProcessCleanupError
 from harness.io import repo_layout
 from harness.reconstruction import (
     authored,
@@ -23,6 +24,7 @@ from harness.reconstruction import (
     bundles,
     comparison,
     contract,
+    ledger,
     prepare,
     provenance,
 )
@@ -482,6 +484,7 @@ def _verify_attempt(
         candidate, member, shared, generation, allowance, prepared_run
     )
     try:
+        ledger.reserve("rebuild", member.key, units=6)
         comparison.rebuild_candidate(
             result_record=result_record,
             run_record=generation.run.as_record(),
@@ -496,6 +499,7 @@ def _verify_attempt(
             [],
             reader=allowance.read_bytes,
         )
+        ledger.reserve("compare", member.key, units=5)
         comparison.compare_rebuilt_candidate(
             rebuild_record=rebuild_record,
             prepared_run=prepared_run,
@@ -504,6 +508,7 @@ def _verify_attempt(
             artifact_limit=limits.artifact_limit,
             retained=measured,
         )
+        ledger.reserve("associated", member.key)
         comparison.verify_associated_candidate(
             comparison_record=workspace / "comparison/comparison-result.json",
             prepared_run=prepared_run,
@@ -515,6 +520,8 @@ def _verify_attempt(
             allowance=allowance,
         )
     except Exception as error:
+        if isinstance(error, ProcessCleanupError):
+            ledger.cleanup_unknown()
         failed = _candidate_failure(
             member, candidate, generation, error, "independent-verification"
         )
@@ -781,6 +788,7 @@ def _run(request, operation):
                     and set(selected) <= {row.key for row in corpus.members},
                     "selection must contain distinct authenticated member keys",
                 )
+                ledger.require_members(selected)
                 (destination / "candidates").mkdir()
                 for generation in shared.generations:
                     if generation.prepared is None:
@@ -1058,6 +1066,10 @@ def _run(request, operation):
             document.pop("attempted_output", None)
             return Outcome(document["exit"], document, tuple(published), tuple(events))
     except (Exception, KeyboardInterrupt) as error:
+        if operation == "verify" and isinstance(
+            error, (KeyboardInterrupt, ProcessCleanupError)
+        ):
+            ledger.cleanup_unknown()
         retain(
             events,
             error,
@@ -1107,8 +1119,18 @@ def _run(request, operation):
         return Outcome(2, document, tuple(published), tuple(events))
 
 
-def verify(request: VerificationRequest) -> Outcome:
-    return _run(request, "verify")
+def verify(
+    request: VerificationRequest, *, attempt_ledger: Path, expected_ledger_digest: str
+) -> Outcome:
+    with ledger.execution(
+        repo_layout().root,
+        attempt_ledger,
+        expected_ledger_digest,
+        request.prepared_run,
+        request.destination,
+        "verify",
+    ):
+        return _run(request, "verify")
 
 
 def report(request: ReportRequest) -> Outcome:

@@ -9,6 +9,7 @@ BOF3 runtime, format and data evidence belongs in [specs](../specs/INDEX.md).
 | [Coding standards](coding-standards.md) | Python naming, module ownership, DRY and checks |
 | [Project context](project-context.md) | Identity, authority and repository layout |
 | [Harness](harness.md) | Domain modules, transactions, native lifecycles and recovery |
+| [Reconstruction](reconstruction.md) | Cumulative native attempts, finite allowances and interrupted-run recovery |
 | [PCSX-Redux Agentic harness](pcsx-redux-agentic.md) | Managed emulator build, embedded missions, skill links and runtime receipts |
 | [Tool usage](tool-usage.md) | Ordered CLI workflows, flags and evidence gates |
 | [Codex](codex.md) | Skill-only session orchestration, local mission diagnosis/audit, global MCP and Pi migration |

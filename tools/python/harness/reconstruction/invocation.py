@@ -23,6 +23,7 @@ from harness.common.artifacts import (
     write_bytes,
 )
 from harness.common.digests import file_record
+from harness.common.journal import write_private
 from harness.common.captureproof import CaptureProofRefused, verify_capture
 from harness.common.failures import FailureEvent, PolicyFailure, facts, primary, retain
 from harness.common.process import ProcessCleanupError, capture
@@ -32,6 +33,7 @@ from harness.reconstruction import (
     catalog,
     calltargets,
     contract,
+    ledger,
     nativeoutput,
     prelude,
     provenance,
@@ -3141,6 +3143,7 @@ def supplied_submission(candidate, result, run):
     return inspection
 
 
+@ledger.accounted("capture-supplied")
 def capture_supplied_run(
     *,
     root,
@@ -3170,6 +3173,7 @@ def capture_supplied_run(
     _regular(context)
     content = _read(context, CONTEXT_LIMIT, events)
     plans, answer = _supplied_plans(content, binding, prepared_run, events)
+    ledger.require_members([plan.entry.member.key for plan in plans])
     _require(
         not destination.exists()
         and destination.parent.is_dir()
@@ -3206,6 +3210,7 @@ def capture_supplied_run(
         ],
     )
     try:
+        ledger.reserve("prepare")
         selection, _ = catalog.resolve(
             root,
             with_profiles=True,
@@ -3297,6 +3302,7 @@ def capture_supplied_run(
                 for row in report["members"]
                 if row["identity"]["key"] == plan.entry.member.key
             )
+            ledger.reserve("native", plan.entry.member.key)
             _capture_supplied_member(
                 workspace, record, plan, binding, prepared_run, row, events
             )
@@ -3313,10 +3319,9 @@ def capture_supplied_run(
     ]
     if events:
         report.update(status="failed", exit=1)
-    write_bytes(
-        destination / "report.json",
-        encode_json(report, path=destination, events=events),
-        events=events,
+    report["attempt_ledger"] = ledger.snapshot()
+    write_private(
+        destination, "report.json", encode_json(report, path=destination, events=events)
     )
     if isinstance(primary(events), ProcessCleanupError):
         raise primary(events)

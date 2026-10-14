@@ -12,6 +12,7 @@ import re
 from harness.build import recipe
 from harness.common.artifacts import encode_json, read_bytes, write_bytes
 from harness.common.digests import file_record
+from harness.common.journal import write_private
 from harness.common.process import ProcessCleanupError
 from harness.common.failures import PolicyFailure, facts, primary, retain
 from harness.reconstruction.prepare import PreparedInputs
@@ -20,6 +21,7 @@ from harness.reconstruction import (
     calltargets,
     comparison,
     invocation,
+    ledger,
     nativeoutput,
     objectfile,
     prelude,
@@ -474,7 +476,8 @@ def _derive_search(report, grant, authenticated):
 
 def _publish_progress(report, destination, ordinal):
     path = destination / f"progress-{ordinal:03d}.json"
-    write_bytes(path, encode_json(report, path=path))
+    report["attempt_ledger"] = ledger.snapshot()
+    write_private(destination, path.name, encode_json(report, path=path))
     return file_record(path)
 
 
@@ -497,6 +500,7 @@ def _admit_work(
     )
     if units > grant.campaign_limit - spent:
         raise _BudgetExhausted("campaign operation units exhausted before owner call")
+    ledger.reserve(cursor.phase, None if member is None else member.key, units=units)
     reservation = dict(
         id=len(report["operation_reservations"]),
         grant_id=grant.grant_id,
@@ -538,7 +542,7 @@ def _member_budget(report, grant, key):
 
 def _write_terminal(path, value):
     value = deepcopy(value)
-    write_bytes(path, encode_json(value, path=path))
+    write_private(path.parent, path.name, encode_json(value, path=path))
     return file_record(path)
 
 
@@ -1180,6 +1184,7 @@ def _authenticate_attempt(attempt, binding, arguments, reservations):
 
 
 def _read_resume(pin, binding, arguments):
+    ledger.require_resume(pin)
     path = pin.path
     _require(
         path.is_absolute()
@@ -1634,7 +1639,7 @@ def _search_forms(*, binding, arguments):
                 else owner_prior_grant,
             )
             path = destination / "run.json"
-            write_bytes(path, encode_json(owner, path=path))
+            write_private(path.parent, path.name, encode_json(owner, path=path))
             report["run"] = file_record(path)
             if owner["grant_origin"]:
                 report["grant_owners"].append(
@@ -2169,7 +2174,8 @@ def _search_forms(*, binding, arguments):
             report["reuse_refusals"].append(reason)
     checkpoint()
     path = destination / "report.json"
-    write_bytes(path, encode_json(report, path=path))
+    report["attempt_ledger"] = ledger.snapshot()
+    write_private(path.parent, path.name, encode_json(report, path=path))
     if fatal is not None and (
         not isinstance(fatal, Exception)
         or isinstance(fatal, (ProcessCleanupError, OSError))
@@ -2538,6 +2544,8 @@ def _compile(
                 retain(events, error, phase="attempt-inventory", path=workspace)
         pending = primary(events)
     result["secondary_failures"] = facts(events)
+    if isinstance(pending, ProcessCleanupError):
+        ledger.cleanup_unknown()
     return (
         result,
         abrupt or pending,
@@ -2734,6 +2742,7 @@ def _run_member(
         row["failure"] = f"{type(pending).__name__}: {pending}"
         row["capture_failures"] = getattr(pending, "capture_failures", ())
         if isinstance(pending, ProcessCleanupError):
+            ledger.cleanup_unknown()
             row["owner_observation"] = pending.observed
         if compiled is not None:
             compiled.update(failure=row["failure"], terminal_failures=facts(events))
@@ -2743,6 +2752,7 @@ def _run_member(
     return row
 
 
+@ledger.accounted("run")
 def run(
     *,
     root: Path,
@@ -2840,6 +2850,7 @@ def run(
     )
     if all_members:
         member_keys = tuple(member.key for member in binding.members)
+    ledger.require_members(member_keys)
     selected_members = tuple(binding.member(key) for key in member_keys)
     _require(
         set(overlay_mounts) <= {image.image_id for image in binding.images},
@@ -2894,6 +2905,7 @@ def run(
     retained_receipts = []
     entry_sources = ()
     try:
+        ledger.reserve("prepare")
         run_record, config_bytes, inputs = _prepare_run(
             root, destination, native_receipt, configuration, rizin, report, run_events
         )
@@ -2940,6 +2952,7 @@ def run(
             events=run_events,
         )
         inputs.verify(events=run_events)
+        ledger.reserve("self-check")
         self_check = invocation.capture_native(
             _native_command(destination / "self-check", rizin, plugin, output_limit),
             configuration=config_bytes,
@@ -2957,6 +2970,7 @@ def run(
             "native self-check failed",
         )
         for index, member in enumerate(selected_members):
+            ledger.reserve("native", member.key)
             _run_member(
                 binding=binding,
                 run_dir=run_dir,
@@ -2973,6 +2987,7 @@ def run(
                 source_form=source_form,
                 run_events=run_events,
                 retained_receipts=retained_receipts,
+                before_compile=lambda phase, profile: ledger.reserve(phase, member.key),
             )
         provenance.require_active_binding(
             binding, run_dir, io_mode="exact", events=run_events
@@ -3057,14 +3072,16 @@ def run(
             capture_failures=getattr(run_error, "capture_failures", ()),
         )
         if isinstance(run_error, ProcessCleanupError):
+            ledger.cleanup_unknown()
             report.update(
                 status="cleanup-uncertain", owner_observation=run_error.observed
             )
     report["secondary_failures"] = facts(run_events)
     path = destination / "report.json"
+    report["attempt_ledger"] = ledger.snapshot()
     try:
-        write_bytes(
-            path, encode_json(report, events=run_events, path=path), events=run_events
+        write_private(
+            path.parent, path.name, encode_json(report, events=run_events, path=path)
         )
     except Exception as error:
         retain(run_events, error, phase="report-receipt", path=path)
