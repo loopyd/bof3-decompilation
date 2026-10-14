@@ -478,11 +478,46 @@ def capture_pair(root: Path, request: dict, reviewed: list[dict]) -> dict:
     }
 
 
+def literal_header_consumers(root: Path, connection, header: str) -> set[str]:
+    """Return current indexed functions with a transitive literal header include."""
+
+    required = set()
+    header_path = root / validate_repo_path(header)
+    with InputBatch(root) as batch:
+
+        def read_source(path):
+            state, raw = batch.read(path, max_bytes=_LIMIT)
+            if state is None:
+                raise ValueError("type header consumer source is missing")
+            return raw.decode("utf-8")
+
+        for row in connection.execute(
+            "SELECT target_id,address,source FROM functions WHERE source IS NOT NULL"
+        ):
+            target, address, source = row
+            path = Path(source)
+            if not path.is_absolute():
+                path = root / validate_repo_path(source)
+            read_source(path)
+            if path == header_path or header_path in local_include_files(
+                root,
+                [path],
+                strict=True,
+                require_literal=True,
+                include_angle=True,
+                read_source=read_source,
+            ):
+                identity = parse_function_id(f"{target}@0x{address:08X}")
+                required.add(f"{identity.target.value}@0x{identity.address:08X}")
+    return required
+
+
 def validate_consumers(
     root: Path, connection, rows: list[dict], functions: list[dict], pair: dict
 ) -> None:
     """Require original indexed uses and all live transitive header consumers."""
-    required = set()
+
+    required = literal_header_consumers(root, connection, HEADER)
     for row in rows:
         for item in row["evidence"]:
             if not isinstance(item, dict):
@@ -493,30 +528,6 @@ def validate_consumers(
             for value in values:
                 identity = parse_function_id(value)
                 required.add(f"{identity.target.value}@0x{identity.address:08X}")
-    with InputBatch(root) as batch:
-
-        def read_source(path):
-            state, raw = batch.read(path, max_bytes=_LIMIT)
-            if state is None:
-                raise ValueError("linked type declaration consumer source is missing")
-            return raw.decode("utf-8")
-
-        for row in connection.execute(
-            "SELECT target_id,address,source FROM functions WHERE source IS NOT NULL"
-        ):
-            target, address, source = row
-            path = Path(source)
-            if not path.is_absolute():
-                path = root / validate_repo_path(source)
-            if path == root / HEADER or root / HEADER in local_include_files(
-                root,
-                [path],
-                strict=True,
-                require_literal=True,
-                include_angle=True,
-                read_source=read_source,
-            ):
-                required.add(f"{target}@0x{address:08X}")
     if not required <= {item["selector"] for item in functions}:
         raise ValueError(
             "linked type affected_functions omit current original or declaration consumers"
