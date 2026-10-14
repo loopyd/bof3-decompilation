@@ -390,8 +390,10 @@ disjoint from retained inputs.
 
 Rehearsal holds one writer lease, rechecks live PRE, and captures shared v6 deletion
 recovery before applying exactly the prepared images. Before the first source edit,
-`OUTPUT.recovery.json` retains that invocation's recovery path, structured digest and
-raw-file SHA, run ID and transaction pin; callback/publication failure prevents edits.
+`OUTPUT.recovery.json` binds the manifest digest, transaction pin and run ID to the
+full recovery record's path, raw-file SHA-256 and structured digest;
+callback/publication failure prevents edits. Keep the full backing record, which
+retains the manifest and transaction.
 Use this receipt after interruption, never select the newest matching recovery file.
 The receipt grants no restoration authority. Rehearsal checks exact POST, invokes
 the grouped comparator once, then restores the identity-bound old source, manifest,
@@ -405,9 +407,11 @@ until actual writer-tree termination is established; never roll back beneath an
 unconfirmed live child. These safeguards use the common runtime and restoration
 owners, not a second recovery engine.
 
-After confirmed restoration, the absent report is exclusively published. Exit zero
-means the temporary comparison matched all selected function bytes and PRE was
-restored; differences exit one. Native failure or unverified restoration
+After confirmed restoration, the absent report is exclusively published as
+`bof3.combiner-rehearsal-result/v2`. It retains the full comparison under the 4 MiB
+document bound and pins `manifest_digest` and `recovery_receipt` (`path`, raw-file
+`sha256`). Exit zero means the temporary comparison matched all selected function
+bytes and PRE was restored; differences exit one. Native failure or unverified restoration
 raises instead. The report retains historical POST comparison evidence, never current
 POST admission: `accepted`, `reusable`, `write_authorized`, `native_verified` and
 `coverage_verified` remain false. Full compiler/consumer closure and actual native

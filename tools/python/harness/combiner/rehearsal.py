@@ -37,7 +37,7 @@ from harness.common.workspace import (
 )
 from harness.domain.policy import validate_matching_text
 
-SCHEMA = "bof3.combiner-rehearsal-result/v1"
+SCHEMA = "bof3.combiner-rehearsal-result/v2"
 _LIMIT = 64 * 1024 * 1024
 
 
@@ -231,7 +231,7 @@ def rehearse_transaction(
                 "schema": SCHEMA,
                 "transaction_fingerprint": expected_fingerprint,
                 "implementation_run_id": implementation_run_id,
-                "manifest": manifest,
+                "manifest_digest": manifest["digest"],
                 "recovery_receipt": recovery_receipt,
                 "comparison": comparison,
                 "restored": True,

@@ -8,20 +8,26 @@ decomp-permuter.
 from __future__ import annotations
 
 import subprocess
-import sys
 from pathlib import Path
 from typing import Any
 
 import pytest
 from harness.commands import permute
+from harness.io import repo_layout
 from harness.toolchain.permuter import DecompPermuterToolchain
 
 ROOT = Path(__file__).resolve().parents[4]
 
 
 def _stub_tools(root: Path) -> None:
-    (root / "tools").mkdir(parents=True, exist_ok=True)
-    (root / "tools" / "prep-permuter.py").touch()
+    toolchain = DecompPermuterToolchain(repo_layout(root))
+    for path in (
+        toolchain.python,
+        toolchain.executable,
+        *toolchain.preparation_tools,
+    ):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.touch()
 
 
 def _lift_env(tmp_path: Path, *, address: int = 0x801CE758) -> Path:
@@ -104,16 +110,8 @@ def test_preparer_creates_runnable_workspace(tmp_path: Path) -> None:
         ".text\nglabel func_test\n    jr $ra\n     li $v0, 1\n"
     )
 
-    subprocess.run(
-        [
-            sys.executable,
-            str(ROOT / "tools" / "prep-permuter.py"),
-            str(source),
-            "func_test",
-            str(tmp_path),
-        ],
-        check=True,
-    )
+    toolchain = DecompPermuterToolchain(repo_layout(ROOT))
+    assert toolchain.prepare(source, "func_test", tmp_path) == 0
     subprocess.run(
         [
             str(tmp_path / "compile.sh"),
@@ -278,10 +276,10 @@ def test_permuter_arguments_jobs() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_run_requires_preparer(tmp_path: Path) -> None:
+def test_run_requires_original_assembly(tmp_path: Path) -> None:
     src = _lift_env(tmp_path)
     ns = permute.build_parser().parse_args(["--root", str(tmp_path), str(src)])
-    with pytest.raises(FileNotFoundError, match="decomp-permuter workflow"):
+    with pytest.raises(FileNotFoundError, match="no original assembly found"):
         permute.run(ns)
 
 
