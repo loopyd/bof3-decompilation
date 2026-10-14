@@ -16,7 +16,7 @@ from harness.common.paths import require_absent
 from harness.domain.symbols import resolve_address_symbol
 from harness.io import RepoLayout
 from harness.match.execution import NativeExecution
-from harness.match.extraction import read_function_image
+from harness.match.extraction import LinkedImage, read_function_image, read_linked_image
 from harness.match.flow import validate_function_flow
 
 _SECTION = re.compile(r"[.A-Za-z_][.A-Za-z0-9_]*")
@@ -314,6 +314,7 @@ def extract_grouped_function(
     size: int,
     layout: RepoLayout,
     execution: NativeExecution,
+    data_sections: Mapping[str, int] | None = None,
 ) -> bytes:
     """Extract the complete named range, rejecting prefix/truncation-based success."""
 
@@ -330,6 +331,7 @@ def extract_grouped_function(
             size=size,
             layout=layout,
             execution=execution,
+            data_sections=data_sections,
         )
     except BaseException as error:
         error.add_note(f"grouped native scratch retained at {scratch}")
@@ -346,6 +348,7 @@ def _extract_function(
     size: int,
     layout: RepoLayout,
     execution: NativeExecution,
+    data_sections: Mapping[str, int] | None = None,
 ) -> bytes:
     if type(size) is not int or size < 8 or size % 4:
         raise ValueError(
@@ -383,5 +386,34 @@ def _extract_function(
             "grouped function extraction failed or returned a short range"
         )
     content = image.content
-    validate_function_flow(content, address)
+    readonly_ranges = ()
+    if data_sections:
+        linked_image = read_linked_image(linked.read_bytes(), limit=64 * 1024 * 1024)
+        readonly_ranges = _capture_readonly_ranges(linked_image, data_sections)
+    validate_function_flow(content, address, readonly_ranges=readonly_ranges)
     return content
+
+
+def _capture_readonly_ranges(
+    image: LinkedImage, data_sections: Mapping[str, int]
+) -> tuple[tuple[int, bytes], ...]:
+    """Admit only actual reviewed, plain readonly allocated initialized storage."""
+    ranges = []
+    for name, address in data_sections.items():
+        candidates = [row for row in image.sections if row.name == name]
+        if len(candidates) != 1 or candidates[0].address != address:
+            raise ValueError("flow data differs from the reviewed section placement")
+        row = candidates[0]
+        if (
+            row.kind == 1
+            and row.flags & 2
+            # Exclude WRITE, EXECINSTR, MERGE, STRINGS, TLS and COMPRESSED.
+            and not row.flags & (1 | 4 | 0x30 | 0xC00)
+            and row.content is not None
+            and not any(
+                relocation["target_section"] == row.index
+                for relocation in image.relocations
+            )
+        ):
+            ranges.append((row.address, row.content))
+    return tuple(ranges)

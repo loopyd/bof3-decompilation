@@ -103,7 +103,9 @@ def resolve_comparison_outputs(root: Path, name: str) -> tuple[Path, Path, set[P
     return output, linked, paths
 
 
-def _compare_function(layout, execution, linked: Path, member: dict) -> dict:
+def _compare_function(
+    layout, execution, linked: Path, member: dict, *, data_sections=None
+) -> dict:
     image = read_function_image(
         linked, function_name=member["symbol"], address=member["address"]
     )
@@ -120,6 +122,7 @@ def _compare_function(layout, execution, linked: Path, member: dict) -> dict:
             size=len(original),
             layout=layout,
             execution=execution,
+            data_sections=data_sections,
         )
         if current != image.content:
             raise ValueError("linked function changed during extraction")
@@ -544,6 +547,10 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
         }
         if len(functions) != len(members["functions"]):
             raise ValueError("comparison member symbols are duplicated")
+        data_placements = {
+            name: section["address"]
+            for name, section in members["data_sections"].items()
+        }
         placed = place_grouped_object(
             output,
             linked,
@@ -551,10 +558,7 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
             layout=layout,
             execution=execution,
             bindings=members["bindings"],
-            data_sections={
-                name: section["address"]
-                for name, section in members["data_sections"].items()
-            },
+            data_sections=data_placements,
         )
         if placed["path"] != str(linked) or placed["script"] != str(
             linked.with_suffix(linked.suffix + ".ld")
@@ -579,7 +583,15 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
             guard()
             producer_watch.validate()
             linked_watch.validate()
-            comparisons.append(_compare_function(layout, execution, linked, member))
+            comparisons.append(
+                _compare_function(
+                    layout,
+                    execution,
+                    linked,
+                    member,
+                    data_sections=data_placements,
+                )
+            )
         data_comparisons = _compare_data(linked, members["data_sections"], execution)
         guard()
         producer_watch.validate()

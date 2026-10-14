@@ -34,9 +34,12 @@ must retain the reviewed image, load, range and canonical target-map bindings.
 Canonical bindings take precedence; exact address-encoding labels share the ordinary
 linker's resolver. Initialized sections require compatible member declarations in
 the pinned manifest and complete linked-byte comparison at their reviewed placement.
-Any differing initialized section fails the group. Computed jumps, BSS and C binding
-overrides are refused. Input and consumer closure and production consolidation
-acceptance retain their owner gates.
+Any differing initialized section fails the group. Guarded absolute jump tables
+require a leading load-delay nop, an unsigned index bound and at most 4,096 entries
+contained in reviewed linked readonly data. Every target must stay inside the
+complete function; reachable entry past the leading nop is refused. Other computed
+jumps, BSS and C binding overrides are refused. Input and consumer closure and
+production consolidation acceptance retain their owner gates.
 
 ## Host capability
 
