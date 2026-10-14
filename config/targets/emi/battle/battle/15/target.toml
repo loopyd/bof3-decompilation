@@ -270,6 +270,7 @@ support_sources = [
 psyq_source = "src/bof3/support/battle15_psyq.c"
 headers = [
     "include/bof3/battle/battle15_internal.h",
+    "include/bof3/battle/battle15_dispatch_internal.h",
 ]
 
 # func_8009CCBC's dense switch dispatches through a seven-entry table at

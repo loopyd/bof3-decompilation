@@ -1,4 +1,4 @@
-#include "bof3/battle/battle15_internal.h"
+#include "bof3/battle/battle15_dispatch_internal.h"
 
 /* @source 0x800ADCC4
  * @behavior copies the three handlers at 0x800969B8 and dispatches the entry
@@ -9,13 +9,5 @@
  */
 void dispatchWorkTable69b8(void)
 {
-    BattleSelectionDispatchTable table;
-
-    u8* work;
-
-    table = D_800969B8;
-    work = g_battle_work;
-    D_801459F0 = 0x800F0800;
-    table.handlers[work[1]]();
-    D_801459F0 = 0x800D3800;
+    BATTLE_DISPATCH_WORK_TABLE(D_800969B8);
 }
