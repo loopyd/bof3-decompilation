@@ -43,6 +43,9 @@ OVERRIDES = (
     "CC",
     "CXX",
 )
+ENVIRONMENT_METADATA = frozenset(
+    {"_", "SHLVL", "CODEX_SESSION_ID", "CODEX_THREAD_ID", "PYTEST_CURRENT_TEST"}
+)
 
 
 def _evidence_paths(value, _memo: dict[int, set[str]] | None = None) -> set[str]:
@@ -169,7 +172,14 @@ def capture(
         ),
         "root": str(root.resolve()),
         "inputs": inputs,
-        "environment_digest": digest(dict(os.environ)),
+        # Launcher/session bookkeeping varies across independent review runs.
+        "environment_digest": digest(
+            {
+                name: value
+                for name, value in os.environ.items()
+                if name not in ENVIRONMENT_METADATA
+            }
+        ),
         "tools": tools,
         "python": {"path": sys.executable, "version": sys.version},
         "git_index": None
