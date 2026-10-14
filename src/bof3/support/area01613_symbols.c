@@ -33,6 +33,7 @@ WEAK_SYMBOL_AT(D_8014930A, 0x8014930a);
 WEAK_SYMBOL_AT(D_8014930E, 0x8014930e);
 WEAK_SYMBOL_AT(D_801F513C, 0x801f513c);
 WEAK_SYMBOL_AT(func_8014F800, 0x8014f800);
+WEAK_SYMBOL_AT(func_8014D978, 0x8014D978);
 
 /* Local record tables: extern-array bindings so `as` expands the indexed
  * relocation with the original `addu $at,$at,$idx` operand order. */

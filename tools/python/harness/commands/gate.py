@@ -229,9 +229,7 @@ def _run(args: argparse.Namespace) -> int:
             rc = 1
 
     print("== git diff --check (informational) ==")
-    diff = subprocess.run(
-        ["git", "-C", str(root), "diff", "--check", "--quiet"], check=False
-    )
+    diff = subprocess.run(["git", "-C", str(root), "diff", "--check"], check=False)
     if diff.returncode == 0:
         print("diff-check: clean")
     else:
