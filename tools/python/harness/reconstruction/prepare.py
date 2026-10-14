@@ -34,7 +34,7 @@ class PreparedInputs:
     _destination: Path
 
     FIELDS = frozenset(
-        "snapshots fork_commits native_build_inputs tools staged_tools binaries binding_inputs".split()
+        "snapshots fork_commits native_build_inputs tools binaries binding_inputs".split()
     )
 
     @classmethod
@@ -156,38 +156,7 @@ class PreparedInputs:
             == owner.parent / "binding-inputs",
             "shared copied inputs escape the preparation owner",
         )
-        for row in prepared["tools"]["profiles"]:
-            for pin in row["staged"].values():
-                path = Path(pin["path"])
-                _require(
-                    path.resolve() == path
-                    and path.is_relative_to(owner.parent / "tools"),
-                    "shared profile tool escapes its owner",
-                )
-            if "tools" in row:
-                for name, path in row["tools"].items():
-                    if name == "maspsx_interpreter":
-                        _require(
-                            path == prepared["tools"]["files"][name]["path"],
-                            "shared interpreter identity differs",
-                        )
-                    else:
-                        _require(
-                            Path(path).resolve() == Path(path)
-                            and Path(path).is_relative_to(owner.parent / "tools"),
-                            "shared executed tool escapes its owner",
-                        )
-                _require(
-                    Path(row["tools"]["maspsx_root"])
-                    .resolve()
-                    .is_relative_to(owner.parent / "tools"),
-                    "shared compiler tools escape the preparation owner",
-                )
-        for row in prepared["tools"]["staged_shared"].values():
-            _require(
-                Path(row["path"]).resolve().is_relative_to(owner.parent / "tools"),
-                "shared staged tool escapes the preparation owner",
-            )
+        catalog.verify(prepared["tools"], events=events)
         recipe.verify_inputs([pointer, campaign_pin], events=events)
         return cls(MappingProxyType(prepared), owner.parent)
 
@@ -294,7 +263,6 @@ class PreparedInputs:
                 ],
                 "native_build_inputs": {"files": inputs},
                 "tools": selection,
-                "staged_tools": cls.tree(destination / "tools"),
                 "binaries": {
                     "rizin": file_record(rizin),
                     "plugin": asdict(receipt.dso) | {"path": str(receipt.dso.path)},
@@ -313,7 +281,6 @@ class PreparedInputs:
             "bindings",
             "forks",
             "snapshots",
-            "staged",
             "producer",
         ):
             try:
@@ -395,12 +362,6 @@ class PreparedInputs:
                                     if isinstance(error, PolicyFailure)
                                     else "unknown",
                                 )
-                elif phase == "staged":
-                    _require(
-                        self.tree(self._destination / "tools")
-                        == self._record["staged_tools"],
-                        "staged tool drift",
-                    )
                 elif phase == "producer" and "producer" in self._record:
                     from harness.reconstruction import invocation
 
@@ -523,7 +484,6 @@ def inspect_shared_provenance(prepared_run, runs, reader):
                         "fork_commits",
                         "native_build_inputs",
                         "tools",
-                        "staged_tools",
                         "binaries",
                         "binding_inputs",
                         "problem",

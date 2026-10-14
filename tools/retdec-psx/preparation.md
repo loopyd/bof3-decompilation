@@ -13,6 +13,16 @@ and source/map hashes. Preparation rejects a changed manifest, image, range,
 reference or current native build input. It validates alignment, image format,
 PS-X headers and payload bounds without an old collector or audit directory.
 
+The canonical pipeline uses the installed GCC 2.7.2-PSX driver, `cc1` and `cpp`,
+native assembler and linker, and existing maspsx in place by absolute path.
+Generation and verification record and recheck their component hashes, profile,
+ordered options and recipe identity. The canonical profile requires absent
+external GCC `specs` files at every declared lookup path and rechecks that absence.
+Reconstruction outputs contain mission inputs and results. Compiler binaries,
+maspsx and configuration run from their installed locations. Changed tool or
+search inputs require fresh preparation; runs bound to copied-tool recipes also
+require fresh preparation.
+
 Build the sibling forks through the [managed lifecycle](README.md). Use the receipt
 path printed by setup. Run from the repository root with a new run id matching
 `[a-z0-9][a-z0-9._-]{0,63}`:

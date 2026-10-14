@@ -3221,9 +3221,8 @@ def capture_supplied_run(
         ],
     )
     try:
-        selection, _ = catalog.stage(
+        selection, _ = catalog.resolve(
             root,
-            destination / "tools",
             with_profiles=True,
             events=events,
         )

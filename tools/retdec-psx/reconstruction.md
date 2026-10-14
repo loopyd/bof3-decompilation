@@ -50,9 +50,9 @@ native build inputs into each attempt. It rechecks their identities before each
 native execution and afterward. Changed sources, original inputs, configuration
 or selected build inputs refuse reuse. Setup reuses one managed build directory
 and overwrites its current receipt. Prepare a fresh run when rebuilding changes
-the referenced inputs. Reconstruction attempts contain their
-bounded mission inputs, compiler workspace files and outputs. No symlinks or
-separate snapshot store are required.
+the referenced inputs. Reconstruction attempts contain bounded mission inputs,
+compiler workspace inputs and outputs. Installed compiler tools run in place by
+absolute path. No symlinks or separate snapshot store are required.
 
 An original-only native workspace contains only original image bytes and the explicit request
 and configuration. Authored Answer bodies, declarations, maps, source-specific
@@ -208,12 +208,17 @@ Each stage records the exact rendered environment and command. A recorded
 `raw_exit` belongs to the managed supervisor process; it does not identify a
 native child's kernel signal status. Missing or uncertain exits remain missing.
 
-Each fresh compiler directory contains a read-only empty `specs` file. The recipe
-records and independently consumes this input. The canonical driver reads it before
-fallback configuration. The verifier grants a 32-bit signed `int` fact only when
-the driver, cc1 and cpp match the pinned canonical release. Signed representation
-remains unknown. The complete literal-zero source rule can
-use this width; it does not establish an original declaration or entry domain.
+Generation and independent verification execute the installed driver, `cc1`, `cpp`,
+assembler, linker and existing maspsx by absolute path. Component hashes,
+profile, ordered options and recipe identity remain verified. The canonical
+profile requires absent external GCC `specs` files at every declared lookup
+path and rechecks that absence. Compiler binaries and maspsx stay in their
+installed locations; runs create no bootstrap or empty specs file. The verifier
+grants a 32-bit signed `int` fact only when the driver, `cc1` and `cpp` match the
+pinned canonical release and the verified recipe's configuration and search
+inputs. Signed representation remains unknown. The complete literal-zero source
+rule can use this width; it does not establish an original declaration or entry
+domain.
 
 Object extraction proves ELF correspondence only. It does not establish Original
 byte identity, declarations, associated-data contents or placement. The report

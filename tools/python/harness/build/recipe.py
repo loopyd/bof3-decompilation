@@ -13,6 +13,7 @@ import shutil
 from typing import cast
 
 from harness.build.compiler import DEFAULT_COMPILER_ID
+from harness.build.runtime import gcc_specs_paths
 from harness.common.artifacts import (
     active_reader,
     ConsumedFile,
@@ -76,20 +77,17 @@ STAGE_TEMPLATES = (
         },
         "stdin": None,
         "stdout": None,
-        "consumes": ("{specs}",),
+        "consumes": (),
         "produces": ("{workspace}/unit.s",),
     },
     {
         "name": "maspsx",
         "argv": (
             "{maspsx_interpreter}",
-            "-I",
             "-S",
             "-P",
             "-B",
-            "{maspsx_bootstrap}",
             "{maspsx_entry}",
-            "{maspsx_root}",
             f"--aspsx-version={MASPSX_VERSION}",
         ),
         "environment": {
@@ -98,6 +96,9 @@ STAGE_TEMPLATES = (
             "HOME": "/tmp",
             "LANG": "C.UTF-8",
             "PYTHONDONTWRITEBYTECODE": "1",
+            "PYTHONPATH": "{maspsx_root}",
+            "PYTHONSAFEPATH": "1",
+            "PYTHONNOUSERSITE": "1",
         },
         "stdin": "{workspace}/unit.s",
         "stdout": "{workspace}/unit.part.s",
@@ -131,10 +132,8 @@ TOOL_NAMES = (
     "driver",
     "cc1",
     "cpp",
-    "specs",
     "assembler",
     "maspsx_interpreter",
-    "maspsx_bootstrap",
     "maspsx_entry",
     "maspsx_root",
 )
@@ -909,7 +908,7 @@ def inspect_compiler_integer_facts(
         raise ImmutableInputDrift(
             "compiler integer context differs from consumed recipe"
         )
-    if set(components) != {"driver", "cc1", "cpp", "specs"}:
+    if set(components) != {"driver", "cc1", "cpp"}:
         raise ImmutableInputDrift("compiler integer components differ")
     for value in (recipe, *components.values()):
         if (
@@ -945,14 +944,16 @@ def inspect_compiler_integer_facts(
             "compiler integer recipe/compiler association differs"
         )
     compiler = components["driver"]
-    if (
-        any(
-            components[name].identity.path != compiler.identity.path.parent / name
-            for name in ("cc1", "cpp", "specs")
-        )
-        or components["specs"].content
+    if any(
+        components[name].identity.path != compiler.identity.path.parent / name
+        for name in ("cc1", "cpp")
     ):
-        raise ImmutableInputDrift("compiler integer companions or empty specs differ")
+        raise ImmutableInputDrift("compiler integer companions differ")
+    if any(
+        Path(path).exists() or Path(path).is_symlink()
+        for path in gcc_specs_paths(str(compiler.identity.path.parent) + "/")
+    ):
+        raise ImmutableInputDrift("canonical compiler has unsupported external specs")
     int_bits = gcc.inspect_canonical_int_bits(
         {name: components[name].identity for name in ("driver", "cc1", "cpp")}
     )
@@ -964,12 +965,12 @@ def inspect_compiler_integer_facts(
         gcc.CANONICAL_INTEGER_RULE
         if int_bits is not None
         else "unsupported-compiler-target/v1",
-        components["specs"].identity,
+        None,
         "c89",
         int_bits,
         None,
         "verified" if int_bits is not None else "unknown",
-        "authenticated canonical GCC and empty specs establish signed int width 32 for literal zero"
+        "authenticated native canonical GCC without external specs establishes signed int width 32 for literal zero"
         if int_bits is not None
         else "authenticated current recipe/compiler lacks an independently justified C89 signed32-bit target contract",
         char_bits=8 if int_bits == 32 else None,

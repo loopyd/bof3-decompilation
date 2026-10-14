@@ -32,6 +32,19 @@ def _is_search_control(argument: str) -> bool:
     return argument.startswith(("-B", "-b", "-V", "-specs", "--", "@", "-x"))
 
 
+def gcc_specs_paths(exec_prefix: str) -> tuple[str, ...]:
+    suffix = "mips-sony-psx/2.7.2/"
+    roots = (
+        (exec_prefix, (suffix, "")),
+        ("/opt/cross/lib/gcc-lib/", (suffix,)),
+        ("/usr/lib/gcc/", (suffix,)),
+        ("/opt/cross/mips-sony-psx/lib/", (suffix, "")),
+    )
+    return tuple(
+        prefix + ending + "specs" for prefix, endings in roots for ending in endings
+    )
+
+
 def _gcc_candidates(seed: dict) -> list[tuple[str, str, list[str] | None]]:
     machine = "mips-sony-psx/"
     suffix = machine + "2.7.2/"
@@ -41,20 +54,13 @@ def _gcc_candidates(seed: dict) -> list[tuple[str, str, list[str] | None]]:
         (path if path.endswith("/") else path + "/") if path else "./"
         for path in seed["compiler_path"].split(os.pathsep)
     ]
-    specs = [
-        (seed["exec_prefix"], (suffix, "")),
-        *((prefix, (suffix,)) for prefix in standard),
-        (tool + "lib/", (suffix, "")),
-    ]
     executables = [
         *((prefix, (suffix, "")) for prefix in [seed["exec_prefix"], *compiler_paths]),
         *((prefix, (suffix, machine)) for prefix in standard),
         (tool + "bin/", (suffix, "")),
     ]
     pending = [
-        ("runtime-source", prefix + ending + "specs", None)
-        for prefix, endings in specs
-        for ending in endings
+        ("runtime-source", path, None) for path in gcc_specs_paths(seed["exec_prefix"])
     ]
     for name in ("cpp", "cc1"):
         pending.extend(

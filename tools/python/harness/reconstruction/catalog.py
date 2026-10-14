@@ -7,7 +7,7 @@ import subprocess
 from collections.abc import Callable
 from pathlib import Path
 
-from harness.build import recipe
+from harness.build import recipe, runtime
 from harness.build.compiler import DEFAULT_COMPILER_ID
 from harness.common import digests
 from harness.common.failures import FailureEvent, PolicyFailure, primary, retain
@@ -24,20 +24,25 @@ TOOL_PATHS = {
     "maspsx_entry": "third_party/maspsx/maspsx.py",
     "maspsx_package": "third_party/maspsx/maspsx/__init__.py",
 }
-MASPSX_BOOTSTRAP = b"""import sys
-
-ENTRY = sys.argv[1]
-ROOT = sys.argv[2]
-sys.path.insert(0, ROOT)
-sys.argv = [ENTRY, *sys.argv[3:]]
-with open(ENTRY, "rb") as stream:
-    SOURCE = stream.read()
-exec(compile(SOURCE, ENTRY, "exec"), {"__name__": "__main__", "__file__": ENTRY})
-"""
 
 
 class CatalogDrift(ValueError):
     selection: dict | None = None
+
+
+def _profile_paths(directory: Path, entry: dict) -> dict:
+    paths = {
+        name: str(
+            directory / (entry["executable_relpath"] if name == "driver" else name)
+        )
+        for name in ("driver", "cc1", "cpp")
+    }
+    paths["directory"] = str(directory)
+    paths.update(
+        (f"specs_{ordinal:02d}", path)
+        for ordinal, path in enumerate(runtime.gcc_specs_paths(str(directory) + "/"))
+    )
+    return paths
 
 
 def _observe(
@@ -167,10 +172,6 @@ def select(
         "pipeline_digest": recipe.pipeline_digest(),
         "files": files,
         "options": list(recipe.REQUIRED_OPTIONS),
-        "bootstrap": {
-            "bytes": len(MASPSX_BOOTSTRAP),
-            "sha256": hashlib.sha256(MASPSX_BOOTSTRAP).hexdigest(),
-        },
         "scope": "Generic object-only pipeline; no source profiles or answer inputs.",
     }
     if retained is not None:
@@ -186,13 +187,8 @@ def select(
         "executable_relpath": "gcc",
     }
     directory = layout.gcc272_psx_root
-    paths = {
-        name: str(
-            directory / (entry["executable_relpath"] if name == "driver" else name)
-        )
-        for name in ("driver", "cc1", "cpp")
-    }
-    paths["directory"] = str(directory)
+    paths = _profile_paths(directory, entry)
+    specs = [name for name in paths if name.startswith("specs_")]
     observed = _observe(paths)
     profile = {
         "profile_id": recipe.CANONICAL_PROFILE_ID,
@@ -201,14 +197,18 @@ def select(
         "original": observed,
         "availability": "refused",
         "refusal": None,
-        "staged": {},
     }
     try:
         gcc_variants.check_host_compatible(entry["host"])
         if entry["assembler"] != f"maspsx --aspsx-version={recipe.MASPSX_VERSION}":
             raise ValueError("assembler is incompatible with the canonical recipe")
-        if any(row["symlink"] or not row["exists"] for row in observed.values()):
+        if any(
+            observed[name]["symlink"] or not observed[name]["exists"]
+            for name in ("driver", "cc1", "cpp", "directory")
+        ):
             raise ValueError("compiler component or directory is absent or symlinked")
+        if any(observed[name]["exists"] or observed[name]["symlink"] for name in specs):
+            raise ValueError("canonical compiler has unsupported external specs")
         if any(
             observed[name]["file"] is None
             or directory.resolve() not in Path(paths[name]).resolve().parents
@@ -237,7 +237,6 @@ def select(
     selection.update(
         profiles=profiles,
         shared_observation=shared,
-        staged_shared={},
         profiles_digest=digests.digest(profiles),
         preparation_failure="shared compiler tools are absent or unreadable"
         if len(files) != len(shared_paths)
@@ -256,141 +255,41 @@ def select(
     return selection
 
 
-def stage(
+def _tool_paths(selection: dict, profile: dict | None = None) -> dict:
+    if profile is None and selection.get("profiles"):
+        profile = selection["profiles"][0]
+    tools = {
+        name: selection["files"][name]["path"]
+        for name in recipe.TOOL_NAMES
+        if name != "maspsx_root"
+        and (profile is None or name not in {"driver", "cc1", "cpp"})
+    }
+    tools["maspsx_root"] = str(Path(tools["maspsx_entry"]).parent)
+    if profile is not None:
+        tools.update(
+            (name, profile["original"][name]["path"])
+            for name in ("driver", "cc1", "cpp")
+        )
+    return tools
+
+
+def resolve(
     root: Path,
-    destination: Path,
     *,
     with_profiles=False,
     retained=None,
     events: list[FailureEvent] | None = None,
 ) -> tuple[dict, dict]:
     selection = select(
-        root,
-        with_profiles=with_profiles,
-        retained=retained,
-        events=events,
+        root, with_profiles=with_profiles, retained=retained, events=events
     )
     try:
         if selection.get("preparation_failure"):
             raise CatalogDrift(selection["preparation_failure"])
-        paths = {
-            "driver": "gcc/gcc",
-            "cc1": "gcc/cc1",
-            "cpp": "gcc/cpp",
-            "specs": "gcc/specs",
-            "assembler": "bin/as",
-            "linker": "bin/ld",
-            "maspsx_entry": "maspsx/maspsx.py",
-            "maspsx_package": "maspsx/maspsx/__init__.py",
-            "maspsx_bootstrap": "maspsx_bootstrap.py",
-        }
-        canonical = {
-            name: str(destination / paths[name])
-            for name in ("driver", "cc1", "cpp", "specs", "assembler", "maspsx_entry")
-        }
-        canonical.update(
-            maspsx_root=str(destination / "maspsx"),
-            maspsx_bootstrap=str(destination / "maspsx_bootstrap.py"),
-            maspsx_interpreter=selection["files"]["maspsx_interpreter"]["path"],
-        )
-        copies = []
-        specs = {"bytes": 0, "sha256": hashlib.sha256(b"").hexdigest()}
-        for name, relative in paths.items():
-            if with_profiles and name in {"driver", "cc1", "cpp", "specs"}:
-                continue
-            record = (
-                selection["bootstrap"]
-                if name == "maspsx_bootstrap"
-                else specs
-                if name == "specs"
-                else selection["files"][name]
-            )
-            copies.append((name, record, destination / relative))
+        canonical = _tool_paths(selection)
         for profile in selection.get("profiles", []):
-            if profile["availability"] != "available":
-                continue
-            directory = destination / (
-                "gcc"
-                if profile["ordinal"] == 0
-                else f"variants/{profile['ordinal']:03d}"
-            )
-            profile["tools"] = {
-                **canonical,
-                **{
-                    name: str(directory / ("gcc" if name == "driver" else name))
-                    for name in ("driver", "cc1", "cpp", "specs")
-                },
-            }
-            copies += [
-                (name, profile["original"][name]["file"], Path(profile["tools"][name]))
-                for name in ("driver", "cc1", "cpp")
-            ]
-            copies.append(("specs", specs, Path(profile["tools"]["specs"])))
-        for name, record, target in copies:
-            source = (
-                None if name in {"maspsx_bootstrap", "specs"} else Path(record["path"])
-            )
-            local, stream = [], None
-            try:
-                data = (
-                    MASPSX_BOOTSTRAP
-                    if name == "maspsx_bootstrap"
-                    else b""
-                    if name == "specs"
-                    else source.read_bytes()
-                )
-                target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-                stream = target.open("xb")
-                if stream.write(data) != len(data):
-                    raise ValueError("file write was incomplete")
-            except Exception as error:
-                retain(local, error, phase="tool-copy", path=target, origin="ordinary")
-            if stream is not None:
-                for phase in ("close", "chmod"):
-                    try:
-                        if phase == "close":
-                            stream.close()
-                        else:
-                            target.chmod(
-                                0o400
-                                if name.startswith("maspsx_") or name == "specs"
-                                else 0o500
-                            )
-                    except Exception as error:
-                        retain(
-                            local, error, phase=phase, path=target, origin="ordinary"
-                        )
-            if events is not None:
-                events.extend(local)
-            if local:
-                raise local[0][3]
-            try:
-                copied = digests.file_record(target)
-            except Exception as error:
-                if events is not None:
-                    retain(
-                        events, error, phase="tool-read", path=target, origin="ordinary"
-                    )
-                raise
-            if (copied["sha256"], copied["bytes"]) != (
-                record["sha256"],
-                record["bytes"],
-            ):
-                raise PolicyFailure("copied compiler tool differs")
-        selection["staged_shared"] = {
-            name: digests.file_record(destination / relative)
-            for name, relative in paths.items()
-            if not with_profiles or name not in {"driver", "cc1", "cpp", "specs"}
-        }
-        for profile in selection.get("profiles", []):
-            profile["staged"] = (
-                {
-                    name: digests.file_record(Path(profile["tools"][name]))
-                    for name in ("driver", "cc1", "cpp", "specs")
-                }
-                if "tools" in profile
-                else {}
-            )
+            if profile["availability"] == "available":
+                profile["tools"] = _tool_paths(selection, profile)
         if with_profiles:
             selection["profiles_digest"] = digests.digest(selection["profiles"])
         verify(selection, events=events)
@@ -403,8 +302,8 @@ def stage(
             retain(
                 events,
                 error,
-                phase="catalog-stage",
-                path=destination,
+                phase="catalog-resolution",
+                path=root,
                 origin="policy"
                 if isinstance(error, (CatalogDrift, PolicyFailure))
                 else "unknown",
@@ -419,9 +318,9 @@ def verify(
     reader: Callable[[Path, int, list[FailureEvent] | None], bytes] | None = None,
 ) -> None:
     local, records = [], []
-    for group in ("files", "staged_shared"):
+    for group in ("files",):
         try:
-            values = selection[group] if group == "files" else selection.get(group, {})
+            values = selection[group]
             if type(values) is not dict:
                 raise CatalogDrift("selected compiler file inventory differs")
             records.extend(values.values())
@@ -465,10 +364,30 @@ def verify(
                     )
             if phase == "profiles":
                 for profile in selection.get("profiles", []):
-                    for field in ("original", "identity", "staged"):
+                    for field in ("original", "identity", "tools"):
                         try:
                             if field == "original":
                                 original = profile["original"]
+                                paths = _profile_paths(
+                                    Path(original["directory"]["path"]),
+                                    profile["entry"],
+                                )
+                                if set(original) != set(paths) or any(
+                                    original[name]["path"] != path
+                                    for name, path in paths.items()
+                                ):
+                                    raise CatalogDrift(
+                                        "native compiler lookup inventory differs"
+                                    )
+                                if profile["availability"] == "available" and any(
+                                    original[name]["exists"]
+                                    or original[name]["symlink"]
+                                    for name in paths
+                                    if name.startswith("specs_")
+                                ):
+                                    raise CatalogDrift(
+                                        "canonical compiler has unsupported external specs"
+                                    )
                                 if (
                                     _observe(
                                         {
@@ -498,8 +417,12 @@ def verify(
                                     raise CatalogDrift(
                                         "compiler profile identity changed"
                                     )
-                            else:
-                                records.extend(profile["staged"].values())
+                            elif "tools" in profile and profile["tools"] != _tool_paths(
+                                selection, profile
+                            ):
+                                raise CatalogDrift(
+                                    "executed tools differ from native compiler inputs"
+                                )
                         except Exception as error:
                             retain(
                                 local,
@@ -556,7 +479,7 @@ def verify(
                     )
                 raise
             if observed != record:
-                raise CatalogDrift("selected or staged compiler tool changed")
+                raise CatalogDrift("selected native compiler tool changed")
         except Exception as error:
             retain(
                 local,

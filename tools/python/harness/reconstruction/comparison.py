@@ -528,7 +528,7 @@ def _adapt_submission(result, run, result_record, run_record, limit):
         and type(selected.get("profiles")) is list
         and bool(selected["profiles"])
         and "profiles_digest" in selected
-        and "staged_shared" in selected,
+        and type(selected.get("files")) is dict,
         "submission lacks the complete selected compiler profiles",
     )
     profiles = selected["profiles"]
@@ -1917,7 +1917,7 @@ def inspect_candidate(
                         allowance.artifact_limit,
                         local,
                     )
-                    for name in ("driver", "cc1", "cpp", "specs")
+                    for name in ("driver", "cc1", "cpp")
                 }
                 integer = recipe.inspect_compiler_integer_facts(
                     context,
@@ -2681,7 +2681,7 @@ def compare_rebuilt_candidate(
             ),
             "comparison workspace overlaps original or accepted rebuild evidence",
         )
-        linker_record = selected["staged_shared"].get("linker")
+        linker_record = selected["files"].get("linker")
         linker = _regular_record(linker_record, limit)
         records = _record_inventory([*records, linker_record], limit)
         _forward_rebuild(events)
@@ -3093,7 +3093,7 @@ def _associated_profiles(
         type(rows) is list and len(rows) == len(profiles),
         "terminal comparison ordered profile census is incomplete",
     )
-    linker_record = selected["staged_shared"].get("linker")
+    linker_record = selected["files"].get("linker")
     linker = _regular_record(linker_record, limit)
     _authenticated_bytes(linker_record, limit, events, reader=reader)
     results, records = [], [linker_record]

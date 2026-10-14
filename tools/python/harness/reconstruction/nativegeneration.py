@@ -2206,9 +2206,8 @@ def _prepare_run(
     selection = {}
     report["tools"] = selection
     try:
-        report["tools"], _ = catalog.stage(
+        report["tools"], _ = catalog.resolve(
             root,
-            destination / "tools",
             with_profiles=True,
             retained=selection,
             events=events,
