@@ -82,28 +82,32 @@ weakening, atomic multi-file commit or power-loss guarantee follows. The
 [shared publication contract](../../../../docs/agents/harness.md#file-publication)
 retains historical NTFS authorization separately from current behavior.
 
-Git-backed v3 captures untouched tracked/unignored workspace PRE bytes/metadata and
-exact index bytes/state, excluding shared generated-artifact roots. Missing guards
-are unavailable, not clean. Pending index lock blocks capture. Unrelated symlinks
-are literal no-follow evidence, never referent reads or restoration targets.
-Dependency snapshots preserve content/identity but grant no mutation/restoration
-or complete arbitrary-Git-layout confinement. Observations are non-atomic; root
-Git metadata trusted. Ext4 honors requested POSIX creation modes subject to umask;
-exact captured modes and drift checks remain required, without a uniform owner-only
-permission policy. Keep source-bearing backing nonpublic/uncommitted.
+Recovery records retain PRE/POST images only for changed paths. Git-backed
+`bof3.recovery-safeguards/v4` pins HEAD, exact index bytes/identity, and unrelated
+Git status with dirty-path digests, excluding shared artifact roots. Dirty symlinks
+use literal no-follow link bytes. Submodule checkout identities and protected
+boundaries do not require recursive content capture; existing owner guards pin
+consumed dependency inputs. Unchanged workspace and dependency files are not
+rollback images. Missing guards are unavailable, not clean; an index lock blocks
+capture. Observations are non-atomic and root Git metadata is trusted. Ext4 honors
+POSIX creation modes subject to umask; preserve exact captured modes and drift
+checks. Keep source-bearing backing nonpublic/uncommitted.
 
 V4 supports separately authorized deletion-aware common owners: present PRE,
 `post:null`, exact declared deletion set and reserved PRE quarantine. It does not
 add type/macro deletion authority, combiner acceptance or automatic recovery.
-Historical v1 is content-only POST; v2 lacks workspace/index guards. Never upgrade
-historical records to claim newer safeguards.
+Historical v1 is content-only POST; v2 lacks workspace/index guards. Nested
+safeguards v1-v3 remain inspectable, but their full-workspace guards are not
+revalidated or silently converted and cannot authorize guarded recovery. New
+transactions require scoped backing. Never upgrade historical records to claim
+newer safeguards.
 
 ## Recovery
 
 Ordinary failure restores captured owned source images only after confirmed native
 cleanup. Restore owned images before checking unrelated state; never overwrite
 unexpected workspace/index edits or new files. Compare allowed PRE, adopted
-workspace, raw index and all-PRE metadata/link safeguards. Drift or failed
+workspace, raw index, HEAD and scoped safeguards. Drift or failed
 inspection means incomplete rollback, not retry permission.
 
 Identity replay requires complete backing, exactly one original POST at source,

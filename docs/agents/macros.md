@@ -456,15 +456,14 @@ inspection and does not establish no effect.
 Records require independently pinned inspection, not automatic restoration. They do
 not replace application receipts, parent acceptance or publication reconciliation.
 
-Git-backed runs also retain untouched workspace PRE images/metadata and exact
-index bytes/state from the owner's existing snapshots. Regular-file archival
-reuses captured bytes; dependency verification recaptures its evidence. Inventory covers tracked/unignored files except
-the shared generated-artifact exclusions; missing snapshots mean unavailable
-guards, not a clean workspace. Records can include local unignored content and
-must remain nonpublic. Ext4 evidence retains filesystem-native creation modes and
-observed mode/type bindings; this grants no permission changes or confidentiality
-guarantee. See [the shared policy](harness.md). A pending index lock
-rejects capture.
+Git-backed runs capture nested `bof3.recovery-safeguards/v4` with Git state,
+digests of unrelated dirty paths, HEAD and exact raw index bytes/identity.
+Only explicit changed paths retain PRE/POST source images; clean sources and
+dependency trees are not copied. Existing consumed-input guards verify required
+dependency inputs. Missing observations mean unavailable guards, not a clean
+workspace. Source images remain nonpublic. Ext4 retains observed creation modes
+and mode/type bindings; this grants no permission changes or confidentiality
+guarantee. See [the shared policy](harness.md). A pending index lock rejects capture.
 
 ```sh
 bin/harness macros inspect-recovery out/reviews/evidence/macro-recovery-NONCE.json --expected-recovery-digest INDEPENDENT_PIN
@@ -476,10 +475,11 @@ presence, and does not print source images. It neither re-derives the manifest
 against live inputs nor establishes an atomic snapshot,
 writer termination/exclusion or publication authenticity. Exit zero does not
 authorize restoration or a retry. Historical v1 records retain content-only POST
-inspection; v2 has no workspace/index guards. V3 reports scoped workspace drift,
-index agreement and locks without printing archived bytes. A matching guard is
-not restoration authority or complete atomic verification. Historical records
-are not upgraded.
+inspection; v2 has no workspace/index guards. Outer v3 records with nested
+safeguards v4 report dirty-path drift, HEAD and index agreement, and index locks.
+A matching guard is not restoration authority or complete atomic verification.
+Historical nested safeguards v1-v3 remain structurally readable but cannot report
+a current match or authorize guarded recovery. Historical records are not upgraded.
 
 For explicit parent-authorized source-only restoration:
 
@@ -489,8 +489,8 @@ bin/harness macros recover out/reviews/evidence/macro-recovery-NONCE.json --expe
 
 The [shared authorization schema and recovery gates](harness.md#guarded-source-recovery)
 require independent parent-pinned authority, reviewed terminal writer evidence,
-matching v3 workspace/Git guards and known absent publication. This command
-restores original owned PRE; it never resolves the macro opportunity, accepts
+an outer v3 record with matching nested safeguards v4 and known absent publication.
+This command restores original owned PRE; it never resolves the macro opportunity, accepts
 source, consumes a ranked attempt budget or permits automatic retry. Unexpected
 publication and workspace/Git drift require separate reconciliation.
 
@@ -502,7 +502,7 @@ creation are not added.
 
 Use the [submodule isolation contract](harness.md#submodule-isolation-candidate)
 within its support limits and the [file publication contract](harness.md#file-publication).
-Dependency snapshots do not authorize restoration, repair, retries,
+Dependency observations do not authorize restoration, repair, retries,
 acceptance, budget resets or evidence rebinding.
 
 Before another macro attempt, record finite scope and obtain fresh readiness

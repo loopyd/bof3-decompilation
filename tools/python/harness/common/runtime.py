@@ -38,7 +38,7 @@ from harness.common.paths import file_state, validate_paths
 from harness.common.lease import verify_writer
 from harness.common.images import classify_restoration, install_image
 from harness.common.git import GitIndexSnapshot
-from harness.common.workspace import WorkspaceSnapshot
+from harness.common.workspace import WorkspaceState
 from harness.io import unique_object
 
 RECEIPT_SCHEMA = "bof3.type-command-receipt/v1"
@@ -199,7 +199,7 @@ def apply_changes(
     allowed: set[str],
     *,
     recovery: dict[str, Any],
-    workspace: WorkspaceSnapshot | None = None,
+    workspace: WorkspaceState | None = None,
     index: GitIndexSnapshot | None = None,
     deletions: set[str] | None = None,
     cleanup_deadline: float | None = None,

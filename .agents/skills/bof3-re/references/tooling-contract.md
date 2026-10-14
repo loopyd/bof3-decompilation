@@ -50,12 +50,14 @@ agree. Domain adapters supply policy; shared mechanisms never import domain
 adapters to discover it. Keep specialized helpers local; similar hash formats,
 validators or evidence checks need not be equivalent.
 
-Workspace recovery excludes root `build/` outputs and refuses indexed or committed
-paths there. Native compilation still pins consumed build tools and outputs through
-its input guards.
-Namespace scans charge each directory entry once and charge the root visit.
-Recursive visits retain fresh deadline checks. Verification rescans the namespace
-and rereads captured files against the same cumulative budget.
+Shared transactions retain rollback images only for explicit changed paths.
+Observe unrelated Git state and hash reported dirty paths; do not copy clean
+sources or recursively capture dependency contents. Pin explicitly consumed inputs
+through their existing owner guards. Recovery excludes root `build/` outputs and
+refuses indexed or committed paths there. Preserve raw index bytes and identity,
+writer cleanup, owned-only restoration, and all native and semantic gates.
+Whole-workspace snapshots, recursive source inventories, and new proof or grant
+frameworks are not prerequisites for bounded naming, type, macro, or combiner work.
 
 Stdlib first, then installed dependencies; no new dependency without explicit user
 approval. Prefer smallest working diff and deletion over speculative abstraction.

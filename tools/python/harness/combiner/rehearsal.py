@@ -42,8 +42,6 @@ from harness.common.safeguards import capture_safeguards, verify_restored_state
 from harness.common.submodules import protect_artifacts
 from harness.common.workspace import (
     adopted_baseline,
-    workspace_backup,
-    workspace_state,
     verify_workspace,
 )
 from harness.domain.policy import validate_matching_text
@@ -160,11 +158,10 @@ def rehearse_transaction(
             {**capture_work_clock(), "cleanup_deadline": cleanup_deadline},
         )
         validate_recovery_manifest(root, manifest)
-        full_backup = workspace_backup(root)
         index = git_index_backup(root)
         if index is None:
             raise ValueError("rehearsal requires a captured Git index for recovery")
-        safeguards = capture_safeguards(root, set(), full_backup, index)
+        safeguards = capture_safeguards(root, set(), baseline["state"], index)
         names = set(record["inputs"]) | set(transaction["owner_inputs"])
         names.difference_update(allowed)
         inputs = _capture_inputs(root, names)
@@ -229,7 +226,7 @@ def rehearse_transaction(
                         "implementation_run_id": implementation_run_id,
                         "output": output,
                     },
-                    workspace=full_backup,
+                    workspace=baseline["state"],
                     index=index,
                     deletions=set(transaction["deletions"]),
                     cleanup_deadline=cleanup_deadline,
@@ -246,18 +243,7 @@ def rehearse_transaction(
                 )
                 guard()
                 _verify_post(root, transaction)
-                verify_workspace(root, full_backup)
-                current = workspace_state(root)
-                if {
-                    name: state
-                    for name, state in current.items()
-                    if name not in allowed
-                } != {
-                    name: state
-                    for name, state in baseline["state"].items()
-                    if name not in allowed
-                }:
-                    raise ValueError("rehearsal changed an unrelated workspace path")
+                verify_workspace(root, baseline["state"], allowed)
             except ProcessCleanupError:
                 raise
             except BaseException:

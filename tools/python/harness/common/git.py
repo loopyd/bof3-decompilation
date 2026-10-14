@@ -277,8 +277,8 @@ def _capture_index_at(parent: int, path: Path) -> GitIndexSnapshot:
         state = os.fstat(stream.fileno())
         if not stat.S_ISREG(state.st_mode) or state.st_size > 128 * 1024 * 1024:
             raise ValueError("Git index is not a regular file")
-        content = stream.read(128 * 1024 * 1024 + 1)
-        if len(content) > 128 * 1024 * 1024 or _index_state(
+        content = stream.read(state.st_size + 1)
+        if len(content) != state.st_size or _index_state(
             os.fstat(stream.fileno())
         ) != _index_state(state):
             raise ValueError("Git index changed during capture")

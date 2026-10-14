@@ -596,132 +596,43 @@ binds proposed images separately and remains read-only.
 `common/directory.py` owns confined descriptor traversal. Files and directory links are
 synced before mutation; capture failure aborts before moving sources.
 
-`common/safeguards.py` reuses the owner's existing workspace/index snapshots,
-retaining untouched PRE bytes, hash, mode, identity, ownership and link count,
-plus exact Git-index bytes/path/state. Inventory follows `workspace_backup`:
-tracked and unignored files, excluding `out/`, `sessions/subagent-artifacts/` and
-`.pi/subagents/`. Changed owned paths remain covered by their source images;
-unchanged owned paths remain in the workspace inventory. A pending index lock
-rejects capture. Non-Git or low-level runs without snapshots explicitly lack these
-guards; missing data is not treated as a clean workspace. Regular-file archival
-reuses captured bytes; dependency evidence is recaptured for comparison. Recovery
-records grow with retained PRE content.
-An exact index snapshot is not a complete Git metadata backup.
-
-`common/links.py` captures unrelated workspace symlinks as literal bytes plus
-identity through confined no-follow parent traversal, never reading referents.
-Link evidence binds bytes, mode, device/inode, ownership, link count and timestamps.
-Link target/type/identity drift
-rejects, including same-target replacement. Macro/type publication rechecks captured
-links; snapshots grant no restoration authority, unrelated links are never restored,
-and symlink-owned mutation remains refused.
+`common/safeguards.py` captures `bof3.recovery-safeguards/v4` with
+unrelated dirty-path observations, current HEAD and exact raw Git-index
+bytes/path/state. Changed owned paths are covered by their PRE/POST images.
+A pending index lock rejects capture. Runs without Git/index observations
+lack these guards; missing observations never establish verified recovery.
+The index snapshot is not a complete Git metadata backup.
 
 ### Submodule isolation candidate
 
-Submodule isolation uses the owners and support limits below. Acceptance
-of this prerequisite does not accept C or macros; their readiness and
-review gates remain separate. Historical repairs retain their consumed
-budgets. Owning OpenSpec changes track remaining work and its acceptance gates.
-Tooling acceptance does not establish whole-game completion.
+`common/workspace.py` reads bounded Git status and hashes reported dirty
+files and literal symlink bytes without following link targets. It excludes
+`build/`, `out/`, `sessions/subagent-artifacts/` and `.pi/subagents/`; tracked
+root build paths reject. Clean sources and dependency worktrees are not
+copied. Submodule checkout changes remain in Git state; submodule worktree
+contents are checked through the inputs actually consumed by the transaction.
 
-| Common owner | Responsibility |
-| --- | --- |
-| `submodules.py` | HEAD/index gitlink boundaries, recursive dependency snapshots, marker/absence binding and unconditional mutation exclusion |
-| `repositories.py` | independent root/module metadata copies, sanitized configuration/environment and bounded scratch Git queries |
-| `inventory.py` | confined file/namespace observations, identity rechecks and shared capture budgets |
-| `trees.py` | scratch worktree inputs, literal links, supported status semantics and live-input rechecks |
-| `workspace.py`, `safeguards.py` | composed baseline, dependency verification and durable observational guards |
-| `recovery.py`, `runtime.py`, `images.py`, `evidence.py` | dependency exclusion before source/image/evidence writes, even without optional workspace/index snapshots |
+`common/submodules.py` protects both HEAD and indexed gitlink boundaries,
+including staged removals. Mutations overlapping a dependency boundary,
+descendant or ancestor reject before source images or evidence are created,
+including low-level calls without optional workspace guards. Artifact
+guards also run before writer-lease acquisition. Transactions never restore,
+reset, initialize, deinitialize or repair dependencies. Bound-image owned
+rollback uses captured identities without depending on a concurrently corrupted
+index; unbound rollback separately enforces dependency exclusion.
 
-`inventory.describe_identity` omits directory allocation size, a filesystem storage
-detail that can vary as directories grow. Directory membership, device/inode, mode,
-link count, ownership and modification/change times remain bound;
-non-directory size and file-content hashes remain exact. This removes an unstable
-storage detail, not namespace, content, confinement or mutation checks.
+Scoped consumed-input freshness, owned PRE/POST identities, raw index checks,
+writer exclusion and cleanup checks remain required. Naming's physical PRE
+snapshot retains only its explicit transaction paths.
 
-New dependency captures use `bof3.submodule-snapshot/v3`. Historical v2 records remain
-structurally readable, but live observation verification requires v3, including
-absent/uninitialized dependencies. Never rewrite historical records or their external
-pins to claim compatibility; recapture and independently rebind a new transaction.
+Historical safeguards v1-v3 and their embedded submodule snapshots remain
+structurally readable. They cannot satisfy the current match check or gain new
+recovery authority. Never rewrite historical records or their external pins;
+new transactions require independently pinned scoped backing.
 
-Root status and workspace backup use an independent metadata/worktree mirror.
-Separate HEAD/index enumeration protects both current and staged-removed
-gitlinks. Baseline composition retains staged changes, module HEAD-versus-gitlink
-differences, tracked changes and
-recursive untracked state. Clean modules remain absent from the dirty map but
-present in preservation evidence. Absent, empty uninitialized and initialized
-modules remain distinct; marker selection and final namespace/identity observations
-are rechecked. Final raw observations recursively recheck the captured aggregate
-after nested queries, without interpreting live Git data. Nonempty uninitialized
-modules reject. Root mirrors retain the generated-artifact exclusions even for
-tracked paths.
-
-Initialized modules use independent scratch files, never hardlinks or redirects
-back to live metadata. Confined capture supplies refs, index/object dependencies
-and configuration before module-state queries. Scratch config parsing disables
-includes; queries disable hooks, fsmonitor, recursive status, optional writes,
-implicit fetching and host attribute/exclude files. Supported configuration values
-are reconstructed explicitly. Metadata and host configuration are separately
-rechecked against their live origins after queries; scratch consistency alone is
-insufficient. Host configuration is parsed initially, then freshly recaptured with
-environment, control-path, absence, identity, mode and content/hash checks before
-unchanged inputs can avoid reparsing. This is not a cross-transaction cache:
-fresh Git/workspace boundaries remain mandatory. The owning OpenSpec change
-retains unresolved validation debt. Captured module `*.lock` files are observed,
-excluded from query copies and never deleted. The superproject index-lock capture
-refusal still applies.
-Optional multi-pack-index and commit-graph files retain raw observations but are
-not copied or interpreted; scratch queries disable both accelerators. Their
-presence alone does not reject capture.
-
-Worktree mirrors capture regular `.gitignore`/`.gitattributes` controls and
-tracked/unignored content; literal symlink bytes are compared without referent
-reads. Linked controls reject even though ordinary literal links are supported.
-Ignored undeclared embedded `.git` directories stay opaque and are never queried;
-their enclosing namespace is observed, not a complete ignored-content backup.
-Unignored undeclared repositories reject, including empty roots independently of
-descendant selection. Metadata hooks/logs/modules/worktrees
-directories are excluded from that metadata scan; declared nested modules receive
-their own bounded capture.
-
-Supported settings include file-mode, autocrlf/eol normalization, ignore-case,
-symlink and Unicode handling, repository format and SHA-1/SHA-256 object format.
-Unknown status-affecting settings reject, including configured filters, config
-includes, external attribute/exclude controls, submodule-ignore settings and
-nonempty global ignore/attribute files. Unsupported layouts include external or
-linked Git controls, bare/shared-commondir worktrees, worktree-specific config,
-alternates, grafts/loose or packed replacement refs, promisor metadata, unmerged indexes and
-sparse/assume-unchanged entries. This is an explicit support ceiling, not arbitrary
-Git-layout compatibility; nonrecursive boundary discovery still reads root HEAD/index.
-
-One recursive capture budget permits 200,000 inventory charges, 2 GiB of observed
-bytes and 512 queries, including rechecks; charges are not unique-file counts.
-Regular inputs cap at 128 MiB each, metadata at 256 MiB, gitfiles at 4 KiB,
-namespace depth at 64 and module ancestry at 32. Each isolated query has 30 seconds,
-2 MiB output, 1 GiB address space, 30 CPU seconds and zero file-output allowance,
-bounded further by the inherited work cutoff. Failure/overflow is never a baseline.
-The root mirror has a separate budget from recursive module capture.
-
-`bof3.recovery-safeguards/v3` adds `gitlink` entries containing canonical
-`bof3.submodule-snapshot/v3` evidence; historical submodule v2 and safeguard v1
-file/v2 file-link records remain readable without rewriting their bytes or pins.
-Enclosing transaction-recovery v3/v4 formats retain their existing scopes.
-Macro/type publication rechecks dependencies. Boundary/descendant/ancestor
-mutation overlap rejects before images,
-including low-level calls without optional guards. Image/evidence destinations are
-checked before directory creation; application, `common.revalidation` and
-`macros.disposition` artifact guards run before writer-lease acquisition. Bound-image
-owned rollback uses captured identities without depending on a concurrently
-corrupted index; unbound rollback separately enforces dependency exclusion.
-Direct receipt/attestation destinations are also guarded; subsequent external-state
-checks still require parent review. Snapshots grant no dependency
-restoration, reset, initialization, deinitialization or repair authority. Drift
-preserves dependency state for parent review; observations remain non-atomic.
-
-Acceptance does not exclude manual concurrent edits; root Git metadata
-remains trusted. Arbitrary Git-layout compatibility and arbitrary
-index-extension confinement remain unassessed. No projection hardening
-is established.
+Observations remain non-atomic and do not exclude manual edits. Root Git
+metadata remains trusted. Arbitrary Git-layout compatibility and index-extension
+confinement remain unassessed.
 
 ### Recovery evidence and rollback
 
@@ -735,19 +646,19 @@ the resulting exact mode. Exception rollback checks POST/PRE identities.
 Ordinary type/macro failure restores only the transaction's captured owned source
 images. Unexpected workspace or Git-index changes are not proof of ownership:
 never overwrite them or quarantine newly observed user files. After owned rollback,
-compare allowed PRE bytes, the adopted workspace, exact raw index snapshot and a
-separate all-PRE safeguard snapshot (including untouched modes/identities/links).
-Drift or inspection failure preserves external state and requires parent review;
-it is not complete rollback or retry authority. Restore owned images before
-inspecting external state, so an unreadable or foreign untouched path cannot
-suppress otherwise safe owned restoration. `ProcessCleanupError` still forbids
-rollback while native descendant termination is uncertain.
+compare allowed PRE bytes, the adopted dirty-path state, current HEAD and the
+exact raw index against captured guards. Drift or inspection failure preserves
+external state and requires parent review; it grants neither complete rollback
+nor retry authority. Restore owned images before inspecting external state, so
+an unreadable unrelated path cannot suppress otherwise safe owned restoration.
+`ProcessCleanupError` still forbids rollback while native descendant termination
+is uncertain.
 
-These snapshots are non-atomic observations, not exclusion of manual editors.
-The non-Git fallback lacks workspace metadata safeguards; do not present it as
-metadata-verified recovery. Durable v3 safeguards retain their separate inventory
-excluding changed paths. Generic workspace/index restoration primitives remain
-available only to separately authorized callers, never as an owner fallback.
+These observations are non-atomic. The non-Git fallback lacks workspace/Git
+guards and cannot claim verified recovery. Nested safeguards v4 excludes changed
+paths and archives no unrelated source contents. Legacy safeguards v1-v3 remain
+readable but cannot report a current match. Owner rollback never restores unrelated
+files or Git state.
 
 Identity-bound source rollback is replayable: it requires complete backup/image
 coverage, recognizes original PRE as a no-op, and resumes a missing destination
@@ -777,9 +688,11 @@ pin, recovery record, root/owner/manifest bindings, PRE encoding and reserved
 quarantine identities. It reports original PRE, missing, exact v2/v3/v4 POST or
 drifted files, staged/displaced POST, unchanged-path hashes and publication presence without printing
 source images. Manifest validation is structural, not live re-derivation.
-V3/v4 inspection also reports scoped workspace additions/removals/drift, index
-agreement and index locks without printing archived bytes. `matches` means only
-that these scoped observations agree, not complete workspace/Git verification.
+For transaction-recovery v3/v4 records with nested safeguards v4, inspection
+also reports dirty-path additions/removals/drift, HEAD and raw-index agreement,
+and index locks. `matches` means these observations agree, not complete workspace/Git
+verification. Nested safeguards v1-v3 remain structurally readable but always report
+`matches: false`.
 Historical v1 records retain content-only POST evidence; v2 retains exact POST
 identity but no workspace/index guards. Neither is upgraded. Observations are
 non-atomic; termination, exclusion and publication authenticity remain unverified.
@@ -789,7 +702,7 @@ Exit zero means inspection succeeded, not that restoration or continuation is sa
 
 `bin/harness types recover` and `bin/harness macros recover` restore owned PRE
 only under an externally pinned parent authorization and a separately pinned
-v3 or v4 record.
+v3 or v4 record with nested safeguards v4.
 `common/authorization.py` validates authority bindings; `common/restoration.py`
 owns the fail-stop operation; `common/inspection.py::load_recovery` validates
 backing for both inspection and restoration. No discovered record grants authority.

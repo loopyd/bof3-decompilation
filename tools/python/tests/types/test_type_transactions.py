@@ -951,7 +951,7 @@ def test_workspace_state_ignores_tool_owned_quarantine(tmp_path: Path) -> None:
     assert transactions._workspace_state(tmp_path) == {}
     assert all(
         not name.startswith(transaction_quarantine.QUARANTINE_DIRECTORY)
-        for name in transaction_workspace.workspace_backup(tmp_path)
+        for name in transaction_workspace.workspace_state(tmp_path)
     )
 
 

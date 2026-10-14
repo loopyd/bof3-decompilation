@@ -797,11 +797,14 @@ staging and reserved PRE/POST quarantines. Images require the same filesystem an
 native no-replace support; source modes are captured as observed. Repository
 evidence uses filesystem-native permissions, not enforced POSIX modes; keep its
 source-bearing content out of public logs and commits.
-With Git-backed snapshots, v3 also archives untouched workspace PRE content and
-metadata plus exact index bytes/state. Inspection reports scoped drift and index
-locks without printing those bytes; unavailable guards are explicit. Matching
-observations are non-atomic and grant no restoration authority. Historical v1/v2
-records remain inspectable without being upgraded to these safeguards.
+Git-backed runs use nested `bof3.recovery-safeguards/v4` to retain digests of
+unrelated dirty paths, current HEAD and exact raw index bytes/identity. PRE/POST
+source images cover only explicit changed paths; clean sources and dependency
+trees are not copied. Existing owner guards verify consumed inputs. Inspection
+reports scoped drift and index locks without source bytes; unavailable guards
+remain explicit. Matching observations are non-atomic and grant no restoration
+authority. Historical outer v1/v2 records and nested safeguards v1-v3 remain
+inspectable; legacy nested guards cannot report a current match or authorize recovery.
 Keep its digest independently when supervising a run. Inspect without mutation:
 
 ```sh
@@ -817,9 +820,9 @@ bin/harness types recover out/reviews/evidence/type-recovery-NONCE.json --expect
 ```
 
 Follow the [shared authorization and recovery gates](harness.md#guarded-source-recovery).
-Recovery requires pinned v3 backing, parent-attested writer termination, matching
-workspace/Git guards and absent known publication. It restores owned PRE only;
-source acceptance, automatic retry and unrelated workspace/Git-index recovery are
+Recovery requires pinned outer v3 backing with matching nested safeguards v4,
+parent-attested writer termination and absent known publication. It restores owned
+PRE only; source acceptance, automatic retry and unrelated workspace/Git-index recovery are
 not granted. Macro invocation belongs to [macros.md](macros.md).
 
 ### Type parent review and final verification

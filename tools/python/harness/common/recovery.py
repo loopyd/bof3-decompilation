@@ -19,7 +19,7 @@ from harness.common.paths import file_state, leaf_stat
 from harness.common.quarantine import reserve_quarantine
 from harness.common.safeguards import capture_safeguards
 from harness.common.submodules import validate_mutations
-from harness.common.workspace import WorkspaceSnapshot
+from harness.common.workspace import WorkspaceState
 
 LEGACY_SCHEMA = "bof3.transaction-recovery/v1"
 IDENTITY_SCHEMA = "bof3.transaction-recovery/v2"
@@ -34,7 +34,7 @@ def capture_recovery(
     changes: dict[str, str | None],
     backup: dict[str, bytes | None],
     *,
-    workspace: WorkspaceSnapshot | None = None,
+    workspace: WorkspaceState | None = None,
     index: GitIndexSnapshot | None = None,
     on_capture: Callable[[dict[str, str]], None] | None = None,
 ) -> dict[str, dict[str, Any]]:

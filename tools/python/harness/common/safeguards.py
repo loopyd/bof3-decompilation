@@ -10,25 +10,15 @@ from pathlib import Path
 from typing import Any
 
 from harness.common.directory import validate_repo_path
-from harness.common.git import GitIndexSnapshot, git_index_backup
-from harness.common.paths import leaf_stat, file_state
-from harness.common.workspace import (
-    WorkspaceSnapshot,
-    workspace_backup,
-    workspace_state,
-)
-from harness.common.links import SymlinkSnapshot, read_symlink
-from harness.common.submodules import (
-    SubmoduleSnapshot,
-    collect_gitlinks,
-    read_submodule,
-    validate_snapshot,
-)
-from harness.common.inventory import CaptureBudget
+from harness.common.git import GitIndexSnapshot, capture_git_state, git_index_backup
+from harness.common.paths import file_state
+from harness.common.workspace import WorkspaceState, verify_workspace, workspace_state
+from harness.common.submodules import validate_snapshot
 
 LEGACY_SCHEMA = "bof3.recovery-safeguards/v1"
 LINK_SCHEMA = "bof3.recovery-safeguards/v2"
-SCHEMA = "bof3.recovery-safeguards/v3"
+CONTENT_SCHEMA = "bof3.recovery-safeguards/v3"
+SCHEMA = "bof3.recovery-safeguards/v4"
 
 
 def verify_restored_state(
@@ -65,120 +55,84 @@ def _has_index_lock(backup: GitIndexSnapshot) -> bool:
     return True
 
 
-def _describe_workspace(
-    root: Path,
-    workspace: WorkspaceSnapshot,
-    changed: set[str],
-    *,
-    include_content: bool = False,
-) -> dict:
-    result = {}
-    gitlinks = (
-        collect_gitlinks(root)
-        if any(isinstance(value, SubmoduleSnapshot) for value in workspace.values())
-        else {}
-    )
-    budget = CaptureBudget()
-    for name, content in workspace.items():
-        if isinstance(content, SubmoduleSnapshot):
-            if any(
-                path == name
-                or path.startswith(name + "/")
-                or name.startswith(path + "/")
-                for path in changed
-            ):
-                raise ValueError(
-                    f"transaction mutation overlaps protected submodule: {name}"
-                )
-            if (
-                name not in gitlinks
-                or read_submodule(root, name, gitlinks[name], budget=budget) != content
-            ):
-                raise ValueError(f"recovery safeguard submodule drifted: {name}")
-            result[name] = {
-                "kind": "gitlink",
-                "sha256": hashlib.sha256(content.content).hexdigest(),
-            }
-            if include_content:
-                result[name]["content_base64"] = base64.b64encode(
-                    content.content
-                ).decode("ascii")
-            continue
-        if name in changed:
-            continue
-        validate_repo_path(name)
-        if isinstance(content, SymlinkSnapshot):
-            if read_symlink(root, name) != content:
-                raise ValueError(f"recovery safeguard symlink drifted: {name}")
-            result[name] = {
-                "kind": "symlink",
-                "sha256": hashlib.sha256(content.content).hexdigest(),
-                "mode": stat.S_IMODE(content.mode),
-                **{
-                    key: getattr(content, key)
-                    for key in (
-                        "device",
-                        "inode",
-                        "uid",
-                        "gid",
-                        "links",
-                        "mtime_ns",
-                        "ctime_ns",
-                    )
-                },
-            }
-            if include_content:
-                result[name]["content_base64"] = base64.b64encode(
-                    content.content
-                ).decode("ascii")
-            continue
-        metadata = leaf_stat(root, name)
-        if metadata is None:
-            raise ValueError(f"recovery safeguard path disappeared: {name}")
-        result[name] = {
-            "kind": "file",
-            "sha256": hashlib.sha256(content).hexdigest(),
-            "mode": stat.S_IMODE(metadata.st_mode),
-            "device": metadata.st_dev,
-            "inode": metadata.st_ino,
-            "uid": metadata.st_uid,
-            "gid": metadata.st_gid,
-            "links": metadata.st_nlink,
-        }
-        if include_content:
-            result[name]["content_base64"] = base64.b64encode(content).decode("ascii")
-    return result
-
-
 def capture_safeguards(
     root: Path,
     changed: set[str],
-    workspace: WorkspaceSnapshot | None,
+    workspace: WorkspaceState | None,
     index: GitIndexSnapshot | None,
 ) -> dict[str, Any] | None:
     if index is None:
         return None
     if workspace is None:
-        raise ValueError("recovery index snapshot requires a workspace snapshot")
+        raise ValueError("recovery index snapshot requires a workspace observation")
     if _has_index_lock(index):
         raise ValueError("Git index lock prevents recovery safeguard capture")
+    verify_workspace(root, workspace, changed)
+    git = capture_git_state(root)
+    if git is None or git.index != index:
+        raise ValueError("Git index changed during recovery safeguard capture")
     return {
         "schema": SCHEMA,
-        "untouched": _describe_workspace(
-            root, workspace, changed, include_content=True
-        ),
+        "workspace": {
+            name: entry for name, entry in workspace.items() if name not in changed
+        },
+        "head": git.head,
         "index": _encode_index(index),
     }
 
 
+def _validate_workspace(value: object, changed: set[str]) -> None:
+    if not isinstance(value, dict):
+        raise ValueError("invalid recovery workspace observation")
+    for name, entry in value.items():
+        validate_repo_path(name)
+        if (
+            name in changed
+            or not isinstance(entry, dict)
+            or set(entry) not in ({"status", "sha256"}, {"status", "sha256", "kind"})
+            or not isinstance(entry["status"], str)
+            or len(entry["status"]) != 2
+            or any(character not in " MADRCUT?!" for character in entry["status"])
+            or ("kind" in entry and entry["kind"] not in {"symlink", "gitlink"})
+            or (
+                entry["sha256"] is not None
+                and (
+                    not isinstance(entry["sha256"], str)
+                    or len(entry["sha256"]) != 64
+                    or any(c not in "0123456789abcdef" for c in entry["sha256"])
+                )
+            )
+        ):
+            raise ValueError("invalid recovery workspace path")
+
+
 def _validate_safeguards(value: object, changed: set[str]) -> dict:
-    if not isinstance(value, dict) or set(value) != {"schema", "untouched", "index"}:
+    if not isinstance(value, dict):
         raise ValueError("invalid recovery safeguards")
-    if value["schema"] not in {SCHEMA, LINK_SCHEMA, LEGACY_SCHEMA} or not isinstance(
-        value["untouched"], dict
-    ):
+    scoped = value.get("schema") == SCHEMA
+    fields = (
+        {"schema", "workspace", "head", "index"}
+        if scoped
+        else {"schema", "untouched", "index"}
+    )
+    if set(value) != fields:
+        raise ValueError("invalid recovery safeguards")
+    if scoped:
+        _validate_workspace(value["workspace"], changed)
+        head = value["head"]
+        if head is not None and (
+            not isinstance(head, str)
+            or len(head) != 40
+            or any(c not in "0123456789abcdef" for c in head)
+        ):
+            raise ValueError("invalid recovery HEAD")
+    elif value["schema"] not in {
+        CONTENT_SCHEMA,
+        LINK_SCHEMA,
+        LEGACY_SCHEMA,
+    } or not isinstance(value["untouched"], dict):
         raise ValueError("invalid recovery safeguards schema")
-    for name, entry in value["untouched"].items():
+    for name, entry in value.get("untouched", {}).items():
         validate_repo_path(name)
         fields = {
             "sha256",
@@ -194,7 +148,7 @@ def _validate_safeguards(value: object, changed: set[str]) -> dict:
             if not isinstance(entry, dict) or entry.get("kind") not in {
                 "file",
                 "symlink",
-            } | ({"gitlink"} if value["schema"] == SCHEMA else set()):
+            } | ({"gitlink"} if value["schema"] == CONTENT_SCHEMA else set()):
                 raise ValueError("invalid recovery untouched kind")
             fields.add("kind")
             if entry["kind"] == "symlink":
@@ -269,15 +223,20 @@ def inspect_safeguards(root: Path, value: object, changed: set[str]) -> dict[str
     index = git_index_backup(root)
     if index is None:
         return {"available": True, "matches": False, "git_present": False}
-    current = _describe_workspace(root, workspace_backup(root), changed)
-    if expected["schema"] == LEGACY_SCHEMA:
-        for entry in current.values():
-            if entry["kind"] == "file":
-                del entry["kind"]
-    previous = {
-        name: {key: value for key, value in entry.items() if key != "content_base64"}
-        for name, entry in expected["untouched"].items()
+    if expected["schema"] != SCHEMA:
+        return {
+            "available": True,
+            "matches": False,
+            "legacy_schema": expected["schema"],
+            "reason": "legacy full-workspace safeguards require a fresh scoped transaction",
+        }
+    git = capture_git_state(root)
+    current = {
+        name: entry
+        for name, entry in workspace_state(root).items()
+        if name not in changed
     }
+    previous = expected["workspace"]
     added = sorted(current.keys() - previous.keys())
     removed = sorted(previous.keys() - current.keys())
     drifted = sorted(
@@ -286,12 +245,18 @@ def inspect_safeguards(root: Path, value: object, changed: set[str]) -> dict[str
         if current[name] != previous[name]
     )
     index_matches = _encode_index(index) == expected["index"]
+    head_matches = git is not None and git.head == expected["head"]
+    stable = capture_git_state(root) == git and git is not None and git.index == index
     index_locked = _has_index_lock(index)
     return {
         "available": True,
-        "matches": not (added or removed or drifted or index_locked) and index_matches,
+        "matches": not (added or removed or drifted or index_locked)
+        and index_matches
+        and head_matches
+        and stable,
         "git_present": True,
         "untouched": {"added": added, "removed": removed, "drifted": drifted},
         "index_matches": index_matches,
+        "head_matches": head_matches,
         "index_locked": index_locked,
     }

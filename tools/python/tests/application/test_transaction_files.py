@@ -10,7 +10,6 @@ from pathlib import Path
 import pytest
 from harness.common import files as transaction_files
 from harness.common import git as transaction_git
-from harness.common import workspace as transaction_workspace
 from harness.common import quarantine as transaction_quarantine
 from harness.common import rename as rename_noreplace
 
@@ -638,22 +637,3 @@ def test_git_index_restore_preserves_concurrent_new_index_when_expected_missing(
     assert concurrent.read_bytes() == b"concurrent index\n"
     assert concurrent.stat().st_ino == inode
     assert list((tmp_path / ".git").glob("index.transaction-backup-*"))
-
-
-def test_rollback_workspace_records_retained_quarantine(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    parent = tmp_path / "include"
-    parent.mkdir()
-    leaf = parent / "generated.h"
-    leaf.write_bytes(b"generated\n")
-    monkeypatch.setattr(
-        transaction_workspace,
-        "workspace_backup",
-        lambda _root: {"include/generated.h": b"generated\n"},
-    )
-    quarantines = transaction_workspace.rollback_workspace(tmp_path, {})
-
-    assert not leaf.exists()
-    assert len(quarantines) == 1
-    assert (tmp_path / quarantines[0]).read_bytes() == b"generated\n"

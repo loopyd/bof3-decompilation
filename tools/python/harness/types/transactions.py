@@ -27,7 +27,7 @@ from harness.common.git import git_index_backup
 from harness.common.runtime import rollback, run_checks, write_attestation
 from harness.common.safeguards import capture_safeguards, verify_restored_state
 from harness.common.process import ProcessCleanupError
-from harness.common.workspace import workspace_backup, verify_workspace
+from harness.common.workspace import verify_workspace
 from harness.common.workspace import adopted_baseline as _adopted_baseline
 from harness.common.workspace import workspace_baseline as _workspace_baseline
 from harness.common.workspace import workspace_state as _workspace_state
@@ -472,12 +472,12 @@ def run_transaction(
         root, manifest, implementation_run_id, participating_targets
     )
     shared_pre.validate_entry(manifest, context)
-    full_backup = workspace_backup(root)
+    workspace_pre = manifest["workspace_baseline"]["state"]
     validate_paths(root, allowed)
     backup: dict[str, bytes | None] = {}
     quarantines = {}
     index_backup = git_index_backup(root)
-    safeguards = capture_safeguards(root, set(), full_backup, index_backup)
+    safeguards = capture_safeguards(root, set(), workspace_pre, index_backup)
     try:
         backup, quarantines = apply_changes(
             root,
@@ -489,7 +489,7 @@ def run_transaction(
                 "implementation_run_id": implementation_run_id,
                 "output": output,
             },
-            workspace=full_backup,
+            workspace=workspace_pre,
             index=index_backup,
         )
         execution_context.applied(root, manifest, context, changes)
@@ -559,7 +559,7 @@ def run_transaction(
         if git_index_backup(root) != index_backup:
             raise ValueError("type transaction changed the Git index before proof")
         execution_context.recheck(root, manifest, context)
-        verify_workspace(root, full_backup)
+        verify_workspace(root, workspace_pre, allowed)
         execution_context.publish(root, application, output)
         return application
     except ProcessCleanupError:
