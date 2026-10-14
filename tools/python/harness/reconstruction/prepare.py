@@ -101,8 +101,7 @@ class PreparedInputs:
         )
         association = prepared["campaign"]
         _require(
-            type(association) is dict
-            and set(association) == {"id", "grant_id", "owner_run"},
+            type(association) is dict and set(association) == {"id", "owner_run"},
             "shared preparation campaign association differs",
         )
         campaign_root = owner.parent.parent
@@ -120,8 +119,13 @@ class PreparedInputs:
             64 << 20,
         )
         _require(
-            campaign.get("campaign") == association["id"]
-            and campaign.get("grant", {}).get("grant_id") == association["grant_id"]
+            type(campaign) is dict
+            and set(campaign)
+            == set(
+                "search_version campaign selected source_forms requested problem resumed_from".split()
+            )
+            and campaign.get("search_version") == "member-first-v2"
+            and campaign.get("campaign") == association["id"]
             and campaign.get("problem") == prepared["problem"]
             and campaign.get("requested", {}).get("problem") == prepared["problem"]
             and all(

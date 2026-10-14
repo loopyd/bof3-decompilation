@@ -5,7 +5,7 @@ description: Run or resume BOF3 lift, naming, type, macro and cleanup campaigns 
 
 # BOF3 lift loop
 
-Bind caller-supplied scope, evidence pins and original budgets, never a named plan
+Bind caller-supplied scope and evidence pins, never a named plan
 file. Use this skill's branch references. Work toward 100% 1:1 human-readable BOF3
 source with evidenced names, types, useful C89 macros and independent acceptance.
 Finite missions bound work without shrinking that goal. Act in the current session.
@@ -37,14 +37,14 @@ for frozen handoffs, consumption, recovery and completion gates.
 ## Batch and lane protocol
 
 Before selecting or launching lanes, read [lane protocol](references/lane-protocol.md).
-Invoke the workflow with registry refs, `maxSelectors`, `repairRounds` and bounded
-concurrency. Do not build a session lane loop. One combined target gate measures
-edited selectors; exact PASS skips the lane reviewer, non-exact routes to bounded
-review/repair.
+Invoke the workflow with the exact registry refs and bounded concurrency.
+Do not build a session lane loop. One combined target gate measures edited selectors;
+exact PASS skips the lane reviewer, non-exact routes to review/repair.
 
-Count every writer harness invocation toward cumulative 12, including queries,
-help/examples and failures. Allow one sweep and at most four variants across all
-repairs. Carry the complete ledger; missing consumption evidence blocks experiments.
+Carry cumulative commands, attempts and outcomes through repairs. Record missing
+history explicitly. Execution needs no allowance, call quota or repair-round grant.
+Continue eligible evidence-backed work; stop on acceptance, a genuine blocker or
+reviewed ladder exhaustion. Repeated experiments require changed evidence.
 
 ## Operator stages
 
@@ -84,7 +84,7 @@ disposition before successor starts.
    before/after in lifting references, not per-function source annotations.
 9. **Account/continue.** Accept only verified/reviewed scope. Account every member,
    preserve pins, refresh affected snapshots/index at safe checkpoints, requery
-   consumers, commit owned accepted work, continue within original limits. No push.
+   consumers, commit owned accepted work, continue within selected scope. No push.
 
 ## Boundary conflicts blocking the index
 

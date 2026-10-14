@@ -10,7 +10,7 @@ bin/harness decomp diagnose REQUEST --expected-request-digest PIN --output out/r
 
 `scripts/mission.py diagnose` forwards unchanged. Diagnose existing claimed lifts;
 use first-source protocol for absent C. Diagnosis grants no source edits, model,
-restoration, acceptance, budget debit/renewal or campaign advancement.
+restoration, acceptance or campaign advancement.
 
 Closed `bof3.lift-request/v1`: `schema`, canonical `selector`, `source`, sorted
 unique `paths` of at most 12 entries, nonempty `task` at most 8 KiB,
@@ -71,5 +71,4 @@ against this diagnosis, not best-of-history or semantics. Exact/partial remains
 acceptance; affected consumers, aids, semantics and domain gates remain owed.
 
 Use fresh direct-child audit output. Retain failed candidates/evidence without
-retry/restore/acceptance permission. Parent accounts every invocation against the
-original budget; neither command runs a model, repair scheduler or recovery loop.
+retry/restore/acceptance permission. Parent records every invocation and outcome; neither command runs a model, repair scheduler or recovery loop.

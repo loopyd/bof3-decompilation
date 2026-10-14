@@ -26,7 +26,7 @@ Read only selected branch references before acting. Cross-mode links grant no pe
 
 ## Protocol
 
-1. Bind mission scope/budget; audit selects one target. Serialize report
+1. Bind mission scope; audit selects one target. Serialize report
    writers; held lock stops. Read [mission method](references/opportunities.md#mission-method)
    before delegation. Historical call counts are not hard caps.
 2. Use `bin/harness agent context cleanup CANONICAL_REQUEST...`. Preserve exact
@@ -36,7 +36,7 @@ Read only selected branch references before acting. Cross-mode links grant no pe
 3. Prove names through behavior, callers and consumers, never raw spelling.
    Report semantic/storage gaps instead of inventing names.
 4. Follow the mode's evidence, application and rollback gates. Never replace
-   frozen lead/report, expand queue, refresh index or reset budget silently.
+   frozen lead/report, expand queue, refresh index or discard history silently.
 5. Separate selected-row results, successful unfiltered full-report `complete:true`
    and independent terminal acceptance; none implies another.
 

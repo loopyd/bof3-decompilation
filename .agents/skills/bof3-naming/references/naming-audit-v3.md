@@ -16,7 +16,7 @@ to receipt-backed `exhausted`/`proposed` conclusions. Parent approval is require
 identity application.
 
 Process at most 10 rows and emit at most 8 KiB per invocation. Cite report/receipt
-paths and SHA-256, not bodies. Resume the canonical command within original attempts;
+paths and SHA-256, not bodies. Resume the canonical command with retained history;
 do not replay completed checkpoint rows. Require successful unfiltered
 `bin/harness naming validate TARGET REPORT` and `complete:true` for target closure.
 Validate explicit collection/import roots with the same canonical absolute

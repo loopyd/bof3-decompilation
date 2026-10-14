@@ -127,7 +127,7 @@ bin/harness macros resume ORIGINAL_MANIFEST APPLICATION --expected-manifest-dige
 
 Pair optional `--reviewed-envelope REVIEWED --expected-envelope-digest ENVELOPE_PIN`
 to check current acceptance. Follow lifecycle `needs-review|skip-accepted` rules;
-resume grants no extraction, durable skip token, termination proof or budget renewal.
+resume grants no extraction, durable skip token or termination proof.
 
 ## Revalidation and shared promotion
 

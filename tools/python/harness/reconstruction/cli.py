@@ -88,26 +88,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="select all 118 frozen Problem members in recorded order",
     )
     command.add_argument(
-        "--member-limit",
-        type=int,
-        help="maximum distinct member admissions per grant; fresh default selected count",
-    )
-    command.add_argument(
-        "--campaign-limit",
-        type=int,
-        help="maximum logical operation units per grant; fresh default 2 + 36 per selected member",
-    )
-    command.add_argument(
         "--resume-from",
         type=Path,
         help="exact prior report or progress file in a retained source-search campaign",
     )
     command.add_argument(
         "--resume-sha256", help="required complete SHA-256 of --resume-from"
-    )
-    command.add_argument(
-        "--new-budget-id",
-        help="explicit unique new grant id on resume; requires both count allowance fields",
     )
     command.add_argument("--output-limit", type=int, default=16 << 20)
     command.add_argument(
@@ -161,10 +147,10 @@ def build_parser() -> argparse.ArgumentParser:
     _ledger_arguments(command)
     command.set_defaults(handler=run_supplied)
     account = commands.add_parser(
-        "ledger", help="retain cumulative attempts and explicit continuation grants"
+        "ledger", help="retain cumulative attempts and execution recovery"
     )
     stages = account.add_subparsers(dest="ledger_operation", required=True)
-    for operation in ("init", "status", "import", "grant", "close"):
+    for operation in ("init", "status", "import", "close"):
         command = stages.add_parser(operation)
         command.add_argument("path", type=Path)
         command.set_defaults(handler=run_ledger)
@@ -179,10 +165,6 @@ def build_parser() -> argparse.ArgumentParser:
         if operation in {"import", "close"}:
             command.add_argument("--evidence", type=Path, required=True)
             command.add_argument("--expected-evidence-sha256", required=True)
-        if operation == "grant":
-            command.add_argument("--grant-id", required=True)
-            command.add_argument("--units", type=int, required=True)
-            command.add_argument("--member", action="append", required=True)
         if operation == "close":
             command.add_argument("--epoch", required=True)
             command.add_argument(
@@ -287,9 +269,6 @@ def run_native(args: argparse.Namespace) -> int:
         entry_cpu_receipt=args.entry_cpu_receipt,
         resume_from=args.resume_from,
         resume_sha256=args.resume_sha256,
-        member_limit=args.member_limit,
-        campaign_limit=args.campaign_limit,
-        new_budget_id=args.new_budget_id,
         attempt_ledger=args.attempt_ledger,
         expected_ledger_digest=args.expected_ledger_digest,
     )
@@ -424,14 +403,6 @@ def run_ledger(args: argparse.Namespace) -> int:
             args.units,
             args.evidence,
             args.expected_evidence_sha256,
-        )
-    elif operation == "grant":
-        result = ledger.update(
-            root,
-            args.path,
-            args.expected_ledger_digest,
-            "grant",
-            dict(id=args.grant_id, units=args.units, members=args.member),
         )
     else:
         result = ledger.close_execution(

@@ -8,7 +8,7 @@ description: Lift or review a target-qualified BOF3 function, match original byt
 ## Authority
 
 Use [standing authority](references/native-execution.md#authority-and-profile) for
-parent index refreshes/external review within original scope/budgets. Workers must
+parent index refreshes/external review within selected scope. Workers must
 not refresh pinned inputs or self-accept. The [operator](../bof3-lift-loop/SKILL.md)
 delegates through session tools only; harness Codex/model SDK/API/detached fallbacks
 are forbidden. Return proposals for parent acceptance.
@@ -91,7 +91,7 @@ pins, `unverified`/null results and read-only audit limits.
 
 ## Match loop
 
-Before editing, read the [clean-C ladder and probe ceiling](references/match-loop.md)
+Before editing, read the [clean-C ladder and probe method](references/match-loop.md)
 for existing/first-source gates, cumulative attempts, candidate retention and review.
 
 ### Eligible-condition levers

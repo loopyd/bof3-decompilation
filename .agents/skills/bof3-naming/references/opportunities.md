@@ -30,8 +30,8 @@ report prerequisites block; never run `init-all` over retained history.
 
 ## Mission method
 
-Use actual mission limits, not unvalidated historical three-row/70-call heuristics.
-Calibrate against accepted units, evidence/review coverage and partial results.
+Bind the selected mission scope and evidence/review requirements. Preserve
+cumulative attempts and missing-history notes without call or row allowances.
 Serialize report writers; stop on a held lock. Probe consequential premises before
 delegation. Keep unsupported rows blocked with the smallest missing fact and one
 bounded next command.

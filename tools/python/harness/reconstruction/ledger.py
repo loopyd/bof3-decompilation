@@ -1,4 +1,4 @@
-"""Durable cumulative reconstruction reservations across execution captures."""
+"""Durable cumulative reconstruction accounting across execution captures."""
 
 from __future__ import annotations
 
@@ -20,7 +20,6 @@ from harness.io import unique_object
 from harness.reconstruction import provenance
 
 SCHEMA = "bof3.reconstruction-attempt-ledger/v1"
-MAX_RECORDS = 16384
 MAX_RECORD_BYTES = 128 << 10
 PHASE_UNITS = dict(
     prepare=1,
@@ -67,9 +66,7 @@ def _require(condition, message):
 
 
 def _units(value):
-    _require(
-        type(value) is int and 1 <= value <= 4250, "invalid ledger operation units"
-    )
+    _require(type(value) is int and value >= 1, "invalid ledger operation units")
 
 
 def _check_record_size(record):
@@ -119,16 +116,23 @@ class Ledger:
         self.epochs = {}
         self.finished = set()
         self.historical_units = 0
+        self.reserved_units = 0
+        self.operation_counts = dict.fromkeys(PHASE_UNITS, 0)
         self.cleanup_uncertain = False
         directory = root / name
         _require(
             directory.is_dir() and not directory.is_symlink(),
             "attempt ledger is absent",
         )
-        names = sorted(path.name for path in directory.iterdir())
+        names = [path.name for path in directory.iterdir()]
         _require(
-            0 < len(names) <= MAX_RECORDS
-            and names == [f"{i:06d}.json" for i in range(len(names))],
+            bool(names)
+            and all(re.fullmatch(r"[0-9]{6,}\.json", name) for name in names),
+            "ledger contains a missing, torn or foreign record",
+        )
+        names.sort(key=lambda name: int(name[:-5]))
+        _require(
+            names == [f"{i:06d}.json" for i in range(len(names))],
             "ledger contains a missing, torn or foreign record",
         )
         for leaf in names:
@@ -189,7 +193,7 @@ class Ledger:
                 "duplicate or invalid historical operation",
             )
             _require(
-                type(payload["units"]) is int and 0 <= payload["units"] <= 4250,
+                type(payload["units"]) is int and payload["units"] >= 0,
                 "invalid historical operation units",
             )
             _require(
@@ -234,7 +238,7 @@ class Ledger:
                 == {"id", "grant", "operation", "prepared_run", "binding_digest"}
                 and type(payload["id"]) is str
                 and payload["id"] not in self.epochs
-                and payload["grant"] in self.grants
+                and (payload["grant"] is None or payload["grant"] in self.grants)
                 and payload["operation"] in {"run", "verify", "capture-supplied"},
                 "invalid or repeated ledger execution epoch",
             )
@@ -262,19 +266,21 @@ class Ledger:
                 payload["units"] == PHASE_UNITS[payload["phase"]],
                 "reservation cost differs from its owner operation",
             )
-            grant = self.epochs[payload["epoch"]]["grant"]
+            allowed = {
+                member["key"]
+                for member in self.records[0]["payload"]["corpus"]["members"]
+            }
             _require(
                 payload["member"] is None
                 if payload["phase"] in {"prepare", "self-check"}
-                else type(payload["member"]) is str
-                and payload["member"] in self.grants[grant]["members"],
-                "reservation member is outside its grant",
+                else type(payload["member"]) is str and payload["member"] in allowed,
+                "reservation member is outside the frozen corpus",
             )
-            _require(
-                self.spent[grant] + payload["units"] <= self.grants[grant]["units"],
-                "cumulative attempt allowance exhausted before owner call",
-            )
-            self.spent[grant] += payload["units"]
+            self.reserved_units += payload["units"]
+            self.operation_counts[payload["phase"]] += 1
+            grant = self.epochs[payload["epoch"]]["grant"]
+            if grant is not None:
+                self.spent[grant] += payload["units"]
         elif kind == "finish":
             _require(
                 set(payload) == {"epoch", "status", "artifacts", "writer_review"}
@@ -295,7 +301,12 @@ class Ledger:
 
     def append(self, kind, payload):
         require_writer(self.root)
-        _require(len(self.records) < MAX_RECORDS, "ledger record limit exhausted")
+        _require(type(payload) is dict, "invalid ledger payload")
+        _require(kind != "grant", "attempt allowance grants are retired")
+        _require(
+            kind != "epoch" or payload.get("grant") is None,
+            "grant-backed execution epochs are retired",
+        )
         last = Ledger(self.root, self.name)
         _require(
             last.head == self.head,
@@ -316,7 +327,6 @@ class Ledger:
         self._accept(record)
 
     def summary(self):
-        reserved = sum(self.spent.values())
         return dict(
             schema=SCHEMA,
             path=self.name,
@@ -324,13 +334,13 @@ class Ledger:
             mission=self.records[0]["payload"]["mission"],
             history_complete=False,
             historical_units_minimum=self.historical_units,
-            reserved_units=reserved,
-            consumed_units_minimum=self.historical_units + reserved,
-            grants=[
+            reserved_units=self.reserved_units,
+            consumed_units_minimum=self.historical_units + self.reserved_units,
+            operation_counts=dict(self.operation_counts),
+            historical_grants=[
                 dict(
                     **grant,
                     consumed_units=self.spent[key],
-                    remaining_units=grant["units"] - self.spent[key],
                 )
                 for key, grant in self.grants.items()
             ],
@@ -430,7 +440,6 @@ def _terminal_artifacts(destination):
         for path in destination.glob("progress-*.json")
         if re.fullmatch(r"progress-[0-9]{3,}.json", path.name)
     ]
-    _require(len(progress) <= MAX_RECORDS, "execution checkpoint limit exceeded")
     paths = [destination / name for name in ("report.json", "verification-result.json")]
     if progress:
         paths.append(max(progress, key=lambda path: int(path.stem.split("-")[1])))
@@ -491,16 +500,8 @@ def execution(root, path, expected_digest, prepared_run, destination, operation)
             "recaptured corpus differs from attempt ledger",
         )
         _require(
-            bool(ledger.grants), "attempt ledger needs an explicit continuation grant"
-        )
-        _require(
             not set(ledger.epochs) - ledger.finished,
             "unfinished execution requires terminal writer review before continuation",
-        )
-        grant = next(reversed(ledger.grants))
-        _require(
-            ledger.spent[grant] < ledger.grants[grant]["units"],
-            "cumulative attempt allowance exhausted",
         )
         epoch = str(destination.resolve())
         _require(
@@ -514,7 +515,7 @@ def execution(root, path, expected_digest, prepared_run, destination, operation)
             "epoch",
             dict(
                 id=epoch,
-                grant=grant,
+                grant=None,
                 operation=operation,
                 prepared_run=str(prepared_run.resolve()),
                 binding_digest=binding.digest,
@@ -579,11 +580,13 @@ def cleanup_unknown():
 def require_members(members):
     current = ACTIVE.get()
     _require(current is not None, "member selection requires an active attempt ledger")
-    ledger, epoch = current
-    allowed = ledger.grants[ledger.epochs[epoch]["grant"]]["members"]
+    ledger, _ = current
+    allowed = {
+        member["key"] for member in ledger.records[0]["payload"]["corpus"]["members"]
+    }
     _require(
         set(members) <= set(allowed),
-        "selected members are outside the continuation grant",
+        "selected members are outside the frozen corpus",
     )
 
 

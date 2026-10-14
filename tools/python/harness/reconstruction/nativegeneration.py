@@ -129,66 +129,13 @@ def _score_links(measured, binding, run_dir, member, form_ordinal, expected_prof
     return scores
 
 
-SEARCH_VERSION = "member-first-v1"
+SEARCH_VERSION = "member-first-v2"
 
 
 @dataclass(frozen=True)
 class _ResumePin:
     path: Path
     sha256: str
-
-
-@dataclass(frozen=True)
-class _CampaignGrant:
-    grant_id: str
-    member_limit: int
-    campaign_limit: int
-
-    @classmethod
-    def parse(cls, value, selected):
-        _require(
-            type(value) is dict
-            and set(value)
-            == {
-                "grant_id",
-                "member_limit",
-                "campaign_limit",
-            },
-            "campaign grant fields differ",
-        )
-        _require(
-            type(value["grant_id"]) is str
-            and re.fullmatch(r"[A-Za-z0-9._-]{1,128}", value["grant_id"]),
-            "grant id must be a bounded ASCII label",
-        )
-        for name, maximum in (
-            ("member_limit", len(selected)),
-            ("campaign_limit", 4250),
-        ):
-            _require(
-                type(value[name]) is int and 1 <= value[name] <= maximum,
-                f"{name} differs from its finite bounds",
-            )
-        return cls(**value)
-
-
-@dataclass(frozen=True)
-class _MemberBudget:
-    key: str
-    grant_id: str
-    admission: dict
-
-    @classmethod
-    def parse(cls, value):
-        _require(
-            type(value) is dict and set(value) == {"key", "grant_id", "admission"},
-            "member budget differs",
-        )
-        return cls(
-            value["key"],
-            value["grant_id"],
-            value["admission"],
-        )
 
 
 @dataclass(frozen=True)
@@ -263,10 +210,6 @@ class _UnresolvedAttempt:
     attempt: dict
     reason: str
     generation_terminal: dict | None
-
-
-class _BudgetExhausted(PolicyFailure):
-    pass
 
 
 def _document(pin):
@@ -362,7 +305,7 @@ def _attempts(report):
     return [attempt for row in report["members"] for attempt in row["attempts"]]
 
 
-def _derive_search(report, grant, authenticated):
+def _derive_search(report, authenticated):
     by_id = {item.attempt["id"]: item for item in authenticated}
     complete = set()
     for row in report["members"]:
@@ -417,36 +360,12 @@ def _derive_search(report, grant, authenticated):
             if row["identity"]["key"] in report["selected"]
             else []
         )
-    reservations = [
-        item
-        for item in report["operation_reservations"]
-        if item["grant_id"] == grant.grant_id
-    ]
-    admissions = [
-        item for item in report["member_budgets"] if item["grant_id"] == grant.grant_id
-    ]
-    remaining_units = grant.campaign_limit - sum(item["units"] for item in reservations)
-    remaining_members = grant.member_limit - len(admissions)
-    _require(
-        remaining_units >= 0 and remaining_members >= 0,
-        "campaign account exceeds its grant",
+    report["accounting"] = dict(
+        operation_units=sum(item["units"] for item in report["operation_reservations"]),
+        operations=len(report["operation_reservations"]),
+        attempts=len(_attempts(report)),
+        members_attempted=len({item["member_key"] for item in _attempts(report)}),
     )
-    report["remaining"] = dict(
-        units=remaining_units,
-        member_admissions=remaining_members,
-    )
-    report["grant_balances"] = [
-        dict(
-            grant_id=value["grant_id"],
-            units=value["campaign_limit"]
-            - sum(
-                item["units"]
-                for item in report["operation_reservations"]
-                if item["grant_id"] == value["grant_id"]
-            ),
-        )
-        for value in report["grants"]
-    ]
     for attempt in _attempts(report):
         for observed in attempt.get("cleanup_uncertainties", []):
             uncertainty = dict(attempt_id=attempt["id"], owner_observation=observed)
@@ -483,7 +402,6 @@ def _publish_progress(report, destination, ordinal):
 
 def _admit_work(
     report,
-    grant,
     cursor,
     *,
     units,
@@ -493,20 +411,12 @@ def _admit_work(
     attempt_id=None,
 ):
     report["cursor"] = asdict(cursor)
-    spent = sum(
-        item["units"]
-        for item in report["operation_reservations"]
-        if item["grant_id"] == grant.grant_id
-    )
-    if units > grant.campaign_limit - spent:
-        raise _BudgetExhausted("campaign operation units exhausted before owner call")
-    ledger.reserve(cursor.phase, None if member is None else member.key, units=units)
+    ledger.reserve(cursor.phase, member, units=units)
     reservation = dict(
         id=len(report["operation_reservations"]),
-        grant_id=grant.grant_id,
         units=units,
         cursor=asdict(cursor),
-        member_key=None if member is None else member.key,
+        member_key=member,
         attempt_id=attempt_id,
         terminal_slot=None if terminal_slot is None else str(terminal_slot),
         owner_run=report["run"],
@@ -514,30 +424,6 @@ def _admit_work(
     report["operation_reservations"].append(reservation)
     checkpoint()
     return reservation
-
-
-def _member_budget(report, grant, key):
-    for record in report["member_budgets"]:
-        if record["key"] == key and record["grant_id"] == grant.grant_id:
-            budget = _MemberBudget.parse(record)
-            return budget
-    charged = sum(
-        item["grant_id"] == grant.grant_id for item in report["member_budgets"]
-    )
-    if charged >= grant.member_limit:
-        raise _BudgetExhausted("campaign member admissions exhausted")
-    admission = dict(
-        key=key,
-        grant_id=grant.grant_id,
-        owner_run=report["run"],
-    )
-    directory = Path(report["destination"]) / "member-admissions"
-    directory.mkdir(exist_ok=True)
-    path = directory / f"{len(report['member_budgets']):06d}.json"
-    write_bytes(path, encode_json(admission, path=path))
-    budget = _MemberBudget(key, grant.grant_id, file_record(path))
-    report["member_budgets"].append(asdict(budget))
-    return budget
 
 
 def _write_terminal(path, value):
@@ -577,7 +463,6 @@ def _generation_disposition(attempt, binding, arguments):
         and (run["selected"] == [member.key])
         and (run["source_form"] == attempt["source_form"])
         and (run["campaign"]["id"] == attempt["origin_campaign"])
-        and (run["campaign"]["grant_id"] == attempt["generation_grant_id"])
         and (submitted["identity"] == asdict(member))
         and (child["selected"] == [member.key])
         and (
@@ -839,7 +724,7 @@ def _generation_disposition(attempt, binding, arguments):
 
 def _terminal_association(attempt, pin, terminal, reservations, *, generation):
     fields = (
-        {"run", "report", "submission", "generation_grant_id"}
+        {"run", "report", "submission"}
         if generation
         else {
             "run",
@@ -873,11 +758,7 @@ def _terminal_association(attempt, pin, terminal, reservations, *, generation):
         and (reservation["attempt_id"] == attempt_id)
         and (reservation["member_key"] == attempt["member_key"])
         and (reservation["cursor"]["phase"] == ("native" if generation else "compare"))
-        and (reservation["terminal_slot"] == str(slot))
-        and (
-            reservation["grant_id"]
-            == (attempt["generation_grant_id"] if generation else attempt["grant_id"])
-        ),
+        and (reservation["terminal_slot"] == str(slot)),
         "terminal differs from its original named reservation or evidence",
     )
     _require(
@@ -1204,8 +1085,26 @@ def _read_resume(pin, binding, arguments):
     _require(record["sha256"] == pin.sha256, "supplied resume SHA-256 differs")
     prior = nativeoutput.parse_json(raw, ARTIFACT_LIMIT)
     _require(
+        type(prior) is dict and prior.get("search_version") == SEARCH_VERSION,
+        "resume requires the current allowance-free source-search schema; retire obsolete reports while preserving recorded consumption",
+    )
+    required_fields = set(
+        "operation status exit denominator run_id binding_digest destination selected "
+        "search_forms search_version source_forms campaign run run_owners resumed_from requested "
+        "operation_reservations failures cleanup_uncertainties exclusions reuse_refusals "
+        "cursor semantic_admission autonomous_exact associated_data placement "
+        "original_byte_comparison members accounting cleanup completed summary attempt_ledger".split()
+    )
+    optional_fields = set(
+        "prior_preparations prepared_inputs self_check authentication snapshots_unchanged "
+        "owner_observation capture_failures tools".split()
+    )
+    _require(
+        required_fields <= set(prior) <= required_fields | optional_fields,
+        "resume report has an incomplete or foreign structure",
+    )
+    _require(
         type(prior) is dict
-        and prior.get("search_version") == SEARCH_VERSION
         and prior.get("run_id") == binding.run_id
         and prior.get("binding_digest") == binding.digest
         and prior.get("selected") == list(arguments["member_keys"])
@@ -1227,15 +1126,47 @@ def _read_resume(pin, binding, arguments):
         == [asdict(member) for member in binding.members],
         "resume corpus, queue, source identity or supported record shape differs",
     )
-    owner = _document(prior["run"])
+    owners = prior["run_owners"]
     _require(
-        owner["campaign"] == prior["campaign"]
-        and owner["selected"] == prior["selected"]
-        and owner["requested"] == prior["requested"]
-        and owner["grant"] in prior["grants"]
-        and Path(prior["run"]["path"]) == Path(prior["destination"]) / "run.json"
-        and owner["search_version"] == SEARCH_VERSION,
-        "resume campaign owner differs",
+        type(owners) is list
+        and owners
+        and owners[-1] == prior["run"]
+        and len({row["path"] for row in owners}) == len(owners),
+        "resume run-owner lineage repeats or changes its current owner",
+    )
+    owner_fields = set(
+        "search_version campaign selected source_forms requested problem resumed_from".split()
+    )
+    for index, owner_pin in enumerate(owners):
+        owner = _document(owner_pin)
+        _require(
+            type(owner) is dict
+            and set(owner) == owner_fields
+            and owner["campaign"] == prior["campaign"]
+            and owner["selected"] == prior["selected"]
+            and owner["source_forms"] == prior["source_forms"]
+            and owner["requested"] == prior["requested"]
+            and owner["problem"] == prior["requested"]["problem"]
+            and Path(owner_pin["path"]).name == "run.json"
+            and owner["search_version"] == SEARCH_VERSION,
+            "resume campaign owner differs",
+        )
+        if index == 0:
+            _require(owner["resumed_from"] is None, "original owner has a predecessor")
+        else:
+            ancestor = _document(owner["resumed_from"])
+            _require(
+                ancestor["search_version"] == SEARCH_VERSION
+                and ancestor["run_owners"] == owners[:index]
+                and ancestor["run"] == owners[index - 1]
+                and ancestor["campaign"] == prior["campaign"]
+                and ancestor["requested"] == prior["requested"],
+                "resume reparents an immutable run-owner lineage",
+            )
+    _require(
+        Path(prior["run"]["path"]) == Path(prior["destination"]) / "run.json"
+        and prior["resumed_from"] == owner["resumed_from"],
+        "resume changes its current owner or predecessor",
     )
     if owner["resumed_from"] is not None:
         predecessor = _document(owner["resumed_from"])
@@ -1247,9 +1178,8 @@ def _read_resume(pin, binding, arguments):
         )
         for name in (
             "operation_reservations",
-            "member_budgets",
-            "grant_owners",
             "cleanup_uncertainties",
+            "run_owners",
         ):
             _require(
                 prior[name][: len(predecessor[name])] == predecessor[name],
@@ -1267,11 +1197,8 @@ def _read_resume(pin, binding, arguments):
                 "member_key",
                 "form_ordinal",
                 "source_form",
-                "grant_id",
                 "workspace",
                 "feedback_workspace",
-                "member_budget",
-                "generation_grant_id",
                 "run",
                 "report",
                 "submission",
@@ -1279,88 +1206,47 @@ def _read_resume(pin, binding, arguments):
                 "rebuild",
                 "comparison",
                 "terminal",
+                "retained_native",
+                "retained_build",
             ):
                 _require(
                     name not in previous_attempt
                     or current_attempt.get(name) == previous_attempt[name],
                     "resume changes original retained evidence",
                 )
-    grants = [
-        _CampaignGrant.parse(value, arguments["member_keys"])
-        for value in prior["grants"]
-    ]
-    _require(
-        len({grant.grant_id for grant in grants}) == len(grants) and bool(grants),
-        "resume grant lineage repeats an id",
+    attempt_fields = set(
+        "id attempt_ordinal member_key source_form form_ordinal origin_campaign "
+        "workspace feedback_workspace status failure evidence_requests".split()
     )
-    by_grant = {grant.grant_id: grant for grant in grants}
-    _require(
-        type(prior.get("grant_owners")) is list
-        and len(prior["grant_owners"]) == len(grants),
-        "grant lineage lacks immutable owners",
+    optional_attempt_fields = set(
+        "run report submission generation_terminal rebuild comparison terminal "
+        "generation_attempt_id restart_phase cleanup_uncertainties profiles "
+        "recovered_terminal recovery_failures retained_native retained_build".split()
     )
-    previous = None
-    for grant, origin in zip(grants, prior["grant_owners"], strict=True):
-        _require(
-            type(origin) is dict
-            and set(origin) == {"grant_id", "run"}
-            and origin["grant_id"] == grant.grant_id,
-            "grant owner identity differs",
-        )
-        original = _document(origin["run"])
-        _require(
-            original["search_version"] == SEARCH_VERSION
-            and original["campaign"] == prior["campaign"]
-            and original["grant"] == asdict(grant)
-            and original["grant_origin"] is True
-            and original["grant_owner"] is None
-            and original["prior_grant_owner"] == previous
-            and original["selected"] == prior["selected"]
-            and original["problem"] == owner["problem"]
-            and original["requested"] == owner["requested"],
-            "imported grant differs from its immutable original outer-run owner",
+    for row in prior["members"]:
+        member_fields = set(
+            "identity reader generation compilation best best_local_exact candidates attempts".split()
         )
         _require(
-            Path(origin["run"]["path"]).name == "run.json",
-            "original grant owner changes its invocation slot",
+            type(row) is dict
+            and member_fields
+            <= set(row)
+            <= member_fields | {"retained_best", "profile_attempts"}
+            and type(row["attempts"]) is list,
+            "resume member has an incomplete or foreign structure",
         )
-        previous = origin["run"]
-    _require(
-        owner["grant"] == asdict(grants[-1])
-        and (
-            prior["run"] == previous
-            if owner["grant_origin"]
-            else owner["grant_owner"] == previous
-        ),
-        "resumed owner reparents the active grant",
-    )
-    for record_budget in prior["member_budgets"]:
-        budget = _MemberBudget.parse(record_budget)
-        grant = by_grant[budget.grant_id]
-        _require(
-            budget.key in arguments["member_keys"],
-            "retained member identity differs",
-        )
-        admission = _document(budget.admission)
-        admitting_owner = _document(admission["owner_run"])
-        _require(
-            admission
-            == dict(
-                key=budget.key,
-                grant_id=budget.grant_id,
-                owner_run=admission["owner_run"],
+        for attempt in row["attempts"]:
+            _require(
+                type(attempt) is dict
+                and attempt_fields
+                <= set(attempt)
+                <= attempt_fields | optional_attempt_fields
+                and attempt["member_key"] == row["identity"]["key"]
+                and attempt["origin_campaign"] == prior["campaign"]
+                and attempt["id"]
+                == f"{prior['campaign']}/{attempt['attempt_ordinal']}",
+                "resume attempt has an incomplete or foreign structure",
             )
-            and admitting_owner["campaign"] == prior["campaign"]
-            and admitting_owner["grant"] == asdict(grant)
-            and Path(budget.admission["path"]).parent
-            == Path(admission["owner_run"]["path"]).parent / "member-admissions",
-            "member admission changes its immutable owner",
-        )
-    _require(
-        len({(row["key"], row["grant_id"]) for row in prior["member_budgets"]})
-        == len(prior["member_budgets"]),
-        "member admissions repeat",
-    )
     by_attempt = {attempt["id"]: attempt for attempt in _attempts(prior)}
     _require(
         len(by_attempt) == len(_attempts(prior))
@@ -1375,7 +1261,6 @@ def _read_resume(pin, binding, arguments):
             and set(reservation)
             == {
                 "id",
-                "grant_id",
                 "units",
                 "cursor",
                 "member_key",
@@ -1383,15 +1268,16 @@ def _read_resume(pin, binding, arguments):
                 "terminal_slot",
                 "owner_run",
             }
-            and reservation["id"] == index
-            and reservation["grant_id"] in by_grant,
+            and reservation["id"] == index,
             "retained reservation identity differs",
         )
         cursor = _Cursor.parse(reservation["cursor"], arguments["member_keys"])
         reserving_owner = _document(reservation["owner_run"])
         _require(
-            reserving_owner["grant"] == asdict(by_grant[reservation["grant_id"]])
-            and reserving_owner["campaign"] == prior["campaign"],
+            reservation["owner_run"] in owners
+            and reserving_owner["search_version"] == SEARCH_VERSION
+            and reserving_owner["campaign"] == prior["campaign"]
+            and reserving_owner["requested"] == prior["requested"],
             "reservation original owner differs",
         )
         expected_units = {
@@ -1415,13 +1301,8 @@ def _read_resume(pin, binding, arguments):
                 and cursor.attempt_ordinal == attempt["attempt_ordinal"]
                 and cursor.member_ordinal
                 == arguments["member_keys"].index(attempt["member_key"])
-                and cursor.form_ordinal == attempt["form_ordinal"]
-                and reservation["grant_id"] == attempt["grant_id"],
+                and cursor.form_ordinal == attempt["form_ordinal"],
                 "reservation attempt association differs",
-            )
-            _require(
-                attempt["member_budget"] in prior["member_budgets"],
-                "attempt reservation changes its admitted member",
             )
             if reservation["terminal_slot"] is not None:
                 expected = (
@@ -1440,22 +1321,22 @@ def _read_resume(pin, binding, arguments):
                 and reservation["terminal_slot"] is None,
                 "unowned work reservation differs",
             )
-    for grant in grants:
-        _require(
-            sum(
-                row["units"]
-                for row in prior["operation_reservations"]
-                if row["grant_id"] == grant.grant_id
-            )
-            <= grant.campaign_limit
-            and sum(
-                row["grant_id"] == grant.grant_id for row in prior["member_budgets"]
-            )
-            <= grant.member_limit,
-            "retained account exceeds a finite grant",
-        )
+    _require(
+        type(prior["accounting"]) is dict
+        and all(type(value) is int for value in prior["accounting"].values())
+        and prior["accounting"]
+        == dict(
+            operation_units=sum(
+                row["units"] for row in prior["operation_reservations"]
+            ),
+            operations=len(prior["operation_reservations"]),
+            attempts=len(by_attempt),
+            members_attempted=len({row["member_key"] for row in by_attempt.values()}),
+        ),
+        "retained accounting differs from its cumulative operations and attempts",
+    )
     recipe.verify_inputs([record, prior["run"]])
-    return prior, record, grants
+    return prior, record
 
 
 def _search_forms(*, binding, arguments):
@@ -1473,64 +1354,15 @@ def _search_forms(*, binding, arguments):
         "resume path and SHA-256 must appear together",
     )
     prior = resume_record = None
-    grants = []
     if arguments["resume_from"] is not None:
         digest = arguments["resume_sha256"]
         _require(
             type(digest) is str and re.fullmatch(r"[0-9a-f]{64}", digest),
             "resume SHA-256 must be lowercase hexadecimal",
         )
-        prior, resume_record, grants = _read_resume(
+        prior, resume_record = _read_resume(
             _ResumePin(Path(arguments["resume_from"]), digest), binding, arguments
         )
-    owner_prior_grant = (
-        None
-        if prior is None
-        else _document(prior["grant_owners"][-1]["run"])["prior_grant_owner"]
-    )
-    new_id = arguments["new_budget_id"]
-    _require(
-        new_id is None or prior is not None, "new_budget_id requires a resumed campaign"
-    )
-    if prior is not None and new_id is None:
-        grant = grants[-1]
-        for name in ("member_limit", "campaign_limit"):
-            _require(
-                arguments[name] is None or arguments[name] == getattr(grant, name),
-                "same-grant resume cannot change finite allowances",
-            )
-    else:
-        if new_id is not None:
-            _require(
-                all(
-                    arguments[name] is not None
-                    for name in ("member_limit", "campaign_limit")
-                ),
-                "a new grant requires all explicit finite allowances",
-            )
-        member_limit = (
-            len(selected)
-            if arguments["member_limit"] is None
-            else arguments["member_limit"]
-        )
-        campaign_limit = (
-            2 + 36 * len(selected)
-            if arguments["campaign_limit"] is None
-            else arguments["campaign_limit"]
-        )
-        grant = _CampaignGrant.parse(
-            dict(
-                grant_id=new_id or "initial",
-                member_limit=member_limit,
-                campaign_limit=campaign_limit,
-            ),
-            selected,
-        )
-        _require(
-            grant.grant_id not in {old.grant_id for old in grants},
-            "a new grant id repeats its imported lineage",
-        )
-        grants.append(grant)
     campaign = (
         prior["campaign"]
         if prior
@@ -1549,14 +1381,12 @@ def _search_forms(*, binding, arguments):
         search_version=SEARCH_VERSION,
         source_forms=[form.value for form in forms],
         campaign=campaign,
-        grants=[asdict(value) for value in grants],
-        grant_owners=[] if prior is None else deepcopy(prior["grant_owners"]),
         resumed_from=resume_record,
+        run_owners=[] if prior is None else deepcopy(prior["run_owners"]),
         requested=None if prior is None else deepcopy(prior["requested"]),
         operation_reservations=[]
         if prior is None
         else deepcopy(prior["operation_reservations"]),
-        member_budgets=[] if prior is None else deepcopy(prior["member_budgets"]),
         failures=[] if prior is None else deepcopy(prior["failures"]),
         cleanup_uncertainties=[]
         if prior is None
@@ -1608,7 +1438,7 @@ def _search_forms(*, binding, arguments):
 
     def checkpoint():
         nonlocal progress
-        _derive_search(report, grant, authenticated)
+        _derive_search(report, authenticated)
         _publish_progress(report, destination, progress)
         progress += 1
 
@@ -1618,7 +1448,6 @@ def _search_forms(*, binding, arguments):
             owner = dict(
                 search_version=SEARCH_VERSION,
                 campaign=campaign,
-                grant=asdict(grant),
                 selected=list(selected),
                 source_forms=report["source_forms"],
                 requested=report["requested"],
@@ -1628,23 +1457,11 @@ def _search_forms(*, binding, arguments):
                     problem_sha256=binding.problem_doc_sha256,
                 ),
                 resumed_from=resume_record,
-                grant_origin=prior is None or new_id is not None,
-                grant_owner=None
-                if prior is None or new_id is not None
-                else report["grant_owners"][-1]["run"],
-                prior_grant_owner=None
-                if prior is None
-                else report["grant_owners"][-1]["run"]
-                if new_id is not None
-                else owner_prior_grant,
             )
             path = destination / "run.json"
             write_private(path.parent, path.name, encode_json(owner, path=path))
             report["run"] = file_record(path)
-            if owner["grant_origin"]:
-                report["grant_owners"].append(
-                    dict(grant_id=grant.grant_id, run=report["run"])
-                )
+            report["run_owners"].append(report["run"])
 
     try:
         requested = _request_identity(binding, arguments)
@@ -1662,8 +1479,6 @@ def _search_forms(*, binding, arguments):
                 prepared_owner = prepared._record
                 _require(
                     prepared_owner["campaign"]["id"] == campaign
-                    and prepared_owner["campaign"]["grant_id"]
-                    in {value.grant_id for value in grants}
                     and prepared_owner["problem"] == requested["problem"]
                     and all(
                         prepared_owner["binaries"][name] == requested[argument]
@@ -1673,7 +1488,7 @@ def _search_forms(*, binding, arguments):
                             ("rizin", "rizin"),
                         )
                     ),
-                    "imported preparation differs from its problem, caller or grant",
+                    "imported preparation differs from its problem or caller",
                 )
             imported = []
             for row in report["members"]:
@@ -1693,7 +1508,7 @@ def _search_forms(*, binding, arguments):
             recipe.verify_inputs([resume_record, prior["run"]])
             authenticated.extend(imported)
         report["authentication"] = "authenticated"
-        completed = _derive_search(report, grant, authenticated)
+        completed = _derive_search(report, authenticated)
         checkpoint()
         pending = [
             (key, index)
@@ -1713,34 +1528,9 @@ def _search_forms(*, binding, arguments):
             for key, index in pending
         )
 
-        def member_available(key):
-            budget = next(
-                (
-                    row
-                    for row in report["member_budgets"]
-                    if row["key"] == key and row["grant_id"] == grant.grant_id
-                ),
-                None,
-            )
-            return budget is not None or report["remaining"]["member_admissions"] > 0
-
         if has_native:
-            _require(
-                any(member_available(key) for key, _ in pending),
-                "no member admission remains before preparation",
-            )
-            if (
-                report["remaining"]["units"] == 0
-                or report["remaining"]["member_admissions"] == 0
-                and not any(
-                    row["grant_id"] == grant.grant_id
-                    for row in report["member_budgets"]
-                )
-            ):
-                raise _BudgetExhausted("no work or member allowance before preparation")
             _admit_work(
                 report,
-                grant,
                 _Cursor(None, None, "prepare"),
                 units=1,
                 member=None,
@@ -1768,7 +1558,6 @@ def _search_forms(*, binding, arguments):
                 problem=owner["problem"],
                 campaign=dict(
                     id=campaign,
-                    grant_id=grant.grant_id,
                     owner_run=report["run"],
                 ),
             )
@@ -1776,13 +1565,8 @@ def _search_forms(*, binding, arguments):
             shared.verify()
             write_bytes(path, encode_json(shared_record, path=path))
             report["prepared_inputs"] = file_record(path)
-            _require(
-                any(member_available(key) for key, _ in pending),
-                "no member admission remains before self-check",
-            )
             _admit_work(
                 report,
-                grant,
                 _Cursor(None, None, "self-check"),
                 units=1,
                 member=None,
@@ -1821,12 +1605,6 @@ def _search_forms(*, binding, arguments):
             if not unresolved:
                 continue
             report["cursor"] = asdict(_Cursor(member_index, unresolved[0], "native"))
-            try:
-                member_budget = _member_budget(report, grant, key)
-            except _BudgetExhausted as error:
-                report["failures"].append(str(error))
-                report["budget_status"] = "member-admissions-exhausted"
-                break
             for form_index in unresolved:
                 prior_generation = next(
                     (
@@ -1851,9 +1629,7 @@ def _search_forms(*, binding, arguments):
                     member_key=key,
                     source_form=forms[form_index].value,
                     form_ordinal=form_index,
-                    grant_id=grant.grant_id,
                     origin_campaign=campaign,
-                    member_budget=asdict(member_budget),
                     workspace=str(workspace),
                     feedback_workspace=str(feedback_root),
                     status="unresolved",
@@ -1881,7 +1657,6 @@ def _search_forms(*, binding, arguments):
                         "report",
                         "submission",
                         "generation_terminal",
-                        "generation_grant_id",
                     ):
                         active[name] = prior_generation.attempt[name]
                     active["generation_attempt_id"] = prior_generation.attempt.get(
@@ -1909,15 +1684,13 @@ def _search_forms(*, binding, arguments):
                     )
                     active.update(
                         run=file_record(path),
-                        generation_grant_id=grant.grant_id,
                         restart_phase="native",
                     )
                     reservation = _admit_work(
                         report,
-                        grant,
                         cursor("native"),
                         units=1,
-                        member=member_budget,
+                        member=key,
                         checkpoint=checkpoint,
                         terminal_slot=workspace / "member-000/terminal-member.json",
                         attempt_id=active["id"],
@@ -1949,10 +1722,9 @@ def _search_forms(*, binding, arguments):
                             retained_receipts=[],
                             before_compile=lambda phase, profile: _admit_work(
                                 report,
-                                grant,
                                 cursor(phase, profile),
                                 units=1,
-                                member=member_budget,
+                                member=key,
                                 checkpoint=checkpoint,
                                 attempt_id=active["id"],
                             ),
@@ -2004,7 +1776,6 @@ def _search_forms(*, binding, arguments):
                             "run",
                             "report",
                             "submission",
-                            "generation_grant_id",
                         )
                     }
                     active["generation_terminal"] = _write_terminal(
@@ -2034,10 +1805,9 @@ def _search_forms(*, binding, arguments):
                 try:
                     _admit_work(
                         report,
-                        grant,
                         cursor("rebuild"),
                         units=6,
-                        member=member_budget,
+                        member=key,
                         checkpoint=checkpoint,
                         attempt_id=active["id"],
                     )
@@ -2055,10 +1825,9 @@ def _search_forms(*, binding, arguments):
                     checkpoint()
                     reservation = _admit_work(
                         report,
-                        grant,
                         cursor("compare"),
                         units=5,
-                        member=member_budget,
+                        member=key,
                         checkpoint=checkpoint,
                         terminal_slot=feedback_root / "terminal.json",
                         attempt_id=active["id"],
@@ -2129,7 +1898,7 @@ def _search_forms(*, binding, arguments):
             binding, arguments["run_dir"], io_mode="exact"
         )
         report["snapshots_unchanged"] = True
-        completed = _derive_search(report, grant, authenticated)
+        completed = _derive_search(report, authenticated)
         if len(completed) == len(selected) * 2:
             report.update(
                 status="cleanup-uncertain"
@@ -2141,18 +1910,12 @@ def _search_forms(*, binding, arguments):
                     bool(report["cleanup_uncertainties"])
                     or report["summary"]["local_best"] != len(selected)
                 ),
-                budget_status="complete",
                 cursor=asdict(_Cursor(None, None, "done")),
             )
-        else:
-            report.setdefault("budget_status", "incomplete")
     except BaseException as error:
         fatal = error
         reason = f"{type(error).__name__}: {error}"
         report["failures"].append(reason)
-        report["budget_status"] = (
-            "exhausted" if isinstance(error, _BudgetExhausted) else "interrupted"
-        )
         if active is not None:
             active.update(status="unresolved", failure=reason)
         if isinstance(error, ProcessCleanupError):
@@ -2771,9 +2534,6 @@ def run(
     search_forms: bool = False,
     resume_from: Path | None = None,
     resume_sha256: str | None = None,
-    member_limit: int | None = None,
-    campaign_limit: int | None = None,
-    new_budget_id: str | None = None,
 ) -> dict:
     _require(
         (entry_receipt is None) == (entry_cpu_receipt is None)
@@ -2824,12 +2584,9 @@ def run(
             for value in (
                 resume_from,
                 resume_sha256,
-                member_limit,
-                campaign_limit,
-                new_budget_id,
             )
         ),
-        "resume and campaign allowances require original-only source search",
+        "resume requires original-only source search",
     )
     _require(
         type(output_limit) is int and 0 < output_limit <= ARTIFACT_LIMIT,
@@ -2870,9 +2627,6 @@ def run(
                 "output_limit": output_limit,
                 "resume_from": resume_from,
                 "resume_sha256": resume_sha256,
-                "member_limit": member_limit,
-                "campaign_limit": campaign_limit,
-                "new_budget_id": new_budget_id,
             },
         )
     destination.mkdir()

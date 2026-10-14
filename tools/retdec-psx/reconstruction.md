@@ -70,6 +70,27 @@ are under the default run root, `out/retdec-118-reconstruction/`; use an absolut
 path to select another location. Set `native_receipt` to the verified current
 receipt printed by setup.
 
+Initialize one cumulative attempt ledger for your campaign:
+
+```sh
+mission=reconstruction
+attempt_ledger="out/retdec-118-reconstruction/attempt-ledgers/$mission"
+bin/harness reconstruction ledger init "$attempt_ledger" \
+	--prepared-run "$prepared_run" --mission "$mission"
+```
+
+Reuse that ledger for later runs, supplied captures and independent verification.
+Before each operation, read its current digest:
+
+```sh
+ledger_digest=$(bin/harness reconstruction ledger status "$attempt_ledger" |
+	.venv/bin/python -c 'import json, sys; print(json.load(sys.stdin)["digest"])')
+```
+
+The ledger records attempts without grants or execution quotas. Historical gaps
+remain visible. An unfinished execution requires terminal-writer review before
+another writer starts.
+
 ```sh
 bin/harness reconstruction run \
   --prepared-run "$prepared_run" \
@@ -80,6 +101,7 @@ bin/harness reconstruction run \
   --member exe/slus_004_22@8014aa04 \
   --member exe/slus_004_22@80166cb0 \
   --output-limit 16777216 \
+  --attempt-ledger "$attempt_ledger" --expected-ledger-digest "$ledger_digest" \
   --json
 ```
 
@@ -95,12 +117,12 @@ Unsupported evidence remains a refusal.
 
 In the command above, replace both `--member` arguments with `--all-members`, use
 a fresh destination. The CLI derives all 118 keys from the verified Problem in
-recorded order. Attempt exhaustion leaves remaining rows unattempted.
+recorded order. Failed and unsupported members remain visible.
 
-## Continue a bounded source-form search
+## Continue a source-form search
 
 Add `--search-source-forms` to compare both supported forms and retain each
-member's best complete-byte result. Set finite member and operation limits:
+member's best complete-byte result:
 
 ```sh
 bin/harness reconstruction run \
@@ -112,10 +134,11 @@ bin/harness reconstruction run \
 	--member exe/slus_004_22@80166cb0 \
 	--member exe/slus_004_22@8014aa04 \
 	--search-source-forms \
-	--member-limit 2 --campaign-limit 74 --json
+	--attempt-ledger "$attempt_ledger" --expected-ledger-digest "$ledger_digest" \
+	--json
 ```
 
-An interruption retains completed outputs, failures and consumed allowances in
+An interruption retains completed outputs, failures and cumulative attempts in
 `report.json` and numbered `progress-*.json` files. Set `checkpoint` to the
 absolute canonical path of one retained report or progress file. Hash that file:
 
@@ -136,17 +159,16 @@ bin/harness reconstruction run \
 	--member exe/slus_004_22@80166cb0 \
 	--member exe/slus_004_22@8014aa04 \
 	--search-source-forms \
+	--attempt-ledger "$attempt_ledger" --expected-ledger-digest "$ledger_digest" \
 	--resume-from "$checkpoint" --resume-sha256 "$checkpoint_sha256" --json
 ```
 
 Resume verifies retained outputs and current inputs. A different hash or input
-identity refuses reuse. Consumed allowances remain in force. Completed results are
+identity refuses reuse. Earlier attempts remain recorded. Completed results are
 reused only after verification.
 
-To continue after exhaustion, add a unique `--new-budget-id` and both finite
-allowances, `--member-limit` and `--campaign-limit`. The new allowance retains
-earlier attempts and their costs.
-Exhaustion leaves unfinished work visible and grants no acceptance credit.
+Grant-based search checkpoints use a retired schema. Start a fresh capture and
+retain the same cumulative ledger.
 
 ## Capture fresh supplied context
 
@@ -183,6 +205,7 @@ bin/harness reconstruction capture-supplied \
   --rizin "$rizin" \
   --context "$context" \
   --output-limit 16777216 \
+  --attempt-ledger "$attempt_ledger" --expected-ledger-digest "$ledger_digest" \
   --json
 ```
 
@@ -247,6 +270,7 @@ bin/harness reconstruction verify \
   --input-open-limit 8388608 \
   --artifact-limit 134217728 \
   --output-limit 536870912 \
+  --attempt-ledger "$attempt_ledger" --expected-ledger-digest "$ledger_digest" \
   --json
 
 bin/harness reconstruction report \

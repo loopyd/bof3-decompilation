@@ -9,9 +9,7 @@
 //           refs: ["BIN/BATTLE/BATTLE.EMI#15@0x800B2104"] },
 //         { key: "l2", target: "emi/etc/shop/00",
 //           refs: ["BIN/ETC/SHOP.EMI#0@0x801D7208"] }
-//       ],
-//       maxSelectors: 2,               // per lane, when the lane also uses `lift next`
-//       repairRounds: 1                // bounded lift<->review repair cycles
+//       ]
 //     },
 //     globalConcurrencyLimit: 8
 //   })
@@ -24,7 +22,7 @@
 // Lessons encoded here (all measured in batches 001-005):
 //  - one target per lane, disjoint target-local write sets;
 //  - a `lift gate` PASS is exact, so NO review is spent on an exact selector;
-//  - a non-exact selector goes to a reviewer, then to a bounded repair round;
+//  - a non-exact selector goes to a reviewer, then to evidence-backed repair;
 //  - per-lane failure isolation: an error becomes that lane's result
 //    and never rejects the batch;
 //  - bounded concurrency (the caller's globalConcurrencyLimit), never 20;
@@ -33,16 +31,9 @@
 // Inputs are plain JSON only; no secrets.
 
 const rawLanes = Array.isArray(args.lanes) ? args.lanes : [];
-const maxSelectors = Number.isInteger(args.maxSelectors) ? args.maxSelectors : 2;
-const repairRounds = Number.isInteger(args.repairRounds) ? args.repairRounds : 1;
-const harnessCallLimit = 12; // cumulative writer calls across lift and every repair
-// A repair round keeps the cumulative tool budget from the original attempt.
 
 if (rawLanes.length === 0) {
   return { ok: false, error: "bof3-lift-lanes: args.lanes must list at least one { key, target, refs } lane" };
-}
-if (rawLanes.length > 32) {
-  return { ok: false, error: "bof3-lift-lanes: at most 32 lanes per invocation" };
 }
 
 const lanes = rawLanes.map((lane, index) => ({
@@ -52,7 +43,7 @@ const lanes = rawLanes.map((lane, index) => ({
 }));
 
 const bad = lanes.filter((lane) => !lane.target || lane.refs.length === 0 ||
-  lane.refs.length > maxSelectors || new Set(lane.refs).size !== lane.refs.length);
+  new Set(lane.refs).size !== lane.refs.length);
 if (bad.length > 0) {
   return { ok: false, error: "bof3-lift-lanes: every lane needs a target and at least one ref: " + bad.map((l) => l.key).join(", ") };
 }
@@ -60,8 +51,9 @@ if (bad.length > 0) {
 const resultContract = (lane) => [
   `Return one JSON object (plain or in one json fence): {lane:"${lane.key}",target:"${lane.target}",`,
   `results:[{selector:"<supplied ref>",outcome:"exact|partial|data|no-op|blocked",`,
-  `gate:{verdict:"PASS|FAIL"},source_path:"..."}],harness_calls:{limit:${harnessCallLimit},used:0,remaining:${harnessCallLimit}}.`,
+  `gate:{verdict:"PASS|FAIL"},source_path:"...",source_sha256:"<64 lowercase hex>"}],harness_calls:{used:0}.`,
   `Include exactly one results row per supplied ref, including unchanged exact rows on repair.`,
+  `Every authored partial candidate needs source_path and source_sha256 before repair can route.`,
   `The lane result must be plain JSON or one whole-result json fence, without surrounding prose.`,
   `Keep the runtime's required acceptance-report in a SEPARATE acceptance-report fence after it;`,
   `never embed that reserved wrapper or its fields in the lane JSON. The runtime validates and`,
@@ -83,7 +75,7 @@ const liftBrief = (lane) => [
   `out/lift-batches/${lane.key}-${lane.target.replace(/^emi\//, "").replace(/\//g, "-")}.md. Do NOT touch another target, config/splat.yaml, the index, caches,`,
   `config/symbol-naming-baseline.json, or Git.`,
   ``,
-  `Selection: only the supplied refs (max ${maxSelectors}). Report data/no-op/blocked rows instead`,
+  `Selection: only the supplied refs. Report data/no-op/blocked rows instead`,
   `of silently substituting candidates; the parent selects any follow-up lane.`,
   ``,
   `Per selector:`,
@@ -103,13 +95,13 @@ const liftBrief = (lane) => [
   `   Write clean C89 with the metadata block (@source/@behavior/@status/@match/@residual) and the #include`,
   `   copied from a sibling lifted source. Wire the splat asm->c flip + block rename, the symbols.txt row,`,
   `   and the target.toml source claim (append to 'sources' when non-empty, else 'support_sources').`,
-  "4. Prove it with ONE call: export BOF3_GATE_RETRIES=10; bin/harness lift gate --target " + lane.target + " <REF> [<REF> ...]",
+  "4. Prove it with ONE call: bin/harness lift gate --target " + lane.target + " <REF> [<REF> ...]",
   `   covering every selector you wired in this lane at once, so the target-scoped stages`,
   `   (symbols normalize/check, splat) run once for the lane instead of once per selector.`,
   `   It takes one native measurement per selector yielding both the instruction diff and`,
-  `   the byte match, and retries shared-build-tree races. Never call asm-diff/byte-match`,
-  `   again for an unchanged candidate; the pre-edit diagnosis above remains required. Explore alternatives with one`,
-  `   'bin/harness lift sweep <REF> SOURCE variant...' call. No flag-search/permute without`,
+  `   the byte match, and retries recognized races until an unchanged failure repeats. Never call asm-diff/byte-match`,
+  `   again for an unchanged candidate; the pre-edit diagnosis above remains required. Explore eligible alternatives with`,
+  `   'bin/harness lift sweep <REF> SOURCE variant...'. No flag-search/permute without`,
   `   parent authorization. NEVER run just check / check-all / check-unit.`,
   `5. If a boundary is proven data (not a function), say so and stop on it — do not force a C lift.`,
   ``,
@@ -119,23 +111,19 @@ const liftBrief = (lane) => [
   `re-run the gate; any post-gate source/binding edit invalidates that gate. Unevidenced roles stay address-anchored.`,
   `A 100% gate PASS needs no review.`,
   ``,
-  `PROBE CEILING: at most ONE 'bin/harness lift sweep' with <=4 variants for the whole lane, and never a`,
-  `per-variant asm-diff/byte-match loop. Do NOT write local compile/compare harnesses (no python or shell`,
-  `loops that compile candidates). The sweeper reuses native comparison setup, but each variant still`,
-  `rewrites/relinks source. Diagnose the first mismatch and choose only applicable clean-C shapes. If`,
-  `the residual is an allocation/scheduling class, record the selector partial with its smallest missing`,
-  `evidence and stop - do not chase it.`,
+  `Use 'bin/harness lift sweep' for eligible clean-C alternatives without call or variant quotas.`,
+  `Do not use per-variant asm-diff/byte-match loops or local compile/compare harnesses. The sweeper`,
+  `reuses native comparison setup; each variant still rewrites/relinks source. Diagnose the first`,
+  `mismatch and select shapes supported by evidence. Proven allocation/scheduling exhaustion retains`,
+  `the best coherent partial with its smallest missing evidence; do not chase spelling coincidences.`,
   ``,
-  `Bounds: at most ${maxSelectors} selectors and ${harnessCallLimit} cumulative writer harness invocations`,
-  `across the lift and all repairs. Count EVERY bin/harness invocation: help/examples, read-only queries,`,
-  `failed calls, prefill, diagnosis and gates; multiple commands in one shell call count separately.`,
-  `Record each command and cumulative count when issued; no read-only or failure exemption.`,
-  `Reserve diagnosis and final validation`,
-  `before spending calls on experiments; if they cannot fit, stop review-pending. Restore regressions,`,
-  `but retain the best coherent non-exact candidate and owned facts for review; parent owns restoration.`,
-  `Report the ordered attempt/rung ledger, harness calls {limit:${harnessCallLimit},used,remaining},`,
-  `sweep/variant consumption and each lever's`,
-  `used/ineligible/declined status with evidence. Bounds carry through repair; a new child is not a reset.`,
+  `Scope: only the supplied ${lane.refs.length} selectors.`,
+  `Record every bin/harness command and outcome when issued, including queries and failures.`,
+  `Report the full ordered attempt/rung ledger, cumulative harness_calls:{used}, every variant`,
+  `and each lever's used/ineligible/declined status with evidence. Preserve explicit history gaps`,
+  `through repairs; gaps require no execution allowance. Repeated experiments require changed evidence`,
+  `explaining the expected effect. Restore regressions and retain the best coherent partial for review.`,
+  `Parent owns restoration. Continue until acceptance, a genuine blocker or reviewed ladder exhaustion.`,
   `Report per selector: selector, outcome (exact/partial/data/no-op/blocked),`,
   `source path, module directory, the name and its evidence, gate numbers, and any shared-header need you did`,
   `NOT make.`,
@@ -149,25 +137,26 @@ const reviewBrief = (lane, liftOutput) => [
   `concrete new C solution for each failing selector: the exact shape, the expected instruction effect, and why.`,
   `If a selector is genuinely data, say so and stop. Supply any naming evidence the lane lacked.`,
   `Return JSON with top-level workflow:"accepted"|"repair"|"blocked", lane and target, plus findings.`,
+  `For workflow:"repair", include repair:{lever:"<stable eligible kebab-case lever>",`,
+  `proposal_sha256:"<64 lowercase hex hash of retained proposed source/shape>",`,
+  `evidence_pins:[{path:"<retained evidence path>",sha256:"<64 lowercase hex>"}]}.`,
+  `Evidence pins must be nonempty and paths distinct. Retain proposal/evidence in authorized report`,
+  `artifacts. Routing checks identity only; parent/native gates authenticate content and eligibility.`,
   `Accepted means the review is dispositioned, not that a partial became exact. Never repair exact rows.`,
   ``,
-  `Preserve the prior ordered attempt ledger and sweep consumption. Propose only untried, eligible`,
-  `experiments within remaining bounds; missing ledger/budget evidence blocks repair, never resets it.`,
+  `Preserve the full ordered attempt ledger and outcomes. Propose untried, eligible`,
+  `experiments, or explain changed evidence for a repeated lever. Record history gaps without quota stops.`,
   `Lane result (including consumption):`,
   String(liftOutput || ""),
 ].join("\n");
 
 const repairBrief = (lane, reviewOutput, proposedText) => [
   `Repair round for lane '${lane.key}' (target '${lane.target}'). A reviewer proposed solutions below.`,
-  `Fix ONLY failing selectors within the original lane write set; leave exact named selectors untouched.`,
-  `Original immutable writer harness-call ceiling: ${harnessCallLimit} across lift and ALL repairs,`,
-  `counting EVERY bin/harness invocation, including help/examples, read-only queries and failed calls;`,
-  `multiple commands in one shell call count separately. Record each command/count when issued.`,
-  `Derive remaining=${harnessCallLimit}-prior cumulative used; missing`,
-  `or inconsistent consumption blocks experiments. If remaining cannot cover required diagnosis and`,
-  `validation, stop review-pending without edits. Report {limit:${harnessCallLimit},used,remaining} cumulatively.`,
+  `Fix ONLY authored partial selectors within the original lane write set; leave exact, data, no-op and blocked rows untouched.`,
+  `Record every command and outcome, including queries and failures, in cumulative history.`,
+  `No call, variant or repair-round allowance is required. Preserve explicit history gaps.`,
   `Read the retained candidate and ledger, obtain its live normal diff, then apply an untried reviewed shape.`,
-  `'bin/harness lift gate --target ${lane.target} <FAILING_REF> [...]' with BOF3_GATE_RETRIES=10 proves`,
+  `'bin/harness lift gate --target ${lane.target} <FAILING_REF> [...]' proves`,
   `all repaired selectors together. No just check, other targets or shared headers. Restore regressions,`,
   `not the best coherent partial: retain it for review with truthful metadata; parent owns restoration.`,
   ``,
@@ -176,11 +165,11 @@ const repairBrief = (lane, reviewOutput, proposedText) => [
   `Reviewer proposal:`,
   String(reviewOutput || ""),
   ``,
-  `Carry forward the full ordered ledger and consumption in your result. Missing budget evidence blocks`,
-  `experiments. At most ONE 'bin/harness lift sweep' with <=4 variants across lift AND all repairs; if`,
-  `already consumed, do not sweep again. No flag-search/permute without selector-specific parent approval; no per-variant`,
-  `asm-diff loop, and no local compile/compare harness. If the residual class is allocation or scheduling,`,
-  `keep the best coherent candidate, record the partial with its smallest missing evidence, and stop.`,
+  `Carry forward the full ordered ledger and outcomes. Use eligible 'bin/harness lift sweep'`,
+  `alternatives without call/variant quotas. Repeat a lever only with changed evidence explaining its`,
+  `expected effect. No flag-search/permute without selector-specific parent approval; no per-variant`,
+  `asm-diff loop or local compile/compare harness. Continue until acceptance, a genuine blocker or`,
+  `reviewed ladder exhaustion. Retain the best coherent partial with its smallest missing evidence.`,
   resultContract(lane),
 ].join("\n");
 
@@ -199,7 +188,29 @@ const verdictOf = (text, lane) => {
   return ["accepted", "repair", "blocked"].includes(report.workflow) ? report.workflow : "unknown";
 };
 
-// One repair round: reviewer proposes, lifter retries, reviewer re-checks.
+// Route by explicit content pins. Parent/native gates authenticate the retained artifacts.
+const repairIdentity = (candidate, review) => {
+  const repair = review?.repair;
+  const isHash = (value) => typeof value === "string" && /^[0-9a-f]{64}$/.test(value);
+  const isPath = (value) => typeof value === "string" && value.length > 0 &&
+    value === value.trim() && !value.includes("\0");
+  if (!repair || typeof repair.lever !== "string" ||
+      !/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(repair.lever) ||
+      !isHash(repair.proposal_sha256) || !Array.isArray(repair.evidence_pins) ||
+      repair.evidence_pins.length === 0) return null;
+  const candidates = candidate.results.filter((row) => row.outcome === "partial");
+  if (candidates.length === 0 || candidates.some((row) => !isPath(row.source_path) || !isHash(row.source_sha256))) return null;
+  const evidence = repair.evidence_pins;
+  if (evidence.some((pin) => !pin || !isPath(pin.path) || !isHash(pin.sha256)) ||
+      new Set(evidence.map((pin) => pin.path)).size !== evidence.length) return null;
+  return JSON.stringify({
+    candidates: candidates.map((row) => [row.selector, row.source_sha256]).sort(),
+    lever: repair.lever, proposal_sha256: repair.proposal_sha256,
+    evidence: [...new Set(evidence.map((pin) => pin.sha256))].sort(),
+  });
+};
+
+// Reviewer proposes an evidenced repair; lifter applies it and reviewer rechecks.
 
 // Per-lane chain with isolation: any rejection becomes that lane's own result.
 // Bound output files add a human-readable suffix to result.output. Keep routing
@@ -256,13 +267,10 @@ const finishLane = (lane, lift) => {
   if (result === "exact") {
     return Promise.resolve({ lane: lane.key, target: lane.target, state: "complete", verdict: "exact-all" });
   }
-  if (repairRounds < 1) {
-    return Promise.resolve({ lane: lane.key, target: lane.target, state: "blocked", verdict: "unreviewed" });
-  }
-  return reviewOnce(lane, text, 1);
+  return reviewOnce(lane, text, 1, new Set());
 };
 
-const reviewOnce = (lane, proposedText, round) => {
+const reviewOnce = (lane, proposedText, round, triedRepairs) => {
   const reviewKey = `${lane.key}-review-${round}`;
   return runs
     .run(reviewKey, {
@@ -276,9 +284,17 @@ const reviewOnce = (lane, proposedText, round) => {
         retainReport(lane, reviewKey, review);
         const text = String((review && review.output) || "");
         const verdict = verdictOf(text, lane);
-        if (verdict !== "repair" || round > repairRounds) {
+        if (verdict !== "repair") {
           return { lane: lane.key, target: lane.target, state: verdict === "accepted" ? "complete" : "blocked", verdict: verdict };
         }
+        const identity = repairIdentity(parseReport(proposedText), parseReport(text));
+        if (identity === null) {
+          return { lane: lane.key, target: lane.target, state: "blocked", verdict: "invalid-repair-identity" };
+        }
+        if (triedRepairs.has(identity)) {
+          return { lane: lane.key, target: lane.target, state: "blocked", verdict: "repeated-unchanged-repair" };
+        }
+        triedRepairs.add(identity);
         const repairKey = `${lane.key}-repair-${round}`;
         return runs
           .run(repairKey, {
@@ -286,7 +302,6 @@ const reviewOnce = (lane, proposedText, round) => {
             agent: "bof3-lifter",
             output: false,
             task: repairBrief(lane, text, proposedText),
-            toolBudget: { soft: 24, hard: 40 },
           })
           .then(
             (repair) => {
@@ -299,7 +314,7 @@ const reviewOnce = (lane, proposedText, round) => {
               if (result === "exact") {
                 return { lane: lane.key, target: lane.target, state: "complete", verdict: "repaired-exact" };
               }
-              return reviewOnce(lane, repairText, round + 1);
+              return reviewOnce(lane, repairText, round + 1, triedRepairs);
             },
             (error) => ({ lane: lane.key, target: lane.target, state: "lane-error", error: String(error).slice(0, 300) }),
           );

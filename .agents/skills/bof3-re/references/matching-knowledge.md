@@ -1,6 +1,6 @@
 # Matching knowledge
 
-Use within [match-loop](match-loop.md) budget, not extra ladder. Before address or
+Follow the [match-loop](match-loop.md) ladder. Before address or
 qualifier changes read [memory API](memory-api.md). Every lever is hypothesis until
 owning live native comparison; keep best coherent PRE and full attempt ledger.
 
@@ -34,8 +34,8 @@ global needs narrow evidenced local extern, not anonymous macro hiding ownership
 Interpret every delay slot on both paths before changing equal-valued arms; slot
 constant may be comparison operand, not selected result. Bounded matrix: ordered
 then nested/inverted equality; separate ungrouped cases; duplicated arm stores/
-returns; shared locals or labels. Stop at three non-progressing variants, within
-smaller sweep/mission ceiling. Locals may change register web. GCC can normalize
+returns; shared locals or labels. Advance only when measured evidence rejects
+eligible alternatives. Locals may change register web. GCC can normalize
 chain inversion regardless of spelling; `-fno-thread-jumps` is not a universal fix.
 
 Branch calls `if (cond) f(x+A); else f(x+B);` can merge into one `jal` where ternary
@@ -77,13 +77,13 @@ not one matching instruction, decides retention.
 ## Allocator-sensitive functions
 
 Same-CFG near match plus narrow probe causing spills/frame/size/save-register/
-prologue changes indicates allocation sensitivity. Stay inside match-loop ceiling;
-this branch adds no attempts. Move intact statements across dependency-safe lifetime
+prologue changes indicates allocation sensitivity. Follow the match-loop ledger
+and exhaustion gate. Move intact statements across dependency-safe lifetime
 boundaries before expression churn. Classify retained improvement, retained frontier,
 reverted neutral/local regression/structural regression. Rank exact bytes, matched
 instructions, later first mismatch, fewer hunks, unchanged size/count/frame, then
 least source disturbance. Frontier alone is not completion; keep it separately and
-combine with best strict improvement only when safe and budgeted.
+combine with best strict improvement only with semantic evidence and live comparison.
 
 Unexpected frame/size/spill/multi-block/prologue drift means restore, unless predicted
 by original diff. Ledger retains source parent, moved statement/crossed lifetime,

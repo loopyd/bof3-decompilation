@@ -1,11 +1,11 @@
 # Continue reconstruction with an attempt ledger
 
 Native `run`, `capture-supplied` and `verify` commands share one cumulative mission
-ledger. `prepare`, ledger `status` and retained `report` inspection need no native
-allowance. Discover arguments with `bin/harness reconstruction --help` and each
+ledger. Execution requires no allowance. Discover arguments with
+`bin/harness reconstruction --help` and each
 command's `--help`.
 
-## Recover history and authorize continuation
+## Recover history and continue
 
 Initialize from a verified preparation containing the frozen 118-member corpus
 and seven exclusions. The ledger directory must match the mission name.
@@ -36,30 +36,19 @@ causes refusal. Zero-unit imports can retain preparation publications without
 charging a native operation.
 
 Historical consumption remains a minimum and `history_complete` stays false.
-Missing history does not become zero consumption or a recovered remaining budget.
+Missing history remains explicit and does not block execution.
 Recapture must retain the same members, target identities and original image bytes.
 Existing output-reuse guards still require unchanged execution inputs.
 
-Record a separately authorized finite allowance for the exact selected members.
-
-```sh
-bin/harness reconstruction ledger grant "$ledger" \
-    --expected-ledger-digest "$ledger_digest" \
-    --grant-id continuation-1 --units "$authorized_units" \
-    --member exe/slus_004_22@8014b17c
-```
-
-Grants do not refund old consumption. Execution uses the latest grant; unused
-capacity from older grants does not carry into it. Each grant permits 1 to 4,250
-units. Native commands require `--attempt-ledger "$ledger"` and
+Native commands require `--attempt-ledger "$ledger"` and
 `--expected-ledger-digest "$ledger_digest"`, plus their other required arguments.
 Use a fresh destination for every execution.
 
 The owner reserves units durably before each operation, including failed calls.
 Preparation and self-check cost one unit each. Native generation, syntax, each
 compiler profile and associated verification cost one unit each. Independent
-rebuild costs six units and comparison costs five units. Exhaustion stops the
-next owner call. Source-form search also retains its member and campaign limits.
+rebuild costs six units and comparison costs five units. These units record
+consumption; they do not limit calls, selected members or repairs.
 
 ## Recover an interrupted execution
 

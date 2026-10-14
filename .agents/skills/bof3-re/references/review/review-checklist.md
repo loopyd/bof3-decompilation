@@ -7,12 +7,12 @@ lanes skip exact-PASS reviewers; apply this checklist to assigned reviews.
 ## Scope rules
 
 - Use the executor brief/diff/rung ledger without re-deriving the search.
-- Verify recorded measurements. Rerun catalog `bin/harness lift flag-search`, `bin/harness build variants verify` or permuter only for one scoped probe of a cited residual class.
+- Verify recorded measurements. Rerun catalog `bin/harness lift flag-search`, `bin/harness build variants verify` or permuter only for evidence-backed probes of a cited residual class.
 - Run scoped `just check` (ruff, `bin/harness source symbols check`, `validate_sources`) only for a required repo gate. Do not run `just check-all` or rebuild `brief`/m2c/Rizin/index without a concrete finding.
 
 Stop at the first answered question.
 
-## Bounded protocol (~25 tool calls)
+## Review protocol
 
 1. Run live `bin/harness lift asm-diff`/`bin/harness lift byte-match` for the selector.
 2. Parse metadata.
@@ -20,8 +20,9 @@ Stop at the first answered question.
 4. Inspect writer-reported paths only; do not use `find -newermt`, repo-wide boundary/hygiene surveys or cross-transaction attribution.
 5. Spot-check one payload.
 
-Allow one determinism rebuild at most. Check staging/orphan `linker.ld` only when
-the claim depends on it. Return item/overall verdicts and at most one finding/repair.
+Rebuild for determinism only when evidence requires it. Check staging/orphan
+`linker.ld` only when the claim depends on it. Return item/overall verdicts and
+all consequential findings/repairs.
 Include optional experiments/proposals only when the verdict requires them.
 
 ## Verdict items
@@ -56,8 +57,7 @@ diff/source/compiler/nearby-function evidence for safe plausible candidates outs
 the ladder/ledger. Record searches and each candidate's support/rejection. Any
 remaining candidate requires `needs-fix`, `ladder_exhausted:false` and 1–3 ranked
 experiments predicting size/frame/CFG/branch/offset/instruction/register effects.
-Set `ladder_exhausted:true` only when none remain. Budget stops, skipped rungs and
-vague allocation guesses prove no exhaustion.
+Set `ladder_exhausted:true` only when none remain. Skipped rungs and vague allocation guesses prove no exhaustion.
 
 ## Item 8 (partial→exact) output
 

@@ -136,9 +136,9 @@ captured implementation ID. Current owner verification yields `needs-review` wit
 accepted envelope; exact complete application including attestation plus externally
 pinned current final acceptance yields `skip-accepted`. Envelope and pin paired.
 Invalid/stale/mismatched acceptance rejects, never downgrades or reapplies. PRE is
-not rederived from POST. No native rerun, persisted skip token or budget renewal.
+not rederived from POST. No native rerun or persisted skip token.
 
 Unpublished POST after cleanup uncertainty uses recovery inspection instead.
-Parent retains original queue/budget/high-water pins and withholds mutation until
+Parent retains original queue/high-water pins and attempt history and withholds mutation until
 independently reviewed termination and separately authorized recovery. Reproduce
 captured environment; never edit proofs to make continuation pass.

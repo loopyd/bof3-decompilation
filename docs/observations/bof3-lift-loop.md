@@ -1346,10 +1346,11 @@ pin the actual target-qualified unit, not a lane number or remembered campaign.
 ## Autonomous lane workflow (batch-006)
 
 Orchestration moved out of the session into `.pi/workflows/bof3-lift-lanes.js`, a
-file-backed ref-driven workflow: it takes `lanes: [{key,target,refs:[DISC_ID#INDEX@0xADDRESS]}]`
-plus `maxSelectors`/`repairRounds`, runs lift -> review-only-if-not-exact -> bounded
-repair per lane, and isolates every lane failure so one timeout cannot reject the
-batch. Validated with `subagent({action:"validate",workflowScriptPath:...})`, then
+file-backed workflow: it takes `lanes: [{key,target,refs:[DISC_ID#INDEX@0xADDRESS]}]`,
+runs lift -> review-only-if-not-exact -> evidenced repair per lane, and isolates
+lane failures. Repairs require changed candidate, proposal or evidence pins;
+there are no selector or repair-round allowances.
+Validated with `subagent({action:"validate",workflowScriptPath:...})`, then
 single-lane tested (`BIN/SCENARIO/SCENA04.EMI#0@0x801F8124` -> exact, gate PASS
 twice, no reviewer spent), then run at 10 lanes: `{lanes:10, complete:10,
 laneErrors:0}`. Measured: 1855 -> 1990 exact boundaries (17.71% -> 18.99%) across

@@ -10,12 +10,12 @@ only for first/ambiguous diagnosis; partial catalogs cannot replace live diagnos
 
 ## First source
 
-For genuinely absent C, require parent admission for one bounded seed. Pin original
+For genuinely absent C, require parent admission for the selected source. Pin original
 bytes/load, reviewed boundary, caller/callee evidence, PRE absence, owned source/
 header/map/layout paths and attempts. Create evidenced C89 with `@source`/`@behavior`,
 manifest claim, declarations/bindings and `c` boundary. Obtain a live
 [native diff](native-execution.md) before another edit. Missing-source errors supply
-no baseline; seeds grant no score, acceptance or budget renewal. Unresolved
+no baseline; seeds grant no score or acceptance. Unresolved
 ownership/ABI or failed native gates stop matching. Require final byte match and
 independent review. Diagnosis requires existing C.
 
@@ -25,10 +25,12 @@ never weaken parser or repair unrelated rows to admit selected function.
 
 ## Terminal ladder
 
-Use the earliest applicable rung; record inapplicability without spending attempts.
-Allow at most three non-progressing attempts per rung within smaller mission/probe
-budgets, with no minimum quota. On the third, restore the best clean-C state and
-advance. Carry the full ordered ledger/consumption through repair. End at first byte match.
+Use the earliest applicable rung and record inapplicability. Carry the full ordered
+attempt ledger through repair, including missing history. Select experiments from
+original/live evidence; repeat a tested lever only with changed evidence explaining
+its expected effect. Restore regressions. Advance when evidence closes a rung or
+proves its eligible alternatives exhausted, never after a fixed attempt count.
+End at first byte match.
 
 | Rung | Work | Gate |
 | --- | --- | --- |
@@ -36,7 +38,7 @@ advance. Carry the full ordered ledger/consumption through repair. End at first 
 | 2. Control flow | Branch direction, loop/return/switch; equal-valued arms use bounded playbook branch matrix before escalation | Branch/topology mismatch clears |
 | 3. Expression/register order | Ordinary temporaries, hoists, statements; no artificial allocator/scheduler controls | Allocation/scheduling residual changes |
 | 4. Compiler profile | Selector-specific parent/user authorization only; `bin/harness lift flag-search TARGET@0xADDRESS`; clean-C exact profiles only | Exit 0 with non-empty `exact_matches` |
-| 5. Permuter | Opt-in, shape already right; one `bin/harness lift permute TARGET@0xADDRESS -j N` | Attempt completes, residual class recorded |
+| 5. Permuter | Opt-in, shape already right; `bin/harness lift permute TARGET@0xADDRESS -j N` | Attempt completes, residual class recorded |
 | 6. Unresolved | Best coherent clean-C candidate, documented allocation/scheduling; no forced registers/asm | `byte-match` remains non-exact; residual documented |
 
 Unauthorized profile/permuter rungs remain untried, not exhausted.
@@ -46,16 +48,17 @@ Same-size relocation/load-order: symbol representation and evidenced pointer-cel
 volatility. Entry copies: lifetime, clean-C ordering, profile/permuter diagnosis.
 Lone delay slot: exact branch/jump operands and liveness, never clobber.
 
-## Probe ceiling
+## Probe method
 
-At most ONE `lift sweep`, four variants total across lane/mission and all repair
-children. No per-variant `asm-diff`/`byte-match` loop or local Python/shell compile/
+Use `lift sweep` for eligible clean-C alternatives without a call or variant quota.
+No per-variant `asm-diff`/`byte-match` loop or local Python/shell compile/
 compare harness. In-process sweep resolves comparison context/canonical compile
 command once, then compiles/compares each variant. Each variant rewrites/relinks.
 Use `--subprocess` only for deliberate legacy reproduction.
 
-Allocation/scheduling residual: retain best coherent candidate and truthful
-`@status partial`/`@match`/`@residual`, then stop. Never chase spelling coincidences.
+Reviewed allocation/scheduling exhaustion: retain best coherent candidate and
+truthful `@status partial`/`@match`/`@residual`, then stop. Never chase spelling
+coincidences. A residual class alone does not prove exhaustion.
 
 ## Eligible-condition levers
 
@@ -66,7 +69,7 @@ ineligible/declined reasons; revisit only with new evidence.
 | --- | --- | --- |
 | No function-shaped bytes: missing prologue/`jr $ra`, pointer runs, printable blocks; or ASM-backlog triage | `bin/harness analysis data-candidates [TARGET...]` | Ranked byte evidence only. Promotion requires reviewed layout transaction, `source splat` and index refresh, not C lift |
 | Fragment/jump-table arm/shared epilogue with head elsewhere; code inside leading bare `[offset, bin, name]` segment or `bin` subsegment | `bin/harness analysis carve TARGET@0xADDRESS START:END` | Isolated two-split row/segment regroup probe preserving `vram`/text order. Never applies. Lane reports evidence; parent owns reviewed Splat placement, no whole-image oracle |
-| Few clean-C shapes explain `first=` | `bin/harness lift sweep SELECTOR SOURCE variants...` | One call, four variants maximum, in-process; cumulative ceiling above |
+| Few clean-C shapes explain `first=` | `bin/harness lift sweep SELECTOR SOURCE variants...` | In-process comparison; retain each variant and outcome |
 | Bytes identical to already-exact function | `bin/harness lift clone TARGET@0xADDRESS --from REPRESENTATIVE` | Dry-run emits self-contained raw `func_`/`D_` clone, no foreign header. `--apply` wires and retains only on `lift gate` PASS, otherwise restores. Still needs own exact gate/required review. Declined target-local include/unresolved external is recorded, never bypassed |
 
 Search these four levers before exhaustion. Byte identity proves no shared ownership.

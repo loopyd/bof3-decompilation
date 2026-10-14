@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import contextlib
 import io
-import os
 import re
 import subprocess
 import sys
@@ -48,15 +47,14 @@ def _map_is_sorted(path: Path) -> bool:
     return addresses == sorted(addresses)
 
 
-def _run_module(
-    module: str, argv: list[str], retries: int, label: str
-) -> tuple[int, str]:
+def _run_module(module: str, argv: list[str], label: str) -> tuple[int, str]:
     """Run one owner stage in this interpreter, capturing its output text."""
 
     from importlib import import_module
 
     handler = getattr(import_module(module), "main")
     attempt = 1
+    failures = set()
     while True:
         buffer = io.StringIO()
         rc = 0
@@ -73,10 +71,12 @@ def _run_module(
         output = buffer.getvalue()
         if rc == 0:
             return 0, output
-        if _RACE_RE.search(output) and attempt < retries:
+        race = _RACE_RE.search(output)
+        if race and race.group(0) not in failures:
+            failures.add(race.group(0))
             sys.stderr.write(
                 f"[lift-gate] shared-tree/sibling race in {label} "
-                f"(attempt {attempt}/{retries}); retrying\n"
+                f"(attempt {attempt}); retrying\n"
             )
             attempt += 1
             time.sleep(3)
@@ -106,7 +106,7 @@ def _evidence_line(payload: dict) -> str:
     )
 
 
-def _measure_native(root: Path, selector: str, retries: int) -> tuple[int, str, str]:
+def _measure_native(root: Path, selector: str) -> tuple[int, str, str]:
     """One in-process native measurement yielding both the diff and byte match.
 
     Returns ``(returncode, output_text, byte_status)`` where ``byte_status`` is
@@ -126,6 +126,7 @@ def _measure_native(root: Path, selector: str, retries: int) -> tuple[int, str, 
         )
 
     attempt = 1
+    failures = set()
     while True:
         try:
             payload = _run_match(function, manifest, source, diagnostics=True)
@@ -133,10 +134,12 @@ def _measure_native(root: Path, selector: str, retries: int) -> tuple[int, str, 
             raise
         except (OSError, RuntimeError, ValueError) as error:
             text = str(error)
-            if _RACE_RE.search(text) and attempt < retries:
+            race = _RACE_RE.search(text)
+            if race and race.group(0) not in failures:
+                failures.add(race.group(0))
                 sys.stderr.write(
                     f"[lift-gate] shared-tree/sibling race in asm-diff "
-                    f"(attempt {attempt}/{retries}); retrying\n"
+                    f"(attempt {attempt}); retrying\n"
                 )
                 attempt += 1
                 time.sleep(3)
@@ -174,9 +177,6 @@ def _run(args: argparse.Namespace) -> int:
         if source is None:
             raise ValueError(f"no authored source for {selector}")
 
-    # Missing claims are an owner repair, never permission to rewrite other lanes.
-    retries = int(os.environ.get("BOF3_GATE_RETRIES") or "4")
-
     rc = 0
     # ---- target-scoped metadata stages, once per target ---------------------
     map_path = root / "config" / "targets" / target / "symbols.txt"
@@ -187,7 +187,6 @@ def _run(args: argparse.Namespace) -> int:
         stage_rc, output = _run_module(
             "harness.commands.symbols",
             ["normalize", target, "--write"],
-            retries,
             "symbols-normalize",
         )
         if stage_rc:
@@ -195,13 +194,13 @@ def _run(args: argparse.Namespace) -> int:
             rc = 1
     print(f"== symbols check {target} ==")
     stage_rc, output = _run_module(
-        "harness.commands.symbols", ["check", target], retries, "symbols"
+        "harness.commands.symbols", ["check", target], "symbols"
     )
     print(output.rstrip())
     if stage_rc:
         rc = 1
     print(f"== splat {target} ==")
-    stage_rc, output = _run_module("harness.commands.splat", [target], retries, "splat")
+    stage_rc, output = _run_module("harness.commands.splat", [target], "splat")
     print(output.rstrip())
     if stage_rc:
         rc = 1
@@ -209,7 +208,7 @@ def _run(args: argparse.Namespace) -> int:
     # ---- one native measurement per selector --------------------------------
     for selector in selectors:
         print(f"== asm-diff {selector} ==")
-        native_rc, output, byte_status = _measure_native(root, selector, retries)
+        native_rc, output, byte_status = _measure_native(root, selector)
         print(output.rstrip())
         print(f"== byte-match {selector} ==\n{byte_status} (single measurement)")
         if native_rc:
