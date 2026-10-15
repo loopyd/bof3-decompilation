@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import dataclass
 import re
 
@@ -311,6 +312,77 @@ EXIT_FIELDS = set(
     "pc delay incomingLink sampledEntry sampledConstant sampledDefinitions equalityEvidence transferSource".split()
 )
 TRANSFER_ENCODING = "summary-or-inline/v1"
+CALL_TRANSFER_ENCODING = "callee-or-inline/v1"
+
+
+def _same_transfers(left, right):
+    if type(left) is not type(right):
+        return False
+    if type(left) is dict:
+        return left.keys() == right.keys() and all(
+            _same_transfers(left[key], right[key]) for key in left
+        )
+    if type(left) is list:
+        return len(left) == len(right) and all(
+            _same_transfers(a, b) for a, b in zip(left, right, strict=True)
+        )
+    return left == right
+
+
+def decode_configuration(configuration):
+    decoded = deepcopy(configuration)
+    functions = _rows(decoded.get("functions", []), 4096, "native functions")
+    summaries = {}
+    for function in functions:
+        _require(type(function) is dict, "native function object")
+        if "originalCallSummary" not in function:
+            continue
+        summary = function["originalCallSummary"]
+        _require(type(summary) is dict, "function summary object")
+        key = summary.get("function")
+        _require(
+            type(key) is str and key and key not in summaries,
+            "duplicate or invalid transfer summary identity",
+        )
+        summaries[key] = _rows(summary.get("transfers"), 34, "summary transfers")
+    for function in functions:
+        native = function.get("returnDisposition", {})
+        _require(type(native) is dict, "native return object")
+        evidence = native.get("evidence", {})
+        _require(type(evidence) is dict, "native evidence object")
+        for call in _rows(evidence.get("calls", []), 4096, "native calls"):
+            _require(type(call) is dict, "native call object")
+            if "contract" not in call:
+                continue
+            value = call["contract"]
+            fields = (CONTRACT_FIELDS - {"registerTransfers"}) | {
+                "registerTransferSource"
+            }
+            if type(value) is dict and "noMemoryWrites" in value:
+                fields.add("noMemoryWrites")
+            contract = _keys(value, fields, "encoded call contract")
+            _require(type(contract["callee"]) is str, "call transfer callee")
+            callee = summaries.get(contract["callee"])
+            source = contract.pop("registerTransferSource")
+            _require(type(source) is dict, "call transfer source")
+            _require(
+                source.get("encoding") == CALL_TRANSFER_ENCODING,
+                "call transfer encoding",
+            )
+            if source.get("kind") == "callee-summary":
+                _keys(source, {"encoding", "kind"}, "callee transfer source")
+                _require(callee is not None and callee, "missing callee transfers")
+                rows = callee
+            else:
+                _keys(source, {"encoding", "kind", "rows"}, "inline call transfers")
+                _require(source["kind"] == "inline", "call transfer source kind")
+                rows = _rows(source["rows"], 34, "inline call transfers")
+                _require(
+                    not rows or callee is None or not _same_transfers(rows, callee),
+                    "redundant inline call transfers",
+                )
+            contract["registerTransfers"] = rows
+    return decoded
 
 
 def _exit_transfers(summary, exit):
@@ -327,7 +399,10 @@ def _exit_transfers(summary, exit):
     _keys(source, {"kind", "rows"}, "inline transfer source")
     _require(source["kind"] == "inline", "exit transfer source kind")
     rows = _rows(source["rows"], 34, "exit register transfers")
-    _require(rows != summary["transfers"], "redundant inline exit transfers")
+    _require(
+        not _same_transfers(rows, summary["transfers"]),
+        "redundant inline exit transfers",
+    )
     return rows
 
 
@@ -393,6 +468,7 @@ def _transfers(rows, definitions, instructions, *, covered):
     )
     for row in rows:
         _keys(row, TRANSFER_FIELDS, "register transfer")
+        _integer(row["register"], 33)
         complete = _complete(row["proof"])
         _require(
             type(row["kind"]) is str
@@ -876,7 +952,7 @@ def _frame_binding(call, caller, callee):
         and memorycontracts._memory_word(words[pc + 4])[0] != "load"
         and len(links) == 1
         and links[0]["exitPcs"] == contract["calleeExits"]
-        and contract["registerTransfers"] == summary["transfers"]
+        and _same_transfers(contract["registerTransfers"], summary["transfers"])
         and condition in contract["inputs"]["remaining"]
         and condition in contract["transfers"]["remaining"]
         and not {
@@ -1180,7 +1256,7 @@ def _call_links(call, caller, graph):
         "callee entry/normal exits",
     )
     _require(
-        contract["registerTransfers"] == summary["transfers"],
+        _same_transfers(contract["registerTransfers"], summary["transfers"]),
         "callee transfer substitution source",
     )
     for dimension in ("result", "effects", "declaration"):

@@ -1247,8 +1247,18 @@ def validate_generation(
     _require(
         observed["range_convention"] == RANGE_CONVENTION, "native range convention"
     )
-    parsed_config = parse_json(inferred, CONFIG_LIMIT)
-    _require(type(parsed_config) is dict, "inferred configuration object")
+    parsed_wire = parse_json(inferred, CONFIG_LIMIT)
+    _require(type(parsed_wire) is dict, "inferred configuration object")
+    try:
+        parsed_config = callcontracts.decode_configuration(parsed_wire)
+    except (
+        proofvalues.CallContractRefused,
+        KeyError,
+        TypeError,
+        IndexError,
+        AttributeError,
+    ) as error:
+        raise NativeOutputRefused(str(error)) from error
     _validate_entry_observations(
         parsed_config.get("functions", []),
         descriptor if scoped else None,
