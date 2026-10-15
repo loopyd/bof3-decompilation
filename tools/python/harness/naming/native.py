@@ -40,6 +40,7 @@ class NativeByteOps:
 
     def __init__(self, root: Path) -> None:
         self.root = root
+        self.commands_executed = 0
 
     def run(self, operation: dict[str, Any]) -> SemanticResult:
         kind = operation["kind"]
@@ -51,6 +52,7 @@ class NativeByteOps:
             stderr=subprocess.PIPE,
             text=True,
         )
+        self.commands_executed += 1
         try:
             stdout, stderr = process.communicate()
         except BaseException:

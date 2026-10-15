@@ -283,6 +283,9 @@ def run_evidence(
                                 owner_session.queue(binding["rizin"], op["target"])
                                 result = owner_session.run_queued()[-1]
                             finally:
+                                telemetry.external_processes += (
+                                    owner_session.commands_executed
+                                )
                                 owner_session.close()
                         if result.killed or result.exit != 0:
                             raise ValueError(
@@ -406,6 +409,7 @@ def run_evidence(
                 write_failed_receipt(namespace, target, row, error, result)
                 errors.append(f"{key}: {error}")
                 break
+    telemetry.external_processes += rizin.commands_executed + byte_ops.commands_executed
     telemetry.phase("collect")
     entries = load_journal(root, report, target)[0]
     manifest = write_journal_manifest(root, report, target, inputs, entries)
