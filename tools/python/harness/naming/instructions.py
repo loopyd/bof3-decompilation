@@ -124,7 +124,7 @@ def replay_instructions(root: Path, payload: dict, semantic: list) -> bool:
                 "required_work": [
                     {"id": item["id"], "status": "open"}
                     for item in payload["items"]
-                    if item.get("operation") == "owner"
+                    if item.get("operation") in {"owner", "calls"}
                     and item.get("supplemental") is False
                 ],
             }

@@ -124,10 +124,17 @@ saved-RA frame on every path. The selected call must precede opaque calls on its
 path. Later calls leave outgoing v0/v1 unresolved. Return transitions explicitly
 assume normal memory/call completion and preservation of SP and the saved-entry-RA
 cell. Unsupported instructions, load timing, loops, indirect flow and post-call
-dependencies are named `selected_call` gaps. Replay recomputes facts from original
-bytes. These facts neither close other rungs nor establish a C return contract;
-function conclusion admission remains disabled. `owner_body` retains its separate
-wrapper and global-pointer zero-byte-store shapes.
+dependencies are named `selected_call` gaps. Only generated caller work authorizes
+call facts. The selected body's complete validated capture supplies `selected_range`
+with its boundary, byte count, original hash and image/layout binding.
+A two-way zero/nonzero halfword-state dispatch with alternative first callees and
+an identical later call suffix supplies `one_level_beyond` caller context. It proves
+conditional invocation and continuation, not state meaning or callee effects.
+Replay recomputes these facts and caller roles from original bytes and the generated
+plan. One receipt cannot close two rungs; a dispatcher context needs a separate
+caller receipt for `selected_call`. Range ownership proves no name term or C return
+contract. Function conclusion admission remains disabled. `owner_body` retains its
+separate wrapper and global-pointer zero-byte-store shapes.
 
 Partial evidence requires `partial_baseline`. Tool-generated `required_work` covers indexed callers/callees/accesses/owners. Record each item's commands and typed observations with evidence deduplication, or leave it open. Concrete discoveries expand the bounded graph. `exhausted` requires all closed; open/failed work is `blocked`, never optional. `optional_work`/`ceiling_next_command` hold only post-ceiling experiments. Proposals retain `semantic_status`, `transaction_status: ready|repairable|blocked` and `readiness_blockers`; proposed data storage equals `describe` exactly.
 

@@ -16,6 +16,7 @@ from harness.naming.capabilities import (
 )
 from harness.naming.consumers import decode_table_consumer
 from harness.naming.description import _describe, _validated_row
+from harness.naming.facts import RUNG_PROFILES
 
 SCHEMA = "bof3.naming-analyzer-facts/v3"
 CONCLUSION_CAPABILITY_SCHEMA = "bof3.naming-conclusion-capability/v1"
@@ -320,6 +321,7 @@ def _analyze_validated_records(
         )
     if row.get("kind") == "function":
         seen = set()
+        capture_gaps = []
         for capture in instructions:
             observations = instruction_observations(_RUNNER_TOKEN, target, row, capture)
             for observation in observations["observations"]:
@@ -328,20 +330,39 @@ def _analyze_validated_records(
                     {
                         **observation,
                         "source_id": _source(
-                            "original-instructions",
+                            {
+                                "selected_range": "original-instructions:selected-range",
+                                "one_level_beyond": "original-instructions:caller-state-dispatch",
+                            }.get(observation["class"], "original-instructions"),
                             target,
                             observation["value"],
                             input_digest,
                         ),
                     }
                 )
-            opened.extend(observations["open"])
-        for fact_class in ("selected_call", "owner_body"):
-            if fact_class not in seen:
+            capture_gaps.extend(observations["open"])
+        required = RUNG_PROFILES["function", row.get("outside_payload") is True]
+        opened = [
+            gap
+            for gap in opened
+            if gap["class"] in required and gap["class"] not in seen
+        ]
+        opened.extend(gap for gap in capture_gaps if gap["class"] in required)
+        opened = [
+            {
+                **gap,
+                "reason": gap["reason"]
+                if gap["reason"].startswith("capability gap:")
+                else f"capability gap: {gap['class']}: {gap['reason']}",
+            }
+            for gap in opened
+        ]
+        for fact_class in sorted(required - seen):
+            if not any(gap["class"] == fact_class for gap in opened):
                 opened.append(
                     {
                         "class": fact_class,
-                        "reason": f"capability gap: {fact_class}: no supported original body captured; use --instructions; selected calls support canonical wrappers and bounded acyclic callers; owner bodies support canonical wrappers and global-pointer zero-byte stores",
+                        "reason": f"capability gap: {fact_class}: no supported original observation captured; use --instructions; selected calls support canonical wrappers and bounded acyclic callers; owner bodies support canonical wrappers and global-pointer zero-byte stores",
                     }
                 )
     result = {
@@ -419,7 +440,18 @@ def instruction_observations(
     if function.target.value != target and str(function) not in owners:
         raise ValueError("instruction capture is not a planned owner selector")
     observations, opened = [], []
-    if function.target.value == target:
+    selected = function.target.value == target and function.address == address_of(
+        str(row["name"])
+    )
+    callers = {
+        str(parse_function_id(work["id"].split(":", 1)[1]))
+        for work in row.get("required_work", [])
+        if work.get("status") == "open"
+        and str(work.get("id", "")).startswith("caller:")
+    }
+    if selected:
+        observations.append(_selected_range(capture, str(function)))
+    if function.target.value == target and str(function) in callers:
         values, reasons = selected_call_observations(token, target, row, capture)
         observations.extend(
             {"class": "selected_call", "polarity": "positive", "value": value}
@@ -428,6 +460,16 @@ def instruction_observations(
         opened.extend(
             {"class": "selected_call", "reason": reason} for reason in reasons
         )
+        for value in values:
+            context = _caller_state_dispatch(value)
+            if context is not None:
+                observations.append(
+                    {
+                        "class": "one_level_beyond",
+                        "polarity": "positive",
+                        "value": context,
+                    }
+                )
     if str(function) in owners:
         try:
             value = decode_owner_body(bytes.fromhex(capture["bytes"]), capture["start"])
@@ -455,4 +497,78 @@ def instruction_observations(
         "facts": sorted({observation["class"] for observation in observations}),
         "observations": observations,
         "open": opened,
+    }
+
+
+def _selected_range(capture: dict, selector: str) -> dict:
+    """Describe the complete live-validated range without inferring body semantics."""
+    binding = capture["binding"]
+    original = bytes.fromhex(capture["bytes"])
+    start, end = binding.get("start"), binding.get("end")
+    if (
+        binding.get("selector") != selector
+        or type(start) is not int
+        or type(end) is not int
+        or start != parse_function_id(selector).address
+        or capture["start"] != start
+        or start % 4
+        or not 0 < len(original) <= 65536
+        or len(original) % 4
+        or end - start != len(original)
+    ):
+        raise ValueError(
+            "selected_range capture differs from its complete original binding"
+        )
+    return {
+        "class": "selected_range",
+        "polarity": "positive",
+        "value": {
+            "selector": selector,
+            "boundary": {"start": f"0x{start:08X}", "end": f"0x{end:08X}"},
+            "byte_count": len(original),
+            "original_sha256": hashlib.sha256(original).hexdigest(),
+            "binding": binding,
+            "scope": "complete reviewed original range; no body semantics or C return contract",
+        },
+    }
+
+
+def _caller_state_dispatch(value: dict) -> dict | None:
+    """Project a decoded two-way state dispatch with an identical later call suffix."""
+    transition = value["transition"]
+    paths = transition.get("paths", [])
+    if len(paths) != 2 or any(
+        len(path["guards"]) != 1 or len(path["calls"]) < 2 for path in paths
+    ):
+        return None
+    first, second = (path["guards"][0] for path in paths)
+    state = first["left"]
+    if (
+        {first["relation"], second["relation"]} != {"equal", "not_equal"}
+        or {key: item for key, item in first.items() if key != "relation"}
+        != {key: item for key, item in second.items() if key != "relation"}
+        or state.get("kind") != "unsigned_halfword_read"
+        or first["right"] != {"kind": "constant", "value": 0}
+        or paths[0]["calls"][1:] != paths[1]["calls"][1:]
+        or paths[0]["calls"][0]["callee"] == paths[1]["calls"][0]["callee"]
+        or {path["calls"][0]["callee"] for path in paths}.isdisjoint({value["callee"]})
+    ):
+        return None
+    return {
+        "kind": "caller_state_dispatch",
+        "caller": value["caller"],
+        "selected": value["callee"],
+        "binding": value["binding"],
+        "state_read": {
+            **state,
+            "instruction": next(
+                instruction
+                for instruction in transition["coverage"]["instructions"]
+                if instruction["address"] == state["instruction"]
+            ),
+        },
+        "paths": paths,
+        "common_later_calls": paths[0]["calls"][1:],
+        "transition": transition,
+        "scope": "conditional invocation and common continuation only; path feasibility, state meaning and transitive callee effects are not established",
     }

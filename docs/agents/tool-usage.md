@@ -212,6 +212,12 @@ leaves outgoing v0/v1 unresolved. Loops, indirect flow, unresolved load timing a
 unsupported arguments/transitions remain explicit capability gaps. Imported rows
 lacking caller work produce no such capture. These facts and collection alone
 do not enable function conclusions. See the [decoder contract](harness.md#domain-packages).
+The selected body's complete capture also supplies `selected_range`. A decoded
+two-way halfword-state dispatch with alternative callees and a common later call
+supplies `one_level_beyond` caller context. It proves conditional invocation,
+without proving state meaning or callee behavior. Each rung needs an independent
+receipt; use a separate caller receipt for `selected_call` when the dispatcher
+supplies context.
 
 `INPUT` uses `bof3.naming-conclusion/v1`. The top-level `report_sha256` is the
 current report CAS digest: import fails if the report bytes have changed. The

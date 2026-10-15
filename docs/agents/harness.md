@@ -72,8 +72,16 @@ opaque. A later call leaves outgoing result registers unresolved; conditional re
 records state their normal-return and stack-preservation assumptions. Unsupported
 instructions, load timing, loops, indirect flow and post-call dependencies remain
 explicit capability gaps. `owner_body` retains its separate decoded shapes.
+The selected function's complete validated capture produces `selected_range`, with
+its half-open boundary, byte count, original hash and live image/layout binding.
+Generated caller work controls call decoding; capturing the selected body alone
+does not make it a caller. A two-way zero/nonzero halfword guard with different
+first callees and an identical later call suffix produces `one_level_beyond` as
+`caller_state_dispatch`. It records the state read, alternative calls and common
+continuation, without assigning meaning to the state or the callees' effects.
 Typed receipts retain the command, complete output, observations and refusal reasons;
-journal replay re-derives them from current original bytes. Function conclusion
+journal replay re-derives them from current original bytes and generated caller work.
+One receipt cannot close two rungs. Function conclusion
 admission remains disabled; imported rows without caller work still need discovery.
 
 FUNCTION identity native checks cover the selected function and every changed C
