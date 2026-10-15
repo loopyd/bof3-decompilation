@@ -1,16 +1,124 @@
-"""Validate exact native describe payloads for naming evidence."""
+"""Capture original data ranges and validate native naming descriptions."""
 
 from __future__ import annotations
 
+import hashlib
 import re
+from pathlib import Path
 from typing import Any
 
+from harness.analysis.project import prepare_target
 from harness.domain.ids import parse_function_id
+from harness.domain.layout import parse_splat_layout
+from harness.domain.manifests import load_target_manifests
 
 _HEX = re.compile(r"0x[0-9A-F]+")
 _STORAGE_KINDS = {"data", "bss", "rodata", "unknown"}
 _STORAGE_AUTHORITY = {"reviewed_splat", "original_binary"}
 _SYMBOL_KINDS = {"data", "function"}
+
+
+def capture_data_range(root: Path, selector: str) -> dict:
+    """Read the whole containing reviewed segment, without inferring object extent."""
+    selected = parse_function_id(selector)
+    result = {"selector": str(selected), "binding": None, "bytes": None, "gap": None}
+    try:
+        manifest = load_target_manifests(root)[selected.target.value]
+        layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
+        boundaries = [
+            boundary
+            for boundary in layout.boundaries
+            if boundary.virtual_start <= selected.address
+            and (
+                boundary.virtual_end is None or selected.address < boundary.virtual_end
+            )
+        ]
+        if len(boundaries) != 1:
+            raise ValueError("data range requires one containing reviewed segment")
+        boundary = boundaries[0]
+        if boundary.kind not in {"data", "rodata"} or boundary.virtual_end is None:
+            raise ValueError("data range requires finite mapped data or rodata")
+        start, end = boundary.virtual_start, boundary.virtual_end
+        if not 0 < end - start <= 65536:
+            raise ValueError("data range is empty or exceeds 64 KiB")
+        spec = prepare_target(root, selected.target.value, manifest=manifest)
+        image = spec.binary.read_bytes()
+        offset = spec.binary_offset + start - spec.load_address
+        if offset < spec.binary_offset or offset + end - start > len(image):
+            raise ValueError("data range escapes original payload")
+        result["binding"] = {
+            "scope": "containing_reviewed_segment",
+            "kind": boundary.kind,
+            "start": start,
+            "end": end,
+            "offset": offset,
+            "image_sha256": hashlib.sha256(image).hexdigest(),
+            "splat_sha256": layout.sha256,
+            "replay_sha256": spec.replay_sha256,
+        }
+        result["bytes"] = image[offset : offset + end - start].hex()
+    except ValueError as error:
+        result["gap"] = str(error)
+    return result
+
+
+def data_range_value(operation: dict, target: str, address: int) -> dict:
+    """Validate one current raw capture and expose only its segment-range fact."""
+    payload = operation.get("payload")
+    selected = parse_function_id(str(operation["selector"]))
+    if (
+        not isinstance(payload, dict)
+        or set(payload) != {"selector", "binding", "bytes", "gap"}
+        or payload["selector"] != str(selected)
+        or selected.target.value != target
+        or selected.address != address
+    ):
+        raise ValueError("data range capture identity or shape is invalid")
+    if payload["gap"] is not None:
+        if (
+            not isinstance(payload["gap"], str)
+            or not payload["gap"].strip()
+            or payload["binding"] is not None
+            or payload["bytes"] is not None
+        ):
+            raise ValueError("data range gap shape is invalid")
+        raise ValueError(payload["gap"])
+    binding = payload["binding"]
+    if (
+        not isinstance(binding, dict)
+        or set(binding)
+        != {
+            "scope",
+            "kind",
+            "start",
+            "end",
+            "offset",
+            "image_sha256",
+            "splat_sha256",
+            "replay_sha256",
+        }
+        or binding["scope"] != "containing_reviewed_segment"
+        or binding["kind"] not in {"data", "rodata"}
+        or any(type(binding[key]) is not int for key in ("start", "end", "offset"))
+        or not 0 <= binding["start"] <= address < binding["end"] <= 0x100000000
+        or not 0 < binding["end"] - binding["start"] <= 65536
+        or binding["offset"] < 0
+        or any(
+            not isinstance(binding[key], str)
+            or re.fullmatch(r"[0-9a-f]{64}", binding[key]) is None
+            for key in ("image_sha256", "splat_sha256", "replay_sha256")
+        )
+        or not isinstance(payload["bytes"], str)
+        or len(payload["bytes"]) != 2 * (binding["end"] - binding["start"])
+        or re.fullmatch(r"[0-9a-f]+", payload["bytes"]) is None
+    ):
+        raise ValueError("data range binding or original bytes are invalid")
+    return {
+        **binding,
+        "address": f"0x{address:08X}",
+        "byte_count": binding["end"] - binding["start"],
+        "original_sha256": hashlib.sha256(bytes.fromhex(payload["bytes"])).hexdigest(),
+    }
 
 
 def _hex(value: object) -> int | None:

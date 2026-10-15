@@ -17,6 +17,7 @@ from harness.analysis.project import prepare_target
 from harness.domain.ids import parse_function_id
 from harness.domain.manifests import load_target_manifests
 from harness.naming.debt import address_of
+from harness.naming.description import capture_data_range
 
 
 def _query(connection: Any, item_id: str) -> tuple[str, str, list[dict[str, Any]]]:
@@ -110,6 +111,16 @@ def main() -> int:
             if row.get("kind") == "data":
                 selected = parse_function_id(
                     f"{init['target']}@{address_of(str(row['name'])):08X}"
+                )
+                operations.append(
+                    {
+                        "item": {"id": f"data_original_range:{selected}"},
+                        "operation": "data_original_range",
+                        "selector": str(selected),
+                        "supplemental": True,
+                        "role": "data_original_range",
+                        "payload": capture_data_range(root, str(selected)),
+                    }
                 )
                 operations.append(
                     {

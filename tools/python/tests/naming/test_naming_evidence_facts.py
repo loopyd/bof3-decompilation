@@ -125,7 +125,7 @@ def test_lowercase_native_selector_is_compared_by_identity():
     assert any(item["class"] == "selected_access" for item in result["facts"])
 
 
-def test_data_describe_and_function_access_produce_all_selected_facts():
+def test_data_describe_and_function_access_produce_storage_and_access_facts():
     storage = {
         "kind": "rodata",
         "start": "0x80096994",
@@ -154,7 +154,8 @@ def test_data_describe_and_function_access_produce_all_selected_facts():
     )
     result = _analyze([described, _describe(), _access()])
     classes = {item["class"] for item in result["facts"]}
-    assert {"selected_range", "storage_class", "selected_access"} <= classes
+    assert {"storage_class", "selected_access"} <= classes
+    assert "selected_range" not in classes
 
 
 def test_real_hex_describe_and_access_produce_positive_facts():
@@ -443,7 +444,7 @@ def test_storage_redundancies_must_agree():
     assert any("storage" in item["reason"] for item in result["unavailable"])
 
 
-def test_canonical_bss_produces_range_and_storage_facts():
+def test_canonical_bss_describe_produces_storage_without_original_range():
     storage = {
         "kind": "bss",
         "start": "0x80096994",
@@ -471,7 +472,7 @@ def test_canonical_bss_produces_range_and_storage_facts():
         symbol={"name": "D_80096994", "kind": "data"},
     )
     classes = {item["class"] for item in _analyze([described])["facts"]}
-    assert {"selected_range", "storage_class"} <= classes
+    assert classes == {"storage_class"}
 
 
 @pytest.mark.parametrize(
@@ -657,7 +658,31 @@ def test_exact_complete_battle15_facts_emit_exhausted_only_capability():
         storage=storage,
         symbol={"name": "D_80096994", "kind": "data"},
     )
-    result = _analyze([selected, _describe(), _access(), _dispatch_consumer()])
+    original_range = {
+        "item": {"id": f"data_original_range:{DATA_SELECTOR}"},
+        "operation": "data_original_range",
+        "selector": DATA_SELECTOR,
+        "supplemental": True,
+        "role": "data_original_range",
+        "payload": {
+            "selector": DATA_SELECTOR.lower(),
+            "binding": {
+                "scope": "containing_reviewed_segment",
+                "kind": "rodata",
+                "start": 0x80096800,
+                "end": 0x80096AB0,
+                "offset": 0,
+                "image_sha256": "a" * 64,
+                "splat_sha256": "b" * 64,
+                "replay_sha256": "c" * 64,
+            },
+            "bytes": "00" * 688,
+            "gap": None,
+        },
+    }
+    result = _analyze(
+        [original_range, selected, _describe(), _access(), _dispatch_consumer()]
+    )
     capability = result["conclusion_capability"]
     assert result["conclusion_enabled"] is True
     assert capability["allowed_conclusion"] == "exhausted"
@@ -700,9 +725,38 @@ def test_unavailable_record_disables_complete_conclusion_capability():
     )
     invalid_access = _access()
     invalid_access["payload"][0]["opcode"] = "invalid"
+    original_range = {
+        "item": {"id": f"data_original_range:{DATA_SELECTOR}"},
+        "operation": "data_original_range",
+        "selector": DATA_SELECTOR,
+        "supplemental": True,
+        "role": "data_original_range",
+        "payload": {
+            "selector": DATA_SELECTOR.lower(),
+            "binding": {
+                "scope": "containing_reviewed_segment",
+                "kind": "rodata",
+                "start": 0x80096800,
+                "end": 0x80096AB0,
+                "offset": 0,
+                "image_sha256": "a" * 64,
+                "splat_sha256": "b" * 64,
+                "replay_sha256": "c" * 64,
+            },
+            "bytes": "00" * 688,
+            "gap": None,
+        },
+    }
 
     result = _analyze(
-        [selected, _describe(), _access(), _dispatch_consumer(), invalid_access]
+        [
+            original_range,
+            selected,
+            _describe(),
+            _access(),
+            _dispatch_consumer(),
+            invalid_access,
+        ]
     )
 
     assert result["open"] == []

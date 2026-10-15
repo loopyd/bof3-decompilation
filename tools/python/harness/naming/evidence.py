@@ -15,7 +15,12 @@ from harness.naming.capabilities import (
     ExactCapabilityRegistry,
 )
 from harness.naming.consumers import decode_table_consumer
-from harness.naming.description import _describe, _validated_row
+from harness.naming.description import (
+    _describe,
+    _validated_row,
+    capture_data_range,
+    data_range_value,
+)
 from harness.naming.facts import RUNG_PROFILES
 
 SCHEMA = "bof3.naming-analyzer-facts/v3"
@@ -145,28 +150,38 @@ def indexed_observations(
         raise ValueError("indexed observations require the native runner")
     target, input_digest = derived["target"], derived["input_digest"]
     candidates = []
+    opened = []
     kind, role = operation["operation"], operation.get("role")
-    if kind == "describe" and role == "selected_data_describe":
-        start, end, storage = _describe(
+    if kind == "data_original_range" and role == kind:
+        try:
+            value = data_range_value(operation, target, address_of(row["name"]))
+            candidates.append(
+                {
+                    "class": "selected_range",
+                    "polarity": "positive",
+                    "value": value,
+                    "source_id": _source(
+                        "original-image:data-range", target, value, input_digest
+                    ),
+                }
+            )
+        except ValueError as error:
+            opened.append({"class": "selected_range", "reason": str(error)})
+    elif kind == "describe" and role == "selected_data_describe":
+        _start, _end, storage = _describe(
             operation, target, expected_name=row["name"], expected_kind="data"
         )
-        value = {
-            "address": f"0x{address_of(row['name']):08X}",
-            "boundary": {"start": f"0x{start:08X}", "end": f"0x{end:08X}"},
-        }
-        for fact_class, family, fact_value in (
-            ("selected_range", "reviewed-layout", value),
-            ("storage_class", "original-image", storage),
-        ):
-            if fact_value is not None:
-                candidates.append(
-                    {
-                        "class": fact_class,
-                        "polarity": "positive",
-                        "value": fact_value,
-                        "source_id": _source(family, target, fact_value, input_digest),
-                    }
-                )
+        if storage is not None:
+            candidates.append(
+                {
+                    "class": "storage_class",
+                    "polarity": "positive",
+                    "value": storage,
+                    "source_id": _source(
+                        "original-image", target, storage, input_digest
+                    ),
+                }
+            )
     elif kind == "access" and role is None:
         sites = {access["source"] for access in operation["payload"]}
         candidates = [
@@ -195,7 +210,7 @@ def indexed_observations(
         "schema": "bof3.naming-evidence-facts/v1",
         "facts": sorted({fact["class"] for fact in facts}),
         "observations": facts,
-        "open": [],
+        "open": opened,
     }
 
 
@@ -246,6 +261,12 @@ def _validate_indexed_receipts(root, row, payload, operations, derived, *, regis
             )
         if operation["operation"] == "data_dispatch_consumer":
             _validate_consumer_bytes(root, derived["target"], operation["payload"])
+        if operation["operation"] == "data_original_range":
+            current = capture_data_range(root, operation["selector"])
+            if _digest(operation["payload"]) != _digest(current):
+                raise ValueError(
+                    "data range capture differs from current original range"
+                )
         receipt = json.loads((root / command["receipt"]).read_bytes())
         expected = indexed_observations(
             _RUNNER_TOKEN, row, operation, derived, registry=registry
@@ -395,25 +416,40 @@ def _analyze_validated_records(
                 bounds[str(item["selector"])] = (start, end)
             if selected_role:
                 storage = described_storage
-                value = {
-                    "address": f"0x{address:08X}",
-                    "boundary": {"start": f"0x{start:08X}", "end": f"0x{end:08X}"},
-                }
-                facts.append(
-                    {
-                        "class": "selected_range",
-                        "polarity": "positive",
-                        "value": value,
-                        "source_id": _source(
-                            "reviewed-layout", target, value, input_digest
-                        ),
-                    }
-                )
         except ValueError as error:
             unavailable.append({"operation": "describe", "reason": str(error)})
+    for item in operations:
+        if item.get("operation") != "data_original_range":
+            continue
+        if (
+            item.get("role") != "data_original_range"
+            or item.get("supplemental") is not True
+            or row.get("kind") != "data"
+        ):
+            raise ValueError("data range operation provenance is invalid")
+        try:
+            value = data_range_value(item, target, address)
+            facts.append(
+                {
+                    "class": "selected_range",
+                    "polarity": "positive",
+                    "value": value,
+                    "source_id": _source(
+                        "original-image:data-range", target, value, input_digest
+                    ),
+                }
+            )
+        except ValueError as error:
+            opened.append({"class": "selected_range", "reason": str(error)})
+            unavailable.append(
+                {"operation": "data_original_range", "reason": str(error)}
+            )
     if not any(fact["class"] == "selected_range" for fact in facts):
         opened.append(
-            {"class": "selected_range", "reason": "validated describe unavailable"}
+            {
+                "class": "selected_range",
+                "reason": "validated original range unavailable",
+            }
         )
     if row.get("kind") == "data" and storage is not None:
         facts.append(

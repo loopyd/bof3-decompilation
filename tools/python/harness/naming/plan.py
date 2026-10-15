@@ -250,6 +250,17 @@ def indexed_operation_plan(
         )
     if row.get("kind") == "data":
         selected = _selected(row, target)
+        item_id = f"data_original_range:{selected}"
+        plan.append(
+            {
+                "id": item_id,
+                "operation": "data_original_range",
+                "selector": selected,
+                "command": f"harness:original-bytes data_original_range {selected} (work item {item_id})",
+                "supplemental": True,
+                "role": "data_original_range",
+            }
+        )
         item_id = f"describe:{selected}"
         plan.append(
             {

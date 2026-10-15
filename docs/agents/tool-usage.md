@@ -243,9 +243,12 @@ Generic function/data capabilities require complete positive kind/locality profi
 Open or unavailable evidence blocks import. The registry-backed exact-data route
 remains exhausted-only. The envelope stores the completed row under `conclusion`.
 Data replay requires current typed receipts for every indexed operation, including
-original-byte table consumers. Missing, duplicate, untyped or stale receipts require
-recapture with retained history. Range and storage share one describe receipt and
-cannot independently close two rungs.
+original data ranges and table consumers. The range operation captures the whole
+containing reviewed data or rodata segment, up to 64 KiB, and binds its bytes to
+current image, layout and replay identities. It proves segment ownership, not
+object extent or semantic meaning. Describe supplies storage on a separate
+receipt. Unsupported ranges retain a named gap. Missing, duplicate, untyped,
+incomplete or stale captures require recapture with retained history.
 Replace the empty `conclusion_capability` placeholder below with the complete
 runner-derived capability object:
 

@@ -263,7 +263,7 @@ def _commit_row(
     report: Path,
     target: str,
     row: dict[str, Any],
-    operations: list[tuple[dict[str, Any], str, str, list[dict[str, Any]], bool]],
+    operations: list[tuple[dict[str, Any], str, str, Any, bool]],
     receipts: list[dict[str, Any]],
     semantic: list[dict[str, Any]],
     derived: dict[str, Any],
@@ -381,7 +381,7 @@ def _receipts_for(
     namespace: EvidenceNamespace,
     target: str,
     row: dict[str, Any],
-    operations: list[tuple[dict[str, Any], str, str, list[dict[str, Any]], bool]],
+    operations: list[tuple[dict[str, Any], str, str, Any, bool]],
     semantic: list[dict[str, Any]],
     captures: tuple[dict, ...] = (),
     *,
@@ -405,6 +405,7 @@ def _receipts_for(
             "describe",
             "xrefs",
             "data_dispatch_consumer",
+            "data_original_range",
         }:
             continue
         item_id = str(item.get("id")).replace(":", "_").replace("/", "_")
@@ -419,7 +420,7 @@ def _receipts_for(
                 f"{len(payload)} rows captured for {item.get('id')}"
             ),
         }
-        if op == "data_dispatch_consumer":
+        if op in {"data_dispatch_consumer", "data_original_range"}:
             from harness.naming.plan import indexed_operation_plan
 
             command["command"] = next(
@@ -427,7 +428,11 @@ def _receipts_for(
                 for planned in indexed_operation_plan(row, target, registry=registry)
                 if planned["id"] == item["id"]
             )
-            command["output"] = "Original table and consumer bytes captured."
+            command["output"] = (
+                "Original table and consumer bytes captured."
+                if op == "data_dispatch_consumer"
+                else "Original data range inspected."
+            )
         if row.get("kind") == "data":
             from harness.naming.evidence import _RUNNER_TOKEN, indexed_observations
 

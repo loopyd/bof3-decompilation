@@ -77,13 +77,16 @@ def _operations(
                 "describe",
                 "xrefs",
                 "data_dispatch_consumer",
+                "data_original_range",
             }
             or (
-                item.get("operation") == "data_dispatch_consumer"
+                item.get("operation")
+                in {"data_dispatch_consumer", "data_original_range"}
                 and not isinstance(item.get("payload"), dict)
             )
             or (
-                item.get("operation") != "data_dispatch_consumer"
+                item.get("operation")
+                not in {"data_dispatch_consumer", "data_original_range"}
                 and not isinstance(item.get("payload"), list)
             )
             or not isinstance(item.get("supplemental"), bool)
@@ -95,6 +98,7 @@ def _operations(
                     "access_function_describe",
                     "access_function_xrefs",
                     "data_dispatch_consumer",
+                    "data_original_range",
                 }
             )
             or (not item.get("supplemental") and item.get("role") is not None)

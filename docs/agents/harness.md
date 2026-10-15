@@ -95,10 +95,14 @@ generic conclusion capabilities. Import and terminal validation require current
 generated-work replay, exact typed observations, distinct rung receipts and
 independently bound corroborators. Capabilities grant no semantic or identity approval.
 Data collection records every indexed operation in a typed receipt, including
-original-byte table consumers. Replay checks the complete current operation set,
-receipt bindings and exact fact projections, and rereads the original consumer
-bytes. Range and storage remain on one describe receipt; they supply no independent
-pair of rung sources. Exact data capabilities remain exhausted-only.
+original data ranges and table consumers. `data_original_range` captures the whole
+containing reviewed data or rodata segment, up to 64 KiB, with current image,
+layout and replay identities. Its `selected_range` fact establishes segment
+ownership and bytes, not object extent. Describe supplies `storage_class` on its
+own receipt. Unsupported or unmapped ranges, including BSS, retain a named range
+gap. Replay requires the complete current operation set and typed projections and
+rereads original bytes. Older captures require recapture. Separate receipts grant
+no semantic corroboration; exact data capabilities remain exhausted-only.
 `naming.readiness` adds target-local unresolved `static_jal` edges to generated
 caller work, including selected addresses outside the payload. It deduplicates
 callers while preserving owner candidates and the three-query bulk snapshot.

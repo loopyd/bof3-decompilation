@@ -151,11 +151,15 @@ grants no semantic approval. `owner_body` retains its separate wrapper and
 global-pointer zero-byte-store shapes.
 
 Data collection requires one current typed receipt per indexed operation,
-including original-byte table consumers. Replay checks the generated plan,
-operation identities and exact fact projections, and rereads consumer bytes from
-the current original image. Untyped or incomplete captures require recapture;
-retain historical evidence. Range and storage share their actual describe receipt
-and cannot close two rungs independently. Exact data capabilities remain exhausted-only.
+including original data ranges and table consumers. `data_original_range` captures
+the entire unambiguous containing reviewed data or rodata segment, up to 64 KiB,
+and binds exact bytes to current image, layout and replay identities. Its
+`selected_range` fact proves segment ownership, not object extent. Describe owns
+`storage_class` on a separate receipt. Unsupported, unmapped, BSS, incomplete or
+oversized ranges retain a named gap. Replay checks the current plan, receipt
+projections and live original bytes. Older captures require recapture; retain
+history. Separate receipts prove no semantic independence. Exact data capabilities
+remain exhausted-only.
 
 Imported function discovery includes target-local unresolved `static_jal` index
 edges as deduplicated caller work, preserving every owner candidate. The destination
