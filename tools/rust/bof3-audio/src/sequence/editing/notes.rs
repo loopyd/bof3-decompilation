@@ -1,4 +1,4 @@
-//! Note insertion/removal in linear sequences, with complete semantic retranslation.
+//! Linear note edits with complete semantic retranslation.
 
 use super::{channel, tempo, translate, Options, Rebuilt, Report};
 use crate::{
@@ -18,7 +18,7 @@ pub(super) fn rebuild(
     options: &Options,
     baseline: &Translation,
 ) -> Result<Rebuilt> {
-    let reject = "SEP note insertion/removal";
+    let reject = "SEP note insertion/removal or channel edit";
     if baseline.timeline.stop != Stop::EndMarker
         || baseline.timeline.steps.iter().any(|step| {
             matches!(
@@ -198,7 +198,7 @@ pub(super) fn rebuild(
             original_data_bytes: original.len(),
             output_data_bytes: bytes.len(),
             limitations: vec![
-                "Linear note insertion/removal rebuilds the selected stream with explicit statuses and minimal deltas. Opaque suffixes and other sequence records survive.",
+                "Linear note insertion, removal and channel changes rebuild the selected stream with explicit statuses and minimal deltas. Opaque suffixes and other sequence records survive.",
                 "With layout_rebuilt, changed_source_bytes counts differing data positions and length; changed_source_events counts all rewritten or removed original events. timing_edits is empty because original delta identities are not retained.",
                 "Existing non-note event identities, generated channel setup and termination remain fixed. Controller-loop structure, new channels and non-note insertion/removal require separate correspondence.",
                 "Bank availability, scheduler timing, synthesis and independent audio fidelity are separate checks.",

@@ -675,8 +675,8 @@ validation share channel initialization in the forward translator; callers may
 explicitly select translation without that setup. The parsed MIDI container must
 retain format, PPQN, tracks and header/chunk contents. Alternate running-status/VLQ
 encodings alone are not edits. The event-preserving path retains source event
-order and rejects channel changes. Linear note insertion/removal uses the separate
-reconstruction described below and permits notes on previously used note channels.
+order and rejects channel changes. Linear note edits use the separate reconstruction
+described below and permit notes on previously used note channels.
 Authored loop/end marker changes and generated setup edits fail with track/event
 or source-cursor diagnostics. Generated termination events must follow the requested
 final tick; timing reconstruction is described below.
@@ -713,15 +713,16 @@ agrees with the edited MIDI and RustySynth independently parses those SMFs. Thes
 checks establish preservation and bounded inverse behavior, not independent
 gameplay fidelity or full song-folder packing.
 
-### Linear MIDI note insertion and removal
+### Linear MIDI note reconstruction
 
 [The note inverse](../../../tools/rust/bof3-audio/src/sequence/editing/notes.rs)
 rebuilds a sequence that reaches its source end marker without controller-loop
-operations. It accepts inserted or removed notes on channels that already contain
-source notes. The ordered program, volume/pan, bend and tempo events retain their
-identities; their supported values and ticks remain editable. MIDI note-off with
-zero release velocity normalizes to SEP note-on with zero velocity. The original
-ignored bend low bytes and the opaque suffix after the source end marker survive.
+operations. It accepts inserted or removed notes and note-channel changes on
+channels that already contain source notes. The ordered program, volume/pan, bend
+and tempo events retain their identities; their supported values and ticks remain
+editable. MIDI note-off with zero release velocity normalizes to SEP note-on with
+zero velocity. Original ignored bend low bytes and the opaque suffix after the
+source end marker survive.
 
 The selected stream receives explicit statuses and minimal deltas. Within each
 MIDI track, event order remains fixed; tempo events precede performance events at
@@ -777,8 +778,9 @@ including relocated loop targets and requested ticks. These synthetic RAM probes
 do not establish original scheduler timing or independent audio fidelity.
 [Music publication](../../../tools/rust/bof3-audio/tests/support/music/timing.rs)
 checks resized SEP publication with untouched other sequences and archive entries.
-The linear note path above handles insertion/removal separately. Channel changes,
-loop-structure editing and full musical acceptance remain open.
+The linear note path above handles insertion, removal and channel changes
+separately. Broader channel changes, loop-structure editing and full musical
+acceptance remain open.
 
 ## Rust SoundFont reading
 

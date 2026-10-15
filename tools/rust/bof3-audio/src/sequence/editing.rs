@@ -93,11 +93,16 @@ pub fn rebuild(
         .zip(&edited.tracks)
         .any(|(before, after)| {
             before.events.len() != after.events.len()
-                || before
-                    .events
-                    .iter()
-                    .zip(&after.events)
-                    .any(|(a, b)| notes::is_note(&a.message) != notes::is_note(&b.message))
+                || before.events.iter().zip(&after.events).any(|(a, b)| {
+                    notes::is_note(&a.message) != notes::is_note(&b.message)
+                        || matches!(
+                            (&a.message, &b.message),
+                            (
+                                Message::Channel { status: before, .. },
+                                Message::Channel { status: after, .. }
+                            ) if notes::is_note(&a.message) && before & 15 != after & 15
+                        )
+                })
         })
     {
         return notes::rebuild(sequence, original, edited, options, &baseline);

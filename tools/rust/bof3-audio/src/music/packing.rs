@@ -55,7 +55,7 @@ pub fn songs(options: &Options) -> Result<Report> {
         archives: Vec::new(), songs: Vec::new(),
         limitations: vec![
             "Existing tone instruments support PCM, shared-consistent loops, gain/pan, sample assignments and verified note-on tuning edits; independent new instrument/sample structures and envelope edits remain unsupported.",
-            "MIDI edits preserve event order, channels and loops; changed timing must agree at repeated delta consumptions. Resized deltas relocate later SEP records; unsupported edits are rejected.",
+            "MIDI value/timing edits retain source correspondence; repeated delta consumptions must agree. Linear notes may be inserted, removed or moved among previously used note channels while preserving generated setup and termination. Controller-loop structure, new channels and non-note insertion/removal remain unsupported. Rebuilt SEP records preserve unrelated bytes.",
             "Empty programs may gain 1..=16 existing tone instruments with matching program controls and percussion aliases. Ordered VAB tone blocks may grow within original EMI and game layout capacity. All 128 MIDI programs are selectable; empty slots remain silent. Songs sharing a bank must agree on rebuilt header/body bytes.",
             "The export's explicit synthesis approximations remain; complete original-game timing and independent audio fidelity are unverified.",
             "Descriptive limitation notes are not reconstruction inputs; authoritative binding, timeline and identity metadata are validated.",
