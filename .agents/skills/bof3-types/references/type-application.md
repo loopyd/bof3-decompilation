@@ -54,10 +54,13 @@ indexed symbols/statuses/source hashes. Preserve record order, metadata, spellin
 and bytes outside implementations; bodies/signatures may change. Cap C capture at
 4 MiB. Run per-member native checks, which currently reject ordinary grouped
 compilation. Preparation grants no native preservation or consolidation authority.
-Every indexed function with a literal transitive include of the selected header
-must appear in `affected_functions`. Preparation rejects consumers outside the
-declared targets and keeps writable scope fixed. Live manifest rederivation repeats
-this check. Support units still require target build and input-closure gates.
+Header queries use each source's effective compiler settings, native literal search
+roots and `-include`/`-imacros` inputs. Every indexed identity reached through these
+inputs must appear in `affected_functions`, including all grouped members. Missing
+inputs, unsupported search or preprocessing, and changes during the query refuse.
+Preparation rejects consumers outside declared targets and keeps writable scope
+fixed. Live manifest rederivation repeats this check. Active preprocessing and
+unindexed support units still require target build and input-closure gates.
 Retain application digest externally before verification, never from the supplied
 artifact. For shared preparation,
 require two independently accepted private envelopes with distinct targets/paths/

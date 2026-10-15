@@ -73,6 +73,7 @@ class IncludeSnapshot:
         self._watch: PathWatch | None = None
         self._states: dict[Path, dict | None] = {}
         self._content: dict[Path, bytes] = {}
+        self._includes: dict[Path, set[Path]] = {}
         self._total = 0
         self._failed = False
         self._active = False
@@ -111,6 +112,7 @@ class IncludeSnapshot:
                     pending.append((path, content))
             while pending:
                 path, content = pending.pop()
+                self._includes.setdefault(path, set())
                 try:
                     text = content.decode("utf-8")
                 except UnicodeError as error:
@@ -133,6 +135,7 @@ class IncludeSnapshot:
                                 )
                         content = self._read(batch, candidate)
                         if content is not None:
+                            self._includes[path].add(candidate)
                             if candidate not in scheduled:
                                 scheduled.add(candidate)
                                 pending.append((candidate, content))
@@ -175,6 +178,21 @@ class IncludeSnapshot:
     @property
     def paths(self) -> frozenset[Path]:
         return frozenset(self._states)
+
+    def depends_on(self, source: Path, dependency: Path) -> bool:
+        """Query captured literal edges from one seed without reopening inputs."""
+        self.check()
+        if source not in self._includes:
+            raise ValueError("dependency source was not captured")
+        pending, seen = [source], set()
+        while pending:
+            path = pending.pop()
+            if path == dependency:
+                return True
+            if path not in seen:
+                seen.add(path)
+                pending.extend(self._includes[path] - seen)
+        return False
 
     def describe_inputs(self) -> dict:
         """Describe captured present files and negative search candidates."""

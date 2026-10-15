@@ -4,13 +4,24 @@ from __future__ import annotations
 
 import json
 import re
+from contextlib import ExitStack, closing
 from pathlib import Path
 
+from harness.build.compiler import (
+    CONFIGURATION_PATH,
+    build_compiler_arguments,
+    parse_compiler_configuration,
+    resolve_compiler_settings,
+)
+from harness.build.dependencies import IncludeSnapshot
+from harness.build.profiles import collect_forced_paths, validate_include_search
 from harness.common.digests import digest
 from harness.common.directory import validate_repo_path
 from harness.common.inputs import InputBatch
+from harness.common.observation import PathWatch
+from harness.domain.cache import collect_manifest_paths
+from harness.domain.claims import index_source_paths, manifest_source_paths
 from harness.domain.ids import normalize_target_id, parse_function_id
-from harness.domain.includes import local_include_files
 from harness.domain.layout import parse_splat_layout
 from harness.domain.manifests import load_target_manifests
 from harness.domain.registry import resolve_function
@@ -478,37 +489,134 @@ def capture_pair(root: Path, request: dict, reviewed: list[dict]) -> dict:
     }
 
 
+def _claimed_consumer_sources(
+    root: Path, rows: list, read_source, *, read_manifest, read_claim
+) -> list:
+    """Resolve indexed identities from claimed metadata, not indexed path text."""
+    manifests = load_target_manifests(
+        root, read_manifest=read_manifest, read_claim=read_claim
+    )
+    if any(row[0] not in manifests for row in rows):
+        raise ValueError("indexed type consumer has no target manifest")
+    owners = {
+        target: index_source_paths(
+            manifest_source_paths(root, manifests[target]), read_source=read_source
+        )
+        for target in {row[0] for row in rows}
+    }
+    result = []
+    for target, address, _ in rows:
+        source = owners[target].get(address)
+        if source is None:
+            raise ValueError("indexed type consumer has no claimed function source")
+        result.append((target, address, source))
+    return result
+
+
 def literal_header_consumers(root: Path, connection, header: str) -> set[str]:
-    """Return current indexed functions with a transitive literal header include."""
+    """Find indexed consumers through configured literal and forced includes."""
 
     required = set()
     header_path = root / validate_repo_path(header)
-    with InputBatch(root) as batch:
-
-        def read_source(path):
-            state, raw = batch.read(path, max_bytes=_LIMIT)
-            if state is None:
-                raise ValueError("type header consumer source is missing")
-            return raw.decode("utf-8")
-
-        for row in connection.execute(
+    rows = list(
+        connection.execute(
             "SELECT target_id,address,source FROM functions WHERE source IS NOT NULL"
-        ):
-            target, address, source = row
-            path = Path(source)
-            if not path.is_absolute():
-                path = root / validate_repo_path(source)
-            read_source(path)
-            if path == header_path or header_path in local_include_files(
+        )
+    )
+    if not rows:
+        return required
+    with ExitStack() as stack:
+        configuration_watch = stack.enter_context(
+            closing(PathWatch({root / CONFIGURATION_PATH}))
+        )
+        manifest_paths = tuple(collect_manifest_paths(root))
+        manifest_root = root / "config/targets"
+        manifest_directories = {
+            parent
+            for name in manifest_paths
+            for parent in (root / name).parents
+            if parent == manifest_root or manifest_root in parent.parents
+        }
+        manifest_watch = stack.enter_context(
+            closing(PathWatch({manifest_root}, directories=manifest_directories))
+        )
+        if tuple(collect_manifest_paths(root)) != manifest_paths:
+            raise ValueError("manifest inventory changed during consumer query")
+        with InputBatch(root) as batch:
+            states = {}
+
+            def read_input(path, *, max_bytes=None):
+                state, raw = batch.read(
+                    path,
+                    max_bytes=max_bytes,
+                    include_metadata=True,
+                    single_link=True,
+                )
+                if path in states and states[path] != state:
+                    raise ValueError(f"type consumer input changed: {path}")
+                states[path] = state
+                return raw
+
+            configuration = read_input(root / CONFIGURATION_PATH, max_bytes=_LIMIT)
+            flags, compilers = parse_compiler_configuration(
+                (configuration or b"").decode("utf-8")
+            )
+            content, seeds = {}, {}
+
+            def read_source(path):
+                raw = read_input(path, max_bytes=_LIMIT)
+                if raw is None:
+                    raise ValueError("type header consumer source is missing")
+                content[path] = raw
+                return raw.decode("utf-8")
+
+            def read_manifest(name):
+                if name not in manifest_paths:
+                    raise ValueError("manifest inventory changed during consumer query")
+                raw = read_input(root / name, max_bytes=_LIMIT)
+                if raw is None:
+                    raise ValueError("type consumer manifest is missing")
+                return raw
+
+            rows = _claimed_consumer_sources(
                 root,
-                [path],
-                strict=True,
-                require_literal=True,
-                include_angle=True,
-                read_source=read_source,
-            ):
-                identity = parse_function_id(f"{target}@0x{address:08X}")
-                required.add(f"{identity.target.value}@0x{identity.address:08X}")
+                rows,
+                read_source,
+                read_manifest=read_manifest,
+                read_claim=lambda name: read_input(root / name),
+            )
+            ownership_watch = stack.enter_context(closing(PathWatch(set(states))))
+            sources = {
+                path: validate_repo_path(path.relative_to(root).as_posix())
+                for _, _, path in rows
+            }
+            for path, name in sources.items():
+                settings = resolve_compiler_settings(
+                    name, content[path].decode("utf-8"), flags, compilers
+                )
+                arguments = build_compiler_arguments(root, settings.flags)
+                validate_include_search(root, arguments)
+                forced = collect_forced_paths(root, arguments, Path.cwd())
+                seeds[path] = (path, *(root / name for name in sorted(forced)))
+            paths = sorted({seed for group in seeds.values() for seed in group})
+            snapshot = stack.enter_context(
+                closing(IncludeSnapshot(root, paths[0], forced=tuple(paths[1:])))
+            )
+            if any(snapshot.content[path] != content[path] for path in sources):
+                raise ValueError("type header consumer source changed during capture")
+            for target, address, path in rows:
+                if any(snapshot.depends_on(seed, header_path) for seed in seeds[path]):
+                    identity = parse_function_id(f"{target}@0x{address:08X}")
+                    required.add(f"{identity.target.value}@0x{identity.address:08X}")
+            snapshot.validate()
+            for path in tuple(states):
+                read_input(path)
+            if tuple(collect_manifest_paths(root)) != manifest_paths:
+                raise ValueError("manifest inventory changed during consumer query")
+        configuration_watch.validate()
+        manifest_watch.validate()
+        ownership_watch.validate()
+        snapshot.check()
     return required
 
 

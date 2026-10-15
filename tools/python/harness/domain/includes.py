@@ -45,7 +45,7 @@ def parse_literal_includes(text: str, *, source: str) -> list[tuple[str, bool]]:
     """Parse conservative literal dependencies, rejecting unsupported directives."""
     if (
         "\x00" in text
-        or "??" in text
+        or re.search(r"\?\?[=/'()!<>-]", text)
         or "%:" in text
         or "\r" in text.replace("\r\n", "")
     ):
