@@ -281,7 +281,7 @@ def _validate_entry_covered_return(row, instructions, definitions):
         "native entry coverage lacks normal exit inventory",
     )
     for normal, exit in zip(exits, evidence["exits"], strict=True):
-        transfer = settled(normal["transfers"])
+        transfer = settled(_exit_transfers(summary, normal))
         _require(
             normal["pc"] == exit["pc"]
             and instructions[exit["pc"]]["word"] == 0x03E00008
@@ -305,8 +305,31 @@ CONTRACT_FIELDS = set(
     "kind callee delay continuation actualIncomingLink bindings calleeExits registerTransfers remaining".split()
 ) | set(DIMENSIONS)
 SUMMARY_FIELDS = set(
-    "function pendingEntry entry result control effects declaration parameterRegisters demands transfers exits accesses".split()
+    "function pendingEntry entry result control effects declaration parameterRegisters demands transferEncoding transfers exits accesses".split()
 )
+EXIT_FIELDS = set(
+    "pc delay incomingLink sampledEntry sampledConstant sampledDefinitions equalityEvidence transferSource".split()
+)
+TRANSFER_ENCODING = "summary-or-inline/v1"
+
+
+def _exit_transfers(summary, exit):
+    _require(
+        summary.get("transferEncoding") == TRANSFER_ENCODING,
+        "function transfer encoding",
+    )
+    _keys(exit, EXIT_FIELDS, "normal exit")
+    source = exit["transferSource"]
+    _require(type(source) is dict, "exit transfer source")
+    if source.get("kind") == "summary":
+        _keys(source, {"kind"}, "summary transfer source")
+        return summary["transfers"]
+    _keys(source, {"kind", "rows"}, "inline transfer source")
+    _require(source["kind"] == "inline", "exit transfer source kind")
+    rows = _rows(source["rows"], 34, "exit register transfers")
+    _require(rows != summary["transfers"], "redundant inline exit transfers")
+    return rows
+
 
 ENTRY_ROLES = set("continuation control address stored-value result call-input".split())
 MEMORY_OPERATIONS = {
@@ -460,7 +483,7 @@ def _validate_entry_arithmetic(row, entry_flow):
         recovered[claim["id"]] = (entry, pcs)
     summary = row["originalCallSummary"]
     for exit in summary["exits"]:
-        for transfer in exit["transfers"]:
+        for transfer in _exit_transfers(summary, exit):
             refs = transfer["definitions"]
             if transfer["equalEntry"] is None or not recovered.keys() & set(refs):
                 continue
@@ -486,7 +509,8 @@ def _validate_entry_arithmetic(row, entry_flow):
         ):
             continue
         witnesses = [
-            exit["transfers"][transfer["register"]] for exit in summary["exits"]
+            _exit_transfers(summary, exit)[transfer["register"]]
+            for exit in summary["exits"]
         ]
         _require(
             witnesses
@@ -767,7 +791,7 @@ def _symbolic_frame(summary, evidence):
                 "symbolic canonical restore",
             )
         for exit in summary["exits"]:
-            transfer = exit["transfers"][reg]
+            transfer = _exit_transfers(summary, exit)[reg]
             refs = exit["sampledDefinitions"] if reg == 31 else transfer["definitions"]
             _require(
                 not transfer["pending"]
@@ -896,7 +920,8 @@ def _summary(row, identity, payload, load, entry_flow, context, images, frame_us
     summary = _keys(value, fields, "function summary")
     _require(
         summary["function"] == identity["key"]
-        and summary["pendingEntry"] == "requires-no-pending-gpr-loads",
+        and summary["pendingEntry"] == "requires-no-pending-gpr-loads"
+        and summary["transferEncoding"] == TRANSFER_ENCODING,
         "function summary identity/precondition",
     )
     evidence = row["returnDisposition"]["evidence"]
@@ -956,13 +981,7 @@ def _summary(row, identity, payload, load, entry_flow, context, images, frame_us
         "summary normal exit inventory",
     )
     for exit, original_exit in zip(exits, evidence["exits"], strict=True):
-        _keys(
-            exit,
-            set(
-                "pc delay incomingLink sampledEntry sampledConstant sampledDefinitions equalityEvidence transfers".split()
-            ),
-            "normal exit",
-        )
+        rows = _exit_transfers(summary, exit)
         complete = _complete(exit["incomingLink"])
         _integer(exit["sampledEntry"], 33, optional=True)
         _integer(exit["sampledConstant"], (1 << 32) - 1, optional=True)
@@ -993,9 +1012,7 @@ def _summary(row, identity, payload, load, entry_flow, context, images, frame_us
                 and all(definitions[ref]["equalEntry"] == 31 for ref in refs),
                 "sampled incoming-link value equality",
             )
-        transfers = _transfers(
-            exit["transfers"], definitions, instructions, covered=covered
-        )
+        transfers = _transfers(rows, definitions, instructions, covered=covered)
         if transfers:
             _require(
                 transfers[2]["definitions"] == original_exit["definitions"]
