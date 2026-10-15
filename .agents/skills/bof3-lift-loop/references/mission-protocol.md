@@ -22,6 +22,12 @@ paths/content pins, commands/outcomes, evidence, findings and proposed
 separate. Missing, stale, malformed or failed results block successors. Keep
 unmeasured native outcomes `unverified`/null; exit zero alone proves no fidelity.
 
+For frozen-five accounting, independently review the current input before passing
+its external SHA-256 pin to `account_frozen_queue`. Preserve the original five
+identities, routes, ten macro members, full consumer scope and semantic exclusions.
+A matching hash proves integrity, not approval. Retain historical inputs unchanged;
+never rebind old evidence or replace current owner verification with accounting.
+
 ## Tooling, stop and resume
 
 Use deterministic owner helpers/CLIs. Read `bin/harness decomp diagnose`/`audit`

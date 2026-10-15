@@ -68,7 +68,6 @@ def queue(tmp_path, monkeypatch):
     }
     pilot = root / "pilot.json"
     pin = _write(pilot, frozen)
-    monkeypatch.setattr(accounting, "PILOT_SHA256", pin)
     monkeypatch.setattr(
         accounting.index, "connect", lambda root: SimpleNamespace(close=lambda: None)
     )
@@ -457,7 +456,6 @@ def test_macro_verified_envelope_binds_global_fingerprint_selected_members(
     frozen = accounting.load(queue.pilot)
     frozen["entries"][4] = entry
     queue.pin = _write(queue.pilot, frozen)
-    monkeypatch.setattr(accounting, "PILOT_SHA256", queue.pin)
     monkeypatch.setattr(
         accounting,
         "macro_opportunities_payload",

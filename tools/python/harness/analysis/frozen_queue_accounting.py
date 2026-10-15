@@ -1,4 +1,4 @@
-"""Read-only accounting of the unchanged, externally pinned S3.3 frozen five."""
+"""Read-only accounting of a reviewed, externally pinned frozen-five snapshot."""
 
 from __future__ import annotations
 
@@ -32,7 +32,6 @@ from ..domain.receipts import reset_receipt_root, set_receipt_root
 from ..domain.registry import resolve_function
 from .rev_queries import describe_payload
 
-PILOT_SHA256 = "bb68a07c5fe271005251d11634b6ed4496a28418d961193304ad39f00719c218"
 TARGET = "emi/battle/battle/15"
 IDS = (
     f"{TARGET}@800A3638",
@@ -136,10 +135,12 @@ def _pin(value: str, *, versioned: bool = False) -> None:
         raise ValueError("invalid external digest pin")
 
 
-def _fresh(root: Path, pilot: Path, frozen: dict, report: Path) -> None:
-    # ponytail: unchanged S3.3 baseline only; mutations require a separately
-    # reviewed fresh native input, not migration or historical receipt rebinding.
-    pins = {pilot: PILOT_SHA256, report: frozen["report_sha256"]}
+def _fresh(
+    root: Path, pilot: Path, expected_pilot_sha256: str, frozen: dict, report: Path
+) -> None:
+    # The parent independently reviews each current input before supplying its
+    # external pin. Historical inputs and acceptance records remain immutable.
+    pins = {pilot: expected_pilot_sha256, report: frozen["report_sha256"]}
     pins[index.index_path(root)] = frozen["index_sha256"]
     for fingerprint in frozen["fingerprints"].values():
         pins.update({root / p: h for p, h in fingerprint["source_inputs"].items()})
@@ -325,7 +326,7 @@ def account_frozen_queue(
     root = canonical_evidence_root(root)
     pilot, report = _path(pilot, root=root), _path(report_path, root=root)
     _pin(expected_pilot_sha256)
-    if expected_pilot_sha256 != PILOT_SHA256 or _sha(pilot) != expected_pilot_sha256:
+    if _sha(pilot) != expected_pilot_sha256:
         raise ValueError("pilot differs from pinned frozen-five input")
     if report != root / REPORT:
         raise ValueError("wrong frozen report path")
@@ -370,7 +371,7 @@ def account_frozen_queue(
     try:
         receipt_token = set_receipt_root(evidence_root)
         try:
-            _fresh(root, pilot, frozen, report)
+            _fresh(root, pilot, expected_pilot_sha256, frozen, report)
             references = {}
             for record in records:
                 if isinstance(record["proof"], dict):
@@ -390,7 +391,7 @@ def account_frozen_queue(
                     raise ValueError("full-report owner returned nonboolean complete")
             except ValueError as error:
                 full = {"complete": False, "blocker": str(error)}
-            _fresh(root, pilot, frozen, report)
+            _fresh(root, pilot, expected_pilot_sha256, frozen, report)
             if any(_sha(_path(path)) != sha for path, sha in references.items()):
                 raise ValueError("retained proof changed during accounting")
         finally:
