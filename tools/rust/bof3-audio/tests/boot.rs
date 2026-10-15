@@ -27,18 +27,17 @@ fn media() -> (Vec<u8>, Executable) {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_BIOS, BOF3_AUDIO_EXE and BOF3_AUDIO_REDUX target capture directory"]
+#[ignore = "requires BOF3_AUDIO_BIOS, BOF3_AUDIO_EXE, BOF3_AUDIO_REDUX target captures, BOF3_AUDIO_REDUX_REVISION and BOF3_AUDIO_REDUX_BINARY_SHA256"]
 fn us_handoff_matches_independent_redux_ram_and_register_capture() {
     let (rom, exe) = media();
     let root = std::path::PathBuf::from(std::env::var_os("BOF3_AUDIO_REDUX").unwrap());
-    let (expected, ram) = reference::capture(&root, &rom, exe.bytes());
-    assert_eq!(expected.pc, exe.header().entry_pc);
+    let expected = reference::capture(&root, &rom, exe.bytes());
+    assert_eq!(expected.registers.pc, exe.header().entry_pc);
     let machine = boot::load_us(Image::from_bytes(rom).unwrap(), &exe, 3_000_000).unwrap();
     reference::compare(
         &machine.cpu,
         machine.bus.ram().bytes(),
         &expected,
-        &ram,
         "US EXE entry before first instruction",
     );
 }
@@ -234,7 +233,7 @@ fn execute_initializer(rom: &[u8], exe: &Executable, entry: u32) -> (boot::Machi
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_BIOS, BOF3_AUDIO_EXE and BOF3_AUDIO_REDUX_INITIALIZATION with callback/sound captures"]
+#[ignore = "requires BOF3_AUDIO_BIOS, BOF3_AUDIO_EXE, BOF3_AUDIO_REDUX_INITIALIZATION callback/sound captures, BOF3_AUDIO_REDUX_REVISION and BOF3_AUDIO_REDUX_BINARY_SHA256"]
 fn original_initializers_match_independent_redux_ram_and_registers() {
     let (rom, exe) = media();
     let root =
@@ -244,14 +243,8 @@ fn original_initializers_match_independent_redux_ram_and_registers() {
         ("callback", 0x801748e4),
         ("sound", profile.sound_initialize),
     ] {
-        let (expected, ram) = reference::capture(&root.join(name), &rom, exe.bytes());
+        let expected = reference::capture(&root.join(name), &rom, exe.bytes());
         let (machine, _, _) = execute_initializer(&rom, &exe, entry);
-        reference::compare(
-            &machine.cpu,
-            machine.bus.ram().bytes(),
-            &expected,
-            &ram,
-            name,
-        );
+        reference::compare(&machine.cpu, machine.bus.ram().bytes(), &expected, name);
     }
 }
