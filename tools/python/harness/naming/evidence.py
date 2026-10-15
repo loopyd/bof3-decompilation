@@ -113,11 +113,13 @@ def recompute_collected_records(
         }
         for item in payload["items"]
     )
+    from harness.naming.plan import collection_row
+
     return _analyze_validated_records(
         token,
         target=target,
         report_digest=report_digest,
-        row=row,
+        row=collection_row(row, target, root=root, registry=registry),
         operations=operations,
         registry=registry,
         instructions=analyzer_instructions(root, payload["semantic"]),
@@ -434,7 +436,7 @@ def _analyze_validated_records(
         "unavailable": unavailable,
         "conclusion_enabled": False,
     }
-    if registry_entry is not None and not opened and not unavailable:
+    if not opened and not unavailable:
         by_class = positive_rung_sources(row, facts)
         if all(by_class.values()):
             result["conclusion_enabled"] = True
@@ -447,9 +449,21 @@ def _analyze_validated_records(
                 "input_digest": input_digest,
                 "fact_digest": _digest(facts),
                 "rungs": by_class,
-                "required_work": [registry_entry.required_work],
-                "proposal_allowed": False,
-                "missing_fact": _CAPABILITY_MISSING_FACT,
+                "required_work": (
+                    [registry_entry.required_work]
+                    if registry_entry is not None
+                    else sorted(
+                        item["id"]
+                        for item in normalized_operations
+                        if not item["supplemental"]
+                    )
+                ),
+                "proposal_allowed": registry_entry is None,
+                **(
+                    {"missing_fact": _CAPABILITY_MISSING_FACT}
+                    if registry_entry is not None
+                    else {}
+                ),
             }
     return result
 

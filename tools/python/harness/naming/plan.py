@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import shlex
+from pathlib import Path
 from typing import Any
 
 from harness.common.commands import command_text, tool_id, trailing_arguments
@@ -159,9 +160,38 @@ def collection_row(
     row: dict[str, Any],
     target: str,
     *,
+    root: Path | None = None,
     registry: ExactCapabilityRegistry = PRODUCTION_EXACT_CAPABILITIES,
 ) -> dict[str, Any]:
-    """Restore code-owned work only for an explicitly selected exact terminal row."""
+    """Restore terminal work from current producers, never authored selectors."""
+
+    exact = any(
+        spec_row == f"data:{row.get('name')}" and entry.consumer.target == target
+        for (spec_row, _selector), entry in registry.items()
+    )
+    if (
+        root is not None
+        and not exact
+        and row.get("rung_status") in {"exhausted", "proposed"}
+    ):
+        from harness.naming.readiness import required_work_items
+
+        generated = required_work_items(
+            root, target, address_of(str(row["name"])), str(row["kind"])
+        )
+        ids = [item.get("id") for item in row.get("required_work", [])]
+        if len(ids) != len(set(ids)) or set(ids) != {item["id"] for item in generated}:
+            raise ValueError(
+                "terminal required_work differs from current generated work"
+            )
+        return {
+            **{
+                key: value
+                for key, value in row.items()
+                if key != "conclusion_provenance"
+            },
+            "required_work": [{**item, "status": "open"} for item in generated],
+        }
 
     if row.get("rung_status") != "exhausted" or row.get("kind") != "data":
         return row

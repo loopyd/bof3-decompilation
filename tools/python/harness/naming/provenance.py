@@ -53,11 +53,17 @@ def require_canonical_provenance(row: dict[str, Any], selector: str) -> dict[str
         "initializer_report_sha256",
         "evidence_namespace",
     }
+    if isinstance(provenance, dict) and provenance.get("kind") == "typed-capability":
+        keys.add("conclusion_sha256")
     if not isinstance(provenance, dict) or set(provenance) != keys:
         raise ValueError(f"{selector} conclusion provenance has a non-canonical shape")
-    if provenance.get("kind") != "exact-capability":
+    if provenance.get("kind") not in {"exact-capability", "typed-capability"}:
         raise ValueError(f"{selector} conclusion provenance kind is unsupported")
-    for key in ("evidence_sha256", "initializer_report_sha256"):
+    for key in keys & {
+        "evidence_sha256",
+        "initializer_report_sha256",
+        "conclusion_sha256",
+    }:
         value = provenance.get(key)
         if not isinstance(value, str) or _SHA256(value) is None:
             raise ValueError(

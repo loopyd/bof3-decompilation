@@ -212,8 +212,9 @@ leaves outgoing v0/v1 unresolved. Loops, indirect flow, unresolved load timing a
 unsupported arguments/transitions remain explicit capability gaps. Imported rows
 gain caller work from target-local unresolved `static_jal` index edges. Each caller
 is captured under its own reviewed boundary; unsupported bodies remain named gaps.
-Other unresolved edge kinds need additional discovery. These facts and collection alone
-do not enable function conclusions. See the [decoder contract](harness.md#domain-packages).
+Other unresolved edge kinds need additional discovery. Function conclusions require
+the complete rung profile and current evidence replay. Collection alone grants no
+semantic approval. See the [decoder contract](harness.md#domain-packages).
 The selected body's complete capture also supplies `selected_range`. A decoded
 two-way halfword-state dispatch with alternative callees and a common later call
 supplies `one_level_beyond` caller context. It proves conditional invocation,
@@ -234,19 +235,21 @@ These files validate row shape only and are not importable fixture sets. Conclus
 recompute every required rung from bound native output. Collection receipts,
 checkpoints, and manifests provide integrity and crash-recovery bookkeeping,
 but they are writable local artifacts and cannot authenticate semantic facts.
-The initial data-access slice derives range, storage, and exact access width;
-open or unavailable rungs still prevent `exhausted` and `proposed` imports.
-The envelope stores the completed row under `conclusion`:
+Generic function/data capabilities require complete positive kind/locality profiles.
+Open or unavailable evidence blocks import. The registry-backed exact-data route
+remains exhausted-only. The envelope stores the completed row under `conclusion`.
+Replace the empty `conclusion_capability` placeholder below with the complete
+runner-derived capability object:
 
 ```json
-{"schema":"bof3.naming-conclusion/v1","target":"TARGET","report_sha256":"CURRENT_REPORT_SHA256","source":{"report":"out/reviews/TARGET.json","report_digest":"INITIALIZER_REPORT_SHA256","evidence":"out/reviews/evidence/RUN/payload.json","evidence_sha256":"EVIDENCE_SHA256","conclusion_capability":"CAPABILITY_ID"},"conclusion":{}}
+{"schema":"bof3.naming-conclusion/v1","target":"TARGET","report_sha256":"CURRENT_REPORT_SHA256","source":{"report":"out/reviews/TARGET.json","report_digest":"INITIALIZER_REPORT_SHA256","evidence":"out/reviews/evidence/RUN/payload.json","evidence_sha256":"EVIDENCE_SHA256","conclusion_capability":{}},"conclusion":{}}
 ```
 
 A proposed conclusion uses the same envelope and evidence bindings, sets
 `rung_status` to `proposed`, and additionally supplies `new_name`, `identity`,
-at least two independent corroborators, and `storage` for data. The schema is
-retained for the future trusted analyzer seam; it does not bypass the current
-fail-closed gate. Failed or unavailable work remains blocked. The complete
+at least two independent corroborators, and `storage` for data. Generic proposals
+require a recomputed capability with `proposal_allowed:true` and exact typed
+evidence. Failed or unavailable work remains blocked. The complete
 resulting report is validated; proposals also receive isolated transaction
 validation. Replay is a no-op only when the exact stored conclusion and its
 original evidence path/digest match, even though the report digest changed.
@@ -551,9 +554,9 @@ uses line-spliced C and requires spelling replacement to commute with splicing;
 joined identifiers cannot escape discovery or destination-collision checks.
 Keyword-shadowing macros, macro-mediated references, call arguments (including
 indirect calls), cross-owner/cross-target scopes, partial/runtime consumers and
-no actual exact consumer fail closed. Automatic `conclude` typed-exhaustion
-capability admission and the unsupported proposed-analyzer seam remain unchanged;
-this human-reviewed path grants neither automated naming nor production acceptance.
+no actual exact consumer fail closed. This human-reviewed preparation route remains
+separate from generic `conclude` admission. Neither route authorizes identity
+application or production acceptance.
 
 Before the authorized spelling application, capture physical PRE for the prepared
 FUNCTION or DATA transaction:

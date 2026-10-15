@@ -1,4 +1,4 @@
-"""Validate closed exact-row Battle 15 conclusion capabilities."""
+"""Replay runner-backed naming conclusion capabilities against current inputs."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from harness.common.digests import digest as json_digest
 from harness.naming.capabilities import (
     PRODUCTION_EXACT_CAPABILITIES,
     ExactCapabilityRegistry,
@@ -21,7 +22,6 @@ from harness.naming.evidence import SCHEMA as ANALYZER_SCHEMA
 from harness.naming.journal import JournalInputs, entry_sha256, journal_is_fresh
 from harness.naming.provenance import (
     PROVENANCE_FIELD,
-    capability_eligible_rows,
     require_canonical_provenance,
 )
 
@@ -130,9 +130,11 @@ def _is_exact_replay(report_path: Path, row: dict[str, Any]) -> bool:
     ]
     if len(matches) != 1:
         return False
-    return {
-        key: value for key, value in matches[0].items() if key != PROVENANCE_FIELD
-    } == {key: value for key, value in row.items() if key != PROVENANCE_FIELD}
+    return json_digest(
+        {key: value for key, value in matches[0].items() if key != PROVENANCE_FIELD}
+    ) == json_digest(
+        {key: value for key, value in row.items() if key != PROVENANCE_FIELD}
+    )
 
 
 def _validate_exact_source_shape(
@@ -149,10 +151,9 @@ def _validate_exact_source_shape(
         },
         "source",
     )
-    if (
-        source["report"] != report_path.as_posix()
-        or source["conclusion_capability"] != capability
-    ):
+    if source["report"] != report_path.as_posix() or json_digest(
+        source["conclusion_capability"]
+    ) != json_digest(capability):
         raise ValueError(
             "source is not exactly bound to the current report and capability"
         )
@@ -172,19 +173,28 @@ def _validated_capability(
     *,
     registry: ExactCapabilityRegistry = PRODUCTION_EXACT_CAPABILITIES,
 ) -> dict[str, Any] | None:
-    """Return the one runner-recomputed exhausted capability, otherwise fail closed."""
+    """Recompute a current capability without trusting authored observations."""
 
     row_name = row.get("name")
-    selector = f"data:{row_name}"
+    selector = f"{row.get('kind')}:{row_name}"
     entries = [
         entry
         for (spec_row, _consumer), entry in registry.items()
         if spec_row == selector and entry.consumer.target == target
     ]
-    if row.get("kind") != "data" or len(entries) != 1:
+    exact = row.get("kind") == "data" and len(entries) == 1
+    if not exact and (
+        row.get("kind") not in {"function", "data"}
+        or not isinstance(source, dict)
+        or "conclusion_capability" not in source
+    ):
         return None
-    if row.get("rung_status") != "exhausted" or not isinstance(source, dict):
+    if exact and row.get("rung_status") != "exhausted":
         raise ValueError("reviewed capability permits only allowlisted exhausted rows")
+    if row.get("rung_status") not in {"exhausted", "proposed"} or not isinstance(
+        source, dict
+    ):
+        raise ValueError("capability requires an exhausted or proposed conclusion")
     report_digest = str(source.get("report_digest", ""))
     evidence = source.get("evidence")
     if not isinstance(evidence, str) or not evidence:
@@ -210,8 +220,10 @@ def _validated_capability(
     replay = _is_exact_replay(report_path, row)
     if not replay and _digest(report_path.read_bytes()) != report_digest:
         raise ValueError("reviewed capability runner journal is stale")
-    if not replay and not journal_is_fresh(
-        root, report_path, target, inputs, registry=registry
+    if (
+        exact
+        and not replay
+        and not journal_is_fresh(root, report_path, target, inputs, registry=registry)
     ):
         raise ValueError("reviewed capability runner journal is stale")
     if replay:
@@ -272,6 +284,18 @@ def _validated_capability(
         payload = json.loads(
             (root / str(entry["evidence"])).read_text(encoding="utf-8")
         )
+        if not exact:
+            _validate_current_plan(
+                root,
+                target,
+                report_path,
+                row,
+                payload,
+                manifest,
+                entry,
+                expected_namespace,
+                registry=registry,
+            )
         recomputed = recompute_collected_records(
             _RUNNER_TOKEN,
             root=root,
@@ -295,7 +319,7 @@ def _validated_capability(
         or any(
             manifest_entry.get(key) != value for key, value in expected_derived.items()
         )
-        or recomputed != derived
+        or json_digest(recomputed) != json_digest(derived)
     ):
         raise ValueError(
             "reviewed capability derived artifact is stale or inconsistent"
@@ -306,12 +330,88 @@ def _validated_capability(
         not isinstance(capability, dict)
         or capability.get("schema") != CONCLUSION_CAPABILITY_SCHEMA
         or capability.get("allowed_conclusion") != "exhausted"
-        or capability.get("proposal_allowed") is not False
-        or supplied != capability
+        or capability.get("proposal_allowed") is not (not exact)
+        or (row["rung_status"] == "proposed" and not capability["proposal_allowed"])
+        or json_digest(supplied) != json_digest(capability)
     ):
         raise ValueError("reviewed conclusion capability mismatches recomputed facts")
     _validate_exact_source_shape(source, report_path, capability)
     return capability
+
+
+def _validate_current_plan(
+    root: Path,
+    target: str,
+    report_path: Path,
+    row: dict,
+    payload: dict,
+    manifest: dict,
+    entry: dict,
+    namespace: EvidenceNamespace,
+    *,
+    registry: ExactCapabilityRegistry,
+) -> None:
+    """Replay one canonical row using live inputs and current generated work."""
+    from harness.analysis.index import index_path
+    from harness.naming.instructions import INSTRUCTION_CAPTURE
+    from harness.naming.journal import _payload_is_fresh, operation_digest
+    from harness.naming.plan import collection_row, row_operation_sequence
+
+    report = json.loads(report_path.read_bytes())
+    rows = [
+        current
+        for current in report.get("rows", [])
+        if (current.get("kind"), current.get("name")) == (row["kind"], row["name"])
+    ]
+    if len(rows) != 1 or any(
+        rows[0].get(key) is not row.get(key)
+        for key in ("outside_payload", "partial_used")
+    ):
+        raise ValueError(
+            "capability row locality or partial metadata differs from report"
+        )
+    token = INSTRUCTION_CAPTURE.set(
+        any(item.get("instruction_id") is not None for item in payload["semantic"])
+    )
+    try:
+        planned = collection_row(row, target, root=root, registry=registry)
+        operations = row_operation_sequence(planned, target, registry=registry)
+        repository_inputs = {
+            path.relative_to(root).as_posix(): _digest(path.read_bytes())
+            for path in sorted(root.glob("config/targets/**/target.toml"))
+        }
+        manifest_rows = [
+            item
+            for item in manifest.get("rows", [])
+            if item.get("row") == payload["row"]
+        ]
+        if (
+            manifest.get("target") != target
+            or manifest.get("report") != report_path.as_posix()
+            or manifest.get("index_generation")
+            != _digest(index_path(root).read_bytes())
+            or manifest.get("repository_inputs") != repository_inputs
+            or manifest.get("operation_digest")
+            != operation_digest(target, report, root=root)
+            or entry.get("status") != "committed"
+            or entry.get("operations") != operations
+            or len(manifest_rows) != 1
+            or manifest_rows[0].get("operations") != operations
+            or manifest_rows[0].get("status") != "committed"
+            or not _payload_is_fresh(
+                root,
+                namespace.path / str(row["name"]) / "payload.json",
+                namespace=namespace.path,
+                target=target,
+                row=payload["row"],
+                operations=operations,
+            )
+        ):
+            raise ValueError(
+                "capability runner inputs, operations or receipts are stale"
+            )
+    finally:
+        INSTRUCTION_CAPTURE.reset(token)
 
 
 def validate_terminal_capability(
@@ -325,8 +425,6 @@ def validate_terminal_capability(
     """Revalidate one capability-backed terminal row against current evidence."""
     selector = f"{row.get('kind')}:{row.get('name')}"
     provenance = require_canonical_provenance(row, selector)
-    if selector not in capability_eligible_rows(target, registry=registry):
-        raise ValueError("terminal row is not backed by a current exact capability")
     evidence = provenance.get("evidence")
     report_digest = provenance.get("initializer_report_sha256")
     if not isinstance(evidence, str) or not isinstance(report_digest, str):
@@ -350,7 +448,7 @@ def validate_terminal_capability(
         namespace_path.parent if explicit else root, namespace_path, explicit
     )
     expected_provenance = {
-        "kind": "exact-capability",
+        "kind": provenance["kind"],
         "evidence": namespace.record_path(row_dir / "payload.json"),
         "evidence_sha256": _digest((row_dir / "payload.json").read_bytes()),
         "initializer_report_sha256": report_digest,
@@ -368,6 +466,14 @@ def validate_terminal_capability(
             ),
         },
     }
+    if provenance["kind"] == "typed-capability":
+        expected_provenance["conclusion_sha256"] = _digest(
+            json.dumps(
+                {key: value for key, value in row.items() if key != PROVENANCE_FIELD},
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode()
+        )
     if provenance != expected_provenance:
         raise ValueError("terminal capability provenance differs from current evidence")
     try:
@@ -394,7 +500,25 @@ def validate_terminal_capability(
     if validated is None:
         raise ValueError("terminal row is not backed by a current exact capability")
     payload = json.loads(resolved.read_text(encoding="utf-8"))
-    expected = _exact_capability_row(validated, payload["commands"][0])
     actual = {key: value for key, value in row.items() if key != PROVENANCE_FIELD}
-    if actual != expected:
-        raise ValueError("terminal row differs from its current exact capability")
+    if validated.get("proposal_allowed") is False:
+        expected = _exact_capability_row(validated, payload["commands"][0])
+        if actual != expected or provenance["kind"] != "exact-capability":
+            raise ValueError("terminal row differs from its current exact capability")
+        return
+    from harness.naming.conclusion import _validate_conclusion
+    from harness.naming.validation import _validate_evidence
+
+    _validate_conclusion(actual, validated)
+    current_provenance = _validate_evidence(
+        root,
+        target,
+        selector,
+        actual,
+        source,
+        namespace,
+        expected_provenance["evidence_namespace"],
+        validated,
+    )
+    if current_provenance != provenance:
+        raise ValueError("terminal row differs from its current typed capability")

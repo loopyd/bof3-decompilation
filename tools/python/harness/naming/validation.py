@@ -171,9 +171,11 @@ def _validate_typed_rungs(
     target: str,
     row_selector: str,
     journal_entry: dict[str, Any],
+    trusted_facts: list[dict[str, Any]] | None = None,
 ) -> None:
     used: set[str] = set()
     sources: set[str] = set()
+    observation_sources: dict[str, str] = {}
     payload_records = {
         (record["receipt"], record["sha256"]): record
         for record in command_records(payload.get("commands"), "source.commands", root)
@@ -195,6 +197,10 @@ def _validate_typed_rungs(
             payload_record = payload_records.get((record["receipt"], record["sha256"]))
             if payload_record is None:
                 raise ValueError("typed receipt is absent from runner payload")
+            if trusted_facts is not None and _canonical_json_digest(
+                record
+            ) != _canonical_json_digest(payload_record):
+                raise ValueError("typed command differs from its exact runner record")
             source_id, capabilities = _receipt_facts(
                 root,
                 record,
@@ -219,6 +225,47 @@ def _validate_typed_rungs(
             ):
                 raise ValueError(f"receipt lacks runner-produced {rung_name} facts")
             sources.add(source_id)
+            if trusted_facts is not None:
+                receipt = json.loads((root / record["receipt"]).read_bytes())
+                observations = rung.get("observations", [])
+                declared_observations = [
+                    observation
+                    for observation in observations
+                    if observation.get("evidence_receipt") == record["receipt"]
+                ]
+                if not declared_observations:
+                    raise ValueError(f"{rung_name} lacks exact receipt observations")
+                for observation in declared_observations:
+                    projected = {
+                        "class": observation.get("fact_class"),
+                        "polarity": observation.get("polarity"),
+                        "value": observation.get("value"),
+                    }
+                    if (
+                        observation.get("producer") != "analyzer"
+                        or projected["class"] != rung_name
+                        or projected["polarity"] != "positive"
+                        or _canonical_json_digest(projected)
+                        not in {
+                            _canonical_json_digest(fact)
+                            for fact in receipt.get("observations", [])
+                        }
+                        or _canonical_json_digest(
+                            {**projected, "source_id": observation.get("source_id")}
+                        )
+                        not in {_canonical_json_digest(fact) for fact in trusted_facts}
+                        or not isinstance(observation.get("id"), str)
+                        or observation["id"] in observation_sources
+                    ):
+                        raise ValueError(
+                            f"{rung_name} observation differs from replayed facts"
+                        )
+                    observation_sources[observation["id"]] = source_id
+        if trusted_facts is not None and any(
+            observation.get("id") not in observation_sources
+            for observation in rung.get("observations", [])
+        ):
+            raise ValueError(f"{rung_name} contains observations outside its receipts")
     corroborators = row.get("corroborators")
     declarations = (
         [value.get("source_id") for value in corroborators.values()]
@@ -230,11 +277,27 @@ def _validate_typed_rungs(
     if (
         len(sources) < 2
         or len(declarations) != len(cited_sources)
-        or cited_sources != sources
+        or (
+            cited_sources != sources
+            if trusted_facts is None
+            else len(cited_sources) < 2 or not cited_sources <= sources
+        )
     ):
         raise ValueError(
             "corroborators must cite two distinct validator-derived source IDs"
         )
+    if trusted_facts is not None:
+        from harness.naming.facts import corroborators, row_observation_ids
+
+        corroborators(row, str(row["name"]), row_observation_ids(row, str(row["name"])))
+        for spec in row["corroborators"].values():
+            if any(
+                observation_sources.get(identity) != spec["source_id"]
+                for identity in spec["observation_ids"]
+            ):
+                raise ValueError(
+                    "corroborator source differs from its exact observations"
+                )
 
 
 def _validate_evidence(
@@ -250,6 +313,7 @@ def _validate_evidence(
     if not isinstance(source, dict):
         raise ValueError("source must bind collected evidence")
     selected_root = expected_namespace.path if capability is not None else None
+    generic = capability is not None and capability.get("proposal_allowed") is True
     records = command_records(
         _records(row),
         f"{selector}.evidence",
@@ -302,9 +366,22 @@ def _validate_evidence(
             allowed_record = (
                 _selector_target("semantic", record.get("selector")) == target
             )
+            if generic and not allowed_record:
+                allowed_record = any(
+                    capture.get("selector") == record.get("selector")
+                    and capture.get("instruction_id") is not None
+                    and record.get("target")
+                    == _selector_target("semantic", capture.get("selector"))
+                    for capture in payload.get("semantic", [])
+                )
         else:
             allowed_record = item is not None and _record_allowed(record, item, target)
-        if record.get("target") != target or not allowed_record:
+        if (
+            record.get("target") != target
+            and not (
+                generic and record.get("operation") == "semantic" and allowed_record
+            )
+        ) or not allowed_record:
             raise ValueError(
                 "receipt target/selector is not authorized by its exact work item"
             )
@@ -365,7 +442,17 @@ def _validate_evidence(
         or manifest_rows.get(selector, {}).get("evidence_sha256") != digest
     ):
         raise ValueError("source evidence is not bound to the current runner manifest")
-    if capability is None:
+    if capability is None or generic:
+        trusted_facts = None
+        if generic:
+            derived = json.loads((path.parent / "derived.json").read_bytes())
+            trusted_facts = derived.get("facts")
+            if (
+                not isinstance(trusted_facts, list)
+                or _canonical_json_digest(trusted_facts) != capability["fact_digest"]
+                or set(row.get("rungs", {})) != set(capability["rungs"])
+            ):
+                raise ValueError("typed capability facts or required rungs differ")
         _validate_typed_rungs(
             root,
             row,
@@ -374,6 +461,7 @@ def _validate_evidence(
             target=target,
             row_selector=selector,
             journal_entry=entry,
+            trusted_facts=trusted_facts,
         )
     else:
         cited_records = {
@@ -394,10 +482,19 @@ def _validate_evidence(
         expected_row = _exact_capability_row(capability, trusted_command)
         if row != expected_row:
             raise ValueError("conclusion does not match the closed reviewed schema")
-    return {
-        "kind": "exact-capability" if capability is not None else "generic-evidence",
+    provenance = {
+        "kind": (
+            "typed-capability"
+            if generic
+            else "exact-capability"
+            if capability is not None
+            else "generic-evidence"
+        ),
         "evidence": evidence,
         "evidence_sha256": digest,
         "initializer_report_sha256": report_digest,
         "evidence_namespace": namespace_provenance,
     }
+    if generic:
+        provenance["conclusion_sha256"] = _canonical_json_digest(row)
+    return provenance

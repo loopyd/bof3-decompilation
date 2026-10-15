@@ -203,7 +203,7 @@ def run_evidence(
         target,
         _report_digest(report),
         hashlib.sha256(index.read_bytes()).hexdigest(),
-        operation_digest(target, report_payload),
+        operation_digest(target, report_payload, root=root),
         {
             path.relative_to(root).as_posix(): hashlib.sha256(
                 path.read_bytes()
@@ -242,7 +242,7 @@ def run_evidence(
         worker.receive()
         for request_id, report_row in enumerate(selected):
             key = _row_key(report_row)
-            row = collection_row(report_row, target, registry=registry)
+            row = collection_row(report_row, target, root=root, registry=registry)
             result = None
             try:
                 semantic: list[dict[str, Any]] = []

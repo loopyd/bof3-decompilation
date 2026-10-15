@@ -38,6 +38,22 @@ def _validate_conclusion(
         "proposed",
     }:
         raise ValueError("conclusion must be one explicit exhausted or proposed row")
+    generic = capability is not None and capability.get("proposal_allowed") is True
+    if generic and (
+        set(row.get("rungs", {})) != set(capability["rungs"])
+        or any(
+            rung.get("status") != "passed" or not rung.get("observations")
+            for rung in row.get("rungs", {}).values()
+        )
+        or sorted(item.get("id") for item in row.get("required_work", []))
+        != capability["required_work"]
+        or any(
+            item.get("status") != "completed" for item in row.get("required_work", [])
+        )
+    ):
+        raise ValueError(
+            "typed conclusion requires all current rungs and generated work closed"
+        )
     if row["rung_status"] == "exhausted":
         if capability is None:
             invalid_rungs = any(
@@ -52,13 +68,16 @@ def _validate_conclusion(
                     rung.get("status") != "passed" or not rung.get("observations")
                     for rung in row.get("rungs", {}).values()
                 )
-                or row.get("missing_fact") != capability.get("missing_fact")
+                or (
+                    not generic
+                    and row.get("missing_fact") != capability.get("missing_fact")
+                )
                 or [item.get("id") for item in row.get("required_work", [])]
                 != capability.get("required_work")
             )
         if invalid_rungs:
             raise ValueError("exhausted conclusion rungs do not match trusted facts")
-        if capability is not None:
+        if capability is not None and not generic:
             corroborators = row.get("corroborators")
             source_ids = (
                 [item.get("source_id") for item in corroborators.values()]
@@ -75,10 +94,10 @@ def _validate_conclusion(
                 raise ValueError(
                     "exhausted conclusion requires the two trusted original-byte corroborators"
                 )
-            if row.get("new_name") is not None or row.get("identity") is not None:
-                raise ValueError(
-                    "exhausted capability cannot carry a semantic name term"
-                )
+        if capability is not None and (
+            row.get("new_name") is not None or row.get("identity") is not None
+        ):
+            raise ValueError("exhausted capability cannot carry a semantic name term")
         if not row.get("missing_fact") or not row.get("ceiling_next_command"):
             raise ValueError(
                 "exhausted conclusion requires reviewed evidence gap and bounded next command/owner"

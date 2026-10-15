@@ -136,8 +136,11 @@ remain required. Positive source coverage follows the row's kind, locality and
 partial-baseline profile; coverage alone establishes no receipt independence.
 One receipt cannot close two rungs; a dispatcher context needs a separate
 caller receipt for `selected_call`. Range ownership proves no name term or C return
-contract. Function conclusion admission remains disabled. `owner_body` retains its
-separate wrapper and global-pointer zero-byte-store shapes.
+contract. Generic conclusion admission requires a complete positive profile, no
+open or unavailable evidence, and exact current replay. Corroborators must bind
+their observations to distinct receipt sources and mechanisms. Capability admission
+grants no semantic approval. `owner_body` retains its separate wrapper and
+global-pointer zero-byte-store shapes.
 
 Imported function discovery includes target-local unresolved `static_jal` index
 edges as deduplicated caller work, preserving every owner candidate. The destination

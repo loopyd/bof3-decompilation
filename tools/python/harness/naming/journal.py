@@ -47,11 +47,16 @@ class JournalInputs:
     repository_inputs: Mapping[str, str] = field(default_factory=dict)
 
 
-def operation_digest(target: str, report: dict[str, Any]) -> str:
+def operation_digest(
+    target: str, report: dict[str, Any], *, root: Path | None = None
+) -> str:
     """Digest of the exact report-derived operation sequence per row."""
 
     operations = [
-        (f"{row.get('kind')}:{row.get('name')}", row_operation_sequence(row, target))
+        (
+            f"{row.get('kind')}:{row.get('name')}",
+            row_operation_sequence(collection_row(row, target, root=root), target),
+        )
         for row in report.get("rows", [])
         if isinstance(row, dict)
     ]
@@ -332,7 +337,7 @@ def journal_is_fresh(
     }
     report_rows = {
         key: row_operation_sequence(
-            collection_row(value, target, registry=registry),
+            collection_row(value, target, root=root, registry=registry),
             target,
             registry=registry,
         )
@@ -369,7 +374,9 @@ def journal_is_fresh(
                 root=root,
                 target=target,
                 report_digest=inputs.report_digest,
-                row=collection_row(report_row_values[row], target, registry=registry),
+                row=collection_row(
+                    report_row_values[row], target, root=root, registry=registry
+                ),
                 payload=evidence_payload,
                 registry=registry,
             )

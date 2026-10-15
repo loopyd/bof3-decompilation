@@ -249,7 +249,10 @@ def validate(
         if state == "exhausted":
             require_canonical_provenance(row, selector)
         elif state == "proposed":
-            require_provenance(row, selector)
+            if row.get(PROVENANCE_FIELD, {}).get("kind") == "typed-capability":
+                require_canonical_provenance(row, selector)
+            else:
+                require_provenance(row, selector)
         elif state == "blocked" and PROVENANCE_FIELD in row:
             raise ValueError(f"{selector} blocked row carries conclusion provenance")
     ctx = _context(root, target, bulk_work=transaction is None)

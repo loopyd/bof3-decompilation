@@ -81,8 +81,10 @@ first callees and an identical later call suffix produces `one_level_beyond` as
 continuation, without assigning meaning to the state or the callees' effects.
 Typed receipts retain the command, complete output, observations and refusal reasons;
 journal replay re-derives them from current original bytes and generated caller work.
-One receipt cannot close two rungs. Function conclusion
-admission remains disabled.
+One receipt cannot close two rungs. Complete positive rung profiles can produce
+generic conclusion capabilities. Import and terminal validation require current
+generated-work replay, exact typed observations, distinct rung receipts and
+independently bound corroborators. Capabilities grant no semantic or identity approval.
 `naming.readiness` adds target-local unresolved `static_jal` edges to generated
 caller work, including selected addresses outside the payload. It deduplicates
 callers while preserving owner candidates and the three-query bulk snapshot.
