@@ -64,6 +64,8 @@ def collect_drift(root: Path) -> list[dict[str, str]]:
     # second owner.
     harness_commands = root / "tools" / "python" / "harness" / "commands"
     for path in sorted(harness_commands.glob("text*.py")):
+        if path.stem != "text" and not path.stem.startswith("text_"):
+            continue
         relative = path.relative_to(root).as_posix()
         if path.name != "text.py":
             note(
