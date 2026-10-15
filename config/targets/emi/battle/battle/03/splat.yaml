@@ -401,8 +401,10 @@ segments:
     - '@source: src/bof3/battle/runActiveDispatchSlotHandlers.c'
     - '@behavior: Clears the dispatched-handler mask at 0x80146329, then scans the eight 12-byte battle dispatch slots twice, once per pass; for every occupied slot whose byte +3 equals the pass and whose byte +1 does not intersect that mask it publishes the slot pointer to 0x801EB4DC, stores the slot index in scratchpad byte 0, and invokes the slot handler from the five-entry table copied off 0x801D0C84.'
   - - 55648
-    - asm
+    - c
     - func_801DE560
+    - '@source: src/bof3/battle/func_801DE560.c'
+    - '@behavior: finds the first free event slot among queue slots 2 through 7 and populates it with the caller''s parameters.'
   - - 55820
     - asm
     - func_801DE60C
