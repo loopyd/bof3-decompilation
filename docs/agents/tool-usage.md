@@ -240,15 +240,19 @@ recompute every required rung from bound native output. Collection receipts,
 checkpoints, and manifests provide integrity and crash-recovery bookkeeping,
 but they are writable local artifacts and cannot authenticate semantic facts.
 Generic function/data capabilities require complete positive kind/locality profiles.
-Open or unavailable evidence blocks import. The registry-backed exact-data route
-remains exhausted-only. The envelope stores the completed row under `conclusion`.
-Data replay requires current typed receipts for every indexed operation, including
-original data ranges and table consumers. The range operation captures the whole
-containing reviewed data or rodata segment, up to 64 KiB, and binds its bytes to
-current image, layout and replay identities. It proves segment ownership, not
-object extent or semantic meaning. Describe supplies storage on a separate
-receipt. Unsupported ranges retain a named gap. Missing, duplicate, untyped,
-incomplete or stale captures require recapture with retained history.
+Open or unavailable evidence blocks import. The envelope stores the completed row
+under `conclusion`. Function and data conclusions use the same current-work and
+typed-receipt gates. Data replay requires every indexed operation, including the
+original data range and complete dispatch consumers. The range capture binds the
+whole containing reviewed data or rodata segment, up to 64 KiB, to current image,
+layout and replay identities. From the aligned selector, it records up to
+16 consecutive original words that each name one unambiguous reviewed function
+start, plus the stopping reason. Consumer reads must fit within that prefix.
+These observations prove neither object extent nor live pointer contents. Describe
+supplies storage on a separate receipt. Initializer and consumer mechanisms share
+image and layout premises; their receipts alone grant no semantic independence.
+Unsupported ranges or required consumers retain named gaps. Missing, duplicate,
+untyped, incomplete, stale or superseded captures require recapture without fallback.
 Replace the empty `conclusion_capability` placeholder below with the complete
 runner-derived capability object:
 

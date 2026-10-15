@@ -10,7 +10,6 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
 from harness.naming.collection import evidence_namespace_for_digest, namespace_identity
 from harness.naming.editing import report_mutation
 from harness.naming.equivalence import _validated_capability
@@ -76,45 +75,16 @@ def _validate_conclusion(
             f"open work={open_work}"
         )
     if row["rung_status"] == "exhausted":
-        if capability is None:
-            invalid_rungs = any(
-                rung.get("status") != "negative" or not rung.get("negative_result")
-                for rung in row.get("rungs", {}).values()
-            )
-        else:
-            expected = capability.get("rungs")
-            invalid_rungs = (
-                set(row.get("rungs", {})) != set(expected or {})
-                or any(
-                    rung.get("status") != "passed" or not rung.get("observations")
-                    for rung in row.get("rungs", {}).values()
-                )
-                or (
-                    not generic
-                    and row.get("missing_fact") != capability.get("missing_fact")
-                )
-                or [item.get("id") for item in row.get("required_work", [])]
-                != capability.get("required_work")
-            )
+        invalid_rungs = any(
+            rung.get("status") != "passed" or not rung.get("observations")
+            for rung in row.get("rungs", {}).values()
+        ) or (
+            capability is not None
+            and [item.get("id") for item in row.get("required_work", [])]
+            != capability.get("required_work")
+        )
         if invalid_rungs:
             raise ValueError("exhausted conclusion rungs do not match trusted facts")
-        if capability is not None and not generic:
-            corroborators = row.get("corroborators")
-            source_ids = (
-                [item.get("source_id") for item in corroborators.values()]
-                if isinstance(corroborators, dict)
-                and len(corroborators) == 2
-                and all(isinstance(item, dict) for item in corroborators.values())
-                else []
-            )
-            expected_sources = {
-                capability["rungs"]["storage_class"][0],
-                capability["rungs"]["one_level_beyond"][0],
-            }
-            if set(source_ids) != expected_sources or len(source_ids) != 2:
-                raise ValueError(
-                    "exhausted conclusion requires the two trusted original-byte corroborators"
-                )
         if capability is not None and (
             row.get("new_name") is not None or row.get("identity") is not None
         ):
@@ -169,7 +139,6 @@ def import_conclusion(
     input_path: Path,
     *,
     evidence_root: Path | None = None,
-    registry=PRODUCTION_EXACT_CAPABILITIES,
 ) -> dict[str, Any]:
     """Validate and atomically import exactly one explicit row conclusion."""
     from harness.naming.namespace import reset_evidence_root
@@ -190,7 +159,6 @@ def import_conclusion(
             report_path,
             input_path,
             evidence_root=evidence_root,
-            registry=registry,
         )
     finally:
         reset_receipt_root(receipt_token)
@@ -204,7 +172,6 @@ def _import_conclusion(
     input_path: Path,
     *,
     evidence_root: Path | None,
-    registry,
 ) -> dict[str, Any]:
     authored = json.loads(input_path.read_text(encoding="utf-8"))
     if (
@@ -235,8 +202,8 @@ def _import_conclusion(
         authored_row,
         source,
         expected_namespace,
-        registry=registry,
     )
+    _reject_unsupported_semantic_facts(authored_row, capability)
     row = _validate_conclusion(authored_row, capability)
     provenance = _validate_evidence(
         root,
@@ -266,7 +233,6 @@ def _import_conclusion(
             raise ValueError("conclusion row is not in the report exactly once")
         current = report["rows"][matches[0]]
         _validate_next_commands(row, current)
-        _reject_unsupported_semantic_facts(row, capability)
         replay_row = {
             key: value for key, value in current.items() if key != PROVENANCE_FIELD
         }
@@ -281,7 +247,7 @@ def _import_conclusion(
                 raise ValueError(
                     "identical conclusion has different provenance binding"
                 )
-            validate(root, target, report, report_path=report_path, registry=registry)
+            validate(root, target, report, report_path=report_path)
             if row["rung_status"] == "proposed":
                 transaction = validate(
                     root,
@@ -289,7 +255,6 @@ def _import_conclusion(
                     report,
                     transaction=selector,
                     report_path=report_path,
-                    registry=registry,
                 )
                 if (
                     not isinstance(transaction, dict)
@@ -321,7 +286,7 @@ def _import_conclusion(
             for item in report["rows"]
             if isinstance(item, dict)
         )
-        validate(root, target, report, report_path=report_path, registry=registry)
+        validate(root, target, report, report_path=report_path)
         if row["rung_status"] == "proposed":
             transaction = validate(
                 root,
@@ -329,7 +294,6 @@ def _import_conclusion(
                 report,
                 transaction=selector,
                 report_path=report_path,
-                registry=registry,
             )
             if (
                 not isinstance(transaction, dict)

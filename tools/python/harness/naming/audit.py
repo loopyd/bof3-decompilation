@@ -21,7 +21,6 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from harness.common.commands import command_at
-from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
 from harness.naming.context import SCHEMA_V2, SCHEMA_V3, TargetContext
 from harness.naming.editing import report_mutation
 from harness.naming.inventory import (
@@ -219,7 +218,6 @@ def validate(
     *,
     transaction: str | None = None,
     report_path: Path | None = None,
-    registry=PRODUCTION_EXACT_CAPABILITIES,
 ) -> dict[str, Any]:
     """Pre-apply check: full report, or one isolated transaction selection.
 
@@ -278,7 +276,6 @@ def validate(
                     normalized_target,
                     report_path,
                     row,
-                    registry=registry,
                 )
     return result
 

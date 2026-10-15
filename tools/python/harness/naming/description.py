@@ -18,10 +18,57 @@ _STORAGE_AUTHORITY = {"reviewed_splat", "original_binary"}
 _SYMBOL_KINDS = {"data", "function"}
 
 
+def _initializer_prefix(layout, address: int, start: int, raw: bytes) -> dict:
+    """Observe original function-address words without guessing object boundaries."""
+    words = []
+    stop = "unaligned selector"
+    if address % 4 == 0:
+        stop = "16-word inspection cap"
+        for index in range(16):
+            offset = address - start + index * 4
+            if offset + 4 > len(raw):
+                stop = "containing segment boundary"
+                break
+            pointer = int.from_bytes(raw[offset : offset + 4], "little")
+            matches = [
+                b
+                for b in layout.boundaries
+                if b.virtual_start <= pointer
+                and (b.virtual_end is None or pointer < b.virtual_end)
+            ]
+            if (
+                len(matches) != 1
+                or not matches[0].is_function
+                or matches[0].virtual_start != pointer
+            ):
+                stop = "word is not one unambiguous reviewed function start"
+                break
+            boundary = matches[0]
+            end = boundary.virtual_end
+            if pointer % 4 or end is None or end % 4 or end <= pointer:
+                stop = "reviewed function range is incomplete or unaligned"
+                break
+            words.append(
+                {
+                    "address": address + index * 4,
+                    "value": pointer,
+                    "function_end": end,
+                    "kind": boundary.kind,
+                }
+            )
+    return {"words": words, "stop": stop}
+
+
 def capture_data_range(root: Path, selector: str) -> dict:
     """Read the whole containing reviewed segment, without inferring object extent."""
     selected = parse_function_id(selector)
-    result = {"selector": str(selected), "binding": None, "bytes": None, "gap": None}
+    result = {
+        "selector": str(selected),
+        "binding": None,
+        "bytes": None,
+        "initializer": None,
+        "gap": None,
+    }
     try:
         manifest = load_target_manifests(root)[selected.target.value]
         layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
@@ -56,19 +103,23 @@ def capture_data_range(root: Path, selector: str) -> dict:
             "splat_sha256": layout.sha256,
             "replay_sha256": spec.replay_sha256,
         }
-        result["bytes"] = image[offset : offset + end - start].hex()
+        raw = image[offset : offset + end - start]
+        result["bytes"] = raw.hex()
+        result["initializer"] = _initializer_prefix(
+            layout, selected.address, start, raw
+        )
     except ValueError as error:
         result["gap"] = str(error)
     return result
 
 
 def data_range_value(operation: dict, target: str, address: int) -> dict:
-    """Validate one current raw capture and expose only its segment-range fact."""
+    """Validate segment ownership and its bounded original function-address prefix."""
     payload = operation.get("payload")
     selected = parse_function_id(str(operation["selector"]))
     if (
         not isinstance(payload, dict)
-        or set(payload) != {"selector", "binding", "bytes", "gap"}
+        or set(payload) != {"selector", "binding", "bytes", "initializer", "gap"}
         or payload["selector"] != str(selected)
         or selected.target.value != target
         or selected.address != address
@@ -80,6 +131,7 @@ def data_range_value(operation: dict, target: str, address: int) -> dict:
             or not payload["gap"].strip()
             or payload["binding"] is not None
             or payload["bytes"] is not None
+            or payload["initializer"] is not None
         ):
             raise ValueError("data range gap shape is invalid")
         raise ValueError(payload["gap"])
@@ -113,11 +165,49 @@ def data_range_value(operation: dict, target: str, address: int) -> dict:
         or re.fullmatch(r"[0-9a-f]+", payload["bytes"]) is None
     ):
         raise ValueError("data range binding or original bytes are invalid")
+    initializer = payload["initializer"]
+    if (
+        not isinstance(initializer, dict)
+        or set(initializer) != {"words", "stop"}
+        or not isinstance(initializer["words"], list)
+        or len(initializer["words"]) > 16
+        or initializer["stop"]
+        not in {
+            "unaligned selector",
+            "16-word inspection cap",
+            "containing segment boundary",
+            "word is not one unambiguous reviewed function start",
+            "reviewed function range is incomplete or unaligned",
+        }
+    ):
+        raise ValueError("data initializer prefix shape is invalid")
+    raw = bytes.fromhex(payload["bytes"])
+    for index, word in enumerate(initializer["words"]):
+        offset = address - binding["start"] + index * 4
+        if (
+            not isinstance(word, dict)
+            or set(word) != {"address", "value", "function_end", "kind"}
+            or any(
+                type(word[k]) is not int for k in ("address", "value", "function_end")
+            )
+            or address % 4
+            or word["address"] != address + index * 4
+            or offset + 4 > len(raw)
+            or word["value"] != int.from_bytes(raw[offset : offset + 4], "little")
+            or word["value"] % 4
+            or word["function_end"] % 4
+            or not 0 <= word["value"] < word["function_end"] <= 0x100000000
+            or word["kind"] not in {"c", "asm"}
+        ):
+            raise ValueError(
+                "data initializer word differs from captured bytes or reviewed range"
+            )
     return {
         **binding,
         "address": f"0x{address:08X}",
         "byte_count": binding["end"] - binding["start"],
         "original_sha256": hashlib.sha256(bytes.fromhex(payload["bytes"])).hexdigest(),
+        "initializer": initializer,
     }
 
 

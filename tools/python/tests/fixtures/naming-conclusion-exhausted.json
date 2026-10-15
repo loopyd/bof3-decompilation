@@ -13,14 +13,13 @@
   "rungs": {
     "selected_range": {
       "authority": "original image",
-      "negative_result": "reviewed instructions establish no semantic role",
       "observations": [
         {
-          "id": "negative",
-          "text": "expert reviewed original instructions"
+          "id": "range",
+          "text": "The reviewed original range is accounted for; semantic identity remains unproven."
         }
       ],
-      "status": "negative"
+      "status": "passed"
     }
   }
 }

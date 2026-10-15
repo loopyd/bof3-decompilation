@@ -28,15 +28,15 @@ def _write(path, value):
 
 
 @pytest.fixture
-def terminal(synthetic_exact_evidence):
-    fixture = synthetic_exact_evidence
+def terminal(synthetic_data_evidence):
+    fixture = synthetic_data_evidence
     root, report = fixture.root, fixture.report
     authored = _synthetic_authored(report)
     source = root / "conclusion.json"
     _write(source, authored)
-    import_conclusion(root, SYNTHETIC_TARGET, report, source, registry=fixture.registry)
+    import_conclusion(root, SYNTHETIC_TARGET, report, source)
     arguments = (root, SYNTHETIC_TARGET, report, f"data:{SYNTHETIC_ROW}")
-    binding = terminal_binding(*arguments, registry=fixture.registry)
+    binding = terminal_binding(*arguments)
     ceiling = _write(
         root / "ceiling.json",
         {"fixture": "Synthetic reviewed finite static ceiling; no BOF3 acceptance"},
@@ -80,23 +80,18 @@ def terminal(synthetic_exact_evidence):
 def test_terminal_review_positive_replay_and_cli(terminal, monkeypatch, capsys):
     fixture, arguments, path, parent = terminal
     original = fixture.report.read_bytes()
-    result = verify_terminal(
-        *arguments, path, digest(parent), registry=fixture.registry
-    )
+    result = verify_terminal(*arguments, path, digest(parent))
     assert result["selected_row_accepted"] is True
     assert result["full_report"]["complete"] is False
     assert result["production_complete"] is False
-    assert (
-        verify_terminal(*arguments, path, digest(parent), registry=fixture.registry)
-        == result
-    )
+    assert verify_terminal(*arguments, path, digest(parent)) == result
     from harness.naming import terminal as terminal_review
 
     real = terminal_review.verify_terminal
     monkeypatch.setattr(
         terminal_review,
         "verify_terminal",
-        lambda *a: real(*a, registry=fixture.registry),
+        lambda *a: real(*a),
     )
     args = build_parser().parse_args(
         [
@@ -238,9 +233,7 @@ def test_terminal_review_rejects_unaccepted_or_stale(terminal, mutation):
     if mutation == "duplicate-parent":
         path.write_text(path.read_text()[:-1] + ', "accepted": true}')
     with pytest.raises(ValueError):
-        verify_terminal(
-            *arguments, path, pin or digest(parent), registry=fixture.registry
-        )
+        verify_terminal(*arguments, path, pin or digest(parent))
     assert fixture.report.read_bytes() == (
         original + b"\n" if mutation == "stale-report" else original
     )
@@ -252,7 +245,7 @@ def test_terminal_review_separates_fullreport_blocker(terminal):
     other = next(row for row in report["rows"] if row["kind"] == "function")
     other["rung_status"] = "proposed"
     _write(fixture.report, report)
-    binding = terminal_binding(*arguments, registry=fixture.registry)
+    binding = terminal_binding(*arguments)
     parent = copy.deepcopy(parent)
     parent["binding"] = binding
     for key in ("preparation_artifact", "review_artifact"):
@@ -261,9 +254,7 @@ def test_terminal_review_separates_fullreport_blocker(terminal):
         value["binding"] = binding
         parent[key] = _write(artifact, value)
     _write(path, parent)
-    result = verify_terminal(
-        *arguments, path, digest(parent), registry=fixture.registry
-    )
+    result = verify_terminal(*arguments, path, digest(parent))
     assert result["selected_row_accepted"] is True
     assert result["full_report"]["blocker"]
     assert result["full_report"]["complete"] is False

@@ -11,7 +11,6 @@ from typing import Any
 
 from harness.domain.receipts import command_records, write_receipt
 from harness.naming.evidence import SCHEMA as ANALYZER_VERSION
-from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
 from harness.naming.journal import commit_entry
 from harness.naming.native import OUTPUT_BUDGET, SemanticResult
 from harness.naming.plan import row_operation_sequence
@@ -386,7 +385,6 @@ def _receipts_for(
     captures: tuple[dict, ...] = (),
     *,
     derived: dict,
-    registry=PRODUCTION_EXACT_CAPABILITIES,
 ) -> list[dict[str, Any]]:
     """Honest receipts for exactly the operations that were executed.
 
@@ -425,7 +423,7 @@ def _receipts_for(
 
             command["command"] = next(
                 planned["command"]
-                for planned in indexed_operation_plan(row, target, registry=registry)
+                for planned in indexed_operation_plan(row, target)
                 if planned["id"] == item["id"]
             )
             command["output"] = (
@@ -447,7 +445,6 @@ def _receipts_for(
                         "role": item.get("role"),
                     },
                     derived,
-                    registry=registry,
                 )
             )
         record = namespace.write_receipt(row, f"{item_id}.json", command)

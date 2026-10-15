@@ -13,7 +13,6 @@ from harness.naming.debt import address_of
 from harness.domain.repository_layout import load_repository_layout
 from harness.naming.annotations import reviewed_annotations
 from harness.naming.audit import _context, validate
-from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
 from harness.naming.context import SCHEMA_V3, inventory_expected, validate_row_v3
 from harness.naming.equivalence import validate_terminal_capability
 from harness.naming.inputs import digest, keys, load
@@ -30,8 +29,6 @@ def terminal_binding(
     target: str,
     report_path: Path,
     transaction: str,
-    *,
-    registry=PRODUCTION_EXACT_CAPABILITIES,
 ) -> dict[str, Any]:
     """Inspect current integrity/scope for review; this does not accept exhaustion."""
     root = root.resolve()
@@ -64,7 +61,7 @@ def terminal_binding(
     connection.close()
     ctx = _context(root, target)
     validate_row_v3(row, row["kind"], row["name"], ctx)
-    validate_terminal_capability(root, target, path, row, registry=registry)
+    validate_terminal_capability(root, target, path, row)
     evidence = root / row["conclusion_provenance"]["evidence"]
     namespace = evidence.parent.parent
     derived = load(evidence.with_name("derived.json"))
@@ -128,8 +125,6 @@ def verify_terminal(
     transaction: str,
     parent: Path,
     expected_parent_digest: str,
-    *,
-    registry=PRODUCTION_EXACT_CAPABILITIES,
 ) -> dict[str, Any]:
     """Accept only a distinct semantic review explicitly pinned by its parent."""
     root = root.resolve()
@@ -156,9 +151,7 @@ def verify_terminal(
         or len(set(origins)) != 3
     ):
         raise ValueError("distinct parent, preparation and reviewer runs required")
-    binding = terminal_binding(
-        root, target, report_path, transaction, registry=registry
-    )
+    binding = terminal_binding(root, target, report_path, transaction)
     if value["binding"] != binding:
         raise ValueError("terminal parent binding is stale or mismatched")
     preparation = _review(value["preparation_artifact"])
@@ -207,15 +200,10 @@ def verify_terminal(
     # Full-report failure is separate from this selected-row gate, never hidden
     # behind an accepted row or used to authorize production advancement.
     try:
-        full = validate(
-            root, target, load(report_path), report_path=report_path, registry=registry
-        )
+        full = validate(root, target, load(report_path), report_path=report_path)
     except ValueError as error:
         full = {"complete": False, "blocker": str(error)}
-    if (
-        terminal_binding(root, target, report_path, transaction, registry=registry)
-        != binding
-    ):
+    if terminal_binding(root, target, report_path, transaction) != binding:
         raise ValueError("terminal state changed during verification")
     if (
         load(parent) != value

@@ -5,8 +5,9 @@ from typing import Any
 
 import harness.naming.evidence as facts
 import pytest
-from harness.naming.capabilities import TABLE_CONSUMERS
-from harness.naming.consumers import decode_table_consumer
+from test_naming_table_consumer import DATA_CONSUMER_CASES, SPECS, _operation, _range
+from harness.naming.consumers import decode_dispatch_consumer
+from pathlib import Path
 
 TARGET = "emi/battle/battle/15"
 SELECTOR = f"{TARGET}@800AD26C"
@@ -560,78 +561,61 @@ def test_describe_role_mismatch_is_rejected():
 
 
 def _dispatch_consumer(**changes):
-    pointer_descriptions = []
-    for pointer, kind in ((0x800AD2EC, "asm"), (0x800AD434, "asm"), (0x800AD67C, "c")):
-        pointer_descriptions.append(
-            [
-                {
-                    "target": TARGET,
-                    "address": f"0x{pointer:08X}",
-                    "splat": {
-                        "kind": kind,
-                        "start": f"0x{pointer:08X}",
-                        "end": f"0x{pointer + 0x20:08X}",
-                        "name": f"func_{pointer:08X}",
-                    },
-                }
-            ]
-        )
-    words = [
-        0x27BDFFD8,
-        0xAFBF0020,
-        0x3C058009,
-        0x24A56994,
-        0x8CA20000,
-        0x8CA30004,
-        0x8CA40008,
-        0xAFA20010,
-        0xAFA30014,
-        0xAFA40018,
-        0x3C02800F,
-        0x3C031F80,
-        0x8C630044,
-        0x34420800,
-        0x3C018014,
-        0xAC2259F0,
-        0x90620001,
-        0,
-        0x00021080,
-        0x03A21021,
-        0x8C420010,
-        0,
-        0x0040F809,
-        0,
-        0x3C02800D,
-        0x34423800,
-        0x3C018014,
-        0xAC2259F0,
-        0x8FBF0020,
-        0x27BD0028,
-        0x03E00008,
-        0,
-    ]
-    payload = {
-        "selected": DATA_SELECTOR,
-        "consumer": SELECTOR,
-        "selected_range": [0x80096994, 0x800969A0],
-        "consumer_range": [0x800AD26C, 0x800AD2EC],
-        "selected_bytes": "ecd20a8034d40a807cd60a80",
-        "consumer_bytes": b"".join(word.to_bytes(4, "little") for word in words).hex(),
-        "image_sha256": "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140",
-        "pointer_descriptions": pointer_descriptions,
-    }
-    payload.update(changes)
+    spec = SPECS[0]
+    operation = _operation(spec)
+    operation.update(
+        {
+            "item": {"id": f"data_dispatch_consumer:{DATA_SELECTOR}:{SELECTOR}"},
+            "operation": "data_dispatch_consumer",
+            "supplemental": True,
+            "role": "data_dispatch_consumer",
+        }
+    )
+    operation["payload"].update(changes)
+    return operation
+
+
+def _original_range(spec=SPECS[0]):
+    raw = bytearray(688)
+    raw[spec.selected_address - 0x80096800 : spec.selected_end - 0x80096800] = (
+        spec.table_bytes
+    )
     return {
-        "item": {"id": f"data_dispatch_consumer:{DATA_SELECTOR}:{SELECTOR}"},
-        "operation": "data_dispatch_consumer",
-        "selector": SELECTOR,
+        "item": {
+            "id": f"data_original_range:{spec.target}@{spec.selected_address:08x}"
+        },
+        "operation": "data_original_range",
+        "selector": f"{spec.target}@{spec.selected_address:08x}",
         "supplemental": True,
-        "role": "data_dispatch_consumer",
-        "payload": payload,
+        "role": "data_original_range",
+        "payload": {
+            "selector": f"{spec.target}@{spec.selected_address:08x}",
+            "binding": {
+                "scope": "containing_reviewed_segment",
+                "kind": "rodata",
+                "start": 0x80096800,
+                "end": 0x80096AB0,
+                "offset": 0,
+                "image_sha256": spec.image_sha256,
+                "splat_sha256": "a" * 64,
+                "replay_sha256": "b" * 64,
+            },
+            "bytes": raw.hex(),
+            "initializer": _range(spec)["initializer"],
+            "gap": None,
+        },
     }
 
 
-def test_exact_complete_battle15_facts_emit_exhausted_only_capability():
+def _assert_live_rejected(operation, monkeypatch):
+    monkeypatch.setattr(
+        facts, "capture_dispatch_consumer", lambda *_: _dispatch_consumer()["payload"]
+    )
+    with pytest.raises(ValueError, match="current original"):
+        facts._validate_consumer_bytes(Path("/unused"), TARGET, operation["payload"])
+
+
+def test_complete_battle15_facts_emit_typed_capability():
     storage = {
         "kind": "rodata",
         "start": "0x80096994",
@@ -658,42 +642,21 @@ def test_exact_complete_battle15_facts_emit_exhausted_only_capability():
         storage=storage,
         symbol={"name": "D_80096994", "kind": "data"},
     )
-    original_range = {
-        "item": {"id": f"data_original_range:{DATA_SELECTOR}"},
-        "operation": "data_original_range",
-        "selector": DATA_SELECTOR,
-        "supplemental": True,
-        "role": "data_original_range",
-        "payload": {
-            "selector": DATA_SELECTOR.lower(),
-            "binding": {
-                "scope": "containing_reviewed_segment",
-                "kind": "rodata",
-                "start": 0x80096800,
-                "end": 0x80096AB0,
-                "offset": 0,
-                "image_sha256": "a" * 64,
-                "splat_sha256": "b" * 64,
-                "replay_sha256": "c" * 64,
-            },
-            "bytes": "00" * 688,
-            "gap": None,
-        },
-    }
+    original_range = _original_range()
     result = _analyze(
         [original_range, selected, _describe(), _access(), _dispatch_consumer()]
     )
     capability = result["conclusion_capability"]
     assert result["conclusion_enabled"] is True
     assert capability["allowed_conclusion"] == "exhausted"
-    assert capability["proposal_allowed"] is False
+    assert capability["proposal_allowed"] is True
     assert set(capability["rungs"]) == {
         "selected_range",
         "selected_access",
         "storage_class",
         "one_level_beyond",
     }
-    assert capability["required_work"] == ["access:emi/battle/battle/15@800ad26c"]
+    assert capability["required_work"] == ["access:emi/battle/battle/15@800AD26C"]
 
 
 def test_unavailable_record_disables_complete_conclusion_capability():
@@ -725,29 +688,7 @@ def test_unavailable_record_disables_complete_conclusion_capability():
     )
     invalid_access = _access()
     invalid_access["payload"][0]["opcode"] = "invalid"
-    original_range = {
-        "item": {"id": f"data_original_range:{DATA_SELECTOR}"},
-        "operation": "data_original_range",
-        "selector": DATA_SELECTOR,
-        "supplemental": True,
-        "role": "data_original_range",
-        "payload": {
-            "selector": DATA_SELECTOR.lower(),
-            "binding": {
-                "scope": "containing_reviewed_segment",
-                "kind": "rodata",
-                "start": 0x80096800,
-                "end": 0x80096AB0,
-                "offset": 0,
-                "image_sha256": "a" * 64,
-                "splat_sha256": "b" * 64,
-                "replay_sha256": "c" * 64,
-            },
-            "bytes": "00" * 688,
-            "gap": None,
-        },
-    }
-
+    original_range = _original_range()
     result = _analyze(
         [
             original_range,
@@ -768,9 +709,9 @@ def test_unavailable_record_disables_complete_conclusion_capability():
 
 
 def test_dispatch_consumer_derives_layout_loads_and_one_level_fact():
-    result = _analyze([_dispatch_consumer()])
+    result = _analyze([_original_range(), _dispatch_consumer()])
     classes = [item["class"] for item in result["facts"]]
-    assert classes == ["reviewed_layout", "selected_access", "one_level_beyond"]
+    assert classes == ["selected_range", "selected_access", "one_level_beyond"]
     assert result["facts"][1]["value"]["load_sites"] == [
         "0x800AD27C",
         "0x800AD280",
@@ -795,50 +736,31 @@ def test_dispatch_consumer_derives_layout_loads_and_one_level_fact():
         ),
     ],
 )
-def test_dispatch_consumer_is_bound_to_reviewed_identities(target, address, change):
+def test_dispatch_consumer_is_bound_to_reviewed_identities(
+    target, address, change, monkeypatch
+):
     operation = _dispatch_consumer(**change)
-    operation["selector"] = operation["payload"]["consumer"]
-    operation["item"]["id"] = (
-        f"data_dispatch_consumer:{operation['payload']['selected']}:"
-        f"{operation['payload']['consumer']}"
-    )
-    result = facts._analyze_validated_records(
-        facts._RUNNER_TOKEN,
-        target=target,
-        report_digest="0" * 64,
-        row={"kind": "data", "name": f"D_{address:08X}"},
-        operations=(operation,),
-    )
-    assert not result["facts"]
-    assert result["unavailable"]
+    _assert_live_rejected(operation, monkeypatch)
 
 
-def test_dispatch_consumer_rejects_same_bytes_at_shifted_range():
-    operation = _dispatch_consumer(
-        consumer=f"{TARGET}@800AD000",
-        consumer_range=[0x800AD000, 0x800AD080],
-    )
-    operation["selector"] = operation["payload"]["consumer"]
-    operation["item"]["id"] = (
-        f"data_dispatch_consumer:{DATA_SELECTOR}:{operation['payload']['consumer']}"
-    )
-    result = _analyze([operation])
-    assert not result["facts"]
-    assert result["unavailable"]
+def test_dispatch_consumer_rejects_same_bytes_at_shifted_range(monkeypatch):
+    operation = _dispatch_consumer(consumer=f"{TARGET}@800AD000")
+    operation["payload"]["binding"].update(start=0x800AD000, end=0x800AD080)
+    _assert_live_rejected(operation, monkeypatch)
 
 
 @pytest.mark.parametrize("index", [2, 3, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27])
-def test_dispatch_consumer_rejects_altered_fixed_global(index):
-    result = _analyze([_mutate_consumer_word(_dispatch_consumer(), index, 0)])
-    assert not result["facts"]
-    assert result["unavailable"]
+def test_dispatch_consumer_rejects_altered_fixed_global(index, monkeypatch):
+    _assert_live_rejected(
+        _mutate_consumer_word(_dispatch_consumer(), index, 0), monkeypatch
+    )
 
 
 def _mutate_consumer_word(operation, index, word):
     payload = operation["payload"]
-    code = bytearray.fromhex(payload["consumer_bytes"])
+    code = bytearray.fromhex(payload["bytes"])
     code[index * 4 : index * 4 + 4] = word.to_bytes(4, "little")
-    payload["consumer_bytes"] = code.hex()
+    payload["bytes"] = code.hex()
     return operation
 
 
@@ -864,72 +786,40 @@ def _mutate_consumer_word(operation, index, word):
         (24, 0x1000FFFF),  # epilogue can re-enter the dispatch
     ],
 )
-def test_dispatch_consumer_rejects_clobbered_or_alternate_chain(index, word):
-    result = _analyze([_mutate_consumer_word(_dispatch_consumer(), index, word)])
-    assert not result["facts"]
-    assert result["unavailable"]
-
-
-def test_non_word_dispatch_without_reviewed_spec_stays_open():
-    operation = _dispatch_consumer(
-        selected="emi/battle/battle/15@800B6F50",
-        selected_range=[0x800B6F50, 0x800B6F51],
-        selected_bytes="00",
-        pointer_descriptions=[],
+def test_dispatch_consumer_rejects_clobbered_or_alternate_chain(
+    index, word, monkeypatch
+):
+    _assert_live_rejected(
+        _mutate_consumer_word(_dispatch_consumer(), index, word), monkeypatch
     )
-    result = facts._analyze_validated_records(
-        facts._RUNNER_TOKEN,
-        target=TARGET,
-        report_digest=hashlib.sha256(b"report").hexdigest(),
-        row={"kind": "data", "name": "D_800B6F50"},
-        operations=(operation,),
+
+
+def test_non_word_dispatch_without_reviewed_spec_stays_open(monkeypatch):
+    operation = _dispatch_consumer(selected="emi/battle/battle/15@800B6F50")
+    _assert_live_rejected(operation, monkeypatch)
+
+
+def test_reviewed_dispatch_spec_rejects_non_word_payload(monkeypatch):
+    operation = _dispatch_consumer(bytes="00")
+    _assert_live_rejected(operation, monkeypatch)
+
+
+def test_dispatch_consumer_rejects_unrelated_local_table_base(monkeypatch):
+    _assert_live_rejected(
+        _mutate_consumer_word(_dispatch_consumer(), 19, 0x02021021), monkeypatch
     )
-    assert result["conclusion_enabled"] is False
-    assert not result["facts"]
-    assert result["unavailable"] == [
-        {
-            "operation": "data_dispatch_consumer",
-            "reason": "table consumer is not an independently reviewed spec",
-        }
-    ]
-
-
-def test_reviewed_dispatch_spec_rejects_non_word_payload():
-    result = _analyze(
-        [
-            _dispatch_consumer(
-                selected_range=[0x80096994, 0x80096995],
-                selected_bytes="00",
-                pointer_descriptions=[],
-            )
-        ]
-    )
-    assert result["conclusion_enabled"] is False
-    assert not result["facts"]
-    assert result["unavailable"]
-
-
-def test_dispatch_consumer_rejects_unrelated_local_table_base():
-    operation = _mutate_consumer_word(_dispatch_consumer(), 19, 0x02021021)
-    result = _analyze([operation])
-    assert not result["facts"]
-    assert result["unavailable"]
 
 
 @pytest.mark.parametrize("size", [1, 2, 3, 5, 95, 97, 1028])
-def test_dispatch_consumer_rejects_malformed_consumer_extent(size):
-    operation = _dispatch_consumer(consumer_bytes="00" * size)
-    operation["payload"]["consumer_range"] = [0x800AD26C, 0x800AD26C + size]
-    result = _analyze([operation])
-    assert not result["facts"]
-    assert result["unavailable"]
+def test_dispatch_consumer_rejects_malformed_consumer_extent(size, monkeypatch):
+    operation = _dispatch_consumer(bytes="00" * size)
+    operation["payload"]["binding"]["end"] = 0x800AD26C + size
+    _assert_live_rejected(operation, monkeypatch)
 
 
 @pytest.mark.parametrize("value", [None, False, 1, [], {}])
-def test_dispatch_consumer_rejects_non_string_consumer_bytes(value):
-    result = _analyze([_dispatch_consumer(consumer_bytes=value)])
-    assert not result["facts"]
-    assert result["unavailable"]
+def test_dispatch_consumer_rejects_non_string_consumer_bytes(value, monkeypatch):
+    _assert_live_rejected(_dispatch_consumer(bytes=value), monkeypatch)
 
 
 @pytest.mark.parametrize(
@@ -943,14 +833,8 @@ def test_dispatch_consumer_rejects_non_string_consumer_bytes(value):
         {"pointer_descriptions": []},
     ],
 )
-def test_dispatch_consumer_tampering_fails_closed(change):
-    result = _analyze([_dispatch_consumer(**change)])
-    assert not [
-        item
-        for item in result["facts"]
-        if item["class"] in {"reviewed_layout", "one_level_beyond"}
-    ]
-    assert result["unavailable"]
+def test_dispatch_consumer_tampering_fails_closed(change, monkeypatch):
+    _assert_live_rejected(_dispatch_consumer(**change), monkeypatch)
 
 
 @pytest.mark.parametrize(
@@ -961,46 +845,16 @@ def test_dispatch_consumer_tampering_fails_closed(change):
     ],
 )
 def test_next_table_consumer_specs_accept_only_exact_original_evidence(row, consumer):
-    spec = TABLE_CONSUMERS[(row, consumer.lower())]
-    descriptions = [
-        [
-            {
-                "target": TARGET,
-                "address": f"0x{pointer:08X}",
-                "splat": {
-                    "kind": "c",
-                    "start": f"0x{pointer:08X}",
-                    "end": f"0x{pointer + 0x20:08X}",
-                    "name": f"func_{pointer:08X}",
-                },
-            }
-        ]
-        for pointer in spec.pointer_addresses
-    ]
-    operation = {
-        "selector": consumer,
-        "payload": {
-            "selected": f"{TARGET}@{spec.selected_address:08X}",
-            "consumer": consumer,
-            "selected_range": [spec.selected_address, spec.selected_end],
-            "consumer_range": [spec.consumer_address, spec.consumer_end],
-            "selected_bytes": spec.table_bytes.hex(),
-            "consumer_bytes": b"".join(
-                word.to_bytes(4, "little") for word in spec.consumer_words
-            ).hex(),
-            "image_sha256": spec.image_sha256,
-            "pointer_descriptions": descriptions,
-        },
-    }
-    derived = decode_table_consumer(operation, spec, "0" * 64)
+    spec = DATA_CONSUMER_CASES[(row, consumer.lower())]
+    operation = _operation(spec)
+    derived = decode_dispatch_consumer(operation, TARGET, _range(spec), "0" * 64)
     assert [fact["class"] for fact in derived] == [
-        "reviewed_layout",
         "selected_access",
         "one_level_beyond",
     ]
-    operation["payload"]["consumer_range"][1] += 4
-    with pytest.raises(ValueError, match="reviewed range"):
-        decode_table_consumer(operation, spec, "0" * 64)
+    operation["payload"]["binding"]["end"] += 4
+    with pytest.raises(ValueError, match="binding"):
+        decode_dispatch_consumer(operation, TARGET, _range(spec), "0" * 64)
 
 
 @pytest.mark.parametrize(
@@ -1011,35 +865,16 @@ def test_next_table_consumer_specs_accept_only_exact_original_evidence(row, cons
     ],
 )
 def test_next_table_consumer_specs_require_complete_capability_evidence(row, consumer):
-    spec = TABLE_CONSUMERS[(row, consumer.lower())]
-    operation = {
-        "item": {"id": f"data_dispatch_consumer:{row}:{consumer}"},
-        "operation": "data_dispatch_consumer",
-        "selector": consumer,
-        "supplemental": True,
-        "role": "data_dispatch_consumer",
-        "payload": {
-            "selected": f"{TARGET}@{spec.selected_address:08X}",
-            "consumer": consumer,
-            "selected_range": [spec.selected_address, spec.selected_end],
-            "consumer_range": [spec.consumer_address, spec.consumer_end],
-            "selected_bytes": spec.table_bytes.hex(),
-            "consumer_bytes": b"".join(
-                word.to_bytes(4, "little") for word in spec.consumer_words
-            ).hex(),
-            "image_sha256": spec.image_sha256,
-            "pointer_descriptions": [
-                [
-                    {
-                        "target": TARGET,
-                        "address": f"0x{pointer:08X}",
-                        "splat": {"kind": "c", "start": f"0x{pointer:08X}"},
-                    }
-                ]
-                for pointer in spec.pointer_addresses
-            ],
-        },
-    }
+    spec = DATA_CONSUMER_CASES[(row, consumer.lower())]
+    operation = _operation(spec)
+    operation.update(
+        {
+            "item": {"id": f"data_dispatch_consumer:{row}:{consumer}"},
+            "operation": "data_dispatch_consumer",
+            "supplemental": True,
+            "role": "data_dispatch_consumer",
+        }
+    )
     result = facts._analyze_validated_records(
         facts._RUNNER_TOKEN,
         target=TARGET,
@@ -1047,13 +882,9 @@ def test_next_table_consumer_specs_require_complete_capability_evidence(row, con
         row={"kind": "data", "name": row.removeprefix("data:")},
         operations=(operation,),
     )
-    assert [item["class"] for item in result["facts"]] == [
-        "reviewed_layout",
-        "selected_access",
-        "one_level_beyond",
-    ]
+    assert result["facts"] == []
     assert result["conclusion_enabled"] is False
-    assert "conclusion_capability" not in result
+    assert result["unavailable"]
 
 
 def test_internal_token_required():

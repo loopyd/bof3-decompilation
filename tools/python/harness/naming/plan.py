@@ -9,10 +9,6 @@ from typing import Any
 from harness.common.commands import command_text, tool_id, trailing_arguments
 from harness.domain.ids import parse_function_id
 from harness.naming.debt import address_of
-from harness.naming.capabilities import (
-    PRODUCTION_EXACT_CAPABILITIES,
-    ExactCapabilityRegistry,
-)
 
 _NATIVE_ARGS = {
     "asm-diff": ["--json", "--detail", "full"],
@@ -161,19 +157,10 @@ def collection_row(
     target: str,
     *,
     root: Path | None = None,
-    registry: ExactCapabilityRegistry = PRODUCTION_EXACT_CAPABILITIES,
 ) -> dict[str, Any]:
     """Restore terminal work from current producers, never authored selectors."""
 
-    exact = any(
-        spec_row == f"data:{row.get('name')}" and entry.consumer.target == target
-        for (spec_row, _selector), entry in registry.items()
-    )
-    if (
-        root is not None
-        and not exact
-        and row.get("rung_status") in {"exhausted", "proposed"}
-    ):
+    if root is not None and row.get("rung_status") in {"exhausted", "proposed"}:
         from harness.naming.readiness import required_work_items
 
         generated = required_work_items(
@@ -193,40 +180,17 @@ def collection_row(
             "required_work": [{**item, "status": "open"} for item in generated],
         }
 
-    if row.get("rung_status") != "exhausted" or row.get("kind") != "data":
-        return row
-    key = f"data:{row.get('name')}"
-    entries = [
-        entry
-        for (spec_row, _selector), entry in registry.items()
-        if spec_row == key and entry.consumer.target == target
-    ]
-    if len(entries) != 1:
-        return row
-    restored = {
-        key: value for key, value in row.items() if key != "conclusion_provenance"
-    }
-    restored["required_work"] = [
-        {
-            "id": entries[0].required_work,
-            "status": "open",
-            "profile": "data_access",
-            "description": "refresh exact reviewed consumer evidence",
-        }
-    ]
-    return restored
+    return row
 
 
 def indexed_operation_plan(
     row: dict[str, Any],
     target: str,
-    *,
-    registry: ExactCapabilityRegistry = PRODUCTION_EXACT_CAPABILITIES,
 ) -> list[dict[str, object]]:
     """Exact ordered required and supplemental indexed work for one row."""
 
     plan: list[dict[str, object]] = []
-    for item in collection_row(row, target, registry=registry).get("required_work", []):
+    for item in collection_row(row, target).get("required_work", []):
         if not (isinstance(item, dict) and item.get("status") == "open"):
             continue
         item_id = str(item.get("id"))
@@ -308,14 +272,12 @@ def indexed_operation_plan(
 def row_operation_sequence(
     row: dict[str, Any],
     target: str = "",
-    *,
-    registry: ExactCapabilityRegistry = PRODUCTION_EXACT_CAPABILITIES,
 ) -> list[str]:
     """Complete code-owned indexed and semantic operation sequence."""
 
     operations = [
         f"indexed:{item['id']}:{item['operation']}:{item['selector']}:{int(bool(item['supplemental']))}"
-        for item in indexed_operation_plan(row, target, registry=registry)
+        for item in indexed_operation_plan(row, target)
     ]
     operations.extend(
         (

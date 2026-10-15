@@ -1,13 +1,12 @@
-"""Production-collected synthetic exact-capability test fixture."""
+"""Production-collected synthetic typed-data evidence fixture."""
 
 from __future__ import annotations
 
 import hashlib
 import json
-import shutil
 import sqlite3
 from pathlib import Path
-from types import MappingProxyType, SimpleNamespace
+from types import SimpleNamespace
 
 import pytest
 from harness.analysis.index import index_path, rebuild
@@ -20,8 +19,6 @@ from harness.analysis.snapshot import (
     write_snapshot,
 )
 from harness.naming.audit import initialize
-from harness.naming.capabilities import ExactCapabilitySpec
-from harness.naming.consumers import TableConsumerSpec
 from harness.naming.execution import run_evidence
 from harness.naming.namespace import journal_dir
 
@@ -107,7 +104,7 @@ def _synthetic_report_row() -> dict:
     }
 
 
-def _build_synthetic_exact_evidence(tmp_path: Path):
+def _build_synthetic_data_evidence(tmp_path: Path):
     config = tmp_path / "config/targets/exe/test"
     config.mkdir(parents=True)
     code = b"".join(word.to_bytes(4, "little") for word in SYNTHETIC_WORDS)
@@ -190,26 +187,6 @@ def _build_synthetic_exact_evidence(tmp_path: Path):
                 "addiu",
             ),
         )
-    spec = TableConsumerSpec(
-        SYNTHETIC_TARGET,
-        f"data:{SYNTHETIC_ROW}",
-        0x80100080,
-        0x8010008C,
-        SYNTHETIC_CONSUMER,
-        0x80100080,
-        digest,
-        table,
-        SYNTHETIC_WORDS,
-        (0x8010008C, 0x80100098, 0x801000A0),
-        (4, 5, 6),
-    )
-    registry = MappingProxyType(
-        {
-            (f"data:{SYNTHETIC_ROW}", "exe/test@80100000"): ExactCapabilitySpec(
-                spec, "access:exe/test@80100000"
-            )
-        }
-    )
     report = tmp_path / "out/reviews/synthetic.json"
     report.parent.mkdir(parents=True)
     initialized = initialize(tmp_path, SYNTHETIC_TARGET)
@@ -225,7 +202,6 @@ def _build_synthetic_exact_evidence(tmp_path: Path):
         SYNTHETIC_TARGET,
         report,
         rows=[f"data:{SYNTHETIC_ROW}"],
-        registry=registry,
     )
     assert result["telemetry_summary"]["rows"] == {
         "planned": 1,
@@ -239,25 +215,10 @@ def _build_synthetic_exact_evidence(tmp_path: Path):
     assert derived["open"] == []
     assert derived["unavailable"] == []
     assert derived["conclusion_capability"]["row"] == f"data:{SYNTHETIC_ROW}"
-    return SimpleNamespace(
-        root=tmp_path, report=report, registry=registry, result=result
-    )
-
-
-@pytest.fixture(scope="session")
-def synthetic_exact_evidence_baseline(tmp_path_factory: pytest.TempPathFactory):
-    return _build_synthetic_exact_evidence(tmp_path_factory.mktemp("synthetic-exact"))
+    return SimpleNamespace(root=tmp_path, report=report, result=result)
 
 
 @pytest.fixture
-def synthetic_exact_evidence(tmp_path: Path, synthetic_exact_evidence_baseline):
-    """Clone one session-built exact fixture so mutation tests stay isolated."""
-
-    baseline = synthetic_exact_evidence_baseline
-    shutil.copytree(baseline.root, tmp_path, dirs_exist_ok=True)
-    return SimpleNamespace(
-        root=tmp_path,
-        report=tmp_path / baseline.report.relative_to(baseline.root),
-        registry=baseline.registry,
-        result=baseline.result,
-    )
+def synthetic_data_evidence(tmp_path: Path):
+    """Collect current typed-data receipts in each mutation test's own root."""
+    return _build_synthetic_data_evidence(tmp_path)

@@ -1,4 +1,4 @@
-"""Validate generic and exact naming conclusion evidence."""
+"""Validate current typed naming conclusion evidence."""
 
 from __future__ import annotations
 
@@ -9,7 +9,6 @@ from typing import Any
 
 from harness.domain.receipts import command_records
 from harness.naming.collection import EvidenceNamespace
-from harness.naming.equivalence import _exact_capability_row
 from harness.naming.journal import entry_sha256
 
 FACT_SCHEMA = "bof3.naming-evidence-facts/v1"
@@ -33,9 +32,16 @@ def _records(row: dict[str, Any]) -> list[dict[str, Any]]:
 def _selector_target(operation: object, selector: object) -> str | None:
     """Derive the only authorized target relation from a typed selector."""
 
-    if operation not in {"calls", "access", "owner", "semantic"} or not isinstance(
-        selector, str
-    ):
+    if operation not in {
+        "calls",
+        "access",
+        "owner",
+        "semantic",
+        "describe",
+        "xrefs",
+        "data_original_range",
+        "data_dispatch_consumer",
+    } or not isinstance(selector, str):
         return None
     selected_target, separator, address = selector.partition("@")
     if not separator or not selected_target or not address:
@@ -312,8 +318,9 @@ def _validate_evidence(
 ) -> dict[str, Any]:
     if not isinstance(source, dict):
         raise ValueError("source must bind collected evidence")
-    selected_root = expected_namespace.path if capability is not None else None
-    generic = capability is not None and capability.get("proposal_allowed") is True
+    if capability is None or capability.get("proposal_allowed") is not True:
+        raise ValueError("semantic fact capability is unsupported")
+    selected_root = expected_namespace.path
     records = command_records(
         _records(row),
         f"{selector}.evidence",
@@ -331,11 +338,7 @@ def _validate_evidence(
         if not Path(evidence).is_absolute()
         else Path(evidence).resolve()
     )
-    allowed_root = (
-        expected_namespace.path
-        if capability is not None
-        else (root / "out/reviews/evidence").resolve()
-    )
+    allowed_root = expected_namespace.path
     if (
         allowed_root not in path.parents
         or not path.is_file()
@@ -366,7 +369,7 @@ def _validate_evidence(
             allowed_record = (
                 _selector_target("semantic", record.get("selector")) == target
             )
-            if generic and not allowed_record:
+            if not allowed_record:
                 allowed_record = any(
                     capture.get("selector") == record.get("selector")
                     and capture.get("instruction_id") is not None
@@ -378,9 +381,7 @@ def _validate_evidence(
             allowed_record = item is not None and _record_allowed(record, item, target)
         if (
             record.get("target") != target
-            and not (
-                generic and record.get("operation") == "semantic" and allowed_record
-            )
+            and not (record.get("operation") == "semantic" and allowed_record)
         ) or not allowed_record:
             raise ValueError(
                 "receipt target/selector is not authorized by its exact work item"
@@ -406,11 +407,7 @@ def _validate_evidence(
     report_digest = str(source.get("report_digest", ""))
     if not report_digest:
         raise ValueError("source requires report_digest")
-    journal_root = (
-        expected_namespace.path
-        if capability is not None
-        else root / "out/reviews/evidence" / f"{target}__{report_digest[:12]}"
-    )
+    journal_root = expected_namespace.path
     journal = journal_root / "checkpoint.jsonl"
     manifest = journal_root / "manifest.json"
     try:
@@ -442,59 +439,30 @@ def _validate_evidence(
         or manifest_rows.get(selector, {}).get("evidence_sha256") != digest
     ):
         raise ValueError("source evidence is not bound to the current runner manifest")
-    if capability is None or generic:
-        trusted_facts = None
-        if generic:
-            derived = json.loads((path.parent / "derived.json").read_bytes())
-            trusted_facts = derived.get("facts")
-            if (
-                not isinstance(trusted_facts, list)
-                or _canonical_json_digest(trusted_facts) != capability["fact_digest"]
-                or set(row.get("rungs", {})) != set(capability["rungs"])
-            ):
-                raise ValueError("typed capability facts or required rungs differ")
-        _validate_typed_rungs(
-            root,
-            row,
-            payload,
-            report_digest=report_digest,
-            target=target,
-            row_selector=selector,
-            journal_entry=entry,
-            trusted_facts=trusted_facts,
-        )
-    else:
-        cited_records = {
-            (record["receipt"], record["sha256"]): record for record in records
-        }
-        if len(cited_records) != 1:
-            raise ValueError("reviewed capability requires one exact runner command")
-        cited_command = next(iter(cited_records.values()))
-        trusted_commands = [
-            record
-            for record in payload_records
-            if (record["receipt"], record["sha256"])
-            == (cited_command["receipt"], cited_command["sha256"])
-        ]
-        if len(trusted_commands) != 1 or cited_command != trusted_commands[0]:
-            raise ValueError("conclusion command differs from trusted runner payload")
-        trusted_command = trusted_commands[0]
-        expected_row = _exact_capability_row(capability, trusted_command)
-        if row != expected_row:
-            raise ValueError("conclusion does not match the closed reviewed schema")
+    derived = json.loads((path.parent / "derived.json").read_bytes())
+    trusted_facts = derived.get("facts")
+    if (
+        not isinstance(trusted_facts, list)
+        or _canonical_json_digest(trusted_facts) != capability["fact_digest"]
+        or set(row.get("rungs", {})) != set(capability["rungs"])
+    ):
+        raise ValueError("typed capability facts or required rungs differ")
+    _validate_typed_rungs(
+        root,
+        row,
+        payload,
+        report_digest=report_digest,
+        target=target,
+        row_selector=selector,
+        journal_entry=entry,
+        trusted_facts=trusted_facts,
+    )
     provenance = {
-        "kind": (
-            "typed-capability"
-            if generic
-            else "exact-capability"
-            if capability is not None
-            else "generic-evidence"
-        ),
+        "kind": "typed-capability",
         "evidence": evidence,
         "evidence_sha256": digest,
         "initializer_report_sha256": report_digest,
         "evidence_namespace": namespace_provenance,
     }
-    if generic:
-        provenance["conclusion_sha256"] = _canonical_json_digest(row)
+    provenance["conclusion_sha256"] = _canonical_json_digest(row)
     return provenance

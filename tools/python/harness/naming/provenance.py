@@ -6,26 +6,9 @@ import re
 from pathlib import PurePosixPath
 from typing import Any
 
-from harness.naming.capabilities import (
-    PRODUCTION_EXACT_CAPABILITIES,
-    ExactCapabilityRegistry,
-)
 
 _SHA256 = re.compile(r"[0-9a-f]{64}").fullmatch
 PROVENANCE_FIELD = "conclusion_provenance"
-
-
-def capability_eligible_rows(
-    target: str,
-    *,
-    registry: ExactCapabilityRegistry = PRODUCTION_EXACT_CAPABILITIES,
-) -> set[str]:
-    """Return the code-owned terminal-row selectors enabled for one target."""
-    return {
-        row_key
-        for (row_key, _selector), entry in registry.items()
-        if entry.consumer.target == target
-    }
 
 
 def _canonical_path(value: object, *, absolute: bool, label: str) -> str:
@@ -53,11 +36,10 @@ def require_canonical_provenance(row: dict[str, Any], selector: str) -> dict[str
         "initializer_report_sha256",
         "evidence_namespace",
     }
-    if isinstance(provenance, dict) and provenance.get("kind") == "typed-capability":
-        keys.add("conclusion_sha256")
+    keys.add("conclusion_sha256")
     if not isinstance(provenance, dict) or set(provenance) != keys:
         raise ValueError(f"{selector} conclusion provenance has a non-canonical shape")
-    if provenance.get("kind") not in {"exact-capability", "typed-capability"}:
+    if provenance.get("kind") != "typed-capability":
         raise ValueError(f"{selector} conclusion provenance kind is unsupported")
     for key in keys & {
         "evidence_sha256",

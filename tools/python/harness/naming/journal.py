@@ -21,7 +21,6 @@ from pathlib import Path
 from typing import Any
 
 from harness.domain.receipts import command_records
-from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
 from harness.naming.evidence import _RUNNER_TOKEN, recompute_collected_records
 from harness.naming.evidence import SCHEMA as ANALYZER_SCHEMA
 from harness.naming.namespace import (
@@ -294,8 +293,6 @@ def journal_is_fresh(
     report: Path,
     target: str,
     inputs: JournalInputs,
-    *,
-    registry=PRODUCTION_EXACT_CAPABILITIES,
 ) -> bool:
     """Reuse only when inputs, receipts, and raw evidence remain digest-bound."""
 
@@ -337,9 +334,8 @@ def journal_is_fresh(
     }
     report_rows = {
         key: row_operation_sequence(
-            collection_row(value, target, root=root, registry=registry),
+            collection_row(value, target, root=root),
             target,
-            registry=registry,
         )
         for key, value in report_row_values.items()
     }
@@ -374,11 +370,8 @@ def journal_is_fresh(
                 root=root,
                 target=target,
                 report_digest=inputs.report_digest,
-                row=collection_row(
-                    report_row_values[row], target, root=root, registry=registry
-                ),
+                row=collection_row(report_row_values[row], target, root=root),
                 payload=evidence_payload,
-                registry=registry,
             )
             derived = _artifact_path(root, namespace, entry.get("derived"))
             if derived != namespace / row.split(":", 1)[1] / "derived.json":

@@ -150,16 +150,18 @@ their observations to distinct receipt sources and mechanisms. Capability admiss
 grants no semantic approval. `owner_body` retains its separate wrapper and
 global-pointer zero-byte-store shapes.
 
-Data collection requires one current typed receipt per indexed operation,
-including original data ranges and table consumers. `data_original_range` captures
-the entire unambiguous containing reviewed data or rodata segment, up to 64 KiB,
-and binds exact bytes to current image, layout and replay identities. Its
-`selected_range` fact proves segment ownership, not object extent. Describe owns
-`storage_class` on a separate receipt. Unsupported, unmapped, BSS, incomplete or
-oversized ranges retain a named gap. Replay checks the current plan, receipt
-projections and live original bytes. Older captures require recapture; retain
-history. Separate receipts prove no semantic independence. Exact data capabilities
-remain exhausted-only.
+Data collection requires a current typed receipt for every indexed operation.
+`data_original_range` binds the whole containing reviewed data or rodata segment,
+up to 64 KiB, to the current image, layout and replay identities. Starting at the
+aligned selector, it records up to 16 consecutive original words that each name
+one unambiguous reviewed function start, plus the stopping reason. This prefix
+proves original content, not object extent, total count or live pointer contents.
+Describe supplies `storage_class` on a separate receipt. Unsupported ranges,
+including BSS, retain a named gap. Complete decoded consumer reads must fit within
+the prefix; every unsupported required consumer remains a gap. Initializer and
+consumer receipts use distinct mechanisms with shared image and layout premises.
+Function and data conclusions use the same current-work, typed-rung and replay
+gates. Missing, stale or superseded captures require recapture without fallback.
 
 Stack-copy dispatch consumers require a complete original body. The decoder
 accounts for delayed loads, saved return address, copies present at the indexed

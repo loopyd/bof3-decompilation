@@ -383,13 +383,24 @@ def test_index_worker_isolates_non_word_dispatch_extent(tmp_path: Path) -> None:
     ][0]
     assert dispatch["selector"] == f"{TARGET}@80100000"
     assert dispatch["payload"]["selected"] == f"{TARGET}@80100010"
-    assert dispatch["payload"]["selected_range"] == [0x80100010, 0x80100011]
-    assert dispatch["payload"]["selected_bytes"] == "00"
-    assert dispatch["payload"]["pointer_descriptions"] == []
+    binding = dispatch["payload"]["binding"]
+    assert binding["start"] == 0x80100000
+    assert binding["end"] == 0x80100010
     assert (
-        dispatch["payload"]["image_sha256"]
+        dispatch["payload"]["bytes"]
+        == (tmp_path / "out/test.bin").read_bytes()[:16].hex()
+    )
+    assert (
+        binding["image_sha256"]
         == hashlib.sha256((tmp_path / "out/test.bin").read_bytes()).hexdigest()
     )
+    assert dispatch["payload"]["gap"] is None
+    original_range = next(
+        op for op in operations if op["operation"] == "data_original_range"
+    )["payload"]
+    assert original_range["binding"]["start"] == 0x80100010
+    assert original_range["binding"]["end"] == 0x80100018
+    assert original_range["initializer"]["words"] == []
 
 
 def test_owner_work_uses_qualified_function_id(monkeypatch: pytest.MonkeyPatch) -> None:

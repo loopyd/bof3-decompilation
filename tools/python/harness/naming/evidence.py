@@ -10,11 +10,7 @@ from typing import Any
 
 from harness.domain.ids import parse_function_id
 from harness.naming.debt import address_of
-from harness.naming.capabilities import (
-    PRODUCTION_EXACT_CAPABILITIES,
-    ExactCapabilityRegistry,
-)
-from harness.naming.consumers import decode_table_consumer
+from harness.naming.consumers import capture_dispatch_consumer, decode_dispatch_consumer
 from harness.naming.description import (
     _describe,
     _validated_row,
@@ -25,10 +21,6 @@ from harness.naming.facts import RUNG_PROFILES
 
 SCHEMA = "bof3.naming-analyzer-facts/v3"
 CONCLUSION_CAPABILITY_SCHEMA = "bof3.naming-conclusion-capability/v1"
-_CAPABILITY_MISSING_FACT = (
-    "a second independent target-local initializer or consumer that independently "
-    "proves the same dispatch role and any additional proposed name term"
-)
 _RUNNER_TOKEN = object()
 _REPOSITORY_ROOT = Path(__file__).resolve().parents[4]
 _WIDTHS = {"lb": 1, "lbu": 1, "sb": 1, "lh": 2, "lhu": 2, "sh": 2, "lw": 4, "sw": 4}
@@ -96,7 +88,6 @@ def recompute_collected_records(
     report_digest: str,
     row: dict,
     payload: dict,
-    registry: ExactCapabilityRegistry = PRODUCTION_EXACT_CAPABILITIES,
 ) -> dict:
     """Replay indexed records and live instruction bytes behind caller-owned guards."""
     from harness.naming.instructions import analyzer_instructions
@@ -120,20 +111,17 @@ def recompute_collected_records(
     )
     from harness.naming.plan import collection_row
 
-    planned_row = collection_row(row, target, root=root, registry=registry)
+    planned_row = collection_row(row, target, root=root)
     derived = _analyze_validated_records(
         token,
         target=target,
         report_digest=report_digest,
         row=planned_row,
         operations=operations,
-        registry=registry,
         instructions=analyzer_instructions(root, payload["semantic"]),
     )
     if row.get("kind") == "data":
-        _validate_indexed_receipts(
-            root, planned_row, payload, operations, derived, registry=registry
-        )
+        _validate_indexed_receipts(root, planned_row, payload, operations, derived)
     return derived
 
 
@@ -142,8 +130,6 @@ def indexed_observations(
     row: dict,
     operation: dict,
     derived: dict,
-    *,
-    registry: ExactCapabilityRegistry = PRODUCTION_EXACT_CAPABILITIES,
 ) -> dict:
     """Project facts onto the indexed operation that actually produced them."""
     if token is not _RUNNER_TOKEN:
@@ -192,14 +178,22 @@ def indexed_observations(
             and int(fact["value"]["site"], 16) in sites
         ]
     elif kind == "data_dispatch_consumer" and role == kind:
-        entry = registry.get((f"data:{row['name']}", operation["selector"].lower()))
-        if entry is not None:
-            try:
-                candidates = decode_table_consumer(
-                    operation, entry.consumer, input_digest
-                )
-            except ValueError:
-                pass
+        selected_range = next(
+            (
+                fact["value"]
+                for fact in derived["facts"]
+                if fact["class"] == "selected_range"
+            ),
+            {},
+        )
+        try:
+            candidates = decode_dispatch_consumer(
+                operation, target, selected_range, input_digest
+            )
+        except ValueError as error:
+            opened.append(
+                {"class": "one_level_beyond", "reason": f"capability gap: {error}"}
+            )
     trusted = {_digest(fact) for fact in derived["facts"]}
     facts = [
         {key: fact[key] for key in ("class", "polarity", "value")}
@@ -214,11 +208,11 @@ def indexed_observations(
     }
 
 
-def _validate_indexed_receipts(root, row, payload, operations, derived, *, registry):
+def _validate_indexed_receipts(root, row, payload, operations, derived):
     """Require the complete current receipt set and its recomputed projections."""
     from harness.naming.plan import indexed_operation_plan
 
-    planned = indexed_operation_plan(row, derived["target"], registry=registry)
+    planned = indexed_operation_plan(row, derived["target"])
     if len(planned) != len(operations) or any(
         expected["id"] != actual["item"]["id"]
         or any(
@@ -268,9 +262,7 @@ def _validate_indexed_receipts(root, row, payload, operations, derived, *, regis
                     "data range capture differs from current original range"
                 )
         receipt = json.loads((root / command["receipt"]).read_bytes())
-        expected = indexed_observations(
-            _RUNNER_TOKEN, row, operation, derived, registry=registry
-        )
+        expected = indexed_observations(_RUNNER_TOKEN, row, operation, derived)
         if any(
             _digest(receipt.get(key)) != _digest(value)
             for key, value in expected.items()
@@ -285,26 +277,11 @@ def _validate_indexed_receipts(root, row, payload, operations, derived, *, regis
 
 def _validate_consumer_bytes(root: Path, target: str, payload: dict) -> None:
     """Re-read the actual original image, not its recorded hash or copied bytes."""
-    from harness.analysis.project import prepare_target
-
-    spec = prepare_target(root, target)
-    image = spec.binary.read_bytes()
-    if hashlib.sha256(image).hexdigest() != payload["image_sha256"]:
-        raise ValueError("data consumer original image is stale")
-    for kind in ("selected", "consumer"):
-        start, end = payload[f"{kind}_range"]
-        offset = spec.binary_offset + start - spec.load_address
-        if (
-            type(start) is not int
-            or type(end) is not int
-            or start >= end
-            or offset < spec.binary_offset
-            or offset + end - start > len(image)
-            or image[offset : offset + end - start].hex() != payload[f"{kind}_bytes"]
-        ):
-            raise ValueError(
-                "data consumer capture differs from current original bytes"
-            )
+    current = capture_dispatch_consumer(root, payload["selected"], payload["consumer"])
+    if _digest(current) != _digest(payload):
+        raise ValueError(
+            "data consumer differs from current original bytes or reviewed range"
+        )
 
 
 def _analyze_validated_records(
@@ -314,7 +291,6 @@ def _analyze_validated_records(
     report_digest: str,
     row: dict[str, Any],
     operations: tuple[dict[str, Any], ...],
-    registry: ExactCapabilityRegistry = PRODUCTION_EXACT_CAPABILITIES,
     instructions: tuple[dict[str, Any], ...] = (),
 ) -> dict[str, Any]:
     """Analyze records from the canonical runner boundary."""
@@ -540,12 +516,6 @@ def _analyze_validated_records(
                 else "access query unavailable",
             }
         )
-    registry_entries = [
-        entry
-        for (spec_row, _consumer), entry in registry.items()
-        if spec_row == selector and entry.consumer.target == target
-    ]
-    registry_entry = registry_entries[0] if len(registry_entries) == 1 else None
     consumer_facts: list[dict[str, Any]] = []
     for item in operations:
         if item.get("operation") != "data_dispatch_consumer":
@@ -556,16 +526,19 @@ def _analyze_validated_records(
         ):
             raise ValueError("dispatch consumer operation provenance is invalid")
         try:
-            key = (selector, str(item["selector"]).lower())
-            entry = registry.get(key)
-            if entry is None or entry is not registry_entry:
-                raise ValueError("table consumer is not an independently reviewed spec")
+            selected_range = next(
+                (fact["value"] for fact in facts if fact["class"] == "selected_range"),
+                {},
+            )
             consumer_facts.extend(
-                decode_table_consumer(item, entry.consumer, input_digest)
+                decode_dispatch_consumer(item, target, selected_range, input_digest)
             )
         except ValueError as error:
             unavailable.append(
-                {"operation": "data_dispatch_consumer", "reason": str(error)}
+                {
+                    "operation": "data_dispatch_consumer",
+                    "reason": f"capability gap: {error}",
+                }
             )
     facts.extend(consumer_facts)
     if not any(fact["class"] == "one_level_beyond" for fact in consumer_facts):
@@ -645,21 +618,12 @@ def _analyze_validated_records(
                 "input_digest": input_digest,
                 "fact_digest": _digest(facts),
                 "rungs": by_class,
-                "required_work": (
-                    [registry_entry.required_work]
-                    if registry_entry is not None
-                    else sorted(
-                        item["id"]
-                        for item in normalized_operations
-                        if not item["supplemental"]
-                    )
+                "required_work": sorted(
+                    item["id"]
+                    for item in normalized_operations
+                    if not item["supplemental"]
                 ),
-                "proposal_allowed": registry_entry is None,
-                **(
-                    {"missing_fact": _CAPABILITY_MISSING_FACT}
-                    if registry_entry is not None
-                    else {}
-                ),
+                "proposal_allowed": True,
             }
     return result
 

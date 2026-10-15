@@ -11,7 +11,6 @@ from typing import Any
 from harness.analysis.index import index_path
 from harness.common.process import ProcessCleanupError
 from harness.domain.ids import normalize_target_id, parse_function_id
-from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
 from harness.naming.client import (
     _validate_report_shape,
     _validate_run_arguments,
@@ -184,7 +183,6 @@ def run_evidence(
     rows_budget: int = DEFAULT_ROWS_BUDGET,
     rizin_executable: str | Path | None = None,
     terminalize: bool = False,
-    registry=PRODUCTION_EXACT_CAPABILITIES,
 ) -> dict[str, Any]:
     telemetry = RunTelemetry()
     report = canonical_report_path(root, report)
@@ -216,9 +214,7 @@ def run_evidence(
         },
     )
     loaded, corrupt = load_journal(root, report, target)
-    fresh = bool(loaded) and journal_is_fresh(
-        root, report, target, inputs, registry=registry
-    )
+    fresh = bool(loaded) and journal_is_fresh(root, report, target, inputs)
     telemetry.rows_stale = len(loaded) if loaded and not fresh else 0
     reusable = loaded if fresh else {}
     if corrupt and not loaded:
@@ -246,7 +242,7 @@ def run_evidence(
         worker.receive()
         for request_id, report_row in enumerate(selected):
             key = _row_key(report_row)
-            row = collection_row(report_row, target, root=root, registry=registry)
+            row = collection_row(report_row, target, root=root)
             result = None
             try:
                 semantic: list[dict[str, Any]] = []
@@ -334,7 +330,7 @@ def run_evidence(
                     target,
                     row,
                 )
-                expected = indexed_operation_plan(row, target, registry=registry)
+                expected = indexed_operation_plan(row, target)
                 expected_by_id = {str(item["id"]): item for item in expected}
                 actual = [
                     {
@@ -381,7 +377,6 @@ def run_evidence(
                     report_digest=inputs.report_digest,
                     row=row,
                     operations=operation_records,
-                    registry=registry,
                     instructions=captures,
                 )
                 receipts = _receipts_for(
@@ -392,7 +387,6 @@ def run_evidence(
                     semantic,
                     captures,
                     derived=derived,
-                    registry=registry,
                 )
                 checkpoint[key] = _commit_row(
                     namespace,

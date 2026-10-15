@@ -94,15 +94,17 @@ One receipt cannot close two rungs. Complete positive rung profiles can produce
 generic conclusion capabilities. Import and terminal validation require current
 generated-work replay, exact typed observations, distinct rung receipts and
 independently bound corroborators. Capabilities grant no semantic or identity approval.
-Data collection records every indexed operation in a typed receipt, including
-original data ranges and table consumers. `data_original_range` captures the whole
-containing reviewed data or rodata segment, up to 64 KiB, with current image,
-layout and replay identities. Its `selected_range` fact establishes segment
-ownership and bytes, not object extent. Describe supplies `storage_class` on its
-own receipt. Unsupported or unmapped ranges, including BSS, retain a named range
-gap. Replay requires the complete current operation set and typed projections and
-rereads original bytes. Older captures require recapture. Separate receipts grant
-no semantic corroboration; exact data capabilities remain exhausted-only.
+Data collection records every indexed operation in a typed receipt.
+`data_original_range` binds the whole containing reviewed data or rodata segment,
+up to 64 KiB, to current image, layout and replay identities. It records up to
+16 original function-address words from the aligned selector and the stopping
+reason. These words establish original content, not object extent, total count
+or live pointer contents. Describe supplies `storage_class` on its own receipt.
+A complete decoded dispatch consumer must read within that prefix. Unsupported
+ranges or required consumers retain named gaps. Initializer and consumer receipts
+use different mechanisms with shared image and layout premises. Function and
+data conclusion import use current generated work, typed observations and live
+original-byte replay. Superseded captures require recapture without fallback.
 `naming.readiness` adds target-local unresolved `static_jal` edges to generated
 caller work, including selected addresses outside the payload. It deduplicates
 callers while preserving owner candidates and the three-query bulk snapshot.

@@ -5,21 +5,18 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
-from types import MappingProxyType
-from typing import Any, cast
 
 import pytest
 from harness.domain.receipts import write_receipt
-from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
 from harness.naming.conclusion import import_conclusion
-from harness.naming.equivalence import _exact_capability_row
-from harness.naming.journal import JournalInputs
-from harness.naming.journal import commit_entry
 from harness.naming.journal import entry_sha256
 from harness.naming.namespace import journal_dir
-from harness.naming.journal import write_manifest
-from harness.naming.validation import _canonical_json_digest, _validate_next_command
-from naming_synthetic_fixture import SYNTHETIC_ROW, SYNTHETIC_TARGET
+from harness.naming.validation import _validate_next_command
+from naming_synthetic_fixture import (
+    SYNTHETIC_ROW,
+    SYNTHETIC_TARGET,
+    _build_synthetic_data_evidence,
+)
 
 TARGET = "exe/test"
 FIXTURES = Path(__file__).resolve().parents[1] / "fixtures"
@@ -54,196 +51,13 @@ def test_documented_conclusion_fixtures_pass_import_shape_validation() -> None:
 
 
 def _fixture(root: Path) -> tuple[Path, Path, dict, dict]:
-    report = root / "report.json"
-    gap = {
-        "status": "open",
-        "next_command": "bin/harness analysis query --json owners exe/test@0x80100010",
-        "observations": [
-            {
-                "id": "gap",
-                "text": "Evidence gap; this initializer records no semantic conclusion.",
-            }
-        ],
-        "authority": "original",
-    }
-    initial = {
-        "kind": "function",
-        "name": "func_80100000",
-        "initializer_state": "bof3.naming-audit-initializer/v1",
-        "rung_status": "blocked",
-        "rungs": {"selected_range": gap},
-        "smallest_repair": "bin/harness analysis query --json owners exe/test@0x80100010",
-        "ceiling_next_command": "bin/harness analysis query --json owners exe/test@0x80100010",
-    }
-    payload_path = root / "out/reviews/evidence/payload.json"
-    receipt = write_receipt(
-        root,
-        "out/reviews/evidence/receipt.json",
-        {
-            "command": "inspect",
-            "status": "passed",
-            "target": TARGET,
-            "selector": f"{TARGET}@0x80100000",
-            "output": "facts",
-        },
-    )
-    receipt.update({"item": "calls:x", "operation": "calls"})
-    receipt_path = root / receipt["receipt"]
-    receipt_payload = json.loads(receipt_path.read_text())
-    receipt_payload.update(
-        {"schema": "bof3.naming-evidence-facts/v1", "facts": ["selected_call"]}
-    )
-    receipt_path.write_text(json.dumps(receipt_payload, sort_keys=True) + "\n")
-    receipt["sha256"] = hashlib.sha256(receipt_path.read_bytes()).hexdigest()
-    receipt2 = write_receipt(
-        root,
-        "out/reviews/evidence/receipt2.json",
-        {
-            "command": "inspect caller",
-            "status": "passed",
-            "target": TARGET,
-            "selector": f"{TARGET}@0x80100000",
-            "output": "independent facts",
-        },
-    )
-    receipt2.update({"item": "calls:y", "operation": "calls"})
-    receipt2_path = root / receipt2["receipt"]
-    receipt2_payload = json.loads(receipt2_path.read_text())
-    receipt2_payload.update(
-        {"schema": "bof3.naming-evidence-facts/v1", "facts": ["selected_call"]}
-    )
-    receipt2_path.write_text(json.dumps(receipt2_payload, sort_keys=True) + "\n")
-    receipt2["sha256"] = hashlib.sha256(receipt2_path.read_bytes()).hexdigest()
-    payload = {
-        "target": TARGET,
-        "row": "function:func_80100000",
-        "items": [
-            {
-                "id": "calls:x",
-                "operation": "calls",
-                "selector": f"{TARGET}@0x80100000",
-                "payload": [{"callsite": "a"}],
-            },
-            {
-                "id": "calls:y",
-                "operation": "calls",
-                "selector": f"{TARGET}@0x80100000",
-                "payload": [{"callsite": "b"}],
-            },
-        ],
-        "commands": [receipt, receipt2],
-    }
-    payload_path.parent.mkdir(parents=True, exist_ok=True)
-    payload_path.write_text(json.dumps(payload), encoding="utf-8")
-    report.write_text(
-        json.dumps(
-            {
-                "schema": "bof3.naming-audit/v3",
-                "target": TARGET,
-                "complete": False,
-                "rows": [initial],
-            },
-            indent=2,
-        )
-        + "\n",
-        encoding="utf-8",
-    )
-    terminal = {
-        "kind": "function",
-        "name": "func_80100000",
-        "rung_status": "exhausted",
-        "rungs": {
-            "selected_call": {
-                "status": "negative",
-                "negative_result": "reviewed bytes do not establish a role",
-                "observations": [
-                    {
-                        "id": "negative-a",
-                        "text": "analyzer found no semantic role",
-                        "producer": "analyzer",
-                        "fact_class": "selected_call",
-                        "evidence_receipt": receipt["receipt"],
-                    },
-                    {
-                        "id": "negative-b",
-                        "text": "independent analyzer found no semantic role",
-                        "producer": "analyzer",
-                        "fact_class": "selected_call",
-                        "evidence_receipt": receipt2["receipt"],
-                    },
-                ],
-                "authority": "original",
-                "commands": [receipt, receipt2],
-            }
-        },
-        "required_work": [
-            {"id": "calls:x", "status": "completed", "commands": [receipt]},
-            {"id": "calls:y", "status": "completed", "commands": [receipt2]},
-        ],
-        "corroborators": {
-            "call-a": {"source_id": receipt["sha256"]},
-            "call-b": {"source_id": receipt2["sha256"]},
-        },
-        "missing_fact": "independent semantic role",
-        "ceiling_next_command": "bin/harness analysis query --json owners exe/test@0x80100010",
-        "interpretation": "no supported name",
-        "authority": "expert and original",
-        "partial_used": False,
-        "outside_payload": False,
-        "optional_work": [],
-        "pending_commands": [],
-    }
-    report_digest = hashlib.sha256(report.read_bytes()).hexdigest()
-    evidence_sha = hashlib.sha256(payload_path.read_bytes()).hexdigest()
-    entry = commit_entry(
-        root,
-        report,
-        TARGET,
-        {
-            "row": "function:func_80100000",
-            "status": "committed",
-            "evidence": payload_path.relative_to(root).as_posix(),
-            "evidence_sha256": evidence_sha,
-            "operations": [],
-        },
-    )
-    write_manifest(
-        root,
-        report,
-        TARGET,
-        JournalInputs(TARGET, report_digest, "test", "test"),
-        {"function:func_80100000": entry},
-    )
-    for label, record in zip(
-        terminal["corroborators"], (receipt, receipt2), strict=True
-    ):
-        terminal["corroborators"][label]["source_id"] = _canonical_json_digest(
-            {
-                "report_digest": report_digest,
-                "target": TARGET,
-                "row": "function:func_80100000",
-                "operation": record["operation"],
-                "selector": record["selector"],
-                "command": record["command"],
-                "payload_digest": evidence_sha,
-                "facts": ["selected_call"],
-            }
-        )
-    authored = {
-        "schema": "bof3.naming-conclusion/v1",
-        "target": TARGET,
-        "report_sha256": report_digest,
-        "source": {
-            "report": report.as_posix(),
-            "report_digest": report_digest,
-            "evidence": payload_path.relative_to(root).as_posix(),
-            "evidence_sha256": evidence_sha,
-        },
-        "conclusion": terminal,
-    }
+    """Current collected evidence with its required capability deliberately omitted."""
+    fixture = _build_synthetic_data_evidence(root)
+    authored = _synthetic_authored(fixture.report)
+    authored["source"].pop("conclusion_capability")
     input_path = root / "input.json"
     input_path.write_text(json.dumps(authored), encoding="utf-8")
-    return report, input_path, authored, terminal
+    return fixture.report, input_path, authored, authored["conclusion"]
 
 
 @pytest.mark.parametrize(
@@ -303,14 +117,25 @@ def test_failed_required_work_remains_blocked() -> None:
         _validate_conclusion(row)
 
 
-def test_one_receipt_cannot_close_two_rungs(tmp_path: Path) -> None:
-    _, input_path, authored, terminal = _fixture(tmp_path)
-    terminal["rungs"]["one_level_beyond"] = dict(terminal["rungs"]["selected_call"])
-    input_path.write_text(json.dumps(authored), encoding="utf-8")
+def test_one_receipt_cannot_close_two_rungs(
+    tmp_path: Path, synthetic_data_evidence
+) -> None:
+    from copy import deepcopy
+
+    report = synthetic_data_evidence.report
+    authored = _synthetic_authored(report)
+    row = authored["conclusion"]
+    reused = deepcopy(row["rungs"]["one_level_beyond"])
+    for observation in reused["observations"]:
+        observation["fact_class"] = "selected_access"
+        observation["id"] += ".access"
+    row["rungs"]["selected_access"] = reused
+    input_path = tmp_path / "conclusion.json"
+    input_path.write_text(json.dumps(authored))
+    original = report.read_bytes()
     with pytest.raises(ValueError, match="one evidence source"):
-        import_conclusion(
-            tmp_path, TARGET, tmp_path / "report.json", tmp_path / "input.json"
-        )
+        import_conclusion(tmp_path, TARGET, report, input_path)
+    assert report.read_bytes() == original
 
 
 def test_import_proposed_delegates_existing_proposal_validation(
@@ -336,7 +161,7 @@ def test_rejects_unbound_or_incomplete_evidence(
     if mutation == "stale":
         authored["report_sha256"] = "0" * 64
     elif mutation == "noop":
-        terminal["rungs"]["selected_call"]["commands"][0]["command"] = (
+        terminal["rungs"]["selected_access"]["commands"][0]["command"] = (
             "harness:naming-evidence-run bounded collection"
         )
     elif mutation == "mismatch":
@@ -363,7 +188,7 @@ def test_validation_failure_is_atomic(tmp_path: Path, monkeypatch) -> None:
         import_conclusion(tmp_path, TARGET, report, input_path)
 
 
-def test_import_validates_whole_result_and_preserves_mode(
+def test_import_requires_capability_before_whole_report_validation(
     tmp_path: Path, monkeypatch
 ) -> None:
     report, input_path, _authored, _row = _fixture(tmp_path)
@@ -378,30 +203,28 @@ def test_replay_still_requires_source_evidence(tmp_path: Path, monkeypatch) -> N
 
 
 def test_rejects_selector_target_bypass_with_matching_receipt_metadata(
-    tmp_path: Path, monkeypatch
+    tmp_path: Path, synthetic_data_evidence
 ) -> None:
-    report, input_path, authored, terminal = _fixture(tmp_path)
-    monkeypatch.setattr("harness.naming.audit.validate", lambda *_args, **_kwargs: {})
-    record = terminal["rungs"]["selected_call"]["commands"][0]
+    report = synthetic_data_evidence.report
+    original = report.read_bytes()
+    authored = _synthetic_authored(report)
+    record = authored["conclusion"]["required_work"][0]["commands"][0]
+    record["selector"] = "exe/other@80100000"
     forged = write_receipt(
         tmp_path,
-        "out/reviews/evidence/selector-forged.json",
-        {**record, "target": TARGET, "selector": "exe/other@0x80100000"},
+        str(Path(record["receipt"]).with_name("forged.json")),
+        record,
     )
-    forged.update({"item": "calls:x", "operation": "calls"})
-    terminal["rungs"]["selected_call"]["commands"] = [forged]
-    terminal["required_work"][0]["commands"] = [forged]
-    payload_path = tmp_path / authored["source"]["evidence"]
-    payload = json.loads(payload_path.read_text())
-    payload["items"][0]["selector"] = "exe/other@0x80100000"
-    payload["commands"] = [forged]
-    payload_path.write_text(json.dumps(payload), encoding="utf-8")
-    authored["source"]["evidence_sha256"] = hashlib.sha256(
-        payload_path.read_bytes()
-    ).hexdigest()
-    input_path.write_text(json.dumps(authored), encoding="utf-8")
-    with pytest.raises(ValueError, match="bound payload|target/selector"):
+    record.clear()
+    record.update(forged)
+    input_path = tmp_path / "conclusion.json"
+    input_path.write_text(json.dumps(authored))
+    with pytest.raises(
+        ValueError,
+        match="bound payload|target/selector",
+    ):
         import_conclusion(tmp_path, TARGET, report, input_path)
+    assert report.read_bytes() == original
 
 
 def test_rejects_proposal_when_transaction_is_not_ready(
@@ -412,28 +235,29 @@ def test_rejects_proposal_when_transaction_is_not_ready(
         import_conclusion(tmp_path, TARGET, report, input_path)
 
 
-def test_rejects_forged_cross_target_receipt(tmp_path: Path, monkeypatch) -> None:
-    report, input_path, authored, terminal = _fixture(tmp_path)
-    monkeypatch.setattr("harness.naming.audit.validate", lambda *_args, **_kwargs: {})
-    record = terminal["rungs"]["selected_call"]["commands"][0]
+def test_rejects_forged_cross_target_receipt(
+    tmp_path: Path, synthetic_data_evidence
+) -> None:
+    report = synthetic_data_evidence.report
+    original = report.read_bytes()
+    authored = _synthetic_authored(report)
+    record = authored["conclusion"]["required_work"][0]["commands"][0]
+    record["target"] = "exe/other"
     forged = write_receipt(
         tmp_path,
-        "out/reviews/evidence/forged.json",
-        {**record, "target": "exe/other"},
+        str(Path(record["receipt"]).with_name("forged.json")),
+        record,
     )
-    forged.update({"item": "calls:x", "operation": "calls"})
-    terminal["rungs"]["selected_call"]["commands"] = [forged]
-    terminal["required_work"][0]["commands"] = [forged]
-    payload = json.loads((tmp_path / authored["source"]["evidence"]).read_text())
-    payload["commands"] = [forged]
-    payload_path = tmp_path / authored["source"]["evidence"]
-    payload_path.write_text(json.dumps(payload), encoding="utf-8")
-    authored["source"]["evidence_sha256"] = hashlib.sha256(
-        payload_path.read_bytes()
-    ).hexdigest()
-    input_path.write_text(json.dumps(authored), encoding="utf-8")
-    with pytest.raises(ValueError, match="bound payload|receipt target/selector"):
+    record.clear()
+    record.update(forged)
+    input_path = tmp_path / "conclusion.json"
+    input_path.write_text(json.dumps(authored))
+    with pytest.raises(
+        ValueError,
+        match="bound payload|target/selector",
+    ):
         import_conclusion(tmp_path, TARGET, report, input_path)
+    assert report.read_bytes() == original
 
 
 def test_concurrent_report_change_is_rejected(tmp_path: Path, monkeypatch) -> None:
@@ -469,7 +293,7 @@ MALICIOUS_COMMANDS = (
 
 def _set_command_field(row: dict, field: str, command: str) -> None:
     if field == "rung.next_command":
-        row["rungs"]["selected_call"]["next_command"] = command
+        row["rungs"]["selected_access"]["next_command"] = command
     elif field == "required_work.next_command":
         row["required_work"][0]["next_command"] = command
     elif field == "optional_work.next_command":
@@ -481,9 +305,12 @@ def _set_command_field(row: dict, field: str, command: str) -> None:
 @pytest.mark.parametrize("field", COMMAND_FIELDS)
 @pytest.mark.parametrize("command", MALICIOUS_COMMANDS)
 def test_rejects_malicious_authored_command_fields_before_semantic_validation(
-    tmp_path: Path, field: str, command: str
+    tmp_path: Path, synthetic_data_evidence, field: str, command: str
 ) -> None:
-    report, input_path, authored, row = _fixture(tmp_path)
+    report = synthetic_data_evidence.report
+    authored = _synthetic_authored(report)
+    row = authored["conclusion"]
+    input_path = tmp_path / "conclusion.json"
     original = report.read_bytes()
     _set_command_field(row, field, command)
     input_path.write_text(json.dumps(authored), encoding="utf-8")
@@ -496,14 +323,12 @@ def test_rejects_malicious_authored_command_fields_before_semantic_validation(
     "forgery", ["checkpoint", "manifest", "stale-namespace", "copied-ledger"]
 )
 def test_local_recovery_artifacts_cannot_authenticate_semantic_facts(
-    tmp_path: Path, forgery: str
+    tmp_path: Path, synthetic_data_evidence, forgery: str
 ) -> None:
-    report, input_path, authored, _row = _fixture(tmp_path)
-    namespace = (
-        tmp_path
-        / "out/reviews/evidence"
-        / f"{TARGET}__{authored['source']['report_digest'][:12]}"
-    )
+    report = synthetic_data_evidence.report
+    authored = _synthetic_authored(report)
+    input_path = tmp_path / "conclusion.json"
+    namespace = journal_dir(tmp_path, report, TARGET)
     checkpoint = namespace / "checkpoint.jsonl"
     manifest = namespace / "manifest.json"
     if forgery == "checkpoint":
@@ -523,7 +348,7 @@ def test_local_recovery_artifacts_cannot_authenticate_semantic_facts(
         entry["entry_sha256"] = entry_sha256(entry)
         checkpoint.write_text(json.dumps(entry, sort_keys=True) + "\n")
     input_path.write_text(json.dumps(authored), encoding="utf-8")
-    with pytest.raises(ValueError, match="journal|manifest"):
+    with pytest.raises(ValueError, match="journal|manifest|derived artifact"):
         import_conclusion(tmp_path, TARGET, report, input_path)
 
 
@@ -531,47 +356,30 @@ BATTLE15_TARGET = "emi/battle/battle/15"
 BATTLE15_ROW = "D_800969A0"
 
 
-def _exact_registry(*names: str) -> MappingProxyType:
-    selected = {
-        key: value
-        for key, value in PRODUCTION_EXACT_CAPABILITIES.items()
-        if key[0] in {f"data:{name}" for name in names}
-    }
-    assert len(selected) == len(names)
-    return MappingProxyType(selected)
-
-
-def test_terminal_exact_row_reconstructs_only_code_owned_work() -> None:
+def test_terminal_row_reconstructs_only_current_generated_work(tmp_path, monkeypatch):
     from harness.naming.plan import collection_row
 
+    work = [
+        {
+            "id": "access:exe/test@80100000",
+            "profile": "data_access",
+            "description": "current access",
+        }
+    ]
+    monkeypatch.setattr("harness.naming.readiness.required_work_items", lambda *_: work)
     terminal = {
         "kind": "data",
-        "name": BATTLE15_ROW,
+        "name": SYNTHETIC_ROW,
         "rung_status": "exhausted",
-        "required_work": [],
+        "required_work": [{"id": work[0]["id"], "status": "completed"}],
     }
-    registry = _exact_registry(BATTLE15_ROW, "D_800969AC")
-    restored = collection_row(terminal, BATTLE15_TARGET, registry=registry)
+    restored = collection_row(terminal, SYNTHETIC_TARGET, root=tmp_path)
     assert restored is not terminal
-    assert restored["required_work"] == [
-        {
-            "id": "access:emi/battle/battle/15@800ad69c",
-            "status": "open",
-            "profile": "data_access",
-            "description": "refresh exact reviewed consumer evidence",
-        }
-    ]
-    ac = collection_row(
-        dict(terminal, name="D_800969AC"), BATTLE15_TARGET, registry=registry
-    )
-    assert ac["required_work"] == [
-        {
-            "id": "access:emi/battle/battle/15@800ad9cc",
-            "status": "open",
-            "profile": "data_access",
-            "description": "refresh exact reviewed consumer evidence",
-        }
-    ]
+    assert restored["required_work"] == [{**work[0], "status": "open"}]
+    with pytest.raises(ValueError, match="current generated work"):
+        collection_row(
+            {**terminal, "required_work": []}, SYNTHETIC_TARGET, root=tmp_path
+        )
 
 
 def _synthetic_authored(report: Path, row_name: str = SYNTHETIC_ROW) -> dict:
@@ -587,8 +395,111 @@ def _synthetic_authored(report: Path, row_name: str = SYNTHETIC_ROW) -> dict:
     payload_path = namespace / row_name / "payload.json"
     payload = json.loads(payload_path.read_text())
     capability = derived["conclusion_capability"]
-    command = payload["commands"][0]
-    conclusion = _exact_capability_row(capability, command)
+    root = report.parents[2]
+    from harness.naming.validation import _receipt_facts
+
+    checkpoint = [
+        json.loads(line)
+        for line in (namespace / "checkpoint.jsonl").read_text().splitlines()
+    ]
+    entry = next(item for item in checkpoint if item["row"] == f"data:{row_name}")
+    rungs = {}
+    source_ids = {}
+    for name in capability["rungs"]:
+        for command in payload["commands"]:
+            receipt = json.loads((root / command["receipt"]).read_text())
+            observations = [
+                item
+                for item in receipt.get("observations", [])
+                if item["class"] == name
+            ]
+            if (
+                not observations
+                or name == "selected_access"
+                and command["operation"] != "access"
+            ):
+                continue
+            source_id, _ = _receipt_facts(
+                root,
+                command,
+                report_digest=report_digest,
+                target=SYNTHETIC_TARGET,
+                row_selector=f"data:{row_name}",
+                journal_entry=entry,
+                payload_record=command,
+            )
+            source_ids[name] = source_id
+            typed = []
+            for index, observation in enumerate(observations):
+                fact = next(
+                    f
+                    for f in derived["facts"]
+                    if all(
+                        f.get(k) == observation.get(k)
+                        for k in ("class", "polarity", "value")
+                    )
+                )
+                typed.append(
+                    {
+                        "id": f"{row_name}.{name}.{index}",
+                        "text": "Current runner-derived observation.",
+                        "producer": "analyzer",
+                        "source_id": fact["source_id"],
+                        "fact_class": name,
+                        "evidence_receipt": command["receipt"],
+                        "polarity": "positive",
+                        "value": fact["value"],
+                    }
+                )
+            rungs[name] = {
+                "status": "passed",
+                "observations": typed,
+                "authority": "reviewed original bytes and layout",
+                "commands": [command],
+            }
+            break
+    initial = next(
+        r for r in json.loads(report.read_text())["rows"] if r["name"] == row_name
+    )
+    conclusion = {
+        "kind": "data",
+        "name": row_name,
+        "rung_status": "exhausted",
+        "outside_payload": False,
+        "partial_used": False,
+        "rungs": rungs,
+        "required_work": [
+            {
+                "id": identity,
+                "status": "completed",
+                "commands": [c for c in payload["commands"] if c["item"] == identity],
+                "observations": [
+                    {
+                        "id": f"{row_name}.work.{i}",
+                        "text": "Executed current generated work.",
+                    }
+                ],
+            }
+            for i, identity in enumerate(capability["required_work"])
+        ],
+        "optional_work": [],
+        "authority": "reviewed original bytes and layout",
+        "interpretation": "Synthetic positive evidence ceiling; no semantic rename is accepted.",
+        "missing_fact": "Independent gameplay meaning remains unproven.",
+        "ceiling_next_command": initial["smallest_repair"],
+        "smallest_repair": initial["smallest_repair"],
+        "corroborators": {
+            label: {
+                "source_id": source_ids[name],
+                "observation_ids": [o["id"] for o in rungs[name]["observations"]],
+                "mechanism": mechanism,
+            }
+            for label, name, mechanism in [
+                ("original-layout", "selected_range", "independent_initializer"),
+                ("original-consumer", "one_level_beyond", "independent_consumer"),
+            ]
+        },
+    }
     return {
         "schema": "bof3.naming-conclusion/v1",
         "target": SYNTHETIC_TARGET,
@@ -604,7 +515,7 @@ def _synthetic_authored(report: Path, row_name: str = SYNTHETIC_ROW) -> dict:
     }
 
 
-def test_proposed_import_uses_custom_registry_for_transaction_validation(
+def test_proposed_import_checks_current_transaction(
     tmp_path: Path, monkeypatch
 ) -> None:
     report = tmp_path / "report.json"
@@ -647,10 +558,6 @@ def test_proposed_import_uses_custom_registry_for_transaction_validation(
     }
     input_path = tmp_path / "conclusion.json"
     input_path.write_text(json.dumps(authored))
-    registry = cast(
-        Any,
-        MappingProxyType({("data:D_CUSTOM", "exe/test@80100000"): object()}),
-    )
     calls = []
 
     monkeypatch.setattr(
@@ -681,18 +588,17 @@ def test_proposed_import_uses_custom_registry_for_transaction_validation(
 
     monkeypatch.setattr("harness.naming.audit.validate", validate)
 
-    result = import_conclusion(tmp_path, TARGET, report, input_path, registry=registry)
+    result = import_conclusion(tmp_path, TARGET, report, input_path)
 
     assert result["changed"] is True
     assert len(calls) == 2
-    assert all(call["registry"] is registry for call in calls)
     assert calls[1]["transaction"] == "function:func_80100000"
 
 
-def test_synthetic_exact_rows_import_and_replay_serially(
-    tmp_path: Path, synthetic_exact_evidence
+def test_synthetic_data_rows_import_and_replay_serially(
+    tmp_path: Path, synthetic_data_evidence
 ) -> None:
-    report = synthetic_exact_evidence.report
+    report = synthetic_data_evidence.report
     evidence_root = None
     for row_name in (SYNTHETIC_ROW,):
         authored = _synthetic_authored(report, row_name)
@@ -700,21 +606,19 @@ def test_synthetic_exact_rows_import_and_replay_serially(
         input_path = tmp_path / f"{row_name}.json"
         input_path.write_text(json.dumps(authored))
         result = import_conclusion(
-            synthetic_exact_evidence.root,
+            synthetic_data_evidence.root,
             SYNTHETIC_TARGET,
             report,
             input_path,
             evidence_root=evidence_root,
-            registry=synthetic_exact_evidence.registry,
         )
         assert result["changed"] is True
         replay = import_conclusion(
-            synthetic_exact_evidence.root,
+            synthetic_data_evidence.root,
             SYNTHETIC_TARGET,
             report,
             input_path,
             evidence_root=evidence_root,
-            registry=synthetic_exact_evidence.registry,
         )
         assert replay["changed"] is False
     rows = json.loads(report.read_text())["rows"]
@@ -737,26 +641,18 @@ def test_synthetic_exact_rows_import_and_replay_serially(
         "duplicate-corroborator",
         "missing-corroborator",
         "unsupported-term",
-        "name-terms",
-        "semantic-status",
-        "transaction-status",
-        "pre-apply",
-        "semantic-claim",
-        "interpretation",
-        "observation-text",
         "source-extra",
         "source-report-omitted",
         "source-report-cross-target",
         "corroborator-observation",
-        "corroborator-extra",
         "other-target",
     ],
 )
-def test_synthetic_exact_row_mutations_fail_without_report_change(
-    tmp_path: Path, synthetic_exact_evidence, mutation: str
+def test_synthetic_data_row_mutations_fail_without_report_change(
+    tmp_path: Path, synthetic_data_evidence, mutation: str
 ) -> None:
-    report = synthetic_exact_evidence.report
-    authored = _synthetic_authored(synthetic_exact_evidence.report)
+    report = synthetic_data_evidence.report
+    authored = _synthetic_authored(synthetic_data_evidence.report)
     authored["source"]["report"] = report.as_posix()
     capability = authored["source"]["conclusion_capability"]
     row = authored["conclusion"]
@@ -775,7 +671,7 @@ def test_synthetic_exact_row_mutations_fail_without_report_change(
     elif mutation == "required-work":
         row["required_work"][0]["id"] = "access:forged"
     elif mutation == "proposal-flag":
-        capability["proposal_allowed"] = True
+        capability["proposal_allowed"] = False
     elif mutation == "duplicate-corroborator":
         row["corroborators"]["original-consumer"]["source_id"] = row["corroborators"][
             "original-layout"
@@ -784,20 +680,6 @@ def test_synthetic_exact_row_mutations_fail_without_report_change(
         row["corroborators"].pop("original-consumer")
     elif mutation == "unsupported-term":
         row["new_name"] = "dispatchTable"
-    elif mutation == "name-terms":
-        row["name_terms"] = {"dispatch": "original-consumer"}
-    elif mutation == "semantic-status":
-        row["semantic_status"] = "accepted"
-    elif mutation == "transaction-status":
-        row["transaction_status"] = "ready"
-    elif mutation == "pre-apply":
-        row["pre_apply"] = {"status": "ready"}
-    elif mutation == "semantic-claim":
-        row["semantic_claim"] = "dispatch table"
-    elif mutation == "interpretation":
-        row["interpretation"] = "semantic dispatch assertion"
-    elif mutation == "observation-text":
-        row["rungs"]["selected_range"]["observations"][0]["text"] = "semantic name"
     elif mutation == "source-extra":
         authored["source"]["semantic_claim"] = "dispatch table"
     elif mutation == "source-report-omitted":
@@ -806,8 +688,6 @@ def test_synthetic_exact_row_mutations_fail_without_report_change(
         authored["source"]["report"] = "out/reviews/other.json"
     elif mutation == "corroborator-observation":
         row["corroborators"]["original-layout"]["observation_ids"] = ["forged"]
-    elif mutation == "corroborator-extra":
-        row["corroborators"]["original-layout"]["semantic_claim"] = "dispatch"
     else:
         authored["source"]["conclusion_capability"]["target"] = "emi/battle/battle/03"
     original = report.read_bytes()
@@ -815,19 +695,18 @@ def test_synthetic_exact_row_mutations_fail_without_report_change(
     input_path.write_text(json.dumps(authored))
     with pytest.raises(ValueError):
         import_conclusion(
-            synthetic_exact_evidence.root,
+            synthetic_data_evidence.root,
             SYNTHETIC_TARGET,
             report,
             input_path,
-            registry=synthetic_exact_evidence.registry,
         )
     assert report.read_bytes() == original
 
 
-def test_synthetic_exact_row_explicit_evidence_root_is_mandatory(
-    tmp_path: Path, synthetic_exact_evidence
+def test_synthetic_data_row_explicit_evidence_root_is_mandatory(
+    tmp_path: Path, synthetic_data_evidence
 ) -> None:
-    report = synthetic_exact_evidence.report
+    report = synthetic_data_evidence.report
     evidence_root = None
     authored = _synthetic_authored(report)
     authored["source"]["report"] = report.as_posix()
@@ -847,92 +726,86 @@ def test_synthetic_exact_row_explicit_evidence_root_is_mandatory(
         assert report.read_bytes() == original
 
     imported = import_conclusion(
-        synthetic_exact_evidence.root,
+        synthetic_data_evidence.root,
         SYNTHETIC_TARGET,
         report,
         input_path,
         evidence_root=evidence_root,
-        registry=synthetic_exact_evidence.registry,
     )
     assert imported["changed"] is True
     replay = import_conclusion(
-        synthetic_exact_evidence.root,
+        synthetic_data_evidence.root,
         SYNTHETIC_TARGET,
         report,
         input_path,
         evidence_root=evidence_root,
-        registry=synthetic_exact_evidence.registry,
     )
     assert replay["changed"] is False
 
 
-def test_synthetic_exact_row_identical_replay_is_idempotent(
-    tmp_path: Path, synthetic_exact_evidence
+def test_synthetic_data_row_identical_replay_is_idempotent(
+    tmp_path: Path, synthetic_data_evidence
 ) -> None:
-    report = synthetic_exact_evidence.report
+    report = synthetic_data_evidence.report
     evidence_root = None
     authored = _synthetic_authored(report)
     authored["source"]["report"] = report.as_posix()
     input_path = tmp_path / "conclusion.json"
     input_path.write_text(json.dumps(authored))
     first = import_conclusion(
-        synthetic_exact_evidence.root,
+        synthetic_data_evidence.root,
         SYNTHETIC_TARGET,
         report,
         input_path,
         evidence_root=evidence_root,
-        registry=synthetic_exact_evidence.registry,
     )
     imported = report.read_bytes()
     replay = import_conclusion(
-        synthetic_exact_evidence.root,
+        synthetic_data_evidence.root,
         SYNTHETIC_TARGET,
         report,
         input_path,
         evidence_root=evidence_root,
-        registry=synthetic_exact_evidence.registry,
     )
     assert first["changed"] is True
     assert replay["changed"] is False
     assert report.read_bytes() == imported
 
 
-def test_synthetic_exact_row_replay_rejects_stale_initializer_digest(
-    tmp_path: Path, synthetic_exact_evidence
+def test_synthetic_data_row_replay_rejects_stale_initializer_digest(
+    tmp_path: Path, synthetic_data_evidence
 ) -> None:
-    report = synthetic_exact_evidence.report
+    report = synthetic_data_evidence.report
     evidence_root = None
     authored = _synthetic_authored(report)
     authored["source"]["report"] = report.as_posix()
     input_path = tmp_path / "conclusion.json"
     input_path.write_text(json.dumps(authored))
     import_conclusion(
-        synthetic_exact_evidence.root,
+        synthetic_data_evidence.root,
         SYNTHETIC_TARGET,
         report,
         input_path,
         evidence_root=evidence_root,
-        registry=synthetic_exact_evidence.registry,
     )
     imported = report.read_bytes()
     authored["report_sha256"] = "0" * 64
     input_path.write_text(json.dumps(authored))
     with pytest.raises(ValueError, match="provenance"):
         import_conclusion(
-            synthetic_exact_evidence.root,
+            synthetic_data_evidence.root,
             SYNTHETIC_TARGET,
             report,
             input_path,
             evidence_root=evidence_root,
-            registry=synthetic_exact_evidence.registry,
         )
     assert report.read_bytes() == imported
 
 
-def test_synthetic_exact_row_rejects_nested_command_extra(
-    tmp_path: Path, synthetic_exact_evidence
+def test_synthetic_data_row_rejects_nested_command_extra(
+    tmp_path: Path, synthetic_data_evidence
 ) -> None:
-    report = synthetic_exact_evidence.report
+    report = synthetic_data_evidence.report
     evidence_root = None
     authored = _synthetic_authored(report)
     authored["source"]["report"] = report.as_posix()
@@ -941,44 +814,43 @@ def test_synthetic_exact_row_rejects_nested_command_extra(
     )
     input_path = tmp_path / "conclusion.json"
     input_path.write_text(json.dumps(authored))
-    with pytest.raises(ValueError, match="trusted runner payload"):
+    with pytest.raises(
+        ValueError, match="typed command differs from its exact runner record"
+    ):
         import_conclusion(
-            synthetic_exact_evidence.root,
+            synthetic_data_evidence.root,
             SYNTHETIC_TARGET,
             report,
             input_path,
             evidence_root=evidence_root,
-            registry=synthetic_exact_evidence.registry,
         )
 
 
-def test_synthetic_exact_row_conflicting_replay_rejects(
-    tmp_path: Path, synthetic_exact_evidence
+def test_synthetic_data_row_conflicting_replay_rejects(
+    tmp_path: Path, synthetic_data_evidence
 ) -> None:
-    report = synthetic_exact_evidence.report
+    report = synthetic_data_evidence.report
     evidence_root = None
     authored = _synthetic_authored(report)
     authored["source"]["report"] = report.as_posix()
     input_path = tmp_path / "conclusion.json"
     input_path.write_text(json.dumps(authored))
     import_conclusion(
-        synthetic_exact_evidence.root,
+        synthetic_data_evidence.root,
         SYNTHETIC_TARGET,
         report,
         input_path,
         evidence_root=evidence_root,
-        registry=synthetic_exact_evidence.registry,
     )
     imported = report.read_bytes()
     authored["conclusion"]["interpretation"] = "conflicting semantic assertion"
     input_path.write_text(json.dumps(authored))
     with pytest.raises(ValueError):
         import_conclusion(
-            synthetic_exact_evidence.root,
+            synthetic_data_evidence.root,
             SYNTHETIC_TARGET,
             report,
             input_path,
             evidence_root=evidence_root,
-            registry=synthetic_exact_evidence.registry,
         )
     assert report.read_bytes() == imported
