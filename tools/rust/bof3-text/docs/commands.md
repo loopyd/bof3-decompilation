@@ -237,7 +237,26 @@ field capacity. All eight records and their allocation identities are required.
 Inline documents use `bof3.inline-text/v1`; validation checks all allocations,
 literal encoding, references and capacity including NUL, and reports `strings`.
 
-## `query ARCHIVE.EMI [-e|--entry N] [--grep TEXT] [-i|--ignore-case] [--commands] [--class ...] [--windows PATH] [--no-windows]`
+## `query SOURCE [-e|--entry N] [--grep TEXT] [-i|--ignore-case] [--commands] [--class ...] [--windows PATH] [--no-windows]`
+
+Without `--class`, queries include verified inline allocations, equipment and
+ability names, default character names and encounter-template names alongside
+banks. `--entry` accepts a supported entry, a comma-separated list or `all`.
+For the supported US executable, omit entry and class selectors to query its
+ASCII allocations. For example:
+
+```sh
+bin/harness text query out/extracted/BIN/ETC/SISYOU.EMI --entry 0 --grep Pwr --json
+bin/harness text query out/extracted/SLUS_004.22 --grep "Exception" --json
+```
+
+Literal results use `bof3.literal-query/v1`, retain the source schema and identity,
+and report allocation metadata in `matches`. Their `reading` is `literal`.
+The default string anchor covers the allocation, including padding and any NUL;
+the match anchor covers only matched source bytes. `--commands` reports an empty
+usage list for these fields. Class selectors retain their bank or heuristic scope.
+The corpus `search` index currently covers banks and heuristic instances; use
+direct `query` for verified literal allocations.
 
 Lists rows, optionally filtered by a **command-transparent** text match, showing
 `bank.row`, the bank-relative byte offset, span length and decoded text. When a match is
@@ -252,7 +271,7 @@ does not match a `{end}` terminator, and `--grep 0x81` does not match an operand
 syntax is therefore no longer searchable — use `--commands` for command usage. `-i`
 folds ASCII case. See `out/text-format/search-semantics.md`.
 
-**`query` and `search` use one matcher.** Both route through `search::find_in_instance`, so the
+**Bank and heuristic `query` and `search` use one matcher.** Both route through `search::find_in_instance`, so the
 same needle answers the same way in either mode: a command-derived break may be skipped or read as
 a single space, and token names and operand bytes are never matchable. `--class heuristic` searches
 the decoded raw-text instances with that same matcher; matches are reported as heuristic leads, not

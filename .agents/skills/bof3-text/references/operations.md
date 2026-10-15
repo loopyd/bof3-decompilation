@@ -92,6 +92,13 @@ option semantics. `query` and corpus `search` match displayed literals across
 commands. Their default offset is the containing string; `--match-offset` selects
 the actual match.
 
+Without a class selector, `query` also searches the supported literal layouts,
+including executable ASCII. For EMI sources, select one entry, a comma-separated
+list or `all`. Omit entry selectors for the executable. Literal JSON results retain
+source identities and allocation metadata; their default anchor includes the full
+allocation. `--match-offset` selects matched bytes. Corpus `search` currently indexes
+banks and heuristic instances, so use direct `query` for verified literal fields.
+
 ## Modify safely
 
 For bank edits, use a freshly extracted version 3 JSON document. Preserve `source`, `fingerprint`

@@ -280,9 +280,9 @@ pub enum Mode {
         #[arg(long)]
         commands: bool,
     },
-    /// List or search the rows of a text subfile
+    /// List or search verified banks and literal allocations
     Query {
-        /// Archive to read
+        /// Source file to read
         archive: PathBuf,
         /// Entry index, comma-separated list, or `all`
         #[arg(short = 'e', long = "entry", default_value = "all")]
@@ -3358,6 +3358,95 @@ struct QueryOptions<'a> {
     match_offset: bool,
 }
 
+struct QuerySources<'a> {
+    literals: Vec<serde_json::Value>,
+    banks: Vec<(crate::models::Entry, TextClass, &'a [u8])>,
+}
+
+fn query_sources<'a>(archive: &Path, data: &'a [u8], spec: &str) -> Result<QuerySources<'a>> {
+    let mut sources = QuerySources {
+        literals: Vec::new(),
+        banks: Vec::new(),
+    };
+    if crate::executable::is_executable(data) {
+        executable_selection(spec, None, None)?;
+        sources.literals.push(
+            serde_json::to_value(crate::executable::extract(archive, data)?)
+                .map_err(|error| Error::Invalid(error.to_string()))?,
+        );
+        return Ok(sources);
+    }
+    let indices = match parse_selection(spec)? {
+        None => None,
+        Some(Selection::One(index)) => Some(vec![index]),
+        Some(Selection::Many(indices)) => Some(indices),
+    };
+    let wanted = |index| {
+        indices
+            .as_ref()
+            .is_none_or(|indices| indices.contains(&index))
+    };
+    let mut literal_entries = std::collections::BTreeSet::new();
+    if crate::characters::supports(data) {
+        let document = crate::characters::extract(archive, data)?;
+        if wanted(document.entry) {
+            literal_entries.insert(document.entry);
+            sources.literals.push(
+                serde_json::to_value(document)
+                    .map_err(|error| Error::Invalid(error.to_string()))?,
+            );
+        }
+    }
+    if crate::records::supports(data) && wanted(0) {
+        literal_entries.insert(0);
+        sources.literals.push(
+            serde_json::to_value(crate::records::extract(archive, data)?)
+                .map_err(|error| Error::Invalid(error.to_string()))?,
+        );
+    }
+    let mut found = literal_entries.clone();
+    for (entry, payload) in crate::lexagraph::entries(data)? {
+        if !wanted(entry.index) || literal_entries.contains(&entry.index) {
+            continue;
+        }
+        let document = if crate::monsters::supports(entry, payload) {
+            Some(serde_json::to_value(crate::monsters::extract(
+                archive, data, entry, payload,
+            )?))
+        } else if crate::inline::supports(entry, payload) {
+            Some(serde_json::to_value(crate::inline::extract(
+                archive, data, entry, payload,
+            )?))
+        } else {
+            None
+        };
+        if let Some(document) = document {
+            sources
+                .literals
+                .push(document.map_err(|error| Error::Invalid(error.to_string()))?);
+            found.insert(entry.index);
+            continue;
+        }
+        if let Some(class) = TextClass::from_load_argument(entry.ram_ptr) {
+            sources.banks.push((entry, class, payload));
+            found.insert(entry.index);
+        }
+    }
+    if let Some(indices) = indices {
+        for index in indices {
+            if !found.contains(&index) {
+                return invalid(format!(
+                    "entry {index} has no supported verified text layout"
+                ));
+            }
+        }
+    }
+    if found.is_empty() {
+        return invalid("archive has no supported verified text layout");
+    }
+    Ok(sources)
+}
+
 fn run_query(
     cli: &Cli,
     archive: &Path,
@@ -3378,9 +3467,36 @@ fn run_query(
     if resolve_class(class_filter)? == Some(TextClass::Heuristic) {
         return query_latches(cli, archive, &data, options, windows, payloads, vocabulary);
     }
-    let selected = select(&data, entry_spec, resolve_class(class_filter)?)?;
+    let sources = if let Some(class) = resolve_class(class_filter)? {
+        QuerySources {
+            literals: Vec::new(),
+            banks: select(&data, entry_spec, Some(class))?,
+        }
+    } else {
+        query_sources(archive, &data, entry_spec)?
+    };
     let mut report = Vec::new();
-    for (entry, class, payload) in &selected {
+    for document in sources.literals {
+        let result = query::literal(document, needle, ignore_case, match_offset, commands)?;
+        if !cli.json {
+            println!("query {}: {}", archive.display(), result["source_schema"]);
+            if commands {
+                println!("  no commands in literal allocations");
+            }
+            if let Some(matches) = result["matches"].as_array() {
+                for row in matches {
+                    println!(
+                        "+{:#x}\t{}B\t{}",
+                        row["reported_offset"].as_u64().unwrap_or(0),
+                        row["reported_length"],
+                        row["text"].as_str().unwrap_or("")
+                    );
+                }
+            }
+        }
+        report.push(result);
+    }
+    for (entry, class, payload) in &sources.banks {
         let section = extract::parse_section(payload)?;
         let source = source_for(archive, *entry, *class).to_string();
         if commands {

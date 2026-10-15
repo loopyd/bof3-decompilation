@@ -222,6 +222,20 @@ pub fn joined_byte_range(
     Some((first, last + 1))
 }
 
+/// Match a verified literal field whose characters each occupy one source byte.
+pub fn find_literal(text: &str, needle: &str, ignore_case: bool) -> Option<Hit> {
+    let mut reading = Reading::default();
+    for (offset, character) in text.chars().enumerate() {
+        reading.literal(character, offset);
+    }
+    let (start, end) = find_in_reading_pair(&reading.text, &reading.text, needle, ignore_case)?;
+    Some(Hit {
+        reading: "literal",
+        text: reading.slice(start, end),
+        byte_range: joined_byte_range(&reading.marks, start, end),
+    })
+}
+
 /// Which characters of a spaced reading came from a command rather than from a literal byte.
 ///
 /// The index stores a spaced reading and, when it differs, a joined one with the commands dropped.
@@ -390,7 +404,7 @@ pub fn find_in_reading(reading: &str, needle: &str, ignore_case: bool) -> Option
 
 /// The canonical match for one encoded instance: command-aware, with its true byte range.
 ///
-/// **Every public matching path routes through here** — `query` on banked rows, the raw-text
+/// Bank and heuristic matching paths route through here: `query` on banked rows, the raw-text
 /// (`heuristic`) query, and corpus `search` — so the modes cannot disagree about what a piece of
 /// text says. A command-derived break may be skipped or stand for a single space; literal bytes
 /// must match exactly, and the returned byte range covers only the literal bytes matched.

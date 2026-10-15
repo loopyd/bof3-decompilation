@@ -8,6 +8,86 @@ use crate::command;
 use crate::extract;
 use crate::models::{Result, Section};
 
+/// Query allocations from a verified literal codec, retaining its source metadata.
+pub fn literal(
+    document: impl Serialize,
+    needle: Option<&str>,
+    ignore_case: bool,
+    match_offset: bool,
+    commands: bool,
+) -> Result<serde_json::Value> {
+    use serde_json::json;
+    let mut report = serde_json::to_value(document)
+        .map_err(|error| crate::models::Error::Invalid(error.to_string()))?;
+    let field = if report.get("names").is_some() {
+        "names"
+    } else {
+        "strings"
+    };
+    let rows =
+        report[field].take().as_array().cloned().ok_or_else(|| {
+            crate::models::Error::Invalid("literal query has no allocations".into())
+        })?;
+    report
+        .as_object_mut()
+        .ok_or_else(|| {
+            crate::models::Error::Invalid("literal query document is not an object".into())
+        })?
+        .remove(field);
+    report["source_schema"] = report["schema"].take();
+    report["schema"] = json!("bof3.literal-query/v1");
+    report["rows"] = json!(rows.len());
+    if commands {
+        report["usage"] = json!([]);
+        return Ok(report);
+    }
+    let mut matches = Vec::new();
+    for mut row in rows {
+        let text = row["text"]
+            .as_str()
+            .ok_or_else(|| crate::models::Error::Invalid("literal query has no text".into()))?;
+        let hit = match needle {
+            Some(needle) => match crate::search::find_literal(text, needle, ignore_case) {
+                Some(hit) => Some(hit),
+                None => continue,
+            },
+            None => None,
+        };
+        let offset = row["file_offset"]
+            .as_u64()
+            .ok_or_else(|| crate::models::Error::Invalid("literal query has no offset".into()))?;
+        let capacity = row["capacity"]
+            .as_u64()
+            .ok_or_else(|| crate::models::Error::Invalid("literal query has no capacity".into()))?;
+        let range = hit.as_ref().and_then(|hit| hit.byte_range);
+        let matched_offset = range.map(|(start, _)| offset + start as u64);
+        let matched_length = range.map(|(start, end)| end - start);
+        row["string_offset"] = json!(offset);
+        row["string_length"] = json!(capacity);
+        row["match_offset"] = json!(matched_offset);
+        row["match_length"] = json!(matched_length);
+        row["anchor"] = json!(if match_offset { "match" } else { "string" });
+        row["reported_offset"] = json!(if match_offset {
+            matched_offset.unwrap_or(offset)
+        } else {
+            offset
+        });
+        row["reported_length"] = json!(if match_offset {
+            matched_length.map_or(capacity, |length| length as u64)
+        } else {
+            capacity
+        });
+        if let Some(hit) = hit {
+            row["matched"] = json!(hit.text);
+            row["reading"] = json!(hit.reading);
+        }
+        matches.push(row);
+    }
+    report["matched"] = json!(matches.len());
+    report["matches"] = json!(matches);
+    Ok(report)
+}
+
 /// One indexed dialogue subfile.
 #[derive(Clone, Debug, Serialize)]
 pub struct IndexedEntry {
