@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from harness.domain.ids import parse_function_id
+from harness.naming.dispatch import decode_dispatch_body
 
 
 @dataclass(frozen=True)
@@ -40,53 +41,6 @@ _SHA256 = re.compile(r"[0-9a-f]{64}")
 
 def _source(family: str, target: str, value: object, input_digest: str) -> str:
     return f"{family}:{_digest([target, value, input_digest])}"
-
-
-def _selector_offset(words: tuple[int, ...]) -> int:
-    selectors = [
-        (index, word)
-        for index, word in enumerate(words)
-        if word >> 26 == 0x24 and (word >> 21) & 0x1F and (word >> 16) & 0x1F
-    ]
-    if len(selectors) != 1:
-        raise ValueError("table consumer selector load is ambiguous")
-    index, selector = selectors[0]
-    base = (selector >> 21) & 0x1F
-    destination = (selector >> 16) & 0x1F
-    definitions = [
-        word
-        for word in words[:index]
-        if (word >> 16) & 0x1F == base and word >> 26 == 0x23
-    ]
-    if not definitions or any(
-        (word >> 16) & 0x1F == base and word >> 26 != 0x23
-        for word in words[index - 1 : index]
-    ):
-        raise ValueError("table consumer selector base is invalid")
-    if index + 3 >= len(words):
-        raise ValueError("table consumer selector def-use is incomplete")
-    shift = words[index + 2]
-    address = words[index + 3]
-    if (
-        shift >> 26 != 0
-        or shift & 0x3F != 0
-        or (shift >> 21) & 0x1F
-        or (shift >> 16) & 0x1F != destination
-        or (shift >> 11) & 0x1F != destination
-        or (shift >> 6) & 0x1F != 2
-        or address >> 26 != 0
-        or address & 0x3F != 0x21
-        or (address >> 21) & 0x1F != 29
-        or (address >> 16) & 0x1F != destination
-        or (address >> 11) & 0x1F != destination
-    ):
-        raise ValueError("table consumer selector def-use is invalid")
-    offset = selector & 0xFFFF
-    if offset & 0x8000:
-        offset -= 0x10000
-    if offset < 0:
-        raise ValueError("table consumer selector offset is invalid")
-    return offset
 
 
 def decode_table_consumer(
@@ -143,6 +97,11 @@ def decode_table_consumer(
         or payload["image_sha256"] != spec.image_sha256
     ):
         raise ValueError("table consumer does not match reviewed original bytes")
+    body = decode_dispatch_body(code, spec.consumer_address, spec.selected_address)
+    if body["observed_read_span"] != [spec.selected_address, spec.selected_end] or [
+        int(read["instruction"], 16) for read in body["selected_reads"]
+    ] != [spec.consumer_address + offset * 4 for offset in spec.load_offsets]:
+        raise ValueError("table consumer decoded reads disagree with reviewed range")
     pointers = list(struct.unpack(f"<{len(table) // 4}I", table))
     if tuple(pointers) != spec.pointer_addresses:
         raise ValueError("table consumer pointers do not match reviewed globals")
@@ -177,7 +136,8 @@ def decode_table_consumer(
             f"0x{spec.selected_end:08X}",
         ],
         "element_width": 4,
-        "element_count": len(pointers),
+        "observed_slots": len(pointers),
+        "scope": "Captured words read by this consumer; object extent and total count remain unproven.",
         "words": [f"0x{pointer:08X}" for pointer in pointers],
         "image_sha256": payload["image_sha256"],
     }
@@ -186,20 +146,21 @@ def decode_table_consumer(
             f"0x{spec.consumer_address:08X}",
             f"0x{spec.consumer_end:08X}",
         ],
-        "load_sites": [
-            f"0x{spec.consumer_address + offset * 4:08X}"
-            for offset in spec.load_offsets
+        "load_sites": [read["instruction"] for read in body["selected_reads"]],
+        "widths": [read["width_bytes"] for read in body["selected_reads"]],
+        "offsets": [
+            int(read["address"], 16) - spec.selected_address
+            for read in body["selected_reads"]
         ],
-        "widths": [4, 4, 4],
-        "offsets": [0, 4, 8],
         "selector": {
             "kind": "unsigned_byte",
-            "offset": _selector_offset(spec.consumer_words),
+            "offset": body["selector"]["offset_bytes"],
             "scale": 4,
         },
         "dispatch": "jalr",
         "delay_slot": "nop",
         "bounds_check": False,
+        "body": body,
     }
     return [
         {

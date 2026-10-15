@@ -161,6 +161,15 @@ projections and live original bytes. Older captures require recapture; retain
 history. Separate receipts prove no semantic independence. Exact data capabilities
 remain exhausted-only.
 
+Stack-copy dispatch consumers require a complete original body. The decoder
+accounts for delayed loads, saved return address, copies present at the indexed
+load, global stores, the indirect call and its slot, and stack restoration.
+Facts retain every memory access and explicit call-preservation assumptions.
+Copied word spans prove neither object extent nor total table length; byte
+selectors outside the copied slots remain unresolved. Unsupported instructions,
+transfers or register flow leave a named gap. Replay requires the current full-body
+projection; older projections require recapture.
+
 Imported function discovery includes target-local unresolved `static_jal` index
 edges as deduplicated caller work, preserving every owner candidate. The destination
 address supplies a lookup key, not a callee identity or runtime-owner proof.
