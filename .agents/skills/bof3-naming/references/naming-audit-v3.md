@@ -44,9 +44,9 @@ activate accounting by compare-and-swap. Inspect ambiguous publication before re
 Recovery verifies no old applications or semantics. Verify the full successor and
 no-change reconciliation preview before further naming.
 
-Exact-capability validation recognizes exact historical optional owner command hints.
-Require receipt/provenance/journal/recomputed-capability checks. Reject mixed hints
-or other row changes; never normalize stored receipts/rows in place.
+Exact-capability validation requires current code-owned command hints plus receipt,
+provenance, journal and recomputed-capability checks. Retired command spellings
+block acceptance. Preserve stored receipts and rows unchanged for reviewed recovery.
 
 Structural validation/capability exhaustion grants no semantic acceptance.
 Autonomous no-op/exhaustion requires read-only parent-pinned
