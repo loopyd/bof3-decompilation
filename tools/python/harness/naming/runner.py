@@ -1,13 +1,4 @@
-"""``bin/harness naming evidence``: one receipt-backed target evidence run.
-
-Native collection of the ``required_work`` for a single target v3 report:
-one process, one bulk context, one shared index connection, bounded
-read-only concurrency, digest-bound evidence files and append-only row
-checkpoints.  Bounded row selection defaults to a deterministic shard of at
-most ten still-open rows; ``--all-rows`` runs under the same budgeted
-collection.  Query success never closes a semantic rung; only the owning
-validator may move a row to a terminal state.
-"""
+"""Collect naming evidence through serial owned captures and one index worker."""
 
 from __future__ import annotations
 
@@ -81,11 +72,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="one canonically spelled absolute parent owning all evidence artifacts",
     )
     parser.add_argument(
-        "--terminalize",
-        action="store_true",
-        help="attempt semantic terminalization; fail closed without report mutation when evidence is insufficient",
-    )
-    parser.add_argument(
         "--instructions",
         action="store_true",
         help="capture complete original instructions for function rows and their direct work",
@@ -122,7 +108,6 @@ def _run(args: argparse.Namespace) -> int:
             shard=args.shard,
             concurrency=args.concurrency,
             rows_budget=args.rows_budget,
-            terminalize=args.terminalize,
         )
     finally:
         reset_receipt_root(receipt_token)

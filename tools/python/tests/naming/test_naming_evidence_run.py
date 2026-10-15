@@ -35,7 +35,6 @@ from harness.analysis.snapshot import (
 from harness.naming.debt import address_of
 from harness.domain.receipts import command_records
 from harness.naming.client import IndexWorker
-from harness.naming.collection import terminalize_report
 from harness.naming.state import checkpoint_path
 from harness.naming.state import load_checkpoint
 from harness.naming.state import manifest_path
@@ -576,13 +575,12 @@ def test_collection_receipts_cannot_terminalize_without_semantic_conclusions(
         TARGET,
         report,
         rows=["function:func_80100000"],
-        terminalize=True,
     )
-    assert result["terminalized"] is False
+    assert result["executed"] == 1
     assert report.read_bytes() == before
 
 
-def test_terminalize_preserves_authored_rows_byte_for_byte(tmp_path: Path) -> None:
+def test_retired_terminalize_option_preserves_authored_report(tmp_path: Path) -> None:
     _repo(tmp_path)
     _index(tmp_path)
     row = _blocked_row("func_80100000", _callee_work())
@@ -590,7 +588,9 @@ def test_terminalize_preserves_authored_rows_byte_for_byte(tmp_path: Path) -> No
     row["proposal"] = {"name": "authored_name"}
     report = _report(tmp_path, [row])
     before = report.read_bytes()
-    assert terminalize_report(tmp_path, report, TARGET, [row], {}) is False
+    with pytest.raises(SystemExit) as error:
+        build_parser().parse_args([TARGET, str(report), "--terminalize"])
+    assert error.value.code == 2
     assert report.read_bytes() == before
 
 

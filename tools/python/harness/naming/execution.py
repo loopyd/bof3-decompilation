@@ -20,7 +20,6 @@ from harness.naming.collection import (
     _receipts_for,
     _select_rows,
     evidence_namespace,
-    terminalize_report,
     write_failed_receipt,
 )
 from harness.naming.evidence import _RUNNER_TOKEN, _analyze_validated_records
@@ -182,7 +181,6 @@ def run_evidence(
     concurrency: int = DEFAULT_CONCURRENCY,
     rows_budget: int = DEFAULT_ROWS_BUDGET,
     rizin_executable: str | Path | None = None,
-    terminalize: bool = False,
 ) -> dict[str, Any]:
     telemetry = RunTelemetry()
     report = canonical_report_path(root, report)
@@ -417,11 +415,6 @@ def run_evidence(
     telemetry_path = evidence_dir(root, report, target) / "telemetry.json"
     summary = telemetry.payload(manifest["sha256"])
     write_telemetry(telemetry_path, summary)
-    terminalized = (
-        terminalize
-        and not errors
-        and terminalize_report(root, report, target, report_rows, entries)
-    )
     return {
         "schema": "bof3.naming-evidence-run/v2",
         "target": target,
@@ -430,7 +423,6 @@ def run_evidence(
         "executed": executed,
         "resumed": len(reusable),
         "errors": errors,
-        "terminalized": terminalized,
         "manifest": namespace.record_path(manifest_path(root, report, target)),
         "manifest_sha256": manifest["sha256"],
         "telemetry": namespace.record_path(telemetry_path),

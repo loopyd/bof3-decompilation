@@ -214,49 +214,6 @@ def _select_rows(
     return [by_key[key] for key in sorted(by_key)][:shard]
 
 
-def _item_queries(
-    row: dict[str, Any], source: Any
-) -> list[tuple[dict[str, Any], str, str, list[dict[str, Any]]]]:
-    """Route each open work item to its canonical indexed query.
-
-    Returns ``(item, operation, selector, payload)``; un-routable items
-    stay open with a machine-visible note instead of a fabricated payload.
-    """
-
-    results: list[tuple[dict[str, Any], str, str, list[dict[str, Any]]]] = []
-    for item in row.get("required_work", []):
-        if not (isinstance(item, dict) and item.get("status") == "open"):
-            continue
-        item_id = str(item.get("id"))
-        if item_id.startswith("callee:") or item_id.startswith("caller:"):
-            function_id = item_id.split(":", 1)[1]
-            payload = source.canonical("calls_payload", function_id)
-            results.append((item, "calls", function_id, payload))
-        elif item_id.startswith("access:"):
-            function_id = item_id.split(":", 1)[1]
-            target, _, addr_text = function_id.partition("@")
-            access_site = int(addr_text, 16)
-            payload = source.execute(
-                "SELECT source, address, function_id, access_kind, opcode "
-                "FROM data_references WHERE target_id = ? AND source = ? "
-                "AND function_id IS NOT NULL ORDER BY address",
-                (target, access_site),
-            )
-            results.append((item, "access", function_id, payload))
-        elif item_id.startswith("owner:"):
-            owner_selector = item_id.split(":", 1)[1]
-            owner_target, _, owner_address = owner_selector.partition("@")
-            start = int(owner_address, 16)
-            payload = source.canonical("owners_payload", f"{owner_target}@{start:08X}")
-            results.append((item, "owner", owner_selector, payload))
-        else:
-            item["note"] = (
-                "unsupported generated work profile; left open for the owning validator"
-            )
-            results.append((item, "open", _row_key(row), []))
-    return results
-
-
 def _commit_row(
     namespace: EvidenceNamespace,
     report: Path,
@@ -326,22 +283,6 @@ def _commit_row(
     if failed_path.exists():
         failed_path.unlink()
     return entry
-
-
-def terminalize_report(
-    root: Path,
-    report: Path,
-    target: str,
-    rows: list[dict[str, Any]],
-    checkpoint: Mapping[str, dict[str, Any]],
-) -> bool:
-    """Leave collected rows blocked until a semantic analyzer authors conclusions.
-
-    Collection receipts prove only that commands ran.  The runner has no typed
-    semantic-conclusion format capable of proving v3 exhaustion, so it must not
-    mutate initializer or authored rows.
-    """
-    return False
 
 
 def write_failed_receipt(
