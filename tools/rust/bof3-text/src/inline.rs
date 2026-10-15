@@ -1,4 +1,4 @@
-//! Source-bound literal allocations inside pinned US battle code payloads.
+//! Source-bound literal allocations inside pinned US overlay code payloads.
 
 use std::collections::BTreeSet;
 use std::path::Path;
@@ -21,6 +21,19 @@ struct Layout {
 }
 
 const LAYOUTS: &[Layout] = &[
+    Layout {
+        name: "US master stat labels",
+        load: 0x801d0c00,
+        size: 13963,
+        sha256: "51385434af5360c35d86a0646d253f36480351b2826a173addcc0b0ca00ed91a",
+        consumers: &[0x801d1500, 0x801d1574, 0x801d15dc, 0x801d1638],
+        allocations: &[
+            (0x801d4038, 4, None),
+            (0x801d403c, 4, None),
+            (0x801d4040, 4, None),
+            (0x801d4044, 4, None),
+        ],
+    },
     Layout {
         name: "US battle categories",
         load: 0x80096800,

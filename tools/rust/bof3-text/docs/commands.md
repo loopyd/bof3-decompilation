@@ -151,7 +151,7 @@ then select the entry explicitly with `extract --entry N`. The output uses
 literal bytes; see [formats.md](formats.md#monster-names). Default `--entry all`
 continues to select banks; `extract-corpus` exports both.
 
-For supported embedded battle text, select the code entry explicitly:
+For supported embedded overlay text, select the code entry explicitly:
 
 ```sh
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
@@ -162,7 +162,8 @@ the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 The original BATTLE archive also has supported literal message records in entry 3.
 Use `--entry 3` to extract them. Command-bearing and untraced records remain
-excluded; see [formats.md](formats.md#inline-battle-text).
+excluded. SISYOU entry 0 supports the four master-menu stat labels; select it
+with `--entry 0`. See [formats.md](formats.md#inline-overlay-text).
 
 ## `extract-corpus [--root DIR] -o|--output DIR`
 

@@ -66,7 +66,7 @@ Use `--entry all` or the source's record entry: 8 for START and 0 for STATUS.
 Omit class and latch selectors. Each copy needs its own freshly extracted
 document and separate output; editing one does not update the other or a save.
 
-For embedded battle text, use `analyze` to find the supported `inline_entries`
+For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
 uses `bof3.inline-text/v1`. Edit only `text`, retain all strings and references,
 and reserve one encoded byte for NUL within each allocation. Pack against the

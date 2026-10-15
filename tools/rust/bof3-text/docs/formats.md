@@ -120,7 +120,7 @@ layout before writing. Encounter data, stats and all other bytes stay unchanged.
 Different archives remain separate sources. This layout recognition does not
 establish support for another region or prove observed rendering.
 
-## Inline battle text
+## Inline overlay text
 
 The supported US battle code payload loaded at `0x80096800` contains two
 five-entry pointer tables at `0x800B6E88` and `0x800B6EC4`. Draw calls at
@@ -140,7 +140,7 @@ NUL-padded. Dialogue commands and pointer changes are refused.
 Recognition pins the complete selected payload outside these allocations.
 Packing additionally binds the complete archive hash, canonical source path,
 entry and entry offset. It preserves all other payloads. Each archive replica
-remains a separate source. Other embedded battle strings, different code
+remains a separate source. Other embedded strings, different code
 layouts and observed rendering remain separate coverage requirements.
 
 The `US battle literal messages` layout supports eight thirteen-byte records
@@ -157,6 +157,14 @@ than a pointer table. Recognition pins those instructions outside the editable
 fields. Document `index` identifies the supported allocation, not its original
 table row. Command-bearing rows 1 and 3 and untraced rows 4 and 5 remain outside
 this layout's editable allocations.
+
+The `US master stat labels` layout supports `Pwr`, `Def`, `Int` and `Agl`
+in SISYOU entry 0, loaded at `0x801D0C00`. Their four-byte allocations start at
+`0x801D4038`, `0x801D403C`, `0x801D4040` and `0x801D4044`. Each accepts up to
+three literal bytes followed by NUL. Calls at `0x801D1500`, `0x801D1574`,
+`0x801D15DC` and `0x801D1638` pass these strings directly to `0x8014F800`.
+Their `references` are empty because the pinned code supplies the addresses.
+Other master-menu labels and observed rendering remain unverified.
 
 ## Bank layout
 
