@@ -24,8 +24,10 @@ execution route never changes compiler/flags or substitutes host GCC.
 
 Native status fingerprints use the guarded literal include snapshot through `src`,
 `include` and `toolchains/psyq/4.7/include`. Consumed headers and negative lookups
-bind every claimed source, support source and header. Unsupported directives,
-unresolved includes and compiler header mappings refuse cached inspection.
+bind every claimed source, support source and header. Effective translation-unit
+settings also bind `-include` and `-imacros` operands and their literal dependencies.
+Missing forced inputs, changed compiler configuration, unsupported search settings,
+directives or header mappings, and unresolved includes refuse cached inspection.
 Preservation profiles pin literal transitive headers and negative lookups for
 current, retained and prospective source images and forced inputs. Verification
 refuses changed headers, newly present candidates and discoveries outside the

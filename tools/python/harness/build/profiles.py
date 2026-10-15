@@ -81,6 +81,42 @@ def collect_forced_paths(root: Path, arguments: list[str], cwd: Path) -> set[str
     return paths
 
 
+def validate_include_search(root: Path, arguments: list[str]) -> None:
+    """Require the literal include search supported by guarded snapshots."""
+    parsed = parse_arguments(arguments[1:])
+    roots = [
+        str(root / name) for name in ("src", "include", "toolchains/psyq/4.7/include")
+    ]
+    if [argument.value for argument in parsed if argument.role == "-I"] != roots or any(
+        argument.role
+        in {
+            "-isystem",
+            "-idirafter",
+            "-iprefix",
+            "-iwithprefix",
+            "-iwithprefixbefore",
+        }
+        or argument.tokens[0] in {"-I-", "-nostdinc", "-nostdinc++"}
+        or argument.tokens[0].startswith(
+            (
+                "-isystem",
+                "-idirafter",
+                "-iprefix",
+                "-iwithprefix",
+                "-iquote",
+                "-isysroot",
+                "-imultilib",
+                "-imultiarch",
+                "-Wp,",
+                "-Xpreprocessor",
+                "--",
+            )
+        )
+        for argument in parsed
+    ):
+        raise ValueError("profile includes require the configured literal search roots")
+
+
 def collect_profile_forced_paths(profile: dict) -> set[str]:
     """Collect forced dependencies from structurally validated configured profiles."""
     paths = set()
@@ -473,43 +509,7 @@ class ProfileContext:
         preserved_inputs: dict | None = None,
     ) -> None:
         """Pin literal dependencies and negative lookups from the supplied image."""
-        parsed = parse_arguments(arguments[1:])
-        roots = [
-            str(self.root / name)
-            for name in ("src", "include", "toolchains/psyq/4.7/include")
-        ]
-        if [
-            argument.value for argument in parsed if argument.role == "-I"
-        ] != roots or any(
-            argument.role
-            in {
-                "-isystem",
-                "-idirafter",
-                "-iprefix",
-                "-iwithprefix",
-                "-iwithprefixbefore",
-            }
-            or argument.tokens[0] in {"-I-", "-nostdinc", "-nostdinc++"}
-            or argument.tokens[0].startswith(
-                (
-                    "-isystem",
-                    "-idirafter",
-                    "-iprefix",
-                    "-iwithprefix",
-                    "-iquote",
-                    "-isysroot",
-                    "-imultilib",
-                    "-imultiarch",
-                    "-Wp,",
-                    "-Xpreprocessor",
-                    "--",
-                )
-            )
-            for argument in parsed
-        ):
-            raise ValueError(
-                "profile includes require the configured literal search roots"
-            )
+        validate_include_search(self.root, arguments)
         if image is None:
             content = self.content[source]
             image = SourceImage(

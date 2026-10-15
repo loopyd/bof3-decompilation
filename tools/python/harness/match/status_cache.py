@@ -4,13 +4,20 @@ from __future__ import annotations
 
 import hashlib
 import json
-from contextlib import closing
+from contextlib import ExitStack, closing
 from dataclasses import asdict
 from pathlib import Path
 import sqlite3
 from typing import Any, Iterable
 
+from harness.build.compiler import (
+    CONFIGURATION_PATH,
+    build_compiler_arguments,
+    parse_compiler_configuration,
+    resolve_compiler_settings,
+)
 from harness.build.dependencies import IncludeSnapshot
+from harness.build.profiles import collect_forced_paths, validate_include_search
 from harness.common.files import read_file
 from harness.common.directory import validate_repo_path
 from harness.domain.ids import normalize_target_id
@@ -18,7 +25,7 @@ from harness.domain.ids import normalize_target_id
 from ..io import file_sha256
 from ..domain.manifests import TargetManifest
 
-_SCHEMA = "harness.decomp-status-cache/v9"
+_SCHEMA = "harness.decomp-status-cache/v10"
 _CONFIGURATION = (
     "config/compiler/object-flags.cmake",
     "config/compiler/variants.json",
@@ -73,12 +80,15 @@ def target_fingerprint(root: Path, manifest: TargetManifest) -> str:
         ).encode()
     )
     digest.update(b"\0")
+    configuration = None
     for path in dict.fromkeys(_paths(root, manifest)):
         relative = path.relative_to(root).as_posix()
         digest.update(relative.encode())
         digest.update(b"\0")
         if relative in _CONFIGURATION:
             content = read_file(root, relative, missing_ok=True, max_bytes=_LIMIT)
+            if relative == CONFIGURATION_PATH:
+                configuration = content
             fingerprint = (
                 hashlib.sha256(content).hexdigest().encode()
                 if content is not None
@@ -95,13 +105,48 @@ def target_fingerprint(root: Path, manifest: TargetManifest) -> str:
         )
     )
     if seeds:
-        with closing(IncludeSnapshot(root, seeds[0], forced=seeds[1:])) as snapshot:
-            for name, state in snapshot.describe_inputs().items():
-                digest.update(name.encode())
-                digest.update(b"\0")
-                digest.update(state["sha256"].encode() if state else b"missing")
-                digest.update(b"\0")
-            snapshot.validate()
+        flags, compilers = parse_compiler_configuration(
+            (configuration or b"").decode("utf-8")
+        )
+        with ExitStack() as stack:
+            snapshot = stack.enter_context(
+                closing(IncludeSnapshot(root, seeds[0], forced=seeds[1:]))
+            )
+            snapshots = [snapshot]
+            forced = set()
+            for name in dict.fromkeys(manifest.sources + manifest.support_sources):
+                if Path(name).suffix != ".c":
+                    continue
+                settings = resolve_compiler_settings(
+                    name,
+                    snapshot.content[root / name].decode("utf-8"),
+                    flags,
+                    compilers,
+                )
+                arguments = build_compiler_arguments(root, settings.flags)
+                validate_include_search(root, arguments)
+                forced.update(collect_forced_paths(root, arguments, Path.cwd()))
+            if forced:
+                paths = tuple(root / name for name in sorted(forced))
+                snapshots.append(
+                    stack.enter_context(
+                        closing(IncludeSnapshot(root, paths[0], forced=paths[1:]))
+                    )
+                )
+            for captured in snapshots:
+                for name, state in captured.describe_inputs().items():
+                    digest.update(name.encode())
+                    digest.update(b"\0")
+                    digest.update(state["sha256"].encode() if state else b"missing")
+                    digest.update(b"\0")
+                captured.validate()
+            if (
+                read_file(root, CONFIGURATION_PATH, missing_ok=True, max_bytes=_LIMIT)
+                != configuration
+            ):
+                raise ValueError("compiler configuration changed during status capture")
+            for captured in snapshots:
+                captured.check()
     binary = root / manifest.binary
     digest.update(manifest.binary.encode())
     digest.update(b"\0")
