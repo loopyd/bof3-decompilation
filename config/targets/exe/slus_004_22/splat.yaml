@@ -127,6 +127,13 @@ segments:
     subsegments:
       - [0xc7718, c, dispatchSoundCue, '@source: src/bof3/audio/dispatchSoundCue.c']
   - [0xc8194, bin, post_cue_dispatch]
+  - name: main_work_voice_helper
+    type: code
+    start: 0xcac54
+    vram: 0x80161454
+    subsegments:
+      - [0xcac54, asm, func_80161454]
+  - [0xcb008, bin, post_main_work_voice_helper]
   - name: emi_loader
     type: code
     start: 0xcb758
