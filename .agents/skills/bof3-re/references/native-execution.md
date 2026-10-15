@@ -43,6 +43,16 @@ CLI adapters, lift gates and decompilation comparisons propagate
 comparisons and later members. Keep POST and owned recovery until child
 termination is established.
 
+Use `bin/harness combiner inspect-recovery` to inspect retained owned recovery;
+inspection grants no restoration authority. Establish actual writer-tree
+termination and exclusion before recovery. `bin/harness combiner recover` requires
+externally pinned recovery and authorization digests, distinct implementation,
+parent and reviewer IDs, retained independent review and terminal-tool evidence.
+An authorization with `approved: false` refuses before source mutation. Recovery
+restores only declared changed paths' original PRE identities and absence states.
+Check Git, raw index, unrelated workspace state and consumed-input freshness
+separately. Restoration grants neither source acceptance nor retry authority.
+
 Shared CMake configuration retries newly observed race signatures under its
 existing lock. A recurring signature, nontransient error or unconfirmed cleanup
 propagates unchanged; retries have no numerical ceiling.
