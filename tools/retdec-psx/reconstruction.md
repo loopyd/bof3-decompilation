@@ -11,6 +11,13 @@ The customized native implementation lives in the sibling `rz-psxdec` and
 `retdec-psx` forks. [README.md](README.md) describes their managed build.
 Supplied-context capture remains separate from original-only reconstruction.
 
+Original callee discovery requires an explicit original-image context through
+`--mount-image`. It retains queued paths after an unresolved indirect transfer.
+A canonical `jalr` linking through `ra` also exposes its potential
+continuation after the delay slot. Its target, return and effects remain unknown;
+discovery alone cannot complete a call or declaration contract. Other indirect
+transfers expose no fallthrough path.
+
 Native recovery can emit a body proposal while the original callee declaration
 remains unknown. A complete `jr ra; nop` body can produce an empty C89 `void`
 candidate. Supported straight-line bodies with direct calls can produce ordinary
