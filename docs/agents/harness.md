@@ -60,6 +60,12 @@ instead of overwriting layout facts. Type derivation changes require rebuilding
 the versioned index, not relabeling old rows. Parsed declarations and assertions
 remain representation evidence, not native byte-match or transaction acceptance.
 
+`naming.semantics` runs each command in a separate owned Rizin process with the
+current target replay and stdin EOF. It drains stdout and stderr through exit and
+confirmed descendant cleanup before starting another command. Interrupted batches
+retain remaining queued commands without replaying completed work.
+Unconfirmed cleanup retains the process handle and blocks retry until close succeeds.
+
 `naming.instructions.resolve_instructions` includes the target-qualified selector
 when refusing capture without a closed reviewed function boundary. The diagnostic
 does not admit raw/unreviewed caller ranges or relax the capture gate.

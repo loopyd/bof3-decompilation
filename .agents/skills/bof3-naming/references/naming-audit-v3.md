@@ -117,6 +117,13 @@ addresses/effects. No fabricated receipts; command list alone is not evidence.
 | `one_level_beyond` | next selector/consumer/caller context required by step 8 |
 | `partial_baseline` | live status, percentage, byte sizes, first mismatch, residual, and original-byte verification before a retained-partial spelling transaction |
 
+Each analyzer command runs in a separate owned Rizin process with the current
+target replay and stdin EOF. Capture drains both output pipes through exit and
+confirmed descendant cleanup before starting the next command. There is no stdin
+command stream or framing parser. Interrupted batches retain remaining queued
+commands without replaying completed work.
+Unconfirmed cleanup retains the process handle and blocks retry until close succeeds.
+
 Instruction capture supports canonical call wrappers and 8..32-instruction acyclic
 BEQ/BNE callers with forward local jumps. Require complete path/slot coverage,
 settled constant-address halfword reads, known selected-call arguments and a matching

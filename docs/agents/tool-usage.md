@@ -204,6 +204,10 @@ bin/harness naming conclude TARGET REPORT INPUT --evidence-root "$ROOT"
 Runner `resumed` counts reusable journal entries present before collection,
 matching `telemetry_summary.rows.skipped`, not newly completed `executed` work.
 Stale entries are excluded. These progress counts grant no semantic acceptance.
+Each analyzer command uses a separate owned Rizin process with the current target
+replay and stdin EOF. The runner drains both output pipes and confirms descendant
+cleanup before starting the next command. Capture uses no stdin command stream or
+framing parser.
 With `--instructions`, reviewed target-local function/caller work can produce
 receipt-backed `selected_call` facts for canonical wrappers and bounded acyclic
 BEQ/BNE callers. Facts retain exact callsites, slots, argument expressions, path

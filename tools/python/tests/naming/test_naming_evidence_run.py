@@ -1,4 +1,4 @@
-"""P0 native runner: one process, one shared index connection, bounded
+"""P0 native runner: serial owned captures, one shared index connection, bounded
 resumable evidence collection with digest-bound receipts.
 
 The runner gathers indexed facts for a report row's generated work; query
@@ -1254,20 +1254,14 @@ def test_partial_baseline_requires_strict_identity_bound_json(
     )
 
 
-def test_rizin_protocol_exact_output_single_session(tmp_path: Path) -> None:
+def test_rizin_protocol_exact_output_one_shot(tmp_path: Path) -> None:
     from harness.naming.semantics import RizinSession
 
     engine = tmp_path / "fake-rizin"
     engine.write_text(
         "#!/usr/bin/env python3\nimport sys\n"
-        "for line in sys.stdin:\n"
-        " line=line.strip()\n"
-        " if line.startswith('echo '): print(line[5:], flush=True)\n"
-        " elif line.startswith('?e BOF3_'):\n"
-        "  print('ERROR: core: Error while parsing command: `'+line+'`', file=sys.stderr, flush=True)\n"
-        " elif line == 'e scr.interactive=false': pass\n"
-        " elif line == 'e scr.interactive': print('false', flush=True)\n"
-        " elif line: print('EXACT:'+line, flush=True)\n",
+        "commands=[sys.argv[i+1] for i,x in enumerate(sys.argv) if x == '-c']\n"
+        "print('EXACT:'+commands[-2], flush=True)\n",
         encoding="utf-8",
     )
     engine.chmod(0o755)
@@ -1276,7 +1270,7 @@ def test_rizin_protocol_exact_output_single_session(tmp_path: Path) -> None:
     session.queue("px 4 @ 0x80100000", TARGET)
     result = session.run_queued()[0]
     assert result.output == "EXACT:px 4 @ 0x80100000"
-    assert session.process_count == 1
+    assert session.process_count == 0
     session.close()
     assert session.process_count == 0
 
@@ -1287,14 +1281,8 @@ def test_rizin_protocol_reports_command_failure(tmp_path: Path) -> None:
     engine = tmp_path / "fake-rizin"
     engine.write_text(
         "#!/usr/bin/env python3\nimport sys\n"
-        "for line in sys.stdin:\n"
-        " line=line.strip()\n"
-        " if line.startswith('echo '): print(line[5:], flush=True)\n"
-        " elif line.startswith('?e BOF3_'):\n"
-        "  print('ERROR: core: Error while parsing command: `'+line+'`', file=sys.stderr, flush=True)\n"
-        " elif line == 'e scr.interactive=false': pass\n"
-        " elif line == 'e scr.interactive': print('false', flush=True)\n"
-        " elif line: print('ERROR: '+line, file=sys.stderr, flush=True)\n",
+        "commands=[sys.argv[i+1] for i,x in enumerate(sys.argv) if x == '-c']\n"
+        "print('ERROR: '+commands[-2], file=sys.stderr, flush=True)\n",
         encoding="utf-8",
     )
     engine.chmod(0o755)
@@ -1306,72 +1294,43 @@ def test_rizin_protocol_reports_command_failure(tmp_path: Path) -> None:
     session.close()
 
 
-def test_rizin_stderr_boundary_waits_for_delayed_reader(
-    tmp_path: Path, monkeypatch: Any
-) -> None:
+def test_rizin_waits_for_complete_stderr(tmp_path: Path) -> None:
     from harness.naming.semantics import RizinSession
 
     engine = tmp_path / "fake-rizin"
     engine.write_text(
-        "#!/usr/bin/env python3\nimport sys\n"
-        "for line in sys.stdin:\n"
-        " line=line.strip()\n"
-        " if line.startswith('echo '): print(line[5:], flush=True)\n"
-        " elif line.startswith('?e BOF3_'):\n"
-        "  print('ERROR: core: Error while parsing command: `'+line+'`', file=sys.stderr, flush=True)\n"
-        " elif line == 'e scr.interactive=false': pass\n"
-        " elif line == 'e scr.interactive': print('false', flush=True)\n"
-        " elif line:\n"
-        "  print('ERROR: invalid-command', file=sys.stderr, flush=True)\n",
+        "#!/usr/bin/env python3\nimport sys,time\n"
+        "print('output',flush=True)\n"
+        "time.sleep(.2)\n"
+        "sys.stderr.write('ERROR: invalid-command'); sys.stderr.flush()\n",
         encoding="utf-8",
     )
     engine.chmod(0o755)
     _repo(tmp_path)
-    original = RizinSession._drain_stderr
-
-    def delayed(self: Any, stream: Any) -> None:
-        time.sleep(0.2)
-        original(self, stream)
-
-    monkeypatch.setattr(RizinSession, "_drain_stderr", delayed)
     session = RizinSession(tmp_path, TARGET, executable=engine)
     session.queue("invalid-command", TARGET)
     result = session.run_queued()[0]
     session.close()
     assert result.exit == 1
+    assert result.raw == "output\n"
     assert "ERROR: invalid-command" in result.stderr
     assert "STDERR_END" not in result.stderr
 
 
-def test_rizin_random_exact_framing_preserves_colliding_fragmented_payload(
-    tmp_path: Path, monkeypatch: Any
-) -> None:
-    import harness.naming.semantics as semantic
+def test_rizin_one_shot_preserves_colliding_fragmented_payload(tmp_path: Path) -> None:
+    from harness.naming.semantics import RizinSession
 
-    token = "a" * 64
-    monkeypatch.setattr(semantic.secrets, "token_hex", lambda _size: token)
     engine = tmp_path / "fake-rizin"
     engine.write_text(
         "#!/usr/bin/env python3\nimport sys,time\n"
-        "handshake=False\n"
-        "for line in sys.stdin:\n"
-        " line=line.strip()\n"
-        " if line.startswith('echo BOF3_FRAME_'):\n"
-        "  for char in line[5:]+'\\n': print(char,end='',flush=True); time.sleep(.001)\n"
-        " elif line.startswith('?e BOF3_FRAME_'):\n"
-        "  marker='ERROR: token-substring '+line[3:]+' remains\\n'\n"
-        "  if not handshake: sys.stderr.write(marker)\n"
-        "  sys.stderr.write('ERROR: core: Error while parsing command: `'+line+'`\\n'); sys.stderr.flush()\n"
-        " elif line == 'e scr.interactive=false': handshake=True\n"
-        " elif line == 'e scr.interactive': handshake=True; print('false', flush=True)\n"
-        " elif line:\n"
-        "  handshake=False\n"
-        "  print('BEFORE BOF3_FRAME_'+('a'*64)+'_END AFTER',flush=True)\n",
+        "payload='BEFORE BOF3_FRAME_'+('a'*64)+'_END AFTER\\n'\n"
+        "for char in payload: print(char,end='',flush=True); time.sleep(.001)\n"
+        "print('ERROR: token-substring BOF3_FRAME_'+('a'*64)+'_STDERR_END remains',file=sys.stderr,flush=True)\n",
         encoding="utf-8",
     )
     engine.chmod(0o755)
     _repo(tmp_path)
-    session = semantic.RizinSession(tmp_path, TARGET, executable=engine)
+    session = RizinSession(tmp_path, TARGET, executable=engine)
     session.queue("payload", TARGET)
     result = session.run_queued()[0]
     session.close()
@@ -1387,45 +1346,30 @@ def _wait_for_path(path: Path) -> None:
         time.sleep(0.001)
 
 
-def test_rizin_boundaries_require_complete_lines_without_cross_command_leak(
-    tmp_path: Path, monkeypatch: Any
-) -> None:
-    import harness.naming.semantics as semantic
+def test_rizin_one_shots_keep_fragmented_pipes_separate(tmp_path: Path) -> None:
+    from harness.naming.semantics import RizinSession
 
-    monkeypatch.setattr(semantic.secrets, "token_hex", lambda _size: "b" * 64)
     engine = tmp_path / "fake-rizin"
     engine.write_text(
         "#!/usr/bin/env python3\nimport pathlib,sys,threading,time\n"
+        "commands=[sys.argv[i+1] for i,x in enumerate(sys.argv) if x == '-c']\n"
+        "command=commands[-2]\n"
         "root=pathlib.Path.cwd()\n"
         "def fragment(stream,text,kind):\n"
         " stream.write(text); stream.flush(); (root/(kind+'.ready')).touch()\n"
         " while not (root/(kind+'.release')).exists(): time.sleep(.001)\n"
         " stream.write(' '+kind+'-same-line-tail\\r\\n'+text+'\\n'); stream.flush()\n"
-        "ends=boundaries=0\n"
-        "handshake=False\n"
-        "for line in sys.stdin:\n"
-        " line=line.strip()\n"
-        " if line.startswith('echo BOF3_FRAME_'):\n"
-        "  if line.endswith('_END'):\n"
-        "   if not handshake: ends += 1\n"
-        "   if not handshake and ends == 1:\n"
-        "    threading.Thread(target=fragment,args=(sys.stdout,line[5:],'stdout')).start()\n"
-        "   else: print(line[5:], flush=True)\n"
-        "  else: print(line[5:], flush=True)\n"
-        " elif line.startswith('?e BOF3_FRAME_'):\n"
-        "  if not handshake: boundaries += 1\n"
-        "  boundary='ERROR: core: Error while parsing command: `'+line+'`'\n"
-        "  if not handshake and boundaries == 1:\n"
-        "   threading.Thread(target=fragment,args=(sys.stderr,boundary,'stderr')).start()\n"
-        "  else: sys.stderr.write(boundary+'\\n'); sys.stderr.flush()\n"
-        " elif line == 'e scr.interactive=false': handshake=True\n"
-        " elif line == 'e scr.interactive': handshake=True; print('false', flush=True)\n"
-        " elif line: handshake=False; print('PAYLOAD:'+line, flush=True)\n",
+        "if command == 'first':\n"
+        " threads=[threading.Thread(target=fragment,args=(sys.stdout,'partial','stdout')),\n"
+        "          threading.Thread(target=fragment,args=(sys.stderr,'ERROR: partial','stderr'))]\n"
+        " for thread in threads: thread.start()\n"
+        " for thread in threads: thread.join()\n"
+        "else: print('PAYLOAD:'+command, flush=True)\n",
         encoding="utf-8",
     )
     engine.chmod(0o755)
     _repo(tmp_path)
-    session = semantic.RizinSession(tmp_path, TARGET, executable=engine)
+    session = RizinSession(tmp_path, TARGET, executable=engine)
     session.queue("first", TARGET)
     session.queue("second", TARGET)
     with ThreadPoolExecutor(max_workers=1) as pool:
@@ -1444,7 +1388,7 @@ def test_rizin_boundaries_require_complete_lines_without_cross_command_leak(
     assert second.exit == 0 and "PAYLOAD:second" in second.raw
 
 
-def test_pinned_rizin_protocol_distinguishes_success_error_and_old_markers() -> None:
+def test_pinned_rizin_protocol_distinguishes_success_error_and_marker_text() -> None:
     from harness.naming.semantics import RizinSession
 
     root = Path(__file__).resolve().parents[4]
