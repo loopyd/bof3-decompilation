@@ -66,6 +66,19 @@ and configuration. Authored Answer bodies, declarations, maps, source-specific
 compiler profiles and prior answers are withheld. The pipeline trusts its pinned
 local tools and records their explicit inputs.
 
+To supply observed entry context, pass `--entry-receipt` and
+`--entry-cpu-receipt` to `run`. The entry must be a passed built-in
+[target mission](../../.agents/skills/psx-emulator/references/target.md) with
+explicit `target=ADDRESS` and `savestate=1`, using only original BIOS and disc
+inputs. Its optional controller and Vsync arguments remain supported. External
+scripts, injected executables and restored entry states are excluded. Query that
+captured state with the built-in `state` mission, `path=registers`, `depth=2` and
+`--input state=PATH`, supplying only that state and the same BIOS. This query
+inspects the file without restoring it. The importer verifies both captures, their
+shared state and emulator identity, the selected PC, complete RAM and mounted
+original image owner. This supplies observed context, not a universal entry or
+declaration contract.
+
 ## Run a selected pair
 
 The retained prepared Problem includes the following two target-qualified member

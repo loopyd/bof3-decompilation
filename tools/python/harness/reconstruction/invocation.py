@@ -136,7 +136,9 @@ def capture_entry_observation(entry_receipt, cpu_receipt, contexts, mounts):
         and type(target) is str
         and re.fullmatch(r"(?:0[xX][0-9a-fA-F]+|[0-9]+)", target)
         and int(target, 16 if target.lower().startswith("0x") else 10) == pc
-        and entry["arguments"] == {"TARGET": target, "SAVESTATE": "1"}
+        and entry["arguments"].get("SAVESTATE") == "1"
+        and set(entry["arguments"])
+        <= {"TARGET", "SAVESTATE", "BUTTONS", "SLOT", "FRAMES"}
         and len(files["ram.bin"]) == 2 << 20,
         "entry capture PC or RAM differs",
     )
