@@ -58,9 +58,12 @@ Header queries use each source's effective compiler settings, native literal sea
 roots and `-include`/`-imacros` inputs. Every indexed identity reached through these
 inputs must appear in `affected_functions`, including all grouped members. Missing
 inputs, unsupported search or preprocessing, and changes during the query refuse.
-Preparation rejects consumers outside declared targets and keeps writable scope
-fixed. Live manifest rederivation repeats this check. Active preprocessing and
-unindexed support units still require target build and input-closure gates.
+Include traversal covers every explicitly claimed C source and support unit,
+including units without indexed function IDs. Each consuming unit requires a
+declared target's build gate; indexed functions also require their own checks.
+Preparation rejects undeclared consumer owners and keeps writable scope fixed.
+Live manifest rederivation repeats this check. Active preprocessing and native
+preservation still require the build and input-closure gates.
 Retain application digest externally before verification, never from the supplied
 artifact. For shared preparation,
 require two independently accepted private envelopes with distinct targets/paths/

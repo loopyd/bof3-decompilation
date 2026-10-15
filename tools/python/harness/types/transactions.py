@@ -329,7 +329,7 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
             root, connection, request.get("affected_functions"), targets
         )
         if not linked and not links.literal_header_consumers(
-            root, connection, header
+            root, connection, header, targets=targets
         ) <= {item["selector"] for item in functions}:
             raise ValueError(
                 "type affected_functions omit current declaration consumers"

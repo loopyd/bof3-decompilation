@@ -491,7 +491,7 @@ def capture_pair(root: Path, request: dict, reviewed: list[dict]) -> dict:
 
 def _claimed_consumer_sources(
     root: Path, rows: list, read_source, *, read_manifest, read_claim
-) -> list:
+) -> tuple[list, dict[Path, set[str]]]:
     """Resolve indexed identities from claimed metadata, not indexed path text."""
     manifests = load_target_manifests(
         root, read_manifest=read_manifest, read_claim=read_claim
@@ -510,11 +510,20 @@ def _claimed_consumer_sources(
         if source is None:
             raise ValueError("indexed type consumer has no claimed function source")
         result.append((target, address, source))
-    return result
+    source_owners: dict[Path, set[str]] = {}
+    for target, manifest in manifests.items():
+        if not manifest.has_explicit_sources:
+            continue
+        for source in manifest_source_paths(root, manifest):
+            if source.suffix == ".c":
+                source_owners.setdefault(source, set()).add(target)
+    return result, source_owners
 
 
-def literal_header_consumers(root: Path, connection, header: str) -> set[str]:
-    """Find indexed consumers through configured literal and forced includes."""
+def literal_header_consumers(
+    root: Path, connection, header: str, *, targets: set[str]
+) -> set[str]:
+    """Cover claimed units by target build and indexed functions by identity."""
 
     required = set()
     header_path = root / validate_repo_path(header)
@@ -523,8 +532,6 @@ def literal_header_consumers(root: Path, connection, header: str) -> set[str]:
             "SELECT target_id,address,source FROM functions WHERE source IS NOT NULL"
         )
     )
-    if not rows:
-        return required
     with ExitStack() as stack:
         configuration_watch = stack.enter_context(
             closing(PathWatch({root / CONFIGURATION_PATH}))
@@ -578,18 +585,21 @@ def literal_header_consumers(root: Path, connection, header: str) -> set[str]:
                     raise ValueError("type consumer manifest is missing")
                 return raw
 
-            rows = _claimed_consumer_sources(
+            rows, source_owners = _claimed_consumer_sources(
                 root,
                 rows,
                 read_source,
                 read_manifest=read_manifest,
                 read_claim=lambda name: read_input(root / name),
             )
-            ownership_watch = stack.enter_context(closing(PathWatch(set(states))))
             sources = {
                 path: validate_repo_path(path.relative_to(root).as_posix())
-                for _, _, path in rows
+                for path in source_owners
             }
+            for path in sources:
+                if path not in content:
+                    read_source(path)
+            ownership_watch = stack.enter_context(closing(PathWatch(set(states))))
             for path, name in sources.items():
                 settings = resolve_compiler_settings(
                     name, content[path].decode("utf-8"), flags, compilers
@@ -599,16 +609,34 @@ def literal_header_consumers(root: Path, connection, header: str) -> set[str]:
                 forced = collect_forced_paths(root, arguments, Path.cwd())
                 seeds[path] = (path, *(root / name for name in sorted(forced)))
             paths = sorted({seed for group in seeds.values() for seed in group})
-            snapshot = stack.enter_context(
-                closing(IncludeSnapshot(root, paths[0], forced=tuple(paths[1:])))
-            )
-            if any(snapshot.content[path] != content[path] for path in sources):
-                raise ValueError("type header consumer source changed during capture")
-            for target, address, path in rows:
-                if any(snapshot.depends_on(seed, header_path) for seed in seeds[path]):
+            snapshot = None
+            if paths:
+                snapshot = stack.enter_context(
+                    closing(IncludeSnapshot(root, paths[0], forced=tuple(paths[1:])))
+                )
+                if any(snapshot.content[path] != content[path] for path in sources):
+                    raise ValueError(
+                        "type header consumer source changed during capture"
+                    )
+                consumers = {
+                    path
+                    for path in sources
+                    if any(
+                        snapshot.depends_on(seed, header_path) for seed in seeds[path]
+                    )
+                }
+                for path in sorted(consumers):
+                    if not source_owners[path] <= targets:
+                        raise ValueError(
+                            "type header consumer lacks declared target build coverage: "
+                            f"{sources[path]}"
+                        )
+                for target, address, path in rows:
+                    if path not in consumers:
+                        continue
                     identity = parse_function_id(f"{target}@0x{address:08X}")
                     required.add(f"{identity.target.value}@0x{identity.address:08X}")
-            snapshot.validate()
+                snapshot.validate()
             for path in tuple(states):
                 read_input(path)
             if tuple(collect_manifest_paths(root)) != manifest_paths:
@@ -616,7 +644,8 @@ def literal_header_consumers(root: Path, connection, header: str) -> set[str]:
         configuration_watch.validate()
         manifest_watch.validate()
         ownership_watch.validate()
-        snapshot.check()
+        if snapshot is not None:
+            snapshot.check()
     return required
 
 
@@ -625,7 +654,9 @@ def validate_consumers(
 ) -> None:
     """Require original indexed uses and all live transitive header consumers."""
 
-    required = literal_header_consumers(root, connection, HEADER)
+    required = literal_header_consumers(
+        root, connection, HEADER, targets={item["target"] for item in functions}
+    )
     for row in rows:
         for item in row["evidence"]:
             if not isinstance(item, dict):
