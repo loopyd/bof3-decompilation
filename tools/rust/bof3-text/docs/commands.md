@@ -55,6 +55,8 @@ For the supported US executable, analysis emits the ASCII document described in
 pointer references. It does not apply the game's dialogue command codec to ASCII.
 Supported record and default character inputs emit their editable name document,
 including each field's offset, address and capacity.
+For EMI inputs, `inline_entries` lists supported embedded string documents beside
+the bank `entries`, with their source entry, pointer references and allocations.
 
 ## `prepare [--root DIR] [--targets DIR] [--out-dir DIR]`
 
@@ -136,6 +138,16 @@ For supported US `START.EMI` and `STATUS.EMI`, extraction writes a
 source's record entry (8 for START, 0 for STATUS), without class or latch selectors.
 See [formats.md](formats.md#default-character-names).
 
+For supported embedded battle categories, select the code entry explicitly:
+
+```sh
+bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
+```
+
+This emits `bof3.inline-text/v1`; omit class and latch selectors. `analyze` lists
+the supported entry in each archive. Default `--entry all` selects banks in
+archives containing both layouts; `extract-corpus` exports both.
+
 ## `extract-corpus [--root DIR] -o|--output DIR`
 
 Exports every currently verified dialogue and battle bank beneath `DIR`, preserving
@@ -153,6 +165,7 @@ documents use `SLUS_004.22.json` at the export root and also round-trip before
 publication. Default character names use `START.EMI/characters.json` and
 `STATUS.EMI/characters.json` at their archive-relative paths. Use `coverage` to
 inspect other consumers and gaps.
+Supported inline strings use `ARCHIVE.EMI/ENTRY.json` alongside bank documents.
 
 ## `scan ARCHIVE.EMI [--min-run N] [--class CLASS] [-e|--entry N] [--windows PATH] [--no-windows]`
 
@@ -200,6 +213,8 @@ record inventory, literal character encoding and twelve-byte field capacity.
 The JSON summary reports `names`; `--commands` adds nothing for this codec.
 Default character documents use `bof3.character-text/v1` and the same summary,
 with a five-byte field capacity.
+Inline documents use `bof3.inline-text/v1`; validation checks all allocations,
+literal encoding, references and capacity including NUL, and reports `strings`.
 
 ## `query ARCHIVE.EMI [-e|--entry N] [--grep TEXT] [-i|--ignore-case] [--commands] [--class ...] [--windows PATH] [--no-windows]`
 
@@ -452,6 +467,11 @@ For supported START or STATUS default names, pack the character document against
 the same original archive. Each literal name must fit five bytes. Use `--entry all`
 or the source's record entry (8 or 0), without class or latch selectors. Each
 archive copy requires its own extracted document and output.
+
+For inline text, pack its document against the same original archive, with
+`--entry all` or the recorded entry and no class or latch selector. Full archive
+identity, pinned payload layout, entry offset and all pointer references must
+match. Text must fit each original allocation including NUL.
 
 ## Common idioms
 

@@ -93,6 +93,29 @@ copies remain separate sources: changing START does not update STATUS or an
 existing save's live names. Character renaming, other initializers and observed
 rendering remain separate requirements.
 
+## Inline battle categories
+
+The supported US battle code payload loaded at `0x80096800` contains two
+five-entry pointer tables at `0x800B6E88` and `0x800B6EC4`. Draw calls at
+`0x800B28C8` and `0x800B2F70` pass their selected strings to renderer
+`0x8014F800`. These item and ability category labels use literal game characters
+and NUL termination. The layout occurs in BATTLE entry 15 and matching payloads
+in other archives; use `analyze` to discover the actual entry.
+
+`bof3.inline-text/v1` retains `source`, `source_sha256`, `layout`, `entry`,
+`entry_offset`, `load_address`, `consumers`, `renderer` and `strings`. Each string
+has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
+pointer-word `references` and editable `text`. Retain all fields and edit only
+`text`. Each allocation includes its original NUL, excludes alignment padding
+and accepts at most `capacity - 1` encoded literal bytes. Shorter text is
+NUL-padded. Dialogue commands and pointer changes are refused.
+
+Recognition pins the complete selected payload outside these allocations.
+Packing additionally binds the complete archive hash, canonical source path,
+entry and entry offset. It preserves all other payloads. Each archive replica
+remains a separate source. Other embedded battle strings, different code
+layouts and observed rendering remain separate coverage requirements.
+
 ## Bank layout
 
 ```

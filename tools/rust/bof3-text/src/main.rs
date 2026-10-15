@@ -16,6 +16,7 @@ mod digest;
 mod executable;
 mod extract;
 mod filters;
+mod inline;
 mod lexagraph;
 mod logging;
 mod models;

@@ -10,7 +10,7 @@ came from, and it builds a retained corpus index so a search covers every archiv
 The [bof3-text skill](../../../../.agents/skills/bof3-text/SKILL.md) owns agent
 workflows for corpus coverage, analysis, safe modification and tool refinement.
 Use `coverage` for full extracted-tree accounting, `extract-corpus` for verified
-bank, supported record name and executable ASCII exports, and `analyze` for original
+bank, inline string, supported record name and executable ASCII exports, and `analyze` for original
 allocations, references and command operands.
 
 Three classes are modelled: `dialogue` and `battle` are located structurally, and `heuristic`

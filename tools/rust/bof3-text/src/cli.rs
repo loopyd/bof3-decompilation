@@ -3192,6 +3192,21 @@ fn run_extract(
     if let Some(spec) = latch {
         return extract_latch(cli, archive, output, &data, spec);
     }
+    if let (None, Ok(index)) = (class_filter, entry_spec.parse::<usize>()) {
+        let entries = crate::lexagraph::entries(&data)?;
+        if let Some(&(entry, payload)) = entries.iter().find(|(entry, payload)| {
+            entry.index == index && crate::inline::supports(*entry, payload)
+        }) {
+            let document = crate::inline::extract(archive, &data, entry, payload)?;
+            write_output(output, &crate::inline::render(&document)?, archive)?;
+            println!(
+                "extracted {} inline strings -> {}",
+                document.strings.len(),
+                output.display()
+            );
+            return Ok(());
+        }
+    }
     let selected = select(&data, entry_spec, resolve_class(class_filter)?)?;
     let multiple = selected.len() > 1;
     if multiple {
@@ -3235,6 +3250,14 @@ fn run_validate(cli: &Cli, path: &Path, commands: bool) -> Result<()> {
     let bytes = read(path, "document")?;
     let value: serde_json::Value =
         serde_json::from_slice(&bytes).map_err(|error| Error::Invalid(error.to_string()))?;
+    if value["schema"] == crate::inline::SCHEMA {
+        let document = crate::inline::parse(&bytes)?;
+        println!(
+            "{}",
+            serde_json::json!({"document": path, "schema": value["schema"], "strings": document.strings.len(), "commands": []})
+        );
+        return Ok(());
+    }
     if value["schema"] == crate::characters::SCHEMA {
         let document = crate::characters::parse(&bytes)?;
         println!(
@@ -3424,6 +3447,29 @@ fn run_pack(
         return invalid("pack refuses to overwrite the original archive");
     }
     let data = read(original, "archive")?;
+    if text_path.is_file() {
+        let bytes = read(text_path, "document")?;
+        let value: serde_json::Value =
+            serde_json::from_slice(&bytes).map_err(|error| Error::Invalid(error.to_string()))?;
+        if value["schema"] == crate::inline::SCHEMA {
+            let document = crate::inline::parse(&bytes)?;
+            if (entry_spec != "all" && entry_spec != document.entry.to_string())
+                || class_filter.is_some()
+                || latch.is_some()
+            {
+                return invalid(
+                    "inline text requires its source entry and no class or latch selector",
+                );
+            }
+            let packed = crate::inline::rebuild(original, &data, &document)?;
+            write_output(output, &packed, original)?;
+            println!(
+                "{}",
+                serde_json::json!({"output": output, "bytes": packed.len(), "strings": document.strings.len()})
+            );
+            return Ok(());
+        }
+    }
     if crate::characters::supports(&data) {
         let document = crate::characters::parse(&read(text_path, "document")?)?;
         character_selection(entry_spec, class_filter, latch, &document)?;

@@ -219,7 +219,38 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                         ),
                                     )
                                 };
-                            if let Some((_, names)) =
+                            let inline = crate::inline::supports(*entry, payload)
+                                .then(|| crate::inline::extract(path, &bytes, *entry, payload).ok())
+                                .flatten();
+                            if let Some(document) = inline {
+                                text_count += 1;
+                                let mut at = entry.offset;
+                                for text in document.strings {
+                                    if text.file_offset > at {
+                                        record.ranges.push(range(
+                                            at,
+                                            text.file_offset - at,
+                                            "unresolved",
+                                            "bytes outside the supported inline allocations".into(),
+                                        ));
+                                    }
+                                    record.ranges.push(RangeRecord {
+                                        offset: text.file_offset, length: text.capacity,
+                                        entry: Some(entry.index), status: "known-text",
+                                        evidence: format!("battle category {:#x}; pointer tables 0x800b6e88/0x800b6ec4; calls 0x800b28c8/0x800b2f70 to renderer 0x8014f800; runtime acceptance pending", text.address),
+                                    });
+                                    at = text.file_offset + text.capacity;
+                                }
+                                let end = entry.offset + payload.len();
+                                if at < end {
+                                    record.ranges.push(range(
+                                        at,
+                                        end - at,
+                                        "unresolved",
+                                        "remaining inline payload consumers unverified".into(),
+                                    ));
+                                }
+                            } else if let Some((_, names)) =
                                 names.as_ref().filter(|(index, _)| entry.index == *index)
                             {
                                 text_count += 1;

@@ -22,7 +22,12 @@ pub fn analyze(path: &Path) -> Result<Value> {
             .map_err(|error| crate::models::Error::Invalid(error.to_string()));
     }
     let mut entries = Vec::new();
+    let mut inline_entries = Vec::new();
     for (entry, payload) in crate::lexagraph::entries(&data)? {
+        if crate::inline::supports(entry, payload) {
+            inline_entries.push(crate::inline::extract(path, &data, entry, payload)?);
+            continue;
+        }
         let Some(class) = TextClass::from_load_argument(entry.ram_ptr) else {
             continue;
         };
@@ -77,6 +82,6 @@ pub fn analyze(path: &Path) -> Result<Value> {
         entries.push(json!({"entry": entry.index, "class": class, "offset": entry.offset, "size": entry.size, "rows": rows}));
     }
     Ok(
-        json!({"schema": "bof3.text-analysis/v1", "archive": path.to_string_lossy(), "archive_sha256": crate::digest::sha256_hex(&data), "scope": "verified EMI banks only", "entries": entries}),
+        json!({"schema": "bof3.text-analysis/v1", "archive": path.to_string_lossy(), "archive_sha256": crate::digest::sha256_hex(&data), "scope": "verified EMI banks and supported inline allocations", "entries": entries, "inline_entries": inline_entries}),
     )
 }

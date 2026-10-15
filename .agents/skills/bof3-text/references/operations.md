@@ -20,7 +20,7 @@ A missing heuristic hit does not prove that a range contains no text.
 ## Extract and analyze
 
 `bin/harness text extract-corpus --root out/extracted -o out/text-export` exports
-verified banks, supported record names, and US executable ASCII into a new
+verified banks, inline strings, supported record names and US executable ASCII into a new
 tree with `manifest.json`. Use an existing parent and a new destination outside
 the source tree. Each exported document must parse back and
 reproduce its original bytes. Any export failure makes the operation fail; retain
@@ -61,6 +61,14 @@ using `bof3.character-text/v1`. Edit only `text`, with at most five literal byte
 Use `--entry all` or the source's record entry: 8 for START and 0 for STATUS.
 Omit class and latch selectors. Each copy needs its own freshly extracted
 document and separate output; editing one does not update the other or a save.
+
+For embedded battle categories, use `analyze` to find the supported `inline_entries`
+and select that code entry explicitly with `extract --entry N`. The document
+uses `bof3.inline-text/v1`. Edit only `text`, retain all strings and references,
+and reserve one encoded byte for NUL within each allocation. Pack against the
+same archive with its recorded entry or `all`, without class or latch selectors.
+Each matching archive payload needs its own source-bound document and output.
+Corpus export includes these documents alongside bank documents.
 
 Analysis reports archive offsets, encoded size, original capacity, command operands
 and shared rows. Terminators inside operands are not string boundaries. Trailing

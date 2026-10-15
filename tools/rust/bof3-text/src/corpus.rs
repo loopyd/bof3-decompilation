@@ -40,7 +40,7 @@ pub fn extract(root: &Path, output: &Path) -> Result<Export> {
     })?;
     let mut report = Export {
         schema: "bof3.text-export/v1",
-        scope: "verified EMI banks, supported record names and executable ASCII; use coverage for unresolved consumers",
+        scope: "verified EMI banks, supported inline strings, record names and executable ASCII; use coverage for unresolved consumers",
         exported: 0,
         failures: 0,
         sources: Vec::new(),
@@ -128,6 +128,23 @@ fn export_archive(
     // Validate and stage every document before publishing any part of this archive's export.
     let mut documents = Vec::new();
     for (entry, payload) in entries {
+        if crate::inline::supports(entry, payload) {
+            let document = crate::inline::extract(path, &data, entry, payload)?;
+            let body = crate::inline::render(&document)?;
+            let imported = crate::inline::parse(&body)?;
+            if crate::inline::rebuild(path, &data, &imported)? != data {
+                return Err(Error::Invalid(format!(
+                    "{name}#{} does not round-trip",
+                    entry.index
+                )));
+            }
+            let relative = path
+                .strip_prefix(root)
+                .unwrap()
+                .join(format!("{}.json", entry.index));
+            documents.push((relative, body, entry, serde_json::json!("inline_text")));
+            continue;
+        }
         let Some(class) = TextClass::from_load_argument(entry.ram_ptr) else {
             continue;
         };
@@ -151,7 +168,7 @@ fn export_archive(
             .strip_prefix(root)
             .unwrap()
             .join(format!("{}.json", entry.index));
-        documents.push((relative, body, entry, class));
+        documents.push((relative, body.into_bytes(), entry, serde_json::json!(class)));
     }
     let mut results = Vec::new();
     for (relative, body, entry, class) in documents {
