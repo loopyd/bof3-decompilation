@@ -19,6 +19,7 @@ from ..domain.psx import (
 )
 from ..domain.symbols import MapSymbol, load_target_symbols
 from .snapshot import SNAPSHOT_SCHEMA, snapshot_path, write_snapshot
+from .typeimports import type_replay
 
 
 @dataclass(frozen=True)
@@ -137,6 +138,7 @@ def prepare_target(
             ),
             roots,
         )
+        + type_replay(root, overlay_text, files=files)
         + overlay_text
     )
     # Explicit claim identity participates in the Rizin fingerprint: comment

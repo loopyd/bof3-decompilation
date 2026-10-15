@@ -45,6 +45,22 @@ Never force argument count from one caller.
 
 **Enums/flags** — switch cases + bit tests are evidence for constrained values; name based on behavior only after replay scenarios exercise them.
 
+## Reviewed replay types
+
+In `reviewed.rz`, declare canonical headers with root-relative
+`#include "include/path.h"` lines and select aliases with one
+`# rizin-types: Name OtherName` line. List dependency headers explicitly.
+The analysis owner imports their declaration closure before the recipe, captures
+every consumed header and fingerprints its full bytes. Missing, conflicting,
+macro-defined or conditionally visible declarations cause refusal. Ordinary
+include guards are supported; this lexical import does not preprocess C.
+
+Use `f+` for aliases at an existing flag address and `avga NAME TYPE @ ADDRESS`
+for typed globals. Keep global names distinct from whole-table flags so the
+record size cannot replace the table extent. Query `avglj` and `tsj TYPE` to
+inspect bindings and members. Preserve startup diagnostics; a zero process exit
+does not prove that Rizin accepted every replay command.
+
 ## Rizin import format
 
 CSV:

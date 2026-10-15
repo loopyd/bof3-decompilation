@@ -97,6 +97,7 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         snapshot_path,
         validate_snapshot_identity,
     )
+    from ..analysis.typeimports import type_headers
 
     root = root.resolve()
     canonical_paths: dict[Path, Path] = {}
@@ -271,8 +272,13 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         paths.update(headers[target])
         paths.update(fallback_sources[target])
     for path in sorted(optional_paths):
-        if capture(format_relative_path(root, path), missing_ok=True) is not None:
+        content = capture(format_relative_path(root, path), missing_ok=True)
+        if content is not None:
             paths.add(path)
+            if path.name == "reviewed.rz":
+                paths.update(
+                    root / name for name in type_headers(content.decode("utf-8"))
+                )
     ordered_paths = tuple(sorted(paths))
     for path in ordered_paths:
         try:
