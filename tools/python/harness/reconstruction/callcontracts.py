@@ -1537,7 +1537,11 @@ def validate_functions(
                 "selection": "selected-root" if identity["root"] else "analysis-callee",
             },
             revised=True,
-            entry_observation=entry_observation,
+            entry_observation=(
+                "entryContext" in row.get("originalCallSummary", {})
+                if entry_observation is True
+                else entry_observation
+            ),
         )
         frame_uses = {}
         for call in evidence["calls"]:

@@ -1380,7 +1380,9 @@ def validate_generation(
             row,
             expected_range,
             revised=revised,
-            entry_observation=scoped if revised else None,
+            entry_observation=(
+                "entryContext" in row["originalCallSummary"] if revised else None
+            ),
         )
         candidate = revised and callcontracts.validate_body_candidate(row)
         _require(
