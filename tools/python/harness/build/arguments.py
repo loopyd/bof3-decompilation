@@ -60,6 +60,9 @@ def iter_arguments(
             operands = True
             yield Argument("delimiter", token, (token,))
             continue
+        if not operands and token == "--bof3-inspect":
+            yield Argument("inspection", token, (token,))
+            continue
         option = None
         if not operands and token != "-I-":
             option = (

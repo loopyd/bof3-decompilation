@@ -179,6 +179,29 @@ def _observe_working_directory() -> dict:
     return {"path": str(cwd), "identity": observe_input(cwd)}
 
 
+def plan_compiler(root, arguments, operands, grouped, cwd):
+    """Resolve the native recipe without creating outputs or staging artifacts."""
+    sources, output = list(operands.sources), operands.output
+    annotated_compiler, metadata_paths = _select_annotated_compiler(
+        root, arguments, sources, output, grouped
+    )
+    compiler = (
+        annotated_compiler if annotated_compiler is not None else select_compiler(root)
+    )
+    executable = _resolve_executable(os.environ.get("PSX_CC_DRIVER") or str(compiler))
+    invocation = plan_invocation(
+        root,
+        arguments,
+        sources=sources,
+        output=output,
+        compiler=compiler,
+        executable=str(executable),
+        cwd=cwd,
+        environment=dict(os.environ),
+    )
+    return compiler, executable, metadata_paths, invocation
+
+
 def prepare_dispatch(root: Path, arguments: list[str]) -> Dispatch:
     """Freeze an invocation after checking its externally pinned grouped history."""
     root = root.resolve()
@@ -203,11 +226,8 @@ def _prepare_selected(
 ) -> Dispatch:
     sources, output = list(operands.sources), operands.output
     selection.protect_outputs(output)
-    annotated_compiler, metadata_paths = _select_annotated_compiler(
-        root, arguments, sources, output, grouped
-    )
-    compiler = (
-        annotated_compiler if annotated_compiler is not None else select_compiler(root)
+    compiler, executable, metadata_paths, invocation = plan_compiler(
+        root, arguments, operands, grouped, Path(working_directory["path"])
     )
     record_path, record_fingerprint = selection.record, selection.fingerprint
     source = sources[0] if len(sources) == 1 else None
@@ -248,7 +268,6 @@ def _prepare_selected(
             raise ValueError(
                 "grouped compiler arguments differ from the ordered preserved invocation"
             )
-    executable = _resolve_executable(os.environ.get("PSX_CC_DRIVER") or str(compiler))
     paths = {*operands.inputs, executable, *metadata_paths}
     cwd = Path(working_directory["path"])
     if cwd.parent != cwd:
@@ -261,16 +280,6 @@ def _prepare_selected(
         paths.update(path for _, path, _ in selection.history)
     selection.protect_outputs(output, inputs=paths)
     environment = dict(os.environ)
-    invocation = plan_invocation(
-        root,
-        arguments,
-        sources=sources,
-        output=output,
-        compiler=compiler,
-        executable=str(executable),
-        cwd=cwd,
-        environment=environment,
-    )
     programs = ProgramSnapshot(root, invocation)
     watch = None
     try:

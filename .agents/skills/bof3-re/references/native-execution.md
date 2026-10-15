@@ -80,6 +80,15 @@ Ordinary status fingerprints watch compiler configuration throughout capture and
 reject changes even when the original bytes or absence are restored. Literal and
 forced dependency checks retain their separate freshness guards.
 
+Ordinary cache keys also bind bounded helper inputs, comparison tools and the
+actual bootstrap's stage recipes and environment digests. `bin/cc --bof3-inspect`
+uses the execution planner without compiling. Program lookup watches remain live
+through comparison and insertion; source, target and tool identities are rechecked
+before insertion. Missing or unsupported identities disable lookup and insertion,
+while fresh comparisons remain available. Program observations retain
+`complete:false`; Python startup, effective runtime selection and full preprocessing
+closure remain unproven.
+
 ## Host capability
 
 Canonical driver, `cpp`, `cc1` are static i386 ELF. Known Codex sandbox failure is

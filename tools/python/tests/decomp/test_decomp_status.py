@@ -214,6 +214,11 @@ def test_report_keeps_live_results_when_index_is_unavailable(
 
 
 def test_report_reuses_a_content_addressed_cache(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(
+        dsp.MatchStatusCache,
+        "_tool_fingerprint",
+        lambda _cache, _source: "fixture-tools",
+    )
     _target(
         tmp_path, "exe/logo", "src/exe/logo", sources=("src/exe/logo/func_80100010.c",)
     )
@@ -355,7 +360,9 @@ def test_build_preflight_reuses_cache_hits(tmp_path: Path, monkeypatch) -> None:
     )
     from harness.decomp import status as ds
 
-    monkeypatch.setattr(dsp, "source_fingerprint", lambda _s, _t: "fake-fingerprint")
+    monkeypatch.setattr(
+        MatchStatusCache, "fingerprint", lambda _cache, _s, _t: "fake-fingerprint"
+    )
     monkeypatch.setattr(dsp, "target_fingerprint", lambda _r, _m: "fake-fingerprint")
     ready, worklist = dsp._build_preflight(
         tmp_path, ds.select_manifests(tmp_path), cache
@@ -623,7 +630,9 @@ def test_no_batch_when_all_sources_are_cached(tmp_path: Path, monkeypatch) -> No
 
     from harness.decomp import status as ds
 
-    monkeypatch.setattr(dsp, "source_fingerprint", lambda _s, _t: "fake-fp")
+    monkeypatch.setattr(
+        MatchStatusCache, "fingerprint", lambda _cache, _s, _t: "fake-fp"
+    )
     monkeypatch.setattr(dsp, "target_fingerprint", lambda _r, _m: "fake-fp")
     monkeypatch.setattr(
         ds,
@@ -675,9 +684,9 @@ def test_source_change_invalidates_cache_and_recomputes(
     import hashlib
 
     monkeypatch.setattr(
-        dsp,
-        "source_fingerprint",
-        lambda s, t: hashlib.sha256(s.read_bytes()).hexdigest()[:32],
+        MatchStatusCache,
+        "fingerprint",
+        lambda _cache, s, t: hashlib.sha256(s.read_bytes()).hexdigest()[:32],
     )
     monkeypatch.setattr(dsp, "target_fingerprint", lambda r, m: "fp-target")
     monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: ({}, {}))
@@ -744,6 +753,11 @@ def test_compile_inputs_invalidate_only_affected_target_then_all_targets(
     tmp_path: Path, monkeypatch
 ) -> None:
     """Target inputs invalidate one target; shared headers invalidate both."""
+    monkeypatch.setattr(
+        dsp.MatchStatusCache,
+        "_tool_fingerprint",
+        lambda _cache, _source: "fixture-tools",
+    )
     _target(
         tmp_path,
         "exe/logo",

@@ -9,6 +9,10 @@ import sys
 
 from harness.common.cli import add_root_argument, run_main
 from harness.build.driver import run_compiler
+from harness.build.arguments import inspect_arguments, parse_arguments, read_source
+from harness.build.dispatch import plan_compiler
+from harness.build.programs import describe_inputs
+from harness.domain.tags import require_single_function
 from harness.build.inventory import capture_inventory, check_inventory
 from harness.build.receipts import run_producer, verify_production
 
@@ -58,7 +62,33 @@ def build_parser() -> argparse.ArgumentParser:
 
 def _run_compiler(args: argparse.Namespace) -> int:
     arguments = args.arguments[1:] if args.arguments[:1] == ["--"] else args.arguments
+    parsed = parse_arguments(arguments)
+    inspections = [item for item in parsed if item.role == "inspection"]
+    if inspections:
+        if len(inspections) != 1:
+            raise ValueError("compiler inspection requires one inspection option")
+        arguments = [
+            token
+            for item in parsed
+            if item.role != "inspection"
+            for token in item.tokens
+        ]
+        return _run_report(lambda: _inspect_compiler(args.root.resolve(), arguments))
     return run_compiler(args.root.resolve(), arguments)
+
+
+def _inspect_compiler(root: Path, arguments: list[str]) -> dict:
+    operands = inspect_arguments(arguments)
+    if len(operands.sources) != 1 or operands.output is None:
+        raise ValueError("compiler inspection requires one ordinary source and output")
+    require_single_function(read_source(operands.sources[0]))
+    _, _, _, invocation = plan_compiler(root, arguments, operands, [], Path.cwd())
+    return {
+        "schema": "bof3.compiler-inspection/v1",
+        "interpreter": sys.executable,
+        "recipe": invocation.describe(),
+        "program_inputs": describe_inputs(invocation),
+    }
 
 
 def _run_producer(args: argparse.Namespace) -> int:

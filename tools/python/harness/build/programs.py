@@ -142,8 +142,20 @@ class ProgramSnapshot:
     def __init__(
         self, root: Path, invocation: Invocation, *, expected: dict | None = None
     ) -> None:
+        self._initialize(root, describe_inputs(invocation), expected)
+
+    @classmethod
+    def from_inputs(cls, root: Path, inputs: dict) -> ProgramSnapshot:
+        """Observe a recipe inspected inside the compiler's actual bootstrap."""
+        if not isinstance(inputs, dict) or set(inputs) != {"requests", "runtime_seeds"}:
+            raise ValueError("compiler program input fields differ")
+        snapshot = cls.__new__(cls)
+        snapshot._initialize(root, copy.deepcopy(inputs), None)
+        return snapshot
+
+    def _initialize(self, root: Path, inputs: dict, expected: dict | None) -> None:
         self.root = root
-        self._inputs = describe_inputs(invocation)
+        self._inputs = inputs
         self._watch: PathWatch | None = None
         self._failed = False
         self._closed = False
@@ -159,7 +171,7 @@ class ProgramSnapshot:
                     raise ValueError("program verification baseline differs")
             paths = {Path(name) for name in self._description["nodes"] if name != "/"}
             self._watch = PathWatch(paths)
-            self.validate(invocation)
+            self.validate_inputs(inputs)
         except BaseException:
             self.close()
             raise
@@ -177,12 +189,16 @@ class ProgramSnapshot:
         return copy.deepcopy(self._description)
 
     def validate(self, invocation: Invocation) -> None:
+        self.validate_inputs(describe_inputs(invocation))
+
+    def validate_inputs(self, inputs: dict) -> None:
+        """Recheck declared program lookups while retaining their original watches."""
         try:
             if self._closed or self._failed or self._watch is None:
                 raise ValueError("program snapshot is closed or failed")
             self._watch.validate()
             if (
-                describe_inputs(invocation) != self._inputs
+                inputs != self._inputs
                 or _capture(self.root, self._inputs) != self._description
             ):
                 raise ValueError("compiler program inputs changed")

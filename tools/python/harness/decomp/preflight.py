@@ -330,10 +330,10 @@ def _build_preflight(
                 continue
             claimed[address] = source
             source_name = source.relative_to(root).as_posix()
-            key = source_fingerprint(source, target_key) if cache is not None else ""
+            key = cache.fingerprint(source, target_key) if cache is not None else ""
             record = (
                 cache.get(target, source_name, address, key)
-                if cache is not None
+                if cache is not None and key
                 else None
             )
             if record is not None:
@@ -575,6 +575,7 @@ def _run_batch_misses(
 
         # A batch request that did not refresh an object needs the existing
         # per-source path for a trustworthy diagnosis.
+        pending = []
         for item in stale_items:
             _, source, address, source_name, key, _manifest = item
             request = _request_for_source(root, source, address, current_manifest)
@@ -588,8 +589,8 @@ def _run_batch_misses(
                 )
                 continue
             record = _batch_result(root, target, source, address, source_name, result)
-            if cache is not None:
-                cache.put(target, source_name, address, key, record)
+            if key:
+                pending.append((item, record))
             records.append(record)
 
         for item, request, resolved in resolved_items:
@@ -604,8 +605,21 @@ def _run_batch_misses(
                 )
                 continue
             record = _batch_result(root, target, source, address, source_name, result)
-            if cache is not None:
-                cache.put(target, source_name, address, key, record)
+            if key:
+                pending.append((item, record))
             records.append(record)
+
+        if cache is not None and pending:
+            current_key = target_fingerprint(root, current_manifest)
+            updates = [
+                (item, record)
+                for item, record in pending
+                if cache.fingerprint(item[1], current_key) == item[4]
+            ]
+            cache.validate()
+            for item, record in updates:
+                _, _, address, source_name, key, _ = item
+                cache.put(target, source_name, address, key, record)
+            cache.validate()
 
     return records

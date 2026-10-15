@@ -57,6 +57,8 @@ def collect_lifts(
 
     ready, worklist = _build_preflight(root, manifests, cache)
     batch_records = _run_batch_misses(root, worklist, diff_runner, cache)
+    if cache is not None:
+        cache.validate()
     records = ready + batch_records
     records.sort(key=lambda r: (r["target"], r["source"]))
     return records

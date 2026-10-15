@@ -12,6 +12,58 @@ from harness.common.lexicon import iter_c_lexemes
 from harness.domain.functions import parse_function_records
 from harness.toolchain.gcc import OLD_GCC_IDENTITY
 
+COMPILER_INPUTS = (
+    "bin/cc",
+    "bin/as",
+    "bin/python-env",
+    "tools/python/harness/build/compiler.py",
+    "tools/python/harness/build/arguments.py",
+    "tools/python/harness/build/invocation.py",
+    "tools/python/harness/build/programs.py",
+    "tools/python/harness/build/runtime.py",
+    "tools/python/harness/build/observations.py",
+    "tools/python/harness/build/execution.py",
+    "tools/python/harness/build/dependencies.py",
+    "tools/python/harness/build/profiles.py",
+    "tools/python/harness/build/migration.py",
+    "tools/python/harness/build/preservation.py",
+    "tools/python/harness/build/dispatch.py",
+    "tools/python/harness/build/routing.py",
+    "tools/python/harness/build/driver.py",
+    "tools/python/harness/build/receipts.py",
+    "tools/python/harness/build/inventory.py",
+    "tools/python/harness/build/cli.py",
+    "tools/python/harness/build/sections.py",
+    "tools/python/harness/build/translation.py",
+    "tools/python/harness/common/digests.py",
+    "tools/python/harness/common/files.py",
+    "tools/python/harness/common/quarantine.py",
+    "tools/python/harness/common/inputs.py",
+    "tools/python/harness/common/lexicon.py",
+    "tools/python/harness/common/observation.py",
+    "tools/python/harness/common/lookups.py",
+    "tools/python/harness/common/process.py",
+    "tools/python/harness/common/children.py",
+    "tools/python/harness/common/paths.py",
+    "tools/python/harness/common/directory.py",
+    "tools/python/harness/common/root.py",
+    "tools/python/harness/domain/cache.py",
+    "tools/python/harness/domain/claims.py",
+    "tools/python/harness/domain/functions.py",
+    "tools/python/harness/domain/layout.py",
+    "tools/python/harness/domain/manifests.py",
+    "tools/python/harness/domain/ids.py",
+    "tools/python/harness/domain/includes.py",
+    "tools/python/harness/domain/psx.py",
+    "tools/python/harness/domain/sources.py",
+    "tools/python/harness/domain/symbols.py",
+    "tools/python/harness/domain/tags.py",
+    "tools/python/harness/io.py",
+    "tools/python/harness/toolchain/gcc.py",
+    "tools/python/harness/toolchain/gcc_variants.py",
+    "tools/python/harness/build/compilation.py",
+)
+
 # ── shared source-key and object-parsing helpers ──────────────────────
 
 OBJECT_FLAGS_RE = re.compile(r"^\s*set\(\s*BOF3_OBJFLAGS_(\S+)\s+(.*?)\)\s*$")
@@ -20,6 +72,7 @@ COMPILER_TAG_RE = re.compile(r"@(compiler|gcc|cflags|flags)\b")
 DEFAULT_COMPILER_ID = f"gcc-{OLD_GCC_IDENTITY}-psx"
 CONFIGURATION_PATH = "config/compiler/object-flags.cmake"
 _INVOCATION_FLAGS = {
+    "--bof3-inspect",
     "-c",
     "-E",
     "-S",

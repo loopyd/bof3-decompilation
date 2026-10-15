@@ -21,12 +21,15 @@ from harness.build.profiles import collect_forced_paths, validate_include_search
 from harness.common.files import read_file
 from harness.common.directory import validate_repo_path
 from harness.common.observation import PathWatch
+from harness.common.digests import digest
+from harness.common.process import ProcessCleanupError
 from harness.domain.ids import normalize_target_id
 
 from ..io import file_sha256
 from ..domain.manifests import TargetManifest
+from .status_programs import StatusPrograms
 
-_SCHEMA = "harness.decomp-status-cache/v11"
+_SCHEMA = "harness.decomp-status-cache/v12"
 _CONFIGURATION = (
     "config/compiler/object-flags.cmake",
     "config/compiler/variants.json",
@@ -182,6 +185,8 @@ class MatchStatusCache:
     """SQLite-backed, throwaway cache whose misses are always safe to recompute."""
 
     def __init__(self, root: Path) -> None:
+        self.root = root
+        self.programs: StatusPrograms | None = None
         self.path = root / "out" / "matching" / "status-cache.sqlite"
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.connection = sqlite3.connect(self.path)
@@ -205,6 +210,25 @@ class MatchStatusCache:
             "PRIMARY KEY (target, source, address))"
         )
         self.connection.commit()
+
+    def _tool_fingerprint(self, source: Path) -> str:
+        if self.programs is None:
+            self.programs = StatusPrograms(self.root)
+        return self.programs.fingerprint(source)
+
+    def fingerprint(self, source: Path, target_key: str) -> str:
+        """Unsupported or absent producer identity disables lookup and insertion."""
+        try:
+            tools = self._tool_fingerprint(source)
+        except ProcessCleanupError:
+            raise
+        except (OSError, RuntimeError, ValueError, KeyError, TypeError):
+            return ""
+        return digest([source_fingerprint(source, target_key), tools])
+
+    def validate(self) -> None:
+        if self.programs is not None:
+            self.programs.validate()
 
     def get(
         self, target: str, source: str, address: int, fingerprint: str
@@ -248,4 +272,8 @@ class MatchStatusCache:
         self.connection.commit()
 
     def close(self) -> None:
-        self.connection.close()
+        try:
+            if self.programs is not None:
+                self.programs.close()
+        finally:
+            self.connection.close()

@@ -13,6 +13,7 @@ from pathlib import Path
 from harness.build.arguments import parse_arguments
 from harness.build.compiler import (
     CONFIGURATION_PATH,
+    COMPILER_INPUTS,
     CompilerSettings,
     build_compiler_arguments,
     parse_compiler_configuration,
@@ -265,55 +266,7 @@ class ProfileContext:
         self.flags, self.compilers = parse_compiler_configuration(overrides)
         self._configurations = {overrides: (self.flags, self.compilers)}
         self.driver = self.read("bin/cc").decode("utf-8")
-        for name in (
-            "bin/as",
-            "bin/python-env",
-            "tools/python/harness/build/compiler.py",
-            "tools/python/harness/build/arguments.py",
-            "tools/python/harness/build/invocation.py",
-            "tools/python/harness/build/programs.py",
-            "tools/python/harness/build/runtime.py",
-            "tools/python/harness/build/observations.py",
-            "tools/python/harness/build/execution.py",
-            "tools/python/harness/build/dependencies.py",
-            "tools/python/harness/build/profiles.py",
-            "tools/python/harness/build/migration.py",
-            "tools/python/harness/build/preservation.py",
-            "tools/python/harness/build/dispatch.py",
-            "tools/python/harness/build/routing.py",
-            "tools/python/harness/build/driver.py",
-            "tools/python/harness/build/receipts.py",
-            "tools/python/harness/build/inventory.py",
-            "tools/python/harness/build/cli.py",
-            "tools/python/harness/build/sections.py",
-            "tools/python/harness/build/translation.py",
-            "tools/python/harness/common/digests.py",
-            "tools/python/harness/common/files.py",
-            "tools/python/harness/common/quarantine.py",
-            "tools/python/harness/common/inputs.py",
-            "tools/python/harness/common/lexicon.py",
-            "tools/python/harness/common/observation.py",
-            "tools/python/harness/common/lookups.py",
-            "tools/python/harness/common/process.py",
-            "tools/python/harness/common/children.py",
-            "tools/python/harness/common/paths.py",
-            "tools/python/harness/common/directory.py",
-            "tools/python/harness/common/root.py",
-            "tools/python/harness/domain/cache.py",
-            "tools/python/harness/domain/claims.py",
-            "tools/python/harness/domain/functions.py",
-            "tools/python/harness/domain/layout.py",
-            "tools/python/harness/domain/manifests.py",
-            "tools/python/harness/domain/ids.py",
-            "tools/python/harness/domain/includes.py",
-            "tools/python/harness/domain/psx.py",
-            "tools/python/harness/domain/sources.py",
-            "tools/python/harness/domain/symbols.py",
-            "tools/python/harness/domain/tags.py",
-            "tools/python/harness/io.py",
-            "tools/python/harness/toolchain/gcc.py",
-            "tools/python/harness/toolchain/gcc_variants.py",
-        ):
+        for name in COMPILER_INPUTS:
             self.read(name)
         self.layout = repo_layout(self.root)
         if hashlib.sha256(self.driver.encode()).hexdigest() != _SUPPORTED_CC_SHA256:
