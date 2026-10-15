@@ -645,7 +645,7 @@ The translation report retains limits on bank/program/channel binding, tone bend
 ranges, measured gain/pan/envelope response and quantized game timing. Original
 SEP bytes must still be preserved in XML; a MIDI expansion is not a lossless
 replacement. Song-folder extraction now uses this component with shared channel
-setup; the fixed-layout inverse below does not accept arbitrary MIDI edits.
+setup; the inverse below does not accept arbitrary MIDI edits.
 
 [Timeline tests](../../../tools/rust/bof3-audio/tests/sequence/timeline.rs) retain
 literal cursor/tick expectations for finite/infinite loops, dynamic channels,
@@ -673,11 +673,13 @@ regenerates correspondence from original SEP bytes, sequence headers and explici
 loop limits. It never trusts manifest event mappings. Song export and inverse
 validation share channel initialization in the forward translator; callers may
 explicitly select translation without that setup. The parsed MIDI container must
-retain format, PPQN, tracks, header/chunk contents and event order. Alternate
-running-status/VLQ encodings alone are not edits. Event insertion/removal, channel
-changes, authored loop/end marker changes and generated setup edits fail with
-track/event or source-cursor diagnostics. Generated termination events must follow
-the requested final tick; timing reconstruction is described below.
+retain format, PPQN, tracks and header/chunk contents. Alternate running-status/VLQ
+encodings alone are not edits. The event-preserving path retains source event
+order and rejects channel changes. Linear note insertion/removal uses the separate
+reconstruction described below and permits notes on previously used note channels.
+Authored loop/end marker changes and generated setup edits fail with track/event
+or source-cursor diagnostics. Generated termination events must follow the requested
+final tick; timing reconstruction is described below.
 
 Supported fixed-width edits are note key/velocity, program, volume/pan values,
 high-byte bend, header tempo and executed tempo events. MIDI note-off with zero
@@ -693,10 +695,11 @@ The reconstructed sequence is translated again and must reproduce every requeste
 event after supported note-off normalization. Multi-sequence entry reconstruction
 rejects duplicate/out-of-range selections and preserves other sequences, IDs,
 header fields, order and padding. Changed sequence lengths relocate later records
-without changing those records' bytes. Reports separate message-value source-byte/
-event changes, delta-span changes, data lengths, header tempo and unchanged-byte
-reuse. The music packing path below now calls
-this library component with manifest and bank-program validation. Arbitrary SF2
+without changing those records' bytes. Reports use `bof3.audio.sequence-edit/v2`.
+With `layout_rebuilt=false`, message-value source-byte/event counts and
+`timing_edits` describe the original event correspondence separately. Both paths
+report data lengths, header tempo and unchanged-byte reuse. The music packing path
+calls this library component with manifest and bank-program validation. Arbitrary SF2
 edits, broader transformations and complete musical acceptance remain required. Forward playback
 approximations, scheduler fidelity and independent audio acceptance remain open.
 
@@ -709,6 +712,33 @@ edits change 231,340 source events across all 119 entries; complete retranslatio
 agrees with the edited MIDI and RustySynth independently parses those SMFs. These
 checks establish preservation and bounded inverse behavior, not independent
 gameplay fidelity or full song-folder packing.
+
+### Linear MIDI note insertion and removal
+
+[The note inverse](../../../tools/rust/bof3-audio/src/sequence/editing/notes.rs)
+rebuilds a sequence that reaches its source end marker without controller-loop
+operations. It accepts inserted or removed notes on channels that already contain
+source notes. The ordered program, volume/pan, bend and tempo events retain their
+identities; their supported values and ticks remain editable. MIDI note-off with
+zero release velocity normalizes to SEP note-on with zero velocity. The original
+ignored bend low bytes and the opaque suffix after the source end marker survive.
+
+The selected stream receives explicit statuses and minimal deltas. Within each
+MIDI track, event order remains fixed; tempo events precede performance events at
+the same tick. Each delta must fit positive signed tenfold runtime scaling. The
+inverse retranslates the rebuilt stream and compares all requested events and
+ticks, allowing only normalized note-off status and relocated source-end text.
+Generated setup and termination remain fixed, so removing every note from a
+previously used channel rejects. Other sequence records and entry padding retain
+their bytes when the selected stream grows or shrinks.
+
+With `layout_rebuilt=true`, `changed_source_bytes` counts differing byte positions
+plus the length difference. `changed_source_events` counts all rewritten or
+removed original events. `timing_edits` is empty because the rebuilt stream no
+longer uses the original delta spans. These counts do not identify individual note
+insertions or removals. Controller-loop edits, new channels and non-note
+insertion/removal reject explicitly. Broader channel and loop reconstruction,
+scheduler timing, bank availability and independent audio fidelity remain open.
 
 ### MIDI timing reconstruction
 
@@ -747,8 +777,8 @@ including relocated loop targets and requested ticks. These synthetic RAM probes
 do not establish original scheduler timing or independent audio fidelity.
 [Music publication](../../../tools/rust/bof3-audio/tests/support/music/timing.rs)
 checks resized SEP publication with untouched other sequences and archive entries.
-Logs use `out/audio-migration/timing-edit-*`; event insertion/removal, channel
-changes, loop-structure editing and full musical acceptance remain open.
+The linear note path above handles insertion/removal separately. Channel changes,
+loop-structure editing and full musical acceptance remain open.
 
 ## Rust SoundFont reading
 

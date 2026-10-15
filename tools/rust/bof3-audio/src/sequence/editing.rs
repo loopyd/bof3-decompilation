@@ -1,4 +1,4 @@
-//! Event-preserving inverse of the bounded SEP MIDI export.
+//! Checked inverse of the bounded SEP MIDI export.
 //!
 //! Regenerate correspondence from original bytes, never from manifest claims.
 //! This component does not validate bank availability or publish an archive.
@@ -16,6 +16,8 @@ use crate::{
     sequence::{Sequence, SequenceSet},
     Result,
 };
+
+mod notes;
 
 #[derive(Clone, Debug)]
 pub struct Options {
@@ -40,6 +42,7 @@ pub struct Report {
     pub changed_source_events: usize,
     pub initial_tempo_changed: bool,
     pub original_bytes_reused: bool,
+    pub layout_rebuilt: bool,
     pub timing_edits: Vec<timing::Delta>,
     pub original_data_bytes: usize,
     pub output_data_bytes: usize,
@@ -65,7 +68,7 @@ fn translate(sequence: &Sequence, bytes: &[u8], options: &Options) -> Result<Tra
     Ok(translation)
 }
 
-/// Rebuild values/timing while retaining event identities, statuses and suffixes.
+/// Rebuild values/timing or linear notes, preserving unrelated source data.
 pub fn rebuild(
     sequence: &Sequence,
     original: &[u8],
@@ -83,12 +86,21 @@ pub fn rebuild(
     if edited.tracks.len() != baseline.midi.tracks.len() {
         return Err("SEP edit: MIDI track count changed".into());
     }
-    for (track, (before, after)) in baseline.midi.tracks.iter().zip(&edited.tracks).enumerate() {
-        if before.events.len() != after.events.len() {
-            return Err(
-                format!("SEP edit: track {track} event insertion/removal unsupported").into(),
-            );
-        }
+    if baseline
+        .midi
+        .tracks
+        .iter()
+        .zip(&edited.tracks)
+        .any(|(before, after)| {
+            before.events.len() != after.events.len()
+                || before
+                    .events
+                    .iter()
+                    .zip(&after.events)
+                    .any(|(a, b)| notes::is_note(&a.message) != notes::is_note(&b.message))
+        })
+    {
+        return notes::rebuild(sequence, original, edited, options, &baseline);
     }
     let timing = timing::derive(original, &baseline, edited)?;
     let mut normalized = edited.clone();
@@ -256,12 +268,13 @@ pub fn rebuild(
     Ok(Rebuilt {
         sequence: updated,
         report: Report {
-            schema: "bof3.audio.sequence-edit/v1",
+            schema: "bof3.audio.sequence-edit/v2",
             sequence_index: sequence.sequence_index,
             changed_source_bytes,
             changed_source_events: changed_events.len(),
             initial_tempo_changed,
             original_bytes_reused: bytes == original && !initial_tempo_changed,
+            layout_rebuilt: false,
             timing_edits: timing.deltas,
             original_data_bytes: original.len(),
             output_data_bytes: bytes.len(),
