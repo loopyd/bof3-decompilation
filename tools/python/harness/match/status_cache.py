@@ -20,12 +20,13 @@ from harness.build.dependencies import IncludeSnapshot
 from harness.build.profiles import collect_forced_paths, validate_include_search
 from harness.common.files import read_file
 from harness.common.directory import validate_repo_path
+from harness.common.observation import PathWatch
 from harness.domain.ids import normalize_target_id
 
 from ..io import file_sha256
 from ..domain.manifests import TargetManifest
 
-_SCHEMA = "harness.decomp-status-cache/v10"
+_SCHEMA = "harness.decomp-status-cache/v11"
 _CONFIGURATION = (
     "config/compiler/object-flags.cmake",
     "config/compiler/variants.json",
@@ -72,6 +73,13 @@ def _paths(root: Path, manifest: TargetManifest) -> Iterable[Path]:
 def target_fingerprint(root: Path, manifest: TargetManifest) -> str:
     """Bind the supplied target model, configuration and enumerated audit inputs."""
 
+    with closing(PathWatch({root / name for name in _CONFIGURATION})) as watch:
+        fingerprint = _capture_target_fingerprint(root, manifest)
+        watch.validate()
+    return fingerprint
+
+
+def _capture_target_fingerprint(root: Path, manifest: TargetManifest) -> str:
     digest = hashlib.sha256(_SCHEMA.encode())
     digest.update(b"\0")
     digest.update(

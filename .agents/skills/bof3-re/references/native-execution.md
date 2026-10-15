@@ -76,6 +76,9 @@ Decompilation preflight requires complete reviewed membership, one explicit lift
 owner and matching attached spellings for a grouped source. Every member uses the
 fresh public comparison route. Groups bypass ordinary batch-object and cached-status
 reuse until their complete input and consumer closure has accepted owner evidence.
+Ordinary status fingerprints watch compiler configuration throughout capture and
+reject changes even when the original bytes or absence are restored. Literal and
+forced dependency checks retain their separate freshness guards.
 
 ## Host capability
 
