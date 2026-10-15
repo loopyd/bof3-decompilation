@@ -89,6 +89,12 @@ while fresh comparisons remain available. Program observations retain
 `complete:false`; Python startup, effective runtime selection and full preprocessing
 closure remain unproven.
 
+Maspsx defaults to the project interpreter and preserves explicit
+`MASPSX_PYTHON` overrides. Tagged local bytecode candidates bind the stage's
+optimization setting only when its absolute interpreter matches the captured
+supervisor identity and hash. Unqualified interpreters, cache prefixes and
+unsupported optimization settings disable ordinary cache reuse.
+
 ## Host capability
 
 Canonical driver, `cpp`, `cc1` are static i386 ELF. Known Codex sandbox failure is

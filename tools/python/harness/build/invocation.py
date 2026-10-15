@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import shutil
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -336,7 +337,7 @@ def plan_invocation(
         )
     assembly = Artifact("compiler.s")
     maspsx = environment.get("PSX_MASPSX") or str(root / "third_party/maspsx/maspsx.py")
-    interpreter = environment.get("MASPSX_PYTHON") or "python3"
+    interpreter = environment.get("MASPSX_PYTHON") or sys.executable
     python_environment = {
         **base,
         "PYTHONPATH": os.pathsep.join(

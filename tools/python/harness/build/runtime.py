@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import os
+import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -11,7 +13,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from harness.build.invocation import Invocation
 
-MASPSX_POLICY = "maspsx-local-sources/v1"
+MASPSX_POLICY = "maspsx-local-sources/v2"
 ASSEMBLER_POLICY = "bof3-assembler-wrapper/v1"
 GCC_POLICY = "gcc-2.7.2-psx-search/v1"
 _MAX_EXECUTABLE_SEARCH_ROOTS = 64
@@ -22,7 +24,13 @@ _SOURCES = {
 }
 _COMMON = {"provider", "root", "stage", "cwd", "operand", "spelling"}
 _FIELDS = {
-    MASPSX_POLICY: {"interpreter", "python_path"},
+    MASPSX_POLICY: {
+        "interpreter",
+        "python_path",
+        "cache_tag",
+        "optimization",
+        "cache_prefix",
+    },
     ASSEMBLER_POLICY: {"assembler", "path"},
     GCC_POLICY: {"exec_prefix", "compiler_path", "path", "controls"},
 }
@@ -106,7 +114,11 @@ def describe_seeds(invocation: Invocation) -> list[dict]:
             if not isinstance(path, str):
                 raise ValueError("maspsx policy requires an explicit search path")
             seed.update(
-                interpreter=stage.arguments[0], python_path=path.split(os.pathsep)
+                interpreter=stage.arguments[0],
+                python_path=path.split(os.pathsep),
+                cache_tag=sys.implementation.cache_tag,
+                optimization=environment.get("PYTHONOPTIMIZE", ""),
+                cache_prefix=environment.get("PYTHONPYCACHEPREFIX", ""),
             )
         elif policy.provider == GCC_POLICY:
             seed.update(
@@ -203,10 +215,66 @@ def validate_seeds(seeds: object) -> None:
                 )
             ):
                 raise ValueError("GCC search controls exceed their bounds")
+        if python and any(
+            not isinstance(seed[name], str)
+            or "\0" in seed[name]
+            or len(os.fsencode(seed[name])) > 16384
+            for name in ("cache_tag", "optimization", "cache_prefix")
+        ):
+            raise ValueError("Python cache settings are invalid")
         identity = (seed["stage"], seed["provider"])
         if identity in identities:
             raise ValueError("duplicate runtime stage policy")
         identities.add(identity)
+
+
+def _python_cache_status(seed: dict, primary: list[dict], nodes: dict) -> str:
+    """Qualify the running interpreter's cache tag using captured program identity."""
+    if (
+        not Path(seed["interpreter"]).is_absolute()
+        or re.fullmatch(r"cpython-[0-9]+", seed["cache_tag"]) is None
+        or seed["optimization"] not in {"", "0", "1", "2"}
+        or seed["cache_prefix"]
+    ):
+        return "unsupported-python-cache"
+    programs = {}
+    for role in ("executable", "supervisor"):
+        matches = [
+            request
+            for request in primary
+            if request["stage"] == seed["stage"] and request["role"] == role
+        ]
+        if len(matches) != 1 or len(matches[0]["lookups"]) != 1:
+            return "unsupported-interpreter"
+        lookup = matches[0]["lookups"][0]
+        if lookup["status"] != "file":
+            return "unsupported-interpreter"
+        programs[role] = nodes[lookup["terminal"]]
+    if any(
+        programs["executable"][field] != programs["supervisor"][field]
+        for field in ("identity", "sha256")
+    ):
+        return "unsupported-interpreter"
+    return "candidate-only"
+
+
+def _python_candidates(seed: dict) -> list[tuple[str, str, None]]:
+    optimization = seed["optimization"]
+    suffix = ".opt-" + optimization if optimization in {"1", "2"} else ""
+    tag = seed["cache_tag"] + suffix + ".pyc"
+    names = (
+        "maspsx/__init__.py",
+        "maspsx.py",
+        "maspsx/__init__.pyc",
+        "maspsx.pyc",
+        "maspsx/__pycache__/__init__." + tag,
+        "__pycache__/maspsx." + tag,
+    )
+    return [
+        ("runtime-source", os.path.join(directory, name), None)
+        for directory in seed["python_path"]
+        for name in names
+    ]
 
 
 def derive_candidates(
@@ -261,19 +329,12 @@ def derive_candidates(
             status = "unsupported-location"
         if gcc and status == "candidate-only" and seed["controls"]:
             status = "unsupported-controls"
+        if python and status == "candidate-only":
+            status = _python_cache_status(seed, primary, nodes)
         pending = []
         if status == "candidate-only":
             if python:
-                pending = [
-                    ("runtime-source", os.path.join(directory, name), None)
-                    for directory in seed["python_path"]
-                    for name in (
-                        "maspsx/__init__.py",
-                        "maspsx.py",
-                        "maspsx/__init__.pyc",
-                        "maspsx.pyc",
-                    )
-                ]
+                pending = _python_candidates(seed)
             elif gcc:
                 pending = _gcc_candidates(seed)
             else:
@@ -312,7 +373,7 @@ def derive_candidates(
                     [
                         "effective-import-selection",
                         "extension-loaders",
-                        "source-bytecode-caches",
+                        "unsupported-interpreter-cache-settings",
                         "startup-stdlib-runtime",
                     ]
                     if python
