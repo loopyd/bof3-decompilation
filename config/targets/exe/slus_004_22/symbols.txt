@@ -199,6 +199,7 @@ installCallbackSlot = 0x8014B854;
 yieldCallbackSlotScheduler = 0x8014B87C;
 exitCurrentCallbackThread = 0x8014B8B0;
 closeCallbackSlot = 0x8014B900;
+func_8014DD3C = 0x8014DD3C;
 cdReadSync = 0x8014E0A8;
 func_8014E0FC = 0x8014E0FC;
 func_8014E22C = 0x8014E22C;
