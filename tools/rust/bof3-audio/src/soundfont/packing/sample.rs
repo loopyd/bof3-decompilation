@@ -43,6 +43,7 @@ pub struct PackedBank {
     pub report: Report,
     pub tone_controls: crate::soundfont::packing::tone::Report,
     pub pitch_controls: crate::soundfont::packing::pitch::Report,
+    pub envelope_controls: crate::soundfont::packing::envelope::Report,
     pub assignments: crate::soundfont::packing::assignment::Report,
     pub populated_programs: Vec<crate::soundfont::packing::program::Population>,
 }
@@ -60,6 +61,7 @@ pub fn pack_bank(
     let mut tones = crate::soundfont::packing::tone::pack(binding, header, baseline, edited)?;
     let pitch =
         crate::soundfont::packing::pitch::pack(binding, header, baseline, edited, reference)?;
+    let envelopes = crate::soundfont::packing::envelope::pack(binding, header, baseline, edited)?;
     let assignments =
         crate::soundfont::packing::assignment::pack(binding, &tones.header, baseline, edited)?;
     let samples = pack_inner(
@@ -70,11 +72,17 @@ pub fn pack_bank(
         true,
         !populated_programs.is_empty(),
     )?;
-    for (offset, bytes) in pitch.patches.into_iter().chain(assignments.patches) {
+    for (offset, bytes) in pitch
+        .patches
+        .into_iter()
+        .chain(assignments.patches)
+        .chain(envelopes.patches)
+    {
         tones.header[offset..offset + 2].copy_from_slice(&bytes);
     }
     tones.header = crate::soundfont::packing::program::apply(&tones.header, &populated_programs)?;
     crate::bank::Bank::parse(&tones.header)?;
+    crate::soundfont::packing::envelope::verify(&tones.header, &envelopes.report)?;
     tones.report.output_header_sha256 = sha256_hex(&tones.header);
     Ok(PackedBank {
         header: tones.header,
@@ -82,6 +90,7 @@ pub fn pack_bank(
         report: samples.report,
         tone_controls: tones.report,
         pitch_controls: pitch.report,
+        envelope_controls: envelopes.report,
         assignments: assignments.report,
         populated_programs,
     })
@@ -281,7 +290,7 @@ fn pack_inner(
             input_soundfont_sha256: sha256_hex(edited.original_bytes()),
             samples,
             limitations: vec![
-                "Sample identities, PCM length/storage offsets, sample-header rate/pitch, names and instrument structure remain fixed; tone gain/pan, root/coarse/fine and sample assignments require the enclosing bank packer's separate inverse validation.",
+                "Sample identities, PCM length/storage offsets, sample-header rate/pitch, names and instrument structure remain fixed; tone gain/pan, root/coarse/fine, fitted envelopes and sample assignments require the enclosing bank packer's separate inverse validation.",
                 "Only shared-consistent nonlooping/continuous loop modes are representable; release-only loops are unsupported. Loops must align to 28 frames and end at the sample end.",
                 "PCM24 loss fields use signed 24-bit integer units; PCM16 conversion rounds nearest with ties toward positive infinity and saturation. Encoder loss fields use PCM16 units.",
                 "ADPCM encoding uses the existing zero-history model and stabilizes edited loops; original runtime interpolation/mixing and PC/PSX fidelity remain unverified.",
@@ -389,7 +398,7 @@ fn controls(font: &Font, tone_controls: bool, program_edits: bool) -> Result<Vec
             for row in data.as_chunks_mut::<4>().0.iter_mut().take(count) {
                 let operator = u16::from_le_bytes([row[0], row[1]]);
                 if operator == 54
-                    || (tone_controls && matches!(operator, 17 | 48 | 51 | 52 | 53 | 58))
+                    || (tone_controls && matches!(operator, 17 | 33..=38 | 48 | 51 | 52 | 53 | 58))
                 {
                     row[2..].fill(0);
                 }

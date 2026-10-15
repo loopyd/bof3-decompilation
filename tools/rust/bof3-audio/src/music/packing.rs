@@ -33,6 +33,7 @@ pub struct SongReport {
     pub soundfont: crate::soundfont::packing::sample::Report,
     pub tone_controls: crate::soundfont::packing::tone::Report,
     pub pitch_controls: crate::soundfont::packing::pitch::Report,
+    pub envelope_controls: crate::soundfont::packing::envelope::Report,
     pub assignments: crate::soundfont::packing::assignment::Report,
     pub populated_programs: Vec<crate::soundfont::packing::program::Population>,
 }
@@ -54,7 +55,7 @@ pub fn songs(options: &Options) -> Result<Report> {
         schema: "bof3.music-pack-report/v1", output: options.output.display().to_string(),
         archives: Vec::new(), songs: Vec::new(),
         limitations: vec![
-            "Existing tone instruments support PCM, shared-consistent loops, gain/pan, sample assignments and verified note-on tuning edits; independent new instrument/sample structures and envelope edits remain unsupported.",
+            "Existing tone instruments support PCM, shared-consistent loops, gain/pan, sample assignments, verified note-on tuning and complete envelope tuples exactly invertible through the source tone's release bits. Independent new instrument/sample structures and arbitrary envelope reconstruction remain unsupported.",
             "MIDI value/timing edits retain source correspondence; repeated delta consumptions must agree. Linear notes may be inserted, removed or moved among previously used note channels while preserving generated setup and termination. Controller-loop structure, new channels and non-note insertion/removal remain unsupported. Rebuilt SEP records preserve unrelated bytes.",
             "Empty programs may gain 1..=16 existing tone instruments with matching program controls and percussion aliases. Ordered VAB tone blocks may grow within original EMI and game layout capacity. All 128 MIDI programs are selectable; empty slots remain silent. Songs sharing a bank must agree on rebuilt header/body bytes.",
             "The export's explicit synthesis approximations remain; complete original-game timing and independent audio fidelity are unverified.",
@@ -215,6 +216,7 @@ pub fn songs(options: &Options) -> Result<Report> {
             soundfont: packed_font.report,
             tone_controls: packed_font.tone_controls,
             pitch_controls: packed_font.pitch_controls,
+            envelope_controls: packed_font.envelope_controls,
             assignments: packed_font.assignments,
             populated_programs: packed_font.populated_programs,
         });

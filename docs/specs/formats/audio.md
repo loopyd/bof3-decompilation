@@ -837,9 +837,9 @@ compares an edited SF2 against a fresh binding/export regenerated from preserved
 VAB bytes and the supported executable. It accepts fixed-length PCM edits and
 shared-consistent nonlooping/continuous sample loops. Sample count, storage
 positions, allocation sizes, headers other than loop points, generator/modulator
-records other than sample mode and separately validated tone gain/pan/tuning/assignment, metadata,
+records other than sample mode and separately validated tone gain/pan/tuning/envelope/assignment, metadata,
 opaque chunks, terminals and padding must remain unchanged. The sample-only API
-still rejects tone edits; the bank API validates all four inverses before returning.
+still rejects tone edits; the bank API validates each inverse before returning.
 Unowned PCM, guard samples and generated silence cannot be edited. Added/removed
 records, release-only loops, instrument topology, unsupported tuning/envelope changes and
 allocation reconstruction fail explicitly. All instrument zones
@@ -884,9 +884,8 @@ the same pair; separate layered tones remain independently editable. Unchanged
 controls retain original bytes without canonicalization. Nonuniform/global-zone
 edits, unrepresentable pairs and invalid ranges fail explicitly. Silent tones
 require the joint [unmute transform](#rust-soundfont-silent-tone-unmuting).
-Topology, key-range and envelope
-reconstruction remain open; note-on tuning and existing PCM assignments are
-handled below.
+Topology and key-range reconstruction remain open. Note-on tuning, fitted
+envelope changes and existing PCM assignments have separate inverses below.
 
 Several VAB pairs can produce the same quantized generators. The inverse chooses
 the pair with minimum summed absolute volume/pan distance from the original,
@@ -901,7 +900,7 @@ The `bof3.audio.sf2-tone-pack/v1` report records source/output header hashes,
 program/tone/instrument identities, original/chosen controls, candidate counts
 and the selected forward fit, including game register magnitudes and approximation
 error. Header hashes describe the final combined header, including separately
-validated pitch edits. The enclosing bank packer validates remaining SoundFont content
+validated pitch and envelope edits. The enclosing bank packer validates remaining SoundFont content
 through the sample inverse before accepting results. Music packing stages header,
 body and sequence replacements together; selected songs sharing either bank entry
 must agree, including unchanged copies.
@@ -1004,6 +1003,32 @@ parsing checks rebuilt fonts. Original-US loader/note-on checks include raw
 music-folder publication evidence uses `out/audio-migration/assignment-pack-*`.
 Broader topology/envelope editing, noise synthesis and
 independent full-runtime/audio fidelity remain separate obligations.
+
+## Rust SoundFont envelope packing
+
+[The envelope inverse](../../../tools/rust/bof3-audio/src/soundfont/packing/envelope.rs)
+accepts a uniform volume-envelope tuple across every key zone of an audible,
+non-stopped tone when one of its 64 release shift/mode settings reproduces the
+tuple exactly. ADSR1 and the remaining ADSR2 bits stay fixed. The inverse reruns
+the complete forward fit at the source binding's ADSR model and probe; changing
+release bits can also change fitted attack, decay or sustain generators. It
+therefore compares delay, attack, hold, decay, sustain and release together.
+
+The original registers and baseline generators must agree with a fresh fit.
+Equivalent candidates minimize absolute distance from the original six-bit
+release field, then the field value. The packer changes only ADSR2 bytes, reparses
+the combined header and verifies the forward fit before returning. Unchanged
+envelopes retain their source bytes. Sample-only packing cannot authorize these
+edits. Gain, pitch, sample assignment, program population and PCM validation
+remain required before music publication.
+
+`bof3.audio.sf2-envelope-pack/v1`, also included in each music song report as
+`envelope_controls`, records changed program/tone/instrument identities, original
+registers, matching candidate counts and selected fits with their approximation
+errors. Exact fitted generators do not establish hardware behavior or PSX/PC
+PCM equality. Delay/hold edits, nonuniform zones, silent/stopped tones and tuples
+without an exact release-bit inverse reject. Arbitrary ADSR, topology and
+independent instrument/sample reconstruction remain open.
 
 ## Rust SoundFont silent-tone unmuting
 
