@@ -50,13 +50,18 @@ exclude operand bytes. Nonempty strings following terminators are listed as
 `trailing_string_segments`; a consumer trace establishes which are choice options.
 Empty slots have zero capacity and no byte offset. Analysis reads original bytes;
 `validate` checks edited document syntax and `pack` enforces edited byte capacity.
-For the supported US executable, analysis emits the ASCII document described in
-[formats.md](formats.md#executable-ascii), including file offsets, capacities and
-pointer references. It does not apply the game's dialogue command codec to ASCII.
-Supported record and default character inputs emit their editable name document,
-including each field's offset, address and capacity.
-For EMI inputs, `inline_entries` lists supported embedded string documents beside
-the bank `entries`, with their source entry, pointer references and allocations.
+Supported executable, record and default character inputs emit
+`bof3.text-analysis/v1` reports, retaining their source metadata and `strings` or
+`names`. `source_schema` identifies the extraction format. For EMI inputs,
+`inline_entries` lists embedded allocation reports beside the bank `entries`.
+Each literal allocation reports `encoded_size`, `max_encoded_size`,
+`required_terminator_bytes`, `remaining_capacity`, whole-allocation hexadecimal
+`original_bytes` and an empty `commands` list, alongside its offsets, capacity
+and any pointer references. Encoded size counts the text's bytes; the separately
+reported required NUL reserves one byte for executable and inline strings.
+Fixed-width names may use their entire field. `encoding` distinguishes ASCII
+from the game's literal character table. These reports are diagnostic; use
+`extract` for editable documents and `validate` for proposed edits.
 
 ## `prepare [--root DIR] [--targets DIR] [--out-dir DIR]`
 

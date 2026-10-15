@@ -5,6 +5,10 @@ text-object document. The repository-wide authority is
 [`docs/specs/formats/dialogue-text.md`](../../../../docs/specs/formats/dialogue-text.md);
 this page describes how the tool represents it.
 
+The editable schemas below belong to extraction, validation and packing.
+`analyze` emits diagnostic `bof3.text-analysis/v1` reports; see the
+[analysis command](commands.md#analyze-input) for their capacity and byte fields.
+
 ## Locating the subfile
 
 The dialogue subfile is the EMI entry whose TOC `load_argument` is `0x80010000`.

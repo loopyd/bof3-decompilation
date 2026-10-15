@@ -1,31 +1,117 @@
-//! Byte-based analysis of verified bank rows and their shared allocations.
+//! Byte-based analysis of verified text and its allocations.
 
 use std::fs;
 use std::path::Path;
 
 use serde_json::{Value, json};
 
-use crate::models::{Result, TextClass, command_for};
+use crate::models::{Error, Result, TextClass, command_for};
+
+enum Encoding {
+    Ascii,
+    GameLiteral,
+}
+
+fn literal_report(
+    document: impl serde::Serialize,
+    field: &str,
+    data: &[u8],
+    encoding: Encoding,
+    terminator_bytes: usize,
+) -> Result<Value> {
+    let mut report =
+        serde_json::to_value(document).map_err(|error| Error::Invalid(error.to_string()))?;
+    let source_schema = report["schema"].take();
+    report["schema"] = json!("bof3.text-analysis/v1");
+    report["source_schema"] = source_schema;
+    report["encoding"] = json!(match encoding {
+        Encoding::Ascii => "ascii",
+        Encoding::GameLiteral => "game-literal",
+    });
+    let rows = report[field]
+        .as_array_mut()
+        .ok_or_else(|| Error::Invalid("literal analysis has no allocations".into()))?;
+    for row in rows {
+        let number = |name: &str| -> Result<usize> {
+            row[name]
+                .as_u64()
+                .and_then(|value| usize::try_from(value).ok())
+                .ok_or_else(|| Error::Invalid(format!("invalid analysis {name}")))
+        };
+        let offset = number("file_offset")?;
+        let capacity = number("capacity")?;
+        let maximum = capacity.checked_sub(terminator_bytes).ok_or_else(|| {
+            Error::Invalid("analysis allocation cannot hold its terminator".into())
+        })?;
+        let text = row["text"]
+            .as_str()
+            .ok_or_else(|| Error::Invalid("literal analysis has no text".into()))?;
+        let encoded_size = match encoding {
+            Encoding::Ascii => text.len(),
+            Encoding::GameLiteral => crate::records::encode_name(text, maximum)?.len(),
+        };
+        let remaining = maximum
+            .checked_sub(encoded_size)
+            .ok_or_else(|| Error::Invalid("analysis text exceeds its allocation".into()))?;
+        let bytes = offset
+            .checked_add(capacity)
+            .and_then(|end| data.get(offset..end))
+            .ok_or_else(|| Error::Invalid("analysis allocation escapes source bytes".into()))?;
+        row["encoded_size"] = json!(encoded_size);
+        row["max_encoded_size"] = json!(maximum);
+        row["required_terminator_bytes"] = json!(terminator_bytes);
+        row["remaining_capacity"] = json!(remaining);
+        row["original_bytes"] = json!(
+            bytes
+                .iter()
+                .map(|byte| format!("{byte:02x}"))
+                .collect::<String>()
+        );
+        row["commands"] = json!([]);
+    }
+    Ok(report)
+}
 
 pub fn analyze(path: &Path) -> Result<Value> {
     let data = fs::read(path)?;
     if crate::characters::supports(&data) {
-        return serde_json::to_value(crate::characters::extract(path, &data)?)
-            .map_err(|error| crate::models::Error::Invalid(error.to_string()));
+        return literal_report(
+            crate::characters::extract(path, &data)?,
+            "names",
+            &data,
+            Encoding::GameLiteral,
+            0,
+        );
     }
     if crate::records::supports(&data) {
-        return serde_json::to_value(crate::records::extract(path, &data)?)
-            .map_err(|error| crate::models::Error::Invalid(error.to_string()));
+        return literal_report(
+            crate::records::extract(path, &data)?,
+            "names",
+            &data,
+            Encoding::GameLiteral,
+            0,
+        );
     }
     if crate::executable::is_executable(&data) {
-        return serde_json::to_value(crate::executable::extract(path, &data)?)
-            .map_err(|error| crate::models::Error::Invalid(error.to_string()));
+        return literal_report(
+            crate::executable::extract(path, &data)?,
+            "strings",
+            &data,
+            Encoding::Ascii,
+            1,
+        );
     }
     let mut entries = Vec::new();
     let mut inline_entries = Vec::new();
     for (entry, payload) in crate::lexagraph::entries(&data)? {
         if crate::inline::supports(entry, payload) {
-            inline_entries.push(crate::inline::extract(path, &data, entry, payload)?);
+            inline_entries.push(literal_report(
+                crate::inline::extract(path, &data, entry, payload)?,
+                "strings",
+                &data,
+                Encoding::GameLiteral,
+                1,
+            )?);
             continue;
         }
         let Some(class) = TextClass::from_load_argument(entry.ram_ptr) else {

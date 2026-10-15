@@ -33,8 +33,12 @@ bin/harness text analyze out/extracted/BIN/WORLD00/AREA000.EMI
 bin/harness text extract out/extracted/BIN/WORLD00/AREA000.EMI -o out/area000.json
 ```
 
-For the US executable, use `extract out/extracted/SLUS_004.22 -o out/exe-text.json`
-or `analyze out/extracted/SLUS_004.22`. Its `bof3.executable-text/v1` document
+`analyze` emits diagnostic `bof3.text-analysis/v1` reports. Literal allocations
+include encoded size, spare capacity, required terminator bytes and the original
+allocation bytes. Use `extract` for documents accepted by `pack`.
+
+For the US executable, use `extract out/extracted/SLUS_004.22 -o out/exe-text.json`.
+Its `bof3.executable-text/v1` document
 uses ASCII, not dialogue tokens. Edit only each string's `text`, retain all
 allocations and references, then pack to a new executable:
 
