@@ -18,6 +18,11 @@ continuation after the delay slot. Its target, return and effects remain unknown
 discovery alone cannot complete a call or declaration contract. Other indirect
 transfers expose no fallthrough path.
 
+Register dataflow retains canonical bitwise `AND` results when both operands are
+known constants. Call-path replay independently derives those constants from
+original instructions. A known stored value does not establish its destination,
+memory effects or declaration.
+
 Native recovery can emit a body proposal while the original callee declaration
 remains unknown. A complete `jr ra; nop` body can produce an empty C89 `void`
 candidate. Supported straight-line bodies with direct calls can produce ordinary
