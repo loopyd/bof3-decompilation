@@ -35,6 +35,8 @@ Preview `bin/harness naming reconcile TARGET --successor` with externally pinned
 Preserve predecessor/receipts and valid rows. Refresh only fully unreviewed
 initializer gaps; record obsolete raw identities with current named bindings.
 Closed work, observed evidence and invalid conclusions block refresh.
+The preview's `plan` contains the complete recovery record, including replacement
+and added rows. Review it against `plan_sha256` before publication.
 
 After independent review, repeat with `--apply` and retained `--expected-plan-sha256`.
 Let the owner publish an immutable generation/distinct inventory checkpoint and

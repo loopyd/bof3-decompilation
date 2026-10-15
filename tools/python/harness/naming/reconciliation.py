@@ -30,6 +30,10 @@ from harness.naming.history import (
     validate_record,
     write_exclusive,
 )
+from harness.naming.plan import (
+    validate_report_operation_prose,
+    validate_report_operations,
+)
 from harness.naming.proposal import atomic_write_if_unchanged
 
 
@@ -293,6 +297,7 @@ def _recover(
             continue
         try:
             validate_row_v3(row, *key, context)
+            validate_report_operation_prose(row, target)
         except ValueError as error:
             replacement = expected[key]
             if not is_unreviewed_initializer(row, replacement):
@@ -304,6 +309,7 @@ def _recover(
             )
     delta["added"] = [expected[key] for key in sorted(expected.keys() - seen)]
     candidate = recovery_successor(report, delta)
+    validate_report_operations(candidate["rows"], target)
     validation = validate(root, target, candidate, report_path=path)
     evidence_root = selected_evidence_root()
     request = {
@@ -361,6 +367,7 @@ def _recover(
         "successor": record["successor"]["path"],
         "checkpoint": reference,
         "plan_sha256": pin,
+        "plan": record,
         "applied": apply,
         "added": [f"{row['kind']}:{row['name']}" for row in delta["added"]],
         "refreshed": [item["selector"] for item in delta["refreshed"]],
