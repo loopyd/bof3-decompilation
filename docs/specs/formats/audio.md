@@ -2136,10 +2136,11 @@ full BIOS startup. Independent drive timing and audio fidelity remain open.
 [The functional drive](../../../tools/rust/bof3-audio/src/machine/cd_drive.rs)
 requires an explicit already-authenticated, closed, spinning Mode-2 disc context,
 including position, mode and filter. It implements Getstat, Setloc, Setmode,
-Setfilter, Getparam, GetlocL, SeekL/SeekP, ReadN/ReadS and Pause transactions.
-Known invalid parameters yield INT5; unsupported commands and mechanical overlap
-fail without changing drive state. This is not an Init, BIOS or authentication
-fallback. The host owner still supplies response/IRQ boundaries, and the caller
+Setfilter, Getparam, GetlocL, SeekL/SeekP, ReadN/ReadS, Pause, Init and
+Mute/Demute transactions. Known invalid parameters yield INT5; unsupported
+commands and mechanical overlap fail without changing drive state. The explicit
+ready-disc constructor does not perform Init, BIOS startup or authentication.
+The host owner still supplies response/IRQ boundaries, and the caller
 explicitly completes mechanical transitions; no clock duration is assigned.
 
 Sector arrival requires a completed read seek and the next expected LBA.
@@ -4506,27 +4507,30 @@ bounded `driver-startup-*-rizin.txt` listings.
 
 ### Original CD reset and host reset state
 
-The [Rust drive](../../../tools/rust/bof3-audio/src/machine/cd_drive.rs) retains
-its existing reset model for command `0x0A`. On accepted reset it stops reading,
-unmutes, sets mode `0x20`, releases XA selection and
-acknowledges with INT3/status `0x02`. A separate caller-supplied completion
-boundary produces INT2/status `0x02` and leaves the drive paused. Pending
-mechanical transitions still reject overlapping reset commands. Bad parameter
-counts return INT5 without changing drive state.
+The [Rust drive](../../../tools/rust/bof3-audio/src/machine/cd_drive.rs)
+implements Init (`0x0A`) as a caller-completed transition. It stops reading,
+resets the current and seek positions to `00:02:00` (LBA 0), clears pending
+Setloc and releases XA selection. It preserves mode, command mute, filter and
+the latest transfer header. A read without a new Setloc uses the reset position
+rather than the retained header. In the paused-drive context, acknowledgement
+is INT3/status `0x02`; the separate completion boundary produces INT2/status
+`0x02` and leaves the drive paused. Mechanical overlap still rejects, and bad
+parameter counts return INT5 without changing drive state.
 
-Reset preserves the filter, pending Setloc target, current position and latest
-transfer header. The [host integration](../../../tools/rust/bof3-audio/src/machine/interconnect/cd.rs)
-also preserves the data cursor and already queued XA output; in this model, Init does not imply
-an immediate audio-buffer flush. Subsequent read/seek operations retain their
-separately documented behavior. These semantics retain the earlier reference
-model. The current PCSX-Redux Agentic
+The current PCSX-Redux Agentic
 [CD implementation](../../../third_party/pcsx-redux-agentic/src/core/cdrom.cc)
-names `0x0A` as `CdlInit` and `0x1C` as `CdlReset`. Its `cdlInit` path resets the
-current and seek positions and clears pending Setloc, unlike the retained-position
-policy above. Recorded PCM comparisons do not establish parity with the current
-[XA submission path](../../../third_party/pcsx-redux-agentic/src/spu/xa.cc). Current-fork reset-state
-and PCM parity require a new bounded comparison. Reset latency and hardware
-fidelity are not inferred from these source paths.
+names `0x0A` as `CdlInit` and `0x1C` as `CdlReset`. Bounded native observations
+confirm that Init resets both positions and clears pending Setloc while
+preserving mode, command mute and filter. Its runtime autopause and report
+flags clear even though the mode byte survives. This does not extend the Rust
+drive's supported mode bits. Opcode `0x1C` remains unsupported by the Rust drive.
+
+The [host integration](../../../tools/rust/bof3-audio/src/machine/interconnect/cd.rs)
+retains its existing data-cursor, queued-XA-output and selection policies.
+Native parity for these policies and active-reading response/IRQ behavior
+remains unverified. Init state agreement does not establish parity with the
+current [XA submission path](../../../third_party/pcsx-redux-agentic/src/spu/xa.cc).
+Mechanical timing and hardware fidelity remain unverified.
 
 The [host reset constructor](../../../tools/rust/bof3-audio/src/machine/cd_host.rs)
 explicitly selects the emulator-reference reset state: interrupt mask `0x1F`,

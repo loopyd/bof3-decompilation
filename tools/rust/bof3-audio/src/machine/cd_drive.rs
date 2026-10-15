@@ -46,6 +46,7 @@ pub struct Drive {
     filter: [u8; 2],
     next_lba: i32,
     target: Option<i32>,
+    resume_lba: Option<i32>,
     last_header: Option<[u8; 8]>,
     muted: bool,
     xa_selection: Option<[u8; 2]>,
@@ -65,6 +66,7 @@ impl Drive {
             filter,
             next_lba: position.lba(),
             target: None,
+            resume_lba: None,
             last_header: None,
             muted: false,
             xa_selection: None,
@@ -145,15 +147,13 @@ impl Drive {
                     return Ok(response);
                 }
                 // Read without Setloc resumes the most recently received sector.
-                let target = self.target.take().unwrap_or_else(|| {
-                    self.last_header.map_or(self.next_lba, |h| {
-                        CdPosition::from_bcd(h[..3].try_into().unwrap())
-                            .unwrap()
-                            .lba()
-                    })
-                });
+                let target = self
+                    .target
+                    .take()
+                    .unwrap_or(self.resume_lba.unwrap_or(self.next_lba));
                 self.activity = Activity::Seeking { target, read };
                 self.xa_selection = None;
+                self.resume_lba = None;
                 self.last_header = None;
             }
             0x09 => {
@@ -163,13 +163,15 @@ impl Drive {
                 }
             }
             0x0a => {
-                // PCSX-Redux's CdlReset (SDK CdlInit, opcode 0x0a) stops
-                // reading, unmutes and selects 2340-byte mode. It preserves
-                // filter, Setloc and transfer-header state. The caller supplies
-                // the separate completion boundary; no reset latency inferred.
+                // CdlInit resets current/seek positions to 00:02:00 and clears
+                // pending Setloc while preserving mode, mute and filter.
+                // A retained transfer header must not redirect the next read.
+                // Completion and unqualified active-reading response timing
+                // remain caller-supplied; opcode 0x1c is the separate CdlReset.
                 self.activity = Activity::Resetting;
-                self.mode = 0x20;
-                self.muted = false;
+                self.next_lba = 0;
+                self.target = None;
+                self.resume_lba = None;
                 self.xa_selection = None;
                 return Ok(self.response(3));
             }
@@ -289,6 +291,7 @@ impl Drive {
             }
         };
         self.last_header = Some(raw[12..20].try_into()?);
+        self.resume_lba = Some(position.lba());
         self.next_lba = next_lba;
         Ok(delivery)
     }

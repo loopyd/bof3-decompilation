@@ -49,7 +49,7 @@ fn context() -> (Interconnect, Drive) {
 }
 
 #[test]
-fn init_unmutes_and_preserves_queued_audio_data_cursor_and_volume() {
+fn init_preserves_mute_queued_audio_data_cursor_and_volume() {
     let (mut bus, mut drive) = context();
     let Admission::Queued { frames } = bus.enqueue_cd_audio(&sector(0, 0)).unwrap() else {
         panic!("expected queued audio");
@@ -68,7 +68,7 @@ fn init_unmutes_and_preserves_queued_audio_data_cursor_and_volume() {
         (reset.discarded_audio_frames, reset.discarded_data_bytes),
         (0, 0)
     );
-    assert!(!drive.muted());
+    assert!(drive.muted());
     assert_eq!(bus.cd_host().unwrap().volume().active(), volume);
     assert_eq!(bus.cd_audio().unwrap().statistics().queued_frames, frames);
     assert_eq!(bus.read(0x1f801802, Width::Byte).unwrap(), 1);

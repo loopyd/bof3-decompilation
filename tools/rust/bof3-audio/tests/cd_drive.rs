@@ -213,7 +213,7 @@ fn drive_responses_use_existing_host_irq_and_drain_contract() {
 }
 
 #[test]
-fn init_acknowledges_stopped_reading_then_completes_with_reset_mode_and_preserved_selection() {
+fn init_resets_positions_and_preserves_mode_mute_filter_and_header() {
     let mut drive = Drive::ready(CdPosition::from_lba(100).unwrap(), 0xe8, [7, 31]).unwrap();
     drive.command(&command(6, &[])).unwrap();
     drive.complete().unwrap();
@@ -230,14 +230,14 @@ fn init_acknowledges_stopped_reading_then_completes_with_reset_mode_and_preserve
     let ack = drive.command(&command(0x0a, &[])).unwrap();
     assert_eq!((ack.interrupt, ack.bytes), (3, vec![2]));
     assert_eq!(drive.activity(), Activity::Resetting);
-    assert!(!drive.muted());
+    assert!(drive.muted());
     assert_eq!(
         drive.command(&command(0x10, &[])).unwrap().bytes,
         header[12..20]
     );
     assert_eq!(
         drive.command(&command(0x0f, &[])).unwrap().bytes,
-        [2, 0x20, 0, 7, 31]
+        [2, 0xe8, 0, 7, 31]
     );
     let pending = drive.clone();
     assert!(drive.command(&command(6, &[])).is_err());
@@ -248,13 +248,13 @@ fn init_acknowledges_stopped_reading_then_completes_with_reset_mode_and_preserve
     let completed = drive.complete().unwrap().unwrap();
     assert_eq!((completed.interrupt, completed.bytes), (2, vec![2]));
     assert_eq!(drive.activity(), Activity::Paused);
-    assert_eq!(drive.next_lba(), 101);
+    assert_eq!(drive.next_lba(), 0);
     assert!(drive.complete().is_err());
     drive.command(&command(6, &[])).unwrap();
     assert_eq!(
         drive.activity(),
         Activity::Seeking {
-            target: 300,
+            target: 0,
             read: true
         }
     );
