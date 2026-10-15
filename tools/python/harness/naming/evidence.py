@@ -88,6 +88,7 @@ def recompute_collected_records(
     report_digest: str,
     row: dict,
     payload: dict,
+    native_ops=None,
 ) -> dict:
     """Replay indexed records and live instruction bytes behind caller-owned guards."""
     from harness.naming.instructions import analyzer_instructions
@@ -112,6 +113,8 @@ def recompute_collected_records(
     from harness.naming.plan import collection_row
 
     planned_row = collection_row(row, target, root=root)
+    from harness.naming.partial import replay_partial
+
     derived = _analyze_validated_records(
         token,
         target=target,
@@ -119,6 +122,17 @@ def recompute_collected_records(
         row=planned_row,
         operations=operations,
         instructions=analyzer_instructions(root, payload["semantic"]),
+        partial=replay_partial(
+            root, planned_row, target, payload, native_ops=native_ops
+        ),
+        partial_gap=next(
+            (
+                item["partial_gap"]
+                for item in payload["semantic"]
+                if "partial_gap" in item
+            ),
+            None,
+        ),
     )
     if row.get("kind") == "data":
         _validate_indexed_receipts(root, planned_row, payload, operations, derived)
@@ -292,6 +306,8 @@ def _analyze_validated_records(
     row: dict[str, Any],
     operations: tuple[dict[str, Any], ...],
     instructions: tuple[dict[str, Any], ...] = (),
+    partial: tuple[dict[str, Any], ...] = (),
+    partial_gap: str | None = None,
 ) -> dict[str, Any]:
     """Analyze records from the canonical runner boundary."""
     if (
@@ -355,6 +371,7 @@ def _analyze_validated_records(
             "operations": normalized_operations,
             "analyzer": SCHEMA,
             **({"instructions": instructions} if instructions else {}),
+            **({"partial": partial} if partial else {}),
         }
     )
     facts: list[dict[str, Any]] = []
@@ -577,6 +594,20 @@ def _analyze_validated_records(
             if gap["class"] in required and gap["class"] not in seen
         ]
         opened.extend(gap for gap in capture_gaps if gap["class"] in required)
+    for observation in partial:
+        facts.append(
+            {
+                **observation,
+                "source_id": _source(
+                    "native-partial-baseline",
+                    target,
+                    observation["value"],
+                    input_digest,
+                ),
+            }
+        )
+    if partial_gap is not None and not partial:
+        opened.append({"class": "partial_baseline", "reason": partial_gap})
     required = set(RUNG_PROFILES[row["kind"], row.get("outside_payload") is True])
     if row.get("partial_used") is True:
         required.add("partial_baseline")

@@ -212,7 +212,13 @@ def run_evidence(
         },
     )
     loaded, corrupt = load_journal(root, report, target)
-    fresh = bool(loaded) and journal_is_fresh(root, report, target, inputs)
+    from harness.naming.native import NativeByteOps
+
+    replay_ops = NativeByteOps(root)
+    fresh = bool(loaded) and journal_is_fresh(
+        root, report, target, inputs, native_ops=replay_ops
+    )
+    telemetry.external_processes += replay_ops.commands_executed
     telemetry.rows_stale = len(loaded) if loaded and not fresh else 0
     reusable = loaded if fresh else {}
     if corrupt and not loaded:
@@ -323,6 +329,18 @@ def run_evidence(
                         raise RuntimeError(
                             f"semantic operation failed: {op['command']}"
                         )
+                    if row.get("partial_used") is True and op["kind"] in {
+                        "asm-diff",
+                        "byte-match",
+                    }:
+                        from harness.naming.partial import capture_partial
+
+                        try:
+                            semantic[-1]["partial_snapshot"] = capture_partial(
+                                root, op, semantic[-1]
+                            )
+                        except (OSError, ValueError, KeyError, TypeError) as error:
+                            semantic[-1]["partial_gap"] = str(error)
                 operations = _operations(
                     worker.request(
                         request_id,
@@ -372,6 +390,8 @@ def run_evidence(
                 from harness.naming.instructions import analyzer_instructions
 
                 captures = analyzer_instructions(root, semantic)
+                from harness.naming.partial import partial_observation
+
                 derived = _analyze_validated_records(
                     _RUNNER_TOKEN,
                     target=target,
@@ -379,6 +399,15 @@ def run_evidence(
                     row=row,
                     operations=operation_records,
                     instructions=captures,
+                    partial=partial_observation(row, target, semantic),
+                    partial_gap=next(
+                        (
+                            item["partial_gap"]
+                            for item in semantic
+                            if "partial_gap" in item
+                        ),
+                        None,
+                    ),
                 )
                 receipts = _receipts_for(
                     namespace,

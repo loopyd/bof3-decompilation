@@ -160,8 +160,13 @@ group uses JR RA instead of NOP, with SB-zero in its return delay slot. Facts pr
 direct effects only, without object extent or transitive callee effects.
 Every missing profile rung, including `partial_baseline`, retains a capability
 gap. Decode refusals remain open despite positive facts from other captures for
-that rung. `owner_resolution`, `owner_data` and `partial_baseline` have no positive
-typed producer. Imported function and data rows and retained partials remain blocked.
+that rung. `owner_resolution` and `owner_data` have no positive typed producer.
+Imported function and data rows remain blocked. Ordinary single-function partials
+can obtain `partial_baseline` from the canonical native pair. It binds declared
+progress separately from measured sizes, instruction counts, percentage and first
+mismatch, with current original and linked function bytes. Only the assembly receipt
+carries this fact. Journal and conclusion replay rerun both commands and compare
+the observations. Unsupported partial shapes retain a named gap.
 Overlapping candidate ranges and planned native checks cannot close those rungs.
 Instruction capture must complete the generated plan. A capture failure aborts
 the row without a committed receipt. Failed receipts cannot close work.

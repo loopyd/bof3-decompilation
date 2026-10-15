@@ -293,6 +293,8 @@ def journal_is_fresh(
     report: Path,
     target: str,
     inputs: JournalInputs,
+    *,
+    native_ops=None,
 ) -> bool:
     """Reuse only when inputs, receipts, and raw evidence remain digest-bound."""
 
@@ -365,6 +367,17 @@ def journal_is_fresh(
             if evidence != expected_evidence:
                 return False
             evidence_payload = json.loads(evidence.read_text(encoding="utf-8"))
+            if hashlib.sha256(evidence.read_bytes()).hexdigest() != entry.get(
+                "evidence_sha256"
+            ) or not _payload_is_fresh(
+                root,
+                evidence,
+                namespace=namespace,
+                target=target,
+                row=row,
+                operations=expected_operations,
+            ):
+                return False
             recomputed = recompute_collected_records(
                 _RUNNER_TOKEN,
                 root=root,
@@ -372,6 +385,7 @@ def journal_is_fresh(
                 report_digest=inputs.report_digest,
                 row=collection_row(report_row_values[row], target, root=root),
                 payload=evidence_payload,
+                native_ops=native_ops,
             )
             derived = _artifact_path(root, namespace, entry.get("derived"))
             if derived != namespace / row.split(":", 1)[1] / "derived.json":
@@ -385,14 +399,6 @@ def journal_is_fresh(
             or not evidence.is_file()
             or hashlib.sha256(evidence.read_bytes()).hexdigest()
             != entry.get("evidence_sha256")
-            or not _payload_is_fresh(
-                root,
-                evidence,
-                namespace=namespace,
-                target=target,
-                row=row,
-                operations=expected_operations,
-            )
             or entry.get("analyzer_version") != ANALYZER_SCHEMA
             or not _artifact_is_fresh(
                 root,

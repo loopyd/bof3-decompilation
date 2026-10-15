@@ -108,8 +108,13 @@ Every required kind/locality rung and `partial_baseline` needs a positive produc
 Instruction observations attach only to instruction captures. Partial `asm-diff`
 and `byte-match` receipts retain complete JSON stdout without inheriting instruction
 facts from a shared selector.
-`owner_resolution`, `owner_data` and `partial_baseline` have none, so imported
-function and data rows and retained partials remain blocked. Overlapping owner ranges,
+For ordinary partial functions, the canonical native pair binds current declared
+status, match and residual separately from measured sizes, instruction match and
+first mismatch. It verifies original and linked function bytes after each command.
+The assembly receipt carries the partial fact. Journal and conclusion replay rerun
+both commands and reject changed measurements or byte bindings. Unsupported source
+shapes retain a named gap. `owner_resolution` and `owner_data` have no positive
+producer, so imported function and data rows remain blocked. Overlapping owner ranges,
 candidate entries and planned native checks cannot close those gaps. Decode
 refusals stay open even when another capture supplies a positive fact for that rung.
 Instruction collection requires the complete generated plan. A capture failure

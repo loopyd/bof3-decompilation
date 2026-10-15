@@ -437,6 +437,12 @@ def _receipts_for(
             command.update(
                 instruction_observations(_RUNNER_TOKEN, target, row, capture)
             )
+        if partial_native and tool_id(shlex.split(command["command"])) == "asm-diff":
+            from harness.naming.partial import partial_observation, partial_projection
+
+            observations = partial_observation(row, target, semantic)
+            if observations:
+                command.update(partial_projection(observations))
         record = namespace.write_receipt(
             row, f"semantic-{index}-{command_digest}.json", command
         )

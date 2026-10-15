@@ -224,10 +224,14 @@ the complete rung profile and current evidence replay. Collection alone grants n
 semantic approval. See the [decoder contract](harness.md#domain-packages).
 Collection names missing producers for every required rung, including
 `partial_baseline`, and retains each decode refusal despite other positive facts
-for the same rung. `owner_resolution`, `owner_data` and `partial_baseline` have
-no positive typed producer. Imported function and data rows and retained partials
-therefore remain blocked, regardless of overlapping candidate owner ranges or
-planned native checks. Instruction capture must complete the generated plan.
+for the same rung. Ordinary single-function partials obtain `partial_baseline`
+only from the executed canonical native pair, verified against original and linked
+function bytes. Its assembly receipt separates declared progress from measured
+sizes, instruction counts, percentage and first mismatch. Journal and conclusion
+replay rerun both commands and require unchanged observations. Unsupported partial
+shapes retain named gaps. `owner_resolution` and `owner_data` have no positive typed
+producer, so imported function and data rows remain blocked regardless of overlapping
+candidate owner ranges. Instruction capture must complete the generated plan.
 A capture failure aborts the row without a committed receipt. Its failed receipt
 cannot close work or support a conclusion.
 The selected body's complete capture also supplies `selected_range`. Supported
