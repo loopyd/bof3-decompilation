@@ -35,6 +35,10 @@ Domain-specific evidence and rollback obligations remain intact.
 
 ## Delivery focus
 
+Use current supported interfaces and formats. When replacing behavior, migrate its
+callers and remove obsolete implementations, parsers, aliases, and fallback paths.
+Do not retain or add backward compatibility layers.
+
 Prioritize the requested shipped result. Use existing local builds, static checks,
 and focused runtime runs to verify changed behavior. Keep verification proportional
 to the change; repeat checks only after relevant changes, failures, or unresolved
