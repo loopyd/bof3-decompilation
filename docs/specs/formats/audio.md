@@ -3533,45 +3533,44 @@ and `out/audio-migration/cd-removal-*` retain the research boundary.
 
 ### Independent BIOS handoff and sound initialization comparison
 
-The prepared US BIOS supersedes the earlier missing-ROM limitation. The current
-emulator owner is [PCSX-Redux Agentic](../../../third_party/pcsx-redux-agentic/).
-The Rust [capture reader](../../../tools/rust/bof3-audio/tests/reference/runtime.rs)
-binds the retained ROM/EXE/script/capture hashes and recorded emulator revision.
-Historical evidence under `out/audio-migration/redux-generic-exe/` establishes
-equality of all 2 MiB RAM, 32 GPRs and PC at `exe/slus_004_22@0x8014AA0C`, before
-its first instruction. RAM SHA-256 is
-`6e9f0ab9998c4703ff1168dfd0d614a817561026a5463e199d42697d271b403a`.
-The Rust ROM path retires 2,695,618 instructions; the reference emulator reports
-6,284,283 cycles. Those counters measure different quantities and are not a
-timing equality claim.
+The original-ROM [bootstrap](../../../tools/rust/bof3-audio/src/machine/boot.rs)
+executes the supported US BIOS and loads the EXE at `exe/slus_004_22@0x8014AA0C`
+before its first instruction. The offline
+[capture reader](../../../tools/rust/bof3-audio/tests/reference/runtime.rs) checks
+ROM, EXE, script and capture hashes and the selected
+[PCSX-Redux Agentic](../../../third_party/pcsx-redux-agentic/) revision.
 
-Starting from that context, host-directed calls set PC, RA=`0x80010000` and zero
-A0..A3, preserving other CPU state. The callback initializer at `0x801748E4`
-returned with identical RAM, GPRs and PC. The sound initializer at `0x8015CD00`
-returned with identical GPRs and PC but **27 differing RAM bytes**. The recorded
-unmasked opt-in [comparison](../../../tools/rust/bof3-audio/tests/boot.rs) failed.
+`Execution::from_boot` preserves the bootstrap's reference interpreter cycles and
+NTSC scanline phase. The cost model counts two base cycles per instruction,
+twenty additional cycles for a BIOS ROM instruction, one per data transaction,
+and the fork's multiply/divide result stalls. Each NTSC line takes 2,146 cycles;
+the frame has 263 lines and VBlank starts at line 243. IRQ admission follows
+the interpreter's branch-delay boundary. These are reference-emulator costs,
+not physical CPU timing.
+
+The bounded [initializer comparison](../../../tools/rust/bof3-audio/tests/boot.rs)
+sets PC, RA=`0x80010000` and zero A0..A3. It compares all 2 MiB RAM, 32 GPRs, PC
+and the return cycle for callback initialization at `0x801748E4` and sound
+initialization at `0x8015CD00`. Sound initialization crosses VBlank and invokes
+the original SDK IRQ and callback routines. Omitting that IRQ path leaves
+kernel context, callback state and the software VBlank counter different.
 
 At `0x80170714` (full EXE offset `0xDA714`), the original `lhu v0,12(a1)` reads
 each voice's ENVX; `0x80170720` (`0xDA720`) stores it at
 `0x8018DBF6 + voice*0x34`. When zero, the code at `0x8017072C..0x80170738`
-sets that voice's bit in the mask at `0x80190C1C`. A retained 24-event reference
-trace at `0x80170720` records `v0=1` for every voice. In that comparison, Rust left
-these 24 fields zero, and its mask was `0x00FFFFFF` versus the captured mask's zero, accounting
-for all 27 bytes. The earlier reference implementation returned one for a newly
-started voice or a pending envelope before sample processing. This explains the
-recorded behavior; it does not establish physical key/envelope timing or justify
-hardcoding one in the Rust model. The current fork's
+sets that voice's bit in the mask at `0x80190C1C`. The historical 27-byte mismatch
+came from an earlier reference reader returning one for a newly started or
+pending voice before sample processing. It remains historical evidence, not a
+value to hardcode or a reason to mask RAM. The current fork's
 [SPU register reader](../../../third_party/pcsx-redux-agentic/src/spu/registers.cc)
-reconstructs ENVX at the CPU read cycle and no longer forces that value. The
-retained captures have not been reproduced on the current fork. Scheduled SPU
-frames, readback and sound-state parity remain open. Device state, pending loads,
-full CPU state and PCM are not captured by these missions.
+reconstructs ENVX at the CPU read cycle and no longer forces that value.
 
-Evidence: `out/audio-migration/redux-initialization/{callback,sound,sound-envelope-all}/`,
-`redux-review/{boot-comparison,initialization-comparison,initialization-accesses}.log`
-and `redux-review/envelope-reader.txt`. A separate trace-limit mission rejects
-overflow with exit code one. These observations do not prove BIOS-free pruning,
-audio fidelity or acceptance of the complete runtime.
+The original-ROM reference clock does not schedule programmable root counters,
+GPU commands or PCM output. Enabling the separate output clock on that execution
+mode fails. Scheduled SPU key/envelope observations, full device state, pending
+loads, complete CPU state and audible fidelity require separate comparisons.
+Host-directed initialization does not establish the game's natural loader
+lifecycle or BIOS-free startup.
 
 ### Verified US sequence event framing
 

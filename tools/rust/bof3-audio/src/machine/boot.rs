@@ -1,5 +1,6 @@
 //! Original BIOS execution to PCSX-Redux's PS-X EXE shell-load handoff.
-//! This prepares kernel RAM, not the game's sound driver or device clocks.
+//! This prepares kernel RAM and the reference interpreter's NTSC phase.
+//! Game sound initialization and complete device clocks remain separate.
 use super::{
     bus::Ram,
     cpu::{Cpu, FaultKind},
@@ -11,6 +12,8 @@ use super::{
 use crate::{digest::sha256_hex, Result};
 use serde::Serialize;
 
+pub(crate) mod timing;
+
 pub const SHELL_ENTRY: u32 = 0x8003_0000;
 
 #[derive(Debug, Serialize)]
@@ -18,6 +21,7 @@ pub struct Evidence {
     pub bios_sha256: String,
     pub executable_sha256: String,
     pub bios_instructions: u64,
+    pub reference_cycles: u64,
     pub syscall_exceptions: u64,
     pub shell_ram_sha256: String,
     pub loaded_ram_sha256: String,
@@ -32,6 +36,7 @@ pub struct Machine {
     pub cpu: Cpu,
     pub bus: Interconnect,
     pub evidence: Evidence,
+    pub(crate) timing: timing::Clock,
 }
 
 /// Only the exact US BIOS/executable pair is supported. Execute ROM code until
@@ -50,12 +55,14 @@ pub fn load_us(firmware: Image, executable: &Executable, transition_limit: u64) 
     let mut bus = Interconnect::from_ram(Ram::default());
     bus.attach_firmware(firmware)?;
     let mut cpu = Cpu::pcsx_redux_reset();
+    let mut timing = timing::Clock::default();
     let mut exceptions = 0;
     for _ in 0..transition_limit {
         if cpu.pc() == SHELL_ENTRY {
             break;
         }
-        match cpu.step(&mut bus) {
+        timing.admit_interrupt(&mut cpu, &bus);
+        match timing.step(&mut cpu, &mut bus) {
             Ok(_) => (),
             Err(fault) if fault.kind == FaultKind::Syscall => {
                 cpu.enter_exception(&fault)?;
@@ -80,6 +87,7 @@ pub fn load_us(firmware: Image, executable: &Executable, transition_limit: u64) 
         bios_sha256: US_SHA256.into(),
         executable_sha256: profile.exe_sha256,
         bios_instructions: cpu.instructions(),
+        reference_cycles: timing.cycles(),
         syscall_exceptions: exceptions,
         shell_ram_sha256,
         loaded_ram_sha256: sha256_hex(bus.ram().bytes()),
@@ -89,5 +97,10 @@ pub fn load_us(firmware: Image, executable: &Executable, transition_limit: u64) 
         stack: cpu.register(29),
         global_pointer: cpu.register(28),
     };
-    Ok(Machine { cpu, bus, evidence })
+    Ok(Machine {
+        cpu,
+        bus,
+        evidence,
+        timing,
+    })
 }

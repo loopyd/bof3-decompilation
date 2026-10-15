@@ -1,7 +1,9 @@
 //! Bounded guest calls with BIOS exceptions, IRQ delivery and explicit base
-//! instruction-clock service. Output/VBlank clocks are opt-in; CPU stalls and
-//! complete GPU/CD timing remain unmodeled.
+//! instruction-clock service. Original-ROM references preserve interpreter costs
+//! and NTSC VBlank phase. Complete GPU/CD and reference root-counter timing remain
+//! unmodeled; PCM output uses a separate explicit clock.
 use super::{
+    boot,
     cpu::{Cpu, FaultKind},
     executable::ram_offset,
     interconnect::Interconnect,
@@ -29,6 +31,7 @@ pub struct Execution {
     syscalls: u64,
     interrupts: u64,
     output: Option<output_clock::Clock>,
+    reference: Option<boot::timing::Clock>,
 }
 
 impl Execution {
@@ -40,7 +43,24 @@ impl Execution {
             syscalls: 0,
             interrupts: 0,
             output: None,
+            reference: None,
         }
+    }
+
+    /// Preserve the original BIOS interpreter's absolute NTSC phase for
+    /// development reference calls. This does not enable the PCM output clock.
+    pub fn from_boot(machine: boot::Machine, model: spu_clock::Model) -> Self {
+        let mut execution = Self::new(machine.cpu, machine.bus, model);
+        execution.reference = Some(machine.timing);
+        execution
+    }
+
+    pub fn reference_cycles(&self) -> Option<u64> {
+        self.reference.as_ref().map(boot::timing::Clock::cycles)
+    }
+
+    pub fn syscalls(&self) -> u64 {
+        self.syscalls
     }
 
     pub fn step(&mut self) -> Result<()> {
@@ -50,11 +70,20 @@ impl Execution {
     /// Observe the instruction selected after IRQ admission, before execution.
     /// The observer cannot mutate guest state. Its failure aborts this run.
     pub fn step_observed(&mut self, observer: &mut impl FnMut(&Self) -> Result<()>) -> Result<()> {
-        if self.cpu.take_interrupt(self.bus.interrupts().pending()) {
+        let interrupt = match &self.reference {
+            Some(clock) => clock.admit_interrupt(&mut self.cpu, &self.bus),
+            None => self.cpu.take_interrupt(self.bus.interrupts().pending()),
+        };
+        if interrupt {
             self.interrupts += 1;
         }
         observer(self)?;
-        match self.cpu.step(&mut self.bus) {
+        let before = self.reference_cycles();
+        let step = match &mut self.reference {
+            Some(clock) => clock.step(&mut self.cpu, &mut self.bus),
+            None => self.cpu.step(&mut self.bus),
+        };
+        match step {
             Ok(_) => (),
             Err(fault) if fault.kind == FaultKind::Syscall => {
                 self.cpu.enter_exception(&fault)?;
@@ -62,12 +91,17 @@ impl Execution {
             }
             Err(fault) => return Err(fault.into()),
         }
-        // PCSX-Redux interpreter base BIAS, not a hardware instruction cost.
+        let ticks = before.map_or(2, |before| {
+            (self.reference_cycles().unwrap() - before) as u32
+        });
+        // Raw-state execution retains its explicit base BIAS schedule.
         if let Some(output) = &mut self.output {
-            output.advance(&mut self.bus, &mut self.clock, 2)?;
+            output.advance(&mut self.bus, &mut self.clock, ticks)?;
         } else {
-            self.clock.advance(&mut self.bus, 2)?;
-            self.bus.advance_cpu(2)?;
+            self.clock.advance(&mut self.bus, ticks)?;
+            if self.reference.is_none() {
+                self.bus.advance_cpu(ticks)?;
+            }
         }
         Ok(())
     }
@@ -75,6 +109,11 @@ impl Execution {
     /// Activate an explicit output/scanline phase at this guest boundary.
     /// Existing SPU arithmetic models must already be configured on the bus.
     pub fn enable_output(&mut self, model: output_clock::Model) -> Result<()> {
+        if self.reference.is_some() {
+            return Err(
+                "original-BIOS reference timing does not implement PCM output scheduling".into(),
+            );
+        }
         if self.output.is_some() {
             return Err("output clock already enabled".into());
         }

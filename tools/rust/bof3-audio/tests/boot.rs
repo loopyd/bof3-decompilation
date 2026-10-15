@@ -1,11 +1,11 @@
 use bof3_audio::{
     digest::sha256_hex,
-    driver::retirement::{Before, Retirement},
     machine::{
         adsr, boot,
         bus::{Bus, Ram, Width},
-        cpu::{Cpu, FaultKind},
+        cpu::Cpu,
         executable::Executable,
+        execution::Execution,
         firmware::{Image, ROM_BYTES},
         interconnect::Interconnect,
         profile::Profile,
@@ -138,7 +138,7 @@ fn original_callback_and_sound_initializers_return_using_bios_created_kernel_sta
     let (rom, exe) = media();
     let profile = Profile::identify(&exe).unwrap();
     for (entry, instructions, exception_count) in
-        [(0x801748e4, 5281, 2), (profile.sound_initialize, 67615, 4)]
+        [(0x801748e4, 5281, 2), (profile.sound_initialize, 68682, 4)]
     {
         let (mut machine, actual_instructions, exceptions) = execute_initializer(&rom, &exe, entry);
         let cpu = &machine.cpu;
@@ -167,16 +167,15 @@ fn original_callback_and_sound_initializers_return_using_bios_created_kernel_sta
     }
 }
 
-fn execute_initializer(rom: &[u8], exe: &Executable, entry: u32) -> (boot::Machine, u64, u64) {
-    let mut machine =
-        boot::load_us(Image::from_bytes(rom.to_vec()).unwrap(), exe, 3_000_000).unwrap();
+fn execute_initializer(rom: &[u8], exe: &Executable, entry: u32) -> (Execution, u64, u64) {
+    let machine = boot::load_us(Image::from_bytes(rom.to_vec()).unwrap(), exe, 3_000_000).unwrap();
+    let mut machine = Execution::from_boot(machine, spu_clock::Model::EmulatorReference);
     let start = machine.cpu.instructions();
-    let mut cpu = machine.cpu;
-    cpu.resume_at(entry);
+    machine.cpu.resume_at(entry);
     for register in 4..8 {
-        cpu.set_register(register, 0);
+        machine.cpu.set_register(register, 0);
     }
-    cpu.set_register(31, 0x80010000);
+    machine.cpu.set_register(31, 0x80010000);
     machine
         .bus
         .configure_spu_voices(
@@ -192,43 +191,18 @@ fn execute_initializer(rom: &[u8], exe: &Executable, entry: u32) -> (boot::Machi
         .bus
         .configure_spu_reverb(spu_reverb::Model::EmulatorReference)
         .unwrap();
-    let mut clock = spu_clock::Clock::new(spu_clock::Model::EmulatorReference);
-    let mut exceptions = 0;
-    let mut retirement = Retirement::default();
     for _ in 0..100_000 {
-        if cpu.pc() == 0x80010000 {
+        if machine.cpu.pc() == 0x80010000 {
             break;
         }
-        let before = Before::capture(&cpu);
-        match cpu.step(&mut machine.bus) {
-            Ok(step) => retirement.observe(exe, &before, &step).unwrap(),
-            Err(fault) if fault.kind == FaultKind::Syscall => {
-                cpu.enter_exception(&fault).unwrap();
-                exceptions += 1;
-            }
-            Err(fault) => panic!("{fault}"),
-        }
-        clock.advance(&mut machine.bus, 2).unwrap();
+        machine.step().unwrap();
     }
-    let accesses: Vec<_> = retirement
-        .memory
-        .iter()
-        .filter(|(access, _)| {
-            let address = access.bus_address & 0x1fffffff;
-            (0x1f801c00..0x1f801d80).contains(&address) && access.operation == "read"
-                || (0x18dbf6..=0x18e0a2).contains(&address)
-                    && (address - 0x18dbf6) % 52 == 0
-                    && access.operation == "write"
-                || address == 0x190c1c
-        })
-        .map(|(access, count)| serde_json::json!({"access": access, "count": count}))
-        .collect();
     println!(
         "{}",
-        serde_json::json!({"schema":"bof3.initialization-accesses/v1", "entry":entry, "accesses":accesses})
+        serde_json::json!({"schema":"bof3.initialization-clock/v1", "entry":entry, "cycles":machine.reference_cycles()})
     );
-    let instructions = cpu.instructions() - start;
-    machine.cpu = cpu;
+    let instructions = machine.cpu.instructions() - start;
+    let exceptions = machine.syscalls();
     (machine, instructions, exceptions)
 }
 
@@ -246,5 +220,6 @@ fn original_initializers_match_independent_redux_ram_and_registers() {
         let expected = reference::capture(&root.join(name), &rom, exe.bytes());
         let (machine, _, _) = execute_initializer(&rom, &exe, entry);
         reference::compare(&machine.cpu, machine.bus.ram().bytes(), &expected, name);
+        assert_eq!(machine.reference_cycles(), Some(expected.registers.cycles));
     }
 }
