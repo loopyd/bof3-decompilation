@@ -205,11 +205,13 @@ Runner `resumed` counts reusable journal entries present before collection,
 matching `telemetry_summary.rows.skipped`, not newly completed `executed` work.
 Stale entries are excluded. These progress counts grant no semantic acceptance.
 With `--instructions`, reviewed target-local function/caller work can produce
-receipt-backed `selected_call` facts for fully decoded direct-call wrappers
-(delay slot, symbolic a0–a3, no guards, forwarded v0/v1 and restored-stack return).
-Branches, loops, indirect calls and unsupported arguments/transitions remain open
-with reasons. Imported rows lacking caller work produce no such capture; neither
-these facts nor collection alone enable function conclusions.
+receipt-backed `selected_call` facts for canonical wrappers and bounded acyclic
+BEQ/BNE callers. Facts retain exact callsites, slots, argument expressions, path
+guards and conditional stack/return transitions. Calls remain opaque; a later call
+leaves outgoing v0/v1 unresolved. Loops, indirect flow, unresolved load timing and
+unsupported arguments/transitions remain explicit capability gaps. Imported rows
+lacking caller work produce no such capture. These facts and collection alone
+do not enable function conclusions. See the [decoder contract](harness.md#domain-packages).
 
 `INPUT` uses `bof3.naming-conclusion/v1`. The top-level `report_sha256` is the
 current report CAS digest: import fails if the report bytes have changed. The

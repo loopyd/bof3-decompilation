@@ -117,6 +117,18 @@ addresses/effects. No fabricated receipts; command list alone is not evidence.
 | `one_level_beyond` | next selector/consumer/caller context required by step 8 |
 | `partial_baseline` | live status, percentage, byte sizes, first mismatch, residual, and original-byte verification before a retained-partial spelling transaction |
 
+Instruction capture supports canonical call wrappers and 8..32-instruction acyclic
+BEQ/BNE callers with forward local jumps. Require complete path/slot coverage,
+settled constant-address halfword reads, known selected-call arguments and a matching
+saved-RA frame on every path. The selected call must precede opaque calls on its
+path. Later calls leave outgoing v0/v1 unresolved. Return transitions explicitly
+assume normal memory/call completion and preservation of SP and the saved-entry-RA
+cell. Unsupported instructions, load timing, loops, indirect flow and post-call
+dependencies are named `selected_call` gaps. Replay recomputes facts from original
+bytes. These facts neither close other rungs nor establish a C return contract;
+function conclusion admission remains disabled. `owner_body` retains its separate
+wrapper and global-pointer zero-byte-store shapes.
+
 Partial evidence requires `partial_baseline`. Tool-generated `required_work` covers indexed callers/callees/accesses/owners. Record each item's commands and typed observations with evidence deduplication, or leave it open. Concrete discoveries expand the bounded graph. `exhausted` requires all closed; open/failed work is `blocked`, never optional. `optional_work`/`ceiling_next_command` hold only post-ceiling experiments. Proposals retain `semantic_status`, `transaction_status: ready|repairable|blocked` and `readiness_blockers`; proposed data storage equals `describe` exactly.
 
 Proposals and contested unresolved claims separate `observation` (bytes/instructions, half-open range), `interpretation` (their proof only) and `authority` (manifest/Splat/map/owner). Recheck payload bounds, opcode widths, element counts, exclusive function ends, live/cached/analyzer distinctions and all name terms. Review reproduces evidence without trusting analyzer labels/prose.

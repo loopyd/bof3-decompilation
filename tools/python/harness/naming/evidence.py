@@ -341,7 +341,7 @@ def _analyze_validated_records(
                 opened.append(
                     {
                         "class": fact_class,
-                        "reason": f"capability gap: {fact_class}: no supported original body captured; use --instructions; only canonical straight-line call wrappers are supported",
+                        "reason": f"capability gap: {fact_class}: no supported original body captured; use --instructions; selected calls support canonical wrappers and bounded acyclic callers; owner bodies support canonical wrappers and global-pointer zero-byte stores",
                     }
                 )
     result = {
@@ -400,7 +400,7 @@ def selected_call_observations(
             bytes.fromhex(capture["bytes"]), capture["start"], selected
         )
     except ValueError as error:
-        return [], [f"{function}: {error}"]
+        return [], [f"capability gap: selected_call: {function}: {error}"]
     return [{"caller": str(function), "binding": capture["binding"], **value}], []
 
 

@@ -64,11 +64,17 @@ remain representation evidence, not native byte-match or transaction acceptance.
 when refusing capture without a closed reviewed function boundary. The diagnostic
 does not admit raw/unreviewed caller ranges or relax the capture gate.
 `naming.evidence` derives `selected_call` observations from byte-validated instruction
-captures using `naming.calls`' bounded straight-line wrapper decoder. Typed receipts
-retain the executed command, complete output, observations and refusal reasons;
-journal replay re-derives them from current original bytes. Unsupported guards,
-arguments or transitions stay open. Function conclusion admission remains disabled;
-imported rows without caller work still need caller discovery.
+captures using `naming.calls`. It supports canonical straight-line wrappers and
+8..32-instruction acyclic BEQ/BNE callers with direct calls and forward local jumps.
+The branching decoder checks every path and delay slot, settled constant-address
+halfword reads, argument expressions and saved-RA stack restoration. Calls remain
+opaque. A later call leaves outgoing result registers unresolved; conditional return
+records state their normal-return and stack-preservation assumptions. Unsupported
+instructions, load timing, loops, indirect flow and post-call dependencies remain
+explicit capability gaps. `owner_body` retains its separate decoded shapes.
+Typed receipts retain the command, complete output, observations and refusal reasons;
+journal replay re-derives them from current original bytes. Function conclusion
+admission remains disabled; imported rows without caller work still need discovery.
 
 FUNCTION identity native checks cover the selected function and every changed C
 caller derived from frozen `source_locations`. `application.collect_function_checks`

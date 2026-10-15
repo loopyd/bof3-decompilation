@@ -1,11 +1,372 @@
-"""Decode bounded straight-line MIPS bodies from original words."""
+"""Decode supported MIPS call paths and direct effects from original words."""
 
 from __future__ import annotations
 
+import json
 import struct
+from dataclasses import dataclass, replace
 
 
 def decode_selected_call(code: bytes, start: int, selected: int) -> dict:
+    """Decode a wrapper or a complete forward BEQ/BNE caller with opaque calls."""
+    if len(code) % 4 or not 32 <= len(code) <= 128:
+        raise ValueError("selected_call requires 8..32 aligned instructions")
+    words = struct.unpack(f"<{len(code) // 4}I", code)
+    if any(word >> 26 in {4, 5} for word in words):
+        return _decode_branch_calls(words, start, selected)
+    return _decode_call_wrapper(code, start, selected)
+
+
+@dataclass(frozen=True)
+class _CallPath:
+    registers: tuple[dict, ...]
+    pending_load: tuple[int, dict] | None = None
+    frame_allocated: bool = False
+    ra_saved: bool = False
+    guards: tuple[dict, ...] = ()
+    calls: tuple[dict, ...] = ()
+    covered: frozenset[int] = frozenset()
+    arguments: dict | None = None
+
+
+def _signed_immediate(word: int) -> int:
+    value = word & 0xFFFF
+    return value - 0x10000 if value & 0x8000 else value
+
+
+def _commit_call_load(path: _CallPath, reads: set[int]) -> _CallPath:
+    if path.pending_load is None:
+        return path
+    register, value = path.pending_load
+    if register in reads:
+        raise ValueError("selected_call unresolved MIPS-I load-delay dependency")
+    registers = list(path.registers)
+    registers[register] = value
+    return replace(path, registers=tuple(registers), pending_load=None)
+
+
+def _call_expression(kind: str, left: dict, right: dict) -> dict:
+    if left["kind"] == right["kind"] == "constant":
+        a, b = left["value"], right["value"]
+        return {
+            "kind": "constant",
+            "value": (a | b if kind == "ori" else a + b) & 0xFFFFFFFF,
+        }
+    value = {"kind": kind, "left": left, "right": right, "width_bits": 32}
+    if len(json.dumps(value)) > 4096:
+        raise ValueError(
+            "selected_call expression exceeds decoder representation bound"
+        )
+    return value
+
+
+def _step_call_path(
+    path: _CallPath, word: int, address: int, frame: int, slot: int
+) -> _CallPath:
+    """Decode one ordinary instruction; transfers and their slots have separate owners."""
+    if word == 0:
+        return _commit_call_load(path, set())
+    if path.calls:
+        raise ValueError(
+            "selected_call unsupported post-call register or memory dependency"
+        )
+    if word == 0x27BD0000 | ((-frame) & 0xFFFF):
+        if path.frame_allocated:
+            raise ValueError("selected_call repeated frame allocation")
+        return replace(_commit_call_load(path, set()), frame_allocated=True)
+    if word == 0xAFBF0000 | slot:
+        if not path.frame_allocated or path.ra_saved:
+            raise ValueError(
+                "selected_call saved-ra store lacks a unique allocated frame"
+            )
+        return replace(_commit_call_load(path, set()), ra_saved=True)
+    op, rs, rt, rd = word >> 26, (word >> 21) & 31, (word >> 16) & 31, (word >> 11) & 31
+    reads = {rs}
+    destination = rt
+    if op == 0 and word & 63 == 0x21 and (word >> 6) & 31 == 0:
+        reads.add(rt)
+        destination = rd
+        value = _call_expression("addu", path.registers[rs], path.registers[rt])
+    elif op == 9:
+        value = _call_expression(
+            "addiu",
+            path.registers[rs],
+            {"kind": "constant", "value": _signed_immediate(word)},
+        )
+    elif op == 13:
+        value = _call_expression(
+            "ori", path.registers[rs], {"kind": "constant", "value": word & 0xFFFF}
+        )
+    elif op == 15 and rs == 0:
+        reads = set()
+        value = {"kind": "constant", "value": (word & 0xFFFF) << 16}
+    elif op == 37:
+        base = path.registers[rs]
+        if base["kind"] != "constant":
+            raise ValueError("selected_call unresolved halfword-read address")
+        effective = (base["value"] + _signed_immediate(word)) & 0xFFFFFFFF
+        if effective % 2:
+            raise ValueError("selected_call unaligned halfword read")
+        value = {
+            "kind": "unsigned_halfword_read",
+            "address": f"0x{effective:08X}",
+            "instruction": f"0x{address:08X}",
+            "width": 2,
+        }
+    else:
+        raise ValueError("selected_call unsupported instruction or reserved encoding")
+    if destination not in range(2, 16) or reads & {29, 31}:
+        raise ValueError("selected_call unsupported register dependency")
+    if path.pending_load is not None and path.pending_load[0] == destination:
+        raise ValueError("selected_call unresolved overlapping load/register write")
+    path = _commit_call_load(path, reads)
+    if op == 37:
+        return replace(path, pending_load=(destination, value))
+    registers = list(path.registers)
+    registers[destination] = value
+    return replace(path, registers=tuple(registers))
+
+
+def _decode_branch_calls(words: tuple[int, ...], start: int, selected: int) -> dict:
+    """Visit every supported acyclic path, retaining opaque-call assumptions."""
+    if (
+        type(start) is not int
+        or type(selected) is not int
+        or start % 4
+        or selected % 4
+        or not 0 <= selected <= 0xFFFFFFFF
+        or not 0 <= start < start + len(words) * 4 <= 0x100000000
+    ):
+        raise ValueError("selected_call invalid original range or callee")
+    tail_index = len(words) - 4
+    tail = words[tail_index:]
+    if tail[2] != 0x03E00008 or not (tail[1] == 0 or tail[3] == 0):
+        raise ValueError("selected_call undecodable return transition")
+    restore = tail[3] if tail[1] == 0 else tail[1]
+    frame, slot = restore & 0xFFFF, tail[0] & 0xFFFF
+    if (
+        restore >> 16 != 0x27BD
+        or not 8 <= frame < 0x8000
+        or frame % 8
+        or tail[0] >> 16 != 0x8FBF
+        or slot % 4
+        or not 0 <= slot <= frame - 4
+    ):
+        raise ValueError("selected_call requires canonical saved-ra stack transition")
+
+    def instruction(index: int) -> dict:
+        return {
+            "address": f"0x{start + index * 4:08X}",
+            "word": f"0x{words[index]:08X}",
+        }
+
+    def destination(index: int) -> int:
+        return ((start + index * 4 + 4) & 0xF0000000) | (
+            (words[index] & 0x3FFFFFF) << 2
+        )
+
+    transfers = {
+        index
+        for index, word in enumerate(words[:tail_index])
+        if word >> 26 in {2, 3, 4, 5}
+    }
+    slots = {index + 1 for index in transfers} | {len(words) - 1}
+    if any(index + 1 >= tail_index or index in slots for index in transfers):
+        raise ValueError("selected_call transfer has no ordinary delay slot")
+    selected_sites = [
+        index
+        for index in transfers
+        if words[index] >> 26 == 3 and destination(index) == selected
+    ]
+    if len(selected_sites) != 1:
+        raise ValueError("selected_call requires one selected direct callsite")
+    selected_site = selected_sites[0]
+
+    def edge(index: int, target: int) -> int:
+        offset = target - start
+        if (
+            offset % 4
+            or not index + 1 < offset // 4 <= tail_index
+            or offset // 4 in slots
+        ):
+            raise ValueError(
+                "selected_call backward, escaping or delay-slot control edge"
+            )
+        return offset // 4
+
+    # Validate even edges that later prove infeasible; no partial decode is evidence.
+    edges = {}
+    for index in transfers:
+        op = words[index] >> 26
+        if op in {4, 5}:
+            target = (
+                start + index * 4 + 4 + _signed_immediate(words[index]) * 4
+            ) & 0xFFFFFFFF
+            edges[index] = edge(index, target)
+        elif op == 2:
+            edges[index] = edge(index, destination(index))
+
+    registers = tuple(
+        {"kind": "entry_register", "register": i}
+        if i
+        else {"kind": "constant", "value": 0}
+        for i in range(32)
+    )
+    pending = [(0, _CallPath(registers=registers))]
+    completed = []
+    while pending:
+        index, path = pending.pop()
+        if len(pending) + len(completed) > 4096:
+            raise ValueError(
+                "selected_call control graph exceeds decoder representation bound"
+            )
+        if index == tail_index:
+            if (
+                not path.frame_allocated
+                or not path.ra_saved
+                or path.pending_load is not None
+            ):
+                raise ValueError(
+                    "selected_call return lacks settled load or saved entry-ra frame"
+                )
+            completed.append(
+                replace(
+                    path,
+                    covered=path.covered | frozenset(range(tail_index, len(words))),
+                )
+            )
+            continue
+        if not 0 <= index < tail_index or index in slots:
+            raise ValueError("selected_call unsupported control entry")
+        path = replace(path, covered=path.covered | {index})
+        word, op = words[index], words[index] >> 26
+        if index not in transfers:
+            path = _step_call_path(path, word, start + index * 4, frame, slot)
+            pending.append((index + 1, path))
+            continue
+        delay = words[index + 1]
+        if op in {2, 3} and delay != 0:
+            raise ValueError("selected_call direct jump/call requires a nop delay slot")
+        if op in {4, 5} and delay not in {0, 0xAFBF0000 | slot}:
+            raise ValueError("selected_call unsupported conditional delay slot")
+        path = replace(path, covered=path.covered | {index + 1})
+        if op in {4, 5}:
+            if path.calls:
+                raise ValueError("selected_call unresolved post-call branch state")
+            rs, rt = (word >> 21) & 31, (word >> 16) & 31
+            if {rs, rt} & {29, 31}:
+                raise ValueError("selected_call unsupported branch register dependency")
+            left, right = path.registers[rs], path.registers[rt]
+            path = _commit_call_load(path, {rs, rt})
+            path = _step_call_path(path, delay, start + (index + 1) * 4, frame, slot)
+            for taken in (False, True):
+                equal = taken == (op == 4)
+                if left == right and not equal:
+                    continue
+                if left["kind"] == right["kind"] == "constant" and equal != (
+                    left["value"] == right["value"]
+                ):
+                    continue
+                guard = {
+                    "branch": instruction(index),
+                    "delay_slot": instruction(index + 1),
+                    "relation": "equal" if equal else "not_equal",
+                    "left": left,
+                    "right": right,
+                }
+                pending.append(
+                    (
+                        edges[index] if taken else index + 2,
+                        replace(path, guards=path.guards + (guard,)),
+                    )
+                )
+            continue
+        path = _commit_call_load(path, set())
+        if op == 2:
+            pending.append((edges[index], path))
+            continue
+        if not path.frame_allocated or not path.ra_saved:
+            raise ValueError(
+                "selected_call frame allocation and saved entry-ra must dominate every call"
+            )
+        if index == selected_site:
+            if path.calls:
+                raise ValueError("selected_call arguments follow an opaque prior call")
+            path = replace(
+                path, arguments={f"a{i - 4}": path.registers[i] for i in range(4, 8)}
+            )
+        call = {
+            "callsite": instruction(index),
+            "callee": f"0x{destination(index):08X}",
+            "delay_slot": instruction(index + 1),
+        }
+        path = replace(path, calls=path.calls + (call,))
+        pending.append((index + 2, path))
+
+    if not completed or set().union(*(path.covered for path in completed)) != set(
+        range(len(words))
+    ):
+        raise ValueError(
+            "selected_call original body has unexplained or unreachable instructions"
+        )
+    selected_paths = [path for path in completed if path.arguments is not None]
+    if not selected_paths or any(
+        path.arguments != selected_paths[0].arguments for path in selected_paths
+    ):
+        raise ValueError("selected_call unresolved selected-call argument join")
+    continuations = []
+    for path in selected_paths:
+        later_calls = list(path.calls[1:])
+        continuations.append(
+            {
+                "guards": list(path.guards),
+                "later_calls": later_calls,
+                "local_reads_before_later_call": [],
+                "outgoing_registers": {
+                    "kind": "unresolved_after_subsequent_call"
+                    if later_calls
+                    else "body_local_forwarding",
+                    "registers": ["v0", "v1"],
+                },
+            }
+        )
+    return {
+        "callsite": instruction(selected_site),
+        "callee": f"0x{selected:08X}",
+        "delay_slot": instruction(selected_site + 1),
+        "argument_registers": selected_paths[0].arguments,
+        "guards": {
+            "kind": "conditional_paths",
+            "paths": [list(path.guards) for path in selected_paths],
+            "scope": "path predicates; feasibility is not established",
+        },
+        "result": {
+            "kind": "uninterpreted_call_registers",
+            "registers": ["v0", "v1"],
+            "continuations": continuations,
+            "scope": "local register flow only; no C return contract or transitive callee effects",
+        },
+        "transition": {
+            "kind": "conditional_return_to_caller",
+            "stack_restored_bytes": frame,
+            "assumptions": [
+                "observed memory operations complete normally",
+                "all opaque calls return normally and preserve sp and the caller's saved-entry-ra stack cell",
+            ],
+            "instructions": [instruction(i) for i in range(tail_index, len(words))],
+            "paths": [
+                {"guards": list(path.guards), "calls": list(path.calls)}
+                for path in completed
+            ],
+            "coverage": {
+                "kind": "complete_acyclic_body",
+                "instructions": [instruction(i) for i in range(len(words))],
+            },
+        },
+    }
+
+
+def _decode_call_wrapper(code: bytes, start: int, selected: int) -> dict:
     """Accept one direct call with a canonical stack/return transition only.
 
     This deliberately excludes branches, loops, indirect calls and load-derived
@@ -140,7 +501,7 @@ def decode_owner_body(code: bytes, start: int) -> dict:
     destination = ((start + index * 4 + 4) & 0xF0000000) | (
         (words[index] & 0x3FFFFFF) << 2
     )
-    decoded = decode_selected_call(code, start, destination)
+    decoded = _decode_call_wrapper(code, start, destination)
     return {
         "coverage": "complete straight-line call wrapper; direct effects only, not transitive callee effects",
         "range": {"start": f"0x{start:08X}", "end": f"0x{start + len(code):08X}"},
