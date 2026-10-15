@@ -25,6 +25,8 @@ A discovered callee's final load can remain an unresolved translation boundary
 without aborting other functions' analysis. This requires a retained discovery
 bound, an authenticated nonbranch predecessor and no admitted successor. The
 callee remains ineligible for complete call or declaration contracts.
+Reaching the address bound ends that path; queued paths inside the bound can
+still be discovered.
 
 Callsite-path diagnostics are omitted when an entry-reachable prefix crosses a
 call without a complete binding and the required register preservation. The
