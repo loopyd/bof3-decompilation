@@ -74,6 +74,15 @@ instructions, load timing, loops, indirect flow and post-call dependencies remai
 explicit capability gaps. `owner_body` retains its separate decoded shapes.
 The selected function's complete validated capture produces `selected_range`, with
 its half-open boundary, byte count, original hash and live image/layout binding.
+`naming.effects` also records direct memory effects when the complete selected
+body fits its acyclic leaf grammar: forward BEQ/BNE/J, ordinary slots, terminal
+JR RA, constant-address LH/LHU/SB/SH and supported integer operations. Facts retain
+every original word, path guard, ordered read and truncated store. Branches sample
+operands before their slots; repeated reads remain distinct. Unresolved load delays,
+addresses, calls, loops, unsupported encodings and writes overlapping code through
+RAM aliases leave a `body_effects_gap`. Effects require settled entry loads, normal
+mapped accesses and stable instructions and standard RAM mappings. They establish
+no path feasibility, object extent, gameplay meaning or C return contract.
 Generated caller work controls call decoding; capturing the selected body alone
 does not make it a caller. A two-way zero/nonzero halfword guard with different
 first callees and an identical later call suffix produces `one_level_beyond` as

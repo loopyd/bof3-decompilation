@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import tempfile
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -51,8 +52,28 @@ def _validate_conclusion(
             item.get("status") != "completed" for item in row.get("required_work", [])
         )
     ):
+        rungs = row.get("rungs", {})
+        expected_rungs = set(capability["rungs"])
+        work = row.get("required_work", [])
+        work_ids = Counter(item.get("id") for item in work)
+        expected_work = set(capability["required_work"])
+        incomplete_rungs = sorted(
+            name
+            for name, rung in rungs.items()
+            if rung.get("status") != "passed" or not rung.get("observations")
+        )
+        open_work = sorted(
+            item["id"] for item in work if item.get("status") != "completed"
+        )
         raise ValueError(
-            "typed conclusion requires all current rungs and generated work closed"
+            "typed conclusion requires all current rungs and generated work closed: "
+            f"missing rungs={sorted(expected_rungs - set(rungs))}; "
+            f"unexpected rungs={sorted(set(rungs) - expected_rungs)}; "
+            f"incomplete rungs={incomplete_rungs}; "
+            f"missing work={sorted(expected_work - set(work_ids))}; "
+            f"unexpected work={sorted(set(work_ids) - expected_work)}; "
+            f"duplicate work={sorted(key for key, count in work_ids.items() if count > 1)}; "
+            f"open work={open_work}"
         )
     if row["rung_status"] == "exhausted":
         if capability is None:

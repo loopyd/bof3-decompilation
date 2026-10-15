@@ -215,8 +215,12 @@ is captured under its own reviewed boundary; unsupported bodies remain named gap
 Other unresolved edge kinds need additional discovery. Function conclusions require
 the complete rung profile and current evidence replay. Collection alone grants no
 semantic approval. See the [decoder contract](harness.md#domain-packages).
-The selected body's complete capture also supplies `selected_range`. A decoded
-two-way halfword-state dispatch with alternative callees and a common later call
+The selected body's complete capture also supplies `selected_range`. Supported
+acyclic leaf bodies include conditional direct memory effects, with distinct
+reads, pre-slot branch guards and truncated stores. Unsupported bodies retain
+`body_effects_gap`; a valid range alone proves no body meaning. Effects require
+settled entry loads, normal mapped accesses and stable code and RAM mappings.
+A decoded two-way halfword-state dispatch with alternative callees and a common later call
 supplies `one_level_beyond` caller context. It proves conditional invocation,
 without proving state meaning or callee behavior. Each rung needs an independent
 receipt; use a separate caller receipt for `selected_call` when the dispatcher

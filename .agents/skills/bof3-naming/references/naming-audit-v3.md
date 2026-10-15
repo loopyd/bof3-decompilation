@@ -127,6 +127,14 @@ cell. Unsupported instructions, load timing, loops, indirect flow and post-call
 dependencies are named `selected_call` gaps. Only generated caller work authorizes
 call facts. The selected body's complete validated capture supplies `selected_range`
 with its boundary, byte count, original hash and image/layout binding.
+Supported complete acyclic leaves also supply `body_effects`: forward BEQ/BNE/J,
+ordinary slots, terminal JR RA, constant-address LH/LHU/SB/SH and supported integer
+operations. Retain all words, guards, ordered reads and truncated stores. Sample
+branches before slots; keep rereads distinct. Require settled entry loads, normal
+mapped accesses and stable code and standard RAM mappings. Unsupported flow,
+instructions, addresses, load timing or code-overlapping RAM-alias stores retain
+`body_effects_gap`. These conditional effects prove no path feasibility, object
+extent, gameplay meaning or C return contract. Range validity survives a body gap.
 A two-way zero/nonzero halfword-state dispatch with alternative first callees and
 an identical later call suffix supplies `one_level_beyond` caller context. It proves
 conditional invocation and continuation, not state meaning or callee effects.

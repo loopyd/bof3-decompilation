@@ -565,7 +565,9 @@ def instruction_observations(
 
 
 def _selected_range(capture: dict, selector: str) -> dict:
-    """Describe the complete live-validated range without inferring body semantics."""
+    """Describe the live range and direct effects only when the full body decodes."""
+    from harness.naming.effects import decode_leaf_effects
+
     binding = capture["binding"]
     original = bytes.fromhex(capture["bytes"])
     start, end = binding.get("start"), binding.get("end")
@@ -583,17 +585,22 @@ def _selected_range(capture: dict, selector: str) -> dict:
         raise ValueError(
             "selected_range capture differs from its complete original binding"
         )
+    value = {
+        "selector": selector,
+        "boundary": {"start": f"0x{start:08X}", "end": f"0x{end:08X}"},
+        "byte_count": len(original),
+        "original_sha256": hashlib.sha256(original).hexdigest(),
+        "binding": binding,
+        "scope": "complete reviewed original range; no C return contract",
+    }
+    try:
+        value["body_effects"] = decode_leaf_effects(original, start)
+    except ValueError as error:
+        value["body_effects_gap"] = str(error)
     return {
         "class": "selected_range",
         "polarity": "positive",
-        "value": {
-            "selector": selector,
-            "boundary": {"start": f"0x{start:08X}", "end": f"0x{end:08X}"},
-            "byte_count": len(original),
-            "original_sha256": hashlib.sha256(original).hexdigest(),
-            "binding": binding,
-            "scope": "complete reviewed original range; no body semantics or C return contract",
-        },
+        "value": value,
     }
 
 
