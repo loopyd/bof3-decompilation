@@ -646,7 +646,8 @@ def _observed_entry_context(summary, evidence):
         )
 
 
-def _scoped_restoration(value, evidence):
+def _scoped_restoration(value, row):
+    evidence = row["returnDisposition"]["evidence"]
     _keys(
         value,
         {
@@ -655,6 +656,7 @@ def _scoped_restoration(value, evidence):
             "stateHash",
             "entryPc",
             "entrySp",
+            "entryBindings",
             "frameBytes",
             "conditions",
             "registers",
@@ -662,11 +664,11 @@ def _scoped_restoration(value, evidence):
         "scoped restoration",
     )
     _require(
-        value["kind"] == "mips-observed-frame-restoration/v1"
+        value["kind"] == "mips-observed-frame-restoration/v2"
         and value["entryPc"] == evidence["start"]
         and value["conditions"]
         == [
-            "captured-entry-sp-and-settled-load-state",
+            "captured-entry-registers-and-settled-load-state",
             "ordinary-ram-mapping-and-cache-mode-remain-active",
             "original-instructions-remain-active",
             "accesses-and-instruction-fetches-complete-normally",
@@ -680,6 +682,17 @@ def _scoped_restoration(value, evidence):
         "scoped restoration conditions or identity",
     )
     _integer(value["entrySp"], 0xFFFFFFFF)
+    bindings = _rows(value["entryBindings"], 30, "scoped entry bindings")
+    for binding in bindings:
+        _keys(binding, {"register", "value"}, "scoped entry binding")
+        _integer(binding["register"], 31)
+        _integer(binding["value"], 0xFFFFFFFF)
+        _require(binding["register"] not in {0, 29}, "scoped entry binding register")
+    _require(
+        [item["register"] for item in bindings]
+        == sorted({item["register"] for item in bindings}),
+        "scoped entry binding order",
+    )
     _integer(value["frameBytes"], 32768)
     sp, frame = value["entrySp"], value["frameBytes"]
     _require(
@@ -759,6 +772,7 @@ def _scoped_restoration(value, evidence):
                 and _complete(contract["noMemoryWrites"]),
                 "scoped call writes remain unresolved",
             )
+    memorycontracts._observed_restoration(row, value)
 
 
 FRAME_CONDITIONS = [
@@ -1004,7 +1018,7 @@ def _summary(row, identity, payload, load, entry_flow, context, images, frame_us
     if "entryContext" in summary:
         _observed_entry_context(summary, evidence)
     if "scopedRestoration" in summary:
-        _scoped_restoration(summary["scopedRestoration"], evidence)
+        _scoped_restoration(summary["scopedRestoration"], row)
     if "symbolicFrame" in summary:
         _symbolic_frame(summary, evidence)
     instructions = {item["pc"]: item for item in evidence["instructions"]}
@@ -1357,13 +1371,6 @@ def _call_links(call, caller, graph):
                 "dependent call discarded conditional frame obligation",
             )
     obligations = row["returnDisposition"]["evidence"]["obligations"]
-    scoped_obligations = [
-        item
-        for item in obligations
-        if item["pc"] == pc
-        and item["domain"] == "architectural"
-        and item["reason"] == "conditional-callee-assigned-transfer-unresolved"
-    ]
     frame_obligations = [
         item
         for item in obligations
@@ -1374,9 +1381,9 @@ def _call_links(call, caller, graph):
     frame = bool(frame_obligations)
     if frame:
         _frame_binding(call, row, callee_row)
-    scoped_r2 = bool(scoped_obligations) or (frame and bool(call_definitions))
+    scoped_r2 = frame and bool(call_definitions)
     if scoped_r2:
-        restoration = summary.get("symbolicFrame" if frame else "scopedRestoration", {})
+        restoration = summary.get("symbolicFrame", {})
         links = [
             item for item in restoration.get("registers", []) if item["register"] == 31
         ]
@@ -1387,8 +1394,7 @@ def _call_links(call, caller, graph):
         transfer = summary["transfers"][2]
         condition = f"conditional-callee-preservation-{pc}"
         _require(
-            (len(scoped_obligations) == 1 or frame)
-            and contract["kind"] == "partial"
+            contract["kind"] == "partial"
             and not call["qualified"]
             and not facts["control"]
             and not facts["transfers"]
@@ -1641,7 +1647,6 @@ def _validate_ordinary_body_candidate(row: dict):
             and item["reason"]
             in {
                 "conditional-callee-preservation-unresolved",
-                "conditional-callee-assigned-transfer-unresolved",
                 FRAME_OBLIGATION,
             }
             for item in evidence["obligations"]

@@ -96,19 +96,29 @@ def capture_entry_observation(entry_receipt, cpu_receipt, contexts, mounts):
             }
         )
     entry, cpu = receipts
+    entry_inputs, cpu_inputs = entry["inputs"], cpu["inputs"]
     _require(
         cpu.get("arguments") == {"DEPTH": "2", "PATH": "registers"}
-        and "file:STATE" in cpu["inputs"]
-        and set(cpu["inputs"]) <= {"bios", "file:STATE"}
-        and all(key == "bios" or key.startswith("disc:") for key in entry["inputs"]),
+        and "bios" in entry_inputs
+        and all(key == "bios" or key.startswith("disc:") for key in entry_inputs)
+        and set(cpu_inputs) == set(entry_inputs) | {"file:STATE", "origin"},
         "CPU observation must inspect the entry state without execution or injection",
     )
-    continuation = origin.verify_origin(
-        Path(entry_receipt), {**entry["inputs"], **cpu["inputs"]}, cpu["emulator"]
+    _require(
+        cpu_inputs["origin"] == sources[0]
+        and all(
+            (cpu_inputs[key]["bytes"], cpu_inputs[key]["sha256"])
+            == (record["bytes"], record["sha256"])
+            for key, record in entry_inputs.items()
+        ),
+        "CPU observation origin or original media differs from the entry capture",
     )
-    state = cpu["inputs"]["file:STATE"]
-    recipe.verify_inputs([state])
-    sources.append(state)
+    recipe.verify_inputs(cpu_inputs.values())
+    sources.extend(cpu_inputs.values())
+    continuation = origin.verify_origin(
+        Path(entry_receipt), cpu_inputs, cpu["emulator"]
+    )
+    state = cpu_inputs["file:STATE"]
     for name, receipt_path, receipt, capture_name, limit in (
         ("registers.json", entry_receipt, entry, "registers.json", 64 << 10),
         ("ram.bin", entry_receipt, entry, "ram.bin", 2 << 20),

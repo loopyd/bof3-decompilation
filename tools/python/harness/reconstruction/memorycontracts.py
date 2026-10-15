@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections import deque
+
 from harness.domain.mips import word_fields
 from harness.reconstruction.proofvalues import (
     _complete,
@@ -50,6 +52,402 @@ def _memory_word(word):
 def _signed16(word):
     immediate = word & 0xFFFF
     return immediate - 0x10000 if immediate & 0x8000 else immediate
+
+
+def _observed_cfg(row):
+    """Reconstruct all reachable original edges, including delay-slot ownership."""
+    evidence = row["returnDisposition"]["evidence"]
+    instructions = {item["pc"]: item for item in evidence["instructions"]}
+    _require(
+        evidence["decodeComplete"]
+        and evidence["analysisComplete"]
+        and len(instructions) == len(evidence["instructions"])
+        and set(instructions) == set(range(evidence["start"], evidence["end"], 4)),
+        "observed restoration requires complete original words",
+    )
+    for item in instructions.values():
+        _require(
+            item["mapped"]
+            and not item["undef"]
+            and item["bytes"] == 4
+            and item["owner"] == row["name"],
+            "observed restoration original ownership",
+        )
+    pending = [(evidence["start"], None)]
+    contexts, successors, derived, exits = {}, {}, set(), set()
+    while pending:
+        pc, owner = pending.pop()
+        if pc in contexts:
+            _require(
+                contexts[pc] == owner, "observed restoration ambiguous delay owner"
+            )
+            continue
+        _require(
+            pc in instructions and len(contexts) < 4096, "observed original CFG bounds"
+        )
+        contexts[pc] = owner
+        word = instructions[pc]["word"]
+        kind, _ = _memory_word(word)
+        _require(
+            kind not in {"unsupported", "trap", "indirect-branch"}
+            and (kind != "call" or word >> 26 == 3),
+            "observed restoration unsupported control",
+        )
+        following = set()
+        if owner is None:
+            following.add(
+                (pc + 4, pc, "delay-slot")
+                if kind in {"branch", "return", "call"}
+                else (pc + 4, None, "fallthrough")
+            )
+        else:
+            branch = instructions[owner]["word"]
+            owner_kind, _ = _memory_word(branch)
+            _require(
+                pc == owner + 4 and kind not in {"branch", "return", "call"},
+                "observed restoration illegal delay slot",
+            )
+            if owner_kind == "branch":
+                target = (
+                    (((owner + 4) & 0xF0000000) | ((branch & 0x03FFFFFF) << 2))
+                    if branch >> 26 == 2
+                    else (owner + 4 + _signed16(branch) * 4) & 0xFFFFFFFF
+                )
+                following.add((target, None, "branch"))
+                if branch >> 26 != 2:
+                    following.add((owner + 8, None, "fallthrough"))
+            elif owner_kind == "call":
+                following.add((owner + 8, None, "call-continuation"))
+            else:
+                _require(branch == 0x03E00008, "observed restoration unproved return")
+                exits.add(owner)
+        successors[pc] = [target for target, _, _ in following]
+        for target, delay_owner, edge_kind in following:
+            derived.add((pc, target, delay_owner, edge_kind))
+            pending.append((target, delay_owner))
+    reported = {
+        (edge["from"], edge["to"], edge["delayOwner"], edge["kind"])
+        for edge in evidence["edges"]
+    }
+    _require(
+        len(reported) == len(evidence["edges"])
+        and reported == derived
+        and exits == {item["pc"] for item in evidence["exits"]}
+        and exits,
+        "observed restoration complete CFG inventory differs",
+    )
+    incoming = {pc: [] for pc in contexts}
+    for pc, targets in successors.items():
+        for target in targets:
+            incoming[target].append(pc)
+    degrees = {pc: len(parents) for pc, parents in incoming.items()}
+    ready = deque(pc for pc, count in degrees.items() if count == 0)
+    _require(list(ready) == [evidence["start"]], "observed restoration entry cycle")
+    ordered = []
+    while ready:
+        pc = ready.popleft()
+        ordered.append(pc)
+        for target in successors[pc]:
+            degrees[target] -= 1
+            if not degrees[target]:
+                ready.append(target)
+    _require(len(ordered) == len(contexts), "observed restoration cyclic original CFG")
+    return instructions, contexts, incoming, ordered, exits
+
+
+def _join_observed_value(left, right):
+    if left == right:
+        return left
+    if left and right and left[0] == right[0] == "saved" and left[:4] == right[:4]:
+        return (*left[:4], left[4] | right[4], left[5] | right[5])
+    return None
+
+
+def _observed_restoration(row, proof):
+    """Replay a callee-local captured frame without trusting claimed address facts."""
+    instructions, contexts, incoming, ordered, exits = _observed_cfg(row)
+    evidence = row["returnDisposition"]["evidence"]
+    bindings = {item["register"]: item["value"] for item in proof["entryBindings"]}
+    calls = {item["pc"]: item for item in evidence["calls"]}
+    frame, sp = proof["frameBytes"], proof["entrySp"]
+    states, terminal = {}, []
+
+    def physical(address, width):
+        if not 0 <= address <= 0xFFFFFFFF or address & 0xE0000000 not in {
+            0,
+            0x80000000,
+            0xA0000000,
+        }:
+            return None
+        address &= 0x1FFFFFFF
+        return address if address + width <= 0x200000 else None
+
+    def joined(parents):
+        registers, pending, words, used, link = parents[0]
+        registers, pending, words, used = (
+            registers.copy(),
+            pending.copy(),
+            words.copy(),
+            used.copy(),
+        )
+        for (
+            other_registers,
+            other_pending,
+            other_words,
+            other_used,
+            other_link,
+        ) in parents[1:]:
+            _require(
+                pending.keys() == other_pending.keys(), "observed pending-load join"
+            )
+            registers = [
+                _join_observed_value(left, right)
+                for left, right in zip(registers, other_registers, strict=True)
+            ]
+            pending = {
+                reg: _join_observed_value(value, other_pending[reg])
+                for reg, value in pending.items()
+            }
+            words = {
+                address: value
+                for address, saved in words.items()
+                if (value := _join_observed_value(saved, other_words.get(address)))
+            }
+            used.update(other_used)
+            link = _join_observed_value(link, other_link)
+        _require(registers[29] is not None, "observed stack join")
+        return registers, pending, words, used, link
+
+    def entry(value):
+        return value[1] if value and value[0] in {"entry", "saved"} else None
+
+    for pc in ordered:
+        if incoming[pc]:
+            registers, pending, words, used, link = joined(
+                [states[parent] for parent in incoming[pc]]
+            )
+        else:
+            registers = [("entry", reg) for reg in range(34)]
+            registers[0], registers[29] = ("constant", 0), ("sp", 0)
+            pending, words, used, link = {}, {}, set(), None
+        word = instructions[pc]["word"]
+        fields = word_fields(word)
+        opcode, rs, rt = fields.opcode, fields.rs, fields.rt
+        kind, destinations = _memory_word(word)
+        immediate = _signed16(word)
+        memory = kind in {"load", "store"}
+        adjustment = opcode == 9 and rs == rt == 29
+        computed = None
+        loaded = None
+        if adjustment:
+            _require(
+                registers[29] and registers[29][0] == "sp", "observed stack identity"
+            )
+            offset = registers[29][1]
+            _require(
+                (pc == evidence["start"] and offset == 0 and immediate == -frame)
+                or (offset == -frame and immediate == frame),
+                "observed stack adjustment",
+            )
+            computed = ("sp", offset + immediate)
+        elif kind == "compute":
+            left, right = registers[rs], registers[rt]
+            if opcode == 0 and fields.funct in {33, 37} and (rs == 0 or rt == 0):
+                computed = registers[rs or rt]
+            elif opcode == 9 and immediate == 0:
+                computed = left
+            elif opcode == 15:
+                computed = ("constant", (word & 0xFFFF) << 16)
+            elif left and left[0] == "constant" and opcode in {9, 13}:
+                computed = (
+                    "constant",
+                    (
+                        (left[1] + immediate)
+                        if opcode == 9
+                        else (left[1] | (word & 0xFFFF))
+                    )
+                    & 0xFFFFFFFF,
+                )
+            elif (
+                opcode == 0
+                and fields.funct in {33, 37}
+                and left
+                and right
+                and left[0] == right[0] == "constant"
+            ):
+                computed = (
+                    "constant",
+                    (
+                        (left[1] + right[1])
+                        if fields.funct == 33
+                        else (left[1] | right[1])
+                    )
+                    & 0xFFFFFFFF,
+                )
+        elif kind == "call":
+            computed = ("constant", pc + 8)
+        if memory:
+            _require(
+                opcode not in {34, 38, 42, 46}, "observed merge access unsupported"
+            )
+            width = 1 if opcode in {32, 36, 40} else 2 if opcode in {33, 37, 41} else 4
+            base = registers[rs]
+            offset, address = None, None
+            if base and base[0] == "sp":
+                offset = base[1] + immediate
+                address = physical(sp + offset, width)
+            elif base and base[0] == "constant":
+                address = physical(base[1] + immediate, width)
+            elif (reg := entry(base)) is not None:
+                if reg in bindings:
+                    address = physical(bindings[reg] + immediate, width)
+                if address is not None:
+                    used.add(reg)
+            if kind == "store":
+                _require(address is not None, "observed store address unresolved")
+                words = {
+                    location: saved
+                    for location, saved in words.items()
+                    if not (address < location + 4 and location < address + width)
+                }
+                saved_entry = entry(registers[rt])
+                if (
+                    opcode == 43
+                    and offset is not None
+                    and -frame <= offset <= -4
+                    and address % 4 == 0
+                    and saved_entry is not None
+                ):
+                    words[address] = (
+                        "saved",
+                        saved_entry,
+                        offset,
+                        pc,
+                        frozenset(),
+                        frozenset(),
+                    )
+            elif (
+                opcode == 35
+                and address is not None
+                and offset is not None
+                and address % 4 == 0
+            ):
+                saved = words.get(address)
+                if saved and saved[2] == offset:
+                    loaded = (*saved[:4], saved[4] | {pc}, saved[5])
+        if kind == "return":
+            _require(
+                word == 0x03E00008 and 31 not in pending, "observed return pending link"
+            )
+            link = registers[31]
+        immediate_destinations = set(destinations) if kind != "load" else set()
+        for reg, value in pending.items():
+            if reg not in immediate_destinations:
+                registers[reg] = value
+        pending = {}
+        for reg in destinations:
+            if not reg:
+                continue
+            _require(
+                instructions[pc]["fullWidthRegisters"].count(reg) == 1
+                and (reg != 29 or adjustment),
+                "observed register write width or stack escape",
+            )
+            if kind == "load":
+                pending[reg] = loaded
+            else:
+                registers[reg] = computed
+        owner = contexts[pc]
+        if owner is not None and _memory_word(instructions[owner]["word"])[0] == "call":
+            call = calls.get(owner)
+            _require(call is not None and not pending, "observed call pending load")
+            contract = call["contract"]
+            _require(
+                call["target"]
+                == (
+                    ((owner + 4) & 0xF0000000)
+                    | ((instructions[owner]["word"] & 0x03FFFFFF) << 2)
+                )
+                and contract["callee"]
+                and contract["delay"] == pc
+                and contract["continuation"] == owner + 8
+                and contract["actualIncomingLink"] == owner + 8
+                and all(
+                    _complete(contract[dimension])
+                    for dimension in (
+                        "identity",
+                        "inputs",
+                        "control",
+                        "transfers",
+                        "noMemoryWrites",
+                    )
+                )
+                and len(contract["registerTransfers"]) == 34,
+                "observed call lacks independent transfer or write contract",
+            )
+            for reg, transfer in enumerate(contract["registerTransfers"]):
+                _require(
+                    transfer["register"] == reg
+                    and _complete(transfer["proof"])
+                    and not transfer["pending"]
+                    and transfer["mayNoPending"]
+                    and not transfer["pendingDefinitions"],
+                    "observed call unsettled transfer",
+                )
+                preserved = (
+                    transfer["kind"] == "preserved" and transfer["equalEntry"] == reg
+                )
+                _require(reg != 29 or preserved, "observed call changes stack")
+                if reg and not preserved:
+                    _require(
+                        transfer["equalEntry"] != 29 and 29 not in transfer["entries"],
+                        "observed call exposes stack",
+                    )
+                    registers[reg] = None
+            words = {
+                address: (*saved[:5], saved[5] | {owner})
+                for address, saved in words.items()
+            }
+        state = registers, pending, words, used, link
+        states[pc] = state
+        if owner in exits:
+            _require(
+                registers[29] == ("sp", 0)
+                and link
+                and link[0] == "saved"
+                and link[1] == 31
+                and link[4]
+                and not pending,
+                "observed exit lacks settled original stack/link restoration",
+            )
+            terminal.append(state)
+    registers, pending, _, used, _ = joined(terminal)
+    restored = []
+    for reg, value in enumerate(registers[:32]):
+        if (
+            reg
+            and value
+            and value[0] == "saved"
+            and value[1] == reg
+            and value[4]
+            and reg not in pending
+        ):
+            restored.append(
+                dict(
+                    register=reg,
+                    entrySpOffset=value[2],
+                    physicalWord=physical(sp + value[2], 4),
+                    storePc=value[3],
+                    loadPcs=sorted(value[4]),
+                    callPcs=sorted(value[5]),
+                    exitPcs=sorted(exits),
+                )
+            )
+    _require(used == bindings.keys(), "observed entry binding inventory differs")
+    _require(
+        restored == proof["registers"],
+        "observed restoration differs from original replay",
+    )
 
 
 def _memory_prefix(row, access):

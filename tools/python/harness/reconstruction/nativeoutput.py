@@ -809,13 +809,62 @@ def _validate_entry_observations(
                 "scoped restoration lacks entry capture input",
             )
             _require(
+                type(restoration) is dict
+                and restoration.get("kind") == "mips-observed-frame-restoration/v2"
+                and type(restoration.get("entryBindings")) is list,
+                "scoped restoration format",
+            )
+            captured = parse_json(entry_captures["registers.json"], 64 << 10)[
+                "registers"
+            ]
+            evidence = function.get("returnDisposition", {}).get("evidence", {})
+            start, end = evidence.get("start"), evidence.get("end")
+            _require(
+                type(start) is int
+                and type(end) is int
+                and start == descriptor["entry_pc"]
+                and start < end <= 0x100000000
+                and start % 4 == end % 4 == 0
+                and start & 0xE0000000 in {0, 0x80000000, 0xA0000000}
+                and (start & 0x1FFFFFFF) + end - start <= 0x200000,
+                "scoped restoration original RAM interval",
+            )
+            instructions = _rows(
+                evidence.get("instructions"), 4096, "scoped original instructions"
+            )
+            _require(
+                len(instructions) == (end - start) // 4,
+                "scoped restoration complete original RAM words",
+            )
+            ram = entry_captures["ram.bin"]
+            for index, instruction in enumerate(instructions):
+                pc = start + 4 * index
+                _require(
+                    type(instruction) is dict
+                    and instruction.get("pc") == pc
+                    and type(instruction.get("word")) is int
+                    and instruction["word"]
+                    == int.from_bytes(
+                        ram[(pc & 0x1FFFFFFF) : (pc & 0x1FFFFFFF) + 4], "little"
+                    ),
+                    "scoped restoration captured instructions differ",
+                )
+            for binding in restoration["entryBindings"]:
+                _require(
+                    type(binding) is dict
+                    and set(binding) == {"register", "value"}
+                    and type(binding["register"]) is int
+                    and 0 < binding["register"] < 32
+                    and binding["register"] != 29
+                    and type(binding["value"]) is int
+                    and binding["value"] == captured[binding["register"]],
+                    "scoped entry register differs from captured input",
+                )
+            _require(
                 function["originalCallSummary"]["function"] == descriptor["function"]
                 and restoration["entryPc"] == descriptor["entry_pc"]
                 and restoration["stateHash"] == descriptor["state"]["sha256"]
-                and restoration["entrySp"]
-                == parse_json(entry_captures["registers.json"], 64 << 10)["registers"][
-                    29
-                ]
+                and restoration["entrySp"] == captured[29]
                 and restoration["observation"]
                 == hashlib.sha256(
                     json.dumps(
