@@ -15,6 +15,7 @@ from harness.build.compiler import (
     parse_object_compilers,
     parse_object_flags,
     resolve_compiler_settings,
+    select_configured_compiler,
     validate_object_configuration,
 )
 from harness.build.invocation import Invocation, plan_dispatch, plan_invocation
@@ -32,12 +33,6 @@ from harness.build.routing import (
 from harness.common.files import read_file
 from harness.common.observation import PathWatch
 from harness.domain.tags import count_function_metadata
-from harness.io import repo_layout
-from harness.toolchain.gcc_variants import (
-    check_host_compatible,
-    parse_variants,
-    select_variant,
-)
 
 _LIMIT = 16 * 1024 * 1024
 _ENVIRONMENT = (
@@ -142,16 +137,7 @@ def _select_annotated_compiler(root, arguments, sources, output, grouped):
         parse_object_flags(text),
         parse_object_compilers(text),
     )
-    layout = repo_layout(root)
-    if settings.compiler_id is None:
-        compiler = layout.gcc272_psx_root / "gcc"
-    else:
-        catalog = read_file(root, "config/compiler/variants.json", max_bytes=_LIMIT)
-        variant = select_variant(
-            parse_variants(catalog.decode("utf-8")), settings.compiler_id
-        )
-        check_host_compatible(variant.host)
-        compiler = variant.install_path(layout) / variant.executable_relpath
+    compiler = select_configured_compiler(root, settings.compiler_id)
     if trial:
         return select_compiler(root) if os.environ.get("PSX_GCC") else compiler, paths
     configured = os.environ.get("PSX_GCC")

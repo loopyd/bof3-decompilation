@@ -15,7 +15,7 @@ from harness.domain.tags import count_function_metadata
 from harness.domain.policy import validate_matching_source
 from harness.domain.symbols import load_map, map_path
 
-from ..build.operations import batch_build, cmake_target_for_source
+from ..build.compilation import compile_sources
 from ..domain.manifests import TargetManifest, load_target_manifests
 from ..domain.claims import manifest_source_paths
 from ..domain.layout import ReviewedSplatLayout, parse_splat_layout
@@ -386,8 +386,8 @@ def _failed_objects(root: Path, result: Any) -> set[str]:
     return failed
 
 
-def _batch_failed_objects(root: Path, cmake_targets: list[str]) -> set[str] | None:
-    """Batch-build every target and report the objects that failed.
+def _batch_failed_objects(root: Path, sources: list[Path]) -> set[str] | None:
+    """Compile every ordinary miss and report the objects that failed.
 
     ``None`` means the outcome cannot be attributed — the batch could not run,
     or it failed without naming an object — so the caller keeps the
@@ -395,7 +395,7 @@ def _batch_failed_objects(root: Path, cmake_targets: list[str]) -> set[str] | No
     """
 
     try:
-        result = batch_build(root, cmake_targets)
+        result = compile_sources(root, sources)
     except ProcessCleanupError:
         raise
     except (RuntimeError, ValueError, FileNotFoundError):
@@ -485,7 +485,7 @@ def _run_batch_misses(
     """
     Phase 2.3.2 — build selected source objects once per target.
 
-    Ordinary misses batch-build and compare without rebuilding, with per-source
+    Ordinary misses compile freshly and compare once, with per-source
     fallback after failure. Groups use fresh complete-group comparison for every
     selected member, without object or summary reuse.
     """
@@ -509,15 +509,10 @@ def _run_batch_misses(
         if not items:
             continue
         sources = [item[1] for item in items]
-        cmake_targets = [cmake_target_for_source(root, s) for s in sources]
 
-        # Ninja's own verdict decides the path.  One failing translation unit no
-        # longer hides every later target, and only the objects the build
-        # reported as FAILED need the per-source build for a trustworthy
-        # diagnosis; the rest were built or verified current by the build
-        # system itself.  An unattributable batch keeps the original
-        # conservative per-source path for every item.
-        failed_objects = _batch_failed_objects(root, cmake_targets)
+        # Every ordinary miss executes bin/cc. Timestamp-based build edges do
+        # not establish freshness after compiler or environment changes.
+        failed_objects = _batch_failed_objects(root, sources)
 
         try:
             manifests = load_target_manifests(root)
@@ -555,10 +550,7 @@ def _run_batch_misses(
         if not items:
             continue
 
-        # Freshness and the build's own failure report decide the path.  Every
-        # object the build did not report as FAILED was built or verified
-        # current by ninja, so comparing it directly keeps the audit
-        # proportional to the number of lifts instead of rebuilding each one.
+        # Attribute compiler failures before comparing freshly produced objects.
         resolved_items: list[tuple[_WorkItem, AsmDiffRequest, dict[str, Any]]] = []
         stale_items: list[_WorkItem] = []
         for item in items:

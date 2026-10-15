@@ -8,7 +8,7 @@ import shutil
 from pathlib import Path
 from typing import Any, Mapping
 
-from ..build.operations import build, cmake_target_for_source
+from ..build.compilation import compile_object
 from ..io import write_json, RepoLayout
 from ._asm_disasm import (
     disassemble_linked,
@@ -38,14 +38,8 @@ from ._asm_diff_payload import AsmDiffRequest, build_result_payload, render_diff
 def run_build_object(
     layout: RepoLayout, source_path: Path, build_log_path: Path | None
 ) -> None:
-    target = cmake_target_for_source(layout.root, source_path)
     object_path = object_path_for_source(layout, source_path)
-    if shutil.which("cmake") is None:
-        raise FileNotFoundError(
-            f"cmake executable not found in PATH; cannot build {target}"
-        )
-
-    result = build(layout.root, target)
+    result = compile_object(layout.root, source_path, object_path)
     log_text = result.stdout
     if result.stderr:
         if log_text:
@@ -56,7 +50,7 @@ def run_build_object(
         build_log_path.write_text(log_text, encoding="utf-8")
     if result.returncode != 0:
         suffix = "" if build_log_path is None else f"; see {build_log_path}"
-        raise RuntimeError(f"object build failed for {target}{suffix}")
+        raise RuntimeError(f"object build failed for {source_path}{suffix}")
     if (
         not object_path.is_file()
         or object_path.stat().st_mtime < source_path.stat().st_mtime
@@ -150,8 +144,8 @@ def _asm_diff_compare(
 ) -> dict[str, Any]:
     """Run the link, byte-match, placement, size, and diagnostic steps.
 
-    *Assumes* the object already exists (built by the caller).  Object
-    freshness is verified via ``st_mtime``.
+    The caller must freshly produce the object before comparison. An existing
+    object or a recent timestamp alone does not establish production freshness.
 
     ``manifests`` lets a caller that already holds a validated catalog (the
     status-audit batch path resolves it once per target) reuse it instead of

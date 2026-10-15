@@ -281,6 +281,26 @@ def build_compiler_arguments(
     return [*base, *override, *(flag for flag in common if flag.startswith("-Wa"))]
 
 
+def select_configured_compiler(root: Path, compiler_id: str | None) -> Path:
+    """Resolve the native compiler selected by attached or object settings."""
+    from harness.io import repo_layout
+    from harness.toolchain.gcc_variants import (
+        check_host_compatible,
+        parse_variants,
+        select_variant,
+    )
+
+    layout = repo_layout(root)
+    if compiler_id is None:
+        return layout.gcc272_psx_root / "gcc"
+    catalog = read_file(
+        root, "config/compiler/variants.json", max_bytes=16 * 1024 * 1024
+    )
+    variant = select_variant(parse_variants(catalog.decode("utf-8")), compiler_id)
+    check_host_compatible(variant.host)
+    return variant.install_path(layout) / variant.executable_relpath
+
+
 def load_object_flags(root: Path) -> dict[str, list[str]]:
     """Parse config/compiler/object-flags.cmake -> {sanitized_key: flags}.
 

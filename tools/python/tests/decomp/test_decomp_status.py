@@ -435,7 +435,7 @@ def test_batch_builds_fresh_misses_once_per_target(tmp_path: Path, monkeypatch) 
         compared_roots.append(repo.root)
         return _batch_result()
 
-    monkeypatch.setattr(dsp, "batch_build", batch)
+    monkeypatch.setattr(dsp, "compile_sources", batch)
     monkeypatch.setattr(dsp, "_asm_diff_resolve", resolve)
     monkeypatch.setattr(dsp, "_asm_diff_compare", compare)
     monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: ({}, {}))
@@ -463,7 +463,7 @@ def test_batch_resolve_failure_falls_back_once(tmp_path: Path, monkeypatch) -> N
     fallback = 0
     monkeypatch.setattr(
         dsp,
-        "batch_build",
+        "compile_sources",
         lambda root, targets: subprocess.CompletedProcess([], 0, "", ""),
     )
     monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: ({}, {}))
@@ -503,7 +503,7 @@ def test_batch_stale_object_falls_back_once_without_duplicate_record(
     fallback = 0
     monkeypatch.setattr(
         dsp,
-        "batch_build",
+        "compile_sources",
         lambda root, targets: subprocess.CompletedProcess([], 0, "", ""),
     )
     monkeypatch.setattr(
@@ -558,7 +558,7 @@ def test_batch_failure_falls_back_per_source_with_error_attribution(
 
     monkeypatch.setattr(
         dsp,
-        "batch_build",
+        "compile_sources",
         lambda root, targets: subprocess.CompletedProcess([], 1, "", "build error"),
     )
     monkeypatch.setattr(ds, "index_coverage", lambda _root, _manifests: ({}, {}))
@@ -637,13 +637,13 @@ def test_no_batch_when_all_sources_are_cached(tmp_path: Path, monkeypatch) -> No
         batch_calls.append(targets)
         raise RuntimeError("should not be called")
 
-    monkeypatch.setattr(dsp, "batch_build", track_batch)
+    monkeypatch.setattr(dsp, "compile_sources", track_batch)
 
     report = ds.build_report(
         tmp_path, ("exe/logo",), use_cache=True, diff_runner=lambda r: {}
     )
 
-    assert batch_calls == [], "batch_build was called despite all cache hits"
+    assert batch_calls == [], "compile_sources was called despite all cache hits"
     assert report["lifts"]["total"] == 1
     assert report["lifts"]["exact"] == 1
     cache.close()
@@ -702,7 +702,7 @@ def test_source_change_invalidates_cache_and_recomputes(
             "output_dir": tmp_path / "out/matching/dummy",
         }
 
-    monkeypatch.setattr(dsp, "batch_build", batch)
+    monkeypatch.setattr(dsp, "compile_sources", batch)
     monkeypatch.setattr(dsp, "_asm_diff_resolve", resolve)
     monkeypatch.setattr(
         dsp,
@@ -790,7 +790,7 @@ def test_compile_inputs_invalidate_only_affected_target_then_all_targets(
             "output_dir": tmp_path / "out/matching/dummy",
         }
 
-    monkeypatch.setattr(dsp, "batch_build", batch)
+    monkeypatch.setattr(dsp, "compile_sources", batch)
     monkeypatch.setattr(dsp, "_asm_diff_resolve", resolve)
     monkeypatch.setattr(
         dsp,
