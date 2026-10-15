@@ -92,6 +92,13 @@ segments:
       - [0xb50b0, c, exitCurrentCallbackThread, '@source: src/bof3/callback/exitCurrentCallbackThread.c']
       - [0xb5100, c, closeCallbackSlot, '@source: src/bof3/callback/closeCallbackSlot.c']
   - [0xb5154, bin, pre_frontend_local_mode]
+  - name: main_work_pointer_publication
+    type: code
+    start: 0xb6ce0
+    vram: 0x8014d4e0
+    subsegments:
+      - [0xb6ce0, asm, func_8014D4E0]
+  - [0xb6d4c, bin, post_main_work_pointer_publication]
   - name: main_lookup_record
     type: code
     start: 0xb753c
