@@ -237,7 +237,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                     record.ranges.push(RangeRecord {
                                         offset: text.file_offset, length: text.capacity,
                                         entry: Some(entry.index), status: "known-text",
-                                        evidence: format!("battle category {:#x}; pointer tables 0x800b6e88/0x800b6ec4; calls 0x800b28c8/0x800b2f70 to renderer 0x8014f800; runtime acceptance pending", text.address),
+                                        evidence: format!("{} allocation {:#x}; consumers {}; renderer 0x8014f800; runtime acceptance pending", document.layout, text.address, document.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", ")),
                                     });
                                     at = text.file_offset + text.capacity;
                                 }

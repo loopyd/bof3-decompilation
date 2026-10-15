@@ -138,7 +138,7 @@ For supported US `START.EMI` and `STATUS.EMI`, extraction writes a
 source's record entry (8 for START, 0 for STATUS), without class or latch selectors.
 See [formats.md](formats.md#default-character-names).
 
-For supported embedded battle categories, select the code entry explicitly:
+For supported embedded battle text, select the code entry explicitly:
 
 ```sh
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
@@ -147,6 +147,9 @@ bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/b
 This emits `bof3.inline-text/v1`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
+The original BATTLE archive also has supported literal message records in entry 3.
+Use `--entry 3` to extract them. Command-bearing and untraced records remain
+excluded; see [formats.md](formats.md#inline-battle-text).
 
 ## `extract-corpus [--root DIR] -o|--output DIR`
 

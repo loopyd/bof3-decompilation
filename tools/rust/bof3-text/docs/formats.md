@@ -93,7 +93,7 @@ copies remain separate sources: changing START does not update STATUS or an
 existing save's live names. Character renaming, other initializers and observed
 rendering remain separate requirements.
 
-## Inline battle categories
+## Inline battle text
 
 The supported US battle code payload loaded at `0x80096800` contains two
 five-entry pointer tables at `0x800B6E88` and `0x800B6EC4`. Draw calls at
@@ -115,6 +115,21 @@ Packing additionally binds the complete archive hash, canonical source path,
 entry and entry offset. It preserves all other payloads. Each archive replica
 remains a separate source. Other embedded battle strings, different code
 layouts and observed rendering remain separate coverage requirements.
+
+The `US battle literal messages` layout supports eight thirteen-byte records
+in BATTLE entry 3, loaded at `0x801D0C00`. The table starts at `0x801EB000` with
+stride thirteen. Supported table rows are 0, 2, 6, 7, 8, 9, 10 and 11; each
+accepts up to twelve literal bytes followed by NUL. The copy consumer at
+`0x801DE94C` uses that stride and copies at most twelve bytes through
+`0x801501E4`, which appends NUL. Event enqueue at `0x801DE560` stores message
+pointers; draw consumer `0x801E9538` forwards them to `0x8014F800`.
+
+These records use the same schema and capacity rules. Their `references` are
+empty because their consumers use indexed records or code references rather
+than a pointer table. Recognition pins those instructions outside the editable
+fields. Document `index` identifies the supported allocation, not its original
+table row. Command-bearing rows 1 and 3 and untraced rows 4 and 5 remain outside
+this layout's editable allocations.
 
 ## Bank layout
 

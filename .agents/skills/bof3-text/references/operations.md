@@ -62,13 +62,16 @@ Use `--entry all` or the source's record entry: 8 for START and 0 for STATUS.
 Omit class and latch selectors. Each copy needs its own freshly extracted
 document and separate output; editing one does not update the other or a save.
 
-For embedded battle categories, use `analyze` to find the supported `inline_entries`
+For embedded battle text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
 uses `bof3.inline-text/v1`. Edit only `text`, retain all strings and references,
 and reserve one encoded byte for NUL within each allocation. Pack against the
 same archive with its recorded entry or `all`, without class or latch selectors.
 Each matching archive payload needs its own source-bound document and output.
 Corpus export includes these documents alongside bank documents.
+The literal message layout excludes command-bearing and untraced table rows.
+An empty pointer-reference list means indexed or code addressing; retain it and
+the consumer metadata. The pinned payload protects those instructions.
 
 Analysis reports archive offsets, encoded size, original capacity, command operands
 and shared rows. Terminators inside operands are not string boundaries. Trailing
