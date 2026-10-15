@@ -136,6 +136,13 @@ caller receipt for `selected_call`. Range ownership proves no name term or C ret
 contract. Function conclusion admission remains disabled. `owner_body` retains its
 separate wrapper and global-pointer zero-byte-store shapes.
 
+Imported function discovery includes target-local unresolved `static_jal` index
+edges as deduplicated caller work, preserving every owner candidate. The destination
+address supplies a lookup key, not a callee identity or runtime-owner proof.
+Other unresolved edge kinds require further discovery. Each caller still needs
+its complete reviewed capture and supported decode; an indexed JAL alone closes
+no semantic rung.
+
 Partial evidence requires `partial_baseline`. Tool-generated `required_work` covers indexed callers/callees/accesses/owners. Record each item's commands and typed observations with evidence deduplication, or leave it open. Concrete discoveries expand the bounded graph. `exhausted` requires all closed; open/failed work is `blocked`, never optional. `optional_work`/`ceiling_next_command` hold only post-ceiling experiments. Proposals retain `semantic_status`, `transaction_status: ready|repairable|blocked` and `readiness_blockers`; proposed data storage equals `describe` exactly.
 
 Proposals and contested unresolved claims separate `observation` (bytes/instructions, half-open range), `interpretation` (their proof only) and `authority` (manifest/Splat/map/owner). Recheck payload bounds, opcode widths, element counts, exclusive function ends, live/cached/analyzer distinctions and all name terms. Review reproduces evidence without trusting analyzer labels/prose.

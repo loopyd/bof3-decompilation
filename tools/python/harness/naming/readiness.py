@@ -253,7 +253,7 @@ class RequiredWorkSnapshot:
             and self.load_address <= address < self.payload_end
         )
         items: list[dict[str, str]] = []
-        if kind == "function" and inside:
+        if kind == "function":
             for caller in self.callers.get(address, ()):
                 items.append(
                     {
@@ -262,7 +262,7 @@ class RequiredWorkSnapshot:
                         "description": f"resolve caller {caller}",
                     }
                 )
-            for callee in self.callees.get(address, ()):
+            for callee in self.callees.get(address, ()) if inside else ():
                 items.append(
                     {
                         "id": f"callee:{callee}",
@@ -306,11 +306,17 @@ def required_work_snapshot(
     prefix = f"{target}@"
     callers: dict[int, list[str]] = {}
     callees: dict[int, list[str]] = {}
-    for caller, callee in connection.execute(
-        "SELECT DISTINCT caller, callee FROM calls "
-        "WHERE caller LIKE ? OR callee LIKE ? ORDER BY caller, callee",
-        (f"{prefix}%", f"{prefix}%"),
+    for caller, callee, unresolved_address in connection.execute(
+        "SELECT caller, callee, NULL FROM calls "
+        "WHERE caller LIKE ? OR callee LIKE ? "
+        "UNION SELECT caller, NULL, target_address FROM unresolved_calls "
+        "WHERE caller LIKE ? AND kind = 'static_jal' ORDER BY 1, 2, 3",
+        (f"{prefix}%", f"{prefix}%", f"{prefix}%"),
     ):
+        if callee is None:
+            if str(caller).startswith(prefix):
+                callers.setdefault(int(unresolved_address), []).append(str(caller))
+            continue
         if str(callee).startswith(prefix):
             callers.setdefault(int(str(callee).rsplit("@", 1)[1], 16), []).append(
                 str(caller)
@@ -343,7 +349,7 @@ def required_work_snapshot(
         target,
         manifest.load_address,
         payload_end,
-        {key: tuple(values) for key, values in callers.items()},
+        {key: tuple(sorted(set(values))) for key, values in callers.items()},
         {key: tuple(values) for key, values in callees.items()},
         {key: tuple(values) for key, values in accesses.items()},
         owners,

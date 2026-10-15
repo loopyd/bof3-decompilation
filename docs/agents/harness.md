@@ -82,7 +82,12 @@ continuation, without assigning meaning to the state or the callees' effects.
 Typed receipts retain the command, complete output, observations and refusal reasons;
 journal replay re-derives them from current original bytes and generated caller work.
 One receipt cannot close two rungs. Function conclusion
-admission remains disabled; imported rows without caller work still need discovery.
+admission remains disabled.
+`naming.readiness` adds target-local unresolved `static_jal` edges to generated
+caller work, including selected addresses outside the payload. It deduplicates
+callers while preserving owner candidates and the three-query bulk snapshot.
+These edges establish work to inspect, not a resolved callee or runtime owner.
+Other unresolved edge kinds do not supply caller work through this path.
 
 FUNCTION identity native checks cover the selected function and every changed C
 caller derived from frozen `source_locations`. `application.collect_function_checks`

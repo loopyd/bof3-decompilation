@@ -210,7 +210,9 @@ BEQ/BNE callers. Facts retain exact callsites, slots, argument expressions, path
 guards and conditional stack/return transitions. Calls remain opaque; a later call
 leaves outgoing v0/v1 unresolved. Loops, indirect flow, unresolved load timing and
 unsupported arguments/transitions remain explicit capability gaps. Imported rows
-lacking caller work produce no such capture. These facts and collection alone
+gain caller work from target-local unresolved `static_jal` index edges. Each caller
+is captured under its own reviewed boundary; unsupported bodies remain named gaps.
+Other unresolved edge kinds need additional discovery. These facts and collection alone
 do not enable function conclusions. See the [decoder contract](harness.md#domain-packages).
 The selected body's complete capture also supplies `selected_range`. A decoded
 two-way halfword-state dispatch with alternative callees and a common later call
