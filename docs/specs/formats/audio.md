@@ -4512,10 +4512,11 @@ implements Init (`0x0A`) as a caller-completed transition. It stops reading,
 resets the current and seek positions to `00:02:00` (LBA 0), clears pending
 Setloc and releases XA selection. It preserves mode, command mute, filter and
 the latest transfer header. A read without a new Setloc uses the reset position
-rather than the retained header. In the paused-drive context, acknowledgement
-is INT3/status `0x02`; the separate completion boundary produces INT2/status
-`0x02` and leaves the drive paused. Mechanical overlap still rejects, and bad
-parameter counts return INT5 without changing drive state.
+rather than the retained header. Acknowledgement reports the pre-transition
+status as INT3/status `0x22` while reading or `0x02` while paused. The separate
+completion boundary produces INT2/status `0x02` and leaves the drive paused.
+Mechanical overlap still rejects, and bad parameter counts return INT5 without
+changing drive state.
 
 The current PCSX-Redux Agentic
 [CD implementation](../../../third_party/pcsx-redux-agentic/src/core/cdrom.cc)
@@ -4526,10 +4527,15 @@ flags clear even though the mode byte survives. This does not extend the Rust
 drive's supported mode bits. Opcode `0x1C` remains unsupported by the Rust drive.
 
 The [host integration](../../../tools/rust/bof3-audio/src/machine/interconnect/cd.rs)
-retains its existing data-cursor, queued-XA-output and selection policies.
-Native parity for these policies and active-reading response/IRQ behavior
-remains unverified. Init state agreement does not establish parity with the
-current [XA submission path](../../../third_party/pcsx-redux-agentic/src/spu/xa.cc).
+retains its data-cursor, queued-XA-output and selection policies. At an
+unrequested-sector boundary, native Init preserves the pending 2048-byte data
+payload, FIFO cursor and XA decoder history, readiness and format. Begin/end
+audio queue accounting shows no discarded frames. It does not expose complete
+queued PCM or locate dequeues against guest command cycles. Native parity for
+active data cursors, later XA selection, exact IRQ publication timing and CPU
+exception admission remains unverified. These state observations do not establish
+signal parity with the current
+[XA submission path](../../../third_party/pcsx-redux-agentic/src/spu/xa.cc).
 Mechanical timing and hardware fidelity remain unverified.
 
 The [host reset constructor](../../../tools/rust/bof3-audio/src/machine/cd_host.rs)

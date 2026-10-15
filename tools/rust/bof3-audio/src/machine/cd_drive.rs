@@ -166,14 +166,13 @@ impl Drive {
                 // CdlInit resets current/seek positions to 00:02:00 and clears
                 // pending Setloc while preserving mode, mute and filter.
                 // A retained transfer header must not redirect the next read.
-                // Completion and unqualified active-reading response timing
-                // remain caller-supplied; opcode 0x1c is the separate CdlReset.
+                // ACK retains pre-transition status; completion is caller-supplied.
+                // Opcode 0x1c is the separate CdlReset.
                 self.activity = Activity::Resetting;
                 self.next_lba = 0;
                 self.target = None;
                 self.resume_lba = None;
                 self.xa_selection = None;
-                return Ok(self.response(3));
             }
             0x0d => {
                 self.filter.copy_from_slice(&command.parameters);

@@ -228,7 +228,7 @@ fn init_resets_positions_and_preserves_mode_mute_filter_and_header() {
     assert_eq!(drive, before);
 
     let ack = drive.command(&command(0x0a, &[])).unwrap();
-    assert_eq!((ack.interrupt, ack.bytes), (3, vec![2]));
+    assert_eq!((ack.interrupt, ack.bytes), (3, vec![0x22]));
     assert_eq!(drive.activity(), Activity::Resetting);
     assert!(drive.muted());
     assert_eq!(
