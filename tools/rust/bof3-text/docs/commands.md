@@ -53,6 +53,8 @@ Empty slots have zero capacity and no byte offset. Analysis reads original bytes
 For the supported US executable, analysis emits the ASCII document described in
 [formats.md](formats.md#executable-ascii), including file offsets, capacities and
 pointer references. It does not apply the game's dialogue command codec to ASCII.
+Supported record and default character inputs emit their editable name document,
+including each field's offset, address and capacity.
 
 ## `prepare [--root DIR] [--targets DIR] [--out-dir DIR]`
 
@@ -129,6 +131,11 @@ document of equipment and ability names. Use `--entry all` or `--entry 0` and om
 `--class` and `--latch`. These fixed-width names use literal characters without
 dialogue commands. See [formats.md](formats.md#record-names).
 
+For supported US `START.EMI` and `STATUS.EMI`, extraction writes a
+`bof3.character-text/v1` document of eight default names. Use `--entry all` or the
+source's record entry (8 for START, 0 for STATUS), without class or latch selectors.
+See [formats.md](formats.md#default-character-names).
+
 ## `extract-corpus [--root DIR] -o|--output DIR`
 
 Exports every currently verified dialogue and battle bank beneath `DIR`, preserving
@@ -143,7 +150,9 @@ run remain for diagnosis; use a new destination for the next run. This operation
 also exports equipment and ability names as `GAME.EMI/records.json`. It covers the supported
 banks, name fields and `SLUS_004.22` ASCII strings. Executable
 documents use `SLUS_004.22.json` at the export root and also round-trip before
-publication. Use `coverage` to inspect other consumers and gaps.
+publication. Default character names use `START.EMI/characters.json` and
+`STATUS.EMI/characters.json` at their archive-relative paths. Use `coverage` to
+inspect other consumers and gaps.
 
 ## `scan ARCHIVE.EMI [--min-run N] [--class CLASS] [-e|--entry N] [--windows PATH] [--no-windows]`
 
@@ -189,6 +198,8 @@ codec has no dialogue commands. `pack` also checks the original source and refer
 Equipment and ability name documents use `bof3.record-text/v1`. Validation checks their full
 record inventory, literal character encoding and twelve-byte field capacity.
 The JSON summary reports `names`; `--commands` adds nothing for this codec.
+Default character documents use `bof3.character-text/v1` and the same summary,
+with a five-byte field capacity.
 
 ## `query ARCHIVE.EMI [-e|--entry N] [--grep TEXT] [-i|--ignore-case] [--commands] [--class ...] [--windows PATH] [--no-windows]`
 
@@ -436,6 +447,11 @@ It checks complete source identity and every fixed-width field, writes at most
 twelve encoded literal bytes per name and NUL-pads shorter names. Other record
 bytes remain unchanged. Use `--entry all` or `--entry 0` without class or latch
 selectors. This layout does not support relocation or dialogue commands in names.
+
+For supported START or STATUS default names, pack the character document against
+the same original archive. Each literal name must fit five bytes. Use `--entry all`
+or the source's record entry (8 or 0), without class or latch selectors. Each
+archive copy requires its own extracted document and output.
 
 ## Common idioms
 

@@ -3129,6 +3129,22 @@ fn executable_selection(entry: &str, class: Option<&str>, latch: Option<&str>) -
     Ok(())
 }
 
+fn character_selection(
+    entry: &str,
+    class: Option<&str>,
+    latch: Option<&str>,
+    document: &crate::characters::Document,
+) -> Result<()> {
+    if (entry != "all" && entry != document.entry.to_string()) || class.is_some() || latch.is_some()
+    {
+        return invalid(format!(
+            "default character names use entry {} and no class or latch selector",
+            document.entry
+        ));
+    }
+    Ok(())
+}
+
 fn run_extract(
     cli: &Cli,
     archive: &Path,
@@ -3138,6 +3154,17 @@ fn run_extract(
     latch: Option<&str>,
 ) -> Result<()> {
     let data = read(archive, "archive")?;
+    if crate::characters::supports(&data) {
+        let document = crate::characters::extract(archive, &data)?;
+        character_selection(entry_spec, class_filter, latch, &document)?;
+        write_output(output, &crate::characters::render(&document)?, archive)?;
+        println!(
+            "extracted {} default character names -> {}",
+            document.names.len(),
+            output.display()
+        );
+        return Ok(());
+    }
     if crate::records::supports(&data) {
         if !matches!(entry_spec, "all" | "0") || class_filter.is_some() || latch.is_some() {
             return invalid("record names use entry 0 and no class or latch selector");
@@ -3208,6 +3235,14 @@ fn run_validate(cli: &Cli, path: &Path, commands: bool) -> Result<()> {
     let bytes = read(path, "document")?;
     let value: serde_json::Value =
         serde_json::from_slice(&bytes).map_err(|error| Error::Invalid(error.to_string()))?;
+    if value["schema"] == crate::characters::SCHEMA {
+        let document = crate::characters::parse(&bytes)?;
+        println!(
+            "{}",
+            serde_json::json!({"document": path, "schema": value["schema"], "names": document.names.len(), "commands": []})
+        );
+        return Ok(());
+    }
     if value["schema"] == crate::records::SCHEMA {
         let document = crate::records::parse(&bytes)?;
         println!(
@@ -3389,6 +3424,17 @@ fn run_pack(
         return invalid("pack refuses to overwrite the original archive");
     }
     let data = read(original, "archive")?;
+    if crate::characters::supports(&data) {
+        let document = crate::characters::parse(&read(text_path, "document")?)?;
+        character_selection(entry_spec, class_filter, latch, &document)?;
+        let packed = crate::characters::rebuild(original, &data, &document)?;
+        write_output(output, &packed, original)?;
+        println!(
+            "{}",
+            serde_json::json!({"output": output, "bytes": packed.len(), "names": document.names.len()})
+        );
+        return Ok(());
+    }
     if crate::records::supports(&data) {
         if !matches!(entry_spec, "all" | "0") || class_filter.is_some() || latch.is_some() {
             return invalid("record names use entry 0 and no class or latch selector");

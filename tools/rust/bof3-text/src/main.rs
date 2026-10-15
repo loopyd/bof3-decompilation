@@ -7,6 +7,7 @@
 //! command models.
 
 mod analysis;
+mod characters;
 mod cli;
 mod command;
 mod corpus;

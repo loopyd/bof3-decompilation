@@ -41,7 +41,7 @@ pub struct Name {
     pub index: usize,
     pub file_offset: usize,
     pub address: u32,
-    capacity: usize,
+    pub(crate) capacity: usize,
     pub text: String,
 }
 
@@ -65,7 +65,7 @@ pub fn supports(data: &[u8]) -> bool {
     sha256_hex(&masked) == LAYOUT_SHA256
 }
 
-fn encode(text: &str) -> Result<Vec<u8>> {
+pub(crate) fn encode_name(text: &str, capacity: usize) -> Result<Vec<u8>> {
     let bytes: Vec<_> = text
         .chars()
         .map(|character| {
@@ -76,10 +76,32 @@ fn encode(text: &str) -> Result<Vec<u8>> {
             })
         })
         .collect::<Result<_>>()?;
-    if bytes.len() > 12 {
-        return invalid("record name exceeds its twelve-byte field");
+    if bytes.len() > capacity {
+        return invalid(format!("record name exceeds its {capacity}-byte field"));
     }
     Ok(bytes)
+}
+
+pub(crate) fn decode_name(bytes: &[u8], file_offset: usize) -> Result<String> {
+    let end = bytes
+        .iter()
+        .position(|byte| *byte == 0)
+        .unwrap_or(bytes.len());
+    if bytes[end..].iter().any(|byte| *byte != 0) {
+        return invalid(format!(
+            "nonzero bytes after name terminator at {file_offset:#x}"
+        ));
+    }
+    bytes[..end]
+        .iter()
+        .map(|byte| {
+            literal_char(*byte).ok_or_else(|| {
+                Error::Invalid(format!(
+                    "unknown literal name byte {byte:#x} at {file_offset:#x}"
+                ))
+            })
+        })
+        .collect()
 }
 
 pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
@@ -91,22 +113,7 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
         for index in 0..count {
             let file_offset = start + index * stride;
             let bytes = &data[file_offset..file_offset + 12];
-            let end = bytes.iter().position(|byte| *byte == 0).unwrap_or(12);
-            if bytes[end..].iter().any(|byte| *byte != 0) {
-                return invalid(format!(
-                    "nonzero bytes after name terminator at {file_offset:#x}"
-                ));
-            }
-            let text = bytes[..end]
-                .iter()
-                .map(|byte| {
-                    literal_char(*byte).ok_or_else(|| {
-                        Error::Invalid(format!(
-                            "unknown literal name byte {byte:#x} at {file_offset:#x}"
-                        ))
-                    })
-                })
-                .collect::<Result<String>>()?;
+            let text = decode_name(bytes, file_offset)?;
             names.push(Name {
                 family: family.into(),
                 index,
@@ -161,7 +168,7 @@ pub fn parse(bytes: &[u8]) -> Result<Document> {
         {
             return invalid("unknown or duplicate name record allocation");
         }
-        encode(&row.text)?;
+        encode_name(&row.text, 12)?;
     }
     if seen.len() != TABLES.iter().map(|(_, _, count, _)| count).sum::<usize>() {
         return invalid("name record document must retain every supported name");
@@ -179,7 +186,7 @@ pub fn rebuild(path: &Path, data: &[u8], document: &Document) -> Result<Vec<u8>>
     let checked = parse(&render(document)?)?;
     let mut output = data.to_vec();
     for row in checked.names {
-        let bytes = encode(&row.text)?;
+        let bytes = encode_name(&row.text, 12)?;
         let span = &mut output[row.file_offset..row.file_offset + 12];
         span.fill(0);
         span[..bytes.len()].copy_from_slice(&bytes);

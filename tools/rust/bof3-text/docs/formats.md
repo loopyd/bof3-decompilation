@@ -65,8 +65,33 @@ needs no terminator inside the record. Overflow and unknown characters fail.
 Build recognition pins every archive byte outside these name fields. Packing
 also checks the complete current source SHA-256, canonical source path and all
 record identities. Stats, flags, prices, offsets and other entries remain
-unchanged. Character names and other record families require
-their own consumer evidence. Runtime acceptance remains a separate gate.
+unchanged. Other record families require their own consumer evidence. Runtime
+acceptance remains a separate gate.
+
+## Default character names
+
+`START.EMI` entry 8 and `STATUS.EMI` entry 0 contain copies of eight default
+character records. Each record has a five-byte name followed by other character
+data at stride `0xA4`. The table starts at whole-file offset `0x72914` in START
+and `0x1B114` in STATUS; both load to `0x801EB514` within the entry loaded at
+`0x801D0C00`. The initializer at entry address `0x801D15C0` copies records into
+the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies five
+name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
+and a five-byte limit to executable renderer `0x8014F800`.
+
+These fields use `bof3.character-text/v1`, with `source`, `source_sha256`,
+`archive_kind` (`start` or `status`), `entry`, `load_address`, `initializer`,
+`name_copy_consumer`, `renderer` and `names`. Each name retains the same identity
+fields as a record name, with `family` equal to `characters` and `capacity` equal
+to five. Retain all eight records and edit only `text`. Names use literal
+characters, without dialogue commands, and may occupy all five bytes. Shorter
+names are NUL-padded. Stats and every other byte remain unchanged.
+
+Recognition pins each archive outside its own name fields. Packing binds the
+complete source SHA-256 and canonical path and checks every allocation. The
+copies remain separate sources: changing START does not update STATUS or an
+existing save's live names. Character renaming, other initializers and observed
+rendering remain separate requirements.
 
 ## Bank layout
 

@@ -9,6 +9,10 @@ use crate::models::{Result, TextClass, command_for};
 
 pub fn analyze(path: &Path) -> Result<Value> {
     let data = fs::read(path)?;
+    if crate::characters::supports(&data) {
+        return serde_json::to_value(crate::characters::extract(path, &data)?)
+            .map_err(|error| crate::models::Error::Invalid(error.to_string()));
+    }
     if crate::records::supports(&data) {
         return serde_json::to_value(crate::records::extract(path, &data)?)
             .map_err(|error| crate::models::Error::Invalid(error.to_string()));

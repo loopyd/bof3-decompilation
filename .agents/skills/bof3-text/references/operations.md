@@ -20,7 +20,7 @@ A missing heuristic hit does not prove that a range contains no text.
 ## Extract and analyze
 
 `bin/harness text extract-corpus --root out/extracted -o out/text-export` exports
-verified banks, equipment and ability names, and supported US executable ASCII into a new
+verified banks, supported record names, and US executable ASCII into a new
 tree with `manifest.json`. Use an existing parent and a new destination outside
 the source tree. Each exported document must parse back and
 reproduce its original bytes. Any export failure makes the operation fail; retain
@@ -55,6 +55,12 @@ Retain every record and its identity. Pack against that same `GAME.EMI` into a
 new output, with `--entry all` or `--entry 0` and no class or latch selector.
 The tool preserves stats and other record bytes. These fields do not use
 dialogue command markup. Other name families require separate evidence.
+
+`extract` also supports eight default character names in US START and STATUS,
+using `bof3.character-text/v1`. Edit only `text`, with at most five literal bytes.
+Use `--entry all` or the source's record entry: 8 for START and 0 for STATUS.
+Omit class and latch selectors. Each copy needs its own freshly extracted
+document and separate output; editing one does not update the other or a save.
 
 Analysis reports archive offsets, encoded size, original capacity, command operands
 and shared rows. Terminators inside operands are not string boundaries. Trailing

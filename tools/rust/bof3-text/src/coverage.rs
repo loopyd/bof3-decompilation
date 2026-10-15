@@ -136,9 +136,16 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
             ranges: Vec::new(),
             derived_from: None,
         };
-        let equipment = crate::records::supports(&bytes)
+        let names = crate::records::supports(&bytes)
             .then(|| crate::records::extract(path, &bytes).ok())
-            .flatten();
+            .flatten()
+            .map(|document| (0, document.names))
+            .or_else(|| {
+                crate::characters::supports(&bytes)
+                    .then(|| crate::characters::extract(path, &bytes).ok())
+                    .flatten()
+                    .map(|document| (document.entry, document.names))
+            });
         if path.extension().is_some_and(|extension| extension == "EMI") {
             match crate::lexagraph::entries(&bytes) {
                 Err(error) => {
@@ -212,11 +219,12 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                         ),
                                     )
                                 };
-                            if let Some(document) = equipment.as_ref().filter(|_| entry.index == 0)
+                            if let Some((_, names)) =
+                                names.as_ref().filter(|(index, _)| entry.index == *index)
                             {
                                 text_count += 1;
                                 let mut at = entry.offset;
-                                for row in &document.names {
+                                for row in names {
                                     if row.file_offset > at {
                                         record.ranges.push(range(
                                             at,
@@ -225,22 +233,24 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                             "bytes outside the supported name record fields".into(),
                                         ));
                                     }
-                                    let consumer = if row.family == "abilities" {
+                                    let consumer = if row.family == "characters" {
+                                        "START/STATUS initializer 0x801d15c0; SISYOU five-byte copy 0x801d39cc and draw call 0x801d1848"
+                                    } else if row.family == "abilities" {
                                         "SISYOU entry 0 twelve-byte copy 0x801d3d64"
                                     } else {
                                         "resolver 0x80165d48; COMMU00 entry 0 twelve-byte copy 0x801f1a30"
                                     };
                                     record.ranges.push(RangeRecord {
                                         offset: row.file_offset,
-                                        length: 12,
-                                        entry: Some(0),
+                                        length: row.capacity,
+                                        entry: Some(entry.index),
                                         status: "known-text",
                                         evidence: format!(
                                             "{} record {}; {consumer}; runtime acceptance pending",
                                             row.family, row.index
                                         ),
                                     });
-                                    at = row.file_offset + 12;
+                                    at = row.file_offset + row.capacity;
                                 }
                                 let end = entry.offset + payload.len();
                                 if at < end {
@@ -248,7 +258,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                         at,
                                         end - at,
                                         "unresolved",
-                                        "remaining GAME entry consumers unverified".into(),
+                                        "remaining record entry consumers unverified".into(),
                                     ));
                                 }
                             } else {
