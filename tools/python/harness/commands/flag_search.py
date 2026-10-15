@@ -40,6 +40,7 @@ def run(args: argparse.Namespace) -> int:
     payload = search_flags(
         layout=layout,
         source=source,
+        address=function.address,
         catalog_path=args.catalog
         or layout.root / "config" / "compiler" / "flag-catalog.json",
         compiler_id=compiler_id,

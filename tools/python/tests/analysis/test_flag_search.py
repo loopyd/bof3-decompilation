@@ -270,9 +270,15 @@ class TestExplicitCompilerOverride:
 
         monkeypatch.setattr(flag_search.subprocess, "run", run)
         layout = SimpleNamespace(root=tmp_path, psyqo_toolchain_root=tmp_path)
-        flag_search.search_flags(layout=layout, source=source, catalog_path=catalog)
         flag_search.search_flags(
-            layout=layout, source=source, catalog_path=catalog, compiler_id="requested"
+            layout=layout, source=source, address=0x80000000, catalog_path=catalog
+        )
+        flag_search.search_flags(
+            layout=layout,
+            source=source,
+            address=0x80000000,
+            catalog_path=catalog,
+            compiler_id="requested",
         )
 
         default_args, default_env = calls[0]

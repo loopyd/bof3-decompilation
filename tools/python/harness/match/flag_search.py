@@ -123,11 +123,14 @@ def search_flags(
     *,
     layout: RepoLayout,
     source: Path,
+    address: int,
     catalog_path: Path,
     compiler_id: str | None = None,
 ) -> dict[str, Any]:
     source = source.expanduser().resolve()
-    baseline = run_asm_diff_one(AsmDiffRequest(source_path=source), layout=layout)
+    baseline = run_asm_diff_one(
+        AsmDiffRequest(source_path=source, address=address), layout=layout
+    )
     original_path = Path(baseline["outputs"]["original"])
     original_size = baseline["original_size"]
     original_bytes = Path(baseline["outputs"]["original_bytes"]).read_bytes()
