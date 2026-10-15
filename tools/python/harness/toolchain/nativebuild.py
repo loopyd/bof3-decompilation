@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import hashlib
+import io
 import json
 import os
 from pathlib import Path
@@ -13,7 +14,7 @@ import subprocess
 import zipfile
 
 from harness.common.digests import file_record
-from harness.common.artifacts import active_reader
+from harness.common.artifacts import active_reader, read_bytes
 from harness.common.git import read_head
 
 SCHEMA = "bof3.rz-psxdec-build/v1"
@@ -155,7 +156,7 @@ def fork_record(root: Path) -> dict:
 def archive_manifest(path: Path, directory: str) -> list[dict]:
     """Re-derive the pristine prerequisite manifest from its pinned ZIP."""
     rows = []
-    with zipfile.ZipFile(path) as archive:
+    with zipfile.ZipFile(io.BytesIO(read_bytes(path, path.stat().st_size))) as archive:
         for member in archive.infolist():
             if member.is_dir():
                 continue
@@ -194,11 +195,13 @@ def link_paths(build: Path, compiler: Path) -> set[Path]:
     """Resolve the actual rz-psxdec link command's object and library inputs."""
     command = build / "src/rz-plugin/CMakeFiles/rz-psxdec.dir/link.txt"
     directory = command.parent.parent.parent
-    arguments = shlex.split(command.read_text())
+    arguments = shlex.split(read_bytes(command, 64 << 20).decode())
     expanded = []
     for argument in arguments:
         if argument.startswith("@"):
-            expanded += shlex.split((directory / argument[1:]).read_text())
+            expanded += shlex.split(
+                read_bytes(directory / argument[1:], 64 << 20).decode()
+            )
         else:
             expanded.append(argument)
     directories = [
@@ -243,7 +246,7 @@ def compiler_paths(build: Path, source_roots: tuple[Path, ...]) -> set[Path]:
     for root in source_roots:
         depfiles += list(root.rglob("*.Po")) + list(root.rglob("*.Plo"))
     for depfile in depfiles:
-        content = depfile.read_text().replace("\\\n", " ")
+        content = read_bytes(depfile, 64 << 20).decode().replace("\\\n", " ")
         for line in content.splitlines():
             _, separator, dependencies = line.partition(":")
             if not separator:
@@ -286,7 +289,7 @@ def _identities(rows: list[dict]) -> tuple[FileIdentity, ...]:
 
 def _execution(row: dict) -> BuildExecution:
     log = _identity(row["log"])
-    actual = json.loads(log.path.read_bytes())
+    actual = json.loads(read_bytes(log.path, log.bytes))
     _require(
         type(row["argv"]) is list
         and all(type(arg) is str for arg in row["argv"])
@@ -323,8 +326,7 @@ def _fork(row: dict) -> ForkSource:
 
 def read_native_build(path: Path) -> NativeBuildReceipt:
     """Read a complete receipt and rehash both forks, prerequisites and DSO."""
-    _require(path.stat().st_size <= 64 << 20, "native receipt exceeds 64 MiB")
-    document = json.loads(path.read_bytes())
+    document = json.loads(read_bytes(path, 64 << 20))
     _require(
         type(document) is dict and document["schema"] == SCHEMA,
         "native build receipt schema differs",
@@ -458,7 +460,7 @@ def read_native_build(path: Path) -> NativeBuildReceipt:
         == (tool_paths["rizin"], "-N", "-n", "-q", "-l", str(dso.path), "-c", "pdza?"),
         "native DSO or explicit load probe differs",
     )
-    output = probe.streams[0].path.read_bytes() + probe.streams[1].path.read_bytes()
+    output = b"".join(read_bytes(stream.path, stream.bytes) for stream in probe.streams)
     _require(
         b"pdzar" in output, "explicit DSO probe did not expose original-range command"
     )

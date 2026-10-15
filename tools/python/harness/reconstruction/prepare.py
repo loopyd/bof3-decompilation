@@ -216,17 +216,8 @@ class PreparedInputs:
         )
 
     @classmethod
-    def prepare(
-        cls,
-        record: dict,
-        *,
-        destination: Path,
-        native_receipt: Path,
-        configuration: Path,
-        rizin: Path,
-        selection: Mapping,
-        driver_root: Path,
-    ) -> PreparedInputs:
+    def native_records(cls, native_receipt: Path) -> dict:
+        """Bind native run records to one fully validated build receipt."""
         receipt_identity = file_record(native_receipt)
         receipt = read_native_build(native_receipt)
         sources = [
@@ -257,6 +248,37 @@ class PreparedInputs:
             {**asdict(identity), "path": str(identity.path)}
             for _, identity in sorted(input_identities.items())
         ]
+        _require(
+            file_record(native_receipt) == receipt_identity,
+            "native receipt changed during validation",
+        )
+        return {
+            "snapshots": snapshots,
+            "fork_commits": [
+                {"root": str(source.root), "commit": source.commit}
+                for source in (receipt.plugin, receipt.retdec)
+            ],
+            "native_build_inputs": {"files": inputs},
+            "binaries": {
+                "plugin": asdict(receipt.dso) | {"path": str(receipt.dso.path)},
+                "receipt": receipt_identity,
+            },
+        }
+
+    @classmethod
+    def prepare(
+        cls,
+        record: dict,
+        *,
+        destination: Path,
+        native_receipt: Path,
+        configuration: Path,
+        rizin: Path,
+        selection: Mapping,
+        driver_root: Path,
+    ) -> PreparedInputs:
+        native = cls.native_records(native_receipt)
+        snapshots = native["snapshots"]
         snapshots.append(
             cls.snapshot(
                 driver_root,
@@ -266,18 +288,13 @@ class PreparedInputs:
         )
         record.update(
             {
+                **native,
                 "snapshots": snapshots,
-                "fork_commits": [
-                    {"root": str(source.root), "commit": source.commit}
-                    for source in (receipt.plugin, receipt.retdec)
-                ],
-                "native_build_inputs": {"files": inputs},
                 "tools": selection,
                 "binaries": {
+                    **native["binaries"],
                     "rizin": file_record(rizin),
-                    "plugin": asdict(receipt.dso) | {"path": str(receipt.dso.path)},
                     "configuration": file_record(configuration),
-                    "receipt": receipt_identity,
                 },
             }
         )

@@ -1227,11 +1227,8 @@ REVIEWED_RIZIN_TYPE_RECIPE_SHA256 = (
 REVIEWED_RIZIN_DATA_SHA256 = (
     "5dba871655bff4f7d8dc7974d5ce3157676c6e99cc79a49e8c0b72c0db08bac4"
 )
-REVIEWED_NATIVE_RECEIPT_SHA256 = (
-    "4a167a1f35bc64c2531470881e0e570629d3df8217e61b707f65749ddced57b4"
-)
 REVIEWED_RETDEC_PARAMETERS_SHA256 = (
-    "1e67a71af4b4c8fe7a0952c21aa19632037db4222cfd6b925c076f8446e40dca"
+    "e79258e9936520f3f3d42e67c5ef4dd06c0dbbd38709c5baf3960f9eb2fb89bd"
 )
 REVIEWED_RIZIN_RUNTIME_SHA256 = (
     "288001233a01e71968f9594a622df2596aed6b4e2f301b46e978f17c6bbc8287"
@@ -1240,7 +1237,7 @@ REVIEWED_RIZIN_PRINTER_SOURCES_SHA256 = (
     "5d1635d4ab2edaaddb0cf356c63c58f1a43583f2d814c44b694be1fdec303c38"
 )
 REVIEWED_ORDINARY_COMMAND_SOURCE_SHA256 = (
-    "3c31ca06392870a35dc2b6d63f8a99d41a34c8a1b2a4bbaadeeafeeb1cb34c29"
+    "4ae5b3c869d9f351142e1bdf5ef3757c9c962366fe2eecc5e0b4649f3aa83b15"
 )
 _RIZIN_PRINTER_SOURCES = (
     "librz/core/cmd/cmd_type.c",
@@ -1836,9 +1833,27 @@ def verify_supplied_run_inputs(run, destination):
     )
     events = []
     reader = active_reader() or _read
+    native_reader = active_reader()
+    with using_reader(
+        (
+            lambda path, bound, events=None: native_reader(
+                path.resolve(strict=True), bound, events
+            )
+        )
+        if native_reader is not None
+        else None
+    ):
+        native = PreparedInputs.native_records(Path(run["binaries"]["receipt"]["path"]))
+    names = {snapshot["name"] for snapshot in native["snapshots"]}
+    snapshots = [row for row in run["snapshots"] if row.get("name") in names]
     _require(
-        run["binaries"]["receipt"]["sha256"] == REVIEWED_NATIVE_RECEIPT_SHA256,
-        "ordinary producer does not use the reviewed current native receipt",
+        snapshots == native["snapshots"]
+        and run["fork_commits"] == native["fork_commits"]
+        and run["native_build_inputs"] == native["native_build_inputs"]
+        and all(
+            run["binaries"][name] == value for name, value in native["binaries"].items()
+        ),
+        "ordinary producer differs from the selected current native receipt",
     )
     for record in run["binaries"].values():
         _consume_identity(record, reader, events)
@@ -2704,6 +2719,14 @@ def _ordinary_source(workspace, plan, run, reader, events):
         reader(configs[0], nativeoutput.CONFIG_LIMIT, events), nativeoutput.CONFIG_LIMIT
     )
     params = config["decompParams"]
+    _require(
+        params.get("originalOnlyReturnRecovery", False) is False
+        and not any(
+            key in params
+            for key in ("psxMemoryContext", "originalSourceForm", "originalCallScope")
+        ),
+        "ordinary configuration carries original-only inputs",
+    )
     expected_paths = {
         "inputFile": workspace / "input/original.elf",
         "outputConfigFile": configs[0],
