@@ -77,6 +77,14 @@ The literal message layout excludes command-bearing and untraced table rows.
 An empty pointer-reference list means indexed or code addressing; retain it and
 the consumer metadata. The pinned payload protects those instructions.
 
+For encounter-template monster names, find `monster_entries` with `analyze`
+and extract the selected entry explicitly. The `bof3.monster-text/v1` document
+must retain all eight records, including empty names. Edit only `text`, using
+at most eight literal bytes per name. Pack against the same source archive
+with its recorded entry or `all`, without class or latch selectors. Shorter
+names are NUL-padded; encounter data and stats remain unchanged. Corpus export
+includes each matching entry. Runtime rendering and other regions remain open.
+
 Analysis reports archive offsets, encoded size, original capacity, command operands
 and shared rows. Terminators inside operands are not string boundaries. Trailing
 string segments are structural observations; trace the consumer before naming

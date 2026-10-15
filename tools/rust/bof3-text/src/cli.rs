@@ -3195,6 +3195,18 @@ fn run_extract(
     if let (None, Ok(index)) = (class_filter, entry_spec.parse::<usize>()) {
         let entries = crate::lexagraph::entries(&data)?;
         if let Some(&(entry, payload)) = entries.iter().find(|(entry, payload)| {
+            entry.index == index && crate::monsters::supports(*entry, payload)
+        }) {
+            let document = crate::monsters::extract(archive, &data, entry, payload)?;
+            write_output(output, &crate::monsters::render(&document)?, archive)?;
+            println!(
+                "extracted {} monster names -> {}",
+                document.names.len(),
+                output.display()
+            );
+            return Ok(());
+        }
+        if let Some(&(entry, payload)) = entries.iter().find(|(entry, payload)| {
             entry.index == index && crate::inline::supports(*entry, payload)
         }) {
             let document = crate::inline::extract(archive, &data, entry, payload)?;
@@ -3250,6 +3262,14 @@ fn run_validate(cli: &Cli, path: &Path, commands: bool) -> Result<()> {
     let bytes = read(path, "document")?;
     let value: serde_json::Value =
         serde_json::from_slice(&bytes).map_err(|error| Error::Invalid(error.to_string()))?;
+    if value["schema"] == crate::monsters::SCHEMA {
+        let document = crate::monsters::parse(&bytes)?;
+        println!(
+            "{}",
+            serde_json::json!({"document": path, "schema": value["schema"], "names": document.names.len(), "commands": []})
+        );
+        return Ok(());
+    }
     if value["schema"] == crate::inline::SCHEMA {
         let document = crate::inline::parse(&bytes)?;
         println!(
@@ -3451,6 +3471,24 @@ fn run_pack(
         let bytes = read(text_path, "document")?;
         let value: serde_json::Value =
             serde_json::from_slice(&bytes).map_err(|error| Error::Invalid(error.to_string()))?;
+        if value["schema"] == crate::monsters::SCHEMA {
+            let document = crate::monsters::parse(&bytes)?;
+            if (entry_spec != "all" && entry_spec != document.entry.to_string())
+                || class_filter.is_some()
+                || latch.is_some()
+            {
+                return invalid(
+                    "monster names require their source entry and no class or latch selector",
+                );
+            }
+            let packed = crate::monsters::rebuild(original, &data, &document)?;
+            write_output(output, &packed, original)?;
+            println!(
+                "{}",
+                serde_json::json!({"output": output, "bytes": packed.len(), "names": document.names.len()})
+            );
+            return Ok(());
+        }
         if value["schema"] == crate::inline::SCHEMA {
             let document = crate::inline::parse(&bytes)?;
             if (entry_spec != "all" && entry_spec != document.entry.to_string())

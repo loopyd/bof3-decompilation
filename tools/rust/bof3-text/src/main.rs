@@ -20,6 +20,7 @@ mod inline;
 mod lexagraph;
 mod logging;
 mod models;
+mod monsters;
 mod pack;
 mod query;
 mod records;

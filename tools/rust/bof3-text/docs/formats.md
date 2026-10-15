@@ -97,6 +97,29 @@ copies remain separate sources: changing START does not update STATUS or an
 existing save's live names. Character renaming, other initializers and observed
 rendering remain separate requirements.
 
+## Monster names
+
+US encounter templates loaded at `0x800E4000` have a 72-byte prefix followed by
+eight records at stride `0x88`. Each record starts with an eight-byte name at
+`0x800E4048 + index × 0x88`. The template copy at `0x800AC218` transfers those
+eight bytes to the enemy's battle record. Lookup at `0x800AC704` searches the
+eight template records. Battle name copy at `0x801DEA18` copies eight bytes
+from the live battle record through `0x801501E4`, which appends NUL.
+
+The tool recognizes the 1160-byte entry layout and load argument. The schema
+`bof3.monster-text/v1` retains `source`, `source_sha256`, `entry`, `entry_offset`,
+`load_address`, `template_copy_consumer`, `template_lookup_consumer`,
+`name_copy_consumer` and `names`. Each name uses the record identity fields
+above, with `family` equal to `monsters` and `capacity` equal to eight.
+Retain all eight records, including empty names, and edit only `text`.
+Names use literal game characters without dialogue commands. Full eight-byte
+names need no internal NUL; shorter names are NUL-padded.
+
+Packing checks the complete source digest, canonical path, entry offset and
+layout before writing. Encounter data, stats and all other bytes stay unchanged.
+Different archives remain separate sources. This layout recognition does not
+establish support for another region or prove observed rendering.
+
 ## Inline battle text
 
 The supported US battle code payload loaded at `0x80096800` contains two

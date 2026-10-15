@@ -103,7 +103,18 @@ pub fn analyze(path: &Path) -> Result<Value> {
     }
     let mut entries = Vec::new();
     let mut inline_entries = Vec::new();
+    let mut monster_entries = Vec::new();
     for (entry, payload) in crate::lexagraph::entries(&data)? {
+        if crate::monsters::supports(entry, payload) {
+            monster_entries.push(literal_report(
+                crate::monsters::extract(path, &data, entry, payload)?,
+                "names",
+                &data,
+                Encoding::GameLiteral,
+                0,
+            )?);
+            continue;
+        }
         if crate::inline::supports(entry, payload) {
             inline_entries.push(literal_report(
                 crate::inline::extract(path, &data, entry, payload)?,
@@ -168,6 +179,6 @@ pub fn analyze(path: &Path) -> Result<Value> {
         entries.push(json!({"entry": entry.index, "class": class, "offset": entry.offset, "size": entry.size, "rows": rows}));
     }
     Ok(
-        json!({"schema": "bof3.text-analysis/v1", "archive": path.to_string_lossy(), "archive_sha256": crate::digest::sha256_hex(&data), "scope": "verified EMI banks and supported inline allocations", "entries": entries, "inline_entries": inline_entries}),
+        json!({"schema": "bof3.text-analysis/v1", "archive": path.to_string_lossy(), "archive_sha256": crate::digest::sha256_hex(&data), "scope": "verified EMI banks, inline allocations and monster name fields", "entries": entries, "inline_entries": inline_entries, "monster_entries": monster_entries}),
     )
 }

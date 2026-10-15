@@ -54,6 +54,8 @@ Supported executable, record and default character inputs emit
 `bof3.text-analysis/v1` reports, retaining their source metadata and `strings` or
 `names`. `source_schema` identifies the extraction format. For EMI inputs,
 `inline_entries` lists embedded allocation reports beside the bank `entries`.
+`monster_entries` lists encounter-template names with their source and copy
+consumer metadata.
 Each literal allocation reports `encoded_size`, `max_encoded_size`,
 `required_terminator_bytes`, `remaining_capacity`, whole-allocation hexadecimal
 `original_bytes` and an empty `commands` list, alongside its offsets, capacity
@@ -143,6 +145,12 @@ For supported US `START.EMI` and `STATUS.EMI`, extraction writes a
 source's record entry (8 for START, 0 for STATUS), without class or latch selectors.
 See [formats.md](formats.md#default-character-names).
 
+For encounter-template monster names, use `analyze` to find `monster_entries`,
+then select the entry explicitly with `extract --entry N`. The output uses
+`bof3.monster-text/v1`. Omit class and latch selectors. Names accept up to eight
+literal bytes; see [formats.md](formats.md#monster-names). Default `--entry all`
+continues to select banks; `extract-corpus` exports both.
+
 For supported embedded battle text, select the code entry explicitly:
 
 ```sh
@@ -174,6 +182,8 @@ publication. Default character names use `START.EMI/characters.json` and
 `STATUS.EMI/characters.json` at their archive-relative paths. Use `coverage` to
 inspect other consumers and gaps.
 Supported inline strings use `ARCHIVE.EMI/ENTRY.json` alongside bank documents.
+Encounter-template names use that same path shape, with class `monster_names`
+in the manifest. Each whole archive must round-trip before publication.
 
 ## `scan ARCHIVE.EMI [--min-run N] [--class CLASS] [-e|--entry N] [--windows PATH] [--no-windows]`
 
@@ -221,6 +231,8 @@ record inventory, literal character encoding and twelve-byte field capacity.
 The JSON summary reports `names`; `--commands` adds nothing for this codec.
 Default character documents use `bof3.character-text/v1` and the same summary,
 with a five-byte field capacity.
+Monster documents use `bof3.monster-text/v1` and report `names`, with an eight-byte
+field capacity. All eight records and their allocation identities are required.
 Inline documents use `bof3.inline-text/v1`; validation checks all allocations,
 literal encoding, references and capacity including NUL, and reports `strings`.
 
@@ -480,6 +492,11 @@ For inline text, pack its document against the same original archive, with
 `--entry all` or the recorded entry and no class or latch selector. Full archive
 identity, pinned payload layout, entry offset and all pointer references must
 match. Text must fit each original allocation including NUL.
+
+For monster names, pack the extracted document against the same original
+archive, using `--entry all` or its recorded entry without class or latch
+selectors. Each name may use eight encoded literal bytes. Shorter names are
+NUL-padded. Packing preserves the remaining encounter and stat fields.
 
 ## Common idioms
 

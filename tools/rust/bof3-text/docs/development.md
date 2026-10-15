@@ -15,6 +15,7 @@
 | `executable.rs` | Pinned US exception ASCII allocations, references and fixed-capacity writes |
 | `records.rs` | Pinned US equipment and ability name fields and literal-only fixed-width writes |
 | `characters.rs` | Separate START and STATUS default character name allocations and writes |
+| `monsters.rs` | Encounter-template monster name fields and eight-byte writes |
 | `inline.rs` | Pinned embedded battle categories and literal message allocations |
 | `digest.rs` | Shared SHA-256 content identities |
 | `extract.rs` | EMI TOC discovery, bank parsing, document construction, fingerprint |

@@ -128,6 +128,23 @@ fn export_archive(
     // Validate and stage every document before publishing any part of this archive's export.
     let mut documents = Vec::new();
     for (entry, payload) in entries {
+        if crate::monsters::supports(entry, payload) {
+            let document = crate::monsters::extract(path, &data, entry, payload)?;
+            let body = crate::monsters::render(&document)?;
+            let imported = crate::monsters::parse(&body)?;
+            if crate::monsters::rebuild(path, &data, &imported)? != data {
+                return Err(Error::Invalid(format!(
+                    "{name}#{} does not round-trip",
+                    entry.index
+                )));
+            }
+            let relative = path
+                .strip_prefix(root)
+                .unwrap()
+                .join(format!("{}.json", entry.index));
+            documents.push((relative, body, entry, serde_json::json!("monster_names")));
+            continue;
+        }
         if crate::inline::supports(entry, payload) {
             let document = crate::inline::extract(path, &data, entry, payload)?;
             let body = crate::inline::render(&document)?;

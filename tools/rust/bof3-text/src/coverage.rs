@@ -222,6 +222,11 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                             let inline = crate::inline::supports(*entry, payload)
                                 .then(|| crate::inline::extract(path, &bytes, *entry, payload).ok())
                                 .flatten();
+                            let monster = crate::monsters::supports(*entry, payload)
+                                .then(|| {
+                                    crate::monsters::extract(path, &bytes, *entry, payload).ok()
+                                })
+                                .flatten();
                             if let Some(document) = inline {
                                 text_count += 1;
                                 let mut at = entry.offset;
@@ -250,8 +255,15 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                         "remaining inline payload consumers unverified".into(),
                                     ));
                                 }
-                            } else if let Some((_, names)) =
-                                names.as_ref().filter(|(index, _)| entry.index == *index)
+                            } else if let Some(names) = monster
+                                .as_ref()
+                                .map(|document| &document.names)
+                                .or_else(|| {
+                                    names
+                                        .as_ref()
+                                        .filter(|(index, _)| entry.index == *index)
+                                        .map(|(_, names)| names)
+                                })
                             {
                                 text_count += 1;
                                 let mut at = entry.offset;
@@ -264,7 +276,9 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                             "bytes outside the supported name record fields".into(),
                                         ));
                                     }
-                                    let consumer = if row.family == "characters" {
+                                    let consumer = if row.family == "monsters" {
+                                        "battle template copy 0x800ac218; lookup 0x800ac704; eight-byte name copy 0x801dea18"
+                                    } else if row.family == "characters" {
                                         "START/STATUS initializer 0x801d15c0; SISYOU five-byte copy 0x801d39cc and draw call 0x801d1848"
                                     } else if row.family == "abilities" {
                                         "SISYOU entry 0 twelve-byte copy 0x801d3d64"
