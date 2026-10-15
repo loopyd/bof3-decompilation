@@ -61,9 +61,14 @@ fn byte_comparison_detects_payload_padding_and_length_changes() {
 fn container_success_does_not_claim_runtime_or_semantic_acceptance() {
     let image = MediaImage::Xa(XaImage::from_bytes(stream()).unwrap());
     let report = Report::inspect("stream.str".into(), &image, None);
-    assert_eq!(report.rendering, "not_checked");
-    assert_eq!(report.translation, "not_checked");
-    assert_eq!(report.identity_consistency, "not_checked");
+    use bof3_audio::verify::Status;
+    assert_eq!(report.schema, "bof3.audio-verification/v2");
+    assert_eq!(report.checks.structure.status, Status::Pass);
+    for (_, check) in report.checks.categories().into_iter().skip(1) {
+        assert_eq!(check.status, Status::MissingEvidence);
+        assert!(!check.reason.is_empty());
+    }
+    assert!(!report.checks.has_failures());
     assert!(report.byte_equality.is_none());
 }
 

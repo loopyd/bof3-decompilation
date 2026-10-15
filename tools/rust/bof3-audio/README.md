@@ -46,6 +46,28 @@ bin/harness audio verify --mode audio --archive /path/to/archive.EMI --json
 bin/harness audio render --help
 ```
 
+`verify --json` writes `bof3.audio-verification/v2`. Its `checks` object reports
+each category with a `status` of `pass`, `fail`, or `missing_evidence` and a
+`reason` describing the evidence or limitation.
+
+| Category | Evidence checked |
+| --- | --- |
+| `structure` | Container layout accepted by the EMI or XA parser, excluding audio semantics. |
+| `identity` | Qualified asset bindings. These remain unverified. |
+| `completeness` | A known whole-file XA hash matched against the complete original disc extent. |
+| `whole_file` | Every byte and the length compared with `--against FILE`. |
+| `translation` | MIDI and SoundFont semantics. No comparison is performed by this command. |
+| `encoding` | Independently decoded samples and codec quality. No comparison is performed by this command. |
+| `rendering` | Independent runtime traces and pre-lossy PCM. No comparison is performed by this command. |
+
+`byte_equality` retains comparison sizes and the first differing byte.
+`media_completeness` retains the known extent and missing-sector details.
+An optional `runtime_profile` identifies the executable, not the archive's asset
+bindings. Matching bytes do not override a completeness failure. Unknown media
+and omitted comparisons report `missing_evidence`. Exit code 1 indicates a failed
+check; exit code 0 means no performed check failed and does not establish accepted
+playback. Invalid inputs fail before an evidence report is produced.
+
 US music rendering executes the supplied BIOS and game sound
 runtime through Rust, using explicit reference clocks:
 

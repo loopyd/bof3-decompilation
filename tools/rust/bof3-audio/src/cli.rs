@@ -115,6 +115,9 @@ pub fn run(arguments: impl Iterator<Item = OsString>) -> Result<u8> {
             );
         }
         println!("SHA-256: {}", report.sha256);
+        for (name, check) in report.checks.categories() {
+            println!("{name}: {}. {}", check.status, check.reason);
+        }
         if let Some(completeness) = &report.media_completeness {
             println!(
                 "Media completeness: {}; {}/{} sectors; {} missing audio sectors",
@@ -132,17 +135,6 @@ pub fn run(arguments: impl Iterator<Item = OsString>) -> Result<u8> {
                 profile.id, profile.bootstrap
             );
         }
-        println!(
-            "Audio payloads, identities, translation, sample encoding and rendering: not checked"
-        );
     }
-    Ok(u8::from(
-        report
-            .byte_equality
-            .is_some_and(|comparison| !comparison.equal)
-            || report
-                .media_completeness
-                .as_ref()
-                .is_some_and(|reference| reference.is_truncated()),
-    ))
+    Ok(u8::from(report.checks.has_failures()))
 }

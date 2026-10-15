@@ -177,6 +177,10 @@ fn verification_reports_truncation_even_when_all_compared_bytes_are_equal() {
         .unwrap();
     assert_eq!(output.status.code(), Some(1));
     let report: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(report["schema"], "bof3.audio-verification/v2");
+    assert_eq!(report["checks"]["whole_file"]["status"], "pass");
+    assert_eq!(report["checks"]["completeness"]["status"], "fail");
+    assert_eq!(report["checks"]["rendering"]["status"], "missing_evidence");
     assert_eq!(report["byte_equality"]["equal"], true);
     assert_eq!(
         report["media_completeness"]["status"],
@@ -191,6 +195,15 @@ fn verification_reports_truncation_even_when_all_compared_bytes_are_equal() {
     let image = bof3_audio::archive::MediaImage::Xa(full);
     let report =
         bof3_audio::verify::Report::inspect("complete.STR".into(), &image, Some(image.bytes()));
+    assert_eq!(
+        report.checks.completeness.status,
+        bof3_audio::verify::Status::Pass
+    );
+    assert_eq!(
+        report.checks.whole_file.status,
+        bof3_audio::verify::Status::Pass
+    );
+    assert!(!report.checks.has_failures());
     assert!(report.byte_equality.unwrap().equal);
     assert_eq!(
         report.media_completeness.unwrap().status,
