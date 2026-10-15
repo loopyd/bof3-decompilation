@@ -9,6 +9,7 @@ import re
 import stat
 from pathlib import Path
 
+from harness.common.observation import PathWatch, capture_directory_identity
 from harness.io import unique_object
 
 _INPUT_FIELDS = (
@@ -38,14 +39,6 @@ def _capture_metadata(status: os.stat_result) -> tuple[int, ...]:
     return tuple(
         stat.S_IFMT(status.st_mode) if field == "st_mode" else getattr(status, field)
         for field in _INPUT_FIELDS
-    )
-
-
-def _capture_parent_metadata(status: os.stat_result) -> tuple[int, ...]:
-    return tuple(
-        stat.S_IFMT(status.st_mode) if field == "st_mode" else getattr(status, field)
-        for field in _INPUT_FIELDS
-        if field != "st_size"
     )
 
 
@@ -111,6 +104,7 @@ class InputBatch:
         self._metadata: dict[Path, tuple[int, ...]] = {}
         self._chains: dict[Path, tuple[tuple[Path, Path], ...]] = {}
         self._missing: set[Path] = set()
+        self._watch: PathWatch | None = None
         self._active = False
         self._closed = False
         self._failed = False
@@ -120,6 +114,7 @@ class InputBatch:
             raise ValueError("input batch cannot be reused")
         self._active = True
         try:
+            self._watch = PathWatch({self.root})
             if self._open_directory(self.root) is None:
                 raise ValueError("input batch root is missing")
         except BaseException:
@@ -182,10 +177,10 @@ class InputBatch:
         self._release_directory(path)
         descriptor = os.open(name, _DIRECTORY_FLAGS, dir_fd=parent)
         try:
-            expected = _capture_parent_metadata(before)
+            expected = capture_directory_identity(before)
             if (
-                _capture_parent_metadata(os.fstat(descriptor)) != expected
-                or _capture_parent_metadata(
+                capture_directory_identity(os.fstat(descriptor)) != expected
+                or capture_directory_identity(
                     os.stat(name, dir_fd=parent, follow_symlinks=False)
                 )
                 != expected
@@ -217,10 +212,10 @@ class InputBatch:
                     follow_symlinks=False,
                 )
             )
-            if _capture_parent_metadata(linked) != self._metadata[ancestor]:
+            if capture_directory_identity(linked) != self._metadata[ancestor]:
                 raise ValueError(f"input parent detached or changed: {ancestor}")
         if (
-            _capture_parent_metadata(os.fstat(self._directories[path]))
+            capture_directory_identity(os.fstat(self._directories[path]))
             != self._metadata[path]
         ):
             raise ValueError(f"input parent descriptor changed: {path}")
@@ -241,6 +236,7 @@ class InputBatch:
             or Path(os.path.abspath(path)) != path
         ):
             raise ValueError("input batch path must be canonical and confined")
+        self._watch.add_paths({path})
         parent = self._open_directory(path.parent)
         if parent is not None:
             self._verify_chain(path.parent)
@@ -347,6 +343,7 @@ class InputBatch:
 
     def _verify(self) -> None:
         self._require_active()
+        self._watch.validate()
         for path in self._missing:
             parent = self._open_directory(path.parent)
             if parent is not None:
@@ -365,10 +362,11 @@ class InputBatch:
                 )
             )
             if (
-                _capture_parent_metadata(linked) != expected
-                or _capture_parent_metadata(os.fstat(descriptor)) != expected
+                capture_directory_identity(linked) != expected
+                or capture_directory_identity(os.fstat(descriptor)) != expected
             ):
                 raise ValueError(f"input parent detached or changed: {path}")
+        self._watch.validate()
 
     def _close(self) -> None:
         descriptors = tuple(self._directories.values())
@@ -377,6 +375,11 @@ class InputBatch:
         self._active = False
         self._closed = True
         failure = None
+        if self._watch is not None:
+            try:
+                self._watch.close()
+            except OSError as error:
+                failure = error
         for descriptor in reversed(descriptors):
             try:
                 os.close(descriptor)

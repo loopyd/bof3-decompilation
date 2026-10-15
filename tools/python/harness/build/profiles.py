@@ -9,6 +9,7 @@ import re
 import stat
 from contextlib import closing
 from pathlib import Path
+from weakref import finalize
 
 from harness.build.arguments import parse_arguments
 from harness.build.compiler import (
@@ -24,7 +25,7 @@ from harness.build.invocation import Invocation, plan_invocation
 from harness.build.programs import capture_description, describe_inputs
 from harness.common.digests import digest
 from harness.common.inputs import InputBatch, read_input, relative
-from harness.common.observation import DirectoryBatch, observe_directory
+from harness.common.observation import PathWatch, capture_directory_identity
 from harness.domain.cache import collect_claim_paths, collect_manifest_paths
 from harness.domain.manifests import TargetManifest, load_manifest_generation
 from harness.io import repo_layout, unique_object
@@ -165,7 +166,7 @@ def _validate_cmake_configuration(root: Path, text: str) -> None:
         )
 
 
-def _observe_input(path: Path, directories: DirectoryBatch | None = None) -> tuple:
+def _observe_input(path: Path) -> tuple:
     location = path
     while True:
         try:
@@ -179,12 +180,7 @@ def _observe_input(path: Path, directories: DirectoryBatch | None = None) -> tup
             raise ValueError(f"profile input has no existing ancestor: {path}")
         location = parent
     if stat.S_ISDIR(state.st_mode):
-        observed = (
-            observe_directory(location)
-            if directories is None
-            else directories.observe(location)
-        )
-        return (str(location), *observed)
+        return (str(location), *capture_directory_identity(state))
     return (
         str(location),
         state.st_dev,
@@ -196,17 +192,6 @@ def _observe_input(path: Path, directories: DirectoryBatch | None = None) -> tup
         state.st_size,
         state.st_mtime_ns,
         state.st_ctime_ns,
-    )
-
-
-def _has_same_observation(expected: tuple, current: tuple) -> bool:
-    if expected == current:
-        return True
-    return (
-        len(expected) == len(current) == 11
-        and stat.S_ISDIR(expected[3])
-        and expected[:7] == current[:7]
-        and expected[8:] == current[8:]
     )
 
 
@@ -252,6 +237,8 @@ class ProfileContext:
             raise ValueError(
                 "unsupported compiler environment overrides: " + ", ".join(active)
             )
+        self._watch = PathWatch({self.root})
+        self._cleanup = finalize(self, self._watch.close)
         cmake = self.read("CMakeLists.txt").decode("utf-8")
         graph = self.read("config/compiler/graph.cmake")
         if hashlib.sha256(graph).hexdigest() != _SUPPORTED_GRAPH_SHA256:
@@ -275,13 +262,23 @@ class ProfileContext:
     def read(
         self, relative: str, *, required: bool = True, batch: InputBatch | None = None
     ) -> bytes:
+        try:
+            return self._read(relative, required=required, batch=batch)
+        except BaseException:
+            self._cleanup()
+            raise
+
+    def _read(
+        self, relative: str, *, required: bool, batch: InputBatch | None
+    ) -> bytes:
+        path = self.root / relative
+        if not path.is_relative_to(self.root):
+            raise ValueError("profile input must be a canonical repository path")
+        self._watch.add_paths({path})
         if relative in self.content:
             if required and self.inputs[relative] is None:
                 raise ValueError(f"missing profile input: {relative}")
             return self.content[relative]
-        path = self.root / relative
-        if not path.is_relative_to(self.root):
-            raise ValueError("profile input must be a canonical repository path")
         if batch is None:
             if path.resolve() != path:
                 raise ValueError("profile input must be a canonical repository path")
@@ -299,7 +296,7 @@ class ProfileContext:
         else:
             if path.stat().st_nlink != 1:
                 raise ValueError(f"multiply linked profile input: {relative}")
-        if not _has_same_observation(observation, _observe_input(path)):
+        if observation != _observe_input(path):
             raise ValueError(f"profile input changed while reading: {relative}")
         self.inputs[relative] = state
         self.content[relative] = data
@@ -496,32 +493,30 @@ class ProfileContext:
             snapshot.validate()
 
     def verify(self) -> None:
-        """Reject moving files or changed configuration instead of publishing stale pins."""
+        """Reject moving inputs while retaining event coverage for later reuse."""
+        try:
+            self._verify()
+        except BaseException:
+            self._cleanup()
+            raise
+
+    def _verify(self) -> None:
+        self._watch.validate()
         self.verify_manifest_inventory()
-        parents = {
-            Path(observation[0])
-            for observation in self.ancestors.values()
-            if stat.S_ISDIR(observation[3])
-        }
-        with DirectoryBatch(parents) as directories:
-            self._verify_ancestors(directories)
-            with InputBatch(self.root) as batch:
-                for relative, state in self.inputs.items():
-                    path = self.root / relative
-                    observation = self.observations[relative]
-                    if not _has_same_observation(
-                        observation, _observe_input(path, directories)
-                    ):
-                        raise ValueError(f"profile input changed: {relative}")
-                    if batch.read(path)[0] != state or (
-                        state is not None and path.stat().st_nlink != 1
-                    ):
-                        raise ValueError(f"profile input changed: {relative}")
-                    if not _has_same_observation(
-                        observation, _observe_input(path, directories)
-                    ):
-                        raise ValueError(f"profile input changed: {relative}")
-            self._verify_ancestors(directories)
+        self._verify_ancestors()
+        with InputBatch(self.root) as batch:
+            for relative, state in self.inputs.items():
+                path = self.root / relative
+                observation = self.observations[relative]
+                if observation != _observe_input(path):
+                    raise ValueError(f"profile input changed: {relative}")
+                if batch.read(path)[0] != state or (
+                    state is not None and path.stat().st_nlink != 1
+                ):
+                    raise ValueError(f"profile input changed: {relative}")
+                if observation != _observe_input(path):
+                    raise ValueError(f"profile input changed: {relative}")
+        self._verify_ancestors()
         for invocation, expected in self._programs.values():
             if (
                 capture_description(self.root, invocation, expected=expected)
@@ -529,11 +524,12 @@ class ProfileContext:
             ):
                 raise ValueError("configured compiler programs changed")
         self.verify_manifest_inventory()
+        self._watch.validate()
 
-    def _verify_ancestors(self, directories: DirectoryBatch | None = None) -> None:
+    def _verify_ancestors(self) -> None:
         for ancestor, observation in self.ancestors.items():
-            current = _observe_input(ancestor, directories)
-            if not _has_same_observation(observation, current):
+            current = _observe_input(ancestor)
+            if observation != current:
                 raise ValueError(
                     f"profile input ancestor changed during capture: {ancestor}; "
                     f"expected={observation!r}; observed={current!r}"
