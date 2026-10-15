@@ -713,6 +713,119 @@ def validate_entry_observation_descriptor(value):
     return value
 
 
+def _entry_cpu_context(captures):
+    query = _keys(
+        parse_json(captures["cpu.json"], 64 << 10),
+        {"schema", "path", "value"},
+        "entry CPU query",
+    )
+    _require(
+        query["schema"] == "psx.runtime-query/v1" and query["path"] == "registers",
+        "entry CPU query identity",
+    )
+
+    def fields(node):
+        _require(type(node) is dict, "entry CPU node")
+        values = {}
+        for field in _rows(node.get("fields"), 32, "entry CPU fields"):
+            _require(
+                type(field) is dict
+                and type(field.get("name")) is str
+                and field.get("present") is True
+                and "value" in field
+                and field["name"] not in values,
+                "entry CPU field absent or duplicated",
+            )
+            values[field["name"]] = field["value"]
+        return values
+
+    values = fields(query["value"])
+    _require(values.get("next_is_delay_slot") is False, "entry CPU delay slot")
+    for name in ("delay_slot_info_1", "delay_slot_info_2"):
+        pending = fields(values.get(name))
+        _require(
+            pending.get("active") is False and pending.get("pc_active") is False,
+            "entry CPU pending transfer",
+        )
+    cp0 = values.get("cp0")
+    _require(type(cp0) is dict, "entry CPU CP0 node")
+    words = _rows(cp0.get("items"), 32, "entry CPU CP0 values")
+    _require(
+        len(words) == 32
+        and all(
+            type(words[index]) is int and 0 <= words[index] <= 0xFFFFFFFF
+            for index in (12, 13, 14)
+        )
+        and type(values.get("in_isr")) is bool,
+        "entry CPU context values",
+    )
+    return dict(
+        inIsr=values["in_isr"], status=words[12], cause=words[13], epc=words[14]
+    )
+
+
+def _validate_entry_observations(
+    functions, descriptor, entry_captures, *, require_success
+):
+    scoped = descriptor is not None
+    context_count = summary_count = 0
+    expected_context = None
+    if scoped:
+        expected_context = dict(
+            kind="psx-observed-entry-context/v1",
+            observation=hashlib.sha256(
+                json.dumps(descriptor, sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest(),
+            stateHash=descriptor["state"]["sha256"],
+            entryPc=descriptor["entry_pc"],
+            cpu=_entry_cpu_context(entry_captures),
+        )
+    for function in functions:
+        summary = function.get("originalCallSummary", {})
+        entry_context = summary.get("entryContext")
+        if scoped and summary.get("function") == descriptor["function"]:
+            summary_count += 1
+            _require(
+                entry_context is not None, "observed function omitted entry context"
+            )
+        if entry_context is not None:
+            context_count += 1
+            _require(
+                scoped
+                and summary.get("function") == descriptor["function"]
+                and entry_context == expected_context,
+                "observed entry CPU context differs from captured input",
+            )
+        restoration = summary.get("scopedRestoration")
+        if restoration is not None:
+            _require(
+                scoped and descriptor is not None,
+                "scoped restoration lacks entry capture input",
+            )
+            _require(
+                function["originalCallSummary"]["function"] == descriptor["function"]
+                and restoration["entryPc"] == descriptor["entry_pc"]
+                and restoration["stateHash"] == descriptor["state"]["sha256"]
+                and restoration["entrySp"]
+                == parse_json(entry_captures["registers.json"], 64 << 10)["registers"][
+                    29
+                ]
+                and restoration["observation"]
+                == hashlib.sha256(
+                    json.dumps(
+                        descriptor, sort_keys=True, separators=(",", ":")
+                    ).encode()
+                ).hexdigest(),
+                "scoped restoration entry input differs",
+            )
+    _require(
+        context_count == summary_count
+        and context_count <= 1
+        and (not scoped or not require_success or context_count == 1),
+        "observed entry context coverage differs",
+    )
+
+
 def validate_status(data: bytes, request: bytes, configuration: bytes) -> dict:
     """Bind the command's closed status to the exact supplied request/configuration bytes."""
 
@@ -1107,30 +1220,12 @@ def validate_generation(
     )
     parsed_config = parse_json(inferred, CONFIG_LIMIT)
     _require(type(parsed_config) is dict, "inferred configuration object")
-    for function in parsed_config.get("functions", []):
-        restoration = function.get("originalCallSummary", {}).get("scopedRestoration")
-        if restoration is not None:
-            descriptor = wanted.get("entry_observation")
-            _require(
-                scoped and descriptor is not None,
-                "scoped restoration lacks entry capture input",
-            )
-            _require(
-                function["originalCallSummary"]["function"] == descriptor["function"]
-                and restoration["entryPc"] == descriptor["entry_pc"]
-                and restoration["stateHash"] == descriptor["state"]["sha256"]
-                and restoration["entrySp"]
-                == parse_json(entry_captures["registers.json"], 64 << 10)["registers"][
-                    29
-                ]
-                and restoration["observation"]
-                == hashlib.sha256(
-                    json.dumps(
-                        descriptor, sort_keys=True, separators=(",", ":")
-                    ).encode()
-                ).hexdigest(),
-                "scoped restoration entry input differs",
-            )
+    _validate_entry_observations(
+        parsed_config.get("functions", []),
+        descriptor if scoped else None,
+        entry_captures,
+        require_success=require_success,
+    )
     backend = _rows(observed["backend_ranges"], 4096, "backend function")
     entries = []
     for row in backend:

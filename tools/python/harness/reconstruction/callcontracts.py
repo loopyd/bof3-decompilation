@@ -494,6 +494,53 @@ def _validate_entry_arithmetic(row, entry_flow):
         )
 
 
+def _observed_entry_context(summary, evidence):
+    value = _keys(
+        summary["entryContext"],
+        {"kind", "observation", "stateHash", "entryPc", "cpu"},
+        "observed entry context",
+    )
+    _require(
+        value["kind"] == "psx-observed-entry-context/v1"
+        and value["entryPc"] == evidence["start"]
+        and all(
+            type(value[key]) is str and re.fullmatch(r"[0-9a-f]{64}", value[key])
+            for key in ("observation", "stateHash")
+        ),
+        "observed entry context identity",
+    )
+    cpu = _keys(value["cpu"], {"inIsr", "status", "cause", "epc"}, "entry CPU context")
+    _require(type(cpu["inIsr"]) is bool, "entry CPU ISR marker")
+    for key in ("status", "cause", "epc"):
+        _integer(cpu[key], 0xFFFFFFFF)
+    _require(not cpu["status"] & 0x10000, "entry CPU cache isolation")
+    if cpu["inIsr"]:
+        _require(
+            not cpu["status"] & 3
+            and not evidence["decodeComplete"]
+            and all(
+                not _complete(summary[key])
+                for key in (
+                    "entry",
+                    "result",
+                    "control",
+                    "effects",
+                    "declaration",
+                    "noMemoryWrites",
+                )
+            )
+            and "scopedRestoration" not in summary
+            and "symbolicFrame" not in summary
+            and {
+                "pc": value["entryPc"],
+                "domain": "architectural",
+                "reason": "observed-isr-context-preservation-unresolved",
+            }
+            in evidence["obligations"],
+            "observed ISR context cannot establish a generic contract",
+        )
+
+
 def _scoped_restoration(value, evidence):
     _keys(
         value,
@@ -839,6 +886,8 @@ def _summary(row, identity, payload, load, entry_flow, context, images, frame_us
         fields.add("scopedRestoration")
     if type(value) is dict and "symbolicFrame" in value:
         fields.add("symbolicFrame")
+    if type(value) is dict and "entryContext" in value:
+        fields.add("entryContext")
     summary = _keys(value, fields, "function summary")
     _require(
         summary["function"] == identity["key"]
@@ -846,6 +895,8 @@ def _summary(row, identity, payload, load, entry_flow, context, images, frame_us
         "function summary identity/precondition",
     )
     evidence = row["returnDisposition"]["evidence"]
+    if "entryContext" in summary:
+        _observed_entry_context(summary, evidence)
     if "scopedRestoration" in summary:
         _scoped_restoration(summary["scopedRestoration"], evidence)
     if "symbolicFrame" in summary:
@@ -1338,6 +1389,10 @@ def validate_functions(
     frames = {}
     for key, row in rows.items():
         summary = row.get("originalCallSummary", {})
+        _require(
+            "entryContext" not in summary or entry_observation is True,
+            "observed entry context lacks captured input",
+        )
         if "symbolicFrame" in summary:
             _keys(
                 summary,
