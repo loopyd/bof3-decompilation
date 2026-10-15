@@ -16,6 +16,44 @@ of `--no-color`.
 Exit status: `0` success, `1` a tool error (unsupported data, refused write,
 malformed document, capacity overflow), `2` a usage error from the argument parser.
 
+## `coverage [--root DIR] [--strict]`
+
+Emits a deterministic JSON report for every regular file under the complete
+extracted tree, default `out/extracted`. Each file has its relative path, size and
+SHA-256. EMI reports partition headers, payloads and padding into known text,
+structurally identified nontext, or unresolved ranges. Payload exclusions retain
+the inventory's source records. The report also pins the inventory's SHA-256.
+Symlinks, special files and unreadable inputs fail rather than disappearing.
+
+The US executable is recognized by its original SHA-256. Recognition establishes
+build identity, not complete text coverage. Other builds remain unrecognized;
+EU and JP support is explicitly unverified. Unknown consumers, nonzero container
+gaps and unverified non-EMI ranges stay unresolved. Supported executable ASCII
+allocations carry their pointer and consumer evidence; other executable bytes
+remain unresolved. Matching unpacked payload sidecars and
+matching extraction manifests are marked as derivatives of their EMI archive,
+so duplicate files do not count as independent sources.
+
+`--strict` prints the report and exits 1 while coverage is incomplete. Disc
+membership reconciliation and executable consumer evidence remain open, so the
+current report always marks full US completion false. Successful bank parsing or
+an empty heuristic search cannot close those gaps. Runtime acceptance is separate.
+The command requires the payload inventory named by `--payloads`; run `prepare`
+first to create the default inventory, or name the crate's policy explicitly.
+
+## `analyze INPUT`
+
+Emits structured JSON for each verified bank row, including its archive and payload
+offsets, encoded byte size, fixed capacity, decoded text and shared row numbers.
+Commands carry their byte offset, opcode and operand bytes. Terminator offsets
+exclude operand bytes. Nonempty strings following terminators are listed as
+`trailing_string_segments`; a consumer trace establishes which are choice options.
+Empty slots have zero capacity and no byte offset. Analysis reads original bytes;
+`validate` checks edited document syntax and `pack` enforces edited byte capacity.
+For the supported US executable, analysis emits the ASCII document described in
+[formats.md](formats.md#executable-ascii), including file offsets, capacities and
+pointer references. It does not apply the game's dialogue command codec to ASCII.
+
 ## `prepare [--root DIR] [--targets DIR] [--out-dir DIR]`
 
 Prepares corpus search from extracted US archives without existing generated text
@@ -75,11 +113,37 @@ is created and never overwritten.
 `--latch ENTRY:OFFSET+LENGTH` extracts one raw-text instance (class `heuristic`)
 found by `scan` instead of a whole subfile; `OFFSET` and `LENGTH` accept decimal or
 `0x`-prefixed hex. The instance is written with an explicit `latch` extent and a span
-fingerprint, and an extent that runs past its subfile is refused as unbounded.
+fingerprint and the entire original archive SHA-256, and an extent that runs past its subfile is refused as unbounded.
 
 Output is always JSON — there is no second codec — and every object carries a
 `source` identifying the subfile and its class. Packing is driven by the
-document's own recorded `source`, so no format detection happens at pack time.
+document's own recorded `source`.
+
+The supported US `SLUS_004.22` executable exports one
+`bof3.executable-text/v1` document. Use the default `--entry all` and omit
+`--class` and `--latch`; EMI selectors are refused for executable input.
+See [formats.md](formats.md#executable-ascii) for supported allocations and limits.
+
+For the supported US `GAME.EMI`, extraction writes one `bof3.record-text/v1`
+document of equipment and ability names. Use `--entry all` or `--entry 0` and omit
+`--class` and `--latch`. These fixed-width names use literal characters without
+dialogue commands. See [formats.md](formats.md#record-names).
+
+## `extract-corpus [--root DIR] -o|--output DIR`
+
+Exports every currently verified dialogue and battle bank beneath `DIR`, preserving
+archive-relative paths as `ARCHIVE.EMI/ENTRY.json`. The default source root is
+`out/extracted`. The destination must be new, outside the input tree, with an
+existing parent. An existing destination is refused. Every document is parsed back
+and its unchanged bank must reproduce the original payload before export.
+
+`manifest.json` records each exported source, archive SHA-256 and round-trip result.
+An archive failure is recorded and makes the command exit 1. Outputs from a failed
+run remain for diagnosis; use a new destination for the next run. This operation
+also exports equipment and ability names as `GAME.EMI/records.json`. It covers the supported
+banks, name fields and `SLUS_004.22` ASCII strings. Executable
+documents use `SLUS_004.22.json` at the export root and also round-trip before
+publication. Use `coverage` to inspect other consumers and gaps.
 
 ## `scan ARCHIVE.EMI [--min-run N] [--class CLASS] [-e|--entry N] [--windows PATH] [--no-windows]`
 
@@ -118,6 +182,13 @@ emits the same facts as an object.
 
 Validation is structural: it cannot know whether an edit still fits the original
 allocation. `pack` performs that check.
+Executable ASCII validation checks its explicit allocations, character set and
+capacity. It emits a JSON summary; `--commands` has no extra effect because this
+codec has no dialogue commands. `pack` also checks the original source and references.
+
+Equipment and ability name documents use `bof3.record-text/v1`. Validation checks their full
+record inventory, literal character encoding and twelve-byte field capacity.
+The JSON summary reports `names`; `--commands` adds nothing for this codec.
 
 ## `query ARCHIVE.EMI [-e|--entry N] [--grep TEXT] [-i|--ignore-case] [--commands] [--class ...] [--windows PATH] [--no-windows]`
 
@@ -338,9 +409,9 @@ Rebuilds the archive with the edited document and refuses to overwrite its own
 source. Checks performed before writing:
 
 1. The document parses and every row is syntactically valid.
-2. The document's `block_fingerprint`, when present, matches the block it is
-   being packed against — this catches a document extracted from a different
-   archive or entry.
+2. The required `source_sha256` matches the entire original archive, the source
+   path resolves to that archive, and entry, load address and class match. The
+   required `fingerprint` also matches the original row extents.
 3. Bank count and per-bank row counts match the original.
 4. Each edited row fits its original span; a row with no allocated span cannot
    receive text.
@@ -353,6 +424,18 @@ unedited document reproduces the original archive byte-for-byte.
 A raw-text (`heuristic`) document takes a different path: it is patched in place at
 its recorded `latch` extent, and any edit that changes the encoded byte length is
 refused, because no allocation is proven for raw text.
+
+For the supported US executable, pass `SLUS_004.22` as `--original` and its
+ASCII document as `--text`. The tool checks the pinned layout, complete source
+SHA-256, canonical source path, complete allocation list and unchanged pointer
+references. Text must fit the original ASCII allocation with a final NUL.
+Executable input uses `--entry all` and refuses class or latch selectors.
+
+For the supported `GAME.EMI`, packing accepts the name document from extraction.
+It checks complete source identity and every fixed-width field, writes at most
+twelve encoded literal bytes per name and NUL-pads shorter names. Other record
+bytes remain unchanged. Use `--entry all` or `--entry 0` without class or latch
+selectors. This layout does not support relocation or dialogue commands in names.
 
 ## Common idioms
 

@@ -6,8 +6,13 @@
 //! [`query`] indexing and queries, and [`models`] the shared dialogue, bank and
 //! command models.
 
+mod analysis;
 mod cli;
 mod command;
+mod corpus;
+mod coverage;
+mod digest;
+mod executable;
 mod extract;
 mod filters;
 mod lexagraph;
@@ -15,6 +20,7 @@ mod logging;
 mod models;
 mod pack;
 mod query;
+mod records;
 mod search;
 mod segmentmap;
 mod syntax;

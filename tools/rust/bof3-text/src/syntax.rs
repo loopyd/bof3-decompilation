@@ -11,7 +11,7 @@ use crate::command;
 use crate::models::{DOCUMENT_VERSION, Error, Result, invalid};
 
 /// JSON schema identifier for the editable text-object document.
-pub const DOCUMENT_SCHEMA: &str = "bof3.dialogue-text/v2";
+pub const DOCUMENT_SCHEMA: &str = "bof3.dialogue-text/v3";
 
 /// A byte extent inside a subfile payload; how a raw-text instance is bounded.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize)]
@@ -40,8 +40,10 @@ pub struct Document {
     pub version: u32,
     /// Where this object came from.
     pub source: crate::models::Source,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub fingerprint: Option<String>,
+    /// Fingerprint of the original row extents.
+    pub fingerprint: String,
+    /// SHA-256 of the entire original archive. Required before any write.
+    pub source_sha256: String,
     /// One entry per bank; each holds that bank's rows in slot order.
     pub banks: Vec<Vec<DocumentRow>>,
     /// Byte extent of a raw-text instance. Absent for the banked classes, whose
@@ -140,8 +142,17 @@ pub fn parse_json(text: &str) -> Result<Document> {
     }
     let document: Document = serde_json::from_value(value)
         .map_err(|error| Error::Invalid(format!("invalid document: {error}")))?;
-    if let Some(value) = &document.fingerprint {
-        check_fingerprint(value)?;
+    check_fingerprint(&document.fingerprint)?;
+    if document.source_sha256.len() != 64
+        || !document
+            .source_sha256
+            .bytes()
+            .all(|byte| byte.is_ascii_hexdigit())
+    {
+        return invalid("source_sha256 must contain the original archive SHA-256");
+    }
+    if document.source.entry.is_none() {
+        return invalid("source.entry must identify the original EMI entry");
     }
     validate(&document)?;
     Ok(document)

@@ -13,7 +13,7 @@ pub const SECTOR: usize = 0x800;
 /// `{end}` control byte; also the padding byte used inside a rewritten extent.
 pub const STRING_TERMINATOR: u8 = 0x00;
 /// Document grammar version.
-pub const DOCUMENT_VERSION: u32 = 2;
+pub const DOCUMENT_VERSION: u32 = 3;
 
 #[derive(Debug)]
 pub enum Error {
@@ -407,7 +407,7 @@ impl std::fmt::Display for TextClass {
 pub struct Source {
     /// Repository-relative archive path.
     pub archive: String,
-    /// TOC entry index; omitted when the archive holds a single text subfile.
+    /// Explicit TOC entry index; editable documents require it even for one text subfile.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub entry: Option<usize>,
     /// RAM address the subfile loads at (the TOC load argument).

@@ -11,6 +11,7 @@ BOF3 runtime, format and data evidence belongs in [specs](../specs/INDEX.md).
 | [Harness](harness.md) | Domain modules, transactions, native lifecycles and recovery |
 | [Reconstruction](reconstruction.md) | Cumulative native attempts and interrupted-run recovery |
 | [PCSX-Redux Agentic harness](pcsx-redux-agentic.md) | Managed emulator build, embedded missions, skill links and runtime receipts |
+| [Text tool](../../.agents/skills/bof3-text/SKILL.md) | Text extraction, analysis, safe edits and source coverage refinement |
 | [Tool usage](tool-usage.md) | Ordered CLI workflows, flags and evidence gates |
 | [Codex](codex.md) | Skill-only session orchestration, local mission diagnosis/audit, global MCP and Pi migration |
 | [Lift loop](../../.agents/skills/bof3-lift-loop/SKILL.md) | Bounded skill missions, parallel evidence/review, serialized writes, recovery and completion |

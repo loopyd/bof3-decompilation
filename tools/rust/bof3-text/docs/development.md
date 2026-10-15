@@ -9,6 +9,12 @@
 | `logging.rs` | Logger setup, verbosity mapping, colour policy, style helpers |
 | `command.rs` | Serializer/deserializer for the editable grammar |
 | `syntax.rs` | Document model, the JSON codec and the linter |
+| `coverage.rs` | Complete extracted-tree accounting and unresolved ranges |
+| `corpus.rs` | Verified bank, record name and executable corpus export with per-source results |
+| `analysis.rs` | Original byte extents, commands, operands and shared rows |
+| `executable.rs` | Pinned US exception ASCII allocations, references and fixed-capacity writes |
+| `records.rs` | Pinned US equipment and ability name fields and literal-only fixed-width writes |
+| `digest.rs` | Shared SHA-256 content identities |
 | `extract.rs` | EMI TOC discovery, bank parsing, document construction, fingerprint |
 | `pack.rs` | Edit planning, span-preserving rebuild, payload replacement |
 | `query.rs` | Index records, row queries, command accounting |
@@ -50,8 +56,11 @@ verification commands below.
    offset; nothing is approximated or dropped.
 6. **Create-new outputs.** The destination is opened with `create_new`, so the
    source archive cannot be reached through another spelling, symlink or hard link.
-7. **Fingerprint.** A document's `block_fingerprint` must match the block being
-   packed, which catches documents taken from a different archive or entry.
+7. **Source binding.** Version 3 documents require the entire archive SHA-256,
+   original row fingerprint and an explicit source entry. Packing verifies the
+   archive path, digest, entry, load address and class before writing.
+   Executable ASCII documents use their own schema and bind the full source
+   digest, canonical path, pinned layout and unchanged pointer references.
 
 ## Extending the format
 

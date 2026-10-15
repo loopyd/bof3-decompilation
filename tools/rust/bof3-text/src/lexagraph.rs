@@ -28,8 +28,8 @@ use unicode_script::{Script, UnicodeScript};
 
 use crate::command;
 use crate::models::{
-    Entry, Error, HEADER_SIZE, MAGIC, Result, SECTOR, TOC_ENTRY_SIZE, TextClass, command_for,
-    literal_char,
+    Entry, Error, FIRST_PAYLOAD, HEADER_SIZE, MAGIC, Result, SECTOR, TOC_ENTRY_SIZE, TextClass,
+    command_for, literal_char,
 };
 
 // Every threshold lives in `crate::filters`; these are re-exports so call sites keep one spelling.
@@ -530,19 +530,21 @@ pub fn entries(data: &[u8]) -> Result<Vec<(Entry, &[u8])>> {
         ));
     }
     let count = u32::from_le_bytes(data[0..4].try_into().unwrap()) as usize;
-    if count == 0 || HEADER_SIZE + count * TOC_ENTRY_SIZE > data.len() {
+    if count == 0 || HEADER_SIZE + count * TOC_ENTRY_SIZE > data.len().min(FIRST_PAYLOAD) {
         return Err(Error::Invalid(
             "EMI TOC entry count does not fit the file".into(),
         ));
     }
     let mut out = Vec::new();
-    let mut offset = 0x800;
+    let mut offset = FIRST_PAYLOAD;
     for index in 0..count {
         let at = HEADER_SIZE + index * TOC_ENTRY_SIZE;
         let size = u32::from_le_bytes(data[at..at + 4].try_into().unwrap()) as usize;
         let ram_ptr = u32::from_le_bytes(data[at + 4..at + 8].try_into().unwrap());
         if offset + size > data.len() {
-            break;
+            return Err(Error::Invalid(format!(
+                "EMI entry {index} escapes the archive"
+            )));
         }
         out.push((
             Entry {

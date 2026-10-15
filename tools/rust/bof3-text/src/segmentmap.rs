@@ -164,7 +164,7 @@ pub fn build(
                         entry.ram_ptr,
                         class.unwrap_or(TextClass::Heuristic),
                     );
-                    let document = extract::document(&section, &source);
+                    let document = extract::document(&section, &source, &data);
                     round_trip = Some(
                         matches!(pack::rebuild(&section, &document), Ok(rebuilt) if rebuilt == payload),
                     );

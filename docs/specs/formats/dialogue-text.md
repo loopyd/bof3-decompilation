@@ -144,13 +144,13 @@ build's own bytes and font table establish it. Regional limits are recorded in
 
 ## Editable codec
 
-The document is JSON only (`bof3.dialogue-text/v2`). It carries the **source** it
+The document is JSON only (`bof3.dialogue-text/v3`). It carries the **source** it
 came from, a fingerprint, and one row array per bank:
 
 ```json
 {
-  "schema": "bof3.dialogue-text/v2",
-  "version": 2,
+  "schema": "bof3.dialogue-text/v3",
+  "version": 3,
   "source": {
     "archive": "out/extracted/BIN/BATTLE/BATTLE.EMI",
     "entry": 11,
@@ -158,12 +158,12 @@ came from, a fingerprint, and one row array per bank:
     "class": "battle"
   },
   "fingerprint": "…",
+  "source_sha256": "…",
   "banks": [[{ "number": 1, "text": "You scattered the enemy!{end}" }]]
 }
 ```
 
-`source` spells `PATH/ARCHIVE.EMI[#ENTRY]@0xADDRESS`; `entry` is omitted when the
-archive holds a single text subfile. **Escaping is JSON's own** (`\\`, `\"`, `\n`,
+`source` spells `PATH/ARCHIVE.EMI[#ENTRY]@0xADDRESS`; `entry` always identifies the original TOC entry. **Escaping is JSON's own** (`\\`, `\"`, `\n`,
 `\uXXXX`), so any literal is representable and no bespoke grammar is needed; the game's
 control codes keep their `{token}` spelling inside string values. A `{`/`}`/`\` that is
 not a token is rejected, and a byte with no modelled token fails closed as

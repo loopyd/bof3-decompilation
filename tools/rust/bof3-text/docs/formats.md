@@ -11,6 +11,63 @@ The dialogue subfile is the EMI entry whose TOC `load_argument` is `0x80010000`.
 Each US archive contains exactly one; `index` reports its payload offset and whether
 it parses.
 
+## Executable ASCII
+
+`extract`, `analyze`, `validate` and `pack` also support the US executable's
+exception-screen ASCII strings. `extract-corpus` exports them when the complete
+source root includes `SLUS_004.22`. This support covers the strings referenced by
+the pointer words at `0x8017F470..0x8017F53C`, with an exclusive upper bound.
+The consumer at `0x8014B3C4` passes these pointers to renderer `0x80150098`.
+The renderer reads bytes until NUL, advances on ASCII space and handles newline
+`0x0A`. These bytes use ASCII rather than the dialogue character table.
+
+The JSON schema is `bof3.executable-text/v1`. It contains `source`, mandatory
+`source_sha256`, `build`, `load_address`, `consumer`, `renderer` and `strings`.
+Each string retains its `address`, whole-file `file_offset`, original `capacity`
+including NUL, pointer `references` and editable `text`. Shared pointers appear
+on one allocation. Retain every allocation and edit only `text`.
+
+Packing accepts printable ASCII and newline, reserves one byte for NUL and
+refuses growth beyond the original string, excluding alignment padding. A
+shortened string is NUL-padded inside its allocation. Unchanged strings preserve
+every byte. Pointer edits and relocation are refused. The numeric printf format
+and unproven exception-table indices are outside this support.
+
+Build recognition hashes all bytes outside the supported allocations against
+the pinned US layout. This permits re-extraction of supported edits while
+refusing changes to code, pointers, headers or unrelated data. Each document
+additionally binds the complete current source SHA-256 and canonical path.
+Source tracing establishes this layout; runtime acceptance and other executable
+consumers remain separate coverage requirements.
+
+## Record names
+
+The US `BIN/ETC/GAME.EMI` entry 0 contains inline names for items, key items,
+weapons, armor, accessories and abilities. `extract`, `analyze`, `validate`, `pack` and
+`extract-corpus` support these fields through `bof3.record-text/v1`.
+The equipment resolver at `0x80165D48` computes the record address from category
+and index. The COMMU00 entry 0 consumer at `0x801F1A30` copies twelve equipment
+name bytes into a separate buffer and appends NUL. The SISYOU entry 0 consumer
+at `0x801D3D64` copies twelve ability name bytes from `0x801CA70C + index × 0x14`
+and appends NUL. A name can therefore occupy all twelve bytes.
+The [equipment contract](../../../../docs/specs/data/equipment.md) describes the
+table locations and record strides.
+
+The document retains `source`, mandatory `source_sha256`, `entry`,
+`load_address`, `equipment_resolver`, `equipment_name_copy_consumer`,
+`ability_name_copy_consumer` and `names`. Each name has
+`family`, zero-based `index`, whole-file `file_offset`, `address`, `capacity`
+and editable `text`. Retain every record and edit only `text`. Names use the
+US literal character table, including `0xFF` for space. They contain no dialogue
+commands or markup. A shorter name is NUL-padded to twelve bytes; a full field
+needs no terminator inside the record. Overflow and unknown characters fail.
+
+Build recognition pins every archive byte outside these name fields. Packing
+also checks the complete current source SHA-256, canonical source path and all
+record identities. Stats, flags, prices, offsets and other entries remain
+unchanged. Character names and other record families require
+their own consumer evidence. Runtime acceptance remains a separate gate.
+
 ## Bank layout
 
 ```
@@ -101,16 +158,16 @@ treat "the game also supports a kanji table" as unproven
 
 ```json
 {
-  "schema": "bof3.dialogue-text/v2",
-  "version": 2,
+  "schema": "bof3.dialogue-text/v3",
+  "version": 3,
   "source": { "archive": "…/AREA000.EMI", "entry": 11, "address": 2147549184, "class": "dialogue" },
   "fingerprint": "…",
+  "source_sha256": "…",
   "banks": [[{ "number": 36, "text": " {nl}Do you want to save?{choice(0x00, 0x0c, 0x02)}Yes{end}No{end}" }]]
 }
 ```
 
-`source` is `PATH/ARCHIVE.EMI[#ENTRY]@0xADDRESS`, with `entry` omitted when the archive
-has one text subfile, and carries the `text_class` (`dialogue`, `battle`, or
+`source` is `PATH/ARCHIVE.EMI[#ENTRY]@0xADDRESS`, with an explicit `entry` even for a single text subfile, and carries the `class` (`dialogue`, `battle`, or
 `heuristic` for a raw-text instance). Escaping is JSON's own, so literals need no
 bespoke rules; the game's control codes stay as `{token}` inside the string.
 `--entry` accepts one index, a comma list, or `all`; extraction to a directory writes
@@ -126,6 +183,8 @@ same number of bytes back:
 
 ## Fingerprint
 
-`block_fingerprint` is a 64-bit FNV-style fingerprint over every row's bytes. It is
-not a cryptographic hash; it exists so `pack` can refuse a document that was
-extracted from a different block.
+`fingerprint` is a required 64-bit FNV-style fingerprint over the original row
+bytes. `source_sha256` is the required SHA-256 of the entire original archive.
+Packing checks both identities and the source path, entry, load address and class
+before writing. Version 3 documents are required; re-extract older documents
+before editing. The tool does not accept an earlier document schema.

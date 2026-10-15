@@ -17,6 +17,7 @@ dependencies.
 | --- | --- |
 | Lift, match, target/source/map/layout, duplicates | `.agents/skills/bof3-re/SKILL.md` |
 | Autonomous campaign or resume | `.agents/skills/bof3-lift-loop/SKILL.md` |
+| Text corpus extraction, analysis, modification and tool refinement | `.agents/skills/bof3-text/SKILL.md` |
 | Naming, identity, source identifiers | `.agents/skills/bof3-naming/SKILL.md` |
 | Type representation / macro work | `.agents/skills/bof3-types/SKILL.md` / `.agents/skills/bof3-macros/SKILL.md` |
 | Python harness, CLI, skill scripts | `.agents/skills/bof3-re/references/tooling-contract.md` |

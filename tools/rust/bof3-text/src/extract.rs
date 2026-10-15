@@ -6,10 +6,7 @@
 //! `{end}` terminator. Extents tile the string region, so every byte belongs to
 //! exactly one row (modulo shared pointers) and nothing is orphaned.
 
-use crate::models::{
-    Bank, DOCUMENT_VERSION, DialogueRow, Entry, Error, FIRST_PAYLOAD, HEADER_SIZE, MAGIC, Result,
-    SECTOR, Section, TOC_ENTRY_SIZE, invalid,
-};
+use crate::models::{Bank, DOCUMENT_VERSION, DialogueRow, Entry, Error, Result, Section, invalid};
 
 /// A subfile that begins with this word declares two pointer banks.
 const TWO_BANK_MARKER: [u8; 4] = [0x08, 0x00, 0x00, 0x00];
@@ -17,39 +14,12 @@ const TWO_BANK_MARKER: [u8; 4] = [0x08, 0x00, 0x00, 0x00];
 /// Parse the TOC of an EMI archive and return every text subfile: the entry
 /// paired with its text class (`dialogue`, `battle`).
 pub fn text_entries(data: &[u8]) -> Result<Vec<(Entry, crate::models::TextClass)>> {
-    if data.len() < HEADER_SIZE || &data[8..16] != MAGIC {
-        return invalid("not an EMI archive (missing MATH_TBL magic)");
-    }
-    let count = u32::from_le_bytes(data[0..4].try_into().unwrap()) as usize;
-    if count == 0 || HEADER_SIZE + count * TOC_ENTRY_SIZE > data.len() {
-        return invalid("EMI TOC entry count does not fit the file");
-    }
-    let mut entries = Vec::new();
-    let mut offset = FIRST_PAYLOAD;
-    for index in 0..count {
-        let at = HEADER_SIZE + index * TOC_ENTRY_SIZE;
-        let size = u32::from_le_bytes(data[at..at + 4].try_into().unwrap());
-        let ram_ptr = u32::from_le_bytes(data[at + 4..at + 8].try_into().unwrap());
-        if let Some(class) = crate::models::TextClass::from_load_argument(ram_ptr) {
-            entries.push((
-                Entry {
-                    index,
-                    offset,
-                    size,
-                    ram_ptr,
-                },
-                class,
-            ));
-        }
-        let advanced = (size as usize)
-            .checked_add(SECTOR - 1)
-            .map(|value| value / SECTOR * SECTOR)
-            .ok_or_else(|| Error::Invalid("EMI size overflow".into()))?;
-        offset = offset
-            .checked_add(advanced)
-            .ok_or_else(|| Error::Invalid("EMI size overflow".into()))?;
-    }
-    Ok(entries)
+    Ok(crate::lexagraph::entries(data)?
+        .into_iter()
+        .filter_map(|(entry, _)| {
+            crate::models::TextClass::from_load_argument(entry.ram_ptr).map(|class| (entry, class))
+        })
+        .collect())
 }
 
 /// The selected text subfile: its entry, its class, and its payload bytes.
@@ -222,11 +192,16 @@ fn parse_bank(data: &[u8], start: usize, end: usize, index: usize) -> Result<Ban
 }
 
 /// Build the JSON text-object document for a section.
-pub fn document(section: &Section, source: &crate::models::Source) -> crate::syntax::Document {
+pub fn document(
+    section: &Section,
+    source: &crate::models::Source,
+    archive: &[u8],
+) -> crate::syntax::Document {
     crate::syntax::Document {
         version: DOCUMENT_VERSION,
         source: source.clone(),
-        fingerprint: Some(fingerprint(section)),
+        fingerprint: fingerprint(section),
+        source_sha256: crate::digest::sha256_hex(archive),
         latch: None,
         banks: section
             .banks

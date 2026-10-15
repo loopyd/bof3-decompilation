@@ -7,6 +7,7 @@ use std::path::{Path, PathBuf};
 use clap::{ArgAction, Parser, Subcommand};
 use log::{debug, info};
 
+use crate::digest::sha256_hex;
 use crate::extract;
 use crate::logging;
 use crate::models::{Error, Result, Source, TextClass};
@@ -57,6 +58,24 @@ pub struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub enum Mode {
+    /// Account for every extracted file and EMI payload, preserving unresolved coverage
+    Coverage {
+        /// Complete extracted disc tree, including executable and non-EMI files
+        #[arg(long, default_value = "out/extracted")]
+        root: PathBuf,
+        /// Fail after reporting if any source or range remains unresolved
+        #[arg(long)]
+        strict: bool,
+    },
+    /// Extract supported banks, record names and executable strings into a new tree
+    ExtractCorpus {
+        #[arg(long, default_value = "out/extracted")]
+        root: PathBuf,
+        #[arg(short = 'o', long)]
+        output: PathBuf,
+    },
+    /// Describe original allocations, encoded commands, and shared references
+    Analyze { archive: PathBuf },
     /// Prepare corpus search artifacts from extracted US archives
     Prepare {
         /// Directory containing extracted archives
@@ -291,7 +310,7 @@ pub enum Mode {
         #[arg(long)]
         no_windows: bool,
     },
-    /// Repack edited text objects into a separate EMI output
+    /// Repack edited text objects into a separate EMI or supported executable output
     Pack {
         /// Original archive the documents came from
         #[arg(long)]
@@ -354,6 +373,41 @@ pub fn main(argv: Vec<std::ffi::OsString>) -> i32 {
 
 fn run(cli: &Cli) -> Result<()> {
     match &cli.mode {
+        Mode::Coverage { root, strict } => {
+            let report = crate::coverage::report(root, &cli.payloads)?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&report)
+                    .map_err(|error| Error::Invalid(error.to_string()))?
+            );
+            if *strict && !report.complete {
+                return Err(Error::Invalid(
+                    "US text coverage is incomplete; inspect unresolved sources and ranges".into(),
+                ));
+            }
+            Ok(())
+        }
+        Mode::ExtractCorpus { root, output } => {
+            let report = crate::corpus::extract(root, output)?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&report)
+                    .map_err(|error| Error::Invalid(error.to_string()))?
+            );
+            if report.failures > 0 {
+                return invalid("corpus extraction has failures; inspect manifest.json");
+            }
+            Ok(())
+        }
+        Mode::Analyze { archive } => {
+            let report = crate::analysis::analyze(archive)?;
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&report)
+                    .map_err(|error| Error::Invalid(error.to_string()))?
+            );
+            Ok(())
+        }
         Mode::Prepare {
             root,
             targets,
@@ -596,7 +650,8 @@ fn extract_latch(cli: &Cli, archive: &Path, output: &Path, data: &[u8], spec: &s
     let document = syntax::Document {
         version: crate::models::DOCUMENT_VERSION,
         source,
-        fingerprint: Some(syntax::span_fingerprint(span)),
+        fingerprint: syntax::span_fingerprint(span),
+        source_sha256: sha256_hex(data),
         banks: vec![vec![syntax::DocumentRow {
             number: 1,
             text: Some(text),
@@ -678,13 +733,12 @@ fn pack_latch(
             entry.ram_ptr
         ));
     }
-    if let Some(stated) = &document.fingerprint {
-        let actual = syntax::span_fingerprint(span);
-        if *stated != actual {
-            return invalid(format!(
-                "document fingerprint {stated} does not match this instance's {actual}; re-extract before editing"
-            ));
-        }
+    bind_document(&document, original, data, entry, TextClass::Heuristic)?;
+    let actual = syntax::span_fingerprint(span);
+    if document.fingerprint != actual {
+        return invalid(
+            "document fingerprint does not match this instance; re-extract before editing",
+        );
     }
     let text = document
         .banks
@@ -1037,11 +1091,10 @@ fn source_for(
     archive: &Path,
     entry: crate::models::Entry,
     class: crate::models::TextClass,
-    multiple: bool,
 ) -> Source {
     Source::new(
         archive_label(archive),
-        if multiple { Some(entry.index) } else { None },
+        Some(entry.index),
         entry.ram_ptr,
         class,
     )
@@ -1345,91 +1398,6 @@ fn run_readability(cli: &Cli, text: &[String], index_path: &Path) -> Result<()> 
         .map_err(|error| Error::Invalid(error.to_string()))?
     );
     Ok(())
-}
-
-/// SHA-256 of a byte slice, in lowercase hex.
-///
-/// Implemented here rather than imported: the registry's owner records carry `sha256:` digests, and the
-/// crate takes no dependency for a hash this small.
-fn sha256_hex(bytes: &[u8]) -> String {
-    const K: [u32; 64] = [
-        0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4,
-        0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe,
-        0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f,
-        0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7,
-        0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc,
-        0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b,
-        0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070, 0x19a4c116,
-        0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
-        0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7,
-        0xc67178f2,
-    ];
-    let mut state: [u32; 8] = [
-        0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab,
-        0x5be0cd19,
-    ];
-    let mut message = bytes.to_vec();
-    let bit_length = (bytes.len() as u64).wrapping_mul(8);
-    message.push(0x80);
-    while message.len() % 64 != 56 {
-        message.push(0);
-    }
-    message.extend_from_slice(&bit_length.to_be_bytes());
-    for chunk in message.chunks(64) {
-        let mut schedule = [0u32; 64];
-        for (position, word) in schedule.iter_mut().take(16).enumerate() {
-            *word = u32::from_be_bytes([
-                chunk[4 * position],
-                chunk[4 * position + 1],
-                chunk[4 * position + 2],
-                chunk[4 * position + 3],
-            ]);
-        }
-        for position in 16..64 {
-            let small0 = schedule[position - 15].rotate_right(7)
-                ^ schedule[position - 15].rotate_right(18)
-                ^ (schedule[position - 15] >> 3);
-            let small1 = schedule[position - 2].rotate_right(17)
-                ^ schedule[position - 2].rotate_right(19)
-                ^ (schedule[position - 2] >> 10);
-            schedule[position] = schedule[position - 16]
-                .wrapping_add(small0)
-                .wrapping_add(schedule[position - 7])
-                .wrapping_add(small1);
-        }
-        let mut working = state;
-        for position in 0..64 {
-            let big1 = working[4].rotate_right(6)
-                ^ working[4].rotate_right(11)
-                ^ working[4].rotate_right(25);
-            let choose = (working[4] & working[5]) ^ ((!working[4]) & working[6]);
-            let temp1 = working[7]
-                .wrapping_add(big1)
-                .wrapping_add(choose)
-                .wrapping_add(K[position])
-                .wrapping_add(schedule[position]);
-            let big0 = working[0].rotate_right(2)
-                ^ working[0].rotate_right(13)
-                ^ working[0].rotate_right(22);
-            let majority =
-                (working[0] & working[1]) ^ (working[0] & working[2]) ^ (working[1] & working[2]);
-            let temp2 = big0.wrapping_add(majority);
-            working = [
-                temp1.wrapping_add(temp2),
-                working[0],
-                working[1],
-                working[2],
-                working[3].wrapping_add(temp1),
-                working[4],
-                working[5],
-                working[6],
-            ];
-        }
-        for (slot, value) in state.iter_mut().zip(working.iter()) {
-            *slot = slot.wrapping_add(*value);
-        }
-    }
-    state.iter().map(|word| format!("{word:08x}")).collect()
 }
 
 /// The `sha256:` digest of a file, the form the registry's owner records use.
@@ -2265,8 +2233,8 @@ fn run_verify(cli: &Cli, root: &Path) -> Result<()> {
                     continue;
                 }
             };
-            let source = source_for(&path, entry, class, true);
-            let document = extract::document(&section, &source);
+            let source = source_for(&path, entry, class);
+            let document = extract::document(&section, &source, &data);
             match pack::rebuild(&section, &document) {
                 Ok(rebuilt) if rebuilt == payload => counts.1 += 1,
                 Ok(rebuilt) => failures.push(format!(
@@ -2450,9 +2418,8 @@ fn run_probe(cli: &Cli, archive: &Path, round_trip: bool) -> Result<()> {
                 if round_trip {
                     // The class is irrelevant to rebuilding; a stand-in keeps this a probe of
                     // structure rather than of any class claim.
-                    let source =
-                        source_for(archive, entry, class.unwrap_or(TextClass::Heuristic), true);
-                    let document = extract::document(&section, &source);
+                    let source = source_for(archive, entry, class.unwrap_or(TextClass::Heuristic));
+                    let document = extract::document(&section, &source, &data);
                     match pack::rebuild(&section, &document) {
                         Ok(rebuilt) if rebuilt == payload => {
                             reproduced += 1;
@@ -3153,6 +3120,15 @@ fn run_index(
     Ok(())
 }
 
+fn executable_selection(entry: &str, class: Option<&str>, latch: Option<&str>) -> Result<()> {
+    if entry != "all" || class.is_some() || latch.is_some() {
+        return invalid(
+            "executable ASCII uses all supported allocations; EMI entry, class and latch selectors do not apply",
+        );
+    }
+    Ok(())
+}
+
 fn run_extract(
     cli: &Cli,
     archive: &Path,
@@ -3162,6 +3138,30 @@ fn run_extract(
     latch: Option<&str>,
 ) -> Result<()> {
     let data = read(archive, "archive")?;
+    if crate::records::supports(&data) {
+        if !matches!(entry_spec, "all" | "0") || class_filter.is_some() || latch.is_some() {
+            return invalid("record names use entry 0 and no class or latch selector");
+        }
+        let document = crate::records::extract(archive, &data)?;
+        write_output(output, &crate::records::render(&document)?, archive)?;
+        println!(
+            "extracted {} record names -> {}",
+            document.names.len(),
+            output.display()
+        );
+        return Ok(());
+    }
+    if crate::executable::is_executable(&data) {
+        executable_selection(entry_spec, class_filter, latch)?;
+        let document = crate::executable::extract(archive, &data)?;
+        write_output(output, &crate::executable::render(&document)?, archive)?;
+        println!(
+            "extracted {} executable ASCII allocations -> {}",
+            document.strings.len(),
+            output.display()
+        );
+        return Ok(());
+    }
     if let Some(spec) = latch {
         return extract_latch(cli, archive, output, &data, spec);
     }
@@ -3173,8 +3173,8 @@ fn run_extract(
     }
     for (entry, class, payload) in &selected {
         let section = extract::parse_section(payload)?;
-        let source = source_for(archive, *entry, *class, multiple);
-        let document = extract::document(&section, &source);
+        let source = source_for(archive, *entry, *class);
+        let document = extract::document(&section, &source, &data);
         let destination = if multiple {
             output.join(format!("{}.json", entry.index))
         } else {
@@ -3205,6 +3205,25 @@ fn run_extract(
 }
 
 fn run_validate(cli: &Cli, path: &Path, commands: bool) -> Result<()> {
+    let bytes = read(path, "document")?;
+    let value: serde_json::Value =
+        serde_json::from_slice(&bytes).map_err(|error| Error::Invalid(error.to_string()))?;
+    if value["schema"] == crate::records::SCHEMA {
+        let document = crate::records::parse(&bytes)?;
+        println!(
+            "{}",
+            serde_json::json!({"document": path, "schema": value["schema"], "names": document.names.len(), "commands": []})
+        );
+        return Ok(());
+    }
+    if value["schema"] == "bof3.executable-text/v1" {
+        let document = crate::executable::parse(&bytes)?;
+        println!(
+            "{}",
+            serde_json::json!({"document": path, "schema": value["schema"], "strings": document.strings.len(), "commands": []})
+        );
+        return Ok(());
+    }
     let document = read_json_document(path)?;
     info!(
         "{}: {} bank(s), {} rows, {} non-empty",
@@ -3285,7 +3304,7 @@ fn run_query(
     let mut report = Vec::new();
     for (entry, class, payload) in &selected {
         let section = extract::parse_section(payload)?;
-        let source = source_for(archive, *entry, *class, selected.len() > 1).to_string();
+        let source = source_for(archive, *entry, *class).to_string();
         if commands {
             let usage: Vec<serde_json::Value> = query::command_usage(&section)
                 .iter()
@@ -3370,6 +3389,30 @@ fn run_pack(
         return invalid("pack refuses to overwrite the original archive");
     }
     let data = read(original, "archive")?;
+    if crate::records::supports(&data) {
+        if !matches!(entry_spec, "all" | "0") || class_filter.is_some() || latch.is_some() {
+            return invalid("record names use entry 0 and no class or latch selector");
+        }
+        let document = crate::records::parse(&read(text_path, "document")?)?;
+        let packed = crate::records::rebuild(original, &data, &document)?;
+        write_output(output, &packed, original)?;
+        println!(
+            "{}",
+            serde_json::json!({"output": output, "bytes": packed.len(), "names": document.names.len()})
+        );
+        return Ok(());
+    }
+    if crate::executable::is_executable(&data) {
+        executable_selection(entry_spec, class_filter, latch)?;
+        let document = crate::executable::parse(&read(text_path, "document")?)?;
+        let packed = crate::executable::rebuild(original, &data, &document)?;
+        write_output(output, &packed, original)?;
+        println!(
+            "{}",
+            serde_json::json!({"output": output, "bytes": packed.len(), "strings": document.strings.len()})
+        );
+        return Ok(());
+    }
     if latch.is_some() || text_path.is_file() {
         let document = read_json_document(text_path)?;
         if document.latch.is_some() || latch.is_some() {
@@ -3388,22 +3431,11 @@ fn run_pack(
             text_path.to_path_buf()
         };
         let document = read_json_document(&document_path)?;
-        let expected = source_for(original, *entry, *class, multiple);
-        if document.source.address != expected.address || document.source.class != expected.class {
-            return invalid(format!(
-                "document {} came from {} but is being packed as {}",
-                document_path.display(),
-                document.source,
-                expected
-            ));
-        }
-        if let Some(stated) = &document.fingerprint {
-            let actual = extract::fingerprint(&section);
-            if *stated != actual {
-                return invalid(format!(
-                    "document fingerprint {stated} does not match this block's {actual}; re-extract before editing"
-                ));
-            }
+        bind_document(&document, original, &data, *entry, *class)?;
+        if document.fingerprint != extract::fingerprint(&section) {
+            return invalid(
+                "document fingerprint does not match this block; re-extract before editing",
+            );
         }
         let rebuilt = pack::rebuild(&section, &document)?;
         packed = pack::replace_payload(&packed, *entry, &rebuilt)?;
@@ -3433,6 +3465,32 @@ fn run_pack(
             areas.join(", "),
             output.display(),
             packed.len()
+        );
+    }
+    Ok(())
+}
+
+/// Require both original archive identity and an exact source entry before packing.
+fn bind_document(
+    document: &Document,
+    original: &Path,
+    data: &[u8],
+    entry: crate::models::Entry,
+    class: TextClass,
+) -> Result<()> {
+    let source_path = Path::new(&document.source.archive);
+    if fs::canonicalize(source_path).ok() != Some(fs::canonicalize(original)?)
+        || document.source.entry != Some(entry.index)
+        || document.source.address != entry.ram_ptr
+        || document.source.class != class
+    {
+        return invalid(
+            "document source does not match the original archive and entry; re-extract before editing",
+        );
+    }
+    if document.source_sha256 != sha256_hex(data) {
+        return invalid(
+            "source_sha256 does not match the entire original archive; re-extract before editing",
         );
     }
     Ok(())

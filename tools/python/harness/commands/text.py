@@ -86,6 +86,9 @@ def _binary(layout) -> str | None:
 #: One canonical invocation per forwarded action, owned by the shared
 #: ``--example`` mechanism rather than repeated in prose.
 EXAMPLES = {
+    "coverage": "bin/harness text coverage --root out/extracted --strict",
+    "extract-corpus": "bin/harness text extract-corpus --root out/extracted -o out/text-export",
+    "analyze": "bin/harness text analyze out/extracted/BIN/WORLD00/AREA000.EMI",
     "prepare": "bin/harness text prepare --root out/extracted/BIN",
     "payloads": "--root out/extracted/BIN",
     "vocabulary": "--out out/text-vocabulary/vocabulary.json",

@@ -425,8 +425,26 @@ DOMAINS: Mapping[str, Domain] = {
         },
     ),
     "text": Domain(
-        "text blocks, corpus index and raw-text instances: index, scan, extract, validate, query, pack, probe, map, build-index, search, verify",
+        "text extraction, analysis, safe edits, corpus search and source coverage",
         actions={
+            "coverage": Action(
+                "account for complete extracted inputs and unresolved text coverage",
+                "harness.commands.text",
+                kind="passthrough",
+                example="bin/harness text coverage --root out/extracted --strict",
+            ),
+            "extract-corpus": Action(
+                "export supported text layouts into a new destination tree",
+                "harness.commands.text",
+                kind="passthrough",
+                example="bin/harness text extract-corpus --root out/extracted -o out/text-export",
+            ),
+            "analyze": Action(
+                "describe original text allocations, commands and shared references",
+                "harness.commands.text",
+                kind="passthrough",
+                example="bin/harness text analyze out/extracted/BIN/WORLD00/AREA000.EMI",
+            ),
             "prepare": Action(
                 "prepare corpus search artifacts from extracted US archives",
                 "harness.commands.text",

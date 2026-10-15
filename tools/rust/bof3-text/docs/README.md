@@ -7,6 +7,12 @@ Owner-local documentation for the BOF3 text tool
 It indexes, scans, extracts, validates, queries, searches and repacks the text subfiles of a
 BOF3 EMI archive as editable JSON text objects, each carrying the `source` and text class it
 came from, and it builds a retained corpus index so a search covers every archive at once.
+The [bof3-text skill](../../../../.agents/skills/bof3-text/SKILL.md) owns agent
+workflows for corpus coverage, analysis, safe modification and tool refinement.
+Use `coverage` for full extracted-tree accounting, `extract-corpus` for verified
+bank, supported record name and executable ASCII exports, and `analyze` for original
+allocations, references and command operands.
+
 Three classes are modelled: `dialogue` and `battle` are located structurally, and `heuristic`
 marks a raw-text instance found by scanning — a lead, not verified text. Original archives are
 never modified.
@@ -103,7 +109,8 @@ bin/harness text pack --original out/extracted/BIN/WORLD00/AREA000.EMI \
 - **No class is promoted on vocabulary or frequency.** `probe` parses every subfile
   independently of class, and it refutes every non-verified candidate: 0 of 6,100 subfiles
   outside `dialogue`/`battle` parse as a text-bank section, versus 200/200 and 44/44 for those
-  two. Those ranges are graphics, palette, encounter and audio containers.
+  two. This rejects that bank shape; executable strings and other raw layouts still
+  require consumer investigation.
 - Outputs are create-new: an existing destination is refused, and the source archive can never
   be reached through a different spelling, symlink or hard link. The destination's directory is
   created when missing.
