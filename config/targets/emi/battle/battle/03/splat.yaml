@@ -657,7 +657,7 @@ segments:
     - c
     - func_801E1A14
     - '@source: src/bof3/battle/func_801E1A14_battle03.c'
-    - '@behavior: While the current local work byte +0x119 is 4, folds its +0x8a halfword down by the global 0x801463c8 byte, raises global 0x801462e8 bit 0x800 and clears that mode byte; then, when the current kind selected by global halfword 0x801463c0 carries the 0x800 mask, advances scratch work byte +0x02, otherwise runs the second local readiness helper and stores 4 into that byte.'
+    - '@behavior: When the current local work byte +0x119 is 4, the function subtracts the global 0x801463c8 byte from its +0x8a halfword. It then raises global 0x801462e8 bit 0x800 and clears work byte +0x119 on both paths. When the current kind selected by global halfword 0x801463c0 carries the 0x800 mask, it advances scratch work byte +0x02; otherwise it runs the second local readiness helper and stores 4 into that byte.'
   - - 69340
     - c
     - stubHandler1Adc
