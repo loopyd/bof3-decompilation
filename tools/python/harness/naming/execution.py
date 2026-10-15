@@ -381,7 +381,14 @@ def run_evidence(
                     instructions=captures,
                 )
                 receipts = _receipts_for(
-                    namespace, target, row, operations, semantic, captures
+                    namespace,
+                    target,
+                    row,
+                    operations,
+                    semantic,
+                    captures,
+                    derived=derived,
+                    registry=registry,
                 )
                 checkpoint[key] = _commit_row(
                     namespace,

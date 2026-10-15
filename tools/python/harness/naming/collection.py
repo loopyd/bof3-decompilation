@@ -11,6 +11,7 @@ from typing import Any
 
 from harness.domain.receipts import command_records, write_receipt
 from harness.naming.evidence import SCHEMA as ANALYZER_VERSION
+from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
 from harness.naming.journal import commit_entry
 from harness.naming.native import OUTPUT_BUDGET, SemanticResult
 from harness.naming.plan import row_operation_sequence
@@ -64,12 +65,24 @@ class EvidenceNamespace:
     ) -> dict[str, Any]:
         """Write one receipt using this namespace's canonical path spelling."""
 
-        return write_receipt(
+        record = write_receipt(
             self.root,
             self.receipt(row, name),
             command,
             evidence_root=self.path if self.explicit else None,
         )
+        if "schema" in command:
+            if command["schema"] != "bof3.naming-evidence-facts/v1":
+                raise ValueError("unsupported typed naming receipt schema")
+            path = self.resolve_record(record["receipt"])
+            payload = json.loads(path.read_text())
+            payload.update(
+                {key: command[key] for key in ("schema", "facts", "observations")}
+            )
+            text = _json_lines(payload)
+            path.write_text(text, encoding="utf-8")
+            record["sha256"] = hashlib.sha256(text.encode()).hexdigest()
+        return record
 
     def artifact(self, row: dict[str, Any], name: str) -> Path:
         """Return one artifact path inside this namespace."""
@@ -368,6 +381,9 @@ def _receipts_for(
     operations: list[tuple[dict[str, Any], str, str, list[dict[str, Any]], bool]],
     semantic: list[dict[str, Any]],
     captures: tuple[dict, ...] = (),
+    *,
+    derived: dict,
+    registry=PRODUCTION_EXACT_CAPABILITIES,
 ) -> list[dict[str, Any]]:
     """Honest receipts for exactly the operations that were executed.
 
@@ -379,7 +395,14 @@ def _receipts_for(
 
     receipts: list[dict[str, Any]] = []
     for item, op, selector, payload, supplemental in operations:
-        if op not in {"calls", "access", "owner", "describe", "xrefs"}:
+        if op not in {
+            "calls",
+            "access",
+            "owner",
+            "describe",
+            "xrefs",
+            "data_dispatch_consumer",
+        }:
             continue
         item_id = str(item.get("id")).replace(":", "_").replace("/", "_")
         command: dict[str, object] = {
@@ -393,6 +416,32 @@ def _receipts_for(
                 f"{len(payload)} rows captured for {item.get('id')}"
             ),
         }
+        if op == "data_dispatch_consumer":
+            from harness.naming.plan import indexed_operation_plan
+
+            command["command"] = next(
+                planned["command"]
+                for planned in indexed_operation_plan(row, target, registry=registry)
+                if planned["id"] == item["id"]
+            )
+            command["output"] = "Original table and consumer bytes captured."
+        if row.get("kind") == "data":
+            from harness.naming.evidence import _RUNNER_TOKEN, indexed_observations
+
+            command.update(
+                indexed_observations(
+                    _RUNNER_TOKEN,
+                    row,
+                    {
+                        "operation": op,
+                        "selector": selector,
+                        "payload": payload,
+                        "role": item.get("role"),
+                    },
+                    derived,
+                    registry=registry,
+                )
+            )
         record = namespace.write_receipt(row, f"{item_id}.json", command)
         record["item"] = str(item.get("id"))
         record["operation"] = op
@@ -405,26 +454,21 @@ def _receipts_for(
         command_digest = hashlib.sha256(
             str(result.get("command")).encode()
         ).hexdigest()[:12]
-        record = namespace.write_receipt(
-            row,
-            f"semantic-{index}-{command_digest}.json",
-            {
-                "command": str(result.get("command")),
-                "status": "passed" if result.get("semantic_success") else "failed",
-                "target": (
-                    str(result["selector"]).split("@", 1)[0]
-                    if result.get("instruction_id")
-                    else target
-                ),
-                "selector": str(result.get("selector")),
-                "output": (
-                    str(result["raw"])
-                    if result.get("instruction_id")
-                    else _bounded_text(str(result.get("output")))
-                ),
-            },
-        )
-        record["operation"] = "semantic"
+        command = {
+            "command": str(result.get("command")),
+            "status": "passed" if result.get("semantic_success") else "failed",
+            "target": (
+                str(result["selector"]).split("@", 1)[0]
+                if result.get("instruction_id")
+                else target
+            ),
+            "selector": str(result.get("selector")),
+            "output": (
+                str(result["raw"])
+                if result.get("instruction_id")
+                else _bounded_text(str(result.get("output")))
+            ),
+        }
         capture = next(
             (item for item in captures if item["selector"] == result.get("selector")),
             None,
@@ -435,13 +479,13 @@ def _receipts_for(
                 instruction_observations,
             )
 
-            observations = instruction_observations(_RUNNER_TOKEN, target, row, capture)
-            path = namespace.resolve_record(record["receipt"])
-            receipt = json.loads(path.read_text())
-            receipt.update(observations)
-            text = _json_lines(receipt)
-            path.write_text(text, encoding="utf-8")
-            record["sha256"] = hashlib.sha256(text.encode()).hexdigest()
+            command.update(
+                instruction_observations(_RUNNER_TOKEN, target, row, capture)
+            )
+        record = namespace.write_receipt(
+            row, f"semantic-{index}-{command_digest}.json", command
+        )
+        record["operation"] = "semantic"
         receipts.append(record)
     if not receipts:
         receipts.append(

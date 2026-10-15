@@ -94,6 +94,11 @@ One receipt cannot close two rungs. Complete positive rung profiles can produce
 generic conclusion capabilities. Import and terminal validation require current
 generated-work replay, exact typed observations, distinct rung receipts and
 independently bound corroborators. Capabilities grant no semantic or identity approval.
+Data collection records every indexed operation in a typed receipt, including
+original-byte table consumers. Replay checks the complete current operation set,
+receipt bindings and exact fact projections, and rereads the original consumer
+bytes. Range and storage remain on one describe receipt; they supply no independent
+pair of rung sources. Exact data capabilities remain exhausted-only.
 `naming.readiness` adds target-local unresolved `static_jal` edges to generated
 caller work, including selected addresses outside the payload. It deduplicates
 callers while preserving owner candidates and the three-query bulk snapshot.

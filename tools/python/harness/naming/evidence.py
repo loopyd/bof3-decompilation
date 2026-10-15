@@ -115,15 +115,174 @@ def recompute_collected_records(
     )
     from harness.naming.plan import collection_row
 
-    return _analyze_validated_records(
+    planned_row = collection_row(row, target, root=root, registry=registry)
+    derived = _analyze_validated_records(
         token,
         target=target,
         report_digest=report_digest,
-        row=collection_row(row, target, root=root, registry=registry),
+        row=planned_row,
         operations=operations,
         registry=registry,
         instructions=analyzer_instructions(root, payload["semantic"]),
     )
+    if row.get("kind") == "data":
+        _validate_indexed_receipts(
+            root, planned_row, payload, operations, derived, registry=registry
+        )
+    return derived
+
+
+def indexed_observations(
+    token: object,
+    row: dict,
+    operation: dict,
+    derived: dict,
+    *,
+    registry: ExactCapabilityRegistry = PRODUCTION_EXACT_CAPABILITIES,
+) -> dict:
+    """Project facts onto the indexed operation that actually produced them."""
+    if token is not _RUNNER_TOKEN:
+        raise ValueError("indexed observations require the native runner")
+    target, input_digest = derived["target"], derived["input_digest"]
+    candidates = []
+    kind, role = operation["operation"], operation.get("role")
+    if kind == "describe" and role == "selected_data_describe":
+        start, end, storage = _describe(
+            operation, target, expected_name=row["name"], expected_kind="data"
+        )
+        value = {
+            "address": f"0x{address_of(row['name']):08X}",
+            "boundary": {"start": f"0x{start:08X}", "end": f"0x{end:08X}"},
+        }
+        for fact_class, family, fact_value in (
+            ("selected_range", "reviewed-layout", value),
+            ("storage_class", "original-image", storage),
+        ):
+            if fact_value is not None:
+                candidates.append(
+                    {
+                        "class": fact_class,
+                        "polarity": "positive",
+                        "value": fact_value,
+                        "source_id": _source(family, target, fact_value, input_digest),
+                    }
+                )
+    elif kind == "access" and role is None:
+        sites = {access["source"] for access in operation["payload"]}
+        candidates = [
+            fact
+            for fact in derived["facts"]
+            if fact["class"] == "selected_access"
+            and fact["value"].get("function") == operation["selector"]
+            and int(fact["value"]["site"], 16) in sites
+        ]
+    elif kind == "data_dispatch_consumer" and role == kind:
+        entry = registry.get((f"data:{row['name']}", operation["selector"].lower()))
+        if entry is not None:
+            try:
+                candidates = decode_table_consumer(
+                    operation, entry.consumer, input_digest
+                )
+            except ValueError:
+                pass
+    trusted = {_digest(fact) for fact in derived["facts"]}
+    facts = [
+        {key: fact[key] for key in ("class", "polarity", "value")}
+        for fact in candidates
+        if _digest(fact) in trusted
+    ]
+    return {
+        "schema": "bof3.naming-evidence-facts/v1",
+        "facts": sorted({fact["class"] for fact in facts}),
+        "observations": facts,
+    }
+
+
+def _validate_indexed_receipts(root, row, payload, operations, derived, *, registry):
+    """Require the complete current receipt set and its recomputed projections."""
+    from harness.naming.plan import indexed_operation_plan
+
+    planned = indexed_operation_plan(row, derived["target"], registry=registry)
+    if len(planned) != len(operations) or any(
+        expected["id"] != actual["item"]["id"]
+        or any(
+            expected.get(key) != actual.get(key)
+            for key in ("operation", "selector", "role", "supplemental")
+        )
+        for expected, actual in zip(planned, operations, strict=True)
+    ):
+        raise ValueError("indexed data operations differ from the current plan")
+    commands = [
+        record
+        for record in payload["commands"]
+        if record.get("operation") != "semantic"
+    ]
+    if len(commands) != len(operations):
+        raise ValueError(
+            "data receipts do not cover every executed operation exactly once"
+        )
+    for operation, expected_operation in zip(operations, planned, strict=True):
+        matches = [
+            record
+            for record in commands
+            if record.get("item") == operation["item"]["id"]
+        ]
+        if len(matches) != 1:
+            raise ValueError("data receipt operation is missing or duplicated")
+        command = matches[0]
+        if any(
+            command.get(key) != operation.get(key)
+            for key in ("operation", "selector", "role", "supplemental")
+        ):
+            raise ValueError("typed indexed receipt operation differs from its capture")
+        if (
+            command.get("command") != expected_operation["command"]
+            or command.get("status") != "passed"
+            or command.get("target") != derived["target"]
+        ):
+            raise ValueError(
+                "typed indexed command differs from its executed operation"
+            )
+        if operation["operation"] == "data_dispatch_consumer":
+            _validate_consumer_bytes(root, derived["target"], operation["payload"])
+        receipt = json.loads((root / command["receipt"]).read_bytes())
+        expected = indexed_observations(
+            _RUNNER_TOKEN, row, operation, derived, registry=registry
+        )
+        if any(
+            _digest(receipt.get(key)) != _digest(value)
+            for key, value in expected.items()
+        ) or any(
+            receipt.get(key) != command.get(key)
+            for key in ("command", "status", "target", "selector", "output")
+        ):
+            raise ValueError(
+                "typed indexed receipt observations differ from replayed facts"
+            )
+
+
+def _validate_consumer_bytes(root: Path, target: str, payload: dict) -> None:
+    """Re-read the actual original image, not its recorded hash or copied bytes."""
+    from harness.analysis.project import prepare_target
+
+    spec = prepare_target(root, target)
+    image = spec.binary.read_bytes()
+    if hashlib.sha256(image).hexdigest() != payload["image_sha256"]:
+        raise ValueError("data consumer original image is stale")
+    for kind in ("selected", "consumer"):
+        start, end = payload[f"{kind}_range"]
+        offset = spec.binary_offset + start - spec.load_address
+        if (
+            type(start) is not int
+            or type(end) is not int
+            or start >= end
+            or offset < spec.binary_offset
+            or offset + end - start > len(image)
+            or image[offset : offset + end - start].hex() != payload[f"{kind}_bytes"]
+        ):
+            raise ValueError(
+                "data consumer capture differs from current original bytes"
+            )
 
 
 def _analyze_validated_records(

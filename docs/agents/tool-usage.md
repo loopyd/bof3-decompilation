@@ -242,6 +242,10 @@ but they are writable local artifacts and cannot authenticate semantic facts.
 Generic function/data capabilities require complete positive kind/locality profiles.
 Open or unavailable evidence blocks import. The registry-backed exact-data route
 remains exhausted-only. The envelope stores the completed row under `conclusion`.
+Data replay requires current typed receipts for every indexed operation, including
+original-byte table consumers. Missing, duplicate, untyped or stale receipts require
+recapture with retained history. Range and storage share one describe receipt and
+cannot independently close two rungs.
 Replace the empty `conclusion_capability` placeholder below with the complete
 runner-derived capability object:
 

@@ -1509,7 +1509,12 @@ def test_semantic_receipts_are_unique_and_validated(tmp_path: Path) -> None:
     from harness.naming.collection import evidence_namespace
 
     records = _receipts_for(
-        evidence_namespace(tmp_path, report, TARGET), TARGET, row, [], semantic
+        evidence_namespace(tmp_path, report, TARGET),
+        TARGET,
+        row,
+        [],
+        semantic,
+        derived={"facts": []},
     )
     assert len({record["receipt"] for record in records}) == 2
     assert command_records(records, "commands", tmp_path) == records

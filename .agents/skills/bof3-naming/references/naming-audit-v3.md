@@ -150,6 +150,13 @@ their observations to distinct receipt sources and mechanisms. Capability admiss
 grants no semantic approval. `owner_body` retains its separate wrapper and
 global-pointer zero-byte-store shapes.
 
+Data collection requires one current typed receipt per indexed operation,
+including original-byte table consumers. Replay checks the generated plan,
+operation identities and exact fact projections, and rereads consumer bytes from
+the current original image. Untyped or incomplete captures require recapture;
+retain historical evidence. Range and storage share their actual describe receipt
+and cannot close two rungs independently. Exact data capabilities remain exhausted-only.
+
 Imported function discovery includes target-local unresolved `static_jal` index
 edges as deduplicated caller work, preserving every owner candidate. The destination
 address supplies a lookup key, not a callee identity or runtime-owner proof.
