@@ -11,6 +11,7 @@ import re
 from harness.common.artifacts import read_bytes
 from harness.reconstruction import (
     callcontracts,
+    copies,
     objectfile,
     proofvalues,
     provenance,
@@ -635,6 +636,7 @@ def validate_native_bindings(
     overlays = type(request) is dict and request.get("schema") in {
         "retdec118.native-request/v5",
         "retdec118.native-request/v6",
+        "retdec118.native-request/v7",
     }
     forms = type(request) is dict and (
         request.get("schema") == "retdec118.native-request/v4"
@@ -647,9 +649,17 @@ def validate_native_bindings(
         fields.add("source_form")
     if request.get("schema") == "retdec118.native-request/v6":
         fields.add("entry_observation")
+    if request.get("schema") == "retdec118.native-request/v7":
+        fields.add("copied_original")
+        _require(not forms, "copied original context acquired a source form")
+        copies.validate_descriptor(request["copied_original"])
     if overlays:
         fields.add("overlay_mounts")
-        mounts = _rows(request["overlay_mounts"], 128, "declared overlay mounts")
+        mounts = _rows(
+            request["overlay_mounts"],
+            127 if request["schema"] == "retdec118.native-request/v7" else 128,
+            "declared overlay mounts",
+        )
         _require(
             mounts
             and all(type(image) is str and image in images for image in mounts)
@@ -664,6 +674,7 @@ def validate_native_bindings(
             "retdec118.native-request/v4",
             "retdec118.native-request/v5",
             "retdec118.native-request/v6",
+            "retdec118.native-request/v7",
         }
         and request["operation"] == "generate",
         "binding request version/operation",
@@ -990,12 +1001,23 @@ def _overlay_owner(context, address, count):
     return None
 
 
-def validate_overlay_context(configuration, request, contexts):
+def validate_overlay_context(
+    configuration, request, contexts, *, copied_original=None, copied_payload=None
+):
     _require(contexts is not None, "overlay context lacks permitted original images")
     catalog = verify_native_contexts(contexts)
+    copied = request.get("schema") == "retdec118.native-request/v7"
+    _require(
+        copied == (copied_original is not None)
+        and copied == (copied_payload is not None),
+        "native copied context lacks validated original capture",
+    )
+    context_fields = {"schema", "identity_sha256", "mounts", "visible_intervals"}
+    if copied:
+        context_fields.add("instruction_scope_sha256")
     context = _keys(
         configuration["decompParams"].get("psxMemoryContext"),
-        {"schema", "identity_sha256", "mounts", "visible_intervals"},
+        context_fields,
         "native overlay context",
     )
     _require(
@@ -1012,8 +1034,21 @@ def validate_overlay_context(configuration, request, contexts):
         "native overlay context digest differs",
     )
     mounts = _rows(context["mounts"], 128, "native overlay mounts")
+    copy_hash = (
+        hashlib.sha256(copies.descriptor_bytes(copied_original)).hexdigest()
+        if copied
+        else None
+    )
+    copy_id = f"observed-copy:{copy_hash}" if copied else None
+    if copied:
+        _require(
+            copied_original == request["copied_original"]
+            and context["instruction_scope_sha256"] == copy_hash,
+            "native instruction scope differs from validated copy",
+        )
     _require(
-        [mount["image_id"] for mount in mounts] == request["overlay_mounts"],
+        [mount["image_id"] for mount in mounts]
+        == [*request["overlay_mounts"], *([copy_id] if copied else [])],
         "native overlay mount order differs from request",
     )
     metadata = {image["image_id"]: image for image in catalog["images"]}
@@ -1028,6 +1063,42 @@ def validate_overlay_context(configuration, request, contexts):
             ),
             "native overlay image",
         )
+        if copied and mount["image_id"] == copy_id:
+            bios = copied_original["files"]["bios.bin"]
+            expected = {
+                "image_id": copy_id,
+                "target": "bios/" + bios["sha256"],
+                "file_path": str(
+                    contexts.input_directory.absolute().parent / bios["path"]
+                ),
+                "file_sha256": bios["sha256"],
+                "file_bytes": bios["bytes"],
+                "payload_offset": copied_original["source_offset"],
+                "payload_sha256": copied_original["sha256"],
+                "payload_bytes": copied_original["bytes"],
+                "load_address": copied_original["destination"],
+                "mapping_kind": "observed-original-copy/v1",
+                "mapping_path": str(
+                    contexts.input_directory.absolute() / "copy-descriptor.json"
+                ),
+                "mapping_sha256": copy_hash,
+            }
+            _require(
+                mount == expected,
+                "native copied mount differs from validated descriptor",
+            )
+            _require(
+                type(copied_payload) is bytes
+                and len(copied_payload) == copied_original["bytes"]
+                and hashlib.sha256(copied_payload).hexdigest()
+                == copied_original["sha256"],
+                "native copied original slice differs",
+            )
+            payloads[copy_id] = copied_payload, copied_original["destination"]
+            boundaries.update(
+                (mount["load_address"], mount["load_address"] + len(copied_payload))
+            )
+            continue
         row = metadata[mount["image_id"]]
         _require(
             all(
@@ -1089,6 +1160,27 @@ def validate_overlay_context(configuration, request, contexts):
         )
         payloads[mount["image_id"]] = payload, row["load_address"]
         boundaries.update((base, base + len(payload)))
+    if copied:
+        copy_start = copied_original["destination"]
+        copy_end = copy_start + copied_original["bytes"]
+        ranges = [
+            (mount["load_address"], mount["payload_bytes"]) for mount in mounts[:-1]
+        ] + [
+            (member["start"], member["end"] - member["start"])
+            for member in [request["member"], *request["callees"]]
+        ]
+        for address, count in ranges:
+            if (
+                not 0 <= address <= 0xFFFFFFFF
+                or address & 0xE0000000 not in (0, 0x80000000, 0xA0000000)
+                or address & 0x1FFFFFFF >= 0x200000
+            ):
+                continue
+            base = (address & 0x1FFFFFFF) | 0x80000000
+            _require(
+                copy_end <= base or base + count <= copy_start,
+                "native copied window overlaps a catalog mount or reviewed function",
+            )
     visible = []
     ordered = sorted(boundaries)
     for start, end in zip(ordered, ordered[1:]):
@@ -1137,6 +1229,8 @@ def validate_contract_graph(
     bindings=None,
     contexts=None,
     entry_observation: bool | None = None,
+    copied_original=None,
+    copied_payload=None,
 ):
     _require(
         entry_observation is None
@@ -1149,6 +1243,7 @@ def validate_contract_graph(
                 "retdec118.native-request/v4",
                 "retdec118.native-request/v5",
                 "retdec118.native-request/v6",
+                "retdec118.native-request/v7",
             }
             and entry_observation == ("entry_observation" in wanted)
             and entry_observation == (wanted["schema"] == "retdec118.native-request/v6")
@@ -1194,9 +1289,14 @@ def validate_contract_graph(
     if wanted.get("schema") in {
         "retdec118.native-request/v5",
         "retdec118.native-request/v6",
+        "retdec118.native-request/v7",
     }:
         context, active_images = validate_overlay_context(
-            configuration, wanted, contexts
+            configuration,
+            wanted,
+            contexts,
+            copied_original=copied_original,
+            copied_payload=copied_payload,
         )
     else:
         _require(
@@ -1207,6 +1307,77 @@ def validate_contract_graph(
             ),
             "legacy original-only request acquired an undeclared overlay context",
         )
+    if copied_original is not None:
+        for function in configuration.get("functions", []):
+            native = function.get("returnDisposition", {})
+            evidence = native.get("evidence")
+            _require(type(evidence) is dict, "copied context function lacks evidence")
+            start = evidence.get("start")
+            if native.get("rule") == "mips-all-normal-exits/v1":
+                _keys(
+                    function,
+                    {
+                        "name",
+                        "callingConvention",
+                        "fncType",
+                        "startAddr",
+                        "endAddr",
+                        "returnDisposition",
+                    },
+                    "unavailable native symbol",
+                )
+                _require(
+                    type(start) is int
+                    and 0 <= start < 1 << 32
+                    and evidence.get("end") == start + 1
+                    and proofvalues._address(function["startAddr"]) == start
+                    and proofvalues._address(function["endAddr"]) == start + 1
+                    and function["callingConvention"] == "unknown"
+                    and function["fncType"] == "decompilerDefined"
+                    and evidence.get("decodeComplete") is False
+                    and evidence.get("analysisComplete") is False
+                    and all(
+                        evidence.get(category) == []
+                        for category in (
+                            "instructions",
+                            "edges",
+                            "definitions",
+                            "exits",
+                            "calls",
+                            "obligations",
+                        )
+                    ),
+                    "unavailable native symbol acquired analysis facts",
+                )
+                callcontracts.validate_return(
+                    function,
+                    {"start": start, "end": start + 1, "selection": "diagnostic"},
+                )
+                continue
+            reasons = {
+                item.get("reason")
+                for item in _rows(
+                    evidence.get("obligations"), 4096, "copied context obligations"
+                )
+                if type(item) is dict
+                and item.get("pc") == start
+                and item.get("domain") == "architectural"
+            }
+            _require(
+                "observed-copy-context-is-not-universal" in reasons,
+                "copied context lost its universal acceptance obligation",
+            )
+            if start == copied_original["entry"]:
+                _require(
+                    "observed-copy-entry-does-not-prove-caller-edge" in reasons,
+                    "copied entry lost its caller edge obligation",
+                )
+            summary = function.get("originalCallSummary")
+            if summary is not None:
+                _require(
+                    not proofvalues._complete(summary["declaration"]),
+                    "copied context acquired an accepted declaration",
+                )
     for member in inventory:
         _validate_reviewed_member(member, scope["root"], payload, load)
         _require(
@@ -1216,6 +1387,7 @@ def validate_contract_graph(
         identities[member["key"]] = dict(member, root=member is scope["root"])
         entries[member["start"]] = member["key"]
     derived_count = derived_words = 0
+    copied_entry_found = copied_original is None
     if active_images is not None:
         owners = {image["image_id"]: image for image in context["mounts"]}
         for function in configuration.get("functions", []):
@@ -1236,6 +1408,13 @@ def validate_contract_graph(
                 "native discovered context identity",
             )
             start, end = node["start"], node["end"]
+            if copied_original is not None and start == copied_original["entry"]:
+                _require(
+                    node["imageId"]
+                    == f"observed-copy:{context['instruction_scope_sha256']}",
+                    "observed copied entry differs from its original owner",
+                )
+                copied_entry_found = True
             _require(
                 type(start) is int
                 and type(end) is int
@@ -1317,6 +1496,7 @@ def validate_contract_graph(
                 root=False,
             )
             entries[start] = node["key"]
+    _require(copied_entry_found, "observed copied entry discovery is missing")
     extents = sorted((item["start"], item["end"]) for item in identities.values())
     _require(
         all(first[1] <= second[0] for first, second in zip(extents, extents[1:])),

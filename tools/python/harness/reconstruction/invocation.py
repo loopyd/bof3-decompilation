@@ -33,6 +33,7 @@ from harness.reconstruction import (
     catalog,
     calltargets,
     contract,
+    copies,
     ledger,
     nativeoutput,
     prelude,
@@ -60,6 +61,7 @@ class OriginalInput:
     contexts: calltargets.NativeContexts
     overlay_mounts: tuple[str, ...] = ()
     entry_observation: EntryObservation | None = None
+    copied_original: copies.CopyObservation | None = None
 
 
 @dataclass(frozen=True)
@@ -317,6 +319,9 @@ def inspect_native(candidate, result, run, binding, prepared_run, reader):
             read_entry_observation(
                 run.get("entry_observation"), candidate / "input", reader=reader
             ),
+            copies.read_copy(
+                run.get("copied_original"), candidate / "input", reader=reader
+            ),
         )
         native = result["native"]
         if native.get("process_origin", "direct") == "direct":
@@ -388,6 +393,9 @@ def inspect_native(candidate, result, run, binding, prepared_run, reader):
             contexts=replace(contexts, input_directory=candidate / "input"),
             entry_captures=original_input.entry_observation.files
             if original_input.entry_observation
+            else None,
+            copied_captures=original_input.copied_original.files
+            if original_input.copied_original
             else None,
         )
         _require(
@@ -690,6 +698,17 @@ def _request(original, events, *, source_form=None):
                 schema="retdec118.native-request/v6",
                 entry_observation=original.entry_observation.descriptor,
             )
+        if original.copied_original is not None:
+            _require(
+                original.overlay_mounts
+                and original.entry_observation is None
+                and source_form is None,
+                "copied instructions need explicit mounts and a separate diagnostic context",
+            )
+            body.update(
+                schema="retdec118.native-request/v7",
+                copied_original=original.copied_original.descriptor,
+            )
     body["request_id"] = hashlib.sha256(
         encode_json(body, events=events, path="native")
     ).hexdigest()
@@ -730,6 +749,16 @@ def capture_native(
                         f"input/entry-{name}": raw
                         for name, raw in original.entry_observation.files.items()
                     }
+                )
+            if original.copied_original is not None:
+                files.update(
+                    {
+                        f"input/copy-{name}": raw
+                        for name, raw in original.copied_original.files.items()
+                    }
+                )
+                files["input/copy-descriptor.json"] = copies.descriptor_bytes(
+                    original.copied_original.descriptor
                 )
         expected = [
             {
@@ -908,13 +937,16 @@ def capture_native(
                 entry_captures=original.entry_observation.files
                 if original.entry_observation
                 else None,
+                copied_captures=original.copied_original.files
+                if original.copied_original
+                else None,
             )
             if status["status"] == "generation-failed":
                 if status["inferred_configuration_complete"]:
                     nativeoutput.validate_generation(**arguments, require_success=False)
             else:
                 unit = nativeoutput.decode_unit(**arguments)
-                copies = {
+                generated_files = {
                     "generated.c": unit.source,
                     "pcs.json": encode_json(
                         [asdict(span) for span in unit.spans],
@@ -928,10 +960,10 @@ def capture_native(
                         bytes=len(data),
                         sha256=hashlib.sha256(data).hexdigest(),
                     )
-                    for name, data in copies.items()
+                    for name, data in generated_files.items()
                 ]
                 expected.extend(result["expected_outputs"])
-                for name, data in copies.items():
+                for name, data in generated_files.items():
                     phase, path = "output-copy", workspace / name
                     write_bytes(path, data, events=events)
                 recipe.verify_inputs(result["expected_outputs"], events=events)

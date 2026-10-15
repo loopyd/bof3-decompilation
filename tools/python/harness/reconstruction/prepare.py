@@ -17,7 +17,7 @@ from harness.common.artifacts import (
 from harness.common.failures import FailureEvent, PolicyFailure, primary, retain
 from harness.common.digests import file_record
 from harness.io import file_sha256
-from harness.reconstruction import bundles, catalog, contract
+from harness.reconstruction import bundles, catalog, contract, copies
 from harness.toolchain.nativebuild import git_commit, read_native_build
 
 MODULE = "harness.reconstruction.prepare"
@@ -62,6 +62,12 @@ class PreparedInputs:
                     Path(record["entry_observation_inputs"]["directory"])
                     == run_directory / "entry-observation",
                     "entry observation belongs to another run",
+                )
+            if "copied_original_inputs" in record:
+                _require(
+                    Path(record["copied_original_inputs"]["directory"])
+                    == run_directory / "copied-original",
+                    "copied instruction inputs belong to another run",
                 )
             return cls(MappingProxyType(record), run_directory)
         prepared = cls.open_owner(pointer, events=events)
@@ -327,6 +333,14 @@ class PreparedInputs:
                             self.tree(Path(entry["directory"])) == entry["files"],
                             "entry observation input drift",
                         )
+                    if "copied_original_inputs" in self._record:
+                        copied = self._record["copied_original_inputs"]
+                        directory = Path(copied["directory"])
+                        _require(
+                            self.tree(directory) == copied["files"],
+                            "copied instruction input drift",
+                        )
+                        copies.read_copy(self._record["copied_original"], directory)
                 elif phase == "forks":
                     for source in self._record["fork_commits"]:
                         try:
@@ -519,6 +533,12 @@ def inspect_shared_provenance(prepared_run, runs, reader):
                                     "entry_observation",
                                     "entry_observation_inputs",
                                 },
+                                fields
+                                | {
+                                    "overlay_mounts",
+                                    "copied_original",
+                                    "copied_original_inputs",
+                                },
                                 fields | {"source_form", "prepared_inputs", "campaign"},
                             )
                         ),
@@ -528,7 +548,9 @@ def inspect_shared_provenance(prepared_run, runs, reader):
                         mounts = record["overlay_mounts"]
                         _require(
                             type(mounts) is list
-                            and 1 <= len(mounts) <= 128
+                            and 1
+                            <= len(mounts)
+                            <= (127 if "copied_original" in record else 128)
                             and all(type(image) is str and image for image in mounts)
                             and len(set(mounts)) == len(mounts)
                             and set(mounts)
@@ -558,6 +580,35 @@ def inspect_shared_provenance(prepared_run, runs, reader):
                                 key=lambda row: row["path"],
                             ),
                             "entry observation staged inputs differ",
+                        )
+                    if "copied_original" in record:
+                        descriptor = copies.validate_descriptor(
+                            record["copied_original"]
+                        )
+                        staged = record["copied_original_inputs"]
+                        _require(
+                            type(staged) is dict
+                            and set(staged) == {"directory", "files"}
+                            and staged["files"]
+                            == sorted(
+                                [
+                                    {**row, "path": Path(row["path"]).name}
+                                    for row in descriptor["files"].values()
+                                ],
+                                key=lambda row: row["path"],
+                            ),
+                            "copied instruction staged inputs differ",
+                        )
+                        _require(
+                            len(record["selected"]) == 1
+                            and descriptor["scope"]["caller_pc"]
+                            == binding.member(record["selected"][0]).start,
+                            "copied instruction caller differs from selected root",
+                        )
+                        copies.read_copy(
+                            descriptor,
+                            Path(staged["directory"]),
+                            reader=generation_reader,
                         )
                     _require(
                         record["problem"]

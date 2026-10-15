@@ -79,6 +79,22 @@ shared state and emulator identity, the selected PC, complete RAM and mounted
 original image owner. This supplies observed context, not a universal entry or
 declaration contract.
 
+To inspect original BIOS instructions observed after a RAM copy, pass
+`--copied-original-receipt PATH` and `--copied-original-offset OFFSET` to `run`.
+Supply one selected caller and explicit `--mount-image` inputs. The receipt must
+contain a passed original-only RAM history, committed writes, consumed words and
+entry markers. Its `observations.json` uses `bof3.original-handler-interval/v1`
+and records the caller entry, handler entry, final registers, controller input
+and audited exclusions. The importer checks these records against the original
+BIOS slice. This mode cannot combine entry-state context or source-form selection.
+
+The native workspace maps the BIOS slice into the observed RAM window and binds
+the capture to its memory-context identity. It analyzes the observed entry as a
+separate discovery lead without inventing a caller edge. Every function retains
+an unresolved architectural condition, and copied bytes supply no ordinary data
+facts. This diagnostic cannot produce an accepted declaration or generated C.
+The observation applies only to the captured interval and its recorded assumptions.
+
 ## Run a selected pair
 
 The retained prepared Problem includes the following two target-qualified member

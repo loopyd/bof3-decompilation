@@ -20,6 +20,7 @@ from harness.reconstruction import (
     catalog,
     calltargets,
     comparison,
+    copies,
     invocation,
     ledger,
     nativeoutput,
@@ -2363,6 +2364,12 @@ def _run_member(
                     "directory", workspace / "input"
                 ),
             ),
+            copies.read_copy(
+                run_record.get("copied_original"),
+                run_record.get("copied_original_inputs", {}).get(
+                    "directory", workspace / "input"
+                ),
+            ),
         )
         observed = invocation.capture_native(
             command,
@@ -2531,10 +2538,27 @@ def run(
     overlay_mounts: tuple[str, ...] = (),
     entry_receipt: Path | None = None,
     entry_cpu_receipt: Path | None = None,
+    copied_original_receipt: Path | None = None,
+    copied_original_offset: int | None = None,
     search_forms: bool = False,
     resume_from: Path | None = None,
     resume_sha256: str | None = None,
 ) -> dict:
+    _require(
+        (copied_original_receipt is None) == (copied_original_offset is None)
+        and (
+            copied_original_receipt is None
+            or (
+                entry_receipt is None
+                and not search_forms
+                and source_form is None
+                and not all_members
+                and len(member_keys) == 1
+                and overlay_mounts
+            )
+        ),
+        "copied instructions require receipt and source offset, one selected root, explicit mounts and a separate diagnostic context",
+    )
     _require(
         (entry_receipt is None) == (entry_cpu_receipt is None)
         and (
@@ -2550,7 +2574,7 @@ def run(
     )
     _require(
         type(overlay_mounts) is tuple
-        and len(overlay_mounts) <= 128
+        and len(overlay_mounts) <= (127 if copied_original_receipt is not None else 128)
         and all(type(image) is str and image for image in overlay_mounts)
         and len(set(overlay_mounts)) == len(overlay_mounts),
         "overlay mounts must be distinct original image IDs in order",
@@ -2696,6 +2720,24 @@ def run(
                 write_bytes(directory / f"entry-{name}", raw, events=run_events)
             run_record["entry_observation"] = observation.descriptor
             run_record["entry_observation_inputs"] = {
+                "directory": str(directory),
+                "files": PreparedInputs.tree(directory),
+            }
+        if copied_original_receipt is not None:
+            copied = copies.capture_copy(
+                copied_original_receipt, copied_original_offset
+            )
+            _require(
+                copied.descriptor["scope"]["caller_pc"]
+                == binding.member(member_keys[0]).start,
+                "copied instruction observation belongs to another selected caller",
+            )
+            directory = destination / "copied-original"
+            directory.mkdir()
+            for name, raw in copied.files.items():
+                write_bytes(directory / f"copy-{name}", raw, events=run_events)
+            run_record["copied_original"] = copied.descriptor
+            run_record["copied_original_inputs"] = {
                 "directory": str(directory),
                 "files": PreparedInputs.tree(directory),
             }

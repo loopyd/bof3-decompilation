@@ -11,7 +11,13 @@ from enum import Enum
 from typing import TYPE_CHECKING
 
 from harness.common.artifacts import encode_json
-from harness.reconstruction import callcontracts, calltargets, proofvalues, provenance
+from harness.reconstruction import (
+    callcontracts,
+    calltargets,
+    copies,
+    proofvalues,
+    provenance,
+)
 
 if TYPE_CHECKING:
     from harness.reconstruction.machinecode import LeafFacts
@@ -840,6 +846,7 @@ def validate_status(data: bytes, request: bytes, configuration: bytes) -> dict:
         "retdec118.native-request/v3",
         "retdec118.native-request/v5",
         "retdec118.native-request/v6",
+        "retdec118.native-request/v7",
     }
     fields = STATUS_KEYS | BINDING_STATUS_KEYS if catalogued else STATUS_KEYS
     if forms:
@@ -1056,6 +1063,7 @@ def validate_generation(
     bindings: dict | None = None,
     contexts: calltargets.NativeContexts | None = None,
     entry_captures: dict | None = None,
+    copied_captures: dict | None = None,
 ) -> tuple[dict, str, tuple | None]:
     """Validate identity-bound native configuration on success or retained failure."""
 
@@ -1072,9 +1080,10 @@ def validate_generation(
     wanted = parse_json(request, 64 << 10)
     _require(type(wanted) is dict, "native generation request object")
     scoped = wanted.get("schema") == "retdec118.native-request/v6"
-    overlays = scoped or wanted.get("schema") == "retdec118.native-request/v5"
+    copied = wanted.get("schema") == "retdec118.native-request/v7"
+    overlays = scoped or copied or wanted.get("schema") == "retdec118.native-request/v5"
     forms = wanted.get("schema") == "retdec118.native-request/v4" or (
-        overlays and "source_form" in wanted
+        overlays and not copied and "source_form" in wanted
     )
     catalogued = (
         overlays or forms or wanted.get("schema") == "retdec118.native-request/v3"
@@ -1111,6 +1120,25 @@ def validate_generation(
                 and hashlib.sha256(raw).hexdigest() == record["sha256"],
                 "native entry capture differs",
             )
+    copied_original = copied_payload = None
+    if copied:
+        _require(entry_captures is None, "copied context acquired entry captures")
+        request_fields.add("copied_original")
+        try:
+            copied_original = copies.validate_descriptor(wanted["copied_original"])
+            copied_payload = copies.validate_files(copied_original, copied_captures)
+        except (
+            copies.CopyRefused,
+            proofvalues.CallContractRefused,
+            KeyError,
+            TypeError,
+        ) as error:
+            raise NativeOutputRefused(str(error)) from error
+    else:
+        _require(
+            copied_captures is None,
+            "native request acquired undeclared copied captures",
+        )
     _keys(wanted, request_fields, "native generation request")
     _require(
         wanted["schema"]
@@ -1121,6 +1149,7 @@ def validate_generation(
             "retdec118.native-request/v4",
             "retdec118.native-request/v5",
             "retdec118.native-request/v6",
+            "retdec118.native-request/v7",
         }
         and wanted["config_sha256"] == CONFIG_SHA256
         and (type(wanted["request_id"]) is str)
@@ -1326,6 +1355,8 @@ def validate_generation(
                 bindings=bindings,
                 contexts=contexts,
                 entry_observation=scoped,
+                copied_original=copied_original,
+                copied_payload=copied_payload,
             )
         else:
             _require(
@@ -1348,6 +1379,10 @@ def validate_generation(
         )
         if forms:
             _validate_source_forms(parsed_config, require_success=require_success)
+        _require(
+            not copied or observed["status"] != "generation-complete",
+            "observed copied context cannot accept generated C",
+        )
         if observed["status"] == "generation-complete":
             if revised:
                 ordinary = (
@@ -1460,6 +1495,7 @@ def decode_unit(
     bindings: dict | None = None,
     contexts: calltargets.NativeContexts | None = None,
     entry_captures: dict | None = None,
+    copied_captures: dict | None = None,
 ) -> CapturedUnit:
     """Capture unedited native C and its contract or body-proposal evidence."""
     selected, symbol, graph = validate_generation(
@@ -1475,6 +1511,7 @@ def decode_unit(
         bindings=bindings,
         contexts=contexts,
         entry_captures=entry_captures,
+        copied_captures=copied_captures,
     )
     stream = _keys(
         parse_json(tokens, TOKEN_LIMIT), {"tokens", "language"}, "native token document"

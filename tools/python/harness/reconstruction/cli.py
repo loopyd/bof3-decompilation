@@ -112,6 +112,16 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help="passed native state query of that entry save state",
     )
+    command.add_argument(
+        "--copied-original-receipt",
+        type=Path,
+        help="passed original-only RAM history with an observed instruction window",
+    )
+    command.add_argument(
+        "--copied-original-offset",
+        type=lambda value: int(value, 0),
+        help="original BIOS file offset corresponding to the observed RAM window",
+    )
     forms = command.add_mutually_exclusive_group()
     forms.add_argument(
         "--source-form",
@@ -266,6 +276,8 @@ def run_native(args: argparse.Namespace) -> int:
         overlay_mounts=tuple(args.mount_image),
         entry_receipt=args.entry_receipt,
         entry_cpu_receipt=args.entry_cpu_receipt,
+        copied_original_receipt=args.copied_original_receipt,
+        copied_original_offset=args.copied_original_offset,
         resume_from=args.resume_from,
         resume_sha256=args.resume_sha256,
         attempt_ledger=args.attempt_ledger,
