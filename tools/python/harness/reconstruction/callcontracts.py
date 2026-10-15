@@ -6,7 +6,7 @@ from dataclasses import dataclass
 import re
 
 from harness.domain.mips import word_fields
-from harness.reconstruction import memorycontracts
+from harness.reconstruction import memorycontracts, pathcontracts
 from harness.reconstruction.proofvalues import (
     _complete,
     _integer,
@@ -82,8 +82,13 @@ def validate_return(
     reference_count = 0
     for category, fields in shapes.items():
         for item in _rows(evidence[category], 4096, "native " + category):
-            _keys(item, set(fields.split()), "native " + category)
+            expected_fields = set(fields.split())
+            if revised and category == "calls" and "entryPath" in item:
+                expected_fields.add("entryPath")
+            _keys(item, expected_fields, "native " + category)
             for key, value in item.items():
+                if revised and category == "calls" and key == "entryPath":
+                    continue
                 if revised and key in {
                     "origin",
                     "contract",
@@ -1492,6 +1497,14 @@ def validate_functions(
                 )
         for call in calls.values():
             _call_links(call, value, graph)
+            if "entryPath" in call:
+                pathcontracts.validate_entry_path(
+                    call,
+                    value,
+                    graph,
+                    context=context,
+                    entry_observation=entry_observation,
+                )
 
     pending = set(graph)
     while pending:
