@@ -157,13 +157,13 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v2`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v3`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 The original BATTLE archive also has supported literal message records in entry 3.
 Use `--entry 3` to extract them. Command-bearing and untraced records remain
 excluded. SISYOU entry 0 supports four master-menu stat labels and the status
-labels `Pois` and `Conf`; select it
+labels `Pois` and `Conf`, plus three ASCII numeric formats; select it
 with `--entry 0`. See [formats.md](formats.md#inline-overlay-text).
 
 ## `extract-corpus [--root DIR] -o|--output DIR`
@@ -235,9 +235,11 @@ Default character documents use `bof3.character-text/v1` and the same summary,
 with a five-byte field capacity.
 Monster documents use `bof3.monster-text/v1` and report `names`, with an eight-byte
 field capacity. All eight records and their allocation identities are required.
-Inline documents use `bof3.inline-text/v2`; validation checks all allocations,
-per-string renderers, literal encoding, references and capacity including NUL,
-and reports `strings`. Re-extract version 1 documents.
+Inline documents use `bof3.inline-text/v3`; validation checks all allocations,
+per-string renderers and codecs, references and capacity including NUL,
+and reports `strings`. Re-extract older inline documents.
+ASCII decimal formats must retain exactly one `%3d`, with no other percent
+sequences; only the surrounding printable ASCII may change within capacity.
 
 ## `query SOURCE [-e|--entry N] [--grep TEXT] [-i|--ignore-case] [--commands] [--class ...] [--windows PATH] [--no-windows]`
 

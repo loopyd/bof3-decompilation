@@ -129,14 +129,17 @@ five-entry pointer tables at `0x800B6E88` and `0x800B6EC4`. Draw calls at
 and NUL termination. The layout occurs in BATTLE entry 15 and matching payloads
 in other archives; use `analyze` to discover the actual entry.
 
-`bof3.inline-text/v2` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v3` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
-`renderer`, pointer-word `references` and editable `text`. Retain all fields and edit only
-`text`. Each allocation includes its original NUL, excludes alignment padding
+`renderer`, `codec`, pointer-word `references` and editable `text`. Retain all
+fields and edit only `text`. Each allocation includes its original NUL, excludes alignment padding
 and accepts at most `capacity - 1` encoded literal bytes. Shorter text is
-NUL-padded. Dialogue commands and pointer changes are refused.
-Re-extract version 1 documents before editing or packing.
+NUL-padded. `game-literal` rows use the game's literal character encoding.
+`ascii-decimal-format` rows use printable ASCII and must retain exactly one
+`%3d`; all other percent sequences are refused. Dialogue commands and pointer
+changes are refused.
+Re-extract older inline documents before editing or packing.
 
 Recognition pins the complete selected payload outside these allocations.
 Packing additionally binds the complete archive hash, canonical source path,
@@ -159,8 +162,8 @@ fields. Document `index` identifies the supported allocation, not its original
 table row. Command-bearing rows 1 and 3 and untraced rows 4 and 5 remain outside
 this layout's editable allocations.
 
-The `US master stat and status labels` layout supports `Pwr`, `Def`, `Int` and `Agl`
-in SISYOU entry 0, loaded at `0x801D0C00`. Their four-byte allocations start at
+The `US master labels and numeric formats` layout supports `Pwr`, `Def`, `Int`
+and `Agl` in SISYOU entry 0, loaded at `0x801D0C00`. Their four-byte allocations start at
 `0x801D4038`, `0x801D403C`, `0x801D4040` and `0x801D4044`. Each accepts up to
 three literal bytes followed by NUL. Calls at `0x801D1500`, `0x801D1574`,
 `0x801D15DC` and `0x801D1638` pass these strings directly to `0x8014F800`.
@@ -170,6 +173,14 @@ These five-byte allocations accept four literal bytes and NUL; the three
 alignment bytes after each remain protected. The selected status pointer reaches
 the call at `0x801D1920`, which uses renderer `0x8014FC90`. Each row records its
 own renderer. The document's `consumers` lists the calls for the whole layout.
+The same layout includes ASCII numeric formats `%3d`, `%3d/   ` and `   /%3d`
+at `0x801D0C04`, `0x801D0C08` and `0x801D0C10`, with four-, eight- and
+eight-byte allocations including NUL. Nine calls pass these formats and one
+zero-extended numeric value to `sprintf` at `0x8017E3F4`; the resulting ASCII
+buffer is drawn by `0x80150098`. Keep the `%3d` conversion and edit only the
+surrounding printable ASCII within capacity. This preserves the number and type
+of arguments and the original maximum formatted length. The conversion is part
+of the format text, not a dialogue command.
 Other master-menu labels and observed rendering remain unverified.
 
 ## Bank layout

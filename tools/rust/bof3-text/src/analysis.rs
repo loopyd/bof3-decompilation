@@ -10,6 +10,7 @@ use crate::models::{Error, Result, TextClass, command_for};
 enum Encoding {
     Ascii,
     GameLiteral,
+    Inline,
 }
 
 fn literal_report(
@@ -27,6 +28,7 @@ fn literal_report(
     report["encoding"] = json!(match encoding {
         Encoding::Ascii => "ascii",
         Encoding::GameLiteral => "game-literal",
+        Encoding::Inline => "per-string",
     });
     let rows = report[field]
         .as_array_mut()
@@ -49,6 +51,11 @@ fn literal_report(
         let encoded_size = match encoding {
             Encoding::Ascii => text.len(),
             Encoding::GameLiteral => crate::records::encode_name(text, maximum)?.len(),
+            Encoding::Inline => {
+                let codec: crate::inline::Codec = serde_json::from_value(row["codec"].clone())
+                    .map_err(|error| Error::Invalid(error.to_string()))?;
+                codec.encode(text, maximum)?.len()
+            }
         };
         let remaining = maximum
             .checked_sub(encoded_size)
@@ -120,7 +127,7 @@ pub fn analyze(path: &Path) -> Result<Value> {
                 crate::inline::extract(path, &data, entry, payload)?,
                 "strings",
                 &data,
-                Encoding::GameLiteral,
+                Encoding::Inline,
                 1,
             )?);
             continue;
