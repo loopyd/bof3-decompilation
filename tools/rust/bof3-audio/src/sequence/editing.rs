@@ -68,7 +68,7 @@ fn translate(sequence: &Sequence, bytes: &[u8], options: &Options) -> Result<Tra
     Ok(translation)
 }
 
-/// Rebuild values/timing or linear notes, preserving unrelated source data.
+/// Rebuild values, timing and supported notes, preserving unrelated source data.
 pub fn rebuild(
     sequence: &Sequence,
     original: &[u8],
@@ -86,6 +86,15 @@ pub fn rebuild(
     if edited.tracks.len() != baseline.midi.tracks.len() {
         return Err("SEP edit: MIDI track count changed".into());
     }
+    let controller_loop = baseline.timeline.steps.iter().any(|step| {
+        matches!(
+            step.kind,
+            Kind::Controller {
+                controller: 6 | 98 | 99,
+                ..
+            }
+        )
+    });
     if baseline
         .midi
         .tracks
@@ -95,13 +104,14 @@ pub fn rebuild(
             before.events.len() != after.events.len()
                 || before.events.iter().zip(&after.events).any(|(a, b)| {
                     notes::is_note(&a.message) != notes::is_note(&b.message)
-                        || matches!(
-                            (&a.message, &b.message),
-                            (
-                                Message::Channel { status: before, .. },
-                                Message::Channel { status: after, .. }
-                            ) if notes::is_note(&a.message) && before & 15 != after & 15
-                        )
+                        || (!controller_loop
+                            && matches!(
+                                (&a.message, &b.message),
+                                (
+                                    Message::Channel { status: before, .. },
+                                    Message::Channel { status: after, .. }
+                                ) if notes::is_note(&a.message) && before & 15 != after & 15
+                            ))
                 })
         })
     {
@@ -125,21 +135,30 @@ pub fn rebuild(
         let data_offset = step.source_cursor + usize::from(step.explicit_status);
         let patch = match step.kind {
             Kind::Note { .. } => {
-                if let Message::Channel { status, data } = after {
-                    if *status == (0x80 | (step.status & 15)) {
-                        if data[1] != 0 {
-                            return Err(format!(
+                let (status, data) = match after {
+                    Message::Channel { status, data } if matches!(*status & 0xf0, 0x80 | 0x90) => {
+                        if *status & 0xf0 == 0x80 {
+                            if data[1] != 0 {
+                                return Err(format!(
                                 "{location}: nonzero note-off release velocity is unrepresentable"
                             )
-                            .into());
+                                .into());
+                            }
+                            *status = 0x90 | (*status & 15);
                         }
-                        *status = step.status;
+                        (*status, data)
                     }
+                    _ => return Err(format!("{location}: expected note message").into()),
+                };
+                // Include unchanged explicit statuses in repeated-visit checks.
+                // Retranslation validates inherited status at implicit notes.
+                if step.explicit_status {
+                    let mut message = vec![status];
+                    message.extend_from_slice(data);
+                    Some((step.source_cursor, message))
+                } else {
+                    Some((data_offset, data.to_vec()))
                 }
-                Some((
-                    data_offset,
-                    channel(after, step.status, &location)?.to_vec(),
-                ))
             }
             Kind::Program { .. } => Some((
                 data_offset,
@@ -284,7 +303,7 @@ pub fn rebuild(
             original_data_bytes: original.len(),
             output_data_bytes: bytes.len(),
             limitations: vec![
-                "Event order, channels, loop structure and generated setup remain fixed; timing edits must agree at every repeated delta consumption. Infinite jumps force zero delay.",
+                "Event order, loop structure and generated setup remain fixed. Note-channel changes must agree at every source visit and reproduce inherited running status. Timing edits must agree at every repeated delta consumption. Infinite jumps force zero delay.",
                 "changed_source_bytes/events count message-value edits; timing_edits records changed delta spans separately. Unchanged delta encodings and opaque suffixes survive; resized deltas relocate later sequence headers.",
                 "Bank programs, tone pitch ranges, SF2 edits and publication require separate validation.",
                 "Forward MIDI approximations and selected finite loop boundary remain unchanged.",

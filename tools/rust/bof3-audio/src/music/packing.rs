@@ -52,11 +52,13 @@ pub fn songs(options: &Options) -> Result<Report> {
     let mut pending = BTreeMap::<String, Pending>::new();
     let mut ids = BTreeSet::new();
     let mut report = Report {
-        schema: "bof3.music-pack-report/v1", output: options.output.display().to_string(),
-        archives: Vec::new(), songs: Vec::new(),
+        schema: "bof3.music-pack-report/v1",
+        output: options.output.display().to_string(),
+        archives: Vec::new(),
+        songs: Vec::new(),
         limitations: vec![
             "Existing tone instruments support PCM, shared-consistent loops, gain/pan, sample assignments, verified note-on tuning and complete envelope tuples exactly invertible through the source tone's release bits. Independent new instrument/sample structures and arbitrary envelope reconstruction remain unsupported.",
-            "MIDI value/timing edits retain source correspondence; repeated delta consumptions must agree. Linear notes may be inserted, removed or moved among previously used note channels while preserving generated setup and termination. Controller-loop structure, new channels and non-note insertion/removal remain unsupported. Rebuilt SEP records preserve unrelated bytes.",
+            "MIDI value/timing and controller-loop note-channel edits retain source correspondence; repeated byte proposals and delta consumptions must agree. Linear notes may be inserted, removed or moved among previously used note channels while preserving generated setup and termination. Controller-loop structure changes, new channels and non-note insertion/removal remain unsupported. Rebuilt SEP records preserve unrelated bytes.",
             "Empty programs may gain 1..=16 existing tone instruments with matching program controls and percussion aliases. Ordered VAB tone blocks may grow within original EMI and game layout capacity. All 128 MIDI programs are selectable; empty slots remain silent. Songs sharing a bank must agree on rebuilt header/body bytes.",
             "The export's explicit synthesis approximations remain; complete original-game timing and independent audio fidelity are unverified.",
             "Descriptive limitation notes are not reconstruction inputs; authoritative binding, timeline and identity metadata are validated.",
