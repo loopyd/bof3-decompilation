@@ -679,20 +679,14 @@ def _request(original, events, *, source_form=None):
             "payload_bytes": len(payload),
             "load_address": image.load_address,
         }
-        body.update(schema="retdec118.native-request/v2", **original.scope)
         body.update(
-            schema="retdec118.native-request/v3",
+            schema="retdec118.native-request/v5",
+            **original.scope,
             image_catalog_sha256=original.contexts.catalog_sha256,
+            overlay_mounts=list(original.overlay_mounts or (original.member.image_id,)),
         )
         if source_form is not None:
-            body.update(
-                schema="retdec118.native-request/v4", source_form=source_form.value
-            )
-        if original.overlay_mounts:
-            body.update(
-                schema="retdec118.native-request/v5",
-                overlay_mounts=list(original.overlay_mounts),
-            )
+            body["source_form"] = source_form.value
         if original.entry_observation is not None:
             body.update(
                 schema="retdec118.native-request/v6",

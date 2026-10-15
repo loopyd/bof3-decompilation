@@ -11,12 +11,19 @@ The customized native implementation lives in the sibling `rz-psxdec` and
 `retdec-psx` forks. [README.md](README.md) describes their managed build.
 Supplied-context capture remains separate from original-only reconstruction.
 
-Original callee discovery requires an explicit original-image context through
-`--mount-image`. It retains queued paths after an unresolved indirect transfer.
+Ordinary runs mount the selected member's original image for native callee
+discovery. `--mount-image` replaces that default with the explicit mount order.
+Both routes verify image ownership and retain unresolved callee, memory and
+declaration obligations. Discovery retains queued paths after an unresolved
+indirect transfer.
 A canonical `jalr` linking through `ra` also exposes its potential
 continuation after the delay slot. Its target, return and effects remain unknown;
 discovery alone cannot complete a call or declaration contract. Other indirect
 transfers expose no fallthrough path.
+
+Callsite-path diagnostics are omitted when an entry-reachable prefix crosses a
+call without a complete binding and the required register preservation. The
+independent reader also checks the original control flow and diagnostic seeds.
 
 Register dataflow retains canonical bitwise `AND` results when both operands are
 known constants. Call-path replay independently derives those constants from
