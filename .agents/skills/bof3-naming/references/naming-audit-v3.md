@@ -130,8 +130,11 @@ with its boundary, byte count, original hash and image/layout binding.
 A two-way zero/nonzero halfword-state dispatch with alternative first callees and
 an identical later call suffix supplies `one_level_beyond` caller context. It proves
 conditional invocation and continuation, not state meaning or callee effects.
-Replay recomputes these facts and caller roles from original bytes and the generated
-plan. One receipt cannot close two rungs; a dispatcher context needs a separate
+Journal and conclusion validation share indexed-record and live original-instruction
+recomputation. Their caller-owned plan, receipt, namespace and freshness checks
+remain required. Positive source coverage follows the row's kind, locality and
+partial-baseline profile; coverage alone establishes no receipt independence.
+One receipt cannot close two rungs; a dispatcher context needs a separate
 caller receipt for `selected_call`. Range ownership proves no name term or C return
 contract. Function conclusion admission remains disabled. `owner_body` retains its
 separate wrapper and global-pointer zero-byte-store shapes.

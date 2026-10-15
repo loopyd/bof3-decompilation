@@ -66,6 +66,64 @@ def _same_function(value: object, expected: object) -> bool:
         return False
 
 
+def positive_rung_sources(row: dict, facts: list[dict]) -> dict[str, list[str]]:
+    """Inventory positive profile facts, without claiming receipt independence."""
+    required = RUNG_PROFILES[row["kind"], row.get("outside_payload") is True]
+    if row.get("partial_used") is True:
+        required = required | {"partial_baseline"}
+    return {
+        name: sorted(
+            {
+                fact["source_id"]
+                for fact in facts
+                if fact["class"] == name and fact["polarity"] == "positive"
+            }
+        )
+        for name in sorted(required)
+    }
+
+
+def recompute_collected_records(
+    token: object,
+    *,
+    root: Path,
+    target: str,
+    report_digest: str,
+    row: dict,
+    payload: dict,
+    registry: ExactCapabilityRegistry = PRODUCTION_EXACT_CAPABILITIES,
+) -> dict:
+    """Replay indexed records and live instruction bytes behind caller-owned guards."""
+    from harness.naming.instructions import analyzer_instructions
+
+    if (
+        not isinstance(payload, dict)
+        or payload.get("target") != target
+        or payload.get("row") != f"{row.get('kind')}:{row.get('name')}"
+    ):
+        raise ValueError("collected evidence target/row mismatch")
+    operations = tuple(
+        {
+            "item": {"id": item["id"]},
+            "operation": item["operation"],
+            "selector": item["selector"],
+            "payload": item["payload"],
+            "supplemental": item["supplemental"],
+            "role": item.get("role"),
+        }
+        for item in payload["items"]
+    )
+    return _analyze_validated_records(
+        token,
+        target=target,
+        report_digest=report_digest,
+        row=row,
+        operations=operations,
+        registry=registry,
+        instructions=analyzer_instructions(root, payload["semantic"]),
+    )
+
+
 def _analyze_validated_records(
     token: object,
     *,
@@ -377,15 +435,7 @@ def _analyze_validated_records(
         "conclusion_enabled": False,
     }
     if registry_entry is not None and not opened and not unavailable:
-        by_class = {
-            name: sorted({fact["source_id"] for fact in facts if fact["class"] == name})
-            for name in (
-                "selected_range",
-                "selected_access",
-                "storage_class",
-                "one_level_beyond",
-            )
-        }
+        by_class = positive_rung_sources(row, facts)
         if all(by_class.values()):
             result["conclusion_enabled"] = True
             result["conclusion_capability"] = {

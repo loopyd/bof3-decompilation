@@ -15,7 +15,7 @@ from harness.naming.collection import EvidenceNamespace
 from harness.naming.evidence import (
     _RUNNER_TOKEN,
     CONCLUSION_CAPABILITY_SCHEMA,
-    _analyze_validated_records,
+    recompute_collected_records,
 )
 from harness.naming.evidence import SCHEMA as ANALYZER_SCHEMA
 from harness.naming.journal import JournalInputs, entry_sha256, journal_is_fresh
@@ -272,23 +272,13 @@ def _validated_capability(
         payload = json.loads(
             (root / str(entry["evidence"])).read_text(encoding="utf-8")
         )
-        operations = tuple(
-            {
-                "item": {"id": item["id"]},
-                "operation": item["operation"],
-                "selector": item["selector"],
-                "payload": item["payload"],
-                "supplemental": item["supplemental"],
-                "role": item.get("role"),
-            }
-            for item in payload["items"]
-        )
-        recomputed = _analyze_validated_records(
+        recomputed = recompute_collected_records(
             _RUNNER_TOKEN,
+            root=root,
             target=target,
             report_digest=report_digest,
             row=row,
-            operations=operations,
+            payload=payload,
             registry=registry,
         )
     except (KeyError, OSError, TypeError, ValueError, json.JSONDecodeError) as error:

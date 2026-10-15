@@ -22,7 +22,7 @@ from typing import Any
 
 from harness.domain.receipts import command_records
 from harness.naming.capabilities import PRODUCTION_EXACT_CAPABILITIES
-from harness.naming.evidence import _RUNNER_TOKEN, _analyze_validated_records
+from harness.naming.evidence import _RUNNER_TOKEN, recompute_collected_records
 from harness.naming.evidence import SCHEMA as ANALYZER_SCHEMA
 from harness.naming.namespace import (
     _artifact_is_fresh,
@@ -364,27 +364,14 @@ def journal_is_fresh(
             if evidence != expected_evidence:
                 return False
             evidence_payload = json.loads(evidence.read_text(encoding="utf-8"))
-            operations = tuple(
-                {
-                    "item": {"id": item["id"]},
-                    "operation": item["operation"],
-                    "selector": item["selector"],
-                    "payload": item["payload"],
-                    "supplemental": item["supplemental"],
-                    "role": item.get("role"),
-                }
-                for item in evidence_payload["items"]
-            )
-            from harness.naming.instructions import analyzer_instructions
-
-            recomputed = _analyze_validated_records(
+            recomputed = recompute_collected_records(
                 _RUNNER_TOKEN,
+                root=root,
                 target=target,
                 report_digest=inputs.report_digest,
                 row=collection_row(report_row_values[row], target, registry=registry),
-                operations=operations,
+                payload=evidence_payload,
                 registry=registry,
-                instructions=analyzer_instructions(root, evidence_payload["semantic"]),
             )
             derived = _artifact_path(root, namespace, entry.get("derived"))
             if derived != namespace / row.split(":", 1)[1] / "derived.json":
