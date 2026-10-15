@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import hashlib
 from dataclasses import dataclass
 from pathlib import Path
@@ -12,7 +13,17 @@ from harness.common.process import resolve_isolated_supervisor, run_bounded
 from harness.io import file_sha256, write_json
 from harness.runtime.assets import collect_assets, stage_assets
 from harness.runtime.completion import validate_completion
-from harness.runtime.disc import collect_disc, encode_bindings, stage_disc, verify_disc
+from harness.runtime.disc import (
+    collect_disc,
+    collect_replacements,
+    encode_bindings,
+    encode_replacement_bindings,
+    replacement_inputs,
+    stage_disc,
+    verify_disc,
+    verify_replacement_layout,
+    verify_replacements,
+)
 from harness.runtime.launch import (
     PROCESS_LIMITATIONS,
     emulator_arguments,
@@ -284,16 +295,56 @@ def inspect_runtime_capture(directory, reader):
         for key, value in receipt["inputs"].items()
         if key.startswith("disc:")
     }
-    if media:
-        staged_disc = receipt.get("disc")
-        folder = directory / "disc"
+    replacement_descriptors = receipt.get("replacements", {})
+    if (
+        not isinstance(replacement_descriptors, dict)
+        or len(replacement_descriptors) > 7
+    ):
+        raise ValueError("invalid runtime replacement declarations")
+    sets = [("disc", media, receipt.get("disc"))]
+    claimed = set()
+    for name, descriptor in replacement_descriptors.items():
+        if (
+            not isinstance(name, str)
+            or re.fullmatch(r"[a-z][a-z0-9-]{0,31}", name) is None
+        ):
+            raise ValueError("invalid runtime replacement name")
+        prefix = f"replacement:{name}:"
+        selected = {
+            "disc:" + key.removeprefix(prefix): value
+            for key, value in receipt["inputs"].items()
+            if key.startswith(prefix)
+        }
+        claimed.update(key for key in receipt["inputs"] if key.startswith(prefix))
+        sets.append((f"replacements/{name}/disc", selected, descriptor))
+    if claimed != {key for key in receipt["inputs"] if key.startswith("replacement:")}:
+        raise ValueError("undeclared runtime replacement inputs")
+    verify_replacement_layout(directory, replacement_descriptors)
+    if (
+        sum(value["bytes"] for _, entries, _ in sets for value in entries.values())
+        > 8 * 1024**3
+    ):
+        raise ValueError("runtime declared media exceeds 8 GiB total")
+    for relative, media, staged_disc in sets:
+        if not media:
+            if staged_disc is not None:
+                raise ValueError(
+                    "runtime staged disc has no declared original media inputs"
+                )
+            continue
+        folder = directory / relative
         if (
             "disc:cue" not in media
             or type(staged_disc) is not dict
             or set(staged_disc) != {"path", "sha256"}
-            or staged_disc["path"] != "disc/media.cue"
+            or staged_disc["path"] != relative + "/media.cue"
             or folder.is_symlink()
             or not folder.is_dir()
+            or any(
+                parent.is_symlink()
+                for parent in folder.parents
+                if parent != directory and parent.is_relative_to(directory)
+            )
         ):
             raise ValueError("runtime staged disc descriptor differs")
         expected_names = {
@@ -318,8 +369,6 @@ def inspect_runtime_capture(directory, reader):
                 or hashlib.sha256(content).hexdigest() != expected["sha256"]
             ):
                 raise ValueError("runtime staged disc track identity changed")
-    elif receipt.get("disc") is not None:
-        raise ValueError("runtime staged disc has no declared original media inputs")
     completion = validate_completion(directory, reader=read)
     if (
         completion != receipt.get("completion")
@@ -376,6 +425,7 @@ def run_session(
     modules: list[str] | None = None,
     files: list[str] | None = None,
     disc: Path | None = None,
+    replacements: list[str] | None = None,
     origin: Path | None = None,
 ) -> dict:
     if not 1024 <= output_limit <= 16 * 1024 * 1024:
@@ -387,6 +437,7 @@ def run_session(
     parameters = parse_arguments(arguments)
     assets = collect_assets(modules or [], files or [])
     media, cue = collect_disc(disc)
+    replacement_media = collect_replacements(replacements or [], media)
     toolchain.verify()
     identity = toolchain.runtime_identity()
     canonical_modules = {
@@ -418,6 +469,7 @@ def run_session(
     }
     inputs.update(assets)
     inputs.update(media)
+    inputs.update(replacement_inputs(replacement_media))
     provenance = verify_origin(origin, inputs, identity) if origin is not None else None
     if inputs["bios"]["bytes"] != 512 * 1024:
         raise ValueError("runtime BIOS must be a 512 KiB PS1 ROM image")
@@ -483,10 +535,22 @@ def run_session(
                 "path": str(mounted.relative_to(output)),
                 "sha256": file_sha256(mounted),
             }
+        receipt["replacements"] = {}
+        if replacement_media:
+            (output / "replacements").mkdir()
+        for name, (entries, descriptor) in replacement_media.items():
+            parent = output / "replacements" / name
+            parent.mkdir()
+            path = stage_disc(parent, entries, descriptor)
+            receipt["replacements"][name] = {
+                "path": str(path.relative_to(output)),
+                "sha256": file_sha256(path),
+            }
         receipt["assets"] = {
             key: str(path.relative_to(output)) for key, path in staged_assets.items()
         }
         verify_disc(output, media, cue)
+        verify_replacements(output, replacement_media)
         environment = mission_environment(
             base=toolchain.environment,
             directory=output,
@@ -496,7 +560,8 @@ def run_session(
             source_manifest_sha256=identity["source_manifest_sha256"],
             entry=entry,
             origin_validated=provenance is not None,
-            media=encode_bindings(media),
+            media=encode_bindings(media)
+            + encode_replacement_bindings(replacement_media),
             inputs=[
                 (key.split(":", 1)[1], path)
                 for key, path in staged_assets.items()
@@ -532,6 +597,7 @@ def run_session(
             raise ValueError("runtime inputs changed during execution")
         if receipt["status"] == "passed":
             verify_disc(output, media, cue)
+            verify_replacements(output, replacement_media)
             receipt["completion"] = validate_completion(output)
     except Exception as error:
         receipt["status"] = "failed"

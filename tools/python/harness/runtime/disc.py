@@ -97,3 +97,69 @@ def verify_disc(output: Path, entries: dict, cue: str) -> None:
             strict=True
         ) != Path(entry["path"]):
             raise ValueError("runtime staged disc track changed")
+
+
+def collect_replacements(values: list[str], initial: dict) -> dict:
+    """Collect at most seven named discs within one 8 GiB session budget."""
+    if values and not initial:
+        raise ValueError("replacement discs require an initial --disc")
+    declarations = {}
+    for value in values:
+        name, separator, path = value.partition("=")
+        if (
+            not separator
+            or not re.fullmatch(r"[a-z][a-z0-9-]{0,31}", name)
+            or not path
+            or name in declarations
+            or len(declarations) >= 7
+        ):
+            raise ValueError(
+                "replacement requires a unique NAME=CUE; at most seven names"
+            )
+        declarations[name] = Path(path)
+    result = {}
+    total = sum(entry["bytes"] for entry in initial.values())
+    for name, path in sorted(declarations.items()):
+        entries, cue = collect_disc(path)
+        total += sum(entry["bytes"] for entry in entries.values())
+        if total > 8 * 1024**3:
+            raise ValueError("runtime declared media exceeds 8 GiB total")
+        result[name] = (entries, cue)
+    return result
+
+
+def replacement_inputs(replacements: dict) -> dict:
+    return {
+        f"replacement:{name}:{key.removeprefix('disc:')}": entry
+        for name, (entries, _) in replacements.items()
+        for key, entry in entries.items()
+    }
+
+
+def encode_replacement_bindings(replacements: dict) -> str:
+    return "".join(
+        f"replacement:{name}:{key.removeprefix('disc:')}\t{entry['bytes']}\t{entry['sha256']}\n"
+        for name, (entries, _) in replacements.items()
+        for key, entry in entries.items()
+        if key != "disc:cue"
+    )
+
+
+def verify_replacement_layout(output: Path, names) -> None:
+    folder = output / "replacements"
+    if not names:
+        if folder.exists() or folder.is_symlink():
+            raise ValueError("undeclared staged replacement media")
+        return
+    if folder.is_symlink() or {path.name for path in folder.iterdir()} != set(names):
+        raise ValueError("runtime replacement set changed")
+    for name in names:
+        parent = folder / name
+        if parent.is_symlink() or {path.name for path in parent.iterdir()} != {"disc"}:
+            raise ValueError("runtime replacement directory changed")
+
+
+def verify_replacements(output: Path, replacements: dict) -> None:
+    verify_replacement_layout(output, replacements)
+    for name, (entries, cue) in replacements.items():
+        verify_disc(output / "replacements" / name, entries, cue)

@@ -49,6 +49,13 @@ def build_parser() -> argparse.ArgumentParser:
         "--disc", type=Path, help="CUE with BINARY tracks; pin and mount declared media"
     )
     command.add_argument(
+        "--replacement",
+        action="append",
+        default=[],
+        metavar="NAME=CUE",
+        help="declare a named replacement disc (at most seven; 8 GiB aggregate)",
+    )
+    command.add_argument(
         "--module",
         action="append",
         default=[],
@@ -95,6 +102,7 @@ def run_runtime(args: argparse.Namespace) -> int:
             modules=args.module,
             files=args.input,
             disc=args.disc,
+            replacements=args.replacement,
             origin=args.origin,
         )
     print(json.dumps(report, indent=2))

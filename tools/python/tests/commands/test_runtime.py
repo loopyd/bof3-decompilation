@@ -20,11 +20,11 @@ class Emulator:
         self.arguments = []
 
     def runtime_identity(self):
-        names = [f"fixture{index:02}" for index in range(52)] + ["support"]
+        names = [f"fixture{index:02}" for index in range(54)] + ["support"]
         rows = [
             {
                 "name": name,
-                "role": "mission" if index < 20 else "module",
+                "role": "mission" if index < 21 else "module",
                 "path": f"src/lua/missions/{name}.lua",
                 "source_sha256": "a" * 64,
                 "source_bytes": 1,

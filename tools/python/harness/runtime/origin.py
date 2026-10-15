@@ -27,7 +27,7 @@ def validate_native_bundle(bundle: dict) -> dict:
             "Builtin runtime resource bundle differs from emulator identity"
         )
     rows = bundle["resources"]
-    if not isinstance(rows, list) or len(rows) != 53:
+    if not isinstance(rows, list) or len(rows) != 55:
         raise ValueError("Builtin runtime resource census differs")
     names = []
     for row in rows:
@@ -61,7 +61,7 @@ def validate_native_bundle(bundle: dict) -> dict:
         names.append(name)
     if (
         names != sorted(set(names))
-        or sum(row["role"] == "mission" for row in rows) != 20
+        or sum(row["role"] == "mission" for row in rows) != 21
     ):
         raise ValueError("Builtin resource ordering or roles differ")
     data = b"".join(
@@ -188,12 +188,12 @@ def verify_origin(path: Path, inputs: dict, emulator: dict, *, reader=None) -> d
         expected = {
             key: (value["sha256"], value["bytes"])
             for key, value in origin["inputs"].items()
-            if key == "bios" or key.startswith("disc:")
+            if key == "bios" or key.startswith(("disc:", "replacement:"))
         }
         supplied = {
             key: (value["sha256"], value["bytes"])
             for key, value in inputs.items()
-            if key == "bios" or key.startswith("disc:")
+            if key == "bios" or key.startswith(("disc:", "replacement:"))
         }
         if expected != supplied:
             raise ValueError("origin BIOS/media identities differ from supplied inputs")
