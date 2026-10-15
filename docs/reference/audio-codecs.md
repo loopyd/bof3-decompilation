@@ -64,6 +64,30 @@ independent MP3/Vorbis decoding and package builds before enabling delivery
 formats. Fix or reject unsuitable codec behavior explicitly; dependency approval
 alone is not production acceptance.
 
+## Explicit PCM rate conversion
+
+`codec::rate::convert` converts nonempty mono/stereo PCM16 between 18900, 32000,
+37800, 44100 and 48000 Hz. Callers supply both rates. Neither encoder calls it
+implicitly. The development `encoding INPUT_WAV NEW_OUTPUT_DIR [TARGET_RATE]`
+example accepts an explicit target rate and retains the original `source.wav`,
+the encoder's `reference.wav`, and a `bof3.audio.delivery-evaluation/v3` report.
+Without a target rate it preserves the input rate.
+
+The converter uses a symmetric Blackman-windowed sinc with 32 zero crossings
+on each side and a cutoff at 94% of the lower Nyquist frequency. Each rational
+phase has unity DC gain. Output frame `n` samples input time
+`n * input_rate / output_rate`; the output has
+`ceil(input_frames * output_rate / input_rate)` frames. Matching rates bypass
+filtering and preserve the PCM exactly.
+
+Finite clips use zero extension without an added delay or filter tail. Boundary
+samples can change. PCM16 quantization rounds to nearest, with ties away from
+zero, and reports saturated samples. Reports also retain both rates, channel
+count, frame counts and cutoff. The PCM API does not carry container metadata
+or rebase loop coordinates. This delivery filter does not model PSX CD
+resampling. Perceptual quality, broader content coverage and floating-point
+bit identity across platforms remain unaccepted.
+
 ## MP3 timing and consumer limits
 
 The encoder has a 481-frame filterbank delay plus one 576-frame granule. The

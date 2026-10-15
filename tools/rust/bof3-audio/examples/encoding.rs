@@ -1,7 +1,7 @@
 //! Evaluate delivery encoders against retained PCM; this is not a production renderer.
 
 use bof3_audio::{
-    codec::{mp3, vorbis},
+    codec::{mp3, rate, vorbis},
     digest::sha256_hex,
     interchange::wave::Wave,
     Result,
@@ -11,17 +11,35 @@ use std::{fs, path::Path, time::Instant};
 
 fn main() -> Result<()> {
     let args: Vec<_> = std::env::args_os().skip(1).collect();
-    if args.len() != 2 {
-        return Err("usage: encoding INPUT_WAV NEW_OUTPUT_DIR".into());
+    if !matches!(args.len(), 2 | 3) {
+        return Err("usage: encoding INPUT_WAV NEW_OUTPUT_DIR [TARGET_RATE]".into());
     }
     let input = fs::read(&args[0])?;
-    let wave = Wave::from_bytes(&input)?;
+    let source = Wave::from_bytes(&input)?;
+    let target_rate = args
+        .get(2)
+        .map(|value| -> Result<u32> {
+            Ok(value.to_str().ok_or("target rate must be UTF-8")?.parse()?)
+        })
+        .transpose()?;
+    let converted = target_rate
+        .map(|target| rate::convert(&source.pcm, source.channels, source.sample_rate, target))
+        .transpose()?;
+    let (wave, conversion) = match converted {
+        Some(converted) => (
+            Wave::new(source.channels, converted.report.output_rate, converted.pcm)?,
+            Some(converted.report),
+        ),
+        None => (source, None),
+    };
     if wave.frames() == 0 {
         return Err("encoder evaluation needs nonempty PCM".into());
     }
     let output = Path::new(&args[1]);
     fs::create_dir(output)?;
-    fs::write(output.join("reference.wav"), &input)?;
+    fs::write(output.join("source.wav"), &input)?;
+    let reference = wave.to_bytes()?;
+    fs::write(output.join("reference.wav"), &reference)?;
     let mut results = Vec::new();
     for codec in ["mp3", "ogg"] {
         let started = Instant::now();
@@ -43,8 +61,9 @@ fn main() -> Result<()> {
     }
     let failed = results.iter().any(|row| row.get("error").is_some());
     let report = json!({
-        "schema": "bof3.audio.delivery-evaluation/v2",
+        "schema": "bof3.audio.delivery-evaluation/v3",
         "source_sha256": sha256_hex(&input),
+        "reference_sha256": sha256_hex(&reference), "conversion": conversion,
         "sample_rate": wave.sample_rate, "channels": wave.channels, "frames": wave.frames(),
         "mp3": {"version": "0.1.3", "bitrate_kbps": 192, "preset": "High",
             "delay_signaling": true, "extra_flush_frames": 1152,

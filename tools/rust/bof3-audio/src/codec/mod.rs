@@ -3,4 +3,5 @@ pub mod adpcm;
 pub mod edc;
 pub mod mp3;
 pub mod quantization;
+pub mod rate;
 pub mod vorbis;
