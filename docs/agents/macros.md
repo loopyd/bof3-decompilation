@@ -236,9 +236,9 @@ accepted. Retain the output digest externally for validation and transactions.
 Unknown fields, stale candidates, incomplete assessments and altered pins reject.
 
 Selection is not write authority, semantic acceptance or an attempt counter.
-`safe_application_count` stays zero and `execution_started` stays false. Repeated
-CLI invocations do not consume a durable budget: scheduling, retries and a campaign
-attempt ledger remain unfinished. Do not substitute output limits for that ledger.
+`safe_application_count` stays zero and `execution_started` stays false. Scheduling,
+retries and a campaign attempt ledger remain unfinished. Do not substitute output
+limits for that ledger.
 
 ## Candidate and consumer inspection
 
@@ -421,7 +421,7 @@ require owned-PRE reconciliation before reuse.
 
 Source rollback can resume identity-verified partial restoration; see the
 [shared recovery contract](harness.md#guarded-source-recovery). Neither rollback
-nor guarded recovery grants source acceptance or an autonomous attempt budget.
+nor guarded recovery grants source acceptance or authorizes automatic retries.
 Ordinary failure restores only captured owned source images; unexpected workspace
 edits, new files and Git staging remain untouched for parent review, not overwritten
 as presumed tool side effects. See the [shared recovery contract](harness.md)
@@ -484,9 +484,9 @@ bin/harness macros recover out/reviews/evidence/macro-recovery-NONCE.json --expe
 The [shared authorization schema and recovery gates](harness.md#guarded-source-recovery)
 require independent parent-pinned authority, reviewed terminal writer evidence,
 an outer v5 record with matching nested safeguards v5 and known absent publication.
-This command restores original owned PRE; it never resolves the macro opportunity, accepts
-source, consumes a ranked attempt budget or permits automatic retry. Unexpected
-publication and workspace/Git drift require separate reconciliation.
+This command restores original owned PRE. It never resolves the macro opportunity,
+accepts source or permits automatic retry. Unexpected publication and workspace/Git
+drift require separate reconciliation.
 
 ### Reviewed private-header creation
 
@@ -497,7 +497,7 @@ creation are not added.
 Use the [submodule isolation contract](harness.md#submodule-isolation-candidate)
 within its support limits and the [file publication contract](harness.md#file-publication).
 Dependency observations do not authorize restoration, repair, retries,
-acceptance, budget resets or evidence rebinding.
+acceptance or evidence rebinding.
 
 Before another macro attempt, record finite scope and obtain fresh readiness
 and review. Preserve consumed attempts and frozen
@@ -505,8 +505,8 @@ obligations. Tooling acceptance does not establish an applied macro or
 whole-game completion. Native validation, independent application review and
 parent confirmation remain mandatory.
 
-Owning OpenSpec changes preserve historical approval and failure limits,
-consumed budgets and unresolved validation debt.
+Owning OpenSpec changes preserve historical approvals, consumed attempts and
+unresolved validation debt. Historical limits do not constrain new execution.
 
 V2 retains all v1 evidence fields and adds exactly one `creation` object with
 `target`, `header`, `header_text`, `manifest_before` and `manifest_after`.
@@ -584,9 +584,8 @@ second returns `skip-accepted` only for the same complete application, including
 attestation, with valid current parent acceptance. Wrong request/run, changed
 state, missing context, invalid acceptance or incomplete pin pairs reject. See
 [request-bound resume](harness.md#request-bound-resume) for shared boundaries.
-Neither form performs extraction, consumes/resets a ranked budget, establishes
-writer termination or supplies a durable skip token. The bounded actor must retain
-its original queue and externally pinned proofs; autonomous marching remains open.
+Neither form performs extraction, establishes writer termination or supplies a
+durable skip token. The bounded actor must retain its original queue and externally pinned proofs; autonomous marching remains open.
 
 ## Private revalidation and shared promotion
 

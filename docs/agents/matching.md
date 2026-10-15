@@ -8,14 +8,14 @@ unrelated until proven otherwise.
 For an existing claimed source, obtain a live `asm-diff` before editing C.
 For a genuinely unlifted function, the parent first admits one bounded seed:
 pin original bytes, load address, reviewed boundary, caller/callee evidence,
-PRE source absence, exact owned source/header/map/layout paths and attempt limits.
+PRE source absence and exact owned source/header/map/layout paths.
 Create only the evidence-backed C89 seed with `@source`/`@behavior`, its manifest
 claim and required declarations/bindings and `c` boundary. Then obtain the first
 live `asm-diff` through the [native execution route](codex.md#native-compiler-execution)
 before any further C edit. A missing-source error is not a native baseline; seed
-creation grants no score, acceptance, budget renewal or compiler-guard bypass.
+creation grants no score, acceptance or compiler-guard bypass.
 Unresolved ownership/ABI or a failed native gate stops matching until resolved
-within the original bounds. Final live byte matching and independent review remain
+within the reviewed scope. Final live byte matching and independent review remain
 mandatory. `bin/harness decomp diagnose` still requires an existing claimed source.
 
 Native equality is not progress-metadata validity. An exact record uses

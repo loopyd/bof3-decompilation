@@ -762,17 +762,17 @@ The result includes owner, manifest/request/run/application/proof bindings and t
 envelope pin, without applying changes, rerunning gates or writing a skip token.
 
 The parent still establishes writer termination/exclusion and preserves queue
-identity and attempt budgets. This read-only, non-atomic disposition grants no
-mutation or retry authority and resets no budget. Reproduce the captured launch
+identity and cumulative attempt history. This read-only, non-atomic disposition
+grants no mutation or retry authority. Reproduce the captured launch
 environment; never edit proofs or relax execution-context checks to make resume
 pass. Historical integrity alone is not current acceptance. The broader bounded
 execution loop remains unfinished.
 
 Unpublished POST after `ProcessCleanupError` uses `inspect-recovery`, not the
-published-application `resume` route. Retain the original budget, latest consumption
-pins and failure evidence across fresh invocation. Remaining launches and an
-available lease do not clear the parent's cleanup-unconfirmed stop. Inspection
-does not authenticate termination; retain native process handles in their owning
+published-application `resume` route. Retain cumulative consumption pins and failure
+evidence across fresh invocations. An available lease does not clear the parent's
+cleanup-unconfirmed stop. Inspection does not authenticate termination. Retain
+native process handles in their owning
 PID namespace rather than interpreting saved PIDs in another tool invocation.
 Neither API persists a cleanup hold or automatically prevents another dispatch.
 The supervising parent must withhold mutation until independently reviewed native
@@ -780,35 +780,15 @@ termination permits separately authorized recovery; no implicit retry follows.
 
 ## Bounded continuation
 
-The parent prepares review scopes and budgets under the
+The parent prepares review scopes under the
 [standing autonomous authorization](codex.md#autonomous-execution), without
 another user prompt for external review or safe-checkpoint index refresh.
-Validator fields do not confer authority by themselves or replace that authorization.
-
-`common.continuation.check_budget` is a read-only validator, not a scheduler or
-launch permission. Its `bof3.execution-budget/v1` contract pins the canonical
-root path/device/inode, ordered unique queue IDs and fingerprints, global launch
-ceiling and per-entry repair ceilings. All integer counters reject booleans.
-There are no implicit defaults.
-
-Supply the externally retained budget digest, latest checkpoint digest and
-sequence, plus the complete `bof3.execution-consumption/v1` chain from zero.
-Each checkpoint pins the contract and previous checkpoint; each transition
-consumes exactly one launch or one entry repair, never refunds or resets.
-Queue membership, counters, ceilings and root must remain bound.
-`bof3.execution-budget-status/v1` reports remaining counts and exhaustion
-with `launch_authorized:false`. Latestness depends on the parent's external
-high-water pin: a mutually consistent stale prefix and stale pin cannot be
-detected internally. Queue fingerprints are bound, not freshly re-queried.
-
-The controller must durably pre-debit before dispatch. Repair work that launches
-a process owes both debits. No checkpoint writer, reservation service, CLI, automatic recovery
-or accepted-source authority is implemented by this validator. Owner freshness,
-writer quiescence and independent parent acceptance remain separate gates.
+Execution requires no allowance, grant or attempt, member, repair or call quota.
+Preserve cumulative attempt history and explicit missing-history notes.
 
 The active-session [skill operator](../../.agents/skills/bof3-lift-loop/SKILL.md)
-accounts original mission bounds and actual handles. No harness model-dispatch
-debit, detached controller or second campaign database owns orchestration.
+owns orchestration and retains actual process handles. Owner freshness, writer
+quiescence and independent parent acceptance remain separate gates.
 
 `run_bounded` optionally accepts prompt `input_data` bytes, `on_spawn` and
 `on_output(stream, chunk)` callbacks. Selector-driven stdin writes proceed alongside

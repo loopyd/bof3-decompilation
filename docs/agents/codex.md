@@ -101,8 +101,7 @@ PS-X header, source/configuration ownership, native inputs/tools/environment,
 workspace metadata and exact raw Git index. Stale analysis stops; it is never
 refreshed or replaced here.
 
-Diagnosis does not create/debit a campaign attempt budget or infer permission to
-retry. Each native command caps combined output at 1 MiB.
+Diagnosis does not authorize retries. Each native command caps combined output at 1 MiB.
 The shared writer lease excludes cooperating writers throughout; it neither proves
 prior-worker termination nor excludes manual editors.
 
@@ -185,8 +184,8 @@ matching-aid, semantic and domain-owner checks.
 
 Output must be a fresh direct-child audit directory. Failure retains evidence and
 any candidate, with no retry/restoration/acceptance authority. The parent accounts
-each invocation against the original campaign budget; neither command debits it or
-implements a model writer, repair scheduler, independent acceptance or recovery.
+each invocation in the cumulative attempt history. Neither command implements a
+model writer, repair scheduler, independent acceptance or recovery.
 `bof3-re`'s `scripts/mission.py` forwards both commands unchanged.
 
 ## Global MCP ownership
@@ -255,7 +254,7 @@ No harness Codex CLI invocation, model SDK/API launch, detached runner or Pi fal
 Review payloads may include relevant private
 source, diffs, agent instructions, target metadata and original-byte evidence;
 exclude credentials and unrelated user media. The parent selects bounded review
-scope and execution limits before launch. Keep original pins, consumed budgets,
+scope before launch. Keep original pins, cumulative attempt history,
 independent semantic review and live acceptance gates; never refresh inputs during
 a pinned transaction. Preserve frozen evidence before replacing working indexes.
 Local feature-completion commits are authorized; do not push or release. Standing

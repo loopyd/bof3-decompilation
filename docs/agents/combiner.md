@@ -748,8 +748,8 @@ files. A separate AI assessment asks **“would a human do this?”**: can the f
 one clear name, improve navigation/local reasoning, preserve useful boundaries and
 avoid hiding different lifecycles? Record accept/reject/defer with evidence and
 counterevidence. Score, string similarity and file-count savings never authorize edits.
-Overlapping candidates compete for the same functions; freeze the selected set and
-original attempt budgets before trying configurable top N.
+Overlapping candidates compete for the same functions. Freeze the selected set
+before trying configurable top N and retain cumulative attempt history.
 
 ## Consolidation safety contract
 
@@ -778,8 +778,8 @@ original attempt budgets before trying configurable top N.
   native gates and a distinct final review follow it. Reuse owned-image recovery,
   writer exclusion, external pins and concurrent-work preservation; deletion/move
   support must be demonstrated, not assumed from header-edit transactions.
-- Failed or cancelled work retains original evidence and budget; restore only proven
-  owned PRE after confirmed writer termination. Discovery grants no rename, macro,
+- Failed or cancelled work retains original evidence and attempt history. Restore
+  only proven owned PRE after confirmed writer termination. Discovery grants no rename, macro,
   type, report repair, index rewrite during pinned work or acceptance authority.
 
 ## Validation
