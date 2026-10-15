@@ -242,7 +242,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                     record.ranges.push(RangeRecord {
                                         offset: text.file_offset, length: text.capacity,
                                         entry: Some(entry.index), status: "known-text",
-                                        evidence: format!("{} allocation {:#x}; consumers {}; renderer 0x8014f800; runtime acceptance pending", document.layout, text.address, document.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", ")),
+                                        evidence: format!("{} allocation {:#x}; consumers {}; renderer {:#x}; runtime acceptance pending", document.layout, text.address, document.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), text.renderer),
                                     });
                                     at = text.file_offset + text.capacity;
                                 }

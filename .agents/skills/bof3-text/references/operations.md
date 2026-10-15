@@ -68,7 +68,8 @@ document and separate output; editing one does not update the other or a save.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v1`. Edit only `text`, retain all strings and references,
+uses `bof3.inline-text/v2`. Re-extract older inline documents. Edit only `text`,
+retain all strings, per-string renderers and references,
 and reserve one encoded byte for NUL within each allocation. Pack against the
 same archive with its recorded entry or `all`, without class or latch selectors.
 Each matching archive payload needs its own source-bound document and output.
