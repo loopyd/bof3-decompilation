@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shlex
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from harness.common.commands import tool_id
 from harness.domain.receipts import command_records, write_receipt
 from harness.naming.evidence import SCHEMA as ANALYZER_VERSION
 from harness.naming.journal import commit_entry
@@ -331,7 +333,8 @@ def _receipts_for(
 
     Indexed receipts record the canonical native operation and the exact
     selector queried; semantic receipts record the executed Rizin/native
-    command, its real exit status, and its bounded output.  No receipt
+    command, its real exit status, and its output. Instruction and partial
+    native receipts retain complete stdout. No receipt
     claims a CLI command that the runner did not execute.
     """
 
@@ -397,6 +400,10 @@ def _receipts_for(
         receipts.append(record)
     for index, result in enumerate(semantic):
         command = dict(result)
+        instruction = result.get("instruction_id") is not None
+        partial_native = row.get("partial_used") is True and tool_id(
+            shlex.split(str(result.get("command")))
+        ) in {"asm-diff", "byte-match"}
         command_digest = hashlib.sha256(
             str(result.get("command")).encode()
         ).hexdigest()[:12]
@@ -404,19 +411,21 @@ def _receipts_for(
             "command": str(result.get("command")),
             "status": "passed" if result.get("semantic_success") else "failed",
             "target": (
-                str(result["selector"]).split("@", 1)[0]
-                if result.get("instruction_id")
-                else target
+                str(result["selector"]).split("@", 1)[0] if instruction else target
             ),
             "selector": str(result.get("selector")),
             "output": (
                 str(result["raw"])
-                if result.get("instruction_id")
+                if instruction or partial_native
                 else _bounded_text(str(result.get("output")))
             ),
         }
         capture = next(
-            (item for item in captures if item["selector"] == result.get("selector")),
+            (
+                item
+                for item in captures
+                if instruction and item["selector"] == result.get("selector")
+            ),
             None,
         )
         if capture is not None and row.get("kind") == "function":

@@ -105,6 +105,9 @@ generic conclusion capabilities. Import and terminal validation require current
 generated-work replay, exact typed observations, distinct rung receipts and
 independently bound corroborators. Capabilities grant no semantic or identity approval.
 Every required kind/locality rung and `partial_baseline` needs a positive producer.
+Instruction observations attach only to instruction captures. Partial `asm-diff`
+and `byte-match` receipts retain complete JSON stdout without inheriting instruction
+facts from a shared selector.
 `owner_resolution`, `owner_data` and `partial_baseline` have none, so imported
 function and data rows and retained partials remain blocked. Overlapping owner ranges,
 candidate entries and planned native checks cannot close those gaps. Decode

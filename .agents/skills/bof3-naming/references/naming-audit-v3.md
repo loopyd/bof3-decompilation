@@ -165,6 +165,9 @@ typed producer. Imported function and data rows and retained partials remain blo
 Overlapping candidate ranges and planned native checks cannot close those rungs.
 Instruction capture must complete the generated plan. A capture failure aborts
 the row without a committed receipt. Failed receipts cannot close work.
+Only instruction captures receive instruction observations. Partial `asm-diff` and
+`byte-match` receipts retain complete JSON stdout; a shared selector grants no
+instruction facts to a native check.
 
 Data collection requires a current typed receipt for every indexed operation.
 `data_original_range` binds the whole containing reviewed data or rodata segment,
