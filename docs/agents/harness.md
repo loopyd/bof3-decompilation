@@ -77,7 +77,11 @@ halfword reads, argument expressions and saved-RA stack restoration. Calls remai
 opaque. A later call leaves outgoing result registers unresolved; conditional return
 records state their normal-return and stack-preservation assumptions. Unsupported
 instructions, load timing, loops, indirect flow and post-call dependencies remain
-explicit capability gaps. `owner_body` retains its separate decoded shapes.
+explicit capability gaps. `owner_body` supports a canonical single-call wrapper
+or a complete 16..65536-byte body of four-word global-pointer zero-store groups.
+Each group is LUI, LW, NOP, SB-zero. The final group replaces NOP with JR RA
+and stores in its return delay slot. These facts describe direct effects only,
+without proving object extent or transitive callee effects.
 The selected function's complete validated capture produces `selected_range`, with
 its half-open boundary, byte count, original hash and live image/layout binding.
 `naming.effects` also records direct memory effects when the complete selected
@@ -100,6 +104,13 @@ One receipt cannot close two rungs. Complete positive rung profiles can produce
 generic conclusion capabilities. Import and terminal validation require current
 generated-work replay, exact typed observations, distinct rung receipts and
 independently bound corroborators. Capabilities grant no semantic or identity approval.
+Every required kind/locality rung and `partial_baseline` needs a positive producer.
+`owner_resolution`, `owner_data` and `partial_baseline` have none, so imported
+function and data rows and retained partials remain blocked. Overlapping owner ranges,
+candidate entries and planned native checks cannot close those gaps. Decode
+refusals stay open even when another capture supplies a positive fact for that rung.
+Instruction collection requires the complete generated plan. A capture failure
+aborts the row without a committed receipt. The failed receipt is forensic evidence.
 Data collection records every indexed operation in a typed receipt.
 `data_original_range` binds the whole containing reviewed data or rodata segment,
 up to 64 KiB, to current image, layout and replay identities. It records up to

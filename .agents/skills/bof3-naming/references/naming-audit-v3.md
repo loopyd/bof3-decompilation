@@ -154,8 +154,17 @@ caller receipt for `selected_call`. Range ownership proves no name term or C ret
 contract. Generic conclusion admission requires a complete positive profile, no
 open or unavailable evidence, and exact current replay. Corroborators must bind
 their observations to distinct receipt sources and mechanisms. Capability admission
-grants no semantic approval. `owner_body` retains its separate wrapper and
-global-pointer zero-byte-store shapes.
+grants no semantic approval. `owner_body` supports a canonical single-call wrapper
+or a complete 16..65536-byte body of four-word LUI, LW, NOP, SB-zero groups. The final
+group uses JR RA instead of NOP, with SB-zero in its return delay slot. Facts prove
+direct effects only, without object extent or transitive callee effects.
+Every missing profile rung, including `partial_baseline`, retains a capability
+gap. Decode refusals remain open despite positive facts from other captures for
+that rung. `owner_resolution`, `owner_data` and `partial_baseline` have no positive
+typed producer. Imported function and data rows and retained partials remain blocked.
+Overlapping candidate ranges and planned native checks cannot close those rungs.
+Instruction capture must complete the generated plan. A capture failure aborts
+the row without a committed receipt. Failed receipts cannot close work.
 
 Data collection requires a current typed receipt for every indexed operation.
 `data_original_range` binds the whole containing reviewed data or rodata segment,

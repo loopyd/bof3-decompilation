@@ -577,23 +577,28 @@ def _analyze_validated_records(
             if gap["class"] in required and gap["class"] not in seen
         ]
         opened.extend(gap for gap in capture_gaps if gap["class"] in required)
-        opened = [
-            {
-                **gap,
-                "reason": gap["reason"]
-                if gap["reason"].startswith("capability gap:")
-                else f"capability gap: {gap['class']}: {gap['reason']}",
-            }
-            for gap in opened
-        ]
-        for fact_class in sorted(required - seen):
-            if not any(gap["class"] == fact_class for gap in opened):
-                opened.append(
-                    {
-                        "class": fact_class,
-                        "reason": f"capability gap: {fact_class}: no supported original observation captured; use --instructions; selected calls support canonical wrappers and bounded acyclic callers; owner bodies support canonical wrappers and global-pointer zero-byte stores",
-                    }
-                )
+    required = set(RUNG_PROFILES[row["kind"], row.get("outside_payload") is True])
+    if row.get("partial_used") is True:
+        required.add("partial_baseline")
+    positive = {fact["class"] for fact in facts if fact["polarity"] == "positive"}
+    for fact_class in sorted(required - positive):
+        if any(gap["class"] == fact_class for gap in opened):
+            continue
+        reason = (
+            "positive producer unavailable"
+            if fact_class in {"owner_resolution", "owner_data", "partial_baseline"}
+            else "no supported runner observation captured"
+        )
+        opened.append({"class": fact_class, "reason": reason})
+    opened = [
+        {
+            **gap,
+            "reason": gap["reason"]
+            if gap["reason"].startswith("capability gap:")
+            else f"capability gap: {gap['class']}: {gap['reason']}",
+        }
+        for gap in opened
+    ]
     result = {
         "schema": SCHEMA,
         "target": target,

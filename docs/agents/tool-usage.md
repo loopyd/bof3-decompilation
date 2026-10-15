@@ -219,6 +219,14 @@ is captured under its own reviewed boundary; unsupported bodies remain named gap
 Other unresolved edge kinds need additional discovery. Function conclusions require
 the complete rung profile and current evidence replay. Collection alone grants no
 semantic approval. See the [decoder contract](harness.md#domain-packages).
+Collection names missing producers for every required rung, including
+`partial_baseline`, and retains each decode refusal despite other positive facts
+for the same rung. `owner_resolution`, `owner_data` and `partial_baseline` have
+no positive typed producer. Imported function and data rows and retained partials
+therefore remain blocked, regardless of overlapping candidate owner ranges or
+planned native checks. Instruction capture must complete the generated plan.
+A capture failure aborts the row without a committed receipt. Its failed receipt
+cannot close work or support a conclusion.
 The selected body's complete capture also supplies `selected_range`. Supported
 acyclic leaf bodies include conditional direct memory effects, with distinct
 reads, pre-slot branch guards and truncated stores. Unsupported bodies retain
