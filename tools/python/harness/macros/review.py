@@ -4,14 +4,23 @@ from __future__ import annotations
 
 import json
 import re
+from contextlib import ExitStack, closing
 from pathlib import Path
 from typing import Any, Callable
 
+from harness.build.compiler import (
+    CONFIGURATION_PATH,
+    build_compiler_arguments,
+    parse_compiler_configuration,
+    resolve_compiler_settings,
+)
+from harness.build.dependencies import IncludeSnapshot
+from harness.build.profiles import collect_forced_paths, validate_include_search
 from harness.common.digests import digest
 from harness.common.directory import validate_repo_path
 from harness.common.inputs import InputBatch
+from harness.common.observation import PathWatch
 from harness.common.paths import file_state, validate_paths
-from harness.domain.includes import local_include_files
 from harness.domain.receipts import sha256_file
 from harness.io import unique_object
 from harness.macros import creation as macro_creation
@@ -137,22 +146,50 @@ def _proof_wrapper_sources(
 
 
 def _wrapper_dependencies(root: Path, source: str) -> set[str]:
-    path = root / source
-    dependencies = local_include_files(
-        root,
-        [path],
-        include_roots=(
-            root / "src",
-            root / "include",
-            root / "toolchains/psyq/4.7/include",
-        ),
-        include_angle=True,
-    )
-    return {
-        dependency.resolve().relative_to(root.resolve()).as_posix()
-        for dependency in dependencies
-        if dependency.is_file() and dependency.resolve().is_relative_to(root.resolve())
-    }
+    """Capture configured literal dependencies without proving active expansion."""
+    path = root / validate_repo_path(source)
+    configuration_path = root / CONFIGURATION_PATH
+    with ExitStack() as stack:
+        watch = stack.enter_context(closing(PathWatch({path, configuration_path})))
+        with InputBatch(root) as batch:
+            _, content = batch.read(
+                path, max_bytes=_REVIEW_LIMIT, include_metadata=True, single_link=True
+            )
+            _, configuration = batch.read(
+                configuration_path,
+                max_bytes=_REVIEW_LIMIT,
+                include_metadata=True,
+                single_link=True,
+            )
+            if content is None:
+                raise ValueError(f"macro wrapper source is missing: {source}")
+            flags, compilers = parse_compiler_configuration(
+                (configuration or b"").decode("utf-8")
+            )
+            settings = resolve_compiler_settings(
+                source, content.decode("utf-8"), flags, compilers
+            )
+            arguments = build_compiler_arguments(root, settings.flags)
+            validate_include_search(root, arguments)
+            forced = collect_forced_paths(root, arguments, Path.cwd())
+            snapshot = stack.enter_context(
+                closing(
+                    IncludeSnapshot(
+                        root, path, forced=tuple(root / name for name in sorted(forced))
+                    )
+                )
+            )
+            if snapshot.content[path] != content:
+                raise ValueError("macro wrapper source changed during capture")
+            dependencies = {
+                dependency.relative_to(root).as_posix()
+                for dependency in snapshot.content
+                if dependency != path
+            }
+            snapshot.validate()
+        watch.validate()
+        snapshot.check()
+    return dependencies
 
 
 def _shared_targets(

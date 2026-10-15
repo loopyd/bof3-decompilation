@@ -45,11 +45,14 @@ function per use. Contextual source/header-through-includer uses cover all sourc
 members; direct uses exclude unreferenced siblings. Block ambiguous identities;
 covered siblings cannot substitute. Repeat before writes.
 
-Traverse literal quoted/angle includes through source/include/PsyQ roots with
-containment and cycle checks. Quotes first search the including directory; angles
-do not. Support compact directives, comments and continuations; exclude commented
-includes. Conditional/computed selection remains unproven. Require actual
-preprocessor binding and independent `all_use_sites` beyond lexical coverage.
+Resolve each source's effective compiler settings, including `-include` and
+`-imacros`. Traverse literal quoted/angle includes through source/include/PsyQ roots;
+quotes first search the including directory; angles do not. Preserve containment,
+cycle checks, compact directives, comments and continuations; omit commented includes.
+Bind source, configuration, dependencies
+and negative lookups through validation. Missing inputs, unsupported search or
+preprocessing, and observed mutation refuse. Active conditional selection remains
+unproven; require actual preprocessor binding and independent `all_use_sites`.
 
 For grouped C, derive membership from reviewed Splat even when metadata is missing.
 Require one explicit lift owner, complete Splat/claim/index membership, current
