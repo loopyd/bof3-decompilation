@@ -77,7 +77,10 @@ class EvidenceNamespace:
             path = self.resolve_record(record["receipt"])
             payload = json.loads(path.read_text())
             payload.update(
-                {key: command[key] for key in ("schema", "facts", "observations")}
+                {
+                    key: command[key]
+                    for key in ("schema", "facts", "observations", "open")
+                }
             )
             text = _json_lines(payload)
             path.write_text(text, encoding="utf-8")

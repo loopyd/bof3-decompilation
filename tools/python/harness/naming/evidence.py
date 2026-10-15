@@ -195,6 +195,7 @@ def indexed_observations(
         "schema": "bof3.naming-evidence-facts/v1",
         "facts": sorted({fact["class"] for fact in facts}),
         "observations": facts,
+        "open": [],
     }
 
 

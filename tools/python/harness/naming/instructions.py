@@ -5,10 +5,12 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import shlex
 from contextvars import ContextVar
 from pathlib import Path
 
 from harness.analysis.project import prepare_target
+from harness.common.commands import tool_id
 from harness.domain.ids import parse_function_id
 from harness.domain.layout import parse_splat_layout
 from harness.domain.manifests import load_target_manifests
@@ -73,7 +75,9 @@ def semantic_identities(semantic: list) -> list[str]:
         command = item.get("command")
         if not isinstance(command, str) or not command.split():
             raise ValueError("semantic command is missing")
-        kind = Path(command.split()[0]).name
+        kind = tool_id(shlex.split(command))
+        if kind is None:
+            raise ValueError("semantic command requires the canonical harness entry")
         identities.append(item.get("instruction_id", f"semantic:{kind}:{command}"))
     return identities
 
