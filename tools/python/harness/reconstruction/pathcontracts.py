@@ -241,7 +241,7 @@ def _seeds(path, call, caller):
             elif fields.opcode in {9, 13, 14} and fields.immediate == 0:
                 copy_source = fields.rs
             _require(
-                fields.opcode in {9, 12, 13, 14, 15} or copy_source is not None,
+                fields.opcode in {9, 10, 11, 12, 13, 14, 15} or copy_source is not None,
                 "call path seed unsupported native constant definition",
             )
             equality = {point} | (
