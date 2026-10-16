@@ -721,12 +721,13 @@ gameplay fidelity or full song-folder packing.
 
 [The note inverse](../../../tools/rust/bof3-audio/src/sequence/editing/notes.rs)
 rebuilds a sequence that reaches its source end marker without controller-loop
-operations. It accepts inserted or removed notes and note-channel changes on
-channels that already contain source notes. The ordered program, volume/pan, bend
-and tempo events retain their identities; their supported values and ticks remain
-editable. MIDI note-off with zero release velocity normalizes to SEP note-on with
-zero velocity. Original ignored bend low bytes and the opaque suffix after the
-source end marker survive.
+operations. It accepts inserted or removed notes and timed tempo events, plus
+note-channel changes on channels that already contain source notes. Timed tempos
+must be nonzero 24-bit values; the initial tempo remains at tick zero. The ordered
+program, volume/pan and bend events retain their identities; their supported
+values and ticks remain editable. MIDI note-off with zero release velocity
+normalizes to SEP note-on with zero velocity. Original ignored bend low bytes and
+the opaque suffix after the source end marker survive.
 
 The selected stream receives explicit statuses and minimal deltas. Within each
 MIDI track, event order remains fixed; tempo events precede performance events at
@@ -740,8 +741,8 @@ their bytes when the selected stream grows or shrinks.
 With `layout_rebuilt=true`, `changed_source_bytes` counts differing byte positions
 plus the length difference. `changed_source_events` counts all rewritten or
 removed original events. `timing_edits` is empty because the rebuilt stream no
-longer uses the original delta spans. These counts do not identify individual note
-insertions or removals. Controller-loop edits, new channels and non-note
+longer uses the original delta spans. These counts do not identify individual
+insertions or removals. Controller-loop edits, new channels and other channel-event
 insertion/removal reject explicitly. Broader channel and loop reconstruction,
 scheduler timing, bank availability and independent audio fidelity remain open.
 

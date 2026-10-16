@@ -1,4 +1,4 @@
-//! Linear note edits with complete semantic retranslation.
+//! Linear note and tempo edits with complete semantic retranslation.
 
 use super::{channel, tempo, translate, Options, Rebuilt, Report};
 use crate::{
@@ -37,8 +37,8 @@ pub(super) fn rebuild(
     }
     let conductor = &edited.tracks[0].events;
     let original_conductor = &baseline.midi.tracks[0].events;
-    if conductor.len() != original_conductor.len() {
-        return Err(format!("{reject}: tempo event insertion/removal is unsupported").into());
+    if conductor.len() < 5 {
+        return Err(format!("{reject}: generated conductor setup or termination missing").into());
     }
     for index in 0..4 {
         if index == 2 {
@@ -198,9 +198,9 @@ pub(super) fn rebuild(
             original_data_bytes: original.len(),
             output_data_bytes: bytes.len(),
             limitations: vec![
-                "Linear note insertion, removal and channel changes rebuild the selected stream with explicit statuses and minimal deltas. Opaque suffixes and other sequence records survive.",
+                "Linear note and tempo insertion/removal and note-channel changes rebuild the selected stream with explicit statuses and minimal deltas. Opaque suffixes and other sequence records survive.",
                 "With layout_rebuilt, changed_source_bytes counts differing data positions and length; changed_source_events counts all rewritten or removed original events. timing_edits is empty because original delta identities are not retained.",
-                "Existing non-note event identities, generated channel setup and termination remain fixed. Controller-loop structure, new channels and non-note insertion/removal require separate correspondence.",
+                "Existing program, controller and bend identities, generated setup and termination remain fixed. Controller-loop structure, new channels and other channel-event insertion/removal require separate correspondence.",
                 "Bank availability, scheduler timing, synthesis and independent audio fidelity are separate checks.",
             ],
         },
