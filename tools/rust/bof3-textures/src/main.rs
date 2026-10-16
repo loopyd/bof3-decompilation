@@ -27,7 +27,7 @@ enum Command {
         #[arg(long)]
         source_root: Option<PathBuf>,
     },
-    /// Export captured snapshots, raw resources, palette words, and qualified upload views.
+    /// Export captured snapshots, raw resources, decoded banks, and qualified editable views.
     Unpack {
         input: PathBuf,
         #[arg(long)]

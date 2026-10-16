@@ -10,7 +10,7 @@ use emi_ex_v2::image::ArchiveImage;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Error, Result,
+    Error, Result, bank,
     catalog::{self, Index, Resource},
     digest::sha256_hex,
     formats,
@@ -36,6 +36,7 @@ pub struct Export {
     pub words: Option<String>,
     pub indices_4: Option<String>,
     pub indices_8: Option<String>,
+    pub decoded: Option<String>,
     pub palette_binding: String,
 }
 
@@ -80,6 +81,10 @@ fn exports(index: &Index) -> Vec<Export> {
                     .upload
                     .as_ref()
                     .map(|_| format!("{directory}/indices-8.png")),
+                decoded: resource
+                    .bank
+                    .as_ref()
+                    .map(|_| format!("{directory}/decoded.bin")),
                 palette_binding: if resource.palette_upload.is_some() {
                     "palette-word source; draw CLUT selection and texture uses are unresolved"
                 } else {
@@ -137,6 +142,9 @@ pub fn unpack(input: &Input, destination: &Path) -> Result<Manifest> {
                 .get(start..start + resource.size as usize)
                 .ok_or_else(|| Error::Invalid(format!("{} exceeds snapshot", resource.id)))?;
             stage.write(&export.raw, raw)?;
+            if let Some(member) = &export.decoded {
+                stage.write(member, &bank::decode(raw)?.bytes)?;
+            }
             if let (Some(palette), Some(member)) = (&resource.palette_upload, &export.words) {
                 stage.write(
                     member,
@@ -272,6 +280,13 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
         {
             let raw =
                 &original[resource.offset as usize..(resource.offset + resource.size) as usize];
+            if let Some(member) = &export.decoded
+                && read_member(&root, member, 1024 * 1024)? != bank::decode(raw)?.bytes
+            {
+                return Err(Error::Invalid(format!(
+                    "{member}: decoded bank view is read-only; internal editable layouts remain unresolved"
+                )));
+            }
             let mut edit = ByteEdits::new(raw);
             edit.add(
                 &export.raw,

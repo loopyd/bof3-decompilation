@@ -5,11 +5,14 @@ self-contained archive packages. It can edit raw VRAM upload words, their
 4-bit or 8-bit index interpretations, and qualified palette-word banks within
 their original allocations.
 
+It also decodes qualified outer compressed banks into read-only byte views.
+Their internal sprite records remain unresolved.
+
 Full graphics support is incomplete. Category discovery lists the intended game
 roles, but current resource roles, CLUT associations, sprite composition,
-animation, compression, and runtime appearance remain unresolved. Strict coverage
-and complete verification return exit 1. A successful raw upload edit does not
-establish its appearance in the game.
+animation, internal codec bindings, and runtime appearance remain unresolved.
+Strict coverage and complete verification return exit 1. A successful raw upload
+edit does not establish its appearance in the game.
 
 ## Build
 
@@ -129,6 +132,10 @@ little-endian PSX color words. Preserve the word count. These banks have proven
 source and staging addresses, but their draw CLUT selections and texture uses
 remain unresolved. Editing a bank does not assign it to a diagnostic image.
 
+A qualified outer compressed bank also has a `decoded.bin` view. Packing requires
+this view to match the original decoded bytes. Internal image, palette, cell, and
+animation records need separate qualification before these views become editable.
+
 Edit raw upload words as unsigned 16-bit values, or preserve a PNG's dimensions
 and palette order while editing its indices. A 4-bit view accepts indices 0 to
 15; an 8-bit view accepts indices 0 to 255. Keep unused holes zero. Changed views
@@ -149,9 +156,9 @@ is rejected.
 Verification reports structure, dependencies, decoding, unchanged reconstruction,
 edited reconstruction, unrelated bytes, and runtime evidence separately. The
 input verifier currently establishes captured structure, qualified raw-word
-decoding, and palette-word inverses. The pack operation checks reconstruction
-and unrelated bytes for its own outputs. Neither report establishes full category
-or runtime acceptance.
+decoding, palette-word inverses, and outer-bank decompression. The pack operation
+checks reconstruction and unrelated bytes for its own outputs. Neither report
+establishes full category or runtime acceptance.
 Use `coverage --strict` to expose unresolved logical sources and dependencies;
 its nonzero result is expected while those findings remain.
 
@@ -192,6 +199,16 @@ offset fails. Final-reference bytes beyond the declared image length are
 reported separately and preserved during encoding. Unchanged streams remain
 exact, and edited streams must fit the original allocation. Source-bank and
 sprite bindings remain unresolved, so the CLI does not yet edit these streams.
+
+The `bank` module implements the outer stream consumed at
+`SLUS_004.22@0x80164064`, with forward overlapping copies at `0x801642F4`.
+Qualified type-1 entries loaded at `0x8003b800` have a six-byte header and an
+`0xff` terminator. Decoded size must match the first header word and cannot
+exceed 1 MiB. The decoder rejects references before the output start. The library
+inverse preserves unchanged streams exactly, retains opaque header and trailing
+bytes, and requires edited output to fit the original allocation. This byte
+inverse does not validate logical sprite edits. The CLI exports decoded bytes
+for inspection and refuses changes to them during packing.
 
 Input files are bounded at 128 MiB, indexed images at 1,048,576 pixels, and each
 codec process at 20 seconds. Invalid extents, malformed images, changed snapshots,

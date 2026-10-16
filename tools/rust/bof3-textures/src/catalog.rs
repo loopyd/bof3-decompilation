@@ -4,7 +4,7 @@ use emi_ex_v2::image::ArchiveImage;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Error, Result,
+    Error, Result, bank,
     digest::sha256_hex,
     formats::Upload,
     palette::PaletteUpload,
@@ -107,6 +107,7 @@ pub struct Resource {
     pub uses: Vec<String>,
     pub upload: Option<Upload>,
     pub palette_upload: Option<PaletteUpload>,
+    pub bank: Option<bank::Info>,
     pub findings: Vec<String>,
 }
 
@@ -137,6 +138,7 @@ pub fn interpretation_hash() -> String {
             include_str!("palette.rs"),
             include_str!("packed.rs"),
             include_str!("lzss.rs"),
+            include_str!("bank.rs"),
         ]
         .join("\n")
         .as_bytes(),
@@ -186,6 +188,7 @@ pub fn build_from(
                     uses: vec![],
                     upload: None,
                     palette_upload: None,
+                    bank: None,
                     findings: vec!["logical records and consumers have not been enumerated".into()],
                 };
                 if entry.file_type == 0
@@ -219,6 +222,31 @@ pub fn build_from(
                             .into(),
                     });
                     resource.palette_upload = Some(palette);
+                }
+                if entry.file_type == 1 && entry.ram_ptr == 0x8003_b800 {
+                    let decoded = bank::decode(payload)?;
+                    resource.kind = "compressed-bank".into();
+                    resource.categories = vec!["unclassified-graphics".into()];
+                    resource.storage = "us-disc-bank-lz".into();
+                    resource.decode = "outer-bank-bytes-verified".into();
+                    resource.bank = Some(decoded.info);
+                    resource.evidence.extend([
+                        "SLUS_004.22@0x80162618:type1-destination".into(),
+                        "SLUS_004.22@0x80163238:bank-decoder-initialization".into(),
+                        "SLUS_004.22@0x80164064:outer-bank-tokens".into(),
+                        "SLUS_004.22@0x801642F4:forward-overlapping-copy".into(),
+                    ]);
+                    resource.dependencies.push(Dependency {
+                        kind: "logical-layout".into(),
+                        target: None,
+                        status: "unresolved".into(),
+                        reason:
+                            "internal image, palette, cell and animation bindings remain unresolved"
+                                .into(),
+                    });
+                    resource.findings.push(
+                        "decoded bank bytes are read-only; logical edits require qualified internal records".into(),
+                    );
                 }
                 if entry.file_type == 3 {
                     resource.kind = "texture-upload".into();
@@ -313,6 +341,7 @@ pub fn build_from(
                 uses: vec![],
                 upload: None,
                 palette_upload: None,
+                bank: None,
                 findings,
             });
         }
@@ -445,6 +474,7 @@ pub fn coverage(index: &Index) -> serde_json::Value {
             "inventory_sha256": index.inventory_sha256},
         "logical": {"complete": false, "resources": index.resources.len(), "raw_uploads": raw,
             "palette_banks": index.resources.iter().filter(|resource| resource.palette_upload.is_some()).count(),
+            "decoded_compressed_banks": index.resources.iter().filter(|resource| resource.bank.is_some()).count(),
             "unresolved_resources": index.resources.iter().filter(|resource| !resource.findings.is_empty()).map(|resource| &resource.id).collect::<Vec<_>>()},
         "categories": index.categories.iter().map(|category| serde_json::json!({"id": category.id, "disposition": "unresolved", "evidence": []})).collect::<Vec<_>>(),
         "unresolved_dependencies": index.resources.iter().flat_map(|resource| resource.dependencies.iter().filter(|edge| edge.status != "verified").map(|edge| serde_json::json!({"resource": resource.id, "dependency": edge}))).collect::<Vec<_>>(),
@@ -460,7 +490,8 @@ pub fn verify(index: &Index) -> serde_json::Value {
         "structure": {"status": "verified", "scope": "captured-inputs-only", "files": index.files.len()},
         "dependencies": {"status": "unresolved"},
         "decode": {"status": "partial", "raw_word_uploads": index.resources.iter().filter(|resource| resource.upload.is_some()).count(),
-            "palette_banks": index.resources.iter().filter(|resource| resource.palette_upload.is_some()).count()},
+            "palette_banks": index.resources.iter().filter(|resource| resource.palette_upload.is_some()).count(),
+            "compressed_banks": index.resources.iter().filter(|resource| resource.bank.is_some()).count()},
         "unchanged_reconstruction": {"status": "unverified"},
         "edited_reconstruction": {"status": "unverified"},
         "unrelated_bytes": {"status": "unverified"},
