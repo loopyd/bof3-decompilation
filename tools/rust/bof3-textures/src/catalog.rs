@@ -139,6 +139,7 @@ pub fn interpretation_hash() -> String {
             include_str!("packed.rs"),
             include_str!("lzss.rs"),
             include_str!("bank.rs"),
+            include_str!("animation.rs"),
         ]
         .join("\n")
         .as_bytes(),

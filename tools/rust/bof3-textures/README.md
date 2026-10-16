@@ -213,5 +213,14 @@ for inspection and refuses changes to them during packing.
 Input files are bounded at 128 MiB, indexed images at 1,048,576 pixels, and each
 codec process at 20 seconds. Invalid extents, malformed images, changed snapshots,
 escaped package paths, missing members, and existing destinations cause failure.
+
+The `animation` library reads bounded program headers, step pairs, and cell
+offsets using the US consumers at `0x8014d910`, `0x8014d978`, and `0x8014daec`.
+It preserves cell payloads and allocation while re-encoding existing step pairs.
+Forward transitions branch once on a duration byte at or above `0x80`, then fetch
+the target directly. Initialization and reverse playback differ. The library
+models the two forward variants in consumer updates, without assuming a frame
+rate. Reverse playback, cell rendering, and source-bank bindings remain
+unresolved. These programs are not yet editable through the CLI.
 Unresolved logical resources, categories, dependencies, inverse formats, and
 runtime families keep full-support acceptance open.
