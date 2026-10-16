@@ -3272,9 +3272,15 @@ fn run_validate(cli: &Cli, path: &Path, commands: bool) -> Result<()> {
     }
     if value["schema"] == crate::inline::SCHEMA {
         let document = crate::inline::parse(&bytes)?;
+        let glyphs = if commands { document.glyph_count()? } else { 0 };
+        let usage = if glyphs == 0 {
+            serde_json::json!([])
+        } else {
+            serde_json::json!([{"command": "glyph", "count": glyphs}])
+        };
         println!(
             "{}",
-            serde_json::json!({"document": path, "schema": value["schema"], "strings": document.strings.len(), "commands": []})
+            serde_json::json!({"document": path, "schema": value["schema"], "strings": document.strings.len(), "commands": usage})
         );
         return Ok(());
     }
@@ -3481,7 +3487,18 @@ fn run_query(
         if !cli.json {
             println!("query {}: {}", archive.display(), result["source_schema"]);
             if commands {
-                println!("  no commands in literal allocations");
+                if let Some(usage) = result["usage"].as_array() {
+                    if usage.is_empty() {
+                        println!("  no commands in literal allocations");
+                    }
+                    for item in usage {
+                        println!(
+                            "  {{{}}}\t{}",
+                            item["command"].as_str().unwrap_or(""),
+                            item["count"]
+                        );
+                    }
+                }
             }
             if let Some(matches) = result["matches"].as_array() {
                 for row in matches {

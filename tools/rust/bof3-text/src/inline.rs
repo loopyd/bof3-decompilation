@@ -6,15 +6,16 @@ use std::path::Path;
 use serde::{Deserialize, Serialize};
 
 use crate::digest::sha256_hex;
-use crate::models::{Entry, Error, Result, invalid};
+use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v3";
+pub const SCHEMA: &str = "bof3.inline-text/v4";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub(crate) enum Codec {
     GameLiteral,
+    GameGlyphs,
     AsciiDecimalFormat,
 }
 
@@ -22,6 +23,9 @@ impl Codec {
     pub(crate) fn encode(self, text: &str, capacity: usize) -> Result<Vec<u8>> {
         if self == Self::GameLiteral {
             return encode_name(text, capacity);
+        }
+        if self == Self::GameGlyphs {
+            return encode_glyphs(text, capacity);
         }
         if text.len() > capacity
             || !text.bytes().all(|byte| (0x20..=0x7e).contains(&byte))
@@ -39,6 +43,9 @@ impl Codec {
         if self == Self::GameLiteral {
             return decode_name(bytes, file_offset);
         }
+        if self == Self::GameGlyphs {
+            return decode_glyphs(bytes, file_offset);
+        }
         let end = bytes.iter().position(|byte| *byte == 0).ok_or_else(|| {
             Error::Invalid(format!("unterminated ASCII format at {file_offset:#x}"))
         })?;
@@ -54,9 +61,105 @@ impl Codec {
     pub(crate) fn as_str(self) -> &'static str {
         match self {
             Self::GameLiteral => "game-literal",
+            Self::GameGlyphs => "game-glyphs",
             Self::AsciiDecimalFormat => "ascii-decimal-format",
         }
     }
+
+    pub(crate) fn commands(self, text: &str, capacity: usize) -> Result<Vec<GlyphCommand>> {
+        if self != Self::GameGlyphs {
+            return Ok(Vec::new());
+        }
+        let bytes = self.encode(text, capacity)?;
+        let mut commands = Vec::new();
+        let mut offset = 0;
+        while offset < bytes.len() {
+            if bytes[offset] == 0x15 {
+                commands.push(GlyphCommand {
+                    offset,
+                    code: 0x15,
+                    name: "glyph",
+                    operands: [bytes[offset + 1]],
+                });
+                offset += 2;
+            } else {
+                offset += 1;
+            }
+        }
+        Ok(commands)
+    }
+}
+
+#[derive(Serialize)]
+pub(crate) struct GlyphCommand {
+    offset: usize,
+    code: u8,
+    name: &'static str,
+    operands: [u8; 1],
+}
+
+fn encode_glyphs(mut text: &str, capacity: usize) -> Result<Vec<u8>> {
+    let mut bytes = Vec::new();
+    while !text.is_empty() {
+        if let Some(tail) = text.strip_prefix("{glyph(0x") {
+            let (operand, remaining) = tail
+                .split_once(")}")
+                .ok_or_else(|| Error::Invalid("glyph command must use {glyph(0xNN)}".into()))?;
+            if operand.len() != 2 || !operand.bytes().all(|byte| byte.is_ascii_hexdigit()) {
+                return invalid("glyph operand must contain exactly two hexadecimal digits");
+            }
+            let operand = u8::from_str_radix(operand, 16)
+                .map_err(|error| Error::Invalid(error.to_string()))?;
+            if operand == 0 {
+                return invalid("NUL glyph operand would truncate the BIOS string append");
+            }
+            bytes.extend_from_slice(&[0x15, operand]);
+            text = remaining;
+        } else {
+            let character = text.chars().next().unwrap();
+            bytes.push(literal_byte(character).ok_or_else(|| {
+                Error::Invalid(format!("unsupported inline glyph character {character:?}"))
+            })?);
+            text = &text[character.len_utf8()..];
+        }
+        if bytes.len() > capacity {
+            return invalid(format!(
+                "inline glyph text exceeds its {capacity}-byte field"
+            ));
+        }
+    }
+    Ok(bytes)
+}
+
+fn decode_glyphs(bytes: &[u8], file_offset: usize) -> Result<String> {
+    let end = bytes.iter().position(|byte| *byte == 0).ok_or_else(|| {
+        Error::Invalid(format!(
+            "unterminated inline glyph text at {file_offset:#x}"
+        ))
+    })?;
+    if bytes[end..].iter().any(|byte| *byte != 0) {
+        return invalid("nonzero bytes after inline glyph text terminator");
+    }
+    let mut text = String::new();
+    let mut offset = 0;
+    while offset < end {
+        if bytes[offset] == 0x15 {
+            if offset + 1 >= end {
+                return invalid("inline glyph command has no nonzero operand before NUL");
+            }
+            text.push_str(&format!("{{glyph(0x{:02X})}}", bytes[offset + 1]));
+            offset += 2;
+        } else {
+            text.push(literal_char(bytes[offset]).ok_or_else(|| {
+                Error::Invalid(format!(
+                    "unknown inline glyph byte at {:#x}",
+                    file_offset + offset
+                ))
+            })?);
+            offset += 1;
+        }
+    }
+    Ok(text)
 }
 
 struct Allocation {
@@ -85,6 +188,16 @@ impl Allocation {
             reference: None,
             renderer: 0x80150098,
             codec: Codec::AsciiDecimalFormat,
+        }
+    }
+
+    const fn glyphs(address: u32, capacity: usize) -> Self {
+        Self {
+            address,
+            capacity,
+            reference: None,
+            renderer: 0x8014f800,
+            codec: Codec::GameGlyphs,
         }
     }
 }
@@ -140,15 +253,16 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
-        name: "US battle literal messages",
+        name: "US battle messages",
         load: 0x801d0c00,
         size: 118224,
-        sha256: "321468941d42c8d749a319f3d862a29f890671d18284c6fc2d89c496a9caf92b",
-        consumers: &[0x801de94c, 0x801de560, 0x801e9538],
+        sha256: "1d1ca57e123bc939b671491799d34b8a871c0ee6a00a8c74a5bcfd614f9bd8f2",
+        consumers: &[0x801de94c, 0x801de560, 0x801deaa4, 0x801deac4, 0x801e9538],
         // Indexed records and direct code references, rather than a pointer table.
-        // Rows 1/3 contain control bytes; rows 4/5 lack traced selections.
+        // Row 1 appends at most five encoded bytes. Rows 3/4/5 remain unsupported.
         allocations: &[
             Allocation::literal(0x801eb000, 13, None, 0x8014f800),
+            Allocation::glyphs(0x801eb00d, 6),
             Allocation::literal(0x801eb01a, 13, None, 0x8014f800),
             Allocation::literal(0x801eb04e, 13, None, 0x8014f800),
             Allocation::literal(0x801eb05b, 13, None, 0x8014f800),
@@ -172,6 +286,14 @@ pub struct Document {
     load_address: u32,
     pub(crate) consumers: Vec<u32>,
     pub strings: Vec<Text>,
+}
+
+impl Document {
+    pub(crate) fn glyph_count(&self) -> Result<usize> {
+        self.strings.iter().try_fold(0, |count, row| {
+            Ok(count + row.codec.commands(&row.text, row.capacity - 1)?.len())
+        })
+    }
 }
 
 #[derive(Serialize, Deserialize)]

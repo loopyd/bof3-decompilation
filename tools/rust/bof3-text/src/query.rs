@@ -37,28 +37,50 @@ pub fn literal(
     report["source_schema"] = report["schema"].take();
     report["schema"] = json!("bof3.literal-query/v1");
     report["rows"] = json!(rows.len());
-    if commands {
-        report["usage"] = json!([]);
-        return Ok(report);
-    }
     let mut matches = Vec::new();
+    let mut glyph_count = 0;
     for mut row in rows {
         let text = row["text"]
             .as_str()
             .ok_or_else(|| crate::models::Error::Invalid("literal query has no text".into()))?;
-        let hit = match needle {
-            Some(needle) => match crate::search::find_literal(text, needle, ignore_case) {
-                Some(hit) => Some(hit),
-                None => continue,
-            },
-            None => None,
-        };
         let offset = row["file_offset"]
             .as_u64()
             .ok_or_else(|| crate::models::Error::Invalid("literal query has no offset".into()))?;
         let capacity = row["capacity"]
             .as_u64()
             .ok_or_else(|| crate::models::Error::Invalid("literal query has no capacity".into()))?;
+        let glyphs = row["codec"] == json!(crate::inline::Codec::GameGlyphs);
+        let maximum = capacity.checked_sub(1).ok_or_else(|| {
+            crate::models::Error::Invalid("literal allocation has no terminator capacity".into())
+        })?;
+        let maximum = usize::try_from(maximum)
+            .map_err(|error| crate::models::Error::Invalid(error.to_string()))?;
+        if commands {
+            if glyphs {
+                glyph_count += crate::inline::Codec::GameGlyphs
+                    .commands(text, maximum)?
+                    .len();
+            }
+            continue;
+        }
+        let hit = match needle {
+            Some(needle) => {
+                let hit = if glyphs {
+                    crate::search::find_glyphs(
+                        &crate::inline::Codec::GameGlyphs.encode(text, maximum)?,
+                        needle,
+                        ignore_case,
+                    )
+                } else {
+                    crate::search::find_literal(text, needle, ignore_case)
+                };
+                match hit {
+                    Some(hit) => Some(hit),
+                    None => continue,
+                }
+            }
+            None => None,
+        };
         let range = hit.as_ref().and_then(|hit| hit.byte_range);
         let matched_offset = range.map(|(start, _)| offset + start as u64);
         let matched_length = range.map(|(start, end)| end - start);
@@ -82,6 +104,14 @@ pub fn literal(
             row["reading"] = json!(hit.reading);
         }
         matches.push(row);
+    }
+    if commands {
+        report["usage"] = if glyph_count == 0 {
+            json!([])
+        } else {
+            json!([{"command": "glyph", "count": glyph_count}])
+        };
+        return Ok(report);
     }
     report["matched"] = json!(matches.len());
     report["matches"] = json!(matches);

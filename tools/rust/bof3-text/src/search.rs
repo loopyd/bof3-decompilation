@@ -410,6 +410,29 @@ pub fn find_in_reading(reading: &str, needle: &str, ignore_case: bool) -> Option
 /// must match exactly, and the returned byte range covers only the literal bytes matched.
 pub fn find_in_instance(encoded: &[u8], needle: &str, ignore_case: bool) -> Option<Hit> {
     let (spaced, bare) = readings(encoded);
+    find_pair(spaced, bare, needle, ignore_case)
+}
+
+pub fn find_glyphs(encoded: &[u8], needle: &str, ignore_case: bool) -> Option<Hit> {
+    let mut spaced = Reading::default();
+    let mut bare = Reading::default();
+    let mut offset = 0;
+    while offset < encoded.len() {
+        if encoded[offset] == 0x15 {
+            encoded.get(offset + 1)?;
+            spaced.separator();
+            offset += 2;
+        } else {
+            let character = literal_char(encoded[offset])?;
+            spaced.literal(character, offset);
+            bare.literal(character, offset);
+            offset += 1;
+        }
+    }
+    find_pair(spaced, bare, needle, ignore_case)
+}
+
+fn find_pair(spaced: Reading, bare: Reading, needle: &str, ignore_case: bool) -> Option<Hit> {
     let (start, end) = find_in_reading_pair(&spaced.text, &bare.text, needle, ignore_case)?;
     let window = spaced.marks.get(start..end)?;
     let first = window.iter().flatten().next().copied();

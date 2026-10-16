@@ -64,6 +64,14 @@ fn literal_report(
         let remaining = maximum
             .checked_sub(encoded_size)
             .ok_or_else(|| Error::Invalid("analysis text exceeds its allocation".into()))?;
+        let commands = if matches!(encoding, Encoding::Inline) {
+            let codec: crate::inline::Codec = serde_json::from_value(row["codec"].clone())
+                .map_err(|error| Error::Invalid(error.to_string()))?;
+            serde_json::to_value(codec.commands(text, maximum)?)
+                .map_err(|error| Error::Invalid(error.to_string()))?
+        } else {
+            json!([])
+        };
         let bytes = offset
             .checked_add(capacity)
             .and_then(|end| data.get(offset..end))
@@ -78,7 +86,7 @@ fn literal_report(
                 .map(|byte| format!("{byte:02x}"))
                 .collect::<String>()
         );
-        row["commands"] = json!([]);
+        row["commands"] = commands;
         if matches!(encoding, Encoding::Ascii)
             && row["codec"] == json!(crate::executable::Codec::AsciiU32HexFormat)
         {

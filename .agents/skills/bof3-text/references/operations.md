@@ -70,7 +70,7 @@ document and separate output; editing one does not update the other or a save.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v3`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v4`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one
 encoded byte for NUL within each allocation. Pack against the
 same archive with its recorded entry or `all`, without class or latch selectors.
@@ -78,7 +78,8 @@ Each matching archive payload needs its own source-bound document and output.
 `ascii-decimal-format` rows retain exactly one `%3d` and allow only surrounding
 printable ASCII within capacity. Other percent sequences are refused.
 Corpus export includes these documents alongside bank documents.
-The literal message layout excludes command-bearing and untraced table rows.
+Battle append row 1 also accepts `{glyph(0xNN)}`, with a nonzero operand and at most
+five encoded bytes. Other command-bearing and untraced table rows are refused.
 An empty pointer-reference list means indexed or code addressing; retain it and
 the consumer metadata. The pinned payload protects those instructions.
 

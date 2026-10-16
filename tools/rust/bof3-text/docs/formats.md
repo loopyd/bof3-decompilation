@@ -145,16 +145,17 @@ five-entry pointer tables at `0x800B6E88` and `0x800B6EC4`. Draw calls at
 and NUL termination. The layout occurs in BATTLE entry 15 and matching payloads
 in other archives; use `analyze` to discover the actual entry.
 
-`bof3.inline-text/v3` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v4` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderer`, `codec`, pointer-word `references` and editable `text`. Retain all
 fields and edit only `text`. Each allocation includes its original NUL, excludes alignment padding
-and accepts at most `capacity - 1` encoded literal bytes. Shorter text is
+and accepts at most `capacity - 1` encoded bytes. Shorter text is
 NUL-padded. `game-literal` rows use the game's literal character encoding.
 `ascii-decimal-format` rows use printable ASCII and must retain exactly one
-`%3d`; all other percent sequences are refused. Dialogue commands and pointer
-changes are refused.
+`%3d`; all other percent sequences are refused. `game-glyphs` rows also accept
+`{glyph(0xNN)}`, encoded as `0x15` followed by one nonzero byte. Glyph names and
+displayed meanings are unverified. Other commands and pointer changes are refused.
 Re-extract older inline documents before editing or packing.
 
 Recognition pins the complete selected payload outside these allocations.
@@ -163,7 +164,7 @@ entry and entry offset. It preserves all other payloads. Each archive replica
 remains a separate source. Other embedded strings, different code
 layouts and observed rendering remain separate coverage requirements.
 
-The `US battle literal messages` layout supports eight thirteen-byte records
+The `US battle messages` layout supports eight thirteen-byte literal records
 in BATTLE entry 3, loaded at `0x801D0C00`. The table starts at `0x801EB000` with
 stride thirteen. Supported table rows are 0, 2, 6, 7, 8, 9, 10 and 11; each
 accepts up to twelve literal bytes followed by NUL. The copy consumer at
@@ -171,11 +172,21 @@ accepts up to twelve literal bytes followed by NUL. The copy consumer at
 `0x801501E4`, which appends NUL. Event enqueue at `0x801DE560` stores message
 pointers; draw consumer `0x801E9538` forwards them to `0x8014F800`.
 
-These records use the same schema and capacity rules. Their `references` are
+Row 1 at `0x801EB00D` uses `game-glyphs` and a six-byte allocation, including NUL.
+It accepts at most five encoded bytes and preserves the remaining seven record
+bytes. A nonzero latch selects this append at `0x801DEAA4`, after a five-byte
+name copy into `0x801492B8`. The call dispatches BIOS A0 service `0x15`, whose
+original implementation scans to destination NUL and copies source through NUL
+without a capacity argument. Increasing the append beyond its original five
+bytes is refused. A zero glyph operand is refused because it would terminate
+that copy. Publisher `0x801DE60C` stores the resulting pointer for the draw
+consumer. The original append is ` {glyph(0x1B)}{glyph(0x1C)}`.
+
+These records use the same schema and source-binding rules. Their `references` are
 empty because their consumers use indexed records or code references rather
 than a pointer table. Recognition pins those instructions outside the editable
 fields. Document `index` identifies the supported allocation, not its original
-table row. Command-bearing rows 1 and 3 and untraced rows 4 and 5 remain outside
+table row. Command-bearing row 3 and untraced rows 4 and 5 remain outside
 this layout's editable allocations.
 
 The `US master labels and numeric formats` layout supports `Pwr`, `Def`, `Int`

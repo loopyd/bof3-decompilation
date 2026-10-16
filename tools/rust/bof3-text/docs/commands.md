@@ -158,13 +158,14 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v3`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v4`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
-The original BATTLE archive also has supported literal message records in entry 3.
-Use `--entry 3` to extract them. Command-bearing and untraced records remain
-excluded. SISYOU entry 0 supports four master-menu stat labels and the status
-labels `Pois` and `Conf`, plus three ASCII numeric formats; select it
+The original BATTLE archive also has supported message records in entry 3.
+Use `--entry 3` to extract them. Its appended row 1 permits literals and
+`{glyph(0xNN)}` within five encoded bytes. Other command-bearing and untraced
+records remain excluded. SISYOU entry 0 supports four master-menu stat labels,
+the status labels `Pois` and `Conf`, and three ASCII numeric formats; select it
 with `--entry 0`. See [formats.md](formats.md#inline-overlay-text).
 
 ## `extract-corpus [--root DIR] -o|--output DIR`
@@ -236,9 +237,10 @@ Default character documents use `bof3.character-text/v1` and the same summary,
 with a five-byte field capacity.
 Monster documents use `bof3.monster-text/v1` and report `names`, with an eight-byte
 field capacity. All eight records and their allocation identities are required.
-Inline documents use `bof3.inline-text/v3`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v4`; validation checks all allocations,
 per-string renderers and codecs, references and capacity including NUL,
 and reports `strings`. Re-extract older inline documents.
+`--commands` counts glyph commands; literal-only layouts retain an empty list.
 ASCII decimal formats must retain exactly one `%3d`, with no other percent
 sequences; only the surrounding printable ASCII may change within capacity.
 
@@ -256,10 +258,13 @@ bin/harness text query out/extracted/SLUS_004.22 --grep "Exception" --json
 ```
 
 Literal results use `bof3.literal-query/v1`, retain the source schema and identity,
-and report allocation metadata in `matches`. Their `reading` is `literal`.
+and report allocation metadata in `matches`. Literal-only rows use `reading: literal`.
+The battle append row uses `reading: command-aware`; glyph commands and their
+operands are transparent to matching.
 The default string anchor covers the allocation, including padding and any NUL;
-the match anchor covers only matched source bytes. `--commands` reports an empty
-usage list for these fields. Class selectors retain their bank or heuristic scope.
+the match anchor covers only matched source bytes. `--commands` counts glyph
+commands in the append row and reports an empty usage list for literal-only fields.
+Class selectors retain their bank or heuristic scope.
 The corpus `search` index currently covers banks and heuristic instances; use
 direct `query` for verified literal allocations.
 
