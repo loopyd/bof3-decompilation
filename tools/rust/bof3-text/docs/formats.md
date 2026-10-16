@@ -145,6 +145,14 @@ five-entry pointer tables at `0x800B6E88` and `0x800B6EC4`. Draw calls at
 and NUL termination. The layout occurs in BATTLE entry 15 and matching payloads
 in other archives; use `analyze` to discover the actual entry.
 
+US `BATE.EMI` entry 0 loads at `0x801D0C00`. Its pointer tables at `0x801D8E4C`,
+`0x801D8E80` and `0x801D8EB8` contain five, four and five supported category
+labels. Calls at `0x801D6F84`, `0x801D7600` and `0x801D7E8C` pass selected
+strings to `0x8014F800`. These `game-literal` fields retain their original string
+length plus NUL, with capacities of five to seven bytes. Alignment padding,
+pointer tables and code remain outside the editable allocations. Other BATE
+strings and observed rendering remain unverified.
+
 `bof3.inline-text/v4` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
