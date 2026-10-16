@@ -11,6 +11,7 @@ pub mod package;
 pub mod packed;
 pub mod palette;
 pub mod png;
+pub mod resident;
 pub mod sources;
 
 pub use error::{Error, Result};

@@ -15,6 +15,7 @@ use crate::{
     digest::sha256_hex,
     formats,
     png::{self, IndexedImage},
+    resident,
     sources::{self, Input},
 };
 
@@ -37,6 +38,7 @@ pub struct Export {
     pub indices_4: Option<String>,
     pub indices_8: Option<String>,
     pub decoded: Option<String>,
+    pub animation: Option<String>,
     pub palette_binding: String,
 }
 
@@ -85,6 +87,10 @@ fn exports(index: &Index) -> Vec<Export> {
                     .bank
                     .as_ref()
                     .map(|_| format!("{directory}/decoded.bin")),
+                animation: resource
+                    .resident_animation
+                    .as_ref()
+                    .map(|_| format!("{directory}/animation.json")),
                 palette_binding: if resource.palette_upload.is_some() {
                     "palette-word source; draw CLUT selection and texture uses are unresolved"
                 } else {
@@ -144,6 +150,9 @@ pub fn unpack(input: &Input, destination: &Path) -> Result<Manifest> {
             stage.write(&export.raw, raw)?;
             if let Some(member) = &export.decoded {
                 stage.write(member, &bank::decode(raw)?.bytes)?;
+            }
+            if let Some(member) = &export.animation {
+                stage.write(member, &serde_json::to_vec_pretty(&resident::decode(raw)?)?)?;
             }
             if let (Some(palette), Some(member)) = (&resource.palette_upload, &export.words) {
                 stage.write(
@@ -292,6 +301,11 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
                 &export.raw,
                 read_member(&root, &export.raw, resource.size.max(1))?,
             )?;
+            if let Some(member) = &export.animation {
+                let document: resident::Document =
+                    serde_json::from_slice(&read_member(&root, member, 16 * 1024 * 1024)?)?;
+                edit.add(member, resident::encode(raw, &document)?)?;
+            }
             if let (Some(palette), Some(member)) = (&resource.palette_upload, &export.words) {
                 let words: Vec<u16> =
                     serde_json::from_slice(&read_member(&root, member, 16 * 1024 * 1024)?)?;
@@ -325,8 +339,19 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
                 }
             }
             let bytes = edit.finish();
+            if resource.resident_animation.is_some()
+                && resident::encode(raw, &resident::decode(&bytes)?)? != bytes
+            {
+                return Err(Error::Invalid(format!(
+                    "{}: resident animation edits must preserve all bytes outside existing step pairs",
+                    resource.id
+                )));
+            }
             if bytes != raw {
-                if resource.upload.is_none() && resource.palette_upload.is_none() {
+                if resource.upload.is_none()
+                    && resource.palette_upload.is_none()
+                    && resource.resident_animation.is_none()
+                {
                     return Err(Error::Invalid(format!(
                         "{} is preservation-only; editable layout is unresolved",
                         resource.id

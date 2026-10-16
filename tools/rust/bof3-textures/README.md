@@ -10,7 +10,7 @@ Their internal sprite records remain unresolved.
 
 Full graphics support is incomplete. Category discovery lists the intended game
 roles, but current resource roles, CLUT associations, sprite composition,
-animation, internal codec bindings, and runtime appearance remain unresolved.
+reverse animation, internal codec bindings, and runtime appearance remain unresolved.
 Strict coverage and complete verification return exit 1. A successful raw upload
 edit does not establish its appearance in the game.
 
@@ -135,6 +135,21 @@ A qualified outer compressed bank also has a `decoded.bin` view. Packing require
 this view to match the original decoded bytes. Internal image, palette, cell, and
 animation records need separate qualification before these views become editable.
 
+A recognized resident animation bank has an editable `animation.json` document.
+Each group retains its program pointers, byte extents, and existing step pairs.
+Edit `duration` and `operand` values from 0 to 255. Keep the number of groups,
+programs, and steps, and preserve all `offset` and `end` fields. Durations below
+128 select cells. Durations of 128 or more select a forward step target. An edit
+must preserve each step's frame or control role and keep every reference valid.
+Programs shared by several table indices must receive agreeing edits. Unchanged
+aliases do not override a changed view. Header, cell, and unrelated bytes remain
+exact. Packing also validates these restrictions for changes to `raw.bin`.
+
+Query these banks with `--kind resident-animation-bank`. `--animation` accepts
+their resource ID. Image and palette bindings, reverse playback, game roles, and
+runtime appearance remain unresolved. Unrecognized resident variants have no
+editable animation document and retain their refusal findings in the catalog.
+
 Edit raw upload words as unsigned 16-bit values, or preserve a PNG's dimensions
 and palette order while editing its indices. A 4-bit view accepts indices 0 to
 15; an 8-bit view accepts indices 0 to 255. Keep unused holes zero. Changed views
@@ -220,6 +235,17 @@ Forward transitions branch once on a duration byte at or above `0x80`, then fetc
 the target directly. Initialization and reverse playback differ. The library
 models the two forward variants in consumer updates, without assuming a frame
 rate. Reverse playback, cell rendering, and source-bank bindings remain
-unresolved. These programs are not yet editable through the CLI.
+unresolved for compressed banks.
+
+The `resident` module binds the recognized type-0 `0x800d3800` table variant to
+the original base initialization at `0x8014ebb8` and program selection at
+`0x8014d878`. A 32-bit relative group table leads to 16-bit relative program
+tables. Each table's first offset delimits its entries. References may be
+repeated or out of order. Each program and its opaque cells must fit before the
+next distinct program address, within its group and payload. The parser bounds
+sources at 1 MiB, group indices and total program indices at 65,536, and each
+group's program indices at 256. Variants whose cell references select metadata
+remain unsupported. Forward step edits preserve the original cell bytes;
+neither a valid program nor an edited duration establishes its use or appearance.
 Unresolved logical resources, categories, dependencies, inverse formats, and
 runtime families keep full-support acceptance open.

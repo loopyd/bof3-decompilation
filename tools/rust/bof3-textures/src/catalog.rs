@@ -8,6 +8,7 @@ use crate::{
     digest::sha256_hex,
     formats::Upload,
     palette::PaletteUpload,
+    resident,
     sources::{self, Input, SourceFile},
 };
 
@@ -108,6 +109,7 @@ pub struct Resource {
     pub upload: Option<Upload>,
     pub palette_upload: Option<PaletteUpload>,
     pub bank: Option<bank::Info>,
+    pub resident_animation: Option<resident::Info>,
     pub findings: Vec<String>,
 }
 
@@ -140,6 +142,7 @@ pub fn interpretation_hash() -> String {
             include_str!("lzss.rs"),
             include_str!("bank.rs"),
             include_str!("animation.rs"),
+            include_str!("resident.rs"),
         ]
         .join("\n")
         .as_bytes(),
@@ -190,6 +193,7 @@ pub fn build_from(
                     upload: None,
                     palette_upload: None,
                     bank: None,
+                    resident_animation: None,
                     findings: vec!["logical records and consumers have not been enumerated".into()],
                 };
                 if entry.file_type == 0
@@ -223,6 +227,34 @@ pub fn build_from(
                             .into(),
                     });
                     resource.palette_upload = Some(palette);
+                }
+                if entry.file_type == 0 && entry.ram_ptr == 0x800d_3800 {
+                    match resident::decode(payload) {
+                        Ok(document) => {
+                            resource.kind = "resident-animation-bank".into();
+                            resource.categories = vec!["unclassified-graphics".into()];
+                            resource.storage = "us-resident-animation".into();
+                            resource.decode = "forward-programs-verified".into();
+                            resource.pack = "forward-steps-verified".into();
+                            resource.resident_animation = Some(document.info());
+                            resource.evidence.extend([
+                                "SLUS_004.22@0x8014EBB8:resident-base-initialization".into(),
+                                "SLUS_004.22@0x8014D878:resident-program-selection".into(),
+                                "SLUS_004.22@0x8014D910:program-initialization".into(),
+                                "SLUS_004.22@0x8014D978:forward-loop-consumer".into(),
+                                "SLUS_004.22@0x8014DAEC:forward-stop-consumer".into(),
+                            ]);
+                            for kind in ["texture-source", "palette", "reverse-animation"] {
+                                resource.dependencies.push(Dependency {
+                                    kind: kind.into(),
+                                    target: None,
+                                    status: "unresolved".into(),
+                                    reason: "image, CLUT, reverse playback and game-role bindings require separate qualification".into(),
+                                });
+                            }
+                        }
+                        Err(error) => resource.findings.push(error.to_string()),
+                    }
                 }
                 if entry.file_type == 1 && entry.ram_ptr == 0x8003_b800 {
                     let decoded = bank::decode(payload)?;
@@ -327,6 +359,7 @@ pub fn build_from(
                 upload: None,
                 palette_upload: None,
                 bank: None,
+                resident_animation: None,
                 findings,
             });
         }
@@ -417,9 +450,10 @@ impl Filter<'_> {
             && self
                 .palette
                 .is_none_or(|value| has_reference(resource, "palette", value))
-            && self
-                .animation
-                .is_none_or(|value| has_reference(resource, "animation", value))
+            && self.animation.is_none_or(|value| {
+                (resource.resident_animation.is_some() && resource.id == value)
+                    || has_reference(resource, "animation", value)
+            })
     }
 }
 
@@ -451,6 +485,7 @@ pub fn coverage(index: &Index) -> serde_json::Value {
         "logical": {"complete": false, "resources": index.resources.len(), "raw_uploads": raw,
             "palette_banks": index.resources.iter().filter(|resource| resource.palette_upload.is_some()).count(),
             "decoded_compressed_banks": index.resources.iter().filter(|resource| resource.bank.is_some()).count(),
+            "resident_animation_banks": index.resources.iter().filter(|resource| resource.resident_animation.is_some()).count(),
             "unresolved_resources": index.resources.iter().filter(|resource| !resource.findings.is_empty()).map(|resource| &resource.id).collect::<Vec<_>>()},
         "categories": index.categories.iter().map(|category| serde_json::json!({"id": category.id, "disposition": "unresolved", "evidence": []})).collect::<Vec<_>>(),
         "unresolved_dependencies": index.resources.iter().flat_map(|resource| resource.dependencies.iter().filter(|edge| edge.status != "verified").map(|edge| serde_json::json!({"resource": resource.id, "dependency": edge}))).collect::<Vec<_>>(),
@@ -467,7 +502,8 @@ pub fn verify(index: &Index) -> serde_json::Value {
         "dependencies": {"status": "unresolved"},
         "decode": {"status": "partial", "raw_word_uploads": index.resources.iter().filter(|resource| resource.upload.is_some()).count(),
             "palette_banks": index.resources.iter().filter(|resource| resource.palette_upload.is_some()).count(),
-            "compressed_banks": index.resources.iter().filter(|resource| resource.bank.is_some()).count()},
+            "compressed_banks": index.resources.iter().filter(|resource| resource.bank.is_some()).count(),
+            "resident_animation_banks": index.resources.iter().filter(|resource| resource.resident_animation.is_some()).count()},
         "unchanged_reconstruction": {"status": "unverified"},
         "edited_reconstruction": {"status": "unverified"},
         "unrelated_bytes": {"status": "unverified"},
