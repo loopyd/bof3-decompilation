@@ -23,7 +23,17 @@ extracted tree, default `out/extracted`. Each file has its relative path, size a
 SHA-256. EMI reports partition headers, payloads and padding into known text,
 structurally identified nontext, or unresolved ranges. Payload exclusions retain
 the inventory's source records. The report also pins the inventory's SHA-256.
-Symlinks, special files and unreadable inputs fail rather than disappearing.
+Symlinks, special files, non-UTF-8 paths and unreadable inputs fail rather than
+disappearing. Paths retain their actual components; a literal backslash in a Linux
+filename is not a directory separator.
+
+`disc_membership` compares each original US file with the paths, sizes and hashes
+in `config/original-us-disc.json`, compiled into the binary. It pins the
+qualification's SHA-256, release and source-project hash, lists missing and changed
+files, and counts additional inputs. Matching every listed original file clears
+the physical-membership blocker. Additional files keep their existing range and
+derivative classifications. Membership does not establish their roles or text
+coverage. The harness rebuilds the binary when this qualification changes.
 
 The US executable is recognized by its original SHA-256. Recognition establishes
 build identity, not complete text coverage. Other builds remain unrecognized;
@@ -34,10 +44,10 @@ remain unresolved. Matching unpacked payload sidecars and
 matching extraction manifests are marked as derivatives of their EMI archive,
 so duplicate files do not count as independent sources.
 
-`--strict` prints the report and exits 1 while coverage is incomplete. Disc
-membership reconciliation and executable consumer evidence remain open, so the
-current report always marks full US completion false. Successful bank parsing or
-an empty heuristic search cannot close those gaps. Runtime acceptance is separate.
+`--strict` prints the report and exits 1 while coverage is incomplete. Executable
+and remaining consumer evidence remain open, so the current report always marks
+full US completion false. Successful bank parsing, matching physical membership
+or an empty heuristic search cannot close those gaps. Runtime acceptance is separate.
 The command requires the payload inventory named by `--payloads`; run `prepare`
 first to create the default inventory, or name the crate's policy explicitly.
 

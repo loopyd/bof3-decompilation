@@ -30,7 +30,11 @@ def _sources_newer(layout, binary: Path) -> bool:
     needing a build keeps the harness from running gates against a stale executable.
     """
     built = binary.stat().st_mtime
-    sources = [layout.bof3_text_src / "Cargo.toml", layout.bof3_text_src / "Cargo.lock"]
+    sources = [
+        layout.bof3_text_src / "Cargo.toml",
+        layout.bof3_text_src / "Cargo.lock",
+        layout.root / "config" / "original-us-disc.json",
+    ]
     sources += list((layout.bof3_text_src / "src").rglob("*.rs"))
     sources += list((layout.bof3_text_src / "data").rglob("*.json"))
     return any(path.is_file() and path.stat().st_mtime > built for path in sources)

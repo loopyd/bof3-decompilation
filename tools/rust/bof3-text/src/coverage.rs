@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use crate::digest::sha256_hex;
 use crate::filters::KnownPayload;
@@ -12,6 +12,7 @@ use crate::models::{Error, Result, TextClass};
 
 const US_EXECUTABLE_SHA256: &str =
     "0af39fb1ffcf25e4bdf2730173f397b5b5f6c44989114fe9b59b92ab7c0eb21a";
+const ORIGINAL_US_DISC: &str = include_str!("../../../../config/original-us-disc.json");
 
 #[derive(Serialize)]
 pub struct Report {
@@ -19,6 +20,7 @@ pub struct Report {
     build: &'static str,
     regional_support: BTreeMap<&'static str, &'static str>,
     policy_sha256: String,
+    disc_membership: DiscMembership,
     pub complete: bool,
     unresolved_ranges: usize,
     verified_text_entries: usize,
@@ -35,6 +37,69 @@ struct FileRecord {
     ranges: Vec<RangeRecord>,
     #[serde(skip_serializing_if = "Option::is_none")]
     derived_from: Option<String>,
+}
+
+#[derive(Deserialize)]
+struct OriginalDisc {
+    release: String,
+    project_sha256: String,
+    files: Vec<OriginalFile>,
+}
+
+#[derive(Deserialize)]
+struct OriginalFile {
+    path: String,
+    size: usize,
+    sha256: String,
+    emi_entries: Option<usize>,
+}
+
+#[derive(Serialize)]
+struct DiscMembership {
+    qualification_sha256: String,
+    release: String,
+    project_sha256: String,
+    original_files_match: bool,
+    expected_files: usize,
+    matched_files: usize,
+    expected_emi_entries: usize,
+    missing_files: Vec<String>,
+    changed_files: Vec<String>,
+    additional_files: usize,
+}
+
+fn disc_membership(records: &BTreeMap<String, FileRecord>) -> Result<DiscMembership> {
+    let original: OriginalDisc = serde_json::from_str(ORIGINAL_US_DISC)
+        .map_err(|error| Error::Invalid(format!("original US disc qualification: {error}")))?;
+    let mut missing_files = Vec::new();
+    let mut changed_files = Vec::new();
+    let mut matched_files = 0;
+    for file in &original.files {
+        match records.get(&file.path) {
+            None => missing_files.push(file.path.clone()),
+            Some(record) if record.size == file.size && record.sha256 == file.sha256 => {
+                matched_files += 1;
+            }
+            Some(_) => changed_files.push(file.path.clone()),
+        }
+    }
+    let present_files = original.files.len() - missing_files.len();
+    Ok(DiscMembership {
+        qualification_sha256: sha256_hex(ORIGINAL_US_DISC.as_bytes()),
+        release: original.release,
+        project_sha256: original.project_sha256,
+        original_files_match: missing_files.is_empty() && changed_files.is_empty(),
+        expected_files: original.files.len(),
+        matched_files,
+        expected_emi_entries: original
+            .files
+            .iter()
+            .filter_map(|file| file.emi_entries)
+            .sum(),
+        missing_files,
+        changed_files,
+        additional_files: records.len() - present_files,
+    })
 }
 
 #[derive(Serialize)]
@@ -78,11 +143,18 @@ pub fn files_under(root: &Path) -> Result<Vec<PathBuf>> {
     Ok(files)
 }
 
-fn relative(root: &Path, path: &Path) -> String {
-    path.strip_prefix(root)
+fn relative(root: &Path, path: &Path) -> Result<String> {
+    let components: Result<Vec<_>> = path
+        .strip_prefix(root)
         .unwrap()
-        .to_string_lossy()
-        .replace('\\', "/")
+        .components()
+        .map(|component| {
+            component.as_os_str().to_str().ok_or_else(|| {
+                Error::Invalid(format!("{}: corpus paths must be UTF-8", path.display()))
+            })
+        })
+        .collect();
+    Ok(components?.join("/"))
 }
 
 fn range(offset: usize, length: usize, status: &'static str, evidence: String) -> RangeRecord {
@@ -122,7 +194,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
     let mut build = "unrecognized";
     let mut text_count = 0;
     for path in &inputs {
-        let name = relative(root, path);
+        let name = relative(root, path)?;
         let bytes = read(path)?;
         let digest = sha256_hex(&bytes);
         if name == "SLUS_004.22" && digest == US_EXECUTABLE_SHA256 {
@@ -409,17 +481,18 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
             }
         }
     }
+    let disc_membership = disc_membership(&records)?;
     let files: Vec<_> = records.into_values().collect();
     let unresolved_ranges = files
         .iter()
         .flat_map(|file| &file.ranges)
         .filter(|range| range.status == "unresolved")
         .count();
-    // An extracted directory is not evidence of complete disc membership or consumer coverage.
-    let blockers = vec![
-        "disc membership has not been reconciled against the original image",
-        "US executable and remaining consumers require source and runtime evidence",
-    ];
+    let mut blockers = Vec::new();
+    if !disc_membership.original_files_match {
+        blockers.push("original US disc files are missing or changed");
+    }
+    blockers.push("US executable and remaining consumers require source and runtime evidence");
     Ok(Report {
         schema: "bof3.text-coverage/v1",
         build,
@@ -429,6 +502,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
             ("JP", "unverified"),
         ]),
         policy_sha256,
+        disc_membership,
         complete: false,
         unresolved_ranges,
         verified_text_entries: text_count,
