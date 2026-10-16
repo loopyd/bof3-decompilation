@@ -432,8 +432,10 @@ segments:
       source: src/bof3/battle/deactivateBattleDispatchSlots.c
       behavior: clears the first three bytes of all eight event-queue slots
   - - 56408
-    - asm
+    - c
     - func_801DE858
+    - '@source: src/bof3/battle/func_801DE858.c'
+    - '@behavior: returns zero if any of eight event-queue slots has a nonzero flag byte and a type matching the argument low byte, or one otherwise.'
   - - 56512
     - c
     - name: pushUiRingTriple

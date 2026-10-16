@@ -1,19 +1,21 @@
 #include "bof3/battle/battle03_internal.h"
 
-/* @behavior reports whether any event-queue slot is active for the given event type
- * byte.
+/* @behavior returns zero if any of eight event-queue slots has a nonzero flag
+ * byte and a type matching the argument low byte, or one otherwise.
  * @source 0x801DE858
- * @status partial
- * @match 40.74
- * @residual non-exact live audit: 11/26 instructions; 104 original bytes versus 108 current.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 u8 func_801DE858(s8 arg0) {
   u8 index;
+  u32 offset;
 
   index = 0u;
   while (index < 8u) {
-    if ((BATTLE_EVENT_SLOT_FLAG(index) != 0u) &&
-        (BATTLE_EVENT_SLOT_A(index) == (u8)arg0)) {
+    offset = (u32)index * 0xcu;
+    if ((battleDispatchSlots[offset] != 0u) &&
+        (battleDispatchSlots[offset + 1u] == (u8)arg0)) {
       return 0u;
     }
     index += 1u;
