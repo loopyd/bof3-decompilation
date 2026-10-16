@@ -617,7 +617,7 @@ pub fn publish_json(destination: &Path, input: &Path, value: &impl Serialize) ->
     stage.publish_file("document.json")
 }
 
-/// Package only authored Rust crate inputs. Archive publication never replaces a file.
+/// Package authored build inputs. Archive publication never replaces a file.
 pub fn source_package(root: &Path, destination: &Path) -> Result<usize> {
     let root = fs::canonicalize(root)?;
     let crate_root = root.join("tools/rust/bof3-textures");
@@ -630,7 +630,7 @@ pub fn source_package(root: &Path, destination: &Path) -> Result<usize> {
             "source-package destination overlaps the EMI crate".into(),
         ));
     }
-    let mut members = Vec::new();
+    let mut members = vec![PathBuf::from("config/original-us-disc.json")];
     for name in ["bof3-textures", "emi-ex"] {
         let relative = PathBuf::from(format!("tools/rust/{name}"));
         let source = root.join(&relative);
@@ -639,12 +639,7 @@ pub fn source_package(root: &Path, destination: &Path) -> Result<usize> {
         }
         collect_rust(&root, &relative.join("src"), &mut members)?;
         if name == "bof3-textures" {
-            for file in [
-                "LICENSE",
-                "mise.toml",
-                "rust-toolchain.toml",
-                "data/us-disc.json",
-            ] {
+            for file in ["LICENSE", "mise.toml", "rust-toolchain.toml"] {
                 members.push(relative.join(file));
             }
         }

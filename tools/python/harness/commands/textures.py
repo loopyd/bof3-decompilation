@@ -50,10 +50,9 @@ def diagnose(layout: RepoLayout) -> str:
     binary = layout.bof3_textures_bin
     if not binary.is_file():
         raise RuntimeError("missing texture executable; run bin/harness textures build")
-    inputs = []
+    inputs = [layout.root / "config/original-us-disc.json"]
     for root in (layout.bof3_textures_src, layout.emi_ex_src):
         inputs.extend((root / "src").rglob("*.rs"))
-        inputs.extend((root / "data").rglob("*.json"))
         inputs.extend(
             p
             for p in (

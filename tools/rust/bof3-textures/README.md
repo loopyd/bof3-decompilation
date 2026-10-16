@@ -57,7 +57,7 @@ The output must be new. The archive includes both local Rust crates, lockfiles,
 the MIT license, release qualification metadata, and build instructions. It
 excludes game media, exported images, and build outputs. It uses the source tree
 where the executable was built; `--source-root REPOSITORY_ROOT` selects another
-checkout containing the two crates.
+checkout containing the two crates and the qualification manifest.
 
 Extract the archive, then use the build command above from its `bof3-textures`
 directory. The build requires the declared Rust toolchain and the locked Cargo
@@ -67,7 +67,7 @@ The package does not vendor them or install tools.
 ## Inputs and commands
 
 Inputs must match the complete `SLUS_004.22` qualification manifest in
-[data/us-disc.json](data/us-disc.json). Supply an original EMI or a complete
+[config/original-us-disc.json](../../../config/original-us-disc.json). Supply an original EMI or a complete
 extracted-disc root. Generated entry dumps are not additional original files.
 Other releases and PSP data are unsupported. An individual archive whose bytes
 occur at several original locations requires `--source` with its original path.

@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use crate::{Error, Result, digest::sha256_hex};
 
 pub const RELEASE: &str = "SLUS_004.22";
-pub const QUALIFICATION: &str = include_str!("../data/us-disc.json");
+pub const QUALIFICATION: &str = include_str!("../../../../config/original-us-disc.json");
 pub const MAX_FILE_BYTES: u64 = 128 * 1024 * 1024;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
