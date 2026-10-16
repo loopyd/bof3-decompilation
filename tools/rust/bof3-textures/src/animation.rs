@@ -1,4 +1,4 @@
-//! Program tables and forward consumers at SLUS_004.22@0x8014D910/0x8014D978/0x8014DAEC.
+//! Program tables and forward/reverse consumers at SLUS_004.22@0x8014D910..0x8014DAEC.
 
 use serde::{Deserialize, Serialize};
 
@@ -50,7 +50,7 @@ impl Program {
         let (remaining, cell) = self.fetch(step)?;
         Ok(Playback {
             program: self,
-            next_step: step + 1,
+            cursor: step + 1,
             remaining,
             cell,
             stopped: false,
@@ -171,9 +171,10 @@ pub fn encode_steps(source: &[u8], offset: usize, end: usize, steps: &[Step]) ->
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum ForwardMode {
-    Loop,
-    Stop,
+pub enum PlaybackMode {
+    ForwardLoop,
+    ForwardStop,
+    ReverseLoop,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -186,7 +187,7 @@ pub struct Advance {
 #[derive(Debug)]
 pub struct Playback<'a> {
     program: &'a Program,
-    next_step: usize,
+    cursor: usize,
     remaining: u8,
     cell: usize,
     stopped: bool,
@@ -201,10 +202,16 @@ impl Playback<'_> {
         self.remaining
     }
 
+    /// Program-relative byte cursor measured from the first step pair.
+    /// Direction changes retain this cursor, as the original consumers do.
+    pub fn cursor(&self) -> usize {
+        self.cursor * 2
+    }
+
     /// One consumer update, whose frequency depends on the game caller.
     /// The unsigned counter wraps: a fetched zero duration lasts 256 updates.
-    pub fn advance(&mut self, mode: ForwardMode) -> Result<Advance> {
-        if self.stopped && mode == ForwardMode::Stop {
+    pub fn advance(&mut self, mode: PlaybackMode) -> Result<Advance> {
+        if self.stopped && mode == PlaybackMode::ForwardStop {
             return Ok(Advance {
                 refreshed: false,
                 boundary: true,
@@ -220,10 +227,18 @@ impl Playback<'_> {
                 stopped: false,
             });
         }
-        let mut target = self.next_step;
+        let mut target = self.cursor;
         let mut boundary = false;
-        if target == self.program.steps.len() {
-            if mode == ForwardMode::Stop {
+        let next_cursor;
+        if mode == PlaybackMode::ReverseLoop {
+            if target == 0 {
+                target = self.program.steps.len();
+                boundary = true;
+            }
+            target -= 1;
+            next_cursor = target;
+        } else if target == self.program.steps.len() {
+            if mode == PlaybackMode::ForwardStop {
                 self.remaining = 1;
                 self.stopped = true;
                 return Ok(Advance {
@@ -234,17 +249,19 @@ impl Playback<'_> {
             }
             target = 0;
             boundary = true;
+            next_cursor = 1;
         } else {
             let token = self.program.steps[target];
             if token.duration >= 0x80 {
                 target = usize::from(token.operand);
                 boundary = true;
             }
+            next_cursor = target + 1;
         }
         let (remaining, cell) = self.program.fetch(target)?;
         self.remaining = remaining;
         self.cell = cell;
-        self.next_step = target + 1;
+        self.cursor = next_cursor;
         Ok(Advance {
             refreshed: true,
             boundary,

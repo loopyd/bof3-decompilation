@@ -11,7 +11,7 @@ Their internal sprite records remain unresolved.
 
 Full graphics support is incomplete. Category discovery lists the intended game
 roles, but current resource roles, CLUT associations, sprite composition,
-reverse animation, internal codec bindings, and runtime appearance remain unresolved.
+reverse playback callers, internal codec bindings, and runtime appearance remain unresolved.
 Strict coverage and complete verification return exit 1. A successful raw upload
 edit does not establish its appearance in the game.
 
@@ -158,7 +158,7 @@ Packing preserves headers, pointer tables, cell counts, padding, and unrelated
 bytes. It applies the same restrictions to changes in `raw.bin`.
 
 Query these banks with `--kind resident-animation-bank`. `--animation` accepts
-their resource ID. Image and palette bindings, reverse playback, game roles, and
+their resource ID. Image and palette bindings, reverse playback callers, game roles, and
 runtime appearance remain unresolved. Unrecognized resident variants have no
 editable animation document and retain their refusal findings in the catalog.
 
@@ -245,9 +245,19 @@ offsets using the US consumers at `0x8014d910`, `0x8014d978`, and `0x8014daec`.
 It preserves cell payloads and allocation while re-encoding existing step pairs.
 Forward transitions branch once on a duration byte at or above `0x80`, then fetch
 the target directly. Initialization and reverse playback differ. The library
-models the two forward variants in consumer updates, without assuming a frame
-rate. Reverse playback, cell rendering, and source-bank bindings remain
-unresolved for compressed banks.
+models the two forward variants and reverse loop in consumer updates, without
+assuming a frame rate. `PlaybackMode` selects `ForwardLoop`, `ForwardStop`, or
+`ReverseLoop`. Switching modes retains the literal byte cursor returned by
+`Playback::cursor()`.
+
+The reverse consumer at `0x8014da24` decrements the byte countdown, wraps a zero
+cursor to the step-table end, and directly fetches the preceding token. High
+durations remain durations in this path. Switching from forward initialization
+to reverse first fetches the current token again. A zero duration lasts 256
+consumer updates. Missing cell references cause an error, including high-token
+operands that are valid forward targets but exceed the cell table in reverse.
+Caller reachability, game direction mapping, cell rendering, and compressed-bank
+bindings remain unresolved.
 
 The `resident` module binds the recognized type-0 `0x800d3800` table variant to
 the original base initialization at `0x8014ebb8` and program selection at
