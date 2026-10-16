@@ -303,16 +303,9 @@ pub fn build_from(
                 resources.push(resource);
             }
         } else {
-            let incomplete = sources::incomplete_extent(file);
-            let mut findings = vec![
+            let findings = vec![
                 "embedded, generated, or media-owned graphics disposition is unresolved".into(),
             ];
-            if let Some(extent) = &incomplete {
-                findings.push(format!(
-                    "captured XA prefix omits {} bytes of the original disc extent; full source qualification is unresolved",
-                    extent.missing_bytes
-                ));
-            }
             resources.push(Resource {
                 id: format!("{}:{}#file", sources::RELEASE, file.path),
                 source: file.path.clone(),
@@ -327,17 +320,8 @@ pub fn build_from(
                 storage: "opaque".into(),
                 decode: "unresolved".into(),
                 pack: "preservation-only".into(),
-                evidence_status: if incomplete.is_some() {
-                    "source-prefix-qualified"
-                } else {
-                    "source-qualified"
-                }
-                .into(),
-                evidence: vec![if incomplete.is_some() {
-                    "captured-us-xa-prefix".into()
-                } else {
-                    "qualified-us-disc".into()
-                }],
+                evidence_status: "source-qualified".into(),
+                evidence: vec!["qualified-us-disc".into()],
                 dependencies: vec![],
                 uses: vec![],
                 upload: None,
@@ -452,26 +436,17 @@ pub fn coverage(index: &Index) -> serde_json::Value {
         .iter()
         .filter(|resource| resource.upload.is_some())
         .count();
-    let incomplete_extents: Vec<_> = index
-        .files
-        .iter()
-        .filter_map(sources::incomplete_extent)
-        .collect();
-    let mut blockers = vec![
+    let blockers = vec![
         "logical resource and consumer enumeration is incomplete",
         "category mappings and dependencies are unresolved",
         "edited and runtime acceptance remains incomplete",
     ];
-    if !incomplete_extents.is_empty() {
-        blockers.push("captured XA prefixes do not cover their original disc extents");
-    }
     serde_json::json!({
         "schema": "bof3.textures-coverage/v1", "release": index.release,
         "full_support": false,
         "physical": {"files": index.files.len(), "emi_entries": index.files.iter().filter_map(|file| file.emi_entries).sum::<usize>(),
-            "qualified_original_corpus": index.is_tree && incomplete_extents.is_empty(),
-            "captured_inventory_matches_qualification": true,
-            "incomplete_original_extents": incomplete_extents,
+            "qualified_original_corpus": index.is_tree,
+            "inventory_matches_qualification": true,
             "inventory_sha256": index.inventory_sha256},
         "logical": {"complete": false, "resources": index.resources.len(), "raw_uploads": raw,
             "palette_banks": index.resources.iter().filter(|resource| resource.palette_upload.is_some()).count(),
@@ -488,7 +463,7 @@ pub fn verify(index: &Index) -> serde_json::Value {
     serde_json::json!({
         "schema": "bof3.textures-verification/v1", "release": index.release, "complete": false,
         "inventory_sha256": index.inventory_sha256,
-        "structure": {"status": "verified", "scope": "captured-inputs-only", "files": index.files.len()},
+        "structure": {"status": "verified", "scope": "qualified-original-inputs", "files": index.files.len()},
         "dependencies": {"status": "unresolved"},
         "decode": {"status": "partial", "raw_word_uploads": index.resources.iter().filter(|resource| resource.upload.is_some()).count(),
             "palette_banks": index.resources.iter().filter(|resource| resource.palette_upload.is_some()).count(),

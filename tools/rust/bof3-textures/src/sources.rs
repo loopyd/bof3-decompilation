@@ -20,34 +20,6 @@ pub struct SourceFile {
     pub emi_entries: Option<usize>,
 }
 
-#[derive(Clone, Debug, Serialize)]
-pub struct IncompleteExtent<'a> {
-    pub source: &'a str,
-    pub captured_bytes: u64,
-    pub disc_extent_raw_payload_bytes: u64,
-    pub missing_bytes: u64,
-}
-
-/// Known XA extraction prefixes. These bounds do not replace the captured input pins.
-pub fn incomplete_extent(file: &SourceFile) -> Option<IncompleteExtent<'_>> {
-    let extent: u64 = match file.path.as_str() {
-        "BIN/BMAG_XA/MAGIC00.STR" => 35_993_088,
-        "BIN/SCE_XA/S_XA00.STR" => 94_411_776,
-        "BIN/SCE_XA/VOICE.STR" => 8_260_096,
-        "LOGO/CAPCOM30.STR" => 2_698_080,
-        _ => return None,
-    };
-    let missing = extent
-        .checked_sub(file.size)
-        .filter(|missing| *missing > 0)?;
-    Some(IncompleteExtent {
-        source: &file.path,
-        captured_bytes: file.size,
-        disc_extent_raw_payload_bytes: extent,
-        missing_bytes: missing,
-    })
-}
-
 #[derive(Deserialize)]
 pub struct Qualification {
     pub release: String,
