@@ -58,6 +58,11 @@ evidence and no unresolved executable leads. It neither rewrites history nor aut
 identities. Selected-row acceptance never replaces the full-report gate.
 Transaction/cosmetic links grant no edit permission.
 
+An affected caller source can contain several functions. Every record must be
+exact, the source must have one explicit lift owner, and its records, manifest
+claims, Splat boundaries and compiled symbols must agree. Retain each caller
+identity even when the transaction scope lists their shared source path once.
+
 ## Evidence gate
 
 Retain names only with target-local address/layout and two independent corroborators: two consistent local accesses/calls; one + Rizin annotation; or proven layout/dispatch table + consistent use. Decompiler names, duplicate hashes, strings, comments, single sites, and `data-scan` counts are leads. Keep `D_XXXXXXXX`/`unk_XX`/`field_XX` if uncertain. Name data by proven content class: strings, pointer/handler table, or struct layout + consumers.
