@@ -234,8 +234,8 @@ pub fn build_from(
                             resource.kind = "resident-animation-bank".into();
                             resource.categories = vec!["unclassified-graphics".into()];
                             resource.storage = "us-resident-animation".into();
-                            resource.decode = "forward-programs-verified".into();
-                            resource.pack = "forward-steps-verified".into();
+                            resource.decode = "forward-programs-and-cell-records-verified".into();
+                            resource.pack = "forward-steps-and-cell-records-verified".into();
                             resource.resident_animation = Some(document.info());
                             resource.evidence.extend([
                                 "SLUS_004.22@0x8014EBB8:resident-base-initialization".into(),
@@ -243,6 +243,9 @@ pub fn build_from(
                                 "SLUS_004.22@0x8014D910:program-initialization".into(),
                                 "SLUS_004.22@0x8014D978:forward-loop-consumer".into(),
                                 "SLUS_004.22@0x8014DAEC:forward-stop-consumer".into(),
+                                "SLUS_004.22@0x8014C6F8:cell-part-count".into(),
+                                "SLUS_004.22@0x8014C700:five-byte-cell-parts".into(),
+                                "SLUS_004.22@0x8017F53C:cell-dimensions".into(),
                             ]);
                             for kind in ["texture-source", "palette", "reverse-animation"] {
                                 resource.dependencies.push(Dependency {
@@ -379,8 +382,18 @@ pub fn build_from(
 
 impl Index {
     pub fn load(path: &Path) -> Result<Self> {
-        let index: Self =
-            serde_json::from_slice(&sources::read_bounded(path, sources::MAX_FILE_BYTES)?)?;
+        let index: Self = serde_json::from_slice(&sources::read_bounded(
+            path,
+            sources::MAX_FILE_BYTES,
+        )?)
+        .map_err(|error| {
+            if error.is_data() {
+                return Error::StaleIndex(format!(
+                    "catalog fields do not match the supported schema: {error}; rebuild with textures index ORIGINAL_INPUT --output NEW_INDEX"
+                ));
+            }
+            Error::from(error)
+        })?;
         index.check_fresh()?;
         Ok(index)
     }

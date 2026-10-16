@@ -4,6 +4,7 @@
 self-contained archive packages. It can edit raw VRAM upload words, their
 4-bit or 8-bit index interpretations, and qualified palette-word banks within
 their original allocations.
+It also edits qualified resident animation step pairs and five-byte cell records.
 
 It also decodes qualified outer compressed banks into read-only byte views.
 Their internal sprite records remain unresolved.
@@ -135,15 +136,26 @@ A qualified outer compressed bank also has a `decoded.bin` view. Packing require
 this view to match the original decoded bytes. Internal image, palette, cell, and
 animation records need separate qualification before these views become editable.
 
-A recognized resident animation bank has an editable `animation.json` document.
+A recognized resident animation bank has an editable `animation.json` document
+with schema `bof3.resident-animation/v2`.
 Each group retains its program pointers, byte extents, and existing step pairs.
 Edit `duration` and `operand` values from 0 to 255. Keep the number of groups,
 programs, and steps, and preserve all `offset` and `end` fields. Durations below
 128 select cells. Durations of 128 or more select a forward step target. An edit
 must preserve each step's frame or control role and keep every reference valid.
 Programs shared by several table indices must receive agreeing edits. Unchanged
-aliases do not override a changed view. Header, cell, and unrelated bytes remain
-exact. Packing also validates these restrictions for changes to `raw.bin`.
+aliases do not override a changed view.
+
+The document's `cells` list contains one entry per payload offset. Keep its order,
+`offset`, `end`, and part count. Each part contains a `size_code` from 0 to 15,
+`horizontal_flip`, signed `x` and `y` anchors from -128 to 127, and unsigned `u`
+and `v` from 0 to 255. Width is `8 * (1 + (size_code & 3))`; height is
+`8 * (1 + (size_code >> 2))`. Keep `opaque_flags` unchanged. It preserves bits
+4 through 6 of the original record. `horizontal_flip` stores bit 7, whose effect
+also depends on the entity's flags and drawing path. V also depends on the
+entity's offset. Editing these records does not resolve texture pages or CLUTs.
+Packing preserves headers, pointer tables, cell counts, padding, and unrelated
+bytes. It applies the same restrictions to changes in `raw.bin`.
 
 Query these banks with `--kind resident-animation-bank`. `--animation` accepts
 their resource ID. Image and palette bindings, reverse playback, game roles, and
@@ -241,11 +253,15 @@ The `resident` module binds the recognized type-0 `0x800d3800` table variant to
 the original base initialization at `0x8014ebb8` and program selection at
 `0x8014d878`. A 32-bit relative group table leads to 16-bit relative program
 tables. Each table's first offset delimits its entries. References may be
-repeated or out of order. Each program and its opaque cells must fit before the
+repeated or out of order. Each program and its cells must fit before the
 next distinct program address, within its group and payload. The parser bounds
 sources at 1 MiB, group indices and total program indices at 65,536, and each
 group's program indices at 256. Variants whose cell references select metadata
-remain unsupported. Forward step edits preserve the original cell bytes;
-neither a valid program nor an edited duration establishes its use or appearance.
+remain unsupported. Cell records follow the count byte at `0x8014c6f8` and the
+five-byte stride at `0x8014c700`. Their size codes use the original dimension
+table at `0x8017f53c`. Records must fit before the next distinct cell address or
+the program end. Only existing step pairs and qualified cell records are
+editable. A valid program or an edited record does not establish its use or
+appearance.
 Unresolved logical resources, categories, dependencies, inverse formats, and
 runtime families keep full-support acceptance open.

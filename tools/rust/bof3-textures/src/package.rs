@@ -343,7 +343,7 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
                 && resident::encode(raw, &resident::decode(&bytes)?)? != bytes
             {
                 return Err(Error::Invalid(format!(
-                    "{}: resident animation edits must preserve all bytes outside existing step pairs",
+                    "{}: resident edits must preserve all bytes outside existing step pairs and qualified cell records",
                     resource.id
                 )));
             }
