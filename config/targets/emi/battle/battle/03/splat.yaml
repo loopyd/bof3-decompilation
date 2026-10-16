@@ -406,8 +406,10 @@ segments:
     - '@source: src/bof3/battle/func_801DE560.c'
     - '@behavior: finds the first free event slot among queue slots 2 through 7 and populates it with the caller''s parameters.'
   - - 55820
-    - asm
+    - c
     - func_801DE60C
+    - '@source: src/bof3/battle/func_801DE60C.c'
+    - '@behavior: overwrites one event-queue slot directly from the caller''s parameters and marks the slot active.'
   - - 55952
     - c
     - stubHandlerE690
