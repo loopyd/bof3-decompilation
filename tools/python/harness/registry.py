@@ -424,6 +424,65 @@ DOMAINS: Mapping[str, Domain] = {
             ),
         },
     ),
+    "textures": Domain(
+        "index, query, verify, unpack, and pack BOF3 graphics",
+        actions={
+            "build": Action(
+                "build the texture component",
+                "harness.commands.textures",
+                entry="build_main",
+                example="bin/harness textures build",
+            ),
+            "categories": Action(
+                "list graphics categories",
+                "harness.commands.textures",
+                kind="passthrough",
+                example="bin/harness textures categories --json",
+            ),
+            "index": Action(
+                "index original US graphics",
+                "harness.commands.textures",
+                kind="passthrough",
+                example="bin/harness textures index out/extracted --output out/textures/index.json",
+            ),
+            "query": Action(
+                "query a fresh graphics catalog",
+                "harness.commands.textures",
+                kind="passthrough",
+                example="bin/harness textures query out/textures/index.json --category font --json",
+            ),
+            "unpack": Action(
+                "export a self-contained editable asset package",
+                "harness.commands.textures",
+                kind="passthrough",
+                example="bin/harness textures unpack out/extracted/BIN/ETC/FIRST.EMI --output out/textures/first",
+            ),
+            "pack": Action(
+                "reconstruct archives from an asset package",
+                "harness.commands.textures",
+                kind="passthrough",
+                example="bin/harness textures pack out/textures/first --output out/textures/packed --json",
+            ),
+            "verify": Action(
+                "report independent graphics verification properties",
+                "harness.commands.textures",
+                kind="passthrough",
+                example="bin/harness textures verify out/extracted --json",
+            ),
+            "coverage": Action(
+                "report complete-source and logical graphics coverage",
+                "harness.commands.textures",
+                kind="passthrough",
+                example="bin/harness textures coverage out/extracted --strict --json",
+            ),
+            "package": Action(
+                "export Rust sources and build instructions",
+                "harness.commands.textures",
+                kind="passthrough",
+                example="bin/harness textures package out/textures/sources.zip",
+            ),
+        },
+    ),
     "text": Domain(
         "text extraction, analysis, safe edits, corpus search and source coverage",
         actions={

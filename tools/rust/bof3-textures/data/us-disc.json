@@ -1,0 +1,5328 @@
+{
+  "release": "SLUS_004.22",
+  "project_sha256": "971fff0b7c17fd7563006109bcbd9c90c9ce7ea31d89d17339c3ba6409e5179d",
+  "files": [
+    {
+      "path": "BIN/BATTLE/BATL_DRA.EMI",
+      "size": 71680,
+      "sha256": "4ccd2273fab933d0400bda77db28c4d54cfd5ac5fa69817855293140d111eb5a",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BATTLE/BATL_END.EMI",
+      "size": 83968,
+      "sha256": "91d076ab62fb0a467083c868e988409e8a850e21b3cae4d2ac7604767a45a675",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BATTLE/BATL_OVR.EMI",
+      "size": 73728,
+      "sha256": "72ebcc852c736524ebe8ed543924142ef2f4e6cb376cf471117996ea20818d86",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BATTLE/BATL_RE2.EMI",
+      "size": 36864,
+      "sha256": "3d675a33c995c57ca5876ffd4f235b613588c3fd1fdfa172f29b0399d5bcd4ba",
+      "emi_entries": 2
+    },
+    {
+      "path": "BIN/BATTLE/BATL_RET.EMI",
+      "size": 100352,
+      "sha256": "38110587e3d7415591e4d91d71d21c905086143256316e01686b8eb1b7385b00",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BATTLE/BATL_SE.EMI",
+      "size": 63488,
+      "sha256": "26ddcccff9609e15331d84c0303848a1dd2e3f0eaddc2947b0b2640b8668ae21",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BATTLE/BATTLE.EMI",
+      "size": 700416,
+      "sha256": "74c4b1e4e5ab638c5af136e90e9f73cb103c7c11249715108332c59eee59c3cf",
+      "emi_entries": 16
+    },
+    {
+      "path": "BIN/BATTLE/BATTLE2.EMI",
+      "size": 700416,
+      "sha256": "74c4b1e4e5ab638c5af136e90e9f73cb103c7c11249715108332c59eee59c3cf",
+      "emi_entries": 16
+    },
+    {
+      "path": "BIN/BATTLE/COMN_SE.EMI",
+      "size": 106496,
+      "sha256": "c6a7be81d3a20e209cf7dbd0e38f83243cc20ceeb7ee57e3c2a73504c793b789",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY000.EMI",
+      "size": 16384,
+      "sha256": "d6789f8db36ed920390641a237f4e1e120a72cb62147543a07ee501b9b135e7d",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY001.EMI",
+      "size": 16384,
+      "sha256": "d6789f8db36ed920390641a237f4e1e120a72cb62147543a07ee501b9b135e7d",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY002.EMI",
+      "size": 16384,
+      "sha256": "d6789f8db36ed920390641a237f4e1e120a72cb62147543a07ee501b9b135e7d",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY003.EMI",
+      "size": 45056,
+      "sha256": "8f51ea8a79a09081dbe49435bc5c7ec8cd0fa091626024691eb5c0b537330f6a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY004.EMI",
+      "size": 16384,
+      "sha256": "821c30ed6886ef9ede31b7b2c072cf2bd2c62ddaa8256740b394d69ea67b847c",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY005.EMI",
+      "size": 45056,
+      "sha256": "8f51ea8a79a09081dbe49435bc5c7ec8cd0fa091626024691eb5c0b537330f6a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY006.EMI",
+      "size": 45056,
+      "sha256": "8f51ea8a79a09081dbe49435bc5c7ec8cd0fa091626024691eb5c0b537330f6a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY007.EMI",
+      "size": 16384,
+      "sha256": "821c30ed6886ef9ede31b7b2c072cf2bd2c62ddaa8256740b394d69ea67b847c",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY008.EMI",
+      "size": 45056,
+      "sha256": "8f51ea8a79a09081dbe49435bc5c7ec8cd0fa091626024691eb5c0b537330f6a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY009.EMI",
+      "size": 45056,
+      "sha256": "8f51ea8a79a09081dbe49435bc5c7ec8cd0fa091626024691eb5c0b537330f6a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY010.EMI",
+      "size": 45056,
+      "sha256": "8f51ea8a79a09081dbe49435bc5c7ec8cd0fa091626024691eb5c0b537330f6a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY011.EMI",
+      "size": 16384,
+      "sha256": "821c30ed6886ef9ede31b7b2c072cf2bd2c62ddaa8256740b394d69ea67b847c",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY012.EMI",
+      "size": 45056,
+      "sha256": "8f51ea8a79a09081dbe49435bc5c7ec8cd0fa091626024691eb5c0b537330f6a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY013.EMI",
+      "size": 16384,
+      "sha256": "821c30ed6886ef9ede31b7b2c072cf2bd2c62ddaa8256740b394d69ea67b847c",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY014.EMI",
+      "size": 16384,
+      "sha256": "821c30ed6886ef9ede31b7b2c072cf2bd2c62ddaa8256740b394d69ea67b847c",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY015.EMI",
+      "size": 40960,
+      "sha256": "7696d435d623e1b68c44badc88d49c7fdd84937c776115ac9cdeadb976072ccb",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY016.EMI",
+      "size": 16384,
+      "sha256": "9f6a4ca5c43253af362a4dccf13508c2e0754b31444d3a6dec369339bfb43009",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY017.EMI",
+      "size": 16384,
+      "sha256": "9f6a4ca5c43253af362a4dccf13508c2e0754b31444d3a6dec369339bfb43009",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY018.EMI",
+      "size": 45056,
+      "sha256": "8f51ea8a79a09081dbe49435bc5c7ec8cd0fa091626024691eb5c0b537330f6a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY019.EMI",
+      "size": 45056,
+      "sha256": "8f51ea8a79a09081dbe49435bc5c7ec8cd0fa091626024691eb5c0b537330f6a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY020.EMI",
+      "size": 49152,
+      "sha256": "7d2d6abe988afb2db6fb2d5d412ab0f7299838430bdb2e7928ab3a6fbe822ebf",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY021.EMI",
+      "size": 16384,
+      "sha256": "83f15f74b903d6bc15d6fa6601ad046ee9d64c7e258bece2cc48968916995632",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY022.EMI",
+      "size": 30720,
+      "sha256": "0dbca3bee7f368e95ade32ce1da1647ea58f482682cb85866a0446e9f0d11e9d",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY023.EMI",
+      "size": 38912,
+      "sha256": "9f250cca335c2922f86f749b364a4ff1e7e29faea26e7ebd3b4b1bcbae354f59",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY024.EMI",
+      "size": 16384,
+      "sha256": "c8a30d5b6866bb7f6c1b87da8a1deb31cbd72e5df136651b1f92b25a3e12749a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY025.EMI",
+      "size": 16384,
+      "sha256": "c8a30d5b6866bb7f6c1b87da8a1deb31cbd72e5df136651b1f92b25a3e12749a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY026.EMI",
+      "size": 16384,
+      "sha256": "c8a30d5b6866bb7f6c1b87da8a1deb31cbd72e5df136651b1f92b25a3e12749a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY027.EMI",
+      "size": 30720,
+      "sha256": "cbf69a9c45fe60ce661cd80ee130d17c59ab95ab8ca8966325467b38f4febb59",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY028.EMI",
+      "size": 28672,
+      "sha256": "6568d83c8bd4c491585b237b6d18de191880c4b460e1a40be87aca262a795cca",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY029.EMI",
+      "size": 49152,
+      "sha256": "7d2d6abe988afb2db6fb2d5d412ab0f7299838430bdb2e7928ab3a6fbe822ebf",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY030.EMI",
+      "size": 16384,
+      "sha256": "83f15f74b903d6bc15d6fa6601ad046ee9d64c7e258bece2cc48968916995632",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY031.EMI",
+      "size": 16384,
+      "sha256": "83f15f74b903d6bc15d6fa6601ad046ee9d64c7e258bece2cc48968916995632",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY032.EMI",
+      "size": 16384,
+      "sha256": "83f15f74b903d6bc15d6fa6601ad046ee9d64c7e258bece2cc48968916995632",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY033.EMI",
+      "size": 16384,
+      "sha256": "83f15f74b903d6bc15d6fa6601ad046ee9d64c7e258bece2cc48968916995632",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY034.EMI",
+      "size": 16384,
+      "sha256": "83f15f74b903d6bc15d6fa6601ad046ee9d64c7e258bece2cc48968916995632",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY035.EMI",
+      "size": 32768,
+      "sha256": "53be20c6827565a461bb9e177aafda333647e953771d1ce63c562d946491ffdc",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY036.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY037.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY038.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY039.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY040.EMI",
+      "size": 47104,
+      "sha256": "98ad0826c32ae06c667cc66bbc58c1379c12177f0167a7189f908f58aa826fb0",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY041.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY042.EMI",
+      "size": 36864,
+      "sha256": "a2f6593610d17d51166862acd4d32d7333189f6c89e94c1becc3254dc47b0ecd",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY043.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY044.EMI",
+      "size": 49152,
+      "sha256": "6d7a54afcb523990d1817f805eec29a8d1bf70adda56925c3fe0a9c6f25c198a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY045.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY046.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY047.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY048.EMI",
+      "size": 49152,
+      "sha256": "6d7a54afcb523990d1817f805eec29a8d1bf70adda56925c3fe0a9c6f25c198a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY049.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY050.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY051.EMI",
+      "size": 32768,
+      "sha256": "6b1a846ac427c28b81f7f6f61cfe4c0a71d1e8a51f0d0763577c2a91b30cff13",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY052.EMI",
+      "size": 40960,
+      "sha256": "9f7a9d1a38835e5f2fcffeca766e3faaba24604e066e593ac709d64b921f4e34",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY053.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY054.EMI",
+      "size": 45056,
+      "sha256": "b2fca7d5280bd96ccbac603f5633ceae06dc68a1a64b01c913a4c197cc220521",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY055.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY056.EMI",
+      "size": 45056,
+      "sha256": "d9a8568ea185bc7b4e82e0b7aab78f49519db88888abe841c314376a44744ebc",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY057.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY058.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY059.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY060.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY061.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY062.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY063.EMI",
+      "size": 45056,
+      "sha256": "09386bf65833d80fcc1de0809598f0ddc487324712654068026d42ea0196d4fa",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY064.EMI",
+      "size": 43008,
+      "sha256": "e355e023f974df237aa91195bf014e6c6cc835ae5b359b151185587a5cabdd73",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY065.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY066.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY067.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY068.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY069.EMI",
+      "size": 36864,
+      "sha256": "adccab407d771e12ae367c1c984909ddd2020933114768c562353bb3a2016023",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY070.EMI",
+      "size": 43008,
+      "sha256": "3c924423c0a2ab23aa28fc986cbcc39bca0a00fb20bdf463dddeccaf77551b40",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY071.EMI",
+      "size": 38912,
+      "sha256": "d10d1c6e9798ef86ed4a42b6023af34785a147a07edce6c6e09771bbcd2b7d08",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY072.EMI",
+      "size": 43008,
+      "sha256": "b7e0ad4f9bc2f0e47453b7286bf806199d7289cec2f31631cfe334ba52ec51ac",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY073.EMI",
+      "size": 43008,
+      "sha256": "e26abd4c05f837a5d8dfe8e67d9de83947dd30fd3a063e8685a1e85319a31b24",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY074.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY075.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY076.EMI",
+      "size": 45056,
+      "sha256": "9294cc7045aa50d38cb8073c0a4c062b3fbfeec08936cc35f2e2bd0f70a161e9",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY077.EMI",
+      "size": 32768,
+      "sha256": "a0bbcdb73af97b93ee69c667af5e819ad31fc505beba9fd9bb87706410093d03",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY078.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY079.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY080.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY081.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY082.EMI",
+      "size": 30720,
+      "sha256": "f6597626a40ad686cb34b15deda78a17c6ff165814169aff0de0b69a4c5ca860",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY083.EMI",
+      "size": 34816,
+      "sha256": "761ef3d15fa11faeaa77e244ad4fe7c42a16e02d3d2a0693d707dc1564d38920",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY084.EMI",
+      "size": 30720,
+      "sha256": "f978c330ba563dacbb3b59a427cdfff8a1ec8828b69a6a86dd8c7ab3a8837c13",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY085.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY086.EMI",
+      "size": 26624,
+      "sha256": "39bb7823f371000bb056c770c3de9d5a7e4a864aa1ca0b2d5f40eb169a995334",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY087.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY088.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY089.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY090.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY091.EMI",
+      "size": 40960,
+      "sha256": "01d6abb7b34112787fca1e1fe14d01f3b0baa21f516fa9ce275bbf292d9258ad",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY092.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY093.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY094.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY095.EMI",
+      "size": 45056,
+      "sha256": "dbddcf21e493c285419e5c453c1fd1715589c5329145157cd5165c1914b3965a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY096.EMI",
+      "size": 45056,
+      "sha256": "dbddcf21e493c285419e5c453c1fd1715589c5329145157cd5165c1914b3965a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY097.EMI",
+      "size": 16384,
+      "sha256": "60bd672b2ab3a58a3c7b54dd15d0da872aaadbcc8520bbc28babd55ab5257d15",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY098.EMI",
+      "size": 16384,
+      "sha256": "60bd672b2ab3a58a3c7b54dd15d0da872aaadbcc8520bbc28babd55ab5257d15",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY099.EMI",
+      "size": 30720,
+      "sha256": "e10128b2a538b03d7b9f51811634630ba33ba439498df52165939b0f4970d203",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY100.EMI",
+      "size": 16384,
+      "sha256": "60bd672b2ab3a58a3c7b54dd15d0da872aaadbcc8520bbc28babd55ab5257d15",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY101.EMI",
+      "size": 16384,
+      "sha256": "60bd672b2ab3a58a3c7b54dd15d0da872aaadbcc8520bbc28babd55ab5257d15",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY102.EMI",
+      "size": 38912,
+      "sha256": "52945ee5e88d23bae65a00e56595c0c82d3f997bdcc08baa2b65d76b38aabf58",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY103.EMI",
+      "size": 32768,
+      "sha256": "3ce1257da7fadb7d44059efaa46e09656fec015e119215b0e944e5e7729c37d6",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY104.EMI",
+      "size": 16384,
+      "sha256": "60bd672b2ab3a58a3c7b54dd15d0da872aaadbcc8520bbc28babd55ab5257d15",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY105.EMI",
+      "size": 40960,
+      "sha256": "339cedb675d359f4e4bf82ade1c5e2cf9ca28cd0c43695357fa77af017016333",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY106.EMI",
+      "size": 40960,
+      "sha256": "339cedb675d359f4e4bf82ade1c5e2cf9ca28cd0c43695357fa77af017016333",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY107.EMI",
+      "size": 40960,
+      "sha256": "339cedb675d359f4e4bf82ade1c5e2cf9ca28cd0c43695357fa77af017016333",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY108.EMI",
+      "size": 40960,
+      "sha256": "0cd453401e4255c1fd681b73418568d67d7181ec9abea038c8ae390dcf20086d",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY109.EMI",
+      "size": 40960,
+      "sha256": "f229b5b2de52a36a47da042806b27bb7375d6bc1d7208531e17da8ea5f5d4108",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY110.EMI",
+      "size": 40960,
+      "sha256": "675d60c21aaa45d4d0c509cb9b9343cf78f64ab9ee244bb9f4c54d6c31d4a434",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY111.EMI",
+      "size": 36864,
+      "sha256": "9379cbab08508f5ea86ab2ab570b20dc68dc37a4124f9e80fa395be767a02017",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY112.EMI",
+      "size": 36864,
+      "sha256": "9379cbab08508f5ea86ab2ab570b20dc68dc37a4124f9e80fa395be767a02017",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY113.EMI",
+      "size": 16384,
+      "sha256": "83987197f3d946686779ac2ef00d7058c63df592d808a09a15611b78a3d88dc7",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY114.EMI",
+      "size": 16384,
+      "sha256": "83987197f3d946686779ac2ef00d7058c63df592d808a09a15611b78a3d88dc7",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY115.EMI",
+      "size": 16384,
+      "sha256": "83987197f3d946686779ac2ef00d7058c63df592d808a09a15611b78a3d88dc7",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY116.EMI",
+      "size": 16384,
+      "sha256": "83987197f3d946686779ac2ef00d7058c63df592d808a09a15611b78a3d88dc7",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY117.EMI",
+      "size": 34816,
+      "sha256": "045726d860576ba31a65c594c2d05d118728d525bbc495021ef1f366870ad5cb",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY118.EMI",
+      "size": 34816,
+      "sha256": "045726d860576ba31a65c594c2d05d118728d525bbc495021ef1f366870ad5cb",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY119.EMI",
+      "size": 32768,
+      "sha256": "a0b63ec888dcd419036ba844c880ff02c8b0ffeaf3cd2a3c51754ba3c0e61b4d",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY120.EMI",
+      "size": 16384,
+      "sha256": "83987197f3d946686779ac2ef00d7058c63df592d808a09a15611b78a3d88dc7",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY121.EMI",
+      "size": 16384,
+      "sha256": "83987197f3d946686779ac2ef00d7058c63df592d808a09a15611b78a3d88dc7",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY122.EMI",
+      "size": 16384,
+      "sha256": "83987197f3d946686779ac2ef00d7058c63df592d808a09a15611b78a3d88dc7",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY123.EMI",
+      "size": 16384,
+      "sha256": "83987197f3d946686779ac2ef00d7058c63df592d808a09a15611b78a3d88dc7",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY124.EMI",
+      "size": 40960,
+      "sha256": "c7e1613d1f4b6a321a3cdb7cfcfce559005c2bdcba4cea42d145963250edecf0",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY125.EMI",
+      "size": 38912,
+      "sha256": "87dc0997caca1b0bb36fbeae8c2a6cc93909d7277ccac14c39faeb880144e03b",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY126.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY127.EMI",
+      "size": 36864,
+      "sha256": "baa1b826a9e6de8f697dc3e57d06169e815b1e58373c12523bc0e5606b67caab",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY128.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY129.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY130.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY131.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY132.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY133.EMI",
+      "size": 16384,
+      "sha256": "b4fb77a319f0e3551e20110505c2b577263f38268a87d7d1e8387d7e39b7b906",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY134.EMI",
+      "size": 36864,
+      "sha256": "2e9bac23833793deef48b35a310da4b17945fcc84844d1dbdaaa38291fccde97",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY135.EMI",
+      "size": 36864,
+      "sha256": "93542c677c705dcdbdc6e9fc50d44f2611d7060daff23d60c2e39417f44115c0",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY136.EMI",
+      "size": 36864,
+      "sha256": "93542c677c705dcdbdc6e9fc50d44f2611d7060daff23d60c2e39417f44115c0",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY137.EMI",
+      "size": 36864,
+      "sha256": "2e9bac23833793deef48b35a310da4b17945fcc84844d1dbdaaa38291fccde97",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY138.EMI",
+      "size": 38912,
+      "sha256": "48be66b5b1bf5744ac9021c552b657e7192ae3aa9b524808028d647952077c58",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY139.EMI",
+      "size": 47104,
+      "sha256": "7aa713390dd65e03e2035ffb0a346b8a3e82fe16a832859e1849af155dd17a1d",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY140.EMI",
+      "size": 47104,
+      "sha256": "7aa713390dd65e03e2035ffb0a346b8a3e82fe16a832859e1849af155dd17a1d",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY141.EMI",
+      "size": 22528,
+      "sha256": "685e089b90db7446fa89e8a08d9ee0d6d9365564def8a60440f435c7e1c07e4b",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY142.EMI",
+      "size": 28672,
+      "sha256": "457bfd06aa95a50273472bf68232f29a2615fa237223d0aa730184dd4fbf60d4",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY143.EMI",
+      "size": 16384,
+      "sha256": "a4931a5de2dfa090097b4f5cbde0450e303c4a20a0999b569dac28444202ebda",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY144.EMI",
+      "size": 16384,
+      "sha256": "a4931a5de2dfa090097b4f5cbde0450e303c4a20a0999b569dac28444202ebda",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY145.EMI",
+      "size": 47104,
+      "sha256": "f0db8bee5d1bfacceab3de27b6ba7b7919599f61332849b3da2e448f85d31c20",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY146.EMI",
+      "size": 30720,
+      "sha256": "5cb2a7f2d81bf1d3a35e21748501fbeb7f56d75302de124524d9c23b8cfb5af4",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY147.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY148.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY149.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY150.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY151.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY152.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY153.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY154.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY155.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY156.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY157.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY158.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY159.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY160.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY161.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY162.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY163.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY164.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY165.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY166.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY167.EMI",
+      "size": 38912,
+      "sha256": "0d8f3872dd2b582e5340ff52523a835e4d6f0c0a8a1dda36cf8bbd2ff2597642",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY168.EMI",
+      "size": 38912,
+      "sha256": "0d8f3872dd2b582e5340ff52523a835e4d6f0c0a8a1dda36cf8bbd2ff2597642",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY169.EMI",
+      "size": 38912,
+      "sha256": "e743abbdd1781514f9fb5fee74c5ad8e491350d73de58120c29467ecfcb8e3e1",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY170.EMI",
+      "size": 38912,
+      "sha256": "e743abbdd1781514f9fb5fee74c5ad8e491350d73de58120c29467ecfcb8e3e1",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY171.EMI",
+      "size": 38912,
+      "sha256": "75e3e0465622cc3badf87e39572a26f8d851d25aadc91babdcdc995f51cd035b",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY172.EMI",
+      "size": 30720,
+      "sha256": "fec951f2af320eac9b76e0992dcd30c5ced69142b6ed911edc9c6023a744b7b5",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY173.EMI",
+      "size": 38912,
+      "sha256": "75c441ef53ac5f52a5af0abf29d19f1c7f6ed9a006b2498c41e0e85872c0b101",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY174.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY175.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY176.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY177.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY178.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY179.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY180.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY181.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY182.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY183.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY184.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY185.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY186.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY187.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY188.EMI",
+      "size": 22528,
+      "sha256": "27e2f1daee67289de6246ddfab7ac14de677bd79fc5944deab1f43502f917a71",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY189.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY190.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY191.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY192.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY193.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY194.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY195.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY196.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY197.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY198.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BENEMY/ENEMY199.EMI",
+      "size": 16384,
+      "sha256": "8d6a055954fa4748edbe54f7bf3eed35fbcc961723acc444a822813331836029",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM000.EMI",
+      "size": 266240,
+      "sha256": "e1caf8633ce6be70524bd288b5af1c4b6042e4ca5cb3b02600affd68b8013a91",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM002.EMI",
+      "size": 274432,
+      "sha256": "5dadb17d1e2fbfeaa43865a60fc378195144cac5313977cec5b4f684abe8e0bd",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM002A.EMI",
+      "size": 159744,
+      "sha256": "080ec8fea0dc950fbc33f3695e3581e023279f4a4034427ab55de900d48c5226",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM003.EMI",
+      "size": 225280,
+      "sha256": "8afd1425767a50202f96cc1bf7a47a1eb4de3ee41a799a6cbdd22409d9a45304",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM004.EMI",
+      "size": 188416,
+      "sha256": "da72a55d21e9578545c2353a13c462db607b787891e382fbc4d2d8bb7aa8144c",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BGM/BGM005.EMI",
+      "size": 268288,
+      "sha256": "50a1939eebe1dcd71f85e4c05074f9c905611f78b074b1ba0091b7295b8dc9ea",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM005A.EMI",
+      "size": 253952,
+      "sha256": "9e2719c497bd0388e56d2dcf3a8a36e6dc600dc0ad3c47989bd9b21d8ed9d9bf",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM008.EMI",
+      "size": 294912,
+      "sha256": "546d8f6dca75e7113c433e40627c39d9dc308540a3bd207798103e14296129c2",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM011.EMI",
+      "size": 264192,
+      "sha256": "806e45c53f470ab50bdb6d44ed36546372159726a4cac302d2ea104ee4e2861c",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM012.EMI",
+      "size": 264192,
+      "sha256": "031d00aaeecf419a27e60f8c8de4117cca235c1d8616e1387f68cf7b239a3155",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM013.EMI",
+      "size": 266240,
+      "sha256": "846043ef7a7f8ac623327dd8d2880ab66a17efdf1131f6257bc9c3873380e777",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM016.EMI",
+      "size": 280576,
+      "sha256": "02745106d3f7eb43366ee8d4a5df4f99c35a0176f6d2c19b9eb17564623f91eb",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM016A.EMI",
+      "size": 272384,
+      "sha256": "12740573b337fdf6308d397caaea7680a7976da8a5f70c45c8c3aac61e4d2288",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM019.EMI",
+      "size": 212992,
+      "sha256": "50d24a4cc03768c06ff891eb8ecd062da6b8ba11822b78e19ac4ec7024f7838f",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM021.EMI",
+      "size": 278528,
+      "sha256": "0000d6aa425226686a64a60bf2539951de607b726d6ace1a5b8012983b70bace",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM022.EMI",
+      "size": 251904,
+      "sha256": "75a2fa0e725584fe3b2e7ef393a9a07804604af8a1e591f814336dbbcf54f3fc",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM023.EMI",
+      "size": 280576,
+      "sha256": "597c51adee951f70cf78c0b3a04a679fe35c8d4eda4c8beac3dba0d0fd199c0f",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM026.EMI",
+      "size": 305152,
+      "sha256": "01f3dbbc2d16f7ff03eab5a75b96d50c316db37c6ee8e0d730b175de2afb0cb0",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM027.EMI",
+      "size": 225280,
+      "sha256": "5f56b8200d2e94153392b7c7ceff97bb4802d886a3190fd0a0ffbf1e3a01fa6e",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM028.EMI",
+      "size": 264192,
+      "sha256": "c56090040a48b8e5f0f873cf500e474440c42b2d70a4d819951ceb8d62a243c9",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM030.EMI",
+      "size": 270336,
+      "sha256": "10628d1cb96e8e6ce9a596e2dcf6b5d98256149b0caa5b5e216802b0a75c523d",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM032.EMI",
+      "size": 161792,
+      "sha256": "fd86541adf4dd624b85ce0aeae2b188a00256401c888febcbea6ca409677a885",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM035.EMI",
+      "size": 251904,
+      "sha256": "24f5de329bd03cc972b973c29b183d40c77fcab73e784ef413a497fca5a9ba06",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM037.EMI",
+      "size": 256000,
+      "sha256": "7f276d15c75b67803adfbca77e03101f398724e383b26ba62e278afebcad6cfe",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM039.EMI",
+      "size": 270336,
+      "sha256": "cb455f08b3ec6d4f044ac4c53e461c8df85004e138451daa29ebe14fbe6caab3",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM039A.EMI",
+      "size": 272384,
+      "sha256": "2cd929648704615adff4752f2e9a502dbd915a48d29e36923e10ec36fb714d17",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM040.EMI",
+      "size": 290816,
+      "sha256": "1024c36518a532c1ea7b6d1ed74ad4f43c9191a0178d8920d7bb1d9b3d80362e",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM040A.EMI",
+      "size": 235520,
+      "sha256": "fab18be4100953dae951296020bfde555e4a0ca421c9554c8be6220dc067a2be",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM041.EMI",
+      "size": 260096,
+      "sha256": "447a2f13292b9f9f9b8f7156e361ec5cf816fa00105e51a2d663f9e7a77ea591",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM043.EMI",
+      "size": 268288,
+      "sha256": "74256e3cdb393f78915d04e7a7d09bcdfd2b7bea06f5e6daec6544486f5c4a0b",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM050.EMI",
+      "size": 280576,
+      "sha256": "66580830aff8e159899153816248d18de29626d2a16b0db34113b396b37fccc1",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM051.EMI",
+      "size": 272384,
+      "sha256": "7adbfca886dcb0b2212268462ad99eaa20b408c641d50945856c8e7d5943c4ac",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM052.EMI",
+      "size": 258048,
+      "sha256": "fd334286f5eba9489964a707477ee1d283dbaaf82b4cb12e177c434868e5c356",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM053.EMI",
+      "size": 57344,
+      "sha256": "03e93d4831b4c7507e8521a76cbd1eea62863df68971959953507d7f05ea58cf",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM054.EMI",
+      "size": 112640,
+      "sha256": "33f0f282764530d2779772ef31d876cc898216434f5b4e70cc0ed78715ff80be",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM057.EMI",
+      "size": 272384,
+      "sha256": "73f6cba3eb220eab0d277b4fe9c304550e5daa0e264787227fa409453a19a582",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM058.EMI",
+      "size": 145408,
+      "sha256": "1c33f3e3b146d48cb8a8db349f6bf250165be030100f14ec56f692d13dc99bf7",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM060.EMI",
+      "size": 67584,
+      "sha256": "e0eb3e5a133378ee7b395d18e2ef56e3fc5db77678369e9eef86e8683bb458e2",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM067.EMI",
+      "size": 260096,
+      "sha256": "9c3563f2424d101192492b1ffa4987751dfeab4a15766c21643b82defdf3c801",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM068.EMI",
+      "size": 276480,
+      "sha256": "eb59b9fec295b58b2e79ba7f32ebd7f3ab9781d84f7d73aa95af2a32603da061",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM070.EMI",
+      "size": 264192,
+      "sha256": "15d77408c44f6faee525b0c90ae1308fabe54591c0f306565284a1dd7a6f9676",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM075.EMI",
+      "size": 237568,
+      "sha256": "f45ea28b44d9099dbc3bd1d58439803d99583b0e27f4616e9d218f98058ecf89",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM076.EMI",
+      "size": 49152,
+      "sha256": "a69b8514e53857ba4426f84967285dc667a507cee0e5941689e34615ec874725",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM077.EMI",
+      "size": 276480,
+      "sha256": "cf7a7390e9e86c279e88257019b72d12400b6e3e6b823598d41976ce951edfd2",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM078.EMI",
+      "size": 296960,
+      "sha256": "d7b8a432a7c7016965bc711d1a6d7be675e7b8cb82dc3b9ed0de80dbe37eabd9",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM078A.EMI",
+      "size": 276480,
+      "sha256": "1d07487412f9a3f2133abccf75c2e5b89a49aa05e5d718e5387301b64c9010f7",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM082.EMI",
+      "size": 294912,
+      "sha256": "e4334a564b5a2cd8b6c3e261ca88dc9ef72c0c51fda0a6bfa0ac0229eb87704c",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM082A.EMI",
+      "size": 262144,
+      "sha256": "db17cda6429ac1f6e3c2a7265d999a2c266b42b14c04e3f8b0c106c1209fa6c7",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM082B.EMI",
+      "size": 249856,
+      "sha256": "97b16d8e5f18604f8958a99afe9ea5cdebd00ea28be79e35f2cccdc9720ca963",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM092.EMI",
+      "size": 270336,
+      "sha256": "cb79393b651b0eb2654abd89063371c7911e463584200573558576deb5ca4323",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM098.EMI",
+      "size": 184320,
+      "sha256": "04951302b43c39da97cb8431399059d23cc00efe4f52c786221a74e0a53b684f",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM099.EMI",
+      "size": 288768,
+      "sha256": "15286ad2adff41b67d5f97d2c33ad14833be0e27dd730d38733f1e1a361569e8",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM101.EMI",
+      "size": 264192,
+      "sha256": "54821ccd0a673bcb54b956577907028fe29ab63e153acbf69318e5a68ec66f3d",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM102.EMI",
+      "size": 243712,
+      "sha256": "67f0a70f6ba11ffbe2e20f5b8c6e872d54e4b324b91426d17d78577799d2a526",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM104.EMI",
+      "size": 272384,
+      "sha256": "211ca2581bdc58a7a06ed62108dcdeaf18795a55c18da6f0a35ddd63431eac24",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM108.EMI",
+      "size": 278528,
+      "sha256": "8e3e731353fe91692c5b9726ea11f10778d5ce9604270a9e1bf2b4720d00b88b",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BGM/BGM117.EMI",
+      "size": 247808,
+      "sha256": "504e4c7a876dfbe506068408ab9e6f39bbff6165596d28d39ed434c034dbfcbe",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BGM/BGM127.EMI",
+      "size": 272384,
+      "sha256": "4652e8f19f05947ffd33c58451284bebec9e6175ea48b46e26e58933e2721914",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM130.EMI",
+      "size": 264192,
+      "sha256": "fdb2a45ea6ee6d9e39a5cc656d42b30f773546ea8ed86a107a7d99cee6373321",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM131.EMI",
+      "size": 249856,
+      "sha256": "5843071a982e81d8e717e8aae5ccde69fc01422fd3197d834182298fd27e531a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM133.EMI",
+      "size": 251904,
+      "sha256": "b18ca7f07ad7de88171a929f1b5d181d885152b48e52857fae353a6080ea4561",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM143.EMI",
+      "size": 231424,
+      "sha256": "29943150bdceb889e024d8ad2b04a98261aa578b370422595fc99e354eca82af",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM147.EMI",
+      "size": 260096,
+      "sha256": "5060fd3f9a623f92936a07e47de5e8353ac123efe579b23e5b21a4125741898f",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM153.EMI",
+      "size": 63488,
+      "sha256": "4f4c9d9b9be143666be4f343cc3fb70fa2e3aab2a67acc670279344e3b82707a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM155.EMI",
+      "size": 264192,
+      "sha256": "1a172709ab08444e2a81d4e25a2c74f875bdf80a5b6301e59ad2778bed6216e3",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM167.EMI",
+      "size": 280576,
+      "sha256": "ec6f7440abd4506cd594ebe1aaecb4abe20adf9d5e7d59478d01c73c705ab6d1",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM175.EMI",
+      "size": 243712,
+      "sha256": "7f998457a8e5d02dcb3f4368d7b2a36328e35b247c51e9588ef153eaf188b46e",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM175A.EMI",
+      "size": 227328,
+      "sha256": "5674f9a25c3764b08db1b476fcf084e1285f67acaa1e022b7881c785d0ea01fd",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM188.EMI",
+      "size": 235520,
+      "sha256": "7ab7f8ef6bb329e3f79f418ad21ca667ae62b7b87ec6c4f857f2285ecce169c1",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM189.EMI",
+      "size": 249856,
+      "sha256": "fef483054a57ab4ed66205fb557d9c28f88512b549ffc91b7ab4ee049953f9f5",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGM197.EMI",
+      "size": 243712,
+      "sha256": "873c209fc2656f810806b21b0797b45f01f2838ab8c15c4b22c5ab2a508f833f",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGMBAT00.EMI",
+      "size": 274432,
+      "sha256": "fe802871fd780db87eda0ce9745f5da93265b0be58f865a92c6d2af45379228f",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGMBAT01.EMI",
+      "size": 278528,
+      "sha256": "0449b215b377a5d91eb7cebf10f81b45b4f3501bba9e2b14d4baeb016c953bed",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGMBAT02.EMI",
+      "size": 274432,
+      "sha256": "fe802871fd780db87eda0ce9745f5da93265b0be58f865a92c6d2af45379228f",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGMBAT03.EMI",
+      "size": 266240,
+      "sha256": "61b1745c751f27f07767fa370bc29ccfd018d5e09de024197355c4ba9bb0287f",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGMBAT04.EMI",
+      "size": 278528,
+      "sha256": "c081f572d0d3c09fc7922cd881d70c82682c4642a79f742d09714f300f97894d",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGMBAT05.EMI",
+      "size": 268288,
+      "sha256": "fae8b7bd1eb49cea9db5817ec58ab6416f5efb59055c6822df86c4aa4369e381",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGMBAT06.EMI",
+      "size": 290816,
+      "sha256": "991be6a804d5295cbfcd7074a7f3e0eb66648cdc8578f1235248e57922310882",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGMEND.EMI",
+      "size": 456704,
+      "sha256": "15c00c369357678afd3f5477bb25f7f7cce8d720d7979c50c90f8df4faad0bce",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGMOPN.EMI",
+      "size": 434176,
+      "sha256": "20d2ff9160b5d7bb4a346b01117b46c5e86703e4ef9f579bb037181d323f4793",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BGM/BGMSPC.EMI",
+      "size": 286720,
+      "sha256": "f7ae3ba98ddea69a86e249844f7516c1f98069e9dab4dd21d83375e85cad7542",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BMAGIC/KAIZAR_D.EMI",
+      "size": 90112,
+      "sha256": "6e13c4fa2b5005f3feebecadf693f3810bc9094dd762e6e8f6f2172db0e5795a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BMAGIC/KAIZAR_F.EMI",
+      "size": 90112,
+      "sha256": "ad316bd2193302b83ae099b37ec7c7213feececa7267ba24f3f4c22adb55ce4d",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BMAGIC/KAIZAR_N.EMI",
+      "size": 90112,
+      "sha256": "146a05fc386238c6e1ddafbd87b0f417abce67416ab00489d96942a838e30c21",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC001.EMI",
+      "size": 10240,
+      "sha256": "db031894208f53e2b84368213948fe4494cf54107d0c5e9e16a9308439569fdf",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC002.EMI",
+      "size": 8192,
+      "sha256": "23a1a2ae9b49c94121e4e0742d3197cadcce3de9699880182069ba1d038ca778",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC003.EMI",
+      "size": 88064,
+      "sha256": "95ea77b70bc1605e88a3b41d61b9a65bec5234d6cc96a4b06aa38c20847e7a86",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC004.EMI",
+      "size": 122880,
+      "sha256": "7fc8c7ed076521b451ead2631dbf848516f6a1f3c6e4683ebfa2e0a266cb4644",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC005.EMI",
+      "size": 135168,
+      "sha256": "e8e7c7057c49822fd4a36a7f00c55078408cd7449a3ffde987f9dcefae7eaeb7",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC006.EMI",
+      "size": 124928,
+      "sha256": "f300e047a11c4df17440d55702da31d92d160640eebfa1354bf27faa71e257c3",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC008.EMI",
+      "size": 51200,
+      "sha256": "569f7d7739dd846b07c1af143ba1403967646fcc47931bc391c1731a4cb86983",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC009.EMI",
+      "size": 69632,
+      "sha256": "a6c90cf3cb89638e3554775304f170c30c24b3fac5489ddecbe258f159773390",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC010.EMI",
+      "size": 4096,
+      "sha256": "701fc0eea15c6426556aab36eb1653476e7daf25e1a333d000be3fe4bd658a61",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC012.EMI",
+      "size": 73728,
+      "sha256": "6f17c764c1bc5380294144fa14d0ee7e002d017c64b8ceb6f38c5cf2cbe6b1e7",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC013.EMI",
+      "size": 69632,
+      "sha256": "119642568f65f1736cec445761541cc40801438a9dbb379cd64b6cb7979e653e",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC015.EMI",
+      "size": 14336,
+      "sha256": "40c5025b328a76d36e7f3e0041bd8355382eefc4a772778d76ad8adc3efa2c02",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC016.EMI",
+      "size": 51200,
+      "sha256": "3240432b6ac289a716a78ef354e26a68ec42cf0575d56bd914d1705c9784bca4",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC017.EMI",
+      "size": 34816,
+      "sha256": "ec2ec549eb2753935e2f529da95dc11fdb28d60255be2856edbdd28cf5163182",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC018.EMI",
+      "size": 61440,
+      "sha256": "49fc4caae67a11a701a6995ab4f90a5b299051549baad45900f8db50ddb44168",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC019.EMI",
+      "size": 86016,
+      "sha256": "5889ae76c6c8146b6d1eaba97d96e40f9ba158f2e78b7358970fb6991c65fa15",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC020.EMI",
+      "size": 69632,
+      "sha256": "a9814c999f2c2ab39be62fdb79f67e370778fb2552bb92e0512f7dfe48fee0bc",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC021.EMI",
+      "size": 43008,
+      "sha256": "1a935b0584796db4ccfabb217775b754c16030ab328bfebf6ef618ef18791395",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC029.EMI",
+      "size": 135168,
+      "sha256": "cdbd06bebd4e2ea73a519db58ed64b0037e57396bbc8eef536543a69080105e2",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC038.EMI",
+      "size": 165888,
+      "sha256": "f97d968f297914a95ab7eef3c3b88193d0347874a477dc34b16e75d27210a0d7",
+      "emi_entries": 9
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC039.EMI",
+      "size": 90112,
+      "sha256": "66cf2c9842c22abaece7441dfa2e6a7aa524e9042efe1f76e1b2c1f9e42f496e",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC040.EMI",
+      "size": 104448,
+      "sha256": "02826792c55e96fb197b1677625b54b5fc5b66cb39bfcb41caf1bd4266893d5f",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC041.EMI",
+      "size": 53248,
+      "sha256": "64d156e184a6b205c856d51235a61a075b5148786f83a85be4e7149c132414fb",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC042.EMI",
+      "size": 49152,
+      "sha256": "7e3b711303420d37e768e3f0a3632cf0896f0d1a572860df3c7181506d5648e4",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC043.EMI",
+      "size": 122880,
+      "sha256": "83de0fd5aead6b261969ac2b3e97478b6e2ca42b45b363ca8ed7d581422dbb96",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC044.EMI",
+      "size": 90112,
+      "sha256": "07e7b6b64c8a3d5b6500f7fde48ce7a500d41ee329854ee2630f66660bae43af",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC045.EMI",
+      "size": 43008,
+      "sha256": "12fe6a69aceef4f3363fdb6d76827aa91c4a60bf4ec40899c3cda4a9fbc68760",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC046.EMI",
+      "size": 124928,
+      "sha256": "d798ee5cba269dcdc3dab033fcce6c73443a8d51a575bcef522a7b881522ee9e",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC047.EMI",
+      "size": 124928,
+      "sha256": "00da571065bb27daff224344cbf50d68b6c7ea9f60e57b5d401f97e49f3d7cb7",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC048.EMI",
+      "size": 73728,
+      "sha256": "30ea95be35e6d7228c43b6ca68839bc9a5f185561876beb018814955719592ab",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC049.EMI",
+      "size": 110592,
+      "sha256": "33ee17f1b6f88ca718d3ce7e68825deaf911b7ee9df3937ff7e86901a5e839c5",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC050.EMI",
+      "size": 34816,
+      "sha256": "d2f582baa32b5c9471857700c5656ee05b63cdf110836be7939c8a4c0f9dac67",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC052.EMI",
+      "size": 55296,
+      "sha256": "f3f5fe245c70c28d89f74a906175bea14eb83029655c7f8918a936c6d4905de1",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC053.EMI",
+      "size": 114688,
+      "sha256": "4dca6ba03bcc3b8edc12ac2fe15e850c9486ffbf3d1b84f640b820fae26f3186",
+      "emi_entries": 9
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC054.EMI",
+      "size": 81920,
+      "sha256": "4911272ab1030150f40fb74208e756d0094a49bafe8fe3e959f030e1113d2497",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC055.EMI",
+      "size": 71680,
+      "sha256": "dc2ccdd36f76848053eedabca2477b5d86e1383b6f36a87af79db5698bc33560",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC056.EMI",
+      "size": 88064,
+      "sha256": "b56ab9dca7aa8f8414e293ccbb292ad6c2579bfb3969bb703918b372de3e1238",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC057.EMI",
+      "size": 116736,
+      "sha256": "19db39b7c062a6b14c5e27f2910738ad566fd2c1c169c207df6dc331ab0edfa1",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC058.EMI",
+      "size": 81920,
+      "sha256": "568e8cac4ce881b1a543a9942ede446fdfedfd75ae887d37d8f24f048518dc54",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC059.EMI",
+      "size": 131072,
+      "sha256": "6e5ed4d80147022106d1ed05cb2939e306a31c9b24d861db64ce945cf787cbe2",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC060.EMI",
+      "size": 10240,
+      "sha256": "88e2c7ae5b9668ac4ebbdd99fc95144c1f765e2c3ee92ee3c5ecf39acd9a80af",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC062.EMI",
+      "size": 110592,
+      "sha256": "6a42165aea80b23180056554392d6b62803990f54bcf5e031acc832da2f50d3a",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC063.EMI",
+      "size": 86016,
+      "sha256": "fe29cb9d480eac3e0dbc5111685c758561b1ac4a1303640b8dc73e6cb8afb6f8",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC064.EMI",
+      "size": 108544,
+      "sha256": "7d90403d7a2d3666a41f4729639d96e08fdf0919d9af1f39f4dc64196f85d7ee",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC065.EMI",
+      "size": 6144,
+      "sha256": "d83c3c04e500b8b7dd52adbc6dc3ca483401484b12be966140e402064d1d1e54",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC066.EMI",
+      "size": 161792,
+      "sha256": "834d4e260294307747baa0ff6da556e1f64c949aa9c33a692542b0f383739a28",
+      "emi_entries": 8
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC067.EMI",
+      "size": 167936,
+      "sha256": "7c7c90cbfdfa9cd592139fc9189f065b8ea7d3681e22903825d97808aa8129f4",
+      "emi_entries": 8
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC068.EMI",
+      "size": 51200,
+      "sha256": "1e638ae345214d19fc830c646c05cd479f394c568e98bd277fbfa055b2ac3bf6",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC069.EMI",
+      "size": 133120,
+      "sha256": "a2f65cbde28163851c3239a91e6eb5e0f68169e9eb357b6fb6377631ef7dc71a",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC070.EMI",
+      "size": 88064,
+      "sha256": "90cc27c115ef7bd474d20b74c57fc7ae734ceab3bae7e2e5bf591b62b834fbde",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC071.EMI",
+      "size": 88064,
+      "sha256": "c4a4f4681894ee1e2ed3a88d6609671050b7c744b2df9bc1dc854d2c002be807",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC072.EMI",
+      "size": 88064,
+      "sha256": "5237314a6afaace05913501434b773b62c80aff18c919d5ecd4facc51431f149",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC073.EMI",
+      "size": 73728,
+      "sha256": "5a3a01608acb88b2717ed37c6ab199f7cad0cb62ccca0def4c116c90ea04a236",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC074.EMI",
+      "size": 73728,
+      "sha256": "ad3e9c72eb451ce508d81276c4517d16a987b1546ac7d5a70501d2bee73bb0dc",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC075.EMI",
+      "size": 118784,
+      "sha256": "3cb7558342d6161f1f71512789cd9ad25a2a6669674b88c4b2a38764f9ffad94",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC076.EMI",
+      "size": 167936,
+      "sha256": "bf0ad839070a5c3de9e741d024613326ce70e1f479754c7a1d4b989913b6e5dd",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC077.EMI",
+      "size": 167936,
+      "sha256": "5611658bcc814c31468ac2d9b01aec86c11086c4e998a5609d33f4f224dd888c",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC078.EMI",
+      "size": 92160,
+      "sha256": "06a27841a7a168f33afd1578749d6e05246f8da4ebe44199cf6446e8cf73012e",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC079.EMI",
+      "size": 77824,
+      "sha256": "e30f7d31a3d2b0dd208a087c8b8277865966441a1c2022e9e61e5d60b2d00a09",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC080.EMI",
+      "size": 4096,
+      "sha256": "d9b81cf5bb09cbc1856db62d1b1c6ba7c1f61faacf7ef3bfa0a00e4914deb818",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC081.EMI",
+      "size": 118784,
+      "sha256": "42af56e39eab457169fb2e1f16aa0ee8b140f1c62dafb5fa80e8b96d0694aa9c",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC082.EMI",
+      "size": 110592,
+      "sha256": "2fd5d32658e9fed0a8c9cabeaf0a274f25a2dac4a174a002fe35a3a6a67f1512",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC083.EMI",
+      "size": 112640,
+      "sha256": "eef98fc9233009233c3da26fb31b387c5f2d755814bd4381cf7c7ad24b80ca98",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC086.EMI",
+      "size": 65536,
+      "sha256": "87c218c56e3b652da8dd5837c15f1780e0d53fe914bf3c3ce7330a26cb8f7928",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC087.EMI",
+      "size": 86016,
+      "sha256": "b1ee9a6b25f01653d6416caa567f774db158fe7844bbe9c46bbaed781a34a3a9",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC088.EMI",
+      "size": 129024,
+      "sha256": "4d66f84015043b024a41c85607b01924b16463c22862c0fc928b54aa93c3d54b",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC091.EMI",
+      "size": 71680,
+      "sha256": "2822c18e341dc3a47621692cb5f034c643e4747949741b560b087bc3595c7008",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC092.EMI",
+      "size": 92160,
+      "sha256": "e7b28ef6ba4a89bd6ad392dd1108df803b82bb353c4bf46ff1520dbab415d25f",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC093.EMI",
+      "size": 167936,
+      "sha256": "9296d61a55b7f98fa0036ed8db4ef3b9d3a31cb6e2bab323ad29fd88a77e49fb",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC094.EMI",
+      "size": 49152,
+      "sha256": "3216a2212cc0843a361e9c8f813186d1988691937c655faab68aa48f1b615b31",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC095.EMI",
+      "size": 98304,
+      "sha256": "826b9cd949b81ceb9f1e701078bbc0387ccd991aca93e70d74287e13c463f2ef",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC096.EMI",
+      "size": 147456,
+      "sha256": "4626fa88b0c2c176d5aa7ea3eb8b3f856449824bd3674fd94fd7372dbbcb1d55",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC097.EMI",
+      "size": 45056,
+      "sha256": "e0465038405253f501832670c36311a727f638b1daaf250c62b0d9f855a27608",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC098.EMI",
+      "size": 40960,
+      "sha256": "76ad2a3362e6b63bff16d3d059c80ccf2825e984a00aa233621344aa730e7077",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC099.EMI",
+      "size": 94208,
+      "sha256": "c174e7323f370181d057bd11445f187452f24ab93d3388d4a6cdd7b3b42a4f57",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC100.EMI",
+      "size": 51200,
+      "sha256": "8c51974c3fac8e8a5d683c84e4f8d1caabd70f13bc2c510ee842f99124c185ae",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC101.EMI",
+      "size": 83968,
+      "sha256": "9f7d18847b503382df1875b2425d6b51c1135dea9ce0fdaa0a804e2930ed0616",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC102.EMI",
+      "size": 92160,
+      "sha256": "b4e1ad2015e842d16d6599c5f22b1df5a17d1fcabbf1d61f1d0130f13399b214",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC103.EMI",
+      "size": 88064,
+      "sha256": "1c8d840dd0eaeb015d3f7e19026a1f3fd78fbb1bf02945ec41a54d4dd423816f",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC104.EMI",
+      "size": 57344,
+      "sha256": "8d5182fab4198140af7dec0e0e86729bc53efcac24596188001837ccfeeaf971",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC105.EMI",
+      "size": 104448,
+      "sha256": "940ad05b8d76b44802976ba5b80b37b12f3a3fb8add5b8359f309a8403b18ebd",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC106.EMI",
+      "size": 83968,
+      "sha256": "85f128d5a995b599dc934a4ae545141f33a86602b3c74ff08ac1306be481b21d",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC107.EMI",
+      "size": 90112,
+      "sha256": "0dc1c97fc681e819d35cc0602d085a75bc84abc70a58d2874fc33d3e1e26e2ba",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC108.EMI",
+      "size": 67584,
+      "sha256": "9a2a4ad41d4326afa2bad4655633af09b436509edbc658df8635177729ef9ef6",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC109.EMI",
+      "size": 71680,
+      "sha256": "6dc819ef3a9e7441ffb92e440100d0638675468da32076fbf7c4ba5a9c6973b9",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC110.EMI",
+      "size": 165888,
+      "sha256": "4463fae6ebe0f3e4120ebb3c552741d99e980edfe6a910adedbab239165dc6d3",
+      "emi_entries": 9
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC111.EMI",
+      "size": 77824,
+      "sha256": "f1147a549c5213ab67fe12ad5b4c614e42a2e48542792d3abc62b3f5bd101788",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC112.EMI",
+      "size": 4096,
+      "sha256": "d9b81cf5bb09cbc1856db62d1b1c6ba7c1f61faacf7ef3bfa0a00e4914deb818",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC113.EMI",
+      "size": 131072,
+      "sha256": "7dfbfd3a7016a91ad58fbf181e52606994ca3eaad2ed66e4f924d1bb4403912c",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC114.EMI",
+      "size": 186368,
+      "sha256": "2aa83867e60c8e067e5421c63848965a4cf0c2de567910969e88f239c8f93a8a",
+      "emi_entries": 9
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC115.EMI",
+      "size": 118784,
+      "sha256": "dfef9a16e97e512ac2b0ee7cd3cd5cedd8b13339c0796edeb68749f0ce76589c",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC116.EMI",
+      "size": 59392,
+      "sha256": "6f6af3c4f9f49e60371443752495e4cb3e440a76b226b740b4827e330e23c7ad",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC117.EMI",
+      "size": 4096,
+      "sha256": "5d5a2c38b34c015184ffc5486783a2df459716ca6e10ed23b1e9ca5377fed4b8",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC118.EMI",
+      "size": 71680,
+      "sha256": "417889765673e62e023bbd58fc4deddaea2056ef5fbc8237cfef5cb5564c23ba",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC120.EMI",
+      "size": 169984,
+      "sha256": "5908418c346ee3649b1bcc5fa358552a59ee673d2868650a399b62cd89fc3fd6",
+      "emi_entries": 8
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC121.EMI",
+      "size": 167936,
+      "sha256": "99b223d4025dd40ace67158ee7da26c8f573d558179fa2710460c3e272cca6e8",
+      "emi_entries": 8
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC122.EMI",
+      "size": 165888,
+      "sha256": "67dfeb268c36061f5fef5f922ce56c7e9f6161cf0142438bf1b73c1039042e3a",
+      "emi_entries": 8
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC123.EMI",
+      "size": 165888,
+      "sha256": "5e6036ee3afcb527ee6e8f3ebdb8362fbd3148f1b78778a1b2124453f2725ac4",
+      "emi_entries": 8
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC124.EMI",
+      "size": 94208,
+      "sha256": "a7d25dd19bc456570c2254c305056085c3b83da1c10583f0480223d8eb866a54",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC125.EMI",
+      "size": 102400,
+      "sha256": "7b54e550bb3f893852f5340382a6da4a06ed528b1266615c190834e2d526c282",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC126.EMI",
+      "size": 129024,
+      "sha256": "5cb8f84b39f13cf7dbdc64b857a073a96f8e2fbb88acfe2a68165444e744b6fe",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC129.EMI",
+      "size": 98304,
+      "sha256": "b118a626abd7ade1b4faf8f30ca6d38224242a472cd366c01b33c877ec9555da",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC130.EMI",
+      "size": 155648,
+      "sha256": "2c8a01590c7c47082cf8639853595c2573e82c1b55ab3eae44ee78b00b0c674d",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC131.EMI",
+      "size": 153600,
+      "sha256": "b5c068895f9a21dadcf97d4f68833d57568d974521271d1e8859eac50c66c4ea",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC132.EMI",
+      "size": 145408,
+      "sha256": "3369c97245b62653d281e5a555846b293d0f168fad8bfae5e13c2d8cf0f6a9f3",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC133.EMI",
+      "size": 112640,
+      "sha256": "ee26bfd320c68f345b4343a264160f44bfd224c86b97bfd5bc3ae4b9c5fd57a8",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC134.EMI",
+      "size": 114688,
+      "sha256": "40597db61822b850b9f846bcc311acb46d23660d82cf698c32281a49c5389bfd",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC135.EMI",
+      "size": 116736,
+      "sha256": "30142b28659da99149940b0eff6ae1ccf65901f7875d49a98d666048393fd5cf",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC136.EMI",
+      "size": 114688,
+      "sha256": "c753bd4decad1029f753e7f9dcd781883c8dc7ac00f855fe5175b4df99d3d21b",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC137.EMI",
+      "size": 157696,
+      "sha256": "237ba80c350c675ef20317acab5494d75c7fe3dd478380584b62afe8580b6017",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC138.EMI",
+      "size": 57344,
+      "sha256": "a6ce9a28024d94a544ddd912794b0e2d21a5082bab2febc19d8f031990605618",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC143.EMI",
+      "size": 40960,
+      "sha256": "d00290aedb47cacd175e8f1b1af3bd30954640b13932d898674696d72ebe2e78",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC144.EMI",
+      "size": 90112,
+      "sha256": "4a141dfd9d858cda7f7eab85edb4e20cb9e3eb0a64efe1f1f6a1305d440ed718",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC145.EMI",
+      "size": 69632,
+      "sha256": "1de4a6e772a93d0108db51b6c751fd8c085010a144dee6c820d91ecc62dbb8ae",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC146.EMI",
+      "size": 77824,
+      "sha256": "1801802b11abbb3db0ddc6c2913c04e1dbe9a00d3f62404c84d598fafb14f4ca",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC150.EMI",
+      "size": 51200,
+      "sha256": "214a7f72fd48e8c59427c05364b75ffc40aa0930389b8b6853dd45a18a95f131",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC151.EMI",
+      "size": 106496,
+      "sha256": "7db2c7229dbb6a09b87e69170146165394365d01fcaeb374c1b5a2ca24d8af1f",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC154.EMI",
+      "size": 75776,
+      "sha256": "22461bd9ac8c611c9bd3f8fa12d1ee8956f684f1a0da7d242d17d225143708be",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC156.EMI",
+      "size": 88064,
+      "sha256": "31aaa697c1ce9080c700a60b82a1e2a95b91bb2b8fe415cbb1c4d20c4474f890",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC157.EMI",
+      "size": 129024,
+      "sha256": "d18f8888b13808c2f65fda7c3585f965127defbc3ed6d1ac0438d2447bd552f0",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC158.EMI",
+      "size": 77824,
+      "sha256": "5ffdd9b0f18f601a7066d1968753ecf352ddd2e75bb8d159a4707c51faca0d1a",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC159.EMI",
+      "size": 88064,
+      "sha256": "55fe7562ee5576b6bb7ab6c4f099e7feca8cc28cd899c1a7bec9e2d3199cb54f",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC161.EMI",
+      "size": 34816,
+      "sha256": "ed55ef5f9b723efedebbb41ac76ed7f0e9e2f999a890d7181d950fbe8cd7895a",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC162.EMI",
+      "size": 71680,
+      "sha256": "ba3945f2562987cbc600927100132bd9eba9a10ff0e4df4e8bd93a19e7a7fe43",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC166.EMI",
+      "size": 73728,
+      "sha256": "ffeef0c618a02fbf5cfb57d2b04633157c75a2918b968d192be301516fe890af",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC167.EMI",
+      "size": 73728,
+      "sha256": "bd20eddabddb9cf85d655d2891c748edf6c06520d241014631d7fb023eb1eb71",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC168.EMI",
+      "size": 88064,
+      "sha256": "7a3dd996fb9aaf862164b5a081b6c85d77a76b25a176e2988b3dd8dd3a29ecc4",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC169.EMI",
+      "size": 169984,
+      "sha256": "832f6ab70cdd41b9da558d7163d4e4bca8bfbe29d3130a68e31b19c0db4bc94d",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC172.EMI",
+      "size": 83968,
+      "sha256": "6d42e4fe1bba1354f44230fce9cfa89b9c4867294120ea63efaa4bc181190af9",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC173.EMI",
+      "size": 92160,
+      "sha256": "cfefb4dcb940c78d6d3a6b9b466d3f9f7f31ee290a86e731480d59fbafbb9fd2",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC213.EMI",
+      "size": 126976,
+      "sha256": "8f0be1b26dbf7998021ad19697872f6d4109f4a6b801a9e144857e25518bd933",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC216.EMI",
+      "size": 4096,
+      "sha256": "8b125e94b62faa5ea92a3e76b948050e3c1eb4384c83d0c7aa12ae6ed80c7c92",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC218.EMI",
+      "size": 145408,
+      "sha256": "909574709a42bad20cc982a5b6ef67d60a9e9ded3f974d2d8f8eba77a13aabd7",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC219.EMI",
+      "size": 176128,
+      "sha256": "9c976e25a482c2e8913a2157964b03373abae067e0db21294bd5afbe993612c3",
+      "emi_entries": 9
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC220.EMI",
+      "size": 188416,
+      "sha256": "777461372d957c90738516f08de93a2db506b9bc62cbfe78596684674f914b52",
+      "emi_entries": 9
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC221.EMI",
+      "size": 188416,
+      "sha256": "d88a47ef0b3b895a8e42a0dc6e78ce9243acb97f04109066d66adef91b64c30a",
+      "emi_entries": 9
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC222.EMI",
+      "size": 153600,
+      "sha256": "a91c6dd860a3e0ff8e511320bee4119a965d87f1690a8d77e73cb4e7bc029568",
+      "emi_entries": 9
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC223.EMI",
+      "size": 94208,
+      "sha256": "97fdb715de73ef207957157d497f8f39253fe0c702f41620916453a6825a5516",
+      "emi_entries": 6
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC225.EMI",
+      "size": 149504,
+      "sha256": "4a488ffbfca743cd5f9a425ff7a565b8d0e2684e0d98d47ceb724083d748fdca",
+      "emi_entries": 9
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC226.EMI",
+      "size": 165888,
+      "sha256": "69a92271cc86a937746b0f5834c8069118b869f12c61a87340de4fe23ac7160c",
+      "emi_entries": 9
+    },
+    {
+      "path": "BIN/BMAGIC/MAGIC227.EMI",
+      "size": 165888,
+      "sha256": "572ee0b28f32ca886d107a3ae573833f6fb03a029c99017b40f6d6021b748a2b",
+      "emi_entries": 9
+    },
+    {
+      "path": "BIN/BMAG_XA/MAGIC00.STR",
+      "size": 31557024,
+      "sha256": "42361df114bf2c2128a4951fbba3c7850e717dac11807a235034acb6c79168d3",
+      "emi_entries": null
+    },
+    {
+      "path": "BIN/BOSS/BOSS001.EMI",
+      "size": 444416,
+      "sha256": "9eac295634f614017048450a184ad6213b720bb0d8f83c0d61ce51b551d9f40f",
+      "emi_entries": 17
+    },
+    {
+      "path": "BIN/BOSS/BOSS002.EMI",
+      "size": 761856,
+      "sha256": "4635c56bca4163e0b99a52125ddfe4dbbced77b8e32622e35f4773b9e8f55eb6",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS004.EMI",
+      "size": 454656,
+      "sha256": "d1aa9d626cc760a4e3eb98741961a8123e1c81c31bf66e439f03ed98a5b7fe1a",
+      "emi_entries": 17
+    },
+    {
+      "path": "BIN/BOSS/BOSS007.EMI",
+      "size": 720896,
+      "sha256": "991000000ab23b286e421bc818151efba03dedace4d9ec893d7c3e50112ca839",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS008.EMI",
+      "size": 751616,
+      "sha256": "1d22bffbbccc37160cc5926cacc270dec7fd70441e7a71676d352c6ccec1085d",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS012.EMI",
+      "size": 759808,
+      "sha256": "653a2895c41bba876a8c8147a28b47dc766dedc7d6836cd98bea88fbaed11038",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS013.EMI",
+      "size": 743424,
+      "sha256": "53e0827c6bc2865effc0457c8978bba84b0f700f068560682ba35cf09856b631",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS014.EMI",
+      "size": 733184,
+      "sha256": "7e6af308777a6e966ac6271aa0343de503e4e9d0dd3c7dcfe2f5396ecf132131",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS015.EMI",
+      "size": 753664,
+      "sha256": "17fd90f2f8935a8fd1e6c478acbdaf2bc68a97d8bfd2e5e84d1faad28e4e228c",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS017.EMI",
+      "size": 722944,
+      "sha256": "06f7bcd0ad24932b2e762a10ff4b2f946549380df86c5b72e7701ed79c355a04",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS018.EMI",
+      "size": 741376,
+      "sha256": "503895b6fe164493d28e71a7c98040810d26eb54078ed321e4500d2f4fa2b8f6",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS019.EMI",
+      "size": 739328,
+      "sha256": "38e37d3ea02dcc19a6bb5f70cd71017df4cc71672d878db8d6984a0e4790a311",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS020.EMI",
+      "size": 741376,
+      "sha256": "2904d76c7b07fb13c0760d6e8e1b1a278b54c358ffb68d9c61124abfa1b585d8",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS021.EMI",
+      "size": 733184,
+      "sha256": "5ecd10d28b3ea74b88d00e231c37efe9c5b14176f7600fcc61d271ef9218cb3b",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS022.EMI",
+      "size": 468992,
+      "sha256": "c7d2204469a29f757b19605266357e5cc76fc82d46dc42efd724e1998da29aa9",
+      "emi_entries": 17
+    },
+    {
+      "path": "BIN/BOSS/BOSS023.EMI",
+      "size": 714752,
+      "sha256": "7a870f7dfd1b4765941968d56b5d3fb2d770fc0d86327508be262ddcb4cead01",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS024.EMI",
+      "size": 745472,
+      "sha256": "6bb1eaf50d098c7d3e4c32d1049ae0ac261e797c1910e76f5bdcd4d0847d78dd",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS025.EMI",
+      "size": 475136,
+      "sha256": "5de702d8c0ee3f472a9de21df98f7c872e850ff92fff1d5dca37d06b6b566b9c",
+      "emi_entries": 17
+    },
+    {
+      "path": "BIN/BOSS/BOSS027.EMI",
+      "size": 751616,
+      "sha256": "6cde7d077aff0db7c633129223a2d533536660f94b2df95c61d5c41d7801f1fd",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS028.EMI",
+      "size": 741376,
+      "sha256": "d0ea974f32a8fca3a212e4e668d2dc835e53384a7df5b128001538e89993b946",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS029.EMI",
+      "size": 718848,
+      "sha256": "85f579caee979d70d7e45b64b2a26b3d2d10469ed123849e53c0d349e36807a0",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS030.EMI",
+      "size": 739328,
+      "sha256": "fd8128d39a1767844bbc39febb0834f805df6eef66039677ea91b287b19d8a4d",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS031.EMI",
+      "size": 468992,
+      "sha256": "3d330b149c8a74575e0e2a12b630ca50bea16fabf6ad2e11425c9e03adf5273f",
+      "emi_entries": 17
+    },
+    {
+      "path": "BIN/BOSS/BOSS032.EMI",
+      "size": 735232,
+      "sha256": "a2fef4ca9800e985703bb52d0164215a78996a889c437eb542600e27a8e56c26",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS033.EMI",
+      "size": 729088,
+      "sha256": "bc5df4acdada289123a76120bb2f10565990661c15d3aade85b3092e5cf3063f",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS034.EMI",
+      "size": 755712,
+      "sha256": "3988171244608f8c47445074487ee42629d02366055526125c6508e916d4190a",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS035.EMI",
+      "size": 745472,
+      "sha256": "d3b577724fbed2bef84c6af3eb96fa130c4c79e08418f2d78b17d34178a566f9",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS036.EMI",
+      "size": 761856,
+      "sha256": "a663acf5e8ed68b11dc40c0f5b98bfa4aff642bb57cf94829a2c55825feef09d",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS037.EMI",
+      "size": 743424,
+      "sha256": "c58558306f5af2a831ec0fc5edcafed13770eae001a294def23cf583a41f3be0",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS038.EMI",
+      "size": 743424,
+      "sha256": "1ded071b5bfe638d810b2f3e85a2616e575442345b33509267a20a07c076d1f3",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS040.EMI",
+      "size": 729088,
+      "sha256": "85e2aaf8247f69f08057393d36cd5f819fc87359be6e30f75e790642d5f021de",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS042.EMI",
+      "size": 731136,
+      "sha256": "135f637fba7913a54c5c9a21abdadbd18dae55e976ba8dd84d4d515ec31bb2b9",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS046.EMI",
+      "size": 737280,
+      "sha256": "38a1691c6bacb339dbfe6a680ecf8b12f0b38e03c1a67fb83e58f0bb75229ff8",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS047.EMI",
+      "size": 745472,
+      "sha256": "9837f061726b280e2992bce5866482b1c43cb5a4ea832547d9b760659f685431",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS049.EMI",
+      "size": 735232,
+      "sha256": "e9799703a7535f8cf452c3e1f7b568d6963ab7ad6f37445512a81e130345c85f",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS050.EMI",
+      "size": 743424,
+      "sha256": "c5f21ebaa81fdb15d379a282c9074fdec638a52bc433de43b14e56fd9ff43cda",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS051.EMI",
+      "size": 753664,
+      "sha256": "abc6c28bdd0dbaf5d953657569536896b52cc133cf701eee853d67e4a7f3bcab",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS052.EMI",
+      "size": 749568,
+      "sha256": "1c84fb824f2197b9e4a566ec1922e7e9d9c89dc19839919f59aa0735954f056e",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS054.EMI",
+      "size": 761856,
+      "sha256": "a50b5db2314f8811de6a6d8341b7b0f3ab74ef2b763d879a7febe4ab8b72dc69",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BOSS/BOSS055.EMI",
+      "size": 770048,
+      "sha256": "59997248c65d338455bc9f99fc9e3d4d83c1c08c228d9ef7a3abe82dd28b7a73",
+      "emi_entries": 20
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD012.EMI",
+      "size": 307200,
+      "sha256": "04221c1c9d3b234f4d6dbb830d393be32cb84b4c615bbc584b7fce367efc8e6b",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD015.EMI",
+      "size": 307200,
+      "sha256": "4bc9b6946f7cf64be9d0db5ce5c3d41dfc9d9243453662890ae924a518fed56d",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD016.EMI",
+      "size": 266240,
+      "sha256": "a2751cf875d7620ab331db27a605a4841bee18ee9769abcbf102cbf948b76506",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD025.EMI",
+      "size": 335872,
+      "sha256": "6b6f447f6c2bcc6c33b9496d8490764b21545c3561fc1742835eacd63415551f",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD026.EMI",
+      "size": 296960,
+      "sha256": "f5fde1e0e50be706f2deafa1eb8b13cef1bb2937d3e81a2ff8dfbe9097e94cb8",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD034.EMI",
+      "size": 266240,
+      "sha256": "938f1e3450fea2efb20dc0b309cb80fb52186f2771e92793c087ce836a63ca18",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD056.EMI",
+      "size": 294912,
+      "sha256": "0358174f7c3e2db0957ca1561179da7b863111c4b31b56cdbc880875cd2a4303",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD247.EMI",
+      "size": 335872,
+      "sha256": "456605e6095ed0d278de1e8d3ac0ad7f4bf34980156ff7d7743be4fe68a6171f",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD257.EMI",
+      "size": 352256,
+      "sha256": "956f31a15cea58fd9c5da4744373fa479852e34a54f59dcff6ffc6877c3bad35",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD267.EMI",
+      "size": 313344,
+      "sha256": "42047c56d1b768547c075cc1d2cc28063c3026e2978dfe32f4ad2387ab731808",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD278.EMI",
+      "size": 344064,
+      "sha256": "122db5a366a5b785c712594583a5296f1567773f41ad77edcbf22a06ab9b8506",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD27A.EMI",
+      "size": 268288,
+      "sha256": "ff54f8a8ae96849ca30c7b80fc9fddb57d58292726aca824c6567ace21f289cb",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD349.EMI",
+      "size": 133120,
+      "sha256": "5ac3f4bce269c2d25184ccf0b127339805614b1192ae662ac18717206ca72011",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD457.EMI",
+      "size": 333824,
+      "sha256": "ce31cb42d2c9d157fe024f4ae3c95248c252c002888ddee97b945a1b96a45901",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD467.EMI",
+      "size": 294912,
+      "sha256": "2fc2143eddb79e483f2157e9214cb528b4c77db5b67ba0ef37a0586a5a05c366",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD478.EMI",
+      "size": 327680,
+      "sha256": "77617b76be8a985a5b62b84dd596de2786f959cb8aa248d4ad677551987351df",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD567.EMI",
+      "size": 311296,
+      "sha256": "c91c1c6739ba3f12340490f07b2ba3e074a52a11847641c0c057e48adf309a3e",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD578.EMI",
+      "size": 344064,
+      "sha256": "a4ef3a2f78ecacf6198ce0d6fddcbee9943d113ba617e2d26418c08d79335e4b",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLD678.EMI",
+      "size": 305152,
+      "sha256": "cc8691968e9e41dc4040f6c4ff1ca7d53fe0cbbf04dceebc0efbc15d8a407ecc",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU012.EMI",
+      "size": 305152,
+      "sha256": "82a7fd901d9d0bb5c73d6e09dad258e2aa721bdc9877a1f6a6ec0905d7cf18e7",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU015.EMI",
+      "size": 309248,
+      "sha256": "bbd2d4f795e6b61bb406090d56b86f5e7a6784b0f374e64e08b33837ff9b46ea",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU016.EMI",
+      "size": 264192,
+      "sha256": "80e2710f8517dc8a098861636fed34a106619f376f829dab6d3511cca4b9161e",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU025.EMI",
+      "size": 331776,
+      "sha256": "d9f563662ad5981705c32ed01b88717ba8173414de01a8a099b96cfb6c00f447",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU026.EMI",
+      "size": 286720,
+      "sha256": "ed261bf14cd3b7ce216c7d1ee55d9ef71be0a5c0c0e0aa2dc6c159029ad05b2b",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU034.EMI",
+      "size": 270336,
+      "sha256": "9b40b28c84895653873f98e34de8758dc18e322f3c123a7b1c969bbbfec2e69b",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU056.EMI",
+      "size": 290816,
+      "sha256": "d13bb361d5c7c079bc5d0a0081a524b8a956f764445c8ce705a29591a8bea1f8",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU247.EMI",
+      "size": 333824,
+      "sha256": "38f59cce5b350fb5e74bb3d3d619b2cdb93b761d376bdff6c5a6acefa88406cc",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU257.EMI",
+      "size": 346112,
+      "sha256": "7e34239e5cecd1c4cb5b1a1f77b26d03850b8ed2ac06477b9ef554c19616e5ed",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU267.EMI",
+      "size": 301056,
+      "sha256": "b1dfa66fc340740961fbe6793b3c8cf95af4c33101c388d75d043e962cc4c274",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU278.EMI",
+      "size": 337920,
+      "sha256": "335790f8dd4ef8c3198f0d58763dc62281273cba54178de0aecdff8e56f40a3a",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU27A.EMI",
+      "size": 264192,
+      "sha256": "cf937810f1b11a035fb723f6a9701084bca377b80017b037e672843285bdce10",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU349.EMI",
+      "size": 335872,
+      "sha256": "5224bb9a806760b0c450dcf52cc1615deb5c8845cb9bbc44f6a28f54bf45240c",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU457.EMI",
+      "size": 337920,
+      "sha256": "b4ded391e80f197c3682b808c3bfc928cd8685a19d5d97a2b8f64022ea7ed1d7",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU467.EMI",
+      "size": 292864,
+      "sha256": "9f5482a2e0e62056138d73ad018c326ccb43b41da87c510286a084ce97ab4805",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU478.EMI",
+      "size": 329728,
+      "sha256": "84b33070f20f0bdaa5388e6b5efc8e2cb64ecbfc5ad960c632effbbe88ffc29e",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU567.EMI",
+      "size": 307200,
+      "sha256": "8df83dbfabacf56062fe0149818751c03ecffd12bdf0c7baecc930396c7c2394",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU578.EMI",
+      "size": 342016,
+      "sha256": "6bd089ebe31df92d79c1b0a13754a25dc931d0041d95ed77de911d2dce524a6a",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BPLU678.EMI",
+      "size": 296960,
+      "sha256": "bd8eb99f11df6bcbdf1705e144ce6ac9db6d309977672edd990133d7552fa12f",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BRTD247.EMI",
+      "size": 294912,
+      "sha256": "d5c00fd7319ea01885db7e118217f615f3b735c2d32f4861bd1e5967db68535b",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BRTD457.EMI",
+      "size": 294912,
+      "sha256": "7ed472aa706ddfa5e3673b127fbb40ea237e1bbf9764ab15f63b4c12e65aa213",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BRTD467.EMI",
+      "size": 256000,
+      "sha256": "bbc710bf610c7c6602ff1271aa5be6b6b88782ab0f1762b203ac1f5aa39a5901",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BRTD478.EMI",
+      "size": 286720,
+      "sha256": "677c9f6e1f2506b2466bdcea1c99bc378e0c0357ce210ad9a9e834b36af5608e",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BRTU247.EMI",
+      "size": 286720,
+      "sha256": "505d7c8412cbdcc853b323c879ebd8e83d3e8e13ce369231a725bd1c748eb74b",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BRTU457.EMI",
+      "size": 292864,
+      "sha256": "af0bc0f3f7e484b4d5e898d38cf618705aa9d5d27b0251934dbec110e646fd83",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BRTU467.EMI",
+      "size": 247808,
+      "sha256": "bfc1cf87e02d50d5f70dc8a1c3fae55ad613662f3585d0da8ec24174ee82f314",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/BRTU478.EMI",
+      "size": 284672,
+      "sha256": "c72614f8b09d080d5c9b6de81893ba836c3263feceb2a62f0c786e6ed388c7d3",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/BPLCHAR/CRYUD00.EMI",
+      "size": 151552,
+      "sha256": "b812462b1dcb228399986df17105a2775fa731da235d76c6aa1369af587c941e",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/CRYUD01.EMI",
+      "size": 153600,
+      "sha256": "549df7014fc977de9a02032992453af19bfb4ac947c04c76c1b372cef6eef0dc",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/CRYUU00.EMI",
+      "size": 151552,
+      "sha256": "6499a9b6d598f059c813aa63ebeeb97fba93d462c201d0b9ee1d41771d7c2ec6",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/CRYUU01.EMI",
+      "size": 153600,
+      "sha256": "007736d5e7de121d0bd21b1f9182e8a8e87d99c14028ed9d1ff900744368156f",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG00_00.EMI",
+      "size": 86016,
+      "sha256": "a084dfd065ce487292514b9417673852e220f80acacfb6d025af82def4605035",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG00_01.EMI",
+      "size": 86016,
+      "sha256": "7f4faf49b119c22649cea4f524808e57daab222d300c750b899d15d280447f65",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG00_02.EMI",
+      "size": 86016,
+      "sha256": "4263f54d0bb27ba859d1259594087ce9f0d0ec5af7ef421adc4b3dbc5d65022c",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG00_03.EMI",
+      "size": 86016,
+      "sha256": "0f71f465b76a355078c1bdfea52be5dea19dd1df231bd6bebdc5c7f7cdd0fb5c",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG00_04.EMI",
+      "size": 86016,
+      "sha256": "3d658fb5a7f113ddca69eb38a7b88d4dbbf73f98dada38216d6184a0cd29f26c",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG01_00.EMI",
+      "size": 79872,
+      "sha256": "f3c95e059a2a6272269b0c1e2a26bae62a6531bf027bd03ec96eb80d49886fe8",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG01_01.EMI",
+      "size": 79872,
+      "sha256": "6957534892cad7d8c310b3f5021f19815571c4880f72e2e8fd4ce4c42380a183",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG01_02.EMI",
+      "size": 79872,
+      "sha256": "a99fd30949d4915e0291dc871666f896d5bb661e424e9eb26a6d68cc17d499d6",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG01_03.EMI",
+      "size": 79872,
+      "sha256": "cadb7d5caaa866f6dee7db1855901cea39f3cabef00f9aba051c0b7a1900535a",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG01_04.EMI",
+      "size": 79872,
+      "sha256": "74ab5d4ab4ca30e062c4725822103503458b69034361ea0825ccf43e807d2316",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG02_00.EMI",
+      "size": 94208,
+      "sha256": "5ca54f97310944756e97248e3baed236900541b2be68337acae94d719f4b4569",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG02_01.EMI",
+      "size": 94208,
+      "sha256": "3954ccc890e1079db313501b87ced3d62389b984b04aeb804805753f479658ed",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG02_02.EMI",
+      "size": 94208,
+      "sha256": "548cd86cd94b1e612d6ee0ac76e591a8400dc2ca7481fe7f7b32bf4bb8c87b54",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG02_03.EMI",
+      "size": 94208,
+      "sha256": "14fe2e7a36a1d2caa7d69580c3352c6c2383f3e66c56c3301871b2fbe1358f1e",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG02_04.EMI",
+      "size": 94208,
+      "sha256": "dfe4f5231b2f0ca36496c452c4502d1801de650f6468045978a3a4e6d735ac9a",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG03_00.EMI",
+      "size": 118784,
+      "sha256": "fe71e57c8b75e084785f479a19346a09f93c9870a37cd00a05ced3f476966476",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG03_01.EMI",
+      "size": 118784,
+      "sha256": "18f265de8a48043275166e42787072b26bcb59cd68ebf87af8c32176b3069026",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG03_02.EMI",
+      "size": 118784,
+      "sha256": "650e4eb8620486320ea1d81484c3819c04148200f3d84b9fa2749a43f197aa85",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG03_03.EMI",
+      "size": 118784,
+      "sha256": "1dbb6068ad5a20f8e124a8dacfa173e80b4196a2240ed0606158dacfbe560d47",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG03_04.EMI",
+      "size": 118784,
+      "sha256": "3a08a8463677016f458b77d26480d78a441849ee09de15d847789de32afe7fe0",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG04_00.EMI",
+      "size": 339968,
+      "sha256": "14168f6ac10b44973987015cb44b8841cbb61962b786430428bfbe57c88faf80",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG05_00.EMI",
+      "size": 110592,
+      "sha256": "27c06adede9145d77429b3b23b4bb2a6539f13171ccd2be6f7dad79d3999c255",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG05_01.EMI",
+      "size": 110592,
+      "sha256": "379a3cfc9a254a11ac245e50809016df3287767375aa7fee34199ed286ef9732",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG05_02.EMI",
+      "size": 110592,
+      "sha256": "0237bb9302f060213d177f770242ca005c8b719874771798faf4ec0cc26dd244",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG05_03.EMI",
+      "size": 110592,
+      "sha256": "109a58a4f7d8cf6ca680e733da69a53d38d326512165e01b07586717db5b090e",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG05_04.EMI",
+      "size": 110592,
+      "sha256": "459931c6439b68ae4646c405eb18fdf71ac678757d909cb15188d90521e68d0c",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG06_00.EMI",
+      "size": 268288,
+      "sha256": "2d9096663dfe9c695678e4dd36d0c603e8078975f7ce1e16d93eeae0f0e90882",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG07_00.EMI",
+      "size": 81920,
+      "sha256": "95db20353361cd29d5057d4b31fa2b9fabda598665fc6c08aa34dcdae2978526",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG07_01.EMI",
+      "size": 81920,
+      "sha256": "5f1b0c1e589a37fcb090f78edb05d6f4190e2d03b02a82710d9e0f21b9d5084b",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG07_02.EMI",
+      "size": 81920,
+      "sha256": "6cc108faaeff82b94a563e1ca6494608b3a28bc3e68d98739572dfa491e9068c",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG07_03.EMI",
+      "size": 81920,
+      "sha256": "a6da303cc6d6e9c93fa2ebdc135a80cd490ca2dbe38136eeb30e69b224229759",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG07_04.EMI",
+      "size": 81920,
+      "sha256": "46a1decc4ca9519d57abbcc1bdbbbf48ed0134760bd56d3d9878477438c92d27",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG08_00.EMI",
+      "size": 106496,
+      "sha256": "00d7255fa218dec5e8e62b973c34c158c0ae4c119e99555a3b2961d24d272ed2",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG08_01.EMI",
+      "size": 106496,
+      "sha256": "ffe9a6be5a97ed318190bfba56cf50deab6cab36098223fa4cb58be2c402ecab",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG08_02.EMI",
+      "size": 106496,
+      "sha256": "2c7f28f4b922d9116d475dbf00684a2cba80ed340bf1d1ad720b15ba4a4e5269",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG08_03.EMI",
+      "size": 106496,
+      "sha256": "cb7d3924abc597c00933ae80cd8a4d5681b11c204ed99434e4485c031ec2c1e9",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/DRG08_04.EMI",
+      "size": 106496,
+      "sha256": "7a7af38715c66162484d5848121ebf3d403e99f0a6f51bf42053ef0e9c11c1d0",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/PAPYD00.EMI",
+      "size": 45056,
+      "sha256": "11638bafcd6b6c325b3aefc03397f1696fd5f81b3fa15ef17fb21f8b2f088464",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/PAPYD01.EMI",
+      "size": 45056,
+      "sha256": "f98b2f9c9e8ccc3120a46a84ca26267d3e204adf53ce52cfbf36121b5812d3bd",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/PAPYD02.EMI",
+      "size": 45056,
+      "sha256": "fcbf80fc216e952e755316a6db05a7ce268416c6fc438981da7a40ac5226865a",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/PAPYD03.EMI",
+      "size": 45056,
+      "sha256": "75e67a04d61ca90acb4b03a163bf9a81662eac3a1a0f417b5b5b2ed3e0e441a0",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/PAPYD04.EMI",
+      "size": 45056,
+      "sha256": "b722b2f133921659f6af78163cc2d7f4a97bc51a0eded36c26d2e528becf4f32",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/PAPYU00.EMI",
+      "size": 51200,
+      "sha256": "485b14b41e4e7e5644fe10e863ca39951c0ebe4750ed3e130815e2d726494abf",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/PAPYU01.EMI",
+      "size": 51200,
+      "sha256": "8c5a7ea1414f82a6c57ea90479b1a9180838dfaf05957b647980b8c8c0766f0a",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/PAPYU02.EMI",
+      "size": 51200,
+      "sha256": "a6522873fb25367ae001afe97a64d62624bb9d6ffb161b40eb0d9e1a0bbf5d81",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/PAPYU03.EMI",
+      "size": 51200,
+      "sha256": "c8e680ba19ca3b18444381ef862822f0ac12717e93081c6e45a8eed3d14a919b",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/PAPYU04.EMI",
+      "size": 51200,
+      "sha256": "5e75fbef8eac3a31166a107d62df908fe51515f94ed3e44b8080851a296f089d",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/REID00.EMI",
+      "size": 149504,
+      "sha256": "e958f315b18a8ea72c6fb371d27e2e27caca2abccca318ddab93944e0d879603",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/REID01.EMI",
+      "size": 149504,
+      "sha256": "516bf74c87e3e4a8d4bf915b98fd8a4903514fbcf131dae9bc71de7433d267a3",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/REIU00.EMI",
+      "size": 149504,
+      "sha256": "6ce54e9f0af50a6da076539db7e4e1c6d9c0d94234d69e9a1d3370e07752a248",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/REIU01.EMI",
+      "size": 149504,
+      "sha256": "b5fa7d93946e0534a2c9d744e57758233c8f85988ae690826bbee0501945de56",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RTD00.EMI",
+      "size": 137216,
+      "sha256": "feb0c84ccf44ff2bdb1feb4cf429998b7161dd1bb29c842d8cf96ba4bc92834d",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RTD01.EMI",
+      "size": 137216,
+      "sha256": "1cb95e9b884c4a101b3b7082ace62913008af71f9d2446a2935f13f6b3b9b834",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RTU00.EMI",
+      "size": 137216,
+      "sha256": "d82d6b415109c4e5e2e2938d76be10806dde427a8d89c6826fb1e4bcdbf7f8e4",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RTU01.EMI",
+      "size": 137216,
+      "sha256": "2af2bdd7e48e5c13c7e2761615b2f576ffff8f6052699ef27341c56a6b42d7e2",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUD00.EMI",
+      "size": 151552,
+      "sha256": "ab8b416338f3072fd664ecefa7d4f17e297d3edf14e956f3e56c44b799c54957",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUD01.EMI",
+      "size": 151552,
+      "sha256": "8000f16da889e023a67a217a463984b8bf5d0a8b3366c055fe88ea8b850a50fe",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUD02.EMI",
+      "size": 151552,
+      "sha256": "70b37e37943ddc74cd7ea5abd41aea99267aafa51e78a4b7ed33ca367dc7fab9",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUD03.EMI",
+      "size": 151552,
+      "sha256": "298228f01735b2d0366da6e2b17dbdcfdee62f18a7c14bc6aeebcdabb8ebeb47",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUD10.EMI",
+      "size": 102400,
+      "sha256": "b4f197bd90d005b1dfbe203732fc2c4895091243d28798da198f14fedcc02427",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUD11.EMI",
+      "size": 102400,
+      "sha256": "c3a6d9f7e9117c3cd2cb0d958e734dd72da417c88764e06263c2d794a5d3b9e1",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUD12.EMI",
+      "size": 102400,
+      "sha256": "0bb4e5d6becb9a44a8f1b453616319f4fc4d8a7284d61273976ccf31a469f44f",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUD13.EMI",
+      "size": 102400,
+      "sha256": "96d0a87f3941af85be97e46635fa08a869579124cd223247c0d7c895101be101",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUU00.EMI",
+      "size": 151552,
+      "sha256": "5bc9880da33f931062da28f8df47e9806f254bbb8c82680282621bc07e1b255d",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUU01.EMI",
+      "size": 151552,
+      "sha256": "1c4291b02b6e704729b8cdd8499e2edbd95b018860074440a73efe19d38a6689",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUU02.EMI",
+      "size": 151552,
+      "sha256": "3a3f2bc1e35fbb7b99da9970008a0885710b556cd4edf521f7ac5c8f41e951f2",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUU03.EMI",
+      "size": 151552,
+      "sha256": "9e24b3d29fafb7aebe954d191c7b7087328b42cdc5ed81918ec895299404f67e",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUU10.EMI",
+      "size": 100352,
+      "sha256": "adad8f411cf044d9a1a029f0565eb7dc7d9000403299b5eda7f3e7f8e8644309",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUU11.EMI",
+      "size": 100352,
+      "sha256": "f8ec75d0af9d712ffbc75ba7e5b0b10f974dd48d6771a94287616fbe5f846314",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUU12.EMI",
+      "size": 100352,
+      "sha256": "a36d2ab59a1135385a08acc29fe52db8a0ef15d04d1750213c48eb50c37a00d6",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/BPLCHAR/RYUU13.EMI",
+      "size": 100352,
+      "sha256": "4c3bd65297ee816979d3ae151ddd4a96eceb12be0be86a312a3978f147aa3c4a",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/ETC/A085SE2.EMI",
+      "size": 198656,
+      "sha256": "0abe2f34eab07a100b20e53aa47ca18d93468c6e144affbe425836535b54e076",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/ETC/A108SE2.EMI",
+      "size": 178176,
+      "sha256": "fd47b10d8488c153f01cf45dbdbf4ba8d508e11d82d76fd428bc9daf647ee73a",
+      "emi_entries": 3
+    },
+    {
+      "path": "BIN/ETC/AFLDKWA.EMI",
+      "size": 20480,
+      "sha256": "97a3235d654bc6340fe36f7a9c636a7ab56575b4793bf5b83f5564811cad3f9e",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/ETC/BATE.EMI",
+      "size": 178176,
+      "sha256": "8c0d9bc742ad83f19b3129d05071bd58b6d1afea8088dbdc26a4ccda432fd823",
+      "emi_entries": 8
+    },
+    {
+      "path": "BIN/ETC/COMMU00.EMI",
+      "size": 18432,
+      "sha256": "9bcec7ec39615ff883849fcaaed0ddb8e294d3cd887ae8e3fb52a32514e029df",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/ETC/COMMU01.EMI",
+      "size": 161792,
+      "sha256": "52a17b39fcfd5c52b9cd8a7c2d090afcdcf8f07b0d95a65a201f802ac532bd02",
+      "emi_entries": 8
+    },
+    {
+      "path": "BIN/ETC/COMMU02.EMI",
+      "size": 188416,
+      "sha256": "2f6b1b6e93393e9f275668b102fff28a5c50e108457f6f89fbafab628569d52e",
+      "emi_entries": 9
+    },
+    {
+      "path": "BIN/ETC/COMMU02B.EMI",
+      "size": 186368,
+      "sha256": "ac2934aadec6ec46e284f63ada9d6e26fe0c91209a98f8e8833b7d85ab78a50e",
+      "emi_entries": 8
+    },
+    {
+      "path": "BIN/ETC/COMMU03.EMI",
+      "size": 114688,
+      "sha256": "1522aaecf75c434e907b397c70d932cc75e30fb8141a94ed3fa979d05fee6774",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/ETC/COMMU04.EMI",
+      "size": 114688,
+      "sha256": "53965805688248d9a8c0dc4d9f29e90df94654edd0caf82708fb35c456037298",
+      "emi_entries": 7
+    },
+    {
+      "path": "BIN/ETC/COMMU05.EMI",
+      "size": 147456,
+      "sha256": "86e97e11f2ecc8c63c7e40074908218d89ec3f6f63de24bd89367c0cb9537553",
+      "emi_entries": 8
+    },
+    {
+      "path": "BIN/ETC/DEMO.EMI",
+      "size": 968704,
+      "sha256": "f6b78a0e20bab226ede71b2ad374042deb892f2bd39b72493b3466b26ca24af3",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/ETC/ENDKANJI.EMI",
+      "size": 67584,
+      "sha256": "383f127cc802f7bd81d89c0beb15933b3af6e8c9ed0d598f581e4c83adc0a048",
+      "emi_entries": 2
+    },
+    {
+      "path": "BIN/ETC/FIRST.EMI",
+      "size": 329728,
+      "sha256": "027304b084fe89c9fdcf384148a2eb85cce1f8166d119d37d189f33bd2dd1a8c",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/ETC/GAME.EMI",
+      "size": 239616,
+      "sha256": "09805bfeb443bfac704395c0c0ae308b45ad294687ed8d8dc3bd7a793145a244",
+      "emi_entries": 2
+    },
+    {
+      "path": "BIN/ETC/MTEST.EMI",
+      "size": 6144,
+      "sha256": "0ba8b86e838df1a1c283998e92a82b96a90a9eb1284b3117c07cf4e4ebc44f4a",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/ETC/RTEST.EMI",
+      "size": 8192,
+      "sha256": "af5737d30cae2fd3c4bd58a4db2b6470c92bd39a8d4278c57f7b19de7a899afa",
+      "emi_entries": 2
+    },
+    {
+      "path": "BIN/ETC/SHISU.EMI",
+      "size": 182272,
+      "sha256": "715d4d4de7a7ee7b5729f679f29b7ae42626b9e4dd2acb409f416b829a250dad",
+      "emi_entries": 8
+    },
+    {
+      "path": "BIN/ETC/SHOP.EMI",
+      "size": 237568,
+      "sha256": "ea1603d154fb5d6d57aaa7535a7d0f7d80de803d9ace4b9a5844d593eb691581",
+      "emi_entries": 9
+    },
+    {
+      "path": "BIN/ETC/SISYOU.EMI",
+      "size": 157696,
+      "sha256": "09be5d83ace939d005f16803ca0a5c542d3429b2a5548cc437c5484eeeec2bab",
+      "emi_entries": 8
+    },
+    {
+      "path": "BIN/ETC/START.EMI",
+      "size": 518144,
+      "sha256": "3f2eefecba538d5ef86ea0d6c62f12adfeb27beb51789fee27003ecf48f90920",
+      "emi_entries": 11
+    },
+    {
+      "path": "BIN/ETC/STATUS.EMI",
+      "size": 262144,
+      "sha256": "136302c364a4716776a86de1a0b2fdc752c71912176bd59655f0884de7ca723d",
+      "emi_entries": 8
+    },
+    {
+      "path": "BIN/PLCHAR/PL012.EMI",
+      "size": 366592,
+      "sha256": "16ef97eea1bda93b224f00509447acbc91e338cc10f131a035c96f43e26cc3b2",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL015.EMI",
+      "size": 327680,
+      "sha256": "4f3d7b526fcd44311f98181c6abb4869b2d208eb607a65cf0e8c42b52124f7ee",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL016.EMI",
+      "size": 251904,
+      "sha256": "5f1a8b40dd5646d7c563d40524f4a5bbe0ab08c267112d3792e56dd9f75b5f85",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL025.EMI",
+      "size": 405504,
+      "sha256": "2022550ccdff263fe3e92aed174b4d2d67f849c2fccdf27842ecfb6f7e5e0b26",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL026.EMI",
+      "size": 329728,
+      "sha256": "e399ecc8212300e8e3964f2a7d2cb28de6229e080c981b389c256300265332fd",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL034.EMI",
+      "size": 311296,
+      "sha256": "226d960dec62632eab6c65e6d5843b43d0301824546c27d9f50b60b5b82aadb7",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL056.EMI",
+      "size": 290816,
+      "sha256": "c2680c87ed5a4c04423ce8a21e7640eae7837a48d0196e046e77118512c92198",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL247.EMI",
+      "size": 399360,
+      "sha256": "4fff380876e5922fe96b9b5eae45f98eacf7b12aac72b4c6ed317f9a6bbcf743",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL257.EMI",
+      "size": 401408,
+      "sha256": "c98240e7192fdeb7b64e227da103b35590adac641f04794e7b1acc714eb490b0",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL267.EMI",
+      "size": 327680,
+      "sha256": "f8b7155d274a4aa2dc2e2786b8e47ae36974d8aa53d3509e9d2534927e333c80",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL278.EMI",
+      "size": 387072,
+      "sha256": "37aa5759735c2c1d693391e59e3dcca701e55f8e723c7b00203b78fdc461b987",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL27A.EMI",
+      "size": 315392,
+      "sha256": "4fc4b2c7302426e743477c75c135e7dac91b0a9a9de1d0732b3b0d216a90137d",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL349.EMI",
+      "size": 272384,
+      "sha256": "f6db511558dbe546d15f2e59155726eda3f67ab0347105ae48ae146f90bb60ef",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL457.EMI",
+      "size": 358400,
+      "sha256": "d0499b59df13e9918cfe1a37b33d47398f3205e9fcad65816f692cd79451d57d",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL467.EMI",
+      "size": 282624,
+      "sha256": "4e3a70fa44da8a2f9e858f14e297ccdd9c408f3a5aa0908d3d8f2d98b0227920",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL478.EMI",
+      "size": 344064,
+      "sha256": "1b9817a002e2627bd79b1a4d416bed28b15014f67637cbdd047908b88d58a1c7",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL567.EMI",
+      "size": 286720,
+      "sha256": "1eb4468ca3a713dd1af52bde76db560faa38c36b8b2959e5600758edaaa90239",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL578.EMI",
+      "size": 348160,
+      "sha256": "102d9af04e8cee9d393aeaa69d20ae5d5ef57a8cce8a58dc6bbaa2406f4c56dc",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PL678.EMI",
+      "size": 272384,
+      "sha256": "bef5345427bc4c6801ff5da78b796445cecbc3fd295d4c26a99044a52760abe6",
+      "emi_entries": 4
+    },
+    {
+      "path": "BIN/PLCHAR/PLP012.EMI",
+      "size": 10240,
+      "sha256": "86936e377c4bcd9ef20f95e0c529cc65f37731dd5966d49735bdbd9f0c6f99ac",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP015.EMI",
+      "size": 8192,
+      "sha256": "70ea82ad8b79035e47b24712bca03b3225f8348dcd5a759a12e6c0e88fa74a17",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP016.EMI",
+      "size": 12288,
+      "sha256": "9bb5fb7358f3d88a07c7ff4a0a738cc836f291c7ac327cc4f8e7e95079499ef7",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP025.EMI",
+      "size": 10240,
+      "sha256": "bbdf1fa134da1863498394ad9bed430c850965b01c988656beeffef30a32efe3",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP026.EMI",
+      "size": 12288,
+      "sha256": "bba4bc7b134df577da443db54941fc0ad209e374dd084ae1b9f88e6b4f42cbb0",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP034.EMI",
+      "size": 10240,
+      "sha256": "f5d67cd458dee3400f4a01030026378b66011c3ec8ea677ea1a53f2c494d7144",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP056.EMI",
+      "size": 12288,
+      "sha256": "d307724361be544a876bf84a728adc1d58a61bb5231e03bc247ca699150529fc",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP247.EMI",
+      "size": 8192,
+      "sha256": "c8961b1f9054968b7a361bb6323954d5cecac4257567bc21201620cd607bfe11",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP257.EMI",
+      "size": 10240,
+      "sha256": "87ccfaf203d6fb45f3f2184f261bb8a451549fe5376fdab7426f10f8b6662b8e",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP267.EMI",
+      "size": 12288,
+      "sha256": "9df447876c1b6e18121c3fafbec0c09a1dfe5a7100a0ce3fcb58dc5e2c73bf12",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP278.EMI",
+      "size": 10240,
+      "sha256": "9efbf38b797bc01d01162f059c16b076b05f3f21f58b1ef9ea4af410635b0e98",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP27A.EMI",
+      "size": 8192,
+      "sha256": "56cb4965f61683863edcf3d588ccab282dec4da2607d0b780f6d8d3bad950747",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP349.EMI",
+      "size": 8192,
+      "sha256": "b140c77a6d8aa70d828e8304e8350741c3429a81621fdbbb912aa312f5610815",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP457.EMI",
+      "size": 8192,
+      "sha256": "9e525b722c2a19ec51b95598d70bf40f7c643dea3018dd99ac554bcbf5ffd5e4",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP467.EMI",
+      "size": 12288,
+      "sha256": "96b223ee1e9edf4627879261a772d0e636a5c9a8009bd4d308d612167305c9e2",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP478.EMI",
+      "size": 8192,
+      "sha256": "04182128b0b38cdfb56a55d8a37d9fc51c8e5d2d056b92db7f6721e2a068d355",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP567.EMI",
+      "size": 12288,
+      "sha256": "54b6613145dfcb942c6685d4bcf2d935af0a4bc4e87f82544f395690a105f3c9",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP578.EMI",
+      "size": 8192,
+      "sha256": "2ec3682f184cc16ec5b0f5721dff74c1019bdf465d906a10903233810d601392",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/PLCHAR/PLP678.EMI",
+      "size": 12288,
+      "sha256": "73daa778138fd8595cba8b348ce66562726b50097b88df9f6521f9aafae90b29",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCE10EFF.EMI",
+      "size": 10240,
+      "sha256": "b899823cbc5c0a195c2c394727ae1c982228bdcbd8bef58c80d5768dd0e6d21f",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCE15EF0.EMI",
+      "size": 8192,
+      "sha256": "b89205fd13ded435e4263e26f49b29040b2f00cbf83c80f98bceef7bff17a13e",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCE15EF1.EMI",
+      "size": 16384,
+      "sha256": "9c692116aa21d4b80b533fca9c35c9ab340185fe305944120f32d81f509f4ac8",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCE15EF2.EMI",
+      "size": 6144,
+      "sha256": "6f1c4f8b13d2bcf5c421d359c7e5f873ae8e3d3485427904f207462ef0e44f15",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCE15EF3.EMI",
+      "size": 10240,
+      "sha256": "80288cefa5e89bc28e38c56fb138f11a2919f4408caaadda5a95ec0b255c5f3a",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA00.EMI",
+      "size": 30720,
+      "sha256": "15f582e1096f3d2b5dc7bf07541edaa115b1d6324d1d303311f6a1716b8f9b21",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA01.EMI",
+      "size": 32768,
+      "sha256": "e2e2b25a4d1d251a6e964e9eccb51ab94f5417572cabbe19544e5982db92a64f",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA02.EMI",
+      "size": 32768,
+      "sha256": "d6a56c974499aaa5c459e8b7d35801bd06d352a645272129d34b0f865180e747",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA03.EMI",
+      "size": 28672,
+      "sha256": "13967f499eaf611d5bc82889d00257efe825204c343104d7e664606440c8e5f7",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA04.EMI",
+      "size": 16384,
+      "sha256": "4c2b062c857b17e62bc0c73d360fb9c3986e4a29743f811a62e4bea6aa58bfa5",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA05.EMI",
+      "size": 30720,
+      "sha256": "596960e99c9fd2a768eb9a57de923f91a65c670872e23ae46026e2cd62834f67",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA06.EMI",
+      "size": 34816,
+      "sha256": "841df3a60f215b525c60f5bdaad3964139e6708dfe79526f6a8352fbe6380c26",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA07.EMI",
+      "size": 32768,
+      "sha256": "afab16b38e87022a7237a0aa7f03792c050cdd5d0015209c8ab9f4a5065f2269",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA08.EMI",
+      "size": 34816,
+      "sha256": "9afb4ba984de0b9291191c5a3cab9610934b40f853c485fb5c5f0464be33dd0e",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA09.EMI",
+      "size": 34816,
+      "sha256": "514b61f4acdac8142a4fa38dbce54d77d8893712caeb74d7d368da07f4f944fb",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA10.EMI",
+      "size": 34816,
+      "sha256": "5778d71ea3556849d17353a56b98dd7ec2b742ea574bebb1a4441dc493ca7481",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA11.EMI",
+      "size": 20480,
+      "sha256": "23843bf9ffef95a47149c964182933344e646798893fdda5c75faa30fdd331d3",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA12.EMI",
+      "size": 28672,
+      "sha256": "dc9692115af584cf333a6878232b2c4ec7aa03f30b41fd6c5ae0fe233645ddf0",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA13.EMI",
+      "size": 24576,
+      "sha256": "59768d50dbd7be20bdea9423f5e09433dc48849f010836b1dbc4d4affab7c5f2",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA14.EMI",
+      "size": 26624,
+      "sha256": "8e0b9fc3b83ff1a854cd74c16330df2899acecdb8c0a8f99e5d4458a59fe3a90",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA15.EMI",
+      "size": 34816,
+      "sha256": "91744ab580907186f2bb6f6caa0e49771e961b39cb68372389c52ea874459672",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA16.EMI",
+      "size": 10240,
+      "sha256": "257d671bba479cf07851130873729a839c74fef98e713c308ea6b931ccd0cc3c",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA17.EMI",
+      "size": 118784,
+      "sha256": "f0c26e9efe4cdd33aec543f7ff9f2b158d31518c793ec743a2605dff9568e81e",
+      "emi_entries": 5
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA18.EMI",
+      "size": 4096,
+      "sha256": "7a5ab9031547e78c8e63eea3bdc2433f07b52766d22234758b433401d4f02aee",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCENARIO/SCENA19.EMI",
+      "size": 4096,
+      "sha256": "eeb4b381faea48e35e920279a8322104d60eec1f5f810572034e74aaacb974c8",
+      "emi_entries": 1
+    },
+    {
+      "path": "BIN/SCE_XA/S_XA00.STR",
+      "size": 82773824,
+      "sha256": "fe01331f117f5130477c1d8e38e216a8a2e01a930046fe055bfc575e0f400bb0",
+      "emi_entries": null
+    },
+    {
+      "path": "BIN/SCE_XA/VOICE.STR",
+      "size": 7243936,
+      "sha256": "021c39dc0774973048deccc909e534f364dba806daf0cfc8ba0f36cc2c239d93",
+      "emi_entries": null
+    },
+    {
+      "path": "BIN/WORLD00/AREA000.EMI",
+      "size": 835584,
+      "sha256": "b6f710875a6da38f66f2aba0d57bc3de6e1abcd51a7a5410264da008d82fd333",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA001.EMI",
+      "size": 813056,
+      "sha256": "670e336f98798b4be79e5d9d8eb443eaf4263d9c42ed31f2404061af99c5c3fc",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA002.EMI",
+      "size": 804864,
+      "sha256": "7259a595eff8635a77f655ed60046a12be154fd11ebe06f1fd4da87f4f206d6d",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA003.EMI",
+      "size": 774144,
+      "sha256": "49a7f77eb3e11fa787c198377288ddf4ba6c1bfae6eaae28e49095059eab8edb",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA004.EMI",
+      "size": 884736,
+      "sha256": "e67092aeb0aa22e6a51fb62f708f58d698844df6f87236a9690aa21e386ff060",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD00/AREA005.EMI",
+      "size": 706560,
+      "sha256": "8aa8cce54954bcf0994dda18cc31182ec05559b3eff557da33367d4d5460e9e2",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA006.EMI",
+      "size": 796672,
+      "sha256": "11d7b1986f256139c1ac56f541fa4519f4b37817a9f78cc71fd831b995ad9ef8",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA007.EMI",
+      "size": 737280,
+      "sha256": "19a3db832673c3a622a38734a109de8698cb55b11af38ad4683eead10591b25b",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA008.EMI",
+      "size": 786432,
+      "sha256": "d420e8e13607f410b4a68b727f4450aafddc7670f08de723f611e8474371454e",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA009.EMI",
+      "size": 765952,
+      "sha256": "30577b37a11d3286b087b6567a13114ac7a2916834b39b3a0e510b8dfad8f1c0",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA010.EMI",
+      "size": 808960,
+      "sha256": "ab58592ff24aa548d3b8a527bbf470d93284d2ca863f49c19cfd9099b34055d0",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA011.EMI",
+      "size": 768000,
+      "sha256": "9fce1548ef2611e200342b517866de1ed4fb3f9c091be1f836962b32271145bc",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA012.EMI",
+      "size": 727040,
+      "sha256": "cd39d55036dd59d3c9f8ce3dcc5f9b22929b6c130ad548b485e5e85b97d59cc6",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA013.EMI",
+      "size": 737280,
+      "sha256": "b61b4218eaa4fb07e38487f8e3143b527edb134c7ad14a1b2c7b63f6e768d4ac",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA014.EMI",
+      "size": 727040,
+      "sha256": "d873c84237cd93d600d68779a5df4f9069f59beaabb7a6c0dd60639608407534",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA015.EMI",
+      "size": 677888,
+      "sha256": "d2be096e7352df46791f8d58cd031452dde445092a9a1a60a98e4d9493bcce13",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA016.EMI",
+      "size": 811008,
+      "sha256": "c2c1312b03f170223ef68fb065b6ecd72d3684d41238680a49bce5216bcdf482",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA017.EMI",
+      "size": 653312,
+      "sha256": "37ad8c96fc5d06d8164c50badbf669dff783aa932052fa59d0f18a5a20c613a7",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA018.EMI",
+      "size": 800768,
+      "sha256": "5e1becd018957514519368c79af0b9b19c9b5bc74ae4d26d209f1f6d6adfea16",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA019.EMI",
+      "size": 645120,
+      "sha256": "bb6d12e0684b31e12f9fd46c5b81a3ff4c9945775bfd64795cafcfa173d93b86",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA020.EMI",
+      "size": 790528,
+      "sha256": "3ade7bfc5740a62cbda23a32426bcbdb0730647b5b60e56bc4e2511e2293aa3d",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA021.EMI",
+      "size": 788480,
+      "sha256": "74f0ba66e7e0aa8780b8e70a6ae5728173334bae7d2dadbae2044dfd6cdb262d",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA022.EMI",
+      "size": 849920,
+      "sha256": "06e2ed440951dda163c5c2a1f11cd1e2ba064aa7cfcb4b81d9d5009579c03d58",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA023.EMI",
+      "size": 868352,
+      "sha256": "9dd3a311a2e959936c8ec3cbf04c9c23451b92a83df22d3725baf4dba171bd68",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA024.EMI",
+      "size": 894976,
+      "sha256": "9949f83cc9dc7d091ba98a2921ee62478f5352837d067a50cac12f75fb94b10d",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD00/AREA025.EMI",
+      "size": 782336,
+      "sha256": "2f2dbc1400ffb7103074517a787e31ed87c1800425861b47c475b10021a37277",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA026.EMI",
+      "size": 835584,
+      "sha256": "e2b992acecad1727a88cf9665facef92fe7ad76454eb66dde68be1d819bf9dff",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA027.EMI",
+      "size": 841728,
+      "sha256": "66c143c1e6bb109b0a4fc8dbb56c52ede8a481ef60189038e3005714cee17548",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA028.EMI",
+      "size": 843776,
+      "sha256": "8775c67b29ee798ff8df68cf8e9256b4c0406920cde461b57dd8c74eed73de0c",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA029.EMI",
+      "size": 800768,
+      "sha256": "cf538cc68c8d5ca5f5806af355f8a377fb1dfbbbce8ee0fc081dad163da54940",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA030.EMI",
+      "size": 1007616,
+      "sha256": "1d0413862d6f24088dfb83e0eff586c8a11b5cb742bd68411a177442e85262df",
+      "emi_entries": 23
+    },
+    {
+      "path": "BIN/WORLD00/AREA031.EMI",
+      "size": 768000,
+      "sha256": "fdae6af9e0851037dda24ea3d58d678f134487ae9ec24004fc6ce894ca603af4",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA032.EMI",
+      "size": 849920,
+      "sha256": "c92b970d66aea77dde1d64d90a393cfe31f3759db2e56f79f822309e3f9b5997",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA033.EMI",
+      "size": 811008,
+      "sha256": "f186f79d1a3dc93c65d305161fd34d103cce8b05b9a49737437030ef4de06a96",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA034.EMI",
+      "size": 665600,
+      "sha256": "85a8ccb56f1d1250f9b4f27db14e871a955a6c5b391e1d25c08d9ac7f070eaef",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA035.EMI",
+      "size": 716800,
+      "sha256": "6db5bb96edc69784a2a3395c2d31dffbd57f0ca50716992526e00695a990729e",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA036.EMI",
+      "size": 622592,
+      "sha256": "49e562bda3ae90b5cee7a7c44109077ddee6f74fe464dc1e96003c15cee85fa3",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD00/AREA037.EMI",
+      "size": 847872,
+      "sha256": "a0e48daaa179b243449e668213a1eccfe08ec2dc2e945934017a4f628d13ab0f",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA038.EMI",
+      "size": 813056,
+      "sha256": "4818ed2058a041df26848e79cabb37e97f328a41df2e2ce0849c97b4030489f8",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA039.EMI",
+      "size": 827392,
+      "sha256": "31d0198b1aea1314b68cd03318a59ecd05c9cac0eb66c6917f9a99dec2f9be9d",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA040.EMI",
+      "size": 806912,
+      "sha256": "39400da887a77f76aa1f5aa2689216f98f405305149d88963c6bd263036fbe61",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA041.EMI",
+      "size": 833536,
+      "sha256": "7764facad268dffc685773a3b8977fc353d9091e710da54c8f3fa2d3f44e198a",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA042.EMI",
+      "size": 798720,
+      "sha256": "4ca03be12ddc2f38be1ae225ee61c952b38722295cad09e0c2cc4e3074ebd8d0",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA043.EMI",
+      "size": 761856,
+      "sha256": "207e183132b63e0b698e377df0715f736c2c291c33cc1460c9cc3599c9913302",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA044.EMI",
+      "size": 845824,
+      "sha256": "2bc075d171a81e13502222e095386a2199fd00f632eb27e5c5272d3af515e443",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA045.EMI",
+      "size": 815104,
+      "sha256": "4e2e9a793d52b1cf41756e06e4ae63c83e706d528f8702e9a0d5c79b3c393c4d",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA046.EMI",
+      "size": 815104,
+      "sha256": "639ac5746632c1af2f3516ab82c0079e3dbb27034e2e85e3422ef685803bf6f2",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA047.EMI",
+      "size": 768000,
+      "sha256": "2eefd3b10a3f199f62aa8b6cdfe895341a1c2cd199d1fbe3a20c1c2940cc4c45",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA048.EMI",
+      "size": 854016,
+      "sha256": "9945093abac50e4fffca60878c15f18a18a66502065cc75bafc6a83a7db3ad0f",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA049.EMI",
+      "size": 843776,
+      "sha256": "72c9c7e7bb5f8b1589b37ddff619b659fdf6a2d9c7548616445fa5fcb4d5565a",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD01/AREA050.EMI",
+      "size": 761856,
+      "sha256": "5529523ef883242b749f5b51ec000bef5479fd19548cda7d1f0b7b6c5f616855",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA051.EMI",
+      "size": 735232,
+      "sha256": "be5a1cab91bae57ba7843919ed04dcf068fa966d4ca8247867575d32892000b2",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA052.EMI",
+      "size": 823296,
+      "sha256": "55e2870b4fa54c5dba781c7372211110492f64acebbb0b4b1ffef759ba83ac91",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA053.EMI",
+      "size": 620544,
+      "sha256": "a3a9ff8e678a01dc95439bb00b1e0d4c32a4486a28642836619d9269d54a2fc7",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA054.EMI",
+      "size": 815104,
+      "sha256": "ed45c2781bfcc7f65e239f9b4cd22cb695ac08dd42124b2aca0cb871ff679ab1",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA055.EMI",
+      "size": 772096,
+      "sha256": "4191522dbc4f1cfaf37ef616b94c3514fccf380e700a44f6e3cc9406f2a72258",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA056.EMI",
+      "size": 831488,
+      "sha256": "4a5c23ab5d4010f1c02e24a64226e3f603797f35644c66d472f4cf4a6e9a8b35",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA057.EMI",
+      "size": 845824,
+      "sha256": "e8f2fdf18793985f0e7eda39226c1abf7f4177f482c94fa93cad3580f327911b",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA058.EMI",
+      "size": 829440,
+      "sha256": "39acdffb152d046607ae1b3394c041adfca599e87787b8b1e05afd614f240b29",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA059.EMI",
+      "size": 630784,
+      "sha256": "db7b342d2531a9302750df99cf2badb03b193caf1f820b3d92092ffecd4d39c3",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA060.EMI",
+      "size": 806912,
+      "sha256": "2876b283715709dfbb9e3bc91c0c03c324a0ddd0f4a886d9cc4ebd03313eb57e",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA061.EMI",
+      "size": 776192,
+      "sha256": "1e11c0be8223f16fb1f961ffe30adf8fd05cdc01a6152050f1bcd9d088468e7f",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA062.EMI",
+      "size": 782336,
+      "sha256": "3b400204d6f0d4c11a068c7ca31cc9e10712ce87340a8f2c46bfceee9ddd3e70",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA063.EMI",
+      "size": 792576,
+      "sha256": "5dca559fc5328bc98842882ae584814e61ede3acfaf035789fb3d1bcf48b9ade",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA064.EMI",
+      "size": 806912,
+      "sha256": "0c37e97725325a9cada5d42b853c5ed6ccfe644b860cce04d1c587d33e395695",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA065.EMI",
+      "size": 794624,
+      "sha256": "603c6078001bc83808f1bff3e699040f9e1c1643a2917f8d72146ac337fb85f6",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA066.EMI",
+      "size": 663552,
+      "sha256": "59746afb7a5efdfd0c106783f8fbf392dcb76993362e601ae5ce99b9ceb0e24a",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA067.EMI",
+      "size": 860160,
+      "sha256": "082b1c5c651d9383036b10d1a966558c921b2e4ed1825f3b2b84d82429ecc3f1",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD01/AREA068.EMI",
+      "size": 702464,
+      "sha256": "453f29957f28e19d7492731a6c50a30eca91fb1f4acd72f3c5a34b380c952a07",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA069.EMI",
+      "size": 696320,
+      "sha256": "9c76e8d47e0086bdf0a11f22fe8a9ce6e3adc2f71d3165d45c58eb19b5986266",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA070.EMI",
+      "size": 829440,
+      "sha256": "203c5dc370430b3d0352d60cc6a144c5ffb33d97122c2e77ec9059492af33a3f",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA071.EMI",
+      "size": 831488,
+      "sha256": "6ab6f166c0196ced41e232c8f126c44bdb5d4dd650c5230fab718f2571593491",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA072.EMI",
+      "size": 802816,
+      "sha256": "679387a69539bd882fb278cc4b22c8cf795a0c46e0cf483823df6e7b624fbb32",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA073.EMI",
+      "size": 823296,
+      "sha256": "9dd7252e8b30edabdee8474c05235a0283e5a6204c4cdb51eb924e0cc741c69a",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA074.EMI",
+      "size": 833536,
+      "sha256": "400c1189ed3c82775d120fcdc43b1eada067c579e8b78ee45af42b8d7192dbc7",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD01/AREA075.EMI",
+      "size": 804864,
+      "sha256": "577410bde5bad8608fe89ecd01f95cfb4cf39aa09f4fa60990f0bdd6dbd76196",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA076.EMI",
+      "size": 819200,
+      "sha256": "edd80fe9002559a3f5fe9138b5b8421e7ddce86a48ecb9d2e024895e110a0e37",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA077.EMI",
+      "size": 835584,
+      "sha256": "42094251ab8fd2194e2738976eed40dd83ff903b186b4f156ea6f1f6735dda51",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD02/AREA078.EMI",
+      "size": 835584,
+      "sha256": "e98184e817487965e1ced74c9ed309ad8991e847752a27bcf9c435635eeb3ecb",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA079.EMI",
+      "size": 845824,
+      "sha256": "a405ddc815c9ca1f3fb0c0829dac05b00594a6a1481f26cde9d4abe6d37d6dde",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA080.EMI",
+      "size": 843776,
+      "sha256": "9b353045d1cf2418fc79c1bc12d16b55caccae6e1bff6e3bb2a277dd32f35d25",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA081.EMI",
+      "size": 835584,
+      "sha256": "9313e5f709ad5397c5ef84dd04f3cf129585540620db1158d44432a2ca1e1f32",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA082.EMI",
+      "size": 874496,
+      "sha256": "da87d7ef1924d9f94a143f2579b0bf488faa619ab1e89aec61b0eb06abec2062",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA083.EMI",
+      "size": 860160,
+      "sha256": "8a84144dd5a758286f9c79b8eaa95182cc28ab258906d625d7a685489aad29ac",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA084.EMI",
+      "size": 851968,
+      "sha256": "5df46bcf5c6d1f47c68053e79d65cf0e1da45e58f993bb9fa45fece9e0d26ce7",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA085.EMI",
+      "size": 833536,
+      "sha256": "f0a8cfdf4f8a204cb96dcb40e85b94d1396f0f9b8c61bf98658b4aa97c6476ce",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA086.EMI",
+      "size": 651264,
+      "sha256": "fe35539740311ddf087d30b3368ed736961c1c8065b97ef1bc5ff5187fb3b318",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA087.EMI",
+      "size": 808960,
+      "sha256": "0b89228afa3fb34e46e0f58c41f26df1716b05e68fc18c8dc1f9ff0941e1dff4",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA088.EMI",
+      "size": 657408,
+      "sha256": "4b763db3d3edae97aaa2d27de2f277ded50cc457541afb5b298bdb92ffc473e0",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA089.EMI",
+      "size": 1007616,
+      "sha256": "0d95456bf8bbbf479cfa091b702016e05fb030ce802ce41bc4e69f81e653e24c",
+      "emi_entries": 23
+    },
+    {
+      "path": "BIN/WORLD02/AREA090.EMI",
+      "size": 813056,
+      "sha256": "f85fa4f1554404abdf0bb1320c7b3cf8dd4fcf5104f0f81406c676f7299a37c9",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA091.EMI",
+      "size": 700416,
+      "sha256": "67fb20ae9b71f4e405b69a995f4fe029eb9487988f818ee9e03092c5b1346e7f",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA092.EMI",
+      "size": 665600,
+      "sha256": "64218605b20f8fee23b0f25bdae7af8347b7227245dc4bf5e0a600ef5f77d22a",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA093.EMI",
+      "size": 765952,
+      "sha256": "060d29ea2bb6eebe2384587799d0ae0c91630e7473d7c38070cc07dda92a6c3f",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA094.EMI",
+      "size": 849920,
+      "sha256": "f35e33af5f1706905ff82928f3dd54b1711c446cc371d6ebcbd62983c50e8680",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA095.EMI",
+      "size": 722944,
+      "sha256": "75308b5c15754b89e59bea45d47c3840159bd4721a46c0e3214a32cac01b12bd",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA096.EMI",
+      "size": 722944,
+      "sha256": "2adaf556a9756a83b7df49a488a96d88d6ca68207c0d1ab0ad139c7959282a9d",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA097.EMI",
+      "size": 804864,
+      "sha256": "f9f4e53c290e5a471f9eb82bf51b03dd895806cf2d4c9a58b7cc909281487348",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA098.EMI",
+      "size": 821248,
+      "sha256": "e8336ade444773ce65cf0ec254848a83ae28c41fa45912d53dd2e0678d27122a",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA099.EMI",
+      "size": 862208,
+      "sha256": "5047a7a533277a56c6e9afbd98a2c94c3306e63d45db92ef4dea6d621b895bd6",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA100.EMI",
+      "size": 778240,
+      "sha256": "0e92e9edd8c2458b8fba73458b545b4f82460d138456b27960dc58093506b8d6",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA101.EMI",
+      "size": 647168,
+      "sha256": "d61239f248974e78cd664e2cc0a4599b9a12deff294ed3406529b22b78654012",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA102.EMI",
+      "size": 657408,
+      "sha256": "2356ceac53c8d4fe1fb8cdfdcdba3579fd9810864a251063abd5be7f9e57f115",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA103.EMI",
+      "size": 841728,
+      "sha256": "782865646b56452b6cbbea717199478aaaee2755c04716e12ed3d41e19e7a8c7",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA104.EMI",
+      "size": 817152,
+      "sha256": "ebc2953b67740c3b7548cc31a925266284a5dfd6f95253d607cb7bd8044bf6ce",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD02/AREA105.EMI",
+      "size": 790528,
+      "sha256": "2a408caf99fdc832295161bb6f0a96898949f08e1ddec4d255ac5fed1d3876aa",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA106.EMI",
+      "size": 792576,
+      "sha256": "dc785e20ed33a56680eeae13922ddc1472187e3d83a35829b150cefb70135551",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA107.EMI",
+      "size": 772096,
+      "sha256": "0b81ee903acfbeadcc950121c82d578a23de439005a9dfafa4d92490737181be",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA108.EMI",
+      "size": 888832,
+      "sha256": "df8a617d8a0e30a993b6575cfc55e4030e935b68779c658fd761a120cdb51d1d",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD02/AREA109.EMI",
+      "size": 817152,
+      "sha256": "00fcf825af195db1ce3d66e588d2faaf580e2fc2441a73423fdb81d796ba6fea",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA110.EMI",
+      "size": 784384,
+      "sha256": "74c98987580c7e94e84df1a3b0666af1f9df4c91ce8f70ad4c943e89a0247312",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA111.EMI",
+      "size": 845824,
+      "sha256": "d7a1c9b8ccca7ae6797d902889f22f48a272a7845a68a415c57b8562ba88ed03",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA112.EMI",
+      "size": 806912,
+      "sha256": "72f356687fa471297ff5271b3e71f4d8a9f8c47bf70cd36ce1cdf79f24d1e818",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD02/AREA113.EMI",
+      "size": 768000,
+      "sha256": "5ccde745d126091e3fc63283e6a570734821c0751c6b91a15bfc6cc5d210af48",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA114.EMI",
+      "size": 780288,
+      "sha256": "83e376bbc6084a1b4a484578d3b914aa72e96e9b976bf4c8a52a4f73a23047ba",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA115.EMI",
+      "size": 808960,
+      "sha256": "7438096864b75b795165762e0bbb0c6584b342126e36249222e5ebc41d032112",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA116.EMI",
+      "size": 638976,
+      "sha256": "bdf30076677de871b1bc562b417e6c2b24628a00e53c306b4ed6e3404320d1ad",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA117.EMI",
+      "size": 706560,
+      "sha256": "eae481b811d132c5a1be46314188336ae703fa71e75d13a42c92b1faa9b5369e",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA118.EMI",
+      "size": 712704,
+      "sha256": "0f97913b0cd28b6ab0a77af104cb7651642c04a3c6e9a34a1a5a0b5304f63027",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA119.EMI",
+      "size": 868352,
+      "sha256": "474c1d0aa6e0937f3a64ec5dcbf315bf5a644fa5bbc22b6b87200c023b0cb547",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA120.EMI",
+      "size": 813056,
+      "sha256": "a2a87a89cbd8edf5f34dec1fc46a41c5fd10a6941df4af44e1b41350cc58c831",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA121.EMI",
+      "size": 831488,
+      "sha256": "52fda262fb426418b8621d3cbedcbdbaa53ed1c5b92306beedad5a0ebde4ebe0",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD03/AREA122.EMI",
+      "size": 763904,
+      "sha256": "b08055b831e19a87803f18ab46d1fb5f6863979dfd6a09fc843f458277075490",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA123.EMI",
+      "size": 763904,
+      "sha256": "3a91ea12f84ac9783dab5e99bdc813c5c5abdc4ef8c9aab1ca2aaa133c0e8bff",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA124.EMI",
+      "size": 796672,
+      "sha256": "7df4bb45721a1ec26e8e2a12b40ea3801dd96c2fa93485bc710aad31922d7f1a",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA125.EMI",
+      "size": 792576,
+      "sha256": "0774214c1f68c29f9a2054739069f5b872a5f230975ded9f9b08cd339d419b51",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA126.EMI",
+      "size": 827392,
+      "sha256": "37e0d724b6381cc7d1cf01281a14517e2b245c7dd221e2a236b62abcb760f683",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA127.EMI",
+      "size": 837632,
+      "sha256": "2a6de480f731aa72ab63354783dea2109ab4d5d45be74a886963231c79df023c",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA128.EMI",
+      "size": 774144,
+      "sha256": "fbe4548b5d40a2256ca8936c3f1e3327af3e355220152df91e2e54478606c415",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA129.EMI",
+      "size": 1007616,
+      "sha256": "55f95a1040c3ef98deafb2e7df5402038d1f97532dee60da92dd1a3478189b3b",
+      "emi_entries": 23
+    },
+    {
+      "path": "BIN/WORLD03/AREA130.EMI",
+      "size": 671744,
+      "sha256": "caa6477b0de26fd6d695677b5c00d2e8488366a4888399c2c1f68497c055984c",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA131.EMI",
+      "size": 827392,
+      "sha256": "2e3249f3e8c0ccd7f545966bf765b2b177578fcc442b67495746ceaa0b06cde8",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA132.EMI",
+      "size": 837632,
+      "sha256": "57ad69b47d44764e2163197f6deed74f42f0b6ba78bc6382976d723a668bc767",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA133.EMI",
+      "size": 829440,
+      "sha256": "900d3d7e1227811892021742e880c33d7cb75569e04e4a93f450d5a1771befed",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA134.EMI",
+      "size": 825344,
+      "sha256": "b7b3b16c623a62678ff4b1ba486dc01ba17f53816173380a905afbe2472abb70",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA135.EMI",
+      "size": 878592,
+      "sha256": "95d7aefbbb2321c4eb864b11b63325c17f7d9363cc1170850526857fe191c593",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD03/AREA136.EMI",
+      "size": 856064,
+      "sha256": "80c2a4cbe8e29349ea5371e265fa2ce061a90e14f13f6f56df75c64e3a56acc7",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA137.EMI",
+      "size": 831488,
+      "sha256": "7fa54e535df42f182349c691767019c2e0795a7d750ba2bb2475e586ba11b2b4",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA138.EMI",
+      "size": 724992,
+      "sha256": "692c65674db04415feb41a52226df96a1271141d74bccde3b20ba15e4377a785",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA139.EMI",
+      "size": 739328,
+      "sha256": "66cfc28ebf4324aa8ce3af0312ab171ba764b09ed82228853a9e99d4c7880cb2",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA140.EMI",
+      "size": 747520,
+      "sha256": "cdf47e9cd6be8210ddb021f58c7acba86538bfc85e22c228a8d702ba7762074d",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA141.EMI",
+      "size": 755712,
+      "sha256": "fa07c55462b280669bc2a661f76054ad71c58ef223c337789a0e537176dd6ca8",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA142.EMI",
+      "size": 847872,
+      "sha256": "22f1ed10c45da260f73bc615d887395f27ebbebc45805c33496cb52b90c8ec0b",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA143.EMI",
+      "size": 796672,
+      "sha256": "c0c58de100318377a1149f5dea2dbeaa5b10f8c99649ba5ebf6ac8f6f85d77b3",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA144.EMI",
+      "size": 747520,
+      "sha256": "c77d2f795aaacba1fcaf3bc95fc07963b24880919a7240e204524bad8f0076c8",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA145.EMI",
+      "size": 841728,
+      "sha256": "59abe442d46527ad8ff8629e6894e008d42fea0acb171889a170b09f71e62b5a",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD03/AREA146.EMI",
+      "size": 663552,
+      "sha256": "970d36a6dbe89590ba00662f6045ef996fe25e92c27c8126e07c6b2b2d33def3",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA147.EMI",
+      "size": 831488,
+      "sha256": "6a3d095c7e5195f7a4b3e4d766d717cc728af57d431dd7ea65fc90d4b2faf505",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA148.EMI",
+      "size": 866304,
+      "sha256": "6dac5d7c6064b8817536ebe2aa35ff2d6a4a63549704d9bebc5d45bd7c16ece2",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA149.EMI",
+      "size": 755712,
+      "sha256": "4c533cc66883735b9937de6fb094b801953f0059e34974a752bf4e6d1664ae9c",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA150.EMI",
+      "size": 823296,
+      "sha256": "613fe071b2ac28e0b19edd37521c1a0db34ec1df5cd25bbae84fa87d262b6cd9",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD03/AREA151.EMI",
+      "size": 808960,
+      "sha256": "0f0b44bc3f5e6250090f90196bc0e8777053afd6dddd3a7115ec1eed480d88ba",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA152.EMI",
+      "size": 804864,
+      "sha256": "6dbed88d012f4de8a9a6f24bacc4b4ed8777905ec707d29cbb518ff2f66596ca",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA153.EMI",
+      "size": 813056,
+      "sha256": "738153e2c48132ac1538dd459efa890bb1ff4d645023abacf3fc93f80194ba16",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA154.EMI",
+      "size": 806912,
+      "sha256": "4a4b5a6b69550f40133a730925be870ef3a68b63bcdd308927f5857c44d148fd",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA155.EMI",
+      "size": 817152,
+      "sha256": "6baeddab9c772316975453e5e3575e622e03ea76d485927fdcaede3b442d3f3f",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA156.EMI",
+      "size": 776192,
+      "sha256": "95eece060a67c73e9eaf6244a6178d4108845092cdd890c5907fe3ead35adb65",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA157.EMI",
+      "size": 624640,
+      "sha256": "8d2bd20504b2105c5b13a32ac12ecac04945cb2ed4c5deb759b940b1d0dc808a",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA158.EMI",
+      "size": 606208,
+      "sha256": "5632ec07f8ca1885a65badd71b85c914e9a496ed5a1b9e02758f7f8747bda6a3",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA159.EMI",
+      "size": 591872,
+      "sha256": "46bb1365d51c61454d5b5c338f29fa6e37d388d3cd9f80206db67acf73efa16f",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA160.EMI",
+      "size": 600064,
+      "sha256": "9ebe213c6afb662d28278c91087ae9895f42945d3af60357b61372cf473516e7",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA161.EMI",
+      "size": 608256,
+      "sha256": "4c4c305581d941331f0cf5752f83e8b184c575fd51d7c08cf2010c880fee7dc1",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA162.EMI",
+      "size": 620544,
+      "sha256": "1fc6559c0a8077f378debb43d9612d2785f16b3333e28326fa3de90b7416fcb3",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA163.EMI",
+      "size": 595968,
+      "sha256": "5d09b52e45a21ae5c58212b677e6d4eec61d11c2569ffbc3fc25e5e4bbac3005",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA164.EMI",
+      "size": 585728,
+      "sha256": "c07795e5037f4891d66f7d58ee569dad36a9c8682ed0541a604755e91e436636",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA165.EMI",
+      "size": 616448,
+      "sha256": "4ffc1f75415976dbfb566a98c7e387fb716d1fe40b10520ecc3c974c4354de97",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA166.EMI",
+      "size": 604160,
+      "sha256": "b8a1802a2d60a833ba0907934fb93ec5e07e82d551a63d2a0cf49a4f875ae17e",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA167.EMI",
+      "size": 862208,
+      "sha256": "90e81d4d0a1a8156268c7ebfa8c936fd2747ea3ca6ebf431ac07478b05f61824",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA168.EMI",
+      "size": 763904,
+      "sha256": "cc88a550965edc674d940e232ab157dea64c0e760cd68346c62c5fd659642e43",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA169.EMI",
+      "size": 661504,
+      "sha256": "f11cc10c508dd4f0f466d1ca79a57a923ff02dd290b0b32ab971a422f6df10b5",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA170.EMI",
+      "size": 843776,
+      "sha256": "ef2cd002c78da03d4d142f3fc9c9f860f6275112bfad8f74f91aa7611a73e8c4",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA171.EMI",
+      "size": 702464,
+      "sha256": "28295c8809b589c28ecbb785cec4e5428c9ba2b047e5e3f09d402c41ab07183c",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA172.EMI",
+      "size": 796672,
+      "sha256": "5c55960d7fbbe099b42778c3899a1d8bad6f24cbf052bdbf06ccd736707eaf21",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA173.EMI",
+      "size": 821248,
+      "sha256": "dc2d80741f85b923b07d63f94442414aad8bbac4ebdccf9735594388126dbdc7",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD04/AREA174.EMI",
+      "size": 866304,
+      "sha256": "8f2b92a27f45ac5469026d17b45226050243aae3f56f629bfed3b91a6f330baf",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA175.EMI",
+      "size": 843776,
+      "sha256": "7cc38af1ff7558457247c0bd7d804d83d258ac8bb0a84bfc67438ccd17721f13",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD04/AREA176.EMI",
+      "size": 823296,
+      "sha256": "63ab55c2e28f75e582ab534da76e5f5426390da0219c924787edb335b94627eb",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD04/AREA177.EMI",
+      "size": 825344,
+      "sha256": "cf076d1a0cf67ef5e8d8beefc1d0d8887731a77c528b3c375356a060df94b7a5",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD04/AREA178.EMI",
+      "size": 825344,
+      "sha256": "053edb62eaaea14d5d3e3c1af1a0b4aeec3f446d2480a31d79928a99471f45a3",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD04/AREA179.EMI",
+      "size": 825344,
+      "sha256": "e2358bd1516cfb9e7a58d821416b11e362fe536e67ef444edf63851235c57060",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD04/AREA180.EMI",
+      "size": 825344,
+      "sha256": "becd5defd0125ee5ba92594e262c2eeb70f6affd773f95ad1f081dc42573e7ac",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD04/AREA181.EMI",
+      "size": 825344,
+      "sha256": "7632b427adf1b9f7d554d1495e7e068a65cea996c1666b16706f31d82df9f822",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD04/AREA182.EMI",
+      "size": 825344,
+      "sha256": "21d9c0e4d56ea283b6a09e178e038436e64d5bd311e4ca0a10f792fc07023b70",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD04/AREA183.EMI",
+      "size": 827392,
+      "sha256": "a4c35bf069484b334ab1ab3fd8cc111f8974c7d3ebc6f9809e6f45e78d8bfe19",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD04/AREA184.EMI",
+      "size": 827392,
+      "sha256": "2806123ed1927b6e141d41aa03f43ff90da1b0475a68a694f45dfac8d204f419",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD04/AREA185.EMI",
+      "size": 827392,
+      "sha256": "cd1e1c10d00a535778badeaab19c16af6b543af4125ad380c6e70e8ec21979ee",
+      "emi_entries": 15
+    },
+    {
+      "path": "BIN/WORLD04/AREA186.EMI",
+      "size": 747520,
+      "sha256": "c0801690be8c75b6eaadcc167a0e3ce54b208ef53c8624e4f87d328cb863a5ef",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA187.EMI",
+      "size": 768000,
+      "sha256": "f5e72960390809fd6120c69319c7d6eed0a4064127d56a9e197fa44675e8c76f",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA188.EMI",
+      "size": 841728,
+      "sha256": "4f39d14203dfe3a4c3ba1d3b5334de9f5e33cf8cd7d3fe4a6940a5b83ac1cbf4",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA189.EMI",
+      "size": 821248,
+      "sha256": "93a818b9bb8a7d3c1988cf331a0178d149ea3a8b520bcf645dbe5019f12da5c7",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA190.EMI",
+      "size": 798720,
+      "sha256": "61540b8c7629469ee3f8bb5148d135116ac86e081ed2e4c6eccb70389a42e679",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA191.EMI",
+      "size": 632832,
+      "sha256": "dfc2da718685cf1a93be98fb1b99efb0fb5e75fe7f81fa29ac7469ad05899590",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA192.EMI",
+      "size": 800768,
+      "sha256": "d326c6272a3142d94ba4b2610caa1c47031b7394055c157af08215199ce1f5ad",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA193.EMI",
+      "size": 774144,
+      "sha256": "cef0f4a89770c7ddfd72459dac2632b48f1055a20d46b14c8f75a4e91ddc079b",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA194.EMI",
+      "size": 653312,
+      "sha256": "b3e3c5e7e85f7a9219ca76ae92f6e0d00cc7f4d762d1b9da940e38a5de1ded2e",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA195.EMI",
+      "size": 804864,
+      "sha256": "ff17e93f3195463d69adb98cdc85e7bafbe8f6a3652ac3bcd75de47e184ca95c",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA196.EMI",
+      "size": 669696,
+      "sha256": "7a7303a7a0a6d883398cccce19d06e85f48c62b1f4d58a162848b30efea240f3",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA197.EMI",
+      "size": 870400,
+      "sha256": "ed5e80f98369f330b3e9afac37add3d9e9925731f88aef19ca46b3dddf32fd50",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA198.EMI",
+      "size": 724992,
+      "sha256": "1374bd21afeeb0af7ac68cf329b37227cd711426bc9e85af5b3aed9ad7cace54",
+      "emi_entries": 14
+    },
+    {
+      "path": "BIN/WORLD04/AREA199.EMI",
+      "size": 819200,
+      "sha256": "867724282e25fca8f46f34b7f05d483ee86aa40148a7a613dcb627d9d8e17f7b",
+      "emi_entries": 14
+    },
+    {
+      "path": "LOGO/CAPCOM30.STR",
+      "size": 2366368,
+      "sha256": "0f9145e980e401ded21f4c315375bcb989f49b8b83582f46f4a2946dd33ff06d",
+      "emi_entries": null
+    },
+    {
+      "path": "LOGO/LOGO.EXE",
+      "size": 122880,
+      "sha256": "21b3f791e450ff308a874e3691d0c0c88df428464f9ad08ea2c7a680a6c0dd2c",
+      "emi_entries": null
+    },
+    {
+      "path": "SLUS_004.22",
+      "size": 1445888,
+      "sha256": "0af39fb1ffcf25e4bdf2730173f397b5b5f6c44989114fe9b59b92ab7c0eb21a",
+      "emi_entries": null
+    },
+    {
+      "path": "SYSTEM.CNF",
+      "size": 70,
+      "sha256": "f9d16f9537d12e07bd3a6f502ce375762de1d6e844b8ca075fe45a66121ef6ca",
+      "emi_entries": null
+    }
+  ]
+}

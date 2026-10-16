@@ -53,6 +53,8 @@ class RepoLayout:
     # its field order.
     bof3_text_src: Path = Path()
     bof3_text_bin: Path = Path()
+    bof3_textures_src: Path = Path()
+    bof3_textures_bin: Path = Path()
 
     @property
     def external_inputs_dir(self) -> Path:
@@ -107,6 +109,13 @@ def repo_layout(
         gcc272_psx_root=toolchains / "gcc-2.7.2-psx",
         gcc_variants_root=toolchains / "gcc-variants",
         psyq_root=toolchains / "psyq" / psyq,
+        bof3_textures_src=resolved / "tools" / "rust" / "bof3-textures",
+        bof3_textures_bin=build
+        / "tools"
+        / "rust"
+        / "bof3-textures"
+        / "release"
+        / "bof3-textures",
         bof3_text_src=resolved / "tools" / "rust" / "bof3-text",
         bof3_text_bin=build / "tools" / "rust" / "bof3-text" / "release" / "bof3-text",
     )

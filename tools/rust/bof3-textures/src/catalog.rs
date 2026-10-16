@@ -1,0 +1,469 @@
+use std::path::{Path, PathBuf};
+
+use emi_ex_v2::image::ArchiveImage;
+use serde::{Deserialize, Serialize};
+
+use crate::{
+    Error, Result,
+    digest::sha256_hex,
+    formats::Upload,
+    palette::PaletteUpload,
+    sources::{self, Input, SourceFile},
+};
+
+pub const SCHEMA: &str = "bof3.textures-index/v1";
+
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct Category {
+    pub id: String,
+    pub description: String,
+}
+
+pub fn categories() -> Vec<Category> {
+    [
+        (
+            "field-character",
+            "Field party figures, ages, actions, and directions",
+        ),
+        ("npc", "Non-player figures, masters, and fairies"),
+        (
+            "battle-character",
+            "Party battle figures and personal transformations",
+        ),
+        ("enemy", "Regular enemy figures"),
+        ("boss", "Boss and multipart figures"),
+        ("dragon", "Dragon forms and shared transformations"),
+        (
+            "area-terrain",
+            "Area and battle-arena terrain and mesh surfaces",
+        ),
+        ("world-map", "World terrain, overlays, and location markers"),
+        ("object-decoration", "Props and sprite or mesh decorations"),
+        (
+            "animated-environment",
+            "Environment uploads, scrolling, and palette changes",
+        ),
+        (
+            "textured-effect",
+            "Textured battle, spell, and field effects",
+        ),
+        ("font", "Glyphs, digits, and symbols"),
+        (
+            "interface",
+            "Windows, icons, cursors, labels, and HUD graphics",
+        ),
+        ("portrait", "Portraits and their selection tables"),
+        (
+            "minigame",
+            "Fishing, fairy-village, casino, and other minigame graphics",
+        ),
+        (
+            "system-screen",
+            "Title, warning, game-over, attract, and ending imagery",
+        ),
+        ("save-icon", "Memory-card icon frames and palettes"),
+        (
+            "unclassified-graphics",
+            "Graphics whose game role is unresolved",
+        ),
+    ]
+    .into_iter()
+    .map(|(id, description)| Category {
+        id: id.into(),
+        description: description.into(),
+    })
+    .collect()
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct Dependency {
+    pub kind: String,
+    pub target: Option<String>,
+    pub status: String,
+    pub reason: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct Resource {
+    pub id: String,
+    pub source: String,
+    pub entry: Option<usize>,
+    pub offset: u64,
+    pub size: u64,
+    pub sha256: String,
+    pub emi_type: Option<u16>,
+    pub load_argument: Option<u32>,
+    pub kind: String,
+    pub categories: Vec<String>,
+    pub storage: String,
+    pub decode: String,
+    pub pack: String,
+    pub evidence_status: String,
+    pub evidence: Vec<String>,
+    pub dependencies: Vec<Dependency>,
+    pub uses: Vec<String>,
+    pub upload: Option<Upload>,
+    pub palette_upload: Option<PaletteUpload>,
+    pub findings: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct Index {
+    pub schema: String,
+    pub release: String,
+    pub input: PathBuf,
+    pub is_tree: bool,
+    pub interpretation_sha256: String,
+    pub inventory_sha256: String,
+    pub files: Vec<SourceFile>,
+    pub categories: Vec<Category>,
+    pub resources: Vec<Resource>,
+}
+
+pub fn interpretation_hash() -> String {
+    sha256_hex(
+        [
+            SCHEMA,
+            sources::QUALIFICATION,
+            include_str!("catalog.rs"),
+            include_str!("formats.rs"),
+            include_str!("package.rs"),
+            include_str!("png.rs"),
+            include_str!("sources.rs"),
+            include_str!("palette.rs"),
+            include_str!("packed.rs"),
+            include_str!("lzss.rs"),
+        ]
+        .join("\n")
+        .as_bytes(),
+    )
+}
+
+pub fn build(input: &Input) -> Result<Index> {
+    build_from(input, |file| {
+        sources::verify_source(&input.source_path(file), file)
+    })
+}
+
+pub fn build_from(
+    input: &Input,
+    mut read: impl FnMut(&SourceFile) -> Result<Vec<u8>>,
+) -> Result<Index> {
+    let mut resources = Vec::new();
+    for file in &input.files {
+        let bytes = read(file)?;
+        if let Some(count) = file.emi_entries {
+            let image = ArchiveImage::from_bytes(bytes)?;
+            if image.version() != 1 || image.entries().len() != count {
+                return Err(Error::Invalid(format!(
+                    "{} disagrees with the original EMI inventory",
+                    file.path
+                )));
+            }
+            for (slot, entry) in image.entries().iter().enumerate() {
+                let payload = image.entry(slot)?;
+                let mut resource = Resource {
+                    id: format!("{}:{}#entry-{slot:03}", sources::RELEASE, file.path),
+                    source: file.path.clone(),
+                    entry: Some(slot),
+                    offset: entry.offset,
+                    size: u64::from(entry.size),
+                    sha256: sha256_hex(payload),
+                    emi_type: Some(entry.file_type),
+                    load_argument: Some(entry.ram_ptr),
+                    kind: "unresolved-entry".into(),
+                    categories: vec![],
+                    storage: "opaque".into(),
+                    decode: "unresolved".into(),
+                    pack: "preservation-only".into(),
+                    evidence_status: "source-qualified".into(),
+                    evidence: vec!["qualified-us-disc".into()],
+                    dependencies: vec![],
+                    uses: vec![],
+                    upload: None,
+                    palette_upload: None,
+                    findings: vec!["logical records and consumers have not been enumerated".into()],
+                };
+                if entry.file_type == 0
+                    && let Some(palette) =
+                        PaletteUpload::from_argument(entry.ram_ptr, payload.len())
+                {
+                    let words = palette.decode_words(payload)?;
+                    if palette.encode_words(&words, payload)? != payload {
+                        return Err(Error::Invalid(format!(
+                            "{} palette inverse mismatch",
+                            resource.id
+                        )));
+                    }
+                    resource.kind = "palette-bank".into();
+                    resource.categories = vec!["unclassified-graphics".into()];
+                    resource.storage = "psx-palette-words".into();
+                    resource.decode = "palette-words-verified".into();
+                    resource.pack = "palette-words-verified".into();
+                    resource.evidence.extend([
+                        "SLUS_004.22@0x80162BAC:entry-destination".into(),
+                        "SLUS_004.22@0x801625E4:type0-sector-transfer".into(),
+                        "SLUS_004.22@0x80177154:cdrom-dma-words".into(),
+                        "SLUS_004.22@0x8014E284:palette-staging".into(),
+                        "SLUS_004.22@0x8014E22C:palette-upload".into(),
+                    ]);
+                    resource.dependencies.push(Dependency {
+                        kind: "consumer-selection".into(),
+                        target: None,
+                        status: "unresolved".into(),
+                        reason: "draw CLUT selection and texture associations are unresolved"
+                            .into(),
+                    });
+                    resource.palette_upload = Some(palette);
+                }
+                if entry.file_type == 3 {
+                    resource.kind = "texture-upload".into();
+                    resource.categories = vec!["unclassified-graphics".into()];
+                    resource.storage = "raw-vram-chunks".into();
+                    resource
+                        .evidence
+                        .push("SLUS_004.22@0x80162698:packed-dispatch".into());
+                    resource
+                        .evidence
+                        .push("SLUS_004.22@0x80163378:bounded-chunk-submission".into());
+                    match Upload::from_argument(entry.ram_ptr, payload.len()) {
+                        Ok(upload) => {
+                            let words = upload.linear_words(payload)?;
+                            if upload.encode_words(&words, payload)? != payload {
+                                return Err(Error::Invalid(format!(
+                                    "{} raw inverse mismatch",
+                                    resource.id
+                                )));
+                            }
+                            resource.upload = Some(upload);
+                            resource.decode = "raw-words-verified".into();
+                            resource.pack = "raw-words-verified".into();
+                        }
+                        Err(error) => resource.findings.push(error.to_string()),
+                    }
+                    for (kind, reason) in [
+                        (
+                            "palette",
+                            "CLUT association and palette source are unresolved",
+                        ),
+                        (
+                            "texture-page",
+                            "draw-mode and texture-page consumers are unresolved",
+                        ),
+                        (
+                            "resident-base",
+                            "resident upload dependencies are unresolved",
+                        ),
+                        (
+                            "upload-order",
+                            "cross-entry loader ordering has not been qualified",
+                        ),
+                    ] {
+                        resource.dependencies.push(Dependency {
+                            kind: kind.into(),
+                            target: None,
+                            status: "unresolved".into(),
+                            reason: reason.into(),
+                        });
+                    }
+                }
+                resources.push(resource);
+            }
+        } else {
+            let incomplete = sources::incomplete_extent(file);
+            let mut findings = vec![
+                "embedded, generated, or media-owned graphics disposition is unresolved".into(),
+            ];
+            if let Some(extent) = &incomplete {
+                findings.push(format!(
+                    "captured XA prefix omits {} bytes of the original disc extent; full source qualification is unresolved",
+                    extent.missing_bytes
+                ));
+            }
+            resources.push(Resource {
+                id: format!("{}:{}#file", sources::RELEASE, file.path),
+                source: file.path.clone(),
+                entry: None,
+                offset: 0,
+                size: file.size,
+                sha256: file.sha256.clone(),
+                emi_type: None,
+                load_argument: None,
+                kind: "unresolved-file".into(),
+                categories: vec![],
+                storage: "opaque".into(),
+                decode: "unresolved".into(),
+                pack: "preservation-only".into(),
+                evidence_status: if incomplete.is_some() {
+                    "source-prefix-qualified"
+                } else {
+                    "source-qualified"
+                }
+                .into(),
+                evidence: vec![if incomplete.is_some() {
+                    "captured-us-xa-prefix".into()
+                } else {
+                    "qualified-us-disc".into()
+                }],
+                dependencies: vec![],
+                uses: vec![],
+                upload: None,
+                palette_upload: None,
+                findings,
+            });
+        }
+    }
+    Ok(Index {
+        schema: SCHEMA.into(),
+        release: sources::RELEASE.into(),
+        input: input.path.clone(),
+        is_tree: input.is_tree,
+        interpretation_sha256: interpretation_hash(),
+        inventory_sha256: sha256_hex(&serde_json::to_vec(&input.files)?),
+        files: input.files.clone(),
+        categories: categories(),
+        resources,
+    })
+}
+
+impl Index {
+    pub fn load(path: &Path) -> Result<Self> {
+        let index: Self =
+            serde_json::from_slice(&sources::read_bounded(path, sources::MAX_FILE_BYTES)?)?;
+        index.check_fresh()?;
+        Ok(index)
+    }
+
+    pub fn check_fresh(&self) -> Result<()> {
+        let stale = |reason| {
+            Error::StaleIndex(format!(
+                "{reason}; rebuild with textures index {} --output NEW_INDEX",
+                self.input.display()
+            ))
+        };
+        if self.schema != SCHEMA
+            || self.release != sources::RELEASE
+            || self.interpretation_sha256 != interpretation_hash()
+        {
+            return Err(stale(
+                "index schema, policy, format, or mapping evidence changed",
+            ));
+        }
+        let source = (!self.is_tree)
+            .then(|| self.files.first().map(|file| file.path.as_str()))
+            .flatten();
+        let input = sources::qualify(&self.input, source)
+            .map_err(|_| stale("source inventory or bytes changed"))?;
+        let fresh = build(&input).map_err(|_| stale("source layout changed"))?;
+        if self != &fresh {
+            return Err(stale(
+                "catalog content differs from captured sources and current interpretation",
+            ));
+        }
+        Ok(())
+    }
+}
+
+#[derive(Default)]
+pub struct Filter<'a> {
+    pub category: Option<&'a str>,
+    pub source: Option<&'a str>,
+    pub asset: Option<&'a str>,
+    pub storage: Option<&'a str>,
+    pub kind: Option<&'a str>,
+    pub palette: Option<&'a str>,
+    pub animation: Option<&'a str>,
+    pub dependency: Option<&'a str>,
+    pub evidence: Option<&'a str>,
+}
+
+impl Filter<'_> {
+    pub fn matches(&self, resource: &Resource) -> bool {
+        self.category
+            .is_none_or(|value| resource.categories.iter().any(|category| category == value))
+            && self
+                .source
+                .is_none_or(|value| resource.source.contains(value))
+            && self.asset.is_none_or(|value| resource.id == value)
+            && self.storage.is_none_or(|value| resource.storage == value)
+            && self.kind.is_none_or(|value| resource.kind == value)
+            && self
+                .evidence
+                .is_none_or(|value| resource.evidence_status == value)
+            && self.dependency.is_none_or(|value| {
+                resource
+                    .dependencies
+                    .iter()
+                    .any(|edge| edge.kind == value || edge.target.as_deref() == Some(value))
+            })
+            && self
+                .palette
+                .is_none_or(|value| has_reference(resource, "palette", value))
+            && self
+                .animation
+                .is_none_or(|value| has_reference(resource, "animation", value))
+    }
+}
+
+fn has_reference(resource: &Resource, kind: &str, target: &str) -> bool {
+    resource
+        .dependencies
+        .iter()
+        .any(|edge| edge.kind == kind && edge.target.as_deref() == Some(target))
+}
+
+pub fn coverage(index: &Index) -> serde_json::Value {
+    let raw = index
+        .resources
+        .iter()
+        .filter(|resource| resource.upload.is_some())
+        .count();
+    let incomplete_extents: Vec<_> = index
+        .files
+        .iter()
+        .filter_map(sources::incomplete_extent)
+        .collect();
+    let mut blockers = vec![
+        "logical resource and consumer enumeration is incomplete",
+        "category mappings and dependencies are unresolved",
+        "edited and runtime acceptance remains incomplete",
+    ];
+    if !incomplete_extents.is_empty() {
+        blockers.push("captured XA prefixes do not cover their original disc extents");
+    }
+    serde_json::json!({
+        "schema": "bof3.textures-coverage/v1", "release": index.release,
+        "full_support": false,
+        "physical": {"files": index.files.len(), "emi_entries": index.files.iter().filter_map(|file| file.emi_entries).sum::<usize>(),
+            "qualified_original_corpus": index.is_tree && incomplete_extents.is_empty(),
+            "captured_inventory_matches_qualification": true,
+            "incomplete_original_extents": incomplete_extents,
+            "inventory_sha256": index.inventory_sha256},
+        "logical": {"complete": false, "resources": index.resources.len(), "raw_uploads": raw,
+            "palette_banks": index.resources.iter().filter(|resource| resource.palette_upload.is_some()).count(),
+            "unresolved_resources": index.resources.iter().filter(|resource| !resource.findings.is_empty()).map(|resource| &resource.id).collect::<Vec<_>>()},
+        "categories": index.categories.iter().map(|category| serde_json::json!({"id": category.id, "disposition": "unresolved", "evidence": []})).collect::<Vec<_>>(),
+        "unresolved_dependencies": index.resources.iter().flat_map(|resource| resource.dependencies.iter().filter(|edge| edge.status != "verified").map(|edge| serde_json::json!({"resource": resource.id, "dependency": edge}))).collect::<Vec<_>>(),
+        "runtime": {"status": "unobserved", "consumer_families": []},
+        "blockers": blockers
+    })
+}
+
+pub fn verify(index: &Index) -> serde_json::Value {
+    serde_json::json!({
+        "schema": "bof3.textures-verification/v1", "release": index.release, "complete": false,
+        "inventory_sha256": index.inventory_sha256,
+        "structure": {"status": "verified", "scope": "captured-inputs-only", "files": index.files.len()},
+        "dependencies": {"status": "unresolved"},
+        "decode": {"status": "partial", "raw_word_uploads": index.resources.iter().filter(|resource| resource.upload.is_some()).count(),
+            "palette_banks": index.resources.iter().filter(|resource| resource.palette_upload.is_some()).count()},
+        "unchanged_reconstruction": {"status": "unverified"},
+        "edited_reconstruction": {"status": "unverified"},
+        "unrelated_bytes": {"status": "unverified"},
+        "runtime": {"status": "unobserved"}, "coverage": coverage(index)
+    })
+}

@@ -95,6 +95,9 @@ def _build_local_tools(layout: RepoLayout) -> None:
             cwd=root,
             quiet=True,
         )
+    from .textures import build_binary
+
+    build_binary(layout)
 
 
 def _extract_and_materialize(root: Path, cue: Path, *, force: bool) -> None:
@@ -254,7 +257,7 @@ def _psyq(state: SetupState) -> str:
 @register_check("local tools", TASKS)
 def _tools(state: SetupState) -> str:
     _build_local_tools(state.layout)
-    return "bof3-disk, emi-ex, bof3-text, bof3-audio"
+    return "bof3-disk, emi-ex, bof3-text, bof3-audio, bof3-textures"
 
 
 @register_check("compile commands", TASKS)
@@ -296,12 +299,20 @@ def _managed_component(state: SetupState) -> str:
     )
 
 
+def _textures(state: SetupState) -> str:
+    from .textures import build_binary
+
+    return str(build_binary(state.layout))
+
+
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
     state = SetupState(root=root, layout=repo_layout(root), args=args)
     selection = {"bios": _bios, "pcsx-redux": _pcsx}
     tasks = (
-        TASKS
+        [Check("textures", _textures)]
+        if args.component == "textures"
+        else TASKS
         if args.component == "all"
         else [Check(args.component, _managed_component)]
         if args.component in {"psyqo", "rz-psxdec", "decomp-permuter"}
@@ -332,7 +343,15 @@ def build_parser() -> argparse.ArgumentParser:
     add_root_argument(parser)
     parser.add_argument(
         "--component",
-        choices=("all", "bios", "pcsx-redux", "psyqo", "rz-psxdec", "decomp-permuter"),
+        choices=(
+            "all",
+            "bios",
+            "pcsx-redux",
+            "psyqo",
+            "rz-psxdec",
+            "decomp-permuter",
+            "textures",
+        ),
         default="all",
         help="prepare everything or one toolchain component",
     )

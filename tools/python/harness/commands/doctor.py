@@ -148,6 +148,13 @@ def _verify_wrappers(root: Path, source: Path) -> str:
     return f"{len(commands)} commands"
 
 
+@register_check("textures", TASKS)
+def _textures(root: Path) -> str:
+    from .textures import diagnose
+
+    return diagnose(repo_layout(root))
+
+
 def _managed_component(root: Path, component: str) -> str:
     return ", ".join(
         managed_lifecycle(repo_layout(root), verify_only=True, component=component)
@@ -157,7 +164,9 @@ def _managed_component(root: Path, component: str) -> str:
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
     tasks = (
-        TASKS
+        [Check("textures", _textures)]
+        if args.component == "textures"
+        else TASKS
         if args.component == "all"
         else [
             Check(args.component, lambda root: _managed_component(root, args.component))
@@ -185,7 +194,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_root_argument(parser)
     parser.add_argument(
         "--component",
-        choices=("all", "psyqo", "rz-psxdec", "decomp-permuter"),
+        choices=("all", "psyqo", "rz-psxdec", "decomp-permuter", "textures"),
         default="all",
     )
     parser.set_defaults(handler=run)
