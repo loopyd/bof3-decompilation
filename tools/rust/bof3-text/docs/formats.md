@@ -18,24 +18,40 @@ it parses.
 ## Executable ASCII
 
 `extract`, `analyze`, `validate` and `pack` also support the US executable's
-exception-screen ASCII strings. `extract-corpus` exports them when the complete
-source root includes `SLUS_004.22`. This support covers the strings referenced by
+exception-screen ASCII strings and hexadecimal format. `extract-corpus` exports
+them when the complete source root includes `SLUS_004.22`. Literal strings use
 the pointer words at `0x8017F470..0x8017F53C`, with an exclusive upper bound.
 The consumer at `0x8014B3C4` passes these pointers to renderer `0x80150098`.
 The renderer reads bytes until NUL, advances on ASCII space and handles newline
 `0x0A`. These bytes use ASCII rather than the dialogue character table.
 
-The JSON schema is `bof3.executable-text/v1`. It contains `source`, mandatory
-`source_sha256`, `build`, `load_address`, `consumer`, `renderer` and `strings`.
+The JSON schema is `bof3.executable-text/v2`. Re-extract older documents before
+editing. It contains `source`, mandatory `source_sha256`, `build`, `load_address`,
+`consumer`, `renderer`, `formatter` and `strings`.
 Each string retains its `address`, whole-file `file_offset`, original `capacity`
-including NUL, pointer `references` and editable `text`. Shared pointers appear
-on one allocation. Retain every allocation and edit only `text`.
+including NUL, immutable `codec`, typed `references` and editable `text`.
+Literal rows use `ascii-literal` and `pointer-word` references with an `address`.
+Shared pointers appear on one allocation. Retain every allocation and edit only
+`text`.
 
-Packing accepts printable ASCII and newline, reserves one byte for NUL and
-refuses growth beyond the original string, excluding alignment padding. A
-shortened string is NUL-padded inside its allocation. Unchanged strings preserve
-every byte. Pointer edits and relocation are refused. The numeric printf format
-and unproven exception-table indices are outside this support.
+For literal rows, packing accepts printable ASCII and newline, reserves one byte
+for NUL and refuses growth beyond the original string, excluding alignment
+padding. A shortened string is NUL-padded inside its allocation. Unchanged strings
+preserve every byte. Reference edits, relocation and unproven exception-table
+indices are refused.
+
+The `%08X` format at `0x80149990` has a five-byte allocation including NUL and
+uses `ascii-u32-hex-format`. Its `address-pair` references retain `upper` and
+`lower` instruction addresses and their `calls`. Calls at `0x8014B520`,
+`0x8014B5A0`, `0x8014B610` and `0x8014B634` pass one 32-bit value to formatter
+`0x8017E3F4`, then draw the result with `0x80150098`.
+
+This codec accepts one entire `%X` or `%x` conversion, optionally with a minimum
+width from 1 through 8 and zero padding, such as `%8X` or `%08x`. It refuses
+surrounding text, other conversions, additional flags, widths outside this range
+and extra arguments. The encoded format must fit four bytes plus NUL; formatted
+output remains at most eight bytes plus NUL. `analyze` reports
+`max_formatted_size` separately from the encoded allocation size.
 
 Build recognition hashes all bytes outside the supported allocations against
 the pinned US layout. This permits re-extraction of supported edits while

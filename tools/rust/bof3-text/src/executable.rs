@@ -8,11 +8,13 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-const SCHEMA: &str = "bof3.executable-text/v1";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v2";
 const LOAD: u32 = 0x80096800;
 const SIZE: usize = 1445888;
 // Hash of the entire executable with only the supported allocations zeroed.
-const LAYOUT_SHA256: &str = "78b41a61a0f65cfa31674f5d7508372d14b331531528dd62b571906f611922a5";
+const LAYOUT_SHA256: &str = "ce6ee8fa3db91516d1df3aa0cca585d3ba963b1f4f15528e482300b0c3893e48";
+const FORMAT_ADDRESS: u32 = 0x80149990;
+const FORMATTER: u32 = 0x8017e3f4;
 // Original string bytes plus their NUL, excluding alignment padding. The consumer
 // at 0x8014b3c4 passes pointers from 0x8017f470..0x8017f53c to 0x80150098.
 const ALLOCATIONS: &[(u32, usize)] = &[
@@ -65,7 +67,71 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (0x80149968, 22),
     (0x80149980, 1),
     (0x80149984, 11),
+    (FORMAT_ADDRESS, 5),
 ];
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "kebab-case")]
+pub(crate) enum Codec {
+    AsciiLiteral,
+    AsciiU32HexFormat,
+}
+
+impl Codec {
+    pub(crate) fn as_str(self) -> &'static str {
+        match self {
+            Self::AsciiLiteral => "ascii-literal",
+            Self::AsciiU32HexFormat => "ascii-u32-hex-format",
+        }
+    }
+
+    pub(crate) fn encode(self, text: &str, maximum: usize) -> Result<Vec<u8>> {
+        let bytes = text.as_bytes();
+        if bytes.len() > maximum
+            || !bytes
+                .iter()
+                .all(|byte| (0x20..=0x7e).contains(byte) || *byte == b'\n')
+        {
+            return invalid(format!(
+                "executable text must fit {maximum} ASCII bytes plus NUL"
+            ));
+        }
+        if self == Self::AsciiU32HexFormat
+            && !matches!(
+                bytes,
+                [b'%', b'X' | b'x']
+                    | [b'%', b'1'..=b'8', b'X' | b'x']
+                    | [b'%', b'0', b'1'..=b'8', b'X' | b'x']
+            )
+        {
+            return invalid(
+                "hex format must be one %X or %x conversion, optionally with width 1..8 and zero padding",
+            );
+        }
+        Ok(bytes.to_vec())
+    }
+}
+
+#[derive(Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(tag = "kind", rename_all = "kebab-case", deny_unknown_fields)]
+pub enum Reference {
+    PointerWord {
+        address: u32,
+    },
+    AddressPair {
+        upper: u32,
+        lower: u32,
+        calls: Vec<u32>,
+    },
+}
+
+fn codec(address: u32) -> Codec {
+    if address == FORMAT_ADDRESS {
+        Codec::AsciiU32HexFormat
+    } else {
+        Codec::AsciiLiteral
+    }
+}
 
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -77,6 +143,7 @@ pub struct Document {
     load_address: u32,
     consumer: u32,
     renderer: u32,
+    formatter: u32,
     pub strings: Vec<Text>,
 }
 
@@ -86,7 +153,8 @@ pub struct Text {
     pub address: u32,
     pub file_offset: usize,
     pub capacity: usize,
-    pub references: Vec<u32>,
+    pub references: Vec<Reference>,
+    pub(crate) codec: Codec,
     pub text: String,
 }
 
@@ -124,25 +192,45 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
             .iter()
             .position(|byte| *byte == 0)
             .ok_or_else(|| Error::Invalid(format!("unterminated ASCII string at {address:#x}")))?;
-        if !bytes[..end]
-            .iter()
-            .all(|byte| (0x20..=0x7e).contains(byte) || *byte == b'\n')
-        {
-            return invalid(format!("non-ASCII executable string at {address:#x}"));
-        }
-        let references = (0x8017f470..0x8017f53c)
-            .step_by(4)
-            .filter(|reference| {
-                let at = offset(*reference);
-                u32::from_le_bytes(data[at..at + 4].try_into().unwrap()) == address
-            })
-            .collect();
+        let codec = codec(address);
+        let text = std::str::from_utf8(&bytes[..end])
+            .map_err(|error| Error::Invalid(error.to_string()))?;
+        codec.encode(text, capacity - 1)?;
+        let references = if address == FORMAT_ADDRESS {
+            vec![
+                Reference::AddressPair {
+                    upper: 0x8014b518,
+                    lower: 0x8014b51c,
+                    calls: vec![0x8014b520],
+                },
+                Reference::AddressPair {
+                    upper: 0x8014b598,
+                    lower: 0x8014b59c,
+                    calls: vec![0x8014b5a0],
+                },
+                Reference::AddressPair {
+                    upper: 0x8014b604,
+                    lower: 0x8014b608,
+                    calls: vec![0x8014b610, 0x8014b634],
+                },
+            ]
+        } else {
+            (0x8017f470..0x8017f53c)
+                .step_by(4)
+                .filter(|reference| {
+                    let at = offset(*reference);
+                    u32::from_le_bytes(data[at..at + 4].try_into().unwrap()) == address
+                })
+                .map(|address| Reference::PointerWord { address })
+                .collect()
+        };
         strings.push(Text {
             address,
             file_offset,
             capacity,
             references,
-            text: String::from_utf8(bytes[..end].to_vec()).unwrap(),
+            codec,
+            text: text.into(),
         });
     }
     Ok(Document {
@@ -153,6 +241,7 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
         load_address: LOAD,
         consumer: 0x8014b3c4,
         renderer: 0x80150098,
+        formatter: FORMATTER,
         strings,
     })
 }
@@ -165,6 +254,7 @@ pub fn parse(data: &[u8]) -> Result<Document> {
         || document.build != "US SLUS-00422 exception ASCII"
         || document.consumer != 0x8014b3c4
         || document.renderer != 0x80150098
+        || document.formatter != FORMATTER
         || document.source_sha256.len() != 64
         || !document
             .source_sha256
@@ -178,21 +268,11 @@ pub fn parse(data: &[u8]) -> Result<Document> {
         if !seen.insert(text.address)
             || !ALLOCATIONS.contains(&(text.address, text.capacity))
             || text.file_offset != offset(text.address)
+            || text.codec != codec(text.address)
         {
             return invalid("unknown or duplicate executable string allocation");
         }
-        if text.text.len() >= text.capacity
-            || !text
-                .text
-                .bytes()
-                .all(|byte| (0x20..=0x7e).contains(&byte) || byte == b'\n')
-        {
-            return invalid(format!(
-                "string at {:#x} must fit {} ASCII bytes plus NUL",
-                text.address,
-                text.capacity - 1
-            ));
-        }
+        text.codec.encode(&text.text, text.capacity - 1)?;
     }
     if seen.len() != ALLOCATIONS.len() {
         return invalid("executable text document must retain every supported allocation");
@@ -218,7 +298,7 @@ pub fn rebuild(path: &Path, data: &[u8], document: &Document) -> Result<Vec<u8>>
             .find(|row| row.address == text.address)
             .unwrap();
         if text.references != expected.references {
-            return invalid("executable pointer references cannot be edited or relocated");
+            return invalid("executable reference sites cannot be edited or relocated");
         }
         if text.text != expected.text {
             let span = &mut output[text.file_offset..text.file_offset + text.capacity];

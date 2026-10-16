@@ -3294,7 +3294,7 @@ fn run_validate(cli: &Cli, path: &Path, commands: bool) -> Result<()> {
         );
         return Ok(());
     }
-    if value["schema"] == "bof3.executable-text/v1" {
+    if value["schema"] == crate::executable::SCHEMA {
         let document = crate::executable::parse(&bytes)?;
         println!(
             "{}",
