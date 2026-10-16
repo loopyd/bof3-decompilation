@@ -12,7 +12,9 @@ Copy both tokens from the frozen request into `bin/harness naming evidence TARGE
 Never construct, search, substitute or accept a caller-supplied path. Missing or
 noncanonical state blocks on `bin/harness naming init-all out/reviews/plan-audit-naming`;
 never initialize implicitly or choose another report. Convert initializer rows only
-to receipt-backed `exhausted`/`proposed` conclusions. Parent approval is required for
+to receipt-backed `exhausted`/`proposed` conclusions. Omit `initializer_state` and
+`conclusion_provenance` from authored terminal rows. `bin/harness naming conclude`
+adds receipt-bound provenance during import. Parent approval is required for
 identity application.
 
 Process at most 10 rows and emit at most 8 KiB per invocation. Cite report/receipt

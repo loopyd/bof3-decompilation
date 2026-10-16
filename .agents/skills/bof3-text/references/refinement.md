@@ -14,6 +14,9 @@ shared or indirect references. Record addresses and byte ranges sufficient to
 reproduce each conclusion. Executable, overlay, menu, name and description text
 remain part of the full objective even when the known-bank export passes.
 
+Pass raw Rizin inputs as absolute paths. The managed tool runs from its executable
+directory.
+
 A `textbin` target entry describes raw data in a code section. Its name does not
 establish that those bytes are strings. Scanner quality, vocabulary agreement,
 frequency and a plausible decoded preview are leads. Promotion requires consumer
