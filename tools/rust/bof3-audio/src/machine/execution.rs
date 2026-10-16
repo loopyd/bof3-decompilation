@@ -59,6 +59,18 @@ impl Execution {
         self.reference.as_ref().map(boot::timing::Clock::cycles)
     }
 
+    /// Configure CPU-cycle ENVX observations before guest SPU initialization.
+    /// Settings come from the retained native capture; no PCM clock is enabled.
+    pub fn configure_reference_spu(
+        &mut self,
+        settings: super::spu_readback::Settings,
+    ) -> Result<()> {
+        if self.reference.is_none() {
+            return Err("reference SPU observations require original-BIOS timing".into());
+        }
+        self.bus.configure_spu_readback(settings)
+    }
+
     pub fn syscalls(&self) -> u64 {
         self.syscalls
     }

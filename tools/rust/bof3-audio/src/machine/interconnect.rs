@@ -13,6 +13,7 @@ use super::{
     interrupts::{Interrupts, Source},
     spu_mixer::{Inputs as SpuInputs, Mixer},
     spu_noise::Noise,
+    spu_readback::{Readback, Settings as ReadbackSettings},
     spu_reverb::{Model as ReverbModel, Reverb},
     spu_transfer::{Mode as SpuMode, Transfer as SpuTransfer},
     spu_voice_ports,
@@ -36,6 +37,8 @@ pub struct Interconnect {
     timers: Timers,
     spu_transfer: SpuTransfer,
     spu_voices: Option<spu_voice_ports::Ports>,
+    spu_readback: Option<Readback>,
+    reference_access: Option<u64>,
     spu_mixer: Mixer,
     spu_reverb: Option<Reverb>,
     // Only the linked runtime's two normal bus configurations are supported.
@@ -66,6 +69,8 @@ impl Interconnect {
             timers: Timers::default(),
             spu_transfer: SpuTransfer::default(),
             spu_voices: None,
+            spu_readback: None,
+            reference_access: None,
             spu_mixer: Mixer::default(),
             spu_reverb: None,
             spu_bus_control: 0,
@@ -114,6 +119,28 @@ impl Interconnect {
         self.spu_mixer.configure_sweeps(envelope)?;
         self.spu_voices = Some(spu_voice_ports::Ports::new(sample, envelope));
         Ok(())
+    }
+
+    pub(crate) fn configure_spu_readback(
+        &mut self,
+        settings: ReadbackSettings,
+    ) -> crate::Result<()> {
+        if self.spu_readback.is_some() {
+            return Err("SPU reference readback already configured".into());
+        }
+        let voices = self
+            .spu_voices
+            .as_ref()
+            .ok_or("configure SPU voices before reference readback")?;
+        if voices.envelope_model() != super::adsr::Model::EmulatorReference {
+            return Err("SPU reference readback requires the explicit emulator ADSR model".into());
+        }
+        self.spu_readback = Some(Readback::new(settings));
+        Ok(())
+    }
+
+    pub(crate) fn set_reference_access(&mut self, cycle: Option<u64>) {
+        self.reference_access = cycle;
     }
 
     /// Per-voice signals before main gain, mixing, capture, CD and reverb. The
@@ -185,7 +212,19 @@ impl Interconnect {
         Ok(output)
     }
 
-    fn read_spu_half(&self, physical: u32) -> crate::Result<u16> {
+    fn read_spu_half(&mut self, physical: u32) -> crate::Result<u16> {
+        if (0x1f80_1c00..0x1f80_1d80).contains(&physical) && physical & 15 == 12 {
+            if let Some(readback) = &mut self.spu_readback {
+                let cycle = self
+                    .reference_access
+                    .ok_or("reference ENVX read requires a CPU access cycle")?;
+                return readback.read(
+                    ((physical - 0x1f80_1c00) / 16) as usize,
+                    cycle,
+                    self.spu_transfer.ram(),
+                );
+            }
+        }
         if physical == 0x1f80_1da2 || (0x1f80_1dc0..0x1f80_1e00).contains(&physical) {
             return self
                 .spu_reverb
@@ -209,6 +248,17 @@ impl Interconnect {
     }
 
     fn write_spu_half(&mut self, physical: u32, value: u16) -> crate::Result<()> {
+        if let Some(readback) = &mut self.spu_readback {
+            let cycle = self
+                .reference_access
+                .ok_or("reference SPU write requires a CPU access cycle")?;
+            readback.write(
+                physical - 0x1f80_1c00,
+                value,
+                cycle,
+                self.spu_transfer.ram(),
+            )?;
+        }
         if physical == 0x1f80_1da2 || (0x1f80_1dc0..0x1f80_1e00).contains(&physical) {
             return self
                 .spu_reverb
@@ -308,7 +358,7 @@ impl Interconnect {
         Ok(())
     }
 
-    fn read_spu_port(&self, address: u32, width: Width) -> Result<u32, BusError> {
+    fn read_spu_port(&mut self, address: u32, width: Width) -> Result<u32, BusError> {
         if address as usize & (width.bytes() - 1) != 0 {
             return Err(error(address, "unaligned SPU port read"));
         }

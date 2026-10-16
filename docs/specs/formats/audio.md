@@ -3565,10 +3565,28 @@ value to hardcode or a reason to mask RAM. The current fork's
 [SPU register reader](../../../third_party/pcsx-redux-agentic/src/spu/registers.cc)
 reconstructs ENVX at the CPU read cycle and no longer forces that value.
 
+`Execution::configure_reference_spu` enables a separate
+[CPU readback owner](../../../tools/rust/bof3-audio/src/machine/spu_readback.rs)
+before guest SPU initialization. Supply the effective native `key_on_delay` and
+`interpolation` settings. The voice owner must already use the explicit emulator
+ADSR model. Each interpreter data transaction supplies its access cycle before
+the MMIO handler; unstamped host ENVX reads and SPU writes reject in this mode.
+Key-on starts a zero envelope. The owner subtracts the configured startup delay
+from elapsed 44.1 kHz steps and applies key-off at its recorded cycle. Register
+latches remain separate from pending output-frame keys.
+
+The readback cursor follows guest start, repeat, pitch, loop flags and SPU RAM.
+A pitch-modulated voice retains the fork's untracked-cursor convention until
+retriggered. Active ADSR register changes and release with fractional ADSR state
+reject precisely. Other rates retain the selected arithmetic model's documented
+disagreements. Configuration does not reconstruct preexisting voice history or
+prove sample-fetch, mixer or hardware timing. The production output clock and
+frame-driven voice state remain separate.
+
 The original-ROM reference clock does not schedule programmable root counters,
 GPU commands or PCM output. Enabling the separate output clock on that execution
-mode fails. Scheduled SPU key/envelope observations, full device state, pending
-loads, complete CPU state and audible fidelity require separate comparisons.
+mode fails. Full device state, pending loads, complete CPU state and audible
+fidelity require separate comparisons.
 Host-directed initialization does not establish the game's natural loader
 lifecycle or BIOS-free startup.
 

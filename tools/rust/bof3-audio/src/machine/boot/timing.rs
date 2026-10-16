@@ -33,6 +33,7 @@ impl Clock {
             bus,
             accesses: 0,
             instruction: None,
+            access_cycle: self.cycles,
         };
         let result = cpu.step(&mut counted);
         if let Some(word) = counted.instruction {
@@ -77,6 +78,7 @@ struct Counted<'a> {
     bus: &'a mut Interconnect,
     accesses: u64,
     instruction: Option<u32>,
+    access_cycle: u64,
 }
 
 impl Bus for Counted<'_> {
@@ -86,18 +88,31 @@ impl Bus for Counted<'_> {
     fn fetch(&mut self, address: u32) -> Result<u32, BusError> {
         let word = self.bus.fetch(address)?;
         self.instruction = Some(word);
+        self.access_cycle +=
+            2 + u64::from(address.wrapping_add(4) & 0xffc0_0000 == 0xbfc0_0000) * 20;
         Ok(word)
     }
     fn read(&mut self, address: u32, width: Width) -> Result<u32, BusError> {
-        self.accesses += 1;
-        self.bus.read(address, width)
+        self.access(|bus| bus.read(address, width))
     }
     fn write(&mut self, address: u32, width: Width, value: u32) -> Result<(), BusError> {
-        self.accesses += 1;
-        self.bus.write(address, width, value)
+        self.access(|bus| bus.write(address, width, value))
     }
     fn write_masked(&mut self, address: u32, value: u32, lanes: u8) -> Result<(), BusError> {
+        self.access(|bus| bus.write_masked(address, value, lanes))
+    }
+}
+
+impl Counted<'_> {
+    fn access<T>(
+        &mut self,
+        operation: impl FnOnce(&mut Interconnect) -> Result<T, BusError>,
+    ) -> Result<T, BusError> {
         self.accesses += 1;
-        self.bus.write_masked(address, value, lanes)
+        self.bus
+            .set_reference_access(Some(self.access_cycle + self.accesses));
+        let result = operation(self.bus);
+        self.bus.set_reference_access(None);
+        result
     }
 }

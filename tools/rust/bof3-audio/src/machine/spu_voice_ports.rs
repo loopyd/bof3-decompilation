@@ -18,6 +18,7 @@ pub enum DisableModel {
 
 pub struct Ports {
     voices: Voices,
+    envelope_model: adsr::Model,
     on: u32,
     off: u32,
     key_latches: [u32; 2],
@@ -42,6 +43,7 @@ impl Ports {
     pub fn new(sample: spu_sample::Model, envelope: adsr::Model) -> Self {
         Self {
             voices: Voices::new(sample, envelope),
+            envelope_model: envelope,
             on: 0,
             off: 0,
             key_latches: [0; 2],
@@ -52,6 +54,10 @@ impl Ports {
             noise: None,
             disable_model: None,
         }
+    }
+
+    pub(crate) fn envelope_model(&self) -> adsr::Model {
+        self.envelope_model
     }
 
     pub fn configure_disable(&mut self, model: DisableModel) -> Result<()> {
