@@ -143,7 +143,7 @@ pub fn files_under(root: &Path) -> Result<Vec<PathBuf>> {
     Ok(files)
 }
 
-fn relative(root: &Path, path: &Path) -> Result<String> {
+pub(crate) fn relative(root: &Path, path: &Path) -> Result<String> {
     let components: Result<Vec<_>> = path
         .strip_prefix(root)
         .unwrap()

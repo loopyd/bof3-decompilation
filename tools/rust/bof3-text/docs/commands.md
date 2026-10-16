@@ -187,6 +187,9 @@ existing parent. An existing destination is refused. Every document is parsed ba
 and its unchanged bank must reproduce the original payload before export.
 
 `manifest.json` records each exported source, archive SHA-256 and round-trip result.
+Paths retain their actual components, including literal backslashes in Unix
+filenames. Input paths must be UTF-8; unrepresentable inputs are refused before
+the destination is created.
 An archive failure is recorded and makes the command exit 1. Outputs from a failed
 run remain for diagnosis; use a new destination for the next run. This operation
 also exports equipment and ability names as `GAME.EMI/records.json`. It covers the supported

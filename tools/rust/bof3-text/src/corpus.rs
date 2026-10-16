@@ -19,7 +19,16 @@ pub struct Export {
 
 /// Export supported layouts. Unknown consumers remain the coverage command's gaps.
 pub fn extract(root: &Path, output: &Path) -> Result<Export> {
-    let inputs = crate::coverage::files_under(root)?;
+    if root.to_str().is_none() {
+        return Err(Error::Invalid("corpus paths must be UTF-8".into()));
+    }
+    let inputs = crate::coverage::files_under(root)?
+        .into_iter()
+        .map(|path| {
+            let name = crate::coverage::relative(root, &path)?;
+            Ok((path, name))
+        })
+        .collect::<Result<Vec<_>>>()?;
     let input_root = fs::canonicalize(root)?;
     // Require an existing parent so resolution cannot create directories inside the input tree.
     let parent = output
@@ -45,16 +54,11 @@ pub fn extract(root: &Path, output: &Path) -> Result<Export> {
         failures: 0,
         sources: Vec::new(),
     };
-    for path in inputs.iter().filter(|path| {
+    for (path, name) in inputs.iter().filter(|(path, _)| {
         path.extension().is_some_and(|extension| extension == "EMI")
             || path.file_name().is_some_and(|name| name == "SLUS_004.22")
     }) {
-        let name = path
-            .strip_prefix(root)
-            .unwrap()
-            .to_string_lossy()
-            .replace('\\', "/");
-        let result = export_archive(root, path, output, &name);
+        let result = export_archive(root, path, output, name);
         match result {
             Ok(rows) => {
                 report.exported += rows.len();
