@@ -153,6 +153,16 @@ length plus NUL, with capacities of five to seven bytes. Alignment padding,
 pointer tables and code remain outside the editable allocations. Other BATE
 strings and observed rendering remain unverified.
 
+US `SHISU.EMI` entry 0 loads at `0x801D0C00`. Its category tables at
+`0x801D9E70`, `0x801D9EA4` and `0x801D9EDC` contain five, four and five labels.
+Calls at `0x801D7F2C`, `0x801D85A8` and `0x801D8E34` pass selected strings to
+`0x8014F800`. US `SHOP.EMI` entry 0 uses the same load address, with tables at
+`0x801E5B48`, `0x801E5B7C` and `0x801E5BB4` and calls at `0x801DCA2C`,
+`0x801DD0A8` and `0x801DD934`. Each archive has its own source-bound layout.
+These `game-literal` fields also retain their original string length plus NUL,
+with capacities of five to seven bytes. Slot padding, pointers and code remain
+protected. Other strings and observed rendering remain unverified.
+
 `bof3.inline-text/v4` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
