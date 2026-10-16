@@ -177,14 +177,12 @@ def rehearse_transaction(
                 require_writer(root)
                 selection.validate()
                 watch.validate()
-                if (
-                    _capture_inputs(root, names) != inputs
-                    or digest(dict(os.environ)) != environment
-                    or git_index_backup(root) != index
-                ):
-                    raise ValueError(
-                        "rehearsal inputs, environment or Git index changed"
-                    )
+                if _capture_inputs(root, names) != inputs:
+                    raise ValueError("rehearsal inputs changed")
+                elif digest(dict(os.environ)) != environment:
+                    raise ValueError("rehearsal environment changed")
+                elif git_index_backup(root) != index:
+                    raise ValueError("rehearsal Git index changed")
 
             guard()
             verify_transaction(
