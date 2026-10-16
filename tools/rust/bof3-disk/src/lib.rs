@@ -264,7 +264,7 @@ impl Image {
     }
 
     fn read_xa_extent(&mut self, extent: u32, logical_size: u32) -> Result<Vec<u8>, Error> {
-        let sectors = u64::from(logical_size).div_ceil(RAW_XA_SIZE as u64);
+        let sectors = u64::from(logical_size).div_ceil(ISO_SECTOR_SIZE);
         let mut bytes = Vec::with_capacity(sectors as usize * RAW_XA_SIZE);
         for sector_index in 0..sectors {
             let sector = u64::from(extent)

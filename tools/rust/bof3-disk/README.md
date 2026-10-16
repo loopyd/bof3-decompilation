@@ -9,6 +9,13 @@ cooked 2048-byte images and raw 2352-byte Mode 1/Mode 2 images. CUE files with
 a local first `FILE` entry are accepted. It validates sector ranges,
 both-endian ISO9660 fields, directory records, and output names before writing.
 
+CD-XA extents use the ISO directory byte length rounded up to 2048-byte logical
+blocks. Raw XA extraction writes 2336 bytes per sector, including the subheaders
+and trailing sector data. Extracted files can therefore exceed their ISO
+directory byte length.
+`disc_lba.json` keeps the ISO byte length in `bytes` and the logical block count
+in `length`.
+
 ```sh
 CARGO_TARGET_DIR=build/tools/rust/bof3-disk \
   cargo build --manifest-path tools/rust/bof3-disk/Cargo.toml --release
@@ -52,10 +59,10 @@ mkpsxiso XML compatibility, or evidence about authorized local media.
 | Raw Mode 1/2 Form 1 files | Fixture-backed byte parity |
 | CUE parsing | Multi-file tracks, modes, INDEX 00/01, and pregaps fixture-tested |
 | Checksums and verification | Portable in-process MD5/SHA-256; integration-tested |
-| `disc_lba.json` rows | Typed serde schema, v1 lexical keys/LBA order/XA length golden-tested |
+| `disc_lba.json` rows | Typed serde schema; ISO byte and logical block counts; v1 lexical keys and LBA order |
 | Project XML | Provisional; not yet mkpsxiso-compatible |
 | License sectors | Raw 2336-byte-sector extraction implemented and fixture-tested |
-| XA file extraction | CD-XA directory attributes parsed; 2336-byte extent counting and payload extraction fixture-tested; real-disc parity pending |
+| XA file extraction | CD-XA attributes and 2048-byte logical extents parsed; 2336-byte payload extraction per sector fixture-tested; real-disc parity pending |
 | CDDA/WAV extraction | Pure-Rust stereo 44.1 kHz WAV conversion fixture-tested; real-disc parity pending |
 | Synthetic cooked ISO rebuild | Fixture-backed deterministic contract |
 | Retail-disc / raw BIN-CUE rebuild | Unsupported |

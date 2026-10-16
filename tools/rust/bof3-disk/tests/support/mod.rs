@@ -88,7 +88,7 @@ pub fn xa_fixture() -> Vec<u8> {
     let records = [
         record(20, 2048, 2, &[0]),
         record(20, 2048, 2, &[1]),
-        xa_record(24, (RAW_XA_SIZE * 2) as u32, b"STREAM.XA;1"),
+        xa_record(24, (ISO_SECTOR_SIZE * 2) as u32, b"STREAM.XA;1"),
         record(22, 2048, 2, b"DIR"),
     ];
     let mut offset = directory;

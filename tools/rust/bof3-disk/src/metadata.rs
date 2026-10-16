@@ -5,7 +5,7 @@ use quick_xml::events::{BytesEnd, BytesStart, Event};
 use quick_xml::Writer;
 use serde::Serialize;
 
-use crate::{Entry, Error};
+use crate::{Entry, Error, ISO_SECTOR_SIZE};
 
 #[derive(Serialize)]
 struct LbaDocument {
@@ -105,14 +105,13 @@ pub fn write_lba_json(
                 .file_stem()
                 .and_then(|value| value.to_str())
                 .unwrap_or("");
-            let sector_size = if entry.is_xa { 2_336 } else { 2_048 };
             LbaRow {
                 archive_name: archive_name.to_owned(),
                 archive_type: extension.clone(),
                 bytes: entry.size,
                 family: family(&entry.path),
                 lba: entry.lba,
-                length: u64::from(entry.size).div_ceil(sector_size),
+                length: u64::from(entry.size).div_ceil(ISO_SECTOR_SIZE),
                 manifest_path: (extension == "EMI")
                     .then(|| manifest_path(raw_root, extracted_root, &entry.path)),
                 name: entry
