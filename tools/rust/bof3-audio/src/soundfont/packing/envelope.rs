@@ -1,4 +1,4 @@
-//! Invert complete fitted SF2 envelopes through the source tone's release bits.
+//! Invert complete fitted SF2 envelopes through one source attack or release field.
 use crate::{
     bank::Bank,
     machine::adsr::Registers,
@@ -101,10 +101,11 @@ pub(crate) fn pack(
         }
         let (fit, matching_candidates) =
             inverse(original, requested).map_err(|e| format!("{prefix}: {e}"))?;
-        patches.push((
-            0x820 + program.tone_block * 512 + source.index * 32 + 18,
-            fit.registers.adsr2.to_le_bytes(),
-        ));
+        let offset = 0x820 + program.tone_block * 512 + source.index * 32;
+        patches.extend([
+            (offset + 16, fit.registers.adsr1.to_le_bytes()),
+            (offset + 18, fit.registers.adsr2.to_le_bytes()),
+        ]);
         tones.push(ToneReport {
             program: program.program,
             tone: source.index,
@@ -117,9 +118,9 @@ pub(crate) fn pack(
     Ok(Packed { patches, report: Report {
         schema: "bof3.audio.sf2-envelope-pack/v1", tones,
         limitations: vec![
-            "Only the source ADSR2 release shift/mode bits are searched; ADSR1 and sustain bits remain fixed. All six SF2 volume-envelope generators must exactly match a complete fit at the recorded model and probe.",
+            "Search the 64 source ADSR2 release shift/mode settings first. If none match, search the 256 ADSR1 attack mode/rate settings with the original ADSR2. Decay and sustain bits stay fixed. All six SF2 volume-envelope generators must exactly match a complete fit at the recorded model and probe.",
             "All key zones of an audible, non-stopped tone must request the same envelope. Delay/hold changes, unmatched tuples, silent/stopped tones and arbitrary ADSR or topology reconstruction are unsupported.",
-            "Equivalent candidates minimize raw release-field distance from the source, then the field value. Fits retain their approximation error; exact SF2 generators do not establish hardware or PC/PSX PCM equivalence.",
+            "Within the first matching field family, equivalent candidates minimize raw field distance from the source, then the field value; matching_candidates counts that family only. Combined attack/release searches are unsupported. Fits retain their approximation error; exact SF2 generators do not establish hardware or PC/PSX PCM equivalence.",
         ],
     }})
 }
@@ -176,26 +177,44 @@ fn fitted(fit: &Fit) -> [u16; 6] {
 }
 
 fn inverse(original: &Fit, requested: [u16; 6]) -> Result<(Fit, usize)> {
-    let mut best = None;
-    let mut rank = (u16::MAX, u16::MAX);
-    let mut count = 0;
-    for release in 0u16..64 {
-        let registers = Registers {
-            adsr1: original.registers.adsr1,
-            adsr2: (original.registers.adsr2 & !63) | release,
+    for (attack, limit) in [(false, 64), (true, 256)] {
+        let source = if attack {
+            original.registers.adsr1 >> 8
+        } else {
+            original.registers.adsr2 & 63
         };
-        let candidate = envelope::fit(registers, original.model, &original.probe)?;
-        if fitted(&candidate) != requested {
-            continue;
+        let mut best = None;
+        let mut rank = (u16::MAX, u16::MAX);
+        let mut count = 0;
+        for value in 0u16..limit {
+            let registers = if attack {
+                Registers {
+                    adsr1: (original.registers.adsr1 & 255) | (value << 8),
+                    adsr2: original.registers.adsr2,
+                }
+            } else {
+                Registers {
+                    adsr1: original.registers.adsr1,
+                    adsr2: (original.registers.adsr2 & !63) | value,
+                }
+            };
+            let candidate = envelope::fit(registers, original.model, &original.probe)?;
+            if fitted(&candidate) != requested {
+                continue;
+            }
+            count += 1;
+            let next = (value.abs_diff(source), value);
+            if next < rank {
+                rank = next;
+                best = Some(candidate);
+            }
         }
-        count += 1;
-        let next = (release.abs_diff(original.registers.adsr2 & 63), release);
-        if next < rank {
-            rank = next;
-            best = Some(candidate);
+        if let Some(fit) = best {
+            return Ok((fit, count));
         }
     }
-    best.map(|fit| (fit, count)).ok_or_else(|| {
-        "complete envelope tuple has no exact source-tone release-bit inverse".into()
-    })
+    Err(
+        "complete envelope tuple has no exact source-tone release-only or attack-only inverse"
+            .into(),
+    )
 }

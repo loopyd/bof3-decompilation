@@ -1013,27 +1013,29 @@ independent full-runtime/audio fidelity remain separate obligations.
 
 [The envelope inverse](../../../tools/rust/bof3-audio/src/soundfont/packing/envelope.rs)
 accepts a uniform volume-envelope tuple across every key zone of an audible,
-non-stopped tone when one of its 64 release shift/mode settings reproduces the
-tuple exactly. ADSR1 and the remaining ADSR2 bits stay fixed. The inverse reruns
-the complete forward fit at the source binding's ADSR model and probe; changing
-release bits can also change fitted attack, decay or sustain generators. It
-therefore compares delay, attack, hold, decay, sustain and release together.
+non-stopped tone. It first searches the 64 ADSR2 release shift/mode settings with
+ADSR1 fixed. If none match, it searches the 256 ADSR1 attack mode/rate settings
+with ADSR2 fixed. Decay and sustain bits remain unchanged. The inverse reruns
+the complete forward fit at the source binding's ADSR model and probe. A changed
+field can affect several fitted generators, so it compares delay, attack, hold,
+decay, sustain and release together.
 
 The original registers and baseline generators must agree with a fresh fit.
-Equivalent candidates minimize absolute distance from the original six-bit
-release field, then the field value. The packer changes only ADSR2 bytes, reparses
-the combined header and verifies the forward fit before returning. Unchanged
-envelopes retain their source bytes. Sample-only packing cannot authorize these
-edits. Gain, pitch, sample assignment, program population and PCM validation
-remain required before music publication.
+Within the first matching field family, equivalent candidates minimize absolute
+distance from the original field, then the field value. The packer applies the
+chosen ADSR registers, reparses the combined header and verifies the forward fit
+before returning. Unchanged envelopes retain their source bytes. Sample-only
+packing cannot authorize these edits. Gain, pitch, sample assignment, program
+population and PCM validation remain required before music publication.
 
 `bof3.audio.sf2-envelope-pack/v1`, also included in each music song report as
 `envelope_controls`, records changed program/tone/instrument identities, original
-registers, matching candidate counts and selected fits with their approximation
-errors. Exact fitted generators do not establish hardware behavior or PSX/PC
-PCM equality. Delay/hold edits, nonuniform zones, silent/stopped tones and tuples
-without an exact release-bit inverse reject. Arbitrary ADSR, topology and
-independent instrument/sample reconstruction remain open.
+registers, matching candidate counts within the selected field family and selected
+fits with their approximation errors. Exact fitted generators do not establish
+hardware behavior or PSX/PC PCM equality. Delay/hold edits, nonuniform zones,
+silent/stopped tones and tuples without an exact single-field inverse reject.
+Combined attack/release searches, arbitrary ADSR, topology and independent
+instrument/sample reconstruction remain open.
 
 ## Rust SoundFont silent-tone unmuting
 
