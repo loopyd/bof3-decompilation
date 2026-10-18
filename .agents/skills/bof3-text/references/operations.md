@@ -70,6 +70,12 @@ class and latch selectors. Re-extract former character-only documents. Each
 archive needs its own document and output; editing one does not update the other
 or a save.
 
+COMMU02 entry 8 and COMMU02B entry 7 each expose eleven menu labels through
+the inline schema. Five fields have fixed byte limits; six reserve one NUL byte.
+Edit only `text` with literal game characters. Pointer words, adjacent glyphs
+and unrelated bytes stay unchanged. Use a separate document and output for each
+archive. Other COMMU02 text and observed rendering remain unverified.
+
 COMMU00 entry 0 and AREA175 through AREA185 entry 14 each expose sixty
 five-byte default names through the same inline schema. Edit only `text` with
 literal game characters. Preserve the four attribute bytes after each field.

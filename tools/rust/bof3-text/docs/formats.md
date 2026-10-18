@@ -268,6 +268,34 @@ length in the allocation's last byte.
 displayed meanings are unverified. Other commands and pointer changes are refused.
 Re-extract older inline documents before editing or packing.
 
+The `US COMMU02 menu labels` layout covers entry 8 of `BIN/ETC/COMMU02.EMI`
+and entry 7 of `COMMU02B.EMI`, loaded at `0x801D0C00`. It exposes eleven
+literal allocations through the inline schema:
+
+| Address | Original game text | Codec | Capacity in bytes | Pointer word |
+| --- | --- | --- | --- | --- |
+| `0x801DAC54` | `HIGH` | `game-fixed-literal` | 4 | None |
+| `0x801DAC58` | `LOW` | `game-fixed-literal` | 3 | None |
+| `0x801DAC5C` | `SET` | `game-fixed-literal` | 3 | None |
+| `0x801DACA8` | `Cash` | `game-fixed-literal` | 4 | None |
+| `0x801DACB0` | `Pot` | `game-fixed-literal` | 3 | None |
+| `0x801DB010` | `OK` | `game-literal` | 3 | `0x801DB038` |
+| `0x801DB014` | `Del` | `game-literal` | 4 | `0x801DB03C` |
+| `0x801DB018` | `Next` | `game-literal` | 5 | `0x801DB040` |
+| `0x801DB020` | `Back` | `game-literal` | 5 | `0x801DB044` |
+| `0x801DB028` | `End` | `game-literal` | 4 | `0x801DB048` |
+| `0x801DB034` | `.` | `game-literal` | 2 | `0x801DB054` |
+
+Fixed fields use their full capacity. The other capacities include one NUL byte.
+The marker's original byte is `0x3E`, which the game character table maps to `.`.
+Consumer `0x801D2CD0` draws the indexed HIGH/LOW/SET fields through `0x8014F800`
+with limits four, three and three. Calls `0x801D320C` and `0x801D3334` draw Cash
+and Pot with limits four and three. Calls `0x801D9868` and `0x801D98CC` pass
+the five menu pointers and the separate marker to `0x8014FC90`, with limits
+sixteen and one. Packing preserves pointers, alignment bytes, adjacent currency
+glyphs and all other payload bytes. Other COMMU02 text and observed rendering
+remain unverified.
+
 The `US COMMU00 default names` layout covers entry 0 of `BIN/ETC/COMMU00.EMI`
 and entry 14 of `BIN/WORLD04/AREA175.EMI` through `AREA185.EMI`. Each payload
 loads at `0x801EEC00`. Its sixty nine-byte records start at `0x801F2700`.

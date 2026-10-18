@@ -400,6 +400,26 @@ struct Layout {
 
 const LAYOUTS: &[Layout] = &[
     Layout {
+        name: "US COMMU02 menu labels",
+        load: 0x801d0c00,
+        size: 42208,
+        sha256: "8686cbcbd2a7298c68d33ccff80c9d5483c2f830b7d3574f3a82e405638d9877",
+        consumers: &[0x801d2cd0, 0x801d320c, 0x801d3334, 0x801d9868, 0x801d98cc],
+        allocations: &[
+            Allocation::fixed_literal(0x801dac54, 4),
+            Allocation::fixed_literal(0x801dac58, 3),
+            Allocation::fixed_literal(0x801dac5c, 3),
+            Allocation::fixed_literal(0x801daca8, 4),
+            Allocation::fixed_literal(0x801dacb0, 3),
+            Allocation::literal(0x801db010, 3, Some(0x801db038), &[0x8014fc90]),
+            Allocation::literal(0x801db014, 4, Some(0x801db03c), &[0x8014fc90]),
+            Allocation::literal(0x801db018, 5, Some(0x801db040), &[0x8014fc90]),
+            Allocation::literal(0x801db020, 5, Some(0x801db044), &[0x8014fc90]),
+            Allocation::literal(0x801db028, 4, Some(0x801db048), &[0x8014fc90]),
+            Allocation::literal(0x801db034, 2, Some(0x801db054), &[0x8014fc90]),
+        ],
+    },
+    Layout {
         name: "US COMMU00 default names",
         load: 0x801eec00,
         size: 15696,

@@ -159,6 +159,13 @@ For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 Re-extract former character-only documents. Default `--entry all` selects banks.
 See [formats.md](formats.md#default-character-names).
 
+For COMMU02 menu labels, select `--entry 8` in `ETC/COMMU02.EMI` or
+`--entry 7` in `ETC/COMMU02B.EMI`, below `BIN`. The inline document contains
+eleven literal fields. Edit only `text`; fixed fields use their full byte
+capacity, while the other fields reserve one NUL byte. Packing preserves all
+pointer words and unrelated bytes. Each archive needs its own document and
+output. See [inline formats](formats.md#inline-overlay-text) for field limits.
+
 For COMMU00 default names, select `--entry 0` in `ETC/COMMU00.EMI` or
 `--entry 14` in `WORLD04/AREA175.EMI` through `AREA185.EMI`, below `BIN`.
 The inline document contains sixty five-byte literal fields. Edit only `text`;
