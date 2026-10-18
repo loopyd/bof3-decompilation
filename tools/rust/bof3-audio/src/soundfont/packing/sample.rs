@@ -80,9 +80,9 @@ pub fn pack_bank(
     {
         tones.header[offset..offset + 2].copy_from_slice(&bytes);
     }
+    crate::soundfont::packing::envelope::verify(&tones.header, &envelopes.report)?;
     tones.header = crate::soundfont::packing::program::apply(&tones.header, &populated_programs)?;
     crate::bank::Bank::parse(&tones.header)?;
-    crate::soundfont::packing::envelope::verify(&tones.header, &envelopes.report)?;
     tones.report.output_header_sha256 = sha256_hex(&tones.header);
     Ok(PackedBank {
         header: tones.header,

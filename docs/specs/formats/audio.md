@@ -3986,7 +3986,7 @@ ffmpeg -f psxstr -i wrapped_2352.str -vn output.wav
 - Area→BGM mapping: lives in scenario controller code, not yet lifted.
 
 
-## Initial channel programs and editable empty programs
+## Initial channel programs and editable program layers
 
 The exact US executable's SEP open routine at `0x8016B38C` calls the initializer
 at `0x8016B4B8`. Its loop at `0x8016B580..0x8016B59C` writes channel index to
@@ -4009,20 +4009,29 @@ instrument; XML distinguishes their playback indices from original VAB samples
 and tones. Standard SF2 consumers may allocate a short silent voice, unlike the
 game's no-allocation behavior. Reports state that approximation.
 
-To populate an empty program, edit its SF2 preset to reference one to sixteen
-existing VAB tone instruments, in the desired layer order, and give its bank-128
-percussion alias the same assignments. These are tone templates: packing copies
-their validated, edited VAB rows into a new program block and changes the owning
-program reference. Templates must share program volume, priority, mode and pan.
+To populate an empty program or replace a populated program's layers, edit its
+SF2 preset to reference one to sixteen existing VAB tone instruments in the
+desired order. Give its bank-128 percussion alias the same assignments when
+present. Existing layers may be reordered, duplicated, removed or replaced;
+each changed program must retain at least one layer. These are tone templates:
+packing copies their validated, edited VAB rows and changes the owning program
+reference. Templates must share program volume, priority, mode and pan, which
+become the destination program's controls.
 Their supported gain, tuning, sample assignment and PCM edits still pass through
 the existing inverses. Shared instrument edits also affect the original programs
-that use those instruments. Creating independent new instrument/sample structures,
-changing preset-level generators/modulators, or replacing populated program
-assignments remains unsupported and rejects explicitly.
+that use those instruments. Simultaneous program replacements copy from the
+validated source rows before any program is rearranged. Creating independent
+new instrument/sample structures or changing preset-level generators/modulators
+remains unsupported and rejects explicitly.
 
 Packing inserts new 512-byte tone blocks in ascending program order, updates
-program/tone totals and declared size, and preserves old blocks, sample-size
-table, body and opaque trailer. Growth must fit the original EMI sector
+program/tone totals and declared size. Existing destination blocks retain their
+validated unused rows; unrelated blocks remain intact. Layer counts and template
+controls are the only changed program-table fields. The sample-size table, body
+and opaque trailer remain intact. Replacing existing layers does not resize their
+512-byte block. The `populated_programs` report includes both new populations
+and replacements with their ordered source program/tone/instrument identities.
+Growth must fit the original EMI sector
 allocation and a verified game VH/SEP/SPU layout. Alias conflicts, more than
 16 layers and capacity failures publish nothing. The shared generated silent
 instrument is not a VAB tone template and its unrepresented edits reject.

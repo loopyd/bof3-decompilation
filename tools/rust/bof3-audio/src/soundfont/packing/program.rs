@@ -1,9 +1,10 @@
-//! Populate empty VAB programs from explicitly assigned, validated tone instruments.
+//! Rebuild VAB program layers from explicitly assigned, validated tone instruments.
 use crate::{bank::Bank, soundfont::bank as binding, soundfont::reader::Font, Result};
 use serde::Serialize;
 use std::collections::BTreeMap;
 
 #[derive(Debug, Serialize)]
+/// One program's replacement layers, including population of an empty slot.
 pub struct Population {
     pub program: u8,
     pub tones: Vec<Tone>,
@@ -23,6 +24,17 @@ pub(crate) fn derive(
     if baseline.presets.len() != edited.presets.len() {
         return Err("SF2 program edit: preset insertion/removal changes program identities".into());
     }
+    let programs: Vec<_> = binding
+        .programs
+        .iter()
+        .map(|p| (p.source_program, p.sf2_preset, p.percussion_preset))
+        .chain(
+            binding
+                .empty_programs
+                .iter()
+                .map(|p| (p.source_program, p.sf2_preset, p.percussion_preset)),
+        )
+        .collect();
     let mut changed = false;
     for (index, (before, after)) in baseline.presets.iter().zip(&edited.presets).enumerate() {
         let mut normalized = after.clone();
@@ -35,15 +47,13 @@ pub(crate) fn derive(
         }
         if before.zones != after.zones {
             changed = true;
-            if !binding
-                .empty_programs
+            if !programs
                 .iter()
-                .any(|p| p.sf2_preset == index || p.percussion_preset == Some(index))
+                .any(|&(_, preset, alias)| preset == index || alias == Some(index))
             {
-                return Err(format!(
-                    "SF2 program edit: replacing populated preset {index} is unsupported"
-                )
-                .into());
+                return Err(
+                    format!("SF2 program edit: preset {index} has no source program").into(),
+                );
             }
         }
     }
@@ -72,27 +82,24 @@ pub(crate) fn derive(
         }
     }
     let mut output = Vec::new();
-    for empty in &binding.empty_programs {
-        let before = &baseline.presets[empty.sf2_preset];
-        let after = &edited.presets[empty.sf2_preset];
-        if let Some(alias) = empty.percussion_preset {
+    for (program, preset, alias) in programs {
+        let before = &baseline.presets[preset];
+        let after = &edited.presets[preset];
+        if let Some(alias) = alias {
             if edited.presets[alias].zones != after.zones {
-                return Err(format!(
-                    "SF2 program {}: melodic and percussion alias assignments must agree",
-                    empty.source_program
-                )
-                .into());
+                let action = if binding.programs.iter().any(|p| p.source_program == program) {
+                    "replacing populated"
+                } else {
+                    "populating empty"
+                };
+                return Err(format!("SF2 program edit: {action} preset {preset}: melodic and percussion alias assignments must agree").into());
             }
         }
         if before.zones == after.zones {
             continue;
         }
         if after.zones.is_empty() || after.zones.len() > 16 {
-            return Err(format!(
-                "SF2 program {}: VAB requires 1..=16 tones",
-                empty.source_program
-            )
-            .into());
+            return Err(format!("SF2 program {}: VAB requires 1..=16 tones", program).into());
         }
         let mut tones = Vec::new();
         for zone in &after.zones {
@@ -113,16 +120,13 @@ pub(crate) fn derive(
                 sf2_instrument: target,
             });
         }
-        output.push(Population {
-            program: empty.source_program,
-            tones,
-        });
+        output.push(Population { program, tones });
     }
     Ok(output)
 }
 
 /// Existing tone edits are already inverted. Copy their resulting raw rows and
-/// preserve every old block, sample-size table byte and opaque header trailer.
+/// retain unused destination rows, unrelated blocks and the sample-size table/tail.
 pub(crate) fn apply(header: &[u8], populations: &[Population]) -> Result<Vec<u8>> {
     if populations.is_empty() {
         return Ok(header.to_vec());
@@ -134,9 +138,18 @@ pub(crate) fn apply(header: &[u8], populations: &[Population]) -> Result<Vec<u8>
     {
         return Err("SF2 program edit: inconsistent original VAB program/tone totals".into());
     }
-    let programs = bank.programs.len() + populations.len();
-    let tones =
-        usize::from(bank.declared_tones) + populations.iter().map(|p| p.tones.len()).sum::<usize>();
+    let replaced: usize = populations
+        .iter()
+        .filter_map(|p| bank.programs.iter().find(|old| old.program == p.program))
+        .map(|p| p.tones.len())
+        .sum();
+    let added = populations
+        .iter()
+        .filter(|p| !bank.programs.iter().any(|old| old.program == p.program))
+        .count();
+    let programs = bank.programs.len() + added;
+    let tones = usize::from(bank.declared_tones) - replaced
+        + populations.iter().map(|p| p.tones.len()).sum::<usize>();
     if programs > 128 || tones > 2048 {
         return Err("SF2 program edit: VAB program/tone capacity exceeded".into());
     }
@@ -153,7 +166,10 @@ pub(crate) fn apply(header: &[u8], populations: &[Population]) -> Result<Vec<u8>
             .find(|p| p.program == population.tones[0].source_program)
             .ok_or("SF2 program edit: source program missing")?;
         let first_attr = &header[0x20 + usize::from(first.program) * 16..][..16];
-        let mut block = vec![0; 512];
+        let mut block = blocks
+            .get(&population.program)
+            .cloned()
+            .unwrap_or_else(|| vec![0; 512]);
         for (index, tone) in population.tones.iter().enumerate() {
             let source = bank
                 .programs
@@ -175,9 +191,7 @@ pub(crate) fn apply(header: &[u8], populations: &[Population]) -> Result<Vec<u8>
         let attr = &mut output[0x20 + usize::from(population.program) * 16..][..16];
         attr[0] = population.tones.len() as u8;
         attr[1..5].copy_from_slice(&first_attr[1..5]);
-        if blocks.insert(population.program, block).is_some() {
-            return Err("SF2 program edit: destination is not empty".into());
-        }
+        blocks.insert(population.program, block);
     }
     for block in blocks.values() {
         output.extend(block);
