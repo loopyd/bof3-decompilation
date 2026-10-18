@@ -10,16 +10,17 @@ use emi_ex_v2::image::ArchiveImage;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Error, Result, bank,
+    Error, Result, bank, bank_image,
     catalog::{self, Index, Resource},
     digest::sha256_hex,
     formats,
     png::{self, IndexedImage},
     resident,
     sources::{self, Input},
+    sprite_bank,
 };
 
-pub const SCHEMA: &str = "bof3.textures-package/v1";
+pub const SCHEMA: &str = "bof3.textures-package/v2";
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -27,6 +28,14 @@ pub struct Snapshot {
     pub source: String,
     pub member: String,
     pub sha256: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct BankImage {
+    pub root: usize,
+    pub image: usize,
+    pub member: String,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
@@ -39,6 +48,8 @@ pub struct Export {
     pub indices_8: Option<String>,
     pub decoded: Option<String>,
     pub animation: Option<String>,
+    pub sprite: Option<String>,
+    pub bank_images: Vec<BankImage>,
     pub palette_binding: String,
 }
 
@@ -91,6 +102,34 @@ fn exports(index: &Index) -> Vec<Export> {
                     .resident_animation
                     .as_ref()
                     .map(|_| format!("{directory}/animation.json")),
+                sprite: resource
+                    .sprite_bank
+                    .as_ref()
+                    .map(|_| format!("{directory}/sprite.json")),
+                bank_images: resource
+                    .sprite_bank
+                    .as_ref()
+                    .map(|bank| {
+                        bank.image_modes
+                            .iter()
+                            .enumerate()
+                            .flat_map(|(root, modes)| {
+                                let directory = &directory;
+                                modes
+                                    .iter()
+                                    .enumerate()
+                                    .filter(|(_, mode)| matches!(mode, 1 | 2))
+                                    .map(move |(image, _)| BankImage {
+                                        root,
+                                        image,
+                                        member: format!(
+                                            "{directory}/root-{root}/image-{image}.png"
+                                        ),
+                                    })
+                            })
+                            .collect()
+                    })
+                    .unwrap_or_default(),
                 palette_binding: if resource.palette_upload.is_some() {
                     "palette-word source; draw CLUT selection and texture uses are unresolved"
                 } else {
@@ -121,6 +160,68 @@ fn image(resource: &Resource, payload: &[u8], bits: u8) -> Result<IndexedImage> 
     })
 }
 
+fn bank_image_view(source: &[u8], descriptor: &bank_image::Info) -> Result<IndexedImage> {
+    if !matches!(descriptor.mode, 1 | 2) {
+        return Err(Error::Invalid(
+            "bank PNG requires an indexed mode-1 or mode-2 record".into(),
+        ));
+    }
+    Ok(IndexedImage {
+        width: usize::from(descriptor.width_words) * 2,
+        height: usize::from(descriptor.height),
+        indices: bank_image::decode(source, descriptor.offset, descriptor.end)?.bytes,
+        palette_bgra: grayscale(),
+    })
+}
+
+fn import_bank(root: &Path, export: &Export, original: &[u8]) -> Result<Vec<u8>> {
+    let decoded = bank::decode(original)?.bytes;
+    let Some(member) = &export.sprite else {
+        return Ok(original.to_vec());
+    };
+    let document: sprite_bank::Document =
+        serde_json::from_slice(&read_member(root, member, 64 * 1024 * 1024)?)?;
+    let original_document = sprite_bank::decode(&decoded)?;
+    let mut planes = Vec::with_capacity(export.bank_images.len());
+    for view in &export.bank_images {
+        let descriptor = &original_document.roots[view.root].images[view.image];
+        let expected = bank_image_view(&decoded, descriptor)?;
+        let imported = png::decode(&read_member(
+            root,
+            &view.member,
+            (png::MAX_PIXELS * 2 + 65536) as u64,
+        )?)?;
+        if imported.width != expected.width
+            || imported.height != expected.height
+            || imported.palette_bgra != expected.palette_bgra
+        {
+            return Err(Error::Invalid(format!(
+                "{}: preserve dimensions and diagnostic palette; edit exact palette words in sprite.json",
+                view.member
+            )));
+        }
+        planes.push(imported.indices);
+    }
+    let edits: Vec<_> = export
+        .bank_images
+        .iter()
+        .zip(&planes)
+        .map(|(view, bytes)| sprite_bank::ImageEdit {
+            root: view.root,
+            image: view.image,
+            bytes,
+        })
+        .collect();
+    let intended = sprite_bank::encode_images(&decoded, &document, &edits)?;
+    let encoded = bank::encode(&intended, original)?;
+    if bank::decode(&encoded)?.bytes != intended {
+        return Err(Error::Invalid(
+            "packed sprite bank differs from intended logical records".into(),
+        ));
+    }
+    Ok(encoded)
+}
+
 pub fn unpack(input: &Input, destination: &Path) -> Result<Manifest> {
     let index = catalog::build(input)?;
     let stage = Stage::new(destination, &input.path)?;
@@ -149,7 +250,19 @@ pub fn unpack(input: &Input, destination: &Path) -> Result<Manifest> {
                 .ok_or_else(|| Error::Invalid(format!("{} exceeds snapshot", resource.id)))?;
             stage.write(&export.raw, raw)?;
             if let Some(member) = &export.decoded {
-                stage.write(member, &bank::decode(raw)?.bytes)?;
+                let decoded = bank::decode(raw)?.bytes;
+                stage.write(member, &decoded)?;
+                if let Some(member) = &export.sprite {
+                    let document = sprite_bank::decode(&decoded)?;
+                    stage.write(member, &serde_json::to_vec_pretty(&document)?)?;
+                    for view in &export.bank_images {
+                        let descriptor = &document.roots[view.root].images[view.image];
+                        stage.write(
+                            &view.member,
+                            &png::encode(&bank_image_view(&decoded, descriptor)?)?,
+                        )?;
+                    }
+                }
             }
             if let Some(member) = &export.animation {
                 stage.write(member, &serde_json::to_vec_pretty(&resident::decode(raw)?)?)?;
@@ -293,14 +406,21 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
                 && read_member(&root, member, 1024 * 1024)? != bank::decode(raw)?.bytes
             {
                 return Err(Error::Invalid(format!(
-                    "{member}: decoded bank view is read-only; internal editable layouts remain unresolved"
+                    "{member}: decoded bank view is read-only; use qualified sprite.json and indexed PNG views"
                 )));
             }
             let mut edit = ByteEdits::new(raw);
-            edit.add(
-                &export.raw,
-                read_member(&root, &export.raw, resource.size.max(1))?,
-            )?;
+            let imported_raw = read_member(&root, &export.raw, resource.size.max(1))?;
+            if resource.bank.is_some() && imported_raw != raw {
+                return Err(Error::Invalid(format!(
+                    "{}: compressed raw bank is read-only; use its qualified editable views",
+                    export.raw
+                )));
+            }
+            edit.add(&export.raw, imported_raw)?;
+            if let Some(member) = &export.sprite {
+                edit.add(member, import_bank(&root, export, raw)?)?;
+            }
             if let Some(member) = &export.animation {
                 let document: resident::Document =
                     serde_json::from_slice(&read_member(&root, member, 16 * 1024 * 1024)?)?;
@@ -351,6 +471,7 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
                 if resource.upload.is_none()
                     && resource.palette_upload.is_none()
                     && resource.resident_animation.is_none()
+                    && resource.sprite_bank.is_none()
                 {
                     return Err(Error::Invalid(format!(
                         "{} is preservation-only; editable layout is unresolved",

@@ -3,14 +3,15 @@
 //! Callers qualify record locations and allocations. This owner does not select
 //! bank roots, palettes, GPU texture modes, or destination coordinates.
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use crate::{Error, Result, lzss, packed};
 
 const MAX_BANK_BYTES: usize = 1024 * 1024;
 const HEADER_BYTES: usize = 8;
 
-#[derive(Clone, Debug, Serialize, PartialEq, Eq)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
 pub struct Info {
     pub offset: usize,
     pub end: usize,

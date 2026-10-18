@@ -229,11 +229,11 @@ pub fn encode(values: &[u8], original: &[u8]) -> Result<Vec<u8>> {
     }
     literal(&mut encoded, &values[pending..]);
     encoded.push(0xff);
-    if encoded.len() > original.len() {
+    if encoded.len() > decoded.info.consumed_bytes {
         return Err(Error::Codec(format!(
-            "outer-bank edit needs {} bytes; original allocation is {}",
+            "outer-bank edit needs {} bytes; original consumed span is {}",
             encoded.len(),
-            original.len()
+            decoded.info.consumed_bytes
         )));
     }
     let mut output = original.to_vec();

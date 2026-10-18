@@ -5,13 +5,12 @@ self-contained archive packages. It can edit raw VRAM upload words, their
 4-bit or 8-bit index interpretations, and qualified palette-word banks within
 their original allocations.
 It also edits qualified resident animation step pairs and five-byte cell records.
-
-It also decodes qualified outer compressed banks into read-only byte views.
-Their internal sprite records remain unresolved.
+Recognized three-root sprite banks have editable index planes, palette words,
+programs, and cells, with both compression layers bounded by their original spans.
 
 Full graphics support is incomplete. Category discovery lists the intended game
 roles, but current resource roles, CLUT associations, sprite composition,
-reverse playback callers, internal codec bindings, and runtime appearance remain unresolved.
+reverse playback callers, unsupported bank variants, and runtime appearance remain unresolved.
 Strict coverage and complete verification return exit 1. A successful raw upload
 edit does not establish its appearance in the game.
 
@@ -102,7 +101,7 @@ JSON on standard output, including when `--json` is omitted.
 
 ## Catalog
 
-The index schema is `bof3.textures-index/v1`. A resource ID combines release,
+The index schema is `bof3.textures-index/v2`. A resource ID combines release,
 original path, and EMI slot or file locator. Equal hashes retain distinct original
 locations. Each record has its byte offset, size, hash, kind, game categories,
 storage, decode and pack status, evidence, dependencies, known uses, and findings.
@@ -121,7 +120,7 @@ executable after changing its interpretation sources.
 
 ## Edit packages
 
-The manifest schema is `bof3.textures-package/v1`. The package includes complete
+The manifest schema is `bof3.textures-package/v2`. The package includes complete
 snapshots of the captured inputs, raw resources, its bound catalog, and coverage. A
 qualified raw upload also has `words.json` and indexed `indices-4.png` and
 `indices-8.png` views. These PNGs use diagnostic grayscale. They do not identify
@@ -132,9 +131,29 @@ little-endian PSX color words. Preserve the word count. These banks have proven
 source and staging addresses, but their draw CLUT selections and texture uses
 remain unresolved. Editing a bank does not assign it to a diagnostic image.
 
-A qualified outer compressed bank also has a `decoded.bin` view. Packing requires
-this view to match the original decoded bytes. Internal image, palette, cell, and
-animation records need separate qualification before these views become editable.
+A qualified outer compressed bank has a read-only `decoded.bin` view. Recognized
+three-root banks also export `sprite.json` with schema `bof3.sprite-bank/v1`, plus
+`root-N/image-N.png` views for mode-1 and mode-2 records. Query them with
+`--kind sprite-bank`. The catalog's `sprite_bank` field reports the record counts
+and image modes. PNG width is twice the record's VRAM word width; each pixel
+preserves one decoded byte. Its grayscale palette is diagnostic.
+
+In `sprite.json`, edit each palette record's 32 unsigned 16-bit `words`, existing
+program step pairs, and existing cell parts. The step and part rules below also
+apply here. Keep root order, section offsets, image descriptors, record extents,
+and list lengths unchanged. Palette records do not establish a complete image
+CLUT: decoded images can select indices above 31. Exact words preserve STP, but
+the neighboring colors, draw CLUT, and runtime palette updates remain unresolved.
+
+Edit PNG indices while preserving dimensions and the diagnostic palette.
+Mode-1 records accept indices from 0 to 31; mode-2 records accept 0 to 255.
+Changed aliases must agree on their complete palette, program, cell, or image
+record. Unchanged aliases do not override an edit. Both image streams and the
+outer bank must fit their original consumed byte spans. Following pointers and
+unconsumed bytes do not grant extra capacity. Packing preserves selection tails,
+opaque flags, headers, pointer tables, codec metadata, and unrelated bytes.
+The bank's `raw.bin` and `decoded.bin` are read-only; use its qualified views.
+Unsupported internal variants retain read-only decoded bytes and refusal findings.
 
 A recognized resident animation bank has an editable `animation.json` document
 with schema `bof3.resident-animation/v2`.
@@ -214,8 +233,7 @@ not establish CLUT boundaries, upload timing, or the appearance of an edited ass
 The library's `packed` module implements the mode-1 byte expansion consumed at
 `SLUS_004.22@0x8014E7F8`. Six five-bit values occupy bit positions 0, 5, 10, 16,
 21, and 26 in each little-endian word. Encoding preserves bits 15 and 31 and
-unused tail values. Source-bank records and consumer bindings remain unresolved,
-so this primitive does not yet add editable sprite packages to the CLI.
+unused tail values. The three-root owner below binds these records to qualified bank sections.
 
 The `lzss` module implements the mode-2 byte stream consumed at
 `SLUS_004.22@0x8014E8FC`. It retains the four-byte opaque prefix and uses
@@ -223,8 +241,7 @@ LSB-first flags with a 512-byte dictionary. The initial cursor is `0x1ee`;
 only dictionary offsets below it are initialized to zero. Reading an unwritten
 offset fails. Final-reference bytes beyond the declared image length are
 reported separately and preserved during encoding. Unchanged streams remain
-exact, and edited streams must fit the original allocation. Source-bank and
-sprite bindings remain unresolved, so the CLI does not yet edit these streams.
+exact, and edited streams must fit the original allocation. The three-root owner supplies the source extents used by editable packages.
 
 The `bank` module implements the outer stream consumed at
 `SLUS_004.22@0x80164064`, with forward overlapping copies at `0x801642F4`.
@@ -232,9 +249,9 @@ Qualified type-1 entries loaded at `0x8003b800` have a six-byte header and an
 `0xff` terminator. Decoded size must match the first header word and cannot
 exceed 1 MiB. The decoder rejects references before the output start. The library
 inverse preserves unchanged streams exactly, retains opaque header and trailing
-bytes, and requires edited output to fit the original allocation. This byte
-inverse does not validate logical sprite edits. The CLI exports decoded bytes
-for inspection and refuses changes to them during packing.
+bytes, and requires edited output to fit the original consumed span. This byte
+inverse does not validate logical sprite edits. Packages validate their record
+edits through the three-root owner before encoding the outer bank.
 
 The `bank_image` library reads the eight-byte records consumed at
 `SLUS_004.22@0x8014e6d0`. The header stores a 16-bit width in VRAM words,
@@ -246,8 +263,19 @@ the surrounding bank, and codec metadata. Edited streams must fit a separately
 qualified allocation. Without proven reusable tail bytes, callers must bound
 encoding at the original consumed length. A following image or animation pointer
 does not establish free space. The library preserves mode-2 final-token overshoot
-separately from image bytes. Bank-root selection, palette bindings, and runtime
-appearance remain unresolved, so this record owner has no CLI edit route yet.
+separately from image bytes. The three-root owner supplies these extents for package edits. Draw CLUT
+bindings and runtime appearance remain unresolved.
+
+The `sprite_bank` owner recognizes the three-root table selected by
+`BIN/ETC/GAME.EMI#0@0x801c1254`. Each root contains ordered image, palette,
+program, and selection sections. The first relative offset delimits each table;
+image and palette tables use 32-bit offsets, and program tables use 16-bit
+offsets. Each table has at most 256 indices. The palette consumer at
+`SLUS_004.22@0x80166c48` copies 32 words per selected record. The selection
+consumer at `0x8014dc08` can skip an image upload according to entity state.
+Selection tails stay opaque: contained triples do not establish valid runtime
+indices or editable records. Recognizing these sections does not assign a bank
+to a field or battle category.
 
 Input files are bounded at 128 MiB, indexed images at 1,048,576 pixels, and each
 codec process at 20 seconds. Invalid extents, malformed images, changed snapshots,
@@ -269,8 +297,8 @@ durations remain durations in this path. Switching from forward initialization
 to reverse first fetches the current token again. A zero duration lasts 256
 consumer updates. Missing cell references cause an error, including high-token
 operands that are valid forward targets but exceed the cell table in reverse.
-Caller reachability, game direction mapping, cell rendering, and compressed-bank
-bindings remain unresolved.
+Caller reachability, game direction mapping, and rendered composition remain
+unresolved. The three-root owner binds forward programs to compressed banks.
 
 The `resident` module binds the recognized type-0 `0x800d3800` table variant to
 the original base initialization at `0x8014ebb8` and program selection at
