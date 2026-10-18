@@ -113,17 +113,23 @@ substrings. Other filters match exact identifiers. Filters combine with AND.
 Resources remain in original-file and slot order. Empty results do not prove
 that a category is absent from the game.
 
-Qualified content mappings identify the glyph and icon atlas in `FIRST.EMI`
-entry 3, and the logo and raster-label atlases in `DEMO.EMI` entries 3 through 5.
-They retain `unclassified-graphics` because their complete logical regions and
-uses remain unresolved. The `font`, `interface`, and `system-screen` filters
-select these known content roles. An image can contain rasterized text even
-when it also has another graphics role.
+Qualified content mappings recognize glyphs, portraits, interface graphics and
+logo or raster-label images in `FIRST.EMI`, `ENDKANJI.EMI`, `SHISU.EMI` and
+`DEMO.EMI`. Use the `font`, `portrait`, `interface` and `system-screen` category
+filters to discover these resources. Equal font, portrait and logo bytes keep
+their separate original locators. They retain `unclassified-graphics` because
+their complete logical regions and uses remain unresolved. An image can contain
+rasterized text even when it also has another graphics role.
 
-These atlases name their physical palette sources in `dependencies`. A `partial`
-palette association records original consumer coordinates and source ranges;
-it does not establish runtime loading or the selected palette at every call.
+Atlases with qualified consumer evidence name their physical palette sources in
+`dependencies`. Content recognition alone leaves the palette unresolved. A
+`partial` palette association records original consumer coordinates and source
+ranges; it does not establish runtime loading or the selected palette at every call.
 `FIRST.EMI` entry 8 covers only 16 of the 8x8 renderer's 64 possible CLUT selectors.
+The `SHISU.EMI` portrait mapping names both physical palette banks. Twelve bounded
+selection records describe 40x48 rectangles and their palette columns on rows
+481 and 482. They do not prove the complete valid selection domain or cover the
+atlas's other interface regions.
 The palette's `uses` field lists the associated original atlas IDs. Other palette,
 page, resident-base, and upload-order dependencies remain visible and unresolved.
 
