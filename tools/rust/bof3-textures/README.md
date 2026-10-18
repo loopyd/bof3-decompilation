@@ -101,7 +101,7 @@ JSON on standard output, including when `--json` is omitted.
 
 ## Catalog
 
-The index schema is `bof3.textures-index/v3`. A resource ID combines release,
+The index schema is `bof3.textures-index/v4`. A resource ID combines release,
 original path, and EMI slot or file locator. Equal hashes retain distinct original
 locations. Each record has its byte offset, size, hash, kind, game categories,
 storage, decode and pack status, evidence, dependencies, known uses, and findings.
@@ -136,6 +136,21 @@ selection records describe 40x48 rectangles and their palette columns on rows
 atlas's other interface regions.
 The palette's `uses` field lists the associated original atlas IDs. Other palette,
 page, resident-base, and upload-order dependencies remain visible and unresolved.
+
+Qualified bank destinations in the `PL`, `BPLD` and `BPLU` source families have a
+`stream_request` record. It identifies the original EXE request family, index,
+loader slot, disc LBA and three selector identifiers. Only the 19 qualified
+members of each family are mapped. The original request function accepts a byte
+index without enforcing these family extents. The identifiers do not establish
+character names, ages, actions or game roles.
+
+Use `--dependency stream-request` or `--dependency root-selection` to find these
+records. The edges name the original EXE and GAME entry 0 consumer. They remain
+unresolved when those files are outside the captured input and partial when the
+consumers are captured. A request does not prove that loading finished or that a
+particular root is active. The `resident-base` edge retains those limits. Some
+archives declare both raw and compressed writes to `0x8003b800`; their active
+phase, overwrite order, palette selection and draw-time state remain unresolved.
 
 Query checks source content and inventory plus the compiled schema, qualification,
 format, package, and mapping policy. It refuses a stale or altered catalog and

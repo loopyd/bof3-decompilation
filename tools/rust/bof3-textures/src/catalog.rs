@@ -10,10 +10,10 @@ use crate::{
     palette::PaletteUpload,
     resident, save_icon,
     sources::{self, Input, SourceFile},
-    sprite_bank,
+    sprite_bank, stream_family,
 };
 
-pub const SCHEMA: &str = "bof3.textures-index/v3";
+pub const SCHEMA: &str = "bof3.textures-index/v4";
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -111,6 +111,7 @@ pub struct Resource {
     pub palette_upload: Option<PaletteUpload>,
     pub bank: Option<bank::Info>,
     pub sprite_bank: Option<sprite_bank::Info>,
+    pub stream_request: Option<stream_family::Request>,
     pub resident_animation: Option<resident::Info>,
     pub save_icon: Option<save_icon::Info>,
     pub findings: Vec<String>,
@@ -150,6 +151,7 @@ pub fn interpretation_hash() -> String {
             include_str!("resident.rs"),
             include_str!("cell.rs"),
             include_str!("sprite_bank.rs"),
+            include_str!("stream_family.rs"),
             include_str!("aliases.rs"),
             include_str!("interface.rs"),
             include_str!("save_icon.rs"),
@@ -205,6 +207,7 @@ pub fn build_from(
                     palette_upload: None,
                     bank: None,
                     sprite_bank: None,
+                    stream_request: None,
                     resident_animation: None,
                     save_icon: None,
                     findings: vec!["logical records and consumers have not been enumerated".into()],
@@ -457,6 +460,7 @@ pub fn build_from(
                 palette_upload: None,
                 bank: None,
                 sprite_bank: None,
+                stream_request: None,
                 resident_animation: None,
                 save_icon: None,
                 findings,
@@ -464,6 +468,7 @@ pub fn build_from(
         }
     }
     crate::interface::annotate(&mut resources)?;
+    stream_family::annotate(&mut resources);
     Ok(Index {
         schema: SCHEMA.into(),
         release: sources::RELEASE.into(),
