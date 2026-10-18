@@ -243,12 +243,34 @@ is rejected.
 
 ## Format and evidence limits
 
-Verification reports structure, dependencies, decoding, unchanged reconstruction,
-edited reconstruction, unrelated bytes, and runtime evidence separately. The
-input verifier currently establishes captured structure, qualified raw-word
-decoding, palette-word inverses, and outer-bank decompression. The pack operation
-checks reconstruction and unrelated bytes for its own outputs. Neither report
-establishes full category or runtime acceptance.
+Verification uses `bof3.textures-verification/v2` and reports structure,
+dependencies, decoding, unchanged reconstruction, edited reconstruction,
+unrelated bytes, and runtime evidence separately. On original inputs it exercises
+the supported word, index, palette, bank, sprite, resident-record and save-icon
+inverses, then compares complete reconstructed files with the originals.
+Unknown resources remain preserved bytes with unsupported inverse status.
+
+To check packed outputs independently, retain the edit package and run:
+
+```sh
+build/tools/rust/bof3-textures/release/bof3-textures verify out/textures/packed --package out/textures/dragon-upload --json
+```
+
+The verifier reconstructs intended output from the package without publishing
+files. It reads the actual output tree, decodes its supported views, compares
+them with the intended edits, and checks every byte outside the intended change
+positions. Header fields, archive padding and gaps inside edited resources are
+included. The check refuses symlink traversal in output members. Missing files,
+malformed archives, changed allocations and mismatched views produce failed
+properties in the JSON report.
+
+`byte_checks_passed` describes only these byte and source-view checks. For example,
+an intact edited icon with damaged neighboring code can pass the edited-view
+comparison while failing unrelated-byte preservation. The report retains file
+and resource hashes and failure details. Neither byte equality nor decoded views
+establish full category, palette-loading or runtime acceptance. Verification
+returns exit 1 while full acceptance remains incomplete, even when its byte
+checks pass. Invalid input or an invalid edit package returns exit 2.
 Use `coverage --strict` to expose unresolved logical sources and dependencies;
 its nonzero result is expected while those findings remain.
 

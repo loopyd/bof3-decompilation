@@ -417,165 +417,9 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
     let stage = Stage::new(destination, &root)?;
     let mut reports = Vec::new();
     for (source, snapshot) in manifest.index.files.iter().zip(&manifest.snapshots) {
-        let original = read_member(&root, &snapshot.member, sources::MAX_FILE_BYTES)?;
-        if original.len() as u64 != source.size || sha256_hex(&original) != source.sha256 {
-            return Err(Error::Invalid(format!(
-                "altered original snapshot {}",
-                source.path
-            )));
-        }
-        let mut replacements: Vec<(usize, Vec<u8>)> = Vec::new();
-        let mut affected = Vec::new();
-        for (resource, export) in manifest
-            .index
-            .resources
-            .iter()
-            .zip(&manifest.exports)
-            .filter(|(resource, _)| resource.source == source.path)
-        {
-            let raw =
-                &original[resource.offset as usize..(resource.offset + resource.size) as usize];
-            if let Some(member) = &export.decoded
-                && read_member(&root, member, 1024 * 1024)? != bank::decode(raw)?.bytes
-            {
-                return Err(Error::Invalid(format!(
-                    "{member}: decoded bank view is read-only; use qualified sprite.json and indexed PNG views"
-                )));
-            }
-            let mut edit = ByteEdits::new(raw);
-            let imported_raw = read_member(&root, &export.raw, resource.size.max(1))?;
-            if resource.bank.is_some() && imported_raw != raw {
-                return Err(Error::Invalid(format!(
-                    "{}: compressed raw bank is read-only; use its qualified editable views",
-                    export.raw
-                )));
-            }
-            edit.add(&export.raw, imported_raw)?;
-            if let Some(member) = &export.sprite {
-                edit.add(member, import_bank(&root, export, raw)?)?;
-            }
-            if let Some(member) = &export.animation {
-                let document: resident::Document =
-                    serde_json::from_slice(&read_member(&root, member, 16 * 1024 * 1024)?)?;
-                edit.add(member, resident::encode(raw, &document)?)?;
-            }
-            if let (Some(palette), Some(member)) = (&resource.palette_upload, &export.words) {
-                let words: Vec<u16> =
-                    serde_json::from_slice(&read_member(&root, member, 16 * 1024 * 1024)?)?;
-                edit.add(member, palette.encode_words(&words, raw)?)?;
-            }
-            if let Some(info) = &resource.save_icon {
-                let original_images = save_icon::decode(raw, info)?;
-                if let Some(member) = &export.words {
-                    let mut images = original_images.clone();
-                    images.palette.words =
-                        serde_json::from_slice(&read_member(&root, member, 65536)?)?;
-                    edit.add(member, save_icon::encode(raw, info, &images)?)?;
-                }
-                for (frame, member) in export.save_frames.iter().enumerate() {
-                    let imported = png::decode(&read_member(&root, member, 65536)?)?;
-                    if imported.width != info.width || imported.height != info.height {
-                        return Err(Error::Invalid(format!(
-                            "{member}: save-icon frames must keep their 16 by 16 dimensions"
-                        )));
-                    }
-                    let mut images = original_images.clone();
-                    images.frames[frame] = original_images.palette.import_indices(&imported)?;
-                    edit.add(member, save_icon::encode(raw, info, &images)?)?;
-                }
-            }
-            if let Some(upload) = &resource.upload {
-                if let Some(member) = &export.words {
-                    let words: Vec<u16> =
-                        serde_json::from_slice(&read_member(&root, member, 16 * 1024 * 1024)?)?;
-                    edit.add(member, upload.encode_words(&words, raw)?)?;
-                }
-                for (bits, member) in [(4, &export.indices_4), (8, &export.indices_8)] {
-                    if let Some(member) = member {
-                        let original_image = image(resource, raw, bits)?;
-                        let imported = png::decode(&read_member(
-                            &root,
-                            member,
-                            (png::MAX_PIXELS * 2 + 65536) as u64,
-                        )?)?;
-                        if imported.width != original_image.width
-                            || imported.height != original_image.height
-                            || imported.palette_bgra != original_image.palette_bgra
-                        {
-                            return Err(Error::Invalid(format!(
-                                "{member}: preserve dimensions and diagnostic palette; a game CLUT edit requires a verified source binding"
-                            )));
-                        }
-                        let words = formats::words_from_indices(&imported.indices, bits)?;
-                        edit.add(member, upload.encode_words(&words, raw)?)?;
-                    }
-                }
-            }
-            let bytes = edit.finish()?;
-            if let Some(info) = &resource.save_icon {
-                save_icon::validate_edit(raw, &bytes, info)?;
-            }
-            if resource.resident_animation.is_some()
-                && resident::encode(raw, &resident::decode(&bytes)?)? != bytes
-            {
-                return Err(Error::Invalid(format!(
-                    "{}: resident edits must preserve all bytes outside existing step pairs and qualified cell records",
-                    resource.id
-                )));
-            }
-            if bytes != raw {
-                if resource.upload.is_none()
-                    && resource.palette_upload.is_none()
-                    && resource.resident_animation.is_none()
-                    && resource.sprite_bank.is_none()
-                    && resource.save_icon.is_none()
-                {
-                    return Err(Error::Invalid(format!(
-                        "{} is preservation-only; editable layout is unresolved",
-                        resource.id
-                    )));
-                }
-                let entry = resource
-                    .entry
-                    .ok_or_else(|| Error::Invalid("non-archive edit is unresolved".into()))?;
-                replacements.push((entry, bytes));
-                affected.push(resource.id.clone());
-            }
-        }
-        let output = if source.emi_entries.is_some() {
-            let archive = ArchiveImage::from_bytes(original.clone())?;
-            let borrowed: Vec<_> = replacements
-                .iter()
-                .map(|(slot, bytes)| (*slot, bytes.as_slice()))
-                .collect();
-            let output = archive.replace_entries(&borrowed)?;
-            for (slot, intended) in &replacements {
-                if output.entry(*slot)? != intended {
-                    return Err(Error::Invalid(format!(
-                        "{} entry {slot}: encoded output mismatch",
-                        source.path
-                    )));
-                }
-            }
-            verify_unrelated(&archive, &output, &replacements)?;
-            output.bytes().to_vec()
-        } else {
-            original.clone()
-        };
-        if replacements.is_empty() && output != original {
-            return Err(Error::Invalid(format!(
-                "{} unchanged reconstruction differs",
-                source.path
-            )));
-        }
-        stage.write(&source.path, &output)?;
-        reports.push(PackedFile {
-            source: source.path.clone(),
-            original_sha256: source.sha256.clone(),
-            output_sha256: sha256_hex(&output),
-            edited_entries: replacements.iter().map(|(slot, _)| *slot).collect(),
-            affected_resources: affected,
-        });
+        let reconstructed = reconstruct(&root, &manifest, source, snapshot)?;
+        stage.write(&source.path, &reconstructed.output)?;
+        reports.push(reconstructed.report);
     }
     let edited = reports.iter().any(|file| !file.edited_entries.is_empty());
     let report = PackReport {
@@ -603,6 +447,181 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
     )?;
     stage.publish()?;
     Ok(report)
+}
+
+pub(crate) struct Reconstruction {
+    pub original: Vec<u8>,
+    pub output: Vec<u8>,
+    pub report: PackedFile,
+}
+
+pub(crate) fn reconstruct(
+    root: &Path,
+    manifest: &Manifest,
+    source: &sources::SourceFile,
+    snapshot: &Snapshot,
+) -> Result<Reconstruction> {
+    let original = read_member(root, &snapshot.member, sources::MAX_FILE_BYTES)?;
+    if original.len() as u64 != source.size || sha256_hex(&original) != source.sha256 {
+        return Err(Error::Invalid(format!(
+            "altered original snapshot {}",
+            source.path
+        )));
+    }
+    let mut replacements: Vec<(usize, Vec<u8>)> = Vec::new();
+    let mut affected = Vec::new();
+    for (resource, export) in manifest
+        .index
+        .resources
+        .iter()
+        .zip(&manifest.exports)
+        .filter(|(resource, _)| resource.source == source.path)
+    {
+        let raw = &original[resource.offset as usize..(resource.offset + resource.size) as usize];
+        if let Some(member) = &export.decoded
+            && read_member(root, member, 1024 * 1024)? != bank::decode(raw)?.bytes
+        {
+            return Err(Error::Invalid(format!(
+                "{member}: decoded bank view is read-only; use qualified sprite.json and indexed PNG views"
+            )));
+        }
+        let mut edit = ByteEdits::new(raw);
+        let imported_raw = read_member(root, &export.raw, resource.size.max(1))?;
+        if resource.bank.is_some() && imported_raw != raw {
+            return Err(Error::Invalid(format!(
+                "{}: compressed raw bank is read-only; use its qualified editable views",
+                export.raw
+            )));
+        }
+        edit.add(&export.raw, imported_raw)?;
+        if let Some(member) = &export.sprite {
+            edit.add(member, import_bank(root, export, raw)?)?;
+        }
+        if let Some(member) = &export.animation {
+            let document: resident::Document =
+                serde_json::from_slice(&read_member(root, member, 16 * 1024 * 1024)?)?;
+            edit.add(member, resident::encode(raw, &document)?)?;
+        }
+        if let (Some(palette), Some(member)) = (&resource.palette_upload, &export.words) {
+            let words: Vec<u16> =
+                serde_json::from_slice(&read_member(root, member, 16 * 1024 * 1024)?)?;
+            edit.add(member, palette.encode_words(&words, raw)?)?;
+        }
+        if let Some(info) = &resource.save_icon {
+            let original_images = save_icon::decode(raw, info)?;
+            if let Some(member) = &export.words {
+                let mut images = original_images.clone();
+                images.palette.words = serde_json::from_slice(&read_member(root, member, 65536)?)?;
+                edit.add(member, save_icon::encode(raw, info, &images)?)?;
+            }
+            for (frame, member) in export.save_frames.iter().enumerate() {
+                let imported = png::decode(&read_member(root, member, 65536)?)?;
+                if imported.width != info.width || imported.height != info.height {
+                    return Err(Error::Invalid(format!(
+                        "{member}: save-icon frames must keep their 16 by 16 dimensions"
+                    )));
+                }
+                let mut images = original_images.clone();
+                images.frames[frame] = original_images.palette.import_indices(&imported)?;
+                edit.add(member, save_icon::encode(raw, info, &images)?)?;
+            }
+        }
+        if let Some(upload) = &resource.upload {
+            if let Some(member) = &export.words {
+                let words: Vec<u16> =
+                    serde_json::from_slice(&read_member(root, member, 16 * 1024 * 1024)?)?;
+                edit.add(member, upload.encode_words(&words, raw)?)?;
+            }
+            for (bits, member) in [(4, &export.indices_4), (8, &export.indices_8)] {
+                if let Some(member) = member {
+                    let original_image = image(resource, raw, bits)?;
+                    let imported = png::decode(&read_member(
+                        root,
+                        member,
+                        (png::MAX_PIXELS * 2 + 65536) as u64,
+                    )?)?;
+                    if imported.width != original_image.width
+                        || imported.height != original_image.height
+                        || imported.palette_bgra != original_image.palette_bgra
+                    {
+                        return Err(Error::Invalid(format!(
+                            "{member}: preserve dimensions and diagnostic palette; a game CLUT edit requires a verified source binding"
+                        )));
+                    }
+                    let words = formats::words_from_indices(&imported.indices, bits)?;
+                    edit.add(member, upload.encode_words(&words, raw)?)?;
+                }
+            }
+        }
+        let bytes = edit.finish()?;
+        if let Some(info) = &resource.save_icon {
+            save_icon::validate_edit(raw, &bytes, info)?;
+        }
+        if resource.resident_animation.is_some()
+            && resident::encode(raw, &resident::decode(&bytes)?)? != bytes
+        {
+            return Err(Error::Invalid(format!(
+                "{}: resident edits must preserve all bytes outside existing step pairs and qualified cell records",
+                resource.id
+            )));
+        }
+        if bytes != raw {
+            if resource.upload.is_none()
+                && resource.palette_upload.is_none()
+                && resource.resident_animation.is_none()
+                && resource.sprite_bank.is_none()
+                && resource.save_icon.is_none()
+            {
+                return Err(Error::Invalid(format!(
+                    "{} is preservation-only; editable layout is unresolved",
+                    resource.id
+                )));
+            }
+            let entry = resource
+                .entry
+                .ok_or_else(|| Error::Invalid("non-archive edit is unresolved".into()))?;
+            replacements.push((entry, bytes));
+            affected.push(resource.id.clone());
+        }
+    }
+    let output = if source.emi_entries.is_some() {
+        let archive = ArchiveImage::from_bytes(original.clone())?;
+        let borrowed: Vec<_> = replacements
+            .iter()
+            .map(|(slot, bytes)| (*slot, bytes.as_slice()))
+            .collect();
+        let output = archive.replace_entries(&borrowed)?;
+        for (slot, intended) in &replacements {
+            if output.entry(*slot)? != intended {
+                return Err(Error::Invalid(format!(
+                    "{} entry {slot}: encoded output mismatch",
+                    source.path
+                )));
+            }
+        }
+        verify_unrelated(&archive, &output, &replacements)?;
+        output.bytes().to_vec()
+    } else {
+        original.clone()
+    };
+    if replacements.is_empty() && output != original {
+        return Err(Error::Invalid(format!(
+            "{} unchanged reconstruction differs",
+            source.path
+        )));
+    }
+    let report = PackedFile {
+        source: source.path.clone(),
+        original_sha256: source.sha256.clone(),
+        output_sha256: sha256_hex(&output),
+        edited_entries: replacements.iter().map(|(slot, _)| *slot).collect(),
+        affected_resources: affected,
+    };
+    Ok(Reconstruction {
+        original,
+        output,
+        report,
+    })
 }
 
 fn verify_unrelated(

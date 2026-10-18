@@ -152,6 +152,7 @@ pub fn interpretation_hash() -> String {
             include_str!("aliases.rs"),
             include_str!("interface.rs"),
             include_str!("save_icon.rs"),
+            include_str!("verification.rs"),
         ]
         .join("\n")
         .as_bytes(),
@@ -604,24 +605,5 @@ pub fn coverage(index: &Index) -> serde_json::Value {
         "unresolved_dependencies": index.resources.iter().flat_map(|resource| resource.dependencies.iter().filter(|edge| edge.status != "verified").map(|edge| serde_json::json!({"resource": resource.id, "dependency": edge}))).collect::<Vec<_>>(),
         "runtime": {"status": "unobserved", "consumer_families": []},
         "blockers": blockers
-    })
-}
-
-pub fn verify(index: &Index) -> serde_json::Value {
-    serde_json::json!({
-        "schema": "bof3.textures-verification/v1", "release": index.release, "complete": false,
-        "inventory_sha256": index.inventory_sha256,
-        "structure": {"status": "verified", "scope": "qualified-original-inputs", "files": index.files.len()},
-        "dependencies": {"status": "unresolved"},
-        "decode": {"status": "partial", "raw_word_uploads": index.resources.iter().filter(|resource| resource.upload.is_some()).count(),
-            "palette_banks": index.resources.iter().filter(|resource| resource.palette_upload.is_some()).count(),
-            "compressed_banks": index.resources.iter().filter(|resource| resource.bank.is_some()).count(),
-            "sprite_banks": index.resources.iter().filter(|resource| resource.sprite_bank.is_some()).count(),
-            "resident_animation_banks": index.resources.iter().filter(|resource| resource.resident_animation.is_some()).count(),
-            "save_icon_sources": index.resources.iter().filter(|resource| resource.save_icon.is_some()).count()},
-        "unchanged_reconstruction": {"status": "unverified"},
-        "edited_reconstruction": {"status": "unverified"},
-        "unrelated_bytes": {"status": "unverified"},
-        "runtime": {"status": "unobserved"}, "coverage": coverage(index)
     })
 }

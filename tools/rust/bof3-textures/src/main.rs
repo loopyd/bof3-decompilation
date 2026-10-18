@@ -93,8 +93,11 @@ enum Command {
     /// Report independent verification properties; incomplete verification returns exit 1.
     Verify {
         input: PathBuf,
-        #[arg(long)]
+        #[arg(long, conflicts_with = "package")]
         source: Option<String>,
+        /// Compare this output directory with intent reconstructed from an edit package.
+        #[arg(long)]
+        package: Option<PathBuf>,
         #[arg(long)]
         json: bool,
     },
@@ -192,9 +195,21 @@ fn run(cli: Cli) -> Result<bool> {
             print_json(&catalog::coverage(&index))?;
             return Ok(!strict);
         }
-        Command::Verify { input, source, .. } => {
-            let index = catalog::build(&sources::qualify(&input, source.as_deref())?)?;
-            print_json(&catalog::verify(&index))?;
+        Command::Verify {
+            input,
+            source,
+            package,
+            ..
+        } => {
+            let report = if let Some(package) = package {
+                bof3_textures::verification::output(&input, &package)?
+            } else {
+                bof3_textures::verification::original(&sources::qualify(
+                    &input,
+                    source.as_deref(),
+                )?)?
+            };
+            print_json(&report)?;
             return Ok(false);
         }
     }
