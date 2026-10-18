@@ -4034,25 +4034,30 @@ it with audible tone templates is unsupported. Simultaneous replacements and
 populations may still copy validated source rows from programs being cleared.
 
 Appended instruments may reconstruct independent tone rows while using validated
-sample allocations and source key zones. An audible, non-stopped source tone may
-also supply a nonempty contiguous subset of its known keys. Retain each selected
-singleton key zone in its original order, with no gaps. A different key range
+sample allocations and source key zones. An audible source tone may also supply a
+nonempty contiguous subset of its known positive-pitch keys. Retain each selected
+singleton key zone in its original order, with no gaps. Stopped keys outside the
+selected range remain in the original instrument. The appended instrument must
+contain only positive, representable pitches. A different key range
 requires the hash-identified original pitch reference. Every key must produce a
 representable mapping through a verified pitch table. Mutable adjacent-data
 reads and zero or unrepresentable pitches reject the edit.
 
 The inverse changes a private source row and its tuning contexts before
 validating the requested controls. Existing subsets retain their recorded
-contexts; expanded or shifted ranges use original-routine measurements. Original
-instruments keep their original keys and order. Name each appended instrument
+contexts; expanded or shifted ranges use original-routine measurements. A source
+with stopped keys still retains its original PCM allocation. Expanded or shifted
+audible ranges use that allocation and its loop mode, including when every
+original key was stopped. This does not activate or remove an original stopped
+key. Original instruments keep their original keys and order. Name each appended instrument
 `PpppTtt`, using its lowest numbered
 melodic destination program and first layer, such as `P001T00`. Names preserve the
 new destination identity; they do not identify or authorize a source template.
 Every appended instrument must be assigned to a program.
 
 Packing matches the full key-zone and generator structure against regenerated
-audible, non-stopped source contexts. Each candidate passes the existing gain,
-tuning, envelope and sample-assignment inverses independently. Multiple matching
+audible source contexts with positive selected pitches. Each candidate passes the
+existing gain, tuning, envelope and sample-assignment inverses independently. Multiple matching
 contexts must produce identical raw tone bytes apart from the owning program
 word, and identical program controls. Other ambiguity rejects. The original tone
 and its independent copies may request different supported controls. Gaps,

@@ -128,7 +128,26 @@ fn expand(
     tone.key_min = keys.0;
     tone.key_max = keys.1;
     let selected = reference.tone(&tone, baseline.samples[source.sf2_sample].rate)?;
-    let template = &baseline.instruments[source.sf2_instrument].zones[0];
+    let mut template = baseline.instruments[source.sf2_instrument].zones[0].clone();
+    if !source.stopped_keys.is_empty() {
+        let sample = binding
+            .samples
+            .iter()
+            .find(|sample| sample.sf2_sample == Some(source.sf2_sample))
+            .ok_or("SF2 independent tone: missing original PCM allocation")?;
+        template.target = Some(source.sf2_sample);
+        for (operator, amount) in [
+            (53, u16::try_from(source.sf2_sample)?),
+            (54, u16::from(sample.loop_range.is_some())),
+        ] {
+            template
+                .generators
+                .iter_mut()
+                .find(|g| g.operator == operator)
+                .ok_or("SF2 independent tone: incomplete source sample generators")?
+                .amount = amount;
+        }
+    }
     let mut zones = Vec::new();
     for row in &selected {
         let parameters = row
@@ -161,6 +180,11 @@ fn source_view(
     selected: Vec<crate::voice::tuning::KeyTuning>,
     zones: Vec<crate::soundfont::reader::model::Zone>,
 ) -> Result<SourceView> {
+    if selected.is_empty() || selected.iter().any(|row| row.sf2.is_none()) {
+        return Err(
+            "SF2 independent tone: selected keys require positive representable pitches".into(),
+        );
+    }
     let source = &binding.tones[tone_index];
     let key_min = selected[0].key;
     let key_max = selected[selected.len() - 1].key;
@@ -181,6 +205,7 @@ fn source_view(
     tone.source_tone.key_min = key_min;
     tone.source_tone.key_max = key_max;
     tone.context.tuning = selected;
+    tone.stopped_keys.clear();
     tone.zone_count = zones.len();
     // Only the private control view changes; the outer packer checks all
     // original raw tables and retains every original instrument.
@@ -249,7 +274,7 @@ pub(crate) fn independent(
         let mut matches = 0;
         let mut first_error = None;
         for (source_index, source) in binding.tones.iter().enumerate() {
-            if source.silent || !source.stopped_keys.is_empty() || requested_keys.is_none() {
+            if source.silent || requested_keys.is_none() {
                 continue;
             }
             let original_shape = shape(&baseline.instruments[source.sf2_instrument].zones);
@@ -277,7 +302,11 @@ pub(crate) fn independent(
             }
             let result = (|| -> Result<[u8; 32]> {
                 let view = match keys.clone() {
-                    Some(keys) if keys == (0..original_shape.len()) => None,
+                    Some(keys)
+                        if keys == (0..original_shape.len()) && source.stopped_keys.is_empty() =>
+                    {
+                        None
+                    }
                     Some(keys) => Some(narrow(binding, header, baseline, source_index, keys)?),
                     None => Some(expand(
                         binding,
@@ -365,7 +394,7 @@ pub(crate) fn independent(
             }
             matches += 1;
         }
-        let selected = selected.ok_or_else(|| format!("SF2 independent tone {index}: no audible, non-stopped source context reconstructs the request{}",
+        let selected = selected.ok_or_else(|| format!("SF2 independent tone {index}: no audible source context with representable selected keys reconstructs the request{}",
             first_error.map_or(String::new(), |e| format!(": {e}"))))?;
         let row = &selected.row;
         output.report.push(IndependentReport {
