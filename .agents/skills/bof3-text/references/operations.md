@@ -65,14 +65,14 @@ The tool preserves stats and other record bytes. These fields do not use
 dialogue command markup. Other name families require separate evidence.
 
 US START entry 8 and STATUS entry 0 each expose ten counted labels and eight
-default names through `bof3.inline-text/v5`. Select the entry explicitly and omit
+default names through `bof3.inline-text/v6`. Select the entry explicitly and omit
 class and latch selectors. Re-extract former character-only documents. Each
 archive needs its own document and output; editing one does not update the other
 or a save.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v5`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v6`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -89,6 +89,11 @@ three. Optional widths use 1..4 with optional zero padding; other conversions ar
 refused. The masked row's final renderer is unverified and records `null`.
 Retain that value. See the [inline format contract](../../../../tools/rust/bof3-text/docs/formats.md)
 for argument bounds and allocation sizes.
+AREA030, AREA089 and AREA129 entry 4 each expose two unsigned sixteen-bit decimal
+formats and two fixed twelve-byte labels. Numeric output is bounded by five
+bytes, but the first format's draw limit remains three characters. Preserve
+the formats' arguments and both size bounds; fixed labels accept literal game
+characters in all twelve bytes. Runtime rendering remains unverified.
 Corpus export includes these documents alongside bank documents.
 Battle append row 1 also accepts `{glyph(0xNN)}`, with a nonzero operand and at most
 five encoded bytes. Other command-bearing and untraced table rows are refused.

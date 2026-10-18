@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v5";
+pub const SCHEMA: &str = "bof3.inline-text/v6";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -22,6 +22,7 @@ pub(crate) enum Codec {
     AsciiSignedDecimalPairFormat,
     AsciiU8DecimalFormat,
     AsciiU7DecimalFormat,
+    AsciiU16DecimalFormat,
 }
 
 impl Codec {
@@ -58,6 +59,7 @@ impl Codec {
         let (arguments, limit): (&[usize], usize) = match self {
             Self::AsciiSignedDecimalPairFormat => (&[4, 4], 9),
             Self::AsciiU8DecimalFormat | Self::AsciiU7DecimalFormat => (&[3], 3),
+            Self::AsciiU16DecimalFormat => (&[5], 5),
             _ => return Ok(None),
         };
         let size = decimal_format_size(text, arguments)?;
@@ -111,6 +113,7 @@ impl Codec {
             Self::AsciiSignedDecimalPairFormat => "ascii-signed-decimal-pair-format",
             Self::AsciiU8DecimalFormat => "ascii-u8-decimal-format",
             Self::AsciiU7DecimalFormat => "ascii-u7-decimal-format",
+            Self::AsciiU16DecimalFormat => "ascii-u16-decimal-format",
         }
     }
 
@@ -274,10 +277,10 @@ struct Allocation {
 }
 
 impl Allocation {
-    const fn fixed_name(address: u32) -> Self {
+    const fn fixed_literal(address: u32, capacity: usize) -> Self {
         Self {
             address,
-            capacity: 5,
+            capacity,
             reference: None,
             renderer: Some(0x8014f800),
             codec: Codec::GameFixedLiteral,
@@ -351,6 +354,29 @@ struct Layout {
 
 const LAYOUTS: &[Layout] = &[
     Layout {
+        name: "US AREA030 panel text",
+        load: 0x801d0c00,
+        size: 75285,
+        sha256: "f1ff752e7cac1a5f198aba917c8072910bc1be1625eb1d14af128fa7ca915205",
+        consumers: &[0x801e1004, 0x801e1320],
+        allocations: &[
+            Allocation::bounded_decimal(
+                0x801d0c38,
+                4,
+                Codec::AsciiU16DecimalFormat,
+                Some(0x8014f800),
+            ),
+            Allocation::bounded_decimal(
+                0x801d0c8c,
+                4,
+                Codec::AsciiU16DecimalFormat,
+                Some(0x8014f800),
+            ),
+            Allocation::fixed_literal(0x801e28c4, 12),
+            Allocation::fixed_literal(0x801e28d0, 12),
+        ],
+    },
+    Layout {
         name: "US AREA008 decimal formats",
         load: 0x801f2c00,
         size: 10232,
@@ -389,14 +415,14 @@ const LAYOUTS: &[Layout] = &[
             Allocation::counted(0x801d0d08),
             Allocation::counted(0x801d0d1c),
             Allocation::counted(0x801d0d30),
-            Allocation::fixed_name(0x801eb514),
-            Allocation::fixed_name(0x801eb5b8),
-            Allocation::fixed_name(0x801eb65c),
-            Allocation::fixed_name(0x801eb700),
-            Allocation::fixed_name(0x801eb7a4),
-            Allocation::fixed_name(0x801eb848),
-            Allocation::fixed_name(0x801eb8ec),
-            Allocation::fixed_name(0x801eb990),
+            Allocation::fixed_literal(0x801eb514, 5),
+            Allocation::fixed_literal(0x801eb5b8, 5),
+            Allocation::fixed_literal(0x801eb65c, 5),
+            Allocation::fixed_literal(0x801eb700, 5),
+            Allocation::fixed_literal(0x801eb7a4, 5),
+            Allocation::fixed_literal(0x801eb848, 5),
+            Allocation::fixed_literal(0x801eb8ec, 5),
+            Allocation::fixed_literal(0x801eb990, 5),
         ],
     },
     Layout {

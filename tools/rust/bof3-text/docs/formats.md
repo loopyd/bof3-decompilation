@@ -115,7 +115,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v5`. Its eighteen strings include
+Extract the selected entry as `bof3.inline-text/v6`. Its eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -192,7 +192,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v5` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v6` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderer`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -236,6 +236,35 @@ A null renderer retains formatter-to-buffer evidence without claiming a display
 consumer. Keep this value unchanged when editing. Code references are pinned
 outside the allocations; no pointer-word reference is inferred from them.
 Observed rendering remains unverified for all three formats.
+
+The `US AREA030 panel text` layout covers entry 4 of the original US
+`WORLD00/AREA030.EMI`, `WORLD02/AREA089.EMI` and `WORLD03/AREA129.EMI` archives
+below `BIN`. Each payload loads at `0x801D0C00`. Each archive requires its own
+source-bound document and edited output.
+
+| Address | Original text | Capacity | Codec |
+| --- | --- | --- | --- |
+| `0x801D0C38` | `%3d` | 4 | `ascii-u16-decimal-format` |
+| `0x801D0C8C` | `%4d` | 4 | `ascii-u16-decimal-format` |
+| `0x801E28C4` | `Manillo` | 12 | `game-fixed-literal` |
+| `0x801E28D0` | `????????????` | 12 | `game-fixed-literal` |
+
+The numeric formats retain one decimal argument bounded by `[0, 65535]`, at
+most five formatted bytes before NUL, and at most three encoded ASCII bytes.
+They accept `%d` with an optional width from 1 to 4. Zero padding cannot fit
+these allocations. Other conversions, missing arguments and extra literals
+that exceed either bound are refused. Consumer `0x801E1004` uses the first
+format with both a byte and a masked sixteen-bit result. Consumer `0x801E1320`
+uses the second with a masked sixteen-bit result. Both call `0x8014F800`.
+The first consumer preserves its three-character draw limit; the second uses
+five. The formatter's output bound does not prove that every digit appears
+within the first consumer's shorter draw limit.
+
+The two labels use the game's literal encoding and all twelve field bytes.
+Consumer `0x801E1004` copies twelve bytes, appends NUL in the destination buffer
+and calls `0x8014F800` with a fifteen-character limit. Shorter edits zero-fill
+the remaining field bytes. Other labels, dynamic record names and runtime
+rendering remain unverified.
 
 Recognition pins the complete selected payload outside these allocations.
 Packing additionally binds the complete archive hash, canonical source path,
