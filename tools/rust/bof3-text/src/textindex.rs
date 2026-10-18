@@ -1,26 +1,13 @@
-//! The retained corpus text index.
+//! Retained corpus readings and verified literal documents.
 //!
-//! One artifact records where text lives across every archive, so a later corpus query is a
-//! scan of this file rather than a scan of the disc. Three properties are deliberate:
-//!
-//! - **Deterministic.** No timestamp, no map iteration order, archives sorted by path and
-//!   instances sorted by `(archive, entry, offset)`. Two runs over unchanged inputs must
-//!   produce byte-identical output, and that is asserted by the corpus evidence.
-//! - **Fresh.** The header carries a digest over every archive's path, size and content, so
-//!   [`current_hash`] can prove whether an existing index still describes the inputs. A
-//!   content digest is used rather than mtime because mtime alone reported "fresh" for this
-//!   repository's other staleness checks while the content had changed.
-//! - **Honest about which field is searchable.** [`Instance::reading`] is the
-//!   command-transparent reading and is *the* search field; [`Instance::text`] is decoded
-//!   text for display only and contains raw token spellings, so searching it would match
-//!   command bytes.
-//!
-//! Banked subfiles contribute their rows; every other subfile contributes the scanner's
-//! latches, so a non-text subfile contributes only its text-like runs. An index over one
-//! corpus is not a claim about any other build.
+//! Inputs and instances have deterministic path order. Content and filter digests
+//! decide freshness. Bank and heuristic rows store command-transparent readings;
+//! literal documents retain their codec and source metadata. Search reproduces hits
+//! from their owning source before reporting offsets. Coverage remains a separate gate.
 
 use std::collections::BTreeMap;
 use std::fs;
+use std::io::Read;
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
@@ -32,9 +19,9 @@ use crate::models::{Error, Result, TextClass};
 use crate::search;
 
 /// Schema identifier of the index artifact.
-pub const INDEX_SCHEMA: &str = "bof3.text-index/v1";
+pub const INDEX_SCHEMA: &str = "bof3.text-index/v2";
 /// Index schema version.
-pub const INDEX_VERSION: u32 = 1;
+pub const INDEX_VERSION: u32 = 2;
 
 /// A non-cryptographic 128-bit FNV-1a digest.
 ///
@@ -144,9 +131,11 @@ pub struct Inputs {
     pub root: String,
     /// Archives found.
     pub archives: usize,
-    /// Total archive bytes read.
+    /// PS-X executable inputs found.
+    pub executables: usize,
+    /// Total source bytes read.
     pub bytes: u64,
-    /// Digest over every archive's relative path, size and content.
+    /// Digest over every source's relative path, size and content.
     pub hash: String,
     /// Digest of the window registry the index was built under; a changed registry invalidates it.
     #[serde(default)]
@@ -174,15 +163,25 @@ pub struct Index {
     pub tool: String,
     /// No generation timestamp is stored: it would make repeat runs differ.
     pub inputs: Inputs,
-    /// Instance count per class, class name to count.
+    /// Bank and heuristic counts by class; verified literal counts by source schema.
     pub counts: BTreeMap<String, usize>,
     /// Subfiles of a known class that failed to parse, as `archive#entry`, so a gap is
     /// visible instead of silent.
     pub skipped: Vec<String>,
     pub instances: Vec<Instance>,
+    pub literals: Vec<crate::literalindex::Document>,
 }
 
 impl Index {
+    pub fn instance_count(&self) -> usize {
+        self.instances.len()
+            + self
+                .literals
+                .iter()
+                .map(crate::literalindex::Document::rows)
+                .sum::<usize>()
+    }
+
     /// Whether archive bytes and every index-building filter still agree.
     pub fn is_fresh(&self, current: &Inputs, filters_hash: &str) -> bool {
         self.inputs.hash == current.hash && self.inputs.filters_hash == filters_hash
@@ -211,7 +210,7 @@ fn stamp(root: &Path, path: &Path) -> Result<ArchiveStamp> {
         .and_then(|time| time.duration_since(std::time::UNIX_EPOCH).ok())
         .map(|elapsed| elapsed.as_secs());
     Ok(ArchiveStamp {
-        path: relative_name(root, path),
+        path: crate::coverage::relative(root, path)?,
         size: metadata.len(),
         mtime,
     })
@@ -253,10 +252,36 @@ pub fn manifest_diff(
     differences
 }
 
-fn absorb(digest: &mut Digest, root: &Path, path: &Path, data: &[u8]) {
-    digest.update(relative_name(root, path).as_bytes());
+fn absorb(digest: &mut Digest, name: &str, data: &[u8]) {
+    digest.update(name.as_bytes());
     digest.update(&(data.len() as u64).to_le_bytes());
     digest.update(data);
+}
+
+fn is_archive(path: &Path) -> bool {
+    path.extension()
+        .is_some_and(|value| value.eq_ignore_ascii_case("EMI"))
+}
+
+/// Strict paths and a header check include executable inputs independently of filenames.
+fn sources(root: &Path) -> Result<Vec<PathBuf>> {
+    if root.to_str().is_none() {
+        return Err(Error::Invalid("index paths must be UTF-8".into()));
+    }
+    let mut found = Vec::new();
+    for path in crate::coverage::files_under(root)? {
+        crate::coverage::relative(root, &path)?;
+        if is_archive(&path) {
+            found.push(path);
+            continue;
+        }
+        let mut header = Vec::with_capacity(8);
+        fs::File::open(&path)?.take(8).read_to_end(&mut header)?;
+        if crate::executable::is_executable(&header) {
+            found.push(path);
+        }
+    }
+    Ok(found)
 }
 
 /// Every `*.EMI` under `root`, sorted by path.
@@ -398,7 +423,7 @@ fn collect(
     Ok((tally, details))
 }
 
-/// Build the index over every archive under `root`.
+/// Build the index over EMI and executable sources under `root`.
 pub fn build(
     root: &Path,
     windows: &crate::windows::WindowIndex,
@@ -407,10 +432,11 @@ pub fn build(
     readability: crate::filters::Readability,
 ) -> Result<Index> {
     let filters = crate::filters::compose(windows, payloads, vocabulary, readability);
-    let paths = archives(root)?;
+    let paths = sources(root)?;
     let mut digest = Digest::new();
     let mut manifest = Vec::with_capacity(paths.len());
     let mut instances = Vec::new();
+    let mut literals = Vec::new();
     let mut skipped = Vec::new();
     let mut tally = crate::lexagraph::Tally::default();
     let mut windows_detail: Vec<crate::lexagraph::WindowDetail> = Vec::new();
@@ -419,9 +445,13 @@ pub fn build(
         let data = fs::read(path)
             .map_err(|error| Error::Invalid(format!("{}: {error}", path.display())))?;
         bytes += data.len() as u64;
-        absorb(&mut digest, root, path, &data);
+        let archive = crate::coverage::relative(root, path)?;
+        absorb(&mut digest, &archive, &data);
         manifest.push(stamp(root, path)?);
-        let archive = relative_name(root, path);
+        literals.extend(crate::literalindex::collect(&archive, &data)?);
+        if crate::executable::is_executable(&data) {
+            continue;
+        }
         let (subfile, detail) = collect(&archive, &data, &mut instances, &mut skipped, &filters)?;
         tally.add(&subfile);
         windows_detail.extend(detail);
@@ -433,6 +463,12 @@ pub fn build(
     for instance in &instances {
         *counts.entry(instance.class.name().to_string()).or_default() += 1;
     }
+    for document in &literals {
+        let schema = document.contents["schema"]
+            .as_str()
+            .ok_or_else(|| Error::Invalid("literal index document has no schema".into()))?;
+        *counts.entry(schema.to_owned()).or_default() += document.rows();
+    }
     skipped.sort();
     Ok(Index {
         schema: INDEX_SCHEMA.to_string(),
@@ -440,7 +476,8 @@ pub fn build(
         tool: format!("bof3-text {}", env!("CARGO_PKG_VERSION")),
         inputs: Inputs {
             root: root.display().to_string(),
-            archives: paths.len(),
+            archives: paths.iter().filter(|path| is_archive(path)).count(),
+            executables: paths.iter().filter(|path| !is_archive(path)).count(),
             bytes,
             hash: digest.hex(),
             manifest,
@@ -452,23 +489,26 @@ pub fn build(
         counts,
         skipped,
         instances,
+        literals,
     })
 }
 
 /// What the current inputs hash to, without building anything.
 pub fn current_hash(root: &Path) -> Result<Inputs> {
-    let paths = archives(root)?;
+    let paths = sources(root)?;
     let mut digest = Digest::new();
     let mut bytes = 0u64;
     for path in &paths {
         let data = fs::read(path)
             .map_err(|error| Error::Invalid(format!("{}: {error}", path.display())))?;
         bytes += data.len() as u64;
-        absorb(&mut digest, root, path, &data);
+        let archive = crate::coverage::relative(root, path)?;
+        absorb(&mut digest, &archive, &data);
     }
     Ok(Inputs {
         root: root.display().to_string(),
-        archives: paths.len(),
+        archives: paths.iter().filter(|path| is_archive(path)).count(),
+        executables: paths.iter().filter(|path| !is_archive(path)).count(),
         bytes,
         hash: digest.hex(),
         manifest: paths
@@ -499,8 +539,12 @@ pub fn write(index: &Index, path: &Path) -> Result<()> {
 pub fn load(path: &Path) -> Result<Index> {
     let text = fs::read_to_string(path)
         .map_err(|error| Error::Invalid(format!("{}: {error}", path.display())))?;
-    let index: Index = serde_json::from_str(&text)
-        .map_err(|error| Error::Invalid(format!("{}: {error}", path.display())))?;
+    let index: Index = serde_json::from_str(&text).map_err(|error| {
+        Error::Invalid(format!(
+            "{}: {error}; rebuild with `build-index`",
+            path.display()
+        ))
+    })?;
     if index.schema != INDEX_SCHEMA {
         return Err(Error::Invalid(format!(
             "unsupported index schema {}; expected {INDEX_SCHEMA}",

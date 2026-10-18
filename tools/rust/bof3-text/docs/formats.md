@@ -365,3 +365,25 @@ bytes. `source_sha256` is the required SHA-256 of the entire original archive.
 Packing checks both identities and the source path, entry, load address and class
 before writing. Version 3 documents are required; re-extract older documents
 before editing. The tool does not accept an earlier document schema.
+
+## Retained corpus index
+
+`bof3.text-index/v2`, version 2, stores bank and heuristic readings in `instances`
+and verified literal documents in `literals`. Each literal document has a relative
+`archive` path and `contents` with the original source schema, source hash, codec,
+consumer metadata and allocations. The source path inside `contents` is relative
+to the index root. Search uses the literal codec's matcher, including transparent
+glyph commands, and never combines adjacent literal allocations.
+
+`inputs.archives` counts EMI files; `inputs.executables` counts PS-X executables.
+The content digest and manifest include both. Unknown executable layouts add no
+verified rows. `counts` records bank and heuristic classes and literal source
+schemas separately. Search's `indexed` count includes both collections' rows.
+Version 1 artifacts must be rebuilt; they do not cover verified literal fields.
+
+Corpus hits from literal documents retain `source_schema`, source hash, codec,
+references and consumer metadata. They have `class: null`; executable hits omit
+`entry`. Their file offsets and capacities use the same allocation anchors as
+direct `query`. A class filter selects bank or heuristic results only. Index
+integrity checks reproduce each selected literal document against source bytes;
+they do not establish full source coverage or runtime rendering.

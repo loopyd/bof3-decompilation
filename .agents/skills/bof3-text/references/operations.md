@@ -105,8 +105,12 @@ Without a class selector, `query` also searches the supported literal layouts,
 including executable ASCII. For EMI sources, select one entry, a comma-separated
 list or `all`. Omit entry selectors for the executable. Literal JSON results retain
 source identities and allocation metadata; their default anchor includes the full
-allocation. `--match-offset` selects matched bytes. Corpus `search` currently indexes
-banks and heuristic instances, so use direct `query` for verified literal fields.
+allocation. `--match-offset` selects matched bytes. Corpus `search` also includes
+verified literal fields. Use `--root out/extracted` with `build-index` and `search`
+to include the executable; the default `BIN` root includes only files below `BIN`.
+Literal results retain `source_schema`, codec, allocation and consumer metadata;
+`class` is null. A class selector restricts search to banks or heuristic instances.
+`--verify-entries` reproduces every selected row, regardless of `--limit`.
 
 ## Modify safely
 

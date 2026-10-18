@@ -152,7 +152,11 @@ fn support_for(script: Script) -> ScriptSupport {
 
 /// Script profile of a latch's literal text, plus a language guess.
 pub fn script_profile(text: &str) -> (Vec<ScriptShare>, Option<LanguageGuess>) {
-    let literal = literal_only(text);
+    literal_script_profile(&literal_only(text))
+}
+
+/// Profile literal characters without interpreting braces as command markup.
+pub fn literal_script_profile(literal: &str) -> (Vec<ScriptShare>, Option<LanguageGuess>) {
     let mut counts: Vec<(Script, usize)> = Vec::new();
     let mut letters = 0usize;
     for character in literal.chars() {
@@ -183,7 +187,7 @@ pub fn script_profile(text: &str) -> (Vec<ScriptShare>, Option<LanguageGuess>) {
             support: support_for(*script),
         })
         .collect();
-    let language = whatlang::detect(&literal).map(|info| LanguageGuess {
+    let language = whatlang::detect(literal).map(|info| LanguageGuess {
         language: info.lang().code().to_string(),
         confidence: info.confidence(),
         reliable: info.is_reliable(),

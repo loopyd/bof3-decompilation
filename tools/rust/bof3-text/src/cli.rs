@@ -149,7 +149,7 @@ pub enum Mode {
     },
     /// Map text-versus-data roles across every archive (read-only report, no config edits)
     Map {
-        /// Directory walked recursively for `*.EMI` archives
+        /// Directory walked recursively for EMI archives
         #[arg(long, default_value = "out/extracted/BIN")]
         root: PathBuf,
         /// Report destination
@@ -164,7 +164,7 @@ pub enum Mode {
     },
     /// Round-trip every text subfile of a known class across the corpus
     Verify {
-        /// Directory walked recursively for `*.EMI` archives
+        /// Directory walked recursively for EMI archives
         #[arg(long, default_value = "out/extracted/BIN")]
         root: PathBuf,
     },
@@ -225,7 +225,7 @@ pub enum Mode {
     },
     /// Build or check the retained corpus text index over many archives
     BuildIndex {
-        /// Directory walked recursively for `*.EMI` archives
+        /// Directory walked recursively for EMI archives and PS-X executables
         #[arg(long, default_value = "out/extracted/BIN")]
         root: PathBuf,
         /// Index artifact to write, or to check when `--check` is given
@@ -1174,7 +1174,7 @@ fn run_prepare(cli: &Cli, root: &Path, targets: &Path, out_dir: &Path) -> Result
     let payloads = known_payloads(&payload_path, false)?;
     let windows = window_index(&windows_path, false)?;
     let index_path = out_dir.join("text-index/index.json");
-    let (index, regenerated) = fresh_index(
+    let (index, regenerated, _) = fresh_index(
         &index_path,
         &root,
         &windows,
@@ -1194,7 +1194,7 @@ fn run_prepare(cli: &Cli, root: &Path, targets: &Path, out_dir: &Path) -> Result
             serde_json::json!({
                 "root": root, "index": index_path, "windows": windows_path,
                 "payloads": payload_path, "vocabulary": vocabulary_path,
-                "archives": index.inputs.archives, "instances": index.instances.len(),
+                "archives": index.inputs.archives, "executables": index.inputs.executables, "instances": index.instance_count(),
                 "regenerated": regenerated,
             })
         );
@@ -1202,7 +1202,7 @@ fn run_prepare(cli: &Cli, root: &Path, targets: &Path, out_dir: &Path) -> Result
         println!(
             "prepared {}: {} instance(s) over {} archive(s)",
             index_path.display(),
-            index.instances.len(),
+            index.instance_count(),
             index.inputs.archives
         );
     }
@@ -2537,14 +2537,18 @@ fn fresh_index(
     payloads: &crate::filters::KnownPayload,
     vocabulary: &crate::filters::Vocabulary,
     readability: crate::filters::Readability,
-) -> Result<(crate::textindex::Index, bool)> {
+) -> Result<(
+    crate::textindex::Index,
+    bool,
+    Vec<crate::textindex::ArchiveStamp>,
+)> {
     let existing = crate::textindex::load(index_path).ok();
     let current = crate::textindex::current_hash(root)?;
     let filters_hash =
         crate::filters::compose(windows, payloads, vocabulary, readability).fingerprint()?;
     if let Some(index) = existing {
         if index.is_fresh(&current, &filters_hash) {
-            return Ok((index, false));
+            return Ok((index, false, current.manifest));
         }
         let detail = crate::textindex::manifest_diff(&index.inputs.manifest, &current.manifest, 3);
         info!(
@@ -2566,18 +2570,47 @@ fn fresh_index(
     info!(
         "regenerated {}: {} instance(s) over {} archive(s)",
         index_path.display(),
-        rebuilt.instances.len(),
+        rebuilt.instance_count(),
         rebuilt.inputs.archives
     );
-    Ok((rebuilt, true))
+    Ok((rebuilt, true, current.manifest))
+}
+
+enum CorpusHit<'a> {
+    Bank(
+        Vec<&'a crate::textindex::Instance>,
+        Option<String>,
+        Option<&'static str>,
+    ),
+    Literal(&'a crate::literalindex::Document, serde_json::Value),
+}
+
+impl CorpusHit<'_> {
+    fn key(&self) -> (&str, Option<usize>, usize) {
+        match self {
+            Self::Bank(group, _, _) => (&group[0].archive, Some(group[0].entry), group[0].offset),
+            Self::Literal(document, row) => (
+                &document.archive,
+                document.entry(),
+                row["file_offset"]
+                    .as_u64()
+                    .expect("literal query validated offset") as usize,
+            ),
+        }
+    }
+
+    fn instances(&self) -> usize {
+        match self {
+            Self::Bank(group, _, _) => group.len(),
+            Self::Literal(_, _) => 1,
+        }
+    }
 }
 
 /// Search the retained corpus index.
 ///
-/// The index is trusted only while it still describes the inputs: a stale manifest is refused
-/// with a rebuild instruction instead of quietly answering from an outdated artifact. Because
-/// the artifact stores readings but not per-character byte marks, a hit is resolved against
-/// its own archive, and that resolution is verified rather than assumed.
+/// Stale inputs regenerate the index. Each selected bank reading or verified literal document
+/// must reproduce from its own source before its matching byte offsets are reported.
 fn run_search(
     cli: &Cli,
     index_path: &Path,
@@ -2587,7 +2620,7 @@ fn run_search(
     payloads: &crate::filters::KnownPayload,
     vocabulary: &crate::filters::Vocabulary,
 ) -> Result<()> {
-    let (index, regenerated) = fresh_index(
+    let (index, regenerated, sources) = fresh_index(
         index_path,
         root,
         windows,
@@ -2648,14 +2681,10 @@ fn run_search(
     }
 
     // 3. Decide which groups matched.
-    let mut hits: Vec<(
-        Vec<&crate::textindex::Instance>,
-        Option<String>,
-        Option<&'static str>,
-    )> = Vec::new();
+    let mut hits = Vec::new();
     for group in &groups {
         match needle {
-            None => hits.push((group.clone(), None, None)),
+            None => hits.push(CorpusHit::Bank(group.clone(), None, None)),
             Some(needle) => {
                 let spaced = crate::search::join_instance_readings(
                     &group
@@ -2684,24 +2713,70 @@ fn run_search(
                     crate::search::find_in_reading_pair(&spaced, &bare, needle, query.ignore_case)
                 {
                     let matched: String = spaced.chars().skip(start).take(end - start).collect();
-                    hits.push((group.clone(), Some(matched), Some("command-aware")));
+                    hits.push(CorpusHit::Bank(
+                        group.clone(),
+                        Some(matched),
+                        Some("command-aware"),
+                    ));
                 }
             }
         }
     }
+    let mut selected_instances = selected.len();
+    if query.class.is_none() {
+        for document in &index.literals {
+            if query
+                .entry
+                .is_some_and(|entry| document.entry() != Some(entry))
+                || query
+                    .archive
+                    .is_some_and(|archive| !document.archive.contains(archive))
+            {
+                continue;
+            }
+            let mut selection = crate::literalindex::Selection {
+                needle: None,
+                ignore_case: query.ignore_case,
+                match_offset: query.match_offset,
+                script: query.script,
+                language: query.language,
+            };
+            let all = crate::literalindex::matches(document, &selection)?;
+            selected_instances += all.len();
+            let matched = if needle.is_none() {
+                all
+            } else {
+                selection.needle = needle;
+                crate::literalindex::matches(document, &selection)?
+            };
+            hits.extend(
+                matched
+                    .into_iter()
+                    .map(|row| CorpusHit::Literal(document, row)),
+            );
+        }
+    }
+    hits.sort_by(|left, right| left.key().cmp(&right.key()));
     let total = hits.len();
-    // Integrity mode reports how many *instances* it resolved, which is what was verified; a hit
-    // covers a group of consecutive windows, so the group count would understate the evidence.
-    let verified_instances: usize = hits.iter().map(|(group, _, _)| group.len()).sum();
-    let selected_instances = selected.len();
-    if query.limit > 0 {
+    // A display limit must never shorten an integrity check.
+    if query.limit > 0 && !query.verify_entries {
         hits.truncate(query.limit);
     }
+    let verified_instances: usize = hits.iter().map(CorpusHit::instances).sum();
 
     // 4. Resolve every hit against its own archive, verifying rather than trusting the index.
     let mut cache: Vec<(PathBuf, Vec<u8>)> = Vec::new();
     let mut results = Vec::new();
-    for (group, matched, reading) in &hits {
+    let mut literal_cache = std::collections::BTreeMap::new();
+    for hit in &hits {
+        let (group, matched, reading) = match hit {
+            CorpusHit::Bank(group, matched, reading) => (group, matched, reading),
+            CorpusHit::Literal(document, row) => {
+                crate::literalindex::verify(document, root, &sources, &mut literal_cache)?;
+                results.push(row.clone());
+                continue;
+            }
+        };
         let first = group[0];
         let last = group[group.len() - 1];
         let archive_path = root.join(&first.archive);
@@ -2823,7 +2898,7 @@ fn run_search(
     info!(
         "{} of {} indexed instance(s) matched ({} shown) from {}",
         total,
-        index.instances.len(),
+        index.instance_count(),
         results.len(),
         index_path.display()
     );
@@ -2837,7 +2912,7 @@ fn run_search(
                     "verified": verified_instances,
                     "groups": results.len(),
                     "of_selected": selected_instances,
-                    "indexed": index.instances.len(),
+                    "indexed": index.instance_count(),
                     "regenerated": regenerated,
                 }))
                 .map_err(|error| Error::Invalid(error.to_string()))?
@@ -2860,7 +2935,7 @@ fn run_search(
             serde_json::to_string_pretty(&serde_json::json!({
                 "index": index_path.display().to_string(),
                 "root": root.display().to_string(),
-                "indexed": index.instances.len(),
+                "indexed": index.instance_count(),
                 "regenerated": regenerated,
                 "matched": total,
                 "shown": results.len(),
@@ -2875,7 +2950,7 @@ fn run_search(
         logging::heading("search"),
         index_path.display(),
         total,
-        index.instances.len()
+        index.instance_count()
     );
     for hit in results
         .iter()
@@ -2917,7 +2992,7 @@ fn run_build_index(
             "{} is {} ({} instance(s), {} archive(s))",
             out.display(),
             if fresh { "fresh" } else { "stale" },
-            index.instances.len(),
+            index.instance_count(),
             index.inputs.archives
         );
         if cli.json {
@@ -2926,8 +3001,8 @@ fn run_build_index(
                 serde_json::to_string_pretty(&serde_json::json!({
                     "index": out.display().to_string(),
                     "fresh": fresh,
-                    "indexed": {"archives": index.inputs.archives, "instances": index.instances.len(), "hash": index.inputs.hash, "filters_hash": index.inputs.filters_hash},
-                    "current": {"archives": current.archives, "hash": current.hash, "filters_hash": filters_hash},
+                    "indexed": {"executables": index.inputs.executables, "archives": index.inputs.archives, "instances": index.instance_count(), "hash": index.inputs.hash, "filters_hash": index.inputs.filters_hash},
+                    "current": {"executables": current.executables, "archives": current.archives, "hash": current.hash, "filters_hash": filters_hash},
                 }))
                 .map_err(|error| Error::Invalid(error.to_string()))?
             );
@@ -2936,7 +3011,7 @@ fn run_build_index(
                 "{} {}: inputs match ({} instance(s) over {} archive(s))",
                 logging::success("fresh"),
                 out.display(),
-                index.instances.len(),
+                index.instance_count(),
                 index.inputs.archives
             );
         } else {
@@ -2967,7 +3042,7 @@ fn run_build_index(
                             "rebuilt": false,
                             "inputs": existing.inputs,
                             "counts": existing.counts,
-                            "instances": existing.instances.len(),
+                            "instances": existing.instance_count(),
                         }))
                         .map_err(|error| Error::Invalid(error.to_string()))?
                     );
@@ -2976,7 +3051,7 @@ fn run_build_index(
                         "{} {} already fresh: {} instance(s) over {} archive(s)",
                         logging::success("index"),
                         out.display(),
-                        existing.instances.len(),
+                        existing.instance_count(),
                         existing.inputs.archives
                     );
                 }
@@ -2994,7 +3069,7 @@ fn run_build_index(
     crate::textindex::write(&index, out)?;
     info!(
         "indexed {} instance(s) over {} archive(s) into {}",
-        index.instances.len(),
+        index.instance_count(),
         index.inputs.archives,
         out.display()
     );
@@ -3013,7 +3088,7 @@ fn run_build_index(
                 "inputs": index.inputs,
                 "counts": index.counts,
                 "skipped": index.skipped,
-                "instances": index.instances.len(),
+                "instances": index.instance_count(),
             }))
             .map_err(|error| Error::Invalid(error.to_string()))?
         );
@@ -3022,7 +3097,7 @@ fn run_build_index(
             "{} {}: {} instance(s) over {} archive(s), {} skipped",
             logging::success("indexed"),
             out.display(),
-            index.instances.len(),
+            index.instance_count(),
             index.inputs.archives,
             index.skipped.len()
         );

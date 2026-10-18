@@ -17,6 +17,7 @@ mod extract;
 mod filters;
 mod inline;
 mod lexagraph;
+mod literalindex;
 mod logging;
 mod models;
 mod monsters;

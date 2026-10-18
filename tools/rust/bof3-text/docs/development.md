@@ -93,9 +93,9 @@ cargo test --locked --release --manifest-path tools/rust/bof3-text/Cargo.toml \
 
 # corpus gates: every text subfile round-trips, and the index describes the archives
 bin/harness text prepare              # bootstrap missing artifacts after disc extraction
-bin/harness text build-index          # rebuilds only when stale; a no-op when fresh
+bin/harness text build-index --root out/extracted  # includes executable text
 bin/harness text verify               # require every selected entry to round-trip
-bin/harness text search --verify-entries   # require every indexed entry to reproduce
+bin/harness text search --root out/extracted --verify-entries  # verify all selected rows
 
 # the whole gate, including the docs drift check
 just check

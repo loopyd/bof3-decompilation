@@ -280,8 +280,8 @@ The default string anchor covers the allocation, including padding and any NUL;
 the match anchor covers only matched source bytes. `--commands` counts glyph
 commands in the append row and reports an empty usage list for literal-only fields.
 Class selectors retain their bank or heuristic scope.
-The corpus `search` index currently covers banks and heuristic instances; use
-direct `query` for verified literal allocations.
+Corpus `search` also includes these verified literal allocations. Use the complete
+extraction root to include executable text.
 
 Lists rows, optionally filtered by a **command-transparent** text match, showing
 `bank.row`, the bank-relative byte offset, span length and decoded text. When a match is
@@ -417,15 +417,18 @@ subfiles for every other load argument in the corpus. See
 Searches the **retained corpus index** (`build-index`) instead of one archive at a time,
 using the same command-transparent matcher as `query`.
 
-```
-$ bin/harness text search --grep "it'll be a good"
-search out/text-index/index.json: 1 of 46057 indexed instance(s) matched
-  WORLD00/AREA000.EMI#11@0x80010000 +0xb8228 "It looks like it'll{nl}be a good crop this…
+```sh
+bin/harness text build-index --root out/extracted
+bin/harness text search --root out/extracted --grep EXCEPTION
 ```
 
 Filters: `--class`, `--script` (e.g. `Latin`), `--language` (e.g. `eng`; only guesses the
 detector called reliable are stored), `-e/--entry`, `--archive` (path substring), and
-`--limit` (0 reports every hit).
+`--limit` (0 reports every hit). Results are ordered by relative source path,
+optional EMI entry and file offset before the display limit is applied. Literal
+rows remain independent. `--class` selects bank or heuristic rows and excludes
+verified literals. Executable results have no EMI entry. Use `--root out/extracted`
+for a complete extraction tree; the default root is `out/extracted/BIN`.
 
 Freshness is decided by the **content digest**, never by the stat manifest: a manifest entry
 keeps a size and a whole-second mtime that can both survive a content change, and a search whose
@@ -437,7 +440,7 @@ that wants to detect staleness without writing.
 Freshness also binds the loaded ownership registry, payload inventory, vocabulary
 and readability settings through `inputs.filters_hash`. Changing their contents
 or using `--no-windows`, `--no-payloads`, `--no-readable` or `--no-vocabulary`
-invalidates the index. Older indexes without this field are rebuilt. Use a
+invalidates the index. Older index schemas are rebuilt. Use a
 separate `--index` path for comparison runs to avoid rebuilding the default index
 when switching back to normal search.
 
@@ -460,30 +463,35 @@ true byte range of the match, mapped through per-character byte marks of the sam
 index was matched on.
 
 `--verify-entries` is an integrity check rather than a search: it resolves every selected
-instance against its own archive and proves both readings reproduce, reporting `verified N of M`
-and failing closed on any mismatch.
+instance against its own source and proves its readings or literal document reproduce,
+reporting `verified N of M` and failing closed on any mismatch. `--limit` is ignored
+in this mode, so the reported count covers every selected row.
 
-Because the artifact stores readings but no per-character byte marks, each hit is resolved
-against its owning archive, and that resolution is **verified**: if the archive does not
-reproduce the entry's readings, `search` fails closed instead of printing a stale offset.
+Bank and heuristic hits reproduce their readings from the owning archive before
+reporting offsets. Literal hits re-extract the complete source-bound document and
+compare its identities, codecs and allocations with the index. Literal results
+retain `source_schema`, original source hash, consumer and allocation metadata,
+and use `class: null`. Glyph commands and their operands remain unsearchable.
 
 ## `build-index [--root DIR] [--out PATH] [--check] [--force] [--windows PATH] [--no-windows]`
 
 Builds the retained **corpus text index**: one artifact recording where text lives across
 many archives, so a corpus query is a scan of that file rather than of the disc.
 
-```
-$ bin/harness text build-index
-indexed out/text-index/index.json: 46057 instance(s) over 880 archive(s), 0 skipped
-  battle     26936
-  dialogue   19121
+```sh
+bin/harness text build-index --root out/extracted
+bin/harness text build-index --root out/extracted --check
 ```
 
 Each instance records its class, source (`archive`, `entry`, `address`), byte extent
 (`offset`, `length`) and the **command-transparent reading** — the same field `--grep`
 matches. `bank`/`number` identify a banked row; a non-banked subfile contributes the
 scanner's latches instead. The header carries digests over archive paths, sizes and
-contents and the index-building filter policy.
+contents and the index-building filter policy. The `bof3.text-index/v2` artifact
+also retains verified inline, record-name, monster-name and executable documents
+in `literals`. Counts include each source schema separately. Executable inputs
+are recognized by their PS-X EXE header, and their bytes participate in freshness.
+Paths must be UTF-8; symlinks and special files are refused.
 
 `--check` reports whether an existing index still matches the inputs and exits non-zero when
 it does not, so a stale index can never be used silently. Without `--check` a stale or
