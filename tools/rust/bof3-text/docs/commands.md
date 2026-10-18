@@ -155,7 +155,7 @@ dialogue commands. See [formats.md](formats.md#record-names).
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v8` document with ten counted labels and eight default names.
+`bof3.inline-text/v9` document with ten counted labels and eight default names.
 Re-extract former character-only documents. Default `--entry all` selects banks.
 See [formats.md](formats.md#default-character-names).
 
@@ -171,7 +171,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v8`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v9`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 The original BATTLE archive also has supported message records in entry 3.
@@ -267,8 +267,12 @@ for source addresses and the limits of the consumer evidence.
 BATE and SHISU entry 0 each include `%3d/%3d` with two unsigned byte arguments.
 The `ascii-u8-decimal-pair-format` codec preserves their order, at most seven
 encoded bytes, and at most seven formatted bytes. Widths use 1..4 with optional
-zero padding; output growth and other conversions are refused. Runtime rendering
-remains unverified.
+zero padding; output growth and other conversions are refused. Each archive
+also exposes `%2d` with one unsigned byte argument and `%02d %02d` with two.
+Their encoded limits are three and nine bytes; formatted limits are three and
+seven bytes. An adjacent `ascii-literal` label accepts three printable ASCII
+bytes, using `0x20` for spaces. It does not interpret format conversions or command
+markup. Each allocation reserves a NUL byte. Runtime rendering remains unverified.
 
 SHOP entry 0 includes an ASCII clock format with three unsigned byte arguments.
 Preserve their order, at most nineteen encoded bytes, and at most sixteen
@@ -276,7 +280,7 @@ formatted bytes. Decimal widths use 1..4 with optional zero padding. Its traced
 consumer copies the result to a stack buffer; retain `renderer: null` because
 rendering is unverified. The filename and Shift-JIS header formats remain unsupported.
 
-Inline documents use `bof3.inline-text/v8`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v9`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.

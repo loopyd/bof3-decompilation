@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v8";
+pub const SCHEMA: &str = "bof3.inline-text/v9";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -18,6 +18,7 @@ pub(crate) enum Codec {
     GameFixedLiteral,
     GameCountedLiteral,
     GameGlyphs,
+    AsciiLiteral,
     AsciiDecimalFormat,
     AsciiSignedDecimalPairFormat,
     AsciiU8DecimalFormat,
@@ -37,6 +38,14 @@ impl Codec {
         }
         if self == Self::GameGlyphs {
             return encode_glyphs(text, capacity);
+        }
+        if self == Self::AsciiLiteral {
+            if text.len() > capacity || !text.bytes().all(|byte| (0x20..=0x7e).contains(&byte)) {
+                return invalid(
+                    "ASCII literal must fit its allocation and contain only printable ASCII",
+                );
+            }
+            return Ok(text.as_bytes().to_vec());
         }
         if self != Self::AsciiDecimalFormat {
             self.max_formatted_size(text)?;
@@ -96,10 +105,10 @@ impl Codec {
             return decode_glyphs(bytes, file_offset);
         }
         let end = bytes.iter().position(|byte| *byte == 0).ok_or_else(|| {
-            Error::Invalid(format!("unterminated ASCII format at {file_offset:#x}"))
+            Error::Invalid(format!("unterminated ASCII text at {file_offset:#x}"))
         })?;
         if bytes[end..].iter().any(|byte| *byte != 0) {
-            return invalid("nonzero bytes after ASCII format terminator");
+            return invalid("nonzero bytes after ASCII terminator");
         }
         let text = std::str::from_utf8(&bytes[..end])
             .map_err(|error| Error::Invalid(error.to_string()))?;
@@ -113,6 +122,7 @@ impl Codec {
             Self::GameFixedLiteral => "game-fixed-literal",
             Self::GameCountedLiteral => "game-counted-literal",
             Self::GameGlyphs => "game-glyphs",
+            Self::AsciiLiteral => "ascii-literal",
             Self::AsciiDecimalFormat => "ascii-decimal-format",
             Self::AsciiSignedDecimalPairFormat => "ascii-signed-decimal-pair-format",
             Self::AsciiU8DecimalFormat => "ascii-u8-decimal-format",
@@ -283,6 +293,16 @@ struct Allocation {
 }
 
 impl Allocation {
+    const fn ascii_literal(address: u32, capacity: usize) -> Self {
+        Self {
+            address,
+            capacity,
+            reference: None,
+            renderer: Some(0x80150098),
+            codec: Codec::AsciiLiteral,
+        }
+    }
+
     const fn fixed_literal(address: u32, capacity: usize) -> Self {
         Self {
             address,
@@ -472,12 +492,13 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
-        name: "US BATE labels and numeric format",
+        name: "US BATE labels and numeric formats",
         load: 0x801d0c00,
         size: 33864,
-        sha256: "18450d535a7987fc3ebfe35eedaf3d1614b94675e7240c168787ab1207cdd7d3",
+        sha256: "b5f31458fdb2c5a06151731162b2c303b9b3f139abb53424d5065c9b55d2e1f9",
         consumers: &[
-            0x801d3fb0, 0x801d6f84, 0x801d6fc0, 0x801d7600, 0x801d7e8c, 0x801d7eac,
+            0x801d3fb0, 0x801d6f84, 0x801d6fc0, 0x801d7600, 0x801d7e8c, 0x801d7eac, 0x801d8394,
+            0x801d83b8, 0x801d83d0, 0x801d83f8, 0x801d841c, 0x801d8438,
         ],
         allocations: &[
             Allocation::counted(0x801d0c50),
@@ -496,6 +517,19 @@ const LAYOUTS: &[Layout] = &[
                 Codec::AsciiU8DecimalPairFormat,
                 Some(0x80150098),
             ),
+            Allocation::bounded_decimal(
+                0x801d0d80,
+                4,
+                Codec::AsciiU8DecimalFormat,
+                Some(0x80150098),
+            ),
+            Allocation::bounded_decimal(
+                0x801d0d84,
+                10,
+                Codec::AsciiU8DecimalPairFormat,
+                Some(0x80150098),
+            ),
+            Allocation::ascii_literal(0x801d0d90, 4),
             Allocation::literal(0x801d8e24, 5, Some(0x801d8e4c), 0x8014f800),
             Allocation::literal(0x801d8e2c, 7, Some(0x801d8e50), 0x8014f800),
             Allocation::literal(0x801d8e34, 6, Some(0x801d8e54), 0x8014f800),
@@ -513,12 +547,13 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
-        name: "US SHISU labels and numeric format",
+        name: "US SHISU labels and numeric formats",
         load: 0x801d0c00,
         size: 38196,
-        sha256: "c7d5594ce926c17bc5d4a4d8ad5894493b9dacb0bd40a991c755f69b70d202cd",
+        sha256: "1ca37d1b108e367d1fe2eba5f3efe9e4ff395a986f662a64a1cd2345b7decc2a",
         consumers: &[
-            0x801d4f58, 0x801d7f2c, 0x801d7f68, 0x801d85a8, 0x801d8e34, 0x801d8e54,
+            0x801d4f58, 0x801d7f2c, 0x801d7f68, 0x801d85a8, 0x801d8e34, 0x801d8e54, 0x801d933c,
+            0x801d9360, 0x801d9378, 0x801d93a0, 0x801d93c4, 0x801d93e0,
         ],
         allocations: &[
             Allocation::counted(0x801d0c34),
@@ -537,6 +572,19 @@ const LAYOUTS: &[Layout] = &[
                 Codec::AsciiU8DecimalPairFormat,
                 Some(0x80150098),
             ),
+            Allocation::bounded_decimal(
+                0x801d0d64,
+                4,
+                Codec::AsciiU8DecimalFormat,
+                Some(0x80150098),
+            ),
+            Allocation::bounded_decimal(
+                0x801d0d68,
+                10,
+                Codec::AsciiU8DecimalPairFormat,
+                Some(0x80150098),
+            ),
+            Allocation::ascii_literal(0x801d0d74, 4),
             Allocation::literal(0x801d9e48, 5, Some(0x801d9e70), 0x8014f800),
             Allocation::literal(0x801d9e50, 7, Some(0x801d9e74), 0x8014f800),
             Allocation::literal(0x801d9e58, 6, Some(0x801d9e78), 0x8014f800),

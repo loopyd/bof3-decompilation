@@ -115,7 +115,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v8`. Its eighteen strings include
+Extract the selected entry as `bof3.inline-text/v9`. Its eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -189,8 +189,23 @@ Widths use 1..4 with optional zero padding; output growth and other conversions
 are refused. BATE calls formatter `0x8017E3F4` at `0x801D6FC0` and `0x801D7EAC`;
 SHISU calls it at `0x801D7F68` and `0x801D8E54`. Each call masks its first
 argument to eight bits and supplies 32 or 128 as the second argument. The result
-at `0x80145AD4` is passed to renderer `0x80150098`. Other numeric formats and
-runtime rendering remain unverified.
+at `0x80145AD4` is passed to renderer `0x80150098`.
+
+Both archives also expose `%2d` and `%02d %02d`. The single-byte format uses
+`ascii-u8-decimal-format`, with three encoded bytes and three formatted bytes.
+The pair uses `ascii-u8-decimal-pair-format`, with nine encoded bytes and seven
+formatted bytes. Their four-byte and ten-byte allocations include NUL. BATE
+addresses are `0x801D0D80` and `0x801D0D84`; SHISU addresses are `0x801D0D64`
+and `0x801D0D68`. Calls at `0x801D8394`, `0x801D83D0`, `0x801D933C` and
+`0x801D9378` load unsigned byte arguments from record offsets 8, 12 and 13.
+They format into `0x80145AD4` and pass the result to `0x80150098`.
+
+The four-byte labels at BATE `0x801D0D90` and SHISU `0x801D0D74` originally
+contain ASCII `  :` followed by NUL. Their `ascii-literal` codec permits three
+printable ASCII bytes and zero-fills unused bytes. Spaces encode as `0x20`;
+format conversions and command markup have no special meaning. Calls at
+`0x801D841C`, `0x801D8438`, `0x801D93C4` and `0x801D93E0` pass these labels
+directly to `0x80150098`. Other formats and runtime rendering remain unverified.
 
 US `SHOP.EMI` entry 0 also exposes the ASCII clock format at `0x801D0C68`,
 originally `BOF3-%02d/%02d/%02d`. Its twenty-byte allocation includes NUL.
@@ -213,7 +228,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v8` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v9` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderer`, `codec`, pointer-word `references` and editable `text`. Retain all
