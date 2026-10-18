@@ -737,15 +737,15 @@ operations. Notes, timed tempos, programs, volume controller 7 and pan controlle
 10 support insertion and removal. Notes, programs, volume and pan may use any
 of the 16 channels when the requested generated setup and termination match
 the reconstructed channel sets. Timed tempos must be nonzero 24-bit values;
-the initial tempo remains at tick zero. Equal-count bends retain their ordered
-source correspondence and channels, with editable high-byte values and ticks. Their original ignored low
-bytes survive. When the bend count changes, the shorter bend list must be an
+the initial tempo remains at tick zero. Equal-count bends may change channel,
+high-byte value and tick. Their ignored source low bytes survive in event order.
+When the bend count changes, the shorter bend list must be an
 ordered subsequence of the longer list with equal channel, high-byte value and
 tick. Removal retains the matched source low bytes; insertion retains every
 source bend and gives each new bend a zero low byte. The inverse considers every
 valid correspondence and rejects if they produce different low bytes. It accepts
-duplicate matches when their resulting bytes agree. Changing retained bend values
-or ticks together with insertion or removal is unsupported. Nonzero MIDI bend
+duplicate matches when their resulting bytes agree. Changing retained bend channels,
+values or ticks together with insertion or removal is unsupported. Nonzero MIDI bend
 low bytes remain unrepresentable. MIDI note-off with zero release velocity normalizes to SEP note-on
 with zero velocity. The opaque suffix after the source end marker survives.
 

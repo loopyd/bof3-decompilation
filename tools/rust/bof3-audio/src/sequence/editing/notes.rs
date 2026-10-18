@@ -195,7 +195,7 @@ pub(super) fn rebuild(
             limitations: vec![
                 "Linear notes, tempo, program and volume/pan events support insertion/removal. Notes, programs and volume/pan may use any of the 16 channels when requested canonical setup and termination match the reconstructed channel sets. Rebuilt streams use explicit statuses and minimal deltas. Opaque suffixes and other sequence records survive.",
                 "With layout_rebuilt, changed_source_bytes counts differing data positions and length; changed_source_events counts all rewritten or removed original events. timing_edits is empty because original delta identities are not retained.",
-                "Equal-count bends retain ordered channels and ignored low bytes. Bend insertion/removal requires an exact ordered channel/value/tick subsequence; all valid correspondences must agree on retained low bytes. Inserted bends use zero. Generated channel defaults remain canonical and note releases follow the reconstructed note channels. Controller-loop structure changes and other controller messages require separate semantics.",
+                "Equal-count bends support channel, high-byte value and tick edits while retaining ignored source low bytes in order. Bend insertion/removal requires an exact ordered channel/value/tick subsequence; all valid correspondences must agree on retained low bytes. Inserted bends use zero. Generated channel defaults remain canonical and note releases follow the reconstructed note channels. Controller-loop structure changes and other controller messages require separate semantics.",
                 "Bank availability, scheduler timing, synthesis and independent audio fidelity are separate checks.",
             ],
         },
@@ -226,9 +226,6 @@ fn bend_lows(baseline: &Translation, events: &[Event]) -> Result<Vec<u8>> {
         })
         .collect();
     if source.len() == edited.len() {
-        if source.iter().zip(&edited).any(|(a, b)| a.1 != b.1) {
-            return Err("SEP bend edit: ordered bend channels changed".into());
-        }
         return Ok(lows);
     }
     let inserting = source.len() < edited.len();
