@@ -1,4 +1,4 @@
-//! Original stream requests for the qualified three-root bank source families.
+//! Original stream requests and conditional archive entry order for sprite banks.
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -98,7 +98,7 @@ pub(crate) fn annotate(resources: &mut [Resource]) {
     let game = format!("{}:BIN/ETC/GAME.EMI#entry-000", sources::RELEASE);
     let has_exe = resources.iter().any(|resource| resource.id == exe);
     let has_game = resources.iter().any(|resource| resource.id == game);
-    for resource in resources {
+    for resource in resources.iter_mut() {
         if resource.load_argument != Some(0x8003_b800) || !matches!(resource.emi_type, Some(0 | 1))
         {
             continue;
@@ -139,5 +139,72 @@ pub(crate) fn annotate(resources: &mut [Resource]) {
             reason: "The header declares destination 0x8003b800. Type-0 and type-1 writes can share it; transfer order, overwrites and active draw-time bytes are not established by a request.".into(),
         });
         resource.stream_request = Some(request);
+    }
+    annotate_entry_order(resources, has_exe);
+}
+
+fn annotate_entry_order(resources: &mut [Resource], has_exe: bool) {
+    let pairs = resources
+        .iter()
+        .enumerate()
+        .filter(|(_, resource)| {
+            resource.source.starts_with("BIN/BPLCHAR/")
+                && resource.entry == Some(3)
+                && resource.emi_type == Some(0)
+                && resource.load_argument == Some(0x8003_b800)
+                && resource.size == 16384
+                && resource.sha256
+                    == "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe"
+        })
+        .filter_map(|(clear, resource)| {
+            let has_audio_records = [(4, 6), (5, 8), (6, 7)].iter().all(|&(entry, kind)| {
+                resources.iter().any(|candidate| {
+                    candidate.source == resource.source
+                        && candidate.entry == Some(entry)
+                        && candidate.emi_type == Some(kind)
+                })
+            });
+            if !has_audio_records {
+                return None;
+            }
+            let bank = resources.iter().position(|candidate| {
+                candidate.source == resource.source
+                    && candidate.entry == Some(7)
+                    && candidate.emi_type == Some(1)
+                    && candidate.load_argument == Some(0x8003_b800)
+                    && candidate
+                        .bank
+                        .as_ref()
+                        .is_some_and(|info| info.decoded_bytes > 16384)
+            })?;
+            Some((clear, bank))
+        })
+        .collect::<Vec<_>>();
+    for (clear_index, bank_index) in pairs {
+        let clear = resources[clear_index].id.clone();
+        let bank = resources[bank_index].id.clone();
+        for index in [clear_index, bank_index] {
+            resources[index].evidence.extend([
+                "SLUS_004.22@0x80161FDC:archive-header-first".into(),
+                "SLUS_004.22@0x80162474:completed-entry-advance".into(),
+                "SLUS_004.22@0x80162B08:conditional-record-selection".into(),
+                "SLUS_004.22@0x801625E4:type0-sector-transfer".into(),
+                "SLUS_004.22@0x80162C14:entry-copy-destination".into(),
+            ]);
+        }
+        resources[clear_index].uses.push(bank);
+        resources[bank_index].dependencies.push(Dependency {
+            kind: "entry-order".into(),
+            target: Some(clear),
+            status: if has_exe { "partial" } else { "unresolved" }.into(),
+            reason: format!(
+                "On the original normal, unskipped no-error path with mode bit 0x20 clear, entry 3's 16384 zero bytes at RAM 0x8003b800..0x8003f800 finish transferring before entry 7 is selected. The later bank declares the same destination and a larger decoded span. Audio-owned types 6/8/7 intervene. {} Their complete RAM effects, later writes, request completion and draw-time state remain unresolved. This ordering does not establish a decoder dependency on zero history.",
+                if has_exe {
+                    "The original EXE entry-selection consumer is captured."
+                } else {
+                    "The required original EXE entry-selection consumer is not captured."
+                },
+            ),
+        });
     }
 }

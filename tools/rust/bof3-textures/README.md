@@ -164,8 +164,19 @@ records. The edges name the original EXE and GAME entry 0 consumer. They remain
 unresolved when those files are outside the captured input and partial when the
 consumers are captured. A request does not prove that loading finished or that a
 particular root is active. The `resident-base` edge retains those limits. Some
-archives declare both raw and compressed writes to `0x8003b800`; their active
-phase, overwrite order, palette selection and draw-time state remain unresolved.
+archives declare both raw and compressed writes to `0x8003b800`; an address match
+does not establish the draw-time contents.
+
+Use `--dependency entry-order` to find qualified same-archive transfer ordering.
+These edges link entry 7's type-1 bank to entry 3's 16,384 zero bytes at
+`0x8003b800..0x8003f800`. On the normal, unskipped path without an error and with
+mode bit `0x20` clear, entry 3 finishes transferring before entry 7 is selected.
+The intervening types 6, 8 and 7 retain their audio owner. Their complete RAM
+effects, later writes, palette selection and draw-time state remain unresolved.
+An edge is partial when the original EXE is captured and unresolved otherwise.
+The zero-filled entry remains preservation-only; its `uses` field names the bank.
+This order does not establish a decoder dependency on zero history, completed
+loading or active residency.
 
 Query checks source content and inventory plus the compiled schema, qualification,
 format, package, and mapping policy. It refuses a stale or altered catalog and
