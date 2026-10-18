@@ -931,6 +931,7 @@ pub fn source_package(root: &Path, destination: &Path) -> Result<usize> {
         collect_rust(&root, &relative.join("src"), &mut members)?;
         if name == "bof3-textures" {
             members.push(relative.join("docs/composition.md"));
+            members.push(relative.join("docs/selection.md"));
             for file in ["LICENSE", "mise.toml", "rust-toolchain.toml"] {
                 members.push(relative.join(file));
             }

@@ -431,6 +431,11 @@ quad geometry from an explicit entity and graph type. It preserves the original
 flip dispatch, scale rounding, UV wrapping, texture-page correction and encoded
 CLUT fields. It does not infer source residency or render an assembled frame.
 
+The [selection library](docs/selection.md) resolves one explicit root selector
+through the original consumer. It preserves the image-skip path, independent
+program selection and raw mirror byte. It does not infer a valid selector range
+or make the surrounding tail editable.
+
 The `animation` library reads bounded program headers, step pairs, and cell
 offsets using the US consumers at `0x8014d910`, `0x8014d978`, and `0x8014daec`.
 It preserves cell payloads and allocation while re-encoding existing step pairs.

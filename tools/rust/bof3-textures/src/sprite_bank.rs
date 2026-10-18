@@ -50,6 +50,20 @@ pub struct Info {
     pub parts: usize,
 }
 
+/// One caller-selected physical slot. This does not establish the valid selector
+/// domain or make the surrounding selection tail editable.
+#[derive(Clone, Debug, Serialize, PartialEq, Eq)]
+pub struct Selection {
+    pub triple_offset: usize,
+    pub image_index: u8,
+    /// None follows the original image-skip branch; image_index is then opaque.
+    pub image: Option<bank_image::Info>,
+    pub program_index: u8,
+    pub program: Program,
+    /// Copied unchanged to entity byte 0x2A, not a palette selector.
+    pub mirror_flag: u8,
+}
+
 impl Document {
     pub fn info(&self) -> Info {
         Info {
@@ -236,6 +250,50 @@ fn root_at(document: &Document, index: usize) -> Result<&Root> {
         .get(index)
         .ok_or_else(|| invalid("missing root index"))
 }
+/// Resolve one explicit selector through SLUS_004.22@0x8014DC08.
+/// The caller must qualify the root, selector and image-skip condition from the
+/// same consumer. Physical extent checks do not prove a valid runtime selector.
+/// skip_image represents entity byte 0 bit 1, not entity byte 0x24.
+pub fn select(
+    source: &[u8],
+    root_index: usize,
+    selector: u8,
+    skip_image: bool,
+) -> Result<Selection> {
+    let document = decode(source)?;
+    let root = root_at(&document, root_index)?;
+    // decode bounds the whole source to 1 MiB and selector to one byte.
+    let triple_offset = root.selection_offset + usize::from(selector) * 3;
+    let end = triple_offset + 3;
+    let triple = source
+        .get(triple_offset..end)
+        .filter(|_| end <= root.end)
+        .ok_or_else(|| invalid("selected triple exceeds its root extent"))?;
+    let image = if skip_image {
+        None
+    } else {
+        Some(
+            root.images
+                .get(usize::from(triple[0]))
+                .ok_or_else(|| invalid("selected image exceeds its table"))?
+                .clone(),
+        )
+    };
+    let program = root
+        .programs
+        .get(usize::from(triple[1]))
+        .ok_or_else(|| invalid("selected program exceeds its table"))?
+        .clone();
+    Ok(Selection {
+        triple_offset,
+        image_index: triple[0],
+        image,
+        program_index: triple[1],
+        program,
+        mirror_flag: triple[2],
+    })
+}
+
 /// Change palette words, animation pairs and cell parts in their existing records.
 /// Preserve all header/table pointers, selection bytes and unknown tails. Changed
 /// aliases must agree on the complete record; unchanged aliases do not override.
