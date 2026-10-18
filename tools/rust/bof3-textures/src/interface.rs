@@ -19,6 +19,33 @@ struct Atlas {
     palettes: &'static [PaletteBinding],
 }
 
+struct SharedContent {
+    sha256: &'static str,
+    argument: u32,
+    categories: &'static [&'static str],
+    content: &'static str,
+    reference: &'static str,
+}
+
+const PORTRAIT_CONTENT: &str = "Portraits, window frames, labels and interface icons";
+
+const SHARED_CONTENT: &[SharedContent] = &[
+    SharedContent {
+        sha256: "d6a8ad127418dfeb2c8cb9f186d40941b47010ee75dd40e809473599ddf08c9e",
+        argument: 0x1c08_0200,
+        categories: &["portrait", "interface"],
+        content: PORTRAIT_CONTENT,
+        reference: "BIN/ETC/FIRST.EMI#4:identical-original-interface-content",
+    },
+    SharedContent {
+        sha256: "0cf5ef90802f620701919bef9d97f2b0cb86951c0855dda8f27ef5f9a014a841",
+        argument: 0x1a08_0200,
+        categories: &["interface"],
+        content: "Window frames, arrows and interface controls",
+        reference: "BIN/ETC/SHISU.EMI#2:identical-original-interface-content",
+    },
+];
+
 const ATLASES: &[Atlas] = &[
     Atlas {
         source: "BIN/ETC/FIRST.EMI",
@@ -40,7 +67,7 @@ const ATLASES: &[Atlas] = &[
         entry: 4,
         sha256: "d6a8ad127418dfeb2c8cb9f186d40941b47010ee75dd40e809473599ddf08c9e",
         categories: &["portrait", "interface"],
-        content: "Portraits, window frames, labels and interface icons",
+        content: PORTRAIT_CONTENT,
         consumer: None,
         palettes: &[],
     },
@@ -94,7 +121,7 @@ const ATLASES: &[Atlas] = &[
         entry: 1,
         sha256: "d6a8ad127418dfeb2c8cb9f186d40941b47010ee75dd40e809473599ddf08c9e",
         categories: &["portrait", "interface"],
-        content: "Portraits, window frames, labels and interface icons",
+        content: PORTRAIT_CONTENT,
         consumer: Some(
             "BIN/ETC/SHISU.EMI#0@0x801D44C0:portrait-rectangles; BIN/ETC/SHISU.EMI#0@0x801D9B78:selection-records",
         ),
@@ -169,24 +196,40 @@ fn check_hash(resource: &Resource, expected: &str) -> Result<()> {
 }
 
 pub(crate) fn annotate(resources: &mut [Resource]) -> Result<()> {
+    for image in resources.iter_mut() {
+        let Some(content) = SHARED_CONTENT
+            .iter()
+            .find(|content| image.sha256 == content.sha256)
+        else {
+            continue;
+        };
+        if image.kind != "texture-upload"
+            || image.emi_type != Some(3)
+            || image.size != 32768
+            || image.load_argument != Some(content.argument)
+        {
+            return Err(Error::Invalid(format!(
+                "{} differs from its qualified shared interface layout",
+                image.id
+            )));
+        }
+        annotate_content(image, content.categories, content.content);
+        push_unique(&mut image.evidence, content.reference);
+        push_unique(
+            &mut image.findings,
+            "identical original payloads share recognized raster content; palette, consumer and loading evidence remains specific to each source",
+        );
+    }
     for atlas in ATLASES {
         let Some(image_index) = locate(resources, atlas.source, atlas.entry) else {
             continue;
         };
         check_hash(&resources[image_index], atlas.sha256)?;
         let image = &mut resources[image_index];
-        for category in atlas.categories {
-            push_unique(&mut image.categories, category);
-        }
-        push_unique(&mut image.evidence, "qualified-original-interface-content");
+        annotate_content(image, atlas.categories, atlas.content);
         if let Some(consumer) = atlas.consumer {
             push_unique(&mut image.evidence, consumer);
         }
-        push_unique(&mut image.uses, atlas.content);
-        push_unique(
-            &mut image.findings,
-            "recognized raster content can contain text; role classification does not certify non-text or runtime rendering",
-        );
         if atlas.palettes.is_empty() {
             push_unique(
                 &mut image.findings,
@@ -198,6 +241,18 @@ pub(crate) fn annotate(resources: &mut [Resource]) -> Result<()> {
         }
     }
     Ok(())
+}
+
+fn annotate_content(image: &mut Resource, categories: &[&str], content: &str) {
+    for category in categories {
+        push_unique(&mut image.categories, category);
+    }
+    push_unique(&mut image.evidence, "qualified-original-interface-content");
+    push_unique(&mut image.uses, content);
+    push_unique(
+        &mut image.findings,
+        "recognized raster content can contain text; role classification does not certify non-text or runtime rendering",
+    );
 }
 
 fn locate(resources: &[Resource], source: &str, entry: usize) -> Option<usize> {

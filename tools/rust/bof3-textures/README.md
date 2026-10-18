@@ -114,12 +114,16 @@ Resources remain in original-file and slot order. Empty results do not prove
 that a category is absent from the game.
 
 Qualified content mappings recognize glyphs, portraits, interface graphics and
-logo or raster-label images in `FIRST.EMI`, `ENDKANJI.EMI`, `SHISU.EMI` and
-`DEMO.EMI`. Use the `font`, `portrait`, `interface` and `system-screen` category
-filters to discover these resources. Equal font, portrait and logo bytes keep
-their separate original locators. They retain `unclassified-graphics` because
-their complete logical regions and uses remain unresolved. An image can contain
-rasterized text even when it also has another graphics role.
+logo or raster-label images. Use the `font`, `portrait`, `interface` and
+`system-screen` category filters to discover these resources. Content recognition
+also covers identical original copies of the `FIRST.EMI` entry 4 portrait atlas
+and the `SHISU.EMI` entry 2 atlas of windows, arrows and controls. Both the payload
+hash and upload layout must match the qualified source. Each copy keeps its
+original locator and its own dependency evidence.
+Equal bytes do not transfer palette, consumer or loading associations between
+archives. The resources retain `unclassified-graphics` because their complete
+logical regions and uses remain unresolved. An image can contain rasterized text
+even when it also has another graphics role.
 
 Atlases with qualified consumer evidence name their physical palette sources in
 `dependencies`. Content recognition alone leaves the palette unresolved. A
