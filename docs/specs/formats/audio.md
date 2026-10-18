@@ -1063,6 +1063,7 @@ every other source bit, including unused ADSR2 bit 13:
 | Sustain level | ADSR1 bits 0-3 | 16 |
 | Sustain rate | ADSR2 bits 6-12 | 128 |
 | Sustain mode/direction | ADSR2 bits 14-15 | 4 |
+| Combined decay shift/sustain level | ADSR1 bits 0-7 | 256 |
 
 The inverse reruns the complete forward fit at the source binding's ADSR model
 and probe. A changed field can affect several fitted generators, so it compares
@@ -1070,7 +1071,9 @@ delay, attack, hold, decay, sustain and release together.
 
 The original registers and baseline generators must agree with a fresh fit.
 Within the first matching field family, equivalent candidates minimize absolute
-distance from the original field, then the field value. The packer applies the
+distance from the original field, then the field value. Single-field matches
+retain priority over the combined search. The combined family ranks the packed
+ADSR1 low byte. The packer applies the
 chosen ADSR registers, reparses the combined header and verifies the forward fit
 before returning. Unchanged envelopes retain their source bytes. Sample-only
 packing cannot authorize these edits. Gain, pitch, sample assignment, program
@@ -1081,8 +1084,8 @@ population and PCM validation remain required before music publication.
 registers, matching candidate counts within the selected field family and selected
 fits with their approximation errors. Exact fitted generators do not establish
 hardware behavior or PSX/PC PCM equality. Delay/hold edits, nonuniform zones,
-silent/stopped tones and tuples without an exact single-field inverse reject.
-Combined-field searches, arbitrary ADSR, topology and independent
+silent/stopped tones and tuples without an exact supported inverse reject.
+Other combined-field searches, arbitrary ADSR, topology and independent
 instrument/sample reconstruction remain open.
 
 ## Rust SoundFont silent-tone unmuting

@@ -1,4 +1,4 @@
-//! Invert complete fitted SF2 envelopes through one source ADSR field family.
+//! Invert complete fitted SF2 envelopes through bounded source ADSR field searches.
 use crate::{
     bank::Bank,
     machine::adsr::Registers,
@@ -118,9 +118,9 @@ pub(crate) fn pack(
     Ok(Packed { patches, report: Report {
         schema: "bof3.audio.sf2-envelope-pack/v1", tones,
         limitations: vec![
-            "Search source fields in order: release shift/mode (64), attack mode/rate (256), decay shift (16), sustain level (16), sustain rate (128), sustain mode/direction (4). Each search preserves every other source bit, including unused ADSR2 bit13. All six SF2 volume-envelope generators must exactly match a complete fit at the recorded model and probe.",
+            "Search source fields in order: release shift/mode (64), attack mode/rate (256), decay shift (16), sustain level (16), sustain rate (128), sustain mode/direction (4), then combined decay shift/sustain level (256). Each search preserves every other source bit, including unused ADSR2 bit13. All six SF2 volume-envelope generators must exactly match a complete fit at the recorded model and probe.",
             "All key zones of an audible, non-stopped tone must request the same envelope. Delay/hold changes, unmatched tuples, silent/stopped tones and arbitrary ADSR or topology reconstruction are unsupported.",
-            "Within the first matching field family, equivalent candidates minimize raw field distance from the source, then the field value; matching_candidates counts that family only. Combined-field searches are unsupported. Fits retain their approximation error; exact SF2 generators do not establish hardware or PC/PSX PCM equivalence.",
+            "Within the first matching field family, equivalent candidates minimize raw field distance from the source, then the field value; the combined family uses the packed ADSR1 low byte. matching_candidates counts the selected family only. Other combined-field searches are unsupported. Fits retain their approximation error; exact SF2 generators do not establish hardware or PC/PSX PCM equivalence.",
         ],
     }})
 }
@@ -184,6 +184,7 @@ fn inverse(original: &Fit, requested: [u16; 6]) -> Result<(Fit, usize)> {
         (true, 0x000f, 0),
         (false, 0x1fc0, 6),
         (false, 0xc000, 14),
+        (true, 0x00ff, 0),
     ] {
         let register = if adsr1 {
             original.registers.adsr1
@@ -217,5 +218,8 @@ fn inverse(original: &Fit, requested: [u16; 6]) -> Result<(Fit, usize)> {
             return Ok((fit, count));
         }
     }
-    Err("complete envelope tuple has no exact source-tone single-field inverse".into())
+    Err(
+        "complete envelope tuple has no exact source-tone inverse in the supported field families"
+            .into(),
+    )
 }
