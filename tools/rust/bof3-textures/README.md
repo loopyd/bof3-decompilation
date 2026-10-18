@@ -2,8 +2,8 @@
 
 `bof3-textures` catalogs original US PlayStation graphics sources and exports
 self-contained archive packages. It can edit raw VRAM upload words, their
-4-bit or 8-bit index interpretations, and qualified palette-word banks within
-their original allocations.
+4-bit or 8-bit index interpretations, exact color-word images, and qualified
+palette-word banks within their original allocations.
 It also edits qualified resident animation step pairs and five-byte cell records.
 Recognized three-root sprite banks have editable index planes, palette words,
 programs, and cells, with both compression layers bounded by their original spans.
@@ -25,8 +25,8 @@ cargo build --offline --locked --release --manifest-path tools/rust/bof3-texture
 build/tools/rust/bof3-textures/release/bof3-textures --help
 ```
 
-PNG interchange requires installed FFmpeg with the `png` codec and `pal8` pixel
-format. Publication requires GNU coreutils `mv` with `--no-copy` and
+PNG interchange requires installed FFmpeg with the `png` codec and both `pal8`
+and `rgba` pixel formats. Publication requires GNU coreutils `mv` with `--no-copy` and
 `--no-clobber`. Commands do not install these tools.
 
 ## Repository commands
@@ -144,11 +144,38 @@ executable after changing its interpretation sources.
 
 ## Edit packages
 
-The manifest schema is `bof3.textures-package/v3`. The package includes complete
+The manifest schema is `bof3.textures-package/v4`. The package includes complete
 snapshots of the captured inputs, raw resources, its bound catalog, and coverage. A
 qualified raw upload also has `words.json` and indexed `indices-4.png` and
 `indices-8.png` views. These PNGs use diagnostic grayscale. They do not identify
 a game palette, texture mode, UV layout, or assembled sprite.
+
+The same upload exports `colors-16.png`, an editable RGBA representation of its
+16-bit words. Its width equals the VRAM word width. RGB channels use exact
+5-bit expansion, `(value << 3) | (value >> 2)`. Alpha encodes the source word:
+0 means word zero, 128 means STP is set, and 255 means a nonzero word without
+STP. STP black therefore remains distinct from zero. Alpha is reconstruction
+metadata here, not a simulation of GPU blending. This view does not establish
+that a game consumer selects 16-bit color rendering.
+
+Keep this PNG in 8-bit RGBA format with its original dimensions. Packing refuses
+RGB channels outside the exact expansion, other alpha values, nonblack pixels
+with alpha 0, and black pixels with alpha 255. It never rounds colors. Edits to
+`colors-16.png`, `words.json`, raw bytes, and index views must agree wherever
+their changed bytes overlap. The tool reports conflicting views and publishes
+nothing. Older packages must be unpacked again with the current executable.
+
+Qualified FIRST glyph, SHISU portrait, and DEMO logo and label atlases also
+export read-only `preview-N.png` files. Each manifest `previews` entry names
+its original `palette_resource`, `bits`, and `first_word` within that palette.
+These are whole-atlas views using conditional static palette associations.
+They do not assemble sprites, prove the active selector, or establish runtime
+loading or appearance. Other atlas regions can require different palettes.
+
+Previews retain the original snapshot's colors even when source views are edited.
+Keep them unchanged. Edit the corresponding `indices-4.png` or `indices-8.png`
+and the palette resource's `words.json`; packing rejects changes to a preview.
+Exact palette words remain the authority for STP and blending metadata.
 
 A qualified palette bank has an editable `words.json` containing its exact
 little-endian PSX color words. Preserve the word count. These banks have proven

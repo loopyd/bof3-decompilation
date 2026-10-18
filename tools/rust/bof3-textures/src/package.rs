@@ -15,12 +15,12 @@ use crate::{
     digest::sha256_hex,
     formats,
     png::{self, IndexedImage},
-    resident, save_icon,
+    preview, resident, save_icon,
     sources::{self, Input},
     sprite_bank,
 };
 
-pub const SCHEMA: &str = "bof3.textures-package/v3";
+pub const SCHEMA: &str = "bof3.textures-package/v4";
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -46,6 +46,8 @@ pub struct Export {
     pub words: Option<String>,
     pub indices_4: Option<String>,
     pub indices_8: Option<String>,
+    pub colors_16: Option<String>,
+    pub previews: Vec<preview::Info>,
     pub decoded: Option<String>,
     pub animation: Option<String>,
     pub sprite: Option<String>,
@@ -75,14 +77,14 @@ fn snapshots(index: &Index) -> Vec<Snapshot> {
         .collect()
 }
 
-fn exports(index: &Index) -> Vec<Export> {
+fn exports(index: &Index) -> Result<Vec<Export>> {
     index
         .resources
         .iter()
         .enumerate()
         .map(|(number, resource)| {
             let directory = format!("resources/{number:05}");
-            Export {
+            Ok(Export {
                 resource: resource.id.clone(),
                 raw: format!("{directory}/raw.bin"),
                 words: (resource.upload.is_some() || resource.palette_upload.is_some()
@@ -96,6 +98,11 @@ fn exports(index: &Index) -> Vec<Export> {
                     .upload
                     .as_ref()
                     .map(|_| format!("{directory}/indices-8.png")),
+                colors_16: resource
+                    .upload
+                    .as_ref()
+                    .map(|_| format!("{directory}/colors-16.png")),
+                previews: preview::exports(index, resource, &directory)?,
                 decoded: resource
                     .bank
                     .as_ref()
@@ -145,7 +152,7 @@ fn exports(index: &Index) -> Vec<Export> {
                     "unresolved; PNG palettes are diagnostic grayscale, not game CLUTs"
                 }
                 .into(),
-            }
+            })
         })
         .collect()
 }
@@ -237,7 +244,7 @@ pub fn unpack(input: &Input, destination: &Path) -> Result<Manifest> {
     let manifest = Manifest {
         schema: SCHEMA.into(),
         snapshots: snapshots(&index),
-        exports: exports(&index),
+        exports: exports(&index)?,
         index,
     };
     let mut written = BTreeSet::new();
@@ -258,6 +265,12 @@ pub fn unpack(input: &Input, destination: &Path) -> Result<Manifest> {
                 .get(start..start + resource.size as usize)
                 .ok_or_else(|| Error::Invalid(format!("{} exceeds snapshot", resource.id)))?;
             stage.write(&export.raw, raw)?;
+            for view in &export.previews {
+                stage.write(
+                    &view.member,
+                    &png::encode(&preview::image(&manifest.index, resource, view, &bytes)?)?,
+                )?;
+            }
             if let Some(member) = &export.decoded {
                 let decoded = bank::decode(raw)?.bytes;
                 stage.write(member, &decoded)?;
@@ -299,6 +312,16 @@ pub fn unpack(input: &Input, destination: &Path) -> Result<Manifest> {
                 }
             }
             if let Some(upload) = &resource.upload {
+                if let Some(member) = &export.colors_16 {
+                    stage.write(
+                        member,
+                        &png::encode_words(&png::WordImage {
+                            width: upload.width_words(),
+                            height: upload.height(),
+                            words: upload.linear_words(raw)?,
+                        })?,
+                    )?;
+                }
                 if let Some(member) = &export.words {
                     stage.write(
                         member,
@@ -344,7 +367,7 @@ pub fn load(root: &Path) -> Result<Manifest> {
         ));
     }
     if manifest.snapshots != snapshots(&manifest.index)
-        || manifest.exports != exports(&manifest.index)
+        || manifest.exports != exports(&manifest.index)?
     {
         return Err(Error::Invalid(
             "package paths or resource descriptors differ from their bound catalog".into(),
@@ -478,6 +501,19 @@ pub(crate) fn reconstruct(
         .filter(|(resource, _)| resource.source == source.path)
     {
         let raw = &original[resource.offset as usize..(resource.offset + resource.size) as usize];
+        for view in &export.previews {
+            let imported = png::decode(&read_member(
+                root,
+                &view.member,
+                (png::MAX_PIXELS * 2 + 65536) as u64,
+            )?)?;
+            if imported != preview::image(&manifest.index, resource, view, &original)? {
+                return Err(Error::Invalid(format!(
+                    "{}: derivative preview is read-only; edit source indices and palette words",
+                    view.member
+                )));
+            }
+        }
         if let Some(member) = &export.decoded
             && read_member(root, member, 1024 * 1024)? != bank::decode(raw)?.bytes
         {
@@ -527,6 +563,17 @@ pub(crate) fn reconstruct(
             }
         }
         if let Some(upload) = &resource.upload {
+            if let Some(member) = &export.colors_16 {
+                let imported =
+                    png::decode_words(&read_member(root, member, png::MAX_WORD_PNG_BYTES as u64)?)
+                        .map_err(|error| Error::Invalid(format!("{member}: {error}")))?;
+                if imported.width != upload.width_words() || imported.height != upload.height() {
+                    return Err(Error::Invalid(format!(
+                        "{member}: preserve the raw upload's word-grid dimensions"
+                    )));
+                }
+                edit.add(member, upload.encode_words(&imported.words, raw)?)?;
+            }
             if let Some(member) = &export.words {
                 let words: Vec<u16> =
                     serde_json::from_slice(&read_member(root, member, 16 * 1024 * 1024)?)?;

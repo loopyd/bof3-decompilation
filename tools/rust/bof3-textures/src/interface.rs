@@ -7,6 +7,8 @@ struct PaletteBinding {
     entry: usize,
     sha256: &'static str,
     selection: &'static str,
+    bits: u8,
+    first_words: &'static [usize],
 }
 
 struct Atlas {
@@ -58,6 +60,10 @@ const ATLASES: &[Atlas] = &[
         ),
         palettes: &[PaletteBinding {
             entry: 8,
+            bits: 4,
+            first_words: &[
+                0, 16, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240,
+            ],
             sha256: "166ead38de405cf28c1cfc35a7c4a2b9b4a69ae95a128b970cf4b9df8b4567c7",
             selection: "FIRST entry 8 stages VRAM row 480, words 0..255. The original 8x8 renderer selects CLUT 0x7800 | (A2 & 63), so this source covers only selectors 0..15. Retail page 0x2f matches the atlas at (960, 0), 4 bits per pixel. Actual selector, upload order, overwrites and rendering are unresolved.",
         }],
@@ -128,11 +134,15 @@ const ATLASES: &[Atlas] = &[
         palettes: &[
             PaletteBinding {
                 entry: 3,
+                bits: 4,
+                first_words: &[208, 224, 240],
                 sha256: "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb",
                 selection: "SHISU entry 3 stages VRAM row 481. Original consumer 0x801D44C0 reads table 0x801D9B78 + 4*(A2 & 255), emits 40x48 rectangles on retail page 0x1e and builds CLUT ((480 + record[3]) << 6) | (record[2] >> 4). Physical records 6/8/11 select row 481, word offsets 208/224/240. Other atlas regions, the complete valid index domain, upload order and rendering are unresolved.",
             },
             PaletteBinding {
                 entry: 4,
+                bits: 4,
+                first_words: &[0, 16, 32, 176, 192, 208, 224, 240],
                 sha256: "5cfa8f083db270a3af233d0213475a13b96f01c6bac9bfb38b6423e4fe27dec7",
                 selection: "SHISU entry 4 stages VRAM row 482. Original consumer 0x801D44C0 selects the atlas at (896, 256), 4 bits per pixel, with table UV bytes 0/1 and 40x48 rectangles. Physical records 0/1/2/3/4/5/7/9/10 select row 482, word offsets 176/240/32/192/208/0/16/176/224. These twelve records do not establish the complete valid index domain. Other atlas regions, upload order and rendering are unresolved.",
             },
@@ -147,6 +157,8 @@ const ATLASES: &[Atlas] = &[
         consumer: Some("BIN/ETC/GAME.EMI#1@0x801D150C:records-4-5; retail-page-0xb9"),
         palettes: &[PaletteBinding {
             entry: 7,
+            bits: 8,
+            first_words: &[0],
             sha256: "25389de257006aa7e940702803b621bae0bb0d6c4d46921eb80c4e8d765e1e06",
             selection: "GAME entry 1 records 4/5 select CLUT row 484, first 256 words of DEMO entry 7, and retail page 0xb9 matches this 8-bit atlas at (576, 256). Slot 0x25f requests the physical DEMO archive. Load success, upload order, overwrites and rendering are unresolved.",
         }],
@@ -160,6 +172,8 @@ const ATLASES: &[Atlas] = &[
         consumer: Some("BIN/ETC/GAME.EMI#1@0x801D16DC:records-2-3; retail-page-0xbb"),
         palettes: &[PaletteBinding {
             entry: 7,
+            bits: 8,
+            first_words: &[256],
             sha256: "25389de257006aa7e940702803b621bae0bb0d6c4d46921eb80c4e8d765e1e06",
             selection: "GAME entry 1 records 2/3 select CLUT row 485, DEMO entry 7 byte range 512..1024, and retail page 0xbb matches this 8-bit atlas at (704, 256). Slot 0x25f requests the physical DEMO archive. Load success, upload order, overwrites and rendering are unresolved.",
         }],
@@ -173,11 +187,31 @@ const ATLASES: &[Atlas] = &[
         consumer: Some("BIN/ETC/GAME.EMI#1@0x801D12CC:records-7-8-9-19; retail-page-0xbd"),
         palettes: &[PaletteBinding {
             entry: 7,
+            bits: 8,
+            first_words: &[512],
             sha256: "25389de257006aa7e940702803b621bae0bb0d6c4d46921eb80c4e8d765e1e06",
             selection: "GAME entry 1 records 7/8/9/19 select CLUT row 486, DEMO entry 7 byte range 1024..1536, and retail page 0xbd matches this 8-bit atlas at (832, 256). Slot 0x25f requests the physical DEMO archive. Load success, upload order, overwrites and rendering are unresolved.",
         }],
     },
 ];
+
+pub(crate) fn preview_bindings(resource: &Resource) -> Vec<(usize, u8, usize)> {
+    ATLASES
+        .iter()
+        .filter(|atlas| {
+            resource.source == atlas.source
+                && resource.entry == Some(atlas.entry)
+                && resource.sha256 == atlas.sha256
+        })
+        .flat_map(|atlas| atlas.palettes)
+        .flat_map(|binding| {
+            binding
+                .first_words
+                .iter()
+                .map(move |first| (binding.entry, binding.bits, *first))
+        })
+        .collect()
+}
 
 fn push_unique(values: &mut Vec<String>, value: &str) {
     if !values.iter().any(|known| known == value) {
