@@ -118,9 +118,9 @@ pub(crate) fn pack(
     Ok(Packed { patches, report: Report {
         schema: "bof3.audio.sf2-envelope-pack/v1", tones,
         limitations: vec![
-            "Search source fields in order: release shift/mode (64), attack mode/rate (256), decay shift (16), sustain level (16), sustain rate (128), sustain mode/direction (4), then combined decay shift/sustain level (256). Each search preserves every other source bit, including unused ADSR2 bit13. All six SF2 volume-envelope generators must exactly match a complete fit at the recorded model and probe.",
+            "Search source fields in order: release shift/mode (64), attack mode/rate (256), decay shift (16), sustain level (16), sustain rate (128), sustain mode/direction (4), combined decay shift/sustain level (256), then combined sustain rate/mode/direction (512). Each search preserves every other source bit, including unused ADSR2 bit13. All six SF2 volume-envelope generators must exactly match a complete fit at the recorded model and probe.",
             "All key zones of an audible, non-stopped tone must request the same envelope. Delay/hold changes, unmatched tuples, silent/stopped tones and arbitrary ADSR or topology reconstruction are unsupported.",
-            "Within the first matching field family, equivalent candidates minimize raw field distance from the source, then the field value; the combined family uses the packed ADSR1 low byte. matching_candidates counts the selected family only. Other combined-field searches are unsupported. Fits retain their approximation error; exact SF2 generators do not establish hardware or PC/PSX PCM equivalence.",
+            "Within the first matching field family, equivalent candidates minimize raw field distance from the source, then the field value. Combined decay/sustain uses the packed ADSR1 low byte; combined sustain uses (ADSR2 & 0xdfc0) >> 6, excluding unused bit13. matching_candidates counts the selected family only. Other combined-field searches are unsupported. Fits retain their approximation error; exact SF2 generators do not establish hardware or PC/PSX PCM equivalence.",
         ],
     }})
 }
@@ -185,6 +185,7 @@ fn inverse(original: &Fit, requested: [u16; 6]) -> Result<(Fit, usize)> {
         (false, 0x1fc0, 6),
         (false, 0xc000, 14),
         (true, 0x00ff, 0),
+        (false, 0xdfc0, 6),
     ] {
         let register = if adsr1 {
             original.registers.adsr1
@@ -196,6 +197,9 @@ fn inverse(original: &Fit, requested: [u16; 6]) -> Result<(Fit, usize)> {
         let mut rank = (u16::MAX, u16::MAX);
         let mut count = 0;
         for value in 0..=(mask >> shift) {
+            if value & !(mask >> shift) != 0 {
+                continue;
+            }
             let mut registers = original.registers;
             let target = if adsr1 {
                 &mut registers.adsr1

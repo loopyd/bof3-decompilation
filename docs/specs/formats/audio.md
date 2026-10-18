@@ -1064,6 +1064,7 @@ every other source bit, including unused ADSR2 bit 13:
 | Sustain rate | ADSR2 bits 6-12 | 128 |
 | Sustain mode/direction | ADSR2 bits 14-15 | 4 |
 | Combined decay shift/sustain level | ADSR1 bits 0-7 | 256 |
+| Combined sustain rate/mode/direction | ADSR2 bits 6-12 and 14-15 | 512 |
 
 The inverse reruns the complete forward fit at the source binding's ADSR model
 and probe. A changed field can affect several fitted generators, so it compares
@@ -1072,10 +1073,12 @@ delay, attack, hold, decay, sustain and release together.
 The original registers and baseline generators must agree with a fresh fit.
 Within the first matching field family, equivalent candidates minimize absolute
 distance from the original field, then the field value. Single-field matches
-retain priority over the combined search. The combined family ranks the packed
-ADSR1 low byte. The packer applies the
-chosen ADSR registers, reparses the combined header and verifies the forward fit
-before returning. Unchanged envelopes retain their source bytes. Sample-only
+retain priority over the combined searches. Combined decay/sustain level ranks
+the packed ADSR1 low byte. Combined sustain rate/mode/direction ranks
+`(ADSR2 & 0xdfc0) >> 6`; the unused bit remains excluded from both the search and
+the ranking. The packer applies the chosen ADSR registers, reparses the combined
+header and verifies the forward fit before returning. Unchanged envelopes retain
+their source bytes. Sample-only
 packing cannot authorize these edits. Gain, pitch, sample assignment, program
 population and PCM validation remain required before music publication.
 
