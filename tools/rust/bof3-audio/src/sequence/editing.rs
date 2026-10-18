@@ -8,7 +8,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use serde::Serialize;
 
 use crate::{
-    interchange::midi::{Message, Midi},
+    interchange::midi::{Event, Message, Midi},
     sequence::events::Kind,
     sequence::midi::{self as translation, Translation},
     sequence::timeline::{Limits, Step},
@@ -110,6 +110,9 @@ pub fn rebuild(
             }
         )
     });
+    if controller_loop {
+        align_channels(&mut baseline, edited, options.initialize_channels)?;
+    }
     if baseline
         .midi
         .tracks
@@ -301,7 +304,7 @@ pub fn rebuild(
             original_data_bytes: original.len(),
             output_data_bytes: bytes.len(),
             limitations: vec![
-                "Event order, loop start/end structure and generated setup remain fixed. Count-controller 6/98 marker values may change when all requested visits agree and the requested expansion matches the rederived execution. Note, program, volume/pan and bend channel changes must agree at every source visit and reproduce inherited running status. Bend source low bytes survive. Timing edits must agree at every repeated delta consumption. Infinite jumps force zero delay.",
+                "Event order and loop start/end structure remain fixed. Generated setup and termination must match the reconstructed channel sets. Count-controller 6/98 marker values may change when all requested visits agree and the requested expansion matches the rederived execution. Note, program, volume/pan and bend channel changes must agree at every source visit and reproduce inherited running status. Bend source low bytes survive. Timing edits must agree at every repeated delta consumption. Infinite jumps force zero delay.",
                 "changed_source_bytes/events count message-value edits; timing_edits records changed delta spans separately. Unchanged delta encodings and opaque suffixes survive; resized deltas relocate later sequence headers.",
                 "Bank programs, tone pitch ranges, SF2 edits and publication require separate validation.",
                 "Forward MIDI approximations and configured infinite-loop traversal bounds remain unchanged.",
@@ -309,6 +312,64 @@ pub fn rebuild(
         },
         bytes,
     })
+}
+
+fn align_channels(baseline: &mut Translation, edited: &Midi, initialize: bool) -> Result<()> {
+    let mut mappings = baseline.report.mappings.iter().filter(|m| m.track == 1);
+    let Some(first) = mappings.next().map(|m| m.event) else {
+        return Ok(());
+    };
+    let last = mappings.next_back().map_or(first, |m| m.event);
+    let start = notes::performance_start(&edited.tracks[1].events, initialize);
+    let Some(requested) = edited.tracks[1].events.get(start..start + last - first + 1) else {
+        return Err("SEP edit: source performance events missing".into());
+    };
+    let mut channels = [false; 16];
+    let mut note_channels = [false; 16];
+    for event in requested {
+        if let Message::Channel { status, .. } = &event.message {
+            channels[usize::from(status & 15)] = true;
+            if notes::is_note(&event.message) {
+                note_channels[usize::from(status & 15)] = true;
+            }
+        }
+    }
+    let mut events = Vec::new();
+    if initialize {
+        for (channel, used) in channels.into_iter().enumerate() {
+            if used {
+                events.extend(translation::channel_setup(channel as u8));
+            }
+        }
+    }
+    if events.len() != start {
+        return Err(
+            "SEP edit: canonical setup must match the requested source channel sets".into(),
+        );
+    }
+    events.extend_from_slice(&baseline.midi.tracks[1].events[first..=last]);
+    for (channel, used) in note_channels.into_iter().enumerate() {
+        if used {
+            events.push(Event {
+                tick: baseline.timeline.final_tick,
+                message: Message::Channel {
+                    status: 0xb0 | channel as u8,
+                    data: vec![123, 0],
+                },
+            });
+        }
+    }
+    events.push(Event {
+        tick: baseline.timeline.final_tick,
+        message: Message::end(),
+    });
+    baseline.midi.tracks[1].events = events;
+    for mapping in &mut baseline.report.mappings {
+        if mapping.track == 1 {
+            mapping.event = mapping.event - first + start;
+        }
+    }
+    Ok(())
 }
 
 fn loop_counts(baseline: &Translation, edited: &Midi) -> Result<BTreeMap<usize, (u8, usize)>> {

@@ -679,9 +679,11 @@ order. Within controller loops, note, program, volume/pan and bend channel chang
 require agreement at every visit to the same source byte and exact rebuilt
 retranslation, including inherited running status. Linear event edits use the
 separate reconstruction described below.
-Loop start/end marker changes and generated setup edits fail with track/event
-or source-cursor diagnostics. Generated termination events must follow the requested
-final tick; timing reconstruction is described below.
+Generated setup must match the channels used by the reconstructed source events,
+including controller-loop channel changes. Generated all-notes-off messages must
+match the reconstructed note channels and final tick. Setup values remain
+canonical; arbitrary setup edits fail. Loop start/end marker changes fail with
+track/event or source-cursor diagnostics. Timing reconstruction is described below.
 
 Supported fixed-width edits are note key/velocity, program, volume/pan values,
 high-byte bend, header tempo and executed tempo events. MIDI note-off with zero

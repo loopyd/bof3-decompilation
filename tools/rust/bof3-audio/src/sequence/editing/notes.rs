@@ -25,6 +25,19 @@ pub(super) fn identity_changed(before: &Message, after: &Message) -> bool {
     }
 }
 
+pub(super) fn performance_start(events: &[Event], initialize: bool) -> usize {
+    let mut first = 0;
+    if initialize {
+        for channel in 0..16 {
+            let setup = crate::sequence::midi::channel_setup(channel);
+            if events[first..].starts_with(&setup) {
+                first += setup.len();
+            }
+        }
+    }
+    first
+}
+
 pub(super) fn rebuild(
     sequence: &Sequence,
     original: &[u8],
@@ -67,15 +80,7 @@ pub(super) fn rebuild(
     let last = baseline.report.mappings.last().unwrap();
     let before = &baseline.midi.tracks[1].events;
     let after = &edited.tracks[1].events;
-    let mut first = 0;
-    if options.initialize_channels {
-        for channel in 0..16 {
-            let setup = crate::sequence::midi::channel_setup(channel);
-            if after[first..].starts_with(&setup) {
-                first += setup.len();
-            }
-        }
-    }
+    let first = performance_start(after, options.initialize_channels);
     let mut ends = after
         .iter()
         .enumerate()
