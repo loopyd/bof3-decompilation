@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v7";
+pub const SCHEMA: &str = "bof3.inline-text/v8";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -21,6 +21,7 @@ pub(crate) enum Codec {
     AsciiDecimalFormat,
     AsciiSignedDecimalPairFormat,
     AsciiU8DecimalFormat,
+    AsciiU8DecimalPairFormat,
     AsciiU8DecimalTripleFormat,
     AsciiU7DecimalFormat,
     AsciiU16DecimalFormat,
@@ -59,6 +60,7 @@ impl Codec {
     pub(crate) fn max_formatted_size(self, text: &str) -> Result<Option<usize>> {
         let (arguments, limit): (&[usize], usize) = match self {
             Self::AsciiSignedDecimalPairFormat => (&[4, 4], 9),
+            Self::AsciiU8DecimalPairFormat => (&[3, 3], 7),
             Self::AsciiU8DecimalTripleFormat => (&[3, 3, 3], 16),
             Self::AsciiU8DecimalFormat | Self::AsciiU7DecimalFormat => (&[3], 3),
             Self::AsciiU16DecimalFormat => (&[5], 5),
@@ -114,6 +116,7 @@ impl Codec {
             Self::AsciiDecimalFormat => "ascii-decimal-format",
             Self::AsciiSignedDecimalPairFormat => "ascii-signed-decimal-pair-format",
             Self::AsciiU8DecimalFormat => "ascii-u8-decimal-format",
+            Self::AsciiU8DecimalPairFormat => "ascii-u8-decimal-pair-format",
             Self::AsciiU8DecimalTripleFormat => "ascii-u8-decimal-triple-format",
             Self::AsciiU7DecimalFormat => "ascii-u7-decimal-format",
             Self::AsciiU16DecimalFormat => "ascii-u16-decimal-format",
@@ -469,11 +472,13 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
-        name: "US BATE labels",
+        name: "US BATE labels and numeric format",
         load: 0x801d0c00,
         size: 33864,
-        sha256: "c4d996aa3fb858d1c8c42342bfa21ad0fc7ae6aa964dd02c48cb4f26ace3c2db",
-        consumers: &[0x801d3fb0, 0x801d6f84, 0x801d7600, 0x801d7e8c],
+        sha256: "18450d535a7987fc3ebfe35eedaf3d1614b94675e7240c168787ab1207cdd7d3",
+        consumers: &[
+            0x801d3fb0, 0x801d6f84, 0x801d6fc0, 0x801d7600, 0x801d7e8c, 0x801d7eac,
+        ],
         allocations: &[
             Allocation::counted(0x801d0c50),
             Allocation::counted(0x801d0c64),
@@ -485,6 +490,12 @@ const LAYOUTS: &[Layout] = &[
             Allocation::counted(0x801d0cdc),
             Allocation::counted(0x801d0cf0),
             Allocation::counted(0x801d0d04),
+            Allocation::bounded_decimal(
+                0x801d0d5c,
+                8,
+                Codec::AsciiU8DecimalPairFormat,
+                Some(0x80150098),
+            ),
             Allocation::literal(0x801d8e24, 5, Some(0x801d8e4c), 0x8014f800),
             Allocation::literal(0x801d8e2c, 7, Some(0x801d8e50), 0x8014f800),
             Allocation::literal(0x801d8e34, 6, Some(0x801d8e54), 0x8014f800),
@@ -502,11 +513,13 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
-        name: "US SHISU labels",
+        name: "US SHISU labels and numeric format",
         load: 0x801d0c00,
         size: 38196,
-        sha256: "2696cb852070d78a63f2e2b9784bf1215ae3984a3412166d551715cb623baedf",
-        consumers: &[0x801d4f58, 0x801d7f2c, 0x801d85a8, 0x801d8e34],
+        sha256: "c7d5594ce926c17bc5d4a4d8ad5894493b9dacb0bd40a991c755f69b70d202cd",
+        consumers: &[
+            0x801d4f58, 0x801d7f2c, 0x801d7f68, 0x801d85a8, 0x801d8e34, 0x801d8e54,
+        ],
         allocations: &[
             Allocation::counted(0x801d0c34),
             Allocation::counted(0x801d0c48),
@@ -518,6 +531,12 @@ const LAYOUTS: &[Layout] = &[
             Allocation::counted(0x801d0cc0),
             Allocation::counted(0x801d0cd4),
             Allocation::counted(0x801d0ce8),
+            Allocation::bounded_decimal(
+                0x801d0d40,
+                8,
+                Codec::AsciiU8DecimalPairFormat,
+                Some(0x80150098),
+            ),
             Allocation::literal(0x801d9e48, 5, Some(0x801d9e70), 0x8014f800),
             Allocation::literal(0x801d9e50, 7, Some(0x801d9e74), 0x8014f800),
             Allocation::literal(0x801d9e58, 6, Some(0x801d9e78), 0x8014f800),
