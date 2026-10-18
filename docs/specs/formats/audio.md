@@ -4034,8 +4034,8 @@ it with audible tone templates is unsupported. Simultaneous replacements and
 populations may still copy validated source rows from programs being cleared.
 
 Appended instruments may reconstruct independent tone rows while using validated
-sample allocations and source key zones. An audible source tone may also supply a
-nonempty contiguous subset of its known positive-pitch keys. Retain each selected
+sample allocations and source key zones. A source tone may also supply a nonempty
+contiguous subset of its known positive-pitch keys. Retain each selected
 singleton key zone in its original order, with no gaps. Stopped keys outside the
 selected range remain in the original instrument. The appended instrument must
 contain only positive, representable pitches. A different key range
@@ -4055,11 +4055,17 @@ melodic destination program and first layer, such as `P001T00`. Names preserve t
 new destination identity; they do not identify or authorize a source template.
 Every appended instrument must be assigned to a program.
 
+A gain-muted source requires explicit relinking to a physical PCM allocation and
+an exact audible gain/pan inverse. Generated silence cannot supply that
+allocation. Program or bank mutes cannot be overridden by tone controls. Copies
+from gain-muted sources retain the original fitted envelope. The original muted
+instruments keep their controls and generated-silence links.
+
 Packing matches the full key-zone and generator structure against regenerated
-audible source contexts with positive selected pitches. Each candidate passes the
-existing gain, tuning, envelope and sample-assignment inverses independently. Multiple matching
-contexts must produce identical raw tone bytes apart from the owning program
-word, and identical program controls. Other ambiguity rejects. The original tone
+source contexts with positive selected pitches. Each candidate passes the
+existing gain, tuning, envelope and sample-assignment inverses independently.
+Multiple matching contexts must produce identical raw tone bytes apart from the
+owning program word, and identical program controls. Other ambiguity rejects. The original tone
 and its independent copies may request different supported controls. Gaps,
 reordered keys, changed velocity zones and arbitrary envelope tuples remain
 unsupported. New source keys require the original pitch reference even when

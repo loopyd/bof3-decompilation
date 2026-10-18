@@ -129,7 +129,7 @@ fn expand(
     tone.key_max = keys.1;
     let selected = reference.tone(&tone, baseline.samples[source.sf2_sample].rate)?;
     let mut template = baseline.instruments[source.sf2_instrument].zones[0].clone();
-    if !source.stopped_keys.is_empty() {
+    if !source.stopped_keys.is_empty() && !source.silent {
         let sample = binding
             .samples
             .iter()
@@ -274,7 +274,7 @@ pub(crate) fn independent(
         let mut matches = 0;
         let mut first_error = None;
         for (source_index, source) in binding.tones.iter().enumerate() {
-            if source.silent || requested_keys.is_none() {
+            if requested_keys.is_none() {
                 continue;
             }
             let original_shape = shape(&baseline.instruments[source.sf2_instrument].zones);
@@ -335,6 +335,15 @@ pub(crate) fn independent(
                     &view,
                     allocated,
                 )?;
+                if source.silent
+                    && !assignments
+                        .report
+                        .tones
+                        .iter()
+                        .any(|tone| tone.sf2_instrument == source.sf2_instrument && tone.unmuted)
+                {
+                    return Err("SF2 independent tone: gain-muted source requires validated audible gain and PCM relinking".into());
+                }
                 let pitch = crate::soundfont::packing::pitch::pack(
                     binding,
                     header,
