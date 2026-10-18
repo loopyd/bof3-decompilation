@@ -217,11 +217,17 @@ Memory-card import, export and save operations remain with the emulator's
 memory-card owner.
 
 A qualified outer compressed bank has a read-only `decoded.bin` view. Recognized
-three-root banks also export `sprite.json` with schema `bof3.sprite-bank/v1`, plus
+three-root banks export `sprite.json` with schema `bof3.sprite-bank/v1`, plus
 `root-N/image-N.png` views for mode-1 and mode-2 records. Query them with
 `--kind sprite-bank`. The catalog's `sprite_bank` field reports the record counts
 and image modes. PNG width is twice the record's VRAM word width; each pixel
 preserves one decoded byte. Its grayscale palette is diagnostic.
+
+Original `BIN/BPLCHAR/BPLU349.EMI#0` stores the same three-root layout as a raw
+type-0 payload. Its storage is `us-raw-three-root-sprite-bank`, with `sprite_bank`
+metadata and no outer `bank` metadata or `decoded.bin` view. Its JSON and PNG
+editing rules are the same as those below. Other raw destinations remain
+unresolved unless separately qualified.
 
 In `sprite.json`, edit each palette record's 32 unsigned 16-bit `words`, existing
 program step pairs, and existing cell parts. The step and part rules below also
@@ -234,11 +240,11 @@ Edit PNG indices while preserving dimensions and the diagnostic palette.
 Mode-1 records accept indices from 0 to 31; mode-2 records accept 0 to 255.
 Changed aliases must agree on their complete palette, program, cell, or image
 record. Conflicts name every changed view of the shared record. Unchanged aliases
-do not override an edit. Both image streams and the outer bank must fit their
-original consumed byte spans. Following pointers and
+do not override an edit. Image streams and any outer bank must fit their original
+consumed byte spans. Raw banks retain their original payload size. Following pointers and
 unconsumed bytes do not grant extra capacity. Packing preserves selection tails,
 opaque flags, headers, pointer tables, codec metadata, and unrelated bytes.
-The bank's `raw.bin` and `decoded.bin` are read-only; use its qualified views.
+The bank's `raw.bin` and any `decoded.bin` are read-only; use its qualified views.
 Unsupported internal variants retain read-only decoded bytes and refusal findings.
 
 A recognized resident animation bank has an editable `animation.json` document
@@ -361,6 +367,10 @@ inverse preserves unchanged streams exactly, retains opaque header and trailing
 bytes, and requires edited output to fit the original consumed span. This byte
 inverse does not validate logical sprite edits. Packages validate their record
 edits through the three-root owner before encoding the outer bank.
+The qualified raw `BPLU349.EMI#0` payload bypasses this outer codec. Original
+type-0 dispatch at `SLUS_004.22@0x801622A8` selects `0x801625E4`, which copies
+sectors into the entry's destination through `0x80162C14`. Packing edits its
+three-root records directly and preserves bytes outside the edited spans.
 
 The `bank_image` library reads the eight-byte records consumed at
 `SLUS_004.22@0x8014e6d0`. The header stores a 16-bit width in VRAM words,

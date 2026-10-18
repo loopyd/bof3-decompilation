@@ -190,11 +190,31 @@ fn bank_image_view(source: &[u8], descriptor: &bank_image::Info) -> Result<Index
     })
 }
 
-fn import_bank(root: &Path, export: &Export, original: &[u8]) -> Result<Vec<u8>> {
-    let decoded = bank::decode(original)?.bytes;
+fn bank_bytes(resource: &Resource, source: &[u8]) -> Result<Vec<u8>> {
+    match (
+        resource.emi_type,
+        resource.bank.is_some(),
+        resource.sprite_bank.is_some(),
+    ) {
+        (Some(1), true, _) => Ok(bank::decode(source)?.bytes),
+        (Some(0), false, true) => Ok(source.to_vec()),
+        _ => Err(Error::Invalid(format!(
+            "{} has no qualified raw or compressed bank transport",
+            resource.id
+        ))),
+    }
+}
+
+fn import_bank(
+    root: &Path,
+    resource: &Resource,
+    export: &Export,
+    original: &[u8],
+) -> Result<Vec<u8>> {
     let Some(member) = &export.sprite else {
         return Ok(original.to_vec());
     };
+    let decoded = bank_bytes(resource, original)?;
     let document: sprite_bank::Document =
         serde_json::from_slice(&read_member(root, member, 64 * 1024 * 1024)?)?;
     let original_document = sprite_bank::decode(&decoded)?;
@@ -229,8 +249,12 @@ fn import_bank(root: &Path, export: &Export, original: &[u8]) -> Result<Vec<u8>>
         })
         .collect();
     let intended = sprite_bank::encode_images(&decoded, &document, &edits)?;
-    let encoded = bank::encode(&intended, original)?;
-    if bank::decode(&encoded)?.bytes != intended {
+    let encoded = if resource.bank.is_some() {
+        bank::encode(&intended, original)?
+    } else {
+        intended.clone()
+    };
+    if bank_bytes(resource, &encoded)? != intended {
         return Err(Error::Invalid(
             "packed sprite bank differs from intended logical records".into(),
         ));
@@ -271,9 +295,11 @@ pub fn unpack(input: &Input, destination: &Path) -> Result<Manifest> {
                     &png::encode(&preview::image(&manifest.index, resource, view, &bytes)?)?,
                 )?;
             }
-            if let Some(member) = &export.decoded {
-                let decoded = bank::decode(raw)?.bytes;
-                stage.write(member, &decoded)?;
+            if export.decoded.is_some() || export.sprite.is_some() {
+                let decoded = bank_bytes(resource, raw)?;
+                if let Some(member) = &export.decoded {
+                    stage.write(member, &decoded)?;
+                }
                 if let Some(member) = &export.sprite {
                     let document = sprite_bank::decode(&decoded)?;
                     stage.write(member, &serde_json::to_vec_pretty(&document)?)?;
@@ -523,15 +549,15 @@ pub(crate) fn reconstruct(
         }
         let mut edit = ByteEdits::new(raw);
         let imported_raw = read_member(root, &export.raw, resource.size.max(1))?;
-        if resource.bank.is_some() && imported_raw != raw {
+        if (resource.bank.is_some() || resource.sprite_bank.is_some()) && imported_raw != raw {
             return Err(Error::Invalid(format!(
-                "{}: compressed raw bank is read-only; use its qualified editable views",
+                "{}: raw bank view is read-only; use its qualified editable views",
                 export.raw
             )));
         }
         edit.add(&export.raw, imported_raw)?;
         if let Some(member) = &export.sprite {
-            edit.add(member, import_bank(root, export, raw)?)?;
+            edit.add(member, import_bank(root, resource, export, raw)?)?;
         }
         if let Some(member) = &export.animation {
             let document: resident::Document =

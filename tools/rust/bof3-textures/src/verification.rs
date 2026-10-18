@@ -38,21 +38,34 @@ fn content(resource: &Resource, bytes: &[u8]) -> Result<Option<Content>> {
     if resource.resident_animation.is_some() {
         return Ok(Some(Content::Resident(resident::decode(bytes)?)));
     }
+    if resource.sprite_bank.is_some() {
+        let decoded = sprite_bytes(resource, bytes)?;
+        let document = sprite_bank::decode(&decoded)?;
+        let images = document
+            .roots
+            .iter()
+            .flat_map(|root| &root.images)
+            .map(|image| bank_image::decode(&decoded, image.offset, image.end))
+            .collect::<Result<_>>()?;
+        return Ok(Some(Content::Sprite(document, images)));
+    }
     if resource.bank.is_some() {
-        let decoded = bank::decode(bytes)?.bytes;
-        if resource.sprite_bank.is_some() {
-            let document = sprite_bank::decode(&decoded)?;
-            let images = document
-                .roots
-                .iter()
-                .flat_map(|root| &root.images)
-                .map(|image| bank_image::decode(&decoded, image.offset, image.end))
-                .collect::<Result<_>>()?;
-            return Ok(Some(Content::Sprite(document, images)));
-        }
-        return Ok(Some(Content::DecodedBank(decoded)));
+        return Ok(Some(Content::DecodedBank(bank::decode(bytes)?.bytes)));
     }
     Ok(None)
+}
+
+fn sprite_bytes(resource: &Resource, source: &[u8]) -> Result<Vec<u8>> {
+    if resource.bank.is_some() && resource.emi_type == Some(1) {
+        return Ok(bank::decode(source)?.bytes);
+    }
+    if resource.bank.is_none() && resource.emi_type == Some(0) {
+        return Ok(source.to_vec());
+    }
+    Err(Error::Codec(format!(
+        "{} has an unsupported sprite transport",
+        resource.id
+    )))
 }
 
 fn inverse(resource: &Resource, original: &[u8]) -> Result<Option<Vec<u8>>> {
@@ -85,7 +98,7 @@ fn inverse(resource: &Resource, original: &[u8]) -> Result<Option<Vec<u8>>> {
         )?)),
         Some(Content::Resident(document)) => Ok(Some(resident::encode(original, &document)?)),
         Some(Content::Sprite(document, _)) => {
-            let decoded = bank::decode(original)?.bytes;
+            let decoded = sprite_bytes(resource, original)?;
             let mut planes = Vec::new();
             for (root, record) in document.roots.iter().enumerate() {
                 for (image, descriptor) in record.images.iter().enumerate() {
@@ -105,7 +118,11 @@ fn inverse(resource: &Resource, original: &[u8]) -> Result<Option<Vec<u8>>> {
                 })
                 .collect();
             let encoded = sprite_bank::encode_images(&decoded, &document, &edits)?;
-            Ok(Some(bank::encode(&encoded, original)?))
+            Ok(Some(if resource.bank.is_some() {
+                bank::encode(&encoded, original)?
+            } else {
+                encoded
+            }))
         }
         Some(Content::DecodedBank(bytes)) => Ok(Some(bank::encode(&bytes, original)?)),
         None => Ok(None),

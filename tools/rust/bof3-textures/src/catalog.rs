@@ -162,6 +162,47 @@ pub fn interpretation_hash() -> String {
     )
 }
 
+fn annotate_sprite(resource: &mut Resource, document: &sprite_bank::Document, storage: &str) {
+    resource.kind = "sprite-bank".into();
+    resource.categories = vec!["unclassified-graphics".into()];
+    resource.storage = storage.into();
+    resource.decode = "images-palettes-programs-and-cells-verified".into();
+    resource.pack = "fixed-record-edits-verified".into();
+    resource.sprite_bank = Some(document.info());
+    resource.evidence.extend([
+        "BIN/ETC/GAME.EMI#0@0x801C1254:three-root-selection".into(),
+        "SLUS_004.22@0x8014DC08:bank-selection-consumer".into(),
+        "SLUS_004.22@0x8014E6D0:image-records".into(),
+        "SLUS_004.22@0x80166C48:32-word-palette-copy".into(),
+        "SLUS_004.22@0x8014C6F8:five-byte-cell-parts".into(),
+    ]);
+    for (kind, reason) in [
+        (
+            "selection",
+            "valid selection indices and skipped-upload states remain unresolved",
+        ),
+        (
+            "palette",
+            "32-word records do not establish complete draw CLUTs or neighboring colors",
+        ),
+        (
+            "texture-page",
+            "runtime page, resident uploads and consumer state remain unresolved",
+        ),
+        (
+            "game-role",
+            "filename families do not establish game categories",
+        ),
+    ] {
+        resource.dependencies.push(Dependency {
+            kind: kind.into(),
+            target: None,
+            status: "unresolved".into(),
+            reason: reason.into(),
+        });
+    }
+}
+
 pub fn build(input: &Input) -> Result<Index> {
     build_from(input, |file| {
         sources::verify_source(&input.source_path(file), file)
@@ -329,43 +370,7 @@ pub fn build_from(
                     ]);
                     match sprite_bank::decode(&decoded.bytes) {
                         Ok(document) => {
-                            resource.kind = "sprite-bank".into();
-                            resource.storage = "us-three-root-sprite-bank".into();
-                            resource.decode = "images-palettes-programs-and-cells-verified".into();
-                            resource.pack = "fixed-record-edits-verified".into();
-                            resource.sprite_bank = Some(document.info());
-                            resource.evidence.extend([
-                                "BIN/ETC/GAME.EMI#0@0x801C1254:three-root-selection".into(),
-                                "SLUS_004.22@0x8014DC08:bank-selection-consumer".into(),
-                                "SLUS_004.22@0x8014E6D0:image-records".into(),
-                                "SLUS_004.22@0x80166C48:32-word-palette-copy".into(),
-                                "SLUS_004.22@0x8014C6F8:five-byte-cell-parts".into(),
-                            ]);
-                            for (kind, reason) in [
-                                (
-                                    "selection",
-                                    "valid selection indices and skipped-upload states remain unresolved",
-                                ),
-                                (
-                                    "palette",
-                                    "32-word records do not establish complete draw CLUTs or neighboring colors",
-                                ),
-                                (
-                                    "texture-page",
-                                    "runtime page, resident uploads and consumer state remain unresolved",
-                                ),
-                                (
-                                    "game-role",
-                                    "filename families do not establish game categories",
-                                ),
-                            ] {
-                                resource.dependencies.push(Dependency {
-                                    kind: kind.into(),
-                                    target: None,
-                                    status: "unresolved".into(),
-                                    reason: reason.into(),
-                                });
-                            }
+                            annotate_sprite(&mut resource, &document, "us-three-root-sprite-bank");
                         }
                         Err(error) => {
                             resource.dependencies.push(Dependency {
@@ -380,6 +385,21 @@ pub fn build_from(
                             );
                         }
                     }
+                }
+                if file.path == "BIN/BPLCHAR/BPLU349.EMI"
+                    && slot == 0
+                    && entry.file_type == 0
+                    && entry.ram_ptr == 0x8003_b800
+                    && resource.sha256
+                        == "3633597f03d7f2129ff7d7fc1ad0fe7c2e6a0affb2562e789c4a0b97b5d14b3e"
+                {
+                    let document = sprite_bank::decode(payload)?;
+                    annotate_sprite(&mut resource, &document, "us-raw-three-root-sprite-bank");
+                    resource.evidence.extend([
+                        "SLUS_004.22@0x801622A8:type0-dispatch".into(),
+                        "SLUS_004.22@0x801625E4:direct-sector-copy".into(),
+                        "SLUS_004.22@0x80162C14:bounded-copy-destination".into(),
+                    ]);
                 }
                 if entry.file_type == 3 {
                     resource.kind = "texture-upload".into();
