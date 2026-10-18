@@ -6,6 +6,7 @@ pub mod bank;
 pub mod bank_image;
 pub mod catalog;
 pub mod cell;
+pub mod composition;
 pub mod digest;
 pub mod error;
 pub mod formats;
