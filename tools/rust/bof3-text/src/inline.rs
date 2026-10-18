@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v6";
+pub const SCHEMA: &str = "bof3.inline-text/v7";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -21,6 +21,7 @@ pub(crate) enum Codec {
     AsciiDecimalFormat,
     AsciiSignedDecimalPairFormat,
     AsciiU8DecimalFormat,
+    AsciiU8DecimalTripleFormat,
     AsciiU7DecimalFormat,
     AsciiU16DecimalFormat,
 }
@@ -58,6 +59,7 @@ impl Codec {
     pub(crate) fn max_formatted_size(self, text: &str) -> Result<Option<usize>> {
         let (arguments, limit): (&[usize], usize) = match self {
             Self::AsciiSignedDecimalPairFormat => (&[4, 4], 9),
+            Self::AsciiU8DecimalTripleFormat => (&[3, 3, 3], 16),
             Self::AsciiU8DecimalFormat | Self::AsciiU7DecimalFormat => (&[3], 3),
             Self::AsciiU16DecimalFormat => (&[5], 5),
             _ => return Ok(None),
@@ -112,6 +114,7 @@ impl Codec {
             Self::AsciiDecimalFormat => "ascii-decimal-format",
             Self::AsciiSignedDecimalPairFormat => "ascii-signed-decimal-pair-format",
             Self::AsciiU8DecimalFormat => "ascii-u8-decimal-format",
+            Self::AsciiU8DecimalTripleFormat => "ascii-u8-decimal-triple-format",
             Self::AsciiU7DecimalFormat => "ascii-u7-decimal-format",
             Self::AsciiU16DecimalFormat => "ascii-u16-decimal-format",
         }
@@ -532,12 +535,13 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
-        name: "US SHOP labels",
+        name: "US SHOP labels and clock format",
         load: 0x801d0c00,
         size: 87660,
-        sha256: "88846e97d2f8e31ac94627ac123fbf23e72920bc288d63e5f5034ae612c45199",
-        consumers: &[0x801d9a58, 0x801dca2c, 0x801dd0a8, 0x801dd934],
+        sha256: "cd91ebe00e58e0f9057d706a4bfe40459c520c70531445738a3c1351be476351",
+        consumers: &[0x801d5894, 0x801d9a58, 0x801dca2c, 0x801dd0a8, 0x801dd934],
         allocations: &[
+            Allocation::bounded_decimal(0x801d0c68, 20, Codec::AsciiU8DecimalTripleFormat, None),
             Allocation::counted(0x801d0d14),
             Allocation::counted(0x801d0d28),
             Allocation::counted(0x801d0d3c),

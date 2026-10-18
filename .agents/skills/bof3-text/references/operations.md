@@ -65,14 +65,14 @@ The tool preserves stats and other record bytes. These fields do not use
 dialogue command markup. Other name families require separate evidence.
 
 US START entry 8 and STATUS entry 0 each expose ten counted labels and eight
-default names through `bof3.inline-text/v6`. Select the entry explicitly and omit
+default names through `bof3.inline-text/v7`. Select the entry explicitly and omit
 class and latch selectors. Re-extract former character-only documents. Each
 archive needs its own document and output; editing one does not update the other
 or a save.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v6`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v7`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -94,6 +94,10 @@ formats and two fixed twelve-byte labels. Numeric output is bounded by five
 bytes, but the first format's draw limit remains three characters. Preserve
 the formats' arguments and both size bounds; fixed labels accept literal game
 characters in all twelve bytes. Runtime rendering remains unverified.
+SHOP entry 0 also includes an ASCII clock format with three ordered unsigned
+byte arguments, at most nineteen encoded bytes and sixteen formatted bytes.
+Preserve its `renderer: null`; only formatting and a stack-buffer copy are traced.
+The filename and Shift-JIS header formats remain unsupported.
 Corpus export includes these documents alongside bank documents.
 Battle append row 1 also accepts `{glyph(0xNN)}`, with a nonzero operand and at most
 five encoded bytes. Other command-bearing and untraced table rows are refused.
