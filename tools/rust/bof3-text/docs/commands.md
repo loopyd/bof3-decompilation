@@ -155,7 +155,7 @@ dialogue commands. See [formats.md](formats.md#record-names).
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v9` document with ten counted labels and eight default names.
+`bof3.inline-text/v10` document with ten counted labels and eight default names.
 Re-extract former character-only documents. Default `--entry all` selects banks.
 See [formats.md](formats.md#default-character-names).
 
@@ -171,7 +171,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v9`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v10`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 The original BATTLE archive also has supported message records in entry 3.
@@ -254,7 +254,7 @@ field capacity. All eight records and their allocation identities are required.
 AREA008 entry 13 includes three decimal formats with separate encoded and
 formatted output limits. Use `analyze` to inspect `max_formatted_size` before
 editing. The deferred masked-byte format has an unverified final renderer and
-retains `renderer: null`. See [inline formats](formats.md#inline-overlay-text)
+retains `renderers: []`. See [inline formats](formats.md#inline-overlay-text)
 for its supported arguments and limits.
 
 AREA030, AREA089 and AREA129 entry 4 each include two numeric formats and two
@@ -274,13 +274,21 @@ seven bytes. An adjacent `ascii-literal` label accepts three printable ASCII
 bytes, using `0x20` for spaces. It does not interpret format conversions or command
 markup. Each allocation reserves a NUL byte. Runtime rendering remains unverified.
 
+BATE and SHISU also expose `%02d` with one unsigned byte argument, at most four
+encoded bytes and three formatted bytes. Their `%7d` rows accept one signed
+32-bit argument, at most three encoded bytes and eleven formatted bytes. Only
+this signed codec permits decimal widths through 7. Its `renderers` array retains
+both proven draw functions. The adjacent `-------` fallback accepts seven
+printable ASCII bytes and refuses every percent sequence because its formatter
+receives no arguments. All these allocations reserve NUL.
+
 SHOP entry 0 includes an ASCII clock format with three unsigned byte arguments.
 Preserve their order, at most nineteen encoded bytes, and at most sixteen
 formatted bytes. Decimal widths use 1..4 with optional zero padding. Its traced
-consumer copies the result to a stack buffer; retain `renderer: null` because
+consumer copies the result to a stack buffer; retain `renderers: []` because
 rendering is unverified. The filename and Shift-JIS header formats remain unsupported.
 
-Inline documents use `bof3.inline-text/v9`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v10`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.

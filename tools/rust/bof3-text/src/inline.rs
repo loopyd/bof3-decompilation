@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v9";
+pub const SCHEMA: &str = "bof3.inline-text/v10";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -19,7 +19,9 @@ pub(crate) enum Codec {
     GameCountedLiteral,
     GameGlyphs,
     AsciiLiteral,
+    AsciiFormatLiteral,
     AsciiDecimalFormat,
+    AsciiI32DecimalFormat,
     AsciiSignedDecimalPairFormat,
     AsciiU8DecimalFormat,
     AsciiU8DecimalPairFormat,
@@ -67,15 +69,20 @@ impl Codec {
     }
 
     pub(crate) fn max_formatted_size(self, text: &str) -> Result<Option<usize>> {
-        let (arguments, limit): (&[usize], usize) = match self {
-            Self::AsciiSignedDecimalPairFormat => (&[4, 4], 9),
-            Self::AsciiU8DecimalPairFormat => (&[3, 3], 7),
-            Self::AsciiU8DecimalTripleFormat => (&[3, 3, 3], 16),
-            Self::AsciiU8DecimalFormat | Self::AsciiU7DecimalFormat => (&[3], 3),
-            Self::AsciiU16DecimalFormat => (&[5], 5),
+        if self == Self::AsciiFormatLiteral && text.contains('%') {
+            return invalid("ASCII format literal cannot contain percent sequences");
+        }
+        let (arguments, limit, max_width): (&[usize], usize, usize) = match self {
+            Self::AsciiFormatLiteral => (&[], 7, 4),
+            Self::AsciiI32DecimalFormat => (&[11], 11, 7),
+            Self::AsciiSignedDecimalPairFormat => (&[4, 4], 9, 4),
+            Self::AsciiU8DecimalPairFormat => (&[3, 3], 7, 4),
+            Self::AsciiU8DecimalTripleFormat => (&[3, 3, 3], 16, 4),
+            Self::AsciiU8DecimalFormat | Self::AsciiU7DecimalFormat => (&[3], 3, 4),
+            Self::AsciiU16DecimalFormat => (&[5], 5, 4),
             _ => return Ok(None),
         };
-        let size = decimal_format_size(text, arguments)?;
+        let size = decimal_format_size(text, arguments, max_width)?;
         if size > limit {
             return invalid(format!(
                 "ASCII decimal format exceeds its {limit}-byte output bound"
@@ -123,7 +130,9 @@ impl Codec {
             Self::GameCountedLiteral => "game-counted-literal",
             Self::GameGlyphs => "game-glyphs",
             Self::AsciiLiteral => "ascii-literal",
+            Self::AsciiFormatLiteral => "ascii-format-literal",
             Self::AsciiDecimalFormat => "ascii-decimal-format",
+            Self::AsciiI32DecimalFormat => "ascii-i32-decimal-format",
             Self::AsciiSignedDecimalPairFormat => "ascii-signed-decimal-pair-format",
             Self::AsciiU8DecimalFormat => "ascii-u8-decimal-format",
             Self::AsciiU8DecimalPairFormat => "ascii-u8-decimal-pair-format",
@@ -177,7 +186,7 @@ impl Codec {
     }
 }
 
-fn decimal_format_size(text: &str, arguments: &[usize]) -> Result<usize> {
+fn decimal_format_size(text: &str, arguments: &[usize], max_width: usize) -> Result<usize> {
     if !text.bytes().all(|byte| (0x20..=0x7e).contains(&byte)) {
         return invalid("ASCII decimal format requires printable ASCII");
     }
@@ -194,14 +203,20 @@ fn decimal_format_size(text: &str, arguments: &[usize]) -> Result<usize> {
             bytes.next();
         }
         let width = match bytes.peek().copied() {
-            Some(b'1'..=b'4') => usize::from(bytes.next().unwrap() - b'0'),
+            Some(byte @ b'1'..=b'9') if usize::from(byte - b'0') <= max_width => {
+                usize::from(bytes.next().unwrap() - b'0')
+            }
             _ if !padded => 0,
-            _ => return invalid("zero padding requires a decimal width from 1 to 4"),
+            _ => {
+                return invalid(format!(
+                    "zero padding requires a decimal width from 1 to {max_width}"
+                ));
+            }
         };
         if bytes.next() != Some(b'd') || argument >= arguments.len() {
-            return invalid(
-                "decimal format requires its ordered %d arguments and optional width 1..4",
-            );
+            return invalid(format!(
+                "decimal format requires its ordered %d arguments and optional width 1..{max_width}",
+            ));
         }
         size += arguments[argument].max(width);
         argument += 1;
@@ -288,7 +303,7 @@ struct Allocation {
     address: u32,
     capacity: usize,
     reference: Option<u32>,
-    renderer: Option<u32>,
+    renderers: &'static [u32],
     codec: Codec,
 }
 
@@ -298,7 +313,7 @@ impl Allocation {
             address,
             capacity,
             reference: None,
-            renderer: Some(0x80150098),
+            renderers: &[0x80150098],
             codec: Codec::AsciiLiteral,
         }
     }
@@ -308,7 +323,7 @@ impl Allocation {
             address,
             capacity,
             reference: None,
-            renderer: Some(0x8014f800),
+            renderers: &[0x8014f800],
             codec: Codec::GameFixedLiteral,
         }
     }
@@ -318,17 +333,22 @@ impl Allocation {
             address,
             capacity: 8,
             reference: None,
-            renderer: Some(0x8014fc90),
+            renderers: &[0x8014fc90],
             codec: Codec::GameCountedLiteral,
         }
     }
 
-    const fn literal(address: u32, capacity: usize, reference: Option<u32>, renderer: u32) -> Self {
+    const fn literal(
+        address: u32,
+        capacity: usize,
+        reference: Option<u32>,
+        renderers: &'static [u32],
+    ) -> Self {
         Self {
             address,
             capacity,
             reference,
-            renderer: Some(renderer),
+            renderers,
             codec: Codec::GameLiteral,
         }
     }
@@ -338,22 +358,22 @@ impl Allocation {
             address,
             capacity,
             reference: None,
-            renderer: Some(0x80150098),
+            renderers: &[0x80150098],
             codec: Codec::AsciiDecimalFormat,
         }
     }
 
-    const fn bounded_decimal(
+    const fn bounded_format(
         address: u32,
         capacity: usize,
         codec: Codec,
-        renderer: Option<u32>,
+        renderers: &'static [u32],
     ) -> Self {
         Self {
             address,
             capacity,
             reference: None,
-            renderer,
+            renderers,
             codec,
         }
     }
@@ -363,7 +383,7 @@ impl Allocation {
             address,
             capacity,
             reference: None,
-            renderer: Some(0x8014f800),
+            renderers: &[0x8014f800],
             codec: Codec::GameGlyphs,
         }
     }
@@ -386,18 +406,8 @@ const LAYOUTS: &[Layout] = &[
         sha256: "f1ff752e7cac1a5f198aba917c8072910bc1be1625eb1d14af128fa7ca915205",
         consumers: &[0x801e1004, 0x801e1320],
         allocations: &[
-            Allocation::bounded_decimal(
-                0x801d0c38,
-                4,
-                Codec::AsciiU16DecimalFormat,
-                Some(0x8014f800),
-            ),
-            Allocation::bounded_decimal(
-                0x801d0c8c,
-                4,
-                Codec::AsciiU16DecimalFormat,
-                Some(0x8014f800),
-            ),
+            Allocation::bounded_format(0x801d0c38, 4, Codec::AsciiU16DecimalFormat, &[0x8014f800]),
+            Allocation::bounded_format(0x801d0c8c, 4, Codec::AsciiU16DecimalFormat, &[0x8014f800]),
             Allocation::fixed_literal(0x801e28c4, 12),
             Allocation::fixed_literal(0x801e28d0, 12),
         ],
@@ -409,19 +419,14 @@ const LAYOUTS: &[Layout] = &[
         sha256: "ff37a43f66ba97f97f7c4c7f1a9020a614e95e48e4629fd6c294981945c97237",
         consumers: &[0x801f3c2c, 0x801f3d18, 0x801f437c, 0x801f43c8],
         allocations: &[
-            Allocation::bounded_decimal(
+            Allocation::bounded_format(
                 0x801f2c04,
                 10,
                 Codec::AsciiSignedDecimalPairFormat,
-                Some(0x8014ff0c),
+                &[0x8014ff0c],
             ),
-            Allocation::bounded_decimal(
-                0x801f2c10,
-                4,
-                Codec::AsciiU8DecimalFormat,
-                Some(0x8014ff0c),
-            ),
-            Allocation::bounded_decimal(0x801f2c14, 3, Codec::AsciiU7DecimalFormat, None),
+            Allocation::bounded_format(0x801f2c10, 4, Codec::AsciiU8DecimalFormat, &[0x8014ff0c]),
+            Allocation::bounded_format(0x801f2c14, 3, Codec::AsciiU7DecimalFormat, &[]),
         ],
     },
     Layout {
@@ -464,12 +469,12 @@ const LAYOUTS: &[Layout] = &[
             Allocation::decimal(0x801d0c04, 4),
             Allocation::decimal(0x801d0c08, 8),
             Allocation::decimal(0x801d0c10, 8),
-            Allocation::literal(0x801d4038, 4, None, 0x8014f800),
-            Allocation::literal(0x801d403c, 4, None, 0x8014f800),
-            Allocation::literal(0x801d4040, 4, None, 0x8014f800),
-            Allocation::literal(0x801d4044, 4, None, 0x8014f800),
-            Allocation::literal(0x801d4048, 5, None, 0x8014fc90),
-            Allocation::literal(0x801d4050, 5, None, 0x8014fc90),
+            Allocation::literal(0x801d4038, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801d403c, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801d4040, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801d4044, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801d4048, 5, None, &[0x8014fc90]),
+            Allocation::literal(0x801d4050, 5, None, &[0x8014fc90]),
         ],
     },
     Layout {
@@ -479,28 +484,37 @@ const LAYOUTS: &[Layout] = &[
         sha256: "3df942ff3b7822e4582cb809cec769712592d7059f39e06fef1e4e057be02c24",
         consumers: &[0x800b28c8, 0x800b2f70],
         allocations: &[
-            Allocation::literal(0x800b6e60, 5, Some(0x800b6e88), 0x8014f800),
-            Allocation::literal(0x800b6e68, 7, Some(0x800b6e8c), 0x8014f800),
-            Allocation::literal(0x800b6e70, 6, Some(0x800b6e90), 0x8014f800),
-            Allocation::literal(0x800b6e78, 7, Some(0x800b6e94), 0x8014f800),
-            Allocation::literal(0x800b6e80, 6, Some(0x800b6e98), 0x8014f800),
-            Allocation::literal(0x800b6e9c, 5, Some(0x800b6ec4), 0x8014f800),
-            Allocation::literal(0x800b6ea4, 7, Some(0x800b6ec8), 0x8014f800),
-            Allocation::literal(0x800b6eac, 7, Some(0x800b6ecc), 0x8014f800),
-            Allocation::literal(0x800b6eb4, 6, Some(0x800b6ed0), 0x8014f800),
-            Allocation::literal(0x800b6ebc, 7, Some(0x800b6ed4), 0x8014f800),
+            Allocation::literal(0x800b6e60, 5, Some(0x800b6e88), &[0x8014f800]),
+            Allocation::literal(0x800b6e68, 7, Some(0x800b6e8c), &[0x8014f800]),
+            Allocation::literal(0x800b6e70, 6, Some(0x800b6e90), &[0x8014f800]),
+            Allocation::literal(0x800b6e78, 7, Some(0x800b6e94), &[0x8014f800]),
+            Allocation::literal(0x800b6e80, 6, Some(0x800b6e98), &[0x8014f800]),
+            Allocation::literal(0x800b6e9c, 5, Some(0x800b6ec4), &[0x8014f800]),
+            Allocation::literal(0x800b6ea4, 7, Some(0x800b6ec8), &[0x8014f800]),
+            Allocation::literal(0x800b6eac, 7, Some(0x800b6ecc), &[0x8014f800]),
+            Allocation::literal(0x800b6eb4, 6, Some(0x800b6ed0), &[0x8014f800]),
+            Allocation::literal(0x800b6ebc, 7, Some(0x800b6ed4), &[0x8014f800]),
         ],
     },
     Layout {
         name: "US BATE labels and numeric formats",
         load: 0x801d0c00,
         size: 33864,
-        sha256: "b5f31458fdb2c5a06151731162b2c303b9b3f139abb53424d5065c9b55d2e1f9",
+        sha256: "0063453c8ee16df8c02f041d5f7f05c5da027a1ca519ce778813abe693ab7b8f",
         consumers: &[
-            0x801d3fb0, 0x801d6f84, 0x801d6fc0, 0x801d7600, 0x801d7e8c, 0x801d7eac, 0x801d8394,
-            0x801d83b8, 0x801d83d0, 0x801d83f8, 0x801d841c, 0x801d8438,
+            0x801d3a48, 0x801d3a6c, 0x801d3ac4, 0x801d3ae4, 0x801d3b10, 0x801d3fb0, 0x801d48d4,
+            0x801d48fc, 0x801d4a4c, 0x801d4a74, 0x801d4a88, 0x801d4aa4, 0x801d6f84, 0x801d6fc0,
+            0x801d7600, 0x801d7e8c, 0x801d7eac, 0x801d8394, 0x801d83b8, 0x801d83d0, 0x801d83f8,
+            0x801d841c, 0x801d8438,
         ],
         allocations: &[
+            Allocation::bounded_format(
+                0x801d0c44,
+                4,
+                Codec::AsciiI32DecimalFormat,
+                &[0x8014ff0c, 0x80150098],
+            ),
+            Allocation::bounded_format(0x801d0c48, 8, Codec::AsciiFormatLiteral, &[0x80150098]),
             Allocation::counted(0x801d0c50),
             Allocation::counted(0x801d0c64),
             Allocation::counted(0x801d0c78),
@@ -511,51 +525,56 @@ const LAYOUTS: &[Layout] = &[
             Allocation::counted(0x801d0cdc),
             Allocation::counted(0x801d0cf0),
             Allocation::counted(0x801d0d04),
-            Allocation::bounded_decimal(
+            Allocation::bounded_format(0x801d0d1c, 5, Codec::AsciiU8DecimalFormat, &[0x8014ff0c]),
+            Allocation::bounded_format(
                 0x801d0d5c,
                 8,
                 Codec::AsciiU8DecimalPairFormat,
-                Some(0x80150098),
+                &[0x80150098],
             ),
-            Allocation::bounded_decimal(
-                0x801d0d80,
-                4,
-                Codec::AsciiU8DecimalFormat,
-                Some(0x80150098),
-            ),
-            Allocation::bounded_decimal(
+            Allocation::bounded_format(0x801d0d80, 4, Codec::AsciiU8DecimalFormat, &[0x80150098]),
+            Allocation::bounded_format(
                 0x801d0d84,
                 10,
                 Codec::AsciiU8DecimalPairFormat,
-                Some(0x80150098),
+                &[0x80150098],
             ),
             Allocation::ascii_literal(0x801d0d90, 4),
-            Allocation::literal(0x801d8e24, 5, Some(0x801d8e4c), 0x8014f800),
-            Allocation::literal(0x801d8e2c, 7, Some(0x801d8e50), 0x8014f800),
-            Allocation::literal(0x801d8e34, 6, Some(0x801d8e54), 0x8014f800),
-            Allocation::literal(0x801d8e3c, 7, Some(0x801d8e58), 0x8014f800),
-            Allocation::literal(0x801d8e44, 6, Some(0x801d8e5c), 0x8014f800),
-            Allocation::literal(0x801d8e60, 5, Some(0x801d8e80), 0x8014f800),
-            Allocation::literal(0x801d8e68, 7, Some(0x801d8e84), 0x8014f800),
-            Allocation::literal(0x801d8e70, 7, Some(0x801d8e88), 0x8014f800),
-            Allocation::literal(0x801d8e78, 6, Some(0x801d8e8c), 0x8014f800),
-            Allocation::literal(0x801d8e90, 5, Some(0x801d8eb8), 0x8014f800),
-            Allocation::literal(0x801d8e98, 7, Some(0x801d8ebc), 0x8014f800),
-            Allocation::literal(0x801d8ea0, 6, Some(0x801d8ec0), 0x8014f800),
-            Allocation::literal(0x801d8ea8, 7, Some(0x801d8ec4), 0x8014f800),
-            Allocation::literal(0x801d8eb0, 6, Some(0x801d8ec8), 0x8014f800),
+            Allocation::literal(0x801d8e24, 5, Some(0x801d8e4c), &[0x8014f800]),
+            Allocation::literal(0x801d8e2c, 7, Some(0x801d8e50), &[0x8014f800]),
+            Allocation::literal(0x801d8e34, 6, Some(0x801d8e54), &[0x8014f800]),
+            Allocation::literal(0x801d8e3c, 7, Some(0x801d8e58), &[0x8014f800]),
+            Allocation::literal(0x801d8e44, 6, Some(0x801d8e5c), &[0x8014f800]),
+            Allocation::literal(0x801d8e60, 5, Some(0x801d8e80), &[0x8014f800]),
+            Allocation::literal(0x801d8e68, 7, Some(0x801d8e84), &[0x8014f800]),
+            Allocation::literal(0x801d8e70, 7, Some(0x801d8e88), &[0x8014f800]),
+            Allocation::literal(0x801d8e78, 6, Some(0x801d8e8c), &[0x8014f800]),
+            Allocation::literal(0x801d8e90, 5, Some(0x801d8eb8), &[0x8014f800]),
+            Allocation::literal(0x801d8e98, 7, Some(0x801d8ebc), &[0x8014f800]),
+            Allocation::literal(0x801d8ea0, 6, Some(0x801d8ec0), &[0x8014f800]),
+            Allocation::literal(0x801d8ea8, 7, Some(0x801d8ec4), &[0x8014f800]),
+            Allocation::literal(0x801d8eb0, 6, Some(0x801d8ec8), &[0x8014f800]),
         ],
     },
     Layout {
         name: "US SHISU labels and numeric formats",
         load: 0x801d0c00,
         size: 38196,
-        sha256: "1ca37d1b108e367d1fe2eba5f3efe9e4ff395a986f662a64a1cd2345b7decc2a",
+        sha256: "2e567070f1f1370c95f68de1997445995faed6af7a5c35414c739e7d157ebc34",
         consumers: &[
-            0x801d4f58, 0x801d7f2c, 0x801d7f68, 0x801d85a8, 0x801d8e34, 0x801d8e54, 0x801d933c,
-            0x801d9360, 0x801d9378, 0x801d93a0, 0x801d93c4, 0x801d93e0,
+            0x801d49f0, 0x801d4a14, 0x801d4a6c, 0x801d4a8c, 0x801d4ab8, 0x801d4f58, 0x801d587c,
+            0x801d58a4, 0x801d59f4, 0x801d5a1c, 0x801d5a30, 0x801d5a4c, 0x801d7f2c, 0x801d7f68,
+            0x801d85a8, 0x801d8e34, 0x801d8e54, 0x801d933c, 0x801d9360, 0x801d9378, 0x801d93a0,
+            0x801d93c4, 0x801d93e0,
         ],
         allocations: &[
+            Allocation::bounded_format(
+                0x801d0c28,
+                4,
+                Codec::AsciiI32DecimalFormat,
+                &[0x8014ff0c, 0x80150098],
+            ),
+            Allocation::bounded_format(0x801d0c2c, 8, Codec::AsciiFormatLiteral, &[0x80150098]),
             Allocation::counted(0x801d0c34),
             Allocation::counted(0x801d0c48),
             Allocation::counted(0x801d0c5c),
@@ -566,39 +585,35 @@ const LAYOUTS: &[Layout] = &[
             Allocation::counted(0x801d0cc0),
             Allocation::counted(0x801d0cd4),
             Allocation::counted(0x801d0ce8),
-            Allocation::bounded_decimal(
+            Allocation::bounded_format(0x801d0d00, 5, Codec::AsciiU8DecimalFormat, &[0x8014ff0c]),
+            Allocation::bounded_format(
                 0x801d0d40,
                 8,
                 Codec::AsciiU8DecimalPairFormat,
-                Some(0x80150098),
+                &[0x80150098],
             ),
-            Allocation::bounded_decimal(
-                0x801d0d64,
-                4,
-                Codec::AsciiU8DecimalFormat,
-                Some(0x80150098),
-            ),
-            Allocation::bounded_decimal(
+            Allocation::bounded_format(0x801d0d64, 4, Codec::AsciiU8DecimalFormat, &[0x80150098]),
+            Allocation::bounded_format(
                 0x801d0d68,
                 10,
                 Codec::AsciiU8DecimalPairFormat,
-                Some(0x80150098),
+                &[0x80150098],
             ),
             Allocation::ascii_literal(0x801d0d74, 4),
-            Allocation::literal(0x801d9e48, 5, Some(0x801d9e70), 0x8014f800),
-            Allocation::literal(0x801d9e50, 7, Some(0x801d9e74), 0x8014f800),
-            Allocation::literal(0x801d9e58, 6, Some(0x801d9e78), 0x8014f800),
-            Allocation::literal(0x801d9e60, 7, Some(0x801d9e7c), 0x8014f800),
-            Allocation::literal(0x801d9e68, 6, Some(0x801d9e80), 0x8014f800),
-            Allocation::literal(0x801d9e84, 5, Some(0x801d9ea4), 0x8014f800),
-            Allocation::literal(0x801d9e8c, 7, Some(0x801d9ea8), 0x8014f800),
-            Allocation::literal(0x801d9e94, 7, Some(0x801d9eac), 0x8014f800),
-            Allocation::literal(0x801d9e9c, 6, Some(0x801d9eb0), 0x8014f800),
-            Allocation::literal(0x801d9eb4, 5, Some(0x801d9edc), 0x8014f800),
-            Allocation::literal(0x801d9ebc, 7, Some(0x801d9ee0), 0x8014f800),
-            Allocation::literal(0x801d9ec4, 6, Some(0x801d9ee4), 0x8014f800),
-            Allocation::literal(0x801d9ecc, 7, Some(0x801d9ee8), 0x8014f800),
-            Allocation::literal(0x801d9ed4, 6, Some(0x801d9eec), 0x8014f800),
+            Allocation::literal(0x801d9e48, 5, Some(0x801d9e70), &[0x8014f800]),
+            Allocation::literal(0x801d9e50, 7, Some(0x801d9e74), &[0x8014f800]),
+            Allocation::literal(0x801d9e58, 6, Some(0x801d9e78), &[0x8014f800]),
+            Allocation::literal(0x801d9e60, 7, Some(0x801d9e7c), &[0x8014f800]),
+            Allocation::literal(0x801d9e68, 6, Some(0x801d9e80), &[0x8014f800]),
+            Allocation::literal(0x801d9e84, 5, Some(0x801d9ea4), &[0x8014f800]),
+            Allocation::literal(0x801d9e8c, 7, Some(0x801d9ea8), &[0x8014f800]),
+            Allocation::literal(0x801d9e94, 7, Some(0x801d9eac), &[0x8014f800]),
+            Allocation::literal(0x801d9e9c, 6, Some(0x801d9eb0), &[0x8014f800]),
+            Allocation::literal(0x801d9eb4, 5, Some(0x801d9edc), &[0x8014f800]),
+            Allocation::literal(0x801d9ebc, 7, Some(0x801d9ee0), &[0x8014f800]),
+            Allocation::literal(0x801d9ec4, 6, Some(0x801d9ee4), &[0x8014f800]),
+            Allocation::literal(0x801d9ecc, 7, Some(0x801d9ee8), &[0x8014f800]),
+            Allocation::literal(0x801d9ed4, 6, Some(0x801d9eec), &[0x8014f800]),
         ],
     },
     Layout {
@@ -608,7 +623,7 @@ const LAYOUTS: &[Layout] = &[
         sha256: "cd91ebe00e58e0f9057d706a4bfe40459c520c70531445738a3c1351be476351",
         consumers: &[0x801d5894, 0x801d9a58, 0x801dca2c, 0x801dd0a8, 0x801dd934],
         allocations: &[
-            Allocation::bounded_decimal(0x801d0c68, 20, Codec::AsciiU8DecimalTripleFormat, None),
+            Allocation::bounded_format(0x801d0c68, 20, Codec::AsciiU8DecimalTripleFormat, &[]),
             Allocation::counted(0x801d0d14),
             Allocation::counted(0x801d0d28),
             Allocation::counted(0x801d0d3c),
@@ -619,20 +634,20 @@ const LAYOUTS: &[Layout] = &[
             Allocation::counted(0x801d0da0),
             Allocation::counted(0x801d0db4),
             Allocation::counted(0x801d0dc8),
-            Allocation::literal(0x801e5b20, 5, Some(0x801e5b48), 0x8014f800),
-            Allocation::literal(0x801e5b28, 7, Some(0x801e5b4c), 0x8014f800),
-            Allocation::literal(0x801e5b30, 6, Some(0x801e5b50), 0x8014f800),
-            Allocation::literal(0x801e5b38, 7, Some(0x801e5b54), 0x8014f800),
-            Allocation::literal(0x801e5b40, 6, Some(0x801e5b58), 0x8014f800),
-            Allocation::literal(0x801e5b5c, 5, Some(0x801e5b7c), 0x8014f800),
-            Allocation::literal(0x801e5b64, 7, Some(0x801e5b80), 0x8014f800),
-            Allocation::literal(0x801e5b6c, 7, Some(0x801e5b84), 0x8014f800),
-            Allocation::literal(0x801e5b74, 6, Some(0x801e5b88), 0x8014f800),
-            Allocation::literal(0x801e5b8c, 5, Some(0x801e5bb4), 0x8014f800),
-            Allocation::literal(0x801e5b94, 7, Some(0x801e5bb8), 0x8014f800),
-            Allocation::literal(0x801e5b9c, 6, Some(0x801e5bbc), 0x8014f800),
-            Allocation::literal(0x801e5ba4, 7, Some(0x801e5bc0), 0x8014f800),
-            Allocation::literal(0x801e5bac, 6, Some(0x801e5bc4), 0x8014f800),
+            Allocation::literal(0x801e5b20, 5, Some(0x801e5b48), &[0x8014f800]),
+            Allocation::literal(0x801e5b28, 7, Some(0x801e5b4c), &[0x8014f800]),
+            Allocation::literal(0x801e5b30, 6, Some(0x801e5b50), &[0x8014f800]),
+            Allocation::literal(0x801e5b38, 7, Some(0x801e5b54), &[0x8014f800]),
+            Allocation::literal(0x801e5b40, 6, Some(0x801e5b58), &[0x8014f800]),
+            Allocation::literal(0x801e5b5c, 5, Some(0x801e5b7c), &[0x8014f800]),
+            Allocation::literal(0x801e5b64, 7, Some(0x801e5b80), &[0x8014f800]),
+            Allocation::literal(0x801e5b6c, 7, Some(0x801e5b84), &[0x8014f800]),
+            Allocation::literal(0x801e5b74, 6, Some(0x801e5b88), &[0x8014f800]),
+            Allocation::literal(0x801e5b8c, 5, Some(0x801e5bb4), &[0x8014f800]),
+            Allocation::literal(0x801e5b94, 7, Some(0x801e5bb8), &[0x8014f800]),
+            Allocation::literal(0x801e5b9c, 6, Some(0x801e5bbc), &[0x8014f800]),
+            Allocation::literal(0x801e5ba4, 7, Some(0x801e5bc0), &[0x8014f800]),
+            Allocation::literal(0x801e5bac, 6, Some(0x801e5bc4), &[0x8014f800]),
         ],
     },
     Layout {
@@ -644,15 +659,15 @@ const LAYOUTS: &[Layout] = &[
         // Indexed records and direct code references, rather than a pointer table.
         // Row 1 appends at most five encoded bytes. Rows 3/4/5 remain unsupported.
         allocations: &[
-            Allocation::literal(0x801eb000, 13, None, 0x8014f800),
+            Allocation::literal(0x801eb000, 13, None, &[0x8014f800]),
             Allocation::glyphs(0x801eb00d, 6),
-            Allocation::literal(0x801eb01a, 13, None, 0x8014f800),
-            Allocation::literal(0x801eb04e, 13, None, 0x8014f800),
-            Allocation::literal(0x801eb05b, 13, None, 0x8014f800),
-            Allocation::literal(0x801eb068, 13, None, 0x8014f800),
-            Allocation::literal(0x801eb075, 13, None, 0x8014f800),
-            Allocation::literal(0x801eb082, 13, None, 0x8014f800),
-            Allocation::literal(0x801eb08f, 13, None, 0x8014f800),
+            Allocation::literal(0x801eb01a, 13, None, &[0x8014f800]),
+            Allocation::literal(0x801eb04e, 13, None, &[0x8014f800]),
+            Allocation::literal(0x801eb05b, 13, None, &[0x8014f800]),
+            Allocation::literal(0x801eb068, 13, None, &[0x8014f800]),
+            Allocation::literal(0x801eb075, 13, None, &[0x8014f800]),
+            Allocation::literal(0x801eb082, 13, None, &[0x8014f800]),
+            Allocation::literal(0x801eb08f, 13, None, &[0x8014f800]),
         ],
     },
 ];
@@ -688,7 +703,7 @@ pub struct Text {
     pub file_offset: usize,
     payload_offset: usize,
     pub capacity: usize,
-    pub renderer: Option<u32>,
+    pub renderers: Vec<u32>,
     pub(crate) codec: Codec,
     references: Vec<u32>,
     text: String,
@@ -724,7 +739,7 @@ pub fn extract(path: &Path, data: &[u8], entry: Entry, payload: &[u8]) -> Result
                 address,
                 capacity,
                 reference,
-                renderer,
+                renderers,
                 codec,
             } = *allocation;
             let payload_offset = (address - layout.load) as usize;
@@ -738,7 +753,7 @@ pub fn extract(path: &Path, data: &[u8], entry: Entry, payload: &[u8]) -> Result
                 file_offset: entry.offset + payload_offset,
                 payload_offset,
                 capacity,
-                renderer,
+                renderers: renderers.to_vec(),
                 codec,
                 references: reference.into_iter().collect(),
                 text: codec.decode(bytes, entry.offset + payload_offset)?,
@@ -785,7 +800,7 @@ pub fn parse(data: &[u8]) -> Result<Document> {
             address,
             capacity,
             reference,
-            renderer,
+            renderers,
             codec,
         } = *allocation;
         let offset = (address - layout.load) as usize;
@@ -794,7 +809,7 @@ pub fn parse(data: &[u8]) -> Result<Document> {
             || row.payload_offset != offset
             || document.entry_offset.checked_add(offset) != Some(row.file_offset)
             || row.capacity != capacity
-            || row.renderer != renderer
+            || row.renderers != renderers
             || row.codec != codec
             || row.references != reference.into_iter().collect::<Vec<_>>()
         {

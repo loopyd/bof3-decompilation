@@ -65,14 +65,14 @@ The tool preserves stats and other record bytes. These fields do not use
 dialogue command markup. Other name families require separate evidence.
 
 US START entry 8 and STATUS entry 0 each expose ten counted labels and eight
-default names through `bof3.inline-text/v9`. Select the entry explicitly and omit
+default names through `bof3.inline-text/v10`. Select the entry explicitly and omit
 class and latch selectors. Re-extract former character-only documents. Each
 archive needs its own document and output; editing one does not update the other
 or a save.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v9`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v10`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -86,8 +86,8 @@ AREA008 entry 13 also exposes three bounded decimal formats. Preserve their
 ordered arguments and both encoded and formatted limits. The signed pair permits
 at most nine output bytes; the unsigned byte and masked seven-bit rows permit
 three. Optional widths use 1..4 with optional zero padding; other conversions are
-refused. The masked row's final renderer is unverified and records `null`.
-Retain that value. See the [inline format contract](../../../../tools/rust/bof3-text/docs/formats.md)
+refused. The masked row's final renderer is unverified and records `renderers: []`.
+Retain that empty array. See the [inline format contract](../../../../tools/rust/bof3-text/docs/formats.md)
 for argument bounds and allocation sizes.
 AREA030, AREA089 and AREA129 entry 4 each expose two unsigned sixteen-bit decimal
 formats and two fixed twelve-byte labels. Numeric output is bounded by five
@@ -102,9 +102,15 @@ nine encoded bytes, respectively, with formatted bounds of three and seven.
 The adjacent `ascii-literal` label accepts three printable ASCII bytes, including
 spaces as `0x20`, without command or format interpretation. All these fields
 reserve one NUL byte; runtime rendering remains unverified.
+BATE and SHISU also expose `%02d` with one unsigned byte argument and bounds of
+four encoded bytes and three formatted bytes. Their `%7d` rows retain one signed
+32-bit argument, three encoded bytes and eleven formatted bytes. Only this codec
+permits widths through 7. Preserve both proven addresses in `renderers`. The
+adjacent `-------` fallback accepts seven printable ASCII bytes and refuses all
+percent sequences because its formatter receives no arguments. Reserve NUL.
 SHOP entry 0 also includes an ASCII clock format with three ordered unsigned
 byte arguments, at most nineteen encoded bytes and sixteen formatted bytes.
-Preserve its `renderer: null`; only formatting and a stack-buffer copy are traced.
+Preserve its `renderers: []`; only formatting and a stack-buffer copy are traced.
 The filename and Shift-JIS header formats remain unsupported.
 Corpus export includes these documents alongside bank documents.
 Battle append row 1 also accepts `{glyph(0xNN)}`, with a nonzero operand and at most

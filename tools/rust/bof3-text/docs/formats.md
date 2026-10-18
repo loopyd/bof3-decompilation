@@ -115,7 +115,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v9`. Its eighteen strings include
+Extract the selected entry as `bof3.inline-text/v10`. Its eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -207,6 +207,26 @@ format conversions and command markup have no special meaning. Calls at
 `0x801D841C`, `0x801D8438`, `0x801D93C4` and `0x801D93E0` pass these labels
 directly to `0x80150098`. Other formats and runtime rendering remain unverified.
 
+BATE `0x801D0D1C` and SHISU `0x801D0D00` also expose `%02d` in five-byte
+allocations. The `ascii-u8-decimal-format` codec preserves one unsigned byte
+argument, at most four encoded bytes and three formatted bytes. The callers
+load bytes from `0x80144FC0` and `0x80144FC1`, format into `0x80145AD4` and
+draw through `0x8014FF0C`.
+
+BATE `0x801D0C44` and SHISU `0x801D0C28` expose `%7d` in four-byte
+allocations. Their `ascii-i32-decimal-format` codec preserves one signed
+32-bit decimal argument. It allows widths 1..7 with optional zero padding,
+within three encoded bytes and eleven formatted bytes. The original formatter
+fetches a full word, converts its unsigned magnitude and counts any minus sign
+within the field width. Even `-2147483648` fits the eleven-byte output bound.
+These strings have proven consumers through both `0x8014FF0C` and `0x80150098`.
+
+The adjacent eight-byte allocations at BATE `0x801D0C48` and SHISU `0x801D0C2C`
+hold the fallback `-------`. Their `ascii-format-literal` codec permits seven
+printable ASCII bytes and refuses every percent sequence. The original calls
+pass no formatting arguments and draw the result through `0x80150098`. Packing
+reserves NUL in all these allocations. Runtime rendering remains unverified.
+
 US `SHOP.EMI` entry 0 also exposes the ASCII clock format at `0x801D0C68`,
 originally `BOF3-%02d/%02d/%02d`. Its twenty-byte allocation includes NUL.
 The `ascii-u8-decimal-triple-format` codec preserves three ordered decimal
@@ -214,8 +234,8 @@ arguments and accepts printable ASCII within nineteen encoded bytes and sixteen
 formatted bytes. Each argument is an unsigned byte. Widths use 1..4 with optional
 zero padding; other conversions are refused. Consumer `0x801D5894` loads the
 three clock bytes and calls formatter `0x8017E3F4` at `0x801D597C`, then copies
-the result to a stack buffer. A rendered consumer is unverified, so `renderer`
-remains `null`. The filename and Shift-JIS header formats are unsupported.
+the result to a stack buffer. A rendered consumer is unverified, so `renderers`
+remains empty. The filename and Shift-JIS header formats are unsupported.
 
 BATE, SHISU and SHOP each also contain ten 20-byte label records, starting at
 `0x801D0C50`, `0x801D0C34` and `0x801D0D14`, respectively. Each record begins
@@ -228,11 +248,14 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v9` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v10` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
-`renderer`, `codec`, pointer-word `references` and editable `text`. Retain all
-fields and edit only `text`. Allocations exclude alignment padding. Terminated
+`renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
+fields and edit only `text`. The ordered `renderers` array retains every proven
+renderer for that allocation; an empty array means no final renderer is verified.
+It does not establish that all possible consumers have been found. Allocations
+exclude alignment padding. Terminated
 rows reserve one byte for NUL, and `game-counted-literal` rows reserve one byte
 for the trailing count. Both accept at most `capacity - 1` encoded bytes.
 `game-fixed-literal` rows accept all `capacity` bytes without a reserved
@@ -267,9 +290,9 @@ Consumer `0x801F3C2C` supplies a signed byte and a second signed byte scaled by
 byte. Both format into `0x80145AD4` and call renderer `0x8014FF0C`.
 Consumers `0x801F437C` and `0x801F43C8` mask an unsigned byte with `0x7F`,
 format into `0x801490D8`, then call `0x80150224` with actions `0x54` and `0x56`.
-Their final renderer remains unverified; that row records `renderer: null`.
-A null renderer retains formatter-to-buffer evidence without claiming a display
-consumer. Keep this value unchanged when editing. Code references are pinned
+Their final renderer remains unverified; that row records `renderers: []`.
+An empty renderer array retains formatter-to-buffer evidence without claiming a
+display consumer. Keep this array unchanged when editing. Code references are pinned
 outside the allocations; no pointer-word reference is inferred from them.
 Observed rendering remains unverified for all three formats.
 
@@ -342,8 +365,8 @@ Their `references` are empty because the pinned code supplies the addresses.
 It also supports `Pois` at `0x801D4048` and `Conf` at `0x801D4050`.
 These five-byte allocations accept four literal bytes and NUL; the three
 alignment bytes after each remain protected. The selected status pointer reaches
-the call at `0x801D1920`, which uses renderer `0x8014FC90`. Each row records its
-own renderer. The document's `consumers` lists the calls for the whole layout.
+the call at `0x801D1920`, which uses renderer `0x8014FC90`. Each row records all its proven
+renderers. The document's `consumers` lists the calls for the whole layout.
 The same layout includes ASCII numeric formats `%3d`, `%3d/   ` and `   /%3d`
 at `0x801D0C04`, `0x801D0C08` and `0x801D0C10`, with four-, eight- and
 eight-byte allocations including NUL. Nine calls pass these formats and one
