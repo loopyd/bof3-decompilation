@@ -141,6 +141,7 @@ pub fn interpretation_hash() -> String {
             include_str!("packed.rs"),
             include_str!("lzss.rs"),
             include_str!("bank.rs"),
+            include_str!("bank_image.rs"),
             include_str!("animation.rs"),
             include_str!("resident.rs"),
         ]

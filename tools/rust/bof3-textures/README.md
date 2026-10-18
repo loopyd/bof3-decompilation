@@ -236,6 +236,19 @@ bytes, and requires edited output to fit the original allocation. This byte
 inverse does not validate logical sprite edits. The CLI exports decoded bytes
 for inspection and refuses changes to them during packing.
 
+The `bank_image` library reads the eight-byte records consumed at
+`SLUS_004.22@0x8014e6d0`. The header stores a 16-bit width in VRAM words,
+a 16-bit height, and a 32-bit mode. Mode 1 uses `packed`, mode 2 uses `lzss`,
+and other modes submit raw words. This mode does not identify GPU bit depth.
+Dimensions must fit 1024 words by 512 rows, within a 1 MiB decoded bank.
+Callers supply qualified record extents. Encoding preserves dimensions and mode,
+the surrounding bank, and codec metadata. Edited streams must fit a separately
+qualified allocation. Without proven reusable tail bytes, callers must bound
+encoding at the original consumed length. A following image or animation pointer
+does not establish free space. The library preserves mode-2 final-token overshoot
+separately from image bytes. Bank-root selection, palette bindings, and runtime
+appearance remain unresolved, so this record owner has no CLI edit route yet.
+
 Input files are bounded at 128 MiB, indexed images at 1,048,576 pixels, and each
 codec process at 20 seconds. Invalid extents, malformed images, changed snapshots,
 escaped package paths, missing members, and existing destinations cause failure.

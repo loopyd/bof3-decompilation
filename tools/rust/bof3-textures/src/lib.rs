@@ -2,6 +2,7 @@
 
 pub mod animation;
 pub mod bank;
+pub mod bank_image;
 pub mod catalog;
 pub mod digest;
 pub mod error;
