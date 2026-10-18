@@ -15,7 +15,7 @@
 | `executable.rs` | Pinned US diagnostic ASCII allocations, references and bounded hexadecimal formats |
 | `records.rs` | Pinned US equipment and ability name fields and literal-only fixed-width writes |
 | `monsters.rs` | Encounter-template monster name fields and eight-byte writes |
-| `inline.rs` | Pinned overlay labels and default names, with terminated, counted or fixed-width fields |
+| `inline.rs` | Pinned overlay labels, default names and bounded decimal formats, with per-row renderer evidence |
 | `digest.rs` | Shared SHA-256 content identities |
 | `extract.rs` | EMI TOC discovery, bank parsing, document construction, fingerprint |
 | `pack.rs` | Edit planning, span-preserving rebuild, payload replacement |

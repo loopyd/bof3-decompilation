@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v4";
+pub const SCHEMA: &str = "bof3.inline-text/v5";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -19,6 +19,9 @@ pub(crate) enum Codec {
     GameCountedLiteral,
     GameGlyphs,
     AsciiDecimalFormat,
+    AsciiSignedDecimalPairFormat,
+    AsciiU8DecimalFormat,
+    AsciiU7DecimalFormat,
 }
 
 impl Codec {
@@ -32,6 +35,13 @@ impl Codec {
         if self == Self::GameGlyphs {
             return encode_glyphs(text, capacity);
         }
+        if self != Self::AsciiDecimalFormat {
+            self.max_formatted_size(text)?;
+            if text.len() > capacity {
+                return invalid("ASCII decimal format exceeds its allocation");
+            }
+            return Ok(text.as_bytes().to_vec());
+        }
         if text.len() > capacity
             || !text.bytes().all(|byte| (0x20..=0x7e).contains(&byte))
             || text.matches("%3d").count() != 1
@@ -42,6 +52,21 @@ impl Codec {
             );
         }
         Ok(text.as_bytes().to_vec())
+    }
+
+    pub(crate) fn max_formatted_size(self, text: &str) -> Result<Option<usize>> {
+        let (arguments, limit): (&[usize], usize) = match self {
+            Self::AsciiSignedDecimalPairFormat => (&[4, 4], 9),
+            Self::AsciiU8DecimalFormat | Self::AsciiU7DecimalFormat => (&[3], 3),
+            _ => return Ok(None),
+        };
+        let size = decimal_format_size(text, arguments)?;
+        if size > limit {
+            return invalid(format!(
+                "ASCII decimal format exceeds its {limit}-byte output bound"
+            ));
+        }
+        Ok(Some(size))
     }
 
     fn decode(self, bytes: &[u8], file_offset: usize) -> Result<String> {
@@ -83,6 +108,9 @@ impl Codec {
             Self::GameCountedLiteral => "game-counted-literal",
             Self::GameGlyphs => "game-glyphs",
             Self::AsciiDecimalFormat => "ascii-decimal-format",
+            Self::AsciiSignedDecimalPairFormat => "ascii-signed-decimal-pair-format",
+            Self::AsciiU8DecimalFormat => "ascii-u8-decimal-format",
+            Self::AsciiU7DecimalFormat => "ascii-u7-decimal-format",
         }
     }
 
@@ -128,6 +156,41 @@ impl Codec {
         }
         Ok(commands)
     }
+}
+
+fn decimal_format_size(text: &str, arguments: &[usize]) -> Result<usize> {
+    if !text.bytes().all(|byte| (0x20..=0x7e).contains(&byte)) {
+        return invalid("ASCII decimal format requires printable ASCII");
+    }
+    let mut bytes = text.bytes().peekable();
+    let mut argument = 0;
+    let mut size = 0;
+    while let Some(byte) = bytes.next() {
+        if byte != b'%' {
+            size += 1;
+            continue;
+        }
+        let padded = bytes.peek() == Some(&b'0');
+        if padded {
+            bytes.next();
+        }
+        let width = match bytes.peek().copied() {
+            Some(b'1'..=b'4') => usize::from(bytes.next().unwrap() - b'0'),
+            _ if !padded => 0,
+            _ => return invalid("zero padding requires a decimal width from 1 to 4"),
+        };
+        if bytes.next() != Some(b'd') || argument >= arguments.len() {
+            return invalid(
+                "decimal format requires its ordered %d arguments and optional width 1..4",
+            );
+        }
+        size += arguments[argument].max(width);
+        argument += 1;
+    }
+    if argument != arguments.len() {
+        return invalid("decimal format must retain every argument");
+    }
+    Ok(size)
 }
 
 #[derive(Serialize)]
@@ -206,7 +269,7 @@ struct Allocation {
     address: u32,
     capacity: usize,
     reference: Option<u32>,
-    renderer: u32,
+    renderer: Option<u32>,
     codec: Codec,
 }
 
@@ -216,7 +279,7 @@ impl Allocation {
             address,
             capacity: 5,
             reference: None,
-            renderer: 0x8014f800,
+            renderer: Some(0x8014f800),
             codec: Codec::GameFixedLiteral,
         }
     }
@@ -226,7 +289,7 @@ impl Allocation {
             address,
             capacity: 8,
             reference: None,
-            renderer: 0x8014fc90,
+            renderer: Some(0x8014fc90),
             codec: Codec::GameCountedLiteral,
         }
     }
@@ -236,7 +299,7 @@ impl Allocation {
             address,
             capacity,
             reference,
-            renderer,
+            renderer: Some(renderer),
             codec: Codec::GameLiteral,
         }
     }
@@ -246,8 +309,23 @@ impl Allocation {
             address,
             capacity,
             reference: None,
-            renderer: 0x80150098,
+            renderer: Some(0x80150098),
             codec: Codec::AsciiDecimalFormat,
+        }
+    }
+
+    const fn bounded_decimal(
+        address: u32,
+        capacity: usize,
+        codec: Codec,
+        renderer: Option<u32>,
+    ) -> Self {
+        Self {
+            address,
+            capacity,
+            reference: None,
+            renderer,
+            codec,
         }
     }
 
@@ -256,7 +334,7 @@ impl Allocation {
             address,
             capacity,
             reference: None,
-            renderer: 0x8014f800,
+            renderer: Some(0x8014f800),
             codec: Codec::GameGlyphs,
         }
     }
@@ -272,6 +350,28 @@ struct Layout {
 }
 
 const LAYOUTS: &[Layout] = &[
+    Layout {
+        name: "US AREA008 decimal formats",
+        load: 0x801f2c00,
+        size: 10232,
+        sha256: "ff37a43f66ba97f97f7c4c7f1a9020a614e95e48e4629fd6c294981945c97237",
+        consumers: &[0x801f3c2c, 0x801f3d18, 0x801f437c, 0x801f43c8],
+        allocations: &[
+            Allocation::bounded_decimal(
+                0x801f2c04,
+                10,
+                Codec::AsciiSignedDecimalPairFormat,
+                Some(0x8014ff0c),
+            ),
+            Allocation::bounded_decimal(
+                0x801f2c10,
+                4,
+                Codec::AsciiU8DecimalFormat,
+                Some(0x8014ff0c),
+            ),
+            Allocation::bounded_decimal(0x801f2c14, 3, Codec::AsciiU7DecimalFormat, None),
+        ],
+    },
     Layout {
         name: "US START and STATUS labels and default names",
         load: 0x801d0c00,
@@ -491,7 +591,7 @@ pub struct Text {
     pub file_offset: usize,
     payload_offset: usize,
     pub capacity: usize,
-    pub renderer: u32,
+    pub renderer: Option<u32>,
     pub(crate) codec: Codec,
     references: Vec<u32>,
     text: String,

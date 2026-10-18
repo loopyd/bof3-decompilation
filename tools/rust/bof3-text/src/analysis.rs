@@ -68,7 +68,11 @@ fn literal_report(
                 codec.encode(text, maximum)?.len()
             }
             Encoding::GameLiteral => crate::records::encode_name(text, maximum)?.len(),
-            Encoding::Inline => inline_codec.unwrap().encode(text, maximum)?.len(),
+            Encoding::Inline => {
+                let codec = inline_codec.unwrap();
+                max_formatted_size = codec.max_formatted_size(text)?;
+                codec.encode(text, maximum)?.len()
+            }
         };
         let remaining = maximum
             .checked_sub(encoded_size)

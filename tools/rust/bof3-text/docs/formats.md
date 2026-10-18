@@ -115,7 +115,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v4`. Its eighteen strings include
+Extract the selected entry as `bof3.inline-text/v5`. Its eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -192,7 +192,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v4` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v5` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderer`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -208,6 +208,34 @@ length in the allocation's last byte.
 `{glyph(0xNN)}`, encoded as `0x15` followed by one nonzero byte. Glyph names and
 displayed meanings are unverified. Other commands and pointer changes are refused.
 Re-extract older inline documents before editing or packing.
+
+The `US AREA008 decimal formats` layout covers entry 13 of the original US
+`BIN/WORLD00/AREA008.EMI`, loaded at `0x801F2C00`. Three ASCII allocations use
+formatter `0x8017E3F4`. Their capacities include NUL:
+
+| Address | Original format | Capacity | Codec | Argument bounds | Maximum output bytes before NUL |
+| --- | --- | --- | --- | --- | --- |
+| `0x801F2C04` | `%02d %02d` | 10 | `ascii-signed-decimal-pair-format` | `[-128, 127]`, `[-426, 423]` | 9 |
+| `0x801F2C10` | `%2d` | 4 | `ascii-u8-decimal-format` | `[0, 255]` | 3 |
+| `0x801F2C14` | `%d` | 3 | `ascii-u7-decimal-format` | `[0, 127]` | 3 |
+
+These codecs require the same number and order of decimal arguments. They accept
+`%d`, an optional minimum width from 1 to 4, and optional zero padding before that
+width. Printable ASCII literals are allowed within both the encoded allocation
+and the original maximum output bound. Other percent sequences are refused.
+Analysis reports `max_formatted_size` separately from encoded size. The three-byte
+allocation fits only `%d` plus NUL, so its format cannot change.
+
+Consumer `0x801F3C2C` supplies a signed byte and a second signed byte scaled by
+100/30 with truncation toward zero. Consumer `0x801F3D18` supplies an unsigned
+byte. Both format into `0x80145AD4` and call renderer `0x8014FF0C`.
+Consumers `0x801F437C` and `0x801F43C8` mask an unsigned byte with `0x7F`,
+format into `0x801490D8`, then call `0x80150224` with actions `0x54` and `0x56`.
+Their final renderer remains unverified; that row records `renderer: null`.
+A null renderer retains formatter-to-buffer evidence without claiming a display
+consumer. Keep this value unchanged when editing. Code references are pinned
+outside the allocations; no pointer-word reference is inferred from them.
+Observed rendering remains unverified for all three formats.
 
 Recognition pins the complete selected payload outside these allocations.
 Packing additionally binds the complete archive hash, canonical source path,

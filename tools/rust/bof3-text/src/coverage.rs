@@ -308,7 +308,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                     record.ranges.push(RangeRecord {
                                         offset: text.file_offset, length: text.capacity,
                                         entry: Some(entry.index), status: "known-text",
-                                        evidence: format!("{} allocation {:#x}; consumers {}; renderer {:#x}; codec {}; runtime acceptance pending", document.layout, text.address, document.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), text.renderer, text.codec.as_str()),
+                                        evidence: format!("{} allocation {:#x}; consumers {}; renderer {}; codec {}; runtime acceptance pending", document.layout, text.address, document.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), text.renderer.map_or_else(|| "unverified".into(), |address| format!("{address:#x}")), text.codec.as_str()),
                                     });
                                     at = text.file_offset + text.capacity;
                                 }

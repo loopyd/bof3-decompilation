@@ -155,7 +155,7 @@ dialogue commands. See [formats.md](formats.md#record-names).
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v4` document with ten counted labels and eight default names.
+`bof3.inline-text/v5` document with ten counted labels and eight default names.
 Re-extract former character-only documents. Default `--entry all` selects banks.
 See [formats.md](formats.md#default-character-names).
 
@@ -171,7 +171,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v4`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v5`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 The original BATTLE archive also has supported message records in entry 3.
@@ -251,7 +251,13 @@ record inventory, literal character encoding and twelve-byte field capacity.
 The JSON summary reports `names`; `--commands` adds nothing for this codec.
 Monster documents use `bof3.monster-text/v1` and report `names`, with an eight-byte
 field capacity. All eight records and their allocation identities are required.
-Inline documents use `bof3.inline-text/v4`; validation checks all allocations,
+AREA008 entry 13 includes three decimal formats with separate encoded and
+formatted output limits. Use `analyze` to inspect `max_formatted_size` before
+editing. The deferred masked-byte format has an unverified final renderer and
+retains `renderer: null`. See [inline formats](formats.md#inline-overlay-text)
+for its supported arguments and limits.
+
+Inline documents use `bof3.inline-text/v5`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.
