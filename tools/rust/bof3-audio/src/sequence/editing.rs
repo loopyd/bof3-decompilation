@@ -77,7 +77,7 @@ pub fn rebuild(
 ) -> Result<Rebuilt> {
     // Validate the whole input even when individual messages appear unchanged.
     edited.to_bytes()?;
-    let baseline = translate(sequence, original, options)?;
+    let mut baseline = translate(sequence, original, options)?;
     let mut container = edited.clone();
     container.tracks = baseline.midi.tracks.clone();
     if container.to_bytes()? != baseline.midi.to_bytes()? {
@@ -85,6 +85,21 @@ pub fn rebuild(
     }
     if edited.tracks.len() != baseline.midi.tracks.len() {
         return Err("SEP edit: MIDI track count changed".into());
+    }
+    let mut patches = loop_counts(&baseline, edited)?;
+    let mut changed_events = BTreeSet::new();
+    if patches
+        .iter()
+        .any(|(&offset, &(value, _))| original[offset] != value)
+    {
+        let mut controlled = original.to_vec();
+        for (&offset, &(value, step)) in &patches {
+            controlled[offset] = value;
+            if original[offset] != value {
+                changed_events.insert(baseline.timeline.steps[step].source_cursor);
+            }
+        }
+        baseline = translate(sequence, &controlled, options)?;
     }
     let controller_loop = baseline.timeline.steps.iter().any(|step| {
         matches!(
@@ -115,8 +130,6 @@ pub fn rebuild(
     let mut updated = sequence.clone();
     updated.tempo_us = tempo(&edited.tracks[0].events[2].message)?;
     let mut handled = BTreeSet::from([(0, 2)]);
-    let mut patches = BTreeMap::<usize, (u8, usize)>::new();
-    let mut changed_events = BTreeSet::new();
     for mapping in &baseline.report.mappings {
         let step = &baseline.timeline.steps[mapping.step];
         let before = &baseline.midi.tracks[mapping.track].events[mapping.event].message;
@@ -296,14 +309,64 @@ pub fn rebuild(
             original_data_bytes: original.len(),
             output_data_bytes: bytes.len(),
             limitations: vec![
-                "Event order, loop structure and generated setup remain fixed. Note-channel changes must agree at every source visit and reproduce inherited running status. Timing edits must agree at every repeated delta consumption. Infinite jumps force zero delay.",
+                "Event order, loop start/end structure and generated setup remain fixed. Count-controller 6/98 marker values may change when all requested visits agree and the requested expansion matches the rederived execution. Note-channel changes must agree at every source visit and reproduce inherited running status. Timing edits must agree at every repeated delta consumption. Infinite jumps force zero delay.",
                 "changed_source_bytes/events count message-value edits; timing_edits records changed delta spans separately. Unchanged delta encodings and opaque suffixes survive; resized deltas relocate later sequence headers.",
                 "Bank programs, tone pitch ranges, SF2 edits and publication require separate validation.",
-                "Forward MIDI approximations and selected finite loop boundary remain unchanged.",
+                "Forward MIDI approximations and configured infinite-loop traversal bounds remain unchanged.",
             ],
         },
         bytes,
     })
+}
+
+fn loop_counts(baseline: &Translation, edited: &Midi) -> Result<BTreeMap<usize, (u8, usize)>> {
+    let mut sources = BTreeMap::new();
+    for (index, step) in baseline.timeline.steps.iter().enumerate() {
+        if let Kind::Controller {
+            controller: controller @ (6 | 98),
+            ..
+        } = step.kind
+        {
+            let identity = format!("BOF3 source={} CC{controller}", step.source_cursor);
+            let offset = step.source_cursor + usize::from(step.explicit_status) + 1;
+            sources.entry(identity).or_insert((offset, index));
+        }
+    }
+    let mut patches = BTreeMap::new();
+    for event in &edited.tracks[1].events {
+        let Message::Meta { kind: 6, data } = &event.message else {
+            continue;
+        };
+        let Ok(text) = std::str::from_utf8(data) else {
+            continue;
+        };
+        let Some((identity, value)) = text.rsplit_once('=') else {
+            continue;
+        };
+        let Some(&(offset, step)) = sources.get(identity) else {
+            continue;
+        };
+        let value = value
+            .parse::<u8>()
+            .ok()
+            .filter(|&value| value <= 127)
+            .ok_or("SEP loop count edit: expected a seven-bit decimal marker value")?;
+        if text != format!("{identity}={value}") {
+            return Err("SEP loop count edit: noncanonical count marker".into());
+        }
+        if let Some(&(previous, _)) = patches.get(&offset) {
+            if previous != value {
+                return Err(format!(
+                    "SEP loop count edit: source {} disagrees across requested visits",
+                    baseline.timeline.steps[step].source_cursor
+                )
+                .into());
+            }
+        } else {
+            patches.insert(offset, (value, step));
+        }
+    }
+    Ok(patches)
 }
 
 /// Rebuild selected sequences; preserve other sequence records and trailing bytes.

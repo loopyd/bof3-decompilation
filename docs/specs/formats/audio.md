@@ -678,7 +678,7 @@ encodings alone are not edits. The event-preserving path retains source event
 order. Within controller loops, note-channel changes require agreement at every
 visit to the same source byte and exact rebuilt retranslation, including inherited
 running status. Linear event edits use the separate reconstruction described below.
-Authored loop/end marker changes and generated setup edits fail with track/event
+Loop start/end marker changes and generated setup edits fail with track/event
 or source-cursor diagnostics. Generated termination events must follow the requested
 final tick; timing reconstruction is described below.
 
@@ -693,6 +693,18 @@ visits fail rather than choosing one edit. Explicit note statuses participate in
 these checks even at unchanged visits. Implicit notes retain their running-status
 encoding; a channel change that requires inserting a status fails retranslation.
 Unchanged deltas, unvisited bytes and opaque suffixes retain their original encodings.
+
+Loop-count controllers 6 and 98 are editable through their generated
+`BOF3 source=<cursor> CC<controller>=<value>` MIDI markers. Values must use
+canonical decimal notation in `0..=127`, and every requested visit to one source
+count byte must agree. The inverse applies those values to the original source
+and derives the new bounded execution before checking the other edits. The
+requested MIDI must contain the complete resulting event expansion, including
+its count markers and termination. Changing a count marker without updating that
+expansion rejects. Editable count sources must appear in the original bounded
+execution. Count edits may accompany consistent value, channel and timing
+edits. Loop start/end structure remains fixed; configured execution limits and
+infinite-loop traversal bounds still apply.
 
 The reconstructed sequence is translated again and must reproduce every requested
 event after supported note-off normalization. Multi-sequence entry reconstruction
@@ -774,8 +786,9 @@ edits apply at original offsets before delta resizing. Reconstruction updates th
 selected sequence length and preserves following sequence records and container
 padding. Full retranslation verifies the requested ticks/events; generated
 source-offset marker text follows relocated positions after the input markers
-have passed unchanged-text validation. Initial tempo/setup stay at tick zero,
-and generated all-notes-off/end events must match the new final tick.
+have passed source-identity and supported count-value validation. Initial
+tempo/setup stay at tick zero, and generated all-notes-off/end events must match
+the new final tick.
 
 [Timing tests](../../../tools/rust/bof3-audio/tests/sequence/timing.rs) cover
 VLQ growth/shrinkage, combined value edits, other-sequence isolation, finite and
