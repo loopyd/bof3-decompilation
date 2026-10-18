@@ -42,6 +42,7 @@ pub fn encode(wave: &Wave, quality: f32) -> Result<Encoded> {
         .collect();
     let mut config = StreamEncoderConfig::new(wave.sample_rate, wave.channels as u8);
     config.quality = quality;
+    config.coupling = false;
     let bytes = encode_pcm_to_ogg(&pcm, &config)?;
     let stream = inspect(&bytes)?;
     if stream.sample_rate != wave.sample_rate

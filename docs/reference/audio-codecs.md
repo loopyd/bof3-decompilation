@@ -136,6 +136,12 @@ this is not an independent complete decoder.
 
 ## Vorbis framing and consumer limits
 
+The adapter encodes stereo channels independently at the requested quality.
+In the pinned encoder, quantizing a positive coupled magnitude to zero while
+retaining a nonzero angle can reverse a channel's spectral sign during inverse
+coupling. Encoding channels independently avoids this fault and can produce
+larger files.
+
 The [Vorbis specification](https://xiph.org/vorbis/doc/Vorbis_I_spec.html) permits
 multiple modes. A consumer warning about three modes does not establish an
 invalid stream. The Rust Vorbis adapter checks single-stream Ogg
