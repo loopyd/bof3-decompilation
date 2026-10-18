@@ -8,12 +8,14 @@ use crate::{
     digest::sha256_hex,
     formats::Upload,
     palette::PaletteUpload,
+    record::{self, CoordinateSpace, Record},
     resident, save_icon,
     sources::{self, Input, SourceFile},
     sprite_bank, stream_family,
 };
 
-pub const SCHEMA: &str = "bof3.textures-index/v4";
+pub const SCHEMA: &str = "bof3.textures-index/v5";
+pub const MAX_INDEX_BYTES: u64 = 512 * 1024 * 1024;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -129,6 +131,7 @@ pub struct Index {
     pub files: Vec<SourceFile>,
     pub categories: Vec<Category>,
     pub resources: Vec<Resource>,
+    pub records: Vec<Record>,
 }
 
 pub fn interpretation_hash() -> String {
@@ -137,6 +140,7 @@ pub fn interpretation_hash() -> String {
             SCHEMA,
             sources::QUALIFICATION,
             include_str!("catalog.rs"),
+            include_str!("record.rs"),
             include_str!("formats.rs"),
             include_str!("package.rs"),
             include_str!("png.rs"),
@@ -214,6 +218,7 @@ pub fn build_from(
     mut read: impl FnMut(&SourceFile) -> Result<Vec<u8>>,
 ) -> Result<Index> {
     let mut resources = Vec::new();
+    let mut records = Vec::new();
     for file in &input.files {
         let bytes = read(file)?;
         if let Some(count) = file.emi_entries {
@@ -291,6 +296,9 @@ pub fn build_from(
                         .uses
                         .push("save-header:0x800C1800:mode-0x13".into());
                     resource.save_icon = Some(info);
+                    if let Some(info) = resource.save_icon.as_ref() {
+                        records.extend(record::save_icon_records(&resource, payload, info)?);
+                    }
                 }
                 if entry.file_type == 0
                     && let Some(palette) =
@@ -333,6 +341,8 @@ pub fn build_from(
                             resource.decode = "forward-programs-and-cell-records-verified".into();
                             resource.pack = "forward-steps-and-cell-records-verified".into();
                             resource.resident_animation = Some(document.info());
+                            records
+                                .extend(record::resident_records(&resource, payload, &document)?);
                             resource.evidence.extend([
                                 "SLUS_004.22@0x8014EBB8:resident-base-initialization".into(),
                                 "SLUS_004.22@0x8014D878:resident-program-selection".into(),
@@ -371,6 +381,12 @@ pub fn build_from(
                     match sprite_bank::decode(&decoded.bytes) {
                         Ok(document) => {
                             annotate_sprite(&mut resource, &document, "us-three-root-sprite-bank");
+                            records.extend(record::sprite_records(
+                                &resource,
+                                &decoded.bytes,
+                                CoordinateSpace::DecodedBank,
+                                &document,
+                            )?);
                         }
                         Err(error) => {
                             resource.dependencies.push(Dependency {
@@ -395,6 +411,12 @@ pub fn build_from(
                 {
                     let document = sprite_bank::decode(payload)?;
                     annotate_sprite(&mut resource, &document, "us-raw-three-root-sprite-bank");
+                    records.extend(record::sprite_records(
+                        &resource,
+                        payload,
+                        CoordinateSpace::EntryPayload,
+                        &document,
+                    )?);
                     resource.evidence.extend([
                         "SLUS_004.22@0x801622A8:type0-dispatch".into(),
                         "SLUS_004.22@0x801625E4:direct-sector-copy".into(),
@@ -499,6 +521,7 @@ pub fn build_from(
         files: input.files.clone(),
         categories: categories(),
         resources,
+        records,
     })
 }
 
@@ -506,7 +529,7 @@ impl Index {
     pub fn load(path: &Path) -> Result<Self> {
         let index: Self = serde_json::from_slice(&sources::read_bounded(
             path,
-            sources::MAX_FILE_BYTES,
+            MAX_INDEX_BYTES,
         )?)
         .map_err(|error| {
             if error.is_data() {
@@ -563,8 +586,49 @@ pub struct Filter<'a> {
     pub evidence: Option<&'a str>,
 }
 
+pub struct QueryFields<'a> {
+    pub(crate) id: &'a str,
+    pub(crate) source: &'a str,
+    pub(crate) categories: &'a [String],
+    pub(crate) storage: &'a str,
+    pub(crate) kind: &'a str,
+    pub(crate) evidence_status: &'a str,
+    pub(crate) dependencies: &'a [Dependency],
+    pub(crate) is_palette: bool,
+    pub(crate) is_animation: bool,
+}
+
+pub trait Queryable {
+    fn query_fields(&self) -> QueryFields<'_>;
+}
+
+impl Queryable for Resource {
+    fn query_fields(&self) -> QueryFields<'_> {
+        QueryFields {
+            id: &self.id,
+            source: &self.source,
+            categories: &self.categories,
+            storage: &self.storage,
+            kind: &self.kind,
+            evidence_status: &self.evidence_status,
+            dependencies: &self.dependencies,
+            is_palette: self.palette_upload.is_some(),
+            is_animation: self.resident_animation.is_some()
+                || self.sprite_bank.is_some()
+                || self.save_icon.is_some(),
+        }
+    }
+}
+
 impl Filter<'_> {
-    pub fn matches(&self, resource: &Resource) -> bool {
+    pub fn matches(&self, resource: &impl Queryable) -> bool {
+        let resource = resource.query_fields();
+        let has_reference = |kind: &str, target: &str| {
+            resource
+                .dependencies
+                .iter()
+                .any(|edge| edge.kind == kind && edge.target.as_deref() == Some(target))
+        };
         self.category
             .is_none_or(|value| resource.categories.iter().any(|category| category == value))
             && self
@@ -582,24 +646,13 @@ impl Filter<'_> {
                     .iter()
                     .any(|edge| edge.kind == value || edge.target.as_deref() == Some(value))
             })
-            && self
-                .palette
-                .is_none_or(|value| has_reference(resource, "palette", value))
+            && self.palette.is_none_or(|value| {
+                (resource.is_palette && resource.id == value) || has_reference("palette", value)
+            })
             && self.animation.is_none_or(|value| {
-                ((resource.resident_animation.is_some()
-                    || resource.sprite_bank.is_some()
-                    || resource.save_icon.is_some())
-                    && resource.id == value)
-                    || has_reference(resource, "animation", value)
+                (resource.is_animation && resource.id == value) || has_reference("animation", value)
             })
     }
-}
-
-fn has_reference(resource: &Resource, kind: &str, target: &str) -> bool {
-    resource
-        .dependencies
-        .iter()
-        .any(|edge| edge.kind == kind && edge.target.as_deref() == Some(target))
 }
 
 pub fn coverage(index: &Index) -> serde_json::Value {
@@ -608,19 +661,23 @@ pub fn coverage(index: &Index) -> serde_json::Value {
         .iter()
         .filter(|resource| resource.upload.is_some())
         .count();
+    let record_kinds = ["bank-image", "palette-record", "animation-program", "sprite-cell", "save-icon-frame"].into_iter().map(|kind| serde_json::json!({"kind": kind, "records": index.records.iter().filter(|record| record.kind == kind).count()})).collect::<Vec<_>>();
     let blockers = vec![
         "logical resource and consumer enumeration is incomplete",
         "category mappings and dependencies are unresolved",
         "edited and runtime acceptance remains incomplete",
     ];
     serde_json::json!({
-        "schema": "bof3.textures-coverage/v1", "release": index.release,
+        "schema": "bof3.textures-coverage/v2", "release": index.release,
         "full_support": false,
-        "physical": {"files": index.files.len(), "emi_entries": index.files.iter().filter_map(|file| file.emi_entries).sum::<usize>(),
+        "physical": {"resources": index.resources.len(), "files": index.files.len(), "emi_entries": index.files.iter().filter_map(|file| file.emi_entries).sum::<usize>(),
             "qualified_original_corpus": index.is_tree,
             "inventory_matches_qualification": true,
             "inventory_sha256": index.inventory_sha256},
-        "logical": {"complete": false, "resources": index.resources.len(), "raw_uploads": raw,
+        "logical": {"complete": false, "records": index.records.len(),
+            "record_kinds": record_kinds,
+            "record_byte_accounting": "logical extents can overlap; physical bytes are counted only by the input inventory",
+            "raw_uploads": raw,
             "palette_banks": index.resources.iter().filter(|resource| resource.palette_upload.is_some()).count(),
             "decoded_compressed_banks": index.resources.iter().filter(|resource| resource.bank.is_some()).count(),
             "sprite_banks": index.resources.iter().filter(|resource| resource.sprite_bank.is_some()).count(),
@@ -628,7 +685,8 @@ pub fn coverage(index: &Index) -> serde_json::Value {
             "save_icon_sources": index.resources.iter().filter(|resource| resource.save_icon.is_some()).count(),
             "unresolved_resources": index.resources.iter().filter(|resource| !resource.findings.is_empty()).map(|resource| &resource.id).collect::<Vec<_>>()},
         "categories": index.categories.iter().map(|category| serde_json::json!({"id": category.id, "disposition": "unresolved", "evidence": []})).collect::<Vec<_>>(),
-        "unresolved_dependencies": index.resources.iter().flat_map(|resource| resource.dependencies.iter().filter(|edge| edge.status != "verified").map(|edge| serde_json::json!({"resource": resource.id, "dependency": edge}))).collect::<Vec<_>>(),
+        "unresolved_dependencies": index.resources.iter().flat_map(|resource| resource.dependencies.iter().filter(|edge| edge.status != "verified").map(|edge| serde_json::json!({"resource": resource.id, "dependency": edge})))
+            .chain(index.records.iter().flat_map(|record| record.dependencies.iter().filter(|edge| edge.status != "verified").map(|edge| serde_json::json!({"resource": record.id, "dependency": edge})))).collect::<Vec<_>>(),
         "runtime": {"status": "unobserved", "consumer_families": []},
         "blockers": blockers
     })

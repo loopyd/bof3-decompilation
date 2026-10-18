@@ -101,9 +101,9 @@ JSON on standard output, including when `--json` is omitted.
 
 ## Catalog
 
-The index schema is `bof3.textures-index/v4`. A resource ID combines release,
+The index schema is `bof3.textures-index/v5`. A resource ID combines release,
 original path, and EMI slot or file locator. Equal hashes retain distinct original
-locations. Each record has its byte offset, size, hash, kind, game categories,
+locations. Each physical resource has its byte offset, size, hash, kind, game categories,
 storage, decode and pack status, evidence, dependencies, known uses, and findings.
 The catalog retains unknown entries and non-EMI files for further disposition.
 
@@ -246,7 +246,8 @@ A qualified outer compressed bank has a read-only `decoded.bin` view. Recognized
 three-root banks export `sprite.json` with schema `bof3.sprite-bank/v1`, plus
 `root-N/image-N.png` views for mode-1 and mode-2 records. Query them with
 `--kind sprite-bank`. The catalog's `sprite_bank` field reports the record counts
-and image modes. PNG width is twice the record's VRAM word width; each pixel
+and image modes. Add `--records` to query its logical images, palettes, programs
+and cells by their own source-bound identities. PNG width is twice the record's VRAM word width; each pixel
 preserves one decoded byte. Its grayscale palette is diagnostic.
 
 Original `BIN/BPLCHAR/BPLU349.EMI#0` stores the same three-root layout as a raw
@@ -471,3 +472,12 @@ editable. A valid program or an edited record does not establish its use or
 appearance.
 Unresolved logical resources, categories, dependencies, inverse formats, and
 runtime families keep full-support acceptance open.
+
+
+## Logical bank records
+
+`query INDEX --records` queries individual records in validated three-root and
+resident banks, plus qualified save-icon frames and palettes.
+The default query reports physical files and EMI entries. Both scopes support the
+same filters. [Catalog records](docs/catalog.md) explains identities, byte
+coordinates, structural references and coverage units.

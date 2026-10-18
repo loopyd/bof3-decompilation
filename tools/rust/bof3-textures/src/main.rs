@@ -77,6 +77,9 @@ enum Command {
         dependency: Option<String>,
         #[arg(long)]
         evidence: Option<String>,
+        /// Query logical bank records instead of physical files and EMI entries.
+        #[arg(long)]
+        records: bool,
         #[arg(long)]
         json: bool,
     },
@@ -156,6 +159,7 @@ fn run(cli: Cli) -> Result<bool> {
             animation,
             dependency,
             evidence,
+            records,
             ..
         } => {
             let index = Index::load(&index)?;
@@ -177,13 +181,23 @@ fn run(cli: Cli) -> Result<bool> {
                 dependency: dependency.as_deref(),
                 evidence: evidence.as_deref(),
             };
-            print_json(
-                &index
-                    .resources
-                    .iter()
-                    .filter(|resource| filter.matches(resource))
-                    .collect::<Vec<_>>(),
-            )?;
+            if records {
+                print_json(
+                    &index
+                        .records
+                        .iter()
+                        .filter(|record| filter.matches(*record))
+                        .collect::<Vec<_>>(),
+                )?;
+            } else {
+                print_json(
+                    &index
+                        .resources
+                        .iter()
+                        .filter(|resource| filter.matches(*resource))
+                        .collect::<Vec<_>>(),
+                )?;
+            }
         }
         Command::Coverage {
             input,

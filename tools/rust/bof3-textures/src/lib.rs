@@ -17,6 +17,7 @@ pub mod packed;
 pub mod palette;
 pub mod png;
 pub mod preview;
+pub mod record;
 pub mod resident;
 pub mod save_icon;
 pub mod sources;

@@ -375,7 +375,7 @@ pub fn load(root: &Path) -> Result<Manifest> {
     let manifest: Manifest = serde_json::from_slice(&read_member(
         root,
         "manifest.json",
-        sources::MAX_FILE_BYTES,
+        catalog::MAX_INDEX_BYTES,
     )?).map_err(|error| {
         if error.is_data() {
             Error::Invalid(format!(
@@ -932,6 +932,7 @@ pub fn source_package(root: &Path, destination: &Path) -> Result<usize> {
         if name == "bof3-textures" {
             members.push(relative.join("docs/composition.md"));
             members.push(relative.join("docs/selection.md"));
+            members.push(relative.join("docs/catalog.md"));
             for file in ["LICENSE", "mise.toml", "rust-toolchain.toml"] {
                 members.push(relative.join(file));
             }
