@@ -268,6 +268,23 @@ length in the allocation's last byte.
 displayed meanings are unverified. Other commands and pointer changes are refused.
 Re-extract older inline documents before editing or packing.
 
+The `US COMMU00 default names` layout covers entry 0 of `BIN/ETC/COMMU00.EMI`
+and entry 14 of `BIN/WORLD04/AREA175.EMI` through `AREA185.EMI`. Each payload
+loads at `0x801EEC00`. Its sixty nine-byte records start at `0x801F2700`.
+The first five bytes of each record use `game-fixed-literal`; the remaining
+four attribute bytes stay unchanged. All five name bytes are available for
+literal game characters. Shorter edits zero-fill unused bytes.
+
+The consumers belong to `BIN/ETC/COMMU02.EMI` entry 8, also present as
+`COMMU02B.EMI` entry 7, loaded at `0x801D0C00`. Call `0x801D6A1C` selects
+a record, then the loop at `0x801D6A24..0x801D6A54` copies its five name bytes
+into `0x801DB080`. Call `0x801D693C` uses that buffer, and `0x801D83D0`
+passes it to renderer `0x8014F800` with a five-glyph limit. These are
+cross-overlay consumers, not instructions inside the name payload. The name
+addresses use indexed code addressing and retain empty pointer-reference lists.
+Each archive needs its own document and output. Save-name propagation and
+observed rendering remain unverified.
+
 The `US AREA008 decimal formats` layout covers entry 13 of the original US
 `BIN/WORLD00/AREA008.EMI`, loaded at `0x801F2C00`. Three ASCII allocations use
 formatter `0x8017E3F4`. Their capacities include NUL:

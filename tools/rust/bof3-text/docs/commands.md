@@ -159,6 +159,14 @@ For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 Re-extract former character-only documents. Default `--entry all` selects banks.
 See [formats.md](formats.md#default-character-names).
 
+For COMMU00 default names, select `--entry 0` in `ETC/COMMU00.EMI` or
+`--entry 14` in `WORLD04/AREA175.EMI` through `AREA185.EMI`, below `BIN`.
+The inline document contains sixty five-byte literal fields. Edit only `text`;
+retain all allocations and metadata. Packing preserves each record's four
+attribute bytes and refuses name growth beyond five encoded bytes. Each archive
+requires its own document and output. See [inline formats](formats.md#inline-overlay-text)
+for the cross-overlay consumers and remaining runtime limits.
+
 For encounter-template monster names, use `analyze` to find `monster_entries`,
 then select the entry explicitly with `extract --entry N`. The output uses
 `bof3.monster-text/v1`. Omit class and latch selectors. Names accept up to eight

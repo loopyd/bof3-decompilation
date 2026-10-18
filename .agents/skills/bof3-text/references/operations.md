@@ -70,6 +70,13 @@ class and latch selectors. Re-extract former character-only documents. Each
 archive needs its own document and output; editing one does not update the other
 or a save.
 
+COMMU00 entry 0 and AREA175 through AREA185 entry 14 each expose sixty
+five-byte default names through the same inline schema. Edit only `text` with
+literal game characters. Preserve the four attribute bytes after each field.
+Each archive needs its own source-bound document and output. The proven copy
+and draw calls belong to the companion COMMU02 overlay; save propagation and
+observed rendering remain unverified.
+
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
 uses `bof3.inline-text/v10`. Re-extract older inline documents. Edit only `text`,
