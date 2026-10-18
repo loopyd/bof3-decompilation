@@ -4034,7 +4034,12 @@ it with audible tone templates is unsupported. Simultaneous replacements and
 populations may still copy validated source rows from programs being cleared.
 
 Appended instruments may reconstruct independent tone rows while using validated
-sample allocations and source key zones. Retain every original instrument in its
+sample allocations and source key zones. An audible, non-stopped source tone may
+also supply a nonempty contiguous subset of its known keys. Retain each selected
+singleton key zone in its original order, with no gaps or keys outside that
+source context. The inverse narrows a private source row and its existing tuning
+contexts before validating the requested controls; it does not infer new pitch
+data. Retain every original instrument in its
 original order. Name each appended instrument `PpppTtt`, using its lowest numbered
 melodic destination program and first layer, such as `P001T00`. Names preserve the
 new destination identity; they do not identify or authorize a source template.
@@ -4045,13 +4050,14 @@ audible, non-stopped source contexts. Each candidate passes the existing gain,
 tuning, envelope and sample-assignment inverses independently. Multiple matching
 contexts must produce identical raw tone bytes apart from the owning program
 word, and identical program controls. Other ambiguity rejects. The original tone
-and its independent copies may request different supported controls. New key or
-velocity zones and arbitrary envelope tuples remain unsupported.
+and its independent copies may request different supported controls. Keys outside
+the proven source range, changed velocity zones and arbitrary envelope tuples
+remain unsupported.
 Existing sample-loop consistency and PCM validation apply to every instrument.
 Original raw instrument-table prefixes and opaque terminal fields remain checked.
 The `independent_instruments` report records the selected source, matching-source
-count, row hash before destination owner-word substitution, and reconstructed
-raw controls.
+count, selected `key_min` and `key_max`, row hash before destination owner-word
+substitution, and reconstructed raw controls.
 
 New mono PCM samples may be appended to the original SF2 sample list and PCM
 pool. Preserve all original sample headers, storage offsets, guards and generated

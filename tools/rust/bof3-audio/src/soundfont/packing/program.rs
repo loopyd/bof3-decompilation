@@ -2,6 +2,7 @@
 use crate::{bank::Bank, soundfont::bank as binding, soundfont::reader::Font, Result};
 use serde::Serialize;
 use std::collections::BTreeMap;
+use std::ops::Range;
 
 #[derive(Debug, Serialize)]
 pub struct IndependentReport {
@@ -14,6 +15,8 @@ pub struct IndependentReport {
     pub pan: u8,
     pub center: u8,
     pub shift: u8,
+    pub key_min: u8,
+    pub key_max: u8,
     pub adsr1: u16,
     pub adsr2: u16,
     pub sample_reference: i16,
@@ -46,7 +49,54 @@ fn shape(
     result
 }
 
-/// Appended instruments must retain a proven source key/context shape. Each
+struct NarrowedSource {
+    header: Vec<u8>,
+    binding: binding::Report,
+    baseline: Font,
+}
+
+fn narrow(
+    binding: &binding::Report,
+    header: &[u8],
+    baseline: &Font,
+    tone_index: usize,
+    keys: Range<usize>,
+) -> Result<NarrowedSource> {
+    let source = &binding.tones[tone_index];
+    let selected = &source.context.tuning[keys.clone()];
+    let key_min = selected[0].key;
+    let key_max = selected[selected.len() - 1].key;
+    let bank = Bank::parse(header)?;
+    let program = bank
+        .programs
+        .iter()
+        .find(|p| p.program == source.source_program)
+        .ok_or("SF2 independent tone: source program missing")?;
+    let at = 0x820 + program.tone_block * 512 + source.source_tone.index * 32;
+    let mut header = header.to_vec();
+    header[at + 6] = key_min;
+    header[at + 7] = key_max;
+    let mut binding = binding.clone();
+    binding.header_sha256 = crate::digest::sha256_hex(&header);
+    binding.source_metadata = Bank::parse(&header)?;
+    let tone = &mut binding.tones[tone_index];
+    tone.source_tone.key_min = key_min;
+    tone.source_tone.key_max = key_max;
+    tone.context.tuning = selected.to_vec();
+    tone.zone_count = selected.len();
+    // Only the private control view is narrowed; the outer packer checks all
+    // original raw tables and retains every original instrument.
+    let mut narrowed = Font::from_bytes(baseline.original_bytes().to_vec())?;
+    narrowed.instruments[source.sf2_instrument].zones =
+        baseline.instruments[source.sf2_instrument].zones[keys].to_vec();
+    Ok(NarrowedSource {
+        header,
+        binding,
+        baseline: narrowed,
+    })
+}
+
+/// Appended instruments must retain a contiguous proven source key range. Each
 /// requested row is inverted separately, without changing its source tone.
 pub(crate) fn independent(
     binding: &binding::Report,
@@ -100,14 +150,40 @@ pub(crate) fn independent(
         let mut controls = Vec::new();
         let mut matches = 0;
         let mut first_error = None;
-        for source in &binding.tones {
-            if source.silent
-                || !source.stopped_keys.is_empty()
-                || shape(&baseline.instruments[source.sf2_instrument].zones) != requested_shape
+        for (source_index, source) in binding.tones.iter().enumerate() {
+            if source.silent || !source.stopped_keys.is_empty() || requested_shape.is_empty() {
+                continue;
+            }
+            let original_shape = shape(&baseline.instruments[source.sf2_instrument].zones);
+            if original_shape.len() != source.context.tuning.len()
+                || requested_shape.len() > original_shape.len()
+            {
+                continue;
+            }
+            let Some(first) = original_shape
+                .windows(requested_shape.len())
+                .position(|zones| zones == requested_shape)
+            else {
+                continue;
+            };
+            let keys = first..first + requested_shape.len();
+            if source.context.tuning[keys.clone()]
+                .windows(2)
+                .any(|pair| pair[0].key.checked_add(1) != Some(pair[1].key))
             {
                 continue;
             }
             let result = (|| -> Result<[u8; 32]> {
+                let narrowed = if keys == (0..original_shape.len()) {
+                    None
+                } else {
+                    Some(narrow(binding, header, baseline, source_index, keys)?)
+                };
+                let (binding, header, baseline) = narrowed
+                    .as_ref()
+                    .map_or((binding, header, baseline), |source| {
+                        (&source.binding, source.header.as_slice(), &source.baseline)
+                    });
                 let mut view = Font::from_bytes(baseline.original_bytes().to_vec())?;
                 view.samples = edited.samples.clone();
                 view.instruments[source.sf2_instrument] = instrument.clone();
@@ -189,6 +265,8 @@ pub(crate) fn independent(
             pan: row[3],
             center: row[4],
             shift: row[5],
+            key_min: row[6],
+            key_max: row[7],
             adsr1: u16::from_le_bytes([row[16], row[17]]),
             adsr2: u16::from_le_bytes([row[18], row[19]]),
             sample_reference: i16::from_le_bytes([row[22], row[23]]),
