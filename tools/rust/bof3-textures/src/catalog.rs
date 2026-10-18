@@ -8,12 +8,12 @@ use crate::{
     digest::sha256_hex,
     formats::Upload,
     palette::PaletteUpload,
-    resident,
+    resident, save_icon,
     sources::{self, Input, SourceFile},
     sprite_bank,
 };
 
-pub const SCHEMA: &str = "bof3.textures-index/v2";
+pub const SCHEMA: &str = "bof3.textures-index/v3";
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -112,6 +112,7 @@ pub struct Resource {
     pub bank: Option<bank::Info>,
     pub sprite_bank: Option<sprite_bank::Info>,
     pub resident_animation: Option<resident::Info>,
+    pub save_icon: Option<save_icon::Info>,
     pub findings: Vec<String>,
 }
 
@@ -150,6 +151,7 @@ pub fn interpretation_hash() -> String {
             include_str!("sprite_bank.rs"),
             include_str!("aliases.rs"),
             include_str!("interface.rs"),
+            include_str!("save_icon.rs"),
         ]
         .join("\n")
         .as_bytes(),
@@ -202,8 +204,48 @@ pub fn build_from(
                     bank: None,
                     sprite_bank: None,
                     resident_animation: None,
+                    save_icon: None,
                     findings: vec!["logical records and consumers have not been enumerated".into()],
                 };
+                if entry.file_type == 0
+                    && let Some(info) =
+                        save_icon::qualify(&file.path, slot, entry.ram_ptr, payload)?
+                {
+                    let images = save_icon::decode(payload, &info)?;
+                    if save_icon::encode(payload, &info, &images)? != payload {
+                        return Err(Error::Invalid(format!(
+                            "{} save-icon inverse mismatch",
+                            resource.id
+                        )));
+                    }
+                    resource.kind = "save-icon-source".into();
+                    resource.categories = vec!["save-icon".into(), "unclassified-graphics".into()];
+                    resource.storage = "embedded-4bit-save-icons".into();
+                    resource.decode = "three-index-planes-and-palette-verified".into();
+                    resource.pack = "fixed-image-ranges-verified".into();
+                    resource.evidence.extend([
+                        "BIN/ETC/SHOP.EMI#8@0x801EF27C:save-header-producer".into(),
+                        "BIN/ETC/SHOP.EMI#0@0x801D6A08:three-frame-mode-in-delay-slot".into(),
+                        "BIN/ETC/SHOP.EMI#8@0x801EFE68:palette".into(),
+                        "BIN/ETC/SHOP.EMI#8@0x801EFE94:frame-0".into(),
+                        "BIN/ETC/SHOP.EMI#8@0x801EFF54:frame-1".into(),
+                        "BIN/ETC/SHOP.EMI#8@0x801F0014:frame-2".into(),
+                    ]);
+                    resource.dependencies.push(Dependency {
+                        kind: "palette".into(), target: Some(resource.id.clone()),
+                        status: "verified".into(),
+                        reason: "16 words at payload offset 0x1268 are copied to header +0x60; three 16x16 index planes are copied to +0x80/+0x100/+0x180".into(),
+                    });
+                    resource.dependencies.push(Dependency {
+                        kind: "save-header-consumer".into(), target: None,
+                        status: "unresolved".into(),
+                        reason: "generated original save header, physical source loading, BIOS animation timing and edited display have not been observed".into(),
+                    });
+                    resource
+                        .uses
+                        .push("save-header:0x800C1800:mode-0x13".into());
+                    resource.save_icon = Some(info);
+                }
                 if entry.file_type == 0
                     && let Some(palette) =
                         PaletteUpload::from_argument(entry.ram_ptr, payload.len())
@@ -414,6 +456,7 @@ pub fn build_from(
                 bank: None,
                 sprite_bank: None,
                 resident_animation: None,
+                save_icon: None,
                 findings,
             });
         }
@@ -516,7 +559,9 @@ impl Filter<'_> {
                 .palette
                 .is_none_or(|value| has_reference(resource, "palette", value))
             && self.animation.is_none_or(|value| {
-                ((resource.resident_animation.is_some() || resource.sprite_bank.is_some())
+                ((resource.resident_animation.is_some()
+                    || resource.sprite_bank.is_some()
+                    || resource.save_icon.is_some())
                     && resource.id == value)
                     || has_reference(resource, "animation", value)
             })
@@ -553,6 +598,7 @@ pub fn coverage(index: &Index) -> serde_json::Value {
             "decoded_compressed_banks": index.resources.iter().filter(|resource| resource.bank.is_some()).count(),
             "sprite_banks": index.resources.iter().filter(|resource| resource.sprite_bank.is_some()).count(),
             "resident_animation_banks": index.resources.iter().filter(|resource| resource.resident_animation.is_some()).count(),
+            "save_icon_sources": index.resources.iter().filter(|resource| resource.save_icon.is_some()).count(),
             "unresolved_resources": index.resources.iter().filter(|resource| !resource.findings.is_empty()).map(|resource| &resource.id).collect::<Vec<_>>()},
         "categories": index.categories.iter().map(|category| serde_json::json!({"id": category.id, "disposition": "unresolved", "evidence": []})).collect::<Vec<_>>(),
         "unresolved_dependencies": index.resources.iter().flat_map(|resource| resource.dependencies.iter().filter(|edge| edge.status != "verified").map(|edge| serde_json::json!({"resource": resource.id, "dependency": edge}))).collect::<Vec<_>>(),
@@ -571,7 +617,8 @@ pub fn verify(index: &Index) -> serde_json::Value {
             "palette_banks": index.resources.iter().filter(|resource| resource.palette_upload.is_some()).count(),
             "compressed_banks": index.resources.iter().filter(|resource| resource.bank.is_some()).count(),
             "sprite_banks": index.resources.iter().filter(|resource| resource.sprite_bank.is_some()).count(),
-            "resident_animation_banks": index.resources.iter().filter(|resource| resource.resident_animation.is_some()).count()},
+            "resident_animation_banks": index.resources.iter().filter(|resource| resource.resident_animation.is_some()).count(),
+            "save_icon_sources": index.resources.iter().filter(|resource| resource.save_icon.is_some()).count()},
         "unchanged_reconstruction": {"status": "unverified"},
         "edited_reconstruction": {"status": "unverified"},
         "unrelated_bytes": {"status": "unverified"},

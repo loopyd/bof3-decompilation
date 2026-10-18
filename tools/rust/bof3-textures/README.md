@@ -101,7 +101,7 @@ JSON on standard output, including when `--json` is omitted.
 
 ## Catalog
 
-The index schema is `bof3.textures-index/v2`. A resource ID combines release,
+The index schema is `bof3.textures-index/v3`. A resource ID combines release,
 original path, and EMI slot or file locator. Equal hashes retain distinct original
 locations. Each record has its byte offset, size, hash, kind, game categories,
 storage, decode and pack status, evidence, dependencies, known uses, and findings.
@@ -140,7 +140,7 @@ executable after changing its interpretation sources.
 
 ## Edit packages
 
-The manifest schema is `bof3.textures-package/v2`. The package includes complete
+The manifest schema is `bof3.textures-package/v3`. The package includes complete
 snapshots of the captured inputs, raw resources, its bound catalog, and coverage. A
 qualified raw upload also has `words.json` and indexed `indices-4.png` and
 `indices-8.png` views. These PNGs use diagnostic grayscale. They do not identify
@@ -150,6 +150,25 @@ A qualified palette bank has an editable `words.json` containing its exact
 little-endian PSX color words. Preserve the word count. These banks have proven
 source and staging addresses, but their draw CLUT selections and texture uses
 remain unresolved. Editing a bank does not assign it to a diagnostic image.
+
+Use `--category save-icon` or `--kind save-icon-source` to find the embedded
+memory-card icon data in `SHOP.EMI` entry 8 and `START.EMI` entry 9. Their equal
+bytes retain separate resource IDs. The original header producer copies a
+16-word palette and three 16x16 frames into an `SC` save header. The catalog's
+`save_icon` field records the physical offsets; `--palette` and `--animation`
+accept this resource ID.
+
+Each source exports `words.json` and `save-frame-0.png` through
+`save-frame-2.png`. Edit the 16 unsigned 16-bit palette words or the frame indices
+from 0 to 15. Keep PNG dimensions and palette metadata unchanged. PNGs preview
+the original palette; packed color changes come from `words.json`. Packing
+preserves producer code and the gaps between stored frames. Changes in `raw.bin`
+must follow the same image-range restrictions and agree with changed views.
+
+The source layout and archive edits are supported. Original save-header capture,
+source loading, BIOS animation timing and edited icon display remain unresolved.
+Memory-card import, export and save operations remain with the emulator's
+memory-card owner.
 
 A qualified outer compressed bank has a read-only `decoded.bin` view. Recognized
 three-root banks also export `sprite.json` with schema `bof3.sprite-bank/v1`, plus

@@ -15,12 +15,12 @@ use crate::{
     digest::sha256_hex,
     formats,
     png::{self, IndexedImage},
-    resident,
+    resident, save_icon,
     sources::{self, Input},
     sprite_bank,
 };
 
-pub const SCHEMA: &str = "bof3.textures-package/v2";
+pub const SCHEMA: &str = "bof3.textures-package/v3";
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -50,6 +50,7 @@ pub struct Export {
     pub animation: Option<String>,
     pub sprite: Option<String>,
     pub bank_images: Vec<BankImage>,
+    pub save_frames: Vec<String>,
     pub palette_binding: String,
 }
 
@@ -84,7 +85,8 @@ fn exports(index: &Index) -> Vec<Export> {
             Export {
                 resource: resource.id.clone(),
                 raw: format!("{directory}/raw.bin"),
-                words: (resource.upload.is_some() || resource.palette_upload.is_some())
+                words: (resource.upload.is_some() || resource.palette_upload.is_some()
+                    || resource.save_icon.is_some())
                     .then(|| format!("{directory}/words.json")),
                 indices_4: resource
                     .upload
@@ -130,7 +132,14 @@ fn exports(index: &Index) -> Vec<Export> {
                             .collect()
                     })
                     .unwrap_or_default(),
-                palette_binding: if resource.palette_upload.is_some() {
+                save_frames: resource.save_icon.as_ref().map(|info| {
+                    (0..info.frame_offsets.len())
+                        .map(|frame| format!("{directory}/save-frame-{frame}.png"))
+                        .collect()
+                }).unwrap_or_default(),
+                palette_binding: if resource.save_icon.is_some() {
+                    "embedded 16-word palette copied to save header +0x60; PNG colors retain original words, edited words are imported separately"
+                } else if resource.palette_upload.is_some() {
                     "palette-word source; draw CLUT selection and texture uses are unresolved"
                 } else {
                     "unresolved; PNG palettes are diagnostic grayscale, not game CLUTs"
@@ -273,6 +282,22 @@ pub fn unpack(input: &Input, destination: &Path) -> Result<Manifest> {
                     &serde_json::to_vec_pretty(&palette.decode_words(raw)?)?,
                 )?;
             }
+            if let Some(info) = &resource.save_icon {
+                let images = save_icon::decode(raw, info)?;
+                if let Some(member) = &export.words {
+                    stage.write(member, &serde_json::to_vec_pretty(&images.palette.words)?)?;
+                }
+                for (member, frame) in export.save_frames.iter().zip(&images.frames) {
+                    stage.write(
+                        member,
+                        &png::encode(&images.palette.image(
+                            info.width,
+                            info.height,
+                            frame.clone(),
+                        )?)?,
+                    )?;
+                }
+            }
             if let Some(upload) = &resource.upload {
                 if let Some(member) = &export.words {
                     stage.write(
@@ -302,7 +327,15 @@ pub fn load(root: &Path) -> Result<Manifest> {
         root,
         "manifest.json",
         sources::MAX_FILE_BYTES,
-    )?)?;
+    )?).map_err(|error| {
+        if error.is_data() {
+            Error::Invalid(format!(
+                "package fields differ from the supported schema: {error}; unpack again with this tool"
+            ))
+        } else {
+            Error::from(error)
+        }
+    })?;
     if manifest.schema != SCHEMA
         || manifest.index.interpretation_sha256 != catalog::interpretation_hash()
     {
@@ -431,6 +464,26 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
                     serde_json::from_slice(&read_member(&root, member, 16 * 1024 * 1024)?)?;
                 edit.add(member, palette.encode_words(&words, raw)?)?;
             }
+            if let Some(info) = &resource.save_icon {
+                let original_images = save_icon::decode(raw, info)?;
+                if let Some(member) = &export.words {
+                    let mut images = original_images.clone();
+                    images.palette.words =
+                        serde_json::from_slice(&read_member(&root, member, 65536)?)?;
+                    edit.add(member, save_icon::encode(raw, info, &images)?)?;
+                }
+                for (frame, member) in export.save_frames.iter().enumerate() {
+                    let imported = png::decode(&read_member(&root, member, 65536)?)?;
+                    if imported.width != info.width || imported.height != info.height {
+                        return Err(Error::Invalid(format!(
+                            "{member}: save-icon frames must keep their 16 by 16 dimensions"
+                        )));
+                    }
+                    let mut images = original_images.clone();
+                    images.frames[frame] = original_images.palette.import_indices(&imported)?;
+                    edit.add(member, save_icon::encode(raw, info, &images)?)?;
+                }
+            }
             if let Some(upload) = &resource.upload {
                 if let Some(member) = &export.words {
                     let words: Vec<u16> =
@@ -459,6 +512,9 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
                 }
             }
             let bytes = edit.finish()?;
+            if let Some(info) = &resource.save_icon {
+                save_icon::validate_edit(raw, &bytes, info)?;
+            }
             if resource.resident_animation.is_some()
                 && resident::encode(raw, &resident::decode(&bytes)?)? != bytes
             {
@@ -472,6 +528,7 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
                     && resource.palette_upload.is_none()
                     && resource.resident_animation.is_none()
                     && resource.sprite_bank.is_none()
+                    && resource.save_icon.is_none()
                 {
                     return Err(Error::Invalid(format!(
                         "{} is preservation-only; editable layout is unresolved",
