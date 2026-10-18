@@ -1,4 +1,4 @@
-//! Map supported SF2 PCM/loop edits to existing VAB sample allocations.
+//! Reconstruct supported SF2 PCM/loop edits and validated appended VAB allocations.
 use crate::{
     codec::adpcm, codec::adpcm::encoder, codec::quantization, codec::quantization::Loss,
     digest::sha256_hex, soundfont::bank as binding, soundfont::reader::Font, Result,
@@ -16,6 +16,7 @@ pub struct Report {
     pub baseline_soundfont_sha256: String,
     pub input_soundfont_sha256: String,
     pub samples: Vec<SampleReport>,
+    pub allocated_samples: Vec<AllocationReport>,
     pub limitations: Vec<&'static str>,
 }
 #[derive(Debug, Serialize)]
@@ -49,6 +50,284 @@ pub struct PackedBank {
     pub independent_instruments: Vec<crate::soundfont::packing::program::IndependentReport>,
 }
 
+#[derive(Debug, Serialize)]
+pub struct AllocationReport {
+    pub sample_id: u16,
+    pub sf2_sample: usize,
+    pub input_name: [u8; 20],
+    pub generated_name: String,
+    pub body_offset: usize,
+    pub encoded_bytes: usize,
+    pub encoded_sha256: String,
+    pub overwritten_unused_size_units: u16,
+    pub reused_encoding_from: Option<u16>,
+    pub pcm24_rounding_loss: Loss,
+    pub pcm24_total_loss: Loss,
+    pub encoding: Option<encoder::Report>,
+}
+
+#[derive(Default)]
+struct Allocations {
+    references: BTreeMap<usize, u16>,
+    bytes: Vec<u8>,
+    reports: Vec<AllocationReport>,
+}
+
+#[derive(Default)]
+struct Structures<'a> {
+    instrument_prefix: Option<&'a Font>,
+    allocations: Option<&'a Allocations>,
+}
+
+/// New samples occupy new size-table entries and are inserted before the
+/// preserved body tail. Existing allocation offsets and bytes never move.
+fn allocations(
+    binding: &binding::Report,
+    header: &[u8],
+    body: &[u8],
+    baseline: &Font,
+    edited: &Font,
+) -> Result<Allocations> {
+    let added = edited
+        .samples
+        .len()
+        .checked_sub(baseline.samples.len())
+        .ok_or("SF2 allocation: original samples cannot be removed")?;
+    let mut output = Allocations::default();
+    if added == 0 {
+        return Ok(output);
+    }
+    if binding.body_sha256 != sha256_hex(body) {
+        return Err("SF2 allocation: body differs from regenerated binding".into());
+    }
+    let bank = crate::bank::Bank::parse(header)?;
+    if usize::from(bank.declared_samples) + added > 254 {
+        return Err(
+            "SF2 allocation: appended PCM exceeds selectable sample IDs 1..254; 255 selects noise"
+                .into(),
+        );
+    }
+    let insertion = bank
+        .samples
+        .last()
+        .map_or(bank.body_prefix_bytes, |s| s.body_offset + s.encoded_bytes);
+    if insertion > body.len() {
+        return Err("SF2 allocation: source allocations exceed body".into());
+    }
+    let table = 0x820 + usize::from(bank.declared_programs) * 512;
+    let modes = modes(edited)?;
+    let mut next = baseline.pcm24_pool().len();
+    for (index, sample) in edited
+        .samples
+        .iter()
+        .enumerate()
+        .skip(baseline.samples.len())
+    {
+        let prefix = format!("SF2 allocation sample {index}");
+        if sample.kind != 1 || sample.link != 0 || sample.start as usize != next {
+            return Err(format!(
+                "{prefix}: append contiguous, unlinked mono samples after the original PCM pool"
+            )
+            .into());
+        }
+        next = (sample.end as usize)
+            .checked_add(46)
+            .ok_or("SF2 allocation: guard range overflow")?;
+        if !edited
+            .pcm24_pool()
+            .get(sample.end as usize..next)
+            .is_some_and(|s| s.iter().all(|&v| v == 0))
+        {
+            return Err(format!("{prefix}: retain 46 zero guard points").into());
+        }
+        let used = binding.tones.iter().any(|tone| {
+            edited
+                .instruments
+                .get(tone.sf2_instrument)
+                .is_some_and(|instrument| instrument.zones.iter().any(|z| z.target == Some(index)))
+        }) || edited
+            .instruments
+            .iter()
+            .skip(baseline.instruments.len())
+            .any(|i| i.zones.iter().any(|z| z.target == Some(index)));
+        if !used {
+            return Err(format!("{prefix}: new sample must be used by a validated tone").into());
+        }
+        let mode = modes
+            .get(&index)
+            .copied()
+            .ok_or("SF2 allocation: missing playback mode")?;
+        let sample_loop = loop_range(edited, index, mode)?;
+        if mode == 0 && (sample.loop_start, sample.loop_end) != (sample.start, sample.start) {
+            return Err(format!(
+                "{prefix}: nonlooping samples require both unused loop points at sample start"
+            )
+            .into());
+        }
+        let input = edited.sample_pcm24(index)?;
+        if input.is_empty() || !input.len().is_multiple_of(28) {
+            return Err(format!(
+                "{prefix}: nonempty whole 28-frame ADPCM blocks required; no implicit padding"
+            )
+            .into());
+        }
+        let required = (input.len() / 28)
+            .checked_mul(16)
+            .ok_or("SF2 allocation: encoded size overflow")?;
+        if required / 8 > usize::from(u16::MAX)
+            || body
+                .len()
+                .checked_add(output.bytes.len())
+                .and_then(|n| n.checked_add(required))
+                .is_none_or(|n| n > 512 * 1024)
+        {
+            return Err(format!(
+                "{prefix}: encoded data exceeds VAB size-table or 512 KiB SPU capacity"
+            )
+            .into());
+        }
+        let pcm: Vec<i16> = input
+            .iter()
+            .map(|&v| ((v + 128).div_euclid(256)).clamp(-32768, 32767) as i16)
+            .collect();
+        let rounded: Vec<i32> = pcm.iter().map(|&v| i32::from(v) * 256).collect();
+        let mut reused = None;
+        for source in &binding.samples {
+            let bytes = body
+                .get(source.body_offset..source.body_offset + source.encoded_bytes)
+                .ok_or("SF2 allocation: existing sample exceeds body")?;
+            if sha256_hex(bytes) != source.sha256 {
+                return Err("SF2 allocation: source sample hash differs".into());
+            }
+            let decoded = adpcm::decode_sample(bytes)?;
+            if decoded
+                .pcm
+                .iter()
+                .map(|&v| i32::from(v) * 256)
+                .eq(input.iter().copied())
+                && decoded
+                    .sample_loop
+                    .as_ref()
+                    .map(|l| l.start_frame..l.end_frame_exclusive)
+                    == sample_loop
+                && decoded
+                    .sample_loop
+                    .as_ref()
+                    .is_none_or(|l| l.pcm_repeat_is_stable)
+            {
+                reused = Some((source.sample_id, bytes.to_vec()));
+                break;
+            }
+        }
+        let (bytes, encoding, reused_encoding_from) = if let Some((id, bytes)) = reused {
+            (bytes, None, Some(id))
+        } else {
+            let encoded = encoder::encode(
+                &pcm,
+                &encoder::Options {
+                    sample_loop: sample_loop.clone(),
+                    ..Default::default()
+                },
+            )?;
+            (encoded.bytes, Some(encoded.report), None)
+        };
+        if bytes.is_empty()
+            || !bytes.len().is_multiple_of(16)
+            || bytes.len() / 8 > usize::from(u16::MAX)
+        {
+            return Err(
+                format!("{prefix}: encoded allocation exceeds VAB size-table capacity").into(),
+            );
+        }
+        let actual = adpcm::decode_sample(&bytes)?;
+        if actual.pcm.len() != input.len()
+            || actual
+                .sample_loop
+                .as_ref()
+                .map(|l| l.start_frame..l.end_frame_exclusive)
+                != sample_loop
+        {
+            return Err(format!("{prefix}: reconstructed duration or loop differs").into());
+        }
+        let actual: Vec<i32> = actual.pcm.iter().map(|&v| i32::from(v) * 256).collect();
+        let sample_id = bank.declared_samples + u16::try_from(output.reports.len())? + 1;
+        output.references.insert(index, sample_id);
+        output.reports.push(AllocationReport {
+            sample_id,
+            sf2_sample: index,
+            input_name: sample.name,
+            generated_name: format!("S{sample_id:03}"),
+            body_offset: insertion + output.bytes.len(),
+            encoded_bytes: bytes.len(),
+            encoded_sha256: sha256_hex(&bytes),
+            overwritten_unused_size_units: u16::from_le_bytes(
+                header[table + usize::from(sample_id) * 2..][..2].try_into()?,
+            ),
+            reused_encoding_from,
+            pcm24_rounding_loss: quantization::measure(input, &rounded),
+            pcm24_total_loss: quantization::measure(input, &actual),
+            encoding,
+        });
+        output.bytes.extend(bytes);
+    }
+    if edited.pcm24_pool().len() != next {
+        return Err("SF2 allocation: extra unowned PCM after new sample guards".into());
+    }
+    if body
+        .len()
+        .checked_add(output.bytes.len())
+        .is_none_or(|n| n > 512 * 1024)
+    {
+        return Err(
+            "SF2 allocation: body exceeds 512 KiB SPU capacity before game layout constraints"
+                .into(),
+        );
+    }
+    Ok(output)
+}
+
+fn apply_allocations(
+    header: &mut [u8],
+    body: &mut Vec<u8>,
+    allocations: &Allocations,
+) -> Result<()> {
+    if allocations.references.is_empty() {
+        return Ok(());
+    }
+    let bank = crate::bank::Bank::parse(header)?;
+    let insertion = bank
+        .samples
+        .last()
+        .map_or(bank.body_prefix_bytes, |s| s.body_offset + s.encoded_bytes);
+    let table = 0x820 + usize::from(bank.declared_programs) * 512;
+    for sample in &allocations.reports {
+        let at = table + usize::from(sample.sample_id) * 2;
+        header[at..at + 2].copy_from_slice(&u16::try_from(sample.encoded_bytes / 8)?.to_le_bytes());
+    }
+    let count = bank.declared_samples + u16::try_from(allocations.reports.len())?;
+    header[0x16..0x18].copy_from_slice(&count.to_le_bytes());
+    let size = bank
+        .declared_file_bytes
+        .checked_add(u32::try_from(allocations.bytes.len())?)
+        .ok_or("SF2 allocation: declared file size overflow")?;
+    header[0xc..0x10].copy_from_slice(&size.to_le_bytes());
+    body.splice(insertion..insertion, allocations.bytes.iter().copied());
+    let rebuilt = crate::bank::Bank::parse(header)?;
+    for expected in &allocations.reports {
+        let actual = &rebuilt.samples[usize::from(expected.sample_id) - 1];
+        if (actual.body_offset, actual.encoded_bytes)
+            != (expected.body_offset, expected.encoded_bytes)
+            || sha256_hex(&body[actual.body_offset..actual.body_offset + actual.encoded_bytes])
+                != expected.encoded_sha256
+        {
+            return Err(
+                "SF2 allocation: rebuilt sample range/hash failed forward verification".into(),
+            );
+        }
+    }
+    Ok(())
+}
+
 /// Validate instrument controls, assignments and samples before accepting edits.
 pub fn pack_bank(
     binding: &binding::Report,
@@ -58,11 +337,13 @@ pub fn pack_bank(
     edited: &Font,
     mut reference: Option<&mut crate::voice::tuning::Reference>,
 ) -> Result<PackedBank> {
+    let allocations = allocations(binding, header, body, baseline, edited)?;
     let independent = crate::soundfont::packing::program::independent(
         binding,
         header,
         baseline,
         edited,
+        &allocations.references,
         reference.as_deref_mut(),
     )?;
     let fixed = if independent.tones.is_empty() {
@@ -79,16 +360,24 @@ pub fn pack_bank(
     let pitch =
         crate::soundfont::packing::pitch::pack(binding, header, baseline, existing, reference)?;
     let envelopes = crate::soundfont::packing::envelope::pack(binding, header, baseline, existing)?;
-    let assignments =
-        crate::soundfont::packing::assignment::pack(binding, &tones.header, baseline, existing)?;
-    let samples = pack_inner(
+    let assignments = crate::soundfont::packing::assignment::pack(
+        binding,
+        &tones.header,
+        baseline,
+        existing,
+        &allocations.references,
+    )?;
+    let mut samples = pack_inner(
         binding,
         body,
         baseline,
         edited,
         true,
         !populated_programs.is_empty(),
-        (!independent.tones.is_empty()).then_some(baseline),
+        Structures {
+            instrument_prefix: (!independent.tones.is_empty()).then_some(baseline),
+            allocations: Some(&allocations),
+        },
     )?;
     for (offset, bytes) in pitch
         .patches
@@ -104,6 +393,8 @@ pub fn pack_bank(
         &populated_programs,
         &independent,
     )?;
+    apply_allocations(&mut tones.header, &mut samples.body, &allocations)?;
+    samples.report.allocated_samples = allocations.reports;
     crate::bank::Bank::parse(&tones.header)?;
     tones.report.output_header_sha256 = sha256_hex(&tones.header);
     Ok(PackedBank {
@@ -127,7 +418,15 @@ pub fn pack(
     baseline: &Font,
     edited: &Font,
 ) -> Result<Packed> {
-    pack_inner(binding, original, baseline, edited, false, false, None)
+    pack_inner(
+        binding,
+        original,
+        baseline,
+        edited,
+        false,
+        false,
+        Structures::default(),
+    )
 }
 
 fn pack_inner(
@@ -137,21 +436,35 @@ fn pack_inner(
     edited: &Font,
     tone_controls: bool,
     program_edits: bool,
-    instrument_prefix: Option<&Font>,
+    structures: Structures<'_>,
 ) -> Result<Packed> {
     if binding.body_sha256 != sha256_hex(original) {
         return Err("SF2 edit: source body does not match regenerated binding".into());
     }
-    if baseline.samples.len() != edited.samples.len()
-        || baseline.pcm24_pool().len() != edited.pcm24_pool().len()
+    let added = structures.allocations.map_or(0, |a| a.references.len());
+    if baseline.samples.len() + added != edited.samples.len()
+        || (added == 0 && baseline.pcm24_pool().len() != edited.pcm24_pool().len())
     {
         return Err(
             "SF2 edit: sample count/storage resizing requires allocation/layout reconstruction"
                 .into(),
         );
     }
-    let before = controls(baseline, tone_controls, program_edits, instrument_prefix)?;
-    let after = controls(edited, tone_controls, program_edits, instrument_prefix)?;
+    let sample_prefix = (added > 0).then_some(baseline);
+    let before = controls(
+        baseline,
+        tone_controls,
+        program_edits,
+        structures.instrument_prefix,
+        sample_prefix,
+    )?;
+    let after = controls(
+        edited,
+        tone_controls,
+        program_edits,
+        structures.instrument_prefix,
+        sample_prefix,
+    )?;
     if before.len() != after.len() {
         return Err("SF2 edit: added/removed metadata chunks unsupported".into());
     }
@@ -313,8 +626,9 @@ fn pack_inner(
             baseline_soundfont_sha256: sha256_hex(baseline.original_bytes()),
             input_soundfont_sha256: sha256_hex(edited.original_bytes()),
             samples,
+            allocated_samples: Vec::new(),
             limitations: vec![
-                "Sample identities, PCM length/storage offsets and sample-header rate/pitch/names remain fixed. Tone controls, assignments, program layers and appended source-shaped instruments require the enclosing bank packer's separate inverse and structure validation.",
+                "Original sample identities, PCM length/storage offsets and sample-header rate/pitch/names remain fixed. The enclosing bank inverse may validate appended mono samples and source-shaped instruments separately; new sample labels re-export as generated VAB allocation names.",
                 "Only shared-consistent nonlooping/continuous loop modes are representable; release-only loops are unsupported. Loops must align to 28 frames and end at the sample end.",
                 "PCM24 loss fields use signed 24-bit integer units; PCM16 conversion rounds nearest with ties toward positive infinity and saturation. Encoder loss fields use PCM16 units.",
                 "ADPCM encoding uses the existing zero-history model and stabilizes edited loops; original runtime interpolation/mixing and PC/PSX fidelity remain unverified.",
@@ -379,6 +693,7 @@ fn controls(
     tone_controls: bool,
     program_edits: bool,
     instrument_prefix: Option<&Font>,
+    sample_prefix: Option<&Font>,
 ) -> Result<Vec<Control>> {
     if !matches!(font.version, (2, 1) | (2, 4)) {
         return Err("SF2 edit: only 2.01/2.04 PCM interchange is supported".into());
@@ -441,11 +756,19 @@ fn controls(
             data = vec![2, 0, 1, 0];
         }
         if chunk.scope == *b"pdta" && chunk.id == *b"shdr" {
+            if let Some(prefix) = sample_prefix {
+                let end = prefix.samples.len() * 46;
+                data = raw
+                    .get(..end)
+                    .ok_or("SF2 allocation: original sample table truncated")?
+                    .to_vec();
+                data.extend(&raw[raw.len() - 46..]);
+            }
             for row in data
                 .as_chunks_mut::<46>()
                 .0
                 .iter_mut()
-                .take(font.samples.len())
+                .take(sample_prefix.map_or(font.samples.len(), |p| p.samples.len()))
             {
                 row[28..36].fill(0);
             }

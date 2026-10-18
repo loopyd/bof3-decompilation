@@ -58,10 +58,10 @@ pub fn songs(options: &Options) -> Result<Report> {
         archives: Vec::new(),
         songs: Vec::new(),
         limitations: vec![
-            "Existing tone instruments support PCM, shared-consistent loops, gain/pan, sample assignments, verified note-on tuning and uniform envelope tuples exactly invertible through one source ADSR field family, combined decay shift/sustain level or combined sustain rate/mode/direction. Appended source-shaped instruments may reconstruct independent rows through these inverses, with qualified destination names and identical-row source agreement. New samples, other independent structures and other combined-field envelope reconstruction remain unsupported.",
+            "Existing tone instruments support PCM, shared-consistent loops, gain/pan, sample assignments, verified note-on tuning and uniform envelope tuples exactly invertible through one source ADSR field family, combined decay shift/sustain level or combined sustain rate/mode/direction. Appended source-shaped instruments may reconstruct independent rows through these inverses, with qualified destination names and identical-row source agreement. Appended sample allocations are validated separately; other independent structures and other combined-field envelope reconstruction remain unsupported.",
             "MIDI value/timing and controller-loop channel edits for notes, programs, volume/pan and bends retain source correspondence; repeated byte proposals and delta consumptions must agree. Generated setup and termination must match the reconstructed channel sets, including controller-loop edits. Count-controller 6/98 marker edits require consistent values and the complete rederived MIDI expansion. Linear notes, tempo, program and volume/pan events support insertion/removal. Linear notes, programs, volume/pan and equal-count bends may use any of the 16 channels with canonical setup and termination matching the reconstructed channel sets. Equal-count bends retain ignored source low bytes in order while allowing high-byte value and tick edits. Uniform source bend lows allow removal with channel/value/tick edits; all-zero source lows also allow insertion with those edits. Otherwise bend insertion/removal requires an exact ordered channel/value/tick subsequence with unambiguous retained low bytes; new bends use zero. Loop start/end structure changes and other controller messages remain unsupported. Rebuilt SEP records preserve unrelated bytes and retained source bend low bytes.",
             "SEP growth must fit the selected bank slot in every known game layout because the active layout is unresolved. Archive allocation capacity is checked separately.",
-            "Empty or populated programs may receive 1..=16 ordered validated tone instruments with matching template program controls and percussion aliases. Populated programs support layer reordering, duplication, removal and replacement, or clearing through the existing empty-program instrument. Mixing silence and audible templates, new sample allocations and instrument structures without a matching source context remain unsupported. VAB tone blocks may grow within original EMI and game layout capacity. All 128 MIDI programs are selectable; unpopulated slots remain silent. Songs sharing a bank must agree on rebuilt header/body bytes.",
+            "Empty or populated programs may receive 1..=16 ordered validated tone instruments with matching template program controls and percussion aliases, or be cleared through the existing empty-program instrument. Appended mono PCM allocations require validated fixed-tone assignments and size/loop/loss reports. Mixing silence and audible templates or using instrument structures without a matching source context remains unsupported. Bank growth must fit original EMI allocations and every possible game layout. All 128 MIDI programs are selectable; unpopulated slots remain silent. Songs sharing a bank must agree on rebuilt header/body bytes.",
             "The export's explicit synthesis approximations remain; complete original-game timing and independent audio fidelity are unverified.",
             "Descriptive limitation notes are not reconstruction inputs; authoritative binding, timeline and identity metadata are validated.",
             "Only selected song folders are reconstructed; disc image rebuilding is outside scope.",
@@ -184,25 +184,28 @@ pub fn songs(options: &Options) -> Result<Report> {
                 return Err("music pack: grown SEP exceeds a possible game layout capacity; active layout context is unresolved".into());
             }
         }
-        if !packed_font.populated_programs.is_empty() {
+        if !packed_font.populated_programs.is_empty()
+            || !packed_font.report.allocated_samples.is_empty()
+        {
             let slot_index = image.entries()[header_entry].ram_ptr as usize;
             let dma_bytes = packed_font.body.len().div_ceil(64) * 64;
-            let fits = mapping.layouts.iter().any(|layout| {
-                layout.slots.get(slot_index).is_some_and(|slot| {
-                    let boundary = layout
-                        .slots
-                        .iter()
-                        .map(|s| s.spu_base)
-                        .filter(|&base| base > slot.spu_base)
-                        .min()
-                        .unwrap_or(512 * 1024);
-                    packed_font.header.len() <= slot.header_capacity as usize
-                        && rebuilt.bytes.len() <= slot.sequence_capacity as usize
-                        && slot.spu_base as usize + dma_bytes <= boundary as usize
-                })
-            });
+            let fits = !mapping.layouts.is_empty()
+                && mapping.layouts.iter().all(|layout| {
+                    layout.slots.get(slot_index).is_some_and(|slot| {
+                        let boundary = layout
+                            .slots
+                            .iter()
+                            .map(|s| s.spu_base)
+                            .filter(|&base| base > slot.spu_base)
+                            .min()
+                            .unwrap_or(512 * 1024);
+                        packed_font.header.len() <= slot.header_capacity as usize
+                            && rebuilt.bytes.len() <= slot.sequence_capacity as usize
+                            && slot.spu_base as usize + dma_bytes <= boundary as usize
+                    })
+                });
             if !fits {
-                return Err("music pack: populated programs exceed available game VH/SEP/SPU layout capacity".into());
+                return Err("music pack: edited bank exceeds a possible game VH/SEP/SPU layout capacity; active layout context is unresolved".into());
             }
         }
         let output = pending.entry(source.into()).or_insert_with(|| Pending {

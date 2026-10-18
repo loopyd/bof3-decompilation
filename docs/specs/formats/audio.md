@@ -1009,11 +1009,12 @@ establish bend/controller equivalence, complete bank coverage or PSX/PC PCM fide
 
 [The assignment inverse](../../../tools/rust/bof3-audio/src/soundfont/packing/assignment.rs)
 accepts changes to a fixed tone's `sampleID` generators when every key zone
-selects the same existing PCM allocation. It resolves the requested SF2 sample
-through the freshly regenerated bank binding, preserving source-qualified sample
-identities. Separate layered tones may select different samples. Added samples,
-per-key assignment requiring tone splitting and generated-silence targets
-reject explicitly. Silent tones require the joint unmute transform below.
+selects the same validated PCM allocation. Existing targets resolve through the
+freshly regenerated bank binding. The enclosing sample inverse may also validate
+[appended allocations](#initial-channel-programs-and-editable-program-layers).
+Separate layered tones may select different samples. Per-key assignment requiring
+tone splitting and generated-silence targets reject explicitly. Silent tones
+require the joint unmute transform below.
 The source and target sample-header
 pitch/rate contexts must agree; other sample metadata remains fixed.
 
@@ -4032,7 +4033,7 @@ This requires the export to contain an empty-program instrument already. Mixing
 it with audible tone templates is unsupported. Simultaneous replacements and
 populations may still copy validated source rows from programs being cleared.
 
-Appended instruments may reconstruct independent tone rows while using existing
+Appended instruments may reconstruct independent tone rows while using validated
 sample allocations and source key zones. Retain every original instrument in its
 original order. Name each appended instrument `PpppTtt`, using its lowest numbered
 melodic destination program and first layer, such as `P001T00`. Names preserve the
@@ -4045,23 +4046,48 @@ tuning, envelope and sample-assignment inverses independently. Multiple matching
 contexts must produce identical raw tone bytes apart from the owning program
 word, and identical program controls. Other ambiguity rejects. The original tone
 and its independent copies may request different supported controls. New key or
-velocity zones, new samples and arbitrary envelope tuples remain unsupported.
+velocity zones and arbitrary envelope tuples remain unsupported.
 Existing sample-loop consistency and PCM validation apply to every instrument.
 Original raw instrument-table prefixes and opaque terminal fields remain checked.
 The `independent_instruments` report records the selected source, matching-source
 count, row hash before destination owner-word substitution, and reconstructed
 raw controls.
 
+New mono PCM samples may be appended to the original SF2 sample list and PCM
+pool. Preserve all original sample headers, storage offsets, guards and generated
+silence. Each new sample must occupy a contiguous appended range followed by
+46 zero guard points and must be used by a validated tone. Linked or ROM samples,
+unowned PCM, implicit padding and changes to original sample geometry reject.
+New samples retain the assigning tone's sample-header rate and pitch context.
+They require nonempty whole 28-frame blocks. Continuous loops must align to
+28-frame boundaries and end at the sample end. Nonlooping samples keep both
+unused header loop points at sample start.
+
+Packing assigns new one-based VAB sample IDs after the original count, through
+254. Byte 255 selects noise. It inserts new encoded bytes after the existing
+allocations and before the preserved body tail, updates only the newly used
+size-table words and adjusts the declared count and size. Existing allocation
+offsets and opaque tails remain intact; simultaneous original PCM edits still
+pass the fixed-size sample inverse. An exact decoded PCM/loop match
+may reuse an original encoding in a separate allocation. Other new samples use
+the existing zero-history ADPCM encoder with explicit PCM24 rounding and total
+encoding-loss reports. No implicit duration change or truncation is accepted.
+The `allocated_samples` report records each range, hash, replaced unused size
+word, reused encoding source and loss. Input labels are recorded; re-export
+generates allocation names such as `S003` because VAB stores no sample names.
+
 Packing inserts new 512-byte tone blocks in ascending program order, updates
 program/tone totals and declared size. Destinations that remain populated retain
 their validated unused rows; unrelated blocks remain intact. Layer counts and template
-controls are the only changed program-table fields. The sample-size table, body
-and opaque trailer remain intact. Replacing existing layers does not resize their
-512-byte block. The `populated_programs` report includes both new populations
+controls are the only changed program-table fields. Tone-only edits preserve the
+sample-size table, body and opaque trailer. Replacing existing layers does not
+resize their 512-byte block. The `populated_programs` report includes both new populations
 and replacements with their ordered source program/tone/instrument identities;
 a cleared program has an empty `tones` list.
-Growth must fit the original EMI sector
-allocation and a verified game VH/SEP/SPU layout. Alias conflicts, more than
+Growth must fit the original EMI sector allocation and every possible verified
+game VH/SEP/SPU layout because the active layout is unresolved. New allocation
+sizes must fit the VAB table and the complete body must fit 512 KiB before
+applying the tighter game layout limits. Alias conflicts, more than
 16 layers and capacity failures publish nothing. The shared generated silent
 instrument is not a VAB tone template and its unrepresented edits reject.
 All 128 MIDI program selections are representable; unpopulated slots stay silent.

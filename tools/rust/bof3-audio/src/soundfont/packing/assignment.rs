@@ -1,6 +1,7 @@
-//! Rebind fixed tone zones to existing, source-qualified VAB PCM allocations.
+//! Rebind fixed tone zones to validated existing or appended VAB PCM allocations.
 use crate::{bank::Bank, soundfont::bank as binding, soundfont::reader::Font, Result};
 use serde::Serialize;
+use std::collections::BTreeMap;
 
 #[derive(Debug, Serialize)]
 pub struct Report {
@@ -33,6 +34,7 @@ pub(crate) fn pack(
     header: &[u8],
     baseline: &Font,
     edited: &Font,
+    allocated: &BTreeMap<usize, u16>,
 ) -> Result<Packed> {
     let bank = Bank::parse(header)?;
     let mut patches = Vec::new();
@@ -89,10 +91,16 @@ pub(crate) fn pack(
         if after.zones.iter().any(|z| z.target != Some(target)) {
             return Err(format!("{prefix}: all key zones must select the same sample; per-key assignment requires tone splitting").into());
         }
-        let source = binding
-            .samples
-            .iter()
-            .find(|s| s.sf2_sample == Some(target))
+        let sample_id = allocated
+            .get(&target)
+            .copied()
+            .or_else(|| {
+                binding
+                    .samples
+                    .iter()
+                    .find(|s| s.sf2_sample == Some(target))
+                    .map(|s| s.sample_id)
+            })
             .ok_or_else(|| {
                 format!("{prefix}: target sample {target} is generated or has no VAB allocation")
             })?;
@@ -128,10 +136,10 @@ pub(crate) fn pack(
                 format!("{prefix}: source reference differs from regenerated binding").into(),
             );
         }
-        if source.sample_id == 0 || source.sample_id >= 255 {
+        if sample_id == 0 || sample_id >= 255 {
             return Err(format!(
                 "{prefix}: allocation {} cannot be selected as PCM; runtime byte 255 selects noise",
-                source.sample_id
+                sample_id
             )
             .into());
         }
@@ -139,10 +147,14 @@ pub(crate) fn pack(
             .samples
             .get(tone.source_sf2_sample)
             .ok_or("SF2 sample assignment: missing source sample")?;
-        let new_sample = baseline
-            .samples
-            .get(target)
-            .ok_or("SF2 sample assignment: missing target sample")?;
+        let new_sample = if allocated.contains_key(&target) {
+            edited
+        } else {
+            baseline
+        }
+        .samples
+        .get(target)
+        .ok_or("SF2 sample assignment: missing target sample")?;
         if current_sample.rate != new_sample.rate
             || current_sample.root_key != new_sample.root_key
             || current_sample.correction_cents != new_sample.correction_cents
@@ -151,14 +163,14 @@ pub(crate) fn pack(
         }
         // The original US tone selector truncates the signed word to its low
         // byte. Keep the otherwise opaque high byte and untouched zero aliases.
-        let output_reference = if old.sample_id == source.sample_id {
+        let output_reference = if old.sample_id == sample_id {
             original.sample_reference
         } else {
-            ((original.sample_reference as u16 & 0xff00) | source.sample_id) as i16
+            ((original.sample_reference as u16 & 0xff00) | sample_id) as i16
         };
-        let resolved =
-            crate::sample::reference::resolve_us_pcm(output_reference, bank.declared_samples)?;
-        if resolved.sample_id != source.sample_id {
+        let sample_count = bank.declared_samples + u16::try_from(allocated.len())?;
+        let resolved = crate::sample::reference::resolve_us_pcm(output_reference, sample_count)?;
+        if resolved.sample_id != sample_id {
             return Err(format!("{prefix}: selected reference failed forward validation").into());
         }
         patches.push((
@@ -181,7 +193,7 @@ pub(crate) fn pack(
     Ok(Packed {patches,report:Report {
         schema:"bof3.audio.sf2-assignment-pack/v1",tones,
         limitations:vec![
-            "Only existing PCM allocations may be selected, uniformly across each fixed tone's key zones. Unmuting additionally requires the gain inverse's validated audible controls. Sample insertion, tone splitting and generated-silence targets are unsupported.",
+            "Validated existing or appended PCM allocations may be selected uniformly across each fixed tone's key zones. The enclosing sample inverse owns new allocation validation. Unmuting additionally requires the gain inverse's validated audible controls. Tone splitting and generated-silence targets are unsupported.",
             "The verified US selector uses the low byte; unchanged zero aliases and the original high byte are preserved. Runtime byte 255 selects noise and cannot name PCM allocation 255.",
             "All edited users of a shared sample must agree on loop mode; the sample inverse separately validates loop endpoints, PCM and allocation capacity before publication.",
             "Pitch-header contexts remain fixed. These reference edits do not establish complete game playback, voice allocation or independent PSX/PC fidelity.",

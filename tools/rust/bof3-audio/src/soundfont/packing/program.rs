@@ -53,6 +53,7 @@ pub(crate) fn independent(
     header: &[u8],
     baseline: &Font,
     edited: &Font,
+    allocated: &BTreeMap<usize, u16>,
     mut reference: Option<&mut crate::voice::tuning::Reference>,
 ) -> Result<Independent> {
     if edited.instruments.len() < baseline.instruments.len() {
@@ -108,6 +109,7 @@ pub(crate) fn independent(
             }
             let result = (|| -> Result<[u8; 32]> {
                 let mut view = Font::from_bytes(baseline.original_bytes().to_vec())?;
+                view.samples = edited.samples.clone();
                 view.instruments[source.sf2_instrument] = instrument.clone();
                 let mut tone =
                     crate::soundfont::packing::tone::pack(binding, header, baseline, &view)?;
@@ -116,6 +118,7 @@ pub(crate) fn independent(
                     &tone.header,
                     baseline,
                     &view,
+                    allocated,
                 )?;
                 let pitch = crate::soundfont::packing::pitch::pack(
                     binding,
