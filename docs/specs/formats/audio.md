@@ -725,9 +725,16 @@ operations. Notes, timed tempos, programs, volume controller 7 and pan controlle
 10 support insertion and removal. Notes may move among channels that already
 contain source notes. Programs, volume and pan may move among previously used
 source channels. Timed tempos must be nonzero 24-bit values; the initial tempo
-remains at tick zero. Bends retain their ordered source correspondence and
-channels, with editable high-byte values and ticks. Their original ignored low
-bytes survive. MIDI note-off with zero release velocity normalizes to SEP note-on
+remains at tick zero. Equal-count bends retain their ordered source correspondence
+and channels, with editable high-byte values and ticks. Their original ignored low
+bytes survive. When the bend count changes, the shorter bend list must be an
+ordered subsequence of the longer list with equal channel, high-byte value and
+tick. Removal retains the matched source low bytes; insertion retains every
+source bend and gives each new bend a zero low byte. The inverse considers every
+valid correspondence and rejects if they produce different low bytes. It accepts
+duplicate matches when their resulting bytes agree. Changing retained bend values
+or ticks together with insertion or removal is unsupported. Nonzero MIDI bend
+low bytes remain unrepresentable. MIDI note-off with zero release velocity normalizes to SEP note-on
 with zero velocity. The opaque suffix after the source end marker survives.
 
 The selected stream receives explicit statuses and minimal deltas. Within each
@@ -743,7 +750,7 @@ With `layout_rebuilt=true`, `changed_source_bytes` counts differing byte positio
 plus the length difference. `changed_source_events` counts all rewritten or
 removed original events. `timing_edits` is empty because the rebuilt stream no
 longer uses the original delta spans. These counts do not identify individual
-insertions or removals. Bend insertion or removal, controller-loop structure
+insertions or removals. Ambiguous bend correspondence, controller-loop structure
 changes, new channels and other controller messages reject explicitly. Broader channel and loop reconstruction,
 scheduler timing, bank availability and independent audio fidelity remain open.
 

@@ -1,8 +1,10 @@
 //! Linear event edits with complete semantic retranslation.
 
-use super::{channel, tempo, translate, Options, Rebuilt, Report};
+use std::collections::BTreeMap;
+
+use super::{tempo, translate, Options, Rebuilt, Report};
 use crate::{
-    interchange::midi::{Message, Midi},
+    interchange::midi::{Event, Message, Midi},
     sequence::{events::Kind, midi::Translation, timeline::Stop, Sequence},
     Result,
 };
@@ -103,11 +105,8 @@ pub(super) fn rebuild(
         }
     }
     let mut normalized = edited.clone();
-    let mut bends = baseline
-        .timeline
-        .steps
-        .iter()
-        .filter(|step| matches!(step.kind, Kind::PitchBend { .. }));
+    let bend_lows = bend_lows(baseline, &after[first..end])?;
+    let mut bend_lows = bend_lows.into_iter();
     let mut messages = Vec::<(u64, u8, Vec<u8>)>::new();
     for event in &mut normalized.tracks[1].events[first..end] {
         let location = format!("{reject}: performance tick {}", event.tick);
@@ -149,29 +148,19 @@ pub(super) fn rebuild(
                     bytes.extend_from_slice(data);
                 }
                 0xe0 => {
-                    let step = bends.next().ok_or_else(|| {
-                        format!("{location}: bend insertion requires source correspondence")
-                    })?;
-                    let Kind::PitchBend { low, .. } = step.kind else {
-                        unreachable!()
-                    };
-                    channel(&event.message, step.status, &location)?;
                     if data[0] != 0 {
                         return Err(format!(
                             "{location}: nonzero bend low byte is unrepresentable"
                         )
                         .into());
                     }
-                    bytes.extend([low, data[1]]);
+                    bytes.extend([bend_lows.next().unwrap(), data[1]]);
                 }
                 _ => return Err(format!("{location}: unsupported channel message").into()),
             }
             bytes
         };
         messages.push((event.tick, 1, bytes));
-    }
-    if bends.next().is_some() {
-        return Err(format!("{reject}: bend removal requires source correspondence").into());
     }
     for event in &conductor[4..conductor.len() - 1] {
         let value = tempo(&event.message)?;
@@ -226,13 +215,121 @@ pub(super) fn rebuild(
             limitations: vec![
                 "Linear notes, tempo, program and volume/pan events support insertion/removal. Notes may move among previously used note channels; programs and volume/pan may move among previously used source channels. Rebuilt streams use explicit statuses and minimal deltas. Opaque suffixes and other sequence records survive.",
                 "With layout_rebuilt, changed_source_bytes counts differing data positions and length; changed_source_events counts all rewritten or removed original events. timing_edits is empty because original delta identities are not retained.",
-                "Ordered bend channels and ignored low bytes, generated setup and termination remain fixed. Bend insertion/removal, controller-loop structure changes, new channels and other controller messages require separate correspondence or semantics.",
+                "Equal-count bends retain ordered channels and ignored low bytes. Bend insertion/removal requires an exact ordered channel/value/tick subsequence; all valid correspondences must agree on retained low bytes. Inserted bends use zero. Generated setup and termination remain fixed. Controller-loop structure changes, new channels and other controller messages require separate semantics.",
                 "Bank availability, scheduler timing, synthesis and independent audio fidelity are separate checks.",
             ],
         },
         sequence: updated,
         bytes,
     })
+}
+
+type BendKey = (u64, u8, u8);
+type BendOccurrences = BTreeMap<BendKey, Vec<(usize, u8, usize)>>;
+
+fn bend_lows(baseline: &Translation, events: &[Event]) -> Result<Vec<u8>> {
+    let mut source = Vec::new();
+    let mut lows = Vec::new();
+    for step in &baseline.timeline.steps {
+        if let Kind::PitchBend { low, high } = step.kind {
+            source.push((step.tick, step.status, high));
+            lows.push(low);
+        }
+    }
+    let edited: Vec<_> = events
+        .iter()
+        .filter_map(|event| match &event.message {
+            Message::Channel { status, data } if status & 0xf0 == 0xe0 => {
+                Some((event.tick, *status, data[1]))
+            }
+            _ => None,
+        })
+        .collect();
+    if source.len() == edited.len() {
+        if source.iter().zip(&edited).any(|(a, b)| a.1 != b.1) {
+            return Err("SEP bend edit: ordered bend channels changed".into());
+        }
+        return Ok(lows);
+    }
+    let inserting = source.len() < edited.len();
+    let (short, long) = if inserting {
+        (&source, &edited)
+    } else {
+        (&edited, &source)
+    };
+    let mut earliest = Vec::with_capacity(short.len());
+    let mut next = 0;
+    for key in short {
+        while next < long.len() && long[next] != *key {
+            next += 1;
+        }
+        if next == long.len() {
+            return Err("SEP bend insertion/removal: remaining bends must retain an ordered source channel/value/tick subsequence".into());
+        }
+        earliest.push(next);
+        next += 1;
+    }
+    let mut latest = vec![0; short.len()];
+    next = long.len();
+    for (index, key) in short.iter().enumerate().rev() {
+        while long[next - 1] != *key {
+            next -= 1;
+        }
+        next -= 1;
+        latest[index] = next;
+    }
+    // Each matching position between the earliest and latest embeddings can
+    // occur in a valid correspondence. Prefix change counts keep duplicate
+    // checks logarithmic instead of enumerating the possible embeddings.
+    let mut occurrences = BendOccurrences::new();
+    for (index, (key, low)) in source.iter().zip(lows).enumerate() {
+        let positions = occurrences.entry(*key).or_default();
+        let changes = positions.last().map_or(0, |&(_, previous, count)| {
+            count + usize::from(previous != low)
+        });
+        positions.push((index, low, changes));
+    }
+    edited
+        .iter()
+        .enumerate()
+        .map(|(index, key)| {
+            if !inserting {
+                return unique_low(&occurrences, key, earliest[index], latest[index] + 1)
+                    .map(|low| low.unwrap());
+            }
+            let first = latest.partition_point(|&position| position < index);
+            let end = earliest.partition_point(|&position| position <= index);
+            let low = unique_low(&occurrences, key, first, end)?;
+            let before = earliest.partition_point(|&position| position < index);
+            let after = source.len() - latest.partition_point(|&position| position <= index);
+            if before + after >= source.len() && low.is_some_and(|low| low != 0) {
+                return Err(
+                    "SEP bend insertion/removal: ambiguous ignored low-byte correspondence".into(),
+                );
+            }
+            Ok(low.unwrap_or(0))
+        })
+        .collect()
+}
+
+fn unique_low(
+    occurrences: &BendOccurrences,
+    key: &BendKey,
+    first: usize,
+    end: usize,
+) -> Result<Option<u8>> {
+    let Some(positions) = occurrences.get(key) else {
+        return Ok(None);
+    };
+    let first = positions.partition_point(|&(index, _, _)| index < first);
+    let end = positions.partition_point(|&(index, _, _)| index < end);
+    if first == end {
+        return Ok(None);
+    }
+    if positions[first].2 != positions[end - 1].2 {
+        return Err("SEP bend insertion/removal: ambiguous ignored low-byte correspondence".into());
+    }
+    Ok(Some(positions[first].1))
 }
 
 fn delta(bytes: &mut Vec<u8>, tick: u64, previous: u64) -> Result<()> {
