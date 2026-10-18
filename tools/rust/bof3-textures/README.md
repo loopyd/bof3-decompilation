@@ -426,10 +426,10 @@ Input files are bounded at 128 MiB, indexed images at 1,048,576 pixels, and each
 codec process at 20 seconds. Invalid extents, malformed images, changed snapshots,
 escaped package paths, missing members, and existing destinations cause failure.
 
-The [composition library](docs/composition.md) computes qualified unscaled
-rectangle and quad geometry from explicit entity, graph-type and CLUT inputs.
-It preserves the original flip dispatch, UV wrapping and texture-page correction.
-It does not infer source residency or render an assembled frame.
+The [composition library](docs/composition.md) computes qualified rectangle and
+quad geometry from an explicit entity and graph type. It preserves the original
+flip dispatch, scale rounding, UV wrapping, texture-page correction and encoded
+CLUT fields. It does not infer source residency or render an assembled frame.
 
 The `animation` library reads bounded program headers, step pairs, and cell
 offsets using the US consumers at `0x8014d910`, `0x8014d978`, and `0x8014daec`.
