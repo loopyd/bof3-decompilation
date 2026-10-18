@@ -68,7 +68,7 @@ fn translate(sequence: &Sequence, bytes: &[u8], options: &Options) -> Result<Tra
     Ok(translation)
 }
 
-/// Rebuild values, timing and supported notes, preserving unrelated source data.
+/// Rebuild supported events and timing, preserving unrelated source data.
 pub fn rebuild(
     sequence: &Sequence,
     original: &[u8],
@@ -104,14 +104,7 @@ pub fn rebuild(
             before.events.len() != after.events.len()
                 || before.events.iter().zip(&after.events).any(|(a, b)| {
                     notes::is_note(&a.message) != notes::is_note(&b.message)
-                        || (!controller_loop
-                            && matches!(
-                                (&a.message, &b.message),
-                                (
-                                    Message::Channel { status: before, .. },
-                                    Message::Channel { status: after, .. }
-                                ) if notes::is_note(&a.message) && before & 15 != after & 15
-                            ))
+                        || (!controller_loop && notes::identity_changed(&a.message, &b.message))
                 })
         })
     {

@@ -1,4 +1,4 @@
-//! Linear note and tempo edits with complete semantic retranslation.
+//! Linear event edits with complete semantic retranslation.
 
 use super::{channel, tempo, translate, Options, Rebuilt, Report};
 use crate::{
@@ -11,6 +11,18 @@ pub(super) fn is_note(message: &Message) -> bool {
     matches!(message, Message::Channel { status, .. } if matches!(status & 0xf0, 0x80 | 0x90))
 }
 
+pub(super) fn identity_changed(before: &Message, after: &Message) -> bool {
+    match (before, after) {
+        (Message::Channel { status: a, data: x }, Message::Channel { status: b, data: y }) => {
+            if is_note(before) && is_note(after) {
+                return a & 15 != b & 15;
+            }
+            a != b || (a & 0xf0 == 0xb0 && x[0] != y[0])
+        }
+        _ => false,
+    }
+}
+
 pub(super) fn rebuild(
     sequence: &Sequence,
     original: &[u8],
@@ -18,7 +30,7 @@ pub(super) fn rebuild(
     options: &Options,
     baseline: &Translation,
 ) -> Result<Rebuilt> {
-    let reject = "SEP note insertion/removal or channel edit";
+    let reject = "SEP event insertion/removal or channel edit";
     if baseline.timeline.stop != Stop::EndMarker
         || baseline.timeline.steps.iter().any(|step| {
             matches!(
@@ -80,19 +92,22 @@ pub(super) fn rebuild(
             format!("{reject}: conductor termination must match the source end tick").into(),
         );
     }
+    let mut note_channels = 0u16;
     let mut used_channels = 0u16;
     for step in &baseline.timeline.steps {
-        if matches!(step.kind, Kind::Note { .. }) {
+        if step.status != 0xff {
             used_channels |= 1 << (step.status & 15);
+        }
+        if matches!(step.kind, Kind::Note { .. }) {
+            note_channels |= 1 << (step.status & 15);
         }
     }
     let mut normalized = edited.clone();
-    let mut nonnotes = baseline.timeline.steps.iter().filter(|step| {
-        matches!(
-            step.kind,
-            Kind::Program { .. } | Kind::Controller { .. } | Kind::PitchBend { .. }
-        )
-    });
+    let mut bends = baseline
+        .timeline
+        .steps
+        .iter()
+        .filter(|step| matches!(step.kind, Kind::PitchBend { .. }));
     let mut messages = Vec::<(u64, u8, Vec<u8>)>::new();
     for event in &mut normalized.tracks[1].events[first..end] {
         let location = format!("{reject}: performance tick {}", event.tick);
@@ -100,7 +115,7 @@ pub(super) fn rebuild(
             let Message::Channel { status, data } = &mut event.message else {
                 unreachable!()
             };
-            if used_channels & (1 << (*status & 15)) == 0 {
+            if note_channels & (1 << (*status & 15)) == 0 {
                 return Err(
                     format!("{location}: new channel requires different generated setup").into(),
                 );
@@ -116,20 +131,31 @@ pub(super) fn rebuild(
             }
             vec![*status, data[0], data[1]]
         } else {
-            let step = nonnotes
-                .next()
-                .ok_or_else(|| format!("{location}: non-note event insertion is unsupported"))?;
-            let data = channel(&event.message, step.status, &location)?;
-            let mut bytes = vec![step.status];
-            match step.kind {
-                Kind::Program { .. } => bytes.extend_from_slice(data),
-                Kind::Controller { controller, .. } => {
-                    if data[0] != controller {
-                        return Err(format!("{location}: controller identity changed").into());
+            let Message::Channel { status, data } = &event.message else {
+                return Err(format!("{location}: unsupported performance message").into());
+            };
+            if used_channels & (1 << (*status & 15)) == 0 {
+                return Err(
+                    format!("{location}: new channel requires different generated setup").into(),
+                );
+            }
+            let mut bytes = vec![*status];
+            match *status & 0xf0 {
+                0xc0 => bytes.extend_from_slice(data),
+                0xb0 => {
+                    if !matches!(data[0], 7 | 10) {
+                        return Err(format!("{location}: unsupported controller identity {}; only volume 7 and pan 10 are representable channel events", data[0]).into());
                     }
                     bytes.extend_from_slice(data);
                 }
-                Kind::PitchBend { low, .. } => {
+                0xe0 => {
+                    let step = bends.next().ok_or_else(|| {
+                        format!("{location}: bend insertion requires source correspondence")
+                    })?;
+                    let Kind::PitchBend { low, .. } = step.kind else {
+                        unreachable!()
+                    };
+                    channel(&event.message, step.status, &location)?;
                     if data[0] != 0 {
                         return Err(format!(
                             "{location}: nonzero bend low byte is unrepresentable"
@@ -138,14 +164,14 @@ pub(super) fn rebuild(
                     }
                     bytes.extend([low, data[1]]);
                 }
-                _ => unreachable!(),
+                _ => return Err(format!("{location}: unsupported channel message").into()),
             }
             bytes
         };
         messages.push((event.tick, 1, bytes));
     }
-    if nonnotes.next().is_some() {
-        return Err(format!("{reject}: non-note event removal is unsupported").into());
+    if bends.next().is_some() {
+        return Err(format!("{reject}: bend removal requires source correspondence").into());
     }
     for event in &conductor[4..conductor.len() - 1] {
         let value = tempo(&event.message)?;
@@ -198,9 +224,9 @@ pub(super) fn rebuild(
             original_data_bytes: original.len(),
             output_data_bytes: bytes.len(),
             limitations: vec![
-                "Linear note and tempo insertion/removal and note-channel changes rebuild the selected stream with explicit statuses and minimal deltas. Opaque suffixes and other sequence records survive.",
+                "Linear notes, tempo, program and volume/pan events support insertion/removal. Notes may move among previously used note channels; programs and volume/pan may move among previously used source channels. Rebuilt streams use explicit statuses and minimal deltas. Opaque suffixes and other sequence records survive.",
                 "With layout_rebuilt, changed_source_bytes counts differing data positions and length; changed_source_events counts all rewritten or removed original events. timing_edits is empty because original delta identities are not retained.",
-                "Existing program, controller and bend identities, generated setup and termination remain fixed. Controller-loop structure, new channels and other channel-event insertion/removal require separate correspondence.",
+                "Ordered bend channels and ignored low bytes, generated setup and termination remain fixed. Bend insertion/removal, controller-loop structure changes, new channels and other controller messages require separate correspondence or semantics.",
                 "Bank availability, scheduler timing, synthesis and independent audio fidelity are separate checks.",
             ],
         },

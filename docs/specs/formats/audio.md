@@ -677,8 +677,7 @@ retain format, PPQN, tracks and header/chunk contents. Alternate running-status/
 encodings alone are not edits. The event-preserving path retains source event
 order. Within controller loops, note-channel changes require agreement at every
 visit to the same source byte and exact rebuilt retranslation, including inherited
-running status. Linear note edits use the separate reconstruction described below
-and permit notes on previously used note channels.
+running status. Linear event edits use the separate reconstruction described below.
 Authored loop/end marker changes and generated setup edits fail with track/event
 or source-cursor diagnostics. Generated termination events must follow the requested
 final tick; timing reconstruction is described below.
@@ -717,20 +716,22 @@ agrees with the edited MIDI and RustySynth independently parses those SMFs. Thes
 checks establish preservation and bounded inverse behavior, not independent
 gameplay fidelity or full song-folder packing.
 
-### Linear MIDI note reconstruction
+<a id="linear-midi-note-reconstruction"></a>
+### Linear MIDI event reconstruction
 
-[The note inverse](../../../tools/rust/bof3-audio/src/sequence/editing/notes.rs)
+[The linear inverse](../../../tools/rust/bof3-audio/src/sequence/editing/notes.rs)
 rebuilds a sequence that reaches its source end marker without controller-loop
-operations. It accepts inserted or removed notes and timed tempo events, plus
-note-channel changes on channels that already contain source notes. Timed tempos
-must be nonzero 24-bit values; the initial tempo remains at tick zero. The ordered
-program, volume/pan and bend events retain their identities; their supported
-values and ticks remain editable. MIDI note-off with zero release velocity
-normalizes to SEP note-on with zero velocity. Original ignored bend low bytes and
-the opaque suffix after the source end marker survive.
+operations. Notes, timed tempos, programs, volume controller 7 and pan controller
+10 support insertion and removal. Notes may move among channels that already
+contain source notes. Programs, volume and pan may move among previously used
+source channels. Timed tempos must be nonzero 24-bit values; the initial tempo
+remains at tick zero. Bends retain their ordered source correspondence and
+channels, with editable high-byte values and ticks. Their original ignored low
+bytes survive. MIDI note-off with zero release velocity normalizes to SEP note-on
+with zero velocity. The opaque suffix after the source end marker survives.
 
 The selected stream receives explicit statuses and minimal deltas. Within each
-MIDI track, event order remains fixed; tempo events precede performance events at
+MIDI track, the rebuilt order follows the edited events; tempo events precede performance events at
 the same tick. Each delta must fit positive signed tenfold runtime scaling. The
 inverse retranslates the rebuilt stream and compares all requested events and
 ticks, allowing only normalized note-off status and relocated source-end text.
@@ -742,8 +743,8 @@ With `layout_rebuilt=true`, `changed_source_bytes` counts differing byte positio
 plus the length difference. `changed_source_events` counts all rewritten or
 removed original events. `timing_edits` is empty because the rebuilt stream no
 longer uses the original delta spans. These counts do not identify individual
-insertions or removals. Controller-loop edits, new channels and other channel-event
-insertion/removal reject explicitly. Broader channel and loop reconstruction,
+insertions or removals. Bend insertion or removal, controller-loop structure
+changes, new channels and other controller messages reject explicitly. Broader channel and loop reconstruction,
 scheduler timing, bank availability and independent audio fidelity remain open.
 
 ### MIDI timing reconstruction
@@ -783,7 +784,7 @@ including relocated loop targets and requested ticks. These synthetic RAM probes
 do not establish original scheduler timing or independent audio fidelity.
 [Music publication](../../../tools/rust/bof3-audio/tests/support/music/timing.rs)
 checks resized SEP publication with untouched other sequences and archive entries.
-The linear note path above handles insertion, removal and channel changes
+The linear event path above handles supported insertion, removal and channel changes
 separately. Broader channel changes, loop-structure editing and full musical
 acceptance remain open.
 
@@ -1685,14 +1686,17 @@ reordered children and scalar changes fail. JSON formatting may change; descript
 limitation strings are validated as notes but are not reconstruction inputs.
 
 SoundFonts pass the bounded PCM/loop and tone-control inverses described above;
-other instrument and metadata edits still fail explicitly. MIDI files are parsed and passed to the
-event-preserving inverse; hashes stored in XML describe the original export, not an
-authorization to ignore edited contents. Edited source program values must exist
-in the paired VAB. Bank headers change only validated tone volume/pan, center/shift
+other instrument and metadata edits still fail explicitly. MIDI files pass through
+the event-preserving or linear inverse. Hashes stored in XML describe the original
+export and never authorize ignoring edited contents. All 128 VAB program IDs are
+selectable, including silent empty slots. Bank headers change only validated tone volume/pan, center/shift
 and sample-reference bytes and retain sample geometry, layering and allocations; source tone
 contexts are revalidated during bank
 binding. Rebuilt sequences must reproduce the requested MIDI events under the
 same bounded translation, including agreement between repeated source visits.
+SEP growth must fit the selected bank slot's sequence capacity in every known game
+layout because the active layout is unresolved. A layout that happens to fit does
+not establish the active context. Archive allocation capacity is checked separately.
 
 Multiple songs sharing one bank/source merge their selected SEP, bank-header and
 sample-body replacements into one archive. Every selected song sharing a header

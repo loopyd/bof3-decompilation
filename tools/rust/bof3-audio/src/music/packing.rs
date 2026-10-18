@@ -57,8 +57,9 @@ pub fn songs(options: &Options) -> Result<Report> {
         archives: Vec::new(),
         songs: Vec::new(),
         limitations: vec![
-            "Existing tone instruments support PCM, shared-consistent loops, gain/pan, sample assignments, verified note-on tuning and complete envelope tuples exactly invertible through the source tone's release bits. Independent new instrument/sample structures and arbitrary envelope reconstruction remain unsupported.",
-            "MIDI value/timing and controller-loop note-channel edits retain source correspondence; repeated byte proposals and delta consumptions must agree. Linear notes may be inserted, removed or moved among previously used note channels while preserving generated setup and termination. Controller-loop structure changes, new channels and non-note insertion/removal remain unsupported. Rebuilt SEP records preserve unrelated bytes.",
+            "Existing tone instruments support PCM, shared-consistent loops, gain/pan, sample assignments, verified note-on tuning and uniform envelope tuples exactly invertible through one source ADSR field family. Independent new instrument/sample structures and combined-field envelope reconstruction remain unsupported.",
+            "MIDI value/timing and controller-loop note-channel edits retain source correspondence; repeated byte proposals and delta consumptions must agree. Linear notes, tempo, program and volume/pan events support insertion/removal. Notes may move among previously used note channels; programs and volume/pan may move among previously used source channels. Generated setup and termination remain fixed. Bend insertion/removal, controller-loop structure changes, new channels and other controller messages remain unsupported. Rebuilt SEP records preserve unrelated bytes and original ignored bend low bytes.",
+            "SEP growth must fit the selected bank slot in every known game layout because the active layout is unresolved. Archive allocation capacity is checked separately.",
             "Empty programs may gain 1..=16 existing tone instruments with matching program controls and percussion aliases. Ordered VAB tone blocks may grow within original EMI and game layout capacity. All 128 MIDI programs are selectable; empty slots remain silent. Songs sharing a bank must agree on rebuilt header/body bytes.",
             "The export's explicit synthesis approximations remain; complete original-game timing and independent audio fidelity are unverified.",
             "Descriptive limitation notes are not reconstruction inputs; authoritative binding, timeline and identity metadata are validated.",
@@ -169,6 +170,19 @@ pub fn songs(options: &Options) -> Result<Report> {
             },
         )
         .map_err(|e| format!("music pack: {}: {e}", song.id))?;
+        if rebuilt.bytes.len() > image.entry(index)?.len() {
+            let slot_index = image.entries()[header_entry].ram_ptr as usize;
+            let fits = !mapping.layouts.is_empty()
+                && mapping.layouts.iter().all(|layout| {
+                    layout
+                        .slots
+                        .get(slot_index)
+                        .is_some_and(|slot| rebuilt.bytes.len() <= slot.sequence_capacity as usize)
+                });
+            if !fits {
+                return Err("music pack: grown SEP exceeds a possible game layout capacity; active layout context is unresolved".into());
+            }
+        }
         if !packed_font.populated_programs.is_empty() {
             let slot_index = image.entries()[header_entry].ram_ptr as usize;
             let dma_bytes = packed_font.body.len().div_ceil(64) * 64;
