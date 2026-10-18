@@ -18,19 +18,20 @@ it parses.
 ## Executable ASCII
 
 `extract`, `analyze`, `validate` and `pack` also support the US executable's
-exception-screen ASCII strings and hexadecimal format. `extract-corpus` exports
+exception-screen ASCII strings and the `FILE NOT FOUND` diagnostic with its
+three-ID hexadecimal format. `extract-corpus` exports
 them when the complete source root includes `SLUS_004.22`. Literal strings use
 the pointer words at `0x8017F470..0x8017F53C`, with an exclusive upper bound.
 The consumer at `0x8014B3C4` passes these pointers to renderer `0x80150098`.
 The renderer reads bytes until NUL, advances on ASCII space and handles newline
 `0x0A`. These bytes use ASCII rather than the dialogue character table.
 
-The JSON schema is `bof3.executable-text/v2`. Re-extract older documents before
+The JSON schema is `bof3.executable-text/v3`. Re-extract older documents before
 editing. It contains `source`, mandatory `source_sha256`, `build`, `load_address`,
-`consumer`, `renderer`, `formatter` and `strings`.
+`consumers`, `renderer`, `formatter` and `strings`.
 Each string retains its `address`, whole-file `file_offset`, original `capacity`
-including NUL, immutable `codec`, typed `references` and editable `text`.
-Literal rows use `ascii-literal` and `pointer-word` references with an `address`.
+including NUL, immutable `consumer` and `codec`, typed `references` and editable `text`.
+Exception literal rows use `ascii-literal` and `pointer-word` references with an `address`.
 Shared pointers appear on one allocation. Retain every allocation and edit only
 `text`.
 
@@ -52,6 +53,21 @@ surrounding text, other conversions, additional flags, widths outside this range
 and extra arguments. The encoded format must fit four bytes plus NUL; formatted
 output remains at most eight bytes plus NUL. `analyze` reports
 `max_formatted_size` separately from the encoded allocation size.
+
+The consumer at `0x80166DF4` draws `FILE NOT FOUND` from `0x80149F9C`
+through the same ASCII renderer. Its 15-byte allocation includes NUL. The
+`address-pair` reference at `0x80166E1C`/`0x80166E20` feeds the draw call at
+`0x80166E24`.
+
+The companion `ID %02X/%02X/%02X` at `0x80149FAC` has an 18-byte allocation
+including NUL and uses `ascii-u8-triple-hex-format`. Its reference pair at
+`0x80166E3C`/`0x80166E40` feeds formatter call `0x80166E44`. Three unsigned
+byte loads from scratchpad offsets 0, 1 and 2 supply the arguments in order;
+the third passes through stack offset `0x10`. Call `0x80166E58` draws the result.
+This codec permits exactly three `%X` or `%x` conversions, optionally with
+width 1..2 and zero padding, plus literal ASCII. It refuses other percent
+sequences, flags, dynamic widths, reordered arguments and output exceeding
+11 bytes plus NUL. The encoded format must fit 17 bytes plus NUL.
 
 Build recognition hashes all bytes outside the supported allocations against
 the pinned US layout. This permits re-extraction of supported edits while

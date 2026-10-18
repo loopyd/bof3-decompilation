@@ -143,7 +143,7 @@ Output is always JSON — there is no second codec — and every object carries 
 document's own recorded `source`.
 
 The supported US `SLUS_004.22` executable exports one
-`bof3.executable-text/v2` document. Re-extract older documents. Use the default
+`bof3.executable-text/v3` document. Re-extract older documents. Use the default
 `--entry all` and omit `--class` and `--latch`; EMI selectors are refused for
 executable input.
 See [formats.md](formats.md#executable-ascii) for supported allocations and limits.
@@ -437,8 +437,9 @@ A stale or missing index is **regenerated and then used**, and the run reports t
 output carries `"regenerated": true`). `build-index --check` is the refusing mode for a caller
 that wants to detect staleness without writing.
 
-Freshness also binds the loaded ownership registry, payload inventory, vocabulary
-and readability settings through `inputs.filters_hash`. Changing their contents
+Freshness also binds the loaded ownership registry, payload inventory, vocabulary,
+readability settings and verified literal codec schemas through `inputs.filters_hash`.
+Changing their contents
 or using `--no-windows`, `--no-payloads`, `--no-readable` or `--no-vocabulary`
 invalidates the index. Older index schemas are rebuilt. Use a
 separate `--index` path for comparison runs to avoid rebuilding the default index

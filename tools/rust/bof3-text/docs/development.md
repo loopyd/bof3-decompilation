@@ -12,7 +12,7 @@
 | `coverage.rs` | Complete extracted-tree accounting and unresolved ranges |
 | `corpus.rs` | Verified bank, record name and executable corpus export with per-source results |
 | `analysis.rs` | Original byte extents, commands, operands and shared rows |
-| `executable.rs` | Pinned US exception ASCII allocations, references and fixed-capacity writes |
+| `executable.rs` | Pinned US diagnostic ASCII allocations, references and bounded hexadecimal formats |
 | `records.rs` | Pinned US equipment and ability name fields and literal-only fixed-width writes |
 | `monsters.rs` | Encounter-template monster name fields and eight-byte writes |
 | `inline.rs` | Pinned overlay labels and default names, with terminated, counted or fixed-width fields |

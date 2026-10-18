@@ -38,19 +38,21 @@ include encoded size, spare capacity, required terminator bytes and the original
 allocation bytes. Use `extract` for documents accepted by `pack`.
 
 For the US executable, use `extract out/extracted/SLUS_004.22 -o out/exe-text.json`.
-Its `bof3.executable-text/v2` document uses ASCII. Re-extract older documents.
-Edit only each string's `text`; retain its codec, allocation and typed reference
-sites. The hexadecimal format permits one `%X` or `%x` conversion with optional
-width 1..8 and zero padding, within four bytes. Surrounding text and other
-conversions are refused. Pack to a new executable:
+Its `bof3.executable-text/v3` document uses ASCII. Re-extract older documents.
+Edit only each string's `text`; retain its consumer, codec, allocation and typed
+reference sites. The exception format permits one `%X` or `%x` conversion with
+optional width 1..8 and zero padding, within four bytes. The three-ID format
+requires three ordered hex conversions with optional width 1..2 and zero padding;
+literal ASCII is allowed within 17 encoded bytes and 11 formatted bytes.
+Other percent sequences and output expansion are refused. Pack to a new executable:
 
 ```sh
 bin/harness text pack --original out/extracted/SLUS_004.22 \
   --text out/exe-text.json -o out/edited-exe.bin
 ```
 
-Omit EMI selectors. Support is limited to the source-traced exception-screen
-strings. Other executable ranges
+Omit EMI selectors. Support covers the source-traced exception screen and
+`FILE NOT FOUND` diagnostic. Other executable ranges
 and runtime acceptance remain unresolved. See the tool's
 [format contract](../../../../tools/rust/bof3-text/docs/formats.md#executable-ascii).
 

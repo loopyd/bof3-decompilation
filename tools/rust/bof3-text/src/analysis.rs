@@ -59,10 +59,12 @@ fn literal_report(
         let text = row["text"]
             .as_str()
             .ok_or_else(|| Error::Invalid("literal analysis has no text".into()))?;
+        let mut max_formatted_size = None;
         let encoded_size = match encoding {
             Encoding::Ascii => {
                 let codec: crate::executable::Codec = serde_json::from_value(row["codec"].clone())
                     .map_err(|error| Error::Invalid(error.to_string()))?;
+                max_formatted_size = codec.max_formatted_size(text)?;
                 codec.encode(text, maximum)?.len()
             }
             Encoding::GameLiteral => crate::records::encode_name(text, maximum)?.len(),
@@ -93,10 +95,8 @@ fn literal_report(
                 .collect::<String>()
         );
         row["commands"] = commands;
-        if matches!(encoding, Encoding::Ascii)
-            && row["codec"] == json!(crate::executable::Codec::AsciiU32HexFormat)
-        {
-            row["max_formatted_size"] = json!(8);
+        if let Some(size) = max_formatted_size {
+            row["max_formatted_size"] = json!(size);
         }
     }
     Ok(report)

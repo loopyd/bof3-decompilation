@@ -1,4 +1,4 @@
-//! Fixed ASCII allocations consumed by the US executable's exception renderer.
+//! Fixed ASCII allocations consumed by the US executable's diagnostic screens.
 
 use std::collections::BTreeSet;
 use std::path::Path;
@@ -8,12 +8,15 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-pub(crate) const SCHEMA: &str = "bof3.executable-text/v2";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v3";
 const LOAD: u32 = 0x80096800;
 const SIZE: usize = 1445888;
 // Hash of the entire executable with only the supported allocations zeroed.
-const LAYOUT_SHA256: &str = "ce6ee8fa3db91516d1df3aa0cca585d3ba963b1f4f15528e482300b0c3893e48";
+const LAYOUT_SHA256: &str = "77b703f2e8e833e658d083fff15c3d10a4f4521f56b21313cf66c76915fa042a";
 const FORMAT_ADDRESS: u32 = 0x80149990;
+const FILE_LABEL: u32 = 0x80149f9c;
+const FILE_FORMAT: u32 = 0x80149fac;
+const CONSUMERS: [u32; 2] = [0x8014b3c4, 0x80166df4];
 const FORMATTER: u32 = 0x8017e3f4;
 // Original string bytes plus their NUL, excluding alignment padding. The consumer
 // at 0x8014b3c4 passes pointers from 0x8017f470..0x8017f53c to 0x80150098.
@@ -68,6 +71,8 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (0x80149980, 1),
     (0x80149984, 11),
     (FORMAT_ADDRESS, 5),
+    (FILE_LABEL, 15),
+    (FILE_FORMAT, 18),
 ];
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -75,6 +80,7 @@ const ALLOCATIONS: &[(u32, usize)] = &[
 pub(crate) enum Codec {
     AsciiLiteral,
     AsciiU32HexFormat,
+    AsciiU8TripleHexFormat,
 }
 
 impl Codec {
@@ -82,6 +88,7 @@ impl Codec {
         match self {
             Self::AsciiLiteral => "ascii-literal",
             Self::AsciiU32HexFormat => "ascii-u32-hex-format",
+            Self::AsciiU8TripleHexFormat => "ascii-u8-triple-hex-format",
         }
     }
 
@@ -96,20 +103,66 @@ impl Codec {
                 "executable text must fit {maximum} ASCII bytes plus NUL"
             ));
         }
-        if self == Self::AsciiU32HexFormat
-            && !matches!(
-                bytes,
-                [b'%', b'X' | b'x']
-                    | [b'%', b'1'..=b'8', b'X' | b'x']
-                    | [b'%', b'0', b'1'..=b'8', b'X' | b'x']
-            )
-        {
-            return invalid(
-                "hex format must be one %X or %x conversion, optionally with width 1..8 and zero padding",
-            );
-        }
+        self.max_formatted_size(text)?;
         Ok(bytes.to_vec())
     }
+
+    pub(crate) fn max_formatted_size(self, text: &str) -> Result<Option<usize>> {
+        match self {
+            Self::AsciiLiteral => Ok(None),
+            Self::AsciiU32HexFormat => {
+                if !matches!(
+                    text.as_bytes(),
+                    [b'%', b'X' | b'x']
+                        | [b'%', b'1'..=b'8', b'X' | b'x']
+                        | [b'%', b'0', b'1'..=b'8', b'X' | b'x']
+                ) {
+                    return invalid(
+                        "hex format must be one %X or %x conversion, optionally with width 1..8 and zero padding",
+                    );
+                }
+                Ok(Some(8))
+            }
+            Self::AsciiU8TripleHexFormat => byte_triplet_size(text.as_bytes()).map(Some),
+        }
+    }
+}
+
+fn byte_triplet_size(bytes: &[u8]) -> Result<usize> {
+    let mut cursor = 0;
+    let mut arguments = 0;
+    let mut rendered = 0;
+    while cursor < bytes.len() {
+        if bytes[cursor] != b'%' {
+            cursor += 1;
+            rendered += 1;
+            continue;
+        }
+        cursor += 1;
+        if bytes.get(cursor) == Some(&b'0') {
+            cursor += 1;
+            if !matches!(bytes.get(cursor).copied(), Some(b'1' | b'2')) {
+                return invalid("byte format zero padding requires width 1 or 2");
+            }
+            cursor += 1;
+        } else if matches!(bytes.get(cursor).copied(), Some(b'1' | b'2')) {
+            cursor += 1;
+        }
+        if !matches!(bytes.get(cursor).copied(), Some(b'X' | b'x')) {
+            return invalid(
+                "byte format requires exactly three ordered %X or %x conversions, with optional width 1..2 and zero padding",
+            );
+        }
+        cursor += 1;
+        arguments += 1;
+        rendered += 2;
+    }
+    if arguments != 3 || rendered > 11 {
+        return invalid(
+            "byte format must consume three arguments and render at most 11 bytes plus NUL",
+        );
+    }
+    Ok(rendered)
 }
 
 #[derive(Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -126,10 +179,18 @@ pub enum Reference {
 }
 
 fn codec(address: u32) -> Codec {
-    if address == FORMAT_ADDRESS {
-        Codec::AsciiU32HexFormat
+    match address {
+        FORMAT_ADDRESS => Codec::AsciiU32HexFormat,
+        FILE_FORMAT => Codec::AsciiU8TripleHexFormat,
+        _ => Codec::AsciiLiteral,
+    }
+}
+
+fn consumer(address: u32) -> u32 {
+    if matches!(address, FILE_LABEL | FILE_FORMAT) {
+        CONSUMERS[1]
     } else {
-        Codec::AsciiLiteral
+        CONSUMERS[0]
     }
 }
 
@@ -141,7 +202,7 @@ pub struct Document {
     source_sha256: String,
     build: String,
     load_address: u32,
-    consumer: u32,
+    consumers: Vec<u32>,
     renderer: u32,
     formatter: u32,
     pub strings: Vec<Text>,
@@ -151,6 +212,7 @@ pub struct Document {
 #[serde(deny_unknown_fields)]
 pub struct Text {
     pub address: u32,
+    pub consumer: u32,
     pub file_offset: usize,
     pub capacity: usize,
     pub references: Vec<Reference>,
@@ -181,7 +243,7 @@ pub fn supports(data: &[u8]) -> bool {
 pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
     if !supports(data) {
         return invalid(
-            "unsupported executable layout; only the pinned US exception strings are supported",
+            "unsupported executable layout; only the pinned US diagnostic strings are supported",
         );
     }
     let mut strings = Vec::new();
@@ -214,6 +276,20 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
                     calls: vec![0x8014b610, 0x8014b634],
                 },
             ]
+        } else if matches!(address, FILE_LABEL | FILE_FORMAT) {
+            vec![if address == FILE_LABEL {
+                Reference::AddressPair {
+                    upper: 0x80166e1c,
+                    lower: 0x80166e20,
+                    calls: vec![0x80166e24],
+                }
+            } else {
+                Reference::AddressPair {
+                    upper: 0x80166e3c,
+                    lower: 0x80166e40,
+                    calls: vec![0x80166e44],
+                }
+            }]
         } else {
             (0x8017f470..0x8017f53c)
                 .step_by(4)
@@ -226,6 +302,7 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
         };
         strings.push(Text {
             address,
+            consumer: consumer(address),
             file_offset,
             capacity,
             references,
@@ -237,9 +314,9 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
         schema: SCHEMA.into(),
         source: path.to_string_lossy().into(),
         source_sha256: sha256_hex(data),
-        build: "US SLUS-00422 exception ASCII".into(),
+        build: "US SLUS-00422 diagnostic ASCII".into(),
         load_address: LOAD,
-        consumer: 0x8014b3c4,
+        consumers: CONSUMERS.to_vec(),
         renderer: 0x80150098,
         formatter: FORMATTER,
         strings,
@@ -251,8 +328,8 @@ pub fn parse(data: &[u8]) -> Result<Document> {
         serde_json::from_slice(data).map_err(|error| Error::Invalid(error.to_string()))?;
     if document.schema != SCHEMA
         || document.load_address != LOAD
-        || document.build != "US SLUS-00422 exception ASCII"
-        || document.consumer != 0x8014b3c4
+        || document.build != "US SLUS-00422 diagnostic ASCII"
+        || document.consumers != CONSUMERS
         || document.renderer != 0x80150098
         || document.formatter != FORMATTER
         || document.source_sha256.len() != 64
@@ -269,6 +346,7 @@ pub fn parse(data: &[u8]) -> Result<Document> {
             || !ALLOCATIONS.contains(&(text.address, text.capacity))
             || text.file_offset != offset(text.address)
             || text.codec != codec(text.address)
+            || text.consumer != consumer(text.address)
         {
             return invalid("unknown or duplicate executable string allocation");
         }

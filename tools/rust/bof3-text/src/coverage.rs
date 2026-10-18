@@ -434,10 +434,10 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                 cursor,
                                 text.file_offset - cursor,
                                 "unresolved",
-                                "executable ranges outside the supported ASCII consumer".into(),
+                                "executable ranges outside the supported ASCII consumers".into(),
                             ));
                         }
-                        record.ranges.push(range(text.file_offset, text.capacity, "known-text", format!("US exception reference sites {:?}; codec {}; consumer 0x8014b3c4, formatter 0x8017e3f4 for hexadecimal formats, renderer 0x80150098; runtime acceptance pending", text.references, text.codec.as_str())));
+                        record.ranges.push(range(text.file_offset, text.capacity, "known-text", format!("US executable reference sites {:?}; codec {}; consumer {:#x}, formatter 0x8017e3f4 for hexadecimal formats, renderer 0x80150098; runtime acceptance pending", text.references, text.codec.as_str(), text.consumer)));
                         cursor = text.file_offset + text.capacity;
                     }
                     if cursor < bytes.len() {
