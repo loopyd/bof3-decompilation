@@ -71,9 +71,11 @@ document and separate output; editing one does not update the other or a save.
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
 uses `bof3.inline-text/v4`. Re-extract older inline documents. Edit only `text`,
-retain all strings, per-string renderers, codecs and references. Reserve one
-encoded byte for NUL within each allocation. Pack against the
-same archive with its recorded entry or `all`, without class or latch selectors.
+retain all strings, per-string renderers, codecs and references. Reserve one byte
+for the NUL in terminated rows or the trailing count in `game-counted-literal`
+rows. Counted rows accept seven literal bytes. Packing updates the count and
+zero-fills unused character bytes. Pack against the same archive with its recorded
+entry or `all`, without class or latch selectors.
 Each matching archive payload needs its own source-bound document and output.
 `ascii-decimal-format` rows retain exactly one `%3d` and allow only surrounding
 printable ASCII within capacity. Other percent sequences are refused.

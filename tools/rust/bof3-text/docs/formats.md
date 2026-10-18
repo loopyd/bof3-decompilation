@@ -161,15 +161,28 @@ Calls at `0x801D7F2C`, `0x801D85A8` and `0x801D8E34` pass selected strings to
 `0x801DD0A8` and `0x801DD934`. Each archive has its own source-bound layout.
 These `game-literal` fields also retain their original string length plus NUL,
 with capacities of five to seven bytes. Slot padding, pointers and code remain
-protected. Other strings and observed rendering remain unverified.
+protected.
+
+BATE, SHISU and SHOP each also contain ten 20-byte label records, starting at
+`0x801D0C50`, `0x801D0C34` and `0x801D0D14`, respectively. Each record begins
+with seven literal bytes and a one-byte count. Calls at `0x801D3FB0`,
+`0x801D4F58` and `0x801D9A58` pass the selected record and its count to
+`0x8014FC90`, which stops at NUL or the supplied count.
+These `game-counted-literal` allocations use all eight bytes, accept at most
+seven encoded characters, and need no NUL when full. Packing updates the count
+and zero-fills unused character bytes. It preserves the remaining 12 bytes of
+each record. Glyph commands are refused. Caller selector bounds, other text
+and observed rendering remain unverified.
 
 `bof3.inline-text/v4` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderer`, `codec`, pointer-word `references` and editable `text`. Retain all
-fields and edit only `text`. Each allocation includes its original NUL, excludes alignment padding
-and accepts at most `capacity - 1` encoded bytes. Shorter text is
-NUL-padded. `game-literal` rows use the game's literal character encoding.
+fields and edit only `text`. Each allocation includes one byte for its NUL or
+trailing count, excludes alignment padding and accepts at most `capacity - 1`
+encoded bytes. Shorter text leaves zero-filled unused character bytes.
+`game-literal` and `game-counted-literal` rows use the game's literal character
+encoding. Counted rows store the encoded length in the allocation's last byte.
 `ascii-decimal-format` rows use printable ASCII and must retain exactly one
 `%3d`; all other percent sequences are refused. `game-glyphs` rows also accept
 `{glyph(0xNN)}`, encoded as `0x15` followed by one nonzero byte. Glyph names and

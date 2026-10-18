@@ -42,9 +42,18 @@ fn literal_report(
         };
         let offset = number("file_offset")?;
         let capacity = number("capacity")?;
-        let maximum = capacity.checked_sub(terminator_bytes).ok_or_else(|| {
-            Error::Invalid("analysis allocation cannot hold its terminator".into())
-        })?;
+        let length_bytes = usize::from(
+            matches!(encoding, Encoding::Inline)
+                && row["codec"] == json!(crate::inline::Codec::GameCountedLiteral),
+        );
+        let terminator_bytes = if length_bytes == 0 {
+            terminator_bytes
+        } else {
+            0
+        };
+        let maximum = capacity
+            .checked_sub(terminator_bytes + length_bytes)
+            .ok_or_else(|| Error::Invalid("analysis allocation cannot hold its metadata".into()))?;
         let text = row["text"]
             .as_str()
             .ok_or_else(|| Error::Invalid("literal analysis has no text".into()))?;
@@ -79,6 +88,7 @@ fn literal_report(
         row["encoded_size"] = json!(encoded_size);
         row["max_encoded_size"] = json!(maximum);
         row["required_terminator_bytes"] = json!(terminator_bytes);
+        row["required_length_bytes"] = json!(length_bytes);
         row["remaining_capacity"] = json!(remaining);
         row["original_bytes"] = json!(
             bytes

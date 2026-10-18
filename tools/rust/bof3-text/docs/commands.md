@@ -67,10 +67,12 @@ Supported executable, record and default character inputs emit
 `monster_entries` lists encounter-template names with their source and copy
 consumer metadata.
 Each literal allocation reports `encoded_size`, `max_encoded_size`,
-`required_terminator_bytes`, `remaining_capacity`, whole-allocation hexadecimal
-`original_bytes` and an empty `commands` list, alongside its offsets, capacity
-and any pointer references. Encoded size counts the text's bytes; the separately
-reported required NUL reserves one byte for executable and inline strings.
+`required_terminator_bytes`, `required_length_bytes`, `remaining_capacity`,
+whole-allocation hexadecimal `original_bytes` and an empty `commands` list,
+alongside its offsets, capacity and any pointer references. Encoded size counts
+the text's bytes. A required NUL reserves one byte for executable and
+NUL-terminated inline strings. Counted inline labels reserve one trailing length byte and require no
+terminator; packing updates that byte from the encoded text.
 Fixed-width names may use their entire field. `encoding` distinguishes ASCII
 from the game's literal character table. These reports are diagnostic; use
 `extract` for editable documents and `validate` for proposed edits.
@@ -251,8 +253,8 @@ with a five-byte field capacity.
 Monster documents use `bof3.monster-text/v1` and report `names`, with an eight-byte
 field capacity. All eight records and their allocation identities are required.
 Inline documents use `bof3.inline-text/v4`; validation checks all allocations,
-per-string renderers and codecs, references and capacity including NUL,
-and reports `strings`. Re-extract older inline documents.
+per-string renderers and codecs, references and capacity including the reserved
+NUL or length byte. It reports `strings`. Re-extract older inline documents.
 `--commands` counts glyph commands; literal-only layouts retain an empty list.
 ASCII decimal formats must retain exactly one `%3d`, with no other percent
 sequences; only the surrounding printable ASCII may change within capacity.

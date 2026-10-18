@@ -15,13 +15,14 @@ pub const SCHEMA: &str = "bof3.inline-text/v4";
 #[serde(rename_all = "kebab-case")]
 pub(crate) enum Codec {
     GameLiteral,
+    GameCountedLiteral,
     GameGlyphs,
     AsciiDecimalFormat,
 }
 
 impl Codec {
     pub(crate) fn encode(self, text: &str, capacity: usize) -> Result<Vec<u8>> {
-        if self == Self::GameLiteral {
+        if matches!(self, Self::GameLiteral | Self::GameCountedLiteral) {
             return encode_name(text, capacity);
         }
         if self == Self::GameGlyphs {
@@ -40,6 +41,19 @@ impl Codec {
     }
 
     fn decode(self, bytes: &[u8], file_offset: usize) -> Result<String> {
+        if self == Self::GameCountedLiteral {
+            let (&length, field) = bytes
+                .split_last()
+                .ok_or_else(|| Error::Invalid("counted literal has no length byte".into()))?;
+            let length = usize::from(length);
+            if length > field.len()
+                || field[..length].contains(&0)
+                || field[length..].iter().any(|byte| *byte != 0)
+            {
+                return invalid("counted literal length or padding does not match its field");
+            }
+            return decode_name(&field[..length], file_offset);
+        }
         if self == Self::GameLiteral {
             return decode_name(bytes, file_offset);
         }
@@ -61,6 +75,7 @@ impl Codec {
     pub(crate) fn as_str(self) -> &'static str {
         match self {
             Self::GameLiteral => "game-literal",
+            Self::GameCountedLiteral => "game-counted-literal",
             Self::GameGlyphs => "game-glyphs",
             Self::AsciiDecimalFormat => "ascii-decimal-format",
         }
@@ -171,6 +186,16 @@ struct Allocation {
 }
 
 impl Allocation {
+    const fn counted(address: u32) -> Self {
+        Self {
+            address,
+            capacity: 8,
+            reference: None,
+            renderer: 0x8014fc90,
+            codec: Codec::GameCountedLiteral,
+        }
+    }
+
     const fn literal(address: u32, capacity: usize, reference: Option<u32>, renderer: u32) -> Self {
         Self {
             address,
@@ -253,12 +278,22 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
-        name: "US BATE categories",
+        name: "US BATE labels",
         load: 0x801d0c00,
         size: 33864,
-        sha256: "3bcdb93ea3900bff033f7bb4278e9d557e9e713e8805b94ee9d3b6dd94512ae6",
-        consumers: &[0x801d6f84, 0x801d7600, 0x801d7e8c],
+        sha256: "c4d996aa3fb858d1c8c42342bfa21ad0fc7ae6aa964dd02c48cb4f26ace3c2db",
+        consumers: &[0x801d3fb0, 0x801d6f84, 0x801d7600, 0x801d7e8c],
         allocations: &[
+            Allocation::counted(0x801d0c50),
+            Allocation::counted(0x801d0c64),
+            Allocation::counted(0x801d0c78),
+            Allocation::counted(0x801d0c8c),
+            Allocation::counted(0x801d0ca0),
+            Allocation::counted(0x801d0cb4),
+            Allocation::counted(0x801d0cc8),
+            Allocation::counted(0x801d0cdc),
+            Allocation::counted(0x801d0cf0),
+            Allocation::counted(0x801d0d04),
             Allocation::literal(0x801d8e24, 5, Some(0x801d8e4c), 0x8014f800),
             Allocation::literal(0x801d8e2c, 7, Some(0x801d8e50), 0x8014f800),
             Allocation::literal(0x801d8e34, 6, Some(0x801d8e54), 0x8014f800),
@@ -276,12 +311,22 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
-        name: "US SHISU categories",
+        name: "US SHISU labels",
         load: 0x801d0c00,
         size: 38196,
-        sha256: "860f9247fc888005c384bb408054e668aa2eeaf3d8678c5de14a2260d120c597",
-        consumers: &[0x801d7f2c, 0x801d85a8, 0x801d8e34],
+        sha256: "2696cb852070d78a63f2e2b9784bf1215ae3984a3412166d551715cb623baedf",
+        consumers: &[0x801d4f58, 0x801d7f2c, 0x801d85a8, 0x801d8e34],
         allocations: &[
+            Allocation::counted(0x801d0c34),
+            Allocation::counted(0x801d0c48),
+            Allocation::counted(0x801d0c5c),
+            Allocation::counted(0x801d0c70),
+            Allocation::counted(0x801d0c84),
+            Allocation::counted(0x801d0c98),
+            Allocation::counted(0x801d0cac),
+            Allocation::counted(0x801d0cc0),
+            Allocation::counted(0x801d0cd4),
+            Allocation::counted(0x801d0ce8),
             Allocation::literal(0x801d9e48, 5, Some(0x801d9e70), 0x8014f800),
             Allocation::literal(0x801d9e50, 7, Some(0x801d9e74), 0x8014f800),
             Allocation::literal(0x801d9e58, 6, Some(0x801d9e78), 0x8014f800),
@@ -299,12 +344,22 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
-        name: "US SHOP categories",
+        name: "US SHOP labels",
         load: 0x801d0c00,
         size: 87660,
-        sha256: "3c313f22546601e7330a95e5b477c9b8c340577ca91f973dcbdb8d53691640bc",
-        consumers: &[0x801dca2c, 0x801dd0a8, 0x801dd934],
+        sha256: "88846e97d2f8e31ac94627ac123fbf23e72920bc288d63e5f5034ae612c45199",
+        consumers: &[0x801d9a58, 0x801dca2c, 0x801dd0a8, 0x801dd934],
         allocations: &[
+            Allocation::counted(0x801d0d14),
+            Allocation::counted(0x801d0d28),
+            Allocation::counted(0x801d0d3c),
+            Allocation::counted(0x801d0d50),
+            Allocation::counted(0x801d0d64),
+            Allocation::counted(0x801d0d78),
+            Allocation::counted(0x801d0d8c),
+            Allocation::counted(0x801d0da0),
+            Allocation::counted(0x801d0db4),
+            Allocation::counted(0x801d0dc8),
             Allocation::literal(0x801e5b20, 5, Some(0x801e5b48), 0x8014f800),
             Allocation::literal(0x801e5b28, 7, Some(0x801e5b4c), 0x8014f800),
             Allocation::literal(0x801e5b30, 6, Some(0x801e5b50), 0x8014f800),
@@ -414,7 +469,7 @@ pub fn extract(path: &Path, data: &[u8], entry: Entry, payload: &[u8]) -> Result
             } = *allocation;
             let payload_offset = (address - layout.load) as usize;
             let bytes = &payload[payload_offset..payload_offset + capacity];
-            if !bytes.contains(&0) {
+            if codec != Codec::GameCountedLiteral && !bytes.contains(&0) {
                 return invalid("inline literal string must retain its NUL terminator");
             }
             Ok(Text {
@@ -516,6 +571,9 @@ pub fn rebuild(path: &Path, data: &[u8], document: &Document) -> Result<Vec<u8>>
         let span = &mut output[row.file_offset..row.file_offset + row.capacity];
         span.fill(0);
         span[..bytes.len()].copy_from_slice(&bytes);
+        if row.codec == Codec::GameCountedLiteral {
+            span[row.capacity - 1] = bytes.len() as u8;
+        }
     }
     Ok(output)
 }
