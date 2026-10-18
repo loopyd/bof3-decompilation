@@ -149,6 +149,7 @@ pub fn interpretation_hash() -> String {
             include_str!("cell.rs"),
             include_str!("sprite_bank.rs"),
             include_str!("aliases.rs"),
+            include_str!("interface.rs"),
         ]
         .join("\n")
         .as_bytes(),
@@ -417,6 +418,7 @@ pub fn build_from(
             });
         }
     }
+    crate::interface::annotate(&mut resources)?;
     Ok(Index {
         schema: SCHEMA.into(),
         release: sources::RELEASE.into(),

@@ -9,7 +9,7 @@ Recognized three-root sprite banks have editable index planes, palette words,
 programs, and cells, with both compression layers bounded by their original spans.
 
 Full graphics support is incomplete. Category discovery lists the intended game
-roles, but current resource roles, CLUT associations, sprite composition,
+roles. Most resource roles, CLUT associations, sprite composition,
 reverse playback callers, unsupported bank variants, and runtime appearance remain unresolved.
 Strict coverage and complete verification return exit 1. A successful raw upload
 edit does not establish its appearance in the game.
@@ -112,6 +112,20 @@ Query supports `--category`, `--source`, `--asset`, `--storage`, `--kind`,
 substrings. Other filters match exact identifiers. Filters combine with AND.
 Resources remain in original-file and slot order. Empty results do not prove
 that a category is absent from the game.
+
+Qualified content mappings identify the glyph and icon atlas in `FIRST.EMI`
+entry 3, and the logo and raster-label atlases in `DEMO.EMI` entries 3 through 5.
+They retain `unclassified-graphics` because their complete logical regions and
+uses remain unresolved. The `font`, `interface`, and `system-screen` filters
+select these known content roles. An image can contain rasterized text even
+when it also has another graphics role.
+
+These atlases name their physical palette sources in `dependencies`. A `partial`
+palette association records original consumer coordinates and source ranges;
+it does not establish runtime loading or the selected palette at every call.
+`FIRST.EMI` entry 8 covers only 16 of the 8x8 renderer's 64 possible CLUT selectors.
+The palette's `uses` field lists the associated original atlas IDs. Other palette,
+page, resident-base, and upload-order dependencies remain visible and unresolved.
 
 Query checks source content and inventory plus the compiled schema, qualification,
 format, package, and mapping policy. It refuses a stale or altered catalog and

@@ -9,6 +9,7 @@ pub mod cell;
 pub mod digest;
 pub mod error;
 pub mod formats;
+mod interface;
 pub mod lzss;
 pub mod package;
 pub mod packed;
