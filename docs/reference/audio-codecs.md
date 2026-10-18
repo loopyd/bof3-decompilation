@@ -118,8 +118,13 @@ the side-information writer truncates it. Registry sources remain unchanged.
 The Rust adapter rejects both configurations before encoding, reporting
 the requested settings and bit budget without substituting a bitrate.
 
-Boundary-impulse fidelity remains unresolved for 48000 Hz stereo at 128 kbit/s.
-Exact decoded lengths and configuration guards do not establish PCM quality.
+The adapter refines ordinary long-block quantization within each frame's existing
+bit capacity. It reproduces the encoder's coefficients from the input PCM before
+changing them, and rejects a mismatch. It then chooses finer global gains to
+minimize summed squared spectral error across the frame, preserving scalefactors,
+block choices, rate, channels and bitrate. Window-switched blocks retain the
+encoder's quantization. This allocation does not establish perceptual quality.
+
 FFmpeg 6.1.1 still ignores the truthful encoder's gapless extension; this is a
 consumer limitation, not permission to impersonate another encoder.
 

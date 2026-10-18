@@ -1,5 +1,6 @@
 //! MPEG-1 delivery encoding with complete filter tails and explicit gapless timing.
 
+mod allocation;
 pub mod stream;
 
 use crate::{interchange::wave::Wave, Result};
@@ -99,6 +100,7 @@ pub fn encode(wave: &Wave, bitrate_kbps: u32) -> Result<Encoded> {
     encoder.push_samples(&vec![0; FRAME_SAMPLES * usize::from(wave.channels)])?;
     let mut audio = Vec::new();
     encoder.finish(&mut audio)?;
+    let audio = allocation::refine(&audio, wave)?;
     validate_frames(
         &audio,
         audio_frames,
