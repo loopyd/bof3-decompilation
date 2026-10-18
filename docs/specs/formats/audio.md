@@ -1013,12 +1013,21 @@ independent full-runtime/audio fidelity remain separate obligations.
 
 [The envelope inverse](../../../tools/rust/bof3-audio/src/soundfont/packing/envelope.rs)
 accepts a uniform volume-envelope tuple across every key zone of an audible,
-non-stopped tone. It first searches the 64 ADSR2 release shift/mode settings with
-ADSR1 fixed. If none match, it searches the 256 ADSR1 attack mode/rate settings
-with ADSR2 fixed. Decay and sustain bits remain unchanged. The inverse reruns
-the complete forward fit at the source binding's ADSR model and probe. A changed
-field can affect several fitted generators, so it compares delay, attack, hold,
-decay, sustain and release together.
+non-stopped tone. It searches these source field families in order, preserving
+every other source bit, including unused ADSR2 bit 13:
+
+| Family | Source bits | Settings |
+| --- | --- | --- |
+| Release shift/mode | ADSR2 bits 0-5 | 64 |
+| Attack mode/rate | ADSR1 bits 8-15 | 256 |
+| Decay shift | ADSR1 bits 4-7 | 16 |
+| Sustain level | ADSR1 bits 0-3 | 16 |
+| Sustain rate | ADSR2 bits 6-12 | 128 |
+| Sustain mode/direction | ADSR2 bits 14-15 | 4 |
+
+The inverse reruns the complete forward fit at the source binding's ADSR model
+and probe. A changed field can affect several fitted generators, so it compares
+delay, attack, hold, decay, sustain and release together.
 
 The original registers and baseline generators must agree with a fresh fit.
 Within the first matching field family, equivalent candidates minimize absolute
@@ -1034,7 +1043,7 @@ registers, matching candidate counts within the selected field family and select
 fits with their approximation errors. Exact fitted generators do not establish
 hardware behavior or PSX/PC PCM equality. Delay/hold edits, nonuniform zones,
 silent/stopped tones and tuples without an exact single-field inverse reject.
-Combined attack/release searches, arbitrary ADSR, topology and independent
+Combined-field searches, arbitrary ADSR, topology and independent
 instrument/sample reconstruction remain open.
 
 ## Rust SoundFont silent-tone unmuting

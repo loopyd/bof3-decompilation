@@ -1,4 +1,4 @@
-//! Invert complete fitted SF2 envelopes through one source attack or release field.
+//! Invert complete fitted SF2 envelopes through one source ADSR field family.
 use crate::{
     bank::Bank,
     machine::adsr::Registers,
@@ -118,9 +118,9 @@ pub(crate) fn pack(
     Ok(Packed { patches, report: Report {
         schema: "bof3.audio.sf2-envelope-pack/v1", tones,
         limitations: vec![
-            "Search the 64 source ADSR2 release shift/mode settings first. If none match, search the 256 ADSR1 attack mode/rate settings with the original ADSR2. Decay and sustain bits stay fixed. All six SF2 volume-envelope generators must exactly match a complete fit at the recorded model and probe.",
+            "Search source fields in order: release shift/mode (64), attack mode/rate (256), decay shift (16), sustain level (16), sustain rate (128), sustain mode/direction (4). Each search preserves every other source bit, including unused ADSR2 bit13. All six SF2 volume-envelope generators must exactly match a complete fit at the recorded model and probe.",
             "All key zones of an audible, non-stopped tone must request the same envelope. Delay/hold changes, unmatched tuples, silent/stopped tones and arbitrary ADSR or topology reconstruction are unsupported.",
-            "Within the first matching field family, equivalent candidates minimize raw field distance from the source, then the field value; matching_candidates counts that family only. Combined attack/release searches are unsupported. Fits retain their approximation error; exact SF2 generators do not establish hardware or PC/PSX PCM equivalence.",
+            "Within the first matching field family, equivalent candidates minimize raw field distance from the source, then the field value; matching_candidates counts that family only. Combined-field searches are unsupported. Fits retain their approximation error; exact SF2 generators do not establish hardware or PC/PSX PCM equivalence.",
         ],
     }})
 }
@@ -177,27 +177,31 @@ fn fitted(fit: &Fit) -> [u16; 6] {
 }
 
 fn inverse(original: &Fit, requested: [u16; 6]) -> Result<(Fit, usize)> {
-    for (attack, limit) in [(false, 64), (true, 256)] {
-        let source = if attack {
-            original.registers.adsr1 >> 8
+    for (adsr1, mask, shift) in [
+        (false, 0x003f, 0),
+        (true, 0xff00, 8),
+        (true, 0x00f0, 4),
+        (true, 0x000f, 0),
+        (false, 0x1fc0, 6),
+        (false, 0xc000, 14),
+    ] {
+        let register = if adsr1 {
+            original.registers.adsr1
         } else {
-            original.registers.adsr2 & 63
+            original.registers.adsr2
         };
+        let source = (register & mask) >> shift;
         let mut best = None;
         let mut rank = (u16::MAX, u16::MAX);
         let mut count = 0;
-        for value in 0u16..limit {
-            let registers = if attack {
-                Registers {
-                    adsr1: (original.registers.adsr1 & 255) | (value << 8),
-                    adsr2: original.registers.adsr2,
-                }
+        for value in 0..=(mask >> shift) {
+            let mut registers = original.registers;
+            let target = if adsr1 {
+                &mut registers.adsr1
             } else {
-                Registers {
-                    adsr1: original.registers.adsr1,
-                    adsr2: (original.registers.adsr2 & !63) | value,
-                }
+                &mut registers.adsr2
             };
+            *target = (register & !mask) | (value << shift);
             let candidate = envelope::fit(registers, original.model, &original.probe)?;
             if fitted(&candidate) != requested {
                 continue;
@@ -213,8 +217,5 @@ fn inverse(original: &Fit, requested: [u16; 6]) -> Result<(Fit, usize)> {
             return Ok((fit, count));
         }
     }
-    Err(
-        "complete envelope tuple has no exact source-tone release-only or attack-only inverse"
-            .into(),
-    )
+    Err("complete envelope tuple has no exact source-tone single-field inverse".into())
 }
