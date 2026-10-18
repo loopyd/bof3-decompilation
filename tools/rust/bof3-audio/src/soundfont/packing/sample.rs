@@ -46,6 +46,7 @@ pub struct PackedBank {
     pub envelope_controls: crate::soundfont::packing::envelope::Report,
     pub assignments: crate::soundfont::packing::assignment::Report,
     pub populated_programs: Vec<crate::soundfont::packing::program::Population>,
+    pub independent_instruments: Vec<crate::soundfont::packing::program::IndependentReport>,
 }
 
 /// Validate instrument controls, assignments and samples before accepting edits.
@@ -55,15 +56,31 @@ pub fn pack_bank(
     body: &[u8],
     baseline: &Font,
     edited: &Font,
-    reference: Option<&mut crate::voice::tuning::Reference>,
+    mut reference: Option<&mut crate::voice::tuning::Reference>,
 ) -> Result<PackedBank> {
-    let populated_programs = crate::soundfont::packing::program::derive(binding, baseline, edited)?;
-    let mut tones = crate::soundfont::packing::tone::pack(binding, header, baseline, edited)?;
+    let independent = crate::soundfont::packing::program::independent(
+        binding,
+        header,
+        baseline,
+        edited,
+        reference.as_deref_mut(),
+    )?;
+    let fixed = if independent.tones.is_empty() {
+        None
+    } else {
+        let mut font = Font::from_bytes(edited.original_bytes().to_vec())?;
+        font.instruments.truncate(baseline.instruments.len());
+        Some(font)
+    };
+    let existing = fixed.as_ref().unwrap_or(edited);
+    let populated_programs =
+        crate::soundfont::packing::program::derive(binding, baseline, edited, &independent)?;
+    let mut tones = crate::soundfont::packing::tone::pack(binding, header, baseline, existing)?;
     let pitch =
-        crate::soundfont::packing::pitch::pack(binding, header, baseline, edited, reference)?;
-    let envelopes = crate::soundfont::packing::envelope::pack(binding, header, baseline, edited)?;
+        crate::soundfont::packing::pitch::pack(binding, header, baseline, existing, reference)?;
+    let envelopes = crate::soundfont::packing::envelope::pack(binding, header, baseline, existing)?;
     let assignments =
-        crate::soundfont::packing::assignment::pack(binding, &tones.header, baseline, edited)?;
+        crate::soundfont::packing::assignment::pack(binding, &tones.header, baseline, existing)?;
     let samples = pack_inner(
         binding,
         body,
@@ -71,6 +88,7 @@ pub fn pack_bank(
         edited,
         true,
         !populated_programs.is_empty(),
+        (!independent.tones.is_empty()).then_some(baseline),
     )?;
     for (offset, bytes) in pitch
         .patches
@@ -81,7 +99,11 @@ pub fn pack_bank(
         tones.header[offset..offset + 2].copy_from_slice(&bytes);
     }
     crate::soundfont::packing::envelope::verify(&tones.header, &envelopes.report)?;
-    tones.header = crate::soundfont::packing::program::apply(&tones.header, &populated_programs)?;
+    tones.header = crate::soundfont::packing::program::apply(
+        &tones.header,
+        &populated_programs,
+        &independent,
+    )?;
     crate::bank::Bank::parse(&tones.header)?;
     tones.report.output_header_sha256 = sha256_hex(&tones.header);
     Ok(PackedBank {
@@ -93,6 +115,7 @@ pub fn pack_bank(
         envelope_controls: envelopes.report,
         assignments: assignments.report,
         populated_programs,
+        independent_instruments: independent.report,
     })
 }
 
@@ -104,7 +127,7 @@ pub fn pack(
     baseline: &Font,
     edited: &Font,
 ) -> Result<Packed> {
-    pack_inner(binding, original, baseline, edited, false, false)
+    pack_inner(binding, original, baseline, edited, false, false, None)
 }
 
 fn pack_inner(
@@ -114,6 +137,7 @@ fn pack_inner(
     edited: &Font,
     tone_controls: bool,
     program_edits: bool,
+    instrument_prefix: Option<&Font>,
 ) -> Result<Packed> {
     if binding.body_sha256 != sha256_hex(original) {
         return Err("SF2 edit: source body does not match regenerated binding".into());
@@ -126,8 +150,8 @@ fn pack_inner(
                 .into(),
         );
     }
-    let before = controls(baseline, tone_controls, program_edits)?;
-    let after = controls(edited, tone_controls, program_edits)?;
+    let before = controls(baseline, tone_controls, program_edits, instrument_prefix)?;
+    let after = controls(edited, tone_controls, program_edits, instrument_prefix)?;
     if before.len() != after.len() {
         return Err("SF2 edit: added/removed metadata chunks unsupported".into());
     }
@@ -290,7 +314,7 @@ fn pack_inner(
             input_soundfont_sha256: sha256_hex(edited.original_bytes()),
             samples,
             limitations: vec![
-                "Sample identities, PCM length/storage offsets, sample-header rate/pitch, names and instrument structure remain fixed; tone gain/pan, root/coarse/fine, fitted envelopes and sample assignments require the enclosing bank packer's separate inverse validation.",
+                "Sample identities, PCM length/storage offsets and sample-header rate/pitch/names remain fixed. Tone controls, assignments, program layers and appended source-shaped instruments require the enclosing bank packer's separate inverse and structure validation.",
                 "Only shared-consistent nonlooping/continuous loop modes are representable; release-only loops are unsupported. Loops must align to 28 frames and end at the sample end.",
                 "PCM24 loss fields use signed 24-bit integer units; PCM16 conversion rounds nearest with ties toward positive infinity and saturation. Encoder loss fields use PCM16 units.",
                 "ADPCM encoding uses the existing zero-history model and stabilizes edited loops; original runtime interpolation/mixing and PC/PSX fidelity remain unverified.",
@@ -350,7 +374,12 @@ fn modes(font: &Font) -> Result<BTreeMap<usize, u16>> {
 }
 
 type Control = ([u8; 4], [u8; 4], Vec<u8>, Option<u8>);
-fn controls(font: &Font, tone_controls: bool, program_edits: bool) -> Result<Vec<Control>> {
+fn controls(
+    font: &Font,
+    tone_controls: bool,
+    program_edits: bool,
+    instrument_prefix: Option<&Font>,
+) -> Result<Vec<Control>> {
     if !matches!(font.version, (2, 1) | (2, 4)) {
         return Err("SF2 edit: only 2.01/2.04 PCM interchange is supported".into());
     }
@@ -380,6 +409,34 @@ fn controls(font: &Font, tone_controls: bool, program_edits: bool) -> Result<Vec
             continue;
         }
         let mut data = raw.to_vec();
+        if let Some(prefix) = instrument_prefix {
+            let width = match &chunk.id {
+                b"inst" => Some(22),
+                b"ibag" | b"igen" => Some(4),
+                _ => None,
+            };
+            if chunk.scope == *b"pdta" {
+                if let Some(width) = width {
+                    let original = prefix
+                        .chunks
+                        .iter()
+                        .find(|c| c.scope == chunk.scope && c.id == chunk.id)
+                        .ok_or("SF2 independent tone: original instrument table missing")?;
+                    let end = original.data.len() - width;
+                    data = raw
+                        .get(..end)
+                        .ok_or("SF2 independent tone: original instrument table truncated")?
+                        .to_vec();
+                    let mut terminal = raw[raw.len() - width..].to_vec();
+                    match &chunk.id {
+                        b"inst" => terminal[20..22].fill(0),
+                        b"ibag" => terminal[..2].fill(0),
+                        _ => (),
+                    }
+                    data.extend(terminal);
+                }
+            }
+        }
         if chunk.scope == *b"INFO" && chunk.id == *b"ifil" {
             data = vec![2, 0, 1, 0];
         }

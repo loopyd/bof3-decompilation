@@ -4010,18 +4010,20 @@ and tones. Standard SF2 consumers may allocate a short silent voice, unlike the
 game's no-allocation behavior. Reports state that approximation.
 
 To populate an empty program or replace a populated program's layers, edit its
-SF2 preset to reference one to sixteen existing VAB tone instruments in the
-desired order. Give its bank-128 percussion alias the same assignments when
-present. Existing layers may be reordered, duplicated, removed or replaced;
-each program using tone templates must retain at least one layer. Packing copies
-their validated, edited VAB rows and changes the owning program reference. Templates must share program volume, priority, mode and pan, which
-become the destination program's controls.
+SF2 preset to reference one to sixteen existing VAB tone instruments or validated
+appended instruments in the desired order. Give its bank-128 percussion alias the
+same assignments when present. Existing layers may be reordered, duplicated,
+removed or replaced; each program using tone templates must retain at least one
+layer. Packing copies their validated, edited VAB rows and changes the owning
+program reference.
+Templates must share program volume, priority, mode and pan, which become the
+destination program's controls.
 Their supported gain, tuning, sample assignment and PCM edits still pass through
 the existing inverses. Shared instrument edits also affect the original programs
 that use those instruments. Simultaneous program replacements copy from the
-validated source rows before any program is rearranged. Creating independent
-new instrument/sample structures or changing preset-level generators/modulators
-remains unsupported and rejects explicitly.
+validated source rows before any program is rearranged. Other instrument/sample
+structures and changes to preset-level generators or modulators remain
+unsupported and reject explicitly.
 
 To clear a populated program, assign only the existing generated empty-program
 instrument to its preset and percussion alias. Packing sets its tone count to
@@ -4029,6 +4031,26 @@ zero, removes its 512-byte tone block and retains the other program-table fields
 This requires the export to contain an empty-program instrument already. Mixing
 it with audible tone templates is unsupported. Simultaneous replacements and
 populations may still copy validated source rows from programs being cleared.
+
+Appended instruments may reconstruct independent tone rows while using existing
+sample allocations and source key zones. Retain every original instrument in its
+original order. Name each appended instrument `PpppTtt`, using its lowest numbered
+melodic destination program and first layer, such as `P001T00`. Names preserve the
+new destination identity; they do not identify or authorize a source template.
+Every appended instrument must be assigned to a program.
+
+Packing matches the full key-zone and generator structure against regenerated
+audible, non-stopped source contexts. Each candidate passes the existing gain,
+tuning, envelope and sample-assignment inverses independently. Multiple matching
+contexts must produce identical raw tone bytes apart from the owning program
+word, and identical program controls. Other ambiguity rejects. The original tone
+and its independent copies may request different supported controls. New key or
+velocity zones, new samples and arbitrary envelope tuples remain unsupported.
+Existing sample-loop consistency and PCM validation apply to every instrument.
+Original raw instrument-table prefixes and opaque terminal fields remain checked.
+The `independent_instruments` report records the selected source, matching-source
+count, row hash before destination owner-word substitution, and reconstructed
+raw controls.
 
 Packing inserts new 512-byte tone blocks in ascending program order, updates
 program/tone totals and declared size. Destinations that remain populated retain

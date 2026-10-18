@@ -4,6 +4,198 @@ use serde::Serialize;
 use std::collections::BTreeMap;
 
 #[derive(Debug, Serialize)]
+pub struct IndependentReport {
+    pub sf2_instrument: usize,
+    pub source_program: u8,
+    pub source_tone: usize,
+    pub matching_sources: usize,
+    pub row_sha256: String,
+    pub volume: u8,
+    pub pan: u8,
+    pub center: u8,
+    pub shift: u8,
+    pub adsr1: u16,
+    pub adsr2: u16,
+    pub sample_reference: i16,
+}
+
+pub(crate) struct IndependentTone {
+    source_program: u8,
+    source_tone: usize,
+    row: [u8; 32],
+}
+
+#[derive(Default)]
+pub(crate) struct Independent {
+    pub tones: BTreeMap<usize, IndependentTone>,
+    pub report: Vec<IndependentReport>,
+}
+
+fn shape(
+    zones: &[crate::soundfont::reader::model::Zone],
+) -> Vec<crate::soundfont::reader::model::Zone> {
+    let mut result = zones.to_vec();
+    for zone in &mut result {
+        zone.target = None;
+        for generator in &mut zone.generators {
+            if matches!(generator.operator, 17 | 33..=38 | 48 | 51..=54 | 58) {
+                generator.amount = 0;
+            }
+        }
+    }
+    result
+}
+
+/// Appended instruments must retain a proven source key/context shape. Each
+/// requested row is inverted separately, without changing its source tone.
+pub(crate) fn independent(
+    binding: &binding::Report,
+    header: &[u8],
+    baseline: &Font,
+    edited: &Font,
+    mut reference: Option<&mut crate::voice::tuning::Reference>,
+) -> Result<Independent> {
+    if edited.instruments.len() < baseline.instruments.len() {
+        return Err("SF2 independent tone: original instruments cannot be removed".into());
+    }
+    if edited.instruments.len() - baseline.instruments.len() > 2048 {
+        return Err("SF2 independent tone: VAB tone capacity exceeded".into());
+    }
+    let bank = Bank::parse(header)?;
+    let mut output = Independent::default();
+    for (index, instrument) in edited
+        .instruments
+        .iter()
+        .enumerate()
+        .skip(baseline.instruments.len())
+    {
+        let destination = binding
+            .programs
+            .iter()
+            .map(|p| (p.source_program, p.sf2_preset))
+            .chain(
+                binding
+                    .empty_programs
+                    .iter()
+                    .map(|p| (p.source_program, p.sf2_preset)),
+            )
+            .flat_map(|(program, preset)| {
+                edited.presets.get(preset).into_iter().flat_map(move |p| {
+                    p.zones.iter().enumerate().filter_map(move |(tone, z)| {
+                        (z.target == Some(index)).then_some((program, tone))
+                    })
+                })
+            })
+            .min()
+            .ok_or("SF2 independent tone: appended instrument is not assigned to a program")?;
+        let name = format!("P{:03}T{:02}", destination.0, destination.1);
+        let mut expected_name = [0; 20];
+        expected_name[..name.len()].copy_from_slice(name.as_bytes());
+        if instrument.name != expected_name {
+            return Err(format!("SF2 independent tone: appended instrument {index} must use first destination name {name}").into());
+        }
+        let requested_shape = shape(&instrument.zones);
+        let mut selected: Option<IndependentTone> = None;
+        let mut controls = Vec::new();
+        let mut matches = 0;
+        let mut first_error = None;
+        for source in &binding.tones {
+            if source.silent
+                || !source.stopped_keys.is_empty()
+                || shape(&baseline.instruments[source.sf2_instrument].zones) != requested_shape
+            {
+                continue;
+            }
+            let result = (|| -> Result<[u8; 32]> {
+                let mut view = Font::from_bytes(baseline.original_bytes().to_vec())?;
+                view.instruments[source.sf2_instrument] = instrument.clone();
+                let mut tone =
+                    crate::soundfont::packing::tone::pack(binding, header, baseline, &view)?;
+                let assignments = crate::soundfont::packing::assignment::pack(
+                    binding,
+                    &tone.header,
+                    baseline,
+                    &view,
+                )?;
+                let pitch = crate::soundfont::packing::pitch::pack(
+                    binding,
+                    header,
+                    baseline,
+                    &view,
+                    reference.as_deref_mut(),
+                )?;
+                let envelope =
+                    crate::soundfont::packing::envelope::pack(binding, header, baseline, &view)?;
+                for (at, bytes) in assignments
+                    .patches
+                    .into_iter()
+                    .chain(pitch.patches)
+                    .chain(envelope.patches)
+                {
+                    tone.header[at..at + 2].copy_from_slice(&bytes);
+                }
+                crate::soundfont::packing::envelope::verify(&tone.header, &envelope.report)?;
+                let program = bank
+                    .programs
+                    .iter()
+                    .find(|p| p.program == source.source_program)
+                    .ok_or("SF2 independent tone: source program missing")?;
+                let at = 0x820 + program.tone_block * 512 + source.source_tone.index * 32;
+                Ok(tone.header[at..at + 32].try_into()?)
+            })();
+            let row = match result {
+                Ok(row) => row,
+                Err(error) => {
+                    if first_error.is_none() {
+                        first_error = Some(error.to_string());
+                    }
+                    continue;
+                }
+            };
+            let attributes = &header[0x20 + usize::from(source.source_program) * 16 + 1..][..4];
+            if let Some(previous) = &selected {
+                let mut a = previous.row;
+                let mut b = row;
+                a[20..22].fill(0);
+                b[20..22].fill(0);
+                if a != b || controls != attributes {
+                    return Err(
+                        "SF2 independent tone: ambiguous source rows or program controls".into(),
+                    );
+                }
+            } else {
+                controls = attributes.to_vec();
+                selected = Some(IndependentTone {
+                    source_program: source.source_program,
+                    source_tone: source.source_tone.index,
+                    row,
+                });
+            }
+            matches += 1;
+        }
+        let selected = selected.ok_or_else(|| format!("SF2 independent tone {index}: no audible, non-stopped source context reconstructs the request{}",
+            first_error.map_or(String::new(), |e| format!(": {e}"))))?;
+        let row = &selected.row;
+        output.report.push(IndependentReport {
+            sf2_instrument: index,
+            source_program: selected.source_program,
+            source_tone: selected.source_tone,
+            matching_sources: matches,
+            row_sha256: crate::digest::sha256_hex(row),
+            volume: row[2],
+            pan: row[3],
+            center: row[4],
+            shift: row[5],
+            adsr1: u16::from_le_bytes([row[16], row[17]]),
+            adsr2: u16::from_le_bytes([row[18], row[19]]),
+            sample_reference: i16::from_le_bytes([row[22], row[23]]),
+        });
+        output.tones.insert(index, selected);
+    }
+    Ok(output)
+}
+
+#[derive(Debug, Serialize)]
 /// One program's replacement layers; an empty list clears a populated slot.
 pub struct Population {
     pub program: u8,
@@ -20,6 +212,7 @@ pub(crate) fn derive(
     binding: &binding::Report,
     baseline: &Font,
     edited: &Font,
+    independent: &Independent,
 ) -> Result<Vec<Population>> {
     if baseline.presets.len() != edited.presets.len() {
         return Err("SF2 program edit: preset insertion/removal changes program identities".into());
@@ -116,10 +309,16 @@ pub(crate) fn derive(
             if after.zones.len() == 1 && binding.empty_program_instrument == Some(target) {
                 continue;
             }
-            let source = binding.tones.iter().find(|t| t.sf2_instrument == target).ok_or("SF2 program edit: assignment requires an existing VAB tone instrument; generated silence and new instrument structures are not tone templates")?;
+            let (source_program, source_tone) = if let Some(source) = independent.tones.get(&target)
+            {
+                (source.source_program, source.source_tone)
+            } else {
+                let source = binding.tones.iter().find(|t| t.sf2_instrument == target).ok_or("SF2 program edit: assignment requires an existing VAB tone instrument; generated silence is not a tone template")?;
+                (source.source_program, source.source_tone.index)
+            };
             tones.push(Tone {
-                source_program: source.source_program,
-                source_tone: source.source_tone.index,
+                source_program,
+                source_tone,
                 sf2_instrument: target,
             });
         }
@@ -130,7 +329,11 @@ pub(crate) fn derive(
 
 /// Existing tone edits are already inverted. Copy their resulting raw rows and
 /// retain unused destination rows, unrelated blocks and the sample-size table/tail.
-pub(crate) fn apply(header: &[u8], populations: &[Population]) -> Result<Vec<u8>> {
+pub(crate) fn apply(
+    header: &[u8],
+    populations: &[Population],
+    independent: &Independent,
+) -> Result<Vec<u8>> {
     if populations.is_empty() {
         return Ok(header.to_vec());
     }
@@ -195,7 +398,11 @@ pub(crate) fn apply(header: &[u8], populations: &[Population]) -> Result<Vec<u8>
                 return Err("SF2 program edit: source tone missing".into());
             }
             let offset = 0x820 + source.tone_block * 512 + tone.source_tone * 32;
-            block[index * 32..index * 32 + 32].copy_from_slice(&header[offset..offset + 32]);
+            let row = independent
+                .tones
+                .get(&tone.sf2_instrument)
+                .map_or(&header[offset..offset + 32], |t| &t.row);
+            block[index * 32..index * 32 + 32].copy_from_slice(row);
             block[index * 32 + 20..index * 32 + 22]
                 .copy_from_slice(&u16::from(population.program).to_le_bytes());
         }
