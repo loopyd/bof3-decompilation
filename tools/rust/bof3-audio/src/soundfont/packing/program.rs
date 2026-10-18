@@ -4,7 +4,7 @@ use serde::Serialize;
 use std::collections::BTreeMap;
 
 #[derive(Debug, Serialize)]
-/// One program's replacement layers, including population of an empty slot.
+/// One program's replacement layers; an empty list clears a populated slot.
 pub struct Population {
     pub program: u8,
     pub tones: Vec<Tone>,
@@ -113,6 +113,9 @@ pub(crate) fn derive(
             {
                 return Err("SF2 program edit: use direct tone instrument assignments without preset generators/modulators".into());
             }
+            if after.zones.len() == 1 && binding.empty_program_instrument == Some(target) {
+                continue;
+            }
             let source = binding.tones.iter().find(|t| t.sf2_instrument == target).ok_or("SF2 program edit: assignment requires an existing VAB tone instrument; generated silence and new instrument structures are not tone templates")?;
             tones.push(Tone {
                 source_program: source.source_program,
@@ -147,7 +150,8 @@ pub(crate) fn apply(header: &[u8], populations: &[Population]) -> Result<Vec<u8>
         .iter()
         .filter(|p| !bank.programs.iter().any(|old| old.program == p.program))
         .count();
-    let programs = bank.programs.len() + added;
+    let cleared = populations.iter().filter(|p| p.tones.is_empty()).count();
+    let programs = bank.programs.len() + added - cleared;
     let tones = usize::from(bank.declared_tones) - replaced
         + populations.iter().map(|p| p.tones.len()).sum::<usize>();
     if programs > 128 || tones > 2048 {
@@ -160,6 +164,13 @@ pub(crate) fn apply(header: &[u8], populations: &[Population]) -> Result<Vec<u8>
     }
     let mut output = header[..0x820].to_vec();
     for population in populations {
+        if population.tones.is_empty() {
+            blocks
+                .remove(&population.program)
+                .ok_or("SF2 program edit: cleared destination is not populated")?;
+            output[0x20 + usize::from(population.program) * 16] = 0;
+            continue;
+        }
         let first = bank
             .programs
             .iter()
@@ -199,10 +210,14 @@ pub(crate) fn apply(header: &[u8], populations: &[Population]) -> Result<Vec<u8>
     output.extend(&header[0x820 + bank.programs.len() * 512..]);
     output[0x12..0x14].copy_from_slice(&(programs as u16).to_le_bytes());
     output[0x14..0x16].copy_from_slice(&(tones as u16).to_le_bytes());
-    let size = bank
-        .declared_file_bytes
-        .checked_add((output.len() - header.len()) as u32)
-        .ok_or("SF2 program edit: declared file size overflow")?;
+    let size = if output.len() >= header.len() {
+        bank.declared_file_bytes
+            .checked_add((output.len() - header.len()) as u32)
+    } else {
+        bank.declared_file_bytes
+            .checked_sub((header.len() - output.len()) as u32)
+    }
+    .ok_or("SF2 program edit: declared file size outside supported range")?;
     output[0x0c..0x10].copy_from_slice(&size.to_le_bytes());
     let parsed = Bank::parse(&output)?;
     if parsed.programs.len() != programs

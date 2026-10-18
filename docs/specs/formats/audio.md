@@ -4013,9 +4013,8 @@ To populate an empty program or replace a populated program's layers, edit its
 SF2 preset to reference one to sixteen existing VAB tone instruments in the
 desired order. Give its bank-128 percussion alias the same assignments when
 present. Existing layers may be reordered, duplicated, removed or replaced;
-each changed program must retain at least one layer. These are tone templates:
-packing copies their validated, edited VAB rows and changes the owning program
-reference. Templates must share program volume, priority, mode and pan, which
+each program using tone templates must retain at least one layer. Packing copies
+their validated, edited VAB rows and changes the owning program reference. Templates must share program volume, priority, mode and pan, which
 become the destination program's controls.
 Their supported gain, tuning, sample assignment and PCM edits still pass through
 the existing inverses. Shared instrument edits also affect the original programs
@@ -4024,13 +4023,21 @@ validated source rows before any program is rearranged. Creating independent
 new instrument/sample structures or changing preset-level generators/modulators
 remains unsupported and rejects explicitly.
 
+To clear a populated program, assign only the existing generated empty-program
+instrument to its preset and percussion alias. Packing sets its tone count to
+zero, removes its 512-byte tone block and retains the other program-table fields.
+This requires the export to contain an empty-program instrument already. Mixing
+it with audible tone templates is unsupported. Simultaneous replacements and
+populations may still copy validated source rows from programs being cleared.
+
 Packing inserts new 512-byte tone blocks in ascending program order, updates
-program/tone totals and declared size. Existing destination blocks retain their
-validated unused rows; unrelated blocks remain intact. Layer counts and template
+program/tone totals and declared size. Destinations that remain populated retain
+their validated unused rows; unrelated blocks remain intact. Layer counts and template
 controls are the only changed program-table fields. The sample-size table, body
 and opaque trailer remain intact. Replacing existing layers does not resize their
 512-byte block. The `populated_programs` report includes both new populations
-and replacements with their ordered source program/tone/instrument identities.
+and replacements with their ordered source program/tone/instrument identities;
+a cleared program has an empty `tones` list.
 Growth must fit the original EMI sector
 allocation and a verified game VH/SEP/SPU layout. Alias conflicts, more than
 16 layers and capacity failures publish nothing. The shared generated silent
