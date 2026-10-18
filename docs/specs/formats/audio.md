@@ -742,15 +742,22 @@ of the 16 channels when the requested generated setup and termination match
 the reconstructed channel sets. Timed tempos must be nonzero 24-bit values;
 the initial tempo remains at tick zero. Equal-count bends may change channel,
 high-byte value and tick. Their ignored source low bytes survive in event order.
-When the bend count changes, the shorter bend list must be an
+When every source bend has the same ignored low byte, removal may accompany
+channel, high-byte value and tick edits. Every retained bend keeps that shared
+low byte. If the shared value is zero, insertion may accompany those edits too,
+since retained and inserted bends all have zero low bytes. An empty source bend
+list also uses zero for every inserted bend.
+
+For other bend-count changes, the shorter bend list must be an
 ordered subsequence of the longer list with equal channel, high-byte value and
 tick. Removal retains the matched source low bytes; insertion retains every
 source bend and gives each new bend a zero low byte. The inverse considers every
 valid correspondence and rejects if they produce different low bytes. It accepts
-duplicate matches when their resulting bytes agree. Changing retained bend channels,
-values or ticks together with insertion or removal is unsupported. Nonzero MIDI bend
-low bytes remain unrepresentable. MIDI note-off with zero release velocity normalizes to SEP note-on
-with zero velocity. The opaque suffix after the source end marker survives.
+duplicate matches when their resulting bytes agree. Outside the uniform-low cases,
+retained bends cannot change channel, value or tick during insertion or removal.
+Nonzero MIDI bend low bytes remain unrepresentable. MIDI note-off with zero
+release velocity normalizes to SEP note-on with zero velocity. The opaque suffix
+after the source end marker survives.
 
 The selected stream receives explicit statuses and minimal deltas. Within each
 MIDI track, the rebuilt order follows the edited events; tempo events precede performance events at

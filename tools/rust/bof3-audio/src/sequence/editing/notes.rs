@@ -200,7 +200,7 @@ pub(super) fn rebuild(
             limitations: vec![
                 "Linear notes, tempo, program and volume/pan events support insertion/removal. Notes, programs and volume/pan may use any of the 16 channels when requested canonical setup and termination match the reconstructed channel sets. Rebuilt streams use explicit statuses and minimal deltas. Opaque suffixes and other sequence records survive.",
                 "With layout_rebuilt, changed_source_bytes counts differing data positions and length; changed_source_events counts all rewritten or removed original events. timing_edits is empty because original delta identities are not retained.",
-                "Equal-count bends support channel, high-byte value and tick edits while retaining ignored source low bytes in order. Bend insertion/removal requires an exact ordered channel/value/tick subsequence; all valid correspondences must agree on retained low bytes. Inserted bends use zero. Generated channel defaults remain canonical and note releases follow the reconstructed note channels. Controller-loop structure changes and other controller messages require separate semantics.",
+                "Equal-count bends support channel, high-byte value and tick edits while retaining ignored source low bytes in order. Uniform source bend lows also allow removal with channel/value/tick edits; all-zero source lows allow insertion with those edits. Otherwise bend insertion/removal requires an exact ordered channel/value/tick subsequence; all valid correspondences must agree on retained low bytes. Inserted bends use zero. Generated channel defaults remain canonical and note releases follow the reconstructed note channels. Controller-loop structure changes and other controller messages require separate semantics.",
                 "Bank availability, scheduler timing, synthesis and independent audio fidelity are separate checks.",
             ],
         },
@@ -232,6 +232,12 @@ fn bend_lows(baseline: &Translation, events: &[Event]) -> Result<Vec<u8>> {
         .collect();
     if source.len() == edited.len() {
         return Ok(lows);
+    }
+    // Uniform removals preserve the same low at every retained bend. Insertions
+    // have the same guarantee when all source lows are zero.
+    let low = lows.first().copied().unwrap_or(0);
+    if (low == 0 || source.len() > edited.len()) && lows.iter().all(|&value| value == low) {
+        return Ok(vec![low; edited.len()]);
     }
     let inserting = source.len() < edited.len();
     let (short, long) = if inserting {
