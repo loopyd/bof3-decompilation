@@ -734,11 +734,11 @@ gameplay fidelity or full song-folder packing.
 [The linear inverse](../../../tools/rust/bof3-audio/src/sequence/editing/notes.rs)
 rebuilds a sequence that reaches its source end marker without controller-loop
 operations. Notes, timed tempos, programs, volume controller 7 and pan controller
-10 support insertion and removal. Notes may move among channels that already
-contain source notes. Programs, volume and pan may move among previously used
-source channels. Timed tempos must be nonzero 24-bit values; the initial tempo
-remains at tick zero. Equal-count bends retain their ordered source correspondence
-and channels, with editable high-byte values and ticks. Their original ignored low
+10 support insertion and removal. Notes, programs, volume and pan may use any
+of the 16 channels when the requested generated setup and termination match
+the reconstructed channel sets. Timed tempos must be nonzero 24-bit values;
+the initial tempo remains at tick zero. Equal-count bends retain their ordered
+source correspondence and channels, with editable high-byte values and ticks. Their original ignored low
 bytes survive. When the bend count changes, the shorter bend list must be an
 ordered subsequence of the longer list with equal channel, high-byte value and
 tick. Removal retains the matched source low bytes; insertion retains every
@@ -754,16 +754,24 @@ MIDI track, the rebuilt order follows the edited events; tempo events precede pe
 the same tick. Each delta must fit positive signed tenfold runtime scaling. The
 inverse retranslates the rebuilt stream and compares all requested events and
 ticks, allowing only normalized note-off status and relocated source-end text.
-Generated setup and termination remain fixed, so removing every note from a
-previously used channel rejects. Other sequence records and entry padding retain
-their bytes when the selected stream grows or shrinks.
+When channel initialization is enabled, the requested MIDI must contain the
+canonical tick-zero defaults for each resulting channel, in channel order. The
+default program equals the channel index. It precedes CC0=0, CC7/39/11/43=127,
+CC10=64, CC42/91/93=0 and bend low/high bytes 0/64, in that order. Controllers
+within each group follow the listed order. Changed default values or setup for
+unused channels reject. Generated all-notes-off messages must match the resulting
+note channels at the final tick. Removing every note from a channel requires
+removing its generated all-notes-off message; removing all source events also
+removes their setup. The original source-end marker must appear exactly once.
+Other sequence records and entry padding retain their bytes when the selected
+stream grows or shrinks.
 
 With `layout_rebuilt=true`, `changed_source_bytes` counts differing byte positions
 plus the length difference. `changed_source_events` counts all rewritten or
 removed original events. `timing_edits` is empty because the rebuilt stream no
 longer uses the original delta spans. These counts do not identify individual
 insertions or removals. Ambiguous bend correspondence, controller-loop structure
-changes, new channels and other controller messages reject explicitly. Broader channel and loop reconstruction,
+changes and other controller messages reject explicitly. Loop reconstruction,
 scheduler timing, bank availability and independent audio fidelity remain open.
 
 ### MIDI timing reconstruction

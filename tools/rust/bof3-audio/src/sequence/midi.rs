@@ -224,39 +224,7 @@ pub fn initialize_channels(translation: &mut Translation) -> Result<usize> {
     let mut setup = Vec::new();
     for (channel, used) in used.into_iter().enumerate() {
         if used {
-            setup.push(Event {
-                tick: 0,
-                message: Message::Channel {
-                    status: 0xc0 | channel as u8,
-                    data: vec![channel as u8],
-                },
-            });
-            for (controller, value) in [
-                (0, 0),
-                (7, 127),
-                (39, 127),
-                (11, 127),
-                (43, 127),
-                (10, 64),
-                (42, 0),
-                (91, 0),
-                (93, 0),
-            ] {
-                setup.push(Event {
-                    tick: 0,
-                    message: Message::Channel {
-                        status: 0xb0 | channel as u8,
-                        data: vec![controller, value],
-                    },
-                });
-            }
-            setup.push(Event {
-                tick: 0,
-                message: Message::Channel {
-                    status: 0xe0 | channel as u8,
-                    data: vec![0, 64],
-                },
-            });
+            setup.extend(channel_setup(channel as u8));
         }
     }
     let count = setup.len();
@@ -268,4 +236,26 @@ pub fn initialize_channels(translation: &mut Translation) -> Result<usize> {
         }
     }
     Ok(count)
+}
+
+pub(super) fn channel_setup(channel: u8) -> Vec<Event> {
+    let mut setup = vec![event(0, self::channel(0xc0 | channel, vec![channel]))];
+    for (controller, value) in [
+        (0, 0),
+        (7, 127),
+        (39, 127),
+        (11, 127),
+        (43, 127),
+        (10, 64),
+        (42, 0),
+        (91, 0),
+        (93, 0),
+    ] {
+        setup.push(event(
+            0,
+            self::channel(0xb0 | channel, vec![controller, value]),
+        ));
+    }
+    setup.push(event(0, self::channel(0xe0 | channel, vec![0, 64])));
+    setup
 }

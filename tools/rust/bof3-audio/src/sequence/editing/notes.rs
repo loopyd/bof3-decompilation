@@ -64,45 +64,35 @@ pub(super) fn rebuild(
             return Err(format!("{reject}: generated conductor setup changed").into());
         }
     }
-    let first = baseline
-        .report
-        .mappings
-        .iter()
-        .find(|m| m.track == 1)
-        .unwrap()
-        .event;
     let last = baseline.report.mappings.last().unwrap();
     let before = &baseline.midi.tracks[1].events;
     let after = &edited.tracks[1].events;
-    let suffix = &before[last.event..];
-    if after.len() < first + suffix.len() || after[..first] != before[..first] {
-        return Err(format!("{reject}: generated performance setup changed").into());
-    }
-    let end = after.len() - suffix.len();
-    let final_tick = after[end].tick;
-    for (actual, expected) in after[end..].iter().zip(suffix) {
-        if actual.message != expected.message || actual.tick != final_tick {
-            return Err(
-                format!("{reject}: generated termination or source end marker changed").into(),
-            );
+    let mut first = 0;
+    if options.initialize_channels {
+        for channel in 0..16 {
+            let setup = crate::sequence::midi::channel_setup(channel);
+            if after[first..].starts_with(&setup) {
+                first += setup.len();
+            }
         }
     }
+    let mut ends = after
+        .iter()
+        .enumerate()
+        .filter(|(_, event)| event.message == before[last.event].message);
+    let Some((end, end_event)) = ends.next() else {
+        return Err(format!("{reject}: original source end marker missing").into());
+    };
+    if end < first || ends.next().is_some() {
+        return Err(format!("{reject}: original source end marker duplicated or misplaced").into());
+    }
+    let final_tick = end_event.tick;
     if conductor.last().unwrap().message != Message::end()
         || conductor.last().unwrap().tick != final_tick
     {
         return Err(
             format!("{reject}: conductor termination must match the source end tick").into(),
         );
-    }
-    let mut note_channels = 0u16;
-    let mut used_channels = 0u16;
-    for step in &baseline.timeline.steps {
-        if step.status != 0xff {
-            used_channels |= 1 << (step.status & 15);
-        }
-        if matches!(step.kind, Kind::Note { .. }) {
-            note_channels |= 1 << (step.status & 15);
-        }
     }
     let mut normalized = edited.clone();
     let bend_lows = bend_lows(baseline, &after[first..end])?;
@@ -114,11 +104,6 @@ pub(super) fn rebuild(
             let Message::Channel { status, data } = &mut event.message else {
                 unreachable!()
             };
-            if note_channels & (1 << (*status & 15)) == 0 {
-                return Err(
-                    format!("{location}: new channel requires different generated setup").into(),
-                );
-            }
             if *status & 0xf0 == 0x80 {
                 if data[1] != 0 {
                     return Err(format!(
@@ -133,11 +118,6 @@ pub(super) fn rebuild(
             let Message::Channel { status, data } = &event.message else {
                 return Err(format!("{location}: unsupported performance message").into());
             };
-            if used_channels & (1 << (*status & 15)) == 0 {
-                return Err(
-                    format!("{location}: new channel requires different generated setup").into(),
-                );
-            }
             let mut bytes = vec![*status];
             match *status & 0xf0 {
                 0xc0 => bytes.extend_from_slice(data),
@@ -196,7 +176,7 @@ pub(super) fn rebuild(
         .zip(&normalized.tracks)
         .all(|(a, b)| a.events == b.events)
     {
-        return Err(format!("{reject}: reconstructed execution differs from requested MIDI; preserve generated channel setup and termination").into());
+        return Err(format!("{reject}: reconstructed execution differs from requested MIDI; channel setup and termination must match the reconstructed channel sets").into());
     }
     let changed_source_bytes = original.iter().zip(&bytes).filter(|(a, b)| a != b).count()
         + original.len().abs_diff(bytes.len());
@@ -213,9 +193,9 @@ pub(super) fn rebuild(
             original_data_bytes: original.len(),
             output_data_bytes: bytes.len(),
             limitations: vec![
-                "Linear notes, tempo, program and volume/pan events support insertion/removal. Notes may move among previously used note channels; programs and volume/pan may move among previously used source channels. Rebuilt streams use explicit statuses and minimal deltas. Opaque suffixes and other sequence records survive.",
+                "Linear notes, tempo, program and volume/pan events support insertion/removal. Notes, programs and volume/pan may use any of the 16 channels when requested canonical setup and termination match the reconstructed channel sets. Rebuilt streams use explicit statuses and minimal deltas. Opaque suffixes and other sequence records survive.",
                 "With layout_rebuilt, changed_source_bytes counts differing data positions and length; changed_source_events counts all rewritten or removed original events. timing_edits is empty because original delta identities are not retained.",
-                "Equal-count bends retain ordered channels and ignored low bytes. Bend insertion/removal requires an exact ordered channel/value/tick subsequence; all valid correspondences must agree on retained low bytes. Inserted bends use zero. Generated setup and termination remain fixed. Controller-loop structure changes, new channels and other controller messages require separate semantics.",
+                "Equal-count bends retain ordered channels and ignored low bytes. Bend insertion/removal requires an exact ordered channel/value/tick subsequence; all valid correspondences must agree on retained low bytes. Inserted bends use zero. Generated channel defaults remain canonical and note releases follow the reconstructed note channels. Controller-loop structure changes and other controller messages require separate semantics.",
                 "Bank availability, scheduler timing, synthesis and independent audio fidelity are separate checks.",
             ],
         },
