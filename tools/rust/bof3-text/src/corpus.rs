@@ -83,21 +83,6 @@ fn export_archive(
     name: &str,
 ) -> Result<Vec<serde_json::Value>> {
     let data = fs::read(path)?;
-    if crate::characters::supports(&data) {
-        let document = crate::characters::extract(path, &data)?;
-        let body = crate::characters::render(&document)?;
-        let imported = crate::characters::parse(&body)?;
-        if crate::characters::rebuild(path, &data, &imported)? != data {
-            return Err(Error::Invalid(format!("{name} does not round-trip")));
-        }
-        let relative = path.strip_prefix(root).unwrap().join("characters.json");
-        let destination = output.join(&relative);
-        fs::create_dir_all(destination.parent().unwrap())?;
-        fs::write(destination, body)?;
-        return Ok(vec![
-            serde_json::json!({"archive": name, "archive_sha256": sha256_hex(&data), "entry": document.entry, "document": relative.to_string_lossy(), "class": "character_names", "status": "exported", "round_trip": true}),
-        ]);
-    }
     if crate::records::supports(&data) {
         let document = crate::records::extract(path, &data)?;
         let body = crate::records::render(&document)?;

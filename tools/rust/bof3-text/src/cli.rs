@@ -3129,22 +3129,6 @@ fn executable_selection(entry: &str, class: Option<&str>, latch: Option<&str>) -
     Ok(())
 }
 
-fn character_selection(
-    entry: &str,
-    class: Option<&str>,
-    latch: Option<&str>,
-    document: &crate::characters::Document,
-) -> Result<()> {
-    if (entry != "all" && entry != document.entry.to_string()) || class.is_some() || latch.is_some()
-    {
-        return invalid(format!(
-            "default character names use entry {} and no class or latch selector",
-            document.entry
-        ));
-    }
-    Ok(())
-}
-
 fn run_extract(
     cli: &Cli,
     archive: &Path,
@@ -3154,17 +3138,6 @@ fn run_extract(
     latch: Option<&str>,
 ) -> Result<()> {
     let data = read(archive, "archive")?;
-    if crate::characters::supports(&data) {
-        let document = crate::characters::extract(archive, &data)?;
-        character_selection(entry_spec, class_filter, latch, &document)?;
-        write_output(output, &crate::characters::render(&document)?, archive)?;
-        println!(
-            "extracted {} default character names -> {}",
-            document.names.len(),
-            output.display()
-        );
-        return Ok(());
-    }
     if crate::records::supports(&data) {
         if !matches!(entry_spec, "all" | "0") || class_filter.is_some() || latch.is_some() {
             return invalid("record names use entry 0 and no class or latch selector");
@@ -3284,14 +3257,6 @@ fn run_validate(cli: &Cli, path: &Path, commands: bool) -> Result<()> {
         );
         return Ok(());
     }
-    if value["schema"] == crate::characters::SCHEMA {
-        let document = crate::characters::parse(&bytes)?;
-        println!(
-            "{}",
-            serde_json::json!({"document": path, "schema": value["schema"], "names": document.names.len(), "commands": []})
-        );
-        return Ok(());
-    }
     if value["schema"] == crate::records::SCHEMA {
         let document = crate::records::parse(&bytes)?;
         println!(
@@ -3393,16 +3358,6 @@ fn query_sources<'a>(archive: &Path, data: &'a [u8], spec: &str) -> Result<Query
             .is_none_or(|indices| indices.contains(&index))
     };
     let mut literal_entries = std::collections::BTreeSet::new();
-    if crate::characters::supports(data) {
-        let document = crate::characters::extract(archive, data)?;
-        if wanted(document.entry) {
-            literal_entries.insert(document.entry);
-            sources.literals.push(
-                serde_json::to_value(document)
-                    .map_err(|error| Error::Invalid(error.to_string()))?,
-            );
-        }
-    }
     if crate::records::supports(data) && wanted(0) {
         literal_entries.insert(0);
         sources.literals.push(
@@ -3640,17 +3595,6 @@ fn run_pack(
             );
             return Ok(());
         }
-    }
-    if crate::characters::supports(&data) {
-        let document = crate::characters::parse(&read(text_path, "document")?)?;
-        character_selection(entry_spec, class_filter, latch, &document)?;
-        let packed = crate::characters::rebuild(original, &data, &document)?;
-        write_output(output, &packed, original)?;
-        println!(
-            "{}",
-            serde_json::json!({"output": output, "bytes": packed.len(), "names": document.names.len()})
-        );
-        return Ok(());
     }
     if crate::records::supports(&data) {
         if !matches!(entry_spec, "all" | "0") || class_filter.is_some() || latch.is_some() {

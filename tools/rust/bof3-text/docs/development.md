@@ -14,9 +14,8 @@
 | `analysis.rs` | Original byte extents, commands, operands and shared rows |
 | `executable.rs` | Pinned US exception ASCII allocations, references and fixed-capacity writes |
 | `records.rs` | Pinned US equipment and ability name fields and literal-only fixed-width writes |
-| `characters.rs` | Separate START and STATUS default character name allocations and writes |
 | `monsters.rs` | Encounter-template monster name fields and eight-byte writes |
-| `inline.rs` | Pinned literal string allocations in overlay code |
+| `inline.rs` | Pinned overlay labels and default names, with terminated, counted or fixed-width fields |
 | `digest.rs` | Shared SHA-256 content identities |
 | `extract.rs` | EMI TOC discovery, bank parsing, document construction, fingerprint |
 | `pack.rs` | Edit planning, span-preserving rebuild, payload replacement |

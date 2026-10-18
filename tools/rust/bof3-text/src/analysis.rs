@@ -42,15 +42,17 @@ fn literal_report(
         };
         let offset = number("file_offset")?;
         let capacity = number("capacity")?;
-        let length_bytes = usize::from(
-            matches!(encoding, Encoding::Inline)
-                && row["codec"] == json!(crate::inline::Codec::GameCountedLiteral),
-        );
-        let terminator_bytes = if length_bytes == 0 {
-            terminator_bytes
+        let inline_codec: Option<crate::inline::Codec> = if matches!(encoding, Encoding::Inline) {
+            Some(
+                serde_json::from_value(row["codec"].clone())
+                    .map_err(|error| Error::Invalid(error.to_string()))?,
+            )
         } else {
-            0
+            None
         };
+        let length_bytes = inline_codec.map_or(0, crate::inline::Codec::length_bytes);
+        let terminator_bytes =
+            inline_codec.map_or(terminator_bytes, crate::inline::Codec::terminator_bytes);
         let maximum = capacity
             .checked_sub(terminator_bytes + length_bytes)
             .ok_or_else(|| Error::Invalid("analysis allocation cannot hold its metadata".into()))?;
@@ -64,18 +66,12 @@ fn literal_report(
                 codec.encode(text, maximum)?.len()
             }
             Encoding::GameLiteral => crate::records::encode_name(text, maximum)?.len(),
-            Encoding::Inline => {
-                let codec: crate::inline::Codec = serde_json::from_value(row["codec"].clone())
-                    .map_err(|error| Error::Invalid(error.to_string()))?;
-                codec.encode(text, maximum)?.len()
-            }
+            Encoding::Inline => inline_codec.unwrap().encode(text, maximum)?.len(),
         };
         let remaining = maximum
             .checked_sub(encoded_size)
             .ok_or_else(|| Error::Invalid("analysis text exceeds its allocation".into()))?;
-        let commands = if matches!(encoding, Encoding::Inline) {
-            let codec: crate::inline::Codec = serde_json::from_value(row["codec"].clone())
-                .map_err(|error| Error::Invalid(error.to_string()))?;
+        let commands = if let Some(codec) = inline_codec {
             serde_json::to_value(codec.commands(text, maximum)?)
                 .map_err(|error| Error::Invalid(error.to_string()))?
         } else {
@@ -108,15 +104,6 @@ fn literal_report(
 
 pub fn analyze(path: &Path) -> Result<Value> {
     let data = fs::read(path)?;
-    if crate::characters::supports(&data) {
-        return literal_report(
-            crate::characters::extract(path, &data)?,
-            "names",
-            &data,
-            Encoding::GameLiteral,
-            0,
-        );
-    }
     if crate::records::supports(&data) {
         return literal_report(
             crate::records::extract(path, &data)?,

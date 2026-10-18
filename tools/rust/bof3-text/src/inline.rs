@@ -15,6 +15,7 @@ pub const SCHEMA: &str = "bof3.inline-text/v4";
 #[serde(rename_all = "kebab-case")]
 pub(crate) enum Codec {
     GameLiteral,
+    GameFixedLiteral,
     GameCountedLiteral,
     GameGlyphs,
     AsciiDecimalFormat,
@@ -22,7 +23,10 @@ pub(crate) enum Codec {
 
 impl Codec {
     pub(crate) fn encode(self, text: &str, capacity: usize) -> Result<Vec<u8>> {
-        if matches!(self, Self::GameLiteral | Self::GameCountedLiteral) {
+        if matches!(
+            self,
+            Self::GameLiteral | Self::GameFixedLiteral | Self::GameCountedLiteral
+        ) {
             return encode_name(text, capacity);
         }
         if self == Self::GameGlyphs {
@@ -54,7 +58,7 @@ impl Codec {
             }
             return decode_name(&field[..length], file_offset);
         }
-        if self == Self::GameLiteral {
+        if matches!(self, Self::GameLiteral | Self::GameFixedLiteral) {
             return decode_name(bytes, file_offset);
         }
         if self == Self::GameGlyphs {
@@ -75,10 +79,31 @@ impl Codec {
     pub(crate) fn as_str(self) -> &'static str {
         match self {
             Self::GameLiteral => "game-literal",
+            Self::GameFixedLiteral => "game-fixed-literal",
             Self::GameCountedLiteral => "game-counted-literal",
             Self::GameGlyphs => "game-glyphs",
             Self::AsciiDecimalFormat => "ascii-decimal-format",
         }
+    }
+
+    pub(crate) const fn terminator_bytes(self) -> usize {
+        match self {
+            Self::GameFixedLiteral | Self::GameCountedLiteral => 0,
+            _ => 1,
+        }
+    }
+
+    pub(crate) const fn length_bytes(self) -> usize {
+        match self {
+            Self::GameCountedLiteral => 1,
+            _ => 0,
+        }
+    }
+
+    pub(crate) fn max_encoded_size(self, capacity: usize) -> Result<usize> {
+        capacity
+            .checked_sub(self.terminator_bytes() + self.length_bytes())
+            .ok_or_else(|| Error::Invalid("inline allocation cannot hold its metadata".into()))
     }
 
     pub(crate) fn commands(self, text: &str, capacity: usize) -> Result<Vec<GlyphCommand>> {
@@ -186,6 +211,16 @@ struct Allocation {
 }
 
 impl Allocation {
+    const fn fixed_name(address: u32) -> Self {
+        Self {
+            address,
+            capacity: 5,
+            reference: None,
+            renderer: 0x8014f800,
+            codec: Codec::GameFixedLiteral,
+        }
+    }
+
     const fn counted(address: u32) -> Self {
         Self {
             address,
@@ -237,6 +272,33 @@ struct Layout {
 }
 
 const LAYOUTS: &[Layout] = &[
+    Layout {
+        name: "US START and STATUS labels and default names",
+        load: 0x801d0c00,
+        size: 117986,
+        sha256: "635abc5e22528925464ee7795053eb9d514cd0f7413ab75cfb96ae33748a105a",
+        consumers: &[0x801d15c0, 0x801dcf50],
+        allocations: &[
+            Allocation::counted(0x801d0c7c),
+            Allocation::counted(0x801d0c90),
+            Allocation::counted(0x801d0ca4),
+            Allocation::counted(0x801d0cb8),
+            Allocation::counted(0x801d0ccc),
+            Allocation::counted(0x801d0ce0),
+            Allocation::counted(0x801d0cf4),
+            Allocation::counted(0x801d0d08),
+            Allocation::counted(0x801d0d1c),
+            Allocation::counted(0x801d0d30),
+            Allocation::fixed_name(0x801eb514),
+            Allocation::fixed_name(0x801eb5b8),
+            Allocation::fixed_name(0x801eb65c),
+            Allocation::fixed_name(0x801eb700),
+            Allocation::fixed_name(0x801eb7a4),
+            Allocation::fixed_name(0x801eb848),
+            Allocation::fixed_name(0x801eb8ec),
+            Allocation::fixed_name(0x801eb990),
+        ],
+    },
     Layout {
         name: "US master labels and numeric formats",
         load: 0x801d0c00,
@@ -415,7 +477,8 @@ pub struct Document {
 impl Document {
     pub(crate) fn glyph_count(&self) -> Result<usize> {
         self.strings.iter().try_fold(0, |count, row| {
-            Ok(count + row.codec.commands(&row.text, row.capacity - 1)?.len())
+            let maximum = row.codec.max_encoded_size(row.capacity)?;
+            Ok(count + row.codec.commands(&row.text, maximum)?.len())
         })
     }
 }
@@ -469,7 +532,7 @@ pub fn extract(path: &Path, data: &[u8], entry: Entry, payload: &[u8]) -> Result
             } = *allocation;
             let payload_offset = (address - layout.load) as usize;
             let bytes = &payload[payload_offset..payload_offset + capacity];
-            if codec != Codec::GameCountedLiteral && !bytes.contains(&0) {
+            if codec.terminator_bytes() != 0 && !bytes.contains(&0) {
                 return invalid("inline literal string must retain its NUL terminator");
             }
             Ok(Text {
@@ -540,7 +603,7 @@ pub fn parse(data: &[u8]) -> Result<Document> {
         {
             return invalid("unknown, duplicate or changed inline string allocation");
         }
-        codec.encode(&row.text, capacity - 1)?;
+        codec.encode(&row.text, codec.max_encoded_size(capacity)?)?;
     }
     if seen.len() != layout.allocations.len() {
         return invalid("inline text document must retain all supported strings");
@@ -567,7 +630,8 @@ pub fn rebuild(path: &Path, data: &[u8], document: &Document) -> Result<Vec<u8>>
     }
     let mut output = data.to_vec();
     for row in checked.strings {
-        let bytes = row.codec.encode(&row.text, row.capacity - 1)?;
+        let maximum = row.codec.max_encoded_size(row.capacity)?;
+        let bytes = row.codec.encode(&row.text, maximum)?;
         let span = &mut output[row.file_offset..row.file_offset + row.capacity];
         span.fill(0);
         span[..bytes.len()].copy_from_slice(&bytes);

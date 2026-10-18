@@ -211,13 +211,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
         let names = crate::records::supports(&bytes)
             .then(|| crate::records::extract(path, &bytes).ok())
             .flatten()
-            .map(|document| (0, document.names))
-            .or_else(|| {
-                crate::characters::supports(&bytes)
-                    .then(|| crate::characters::extract(path, &bytes).ok())
-                    .flatten()
-                    .map(|document| (document.entry, document.names))
-            });
+            .map(|document| (0, document.names));
         if path.extension().is_some_and(|extension| extension == "EMI") {
             match crate::lexagraph::entries(&bytes) {
                 Err(error) => {

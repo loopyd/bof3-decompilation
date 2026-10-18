@@ -153,9 +153,10 @@ document of equipment and ability names. Use `--entry all` or `--entry 0` and om
 `--class` and `--latch`. These fixed-width names use literal characters without
 dialogue commands. See [formats.md](formats.md#record-names).
 
-For supported US `START.EMI` and `STATUS.EMI`, extraction writes a
-`bof3.character-text/v1` document of eight default names. Use `--entry all` or the
-source's record entry (8 for START, 0 for STATUS), without class or latch selectors.
+For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
+`--entry 0` for STATUS, without class or latch selectors. Extraction writes one
+`bof3.inline-text/v4` document with ten counted labels and eight default names.
+Re-extract former character-only documents. Default `--entry all` selects banks.
 See [formats.md](formats.md#default-character-names).
 
 For encounter-template monster names, use `analyze` to find `monster_entries`,
@@ -197,10 +198,10 @@ run remain for diagnosis; use a new destination for the next run. This operation
 also exports equipment and ability names as `GAME.EMI/records.json`. It covers the supported
 banks, name fields and `SLUS_004.22` ASCII strings. Executable
 documents use `SLUS_004.22.json` at the export root and also round-trip before
-publication. Default character names use `START.EMI/characters.json` and
-`STATUS.EMI/characters.json` at their archive-relative paths. Use `coverage` to
-inspect other consumers and gaps.
-Supported inline strings use `ARCHIVE.EMI/ENTRY.json` alongside bank documents.
+publication. Supported inline strings use `ARCHIVE.EMI/ENTRY.json` alongside
+bank documents. START's labels and default names use `START.EMI/8.json`, and
+STATUS's use `STATUS.EMI/0.json`, at their archive-relative paths. Use `coverage`
+to inspect other consumers and gaps.
 Encounter-template names use that same path shape, with class `monster_names`
 in the manifest. Each whole archive must round-trip before publication.
 
@@ -248,13 +249,12 @@ codec has no dialogue commands. `pack` also checks the original source and refer
 Equipment and ability name documents use `bof3.record-text/v1`. Validation checks their full
 record inventory, literal character encoding and twelve-byte field capacity.
 The JSON summary reports `names`; `--commands` adds nothing for this codec.
-Default character documents use `bof3.character-text/v1` and the same summary,
-with a five-byte field capacity.
 Monster documents use `bof3.monster-text/v1` and report `names`, with an eight-byte
 field capacity. All eight records and their allocation identities are required.
 Inline documents use `bof3.inline-text/v4`; validation checks all allocations,
-per-string renderers and codecs, references and capacity including the reserved
-NUL or length byte. It reports `strings`. Re-extract older inline documents.
+per-string renderers and codecs, references and capacity. Terminated or counted
+rows reserve one NUL or length byte; fixed literal rows use their full capacity.
+It reports `strings`. Re-extract older inline or character-only documents.
 `--commands` counts glyph commands; literal-only layouts retain an empty list.
 ASCII decimal formats must retain exactly one `%3d`, with no other percent
 sequences; only the surrounding printable ASCII may change within capacity.
@@ -528,15 +528,12 @@ twelve encoded literal bytes per name and NUL-pads shorter names. Other record
 bytes remain unchanged. Use `--entry all` or `--entry 0` without class or latch
 selectors. This layout does not support relocation or dialogue commands in names.
 
-For supported START or STATUS default names, pack the character document against
-the same original archive. Each literal name must fit five bytes. Use `--entry all`
-or the source's record entry (8 or 0), without class or latch selectors. Each
-archive copy requires its own extracted document and output.
-
 For inline text, pack its document against the same original archive, with
 `--entry all` or the recorded entry and no class or latch selector. Full archive
 identity, pinned payload layout, entry offset and all pointer references must
-match. Text must fit each original allocation including NUL.
+match. Terminated rows reserve one byte for NUL; counted rows reserve one byte
+for their trailing length. START and STATUS default names accept all five bytes
+of their fixed fields. Each archive copy needs its own document and output.
 
 For monster names, pack the extracted document against the same original
 archive, using `--entry all` or its recorded entry without class or latch

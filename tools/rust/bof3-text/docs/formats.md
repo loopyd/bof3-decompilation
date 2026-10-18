@@ -99,18 +99,20 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-These fields use `bof3.character-text/v1`, with `source`, `source_sha256`,
-`archive_kind` (`start` or `status`), `entry`, `load_address`, `initializer`,
-`name_copy_consumer`, `renderer` and `names`. Each name retains the same identity
-fields as a record name, with `family` equal to `characters` and `capacity` equal
-to five. Retain all eight records and edit only `text`. Names use literal
-characters, without dialogue commands, and may occupy all five bytes. Shorter
-names are NUL-padded. Stats and every other byte remain unchanged.
+Extract the selected entry as `bof3.inline-text/v4`. Its eighteen strings include
+the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
+names at indices 10 through 17. The label consumer calls `0x8014FC90` at
+`0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
+Names use `game-fixed-literal`, have capacity five and may occupy all five bytes.
+Shorter names are NUL-padded. Retain all eighteen allocations and edit only
+`text`. Re-extract former character-only documents before editing or packing.
 
-Recognition pins each archive outside its own name fields. Packing binds the
-complete source SHA-256 and canonical path and checks every allocation. The
-copies remain separate sources: changing START does not update STATUS or an
-existing save's live names. Character renaming, other initializers and observed
+Recognition pins the selected payload outside its label and name allocations.
+Packing binds the complete archive SHA-256 and canonical path and checks every
+allocation. Stats, the other twelve bytes in each label record and all other
+archive bytes remain unchanged. The copies remain separate sources. Changing
+START does not update STATUS or an existing save's live names. Character renaming,
+other initializers and observed
 rendering remain separate requirements.
 
 ## Monster names
@@ -178,11 +180,13 @@ and observed rendering remain unverified.
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderer`, `codec`, pointer-word `references` and editable `text`. Retain all
-fields and edit only `text`. Each allocation includes one byte for its NUL or
-trailing count, excludes alignment padding and accepts at most `capacity - 1`
-encoded bytes. Shorter text leaves zero-filled unused character bytes.
-`game-literal` and `game-counted-literal` rows use the game's literal character
-encoding. Counted rows store the encoded length in the allocation's last byte.
+fields and edit only `text`. Allocations exclude alignment padding. Terminated
+rows reserve one byte for NUL, and `game-counted-literal` rows reserve one byte
+for the trailing count. Both accept at most `capacity - 1` encoded bytes.
+`game-fixed-literal` rows accept all `capacity` bytes without a reserved
+terminator. Shorter text leaves zero-filled unused character bytes. These three
+literal codecs use the game's character encoding. Counted rows store the encoded
+length in the allocation's last byte.
 `ascii-decimal-format` rows use printable ASCII and must retain exactly one
 `%3d`; all other percent sequences are refused. `game-glyphs` rows also accept
 `{glyph(0xNN)}`, encoded as `0x15` followed by one nonzero byte. Glyph names and
