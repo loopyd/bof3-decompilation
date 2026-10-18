@@ -137,6 +137,21 @@ atlas's other interface regions.
 The palette's `uses` field lists the associated original atlas IDs. Other palette,
 page, resident-base, and upload-order dependencies remain visible and unresolved.
 
+Use `--dependency archive-request` or `--dependency palette-stage` to find
+qualified palette loading paths. These edges cover `FIRST.EMI` entries 8, 9, 10
+and 13, plus `BATE.EMI` and `SHISU.EMI` entries 3 and 4. `archive-request` names
+the original requester in the EXE or GAME entry 0; `palette-stage` names the EXE
+copy routine. An edge is unresolved if its consumer source is outside the input
+and partial when that source is captured.
+
+The FIRST bootstrap copies 32 rows of 256 words from `0x80033800` to
+`0x80037800`, after clearing source rows 28 through 31. Its four qualified
+palette entries occupy rows 0, 1, 2 and 26. The BATE and SHISU initializers copy
+rows 1 and 2 separately after their ready branches. These paths establish static
+address mappings, not exclusive RAM producers or subsequent GPU execution.
+Other initialization calls, overwrites, active palette selection and runtime
+residency remain unresolved.
+
 Qualified bank destinations in the `PL`, `BPLD` and `BPLU` source families have a
 `stream_request` record. It identifies the original EXE request family, index,
 loader slot, disc LBA and three selector identifiers. Only the 19 qualified

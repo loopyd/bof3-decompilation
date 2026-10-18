@@ -1,6 +1,12 @@
+//! Qualified raster content, conditional CLUT associations and palette staging.
+//! `archive-request` names the original requester; `palette-stage` names the EXE
+//! copy routine. Missing captured prerequisites remain unresolved. Static
+//! staging does not establish subsequent GPU execution or palette residency.
+
 use crate::{
     Error, Result,
     catalog::{Dependency, Resource},
+    sources,
 };
 
 struct PaletteBinding {
@@ -28,6 +34,76 @@ struct SharedContent {
     content: &'static str,
     reference: &'static str,
 }
+
+struct RowStager {
+    source: &'static str,
+    slot: u16,
+    request: &'static str,
+    stage: PaletteStage,
+}
+
+#[derive(Clone, Copy)]
+enum PaletteStage {
+    InitialBlock,
+    SelectedRows,
+}
+
+const ROW_STAGERS: &[RowStager] = &[
+    RowStager {
+        source: "BIN/ETC/FIRST.EMI",
+        slot: 0x261,
+        request: "SLUS_004.22@0x8014EAB4:archive-request",
+        stage: PaletteStage::InitialBlock,
+    },
+    RowStager {
+        source: "BIN/ETC/BATE.EMI",
+        slot: 0x257,
+        request: "BIN/ETC/GAME.EMI#0@0x801987D8:archive-request",
+        stage: PaletteStage::SelectedRows,
+    },
+    RowStager {
+        source: "BIN/ETC/SHISU.EMI",
+        slot: 0x265,
+        request: "BIN/ETC/GAME.EMI#0@0x80198998:archive-request",
+        stage: PaletteStage::SelectedRows,
+    },
+];
+
+const INITIAL_PALETTE_ROWS: [(usize, u32, &str); 4] = [
+    (
+        8,
+        0,
+        "166ead38de405cf28c1cfc35a7c4a2b9b4a69ae95a128b970cf4b9df8b4567c7",
+    ),
+    (
+        9,
+        1,
+        "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb",
+    ),
+    (
+        10,
+        2,
+        "5cfa8f083db270a3af233d0213475a13b96f01c6bac9bfb38b6423e4fe27dec7",
+    ),
+    (
+        13,
+        26,
+        "54a7ea6d69ff675bf1e07ba1fcd488e44ebcb50c9ad945bf1068abd43791269a",
+    ),
+];
+
+const SELECTED_PALETTE_ROWS: [(usize, u32, &str); 2] = [
+    (
+        3,
+        1,
+        "a8a1701c0555c20d44259c66123fb491efc1df1a87c89e850078fa7948a64fdb",
+    ),
+    (
+        4,
+        2,
+        "5cfa8f083db270a3af233d0213475a13b96f01c6bac9bfb38b6423e4fe27dec7",
+    ),
+];
 
 const PORTRAIT_CONTENT: &str = "Portraits, window frames, labels and interface icons";
 
@@ -272,6 +348,94 @@ pub(crate) fn annotate(resources: &mut [Resource]) -> Result<()> {
         }
         for (number, binding) in atlas.palettes.iter().enumerate() {
             bind_palette(resources, image_index, atlas, binding, number == 0)?;
+        }
+    }
+    annotate_staging(resources)?;
+    Ok(())
+}
+
+fn annotate_staging(resources: &mut [Resource]) -> Result<()> {
+    let game = format!("{}:BIN/ETC/GAME.EMI#entry-000", sources::RELEASE);
+    let stager = format!("{}:SLUS_004.22#file", sources::RELEASE);
+    let game_captured = resources.iter().any(|resource| resource.id == game);
+    let stager_captured = resources.iter().any(|resource| resource.id == stager);
+    for source in ROW_STAGERS {
+        let (rows, requester, requester_captured, routine) = match source.stage {
+            PaletteStage::InitialBlock => (
+                INITIAL_PALETTE_ROWS.as_slice(),
+                &stager,
+                stager_captured,
+                "SLUS_004.22@0x8014E284:32-row-palette-block-copy",
+            ),
+            PaletteStage::SelectedRows => (
+                SELECTED_PALETTE_ROWS.as_slice(),
+                &game,
+                game_captured,
+                "SLUS_004.22@0x8014E3A0:256-word-palette-row-copy",
+            ),
+        };
+        for &(entry, row, sha256) in rows {
+            let Some(index) = locate(resources, source.source, entry) else {
+                continue;
+            };
+            let palette = &mut resources[index];
+            check_hash(palette, sha256)?;
+            let source_ram = 0x8003_3800 + row * 512;
+            let stage_ram = 0x8003_7800 + row * 512;
+            if palette.kind != "palette-bank"
+                || palette.palette_upload.is_none()
+                || palette.load_argument != Some(source_ram)
+                || palette.size != 512
+            {
+                return Err(Error::Invalid(format!(
+                    "{} differs from its qualified palette-row staging layout",
+                    palette.id
+                )));
+            }
+            palette.evidence.extend([
+                source.request.into(),
+                "SLUS_004.22@0x80162160:slot-lba-lookup".into(),
+                routine.into(),
+            ]);
+            let staging = match source.stage {
+                PaletteStage::InitialBlock => {
+                    "The original bootstrap clears source rows 28..31, then copies all 32 rows of 256 palette words into staging RAM. Its path follows the ready branch and intervening initialization calls. Other resident source rows remain unresolved."
+                }
+                PaletteStage::SelectedRows => {
+                    "After the ready branch, the original initializer copies rows 1 and 2, each containing 256 palette words, into staging RAM."
+                }
+            };
+            for (kind, target, captured, reason) in [
+                (
+                    "archive-request",
+                    requester,
+                    requester_captured,
+                    format!(
+                        "Original requester selects slot {:#x} for {} and polls readiness before palette staging. Actual execution and loading are unobserved.",
+                        source.slot, source.source
+                    ),
+                ),
+                (
+                    "palette-stage",
+                    &stager,
+                    stager_captured,
+                    format!(
+                        "{staging} This archive row declares RAM {source_ram:#x}; the copy maps that address to staging RAM {stage_ram:#x}. The separately qualified conditional upload places this row at VRAM y={}. Other RAM producers, overwrites, GPU execution and active residency are unresolved.",
+                        480 + row
+                    ),
+                ),
+            ] {
+                palette.dependencies.push(Dependency {
+                    kind: kind.into(),
+                    target: Some(target.clone()),
+                    status: if captured { "partial" } else { "unresolved" }.into(),
+                    reason: if captured {
+                        reason
+                    } else {
+                        format!("{reason} The required consumer source is not captured.")
+                    },
+                });
+            }
         }
     }
     Ok(())
