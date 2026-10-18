@@ -11,7 +11,7 @@ use crate::{
     interchange::midi::{Message, Midi},
     sequence::events::Kind,
     sequence::midi::{self as translation, Translation},
-    sequence::timeline::Limits,
+    sequence::timeline::{Limits, Step},
     sequence::timing,
     sequence::{Sequence, SequenceSet},
     Result,
@@ -156,38 +156,30 @@ pub fn rebuild(
                     }
                     _ => return Err(format!("{location}: expected note message").into()),
                 };
-                // Include unchanged explicit statuses in repeated-visit checks.
-                // Retranslation validates inherited status at implicit notes.
-                if step.explicit_status {
-                    let mut message = vec![status];
-                    message.extend_from_slice(data);
-                    Some((step.source_cursor, message))
-                } else {
-                    Some((data_offset, data.to_vec()))
-                }
+                Some(channel_patch(step, status, data))
             }
-            Kind::Program { .. } => Some((
-                data_offset,
-                channel(after, step.status, &location)?.to_vec(),
-            )),
+            Kind::Program { .. } => {
+                let (status, data) = channel(after, step.status, &location)?;
+                Some(channel_patch(step, status, data))
+            }
             Kind::Controller {
                 controller: 7 | 10, ..
             } => {
-                let data = channel(after, step.status, &location)?;
+                let (status, data) = channel(after, step.status, &location)?;
                 if data[0] != original[data_offset] {
                     return Err(format!("{location}: controller identity changed").into());
                 }
-                Some((data_offset, data.to_vec()))
+                Some(channel_patch(step, status, data))
             }
-            Kind::PitchBend { .. } => {
-                let data = channel(after, step.status, &location)?;
+            Kind::PitchBend { low, .. } => {
+                let (status, data) = channel(after, step.status, &location)?;
                 if data[0] != 0 {
                     return Err(
                         format!("{location}: nonzero bend low byte is unrepresentable").into(),
                     );
                 }
                 // The game ignores the source low byte. Retain its exact encoding.
-                Some((data_offset + 1, vec![data[1]]))
+                Some(channel_patch(step, status, &[low, data[1]]))
             }
             Kind::Tempo { .. } => {
                 let value = tempo(after).map_err(|error| format!("{location}: {error}"))?;
@@ -309,7 +301,7 @@ pub fn rebuild(
             original_data_bytes: original.len(),
             output_data_bytes: bytes.len(),
             limitations: vec![
-                "Event order, loop start/end structure and generated setup remain fixed. Count-controller 6/98 marker values may change when all requested visits agree and the requested expansion matches the rederived execution. Note-channel changes must agree at every source visit and reproduce inherited running status. Timing edits must agree at every repeated delta consumption. Infinite jumps force zero delay.",
+                "Event order, loop start/end structure and generated setup remain fixed. Count-controller 6/98 marker values may change when all requested visits agree and the requested expansion matches the rederived execution. Note, program, volume/pan and bend channel changes must agree at every source visit and reproduce inherited running status. Bend source low bytes survive. Timing edits must agree at every repeated delta consumption. Infinite jumps force zero delay.",
                 "changed_source_bytes/events count message-value edits; timing_edits records changed delta spans separately. Unchanged delta encodings and opaque suffixes survive; resized deltas relocate later sequence headers.",
                 "Bank programs, tone pitch ranges, SF2 edits and publication require separate validation.",
                 "Forward MIDI approximations and configured infinite-loop traversal bounds remain unchanged.",
@@ -412,10 +404,24 @@ pub fn rebuild_entry(
     Ok(RebuiltEntry { bytes, reports })
 }
 
-fn channel<'a>(message: &'a Message, expected: u8, location: &str) -> Result<&'a [u8]> {
+fn channel<'a>(message: &'a Message, expected: u8, location: &str) -> Result<(u8, &'a [u8])> {
     match message {
-        Message::Channel { status, data } if *status == expected => Ok(data),
-        _ => Err(format!("{location}: message type or channel edit unsupported").into()),
+        Message::Channel { status, data } if *status & 0xf0 == expected & 0xf0 => {
+            Ok((*status, data))
+        }
+        _ => Err(format!("{location}: message type edit unsupported").into()),
+    }
+}
+
+fn channel_patch(step: &Step, status: u8, data: &[u8]) -> (usize, Vec<u8>) {
+    // Include unchanged explicit statuses in repeated-visit checks.
+    // Retranslation validates inherited status at implicit channel messages.
+    if step.explicit_status {
+        let mut message = vec![status];
+        message.extend_from_slice(data);
+        (step.source_cursor, message)
+    } else {
+        (step.source_cursor, data.to_vec())
     }
 }
 

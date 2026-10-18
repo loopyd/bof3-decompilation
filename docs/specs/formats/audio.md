@@ -675,9 +675,10 @@ validation share channel initialization in the forward translator; callers may
 explicitly select translation without that setup. The parsed MIDI container must
 retain format, PPQN, tracks and header/chunk contents. Alternate running-status/VLQ
 encodings alone are not edits. The event-preserving path retains source event
-order. Within controller loops, note-channel changes require agreement at every
-visit to the same source byte and exact rebuilt retranslation, including inherited
-running status. Linear event edits use the separate reconstruction described below.
+order. Within controller loops, note, program, volume/pan and bend channel changes
+require agreement at every visit to the same source byte and exact rebuilt
+retranslation, including inherited running status. Linear event edits use the
+separate reconstruction described below.
 Loop start/end marker changes and generated setup edits fail with track/event
 or source-cursor diagnostics. Generated termination events must follow the requested
 final tick; timing reconstruction is described below.
@@ -689,8 +690,8 @@ nonzero release velocity fails. Nonzero MIDI bend low bytes fail because the lin
 callback cannot represent them; original ignored SEP low bytes survive unchanged.
 Tempo must remain a nonzero 24-bit value. Each source-byte proposal includes every
 executed visit, including unchanged visits; conflicting repeated or overlapping
-visits fail rather than choosing one edit. Explicit note statuses participate in
-these checks even at unchanged visits. Implicit notes retain their running-status
+visits fail rather than choosing one edit. Explicit channel statuses participate in
+these checks even at unchanged visits. Implicit messages retain their running-status
 encoding; a channel change that requires inserting a status fails retranslation.
 Unchanged deltas, unvisited bytes and opaque suffixes retain their original encodings.
 
