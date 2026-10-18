@@ -17,6 +17,7 @@ pub struct IndependentReport {
     pub shift: u8,
     pub key_min: u8,
     pub key_max: u8,
+    pub pitch_reference_sha256: Option<String>,
     pub adsr1: u16,
     pub adsr2: u16,
     pub sample_reference: i16,
@@ -26,6 +27,7 @@ pub(crate) struct IndependentTone {
     source_program: u8,
     source_tone: usize,
     row: [u8; 32],
+    pitch_reference_sha256: Option<String>,
 }
 
 #[derive(Default)]
@@ -49,7 +51,47 @@ fn shape(
     result
 }
 
-struct NarrowedSource {
+fn key_range(zones: &[crate::soundfont::reader::model::Zone]) -> Option<(u8, u8)> {
+    let mut keys = Vec::new();
+    for zone in zones {
+        let mut ranges = zone.generators.iter().filter(|g| g.operator == 43);
+        let [lo, hi] = ranges.next()?.amount.to_le_bytes();
+        if lo != hi || hi > 127 || ranges.next().is_some() {
+            return None;
+        }
+        if keys
+            .last()
+            .is_some_and(|key: &u8| key.checked_add(1) != Some(lo))
+        {
+            return None;
+        }
+        keys.push(lo);
+    }
+    Some((*keys.first()?, *keys.last()?))
+}
+
+fn same_layout(
+    original: &[crate::soundfont::reader::model::Zone],
+    requested: &[crate::soundfont::reader::model::Zone],
+) -> bool {
+    let mut original = shape(original);
+    let mut requested = shape(requested);
+    for zone in original.iter_mut().chain(&mut requested) {
+        for generator in &mut zone.generators {
+            if generator.operator == 43 {
+                generator.amount = 0;
+            }
+        }
+    }
+    original.first().is_some_and(|template| {
+        original
+            .iter()
+            .chain(&requested)
+            .all(|zone| zone == template)
+    })
+}
+
+struct SourceView {
     header: Vec<u8>,
     binding: binding::Report,
     baseline: Font,
@@ -61,9 +103,65 @@ fn narrow(
     baseline: &Font,
     tone_index: usize,
     keys: Range<usize>,
-) -> Result<NarrowedSource> {
+) -> Result<SourceView> {
     let source = &binding.tones[tone_index];
-    let selected = &source.context.tuning[keys.clone()];
+    source_view(
+        binding,
+        header,
+        baseline,
+        tone_index,
+        source.context.tuning[keys.clone()].to_vec(),
+        baseline.instruments[source.sf2_instrument].zones[keys].to_vec(),
+    )
+}
+
+fn expand(
+    binding: &binding::Report,
+    header: &[u8],
+    baseline: &Font,
+    tone_index: usize,
+    keys: (u8, u8),
+    reference: &mut crate::voice::tuning::Reference,
+) -> Result<SourceView> {
+    let source = &binding.tones[tone_index];
+    let mut tone = source.source_tone.clone();
+    tone.key_min = keys.0;
+    tone.key_max = keys.1;
+    let selected = reference.tone(&tone, baseline.samples[source.sf2_sample].rate)?;
+    let template = &baseline.instruments[source.sf2_instrument].zones[0];
+    let mut zones = Vec::new();
+    for row in &selected {
+        let parameters = row
+            .sf2
+            .as_ref()
+            .ok_or_else(|| format!("SF2 independent tone: {}", row.unsupported_message()))?;
+        let mut zone = template.clone();
+        for (operator, amount) in [
+            (43, u16::from_le_bytes([row.key, row.key])),
+            (58, u16::from(parameters.root_key)),
+            (51, parameters.coarse_tune as u16),
+            (52, parameters.fine_tune as u16),
+        ] {
+            zone.generators
+                .iter_mut()
+                .find(|g| g.operator == operator)
+                .ok_or("SF2 independent tone: incomplete source key/pitch generators")?
+                .amount = amount;
+        }
+        zones.push(zone);
+    }
+    source_view(binding, header, baseline, tone_index, selected, zones)
+}
+
+fn source_view(
+    binding: &binding::Report,
+    header: &[u8],
+    baseline: &Font,
+    tone_index: usize,
+    selected: Vec<crate::voice::tuning::KeyTuning>,
+    zones: Vec<crate::soundfont::reader::model::Zone>,
+) -> Result<SourceView> {
+    let source = &binding.tones[tone_index];
     let key_min = selected[0].key;
     let key_max = selected[selected.len() - 1].key;
     let bank = Bank::parse(header)?;
@@ -82,22 +180,21 @@ fn narrow(
     let tone = &mut binding.tones[tone_index];
     tone.source_tone.key_min = key_min;
     tone.source_tone.key_max = key_max;
-    tone.context.tuning = selected.to_vec();
-    tone.zone_count = selected.len();
-    // Only the private control view is narrowed; the outer packer checks all
+    tone.context.tuning = selected;
+    tone.zone_count = zones.len();
+    // Only the private control view changes; the outer packer checks all
     // original raw tables and retains every original instrument.
-    let mut narrowed = Font::from_bytes(baseline.original_bytes().to_vec())?;
-    narrowed.instruments[source.sf2_instrument].zones =
-        baseline.instruments[source.sf2_instrument].zones[keys].to_vec();
-    Ok(NarrowedSource {
+    let mut view = Font::from_bytes(baseline.original_bytes().to_vec())?;
+    view.instruments[source.sf2_instrument].zones = zones;
+    Ok(SourceView {
         header,
         binding,
-        baseline: narrowed,
+        baseline: view,
     })
 }
 
-/// Appended instruments must retain a contiguous proven source key range. Each
-/// requested row is inverted separately, without changing its source tone.
+/// Appended instruments use contiguous singleton keys. New source keys require
+/// the original pitch reference; each row is inverted without changing its source.
 pub(crate) fn independent(
     binding: &binding::Report,
     header: &[u8],
@@ -146,42 +243,55 @@ pub(crate) fn independent(
             return Err(format!("SF2 independent tone: appended instrument {index} must use first destination name {name}").into());
         }
         let requested_shape = shape(&instrument.zones);
+        let requested_keys = key_range(&instrument.zones);
         let mut selected: Option<IndependentTone> = None;
         let mut controls = Vec::new();
         let mut matches = 0;
         let mut first_error = None;
         for (source_index, source) in binding.tones.iter().enumerate() {
-            if source.silent || !source.stopped_keys.is_empty() || requested_shape.is_empty() {
+            if source.silent || !source.stopped_keys.is_empty() || requested_keys.is_none() {
                 continue;
             }
             let original_shape = shape(&baseline.instruments[source.sf2_instrument].zones);
-            if original_shape.len() != source.context.tuning.len()
-                || requested_shape.len() > original_shape.len()
-            {
+            if original_shape.len() != source.context.tuning.len() {
                 continue;
             }
-            let Some(first) = original_shape
+            let keys = original_shape
                 .windows(requested_shape.len())
                 .position(|zones| zones == requested_shape)
-            else {
+                .map(|first| first..first + requested_shape.len());
+            if keys.is_none()
+                && !same_layout(
+                    &baseline.instruments[source.sf2_instrument].zones,
+                    &instrument.zones,
+                )
+            {
                 continue;
             };
-            let keys = first..first + requested_shape.len();
-            if source.context.tuning[keys.clone()]
-                .windows(2)
-                .any(|pair| pair[0].key.checked_add(1) != Some(pair[1].key))
-            {
+            if keys.as_ref().is_some_and(|keys| {
+                source.context.tuning[keys.clone()]
+                    .windows(2)
+                    .any(|pair| pair[0].key.checked_add(1) != Some(pair[1].key))
+            }) {
                 continue;
             }
             let result = (|| -> Result<[u8; 32]> {
-                let narrowed = if keys == (0..original_shape.len()) {
-                    None
-                } else {
-                    Some(narrow(binding, header, baseline, source_index, keys)?)
+                let view = match keys.clone() {
+                    Some(keys) if keys == (0..original_shape.len()) => None,
+                    Some(keys) => Some(narrow(binding, header, baseline, source_index, keys)?),
+                    None => Some(expand(
+                        binding,
+                        header,
+                        baseline,
+                        source_index,
+                        requested_keys.ok_or("SF2 independent tone: invalid key range")?,
+                        reference.as_deref_mut().ok_or(
+                            "SF2 independent tone: original game pitch reference required for new source keys",
+                        )?,
+                    )?),
                 };
-                let (binding, header, baseline) = narrowed
-                    .as_ref()
-                    .map_or((binding, header, baseline), |source| {
+                let (binding, header, baseline) =
+                    view.as_ref().map_or((binding, header, baseline), |source| {
                         (&source.binding, source.header.as_slice(), &source.baseline)
                     });
                 let mut view = Font::from_bytes(baseline.original_bytes().to_vec())?;
@@ -248,6 +358,9 @@ pub(crate) fn independent(
                     source_program: source.source_program,
                     source_tone: source.source_tone.index,
                     row,
+                    pitch_reference_sha256: keys
+                        .is_none()
+                        .then(|| reference.as_ref().unwrap().profile().exe_sha256.clone()),
                 });
             }
             matches += 1;
@@ -267,6 +380,7 @@ pub(crate) fn independent(
             shift: row[5],
             key_min: row[6],
             key_max: row[7],
+            pitch_reference_sha256: selected.pitch_reference_sha256.clone(),
             adsr1: u16::from_le_bytes([row[16], row[17]]),
             adsr2: u16::from_le_bytes([row[18], row[19]]),
             sample_reference: i16::from_le_bytes([row[22], row[23]]),
