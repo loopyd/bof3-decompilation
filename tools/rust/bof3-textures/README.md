@@ -148,8 +148,9 @@ the neighboring colors, draw CLUT, and runtime palette updates remain unresolved
 Edit PNG indices while preserving dimensions and the diagnostic palette.
 Mode-1 records accept indices from 0 to 31; mode-2 records accept 0 to 255.
 Changed aliases must agree on their complete palette, program, cell, or image
-record. Unchanged aliases do not override an edit. Both image streams and the
-outer bank must fit their original consumed byte spans. Following pointers and
+record. Conflicts name every changed view of the shared record. Unchanged aliases
+do not override an edit. Both image streams and the outer bank must fit their
+original consumed byte spans. Following pointers and
 unconsumed bytes do not grant extra capacity. Packing preserves selection tails,
 opaque flags, headers, pointer tables, codec metadata, and unrelated bytes.
 The bank's `raw.bin` and `decoded.bin` are read-only; use its qualified views.
@@ -163,7 +164,7 @@ programs, and steps, and preserve all `offset` and `end` fields. Durations below
 128 select cells. Durations of 128 or more select a forward step target. An edit
 must preserve each step's frame or control role and keep every reference valid.
 Programs shared by several table indices must receive agreeing edits. Unchanged
-aliases do not override a changed view.
+aliases do not override a changed view. Conflicts name every changed program view.
 
 The document's `cells` list contains one entry per payload offset. Keep its order,
 `offset`, `end`, and part count. Each part contains a `size_code` from 0 to 15,
@@ -185,8 +186,9 @@ Edit raw upload words as unsigned 16-bit values, or preserve a PNG's dimensions
 and palette order while editing its indices. A 4-bit view accepts indices 0 to
 15; an 8-bit view accepts indices 0 to 255. Keep unused holes zero. Changed views
 that request different values for the same byte cause an edit-conflict error.
-Unchanged views do not override edits. Changes to preservation-only resources,
-allocation, source snapshots, catalog descriptors, or diagnostic palettes fail.
+The error names all changed views at each conflicting byte. Unchanged views do
+not override edits. Changes to preservation-only resources, allocation, source
+snapshots, catalog descriptors, or diagnostic palettes fail.
 
 Packing reconstructs from the package's snapshots without opening the former
 source paths. It validates all members and outputs in a private staging directory,

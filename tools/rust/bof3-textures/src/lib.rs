@@ -1,5 +1,6 @@
 //! Qualified BOF3 graphics sources, reversible formats, and asset packages.
 
+mod aliases;
 pub mod animation;
 pub mod bank;
 pub mod bank_image;

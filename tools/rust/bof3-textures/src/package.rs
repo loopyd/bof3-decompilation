@@ -458,7 +458,7 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
                     }
                 }
             }
-            let bytes = edit.finish();
+            let bytes = edit.finish()?;
             if resource.resident_animation.is_some()
                 && resident::encode(raw, &resident::decode(&bytes)?)? != bytes
             {
@@ -582,7 +582,8 @@ fn verify_unrelated(
 
 struct ByteEdits<'a> {
     original: &'a [u8],
-    changes: BTreeMap<usize, (u8, String)>,
+    changes: BTreeMap<usize, (u8, BTreeSet<String>)>,
+    conflicts: BTreeSet<usize>,
 }
 
 impl<'a> ByteEdits<'a> {
@@ -590,6 +591,7 @@ impl<'a> ByteEdits<'a> {
         Self {
             original,
             changes: BTreeMap::new(),
+            conflicts: BTreeSet::new(),
         }
     }
 
@@ -603,24 +605,43 @@ impl<'a> ByteEdits<'a> {
             if *old == new {
                 continue;
             }
-            if let Some((other, owner)) = self.changes.get(&offset)
-                && *other != new
-            {
-                return Err(Error::Conflict(format!(
-                    "{owner} and {member} disagree at source byte 0x{offset:x}"
-                )));
+            let (other, owners) = self
+                .changes
+                .entry(offset)
+                .or_insert_with(|| (new, BTreeSet::new()));
+            owners.insert(member.into());
+            if *other != new {
+                self.conflicts.insert(offset);
             }
-            self.changes.insert(offset, (new, member.into()));
         }
         Ok(())
     }
 
-    fn finish(self) -> Vec<u8> {
+    fn finish(self) -> Result<Vec<u8>> {
+        if !self.conflicts.is_empty() {
+            let mut groups: BTreeMap<Vec<&str>, usize> = BTreeMap::new();
+            for offset in &self.conflicts {
+                let owners = self.changes[offset].1.iter().map(String::as_str).collect();
+                groups.entry(owners).or_insert(*offset);
+            }
+            return Err(Error::Conflict(
+                groups
+                    .into_iter()
+                    .map(|(owners, offset)| {
+                        format!(
+                            "[{}] disagree at source byte 0x{offset:x}",
+                            owners.join(", ")
+                        )
+                    })
+                    .collect::<Vec<_>>()
+                    .join("; "),
+            ));
+        }
         let mut output = self.original.to_vec();
         for (offset, (byte, _)) in self.changes {
             output[offset] = byte;
         }
-        output
+        Ok(output)
     }
 }
 

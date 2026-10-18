@@ -170,28 +170,27 @@ pub fn encode(source: &[u8], edited: &Document) -> Result<Vec<u8>> {
     if edited.schema != SCHEMA || edited.groups.len() != original.groups.len() {
         return Err(invalid("edit changes the schema or group allocation"));
     }
-    let mut edits = BTreeMap::new();
-    for (group, raw) in edited.groups.iter().zip(&original.groups) {
+    let mut edits = crate::aliases::Aliases::new();
+    for (group_index, (group, raw)) in edited.groups.iter().zip(&original.groups).enumerate() {
         if group.offset != raw.offset || group.programs.len() != raw.programs.len() {
             return Err(invalid("edit changes a group or program table"));
         }
-        for (program, raw) in group.programs.iter().zip(&raw.programs) {
+        for (program_index, (program, raw)) in group.programs.iter().zip(&raw.programs).enumerate()
+        {
             if program.offset != raw.offset || program.end != raw.end {
                 return Err(invalid("edit changes a program allocation"));
             }
             if program.steps == raw.steps {
                 continue;
             }
-            if let Some(previous) = edits.insert(program.offset, program)
-                && previous.steps != program.steps
-            {
-                return Err(invalid(&format!(
-                    "conflicting aliases for program at byte {}",
-                    program.offset
-                )));
-            }
+            edits.add(
+                program.offset,
+                program,
+                format!("group-{group_index}/program-{program_index}"),
+            );
         }
     }
+    let edits = edits.finish("resident program")?;
     let mut output = source.to_vec();
     cell::encode_cells(&mut output, &original.cells, &edited.cells)?;
     for program in edits.values() {

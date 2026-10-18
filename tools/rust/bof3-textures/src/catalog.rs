@@ -148,6 +148,7 @@ pub fn interpretation_hash() -> String {
             include_str!("resident.rs"),
             include_str!("cell.rs"),
             include_str!("sprite_bank.rs"),
+            include_str!("aliases.rs"),
         ]
         .join("\n")
         .as_bytes(),

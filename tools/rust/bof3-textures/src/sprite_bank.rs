@@ -236,22 +236,6 @@ fn root_at(document: &Document, index: usize) -> Result<&Root> {
         .get(index)
         .ok_or_else(|| invalid("missing root index"))
 }
-fn agree<'a, T: PartialEq + ?Sized>(
-    edits: &mut BTreeMap<usize, (&'a T, String)>,
-    offset: usize,
-    value: &'a T,
-    view: String,
-) -> Result<()> {
-    if let Some((previous, owner)) = edits.get(&offset)
-        && *previous != value
-    {
-        return Err(Error::Conflict(format!(
-            "sprite aliases {owner} and {view} disagree at decoded byte {offset}"
-        )));
-    }
-    edits.insert(offset, (value, view));
-    Ok(())
-}
 /// Change palette words, animation pairs and cell parts in their existing records.
 /// Preserve all header/table pointers, selection bytes and unknown tails. Changed
 /// aliases must agree on the complete record; unchanged aliases do not override.
@@ -260,9 +244,9 @@ pub fn encode(source: &[u8], edited: &Document) -> Result<Vec<u8>> {
     if edited.schema != SCHEMA || edited.roots.len() != original.roots.len() {
         return Err(invalid("edit changes root allocation"));
     }
-    let mut palettes = BTreeMap::new();
-    let mut programs = BTreeMap::new();
-    let mut cells = BTreeMap::new();
+    let mut palettes = crate::aliases::Aliases::new();
+    let mut programs = crate::aliases::Aliases::new();
+    let mut cells = crate::aliases::Aliases::new();
     for (root_index, (root, raw)) in edited.roots.iter().zip(&original.roots).enumerate() {
         if (
             root.offset,
@@ -290,12 +274,11 @@ pub fn encode(source: &[u8], edited: &Document) -> Result<Vec<u8>> {
                 return Err(invalid("edit changes palette offset"));
             }
             if palette != raw {
-                agree(
-                    &mut palettes,
+                palettes.add(
                     palette.offset,
                     palette,
                     format!("root-{root_index}/palette-{index}"),
-                )?;
+                );
             }
         }
         for (index, (program, raw)) in root.programs.iter().zip(&raw.programs).enumerate() {
@@ -306,12 +289,11 @@ pub fn encode(source: &[u8], edited: &Document) -> Result<Vec<u8>> {
                 return Err(invalid("edit changes program allocation"));
             }
             if program != raw {
-                agree(
-                    &mut programs,
+                programs.add(
                     program.offset,
                     program,
                     format!("root-{root_index}/program-{index}"),
-                )?;
+                );
             }
         }
         for (index, (cell, raw)) in root.cells.iter().zip(&raw.cells).enumerate() {
@@ -322,23 +304,21 @@ pub fn encode(source: &[u8], edited: &Document) -> Result<Vec<u8>> {
                 return Err(invalid("edit changes cell allocation"));
             }
             if cell != raw {
-                agree(
-                    &mut cells,
-                    cell.offset,
-                    cell,
-                    format!("root-{root_index}/cell-{index}"),
-                )?;
+                cells.add(cell.offset, cell, format!("root-{root_index}/cell-{index}"));
             }
         }
     }
+    let palettes = palettes.finish("sprite")?;
+    let programs = programs.finish("sprite")?;
+    let cells = cells.finish("sprite")?;
     let mut output = source.to_vec();
-    for (palette, _) in palettes.values() {
+    for palette in palettes.values() {
         for (index, word) in palette.words.iter().enumerate() {
             let start = palette.offset + 2 * index;
             output[start..start + 2].copy_from_slice(&word.to_le_bytes());
         }
     }
-    for (program, _) in programs.values() {
+    for program in programs.values() {
         let encoded = animation::encode_steps(source, program.offset, program.end, &program.steps)?;
         let start = program.offset + 2;
         let end = start + program.steps.len() * 2;
@@ -350,7 +330,7 @@ pub fn encode(source: &[u8], edited: &Document) -> Result<Vec<u8>> {
         .flat_map(|root| &root.cells)
         .map(|cell| (cell.offset, cell))
         .collect::<BTreeMap<_, _>>();
-    for (&offset, (cell, _)) in &cells {
+    for (&offset, cell) in &cells {
         cell::encode_cells(
             &mut output,
             std::slice::from_ref(raw_cells[&offset]),
@@ -381,7 +361,7 @@ pub fn encode_images(source: &[u8], edited: &Document, edits: &[ImageEdit<'_>]) 
     {
         return Err(invalid("more image edits than qualified image indices"));
     }
-    let mut images = BTreeMap::new();
+    let mut images = crate::aliases::Aliases::new();
     for edit in edits {
         let image = root_at(&original, edit.root)?
             .images
@@ -392,16 +372,16 @@ pub fn encode_images(source: &[u8], edited: &Document, edits: &[ImageEdit<'_>]) 
             return Err(invalid("image edit changes dimensions"));
         }
         if edit.bytes != raw.bytes {
-            agree(
-                &mut images,
+            images.add(
                 image.offset,
                 edit.bytes,
                 format!("root-{}/image-{}", edit.root, edit.image),
-            )?;
+            );
         }
     }
+    let images = images.finish("sprite")?;
     let mut output = encode(source, edited)?;
-    for (offset, (bytes, _)) in images {
+    for (offset, bytes) in images {
         let image = original
             .roots
             .iter()
