@@ -323,6 +323,21 @@ separately from runtime observations. Packed edits currently require their bound
 package for interpretation; treating an edited archive as an original US input
 is rejected.
 
+The `bof3.textures-pack-report/v2` report lists changed physical resources in
+`files[].edited_resources`. Its `potential_impact` lists those resources and their
+known dependents across the package, including logical records and their recorded
+uses. Records whose bytes remain unchanged can appear here because they depend
+on a changed containing entry. Identities and uses are sorted, and cycles are
+visited once. Equal bytes in separate original sources retain separate identities.
+
+Each affected resource retains its dependency targets, evidence statuses and
+unresolved reasons. `impact_complete` is true only when every dependency in this
+impact set has a verified target inside the package catalog. An unchanged package
+has an empty impact set. These fields describe catalog relationships; `runtime`
+continues to report execution evidence separately. The package manifest contains
+the graph before editing in `index.resources` and `index.records`, through their
+`dependencies` and `uses` fields.
+
 ## Format and evidence limits
 
 Verification uses `bof3.textures-verification/v2` and reports structure,

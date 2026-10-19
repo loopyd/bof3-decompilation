@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     Error, Result, bank, bank_image,
-    catalog::{self, Index, Resource},
+    catalog::{self, Dependency, Index, Resource},
     digest::sha256_hex,
     formats,
     png::{self, IndexedImage},
@@ -446,7 +446,14 @@ pub struct PackedFile {
     pub original_sha256: String,
     pub output_sha256: String,
     pub edited_entries: Vec<usize>,
-    pub affected_resources: Vec<String>,
+    pub edited_resources: Vec<String>,
+}
+
+#[derive(Serialize)]
+pub struct ResourceImpact {
+    pub resource: String,
+    pub uses: Vec<String>,
+    pub dependencies: Vec<Dependency>,
 }
 
 #[derive(Serialize)]
@@ -454,6 +461,8 @@ pub struct PackReport {
     pub schema: String,
     pub complete: bool,
     pub files: Vec<PackedFile>,
+    pub potential_impact: Vec<ResourceImpact>,
+    pub impact_complete: bool,
     pub unchanged_reconstruction: String,
     pub edited_reconstruction: String,
     pub unrelated_bytes: String,
@@ -471,10 +480,13 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
         reports.push(reconstructed.report);
     }
     let edited = reports.iter().any(|file| !file.edited_entries.is_empty());
+    let (potential_impact, impact_complete) = edit_impact(&manifest.index, &reports)?;
     let report = PackReport {
-        schema: "bof3.textures-pack-report/v1".into(),
+        schema: "bof3.textures-pack-report/v2".into(),
         complete: true,
         files: reports,
+        potential_impact,
+        impact_complete,
         unchanged_reconstruction: if edited {
             "not-applicable-to-edited-files"
         } else {
@@ -498,6 +510,72 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
     Ok(report)
 }
 
+fn edit_impact(index: &Index, files: &[PackedFile]) -> Result<(Vec<ResourceImpact>, bool)> {
+    let nodes: BTreeMap<_, _> = index
+        .resources
+        .iter()
+        .map(|resource| {
+            (
+                resource.id.as_str(),
+                (resource.dependencies.as_slice(), resource.uses.as_slice()),
+            )
+        })
+        .chain(index.records.iter().map(|record| {
+            (
+                record.id.as_str(),
+                (record.dependencies.as_slice(), record.uses.as_slice()),
+            )
+        }))
+        .collect();
+    let mut dependents: BTreeMap<&str, BTreeSet<&str>> = BTreeMap::new();
+    for (&resource, (dependencies, _)) in &nodes {
+        for edge in *dependencies {
+            if let Some(target) = edge.target.as_deref() {
+                dependents.entry(target).or_default().insert(resource);
+            }
+        }
+    }
+    let mut affected: BTreeSet<_> = files
+        .iter()
+        .flat_map(|file| file.edited_resources.iter().map(String::as_str))
+        .collect();
+    let mut pending: Vec<_> = affected.iter().copied().collect();
+    while let Some(resource) = pending.pop() {
+        if let Some(users) = dependents.get(resource) {
+            for &user in users {
+                if affected.insert(user) {
+                    pending.push(user);
+                }
+            }
+        }
+    }
+    let mut complete = true;
+    let mut impact = Vec::with_capacity(affected.len());
+    for resource in affected {
+        let (dependencies, uses) = nodes.get(resource).ok_or_else(|| {
+            Error::Invalid(format!(
+                "edited resource {resource} is missing from the catalog"
+            ))
+        })?;
+        complete &= dependencies.iter().all(|edge| {
+            edge.status == "verified"
+                && edge
+                    .target
+                    .as_deref()
+                    .is_some_and(|target| nodes.contains_key(target))
+        });
+        let mut uses = uses.to_vec();
+        uses.sort();
+        uses.dedup();
+        impact.push(ResourceImpact {
+            resource: resource.into(),
+            uses,
+            dependencies: dependencies.to_vec(),
+        });
+    }
+    Ok((impact, complete))
+}
+
 pub(crate) struct Reconstruction {
     pub original: Vec<u8>,
     pub output: Vec<u8>,
@@ -518,7 +596,7 @@ pub(crate) fn reconstruct(
         )));
     }
     let mut replacements: Vec<(usize, Vec<u8>)> = Vec::new();
-    let mut affected = Vec::new();
+    let mut edited_resources = Vec::new();
     for (resource, export) in manifest
         .index
         .resources
@@ -654,7 +732,7 @@ pub(crate) fn reconstruct(
                 .entry
                 .ok_or_else(|| Error::Invalid("non-archive edit is unresolved".into()))?;
             replacements.push((entry, bytes));
-            affected.push(resource.id.clone());
+            edited_resources.push(resource.id.clone());
         }
     }
     let output = if source.emi_entries.is_some() {
@@ -688,7 +766,7 @@ pub(crate) fn reconstruct(
         original_sha256: source.sha256.clone(),
         output_sha256: sha256_hex(&output),
         edited_entries: replacements.iter().map(|(slot, _)| *slot).collect(),
-        affected_resources: affected,
+        edited_resources,
     };
     Ok(Reconstruction {
         original,
