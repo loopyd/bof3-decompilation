@@ -11,8 +11,8 @@ from harness.domain.symbols import map_path
 from harness.domain.manifests import TargetManifest
 from harness.domain.splat_evidence import boundary_kind_evidence
 
-_RAW_FUNCTION = re.compile(r"func_[0-9A-F]{8}")
-_RAW_DATA = re.compile(r"D_[0-9A-F]{8}(?:_[A-Za-z0-9_]+)?")
+_RAW_FUNCTION = re.compile(r"func_(?P<address>[0-9A-F]{8})")
+_RAW_DATA = re.compile(r"D_(?P<address>[0-9A-F]{8})(?:_[A-Za-z0-9_]+)?")
 _MAP_ROW = re.compile(r"(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*0x[0-9A-Fa-f]+;")
 _SEMANTIC_FILE = re.compile(
     r"[a-z][A-Za-z0-9]*(?:_(?:[a-z][a-z0-9]*_)?[0-9A-F]{8})?\.c"
@@ -153,7 +153,8 @@ def naming_debt_regressions(
 
 def address_of(name: str) -> int:
     """Extract the embedded address from one raw inventory symbol name."""
-    match = re.search(r"([0-9A-Fa-f]{8})$", name)
+    symbol = name.rsplit(":", 1)[-1]
+    match = _RAW_FUNCTION.fullmatch(symbol) or _RAW_DATA.fullmatch(symbol)
     if match is None:
         raise ValueError(f"raw inventory name lacks address: {name}")
-    return int(match.group(1), 16)
+    return int(match.group("address"), 16)
