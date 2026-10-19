@@ -8,6 +8,7 @@ pub mod checksum;
 pub mod cue;
 pub mod metadata;
 pub mod rebuild;
+pub mod replace;
 
 const ISO_SECTOR_SIZE: u64 = 2048;
 const RAW_SECTOR_SIZE: u64 = 2352;

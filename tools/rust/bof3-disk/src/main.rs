@@ -12,6 +12,8 @@ struct Options {
     raw_root: Option<PathBuf>,
     cue: Option<PathBuf>,
     log: Option<PathBuf>,
+    iso_path: Option<PathBuf>,
+    replacement: Option<PathBuf>,
     quiet: bool,
     verbose: bool,
 }
@@ -30,14 +32,18 @@ fn run(args: Vec<OsString>) -> Result<(), String> {
     }
     let command = args[0].to_str().ok_or("command must be valid UTF-8")?;
     let options = parse_options(&args[1..])?;
+    if command != "replace" && (options.iso_path.is_some() || options.replacement.is_some()) {
+        return Err("--path and --replacement are only valid with replace".into());
+    }
     match command {
         "extract" => extract(options),
         "lba-json" => lba_json(options),
         "checksum" => checksum(options),
         "rebuild" => rebuild(options),
+        "replace" => replace(options),
         "verify" => verify(options),
         value => Err(format!(
-            "unknown command: {value}; use extract, rebuild, lba-json, checksum, or verify"
+            "unknown command: {value}; use extract, rebuild, replace, lba-json, checksum, or verify"
         )),
     }
 }
@@ -161,6 +167,36 @@ fn rebuild(options: Options) -> Result<(), String> {
     Ok(())
 }
 
+fn replace(options: Options) -> Result<(), String> {
+    reject(
+        &options,
+        &[
+            ('x', options.extract.is_some()),
+            ('p', options.project.is_some()),
+            ('r', options.raw_root.is_some()),
+            ('c', options.cue.is_some()),
+            ('l', options.log.is_some()),
+        ],
+    )?;
+    let input = options.input.ok_or("replace requires -i <input-image>")?;
+    let output = options.output.ok_or("replace requires -o <new-image>")?;
+    let path = options
+        .iso_path
+        .ok_or("replace requires --path <ISO-file-path>")?;
+    let replacement = options
+        .replacement
+        .ok_or("replace requires --replacement <file>")?;
+    let sectors = bof3_disk_v2::replace::file(&input, &output, &path, &replacement)
+        .map_err(display_error(&input))?;
+    if !options.quiet {
+        eprintln!(
+            "wrote image: {} ({sectors} changed sectors)",
+            output.display()
+        );
+    }
+    Ok(())
+}
+
 fn lba_json(options: Options) -> Result<(), String> {
     reject(&options, &[('c', options.cue.is_some())])?;
     let input = options.input.ok_or("lba-json requires -i <input-image>")?;
@@ -264,7 +300,7 @@ fn parse_options(args: &[OsString]) -> Result<Options, String> {
             "-q" => options.quiet = true,
             "-v" => options.verbose = true,
             "-h" | "--help" => return Err("use `bof3-disk help`".into()),
-            "-i" | "-o" | "-x" | "-p" | "-r" | "-c" | "-l" => {
+            "-i" | "-o" | "-x" | "-p" | "-r" | "-c" | "-l" | "--path" | "--replacement" => {
                 index += 1;
                 let value = PathBuf::from(
                     args.get(index)
@@ -278,6 +314,8 @@ fn parse_options(args: &[OsString]) -> Result<Options, String> {
                     "-r" => options.raw_root = Some(value),
                     "-c" => options.cue = Some(value),
                     "-l" => options.log = Some(value),
+                    "--path" => options.iso_path = Some(value),
+                    "--replacement" => options.replacement = Some(value),
                     _ => unreachable!(),
                 }
             }
@@ -300,7 +338,8 @@ fn display_error(path: &Path) -> impl FnOnce(bof3_disk_v2::Error) -> String + '_
 }
 
 fn print_usage() {
-    println!("Usage: bof3-disk <extract|rebuild|lba-json|checksum|verify> [options]");
+    println!("Usage: bof3-disk <extract|rebuild|replace|lba-json|checksum|verify> [options]");
     println!("  -i input  -o output  -x extract-dir  -p project.xml  -r raw-root");
     println!("  -c cue    -l log     -q quiet        -v verbose");
+    println!("  replace: -i image -o new-image --path ISO-file --replacement file");
 }

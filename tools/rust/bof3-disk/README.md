@@ -1,8 +1,7 @@
 # bof3-disk v2
 
-Canonical repository implementation of the disc extraction, checksum, and
-synthetic rebuild path. The imported C++ implementation remains available as a
-parity oracle for contracts not implemented here.
+Canonical repository implementation of disc extraction, checksums, fixed-size
+file replacement and synthetic rebuilds.
 
 The pure-Rust extraction path reads ordinary ISO9660 files byte-for-byte from
 cooked 2048-byte images and raw 2352-byte Mode 1/Mode 2 images. CUE files with
@@ -51,6 +50,34 @@ This is only a checked-in synthetic-fixture contract. It is **not** retail-disc
 parity, raw BIN/CUE output, XA/CDDA support, nested-directory support,
 mkpsxiso XML compatibility, or evidence about authorized local media.
 
+## Replace a file in a copy
+
+Use `replace` to copy an existing image and replace one ordinary ISO9660 file
+without changing its size or disc location:
+
+```sh
+build/tools/rust/bof3-disk/release/bof3-disk replace \
+  -i inputs/external/disc.cue -o out/edited-track.bin \
+  --path BIN/ETC/START.EMI --replacement out/edited-start.EMI
+```
+
+The ISO path is relative, case-sensitive and omits the `;1` version suffix.
+The replacement must match the directory's file size and fit within 64 MiB.
+The destination must be new. Inputs remain unchanged. A write failure may leave
+a partial destination; use a new path when retrying.
+
+Cooked 2048-byte images and raw 2352-byte Mode 2 Form 1 sectors are supported.
+Raw sectors must have matching subheaders and valid original EDC/ECC. The command
+repairs EDC/ECC for changed sectors and preserves headers, final-sector padding,
+unrelated sectors and extent locations. It refuses directories, XA files,
+extended attributes, interleaving, associated files, multi-extent records and
+overlapping extents. Raw Mode 1 and Mode 2 Form 2 replacement are unsupported.
+
+For CUE input, the output contains a copy of the data-track file. Create a separate
+disposable CUE sheet with the original track declarations, pointing its data file
+to the new image and its other files to the unchanged originals. The command does
+not generate a CUE sheet, relocate files or rebuild a retail disc.
+
 ## Parity matrix
 
 | Contract | Status |
@@ -65,6 +92,7 @@ mkpsxiso XML compatibility, or evidence about authorized local media.
 | XA file extraction | CD-XA attributes and 2048-byte logical extents parsed; 2336-byte payload extraction per sector fixture-tested; real-disc parity pending |
 | CDDA/WAV extraction | Pure-Rust stereo 44.1 kHz WAV conversion fixture-tested; real-disc parity pending |
 | Synthetic cooked ISO rebuild | Fixture-backed deterministic contract |
+| Fixed-size file replacement | Cooked images and raw Mode 2 Form 1 sectors; preserves disc layout |
 | Retail-disc / raw BIN-CUE rebuild | Unsupported |
 
 ## Dependencies
