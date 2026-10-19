@@ -36,6 +36,7 @@ pub(crate) fn pack(
     header: &[u8],
     baseline: &Font,
     edited: &Font,
+    assignments: &crate::soundfont::packing::assignment::Report,
 ) -> Result<Packed> {
     let bank = Bank::parse(header)?;
     let mut tones = Vec::new();
@@ -64,10 +65,14 @@ pub(crate) fn pack(
             "SF2 envelope edit: program {} tone {}",
             tone.source_program, tone.source_tone.index
         );
-        if tone.silent || !tone.stopped_keys.is_empty() {
-            return Err(
-                format!("{prefix}: silent and stopped-pitch envelope edits unsupported").into(),
-            );
+        let activated = assignments.tones.iter().any(|assignment| {
+            assignment.sf2_instrument == tone.sf2_instrument && assignment.unmuted
+        });
+        if (tone.silent && !activated) || !tone.stopped_keys.is_empty() {
+            return Err(format!(
+                "{prefix}: unactivated silent and stopped-pitch envelope edits unsupported"
+            )
+            .into());
         }
         let program = bank
             .programs
@@ -119,7 +124,7 @@ pub(crate) fn pack(
         schema: "bof3.audio.sf2-envelope-pack/v1", tones,
         limitations: vec![
             "Search source fields in order: release shift/mode (64), attack mode/rate (256), decay shift (16), sustain level (16), sustain rate (128), sustain mode/direction (4), combined decay shift/sustain level (256), then combined sustain rate/mode/direction (512). Each search preserves every other source bit, including unused ADSR2 bit13. All six SF2 volume-envelope generators must exactly match a complete fit at the recorded model and probe.",
-            "All key zones of an audible, non-stopped tone must request the same envelope. Delay/hold changes, unmatched tuples, silent/stopped tones and arbitrary ADSR or topology reconstruction are unsupported.",
+            "All key zones of an audible, non-stopped tone must request the same envelope. Initially silent tones require validated audible gain and physical PCM relinking before envelope inversion. Delay/hold changes, unmatched tuples, tones that remain silent, stopped tones and arbitrary ADSR or topology reconstruction are unsupported.",
             "Within the first matching field family, equivalent candidates minimize raw field distance from the source, then the field value. Combined decay/sustain uses the packed ADSR1 low byte; combined sustain uses (ADSR2 & 0xdfc0) >> 6, excluding unused bit13. matching_candidates counts the selected family only. Other combined-field searches are unsupported. Fits retain their approximation error; exact SF2 generators do not establish hardware or PC/PSX PCM equivalence.",
         ],
     }})

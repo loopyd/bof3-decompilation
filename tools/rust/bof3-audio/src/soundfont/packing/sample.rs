@@ -359,13 +359,19 @@ pub fn pack_bank(
     let mut tones = crate::soundfont::packing::tone::pack(binding, header, baseline, existing)?;
     let pitch =
         crate::soundfont::packing::pitch::pack(binding, header, baseline, existing, reference)?;
-    let envelopes = crate::soundfont::packing::envelope::pack(binding, header, baseline, existing)?;
     let assignments = crate::soundfont::packing::assignment::pack(
         binding,
         &tones.header,
         baseline,
         existing,
         &allocations.references,
+    )?;
+    let envelopes = crate::soundfont::packing::envelope::pack(
+        binding,
+        header,
+        baseline,
+        existing,
+        &assignments.report,
     )?;
     let mut samples = pack_inner(
         binding,

@@ -350,16 +350,12 @@ pub(crate) fn independent(
                     &view,
                     reference.as_deref_mut(),
                 )?;
-                let activated_binding = activating.then(|| {
-                    let mut binding = binding.clone();
-                    binding.tones[source_index].silent = false;
-                    binding
-                });
                 let envelope = crate::soundfont::packing::envelope::pack(
-                    activated_binding.as_ref().unwrap_or(binding),
+                    binding,
                     header,
                     baseline,
                     &view,
+                    &assignments.report,
                 )?;
                 for (at, bytes) in assignments
                     .patches

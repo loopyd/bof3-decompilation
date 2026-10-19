@@ -1088,9 +1088,11 @@ population and PCM validation remain required before music publication.
 registers, matching candidate counts within the selected field family and selected
 fits with their approximation errors. Exact fitted generators do not establish
 hardware behavior or PSX/PC PCM equality. Delay/hold edits, nonuniform zones,
-silent/stopped tones and tuples without an exact supported inverse reject.
-Other combined-field searches, arbitrary ADSR, topology and independent
-instrument/sample reconstruction remain open.
+stopped tones, tones that remain silent and tuples without an exact supported
+inverse reject. An initially silent tone must pass the audible gain inverse and
+physical PCM relink validation before envelope fitting. Other combined-field
+searches and arbitrary ADSR or topology reconstruction remain unsupported.
+Supported independent instrument and sample reconstruction is described below.
 
 ## Rust SoundFont silent-tone unmuting
 
@@ -1103,9 +1105,10 @@ sample reject. Bank/program controls remain fixed; their mutes cannot be
 overridden by tone controls and produce a no-exact-inverse diagnostic.
 
 The assignment inverse receives the gain-validated header and checks that the
-selected tone is audible under its recorded ordinary-sequence context. Existing
-sample-header tuning, noise-selector, fixed-zone and shared-loop restrictions
-still apply. Returning to the original allocation preserves the entire encoded
+selected tone is audible under its recorded ordinary-sequence context. A
+validated unmute may also request a uniform envelope tuple supported by the
+existing fitted-envelope inverse. Existing sample-header tuning, noise-selector,
+fixed-zone and shared-loop restrictions still apply. Returning to the original allocation preserves the entire encoded
 reference, including raw zero aliases and opaque high bytes. Assignment reports
 mark the change with `unmuted`; the gain report retains selected controls,
 candidate count and approximation error. No claim of dynamic-controller or
