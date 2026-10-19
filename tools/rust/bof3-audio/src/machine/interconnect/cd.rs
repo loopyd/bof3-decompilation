@@ -64,7 +64,8 @@ impl Interconnect {
         let reset = seek_reset || (command.opcode == 9 && response.interrupt == 3);
         let audio_selection_released =
             reset || (matches!(command.opcode, 0x0a | 0x0d) && response.interrupt == 3);
-        if seek_reset && self.dma.cd.active() {
+        let init = command.opcode == 0x0a && response.interrupt == 3;
+        if (seek_reset || init) && self.dma.cd.active() {
             return Err("CD drive: seek/reset during active DMA3 is not implemented".into());
         }
         let discarded_audio_frames = if reset {

@@ -156,9 +156,20 @@ separate verification.
 [Rust command application and original cue restart](../specs/formats/audio.md#rust-cd-command-lifecycle-and-cue-restart)
 retain explicit modeled command boundaries and reject active-DMA reset. The
 Rust policy clears audio state on seek/read startup and Pause, allows an already
-continuing read to avoid restart, and preserves its Setloc/position context at
-`0x0A`. Those policies differ from the current native handlers. Selection release
-and diagnostic coding transitions are implemented separately below.
+continuing read to avoid restart, and resets positions and pending Setloc at
+`0x0A`. Init preserves mode, mute, filter, data selection and queued audio while
+releasing XA selection. Successful Init and seek transitions reject active DMA3
+before changing drive or buffer state. Audio-reset policies still differ from
+the native handlers. Selection release and diagnostic coding transitions are
+implemented separately below.
+
+Bounded native Init observations agree on position, pending Setloc, mode, mute
+and filter. During an active read, a partially consumed 2,048-byte requested FIFO
+retains its contents, cursor, request flag and latest header through Init.
+Guest loads continue from the retained cursor after INT3/status `0x22` and
+INT2/status `0x02`. These observations establish response order and the selected
+data boundary. Queued PCM/history behavior, game IRQ admission, exact response
+timing and mechanical latency remain unaccepted.
 
 ## XA selection and EOF
 
