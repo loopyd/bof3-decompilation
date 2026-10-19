@@ -937,7 +937,10 @@ def _frame_binding(call, caller, callee):
     pc = call["pc"]
     evidence = caller["returnDisposition"]["evidence"]
     summary = callee["originalCallSummary"]
-    restoration = summary["symbolicFrame"]
+    bound = "symbolicFrame" in call.get("entryPath", {})
+    restoration = (
+        call["entryPath"]["symbolicFrame"] if bound else summary["symbolicFrame"]
+    )
     condition = f"conditional-callee-preservation-{pc}"
     words = {item["pc"]: item["word"] for item in evidence["instructions"]}
     obligations = [
@@ -965,7 +968,8 @@ def _frame_binding(call, caller, callee):
         and pc + 4 in words
         and memorycontracts._memory_word(words[pc + 4])[0] != "load"
         and len(links) == 1
-        and links[0]["exitPcs"] == contract["calleeExits"]
+        and links[0]["exitPcs"]
+        == ([call["entryPath"]["terminalPc"]] if bound else contract["calleeExits"])
         and _same_transfers(contract["registerTransfers"], summary["transfers"])
         and condition in contract["inputs"]["remaining"]
         and condition in contract["transfers"]["remaining"]
@@ -975,6 +979,21 @@ def _frame_binding(call, caller, callee):
         }.intersection(contract["remaining"]),
         "conditional symbolic frame lacks actual settled call binding",
     )
+    if bound:
+        _require(
+            call["entryPath"]["callee"] == contract["callee"]
+            and restoration["entryPc"]
+            == callee["returnDisposition"]["evidence"]["start"]
+            and "entryContext" not in summary,
+            "bound symbolic frame callee differs",
+        )
+        preserved = pathcontracts.bound_frame_registers(call, FRAME_CONDITIONS)
+        return {
+            "call": call,
+            "entryPc": restoration["entryPc"],
+            "continuation": contract["continuation"],
+            "registers": preserved,
+        }
     preserved = {item["register"] for item in restoration["registers"]}
     preserved.update(
         item["register"]
@@ -1381,6 +1400,10 @@ def _call_links(call, caller, graph):
     frame = bool(frame_obligations)
     if frame:
         _frame_binding(call, row, callee_row)
+        _require(
+            "symbolicFrame" not in call.get("entryPath", {}) or not call_definitions,
+            "bound frame cannot supply a call-produced result",
+        )
     scoped_r2 = frame and bool(call_definitions)
     if scoped_r2:
         restoration = summary.get("symbolicFrame", {})
@@ -1558,11 +1581,13 @@ def validate_functions(
                 for item in evidence["obligations"]
             ):
                 _require(
-                    call["contract"]["callee"] in frames,
+                    call["contract"]["callee"] in frames
+                    or "symbolicFrame" in call.get("entryPath", {})
+                    and call["contract"]["callee"] in rows,
                     "conditional frame source absent",
                 )
                 frame_uses[call["pc"]] = _frame_binding(
-                    call, row, frames[call["contract"]["callee"]]
+                    call, row, rows[call["contract"]["callee"]]
                 )
         entry_flow = memorycontracts._entry_flow(row, frame_uses=frame_uses)
         original_payload, original_load = (
@@ -1608,6 +1633,8 @@ def validate_functions(
                     context=context,
                     entry_observation=entry_observation,
                 )
+                if "symbolicFrame" in call["entryPath"]:
+                    pathcontracts.bound_frame_registers(call, FRAME_CONDITIONS)
 
     pending = set(graph)
     while pending:

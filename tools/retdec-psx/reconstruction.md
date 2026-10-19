@@ -32,6 +32,14 @@ Callsite-path diagnostics are omitted when an entry-reachable prefix crosses a
 call without a complete binding and the required register preservation. The
 independent reader also checks the original control flow and diagnostic seeds.
 
+A verified bound path can retain `entryPath.symbolicFrame` for conditional SP
+and saved-register restoration. The reader independently replays original stores,
+reloads and MIPS load delays before using those identities in the caller. Recovery
+rejects nested calls, unknown stores and unsupported SP changes. It assumes an
+aligned ordinary-RAM frame, ordinary-RAM reads outside that frame, normal accesses
+and stable instructions without external interference. The call remains partial.
+These facts supply no assigned result, complete memory effects or C declaration.
+
 Register dataflow retains canonical bitwise `AND` results when both operands are
 known constants. Call-path replay independently derives those constants from
 original instructions. A known stored value does not establish its destination,

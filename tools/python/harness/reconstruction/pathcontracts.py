@@ -1,4 +1,4 @@
-"""Replay diagnostic call paths without changing universal call contracts."""
+"""Replay bound call paths and conditional frames from original instructions."""
 
 from __future__ import annotations
 
@@ -313,19 +313,22 @@ def _seeds(path, call, caller):
 
 
 def validate_entry_path(call, caller, graph, *, context, entry_observation):
+    fields = {
+        "kind",
+        "callee",
+        "contextHash",
+        "bindings",
+        "instructions",
+        "edges",
+        "branches",
+        "terminalPc",
+        "remaining",
+    }
+    if "symbolicFrame" in call["entryPath"]:
+        fields.add("symbolicFrame")
     path = _keys(
         call["entryPath"],
-        {
-            "kind",
-            "callee",
-            "contextHash",
-            "bindings",
-            "instructions",
-            "edges",
-            "branches",
-            "terminalPc",
-            "remaining",
-        },
+        fields,
         "bound call path",
     )
     contract = call["contract"]
@@ -501,3 +504,164 @@ def validate_entry_path(call, caller, graph, *, context, entry_observation):
         and path["terminalPc"] == terminal,
         "call path replay differs from original instructions and actual bindings",
     )
+
+
+def bound_frame_registers(call, conditions):
+    """Reconstruct conditional saved registers without using summary transfers."""
+    path = call["entryPath"]
+    frame = _keys(
+        path["symbolicFrame"],
+        {"kind", "entryPc", "allocationPc", "frameBytes", "conditions", "registers"},
+        "bound symbolic frame",
+    )
+    _require(
+        frame["kind"] == "mips-bound-frame-restoration/v1"
+        and frame["conditions"] == conditions + ["non-frame-reads-access-ordinary-ram"]
+        and frame["entryPc"] == call["target"]
+        and path["instructions"]
+        and path["instructions"][0]["pc"] == frame["entryPc"],
+        "bound symbolic frame identity or conditions",
+    )
+    links = [item for item in path["bindings"] if item["register"] == 31]
+    _require(
+        len(links) == 1 and links[0]["constant"] == call["pc"] + 8,
+        "bound symbolic frame lacks actual incoming link",
+    )
+    _integer(frame["entryPc"], 0xFFFFFFFF)
+    _integer(frame["allocationPc"], 0xFFFFFFFF)
+    _integer(frame["frameBytes"], 32768)
+    _require(
+        frame["frameBytes"] > 0 and frame["frameBytes"] % 4 == 0,
+        "bound symbolic frame size",
+    )
+    # Each value carries an incoming register and, after a reload, its slot origin.
+    registers = [None] + [(reg, None, None, None) for reg in range(1, 32)]
+    slots, pending = {}, None
+    offset, allocation, restored, sampled = 0, None, False, None
+    for row in path["instructions"]:
+        pc, word = row["pc"], row["word"]
+        fields = word_fields(word)
+        op, rs, rt = fields.opcode, fields.rs, fields.rt
+        branch = op in {2, 4, 5, 6, 7} or (op == 1 and rt in {0, 1})
+        returning = word == 0x03E00008
+        load = op in {32, 33, 35, 36, 37}
+        store = op in {40, 41, 43}
+        adjustment = op == 9 and rs == rt == 29
+        destination, value = None, None
+        if adjustment:
+            immediate = fields.signed_immediate
+            if allocation is None:
+                _require(immediate == -frame["frameBytes"], "bound frame allocation")
+                allocation = pc
+            else:
+                _require(
+                    not restored
+                    and offset == -frame["frameBytes"]
+                    and immediate == frame["frameBytes"],
+                    "bound frame restoration",
+                )
+                restored = True
+            offset += immediate
+            destination = 29
+        elif load or store:
+            _require(rt != 29, "bound frame memory reads or overwrites SP value")
+            if rs == 29:
+                slot = offset + fields.signed_immediate
+                _require(
+                    allocation is not None
+                    and not restored
+                    and offset == -frame["frameBytes"]
+                    and -frame["frameBytes"] <= slot <= -4
+                    and slot % 4 == 0
+                    and op in {35, 43},
+                    "bound frame stack access",
+                )
+                if store:
+                    saved = registers[rt]
+                    _require(
+                        saved is not None and saved[0] != 29, "bound frame save value"
+                    )
+                    slots[slot] = (saved[0], pc)
+                elif slot in slots:
+                    entry, store_pc = slots[slot]
+                    value = (entry, slot, store_pc, pc)
+            else:
+                _require(load, "bound frame unknown store")
+            if load:
+                destination = rt
+        elif returning:
+            _require(
+                pc == path["terminalPc"] and (pending is None or pending[0] != 31),
+                "bound frame terminal instruction or pending link",
+            )
+            sampled = registers[31]
+        elif branch:
+            inputs = (rs, rt) if op in {4, 5} else (rs,) if op != 2 else ()
+            _require(29 not in inputs, "bound frame branch uses SP")
+        else:
+            destination, _ = _compute(fields, [None] * 32)
+            inputs = (rs, rt) if op == 0 else () if op == 15 else (rs,)
+            _require(
+                29 not in inputs and destination != 29, "bound frame unsupported SP use"
+            )
+            source = None
+            if op == 0 and fields.funct in {33, 37}:
+                source = rt if rs == 0 else rs if rt == 0 else None
+            elif op == 0 and fields.funct == 0 and rs == 0 and fields.shift == 0:
+                source = rt
+            elif op == 9 and fields.immediate == 0:
+                source = rs
+            if source is not None:
+                value = registers[source]
+        if pending is not None:
+            register, loaded = pending
+            if load or destination != register:
+                registers[register] = loaded
+        pending = None
+        if destination:
+            if load:
+                pending = (destination, value)
+            else:
+                registers[destination] = value
+    _require(
+        allocation == frame["allocationPc"]
+        and restored
+        and offset == 0
+        and pending is None
+        and sampled is not None
+        and sampled == registers[31]
+        and sampled[0] == 31
+        and sampled[3] is not None,
+        "bound frame lacks settled SP and sampled link restoration",
+    )
+    expected = []
+    for reg, value in enumerate(registers):
+        if value is None or value[0] != reg or value[3] is None:
+            continue
+        _, slot, store_pc, load_pc = value
+        expected.append(
+            dict(
+                register=reg,
+                offset=slot,
+                storePc=store_pc,
+                loadPcs=[load_pc],
+                callPcs=[],
+                exitPcs=[path["terminalPc"]],
+            )
+        )
+    for row in _rows(frame["registers"], 31, "bound frame registers"):
+        _keys(
+            row,
+            {"register", "offset", "storePc", "loadPcs", "callPcs", "exitPcs"},
+            "bound frame register",
+        )
+        _integer(row["register"], 31)
+        _integer(row["storePc"], 0xFFFFFFFF)
+        _require(type(row["offset"]) is int, "bound frame register offset")
+        for field in ("loadPcs", "callPcs", "exitPcs"):
+            _references(row[field], 0xFFFFFFFF)
+    _require(
+        frame["registers"] == expected,
+        "bound frame restoration differs from original words",
+    )
+    return {29} | {item["register"] for item in expected} - {31}
