@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v11";
+pub const SCHEMA: &str = "bof3.inline-text/v12";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -21,6 +21,7 @@ pub(crate) enum Codec {
     GameGlyphs,
     AsciiLiteral,
     AsciiFormatLiteral,
+    AsciiDigitGlyphLiteral,
     AsciiDecimalFormat,
     AsciiI32DecimalFormat,
     AsciiSignedDecimalPairFormat,
@@ -77,6 +78,18 @@ impl Codec {
     }
 
     pub(crate) fn max_formatted_size(self, text: &str) -> Result<Option<usize>> {
+        if self == Self::AsciiDigitGlyphLiteral {
+            if text.is_empty()
+                || !text
+                    .bytes()
+                    .all(|byte| byte == b' ' || (b'0'..=b':').contains(&byte))
+            {
+                return invalid(
+                    "digit glyph literal requires spaces, digits or the original ':' glyph index",
+                );
+            }
+            return Ok(Some(text.len()));
+        }
         if self == Self::AsciiFormatLiteral && text.contains('%') {
             return invalid("ASCII format literal cannot contain percent sequences");
         }
@@ -145,6 +158,7 @@ impl Codec {
             Self::GameGlyphs => "game-glyphs",
             Self::AsciiLiteral => "ascii-literal",
             Self::AsciiFormatLiteral => "ascii-format-literal",
+            Self::AsciiDigitGlyphLiteral => "ascii-digit-glyph-literal",
             Self::AsciiDecimalFormat => "ascii-decimal-format",
             Self::AsciiI32DecimalFormat => "ascii-i32-decimal-format",
             Self::AsciiSignedDecimalPairFormat => "ascii-signed-decimal-pair-format",
@@ -863,8 +877,11 @@ const LAYOUTS: &[Layout] = &[
         name: "US battle messages",
         load: 0x801d0c00,
         size: 118224,
-        sha256: "1d1ca57e123bc939b671491799d34b8a871c0ee6a00a8c74a5bcfd614f9bd8f2",
-        consumers: &[0x801de94c, 0x801de560, 0x801deaa4, 0x801deac4, 0x801e9538],
+        sha256: "18d4f268258122a4f71553ed42fcfef5426dc6b3085d86950a0a175e0f9ecf7a",
+        consumers: &[
+            0x801de94c, 0x801de560, 0x801deaa4, 0x801deac4, 0x801e9538, 0x801d9524, 0x801d9544,
+            0x801d96cc,
+        ],
         // Indexed records and direct code references, rather than a pointer table.
         // Row 1 appends at most five encoded bytes. Rows 3/4/5 remain unsupported.
         allocations: &[
@@ -877,6 +894,9 @@ const LAYOUTS: &[Layout] = &[
             Allocation::literal(0x801eb075, 13, None, &[0x8014f800]),
             Allocation::literal(0x801eb082, 13, None, &[0x8014f800]),
             Allocation::literal(0x801eb08f, 13, None, &[0x8014f800]),
+            Allocation::bounded_format(0x801d0c70, 2, Codec::AsciiDigitGlyphLiteral, &[0x801d94d4]),
+            Allocation::bounded_format(0x801d0c74, 4, Codec::AsciiU16DecimalFormat, &[0x801d94d4]),
+            Allocation::bounded_format(0x801d0c78, 4, Codec::AsciiU16DecimalFormat, &[0x801d9684]),
         ],
     },
 ];
