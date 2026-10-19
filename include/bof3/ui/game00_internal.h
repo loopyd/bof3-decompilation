@@ -793,6 +793,9 @@ extern s32         D_80181AC4[];
 extern u8          D_80181B00[];
 /* @source 0x80181B01 @kind table */
 extern u8          D_80181B01[];
+/* Signed halfword thresholds selected by D_80146250[0x79].
+ * @source 0x80181B70 @kind table */
+extern s16 movementThresholds[];
 /* @source 0x80181B94 @kind table */
 extern s32         D_80181B94[];
 /* @source 0x80181B98 @kind table */
@@ -1212,7 +1215,6 @@ void retreatPanelField6ToNeg20(void);
 /* Movement/position offset tables in main exe data section */
 #define MOVEMENT_OFFSET_0(i)  PSX_REF(volatile s32, 0x80181B94u + (i) * 8)
 #define MOVEMENT_OFFSET_1(i)  PSX_REF(volatile s32, 0x80181B98u + (i) * 8)
-#define MOVEMENT_THRESHOLD(i) PSX_REF(volatile s16, 0x80181B70u + (i) * 2)
 
 /* Misc. single fixed-address globals (read-only status flags) */
 #define GAME_UNK_80145558 PSX_REF(const volatile u32, 0x80145558u)
