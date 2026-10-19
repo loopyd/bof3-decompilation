@@ -2395,7 +2395,7 @@
       "source": "src/bof3/battle/func_801DF3F8.c",
       "source_sha256": "b5b6855b3020ab9f23a52183cb26f057bac0f47628ccc3bbb0d9bfa5379d8bb5",
       "splat": "config/targets/emi/battle/battle/03/splat.yaml",
-      "splat_sha256": "e1110e44569edc774eb6a57af5b4d6ec71eba00a03fed3d9b21aed8324e8f95c"
+      "splat_sha256": "57a3f85dcb1766f5c9de49739141c435f7fbcbd96eaf0f31bc3c13ac7cb1dc27"
     },
     "case-037": {
       "manifest": "config/targets/emi/battle/battle/15/target.toml",
@@ -2555,7 +2555,7 @@
       "source": "src/bof3/battle/markBattlersMeetingOpposingThresholds.c",
       "source_sha256": "255d813add053c868aa74e7aa427553a926623271ca114bf6003838ad860ec87",
       "splat": "config/targets/emi/battle/battle/03/splat.yaml",
-      "splat_sha256": "e1110e44569edc774eb6a57af5b4d6ec71eba00a03fed3d9b21aed8324e8f95c"
+      "splat_sha256": "57a3f85dcb1766f5c9de49739141c435f7fbcbd96eaf0f31bc3c13ac7cb1dc27"
     },
     "case-054": {
       "manifest": "config/targets/emi/battle/battle/15/target.toml",
@@ -2705,7 +2705,7 @@
       "source": "src/bof3/battle/func_801E020C.c",
       "source_sha256": "e82d44e1db900e0a825483488c34743fcb3370d6396a3b8fbb9b4783b2f512b9",
       "splat": "config/targets/emi/battle/battle/03/splat.yaml",
-      "splat_sha256": "e1110e44569edc774eb6a57af5b4d6ec71eba00a03fed3d9b21aed8324e8f95c"
+      "splat_sha256": "57a3f85dcb1766f5c9de49739141c435f7fbcbd96eaf0f31bc3c13ac7cb1dc27"
     },
     "case-069": {
       "manifest": "config/targets/emi/battle/battle/15/target.toml",
@@ -2835,7 +2835,7 @@
       "source": "src/bof3/battle/func_801E3638_battle03.c",
       "source_sha256": "6fe41d5fa3a3aee59f3e870571d0ddac9774d22fb327e5b8d7e5736f2103d33c",
       "splat": "config/targets/emi/battle/battle/03/splat.yaml",
-      "splat_sha256": "e1110e44569edc774eb6a57af5b4d6ec71eba00a03fed3d9b21aed8324e8f95c"
+      "splat_sha256": "57a3f85dcb1766f5c9de49739141c435f7fbcbd96eaf0f31bc3c13ac7cb1dc27"
     },
     "case-083": {
       "manifest": "config/targets/emi/battle/battle/15/target.toml",
@@ -3035,7 +3035,7 @@
       "source": "src/bof3/battle/drawIconStrip24x8.c",
       "source_sha256": "16b36d09ef43c2bbe7923171eaee88b619d25e5d32b40889c482149b4d1c1b04",
       "splat": "config/targets/emi/battle/battle/03/splat.yaml",
-      "splat_sha256": "e1110e44569edc774eb6a57af5b4d6ec71eba00a03fed3d9b21aed8324e8f95c"
+      "splat_sha256": "57a3f85dcb1766f5c9de49739141c435f7fbcbd96eaf0f31bc3c13ac7cb1dc27"
     },
     "case-103": {
       "manifest": "config/targets/emi/battle/battle/15/target.toml",
