@@ -7,9 +7,12 @@
 
 typedef void (*Battle03Handler)(void);
 typedef void (*Battle03EnemyModeHandler)(s32 arg0);
-typedef void (*Battle03ForwardingHandler)(s32 arg0, s32 arg1, s32 arg2,
-                                          s32 arg3, s32 arg4, s32 arg5,
-                                          s32 arg6, u8* selector);
+typedef void (*Battle03ForwardingHandler)(u8* arg0, s16* arg1, s16* arg2,
+                                         s16* arg3, s16* arg4, u8* arg5,
+                                         s16* arg6, u8* selector);
+typedef struct Battle03ForwardingTable {
+  Battle03ForwardingHandler handlers[3];
+} Battle03ForwardingTable;
 typedef struct Battle03DispatchTable {
   Battle03Handler handlers[3];
 } Battle03DispatchTable;
@@ -404,6 +407,7 @@ extern Battle03DispatchTable        D_801D0FAC; /* @source 0x801D0FAC @kind unkn
 extern Battle03DispatchTable        D_801D0FB8; /* @source 0x801D0FB8 @kind unknown */
 extern Battle03DispatchTable        D_801D0FC4; /* @source 0x801D0FC4 @kind unknown */
 extern Battle03FourDispatchTable    D_801D0FD0; /* @source 0x801D0FD0 @kind table */
+extern Battle03ForwardingTable      panelForwardingHandlers0fec; /* @source 0x801D0FEC @kind table */
 extern Battle03DispatchTable        D_801D0FF8; /* @source 0x801D0FF8 @kind table */
 extern Battle03FourDispatchTable    stateByte3Handlers1004; /* @source 0x801D1004 @kind table */
 extern u8*            D_801C893C[]; /* @source 0x801C893C @kind unknown */
@@ -763,8 +767,8 @@ void forwardPanelHalfwords(void);
 void callD8450WhenIdle(void);
 void activatePanelTask(void);
 void commitQueuedPanelTask(void);
-void func_801EA1E0(s32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, s32 arg5,
-                   s32 arg6, u8* selector);
+void func_801EA1E0(u8* arg0, s16* arg1, s16* arg2, s16* arg3, s16* arg4,
+                  u8* arg5, s16* arg6, u8* selector);
 void dispatchResultAuxState(void);
 void func_801E8684(void);
 void func_801E8D04(void);
@@ -985,8 +989,6 @@ u8   countMessageTokens(u8* arg0);
   PSX_PTR(const volatile Battle03Handler, 0x801d0cc0u)
 #define BATTLE_PANEL_TASK_ROOT_TABLE                                           \
   PSX_PTR(const volatile Battle03Handler, 0x801d0f80u)
-#define BATTLE_PANEL_TASK_ARG_DISPATCH_TABLE                                   \
-  PSX_PTR(const volatile Battle03ForwardingHandler, 0x801d0fecu)
 #define BATTLE_PANEL_TASK_PTR SPAD_PTR_SLOT(volatile u8, 0x80148648u)
 #define BATTLE_PANEL_TASK_HALF_04                                              \
   PSX_REF(volatile u16, (u32)(BATTLE_PANEL_TASK_PTR) + 4)

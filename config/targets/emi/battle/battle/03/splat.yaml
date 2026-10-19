@@ -1336,8 +1336,10 @@ segments:
     - asm
     - commitQueuedPanelTask
   - - 103904
-    - asm
+    - c
     - func_801EA1E0
+    - '@source: src/bof3/battle/func_801EA1E0.c'
+    - '@behavior: Copies the three panel forwarding handlers and dispatches by the selector byte while forwarding all eight pointer arguments.'
   - - 104020
     - asm
     - func_801EA254
