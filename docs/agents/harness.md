@@ -118,7 +118,9 @@ producer, so imported function and data rows remain blocked. Overlapping owner r
 candidate entries and planned native checks cannot close those gaps. Decode
 refusals stay open even when another capture supplies a positive fact for that rung.
 Instruction collection requires the complete generated plan. A capture failure
-aborts the row without a committed receipt. The failed receipt is forensic evidence.
+aborts the row without a committed receipt. The failed receipt retains captured
+semantic operations and the last command's output for diagnosis. It is forensic
+evidence and cannot close work.
 Data collection records every indexed operation in a typed receipt.
 `data_original_range` binds the whole containing reviewed data or rodata segment,
 up to 64 KiB, to current image, layout and replay identities. It records up to

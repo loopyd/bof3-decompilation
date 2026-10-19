@@ -293,10 +293,12 @@ def write_failed_receipt(
     row: dict[str, Any],
     error: Exception,
     result: SemanticResult | None = None,
+    *,
+    semantic: Sequence[dict[str, Any]],
 ) -> dict[str, Any]:
     """Persist one honest forensic failure without committing the row."""
 
-    output = {"error": str(error)}
+    output = {"error": str(error), "semantic_operations": list(semantic)}
     if result is not None:
         output["last_operation"] = {
             "command": result.command,

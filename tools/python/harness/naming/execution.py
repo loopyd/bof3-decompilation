@@ -435,7 +435,9 @@ def run_evidence(
                 raise
             except Exception as error:
                 worker.kill()
-                write_failed_receipt(namespace, target, row, error, result)
+                write_failed_receipt(
+                    namespace, target, row, error, result, semantic=semantic
+                )
                 errors.append(f"{key}: {error}")
                 break
     telemetry.external_processes += rizin.commands_executed + byte_ops.commands_executed
