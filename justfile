@@ -37,6 +37,7 @@ check: venv
     # `validate_sources` was ever reached, and would have hidden the text gates too.
     @PYTHONPATH={{ pythonpath }} {{ python }} -m ruff check tools/python
     @{{ root }}/bin/harness source docs
+    @just check-textures
     # Text tool gates, measured over the 880-archive US corpus and kept identical to the performance
     # table in out/text-format/validation-summary.md:
     #   document drift 0.1 s; ruff 0.05 s; Rust unit tests 5.5 s warm; the crate test suite
@@ -66,6 +67,12 @@ check: venv
     @PYTHONPATH={{ pythonpath }} {{ python }} -m pytest -q -p no:cacheprovider tools/python/tests/text
     @{{ root }}/bin/harness source symbols check
     @PYTHONPATH={{ pythonpath }} {{ python }} -m harness.commands.validate_sources
+
+# Check the texture component with its installed pinned toolchain.
+check-textures: venv
+    @rustup run 1.98.1 cargo fmt --manifest-path tools/rust/bof3-textures/Cargo.toml -- --check
+    @rustup run 1.98.1 cargo clippy --offline --locked --release --all-targets --manifest-path tools/rust/bof3-textures/Cargo.toml --target-dir build/tools/rust/bof3-textures -- -D warnings
+    @{{ root }}/bin/harness textures categories --json
 
 # Full gate: every pytest unit plus the shared scoped gate.
 check-all: check

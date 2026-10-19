@@ -27,7 +27,10 @@ a function and verify it against the right image.
   [config/targets/](config/targets/).
 - Notes on the game's file formats, data and behavior in [docs/specs/](docs/specs/).
 - Tools for code analysis, decompilation, compilation and byte comparison,
-  together with tools for inspecting and editing game text and audio.
+  together with tools for inspecting and editing game
+  [text](tools/rust/bof3-text/docs/README.md),
+  [audio](tools/rust/bof3-audio/README.md), and
+  [graphics](tools/rust/bof3-textures/README.md).
 - [PCSX-Redux Agentic](third_party/pcsx-redux-agentic/README.md), our Linux
   PlayStation emulator fork, for debugging the running game and capturing
   memory, save states, screenshots and audio.
