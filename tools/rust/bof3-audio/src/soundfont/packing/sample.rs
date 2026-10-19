@@ -385,6 +385,9 @@ pub fn pack_bank(
         existing,
         &allocations.references,
     )?;
+    if range_prefix.is_some() {
+        validate_range_destinations(binding, body, baseline, existing, &assignments.report)?;
+    }
     let envelopes = crate::soundfont::packing::envelope::pack(
         binding,
         header,
@@ -403,6 +406,7 @@ pub fn pack_bank(
             baseline,
             existing,
             &tones.report,
+            &assignments.report,
             &envelopes.report,
         )?;
     }
@@ -419,6 +423,11 @@ pub fn pack_bank(
             allocations: Some(&allocations),
         },
     )?;
+    if range_prefix.is_some() && samples.body != body {
+        return Err(
+            "SF2 key range: sample assignment must preserve the entire original body".into(),
+        );
+    }
     for (offset, bytes) in pitch
         .patches
         .into_iter()
@@ -787,11 +796,55 @@ fn validate_range_source(baseline: &Font) -> Result<()> {
     Ok(())
 }
 
+fn validate_range_destinations(
+    binding: &binding::Report,
+    body: &[u8],
+    baseline: &Font,
+    edited: &Font,
+    assignments: &crate::soundfont::packing::assignment::Report,
+) -> Result<()> {
+    let source_modes = modes(baseline)?;
+    for tone in &assignments.tones {
+        let mode = *source_modes
+            .get(&tone.original_sf2_sample)
+            .ok_or("SF2 key range: original sample mode missing")?;
+        let destination = binding
+            .samples
+            .iter()
+            .find(|sample| sample.sf2_sample == Some(tone.output_sf2_sample))
+            .ok_or("SF2 key range: destination is not an existing physical allocation")?;
+        let end = destination
+            .body_offset
+            .checked_add(destination.encoded_bytes)
+            .ok_or("SF2 key range: destination allocation overflow")?;
+        let encoded = body
+            .get(destination.body_offset..end)
+            .ok_or("SF2 key range: destination allocation exceeds body")?;
+        if encoded.is_empty() || sha256_hex(encoded) != destination.sha256 {
+            return Err(
+                "SF2 key range: destination allocation is empty or differs from binding".into(),
+            );
+        }
+        let decoded = adpcm::decode_sample(encoded)?;
+        let original_loop = decoded
+            .sample_loop
+            .map(|range| range.start_frame..range.end_frame_exclusive);
+        if loop_range(edited, tone.output_sf2_sample, mode)? != original_loop {
+            return Err(
+                "SF2 key range: destination loop is incompatible with fixed source tone mode"
+                    .into(),
+            );
+        }
+    }
+    Ok(())
+}
+
 fn validate_range_tables(
     baseline: &Font,
     expected: &Font,
     edited: &Font,
     gains: &crate::soundfont::packing::tone::Report,
+    assignments: &crate::soundfont::packing::assignment::Report,
     envelopes: &crate::soundfont::packing::envelope::Report,
 ) -> Result<()> {
     let mut validated = Font::from_bytes(expected.original_bytes().to_vec())?;
@@ -812,6 +865,17 @@ fn validate_range_tables(
             }
         }
     }
+    for tone in &assignments.tones {
+        let sample = u16::try_from(tone.output_sf2_sample)?;
+        for zone in &mut validated.instruments[tone.sf2_instrument].zones {
+            zone.target = Some(tone.output_sf2_sample);
+            for generator in &mut zone.generators {
+                if generator.operator == 53 {
+                    generator.amount = sample;
+                }
+            }
+        }
+    }
     for tone in &envelopes.tones {
         let parameters = tone.fit.parameters.envelope();
         for zone in &mut validated.instruments[tone.sf2_instrument].zones {
@@ -825,6 +889,20 @@ fn validate_range_tables(
                 };
             }
         }
+    }
+    if validated
+        .instruments
+        .iter()
+        .zip(&edited.instruments)
+        .any(|(before, after)| {
+            before
+                .zones
+                .iter()
+                .zip(&after.zones)
+                .any(|(before, after)| before.target != after.target)
+        })
+    {
+        return Err("SF2 key range: sample target differs from validated assignment".into());
     }
     for (id, bytes) in instrument_tables(&validated, baseline)? {
         if instrument_table(edited, id)? != bytes {

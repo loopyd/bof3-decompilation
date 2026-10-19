@@ -4043,22 +4043,34 @@ representable mapping through the verified pitch table. Missing references,
 mutable adjacent-data reads and unsupported pitches reject the request.
 
 Range edits may also request uniform, exactly invertible attenuation, pan and
-supported fitted-envelope changes on the same tone. Each inverse retains its
+supported fitted-envelope changes and existing physical PCM assignments on the
+same tone. Each inverse retains its
 original source controls and recorded model. Envelope edits use the existing
 field families and selection order described above. Attack, decay, sustain and
 release amounts may change only when a complete fitted tuple matches. Delay and
 hold stay fixed. Each range-changing instrument selects its own uniform fit.
 
 Packing checks original raw table ownership before reconstructing any range. It
-uses the selected gain and forward-verified envelope fits to reconstruct complete
+uses selected gain, per-instrument validated sample indices and forward-verified
+envelope fits to reconstruct complete
 instrument tables before sample reconstruction. Names, generator identities and
 order, modulators, opaque terminal bytes and unrelated rows remain checked. Raw
 table changes are limited to validated key and pitch zones, selected gain and
-envelope amounts, and bag and generator indices their geometry requires.
+envelope amounts, validated sample links, and bag and generator indices their
+geometry requires. Both the zone target and sample generator must match the
+assignment report for that instrument.
 
-Each original instrument identity, sample link, loop mode and other control stays
-fixed. Muted or stopped-pitch range sources and combined range edits with tuning,
-samples, presets or instruments whose ranges did not change remain unsupported.
+Each original instrument identity, loop mode and other control stays fixed.
+A range-changing instrument may uniformly select another existing nonempty
+physical PCM allocation with matching sample-header tuning and compatible original
+loop behavior. Different instruments may select different destinations. The
+assignment inverse preserves opaque reference high bytes and unchanged zero
+aliases. Incompatible destinations reject before sample reconstruction. The
+entire original body remains byte-exact, including allocations losing their last
+user. Sample headers, pool, allocations and topology stay fixed.
+
+Muted or stopped-pitch range sources and combined range edits with tuning,
+sample storage, presets or instruments whose ranges did not change remain unsupported.
 Envelope tuples outside the existing field families also reject the request.
 The `key_ranges` array in bank and music song reports records
 source identities, original and output ranges, selected pitch contexts and the

@@ -326,18 +326,17 @@ pub(crate) fn ranges(
         if after.name != expected.name
             || after.zones.len() != expected.zones.len()
             || after.zones.iter().zip(&expected.zones).any(|(a, b)| {
-                a.target != b.target
-                    || a.modulators != b.modulators
+                a.modulators != b.modulators
                     || a.generators.len() != b.generators.len()
                     || a.generators.iter().zip(&b.generators).any(|(a, b)| {
                         a.operator != b.operator
-                            || (!matches!(a.operator, 17 | 34 | 36..=38 | 48)
+                            || (!matches!(a.operator, 17 | 34 | 36..=38 | 48 | 53)
                                 && a.amount != b.amount)
                     })
             })
         {
             return Err(
-                "SF2 key range: combined edits beyond gain/pan/envelope unsupported".into(),
+                "SF2 key range: combined edits beyond gain/pan/envelope/sample assignment unsupported".into(),
             );
         }
         let report = KeyRangeReport {
