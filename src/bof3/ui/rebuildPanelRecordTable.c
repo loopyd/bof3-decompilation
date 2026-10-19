@@ -14,10 +14,6 @@
  * @match 100.00
  * @residual none
  */
-typedef struct ShopPanelWords {
-  u32 w[7];
-} ShopPanelWords;
-
 void rebuildPanelRecordTable(void) {
   u8 i;
   u8 j;

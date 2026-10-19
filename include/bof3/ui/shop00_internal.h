@@ -8,6 +8,10 @@
 #include "panel/task.h"
 #include "gpu/prim.h"
 
+typedef struct ShopPanelWords {
+  u32 w[7];
+} ShopPanelWords;
+
 /* @source 0x80148648
  * @kind unknown */
 extern PanelTask* D_80148648;
@@ -338,13 +342,13 @@ extern u16 D_80143F00;
  * @kind unknown */
 extern s8 D_80146870;
 
-/* Main-RAM panel record table filled by func_801D6CE4: seven 32-bit words per
+/* Overlay-local panel record table filled by func_801D6CE4: seven 32-bit words per
  * record (stride 0x1C bytes) taken from byte offset 0xCA0 of the shop state
  * block. Zero-filled in the shipped payload, so the record contents are not
  * observable there.
  * @source 0x801E6098
  * @kind table */
-extern u32 D_801E6098[];
+extern ShopPanelWords D_801E6098[];
 
 /* Overlay-local tail-data bytes shared by the D_801E530C phase-step family: the
  * sub-step handler func_801D472C clears D_801E6110 and D_801E6080, arms
