@@ -21,6 +21,12 @@ disposition does not establish sample pairing, loading, playback, or the meaning
 of unused bytes. Auxiliary containers remain opaque; their ownership does not
 identify all bytes as envelope data.
 
+Qualified STR files retain their complete sector-stream extents. `CAPCOM30.STR`
+delegates video to the existing media workflow and XA audio to the audio tool;
+the three qualified `BIN/` STR streams delegate selected XA audio to that tool.
+Their residual sector roles and complete byte interpretation remain unresolved.
+Textures preserves these streams and refuses edits to them.
+
 ## Build
 
 Use Rust 1.98.1 with edition 2024. The crate declares Rust 1.98 as its minimum.
@@ -174,6 +180,20 @@ particular root is active. The `resident-base` edge retains those limits. Some
 archives declare both raw and compressed writes to `0x8003b800`; an address match
 does not establish the draw-time contents.
 
+The `draw-clut`, `palette-stage` and `image-stage` dependencies retain the
+initializer's conditional draw context. For an explicit slot from 0 through 7,
+palette zero of the selected root supplies 32 words at VRAM row 495, starting
+at word `32*slot`, after the pending palette upload executes without an
+intervening overwrite. The initialized CLUT selects that same start. Indices
+above 31 need separately proven neighboring colors. The image queue targets
+VRAM X 320 words and Y `(80*slot)&255`, unless the entity skips its image upload.
+These relationships do not establish the gameplay slot range or current state.
+
+The title initializer waits for DEMO, copies the shared palette block and marks
+its upload pending. DEMO entry 7 supplies eight rows at source RAM `0x80034000`,
+which map to staging RAM `0x80038000` and conditional VRAM rows 484 through 491.
+Other rows in that shared copy require their own source bindings.
+
 Use `--dependency entry-order` to find qualified same-archive transfer ordering.
 These edges link entry 7's type-1 bank to entry 3's 16,384 zero bytes at
 `0x8003b800..0x8003f800`. On the normal, unskipped path without an error and with
@@ -213,12 +233,18 @@ with alpha 0, and black pixels with alpha 255. It never rounds colors. Edits to
 their changed bytes overlap. The tool reports conflicting views and publishes
 nothing. Older packages must be unpacked again with the current executable.
 
-Qualified FIRST glyph, SHISU portrait, and DEMO logo and label atlases also
+Qualified FIRST glyph, SHISU portrait, and DEMO logo, label and scrolling-panel atlases also
 export read-only `preview-N.png` files. Each manifest `previews` entry names
 its original `palette_resource`, `bits`, and `first_word` within that palette.
 These are whole-atlas views using conditional static palette associations.
 They do not assemble sprites, prove the active selector, or establish runtime
 loading or appearance. Other atlas regions can require different palettes.
+
+DEMO entry 6 contains four 256-pixel-wide panels. The GAME entry 1 loop at
+`0x801d18f8` selects 8-bit pages at VRAM X coordinates 320, 448, 576 and 704.
+Records 11 through 14 at `0x801d1c6c` select UV `(0, 0)`, a 256x192 rectangle,
+and palette rows 487 through 490 respectively. The four previews apply those
+palettes to the whole atlas. They do not reproduce the loop's scrolling or fades.
 
 Previews retain the original snapshot's colors even when source views are edited.
 Keep them unchanged. Edit the corresponding `indices-4.png` or `indices-8.png`

@@ -132,6 +132,43 @@ pub(crate) fn annotate(resources: &mut [Resource]) {
                 if has_game { "The GAME entry 0 consumer is captured." } else { "The GAME entry 0 consumer is not captured in this input." },
             ),
         });
+        resource.evidence.extend([
+            "BIN/ETC/GAME.EMI#0@0x801C1254:root-draw-context-initialization".into(),
+            "SLUS_004.22@0x80166C48:selected-root-palette-zero-copy".into(),
+            "SLUS_004.22@0x8014E22C:conditional-palette-block-upload".into(),
+            "SLUS_004.22@0x8014CE78:draw-clut-selection".into(),
+        ]);
+        for (kind, target, captured, reason) in [
+            (
+                "draw-clut",
+                &game,
+                has_game,
+                "For a matched root and explicit initialization slot s in 0..7, GAME sets entity flags=1, page=5, V base=(80*s)&255, selector=0x78+s and mode=2. The draw helper selects CLUT (495<<6)|(2*s). The initializer accepts an unchecked byte slot; this bounded relationship does not establish the gameplay slot domain or a current entity.",
+            ),
+            (
+                "palette-stage",
+                &exe,
+                has_exe,
+                "The initializer copies palette zero of the selected root, exactly 32 words, to RAM 0x80035600+64*s and its +0x4000 mirror, and marks the palette upload pending. For s in 0..7, the conditional (0,480,256,32) upload from 0x80037800 places those words at row 495, columns 32*s..32*s+31. This covers only indices 0..31; selected root, execution, neighboring colors and intervening overwrites remain unresolved.",
+            ),
+            (
+                "image-stage",
+                &exe,
+                has_exe,
+                "For the initialized entity, 0x8014DC08 queues the selected root image at VRAM x=320 words, y=(80*s)&255 unless entity byte zero has mask 0x02 set. The consumer 0x8014E6D0 uses the queued dimensions and codec. The base eight-bit texture page is 0x85 before blend bits and part-specific correction; image selection, completed upload and draw-time residency remain unobserved.",
+            ),
+        ] {
+            resource.dependencies.push(Dependency {
+                kind: kind.into(),
+                target: Some(target.clone()),
+                status: if captured { "partial" } else { "unresolved" }.into(),
+                reason: if captured {
+                    reason.into()
+                } else {
+                    format!("{reason} The required consumer source is not captured.")
+                },
+            });
+        }
         resource.dependencies.push(Dependency {
             kind: "resident-base".into(),
             target: None,

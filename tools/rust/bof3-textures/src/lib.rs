@@ -12,6 +12,7 @@ pub mod error;
 pub mod formats;
 mod interface;
 pub mod lzss;
+mod media;
 pub mod package;
 pub mod packed;
 pub mod palette;

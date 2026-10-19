@@ -35,7 +35,7 @@ struct SharedContent {
     reference: &'static str,
 }
 
-struct RowStager {
+struct PaletteStager {
     source: &'static str,
     slot: u16,
     request: &'static str,
@@ -46,28 +46,41 @@ struct RowStager {
 enum PaletteStage {
     InitialBlock,
     SelectedRows,
+    TitleBlock,
 }
 
-const ROW_STAGERS: &[RowStager] = &[
-    RowStager {
+const PALETTE_STAGERS: &[PaletteStager] = &[
+    PaletteStager {
         source: "BIN/ETC/FIRST.EMI",
         slot: 0x261,
         request: "SLUS_004.22@0x8014EAB4:archive-request",
         stage: PaletteStage::InitialBlock,
     },
-    RowStager {
+    PaletteStager {
         source: "BIN/ETC/BATE.EMI",
         slot: 0x257,
         request: "BIN/ETC/GAME.EMI#0@0x801987D8:archive-request",
         stage: PaletteStage::SelectedRows,
     },
-    RowStager {
+    PaletteStager {
         source: "BIN/ETC/SHISU.EMI",
         slot: 0x265,
         request: "BIN/ETC/GAME.EMI#0@0x80198998:archive-request",
         stage: PaletteStage::SelectedRows,
     },
+    PaletteStager {
+        source: "BIN/ETC/DEMO.EMI",
+        slot: 0x25f,
+        request: "BIN/ETC/GAME.EMI#1@0x801D0C90:archive-request-and-ready-poll",
+        stage: PaletteStage::TitleBlock,
+    },
 ];
+
+const TITLE_PALETTE_ROWS: [(usize, u32, &str); 1] = [(
+    7,
+    4,
+    "25389de257006aa7e940702803b621bae0bb0d6c4d46921eb80c4e8d765e1e06",
+)];
 
 const INITIAL_PALETTE_ROWS: [(usize, u32, &str); 4] = [
     (
@@ -269,6 +282,23 @@ const ATLASES: &[Atlas] = &[
             selection: "GAME entry 1 records 7/8/9/19 select CLUT row 486, DEMO entry 7 byte range 1024..1536, and retail page 0xbd matches this 8-bit atlas at (832, 256). Slot 0x25f requests the physical DEMO archive. Load success, upload order, overwrites and rendering are unresolved.",
         }],
     },
+    Atlas {
+        source: "BIN/ETC/DEMO.EMI",
+        entry: 6,
+        sha256: "d933822cecb0f13950af92494d34b61f36c15feee188fe21ca6798e75a711b2a",
+        categories: &["system-screen"],
+        content: "Four indexed panels selected by the scrolling title-screen consumer",
+        consumer: Some(
+            "BIN/ETC/GAME.EMI#1@0x801D18F8:four-panel-loop; BIN/ETC/GAME.EMI#1@0x801D17D8:rectangle-consumer; BIN/ETC/GAME.EMI#1@0x801D1C6C:records-11-12-13-14",
+        ),
+        palettes: &[PaletteBinding {
+            entry: 7,
+            bits: 8,
+            first_words: &[768, 1024, 1280, 1536],
+            sha256: "25389de257006aa7e940702803b621bae0bb0d6c4d46921eb80c4e8d765e1e06",
+            selection: "GAME entry 1 records 11..14 select CLUT rows 487..490, DEMO entry 7 byte ranges 1536..2048, 2048..2560, 2560..3072 and 3072..3584 respectively. The four-iteration loop selects retail pages 0x85/0x87/0x89/0x8b at VRAM x=320/448/576/704, y=0, 8 bits per pixel. Each record samples UV (0,0), width 256, height 192 within its corresponding quarter of the 1024x256-pixel upload. Whole-atlas previews under each palette are derivatives, not assembled screen frames. Loading, upload order, overwrites, scrolling, fades and rendering remain unobserved.",
+        }],
+    },
 ];
 
 pub(crate) fn preview_bindings(resource: &Resource) -> Vec<(usize, u8, usize)> {
@@ -356,10 +386,12 @@ pub(crate) fn annotate(resources: &mut [Resource]) -> Result<()> {
 
 fn annotate_staging(resources: &mut [Resource]) -> Result<()> {
     let game = format!("{}:BIN/ETC/GAME.EMI#entry-000", sources::RELEASE);
+    let title = format!("{}:BIN/ETC/GAME.EMI#entry-001", sources::RELEASE);
     let stager = format!("{}:SLUS_004.22#file", sources::RELEASE);
     let game_captured = resources.iter().any(|resource| resource.id == game);
+    let title_captured = resources.iter().any(|resource| resource.id == title);
     let stager_captured = resources.iter().any(|resource| resource.id == stager);
-    for source in ROW_STAGERS {
+    for source in PALETTE_STAGERS {
         let (rows, requester, requester_captured, routine) = match source.stage {
             PaletteStage::InitialBlock => (
                 INITIAL_PALETTE_ROWS.as_slice(),
@@ -373,6 +405,12 @@ fn annotate_staging(resources: &mut [Resource]) -> Result<()> {
                 game_captured,
                 "SLUS_004.22@0x8014E3A0:256-word-palette-row-copy",
             ),
+            PaletteStage::TitleBlock => (
+                TITLE_PALETTE_ROWS.as_slice(),
+                &title,
+                title_captured,
+                "SLUS_004.22@0x8014E284:32-row-palette-block-copy",
+            ),
         };
         for &(entry, row, sha256) in rows {
             let Some(index) = locate(resources, source.source, entry) else {
@@ -382,13 +420,17 @@ fn annotate_staging(resources: &mut [Resource]) -> Result<()> {
             check_hash(palette, sha256)?;
             let source_ram = 0x8003_3800 + row * 512;
             let stage_ram = 0x8003_7800 + row * 512;
+            let row_count = match source.stage {
+                PaletteStage::TitleBlock => 8,
+                _ => 1,
+            };
             if palette.kind != "palette-bank"
                 || palette.palette_upload.is_none()
                 || palette.load_argument != Some(source_ram)
-                || palette.size != 512
+                || palette.size != u64::from(row_count) * 512
             {
                 return Err(Error::Invalid(format!(
-                    "{} differs from its qualified palette-row staging layout",
+                    "{} differs from its qualified palette staging layout",
                     palette.id
                 )));
             }
@@ -403,6 +445,9 @@ fn annotate_staging(resources: &mut [Resource]) -> Result<()> {
                 }
                 PaletteStage::SelectedRows => {
                     "After the ready branch, the original initializer copies rows 1 and 2, each containing 256 palette words, into staging RAM."
+                }
+                PaletteStage::TitleBlock => {
+                    "The original title initializer waits for DEMO to become ready, calls the 32-row palette copy and marks the upload pending. DEMO entry 7 supplies source rows 4..11; other copied source rows are not supplied by this entry."
                 }
             };
             for (kind, target, captured, reason) in [
@@ -420,8 +465,9 @@ fn annotate_staging(resources: &mut [Resource]) -> Result<()> {
                     &stager,
                     stager_captured,
                     format!(
-                        "{staging} This archive row declares RAM {source_ram:#x}; the copy maps that address to staging RAM {stage_ram:#x}. The separately qualified conditional upload places this row at VRAM y={}. Other RAM producers, overwrites, GPU execution and active residency are unresolved.",
-                        480 + row
+                        "{staging} This archive span declares RAM {source_ram:#x}; the copy maps that address to staging RAM {stage_ram:#x}. The separately qualified conditional upload places its {row_count} rows at VRAM y={}..{}. Other RAM producers, overwrites, GPU execution and active residency are unresolved.",
+                        480 + row,
+                        480 + row + row_count - 1
                     ),
                 ),
             ] {

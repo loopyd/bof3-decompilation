@@ -161,6 +161,7 @@ pub fn interpretation_hash() -> String {
             include_str!("stream_family.rs"),
             include_str!("aliases.rs"),
             include_str!("interface.rs"),
+            include_str!("media.rs"),
             include_str!("save_icon.rs"),
             include_str!("verification.rs"),
         ]
@@ -515,7 +516,7 @@ pub fn build_from(
             let findings = vec![
                 "embedded, generated, or media-owned graphics disposition is unresolved".into(),
             ];
-            resources.push(Resource {
+            let mut resource = Resource {
                 id: format!("{}:{}#file", sources::RELEASE, file.path),
                 source: file.path.clone(),
                 entry: None,
@@ -541,7 +542,9 @@ pub fn build_from(
                 resident_animation: None,
                 save_icon: None,
                 findings,
-            });
+            };
+            crate::media::annotate(&mut resource);
+            resources.push(resource);
         }
     }
     crate::interface::annotate(&mut resources)?;
