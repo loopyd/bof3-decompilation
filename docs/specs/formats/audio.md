@@ -4074,9 +4074,15 @@ aliases. Incompatible destinations reject before sample reconstruction. The
 entire original body remains byte-exact, including allocations losing their last
 user. Sample headers, pool, allocations and topology stay fixed.
 
-Muted or stopped-pitch range sources and combined range edits with scale tuning,
-sample storage, presets or instruments whose ranges did not change remain
-unsupported.
+Other original audible instruments without stopped keys may keep their ranges
+while requesting the same separately validated gain, pan, pitch, envelope and
+existing physical sample assignments. Each companion retains its original
+identity, ordered keys, generator layout, modulators and source contexts. Preset
+and percussion aliases stay fixed. Every requested amount and sample target must
+match its owning inverse report and the complete instrument tables.
+
+Muted or stopped-pitch range sources or companions and combined range edits with
+scale tuning, sample storage or presets remain unsupported.
 Envelope tuples outside the existing field families also reject the request.
 The `key_ranges` array in bank and music song reports records
 source identities, original and output ranges, selected pitch contexts and the

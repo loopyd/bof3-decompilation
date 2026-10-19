@@ -376,7 +376,34 @@ pub(crate) fn ranges(
             .any(|(_, _, report)| report.sf2_instrument == index)
             && before != after
         {
-            return Err("SF2 key range: combined edits to other instruments unsupported".into());
+            let mut sources = binding
+                .tones
+                .iter()
+                .filter(|tone| tone.sf2_instrument == index);
+            let source = sources
+                .next()
+                .ok_or("SF2 key range: companion instrument has no original tone")?;
+            if sources.next().is_some() || source.silent || !source.stopped_keys.is_empty() {
+                return Err(
+                    "SF2 key range: companion requires one original audible tone without stopped keys".into(),
+                );
+            }
+            if before.name != after.name
+                || before.zones.len() != after.zones.len()
+                || before.zones.iter().zip(&after.zones).any(|(a, b)| {
+                    a.modulators != b.modulators
+                        || a.generators.len() != b.generators.len()
+                        || a.generators.iter().zip(&b.generators).any(|(a, b)| {
+                            a.operator != b.operator
+                                || (!matches!(a.operator, 17 | 34 | 36..=38 | 48 | 51..=53 | 58)
+                                    && a.amount != b.amount)
+                        })
+                })
+            {
+                return Err(
+                    "SF2 key range: companion edits beyond gain/pan/pitch/envelope/sample assignment unsupported".into(),
+                );
+            }
         }
     }
     let mut output = KeyRanges {
