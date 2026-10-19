@@ -4,6 +4,7 @@ pub mod content;
 pub mod loader;
 pub mod model;
 pub mod music;
+mod roles;
 
 use crate::catalog::model::{Asset, AssetData, Catalog, Entry, SectorRange, Source, XaStream};
 use crate::{archive::MediaImage, bank::Bank, digest::sha256_hex, sequence::SequenceSet, Result};
@@ -24,7 +25,7 @@ impl Catalog {
         Self { schema: "bof3.audio-catalog/v1", sources: Vec::new(), assets: Vec::new(), runtime_mapping: None,
             unresolved: vec![
                 "game bank/song IDs and bank-to-body/sequence associations require runtime evidence; candidates are not resolved links",
-                "SFX/vocal classification is unresolved; XA cue extents require a verified executable and known media",
+                "local SFX bank-reference roles require a verified executable; sample and vocal roles remain unresolved; XA cue extents require a verified executable and known media",
                 "shared header hashes show byte-identical headers, not necessarily identical sample bodies",
                 "sequence event semantics and sample playback are not validated by inventory",
             ] }
@@ -153,6 +154,15 @@ impl Catalog {
                         load_argument: data.ram_ptr,
                         body_sha256: if data.file_type == 7 {
                             Some(sha256_hex(image.entry(entry)?))
+                        } else {
+                            None
+                        },
+                        auxiliary_records: if data.file_type == 8
+                            && data.size > 0
+                            && data.size <= 1024
+                            && data.size.is_multiple_of(4)
+                        {
+                            Some(image.entry(entry)?.as_chunks::<4>().0.to_vec())
                         } else {
                             None
                         },
@@ -296,6 +306,7 @@ impl Catalog {
             game_bank_id: None,
             game_song_ids: Vec::new(),
             content_type: "unresolved",
+            roles: Vec::new(),
             data,
         });
     }

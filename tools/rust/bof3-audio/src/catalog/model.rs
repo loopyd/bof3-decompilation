@@ -36,6 +36,9 @@ pub struct Entry {
     pub load_argument: u32,
     /// Hash of the complete declared type-7 payload, excluding archive padding.
     pub body_sha256: Option<String>,
+    /// Bounded physical type-8 records. These do not establish playback results.
+    #[serde(skip)]
+    pub(super) auxiliary_records: Option<Vec<[u8; 4]>>,
 }
 
 #[derive(Debug, Serialize)]
@@ -46,8 +49,23 @@ pub struct Asset {
     pub game_bank_id: Option<u16>,
     pub game_song_ids: Vec<u16>,
     pub content_type: &'static str,
+    pub roles: Vec<Role>,
     #[serde(flatten)]
     pub data: AssetData,
+}
+
+#[derive(Debug, Serialize)]
+pub struct Role {
+    pub role: &'static str,
+    pub scope: &'static str,
+    pub auxiliary_entry: String,
+    pub reference_rows: Vec<usize>,
+    pub target: &'static str,
+    pub dispatcher: u32,
+    pub dispatcher_file_offset: usize,
+    pub handler: u32,
+    pub handler_file_offset: usize,
+    pub playback: &'static str,
 }
 
 #[derive(Debug, Serialize)]

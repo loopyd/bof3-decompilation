@@ -46,6 +46,22 @@ bin/harness audio verify --mode audio --archive /path/to/archive.EMI --json
 bin/harness audio render --help
 ```
 
+For bank references used by the original local effects dispatcher, use
+`index --mode audio --type sfx --executable PSX_EXE` with your media selection.
+`query` accepts the same filter and a qualified bank `--id` from the index.
+Numeric IDs still fail when several selected banks match.
+
+Each selected bank's `roles` records the qualified auxiliary table, reference
+rows and original dispatcher and handler addresses. The scope is
+`local_dispatch_reference`. This identifies bank use by the effects path.
+It does not classify every sample or establish successful playback. The current
+boundary requires one resolved body and one bounded auxiliary table, with local
+record shapes and populated programs. Active layout, physical tone and sample
+selection, load history and independent PCM remain unresolved. Shared payloads
+do not transfer roles. Sample and XA roles remain unresolved, and `--type vocals`
+fails until vocal-role evidence is available. `extract` does not yet accept role
+filters.
+
 `verify --json` writes `bof3.audio-verification/v2`. Its `checks` object reports
 each category with a `status` of `pass`, `fail`, or `missing_evidence` and a
 `reason` describing the evidence or limitation.

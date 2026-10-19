@@ -162,6 +162,7 @@ pub fn resolve(catalog: &mut Catalog, executable: &Executable) -> Result<XaMap> 
                     game_bank_id: None,
                     game_song_ids: Vec::new(),
                     content_type: "unresolved",
+                    roles: Vec::new(),
                     data: AssetData::XaCue(cue.clone()),
                 });
                 Some(id)

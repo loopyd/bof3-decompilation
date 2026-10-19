@@ -16,7 +16,9 @@ pub const HELP: &str =
  Numeric IDs: bank/song entry number, sample ID, SEP sequence ID, XA channel, packed XA cue ID (decimal or 0x-prefixed hex).\n\
  Ambiguous numbers require a qualified ID from index; sequence qualified IDs use sequence index.\n\
  Disc-root identities use relative paths; explicit archives use canonical absolute paths.\n\
- Original music archives resolve by whole-file SHA-256. Other song identities, SFX/vocal classification,\n\
+ Audio index/query accept --type sfx with --executable for banks referenced by local effects tables.\n\
+ This is bank use, not classification of every sample or accepted playback. Vocal roles remain unresolved.\n\
+ Original music archives resolve by whole-file SHA-256. Other song identities,\n\
  active runtime layout, and XA scheduler endpoints remain unresolved.\n";
 
 pub fn run(operation: &str, mut args: impl Iterator<Item = OsString>) -> Result<u8> {
@@ -24,6 +26,7 @@ pub fn run(operation: &str, mut args: impl Iterator<Item = OsString>) -> Result<
     let mut root = None;
     let mut archives = Vec::new();
     let mut kind = None;
+    let mut role = None;
     let mut id = None;
     let mut cue = None;
     let mut executable = None;
@@ -31,20 +34,43 @@ pub fn run(operation: &str, mut args: impl Iterator<Item = OsString>) -> Result<
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--mode") if mode.is_none() => mode = Some(string_value(&mut args, "--mode")?),
-            Some("--disc-root") if root.is_none() => root = Some(PathBuf::from(value(&mut args, "--disc-root")?)),
+            Some("--disc-root") if root.is_none() => {
+                root = Some(PathBuf::from(value(&mut args, "--disc-root")?))
+            }
             Some("--archive") => archives.push(PathBuf::from(value(&mut args, "--archive")?)),
-            Some("--kind") if operation != "map" && kind.is_none() => kind = Some(string_value(&mut args, "--kind")?),
-            Some("--executable") if executable.is_none() => executable = Some(PathBuf::from(value(&mut args, "--executable")?)),
-            Some("--id") if operation == "query" && id.is_none() => id = Some(string_value(&mut args, "--id")?),
-            Some("--cue") if operation == "query" && cue.is_none() => cue = Some(string_value(&mut args, "--cue")?.parse::<u16>()?),
+            Some("--kind") if operation != "map" && kind.is_none() => {
+                kind = Some(string_value(&mut args, "--kind")?)
+            }
+            Some("--executable") if executable.is_none() => {
+                executable = Some(PathBuf::from(value(&mut args, "--executable")?))
+            }
+            Some("--id") if operation == "query" && id.is_none() => {
+                id = Some(string_value(&mut args, "--id")?)
+            }
+            Some("--cue") if operation == "query" && cue.is_none() => {
+                cue = Some(string_value(&mut args, "--cue")?.parse::<u16>()?)
+            }
             Some("--json") if !json => json = true,
-            Some("--type") => return Err("--type sfx|vocals: classification is not yet verified; use an unfiltered inventory with explicit unresolved content types".into()),
+            Some("--type") if operation != "map" && role.is_none() => {
+                role = Some(string_value(&mut args, "--type")?)
+            }
             _ => return Err(format!("unknown, repeated, or inapplicable option {arg:?}").into()),
         }
     }
     let mode = mode.ok_or("--mode required")?;
     if mode != "audio" && mode != "music" {
         return Err("--mode must be audio or music".into());
+    }
+    if let Some(role) = &role {
+        if mode != "audio" {
+            return Err("--type requires --mode audio".into());
+        }
+        match role.as_str() {
+            "sfx" if executable.is_some() => {}
+            "sfx" => return Err("--type sfx requires --executable for original dispatcher evidence".into()),
+            "vocals" => return Err("--type vocals: classification is not yet verified; use an unfiltered inventory with explicit unresolved content types".into()),
+            _ => return Err("--type requires sfx or vocals".into()),
+        }
     }
     if kind.as_deref().is_some_and(|v| {
         !["bank", "sample", "song", "sequence", "xa_stream", "xa_cue"].contains(&v)
@@ -146,6 +172,11 @@ pub fn run(operation: &str, mut args: impl Iterator<Item = OsString>) -> Result<
         }
         return Ok(0);
     }
+    if let Some(role) = &role {
+        catalog
+            .assets
+            .retain(|asset| asset.roles.iter().any(|evidence| evidence.role == role));
+    }
     if operation == "query" {
         let asset = if let Some(cue) = cue {
             catalog.select_cue(cue)?
@@ -209,6 +240,21 @@ fn print_asset(asset: &Asset) {
         asset.game_bank_id,
         asset.game_song_ids
     );
+    for evidence in &asset.roles {
+        println!(
+            "Role {}: {} via {} rows {:?}; {}@0x{:08X} (EXE +0x{:X}) -> 0x{:08X} (EXE +0x{:X}); {}",
+            evidence.role,
+            evidence.scope,
+            evidence.auxiliary_entry,
+            evidence.reference_rows,
+            evidence.target,
+            evidence.dispatcher,
+            evidence.dispatcher_file_offset,
+            evidence.handler,
+            evidence.handler_file_offset,
+            evidence.playback
+        );
+    }
 }
 
 fn print_unresolved(catalog: &Catalog) {
