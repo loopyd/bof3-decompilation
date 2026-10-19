@@ -295,7 +295,7 @@ the five menu pointers and the separate marker to `0x8014FC90`, with limits
 sixteen and one. Packing preserves pointers, alignment bytes, adjacent currency
 glyphs and all other payload bytes.
 
-The same layout also exposes six ASCII formats. Capacities include NUL and
+The same layout also exposes seven ASCII formats. Capacities include NUL and
 exclude alignment padding:
 
 | Address | Original bytes before NUL | Capacity | Codec |
@@ -306,8 +306,9 @@ exclude alignment padding:
 | `0x801D0C18` | `%04d` | 5 | `ascii-i32-decimal-format` |
 | `0x801DAD60` | Three `0x5C` bytes | 4 | `ascii-format-literal` |
 | `0x801DAD64` | One `0x5C` byte | 2 | `ascii-format-literal` |
+| `0x801D0C24` | `%d%d%d` | 7 | `ascii-u8-decimal-triple-format` |
 
-The decimal formats retain one ordered signed 32-bit argument. Calls load full
+The four single-argument decimal formats retain one signed 32-bit argument. Calls load full
 words from `0x80144F50` or `0x801DB07C`; signed comparisons against 10, 100 or
 1000 do not establish a nonnegative or byte-sized domain. The codec permits
 widths 1..7 with optional zero padding, within the encoded allocation and eleven
@@ -317,9 +318,15 @@ calls `0x801D3254` and `0x801D350C` draw through `0x8014FF0C`.
 The two fallback formats use printable ASCII within three and one encoded bytes.
 They refuse every percent sequence because their calls supply no formatting
 arguments. Calls `0x801D4BBC`, `0x801D4BF0`, `0x801D4DCC` and `0x801D4E00`
-format into the same buffer and draw through `0x8014FF0C`. The shared `%d`
-and multi-argument formats remain unsupported. Other COMMU02 text and observed
-rendering remain unverified.
+format into the same buffer and draw through `0x8014FF0C`.
+
+The triple format at `0x801D0C24` retains three ordered unsigned byte arguments.
+Calls `0x801D4C44` and `0x801D4D24` load them with `lbu`, format into
+`0x80145AD4` and draw through `0x8014FF0C`. Their output needs at most nine
+bytes before NUL. Its six encoded bytes leave no room for widths or literals,
+so packing requires the original `%d%d%d`. The alignment byte at `0x801D0C2B`
+stays unchanged. The shared `%d` also feeds command buffers and remains unsupported.
+Other COMMU02 text and observed rendering remain unverified.
 
 Four keyboard menu labels and a separator also use this layout:
 
