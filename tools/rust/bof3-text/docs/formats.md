@@ -115,7 +115,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v10`. Its eighteen strings include
+Extract the selected entry as `bof3.inline-text/v11`. Its eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -248,7 +248,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v10` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v11` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -334,6 +334,20 @@ write `0x801490D8` or `0x801490F8` before dispatch through `0x80150224`.
 Those arguments are byte-masked values or a signed byte plus one. They need at
 most four output bytes before NUL, within the codec's conservative eleven-byte
 bound. Packing preserves the original format and alignment byte at `0x801D0C23`.
+
+The active US keyboard page at `0x801DAB6C` has eight rows of twelve bytes.
+Its 68 ordinary cells use `game-keyboard-character`, with capacity one and no
+terminator or padding. Each cell requires exactly one letter, digit, space or
+one of `! ? - , .` from the original page. Empty text, command markup and other
+characters are refused. The 28 zero or control positions and the preceding
+192 bytes of other keyboard pages stay unchanged.
+
+The original selector at `0x801DAAA8` is 2, and both traced initialization paths
+store 2. The drawing loop at `0x801D94D0` passes each ordinary cell to
+`0x8014F800` with a one-character limit. The selector at `0x801DA114` skips
+zero cells, handles control values separately and copies the chosen byte into
+`0x801DB080` plus the name cursor at `0x801DA588`. Indexed references remain
+empty; the payload pin protects the selector, navigation and draw instructions.
 Command dispatch semantics, other COMMU02 text and observed rendering remain unverified.
 
 Four keyboard menu labels and a separator also use this layout:

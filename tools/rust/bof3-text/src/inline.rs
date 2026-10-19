@@ -9,13 +9,14 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v10";
+pub const SCHEMA: &str = "bof3.inline-text/v11";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub(crate) enum Codec {
     GameLiteral,
     GameFixedLiteral,
+    GameKeyboardCharacter,
     GameCountedLiteral,
     GameGlyphs,
     AsciiLiteral,
@@ -32,6 +33,13 @@ pub(crate) enum Codec {
 
 impl Codec {
     pub(crate) fn encode(self, text: &str, capacity: usize) -> Result<Vec<u8>> {
+        if self == Self::GameKeyboardCharacter {
+            let bytes = encode_name(text, capacity)?;
+            if capacity != 1 || bytes.len() != 1 || !keyboard_character(bytes[0]) {
+                return invalid("keyboard cell requires exactly one active US keyboard character");
+            }
+            return Ok(bytes);
+        }
         if matches!(
             self,
             Self::GameLiteral | Self::GameFixedLiteral | Self::GameCountedLiteral
@@ -92,6 +100,11 @@ impl Codec {
     }
 
     fn decode(self, bytes: &[u8], file_offset: usize) -> Result<String> {
+        if self == Self::GameKeyboardCharacter {
+            let text = decode_name(bytes, file_offset)?;
+            self.encode(&text, bytes.len())?;
+            return Ok(text);
+        }
         if self == Self::GameCountedLiteral {
             let (&length, field) = bytes
                 .split_last()
@@ -127,6 +140,7 @@ impl Codec {
         match self {
             Self::GameLiteral => "game-literal",
             Self::GameFixedLiteral => "game-fixed-literal",
+            Self::GameKeyboardCharacter => "game-keyboard-character",
             Self::GameCountedLiteral => "game-counted-literal",
             Self::GameGlyphs => "game-glyphs",
             Self::AsciiLiteral => "ascii-literal",
@@ -144,7 +158,7 @@ impl Codec {
 
     pub(crate) const fn terminator_bytes(self) -> usize {
         match self {
-            Self::GameFixedLiteral | Self::GameCountedLiteral => 0,
+            Self::GameFixedLiteral | Self::GameCountedLiteral | Self::GameKeyboardCharacter => 0,
             _ => 1,
         }
     }
@@ -184,6 +198,10 @@ impl Codec {
         }
         Ok(commands)
     }
+}
+
+fn keyboard_character(byte: u8) -> bool {
+    byte.is_ascii_alphanumeric() || matches!(byte, 0x3c..=0x3e | 0x5c | 0x5d | 0xff)
 }
 
 fn decimal_format_size(text: &str, arguments: &[usize], max_width: usize) -> Result<usize> {
@@ -308,6 +326,16 @@ struct Allocation {
 }
 
 impl Allocation {
+    const fn keyboard_character(address: u32) -> Self {
+        Self {
+            address,
+            capacity: 1,
+            reference: None,
+            renderers: &[0x8014f800],
+            codec: Codec::GameKeyboardCharacter,
+        }
+    }
+
     const fn ascii_literal(address: u32, capacity: usize) -> Self {
         Self {
             address,
@@ -403,12 +431,13 @@ const LAYOUTS: &[Layout] = &[
         name: "US COMMU02 menu labels",
         load: 0x801d0c00,
         size: 42208,
-        sha256: "d0f3b80dd255c217747bb552a1c49dac15e9c32420195153a746f8597bdc7eab",
+        sha256: "32946ade160f8d4b59a27eb862ee6d0f2457cd26a89c11c8d4ebd18268088c9f",
         consumers: &[
             0x801d2cd0, 0x801d320c, 0x801d3334, 0x801d9868, 0x801d98cc, 0x801d322c, 0x801d33a8,
             0x801d33d4, 0x801d3418, 0x801d3444, 0x801d3488, 0x801d34b4, 0x801d34e8, 0x801d4bbc,
             0x801d4bf0, 0x801d4dcc, 0x801d4e00, 0x801d4e54, 0x801d96cc, 0x801d4c44, 0x801d4d24,
             0x801d3f80, 0x801d3f90, 0x801d3fc8, 0x801d4c84, 0x801d4cb4, 0x801d4d64, 0x801d4d94,
+            0x801da57c,
         ],
         allocations: &[
             Allocation::fixed_literal(0x801dac54, 4),
@@ -440,6 +469,74 @@ const LAYOUTS: &[Layout] = &[
                 &[0x8014ff0c],
             ),
             Allocation::bounded_format(0x801d0c20, 3, Codec::AsciiI32DecimalFormat, &[0x8014ff0c]),
+            Allocation::keyboard_character(0x801dab6c),
+            Allocation::keyboard_character(0x801dab6d),
+            Allocation::keyboard_character(0x801dab6e),
+            Allocation::keyboard_character(0x801dab6f),
+            Allocation::keyboard_character(0x801dab70),
+            Allocation::keyboard_character(0x801dab71),
+            Allocation::keyboard_character(0x801dab72),
+            Allocation::keyboard_character(0x801dab73),
+            Allocation::keyboard_character(0x801dab74),
+            Allocation::keyboard_character(0x801dab75),
+            Allocation::keyboard_character(0x801dab76),
+            Allocation::keyboard_character(0x801dab77),
+            Allocation::keyboard_character(0x801dab78),
+            Allocation::keyboard_character(0x801dab79),
+            Allocation::keyboard_character(0x801dab7a),
+            Allocation::keyboard_character(0x801dab7b),
+            Allocation::keyboard_character(0x801dab7c),
+            Allocation::keyboard_character(0x801dab7d),
+            Allocation::keyboard_character(0x801dab7e),
+            Allocation::keyboard_character(0x801dab7f),
+            Allocation::keyboard_character(0x801dab80),
+            Allocation::keyboard_character(0x801dab81),
+            Allocation::keyboard_character(0x801dab82),
+            Allocation::keyboard_character(0x801dab83),
+            Allocation::keyboard_character(0x801dab84),
+            Allocation::keyboard_character(0x801dab85),
+            Allocation::keyboard_character(0x801dab86),
+            Allocation::keyboard_character(0x801dab87),
+            Allocation::keyboard_character(0x801dab88),
+            Allocation::keyboard_character(0x801dab89),
+            Allocation::keyboard_character(0x801dab8e),
+            Allocation::keyboard_character(0x801dab8f),
+            Allocation::keyboard_character(0x801dab90),
+            Allocation::keyboard_character(0x801dab91),
+            Allocation::keyboard_character(0x801dab92),
+            Allocation::keyboard_character(0x801dab93),
+            Allocation::keyboard_character(0x801dab94),
+            Allocation::keyboard_character(0x801dab95),
+            Allocation::keyboard_character(0x801dab96),
+            Allocation::keyboard_character(0x801dab97),
+            Allocation::keyboard_character(0x801dab98),
+            Allocation::keyboard_character(0x801dab99),
+            Allocation::keyboard_character(0x801dab9c),
+            Allocation::keyboard_character(0x801dab9d),
+            Allocation::keyboard_character(0x801dab9e),
+            Allocation::keyboard_character(0x801dab9f),
+            Allocation::keyboard_character(0x801daba0),
+            Allocation::keyboard_character(0x801daba1),
+            Allocation::keyboard_character(0x801daba2),
+            Allocation::keyboard_character(0x801daba3),
+            Allocation::keyboard_character(0x801daba4),
+            Allocation::keyboard_character(0x801daba5),
+            Allocation::keyboard_character(0x801daba8),
+            Allocation::keyboard_character(0x801daba9),
+            Allocation::keyboard_character(0x801dabaa),
+            Allocation::keyboard_character(0x801dabab),
+            Allocation::keyboard_character(0x801dabac),
+            Allocation::keyboard_character(0x801dabad),
+            Allocation::keyboard_character(0x801dabb4),
+            Allocation::keyboard_character(0x801dabb5),
+            Allocation::keyboard_character(0x801dabb6),
+            Allocation::keyboard_character(0x801dabb7),
+            Allocation::keyboard_character(0x801dabb8),
+            Allocation::keyboard_character(0x801dabb9),
+            Allocation::keyboard_character(0x801dabba),
+            Allocation::keyboard_character(0x801dabbb),
+            Allocation::keyboard_character(0x801dabbc),
+            Allocation::keyboard_character(0x801dabbd),
         ],
     },
     Layout {

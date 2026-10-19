@@ -155,15 +155,18 @@ dialogue commands. See [formats.md](formats.md#record-names).
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v10` document with ten counted labels and eight default names.
+`bof3.inline-text/v11` document with ten counted labels and eight default names.
 Re-extract former character-only documents. Default `--entry all` selects banks.
 See [formats.md](formats.md#default-character-names).
 
 For COMMU02 menu labels, select `--entry 8` in `ETC/COMMU02.EMI` or
 `--entry 7` in `ETC/COMMU02B.EMI`, below `BIN`. The inline document contains
-fifteen game literal fields, one ASCII separator and eight ASCII formats. Edit only
-`text` using each row's codec. Fixed fields use their full byte capacity; other fields reserve one NUL
-byte. Single-argument decimal formats retain one signed word and at most eleven output
+fifteen game literal fields, one ASCII separator, eight ASCII formats and 68
+keyboard cells. Edit only `text` using each row's codec. Fixed fields use their
+full byte capacity; terminated fields reserve one NUL byte. Each
+`game-keyboard-character` cell requires one letter, digit, space or one of
+`! ? - , .`. Empty cells, control cells and the other keyboard pages are protected.
+Single-argument decimal formats retain one signed word and at most eleven output
 bytes. The shared `%d` and three-argument `%d%d%d` formats must retain their original
 text within two and six encoded bytes, respectively. Fallback formats refuse
 percent sequences. Packing preserves all pointer words and unrelated bytes.
@@ -190,7 +193,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v10`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v11`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 The original BATTLE archive also has supported message records in entry 3.
@@ -307,7 +310,7 @@ formatted bytes. Decimal widths use 1..4 with optional zero padding. Its traced
 consumer copies the result to a stack buffer; retain `renderers: []` because
 rendering is unverified. The filename and Shift-JIS header formats remain unsupported.
 
-Inline documents use `bof3.inline-text/v10`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v11`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.

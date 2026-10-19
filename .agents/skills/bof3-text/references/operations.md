@@ -65,20 +65,24 @@ The tool preserves stats and other record bytes. These fields do not use
 dialogue command markup. Other name families require separate evidence.
 
 US START entry 8 and STATUS entry 0 each expose ten counted labels and eight
-default names through `bof3.inline-text/v10`. Select the entry explicitly and omit
+default names through `bof3.inline-text/v11`. Select the entry explicitly and omit
 class and latch selectors. Re-extract former character-only documents. Each
 archive needs its own document and output; editing one does not update the other
 or a save.
 
 COMMU02 entry 8 and COMMU02B entry 7 each expose fifteen menu labels, one ASCII
-separator and eight ASCII format fields through the inline schema. Five labels
-have fixed byte limits; all other fields reserve one NUL byte. Edit only `text` using each
-row's codec. Single-argument decimal formats retain one signed word and an eleven-byte
+separator, eight ASCII formats and 68 keyboard cells through the inline schema.
+Five labels have fixed byte limits; the other labels, separator and formats reserve
+one NUL byte. Edit only `text` using each row's codec. Single-argument decimal formats
+retain one signed word and an eleven-byte
 output bound. The shared `%d` and three-argument `%d%d%d` formats must retain their
 original text within two and six encoded bytes, respectively. Fallback formats
 refuse percent sequences. Pointer words, padding, adjacent glyphs and unrelated
-bytes stay unchanged. Use a separate document and
-output for each archive. Other COMMU02 text and observed rendering remain unverified.
+bytes stay unchanged. Each `game-keyboard-character` cell requires exactly one
+letter, digit, space or one of `! ? - , .` from the active US keyboard alphabet.
+Empty cells, control cells and the other pages stay protected. Use a separate
+document and output for each archive. Other COMMU02 text and observed rendering
+remain unverified.
 
 COMMU00 entry 0 and AREA175 through AREA185 entry 14 each expose sixty
 five-byte default names through the same inline schema. Edit only `text` with
@@ -89,7 +93,7 @@ observed rendering remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v10`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v11`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use

@@ -293,8 +293,9 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                     crate::monsters::extract(path, &bytes, *entry, payload).ok()
                                 })
                                 .flatten();
-                            if let Some(document) = inline {
+                            if let Some(mut document) = inline {
                                 text_count += 1;
+                                document.strings.sort_by_key(|text| text.file_offset);
                                 let mut at = entry.offset;
                                 for text in document.strings {
                                     if text.file_offset > at {
