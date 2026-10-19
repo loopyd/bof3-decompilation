@@ -21,11 +21,12 @@ little-endian signed-16 encoding their SHA-256 is
 `0ea87420ec5d82b35aa651a26622572b422f3d330afbf78f166941db7035ca80`.
 Both Rust 37.8 kHz models index history from `p-1` and floor each product before
 summation. Native `zigzag` reads `ring[(xaRingPos-i)&31]` for `i=1..29`, shifts
-each product by 15 and saturates the sum. A bounded original VOICE comparison
-confirms `CombinedRounded` mono 4-bit decoding, mono expansion and this alignment
-when the native gain stages are applied separately. That comparison covers
-consumed output under the captured settings. Remaining queued output, other
-formats and histories, and hardware fidelity require separate evidence.
+each product by 15 and saturates the sum. Bounded comparisons of original VOICE
+mono and S_XA00 stereo 4-bit sectors confirm `CombinedRounded` decoding, mono
+expansion and this alignment when the native gain stages are applied separately.
+They cover consumed output under the captured settings, including distinct stereo
+channels. Remaining queued output, other formats and histories, and hardware
+fidelity require separate evidence.
 
 The retained Rust 18.9 kHz table has 175 coefficients, SHA-256
 `02f3c9597f8e4b8f961e7981ac758034a2ff8eb5200b01ba410106e3460bffa1`.
@@ -216,6 +217,6 @@ the current native path and independent hardware evidence.
 
 [Rust transition validation](../specs/formats/audio.md#rust-xa-coding-transitions)
 covers all eight supported coding formats with 192 synthetic vectors generated
-by separate Python arithmetic/state. Numeric filter coefficients are shared;
+by a separate Rust integer model. Numeric filter coefficients are shared;
 this is not an independent hardware-filter or game-audio oracle. Emphasis and
 dynamic changes under `Published37800` remain explicitly unsupported.
