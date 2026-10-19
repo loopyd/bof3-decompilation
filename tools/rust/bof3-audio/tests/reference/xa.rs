@@ -196,7 +196,14 @@ pub fn transition(first: u8, second: u8, admission: &str) -> ([usize; 3], String
             if stage != 1 || admission == "queued" {
                 let frames = reference.resample(coding, &pcm);
                 counts[stage] = frames.len();
-                output.extend(frames);
+                output.extend(frames.into_iter().map(|frame| {
+                    frame.map(|sample| {
+                        let scaled = (i64::from(sample) * 128 * 33617)
+                            .div_euclid(1 << 22)
+                            .clamp(-32768, 32767);
+                        (scaled * 31880).div_euclid(1 << 15) as i16
+                    })
+                }));
             }
         }
     }

@@ -17,6 +17,10 @@ fn stream() -> Stream {
         coding: 0,
     }
 }
+fn volume() -> bof3_audio::machine::cd_audio::Volume {
+    bof3_audio::machine::cd_audio::Volume::new([128, 0, 128, 0]).unwrap()
+}
+
 fn queue() -> Queue {
     Queue::new(
         stream(),
@@ -46,6 +50,20 @@ fn sector(value: u8) -> Vec<u8> {
     }
     bytes
 }
+fn drive_gain(frames: Vec<[i16; 2]>) -> Vec<[i16; 2]> {
+    frames
+        .into_iter()
+        .map(|frame| {
+            frame.map(|sample| {
+                let scaled = (i64::from(sample) * 128 * 33617)
+                    .div_euclid(1 << 22)
+                    .clamp(-32768, 32767);
+                (scaled * 31880).div_euclid(1 << 15) as i16
+            })
+        })
+        .collect()
+}
+
 fn drain(queue: &mut Queue) -> Vec<[i16; 2]> {
     let mut frames = Vec::new();
     while queue.statistics().queued_frames != 0 {
@@ -81,15 +99,15 @@ fn port(bus: &mut Interconnect, bank: u32, offset: u32, value: u32) {
 fn backlog_drop_preserves_histories_and_ten_frame_boundary() {
     let mut queue = queue();
     let mut direct = reference();
-    let expected_first = direct.sector(&sector(0x12)).unwrap();
+    let expected_first = drive_gain(direct.sector(&sector(0x12)).unwrap());
     assert_eq!(
-        queue.sector(&sector(0x12), false).unwrap(),
+        queue.sector(&sector(0x12), false, &volume()).unwrap(),
         Admission::Queued {
             frames: expected_first.len()
         }
     );
     assert_eq!(
-        queue.sector(&sector(0x76), false).unwrap(),
+        queue.sector(&sector(0x76), false, &volume()).unwrap(),
         Admission::Dropped {
             buffered_frames: expected_first.len()
         }
@@ -100,16 +118,16 @@ fn backlog_drop_preserves_histories_and_ten_frame_boundary() {
         queue.consume();
     }
     assert_eq!(
-        queue.sector(&sector(0x65), false).unwrap(),
+        queue.sector(&sector(0x65), false, &volume()).unwrap(),
         Admission::Dropped {
             buffered_frames: 11
         }
     );
     actual.push(queue.preview());
     queue.consume();
-    let second = direct.sector(&sector(0x34)).unwrap();
+    let second = drive_gain(direct.sector(&sector(0x34)).unwrap());
     assert_eq!(
-        queue.sector(&sector(0x34), false).unwrap(),
+        queue.sector(&sector(0x34), false, &volume()).unwrap(),
         Admission::Queued {
             frames: second.len()
         }
@@ -132,22 +150,29 @@ fn muted_sector_advances_predictors_only_and_keeps_buffered_tail() {
         Resampling::EmulatorReference,
     )
     .unwrap();
-    let first = filter
-        .process(&decoder.decode_sector(&sector(0x12)).unwrap())
-        .unwrap();
-    queue.sector(&sector(0x12), false).unwrap();
+    let first = drive_gain(
+        filter
+            .process(&decoder.decode_sector(&sector(0x12)).unwrap())
+            .unwrap(),
+    );
+    queue.sector(&sector(0x12), false, &volume()).unwrap();
     for _ in 0..first.len() - 10 {
         queue.consume();
     }
     let old = queue.preview();
-    assert_eq!(queue.sector(&sector(0x67), true).unwrap(), Admission::Muted);
+    assert_eq!(
+        queue.sector(&sector(0x67), true, &volume()).unwrap(),
+        Admission::Muted
+    );
     decoder.decode_sector(&sector(0x67)).unwrap(); // No interpolation while muted.
     assert_eq!(queue.preview(), old);
     assert_eq!(drain(&mut queue), first[first.len() - 10..]);
-    let next = filter
-        .process(&decoder.decode_sector(&sector(0x34)).unwrap())
-        .unwrap();
-    queue.sector(&sector(0x34), false).unwrap();
+    let next = drive_gain(
+        filter
+            .process(&decoder.decode_sector(&sector(0x34)).unwrap())
+            .unwrap(),
+    );
+    queue.sector(&sector(0x34), false, &volume()).unwrap();
     assert_eq!(drain(&mut queue), next);
     assert_eq!(queue.statistics().muted_sectors, 1);
 }
@@ -164,25 +189,25 @@ fn malformed_input_and_empty_output_do_not_advance_decoder_state() {
     let mut invalid = sector(0x12);
     invalid[8 + 17 * 128 + 4] = 0xff;
     for muted in [false, true] {
-        assert!(queue.sector(&invalid, muted).is_err());
+        assert!(queue.sector(&invalid, muted, &volume()).is_err());
         assert_eq!(queue.statistics(), before);
     }
-    queue.sector(&sector(0x12), false).unwrap();
+    queue.sector(&sector(0x12), false, &volume()).unwrap();
     let before = queue.statistics();
-    assert!(queue.sector(&invalid, false).is_err()); // Validate even dropped input.
+    assert!(queue.sector(&invalid, false, &volume()).is_err()); // Validate even dropped input.
     assert_eq!(queue.statistics(), before);
     assert_eq!(
         drain(&mut queue),
-        reference().sector(&sector(0x12)).unwrap()
+        drive_gain(reference().sector(&sector(0x12)).unwrap())
     );
 }
 
 #[test]
-fn buffered_frames_use_current_matrix_and_capture_post_drive_pre_spu_gain() {
+fn buffered_frames_retain_admission_matrix_and_capture_post_drive_pre_spu_gain() {
     let mut bus = bus(queue());
     bus.enqueue_cd_audio(&sector(0x12)).unwrap();
-    let reference = reference().sector(&sector(0x12)).unwrap();
-    for (index, raw) in reference.iter().copied().take(300).enumerate() {
+    let reference = drive_gain(reference().sector(&sector(0x12)).unwrap());
+    for (index, cd) in reference.iter().copied().take(300).enumerate() {
         if index == 100 {
             // Halve both drive channels after audio is queued.
             port(&mut bus, 2, 2, 64);
@@ -192,8 +217,6 @@ fn buffered_frames_use_current_matrix_and_capture_post_drive_pre_spu_gain() {
         if index == 150 {
             port(&mut bus, 3, 3, 1);
         } // Mute future admission, not tail.
-        let gain = if index < 100 { 128 } else { 64 };
-        let cd = raw.map(|v| ((i32::from(v) * gain) >> 7) as i16);
         let expected = cd.map(|v| ((i32::from(v) >> 1) >> 1) as i16);
         assert_eq!(bus.step_spu_cd_output([0; 2]).unwrap(), expected);
         for (channel, sample) in cd.into_iter().enumerate() {
@@ -255,7 +278,7 @@ fn original_voice_queue_matches_direct_samples_at_steady_sector_rate() {
                 bus.enqueue_cd_audio(&bytes).unwrap(),
                 Admission::Queued { .. }
             ));
-            expected.extend(direct.sector(&bytes).unwrap());
+            expected.extend(drive_gain(direct.sector(&bytes).unwrap()));
             selected += 1;
         }
         for _ in 0..294 {
@@ -278,5 +301,7 @@ fn original_voice_queue_matches_direct_samples_at_steady_sector_rate() {
         ),
         (0, 0, 0)
     );
-    eprintln!("Raw VOICE queue/SPU: 256 sectors, 16 selected XA, 75,264 output frames; no drops/underruns at the supplied steady phase. This is not CPU timing or independent hardware PCM validation.");
+    eprintln!(
+        "Raw VOICE queue/SPU: 256 sectors, 16 selected XA, 75,264 output frames; no drops/underruns at the supplied steady phase. This is not CPU timing or independent hardware PCM validation."
+    );
 }

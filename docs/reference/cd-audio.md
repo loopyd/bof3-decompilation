@@ -23,7 +23,7 @@ Both Rust 37.8 kHz models index history from `p-1` and floor each product before
 summation. Native `zigzag` reads `ring[(xaRingPos-i)&31]` for `i=1..29`, shifts
 each product by 15 and saturates the sum. Bounded comparisons of original VOICE
 mono and S_XA00 stereo 4-bit sectors confirm `CombinedRounded` decoding, mono
-expansion and this alignment when the native gain stages are applied separately.
+expansion and this alignment with the native gain stages.
 They cover consumed output under the captured settings, including distinct stereo
 channels. Remaining queued output, other formats and histories, and hardware
 fidelity require separate evidence.
@@ -36,11 +36,17 @@ inserts the midpoint of each sample pair and runs the resulting 37.8 kHz input
 through the shared zigzag filter. Neither the retained half-rate policy nor the
 native implementation establishes half-rate hardware fidelity.
 
-Native ATV gain also differs from the Rust diagnostic matrix. XA applies integer
-scales 33617 before saturation and 31880 afterward; CD-DA uses 31130 before
-saturation and 31880 afterward. The native feed then applies the configured host
-volume divisor. Capture stage, settings and these gain differences must remain
-explicit in comparisons.
+Rust `Volume::apply_xa` follows native XA gain: sum each output's matrix
+products in signed 64-bit arithmetic, multiply by 33617, shift by 22, saturate to
+signed 16-bit, then multiply by 31880 and shift by 15. The queue applies this
+gain at sector admission. A bounded original stereo capture confirms unity and
+an asymmetric crossed matrix, including old queued output consumed after a
+latch. Clipping cases and other matrices need separate native evidence.
+
+Native CD-DA uses 31130 before saturation and 31880 afterward. Rust's XA gain
+API does not implement CD-DA. The native feed also applies the configured host
+volume divisor. That host setting and the capture stage remain explicit
+comparison inputs, separate from drive gain.
 
 [Rust implementation and checks](../specs/formats/audio.md#rust-cdxa-sample-processing)
 retain startup phase, history, gain limits and timing boundaries. Emphasis, drive
@@ -129,18 +135,19 @@ verification open.
 The [Rust queue](../../tools/rust/bof3-audio/src/machine/cd_queue.rs) retains a
 diagnostic policy that drops incoming XA above ten buffered frames without
 committing decoder history. Muted admission decodes ADPCM but skips resampling
-and insertion. Output applies current drive-matrix gain after popping a frame
-and supplies zero when empty. The watermark and ordering are retained model
-choices requiring independent lifecycle/timing evidence.
+and insertion. Unmuted admission applies active drive gain after interpolation
+and stores the scaled frames. Later latches leave queued frames unchanged.
+Output supplies the stored frame, or zero when empty. The watermark remains
+a diagnostic model choice requiring independent lifecycle and timing evidence.
 
 Native `playXASector` decodes accepted sectors before deciding whether mute
 permits a feed. `FeedXA` applies ATV gain before submission to the separate CD
 stream; the [audio callback](../../third_party/pcsx-redux-agentic/src/spu/sdlaudio.cc)
 zero-fills stream underruns. These owners do not implement the Rust ten-frame
-admission rule or dequeue-time gain policy.
+admission rule. The Rust gain placement follows native feed-time processing.
 
 [The Rust queue and SPU checks](../specs/formats/audio.md#rust-xa-audio-queue-and-spu-consumption)
-retain those ordering choices, expose drops/underruns, and additionally reject
+retain the diagnostic admission policy, expose drops and underruns, and reject
 malformed sectors even when they would be dropped. Explicit steady-rate raw-disc
 tests and the original scheduler fixture establish functional routing only.
 The [XA interleave discussion](https://psx-spx.consoledev.net/cdromformat/)

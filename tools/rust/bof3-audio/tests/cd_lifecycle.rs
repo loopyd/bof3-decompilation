@@ -18,6 +18,10 @@ fn stream(channel: u8, coding: u8) -> Stream {
         coding,
     }
 }
+fn volume() -> bof3_audio::machine::cd_audio::Volume {
+    bof3_audio::machine::cd_audio::Volume::new([128, 0, 128, 0]).unwrap()
+}
+
 fn queue(channel: u8, coding: u8) -> Queue {
     Queue::new(
         stream(channel, coding),
@@ -99,7 +103,7 @@ fn apply(
 #[test]
 fn reset_rebinds_channel_and_format_with_fresh_history_after_validation() {
     let mut q = queue(0, 0);
-    q.sector(&sector(0, 0), false).unwrap();
+    q.sector(&sector(0, 0), false, &volume()).unwrap();
     for _ in 0..31 {
         q.consume();
     }
@@ -109,13 +113,13 @@ fn reset_rebinds_channel_and_format_with_fresh_history_after_validation() {
     let before = q.statistics();
     let mut invalid = sector(1, 1);
     invalid[5] = 3;
-    assert!(q.sector(&invalid, false).is_err());
+    assert!(q.sector(&invalid, false, &volume()).is_err());
     assert_eq!(q.statistics(), before);
     let mut fresh = queue(2, 5);
     let bytes = sector(2, 5);
     assert_eq!(
-        q.sector(&bytes, false).unwrap(),
-        fresh.sector(&bytes, false).unwrap()
+        q.sector(&bytes, false, &volume()).unwrap(),
+        fresh.sector(&bytes, false, &volume()).unwrap()
     );
     while fresh.statistics().queued_frames != 0 {
         assert_eq!(q.preview(), fresh.preview());
@@ -124,7 +128,7 @@ fn reset_rebinds_channel_and_format_with_fresh_history_after_validation() {
     }
     assert_eq!(q.statistics().reset_discarded_frames, discarded as u64);
     assert_eq!(q.statistics().resets, 1);
-    assert!(q.sector(&sector(3, 5), false).is_err()); // No mid-stream rebind.
+    assert!(q.sector(&sector(3, 5), false, &volume()).is_err()); // No mid-stream rebind.
 }
 
 #[test]

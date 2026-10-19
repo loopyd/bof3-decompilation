@@ -131,8 +131,8 @@ fn clearing_parameters_and_audio_register_banks_preserve_independent_state() {
     assert_eq!(host.volume().active(), [128, 0, 128, 0]);
     host.write(3, 0x21).unwrap();
     assert_eq!(host.volume().active(), [64, 32, 64, 32]);
-    assert_eq!(host.volume().apply([1000, -1000], false), [250, -250]);
-    assert_eq!(host.volume().apply([1000, -1000], true), [0, 0]);
+    assert_eq!(host.volume().apply_xa([1000, -1000]), [249, -251]);
+    assert!(host.volume().xa_muted());
 }
 
 #[test]

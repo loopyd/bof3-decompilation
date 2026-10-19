@@ -218,16 +218,17 @@ impl Volume {
         }
         Ok(())
     }
-    /// A supplied sample at the caller's output boundary. This does not choose
-    /// whether mute changes decoder/FIFO state; the drive execution owner must.
-    pub fn apply(&self, frame: [i16; 2], xa: bool) -> [i16; 2] {
-        if xa && self.xa_muted {
-            return [0; 2];
-        }
-        let part = |sample, volume| (i32::from(sample) * i32::from(volume)) >> 7;
+    /// Native XA gain at sector admission, after interpolation. The queue
+    /// owner handles mute before interpolation; queued samples retain this gain.
+    pub fn apply_xa(&self, frame: [i16; 2]) -> [i16; 2] {
+        let part = |sample, volume| i64::from(sample) * i64::from(volume);
+        let scale = |sum: i64| {
+            let clipped = ((sum * 33617) >> 22).clamp(-32768, 32767);
+            ((clipped * 31880) >> 15) as i16
+        };
         [
-            clip(part(frame[0], self.active[0]) + part(frame[1], self.active[3])),
-            clip(part(frame[0], self.active[1]) + part(frame[1], self.active[2])),
+            scale(part(frame[0], self.active[0]) + part(frame[1], self.active[3])),
+            scale(part(frame[0], self.active[1]) + part(frame[1], self.active[2])),
         ]
     }
 }

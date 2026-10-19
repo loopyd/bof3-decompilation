@@ -349,7 +349,7 @@ fn decoded_xa_passes_drive_routing_before_spu_gain_and_capture() {
     bus.write(0x1f801d80, Width::Word, 0x20002000).unwrap();
     let mut signal = false;
     for (frame, input) in frames.into_iter().take(300).enumerate() {
-        let cd = volume.apply(input, true);
+        let cd = volume.apply_xa(input);
         let output = bus
             .step_spu_output(Inputs {
                 cd,

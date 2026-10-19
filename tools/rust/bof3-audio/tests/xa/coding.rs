@@ -17,6 +17,10 @@ struct Vector {
     sha256: String,
 }
 
+fn volume() -> bof3_audio::machine::cd_audio::Volume {
+    bof3_audio::machine::cd_audio::Volume::new([128, 0, 128, 0]).unwrap()
+}
+
 fn queue(coding: u8, resampling: Resampling) -> Queue {
     Queue::new(
         Stream {
@@ -70,13 +74,18 @@ fn all_coding_transitions_match_independent_state_and_arithmetic_vectors() {
         assert_eq!(hash, vector.sha256);
         let mut q = queue(vector.first, Resampling::EmulatorReference);
         let mut output = Vec::new();
-        q.sector(&sector(vector.first, 1), false).unwrap();
+        q.sector(&sector(vector.first, 1), false, &volume())
+            .unwrap();
         assert_eq!(q.statistics().queued_frames, vector.counts[0]);
         if vector.admission != "dropped" {
             output.extend(drain(&mut q));
         }
         let second = q
-            .sector(&sector(vector.second, 2), vector.admission == "muted")
+            .sector(
+                &sector(vector.second, 2),
+                vector.admission == "muted",
+                &volume(),
+            )
             .unwrap();
         match vector.admission.as_str() {
             "queued" => assert_eq!(
@@ -95,7 +104,8 @@ fn all_coding_transitions_match_independent_state_and_arithmetic_vectors() {
             _ => panic!("unknown reference admission"),
         }
         output.extend(drain(&mut q));
-        q.sector(&sector(vector.first, 3), false).unwrap();
+        q.sector(&sector(vector.first, 3), false, &volume())
+            .unwrap();
         let last = drain(&mut q);
         assert_eq!(last.len(), vector.counts[2]);
         output.extend(last);
@@ -122,26 +132,26 @@ fn unsupported_or_malformed_transition_is_atomic_and_published_model_stays_expli
         let mut q = queue(1, resampling);
         let mut reference = queue(1, resampling);
         let first = sector(1, 1);
-        q.sector(&first, false).unwrap();
-        reference.sector(&first, false).unwrap();
+        q.sector(&first, false, &volume()).unwrap();
+        reference.sector(&first, false, &volume()).unwrap();
         let before = q.statistics();
         let mut malformed = sector(0x14, 2);
         malformed[8 + 17 * 128 + 4] = 0xf8;
         for bytes in [vec![], sector(0x40, 2), sector(2, 2), malformed] {
-            assert!(q.sector(&bytes, false).is_err());
+            assert!(q.sector(&bytes, false, &volume()).is_err());
             assert_eq!(q.statistics(), before);
         }
         if resampling == Resampling::Published37800 {
             assert!(q
-                .sector(&sector(0, 2), false)
+                .sector(&sector(0, 2), false, &volume())
                 .unwrap_err()
                 .to_string()
                 .contains("emulator-reference"));
             assert_eq!(q.statistics(), before);
         }
         assert_eq!(drain(&mut q), drain(&mut reference));
-        q.sector(&sector(1, 3), false).unwrap();
-        reference.sector(&sector(1, 3), false).unwrap();
+        q.sector(&sector(1, 3), false, &volume()).unwrap();
+        reference.sector(&sector(1, 3), false, &volume()).unwrap();
         assert_eq!(drain(&mut q), drain(&mut reference));
     }
 }
@@ -149,21 +159,21 @@ fn unsupported_or_malformed_transition_is_atomic_and_published_model_stays_expli
 #[test]
 fn coding_changes_do_not_release_identity_but_eof_allows_both_to_change() {
     let mut q = queue(1, Resampling::EmulatorReference);
-    q.sector(&sector(1, 1), false).unwrap();
+    q.sector(&sector(1, 1), false, &volume()).unwrap();
     drain(&mut q);
     let mut other = sector(0x14, 2);
     other[1] = 7;
     other[5] = 7;
-    assert!(q.sector(&other, false).is_err());
+    assert!(q.sector(&other, false, &volume()).is_err());
     let mut eof = sector(0, 2);
     eof[2] |= 0x80;
     eof[6] |= 0x80;
-    q.sector(&eof, false).unwrap();
+    q.sector(&eof, false, &volume()).unwrap();
     drain(&mut q);
     assert!(matches!(
-        q.sector(&other, false).unwrap(),
+        q.sector(&other, false, &volume()).unwrap(),
         Admission::Queued { .. }
     ));
     drain(&mut q);
-    assert!(q.sector(&sector(0x14, 3), false).is_err());
+    assert!(q.sector(&sector(0x14, 3), false, &volume()).is_err());
 }

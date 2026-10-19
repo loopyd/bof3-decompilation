@@ -1,5 +1,5 @@
 //! XA decode-to-SPU queue. Caller supplies sector arrivals and output boundaries.
-use super::cd_audio::{Model as Resampling, XaAudio};
+use super::cd_audio::{Model as Resampling, Volume, XaAudio};
 use crate::{
     xa::{Arithmetic, Histories, Stream},
     Result,
@@ -8,7 +8,7 @@ use std::collections::VecDeque;
 
 #[derive(Clone, Copy, Debug)]
 pub enum Model {
-    /// Inspected emulator: reject admission above ten buffered frames by
+    /// Retained diagnostic policy: reject admission above ten buffered frames by
     /// dropping that sector without advancing histories; empty output is zero.
     /// Physical queue capacity, latency and lifecycle remain unverified.
     EmulatorReference,
@@ -89,8 +89,13 @@ impl Queue {
 
     /// Input must already be selected by the drive. Validate on a private
     /// decoder candidate so errors and dropped sectors preserve both histories.
-    /// Muting affects newly admitted sectors, not frames already queued.
-    pub fn sector(&mut self, bytes: &[u8], muted: bool) -> Result<Admission> {
+    /// Mute and active gain affect newly admitted sectors, not queued frames.
+    pub fn sector(
+        &mut self,
+        bytes: &[u8],
+        command_muted: bool,
+        volume: &Volume,
+    ) -> Result<Admission> {
         if bytes.len() != 2336 {
             return Err("XA queue requires one whole selected sector".into());
         }
@@ -115,7 +120,7 @@ impl Queue {
         let blocked = match self.model {
             Model::EmulatorReference => self.frames.len() > 10,
         };
-        if blocked || muted {
+        if blocked || command_muted || volume.xa_muted() {
             let binding = candidate.clone();
             candidate.muted_sector(bytes)?;
             self.selection_released = bytes[2] & 0x80 != 0;
@@ -133,13 +138,14 @@ impl Queue {
         let frames = candidate.sector(bytes)?;
         self.selection_released = bytes[2] & 0x80 != 0;
         let count = frames.len();
-        self.frames.extend(frames);
+        self.frames
+            .extend(frames.into_iter().map(|frame| volume.apply_xa(frame)));
         self.audio = Some(candidate);
         self.statistics.admitted_sectors += 1;
         Ok(Admission::Queued { frames: count })
     }
 
-    /// Before current drive-volume coefficients are applied. Empty output does
+    /// Post-drive-gain frame, ready for SPU CD input. Empty output does
     /// not advance decoder/interpolation history or invent buffered samples.
     pub fn preview(&self) -> [i16; 2] {
         self.frames.front().copied().unwrap_or([0; 2])

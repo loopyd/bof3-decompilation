@@ -140,21 +140,21 @@ fn sectors_keep_phase_and_reject_identity_or_decode_errors_without_advancing() {
 fn drive_matrix_latches_atomically_and_preserves_stereo_swap_mono_and_mute() {
     let mut volume = Volume::new([128, 0, 128, 0]).unwrap();
     let frame = [10001, -10001];
-    assert_eq!(volume.apply(frame, true), frame);
+    assert_eq!(volume.apply_xa(frame), [9981, -9983]);
     for (bank, offset, value) in [(2, 2, 0), (2, 3, 128), (3, 1, 0), (3, 2, 128)] {
         volume.write(bank, offset, value).unwrap();
     }
-    assert_eq!(volume.apply(frame, true), frame);
+    assert_eq!(volume.apply_xa(frame), [9981, -9983]);
     volume.write(3, 3, 0x20).unwrap();
-    assert_eq!(volume.apply(frame, true), [-10001, 10001]);
+    assert_eq!(volume.apply_xa(frame), [-9983, 9981]);
     for (bank, offset) in [(2, 2), (2, 3), (3, 1), (3, 2)] {
         volume.write(bank, offset, 64).unwrap();
     }
     volume.write(3, 3, 0x20).unwrap();
-    assert_eq!(volume.apply(frame, true), [-1, -1]); // Each product floors separately.
+    assert_eq!(volume.apply_xa(frame), [0, 0]); // Matrix products sum before scaling.
     volume.write(3, 3, 1).unwrap();
-    assert_eq!(volume.apply(frame, true), [0; 2]);
-    assert_eq!(volume.apply(frame, false), [-1, -1]);
+    assert_eq!(volume.apply_xa(frame), [0; 2]);
+    assert!(volume.xa_muted());
     let old = volume.active();
     for (bank, offset) in [(2, 2), (2, 3), (3, 1), (3, 2)] {
         volume.write(bank, offset, 255).unwrap();
@@ -166,8 +166,8 @@ fn drive_matrix_latches_atomically_and_preserves_stereo_swap_mono_and_mute() {
     assert!(volume.write(0, 1, 0).is_err());
     assert!(Volume::new([255; 4]).is_err());
     let double = Volume::new([128; 4]).unwrap();
-    assert_eq!(double.apply([32767; 2], false), [32767; 2]);
-    assert_eq!(double.apply([-32768; 2], false), [-32768; 2]);
+    assert_eq!(double.apply_xa([32767; 2]), [31879; 2]);
+    assert_eq!(double.apply_xa([-32768; 2]), [-31880; 2]);
 }
 
 #[test]

@@ -2377,8 +2377,8 @@ reset, end padding or tail flush. Extraction remains at encoded rate.
 uses the same 37.8 kHz history alignment, with the first tap at the most recently
 written sample. A bounded original mono 4-bit comparison agrees with the
 [native XA/CDDA submission path](../../../third_party/pcsx-redux-agentic/src/spu/xa.cc)
-after separate native gain conversion. The diagnostic drive matrix below still
-differs from those native gain stages. The distinct half-rate filter, wider
+with native gain conversion. The production XA matrix below follows those
+gain stages. The distinct half-rate filter, wider
 formats and histories, and output left queued remain unaccepted.
 Both require explicit selection; neither establishes hardware fidelity. See
 [coefficient provenance and differences](../../reference/cd-audio.md). Reset
@@ -2390,13 +2390,15 @@ Malformed stereo input or failed sector decoding leaves processing state intact.
 Emphasis remains unsupported.
 
 Drive volume is separate from SPU input gain. Its four staged coefficients cover
-both direct and crossed routes, latch together on ADPCTL apply, floor each product
-separately and saturate the sum. The caller supplies initial coefficients; no BIOS
+both direct and crossed routes and latch together on ADPCTL apply.
+`Volume::apply_xa` sums each output's products in signed 64-bit arithmetic,
+multiplies by 33617, shifts by 22, saturates to signed 16-bit, then multiplies
+by 31880 and shifts by 15. The caller supplies initial coefficients; no BIOS
 default is inferred. Gains exceeding double volume per output reject before
 latching because the hardware's larger-gain saturation is unresolved. Reserved
-control bits also reject. The component can mute supplied XA output independently
-of CDDA, but does not decide mute's effect on decoding, interpolation or queued
-frames. The CD host register owner above now decodes its bank/offset writes;
+control bits also reject. The queue samples command and register XA mute before
+interpolation. CDDA gain is not implemented by this API. The CD host register
+owner above decodes the bank and offset writes;
 drive-command execution, sector scheduling and FIFO/audio lifecycle remain open.
 
 [CD processing checks](../../../tools/rust/bof3-audio/tests/cd_audio.rs) compare
@@ -2414,22 +2416,24 @@ de-emphasis and independent hardware audio remain required.
 
 [The XA queue](../../../tools/rust/bof3-audio/src/machine/cd_queue.rs) connects
 sector decoding/resampling to frame consumption. Its required
-`Model::EmulatorReference` follows the inspected emulator's admission rule:
+`Model::EmulatorReference` retains a diagnostic admission rule:
 more than ten buffered frames drops the arriving sector without committing
 predictor or interpolation history. Ten or fewer permits admission. Drops,
 muted sectors, actual frame consumption and empty output are counted separately.
-Unlike the comparison implementation's early return, Rust still validates a
-dropped sector on a private decoder candidate; malformed input fails without
+Rust validates even a dropped sector on a private decoder candidate.
+Malformed input fails without
 changing the queue, statistics or either history. No hardware capacity or clock
 latency is inferred from this rule.
 
 XA mute is sampled at sector admission. An admitted muted sector advances ADPCM
 predictor history, but does not resample or append output. Previously queued
-frames remain available. `Interconnect::step_spu_cd_output` applies the host's
-current drive-volume matrix as each frame is consumed, then uses existing SPU
-CD gain, routing, reverb and final gain. Capture therefore sees post-drive,
-pre-SPU-gain samples. The low-level `Volume::apply` convenience mute flag does
-not govern queued-frame lifetime; the queue handles admission mute separately.
+frames remain available. Unmuted admission applies the active drive matrix
+after interpolation, before insertion. Later volume latches do not rescale the
+queued tail. `Interconnect::step_spu_cd_output` passes those frames to the
+existing SPU CD gain, routing, reverb and final gain. Capture therefore sees
+post-drive, pre-SPU-gain samples. A bounded native original stereo comparison
+confirms unity and asymmetric crossed gain across a guest latch with old output
+still queued. Clipping and other matrices remain unaccepted against native output.
 Empty queue output is zero under the selected reference model and does not
 advance decoder history. Seek/read/Pause reset and CD command mute are now
 connected through the command lifecycle below. EOF selection release and coding

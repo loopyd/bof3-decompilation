@@ -20,6 +20,10 @@ fn stream(channel: u8) -> Stream {
     }
 }
 
+fn volume() -> bof3_audio::machine::cd_audio::Volume {
+    bof3_audio::machine::cd_audio::Volume::new([128, 0, 128, 0]).unwrap()
+}
+
 fn queue() -> Queue {
     Queue::new(
         stream(0),
@@ -65,6 +69,20 @@ fn command(opcode: u8, parameters: &[u8]) -> Command {
         opcode,
         parameters: parameters.to_vec(),
     }
+}
+
+fn drive_gain(frames: Vec<[i16; 2]>) -> Vec<[i16; 2]> {
+    frames
+        .into_iter()
+        .map(|frame| {
+            frame.map(|sample| {
+                let scaled = (i64::from(sample) * 128 * 33617)
+                    .div_euclid(1 << 22)
+                    .clamp(-32768, 32767);
+                (scaled * 31880).div_euclid(1 << 15) as i16
+            })
+        })
+        .collect()
 }
 
 fn drain(queue: &mut Queue) -> Vec<[i16; 2]> {
@@ -127,17 +145,17 @@ fn eof_rebinding_keeps_predictors_filter_history_and_tail_for_each_admission() {
         let mut q = queue();
         let mut reference = audio();
         let first = sector(0, 0x64, 0x12);
-        q.sector(&first, false).unwrap();
-        let first_frames = reference.sector(&first).unwrap();
+        q.sector(&first, false, &volume()).unwrap();
+        let first_frames = drive_gain(reference.sector(&first).unwrap());
         if admission != 2 {
             assert_eq!(drain(&mut q), first_frames);
         }
         let eof = sector(0, 0xe4, 0x76);
-        let result = q.sector(&eof, admission == 1).unwrap();
+        let result = q.sector(&eof, admission == 1, &volume()).unwrap();
         match admission {
             0 => {
                 assert!(matches!(result, Admission::Queued { .. }));
-                assert_eq!(drain(&mut q), reference.sector(&eof).unwrap());
+                assert_eq!(drain(&mut q), drive_gain(reference.sector(&eof).unwrap()));
             }
             1 => {
                 assert_eq!(result, Admission::Muted);
@@ -150,7 +168,7 @@ fn eof_rebinding_keeps_predictors_filter_history_and_tail_for_each_admission() {
             }
         }
         let next = sector(1, 0x64, 0x34);
-        q.sector(&next, false).unwrap();
+        q.sector(&next, false, &volume()).unwrap();
         let normalized = sector(0, 0x64, 0x34);
         let expected = if admission == 1 {
             use bof3_audio::{machine::cd_audio::Resampler, xa::Decoder};
@@ -162,49 +180,51 @@ fn eof_rebinding_keeps_predictors_filter_history_and_tail_for_each_admission() {
                 .process(&decoder.decode_sector(&first).unwrap())
                 .unwrap();
             decoder.decode_sector(&eof).unwrap();
-            resampler
-                .process(&decoder.decode_sector(&normalized).unwrap())
-                .unwrap()
+            drive_gain(
+                resampler
+                    .process(&decoder.decode_sector(&normalized).unwrap())
+                    .unwrap(),
+            )
         } else {
-            reference.sector(&normalized).unwrap()
+            drive_gain(reference.sector(&normalized).unwrap())
         };
         assert_ne!(
             expected,
-            audio().sector(&normalized).unwrap(),
+            drive_gain(audio().sector(&normalized).unwrap()),
             "must distinguish retained history from reset"
         );
         assert_eq!(drain(&mut q), expected);
-        assert!(q.sector(&sector(2, 0x64, 0), false).is_err());
+        assert!(q.sector(&sector(2, 0x64, 0), false, &volume()).is_err());
     }
 }
 
 #[test]
 fn rejected_eof_and_unsupported_coding_preserve_selection_and_audio_state() {
     let mut q = queue();
-    q.sector(&sector(0, 0x64, 0x12), false).unwrap();
+    q.sector(&sector(0, 0x64, 0x12), false, &volume()).unwrap();
     let before = q.statistics();
     let mut bad = sector(0, 0xe4, 0);
     bad[8 + 17 * 128 + 4] = 0xf8;
-    assert!(q.sector(&bad, false).is_err());
+    assert!(q.sector(&bad, false, &volume()).is_err());
     assert_eq!(q.statistics(), before);
-    assert!(q.sector(&sector(1, 0x64, 0), false).is_err());
-    q.sector(&sector(0, 0xe4, 0), false).unwrap(); // dropped, but releases selection
+    assert!(q.sector(&sector(1, 0x64, 0), false, &volume()).is_err());
+    q.sector(&sector(0, 0xe4, 0), false, &volume()).unwrap(); // dropped, but releases selection
     let before = q.statistics();
     let mut changed = sector(1, 0x64, 0);
     changed[3] = 0x40;
     changed[7] = 0x40;
     assert!(q
-        .sector(&changed, false)
+        .sector(&changed, false, &volume())
         .unwrap_err()
         .to_string()
         .contains("emphasis"));
     assert_eq!(q.statistics(), before);
     assert!(matches!(
-        q.sector(&sector(1, 0x64, 0), false).unwrap(),
+        q.sector(&sector(1, 0x64, 0), false, &volume()).unwrap(),
         Admission::Dropped { .. }
     ));
     // A dropped first sector still acquires selection; another channel fails.
-    assert!(q.sector(&sector(2, 0x64, 0), false).is_err());
+    assert!(q.sector(&sector(2, 0x64, 0), false, &volume()).is_err());
 }
 
 #[test]
@@ -245,16 +265,16 @@ fn selection_release_preserves_tail_and_continuous_decoder_history() {
     let mut q = queue();
     let mut reference = audio();
     let first = sector(0, 0x64, 0x12);
-    q.sector(&first, false).unwrap();
-    let expected = reference.sector(&first).unwrap();
+    q.sector(&first, false, &volume()).unwrap();
+    let expected = drive_gain(reference.sector(&first).unwrap());
     let before = q.statistics();
     q.release_selection();
     assert_eq!(q.statistics(), before);
     assert_eq!(drain(&mut q), expected);
-    q.sector(&sector(1, 0x64, 0x34), false).unwrap();
+    q.sector(&sector(1, 0x64, 0x34), false, &volume()).unwrap();
     let normalized = sector(0, 0x64, 0x34);
-    let expected = reference.sector(&normalized).unwrap();
-    assert_ne!(expected, audio().sector(&normalized).unwrap());
+    let expected = drive_gain(reference.sector(&normalized).unwrap());
+    assert_ne!(expected, drive_gain(audio().sector(&normalized).unwrap()));
     assert_eq!(drain(&mut q), expected);
 }
 
@@ -288,15 +308,17 @@ fn raw_voice_automatic_selection_decodes_complete_first_stream() {
             }
             channels.insert((bytes[0], bytes[1]));
             assert!(matches!(
-                q.sector(&bytes, false).unwrap(),
+                q.sector(&bytes, false, &volume()).unwrap(),
                 Admission::Queued { .. }
             ));
             let actual = drain(&mut q);
-            assert_eq!(actual, reference.sector(&bytes).unwrap());
+            assert_eq!(actual, drive_gain(reference.sector(&bytes).unwrap()));
             frames += actual.len();
         }
     }
-    println!("Raw VOICE selection: {count} sectors, {selected} selected, {eof} EOF at sector {eof_at:?}, {channels:?}, {frames} frames; explicit drain per sector, no timing claim");
+    println!(
+        "Raw VOICE selection: {count} sectors, {selected} selected, {eof} EOF at sector {eof_at:?}, {channels:?}, {frames} frames; explicit drain per sector, no timing claim"
+    );
     // This corpus has no cross-channel handoff after the selected EOF. The
     // synthetic tests above deliberately exercise that separate requirement.
     assert_eq!((count, selected, eof, frames), (3536, 71, 1, 333984));

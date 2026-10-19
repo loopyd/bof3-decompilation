@@ -31,18 +31,17 @@ impl Interconnect {
         &mut self,
         sector: &[u8],
     ) -> crate::Result<crate::machine::cd_queue::Admission> {
-        let muted = self.cd_host()?.volume().xa_muted() || self.cd_command_muted;
+        let host = self.cd_host.as_ref().ok_or("CD host is not configured")?;
         self.cd_audio
             .as_mut()
             .ok_or("CD audio is not configured")?
-            .sector(sector, muted)
+            .sector(sector, self.cd_command_muted, host.volume())
     }
-    /// One supplied SPU frame boundary. Drive matrix gain is applied now, while
-    /// XA mute was applied at sector admission. Failed SPU output retains the
+    /// One supplied SPU frame boundary. Drive gain and XA mute were applied
+    /// at sector admission. Failed SPU output retains the
     /// queued frame; the existing SPU engine may have advanced internal state.
     pub fn step_spu_cd_output(&mut self, external: [i16; 2]) -> crate::Result<[i16; 2]> {
-        let raw = self.cd_audio()?.preview();
-        let cd = self.cd_host()?.volume().apply(raw, false);
+        let cd = self.cd_audio()?.preview();
         let output = self.step_spu_output(super::SpuInputs { cd, external })?;
         self.cd_audio.as_mut().unwrap().consume();
         Ok(output)
