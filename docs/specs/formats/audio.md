@@ -4036,6 +4036,24 @@ This requires the export to contain an empty-program instrument already. Mixing
 it with audible tone templates is unsupported. Simultaneous replacements and
 populations may still copy validated source rows from programs being cleared.
 
+Existing audible tones may change to a nonempty contiguous range of ordered
+singleton key zones. Retained keys use their recorded positive-pitch contexts.
+New keys require the hash-identified original pitch reference and a positive,
+representable mapping through the verified pitch table. Missing references,
+mutable adjacent-data reads and unsupported pitches reject the request.
+
+Range edits preserve each original instrument identity and all controls, sample
+links and loop modes. Muted or stopped-pitch source tones and combined range
+edits with control, sample, preset or other instrument changes are unsupported.
+Packing validates every fixed instrument before normalizing instrument tables.
+Raw table changes are limited to the validated key and pitch zones and the bag
+and generator indices their geometry requires. Names, generator identities and
+order, modulators, opaque terminal bytes and unrelated rows remain checked. The `key_ranges` array in bank and music song reports records
+source identities, original and output ranges, selected pitch contexts and the
+executable hash when new keys require measurements. Pure range edits change only
+the source tone's key bounds; the VAB sample body and other header bytes remain
+unchanged. These checks do not establish initialized-game or native fidelity.
+
 Appended instruments may reconstruct independent tone rows while using validated
 sample allocations and source key zones. A source tone may also supply a nonempty
 contiguous subset of its known positive-pitch keys. Retain each selected

@@ -46,6 +46,7 @@ pub struct PackedBank {
     pub pitch_controls: crate::soundfont::packing::pitch::Report,
     pub envelope_controls: crate::soundfont::packing::envelope::Report,
     pub assignments: crate::soundfont::packing::assignment::Report,
+    pub key_ranges: Vec<crate::soundfont::packing::program::KeyRangeReport>,
     pub populated_programs: Vec<crate::soundfont::packing::program::Population>,
     pub independent_instruments: Vec<crate::soundfont::packing::program::IndependentReport>,
 }
@@ -76,6 +77,7 @@ struct Allocations {
 #[derive(Default)]
 struct Structures<'a> {
     instrument_prefix: Option<&'a Font>,
+    range_prefix: Option<&'a Font>,
     allocations: Option<&'a Allocations>,
 }
 
@@ -337,6 +339,23 @@ pub fn pack_bank(
     edited: &Font,
     mut reference: Option<&mut crate::voice::tuning::Reference>,
 ) -> Result<PackedBank> {
+    let original_header_sha256 = sha256_hex(header);
+    let key_ranges = crate::soundfont::packing::program::ranges(
+        binding,
+        header,
+        baseline,
+        edited,
+        reference.as_deref_mut(),
+    )?;
+    if let Some(ranges) = &key_ranges {
+        validate_range_tables(baseline, &ranges.baseline, edited)?;
+    }
+    let range_prefix = key_ranges.as_ref().map(|_| baseline);
+    let (binding, header, baseline) = key_ranges
+        .as_ref()
+        .map_or((binding, header, baseline), |ranges| {
+            (&ranges.binding, ranges.header.as_slice(), &ranges.baseline)
+        });
     let allocations = allocations(binding, header, body, baseline, edited)?;
     let independent = crate::soundfont::packing::program::independent(
         binding,
@@ -382,6 +401,7 @@ pub fn pack_bank(
         !populated_programs.is_empty(),
         Structures {
             instrument_prefix: (!independent.tones.is_empty()).then_some(baseline),
+            range_prefix,
             allocations: Some(&allocations),
         },
     )?;
@@ -402,6 +422,7 @@ pub fn pack_bank(
     apply_allocations(&mut tones.header, &mut samples.body, &allocations)?;
     samples.report.allocated_samples = allocations.reports;
     crate::bank::Bank::parse(&tones.header)?;
+    tones.report.original_header_sha256 = original_header_sha256;
     tones.report.output_header_sha256 = sha256_hex(&tones.header);
     Ok(PackedBank {
         header: tones.header,
@@ -411,6 +432,7 @@ pub fn pack_bank(
         pitch_controls: pitch.report,
         envelope_controls: envelopes.report,
         assignments: assignments.report,
+        key_ranges: key_ranges.map_or_else(Vec::new, |ranges| ranges.report),
         populated_programs,
         independent_instruments: independent.report,
     })
@@ -463,6 +485,7 @@ fn pack_inner(
         program_edits,
         structures.instrument_prefix,
         sample_prefix,
+        structures.range_prefix,
     )?;
     let after = controls(
         edited,
@@ -470,6 +493,7 @@ fn pack_inner(
         program_edits,
         structures.instrument_prefix,
         sample_prefix,
+        structures.range_prefix,
     )?;
     if before.len() != after.len() {
         return Err("SF2 edit: added/removed metadata chunks unsupported".into());
@@ -694,12 +718,76 @@ fn modes(font: &Font) -> Result<BTreeMap<usize, u16>> {
 }
 
 type Control = ([u8; 4], [u8; 4], Vec<u8>, Option<u8>);
+
+fn instrument_table(font: &Font, id: [u8; 4]) -> Result<&[u8]> {
+    let chunk = font
+        .chunks
+        .iter()
+        .find(|c| c.scope == *b"pdta" && c.id == id)
+        .ok_or("SF2 key range: instrument table missing")?;
+    Ok(&font.original_bytes()[chunk.data.clone()])
+}
+
+/// Rebuild only indices implied by the already validated instrument zones.
+/// Names, ordered generator records and opaque terminal bytes stay exact.
+fn instrument_tables(font: &Font, original: &Font) -> Result<[([u8; 4], Vec<u8>); 3]> {
+    let mut inst = Vec::new();
+    let mut ibag = Vec::new();
+    let mut igen = Vec::new();
+    let mut modulators = 0usize;
+    for instrument in &font.instruments {
+        inst.extend(instrument.name);
+        inst.extend(u16::try_from(ibag.len() / 4)?.to_le_bytes());
+        for zone in &instrument.zones {
+            ibag.extend(u16::try_from(igen.len() / 4)?.to_le_bytes());
+            ibag.extend(u16::try_from(modulators)?.to_le_bytes());
+            modulators += zone.modulators.len();
+            for generator in &zone.generators {
+                igen.extend(generator.operator.to_le_bytes());
+                igen.extend(generator.amount.to_le_bytes());
+            }
+        }
+    }
+    let raw = instrument_table(original, *b"inst")?;
+    let mut terminal = raw[raw.len() - 22..].to_vec();
+    terminal[20..22].copy_from_slice(&u16::try_from(ibag.len() / 4)?.to_le_bytes());
+    inst.extend(terminal);
+    let raw = instrument_table(original, *b"ibag")?;
+    let mut terminal = raw[raw.len() - 4..].to_vec();
+    if terminal[2..4] != u16::try_from(modulators)?.to_le_bytes() {
+        return Err("SF2 key range: changed modulator layout unsupported".into());
+    }
+    terminal[..2].copy_from_slice(&u16::try_from(igen.len() / 4)?.to_le_bytes());
+    ibag.extend(terminal);
+    let raw = instrument_table(original, *b"igen")?;
+    igen.extend(&raw[raw.len() - 4..]);
+    Ok([(*b"inst", inst), (*b"ibag", ibag), (*b"igen", igen)])
+}
+
+fn validate_range_tables(baseline: &Font, expected: &Font, edited: &Font) -> Result<()> {
+    for (font, tables) in [
+        (baseline, instrument_tables(baseline, baseline)?),
+        (edited, instrument_tables(expected, baseline)?),
+    ] {
+        for (id, bytes) in tables {
+            if instrument_table(font, id)? != bytes {
+                return Err(format!(
+                    "SF2 key range: instrument table {} differs from validated geometry or source bytes",
+                    String::from_utf8_lossy(&id)
+                ).into());
+            }
+        }
+    }
+    Ok(())
+}
+
 fn controls(
     font: &Font,
     tone_controls: bool,
     program_edits: bool,
     instrument_prefix: Option<&Font>,
     sample_prefix: Option<&Font>,
+    range_prefix: Option<&Font>,
 ) -> Result<Vec<Control>> {
     if !matches!(font.version, (2, 1) | (2, 4)) {
         return Err("SF2 edit: only 2.01/2.04 PCM interchange is supported".into());
@@ -730,6 +818,11 @@ fn controls(
             continue;
         }
         let mut data = raw.to_vec();
+        if let Some(prefix) = range_prefix {
+            if chunk.scope == *b"pdta" && matches!(&chunk.id, b"inst" | b"ibag" | b"igen") {
+                data = instrument_table(prefix, chunk.id)?.to_vec();
+            }
+        }
         if let Some(prefix) = instrument_prefix {
             let width = match &chunk.id {
                 b"inst" => Some(22),

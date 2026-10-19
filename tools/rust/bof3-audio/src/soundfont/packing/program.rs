@@ -5,6 +5,26 @@ use std::collections::BTreeMap;
 use std::ops::Range;
 
 #[derive(Debug, Serialize)]
+pub struct KeyRangeReport {
+    pub program: u8,
+    pub tone: usize,
+    pub sf2_instrument: usize,
+    pub original_key_min: u8,
+    pub original_key_max: u8,
+    pub output_key_min: u8,
+    pub output_key_max: u8,
+    pub pitch_reference_sha256: Option<String>,
+    pub selected: Vec<crate::voice::tuning::KeyTuning>,
+}
+
+pub(crate) struct KeyRanges {
+    pub header: Vec<u8>,
+    pub binding: binding::Report,
+    pub baseline: Font,
+    pub report: Vec<KeyRangeReport>,
+}
+
+#[derive(Debug, Serialize)]
 pub struct IndependentReport {
     pub sf2_instrument: usize,
     pub source_program: u8,
@@ -216,6 +236,153 @@ fn source_view(
         binding,
         baseline: view,
     })
+}
+
+/// Validate every fixed instrument before changing a private control view.
+/// Range edits currently stand alone; other edits retain their existing path.
+pub(crate) fn ranges(
+    binding: &binding::Report,
+    header: &[u8],
+    baseline: &Font,
+    edited: &Font,
+    mut reference: Option<&mut crate::voice::tuning::Reference>,
+) -> Result<Option<KeyRanges>> {
+    let mut changes = Vec::new();
+    for (index, before) in baseline.instruments.iter().enumerate() {
+        let Some(after) = edited.instruments.get(index) else {
+            continue;
+        };
+        if key_range(&before.zones) == key_range(&after.zones) {
+            continue;
+        }
+        let (source_index, source) = binding
+            .tones
+            .iter()
+            .enumerate()
+            .find(|(_, tone)| tone.sf2_instrument == index)
+            .ok_or("SF2 key range: generated instruments cannot change their keys")?;
+        if source.silent || !source.stopped_keys.is_empty() {
+            return Err("SF2 key range: muted or stopped-pitch source tones unsupported".into());
+        }
+        if before.zones.iter().any(|zone| !zone.modulators.is_empty()) {
+            return Err("SF2 key range: source modulators unsupported".into());
+        }
+        let (key_min, key_max) = key_range(&after.zones)
+            .ok_or("SF2 key range: ordered contiguous singleton keys required")?;
+        let count = usize::from(key_max - key_min) + 1;
+        let retained = source
+            .context
+            .tuning
+            .iter()
+            .position(|row| row.key == key_min)
+            .filter(|&first| {
+                source
+                    .context
+                    .tuning
+                    .get(first..first + count)
+                    .is_some_and(|rows| {
+                        rows.iter().enumerate().all(|(offset, row)| {
+                            usize::from(row.key) == usize::from(key_min) + offset
+                        })
+                    })
+            });
+        let (view, pitch_reference_sha256) = match retained {
+            Some(first) => (
+                narrow(
+                    binding,
+                    header,
+                    baseline,
+                    source_index,
+                    first..first + count,
+                )?,
+                None,
+            ),
+            None => {
+                let reference = reference.as_deref_mut().ok_or(
+                    "SF2 key range: original game pitch reference required for new source keys",
+                )?;
+                (
+                    expand(
+                        binding,
+                        header,
+                        baseline,
+                        source_index,
+                        (key_min, key_max),
+                        reference,
+                    )?,
+                    Some(reference.profile().exe_sha256.clone()),
+                )
+            }
+        };
+        if after != &view.baseline.instruments[index] {
+            return Err(
+                "SF2 key range: combined control, sample or instrument edits unsupported".into(),
+            );
+        }
+        let report = KeyRangeReport {
+            program: source.source_program,
+            tone: source.source_tone.index,
+            sf2_instrument: index,
+            original_key_min: source.source_tone.key_min,
+            original_key_max: source.source_tone.key_max,
+            output_key_min: key_min,
+            output_key_max: key_max,
+            pitch_reference_sha256,
+            selected: view.binding.tones[source_index].context.tuning.clone(),
+        };
+        changes.push((source_index, view, report));
+    }
+    if changes.is_empty() {
+        return Ok(None);
+    }
+    if binding.header_sha256 != crate::digest::sha256_hex(header) {
+        return Err("SF2 key range: header differs from regenerated binding".into());
+    }
+    if baseline.instruments.len() != edited.instruments.len()
+        || baseline.presets != edited.presets
+        || baseline.samples != edited.samples
+        || baseline.pcm24_pool() != edited.pcm24_pool()
+    {
+        return Err("SF2 key range: combined topology, preset or sample edits unsupported".into());
+    }
+    for (index, (before, after)) in baseline
+        .instruments
+        .iter()
+        .zip(&edited.instruments)
+        .enumerate()
+    {
+        if !changes
+            .iter()
+            .any(|(_, _, report)| report.sf2_instrument == index)
+            && before != after
+        {
+            return Err("SF2 key range: combined edits to other instruments unsupported".into());
+        }
+    }
+    let mut output = KeyRanges {
+        header: header.to_vec(),
+        binding: binding.clone(),
+        baseline: Font::from_bytes(baseline.original_bytes().to_vec())?,
+        report: Vec::new(),
+    };
+    for (source_index, view, report) in changes {
+        let index = report.sf2_instrument;
+        output.binding.tones[source_index] = view.binding.tones[source_index].clone();
+        output.baseline.instruments[index] = view.baseline.instruments[index].clone();
+        let bank = &binding.source_metadata;
+        let program = bank
+            .programs
+            .iter()
+            .find(|p| p.program == report.program)
+            .ok_or("SF2 key range: source program missing")?;
+        let at = 0x820 + program.tone_block * 512 + report.tone * 32;
+        output.header[at + 6] = report.output_key_min;
+        output.header[at + 7] = report.output_key_max;
+        output.report.push(report);
+    }
+    output.binding.header_sha256 = crate::digest::sha256_hex(&output.header);
+    output.binding.source_metadata = Bank::parse(&output.header)?;
+    Ok(Some(output))
 }
 
 /// Appended instruments use contiguous singleton keys. New source keys require
