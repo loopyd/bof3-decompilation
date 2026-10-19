@@ -219,8 +219,18 @@ pub fn build_from(
 ) -> Result<Index> {
     let mut resources = Vec::new();
     let mut records = Vec::new();
+    let qualification = sources::qualification()?;
     for file in &input.files {
         let bytes = read(file)?;
+        if !qualification.files.contains(file)
+            || bytes.len() as u64 != file.size
+            || sha256_hex(&bytes) != file.sha256
+        {
+            return Err(Error::Invalid(format!(
+                "{} is not an unchanged qualified original US source",
+                file.path
+            )));
+        }
         if let Some(count) = file.emi_entries {
             let image = ArchiveImage::from_bytes(bytes)?;
             if image.version() != 1 || image.entries().len() != count {
@@ -258,6 +268,22 @@ pub fn build_from(
                     save_icon: None,
                     findings: vec!["logical records and consumers have not been enumerated".into()],
                 };
+                if let Some(storage) = match entry.file_type {
+                    6 => Some("vab-header"),
+                    7 => Some("vab-body"),
+                    10 => Some("sep-sequence-container"),
+                    _ => None,
+                } {
+                    resource.kind = "audio-owned-container".into();
+                    resource.storage = storage.into();
+                    resource.decode = "delegated-to-audio".into();
+                    resource.evidence_status = "owner-qualified".into();
+                    resource.evidence.push(
+                        "tools/rust/bof3-audio/src/catalog/mod.rs:original-us-container-ownership"
+                            .into(),
+                    );
+                    resource.findings.clear();
+                }
                 if entry.file_type == 0
                     && let Some(info) =
                         save_icon::qualify(&file.path, slot, entry.ram_ptr, payload)?
@@ -675,6 +701,8 @@ pub fn coverage(index: &Index) -> serde_json::Value {
             "inventory_matches_qualification": true,
             "inventory_sha256": index.inventory_sha256},
         "logical": {"complete": false, "records": index.records.len(),
+            "audio_owned_containers": index.resources.iter().filter(|resource| resource.kind == "audio-owned-container").count(),
+            "audio_owned_container_bytes": index.resources.iter().filter(|resource| resource.kind == "audio-owned-container").map(|resource| resource.size).sum::<u64>(),
             "record_kinds": record_kinds,
             "record_byte_accounting": "logical extents can overlap; physical bytes are counted only by the input inventory",
             "raw_uploads": raw,

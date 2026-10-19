@@ -14,6 +14,12 @@ reverse playback callers, unsupported bank variants, and runtime appearance rema
 Strict coverage and complete verification return exit 1. A successful raw upload
 edit does not establish its appearance in the game.
 
+The catalog retains qualified original audio containers as
+`audio-owned-container` resources. Textures preserves their bytes; use the
+[audio tool](../bof3-audio/README.md) for audio decoding and edits. This ownership
+disposition does not establish sample pairing, loading, playback, or the meaning
+of unused bytes.
+
 ## Build
 
 Use Rust 1.98.1 with edition 2024. The crate declares Rust 1.98 as its minimum.
