@@ -62,7 +62,7 @@ def bounded_reads(
 
 BASELINE_SCHEMA = "retdec118.corpus/v1"
 PINNED_BASELINE_SHA256 = (
-    "d32330375bd5bb296ffc75edcb37bcc79aff24bbbe3bf418f2009e1fa79c9c75"
+    "01ef8f73972f82a2fd34a554e8700b28bf1280861706adea19f9c4194fbfdb62"
 )
 DEFAULT_BASELINE_PATH = "tools/retdec-psx/corpus.json"
 
