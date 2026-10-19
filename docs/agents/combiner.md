@@ -727,11 +727,15 @@ closure, native consumer integration and byte equality remain open. A successful
 configured-provenance check never permits skipping compilation; retain terminal
 status separately.
 
-## Planned discovery and ranking
+## Discovery and ranking
 
 The cleanup node is **combiner**, with explicit discovery, assessment, audit and
-transaction modes under one concern skill. Beyond inspection/profile preflight,
-these modes are queued, not implemented. Candidates require two distinct functions and
+transaction responsibilities under one concern owner.
+`bin/harness combiner discover` supports the four methods below over a finite
+target-local pool. The [discovery contract](../../.agents/skills/bof3-re/references/tooling-contract.md#combiner-discovery)
+defines supported inputs, thresholds, ranking and refusals. Complete method
+assessments and production consolidation still require their owning acceptance gates.
+Candidates require two distinct functions and
 two existing source files; a single already-cohesive file is not a fabricated win.
 
 | Method | Evidence required before selection |
