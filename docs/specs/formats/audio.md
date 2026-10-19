@@ -928,7 +928,7 @@ the same pair; separate layered tones remain independently editable. Unchanged
 controls retain original bytes without canonicalization. Nonuniform/global-zone
 edits, unrepresentable pairs and invalid ranges fail explicitly. Silent tones
 require the joint [unmute transform](#rust-soundfont-silent-tone-unmuting).
-Topology and key-range reconstruction remain open. Note-on tuning, fitted
+Key-range edits use the separate program inverse below. Note-on tuning, fitted
 envelope changes and existing PCM assignments have separate inverses below.
 
 Several VAB pairs can produce the same quantized generators. The inverse chooses
@@ -4042,17 +4042,25 @@ New keys require the hash-identified original pitch reference and a positive,
 representable mapping through the verified pitch table. Missing references,
 mutable adjacent-data reads and unsupported pitches reject the request.
 
-Range edits preserve each original instrument identity and all controls, sample
-links and loop modes. Muted or stopped-pitch source tones and combined range
-edits with control, sample, preset or other instrument changes are unsupported.
-Packing validates every fixed instrument before normalizing instrument tables.
-Raw table changes are limited to the validated key and pitch zones and the bag
-and generator indices their geometry requires. Names, generator identities and
-order, modulators, opaque terminal bytes and unrelated rows remain checked. The `key_ranges` array in bank and music song reports records
+Range edits may also request uniform, exactly invertible attenuation and pan on
+the same tone. The gain inverse retains the original source controls and recorded
+gain model. It validates the requested controls and their forward fit before the
+packer uses the selected gain amounts to reconstruct instrument tables.
+
+Each original instrument identity, sample link, loop mode and other control stays
+fixed. Muted or stopped-pitch range sources and combined range edits with tuning,
+envelopes, samples, presets or other instruments remain unsupported. Packing
+validates original raw table ownership and every fixed instrument. Raw table
+changes are limited to the validated key and pitch zones, selected gain amounts,
+and bag and generator indices their geometry requires. Names, generator identities
+and order, modulators, opaque terminal bytes and unrelated rows remain checked.
+The `key_ranges` array in bank and music song reports records
 source identities, original and output ranges, selected pitch contexts and the
 executable hash when new keys require measurements. Pure range edits change only
 the source tone's key bounds; the VAB sample body and other header bytes remain
-unchanged. These checks do not establish initialized-game or native fidelity.
+unchanged. Combined gain edits additionally change only the selected tone's volume
+and pan bytes, as recorded in `tone_controls`. These checks do not establish
+initialized-game or native fidelity.
 
 Appended instruments may reconstruct independent tone rows while using validated
 sample allocations and source key zones. A source tone may also supply a nonempty

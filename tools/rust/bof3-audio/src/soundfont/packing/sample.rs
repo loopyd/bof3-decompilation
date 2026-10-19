@@ -347,8 +347,8 @@ pub fn pack_bank(
         edited,
         reference.as_deref_mut(),
     )?;
-    if let Some(ranges) = &key_ranges {
-        validate_range_tables(baseline, &ranges.baseline, edited)?;
+    if key_ranges.is_some() {
+        validate_range_source(baseline)?;
     }
     let range_prefix = key_ranges.as_ref().map(|_| baseline);
     let (binding, header, baseline) = key_ranges
@@ -376,6 +376,9 @@ pub fn pack_bank(
     let populated_programs =
         crate::soundfont::packing::program::derive(binding, baseline, edited, &independent)?;
     let mut tones = crate::soundfont::packing::tone::pack(binding, header, baseline, existing)?;
+    if let Some(original) = range_prefix {
+        validate_range_tables(original, baseline, existing, &tones.report)?;
+    }
     let pitch =
         crate::soundfont::packing::pitch::pack(binding, header, baseline, existing, reference)?;
     let assignments = crate::soundfont::packing::assignment::pack(
@@ -764,18 +767,45 @@ fn instrument_tables(font: &Font, original: &Font) -> Result<[([u8; 4], Vec<u8>)
     Ok([(*b"inst", inst), (*b"ibag", ibag), (*b"igen", igen)])
 }
 
-fn validate_range_tables(baseline: &Font, expected: &Font, edited: &Font) -> Result<()> {
-    for (font, tables) in [
-        (baseline, instrument_tables(baseline, baseline)?),
-        (edited, instrument_tables(expected, baseline)?),
-    ] {
-        for (id, bytes) in tables {
-            if instrument_table(font, id)? != bytes {
-                return Err(format!(
-                    "SF2 key range: instrument table {} differs from validated geometry or source bytes",
-                    String::from_utf8_lossy(&id)
-                ).into());
+fn validate_range_source(baseline: &Font) -> Result<()> {
+    for (id, bytes) in instrument_tables(baseline, baseline)? {
+        if instrument_table(baseline, id)? != bytes {
+            return Err("SF2 key range: original raw instrument ownership differs".into());
+        }
+    }
+    Ok(())
+}
+
+fn validate_range_tables(
+    baseline: &Font,
+    expected: &Font,
+    edited: &Font,
+    gains: &crate::soundfont::packing::tone::Report,
+) -> Result<()> {
+    let mut validated = Font::from_bytes(expected.original_bytes().to_vec())?;
+    validated.instruments = expected.instruments.clone();
+    for tone in gains.tones.iter().filter(|tone| tone.changed) {
+        let parameters = tone
+            .fit
+            .as_ref()
+            .and_then(|fit| fit.parameters)
+            .ok_or("SF2 key range: validated audible gain fit missing")?;
+        for zone in &mut validated.instruments[tone.sf2_instrument].zones {
+            for generator in &mut zone.generators {
+                match generator.operator {
+                    17 => generator.amount = parameters.pan as u16,
+                    48 => generator.amount = parameters.attenuation_cb,
+                    _ => (),
+                }
             }
+        }
+    }
+    for (id, bytes) in instrument_tables(&validated, baseline)? {
+        if instrument_table(edited, id)? != bytes {
+            return Err(format!(
+                "SF2 key range: instrument table {} differs from validated geometry or source bytes",
+                String::from_utf8_lossy(&id)
+            ).into());
         }
     }
     Ok(())

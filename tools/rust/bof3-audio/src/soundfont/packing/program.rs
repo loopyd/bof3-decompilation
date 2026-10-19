@@ -239,7 +239,7 @@ fn source_view(
 }
 
 /// Validate every fixed instrument before changing a private control view.
-/// Range edits currently stand alone; other edits retain their existing path.
+/// Gain/pan amounts remain subject to the separate exact inverse.
 pub(crate) fn ranges(
     binding: &binding::Report,
     header: &[u8],
@@ -314,10 +314,20 @@ pub(crate) fn ranges(
                 )
             }
         };
-        if after != &view.baseline.instruments[index] {
-            return Err(
-                "SF2 key range: combined control, sample or instrument edits unsupported".into(),
-            );
+        let expected = &view.baseline.instruments[index];
+        if after.name != expected.name
+            || after.zones.len() != expected.zones.len()
+            || after.zones.iter().zip(&expected.zones).any(|(a, b)| {
+                a.target != b.target
+                    || a.modulators != b.modulators
+                    || a.generators.len() != b.generators.len()
+                    || a.generators.iter().zip(&b.generators).any(|(a, b)| {
+                        a.operator != b.operator
+                            || (!matches!(a.operator, 17 | 48) && a.amount != b.amount)
+                    })
+            })
+        {
+            return Err("SF2 key range: combined edits beyond gain/pan unsupported".into());
         }
         let report = KeyRangeReport {
             program: source.source_program,
