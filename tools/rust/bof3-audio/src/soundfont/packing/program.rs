@@ -330,13 +330,13 @@ pub(crate) fn ranges(
                     || a.generators.len() != b.generators.len()
                     || a.generators.iter().zip(&b.generators).any(|(a, b)| {
                         a.operator != b.operator
-                            || (!matches!(a.operator, 17 | 34 | 36..=38 | 48 | 53)
+                            || (!matches!(a.operator, 17 | 34 | 36..=38 | 48 | 51..=53 | 58)
                                 && a.amount != b.amount)
                     })
             })
         {
             return Err(
-                "SF2 key range: combined edits beyond gain/pan/envelope/sample assignment unsupported".into(),
+                "SF2 key range: combined edits beyond gain/pan/pitch/envelope/sample assignment unsupported".into(),
             );
         }
         let report = KeyRangeReport {

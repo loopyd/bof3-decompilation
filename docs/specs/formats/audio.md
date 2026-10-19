@@ -965,8 +965,9 @@ the fresh original-US export. It compares their combined pitch in integer cents,
 `-100*root + 100*coarse + fine`; the unchanged MIDI key contributes the same term
 on both sides. Equivalent generator representations may therefore re-export with
 different individual values while preserving requested note-on pitch. Every
-original single-key zone must remain present and match exactly; there is no
-nearest-pitch fallback. Sample-header pitch/rate, scale tuning, key ranges,
+source single-key zone must remain present and match exactly. The enclosing range
+inverse may first reconstruct a separately validated contiguous key range. There
+is no nearest-pitch fallback. Sample-header pitch/rate, scale tuning,
 topology, modulators and unrelated generator records remain fixed.
 
 The bank API takes an optional original-executable `tuning::Reference`; a pitch
@@ -4043,21 +4044,25 @@ representable mapping through the verified pitch table. Missing references,
 mutable adjacent-data reads and unsupported pitches reject the request.
 
 Range edits may also request uniform, exactly invertible attenuation, pan and
-supported fitted-envelope changes and existing physical PCM assignments on the
-same tone. Each inverse retains its
-original source controls and recorded model. Envelope edits use the existing
+supported fitted-envelope changes, verified note-on pitch edits and existing
+physical PCM assignments on the same tone. Each inverse retains its original
+source controls and recorded model. Envelope edits use the existing
 field families and selection order described above. Attack, decay, sustain and
 release amounts may change only when a complete fitted tuple matches. Delay and
 hold stay fixed. Each range-changing instrument selects its own uniform fit.
+Pitch edits use the existing original-executable inverse over the validated output key range, retaining
+original center/shift provenance, candidate ranking and table-read restrictions.
+Each selected row must match the complete ordered keys, sample-rate context and
+requested combined cents. Legal equivalent root/coarse/fine encodings are accepted
+only after their bounds and combined pitch match that forward-verified selection.
 
 Packing checks original raw table ownership before reconstructing any range. It
 uses selected gain, per-instrument validated sample indices and forward-verified
-envelope fits to reconstruct complete
-instrument tables before sample reconstruction. Names, generator identities and
+pitch rows and envelope fits to reconstruct complete instrument tables before sample reconstruction. Names, generator identities and
 order, modulators, opaque terminal bytes and unrelated rows remain checked. Raw
 table changes are limited to validated key and pitch zones, selected gain and
-envelope amounts, validated sample links, and bag and generator indices their
-geometry requires. Both the zone target and sample generator must match the
+envelope amounts, validated root/coarse/fine amounts, validated sample links, and
+bag and generator indices their geometry requires. Both the zone target and sample generator must match the
 assignment report for that instrument.
 
 Each original instrument identity, loop mode and other control stays fixed.
@@ -4069,8 +4074,9 @@ aliases. Incompatible destinations reject before sample reconstruction. The
 entire original body remains byte-exact, including allocations losing their last
 user. Sample headers, pool, allocations and topology stay fixed.
 
-Muted or stopped-pitch range sources and combined range edits with tuning,
-sample storage, presets or instruments whose ranges did not change remain unsupported.
+Muted or stopped-pitch range sources and combined range edits with scale tuning,
+sample storage, presets or instruments whose ranges did not change remain
+unsupported.
 Envelope tuples outside the existing field families also reject the request.
 The `key_ranges` array in bank and music song reports records
 source identities, original and output ranges, selected pitch contexts and the

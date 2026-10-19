@@ -406,6 +406,7 @@ pub fn pack_bank(
             baseline,
             existing,
             &tones.report,
+            (binding, &pitch.report),
             &assignments.report,
             &envelopes.report,
         )?;
@@ -839,11 +840,174 @@ fn validate_range_destinations(
     Ok(())
 }
 
+fn range_pitch_raw(zone: &crate::soundfont::reader::model::Zone) -> [Option<u16>; 3] {
+    [58, 51, 52].map(|operator| {
+        zone.generators
+            .iter()
+            .find(|generator| generator.operator == operator)
+            .map(|generator| generator.amount)
+    })
+}
+
+fn range_pitch_values(zone: &crate::soundfont::reader::model::Zone) -> Result<(u8, [u16; 3], i32)> {
+    let mut keys = zone
+        .generators
+        .iter()
+        .filter(|generator| generator.operator == 43);
+    let key = keys
+        .next()
+        .ok_or("SF2 key range: pitch key missing")?
+        .amount;
+    let [low, high] = key.to_le_bytes();
+    if low != high || high > 127 || keys.next().is_some() {
+        return Err("SF2 key range: pitch requires one singleton key".into());
+    }
+    let raw = range_pitch_raw(zone);
+    let root = raw[0].ok_or("SF2 key range: explicit pitch root missing")?;
+    let coarse = raw[1].ok_or("SF2 key range: explicit coarse pitch missing")?;
+    let fine = raw[2].ok_or("SF2 key range: explicit fine pitch missing")?;
+    if root > 127
+        || !(-120..=120).contains(&(coarse as i16))
+        || !(-99..=99).contains(&(fine as i16))
+    {
+        return Err("SF2 key range: pitch generators outside supported bounds".into());
+    }
+    let cents = -100 * i32::from(root) + 100 * i32::from(coarse as i16) + i32::from(fine as i16);
+    Ok((low, [root, coarse, fine], cents))
+}
+
+fn validate_range_pitch(
+    binding: &binding::Report,
+    expected: &Font,
+    edited: &Font,
+    validated: &mut Font,
+    pitches: &crate::soundfont::packing::pitch::Report,
+) -> Result<()> {
+    let mut seen = BTreeSet::new();
+    for tone in &pitches.tones {
+        let mut sources = binding.tones.iter().filter(|source| {
+            source.sf2_instrument == tone.sf2_instrument
+                && source.source_program == tone.program
+                && source.source_tone.index == tone.tone
+        });
+        let source = sources
+            .next()
+            .ok_or("SF2 key range: unrelated pitch report")?;
+        if sources.next().is_some() || !seen.insert(tone.sf2_instrument) {
+            return Err("SF2 key range: duplicate pitch report identity".into());
+        }
+        if tone.original_center != source.source_tone.center
+            || tone.original_shift != source.source_tone.shift
+        {
+            return Err("SF2 key range: original pitch provenance differs".into());
+        }
+        let before = expected
+            .instruments
+            .get(tone.sf2_instrument)
+            .ok_or("SF2 key range: original pitch instrument missing")?;
+        let after = edited
+            .instruments
+            .get(tone.sf2_instrument)
+            .ok_or("SF2 key range: requested pitch instrument missing")?;
+        let count = before.zones.len();
+        let key_count = usize::from(source.source_tone.key_max)
+            .checked_sub(usize::from(source.source_tone.key_min))
+            .ok_or("SF2 key range: invalid pitch source range")?
+            + 1;
+        if count == 0
+            || count != key_count
+            || count != after.zones.len()
+            || count != source.context.tuning.len()
+            || count != tone.requested_cents.len()
+            || count != tone.selected.len()
+        {
+            return Err("SF2 key range: pitch report/key lengths differ".into());
+        }
+        let rate = expected
+            .samples
+            .get(source.source_sf2_sample)
+            .ok_or("SF2 key range: source pitch sample missing")?
+            .rate;
+        let mut changed = false;
+        for index in 0..count {
+            let (before_key, _, _) = range_pitch_values(&before.zones[index])?;
+            let (key, raw, cents) = range_pitch_values(&after.zones[index])?;
+            let row = &tone.selected[index];
+            let source_row = &source.context.tuning[index];
+            let expected_key = usize::from(source.source_tone.key_min) + index;
+            let parameters = row
+                .sf2
+                .as_ref()
+                .ok_or("SF2 key range: selected pitch is unrepresentable")?;
+            let selected_cents = -100 * i32::from(parameters.root_key)
+                + 100 * i32::from(parameters.coarse_tune)
+                + i32::from(parameters.fine_tune);
+            if usize::from(key) != expected_key
+                || before_key != key
+                || source_row.key != key
+                || row.key != key
+                || source_row.center != tone.original_center
+                || source_row.shift != tone.original_shift
+                || source_row.sf2_sample_rate != rate
+                || row.sf2_sample_rate != rate
+                || row.center != tone.output_center
+                || row.shift != tone.output_shift
+                || row.unsupported.is_some()
+                || row.effective_step == 0
+                || row.pitch_table_index.is_none()
+                || !row.pitch_lookup.is_some_and(|lookup| {
+                    matches!(
+                        lookup.region,
+                        crate::voice::tuning::LookupRegion::NoteOnPitchTable
+                            | crate::voice::tuning::LookupRegion::EarlierSpuPitchTable
+                    )
+                })
+                || parameters.root_key > 127
+                || !(-120..=120).contains(&parameters.coarse_tune)
+                || !(-99..=99).contains(&parameters.fine_tune)
+                || cents != selected_cents
+                || cents != tone.requested_cents[index]
+            {
+                return Err("SF2 key range: selected pitch/report context differs".into());
+            }
+            changed |= range_pitch_raw(&before.zones[index]) != raw.map(Some);
+            for (operator, amount) in [58, 51, 52].into_iter().zip(raw) {
+                validated.instruments[tone.sf2_instrument].zones[index]
+                    .generators
+                    .iter_mut()
+                    .find(|generator| generator.operator == operator)
+                    .ok_or("SF2 key range: original pitch generator missing")?
+                    .amount = amount;
+            }
+        }
+        if !changed {
+            return Err("SF2 key range: unrelated unchanged pitch report".into());
+        }
+    }
+    for source in &binding.tones {
+        let before = &expected.instruments[source.sf2_instrument].zones;
+        let after = &edited.instruments[source.sf2_instrument].zones;
+        if before.len() != after.len() {
+            return Err("SF2 key range: pitch instrument lengths differ".into());
+        }
+        if !seen.contains(&source.sf2_instrument)
+            && before
+                .iter()
+                .zip(after)
+                .any(|(a, b)| range_pitch_raw(a) != range_pitch_raw(b))
+        {
+            return Err("SF2 key range: changed pitch has no validated report".into());
+        }
+    }
+    Ok(())
+}
+
 fn validate_range_tables(
     baseline: &Font,
     expected: &Font,
     edited: &Font,
     gains: &crate::soundfont::packing::tone::Report,
+    pitch: (&binding::Report, &crate::soundfont::packing::pitch::Report),
     assignments: &crate::soundfont::packing::assignment::Report,
     envelopes: &crate::soundfont::packing::envelope::Report,
 ) -> Result<()> {
@@ -865,6 +1029,7 @@ fn validate_range_tables(
             }
         }
     }
+    validate_range_pitch(pitch.0, expected, edited, &mut validated, pitch.1)?;
     for tone in &assignments.tones {
         let sample = u16::try_from(tone.output_sf2_sample)?;
         for zone in &mut validated.instruments[tone.sf2_instrument].zones {
