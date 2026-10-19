@@ -295,7 +295,7 @@ the five menu pointers and the separate marker to `0x8014FC90`, with limits
 sixteen and one. Packing preserves pointers, alignment bytes, adjacent currency
 glyphs and all other payload bytes.
 
-The same layout also exposes seven ASCII formats. Capacities include NUL and
+The same layout also exposes eight ASCII formats. Capacities include NUL and
 exclude alignment padding:
 
 | Address | Original bytes before NUL | Capacity | Codec |
@@ -307,9 +307,10 @@ exclude alignment padding:
 | `0x801DAD60` | Three `0x5C` bytes | 4 | `ascii-format-literal` |
 | `0x801DAD64` | One `0x5C` byte | 2 | `ascii-format-literal` |
 | `0x801D0C24` | `%d%d%d` | 7 | `ascii-u8-decimal-triple-format` |
+| `0x801D0C20` | `%d` | 3 | `ascii-i32-decimal-format` |
 
-The four single-argument decimal formats retain one signed 32-bit argument. Calls load full
-words from `0x80144F50` or `0x801DB07C`; signed comparisons against 10, 100 or
+The formats at `0x801D0C04` through `0x801D0C18` retain one signed 32-bit argument.
+Calls load full words from `0x80144F50` or `0x801DB07C`; signed comparisons against 10, 100 or
 1000 do not establish a nonnegative or byte-sized domain. The codec permits
 widths 1..7 with optional zero padding, within the encoded allocation and eleven
 formatted bytes before NUL. Formatter `0x8017E3F4` writes into `0x80145AD4`;
@@ -325,8 +326,15 @@ Calls `0x801D4C44` and `0x801D4D24` load them with `lbu`, format into
 `0x80145AD4` and draw through `0x8014FF0C`. Their output needs at most nine
 bytes before NUL. Its six encoded bytes leave no room for widths or literals,
 so packing requires the original `%d%d%d`. The alignment byte at `0x801D0C2B`
-stays unchanged. The shared `%d` also feeds command buffers and remains unsupported.
-Other COMMU02 text and observed rendering remain unverified.
+stays unchanged.
+
+The shared `%d` at `0x801D0C20` reserves one NUL byte and must remain exactly `%d`.
+Four callers load unsigned bytes and draw through `0x8014FF0C`. Three other calls
+write `0x801490D8` or `0x801490F8` before dispatch through `0x80150224`.
+Those arguments are byte-masked values or a signed byte plus one. They need at
+most four output bytes before NUL, within the codec's conservative eleven-byte
+bound. Packing preserves the original format and alignment byte at `0x801D0C23`.
+Command dispatch semantics, other COMMU02 text and observed rendering remain unverified.
 
 Four keyboard menu labels and a separator also use this layout:
 

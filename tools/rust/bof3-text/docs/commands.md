@@ -161,12 +161,13 @@ See [formats.md](formats.md#default-character-names).
 
 For COMMU02 menu labels, select `--entry 8` in `ETC/COMMU02.EMI` or
 `--entry 7` in `ETC/COMMU02B.EMI`, below `BIN`. The inline document contains
-fifteen game literal fields, one ASCII separator and seven ASCII formats. Edit only
+fifteen game literal fields, one ASCII separator and eight ASCII formats. Edit only
 `text` using each row's codec. Fixed fields use their full byte capacity; other fields reserve one NUL
 byte. Single-argument decimal formats retain one signed word and at most eleven output
-bytes. The three-argument format must remain `%d%d%d` within its six encoded bytes;
-fallback formats refuse percent sequences. Packing preserves all pointer
-words and unrelated bytes. Each archive needs its own document and output.
+bytes. The shared `%d` and three-argument `%d%d%d` formats must retain their original
+text within two and six encoded bytes, respectively. Fallback formats refuse
+percent sequences. Packing preserves all pointer words and unrelated bytes.
+Each archive needs its own document and output.
 See [inline formats](formats.md#inline-overlay-text) for field limits.
 
 For COMMU00 default names, select `--entry 0` in `ETC/COMMU00.EMI` or

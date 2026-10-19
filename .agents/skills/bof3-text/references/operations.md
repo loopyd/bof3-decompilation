@@ -71,12 +71,13 @@ archive needs its own document and output; editing one does not update the other
 or a save.
 
 COMMU02 entry 8 and COMMU02B entry 7 each expose fifteen menu labels, one ASCII
-separator and seven ASCII format fields through the inline schema. Five labels
+separator and eight ASCII format fields through the inline schema. Five labels
 have fixed byte limits; all other fields reserve one NUL byte. Edit only `text` using each
 row's codec. Single-argument decimal formats retain one signed word and an eleven-byte
-output bound. The three-argument format must remain `%d%d%d` within six encoded bytes;
-fallback formats refuse percent sequences. Pointer words, padding,
-adjacent glyphs and unrelated bytes stay unchanged. Use a separate document and
+output bound. The shared `%d` and three-argument `%d%d%d` formats must retain their
+original text within two and six encoded bytes, respectively. Fallback formats
+refuse percent sequences. Pointer words, padding, adjacent glyphs and unrelated
+bytes stay unchanged. Use a separate document and
 output for each archive. Other COMMU02 text and observed rendering remain unverified.
 
 COMMU00 entry 0 and AREA175 through AREA185 entry 14 each expose sixty

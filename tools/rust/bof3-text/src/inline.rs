@@ -403,11 +403,12 @@ const LAYOUTS: &[Layout] = &[
         name: "US COMMU02 menu labels",
         load: 0x801d0c00,
         size: 42208,
-        sha256: "e6bf675dd118c2aeaa01c7b11a9a4edb2405c4059e615a8068b9745c0bbc1a2f",
+        sha256: "d0f3b80dd255c217747bb552a1c49dac15e9c32420195153a746f8597bdc7eab",
         consumers: &[
             0x801d2cd0, 0x801d320c, 0x801d3334, 0x801d9868, 0x801d98cc, 0x801d322c, 0x801d33a8,
             0x801d33d4, 0x801d3418, 0x801d3444, 0x801d3488, 0x801d34b4, 0x801d34e8, 0x801d4bbc,
             0x801d4bf0, 0x801d4dcc, 0x801d4e00, 0x801d4e54, 0x801d96cc, 0x801d4c44, 0x801d4d24,
+            0x801d3f80, 0x801d3f90, 0x801d3fc8, 0x801d4c84, 0x801d4cb4, 0x801d4d64, 0x801d4d94,
         ],
         allocations: &[
             Allocation::fixed_literal(0x801dac54, 4),
@@ -438,6 +439,7 @@ const LAYOUTS: &[Layout] = &[
                 Codec::AsciiU8DecimalTripleFormat,
                 &[0x8014ff0c],
             ),
+            Allocation::bounded_format(0x801d0c20, 3, Codec::AsciiI32DecimalFormat, &[0x8014ff0c]),
         ],
     },
     Layout {
