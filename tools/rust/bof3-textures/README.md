@@ -379,6 +379,16 @@ checks pass. Invalid input or an invalid edit package returns exit 2.
 Use `coverage --strict` to expose unresolved logical sources and dependencies;
 its nonzero result is expected while those findings remain.
 
+Coverage schema `bof3.textures-coverage/v3` lists each category's
+`physical_resources` and `logical_records` with separate counts. Members are
+sorted by resource ID and retain their source locators, hashes, evidence status,
+evidence references and dependencies. Physical members also retain their
+findings. Logical members identify their parent and offset coordinate space.
+Structural record evidence does not establish the extent of a game category.
+Category dispositions remain `unresolved`; an empty member list does not prove
+absence. Overlapping logical extents are not additional physical source bytes.
+Older indexes and packages must be regenerated with the current executable.
+
 Raw upload placement uses `SLUS_004.22@0x80162698` and the existing EMI image
 owner. Each chunk contains 32 by 32 little-endian VRAM words. Descriptor masks
 are `0x3f` for X, `0x1f` for Y, and `0x3f` for row span, with 32-word coordinates.

@@ -1,4 +1,7 @@
-use std::path::{Path, PathBuf};
+use std::{
+    collections::BTreeMap,
+    path::{Path, PathBuf},
+};
 
 use emi_ex_v2::image::ArchiveImage;
 use serde::{Deserialize, Serialize};
@@ -687,6 +690,63 @@ impl Filter<'_> {
     }
 }
 
+fn category_coverage(index: &Index, category: &Category) -> serde_json::Value {
+    let physical_resources: BTreeMap<_, _> = index
+        .resources
+        .iter()
+        .filter(|resource| resource.categories.contains(&category.id))
+        .map(|resource| {
+            (
+                &resource.id,
+                serde_json::json!({
+                    "id": resource.id,
+                    "source": resource.source,
+                    "entry": resource.entry,
+                    "offset": resource.offset,
+                    "size": resource.size,
+                    "sha256": resource.sha256,
+                    "evidence_status": resource.evidence_status,
+                    "evidence": resource.evidence,
+                    "findings": resource.findings,
+                    "dependencies": resource.dependencies,
+                }),
+            )
+        })
+        .collect();
+    let logical_records: BTreeMap<_, _> = index
+        .records
+        .iter()
+        .filter(|record| record.categories.contains(&category.id))
+        .map(|record| {
+            (
+                &record.id,
+                serde_json::json!({
+                    "id": record.id,
+                    "parent": record.parent,
+                    "source": record.source,
+                    "entry": record.entry,
+                    "coordinate_space": record.coordinate_space,
+                    "coordinate_source_sha256": record.coordinate_source_sha256,
+                    "offset": record.offset,
+                    "size": record.size,
+                    "sha256": record.sha256,
+                    "evidence_status": record.evidence_status,
+                    "evidence": record.evidence,
+                    "dependencies": record.dependencies,
+                }),
+            )
+        })
+        .collect();
+    serde_json::json!({
+        "id": category.id,
+        "disposition": "unresolved",
+        "physical_resource_count": physical_resources.len(),
+        "logical_record_count": logical_records.len(),
+        "physical_resources": physical_resources.into_values().collect::<Vec<_>>(),
+        "logical_records": logical_records.into_values().collect::<Vec<_>>(),
+    })
+}
+
 pub fn coverage(index: &Index) -> serde_json::Value {
     let raw = index
         .resources
@@ -700,7 +760,7 @@ pub fn coverage(index: &Index) -> serde_json::Value {
         "edited and runtime acceptance remains incomplete",
     ];
     serde_json::json!({
-        "schema": "bof3.textures-coverage/v2", "release": index.release,
+        "schema": "bof3.textures-coverage/v3", "release": index.release,
         "full_support": false,
         "physical": {"resources": index.resources.len(), "files": index.files.len(), "emi_entries": index.files.iter().filter_map(|file| file.emi_entries).sum::<usize>(),
             "qualified_original_corpus": index.is_tree,
@@ -718,7 +778,7 @@ pub fn coverage(index: &Index) -> serde_json::Value {
             "resident_animation_banks": index.resources.iter().filter(|resource| resource.resident_animation.is_some()).count(),
             "save_icon_sources": index.resources.iter().filter(|resource| resource.save_icon.is_some()).count(),
             "unresolved_resources": index.resources.iter().filter(|resource| !resource.findings.is_empty()).map(|resource| &resource.id).collect::<Vec<_>>()},
-        "categories": index.categories.iter().map(|category| serde_json::json!({"id": category.id, "disposition": "unresolved", "evidence": []})).collect::<Vec<_>>(),
+        "categories": index.categories.iter().map(|category| category_coverage(index, category)).collect::<Vec<_>>(),
         "unresolved_dependencies": index.resources.iter().flat_map(|resource| resource.dependencies.iter().filter(|edge| edge.status != "verified").map(|edge| serde_json::json!({"resource": resource.id, "dependency": edge})))
             .chain(index.records.iter().flat_map(|record| record.dependencies.iter().filter(|edge| edge.status != "verified").map(|edge| serde_json::json!({"resource": record.id, "dependency": edge})))).collect::<Vec<_>>(),
         "runtime": {"status": "unobserved", "consumer_families": []},

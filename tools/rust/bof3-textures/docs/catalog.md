@@ -61,11 +61,22 @@ archive copy retains its own IDs. These source relationships do not establish
 BIOS timing or edited display. Record edits remain subject to the parent
 package's supported edit rules.
 
-Coverage schema `bof3.textures-coverage/v2` reports physical resources separately
-from logical records and their kinds. Logical extents may overlap, so their sizes
-must not be added to physical source bytes. Strict coverage still fails while
-logical enumeration, game roles, consumer bindings or runtime acceptance remain
-incomplete. Old or altered indexes must be rebuilt from original inputs.
+Coverage schema `bof3.textures-coverage/v3` reports physical resources separately
+from logical records and their kinds. Each category has `physical_resources`
+and `logical_records`, sorted and deduplicated by ID, with
+`physical_resource_count` and `logical_record_count` respectively. Each member
+retains its source, entry, extent, hash, evidence status, evidence references and
+dependencies. Physical members retain their findings; logical members retain
+their parent, coordinate space and coordinate-source hash. The release and
+qualified inventory remain identified by the coverage report.
+
+These lists expose existing catalog assignments. Structural record evidence does
+not prove category enumeration or consumer coverage. Category dispositions remain
+`unresolved`, including categories with no members; an empty list does not prove
+absence. Logical extents may overlap, so their sizes must not be added to physical
+source bytes. Strict coverage still fails while logical enumeration, game roles,
+consumer bindings or runtime acceptance remain incomplete. Old indexes and
+packages must be regenerated with the current executable.
 
 Catalog files and package manifests have a 512 MiB read limit. Each original
 source file keeps its separate 128 MiB limit. Readers refuse files above these limits and reads whose size changes. The larger document limit allows the full corpus to retain
