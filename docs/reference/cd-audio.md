@@ -168,8 +168,17 @@ and filter. During an active read, a partially consumed 2,048-byte requested FIF
 retains its contents, cursor, request flag and latest header through Init.
 Guest loads continue from the retained cursor after INT3/status `0x22` and
 INT2/status `0x02`. These observations establish response order and the selected
-data boundary. Queued PCM/history behavior, game IRQ admission, exact response
-timing and mechanical latency remain unaccepted.
+data boundary. Joined native capture also observes queued disc frames after
+Init acknowledgement, accounts for their later consumption without new feeds
+or recorder loss, and retains the observed mono ADPCM predictor and first-sector
+flag.
+
+With explicit caller registers, the original reset routine installs its own
+interrupt state and returns success. Its Init ACK reaches the SDK CD handler
+inside an existing VBlank exception. A separate completion capture records INT2,
+the CD-line assertion, CPU hardware IRQ admission and entry into that handler.
+These bounded calls do not establish natural game startup, wider decoder
+histories, signal parity, exact response timing or mechanical latency.
 
 ## XA selection and EOF
 
