@@ -70,9 +70,9 @@ class and latch selectors. Re-extract former character-only documents. Each
 archive needs its own document and output; editing one does not update the other
 or a save.
 
-COMMU02 entry 8 and COMMU02B entry 7 each expose eleven menu labels and six
-ASCII format fields through the inline schema. Five labels have fixed byte
-limits; all other fields reserve one NUL byte. Edit only `text` using each
+COMMU02 entry 8 and COMMU02B entry 7 each expose fifteen menu labels, one ASCII
+separator and six ASCII format fields through the inline schema. Five labels
+have fixed byte limits; all other fields reserve one NUL byte. Edit only `text` using each
 row's codec. Decimal formats retain one signed-word argument and an eleven-byte
 output bound; fallback formats refuse percent sequences. Pointer words, padding,
 adjacent glyphs and unrelated bytes stay unchanged. Use a separate document and

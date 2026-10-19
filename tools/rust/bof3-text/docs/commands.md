@@ -161,8 +161,8 @@ See [formats.md](formats.md#default-character-names).
 
 For COMMU02 menu labels, select `--entry 8` in `ETC/COMMU02.EMI` or
 `--entry 7` in `ETC/COMMU02B.EMI`, below `BIN`. The inline document contains
-eleven literal fields and six ASCII formats. Edit only `text` using each row's
-codec. Fixed fields use their full byte capacity; other fields reserve one NUL
+fifteen game literal fields, one ASCII separator and six ASCII formats. Edit only
+`text` using each row's codec. Fixed fields use their full byte capacity; other fields reserve one NUL
 byte. Decimal formats retain one signed-word argument and at most eleven output
 bytes; fallback formats refuse percent sequences. Packing preserves all pointer
 words and unrelated bytes. Each archive needs its own document and output.

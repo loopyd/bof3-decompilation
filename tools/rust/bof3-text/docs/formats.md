@@ -321,6 +321,23 @@ format into the same buffer and draw through `0x8014FF0C`. The shared `%d`
 and multi-argument formats remain unsupported. Other COMMU02 text and observed
 rendering remain unverified.
 
+Four keyboard menu labels and a separator also use this layout:
+
+| Address | Original text | Capacity including NUL | Codec |
+| --- | --- | --- | --- |
+| `0x801D0C2C` | `-` | 2 | `ascii-literal` |
+| `0x801D0C3C` | `Next` | 5 | `game-literal` |
+| `0x801D0C41` | `Back` | 5 | `game-literal` |
+| `0x801D0C46` | `Quit` | 5 | `game-literal` |
+| `0x801D0C4B` | `End` | 4 | `game-literal` |
+
+Code at `0x801D9520` copies the four adjacent labels to a 20-byte stack region.
+Branches select offsets 0, 5, 10 and 15; call `0x801D96CC` draws through
+`0x8014F800` with a five-byte count and NUL termination. The separator reaches
+ASCII renderer `0x80150098` at call `0x801D4E54`. It retains raw byte `0x2D`,
+which differs from the game encoding's hyphen byte `0x3D`. Packing preserves
+the copies' boundaries, the trailing alignment byte and the keyboard glyph table.
+
 The `US COMMU00 default names` layout covers entry 0 of `BIN/ETC/COMMU00.EMI`
 and entry 14 of `BIN/WORLD04/AREA175.EMI` through `AREA185.EMI`. Each payload
 loads at `0x801EEC00`. Its sixty nine-byte records start at `0x801F2700`.
