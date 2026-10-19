@@ -64,11 +64,11 @@ new output, with `--entry all` or `--entry 0` and no class or latch selector.
 The tool preserves stats and other record bytes. These fields do not use
 dialogue command markup. Other name families require separate evidence.
 
-US START entry 8 and STATUS entry 0 each expose ten counted labels and eight
-default names through `bof3.inline-text/v12`. Select the entry explicitly and omit
-class and latch selectors. Re-extract former character-only documents. Each
-archive needs its own document and output; editing one does not update the other
-or a save.
+US START entry 8 and STATUS entry 0 each expose ten counted labels, eight default
+names, 68 ordinary keyboard cells and four name-entry menu labels through
+`bof3.inline-text/v13`. Select the entry explicitly and omit class and latch
+selectors. Re-extract older inline documents. Use a separate document and output
+for each archive. Editing one does not update the other or a save.
 
 COMMU02 entry 8 and COMMU02B entry 7 each expose fifteen menu labels, one ASCII
 separator, eight ASCII formats and 68 keyboard cells through the inline schema.
@@ -93,7 +93,7 @@ observed rendering remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v12`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v13`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
