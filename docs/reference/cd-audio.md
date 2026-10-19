@@ -19,10 +19,13 @@ seek state and timing require separate original-runtime evidence.
 The retained published 37.8 kHz table contains 203 coefficients. In phase-major
 little-endian signed-16 encoding their SHA-256 is
 `0ea87420ec5d82b35aa651a26622572b422f3d330afbf78f166941db7035ca80`.
-Rust `Published37800` indexes history from `p-1`, while `EmulatorReference`
-indexes from `p`; each product is floored before summation. Native `zigzag`
-reads `ring[(xaRingPos-i)&31]` for `i=1..29`, shifts each product by 15 and
-saturates the sum. Native phase/history alignment still needs direct comparison.
+Both Rust 37.8 kHz models index history from `p-1` and floor each product before
+summation. Native `zigzag` reads `ring[(xaRingPos-i)&31]` for `i=1..29`, shifts
+each product by 15 and saturates the sum. A bounded original VOICE comparison
+confirms `CombinedRounded` mono 4-bit decoding, mono expansion and this alignment
+when the native gain stages are applied separately. That comparison covers
+consumed output under the captured settings. Remaining queued output, other
+formats and histories, and hardware fidelity require separate evidence.
 
 The retained Rust 18.9 kHz table has 175 coefficients, SHA-256
 `02f3c9597f8e4b8f961e7981ac758034a2ff8eb5200b01ba410106e3460bffa1`.

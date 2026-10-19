@@ -9,7 +9,7 @@ use crate::{
 pub enum Model {
     /// Published 37.8 kHz indexing. No published 18.9 kHz algorithm is established.
     Published37800,
-    /// Inspected emulator's alignment and separate half-rate filter.
+    /// Native 37.8 kHz alignment and retained diagnostic half-rate filter.
     EmulatorReference,
 }
 
@@ -86,13 +86,11 @@ impl Resampler {
                 for weights in ZIGZAG {
                     output.push(std::array::from_fn(|output_channel| {
                         let channel = if channels == 1 { 0 } else { output_channel };
-                        let displacement = usize::from(self.model == Model::Published37800);
                         let sum: i32 = weights
                             .iter()
                             .enumerate()
                             .map(|(tap, &weight)| {
-                                let sample = self.ring[channel]
-                                    [(self.position + 64 - tap - displacement) & 31];
+                                let sample = self.ring[channel][(self.position + 63 - tap) & 31];
                                 (i32::from(sample) * i32::from(weight)) >> 15
                             })
                             .sum();

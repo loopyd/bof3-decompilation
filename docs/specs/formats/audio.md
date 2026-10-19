@@ -2374,11 +2374,12 @@ reset, end padding or tail flush. Extraction remains at encoded rate.
 
 `Published37800` implements the published seven-phase filter alignment and rejects
 18.9 kHz, for which that source gives no complete algorithm. `EmulatorReference`
-retains the earlier comparison model's 37.8 kHz alignment and distinct half-rate
-filter. Its name does not establish parity with the current
-[native XA/CDDA submission path](../../../third_party/pcsx-redux-agentic/src/spu/xa.cc);
-resampling and attenuation still require independent comparison of captured
-settings, feeds and samples.
+uses the same 37.8 kHz history alignment, with the first tap at the most recently
+written sample. A bounded original mono 4-bit comparison agrees with the
+[native XA/CDDA submission path](../../../third_party/pcsx-redux-agentic/src/spu/xa.cc)
+after separate native gain conversion. The diagnostic drive matrix below still
+differs from those native gain stages. The distinct half-rate filter, wider
+formats and histories, and output left queued remain unaccepted.
 Both require explicit selection; neither establishes hardware fidelity. See
 [coefficient provenance and differences](../../reference/cd-audio.md). Reset
 contexts have zero filter history, position zero and phase six. Phase/history

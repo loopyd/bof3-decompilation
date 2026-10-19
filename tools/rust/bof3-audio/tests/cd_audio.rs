@@ -25,7 +25,7 @@ fn interpolation_models_match_independent_signed_vectors_and_chunk_boundaries() 
             Model::EmulatorReference,
             1,
             140,
-            "02c0564a53770ad10903fd71db17581e259586d9b47d3256a0718d2487ad981b",
+            "816c6f2ca300e28765df96890b96a6f28921256e988bcd75c3b3efe23c5b224b",
         ),
         (
             Model::EmulatorReference,

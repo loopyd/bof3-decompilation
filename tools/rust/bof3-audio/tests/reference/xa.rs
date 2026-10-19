@@ -1,4 +1,5 @@
 //! Independent integer/vector model ported from the retained pre-migration oracles.
+//! The 37.8 kHz ring indexing is corrected against native feed/output observations.
 //! Shares only numeric FIR coefficients, never production decoding or queue state.
 
 #[path = "../../src/machine/xa_filter.rs"]
@@ -130,7 +131,7 @@ impl Reference {
             let index = if half {
                 (self.cursor + 32 - 25 + tap) % 32
             } else {
-                (self.cursor + 32 - tap) % 32
+                (self.cursor + 31 - tap) % 32
             };
             let product = i64::from(self.rings[channel][index]) * i64::from(weight);
             sum += if half { product } else { product >> 15 };
@@ -211,7 +212,7 @@ fn hash(frames: &[[i16; 2]]) -> String {
 }
 
 #[test]
-fn fixed_interpolation_vectors_preserve_original_reference_hashes() {
+fn fixed_interpolation_vectors_preserve_qualified_reference_hashes() {
     let pcm: Vec<_> = (0..120)
         .map(|n| {
             vec![
@@ -224,7 +225,7 @@ fn fixed_interpolation_vectors_preserve_original_reference_hashes() {
         (
             1,
             140,
-            "02c0564a53770ad10903fd71db17581e259586d9b47d3256a0718d2487ad981b",
+            "816c6f2ca300e28765df96890b96a6f28921256e988bcd75c3b3efe23c5b224b",
         ),
         (
             5,
