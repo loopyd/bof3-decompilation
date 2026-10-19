@@ -6,9 +6,10 @@ animation program metadata and cells in validated three-root banks, programs and
 cells in validated resident banks, and the qualified save-icon frames and palette.
 Other internal layouts remain unresolved.
 
-Qualified original US EMI types 6, 7 and 10 have the physical kind
-`audio-owned-container`, with storage `vab-header`, `vab-body` and
-`sep-sequence-container`. Their source hashes, sizes and entry locators remain in
+Qualified original US EMI types 6, 7, 8 and 10 have the physical kind
+`audio-owned-container`, with storage `vab-header`, `vab-body`,
+`audio-auxiliary-container` and `sep-sequence-container`, respectively.
+Their source hashes, sizes and entry locators remain in
 the catalog. The disposition requires an exact canonical source, including its
 original TOC. Changed or unqualified sources are rejected.
 
@@ -16,7 +17,9 @@ These containers have `decode: delegated-to-audio`, `pack: preservation-only`
 and `evidence_status: owner-qualified`. Textures preserves unused fields,
 allocations, padding and opaque bytes. Ownership does not prove that every byte
 is sound data or graphics-free. It does not establish bank pairing, loading,
-runtime residency, or SFX and vocal roles. Audio auxiliary entries, archive gaps
+runtime residency, or SFX and vocal roles. The original type-8 handler at
+`0x801629F0` selects the audio slot's auxiliary destination. This establishes
+ownership without identifying all auxiliary bytes as ADSR data. Archive gaps
 and media streams retain their separate unresolved dispositions.
 
 Use `query INDEX --kind audio-owned-container` to inspect these resources.

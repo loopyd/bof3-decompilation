@@ -271,6 +271,7 @@ pub fn build_from(
                 if let Some(storage) = match entry.file_type {
                     6 => Some("vab-header"),
                     7 => Some("vab-body"),
+                    8 => Some("audio-auxiliary-container"),
                     10 => Some("sep-sequence-container"),
                     _ => None,
                 } {
@@ -282,6 +283,11 @@ pub fn build_from(
                         "tools/rust/bof3-audio/src/catalog/mod.rs:original-us-container-ownership"
                             .into(),
                     );
+                    if entry.file_type == 8 {
+                        resource
+                            .evidence
+                            .push("SLUS_004.22@0x801629F0:audio-auxiliary-destination".into());
+                    }
                     resource.findings.clear();
                 }
                 if entry.file_type == 0

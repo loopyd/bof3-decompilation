@@ -14,11 +14,12 @@ reverse playback callers, unsupported bank variants, and runtime appearance rema
 Strict coverage and complete verification return exit 1. A successful raw upload
 edit does not establish its appearance in the game.
 
-The catalog retains qualified original audio containers as
-`audio-owned-container` resources. Textures preserves their bytes; use the
-[audio tool](../bof3-audio/README.md) for audio decoding and edits. This ownership
+The catalog retains qualified original audio containers, including auxiliary
+containers, as `audio-owned-container` resources. Textures preserves their bytes.
+Use the [audio tool](../bof3-audio/README.md) for audio decoding and edits. This ownership
 disposition does not establish sample pairing, loading, playback, or the meaning
-of unused bytes.
+of unused bytes. Auxiliary containers remain opaque; their ownership does not
+identify all bytes as envelope data.
 
 ## Build
 
