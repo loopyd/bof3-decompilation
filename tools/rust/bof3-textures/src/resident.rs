@@ -199,6 +199,10 @@ pub fn encode(source: &[u8], edited: &Document) -> Result<Vec<u8>> {
         let end = start + program.steps.len() * 2;
         output[start..end].copy_from_slice(&encoded[start..end]);
     }
+    for program in original.groups.iter().flat_map(|group| &group.programs) {
+        animation::decode(source, program.offset, program.end)?
+            .validate_preserved(source, &output)?;
+    }
     decode(&output)?;
     Ok(output)
 }

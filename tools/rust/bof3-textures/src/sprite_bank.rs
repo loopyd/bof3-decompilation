@@ -395,8 +395,17 @@ pub fn encode(source: &[u8], edited: &Document) -> Result<Vec<u8>> {
             std::slice::from_ref(*cell),
         )?;
     }
+    validate_program_metadata(source, &output, &original)?;
     decode(&output)?;
     Ok(output)
+}
+
+fn validate_program_metadata(source: &[u8], output: &[u8], original: &Document) -> Result<()> {
+    for program in original.roots.iter().flat_map(|root| &root.programs) {
+        animation::decode(source, program.offset, program.end)?
+            .validate_preserved(source, output)?;
+    }
+    Ok(())
 }
 
 /// One explicit index-plane view of an existing image record.
@@ -450,6 +459,7 @@ pub fn encode_images(source: &[u8], edited: &Document, edits: &[ImageEdit<'_>]) 
         let encoded = bank_image::encode(bytes, source, offset, end)?;
         output[offset..end].copy_from_slice(&encoded[offset..end]);
     }
+    validate_program_metadata(source, &output, &original)?;
     decode(&output)?;
     Ok(output)
 }

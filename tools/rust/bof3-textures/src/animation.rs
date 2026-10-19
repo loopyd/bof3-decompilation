@@ -17,6 +17,16 @@ pub struct Program {
     cell_table: usize,
     steps: Vec<Step>,
     cell_offsets: Vec<u16>,
+    metadata_cells: Vec<MetadataCell>,
+}
+
+#[derive(Clone, Debug, Serialize, PartialEq, Eq)]
+pub struct MetadataCell {
+    pub operand: u8,
+    pub lookup_offset: usize,
+    pub relative_offset: u16,
+    pub cell_offset: usize,
+    pub part_count: u8,
 }
 
 impl Program {
@@ -28,6 +38,35 @@ impl Program {
         &self.cell_offsets
     }
 
+    pub fn metadata_cells(&self) -> &[MetadataCell] {
+        &self.metadata_cells
+    }
+
+    pub(crate) fn validate_preserved(&self, source: &[u8], output: &[u8]) -> Result<()> {
+        if self.metadata_cells.is_empty() {
+            return Ok(());
+        }
+        let metadata_end = self.cell_table + self.cell_offsets.len() * 2;
+        if source.get(self.offset..metadata_end) != output.get(self.offset..metadata_end) {
+            return Err(Error::Codec(
+                "animation metadata alias requires unchanged header, steps and declared offsets"
+                    .into(),
+            ));
+        }
+        for alias in &self.metadata_cells {
+            if output.get(alias.lookup_offset..alias.lookup_offset + 2)
+                != Some(alias.relative_offset.to_le_bytes().as_slice())
+                || output.get(alias.cell_offset) != Some(&alias.part_count)
+            {
+                return Err(Error::Codec(
+                    "animation edit changes an original metadata-alias lookup or zero-part cell"
+                        .into(),
+                ));
+            }
+        }
+        Ok(())
+    }
+
     fn fetch(&self, step: usize) -> Result<(u8, usize)> {
         let token = self
             .steps
@@ -36,13 +75,23 @@ impl Program {
         let offset = self
             .cell_offsets
             .get(usize::from(token.operand))
+            .map(|offset| self.cell_table + usize::from(*offset))
+            .or_else(|| {
+                if token.duration >= 0x80 {
+                    return None;
+                }
+                self.metadata_cells
+                    .iter()
+                    .find(|alias| alias.operand == token.operand)
+                    .map(|alias| alias.cell_offset)
+            })
             .ok_or_else(|| {
                 Error::Codec(format!(
                     "animation step {step} selects missing cell {} during direct fetch",
                     token.operand
                 ))
             })?;
-        Ok((token.duration, self.cell_table + usize::from(*offset)))
+        Ok((token.duration, offset))
     }
 
     /// Initialization fetches a token directly, without testing its control bit.
@@ -60,7 +109,8 @@ impl Program {
 
 /// Parse this bounded table variant in decoded-bank byte coordinates.
 /// The caller supplies the qualified program offset and containing extent.
-/// Cell payloads remain opaque; their addresses must lie after the offset table.
+/// Declared cells follow the offset table. Normal tokens may additionally resolve
+/// a zero-part cell inside that immutable table through an out-of-table lookup.
 pub fn decode(source: &[u8], offset: usize, end: usize) -> Result<Program> {
     if source.len() > 1024 * 1024 || end > source.len() {
         return Err(Error::Codec(
@@ -113,9 +163,36 @@ pub fn decode(source: &[u8], offset: usize, end: usize) -> Result<Program> {
             ));
         }
     }
+    let mut metadata_cells: Vec<MetadataCell> = Vec::new();
     for (index, token) in steps.iter().enumerate() {
         let limit = if token.duration < 0x80 { cells } else { count };
         if usize::from(token.operand) >= limit {
+            if token.duration < 0x80 {
+                let lookup = cell_table + usize::from(token.operand) * 2;
+                let word = bytes.get(lookup..lookup + 2).ok_or_else(|| {
+                    Error::Codec("animation metadata lookup exceeds its program".into())
+                })?;
+                let relative_offset = u16::from_le_bytes(word.try_into().unwrap());
+                let target = cell_table + usize::from(relative_offset);
+                if !(cell_table..metadata_end).contains(&target) || bytes[target] != 0 {
+                    return Err(Error::Codec(
+                        "animation metadata alias must select a zero-part cell in its declared offset table".into(),
+                    ));
+                }
+                if !metadata_cells
+                    .iter()
+                    .any(|alias| alias.operand == token.operand)
+                {
+                    metadata_cells.push(MetadataCell {
+                        operand: token.operand,
+                        lookup_offset: offset + lookup,
+                        relative_offset,
+                        cell_offset: offset + target,
+                        part_count: bytes[target],
+                    });
+                }
+                continue;
+            }
             return Err(Error::Codec(format!(
                 "animation step {index} operand {} exceeds its {} table",
                 token.operand,
@@ -132,6 +209,7 @@ pub fn decode(source: &[u8], offset: usize, end: usize) -> Result<Program> {
         cell_table: offset + cell_table,
         steps,
         cell_offsets,
+        metadata_cells,
     })
 }
 
@@ -142,6 +220,11 @@ pub fn encode_steps(source: &[u8], offset: usize, end: usize, steps: &[Step]) ->
     if steps.len() != original.steps.len() {
         return Err(Error::Codec(
             "animation edit changes its step allocation".into(),
+        ));
+    }
+    if !original.metadata_cells.is_empty() && steps != original.steps {
+        return Err(Error::Codec(
+            "animation metadata-alias program steps are read-only".into(),
         ));
     }
     if steps
@@ -158,6 +241,7 @@ pub fn encode_steps(source: &[u8], offset: usize, end: usize, steps: &[Step]) ->
         let position = original.offset + 2 + index * 2;
         output[position..position + 2].copy_from_slice(&[step.duration, step.operand]);
     }
+    original.validate_preserved(source, &output)?;
     let edited = decode(&output, offset, end)?;
     // A forward control branches once, then fetches its destination as a frame.
     // Repeated high tokens must retain this direct-fetch behavior, not recurse.

@@ -182,6 +182,34 @@ impl<'a> Builder<'a> {
                 "this program cell table references the record; execution is not inferred".into(),
             );
         }
+        for alias in decoded.metadata_cells() {
+            let cell_id = self.id("sprite-cell", alias.cell_offset);
+            let cell = self.records.get_mut(&cell_id).ok_or_else(|| {
+                Error::Invalid("metadata alias selects a missing source-bound cell".into())
+            })?;
+            cell.evidence.push(format!(
+                "SLUS_004.22@0x8014DBFC:u16 lookup at byte {} stores {}; zero part count at byte {} lies in the declared cell-offset table; setup at 0x8014C6FC precedes the zero-part branch",
+                alias.lookup_offset, alias.relative_offset, alias.cell_offset
+            ));
+            self.edge(
+                &program_id,
+                "metadata-cell",
+                cell_id.clone(),
+                format!("normal operand {} resolves a zero-part metadata cell without adding a declared offset", alias.operand),
+            );
+            self.edge(
+                &cell_id,
+                "animation-metadata",
+                program_id.clone(),
+                "the zero count overlaps this program's immutable declared offset table; execution and rendering are unresolved".into(),
+            );
+            self.edge(
+                &cell_id,
+                "metadata-lookup",
+                self.parent.id.clone(),
+                format!("immutable {} lookup bytes {}..{} store relative offset {}; all alias-bearing program steps are read-only", self.space.label(), alias.lookup_offset, alias.lookup_offset + 2, alias.relative_offset),
+            );
+        }
         Ok(())
     }
 

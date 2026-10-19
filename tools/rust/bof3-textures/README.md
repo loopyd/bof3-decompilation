@@ -291,6 +291,14 @@ must preserve each step's frame or control role and keep every reference valid.
 Programs shared by several table indices must receive agreeing edits. Unchanged
 aliases do not override a changed view. Conflicts name every changed program view.
 
+Some normal frame operands read a lookup word beyond the declared cell-offset
+table and resolve to a zero-part cell inside that table. These metadata aliases
+remain separate from declared offsets. Their programs' step pairs, headers,
+declared offsets, lookup words and zero count bytes are read-only. Packing checks
+these bytes against the original source after all cell, palette and image writes,
+including edits submitted through a raw view. A part edit that overlaps a lookup
+word is refused even when the changed lookup would remain within bounds.
+
 The document's `cells` list contains one entry per payload offset. Keep its order,
 `offset`, `end`, and part count. Each part contains a `size_code` from 0 to 15,
 `horizontal_flip`, signed `x` and `y` anchors from -128 to 127, and unsigned `u`
@@ -485,8 +493,14 @@ tables. Each table's first offset delimits its entries. References may be
 repeated or out of order. Each program and its cells must fit before the
 next distinct program address, within its group and payload. The parser bounds
 sources at 1 MiB, group indices and total program indices at 65,536, and each
-group's program indices at 256. Variants whose cell references select metadata
-remain unsupported. Cell records follow the count byte at `0x8014c6f8` and the
+group's program indices at 256. A normal frame operand beyond the declared cell
+count is supported only when its lookup word fits inside the same program and
+selects a zero count byte inside the declared offset table. Parsed programs expose
+these source-bound lookups separately as `metadata_cells`; they do not increase
+the declared cell count. Other metadata references remain unsupported. The setup
+call at `0x8014c6fc` precedes the zero-part branch, so a zero-part cell does not
+establish an invisible frame or absence of GPU effects. Cell records follow the
+count byte at `0x8014c6f8` and the
 five-byte stride at `0x8014c700`. Their size codes use the original dimension
 table at `0x8017f53c`. Records must fit before the next distinct cell address or
 the program end. Only existing step pairs and qualified cell records are

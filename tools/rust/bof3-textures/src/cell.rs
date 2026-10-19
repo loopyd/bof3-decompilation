@@ -53,6 +53,12 @@ pub(crate) fn decode_cells(
         .cell_offsets()
         .iter()
         .map(|relative| table + usize::from(*relative))
+        .chain(
+            program
+                .metadata_cells()
+                .iter()
+                .map(|alias| alias.cell_offset),
+        )
         .collect();
     for &offset in &starts {
         let end = extent(offset, &starts, end);
