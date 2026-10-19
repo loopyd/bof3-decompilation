@@ -340,6 +340,9 @@ pub fn pack_bank(
     mut reference: Option<&mut crate::voice::tuning::Reference>,
 ) -> Result<PackedBank> {
     let original_header_sha256 = sha256_hex(header);
+    if crate::soundfont::packing::program::has_range_changes(baseline, edited) {
+        validate_range_source(baseline)?;
+    }
     let key_ranges = crate::soundfont::packing::program::ranges(
         binding,
         header,
@@ -347,9 +350,6 @@ pub fn pack_bank(
         edited,
         reference.as_deref_mut(),
     )?;
-    if key_ranges.is_some() {
-        validate_range_source(baseline)?;
-    }
     let range_prefix = key_ranges.as_ref().map(|_| baseline);
     let (binding, header, baseline) = key_ranges
         .as_ref()
@@ -376,9 +376,6 @@ pub fn pack_bank(
     let populated_programs =
         crate::soundfont::packing::program::derive(binding, baseline, edited, &independent)?;
     let mut tones = crate::soundfont::packing::tone::pack(binding, header, baseline, existing)?;
-    if let Some(original) = range_prefix {
-        validate_range_tables(original, baseline, existing, &tones.report)?;
-    }
     let pitch =
         crate::soundfont::packing::pitch::pack(binding, header, baseline, existing, reference)?;
     let assignments = crate::soundfont::packing::assignment::pack(
@@ -395,6 +392,20 @@ pub fn pack_bank(
         existing,
         &assignments.report,
     )?;
+    if let Some(original) = range_prefix {
+        let mut verified_header = tones.header.clone();
+        for (offset, bytes) in &envelopes.patches {
+            verified_header[*offset..*offset + 2].copy_from_slice(bytes);
+        }
+        crate::soundfont::packing::envelope::verify(&verified_header, &envelopes.report)?;
+        validate_range_tables(
+            original,
+            baseline,
+            existing,
+            &tones.report,
+            &envelopes.report,
+        )?;
+    }
     let mut samples = pack_inner(
         binding,
         body,
@@ -781,6 +792,7 @@ fn validate_range_tables(
     expected: &Font,
     edited: &Font,
     gains: &crate::soundfont::packing::tone::Report,
+    envelopes: &crate::soundfont::packing::envelope::Report,
 ) -> Result<()> {
     let mut validated = Font::from_bytes(expected.original_bytes().to_vec())?;
     validated.instruments = expected.instruments.clone();
@@ -797,6 +809,20 @@ fn validate_range_tables(
                     48 => generator.amount = parameters.attenuation_cb,
                     _ => (),
                 }
+            }
+        }
+    }
+    for tone in &envelopes.tones {
+        let parameters = tone.fit.parameters.envelope();
+        for zone in &mut validated.instruments[tone.sf2_instrument].zones {
+            for generator in &mut zone.generators {
+                generator.amount = match generator.operator {
+                    34 => parameters.attack as u16,
+                    36 => parameters.decay as u16,
+                    37 => parameters.sustain_cb,
+                    38 => parameters.release as u16,
+                    _ => generator.amount,
+                };
             }
         }
     }

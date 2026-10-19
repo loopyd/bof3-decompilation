@@ -4042,24 +4042,32 @@ New keys require the hash-identified original pitch reference and a positive,
 representable mapping through the verified pitch table. Missing references,
 mutable adjacent-data reads and unsupported pitches reject the request.
 
-Range edits may also request uniform, exactly invertible attenuation and pan on
-the same tone. The gain inverse retains the original source controls and recorded
-gain model. It validates the requested controls and their forward fit before the
-packer uses the selected gain amounts to reconstruct instrument tables.
+Range edits may also request uniform, exactly invertible attenuation, pan and
+supported fitted-envelope changes on the same tone. Each inverse retains its
+original source controls and recorded model. Envelope edits use the existing
+field families and selection order described above. Attack, decay, sustain and
+release amounts may change only when a complete fitted tuple matches. Delay and
+hold stay fixed. Each range-changing instrument selects its own uniform fit.
+
+Packing checks original raw table ownership before reconstructing any range. It
+uses the selected gain and forward-verified envelope fits to reconstruct complete
+instrument tables before sample reconstruction. Names, generator identities and
+order, modulators, opaque terminal bytes and unrelated rows remain checked. Raw
+table changes are limited to validated key and pitch zones, selected gain and
+envelope amounts, and bag and generator indices their geometry requires.
 
 Each original instrument identity, sample link, loop mode and other control stays
 fixed. Muted or stopped-pitch range sources and combined range edits with tuning,
-envelopes, samples, presets or other instruments remain unsupported. Packing
-validates original raw table ownership and every fixed instrument. Raw table
-changes are limited to the validated key and pitch zones, selected gain amounts,
-and bag and generator indices their geometry requires. Names, generator identities
-and order, modulators, opaque terminal bytes and unrelated rows remain checked.
+samples, presets or instruments whose ranges did not change remain unsupported.
+Envelope tuples outside the existing field families also reject the request.
 The `key_ranges` array in bank and music song reports records
 source identities, original and output ranges, selected pitch contexts and the
 executable hash when new keys require measurements. Pure range edits change only
 the source tone's key bounds; the VAB sample body and other header bytes remain
 unchanged. Combined gain edits additionally change only the selected tone's volume
-and pan bytes, as recorded in `tone_controls`. These checks do not establish
+and pan bytes, as recorded in `tone_controls`. Combined envelope edits change
+only the selected ADSR fields, as recorded in `envelope_controls`, while preserving
+unused bits and other register fields. These checks do not establish
 initialized-game or native fidelity.
 
 Appended instruments may reconstruct independent tone rows while using validated

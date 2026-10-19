@@ -238,8 +238,16 @@ fn source_view(
     })
 }
 
+pub(crate) fn has_range_changes(baseline: &Font, edited: &Font) -> bool {
+    baseline
+        .instruments
+        .iter()
+        .zip(&edited.instruments)
+        .any(|(before, after)| key_range(&before.zones) != key_range(&after.zones))
+}
+
 /// Validate every fixed instrument before changing a private control view.
-/// Gain/pan amounts remain subject to the separate exact inverse.
+/// Gain/pan and envelope amounts remain subject to their separate exact inverses.
 pub(crate) fn ranges(
     binding: &binding::Report,
     header: &[u8],
@@ -323,11 +331,14 @@ pub(crate) fn ranges(
                     || a.generators.len() != b.generators.len()
                     || a.generators.iter().zip(&b.generators).any(|(a, b)| {
                         a.operator != b.operator
-                            || (!matches!(a.operator, 17 | 48) && a.amount != b.amount)
+                            || (!matches!(a.operator, 17 | 34 | 36..=38 | 48)
+                                && a.amount != b.amount)
                     })
             })
         {
-            return Err("SF2 key range: combined edits beyond gain/pan unsupported".into());
+            return Err(
+                "SF2 key range: combined edits beyond gain/pan/envelope unsupported".into(),
+            );
         }
         let report = KeyRangeReport {
             program: source.source_program,
