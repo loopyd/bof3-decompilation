@@ -7,24 +7,21 @@ tags: [dialogue, text, format]
 
 # Dialogue text block
 
-Area dialogue lives in an EMI subfile, not in a standalone file and not in a
-target-local `.text` blob. The layout, character table and command bytecodes were
-established from three independent sources that agree:
+Area dialogue lives in an EMI subfile. This specification describes the supported
+US bank layout and codec. The original US file identities are pinned in
+[`config/original-us-disc.json`](../../../config/original-us-disc.json).
+The [command registry](../../../tools/rust/bof3-text/src/models.rs) defines the
+supported token names and operand widths.
 
-1. **Original US bytes** (`SLUS-00422`, `BOF3_1.1`, md5
-   `9dd9a7c934b8b59d0ce76b0f25d18176`) — every claim below is reproducible from the disc.
-2. **The US renderer** in `SLUS_004.22`, which reads the pointer table and
-   dispatches on the control bytes
-   ([evidence](../../../out/text-format/consumer-verification.md)).
-3. **The reference translation tool** (`brisma/bof3-translation-tool`,
-   `bof3tool.py` `decode_text`/`encode_text`), whose decode/encode pair names the
-   codes and fixes their operand widths, and the older
-   `glitch-in-the-herring/bof3-text-extractor` plus the BOF3JS EU knowledgebase
-   ([chapter 5](../bof3-eu/05-features-meshes.md), `SLES_013.04`, leads only).
+External investigation leads include `brisma/bof3-translation-tool`,
+`glitch-in-the-herring/bof3-text-extractor` and the BOF3JS
+[EU knowledgebase](../bof3-eu/05-features-meshes.md). They do not establish support
+for another region. Original source bytes and their consumers determine format
+acceptance; codec support alone does not establish in-game behavior.
 
-Tooling: `bin/harness text index|scan|extract|validate|query|pack|probe|map|build-index|search|verify`
-(implementation `tools/rust/bof3-text`, owner docs
-`tools/rust/bof3-text/docs/README.md`).
+Use `bin/harness text --help` to discover commands. The
+[tool documentation](../../../tools/rust/bof3-text/docs/README.md) describes
+extraction, analysis, search, packing and coverage reporting.
 
 ## Locating the subfile
 
@@ -39,11 +36,12 @@ Each of the 200 US area archives carries exactly one dialogue subfile.
 ## Bank layout
 
 ```
-u16 pointer_bytes                 ; byte size of the offset array, including itself
-u16 offsets[pointer_bytes / 2]    ; bank-relative pointers
+u16 offsets[pointer_bytes / 2]    ; offsets[0] is pointer_bytes
 strings[]                         ; begins at byte pointer_bytes
 ```
 
+- The first `u16` is both the first row's offset and the byte size of the entire
+  offset array. There is no separate size field before the array.
 - `pointer_bytes` is even, `>= 4`, and `offsets[0] == pointer_bytes`, so the first
   row begins right after the table.
 - Pointers are **independent**: they need not increase, and a later slot may point
@@ -53,13 +51,11 @@ strings[]                         ; begins at byte pointer_bytes
   table)` or the end of the bank for the largest pointer. Extents tile the string
   region, so every byte after the table belongs to exactly one row (modulo shared
   pointers); nothing is orphaned or unreferenced.
-- A subfile whose first word is `0x00000008` declares **two banks**: an 8-byte header
+- A valid section whose first word is `0x00000008` declares **two banks**: an 8-byte header
   (`u32 8`, `u32 block1_start`) precedes the first bank, and the second runs from that
-  word to the end. This is **live US data**: 44 battle/system text subfiles (load
-  argument `0x8001A000`, sizes `14428` and `16872`) use it, and all 44 round-trip
-  byte-identically; packing preserves the header verbatim. Seven further
-  68-byte subfiles of a different class (`0x800E3800`) begin with the same four bytes by
-  coincidence and are refused by the header validation, not silently handled.
+  word to the end. US battle/system text uses load argument `0x8001A000`;
+  packing preserves the header verbatim. The first word alone is insufficient
+  to identify text: bank boundaries and pointer tables must also validate.
 
 ## Command bytecodes
 
@@ -91,15 +87,13 @@ Operand counts are the bytes following the control byte.
 
 Any byte with no literal or command mapping is preserved as `{byte(0xNN)}`.
 
-Notes established from the corpus and the two consumers:
+Row boundaries and command widths affect decoding:
 
-- `0x16` (`{time}`) **only ever appears as the last command of a row** (0 of
-  19,341 extents place content after it). Seven areas (`AREA009`, `AREA020`,
+- `0x16` (`{time}`) can end a row without NUL. Seven areas (`AREA009`, `AREA020`,
   `AREA066`, `AREA134`, `AREA148`, `AREA149`, `AREA172`) contain **no `0x00` at
   all** and end their rows with `{time(0xNN)}` — a NUL-only reader cannot open them.
 - A command whose operands are cut off by the extent is emitted as `{byte(0xNN)}`.
-  `{byte(0xNN)}` is accepted for any value, so such text repacks unchanged; measured
-  across the corpus, 0 of the 6,516 `{byte}` tokens stand for a byte that has a token.
+  `{byte(0xNN)}` accepts any byte value, preserving incomplete commands unchanged.
 
 ### Option lists
 
@@ -110,8 +104,8 @@ the same row extent, after the row's `{end}`:
 This is B3  {nl}Do you want to ride{nl}the lift?  {choice(0x00, 0x0c, 0x13)}Go to B1{end}Go to B2{end}Quit{end}
 ```
 
-2,034 US rows carry such a list. This is why the bytes after a row's first `NUL`
-have no pointer of their own: they belong to the row that asked the question.
+The bytes after a row's first `NUL` can therefore belong to its option list.
+They remain part of that row's allocation.
 
 ## Character table
 
@@ -130,17 +124,10 @@ as lossy.
 
 ### Languages and script coverage
 
-The table above is the US (`SLUS_004.22`) table. For other regional builds the
-evidenced surface is a **single-byte accented-Latin range around `0x97`-`0xAA`**,
-which the reference tool supplies out-of-band (`--extra-table 9A=à 9B=ò …`, PAL
-example `À=97 Ò=98 Ù=99 ì=a5 è=a0 é=a1 É=a4 ù=a8 °=aa`). That is the multilingual
-(EU) extension, and it is still Latin script — not a new script.
-
-**No kanji or two-byte table is evidenced.** The pinned reference decoder has no
-double-byte path and no CJK codepoints; the JP build (`SLPS-00990`) is unexamined.
-Treat "the game also supports a kanji table" as **unproven** until the Japanese
-build's own bytes and font table establish it. Regional limits are recorded in
-`out/text-format/decoder-provenance.md`.
+The table above is the US (`SLUS_004.22`) table. EU and JP encodings and consumers
+remain unverified. External accented-Latin tables are investigation leads;
+the US codec does not establish their regional mapping. A kanji or two-byte table
+requires evidence from the Japanese build's own bytes, font table and consumers.
 
 ## Editable codec
 
@@ -163,7 +150,8 @@ came from, a fingerprint, and one row array per bank:
 }
 ```
 
-`source` spells `PATH/ARCHIVE.EMI[#ENTRY]@0xADDRESS`; `entry` always identifies the original TOC entry. **Escaping is JSON's own** (`\\`, `\"`, `\n`,
+The `source` object identifies the archive, original TOC entry, load address and
+class. **Escaping is JSON's own** (`\\`, `\"`, `\n`,
 `\uXXXX`), so any literal is representable and no bespoke grammar is needed; the game's
 control codes keep their `{token}` spelling inside string values. A `{`/`}`/`\` that is
 not a token is rejected, and a byte with no modelled token fails closed as
@@ -196,9 +184,8 @@ expansion are not inferred. `latch` is absent for the banked classes.
 **A latch is a lead, not verified text, and it is never drawn from a classified window.** A
 range an existing owner already accounts for — a known-class subfile's whole payload, its pointer
 tables and row extents, or a reviewed `textbin` range — is a barrier the scanner never latches
-inside, so the 311 latches that used to sit inside verified text banks are now zero. The registry of
-those windows is generated by `bin/harness text windows` and every latching mode reports what the
-check removed.
+inside. Generate the registry with `bin/harness text windows`; every latching mode
+reports its applied barriers and removed or split latches.
 
 **Identified non-text payloads are not searched, and a lead has to carry a word.** The tool's filter
 layer (`filters.rs`, contracts in `models.rs`) refuses byte ranges that a parse or a record already
@@ -210,14 +197,13 @@ pre-filter and the post-filter are the same code for every mode.
 
 **A hit is anchored on its containing string, not on its match.** `scan` reports each candidate's offset,
 length, decode ratio, letter count and distinct-byte count, and labels the class
-`heuristic`; `dialogue` and `battle` remain the only classes with evidence. Latch counts
-outside those two banks are a list to investigate, not discovered classes (see
-`out/text-format/lexagraph-scan.md`). Structural probing then **refuted every candidate**:
-`probe --round-trip` parses 0 of 6,100 subfiles outside the verified classes as a text-bank
-section, while its positive control parses and reproduces 200/200 `dialogue` and 44/44 `battle`
-subfiles — and the candidates are documented elsewhere as VRAM pages, palette, encounter and
-audio containers (see `out/text-format/class-promotion.md`). No further class is promotable on
-present evidence.
+`heuristic`. `dialogue` and `battle` are the supported bank classes; the tool also
+supports verified literal layouts described in its
+[format reference](../../../tools/rust/bof3-text/docs/formats.md).
+Use `probe --round-trip` to test bank structure. Neither a successful structural
+probe nor a readable latch establishes a new consumer-verified class. A failed
+probe does not rule out another text layout. Discovery must retain unresolved
+sources until their storage and consumers are established.
 
 
 ## Allocation and packing
@@ -234,33 +220,27 @@ present evidence.
 
 ## Coverage
 
-All **200** US dialogue subfiles parse, extract and repack byte-identically when
-unedited — as do all 44 two-bank battle/system text subfiles (`0x8001A000`), so the tool covers **244** text subfiles in two classes. Earlier 190/10 and 174/26 splits
-came from three wrong assumptions, all corrected here: that `0x16` was inert, that
-offsets had to increase, and that bytes after the first `NUL` were unreferenced.
+`bin/harness text verify` checks unchanged round trips for recognized dialogue
+and battle banks. `extract-corpus` also exports supported executable, inline and
+record layouts, checking unchanged reproduction before publishing each document.
+Use `coverage --strict` on the complete extracted tree for file membership,
+source ranges and unresolved consumers. Bank verification and search-index
+integrity do not establish full US text coverage.
 
 ### Uncertainty
 
 - The precise meaning of the three `{choice}` operands (beyond "option count/kind
   and separators") and of individual operand values such as `{time}` and
   `{effect}` remain unreconstructed; the operands are round-tripped, not interpreted.
-- The two-bank layout is implemented from the reference tool and **is** exercised
-  by 44 US battle/system subfiles, all of which round-trip byte-identically.
-- No whole-image or runtime oracle exists here: this is a byte-level format, not
-  proof of in-game rendering.
+- Unchanged round trips prove byte preservation for supported inputs. Edited
+  rendering, choices and dynamic substitutions require separate bounded runtime
+  observations, reconciled with the original source and consumer.
 
 ## Evidence
 
-- External decoder provenance, pinned width table, language and region limits:
-  `out/text-format/decoder-provenance.md` (retained sources under
-  `out/text-format/provenance/`).
-- Heuristic scan of all 880 US archives, with false-positive and false-negative
-  behaviour stated: `out/text-format/lexagraph-scan.md`.
-- Raw-text instance round trip, controlled edit and refusal evidence:
-  `out/text-format/raw-text-instances.md`.
-- Guide/provenance record and corrections: `out/text-format/evidence-scope.md`.
-- US consumer verification: `out/text-format/consumer-verification.md`, raw excerpt
-  `out/text-format/us-text-dispatch.md`.
-- Independent per-command derivation: `out/text-format/command-derivation.md`.
-- Round-trip, safety and rejection evidence:
-  `out/text-format/roundtrip-validation.md`.
+The maintained [command reference](../../../tools/rust/bof3-text/docs/commands.md)
+describes `analyze`, `probe`, `verify`, `extract-corpus` and `coverage`.
+`analyze` exposes original allocation bytes, commands, operand offsets and shared
+references. Use these source locations to reproduce byte checks and qualify
+consumer observations. Keep run-specific reports outside the format contract;
+missing source or runtime evidence remains an acceptance gap.

@@ -534,11 +534,12 @@ Other master-menu labels and observed rendering remain unverified.
 ## Bank layout
 
 ```
-u16 pointer_bytes                 ; byte size of the offset array, including itself
-u16 offsets[pointer_bytes / 2]    ; bank-relative pointers
+u16 offsets[pointer_bytes / 2]    ; offsets[0] is pointer_bytes
 strings[]                         ; begins at byte pointer_bytes
 ```
 
+- The first `u16` is both the first row's offset and the byte size of the entire
+  offset array. There is no separate size field before the array.
 - `offsets[0] == pointer_bytes`. Pointers are independent and need not increase;
   equal pointers are the same row, and a pointer equal to the bank size is empty.
 - A row's bytes are its **extent**: `[offsets[i], next larger pointer)` — or the end
@@ -609,13 +610,10 @@ shapes, `0x8A`=`©`, `0x8D`=`&`, `0x92`=`•`.
 Any byte not in these tables is preserved as `{byte(0xNN)}`; nothing is mapped to a
 space or dropped.
 
-This is the US (`SLUS_004.22`) table. For other regional builds the evidenced
-extension is a single-byte **accented-Latin** range around `0x97`-`0xAA` (supplied to
-the reference tool as `--extra-table 9A=à 9B=ò …`), which is the multilingual (EU)
-surface and is still Latin script. **No kanji or two-byte table is evidenced**: the
-pinned reference decoder has no double-byte path and the JP build is unexamined, so
-treat "the game also supports a kanji table" as unproven
-(`out/text-format/decoder-provenance.md`).
+This is the US (`SLUS_004.22`) table. EU and JP encodings and consumers remain
+unverified. External accented-Latin tables are investigation leads; the US codec
+does not establish their regional mapping. A kanji or two-byte table requires
+evidence from the Japanese build's own bytes, font table and consumers.
 
 ## JSON codec
 
@@ -630,8 +628,9 @@ treat "the game also supports a kanji table" as unproven
 }
 ```
 
-`source` is `PATH/ARCHIVE.EMI[#ENTRY]@0xADDRESS`, with an explicit `entry` even for a single text subfile, and carries the `class` (`dialogue`, `battle`, or
-`heuristic` for a raw-text instance). Escaping is JSON's own, so literals need no
+The `source` object identifies the archive, original TOC entry, load address and
+class: `dialogue`, `battle`, or `heuristic` for a raw-text instance.
+Escaping is JSON's own, so literals need no
 bespoke rules; the game's control codes stay as `{token}` inside the string.
 `--entry` accepts one index, a comma list, or `all`; extraction to a directory writes
 `<entry>.json` per subfile.

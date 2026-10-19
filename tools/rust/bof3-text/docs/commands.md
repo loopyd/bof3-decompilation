@@ -354,8 +354,8 @@ Control commands and their operands are transparent to `--grep`, so a phrase the
 breaks across a command is found (`--grep "it'll be a good"` matches
 `it'll{nl}be a good crop`) and **raw command bytes are never matchable**: `--grep end`
 does not match a `{end}` terminator, and `--grep 0x81` does not match an operand. Token
-syntax is therefore no longer searchable — use `--commands` for command usage. `-i`
-folds ASCII case. See `out/text-format/search-semantics.md`.
+syntax is therefore not searchable. Use `--commands` for command usage. `-i`
+folds ASCII case.
 
 **Bank and heuristic `query` and `search` use one matcher.** Both route through `search::find_in_instance`, so the
 same needle answers the same way in either mode: a command-derived break may be skipped or read as
@@ -388,11 +388,8 @@ decodes to what it claims.
 Round-trips every text subfile of a **known** class across the corpus and reports the result. This
 is the tool's own gate: it proves the bytes it claims to understand are reproduced exactly.
 
-```
-$ bin/harness text verify
-verified out/extracted/BIN: 244 of 244 text subfile(s) over 880 archive(s) round-trip byte-identically
-  battle     44/44
-  dialogue   200/200
+```sh
+bin/harness text verify --root out/extracted
 ```
 
 Subfiles of an unknown class are not judged here — `probe` is the mode for those. Any failure is
@@ -438,22 +435,16 @@ Writes a **read-only** text-versus-data map of every subfile in every archive: r
 the evidence used and an `unidentified` marker. It proposes roles and changes nothing — no
 `splat.yaml`, `target.toml` or any segment config is touched.
 
-```
-$ bin/harness text map
-mapped out/text-format/segment-map.json: 6344 subfile(s) over 880 archive(s)
-  verified text   244
-  data            6100
-  identified data 1139 (1139 by magic)
-  unidentified    4961
-  candidates      12884 text-like run(s) in 2200 data subfile(s) (candidates only)
-  in text banks   311 run(s) belonging to the verified text itself
-  this report proposes roles and changes nothing
+```sh
+bin/harness text map --root out/extracted
 ```
 
-A range is `text` only when it parses as a section **and** reproduces byte-identically **and** its
-class has evidence; everything else is `data`. Text-like runs inside data are listed as candidates,
-never as text ranges. The report deliberately does **not** encode the EU-knowledgebase ctype
-taxonomy, so it asserts only what the US bytes show. See `out/text-format/segment-map.md`.
+A range is `text` only when it parses as a bank section, reproduces byte-identically
+and belongs to a supported bank class. Everything else has role `data`, including
+other text layouts; this role does not prove the absence of text. Text-like runs
+inside data remain candidates. The report does not encode the EU knowledgebase's
+ctype taxonomy. Use `coverage --strict` for supported literal layouts, original
+disc membership and unresolved source ranges.
 
 ## `probe ARCHIVE.EMI [--round-trip]`
 
@@ -462,16 +453,14 @@ the string region — **without consulting class membership**, so an unknown loa
 on the same terms as `dialogue`. `--round-trip` also rebuilds each parsed section and reports
 whether it reproduces the payload byte-for-byte.
 
-```
-$ bin/harness text probe out/extracted/BIN/WORLD00/AREA000.EMI --round-trip
-probe …AREA000.EMI: 1 of 16 subfile(s) parse as a text section, 1 reproduce byte-identically
-  #11 0x80010000 dialogue banks=1 rows=256 used=130 round-trip=identical
+```sh
+bin/harness text probe out/extracted/BIN/WORLD00/AREA000.EMI --round-trip
 ```
 
-This is the structural evidence a class promotion may rest on, and its positive control is
-built in: it parses and reproduces the two consumer-verified classes, and reports 0 of 6,100
-subfiles for every other load argument in the corpus. See
-`out/text-format/class-promotion.md`.
+The report includes the entry, load argument, bank and row counts, and reproduction
+result. A successful probe supplies structural evidence for further investigation;
+promotion also requires original consumer evidence. A failed probe does not rule
+out text stored in another layout.
 
 ## `search [--index PATH] [--root DIR] [--grep TEXT] [-i|--ignore-case] [--class ...] [--script S] [--language L] [-e|--entry N] [--archive TEXT] [--limit N] [--match-offset] [--windows PATH] [--no-windows] [--verify-entries]`
 
