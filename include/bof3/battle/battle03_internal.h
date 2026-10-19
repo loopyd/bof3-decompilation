@@ -354,10 +354,10 @@ extern Battle03NineteenDispatchTable D_801D0CD0; /* @source 0x801D0CD0 @kind unk
 extern Battle03QueuedSlot* volatile D_801EC2E0; /* @source 0x801EC2E0 @kind unknown */
 extern Battle03FourDispatchTable    D_801D0CC0; /* @source 0x801D0CC0 @kind table */
 extern Battle03SlotStore            D_801EC330[]; /* @source 0x801EC330 @kind unknown */
+extern Battle03LocalWork            localWorkRecordsBf20[]; /* @source 0x801EBF20 @kind unknown */
 /* 0x140-stride battle status records paired with the local work records; bit 0
  * of word 0 is cleared for the first three records by queueEligibleWorkRecord
- * and tested by func_801E7B34. The raw-address macro BATTLE_LOCAL_STATUS_ARRAY
- * in this header still binds the same address for that older lift. */
+ * and tested by func_801E7B34. */
 extern Battle03FlagRecord            battleLocalStatusArray[]; /* @source 0x801EC048 @kind unknown */
 /* @kind: bss (map symbol: uiRingHead) — UI ring consumer index. */
 extern u8                            uiRingHead; /* @source 0x801EBF04 */
@@ -405,6 +405,7 @@ extern Battle03DispatchTable        D_801D0FB8; /* @source 0x801D0FB8 @kind unkn
 extern Battle03DispatchTable        D_801D0FC4; /* @source 0x801D0FC4 @kind unknown */
 extern Battle03FourDispatchTable    D_801D0FD0; /* @source 0x801D0FD0 @kind table */
 extern Battle03DispatchTable        D_801D0FF8; /* @source 0x801D0FF8 @kind table */
+extern Battle03FourDispatchTable    stateByte3Handlers1004; /* @source 0x801D1004 @kind table */
 extern u8*            D_801C893C[]; /* @source 0x801C893C @kind unknown */
 extern u32*           D_800B6178[]; /* @source 0x800B6178 @kind unknown */
 extern u8*            D_801C8950[]; /* @source 0x801C8950 @kind unknown */
@@ -1023,8 +1024,6 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_PANEL_ICON_TABLE_AEB0    PSX_PTR(const volatile u32, 0x801eaeb0u)
 #define BATTLE_ICON_CLUT_TABLE_0C64     PSX_PTR(const volatile u8, 0x801d0c64u)
 #define BATTLE_GLOBAL_PTR_BF08          SPAD_PTR_SLOT(volatile u8, 0x801ebf08u)
-#define BATTLE_LOCAL_ALT_WORK_ARRAY     PSX_PTR(volatile u8, 0x801ebf20u)
-#define BATTLE_LOCAL_STATUS_ARRAY       PSX_PTR(volatile u8, 0x801ec048u)
 #define BATTLE_PANEL_TASK_ICON_TABLE                                           \
   PSX_PTR(const volatile Battle03Handler, 0x801d0ff8u)
 #define BATTLE_RESULT_UI_AUX_HANDLER_0 ((Battle03Handler)0x801e8684u)
@@ -1146,8 +1145,6 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_ROM_BASE_D0000     PSX_PTR(const u8, 0x801d0000u)
 #define BATTLE_DISPATCH_SUBSTATE3(index)                                       \
   PSX_PTR(const volatile Battle03Handler, 0x801eb1e0u + ((u32)(index) * 4u))
-#define BATTLE_SCRIPT_TABLE_492B8 PSX_PTR(void, 0x801492b8u)
-#define BATTLE_SCRIPT_TABLE_0B00D PSX_PTR(const void, 0x801eb00du)
 
 /* Single fixed-address globals (inline; no symbol binding required). */
 #define BATTLE_GLOBAL_WORD_598C  PSX_REF(u32, 0x8014598cu)

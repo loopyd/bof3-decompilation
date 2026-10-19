@@ -454,8 +454,10 @@ segments:
     - c
     - submitEnemyScriptBlock
   - - 56932
-    - asm
+    - c
     - func_801DEA64
+    - '@source: src/bof3/battle/func_801DEA64.c'
+    - '@behavior: Submits the current slot script, optionally appends its suffix, and queues the common event.'
   - - 57056
     - asm
     - func_801DEAE0
@@ -1209,8 +1211,10 @@ segments:
     - asm
     - func_801E7948
   - - 94004
-    - asm
+    - c
     - func_801E7B34
+    - '@source: src/bof3/battle/func_801E7B34.c'
+    - '@behavior: Scans three paired work/status records, stopping at inactive work or active status.'
   - - 94112
     - asm
     - func_801E7BA0
@@ -1364,8 +1368,10 @@ segments:
     - '@source: src/bof3/battle/func_801EA774.c'
     - '@behavior: Reads the panel halfword +0x06 of the state object published at 0x80148648: when it reads -0x16, the dispatched-handler mask byte at 0x80146329 has the bits of the +0x01 byte of the dispatch slot published at 0x801EB4DC cleared from it and func_80158E20 is called; every other value rewrites that same halfword 8 lower.'
   - - 105436
-    - asm
+    - c
     - func_801EA7DC
+    - '@source: src/bof3/battle/func_801EA7DC.c'
+    - '@behavior: Copies four handlers and dispatches the entry selected by panel-task state byte +3.'
   - - 105544
     - c
     - advancePanelWhenRingDiffers

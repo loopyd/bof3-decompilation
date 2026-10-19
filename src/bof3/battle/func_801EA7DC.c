@@ -1,18 +1,15 @@
 #include "bof3/battle/battle03_internal.h"
 
-/* @behavior dispatches the current panel-task byte-3 state through the four-entry
- * result-ring icon table.
+/* @behavior copies the four-entry handler table and dispatches the entry
+ * selected by the current panel-task byte-3 state.
  * @source 0x801EA7DC
- * @status partial
- * @match 50.00
- * @residual non-exact live audit: 16/27 instructions; 108 original bytes versus 128 current.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void NO_SIBLING_CALLS func_801EA7DC(void) {
-  Battle03Handler table[4];
+  Battle03FourDispatchTable table;
 
-  table[0] = *(Battle03Handler const volatile*)0x801d1004u;
-  table[1] = *(Battle03Handler const volatile*)0x801d1008u;
-  table[2] = *(Battle03Handler const volatile*)0x801d100cu;
-  table[3] = *(Battle03Handler const volatile*)0x801d1010u;
-  table[BATTLE_PANEL_TASK_BYTE_03]();
+  table = stateByte3Handlers1004;
+  table.handlers[D_80148648[3]]();
 }
