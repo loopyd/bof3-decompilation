@@ -161,10 +161,12 @@ See [formats.md](formats.md#default-character-names).
 
 For COMMU02 menu labels, select `--entry 8` in `ETC/COMMU02.EMI` or
 `--entry 7` in `ETC/COMMU02B.EMI`, below `BIN`. The inline document contains
-eleven literal fields. Edit only `text`; fixed fields use their full byte
-capacity, while the other fields reserve one NUL byte. Packing preserves all
-pointer words and unrelated bytes. Each archive needs its own document and
-output. See [inline formats](formats.md#inline-overlay-text) for field limits.
+eleven literal fields and six ASCII formats. Edit only `text` using each row's
+codec. Fixed fields use their full byte capacity; other fields reserve one NUL
+byte. Decimal formats retain one signed-word argument and at most eleven output
+bytes; fallback formats refuse percent sequences. Packing preserves all pointer
+words and unrelated bytes. Each archive needs its own document and output.
+See [inline formats](formats.md#inline-overlay-text) for field limits.
 
 For COMMU00 default names, select `--entry 0` in `ETC/COMMU00.EMI` or
 `--entry 14` in `WORLD04/AREA175.EMI` through `AREA185.EMI`, below `BIN`.

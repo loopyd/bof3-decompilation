@@ -754,7 +754,7 @@ impl ScanFilters<'_> {
     /// Bump the policy version when filter or reading semantics change.
     pub fn fingerprint(&self) -> Result<String> {
         let bytes = serde_json::to_vec(&(
-            "bof3.text-filters/v4",
+            "bof3.text-filters/v5",
             [
                 crate::executable::SCHEMA,
                 crate::inline::SCHEMA,

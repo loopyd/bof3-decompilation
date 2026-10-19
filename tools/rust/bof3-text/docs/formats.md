@@ -293,8 +293,33 @@ with limits four, three and three. Calls `0x801D320C` and `0x801D3334` draw Cash
 and Pot with limits four and three. Calls `0x801D9868` and `0x801D98CC` pass
 the five menu pointers and the separate marker to `0x8014FC90`, with limits
 sixteen and one. Packing preserves pointers, alignment bytes, adjacent currency
-glyphs and all other payload bytes. Other COMMU02 text and observed rendering
-remain unverified.
+glyphs and all other payload bytes.
+
+The same layout also exposes six ASCII formats. Capacities include NUL and
+exclude alignment padding:
+
+| Address | Original bytes before NUL | Capacity | Codec |
+| --- | --- | --- | --- |
+| `0x801D0C04` | `%7d` | 4 | `ascii-i32-decimal-format` |
+| `0x801D0C08` | `%02d` | 5 | `ascii-i32-decimal-format` |
+| `0x801D0C10` | `%03d` | 5 | `ascii-i32-decimal-format` |
+| `0x801D0C18` | `%04d` | 5 | `ascii-i32-decimal-format` |
+| `0x801DAD60` | Three `0x5C` bytes | 4 | `ascii-format-literal` |
+| `0x801DAD64` | One `0x5C` byte | 2 | `ascii-format-literal` |
+
+The decimal formats retain one ordered signed 32-bit argument. Calls load full
+words from `0x80144F50` or `0x801DB07C`; signed comparisons against 10, 100 or
+1000 do not establish a nonnegative or byte-sized domain. The codec permits
+widths 1..7 with optional zero padding, within the encoded allocation and eleven
+formatted bytes before NUL. Formatter `0x8017E3F4` writes into `0x80145AD4`;
+calls `0x801D3254` and `0x801D350C` draw through `0x8014FF0C`.
+
+The two fallback formats use printable ASCII within three and one encoded bytes.
+They refuse every percent sequence because their calls supply no formatting
+arguments. Calls `0x801D4BBC`, `0x801D4BF0`, `0x801D4DCC` and `0x801D4E00`
+format into the same buffer and draw through `0x8014FF0C`. The shared `%d`
+and multi-argument formats remain unsupported. Other COMMU02 text and observed
+rendering remain unverified.
 
 The `US COMMU00 default names` layout covers entry 0 of `BIN/ETC/COMMU00.EMI`
 and entry 14 of `BIN/WORLD04/AREA175.EMI` through `AREA185.EMI`. Each payload

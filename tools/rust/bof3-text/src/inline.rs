@@ -403,8 +403,12 @@ const LAYOUTS: &[Layout] = &[
         name: "US COMMU02 menu labels",
         load: 0x801d0c00,
         size: 42208,
-        sha256: "8686cbcbd2a7298c68d33ccff80c9d5483c2f830b7d3574f3a82e405638d9877",
-        consumers: &[0x801d2cd0, 0x801d320c, 0x801d3334, 0x801d9868, 0x801d98cc],
+        sha256: "37053f10b716836e72d0cd4141020ee395c972c82811bdf2bb5b41075e267709",
+        consumers: &[
+            0x801d2cd0, 0x801d320c, 0x801d3334, 0x801d9868, 0x801d98cc, 0x801d322c, 0x801d33a8,
+            0x801d33d4, 0x801d3418, 0x801d3444, 0x801d3488, 0x801d34b4, 0x801d34e8, 0x801d4bbc,
+            0x801d4bf0, 0x801d4dcc, 0x801d4e00,
+        ],
         allocations: &[
             Allocation::fixed_literal(0x801dac54, 4),
             Allocation::fixed_literal(0x801dac58, 3),
@@ -417,6 +421,12 @@ const LAYOUTS: &[Layout] = &[
             Allocation::literal(0x801db020, 5, Some(0x801db044), &[0x8014fc90]),
             Allocation::literal(0x801db028, 4, Some(0x801db048), &[0x8014fc90]),
             Allocation::literal(0x801db034, 2, Some(0x801db054), &[0x8014fc90]),
+            Allocation::bounded_format(0x801d0c04, 4, Codec::AsciiI32DecimalFormat, &[0x8014ff0c]),
+            Allocation::bounded_format(0x801d0c08, 5, Codec::AsciiI32DecimalFormat, &[0x8014ff0c]),
+            Allocation::bounded_format(0x801d0c10, 5, Codec::AsciiI32DecimalFormat, &[0x8014ff0c]),
+            Allocation::bounded_format(0x801d0c18, 5, Codec::AsciiI32DecimalFormat, &[0x8014ff0c]),
+            Allocation::bounded_format(0x801dad60, 4, Codec::AsciiFormatLiteral, &[0x8014ff0c]),
+            Allocation::bounded_format(0x801dad64, 2, Codec::AsciiFormatLiteral, &[0x8014ff0c]),
         ],
     },
     Layout {
