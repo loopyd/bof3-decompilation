@@ -4057,9 +4057,10 @@ Every appended instrument must be assigned to a program.
 
 A gain-muted source requires explicit relinking to a physical PCM allocation and
 an exact audible gain/pan inverse. Generated silence cannot supply that
-allocation. Program or bank mutes cannot be overridden by tone controls. Copies
-from gain-muted sources retain the original fitted envelope. The original muted
-instruments keep their controls and generated-silence links.
+allocation. Program or bank mutes cannot be overridden by tone controls. After
+the gain and sample inverses verify activation, the existing fitted-envelope
+inverse may also reconstruct the copy's supported envelope edits. The original
+muted instruments keep their controls and generated-silence links.
 
 Packing matches the full key-zone and generator structure against regenerated
 source contexts with positive selected pitches. Each candidate passes the

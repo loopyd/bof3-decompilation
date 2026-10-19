@@ -335,13 +335,12 @@ pub(crate) fn independent(
                     &view,
                     allocated,
                 )?;
-                if source.silent
-                    && !assignments
-                        .report
-                        .tones
-                        .iter()
-                        .any(|tone| tone.sf2_instrument == source.sf2_instrument && tone.unmuted)
-                {
+                let activating = assignments
+                    .report
+                    .tones
+                    .iter()
+                    .any(|tone| tone.sf2_instrument == source.sf2_instrument && tone.unmuted);
+                if source.silent && !activating {
                     return Err("SF2 independent tone: gain-muted source requires validated audible gain and PCM relinking".into());
                 }
                 let pitch = crate::soundfont::packing::pitch::pack(
@@ -351,8 +350,17 @@ pub(crate) fn independent(
                     &view,
                     reference.as_deref_mut(),
                 )?;
-                let envelope =
-                    crate::soundfont::packing::envelope::pack(binding, header, baseline, &view)?;
+                let activated_binding = activating.then(|| {
+                    let mut binding = binding.clone();
+                    binding.tones[source_index].silent = false;
+                    binding
+                });
+                let envelope = crate::soundfont::packing::envelope::pack(
+                    activated_binding.as_ref().unwrap_or(binding),
+                    header,
+                    baseline,
+                    &view,
+                )?;
                 for (at, bytes) in assignments
                     .patches
                     .into_iter()
