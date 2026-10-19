@@ -31,7 +31,7 @@ impl fmt::Display for Error {
             Self::Io(error) => write!(f, "{error}"),
             Self::InvalidImage(message) => write!(f, "invalid disc image: {message}"),
             Self::InvalidImageDetail(message) => write!(f, "invalid disc image: {message}"),
-            Self::InvalidInput(message) => write!(f, "invalid rebuild input: {message}"),
+            Self::InvalidInput(message) => write!(f, "invalid disc input: {message}"),
         }
     }
 }
