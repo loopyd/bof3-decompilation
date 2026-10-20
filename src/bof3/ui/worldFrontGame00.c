@@ -92,3 +92,29 @@ void updateStateMachine(void) {
       break;
   }
 }
+
+/* @behavior dispatches one of two world-front updates from the current
+ * sub-state, then ticks the shared waiting path.
+ * @source 0x80198170
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void dispatchWorldUpdate(void) {
+  if (D_80143B92 == 0) {
+    func_80198F1C();
+  } else {
+    updateWorldPosition();
+  }
+  runFrameFinalizationServices();
+}
+
+/* @behavior runs the shared world-front update.
+ * @source 0x801981B4
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void updateWorld(void) {
+  func_80198F1C();
+}

@@ -128,7 +128,7 @@ segments:
   - - 7032
     - c
     - updateStateMachine
-    - '@source: src/bof3/ui/updateStateMachine.c'
+    - '@source: src/bof3/ui/worldFrontGame00.c'
     - '@behavior: advances the world-front state machine, coordinating selection transitions, front effects, and shared scenario updates.'
   - - 7652
     - c
@@ -179,12 +179,12 @@ segments:
   - - 10608
     - c
     - dispatchWorldUpdate
-    - '@source: src/bof3/ui/worldUpdateGame00.c'
+    - '@source: src/bof3/ui/worldFrontGame00.c'
     - '@behavior: dispatches one of two world-front updates from the current sub-state, then ticks the shared waiting path.'
   - - 10676
     - c
     - updateWorld
-    - '@source: src/bof3/ui/worldUpdateGame00.c'
+    - '@source: src/bof3/ui/worldFrontGame00.c'
     - '@behavior: runs the shared world-front update.'
   - - 10708
     - c
