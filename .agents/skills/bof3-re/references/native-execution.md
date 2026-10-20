@@ -86,6 +86,25 @@ Decompilation preflight requires complete reviewed membership, one explicit lift
 owner and matching attached spellings for a grouped source. Every member uses the
 fresh public comparison route. Groups bypass ordinary batch-object and cached-status
 reuse until their complete input and consumer closure has accepted owner evidence.
+
+Grouped comparison runs through `bin/harness combiner compare SOURCE --output OUT.o`
+and needs a preservation record selected through `BOF3_PRESERVATION_RECORD` and
+`BOF3_PRESERVATION_FINGERPRINT`, or an externally pinned `BOF3_PRESERVATION_ROUTES`
+table; without one it refuses. Inspect the PRE profile with `combiner profile`,
+passing the destination draft through `--destination-source` and its sha256, then
+freeze the record with `combiner preservation capture`. The post manifest must place
+the grouped destination at the first member's recorded position and remove every other
+member entry, and the post Splat must only rewrite member source markers. The
+comparison reports per-member function bytes and the initialized-data sections each
+member owns, with `scope` naming both. A noncontiguous member range is compared like a
+contiguous one.
+
+The grouped comparison covers no BSS: a reviewed BSS placement is refused, so a member
+that needs BSS requires separate original evidence. A size-preserving change to one
+member reports `byte_match: false` with a first-mismatch offset and exit 1. A member
+that grows into another reviewed member or data placement is refused at section
+placement; any other size change is reported as a size delta without flow
+verification.
 Ordinary status fingerprints watch compiler configuration throughout capture and
 reject changes even when the original bytes or absence are restored. Literal and
 forced dependency checks retain their separate freshness guards.
