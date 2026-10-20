@@ -62,6 +62,8 @@ An affected caller source can contain several functions. Every record must be
 exact, the source must have one explicit lift owner, and its records, manifest
 claims, Splat boundaries and compiled symbols must agree. Retain each caller
 identity even when the transaction scope lists their shared source path once.
+Each caller needs a finite, four-byte-aligned reviewed function range. Native
+reports must cover that complete range; truncated or oversized results reject.
 
 ## Evidence gate
 

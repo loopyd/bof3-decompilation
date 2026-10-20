@@ -38,7 +38,10 @@ Function checks enumerate every attached exact record in affected C callers and
 verify each target-owned source and compiled spelling. Empty, partial, duplicate
 or ambiguous caller records refuse the check. Grouped callers require one
 explicit lift owner and exact equality among attached records, claims and
-reviewed Splat boundaries. The selected definition remains a single function.
+reviewed Splat boundaries. Each caller needs a finite, four-byte-aligned reviewed
+function range; a caller with no reviewed function boundary, or with a truncated or
+oversized range, refuses the check. The selected definition remains a single
+function.
 Declared support units with the selected `WEAK_SYMBOL_AT` address remain binding
 locations; they do not become function callers.
 Native comparison gates remain required before transaction acceptance.

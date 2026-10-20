@@ -132,7 +132,7 @@ def evidence(root: Path, result: dict, row) -> bool:
             and type(payload["original_size"]) is int
             and payload["original_size"] > 0
             and payload["original_size"] % 4 == 0
-            and (size is None or payload["original_size"] == size)
+            and payload["original_size"] == size
             and type(payload["current_size"]) is int
             and payload["current_size"] == payload["original_size"]
             and type(payload["size_delta"]) is int

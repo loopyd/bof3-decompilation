@@ -179,12 +179,12 @@ segments:
   - - 10608
     - c
     - dispatchWorldUpdate
-    - '@source: src/bof3/ui/dispatchWorldUpdate.c'
+    - '@source: src/bof3/ui/worldUpdateGame00.c'
     - '@behavior: dispatches one of two world-front updates from the current sub-state, then ticks the shared waiting path.'
   - - 10676
     - c
     - updateWorld
-    - '@source: src/bof3/ui/updateWorld.c'
+    - '@source: src/bof3/ui/worldUpdateGame00.c'
     - '@behavior: runs the shared world-front update.'
   - - 10708
     - c

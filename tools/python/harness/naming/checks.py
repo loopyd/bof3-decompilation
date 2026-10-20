@@ -76,6 +76,8 @@ def collect_function_checks(root: Path, row) -> list[dict]:
         }
     ]
     scope = facts["scope"]
+    manifest = load_target_manifests(root)[scope["target"]]
+    layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
     selectors = {checks[0]["selector"]}
     for relative in sorted(set(scope["source_locations"])):
         if relative == scope["definition"] or not relative.endswith(".c"):
@@ -84,12 +86,24 @@ def collect_function_checks(root: Path, row) -> list[dict]:
             selector = f"{scope['target']}@0x{record.address:08X}"
             if selector in selectors:
                 raise ValueError(f"function caller ownership is ambiguous: {relative}")
+            boundary = layout.find_boundary_at(record.address)
+            if boundary is None or not boundary.is_function:
+                raise ValueError(f"function caller has no reviewed function boundary: {selector}")
+            if (
+                record.address % 4
+                or boundary.virtual_size is None
+                or boundary.virtual_size <= 0
+                or boundary.virtual_size % 4
+            ):
+                raise ValueError(
+                    f"function caller requires a finite aligned reviewed range: {selector}"
+                )
             selectors.add(selector)
             checks.append(
                 {
                     "selector": selector,
                     "address": record.address,
-                    "size": None,
+                    "size": boundary.virtual_size,
                     "name": record.spelling,
                     "source": relative,
                 }

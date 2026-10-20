@@ -228,15 +228,30 @@ def validate_return(
             _validate_entry_covered_return(row, instructions, definitions)
 
 
+def _declaration_demand(use):
+    """One entry demand a projected i32 declaration may rest on.
+
+    O32 passes arguments in a0-a3 only. The stack pointer is the frame base and
+    never an argument; a demanded callee-saved or context register is the caller's
+    own context, which the function only saves or passes through.
+    """
+    register, role = use["register"], use["role"]
+    if 4 <= register <= 7 or register == 29:
+        return True
+    context = register in {28, 30, 31} or 16 <= register <= 23
+    return context and role in {"stored-value", "call-input", "continuation"}
+
+
 def _validate_entry_covered_return(row, instructions, definitions):
     evidence = row["returnDisposition"]["evidence"]
     summary = row.get("originalCallSummary")
     _require(type(summary) is dict, "native entry coverage lacks function summary")
     start, end = evidence["start"], evidence["end"]
+    root = evidence.get("selection") == "selected-root"
     _require(
         evidence["decodeComplete"] is evidence["analysisComplete"] is True
         and _complete(summary["entry"])
-        and _complete(summary["control"])
+        and (root or _complete(summary["control"]))
         and summary["pendingEntry"] == "requires-no-pending-gpr-loads"
         and 0 <= start < end <= 1 << 32
         and start % 4 == end % 4 == 0
@@ -275,6 +290,14 @@ def _validate_entry_covered_return(row, instructions, definitions):
         )
         return transfer
 
+    if root:
+        returns = sorted(
+            pc for pc, item in instructions.items() if item["word"] == 0x03E00008
+        )
+        _require(
+            returns == sorted(exit["pc"] for exit in evidence["exits"]),
+            "root return without complete jr-ra exit census",
+        )
     settled(summary["transfers"])
     exits = _rows(summary["exits"], 4096, "covered normal exits")
     _require(
@@ -288,7 +311,7 @@ def _validate_entry_covered_return(row, instructions, definitions):
             and instructions[exit["pc"]]["word"] == 0x03E00008
             and normal["delay"] == exit["delaySlot"] == exit["pc"] + 4
             and normal["delay"] in instructions
-            and _complete(normal["incomingLink"])
+            and (root or _complete(normal["incomingLink"]))
             and transfer["definitions"] == exit["definitions"]
             and transfer["pendingDefinitions"] == exit["pendingDefinitions"],
             "native entry coverage lacks owned settled normal exit",
@@ -1207,11 +1230,7 @@ def _summary(row, identity, payload, load, entry_flow, context, images, frame_us
         _require(
             facts["entry"]
             and facts["result"]
-            and all(
-                4 <= use["register"] <= 7
-                or (use["register"] == 31 and use["role"] == "continuation")
-                for use in demands
-            ),
+            and all(_declaration_demand(use) for use in demands),
             "supported declaration facts",
         )
     return summary

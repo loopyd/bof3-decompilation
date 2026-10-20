@@ -45,6 +45,44 @@ known constants. Call-path replay independently derives those constants from
 original instructions. A known stored value does not establish its destination,
 memory effects or declaration.
 
+A direct call whose analyzed callee summary records at least one normal exit, and
+which has no general-purpose register load pending at the call boundary, is treated
+as a normally returning O32 callee: it restores `sp` and leaves the caller's `gp`,
+`fp` and `s0`-`s7` registers intact. This is an admitted convention, not a fact
+derived from the callee's bytes. It keeps the caller's post-call stores and loads
+provable when the callee contract stays partial.
+
+The convention covers registers only. It does not grant a result, call effect,
+declaration or normal-return contract, it does not cover `ra`, it retains no frame
+contents, and it never overrides a callee fact that settles a register to a
+different value. `jalr`, an unresolved target, a callee without an analyzed summary
+or without a normal exit, and a call with a pending register load keep the previous
+refusal. The independent reader accepts the resulting preservation facts without
+replaying them.
+
+For the selected root, the return contract is accepted on its own coverage: complete
+decoded instructions, a complete entry summary, a settled `v0` at every normal exit,
+matching exit definitions, and a census that makes every `jr ra` in the range an
+analysed exit. It does not require the control closure of the root's callees,
+because a callee that never returns only removes paths from the claim.
+
+It also does not require proof that each exit returns through the entry link. That
+equality stays unprovable when `ra` is spilled to the frame and reloaded, which the
+register flow does not model, so the census and the settled `v0` carry the claim
+instead. A callee contract still requires the complete control summary. A complete
+result can also complete the declaration projection when every demand is a parameter
+or the continuation, so the root may reach a declaration while its control summary
+stays partial.
+
+A projected i32 declaration rests on complete entry and result facts and on the
+registers the function reads at entry. Arguments reach O32 functions in `a0`-`a3`
+only, so those demands become the parameter lanes. The stack pointer is accepted
+because it is the frame base, and a demanded `gp`, `fp`, `s0`-`s7` or `ra` is
+accepted only when the function saves it or passes it through, and that register's
+entry value stays unproved: the rule bounds the role it appears in, not its value.
+Any other entry demand refuses the declaration, and the independent reader applies
+the same rule.
+
 Native recovery can emit a body proposal while the original callee declaration
 remains unknown. A complete `jr ra; nop` body can produce an empty C89 `void`
 candidate. Supported straight-line bodies with direct calls can produce ordinary
