@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import os
 from collections.abc import Iterable
@@ -208,12 +209,30 @@ def select_preservation(
         raise
 
 
+# A single invocation re-verifies the same preserved selection before and after
+# every producer stage. The selection watch latches record and pinned-input
+# mutations, so later stages re-validate that watch instead of re-reading every
+# pinned input; the first verification of a selected history stays complete.
+_VERIFIED_SELECTIONS: dict[tuple[str, str, str, str], dict] = {}
+_VERIFIED_SELECTIONS_LIMIT = 64
+
+
 def verify_selection(
     root: Path, selection: Selection, *, compiler: Path | None = None
 ) -> dict:
     """Verify all source-bound histories under the retained routing watch."""
     if selection.record is None or selection.fingerprint is None:
         raise ValueError("verification requires selected preservation history")
+    key = (
+        str(root),
+        str(selection.record),
+        str(selection.fingerprint),
+        "" if compiler is None else str(compiler),
+    )
+    cached = _VERIFIED_SELECTIONS.get(key)
+    if cached is not None:
+        selection.validate()
+        return copy.deepcopy(cached)
     selection.validate()
     record = read_preservation_document(selection.record)
     companions = []
@@ -235,4 +254,7 @@ def verify_selection(
         companions=tuple(companions),
     )
     selection.validate()
+    if len(_VERIFIED_SELECTIONS) >= _VERIFIED_SELECTIONS_LIMIT:
+        _VERIFIED_SELECTIONS.clear()
+    _VERIFIED_SELECTIONS[key] = copy.deepcopy(proof)
     return proof
