@@ -45,15 +45,38 @@ def collect_entries(root: Path) -> tuple[dict, dict]:
     return indexed, committed
 
 
+# Whole-index and whole-tree scans are expensive; a gitlink set is reused while the
+# captured HEAD and index snapshot are unchanged. Any index or HEAD change misses.
+_GITLINK_CACHE: dict[tuple, dict[str, str]] = {}
+_GITLINK_CACHE_LIMIT = 8
+
+
+def _gitlink_key(root: Path, state) -> tuple:
+    # GitState is a frozen snapshot of HEAD plus the index path, content and
+    # filesystem state, so it is directly usable as a cache key.
+    return (str(root), state)
+
+
 def collect_gitlinks(root: Path) -> dict[str, str]:
     """Protect both staged and HEAD boundaries, including staged removals."""
+    state = capture_git_state(root)
+    if state is not None:
+        cached = _GITLINK_CACHE.get(_gitlink_key(root, state))
+        if cached is not None:
+            return dict(cached)
     indexed, committed = collect_entries(root)
-    return {
+    result = {
         name: checksum
         for entries in (committed, indexed)
         for name, (mode, checksum) in entries.items()
         if mode == "160000"
     }
+    state = capture_git_state(root)
+    if state is not None:
+        if len(_GITLINK_CACHE) >= _GITLINK_CACHE_LIMIT:
+            _GITLINK_CACHE.clear()
+        _GITLINK_CACHE[_gitlink_key(root, state)] = result
+    return dict(result)
 
 
 def validate_mutations(root: Path, names: set[str]) -> None:
