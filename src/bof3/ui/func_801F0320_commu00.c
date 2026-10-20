@@ -7,15 +7,37 @@
  *           totals -- kind 10 adds the weight byte to the 0x801455C5 total and
  *           kind 11 adds it to the 0x801455C6 total.
  * @status partial
- * @match 77.27
- * @residual Live asm-diff 34/44 instructions (77.27%), bytes 172->176 (-4), first difference +0x0000. The complete loop body is instruction-for-instruction identical to the original, including its registers (a2/a3 accumulators, a0 weight pointer, a1 byte offset, t0 final value), the signed `slt` exit test on the strength-reduced weight pointer and the store in the `j` delay slot. The whole residual is the pre-loop block: the original materialises the 0x801455C5 address as `lui v0 / addiu v0,21957 / move a2,v0` (a temp plus a copy into the loop register), which this source emits as a single `lui a2 / addiu a2` pair, so the pre-header is one instruction short and the two hoisted kind constants (10, 11) plus `move a1,zero` are ordered differently. 31 measured clean-C spellings were screened and every one of them either reproduced the single-register form or changed the (already exact) loop: `weight` pointer loops, index loops with `i*8`/`i*9` (kept the counter and `slti`), the table indexed by an `s32` offset (the spelling that produced the exact signed `slt` exit test and the exact loop), symbol-form accumulations (folded `%lo` addressing instead of `a2`/`a3`), accumulator pointers assigned outside vs. inside the loop, `&D_801455C4 + 1` and `total_b = total_a + 1` derivations, declaration initializers, and volatile pointer views (which reached the original's 176-byte size by duplicating the weight-pointer increment into the `j` delay slot -- an unjustified-volatility scheduling trick, rejected). Residual class: pre-loop address materialisation / scheduling, i.e. the original's address survived as a loop invariant register with a copy. Smallest missing evidence: the pass that keeps an invariant temporary separate from the loop-resident register in this compiler profile, or an independent review of the retained candidate. */
+ * @match 79.55
+ * @residual Live asm-diff 35/44 instructions (79.55%), 172 vs 176 bytes, first
+ * difference +0x0008: the two hoisted kind literals, the whole loop body, both
+ * kind arms, the strength-reduced weight pointer and its 540-byte bound
+ * reproduce the original. The residual is the pre-loop accumulator pair: the
+ * original materialises the 0x801455C5 symbol address into a temporary and
+ * copies it into the loop register (`lui v0 / addiu v0,21957 / move a2,v0`,
+ * then `addiu a3,a2,1`), this spelling folds the symbol address into a2 with no
+ * copy, so the block is one instruction short and every later position shifts.
+ * The named kind constants at the top are retained because they put the two
+ * hoisted literals in the original order (the earlier spelling was 34/44 with
+ * the first difference at +0x0000). A constant-address spelling
+ * (`PSX_PTR(u8, 0x801455C5u)`) reaches 39/44 at 176/176 bytes but is declined:
+ * it emits `lui/ori` instead of the original's `lui/addiu` symbol
+ * materialisation and folds the second accumulator into its own `lui/ori` pair,
+ * so its size match comes from a form the original bytes disprove.
+ * Residual class: pre-loop invariant-address copy. Smallest missing evidence:
+ * the clean-C spelling that keeps the invariant address temporary separate from
+ * the loop-resident register in this compiler profile.
+ */
 void func_801F0320(void) {
   u8* total_a;
   u8* total_b;
   s32 woff;
   s32 offset;
   u8  kind;
+  s32 match_a;
+  s32 match_b;
 
+  match_a = 10;
+  match_b = 11;
   total_a = &D_801455C5;
   total_b = total_a + 1;
 
@@ -27,9 +49,9 @@ void func_801F0320(void) {
     if (((volatile u8*)activeRecordBytes)[offset] != 0) {
       kind = D_801455C9[offset];
 
-      if (kind == 10) {
+      if (kind == match_a) {
         *total_a = *total_a + D_801F2706[woff];
-      } else if (kind == 11) {
+      } else if (kind == match_b) {
         *total_b = *total_b + D_801F2706[woff];
       }
     }

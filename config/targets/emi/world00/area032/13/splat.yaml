@@ -70,6 +70,8 @@ segments:
   - - 2176
     - c
     - func_801F3480
+    - '@source: src/bof3/world/func_801F3480.c'
+    - '@behavior: Updates the work-area activity flags from the scratch cursor record at 0x1F800044: while byte 9 is non-zero it sets flag bit 0x40 on the 0x98-byte record of 0x80146888 that byte 0x0B selects and decrements byte 9, otherwise it clears that bit, zeroes the flag byte of the records selected by cursor bytes 3 and 4, and sets cursor byte 1 to 2.'
   - - 2484
     - c
     - func_801F35B4

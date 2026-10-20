@@ -14,9 +14,14 @@
  * g_WorkObjectTint, then advances the object cursor to the interpolated one.
  * When the shared mode byte D_80146866 reads 0x32 the object's state byte at
  * offset 0x01 is set to 2. Takes no arguments and returns nothing.
- * @status partial
- * @match 95.88
- * @residual live asm-diff 93/97 insns (388->380 bytes), first difference +0x013c: the loop-back branch. The original materialises the loop-control flag into $v0 (`move v0,s0`) before `bnez v0,<loop head>` and re-loads the 0x8000 step constant in that branch's delay slot, so its loop head is the first load; this shape branches on $s0 directly and keeps the step constant at the loop head. Declaring the control flag as `s16` (or casting the condition) does make the compiler emit the `move`, which suggests a 16-bit control flag, but the copy is then scheduled between the loop's tail stores, so the delay slot still takes the last store instead of the step constant. Ranked untried experiments: (1) a `s16` flag with an explicit late condition copy (a temp assigned after the tail stores), (2) the same loop with the tail cursor copy written as a 12-byte aggregate assignment, (3) a per-object compiler/scheduling profile probe (bin/flag-search; out of scope for this mission). All other 93 instructions, the whole prologue/init/record copy/argument image and the other delay-slot pairs match the original byte-for-byte.
+ * Clean-C shape: the loop-control flag is a 16-bit local (so the compare
+ * extends it and the branch reads it out of $v0) and the loop tail copying
+ * the interpolated cursor back into the object cursor is one 12-byte
+ * aggregate assignment (so the last store stays ahead of that compare and the
+ * 0x8000 step constant fills the branch delay slot).
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void drawWorkObjectTrailToCell(void) {
   Scena00WorkCell* obj;
@@ -25,7 +30,7 @@ void drawWorkObjectTrailToCell(void) {
   Scena00Cursor interp;
   Scena00Cursor target;
   Scena00Tint color;
-  s32 more;
+  s16 more;
 
   obj = (Scena00WorkCell*)D_1F800044;
   color = *(Scena00Tint*)g_WorkObjectTint;
@@ -52,9 +57,7 @@ void drawWorkObjectTrailToCell(void) {
           func_8015477C(cur.coord_x_00, interp.coord_y_04);
     }
     func_801F78EC(interp, cur, color);
-    cur.coord_x_00 = interp.coord_x_00;
-    cur.coord_y_04 = interp.coord_y_04;
-    cur.scale_08 = interp.scale_08;
+    cur = interp;
   } while (more);
 
   if (D_80146866 == 50) {

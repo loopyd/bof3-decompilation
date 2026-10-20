@@ -14,7 +14,11 @@
  * load is also hoisted above the accumulator store in the original, filling the
  * load delay slot and saving the trailing nop. Clean-C orders, local hoists and
  * declaration orders all reproduced the same 26-instruction stream; profile and
- * permuter rungs are not authorized for this lane.
+ * permuter rungs are not authorized for this lane. A later shape sweep of the
+ * inline accumulator form, both store orders, a preloaded accumulator, two
+ * per-region cursor locals and swapped declaration order measured 12-17/25 with
+ * the shared constant still in $a1, so this step-local form stays the best
+ * coherent candidate.
  */
 void func_801F3728(void) {
   u8* record;

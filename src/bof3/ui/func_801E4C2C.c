@@ -11,27 +11,21 @@
  *           the EMI-local pointer table D_801E5FC0 with that id and returns 1
  *           when the list is empty or every listed id is recorded in the skill
  *           lists scanned by func_801E4D4C, otherwise 0.
- * @status partial
- * @match 81.94
- * @residual tail normalization plus delay-slot allocation. The
- *           `default: goto scan;` spelling fixes the block order the earlier
- *           candidate missed: the flag arm now sits before the scan, the
- *           dispatch jumps to the original's 0x801E4CDC, and the first
- *           difference moves from +0x0030 to +0x004C (59/72, was 55/72). What
- *           still differs is the pinned gcc-2.7.2-psx pipeline's own
- *           normalization of this tail: it if-converts
- *           `if (flag != 0) return 1; return 0;` into one `j epilogue` plus
- *           `sltu v0,zero,v0` and gives case 0xC its own copy, so the return-1
- *           block keeps a single predecessor instead of the original's two
- *           (flag-true fallthrough plus the scan's list-terminated edge), and
- *           two delay slots then allocate differently (the default index mask
- *           and `li s1,255`). Peeled-list/do-while spellings that add the
- *           second predecessor measured 54/72 in the same sweep. Smallest
- *           missing evidence: a clean-C spelling that keeps this boolean
- *           return branchy.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
+/* The flag tail returns through two separate blocks: the original keeps the
+ * `return 1` block reachable from both the flag-true fallthrough and the scan's
+ * list-terminated edge, so the spelling branches on `flag == 0` into the shared
+ * epilogue and labels the `return 1` block the scan jumps back to. Writing the
+ * tail as `if (flag != 0) return 1; return 0;` lets the pinned compiler
+ * if-convert it into `sltu` and gives case 0xC its own copy (59/72). The scan
+ * keeps the current list byte in a u8 local so one `lbu` feeds both the
+ * 0xFF terminator test and the func_801E4D4C argument. */
 s32 func_801E4C2C(u8 arg0) {
   u8* p;
+  u8 c;
   s32 flag;
 
   switch (arg0) {
@@ -50,17 +44,20 @@ s32 func_801E4C2C(u8 arg0) {
   default:
     goto scan;
   }
-  if (flag != 0) {
-    return 1;
+  if (flag == 0) {
+    return 0;
   }
-  return 0;
+flagged:
+  return 1;
 scan:
   p = D_801E5FC0[arg0];
-  while (*p != 0xFF) {
-    if ((u8)func_801E4D4C(*p) == 0) {
+  c = *p;
+  while (c != 0xFF) {
+    if ((u8)func_801E4D4C(c) == 0) {
       return 0;
     }
     p++;
+    c = *p;
   }
-  return 1;
+  goto flagged;
 }

@@ -23,7 +23,12 @@
  * second cursor base in $a0 (77.19%); compiler-profile and permuter rungs are
  * not authorized for this lane and no clean-C shape measured so far reproduces
  * the original assignment. The per-region fresh cursor locals mirror the exact
- * area016 siblings func_801F3224/func_801F3360.
+ * area016 siblings func_801F3224/func_801F3360. A later shape sweep of four
+ * tail statement orders, a byte-4 store through the global and a swapped local
+ * declaration order all reproduced this identical 45/55 stream at 228 bytes, so
+ * the residual is the home register of the shared constant rather than the
+ * statement order; the 0xC step store first, `cursor[4] = 1` second and the
+ * accumulator last is the best coherent candidate measured.
  */
 void func_801F3844(void) {
   u8* record;

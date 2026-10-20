@@ -14,31 +14,21 @@
  *           sign-extended 0x801455C2 byte and stores the result clamped to
  *           0..99 back into 0x801455C2, then republishes the shared counter word
  *           as the new snapshot.
- * @status partial
- * @match 93.85
- * @residual Live asm-diff 61/65 instructions (93.85%), 260 vs 260 bytes, first
- * difference +0x0040: the whole division/guard, all eighty loop instructions
- * (both stride tables, the weight temporary and its +3, the accumulator) and
- * the multiply reproduce the original instruction-for-instruction including
- * registers (tick in v1, offset a0, weight offset a1, total a2, kind constant
- * a3, penalty t0, value v1, result a0). The residual is two block-local
- * ordering classes: the clamp's branch layout (the original tests `value < 0`
- * first with `bltz` and jumps over the else arm; this spelling emits `bgez`
- * plus a `nop` delay slot) and the placement of the loop-invariant `li a3,9`
- * inside the loop preheader (the original orders it between the total and
- * weight-offset inits, this spelling at the end). Measured clean-C spellings
- * for the clamp chain/ternary/three-store/nested and for the preheader
- * init/declaration order (32 variants including the `weight = table[..] + 3`
- * temporary that fixed the accumulation order and the tick register) either
- * reproduced the same two classes or dropped the already-exact loop and tail
- * registers, so the candidate is retained as the best measured shape.
- * Smallest missing evidence: the clean-C spelling that yields the original's
- * clamp branch polarity/block order and preheader constant placement in this
- * compiler profile.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ * Two clean-C shapes carry the last four instructions and are kept for that
+ * reason. The kind literal is a named local assigned between the accumulator
+ * and offset initializations, so the loop-invariant compare constant stays
+ * where the original issues it (between those two inits) instead of being
+ * hoisted behind them. The clamp tests the non-negative guard with the value
+ * arm nested inside it, which yields the original's branch-first `bltz` to the
+ * out-of-line zero arm instead of a `bgez` with an inline fall-through arm.
  */
 void func_801EF110(u8 active_count) {
   u32 tick;
   s32 weight;
+  s32 match_kind;
   s32 penalty;
   s32 offset;
   s32 weight_offset;
@@ -53,10 +43,11 @@ void func_801EF110(u8 active_count) {
 
   penalty = active_count * 2;
   total = 0;
+  match_kind = 9;
   weight_offset = 0;
   offset = 0;
   do {
-    if (((volatile u8*)activeRecordBytes)[offset] != 0 && D_801455C9[offset] == 9) {
+    if (((volatile u8*)activeRecordBytes)[offset] != 0 && D_801455C9[offset] == match_kind) {
       weight = D_801F2705[weight_offset] + 3;
       total += weight;
     }
@@ -65,8 +56,13 @@ void func_801EF110(u8 active_count) {
   } while (offset < 480);
 
   value = D_801455C2 + ((s16)total - penalty) * (u16)tick;
-  clamped = value >= 100 ? 99 : value;
-  if (value < 0) {
+  if (value >= 0) {
+    if (value < 100) {
+      clamped = value;
+    } else {
+      clamped = 99;
+    }
+  } else {
     clamped = 0;
   }
   D_801455C2 = clamped;

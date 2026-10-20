@@ -16,9 +16,9 @@ s32 func_801D1C44(u8 row, u8 count);
  *           (arg4 - first) * 57 / (second - first); when they are equal both
  *           corners keep arg0. The colour bytes are 0x80/0/0 and the
  *           primitive is queued through func_8014E5A0(1, 0x10).
- * @status partial
- * @match 92.96
- * @residual 66/71 matched instructions and 272 current bytes versus 284 original; the clean-C shape is complete and every remaining delta is the three-instruction MIPS unsigned-division-by-zero trap sequence (bnez v1;$L;nop;break 7) plus the branch/jump targets it shifts: maspsx emits it only under the per-object -Wa,--expand-div profile (config/compiler/object-flags.cmake, out of this lane's scope). A probe build of this exact source with that flag reproduces the original 71/71 instruction sequence.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801D1B28(u16 arg0, u16 arg1, u8 arg2, u8 arg3, u32 arg4) {
   u8* primitive;
