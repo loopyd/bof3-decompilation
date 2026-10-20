@@ -62,7 +62,8 @@ const resultContract = (lane) => [
   `gate:{verdict:"PASS|FAIL"},source_path:"...",source_sha256:"<64 lowercase hex>"}],harness_calls:{used:0}.`,
   `Include exactly one results row per supplied ref, including unchanged exact rows on repair.`,
   `Every authored partial candidate needs source_path and source_sha256 before repair can route.`,
-  `The lane result must be plain JSON or one whole-result json fence, without surrounding prose.`,
+  `The lane result must be plain JSON or one whole-result json fence. Narration before the`,
+  `result fence is tolerated by routing, but keep the result fence last and complete.`,
   `Keep the runtime's required acceptance-report in a SEPARATE acceptance-report fence after it;`,
   `never embed that reserved wrapper or its fields in the lane JSON. The runtime validates and`,
   `removes the acceptance fence before routing. Save only lane JSON to your authorized lane report.`,
@@ -186,12 +187,67 @@ const repairBrief = (lane, reviewOutput, proposedText) => [
 ].join("\n");
 
 // Only explicit result objects govern routing; narrative/nested ledger statuses do not.
-const parseReport = (text) => {
+//
+// Children narrate before they report: reviewers write findings and then append the
+// routing JSON, and repairs write a ledger before their result rows. Routing must not
+// depend on the response being JSON-only, so collect candidate objects in order from
+// the whole text, every fenced block, and every balanced `{...}` span, then prefer the
+// first object that declares a routing key.
+const balancedObjects = (text) => {
+  const spans = [];
+  let depth = 0;
+  let start = -1;
+  let quoted = false;
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    if (quoted) {
+      if (char === "\\") index += 1;
+      else if (char === '"') quoted = false;
+      continue;
+    }
+    if (char === '"') {
+      quoted = true;
+      continue;
+    }
+    if (char === "{") {
+      if (depth === 0) start = index;
+      depth += 1;
+      continue;
+    }
+    if (char === "}" && depth > 0) {
+      depth -= 1;
+      if (depth === 0 && start >= 0) {
+        spans.push(text.slice(start, index + 1));
+        start = -1;
+      }
+    }
+  }
+  return spans;
+};
+
+const jsonObjects = (text) => {
   const value = String(text || "").trim();
-  try { return JSON.parse(value); } catch (_) { /* allow one explicit JSON fence */ }
-  const fence = /^```json\s*\n([\s\S]*?)\n```$/.exec(value);
-  if (!fence) return null;
-  try { return JSON.parse(fence[1]); } catch (_) { return null; }
+  const objects = [];
+  const consider = (raw) => {
+    if (!raw) return;
+    try {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === "object") objects.push(parsed);
+    } catch (_) { /* not JSON; keep looking */ }
+  };
+  consider(value);
+  for (const block of value.matchAll(/```[A-Za-z0-9_-]*[ \t]*\r?\n([\s\S]*?)\r?\n```/g)) {
+    consider(block[1].trim());
+  }
+  for (const span of balancedObjects(value)) consider(span);
+  return objects;
+};
+
+const parseReport = (text) => {
+  const objects = jsonObjects(text);
+  if (objects.length === 0) return null;
+  return objects.find((value) => !Array.isArray(value) &&
+    ("workflow" in value || Array.isArray(value.results))) || objects[0];
 };
 
 const verdictOf = (text, lane) => {
