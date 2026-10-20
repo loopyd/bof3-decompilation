@@ -164,6 +164,8 @@ segments:
   - - 36532
     - c
     - func_801D9AB4
+    - '@source: src/bof3/battle/func_801D9AB4.c'
+    - '@behavior: Draws a flat four-point quadrangle at the current primitive cursor: adds the selected 0x10-byte-stride coordinate template entry at D_801EAD30 to the two corner arguments for the four vertices, then packs the red/green/blue channels of the palette entry selected by the CLUT bank byte D_80144952 and the low byte of arg3 into the colour bytes, marks the primitive semi-transparent and closes the 0x18-byte packet.'
   - - 36992
     - c
     - func_801D9C80
@@ -461,8 +463,10 @@ segments:
     - '@source: src/bof3/battle/func_801DEA64.c'
     - '@behavior: Submits the current slot script, optionally appends its suffix, and queues the common event.'
   - - 57056
-    - asm
+    - c
     - func_801DEAE0
+    - '@source: src/bof3/battle/func_801DEAE0.c'
+    - '@behavior: Copies the six D_801D0C98 event ids to the stack, picks one of two ids from the slot selected by the battle mode word D_801463D0 (mode 1 takes the first pair, modes 2 through 4 the second pair, every other mode the third pair) with rand(), resolves it through func_801502D0 and queues it as event 2 of slot 0 through func_801DE60C.'
   - - 57284
     - c
     - queueScriptEvent

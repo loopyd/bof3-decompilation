@@ -30,28 +30,35 @@
  * `(size * (scratch u16 at 0x38)) / 0x10000`, before queueing the cell through
  * `func_80155A08(..., 1, 0x28)` with both coordinates shifted left by `16`.
  * @status partial
- * @match 79.95
- * @residual live audit 311/389 instructions, 1548 bytes against 1556 original; the
- * retained candidate reproduces the prologue size, load/payload offset and the
- * whole `D_801F51D8`/`D_801F51DC`/`D_801F51E0` texture-window block (byte-exact
- * mult/`mflo`/`sra` sequences and per-statement reloads prove the three tables are
- * non-const), but first differs at the entry pointer load, which this build
- * allocates to `$a0` where the original uses `$a1`; the residual is an
- * allocation/scheduling class: the first-active-frame block schedules the
- * increment add/store ahead of the shared frame-counter load, `layer` sits in
- * `$s5` instead of `$s2`, `0xFFFF` in `$s6` instead of `$s5` and the constant
- * `2` in `$t3` instead of `$s7`, and the coordinate bias `field - 2 + layer` is
- * reassociated into a hoisted `layer - 2`. Clean-C levers measured and rejected:
- * `row < span + 1` (277/391), `x`/`y` field-bias locals (297/391), explicit
- * `(s16)` casts on the bias (309/399), inner bound `span` without the guard
- * (276/389), locals declared in a different order (no change), and the entry
- * statement order `field` then increment (304/389, exact 1556 bytes). Smallest
- * missing evidence: the original's exact statement/variable structure for the
- * entry block and the coordinate bias, which only an allocator-level change
- * would expose; the default clean-C ladder is exhausted and the profile rungs
- * (flag-search/compiler-variants/permuter) are opt-in and unauthorized here.
+ * @match 83.03
+ * @residual live audit 323/389 instructions, 1556 bytes against 1556 original; the
+ * first-active-frame entry block now matches byte for byte - two separate `lbu` reads
+ * of the byte at `0x02`, the `0x3A` store ahead of the `0x02` store, the incremented
+ * value held in a local and the entry pointer allocated to `$a1` as in the original.
+ * First differs at +0x008C: the byte at `0x0B` is allocated to `$s3` instead of the
+ * original's `$v1` with `layer` in `$s2`, and `0x800 + (layer << 10)` folds into
+ * `value << 10` where the original emits `addiu s2,v1,-2`, `addiu v0,v0,0x800` and
+ * `sll v1,s2,0xa` separately. Volatility lever measured: a function-wide volatile
+ * pointee gives 307/389 at 1568 bytes, the entry-scope volatile view alone 322/389 at
+ * 1556 bytes, and the `next` local the retained 323/389. Clean-C levers measured and
+ * rejected: `row < span + 1` (277/391), `x`/`y` field-bias locals (297/391), explicit
+ * `(s16)` casts on the bias (309/399), inner bound `span` without the guard (276/389),
+ * locals declared in a different order (no change), and the entry statement order
+ * `field` then increment (304/389, exact 1556 bytes). Smallest missing evidence: the
+ * original's allocation of `layer` across the scroll/clamp block, which only an
+ * allocator-level change would expose; the default clean-C ladder is exhausted and the
+ * profile rungs (compiler-variants/permuter) are opt-in and unauthorized here. Rung 4
+ * is measured negative: `lift flag-search` over 52 catalogue profiles returns no
+ * exact match and leaves the -O2/-G0 baseline best, so the cap is not a
+ * compiler-profile class. The review's cancellation lever is also measured negative:
+ * splitting the `0x38` update into `+ 0x800` and `+ (layer << 10)` statements, with
+ * and without a named `scroll` temporary, both emit 303/390 at 1560 bytes with the
+ * frame one saved register smaller and the first difference moved to `+0x0008`;
+ * gcc-2.7.2 reassociates the halves back into `value << 10` and only the allocation
+ * changes, so both shapes were reverted to this candidate.
  */
 void func_801F4768(void) {
+  volatile World00Area016Scratch* first_frame;
   World00Area016Scratch* scratch;
   u32                    primitive;
   SVECTOR*               vertices;
@@ -67,10 +74,15 @@ void func_801F4768(void) {
   long                   depth;
   long                   flag;
 
-  scratch = D_1F800044;
-  if (scratch->state_02 == 0) {
-    scratch->state_02 = scratch->state_02 + 1;
-    FIELD_REF(u16, scratch, 0x3au) += D_80143E6C & 0xf;
+  first_frame = D_1F800044;
+  if (first_frame->state_02 == 0) {
+    u8 count;
+    u8 next;
+
+    count = first_frame->state_02;
+    next = count + 1;
+    FIELD_REF(volatile u16, first_frame, 0x3au) += D_80143E6C & 0xf;
+    first_frame->state_02 = next;
   }
   if ((D_8014832E & 4) == 0) {
     return;

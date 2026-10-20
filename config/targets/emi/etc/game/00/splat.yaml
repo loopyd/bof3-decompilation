@@ -1854,6 +1854,8 @@ segments:
   - - 183352
     - c
     - func_801C2438
+    - '@source: src/bof3/ui/func_801C2438.c'
+    - '@behavior: marks the first 31 of the 32 halfword entries of the row at 0x80039600 + (work byte 0x05 << 6) with bit 0x8000 and clears the row word at 0x8003963E, sets bit 0x20 of the work flags byte at 0x00, and advances the palette stage serial to 1.'
   - - 183504
     - c
     - func_801C24D0

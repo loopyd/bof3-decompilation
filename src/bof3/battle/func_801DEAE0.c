@@ -7,7 +7,7 @@ extern int rand(void);
  * @source 0x801DEAE0
  * @status partial
  * @match 78.95
- * @residual non-exact live audit: 45/57 instructions; 228 original bytes versus 228 current.
+ * @residual live asm diff 45/57 instructions, 228 versus 228 bytes. First mismatch +0x34: the original branches forward into the mode-1 arm (beq mode,1) which sits behind the dispatch chain, then jumps to the 2..4 arm; this build inverts the test, inlines the mode-1 arm and re-derives the rest of the chain afterwards, and it copies the resolved id into v1 because it materialises the 0xFF argument constant in v0. Both the switch and the inverted-nested shapes reach the same 45/57 live score, and a flag-search over the 52 reviewed profiles left the canonical -O2 profile the best (no exact match), so the residual is the dispatch layout and its register assignment, not a compiler profile.
  */
 void func_801DEAE0(void) {
   u8          local_18[6];

@@ -18,9 +18,10 @@
  *   rungs tried and rejected: direct volatile reads with u8/u32 locals (extra
  *   `andi`, folded address), non-volatile view without an index hoist (loads
  *   CSEd), index/negation in separate statements (cross-jump tail lost),
- *   inverted sentinel test and inverted arm order (layout regressed). Profile
- *   (`bin/flag-search`) and permuter rungs are opt-in and were not authorized
- *   for this mission.
+ *   inverted sentinel test and inverted arm order (layout regressed), and a
+ *   separate s32 negation local before the store (same three differences).
+ *   The 52-profile canonical flag catalog returns no exact match (best
+ *   94.74). The permuter rung is opt-in and was not authorized.
  */
 void func_8009DE8C(void) {
   u8* state;

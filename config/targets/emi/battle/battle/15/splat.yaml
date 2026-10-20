@@ -247,6 +247,8 @@ segments:
   - - 18784
     - c
     - func_8009B160
+    - '@source: src/bof3/battle/func_8009B160.c'
+    - '@behavior: Initialises the battle panel state bytes at 0x80148573/0x801485B8..0x801485C5, stores the 0x800B6F50 pointer in D_801485D8 and copies work byte +0x05 of the record at D_801EBF08 into 0x801485C4 and 0x80148656.'
   - - 18956
     - c
     - runPanelTasks16To19
@@ -840,6 +842,8 @@ segments:
   - - 53684
     - c
     - clampIndexedBattleByte14
+    - '@source: src/bof3/battle/clampIndexedBattleByte14.c'
+    - '@behavior: Adds the signed halfword delta to byte 0x14 of the record selected by the masked index byte read off the D_801463A0 pointer; the stored value is clamped to 0x32 when the sum reaches it, to -25 when the sum falls below it, and is the sum otherwise.'
   - - 53776
     - c
     - func_800A3A10

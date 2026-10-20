@@ -4,7 +4,13 @@
  * @source 0x8009B160
  * @status partial
  * @match 83.72
- * @residual same-CFG allocator/scheduling residual from +0x0000 (constant/register schedule differs; live byte-match DIFFER)
+ * @residual same-CFG allocator/scheduling residual from +0x0000 (live
+ *   byte-match DIFFER): the instruction sequence matches but the two short
+ *   constants swap registers -- original holds 1 in $a0 and 3 in $v1, this
+ *   shape holds 1 in $v1 and 3 in $a0. Rejected variants: literal 1/3 without
+ *   a constant local and a named three = 3 local both measure 34/43 (worse
+ *   than 36/43). The 52-profile canonical flag catalog returns no exact match
+ *   (best 83.72).
  */
 void func_8009B160(void) {
   u8 *work;

@@ -34,8 +34,17 @@
  * whole-expression forms of the search result pointer, `entry` pointer local with
  * and without a cast chain, do-while/while/goto spellings of the fill loop,
  * preheader statement permutations, and splitting the search byte offset from the
- * 0x801490E4 record offset. Compiler-profile and permuter rungs are opt-in and were
- * not authorised for this selector.
+ * 0x801490E4 record offset. Rung 4 is measured negative: `lift flag-search` over
+ * 52 catalogue profiles leaves the -O2/-G0 baseline at 94.22 as the maximum with no
+ * exact match, and four further live variants (inlined table deref, predecrement
+ * fill condition, both together, descending fill-pointer walk) scored 145, 163, 145
+ * and 155 of 173. The permuter rung is opt-in and was not authorised for this
+ * selector.
+ * The reviewed fill-constant-before-counter-init lever (repair 4) is measured
+ * negative: naming the fill byte in a local declared before the counter leaves
+ * 163/173 at 692 bytes with the same `+0x0098` and the same reversed preheader
+ * materialisation (`li $v1,0xB` still precedes `li $a0,0x5C`), so the named value
+ * does not move the constant's insn ahead of the counter init.
  */
 void func_801F2C38(void) {
   const u8* row;

@@ -21,15 +21,25 @@
  * record's 0x0B byte and stores tint bytes -0x40 into 0x5D-0x5F with 1 at 0x5C.
  * Returns 0 from the first walk and 1 from the second.
  * @status partial
- * @match 76.14
- * @residual Instruction-shape residual after the clean-C ladder reached
- * expression/register order: the record walk's entry test stays peeled
- * (the loop keeps a duplicated leading flag test and a compensating index
- * decrement) and the 32-entry row copy keeps strength-reduced induction
- * variables ($a1 = 0xC0 + 2i) with the reversed addu operands the sibling
- * func_801C2438 already records; the head `lui` also allocates $v1 where the
- * original uses $v0. Live: 118/181 instructions, 724 vs 704 bytes (size delta
- * +20), first mismatch +0x0000. No pins, clobbers or barriers.
+ * @match 89.77
+ * @residual Prologue and walk-header scheduling residual after the clean-C
+ * ladder. The compiled function has the original's 176 instructions and 704
+ * bytes with the original's -64 frame; both walks read D_80146254 directly, so
+ * the scan bound, the post-scan test and the `blez`/`move a0,v0` count copy
+ * match, and the inner row-copy load and store emit the original's
+ * `sll`/`addu` operand order and register roles. Remaining classes: the frame
+ * adjust and the scan-offset zeroing are scheduled ahead of the record-count
+ * load instead of after it; the first walk's scan-exit branch takes the offset
+ * init in its delay slot where the original emits `nop` and zeroes the index
+ * first; and the second walk keeps its `if (count > 0)` pre-test, which
+ * duplicates the loop's entry test, so the original's `addu v0,s1,v0` /
+ * `move a2,v0` record copy has no instruction slot. Measured and rejected on
+ * this allocation: the second-walk record address built as a u32 and then
+ * assigned (155/176 at 708 bytes), a signed second-walk loop bound and a
+ * swapped first-walk init order (158/176, neutral), dropping the second-walk
+ * pre-test with its count local (144/176 at 696 bytes), a single record local
+ * for both walks (148/176), and the inner row-copy load reordered before the
+ * pad computation (151/176).
  */
 s32 func_801BEE5C(void) {
   s32 count;
@@ -38,24 +48,24 @@ s32 func_801BEE5C(void) {
   s32 j;
   s32 offset;
   u8* rec;
-  u8* entries;
+  u8* rec2;
+  u32 base;
   u8* row;
   u8* pad;
   u16 value;
 
-  count = D_80146254;
   i = 0;
   search_offset = 0;
-  for (i = 0; i < count; i++) {
+  for (i = 0; i < D_80146254; i++) {
     if (D_80145E90[search_offset + 0x0B] != 0) {
       break;
     }
     search_offset += 0x140;
   }
-  if (i < count) {
+  if (i < D_80146254) {
     i = 0;
     offset = 0;
-    for (; i < D_80146254; i++, offset += 0x140) {
+    for (; i < D_80146254;) {
       rec = D_80145E90 + offset;
       D_80146250 = rec;
       g_game_work = (struct GameWorkArea*)rec;
@@ -73,6 +83,8 @@ s32 func_801BEE5C(void) {
         func_8014D664(g_game_work->route_index_08, 0, 0x800F0800, 0xA00);
         func_8014D978();
       }
+      offset += 0x140;
+      i++;
     }
     return 0;
   }
@@ -82,18 +94,18 @@ s32 func_801BEE5C(void) {
   }
   count = D_80146254;
   if (count > 0) {
-    entries = PSX_PTR(u8, 0x80035600u);
+    base = 0x80035600u;
     i = 0;
     offset = 0;
-    for (; i < D_80146254; i++, offset += 0x140) {
-      rec = D_80145E90 + offset;
-      D_80146250 = rec;
-      g_game_work = (struct GameWorkArea*)rec;
+    for (; i < D_80146254;) {
+      rec2 = D_80145E90 + offset;
+      D_80146250 = rec2;
+      g_game_work = (struct GameWorkArea*)rec2;
       for (j = 0; j < 0x20; j++) {
-        row = entries + (rec[0x05] << 6);
+        row = (u8*)(((u32)rec2[0x05] << 6) + base);
         pad = row + 0xC0;
-        value = *(u16*)(row + (j << 1));
-        *(u16*)(pad + (j << 1)) = value;
+        value = *(u16*)((u32)(j << 1) + (u32)row);
+        *(u16*)((u32)(j << 1) + (u32)pad) = value;
       }
       func_801C2438();
       g_game_work->field_0B = 0;
@@ -101,6 +113,8 @@ s32 func_801BEE5C(void) {
       g_game_work->unk_5E = -0x40;
       g_game_work->unk_5F = -0x40;
       g_game_work->flags_5C = 1;
+      offset += 0x140;
+      i++;
     }
   }
   return 1;

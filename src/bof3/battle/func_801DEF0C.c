@@ -13,7 +13,10 @@
  * clears (load-delay `nop`) and reuses the just-freed v0, while this build hoists
  * the byte load above the clears and therefore allocates it to a0; the entry
  * block register assignment and every later statement match. Clean-C register
- * allocation/scheduling residual (allocation class), not a semantic difference.
+ * allocation/scheduling residual (allocation class), not a semantic difference:
+ * seven measured clean-C shapes keep the hoist, and a flag-search over the 52
+ * reviewed profiles left the canonical -O2 profile the best score (no exact
+ * match).
  */
 void func_801DEF0C(void) {
   Battle03LocalWork* work1;

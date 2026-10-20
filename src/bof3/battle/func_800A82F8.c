@@ -13,10 +13,12 @@
  *   the zero store in the loop-entry branch delay slot and copies the pointer
  *   and count into $a1/$a2. This shape loads the count last, so the assembler
  *   injects an aspsx-style nop before the loop-entry branch and the zero store
- *   is emitted before the branch instead of in its delay slot. Untried next rung: hoisting
- *   the count read out of the loop condition into a register-valued
- *   temporary placed before the pointer statement. Clean-C byte match and
- *   independent review pending.
+ *   is emitted before the branch instead of in its delay slot. Rejected next
+ *   rungs: hoisting the count read into a u8 temporary ahead of the pointer
+ *   statement measures 15/26 (100 bytes) and 16/26 (108 bytes), and the
+ *   hoisted compare turns the loop test into a signed one. The 52-profile
+ *   canonical flag catalog returns no exact match (best 77.78). Clean-C byte
+ *   match and independent review pending.
  */
 void func_800A82F8(void)
 {

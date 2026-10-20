@@ -11,10 +11,19 @@
  * D_80145026 / D_80145028 level flags; when func_801E1C10 reports a full icon
  * row it arms byte 3 with the mode constant and sets D_801E3204, otherwise it
  * clears D_801E3204 and arms byte 2 with 2.
- * @status partial
- * @match 82.57
- * @residual scheduler emits the three mode constants inside the case bodies instead of the dispatch-branch delay slots
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
+/* Five arm bodies read the scratchpad cursor cell through
+ * WORLD00_AREA030_SCRATCH_PTR, the constant-address volatile form the exact
+ * sibling confirmSelectionStep (0x801DDDBC) already uses, while the 0x10 arm and
+ * every second `work[3]` read keep the D_1F800044 symbol view. Both spellings
+ * name the same volatile cell (WEAK_SYMBOL_AT(D_1F800044, 0x1F800044)). The
+ * constant-address arms make the `modeByte = 7` / `D_801E3204 = 1` constant the
+ * head of its block, so reorg fills the preceding branch delay slot
+ * (`beq ...,0x04` / `beq ...,0x80` / `bnez D_801E3204`), which is where the
+ * retained symbol-only spelling lost three instructions (+12 bytes). */
 void func_801D9E40(void) {
   u8 *work;
 
@@ -28,14 +37,14 @@ void func_801D9E40(void) {
   case 0x80:
     modeByte = 7;
     D_8014403D = 4;
-    work = D_1F800044;
+    work = WORLD00_AREA030_SCRATCH_PTR;
     work[2] = 9;
     D_1F800044[3] = 0;
     break;
   case 0x40:
     modeByte = 7;
     if (D_80145026 == 0 || D_80145028 == 0) {
-      work = D_1F800044;
+      work = WORLD00_AREA030_SCRATCH_PTR;
       D_8014403D = 4;
       work[2] = 9;
       D_1F800044[3] = 0;
@@ -43,7 +52,7 @@ void func_801D9E40(void) {
       if ((u8)func_801E1C10() != 0) {
         if (D_801E3204 == 0) {
           D_801E3204 = 1;
-          work = D_1F800044;
+          work = WORLD00_AREA030_SCRATCH_PTR;
           D_8014403D = 4;
           work[3] = 7;
           break;
@@ -51,7 +60,7 @@ void func_801D9E40(void) {
       } else {
         D_801E3204 = 0;
       }
-      work = D_1F800044;
+      work = WORLD00_AREA030_SCRATCH_PTR;
       work[2] = 2;
       D_1F800044[3] = 0;
     }
@@ -59,7 +68,7 @@ void func_801D9E40(void) {
   case 0x04:
     modeByte = 7;
     D_8014403D = 4;
-    work = D_1F800044;
+    work = WORLD00_AREA030_SCRATCH_PTR;
     work[2] = 0xA;
     D_1F800044[3] = 0;
     break;

@@ -3,7 +3,7 @@
 /* @source 0x801E97A8
  * @status partial
  * @match 86.67
- * @residual live asm diff 78/90 instructions, 328 versus 360 bytes. First mismatch bnez v1,0x801e980c: the original keeps the maspsx division-trap expansion (break 7 / break 6) that the canonical maspsx pass omits, so this object needs an object-local -Wa,--expand-div profile. Second residual: the panel byte +0x03 reload is scheduled one instruction later than the original (sh 0x1C store before the cell reload here, after it there). Next rung: object-local expand-div profile, then load-order retry.
+ * @residual live asm diff 78/90 instructions, 328 versus 360 bytes. First mismatch bnez v1,0x801e980c: the original keeps the maspsx division-trap expansion (break 7 / break 6) that the canonical maspsx pass omits. A disposable flag-search probe with an -O2 -Wa,--expand-div candidate measured 88/90 (97.8%) and clears that whole block, so the object needs an object-local -Wa,--expand-div profile; no entry was recorded because the lane authorizes one only for an exact match, and the remaining 2 instructions still differ here: the panel byte +0x03 reload (lui/lw of D_80148648) is scheduled after the 0x1C halfword store instead of before it, which also costs the load-delay slot. Next rung: object-local expand-div profile plus a load-order retry for that final block.
  */
 /* @behavior Rescales the active enemy work record selected by panel byte +0x0A
  * into panel byte +0x0B (55/divisor ratio), forces that byte to one while the
