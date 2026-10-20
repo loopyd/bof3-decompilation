@@ -15,6 +15,23 @@ _DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 _FILE_FLAGS = os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC | os.O_NONBLOCK
 _MAX_NODES = 8192
 _MAX_DIRECTORIES = 512
+# Re-verification re-reads the same compiler programs. A digest is reused only
+# while the file's complete stat identity is unchanged; every call re-stats and
+# still re-checks identity before and after any read.
+_CONTENT_CACHE: dict[tuple[int, int, int, int, int], str] = {}
+_CONTENT_CACHE_LIMIT = 512
+
+
+def _content_key(status: os.stat_result) -> tuple[int, int, int, int, int]:
+    return (
+        status.st_dev,
+        status.st_ino,
+        status.st_size,
+        status.st_mtime_ns,
+        status.st_ctime_ns,
+    )
+
+
 _MAX_FILE_BYTES = 64 * 1024 * 1024
 _MAX_TOTAL_BYTES = 256 * 1024 * 1024
 
@@ -134,6 +151,10 @@ class LookupBatch:
     def _read_file(self, parent: Path, name: str, before: os.stat_result) -> str:
         if before.st_nlink != 1:
             raise ValueError("lookup file exceeds link bounds")
+        if before.st_size <= _MAX_FILE_BYTES:
+            cached = _CONTENT_CACHE.get(_content_key(before))
+            if cached is not None:
+                return cached
         if before.st_size > _MAX_FILE_BYTES:
             # An oversized unrelated program on PATH (e.g. a version-manager
             # binary) is bound by identity rather than read into memory.
@@ -171,7 +192,12 @@ class LookupBatch:
                 != _identity(before)
             ):
                 raise ValueError("lookup file changed while reading")
-            return checksum.hexdigest()
+            digest = checksum.hexdigest()
+            if size <= _MAX_FILE_BYTES:
+                if len(_CONTENT_CACHE) >= _CONTENT_CACHE_LIMIT:
+                    _CONTENT_CACHE.clear()
+                _CONTENT_CACHE[_content_key(before)] = digest
+            return digest
         finally:
             os.close(descriptor)
 

@@ -101,6 +101,7 @@ class InputBatch:
         if self.root.anchor != "/" or Path(os.path.abspath(root)) != self.root:
             raise ValueError("input batch root must be canonical and absolute")
         self._directories: dict[Path, int] = {}
+        self._children: dict[Path, int] = {}
         self._metadata: dict[Path, tuple[int, ...]] = {}
         self._chains: dict[Path, tuple[tuple[Path, Path], ...]] = {}
         self._missing: set[Path] = set()
@@ -137,12 +138,19 @@ class InputBatch:
     def _release_directory(self, protected: Path) -> None:
         if len(self._directories) < _DIRECTORY_CACHE_SIZE:
             return
-        parents = {path.parent for path in self._directories}
         for path in self._directories:
-            if path not in parents and not protected.is_relative_to(path):
-                descriptor = self._directories.pop(path)
-                os.close(descriptor)
-                return
+            if self._children.get(path) or protected.is_relative_to(path):
+                continue
+            descriptor = self._directories.pop(path)
+            os.close(descriptor)
+            parent = path.parent
+            if path != parent:
+                remaining = self._children.get(parent, 0) - 1
+                if remaining > 0:
+                    self._children[parent] = remaining
+                else:
+                    self._children.pop(parent, None)
+            return
 
     def _open_directory(self, path: Path) -> int | None:
         self._require_active()
@@ -189,6 +197,9 @@ class InputBatch:
                 raise ValueError(f"input parent changed during observation: {path}")
             self._metadata[path] = expected
             self._directories[path] = descriptor
+            parent_path = path.parent
+            if path != parent_path:
+                self._children[parent_path] = self._children.get(parent_path, 0) + 1
         except BaseException:
             os.close(descriptor)
             raise
@@ -371,6 +382,7 @@ class InputBatch:
     def _close(self) -> None:
         descriptors = tuple(self._directories.values())
         self._directories.clear()
+        self._children.clear()
         self._chains.clear()
         self._active = False
         self._closed = True

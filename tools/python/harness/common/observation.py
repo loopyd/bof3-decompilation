@@ -51,6 +51,7 @@ class PathWatch:
         self._identities: dict[Path, tuple[int, ...]] = {}
         self._entries: dict[int, set[bytes]] = {}
         self._watch_paths: dict[int, set[Path]] = {}
+        self._watch_of: dict[Path, int] = {}
         self._memberships: set[int] = set()
         self._inputs: set[Path] = set()
         self._failure: str | None = None
@@ -81,27 +82,45 @@ class PathWatch:
         if self._descriptor is None:
             raise ValueError("input watch is closed")
         try:
+            if directories is None and len(paths) == 1:
+                # Admission of one already watched input is the dominant call: keep
+                # it to a single membership test and the required event drain.
+                (path,) = paths
+                if path in self._inputs:
+                    self._drain()
+                    return
             self._drain()
             directories = set() if directories is None else set(directories)
             inputs = set(paths) | directories
-            if not inputs or len(self._inputs | inputs) > 16384:
+            if not inputs:
                 raise ValueError("path watch input count is outside supported bounds")
-            if inputs <= self._inputs and not directories:
+            # Count and compare against new inputs only: rebuilding the union of the
+            # whole watched set on every admission is quadratic in input count.
+            pending = inputs - self._inputs
+            if len(self._inputs) + len(pending) > 16384:
+                raise ValueError("path watch input count is outside supported bounds")
+            if not pending and not directories:
+                self._drain()
                 return
-            entries: dict[Path, set[bytes]] = {path: set() for path in directories}
-            for path in inputs:
+            entries: dict[Path, set[bytes]] = {}
+            for path in pending:
                 if not path.is_absolute() or ".." in path.parts:
                     raise ValueError("path watch requires absolute inputs")
+                if path in directories:
+                    entries.setdefault(path, set())
                 child = path
-                if child == child.parent:
-                    entries.setdefault(child, set())
                 while child != child.parent:
-                    entries.setdefault(child.parent, set()).add(os.fsencode(child.name))
-                    child = child.parent
+                    parent = child.parent
+                    entries.setdefault(parent, set()).add(os.fsencode(child.name))
+                    if parent in self._directories:
+                        break
+                    child = parent
             if len(set(entries) | self._directories.keys()) > 32768:
                 raise ValueError("path watch ancestor count exceeds limit")
+            watch_paths = self._watch_of
             for path in sorted(entries, key=lambda item: (len(item.parts), item)):
-                if path in self._directories:
+                existing = path in self._directories
+                if existing:
                     directory = self._directories[path]
                 elif path == path.parent:
                     directory = os.open(path, _DIRECTORY_FLAGS)
@@ -116,18 +135,23 @@ class PathWatch:
                         )
                     except FileNotFoundError:
                         continue
-                self._directories[path] = directory
+                if not existing:
+                    self._directories[path] = directory
                 before_status = os.fstat(directory)
                 before = capture_directory_identity(before_status)
-                watch = self._add_watch(
-                    self._descriptor,
-                    os.fsencode(f"/proc/self/fd/{directory}"),
-                    _ENTRY_EVENTS | _SELF_EVENTS | _ONLY_DIRECTORY,
-                )
-                if watch < 0:
-                    raise OSError(
-                        ctypes.get_errno(), f"cannot watch input parent: {path}"
+                if existing:
+                    watch = watch_paths[path]
+                else:
+                    watch = self._add_watch(
+                        self._descriptor,
+                        os.fsencode(f"/proc/self/fd/{directory}"),
+                        _ENTRY_EVENTS | _SELF_EVENTS | _ONLY_DIRECTORY,
                     )
+                    if watch < 0:
+                        raise OSError(
+                            ctypes.get_errno(), f"cannot watch input parent: {path}"
+                        )
+                    watch_paths[path] = watch
                 self._entries.setdefault(watch, set()).update(entries[path])
                 self._watch_paths.setdefault(watch, set()).add(path)
                 if path in directories:
@@ -163,7 +187,7 @@ class PathWatch:
                 self._identities[path] = after
             if directories - self._directories.keys():
                 self._fail("input membership directory is missing")
-            self._inputs.update(inputs)
+            self._inputs.update(pending)
             self._drain()
         except BaseException:
             if self._failure is None:
