@@ -13,10 +13,11 @@ from harness.build.invocation import Invocation, Stage
 from harness.build.profiles import _SUPPORTED_CC_SHA256
 from harness.build.programs import ProgramSnapshot, describe_inputs
 from harness.common.digests import digest
+
 from harness.common.inputs import InputBatch
 from harness.common.observation import PathWatch
 from harness.common.process import run_bounded
-from harness.io import repo_layout, unique_object
+from harness.io import file_sha256, repo_layout, unique_object
 
 _PYTHON_ENV_SHA256 = "04eee0b601b47d438b012a33dada20d8dfbd1e31ea6377fbc061ea843a6e75bc"
 
@@ -149,8 +150,9 @@ def _supported(description: dict) -> None:
 class StatusPrograms:
     """Keep deduplicated program observations alive through a complete status pass."""
 
-    def __init__(self, root: Path):
+    def __init__(self, root: Path, inspections: object | None = None):
         self.root = root
+        self.inspections = inspections
         self.environment = _compiler_environment()
         self.snapshots: dict[str, tuple[dict, ProgramSnapshot]] = {}
         self.watch = PathWatch({root / name for name in _INPUTS})
@@ -174,9 +176,39 @@ class StatusPrograms:
             self.snapshots[key] = (inputs, snapshot)
         return self.snapshots[key][1].describe()
 
+    def _inspection(self, source: Path) -> dict:
+        """Reuse a recorded inspection while its material inputs are unchanged.
+
+        The inspection is a read-only bootstrap query. Its answer depends on the
+        source bytes, the resolved ordered arguments and the captured tool identity,
+        all of which enter the key; a miss always recomputes.
+        """
+        output = self.root / "build" / source.relative_to(self.root).with_suffix(".o")
+        arguments, _ = configured_command(self.root, source, output, allow_grouped=True)
+        key = digest(
+            {
+                "source": source.relative_to(self.root).as_posix(),
+                "source_sha256": file_sha256(source),
+                "arguments": arguments,
+                "tools": digest({"helpers": self.helpers, "common": self.common}),
+            }
+        )
+        cached = (
+            self.inspections.get_inspection(key)
+            if self.inspections is not None
+            else None
+        )
+        if cached is not None:
+            self.watch.validate()
+            return cached
+        value = _inspection(self.root, source)
+        if self.inspections is not None:
+            self.inspections.put_inspection(key, value)
+        return value
+
     def fingerprint(self, source: Path) -> str:
         self.watch.validate()
-        inspection = _inspection(self.root, source)
+        inspection = self._inspection(source)
         programs = self._capture(inspection["program_inputs"])
         self.watch.validate()
         return digest(

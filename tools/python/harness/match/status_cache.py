@@ -198,6 +198,7 @@ class MatchStatusCache:
         ).fetchone()
         if row is None or row[0] != _SCHEMA:
             self.connection.execute("DROP TABLE IF EXISTS results")
+            self.connection.execute("DROP TABLE IF EXISTS inspections")
             self.connection.execute("DELETE FROM metadata")
         self.connection.execute(
             "INSERT OR REPLACE INTO metadata (key, value) VALUES ('schema', ?) ",
@@ -209,11 +210,16 @@ class MatchStatusCache:
             "fingerprint TEXT NOT NULL, record TEXT NOT NULL, "
             "PRIMARY KEY (target, source, address))"
         )
+        # Recorded compiler inspections: a miss is always safe to recompute.
+        self.connection.execute(
+            "CREATE TABLE IF NOT EXISTS inspections ("
+            "key TEXT PRIMARY KEY, value TEXT NOT NULL)"
+        )
         self.connection.commit()
 
     def _tool_fingerprint(self, source: Path) -> str:
         if self.programs is None:
-            self.programs = StatusPrograms(self.root)
+            self.programs = StatusPrograms(self.root, inspections=self)
         return self.programs.fingerprint(source)
 
     def fingerprint(self, source: Path, target_key: str) -> str:
@@ -229,6 +235,25 @@ class MatchStatusCache:
     def validate(self) -> None:
         if self.programs is not None:
             self.programs.validate()
+
+    def get_inspection(self, key: str) -> dict[str, Any] | None:
+        row = self.connection.execute(
+            "SELECT value FROM inspections WHERE key = ?", (key,)
+        ).fetchone()
+        if row is None:
+            return None
+        try:
+            value = json.loads(row[0])
+        except ValueError:
+            return None
+        return value if isinstance(value, dict) else None
+
+    def put_inspection(self, key: str, value: dict[str, Any]) -> None:
+        self.connection.execute(
+            "INSERT OR REPLACE INTO inspections (key, value) VALUES (?, ?)",
+            (key, json.dumps(value, sort_keys=True)),
+        )
+        self.connection.commit()
 
     def get(
         self, target: str, source: str, address: int, fingerprint: str
