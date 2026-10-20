@@ -33,11 +33,15 @@ segments:
     - asm
     - bootPrimaryState
   - - 400
-    - asm
+    - c
     - func_801F6D90
+    - '@source: src/bof3/scenario/func_801F6D90_scena16.c'
+    - '@behavior: Routes the primary SCENA16 area path from the pending world id D_80143F00: world 2 runs func_801F6F30 and world 4 runs seedRouteEnterState2, both leaving D_80143C30 = 1, while world 0x1F runs seedRouteEnterState3 and leaves D_80143C30 = 0; every other world id keeps D_80143C30 unchanged. All paths then store 2 in the secondary route byte D_80146872.'
   - - 560
-    - asm
+    - c
     - seedRouteEnterState3
+    - '@source: src/bof3/scenario/seedRouteEnterState3_scena16.c'
+    - '@behavior: Seeds one routed setup path: arms the shared halfword channels D_801492D8 and D_8014932C with 0x100, clears D_801492DC and D_801492DA, runs func_8015C100 and, when func_8015B5D4(D_8014686C, 1) reports success as zero, clears the effect bank D_8014832E, runs func_8015B580(D_8014686C, 1) and enters secondary state 3 by storing 3 in D_80146874. D_8014686C is read once per call.'
   - - 688
     - asm
     - seedRouteEnterState2
@@ -45,14 +49,18 @@ segments:
     - asm
     - func_801F6F30
   - - 1348
-    - asm
+    - c
     - dispatchSecondaryState
+    - '@source: src/bof3/scenario/dispatchSecondaryState_scena16.c'
+    - '@behavior: Dispatches through the secondary SCENA16 state table: loads the signed front-end state byte D_80146874 with a signed byte load, scales it by four onto the overlay-local handler table secondaryStateTable (0x801F8558) and calls the selected handler with jalr and no arguments; reads no other memory and writes none.'
   - - 1408
     - asm
     - noopSecondaryState
   - - 1416
-    - asm
+    - c
     - finalizeSecondaryPath
+    - '@source: src/bof3/scenario/finalizeSecondaryPath_scena16.c'
+    - '@behavior: Finalizes the secondary SCENA16 path while the shared gate word D_80143C40 reads zero: clears D_80143C30 and the effect bank D_8014832E, copies the pending palette block, queues front-end cues 0x213 and 0x214, and while the shared selection byte D_80145029 still names a selection passes that byte''s two-byte effect pair from D_80181EBA to game_stop_selection_fx and marks it consumed with 0xFF; it then runs func_8016C0C0(0x7F, 0x7F) and func_8014B8B0.'
   - - 1584
     - asm
     - func_801F7230

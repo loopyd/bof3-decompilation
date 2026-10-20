@@ -1,56 +1,27 @@
 #include "bof3/scenario/scena16_internal.h"
 
-typedef struct Scena16Bank80140000 {
-  u8           pad_0000_686b[0x686c];
-  volatile u32 word_686c;
-  u8           pad_6870_6873[4];
-  volatile s8  byte_6874;
-  u8           pad_6875_832d[0x832e - 0x6875];
-  volatile u8  byte_832e;
-} Scena16Bank80140000;
-
-typedef struct Scena16Bank80150000 {
-  u8           pad_0000_92d7[0x92d8];
-  volatile u16 half_92d8;
-  volatile u16 half_92da;
-  volatile u16 half_92dc;
-  u8           pad_92de_932b[0x932c - 0x92de];
-  volatile u16 half_932c;
-} Scena16Bank80150000;
-
-#define SCENA16_BANK_80140000(type) PSX_PTR(volatile type, 0x80140000u)
-
 /* @behavior seeds one routed setup path and enters secondary state 3 on success.
+ * It arms the two shared halfword channels D_801492D8/D_8014932C with 0x100, clears
+ * D_801492DC and D_801492DA, runs func_8015C100, and, when
+ * func_8015B5D4(D_8014686C, 1) reports success as zero, clears the effect bank
+ * D_8014832E, runs func_8015B580(D_8014686C, 1) and enters secondary state 3 by
+ * storing 3 in D_80146874. D_8014686C is read once per call, and the second call's
+ * constant argument is issued in its delay slot.
  * @source 0x801F6E30
- * @status partial
- * @match 90.91
- * @residual second call argument scheduling leaves an extra delay nop; 132 bytes versus 128 original; bank representation cleanup remains.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void seedRouteEnterState3(void) {
-  u32 arg0;
-
-  ((volatile Scena16Bank80150000*)SCENA16_BANK_80140000(Scena16Bank80150000))
-      ->half_92d8 = 0x100u;
-  ((volatile Scena16Bank80150000*)SCENA16_BANK_80140000(Scena16Bank80150000))
-      ->half_92dc = 0u;
-  ((volatile Scena16Bank80150000*)SCENA16_BANK_80140000(Scena16Bank80150000))
-      ->half_92da = 0u;
-  ((volatile Scena16Bank80150000*)SCENA16_BANK_80140000(Scena16Bank80150000))
-      ->half_932c = 0x100u;
+  D_801492D8 = 0x100u;
+  D_801492DC = 0u;
+  D_801492DA = 0u;
+  D_8014932C = 0x100u;
   func_8015C100();
 
-  if (func_8015B5D4(((volatile Scena16Bank80140000*)SCENA16_BANK_80140000(
-                         Scena16Bank80140000))
-                        ->word_686c,
-                    1) == 0) {
-    arg0 = ((volatile Scena16Bank80140000*)SCENA16_BANK_80140000(
-                Scena16Bank80140000))
-               ->word_686c;
-    ((volatile Scena16Bank80140000*)SCENA16_BANK_80140000(Scena16Bank80140000))
-        ->byte_832e = 0u;
-
-    func_8015B580(arg0, 1);
-    ((volatile Scena16Bank80140000*)SCENA16_BANK_80140000(Scena16Bank80140000))
-        ->byte_6874 = 3;
+  if (func_8015B5D4(D_8014686C, 1) == 0) {
+    D_8014832E = 0u;
+    func_8015B580(D_8014686C, 1);
+    D_80146874 = 3;
   }
 }

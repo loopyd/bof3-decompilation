@@ -24,6 +24,10 @@
  * clean-C statement order that materializes the compare constant before the `lbu` so the
  * delay-slot filler can sink it into the entry branch slot; profile/permuter rungs were
  * not authorized for this mission.
+ * Lane re-measurement: the flag catalog (52 profiles, including -fno-delayed-branch and
+ * -fno-schedule-insns) has no exact match, and an unmasked `count != 0xff` compare, a
+ * masked load local and a flipped `0xff != (count & 0xff)` compare each keep the same
+ * 64/66 with `li v0,255` after the `lbu` instead of in the entry branch delay slot.
  */
 void func_801EA8F4(void) {
   u8 head;

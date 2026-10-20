@@ -9,16 +9,22 @@
 typedef void (*Scena16Callback)(void);
 typedef void (*Scena16RecordCallback)(void* record, u32 arg1);
 
+/* @source 0x1F800000 @kind unknown — scratchpad byte that publishes the freshly
+ * selected object index; the secondary controller re-reads it per row write. */
+extern u8 D_1F800000;
 /* @source 0x80143C30 @kind unknown */
-extern volatile u8  D_80143C30;
+extern u8  D_80143C30;
 /* @source 0x80143C40 @kind unknown */
 extern volatile u16 D_80143C40;
+/* @source 0x80143F00 @kind unknown — pending world id read by the primary
+ * 0x801F6D90 route switch with an unsigned halfword load. */
+extern u16 D_80143F00;
 /* @source 0x80143F03 @kind unknown */
 extern u8  D_80143F03;
 /* @source 0x80143F80 @kind unknown */
 extern s32          D_80143F80;
 /* @source 0x80145029 @kind unknown */
-extern volatile u8  D_80145029;
+extern u8  D_80145029;
 /* @source 0x80145988 @kind unknown */
 extern volatile u8  D_80145988;
 /* @source 0x80146258 @kind unknown */
@@ -31,21 +37,24 @@ extern u8 D_80146867;
 extern volatile u8 g_ScenarioProgress;
 extern volatile u32 g_ScenarioProgressWord;
 /* @source 0x80146874 @kind unknown */
-extern volatile s8  D_80146874;
+extern s8  D_80146874;
 /* @source 0x80146875 @kind unknown */
 extern u8  D_80146875;
 /* @source 0x80146876 @kind unknown */
 extern u16 D_80146876;
 /* @source 0x8014686C @kind unknown */
 extern volatile u32 D_8014686C;
+/* @source 0x80146872 @kind unknown */
+extern s8  D_80146872;
 /* @source 0x8014832E @kind unknown */
 extern u8  D_8014832E;
-/* @source 0x801492D8 @kind unknown */
-extern volatile u16 D_801492D8;
+/* @source 0x801492D8 @kind unknown — signed halfword channel, read with `lh`
+ * by the 0x801F7230 secondary controller. */
+extern s16 D_801492D8;
 /* @source 0x801492DA @kind unknown */
-extern volatile u16 D_801492DA;
+extern s16 D_801492DA;
 /* @source 0x801492DC @kind unknown */
-extern volatile u16 D_801492DC;
+extern s16 D_801492DC;
 /* @source 0x8014932C @kind unknown */
 extern volatile u16 D_8014932C;
 /* @source 0x8014930C @kind unknown */
@@ -58,6 +67,19 @@ extern volatile u16 D_80149322;
 extern s32          D_80147A90;
 /* @source 0x80143F1D @kind unknown */
 extern volatile u8  D_80143F1D;
+/* @source 0x80143FC8 @kind table — base of the 0x74-byte object rows seeded by
+ * the 0x801F7230 secondary controller. */
+extern u8 D_80143FC8[];
+/* @source 0x80143FCD @kind table — +5 byte field of the same object rows. */
+extern u8 D_80143FCD[];
+/* @source 0x80143FD1 @kind table — +9 byte field of the same object rows. */
+extern u8 D_80143FD1[];
+/* @source 0x8014402C @kind table — +0x64 word field of the same object rows. */
+extern u8 D_8014402C[];
+/* @source 0x80144030 @kind table — +0x68 word field of the same object rows. */
+extern u8 D_80144030[];
+/* @source 0x80144034 @kind table — +0x6C word field of the same object rows. */
+extern u8 D_80144034[];
 /* @source 0x80010004 @kind unknown */
 extern volatile u16 D_80010004;
 /* @source 0x80010006 @kind unknown */

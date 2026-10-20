@@ -15,6 +15,9 @@
  * both regressed to 75.00%); one bounded `bin/permute --time-limit 60` found no improvement;
  * per-object scheduling/profile search is outside this lane. Next untried rung: pipeline-level
  * profile/`--expand-div`-class object flag evidence for this object.
+ * Lane re-measurement: the flag catalog (52 profiles) has no exact match, and five scan-loop
+ * spellings (`count++` before `arg1++`, `arg1 = arg1 + 1`, `++` forms, `for` and `while`
+ * forms) all reproduce the same 43/46 with the pointer increment sunk into the back-edge slot.
  */
 void centerFieldText(u8* arg0, u8* arg1, u8 arg2, u8 arg3) {
   u8* start;

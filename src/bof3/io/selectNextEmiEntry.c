@@ -21,8 +21,10 @@ extern s8            D_80148FC0[];
  * loader state, releases any prior owner, and advances the loader step.
  * @source 0x80162790
  * @status partial
- * @match unavailable
- * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
+ * @match 65.15
+ * @residual clean-C allocation/scheduling residual: 43/66 instructions, 264 original bytes
+ * versus 256 current; the entry-block load order and the loader-word base register differ.
+ * flag-search over the 52 reviewed profiles peaks at 69.57% (-O1), so no clean profile closes it.
  */
 void selectNextEmiEntry(void) {
   u8   unused_stack[64];

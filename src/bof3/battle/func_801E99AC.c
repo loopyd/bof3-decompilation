@@ -32,6 +32,11 @@
  * reads the func_801D8690 first argument through the retained pointer instead
  * of the reloaded one; spelling every second-half access through the reloaded
  * cell instead costs the +0x04 store address (measured 84/91).
+ * Lane re-measurement: spelling only the call's first argument through the
+ * reloaded cell shifts the first D_80148648 load from $a2 to $a3 (84/91, first
+ * mismatch at instruction 0); a reassigned `panel` local for the second half
+ * reaches 85/91 and a first-half position local reaches 89/91, so the retained
+ * candidate stays the best coherent partial.
  */
 void func_801E99AC(void) {
   u8* panel;

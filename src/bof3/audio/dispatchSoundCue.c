@@ -11,8 +11,11 @@ extern short SsUtSetDetVVol(short, short, short);
  * PsyQ SsUtKeyOnV/SsUtSetDetVVol.
  * @source 0x8015DF18
  * @status partial
- * @match unavailable
- * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
+ * @match 87.65
+ * @residual clean-C allocation/scheduling residual: 589/672 instructions, 2684 original bytes
+ * versus 2688 current; the status-argument copy is hoisted out of the jalr delay slot. The
+ * canonical -O2 profile under the attached gcc-2.6.3 object compiler is already the best of the
+ * 52 reviewed flag profiles.
  */
 void dispatchSoundCue(u32 cue_id) {
 

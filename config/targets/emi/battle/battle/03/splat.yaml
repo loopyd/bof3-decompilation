@@ -269,8 +269,10 @@ segments:
     - asm
     - func_801DCCB0
   - - 49488
-    - asm
+    - c
     - func_801DCD50
+    - '@source: src/bof3/battle/func_801DCD50.c'
+    - '@behavior: Applies the current scratchpad damage modifiers, variance table and optional battler-specific scale table to one signed damage value.'
   - - 49912
     - asm
     - initDeferredBattlerCountdown

@@ -4,8 +4,10 @@
  * dispatches the current loader phase, and advances the streaming ring.
  * @source 0x80162230
  * @status partial
- * @match unavailable
- * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
+ * @match 95.56
+ * @residual clean-C allocation residual: 172/180 instructions, 720 bytes either side; the slot
+ * index and the slot-size base swap $a1/$v1. The canonical -O2 profile is already the best of the
+ * 52 reviewed flag profiles.
  */
 
 extern void (*D_80183248[])(void);
