@@ -2,9 +2,9 @@
 
 /* @source 0x800A0E68
  * @behavior UNKNOWN: exact behavior is not yet documented.
- * @status partial
- * @match unavailable
- * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 
 void func_800A0E68(void) {

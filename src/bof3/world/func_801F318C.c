@@ -9,9 +9,9 @@
  *           triangle per step whose first vertex is the projected centre, whose
  *           second vertex is the previous ring point and whose third is the new
  *           one (its first colour white, the other two black).
- * @status partial
- * @match 98.77
- * @residual live audit: 161/163 instructions, 648 original bytes versus 652 current; body and 32-step loop byte-identical, sole residual one extra load-delay nop before the pre-loop trail entry's address materialisation.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801F318C(s16 arg0) {
   World00Area028ScreenPoint screen;

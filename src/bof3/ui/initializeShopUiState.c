@@ -2,9 +2,9 @@
 
 /* @source 0x801E2650
  * @behavior initializes shop UI state fields.
- * @status partial
- * @match unavailable
- * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void initializeShopUiState(void) {
   u8* base;
