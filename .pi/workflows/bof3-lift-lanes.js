@@ -36,6 +36,12 @@ if (rawLanes.length === 0) {
   return { ok: false, error: "bof3-lift-lanes: args.lanes must list at least one { key, target, refs } lane" };
 }
 
+// Optional explicit child model for this run (`args.model`), for example
+// "ninerouter/ds-combo". Empty keeps each agent's declared model.
+const laneModel =
+  typeof args.model === "string" && args.model.trim() ? args.model.trim() : "";
+const modelOption = laneModel ? { model: laneModel } : {};
+
 const lanes = rawLanes.map((lane, index) => ({
   key: String(lane.key || `lane-${index + 1}`),
   target: String(lane.target || ""),
@@ -228,6 +234,7 @@ const laneChain = (lane) => {
     .run(liftKey, {
       label: `Lift ${lane.key} (${lane.target})`,
       agent: "bof3-lifter",
+      ...modelOption,
       output: false,
       task: liftBrief(lane),
     })
@@ -276,6 +283,7 @@ const reviewOnce = (lane, proposedText, round, triedRepairs) => {
     .run(reviewKey, {
       label: `Review ${lane.key} non-exact lift`,
       agent: "bof3-reviewer",
+      ...modelOption,
       output: false,
       task: reviewBrief(lane, proposedText),
     })
@@ -300,6 +308,7 @@ const reviewOnce = (lane, proposedText, round, triedRepairs) => {
           .run(repairKey, {
             label: `Repair ${lane.key} after review`,
             agent: "bof3-lifter",
+            ...modelOption,
             output: false,
             task: repairBrief(lane, text, proposedText),
           })
