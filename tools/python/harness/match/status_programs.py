@@ -19,6 +19,28 @@ from harness.common.process import run_bounded
 from harness.io import repo_layout, unique_object
 
 _PYTHON_ENV_SHA256 = "04eee0b601b47d438b012a33dada20d8dfbd1e31ea6377fbc061ea843a6e75bc"
+
+_ROUTING_ENVIRONMENT = frozenset(
+    {
+        "BOF3_PRESERVATION_RECORD",
+        "BOF3_PRESERVATION_FINGERPRINT",
+        "BOF3_PRESERVATION_ROUTES",
+        "BOF3_PRESERVATION_ROUTES_SHA256",
+    }
+)
+
+
+def _compiler_environment() -> dict[str, str]:
+    """Environment minus preservation-routing selection variables.
+
+    Those variables choose a preservation record; they are not part of the compiler
+    environment and must not change a status identity or its comparison stages.
+    """
+    return {
+        name: value
+        for name, value in os.environ.items()
+        if name not in _ROUTING_ENVIRONMENT
+    }
 _INPUTS = (
     *COMPILER_INPUTS,
     ".venv/pyvenv.cfg",
@@ -63,7 +85,7 @@ def _helper_inputs(root: Path) -> dict:
 
 def _inspection(root: Path, source: Path) -> dict:
     output = root / "build" / source.relative_to(root).with_suffix(".o")
-    arguments, environment = configured_command(root, source, output)
+    arguments, environment = configured_command(root, source, output, allow_grouped=True)
     result = run_bounded(
         root,
         [arguments[0], "--bof3-inspect", *arguments[1:]],
@@ -88,7 +110,7 @@ def _inspection(root: Path, source: Path) -> dict:
 
 
 def _comparison_inputs(root: Path) -> dict:
-    environment = tuple(os.environ.items())
+    environment = tuple(_compiler_environment().items())
     tools = repo_layout(root).psyqo_toolchain_root / "bin"
     stages = [
         Stage(
@@ -129,7 +151,7 @@ class StatusPrograms:
 
     def __init__(self, root: Path):
         self.root = root
-        self.environment = dict(os.environ)
+        self.environment = _compiler_environment()
         self.snapshots: dict[str, tuple[dict, ProgramSnapshot]] = {}
         self.watch = PathWatch({root / name for name in _INPUTS})
         try:
@@ -163,13 +185,13 @@ class StatusPrograms:
                 "inspection": inspection,
                 "programs": programs,
                 "comparison": self.common,
-                "environment": digest(dict(os.environ)),
+                "environment": digest(_compiler_environment()),
             }
         )
 
     def validate(self) -> None:
         self.watch.validate()
-        if dict(os.environ) != self.environment:
+        if _compiler_environment() != self.environment:
             raise ValueError("status process environment changed")
         if _helper_inputs(self.root) != self.helpers:
             raise ValueError("status implementation inputs changed")

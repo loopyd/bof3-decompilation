@@ -14,20 +14,59 @@ from harness.build.compiler import (
     select_configured_compiler,
 )
 from harness.common.process import ProcessCleanupError, run_bounded
-from harness.domain.tags import require_single_function
+from harness.domain.tags import count_function_metadata, require_single_function
+
+
+_ROUTING_ENVIRONMENT = frozenset(
+    {
+        "BOF3_PRESERVATION_RECORD",
+        "BOF3_PRESERVATION_FINGERPRINT",
+        "BOF3_PRESERVATION_ROUTES",
+        "BOF3_PRESERVATION_ROUTES_SHA256",
+    }
+)
+
+
+def _compiler_environment() -> dict[str, str]:
+    """Environment for compiler invocations, without routing-selection variables."""
+    return {
+        name: value
+        for name, value in os.environ.items()
+        if name not in _ROUTING_ENVIRONMENT
+    }
+
+
+def _preserved_grouped_command(
+    root: Path, source: Path, output: Path
+) -> tuple[list[str], dict[str, str]]:
+    """Resolve a grouped source's ordered invocation from its preserved record."""
+    from contextlib import closing
+
+    from harness.build.routing import select_preservation, verify_selection
+
+    with closing(select_preservation(root, [source], [source])) as selection:
+        if selection.record is None:
+            raise ValueError(
+                "grouped compiler input requires an externally pinned preservation record"
+            )
+        proof = verify_selection(root, selection)
+    preserved = list(proof["profile"]["arguments"])
+    return [preserved[0], *preserved[1:], "-c", str(source), "-o", str(output)], _compiler_environment()
 
 
 def configured_command(
-    root: Path, source: Path, output: Path
+    root: Path, source: Path, output: Path, *, allow_grouped: bool = False
 ) -> tuple[list[str], dict[str, str]]:
     """Mirror the configured build's ordered arguments and compiler overlay."""
     text = read_source(source)
+    if allow_grouped and count_function_metadata(text) > 1:
+        return _preserved_grouped_command(root, source, output)
     require_single_function(text)
     flags, compilers = load_compiler_configuration(root)
     settings = resolve_compiler_settings(
         source.relative_to(root).as_posix(), text, flags, compilers
     )
-    environment = dict(os.environ)
+    environment = _compiler_environment()
     if settings.compiler_id is not None:
         environment["PSX_GCC"] = str(
             select_configured_compiler(root, settings.compiler_id)
