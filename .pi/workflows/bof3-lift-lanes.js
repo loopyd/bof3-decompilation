@@ -46,6 +46,8 @@ const lanes = rawLanes.map((lane, index) => ({
   key: String(lane.key || `lane-${index + 1}`),
   target: String(lane.target || ""),
   refs: Array.isArray(lane.refs) ? lane.refs.map(String) : [],
+  // Optional bounded parent instruction appended to the lift and repair briefs.
+  note: typeof lane.note === "string" ? lane.note.trim() : "",
 }));
 
 const bad = lanes.filter((lane) => !lane.target || lane.refs.length === 0 ||
@@ -134,6 +136,8 @@ const liftBrief = (lane) => [
   `source path, module directory, the name and its evidence, gate numbers, and any shared-header need you did`,
   `NOT make.`,
   resultContract(lane),
+  lane.note ? "Parent note for this lane:" : "",
+  lane.note || "",
 ].join("\n");
 
 const reviewBrief = (lane, liftOutput) => [
@@ -177,6 +181,8 @@ const repairBrief = (lane, reviewOutput, proposedText) => [
   `asm-diff loop or local compile/compare harness. Continue until acceptance, a genuine blocker or`,
   `reviewed ladder exhaustion. Retain the best coherent partial with its smallest missing evidence.`,
   resultContract(lane),
+  lane.note ? "Parent note for this lane:" : "",
+  lane.note || "",
 ].join("\n");
 
 // Only explicit result objects govern routing; narrative/nested ledger statuses do not.
