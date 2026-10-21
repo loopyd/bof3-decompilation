@@ -5,18 +5,8 @@
  * shared texture window, then queues the matching inner fill rectangle.
  * @source 0x801F3D88
  * @status partial
- * @match 82.89
- * @residual instruction scheduling/register allocation: the allocator assigns
- *           bottom_y to s2 and bottom_v to s3 (the original is the reverse); the
- *           x/y halfword loads are hoisted to the top of the entry block (the
- *           original schedules them in the first GetGraphType() call shadow),
- *           which is the first difference at object offset 0x04; the block C/D/E
- *           store, clamp and re-read order also differs. Frame (0x78), prologue
- *           and the primitive field mapping match, but the object is 337/339
- *           instructions (1348/1356 bytes). No register pinning, clobber,
- *           barrier or scheduling aid is permitted.
- * @note the byte-identical twins emi/etc/shop/00@0x801DAB90 and
- *       emi/etc/sisyou/00@0x801D1E54 share this body and are still partial.
+ * @match 86.73
+ * @residual Two instructions are absent; emitter scheduling, operand-register choices and resulting branch displacements differ at 1348 bytes versus 1356 original.
  */
 void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   RECT*     texture_window;
@@ -24,7 +14,7 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   s32       x;
   s32       bottom_y;
   s32       half_copy;
-  s32       y;
+  s32       sy;
   s32       clut_x;
   s32       left_x;
   s32       bottom_v;
@@ -36,6 +26,8 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   s32       arg3_l;
   s32       arg1_l;
   s32       zero_v;
+  s32       sx;
+  s32       narrow_width;
 
   texture_window = (RECT*)g_PrimCursor;
   g_PrimCursor = (u8*)(texture_window + 1);
@@ -44,8 +36,8 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   texture_window->w = 0x10;
   texture_window->h = 0x10;
 
-  x = (s32)(u16)arg0;
-  y = (s32)(u16)arg1;
+  sx = (s32)(u16)arg0;
+  sy = (s32)(u16)arg1;
 
   if (GetGraphType() != 1) {
     GetGraphType();
@@ -59,11 +51,11 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   SetSemiTrans(primitive, 1);
   clut_x = ((s32)arg4 << 5) + 0x10;
   two = 2;
-  primitive->x0 = (s16)x;
-  primitive->y0 = (s16)y;
+  primitive->x0 = (s16)sx;
+  primitive->y0 = (s16)sy;
+  primitive->y1 = (s16)sy;
+  primitive->x2 = (s16)sx;
   left_x = arg0 + two;
-  primitive->y1 = (s16)y;
-  primitive->x2 = (s16)x;
   primitive->x1 = (s16)left_x;
   arg3_l = arg3;
   arg1_l = arg1;
@@ -80,8 +72,9 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->y2 = (s16)bottom_y;
   primitive->y3 = (s16)bottom_y;
   primitive->u1 = 2u;
-  primitive->v3 = (primitive->v2 = (u8)bottom_v);
+  primitive->v2 = (u8)bottom_v;
   primitive->u3 = 2u;
+  primitive->v3 = (u8)bottom_v;
   primitive->y0 += two;
   primitive->y2 -= 3;
   primitive->v0 += two;
@@ -89,26 +82,26 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->clut = GetClut(clut_x, 0x1e1);
 
   width_plus_1 = arg2 + 1;
+  narrow_width = (s32)(u16)width_plus_1;
 
   if (GetGraphType() != 1) {
     GetGraphType();
   }
 
   primitive->tpage = 0x0fu;
-  x = (s32)(u16)width_plus_1;
   func_8014E5A0(1u, 0x28u);
-  x = ((s32)(u16)x - 4) >> 1;
+  x = ((s32)(u16)narrow_width - 4) >> 1;
 
   primitive = (POLY_FT4*)g_PrimCursor;
   odd_width = (arg2 - 3) & 1;
   odd16 = (u16)odd_width;
   SetPolyFT4(primitive);
   SetSemiTrans(primitive, 1);
-  half_copy = x;
   primitive->x0 = (s16)left_x;
-  primitive->y0 = (s16)y;
+  primitive->y0 = (s16)sy;
   primitive->x1 = (s16)(x + left_x);
-  primitive->y1 = (s16)y;
+  half_copy = x;
+  primitive->y1 = (s16)sy;
   primitive->x2 = (s16)left_x;
   primitive->y2 = (s16)bottom_y;
   primitive->x3 = (s16)(x + left_x);
@@ -136,11 +129,11 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   SetPolyFT4(primitive);
   SetSemiTrans(primitive, 1);
   right_base = arg0 + half_copy;
-  x = half_copy + odd_width;
+  primitive->y0 = (s16)sy;
   primitive->x0 = (s16)(right_base + two);
-  primitive->y0 = (s16)y;
+  x = half_copy + odd_width;
   primitive->x1 = (s16)(right_base + (x + two));
-  primitive->y1 = (s16)y;
+  primitive->y1 = (s16)sy;
   primitive->x2 = (s16)(right_base + two);
   primitive->y2 = (s16)bottom_y;
   primitive->x3 = (s16)(right_base + (x + two));
@@ -173,10 +166,10 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->x0 = (s16)(arg0 + width_plus_1 - two);
   primitive->x2 = (s16)(arg0 + width_plus_1 - two);
   primitive->x1 = (s16)(arg0 + width_plus_1);
-  primitive->y1 = (s16)y;
+  primitive->y1 = (s16)sy;
   primitive->x3 = (s16)(arg0 + width_plus_1);
   primitive->y3 = (s16)bottom_y;
-  primitive->y0 = (s16)y;
+  primitive->y0 = (s16)sy;
   primitive->u0 = 0u;
   primitive->v0 = 0u;
   primitive->u1 = 2u;
