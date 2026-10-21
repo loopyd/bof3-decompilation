@@ -75,6 +75,17 @@ headers = [
     "include/bof3/ui/commu00_internal.h",
 ]
 
+# func_801F08D8's record-kind dispatch emits a 14-entry `.rdata` jump table that
+# the original overlay links at 0x801EEC0C, inside the payload's leading data
+# header (offset 0xC): that address is 4-mod-8 while the compiler's `.align 3`
+# asks for 8, so the placement route lowers only this section's alignment. The
+# table's entries are the function's own dispatch arm labels.
+[[matching.section_placements]]
+function = 0x801F08D8
+section = ".rodata"
+address = 0x801EEC0C
+size = 0x38
+
 [[replicas]]
 disc_id = "BIN/WORLD04/AREA175.EMI#14"
 payload_sha256 = "27e06df900c8809cc941f2086f0126cff1c951039ad6e63d6e3c21c6fd708f7a"

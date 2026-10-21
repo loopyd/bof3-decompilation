@@ -944,9 +944,9 @@ extern const GameEntry0StateHandler D_801C7B14[];
 /* @source 0x801C7B44 @kind unknown */
 extern GameEntry0StateHandler D_801C7B44[];
 /* @source 0x801C7B54 @kind unknown */
-extern const GameEntry0StateHandler D_801C7B54[];
+extern GameEntry0StateHandler D_801C7B54[];
 /* @source 0x801C7B7C @kind unknown */
-extern const GameEntry0StateHandler D_801C7B7C[];
+extern GameEntry0StateHandler D_801C7B7C[];
 /* @source 0x801C7B88 @kind unknown */
 extern const GameEntry0StateHandler D_801C7B88[];
 /* @source 0x801C7B98 @kind unknown */
