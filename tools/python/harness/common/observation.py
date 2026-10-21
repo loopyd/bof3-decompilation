@@ -109,8 +109,10 @@ class PathWatch:
                 if path in directories:
                     entries.setdefault(path, set())
                 child = path
-                while child != child.parent:
+                while True:
                     parent = child.parent
+                    if child == parent:
+                        break
                     entries.setdefault(parent, set()).add(os.fsencode(child.name))
                     if parent in self._directories:
                         break
