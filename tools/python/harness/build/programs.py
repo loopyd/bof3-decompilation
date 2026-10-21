@@ -77,7 +77,7 @@ def describe_inputs(invocation: Invocation) -> dict:
     }
 
 
-def _capture(root: Path, inputs: dict) -> dict:
+def _capture(root: Path, inputs: dict, *, expected: dict | None = None) -> dict:
     requests, seeds = inputs["requests"], inputs["runtime_seeds"]
     with LookupBatch() as batch:
         repository = batch.observe(str(root), cwd=root)
@@ -132,7 +132,10 @@ def _capture(root: Path, inputs: dict) -> dict:
         },
         "complete": False,
     }
-    validate_description(result)
+    # An identical fresh capture inherits the baseline's structural validation.
+    # LookupBatch still samples and verifies every current node on every pass.
+    if result != expected:
+        validate_description(result)
     return result
 
 
@@ -199,7 +202,8 @@ class ProgramSnapshot:
             self._watch.validate()
             if (
                 inputs != self._inputs
-                or _capture(self.root, self._inputs) != self._description
+                or _capture(self.root, self._inputs, expected=self._description)
+                != self._description
             ):
                 raise ValueError("compiler program inputs changed")
             self._watch.validate()
