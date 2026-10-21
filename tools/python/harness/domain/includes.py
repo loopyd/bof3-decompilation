@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable
+from functools import lru_cache
 from pathlib import Path
 
 
@@ -37,6 +38,7 @@ def _strip_comments(text: str) -> str:
     )
 
 
+@lru_cache(maxsize=128)
 def _include_text(text: str) -> str:
     return _strip_comments(re.sub(r"\\\r?\n", "", text))
 
