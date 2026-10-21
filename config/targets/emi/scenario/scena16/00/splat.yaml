@@ -71,8 +71,10 @@ segments:
     - asm
     - func_801F7CC4
   - - 5976
-    - asm
+    - c
     - dispatchRecordCallback
+    - '@source: src/bof3/scenario/dispatchRecordCallback_scena16.c'
+    - '@behavior: Dispatches the record callback selected by byte 0x7A with the record and shared context word.'
   - - 6040
     - asm
     - returnZero

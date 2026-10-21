@@ -12,13 +12,15 @@
  * loaded with a plain `lw`, and the handler is entered with `jalr` plus a delay
  * nop. The callback takes two arguments and no stack arguments.
  * @source 0x801F8358
- * @status partial
- * @match 87.50
- * @residual The 64-byte body matches 14 of 16 instructions; frame setup follows the record/context loads instead of preceding them.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void dispatchRecordCallback(void* record) {
   Scena16RecordCallback callback;
 
-  callback = recordCallbackTable[((const u8*)record)[0x7a]];
-  callback(record, D_8014686C);
+  do {
+    callback = recordCallbackTable[((const u8*)record)[0x7a]];
+    callback(record, D_8014686C);
+  } while (0);
 }
