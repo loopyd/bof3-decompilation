@@ -191,7 +191,7 @@ def _build_preflight(
 
     for target, manifest in manifests:
         source_dir = root / manifest.source_dir
-        target_key = target_fingerprint(root, manifest) if cache is not None else ""
+        target_key: str | None = None
         try:
             layout: ReviewedSplatLayout | None = parse_splat_layout(
                 root / manifest.splat, manifest.load_address
@@ -330,6 +330,8 @@ def _build_preflight(
                 continue
             claimed[address] = source
             source_name = source.relative_to(root).as_posix()
+            if cache is not None and target_key is None:
+                target_key = target_fingerprint(root, manifest)
             key = cache.fingerprint(source, target_key) if cache is not None else ""
             record = (
                 cache.get(target, source_name, address, key)

@@ -42,6 +42,8 @@ def _compiler_environment() -> dict[str, str]:
         for name, value in os.environ.items()
         if name not in _ROUTING_ENVIRONMENT
     }
+
+
 _INPUTS = (
     *COMPILER_INPUTS,
     ".venv/pyvenv.cfg",
@@ -86,7 +88,9 @@ def _helper_inputs(root: Path) -> dict:
 
 def _inspection(root: Path, source: Path) -> dict:
     output = root / "build" / source.relative_to(root).with_suffix(".o")
-    arguments, environment = configured_command(root, source, output, allow_grouped=True)
+    arguments, environment = configured_command(
+        root, source, output, allow_grouped=True
+    )
     result = run_bounded(
         root,
         [arguments[0], "--bof3-inspect", *arguments[1:]],
@@ -154,7 +158,7 @@ class StatusPrograms:
         self.root = root
         self.inspections = inspections
         self.environment = _compiler_environment()
-        self.snapshots: dict[str, tuple[dict, ProgramSnapshot]] = {}
+        self.snapshots: dict[str, tuple[dict, ProgramSnapshot, dict]] = {}
         self.watch = PathWatch({root / name for name in _INPUTS})
         try:
             self.helpers = _helper_inputs(root)
@@ -169,12 +173,13 @@ class StatusPrograms:
         if key not in self.snapshots:
             snapshot = ProgramSnapshot.from_inputs(self.root, inputs)
             try:
-                _supported(snapshot.describe())
+                description = snapshot.describe()
+                _supported(description)
             except BaseException:
                 snapshot.close()
                 raise
-            self.snapshots[key] = (inputs, snapshot)
-        return self.snapshots[key][1].describe()
+            self.snapshots[key] = (inputs, snapshot, description)
+        return self.snapshots[key][2]
 
     def _inspection(self, source: Path) -> dict:
         """Reuse a recorded inspection while its material inputs are unchanged.
@@ -227,11 +232,11 @@ class StatusPrograms:
             raise ValueError("status process environment changed")
         if _helper_inputs(self.root) != self.helpers:
             raise ValueError("status implementation inputs changed")
-        for inputs, snapshot in self.snapshots.values():
+        for inputs, snapshot, _ in self.snapshots.values():
             snapshot.validate_inputs(inputs)
         self.watch.validate()
 
     def close(self) -> None:
-        for _, snapshot in self.snapshots.values():
+        for _, snapshot, _ in self.snapshots.values():
             snapshot.close()
         self.watch.close()

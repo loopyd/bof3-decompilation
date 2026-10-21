@@ -187,6 +187,7 @@ class MatchStatusCache:
     def __init__(self, root: Path) -> None:
         self.root = root
         self.programs: StatusPrograms | None = None
+        self._pending_inspections: dict[str, str] = {}
         self.path = root / "out" / "matching" / "status-cache.sqlite"
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.connection = sqlite3.connect(self.path)
@@ -237,6 +238,8 @@ class MatchStatusCache:
             self.programs.validate()
 
     def get_inspection(self, key: str) -> dict[str, Any] | None:
+        if key in self._pending_inspections:
+            return json.loads(self._pending_inspections[key])
         row = self.connection.execute(
             "SELECT value FROM inspections WHERE key = ?", (key,)
         ).fetchone()
@@ -249,11 +252,19 @@ class MatchStatusCache:
         return value if isinstance(value, dict) else None
 
     def put_inspection(self, key: str, value: dict[str, Any]) -> None:
-        self.connection.execute(
+        self._pending_inspections[key] = json.dumps(value, sort_keys=True)
+        if len(self._pending_inspections) >= 64:
+            self._flush_inspections()
+
+    def _flush_inspections(self) -> None:
+        if not self._pending_inspections:
+            return
+        self.connection.executemany(
             "INSERT OR REPLACE INTO inspections (key, value) VALUES (?, ?)",
-            (key, json.dumps(value, sort_keys=True)),
+            self._pending_inspections.items(),
         )
         self.connection.commit()
+        self._pending_inspections.clear()
 
     def get(
         self, target: str, source: str, address: int, fingerprint: str
@@ -301,4 +312,7 @@ class MatchStatusCache:
             if self.programs is not None:
                 self.programs.close()
         finally:
-            self.connection.close()
+            try:
+                self._flush_inspections()
+            finally:
+                self.connection.close()
