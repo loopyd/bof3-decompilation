@@ -242,9 +242,9 @@ class InputBatch:
     def _prepare_parent(self, path: Path) -> int | None:
         self._require_active()
         if (
-            not path.is_absolute()
-            or not path.is_relative_to(self.root)
-            or Path(os.path.abspath(path)) != path
+            path.anchor != "/"
+            or ".." in path.parts
+            or path.parts[: len(self.root.parts)] != self.root.parts
         ):
             raise ValueError("input batch path must be canonical and confined")
         self._watch.add_paths({path})
