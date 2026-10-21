@@ -3,19 +3,23 @@
 /* @behavior reports whether one local battler's `0x98` value is large enough for
  * the current average/max threshold pair.
  * @source 0x801DB3A0
- * @status partial
- * @match 61.11
- * @residual 11/18 instructions; 68 original bytes versus 72 current. Indexed
- * address allocation, comparison signedness and return scheduling still differ.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 u8 func_801DB3A0(u32 arg0, u32 arg1, u32 arg2) {
-  u16 value;
+  u32 value;
 
   arg1 &= 0xffffu;
-  arg0 &= 0xffu;
-  value = ((Battle03LocalHalfRecord*)D_80145F28)[arg0].half_00;
-  if ((arg1 << 1) > value) {
-    return 0;
+  do {
+    arg0 &= 0xffu;
+    value = arg0 << 2;
+    value += arg0;
+    value <<= 6;
+    value = ((Battle03LocalHalfRecord*)((u8*)D_80145F28 + value))->half_00;
+  } while (0);
+  if ((s32)value >= (s32)(arg1 << 1)) {
+    return (arg2 & 0xffffu) <= value;
   }
-  return value >= (arg2 & 0xffffu);
+  return 0;
 }

@@ -936,13 +936,13 @@ extern const u8         D_801C7AE0[];
 extern const u8         D_801C7AE8[];
 
 /* @source 0x801CD568 @kind table */
-extern const GameEntry0StateHandler scenarioSubstateHandlerTable[];
+extern GameEntry0StateHandler scenarioSubstateHandlerTable[];
 /* @source 0x801C7B08 @kind unknown */
 extern const GameEntry0StateHandler D_801C7B08[];
 /* @source 0x801C7B14 @kind unknown */
 extern const GameEntry0StateHandler D_801C7B14[];
 /* @source 0x801C7B44 @kind unknown */
-extern const GameEntry0StateHandler D_801C7B44[];
+extern GameEntry0StateHandler D_801C7B44[];
 /* @source 0x801C7B54 @kind unknown */
 extern const GameEntry0StateHandler D_801C7B54[];
 /* @source 0x801C7B7C @kind unknown */

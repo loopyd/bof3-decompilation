@@ -209,8 +209,10 @@ segments:
     - asm
     - func_801DB2F8
   - - 42912
-    - asm
+    - c
     - func_801DB3A0
+    - '@source: src/bof3/battle/func_801DB3A0.c'
+    - '@behavior: reports whether one local battler''s `0x98` value is large enough for the current average/max threshold pair.'
   - - 42980
     - c
     - enemyBattlerMeetsThresholds
