@@ -159,6 +159,10 @@ const reviewBrief = (lane, liftOutput) => [
   `experiments, or explain changed evidence for a repeated lever. Record history gaps without quota stops.`,
   `Lane result (including consumption):`,
   String(liftOutput || ""),
+  lane.note ? "Parent restrictions also apply to this review:" : "",
+  lane.note || "",
+  `Review never grants new experiment authority. A proposed lever outside the parent scope`,
+  `must return workflow:"blocked" or a reviewed partial disposition, not workflow:"repair".`,
 ].join("\n");
 
 const repairBrief = (lane, reviewOutput, proposedText) => [
