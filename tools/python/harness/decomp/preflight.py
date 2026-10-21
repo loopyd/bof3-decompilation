@@ -103,20 +103,30 @@ def _batch_result(
     }
 
 
-def _validate_grouped_owner(root: Path, source: Path, manifest: TargetManifest) -> None:
+def _validate_grouped_owner(
+    root: Path,
+    source: Path,
+    manifest: TargetManifest,
+    manifests: dict[str, TargetManifest],
+) -> None:
     name = source.relative_to(root).as_posix()
     owners = [
         entry.id.value
-        for entry in load_target_manifests(root).values()
+        for entry in manifests.values()
         if name in entry.sources + entry.support_sources
     ]
     if owners != [manifest.id.value] or name not in manifest.sources:
         raise ValueError("grouped comparison requires one explicit lift owner")
 
 
-def _grouped_fingerprint(root: Path, source: Path, manifest: TargetManifest) -> str:
+def _grouped_fingerprint(
+    root: Path,
+    source: Path,
+    manifest: TargetManifest,
+    manifests: dict[str, TargetManifest],
+) -> str:
     """Pin reviewed preflight inputs without granting build or cache reuse."""
-    _validate_grouped_owner(root, source, manifest)
+    _validate_grouped_owner(root, source, manifest, manifests)
     digest = hashlib.sha256()
     for path in (
         root / "config" / "targets" / manifest.id.value / "target.toml",
@@ -136,9 +146,10 @@ def _validate_grouped_source(
     records: tuple[FunctionRecord, ...],
     layout: ReviewedSplatLayout | None,
     expected: dict[str, int | tuple[int, ...]],
+    manifests: dict[str, TargetManifest],
 ) -> None:
     name = source.relative_to(root).as_posix()
-    _validate_grouped_owner(root, source, manifest)
+    _validate_grouped_owner(root, source, manifest, manifests)
     addresses = expected.get(source_expected_key(root / manifest.source_dir, source))
     if (
         layout is None
@@ -228,12 +239,21 @@ def _build_preflight(
                 key = ""
                 try:
                     records = parse_function_records(text)
+                    current_manifests = load_target_manifests(root)
                     _validate_grouped_source(
-                        root, source, manifest, records, layout, expected
+                        root,
+                        source,
+                        manifest,
+                        records,
+                        layout,
+                        expected,
+                        current_manifests,
                     )
                     validate_matching_source(root, source, checked=checked)
                     if not duplicates:
-                        key = _grouped_fingerprint(root, source, manifest)
+                        key = _grouped_fingerprint(
+                            root, source, manifest, current_manifests
+                        )
                 except ProcessCleanupError:
                     raise
                 except (OSError, RuntimeError, ValueError) as error:
@@ -425,16 +445,19 @@ def _run_grouped_misses(
         membership.setdefault(source, set()).add(address)
     for target, source, address, source_name, key, queued_manifest in items:
         try:
-            current = load_target_manifests(root).get(target)
+            manifests = load_target_manifests(root)
+            current = manifests.get(target)
             if (
                 current != queued_manifest
-                or _grouped_fingerprint(root, source, current) != key
+                or _grouped_fingerprint(root, source, current, manifests) != key
             ):
                 raise ValueError("grouped reviewed inputs changed after preflight")
             attached = parse_function_records(source.read_text(encoding="utf-8"))
             layout = parse_splat_layout(root / current.splat, current.load_address)
             expected = expected_lift_sources(layout, root / current.source_dir)
-            _validate_grouped_source(root, source, current, attached, layout, expected)
+            _validate_grouped_source(
+                root, source, current, attached, layout, expected, manifests
+            )
             if (
                 len(attached) < 2
                 or {row.address for row in attached} != membership[source]
@@ -442,9 +465,10 @@ def _run_grouped_misses(
                 raise ValueError("grouped worklist omits or changes an attached member")
             request = _request_for_source(root, source, address, current)
             result = diff_runner(request)
+            manifests = load_target_manifests(root)
             if (
-                _grouped_fingerprint(root, source, current) != key
-                or load_target_manifests(root).get(target) != queued_manifest
+                _grouped_fingerprint(root, source, current, manifests) != key
+                or manifests.get(target) != queued_manifest
             ):
                 raise ValueError("grouped reviewed inputs changed during comparison")
             records.append(
@@ -461,9 +485,10 @@ def _run_grouped_misses(
         if source in drift:
             continue
         try:
+            manifests = load_target_manifests(root)
             if (
-                _grouped_fingerprint(root, source, queued_manifest) != key
-                or load_target_manifests(root).get(target) != queued_manifest
+                _grouped_fingerprint(root, source, queued_manifest, manifests) != key
+                or manifests.get(target) != queued_manifest
             ):
                 raise ValueError("grouped reviewed inputs changed during comparison")
         except ProcessCleanupError:

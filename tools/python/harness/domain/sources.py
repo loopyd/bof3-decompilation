@@ -306,13 +306,14 @@ def owning_manifest(
         )
     except ValueError:
         return None
+    source_name = source_rel.as_posix()
     catalog = load_target_manifests(root) if manifests is None else manifests
     claimed_owners = [
         manifest
         for manifest in catalog.values()
-        if any(Path(claimed) == source_rel for claimed in manifest.sources)
-        or any(Path(claimed) == source_rel for claimed in manifest.support_sources)
-        or any(Path(claimed) == source_rel for claimed in manifest.headers)
+        if source_name in manifest.sources
+        or source_name in manifest.support_sources
+        or source_name in manifest.headers
     ]
     if not claimed_owners:
         return None
