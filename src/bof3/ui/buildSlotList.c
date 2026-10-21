@@ -26,21 +26,20 @@
  *           finally draws the shop panel through func_801DA2F4 at
  *           phaseTimer * 32 + 0xB4 with the y constant 0x26, the constant 0 and
  *           the main-RAM value D_80144F50.
- * @status partial
- * @match 96.63
- * @residual entry-block scheduling permutation: this candidate reshuffles only
- *           the first basic block (sw s2,0x20(sp) and the timer reset ahead of
- *           andi a0,a0,0xFF, sw s0,0x18(sp) deferred into the branch delay
- *           slot) where the original keeps the narrowing and the save order
- *           ra, s2, s1, s0 and puts the timer reset in the delay slot; the
- *           instruction multiset and every instruction from the first emitters
- *           on match.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void buildSlotList(u8 arg0) {
-  u8 timer = 0;
+  u8 timer;
   u8 slot;
+  u32 enabled;
 
-  if (arg0 != 0) {
+  enabled = arg0;
+  do {
+    timer = 0;
+  } while (0);
+  if (enabled != 0) {
     timer = phaseTimer;
   }
   func_801DAB90(0x14, (0x10 - timer * 10) & 0xFFFE, 0x118, 0x13, D_80144952);
