@@ -9,8 +9,15 @@
  * @residual none
  */
 void func_8009FAE4(void) {
-  D_801462E8 |= 0x4000;
-  D_801463CA = D_80146374;
-  D_801463CB = D_80146384;
+  volatile u16 *flags = &D_801462E8;
+  u16 value;
+  u8 first, second;
+
+  value = *flags;
+  first = D_80146374;
+  second = D_80146384;
+  *flags = value | 0x4000;
+  D_801463CA = first;
+  D_801463CB = second;
   func_800A3F28();
 }

@@ -331,8 +331,10 @@ segments:
     - c
     - clampS32
   - - 52224
-    - asm
+    - c
     - func_801DD800
+    - '@source: src/bof3/battle/func_801DD800.c'
+    - '@behavior: Steps the oscillating factor byte 0x80146308 by two toward the opposite bound: a value above 0x1E sets the direction latch 0x80146304 and a zero value clears it, so the byte ramps up to 0x20 and back down to zero.'
   - - 52312
     - asm
     - submitCurrentWorkEffectVariant

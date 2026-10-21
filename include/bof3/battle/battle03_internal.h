@@ -373,6 +373,16 @@ extern u8*                           D_80148648; /* @source 0x80148648 */
 extern u8                            D_801462E5; /* @source 0x801462E5 */
 extern u8                            D_801462EE; /* @source 0x801462EE @kind unknown */
 extern volatile u8                   D_801462EF; /* @source 0x801462EF @kind unknown */
+/* Oscillating factor byte stepped by func_801DD800; its consumers
+ * func_801E38C0/func_801DF7EC copy it into the effect record bytes +0x02, +0x03
+ * and +0x04 of the 12-byte D_80145BD4 records. BATTLE_GLOBAL_BYTE_6304 is the
+ * direction latch inside the same step: the byte ramps up while it is zero and
+ * down while it is one. */
+extern u8                            BATTLE_GLOBAL_BYTE_6308; /* @source 0x80146308 @kind unknown */
+/* The original codegen keeps the latch load unextended (`lbu` straight into the
+ * compare) while the oscillating byte above is masked, so the latch is the plain
+ * non-volatile view: a volatile view forces a redundant `andi` on that load. */
+extern u8                            BATTLE_GLOBAL_BYTE_6304; /* @source 0x80146304 @kind unknown */
 extern u8                            D_8014630C; /* @source 0x8014630C @kind unknown */
 extern u8                            D_8014864C; /* @source 0x8014864C @kind unknown */
 extern u8                            D_80181B10[]; /* @source 0x80181B10 @kind unknown */

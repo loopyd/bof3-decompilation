@@ -1,28 +1,36 @@
 #include "bof3/battle/battle03_internal.h"
 
-/* @behavior oscillates the UI byte at `0x80146308` between rising and falling modes
- * using the latch byte at `0x80146304`.
+/* @behavior Steps the oscillating factor byte 0x80146308 by two toward the
+ * opposite bound: a value above 0x1E sets the direction latch 0x80146304 and a
+ * zero value clears it, so the byte ramps up to 0x20 and back down to zero.
+ * Its consumers func_801E38C0 and func_801DF7EC copy it into the effect record
+ * bytes +0x02, +0x03 and +0x04 of the 12-byte D_80145BD4 records.
  * @source 0x801DD800
  * @status partial
- * @match 54.17
- * @residual non-exact live audit: 13/22 instructions; 88 original bytes versus 96 current.
+ * @match 81.82
+ * @residual allocation/scheduling: 18/22 instructions match at the same
+ * 88-byte size. The original keeps the stepped result in $v0 and keeps an extra
+ * copy of the loaded byte in $a1 for the falling arm (`move a1,a0` filling the
+ * delay slot of the second test); this candidate allocates the result to $a1
+ * with no copy, so that delay slot is empty and the two `addiu` plus the final
+ * `sb` name $a1 instead of $v0/$a1.
  */
 void func_801DD800(void) {
-  volatile u8* value_ptr;
-  u8           value;
-  u8           next;
+  u8* p;
+  u8  value;
+  u8  next;
 
-  value_ptr = BATTLE_GLOBAL_RAM_U8 + 0x6308u;
-  value = *value_ptr;
-  if (value > 0x1eu) {
-    *(value_ptr - 4) = 1u;
+  p = &BATTLE_GLOBAL_BYTE_6308;
+  value = *p;
+  if (value > 0x1Eu) {
+    BATTLE_GLOBAL_BYTE_6304 = 1u;
   }
   if (value == 0u) {
-    *(value_ptr - 4) = 0u;
+    BATTLE_GLOBAL_BYTE_6304 = 0u;
   }
   next = value + 2u;
-  if (*(value_ptr - 4) == 1u) {
+  if (BATTLE_GLOBAL_BYTE_6304 == 1u) {
     next = value - 2u;
   }
-  *value_ptr = next;
+  *p = next;
 }
