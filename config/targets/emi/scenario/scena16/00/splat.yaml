@@ -46,8 +46,10 @@ segments:
     - asm
     - seedRouteEnterState2
   - - 816
-    - asm
+    - c
     - func_801F6F30
+    - '@source: src/bof3/scenario/func_801F6F30_scena16.c'
+    - '@behavior: Stages the SCENA16 route-path-2 resource/object setup sequence the primary route switch at 0x801F6D90 reaches for world id 2. It first runs the two-stage wait func_8015B5D4(D_8014686C, 2): on a zero return it clears the scenario progress word at 0x80146864, reruns func_80154FD8(0x300) and func_801C601C(0), raises the shared ramp channel D_801492D8 by 0xAA, stores the object byte func_8019601C() in scratchpad 0x1F800000 and, unless that byte is 0xFF, seeds that object''s 0x74-byte row at 0x80143FC8 (+0 = 1, +5 = 0x13, the word D_801492D8 - 0xAA at +0x64, the signed halfwords D_801492DA and D_801492DC at +0x68/+0x6C and +9 = 0x40); it then runs func_8015C100(), commits the front selector word pair D_80145EC4 = 0x330000/D_80145EC8 = 0x400000 and calls func_8015B580(D_8014686C, 2). When the first wait instead returns nonzero it retries through func_8015B5D4(D_8014686C, 10) and, on a zero return, calls func_8015B580(D_8014686C, 10), func_801BE1B0(0) and rebases the fixed-point channel pair D_80149308 = 0x260000/D_8014930C = 0x1B8000. Takes no arguments and returns nothing; the address is the single jal target of the SCENA16 primary route switch for world id 2, and the body matches the exact SCENA00 sibling func_801F9644 (0x801F9644) that carries the D_80143F00 = 2 gate in its own body instead.'
   - - 1348
     - c
     - dispatchSecondaryState

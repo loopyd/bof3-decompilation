@@ -90,10 +90,12 @@ extern volatile u16 D_80010008;
 extern volatile u16 D_80010020;
 /* @source 0x80010022 @kind unknown */
 extern volatile u16 D_80010022;
-/* @source 0x80145EC4 @kind unknown */
-extern volatile u32 D_80145EC4;
+/* @source 0x80145EC4 @kind unknown — front selector pair, plain RAM (every
+ * other target declares it non-volatile); the volatile view blocked the
+ * original schedule around the closing calls. */
+extern u32 D_80145EC4;
 /* @source 0x80145EC8 @kind unknown */
-extern volatile u32 D_80145EC8;
+extern u32 D_80145EC8;
 /* @source 0x80149308 @kind unknown */
 extern volatile u32 D_80149308;
 /* @source 0x801F854C @kind table — primary state handlers indexed by bank byte 0x6872:
