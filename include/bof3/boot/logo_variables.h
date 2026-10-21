@@ -23,7 +23,9 @@ extern CdlATV D_801EB470; /* @source 0x801EB470 @kind unknown */
  * previous and current stream frame numbers, and D_801EB46C is the stream
  * transfer flag that func_801CEC88 spins on and func_801CECA4 completes. The
  * two D_801EB474/D_801EB475 stream flags and the D_801EB4AC status byte are
- * polled through func_801CFEF4 during the func_801CE930 stream setup.
+ * polled through func_801CFEF4 during the func_801CE930 stream setup, and
+ * func_801D0320 writes the three BCD minute/second/sector bytes of the
+ * converted stream LBA at D_801EB4AC before those probes start.
  *
  * D_801EB46C is volatile because func_801CECA4, the MDEC output callback
  * installed for the stream, publishes it while func_801CEC88 busy-waits; the

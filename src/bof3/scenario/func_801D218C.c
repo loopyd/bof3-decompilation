@@ -18,22 +18,11 @@
  * bytes 0x06/0x0E, and queues each primitive with func_8014E5A0(2, 0x14) until
  * the index reaches the count.
  * @status partial
- * @match 96.25
- * @residual the loop-entry basic block still schedules differently in 6 of 160
- * instructions (first difference +0x0060): the rand() call's delay slot holds
- * the loop-index seed `li s1,1` in the original where this build materializes
- * the stage pointer (`addiu s2,s0,4`), and the loop-entry count load
- * (`lui v0,0x1f80; lw v0,12(v0)` with its `slt`) is scheduled after the first
- * scaled-vertex chain (`mflo; sra; sh`) instead of before it, so the scaled
- * sample lands in $v0 where the original keeps the count in $v0 and the sample
- * in $v1. Levers measured and rejected on top of the retained non-volatile seed
- * store: stage created inside the loop body (137/163, prologue moves), volatile
- * s32* stage (146/163), volatile loop bound through D_1F80000C (147/162),
- * loop index before/after the stage assignment and a for-statement initialiser
- * (154/160, schedule unchanged), vz stored before vy (144/162)
+ * @match 97.50
+ * @residual Initial sample storage precedes the count load and loop guard instead of following them; four instruction positions differ at unchanged 640-byte size.
  */
 void func_801D218C(void) {
-  volatile s32* base;
+  s32*          base;
   s32*          stage;
   u8*           prim;
   s32           i;
@@ -42,7 +31,7 @@ void func_801D218C(void) {
   s32           projected;
   s32           depth;
 
-  base = &D_1F800000;
+  base = (s32*)&D_1F800000;
   *base = 0x40;
   D_1F800004 = (s32)((s32)(((((u8*)D_1F800044)[0x0b]) + 2) & 0x0fu) << 8);
   D_1F80000C = ((u8*)D_1F800044)[0x0a];

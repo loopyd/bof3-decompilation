@@ -39,13 +39,16 @@ s32  func_801D2558(u_long** data, u_long** header);
  * the MDEC output callback installed for the stream, func_801CFC00 arms the CD
  * stream for the D_801EB448 buffer, func_801CFEF4 reports the readiness of a
  * stream flag through its second pointer argument, func_801D2180 waits for one
- * frame of the given byte size and func_801D23DC and func_801D0320 start the
- * disc transfer of the supplied LBA. */
+ * frame of the given byte size and func_801D23DC starts the disc transfer of
+ * the supplied LBA. func_801D0320 converts the supplied LBA into the three BCD
+ * minute/second/sector bytes it writes through its second argument and returns
+ * that pointer; its 0x801D0320 body is the LBA-to-position conversion that the
+ * LOGO stream setup runs before the readiness probes. */
 s32  func_801CFEF4(s32 mode, u8* flag, s32 arg);
 void func_801CFC00(s32 buffer, s32 mode);
 s32  func_801D2180(s32 size);
 s32  func_801D23DC(s32 arg0, s32 arg1, u_long arg2, s32 arg3, s32 arg4);
-s32  func_801D0320(u_long lba);
+u8*  func_801D0320(u_long lba, u8* pos);
 void func_801CECA4(void);
 void func_801D2464(u_long* data);
 s32  func_801D6FCC(s32 buffer, s32 length);

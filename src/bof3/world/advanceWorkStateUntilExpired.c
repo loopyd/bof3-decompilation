@@ -2,31 +2,28 @@
 
 /**
  * @source 0x801F3250
- * @behavior Advances the current work entry by its three velocity fields,
- * decrements two byte timers, and clears the active flag when timer +2 expires.
- * @status partial
- * @match 48.48
- * @residual non-exact live audit: 16/33 instructions; 132 original bytes versus 132 current.
+ * @behavior Advances the current work entry's three 32-bit position words at
+ * +0x04/+0x08/+0x0c by the matching velocity component of its +0x14 vector and
+ * decrements its byte-3 timer; it then reloads the work cursor, decrements the
+ * entry's byte-2 timer and, when that timer reaches zero, reloads the cursor
+ * once more and clears the entry's active byte 0.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void advanceWorkStateUntilExpired(void) {
-  u8* initialWork;
-  u8* timerWork;
-  u8* clearWork;
-  u8  timer3;
+  World00Area024SpriteWork* work;
+  u8 timer;
 
-  initialWork = workCursor;
-  timer3 = initialWork[3];
-  *(s32*)(initialWork + 4) =
-      *(s32*)(initialWork + 4) + *(s32*)(initialWork + 20);
-  *(s32*)(initialWork + 8) =
-      *(s32*)(initialWork + 8) + *(s32*)(initialWork + 24);
-  initialWork[3] = timer3 - 1;
-  timerWork = workCursor;
-  *(s32*)(initialWork + 12) =
-      *(s32*)(initialWork + 12) + *(s32*)(initialWork + 28);
-  timerWork[2]--;
-  if (timerWork[2] == 0) {
-    clearWork = workCursor;
-    clearWork[0] = 0;
+  work = (World00Area024SpriteWork*)workCursor;
+  work->field_04 += work->field_14.vx;
+  work->field_08 += work->field_14.vy;
+  work->field_0c += work->field_14.vz;
+  work->field_03--;
+
+  timer = ((World00Area024SpriteWork*)workCursor)->field_02 - 1;
+  ((World00Area024SpriteWork*)workCursor)->field_02 = timer;
+  if (timer == 0) {
+    ((World00Area024SpriteWork*)workCursor)->field_00 = 0;
   }
 }
