@@ -10,9 +10,9 @@ typedef struct GameFrontBannerState {
 /* @behavior advances the four-panel frontend banner fade and draws each
  * visible panel with its current alpha.
  * @source 0x801D18F8
- * @status partial
- * @match 93.08
- * @residual live diff is only the two loop-carried values' saved registers: cc1 keeps the counter in s2 and marker in s1 (original: counter s1, marker s2); instruction stream, size and branch layout otherwise match (130/130). Initializing marker after the scroll/x block restored the original's separate x-base 320 copy (106/130 -> 121/130); the remaining allocation choice needs a clean-C lever (the removed pin/clobber aid supplied it).
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void updateBanner(void) {
   volatile GameFrontBannerState* state;
@@ -34,13 +34,12 @@ void updateBanner(void) {
   /* Anchor the banner state on the fade-phase byte: the original derives the
    * scroll base (-15) and alpha cell (-13) from &GAME_FRONT_FADE_PHASE. */
   phase_addr = &GAME_FRONT_FADE_PHASE;
-  /* Initialize the loop counter before the early-return guard so cc1 schedules
-   * the `i = 0` clear into the beqz delay slot, matching the original prologue.
-   * This does not select a saved register for i. */
-  i = 0;
   if (*phase_addr == 0) {
     return;
   }
+  do {
+    i = 0;
+  } while (0);
   state = (volatile GameFrontBannerState*)(phase_addr - 15);
   one = 1;
   alpha = (volatile u16*)(phase_addr - 13);
