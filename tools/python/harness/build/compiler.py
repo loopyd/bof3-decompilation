@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 
 from harness.build.arguments import iter_arguments
@@ -193,9 +194,19 @@ def parse_compiler_configuration(
     """Decode bounded literal settings without evaluating CMake statements."""
     if not isinstance(text, str) or len(text.encode("utf-8")) > 4 * 1024 * 1024:
         raise ValueError("object compiler configuration exceeds the text bound")
+    flags, compilers = _parse_configuration(text)
+    return {key: list(value) for key, value in flags}, dict(compilers)
+
+
+@lru_cache(maxsize=8)
+def _parse_configuration(
+    text: str,
+) -> tuple[tuple[tuple[str, tuple[str, ...]], ...], tuple[tuple[str, str], ...]]:
     validate_object_configuration(text)
-    result = parse_object_flags(text), parse_object_compilers(text)
-    return result
+    return (
+        tuple((key, tuple(value)) for key, value in parse_object_flags(text).items()),
+        tuple(parse_object_compilers(text).items()),
+    )
 
 
 def load_compiler_configuration(
