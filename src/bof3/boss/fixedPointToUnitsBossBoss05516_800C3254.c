@@ -9,18 +9,16 @@
  * result into the 16-bit accumulators at work +0x2E and +0x30; calls 2 and 3 pass
  * `value << 16` with 0x10000 and use the whole value back, confirming the 16.16
  * reading of the first argument.
- * @status partial
- * @match 58.33
- * @residual Original is 48 bytes (12 instructions); the best candidate found so far
- * is 44 (11). The `(u16)` test produces the original's second `andi`, but this
- * shape leaves the low-half `andi` in a scratch register, so the reorg pass fills
- * the `bltz` delay slot where the original keeps `nop` and the body's operand
- * order differs. Allocation/scheduling class; no clean-C lever left inside the
- * one-sweep probe ceiling.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 s32 fixedPointToUnitsBossBoss05516_800C3254(s32 value, s32 arg1) {
   if (arg1 >= 0 && (u16)value != 0) {
-    value = (value & 0xFFFF) | (((value >> 16) + 1) << 16);
+    s32 whole = value >> 16;
+
+    value &= 0xFFFF;
+    value |= (whole + 1) << 16;
   }
   return value >> 16;
 }

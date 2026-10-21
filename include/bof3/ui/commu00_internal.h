@@ -348,7 +348,7 @@ void func_80150224(s32 action_id);
 s32  func_8015B5D4(u32 arg0, s32 arg1);
 void func_8015BAC4(u8 resource_id);
 void func_8015C058(void);
-void func_8015C088(void);
+s32  func_8015C088(void);
 void func_8015D404(u32 arg0, s32 arg1);
 void func_801636A0(u32 arg0, u32 arg1);
 u32  func_80163EA0(void);

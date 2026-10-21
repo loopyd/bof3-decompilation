@@ -160,9 +160,9 @@ segments:
     - c
     - fixedPointToUnitsBossBoss05516_800C3254
     - '@source: src/bof3/boss/fixedPointToUnitsBossBoss05516_800C3254.c'
-    - '@status: partial'
-    - '@match: 58.33'
-    - '@residual: original is 48 bytes (12 instructions) and the best candidate is 44 (11). The (u16) test produces the original second andi, but this shape leaves the low-half andi in a scratch register, so the reorg pass fills the bltz delay slot where the original keeps nop, and the body operand order differs. Allocation/scheduling class; no clean-C lever left inside the one-sweep probe ceiling.'
+    - '@status: exact'
+    - '@match: 100.00'
+    - '@residual: none'
   - - 6788
     - asm
     - func_800C3284

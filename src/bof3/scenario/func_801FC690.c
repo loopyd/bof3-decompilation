@@ -3,7 +3,7 @@
 extern u8 D_80146874;
 extern u8 D_80146875;
 
-void func_8015C088(void);
+s32 func_8015C088(void);
 
 /* @source 0x801FC690
  * @behavior Slot 7 of the overlay's nine-pointer handler table at 0x801FD00C
@@ -17,12 +17,9 @@ void func_8015C088(void);
  * the call, and each of the two byte stores materialises the 0x8014 page in
  * $at on its own, which is how the psyq compiler emits separate shared-byte
  * stores.
- * @status partial
- * @match 84.62
- * @residual Post-call constant store materialises 6 in $v0 where the shipped bytes use $v1: insn=11/13, 52->52 bytes, frame 0x18 unchanged, first difference +0x0010 (li v1,6 vs li v0,6).
- * Four clean-C spellings measured live this lane all reproduced $v0 at that same first difference: a result local assigned after the stores, the same local assigned before them, a named state local feeding the store, and a state+result local pair.
- * The identical residual class is already recorded on src/bof3/ui/func_801F14F8_commu00.c (@status partial, @match 87.50), whose lane measured eight further spellings with the same outcome; residual class: reload/allocator register choice for a post-call constant store, which the measured clean-C type/control-flow/expression spellings do not move.
- * Next evidence: an authorised compiler-profile probe or a scheduler-order route; independent review pending.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 s32 func_801FC690(s32 arg0, s32 arg1) {
   func_8015C088();

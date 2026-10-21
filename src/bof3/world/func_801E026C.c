@@ -1,28 +1,30 @@
 #include "bof3/world/area03004_internal.h"
 
-/**
+/* @behavior advances the signed range position at +0x8E of the current work
+ * record D_80146884 by arg0 and clamps the result into [0, +0x8C] of that
+ * record.
  * @source 0x801E026C
- * @behavior Advances the signed position by arg0 and clamps it to [0, limit].
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801E026C(s8 arg0) {
-  s32 delta;
-  Area030Range* range;
-  s16 value;
-  s16 result;
+    Area030Range* range;
+    s16 value;
+    s16 limit;
+    s16 result;
 
-  delta = arg0;
-  range = D_80146884;
-  range->value_8E += delta;
-  value = range->value_8E;
-  result = range->value_8E;
-
-  if (value < 0) {
-    result = 0;
-    goto store;
-  }
-  if (range->limit_8C < value) {
-    result = range->limit_8C;
-  }
-store:
-  range->value_8E = result;
+    D_80146884->value_8E += arg0;
+    range = D_80146884;
+    value = range->value_8E;
+    if (value >= 0) {
+        limit = range->limit_8C;
+        result = value;
+        if (limit < value) {
+            result = limit;
+        }
+    } else {
+        result = 0;
+    }
+    range->value_8E = result;
 }
