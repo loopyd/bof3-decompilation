@@ -12,9 +12,15 @@ extern s32 func_8019651C(void* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
  * @status exact
  * @match 100.00
  * @residual none
+ *
+ * The 0x04 store reads the work pointer through its own local ahead of the 0x7E
+ * countdown update. Re-reading the scratch pointer at the store point schedules
+ * that load after the countdown store, and capturing it in the same local as the
+ * tint channels moves the 0x5C store base off $v0.
  */
 void func_801ACA14(void) {
   struct GameWorkArea* work;
+  struct GameWorkArea* tail;
 
   D_80146884[0x93] = func_8019651C(g_game_work, 0, 0, 0, 1);
   g_game_work->flags_00 |= 0x20;
@@ -23,6 +29,7 @@ void func_801ACA14(void) {
   work->unk_5E = -0x40;
   work->unk_5D = -0x40;
   g_game_work->flags_5C = 1;
+  tail = g_game_work;
   *(u16*)(D_80146884 + 0x7e) -= 1;
-  g_game_work->field_04 = 1;
+  tail->field_04 = 1;
 }

@@ -1,31 +1,34 @@
 #include "bof3/battle/battle03_internal.h"
 
-/* @behavior returns the unblocked local work index with the smallest halfword at
- * offset `0x88` across the first three local records.
+/* @behavior Returns the index with the smallest halfword at +0x88 among the
+ * first three D_80145E90 records not blocked by func_801DB524. Only values below
+ * 10000 qualify; ties keep the earlier index, and no qualifying value returns 0.
  * @source 0x801E2D90
- * @status partial
- * @match 52.38
- * @residual non-exact live audit: 22/40 instructions; 160 original bytes versus 168 current.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 u8 func_801E2D90(void) {
-  u8  result;
-  u16 best;
+  u32 index;
+  u32 best;
+  u32 result;
   u8  slot;
+  u16 value;
 
   result = 0u;
   best = 10000u;
-  slot = 0u;
+  index = 0u;
   do {
-    volatile Battle03LocalWork* battle_work;
-
-    battle_work = &BATTLE_LOCAL_WORK_ARRAY[slot];
-    if ((func_801DB524(slot) == 0u) &&
-        (BATTLE_LOCAL_HALF_88(battle_work) < best)) {
-      best = BATTLE_LOCAL_HALF_88(battle_work);
-      result = slot;
+    slot = (u8)index;
+    if (func_801DB524(slot) == 0u) {
+      value = *(u16*)&D_80145F18[((slot << 2) + slot) << 6];
+      if (value < best) {
+        best = value;
+        result = index;
+      }
     }
-    slot += 1u;
-  } while (slot < 3u);
+    index += 1u;
+  } while ((u8)index < 3u);
 
-  return result;
+  return (u8)result;
 }

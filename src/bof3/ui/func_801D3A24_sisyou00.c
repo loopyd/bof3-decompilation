@@ -22,11 +22,12 @@
  *           ran, the selected master's +0xE action is started through
  *           func_80150224 and the phase byte is written as 2; the handler index
  *           D_801D4286 is advanced either way.
- * Residual: the gate-scan loop keeps the three table bases (D_801D4088,
- *           D_801D4089 and D_80145FCC) in callee-saved registers where the
- *           original re-materializes %hi/%lo per use, and two address adds
- *           commute in the opposite order; the head, the four confirmation
- *           paths and the tail match instruction for instruction.
+ * Residual: the gate-scan loop keeps the D_801D4088 and D_801D4089 table bases
+ *           in two extra callee-saved registers where the original
+ *           re-materializes %hi/%lo per access; that also shifts the remaining
+ *           callee-saved assignments and commutes the index add the other way.
+ *           The head, the four confirmation paths and the tail match
+ *           instruction for instruction.
  * @status partial
  * @match 83.03
  * @residual address materialization and commutative add order in the gate-scan loop

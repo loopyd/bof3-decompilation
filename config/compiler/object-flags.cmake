@@ -26,6 +26,10 @@
 # CMake wraps the compile command in `cmake -E env PSX_GCC=<verified-path>`
 # when this is set. No entry means canonical gcc-2.7.2-psx is used.
 
+# func_801DCCB0 retains the original signed division checks, including break 7
+# and break 6. The selector-specific flag search verified this expansion.
+set(BOF3_OBJFLAGS_bof3_battle_func_801DCCB0_c -O2 -Wa,--expand-div)
+
 set(BOF3_OBJFLAGS_bof3_ui_armFadeDelay_game01_801D0D5C_c -O1)
 
 # preDispatchGate keeps &GAME_FRONT_INPUT_GATE in a base register and reaches the

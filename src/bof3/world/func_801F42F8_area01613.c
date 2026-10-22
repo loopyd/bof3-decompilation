@@ -15,11 +15,13 @@
  * step index, stores that pair's second byte to scratch offset `0x2A` and
  * finally calls the shared `func_8014D290` helper.
  * @status partial
- * @match 37.86
- * @residual Instruction stream matches the original modulo scheduling: every mnemonic, offset and shift is identical (multiset diff = three original `nop`s), but gcc-2.7.2 hoists `lw $v0,0x80145EC4`/`0x80145EC8` into the entry-block load-delay slots, batches the four `sw`s and allocates the scratch pointer to `$a3` instead of `$a1`; first live diff = entry block, original `nop` after `lw $a1,0x1F800044` / `lbu $v0,0x8($a1)`. Reverted clean-C levers: volatile scratch pointer, volatile context reads (both forms), volatile table views, table/context statement order, early-out and RMW arm forms; flag-search/permuter rungs are opt-in and unauthorized for this selector.
+ * @match 65.73
+ * @residual 94/143 instructions; 560 original bytes versus 572 current.
+ * The context loads move ahead of scratch stores, the branch keeps an extra
+ * byte mask, and store scheduling differs. The volatile pointer-cell reads
+ * preserve the original repeated work-pointer loads.
  */
 void func_801F42F8(void) {
-  World00Area016Scratch* scratch;
   s16 stepped;
 
   func_8014DD3C(0x46);
@@ -28,42 +30,38 @@ void func_801F42F8(void) {
   FIELD_REF(u8, D_1F800044, 0x24u) = 0;
   FIELD_REF(u8, D_1F800044, 0x29u) = 5;
 
-  scratch = D_1F800044;
-  scratch->unk_0c = (s16)D_801F51B8[scratch->unk_04[4]][0];
-  scratch->unk_10 = (s16)D_801F51B8[scratch->unk_04[4]][1];
-  scratch->unk_34 = D_80145EC4;
-  scratch->unk_38 = D_80145EC8;
+  D_1F800044->unk_0c = (s16)D_801F51B8[D_1F800044->unk_04[4]][0];
+  D_1F800044->unk_10 = (s16)D_801F51B8[D_1F800044->unk_04[4]][1];
+  D_1F800044->unk_34 = D_80145EC4;
+  D_1F800044->unk_38 = D_80145EC8;
 
-  if (scratch->unk_04[2] != 0) {
-    FIELD_REF(u16, scratch, 0x36u) -=
-        (s16)D_801F51B8[scratch->unk_04[4]][0] >> 13;
-    stepped = FIELD_REF(u16, scratch, 0x3au) -
-              ((s16)D_801F51B8[scratch->unk_04[4]][1] >> 13);
-    FIELD_REF(u16, scratch, 0x3au) = stepped;
+  if (D_1F800044->unk_04[2] != 0) {
+    FIELD_REF(u16, D_1F800044, 0x36u) -=
+        (s16)D_801F51B8[D_1F800044->unk_04[4]][0] >> 13;
+    stepped = FIELD_REF(u16, D_1F800044, 0x3au) -
+              ((s16)D_801F51B8[D_1F800044->unk_04[4]][1] >> 13);
+    FIELD_REF(u16, D_1F800044, 0x3au) = stepped;
 
-    if (scratch->unk_04[2] == 1) {
-      if (scratch->unk_0c == 0) {
-        FIELD_REF(u16, scratch, 0x36u) += 2;
+    if (D_1F800044->unk_04[2] == 1) {
+      if (D_1F800044->unk_0c == 0) {
+        FIELD_REF(u16, D_1F800044, 0x36u) += 2;
       } else {
-        FIELD_REF(u16, scratch, 0x3au) = stepped + 2;
+        FIELD_REF(u16, D_1F800044, 0x3au) = stepped + 2;
       }
     } else {
-      if (scratch->unk_0c == 0) {
-        FIELD_REF(u16, scratch, 0x36u) -= 2;
+      if (D_1F800044->unk_0c == 0) {
+        FIELD_REF(u16, D_1F800044, 0x36u) -= 2;
       } else {
-        FIELD_REF(u16, scratch, 0x3au) = stepped - 2;
+        FIELD_REF(u16, D_1F800044, 0x3au) = stepped - 2;
       }
     }
   }
 
-  scratch = D_1F800044;
-  FIELD_REF(u16, scratch, 0x36u) -= (s16)D_801F51B8[scratch->unk_04[4]][0] >> 9;
-  FIELD_REF(u16, scratch, 0x3au) -= (s16)D_801F51B8[scratch->unk_04[4]][1] >> 9;
-  scratch->unk_0b = 0;
-  scratch = D_1F800044;
-  scratch->mode = scratch->mode + 1;
+  FIELD_REF(u16, D_1F800044, 0x36u) -= (s16)D_801F51B8[D_1F800044->unk_04[4]][0] >> 9;
+  FIELD_REF(u16, D_1F800044, 0x3au) -= (s16)D_801F51B8[D_1F800044->unk_04[4]][1] >> 9;
+  D_1F800044->unk_0b = 0;
+  D_1F800044->mode = D_1F800044->mode + 1;
   func_8014D6B8(D_801F51C8[D_1F800044->unk_04[4]][0]);
-  scratch = D_1F800044;
-  FIELD_REF(u8, scratch, 0x2au) = D_801F51C8[scratch->unk_04[4]][1];
+  FIELD_REF(u8, D_1F800044, 0x2au) = D_801F51C8[D_1F800044->unk_04[4]][1];
   func_8014D290();
 }

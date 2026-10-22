@@ -11,24 +11,31 @@
  * @status partial
  * @match 32.14
  * @residual Clean-C partial: 9/28 instructions in place (32.14%), 112/112
- *   bytes, 28 instructions, first difference +0x0004. Retained shape computes
- *   the two axis bounds first and the plane bound last with both shifts
- *   inlined; it reproduces the entry result-temp clear, the two `bnez` to the
- *   shared `jr ra` and the in-place `sltu`/`xori` tail, and matches more
- *   instructions than the earlier named-shift shape (5/28, same 112/28 and
- *   first mismatch) that this replaces. Remaining difference: the result/`&&`
- *   temporary lands in $t1 vs the original's $v0, and the two `srl` are
- *   emitted around the `lui/lw` pair instead of after it. Measured
- *   alternatives: plane computed first with inlined shifts = 4/28 (14.29%,
- *   first +0x0000, 27/28 opcode kinds positionally identical). The bounded
- *   permute found only `do { ... } while (0)` scope wrappers, rejected as
- *   structural regressions (size/instruction-count or schedule shifts; exact
- *   counts not retained). Compiler-variant probes on the earlier 5/28 shape
- *   found no exact candidate (canonical -O2 retained; 2.6.3 does not compile
- *   this TU; 2.95.2 higher but not exact). Smallest missing evidence: a
- *   clean-C shape that leaves the emitted schedule unchanged while moving
- *   these long-lived temporaries. Clean-C byte match and independent review
- *   pending.
+ *   bytes, 28 instructions, first difference +0x0004. The retained shape
+ *   computes the two axis bounds first and the plane bound last with both
+ *   shifts inlined; it keeps a single entry clear of the merged result
+ *   temporary, both `bnez` to the shared `jr ra` and the `sltu`/`xori` tail,
+ *   but that temporary lands in $t1 where the original uses $v0 (hence the
+ *   trailing `move v0,t1`), and the two `srl` are emitted around the `lui/lw`
+ *   pair instead of after it. Repair round refuted the early-return
+ *   hypothesis: with the plane kept last, two `if (value < bound) return 0;`
+ *   guards measure 11/28 at 116 bytes (29 instructions), because the shared
+ *   `move v0,zero` block then sits between the compare path and `jr ra` and
+ *   that path needs an extra `j`; with the plane first the same guards measure
+ *   3/28 at 116 bytes. Both add an instruction the original does not have, so
+ *   the single-expression body is kept. A statement-order-only move of the
+ *   0x3E plane above both axes, with declarations and single-expression return
+ *   unchanged, was measured next: 4/28 at 112 bytes with the `value` copy
+ *   leaving $t0 (`move a3,a1`), so emission order is not the lever and the
+ *   residual is register colouring. Other measured shapes: plane first with a
+ *   `half` local 4/28 at 112 bytes; a named-shift body 5/28. Pre-lane
+ *   provenance, not this round's evidence: a bounded permute of the superseded
+ *   named-shift body found only `do { ... } while (0)` wrappers (rejected as
+ *   structural regressions), and compiler-variant probes reported no exact
+ *   candidate (canonical -O2 retained; 2.6.3 does not compile this TU; 2.95.2
+ *   higher but not exact). Smallest missing evidence: a clean-C shape that
+ *   leaves the emitted schedule unchanged while moving these long-lived
+ *   temporaries. Clean-C byte match and independent review pending.
  *   No aids: no register pins, clobbers, barriers or empty asm.
  */
 u32 func_800AF5FC(BattleRange *range, u32 value) {

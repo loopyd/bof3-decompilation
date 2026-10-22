@@ -7,7 +7,20 @@
  * counter +0x10 to -6 and increments work byte +0x01.
  * @status partial
  * @match 55.88
- * @residual first mismatch +0x0000: work pointer in a1 and +0x09 counter in a0 instead of the original a0/a1; every one of the 15 differing instructions is that single register swap with no other difference, 136->136 bytes, clean-C match unresolved
+ * @residual first mismatch +0x0000: the work pointer is allocated to $a1 and
+ *   the +0x09 counter to $a0, the reverse of the original. Every one of the 15
+ *   differing instructions is that single swap, both bodies are 136 bytes, and
+ *   the reset arm already matches. Residual class: allocator choice between a
+ *   block-local counter pseudo and a cross-block pointer pseudo. Repair round:
+ *   hoisting the post-if reload out of the if body, so the pointer's second
+ *   value stops crossing the join, measures 18/34 at 136 bytes and still
+ *   allocates $a1, which refutes that explanation, and it also makes the reload
+ *   unconditional where the original reloads only on the taken path. Three
+ *   declaration-order permutations of the same statements all stay at 19/34,
+ *   and moving the reset arm's `u8 *current;` to function scope (declaration
+ *   scope, the last untried numbering dimension) is also inert at 19/34.
+ *   Compiler-profile and permuter rungs are not authorized, so they stay untried
+ *   rather than exhausted.
  */
 void advanceStageAndAccumulateWorkCounter(void)
 {

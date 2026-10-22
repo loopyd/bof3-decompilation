@@ -4,76 +4,77 @@
  * anchor using the rotation seed at `0x801492d8`.
  * @source 0x801F3ECC
  * @status partial
- * @match 56.15
- * @residual non-exact live audit: 73/126 instructions; 504 original bytes versus 520 current.
+ * @match 61.11
+ * @residual non-exact live audit: 77/126 instructions; 504 original bytes versus 492 current.
+ * The rotation seed binds through the named `D_801492D8` object, the four
+ * scratch vertices through the `D_1F800014` pointer and the packet through the
+ * PsyQ `POLY_G4` members, which removed the constant-address `lui/ori` seed
+ * load and eight duplicated scratch address computations. The original writes
+ * each scratch x halfword through the held vector base and each y/z halfword
+ * through an absolute `$at` address, then emits `addiu v1,v1,-0x9E` followed by
+ * `addu v1,s2,v1` per coordinate. A single symbol-derived pointer makes
+ * gcc-2.7.2 fold every symbol+offset store to an absolute address, and both
+ * operand spellings of `arg + (half - 0x9E)` fold into one hoisted
+ * `arg - 0x9E`, so the mixed addressing and the per-statement constant order
+ * remain unreproduced (three shapes measured identically at 77/126).
  */
 void appendTransformedG4Panel(s16 arg0, s16 arg1) {
-  MATRIX        matrix;
-  long          depth;
-  long          flag;
-  volatile s16* scratch;
-  u32           primitive;
+  MATRIX   matrix;
+  long     depth;
+  long     flag;
+  POLY_G4* prim;
+  SVECTOR* vertices;
 
   PushMatrix();
-  RotMatrix(WORLD00_AREA016_ROTATION, &matrix);
+  RotMatrix(&D_801492D8, &matrix);
   matrix.t[0] = 0;
   matrix.t[1] = 0;
   matrix.t[2] = 0;
   SetRotMatrix(&matrix);
   SetTransMatrix(&matrix);
 
-  scratch = (volatile s16*)WORLD00_AREA016_G4_VERTEX0;
-  primitive = (u32)WORLD00_AREA016_PRIMITIVE_PTR;
+  vertices = D_1F800014;
+  prim = (POLY_G4*)WORLD00_AREA016_PRIMITIVE_PTR;
 
-  scratch[0] = -10;
-  scratch[1] = 0;
-  scratch[2] = 0;
-  scratch[4] = 0;
-  scratch[5] = -4;
-  scratch[6] = 0;
-  scratch[8] = 0;
-  scratch[9] = 4;
-  scratch[10] = 0;
-  scratch[12] = 10;
-  scratch[13] = 0;
-  scratch[14] = 0;
+  vertices[0].vx = -10;
+  SPAD_REF(s16, 0x16u) = 0;
+  SPAD_REF(s16, 0x18u) = 0;
+  vertices[1].vx = 0;
+  SPAD_REF(s16, 0x1eu) = -4;
+  SPAD_REF(s16, 0x20u) = 0;
+  vertices[2].vx = 0;
+  SPAD_REF(s16, 0x26u) = 4;
+  SPAD_REF(s16, 0x28u) = 0;
+  vertices[3].vx = 10;
+  SPAD_REF(s16, 0x2eu) = 0;
+  SPAD_REF(s16, 0x30u) = 0;
 
-  SetPolyG4((POLY_G4*)primitive);
-  RotTransPers4(WORLD00_AREA016_G4_VERTEX0, WORLD00_AREA016_G4_VERTEX1,
-                WORLD00_AREA016_G4_VERTEX2, WORLD00_AREA016_G4_VERTEX3,
-                (long*)(primitive + 8), (long*)(primitive + 0x10),
-                (long*)(primitive + 0x18), (long*)(primitive + 0x20), &depth,
-                &flag);
+  SetPolyG4(prim);
+  RotTransPers4(vertices, vertices + 1, vertices + 2, vertices + 3,
+                (long*)&prim->x0, (long*)&prim->x1, (long*)&prim->x2,
+                (long*)&prim->x3, &depth, &flag);
 
-  *(volatile u8*)(primitive + 0xc) = 0x80u;
-  *(volatile u8*)(primitive + 0xe) = 0x80u;
-  *(volatile u8*)(primitive + 0x14) = 0x80u;
-  *(volatile u8*)(primitive + 0x16) = 0x80u;
-  *(volatile u8*)(primitive + 4) = 0xffu;
-  *(volatile u8*)(primitive + 5) = 0u;
-  *(volatile u8*)(primitive + 6) = 0u;
-  *(volatile u8*)(primitive + 0xd) = 0u;
-  *(volatile u8*)(primitive + 0x15) = 0u;
-  *(volatile u8*)(primitive + 0x1c) = 0u;
-  *(volatile u8*)(primitive + 0x1d) = 0u;
-  *(volatile u8*)(primitive + 0x1e) = 0xffu;
+  prim->r1 = 0x80;
+  prim->b1 = 0x80;
+  prim->r2 = 0x80;
+  prim->b2 = 0x80;
+  prim->r0 = 0xff;
+  prim->g0 = 0;
+  prim->b0 = 0;
+  prim->g1 = 0;
+  prim->g2 = 0;
+  prim->r3 = 0;
+  prim->g3 = 0;
+  prim->b3 = 0xff;
 
-  *(volatile s16*)(primitive + 8) =
-      arg0 + ((s16) * (volatile s16*)(primitive + 8) - 0x9e);
-  *(volatile s16*)(primitive + 10) =
-      arg1 + ((s16) * (volatile s16*)(primitive + 10) - 0x76);
-  *(volatile s16*)(primitive + 0x10) =
-      arg0 + ((s16) * (volatile s16*)(primitive + 0x10) - 0x9e);
-  *(volatile s16*)(primitive + 0x12) =
-      arg1 + ((s16) * (volatile s16*)(primitive + 0x12) - 0x76);
-  *(volatile s16*)(primitive + 0x18) =
-      arg0 + ((s16) * (volatile s16*)(primitive + 0x18) - 0x9e);
-  *(volatile s16*)(primitive + 0x1a) =
-      arg1 + ((s16) * (volatile s16*)(primitive + 0x1a) - 0x76);
-  *(volatile s16*)(primitive + 0x20) =
-      arg0 + ((s16) * (volatile s16*)(primitive + 0x20) - 0x9e);
-  *(volatile s16*)(primitive + 0x22) =
-      arg1 + ((s16) * (volatile s16*)(primitive + 0x22) - 0x76);
+  prim->x0 = prim->x0 - 0x9e + arg0;
+  prim->y0 = prim->y0 - 0x76 + arg1;
+  prim->x1 = prim->x1 - 0x9e + arg0;
+  prim->y1 = prim->y1 - 0x76 + arg1;
+  prim->x2 = prim->x2 - 0x9e + arg0;
+  prim->y2 = prim->y2 - 0x76 + arg1;
+  prim->x3 = prim->x3 - 0x9e + arg0;
+  prim->y3 = prim->y3 - 0x76 + arg1;
 
   func_8014E5A0(1u, 0x24u);
   PopMatrix();

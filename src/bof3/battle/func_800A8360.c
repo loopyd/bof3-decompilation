@@ -1,10 +1,16 @@
 #include "bof3/battle/battle15_internal.h"
 
 /* @source 0x800A8360
- * @behavior initializes battle selection state fields.
+ * @behavior Initializes the battle selection state block: the leading byte,
+ *   the 0x71/0x72/0x73 and 0x79/0x7A/0x7B/0x7C/0x7D bytes, the 0x74/0x76/0x80
+ *   halfwords, and the trailing 0x6C/0xDD/0xDE bytes, in the original store
+ *   order.
  * @status partial
- * @match unavailable
- * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
+ * @match 81.58
+ * @residual 31/38 instructions at the original 152-byte size. The original
+ *   holds &D_80148570 in $v1 for stores at offsets 0 and 0x6C and keeps 8 in
+ *   $a0. This build folds those accesses into absolute stores, changing the
+ *   base and constant register allocation from the first instruction.
  */
 void func_800A8360(void)
 {

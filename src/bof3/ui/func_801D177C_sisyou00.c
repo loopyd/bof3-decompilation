@@ -18,8 +18,14 @@ void func_801D23A0(u16 arg0, u16 arg1, u8 arg2, u8 arg3);
  *           finally the draw mode, the panel primitive append and the icon
  *           primitive whose kind is the icon byte offset by three.
  * @status partial
- * @match 66.39
- * @residual 162/244 matched instructions and 976 current bytes versus 940 original; the 0x48 frame and every callee-saved assignment differ from the first instruction because the byte parameters stay in $fp instead of their stack slots
+ * @match 94.94
+ * @residual 225 of 237 current instructions and 948 current bytes versus 940
+ *           original; twelve instructions differ in two independent groups:
+ *           the closing emitPanelIconPrim call sign-extends both coordinates
+ *           (sll/sra) because the shared PANEL_ICON_PRIM prototype declares
+ *           s16 coordinates, while the original zero-extends them
+ *           (andi 0xffff), and eight prologue/early-block instructions hold a
+ *           different scheduler slot at an unchanged instruction multiset.
  */
 void func_801D177C(u16 x, u16 y, u8 entry, u8 icon) {
   SisyouEntry* record;
@@ -31,7 +37,8 @@ void func_801D177C(u16 x, u16 y, u8 entry, u8 icon) {
 
   base = &D_80144952;
   func_801AE3F0((u16)(x + 3), (u16)(y + 3), 0x7D, 0x30, 0, base[0]);
-  record = (SisyouEntry*)(base + 0x16) + entry;
+  base += 0x16;
+  record = (SisyouEntry*)base + entry;
   func_801D23A0((u16)(x + 0x56), (u16)(y + 2), record->unk_05,
                 (u8)((record->status.half >> 6) & 2));
   func_8014F800((s16)(x + 0x14), (s16)(y + 3), 0, 5, (u32)record);
@@ -62,9 +69,11 @@ void func_801D177C(u16 x, u16 y, u8 entry, u8 icon) {
   sprintf((char*)D_80145AD4, D_801D0C10, record->unk_1C);
   func_80150098(textX, textY, 0, D_80145AD4);
 
-  value = record->unk_16;
-  align = (value == 0) ? 2 : (((record->unk_1E >> 2) >= value) ? 4 : 0);
-  sprintf((char*)D_80145AD4, D_801D0C08, value);
+  align = ((record->unk_1E >> 2) >= record->unk_16) ? 4 : 0;
+  if (record->unk_16 == 0) {
+    align = 2;
+  }
+  sprintf((char*)D_80145AD4, D_801D0C08, record->unk_16);
   textY = (s16)(y + 0x27);
   func_80150098(textX, textY, align, D_80145AD4);
   sprintf((char*)D_80145AD4, D_801D0C10, record->unk_1E);

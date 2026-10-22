@@ -262,6 +262,7 @@ typedef struct Battle03UiRingEntry {
 
 extern volatile AbilityObject       ABILITY_OBJECTS[]; /* @source 0x801CA70C @kind unknown */
 extern volatile u8                  D_801462F0; /* @source 0x801462F0 @kind unknown */
+extern volatile u16                 D_801EC2EE; /* @source 0x801EC2EE @kind unknown */
 extern Battle03TemplateRecord       D_80144968[]; /* @source 0x80144968 @kind unknown */
 extern volatile Battle03FlagRecord D_80145FB8[]; /* @source 0x80145FB8 @kind unknown */
 extern volatile Battle03LocalHalfRecord D_80145F28[]; /* @source 0x80145F28 @kind unknown */
@@ -333,6 +334,10 @@ extern volatile u8 D_80144980[];
 extern Battle03DispatchTable D_801D0FE0; /* @source 0x801D0FE0 @kind table */
 extern volatile u8 D_80145F10[];
 extern volatile u8 D_80145F18[];
+/* Halfword 0x80145F26 (offset 0x0E of the D_80145F18 field block, which sits at
+ * +0x88 of a 0x140-stride D_80145E90 local work record): the original folds the
+ * zero-extended load (`lhu %lo(sym)($at)`), so the symbol stays non-volatile. */
+extern u8 D_80145F26[]; /* @source 0x80145F26 @kind unknown */
 extern volatile u8 D_80145F1A[];
 extern volatile u8 D_80145F1C[];
 extern volatile u8 D_80145F20[]; /* @source 0x80145F20 @kind unknown */
@@ -889,7 +894,6 @@ u8   countMessageTokens(u8* arg0);
   (BATTLE_ABILITY_RECORD_TABLE[(kind)].tail_10.selection_mask)
 #define BATTLE_PANEL_SLOT_MASK(kind)                                           \
   PSX_REF(volatile u8, 0x801d90ebu + ((u32)(kind) * 0x18u))
-#define BATTLE_LOCAL_HALF_88(work)  PSX_REF(volatile u16, (u32)(work) + 0x88u)
 #define BATTLE_LOCAL_HALF_8A(work)  PSX_REF(volatile u16, (u32)(work) + 0x8au)
 #define BATTLE_LOCAL_HALF_90(work)  PSX_REF(volatile u16, (u32)(work) + 0x90u)
 #define BATTLE_LOCAL_HALF_92(work)  PSX_REF(volatile u16, (u32)(work) + 0x92u)
@@ -1064,8 +1068,6 @@ u8   countMessageTokens(u8* arg0);
   PSX_REF(volatile u8, 0x80145f1cu + ((u32)(index) * 0x140u))
 #define BATTLE_LOCAL_ABS_BYTE_5FB0(index)                                      \
   PSX_REF(volatile u8, 0x80145fb0u + ((u32)(index) * 0x140u))
-#define BATTLE_LOCAL_ABS_HALF_5F26(index)                                      \
-  PSX_REF(volatile u16, 0x80145f26u + ((u32)(index) * 0x140u))
 #define BATTLE_LOCAL_ABS_HALF_5F28(index)                                      \
   PSX_REF(volatile u16, 0x80145f28u + ((u32)(index) * 0x140u))
 #define BATTLE_LOCAL_ABS_BYTE_5FCC(index)                                      \
@@ -1159,9 +1161,7 @@ u8   countMessageTokens(u8* arg0);
 
 /* Single fixed-address globals (inline; no symbol binding required). */
 #define BATTLE_GLOBAL_WORD_598C  PSX_REF(u32, 0x8014598cu)
-#define BATTLE_GLOBAL_BYTE_62F0  PSX_REF(volatile u8, 0x801462f0u)
 #define BATTLE_GLOBAL_BYTE_62F3  PSX_REF(u8, 0x801462f3u)
-#define BATTLE_GLOBAL_HALF_EC2EE PSX_REF(volatile u16, 0x801ec2eeu)
 
 /* @source 0x801EAFF4 @kind unknown */
 extern u8 battleCommandEntryTable;

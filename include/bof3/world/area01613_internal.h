@@ -147,6 +147,10 @@ extern s8 D_801490C7;
 extern u8 D_801490D8[];
 /* @source 0x801490E4 @kind unknown */
 extern u8 D_801490E4[];
+/* @source 0x801492D8 @kind unknown — rotation seed handed to `RotMatrix` by
+ * appendTransformedG4Panel. Declared as a named object so the address is
+ * expanded through the shared map symbol, as the original does. */
+extern SVECTOR D_801492D8;
 /* @source 0x8014930A @kind unknown */
 extern s16 D_8014930A;
 /* @source 0x8014930E @kind unknown */

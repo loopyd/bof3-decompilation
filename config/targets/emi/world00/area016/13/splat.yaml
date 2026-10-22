@@ -148,9 +148,10 @@ segments:
     - '@source: src/bof3/world/func_801F3B00.c'
     - '@behavior: returns immediately unless any bit of the shared mask 0x8014832E in 0x1B is set; otherwise it selects the tpage draw mode, draws the local marker sprite layers chosen by the shared probes 0x8014930A/0x8014930E and the shared mask words 0x80145AB4/0x80145AC0 through the local table 0x801F5194, adds the third marker layer when the shared 0x80145024/0x80146258/0x8014625A conditions hold, and appends the transformed G4 panel.'
   - - 4812
-    - asm
+    - c
     - appendTransformedG4Panel
     - '@source: src/bof3/world/appendTransformedG4Panel.c'
+    - '@behavior: pushes the GTE matrix stack, builds a zeroed transfer matrix from the shared rotation seed 0x801492D8, fills the four scratchpad vertices at 0x1F800014 with the -10/4/10 and -4/4 local quad corners, projects them through RotTransPers4 into the current primitive read from 0x8014598C, sets the Gouraud shading bytes (0x80 red/blue for every corner, 0xFF red at vertex 0 and 0xFF blue at vertex 3 and zero for the remaining channels), biases the projected halfwords of each corner by the supplied screen anchor minus 0x9E (x) and 0x76 (y), then requests 0x24 through func_8014E5A0 and pops the matrix stack.'
   - - 5316
     - c
     - func_801F40C4

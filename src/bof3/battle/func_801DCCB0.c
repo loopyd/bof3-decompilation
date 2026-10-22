@@ -1,27 +1,35 @@
 #include "bof3/battle/battle03_internal.h"
 
-/* @behavior averages the current local battler `0x96` values and blends the result
- * with the queued halfword at `0x801ec2ee`.
+/* @behavior Sums the halfword at +0x96 of the D_80145E90 local work records
+ * selected by the D_801462F0 record count, divides that 16-bit total by the same
+ * count and returns half of the sum of the quotient and the D_801EC2EE halfword.
  * @source 0x801DCCB0
- * @status partial
- * @match 35.00
- * @residual non-exact live audit: 14/40 instructions; 160 original bytes versus 140 current.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 u32 func_801DCCB0(void) {
   s32 total;
   u32 count;
-  u8  index;
+  u32 limit;
+  u32 index;
+  u8  slot;
+  s32 divisor;
 
+  /* Plain views retain the original two count loads and one final halfword
+   * load without imposing volatile ordering on the intervening arithmetic. */
   total = 0;
   index = 0u;
-  count = BATTLE_GLOBAL_BYTE_62F0;
+  count = *(u8*)&D_801462F0;
   if (count != 0u) {
+    limit = count;
     do {
-      total += BATTLE_LOCAL_ABS_HALF_5F26(index);
+      slot = (u8)index;
+      total += *(u16*)&D_80145F26[((slot << 2) + slot) << 6];
       index += 1u;
-    } while ((u32)index < count);
+    } while ((u8)index < limit);
   }
 
-  return ((((u16)total / BATTLE_GLOBAL_BYTE_62F0) + BATTLE_GLOBAL_HALF_EC2EE) >>
-          1);
+  divisor = *(u8*)&D_801462F0;
+  return ((u32)((u16)total / divisor) + *(u16*)&D_801EC2EE) >> 1;
 }
