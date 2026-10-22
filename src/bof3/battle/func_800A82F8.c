@@ -6,19 +6,7 @@
  *   byte count.
  * @status partial
  * @match 77.78
- * @residual Clean-C partial (21/27 instructions, 104->108 bytes). Loop body,
- *   index masking, table addressing, bound copies and branch chains match.
- *   First difference: preheader schedule. Original loads the count first
- *   (lui $v1 / lbu $v1), computes the accumulator pointer in $v0, then puts
- *   the zero store in the loop-entry branch delay slot and copies the pointer
- *   and count into $a1/$a2. This shape loads the count last, so the assembler
- *   injects an aspsx-style nop before the loop-entry branch and the zero store
- *   is emitted before the branch instead of in its delay slot. Rejected next
- *   rungs: hoisting the count read into a u8 temporary ahead of the pointer
- *   statement measures 15/26 (100 bytes) and 16/26 (108 bytes), and the
- *   hoisted compare turns the loop test into a signed one. The 52-profile
- *   canonical flag catalog returns no exact match (best 77.78). Clean-C byte
- *   match and independent review pending.
+ * @residual GCC loop-preheader emission order, pointer copy and missing bound copy differ; current body is 108 bytes versus 104 original.
  */
 void func_800A82F8(void)
 {

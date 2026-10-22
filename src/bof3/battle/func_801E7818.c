@@ -1,22 +1,17 @@
 #include "bof3/battle/battle03_internal.h"
 
-/* @behavior dispatches the current saved-preview/result task state through the
- * fixed five-entry handler table.
- * @source 0x801E7818
- * @status partial
- * @match 41.94
- * @residual non-exact live audit: 13/28 instructions; 112 original bytes versus 124 current.
+/* @source 0x801E7818
+ * @behavior Copies the five saved-preview/result handlers bound at 0x801D0F6C
+ * to the stack and runs the one selected by byte +0x01 of the work object
+ * published at 0x1F800044.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
-void NO_SIBLING_CALLS func_801E7818(void) {
-  Battle03Handler const* savedPreviewResultTable;
-  Battle03Handler        table[5];
+void func_801E7818(void)
+{
+    Battle03FiveDispatchTable handlers;
 
-  savedPreviewResultTable =
-      (Battle03Handler const*)BATTLE_SAVED_PREVIEW_RESULT_TABLE;
-  table[0] = savedPreviewResultTable[0];
-  table[1] = savedPreviewResultTable[1];
-  table[2] = savedPreviewResultTable[2];
-  table[3] = savedPreviewResultTable[3];
-  table[4] = savedPreviewResultTable[4];
-  table[BATTLE_LOCAL_SCRATCH_PTR->unk_01]();
+    handlers = D_801D0F6C;
+    handlers.handlers[battleWork[1]]();
 }

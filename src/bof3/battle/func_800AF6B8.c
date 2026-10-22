@@ -7,13 +7,7 @@
  * @source 0x800AF6B8
  * @status partial
  * @match 25.93
- * @residual first mismatch +0x0004: the original hoists `move v0,zero` into the
- * entry block and shares one return, while the explicit early `return result;`
- * here yields a separate zero-return block plus an extra 4-byte `j` (27 insns
- * vs 26; 104->108 bytes); the plane pseudo lands in a2 where the original used
- * t2. Clean-C retry: assign inside the if and use a single trailing
- * `return result;`. Ladder tried: cfg/return shapes, statement orders, bounded
- * permute, profile probes; no aids. Byte match and independent review pending.
+ * @residual Axis predicate register allocation, return placement and a byte mask differ; current body is 108 bytes versus 104 original.
  */
 u32 func_800AF6B8(u32 x, u32 y, s32 z, u32 size) {
     BattleWork *work;

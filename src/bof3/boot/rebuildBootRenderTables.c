@@ -14,7 +14,10 @@ extern u32  D_801459FC;
  * @source 0x8014B020
  * @status partial
  * @match 42.31
- * @residual non-exact live audit: 22/52 instructions; 208 original bytes versus 204 current.
+ * @residual loop induction shape only: 22/52 instructions; 208 original bytes
+ * versus 204 current. Both loops compare an ascending signed counter against a
+ * literal bound, so the canonical -O2 profile rewrites each into a countdown
+ * trip counter and schedules the address materialisation ahead of the counter.
  */
 void rebuildBootRenderTables(void) {
   s32   index;
@@ -29,12 +32,11 @@ void rebuildBootRenderTables(void) {
   buffer_index = D_80143D44;
   packet_table = bootPacketHeadTable;
   g_PrimCursor = 0x80020000u + ((buffer_index * 9) << 12);
-  while (index < 8) {
+  do {
     *ordering_table = (u32*)(packet_table + (buffer_index << 5));
     ordering_table++;
-    index++;
     packet_table += 4;
-  }
+  } while (++index < 8);
 
   index = 0;
   buffer_index = D_80143D44;
@@ -44,9 +46,8 @@ void rebuildBootRenderTables(void) {
     *(u32*)(D_80142CC0 + table_offset) = 0;
     *(u32*)(D_80142CC4 + table_offset) = (u32)(packet + (buffer_index << 3));
     packet += 0x30;
-    index++;
     table_offset += 0x30;
-  } while (index < 0x38);
+  } while (++index < 0x38);
 
   D_801459F8 = 0x800e4800;
   D_801459FC = 0x800f5000;

@@ -21,35 +21,32 @@ extern s8            D_80148FC0[];
  * loader state, releases any prior owner, and advances the loader step.
  * @source 0x80162790
  * @status partial
- * @match 65.15
- * @residual clean-C allocation/scheduling residual: 43/66 instructions, 264 original bytes
- * versus 256 current; the entry-block load order and the loader-word base register differ.
- * flag-search over the 52 reviewed profiles peaks at 69.57% (-O1), so no clean profile closes it.
+ * @match 68.18
+ * @residual instruction schedule and register allocation only: 45/66
+ * instructions with the original 264-byte size. The original keeps the
+ * prior-owner load/store in source order around the loader-word load and
+ * reloads D_80146483 for the release test; the canonical -O2 profile
+ * re-schedules both and reuses the narrow local instead.
  */
 void selectNextEmiEntry(void) {
   u8   unused_stack[64];
   u32* table_word;
-  u8   next_index;
   u16  entry_index;
 
   if (D_8014646C == 0) {
     u32 current_word;
-    u16 raw_index;
     u8  prev_slot;
 
+    prev_slot = D_80146481;
     table_word = &D_80146458;
     current_word = *table_word;
-
-    entry_index = D_80146780[current_word].index;
-    prev_slot = D_80146481;
     D_80146484 = prev_slot;
 
-    raw_index = entry_index;
-    D_80146483 = raw_index;
-    next_index = (u8)raw_index;
+    entry_index = D_80146780[current_word].index;
+    D_80146483 = entry_index;
 
-    *table_word = D_80146780[next_index].word;
-    D_80146780[next_index].state = 0;
+    *table_word = D_80146780[(u8)entry_index].word;
+    D_80146780[(u8)entry_index].state = 0;
 
     if (D_80148FC0[D_80146483] != -1) {
       SsUtAllKeyOff(0);

@@ -405,6 +405,7 @@ void integrateMotionOrSet2(void);
 extern Battle03EightDispatchTable   D_801D0F80; /* @source 0x801D0F80 @kind unknown */
 extern Battle03FiveDispatchTable   D_801D0F44; /* @source 0x801D0F44 @kind unknown */
 extern Battle03FiveDispatchTable    D_801D0F58; /* @source 0x801D0F58 @kind unknown */
+extern Battle03FiveDispatchTable    D_801D0F6C; /* @source 0x801D0F6C @kind table */
 extern Battle03DispatchTable        D_801D0F20; /* @source 0x801D0F20 @kind unknown */
 
 Battle03LocalWork *findLocalWorkByKind(u8 arg0);
@@ -1042,8 +1043,6 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_RESULT_UI_AUX_HANDLER_1 ((Battle03Handler)0x801e8d04u)
 #define BATTLE_PREVIEW_SEQUENCE_TABLE                                          \
   PSX_PTR(const volatile Battle03Handler, 0x801d0f44u)
-#define BATTLE_SAVED_PREVIEW_RESULT_TABLE                                      \
-  PSX_PTR(const volatile Battle03Handler, 0x801d0f6cu)
 
 /* Scratchpad flags at 0x1F800000 (u16). */
 #define BATTLE_SCRATCH_FLAGS SPAD_REF(volatile u16, 0u)

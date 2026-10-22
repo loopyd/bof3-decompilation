@@ -1658,7 +1658,7 @@ segments:
     - '@source: src/bof3/ui/func_801BB760.c'
     - '@status: partial'
     - '@match: 65.00'
-    - '@residual: Two register roles differ; everything else (block shape, branch direction, delay-slot content, 80-byte frame) matches. The original copies the func_80154F78 result out of the return register into $a0 (`move a0,v0` at +0x1C) and keeps the compared result in $v0; this spelling leaves the call result in $v0 and allocates the result pseudo to $a0, so the entry copy is missing and the epilogue gains `move v0,a0` (19 insns / 76 bytes vs 20 / 80). First difference: the absent `move a0,v0`. One four-variant `lift sweep` (in-process route) measured the two-return spellings higher at 17/20, 80 bytes, but they invert the branch (`bne` into the compare block plus a spare `j`) against the original `beqz` over it, so this topologically faithful spelling is retained as the frontier candidate. Next untried rung: clean-C temporary/lifetime levers that move the result pseudo into $v0 without register pins. /'
+    - '@residual: The call-result copy now matches; report and scratch gate register allocation differ at the original 80-byte size.'
     - '@behavior: Queries the shared route-parameterised position service func_80154F78 with the two incoming coordinates and the scratch work-area route index, then reports whether the returned value shifted up by 16 bits exceeds 0x400000; the report is suppressed to zero while the scratchpad byte at 0x1F800000 is zero.'
   - - 155568
     - c
@@ -1668,6 +1668,11 @@ segments:
   - - 155676
     - c
     - func_801BB81C
+    - '@source: src/bof3/ui/func_801BB81C.c'
+    - '@status: partial'
+    - '@match: 40.00'
+    - '@residual: Type-mask, constant and report register allocation differ at unchanged 80-byte size.'
+    - '@behavior: Returns whether two scratchpad bytes differ when both high nibbles identify type 0x20, reading both bytes from the scratchpad byte array D_1F800000 indexed by the unsigned argument; otherwise returns zero.'
   - - 155756
     - asm
     - func_801BB86C

@@ -1207,8 +1207,10 @@ segments:
     - '@source: src/bof3/battle/func_801E7778_battle03.c'
     - '@behavior: Clears work flag 0x40 and advances the work countdown word +0x40 by 0x2000; when that word has already reached 0x10000 it instead clears work byte +0x48, clears flag 0x2000 in the flag record selected by work byte +0x05, and clears the queued-slot bytes.'
   - - 93208
-    - asm
+    - c
     - func_801E7818
+    - '@source: src/bof3/battle/func_801E7818.c'
+    - '@behavior: Copies the five saved-preview/result handlers bound at 0x801D0F6C to the stack and runs the one selected by byte +0x01 of the work object published at 0x1F800044.'
   - - 93320
     - c
     - advanceFlagRecordCounter
