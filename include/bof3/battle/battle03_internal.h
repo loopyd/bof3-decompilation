@@ -617,7 +617,7 @@ u8   func_800A9304(u8 arg0);
 u8   func_800A94A8(void);
 u8   func_800A955C(void);
 void func_800A36F0(u32 arg0, u32 arg1);
-u16  func_800A2AE0(u8 arg0);
+s16  func_800A2AE0(u8 battler_index, u16 element_mask);
 u8   func_800A3DF8(u32 arg0, u32 arg1);
 void func_800A31E0(u32 arg0, u32 arg1);
 void func_800AD074(u8 arg0);

@@ -316,6 +316,23 @@ headers = [
     "include/bof3/battle/battle03_internal.h",
 ]
 
+[[companion_overlays]]
+target = "emi/battle/battle/15"
+disc_id = "BIN/BATTLE/BATTLE.EMI#15"
+payload_sha256 = "77d963c56e3ba6b1619323e3007c25d70300e855ac9f4b088ddce2604f92e140"
+load_address = 0x80096800
+size = 133316
+evidence = "Original jal at 0x801DCDF0 targets 0x800A2AE0. Original-disc runtime observations at caller entry and 0x801DCDE8 confirm the complete caller and Battle15 callee ranges are resident together. The observed zero-mode invocation skips the call; callee execution is not claimed."
+
+[companion_overlays.abi]
+target_address = 0x800A2AE0
+prototype = "s16 func_800A2AE0(u8 battler_index, u16 element_mask)"
+evidence = "Caller preserves the raw scratchpad flags in a1 through jal and supplies the battler byte in a0. The Battle15 callee tests a1 element bits and returns a sign-extended halfword."
+
+[[companion_overlays.static_calls]]
+caller_address = 0x801DCDF0
+target_address = 0x800A2AE0
+
 [[matching.section_placements]]
 function = 0x801E5CA4
 section = ".rodata"
