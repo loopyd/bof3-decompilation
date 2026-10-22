@@ -14,6 +14,8 @@ typedef int (*NoteCall)(u32, u32, u32, u32, u32, u32);
 static u32 player_record;
 static u8 voice_tracks[24];
 static u8 levels[16];
+static u8 peaks[16];
+static u8 peak_hold[16];
 static u32 glyph_packets[1024];
 static u32 glyph_head;
 static u32 draw_y;
@@ -66,6 +68,72 @@ static void rectangle(u32 x, u32 y, u32 width, u32 height, u32 color)
     gpu(0x60000000 | color);
     gpu(xy(x, y));
     gpu(xy(width, height));
+}
+
+static int sine(u32 angle)
+{
+    static const int quarter[17] = {
+        0, 100, 200, 297, 392, 483, 569, 650, 724,
+        792, 851, 903, 946, 980, 1004, 1019, 1024
+    };
+    u32 index, fraction;
+    int value;
+    angle &= 255;
+    index = angle & 127;
+    if (index > 64) index = 128 - index;
+    fraction = index & 3;
+    index >>= 2;
+    value = quarter[index];
+    if (index < 16) value += (quarter[index + 1] - value) * fraction / 4;
+    return angle & 128 ? -value : value;
+}
+
+static void background(u32 frames)
+{
+    static const u8 faces[6][4] = {
+        {0, 1, 2, 3}, {4, 5, 6, 7}, {0, 1, 4, 5},
+        {2, 3, 6, 7}, {0, 2, 4, 6}, {1, 3, 5, 7}
+    };
+    u32 points[8], vertex, face, corner, axis;
+    int x, y, z, rotated_x, rotated_y, rotated_z, yaw_sin, yaw_cos;
+    int pitch_sin, pitch_cos;
+    gpu(0xe1000200);
+    gpu(0x38000000); gpu(xy(0, 0));
+    gpu(0); gpu(xy(320, 0));
+    gpu(0x380624); gpu(xy(0, 240));
+    gpu(0x380624); gpu(xy(320, 240));
+    yaw_sin = sine(frames / 3);
+    yaw_cos = sine(frames / 3 + 64);
+    pitch_sin = sine(frames / 5 + 24);
+    pitch_cos = sine(frames / 5 + 88);
+    for (vertex = 0; vertex < 8; ++vertex) {
+        x = vertex & 1 ? 64 : -64;
+        y = vertex & 2 ? 64 : -64;
+        z = vertex & 4 ? 64 : -64;
+        rotated_x = (x * yaw_cos + z * yaw_sin) / 1024;
+        rotated_z = (z * yaw_cos - x * yaw_sin) / 1024;
+        rotated_y = (y * pitch_cos - rotated_z * pitch_sin) / 1024;
+        rotated_z = (y * pitch_sin + rotated_z * pitch_cos) / 1024;
+        points[vertex] = xy(160 + rotated_x * 300 / (rotated_z + 320),
+                            148 + rotated_y * 300 / (rotated_z + 320));
+    }
+    /* Quarter-additive faces and edges keep the cube below the HUD's contrast. */
+    gpu(0xe1000260);
+    for (face = 0; face < 6; ++face) {
+        gpu(0x2a402030);
+        for (corner = 0; corner < 4; ++corner) gpu(points[faces[face][corner]]);
+    }
+    for (vertex = 0; vertex < 8; ++vertex) {
+        for (axis = 1; axis <= 4; axis <<= 1) {
+            if ((vertex & axis) == 0) {
+                gpu(0x42903068);
+                gpu(points[vertex]); gpu(points[vertex | axis]);
+            }
+        }
+    }
+    gpu(0xe1000200);
+    gpu(0x62000000); gpu(xy(176, 16)); gpu(xy(132, 78));
+    gpu(0x62000000); gpu(xy(10, 92)); gpu(xy(300, 18));
 }
 
 static void text_scaled(u32 x, u32 y, const char *string, u32 width, u32 height)
@@ -183,8 +251,27 @@ static void musical_position(void)
     text_scaled(184, 84, digits, 6, 6);
 }
 
+static u32 meter_level(u32 amplitude)
+{
+    u32 base, level;
+    if (amplitude == 0) return 0;
+    base = 1;
+    level = 1;
+    while (amplitude >= base * 2) {
+        base *= 2;
+        level += 18;
+    }
+    return level + (amplitude - base) * 18 / base;
+}
+
 static void meters(void)
 {
+    static const u32 fire[16] = {
+        0x080c90, 0x080ea8, 0x0814c0, 0x081dd8,
+        0x0828f0, 0x0838ff, 0x084aff, 0x085eff,
+        0x0874ff, 0x088cff, 0x08a4ff, 0x10baff,
+        0x20ceff, 0x38deff, 0x58ecff, 0x80f8ff
+    };
     u32 voice, track, level, volume, envelope, x, bar, color;
     int left, right;
     u8 current[16];
@@ -204,17 +291,32 @@ static void meters(void)
         level = volume * envelope >> 22;
         if (level > current[track]) current[track] = (u8)level;
     }
+    gpu(0xe1000200);
     for (track = 0; track < 16; ++track) {
-        level = current[track];
+        level = meter_level(current[track]);
         if (level >= levels[track]) levels[track] = (u8)level;
         else levels[track] = levels[track] > 4 ? levels[track] - 4 : 0;
+        if (levels[track] >= peaks[track]) {
+            peaks[track] = levels[track];
+            peak_hold[track] = 24;
+        } else if (peak_hold[track] != 0) --peak_hold[track];
+        else if (peaks[track] != 0) --peaks[track];
         x = 17 + track * 18;
-        color = 0x181818 + ((level * 200 / 127) << 8) + ((level * 100 / 127) << 16);
+        gpu(0x62000000); gpu(xy(x - 1, 116)); gpu(xy(13, 95));
+        rectangle(x - 1, 116, 1, 95, 0x100610);
+        rectangle(x + 11, 116, 1, 95, 0x100610);
+        color = level != 0 ? fire[level / 8] : 0x100818;
         rectangle(x + 2, 118, 7, 7, color);
         for (bar = 0; bar < 16; ++bar) {
-            color = 0x292820;
-            if (levels[track] > bar * 8) color = bar < 11 ? 0xa0d030 : (bar < 14 ? 0x30ccdc : 0x4050f0);
+            color = 0x100818;
+            if (levels[track] > bar * 8) color = fire[bar];
             rectangle(x + 1, 204 - bar * 4, 9, 3, color);
+            if (levels[track] > bar * 8) {
+                rectangle(x + 2, 204 - bar * 4, 7, 1, fire[bar] | 0x303030);
+            }
+            if (peaks[track] != 0 && bar == (peaks[track] - 1u) / 8) {
+                rectangle(x + 1, 204 - bar * 4, 9, 1, 0xa0e8ff);
+            }
         }
         number[0] = (char)('0' + (track + 1) / 10);
         number[1] = (char)('0' + (track + 1) % 10);
@@ -230,7 +332,7 @@ static void display(u32 frames)
     gpu(0xe3000000 | (next << 10));
     gpu(0xe4000000 | 319 | ((next + 239) << 10));
     gpu(0xe5000000 | (next << 11));
-    rectangle(0, 0, 320, 240, 0x201810);
+    background(frames);
     logo();
     text(184, 22, "PLAYER " PLAYER_VERSION);
     text(184, 42, "deitydragon");
