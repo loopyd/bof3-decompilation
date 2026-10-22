@@ -1,37 +1,61 @@
 #include "bof3/battle/battle03_internal.h"
 
-/* @behavior reads one or two bytes from the current enemy script pointer at `0xec`,
- * forwards the low 7 bits through the shared effect helper, and stores the high
- * bit result into scratch byte `0x2a`.
- * @source 0x801E2314
- * @status partial
- * @match 14.88
- * @residual non-exact live audit: 18/121 instructions; 484 original bytes versus 220 current.
+/* @source 0x801E2314
+ * @behavior Consumes one enemy script byte selected by the scratch work mode
+ * byte +0x08 and derives the flag byte +0x2A of that same scratch record from
+ * it: modes 0 and 1 read script byte [index] and modes 2 and 3 read script byte
+ * [index + 1]; the byte masked to 0x7F is handed to func_8014D8D4 and the flag
+ * takes bit 0x80 of the byte for modes 0 and 2 and the inverse of that bit for
+ * modes 1 and 3. Any other mode leaves the flag untouched.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
+
+#define BATTLE_SCRIPT_PTR                                                      \
+  ((volatile u8*)FIELD_REF(volatile u8*, battleCurrentEnemyWorkState, 0xecu))
+
 void func_801E2314(u32 arg0) {
-  volatile u8* script_ptr;
-  u8           mode;
-  u8           value;
+  s32 mode;
+  u8  value;
 
-  script_ptr = BATTLE_ENEMY_PTR_EC(BATTLE_CURRENT_ENEMY_PTR);
-  mode = BATTLE_LOCAL_SCRATCH_PTR->unk_08;
-
-  if (mode == 1u) {
-    func_8014D8D4(script_ptr[arg0 & 0xffu] & 0x7fu);
-    value = script_ptr[arg0 & 0xffu];
-    BATTLE_LOCAL_BYTE_2A(BATTLE_LOCAL_SCRATCH_PTR) = (value & 0x80u) == 0u;
-    return;
+  mode = D_1F800044->unk_08;
+  switch (mode) {
+  case 0:
+    func_8014D8D4(BATTLE_SCRIPT_PTR[arg0 & 0xff] & 0x7f);
+    value = BATTLE_SCRIPT_PTR[arg0 & 0xff];
+    if (value & 0x80) {
+      D_1F800044->unk_2a = 1;
+    } else {
+      D_1F800044->unk_2a = 0;
+    }
+    break;
+  case 1:
+    func_8014D8D4(BATTLE_SCRIPT_PTR[arg0 & 0xff] & 0x7f);
+    value = BATTLE_SCRIPT_PTR[arg0 & 0xff];
+    if (value & 0x80) {
+      D_1F800044->unk_2a = 0;
+    } else {
+      D_1F800044->unk_2a = 1;
+    }
+    break;
+  case 2:
+    func_8014D8D4((BATTLE_SCRIPT_PTR + (arg0 & 0xff))[1] & 0x7f);
+    value = (BATTLE_SCRIPT_PTR + (arg0 & 0xff))[1];
+    if (value & 0x80) {
+      D_1F800044->unk_2a = 1;
+    } else {
+      D_1F800044->unk_2a = 0;
+    }
+    break;
+  case 3:
+    func_8014D8D4((BATTLE_SCRIPT_PTR + (arg0 & 0xff))[1] & 0x7f);
+    value = (BATTLE_SCRIPT_PTR + (arg0 & 0xff))[1];
+    if (value & 0x80) {
+      D_1F800044->unk_2a = 0;
+    } else {
+      D_1F800044->unk_2a = 1;
+    }
+    break;
   }
-
-  if (mode == 0u) {
-    func_8014D8D4(script_ptr[arg0 & 0xffu] & 0x7fu);
-    value = script_ptr[arg0 & 0xffu];
-  } else if (mode == 2u || mode == 3u) {
-    func_8014D8D4(script_ptr[(arg0 & 0xffu) + 1u] & 0x7fu);
-    value = script_ptr[(arg0 & 0xffu) + 1u];
-  } else {
-    return;
-  }
-
-  BATTLE_LOCAL_BYTE_2A(BATTLE_LOCAL_SCRATCH_PTR) = (value & 0x80u) == 0u;
 }

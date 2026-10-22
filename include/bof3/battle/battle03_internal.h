@@ -60,7 +60,9 @@ typedef struct Battle03LocalWork {
   u32 unk_20;
   u8  pad_24[5];
   u8  unk_29;
-  u8  pad_2a;
+  /* unk_2a is the enemy script flag byte that func_801E2314 derives from the
+   * script bit 0x80 of the mode-selected byte. */
+  u8  unk_2a;
   u8  unk_2b;
   u8  pad_2c[8];
   s32 unk_34;
@@ -511,6 +513,14 @@ extern u8               D_801EB068[];
  * D_801EB638 family binds the D_801EB630 record bytes. */
 extern u8               D_801EB0B0[]; /* @source 0x801EB0B0 @kind unknown */
 extern u8               D_801EB0B1[]; /* @source 0x801EB0B1 @kind unknown */
+/* Y deltas of the queued-slot position pairs recomposed by func_801E8DD8: the
+ * first-three-record table pair is selected by record byte +0x79 and the enemy
+ * class byte at 0x801EB710 selects the 0x88-byte D_800E40CB row. Each is bound as
+ * its own flat symbol because the original reaches them symbol-relative. */
+extern u8               D_801EB108[]; /* @source 0x801EB108 @kind unknown */
+extern u8               D_801EB109[]; /* @source 0x801EB109 @kind unknown */
+extern u8               D_801EB710[]; /* @source 0x801EB710 @kind unknown */
+extern u8               D_800E40CB[]; /* @source 0x800E40CB @kind unknown */
 extern volatile u8      battleDispatchSlots[]; /* @source 0x801EB4F0 @kind unknown */
 /* @source 0x801EB4F4 @kind table — the message view of the 12-byte
  * battleDispatchSlots entries read by func_801E9538: the original reaches the
@@ -850,7 +860,6 @@ u8   countMessageTokens(u8* arg0);
 /* @kind: bss (map symbol: battleCurrentEnemyWorkState) — current Battle03EnemyWork pointer cell. */
 #define BATTLE_CURRENT_ENEMY_PTR                                               \
   PSX_REF(volatile Battle03EnemyWork*, 0x801eb4e8u)
-#define BATTLE_CURRENT_QUEUED_PTR_4B20 SPAD_PTR_SLOT(volatile u8, 0x801eb4e0u)
 #define BATTLE_SLOT_STORE_FLAG(index)                                          \
   PSX_REF(volatile u8, 0x801ec339u + ((u32)(index) * 0x78u))
 #define BATTLE_SLOT_STORE_PTR(index)                                           \
@@ -911,7 +920,6 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_LOCAL_HALF_96(work)  PSX_REF(volatile u16, (u32)(work) + 0x96u)
 #define BATTLE_LOCAL_HALF_98(work)  PSX_REF(volatile u16, (u32)(work) + 0x98u)
 #define BATTLE_LOCAL_BYTE_8C(work)  PSX_REF(volatile u8, (u32)(work) + 0x8cu)
-#define BATTLE_LOCAL_BYTE_2A(work)  PSX_REF(volatile u8, (u32)(work) + 0x2au)
 #define BATTLE_LOCAL_BYTE_9E(work)  PSX_REF(volatile u8, (u32)(work) + 0x9eu)
 #define BATTLE_LOCAL_BYTE_A6(work)  PSX_REF(volatile u8, (u32)(work) + 0xa6u)
 #define BATTLE_LOCAL_BYTE_A9(work)  PSX_REF(volatile u8, (u32)(work) + 0xa9u)
@@ -979,15 +987,11 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_ENEMY_BYTE_115(work) PSX_REF(volatile u8, (u32)(work) + 0x115u)
 #define BATTLE_ENEMY_BYTE_E0(work)  PSX_REF(volatile u8, (u32)(work) + 0xe0u)
 #define BATTLE_ENEMY_BYTE_E6(work)  PSX_REF(volatile u8, (u32)(work) + 0xe6u)
-#define BATTLE_ENEMY_PTR_EC(work)                                              \
-  SPAD_PTR_SLOT(volatile u8, (volatile u8*)(work) + 0xecu)
 #define BATTLE_WEIGHT_TABLE_0394       PSX_PTR(const volatile u8, 0x801eb394u)
 #define BATTLE_WEIGHT_TABLE_039C       PSX_PTR(const volatile u8, 0x801eb39cu)
 #define BATTLE_RANDOM_TABLE_AC58       PSX_PTR(const volatile u8, 0x801eac58u)
 #define BATTLE_RANDOM_TABLE_AC78       PSX_PTR(const volatile u8, 0x801eac78u)
 /* @kind: rodata (map symbol: battleCommandEntryTable) — command entries: 12-byte params + 16-byte name. */
-#define BATTLE_RETRY_TABLE_AFF4        PSX_PTR(const volatile u8, 0x801eaff4u)
-#define BATTLE_COUNTER_TABLE_AFFC      PSX_PTR(const volatile u8, 0x801eaffcu)
 #define BATTLE_PERCENT_TABLE_AF3C      PSX_PTR(const volatile u16, 0x801eaf3cu)
 #define BATTLE_RANDOM_BONUS_TABLE_AF48 PSX_PTR(const volatile s8, 0x801eaf48u)
 #define BATTLE_RANK_TABLE_AF88         PSX_PTR(const volatile u8, 0x801eaf88u)
@@ -1119,18 +1123,6 @@ u8   countMessageTokens(u8* arg0);
   PSX_PTR(const volatile Battle03Handler, 0x801eb270u + ((u32)(index) * 4u))
 
 /* Offset/position tables for queued-slot rendering (func_801E8DD8). */
-#define BATTLE_OFFSET_TABLE_0B10(a, b)                                         \
-  PSX_REF(volatile s8, 0x801eb0b0u + ((u32)(a) * 2u) + ((u32)(b) * 8u))
-#define BATTLE_ENEMY_OFFSET_TABLE_0B08(b)                                      \
-  PSX_REF(volatile u8, 0x801eb108u + ((u32)(b) * 2u))
-#define BATTLE_ENEMY_OFFSET_TABLE_0B09(b)                                      \
-  PSX_REF(volatile u8, 0x801eb109u + ((u32)(b) * 2u))
-#define BATTLE_ENEMY_OFFSET_U8_0B10(index)                                     \
-  PSX_REF(volatile u8, 0x801eb710u + ((u32)(index) * 0x118u))
-#define BATTLE_ENEMY_OFFSET_S8_0B12(index)                                     \
-  PSX_REF(volatile s8, 0x801eb712u + ((u32)(index) * 0x118u))
-#define BATTLE_CLASS_OFFSET_0C0CB(b)                                           \
-  PSX_REF(volatile u8, 0x800e40cbu + ((u32)(b) * 0x88u))
 /* +0x03 byte of each 0x88-byte class record; non-volatile so GCC keeps the
  * constant as the load displacement (`lui $at; addu $at,idx,$at; lbu %lo`). */
 #define BATTLE_CLASS_BYTE_0C0CE(b)                                             \
@@ -1161,8 +1153,10 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_GLOBAL_WORD_598C  PSX_REF(u32, 0x8014598cu)
 #define BATTLE_GLOBAL_BYTE_62F3  PSX_REF(u8, 0x801462f3u)
 
-/* @source 0x801EAFF4 @kind unknown */
-extern u8 battleCommandEntryTable;
+/* @source 0x801EAFF4 @kind unknown — 12-byte command parameter rows; byte +0
+ * is the retry rate index and byte +8 the trigger rate read by
+ * shouldTriggerBattlerCountdownRetry. */
+extern u8 battleCommandEntryTable[];
 
 /* @source 0x801EB4E8 @kind unknown */
 extern Battle03EnemyWork* battleCurrentEnemyWorkState;

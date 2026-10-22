@@ -288,6 +288,13 @@ extern u8 D_80145F35[]; /* @source 0x80145F35 @kind unknown */
 extern u8 D_80145F36[]; /* @source 0x80145F36 @kind unknown */
 extern u8 D_80145F37[]; /* @source 0x80145F37 @kind unknown */
 extern u8 D_80145F18[]; /* @source 0x80145F18 @kind unknown */
+/* Halfwords of the same 0x140-byte party-work record read by func_8009D198
+ * (+0x02, +0x04, +0x0A). Each address is its own symbol for the reason given
+ * on the func_800A4458 band below: the original encodes the access as
+ * `lui %hi(SYM); addu at,at,index*0x140; op %lo(SYM)(at)`. */
+extern u8 D_80145F1A[]; /* @source 0x80145F1A @kind unknown */
+extern u8 D_80145F1C[]; /* @source 0x80145F1C @kind unknown */
+extern u8 D_80145F22[]; /* @source 0x80145F22 @kind unknown */
 extern u8 D_80145F12[]; /* @source 0x80145F12 @kind unknown */
 extern u8 D_80145F04[]; /* @source 0x80145F04 @kind unknown */
 /* Party-slot position/colour band maintained by func_800A4458. Every address is
@@ -317,6 +324,42 @@ extern u8 D_801EB6A4[]; /* @source 0x801EB6A4 @kind unknown */
 extern u8 D_801EB712[]; /* @source 0x801EB712 @kind unknown */
 extern u8 D_801EB713[]; /* @source 0x801EB713 @kind unknown */
 extern u8 D_801EB6C4[]; /* @source 0x801EB6C4 @kind unknown */
+/* Field addresses of the 0x118-byte local panel record written by
+ * func_800AC218 and read by func_8009D198. Every field address is its own
+ * symbol: the original encodes each access as `lui %hi(SYM); addu at,at,record
+ * byte offset; op %lo(SYM)(at)`, which a raw address expression assembles as
+ * `addu at,offset,at`. */
+extern u8 D_801EB6AD[]; /* @source 0x801EB6AD @kind unknown */
+extern u8 D_801EB6AE[]; /* @source 0x801EB6AE @kind unknown */
+extern u8 D_801EB6B0[]; /* @source 0x801EB6B0 @kind unknown */
+extern u8 D_801EB6B2[]; /* @source 0x801EB6B2 @kind unknown */
+extern u8 D_801EB6B4[]; /* @source 0x801EB6B4 @kind unknown */
+extern u8 D_801EB6B6[]; /* @source 0x801EB6B6 @kind unknown */
+extern u8 D_801EB6B8[]; /* @source 0x801EB6B8 @kind unknown */
+extern u8 D_801EB6BC[]; /* @source 0x801EB6BC @kind unknown */
+extern u8 D_801EB6C6[]; /* @source 0x801EB6C6 @kind unknown */
+extern u8 D_801EB6C8[]; /* @source 0x801EB6C8 @kind unknown */
+extern u8 D_801EB6D0[]; /* @source 0x801EB6D0 @kind unknown */
+extern u8 D_801EB6D2[]; /* @source 0x801EB6D2 @kind unknown */
+extern u8 D_801EB6F4[]; /* @source 0x801EB6F4 @kind unknown */
+extern u8 D_801EB6F6[]; /* @source 0x801EB6F6 @kind unknown */
+extern u8 D_801EB6F8[]; /* @source 0x801EB6F8 @kind unknown */
+extern u8 D_801EB6FA[]; /* @source 0x801EB6FA @kind unknown */
+extern u8 D_801EB6FF[]; /* @source 0x801EB6FF @kind unknown */
+extern u8 D_801EB700[]; /* @source 0x801EB700 @kind unknown */
+extern u8 D_801EB701[]; /* @source 0x801EB701 @kind unknown */
+extern u8 D_801EB702[]; /* @source 0x801EB702 @kind unknown */
+extern u8 D_801EB703[]; /* @source 0x801EB703 @kind unknown */
+extern u8 D_801EB704[]; /* @source 0x801EB704 @kind unknown */
+extern u8 D_801EB705[]; /* @source 0x801EB705 @kind unknown */
+extern u8 D_801EB706[]; /* @source 0x801EB706 @kind unknown */
+extern u8 D_801EB707[]; /* @source 0x801EB707 @kind unknown */
+extern u8 D_801EB720[]; /* @source 0x801EB720 @kind unknown */
+extern u8 D_801EB721[]; /* @source 0x801EB721 @kind unknown */
+extern u8 D_801EB72D[]; /* @source 0x801EB72D @kind unknown */
+extern u8 D_801EB742[]; /* @source 0x801EB742 @kind unknown */
+extern u8 D_801EB743[]; /* @source 0x801EB743 @kind unknown */
+extern u8 D_801EB744[]; /* @source 0x801EB744 @kind unknown */
 /* Local panel entry list read by func_8009CFEC: count byte plus 4-byte entries. */
 extern u8 D_801EB5A8; /* @source 0x801EB5A8 @kind unknown */
 extern BattleLocalPanelEntry D_801ED9B0[]; /* @source 0x801ED9B0 @kind unknown */

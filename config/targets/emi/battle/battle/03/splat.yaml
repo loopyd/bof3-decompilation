@@ -370,9 +370,10 @@ segments:
     - asm
     - queueActiveBattlerSnapshots
   - - 53428
-    - asm
+    - c
     - shouldTriggerBattlerCountdownRetry
     - '@source: src/bof3/battle/shouldTriggerBattlerCountdownRetry.c'
+    - '@behavior: Decides whether the countdown of the battler selected by arg0 fires on this frame: the countdown byte is local work +0x121 for the first three battlers and enemy work +0xFD otherwise, a zero countdown never fires, a roll of rand() % 100 at or below the rate byte keeps the countdown (the battleCommandEntryTable byte +8 selected by the countdown byte for the countdown values 1 and 2, the fixed 0x4C bound otherwise), and the retry roll compares rand() % 10000 with 10000 minus 50 times the entry byte of battleCommandEntryTable selected by the retry index byte (local work +0xA6 or enemy work +0xB6).'
   - - 53884
     - asm
     - advanceCounterStorePacked
@@ -774,8 +775,10 @@ segments:
     - '@source: src/bof3/battle/func_801E2284_battle03.c'
     - '@behavior: Publishes the first occupied 0x118-byte reserve work record at D_801EB630 as the current enemy work (scratchpad +0x44 and the 0x801EB4E8 global) and runs func_8014D290, skipping empty records.'
   - - 71444
-    - asm
+    - c
     - func_801E2314
+    - '@source: src/bof3/battle/func_801E2314.c'
+    - '@behavior: Consumes one enemy script byte selected by the scratch work mode byte +0x08 and derives the flag byte +0x2A of that same scratch record from it: modes 0 and 1 read script byte [index] and modes 2 and 3 read script byte [index + 1]; the byte masked to 0x7F is handed to func_8014D8D4 and the flag takes bit 0x80 of the byte for modes 0 and 2 and the inverse of that bit for modes 1 and 3. Any other mode leaves the flag untouched.'
   - - 71928
     - c
     - func_801E24F8
@@ -1277,8 +1280,10 @@ segments:
     - '@source: src/bof3/battle/func_801E8D04_battle03.c'
     - '@behavior: Clears work flag 0x40 and advances the work countdown word +0x40 by 0x2000; when that word has already reached 0x10000 it instead clears work byte +0x48, masks flag 0x2000 out of the 0x140-stride flag record selected by work byte +0x05, masks 0xFFFCFFF9 into that record''s second flag word, and clears the queued-slot bytes.'
   - - 98776
-    - asm
+    - c
     - func_801E8DD8
+    - '@source: src/bof3/battle/func_801E8DD8.c'
+    - '@behavior: Derives the rendering position of the queued work record published at 0x801EB4E0 into the scratch work halfwords: for the first three records the x delta is the signed byte at D_801EB0B0 indexed by record byte +0x08 * 2 plus the +0x79 byte of the 0x140-stride local work record * 8, the y delta is D_801EB108[byte79 * 2] while record byte +0x08 is below two and D_801EB109[byte79 * 2] otherwise, and record halfwords +0x2E/+0x30 become scratch +0x2E/+0x30 with those deltas applied (+0x30 also minus 8) while +0x32 is copied across; enemy records take the x delta from the signed byte at D_801EB712 and the y delta from the class table D_800E40CB row selected by the D_801EB710 class byte of the same 0x118-stride record.'
   - - 99240
     - c
     - func_801E8FA8

@@ -44,6 +44,24 @@
  * read of the jitter alone: it stops the loop optimiser from keeping the
  * parameter's sign-extension live in a register across the loop, restoring the
  * original's per-arm `lhu` of the parameter home (367/449 -> 382/447).
+ * Wave-16 repair measured the same evidence again from the slot layout. The
+ * original frame holds five word objects: the two RotTransPers4 out-params at
+ * 0x28/0x2C, the two `sh`+`lhu` parameter truncation slots at 0x30/0x38 and the
+ * promoted halfwidth at 0x40. Only the addressable-parameter home here lands at
+ * 0x28, which pushes that pair to 0x2C/0x30, so the four call sites address
+ * `sp+0x2C`/`sp+0x30` instead of the original `sp+0x28`/`sp+0x2C`; the rest of
+ * the loop body already carries the original's per-arm `lhu` of the jitter and
+ * `lw` of the promoted halfwidth. Shapes without an addressable parameter move
+ * the truncation slots to the original 0x30/0x38 and free 0x28/0x2C for the
+ * out-params, but the loop optimiser then hoists both promotions into two extra
+ * word slots: plain `arg1`/`arg2` operands reach 367/447 at frame 0x78 and 1796
+ * bytes, the same shape with explicit promoted locals reaches 367/447, and
+ * promoting both parameters through plain `s32` locals reaches the original
+ * frame 0x70 and the exact 1788-byte size at 363/447. `volatile s16` locals
+ * instead draw two-byte slots at 0x28/0x2A and a 0x68 frame (341/448). The
+ * retained deficit is therefore reload's choice between a HImode spill that is
+ * reloaded per arm and an SImode promotion for the jitter parameter, which no
+ * clean-C spelling reached without losing the per-arm `lhu`.
  */
 void func_801D165C(s32 arg0, s16 arg1, s16 arg2) {
   s32*     size;
