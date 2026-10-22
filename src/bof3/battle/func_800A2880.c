@@ -9,25 +9,9 @@
  *   never reads; the battler record index is the second argument. The rate and
  *   percent scalings both divide unsigned, so a non-positive intermediate
  *   wraps the way the original's own unsigned divide does.
- * @status partial
- * @match 96.67
- * @residual allocation residual (145/150 instructions live, 608 original
- *   bytes versus 608 current, so the frame, the fixed-point and divide-by-five
- *   sequences, the percent clamp, the element-modifier, random-band and halving
- *   scalings, the element lookup and the divide operands all match). The
- *   percent source is read into the s32 local and clamped in one assignment,
- *   which keeps the divide unsigned (`multu`/`mfhi`/`srl`) and leaves the
- *   original's single `subu` and signed `slti`; deriving the percentile inline
- *   from the halfword instead re-extends the quotient with an `andi`/`move`
- *   pair.
- *   Surviving differences: five instructions of register naming in the guard
- *   word block - each arm's `lw` and `lui 0x1` pair plus the shared `and`. The
- *   original loads the party word at +0x01D0 and the enemy word at +0x01DA
- *   into v0 with the 0x10000 constant in v1 and then forms `and v0,v0,v1`,
- *   while this build loads into v1 with the constant in v0 and forms
- *   `and v0,v1,v0`. Function-shaped range with its own
- *   prologue and return: the data-candidate, carve and clone levers do not
- *   apply. Compiler-profile and permuter rungs remain unauthorized.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 s16 func_800A2880(u8 selection_index, u8 battler_index, u16 base_value,
                   u8 element_flag)
@@ -37,7 +21,6 @@ s16 func_800A2880(u8 selection_index, u8 battler_index, u16 base_value,
   s32 rate;
   u16 kind_mask;
   s16 modifier;
-  u32 word;
 
   /* The original promotes the defence rate to a percent-times-hundred fixed
    * point before applying it, so the *0x64 against the 0x64u divisor are the
@@ -78,16 +61,16 @@ s16 func_800A2880(u8 selection_index, u8 battler_index, u16 base_value,
     if (D_80145FB4[battler_index].unk_04 & 0x200u) {
       damage /= 2;
     }
-    word = D_80145FB4[battler_index].unk_00;
+    if (D_80145FB4[battler_index].unk_00 & 0x10000u) {
+      damage = 0;
+    }
   } else {
     if (D_801EB730[battler_index - 3].unk_04 & 0x200u) {
       damage /= 2;
     }
-    word = D_801EB730[battler_index - 3].unk_00;
-  }
-
-  if (word & 0x10000u) {
-    damage = 0;
+    if (D_801EB730[battler_index - 3].unk_00 & 0x10000u) {
+      damage = 0;
+    }
   }
   return (s16)damage;
 }
