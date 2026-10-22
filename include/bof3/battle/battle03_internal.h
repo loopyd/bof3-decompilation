@@ -136,6 +136,16 @@ typedef struct Battle03LocalHalfRecord {
   u8  pad_02[0x13e];
 } Battle03LocalHalfRecord;
 
+typedef struct Battle03RankEntry {
+  s16 value;
+  u16 index;
+} Battle03RankEntry;
+
+typedef struct Battle03LocalByteRecord {
+  u8 byte_00;
+  u8 pad_01[0x13f];
+} Battle03LocalByteRecord;
+
 typedef struct Battle03EnemyHalfRecord {
   u16 half_00;
   u8  pad_02[0x116];
@@ -157,7 +167,11 @@ typedef struct Battle03EnemyWork {
   u8                       unk_02;
   u8                       unk_03;
   u8                       unk_04;
-  u8                       pad_05[0x7d];
+  /* func_801E2A88 returns byte unk_05 in its default arm and tests halfword
+   * unk_80 in cases 1 and 4. Both use the folded D_801EB630 record base. */
+  u8                       unk_05;
+  u8                       pad_06[0x7a];
+  u16                      unk_80;
   /* unk_82/unk_fd proven by the func_801D57AC countdown path */
   u16                      unk_82;
   u8                       pad_84[4];
@@ -177,7 +191,9 @@ typedef struct Battle03EnemyWork {
   u8                       unk_f0;
   u8                       pad_f1[4];
   u8                       unk_f5;
-  u8                       pad_f6[2];
+  /* unk_f6 indexes the D_801CA718 kind table in func_801E2A88; the original
+   * reads it as lhu %lo(D_801EB726)($at). */
+  u16                      unk_f6;
   /* unk_f8/unk_fa/unk_fc proven by the func_801D5BC0 reset path */
   u16                      unk_f8;
   u16                      unk_fa;
@@ -343,6 +359,13 @@ extern u8                           D_80145E98[]; /* @source 0x80145E98 @kind un
 extern u8                           D_80145EBE[]; /* @source 0x80145EBE @kind unknown */
 extern u8                           D_80145EC0[]; /* @source 0x80145EC0 @kind unknown */
 extern u8                           D_80145F09[]; /* @source 0x80145F09 @kind unknown */
+/* Bytes +0x7A and +0x119 of the same 0x140-stride record, read by the phase-2
+ * local arm of func_801DAAE4. The original reaches both with `lui $at,%hi(X)` +
+ * `addu at,at,index*0x140` + `lbu %lo(X)(at)` instead of a shared record base, so
+ * they join the flat-symbol family above; +0x119 is volatile because the arm
+ * re-reads it after the value store. */
+extern volatile Battle03LocalByteRecord D_80145F0A[]; /* @source 0x80145F0A @kind unknown */
+extern volatile Battle03LocalByteRecord D_80145FA9[]; /* @source 0x80145FA9 @kind unknown */
 extern volatile u8 D_80144974[];
 extern volatile u8 D_8014497C[];
 extern volatile u8 D_8014497E[];
@@ -718,6 +741,14 @@ extern u8  D_801EB6AC[]; /* @source 0x801EB6AC @kind unknown */
 extern s8  D_801EAEA4; /* @source 0x801EAEA4 @kind unknown */
 extern s8  D_801EAEA6; /* @source 0x801EAEA6 @kind unknown */
 extern u8  D_801EAF27[]; /* @source 0x801EAF27 @kind unknown */
+/* @source 0x801EAF3C @kind unknown — per-rank percent table the rank list scales
+ * by; its own symbol so the read folds as `%hi`/`%lo` instead of `lui`+`ori`. */
+extern const u16 D_801EAF3C[];
+/* @source 0x801EB550 @kind unknown */
+extern Battle03RankEntry D_801EB550[];
+/* @source 0x801EAF48 @kind unknown — per-rank random-bonus table the enemy arm
+ * adds to the enemy value. */
+extern const s8 D_801EAF48[];
 void func_801D9AB4(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void func_801D9C80(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void func_801D9DBC(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4);
@@ -803,7 +834,7 @@ void drawSpritePrimTpage0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 ar
 void drawSpritePrimTpage1(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,
                    u8 arg6);
 u8   pickRandomUnblockedId(u8 arg0);
-s8   func_801E2A88(u8 arg0);
+u8   func_801E2A88(u8 arg0);
 u8   func_801E2CA4(void);
 u8   pickTargetByMode(s8 arg0);
 u8   func_801E2D90(void);
@@ -838,8 +869,6 @@ u8   countMessageTokens(u8* arg0);
 
 #define BATTLE_LOCAL_WORK_ARRAY PSX_PTR(volatile Battle03LocalWork, 0x80145e90u)
 #define BATTLE_ENEMY_WORK_ARRAY PSX_PTR(volatile Battle03EnemyWork, 0x801eb630u)
-#define BATTLE_QUEUED_SLOT_ARRAY                                               \
-  PSX_PTR(volatile Battle03QueuedSlot, 0x801ec330u)
 #define BATTLE_LOCAL_WORK_PTR                                                  \
   PSX_REF(volatile Battle03LocalWork*, 0x80146250u)
 #define BATTLE_GLOBAL_BYTE_62FC(index)                                         \
@@ -896,7 +925,6 @@ u8   countMessageTokens(u8* arg0);
   PSX_PTR(const volatile Battle03Handler, 0x801eb120u)
 #define BATTLE_LOCAL_FLAGS_80(work) PSX_REF(volatile u16, (u32)(work) + 0x80u)
 #define BATTLE_LOCAL_BYTE_79(work)  PSX_REF(volatile u8, (u32)(work) + 0x79u)
-#define BATTLE_LOCAL_BYTE_7A(work)  PSX_REF(volatile u8, (u32)(work) + 0x7au)
 #define BATTLE_LOCAL_BYTE_82(work)  PSX_REF(volatile u8, (u32)(work) + 0x82u)
 #define BATTLE_LOCAL_BYTE_85(work)  PSX_REF(volatile u8, (u32)(work) + 0x85u)
 #define BATTLE_LOCAL_BYTE_86(work)  PSX_REF(volatile u8, (u32)(work) + 0x86u)
@@ -992,8 +1020,6 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_RANDOM_TABLE_AC58       PSX_PTR(const volatile u8, 0x801eac58u)
 #define BATTLE_RANDOM_TABLE_AC78       PSX_PTR(const volatile u8, 0x801eac78u)
 /* @kind: rodata (map symbol: battleCommandEntryTable) — command entries: 12-byte params + 16-byte name. */
-#define BATTLE_PERCENT_TABLE_AF3C      PSX_PTR(const volatile u16, 0x801eaf3cu)
-#define BATTLE_RANDOM_BONUS_TABLE_AF48 PSX_PTR(const volatile s8, 0x801eaf48u)
 #define BATTLE_RANK_TABLE_AF88         PSX_PTR(const volatile u8, 0x801eaf88u)
 #define BATTLE_VARIANCE_TABLE_AFA0     PSX_PTR(const volatile s32, 0x801eafa0u)
 #define BATTLE_SCALE_TABLE_AFC0        PSX_PTR(const volatile s16, 0x801eafc0u)
@@ -1064,11 +1090,8 @@ u8   countMessageTokens(u8* arg0);
 
 /* Scratchpad pointer cell at 0x1F800044, read as several cell types. */
 #define BATTLE_SCRATCH_CELL_U8PTR PSX_REF(volatile u8*, 0x1f800044u)
-#define BATTLE_SCRATCH_CELL_WORD PSX_REF(volatile u32, 0x1f800044u)
 
 /* Local-work-array (0x80145e90, stride 0x140) absolute-field accessors. */
-#define BATTLE_LOCAL_ABS_BYTE_5E90(index)                                      \
-  PSX_REF(volatile u8, 0x80145e90u + ((u32)(index) * 0x140u))
 #define BATTLE_LOCAL_ABS_HALF_5F10(index)                                      \
   PSX_REF(volatile u16, 0x80145f10u + ((u32)(index) * 0x140u))
 #define BATTLE_LOCAL_ABS_HALF_5F18(index)                                      \
@@ -1085,8 +1108,6 @@ u8   countMessageTokens(u8* arg0);
   PSX_REF(volatile u8, 0x80145fccu + ((u32)(index) * 0x140u))
 #define BATTLE_LOCAL_ABS_WORD_5F04(index)                                      \
   PSX_PTR(volatile u32, 0x80145f04u + ((u32)(index) * 0x140u))
-#define BATTLE_LOCAL_ABS_WORD_5FB8(index)                                      \
-  PSX_REF(volatile u32, 0x80145fb8u + ((u32)(index) * 0x140u))
 
 /* Ability template records (0x80144968, stride 0xa4) absolute-field accessors. */
 #define BATTLE_TEMPLATE_ABS_WORD_4968(index)                                   \
@@ -1103,8 +1124,6 @@ u8   countMessageTokens(u8* arg0);
 /* Enemy-work-array (0x801eb630, stride 0x118) absolute-field accessors. */
 #define BATTLE_ENEMY_ABS_HALF_6B2(index)                                       \
   PSX_REF(volatile u16, 0x801eb6b2u + ((u32)(index) * 0x118u))
-#define BATTLE_ENEMY_ABS_WORD_734(index)                                       \
-  PSX_REF(volatile u32, 0x801eb734u + ((u32)(index) * 0x118u))
 
 
 /* UI ring head byte at 0x801ec328. */

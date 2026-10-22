@@ -14,16 +14,15 @@ typedef struct Battle03GroupQueueEntry {
  * to the 0xFF empty marker, resets `groupQueueCursor` and appends the
  * still-eligible slot numbers to the queue.
  * @status partial
- * @match 55.61
- * @residual 109/196 instructions, 784 original bytes versus 776 current. The
- * first live difference is the phase-1 accumulator: the original retains an
- * unconditional `total += value` (sunk into the `beqz` delay slot) whose value is
- * never read, while the canonical gcc-2.7.2-psx dead-insn pass removes the dead
- * accumulation and cascades into the s0/s1/s2/s3 allocation. Every other shape
- * (queue fill, descending sort, cursor drain) is present. Tried and rejected with
- * the same 109/196 or unchanged allocation: conditional vs unconditional
- * accumulate, shared u8 sum/counter, u16 sum with a separate u8 counter, and the
- * `total = maximum` spelling; gcc-2.6.3-psx also removes the accumulation.
+ * @match 57.14
+ * @residual 112/196 instructions, 784 original bytes versus 772 current. The
+ * sort guard now uses the original's signed form (`left < slots - 1`, emitted as
+ * `addiu -1` plus `slt`). The first live difference is the phase-1 accumulator:
+ * the original retains an unconditional `total += value` (sunk into the `beqz`
+ * delay slot) whose value is never read, while the canonical gcc-2.7.2-psx
+ * dead-insn pass removes the dead accumulation and cascades into the
+ * s0/s1/s2/s3 allocation. Every other shape (queue fill, descending sort,
+ * cursor drain) is present.
  * Smallest missing evidence: the retail translation unit's dead-code-surviving
  * shape for that accumulator (or a per-object profile/variant rung, which this
  * mission does not authorize).
@@ -77,7 +76,7 @@ void func_801DA7D4(void) {
     u8 left;
 
     left = 0u;
-    while (left + 1u < slots) {
+    while (left < slots - 1) {
       u8 right;
 
       right = left + 1u;

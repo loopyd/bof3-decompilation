@@ -203,9 +203,13 @@ segments:
   - - 39892
     - c
     - func_801DA7D4
+    - '@source: src/bof3/battle/func_801DA7D4.c'
+    - '@behavior: Rebuilds the pending group queue from the eligible battler slots: it sums the enemy slot values at D_801EB6D8[index - 3] and keeps the largest one for the slots 3..10 that pass the D_801EB734 flag-word bit 0x8000, then collects the eligible local slots 0..2 (values at D_80145F28) into a stack list ordered by descending value, clears the three bytes of groupQueueTable to the 0xFF empty marker, resets groupQueueCursor and appends the still-eligible slot numbers to the queue.'
   - - 40676
-    - asm
+    - c
     - func_801DAAE4
+    - '@source: src/bof3/battle/func_801DAAE4.c'
+    - '@behavior: Builds and sorts the mixed local and enemy ranking list used by the owner selection bytes at 0x8014630C, then resets the current owner cursor byte 0x80146322.'
   - - 42072
     - asm
     - markBattlersMeetingOpposingThresholds
@@ -416,8 +420,10 @@ segments:
     - asm
     - clearPendingBit
   - - 54740
-    - asm
+    - c
     - func_801DE1D4
+    - '@source: src/bof3/battle/func_801DE1D4.c'
+    - '@behavior: Copies each active local and enemy battler work record into a kind 7 queued slot entry: local slots 0..2 whose record byte +0x00 carries bit 0x1 while their D_80145FB8 flag word lacks bit 0x8, and enemy slots 3..10 that func_801DB524 reports available while their D_801EB734 flag word lacks bit 0x8. For each such record it allocates the slot, copies the 0x74-byte record image, publishes the record pointer into the entry +0x74 pointer and the 0x1F800044 scratch cell, and clears the entry''s queue bytes.'
   - - 55356
     - c
     - func_801DE43C
@@ -800,8 +806,10 @@ segments:
     - asm
     - pickRandomUnblockedId
   - - 73352
-    - asm
+    - c
     - func_801E2A88
+    - '@source: src/bof3/battle/func_801E2A88.c'
+    - '@behavior: Selects a target or result byte from the current enemy state byte 0x80146375 and the chosen enemy kind, delegating the special cases to the pickTargetOrFf, pickTargetByMode, func_801E2CA4, func_801E2D90 and func_801E2E30 picker helpers.'
   - - 73892
     - c
     - func_801E2CA4
