@@ -11,15 +11,9 @@
  * arg1 and the func_801E0ABC summary word through D_801D0C38 into the same
  * buffer (spaces rewritten to 0xFF) and submits them at x 0x2F - 25 * count and
  * 25 * count + 0xEF on row 0x73.
- * @status partial
- * @match 94.97
- * @residual the third-arm copy loop's second read is missing: the current
- * object reuses the one `lbu 0($v1)` load for the zero test and puts the
- * `sb 0($t0)` store in that branch's delay slot, so the original's second
- * `lbu 0(v1)` reload is absent and the loop-exit and later labels sit eight
- * bytes (two instructions) earlier; every other instruction, the packed-record
- * copy, the three draw calls without a short conversion on the count-scaled
- * coordinates, and the trailing label formatting match
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 typedef struct PackedCoords {
   u8 value[6];
@@ -29,7 +23,7 @@ void func_801E1004(s32 arg0, s32 arg1, s32 arg2) {
   PackedCoords coords;
   s32 i;
   u8* dst;
-  const u8* src;
+  u8* src;
 
   coords = *(PackedCoords*)D_801D0C30;
   submitTpageDrawMode(0, 1);
