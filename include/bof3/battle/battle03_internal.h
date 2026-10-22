@@ -94,13 +94,15 @@ typedef struct Battle03LocalWork {
   u8  pad_a5[0x73];
   u8  unk_118;
   u8  unk_119;
-  u8  pad_11a[2];
+  /* unk_11a is the packed counter value func_801DDFEC hands to
+   * advanceCounterStorePacked together with the unk_122 counter index. */
+  u16 unk_11a;
   /* unk_11c/unk_11e/unk_120 proven by the func_801D5BC0 reset path */
   u16 unk_11c;
   u16 unk_11e;
   u8  unk_120;
   u8  unk_121;
-  u8  pad_122;
+  u8  unk_122;
   u8  unk_123;
   u32 unk_124;
   u32 unk_128;
@@ -237,7 +239,15 @@ typedef struct Battle03SlotStore {
   u32 unk_34;
   u32 unk_38;
   u32 unk_3c;
-  u8  pad_40[0x34];
+  u8  pad_40[8];
+  /* unk_48/unk_5d/unk_5e/unk_5f are the late entry bytes cleared for every
+   * slot by func_801E5A38, matching the single-entry clearQueuedSlotBytes. */
+  u8  unk_48;
+  u8  pad_49[0x14];
+  u8  unk_5d;
+  u8  unk_5e;
+  u8  unk_5f;
+  u8  pad_60[0x14];
   u32 ptr_74;
 } Battle03SlotStore;
 
@@ -388,6 +398,11 @@ extern u8                            BATTLE_GLOBAL_BYTE_6308; /* @source 0x80146
  * compare) while the oscillating byte above is masked, so the latch is the plain
  * non-volatile view: a volatile view forces a redundant `andi` on that load. */
 extern u8                            BATTLE_GLOBAL_BYTE_6304; /* @source 0x80146304 @kind unknown */
+/* Ranked owner list: func_801DAAE4 publishes the selected owner ids here and
+ * func_801DDFEC walks entries [D_80146322 - 1, D_80146323). Kept as the plain
+ * byte spelling because the exact callers index it through its address
+ * (`(&D_8014630C)[index]`), which an array declaration would make a
+ * pointer-to-incomplete-array use. */
 extern u8                            D_8014630C; /* @source 0x8014630C @kind unknown */
 extern u8                            D_8014864C; /* @source 0x8014864C @kind unknown */
 extern u8                            D_80181B10[]; /* @source 0x80181B10 @kind unknown */
@@ -854,24 +869,10 @@ u8   countMessageTokens(u8* arg0);
   PSX_REF(volatile u16, 0x801eb4f8u + ((u32)(index) * 0x0cu))
 #define BATTLE_EVENT_SLOT_BYTE(index)                                          \
   PSX_REF(volatile u8, 0x801eb4fau + ((u32)(index) * 0x0cu))
-#define BATTLE_SLOT_STORE_BYTE_01(index)                                       \
-  PSX_REF(volatile u8, 0x801ec331u + ((u32)(index) * 0x78u))
-#define BATTLE_SLOT_STORE_BYTE_02(index)                                       \
-  PSX_REF(volatile u8, 0x801ec332u + ((u32)(index) * 0x78u))
-#define BATTLE_SLOT_STORE_BYTE_05(index)                                       \
-  PSX_REF(volatile u8, 0x801ec335u + ((u32)(index) * 0x78u))
-#define BATTLE_SLOT_STORE_BYTE_06(index)                                       \
-  PSX_REF(volatile u8, 0x801ec336u + ((u32)(index) * 0x78u))
 #define BATTLE_SLOT_STORE_BYTE_29(index)                                       \
   PSX_REF(volatile u8, 0x801ec359u + ((u32)(index) * 0x78u))
 #define BATTLE_SLOT_STORE_BYTE_5C(index)                                       \
   PSX_REF(volatile u8, 0x801ec38cu + ((u32)(index) * 0x78u))
-#define BATTLE_SLOT_STORE_BYTE_5D(index)                                       \
-  PSX_REF(volatile u8, 0x801ec38du + ((u32)(index) * 0x78u))
-#define BATTLE_SLOT_STORE_BYTE_5E(index)                                       \
-  PSX_REF(volatile u8, 0x801ec38eu + ((u32)(index) * 0x78u))
-#define BATTLE_SLOT_STORE_BYTE_5F(index)                                       \
-  PSX_REF(volatile u8, 0x801ec38fu + ((u32)(index) * 0x78u))
 #define BATTLE_LOCAL_STATE_TABLE                                               \
   PSX_PTR(const volatile Battle03Handler, 0x801eb120u)
 #define BATTLE_LOCAL_FLAGS_80(work) PSX_REF(volatile u16, (u32)(work) + 0x80u)
@@ -913,7 +914,6 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_LOCAL_BYTE_134(work) PSX_REF(volatile u8, (u32)(work) + 0x134u)
 #define BATTLE_LOCAL_BYTE_120(work) PSX_REF(volatile u8, (u32)(work) + 0x120u)
 #define BATTLE_LOCAL_BYTE_121(work) PSX_REF(volatile u8, (u32)(work) + 0x121u)
-#define BATTLE_LOCAL_BYTE_122(work) PSX_REF(volatile u8, (u32)(work) + 0x122u)
 #define BATTLE_LOCAL_BYTE_13C(work) PSX_REF(volatile u8, (u32)(work) + 0x13cu)
 #define BATTLE_LOCAL_HALF_2C(work)  PSX_REF(volatile u16, (u32)(work) + 0x2cu)
 #define BATTLE_LOCAL_STATE_TABLE_015C                                          \
@@ -1094,15 +1094,6 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_ENEMY_ABS_WORD_734(index)                                       \
   PSX_REF(volatile u32, 0x801eb734u + ((u32)(index) * 0x118u))
 
-/* Queued-slot (0x801ec330, stride 0x78) missing byte-field accessors. */
-#define BATTLE_SLOT_STORE_BYTE_00(index)                                       \
-  PSX_REF(volatile u8, 0x801ec330u + ((u32)(index) * 0x78u))
-#define BATTLE_SLOT_STORE_BYTE_03(index)                                       \
-  PSX_REF(volatile u8, 0x801ec333u + ((u32)(index) * 0x78u))
-#define BATTLE_SLOT_STORE_BYTE_04(index)                                       \
-  PSX_REF(volatile u8, 0x801ec334u + ((u32)(index) * 0x78u))
-#define BATTLE_SLOT_STORE_BYTE_48(index)                                       \
-  PSX_REF(volatile u8, 0x801ec378u + ((u32)(index) * 0x78u))
 
 /* UI ring head byte at 0x801ec328. */
 #define BATTLE_UI_RING_HEAD PSX_REF(volatile u8, 0x801ec328u)

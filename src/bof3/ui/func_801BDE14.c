@@ -4,10 +4,8 @@
  * @source 0x801BDE14
  * @behavior Find the first active eligible work record that passes the
  * coordinate/range test, returning its signed slot index or -1.
- * @status partial
- * @match 86.89
- * @residual same-size callee-saved register allocation rotation; clean-C
- * local copies regressed, permuter and compiler/flag searches found no exact
+ * @status exact
+ * @match 100.00
  */
 s8 func_801BDE14(s32 x, s32 y, s32 range)
 {
@@ -16,7 +14,7 @@ s8 func_801BDE14(s32 x, s32 y, s32 range)
   s16 reference;
   struct GameWorkArea* work;
 
-  reference = func_801BDCF8();
+  reference = func_801BDCF8(x, y);
   i = 0;
   offset = 0;
   do {

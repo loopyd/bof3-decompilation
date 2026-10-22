@@ -12,14 +12,15 @@
  * byte and handed to func_80155A08 at 0x28 bytes.
  * @source 0x801F2DF8
  * @status partial
- * @match 89.08
- * @residual live audit: 106/119 instructions, 476 original bytes versus 472 current. Residual class is allocator/scheduler order inside two call-free regions: the func_801AFFD8 argument address (&screen[1]) is materialised one slot before the first size read where the original keeps it in that load's delay slot and reuses $v0 for both reads, and the tail keeps the GetTPage result plus the colour byte in $v0/$v1 swapped (the original stores tpage straight after the call and reuses its nop-filled colour load-delay pair, one instruction longer). Measured clean-C shapes: work-pointer volatility view, screen-workspace volatility, pointer and alias locals, separate colour locals, statement order, and the SDK setUV4/setUVWH uv forms; the profile and permuter rungs are opt-in and untried.
+ * @match 92.44
+ * @residual live audit: 110/119 instructions, 476 -> 472 bytes. The size pair reloads `+0x24` through a local per write, restoring the original load/store/load/store order. Remaining residual class is scheduler order at the tail: this build hoists the three colour byte loads above the GetTPage result store and leaves one fewer unfilled load-delay nop, where the original stores tpage straight after the call. Measured shapes: plain work view 107/119 (the two size reads then merge, 456 bytes), explicit size local with the volatile view 110/119 (retained). Profile and permuter rungs are opt-in and untried.
  */
 void func_801F2DF8(const void* arg0) {
   World00Area024ScreenPoint       screen[4];
   const volatile World00Area024SpriteWork* work;
   const void*                     object;
   POLY_FT4*                       prim;
+  u16                             size;
   u8                              color;
 
   work = (const World00Area024SpriteWork*)arg0;
@@ -30,8 +31,10 @@ void func_801F2DF8(const void* arg0) {
   SetSemiTrans(prim, 1);
 
   func_801AFF04(object, &screen[0]);
-  screen[1].x = work->field_24;
-  screen[1].y = work->field_24;
+  size = work->field_24;
+  screen[1].x = size;
+  size = work->field_24;
+  screen[1].y = size;
   func_801AFFD8(object, &screen[1], &screen[1]);
 
   prim->x0 = screen[0].x - ((s16)screen[1].x >> 1);

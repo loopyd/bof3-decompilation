@@ -383,8 +383,10 @@ segments:
     - asm
     - scanTriggerTableSubmit
   - - 54252
-    - asm
+    - c
     - func_801DDFEC
+    - '@source: src/bof3/battle/func_801DDFEC.c'
+    - '@behavior: Scans the ranked owner list from the D_80146322 cursor up to the volatile D_80146323 count for the local battler named by the low byte of arg0 and, when that battler''s D_80145E90 record sits in state 5 with a clear packed high byte, advances its counter through advanceCounterStorePacked.'
   - - 54444
     - c
     - scalePercentClamp999
@@ -1057,8 +1059,10 @@ segments:
     - asm
     - clearQueuedSlotBytes
   - - 85560
-    - asm
+    - c
     - func_801E5A38
+    - '@source: src/bof3/battle/func_801E5A38.c'
+    - '@behavior: Clears the key state bytes across all 0x30 queued-slot entries.'
   - - 85740
     - c
     - stubHandler5Aec

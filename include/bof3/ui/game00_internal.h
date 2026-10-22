@@ -149,7 +149,10 @@ u8 func_801C520C(void);
 /* Reports success as a byte flag: the callee's own bodies return only 0 or 1 and
  * both of its callers mask the result with 0xFF before testing it. */
 u8 func_801C539C(void);
-s16 func_801BDCF8(void);
+/* Forwards x/y to func_8015477C and compares its result with the scratchpad
+ * work-record counter at 0x3E. Returns the result when their difference is
+ * less than 0x101, otherwise the counter. */
+s16 func_801BDCF8(s32 coord_x, s32 coord_y);
 u8 func_801BDD58(s32 x, s32 y, s16 reference, s32 range,
                  struct GameWorkArea* work);
 
@@ -1074,11 +1077,18 @@ u8* getSpriteRectEntry(u8 sprite_id, u8 flags);
  */
 void drawSprite(s16 x, s16 y, u8 sprite_id, u8 flags);
 
-/* @behavior iterates a packed sprite-record table and draws each sprite via
- * drawSprite with signed offsets shifted by 3 applied to base coords.
+/* @behavior selects the sprite page from the low bit of the flag word (0x340
+ * when set, 0x380 when clear), sets the draw mode, and iterates a packed
+ * sprite-record table drawing each sprite via drawSprite with signed offsets
+ * shifted by 3 applied to base coords. The flag word is wider than a byte: the
+ * original never truncates the incoming $a3 at entry (the byte-wide precedent
+ * dispatchPositionCheckBySpeed does), and keeps it as a full word in $s3. The
+ * eight-bit re-mask at each drawSprite call comes from the source expression,
+ * so it says nothing about the argument width; u32 and s32 are not
+ * byte-distinguishable here.
  * @source 0x801AF390
  */
-void drawSpriteRecordTable(s16 base_x, s16 base_y, const u8* record_table, u8 flags);
+void drawSpriteRecordTable(s16 base_x, s16 base_y, const u8* record_table, u32 flags);
 
 /* @behavior computes a screen-space position from an entity's offset-adjusted
  * coordinates; returns the result as a signed 16-bit value.

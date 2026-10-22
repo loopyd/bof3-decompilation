@@ -1705,6 +1705,8 @@ segments:
   - - 165396
     - c
     - func_801BDE14
+    - '@source: src/bof3/ui/func_801BDE14.c'
+    - '@behavior: finds the first active work record, other than the current scratchpad record, whose flags byte is non-zero, whose byte 0x07 has bit 0x80 clear and whose coordinate/range test passes, and returns its signed slot index; returns -1 when no record qualifies.'
   - - 165640
     - asm
     - func_801BDF08

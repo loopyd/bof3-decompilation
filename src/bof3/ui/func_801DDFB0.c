@@ -14,30 +14,25 @@
  *           func_8014FF0C at (x + 94, same y) with the row string D_801D0E58 or
  *           D_801D0E5C. Finally it submits the cursor position through
  *           func_801647C4 at (x + 8, row * 16 + y + 28).
- * @status partial
- * @match 99.15
- * @residual one commutative operand order: 117/118 instructions and
- *           all 472 bytes match. The single difference is the final position
- *           sum, where the original emits `addu a1,a1,s5` (shifted row first)
- *           and this candidate emits `addu a1,s5,a1`; eleven spellings of that
- *           argument (signed/unsigned shifts, u16 and implicit conversion to
- *           the u16 parameter, int and u32 mixes, a separate offset local)
- *           all emit the same swapped operand order, so the remaining
- *           difference is the pinned compiler's commutative operand order, not
- *           a source shape. Two earlier source levers were required to reach
- *           this point: the first palette shade is a short-lived u32 local, so
- *           the compiler materializes it directly in a0 with the pre-store in
- *           the branch delay slot, and the label x offset is an s16 local
- *           assigned before the first func_8014F800 call, which lets the add
- *           fill the func_801502D0 delay slot with its truncation deferred to
- *           that call's argument (a u8 `color` local supplies the original's
- *           single `andi 0xff` zero extension). An s32 spelling of that label
- *           local grows the frame and is rejected.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ *
+ * The row pitch of the submitted cursor position is shifted into a named u16
+ * local before the call: with the shift inlined the compiler emits
+ * `addu a1,s5,a1`, while the named shift result makes it keep the original
+ * `addu a1,a1,s5`. Two other shapes are load-bearing: the first palette shade
+ * is a short-lived u32 local, which the compiler materializes straight into a0
+ * with the pre-store in the branch delay slot, and the label x offset is an s16
+ * local assigned before the first func_8014F800 call so the add fills the
+ * func_801502D0 delay slot; an s32 spelling of that label local grows the
+ * frame. The u8 `color` local supplies the original's single `andi 0xff`.
  */
 void func_801DDFB0(s16 x, s16 y, u32 flags, u8 row, u8 variant) {
   s16 left;
   s16 right;
   s16 text_y;
+  u16 row_offset;
   u8 color;
   u32 shade;
   u32 texture;
@@ -63,5 +58,6 @@ void func_801DDFB0(s16 x, s16 y, u32 flags, u8 row, u8 variant) {
   text_y = (s16)(y + 41);
   func_8014FF0C(right, text_y, color, D_801D0E5C);
 
-  func_801647C4((u16)(x + 8), (u16)(((u32)row << 4) + y + 28), 0);
+  row_offset = (u16)((u32)row << 4);
+  func_801647C4((u16)(x + 8), (u16)(row_offset + y + 28), 0);
 }
