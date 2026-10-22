@@ -10,22 +10,28 @@ extern SPRT_8* g_PrimCursor;
  * @behavior emits one 8x8 glyph sprite for each non-space byte of the string,
  * advancing eight pixels per byte and wrapping on newline.
  * @source 0x80150098
- * @status partial
- * @match 97.59
- * @residual 81/83 instructions at the original 332-byte size. The clut
- * argument's save/copy pair precedes the other entry copies instead of
- * following them. The loop and register assignments match.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
-void drawGlyphString8x8(s16 x, s16 y, u32 clut, const u8* input) {
+void drawGlyphString8x8(s16 x, s16 y, u16 clut, const u8* input) {
   SPRT_8* primitive;
   s16     start_x;
   u16     primitive_clut;
+  union {
+    u16 raw;
+    struct {
+      unsigned short column : 6;
+      unsigned short upper : 10;
+    } fields;
+  } palette;
 
+  /* The palette column occupies the low six bits of the CLUT halfword. */
+  palette.raw = (u16)clut;
   func_8014FC00(0);
 
   primitive = g_PrimCursor;
-  clut &= 0x3fu;
-  primitive_clut = (u16)(clut | 0x7800u);
+  primitive_clut = palette.fields.column | 0x7800;
   start_x = x;
 
   do {
