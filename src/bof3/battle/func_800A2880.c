@@ -20,10 +20,12 @@
  *   original's single `subu` and signed `slti`; deriving the percentile inline
  *   from the halfword instead re-extends the quotient with an `andi`/`move`
  *   pair.
- *   Surviving differences: three instructions of register naming in the guard
- *   word block - the original loads the party word at +0x01D0 and the enemy
- *   word at +0x01DA into v0 and then forms `and v0,v0,v1`, while this build
- *   loads into v1 and forms `and v0,v1,v0`. Function-shaped range with its own
+ *   Surviving differences: five instructions of register naming in the guard
+ *   word block - each arm's `lw` and `lui 0x1` pair plus the shared `and`. The
+ *   original loads the party word at +0x01D0 and the enemy word at +0x01DA
+ *   into v0 with the 0x10000 constant in v1 and then forms `and v0,v0,v1`,
+ *   while this build loads into v1 with the constant in v0 and forms
+ *   `and v0,v1,v0`. Function-shaped range with its own
  *   prologue and return: the data-candidate, carve and clone levers do not
  *   apply. Compiler-profile and permuter rungs remain unauthorized.
  */

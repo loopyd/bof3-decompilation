@@ -6,15 +6,22 @@
  * camera-position variables and resets per-character visual offsets.
  * @source 0x800AAA74
  * @status partial
- * @match 95.49
- * @residual scheduling: 127/133 instructions with an exact 532-byte image. The
- *   mode byte, each per-arm camera base and the 0x140-scaled offsets assemble
- *   like the original (one named base plus displacements, folded
- *   `lui at,%hi; addu at,at,offset; op %lo(at)` loads), and per-case local
- *   scopes keep the scaled slot offset in $v0. The 6 remaining differences are
- *   mode-3 only: the panel argument's `addu` operand order, the position of its
- *   `addiu`, and the tracked/fixed load and store order, which the volatile
- *   accesses pin after the call argument is loaded.
+ * @match 97.74
+ * @residual scheduling: 130/133 instructions with an exact 532-byte image and
+ *   frame. The mode byte, each per-arm camera base and the 0x140-scaled offsets
+ *   assemble like the original (one named base plus displacements, folded
+ *   `lui at,%hi; addu at,at,offset; op %lo(at)` loads), per-case local scopes
+ *   keep the scaled slot offset in $v0, and case 3 now reads the tracked +0x42
+ *   halfword before the fixed +0x44 load/store pair, which pins the original
+ *   volatile order. The 3 remaining differences are mode-3 only: the argument
+ *   base folds the +0x42 bias into the loop-invariant register
+ *   (`addiu s3,s2,-2` instead of `-68`) so the per-iteration
+ *   `addiu a0,a0,66` disappears, and the argument's `negu` is scheduled before
+ *   the fixed store, which leaves a `nop` in the `jal` delay slot instead of
+ *   the original's `negu`. Writing the argument address as a u16-element
+ *   pointer restores the separate `addiu` but emits `addu a0,s3,v0` instead of
+ *   `addu a0,v0,s3`, so both measured address forms sit on this
+ *   allocator/scheduler frontier.
  */
 void func_800AAA74(void) {
   switch (D_80144F58) {
@@ -53,14 +60,14 @@ void func_800AAA74(void) {
     slot = 0u;
     while (slot < D_801462F0) {
       if (func_801DB524(slot) == 0u) {
-        volatile u16* panel;
+        u32 fixed;
 
         offset = (u32)slot * 0x140u;
+        fixed = *(volatile u16*)(D_80145F04 + offset + 0x42u);
         *(volatile u16*)(D_80145F04 + offset + 0x44u) =
             *(volatile u16*)(D_80145F04 + 0x44u);
-        panel = (volatile u16*)(D_80145F04 + offset);
-        func_801654F4(panel + 0x21,
-                      -(s32)((u32)(*(volatile u16*)(D_80145F04 + offset + 0x42u)) >> 1u));
+        func_801654F4((volatile u16*)(D_80145F04 + offset + 0x42u),
+                      -(s32)(fixed >> 1u));
       }
       slot += 1u;
     }
