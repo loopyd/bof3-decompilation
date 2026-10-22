@@ -344,6 +344,12 @@ extern s16 D_801485EC; /* @source 0x801485EC @kind unknown */
 extern s16 D_801485EE; /* @source 0x801485EE @kind unknown */
 extern u8 D_80145500[][4]; /* @source 0x80145500 @kind unknown */
 extern u8 D_80145518[][4]; /* @source 0x80145518 @kind unknown */
+/* Index-3 row of the 3-byte saved group/scroll/cursor table based at
+ * 0x801454F4 (see BATTLE_SELECTION_SAVED_GROUP). Declared as named symbols
+ * because the original encodes each read as a `%hi`/`%lo` pair. */
+extern u8 D_801454FD; /* @source 0x801454FD @kind unknown */
+extern u8 D_801454FE; /* @source 0x801454FE @kind unknown */
+extern u8 D_801454FF; /* @source 0x801454FF @kind unknown */
 extern u8 D_80148624; /* @source 0x80148624 @kind unknown */
 extern volatile u8   D_80148626; /* @source 0x80148626 @kind unknown */
 extern volatile u8   D_80148627; /* @source 0x80148627 @kind unknown */

@@ -4,13 +4,10 @@
  * @behavior Emits a ring of semi-transparent quadrilateral primitives.
  * @status partial
  * @match 87.62
- * @residual same-size angle-register allocation and loop scheduling differ: the
- * original keeps the angle counter in $s1 and the wrapped angle in $s3 where
- * this stream swaps them, and the preheader duplicates the `next`/`andi` pair
- * that the original keeps in the loop body. Three local declaration orders and
- * a per-region local reorder reproduced this identical 92/105 stream at 420
- * bytes; a wider parameter-type probe needs the target header prototype and is
- * not evidenced for this lane.
+ * @residual 92/105 instructions at the original 420-byte size and 0x40 frame.
+ * From +0x0068, loop rotation moves next = angle + 0x80 to the back edge and
+ * hoists the angle mask above the leading calls. The angle and wrapped-angle
+ * register assignments also differ.
  */
 void func_801F2F04(s16 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4) {
   s32 temp_lo_1;

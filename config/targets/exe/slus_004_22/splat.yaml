@@ -105,7 +105,14 @@ segments:
     vram: 0x8014dd3c
     subsegments:
       - [0xb753c, asm, func_8014DD3C]
-  - [0xb7678, bin, post_main_lookup_record]
+  - [0xb7678, bin, pre_exe_image_load]
+  - name: exe_image_load
+    type: code
+    start: 0xb78fc
+    vram: 0x8014e0fc
+    subsegments:
+      - [0xb78fc, c, func_8014E0FC, '@source: src/bof3/io/func_8014E0FC.c']
+  - [0xb7a2c, bin, post_main_lookup_record]
   - name: main_lookup_initializer
     type: code
     start: 0xb8280

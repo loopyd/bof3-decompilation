@@ -954,7 +954,6 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_ENEMY_BYTE_04(work)  PSX_REF(volatile u8, (u32)(work) + 4u)
 #define BATTLE_ENEMY_BYTE_05(work)  PSX_REF(volatile u8, (u32)(work) + 5u)
 #define BATTLE_ENEMY_HALF_AA(work)  PSX_REF(volatile u16, (u32)(work) + 0xaau)
-#define BATTLE_ENEMY_HALF_94(work)  PSX_REF(volatile u16, (u32)(work) + 0x94u)
 #define BATTLE_ENEMY_BYTE_88(work)  PSX_REF(volatile u8, (u32)(work) + 0x88u)
 #define BATTLE_ENEMY_HALF_A8(work)  PSX_REF(volatile u16, (u32)(work) + 0xa8u)
 #define BATTLE_ENEMY_HALF_FA(work)  PSX_REF(volatile u16, (u32)(work) + 0xfau)

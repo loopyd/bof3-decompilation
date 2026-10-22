@@ -3,29 +3,31 @@
 /* @behavior scans ids `3..10` and returns the unblocked id with the smallest enemy
  * halfword at offset `0x94`.
  * @source 0x801E2CA4
- * @status partial
- * @match 47.73
- * @residual non-exact live audit: 21/42 instructions; 168 original bytes versus 176 current.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ * The u32 counter with per-use `(u8)` casts keeps the original's per-iteration
+ * zero-extension of the call argument, the record index and the loop test.
  */
 u8 func_801E2CA4(void) {
+  u32 index;
+  u32 best;
   u8  result;
-  u16 best;
-  u8  slot;
+  u16 value;
 
   result = 0u;
   best = 0xffffu;
-  slot = 3u;
+  index = 3u;
   do {
-    volatile Battle03EnemyWork* battle_work;
-
-    battle_work = &BATTLE_ENEMY_WORK_ARRAY[slot - 3u];
-    if ((func_801DB524(slot) == 0u) &&
-        (BATTLE_ENEMY_HALF_94(battle_work) < best)) {
-      best = BATTLE_ENEMY_HALF_94(battle_work);
-      result = slot;
+    if (func_801DB524((u8)index) == 0u) {
+      value = D_801EB630[(u8)index - 3u].unk_94;
+      if (value < best) {
+        best = value;
+        result = index;
+      }
     }
-    slot += 1u;
-  } while (slot < 0x0bu);
+    index += 1u;
+  } while ((u8)index < 0x0bu);
 
   return result;
 }

@@ -114,6 +114,8 @@ segments:
   - - 6120
     - c
     - func_80097FE8
+    - '@source: src/bof3/battle/func_80097FE8.c'
+    - '@behavior: Initialises the active battle selection state at 0x80148570 from the active message-slot work record: the state head byte and its byte +0x6C are written through the 0x80148570 base, every other state byte through its own symbol, and bit 1 of the active selection slot flag word +0x10 is stored into 0x80148584.'
   - - 6312
     - c
     - dispatchSubstateTable4418
@@ -239,8 +241,10 @@ segments:
     - c
     - func_8009AF7C
   - - 18308
-    - asm
+    - c
     - func_8009AF84
+    - '@source: src/bof3/battle/func_8009AF84.c'
+    - '@behavior: Initialises the secondary battle selection state at 0x80148570 from the saved group/scroll/cursor bytes of table row 3: the state head byte and its byte +0x6C are written through the 0x80148570 base, the remaining state bytes through their own symbols, and the saved bytes are copied into the state row 0x8014857A..0x8014857C.'
   - - 18492
     - c
     - func_8009B03C

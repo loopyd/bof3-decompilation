@@ -1,82 +1,50 @@
 #include "bof3/core/slus_internal.h"
 
-extern void* cdReadSync(s32 size, void* buffer, s32 sectors);
+/* Body-read staging pair: the load buffer pointer is immediately followed by
+ * the byte count read into it, so both fields are reached through one object. */
+typedef struct ExeImageLoad {
+  void* buffer;
+  s32   size;
+} ExeImageLoad;
 
-extern void* D_801459F8;
-extern u32   D_80143E70[];
-extern void* D_80143E88;
-extern s32   D_80143E8C;
+extern u32*         D_801459F8;
+extern u32          D_80143E70[];
+extern ExeImageLoad D_80143E88;
 
-/* @behavior reads one EXE file into RAM in two sector-sized steps and copies the
- * first staged header block into the boot scratch area.
+extern s32 cdReadSync(s32 size, void* buffer, s32 sectors);
+
+/* @behavior searches the mounted disc for the requested EXE image, reads one
+ * 0x800-byte sector into the staged read buffer, copies the 0x88-byte image
+ * header into the boot header area, advances the file position by one sector,
+ * then reads the image body into the staged load buffer.  A missing file and a
+ * failed body read both retry, up to ten attempts in total.
  * @source 0x8014E0FC
- * @status partial
- * @match 47.67
- * @residual non-exact live audit: 41/76 instructions; 304 original bytes versus 344 current.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 s32 func_8014E0FC(const char* path) {
-  CdlFILE     file;
-  u32*        src;
-  u32*        dst;
-  u32*        end;
-  s32         attempts;
-  s32         sectors;
-  s32*        exe_size;
-  const char* current_path;
+  CdlFILE file;
+  s32     attempts;
+  s32     sectors;
 
-  current_path = path;
   sectors = 0x80;
-  exe_size = &D_80143E8C;
   attempts = 0;
-  while (1) {
-    if (CdSearchFile(&file, current_path) != NULL) {
+  do {
+    if (CdSearchFile(&file, (char*)path) != NULL) {
       CdControl(CdlSetloc, (u_char*)&file, NULL);
       if (cdReadSync(0x800, D_801459F8, sectors) == 0) {
-        src = D_801459F8;
-        dst = D_80143E70;
-        end = src + 0x20;
-
-        do {
-          u32* cur_dst;
-          u32* cur_src;
-          u32  word1;
-          u32  word2;
-          u32  word3;
-
-          cur_dst = dst;
-          cur_src = src;
-          word1 = cur_src[1];
-          word2 = cur_src[2];
-          word3 = cur_src[3];
-          cur_dst[0] = cur_src[0];
-          cur_dst[1] = word1;
-          cur_dst[2] = word2;
-          cur_dst[3] = word3;
-          src = cur_src + 4;
-          dst = cur_dst + 4;
-        } while (src != end);
-
-        dst[0] = src[0];
-        dst[1] = src[1];
+        __builtin_memcpy(&D_80143E70, D_801459F8, 0x88);
         CdIntToPos(CdPosToInt(&file.pos) + 1, &file.pos);
         CdControlB(CdlSetloc, (u_char*)&file, NULL);
-
-        attempts += 1;
-        if (cdReadSync(exe_size[0], D_80143E88, sectors) == 0) {
-          return 0;
-        }
-
-        if (attempts < 10) {
+        if (cdReadSync(D_80143E88.size, D_80143E88.buffer, sectors) != 0) {
+          attempts++;
           continue;
         }
-
-        return -1;
+        return 0;
       }
     }
-
-    attempts += 1;
-    if (attempts >= 10) {
-      return -1;
-    }
-  }
+    attempts++;
+  } while (attempts < 10);
+  return -1;
 }

@@ -2,14 +2,14 @@
 
 /* @behavior updates work-area activity flags from the scratch cursor record.
  * @source 0x801F3480
- * @status partial
- * @match 79.22
- * @residual same-size allocator mismatch begins at +0x34: computed slot
- * offset is in v1 instead of v0; one bounded permuter run found no exact. A
- * shape sweep of the inline compound-assignment form and of the struct-field
- * form `((World00Area032WorkRecord*)D_80146888)[i].flags_00` measured 55/77 at
- * 284 bytes, six instructions short of the original, so this offset-local form
- * remains the best coherent candidate.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ * Clean-C shape: each flag update loads the record byte into `value`, applies
+ * the bit operation to `value` as its own statement, and only then stores it.
+ * Folding the operation into the store (`= value | 0x40`) keeps the scaled slot
+ * offset in $v1 instead of the original $v0 and costs four instructions per
+ * site; the split statement reproduces all 77 instructions and 308 bytes.
  */
 void func_801F3480(void) {
   s32 offset;
@@ -18,12 +18,14 @@ void func_801F3480(void) {
   if (D_1F800044[9] != 0) {
     offset = D_1F800044[11] * 152;
     value = D_80146888[offset];
-    D_80146888[offset] = value | 0x40;
+    value |= 0x40;
+    D_80146888[offset] = value;
     D_1F800044[9]--;
   } else {
     offset = D_1F800044[11] * 152;
     value = D_80146888[offset];
-    D_80146888[offset] = value & 0xBF;
+    value &= 0xBF;
+    D_80146888[offset] = value;
     offset = D_1F800044[3] * 152;
     D_80146888[offset] = 0;
     offset = D_1F800044[4] * 152;

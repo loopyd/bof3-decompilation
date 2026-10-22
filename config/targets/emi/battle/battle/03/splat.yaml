@@ -206,8 +206,10 @@ segments:
     - asm
     - markBattlersMeetingOpposingThresholds
   - - 42744
-    - asm
+    - c
     - func_801DB2F8
+    - '@source: src/bof3/battle/func_801DB2F8.c'
+    - '@behavior: reports whether one battler slot is minimally eligible for the ranking path, using only the active bit and the base local/enemy rejection masks.'
   - - 42912
     - c
     - func_801DB3A0
@@ -227,8 +229,10 @@ segments:
     - asm
     - clearRankingScratch
   - - 43300
-    - asm
+    - c
     - func_801DB524
+    - '@source: src/bof3/battle/func_801DB524.c'
+    - '@behavior: reports whether one local/enemy battler slot is unavailable, either because it is inactive or because its corresponding `0x4000` flag is set.'
   - - 43468
     - c
     - func_801DB5CC
@@ -786,8 +790,10 @@ segments:
     - asm
     - func_801E2A88
   - - 73892
-    - asm
+    - c
     - func_801E2CA4
+    - '@source: src/bof3/battle/func_801E2CA4.c'
+    - '@behavior: scans ids `3..10` and returns the unblocked id with the smallest enemy halfword at offset `0x94`.'
   - - 74060
     - asm
     - pickTargetByMode
