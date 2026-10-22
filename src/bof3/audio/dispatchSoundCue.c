@@ -11,11 +11,10 @@ extern short SsUtSetDetVVol(short, short, short);
  * PsyQ SsUtKeyOnV/SsUtSetDetVVol.
  * @source 0x8015DF18
  * @status partial
- * @match 87.65
- * @residual clean-C allocation/scheduling residual: 589/672 instructions, 2684 original bytes
- * versus 2688 current; the status-argument copy is hoisted out of the jalr delay slot. The
- * canonical -O2 profile under the attached gcc-2.6.3 object compiler is already the best of the
- * 52 reviewed flag profiles.
+ * @match 88.24
+ * @residual 593/672 instructions; 2684 original bytes versus 2688 current.
+ * The entry cue copy moves ahead of the masks instead of filling the handler
+ * call's delay slot. Four fade-product register assignments also differ.
  */
 void dispatchSoundCue(u32 cue_id) {
 
@@ -27,8 +26,6 @@ void dispatchSoundCue(u32 cue_id) {
   s32 shifted;
 
   s32 top;
-
-  s32 lo2;
 
   hi = (cue_id & 0xF00) >> 8;
   lo8 = cue_id & 0xFF;
@@ -45,11 +42,11 @@ void dispatchSoundCue(u32 cue_id) {
         lo += 0x7F;
       }
       D_8018B39C = (s16)(lo >> 7);
-      lo2 = D_8018B3A0 * D_8018B3A4;
-      shifted = lo2 >> 7;
-      if (lo2 < 0) {
-        lo2 += 0x7F;
-        shifted = lo2 >> 7;
+      lo = D_8018B3A0 * D_8018B3A4;
+      shifted = lo >> 7;
+      if (lo < 0) {
+        lo += 0x7F;
+        shifted = lo >> 7;
       }
       D_8018B3A0 = (s16)shifted;
       /* fallthrough */
@@ -59,11 +56,11 @@ void dispatchSoundCue(u32 cue_id) {
         lo += 0x7F;
       }
       D_8018B374 = (s16)(lo >> 7);
-      lo2 = D_8018B378 * D_8018B37C;
-      shifted = lo2 >> 7;
-      if (lo2 < 0) {
-        lo2 += 0x7F;
-        shifted = lo2 >> 7;
+      lo = D_8018B378 * D_8018B37C;
+      shifted = lo >> 7;
+      if (lo < 0) {
+        lo += 0x7F;
+        shifted = lo >> 7;
       }
       D_8018B378 = (s16)shifted;
       /* fallthrough */
@@ -73,11 +70,11 @@ void dispatchSoundCue(u32 cue_id) {
         lo += 0x7F;
       }
       D_8018B34C = (s16)(lo >> 7);
-      lo2 = D_8018B350 * D_8018B354;
-      shifted = lo2 >> 7;
-      if (lo2 < 0) {
-        lo2 += 0x7F;
-        shifted = lo2 >> 7;
+      lo = D_8018B350 * D_8018B354;
+      shifted = lo >> 7;
+      if (lo < 0) {
+        lo += 0x7F;
+        shifted = lo >> 7;
       }
       D_8018B350 = (s16)shifted;
       /* fallthrough */
@@ -87,11 +84,11 @@ void dispatchSoundCue(u32 cue_id) {
         lo += 0x7F;
       }
       D_8018B324 = (s16)(lo >> 7);
-      lo2 = D_8018B328 * D_8018B32C;
-      shifted = lo2 >> 7;
-      if (lo2 < 0) {
-        lo2 += 0x7F;
-        shifted = lo2 >> 7;
+      lo = D_8018B328 * D_8018B32C;
+      shifted = lo >> 7;
+      if (lo < 0) {
+        lo += 0x7F;
+        shifted = lo >> 7;
       }
       D_8018B328 = (s16)shifted;
     }

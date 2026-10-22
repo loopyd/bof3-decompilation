@@ -694,6 +694,14 @@ extern s8  D_80144952; /* @source 0x80144952 @kind unknown */
 extern u16 D_80033A08[]; /* @source 0x80033A08 @kind table */
 extern u16 D_801EAD30[]; /* @source 0x801EAD30 @kind table */
 extern u16 D_801EAE50[][2]; /* @source 0x801EAE50 @kind table */
+/* Byte views of the 0x24-byte UI owner records scanned by func_801DA69C: every
+ * record carries its mode byte at +0x33 and its kind byte at +0x3A, and the
+ * scan reaches both with one 0x24-scaled index. */
+extern u8  D_80148333[]; /* @source 0x80148333 @kind unknown */
+extern u8  D_8014833A[]; /* @source 0x8014833A @kind unknown */
+/* Byte view of the kind byte at +0x7C of the 0x118-byte D_801EB630 enemy work
+ * records, reached by the func_801DA69C UI-slot reuse scan. */
+extern u8  D_801EB6AC[]; /* @source 0x801EB6AC @kind unknown */
 /* Panel correction bytes selected by the D_801EB630 record byte +0x08 read by
  * func_801E99AC; bound as two symbols because the original reaches each with its
  * own displacement. */
@@ -836,10 +844,6 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_GLOBAL_BYTE_6354(index)                                         \
   PSX_REF(volatile u8, 0x80146354u + (u32)(index))
 #define BATTLE_GLOBAL_PTR_6380 PSX_REF(volatile u8 *, 0x80146380u)
-#define BATTLE_UI_BYTE_8333_INDEX(index)                                       \
-  PSX_REF(volatile u8, 0x80148333u + ((u32)(index) * 0x24u))
-#define BATTLE_UI_BYTE_833A(index)                                             \
-  PSX_REF(volatile u8, 0x8014833au + ((u32)(index) * 0x24u))
 #define BATTLE_LOCAL_SCRATCH_PTR                                               \
   PSX_REF(volatile Battle03LocalWork*, 0x1f800044u)
 #define BATTLE_ENEMY_SCRATCH_PTR SPAD_PTR_SLOT(volatile Battle03EnemyWork, 0x44u)
@@ -995,8 +999,6 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_VARIANCE_TABLE_AF94     PSX_PTR(const volatile u8, 0x801eaf94u)
 #define BATTLE_TARGET_MODE_PACK(index)                                         \
   PSX_REF(volatile u8, 0x800b51f8u + (u32)(index))
-#define BATTLE_ENEMY_SLOT_KIND(index)                                          \
-  PSX_REF(volatile u8, 0x801eb6acu + ((u32)(index) * 0x118u))
 #define BATTLE_KIND_BYTE_00(kind)                                              \
   PSX_REF(volatile u8, 0x801ca718u + ((u32)(kind) * 0x14u))
 #define BATTLE_LOCAL_PRESENTATION_BYTE3_TABLE                                  \

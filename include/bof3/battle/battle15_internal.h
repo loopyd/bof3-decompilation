@@ -156,6 +156,10 @@ extern BattleSelectionDispatchTable D_800969F8; /* @source 0x800969F8 @kind unkn
 extern BattleSelectionDispatchTable D_80096A08; /* @source 0x80096A08 @kind unknown */
 extern BattleSelectionDispatchTable D_80096A34; /* @source 0x80096A34 @kind unknown */
 extern BattleSelectionDispatchTable D_80096A40; /* @source 0x80096A40 @kind unknown */
+/* Selection-phase mode byte switched on by func_800AAA74, whose four cases are
+ * numeric only (1, 2, 3, 4). The bytes prove the dispatch, not what the cases
+ * mean in play. Named so the read assembles as one `lui`/`lbu` pair. */
+extern u8 D_80144F58; /* @source 0x80144F58 @kind unknown */
 extern s32 D_80144F60[]; /* @source 0x80144F60 @kind unknown */
 extern volatile u32  D_80144F80[]; /* @source 0x80144F80 @kind unknown */
 extern u16 D_80145FAA[]; /* @source 0x80145FAA @kind unknown */
@@ -207,6 +211,9 @@ extern u16 D_800B6D30[]; /* @source 0x800B6D30 @kind string */
 extern u8 D_801462E4; /* @source 0x801462E4 @kind unknown */
 extern u8 D_801462EA; /* @source 0x801462EA @kind unknown */
 extern volatile u8   D_801462EF; /* @source 0x801462EF @kind unknown */
+/* Shared active-record count (config/targets/shared/symbols.txt); func_800AAA74
+ * re-reads it in both loop conditions. */
+extern volatile u8   D_801462F0; /* @source 0x801462F0 @kind unknown */
 extern volatile u8   D_80146303; /* @source 0x80146303 @kind unknown */
 extern volatile u16  D_80145AC8; /* @source 0x80145AC8 @kind unknown */
 extern u8*           D_801EB4D8; /* @source 0x801EB4D8 @kind unknown */
@@ -266,6 +273,25 @@ extern u8 D_80145F37[]; /* @source 0x80145F37 @kind unknown */
 extern u8 D_80145F18[]; /* @source 0x80145F18 @kind unknown */
 extern u8 D_80145F12[]; /* @source 0x80145F12 @kind unknown */
 extern u8 D_80145F04[]; /* @source 0x80145F04 @kind unknown */
+/* Party-slot position/colour band maintained by func_800A4458. Every address is
+ * its own symbol: the original encodes each access as `lui %hi(SYM);
+ * addu at,at,offset; op %lo(SYM)(at)`, which a raw address expression would
+ * assemble as `addu at,offset,at`. */
+extern u8 D_80145F1E[]; /* @source 0x80145F1E @kind unknown */
+extern u8 D_80145F20[]; /* @source 0x80145F20 @kind unknown */
+extern u8 D_80145F24[]; /* @source 0x80145F24 @kind unknown */
+extern u8 D_80145F26[]; /* @source 0x80145F26 @kind unknown */
+extern u8 D_80145F28[]; /* @source 0x80145F28 @kind unknown */
+extern u8 D_80145F2A[]; /* @source 0x80145F2A @kind unknown */
+extern u8 D_80145F44[]; /* @source 0x80145F44 @kind unknown */
+extern u8 D_80145F46[]; /* @source 0x80145F46 @kind unknown */
+extern u8 D_80145F48[]; /* @source 0x80145F48 @kind unknown */
+extern u8 D_80145F4A[]; /* @source 0x80145F4A @kind unknown */
+/* Camera band read by func_800AAA74's case 4 as one base plus the
+ * -0x280/-0x140 displacements; the case number is all the bytes prove. */
+extern u8 D_801461CA[]; /* @source 0x801461CA @kind unknown */
+/* Shared 0x20-byte party-slot template read by func_800A4458. */
+extern u8 D_801EBEF0[]; /* @source 0x801EBEF0 @kind unknown */
 extern u8 D_801EB6E4[]; /* @source 0x801EB6E4 @kind unknown */
 extern u8 D_801EB6E5[]; /* @source 0x801EB6E5 @kind unknown */
 extern u8 D_801EB6E6[]; /* @source 0x801EB6E6 @kind unknown */
@@ -477,6 +503,12 @@ void setFlag2000StoreDoubledResult(void);
 u8   querySelectionApplyInput(s32 input_mask);
 s16  func_801DC044(u8 arg0, u8 arg1, u32 arg2);
 void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
+/* INFERRED: 0x801654F4 and 0x80165694 are reached only from func_800AAA74, which
+ * passes the addressed camera halfword/byte in $a0 and the shifted-and-negated
+ * value in $a1; neither callee has a lifted body in this repository. Promotion
+ * needs their EXE-side bodies. */
+void func_801654F4(volatile u16* target, s32 value);
+void func_80165694(volatile u8* target, u8 value);
 void func_801DE94C(s32 arg0, s32 arg1);
 void func_80158E20(void);
 void func_8015DF18(u16 arg0);
@@ -550,7 +582,6 @@ void func_801DEA64(s32 arg0);
 #define BATTLE_SELECTION_TABLE_BASE                                            \
   PSX_PTR(const volatile BattleSelectionHandler, 0x800b0000u)
 #define BATTLE_MODIFIER_TABLE      PSX_PTR(volatile s16, 0x800b493cu)
-#define BATTLE_TEMPLATE_BASE       PSX_PTR(volatile u8, 0x801ebef0u)
 #define BATTLE_UNK_80148570_BASE   PSX_PTR(volatile u8, 0x80148570u)
 #define BATTLE_UNK_801485DC        PSX_REF(volatile u8, 0x801485dcu)
 #define BATTLE_UNK_801485DD        PSX_REF(volatile u8, 0x801485ddu)
@@ -573,11 +604,6 @@ void func_801DEA64(s32 arg0);
 #define BATTLE_SCRATCHPAD_PTR      SPAD_PTR_SLOT(u8, 0x44u)
 #define BATTLE_PLAYER_BATTLER_BASE PSX_PTR(volatile u8, 0x80145e90u)
 #define BATTLE_ENEMY_BATTLER_BASE  PSX_PTR(volatile u8, 0x801eb2e8u)
-#define BATTLE_UNK_80145F44        PSX_PTR(volatile u16, 0x80145f44u)
-#define BATTLE_UNK_80145F46        PSX_PTR(volatile u16, 0x80145f46u)
-#define BATTLE_UNK_80145F59        PSX_PTR(volatile u8, 0x80145f59u)
-#define BATTLE_UNK_80145F4A        PSX_PTR(volatile u16, 0x80145f4au)
-#define BATTLE_UNK_801461CA        PSX_PTR(volatile u16, 0x801461cau)
 
 extern volatile u8 D_801485B8; /* @source 0x801485B8 @kind unknown */
 extern u8 D_801485B9; /* @source 0x801485B9 @kind unknown */

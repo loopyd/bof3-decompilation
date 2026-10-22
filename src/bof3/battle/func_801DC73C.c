@@ -5,8 +5,16 @@ extern int rand(void);
  * otherwise passing through the signed damage value unchanged.
  * @source 0x801DC73C
  * @status partial
- * @match unavailable
- * @residual requeued after forbidden matching aid removal; clean-C byte match and independent review required
+ * @match 91.86
+ * @residual Live asm diff 79/86 instructions, 344 versus 344 bytes; the only
+ * differing hunk is the enemy-record index chain at +0x88, where the original
+ * keeps the arg1 - 3 difference in v0 and the x0x118 accumulator in v1 while
+ * this build swaps the two registers. Shapes measured without clearing that
+ * class: inline enemy subscript, signed index local, record pointer local,
+ * re-masked index, byte-pointer enemy view, split difference/scale statements,
+ * if/else instead of the goto-joined test, and a two-step index local. The
+ * clean-C lever that would steer this is the compiler profile, which this lane
+ * is not authorised to search.
  */
 u32 func_801DC73C(s16 arg0, u32 arg1, u32 arg2) {
 

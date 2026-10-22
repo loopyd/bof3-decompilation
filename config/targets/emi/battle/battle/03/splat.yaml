@@ -169,6 +169,8 @@ segments:
   - - 36992
     - c
     - func_801D9C80
+    - '@source: src/bof3/battle/func_801D9C80.c'
+    - '@behavior: Emits one colored tile primitive at the current primitive cursor: the dimensions come from the 2-entry row of D_801EAE50 selected by the low byte of arg2, the red/green/blue channels are packed from the palette entry selected by the CLUT bank byte D_80144952 and the low byte of arg3, and the primitive is marked semi-transparent before the 0x10-mode close.'
   - - 37308
     - asm
     - func_801D9DBC
@@ -194,8 +196,10 @@ segments:
     - c
     - drawSpritePrimTpage1
   - - 39580
-    - asm
+    - c
     - func_801DA69C
+    - '@source: src/bof3/battle/func_801DA69C.c'
+    - '@behavior: Reports whether the enemy work record selected by the low byte of arg0 may reuse a UI owner slot: it scans the eight UI owner slots from slot 7 down for the one whose kind byte at +0x3A equals arg0 + 3, then walks the slots above it and rejects the reuse when any visible slot whose mode byte at +0x33 is neither 2 nor 3 carries the enemy kind byte at +0x7C selected by its own kind byte minus 3.'
   - - 39892
     - c
     - func_801DA7D4
@@ -265,8 +269,10 @@ segments:
     - asm
     - func_801DC044
   - - 47932
-    - asm
+    - c
     - func_801DC73C
+    - '@source: src/bof3/battle/func_801DC73C.c'
+    - '@behavior: Returns the signed damage value unchanged while the battle global halfword 0x801462E8 has bit 0x80 set. Otherwise it reads the status halfword of the local work record selected by the low byte of arg1 (or of the enemy work record when that byte is at least 3), and clears bit 0x10 of the local work record byte +0x120 selected by the low byte of arg2 when the status carries bit 8 and the first random gate passes, or when the second random gate lands below the percent byte 0x801EC303.'
   - - 48276
     - asm
     - func_801DC894

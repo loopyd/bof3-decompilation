@@ -1,69 +1,81 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @behavior handles battle camera adjustment during the selection phase. depending
- * on the current mode (1=defend, 2=attack, 3=examine, 4=escape), adjusts
+/* @behavior handles battle camera adjustment during the selection phase. the
+ * mode byte selects one of four numeric cases (1, 2, 3, 4); the bytes prove only
+ * the four-way dispatch, not what each case means in play. adjusts
  * camera-position variables and resets per-character visual offsets.
  * @source 0x800AAA74
  * @status partial
- * @match 36.88
- * @residual non-exact live audit: 59/133 instructions; 532 original bytes versus 640 current.
+ * @match 95.49
+ * @residual scheduling: 127/133 instructions with an exact 532-byte image. The
+ *   mode byte, each per-arm camera base and the 0x140-scaled offsets assemble
+ *   like the original (one named base plus displacements, folded
+ *   `lui at,%hi; addu at,at,offset; op %lo(at)` loads), and per-case local
+ *   scopes keep the scaled slot offset in $v0. The 6 remaining differences are
+ *   mode-3 only: the panel argument's `addu` operand order, the position of its
+ *   `addiu`, and the tracked/fixed load and store order, which the volatile
+ *   accesses pin after the call argument is loaded.
  */
 void func_800AAA74(void) {
-  volatile u8*  state_base;
-  volatile u16* panel_offset;
-  u8            mode;
-  u8            slot;
-  u8            active_count;
-  s32           slot_offset;
+  switch (D_80144F58) {
+  case 1u: {
+    u8* base;
 
-  state_base = BATTLE_GAME_RAM_BASE;
-  mode = PSX_REF(volatile u8, 0x80144f58u);
+    base = D_80145F44;
+    func_801654F4((volatile u16*)base, (u32)(*(volatile u16*)base) >> 1u);
+    func_801654F4((volatile u16*)(base + 2),
+                  -(s32)((u32)(*(volatile u16*)(base + 2)) >> 2u));
+    func_80165694(base + 21, *(volatile u8*)(base + 21));
+    return;
+  }
+  case 2u: {
+    u8  slot;
+    u32 offset;
 
-  switch (mode) {
-    case 1u:
-      FUNCTION_AT(void (*)(volatile u16*, u32), 0x801654f4u)(
-          BATTLE_UNK_80145F44, (u32)(PSX_REF(volatile u16, 0x80145f44u) >> 1u));
-      FUNCTION_AT(void (*)(volatile u16*, s32), 0x801654f4u)(
-          BATTLE_UNK_80145F46, -(s32)(PSX_REF(volatile u16, 0x80145f46u) >> 2u));
-      FUNCTION_AT(void (*)(volatile u8*, u8), 0x80165694u)(BATTLE_UNK_80145F59,
-                                                           PSX_REF(volatile u8, 0x80145f59u));
-      return;
-    case 2u:
-      active_count = PSX_REF(volatile u8, 0x801462f0u);
-      slot = 0u;
-      while (slot < active_count) {
-        if (!FUNCTION_AT(s32 (*)(s32), 0x801db524u)((s32)slot)) {
-          slot_offset = (u32)slot * 0x140u;
-          panel_offset = (volatile u16*)(state_base + slot_offset + 0x5f04u);
-          FUNCTION_AT(void (*)(volatile u16*, s32), 0x801654f4u)(
-              panel_offset + (0x44u / 2u),
-              -(s32)(PSX_REF(volatile u16, 0x80145f48u + slot_offset) >> 2u));
-        }
-        slot += 1u;
+    slot = 0u;
+    while (slot < D_801462F0) {
+      if (func_801DB524(slot) == 0u) {
+        volatile u16* panel;
+
+        offset = (u32)slot * 0x140u;
+        panel = (volatile u16*)(D_80145F04 + offset);
+        func_801654F4(panel + 0x22,
+                      -(s32)((u32)(*(volatile u16*)(D_80145F04 + offset + 0x44u)) >> 2u));
       }
-      return;
-    case 3u:
-      active_count = PSX_REF(volatile u8, 0x801462f0u);
-      slot = 0u;
-      while (slot < active_count) {
-        if (!FUNCTION_AT(s32 (*)(s32), 0x801db524u)((s32)slot)) {
-          slot_offset = (u32)slot * 0x140u;
-          PSX_REF(volatile u16, 0x80145f48u + slot_offset) = PSX_REF(volatile u16, 0x80145f48u);
-          panel_offset = (volatile u16*)(state_base + slot_offset + 0x5f04u);
-          FUNCTION_AT(void (*)(volatile u16*, s32), 0x801654f4u)(
-              panel_offset + (0x42u / 2u),
-              -(s32)(PSX_REF(volatile u16, 0x80145f46u + slot_offset) >> 1u));
-        }
-        slot += 1u;
+      slot += 1u;
+    }
+    return;
+  }
+  case 3u: {
+    u8  slot;
+    u32 offset;
+
+    slot = 0u;
+    while (slot < D_801462F0) {
+      if (func_801DB524(slot) == 0u) {
+        volatile u16* panel;
+
+        offset = (u32)slot * 0x140u;
+        *(volatile u16*)(D_80145F04 + offset + 0x44u) =
+            *(volatile u16*)(D_80145F04 + 0x44u);
+        panel = (volatile u16*)(D_80145F04 + offset);
+        func_801654F4(panel + 0x21,
+                      -(s32)((u32)(*(volatile u16*)(D_80145F04 + offset + 0x42u)) >> 1u));
       }
-      break;
-    case 4u:
-      FUNCTION_AT(void (*)(volatile u16*, u32), 0x801654f4u)(
-          BATTLE_UNK_801461CA, (u32)(PSX_REF(volatile u16, 0x801461cau) >> 1u));
-      FUNCTION_AT(void (*)(volatile u16*, s32), 0x801654f4u)(
-          BATTLE_UNK_80145F4A, -(s32)(PSX_REF(volatile u16, 0x80145f4au) >> 2u));
-      FUNCTION_AT(void (*)(volatile u16*, s32), 0x801654f4u)(
-          BATTLE_UNK_80145F44, -(s32)(PSX_REF(volatile u16, 0x80145f44u) >> 2u));
-      break;
+      slot += 1u;
+    }
+    break;
+  }
+  case 4u: {
+    u8* base;
+
+    base = D_801461CA;
+    func_801654F4((volatile u16*)base, (u32)(*(volatile u16*)base) >> 1u);
+    func_801654F4((volatile u16*)(base - 0x280),
+                  -(s32)((u32)(*(volatile u16*)(base - 0x280)) >> 2u));
+    func_801654F4((volatile u16*)(base - 0x140),
+                  -(s32)((u32)(*(volatile u16*)(base - 0x140)) >> 2u));
+    break;
+  }
   }
 }

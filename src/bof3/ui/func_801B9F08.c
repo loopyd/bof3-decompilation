@@ -8,8 +8,17 @@
  *           0xA0-0xA3 and 0x20 families against the work-area route bit,
  *           returning 0 when no family matches.
  * @status partial
- * @match 79.19
- * @residual First differing byte is +0x00A0, the arm-dispatch jump target (original j 0x801ba26c, current j 0x801ba270): the current build is one instruction long (221 insns / 884 bytes vs 220 / 880). The count, remap, 0x70, 0xFF, 0xB0 and both dispatch arms match; the remaining difference is gcc branch-inversion and return-block layout in the odd/even dispatch and tail, plus its delay-slot filling of the n == 1 probe.
+ * @match 86.36
+ * @residual Non-exact live audit: 190/220 instructions, 880 original bytes
+ * versus 872 current, so every shared return target still sits eight bytes
+ * early. The count, remap, 0x70, 0xFF, 0xB0, 0xA2 route, 0xA3 and 0x20 family
+ * arms match. The residual is gcc return-block threading and delay-slot
+ * choice: the original sends the 0xA3 result through a j/li block with a nop
+ * branch delay where this build reaches the epilogue directly, and the 0xA1
+ * arm's two checks thread in the opposite order. Rewriting the tail as
+ * `if (n > 1) { ... } return 0;` (instead of an early `return 0;` plus the
+ * loop) reproduced the original's shared return-zero block and its
+ * recomputed `(u8)n - 1` back-edge bound.
  */
 s32 func_801B9F08(u8 arg0, u8 arg1, u8 arg2) {
   u8 buf[3];
@@ -68,10 +77,10 @@ s32 func_801B9F08(u8 arg0, u8 arg1, u8 arg2) {
   } else {
     if ((buf[0] & 0xF0) == 0xA0 || (buf[1] & 0xF0) == 0xA0) {
       if (buf[0] == 0xA2 && buf[1] == buf[0]) {
-        if (g_game_work->route_index_08 & 1) {
-          return 0xA2;
+        if (!(g_game_work->route_index_08 & 1)) {
+          return 0x10;
         }
-        return 0x10;
+        return 0xA2;
       }
       if (buf[0] == 0xA3 && buf[1] == buf[0]) {
         return 0xA3;
@@ -85,20 +94,19 @@ s32 func_801B9F08(u8 arg0, u8 arg1, u8 arg2) {
       return 0xA1;
     }
   }
-  if (n < 2) {
-    return 0;
-  }
-  for (i = 0; i < n - 1; i++) {
-    if ((buf[i] & 0xF0) != 0x20) {
-      continue;
-    }
-    p = &buf[i];
-    for (i = 0; i < n; i++) {
-      if ((buf[i] & 0xF0) == 0x20 && buf[i] != *p) {
-        return 0x20;
+  if (n > 1) {
+    for (i = 0; i < n - 1; i++) {
+      if ((buf[i] & 0xF0) != 0x20) {
+        continue;
       }
+      p = &buf[i];
+      for (i = 0; i < n; i++) {
+        if ((buf[i] & 0xF0) == 0x20 && buf[i] != *p) {
+          return 0x20;
+        }
+      }
+      i = n;
     }
-    i = n;
   }
   return 0;
 }

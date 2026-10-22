@@ -66,7 +66,7 @@ segments:
     - c
     - func_801F30EC
     - '@source: src/bof3/world/func_801F30EC_area03213.c'
-    - '@behavior: Stores the identifier returned by func_8015CA48 at offset 3 of the scratch cursor record at 0x1F800044 and, when that byte is not 0xFF, marks the 0x98-byte work record of 0x80146888 it selects as live; the second identifier from func_8015CA48 goes to cursor offset 4 and, when it is not 0xFF, the earlier record is released and the function returns. Otherwise it activates the two selected work records through func_801A4D54 with the local 0x801F3F8C data script, restores the previously published cursor, spreads the two selected records 0x34/0x38 accumulators by -/+0x1000, sets their 0x20 flag bit, clears their 0x5C byte, submits both records through func_8019651C with the 0xF mask, and finally sets cursor byte 9 to 4 and cursor byte 1 to 1.'
+    - '@behavior: Stores the slot identifier returned by func_8015CA48 at offset 3 of the scratch cursor record published at 0x1F800044 and returns when that byte is 0xFF; otherwise it marks the 0x98-byte work record of 0x80146888 that byte selects as live, stores a second func_8015CA48 identifier at cursor offset 4 and, when that second byte is 0xFF, releases the first record and returns. Otherwise it marks the second record live, activates both records through func_801A4D54 with the local 0x801F3F8C data script while publishing the selected slot index at 0x1F800000, restores the previously published cursor, spreads the two records 0x34/0x38 accumulators by -0x1000/+0x1000, sets their 0x20 flag bit, clears their 0x5C byte, submits both records through func_8019651C with the 0xF mask, and finally sets cursor byte 9 to 4 and cursor byte 1 to 1.'
   - - 2176
     - c
     - func_801F3480
