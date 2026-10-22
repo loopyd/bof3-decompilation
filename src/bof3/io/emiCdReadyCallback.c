@@ -3,11 +3,9 @@
 /* @behavior services the active EMI CD-ready callback, validates the sector source,
  * dispatches the current loader phase, and advances the streaming ring.
  * @source 0x80162230
- * @status partial
- * @match 95.56
- * @residual clean-C allocation residual: 172/180 instructions, 720 bytes either side; the slot
- * index and the slot-size base swap $a1/$v1. The canonical -O2 profile is already the best of the
- * 52 reviewed flag profiles.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 
 extern void (*D_80183248[])(void);
@@ -67,11 +65,12 @@ void emiCdReadyCallback(u8 status, u8* result) {
     }
 
     transfer_size = D_80146454;
-    slot_sizes = (u32*)(read_progress + 0x84);
     if (transfer_size >= 0x801) {
       D_80146454 = transfer_size - 0x800;
+      slot_sizes = (u32*)(read_progress + 0x84);
       slot_sizes[slot] = 0x800;
     } else {
+      slot_sizes = (u32*)(read_progress + 0x84);
       slot_sizes[slot] = transfer_size;
       D_80146454 = 0;
     }
