@@ -17,7 +17,8 @@ from ..domain.sources import owning_manifest
 from ..io import RepoLayout
 from ..toolchain.gcc_variants import EmptyCatalog, lookup_variant
 from ._asm_disasm import extract_instructions, disassemble_linked
-from ._asm_link import function_bytes_match
+from ._asm_link import extract_section_bytes, function_bytes_match
+from ._asm_resolve import extract_original_bytes, overlay_load_address_for_source
 from ._asm_diff_payload import AsmDiffRequest, matching_instruction_count
 from .asm_diff import run_asm_diff_one
 
@@ -161,6 +162,22 @@ def search_flags(
     if compiler_id is not None:
         cmd = _strip_embedded_psx_gcc(cmd)
     symbols_c_path, canonical_bindings = _resolve_bindings(layout, source)
+    manifest = owning_manifest(layout.root, source)
+    placements = (
+        () if manifest is None else manifest.section_placements.get(address, ())
+    )
+    section_addresses = {
+        placement.section: placement.address for placement in placements
+    }
+    original_sections = {
+        placement.section: extract_original_bytes(
+            Path(baseline["original_binary"]),
+            address=placement.address,
+            size=placement.size,
+            load_address=overlay_load_address_for_source(layout, source),
+        )
+        for placement in placements
+    }
     results: list[dict[str, Any]] = []
     with tempfile.TemporaryDirectory(prefix="harness-flags-") as tmp:
         work = Path(tmp)
@@ -210,8 +227,18 @@ def search_flags(
                     symbols_c_path=symbols_c_path,
                     canonical_bindings=canonical_bindings,
                     layout=layout,
+                    section_addresses=section_addresses,
                 )
                 linked_path = object_path.with_suffix(".linked.o")
+                for placement in placements:
+                    linked_section = extract_section_bytes(
+                        linked_path, section=placement.section, layout=layout
+                    )
+                    if linked_section != original_sections[placement.section]:
+                        raise RuntimeError(
+                            f"reviewed {placement.section} placement for "
+                            f"{baseline['function']} does not match original bytes"
+                        )
                 if match_ok:
                     linked_dump = disassemble_linked(
                         objdump_path=Path(objdump),
