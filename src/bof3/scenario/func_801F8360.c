@@ -27,16 +27,9 @@
  * are read as unsigned (the original shifts them logically while multiplying
  * signed), and the countdown byte that feeds the fade is read before the tint
  * bytes so one published-cell load serves both.
- * @status partial
- * @match 95.21
- * @residual Register-pair exchange at +0x0074: the original keeps radius << 4 in $s1 and the work-angle tip in $s2, this candidate holds them swapped, so the two tip definitions, the radius shift and their four vertex stores differ and all other 139 of 146 instructions match.
- * The residual is a callee-saved register-pair permutation only: the 584-byte
- * size, the 152-byte frame and every instruction schedule match. About 30
- * measured clean-C variants (statement order of the two shape groups, inline
- * versus local tip values, declaration order, s32/u32/u16/s16/long tip types,
- * (s16)/(u16) store casts, pointer hoists for the second vertex) keep this
- * identical swap or regress. The compiler profile probe (bin/flag-search) and
- * the permuter are the next untried rungs and are opt-in for this selector.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801F8360(void) {
   MATRIX   matrix;
@@ -49,9 +42,8 @@ void func_801F8360(void) {
   s32      angle;
   s32      fade;
   s16      index;
-  s32      tip_work_x;
+  s32      tip_x;
   s32      tip_work_y;
-  s32      tip_fixed_x;
   s32      tip_fixed_y;
 
   *(s32*)(D_1F800044 + 0x6C) = (D_1F800044[0x09] << 12) / 0x168;
@@ -59,7 +51,7 @@ void func_801F8360(void) {
   angle = *(s32*)(D_1F800044 + 0x10);
   radius = *(s32*)(D_1F800044 + 0x0C);
 
-  tip_work_x = (u32)(radius * func_801783C8(angle)) >> 8;
+  tip_x = (u32)(radius * func_801783C8(angle)) >> 8;
   tip_work_y = (u32)(radius * func_801782FC(angle)) >> 8;
 
   shape_work[0].vx = 0;
@@ -68,11 +60,11 @@ void func_801F8360(void) {
   shape_work[1].vx = radius << 4;
   shape_work[1].vy = 0;
   shape_work[1].vz = 0;
-  shape_work[2].vx = tip_work_x;
+  shape_work[2].vx = tip_x;
   shape_work[2].vy = tip_work_y;
   shape_work[2].vz = 0;
 
-  tip_fixed_x = (u32)(radius * func_801783C8(0xAC)) >> 8;
+  tip_x = (u32)(radius * func_801783C8(0xAC)) >> 8;
   tip_fixed_y = (u32)(radius * func_801782FC(0xAC)) >> 8;
 
   shape_fixed[0].vx = 0;
@@ -81,7 +73,7 @@ void func_801F8360(void) {
   shape_fixed[1].vx = radius << 4;
   shape_fixed[1].vy = 0;
   shape_fixed[1].vz = 0;
-  shape_fixed[2].vx = tip_fixed_x;
+  shape_fixed[2].vx = tip_x;
   shape_fixed[2].vy = tip_fixed_y;
   shape_fixed[2].vz = 0;
 
