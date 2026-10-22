@@ -18,11 +18,9 @@
  * 0x80143BB0 and increments the mode byte; when the shared mode byte is 1 and
  * the phase byte is not 2 it calls the shared func_8015C058 helper and clears
  * 0x801448EB, the mode byte and 0x801448ED.
- * @status partial
- * @match 99.42
- * @residual 172/173 instructions at the original 692-byte size. The fill
- * preheader at +0x1EC initializes the counter before the 0x5C fill constant;
- * the original loads the constant first. The exit address arithmetic matches.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801F2C38(void) {
   const u8* row;
@@ -86,9 +84,12 @@ void func_801F2C38(void) {
           dst[i] = src[i];
         }
       } else {
+        u8 fill;
+
+        fill = 0x5C;
         i = 0xB;
         do {
-          dst[i] = 0x5C;
+          dst[i] = fill;
           i -= 1;
         } while (i >= 0);
       }
