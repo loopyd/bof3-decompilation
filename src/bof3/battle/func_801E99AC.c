@@ -10,33 +10,9 @@
  * Finally, while the selection gate byte 0x801462EF is set, a queued slot byte
  * D_801EB4D8 that has no 0xC0 bits and equals panel byte +0x0A, or that has
  * 0xC0 bits and 0x40 set, skips the queued panel task commit.
- * @status partial
- * @match 97.80
- * @residual live asm diff 89/91 instructions, 364 versus 364 bytes. First
- * mismatch +0x0090: this build re-materializes the record index mask
- * (andi v1,a3,0xff) before the panel halfword +0x04 store, the original stores
- * first. Second residual: the func_801D8690 first argument is read through the
- * retained pointer register instead of the reloaded one (lh a0,4(a2) here versus
- * lh a0,4(v0) there). Both are register-allocation/scheduling only: no missing
- * symbol, type, boundary or control-flow fact.
- * Matching note: panel halfword +0x04 is the first use of the D_80148648 cell,
- * so this compiler expands that store address from the load and keeps the
- * pointer in $a2 for the whole first half; spelling the same store through an
- * inline D_80148648 instead makes gcc spend a `move` to preserve the address
- * (measured 86/91). The record bytes are flat symbols at their own addresses,
- * which is how the original encodes each of them (one 32-bit displacement
- * each); the +0x30 halfword is added before the +0xDB byte, which is what puts
- * the unsigned halfword in $a1 and the sign-extended byte in $v1 (measured
- * 81/91 and 86/91 for the reversed order). Residual detail: this build re-masks
- * the record index before the +0x04 store where the original stores first, and
- * reads the func_801D8690 first argument through the retained pointer instead
- * of the reloaded one; spelling every second-half access through the reloaded
- * cell instead costs the +0x04 store address (measured 84/91).
- * Lane re-measurement: spelling only the call's first argument through the
- * reloaded cell shifts the first D_80148648 load from $a2 to $a3 (84/91, first
- * mismatch at instruction 0); a reassigned `panel` local for the second half
- * reaches 85/91 and a first-half position local reaches 89/91, so the retained
- * candidate stays the best coherent partial.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801E99AC(void) {
   u8* panel;
@@ -49,15 +25,17 @@ void func_801E99AC(void) {
   index = panel[0xA] - 3;
   offset = (u32)index * 0x118;
 
-  *(s16*)&panel[4] =
-      *(s16*)&D_801EB65E[offset] + *(s8*)&D_801EB712[offset] +
-      (D_801EB638[offset] == 0 || D_801EB638[offset] == 3 ? D_801EAEA4
-                                                         : D_801EAEA6);
+  do {
+    *(s16*)&panel[4] =
+        *(s16*)&D_801EB65E[offset] + *(s8*)&D_801EB712[offset] +
+        (D_801EB638[offset] == 0 || D_801EB638[offset] == 3 ? D_801EAEA4
+                                                           : D_801EAEA6);
+  } while (0);
 
   value = *(u16*)&D_801EB660[(u32)index * 0x118] +
           (s8)D_801EB713[(u32)index * 0x118] + 12;
   *(s16*)&D_80148648[6] = value;
-  func_801D8690(*(s16*)&panel[4], value, D_80148648[0xA]);
+  func_801D8690(*(s16*)&D_80148648[4], value, D_80148648[0xA]);
 
   if (D_801462EF != 0) {
     flags = *D_801EB4D8;
