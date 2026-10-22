@@ -894,8 +894,13 @@ extern struct GameWorkArea D_80146888[];
 extern u8                  D_8014933F;
 /* @source 0x801CD954 @kind unknown */
 extern u32                 D_801CD954;
-/* @source 0x801C7B74 @kind unknown */
+/* @behavior two signed one-byte coordinate steps per route index: the first
+ * step of route index n lives in D_801C7B74 at byte n * 2 and the second in
+ * D_801C7B75 at the same byte offset, so the pair is one stride-two record. */
+/* @source 0x801C7B74 @kind table */
 extern const s8            D_801C7B74[];
+/* @source 0x801C7B75 @kind table */
+extern const s8            D_801C7B75[];
 /* @source 0x80146864 @kind unknown */
 extern volatile u8         g_ScenarioProgress;
 /* @source 0x801490A4 @kind unknown */

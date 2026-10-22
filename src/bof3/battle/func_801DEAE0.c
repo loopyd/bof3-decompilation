@@ -3,11 +3,26 @@
 extern int rand(void);
 
 /* @behavior chooses one event id from the small fixed table based on the current
- * halfword mode at `0x801463d0`, then writes that event into slot `0`.
+ * word mode at `0x801463d0`, then writes that event into slot `0`.
  * @source 0x801DEAE0
  * @status partial
  * @match 78.95
- * @residual live asm diff 45/57 instructions, 228 versus 228 bytes. First mismatch +0x34: the original branches forward into the mode-1 arm (beq mode,1) which sits behind the dispatch chain, then jumps to the 2..4 arm; this build inverts the test, inlines the mode-1 arm and re-derives the rest of the chain afterwards, and it copies the resolved id into v1 because it materialises the 0xFF argument constant in v0. Both the switch and the inverted-nested shapes reach the same 45/57 live score, and a flag-search over the 52 reviewed profiles left the canonical -O2 profile the best (no exact match), so the residual is the dispatch layout and its register assignment, not a compiler profile.
+ * @residual live asm diff 45/57 instructions, 228 versus 228 bytes. First
+ * mismatch +0x34: the original branches forward into the mode-1 arm (beq mode,1)
+ * and fills its delay slot with `addiu s0,sp,0x18`, the base of `table`; this
+ * build schedules that dependency-free addiu at +0x34, four instructions before
+ * the original's +0x44 delay slot, and then takes the register tie-break on the
+ * 0xFF argument (constant in v0 here, in v1 there, so one extra move). No
+ * measured clean-C shape improves on 45/57: select in the if
+ * and one call after the arms (44/57, 224 bytes), the same with a named pointer
+ * (39/57), arm-3-first else-if with one call and with per-arm calls (42/57, the
+ * second 232 bytes), arm-1 moved to the else with inner nesting in both
+ * polarities (36/57 and 40/57), and in the repair round the intact
+ * `table = local_18` statement deferred after the mode load, inside the mode-1
+ * arm, or ahead of the mode load (45/57 and the same emitted bytes each time,
+ * which shows the statement position does not control the hoist). The 52-profile
+ * flag-search that left canonical -O2 best predates and sits outside this lane,
+ * which was restricted to asm-diff, sweep and the combined gate.
  */
 void func_801DEAE0(void) {
   u8          local_18[6];

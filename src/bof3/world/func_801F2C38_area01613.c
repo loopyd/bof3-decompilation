@@ -19,32 +19,10 @@
  * the phase byte is not 2 it calls the shared func_8015C058 helper and clears
  * 0x801448EB, the mode byte and 0x801448ED.
  * @status partial
- * @match 94.22
- * @residual 163/173 instructions (692/692 bytes) match, first difference at
- * +0x98. Everything except the halfword-search exit and the fill preheader matches
- * instruction for instruction: the shared 0x801F4FC4 table search, the 0x801F4DA0
- * row scan, the 0x801F50E4 record selection, both twelve-byte fill/copy arms, the
- * cross-jumped func_80150224 edges and the case-1 reset. The residual is
- * allocator/scheduler only: at the search exit this candidate duplicates the
- * `sll $v0,$s0,0x5` index scaling into the `beq` delay slot (the original leaves
- * `nop` there and recomputes `sll $v1,$s0,0x5` after the base materialisation),
- * which shifts the exit block's `$v0`/`$v1` roles, and the fill loop emits the
- * hoisted `li $a0,0x5C` after `li $v1,0xB` instead of before it. Rejected clean-C
- * levers (each measured against the live diff): byte-offset vs element-index vs
- * whole-expression forms of the search result pointer, `entry` pointer local with
- * and without a cast chain, do-while/while/goto spellings of the fill loop,
- * preheader statement permutations, and splitting the search byte offset from the
- * 0x801490E4 record offset. Rung 4 is measured negative: `lift flag-search` over
- * 52 catalogue profiles leaves the -O2/-G0 baseline at 94.22 as the maximum with no
- * exact match, and four further live variants (inlined table deref, predecrement
- * fill condition, both together, descending fill-pointer walk) scored 145, 163, 145
- * and 155 of 173. The permuter rung is opt-in and was not authorised for this
- * selector.
- * The reviewed fill-constant-before-counter-init lever (repair 4) is measured
- * negative: naming the fill byte in a local declared before the counter leaves
- * 163/173 at 692 bytes with the same `+0x0098` and the same reversed preheader
- * materialisation (`li $v1,0xB` still precedes `li $a0,0x5C`), so the named value
- * does not move the constant's insn ahead of the counter init.
+ * @match 99.42
+ * @residual 172/173 instructions at the original 692-byte size. The fill
+ * preheader at +0x1EC initializes the counter before the 0x5C fill constant;
+ * the original loads the constant first. The exit address arithmetic matches.
  */
 void func_801F2C38(void) {
   const u8* row;
@@ -56,6 +34,7 @@ void func_801F2C38(void) {
   s32 index;
   s32 count;
   s32 offset;
+  s32 column;
   s32 record_offset;
   s32 i;
 
@@ -70,8 +49,10 @@ void func_801F2C38(void) {
           break;
         }
       }
-      entry = (const s16*)D_801F4FC4 + index * 16;
-      func_80150224(entry[D_80146870]);
+      column = D_80146870 * 2;
+      entry = (const s16*)D_801F4FC4;
+      column = column + (s32)((const u8*)entry + index * 32);
+      func_80150224(*(const s16*)column);
     } else {
       row = &D_801F4DA0[0][0];
       while (1) {

@@ -1270,8 +1270,10 @@ segments:
     - asm
     - func_801E8DD8
   - - 99240
-    - asm
+    - c
     - func_801E8FA8
+    - '@source: src/bof3/battle/func_801E8FA8.c'
+    - '@behavior: Chooses the next enabled bit of the current target''s 0x58 group-flag mask, starting just after the scratch byte 0x0B and wrapping modulo 16.'
   - - 99444
     - c
     - dispatchStateByte2TableF80

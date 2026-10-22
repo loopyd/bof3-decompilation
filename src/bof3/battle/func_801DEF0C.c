@@ -10,13 +10,17 @@
  * @match 92.31
  * @residual 48/52 instructions, 208->204 bytes; first mismatch +0x18 is the byte
  * +0x08 value load: the original keeps `lbu v0,D_801462EC` after the six word
- * clears (load-delay `nop`) and reuses the just-freed v0, while this build hoists
- * the byte load above the clears and therefore allocates it to a0; the entry
- * block register assignment and every later statement match. Clean-C register
- * allocation/scheduling residual (allocation class), not a semantic difference:
- * seven measured clean-C shapes keep the hoist, and a flag-search over the 52
- * reviewed profiles left the canonical -O2 profile the best score (no exact
- * match).
+ * clears (load-delay `nop`) and reuses the freed v0, while this build hoists the
+ * load above the clears and allocates it to a0, dropping one instruction. Seven
+ * clean-C shapes in the lift lane keep the hoist: inline read without a temporary
+ * (46/52), temporary after the pointer reload (46/52), read before the clears
+ * (48/52), pointer reload ahead of the clears (46/52), volatile absolute read
+ * (50/52 but 212 bytes and an earlier +0x04 mismatch), volatile work pointer
+ * (27/52) and volatile stores (31/52), both with an extra s0 frame. Read-before
+ * and read-after emit the same bytes, so the C statement order of that load is
+ * not the control; scheduler/allocation class, not a semantic difference. The
+ * 52-profile flag-search that left canonical -O2 best predates and sits outside
+ * this lane, which was restricted to asm-diff, sweep and the combined gate.
  */
 void func_801DEF0C(void) {
   Battle03LocalWork* work1;
