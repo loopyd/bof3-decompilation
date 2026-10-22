@@ -12,16 +12,24 @@ existing assembler and linker wrappers:
 make REPO=/absolute/path/to/rebof3-simple clean all
 ```
 
+`player.c` coordinates the frame loop. `audio.c` owns driver calls, sequence
+restarts, musical ticks, and SPU channel levels. `graphics.c` owns GPU commands,
+assets, glyphs, the animated background, and frame buffers. `hud.c` owns layout,
+time formatting, meter animation, and the small `Capcom C 1993` driver credit.
+The audio, graphics, and HUD interfaces have matching headers. `psx.h` defines
+shared PSX types and hardware access.
+
 The player loads at `0x80010000`, keeps the original runtime at `0x80096800`, and
 uses a stack below it. The linker rejects player assets that exceed the reserved
 low-memory region. The runtime's original sound initialization, bank transfers,
 SEP callbacks, sequencer and glyph renderer remain in use. A note-call hook records
 the MIDI channel associated with each allocated SPU voice for the meters.
 
-`text_scaled(x, y, string, width, height)` takes glyph dimensions in screen pixels.
-It uses the original glyph renderer to produce glyph positions and texture UVs,
+`graphics_text_scaled(x, y, string, width, height)` takes glyph dimensions in
+screen pixels. It uses the original glyph renderer to produce positions and texture UVs,
 then converts its sprites to textured quads when scaling is requested. Ordinary
-labels and SMPTE use 8x8 pixels; the musical position and time labels use 6x6.
+labels and SMPTE use 8x8 pixels. Musical position, time labels, and the driver
+credit use 6x6.
 SMPTE uses 30-frame non-drop numbering, advancing once per two NTSC VBlanks.
 Musical position uses the driver's live delta counters and the SEP header's PPQN
 and time signature. Bars and beats start at 1, ticks at 0; controller loops advance

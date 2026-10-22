@@ -130,6 +130,19 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             "player.c",
             include_bytes!("../../player/player.c").as_slice(),
         ),
+        ("psx.h", include_bytes!("../../player/psx.h").as_slice()),
+        ("audio.c", include_bytes!("../../player/audio.c").as_slice()),
+        ("audio.h", include_bytes!("../../player/audio.h").as_slice()),
+        (
+            "graphics.c",
+            include_bytes!("../../player/graphics.c").as_slice(),
+        ),
+        (
+            "graphics.h",
+            include_bytes!("../../player/graphics.h").as_slice(),
+        ),
+        ("hud.c", include_bytes!("../../player/hud.c").as_slice()),
+        ("hud.h", include_bytes!("../../player/hud.h").as_slice()),
         ("start.s", include_bytes!("../../player/start.s").as_slice()),
         (
             "assets.s",
