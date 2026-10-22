@@ -39,6 +39,11 @@ headers = [
 ]
 
 [[matching.section_placements]]
+function = 0x801F7CC4
+section = ".rodata"
+address = 0x801F6C5C
+size = 0x34
+[[matching.section_placements]]
 function = 0x801F7790
 section = ".rodata"
 address = 0x801F6C34

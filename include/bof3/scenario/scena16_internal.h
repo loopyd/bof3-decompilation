@@ -12,6 +12,10 @@ typedef void (*Scena16RecordCallback)(void* record, u32 arg1);
 /* @source 0x1F800000 @kind unknown — scratchpad byte that publishes the freshly
  * selected object index; the secondary controller re-reads it per row write. */
 extern u8 D_1F800000;
+/* @source 0x80143BB0 @kind unknown — front-end mode byte: the secondary
+ * controller arms it with 2 and waits for it to leave 2. Plain byte view, the
+ * same ownership as the exact scena00 sibling func_801FA27C. */
+extern u8 D_80143BB0;
 /* @source 0x80143C30 @kind unknown */
 extern u8  D_80143C30;
 /* @source 0x80143C40 @kind unknown */

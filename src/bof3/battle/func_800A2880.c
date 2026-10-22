@@ -1,84 +1,91 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @behavior applies damage modifiers for a battler's attack, incorporating element
- * affinity, randomness, defended status, and battle formation effects.
- * returns the final damage value as s16.
- * @source 0x800A2880
+/* @source 0x800A2880
+ * @behavior Scales the attack power of the selected battle action for the
+ *   battler's defence rate, element affinity, randomised damage band and guard
+ *   flags, and halves that result while the 0x200 flag of the battler's word
+ *   at +0x04 is set. A battler whose word at +0x00 carries bit 0x10000 takes no
+ *   damage. The first argument is the 0x80146374 selection byte, which the body
+ *   never reads; the battler record index is the second argument. The rate and
+ *   percent scalings both divide unsigned, so a non-positive intermediate
+ *   wraps the way the original's own unsigned divide does.
  * @status partial
- * @match 19.51
- * @residual non-exact live audit: 32/150 instructions; 608 original bytes versus 672 current.
+ * @match 96.67
+ * @residual allocation residual (145/150 instructions live, 608 original
+ *   bytes versus 608 current, so the frame, the fixed-point and divide-by-five
+ *   sequences, the percent clamp, the element-modifier, random-band and halving
+ *   scalings, the element lookup and the divide operands all match). The
+ *   percent source is read into the s32 local and clamped in one assignment,
+ *   which keeps the divide unsigned (`multu`/`mfhi`/`srl`) and leaves the
+ *   original's single `subu` and signed `slti`; deriving the percentile inline
+ *   from the halfword instead re-extends the quotient with an `andi`/`move`
+ *   pair.
+ *   Surviving differences: three instructions of register naming in the guard
+ *   word block - the original loads the party word at +0x01D0 and the enemy
+ *   word at +0x01DA into v0 and then forms `and v0,v0,v1`, while this build
+ *   loads into v1 and forms `and v0,v1,v0`. Function-shaped range with its own
+ *   prologue and return: the data-candidate, carve and clone levers do not
+ *   apply. Compiler-profile and permuter rungs remain unauthorized.
  */
-s16 func_800A2880(u8 battler_index, u16 base_value, u8 element_flag, u32 mode) {
-  volatile s16* modifier_table;
-  volatile u8*  player_state;
-  u16           rule_selection;
-  u32           adjusted_value;
-  u32           random_bonus;
-  s16           element_mod;
-  u16           raw_def_rate;
-  u32           scale;
-  u32           defence_bonus;
-  s16           result;
+s16 func_800A2880(u8 selection_index, u8 battler_index, u16 base_value,
+                  u8 element_flag)
+{
+  s32 damage;
+  s32 percent;
+  s32 rate;
+  u16 kind_mask;
+  s16 modifier;
+  u32 word;
 
-  raw_def_rate = PSX_REF(volatile u16, 0x801ec312u) + 0x64u;
-  scale = (raw_def_rate * 0x64u) / 100u;
+  /* The original promotes the defence rate to a percent-times-hundred fixed
+   * point before applying it, so the *0x64 against the 0x64u divisor are the
+   * original's own operations. */
+  rate = (D_801EC312 + 0x64) * 0x64;
+  damage = base_value * rate / 0x64u;
 
-  rule_selection = PSX_REF(volatile u16, 0x801463c0u);
-  rule_selection = (rule_selection * 0x14u) + 0x801d0000u;
-  rule_selection = PSX_REF(volatile u16, rule_selection - 0x58e4u) & 0x1ffu;
-
-  adjusted_value = ((u32)base_value * scale) / 100u;
-  scale = PSX_REF(volatile u16, 0x801ec2f2u) / 5u;
-  if ((s32)(0x64u - scale) < 0x32) {
-    scale = 0x32u;
-  } else {
-    scale = 0x64u - scale;
+  /* Split statements keep the division unsigned: the dividend is the s32 local
+   * and the divisor is 5u, so GCC emits `multu`/`mfhi`/`srl`; the subtraction
+   * and the clamp then act on the integer local and the original's `subu`, `slti`
+   * and single clamp store follow. */
+  percent = D_801EC2F2;
+  percent = 0x64 - percent / 5u;
+  if (percent < 0x32) {
+    percent = 0x32;
   }
-  adjusted_value = (adjusted_value * scale) / 100u;
+  /* Unsigned divisor: the original scales by the clamped percent with
+   * `multu`/`mfhi`/`srl`, while a signed divide emits `mult`/`sra`/`subu`. */
+  damage = damage * percent / 0x64u;
 
-  if (rule_selection != 0u) {
+  kind_mask = D_801CA71C[D_801463C0].mask & 0x1FFu;
+  if (kind_mask != 0u) {
     if (element_flag != 0u) {
-      element_mod = FUNCTION_AT(s16 (*)(u8, u16, u32), 0x800a2ef0u)(
-          battler_index, rule_selection, 0x51eb851fu);
+      modifier = (s16)func_800A2EF0(battler_index, kind_mask);
     } else {
-      element_mod = func_800A2AE0(battler_index, rule_selection);
+      modifier = (s16)func_800A2AE0(battler_index, kind_mask);
     }
-    adjusted_value = (adjusted_value * (u16)element_mod) / 100u;
+    damage = damage * modifier / 0x64;
   }
 
-  random_bonus = FUNCTION_AT(u32 (*)(void), 0x8017e3d4u)();
-  modifier_table = (volatile s16*)((u32)BATTLE_SELECTION_TABLE_BASE +
-                                   (((random_bonus & 7u) * 2u) + 0x492cu));
-  defence_bonus = (adjusted_value * (u32)*modifier_table) / 10000u;
+  damage = damage * D_800B492C[rand() & 7] / 10000;
 
-  if ((PSX_REF(volatile u8, 0x80146394u) < 3u) && (PSX_REF(volatile u8, 0x80144f58u) == 2u) &&
-      (defence_bonus > 0u)) {
-    defence_bonus -= (adjusted_value * (u32)*modifier_table) / 40000u;
+  if (D_80146394 < 3u && PSX_REF(u8, 0x80144F58u) == 2u && damage > 0) {
+    damage -= damage >> 2;
   }
 
-  player_state = BATTLE_GAME_RAM_BASE;
   if (battler_index < 3u) {
-    defence_bonus /= 2u;
-    if (PSX_REF(volatile u32, 0x80145fb4u + ((u32)battler_index * 0x140u) + 4u) & 0x200u) {
-      defence_bonus /= 2u;
+    if (D_80145FB4[battler_index].unk_04 & 0x200u) {
+      damage /= 2;
     }
-    if (PSX_REF(volatile u32, 0x80145fb4u + ((u32)battler_index * 0x140u)) & 0x10000u) {
-      result = 0;
-    } else {
-      result = (s16)defence_bonus;
-    }
+    word = D_80145FB4[battler_index].unk_00;
   } else {
-    defence_bonus /= 2u;
-    if (PSX_REF(volatile u32, 0x801eb6d0u + ((u32)(battler_index - 3u) * 0x118u) + 4u) &
-        0x200u) {
-      defence_bonus /= 2u;
+    if (D_801EB730[battler_index - 3].unk_04 & 0x200u) {
+      damage /= 2;
     }
-    if (PSX_REF(volatile u32, 0x801eb6d0u + ((u32)(battler_index - 3u) * 0x118u)) & 0x10000u) {
-      result = 0;
-    } else {
-      result = (s16)defence_bonus;
-    }
+    word = D_801EB730[battler_index - 3].unk_00;
   }
 
-  return result;
+  if (word & 0x10000u) {
+    damage = 0;
+  }
+  return (s16)damage;
 }

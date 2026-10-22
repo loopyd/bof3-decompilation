@@ -1,99 +1,79 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @behavior draws the battle local panel with three mode-specific rectangle
- * regions, a cursor for the active battler, and optional preview placement
- * for the current selection state.
- * @source 0x800B0498
+/* The panel-task root cell at 0x80148648 is read here through its symbol name:
+ * each access then materializes the cell address separately, matching the
+ * original bytes. The raw-constant g_PanelTaskRoot macro the header defines for
+ * that same name would let the compiler keep the address in a callee-saved
+ * register across the draw calls that follow. The record itself is wider than
+ * PanelTask: this function also reads the size bytes at +0x08/+0x09. */
+#undef D_80148648
+/* The header declares the cell as PanelTask*, which stops at +0x08; this
+ * function also reads the size bytes at +0x08/+0x09, so it views the same cell
+ * through BattlePanelBoxTask. */
+#define BATTLE_PANEL_BOX ((BattlePanelBoxTask *)D_80148648)
+
+/* @source 0x800B0498
+ * @behavior Draws the battle local panel: the box pass for the panel origin
+ *   and size, three shaded rectangle regions, the AP label and the formatted
+ *   battler index, then the cursor pass for the active selection substate. The
+ *   label index count is 7 while the active message slot's +0x8A word is below
+ *   the 0x801463B8 selection byte and 0 otherwise.
  * @status partial
- * @match 32.50
- * @residual non-exact live audit: 52/151 instructions; 604 original bytes versus 640 current.
+ * @match 85.43
+ * @residual 129/151 instructions; 604 original bytes versus 600 current.
+ * The selection-substate tail uses different argument register homes and
+ * scheduling. The cursor call keeps the fixed declaration; its callee ignores
+ * incoming registers beyond the coordinates.
  */
-void func_800B0498(void) {
-  volatile u8* task_root;
-  volatile u8* message_slot;
-  volatile u8* panel_base;
-  s16          root_x;
-  s16          root_y;
-  u8           root_w;
-  u8           root_h;
-  u8           cursor_index;
-  s16          cursor_x;
-  s16          cursor_y;
-  s32          draw_x;
-  s32          draw_y;
-  s8           sel_substate_plus;
-  u8           sel_substate;
-  u8           panel_count;
-  s32          scratchpad_saved;
+void func_800B0498(void)
+{
+  u16 panel_count;
+  s8 substate;
+  u16 cursor_x;
+  u16 cursor_y;
+  u8 *bank;
+  u8 *sel;
 
-  task_root = (volatile u8*)PSX_REF(volatile u32, 0x80148648u);
+  func_800B06F4((s16)BATTLE_PANEL_BOX->x, (s16)BATTLE_PANEL_BOX->y,
+                BATTLE_PANEL_BOX->width, BATTLE_PANEL_BOX->height);
 
-  root_x = (s16)PSX_REF(volatile u16, (u32)(task_root + 4u));
-  root_y = (s16)PSX_REF(volatile u16, (u32)(task_root + 6u));
-  root_w = PSX_REF(volatile u8, (u32)(task_root + 8u));
-  root_h = PSX_REF(volatile u8, (u32)(task_root + 9u));
+  bank = &D_80144952;
+  func_801AE3F0((u16)(BATTLE_PANEL_BOX->x + 6),
+                (u16)(BATTLE_PANEL_BOX->y + 0x21),
+                (u16)((BATTLE_PANEL_BOX->width << 3) - 0xF),
+                (u16)((BATTLE_PANEL_BOX->height << 3) - 0x27), 0,
+                *bank);
+  func_801AE3F0((u16)(BATTLE_PANEL_BOX->x + 0x36),
+                (u16)(BATTLE_PANEL_BOX->y + 6), 0x48, 0x18, 0,
+                *bank);
+  func_801AE3F0((u16)(BATTLE_PANEL_BOX->x + 0x87),
+                (u16)(BATTLE_PANEL_BOX->y + 0xA), 0x30, 0x10, 0,
+                *bank);
 
-  FUNCTION_AT(void (*)(s16, s16, u8, u8), 0x800b06f4u)(root_x, root_y, root_w,
-                                                       root_h);
+  sel = &D_801463B8;
+  panel_count = (PSX_REF(u16, (u32)D_801EBF08 + 0x8Au) < *sel) ? 7 : 0;
+  func_8014FF0C((s16)(BATTLE_PANEL_BOX->x + 0x88),
+                (s16)(BATTLE_PANEL_BOX->y + 0xC), panel_count,
+                &battleApParamStrings);
+  sprintf((char *)D_80145AD4, (const char *)&battlePanelIndexFormat,
+          *sel);
+  func_8014FF0C((s16)(BATTLE_PANEL_BOX->x + 0xA0),
+                (s16)(BATTLE_PANEL_BOX->y + 0xC), panel_count,
+                D_80145AD4);
 
-  task_root = (volatile u8*)PSX_REF(volatile u32, 0x80148648u);
-  draw_x = (s32)((u16)PSX_REF(volatile u16, (u32)(task_root + 4u)) + 6u);
-  draw_y = (s32)((u16)PSX_REF(volatile u16, (u32)(task_root + 6u)) + 0x21u);
-  FUNCTION_AT(void (*)(s32, s32, s32, s32, s32, s32), 0x801ae3f0u)(
-      draw_x, draw_y, ((s32)PSX_REF(volatile u8, (u32)(task_root + 8u)) * 8) - 0xf,
-      ((s32)PSX_REF(volatile u8, (u32)(task_root + 9u)) * 8) - 0x27, 0, (s32)PSX_REF(volatile u8, 0x80144952u));
-
-  task_root = (volatile u8*)PSX_REF(volatile u32, 0x80148648u);
-  draw_x = (s32)((u16)PSX_REF(volatile u16, (u32)(task_root + 4u)) + 0x36u);
-  draw_y = (s32)((u16)PSX_REF(volatile u16, (u32)(task_root + 6u)) + 6u);
-  FUNCTION_AT(void (*)(s32, s32, s32, s32, s32, s32), 0x801ae3f0u)(
-      draw_x, draw_y, 0x48u, 0x18u, 0u, (s32)PSX_REF(volatile u8, 0x80144952u));
-
-  task_root = (volatile u8*)PSX_REF(volatile u32, 0x80148648u);
-  draw_x = (s32)((u16)PSX_REF(volatile u16, (u32)(task_root + 4u)) + 0x87u);
-  draw_y = (s32)((u16)PSX_REF(volatile u16, (u32)(task_root + 6u)) + 0xau);
-  FUNCTION_AT(void (*)(s32, s32, s32, s32, s32, s32), 0x801ae3f0u)(
-      draw_x, draw_y, 0x30u, 0x10u, 0u, (s32)PSX_REF(volatile u8, 0x80144952u));
-
-  task_root = (volatile u8*)PSX_REF(volatile u32, 0x80148648u);
-  message_slot = (volatile u8*)PSX_REF(volatile u32, 0x801ebf08u);
-  cursor_index = PSX_REF(volatile u8, 0x801463b8u);
-  panel_count =
-      ((u16)PSX_REF(volatile u16, (u32)(message_slot + 0x8au)) < cursor_index) ? 7u : 0u;
-
-  FUNCTION_AT(void (*)(s16, s16, s32, volatile u32*), 0x8014ff0cu)(
-      (s16)((u16)PSX_REF(volatile u16, (u32)(task_root + 4u)) + 0x88u),
-      (s16)((u16)PSX_REF(volatile u16, (u32)(task_root + 6u)) + 0xcu), (s32)panel_count,
-      BATTLE_UNK_800B6D1C);
-
-  FUNCTION_AT(void (*)(volatile u16*, volatile void*, u8), 0x8017e3f4u)(
-      BATTLE_UNK_80145AD4, BATTLE_UNK_80096A04, PSX_REF(volatile u8, 0x801463b8u));
-
-  task_root = (volatile u8*)PSX_REF(volatile u32, 0x80148648u);
-  FUNCTION_AT(void (*)(s16, s16, s32, volatile void*), 0x8014ff0cu)(
-      (s16)((u16)PSX_REF(volatile u16, (u32)(task_root + 4u)) + 0xa0u),
-      (s16)((u16)PSX_REF(volatile u16, (u32)(task_root + 6u)) + 0xcu), (s32)panel_count,
-      BATTLE_UNK_80145AD4);
-
-  if (PSX_REF(volatile u8, 0x801462e3u) == 4u) {
-    sel_substate = (u8)PSX_REF(volatile u8, 0x801462e6u);
-    if ((s8)sel_substate == (s8)-1) {
-      task_root = (volatile u8*)PSX_REF(volatile u32, 0x80148648u);
-      cursor_x = (s16)((u16)PSX_REF(volatile u16, (u32)(task_root + 4u)) + 0xeu);
-      cursor_y = (s16)((u16)PSX_REF(volatile u16, (u32)(task_root + 6u)) + 0xcu);
-      FUNCTION_AT(void (*)(s32, s32, s32, s8), 0x801647c4u)(
-          (s32)(u16)cursor_x, (s32)(u16)cursor_y, 0, (s8)-1);
+  /* The 0x801462E3 substate mode is read through a non-volatile view here: the
+   * header's volatile declaration makes the 4 test emit an extra
+   * `andi v0,v0,0xff` that the original bytes do not carry. */
+  if (PSX_REF(u8, 0x801462E3u) == 4) {
+    substate = (s8)D_801462E6;
+    if (substate == (s8)-1) {
+      cursor_x = (u16)(BATTLE_PANEL_BOX->x + 0xE);
+      cursor_y = (u16)(BATTLE_PANEL_BOX->y + 0xC);
     } else {
-      task_root = (volatile u8*)PSX_REF(volatile u32, 0x80148648u);
-      cursor_x = (s16)((u16)PSX_REF(volatile u16, (u32)(task_root + 4u)) + 0xeu +
-                       (u16)(PSX_REF(volatile u8, 0x801462e7u) * 0x1eu));
-      cursor_y = (s16)((u16)PSX_REF(volatile u16, (u32)(task_root + 6u)) + 0x2cu +
-                       ((u32)sel_substate << 5u));
-      FUNCTION_AT(void (*)(s32, s32, s32, s8), 0x801647c4u)(
-          (s32)(u16)cursor_x, (s32)(u16)cursor_y, 0, (s8)sel_substate);
+      cursor_x = (u16)(BATTLE_PANEL_BOX->x + 0xE +
+                       PSX_REF(u8, 0x801462E7u) * 0x1E);
+      cursor_y = (u16)(BATTLE_PANEL_BOX->y + 0x2C + ((u8)substate << 5));
     }
+    func_801647C4(cursor_x, cursor_y, 0);
   }
-
-  (void)scratchpad_saved;
-  (void)panel_base;
 }

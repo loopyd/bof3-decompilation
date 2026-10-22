@@ -809,8 +809,10 @@ segments:
     - asm
     - func_800A26F0
   - - 49280
-    - asm
+    - c
     - func_800A2880
+    - '@source: src/bof3/battle/func_800A2880.c'
+    - '@behavior: Scales the selected action''s power for the battler defence rate, element affinity, randomised damage band and guard flags, then halves it while the +0x04 guard word of the battler record carries bit 0x200; a battler whose +0x00 word carries 0x10000 takes no damage.'
   - - 49888
     - asm
     - func_800A2AE0
@@ -845,8 +847,10 @@ segments:
     - c
     - func_800A36BC
   - - 52976
-    - asm
+    - c
     - func_800A36F0
+    - '@source: src/bof3/battle/func_800A36F0.c'
+    - '@behavior: Clears the status-word bits named by the input mask on the selected battler and, when the mask asks for bit 0x20 and the battler still carries it, copies the battler''s three-word defence row over the head of its action record, staging the record base in the scratchpad work cell across the two helper calls.'
   - - 53684
     - c
     - clampIndexedBattleByte14
@@ -1567,8 +1571,10 @@ segments:
     - asm
     - func_800B0410
   - - 105624
-    - asm
+    - c
     - func_800B0498
+    - '@source: src/bof3/battle/func_800B0498.c'
+    - '@behavior: Draws the battle local panel: the box pass for the panel origin and size, three shaded rectangle regions, the AP label and the formatted battler index, then the cursor pass for the active selection substate.'
   - - 106228
     - asm
     - func_800B06F4

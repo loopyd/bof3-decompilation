@@ -40,6 +40,19 @@ typedef struct BattlePanelTask {
   s16 field_06;
 } BattlePanelTask;
 
+/* Panel box record as func_800B0498 reads it: the box origin at +0x04/+0x06 is
+ * read as unsigned halfwords here (the same halfwords other panel passes read
+ * through the signed BattlePanelTask view) and the box size bytes at
+ * +0x08/+0x09 lie past the end of BattlePanelTask. */
+typedef struct BattlePanelBoxTask {
+  u8  unk_00[3];
+  u8  state;
+  u16 x;
+  u16 y;
+  u8  width;
+  u8  height;
+} BattlePanelBoxTask;
+
 typedef struct BattleSelectionKind {
   u16 mask;
   u8  unk_02[0x12];
@@ -216,6 +229,10 @@ extern volatile u8   D_801462EF; /* @source 0x801462EF @kind unknown */
 extern volatile u8   D_801462F0; /* @source 0x801462F0 @kind unknown */
 extern volatile u8   D_80146303; /* @source 0x80146303 @kind unknown */
 extern volatile u16  D_80145AC8; /* @source 0x80145AC8 @kind unknown */
+/* sprintf work buffer of the panel label row: func_800B0498 formats the
+ * battler index into it and prints it through func_8014FF0C. Declared as a
+ * named symbol so both uses materialize the buffer address through %hi/%lo. */
+extern u8            D_80145AD4[]; /* @source 0x80145AD4 @kind unknown */
 extern u8*           D_801EB4D8; /* @source 0x801EB4D8 @kind unknown */
 /* Pointer cell holding the current local battle-work record; its byte 0x01 is
  * the byte compared with 5 by pollReadyThenInvokeHelperWhenWorkByte1Is5. */
@@ -461,9 +478,15 @@ void                           func_8009DE8C(void);
 void                           func_8009E500(void);
 void                           func_8009F320(void);
 void                           func_800A0378(void);
-s16  func_800A2880(u8 battler_index, u16 base_value, u8 element_flag, u32 mode);
+/* Damage modifier at 0x800A2880: the first argument is the 0x80146374 selection
+ * byte, which the decoded body never reads; every call site passes the 0x80146394
+ * battler byte second and the selected action's power byte third, and the fourth
+ * argument selects the element table consulted for that power. */
+s16  func_800A2880(u8 selection_index, u8 battler_index, u16 base_value,
+                   u8 element_flag);
 s32  passesBytePairGate(u8 battler_index, u8 value);
 s16  func_800A2AE0(u8 battler_index, u16 element_mask);
+s32  func_800A2EF0(u8 battler_index, u32 flags);
 s16  func_800A2D70(s32 battler_index, s32 selection_mask);
 s32  func_800A30E8(u32 unused, u8 selector);
 void func_800A31E0(u8 selection_kind, u16 input_mask);
@@ -502,7 +525,20 @@ void func_800B4220(s16 arg0, s16 arg1, u8 arg2);
 void setFlag2000StoreDoubledResult(void);
 u8   querySelectionApplyInput(s32 input_mask);
 s16  func_801DC044(u8 arg0, u8 arg1, u32 arg2);
+/* The cursor helper reads the two coordinates. Its original body overwrites
+ * incoming $a2/$a3 before use; a caller's live substate is not an argument. */
 void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
+
+/* Shared work-record submitter; func_800A36F0 hands it the battler record base
+ * it stages in the scratchpad work cell. */
+void func_80196718(void *arg0);
+/* Status-word consumer called by func_800A36F0 with the status word it has just
+ * stored; the call site loads it with `lhu` and sets no other argument. */
+void func_801DDAB4(u16 status);
+/* Panel box pass called first by func_800B0498 with the panel origin at
+ * +0x04/+0x06 (signed halfwords) and the size bytes at +0x08/+0x09. */
+void func_800B06F4(s16 x, s16 y, u8 width, u8 height);
+void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void *arg3);
 /* INFERRED: 0x801654F4 and 0x80165694 are reached only from func_800AAA74, which
  * passes the addressed camera halfword/byte in $a0 and the shifted-and-negated
  * value in $a1; neither callee has a lifted body in this repository. Promotion
@@ -603,7 +639,6 @@ void func_801DEA64(s32 arg0);
 #define BATTLE_UNK_80145AD4        PSX_PTR(volatile u16, 0x80145ad4u)
 #define BATTLE_SCRATCHPAD_PTR      SPAD_PTR_SLOT(u8, 0x44u)
 #define BATTLE_PLAYER_BATTLER_BASE PSX_PTR(volatile u8, 0x80145e90u)
-#define BATTLE_ENEMY_BATTLER_BASE  PSX_PTR(volatile u8, 0x801eb2e8u)
 
 extern volatile u8 D_801485B8; /* @source 0x801485B8 @kind unknown */
 extern u8 D_801485B9; /* @source 0x801485B9 @kind unknown */
@@ -641,6 +676,64 @@ typedef struct BattlePartyFlagRecord {
 } BattlePartyFlagRecord;
 
 extern BattlePartyFlagRecord D_80145FB8[]; /* @source 0x80145FB8 @kind unknown */
+
+/* Guard words read by func_800A2880: the 0x10000 "takes no damage" word at
+ * +0x00 and the 0x200 guard word at +0x04 of each record. Every address keeps
+ * its own symbol because the original encodes each access as
+ * `lui %hi(SYM); addu at,at,index; lw %lo(SYM)(at)`, which a raw address
+ * expression would assemble as `addu at,index,at`. */
+typedef struct BattlePartyGuardRecord {
+  u32 unk_00;
+  u32 unk_04;
+  u8  unk_08[0x138];
+} BattlePartyGuardRecord;
+
+typedef struct BattleEnemyGuardRecord {
+  u32 unk_00;
+  u32 unk_04;
+  u8  unk_08[0x110];
+} BattleEnemyGuardRecord;
+
+extern BattlePartyGuardRecord D_80145FB4[]; /* @source 0x80145FB4 @kind unknown */
+extern BattleEnemyGuardRecord D_801EB730[]; /* @source 0x801EB730 @kind unknown */
+
+/* Random damage-band table indexed by the three-bit roll in func_800A2880;
+ * eight signed halfwords directly above battleElementResistanceModifierTable. */
+extern u16 D_800B492C[]; /* @source 0x800B492C @kind table */
+
+/* Action records touched by func_800A36F0: the three words copied from the
+ * 0x78-byte defence row land at +0x00..+0x08 and the status word this function
+ * clears sits at +0x4C (party) or +0x4E (enemy) of the same record. The status
+ * member is volatile because the original stores it and then reloads it. */
+typedef struct BattlePartyActionRecord {
+  u32 unk_00;
+  u32 unk_04;
+  u32 unk_08;
+  u8  unk_0C[0x40];
+  volatile u16 status;
+  u8  unk_4E[0xF2];
+} BattlePartyActionRecord;
+
+typedef struct BattleEnemyActionRecord {
+  u32 unk_00;
+  u32 unk_04;
+  u32 unk_08;
+  u8  unk_0C[0x42];
+  volatile u16 status;
+  u8  unk_50[0xC8];
+} BattleEnemyActionRecord;
+
+/* Defence row copied by func_800A36F0, three words per 0x78-byte row. */
+typedef struct BattleDefenceRow {
+  u32 unk_00;
+  u32 unk_04;
+  u32 unk_08;
+  u8  unk_0C[0x6C];
+} BattleDefenceRow;
+
+extern BattlePartyActionRecord D_80145EC4[]; /* @source 0x80145EC4 @kind unknown */
+extern BattleEnemyActionRecord D_801EB664[]; /* @source 0x801EB664 @kind unknown */
+extern BattleDefenceRow D_801EC364[]; /* @source 0x801EC364 @kind unknown */
 extern u8 D_80145F09[]; /* @source 0x80145F09 @kind unknown */
 extern u8 D_800B6C40[]; /* @source 0x800B6C40 @kind unknown */
 extern u8 D_800B6C4C[]; /* @source 0x800B6C4C @kind unknown */
