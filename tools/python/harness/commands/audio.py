@@ -15,7 +15,7 @@ from harness.common.cli import add_example_argument, run_main
 from harness.common.native import exec_tool
 from harness.io import repo_layout
 
-OPERATIONS = ("index", "query", "map", "extract", "render", "pack", "verify")
+OPERATIONS = ("index", "query", "map", "extract", "render", "pack", "compile", "verify")
 CRATES = ("bof3-audio", "emi-ex")
 PACKAGE_ROOT = "bof3-audio"
 
@@ -103,7 +103,7 @@ def collect_sources(root: Path) -> list[Path]:
             if not source.is_file() or source.is_symlink():
                 raise ValueError(f"missing or unsafe package input: {source}")
             files.append(source)
-        for directory in ("src", "tests", "examples"):
+        for directory in ("src", "tests", "examples", "player"):
             base = crate / directory
             if base.is_symlink():
                 raise ValueError(f"source directory is a symlink: {base}")
@@ -116,7 +116,14 @@ def collect_sources(root: Path) -> list[Path]:
                     raise ValueError(
                         f"Python belongs in harness integration tests, not the audio crate: {source}"
                     )
-                if source.is_file() and source.suffix in {".rs", ".json"}:
+                if source.is_file() and (
+                    source.suffix in {".rs", ".json"}
+                    or directory == "player"
+                    and (
+                        source.suffix in {".c", ".h", ".s", ".ld"}
+                        or source.name in {"Makefile", "README.md"}
+                    )
+                ):
                     files.append(source)
         for source in sorted(crate.iterdir()):
             if source.name.startswith(

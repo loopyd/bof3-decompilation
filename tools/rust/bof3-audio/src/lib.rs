@@ -16,6 +16,7 @@ pub mod pack;
 mod pack_cli;
 pub mod pc_archive;
 pub mod pc_render;
+pub mod player;
 pub mod psx_render;
 mod publication;
 mod render_cli;

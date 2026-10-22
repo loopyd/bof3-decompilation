@@ -185,6 +185,7 @@ DOMAINS: Mapping[str, Domain] = {
                     "extract",
                     "render",
                     "pack",
+                    "compile",
                     "verify",
                 )
             },

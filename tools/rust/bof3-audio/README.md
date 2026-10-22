@@ -35,7 +35,7 @@ does not trust project files automatically. Mise’s
 [Rust integration](https://mise.jdx.dev/lang/rust.html) owns toolchain selection.
 
 In the full repository, `bin/harness audio build` builds and prints the binary
-path. `bin/harness audio index|query|map|extract|render|pack|verify ...` builds and
+path. `bin/harness audio index|query|map|extract|render|pack|compile|verify ...` builds and
 forwards arguments to Rust. `audio build OPERATION ...` remains available.
 `audio package [OUT]` writes a deterministic source ZIP, defaulting to
 `out/bof3-audio-source.zip`; publication failures preserve an existing ZIP.
@@ -119,6 +119,47 @@ available and now defaults to one file play, so already-expanded exports are not
 repeated again. Explicit `--repeats` requests whole-file restarts only in that
 input mode. After the requested file plays, extra fixed-duration time advances
 the final synth state without restarting.
+
+Build a standalone PS-X EXE for the selected song with the full repository's
+canonical GCC 2.7.2 toolchain:
+
+```sh
+bin/harness audio compile --mode music \
+  --archive out/extracted/BIN/BGM/BGM000.EMI \
+  --executable out/extracted/SLUS_004.22 --sequence 0 \
+  --disc-root out/extracted --output out/music-player --json
+```
+
+The new output directory contains `player.exe`, build sources, supplied media,
+`player.json`, and `build.log`. The player needs no disc after loading; the console
+or emulator supplies its BIOS. The extracted disc root must contain the original
+US `BIN/ETC/FIRST.EMI` and `BIN/ETC/DEMO.EMI` for the font and title logo. It defaults
+to the executable's directory. The executable must match the supported US profile.
+Use `--repo-root PATH` when running a source-package build outside the full checkout.
+`--layout 0|1|2` uses the same capacity rules as PSX rendering.
+
+The C89 player retains the original runtime image and calls its audio driver and
+8x8 glyph renderer. One note-call hook associates SPU voices with the selected
+sequence's 16 MIDI channels. Each channel has a pulsing activity icon and a vertical
+meter derived from voice volume and envelope levels, with visual decay. These
+meters do not measure mixed PCM. The screen shows 30-frame non-drop SMPTE timecode
+(`HH:MM:SS:FF`) and a smaller `bar:beat:tick` display, the EMI basename, the reduced
+game logo, player version, and author `deitydragon`. SMPTE advances once per two
+NTSC VBlanks. Musical time uses the live driver's elapsed delta and remaining
+delay, the selected sequence's PPQN, and its time signature; it follows tempo
+changes. Bars and beats start at 1, ticks at 0. Musical time continues across
+controller loops and resets on a whole-sequence restart. The glyph renderer
+supports separate width and height scaling; the player uses 8x8 and 6x6 glyphs.
+Archive basenames must fit 36 ASCII bytes using letters, digits, spaces, periods,
+underscores or hyphens. Lowercase and underscore glyphs are copied from the game's
+font into its ASCII slots.
+
+Encoded loops continue through the original driver. When a sequence ends, the
+player restarts it indefinitely; SMPTE time continues across restarts. The output
+retains the complete original US runtime, with the note-call hook, rather than
+claiming a separately linked driver. Keep generated media and executable files
+local. See [player build instructions](player/README.md) to rebuild the generated
+project. Emulator playback does not establish hardware audio fidelity.
 
 Music extraction's `--allow-approximations` also permits known zero-pitch keys
 to use silence at key-on while preserving their original sample PCM. Reports

@@ -5,7 +5,7 @@ use crate::{archive::MediaImage, verify::Report, Result};
 use std::{ffi::OsString, path::PathBuf};
 
 const HELP: &str = "bof3-audio — BOF3 audio migration\n\
-usage: bof3-audio <index|query|map|extract|render|pack|verify> --mode audio|music [OPTIONS]\n\
+usage: bof3-audio <index|query|map|extract|render|pack|compile|verify> --mode audio|music [OPTIONS]\n\
 \nAvailable during foundation development:\n\
   verify --mode audio|music --archive FILE [--against ORIGINAL] [--executable PSX_EXE] [--json]\n\
     Check EMI/XA container structure and optional whole-file byte equality.\n\
@@ -18,17 +18,18 @@ pub fn run(arguments: impl Iterator<Item = OsString>) -> Result<u8> {
     let command = args.next().ok_or("missing operation; use --help")?;
     if command == "--help" || command == "-h" {
         print!(
-            "{HELP}{}{}{}{}",
+            "{HELP}{}{}{}{}{}",
             crate::catalog_cli::HELP,
             crate::extract_cli::HELP,
             crate::render_cli::HELP,
-            crate::pack_cli::HELP
+            crate::pack_cli::HELP,
+            crate::player::HELP
         );
         return Ok(0);
     }
     let operation = command.to_str().ok_or("operation must be UTF-8")?;
     if ![
-        "index", "query", "map", "extract", "render", "pack", "verify",
+        "index", "query", "map", "extract", "render", "pack", "compile", "verify",
     ]
     .contains(&operation)
     {
@@ -36,11 +37,12 @@ pub fn run(arguments: impl Iterator<Item = OsString>) -> Result<u8> {
     }
     if args.peek().is_some_and(|arg| arg == "--help") {
         print!(
-            "{HELP}{}{}{}{}",
+            "{HELP}{}{}{}{}{}",
             crate::catalog_cli::HELP,
             crate::extract_cli::HELP,
             crate::render_cli::HELP,
-            crate::pack_cli::HELP
+            crate::pack_cli::HELP,
+            crate::player::HELP
         );
         return Ok(0);
     }
@@ -52,6 +54,9 @@ pub fn run(arguments: impl Iterator<Item = OsString>) -> Result<u8> {
     }
     if operation == "render" {
         return crate::render_cli::run(args);
+    }
+    if operation == "compile" {
+        return crate::player::run(args);
     }
     if operation == "pack" {
         return crate::pack_cli::run(args);

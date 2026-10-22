@@ -73,110 +73,18 @@ pub fn prepare(
     observer: &mut impl FnMut(Stage, &Execution) -> Result<()>,
 ) -> Result<Prepared> {
     let profile = Profile::identify(executable)?;
-    let vh = options.header_entry;
-    let vb = options.body_entry;
-    for (index, kind) in [(vh, 6), (vb, 7)] {
-        if archive
-            .entries()
-            .get(index)
-            .is_none_or(|entry| entry.file_type != kind)
-        {
-            return Err(format!("PSX bank: entry {index} must have type {kind}").into());
-        }
-    }
-    if vb <= vh
-        || archive.entries()[vh + 1..vb]
-            .iter()
-            .any(|entry| entry.file_type == 6)
-    {
-        return Err("PSX bank: body is not owned by the selected header".into());
-    }
-    let header = archive.entry(vh)?;
-    let body = archive.entry(vb)?;
-    let sep_bytes = if let Some(index) = options.sequence_entry {
-        if archive
-            .entries()
-            .get(index)
-            .is_none_or(|entry| !matches!(entry.file_type, 9 | 10))
-        {
-            return Err("PSX bank: sequence staging requires a sequence entry".into());
-        }
-        if index <= vh
-            || archive.entries()[vh + 1..index]
-                .iter()
-                .any(|entry| entry.file_type == 6)
-        {
-            return Err("PSX bank: sequence is not owned by the selected header".into());
-        }
-        archive.entry(index)?
-    } else {
-        &[]
-    };
-    let bank = Bank::parse(header)?;
-    let requested_layout = options.layout;
-    let expected_body = bank
-        .samples
-        .last()
-        .map_or(bank.body_prefix_bytes, |s| s.body_offset + s.encoded_bytes);
-    if expected_body != body.len() {
-        return Err(format!(
-            "PSX bank: VH describes {expected_body} VB bytes, entry {vb} has {}",
-            body.len()
-        )
-        .into());
-    }
-    let dma_bytes = body.len().div_ceil(64) * 64;
-    let mut failures = Vec::new();
-    let candidates: Vec<u8> = requested_layout.map_or_else(|| vec![0, 1, 2], |v| vec![v]);
-    let mut selection = None;
-    for layout in candidates {
-        let slots = loader::initialize_layout(executable, layout)?;
-        let slot = slots
-            .slots
-            .get(archive.entries()[vh].ram_ptr as usize)
-            .ok_or("PSX bank: invalid game bank slot")?;
-        let next_slot_boundary = slots
-            .slots
-            .iter()
-            .map(|s| s.spu_base)
-            .filter(|&base| base > slot.spu_base)
-            .min()
-            .unwrap_or(512 * 1024);
-        if header.len() <= slot.header_capacity as usize
-            && sep_bytes.len() <= slot.sequence_capacity as usize
-            && slot.spu_base as usize + dma_bytes <= next_slot_boundary as usize
-        {
-            selection = Some((layout, slot.clone(), next_slot_boundary));
-            break;
-        }
-        failures.push(format!("layout {layout} slot {} capacity: VH {}/{}, SEP {}/{}, SPU DMA end {:#x}, next slot boundary {next_slot_boundary:#x}", slot.index, header.len(), slot.header_capacity, sep_bytes.len(), slot.sequence_capacity, slot.spu_base as usize + dma_bytes));
-    }
-    let (layout, slot, next_slot_boundary) = selection.ok_or_else(|| {
-        format!(
-            "PSX bank: archive exceeds available layout capacity: {}",
-            failures.join("; ")
-        )
-    })?;
-    let offset = archive.entries()[vb].offset as usize;
-    let source = archive
-        .bytes()
-        .get(offset..offset + dma_bytes)
-        .ok_or("PSX bank: missing preserved final DMA padding")?;
-    let identity = Identity {
-        archive_sha256: sha256_hex(archive.bytes()),
-        header_entry: vh,
-        header_bytes: header.len(),
-        body_entry: vb,
-        sequence_entry: options.sequence_entry,
-        header_bank_id: bank.header_id,
-        game_bank_id: slot.vab_id,
-        layout,
-        requested_layout,
-        slot: slot.clone(),
-        body_bytes: body.len(),
-        dma_bytes,
-        next_slot_boundary,
-    };
+    let plan = plan(executable, archive, options)?;
+    let Plan {
+        identity,
+        bank,
+        header,
+        sequence: sep_bytes,
+        transfer: source,
+    } = plan;
+    let slot = &identity.slot;
+    let layout = identity.layout;
+    let dma_bytes = identity.dma_bytes;
+    let body = &source[..identity.body_bytes];
     let machine = boot::load_us(firmware, executable, 3_000_000)?;
     let mut execution = Execution::new(
         machine.cpu,
@@ -282,5 +190,133 @@ pub fn prepare(
         identity,
         calls,
         bank,
+    })
+}
+
+/// Validated single-bank staging shared by guest rendering and PS-X compilation.
+pub struct Plan<'a> {
+    pub identity: Identity,
+    pub bank: Bank,
+    pub header: &'a [u8],
+    pub sequence: &'a [u8],
+    pub transfer: &'a [u8],
+}
+
+pub fn plan<'a>(
+    executable: &Executable,
+    archive: &'a ArchiveImage,
+    options: &Options,
+) -> Result<Plan<'a>> {
+    Profile::identify(executable)?;
+    let vh = options.header_entry;
+    let vb = options.body_entry;
+    for (index, kind) in [(vh, 6), (vb, 7)] {
+        if archive
+            .entries()
+            .get(index)
+            .is_none_or(|entry| entry.file_type != kind)
+        {
+            return Err(format!("PSX bank: entry {index} must have type {kind}").into());
+        }
+    }
+    if vb <= vh
+        || archive.entries()[vh + 1..vb]
+            .iter()
+            .any(|entry| entry.file_type == 6)
+    {
+        return Err("PSX bank: body is not owned by the selected header".into());
+    }
+    let header = archive.entry(vh)?;
+    let body = archive.entry(vb)?;
+    let sep_bytes = if let Some(index) = options.sequence_entry {
+        if archive
+            .entries()
+            .get(index)
+            .is_none_or(|entry| !matches!(entry.file_type, 9 | 10))
+        {
+            return Err("PSX bank: sequence staging requires a sequence entry".into());
+        }
+        if index <= vh
+            || archive.entries()[vh + 1..index]
+                .iter()
+                .any(|entry| entry.file_type == 6)
+        {
+            return Err("PSX bank: sequence is not owned by the selected header".into());
+        }
+        archive.entry(index)?
+    } else {
+        &[]
+    };
+    let bank = Bank::parse(header)?;
+    let requested_layout = options.layout;
+    let expected_body = bank
+        .samples
+        .last()
+        .map_or(bank.body_prefix_bytes, |s| s.body_offset + s.encoded_bytes);
+    if expected_body != body.len() {
+        return Err(format!(
+            "PSX bank: VH describes {expected_body} VB bytes, entry {vb} has {}",
+            body.len()
+        )
+        .into());
+    }
+    let dma_bytes = body.len().div_ceil(64) * 64;
+    let mut failures = Vec::new();
+    let candidates: Vec<u8> = requested_layout.map_or_else(|| vec![0, 1, 2], |v| vec![v]);
+    let mut selection = None;
+    for layout in candidates {
+        let slots = loader::initialize_layout(executable, layout)?;
+        let slot = slots
+            .slots
+            .get(archive.entries()[vh].ram_ptr as usize)
+            .ok_or("PSX bank: invalid game bank slot")?;
+        let next_slot_boundary = slots
+            .slots
+            .iter()
+            .map(|s| s.spu_base)
+            .filter(|&base| base > slot.spu_base)
+            .min()
+            .unwrap_or(512 * 1024);
+        if header.len() <= slot.header_capacity as usize
+            && sep_bytes.len() <= slot.sequence_capacity as usize
+            && slot.spu_base as usize + dma_bytes <= next_slot_boundary as usize
+        {
+            selection = Some((layout, slot.clone(), next_slot_boundary));
+            break;
+        }
+        failures.push(format!("layout {layout} slot {} capacity: VH {}/{}, SEP {}/{}, SPU DMA end {:#x}, next slot boundary {next_slot_boundary:#x}", slot.index, header.len(), slot.header_capacity, sep_bytes.len(), slot.sequence_capacity, slot.spu_base as usize + dma_bytes));
+    }
+    let (layout, slot, next_slot_boundary) = selection.ok_or_else(|| {
+        format!(
+            "PSX bank: archive exceeds available layout capacity: {}",
+            failures.join("; ")
+        )
+    })?;
+    let offset = archive.entries()[vb].offset as usize;
+    let source = archive
+        .bytes()
+        .get(offset..offset + dma_bytes)
+        .ok_or("PSX bank: missing preserved final DMA padding")?;
+    let identity = Identity {
+        archive_sha256: sha256_hex(archive.bytes()),
+        header_entry: vh,
+        header_bytes: header.len(),
+        body_entry: vb,
+        sequence_entry: options.sequence_entry,
+        header_bank_id: bank.header_id,
+        game_bank_id: slot.vab_id,
+        layout,
+        requested_layout,
+        slot: slot.clone(),
+        body_bytes: body.len(),
+        dma_bytes,
+        next_slot_boundary,
+    };
+    Ok(Plan {
+        identity,
+        bank,
+        header,
+        sequence: sep_bytes,
+        transfer: source,
     })
 }
