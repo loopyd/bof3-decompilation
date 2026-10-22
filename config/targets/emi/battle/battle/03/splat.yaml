@@ -618,8 +618,10 @@ segments:
     - asm
     - func_801E0B64
   - - 66060
-    - asm
+    - c
     - func_801E0E0C
+    - '@source: src/bof3/battle/func_801E0E0C.c'
+    - '@behavior: Reports whether the first three D_80145E90 local work records are all strictly ready: inactive records are skipped, and an active record fails when its +0x80 halfword carries 0x4004, its +0x124 word carries 4, its +0x128 word carries 2, or, while +0x80 carries 0x4000, its bytes +0x86/+0x87 read 0x18 or its +0x85 byte reads 0x43.'
   - - 66316
     - asm
     - func_801E0F0C
@@ -1107,8 +1109,10 @@ segments:
     - '@source: src/bof3/battle/func_801E61F0_battle03.c'
     - '@behavior: Counts down the current queued slot timer byte +0x09 and, when it expires, clears flag bit 0x80 of the local work or enemy work record selected by that slot''s work pointer byte +0x05 before clearing the queued slot bytes.'
   - - 87740
-    - asm
+    - c
     - func_801E62BC
+    - '@source: src/bof3/battle/func_801E62BC.c'
+    - '@behavior: Rolls the current queued slot digit counter halfword +0x32 forward by one modulo 10, then redraws its digit run: for the slot digit index byte +0x0A counted down to 0 it forwards the recomputed halfword +0x36, the signed halfword +0x3A, the caller delay byte and the rolled digit to func_801D9684.'
   - - 88000
     - c
     - dispatchSlotByte1TableF20

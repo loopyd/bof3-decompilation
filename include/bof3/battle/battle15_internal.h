@@ -197,6 +197,13 @@ extern BattleSelectionHandler battlePanelStateHandlerTable6e34[]; /* @source 0x8
 extern BattleSelectionHandler battlePanelStateHandlerTable6e50[]; /* @source 0x800B6E50 @kind table */
 extern BattleLocalOffsetPair D_800B6C90[]; /* @source 0x800B6C90 @kind unknown */
 extern u8 D_800B6D00[]; /* @source 0x800B6D00 @kind unknown */
+/* Eight-byte rodata blocks holding the "1" and "0" cursor-label strings at
+ * +0x02; func_800B0B0C passes their base addresses to func_801AF390. */
+extern u8 D_800B6D20[]; /* @source 0x800B6D20 @kind string */
+extern u8 D_800B6D28[]; /* @source 0x800B6D28 @kind string */
+/* "Data"/"Pick"/"Best" string run; func_800B0B0C passes &D_800B6D30[slot*3]
+ * (three u16 rows, six bytes per panel slot) as the label record of each slot. */
+extern u16 D_800B6D30[]; /* @source 0x800B6D30 @kind string */
 extern u8 D_801462E4; /* @source 0x801462E4 @kind unknown */
 extern u8 D_801462EA; /* @source 0x801462EA @kind unknown */
 extern volatile u8   D_801462EF; /* @source 0x801462EF @kind unknown */
@@ -347,6 +354,10 @@ extern u8 D_80145518[][4]; /* @source 0x80145518 @kind unknown */
 /* Index-3 row of the 3-byte saved group/scroll/cursor table based at
  * 0x801454F4 (see BATTLE_SELECTION_SAVED_GROUP). Declared as named symbols
  * because the original encodes each read as a `%hi`/`%lo` pair. */
+/* 3-byte saved group/scroll/cursor rows indexed by three times the active
+ * message slot (func_80097EC0). Same table as the index-3 symbols below. */
+extern u8 D_801454F4[]; /* @source 0x801454F4 @kind table */
+extern u8 D_80144952; /* @source 0x80144952 @kind unknown */
 extern u8 D_801454FD; /* @source 0x801454FD @kind unknown */
 extern u8 D_801454FE; /* @source 0x801454FE @kind unknown */
 extern u8 D_801454FF; /* @source 0x801454FF @kind unknown */
@@ -372,6 +383,13 @@ extern s16 D_80149322; /* @source 0x80149322 @kind unknown */
  * SetSprt8 / SetSemiTrans are declared by <libgpu.h> (via bof3/psyq.h);
  * func_8014E5A0 is a game primitive-append helper (lifted in exe/slus_004.22). */
 void func_8014E5A0(u32 ot_index, u32 primitive_size);
+/* Panel-slot primitive/text helpers owned by the main EXE (0x8014xxxx).
+ * Argument widths come from func_800B0B0C's live original bytes: the two
+ * coordinate arguments are zero-extended to u16 for func_801AE3F0 and
+ * sign-extended to s16 for func_801AF390. func_8014F800 stays declared by
+ * <gpu/prim.h> (s16, s16, s32, u32, u32). */
+void func_801AE3F0(u16 arg0, u16 arg1, s32 arg2, s32 arg3, s32 arg4, u8 arg5);
+void func_801AF390(s16 arg0, s16 arg1, const u8* arg2, s32 arg3);
 /* INFERRED: 0x8014E3A0 is reached only from func_800A4BB4, which passes the
  * literal 0x1B in $a0; the callee itself lives outside this target, so the
  * parameter is modelled as an engine action id. Promotion needs the EXE-side

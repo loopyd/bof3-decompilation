@@ -80,7 +80,11 @@ typedef struct Battle03LocalWork {
   u8  unk_79;
   u8  pad_7a[6];
   u16 unk_80;
-  u8  pad_82[6];
+  u8  pad_82[3];
+  /* Identity triple tested by func_801E0E0C while unk_80 carries 0x4000. */
+  u8  unk_85;
+  u8  unk_86;
+  u8  unk_87;
   u16 unk_88;
   u16 unk_8a;
   u8  unk_8c;
@@ -681,7 +685,11 @@ void func_801D8AE4(s32 arg0, s32 arg1, s32 arg2);
 void func_801D8DF8(s32 arg0, s32 arg1, u32 arg2);
 u8   markBattlersMeetingOpposingThresholds(void);
 void drawDecimalGlyphRun(s16 arg0, u16 arg1, u8 arg2, s16 arg3);
-void func_801D9684(s16 arg0, u16 arg1, s32 arg2, u16 arg3);
+/* arg1 is the signed slot Y halfword: both call sites (func_801E5CA4 and
+ * func_801E62BC) sign-extend it in the original binary (`lh`) and the callee
+ * stores only its low half, so the declaration stays signed to reproduce that
+ * caller-side extension. */
+void func_801D9684(s16 arg0, s16 arg1, s32 arg2, u16 arg3);
 extern s8  D_80144952; /* @source 0x80144952 @kind unknown */
 extern u16 D_80033A08[]; /* @source 0x80033A08 @kind table */
 extern u16 D_801EAD30[]; /* @source 0x801EAD30 @kind table */
@@ -838,8 +846,6 @@ u8   countMessageTokens(u8* arg0);
 /* @kind: bss (map symbol: battleCurrentEnemyWorkState) — current Battle03EnemyWork pointer cell. */
 #define BATTLE_CURRENT_ENEMY_PTR                                               \
   PSX_REF(volatile Battle03EnemyWork*, 0x801eb4e8u)
-#define BATTLE_CURRENT_QUEUED_SLOT_PTR                                         \
-  SPAD_PTR_SLOT(volatile Battle03QueuedSlot, 0x801ec2e0u)
 #define BATTLE_CURRENT_QUEUED_PTR_4B20 SPAD_PTR_SLOT(volatile u8, 0x801eb4e0u)
 #define BATTLE_SLOT_STORE_FLAG(index)                                          \
   PSX_REF(volatile u8, 0x801ec339u + ((u32)(index) * 0x78u))

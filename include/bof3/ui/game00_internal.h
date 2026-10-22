@@ -499,6 +499,11 @@ typedef struct GameInputRecord {
 } GameInputRecord;
 /* @source 0x80144974 @kind unknown */
 extern GameInputRecord D_80144974[];
+/* @behavior learned-ability level halfword of the 0xA4-byte-stride character
+ * record selected by the mapped character index; func_801AF5B0 compares it
+ * against the required level reported by func_80166A10. */
+/* @source 0x8014497E @kind table */
+extern u8 D_8014497E[];
 /* @source 0x801CD358 @kind table */
 extern GameEntry0StateHandler D_801CD358[];
 /* @source 0x801CD374 @kind table */
@@ -672,6 +677,18 @@ extern u32         D_80146268;
  * helpers publish the direction-offset position for that record. */
 /* @source 0x80145F00 @kind table */
 extern u8          D_80145F00[];
+/* @behavior flags halfword of every 0x140-byte-stride character record read by
+ * func_801AF5B0: bit 4 marks the character element-locked. */
+/* @source 0x80145F10 @kind table */
+extern u8          D_80145F10[];
+/* @behavior learned-ability level halfword of every 0x140-byte-stride character
+ * record read by func_801AF5B0. */
+/* @source 0x80145F1A @kind table */
+extern u8          D_80145F1A[];
+/* @behavior level byte of every 0x140-byte-stride character record; read by
+ * func_801AF5B0 for ability kind 20. */
+/* @source 0x80145F1E @kind table */
+extern u8          D_80145F1E[];
 /* @behavior leading byte of each D_80146254-entry, 0x140-byte-stride record;
  * func_8019FF88 copies the per-kind byte D_801C8380[kind] into it and sets
  * bit 1 of the record's second byte at D_80145FBC. */
@@ -1231,10 +1248,12 @@ void retreatPanelField6ToNeg20(void);
 #define MOVEMENT_OFFSET_0(i)  PSX_REF(volatile s32, 0x80181B94u + (i) * 8)
 #define MOVEMENT_OFFSET_1(i)  PSX_REF(volatile s32, 0x80181B98u + (i) * 8)
 
-/* Misc. single fixed-address globals (read-only status flags) */
-#define GAME_UNK_80145558 PSX_REF(const volatile u32, 0x80145558u)
-#define GAME_UNK_80145554 PSX_REF(const volatile u32, 0x80145554u)
-#define GAME_UNK_801462EA PSX_REF(const volatile u8, 0x801462eau)
+/* Misc. single fixed-address globals (read-only status flags). Not volatile:
+ * the constant address then folds to `lui` + offset access, which is the form
+ * the original uses for each of these single reads. */
+#define GAME_UNK_80145558 PSX_REF(const u32, 0x80145558u)
+#define GAME_UNK_80145554 PSX_REF(const u32, 0x80145554u)
+#define GAME_UNK_801462EA PSX_REF(const u8, 0x801462eau)
 
 /* ---- RAM globals (D_ names match original game data patterns) ---- */
 

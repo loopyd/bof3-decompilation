@@ -109,8 +109,10 @@ segments:
     - asm
     - selectionSetupEnabled
   - - 5824
-    - asm
+    - c
     - func_80097EC0
+    - '@source: src/bof3/battle/func_80097EC0.c'
+    - '@behavior: Initialises the primary battle selection-grid scratch band at 0x80148570 from the active message-slot work record and the saved group/page/cursor row of the 0x801454F4 table; 0x80148584 receives bit 1 of the active selection slot flag word when bits 1 and 17 of that word are both set.'
   - - 6120
     - c
     - func_80097FE8
@@ -1469,6 +1471,8 @@ segments:
   - - 100600
     - c
     - func_800AF0F8
+    - '@source: src/bof3/battle/func_800AF0F8.c'
+    - '@behavior: Maps two 16.16 battle positions onto the render cell table, then writes the packet code of each remaining list key back into the render cell entry, rolling the primitive cursor back when the cell is out of table or its block does not fit the primitive arena.'
   - - 101044
     - asm
     - func_800AF2B4
@@ -1581,8 +1585,10 @@ segments:
     - asm
     - func_800B0AB0
   - - 107276
-    - asm
+    - c
     - func_800B0B0C
+    - '@source: src/bof3/battle/func_800B0B0C.c'
+    - '@behavior: Draws the three battle panel slots with their cursor sprites and label records, redrawing the slot named by the 0x801462E5 selection byte with the dedicated cursor label, then runs the final cursor pass when that byte has no high bit.'
   - - 107748
     - c
     - dispatchPanelTaskTable6a14

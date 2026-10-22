@@ -1,15 +1,28 @@
 #include "bof3/world/area03004_internal.h"
 
 /* @source 0x801E1320
- * @behavior draws a value-dependent icon row and formatted numeric label.
+ * @behavior draws the AREA030 value row at the requested origin: selects
+ * graphics mode 3/1, draws sprites 6 and 7 at (x, y) and (x + 0x58, y), reads
+ * the func_801E0B6C summary value, scans the 13 halfword thresholds of the
+ * frame copy of D_801D0C70 for the first entry above that value's low 16 bits,
+ * publishes the resulting index into D_801454EC and draws the icon record of
+ * the matching frame copy of D_801D0C3C at (x + 0x1D, y + 0x1D) followed by
+ * sprite 0x48 at the record's offset-derived x positions on the y + 0x21 row
+ * for its two flag bytes, then formats that value through D_801D0C8C into
+ * D_80145AD4, rewrites the first five spaces to 0xFF and submits the result at
+ * (x + 0x45, y + 9) through func_8014F800.
  * @status partial
- * @match 88.50
- * @residual the threshold scan's index counter is allocated to $v1 where the
- * original uses $a0 and re-derives the scan base from $sp instead of reusing
- * the $a3 icon base, so the scan loop plus the following record indexing and
- * D_801454EC store differ; the trailing space-fixup loop is rotated by the
- * loop optimizer and compares with sltu where the original compares with slt;
- * the object is 20 bytes longer than the reviewed boundary
+ * @match 90.40
+ * @residual the threshold scan loop is rotated by the loop optimizer: it peels
+ * the index-0 test and closes with a conditional back edge, so the counter lands
+ * in $v1 and the scan base is re-derived from $sp per iteration where the
+ * original tests at the top, jumps back unconditionally with the counter in $a0
+ * and reuses the $a3 icon base for both the scan and the following record index;
+ * the record selection, D_801454EC store and the trailing space fixup then sit
+ * in a shifted schedule and the object stays twelve bytes longer. Array
+ * subscripting, pointer-arithmetic subscripting and a break-out form all emit
+ * that same rotated loop, so the shape is a loop-optimizer decision rather than
+ * an address-spelling one
  */
 void func_801E1320(s16 x, s16 y)
 {
@@ -18,7 +31,7 @@ void func_801E1320(s16 x, s16 y)
     u32 value;
     u32 index;
     IconRecord* record;
-    u8* text;
+    s32 i;
 
     submitTpageDrawMode(3, 1);
     func_801E0DCC(6, 1, x, y);
@@ -41,13 +54,10 @@ void func_801E1320(s16 x, s16 y)
     }
 
     sprintf((char*)D_80145AD4, (char*)D_801D0C8C, value & 0xFFFF);
-    text = D_80145AD4;
-    while (text < D_80145AD4 + 5) {
-        if (*text == 0x20) {
-            *text = 0xFF;
+    for (i = 0; i < 5; i++) {
+        if (D_80145AD4[i] == 0x20) {
+            D_80145AD4[i] = 0xFF;
         }
-        text++;
     }
     func_8014F800((s16)(x + 0x45), (s16)(y + 9), 0, 5, (u32)D_80145AD4);
-
 }
