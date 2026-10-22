@@ -6,7 +6,7 @@
  * @match 100.00
  * @residual none
  */
-u8 pickTargetOrFf(s8 arg0) {
+u8 pickTargetOrFf(u8 arg0) {
     s32 result;
 
     if (D_801462F3 == 1) {

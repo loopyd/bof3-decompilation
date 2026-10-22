@@ -836,10 +836,10 @@ void drawSpritePrimTpage1(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 ar
 u8   pickRandomUnblockedId(u8 arg0);
 u8   func_801E2A88(u8 arg0);
 u8   func_801E2CA4(void);
-u8   pickTargetByMode(s8 arg0);
+u8   pickTargetByMode(u8 arg0);
 u8   func_801E2D90(void);
 u8   enemyReadyOrHelper1(void);
-u8   pickTargetOrFf(s8 arg0);
+u8   pickTargetOrFf(u8 arg0);
 void dispatchPresentationState1(void);
 void dispatchPresentationByte3(void);
 extern Battle03Handler D_801EB454[]; /* @source 0x801EB454 @kind unknown */

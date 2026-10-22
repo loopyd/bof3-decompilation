@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-u8 pickTargetByMode(s8 arg0) {
+u8 pickTargetByMode(u8 arg0) {
   u8 value;
 
   if (BATTLE_GLOBAL_BYTE_62F3 == 1u) {
