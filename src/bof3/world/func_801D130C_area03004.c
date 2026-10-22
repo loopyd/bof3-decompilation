@@ -11,9 +11,9 @@
  * into the palette-stage serial 0x80145988, advances the work-record stage byte
  * at work offset 3 and calls func_8014D4E0 without arguments.
  * @source 0x801D130C
- * @status partial
- * @match 98.65
- * @residual The row-base add follows the sub-block shift instead of preceding it; one instruction placement differs at unchanged 296-byte size.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 /* The loop keeps the original's `src[i]` indexed load and gives the element
  * offset a second use as the destination byte offset, so cc1 shares one scale
@@ -45,9 +45,9 @@ void func_801D130C(void) {
   do {
     elem = (u32)i * 2u;
     index = rows[0];
-    row = (u32)(index >> 3) * 0x200u;
+    row = 0x80037800u + (u32)(index >> 3) * 0x200u;
     sub = (u32)(index & 7u) * 0x40u;
-    src = PSX_PTR(u16, 0x80037800u + sub + row);
+    src = PSX_PTR(u16, sub + row);
     value = src[i];
     *(u16*)((u8*)dst + 0xC0u + elem) = value | 0x8000u;
     i++;
