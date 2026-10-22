@@ -952,9 +952,9 @@ extern GameEntry0StateHandler D_801C7B88[];
 /* @source 0x801C7B98 @kind unknown */
 extern GameEntry0StateHandler D_801C7B98[];
 /* @source 0x801C7BA4 @kind unknown */
-extern const GameEntry0StateHandler D_801C7BA4[];
+extern GameEntry0StateHandler D_801C7BA4[];
 /* @source 0x801C7BB0 @kind unknown */
-extern const GameEntry0StateHandler D_801C7BB0[];
+extern GameEntry0StateHandler D_801C7BB0[];
 
 /* @source 0x80143FC8 @kind bss */
 extern RecordSlot recordTable[20];

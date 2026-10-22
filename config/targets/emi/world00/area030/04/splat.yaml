@@ -159,8 +159,10 @@ segments:
     - '@source: src/bof3/world/seedMenuScratch.c'
     - '@behavior: seeds the AREA030 scratch record for the later menu phase and bumps scratch state byte `0x03`.'
   - - 24360
-    - asm
+    - c
     - func_801D6B28
+    - '@source: src/bof3/world/func_801D6B28.c'
+    - '@behavior: AREA030 selection-panel marker refresh: runs the shared panel reset func_8014D4E0, submits the tpage draw mode (0, 1), draws the three panel lines through func_801E0DCC, clamps the work-record x word 0x0C to 0x39..0x79 and its companion word 0x10 to 0x41..0x94 in place, then redraws the selection marker row through func_801D3244 (clamped x word as a signed halfword, 0xB3, 0x20, work byte 6 low three bits doubled, 1, and a mode flag that is 1 when word 0x10 is below word 0x0C or word 0x0C plus 0x20 is below word 0x10) and func_801D2C34 (clamped companion word as a signed halfword, 0xB3, arg0 byte as a flag, 1).'
   - - 24752
     - c
     - func_801D6CB0

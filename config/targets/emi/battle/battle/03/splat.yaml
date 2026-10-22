@@ -474,6 +474,8 @@ segments:
   - - 57284
     - c
     - queueScriptEvent
+    - '@source: src/bof3/battle/queueScriptEvent.c'
+    - '@behavior: Resolves one event id from the ten-halfword rows of the 0x801EB09C script table selected by the low byte of arg0 and the halfword selected by the low byte of arg1, passes that halfword through func_801502D0 and submits the result to func_801DE560 with dispatch byte 2 and halfword 0x2D, which fills the first free event slot among slots 2 through 7.'
   - - 57384
     - c
     - centerFieldText

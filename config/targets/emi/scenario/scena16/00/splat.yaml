@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801F7230
   - - 2960
-    - asm
+    - c
     - func_801F7790
+    - '@source: src/bof3/scenario/func_801F7790_scena16.c'
+    - '@behavior: Runs the secondary SCENA16 controller selected by the state byte D_80146875 through a ten-entry absolute jump table: state 0, while the gate word D_80143C40 is clear, runs func_8014ECAC(1) and advances; state 1 draws the 0x50/0x50 window from D_80010004 over the shared VRAM base and, while the gate word is clear, reloads 0x7F into D_80146876 and advances; state 2 re-draws that window, counts D_80146876 down and at zero runs func_8014ECAC(0) before advancing; state 3 keeps re-drawing that window while the gate word is set and otherwise runs func_8014ECAC(1), stores 0x30 in D_80146866, arms effect bank 0x1F in D_8014832E, publishes func_8019601C() in scratchpad 0x1F800000 and, unless that byte is 0xFF, seeds the 0x74-byte row D_80143FC8 + index * 0x74 (+0 = 1, +5 = 0x13, the signed words D_801492D8 + 0x1C0, D_801492DA and D_801492DC at +0x64/+0x68/+0x6C, +9 = 0xFF) before advancing; state 4, while the gate word is clear, clears D_80146876 and advances; state 5 draws the 0x48/0x50 window from D_80010006, counts D_80146876 up and, at 0x20, copies the palette block, reloads 0x7F and advances; at other values it clamps the palette channels with the count; state 6 re-draws that window, counts D_80146876 down and at zero reloads 0x20 and advances; state 7 counts D_80146876 down and, above zero, re-draws that window and clamps the palette channels with the fresh count, otherwise copies the palette block, reloads 0x1E and advances; state 8 counts D_80146876 down and advances at zero; state 9 runs func_80161C20(2, 100, 0x20), seeds the front selector context func_8019FA28(2, 0x340000, 0x430000, 3), requests secondary state 4 in D_80146874 and returns the state byte to 0. The advancing states either increment D_80146875 through its address or through one %hi/%lo store, and the 0x74-byte row writes re-read the index byte from scratchpad.'
   - - 4292
     - asm
     - func_801F7CC4

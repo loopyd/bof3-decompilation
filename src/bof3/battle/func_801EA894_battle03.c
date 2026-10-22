@@ -6,9 +6,7 @@
  * the state; finally it redispatches the panel handler.
  * @status partial
  * @match 75.00
- * @residual Allocator residual: only the register pair for the state halfword and the
- * flag constant differs (original `li/lh v1/v0`, current `v0/v1`); 24/24 instructions,
- * 96/96 bytes, first mismatch +0x000C.
+ * @residual Halfword-state and flag-constant register allocation differ at unchanged 96-byte size.
  */
 void func_801EA894(void) {
     u8* panel = (u8*)D_80148648;

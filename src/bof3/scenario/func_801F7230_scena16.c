@@ -32,27 +32,13 @@
  * D_801492DC at +0x64/+0x68/+0x6C, +9 = 0x60) before advancing; state 11, at
  * D_80146867 = 0x60, seeds the front selector context
  * func_8019FA28(0x1F, 0x70000, 0x140000, 0), stores 0xFF in D_80143F1D, runs
- * func_80161CD0(6, 0x50, 0x40) and clears D_80146866, D_80146874 and
- * D_80146875. The eight advancing states increment D_80146875 through its
- * address, and the 0x74-byte row writes re-read the index byte from scratchpad.
+ * func_80161CD0(6, 0x50, 0x40), clears D_80146866 and D_80146875 and sets
+ * D_80146874 to 3. States 0 through 10 advance D_80146875; states 0, 4, 5,
+ * 8, 9 and 10 use its address. The row writes re-read the scratchpad index.
  * @source 0x801F7230
  * @status partial
- * @match 88.41
- * @residual 305 of 345 instructions match; 1380 current bytes versus 1376 original.
- * The 0x74-byte row seed is instruction-identical: the scratchpad byte is published
- * through `extern u8 D_1F800000`, so its base materialises `lui` plus `addiu` and
- * each row statement re-reads `lbu` without a narrow extend, and the frame is back
- * to the original 32 bytes. Four differences remain. (1) The switch table addend
- * still needs the reviewed 0x801F6C04 `.rodata` placement, which can only validate
- * once every case label sits at its original address. (2) State 0 emits its
- * increment load one slot after the gate-word load; the original issues it first.
- * (3) State 3 keeps the shared call tail's `lui v1, 0x8001` in its jump delay slot,
- * making that block one instruction long, while state 9 loses one because its final
- * increment store merges into state 10's increment tail; state 11 hoists
- * `li a2, 0x40` and leaves a `nop` in the func_80161CD0 delay slot. Those three
- * count deltas cancel to +1 instruction and shift every case label from state 4
- * through state 9 by 4 bytes. All four are scheduler/allocator picks with no
- * remaining clean-C representation lever.
+ * @match 98.84
+ * @residual The shared state-increment tail uses a0 instead of v1 for its byte pointer; four instructions differ at unchanged 1376-byte size.
  */
 void func_801F7230(void) {
   u8* next;
@@ -60,6 +46,7 @@ void func_801F7230(void) {
   switch (D_80146875) {
     case 0: {
       u8 step;
+      u16 flags;
 
       if (D_80143C40 == 0u) {
         func_8014ECAC(1u);
@@ -67,8 +54,10 @@ void func_801F7230(void) {
         func_80161C20(6u, 0x50, 8);
         next = &D_80146875;
         step = *next;
-        D_80146258 |= 0x80u;
-        *next = (u8)(step + 1u);
+        flags = D_80146258;
+        step++;
+        D_80146258 = flags | 0x80u;
+        *next = step;
       }
       break;
     }
@@ -159,7 +148,8 @@ void func_801F7230(void) {
       break;
 
     case 9: {
-      u8 step;
+      u8* next;
+      u8  step;
 
       if (D_80143F03 == 2u) {
         next = &D_80146875;

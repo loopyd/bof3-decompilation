@@ -12,32 +12,30 @@
  * at work offset 3 and calls func_8014D4E0 without arguments.
  * @source 0x801D130C
  * @status partial
- * @match 38.67
- * @residual Live mismatch is a same-shape register/scheduling residual, not a
- * semantic one (live `lift gate`: 29/75 insns, 296->300 bytes, first +0x0008,
- * byte-match DIFFER): the whole function is instruction-for-instruction the
- * original's shape except (1) the original schedules the independent
- * `sll i<<1` into the lbu load-delay slot (`lbu v0,0(t0); sll a0,a1,1;
- * srl v1,v0,3`) while cc1 fills that slot with a nop and recomputes the shift
- * after the address adds (one extra instruction, +4 bytes), and (2) the
- * register web lands one class lower (i in $4, row byte address in $3, source
- * base in $2, destination base in $1 versus the original's i in $5, address in
- * $8, base in $7, destination in $6); the tail block including the $at
- * row-end stores, the signed -64 byte seeds and the per-access cursor reloads
- * is already an exact shape match. The source base and sub-block terms are
- * re-derived through the exact sibling func_801C3154 split form to keep the
- * original `row + base` then `+ sub` operand order; the remaining clean-C lever
- * is making the source element shift available before the shared row byte is
- * used, i.e. an explicitly early element-index temporary.
+ * @match 98.65
+ * @residual The row-base add follows the sub-block shift instead of preceding it; one instruction placement differs at unchanged 296-byte size.
+ */
+/* The loop keeps the original's `src[i]` indexed load and gives the element
+ * offset a second use as the destination byte offset, so cc1 shares one scale
+ * multiply between the load and the store: that places `sll i<<1` in the lbu
+ * load-delay slot. The destination base is the row address minus its
+ * 0x60-element prefix so the store keeps the original's `0xC0` displacement and
+ * two-byte pointer step. The tail re-reads the volatile cursor cell once per
+ * original read; each read owns its local because a shared local moves the
+ * whole tail web into $a0 and loses the original's $v1/$v0 split.
  */
 void func_801D130C(void) {
-  u16* dst;
-  u16* src;
   u8*  cur;
+  u8*  cur2;
+  u8*  cur3;
+  u8*  cur4;
   u8*  rows;
+  u16* src;
+  u16* dst;
   u16  value;
   u32  row;
   u32  sub;
+  u32  elem;
   u8   index;
   s32  i;
 
@@ -45,13 +43,13 @@ void func_801D130C(void) {
   rows = &D_80145EB7;
   dst = PSX_PTR(u16, 0x80039600u);
   do {
+    elem = (u32)i * 2u;
     index = rows[0];
     row = (u32)(index >> 3) * 0x200u;
-    src = PSX_PTR(u16, 0x80037800u + row);
     sub = (u32)(index & 7u) * 0x40u;
     src = PSX_PTR(u16, 0x80037800u + sub + row);
     value = src[i];
-    dst[0x60 + i] = value | 0x8000u;
+    *(u16*)((u8*)dst + 0xC0u + elem) = value | 0x8000u;
     i++;
   } while (i < 0x1F);
 
@@ -59,18 +57,18 @@ void func_801D130C(void) {
   PSX_REF(u16, 0x800396C0u) = 0;
   PSX_REF(u16, 0x800396FEu) = 0;
   cur[0xB] = cur[0x27];
-  cur = D_1F800044;
-  cur[0] |= 0x20u;
-  cur = D_1F800044;
-  cur[0x27] = 0x7B;
-  cur = D_1F800044;
-  cur[0x5C] = 1;
-  cur = D_1F800044;
-  ((s8*)cur)[0x5D] = -0x40;
-  cur = D_1F800044;
-  ((s8*)cur)[0x5E] = -0x40;
-  cur = D_1F800044;
-  ((s8*)cur)[0x5F] = -0x40;
+  cur2 = D_1F800044;
+  cur2[0] |= 0x20u;
+  cur2 = D_1F800044;
+  cur2[0x27] = 0x7B;
+  cur3 = D_1F800044;
+  cur3[0x5C] = 1;
+  cur3 = D_1F800044;
+  ((s8*)cur3)[0x5D] = -0x40;
+  cur3 = D_1F800044;
+  ((s8*)cur3)[0x5E] = -0x40;
+  cur4 = D_1F800044;
+  ((s8*)cur4)[0x5F] = -0x40;
   D_80145988 = 1;
   cur = D_1F800044;
   cur[3] = cur[3] + 1u;

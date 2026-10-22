@@ -59,14 +59,16 @@ extern s16 D_801492DC;
 extern volatile u16 D_8014932C;
 /* @source 0x8014930C @kind unknown */
 extern s32          D_8014930C;
-/* @source 0x80149314 @kind unknown */
-extern volatile u32 D_80149314;
+/* @source 0x80149314 @kind unknown. This target uses the plain gate-word
+ * view also declared by scena00; no asynchronous writer is evidenced. */
+extern u32          D_80149314;
 /* @source 0x80149322 @kind unknown */
-extern volatile u16 D_80149322;
+extern u16          D_80149322;
 /* @source 0x80147A90 @kind unknown */
 extern s32          D_80147A90;
-/* @source 0x80143F1D @kind unknown */
-extern volatile u8  D_80143F1D;
+/* @source 0x80143F1D @kind unknown. The plain cue-byte view agrees with
+ * scena00; this target supplies no asynchronous writer evidence. */
+extern u8  D_80143F1D;
 /* @source 0x80143FC8 @kind table — base of the 0x74-byte object rows seeded by
  * the 0x801F7230 secondary controller. */
 extern u8 D_80143FC8[];
@@ -86,10 +88,11 @@ extern volatile u16 D_80010004;
 extern volatile u16 D_80010006;
 /* @source 0x80010008 @kind unknown */
 extern volatile u16 D_80010008;
-/* @source 0x80010020 @kind unknown */
-extern volatile u16 D_80010020;
+/* @source 0x80010020 @kind unknown. Window selectors use a plain table view.
+ * The owning image and writers of the 0x80010000 block remain unverified. */
+extern u16 D_80010020;
 /* @source 0x80010022 @kind unknown */
-extern volatile u16 D_80010022;
+extern u16 D_80010022;
 /* @source 0x80145EC4 @kind unknown — front selector pair, plain RAM (every
  * other target declares it non-volatile); the volatile view blocked the
  * original schedule around the closing calls. */

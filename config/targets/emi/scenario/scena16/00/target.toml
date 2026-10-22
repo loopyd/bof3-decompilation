@@ -37,3 +37,14 @@ psyq_source = "src/bof3/support/scena16_psyq.c"
 headers = [
     "include/bof3/scenario/scena16_internal.h",
 ]
+
+[[matching.section_placements]]
+function = 0x801F7790
+section = ".rodata"
+address = 0x801F6C34
+size = 0x28
+[[matching.section_placements]]
+function = 0x801F7230
+section = ".rodata"
+address = 0x801F6C04
+size = 0x30

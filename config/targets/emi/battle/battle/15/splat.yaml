@@ -347,6 +347,8 @@ segments:
   - - 29896
     - c
     - func_8009DCC8
+    - '@source: src/bof3/battle/func_8009DCC8.c'
+    - '@behavior: Reads the battle selection index D_801463C0, the active battler byte D_80146374 and the base value byte D_80146394, looks the selected element byte up in the 0x14-stride table D_801CA71B, resolves the battle modifier through func_800A2880 and stores the signed halfword result in field +0x04 of the selection record pointer D_801463A0.'
   - - 29984
     - c
     - func_8009DD20
