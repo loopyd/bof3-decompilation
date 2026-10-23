@@ -44,13 +44,11 @@
  * D_80146875.
  * @source 0x801FA7D8
  * @status partial
- * @match unavailable
- * @residual Comparison is unavailable because the generated jump table differs from the original.
- * Entry 5 of the 18-entry table at 0x801F6C58 differs by four bytes; the
- * remaining entries match. Generated text is 1940 bytes, but the frame is
- * 0x30 rather than the original 0x20. No native match result qualifies until
- * the table matches. Case 8 stores the counter before clearing the effect
- * bank; case 9 advances state only when progress is 0x14.
+ * @match 98.35
+ * @residual 477/485 instructions match at the original 1940-byte size.
+ * The 18-word case table at 0x801F6C58 matches. Eight prologue/epilogue
+ * instructions differ because the generated frame is 0x30 rather than 0x20.
+ * No body access uses the extra 16 bytes; their allocation cause is unresolved.
  */
 void func_801FA7D8(void) {
     if ((u32)(D_80146875 - 4u) < 3u) {
@@ -104,8 +102,9 @@ void func_801FA7D8(void) {
 
     case 4: {
         u16 *counter = (u16 *)&D_80146876;
-        u16 *world = (u16 *)&D_80147A96;
-        s32  step;
+        u8  *mode;
+        u16 *world;
+        u8   table_value;
 
         if (*counter != 0u) {
             *counter = (u16)(*counter - 1u);
@@ -114,19 +113,21 @@ void func_801FA7D8(void) {
             *(u8 *)&g_ScenarioProgress += 1;
         }
 
-        if (D_80146866 == 0u) {
+        mode = (u8 *)&D_80146866;
+        if (*mode == 0u) {
             break;
         }
 
-        D_80146866 = (u8)(D_80146866 - 1u);
-        step = D_801FCA4C[D_80143E6C & 0xFu];
-        *world = (u16)(*world + (s32)(s8)step * 4);
+        table_value = D_801FCA4C[D_80143E6C & 0xFu];
+        *mode = (u8)(*mode - 1u);
+        world = (u16 *)&D_80147A96;
+        *world = (u16)(*world + (s32)((u32)(s32)(s8)table_value << 2));
         break;
     }
 
     case 5: {
-        u16 *world = (u16 *)&D_80147A96;
-        s32  step;
+        u16 *world;
+        u8   table_value;
 
         if (*(u8 *)&g_ScenarioProgress == 0x11u) {
             D_80146876 = 0x3cu;
@@ -138,8 +139,9 @@ void func_801FA7D8(void) {
         }
 
         D_80146866 = (u8)(D_80146866 - 1u);
-        step = D_801FCA4C[D_80143E6C & 0xFu];
-        *world = (u16)(*world + (s32)(s8)step * 4);
+        world = (u16 *)&D_80147A96;
+        table_value = D_801FCA4C[D_80143E6C & 0xFu];
+        *world = (u16)(*world + (s32)((u32)(s32)(s8)table_value << 2));
         break;
     }
 
@@ -256,11 +258,14 @@ void func_801FA7D8(void) {
         u16  remaining = *counter;
 
         if (remaining != 0u) {
-            u32 index = remaining & 0xfu;
+            u32  index = remaining & 0xfu;
+            s32 *accum = (s32 *)&D_801469EC;
+            s32  delta;
 
-            D_801469EC += (s32)(s8)D_801FCA4C[index] << 11;
+            *accum += (s32)((u32)(s32)(s8)D_801FCA4C[index] << 11);
+            delta = (s32)((u32)(s32)(s8)D_801FCA4C[index] << 11);
             *counter = (u16)(remaining - 1u);
-            D_801469F0 -= (s32)(s8)D_801FCA4C[index] << 11;
+            D_801469F0 -= delta;
             break;
         }
 
