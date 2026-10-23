@@ -4,17 +4,15 @@
  * @behavior Emits 32 semi-transparent Gouraud triangles as a radial fan.
  * Each triangle joins the center to two radius-scaled angular samples, with
  * the next sample wrapping to angle zero for the final triangle.
- * @status partial
- * @match 97.14
- * @residual 102/105 instructions at the original 420-byte size and 0x40 frame.
- * The endpoint handoff sign-extends s2 instead of moving it to s1, and the
- * loop test omits the original halfword mask. The angle register roles match.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801F2F04(s16 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4) {
   s32 temp_lo_1;
   s32 temp_lo_2;
   s32 wrapped;
-  s16 next;
+  s32 next;
   s32 angle;
   u8* primitive;
 
@@ -40,7 +38,8 @@ void func_801F2F04(s16 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4) {
     temp_lo_1 = arg2 * func_801783C8((u16)wrapped);
     angle = next;
     *(s16*)(primitive + 0x18) = arg0 + (temp_lo_1 >> 12);
-    temp_lo_2 = arg2 * func_801782FC((u16)wrapped);
+    next = func_801782FC((u16)wrapped);
+    temp_lo_2 = arg2 * next;
     primitive[4] = arg3;
     primitive[5] = arg3;
     primitive[6] = arg3;
