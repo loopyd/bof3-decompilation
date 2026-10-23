@@ -1,4 +1,4 @@
-#include "bof3/battle/battle15_internal.h"
+#include "base/types.h"
 
 extern u8* volatile g_battle_work; /* @source 0x1F800044 @kind data */
 
