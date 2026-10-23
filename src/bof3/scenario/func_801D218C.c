@@ -17,9 +17,9 @@
  * random colour into primitive bytes 0x04/0x05 and 0x0C/0x0D with 0x20 in
  * bytes 0x06/0x0E, and queues each primitive with func_8014E5A0(2, 0x14) until
  * the index reaches the count.
- * @status partial
- * @match 97.50
- * @residual Initial sample storage precedes the count load and loop guard instead of following them; four instruction positions differ at unchanged 640-byte size.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801D218C(void) {
   s32*          base;
@@ -27,6 +27,9 @@ void func_801D218C(void) {
   u8*           prim;
   s32           i;
   s32           graph_value;
+  s32           count_or_ready;
+  s32           rotation_or_product;
+  s32           sample_or_scale;
   s32           phase;
   s32           projected;
   s32           depth;
@@ -38,12 +41,14 @@ void func_801D218C(void) {
   *(s32*)&D_1F800008 = rand() & 0x3f;
   i = 1;
   D_1F800014.vx = 0;
-  D_1F800014.vy = (s16)((func_801782FC(D_1F800004) * *base) >> 12);
+  rotation_or_product = func_801782FC(D_1F800004) * *base;
   D_1F800014.vz = 0;
-
   stage = (s32*)(base + 1);
-
-  while (i < stage[2]) {
+  count_or_ready = stage[2];
+  count_or_ready = i < count_or_ready;
+  sample_or_scale = rotation_or_product >> 12;
+  D_1F800014.vy = (s16)sample_or_scale;
+  while (count_or_ready) {
     if (GetGraphType() == 1 || GetGraphType() == 2) {
       graph_value = 0x2a5;
     } else {
@@ -69,7 +74,9 @@ void func_801D218C(void) {
     phase = (s32)((s32)(((((u8*)D_1F800044)[0x0b]) + i + 2) & 0x0fu) << 8);
     D_1F800014.vx = 0;
     stage[0] = phase;
-    D_1F800014.vy = (s16)((func_801782FC(phase) * stage[-1]) >> 12);
+    rotation_or_product = func_801782FC(phase);
+    sample_or_scale = stage[-1];
+    D_1F800014.vy = (s16)((rotation_or_product * sample_or_scale) >> 12);
     D_1F800014.vz = (s16)(-(i << 6));
 
     RotTransPers(&D_1F800014, (long*)(prim + 0x10), (long*)&projected,
@@ -87,5 +94,7 @@ void func_801D218C(void) {
     func_8014E5A0(2, 0x14);
 
     i++;
+    count_or_ready = stage[2];
+    count_or_ready = i < count_or_ready;
   }
 }
