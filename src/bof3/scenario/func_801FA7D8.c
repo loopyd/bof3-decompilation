@@ -44,62 +44,11 @@
  * D_80146875.
  * @source 0x801FA7D8
  * @status partial
- * @match 94.64
- * @residual Instruction count and size agree with the original (485/485
- * instructions, 1940/1940 bytes) and 459/485 instructions match, but 26
- * instructions differ: eight are the stack-frame setup/teardown words (the
- * frame is 0x30 instead of 0x20) and eighteen are placed or allocated
- * differently in four regions
- * (case 4/5's shared D_80146866/D_80147A96 tail: the original materialises
- * `u8 *` and `u16 *` addresses where this source folds them, and the original
- * reads the D_801FCA4C step with `lbu` + a register sign extension where this
- * source folds it into a signed byte load; case 6's tail; the case 11/12 state
- * handoffs; case 14's ramp). Shape evidence: measured with the mission-local
- * normalised .text diff (same instruction multiset per case).
- *
- * Live gate state: bin/asm-diff and bin/byte-match both abort for this selector
- * with `reviewed .rodata placement for func_801FA7D8 does not match original
- * bytes`, so no diff or byte verdict is available while the generated jump
- * table differs from the original 0x48 bytes at 0x801F6C58. Two of its
- * eighteen entries are off, each by one instruction placed in a different
- * basic block: entry 5 (case 5, +4) because the D_80147A96 pointer is
- * materialised in the case-4 counter-load delay slot instead of the case-4
- * tail, and entry 9 (case 9, -4) because case 8's `li v0,20` is sunk into its
- * `beqz` delay slot. The same request minus the placement assertion reports
- * 422/485 (87.01%).
- *
- * Measured clean-C shapes that did not move the residual: s32/u32/u16/s16/u8/s8
- * step locals, inline and `(u8)`-cast step expressions, `shift` spelling, `u8 *`
- * / `u16 *` pointer locals for D_80146866 and D_80147A96, `u32 *` and `u8 *`
- * views of the record words, struct-typed record access, hoisted index locals,
- * argument locals for func_8015477C, both statement orders for the case 4/5
- * tail, and statement-order permutations of case 6's seeding block. The frame
- * residual is 16 bytes of reserved-but-unused stack: gcc reserves one outgoing
- * argument slot pair for the two D_80143FFC/D_80144000 memory arguments of the
- * func_8015477C call in case 6, and no clean-C argument spelling tried
- * (locals, casts, pointer views, prototype variants) removes it. Confirmed
- * since: the frame is reserved as `vars` with no stack access anywhere in the
- * object; literal arguments to that call give vars=0, and hoisting the byte
- * offset (`u32 off = (u32)*scratch * 0x74u;`) gives vars=0/frame 0x20 but adds
- * a callee-saved register and loses 20 instructions (480 total), so it is not
- * the original shape either.
- *
- * The case 9 `D_80146875 = 0xa` store belongs inside the progress test: the
- * original's `bne` at 0x801FAD00 targets the epilogue, so progress != 0x14
- * returns without storing. Moving the store inside the `if` reproduces that
- * control flow and gives case 9 the original's 15 instructions, but the live
- * aligned match then drops to 393/485 because case 8 stays one instruction
- * short (20 vs 21) and every later case shifts by 4 bytes; the unconditional
- * store is therefore retained here until case 8 is settled. The case 4/5 step
- * load also stays `lb`+`sll 2` for every spelling tried (s32/u32/u8 step
- * locals, inline cast, nested declaration); the original's
- * `lbu`+`sll 0x18`+`sra 0x16` folds the byte sign extension into the load, a
- * combine difference rather than a source shape, and it is the sole reason
- * case 5 has 30 instructions instead of 31.
- * Next untried rung: the opt-in compiler-profile probe (bin/flag-search, or
- * each installed compiler via --compiler ID) is the decisive evidence; the
- * permuter is the only other candidate. Neither is authorised for this
- * mission, and both are blocked until the jump-table placement verifies.
+ * @match unavailable
+ * @residual Comparison is unavailable because the generated jump table differs from the original.
+ * The generated 18-entry table
+ * at 0x801F6C58 must match before native instruction or byte results qualify.
+ * The case-9 state store is conditional on progress 0x14, as in the original.
  */
 void func_801FA7D8(void) {
     if ((u32)(D_80146875 - 4u) < 3u) {
@@ -258,8 +207,8 @@ void func_801FA7D8(void) {
         if (*(u8 *)&g_ScenarioProgress == 0x14u) {
             func_80164020(0, 1);
             D_80146876 = 0x25cu;
+            D_80146875 = 0xau;
         }
-        D_80146875 = 0xau;
         break;
 
     case 10: {
