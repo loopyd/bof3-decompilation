@@ -13,7 +13,8 @@
  * func_80161C20(6, 0x50, 8), raises flag 0x80 in the mode word D_80146258 and
  * advances; state 1 draws the 0x7A/0x64 window from D_80010020 over the shared
  * VRAM base and, while the gate word is clear, clears D_80146876 and advances;
- * state 2 counts D_80146876 up, re-draws that window and, at 0x7F, runs
+ * state 2 counts D_80146876 up, runs func_8016C0C0(counter, counter),
+ * re-draws that window and, at 0x7F, runs
  * func_8014ECAC(0), clears the counter and advances; state 3 keeps re-drawing
  * that window while the gate word is set and otherwise arms effect bank 0x1F in
  * D_8014832E, runs func_8015C088/func_8015C100/func_8014ECAC(1), stores 1 in
@@ -36,16 +37,16 @@
  * D_80146874 to 3. States 0 through 10 advance D_80146875; states 0, 4, 5,
  * 8, 9 and 10 use its address. The row writes re-read the scratchpad index.
  * @source 0x801F7230
- * @status partial
- * @match 98.84
- * @residual The shared state-increment tail uses a0 instead of v1 for its byte pointer; four instructions differ at unchanged 1376-byte size.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
+/* Keep each state's advancement pointer local to that state. */
 void func_801F7230(void) {
-  u8* next;
-
   switch (D_80146875) {
     case 0: {
-      u8 step;
+      u8* next;
+      u8  step;
       u16 flags;
 
       if (D_80143C40 == 0u) {
@@ -99,15 +100,20 @@ void func_801F7230(void) {
       D_80146875 = (u8)(D_80146875 + 1u);
       break;
 
-    case 4:
+    case 4: {
+      u8* next;
+
       if (D_80146867 == 0x54u) {
         func_8014ECAC(0u);
         next = &D_80146875;
         *next = (u8)(*next + 1u);
       }
       break;
+    }
 
-    case 5:
+    case 5: {
+      u8* next;
+
       if (D_80143C40 == 0u) {
         D_8014832E = 0u;
         func_8014ECAC(1u);
@@ -115,6 +121,7 @@ void func_801F7230(void) {
         *next = (u8)(*next + 1u);
       }
       break;
+    }
 
     case 6:
       func_8014F800(0x50, 0x50, 0, 0xffu, SCENA16_VRAM_BASE + (u32)D_80010022);
@@ -136,7 +143,9 @@ void func_801F7230(void) {
       break;
     }
 
-    case 8:
+    case 8: {
+      u8* next;
+
       if (D_80143C40 != 0u) {
         func_8014F800(0x50, 0x50, 0, 0xffu,
                       SCENA16_VRAM_BASE + (u32)D_80010022);
@@ -146,6 +155,7 @@ void func_801F7230(void) {
       next = &D_80146875;
       *next = (u8)(*next + 1u);
       break;
+    }
 
     case 9: {
       u8* next;
@@ -161,6 +171,7 @@ void func_801F7230(void) {
     }
 
     case 10: {
+      u8* next;
       u8* scratch;
       u8  object_index;
 

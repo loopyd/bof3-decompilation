@@ -329,10 +329,6 @@ void func_801D1E54(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4);
  * arg3 is the record value byte and arg4 the record numeric row base, both
  * read as bytes/words by the callee. */
 void func_801D1B28(u16 arg0, u16 arg1, u8 arg2, u8 arg3, u32 arg4);
-/* Emits the icon primitive at the masked coordinates (arg0, arg1) with the
- * kind arg2, the texture page arg3, the CLUT arg4 and the colour byte arg5. */
-void emitPanelIconPrim(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u16 arg4,
-                       u8 arg5);
 void func_801D25D8(void);
 void func_801D2BE8(void);
 

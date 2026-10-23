@@ -11,18 +11,9 @@
  * for its two flag bytes, then formats that value through D_801D0C8C into
  * D_80145AD4, rewrites the first five spaces to 0xFF and submits the result at
  * (x + 0x45, y + 9) through func_8014F800.
- * @status partial
- * @match 90.40
- * @residual the threshold scan loop is rotated by the loop optimizer: it peels
- * the index-0 test and closes with a conditional back edge, so the counter lands
- * in $v1 and the scan base is re-derived from $sp per iteration where the
- * original tests at the top, jumps back unconditionally with the counter in $a0
- * and reuses the $a3 icon base for both the scan and the following record index;
- * the record selection, D_801454EC store and the trailing space fixup then sit
- * in a shifted schedule and the object stays twelve bytes longer. Array
- * subscripting, pointer-arithmetic subscripting and a break-out form all emit
- * that same rotated loop, so the shape is a loop-optimizer decision rather than
- * an address-spelling one
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801E1320(s16 x, s16 y)
 {
@@ -39,7 +30,10 @@ void func_801E1320(s16 x, s16 y)
 
     value = func_801E0B6C();
     index = 0;
-    while ((value & 0xFFFF) >= thresholds.thresholds[index]) {
+    while (1) {
+        if ((value & 0xFFFF) < thresholds.thresholds[index]) {
+            break;
+        }
         index++;
     }
 

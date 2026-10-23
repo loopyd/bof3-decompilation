@@ -4,6 +4,10 @@
  * translation unit declares the callsite-observed widths; the EMI-local
  * definition of func_801D23A0 keeps its own signed coordinates. */
 void func_801D23A0(u16 arg0, u16 arg1, u8 arg2, u8 arg3);
+/* The original zero-extends both icon coordinates (andi 0xFFFF); the
+ * shared PANEL_ICON_PRIM template keeps its signed coordinates. */
+void emitPanelIconPrim(u16 arg0, u16 arg1, s32 arg2, s32 arg3, u16 arg4,
+                       u8 arg5);
 
 /* @source 0x801D177C
  * @behavior draws one master-list record of the 164-byte record table at
@@ -17,15 +21,9 @@ void func_801D23A0(u16 arg0, u16 arg1, u8 arg2, u8 arg3);
  *           func_801AF390, the record numeric row through func_801D1B28, and
  *           finally the draw mode, the panel primitive append and the icon
  *           primitive whose kind is the icon byte offset by three.
- * @status partial
- * @match 94.94
- * @residual 225 of 237 current instructions and 948 current bytes versus 940
- *           original; twelve instructions differ in two independent groups:
- *           the closing emitPanelIconPrim call sign-extends both coordinates
- *           (sll/sra) because the shared PANEL_ICON_PRIM prototype declares
- *           s16 coordinates, while the original zero-extends them
- *           (andi 0xffff), and eight prologue/early-block instructions hold a
- *           different scheduler slot at an unchanged instruction multiset.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801D177C(u16 x, u16 y, u8 entry, u8 icon) {
   SisyouEntry* record;
@@ -37,8 +35,11 @@ void func_801D177C(u16 x, u16 y, u8 entry, u8 icon) {
 
   base = &D_80144952;
   func_801AE3F0((u16)(x + 3), (u16)(y + 3), 0x7D, 0x30, 0, base[0]);
-  base += 0x16;
-  record = (SisyouEntry*)base + entry;
+  /* The record base is formed straight from the byte symbol instead of from
+   * the loaded copy: the original re-materializes %hi/%lo at the byte load
+   * and adds the 0x16 record offset to it after the call, so folding the
+   * offset through the pointer local places the address pair too early. */
+  record = (SisyouEntry*)(&D_80144952 + 0x16) + entry;
   func_801D23A0((u16)(x + 0x56), (u16)(y + 2), record->unk_05,
                 (u8)((record->status.half >> 6) & 2));
   func_8014F800((s16)(x + 0x14), (s16)(y + 3), 0, 5, (u32)record);
