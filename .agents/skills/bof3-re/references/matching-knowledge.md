@@ -7,7 +7,7 @@ owning live native comparison; keep best coherent PRE and full attempt ledger.
 Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 [delay slots](#delay-slots-and-entry-copies), [representation](#representation-and-volatility),
 [allocation](#allocator-sensitive-functions), [orphan stack slots](#orphan-stack-slots),
-[compiler](#compiler-evidence),
+[compiler](#compiler-evidence), [guard scheduling](#guard-scheduling-and-value-reuse),
 [runtime](#runtime-evidence), [storage](#storage-and-analysis-context),
 [failure/capture](#failure-and-capture).
 
@@ -28,6 +28,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Load uses wrong argument register | Verify callee argument consumption and caller setup before allocator probes |
 | Missing read after a store | Recheck pointer reloads, source qualification and aliasing against original instructions |
 | Saved-register pair exchanged | Trace real value deaths, later reuse and merged allocator quantities |
+| Guard load/test displaced around a product/store chain | Trace [guard scheduling and value reuse](#guard-scheduling-and-value-reuse) before changing arithmetic |
 
 Named extern-array indexing can emit folded `lw table(index)` and assembler
 `lui $at; addu $at,$at,index`; fixed-address arithmetic may emit compiler's opposite
@@ -185,6 +186,37 @@ changes. Verify that prediction in before/after RTL and a supported live compari
 Do not infer exact allocator causality from matching scores, debug-register names
 or source formulas without accounting for suggestions and interference. Keep flags
 fixed; no automatic flag catalogs or compiler-variant batches.
+
+### Guard scheduling and value reuse
+
+Use when guard loads/tests and a product/store chain have correct operations but
+wrong order. Keep compiler/flags fixed; prove the first divergent pass.
+
+1. In GCC 2.7.2 `sched.c`, inspect `birthing_insn_p` and `adjust_priority`.
+   Before reload, a live destination with `reg_n_sets[i] == 1` can receive
+   `max_priority` when `n_deaths == 0`. Scheduling runs backwards: a boosted
+   guard can land late in forward order. Check adjusted ready-list priorities,
+   not raw priorities alone.
+2. Test count-to-boolean reuse with two real consumers:
+
+   ```c
+   count_or_ready = stage[2];
+   count_or_ready = i < count_or_ready;
+   ```
+
+   Use the result as the guard; repeat at the original latch. Preserve guard
+   reads, paths and call/store order, including `continue` paths. Confirm both
+   definitions survive optimization and remove the observed boost. Dummy
+   assignments, duplicate reads and invented dependencies remain forbidden.
+3. Separate scheduling from allocation. Correct order can still use wrong
+   registers. Trace `.lreg`/`.greg`, block-local versus global allocation,
+   suggestions and conflicts. After consumption, test a sample local reused for
+   a real loop-scale operand; a shared sample-result local may instead force
+   both results into one wrong register. Every value needs a genuine consumer.
+4. Bind before/after dumps to source hashes. Verify predicted order and register
+   changes, then full function/readonly bytes through `lift sweep`, live gate
+   and independent review. Freeze the candidate during review. This lever is
+   profile-specific evidence, not a universal spelling or proof of original C.
 
 ## Runtime evidence
 
