@@ -6,6 +6,7 @@ owning live native comparison; keep best coherent PRE and full attempt ledger.
 
 Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 [explicit cursors](#explicit-cursors-and-signed-bounds),
+[operation scopes](#operation-scopes-and-loop-note-dependencies),
 [delay slots](#delay-slots-and-entry-copies), [representation](#representation-and-volatility),
 [allocation](#allocator-sensitive-functions), [orphan stack slots](#orphan-stack-slots),
 [compiler](#compiler-evidence), [guard scheduling](#guard-scheduling-and-value-reuse),
@@ -58,10 +59,42 @@ Test equivalent per-arm checks or pure address calculations while retaining the
 common result/return. Preserve memory reads and their order. Duplicated expressions
 must not duplicate calls, volatile accesses or other side effects.
 
-For preheader or delay-slot order, test a block-local value initialized at its real
-use, or a single-execution `do { operation; } while (0)` around actual work. Such
-scopes can alter loop notes, lifetimes and scheduling. They are hypotheses, not
-barriers. Reject empty scopes, dummy work, added accesses and semantic distortion.
+For preheader or delay-slot order, test block-local initialization or evidenced
+[operation-scope placement](#operation-scopes-and-loop-note-dependencies).
+
+### Operation scopes and loop-note dependencies
+
+Use when real initialization has the required lifetime but adjacent call arguments
+schedule incorrectly. Keep owning compiler/flags fixed; inspect both scheduling
+passes before changing scope placement.
+
+1. In GCC 2.7.2 `sched.c::sched_analyze_insn`, trace `LOOP_BEG`/`LOOP_END`
+   handling. Loop notes can attach dependencies to the next instruction: pending
+   uses/sets gain edges, `reg_pending_sets_all` marks every register set, and
+   memory lists flush. An apparent output dependency between unrelated arguments
+   may come from this boundary, not ABI or register overlap.
+2. Test a single-execution scope around actual work, for example:
+
+   ```c
+   do {
+     size = frame_bytes;
+   } while (0);
+   install_callback(callback);
+   start_stream(buffer, mode);
+   ```
+
+   Move the intact operation scope across a call only when value independence,
+   address escapes and every path permit it. Preserve call, volatile and memory
+   effects. Initialization needs a real later consumer. Empty scopes, dummy work,
+   extra accesses and barrier substitutes remain forbidden.
+3. Compare plain initialization, PRE placement and proposed placement through
+   `lift sweep`. Plain form may rematerialize a constant or drop saved registers;
+   another placement may retain allocation while freeing argument order. Bind
+   `.sched`/`.sched2` to source hashes and verify the dependency change.
+4. Check the whole function, frame and readonly bytes with the live gate and
+   independent semantic review; freeze during review. Scope necessity or one
+   corrected pair alone proves neither admissibility nor exactness. Keep the
+   mechanism profile-specific, not proof of original source spelling.
 
 ### Explicit cursors and signed bounds
 
