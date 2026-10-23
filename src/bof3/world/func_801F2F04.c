@@ -3,11 +3,10 @@
 /* @source 0x801F2F04
  * @behavior Emits a ring of semi-transparent quadrilateral primitives.
  * @status partial
- * @match 87.62
- * @residual 92/105 instructions at the original 420-byte size and 0x40 frame.
- * From +0x0068, loop rotation moves next = angle + 0x80 to the back edge and
- * hoists the angle mask above the leading calls. The angle and wrapped-angle
- * register assignments also differ.
+ * @match 94.29
+ * @residual 99/105 instructions at the original 420-byte size and 0x40 frame.
+ * The next and wrapped angles occupy s3/s2 instead of the original s2/s3;
+ * the current angle, loop setup and instruction ordering match.
  */
 void func_801F2F04(s16 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4) {
   s32 temp_lo_1;
@@ -24,13 +23,18 @@ void func_801F2F04(s16 arg0, s16 arg1, s16 arg2, u8 arg3, u8 arg4) {
     primitive = g_PrimCursor;
     func_8017A97C(primitive);
     SetSemiTrans(primitive, 1);
-    next = angle + 0x80;
+    do {
+      next = angle + 0x80;
+    } while (0);
     wrapped = next & 0xfff;
-    angle &= 0xffff;
-    *(s16*)(primitive + 8) = arg0;
-    *(s16*)(primitive + 0x0a) = arg1;
-    *(s16*)(primitive + 0x10) = arg0 + ((arg2 * func_801783C8(angle)) >> 12);
-    *(s16*)(primitive + 0x12) = arg1 + ((arg2 * func_801782FC(angle)) >> 12);
+    {
+      u16 current = angle;
+
+      *(s16*)(primitive + 8) = arg0;
+      *(s16*)(primitive + 0x0a) = arg1;
+      *(s16*)(primitive + 0x10) = arg0 + ((arg2 * func_801783C8(current)) >> 12);
+      *(s16*)(primitive + 0x12) = arg1 + ((arg2 * func_801782FC(current)) >> 12);
+    }
     temp_lo_1 = arg2 * func_801783C8((u16)wrapped);
     angle = next;
     *(s16*)(primitive + 0x18) = arg0 + (temp_lo_1 >> 12);
