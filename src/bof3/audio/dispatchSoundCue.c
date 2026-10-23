@@ -10,12 +10,9 @@ extern short SsUtSetDetVVol(short, short, short);
  * volumes while a fade is active, and keys on/upvolumes cue channels via
  * PsyQ SsUtKeyOnV/SsUtSetDetVVol.
  * @source 0x8015DF18
- * @status partial
- * @match 90.03
- * @residual 605 instructions match; 2684 original bytes versus 2688 current.
- * The entry cue copy precedes the cue masks instead of filling the handler
- * call's delay slot. Four mult operand orders and branch displacements also
- * differ; the generated function is four bytes longer than the original.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void dispatchSoundCue(u32 cue_id) {
 
@@ -26,6 +23,7 @@ void dispatchSoundCue(u32 cue_id) {
   s16 result;
   s32 shifted;
   s32 fade;
+  s32 product;
 
   s32 top;
 
@@ -45,7 +43,8 @@ void dispatchSoundCue(u32 cue_id) {
         lo += 0x7F;
       }
       D_8018B39C = (s16)(lo >> 7);
-      fade = D_8018B3A0 * fade;
+      product = D_8018B3A0 * fade;
+      fade = product;
       shifted = fade >> 7;
       if (fade < 0) {
         fade += 0x7F;
@@ -60,7 +59,8 @@ void dispatchSoundCue(u32 cue_id) {
         lo += 0x7F;
       }
       D_8018B374 = (s16)(lo >> 7);
-      fade = D_8018B378 * fade;
+      product = D_8018B378 * fade;
+      fade = product;
       shifted = fade >> 7;
       if (fade < 0) {
         fade += 0x7F;
@@ -75,7 +75,8 @@ void dispatchSoundCue(u32 cue_id) {
         lo += 0x7F;
       }
       D_8018B34C = (s16)(lo >> 7);
-      fade = D_8018B350 * fade;
+      product = D_8018B350 * fade;
+      fade = product;
       shifted = fade >> 7;
       if (fade < 0) {
         fade += 0x7F;
@@ -90,7 +91,8 @@ void dispatchSoundCue(u32 cue_id) {
         lo += 0x7F;
       }
       D_8018B324 = (s16)(lo >> 7);
-      fade = D_8018B328 * fade;
+      product = D_8018B328 * fade;
+      fade = product;
       shifted = fade >> 7;
       if (fade < 0) {
         fade += 0x7F;
@@ -248,7 +250,8 @@ void dispatchSoundCue(u32 cue_id) {
     return;
   }
 
-  if (D_8018E140[(s16)D_8018B3F0] == 0) {
+  cue_id = (s32)(s16)D_8018B3F0;
+  if (D_8018E140[(s32)cue_id] == 0) {
     switch (D_8018B3E4) {
     case 3:
       result = SsUtKeyOnV(D_8018B390, D_8018B30C, D_8018B380,
