@@ -5,17 +5,11 @@
  * shared texture window, then queues the matching inner fill rectangle.
  * @source 0x801F3D88
  * @status partial
- * @match 87.32
- * @residual Byte size matches the 1356-byte original and 296 of 339 instructions
- *   match. The original forms the strip height
- *   (arg3 + 1) in a caller-saved temp and copies it into its own saved home
- *   with `move s2,v0`, so the bottom edge is s3 and the strip height is s2;
- *   this candidate has no such copy, recomputes the height as `addiu s3,t1,1`
- *   and homes the bottom edge in s2 and the height in s3. The left-edge
- *   coordinate and the strip-A/C/D read-back writes are also scheduled
- *   differently. Both remain allocation and scheduler class: 18 measured
- *   clean-C shapes produced either the copy with exchanged homes or the
- *   original homes without the copy.
+ * @match 92.92
+ * @residual 315/339 instructions match at the original 1356-byte size.
+ * Remaining differences concern setup/store scheduling, block-C temporary
+ * allocation and operand order, and block-D y2/v2 forwarding rather than reloads.
+ * The byte-sized strip height has a separate value from the bottom coordinate.
  */
 void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   RECT*     texture_window;
@@ -28,12 +22,13 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   s32       left_x;
   s32       bottom_v;
   u16       odd16;
+  s32       y2_read;
+  u16       v2_read;
+  u8        strip_v;
   s32       width_plus_1;
   s32       odd_width;
   s32       right_base;
   s32       two;
-  s32       arg3_l;
-  s32       arg1_l;
   s32       zero_v;
   s32       sx;
   u16       narrow_width;
@@ -66,8 +61,6 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->x2 = (s16)sx;
   left_x = arg0 + two;
   primitive->x1 = (s16)left_x;
-  arg3_l = arg3;
-  arg1_l = arg1;
   primitive->x3 = (s16)left_x;
   primitive->u0 = 0u;
   primitive->v0 = 0u;
@@ -76,14 +69,15 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->r0 = 0xacu;
   primitive->g0 = 0xacu;
   primitive->b0 = 0xacu;
-  bottom_v = arg3_l + 1;
-  bottom_y = (arg3_l + 1) + arg1_l;
+  bottom_v = arg3 + 1;
+  bottom_y = arg1 + bottom_v;
+  strip_v = (u8)bottom_v;
   primitive->y2 = (s16)bottom_y;
   primitive->y3 = (s16)bottom_y;
   primitive->u1 = 2u;
-  primitive->v2 = (u8)bottom_v;
+  primitive->v2 = strip_v;
   primitive->u3 = 2u;
-  primitive->v3 = (u8)bottom_v;
+  primitive->v3 = strip_v;
   primitive->y0 += two;
   primitive->y2 -= 3;
   primitive->v0 += two;
@@ -120,9 +114,9 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->u1 = (u8)half_copy;
   primitive->v1 = 0u;
   primitive->u2 = 0u;
-  primitive->v2 = (u8)bottom_v;
+  primitive->v2 = strip_v;
   primitive->u3 = (u8)half_copy;
-  primitive->v3 = (u8)bottom_v;
+  primitive->v3 = strip_v;
   primitive->r0 = 0xacu;
   primitive->g0 = 0xacu;
   primitive->b0 = 0xacu;
@@ -152,9 +146,9 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->u1 = (u8)(half_copy + odd16);
   primitive->v1 = 0u;
   primitive->u2 = 0u;
-  primitive->v2 = (u8)bottom_v;
+  primitive->v2 = strip_v;
   primitive->u3 = (u8)(half_copy + odd16);
-  primitive->v3 = (u8)bottom_v;
+  primitive->v3 = strip_v;
   primitive->r0 = 0xacu;
   primitive->g0 = 0xacu;
   primitive->b0 = 0xacu;
@@ -171,7 +165,9 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   SetPolyFT4(primitive);
   SetSemiTrans(primitive, 1);
   primitive->y2 = (s16)bottom_y;
-  primitive->v2 = (u8)bottom_v;
+  y2_read = primitive->y2;
+  primitive->v2 = strip_v;
+  v2_read = primitive->v2;
   primitive->x0 = (s16)(arg0 + width_plus_1 - two);
   primitive->x2 = (s16)(arg0 + width_plus_1 - two);
   primitive->x1 = (s16)(arg0 + width_plus_1);
@@ -185,15 +181,15 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->v1 = 0u;
   primitive->u2 = 0u;
   primitive->u3 = 2u;
-  primitive->v3 = (u8)bottom_v;
+  primitive->v3 = strip_v;
   primitive->r0 = 0xacu;
   primitive->g0 = 0xacu;
   primitive->b0 = 0xacu;
   primitive->y1 += two;
   primitive->y3 -= 3;
-  primitive->y2 -= 1;
+  primitive->y2 = (s16)(y2_read - 1);
   primitive->v1 += two;
-  primitive->v2 -= 1;
+  primitive->v2 = (u8)(v2_read - 1);
   primitive->v3 -= 3;
   primitive->clut = GetClut(clut_x, 0x1e1);
 

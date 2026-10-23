@@ -46,9 +46,11 @@
  * @status partial
  * @match unavailable
  * @residual Comparison is unavailable because the generated jump table differs from the original.
- * The generated 18-entry table
- * at 0x801F6C58 must match before native instruction or byte results qualify.
- * The case-9 state store is conditional on progress 0x14, as in the original.
+ * Entry 5 of the 18-entry table at 0x801F6C58 differs by four bytes; the
+ * remaining entries match. Generated text is 1940 bytes, but the frame is
+ * 0x30 rather than the original 0x20. No native match result qualifies until
+ * the table matches. Case 8 stores the counter before clearing the effect
+ * bank; case 9 advances state only when progress is 0x14.
  */
 void func_801FA7D8(void) {
     if ((u32)(D_80146875 - 4u) < 3u) {
@@ -190,10 +192,11 @@ void func_801FA7D8(void) {
         u16 *counter = (u16 *)&D_80146876;
 
         if (*counter != 0u) {
+            /* Preserve the original counter-store-before-clear order. */
+            *counter = (u16)(*counter - 1u);
             if (D_80143C40 == 0u) {
                 D_8014832E = 0u;
             }
-            *counter = (u16)(*counter - 1u);
             break;
         }
 
