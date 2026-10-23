@@ -18,9 +18,9 @@
  * the frame number of the header in D_801EB468, decodes the bitstream into the
  * CD buffer of the current index through DecDCTvlc, advances the decoder stream
  * position through func_801D2464 and always returns 0.
- * @status partial
- * @match 98.89
- * @residual The stream-start mode constant is loaded after the stream address instead of before it; both bodies are 360 bytes.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 s32 func_801CE930(u_long disc_lba) {
   u_long* data;
@@ -32,10 +32,10 @@ s32 func_801CE930(u_long disc_lba) {
   D_801EB46C = 0;
   D_801EB464 = 0;
   DecDCTReset(0);
-  DecDCToutCallback(func_801CECA4);
   do {
     size = 0x1C8;
   } while (0);
+  DecDCToutCallback(func_801CECA4);
   func_801CFC00(D_801EB448, 0xF);
   pending = 0;
   func_801D23DC(1, 1, 0xFFFFFFF, 0, 0);
