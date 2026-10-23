@@ -7,7 +7,7 @@ lanes skip exact-PASS reviewers; apply this checklist to assigned reviews.
 ## Scope rules
 
 - Use the executor brief/diff/rung ledger without re-deriving the search.
-- Verify recorded measurements. Rerun catalog `bin/harness lift flag-search`, `bin/harness build variants verify` or permuter only for evidence-backed probes of a cited residual class.
+- Verify measurements under the owning effective compiler and unchanged flags. Flag catalogs and compiler-variant batches are not review or exhaustion gates. An opt-in permuter requires a cited residual and parent authorization.
 - Run scoped `just check` (ruff, `bin/harness source symbols check`, `validate_sources`) only for a required repo gate. Do not run `just check-all` or rebuild `brief`/m2c/Rizin/index without a concrete finding.
 
 Stop at the first answered question.
@@ -42,28 +42,35 @@ Include optional experiments/proposals only when the verdict requires them.
 
 | Situation | Action |
 | --- | --- |
-| Any remaining safe plausible candidate | `needs-fix` + `ladder_exhausted:false` + 1–3 ranked experiments (lever, expected effect, evidence, accept/revert) |
+| Supported untried candidate | `needs-fix` + `ladder_exhausted:false` + up to three ranked experiments with expected effects and accept/revert criteria |
+| No justified probe, evidence incomplete | `needs-fix` + empty experiments + named evidence gap; not exhaustion |
 | Unknown type/symbol/layout/ABI/CFG/lifetime | focused target-qualified Rizin first |
-| Historical profiles | require supported + installed ones unless proven insensitive |
+| Historical profile searches | Carry as history only; require no rerun or broader catalog |
 | Coherent partial, nothing left | `pass` + empty experiments + explicit ladder attestation, only under the exhaustion gate |
 | Rejected semantics/types, invalid ownership/boundary, approval/safety, external tool blocker | `block` — never ordinary non-exactness |
 
-No evidence-free repeat or reviewer-required restoration.
+No evidence-free repeat or reviewer-required restoration. Separate coherent partial
+retention from exact acceptance. Review range proofs and new conversion/flow effects
+before retaining a higher score. Retention keeps `needs-fix` / `repair`,
+`ladder_exhausted:false` and truthful byte/gate failures; it never advances exact
+cleanup. A missing original instruction at a smaller size is not an exact match.
 
 ## Exhaustion gate
 
 After the ladder and every failed experiment, lifter and reviewer search live
 diff/source/compiler/nearby-function evidence for safe plausible candidates outside
 the ladder/ledger. Record searches and each candidate's support/rejection. Any
-remaining candidate requires `needs-fix`, `ladder_exhausted:false` and 1–3 ranked
-experiments predicting size/frame/CFG/branch/offset/instruction/register effects.
+supported candidate requires `needs-fix`, `ladder_exhausted:false` and a ranked
+experiment predicting size/frame/CFG/branch/offset/instruction/register effects.
 Set `ladder_exhausted:true` only when none remain. Skipped rungs and vague allocation guesses prove no exhaustion.
 
 ## Item 8 (partial→exact) output
 
 Propose reusable wording/evidence for an authorized reference writer; do not edit
-references or accept matching rules. For function-only results, return `lesson: none`
-with evidence. Omit selector/address, percentages, transient state and dates.
+references or accept matching rules. Separate reusable investigation methods from
+function-specific winning spellings. Preserve preconditions, rejected interactions
+and evidence limits; one exact result does not prove universal compiler causality.
+For function-only results, return `lesson: none` with evidence. Omit selector/address, percentages, transient state and dates.
 Apply `sharing-nonmatches.md` to sharing decisions.
 
 ## Workflow translation

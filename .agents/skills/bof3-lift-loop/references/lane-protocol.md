@@ -78,10 +78,12 @@ content blocks another repair; wording, copied paths, counters, rounds and ledge
 cannot bypass this.
 
 Use `lift sweep` for eligible shape alternatives, without call or variant quotas.
-No per-variant diff loop or local compile/compare harness. `lift flag-search`/
-`lift permute` require parent authorization. No lane `just check`, `just check-all`
-or `just check-unit`. Retain best coherent partial and owned facts for review;
-revert regressions. Parent owns final restoration.
+No per-variant diff loop or local compile/compare harness. Keep the owning compiler
+and flags fixed; flag catalogs and compiler-variant batches are not lane rungs.
+At a stall, follow [compiler and runtime evidence](../../bof3-re/references/matching-knowledge.md#compiler-evidence).
+`lift permute` still requires parent authorization. No lane `just check`,
+`just check-all` or `just check-unit`. Retain best coherent partial and owned facts
+for review; revert regressions. Parent owns final restoration.
 
 ## Serial batch close
 

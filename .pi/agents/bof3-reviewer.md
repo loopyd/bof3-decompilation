@@ -35,5 +35,6 @@ For project contracts, inspect routing, tool availability, boundaries, failure
 handling and existing checks; do not claim a domain byte check for Markdown.
 Return accepted/no-op/repair/blocked, scope and current-content evidence, actual
 commands/results, concrete findings and risks. No-op needs a reason. Budget or
-missing validation is not acceptance. Propose 1–3 evidence-backed experiments
-for repair; request supervisor help for unresolved authority or infrastructure.
+missing validation is not acceptance. For repair, propose up to three supported
+untried experiments; otherwise name the evidence gap without claiming exhaustion.
+Request supervisor help for unresolved authority or infrastructure.

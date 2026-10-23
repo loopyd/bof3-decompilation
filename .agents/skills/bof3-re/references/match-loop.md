@@ -30,23 +30,29 @@ attempt ledger through repair, including missing history. Select experiments fro
 original/live evidence; repeat a tested lever only with changed evidence explaining
 its expected effect. Restore regressions. Advance when evidence closes a rung or
 proves its eligible alternatives exhausted, never after a fixed attempt count.
-End at first byte match.
+End at first byte match. Keep the owning effective compiler and flags fixed,
+including reviewed attached settings. Flag catalogs and compiler-variant batches
+are not ladder rungs or exhaustion requirements. Route actual pipeline defects
+through the tooling owner; matching work grants no profile-change authority.
 
 | Rung | Work | Gate |
 | --- | --- | --- |
-| 1. Types/declarations | Width, signedness, pointers, fields, prototypes | `bin/harness lift byte-match TARGET@0xADDRESS` clears type-shape mismatch |
-| 2. Control flow | Branch direction, loop/return/switch; equal-valued arms use bounded playbook branch matrix before escalation | Branch/topology mismatch clears |
-| 3. Expression/register order | Ordinary temporaries, hoists, statements; no artificial allocator/scheduler controls | Allocation/scheduling residual changes |
-| 4. Compiler profile | Selector-specific parent/user authorization only; `bin/harness lift flag-search TARGET@0xADDRESS`; clean-C exact profiles only | Exit 0 with non-empty `exact_matches` |
-| 5. Permuter | Opt-in, shape already right; `bin/harness lift permute TARGET@0xADDRESS -j N` | Attempt completes, residual class recorded |
-| 6. Unresolved | Best coherent clean-C candidate, documented allocation/scheduling; no forced registers/asm | `byte-match` remains non-exact; residual documented |
+| 1. Representation/access | Prove ABI, widths, qualifiers, pointer cells and original reloads; inspect callees before declaring allocation-only | Original calls, conversions and memory events accounted for |
+| 2. Control flow | Branch direction, loop/return/switch; test branch-local calculations with a shared result and the playbook branch matrix | Branch/topology mismatch clears |
+| 3. Value lifetimes | Reuse a consumed local for a later real result; test block-local initialization, operation scopes and arithmetic grouping | Predicted instruction effect measured; semantics and complete diff checked |
+| 4. Compiler evidence | At a stall, inspect matching compiler sources and before/after RTL for the cited residual | Source-backed mechanism predicts a new probe; diagnostics grant no match |
+| 5. Runtime evidence | For unresolved behavior, use bounded original/candidate observations through `psx-emulator` | Inputs, observations, stop and provenance checked; host edits and coverage limits explicit |
+| 6. Permuter | Opt-in, shape already right; `bin/harness lift permute TARGET@0xADDRESS -j N`; keep owning profile fixed | Attempt completes, residual class recorded |
+| 7. Unresolved | Preserve best coherent clean C and truthful partial metadata; report missing evidence | Non-exact disposition separates retention, blocker and exhaustion |
 
-Unauthorized profile/permuter rungs remain untried, not exhausted.
+Read [matching knowledge](matching-knowledge.md) for each evidence branch. Runtime
+work answers a named behavior question; it is not mandatory for a proven register
+permutation. An unauthorized permuter stays untried, not exhausted.
 
-Frame/size: types/calls, address-taken locals, aggregate copies, flow first.
-Same-size relocation/load-order: symbol representation and evidenced pointer-cell
-volatility. Entry copies: lifetime, clean-C ordering, profile/permuter diagnosis.
-Lone delay slot: exact branch/jump operands and liveness, never clobber.
+Frame/size: types/calls, address-taken locals, aggregate copies and flow first.
+Relocation/load order: symbol representation and original reload evidence first.
+Entry copies: representation and live ranges before scheduler claims. For a lone
+delay slot, prove branch operands and liveness; never introduce a clobber.
 
 ## Probe method
 
@@ -56,9 +62,14 @@ compare harness. In-process sweep resolves comparison context/canonical compile
 command once, then compiles/compares each variant. Each variant rewrites/relinks.
 Use `--subprocess` only for deliberate legacy reproduction.
 
-Reviewed allocation/scheduling exhaustion: retain best coherent candidate and
-truthful `@status partial`/`@match`/`@residual`, then stop. Never chase spelling
-coincidences. A residual class alone does not prove exhaustion.
+Before each sweep, state the semantic precondition and predicted instruction
+change. Compare the full result, not score alone. Restore neutral/regressive probes.
+Retain a strict coherent partial improvement only after semantic review and truthful
+metadata; retention is not exact acceptance or exhaustion. Near-exact allocation
+differences trigger compiler evidence, not another spelling batch.
+
+Reviewed exhaustion requires the separate exhaustion gate. A residual class,
+negative batch or lack of a new idea does not prove it.
 
 ## Eligible-condition levers
 
@@ -82,8 +93,9 @@ body literals stay unchanged.
 
 ## Review and stop
 
-Non-exact review proposes 1–3 ranked untried experiments with expected instruction
-effects. Caller owns retries/stopping. Retain coherent improvement with atomic
+Non-exact review proposes up to three supported untried experiments with expected
+instruction effects. If none is justified, name the evidence gap; do not invent a
+probe or claim exhaustion. Caller owns retries/stopping. Retain coherent improvement with atomic
 partial metadata; revert no-progress/semantic defects. Partial-to-exact review
 identifies decisive experiment; parent records reusable playbook/lesson proposal.
 

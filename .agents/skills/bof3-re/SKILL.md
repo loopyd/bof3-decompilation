@@ -46,6 +46,8 @@ invoke `$psx-rizin` for concrete questions. Prefer repository `bin`.
   no exception. Remove aids in authorized scope, requeue clean-C match and independent
   review. Keep manifest-owned `symbols.c` `WEAK_SYMBOL_AT`. No handwritten asm,
   asm-renamed externs or unapproved `INCLUDE_ASM`.
+- Match under the owning effective compiler and attached settings. Flag catalogs
+  and compiler-variant batches are outside the matching ladder.
 - SDK external: official PsyQ names/maps/headers; never lift SDK bodies.
 - Unknown fields `unk_XX`; canonical map names. `internal.h` order: guard, includes,
   types, extern data, prototypes, macros/helpers.
@@ -93,6 +95,9 @@ pins, `unverified`/null results and read-only audit limits.
 
 Before editing, read the [clean-C ladder and probe method](references/match-loop.md)
 for existing/first-source gates, cumulative attempts, candidate retention and review.
+Keep the owning compiler/flags fixed. Before stalled source sweeps, read
+[compiler evidence](references/matching-knowledge.md#compiler-evidence); for unresolved
+behavior, use its [runtime branch](references/matching-knowledge.md#runtime-evidence).
 
 ### Eligible-condition levers
 
