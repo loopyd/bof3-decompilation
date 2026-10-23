@@ -9,6 +9,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 [delay slots](#delay-slots-and-entry-copies), [representation](#representation-and-volatility),
 [allocation](#allocator-sensitive-functions), [orphan stack slots](#orphan-stack-slots),
 [compiler](#compiler-evidence), [guard scheduling](#guard-scheduling-and-value-reuse),
+[CSE and operand order](#cse-lifetimes-and-commutative-targets),
 [runtime](#runtime-evidence), [storage](#storage-and-analysis-context),
 [failure/capture](#failure-and-capture).
 
@@ -20,6 +21,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Wrong relocation/base folding | Standalone symbol versus reviewed struct field/array |
 | `addu $at,index,$at` versus `addu $at,$at,index` | Named extern array can shift expansion to assembler; never pin scratch `$at` |
 | Fixed-address constant steals entry copy | Named extern binding can prevent constant-address CSE; verify entire register web |
+| Saved copy moves to entry or commutative operands stay swapped | Trace [CSE lifetimes and commutative targets](#cse-lifetimes-and-commutative-targets) |
 | Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler |
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots) |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
@@ -244,6 +246,38 @@ wrong order. Keep compiler/flags fixed; prove the first divergent pass.
    changes, then full function/readonly bytes through `lift sweep`, live gate
    and independent review. Freeze the candidate during review. This lever is
    profile-specific evidence, not a universal spelling or proof of original C.
+
+### CSE lifetimes and commutative targets
+
+Use for an early saved-argument copy or a persistent commutative operand swap.
+Keep owning settings fixed; inspect that compiler version, recipe and patches.
+Nearby-version source supports a hypothesis, not owning-compiler proof.
+
+1. For entry copies, trace `cse.c::make_regs_eqv` and `canon_reg`, then scheduler
+   and allocator output. GCC 2.6.3 can prefer an equivalent pseudo whose lifetime
+   extends further beyond the block. After the argument's final consumer, test
+   reusing the formal for a later real index or control value, beyond the saved
+   copy's last use. Preserve the saved value, ABI, signed indexing and conversions
+   on every path. Confirm canonicalization and call-delay placement in RTL;
+   source assignment order alone does not establish the cause.
+2. For operand swaps, inspect `optabs.c::expand_binop`. GCC 2.6.3 can swap
+   commutative operands when `target == op1`; reversing source operands alone
+   can normalize back. Test a distinct genuine result before consuming it:
+
+   ```c
+   product = channel * fade;
+   fade = product;
+   ```
+
+   Preserve signedness, product range, shifts and rounding. Keep both assignments
+   only when the product and copied value have real consumers. Confirm RTL avoids
+   the swap and allocation coalesces the copy without extra instructions. Byte
+   equality alone does not justify an unsigned product or changed narrowing.
+3. Measure each predicted effect and their interaction through `lift sweep`.
+   Bind dumps to source hashes; inspect the complete register web and memory
+   events. Require full function/readonly bytes, live gate and independent review;
+   freeze during review. Treat success as profile-specific, not original-source
+   recovery or permission to add dummy uses, aliases, pins or barriers.
 
 ## Runtime evidence
 
