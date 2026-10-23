@@ -43,12 +43,9 @@
  * byte, runs func_8015C058 and func_801BE1B0(6) and clears D_80146874 and
  * D_80146875.
  * @source 0x801FA7D8
- * @status partial
- * @match 98.35
- * @residual 477/485 instructions match at the original 1940-byte size.
- * The 18-word case table at 0x801F6C58 matches. Eight prologue/epilogue
- * instructions differ because the generated frame is 0x30 rather than 0x20.
- * No body access uses the extra 16 bytes; their allocation cause is unresolved.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_801FA7D8(void) {
     if ((u32)(D_80146875 - 4u) < 3u) {
@@ -160,14 +157,19 @@ void func_801FA7D8(void) {
         *scratch = object_index;
 
         if (object_index != 0xffu) {
+            u32 seed;
+
             D_80143FC8[(u32)object_index * 0x74u] = 1u;
             D_80143FCD[(u32)*scratch * 0x74u] = 0x1eu;
-            *(s32 *)(D_80143FFC + (u32)*scratch * 0x74u) = D_80145EC4;
-            *(s32 *)(D_80144000 + (u32)*scratch * 0x74u) = D_80145EC8;
+            seed = (u32)(D_80143FFC + (u32)*scratch * 0x74u);
+            *(s32 *)seed = D_80145EC4;
+            seed = (u32)(D_80144000 + (u32)*scratch * 0x74u);
+            *(s32 *)seed = D_80145EC8;
             *(s32 *)(D_80144004 + (u32)*scratch * 0x74u) =
                 func_8015477C(*(s32 *)(D_80143FFC + (u32)*scratch * 0x74u),
                               *(s32 *)(D_80144000 + (u32)*scratch * 0x74u)) << 16;
-            D_80143FF1[(u32)*scratch * 0x74u] = 0u;
+            seed = *scratch;
+            D_80143FF1[seed * 0x74u] = 0u;
         }
 
         *counter = 0x84u;
