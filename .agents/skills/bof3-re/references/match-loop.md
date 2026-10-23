@@ -39,7 +39,7 @@ through the tooling owner; matching work grants no profile-change authority.
 | --- | --- | --- |
 | 1. Representation/access | Prove ABI, widths, qualifiers, pointer cells and original reloads; inspect callees before declaring allocation-only | Original calls, conversions and memory events accounted for |
 | 2. Control flow | Branch direction, loop/return/switch; test branch-local calculations with a shared result and the playbook branch matrix | Branch/topology mismatch clears |
-| 3. Value lifetimes | Reuse a consumed local for a later real result; test block-local initialization, operation scopes and arithmetic grouping | Predicted instruction effect measured; semantics and complete diff checked |
+| 3. Value lifetimes | Reuse a consumed local for a later real result; diagnose [orphan stack slots](matching-knowledge.md#orphan-stack-slots); test block-local initialization, operation scopes and arithmetic grouping | Predicted instruction effect measured; semantics and complete diff checked |
 | 4. Compiler evidence | At a stall, inspect matching compiler sources and before/after RTL for the cited residual | Source-backed mechanism predicts a new probe; diagnostics grant no match |
 | 5. Runtime evidence | For unresolved behavior, use bounded original/candidate observations through `psx-emulator` | Inputs, observations, stop and provenance checked; host edits and coverage limits explicit |
 | 6. Permuter | Opt-in, shape already right; `bin/harness lift permute TARGET@0xADDRESS -j N`; keep owning profile fixed | Attempt completes, residual class recorded |

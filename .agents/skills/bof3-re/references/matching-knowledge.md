@@ -6,7 +6,8 @@ owning live native comparison; keep best coherent PRE and full attempt ledger.
 
 Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 [delay slots](#delay-slots-and-entry-copies), [representation](#representation-and-volatility),
-[allocation](#allocator-sensitive-functions), [compiler](#compiler-evidence),
+[allocation](#allocator-sensitive-functions), [orphan stack slots](#orphan-stack-slots),
+[compiler](#compiler-evidence),
 [runtime](#runtime-evidence), [storage](#storage-and-analysis-context),
 [failure/capture](#failure-and-capture).
 
@@ -19,7 +20,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | `addu $at,index,$at` versus `addu $at,$at,index` | Named extern array can shift expansion to assembler; never pin scratch `$at` |
 | Fixed-address constant steals entry copy | Named extern binding can prevent constant-address CSE; verify entire register web |
 | Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler |
-| Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology |
+| Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots) |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
 | Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt |
 | Global/BSS offsets | Audit COMMON/section/alignment/order/padding and following symbols |
@@ -136,6 +137,32 @@ A narrowed induction temporary needs a complete reachable-range proof, including
 the final endpoint. A higher score at the same size can be a retainable partial
 while introducing a different residual. More matched instructions with missing
 original bytes is not exactness; inspect conversion, mask, frame and flow changes.
+
+### Orphan stack slots
+
+Use this lever when the body matches but the frame differs, with no emitted body
+access to the extra bytes. First exclude ABI, call, aggregate and address-escape
+errors. In GCC 2.7.2, a folded address can leave an internal `USE` of a pseudo
+whose definition disappeared. Reload may allocate a slot for that pseudo even
+though the `USE` emits no instruction.
+
+1. Bind before/after dumps to the source and unchanged compiler settings. Trace
+   the address definition, its death note and surviving `USE` through combine,
+   allocation and reload. Confirm a stack-slot `USE` and the extra frame bytes;
+   a frame-size difference alone does not establish this cause.
+2. Reuse one compatible scalar after each value's final consumer, for example
+   store address, next store address, then a later real row index. Preserve each
+   original reload, store and call. For address/index reuse through `u32`, prove
+   the target's pointer width, lossless round-trip, alignment and unsigned offset
+   arithmetic. Do not narrow an address or invent an aggregate to steer aliasing.
+3. Check whether the later numeric consumer gives the local a hard register.
+   An internal `USE` may remain; it must no longer require an orphan stack slot.
+   Pointer-only reuse may reduce slots without removing the last one. Typed
+   indexing can instead change alias analysis, reloads and the instruction body.
+4. Measure through `lift sweep`, then the owning live gate and independent review.
+   Require the original frame, complete function bytes and reviewed readonly data
+   for exact acceptance. Preserve semantic and memory-event equivalence; smaller
+   frames or fewer `USE`s alone are not acceptance evidence.
 
 ## Compiler evidence
 
