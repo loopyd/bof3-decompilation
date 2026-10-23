@@ -11,10 +11,11 @@ extern short SsUtSetDetVVol(short, short, short);
  * PsyQ SsUtKeyOnV/SsUtSetDetVVol.
  * @source 0x8015DF18
  * @status partial
- * @match 88.24
- * @residual 593/672 instructions; 2684 original bytes versus 2688 current.
- * The entry cue copy moves ahead of the masks instead of filling the handler
- * call's delay slot. Four fade-product register assignments also differ.
+ * @match 90.03
+ * @residual 605 instructions match; 2684 original bytes versus 2688 current.
+ * The entry cue copy precedes the cue masks instead of filling the handler
+ * call's delay slot. Four mult operand orders and branch displacements also
+ * differ; the generated function is four bytes longer than the original.
  */
 void dispatchSoundCue(u32 cue_id) {
 
@@ -24,6 +25,7 @@ void dispatchSoundCue(u32 cue_id) {
   s32 lo;
   s16 result;
   s32 shifted;
+  s32 fade;
 
   s32 top;
 
@@ -37,58 +39,62 @@ void dispatchSoundCue(u32 cue_id) {
   if (D_8018B3F4 == 0x80) {
     switch (D_8018B3E4) {
     case 3:
-      lo = D_8018B39C * (0x80 - D_8018B3A4);
+      fade = D_8018B3A4;
+      lo = D_8018B39C * (0x80 - fade);
       if (lo < 0) {
         lo += 0x7F;
       }
       D_8018B39C = (s16)(lo >> 7);
-      lo = D_8018B3A0 * D_8018B3A4;
-      shifted = lo >> 7;
-      if (lo < 0) {
-        lo += 0x7F;
-        shifted = lo >> 7;
+      fade = D_8018B3A0 * fade;
+      shifted = fade >> 7;
+      if (fade < 0) {
+        fade += 0x7F;
+        shifted = fade >> 7;
       }
       D_8018B3A0 = (s16)shifted;
       /* fallthrough */
     case 2:
-      lo = D_8018B374 * (0x80 - D_8018B37C);
+      fade = D_8018B37C;
+      lo = D_8018B374 * (0x80 - fade);
       if (lo < 0) {
         lo += 0x7F;
       }
       D_8018B374 = (s16)(lo >> 7);
-      lo = D_8018B378 * D_8018B37C;
-      shifted = lo >> 7;
-      if (lo < 0) {
-        lo += 0x7F;
-        shifted = lo >> 7;
+      fade = D_8018B378 * fade;
+      shifted = fade >> 7;
+      if (fade < 0) {
+        fade += 0x7F;
+        shifted = fade >> 7;
       }
       D_8018B378 = (s16)shifted;
       /* fallthrough */
     case 1:
-      lo = D_8018B34C * (0x80 - D_8018B354);
+      fade = D_8018B354;
+      lo = D_8018B34C * (0x80 - fade);
       if (lo < 0) {
         lo += 0x7F;
       }
       D_8018B34C = (s16)(lo >> 7);
-      lo = D_8018B350 * D_8018B354;
-      shifted = lo >> 7;
-      if (lo < 0) {
-        lo += 0x7F;
-        shifted = lo >> 7;
+      fade = D_8018B350 * fade;
+      shifted = fade >> 7;
+      if (fade < 0) {
+        fade += 0x7F;
+        shifted = fade >> 7;
       }
       D_8018B350 = (s16)shifted;
       /* fallthrough */
     case 0:
-      lo = D_8018B324 * (0x80 - D_8018B32C);
+      fade = D_8018B32C;
+      lo = D_8018B324 * (0x80 - fade);
       if (lo < 0) {
         lo += 0x7F;
       }
       D_8018B324 = (s16)(lo >> 7);
-      lo = D_8018B328 * D_8018B32C;
-      shifted = lo >> 7;
-      if (lo < 0) {
-        lo += 0x7F;
-        shifted = lo >> 7;
+      fade = D_8018B328 * fade;
+      shifted = fade >> 7;
+      if (fade < 0) {
+        fade += 0x7F;
+        shifted = fade >> 7;
       }
       D_8018B328 = (s16)shifted;
     }
