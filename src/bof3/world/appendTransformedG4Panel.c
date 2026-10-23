@@ -4,19 +4,15 @@
  * anchor using the rotation seed at `0x801492d8`.
  * @source 0x801F3ECC
  * @status partial
- * @match 61.11
- * @residual non-exact live audit: 77/126 instructions; 504 original bytes versus 492 current.
- * The rotation seed binds through the named `D_801492D8` object, the four
- * scratch vertices through the `D_1F800014` pointer and the packet through the
- * PsyQ `POLY_G4` members, which removed the constant-address `lui/ori` seed
- * load and eight duplicated scratch address computations. The original writes
- * each scratch x halfword through the held vector base and each y/z halfword
- * through an absolute `$at` address, then emits `addiu v1,v1,-0x9E` followed by
- * `addu v1,s2,v1` per coordinate. A single symbol-derived pointer makes
- * gcc-2.7.2 fold every symbol+offset store to an absolute address, and both
- * operand spellings of `arg + (half - 0x9E)` fold into one hoisted
- * `arg - 0x9E`, so the mixed addressing and the per-statement constant order
- * remain unreproduced (three shapes measured identically at 77/126).
+ * @match 87.60
+ * @residual 113 of 129 current instructions match, against 126 original;
+ * 504 original bytes versus 516 current. At +0x0070, the -4/+4 scratch stores
+ * precede the original zero stores. Three of four scratch x stores use an
+ * absolute address instead of the held vector base, adding three `lui`
+ * instructions. The 0xFF materialization and stores also occur earlier.
+ * Narrowing each biased coordinate before adding its anchor preserves the
+ * stored halfword and retains the original per-coordinate bias calculation.
+ * This equivalence depends on the final store being 16-bit.
  */
 void appendTransformedG4Panel(s16 arg0, s16 arg1) {
   MATRIX   matrix;
@@ -67,14 +63,14 @@ void appendTransformedG4Panel(s16 arg0, s16 arg1) {
   prim->g3 = 0;
   prim->b3 = 0xff;
 
-  prim->x0 = prim->x0 - 0x9e + arg0;
-  prim->y0 = prim->y0 - 0x76 + arg1;
-  prim->x1 = prim->x1 - 0x9e + arg0;
-  prim->y1 = prim->y1 - 0x76 + arg1;
-  prim->x2 = prim->x2 - 0x9e + arg0;
-  prim->y2 = prim->y2 - 0x76 + arg1;
-  prim->x3 = prim->x3 - 0x9e + arg0;
-  prim->y3 = prim->y3 - 0x76 + arg1;
+  prim->x0 = (s16)(prim->x0 - 0x9e) + arg0;
+  prim->y0 = (s16)(prim->y0 - 0x76) + arg1;
+  prim->x1 = (s16)(prim->x1 - 0x9e) + arg0;
+  prim->y1 = (s16)(prim->y1 - 0x76) + arg1;
+  prim->x2 = (s16)(prim->x2 - 0x9e) + arg0;
+  prim->y2 = (s16)(prim->y2 - 0x76) + arg1;
+  prim->x3 = (s16)(prim->x3 - 0x9e) + arg0;
+  prim->y3 = (s16)(prim->y3 - 0x76) + arg1;
 
   func_8014E5A0(1u, 0x24u);
   PopMatrix();

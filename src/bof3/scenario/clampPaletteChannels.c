@@ -13,14 +13,17 @@
  * 0xFF and a second copy is masked with 0xFFFF as the unsigned limit compared
  * with `sltu`; the source halfword is loaded with `lhu` and shifted with `srav`,
  * so the colour word is a signed full word with no extra 0xFFFF mask; the inner
- * channel loop accumulates through two full words (`or` into one register and a
- * copy into the carried register), both of which stay live to the end of the
- * outer iteration; the destination is formed as base + byte offset with `addu`,
- * and the source pointer is compared with `slt` (a signed comparison).
+ * channel loop counts its three channels with an index whose x5 shift the
+ * compiler re-forms into a running 0/5/10 accumulator (`slti 3`/`bnez` exit);
+ * it accumulates through two full words (`or` into one register and a copy into
+ * the carried register), both of which stay live to the end of the outer
+ * iteration; the destination is formed as base + byte offset with `addu` and
+ * rematerialises the 0x80037800 base inside the outer loop, and the source
+ * pointer is compared with `slt` (a signed comparison).
  * @source 0x801F83B0
  * @status partial
- * @match 46.51
- * @residual Channel-loop exit (li 3/bne instead of slti 3/bnez) and register allocation differ; both bodies are 172 bytes.
+ * @match 51.16
+ * @residual Pre-header order emits the intensity and limit masks after offset/src/src_end instead of first, and the t-register pool is rotated one slot (packed in a3, merged in v1, dst in a1 versus packed t0, merged a3, dst v1). Inner channel loop and in-loop destination base match; both bodies are 172 bytes.
  */
 void clampPaletteChannels(u32 intensity) {
   const u16* src;
@@ -31,12 +34,10 @@ void clampPaletteChannels(u32 intensity) {
   u32        merged;
   s32        color;
   u32        component;
-  u32        shift;
   s32        i;
   u16*       dst;
 
   intensity &= 0xffu;
-  limit = intensity & 0xffffu;
   offset = 0u;
   src = (const u16*)SCENA16_PALETTE_SRC;
   src_end = PSX_PTR(const u16, 0x80033820u);
@@ -45,20 +46,15 @@ void clampPaletteChannels(u32 intensity) {
     packed = 0u;
     i = 0;
     color = *src;
-    shift = 0u;
-    do {
-      component = (u32)(color >> shift) & 0x1fu;
+    for (; i < 3; i++) {
+      component = (u32)(color >> (i * 5)) & 0x1fu;
+      limit = intensity & 0xffffu;
       if (limit < component) {
         component = intensity;
       }
       merged = (packed << 5) | component;
       packed = merged;
-      i++;
-      shift += 5u;
-      if (i == 3) {
-        break;
-      }
-    } while (1);
+    }
 
     dst = (u16*)((u8*)SCENA16_PALETTE_DST + offset);
     *dst = (u16)packed;

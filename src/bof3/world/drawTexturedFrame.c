@@ -5,8 +5,17 @@
  * shared texture window, then queues the matching inner fill rectangle.
  * @source 0x801F3D88
  * @status partial
- * @match 86.73
- * @residual Two instructions are absent; emitter scheduling, operand-register choices and resulting branch displacements differ at 1348 bytes versus 1356 original.
+ * @match 87.32
+ * @residual Byte size matches the 1356-byte original and 296 of 339 instructions
+ *   match. The original forms the strip height
+ *   (arg3 + 1) in a caller-saved temp and copies it into its own saved home
+ *   with `move s2,v0`, so the bottom edge is s3 and the strip height is s2;
+ *   this candidate has no such copy, recomputes the height as `addiu s3,t1,1`
+ *   and homes the bottom edge in s2 and the height in s3. The left-edge
+ *   coordinate and the strip-A/C/D read-back writes are also scheduled
+ *   differently. Both remain allocation and scheduler class: 18 measured
+ *   clean-C shapes produced either the copy with exchanged homes or the
+ *   original homes without the copy.
  */
 void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   RECT*     texture_window;
@@ -27,7 +36,7 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   s32       arg1_l;
   s32       zero_v;
   s32       sx;
-  s32       narrow_width;
+  u16       narrow_width;
 
   texture_window = (RECT*)g_PrimCursor;
   g_PrimCursor = (u8*)(texture_window + 1);
@@ -68,7 +77,7 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->g0 = 0xacu;
   primitive->b0 = 0xacu;
   bottom_v = arg3_l + 1;
-  bottom_y = arg1_l + bottom_v;
+  bottom_y = (arg3_l + 1) + arg1_l;
   primitive->y2 = (s16)bottom_y;
   primitive->y3 = (s16)bottom_y;
   primitive->u1 = 2u;
@@ -82,7 +91,7 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
   primitive->clut = GetClut(clut_x, 0x1e1);
 
   width_plus_1 = arg2 + 1;
-  narrow_width = (s32)(u16)width_plus_1;
+  narrow_width = (u16)width_plus_1;
 
   if (GetGraphType() != 1) {
     GetGraphType();
@@ -90,7 +99,7 @@ void drawTexturedFrame(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4) {
 
   primitive->tpage = 0x0fu;
   func_8014E5A0(1u, 0x28u);
-  x = ((s32)(u16)narrow_width - 4) >> 1;
+  x = ((s32)narrow_width - 4) >> 1;
 
   primitive = (POLY_FT4*)g_PrimCursor;
   odd_width = (arg2 - 3) & 1;
