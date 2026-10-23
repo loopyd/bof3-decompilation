@@ -1,7 +1,9 @@
 #include "bof3/world/area03213_internal.h"
 
 /* @source 0x801F2F04
- * @behavior Emits a ring of semi-transparent quadrilateral primitives.
+ * @behavior Emits 32 semi-transparent Gouraud triangles as a radial fan.
+ * Each triangle joins the center to two radius-scaled angular samples, with
+ * the next sample wrapping to angle zero for the final triangle.
  * @status partial
  * @match 94.29
  * @residual 99/105 instructions at the original 420-byte size and 0x40 frame.
