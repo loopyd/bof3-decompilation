@@ -5,6 +5,7 @@ qualifier changes read [memory API](memory-api.md). Every lever is hypothesis un
 owning live native comparison; keep best coherent PRE and full attempt ledger.
 
 Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
+[explicit cursors](#explicit-cursors-and-signed-bounds),
 [delay slots](#delay-slots-and-entry-copies), [representation](#representation-and-volatility),
 [allocation](#allocator-sensitive-functions), [orphan stack slots](#orphan-stack-slots),
 [compiler](#compiler-evidence), [guard scheduling](#guard-scheduling-and-value-reuse),
@@ -22,7 +23,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler |
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots) |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
-| Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt |
+| Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt. For displaced induction setup, inspect [explicit cursors](#explicit-cursors-and-signed-bounds) |
 | Global/BSS offsets | Audit COMMON/section/alignment/order/padding and following symbols |
 | Phantom read-only object | Local static constant versus existing shared extern ownership |
 | Load uses wrong argument register | Verify callee argument consumption and caller setup before allocator probes |
@@ -59,6 +60,32 @@ For preheader or delay-slot order, test a block-local value initialized at its r
 use, or a single-execution `do { operation; } while (0)` around actual work. Such
 scopes can alter loop notes, lifetimes and scheduling. They are hypotheses, not
 barriers. Reject empty scopes, dummy work, added accesses and semantic distortion.
+
+### Explicit cursors and signed bounds
+
+Use when loop accesses match but induction setup, entry guard or bound compare
+differs. Diagnose before changing statement order; keep compiler/flags fixed.
+
+1. Bind RTL to source hashes. In GCC 2.7.2, trace `loop.c` strength reduction
+   and invariant insertion, then `.sched`/`.sched2`. An index loop can acquire
+   pointer setup after another initializer; scheduling may preserve that order.
+2. Test an explicit cursor and endpoint. Use `do` only when original control
+   flow and the complete input domain prove at least one iteration. Prove
+   start, stride, count, final cursor and parallel indices, including exit and
+   `continue` paths. Preserve conditional loads, byte truncation and aliases.
+3. If the cursor form loses an original address copy, trace CSE and allocation.
+   After deriving accumulator pointers, test reusing the consumed address scalar
+   for a real kind value. Preserve every reload; add no dummy use or alias view.
+4. Match compare semantics, not just loop length. Pointer `<` may emit `sltu`
+   where original cursors use `slt`; `!=` may remove the compare. Test signed
+   address casts only after proving target pointer width/conversion, ordered
+   endpoints within one signed region, reachable stride progression and no
+   wraparound. Re-prove these bounds for relocated copies; never cast solely
+   to select an opcode.
+5. Confirm predicted setup, entry test and compare through `lift sweep`, then
+   full function/readonly-byte gate and independent review. Freeze during review.
+   Correct setup alone proves neither semantics nor exactness; this lever does
+   not establish original C or universal compiler behavior.
 
 ## Delay slots and entry copies
 
