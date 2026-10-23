@@ -46,6 +46,7 @@ const lanes = rawLanes.map((lane, index) => ({
   key: String(lane.key || `lane-${index + 1}`),
   target: String(lane.target || ""),
   refs: Array.isArray(lane.refs) ? lane.refs.map(String) : [],
+  cwd: typeof lane.cwd === "string" && lane.cwd.trim() ? lane.cwd.trim() : "",
   // Optional bounded parent instruction appended to the lift and repair briefs.
   note: typeof lane.note === "string" ? lane.note.trim() : "",
 }));
@@ -308,6 +309,7 @@ const laneChain = (lane) => {
       label: `Lift ${lane.key} (${lane.target})`,
       agent: "bof3-lifter",
       ...modelOption,
+      ...(lane.cwd ? { cwd: lane.cwd } : {}),
       output: false,
       task: liftBrief(lane),
     })
@@ -357,6 +359,7 @@ const reviewOnce = (lane, proposedText, round, triedRepairs) => {
       label: `Review ${lane.key} non-exact lift`,
       agent: "bof3-reviewer",
       ...modelOption,
+      ...(lane.cwd ? { cwd: lane.cwd } : {}),
       output: false,
       task: reviewBrief(lane, proposedText),
     })
@@ -382,6 +385,7 @@ const reviewOnce = (lane, proposedText, round, triedRepairs) => {
             label: `Repair ${lane.key} after review`,
             agent: "bof3-lifter",
             ...modelOption,
+            ...(lane.cwd ? { cwd: lane.cwd } : {}),
             output: false,
             task: repairBrief(lane, text, proposedText),
           })
