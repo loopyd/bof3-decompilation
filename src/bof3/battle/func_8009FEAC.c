@@ -2,13 +2,13 @@
 
 /* @behavior UNKNOWN: exact behavior is not yet documented. */
 
-/* @stores byte 2 at offset 8 and halfword -5 at offset 6 of the pointer from D_801463A0.
+/* @stores byte 2 at offset 8 and halfword -5 at offset 6 of the pointer from D_8014639C.record.
  * @source 0x8009FEAC
  * @status exact
  * @match 100.00
  * @residual none
  */
 void func_8009FEAC(void) {
-  ((u8*)D_801463A0)[8] = 2;
-  *(s16*)((u8*)D_801463A0 + 6) = -5;
+  ((u8*)D_8014639C.record)[8] = 2;
+  *(s16*)((u8*)D_8014639C.record + 6) = -5;
 }

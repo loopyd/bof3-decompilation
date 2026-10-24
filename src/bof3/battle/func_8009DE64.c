@@ -2,7 +2,7 @@
 
 /* @behavior UNKNOWN: exact behavior is not yet documented. */
 
-/* @stores 0x-28 to offset 2 of the pointer loaded from D_801463A0.
+/* @stores 0x-28 to offset 2 of the pointer loaded from D_8014639C.record.
  * @source 0x8009DE64
  * @status exact
  * @match 100.00
@@ -11,6 +11,6 @@
 void func_8009DE64(void) {
   s16* ptr;
 
-  ptr = (s16*)D_801463A0;
+  ptr = (s16*)D_8014639C.record;
   ptr[2] = -40;
 }

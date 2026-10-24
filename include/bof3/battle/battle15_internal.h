@@ -6,6 +6,12 @@
 #include "gpu/prim.h"
 #include "battle/ram.h"
 
+/* Active work and selection-record pointers, reconstructed at 0x8014639C. */
+typedef struct BattleSelectionPointers {
+  u8 *work;
+  s16 *record;
+} BattleSelectionPointers;
+
 typedef void (*BattleSelectionHandler)(void);
 typedef struct BattleSelectionDispatchTable {
   BattleSelectionHandler handlers[3];
@@ -278,7 +284,7 @@ extern u8                      D_80146375; /* @source 0x80146375 @kind unknown *
 extern volatile s8   D_80145558; /* @source 0x80145558 @kind unknown */
 extern volatile s16  D_801EC2EE; /* @source 0x801EC2EE @kind unknown */
 extern volatile u8   D_80146394; /* @source 0x80146394 @kind unknown */
-extern s16* volatile D_801463A0; /* @source 0x801463A0 @kind unknown */
+extern BattleSelectionPointers D_8014639C; /* @source 0x8014639C @kind data */
 extern volatile u16  D_801463C0; /* @source 0x801463C0 @kind unknown */
 extern u16 D_801EC2F2; /* @source 0x801EC2F2 @kind unknown */
 extern u16 D_801EC312; /* @source 0x801EC312 @kind unknown */

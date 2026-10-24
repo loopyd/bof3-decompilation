@@ -19,5 +19,5 @@ void func_8009DCC8(void)
   base_value = D_80146394;
   result = func_800A2880(battler_index, base_value,
                          D_801CA71B[index * 0x14], 0);
-  D_801463A0[2] = result;
+  D_8014639C.record[2] = result;
 }

@@ -2,13 +2,13 @@
 
 /* @behavior UNKNOWN: exact behavior is not yet documented. */
 
-/* @stores byte 2 at offset 8 and halfword -0x28 at offset 6 of the pointer from D_801463A0.
+/* @stores byte 2 at offset 8 and halfword -0x28 at offset 6 of the pointer from D_8014639C.record.
  * @source 0x8009FED0
  * @status exact
  * @match 100.00
  * @residual none
  */
 void func_8009FED0(void) {
-  ((volatile u8*)D_801463A0)[8] = 2;
-  D_801463A0[3] = -0x28;
+  ((volatile u8*)D_8014639C.record)[8] = 2;
+  D_8014639C.record[3] = -0x28;
 }

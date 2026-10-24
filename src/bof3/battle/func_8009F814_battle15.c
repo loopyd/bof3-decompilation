@@ -9,5 +9,5 @@
  * @residual none
  */
 void func_8009F814(void) {
-  D_801463A0[2] = func_800A4294(1);
+  D_8014639C.record[2] = func_800A4294(1);
 }

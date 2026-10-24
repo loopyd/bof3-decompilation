@@ -19,5 +19,5 @@ void applyKindMaskSelection(void) {
   mask = D_801CA71C[index].mask & 0x1FFu;
   arg1 = D_80146394;
   result = func_801DC044(arg0, arg1, mask);
-  D_801463A0[2] = result;
+  D_8014639C.record[2] = result;
 }

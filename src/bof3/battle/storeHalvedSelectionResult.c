@@ -7,5 +7,5 @@
  */
 /* @behavior Stores the signed half of the battle selection result in the active record. */
 void storeHalvedSelectionResult(void) {
-  D_801463A0[2] = func_801DC044(D_80146374, D_80146394, 0xFFFF) >> 1;
+  D_8014639C.record[2] = func_801DC044(D_80146374, D_80146394, 0xFFFF) >> 1;
 }

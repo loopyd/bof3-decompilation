@@ -12,7 +12,7 @@ void func_800A0E68(void) {
   s32 half;
 
   half = func_801DC044(D_80146374, D_80146394, 0xFFFF) / 2;
-  ((u16*)D_801463A0)[2] = half;
+  ((u16*)D_8014639C.record)[2] = half;
   if (half != 0) {
     querySelectionApplyInput(0x20);
   }

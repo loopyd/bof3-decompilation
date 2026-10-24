@@ -9,8 +9,8 @@
 void armRecordFlag8ResetFields(void) {
   s16 *ptr;
 
-  ((volatile u8 *)D_801463A0)[8] |= 2;
-  ((volatile s16 *)D_801463A0)[2] = -5;
-  ptr = D_801463A0;
+  ((u8 *)D_8014639C.record)[8] |= 2;
+  ((s16 *)D_8014639C.record)[2] = -5;
+  ptr = D_8014639C.record;
   ptr[3] = -1;
 }

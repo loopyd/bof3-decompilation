@@ -3,25 +3,14 @@
 /* @source 0x8009DE8C
  * @behavior Negates the halfword selected by the active battler index byte and
  *   stores the result in the field at +0x04 of the selection record pointer
- *   D_801463A0: below index 3 the halfword comes from the 0x140-stride
+ *   D_8014639C.record: below index 3 the halfword comes from the 0x140-stride
  *   local-work record field above 0x80145F18, at index 3 and above from the
  *   0x118-stride enemy-work record halfword above 0x801EB6C4. When the
  *   enemy-work halfword is the 0xFFFF sentinel the stored field becomes -1 and
  *   the matching enemy status byte at 0x801EB72C gains bit 2.
- * @status partial
- * @match 94.74
- * @residual 54/57 instructions, 228/228 bytes: 3 instructions differ only in
- *   delay-slot placement. The else path's negation fills the pointer-load
- *   delay slot after `lw v1` and the arm jumps straight to the store, while the
- *   original lifts it into the `bne` delay slot and keeps a `nop` in the
- *   load-delay slot (then-arm `j` target 0x8009DF64 vs 0x8009DF60). Clean-C
- *   rungs tried and rejected: direct volatile reads with u8/u32 locals (extra
- *   `andi`, folded address), non-volatile view without an index hoist (loads
- *   CSEd), index/negation in separate statements (cross-jump tail lost),
- *   inverted sentinel test and inverted arm order (layout regressed), and a
- *   separate s32 negation local before the store (same three differences).
- *   The 52-profile canonical flag catalog returns no exact match (best
- *   94.74). The permuter rung is opt-in and was not authorized.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void func_8009DE8C(void) {
   u8* state;
@@ -33,7 +22,7 @@ void func_8009DE8C(void) {
    * address register. */
   state = (u8*)&D_80146394;
   if (*state < 3) {
-    ((s16*)D_801463A0)[2] =
+    ((s16*)D_8014639C.record)[2] =
         -*(u16*)(D_80145F18 + *state * 0x140 + 8);
   } else {
     u32 enemy_index;
@@ -44,10 +33,10 @@ void func_8009DE8C(void) {
     enemy_index = *state - 3;
     value = *(u16*)(D_801EB6C4 + enemy_index * 0x118 + 0xC);
     if (value == 0xFFFF) {
-      ((s16*)D_801463A0)[2] = -1;
+      ((s16*)D_8014639C.record)[2] = -1;
       D_801EB72C[*(volatile u8*)state - 3].status |= 4;
       return;
     }
-    ((s16*)D_801463A0)[2] = -value;
+    ((s16*)D_8014639C.record)[2] = -value;
   }
 }

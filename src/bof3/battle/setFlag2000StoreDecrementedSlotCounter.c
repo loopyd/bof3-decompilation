@@ -18,11 +18,11 @@ void setFlag2000StoreDecrementedSlotCounter(void)
     *flags |= 0x2000;
     if (index < 3) {
         offset = index * 0x140;
-        ((volatile s16*)D_801463A0)[2] = *((u16*)(D_80145F18 + offset)) - 1;
+        ((volatile s16*)D_8014639C.record)[2] = *((u16*)(D_80145F18 + offset)) - 1;
         *((u16*)&D_80145F18[D_80146374 * 0x140]) = 1;
     } else {
         offset = (index - 3) * 0x118;
-        ((volatile s16*)D_801463A0)[2] = *((u16*)(D_801EB6C4 + offset)) - 1;
+        ((volatile s16*)D_8014639C.record)[2] = *((u16*)(D_801EB6C4 + offset)) - 1;
         slot = D_80146374 - 3;
         *((u16*)(D_801EB6C4 + slot * 0x118)) = 1;
     }

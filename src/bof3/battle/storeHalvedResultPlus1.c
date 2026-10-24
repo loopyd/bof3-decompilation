@@ -2,7 +2,7 @@
 
 /* @source 0x8009EACC
  * @behavior sets flag 0x2000, calls func_801DC044 with state values and 0xFFFF,
- * then stores half the result plus one into D_801463A0[2].
+ * then stores half the result plus one into D_8014639C.record[2].
  * @status exact
  * @match 100.00
  * @residual none
@@ -19,5 +19,5 @@ void storeHalvedResultPlus1(void)
         new_var = D_80146374;
     } while (0);
     result = func_801DC044(new_var, D_80146394, 0xFFFF);
-    D_801463A0[2] = (result >> 1) + 1;
+    D_8014639C.record[2] = (result >> 1) + 1;
 }
