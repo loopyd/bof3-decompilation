@@ -58,8 +58,6 @@ class ContextProfile:
     accepts_selector: bool
     accepts_target: bool
     stable_paths: tuple[str, ...] | None
-    byte_limit: int
-    section_limit: int
     handler: ContextHandler
 
 
@@ -95,8 +93,6 @@ def _context_profile(
     accepts_selector: bool = False,
     accepts_target: bool = False,
     stable_paths: Iterable[str] | None = None,
-    byte_limit: int = 13_000,
-    section_limit: int = 4,
 ) -> Callable[[ContextHandler], ContextHandler]:
     """Register one profile without performing repository I/O."""
 
@@ -111,8 +107,6 @@ def _context_profile(
                 stable_paths=(
                     None if stable_paths is None else tuple(dict.fromkeys(stable_paths))
                 ),
-                byte_limit=byte_limit,
-                section_limit=section_limit,
                 handler=handler,
             ),
         )
@@ -212,12 +206,4 @@ def render_context(
         output = f"role {role}: no repository context required\n"
     else:
         output = "".join(section.render() for section in sections).lstrip()
-    if mode == "stable":
-        encoded = len(output.encode())
-        if encoded > profile.byte_limit or len(sections) > profile.section_limit:
-            raise ValueError(
-                f"stable {role} context exceeds bound: "
-                f"{encoded}/{profile.byte_limit} bytes, "
-                f"{len(sections)}/{profile.section_limit} sections"
-            )
     return output

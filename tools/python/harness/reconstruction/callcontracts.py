@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import re
 
 from harness.domain.mips import word_fields
-from harness.reconstruction import memorycontracts, pathcontracts
+from harness.reconstruction import memorycontracts, pathcontracts, pointerloads
 from harness.reconstruction.proofvalues import (
     _complete,
     _integer,
@@ -658,6 +658,7 @@ def _observed_entry_context(summary, evidence):
                 )
             )
             and "scopedRestoration" not in summary
+            and "observedFrameCallAdmission" not in summary
             and "symbolicFrame" not in summary
             and {
                 "pc": value["entryPc"],
@@ -669,8 +670,27 @@ def _observed_entry_context(summary, evidence):
         )
 
 
-def _scoped_restoration(value, row):
+def _admitted_call_pcs(summary):
+    value = summary.get("observedFrameCallAdmission")
+    if value is None:
+        return frozenset()
+    _require(
+        type(value) is dict and type(value.get("calls")) is list,
+        "observed frame admission shape",
+    )
+    pcs = []
+    for item in value["calls"]:
+        _require(
+            type(item) is dict and type(item.get("pc")) is int,
+            "observed frame admission call",
+        )
+        pcs.append(item["pc"])
+    return frozenset(pcs)
+
+
+def _scoped_restoration(value, row, closure):
     evidence = row["returnDisposition"]["evidence"]
+    admitted = _admitted_call_pcs(row["originalCallSummary"])
     _keys(
         value,
         {
@@ -789,13 +809,293 @@ def _scoped_restoration(value, row):
             )
         for pc in restored["callPcs"]:
             contract = calls.get(pc, {}).get("contract", {})
+            if pc in admitted:
+                # Conditional eligibility rests on the settled call binding plus the replayed
+                # census, not on aggregate control/transfers, so those dimensions stay partial.
+                _require(
+                    type(contract) is dict
+                    and "noMemoryWrites" in contract
+                    and not _complete(contract["noMemoryWrites"])
+                    and all(_complete(contract[key]) for key in ("identity", "inputs"))
+                    and contract["delay"] == pc + 4
+                    and contract["continuation"]
+                    == contract["actualIncomingLink"]
+                    == pc + 8,
+                    "admitted call keeps an unconditional write or transfer proof",
+                )
+                continue
             _require(
                 type(contract) is dict
                 and "noMemoryWrites" in contract
                 and _complete(contract["noMemoryWrites"]),
                 "scoped call writes remain unresolved",
             )
-    memorycontracts._observed_restoration(row, value)
+    replay = memorycontracts._observed_restoration(row, value, admitted)
+    if "observedFrameCallAdmission" in row["originalCallSummary"]:
+        _observed_frame_call_admission(
+            row["originalCallSummary"]["observedFrameCallAdmission"],
+            row,
+            row["originalCallSummary"],
+            evidence,
+            closure,
+            replay,
+        )
+
+
+def _observed_pointer_load(value, summary, evidence):
+    """Check one occurrence-scoped pointer-load record against the decoded original words."""
+
+    pointerloads.validate_record(value)
+    instructions = {item["pc"]: item for item in evidence["instructions"]}
+    _require(
+        value["entryPc"] == evidence["start"] and value["stopPc"] % 4 == 0,
+        "observed pointer loads belong to another original range",
+    )
+    conditions = list(pointerloads.CONDITIONS)
+    entry = summary.get("entryContext")
+    if entry is not None:
+        isr = entry["cpu"]["inIsr"]
+        _require(value["isr"] is isr, "observed pointer load ISR status differs")
+        if isr:
+            conditions.append(pointerloads.ISR_CONDITION)
+    _require(
+        value["conditions"] == conditions,
+        "observed pointer load lost or altered its conditions",
+    )
+    if value["isr"]:
+        _require(
+            not evidence["decodeComplete"]
+            and all(
+                not _complete(summary[key])
+                for key in (
+                    "entry",
+                    "result",
+                    "control",
+                    "effects",
+                    "declaration",
+                    "noMemoryWrites",
+                )
+            )
+            and "scopedRestoration" not in summary
+            and "observedFrameCallAdmission" not in summary
+            and "symbolicFrame" not in summary,
+            "observed ISR pointer loads cannot establish a generic contract",
+        )
+    accesses = {
+        access["pc"]: access for access in summary.get("accesses", []) if type(access) is dict
+    }
+    for row in value["occurrences"] + value["excluded"]:
+        original = instructions.get(row["pc"])
+        _require(
+            original is not None
+            and original["word"] == row["word"]
+            and original["mapped"]
+            and not original["undef"]
+            and original["bytes"] == 4,
+            "observed pointer load names an instruction outside the original range",
+        )
+    for row in value["occurrences"]:
+        _require(
+            row["sequence"] > row["path"]["firstSequence"]
+            and row["path"]["sequence"] == row["sequence"]
+            and row["path"]["lastSequence"] >= row["sequence"]
+            and row["reaching"]["sequence"] < row["sequence"]
+            and row["visibleFromSequence"] > row["sequence"]
+            and row["visibleFromPc"] >= row["pc"] + 8
+            and value["interval"]["mappingStart"]
+            <= row["address"]["physical"]
+            <= value["interval"]["mappingStart"] + value["interval"]["bytes"] - 4
+            and row["address"]["canonical"] == row["address"]["physical"] | 0x80000000,
+            "observed pointer load occurrence keeps no occurrence path or interval",
+        )
+        reaching = instructions.get(row["reaching"]["pc"])
+        _require(
+            reaching is not None
+            and reaching["word"] == row["reaching"]["word"]
+            and reaching["word"] >> 26 == 15
+            and (reaching["word"] >> 16) & 31 == (row["word"] >> 21) & 31,
+            "observed pointer load reaching definition is not the recorded original prefix",
+        )
+        _require(
+            row["consumers"]
+            and all(consumer["pc"] in instructions for consumer in row["consumers"]),
+            "observed pointer load consumer is not a recorded original use",
+        )
+        for consumer in row["consumers"]:
+            use = pointerloads.operand_use(instructions[consumer["pc"]]["word"])
+            _require(
+                consumer["sequence"] >= row["visibleFromSequence"]
+                and consumer["sequence"] <= row["path"]["lastSequence"]
+                and use is not None
+                and row["destination"] in {reg for reg in use[0] if reg < 32},
+                "observed pointer load consumer is not a recorded original use",
+            )
+        access = accesses.get(row["pc"])
+        _require(
+            access is None or not _complete(access["currentContents"]),
+            "observed pointer load completed universal runtime contents",
+        )
+
+
+def _observed_frame_call_admission(value, row, summary, evidence, closure, replay):
+    """Check one tagged continuation-conditional admission against an independent census."""
+    value = _keys(
+        value,
+        {
+            "kind",
+            "observation",
+            "stateHash",
+            "entryPc",
+            "entrySp",
+            "frameBytes",
+            "conditions",
+            "calls",
+        },
+        "observed frame call admission",
+    )
+    restoration = summary["scopedRestoration"]
+    _require(
+        value["kind"] == memorycontracts.FRAME_ADMISSION_KIND
+        and value["conditions"] == memorycontracts.FRAME_ADMISSION_CONDITIONS
+        and value["observation"] == restoration["observation"]
+        and value["stateHash"] == restoration["stateHash"]
+        and value["entryPc"] == restoration["entryPc"] == evidence["start"]
+        and value["entrySp"] == restoration["entrySp"]
+        and value["frameBytes"] == restoration["frameBytes"],
+        "observed frame admission identity or conditions",
+    )
+    captured = {
+        item["register"]: item["value"] for item in restoration["entryBindings"]
+    }
+    calls = _rows(value["calls"], 32, "admitted calls")
+    conditional = replay["protected"]
+    _require(
+        calls and [item.get("pc") for item in calls] == sorted(conditional),
+        "admitted call inventory differs from replay",
+    )
+    for restored in restoration["registers"]:
+        for pc in restored["callPcs"]:
+            if pc not in conditional:
+                continue
+            _require(
+                any(
+                    word["physicalWord"] == restored["physicalWord"]
+                    for word in conditional[pc]
+                ),
+                "admitted call does not protect the restored word it crossed",
+            )
+    provenance = {item["pc"]: item for item in evidence["calls"]}
+    instructions = {item["pc"]: item["word"] for item in evidence["instructions"]}
+    for item in calls:
+        _keys(
+            item,
+            {
+                "pc",
+                "delay",
+                "continuation",
+                "target",
+                "callee",
+                "outgoingBytes",
+                "outgoingPcs",
+                "checks",
+                "protectedWords",
+                "closure",
+            },
+            "admitted call",
+        )
+        pc = item["pc"]
+        _integer(pc)
+        _integer(item["delay"])
+        _integer(item["continuation"])
+        _integer(item["target"])
+        _integer(item["outgoingBytes"], 32768)
+        _require(
+            item["checks"] == memorycontracts.FRAME_ADMISSION_CHECKS
+            and item["delay"] == pc + 4
+            and item["continuation"] == pc + 8
+            and pc in instructions
+            and pc + 4 in instructions
+            and instructions[pc] >> 26 == 3
+            and item["target"]
+            == (((pc + 4) & 0xF0000000) | ((instructions[pc] & 0x03FFFFFF) << 2))
+            and type(item["callee"]) is str
+            and bool(item["callee"]),
+            "admitted call control binding",
+        )
+        call = provenance.get(pc)
+        _require(
+            call is not None and type(call.get("contract")) is dict,
+            "admitted call provenance",
+        )
+        contract = call["contract"]
+        _require(
+            item["callee"] == contract["callee"]
+            and contract["delay"] == pc + 4
+            and contract["continuation"] == contract["actualIncomingLink"] == pc + 8
+            and not _complete(contract["noMemoryWrites"])
+            and all(_complete(contract[key]) for key in ("identity", "inputs")),
+            "admitted call keeps unconditional evidence",
+        )
+        words = _rows(item["protectedWords"], 31, "admitted protected words")
+        for word in words:
+            _keys(
+                word,
+                {"physicalWord", "entrySpOffset", "register", "storePc"},
+                "admitted protected word",
+            )
+            _integer(word["physicalWord"], 0x1FFFFF)
+            _integer(word["storePc"])
+            _require(
+                word["register"] in memorycontracts.FRAME_ENTRY_REGISTERS
+                and type(word["entrySpOffset"]) is int
+                and word["entrySpOffset"] <= -4,
+                "admitted protected word origin",
+            )
+        members = _rows(item["closure"], 32, "admitted closure")
+        for member in members:
+            _keys(
+                member,
+                {
+                    "function",
+                    "start",
+                    "end",
+                    "entrySpOffset",
+                    "instructions",
+                    "calls",
+                    "accesses",
+                    "writes",
+                },
+                "admitted closure member",
+            )
+            for key in ("start", "end", "instructions", "calls", "accesses", "writes"):
+                _integer(member[key], 1 << 32 if key in {"start", "end"} else 4096)
+            _require(
+                type(member["function"]) is str
+                and bool(member["function"])
+                and type(member["entrySpOffset"]) is int
+                and -32768 <= member["entrySpOffset"] <= 0,
+                "admitted closure member identity",
+            )
+        _require(
+            words == conditional[pc],
+            "admitted protected words differ from original replay",
+        )
+        census = memorycontracts.frame_admission_census(
+            row,
+            item,
+            closure,
+            frame=value["frameBytes"],
+            entry_sp=value["entrySp"],
+            captured=captured,
+            protected=words,
+        )
+        _require(
+            item["outgoingBytes"] == census["outgoingBytes"]
+            and _references(item["outgoingPcs"], 0xFFFFFFFF) == census["outgoingPcs"]
+            and words == census["protectedWords"]
+            and members == census["closure"],
+            "admitted call census differs from independent replay",
+        )
 
 
 FRAME_CONDITIONS = [
@@ -1036,7 +1336,9 @@ def _frame_binding(call, caller, callee):
     }
 
 
-def _summary(row, identity, payload, load, entry_flow, context, images, frame_uses):
+def _summary(
+    row, identity, payload, load, entry_flow, context, images, frame_uses, closure
+):
     value = row.get("originalCallSummary")
     fields = SUMMARY_FIELDS | (
         {"noMemoryWrites"}
@@ -1045,10 +1347,14 @@ def _summary(row, identity, payload, load, entry_flow, context, images, frame_us
     )
     if type(value) is dict and "scopedRestoration" in value:
         fields.add("scopedRestoration")
+    if type(value) is dict and "observedFrameCallAdmission" in value:
+        fields.add("observedFrameCallAdmission")
     if type(value) is dict and "symbolicFrame" in value:
         fields.add("symbolicFrame")
     if type(value) is dict and "entryContext" in value:
         fields.add("entryContext")
+    if type(value) is dict and "observedPointerLoad" in value:
+        fields.add("observedPointerLoad")
     summary = _keys(value, fields, "function summary")
     _require(
         summary["function"] == identity["key"]
@@ -1059,8 +1365,19 @@ def _summary(row, identity, payload, load, entry_flow, context, images, frame_us
     evidence = row["returnDisposition"]["evidence"]
     if "entryContext" in summary:
         _observed_entry_context(summary, evidence)
+    if "observedPointerLoad" in summary:
+        _observed_pointer_load(summary["observedPointerLoad"], summary, evidence)
     if "scopedRestoration" in summary:
-        _scoped_restoration(summary["scopedRestoration"], row)
+        _scoped_restoration(summary["scopedRestoration"], row, closure)
+    _require(
+        "observedFrameCallAdmission" not in summary or "scopedRestoration" in summary,
+        "observed frame admission lacks probed restoration evidence",
+    )
+    _require(
+        "observedFrameCallAdmission" not in summary
+        or not _complete(summary["noMemoryWrites"]),
+        "observed frame admission claims unconditional write absence",
+    )
     if "symbolicFrame" in summary:
         _symbolic_frame(summary, evidence)
     instructions = {item["pc"]: item for item in evidence["instructions"]}
@@ -1547,6 +1864,7 @@ def validate_functions(
             )
             _symbolic_frame(summary, row["returnDisposition"]["evidence"])
             frames[key] = row
+    closure = {identities[key]["start"]: (key, row) for key, row in rows.items()}
     graph = {}
     for key, row in rows.items():
         identity = identities[key]
@@ -1623,6 +1941,7 @@ def validate_functions(
                 context,
                 images,
                 frame_uses,
+                closure,
             ),
             instructions,
             definitions,

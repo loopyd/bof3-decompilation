@@ -11,6 +11,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 [allocation](#allocator-sensitive-functions), [orphan stack slots](#orphan-stack-slots),
 [compiler](#compiler-evidence), [guard scheduling](#guard-scheduling-and-value-reuse),
 [CSE and operand order](#cse-lifetimes-and-commutative-targets),
+[narrow load sharing](#narrow-load-sharing-and-real-value-reuse),
 [runtime](#runtime-evidence), [storage](#storage-and-analysis-context),
 [failure/capture](#failure-and-capture).
 
@@ -24,6 +25,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Fixed-address constant steals entry copy | Named extern binding can prevent constant-address CSE; verify entire register web |
 | Saved copy moves to entry or commutative operands stay swapped | Trace [CSE lifetimes and commutative targets](#cse-lifetimes-and-commutative-targets) |
 | Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler |
+| `lh` plus `lhu` replaces `lh` plus register copy | Trace [narrow load sharing](#narrow-load-sharing-and-real-value-reuse), known bits and later definitions |
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots) |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
 | Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt. For displaced induction setup, inspect [explicit cursors](#explicit-cursors-and-signed-bounds) |
@@ -54,10 +56,17 @@ GCC loop rotation can move invariants: assigning inside loop body can permit lat
 hoisting/preheader copies; moving before loop can lose them. Keep only measured
 semantically correct shape; record negative experiments before trying another shape.
 
-A shared test after two value-producing arms can extend one local across the join.
-Test equivalent per-arm checks or pure address calculations while retaining the
-common result/return. Preserve memory reads and their order. Duplicated expressions
-must not duplicate calls, volatile accesses or other side effects.
+A shared test after value-producing arms extends a local across the join. Test
+per-arm checks branching to the existing common operation. For tail-merged stores,
+express the original subtraction, saturation and capped paths explicitly; retain
+sentinel exits and each path's memory effects. Duplicate no calls or volatile reads.
+
+For indexed fields, match the original calculation's branch boundary. A partial
+stride such as `four = slot << 2` before the branch, completed as
+`(four + slot) << 6` inside each arm, can preserve folded field addressing where
+hoisting the full stride does not. Prove unsigned range, shifts and equivalence to
+`slot * 0x140`. Share only until an intervening store/call can change the index;
+preserve original post-store rereads. Do not add volatility to force them.
 
 For preheader or delay-slot order, test block-local initialization or evidenced
 [operation-scope placement](#operation-scopes-and-loop-note-dependencies).
@@ -146,11 +155,14 @@ only with semantic evidence; reviewed plain view may restore shape. Volatile poi
 cell forces reload without qualifying pointee; use API reference. Never add volatility
 as arbitrary scheduler control. Original-proven ordering remains explicit evidence.
 
-Unaligned fields/padding/SDK stack types follow type-application reference. Direct
-member indexing may preserve folded offset where local pointer enlarges frame.
-Scalar versus aggregate copies, induction counter separate from pointer, temporary
-lifetime and per-evaluation reload locals can change allocation. Full comparison,
-not one matching instruction, decides retention.
+Unaligned fields/padding/SDK stack types follow type-application reference. For
+pooled member addresses, compare direct access through the existing member with
+an initialized pointer local serving one operation. Direct member access can retain
+folded offsets where a reused pointer materializes the cell address. Compare plain
+and single-execution scopes; loop notes can change CSE/combine as well as scheduling.
+Preserve cell/pointee types, qualifiers, evaluation count, aliases and reloads after
+stores. Do not replace the owning aggregate, add cell aliases or qualify accesses
+solely for matching. Check the whole function and frame, not the first fixed load.
 
 Match local views to existing storage and consumers. A mutable source view over a
 mutable byte table can change read-after-write code generation without adding
@@ -194,7 +206,10 @@ Trace each local from definition through its final consumer and address escapes.
 After its value is consumed, test reusing it for a later real helper result or
 calculation with a compatible type. Preserve call order, signed multiplication,
 shifts and narrowing. The new result must have a genuine consumer. Never add dummy
-uses to inflate liveness. Review the whole allocator output, not one register pair.
+uses to inflate liveness. Compatible locals can also serve mutually exclusive arms
+when each arm defines before use and no value escapes the join. Split phase values
+when their interference differs; share a consumed scalar only with a real later
+consumer. Review the whole allocator output, not one register pair.
 
 A narrowed induction temporary needs a complete reachable-range proof, including
 the final endpoint. A higher score at the same size can be a retainable partial
@@ -311,6 +326,48 @@ Nearby-version source supports a hypothesis, not owning-compiler proof.
    events. Require full function/readonly bytes, live gate and independent review;
    freeze during review. Treat success as profile-specific, not original-source
    recovery or permission to add dummy uses, aliases, pins or barriers.
+
+### Narrow load sharing and real value reuse
+
+Use for `lh` plus `lhu` from one address where original uses one signed load and
+a register copy, often in a branch delay slot. Keep declarations and flags fixed.
+
+1. Bind `.cse`/`.combine`/`.lreg`/`.greg` to source/compiler hashes. Trace narrow
+   `HI` value, signed `SI` consumer and all later definitions. GCC 2.7.2
+   `combine.c::try_combine` can split a narrow-load/sign-extension `PARALLEL` into
+   signed load plus copy. Its `reg_nonzero_bits` guard rejects a narrow destination
+   assumed zero-extended. Later definitions can change this global fact despite
+   nonoverlapping runtime lifetimes.
+2. Reuse the consumed narrow local for existing real work. Example: carry the
+   complemented unsigned status byte through `s16` for an existing bit clear:
+
+   ```c
+   /* pending is s16; its previous value is dead on this path. */
+   {
+     u32 slot = *selected; /* selected already points to volatile u8. */
+     pending = ~records[slot].status; /* status is u8. */
+     records[slot].status = ~(pending | 0x10);
+   }
+   ```
+
+   This replaces `records[*selected].status &= ~0x10`, not an extra operation.
+   For unsigned `u8` on the 32-bit target, the promoted complement ranges from
+   -256 through -1 and fits `s16`; `~(~status | mask)` equals `status & ~mask`.
+   Re-prove widths, promotions and narrowing for other fields/masks. Evaluate the
+   original index once; preserve status read/store and ordering. Require the old
+   value dead on every incoming path and a definition before every later use.
+3. Subtraction-result reuse can clear duplicate loads but tie output to the input
+   register. Constants/booleans/masks may fold away without changing known bits.
+   Word promotion can remove internal `USE`s and change frame size; trace
+   [orphan slots](#orphan-stack-slots), never pad. Identical emitted forms share one
+   optimizer class; retry only with changed compiler evidence.
+4. Use `lift sweep`; require predicted load/copy change and inspect full frame,
+   CFG, register web and memory events. Confirm current dumps before causal claims;
+   a compiler rule plus exact bytes does not prove every intermediate fact. Finish
+   with live whole-function byte gate and required semantic review. No dummy
+   complements, discarded values, duplicate accesses, new volatility, pins or
+   barriers. Treat as profile-specific hypothesis, not preferred spelling or
+   recovered original source.
 
 ## Runtime evidence
 

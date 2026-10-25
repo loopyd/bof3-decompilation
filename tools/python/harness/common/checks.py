@@ -277,6 +277,8 @@ def _evidence(check: dict[str, Any], output: str, root: Path) -> dict[str, Any]:
     if not isinstance(payload, dict) or expected is None:
         raise ValueError("partial transaction check did not return JSON evidence")
     schema, keys = expected
+    if "--image-evidence" in check["argv"]:
+        keys = keys | {"function_image"}
     if set(payload) != keys or payload.get("schema") != schema:
         raise ValueError("partial transaction evidence has an invalid tool schema")
     _validate_common(payload, check, root)
@@ -378,6 +380,8 @@ def _exact_evidence(check: dict[str, Any], output: str, root: Path) -> bool:
     try:
         payload = json.loads(output, object_pairs_hook=unique_object)
         schema, keys = _SCHEMAS[tool_id(check["argv"])]
+        if "--image-evidence" in check["argv"]:
+            keys = keys | {"function_image"}
         if (
             not isinstance(payload, dict)
             or set(payload) != keys
@@ -413,9 +417,34 @@ def _exact_evidence(check: dict[str, Any], output: str, root: Path) -> bool:
         return False
 
 
+def _reconstruction_evidence(
+    check: dict, exit_code: object, output: str, root: Path
+) -> dict:
+    from harness.match.evidence import comparison_digest
+
+    try:
+        policy = check["reconstruction"]
+        expected = policy["expected"]
+        payload = json.loads(output, object_pairs_hook=unique_object)
+        if type(exit_code) is not int or exit_code != expected["exit_code"]:
+            raise ValueError("unexpected reconstruction exit status")
+        if exit_code == 0:
+            if not _exact_evidence(check, output, root):
+                raise ValueError("invalid reconstruction exact evidence")
+        else:
+            _baseline_facts(check, exit_code, output, root)
+        actual = comparison_digest(payload, root)
+        passed = actual == expected["identity_digest"]
+        return {"passed": passed, "metrics": None, "evidence_digest": actual}
+    except (ValueError, KeyError, TypeError, OSError):
+        return {"passed": False, "metrics": None, "evidence_digest": None}
+
+
 def check_evidence(
     check: dict[str, Any], exit_code: object, output: str, root: Path
 ) -> dict[str, Any]:
+    if "reconstruction" in check:
+        return _reconstruction_evidence(check, exit_code, output, root)
     baseline = check.get("partial_baseline")
     if baseline is None:
         return {

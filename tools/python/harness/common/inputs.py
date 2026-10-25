@@ -7,6 +7,7 @@ import json
 import os
 import re
 import stat
+from functools import lru_cache
 from pathlib import Path
 
 from harness.common.observation import PathWatch, capture_directory_identity
@@ -50,10 +51,16 @@ _READ_INPUT_CACHE: dict[tuple, tuple[dict, bytes]] = {}
 _READ_INPUT_CACHE_LIMIT = 8192
 
 
+@lru_cache(maxsize=_READ_INPUT_CACHE_LIMIT)
+def _input_ancestors(path: Path) -> tuple[Path, ...]:
+    """Cache lexical ancestry only; callers still observe every path component."""
+    return (path, *path.parents)
+
+
 def read_input(path: Path) -> tuple[dict | None, bytes | None]:
     """Bind input state to the exact bytes read between stable metadata samples."""
     before = None
-    for part in (path, *path.parents):
+    for part in _input_ancestors(path):
         try:
             observed = part.stat(follow_symlinks=False)
         except (FileNotFoundError, NotADirectoryError):

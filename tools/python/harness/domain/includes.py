@@ -38,7 +38,7 @@ def _strip_comments(text: str) -> str:
     )
 
 
-@lru_cache(maxsize=128)
+@lru_cache(maxsize=8192)
 def _include_text(text: str) -> str:
     return _strip_comments(re.sub(r"\\\r?\n", "", text))
 

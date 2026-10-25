@@ -239,7 +239,7 @@ def run_check(args: argparse.Namespace) -> int:
             layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
             errors.extend(
                 str(finding)
-                for finding in splat_source_findings(target, layout)
+                for finding in splat_source_findings(root, target, manifest, layout)
                 if finding.verdict == "reject"
             )
             layers = {

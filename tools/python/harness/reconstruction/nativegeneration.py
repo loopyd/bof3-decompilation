@@ -2350,6 +2350,12 @@ def _run_member(
         row["generation"] = "attempted"
         inputs.verify(events=events)
         command = _native_command(workspace, rizin, plugin, output_limit)
+        observation = invocation.read_entry_observation(
+            run_record.get("entry_observation"),
+            run_record.get("entry_observation_inputs", {}).get(
+                "directory", workspace / "input"
+            ),
+        )
         original_input = invocation.OriginalInput(
             member,
             image,
@@ -2358,17 +2364,19 @@ def _run_member(
             _call_scope(binding, run_dir, member, events),
             contexts,
             tuple(run_record.get("overlay_mounts", ())),
-            invocation.read_entry_observation(
-                run_record.get("entry_observation"),
-                run_record.get("entry_observation_inputs", {}).get(
-                    "directory", workspace / "input"
-                ),
-            ),
+            observation,
             copies.read_copy(
                 run_record.get("copied_original"),
                 run_record.get("copied_original_inputs", {}).get(
                     "directory", workspace / "input"
                 ),
+            ),
+            invocation.read_pointer_load(
+                run_record.get("pointer_load"),
+                run_record.get("pointer_load_inputs", {}).get(
+                    "directory", workspace / "input"
+                ),
+                observation=observation,
             ),
         )
         observed = invocation.capture_native(
@@ -2538,6 +2546,7 @@ def run(
     overlay_mounts: tuple[str, ...] = (),
     entry_receipt: Path | None = None,
     entry_cpu_receipt: Path | None = None,
+    pointer_load_receipt: Path | None = None,
     copied_original_receipt: Path | None = None,
     copied_original_offset: int | None = None,
     search_forms: bool = False,
@@ -2571,6 +2580,11 @@ def run(
             )
         ),
         "entry observation requires both receipts, one reviewed root and explicit original mounts",
+    )
+    _require(
+        pointer_load_receipt is None
+        or (entry_receipt is not None and copied_original_receipt is None),
+        "pointer loads require the observed entry receipts and no copied profile",
     )
     _require(
         type(overlay_mounts) is tuple
@@ -2723,6 +2737,33 @@ def run(
                 "directory": str(directory),
                 "files": PreparedInputs.tree(directory),
             }
+            if pointer_load_receipt is not None:
+                loads = invocation.capture_pointer_load(
+                    pointer_load_receipt, observation, contexts, overlay_mounts
+                )
+                _require(
+                    loads.descriptor["function"] == observation.descriptor["function"],
+                    "pointer load capture belongs to another observed function",
+                )
+                loads_directory = destination / "pointer-load"
+                loads_directory.mkdir()
+                for name, raw in loads.files.items():
+                    write_bytes(
+                        loads_directory / f"pointer-{name}", raw, events=run_events
+                    )
+                entry_sources += tuple(
+                    {
+                        "path": str(loads_directory / f"pointer-{name}"),
+                        "bytes": len(raw),
+                        "sha256": hashlib.sha256(raw).hexdigest(),
+                    }
+                    for name, raw in loads.files.items()
+                )
+                run_record["pointer_load"] = loads.descriptor
+                run_record["pointer_load_inputs"] = {
+                    "directory": str(loads_directory),
+                    "files": PreparedInputs.tree(loads_directory),
+                }
         if copied_original_receipt is not None:
             copied = copies.capture_copy(
                 copied_original_receipt, copied_original_offset

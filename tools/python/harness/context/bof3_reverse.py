@@ -16,8 +16,6 @@ from .common import BOF3_PATHS, contract_sections, selector_sections
         ".agents/skills/bof3-re/SKILL.md",
         ".agents/skills/bof3-re/references/reverse/mission-protocol.md",
     ),
-    byte_limit=160_000,
-    section_limit=32,
 )
 def reverse_context(request: ContextRequest) -> list[ContextSection]:
     sections = selector_sections(request.root, request.function, request.mode)

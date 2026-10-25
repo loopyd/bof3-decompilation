@@ -178,6 +178,8 @@ def _manifest(root: Path, value: object, *, rederive: bool = False) -> dict[str,
     if facts.get("schema") != MANIFEST_SCHEMA or value.get("digest") != digest(facts):
         raise ValueError("macro transaction manifest drifted")
     validate_manifest(value)
+    if any("reconstruction" in check for check in value.get("required_checks", [])):
+        raise ValueError("macro transactions do not support reconstruction policies")
     if rederive:
         try:
             canonical = prepare_transaction(root, value["request"])

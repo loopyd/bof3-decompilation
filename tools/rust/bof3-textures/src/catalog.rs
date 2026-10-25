@@ -311,12 +311,12 @@ pub fn build_from(
                     resource.decode = "three-index-planes-and-palette-verified".into();
                     resource.pack = "fixed-image-ranges-verified".into();
                     resource.evidence.extend([
-                        "BIN/ETC/SHOP.EMI#8@0x801EF27C:save-header-producer".into(),
+                        format!("{}@0x801EF27C:save-header-producer", resource.id),
                         "BIN/ETC/SHOP.EMI#0@0x801D6A08:three-frame-mode-in-delay-slot".into(),
-                        "BIN/ETC/SHOP.EMI#8@0x801EFE68:palette".into(),
-                        "BIN/ETC/SHOP.EMI#8@0x801EFE94:frame-0".into(),
-                        "BIN/ETC/SHOP.EMI#8@0x801EFF54:frame-1".into(),
-                        "BIN/ETC/SHOP.EMI#8@0x801F0014:frame-2".into(),
+                        format!("{}@0x801EFE68:palette", resource.id),
+                        format!("{}@0x801EFE94:frame-0", resource.id),
+                        format!("{}@0x801EFF54:frame-1", resource.id),
+                        format!("{}@0x801F0014:frame-2", resource.id),
                     ]);
                     resource.dependencies.push(Dependency {
                         kind: "palette".into(), target: Some(resource.id.clone()),

@@ -335,8 +335,8 @@ segments:
     - '@behavior: Compacts the D_801EB5A8-entry local panel list at D_801ED9B0 by keeping only the first entry of each (kind byte of the 0x118-byte record at D_801EB6AC selected by the entry owner index, panel id) pair, writes the kept count back to D_801EB5A8 and copies the kept entries down over the list.'
   - - 27032
     - c
-    - func_8009D198
-    - '@source: src/bof3/battle/func_8009D198_battle15.c'
+    - applyPendingBattleDamage
+    - '@source: src/bof3/battle/applyPendingBattleDamage.c'
     - '@behavior: Applies the pending damage pair of the active battle selection record pointed to by D_801463A0 to the battler named by the index byte D_80146394 (below 3 the 0x140-stride local-work record based at 0x80145F18, otherwise the 0x118-stride enemy-work record based at 0x801EB6C4), then dispatches the current battle mode action handler: marks the target status byte with 0x31, consumes the mode-scaled counter of D_80146374, clears the pair when the record flag word 0x10000 is set, and clamps plus consumes the record halfwords +0x04 and +0x06.'
   - - 29332
     - c

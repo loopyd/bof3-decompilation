@@ -41,6 +41,7 @@ def _run_match(
     source: Path,
     *,
     diagnostics: bool,
+    image_evidence: bool = False,
 ) -> dict[str, object]:
     root = repo_layout().root
     bindings = root / "out" / "bindings" / function.target.value / "symbols.c"
@@ -48,6 +49,10 @@ def _run_match(
         root, function.target.value, psyq_space=manifest.psyq_space
     )
     grouped = count_function_metadata(source.read_text(encoding="utf-8")) > 1
+    if grouped and image_evidence:
+        raise ValueError(
+            "function-image evidence requires an ordinary single-function source"
+        )
     if not grouped:
         binding_text = weak_bindings_c(symbols)
         bindings.parent.mkdir(parents=True, exist_ok=True)
@@ -69,6 +74,7 @@ def _run_match(
             },
             section_placements=manifest.section_placements.get(function.address, ()),
             diagnostics=diagnostics,
+            image_evidence=image_evidence,
         )
     )
     if diagnostics:
@@ -164,7 +170,13 @@ def run_asm_diff(args: argparse.Namespace) -> int:
     function, manifest, source = resolve_function_selector(args.function)
     source = _require_lifted_source(function, source)
     return _print_match(
-        _run_match(function, manifest, source, diagnostics=True),
+        _run_match(
+            function,
+            manifest,
+            source,
+            diagnostics=True,
+            image_evidence=getattr(args, "image_evidence", False),
+        ),
         json_output=args.json,
         bytes_only=False,
         detail=args.detail,
@@ -175,7 +187,13 @@ def run_byte_match(args: argparse.Namespace) -> int:
     function, manifest, source = resolve_function_selector(args.function)
     source = _require_lifted_source(function, source)
     return _print_match(
-        _run_match(function, manifest, source, diagnostics=False),
+        _run_match(
+            function,
+            manifest,
+            source,
+            diagnostics=False,
+            image_evidence=getattr(args, "image_evidence", False),
+        ),
         json_output=args.json,
         bytes_only=True,
     )
@@ -242,6 +260,11 @@ def main(argv: list[str] | None = None) -> int:
     elif command in {"asm-diff", "byte-match"}:
         parser.add_argument("function", nargs="?", help=FUNCTION_ID_HELP)
         parser.add_argument("--json", action="store_true")
+        parser.add_argument(
+            "--image-evidence",
+            action="store_true",
+            help="include original and freshly linked function-image hashes in full JSON",
+        )
         if command == "asm-diff":
             add_detail_argument(parser)
         parser.set_defaults(

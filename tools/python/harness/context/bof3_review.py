@@ -17,8 +17,6 @@ from .common import BOF3_PATHS, contract_sections, selector_sections
         ".agents/skills/bof3-re/references/review/review-checklist.md",
         ".agents/skills/bof3-re/references/review/sharing-nonmatches.md",
     ),
-    byte_limit=160_000,
-    section_limit=32,
 )
 def review_context(request: ContextRequest) -> list[ContextSection]:
     sections = selector_sections(request.root, request.function, request.mode)

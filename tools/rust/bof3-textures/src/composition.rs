@@ -167,7 +167,8 @@ pub fn compose(cell: &Cell, context: DrawContext) -> Result<Vec<Geometry>> {
             } else {
                 1
             };
-            let u = (i16::from(part.u) - 128 * correction - 1) as u8;
+            let u =
+                (i16::from(part.u) - 128 * correction - i16::from(!matches!(state, 4 | 7))) as u8;
             let (x0, x1, y0, y1, u0, u1, v1) = if let Some([scale_x, scale_y]) = context.scale {
                 let offset_x = scaled(i32::from(part.x), scale_x);
                 let scaled_width = scaled(i32::from(width), scale_x);

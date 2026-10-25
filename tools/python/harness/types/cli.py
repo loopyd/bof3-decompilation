@@ -240,7 +240,12 @@ def build_parser() -> argparse.ArgumentParser:
         "baseline", help="print the exact clean/adopted workspace baseline digest"
     )
     baseline.set_defaults(handler=_baseline)
-    prepare = sub.add_parser("prepare", help="capture one reviewed type transaction")
+    prepare = sub.add_parser(
+        "prepare",
+        help="capture a reviewed ordinary V2, linked V3 or reconstruction V4 type transaction",
+        description="V4 uses concern=reconstruction, type_concern, reconstruction_functions "
+        "and a pinned proposal {path,sha256}; preparation always captures live PRE.",
+    )
     prepare.add_argument("request", type=Path)
     prepare.add_argument("output", type=Path)
     prepare.set_defaults(handler=_prepare)

@@ -1,7 +1,7 @@
 # Type application
 
 Branches: [discovery](#discovery), [prepare/run](#prepare-and-run),
-[parent review](#parent-review), [revalidation](#revalidation),
+[reconstruction](#reviewed-reconstruction), [parent review](#parent-review), [revalidation](#revalidation),
 [shared promotion](#shared-promotion). Before writes/native work read
 [transaction lifecycle](transaction-lifecycle.md) and
 [native execution](../../bof3-re/references/native-execution.md).
@@ -70,6 +70,64 @@ require two independently accepted private envelopes with distinct targets/paths
 digests, identical address-free representation/semantic contracts, private/exact
 wrappers and shared dependency proof. Integrity pins or legacy
 `expected_application_digest` cannot substitute.
+
+## Reviewed reconstruction
+
+V4 `bof3.type-transaction-request/v4` uses `concern: reconstruction` for one
+existing target-owned header and ordinary single-function sources. Retain V2
+`target`, `header`, `index_candidate_ids`, `candidate_artifacts`,
+`affected_functions` and optional `adopted_baseline`. Add `type_concern` from
+`alias|layout|field|prototype`, sorted nonempty `reconstruction_functions` and
+`proposal:{path,sha256}`. Shared, linked and grouped changes are unsupported.
+Derive the complete header consumer set; selection never excludes a consumer.
+V2/V3 preservation remains strict.
+
+Pin a bounded `bof3.type-reconstruction-proposal/v1` with exactly `schema`,
+`request_digest`, `pre_state`, `images`, `members`, `review`, `digest`.
+`request_digest` covers the request without `proposal` and `adopted_baseline`.
+`pre_state` covers every allowed path. `images` maps exactly the changed header
+and selected source paths to complete POST SHA-256 hashes. Preparation captures
+fresh PRE and refuses differing image identities; never prepare from installed
+POST or rewrite historical proofs.
+
+Each sorted member has `selector`, `pre`, `expected`, `metadata`, `findings`.
+`pre` and `expected` each map `asm-diff` and `byte-match` to
+`{exit_code,payload,identity_digest}`. Capture full JSON with
+`bin/harness lift asm-diff SELECTOR --json --detail full --image-evidence` and
+`bin/harness lift byte-match SELECTOR --json --image-evidence` only through an
+authorized diagnostic run with rollback. `function_image` binds
+`original_sha256` and freshly linked `current_sha256`. The comparison owner
+normalizes output locations and repository path spelling, retaining output-key
+membership and all result fields. Raw stdout hashes remain native receipt facts.
+Expected results are fixed before application, never learned from POST.
+
+`metadata` has `status`, two-decimal string `match`, and `residual`. The pinned
+source must agree with the native result and retain identity, ABI, other metadata
+and surrounding source. Exact progress requires `exact`, `100.00`, `none`.
+Each member and the joint review supply nonempty findings for `semantics`, `abi`,
+`range`, `memory_events`, `control_flow`, `frame`, `aids`. Scores never prove
+semantics or permit aliases, barriers or unsupported qualifiers.
+
+`review` has `accepted:true`, distinct `author_run_id`, `reviewer_run_id`,
+`artifact:{path,sha256}` and `findings`. Its retained JSON artifact is exactly
+`schema: bof3.type-reconstruction-review/v1`, `accepted:true`, both run IDs,
+`request_digest`, `pre_state_digest`, `images_digest`, `members_digest` and
+`findings`, binding the independently inspected proposal. Artifact, proposal,
+source and native identities stay live through execution and replay. The actual
+implementation run ID must be nonempty and distinct from both review IDs.
+
+Existing exact consumers must stay exact. Unselected partials retain identical
+native output. Selected partials must equal their reviewed expectations, keep the
+original range, never lose matching instructions or increase absolute size delta.
+Partial-to-exact uses exact validation, not a mismatch exit. Bodies, header and
+reviewed progress metadata publish together through existing owned recovery.
+This permits measured improvements, not generic non-regression approval.
+
+V4 manifests retain the proposal/reference, original preservation checks and derived
+selected checks. Verification, review, resume and check-only revalidation retain
+that policy without rebasing. Final parent acceptance remains separate; V4 proofs
+cannot supply shared promotion. Failed gates roll back; uncertain cleanup stops
+under the existing lifecycle. Rejected source aids cannot enter through V4.
 
 ## Parent review
 

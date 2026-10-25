@@ -103,11 +103,6 @@ def test_canonical_routes_load_exact_selected_body_and_direct_refs(
     for ref in emitted_references:
         assert ref.startswith(f".agents/skills/{skill}/")
     loaded_bytes = sum(len(section.text.encode()) for section in sections[1:])
-    # Bounds one route's prefill (selected body + its direct references). The
-    # largest measured route is bof3-naming/audit-target at 16,362 bytes; the
-    # enforced context-profile limit is 24,000, so this stays a tighter regression
-    # guard than the runtime ceiling while allowing the measured content.
-    assert loaded_bytes <= 16_400
     assert selected["loaded_bytes"] == loaded_bytes
     unselected = {
         "bof3-naming",

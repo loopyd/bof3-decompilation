@@ -4,6 +4,7 @@ from collections import deque
 
 from harness.domain.mips import word_fields
 from harness.reconstruction.proofvalues import (
+    CallContractRefused,
     _complete,
     _integer,
     _keys,
@@ -17,6 +18,30 @@ DIMENSIONS = set(
     "objectExtent initializedObject zeroInitializedObject constQualification "
     "volatileQualification restrictQualification currentContents aliasEffects placement".split()
 )
+
+FRAME_ADMISSION_KIND = "observed-frame-call-admission/v1"
+FRAME_ADMISSION_CONDITIONS = [
+    "captured-entry-registers-and-settled-load-state",
+    "ordinary-ram-mapping-and-cache-mode-remain-active",
+    "original-instructions-remain-active",
+    "accesses-and-instruction-fetches-complete-normally",
+    "no-asynchronous-or-external-state-interference",
+    "mips-i-load-and-branch-delays",
+    "each-crossed-call-returns-to-its-recorded-continuation",
+]
+FRAME_ADMISSION_CHECKS = [
+    "call-boundary-settled-and-direct",
+    "caller-and-callee-instructions-complete",
+    "closed-reachable-call-inventory",
+    "callee-has-normal-exit",
+    "outgoing-interval-complete",
+    "reachable-writes-disjoint-from-protected-words",
+    "protected-addresses-not-exposed",
+    "ordinary-ram-aliases-normalized",
+]
+# Whole four-byte saves of entry gp, fp, s0-s7 or the incoming link are the only
+# protected words; saving the stack pointer or an argument is not an admitted save.
+FRAME_ENTRY_REGISTERS = frozenset({28, 30, 31}) | frozenset(range(16, 24))
 
 
 def _memory_word(word):
@@ -163,7 +188,7 @@ def _join_observed_value(left, right):
     return None
 
 
-def _observed_restoration(row, proof):
+def _observed_restoration(row, proof, admitted=frozenset()):
     """Replay a callee-local captured frame without trusting claimed address facts."""
     instructions, contexts, incoming, ordered, exits = _observed_cfg(row)
     evidence = row["returnDisposition"]["evidence"]
@@ -171,6 +196,7 @@ def _observed_restoration(row, proof):
     calls = {item["pc"]: item for item in evidence["calls"]}
     frame, sp = proof["frameBytes"], proof["entrySp"]
     states, terminal = {}, []
+    protected = {}
 
     def physical(address, width):
         if not 0 <= address <= 0xFFFFFFFF or address & 0xE0000000 not in {
@@ -362,6 +388,42 @@ def _observed_restoration(row, proof):
             call = calls.get(owner)
             _require(call is not None and not pending, "observed call pending load")
             contract = call["contract"]
+            proven = _complete(contract["noMemoryWrites"])
+            if not proven:
+                # Only the approved preserved words may survive an unproved call; every other
+                # saved value loses its relation here, exactly as the producer does.
+                words = {
+                    address: saved
+                    for address, saved in words.items()
+                    if saved[1] in FRAME_ENTRY_REGISTERS and saved[2] <= -4
+                }
+                registers = [
+                    value
+                    if not (
+                        value is not None
+                        and value[0] == "saved"
+                        and (value[1] not in FRAME_ENTRY_REGISTERS or value[2] > -4)
+                    )
+                    else None
+                    for value in registers
+                ]
+            crossing = [
+                dict(
+                    physicalWord=address,
+                    entrySpOffset=saved[2],
+                    register=saved[1],
+                    storePc=saved[3],
+                )
+                for address, saved in sorted(words.items())
+            ]
+            # Only a call that crosses a preserved word needs the continuation condition; an
+            # unproved call that crosses none retains no saved-memory fact and needs neither a
+            # write-absence proof nor an admission record.
+            conditional_call = bool(crossing) and not proven
+            _require(
+                conditional_call == (owner in admitted),
+                "observed call carries a stale or unneeded admission",
+            )
             _require(
                 call["target"]
                 == (
@@ -372,38 +434,57 @@ def _observed_restoration(row, proof):
                 and contract["delay"] == pc
                 and contract["continuation"] == owner + 8
                 and contract["actualIncomingLink"] == owner + 8
-                and all(
-                    _complete(contract[dimension])
-                    for dimension in (
-                        "identity",
-                        "inputs",
-                        "control",
-                        "transfers",
-                        "noMemoryWrites",
-                    )
-                )
+                and _complete(contract["identity"])
+                and _complete(contract["inputs"])
                 and len(contract["registerTransfers"]) == 34,
-                "observed call lacks independent transfer or write contract",
+                "observed call lacks settled call binding or transfers",
             )
-            for reg, transfer in enumerate(contract["registerTransfers"]):
+            if proven:
                 _require(
+                    all(
+                        _complete(contract[dimension])
+                        for dimension in ("control", "transfers", "noMemoryWrites")
+                    ),
+                    "proved observed call lacks complete control or transfers",
+                )
+            for reg, transfer in enumerate(contract["registerTransfers"]):
+                settled = (
                     transfer["register"] == reg
                     and _complete(transfer["proof"])
                     and not transfer["pending"]
-                    and transfer["mayNoPending"]
-                    and not transfer["pendingDefinitions"],
-                    "observed call unsettled transfer",
                 )
                 preserved = (
-                    transfer["kind"] == "preserved" and transfer["equalEntry"] == reg
+                    settled
+                    and transfer["kind"] == "preserved"
+                    and transfer["equalEntry"] == reg
                 )
-                _require(reg != 29 or preserved, "observed call changes stack")
-                if reg and not preserved:
-                    _require(
-                        transfer["equalEntry"] != 29 and 29 not in transfer["entries"],
-                        "observed call exposes stack",
+                exposes_stack = (
+                    settled
+                    and not preserved
+                    and (transfer["equalEntry"] == 29 or 29 in transfer["entries"])
+                )
+                if settled and reg == 29 and not preserved:
+                    raise CallContractRefused(
+                        "observed call proves a contrary stack transfer"
                     )
-                    registers[reg] = None
+                _require(
+                    not exposes_stack,
+                    "observed call proves a stack escape",
+                )
+                if proven:
+                    _require(
+                        settled
+                        and transfer["mayNoPending"]
+                        and not transfer["pendingDefinitions"],
+                        "observed call unsettled transfer",
+                    )
+                if not preserved:
+                    # Unsettled or non-preserving transfers keep no relation. The stack pointer
+                    # relation is retained separately as the conditional frame base.
+                    if reg != 29:
+                        registers[reg] = None
+            if conditional_call:
+                protected[owner] = crossing
             words = {
                 address: (*saved[:5], saved[5] | {owner})
                 for address, saved in words.items()
@@ -448,6 +529,483 @@ def _observed_restoration(row, proof):
         restored == proof["registers"],
         "observed restoration differs from original replay",
     )
+    _require(admitted == set(protected), "admitted call inventory differs")
+    return {"registers": restored, "protected": protected}
+
+
+def _admission_physical(address, width):
+    if type(address) is not int or not 0 <= address <= 0xFFFFFFFF:
+        return None
+    if address & 0xE0000000 not in {0, 0x80000000, 0xA0000000}:
+        return None
+    physical = address & 0x1FFFFFFF
+    return physical if width > 0 and physical + width <= 0x200000 else None
+
+
+def _admission_offset(base, add):
+    if base is None:
+        return None
+    if base[0] == "stack":
+        return ("stack", base[1] + add)
+    if base[0] == "entry":
+        return ("entry", base[1], base[2] + add)
+    if base[0] == "constant":
+        return ("constant", (base[1] + add) & 0xFFFFFFFF)
+    return None
+
+
+def _admission_step(pc, word, state):
+    """Register effects of one census word; unsupported effects refuse admission."""
+    fields = word_fields(word)
+    opcode, rs, rt, rd = fields.opcode, fields.rs, fields.rt, fields.rd
+    fn, shift = fields.funct, fields.shift
+    immediate = _signed16(word)
+    kind, _ = _memory_word(word)
+    _require(
+        opcode not in {34, 38, 42, 46}
+        and kind not in {"unsupported", "trap", "indirect-branch"}
+        and not (opcode == 0 and fn == 9)
+        and not (opcode == 0 and fn == 8 and rs != 31),
+        "admission census unsupported original word",
+    )
+
+    def assign(reg, value):
+        if reg:
+            state[reg] = value
+
+    if opcode == 3:
+        assign(31, ("constant", (pc + 8) & 0xFFFFFFFF))
+        return
+    if opcode == 0:
+        if fn == 8:
+            return
+        if fn == 0 and shift == 0:
+            assign(rd, state[rt])
+            return
+        if fn in {33, 37}:
+            value = None
+            if rs == 0:
+                value = state[rt]
+            elif rt == 0:
+                value = state[rs]
+            elif (
+                state[rs] is not None
+                and state[rt] is not None
+                and state[rs][0] == state[rt][0] == "constant"
+            ):
+                left, right = state[rs][1], state[rt][1]
+                value = (
+                    "constant",
+                    ((left + right) & 0xFFFFFFFF) if fn == 33 else left | right,
+                )
+            assign(rd, value)
+            return
+        assign(rd, None)
+        return
+    if opcode == 15:
+        assign(rt, ("constant", (word & 0xFFFF) << 16))
+        return
+    if opcode in {8, 9}:
+        assign(rt, _admission_offset(state[rs], immediate))
+        return
+    if opcode == 13:
+        value = None
+        if state[rs] is not None and state[rs][0] == "constant":
+            value = ("constant", state[rs][1] | (word & 0xFFFF))
+        assign(rt, value)
+        return
+    if 8 <= opcode <= 14:
+        assign(rt, None)
+        return
+    if kind == "load":
+        assign(rt, None)
+
+
+def _admission_join(states):
+    joined = list(states[0])
+    for other in states[1:]:
+        joined = [
+            left if left == right else None
+            for left, right in zip(joined, other, strict=True)
+        ]
+    return joined
+
+
+def _admission_preserved(evidence):
+    """Registers whose call-transfer proof is a settled preservation, per call site."""
+    preserved = {}
+    for call in evidence["calls"]:
+        mask = 0
+        contract = call.get("contract")
+        if (
+            type(contract) is dict
+            and len(contract.get("registerTransfers") or ()) == 34
+        ):
+            for reg, transfer in enumerate(contract["registerTransfers"]):
+                if (
+                    1 <= reg < 32
+                    and transfer["register"] == reg
+                    and _complete(transfer["proof"])
+                    and transfer["kind"] == "preserved"
+                    and not transfer["pending"]
+                    and transfer["mayNoPending"]
+                    and transfer["equalEntry"] == reg
+                ):
+                    mask |= 1 << reg
+        preserved[call["pc"]] = mask
+    return preserved
+
+
+def _admission_replay(
+    row, entry_sp_offset, call_sp_physical, entry, identities, captured
+):
+    """Replay one census function from original words and its inherited registers."""
+    instructions, contexts, incoming, ordered, exits = _observed_cfg(row)
+    evidence = row["returnDisposition"]["evidence"]
+    _require(bool(exits), "admission census callee normal exit")
+    preserved = _admission_preserved(evidence)
+    states, posts, entries = {}, {}, {}
+    for pc in ordered:
+        owner = contexts[pc]
+        parents = incoming[pc]
+        pre = (
+            list(entry)
+            if not parents
+            else _admission_join([posts[parent] for parent in parents])
+        )
+        post = list(pre)
+        _admission_step(pc, instructions[pc]["word"], post)
+        if owner is not None and _memory_word(instructions[owner]["word"])[0] == "call":
+            _require(
+                instructions[owner]["word"] >> 26 == 3,
+                "admission census indirect call",
+            )
+            _require(
+                post[29] is not None and post[29][0] == "stack",
+                "admission census call frame base",
+            )
+            _require(
+                _memory_word(instructions[pc]["word"])[0] != "load",
+                "admission census call delay load",
+            )
+            # The callee receives the registers actually present after the delay slot;
+            # only the caller continuation sees the return-side clobbers.
+            entries[pc] = list(post)
+            entries[pc][31] = ("constant", (owner + 8) & 0xFFFFFFFF)
+            post[31] = ("constant", (owner + 8) & 0xFFFFFFFF)
+            # A register survives the call only when the callee proves it preserved;
+            # every other caller relation is invalidated, as the producer does.
+            kept = preserved.get(owner, 0)
+            for reg in range(1, 32):
+                if reg not in {29, 31} and not kept & (1 << reg):
+                    post[reg] = None
+        states[pc] = pre
+        posts[pc] = post
+    _require(len(states) == len(instructions), "admission census reachable inventory")
+    rows, calls = [], []
+    for pc in ordered:
+        pre = states[pc]
+        word = instructions[pc]["word"]
+        kind, _ = _memory_word(word)
+        fields = word_fields(word)
+        if kind in {"load", "store"}:
+            _require(
+                pre[fields.rs] is not None,
+                "admission census unresolved access base",
+            )
+            base = pre[fields.rs]
+            immediate = _signed16(word)
+            opcode = fields.opcode
+            width = 1 if opcode in {32, 36, 40} else 2 if opcode in {33, 37, 41} else 4
+            access = {"pc": pc, "write": kind == "store", "bytes": width}
+            if base[0] == "stack":
+                access["stack"] = True
+                access["offset"] = entry_sp_offset + base[1] + immediate
+                # Every supported derivation resolves into the call-time frame coordinate,
+                # so a constant or entry-derived alias of the frame still contributes.
+                access["frameOffset"] = access["offset"]
+            elif base[0] == "constant":
+                physical = _admission_physical(base[1] + immediate, width)
+                _require(physical is not None, "admission census constant address")
+                access["stack"] = False
+                access["physical"] = physical
+                access["frameOffset"] = physical - call_sp_physical
+            else:
+                _require(base[1] in captured, "admission census unbound entry address")
+                physical = _admission_physical(
+                    captured[base[1]] + base[2] + immediate, width
+                )
+                _require(physical is not None, "admission census entry address")
+                access["stack"] = False
+                access["physical"] = physical
+                access["frameOffset"] = physical - call_sp_physical
+            if access["write"]:
+                value = pre[fields.rt]
+                access["valueKnown"] = False
+                access["valueFrameOffset"] = 0
+                if value is not None and value[0] == "stack":
+                    access["valueKnown"] = True
+                    access["valueFrameOffset"] = entry_sp_offset + value[1]
+                elif value is not None and value[0] == "constant":
+                    resolved = _admission_physical(value[1], 1)
+                    if resolved is not None:
+                        access["valueKnown"] = True
+                        access["valueFrameOffset"] = resolved - call_sp_physical
+                elif value is not None and value[0] == "entry":
+                    if value[1] in captured:
+                        resolved = _admission_physical(captured[value[1]] + value[2], 1)
+                        if resolved is not None:
+                            access["valueKnown"] = True
+                            access["valueFrameOffset"] = resolved - call_sp_physical
+            rows.append(access)
+        owner = contexts[pc]
+        if owner is not None and _memory_word(instructions[owner]["word"])[0] == "call":
+            owner_word = instructions[owner]["word"]
+            target = ((owner + 4) & 0xF0000000) | ((owner_word & 0x03FFFFFF) << 2)
+            sp_offset = entries[pc][29][1]
+            calls.append(
+                {
+                    "pc": owner,
+                    "target": target,
+                    "callee": identities.get(target),
+                    "entrySpOffset": entry_sp_offset + sp_offset,
+                    "entry": [
+                        ("stack", value[1] - sp_offset)
+                        if value is not None and value[0] == "stack"
+                        else value
+                        for value in entries[pc]
+                    ],
+                }
+            )
+    rows.sort(key=lambda item: item["pc"])
+    return {
+        "function": None,
+        "start": evidence["start"],
+        "end": evidence["end"],
+        "entrySpOffset": entry_sp_offset,
+        "instructions": len(instructions),
+        "calls": len(calls),
+        "rows": rows,
+    }, calls
+
+
+def frame_admission_census(row, call, closure, *, frame, entry_sp, captured, protected):
+    """Re-derive one crossed call's census from original words and authenticated inputs."""
+    evidence = row["returnDisposition"]["evidence"]
+    _require(
+        evidence["decodeComplete"] and evidence["analysisComplete"],
+        "admission census caller coverage",
+    )
+    _require(
+        0 < frame <= 32768 and frame % 4 == 0 and 0 <= entry_sp - frame <= 0xFFFFFFFF,
+        "admission census frame base",
+    )
+    instructions = {item["pc"]: item for item in evidence["instructions"]}
+    _require(
+        call["pc"] in instructions and call["pc"] + 4 in instructions,
+        "admission census call words",
+    )
+    word = instructions[call["pc"]]["word"]
+    _require(word >> 26 == 3, "admission census direct call")
+    target = ((call["pc"] + 4) & 0xF0000000) | ((word & 0x03FFFFFF) << 2)
+    _require(
+        call["target"] == target
+        and _memory_word(instructions[call["pc"] + 4]["word"])[0] != "load",
+        "admission census settled direct call",
+    )
+    identities = {start: key for start, (key, _) in closure.items()}
+    call_sp_physical = (entry_sp - frame) & 0x1FFFFFFF
+    entry = [None] * 34
+    entry[0] = ("constant", 0)
+    entry[29] = ("stack", 0)
+    for reg in range(1, 32):
+        if reg != 29:
+            entry[reg] = ("entry", reg, 0)
+    caller, caller_calls = _admission_replay(
+        row, frame, call_sp_physical, entry, identities, captured
+    )
+    crossed = [item for item in caller_calls if item["pc"] == call["pc"]]
+    _require(
+        len(crossed) == 1
+        and crossed[0]["target"] == target
+        and crossed[0]["callee"] is not None
+        and crossed[0]["entrySpOffset"] == 0,
+        "admission census crossed call binding",
+    )
+    crossed = crossed[0]
+    edges = {}
+    pending = [crossed["target"]]
+    seen = set()
+    while pending:
+        start = pending.pop()
+        if start in seen:
+            continue
+        _require(start in closure, "admission census unresolved callee")
+        _require(len(seen) < 32, "admission census closure bound")
+        seen.add(start)
+        member_row = closure[start][1]
+        member_evidence = member_row["returnDisposition"]["evidence"]
+        _require(
+            member_evidence["start"] == start
+            and member_evidence["decodeComplete"]
+            and member_evidence["analysisComplete"]
+            and bool(member_evidence["exits"]),
+            "admission census callee coverage",
+        )
+        edges[start] = []
+        for item in member_evidence["instructions"]:
+            member_word = item["word"]
+            _require(
+                not (member_word >> 26 == 0 and member_word & 63 == 9),
+                "admission census indirect callee call",
+            )
+            if member_word >> 26 != 3:
+                continue
+            callee = ((item["pc"] + 4) & 0xF0000000) | ((member_word & 0x03FFFFFF) << 2)
+            _require(callee in closure, "admission census external callee")
+            edges[start].append(callee)
+            pending.append(callee)
+    colors = {}
+
+    def visit(start):
+        if colors.get(start) == 2:
+            return True
+        if colors.get(start) == 1:
+            return False
+        colors[start] = 1
+        if not all(visit(target) for target in edges[start]):
+            return False
+        colors[start] = 2
+        return True
+
+    _require(visit(crossed["target"]), "admission census recursive closure")
+    known = {crossed["target"]: (crossed["entry"], crossed["entrySpOffset"])}
+    pending = [crossed]
+    members = {}
+    while pending:
+        current = pending.pop(0)
+        if current["target"] in members:
+            continue
+        member, nested = _admission_replay(
+            closure[current["target"]][1],
+            current["entrySpOffset"],
+            call_sp_physical,
+            current["entry"],
+            identities,
+            captured,
+        )
+        for item in nested:
+            _require(
+                item["callee"] is not None, "admission census unresolved callee call"
+            )
+            if item["target"] in known:
+                _require(
+                    known[item["target"]] == (item["entry"], item["entrySpOffset"]),
+                    "admission census repeated callee entry",
+                )
+                continue
+            known[item["target"]] = (item["entry"], item["entrySpOffset"])
+            pending.append(item)
+        members[current["target"]] = member
+    physical_words, physical_set = {}, set()
+    for word in protected:
+        offset = word["entrySpOffset"] + frame
+        _require(
+            0 <= offset <= frame - 4 and word["physicalWord"] not in physical_set,
+            "admission census protected word placement",
+        )
+        physical_set.add(word["physicalWord"])
+        physical_words[offset] = word
+    _require(physical_words, "admission census lacks protected words")
+    outgoing = 16
+    outgoing_pcs = set()
+    rows = [(access, True) for access in caller["rows"]]
+    for member in members.values():
+        rows.extend((access, False) for access in member["rows"])
+    for access, owner in rows:
+        # A stack-pointer access belongs to a frame by construction. An ordinary-RAM access
+        # belongs to the caller frame only when its resolved interval actually lies inside it;
+        # a disjoint object above or below S is neither a stack argument nor a frame access.
+        offset = access["frameOffset"]
+        inside = 0 <= offset <= frame - access["bytes"]
+        _require(
+            not (owner and access["stack"] and not inside),
+            "admission census caller frame access",
+        )
+        saved = owner and access["bytes"] == 4 and inside and offset in physical_words
+        if access["write"] and not saved:
+            for protected in physical_words:
+                _require(
+                    not (
+                        offset < protected + 4 and protected < offset + access["bytes"]
+                    ),
+                    "admission census reachable write overlaps a protected word",
+                )
+        if saved or offset < 0:
+            continue
+        if not access["stack"] and not inside:
+            continue
+        outgoing_pcs.add(access["pc"])
+        outgoing = max(outgoing, offset + access["bytes"])
+    outgoing = (outgoing + 3) & ~3
+    _require(
+        outgoing <= frame and len(outgoing_pcs) <= 4096,
+        "admission census outgoing interval",
+    )
+    for offset, word in physical_words.items():
+        _require(
+            offset >= outgoing
+            and offset % 4 == 0
+            and ((entry_sp - frame + offset) & 0x1FFFFFFF) == word["physicalWord"],
+            "admission census protected word interval",
+        )
+    for access in caller["rows"]:
+        if not access["write"] or not access["valueKnown"]:
+            continue
+        if access["pc"] >= call["pc"]:
+            continue
+        _require(
+            not (
+                0 <= access["valueFrameOffset"] < frame
+                and int(access["valueFrameOffset"]) in physical_words
+            ),
+            "admission census protected address exposed",
+        )
+    for reg in range(1, 32):
+        if reg == 29 or crossed["entry"][reg] is None:
+            continue
+        if crossed["entry"][reg][0] != "stack":
+            continue
+        _require(
+            crossed["entry"][reg][1] not in physical_words,
+            "admission census protected address passed to the callee",
+        )
+    return {
+        "outgoingBytes": outgoing,
+        "outgoingPcs": sorted(outgoing_pcs),
+        "protectedWords": [
+            dict(
+                physicalWord=physical_words[offset]["physicalWord"],
+                entrySpOffset=offset - frame,
+                register=physical_words[offset]["register"],
+                storePc=physical_words[offset]["storePc"],
+            )
+            for offset in sorted(physical_words)
+        ],
+        "closure": [
+            dict(
+                function=closure[start][0],
+                start=member["start"],
+                end=member["end"],
+                entrySpOffset=member["entrySpOffset"],
+                instructions=member["instructions"],
+                calls=member["calls"],
+                accesses=len(member["rows"]),
+                writes=sum(1 for access in member["rows"] if access["write"]),
+            )
+            for start, member in sorted(members.items())
+        ],
+    }
 
 
 def _memory_prefix(row, access):
@@ -547,7 +1105,7 @@ def _memory_prefix_loads(instructions, stop, protected_registers):
         )
 
 
-def _memory_prefix_address(row, access, entry_flow=None):
+def _memory_prefix_address(row, access, entry_flow=None, *, first_use=False):
     evidence = row["returnDisposition"]["evidence"]
     if entry_flow is None:
         instructions = _memory_prefix(row, access)
@@ -555,14 +1113,20 @@ def _memory_prefix_address(row, access, entry_flow=None):
         summary = row["originalCallSummary"]
         instructions = {item["pc"]: item for item in evidence["instructions"]}
         _require(
-            evidence["decodeComplete"]
-            and evidence["analysisComplete"]
+            evidence["analysisComplete"]
             and summary["pendingEntry"] == "requires-no-pending-gpr-loads"
-            and set(instructions) == set(range(evidence["start"], evidence["end"], 4))
-            and all(
-                _memory_word(item["word"])[0]
-                not in {"unsupported", "trap", "indirect-branch"}
-                for item in instructions.values()
+            and (
+                first_use
+                or (
+                    evidence["decodeComplete"]
+                    and set(instructions)
+                    == set(range(evidence["start"], evidence["end"], 4))
+                    and all(
+                        _memory_word(item["word"])[0]
+                        not in {"unsupported", "trap", "indirect-branch"}
+                        for item in instructions.values()
+                    )
+                )
             ),
             "fixed memory flow requires complete original words",
         )
@@ -1584,15 +2148,41 @@ def validate_access(
             else "reported relative address differs from closed original flow",
         )
         return
-    _keys(
-        address,
-        {"kind", "base", "value", "equalityEvidence", "alignment", "fileBytes"},
-        "fixed original memory address",
-    )
+    first_use = address["kind"] == "instruction-fixed-first-use/v1"
+    fields = {"kind", "base", "value", "equalityEvidence", "alignment", "fileBytes"}
+    if first_use:
+        fields.update({"entryPc", "usePc", "operandPhase", "callPcs", "conditions"})
+    _keys(address, fields, "fixed original memory address")
     _require(
-        address["kind"] in {"entry-fallthrough-prefix/v1", "instruction-fixed-flow/v1"},
+        address["kind"]
+        in {
+            "entry-fallthrough-prefix/v1",
+            "instruction-fixed-flow/v1",
+            "instruction-fixed-first-use/v1",
+        },
         "original address rule",
     )
+    if first_use:
+        evidence = row["returnDisposition"]["evidence"]
+        for field in ("entryPc", "usePc"):
+            _integer(address[field], 0xFFFFFFFF)
+        _require(
+            address["entryPc"] == evidence["start"]
+            and address["usePc"] == access["pc"]
+            and address["operandPhase"] == "before-instruction"
+            and address["callPcs"] == []
+            and address["conditions"]
+            == ["first-reach-from-original-entry-before-unproved-control-crossing"]
+            and not _complete(row["originalCallSummary"]["effects"])
+            and not _complete(row["originalCallSummary"]["declaration"])
+            and not _complete(row["originalCallSummary"]["noMemoryWrites"])
+            and type(address["fileBytes"]) is dict
+            and address["fileBytes"].get("kind") in {"partial", "unknown"}
+            and not _complete(address["fileBytes"]),
+            "fixed first-use domain or ordinary authority differs",
+        )
+        entry_flow = _entry_flow(row, frame_uses=frame_uses, use_pc=access["pc"])
+        _require(not entry_flow[2], "fixed first-use address crosses a call")
     for field in ("base", "value"):
         _integer(address[field], 0xFFFFFFFF)
     _references(address["equalityEvidence"], 0xFFFFFFFF)
@@ -1601,7 +2191,10 @@ def validate_access(
     base, value, pcs = _memory_prefix_address(
         row,
         access,
-        entry_flow if address["kind"] == "instruction-fixed-flow/v1" else None,
+        entry_flow
+        if first_use or address["kind"] == "instruction-fixed-flow/v1"
+        else None,
+        first_use=first_use,
     )
     _require(
         (address["base"], address["value"], address["equalityEvidence"])

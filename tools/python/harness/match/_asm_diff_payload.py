@@ -24,6 +24,7 @@ class AsmDiffRequest:
     canonical_bindings: Mapping[str, int] | None = None
     section_placements: tuple[SectionPlacement, ...] | None = None
     diagnostics: bool = True
+    image_evidence: bool = False
 
 
 def render_diff(original_lines: list[str], current_lines: list[str]) -> str:

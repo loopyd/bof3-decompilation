@@ -113,6 +113,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="passed native state query of that entry save state",
     )
     command.add_argument(
+        "--pointer-load-receipt",
+        type=Path,
+        help="passed original-only RAM history for interval-scoped pointer-load evidence",
+    )
+    command.add_argument(
         "--copied-original-receipt",
         type=Path,
         help="passed original-only RAM history with an observed instruction window",
@@ -276,6 +281,7 @@ def run_native(args: argparse.Namespace) -> int:
         overlay_mounts=tuple(args.mount_image),
         entry_receipt=args.entry_receipt,
         entry_cpu_receipt=args.entry_cpu_receipt,
+        pointer_load_receipt=args.pointer_load_receipt,
         copied_original_receipt=args.copied_original_receipt,
         copied_original_offset=args.copied_original_offset,
         resume_from=args.resume_from,

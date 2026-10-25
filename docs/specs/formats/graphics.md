@@ -103,6 +103,31 @@ resident loading or rendered frames. See the tool's
 the required explicit draw and selector context. Unresolved formats and consumers
 remain full-support blockers.
 
+## Embedded save icons
+
+`BIN/ETC/SHOP.EMI#8` and `BIN/ETC/START.EMI#9` contain equal producer payloads
+loaded at `0x801EEC00`. They retain separate source identities. The producer at
+`0x801EF27C` writes an `SC` header at `0x800C1800`. The original SHOP entry-0
+caller at `0x801D6A08` supplies one block, icon mode `0x13`, and a title pointer
+at `0x80145AD4`.
+
+| Data | Producer payload offset | Save-header offset | Bytes |
+| --- | --- | --- | ---: |
+| 16-word palette | `0x1268` | `0x60` | 32 |
+| Frame 0 | `0x1294` | `0x80` | 128 |
+| Frame 1 | `0x1354` | `0x100` | 128 |
+| Frame 2 | `0x1414` | `0x180` | 128 |
+
+Each frame contains 16 by 16 four-bit indices, with the low nibble first.
+All frames use the same palette. Source gaps between frames are outside the
+copied index planes and remain unchanged during packing. The producer writes
+the mode and block count at header offsets `2` and `3`, copies the title to
+offset `4`, and clears offsets `0x44..0x60`.
+
+The texture tool edits these source image ranges. Memory-card operations belong
+to the emulator's memory-card owner. Producer execution alone does not establish
+natural save-path execution, persistence, icon display, or animation timing.
+
 The raw-texture and palette model agrees with the pinned
 [`BoF3-Data-Doc`](../../../third_party/references/bof3-data-doc/src/DataStructures/3_TextureAndPalette.md);
 the chunk geometry and descriptor fields are confirmed by the local loader and

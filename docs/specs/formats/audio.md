@@ -4086,8 +4086,15 @@ identity, ordered keys, generator layout, modulators and source contexts. Preset
 and percussion aliases stay fixed. Every requested amount and sample target must
 match its owning inverse report and the complete instrument tables.
 
-Muted or stopped-pitch range sources or companions and combined range edits with
-scale tuning, sample storage or presets remain unsupported.
+An initially silent companion may retain its original range and pitch while
+relinking to existing compatible PCM. The gain and assignment inverses must
+validate audible activation before an optional supported envelope edit. Root key,
+coarse tune and fine tune generator amounts stay exact. A gain or envelope change
+without a playback sample relink is unsupported. The fixed source loop mode must
+already match the destination allocation.
+
+Muted or stopped-pitch range sources, stopped companions and combined range edits
+with scale tuning, sample storage or presets remain unsupported.
 Envelope tuples outside the existing field families also reject the request.
 The `key_ranges` array in bank and music song reports records
 source identities, original and output ranges, selected pitch contexts and the

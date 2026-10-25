@@ -22,7 +22,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from .claims import collect_manifest_source_addresses
+from .functions import parse_function_records
 from .layout import SplatBoundary, ReviewedSplatLayout, parse_splat_layout
+from .sources import expected_lift_sources
 from .psx import payload_for, reviewed_range_digest
 from .symbols import (
     MapSymbol,
@@ -284,13 +287,12 @@ def composed_map_findings(
 
 
 def splat_source_findings(
-    target: str, layout: ReviewedSplatLayout
+    root: Path, target: str, manifest: "TargetManifest", layout: ReviewedSplatLayout
 ) -> list[IdentityCollisionFinding]:
-    """Splat/source bijection for one target's reviewed layout.
+    """Validate function-specific Splat/source ownership for one target.
 
-    Rejects: duplicate starts, overlapping finite ranges, duplicate
-    function names (c/asm boundaries), and two C boundaries claiming one
-    source.  A data label reusing a function name is a data label, not a
+    Reject duplicate starts, overlapping finite ranges, duplicate function
+    names and grouped sources without exact attached-record membership.  A data label reusing a function name is a data label, not a
     function-identity collision.  The boundary/source *address*
     disagreement stays with ``domain.sources`` (``expected_lift_sources``
     plus the lift scan own it), so it is not duplicated here.
@@ -344,16 +346,52 @@ def splat_source_findings(
     for boundary in layout.boundaries:
         if boundary.kind == "c" and boundary.source:
             claimed.setdefault(boundary.source, []).append(boundary)
-    for source in sorted(claimed):
-        if len(claimed[source]) > 1:
-            addresses = ", ".join(f"0x{b.virtual_start:08X}" for b in claimed[source])
-            findings.append(
-                _splat_reject(
-                    target,
-                    claimed[source][0].virtual_start,
-                    f"two C boundaries claim source {source!r} at {addresses}",
-                )
+    grouped = {
+        source: members for source, members in claimed.items() if len(members) > 1
+    }
+    if grouped:
+        try:
+            owned = collect_manifest_source_addresses(
+                root,
+                manifest,
+                expected_lifts=expected_lift_sources(
+                    layout, root / manifest.source_dir
+                ),
             )
+            ownership_error = None
+        except (OSError, UnicodeError, ValueError) as error:
+            owned = []
+            ownership_error = str(error)
+        for source, members in sorted(grouped.items()):
+            try:
+                if ownership_error is not None:
+                    raise ValueError(ownership_error)
+                path = root / source
+                if source not in manifest.sources:
+                    raise ValueError("grouped C source is not a manifest source claim")
+                records = parse_function_records(path.read_text(encoding="utf-8"))
+                expected = {member.virtual_start: member.name for member in members}
+                actual = {record.address: record.spelling for record in records}
+                if any(record.kind != "function" for record in records):
+                    raise ValueError("grouped record is not a function implementation")
+                if actual != expected:
+                    raise ValueError(
+                        "grouped attached records differ from Splat identities"
+                    )
+                if {address for owner, address in owned if owner == path} != set(
+                    expected
+                ):
+                    raise ValueError(
+                        "grouped manifest ownership differs from Splat membership"
+                    )
+            except (OSError, UnicodeError, ValueError) as error:
+                findings.append(
+                    _splat_reject(
+                        target,
+                        members[0].virtual_start,
+                        f"invalid grouped source {source!r}: {error}",
+                    )
+                )
     return findings
 
 

@@ -102,14 +102,14 @@ impl<'a> Builder<'a> {
             return Ok(id);
         }
         let consumer = match kind {
-            "bank-image" => "SLUS_004.22@0x8014E6D0:image-records",
+            "bank-image" => "SLUS_004.22@0x8014E6D0:image-records".into(),
             "palette-record" if self.parent.save_icon.is_some() => {
-                "BIN/ETC/SHOP.EMI#8@0x801EFE68:save-header-palette-source"
+                format!("{}@0x801EFE68:save-header-palette-source", self.parent.id)
             }
-            "palette-record" => "SLUS_004.22@0x80166C48:32-word-palette-copy",
-            "save-icon-frame" => "BIN/ETC/SHOP.EMI#8@0x801EF27C:save-header-frame-source",
-            "animation-program" => "SLUS_004.22@0x8014D910:program-initialization",
-            "sprite-cell" => "SLUS_004.22@0x8014C6F8:five-byte-cell-parts",
+            "palette-record" => "SLUS_004.22@0x80166C48:32-word-palette-copy".into(),
+            "save-icon-frame" => format!("{}@0x801EF27C:save-header-frame-source", self.parent.id),
+            "animation-program" => "SLUS_004.22@0x8014D910:program-initialization".into(),
+            "sprite-cell" => "SLUS_004.22@0x8014C6F8:five-byte-cell-parts".into(),
             _ => unreachable!(),
         };
         self.records.insert(id.clone(), Record {
@@ -119,7 +119,7 @@ impl<'a> Builder<'a> {
             sha256: sha256_hex(bytes), kind: kind.into(), categories: self.parent.categories.clone(),
             storage: format!("{}-record", self.parent.storage), decode: "record-layout-verified".into(),
             pack: "parent-package-controls-edits".into(), evidence_status: "source-qualified".into(),
-            evidence: vec![consumer.into()], uses: vec![usage],
+            evidence: vec![consumer], uses: vec![usage],
             dependencies: vec![
                 Dependency { kind: "source".into(), target: Some(self.parent.id.clone()),
                     status: "verified".into(), reason: "record bytes are bound to this physical resource and coordinate source".into() },

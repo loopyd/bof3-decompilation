@@ -36,6 +36,7 @@ from harness.reconstruction import (
     copies,
     ledger,
     nativeoutput,
+    pointerloads,
     prelude,
     provenance,
 )
@@ -62,6 +63,7 @@ class OriginalInput:
     overlay_mounts: tuple[str, ...] = ()
     entry_observation: EntryObservation | None = None
     copied_original: copies.CopyObservation | None = None
+    pointer_load: pointerloads.PointerLoadCapture | None = None
 
 
 @dataclass(frozen=True)
@@ -206,6 +208,45 @@ def read_entry_observation(descriptor, directory, *, reader=None):
         )
         files[name] = raw
     return EntryObservation(descriptor, MappingProxyType(files))
+
+
+def capture_pointer_load(history_receipt, observation, contexts, mounts):
+    """Pin one RAM history to the observed entry boundary that owns it."""
+
+    descriptor, files = pointerloads.capture(history_receipt)
+    boundary = observation.files["ram.bin"]
+    capture = pointerloads.seal(
+        descriptor,
+        files,
+        contexts=contexts,
+        overlay_mounts=mounts,
+        boundary_ram=boundary,
+    )
+    _require(
+        capture.descriptor["state"]["sha256"] == observation.descriptor["state"]["sha256"],
+        "pointer load history and observed entry inspect different states",
+    )
+    return capture
+
+
+def read_pointer_load(descriptor, directory, *, observation, reader=None):
+    if descriptor is None:
+        return None
+    _require(
+        observation is not None and set(observation.files) >= {"ram.bin"},
+        "pointer load capture needs the observed entry boundary",
+    )
+    read = pointerloads.read(
+        descriptor,
+        directory,
+        boundary_ram=observation.files["ram.bin"],
+        reader=reader,
+    )
+    _require(
+        read.descriptor["state"]["sha256"] == observation.descriptor["state"]["sha256"],
+        "retained pointer load history and observed entry inspect different states",
+    )
+    return read
 
 
 @dataclass(frozen=True)
@@ -406,6 +447,9 @@ def inspect_native(candidate, result, run, binding, prepared_run, reader):
             else None,
             copied_captures=original_input.copied_original.files
             if original_input.copied_original
+            else None,
+            pointer_captures=original_input.pointer_load.files
+            if original_input.pointer_load
             else None,
         )
         _require(
@@ -713,6 +757,16 @@ def _request(original, events, *, source_form=None):
                 schema="retdec118.native-request/v7",
                 copied_original=original.copied_original.descriptor,
             )
+        if original.pointer_load is not None:
+            _require(
+                original.entry_observation is not None
+                and original.copied_original is None,
+                "pointer loads need the observed entry boundary and no copied profile",
+            )
+            body.update(
+                schema="retdec118.native-request/v8",
+                pointer_load=original.pointer_load.descriptor,
+            )
     body["request_id"] = hashlib.sha256(
         encode_json(body, events=events, path="native")
     ).hexdigest()
@@ -752,6 +806,13 @@ def capture_native(
                     {
                         f"input/entry-{name}": raw
                         for name, raw in original.entry_observation.files.items()
+                    }
+                )
+            if original.pointer_load is not None:
+                files.update(
+                    {
+                        f"input/pointer-{name}": raw
+                        for name, raw in original.pointer_load.files.items()
                     }
                 )
             if original.copied_original is not None:
@@ -943,6 +1004,9 @@ def capture_native(
                 else None,
                 copied_captures=original.copied_original.files
                 if original.copied_original
+                else None,
+                pointer_captures=original.pointer_load.files
+                if original.pointer_load
                 else None,
             )
             if status["status"] == "generation-failed":

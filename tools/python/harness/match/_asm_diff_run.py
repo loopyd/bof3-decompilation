@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
 import re
 import shutil
@@ -240,8 +241,12 @@ def _asm_diff_compare(
                 "match original bytes"
             )
     current_size = len(compiled_bytes)
+    image_evidence = {
+        "original_sha256": hashlib.sha256(original_bytes).hexdigest(),
+        "current_sha256": hashlib.sha256(compiled_bytes).hexdigest(),
+    }
     if not request.diagnostics:
-        return {
+        payload = {
             "schema": "harness.byte-match-one/v1",
             "status": "exact_match" if byte_match else "different",
             "exact_match": byte_match,
@@ -258,6 +263,9 @@ def _asm_diff_compare(
             "current_object": str(object_path),
             "outputs": {},
         }
+        if request.image_evidence:
+            payload["function_image"] = image_evidence
+        return payload
 
     shutil.copyfile(current_compiler_asm, output_dir / "compiler.s")
 
@@ -301,5 +309,7 @@ def _asm_diff_compare(
         current_lines=current_lines,
         linked_path=linked_path,
     )
+    if request.image_evidence:
+        payload["function_image"] = image_evidence
     write_json(output_dir / "summary.json", payload)
     return payload

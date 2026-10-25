@@ -15,6 +15,7 @@ from harness.reconstruction import (
     callcontracts,
     calltargets,
     copies,
+    pointerloads,
     proofvalues,
     provenance,
 )
@@ -873,12 +874,139 @@ def _validate_entry_observations(
                 ).hexdigest(),
                 "scoped restoration entry input differs",
             )
+        admission = summary.get("observedFrameCallAdmission")
+        if admission is not None:
+            _require(
+                scoped and summary.get("function") == descriptor["function"],
+                "observed frame admission lacks entry capture input",
+            )
+            _require(
+                type(admission) is dict
+                and admission.get("kind") == "observed-frame-call-admission/v1"
+                and type(admission.get("calls")) is list
+                and sum(
+                    len(call.get("protectedWords", []))
+                    for call in admission["calls"]
+                    if type(call) is dict
+                )
+                <= 992,
+                "observed frame admission format",
+            )
+            _require(
+                admission.get("observation")
+                == hashlib.sha256(
+                    json.dumps(
+                        descriptor, sort_keys=True, separators=(",", ":")
+                    ).encode()
+                ).hexdigest()
+                and admission.get("stateHash") == descriptor["state"]["sha256"]
+                and admission.get("entryPc") == descriptor["entry_pc"]
+                and admission.get("entrySp") == captured[29],
+                "observed frame admission entry input differs",
+            )
+            for call in admission["calls"]:
+                _require(
+                    type(call) is dict and type(call.get("protectedWords")) is list,
+                    "observed frame admission call input",
+                )
+                words = [
+                    word["physicalWord"]
+                    for word in call["protectedWords"]
+                    if type(word) is dict
+                    and type(word.get("physicalWord")) is int
+                    and type(word.get("entrySpOffset")) is int
+                ]
+                _require(
+                    len(words) == len(call["protectedWords"])
+                    and words
+                    == sorted(
+                        (captured[29] + word["entrySpOffset"]) & 0x1FFFFFFF
+                        for word in call["protectedWords"]
+                    ),
+                    "observed frame admission protected word differs from captured input",
+                )
     _require(
         context_count == summary_count
         and context_count <= 1
         and (not scoped or not require_success or context_count == 1),
         "observed entry context coverage differs",
     )
+
+
+def _pointer_boundary(entry_captures):
+    """Derive the recorded boundary position the pointer-load capture must share."""
+
+    registers = _keys(
+        parse_json(entry_captures["registers.json"], 64 << 10),
+        {"schema", "pc", "cycles", "registers"},
+        "pointer load entry registers",
+    )
+    query = _keys(
+        parse_json(entry_captures["cpu.json"], 64 << 10),
+        {"schema", "path", "value"},
+        "pointer load entry CPU query",
+    )
+    _require(
+        registers["schema"] == "psx.runtime-registers/v1"
+        and type(registers["pc"]) is int
+        and type(registers["cycles"]) is int
+        and 0 < registers["cycles"] < 1 << 64
+        and query["schema"] == "psx.runtime-query/v1"
+        and query["path"] == "registers",
+        "pointer load entry boundary identity",
+    )
+    values = {}
+    for field in _rows(query["value"].get("fields"), 32, "pointer load CPU fields"):
+        _require(
+            type(field) is dict
+            and type(field.get("name")) is str
+            and field.get("present") is True
+            and field["name"] not in values,
+            "pointer load CPU field absent or duplicated",
+        )
+        values[field["name"]] = field["value"]
+    _require(
+        values.get("pc") == registers["pc"]
+        and values.get("cycle") == registers["cycles"],
+        "pointer load CPU query inspects another position",
+    )
+    return registers["pc"], registers["cycles"]
+
+
+def _validate_pointer_loads(functions, capture, entry_captures, *, require_success):
+    """Re-derive every occurrence fact from the capture and compare with the native record."""
+
+    descriptor = capture.descriptor
+    entry_pc, cycle = _pointer_boundary(entry_captures)
+    _require(
+        entry_pc == descriptor["entry_pc"] and cycle == int(descriptor["begin_cycle"]),
+        "pointer load history does not start at the observed entry boundary",
+    )
+    isr = _entry_cpu_context(entry_captures)["inIsr"]
+    expected = pointerloads.expected_record(capture, isr=isr)
+    carriers = [
+        summary
+        for summary in (
+            function.get("originalCallSummary") for function in functions
+        )
+        if type(summary) is dict and "observedPointerLoad" in summary
+    ]
+    _require(len(carriers) <= 1, "observed pointer loads published more than once")
+    for summary in carriers:
+        _require(
+            summary.get("function") == descriptor["function"],
+            "observed pointer loads belong to another function",
+        )
+        pointerloads.validate_record(summary["observedPointerLoad"])
+        _require(
+            summary["observedPointerLoad"] == expected,
+            "observed pointer loads differ from the independent derivation",
+        )
+    if require_success:
+        _require(
+            len(carriers) == 1,
+            "the prepared pointer load capture published no occurrence record",
+        )
 
 
 def validate_status(data: bytes, request: bytes, configuration: bytes) -> dict:
@@ -888,7 +1016,11 @@ def validate_status(data: bytes, request: bytes, configuration: bytes) -> dict:
     _require(type(wanted) is dict, "native status request object")
     forms = wanted.get("schema") == "retdec118.native-request/v4" or (
         wanted.get("schema")
-        in {"retdec118.native-request/v5", "retdec118.native-request/v6"}
+        in {
+            "retdec118.native-request/v5",
+            "retdec118.native-request/v6",
+            "retdec118.native-request/v8",
+        }
         and "source_form" in wanted
     )
     catalogued = forms or wanted.get("schema") in {
@@ -896,6 +1028,7 @@ def validate_status(data: bytes, request: bytes, configuration: bytes) -> dict:
         "retdec118.native-request/v5",
         "retdec118.native-request/v6",
         "retdec118.native-request/v7",
+        "retdec118.native-request/v8",
     }
     fields = STATUS_KEYS | BINDING_STATUS_KEYS if catalogued else STATUS_KEYS
     if forms:
@@ -1113,6 +1246,7 @@ def validate_generation(
     contexts: calltargets.NativeContexts | None = None,
     entry_captures: dict | None = None,
     copied_captures: dict | None = None,
+    pointer_captures: dict | None = None,
 ) -> tuple[dict, str, tuple | None]:
     """Validate identity-bound native configuration on success or retained failure."""
 
@@ -1128,7 +1262,8 @@ def validate_generation(
     observed = validate_status(status, request, configuration)
     wanted = parse_json(request, 64 << 10)
     _require(type(wanted) is dict, "native generation request object")
-    scoped = wanted.get("schema") == "retdec118.native-request/v6"
+    pointer = wanted.get("schema") == "retdec118.native-request/v8"
+    scoped = pointer or wanted.get("schema") == "retdec118.native-request/v6"
     copied = wanted.get("schema") == "retdec118.native-request/v7"
     overlays = scoped or copied or wanted.get("schema") == "retdec118.native-request/v5"
     forms = wanted.get("schema") == "retdec118.native-request/v4" or (
@@ -1153,6 +1288,8 @@ def validate_generation(
         request_fields.add("source_form")
     if overlays:
         request_fields.add("overlay_mounts")
+    if pointer:
+        request_fields.add("pointer_load")
     if scoped:
         request_fields.add("entry_observation")
         descriptor = validate_entry_observation_descriptor(wanted["entry_observation"])
@@ -1169,6 +1306,30 @@ def validate_generation(
                 and hashlib.sha256(raw).hexdigest() == record["sha256"],
                 "native entry capture differs",
             )
+    pointer_load = None
+    if pointer:
+        try:
+            _require(
+                pointer_captures is not None and set(entry_captures or {}) >= {"ram.bin"},
+                "native pointer load captures missing",
+            )
+            pointer_load = pointerloads.open_captures(
+                wanted["pointer_load"],
+                pointer_captures,
+                boundary_ram=entry_captures["ram.bin"],
+            )
+        except (
+            pointerloads.PointerLoadRefused,
+            KeyError,
+            TypeError,
+            IndexError,
+        ) as error:
+            raise NativeOutputRefused(str(error)) from error
+    else:
+        _require(
+            pointer_captures is None,
+            "native request acquired undeclared pointer load captures",
+        )
     copied_original = copied_payload = None
     if copied:
         _require(entry_captures is None, "copied context acquired entry captures")
@@ -1199,6 +1360,7 @@ def validate_generation(
             "retdec118.native-request/v5",
             "retdec118.native-request/v6",
             "retdec118.native-request/v7",
+            "retdec118.native-request/v8",
         }
         and wanted["config_sha256"] == CONFIG_SHA256
         and (type(wanted["request_id"]) is str)
@@ -1314,6 +1476,13 @@ def validate_generation(
         entry_captures,
         require_success=require_success,
     )
+    if pointer_load is not None:
+        _validate_pointer_loads(
+            parsed_config.get("functions", []),
+            pointer_load,
+            entry_captures,
+            require_success=require_success,
+        )
     backend = _rows(observed["backend_ranges"], 4096, "backend function")
     entries = []
     for row in backend:

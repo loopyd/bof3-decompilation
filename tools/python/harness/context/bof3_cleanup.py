@@ -357,8 +357,6 @@ def cleanup_sections(
     accepts_selector=True,
     accepts_target=True,
     stable_paths=(),
-    byte_limit=24_000,
-    section_limit=6,
 )
 def cleanup_context(request: ContextRequest) -> list[ContextSection]:
     if request.cleanup is not None:

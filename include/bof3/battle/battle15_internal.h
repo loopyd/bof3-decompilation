@@ -294,7 +294,7 @@ extern u8 D_80145F35[]; /* @source 0x80145F35 @kind unknown */
 extern u8 D_80145F36[]; /* @source 0x80145F36 @kind unknown */
 extern u8 D_80145F37[]; /* @source 0x80145F37 @kind unknown */
 extern u8 D_80145F18[]; /* @source 0x80145F18 @kind unknown */
-/* Halfwords of the same 0x140-byte party-work record read by func_8009D198
+/* Halfwords of the same 0x140-byte party-work record read by applyPendingBattleDamage
  * (+0x02, +0x04, +0x0A). Each address is its own symbol for the reason given
  * on the func_800A4458 band below: the original encodes the access as
  * `lui %hi(SYM); addu at,at,index*0x140; op %lo(SYM)(at)`. */
@@ -331,7 +331,7 @@ extern u8 D_801EB712[]; /* @source 0x801EB712 @kind unknown */
 extern u8 D_801EB713[]; /* @source 0x801EB713 @kind unknown */
 extern u8 D_801EB6C4[]; /* @source 0x801EB6C4 @kind unknown */
 /* Field addresses of the 0x118-byte local panel record written by
- * func_800AC218 and read by func_8009D198. Every field address is its own
+ * func_800AC218 and read by applyPendingBattleDamage. Every field address is its own
  * symbol: the original encodes each access as `lui %hi(SYM); addu at,at,record
  * byte offset; op %lo(SYM)(at)`, which a raw address expression assembles as
  * `addu at,offset,at`. */
@@ -794,7 +794,7 @@ extern u8 D_801EB710[]; /* @source 0x801EB710 @kind unknown */
 /* Enemy-work record (0x118 stride) flag word at 0x801EB734 (record + 0x08),
  * the +0x140 local-work counter byte at 0x80145FC9, the current action
  * pointer at 0x80146380 and the battle action dispatch tables. Referenced by
- * func_8009D198. */
+ * applyPendingBattleDamage. */
 typedef struct BattleEnemyWordRecord {
   u32 word_00;
   u8  pad_04[0x114];

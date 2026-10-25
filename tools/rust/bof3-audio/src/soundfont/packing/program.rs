@@ -383,9 +383,22 @@ pub(crate) fn ranges(
             let source = sources
                 .next()
                 .ok_or("SF2 key range: companion instrument has no original tone")?;
-            if sources.next().is_some() || source.silent || !source.stopped_keys.is_empty() {
+            if sources.next().is_some() || !source.stopped_keys.is_empty() {
                 return Err(
-                    "SF2 key range: companion requires one original audible tone without stopped keys".into(),
+                    "SF2 key range: companion requires one original tone without stopped keys"
+                        .into(),
+                );
+            }
+            if source.silent
+                && !before
+                    .zones
+                    .iter()
+                    .zip(&after.zones)
+                    .any(|(a, b)| a.target != b.target)
+            {
+                return Err(
+                    "SF2 key range: silent companion requires an actual playback sample relink"
+                        .into(),
                 );
             }
             if before.name != after.name
@@ -395,6 +408,9 @@ pub(crate) fn ranges(
                         || a.generators.len() != b.generators.len()
                         || a.generators.iter().zip(&b.generators).any(|(a, b)| {
                             a.operator != b.operator
+                                || (source.silent
+                                    && matches!(a.operator, 51 | 52 | 58)
+                                    && a.amount != b.amount)
                                 || (!matches!(a.operator, 17 | 34 | 36..=38 | 48 | 51..=53 | 58)
                                     && a.amount != b.amount)
                         })

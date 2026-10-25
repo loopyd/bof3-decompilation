@@ -45,6 +45,22 @@ known constants. Call-path replay independently derives those constants from
 original instructions. A known stored value does not establish its destination,
 memory effects or declaration.
 
+Fixed-address recovery can emit `instruction-fixed-first-use/v1` when the complete
+entry-to-access prefix proves a unique constant address before any call. The
+independent reader reconstructs the participating original instructions, edges,
+definition chain and MIPS load delays. The fact applies only on first reach of
+that access, before its instruction executes; incomplete later control does not
+invalidate that prefix. Ambiguous paths, prefix cycles, unsupported control and
+crossed calls refuse this rule. Existing whole-function fixed-address formats
+retain their stricter coverage requirements.
+
+The first-use record carries its entry, use, operand phase, equality evidence and
+condition. It can establish the access address and alignment, not file-backed
+contents, runtime contents, object extent, qualifiers, aliases, placement,
+declarations or memory effects. Those obligations remain unresolved. Consumers
+that require backed storage or ordinary declaration authority cannot use this
+conditional record.
+
 A direct call whose analyzed callee summary records at least one normal exit, and
 which has no general-purpose register load pending at the call boundary, is treated
 as a normally returning O32 callee: it restores `sp` and leaves the caller's `gp`,
@@ -143,6 +159,33 @@ inspects the file without restoring it. The importer verifies both captures, the
 shared state and emulator identity, the selected PC, complete RAM and mounted
 original image owner. This supplies observed context, not a universal entry or
 declaration contract.
+
+To derive occurrence-scoped pointer-load evidence, add `--pointer-load-receipt PATH`
+alongside the matching entry and CPU receipts. Use a passed built-in RAM-interval
+`history` mission that resumes that exact captured state. Its range must cover the
+pointer cells and the complete dispatched instruction slice used by the derivation.
+Declare a stop and event, payload and frame bounds before recording. Begin/end
+contexts, capture hashes, start cycle, original instruction ownership and ordered
+RAM replay must agree. Missing boundaries, mapping drift, incomplete recording or
+a write overlapping a selected cell refuses the capture. This option cannot combine
+with copied-original observations or source-form search.
+
+The initial pointer rule requires an aligned ordinary-RAM full-word `LW` into a
+nonzero GPR, immediately preceded by a recorded `LUI` defining its nonzero base.
+The native producer and independent reader derive the address, four bytes and
+conditional destination visibility from the recording. They check the intervening
+instruction for premature use, cancellation, replacement and unsupported effects.
+Unsupported later effects withdraw the occurrence; unsupported `JALR` forms are
+not treated as no-ops. A record is keyed by occurrence, path and interval, not PC
+alone.
+
+The output is `originalCallSummary.observedPointerLoad`, tagged
+`psx-observed-pointer-load/v1`. It is conditional diagnostic evidence, not a
+recorded successful read or retirement. ISR status, normal-completion assumptions
+and host-access exclusions remain explicit. The record supplies no universal
+constant, MMIO pointee value, object declaration or complete call/effect contract.
+A validated record may survive in partial output when generation fails; it does
+not imply that C was generated or that the selected member was accepted.
 
 To inspect original BIOS instructions observed after a RAM copy, pass
 `--copied-original-receipt PATH` and `--copied-original-offset OFFSET` to `run`.

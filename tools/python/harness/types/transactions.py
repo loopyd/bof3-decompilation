@@ -39,7 +39,7 @@ from harness.domain import functions as source_functions
 from harness.domain.sources import expected_lift_sources, source_expected_key
 from harness.domain.tags import count_function_metadata
 from harness.types.proofs import private_proofs, validate_shared_header
-from harness.types import links
+from harness.types import links, reconstruction
 from harness.types.review import artifact_paths, validate_reviewed_candidate
 from harness.types.review import candidate_account as _candidate_account
 
@@ -297,11 +297,15 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
     if not isinstance(request, dict) or request.get("schema") not in {
         REQUEST_SCHEMA,
         links.REQUEST_SCHEMA,
+        reconstruction.REQUEST_SCHEMA,
     }:
         raise ValueError(f"type transaction request schema must be {REQUEST_SCHEMA}")
     concern = request.get("concern")
     linked = request["schema"] == links.REQUEST_SCHEMA
-    if linked:
+    combined = request["schema"] == reconstruction.REQUEST_SCHEMA
+    if combined:
+        reconstruction.validate_request(request)
+    elif linked:
         links.validate_request(request)
     elif concern not in CONCERNS:
         raise ValueError(f"unknown type transaction concern: {concern}")
@@ -349,6 +353,8 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
             path,
             ("alias" if row["id"] == links.STORAGE_ID else "layout")
             if linked
+            else request["type_concern"]
+            if combined
             else concern,
             row,
         )
@@ -368,7 +374,7 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
     )
     if concern == "shared":
         if any(
-            item["application"]["concern"] == "linked"
+            item["application"]["concern"] in {"linked", "reconstruction"}
             or item["application"]["manifest"].get("schema") == links.MANIFEST_SCHEMA
             or "linked_pair" in item["application"]["manifest"]
             for item in proofs
@@ -386,7 +392,11 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
     pre_state = file_state(root, allowed)
     partial_baselines = capture_partial_baselines(root, functions)
     facts = {
-        "schema": links.MANIFEST_SCHEMA if linked else MANIFEST_SCHEMA,
+        "schema": reconstruction.MANIFEST_SCHEMA
+        if combined
+        else links.MANIFEST_SCHEMA
+        if linked
+        else MANIFEST_SCHEMA,
         "target": target,
         "targets": sorted(targets),
         "concern": concern,
@@ -403,6 +413,8 @@ def prepare_transaction(root: Path, request: object) -> dict[str, Any]:
         ),
         "request": request,
     }
+    if combined:
+        reconstruction.capture(root, facts, run_command)
     if pair is not None:
         facts["linked_pair"] = pair
     if proofs:
@@ -414,10 +426,20 @@ def _manifest(root: Path, value: object, *, rederive: bool = False) -> dict[str,
     if not isinstance(value, dict):
         raise ValueError("type transaction manifest must be an object")
     facts = {key: item for key, item in value.items() if key != "digest"}
-    if facts.get("schema") not in {MANIFEST_SCHEMA, links.MANIFEST_SCHEMA} or value.get(
-        "digest"
-    ) != digest(facts):
+    if facts.get("schema") not in {
+        MANIFEST_SCHEMA,
+        links.MANIFEST_SCHEMA,
+        reconstruction.MANIFEST_SCHEMA,
+    } or value.get("digest") != digest(facts):
         raise ValueError("type transaction manifest drifted")
+    if facts["schema"] == reconstruction.MANIFEST_SCHEMA:
+        reconstruction.validate_policy(root, value)
+    elif (
+        value.get("concern") == "reconstruction"
+        or "reconstruction" in value
+        or any("reconstruction" in c for c in value.get("required_checks", []))
+    ):
+        raise ValueError("reconstruction policy requires a V4 manifest")
     if facts["schema"] == links.MANIFEST_SCHEMA:
         links.validate_manifest(root, value)
     elif value.get("concern") == "linked" or "linked_pair" in value:
@@ -463,7 +485,24 @@ def run_transaction(
 ) -> dict[str, Any]:
     manifest = _manifest(root, manifest_value, rederive=True)
     links.validate_participation(manifest, implementation_run_id, participating_targets)
-    _validate_source_changes(root, manifest, changes)
+    if manifest["schema"] == reconstruction.MANIFEST_SCHEMA:
+        if (
+            participating_targets is not None
+            and participating_targets != manifest["targets"]
+        ):
+            raise ValueError(
+                "reconstruction does not support additional participating targets"
+            )
+        reconstruction.validate_changes(root, manifest, changes)
+        review = manifest["reconstruction"]["proposal"]["review"]
+        if (
+            implementation_run_id
+            in {review["author_run_id"], review["reviewer_run_id"]}
+            or not implementation_run_id
+        ):
+            raise ValueError("reconstruction requires a distinct implementation run ID")
+    else:
+        _validate_source_changes(root, manifest, changes)
     allowed = validate_paths(root, manifest["allowed_paths"])
     if (
         file_state(root, allowed) != manifest["pre_state"]
@@ -594,6 +633,7 @@ def verify_application(
         root, value, expected_application_digest, "type", _manifest
     )
     links.validate_application(value)
+    reconstruction.validate_application(value)
     allowed = validate_paths(root, manifest["allowed_paths"])
     if file_state(root, allowed) != value["post_state"]:
         raise ValueError("type application post-state drifted")

@@ -95,9 +95,11 @@ pins, `unverified`/null results and read-only audit limits.
 
 Before editing, read the [clean-C ladder and probe method](references/match-loop.md)
 for existing/first-source gates, cumulative attempts, candidate retention and review.
-Keep the owning compiler/flags fixed. Before stalled source sweeps, read
-[compiler evidence](references/matching-knowledge.md#compiler-evidence); for unresolved
-behavior, use its [runtime branch](references/matching-knowledge.md#runtime-evidence).
+Keep owning compiler/flags fixed. Before stalled sweeps, read
+[compiler evidence](references/matching-knowledge.md#compiler-evidence). For duplicate
+signed/narrow loads replacing a register copy, read
+[narrow load sharing](references/matching-knowledge.md#narrow-load-sharing-and-real-value-reuse).
+For unresolved behavior, use [runtime evidence](references/matching-knowledge.md#runtime-evidence).
 
 ### Eligible-condition levers
 

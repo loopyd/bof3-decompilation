@@ -33,6 +33,13 @@ def validate_application_history(
         or value["pre_state"] != manifest["pre_state"]
     ):
         raise ValueError(f"{owner} application proof does not match manifest")
+    if (
+        "expected_post_state" in manifest
+        and value["post_state"] != manifest["expected_post_state"]
+    ):
+        raise ValueError(
+            "application POST differs from the admitted replacement images"
+        )
     validate_receipts(
         root,
         value.get("receipts"),

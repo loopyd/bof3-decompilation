@@ -637,6 +637,7 @@ def validate_native_bindings(
         "retdec118.native-request/v5",
         "retdec118.native-request/v6",
         "retdec118.native-request/v7",
+        "retdec118.native-request/v8",
     }
     forms = type(request) is dict and (
         request.get("schema") == "retdec118.native-request/v4"
@@ -647,8 +648,13 @@ def validate_native_bindings(
     )
     if forms:
         fields.add("source_form")
-    if request.get("schema") == "retdec118.native-request/v6":
+    if request.get("schema") in {
+        "retdec118.native-request/v6",
+        "retdec118.native-request/v8",
+    }:
         fields.add("entry_observation")
+    if request.get("schema") == "retdec118.native-request/v8":
+        fields.add("pointer_load")
     if request.get("schema") == "retdec118.native-request/v7":
         fields.add("copied_original")
         _require(not forms, "copied original context acquired a source form")
@@ -675,6 +681,7 @@ def validate_native_bindings(
             "retdec118.native-request/v5",
             "retdec118.native-request/v6",
             "retdec118.native-request/v7",
+            "retdec118.native-request/v8",
         }
         and request["operation"] == "generate",
         "binding request version/operation",
@@ -1244,9 +1251,14 @@ def validate_contract_graph(
                 "retdec118.native-request/v5",
                 "retdec118.native-request/v6",
                 "retdec118.native-request/v7",
+                "retdec118.native-request/v8",
             }
             and entry_observation == ("entry_observation" in wanted)
-            and entry_observation == (wanted["schema"] == "retdec118.native-request/v6")
+            and entry_observation
+            == (
+                wanted["schema"]
+                in {"retdec118.native-request/v6", "retdec118.native-request/v8"}
+            )
         ),
         "validated invocation entry observation context differs",
     )
@@ -1290,6 +1302,7 @@ def validate_contract_graph(
         "retdec118.native-request/v5",
         "retdec118.native-request/v6",
         "retdec118.native-request/v7",
+        "retdec118.native-request/v8",
     }:
         context, active_images = validate_overlay_context(
             configuration,
