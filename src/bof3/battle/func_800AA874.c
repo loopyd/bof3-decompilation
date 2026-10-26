@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-u32 func_800AA874(u32 arg0) {
-  arg0 &= 0xFF;
-  return (*(u32 *)((u8 *)D_80144F80 + ((arg0 >> 5) * 4)) & (1 << (arg0 & 0x1F))) != 0;
+u32 func_800AA874(u32 bitIndex) {
+  bitIndex &= 0xFF;
+  return (*(u32 *)((u8 *)D_80144F80 + ((bitIndex >> 5) * 4)) & (1 << (bitIndex & 0x1F))) != 0;
 }
