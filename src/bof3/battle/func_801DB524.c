@@ -10,7 +10,7 @@
  * branch and its shared zero-return fall-through; a constant `return 0` tail
  * folds into an `sltu` value and loses those instructions.
  */
-u8 func_801DB524(u8 arg0) {
+u8 isBattlerInactiveOrFlag4000(u8 arg0) {
   u16 flags;
   u8  blocked;
 

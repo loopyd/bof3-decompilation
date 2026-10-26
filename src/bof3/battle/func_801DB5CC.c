@@ -1,7 +1,7 @@
 #include "bof3/battle/battle03_internal.h"
 
 /* @source 0x801DB5CC
- * @behavior Returns the index of the first battler slot that func_801DB524
+ * @behavior Returns the index of the first battler slot that isBattlerInactiveOrFlag4000
  * reports available, rotating the scan around the requested slot: for requested
  * indices below 3 it scans the local work slots from that index up to 2 and
  * then from 0 up to that index, and for higher indices it scans the enemy work
@@ -19,23 +19,23 @@ u8 func_801DB5CC(u8 arg0) {
 
   if (arg0 < 3u) {
     for (i = arg0; i < 3u; i++) {
-      if (func_801DB524(i) == 0u) {
+      if (isBattlerInactiveOrFlag4000(i) == 0u) {
         return i;
       }
     }
     for (i = 0; i < arg0; i++) {
-      if (func_801DB524(i) == 0u) {
+      if (isBattlerInactiveOrFlag4000(i) == 0u) {
         return i;
       }
     }
   } else {
     for (i = arg0; i < 0xBu; i++) {
-      if (func_801DB524(i) == 0u) {
+      if (isBattlerInactiveOrFlag4000(i) == 0u) {
         return i;
       }
     }
     for (i = 3; i < arg0; i++) {
-      if (func_801DB524(i) == 0u) {
+      if (isBattlerInactiveOrFlag4000(i) == 0u) {
         return i;
       }
     }

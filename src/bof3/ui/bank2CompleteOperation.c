@@ -22,7 +22,7 @@ void bank2CompleteOperation(void) {
     D_801462E2 = 0;
     D_801462E3 = 0;
     D_801462E4 = 0;
-    D_801462F0 = findModeFreeSlot(1);
+    localBattlerCount = findModeFreeSlot(1);
     state = &D_80143B92;
     (*state)++;
   }

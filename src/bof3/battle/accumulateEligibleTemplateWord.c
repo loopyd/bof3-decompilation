@@ -13,7 +13,7 @@ s32 accumulateEligibleTemplateWord(s32 arg0) {
   u8 index = 0;
   u8 record;
 
-  if (D_801462F0 != 0) {
+  if (localBattlerCount != 0) {
     do {
       if ((u8)testFlag400WhenEligible(index) != 0) {
         record = lookupStateByteMapped(D_80145E90[index].unk_79);
@@ -26,7 +26,7 @@ s32 accumulateEligibleTemplateWord(s32 arg0) {
         }
       }
       index += 1;
-    } while (index < D_801462F0);
+    } while (index < localBattlerCount);
   }
   return arg0;
 }

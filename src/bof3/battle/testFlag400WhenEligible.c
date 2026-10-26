@@ -7,7 +7,7 @@
  * @residual none
  */
 s32 testFlag400WhenEligible(u8 arg0) {
-    if (func_801DB524(arg0) == 0) {
+    if (isBattlerInactiveOrFlag4000(arg0) == 0) {
         return ((D_80145FB8[arg0].flags_00 & 0x400) + 1) <= 1;
     }
 

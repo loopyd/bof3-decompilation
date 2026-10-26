@@ -40,7 +40,7 @@ segments:
     - c
     - queueEligibleWorkRecord
     - '@source: src/bof3/battle/queueEligibleWorkRecord.c'
-    - '@behavior: Scans the battle-local work records from the D_801462E5 cursor up to the volatile D_801462F0 count, skipping the records func_801DB524 reports unavailable; the first record whose D_80145FB8 flag word carries bit 0 or bit 1 has flag 0x2000 raised on its D_80145FB4 flag word, allocates the queued slot-store entry for kind 0xB when that record''s D_80145F09 byte is 4 and for kind 0xC otherwise (clearing bit 0 of the three 0x801EC048 status records first), publishes the record pointer into the entry +0x74 pointer, and advances both the cursor and the battle state byte 0x801462E2; when the scan exhausts, only the state byte advances.'
+    - '@behavior: Scans the battle-local work records from the D_801462E5 cursor up to the volatile localBattlerCount count, skipping the records isBattlerInactiveOrFlag4000 reports unavailable; the first record whose D_80145FB8 flag word carries bit 0 or bit 1 has flag 0x2000 raised on its D_80145FB4 flag word, allocates the queued slot-store entry for kind 0xB when that record''s D_80145F09 byte is 4 and for kind 0xC otherwise (clearing bit 0 of the three 0x801EC048 status records first), publishes the record pointer into the entry +0x74 pointer, and advances both the cursor and the battle state byte 0x801462E2; when the scan exhausts, only the state byte advances.'
   - - 24084
     - asm
     - func_801D6A14
@@ -238,19 +238,19 @@ segments:
     - clearRankingScratch
   - - 43300
     - c
-    - func_801DB524
+    - isBattlerInactiveOrFlag4000
     - '@source: src/bof3/battle/func_801DB524.c'
     - '@behavior: reports whether one local/enemy battler slot is unavailable, either because it is inactive or because its corresponding `0x4000` flag is set.'
   - - 43468
     - c
     - func_801DB5CC
     - '@source: src/bof3/battle/func_801DB5CC.c'
-    - '@behavior: Returns the index of the first battler slot that func_801DB524 reports available, rotating the scan around the requested slot: for requested indices below 3 it scans the local work slots from that index up to 2 and then from 0 up to that index, and for higher indices it scans the enemy work slots from that index up to 10 and then from 3 up to that index; returns 0xFF when no slot is found.'
+    - '@behavior: Returns the index of the first battler slot that isBattlerInactiveOrFlag4000 reports available, rotating the scan around the requested slot: for requested indices below 3 it scans the local work slots from that index up to 2 and then from 0 up to that index, and for higher indices it scans the enemy work slots from that index up to 10 and then from 3 up to that index; returns 0xFF when no slot is found.'
   - - 43764
     - c
     - func_801DB6F4
     - '@source: src/bof3/battle/func_801DB6F4.c'
-    - '@behavior: Returns the index of the first battler slot that func_801DB524 reports available, scanning downward and wrapping around the requested slot: for requested indices below three it scans the local work slots from that index down to zero and then from two down to that index plus one, and for higher indices it scans the enemy work slots from that index down to three and then from ten down to that index plus one; returns 0xFF when no slot is found.'
+    - '@behavior: Returns the index of the first battler slot that isBattlerInactiveOrFlag4000 reports available, scanning downward and wrapping around the requested slot: for requested indices below three it scans the local work slots from that index down to zero and then from two down to that index plus one, and for higher indices it scans the enemy work slots from that index down to three and then from ten down to that index plus one; returns 0xFF when no slot is found.'
   - - 44100
     - c
     - func_801DB844
@@ -287,7 +287,7 @@ segments:
     - c
     - func_801DCCB0
     - '@source: src/bof3/battle/func_801DCCB0.c'
-    - '@behavior: Sums the halfword at +0x96 of the 0x140-stride D_80145E90 local work records selected by the D_801462F0 record count, divides that 16-bit total by the same count and returns half of the sum of the quotient and the D_801EC2EE halfword; a zero divisor reaches the signed division trap.'
+    - '@behavior: Sums the halfword at +0x96 of the 0x140-stride D_80145E90 local work records selected by the localBattlerCount record count, divides that 16-bit total by the same count and returns half of the sum of the quotient and the D_801EC2EE halfword; a zero divisor reaches the signed division trap.'
   - - 49488
     - c
     - func_801DCD50
@@ -363,7 +363,7 @@ segments:
     - c
     - func_801DD978
     - '@source: src/bof3/battle/func_801DD978.c'
-    - '@behavior: Scans the enemy work slots 3..10 that func_801DB524 reports available, remembers the largest record halfword +0x88, then picks among those whose +0x88 still equals that maximum the first slot whose halfword +0x94 is the smallest and publishes that slot index in the battle byte 0x80146384.'
+    - '@behavior: Scans the enemy work slots 3..10 that isBattlerInactiveOrFlag4000 reports available, remembers the largest record halfword +0x88, then picks among those whose +0x88 still equals that maximum the first slot whose halfword +0x94 is the smallest and publishes that slot index in the battle byte 0x80146384.'
   - - 52916
     - asm
     - submitPositionalEffectBit80
@@ -423,7 +423,7 @@ segments:
     - c
     - func_801DE1D4
     - '@source: src/bof3/battle/func_801DE1D4.c'
-    - '@behavior: Copies each active local and enemy battler work record into a kind 7 queued slot entry: local slots 0..2 whose record byte +0x00 carries bit 0x1 while their D_80145FB8 flag word lacks bit 0x8, and enemy slots 3..10 that func_801DB524 reports available while their D_801EB734 flag word lacks bit 0x8. For each such record it allocates the slot, copies the 0x74-byte record image, publishes the record pointer into the entry +0x74 pointer and the 0x1F800044 scratch cell, and clears the entry''s queue bytes.'
+    - '@behavior: Copies each active local and enemy battler work record into a kind 7 queued slot entry: local slots 0..2 whose record byte +0x00 carries bit 0x1 while their D_80145FB8 flag word lacks bit 0x8, and enemy slots 3..10 that isBattlerInactiveOrFlag4000 reports available while their D_801EB734 flag word lacks bit 0x8. For each such record it allocates the slot, copies the 0x74-byte record image, publishes the record pointer into the entry +0x74 pointer and the 0x1F800044 scratch cell, and clears the entry''s queue bytes.'
   - - 55356
     - c
     - func_801DE43C
@@ -651,7 +651,7 @@ segments:
     - c
     - func_801E12DC
     - '@source: src/bof3/battle/claimFlag2000AndQueueSlot.c'
-    - '@behavior: Scans the D_801462F0 active local work records for flag 0x2000 and returns as soon as one carries it; otherwise sets that flag on the current work record published at 0x80146250, selects queued-slot kind 0xB when work byte +0x79 is 4 and 0xC otherwise, allocates the matching slot-store entry through func_801E590C, publishes the scratch work pointer into that entry and increments scratch byte +0x04.'
+    - '@behavior: Scans the localBattlerCount active local work records for flag 0x2000 and returns as soon as one carries it; otherwise sets that flag on the current work record published at 0x80146250, selects queued-slot kind 0xB when work byte +0x79 is 4 and 0xC otherwise, allocates the matching slot-store entry through func_801E590C, publishes the scratch work pointer into that entry and increments scratch byte +0x04.'
   - - 67512
     - c
     - resetWorkWhenFlag2000Clear
@@ -822,7 +822,7 @@ segments:
     - c
     - func_801E2D90
     - '@source: src/bof3/battle/func_801E2D90.c'
-    - '@behavior: Returns the index with the smallest halfword at +0x88 among the first three D_80145E90 records not blocked by func_801DB524. Only values below 10000 qualify; ties keep the earlier index, and no qualifying value returns 0.'
+    - '@behavior: Returns the index with the smallest halfword at +0x88 among the first three D_80145E90 records not blocked by isBattlerInactiveOrFlag4000. Only values below 10000 qualify; ties keep the earlier index, and no qualifying value returns 0.'
   - - 74288
     - asm
     - func_801E2E30
@@ -1200,7 +1200,7 @@ segments:
     - c
     - func_801E6D28
     - '@source: src/bof3/battle/func_801E6D28.c'
-    - '@behavior: Returns from the battle work gate when the 0x801462E8 halfword carries bit 0x400 and the current work record byte +5 already equals the global byte 0x80146374; otherwise it masks the selected record status halfword +0x80/+0x82 with 0x58 and increments scratchpad byte +1 of the 0x1F800044 object when any group bit is set and func_801DB524 accepts that record.'
+    - '@behavior: Returns from the battle work gate when the 0x801462E8 halfword carries bit 0x400 and the current work record byte +5 already equals the global byte 0x80146374; otherwise it masks the selected record status halfword +0x80/+0x82 with 0x58 and increments scratchpad byte +1 of the 0x1F800044 object when any group bit is set and isBattlerInactiveOrFlag4000 accepts that record.'
   - - 90708
     - asm
     - func_801E6E54
@@ -1352,7 +1352,7 @@ segments:
     - c
     - func_801E960C
     - '@source: src/bof3/battle/func_801E960C.c'
-    - '@behavior: Dispatches the panel handler selected by state byte +0x03 through the four-entry table at 0x801D0FD0, forwards the state field pointers and the selected enemy work record halfwords +0x94/+0xA0 to func_801EA1E0, advances state byte +0x03 to 3 when func_801DB524 hits while state byte +0x0D is clear, then sets or clears bit 0x2000 of that record flags halfword +0x82 from the quarter comparison of halfwords +0x94/+0xA0.'
+    - '@behavior: Dispatches the panel handler selected by state byte +0x03 through the four-entry table at 0x801D0FD0, forwards the state field pointers and the selected enemy work record halfwords +0x94/+0xA0 to func_801EA1E0, advances state byte +0x03 to 3 when isBattlerInactiveOrFlag4000 hits while state byte +0x0D is clear, then sets or clears bit 0x2000 of that record flags halfword +0x82 from the quarter comparison of halfwords +0x94/+0xA0.'
   - - 101288
     - c
     - func_801E97A8

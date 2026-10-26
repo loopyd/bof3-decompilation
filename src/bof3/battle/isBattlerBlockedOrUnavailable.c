@@ -29,5 +29,5 @@ u8 isBattlerBlockedOrUnavailable(u32 arg0) {
     }
   }
 
-  return func_801DB524((u8)arg0) != 0u;
+  return isBattlerInactiveOrFlag4000((u8)arg0) != 0u;
 }

@@ -892,7 +892,7 @@ extern u8                  D_801462E3;
 /* @source 0x801462E4 @kind unknown */
 extern u8                  D_801462E4;
 /* @source 0x801462F0 @kind unknown */
-extern u8                  D_801462F0;
+extern u8                  localBattlerCount;
 /* @source 0x801462EC @kind unknown */
 extern u8                  D_801462EC;
 /* @source 0x80146325 @kind unknown */

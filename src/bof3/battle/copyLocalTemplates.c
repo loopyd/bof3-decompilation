@@ -14,7 +14,7 @@ void copyLocalTemplates(void) {
   u8*                               work_base;
   volatile u8*                      loop_count;
 
-  count_ptr = &D_801462F0;
+  count_ptr = &localBattlerCount;
   index = 0u;
   if (*count_ptr != 0) {
     do {

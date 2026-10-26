@@ -19,7 +19,7 @@ u8 func_801E2CA4(void) {
   best = 0xffffu;
   index = 3u;
   do {
-    if (func_801DB524((u8)index) == 0u) {
+    if (isBattlerInactiveOrFlag4000((u8)index) == 0u) {
       value = D_801EB630[(u8)index - 3u].unk_94;
       if (value < best) {
         best = value;

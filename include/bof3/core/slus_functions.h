@@ -39,7 +39,15 @@ void fadeLoop(s32 a0, s32 a1, s32 a2);
 u8   drawFadeTile(s16* value, s32 arg, u8 arg2, u8 arg3, u8 arg4);
 void drawGlyphString8x8(s16 x, s16 y, u16 clut, const u8* text);
 void dispatchSoundCue(u32 cue_id);
+/* Reviewed ASM helpers truncate sums before their 999/100 cap checks.
+ * The byte helper also clears sign-bit sums. Neither is universal saturation.
+ * INFERRED: Signatures are preserved from the Battle15 importer; parameter
+ * widths and return types remain unresolved. Both bodies return a value. */
+/* @source 0x801654F4 */
+void adjustHalfwordWith999Cap(volatile u16* target, s32 value);
 s32  adjustBoundedCounter(u8* counter, s32 delta);
+/* @source 0x80165694 */
+void adjustByteWith100Cap(volatile u8* target, u8 value);
 
 /* EMI loader and CD callback path. */
 void    initEmiLoader(void);

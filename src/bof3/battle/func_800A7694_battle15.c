@@ -16,7 +16,7 @@
 void func_800A7694(s8 a0, s8 a1, s8 a2, s8 a3, s8 a4) {
   u8* record;
 
-  record = &D_80145F04[(u32)D_80146374 * 0x140u];
+  record = &battleWorkRecordBase[(u32)D_80146374 * 0x140u];
 
   {
     s8 row;

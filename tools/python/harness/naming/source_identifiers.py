@@ -37,7 +37,10 @@ _C_KEYWORDS = frozenset(
     "for goto if inline int long register restrict return short signed sizeof "
     "static struct switch typedef union unsigned void volatile while _Bool".split()
 )
-_SCALAR_TYPES = frozenset("bool s8 s16 s32 s64 u8 u16 u32 u64 f32 f64".split())
+_SCALAR_TYPES = frozenset(
+    "bool s8 s16 s32 s64 u8 u16 u32 u64 f32 f64 "
+    "char short int long signed unsigned float double void _Bool".split()
+)
 _QUALIFIERS = frozenset("const volatile static register auto".split())
 _TYPE_HEADS = frozenset("struct union enum".split())
 _NATIVE_OUTPUT_LIMIT = 2 * 1024 * 1024
@@ -59,11 +62,36 @@ def _tags(masked: str) -> set[str]:
     return set(re.findall(r"\b(?:struct|union|enum)\s+([A-Za-z_]\w*)", masked))
 
 
+def _without_initializers(statement: str) -> str:
+    """Keep declarators, excluding top-level initializer expressions."""
+
+    masked = _masked(statement)
+    parts: list[str] = []
+    parens = brackets = braces = 0
+    start = 0
+    skipping = False
+    for index, character in enumerate(masked):
+        if character == "=" and parens == brackets == braces == 0 and not skipping:
+            parts.append(statement[start:index])
+            skipping = True
+        elif character in ",;" and parens == brackets == braces == 0:
+            if skipping:
+                start = index
+                skipping = False
+        parens += (character == "(") - (character == ")")
+        brackets += (character == "[") - (character == "]")
+        braces += (character == "{") - (character == "}")
+    if not skipping:
+        parts.append(statement[start:])
+    return "".join(parts)
+
+
 def _declaration_names(statement: str) -> tuple[str, ...]:
-    """Return declared ordinary names, dropping aggregate tags and type heads."""
+    """Return declared ordinary names, dropping initializers, tags and type heads."""
 
     from harness.domain.c_context import declaration_names
 
+    statement = _without_initializers(statement)
     masked = _masked(statement)
     try:
         names = declaration_names(statement)
@@ -114,12 +142,25 @@ def _is_declaration(statement: str) -> bool:
         if token in _TYPE_HEADS:
             remainder = remainder[match.end() :]
             tag = re.match(r"\s*[A-Za-z_]\w*", remainder)
-            if tag is not None:
-                remainder = remainder[tag.end() :]
-            continue
+            if tag is None:
+                return False
+            remainder = remainder[tag.end() :]
+            break
         remainder = remainder[match.end() :]
+        if token in _SCALAR_TYPES:
+            following = re.match(r"\s*([A-Za-z_]\w*)", remainder)
+            if following and following.group(1) in _SCALAR_TYPES:
+                continue
         break
     if remainder.lstrip().startswith("="):
+        return False
+    # A parenthesis after a type head must begin a pointer declarator, not
+    # the argument list of a call whose callee was mistaken for a typedef.
+    if remainder.lstrip().startswith("(") and not re.match(
+        r"\s*\(\s*\*\s*(?:(?:const|volatile)\s+)*[A-Za-z_]\w*"
+        r"\s*(?:\[[^]]*\]\s*)*\)\s*(?:\(|\[)",
+        remainder,
+    ):
         return False
     return bool(_declarator_names(remainder))
 
@@ -183,7 +224,16 @@ def _statement_declarations(body: str) -> list[str]:
     declarations: list[str] = []
     start = 0
     parens = brackets = 0
+    initializer_braces = 0
+    aggregate_braces = 0
+    aggregate_statement = False
     for index, character in enumerate(masked):
+        if aggregate_statement:
+            aggregate_braces += (character == "{") - (character == "}")
+            if character == ";" and aggregate_braces == 0:
+                aggregate_statement = False
+                start = index + 1
+            continue
         if character == "(":
             parens += 1
         elif character == ")":
@@ -192,7 +242,45 @@ def _statement_declarations(body: str) -> list[str]:
             brackets += 1
         elif character == "]":
             brackets -= 1
-        elif character == ";" and parens == 0 and brackets == 0:
+        elif character == "{" and parens == 0 and brackets == 0:
+            prefix = masked[start:index]
+            if (
+                not initializer_braces
+                and "=" not in prefix
+                and re.match(
+                    r"\s*(?:(?:typedef|const|volatile|static|auto|register|extern)\s+)*"
+                    r"(?:struct|union|enum)\b",
+                    prefix,
+                )
+            ):
+                aggregate_statement = True
+                aggregate_braces = 1
+            elif initializer_braces or (
+                "=" in prefix and _is_declaration(body[start:index] + ";")
+            ):
+                initializer_braces += 1
+            else:
+                start = index + 1
+        elif character == "}" and parens == 0 and brackets == 0:
+            if initializer_braces:
+                initializer_braces -= 1
+            else:
+                start = index + 1
+        elif (
+            character == ":"
+            and parens == 0
+            and brackets == 0
+            and not initializer_braces
+        ):
+            prefix = masked[start : index + 1]
+            if re.fullmatch(r"\s*(?:case\b[^{};]*|default|[A-Za-z_]\w*)\s*:", prefix):
+                start = index + 1
+        elif (
+            character == ";"
+            and parens == 0
+            and brackets == 0
+            and not initializer_braces
+        ):
             statement = body[start : index + 1]
             if _is_declaration(statement):
                 declarations.append(statement)
@@ -388,7 +476,8 @@ def prepare_source_transaction(
     resolved, source, text, record, _signature, _body, _uses = _identifiers(
         root, selector
     )
-    row = describe_source_identifier(root, target, f"{selector}@{kind}:{old_name}")
+    identifier = f"{function.target.value}@{function.address:08X}@{kind}:{old_name}"
+    row = describe_source_identifier(root, target, identifier)
     _validate_rename(text, record, kind=kind, old_name=old_name, new_name=new_name)
     path = _receipt_path(root, output)
     backup = path.with_name(path.name + ".pre")
@@ -515,18 +604,20 @@ def verify_source_transaction(
     text = source.read_text(encoding="utf-8")
     if hashlib.sha256(text.encode("utf-8")).hexdigest() != payload["post_sha256"]:
         raise ValueError("applied source no longer matches the transaction")
+    original = (root / payload["backup"]).read_text(encoding="utf-8")
+    if hashlib.sha256(original.encode("utf-8")).hexdigest() != payload["pre_sha256"]:
+        raise ValueError("source rename backup no longer matches PRE")
     start, end = payload["implementation"]["start"], payload["implementation"]["end"]
     expected = (
-        text[:start]
+        original[:start]
         + re.sub(
-            rf"\b{re.escape(payload['new_name'])}\b",
-            payload["old_name"],
-            text[start:end],
+            rf"\b{re.escape(payload['old_name'])}\b",
+            payload["new_name"],
+            original[start:end],
         )
-        + text[end:]
+        + original[end:]
     )
-    original = (root / payload["backup"]).read_text(encoding="utf-8")
-    if expected != original:
+    if text != expected:
         raise ValueError("applied rename changed text outside the renamed identifier")
     if _code_occurrences(text, payload["old_name"]):
         raise ValueError("applied source still contains the old identifier")

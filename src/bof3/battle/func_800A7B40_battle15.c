@@ -28,7 +28,7 @@ u32 func_800A7B40(u8 group, u8 slot)
 
   i = 0;
   row = &D_800B4EB0[(u32)group * 3u];
-  slots = &D_80145F04[(u32)D_80146374 * 0x140u];
+  slots = &battleWorkRecordBase[(u32)D_80146374 * 0x140u];
 
   for (; i < 3u; i++) {
     if (row[i] == 0u) {

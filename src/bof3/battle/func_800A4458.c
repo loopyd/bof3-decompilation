@@ -38,7 +38,7 @@ void func_800A4458(void) {
       record += offset;
 
       *(u16*)&record[0xB0] = x;
-      value = *(u16*)&D_80145F44[offset];
+      value = *(u16*)&battleWorkAdjustmentFields[offset];
       *(u16*)&D_80145F20[offset] = x;
       value += *(u16*)&tmpl[2];
       *(u16*)&record[0xB4] = value;

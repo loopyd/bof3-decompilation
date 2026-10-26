@@ -293,7 +293,7 @@ typedef struct Battle03UiRingEntry {
 } Battle03UiRingEntry;
 
 extern volatile AbilityObject       ABILITY_OBJECTS[]; /* @source 0x801CA70C @kind unknown */
-extern volatile u8                  D_801462F0; /* @source 0x801462F0 @kind unknown */
+extern volatile u8                  localBattlerCount; /* @source 0x801462F0 @kind unknown */
 extern volatile u16                 D_801EC2EE; /* @source 0x801EC2EE @kind unknown */
 extern Battle03TemplateRecord       D_80144968[]; /* @source 0x80144968 @kind unknown */
 extern volatile Battle03FlagRecord D_80145FB8[]; /* @source 0x80145FB8 @kind unknown */
@@ -611,7 +611,7 @@ u8   func_8014DAEC(void);
 void func_8014E5A0(u8 arg0, u8 arg1);
 void func_8014F800(s16 arg0, s16 arg1, s32 arg2, u32 arg3, u32 arg4);
 u32  func_8014D8D4(u8 arg0);
-u8   func_801DB524(u8 arg0);
+u8   isBattlerInactiveOrFlag4000(u8 arg0);
 s32  testFlag400WhenEligible(u8 arg0);
 u8   func_800A9304(u8 arg0);
 u8   func_800A94A8(void);
@@ -621,7 +621,7 @@ s16  func_800A2AE0(u8 battler_index, u16 element_mask);
 u8   func_800A3DF8(u32 arg0, u32 arg1);
 void func_800A31E0(u32 arg0, u32 arg1);
 void func_800AD074(u8 arg0);
-void func_800AAA74(void);
+void adjustBattleWorkValuesForMode(void);
 void func_800A4458(void);
 void func_800A9BD8(u8 arg0);
 /* Owned by the SLUS address space (boundary func_800A9820 in emi/battle/battle/15);

@@ -1,7 +1,7 @@
 #include "bof3/battle/battle03_internal.h"
 
 /* @behavior Returns the index with the smallest halfword at +0x88 among the
- * first three D_80145E90 records not blocked by func_801DB524. Only values below
+ * first three D_80145E90 records not blocked by isBattlerInactiveOrFlag4000. Only values below
  * 10000 qualify; ties keep the earlier index, and no qualifying value returns 0.
  * @source 0x801E2D90
  * @status exact
@@ -20,7 +20,7 @@ u8 func_801E2D90(void) {
   index = 0u;
   do {
     slot = (u8)index;
-    if (func_801DB524(slot) == 0u) {
+    if (isBattlerInactiveOrFlag4000(slot) == 0u) {
       value = *(u16*)&D_80145F18[((slot << 2) + slot) << 6];
       if (value < best) {
         best = value;

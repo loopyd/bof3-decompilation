@@ -1,7 +1,7 @@
 #include "bof3/battle/battle03_internal.h"
 
 /* @behavior Sums the halfword at +0x96 of the D_80145E90 local work records
- * selected by the D_801462F0 record count, divides that 16-bit total by the same
+ * selected by the localBattlerCount record count, divides that 16-bit total by the same
  * count and returns half of the sum of the quotient and the D_801EC2EE halfword.
  * @source 0x801DCCB0
  * @status exact
@@ -20,7 +20,7 @@ u32 func_801DCCB0(void) {
    * load without imposing volatile ordering on the intervening arithmetic. */
   total = 0;
   index = 0u;
-  count = *(u8*)&D_801462F0;
+  count = *(u8*)&localBattlerCount;
   if (count != 0u) {
     limit = count;
     do {
@@ -30,6 +30,6 @@ u32 func_801DCCB0(void) {
     } while ((u8)index < limit);
   }
 
-  divisor = *(u8*)&D_801462F0;
+  divisor = *(u8*)&localBattlerCount;
   return ((u32)((u16)total / divisor) + *(u16*)&D_801EC2EE) >> 1;
 }

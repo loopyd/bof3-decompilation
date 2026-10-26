@@ -166,13 +166,26 @@ segments:
       - [0xcc500, c, isEmiLoaderReady, '@source: src/bof3/io/isEmiLoaderReady.c']
       - [0xcc518, c, dispatchEmiModeCallback, '@source: src/bof3/io/dispatchEmiModeCallback.c']
   - [0xcc59c, bin, post_emi_loader]
+  - name: halfword_adjustment
+    type: code
+    start: 0xcecf4
+    vram: 0x801654f4
+    subsegments:
+      - [0xcecf4, asm, adjustHalfwordWith999Cap]
+  - [0xced70, bin, post_halfword_adjustment]
   - name: equipment_counter
     type: code
     start: 0xcedf4
     vram: 0x801655f4
     subsegments:
       - [0xcedf4, c, adjustBoundedCounter, '@source: src/bof3/equipment/adjustBoundedCounter.c']
-  - [0xcee94, bin, pre_item_record_dispatch]
+  - name: byte_adjustment
+    type: code
+    start: 0xcee94
+    vram: 0x80165694
+    subsegments:
+      - [0xcee94, asm, adjustByteWith100Cap]
+  - [0xceeec, bin, pre_item_record_dispatch]
   - name: item_record_dispatch
     type: code
     start: 0xCF548

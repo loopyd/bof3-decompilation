@@ -10,6 +10,7 @@ from typing import Any
 from ..io import file_sha256
 from ..domain.manifests import load_target_manifests
 from ..domain.ids import normalize_target_id
+from ..domain.psx import is_psx_exe, payload_for, validate_psx_header
 from ..io import read_json
 
 
@@ -18,12 +19,28 @@ def verify_declared_companions(
 ) -> list[dict[str, Any]]:
     """Verify one caller's declared companion facts without a global EMI scan."""
 
-    caller = _direct_entry(root, caller_manifest.disc_id)
-    if caller_manifest.load_address != int(caller["load_address"]):
-        raise ValueError(
-            f"caller catalog load address mismatch: {caller_manifest.id.value}"
+    if caller_manifest.kind == "emi":
+        caller = _direct_entry(root, caller_manifest.disc_id)
+        if caller_manifest.load_address != int(caller["load_address"]):
+            raise ValueError(
+                f"caller catalog load address mismatch: {caller_manifest.id.value}"
+            )
+        caller_payload = Path(caller["payload_path"]).read_bytes()
+    else:
+        binary_path = root / caller_manifest.binary
+        binary = binary_path.read_bytes()
+        if is_psx_exe(binary):
+            validate_psx_header(
+                binary, caller_manifest.load_address, binary_name=str(binary_path)
+            )
+        payload = payload_for(
+            binary, caller_manifest.load_address, binary_name=str(binary_path)
         )
-    caller_payload = Path(caller["payload_path"]).read_bytes()
+        caller_payload = binary[payload.binary_offset :]
+        caller = {
+            "load_address": payload.load_address,
+            "size": payload.payload_size,
+        }
     relations: list[dict[str, Any]] = []
     for companion in caller_manifest.companions:
         target = _direct_entry(root, companion.disc_id)

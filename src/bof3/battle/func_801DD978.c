@@ -1,7 +1,7 @@
 #include "bof3/battle/battle03_internal.h"
 
 /* @source 0x801DD978
- * @behavior Scans the enemy work slots `3..10` that func_801DB524 reports
+ * @behavior Scans the enemy work slots `3..10` that isBattlerInactiveOrFlag4000 reports
  * available and remembers the largest record halfword +0x88 seen; it then picks,
  * among the available slots whose halfword +0x88 still equals that maximum, the
  * first one whose halfword +0x94 is the smallest and publishes that slot index
@@ -21,7 +21,7 @@ void func_801DD978(void) {
 
   slot = 3u;
   do {
-    if (func_801DB524(slot) == 0u) {
+    if (isBattlerInactiveOrFlag4000(slot) == 0u) {
       value = D_801EB630[slot - 3u].unk_88;
       if (best < value) {
         best = value;
@@ -34,7 +34,7 @@ void func_801DD978(void) {
   selected = 0u;
   slot = 3u;
   do {
-    if (func_801DB524(slot) == 0u) {
+    if (isBattlerInactiveOrFlag4000(slot) == 0u) {
       if (best == D_801EB630[slot - 3u].unk_88) {
         value = D_801EB630[slot - 3u].unk_94;
         if (value <= lowest) {

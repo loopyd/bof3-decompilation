@@ -69,7 +69,7 @@ void func_801D4D44(void) {
     if (BATTLE_GLOBAL_BYTE_63CE_NV == 0u) {
       index = 0u;
       do {
-        if (func_801DB524(index) == 0u) {
+        if (isBattlerInactiveOrFlag4000(index) == 0u) {
           D_80145E90[index].unk_128 &= 0xffffffefu;
         }
         index += 1u;
@@ -77,7 +77,7 @@ void func_801D4D44(void) {
 
       index = 3u;
       do {
-        if (func_801DB524(index) == 0u) {
+        if (isBattlerInactiveOrFlag4000(index) == 0u) {
           D_801EB630[index - 3u].unk_104 &= 0xffffffefu;
         }
         index += 1u;

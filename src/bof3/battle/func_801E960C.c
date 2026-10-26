@@ -4,7 +4,7 @@
  * @behavior Dispatches the panel handler selected by state byte +0x03 through the
  * four-entry handler table copied off 0x801D0FD0, then forwards the state field
  * pointers +0xB/+0x1C/+0x14/+0xD/+0x18/+0x8 and the selected enemy work record's
- * +0x94/+0xA0 halfword pointers to func_801EA1E0. When func_801DB524(state byte
+ * +0x94/+0xA0 halfword pointers to func_801EA1E0. When isBattlerInactiveOrFlag4000(state byte
  * +0x0A) reports a hit while state byte +0x0D is clear it sets state byte +0x03
  * to 3, and it finally raises bit 0x2000 of that enemy work record's flags
  * halfword +0x82 while its halfword +0x94 is below a quarter of its halfword
@@ -28,7 +28,7 @@ void func_801E960C(void) {
                 (s16*)(record + 0x20), D_80148648 + 0xD,
                 (s16*)(D_80148648 + 0x18), D_80148648 + 0x8);
 
-  if ((func_801DB524(D_80148648[0xA]) != 0) && (D_80148648[0xD] == 0)) {
+  if ((isBattlerInactiveOrFlag4000(D_80148648[0xA]) != 0) && (D_80148648[0xD] == 0)) {
     D_80148648[3] = 3;
   }
 

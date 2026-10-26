@@ -175,10 +175,9 @@ extern BattleSelectionDispatchTable D_800969F8; /* @source 0x800969F8 @kind unkn
 extern BattleSelectionDispatchTable D_80096A08; /* @source 0x80096A08 @kind unknown */
 extern BattleSelectionDispatchTable D_80096A34; /* @source 0x80096A34 @kind unknown */
 extern BattleSelectionDispatchTable D_80096A40; /* @source 0x80096A40 @kind unknown */
-/* Selection-phase mode byte switched on by func_800AAA74, whose four cases are
- * numeric only (1, 2, 3, 4). The bytes prove the dispatch, not what the cases
- * mean in play. Named so the read assembles as one `lui`/`lbu` pair. */
-extern u8 D_80144F58; /* @source 0x80144F58 @kind unknown */
+/* Mode values 1..4 select battle work adjustments. Value 2 also reduces
+ * positive damage for a local selection. Gameplay mode labels are unresolved. */
+extern u8 battleAdjustmentModeState; /* @source 0x80144F58 @kind unknown */
 extern s32 D_80144F60[]; /* @source 0x80144F60 @kind unknown */
 extern volatile u32  D_80144F80[]; /* @source 0x80144F80 @kind unknown */
 extern u16 D_80145FAA[]; /* @source 0x80145FAA @kind unknown */
@@ -230,9 +229,9 @@ extern u16 D_800B6D30[]; /* @source 0x800B6D30 @kind string */
 extern u8 D_801462E4; /* @source 0x801462E4 @kind unknown */
 extern u8 D_801462EA; /* @source 0x801462EA @kind unknown */
 extern volatile u8   D_801462EF; /* @source 0x801462EF @kind unknown */
-/* Shared active-record count (config/targets/shared/symbols.txt); func_800AAA74
+/* Shared active-record count (config/targets/shared/symbols.txt); adjustBattleWorkValuesForMode
  * re-reads it in both loop conditions. */
-extern volatile u8   D_801462F0; /* @source 0x801462F0 @kind unknown */
+extern volatile u8   localBattlerCount; /* @source 0x801462F0 @kind unknown */
 extern volatile u8   D_80146303; /* @source 0x80146303 @kind unknown */
 extern volatile u16  D_80145AC8; /* @source 0x80145AC8 @kind unknown */
 /* sprintf work buffer of the panel label row: func_800B0498 formats the
@@ -302,7 +301,7 @@ extern u8 D_80145F1A[]; /* @source 0x80145F1A @kind unknown */
 extern u8 D_80145F1C[]; /* @source 0x80145F1C @kind unknown */
 extern u8 D_80145F22[]; /* @source 0x80145F22 @kind unknown */
 extern u8 D_80145F12[]; /* @source 0x80145F12 @kind unknown */
-extern u8 D_80145F04[]; /* @source 0x80145F04 @kind unknown */
+extern u8 battleWorkRecordBase[]; /* @source 0x80145F04 @kind unknown */
 /* Party-slot position/colour band maintained by func_800A4458. Every address is
  * its own symbol: the original encodes each access as `lui %hi(SYM);
  * addu at,at,offset; op %lo(SYM)(at)`, which a raw address expression would
@@ -313,13 +312,13 @@ extern u8 D_80145F24[]; /* @source 0x80145F24 @kind unknown */
 extern u8 D_80145F26[]; /* @source 0x80145F26 @kind unknown */
 extern u8 D_80145F28[]; /* @source 0x80145F28 @kind unknown */
 extern u8 D_80145F2A[]; /* @source 0x80145F2A @kind unknown */
-extern u8 D_80145F44[]; /* @source 0x80145F44 @kind unknown */
+extern u8 battleWorkAdjustmentFields[]; /* @source 0x80145F44 @kind unknown */
 extern u8 D_80145F46[]; /* @source 0x80145F46 @kind unknown */
 extern u8 D_80145F48[]; /* @source 0x80145F48 @kind unknown */
 extern u8 D_80145F4A[]; /* @source 0x80145F4A @kind unknown */
-/* Camera band read by func_800AAA74's case 4 as one base plus the
- * -0x280/-0x140 displacements; the case number is all the bytes prove. */
-extern u8 D_801461CA[]; /* @source 0x801461CA @kind unknown */
+/* Work-field band read by adjustBattleWorkValuesForMode's case 4 at one base
+ * and displacements -0x280/-0x140. The field's gameplay role is unresolved. */
+extern u8 battleCalculationInputAdjustmentState[]; /* @source 0x801461CA @kind unknown */
 /* Shared 0x20-byte party-slot template read by func_800A4458. */
 extern u8 D_801EBEF0[]; /* @source 0x801EBEF0 @kind unknown */
 extern u8 D_801EB6E4[]; /* @source 0x801EB6E4 @kind unknown */
@@ -552,11 +551,12 @@ void func_800ABC30(void);
 void func_800A9BD8(u8 battler_index);
 void clampIndexedBattleByte14(s16 delta, s32 index);
 u8   resetSelectionApplyInput(s32 input_mask);
-u8   func_801DB524(u8 arg0);
+/* @source 0x801DB524 */
+u8   isBattlerInactiveOrFlag4000(u8 arg0);
 s16  func_800A4294(s32 kind);
 void func_800A4458(void);
 void setupMode104ArmWorkBit2(void);
-void func_800AAA74(void);
+void adjustBattleWorkValuesForMode(void);
 void func_800AAEBC(s16 target_index, u8 battler_index);
 void func_800B0498(void);
 void func_800B0B0C(s16 base_x, s16 base_y);
@@ -588,12 +588,16 @@ void func_801DDAB4(u16 status);
  * +0x04/+0x06 (signed halfwords) and the size bytes at +0x08/+0x09. */
 void func_800B06F4(s16 x, s16 y, u8 width, u8 height);
 void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void *arg3);
-/* INFERRED: 0x801654F4 and 0x80165694 are reached only from func_800AAA74, which
- * passes the addressed camera halfword/byte in $a0 and the shifted-and-negated
- * value in $a1; neither callee has a lifted body in this repository. Promotion
- * needs their EXE-side bodies. */
-void func_801654F4(volatile u16* target, s32 value);
-void func_80165694(volatile u8* target, u8 value);
+/* SLUS imports with reviewed original ASM bodies and executable callers.
+ * The halfword operation uses a signed low-halfword delta and a 999 cap.
+ * The byte operation clears sign-bit sums before its 100 cap. Both truncate
+ * before testing, so neither is universal mathematical saturation.
+ * INFERRED: These preserved signatures do not resolve parameter-width or
+ * return-type questions. Both original bodies produce a return value. */
+/* @source 0x801654F4 */
+void adjustHalfwordWith999Cap(volatile u16* target, s32 value);
+/* @source 0x80165694 */
+void adjustByteWith100Cap(volatile u8* target, u8 value);
 void func_801DE94C(s32 arg0, s32 arg1);
 void func_80158E20(void);
 void func_8015DF18(u16 arg0);

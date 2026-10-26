@@ -1205,7 +1205,7 @@ segments:
     - func_800AA8FC
   - - 82548
     - asm
-    - func_800AAA74
+    - adjustBattleWorkValuesForMode
   - - 83080
     - asm
     - func_800AAC88

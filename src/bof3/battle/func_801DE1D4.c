@@ -4,7 +4,7 @@
  * @behavior Copies each active local and enemy battler work record into a kind
  * 7 queued slot entry: local slots 0..2 whose record byte +0x00 carries bit 0x1
  * while their D_80145FB8 flag word lacks bit 0x8, and enemy slots 3..10 that
- * func_801DB524 reports available while their D_801EB734 flag word lacks bit
+ * isBattlerInactiveOrFlag4000 reports available while their D_801EB734 flag word lacks bit
  * 0x8. For each such record it allocates the slot, copies the 0x74-byte record
  * image, publishes the record pointer into the entry +0x74 pointer and the
  * 0x1F800044 scratch cell, and clears the entry's queue bytes.
@@ -69,7 +69,7 @@ void func_801DE1D4(void) {
     } else {
       u32 work_offset;
 
-      if (func_801DB524(index) != 0u ||
+      if (isBattlerInactiveOrFlag4000(index) != 0u ||
           ((D_801EB734[(u32)index - 3u].word_00 & 8u) != 0u)) {
         goto advance;
       }
