@@ -16,14 +16,14 @@
  */
 u8 *findOwnerRecord(u8 id)
 {
-  u8 i;
+  u8 recordIndex;
 
-  i = 0;
-  while (i < 30) {
-    if (D_8014688E[i].kind == 7 && D_8014688E[i].owner == id) {
-      return (u8 *)&D_8014688E[i] - 0x6;
+  recordIndex = 0;
+  while (recordIndex < 30) {
+    if (D_8014688E[recordIndex].kind == 7 && D_8014688E[recordIndex].owner == id) {
+      return (u8 *)&D_8014688E[recordIndex] - 0x6;
     }
-    i++;
+    recordIndex++;
   }
   return NULL;
 }

@@ -7,14 +7,14 @@
  * @match 100.00
  * @residual none
  */
-u32 func_800AD044(u32 arg0) {
-    u32 idx;
+u32 func_800AD044(u32 bitIndex) {
+    u32 wordByteOffset;
     u32 mask;
     u32 word;
 
-    arg0 &= 0xFFFF;
-    idx = (arg0 >> 5) * 4;
-    mask = 1 << (arg0 & 0x1F);
-    word = *(u32 *)((u8 *)D_80144F60 + idx);
+    bitIndex &= 0xFFFF;
+    wordByteOffset = (bitIndex >> 5) * 4;
+    mask = 1 << (bitIndex & 0x1F);
+    word = *(u32 *)((u8 *)D_80144F60 + wordByteOffset);
     return (word & mask) != 0;
 }

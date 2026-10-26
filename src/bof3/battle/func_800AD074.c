@@ -6,9 +6,9 @@
  * @match 100.00
  * @residual none
  */
-void func_800AD074(u16 arg0) {
+void func_800AD074(u16 bitIndex) {
   s32 bit_mask;
 
   bit_mask = 0x1F;
-  D_80144F60[arg0 >> 5] |= (1U << (arg0 & bit_mask));
+  D_80144F60[bitIndex >> 5] |= (1U << (bitIndex & bit_mask));
 }
