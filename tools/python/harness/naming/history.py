@@ -615,7 +615,13 @@ def _validate_active(root: Path, path: Path, record: dict) -> None:
                 "active generation changed retained inventory or conclusions"
             )
         selector = f"{current['kind']}:{current['name']}"
-        if current.get("rung_status") == "proposed":
+        state = current.get("rung_status")
+        provenance = current.get("conclusion_provenance")
+        typed = (
+            isinstance(provenance, dict)
+            and provenance.get("kind") == "typed-capability"
+        )
+        if state == "proposed" and not typed:
             from harness.naming.proposal import (
                 require_provenance,
                 validate_authored_digests,
@@ -627,14 +633,24 @@ def _validate_active(root: Path, path: Path, record: dict) -> None:
                 current.get(key) != provenance[key] for key in ("pre_apply", "manifest")
             ):
                 raise ValueError("active generation proposal binding differs")
-        elif current.get("rung_status") == "exhausted":
+        elif state in {"proposed", "exhausted"}:
             from harness.naming.provenance import require_canonical_provenance
 
             provenance = require_canonical_provenance(current, selector)
+            authored = {
+                key: value
+                for key, value in current.items()
+                if key != "conclusion_provenance"
+            }
+            authored_digest = compute_sha256(
+                json.dumps(authored, sort_keys=True, separators=(",", ":")).encode()
+            )
+            if authored_digest != provenance["conclusion_sha256"]:
+                raise ValueError("active generation conclusion changed")
             evidence = Path(provenance["evidence"])
             evidence = evidence if evidence.is_absolute() else root / evidence
             if read_state(evidence)["sha256"] != provenance["evidence_sha256"]:
-                raise ValueError("active generation exhaustion evidence changed")
+                raise ValueError("active generation conclusion evidence changed")
         else:
             raise ValueError("active generation contains an unauthenticated row edit")
     if (

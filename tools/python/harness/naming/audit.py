@@ -299,7 +299,24 @@ def prepare_transaction(
         report = json.loads(original, object_pairs_hook=unique_object)
         if not isinstance(report, dict):
             raise ValueError("report must be a JSON object")
-        if candidate is not None:
+        if candidate is None:
+            typed_rows = [
+                row
+                for row in report.get("rows", [])
+                if isinstance(row, dict)
+                and f"{row.get('kind')}:{row.get('name')}" == transaction
+                and isinstance(row.get(PROVENANCE_FIELD), dict)
+                and row[PROVENANCE_FIELD].get("kind") == "typed-capability"
+            ]
+            if typed_rows:
+                validate(
+                    root,
+                    target,
+                    report,
+                    transaction=transaction,
+                    report_path=path,
+                )
+        else:
             assert expected_sha256 is not None
             replace_initializer(
                 report,
