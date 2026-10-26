@@ -6,6 +6,8 @@ import json
 import struct
 from dataclasses import dataclass, replace
 
+from harness.naming.effects import _overlaps_instructions, ram_offset
+
 
 def decode_selected_call(code: bytes, start: int, selected: int) -> dict:
     """Decode a wrapper or a complete forward BEQ/BNE caller with opaque calls."""
@@ -370,7 +372,8 @@ def _decode_call_wrapper(code: bytes, start: int, selected: int) -> dict:
     """Accept one direct call with a canonical stack/return transition only.
 
     This deliberately excludes branches, loops, indirect calls and load-derived
-    arguments. Unknown instructions never establish an absence of guards.
+    arguments. Fixed-address SB/SH stores are retained as ordered direct effects.
+    Unknown instructions never establish an absence of guards.
     """
     if len(code) % 4 or not 32 <= len(code) <= 128:
         raise ValueError(
@@ -403,13 +406,22 @@ def _decode_call_wrapper(code: bytes, start: int, selected: int) -> dict:
         or slot % 4
         or not 0 <= slot <= frame - 4
         or tail[0] >> 16 != 0x8FBF
-        or words[:2] != [0x27BD0000 | ((-frame) & 0xFFFF), 0xAFBF0000 | slot]
     ):
+        raise ValueError("selected_call requires canonical saved-ra stack transition")
+    # The canonical allocation and saved-ra pair must dominate the call in order.
+    allocate = [
+        offset
+        for offset, word in enumerate(words)
+        if word == 0x27BD0000 | ((-frame) & 0xFFFF)
+    ]
+    save = [offset for offset, word in enumerate(words) if word == 0xAFBF0000 | slot]
+    if len(allocate) != 1 or len(save) != 1 or not allocate[0] < save[0] < index:
         raise ValueError("selected_call requires canonical saved-ra stack transition")
     registers = [{"kind": "entry_register", "register": number} for number in range(32)]
     registers[0] = {"kind": "constant", "value": 0}
+    stores: list[dict] = []
 
-    def step(word: int) -> None:
+    def step(word: int, address: int, allow_store: bool) -> None:
         if word == 0:
             return
         op, rs, rt, rd = (
@@ -419,28 +431,74 @@ def _decode_call_wrapper(code: bytes, start: int, selected: int) -> dict:
             (word >> 11) & 31,
         )
         immediate = word & 0xFFFF
+        offset = immediate - 0x10000 if immediate & 0x8000 else immediate
+        if op in {40, 41}:
+            if not allow_store:
+                raise ValueError("selected_call unsupported delay-slot store")
+            if rs in {29, 31} or rt in {29, 31}:
+                raise ValueError("selected_call unsupported store register dependency")
+            width = 1 if op == 40 else 2
+            base, source = registers[rs], registers[rt]
+            if base["kind"] != "constant" or source["kind"] != "constant":
+                raise ValueError("selected_call unresolved store base or value")
+            effective = (base["value"] + offset) & 0xFFFFFFFF
+            if effective % width:
+                raise ValueError("selected_call unaligned store")
+            if ram_offset(effective) is None:
+                raise ValueError("selected_call unsupported store address class")
+            if _overlaps_instructions(effective, width, start, start + len(code)):
+                raise ValueError(
+                    "selected_call store overlaps captured instruction bytes"
+                )
+            if _overlaps_instructions(effective, width, selected, selected + 4):
+                raise ValueError(
+                    "selected_call store overwrites the selected callee entry"
+                )
+            stores.append(
+                {
+                    "kind": "store",
+                    "instruction": f"0x{address:08X}",
+                    "address": f"0x{effective:08X}",
+                    "width_bytes": width,
+                    "value": source["value"] & ((1 << (width * 8)) - 1),
+                    "stored_low_bits": width * 8,
+                }
+            )
+            return
         if op == 9:
-            destination_register = rt
-            value = {
-                "kind": "addiu",
-                "base": registers[rs],
-                "immediate": immediate - 0x10000 if immediate & 0x8000 else immediate,
-            }
+            destination_register, base = rt, registers[rs]
+            value = (
+                {"kind": "constant", "value": (base["value"] + offset) & 0xFFFFFFFF}
+                if base["kind"] == "constant"
+                else {"kind": "addiu", "base": base, "immediate": offset}
+            )
         elif op == 15 and rs == 0:
             destination_register = rt
             value = {"kind": "constant", "value": immediate << 16}
         elif op == 13:
-            destination_register = rt
-            value = {"kind": "ori", "base": registers[rs], "immediate": immediate}
+            destination_register, base = rt, registers[rs]
+            value = (
+                {"kind": "constant", "value": (base["value"] | immediate) & 0xFFFFFFFF}
+                if base["kind"] == "constant"
+                else {"kind": "ori", "base": base, "immediate": immediate}
+            )
         elif op == 0 and word & 63 == 0x21 and (word >> 6) & 31 == 0:
-            destination_register = rd
-            value = {"kind": "addu", "left": registers[rs], "right": registers[rt]}
+            destination_register, left, right = rd, registers[rs], registers[rt]
+            value = (
+                {
+                    "kind": "constant",
+                    "value": (left["value"] + right["value"]) & 0xFFFFFFFF,
+                }
+                if left["kind"] == right["kind"] == "constant"
+                else {"kind": "addu", "left": left, "right": right}
+            )
         else:
             raise ValueError(
                 "selected_call unresolved guard or argument: branch/loop or unsupported instruction"
             )
+        # `at` carries only constant address materialisation, never call operands.
         if (
-            destination_register not in range(2, 16)
+            destination_register not in (range(1, 16) if op == 15 else range(2, 16))
             or rs in {29, 31}
             or (op == 0 and rt in {29, 31})
         ):
@@ -452,9 +510,11 @@ def _decode_call_wrapper(code: bytes, start: int, selected: int) -> dict:
             raise ValueError("selected_call argument expression exceeds decoder bound")
         registers[destination_register] = value
 
-    for word in words[2:index]:
-        step(word)
-    step(words[index + 1])
+    for position in range(index):
+        if position in (allocate[0], save[0]):
+            continue
+        step(words[position], start + position * 4, True)
+    step(words[index + 1], start + (index + 1) * 4, False)
 
     def instruction(offset: int) -> dict:
         return {
@@ -462,7 +522,7 @@ def _decode_call_wrapper(code: bytes, start: int, selected: int) -> dict:
             "word": f"0x{words[offset]:08X}",
         }
 
-    return {
+    decoded = {
         "callsite": instruction(index),
         "callee": f"0x{selected:08X}",
         "delay_slot": instruction(index + 1),
@@ -483,18 +543,32 @@ def _decode_call_wrapper(code: bytes, start: int, selected: int) -> dict:
             ],
         },
     }
+    if stores:
+        decoded["direct_effects"] = {
+            "kind": "ordered_fixed_address_stores",
+            "stores": stores,
+            "assumptions": [
+                "entry sp is unknown, so the fixed store addresses are premises rather than proven exclusions: they are assumed disjoint from the caller's live stack frame and its saved-entry-ra cell",
+                "stores are proven not to cover the captured caller instructions or the selected callee entry word; aliasing with any other executing code, mapped object or live datum remains assumed away",
+                "each direct store completes normally while its ordinary main-RAM address remains mapped",
+            ],
+            "scope": "ordered direct stores only: instruction, fixed address, width and width-truncated constant value; current memory contents, object extent, lifetime, readers, gameplay meaning and callee effects remain unproven",
+        }
+    return decoded
 
 
 def decode_owner_body(code: bytes, start: int) -> dict:
     """Describe only the direct effects of a completely decoded call wrapper."""
-    if len(code) >= 16 and int.from_bytes(code[:4], "little") >> 26 == 15:
+    if len(code) % 4:
+        raise ValueError("owner_body requires aligned original instructions")
+    words = list(struct.unpack(f"<{len(code) // 4}I", code))
+    calls = [index for index, word in enumerate(words) if word >> 26 == 3]
+    if not calls and len(code) >= 16 and words[0] >> 26 == 15:
         return decode_owner_stores(code, start)
-    if len(code) % 4 or not 32 <= len(code) <= 128:
+    if not 32 <= len(code) <= 128:
         raise ValueError(
             "owner_body requires a canonical call wrapper or global-pointer zero-byte stores"
         )
-    words = list(struct.unpack(f"<{len(code) // 4}I", code))
-    calls = [index for index, word in enumerate(words) if word >> 26 == 3]
     if len(calls) != 1:
         raise ValueError("owner_body requires exactly one direct jal")
     index = calls[0]
@@ -502,13 +576,16 @@ def decode_owner_body(code: bytes, start: int) -> dict:
         (words[index] & 0x3FFFFFF) << 2
     )
     decoded = _decode_call_wrapper(code, start, destination)
-    return {
+    stores = decoded.get("direct_effects", {}).get("stores", [])
+    # The wrapper decoder proved one saved-entry-ra store; it need not be word 1.
+    saved = [word for word in words if word >> 16 == 0xAFBF]
+    body = {
         "coverage": "complete straight-line call wrapper; direct effects only, not transitive callee effects",
         "range": {"start": f"0x{start:08X}", "end": f"0x{start + len(code):08X}"},
         "effects": {
             "stack_frame_bytes": decoded["transition"]["stack_restored_bytes"],
             "saved_register": "ra",
-            "saved_register_stack_offset": words[1] & 0xFFFF,
+            "saved_register_stack_offset": saved[0] & 0xFFFF,
             "argument_registers": decoded["argument_registers"],
             "result": decoded["result"],
             "transition": decoded["transition"],
@@ -518,7 +595,11 @@ def decode_owner_body(code: bytes, start: int) -> dict:
         ],
         "globals": {
             "direct_accesses": [],
-            "basis": "no direct globals observed within the decoded body",
+            "basis": (
+                "no direct global reads observed; fixed-address stores are recorded under direct_effects"
+                if stores
+                else "no direct globals observed within the decoded body"
+            ),
         },
         "tables": {
             "direct_accesses": [],
@@ -533,6 +614,9 @@ def decode_owner_body(code: bytes, start: int) -> dict:
         ],
         "guards": decoded["guards"],
     }
+    if stores:
+        body["direct_effects"] = decoded["direct_effects"]
+    return body
 
 
 def decode_owner_stores(code: bytes, start: int) -> dict:

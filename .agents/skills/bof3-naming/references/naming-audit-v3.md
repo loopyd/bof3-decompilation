@@ -139,9 +139,16 @@ settled constant-address halfword reads, known selected-call arguments and a mat
 saved-RA frame on every path. The selected call must precede opaque calls on its
 path. Later calls leave outgoing v0/v1 unresolved. Return transitions explicitly
 assume normal memory/call completion and preservation of SP and the saved-entry-RA
-cell. Unsupported instructions, load timing, loops, indirect flow and post-call
-dependencies are named `selected_call` gaps. Only generated caller work authorizes
-call facts. The selected body's complete validated capture supplies `selected_range`
+cell. Straight-line wrappers permit one matching allocation and saved-RA store
+in order before the call. Pre-call SB/SH require constant addresses and values,
+aligned main RAM and no alias with captured caller bytes or the selected callee
+entry word. Retain ordered width-truncated stores, including repeated addresses.
+Stack and other code/data nonaliasing remain explicit premises, not proved facts;
+shared owner-body output preserves them. Delay-slot stores and unresolved store
+values are refused. Constant wrapper arguments use folded literal facts; older
+expression projections require recapture, not fallback. Unsupported instructions,
+load timing, loops, indirect flow and post-call dependencies are named
+`selected_call` gaps. Only generated caller work authorizes call facts. The selected body's complete validated capture supplies `selected_range`
 with its boundary, byte count, original hash and image/layout binding.
 Supported complete acyclic leaves also supply `body_effects`: forward BEQ/BNE/J,
 ordinary slots, terminal JR RA, constant-address LH/LHU/SB/SH and supported integer

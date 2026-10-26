@@ -67,17 +67,18 @@ def _settle_load(
     return replace(path, registers=tuple(registers), pending_load=None)
 
 
+def ram_offset(value: int) -> int | None:
+    """Return the main-RAM mirror offset of a KUSEG/KSEG0/KSEG1 address, else None."""
+    if value & 0xE0000000 in {0, 0x80000000, 0xA0000000}:
+        physical = value & 0x1FFFFFFF
+        if physical < 0x800000:
+            return physical % 0x200000
+    return None
+
+
 def _overlaps_instructions(address: int, width: int, start: int, end: int) -> bool:
     if address < end and address + width > start:
         return True
-
-    def ram_offset(value: int) -> int | None:
-        if value & 0xE0000000 in {0, 0x80000000, 0xA0000000}:
-            physical = value & 0x1FFFFFFF
-            if physical < 0x800000:
-                return physical % 0x200000
-        return None
-
     first, last = ram_offset(start), ram_offset(end - 1)
     if first is None or last != (first + end - start - 1) % 0x200000:
         return False
