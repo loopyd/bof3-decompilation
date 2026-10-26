@@ -14,6 +14,7 @@ from .includes import local_include_files
 
 CANDIDATE_SCHEMA = "bof3.analysis-candidate/v1"
 TRANSACTION_SCHEMA = "bof3.analysis-transaction/v1"
+FACT_SCHEMA = "bof3.naming-evidence-facts/v1"
 CANDIDATE_KINDS = frozenset(
     {
         "rename",
@@ -158,10 +159,7 @@ def command_records(
                 f"{field} command receipt is not structured: {receipt}"
             ) from error
         base = _receipt_payload(command)
-        if (
-            isinstance(recorded, dict)
-            and recorded.get("schema") == "bof3.naming-evidence-facts/v1"
-        ):
+        if isinstance(recorded, dict) and recorded.get("schema") == FACT_SCHEMA:
             valid_payload = all(
                 recorded.get(key) == value for key, value in base.items()
             )
@@ -402,6 +400,7 @@ __all__ = [
     "CANDIDATE_KINDS",
     "CANDIDATE_SCHEMA",
     "CANDIDATE_STATUSES",
+    "FACT_SCHEMA",
     "PROVENANCE_KINDS",
     "TRANSACTION_SCHEMA",
     "canonical_json",

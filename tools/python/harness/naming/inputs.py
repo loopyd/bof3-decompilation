@@ -6,11 +6,13 @@ import hashlib
 import json
 import os
 import subprocess
+from math import isfinite
 from pathlib import Path
 
 from harness.common.inputs import file_state, input_state, relative
 from harness.domain.ids import normalize_target_id
 from harness.domain.manifests import load_target_manifests
+from harness.domain.receipts import FACT_SCHEMA
 from harness.domain.symbols import load_target_symbols
 from harness.io import unique_object
 from harness.naming.annotations import reviewed_scope_digest
@@ -58,7 +60,7 @@ def index_digest(root: Path) -> str:
 _SHAPES = {
     "report": "schema target complete rows",
     "row": "authority ceiling_next_command conclusion_provenance corroborators identity initializer_state interpretation kind manifest missing_fact name name_terms new_name optional_work outside_payload partial_used pre_apply readiness_blockers required_work rung_status rungs semantic_status smallest_repair transaction_status storage",
-    "provenance": "kind report report_sha256 row_sha256 pre_apply manifest evidence evidence_sha256 evidence_namespace initializer_report_sha256",
+    "provenance": "kind report report_sha256 row_sha256 pre_apply manifest evidence evidence_sha256 evidence_namespace initializer_report_sha256 conclusion_sha256",
     "namespace": "mode namespace root",
     "binding": "version digest facts",
     "facts": "address destination kind new_name old_name reviewed reviewed_digest scope selector status unchanged_range work storage data",
@@ -69,8 +71,8 @@ _SHAPES = {
     "inventory": "address kind new_name old_name selector",
     "work": "commands description id observations profile status next_command reason",
     "rung": "authority commands next_command observations status negative_result",
-    "command": "command item operation output receipt role selector sha256 status supplemental target",
-    "observation": "id producer source_id text",
+    "command": "command facts item observations open operation output receipt role schema selector sha256 status supplemental target",
+    "observation": "id text producer source_id fact_class evidence_receipt polarity value",
     "corroborator": "mechanism observation_ids source_id",
     "storage": "kind start end file_offset present_in_binary authority",
 }
@@ -93,6 +95,125 @@ _CHILDREN = {
     "observations": "observation",
     "storage": "storage",
 }
+_TYPED_RECEIPT_FIELDS = frozenset({"schema", "facts", "observations", "open"})
+_TYPED_FACT_FIELDS = frozenset({"class", "polarity", "value"})
+_OPENED_FACT_FIELDS = frozenset({"class", "reason"})
+_OBSERVATION_FIELDS = frozenset({"id", "text"})
+_TYPED_OBSERVATION_FIELDS = _OBSERVATION_FIELDS | {
+    "producer",
+    "source_id",
+    "fact_class",
+    "evidence_receipt",
+    "polarity",
+    "value",
+}
+_ANALYZER_PRODUCER = "analyzer"
+# Current evidence grammar is positive-only: negatives are opened facts, not
+# typed observations (owner: naming evidence facts and their replay).
+_POLARITIES = frozenset({"positive"})
+_COMMAND_ROLES = frozenset(
+    {
+        "selected_data_describe",
+        "access_function_describe",
+        "access_function_xrefs",
+        "data_original_range",
+        "data_dispatch_consumer",
+    }
+)
+# Typed projection payloads stay owner-defined JSON: the naming evidence owner
+# replays them against its derived facts, so this vocabulary stops at the record
+# and fact envelopes instead of restating value semantics.
+_UNWALKED = {
+    "command": _TYPED_RECEIPT_FIELDS,
+    "observation": frozenset({"value"}),
+}
+
+
+def _text(value, field: str) -> None:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"naming receipt {field} requires non-empty text")
+
+
+def _array(value, field: str) -> list:
+    if not isinstance(value, list):
+        raise ValueError(f"naming receipt {field} must be an array")
+    return value
+
+
+def _polarity(value, field: str) -> None:
+    if not isinstance(value, str) or value not in _POLARITIES:
+        raise ValueError(f"naming receipt {field} requires a known polarity")
+
+
+def _json_value(value, field: str, seen: set[int] | None = None) -> None:
+    """Require finite JSON: string keys, no NaN/infinity and no other objects."""
+    if value is None or isinstance(value, (str, bool, int)):
+        return
+    if isinstance(value, float):
+        if not isfinite(value):
+            raise ValueError(f"naming receipt {field} requires finite JSON")
+        return
+    if not isinstance(value, (dict, list)):
+        raise ValueError(f"naming receipt {field} requires finite JSON")
+    seen = set() if seen is None else seen
+    if id(value) in seen:
+        raise ValueError(f"naming receipt {field} must not contain a cycle")
+    seen.add(id(value))
+    try:
+        pairs = value.items() if isinstance(value, dict) else enumerate(value)
+        for key, item in pairs:
+            if isinstance(value, dict) and not isinstance(key, str):
+                raise ValueError(f"naming receipt {field} requires string JSON keys")
+            _json_value(item, field, seen)
+    finally:
+        seen.discard(id(value))
+
+
+def _command(value: dict) -> None:
+    """Check a command record's role and current typed receipt envelope."""
+    if "role" in value and (
+        not isinstance(value["role"], str) or value["role"] not in _COMMAND_ROLES
+    ):
+        raise ValueError("unsupported naming evidence command role")
+    present = _TYPED_RECEIPT_FIELDS & value.keys()
+    if not present:
+        return
+    if present != _TYPED_RECEIPT_FIELDS:
+        raise ValueError("typed naming receipt requires its full projection")
+    if value["schema"] != FACT_SCHEMA:
+        raise ValueError("unsupported typed naming receipt schema")
+    for fact in _array(value["facts"], "facts"):
+        _text(fact, "facts")
+    for observation in _array(value["observations"], "observations"):
+        if not isinstance(observation, dict) or set(observation) != _TYPED_FACT_FIELDS:
+            raise ValueError(
+                "typed naming observation requires class, polarity and value"
+            )
+        _text(observation["class"], "observation class")
+        _polarity(observation["polarity"], "observation polarity")
+        _json_value(observation["value"], "observation value")
+    for opened in _array(value["open"], "open"):
+        if not isinstance(opened, dict) or set(opened) != _OPENED_FACT_FIELDS:
+            raise ValueError("opened naming fact requires class and reason")
+        for field in ("class", "reason"):
+            _text(opened[field], f"open {field}")
+
+
+def _observation(value: dict) -> None:
+    """Check a plain or typed analyzer observation record envelope."""
+    fields = set(value)
+    if fields == _OBSERVATION_FIELDS:
+        for field in ("id", "text"):
+            _text(value[field], f"observation {field}")
+    elif fields == _TYPED_OBSERVATION_FIELDS:
+        for field in ("id", "text", "source_id", "fact_class", "evidence_receipt"):
+            _text(value[field], f"observation {field}")
+        if value["producer"] != _ANALYZER_PRODUCER:
+            raise ValueError("typed naming observation requires the analyzer producer")
+        _polarity(value["polarity"], "observation polarity")
+        _json_value(value["value"], "observation value")
+    else:
+        raise ValueError("noncanonical naming observation keys")
 
 
 def _shape(value, kind: str) -> None:
@@ -101,15 +222,10 @@ def _shape(value, kind: str) -> None:
             _shape(item, kind)
     elif isinstance(value, dict):
         keys(value, _SHAPES[kind], exact=False)
-        if kind == "command" and "role" in value:
-            role = value["role"]
-            if not isinstance(role, str) or role not in {
-                "selected_data_describe",
-                "access_function_describe",
-                "access_function_xrefs",
-                "data_dispatch_consumer",
-            }:
-                raise ValueError("unsupported naming evidence command role")
+        if kind == "command":
+            _command(value)
+        elif kind == "observation":
+            _observation(value)
         for key, item in value.items():
             if kind == "facts" and key == "data":
                 validate_data_shape(item)
@@ -130,6 +246,8 @@ def _shape(value, kind: str) -> None:
                             raise ValueError("invalid name-term references")
                     else:
                         _shape(child, "rung" if key == "rungs" else "corroborator")
+            elif key in _UNWALKED.get(kind, frozenset()):
+                continue
             elif isinstance(item, (dict, list)):
                 if key in _CHILDREN:
                     _shape(item, _CHILDREN[key])
