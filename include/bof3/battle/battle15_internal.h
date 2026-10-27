@@ -174,7 +174,7 @@ extern BattlePanelTaskDispatchTable D_80096A14; /* @source 0x80096A14 @kind unkn
 extern BattleSelectionDispatchTable D_800969F8; /* @source 0x800969F8 @kind unknown */
 extern BattleSelectionDispatchTable D_80096A08; /* @source 0x80096A08 @kind unknown */
 extern BattleSelectionDispatchTable D_80096A34; /* @source 0x80096A34 @kind unknown */
-extern BattleSelectionDispatchTable D_80096A40; /* @source 0x80096A40 @kind unknown */
+extern BattleSelectionDispatchTable byteIndexedHandlerTable; /* @source 0x80096A40 @kind unknown */
 /* Mode values 1..4 select battle work adjustments. Value 2 also reduces
  * positive damage for a local selection. Gameplay mode labels are unresolved. */
 extern u8 battleAdjustmentModeState; /* @source 0x80144F58 @kind unknown */

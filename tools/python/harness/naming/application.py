@@ -72,6 +72,8 @@ def evidence(root: Path, result: dict, row) -> bool:
     if (
         type(result["exit_code"]) is not int
         or result["exit_code"] != 0
+        or type(result.get("raw_exit")) is not int
+        or result["raw_exit"] != 0
         or result["failure"] is not None
     ):
         return False
@@ -366,7 +368,7 @@ def validate_bundle(
         ):
             raise ValueError("native execution artifact replaced")
         result = load(execution)
-        keys(result, "argv exit_code failure stdout stderr before after")
+        keys(result, "argv exit_code raw_exit failure stdout stderr before after")
         if (
             result["argv"] != argv
             or not evidence(root, result, row)

@@ -227,13 +227,16 @@ def validate_review(root: Path, bundle, row):
     ] or record["output"] != digest(value):
         raise ValueError("review receipt does not bind parent attestation")
     readiness = review["readiness"]
-    keys(readiness, "argv exit_code failure stdout stderr")
+    keys(readiness, "argv exit_code raw_exit failure stdout stderr")
     import json
 
     if (
         readiness["argv"]
         != canonical("analysis-readiness", bundle["binding"]["target"])
+        or type(readiness["exit_code"]) is not int
         or readiness["exit_code"] != 0
+        or type(readiness["raw_exit"]) is not int
+        or readiness["raw_exit"] != 0
         or readiness["failure"] is not None
         or json.loads(readiness["stdout"], object_pairs_hook=unique_object).get("ready")
         is not True
@@ -271,7 +274,13 @@ def ingest(
     output = directory(root)
     write_json(output / "readiness.json", readiness)
     write_json(output / "diff-check.json", hygiene)
-    if hygiene["exit_code"] != 0 or hygiene["failure"] is not None:
+    if (
+        type(hygiene["exit_code"]) is not int
+        or hygiene["exit_code"] != 0
+        or type(hygiene.get("raw_exit")) is not int
+        or hygiene["raw_exit"] != 0
+        or hygiene["failure"] is not None
+    ):
         raise ValueError(f"diff hygiene failed; retained {output}")
     # Keep bundle beside its original gate execution files; review artifacts may
     # live in a new native directory, but no existing evidence is overwritten.

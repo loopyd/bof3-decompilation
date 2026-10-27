@@ -12,6 +12,6 @@ void dispatchPanelStateTable6a40(void)
 {
     BattleSelectionDispatchTable handlers;
 
-    handlers = D_80096A40;
+    handlers = byteIndexedHandlerTable;
     handlers.handlers[D_80148648->state]();
 }
