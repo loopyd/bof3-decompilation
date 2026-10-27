@@ -9,7 +9,7 @@
  * @match 100.00
  * @residual none
  */
-u32 func_800AF720(u32 x, u32 y, u32 size) {
+u32 testWorkRangeAgainstPoint(u32 x, u32 y, u32 size) {
     u32 halfSize;
     BattleRange *work;
     u32 axis34Bound;

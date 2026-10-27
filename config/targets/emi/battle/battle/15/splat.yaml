@@ -1506,7 +1506,7 @@ segments:
     - '@behavior: Tests a size word against both scratchpad work-range origins and the 0x3E height word.'
   - - 102176
     - c
-    - func_800AF720
+    - testWorkRangeAgainstPoint
   - - 102244
     - asm
     - func_800AF764

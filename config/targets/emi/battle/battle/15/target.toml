@@ -195,7 +195,7 @@ sources = [
     "src/bof3/battle/func_800AF5FC.c",
     "src/bof3/battle/testWorkRangeAgainstRecord.c",
     "src/bof3/battle/func_800AF6B8.c",
-    "src/bof3/battle/func_800AF720.c",
+    "src/bof3/battle/testWorkRangeAgainstPoint.c",
     "src/bof3/battle/func_800AFC54.c",
     "src/bof3/battle/func_800AFF98_battle15.c",
     "src/bof3/battle/func_800B0058_battle15.c",
