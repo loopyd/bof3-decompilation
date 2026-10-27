@@ -306,13 +306,16 @@ def required_work_snapshot(
     prefix = f"{target}@"
     callers: dict[int, list[str]] = {}
     callees: dict[int, list[str]] = {}
-    for caller, callee, unresolved_address in connection.execute(
-        "SELECT caller, callee, NULL FROM calls "
-        "WHERE caller LIKE ? OR callee LIKE ? "
-        "UNION SELECT caller, NULL, target_address FROM unresolved_calls "
-        "WHERE caller LIKE ? AND kind = 'static_jal' ORDER BY 1, 2, 3",
-        (f"{prefix}%", f"{prefix}%", f"{prefix}%"),
-    ):
+    call_rows = list(
+        connection.execute(
+            "SELECT caller, callee, NULL, NULL FROM calls "
+            "WHERE caller LIKE ? OR callee LIKE ? "
+            "UNION SELECT caller, NULL, target_address, callsite FROM unresolved_calls "
+            "WHERE kind = 'static_jal' ORDER BY 1, 2, 3, 4",
+            (f"{prefix}%", f"{prefix}%"),
+        )
+    )
+    for caller, callee, unresolved_address, _site in call_rows:
         if callee is None:
             if str(caller).startswith(prefix):
                 callers.setdefault(int(unresolved_address), []).append(str(caller))
@@ -325,6 +328,10 @@ def required_work_snapshot(
             callees.setdefault(int(str(caller).rsplit("@", 1)[1], 16), []).append(
                 str(callee)
             )
+    from harness.naming.crosscalls import cross_target_callers
+
+    for address, identities in cross_target_callers(root, target, call_rows).items():
+        callers.setdefault(address, []).extend(identities)
     accesses: dict[int, list[str]] = {}
     for address, function_id in connection.execute(
         "SELECT DISTINCT address, function_id FROM data_references "

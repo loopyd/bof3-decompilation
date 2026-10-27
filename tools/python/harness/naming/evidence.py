@@ -150,7 +150,9 @@ def recompute_collected_records(
             None,
         ),
     )
-    if row.get("kind") == "data":
+    if row.get("kind") == "data" or any(
+        item["operation"] == "function_predicate_context" for item in operations
+    ):
         _validate_indexed_receipts(root, planned_row, payload, operations, derived)
     return derived
 
@@ -248,6 +250,25 @@ def indexed_observations(
             opened.append({"class": fact_class, "reason": f"capability gap: {error}"})
         else:
             opened.extend(byte_lookup_gaps(operation["payload"], fact_class))
+    elif kind == "function_predicate_context" and role == kind:
+        from harness.naming.predicates import predicate_context
+
+        try:
+            value = predicate_context(operation, target, str(row["name"]))
+            candidates = [
+                {
+                    "class": "one_level_beyond",
+                    "polarity": "positive",
+                    "value": value,
+                    "source_id": _source(
+                        "original-image:predicate-context", target, value, input_digest
+                    ),
+                }
+            ]
+        except ValueError as error:
+            opened.append(
+                {"class": "one_level_beyond", "reason": f"capability gap: {error}"}
+            )
     trusted = {_digest(fact) for fact in derived["facts"]}
     facts = [
         {key: fact[key] for key in ("class", "polarity", "value")}
@@ -302,7 +323,8 @@ def _validate_indexed_receipts(root, row, payload, operations, derived):
         if (
             command.get("command") != expected_operation["command"]
             or command.get("status") != "passed"
-            or command.get("target") != derived["target"]
+            or command.get("target")
+            != parse_function_id(operation["selector"]).target.value
         ):
             raise ValueError(
                 "typed indexed command differs from its executed operation"
@@ -313,6 +335,16 @@ def _validate_indexed_receipts(root, row, payload, operations, derived):
             _validate_byte_lookup_bytes(
                 root, operation["operation"], operation["payload"]
             )
+        if operation["operation"] == "function_predicate_context":
+            from harness.naming.consumers import capture_reviewed_consumer
+
+            current = capture_reviewed_consumer(
+                root, operation["selector"], operation["selector"]
+            )
+            if _digest(current) != _digest(operation["payload"]):
+                raise ValueError(
+                    "predicate context differs from current original range"
+                )
         if operation["operation"] == "data_original_range":
             current = capture_data_range(root, operation["selector"])
             if _digest(operation["payload"]) != _digest(current):
@@ -320,6 +352,15 @@ def _validate_indexed_receipts(root, row, payload, operations, derived):
                     "data range capture differs from current original range"
                 )
         receipt = json.loads((root / command["receipt"]).read_bytes())
+        if row.get("kind") == "function" and operation["operation"] == "calls":
+            if any(
+                receipt.get(key) != command.get(key)
+                for key in ("command", "status", "target", "selector", "output")
+            ):
+                raise ValueError(
+                    "caller query receipt differs from its captured operation"
+                )
+            continue
         expected = indexed_observations(_RUNNER_TOKEN, row, operation, derived)
         if any(
             _digest(receipt.get(key)) != _digest(value)
@@ -393,7 +434,18 @@ def _analyze_validated_records(
             and owner_selector == operation_selector
             and row.get("outside_payload") is True
         )
-        if operation_selector.target.value != target and not external_owner:
+        from harness.naming.crosscalls import generated_callers
+
+        external_caller = (
+            item.get("operation") == "calls"
+            and item.get("supplemental") is False
+            and item_id.startswith("caller:")
+            and str(operation_selector) in generated_callers(row, target)
+            and item_id.split(":", 1)[1] == str(operation_selector)
+        )
+        if operation_selector.target.value != target and not (
+            external_owner or external_caller
+        ):
             raise ValueError("analyzer operation target mismatch")
         if external_owner:
             payload = item.get("payload")
@@ -637,6 +689,28 @@ def _analyze_validated_records(
                 }
             )
     facts.extend(consumer_facts)
+    for item in operations:
+        if item.get("operation") != "function_predicate_context":
+            continue
+        from harness.naming.predicates import predicate_context
+
+        try:
+            value = predicate_context(item, target, str(row["name"]))
+        except ValueError as error:
+            opened.append(
+                {"class": "one_level_beyond", "reason": f"capability gap: {error}"}
+            )
+        else:
+            facts.append(
+                {
+                    "class": "one_level_beyond",
+                    "polarity": "positive",
+                    "value": value,
+                    "source_id": _source(
+                        "original-image:predicate-context", target, value, input_digest
+                    ),
+                }
+            )
     if not any(fact["class"] == "one_level_beyond" for fact in facts):
         opened.append(
             {
@@ -752,13 +826,22 @@ def selected_call_observations(
     if token is not _RUNNER_TOKEN:
         raise ValueError("selected_call requires the native runner")
     function = parse_function_id(capture["selector"])
-    if function.target.value != target:
-        raise ValueError("selected_call target mismatch")
+    from harness.naming.crosscalls import generated_callers
+
+    if str(function) not in generated_callers(row, target):
+        raise ValueError("selected_call capture is not generated caller work")
     selected = address_of(str(row["name"]))
     try:
-        value = decode_selected_call(
-            bytes.fromhex(capture["bytes"]), capture["start"], selected
-        )
+        if function.target.value != target:
+            from harness.naming.callereffects import decode_caller_body
+
+            value = decode_caller_body(
+                bytes.fromhex(capture["bytes"]), capture["start"], selected
+            )
+        else:
+            value = decode_selected_call(
+                bytes.fromhex(capture["bytes"]), capture["start"], selected
+            )
     except ValueError as error:
         return [], [f"capability gap: selected_call: {function}: {error}"]
     return [{"caller": str(function), "binding": capture["binding"], **value}], []
@@ -776,21 +859,20 @@ def instruction_observations(
     from harness.naming.plan import owner_instruction_selectors
 
     owners = owner_instruction_selectors(row)
-    if function.target.value != target and str(function) not in owners:
-        raise ValueError("instruction capture is not a planned owner selector")
+    from harness.naming.crosscalls import generated_callers
+
+    callers = generated_callers(row, target)
+    if function.target.value != target and str(function) not in owners | callers:
+        raise ValueError(
+            "instruction capture is not a planned owner or caller selector"
+        )
     observations, opened = [], []
     selected = function.target.value == target and function.address == address_of(
         str(row["name"])
     )
-    callers = {
-        str(parse_function_id(work["id"].split(":", 1)[1]))
-        for work in row.get("required_work", [])
-        if work.get("status") == "open"
-        and str(work.get("id", "")).startswith("caller:")
-    }
     if selected:
         observations.append(_selected_range(capture, str(function)))
-    if function.target.value == target and str(function) in callers:
+    if str(function) in callers:
         values, reasons = selected_call_observations(token, target, row, capture)
         observations.extend(
             {"class": "selected_call", "polarity": "positive", "value": value}
@@ -881,6 +963,8 @@ def _selected_range(capture: dict, selector: str) -> dict:
 
 def _caller_state_dispatch(value: dict) -> dict | None:
     """Project a decoded two-way state dispatch with an identical later call suffix."""
+    if value.get("kind") == "complete_static_caller_body" or "transition" not in value:
+        return None
     transition = value["transition"]
     paths = transition.get("paths", [])
     if len(paths) != 2 or any(

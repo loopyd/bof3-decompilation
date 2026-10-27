@@ -322,6 +322,7 @@ def write_failed_receipt(
 
 
 _CAPTURE_OPERATION_OUTPUT = {
+    "function_predicate_context": "Complete original predicate context captured.",
     "data_dispatch_consumer": "Original table and consumer bytes captured.",
     "data_original_range": "Original data range inspected.",
     "data_byte_lookup_access": (
@@ -364,6 +365,7 @@ def _receipts_for(
             "data_original_range",
             "data_byte_lookup_access",
             "data_byte_lookup_context",
+            "function_predicate_context",
         }:
             continue
         item_id = str(item.get("id")).replace(":", "_").replace("/", "_")
@@ -372,7 +374,7 @@ def _receipts_for(
                 f"harness:rev-query {op} {selector} (work item {item.get('id')})"
             ),
             "status": "passed",
-            "target": target,
+            "target": selector.split("@", 1)[0],
             "selector": selector,
             "output": _bounded_text(
                 f"{len(payload)} rows captured for {item.get('id')}"
@@ -387,7 +389,7 @@ def _receipts_for(
                 if planned["id"] == item["id"]
             )
             command["output"] = _CAPTURE_OPERATION_OUTPUT[op]
-        if row.get("kind") == "data":
+        if row.get("kind") == "data" or op == "function_predicate_context":
             from harness.naming.evidence import _RUNNER_TOKEN, indexed_observations
 
             command.update(
@@ -399,6 +401,7 @@ def _receipts_for(
                         "selector": selector,
                         "payload": payload,
                         "role": item.get("role"),
+                        "supplemental": supplemental,
                     },
                     derived,
                 )

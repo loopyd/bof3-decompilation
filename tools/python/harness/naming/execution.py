@@ -53,6 +53,7 @@ _CAPTURE_OPERATIONS = frozenset(
         "data_original_range",
         "data_byte_lookup_access",
         "data_byte_lookup_context",
+        "function_predicate_context",
     }
 )
 
@@ -87,6 +88,7 @@ def _operations(
                 "data_original_range",
                 "data_byte_lookup_access",
                 "data_byte_lookup_context",
+                "function_predicate_context",
             }
             or (
                 item.get("operation") in _CAPTURE_OPERATIONS
@@ -108,6 +110,7 @@ def _operations(
                     "data_original_range",
                     "data_byte_lookup_access",
                     "data_byte_lookup_context",
+                    "function_predicate_context",
                 }
             )
             or (not item.get("supplemental") and item.get("role") is not None)
@@ -127,7 +130,16 @@ def _operations(
             and item_id.split(":", 1)[1] == item["selector"]
             and row.get("outside_payload") is True
         )
-        if selector_target != target and not external_owner:
+        from harness.naming.crosscalls import generated_callers
+
+        external_caller = (
+            item["operation"] == "calls"
+            and not item["supplemental"]
+            and item_id.startswith("caller:")
+            and item_id.split(":", 1)[1] == item["selector"]
+            and item["selector"] in generated_callers(row, target)
+        )
+        if selector_target != target and not (external_owner or external_caller):
             raise ValueError("indexed operation target does not match report")
         record = dict(item["item"])
         if item.get("role") is not None:
@@ -268,8 +280,14 @@ def run_evidence(
                     planned_owner = op["kind"] == "instructions-v1" and op[
                         "target"
                     ] in owner_instruction_selectors(row)
+                    from harness.naming.crosscalls import generated_callers
+
+                    planned_caller = op["kind"] == "instructions-v1" and op[
+                        "target"
+                    ] in generated_callers(row, target)
                     if (
                         not planned_owner
+                        and not planned_caller
                         and op["target"] != target
                         and not op["target"].startswith(f"{target}@")
                     ):

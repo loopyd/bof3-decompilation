@@ -14,6 +14,7 @@ from harness.common.commands import tool_id
 from harness.domain.ids import parse_function_id
 from harness.domain.layout import parse_splat_layout
 from harness.domain.manifests import load_target_manifests
+from harness.naming.debt import address_of
 
 INSTRUCTION_CAPTURE: ContextVar[bool] = ContextVar("instruction_capture", default=False)
 
@@ -121,10 +122,22 @@ def replay_instructions(root: Path, payload: dict, semantic: list) -> bool:
         kind, name = payload["row"].split(":", 1)
         if kind == "function":
             # The caller has already compared these items to the report-owned plan.
+            selected_capture = next(
+                (
+                    capture
+                    for capture in semantic
+                    if capture.get("instruction_id") is not None
+                    and parse_function_id(str(capture.get("selector"))).target.value
+                    == payload["target"]
+                    and parse_function_id(str(capture.get("selector"))).address
+                    == address_of(name)
+                ),
+                None,
+            )
             row = {
                 "kind": kind,
                 "name": name,
-                "outside_payload": True,
+                "outside_payload": selected_capture is None,
                 "required_work": [
                     {"id": item["id"], "status": "open"}
                     for item in payload["items"]

@@ -91,7 +91,14 @@ def main() -> int:
                         and item_id.split(":", 1)[1] == selector
                         and request["row"].get("outside_payload") is True
                     )
-                    if operation_target != init["target"] and not external_owner:
+                    external_caller = (
+                        operation == "calls"
+                        and item_id.startswith("caller:")
+                        and item_id.split(":", 1)[1] == selector
+                    )
+                    if operation_target != init["target"] and not (
+                        external_owner or external_caller
+                    ):
                         raise ValueError(
                             "indexed operation target does not match report"
                         )
@@ -111,6 +118,22 @@ def main() -> int:
                     )
             queries = importlib.import_module("harness.analysis.rev_queries")
             row = request["row"]
+            for planned in indexed_operation_plan(row, init["target"], root=root):
+                if planned["operation"] != "function_predicate_context":
+                    continue
+                from harness.naming.consumers import capture_reviewed_consumer
+
+                selector = str(planned["selector"])
+                operations.append(
+                    {
+                        "item": {"id": planned["id"]},
+                        "operation": planned["operation"],
+                        "selector": selector,
+                        "supplemental": True,
+                        "role": planned["role"],
+                        "payload": capture_reviewed_consumer(root, selector, selector),
+                    }
+                )
             if row.get("kind") == "data":
                 selected = parse_function_id(
                     f"{init['target']}@{address_of(str(row['name'])):08X}"

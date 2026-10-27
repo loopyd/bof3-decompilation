@@ -133,9 +133,9 @@ command stream or framing parser. Interrupted batches retain remaining queued
 commands without replaying completed work.
 Unconfirmed cleanup retains the process handle and blocks retry until close succeeds.
 
-Instruction capture supports canonical call wrappers and 8..512-instruction acyclic
-BEQ/BNE callers with forward local jumps. Complete caller ranges are limited to
-2,048 bytes; path and expression bounds remain. Require complete path/slot
+Target-local instruction capture supports canonical call wrappers and
+8..512-instruction acyclic BEQ/BNE callers with forward local jumps. Complete
+caller ranges are limited to 2,048 bytes; path and expression bounds remain. Require complete path/slot
 coverage, settled constant-address halfword reads, known selected-call arguments and a matching
 saved-RA frame on every path. The selected call must precede opaque calls on its
 path. Later calls leave outgoing v0/v1 unresolved. Return transitions explicitly
@@ -162,6 +162,28 @@ extent, gameplay meaning or C return contract. Range validity survives a body ga
 A two-way zero/nonzero halfword-state dispatch with alternative first callees and
 an identical later call suffix supplies `one_level_beyond` caller context. It proves
 conditional invocation and continuation, not state meaning or callee effects.
+Cross-target caller work retains global indexed `static_jal` leads to reviewed
+selected entries, corroborated by original call words. A destination address does
+not prove runtime ownership. Caller capture uses its own target, complete reviewed
+boundary, image, load mapping and replay identity; unavailable or stale candidates
+remain gaps. Only generated caller work authorizes foreign captures.
+
+The cross-target static grammar supports ADDIU/LUI/ADDU/SUBU, ANDI/ORI/NOR/SLTIU,
+SLL/SRA, LW/LH/LHU/LBU, SW/SB/SH, BEQ/BNE/BGEZ, J/JAL and terminal JR RA.
+BGEZ requires REGIMM `rt=1`; likely/link variants and reserved encodings refuse.
+Bounds are 256 words, 16 calls, zero loops, 512 edges, 64 pending and 64 completed
+alternatives, 4,096 value nodes and 4,096 word visits including slots. Calls expose
+post-slot arguments, fresh outputs, conditional result use and caller-saved
+clobbers. Earlier opaque calls preserve only declared ABI snapshots and protected
+frame cells. Data-pointer/frame nonaliasing is a conditional premise, not proved
+safety; caller-owned overlapping SP writes still invalidate saves.
+
+A separate `function_predicate_context` capture supplies complete leaf context
+under its own receipt, with SRL/SLTU/XORI added for unsigned Boolean expressions.
+It retains pointer/field reads, arithmetic and guarded zero/one returns. No extent,
+gameplay, active-overlay or execution claim follows. It cannot replace a caller
+receipt or duplicate its source to close another rung.
+
 Journal and conclusion validation share indexed-record and live original-instruction
 recomputation. Their caller-owned plan, receipt, namespace and freshness checks
 remain required. Positive source coverage follows the row's kind, locality and

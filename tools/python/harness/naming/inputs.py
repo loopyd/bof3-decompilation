@@ -120,6 +120,7 @@ _COMMAND_ROLES = frozenset(
         "data_dispatch_consumer",
         "data_byte_lookup_access",
         "data_byte_lookup_context",
+        "function_predicate_context",
     }
 )
 # Typed projection payloads stay owner-defined JSON: the naming evidence owner

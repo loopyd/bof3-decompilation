@@ -52,8 +52,8 @@ def semantic_operation_plan(row: dict[str, Any], target: str) -> list[dict[str, 
             key = str(work.get("id", ""))
             if key.startswith(("caller:", "callee:")):
                 function = parse_function_id(key.split(":", 1)[1])
-                if function.target.value != target:
-                    raise ValueError("instruction work must be target-local")
+                if function.target.value != target and not key.startswith("caller:"):
+                    raise ValueError("instruction callee work must be target-local")
                 selectors.add(str(function))
         selectors.update(owner_instruction_selectors(row))
         result.extend(
@@ -290,6 +290,26 @@ def indexed_operation_plan(
                 "role": "data_dispatch_consumer",
             }
         )
+    if row.get("kind") == "function" and root is not None:
+        from harness.naming.crosscalls import generated_callers
+
+        if any(
+            parse_function_id(caller).target.value != target
+            for caller in generated_callers(row, target)
+        ):
+            selected = _selected(row, target)
+            operation = "function_predicate_context"
+            item_id = f"{operation}:{selected}"
+            plan.append(
+                {
+                    "id": item_id,
+                    "operation": operation,
+                    "selector": selected,
+                    "command": f"harness:original-bytes {operation} {selected} (work item {item_id})",
+                    "supplemental": True,
+                    "role": operation,
+                }
+            )
     return plan
 
 

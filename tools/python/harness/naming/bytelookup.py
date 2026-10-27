@@ -40,12 +40,8 @@ from harness.domain.manifests import load_target_manifests
 from harness.domain.mips import word_fields
 from harness.naming.consumers import capture_reviewed_consumer
 from harness.naming.description import capture_data_range
-from harness.naming.lookupeffects import (
-    REGISTER_NAMES,
-    SCOPE,
-    SHARED_PREMISES,
-    decode_consumer_body,
-)
+from harness.naming.lookupeffects import SCOPE, SHARED_PREMISES, decode_consumer_body
+from harness.naming.staticeffects import REGISTER_NAMES
 
 _MAX_FUNCTION_BYTES = 65536
 _MAX_CONSUMERS = 8

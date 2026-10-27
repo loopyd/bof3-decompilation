@@ -43,6 +43,7 @@ def _selector_target(operation: object, selector: object) -> str | None:
         "data_dispatch_consumer",
         "data_byte_lookup_access",
         "data_byte_lookup_context",
+        "function_predicate_context",
     } or not isinstance(selector, str):
         return None
     selected_target, separator, address = selector.partition("@")
@@ -66,6 +67,8 @@ def _record_allowed(
             selected_target
             == str(item.get("id", "")).removeprefix("owner:").partition("@")[0]
         )
+    if operation == "calls" and str(item.get("id", "")).startswith("caller:"):
+        return selector == str(item["id"]).removeprefix("caller:")
     return selected_target == import_target
 
 
@@ -381,9 +384,19 @@ def _validate_evidence(
                 )
         else:
             allowed_record = item is not None and _record_allowed(record, item, target)
+        external_caller_record = (
+            item is not None
+            and record.get("operation") == "calls"
+            and str(item.get("id", "")).startswith("caller:")
+            and allowed_record
+        )
         if (
             record.get("target") != target
-            and not (record.get("operation") == "semantic" and allowed_record)
+            and not (
+                record.get("operation") == "semantic"
+                and allowed_record
+                or external_caller_record
+            )
         ) or not allowed_record:
             raise ValueError(
                 "receipt target/selector is not authorized by its exact work item"
