@@ -9,17 +9,17 @@
  * @match 100.00
  * @residual none
  */
-u32 func_800AF66C(BattleRange *range, u32 value) {
-    u32 half_value;
+u32 func_800AF66C(BattleRange *range, u32 size) {
+    u32 halfSize;
     BattleRange *work;
-    u32 first;
-    u32 second;
+    u32 axis34Bound;
+    u32 axis38Bound;
 
-    half_value = value >> 1;
+    halfSize = size >> 1;
     work = (BattleRange *)g_battle_work;
-    first = work->range_axis_34 + half_value - range->range_axis_34;
-    second = work->range_axis_38 + half_value - range->range_axis_38;
-    if (value >= first && value >= second) {
+    axis34Bound = work->range_axis_34 + halfSize - range->range_axis_34;
+    axis38Bound = work->range_axis_38 + halfSize - range->range_axis_38;
+    if (size >= axis34Bound && size >= axis38Bound) {
         return 1;
     }
     return 0;

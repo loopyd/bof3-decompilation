@@ -10,16 +10,16 @@
  * @residual none
  */
 u32 func_800AF720(u32 x, u32 y, u32 size) {
-    u32 half;
+    u32 halfSize;
     BattleRange *work;
-    u32 first;
-    u32 second;
+    u32 axis34Bound;
+    u32 axis38Bound;
 
-    half = size >> 1;
+    halfSize = size >> 1;
     work = (BattleRange *)g_battle_work;
-    first = work->range_axis_34 + half - x;
-    second = work->range_axis_38 + half - y;
-    if (size >= first && size >= second) {
+    axis34Bound = work->range_axis_34 + halfSize - x;
+    axis38Bound = work->range_axis_38 + halfSize - y;
+    if (size >= axis34Bound && size >= axis38Bound) {
         return 1;
     }
     return 0;
