@@ -240,7 +240,7 @@ def _validate_current_plan(
     )
     try:
         planned = collection_row(row, target, root=root)
-        operations = row_operation_sequence(planned, target)
+        operations = row_operation_sequence(planned, target, root=root)
         repository_inputs = {
             path.relative_to(root).as_posix(): _digest(path.read_bytes())
             for path in sorted(root.glob("config/targets/**/target.toml"))

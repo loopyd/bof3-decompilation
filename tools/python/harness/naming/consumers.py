@@ -14,7 +14,7 @@ from harness.domain.manifests import load_target_manifests
 from harness.naming.dispatch import decode_dispatch_body
 
 
-def capture_dispatch_consumer(root: Path, selected: str, consumer: str) -> dict:
+def capture_reviewed_consumer(root: Path, selected: str, consumer: str) -> dict:
     """Capture only a complete reviewed function, independent of indexed sizes."""
     selected_id, consumer_id = parse_function_id(selected), parse_function_id(consumer)
     result = {
@@ -26,7 +26,7 @@ def capture_dispatch_consumer(root: Path, selected: str, consumer: str) -> dict:
     }
     try:
         if selected_id.target != consumer_id.target:
-            raise ValueError("dispatch consumer target differs from selected data")
+            raise ValueError("reviewed consumer target differs from selected data")
         manifest = load_target_manifests(root)[consumer_id.target.value]
         layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
         matches = [
@@ -40,18 +40,18 @@ def capture_dispatch_consumer(root: Path, selected: str, consumer: str) -> dict:
             or not matches[0].is_function
             or matches[0].virtual_start != consumer_id.address
         ):
-            raise ValueError("dispatch consumer requires one reviewed function start")
+            raise ValueError("reviewed consumer requires one reviewed function start")
         boundary = matches[0]
         start, end = boundary.virtual_start, boundary.virtual_end
         if end is None or start % 4 or end % 4 or not 0 < end - start <= 65536:
             raise ValueError(
-                "dispatch consumer requires a finite aligned body up to 64 KiB"
+                "reviewed consumer requires a finite aligned body up to 64 KiB"
             )
         spec = prepare_target(root, consumer_id.target.value, manifest=manifest)
         image = spec.binary.read_bytes()
         offset = spec.binary_offset + start - spec.load_address
         if offset < spec.binary_offset or offset + end - start > len(image):
-            raise ValueError("dispatch consumer range escapes original payload")
+            raise ValueError("reviewed consumer range escapes original payload")
         result["binding"] = {
             "start": start,
             "end": end,
@@ -64,6 +64,11 @@ def capture_dispatch_consumer(root: Path, selected: str, consumer: str) -> dict:
     except ValueError as error:
         result["gap"] = str(error)
     return result
+
+
+def capture_dispatch_consumer(root: Path, selected: str, consumer: str) -> dict:
+    """Capture the shared reviewed range for dispatch-specific decoding."""
+    return capture_reviewed_consumer(root, selected, consumer)
 
 
 def decode_dispatch_consumer(

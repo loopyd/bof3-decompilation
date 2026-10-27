@@ -41,6 +41,8 @@ def _selector_target(operation: object, selector: object) -> str | None:
         "xrefs",
         "data_original_range",
         "data_dispatch_consumer",
+        "data_byte_lookup_access",
+        "data_byte_lookup_context",
     } or not isinstance(selector, str):
         return None
     selected_target, separator, address = selector.partition("@")

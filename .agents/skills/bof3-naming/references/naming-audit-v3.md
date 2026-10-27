@@ -204,6 +204,51 @@ consumer receipts use distinct mechanisms with shared image and layout premises.
 Function and data conclusions use the same current-work, typed-rung and replay
 gates. Missing, stale or superseded captures require recapture without fallback.
 
+Byte-lookup operations activate from current original-byte discovery for the selected
+data address, not an authored consumer list. A concrete byte-read site or plausible
+refusal tied to a reviewed function activates both access and context operations.
+Generic unavailable ranges or unreadable boundaries alone do not activate them;
+existing range, storage and ownership gaps still apply. Omitted operations prove no
+absence of consumers. Once active, all discovery refusals and coverage gaps remain
+blocking, including scan limits and unreadable boundaries.
+
+Discovery follows address materializations, constant rebases and copied bases
+within 12 instructions across proven non-clobbers. An in-window transfer also
+includes its ordinary delay slot, even at the window boundary; discovery stops
+there rather than following either successor. Missing or unsupported slots retain
+plausible refusals. It classifies each in-window memory use,
+including uses after a different address was accessed. Interruptions remain
+plausible refusals when a page's low half is unresolved or the surviving base
+already equals the selected address. A settled different base alone is not a
+candidate. Retain multiple-addend refusals, interruption counts and scan limits;
+resolved uses do not prove absence beyond the window. The plan and worker use
+the same applicability rule. Scan reuse checks current image, layout, replay
+and load mapping before reusing one target scan. Access receipts record only
+materialization windows and index provenance. Context receipts use the same finite
+reviewed-function capture owner as dispatch, with complete body bytes and separate
+image/layout/replay bindings. Replay compares each payload against its own current
+capture and the exact generated plan. Their mechanisms are
+`original-image:byte-lookup-access` and `original-image:byte-lookup-context`;
+duplicating a source cannot supply independent corroboration.
+
+Static context supports LUI, ADDIU, ADDU, SUBU, ANDI, XORI, SLL, SRA, SLTU,
+SLTIU, LBU, LH, LHU, LW, SB, SW, BEQ, BNE, J, JAL and terminal JR RA.
+Loads settle at instruction boundaries, branches sample operands before slots,
+and JAL writes its link before the slot. Calls invalidate caller-saved values and
+memory knowledge; post-call loads are fresh inputs. Receipts state normal mapped
+access, unchanged-code, normal-return O32, protected-frame and relied-on nonaliasing
+premises. Those premises prove no execution, callee effects or runtime ownership.
+
+Context accounts for every word and conditional event. Checked unit-step masked
+loops use one symbolic iteration with proved entry, latch and carried-register
+relations, not arbitrary unrolling. Cached byte counts permit at most 255
+iterations: list positions are `0..254`, loaded lookup bytes `0..255`. Bounds are
+256 words, two nonnested loops, 11 calls, 512 edges, 4,096 expression nodes,
+64 alternatives and 4,096 walk steps. Unsupported instructions, required identities,
+loop shapes, aliases or exhausted bounds retain named gaps. Context replay
+recomputes the body and premises from its original bytes. Unsupported contexts
+and discovery refusals keep the row blocked, regardless of other positive facts.
+
 Stack-copy dispatch consumers require a complete original body. The decoder
 accounts for delayed loads, saved return address, copies present at the indexed
 load, global stores, the indirect call and its slot, and stack restoration.

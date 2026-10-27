@@ -274,7 +274,7 @@ def _commit_row(
         "status": "committed",
         "evidence": raw_file,
         "evidence_sha256": hashlib.sha256(raw_text.encode()).hexdigest(),
-        "operations": row_operation_sequence(row, target),
+        "operations": row_operation_sequence(row, target, root=namespace.root),
         "derived": namespace.record_path(derived_path),
         "derived_sha256": hashlib.sha256(derived_text.encode()).hexdigest(),
         "derived_size": len(derived_text.encode()),
@@ -321,6 +321,18 @@ def write_failed_receipt(
     )
 
 
+_CAPTURE_OPERATION_OUTPUT = {
+    "data_dispatch_consumer": "Original table and consumer bytes captured.",
+    "data_original_range": "Original data range inspected.",
+    "data_byte_lookup_access": (
+        "Original byte lookup sites and address provenance captured."
+    ),
+    "data_byte_lookup_context": (
+        "Original byte lookup consumer bodies and effects captured."
+    ),
+}
+
+
 def _receipts_for(
     namespace: EvidenceNamespace,
     target: str,
@@ -350,6 +362,8 @@ def _receipts_for(
             "xrefs",
             "data_dispatch_consumer",
             "data_original_range",
+            "data_byte_lookup_access",
+            "data_byte_lookup_context",
         }:
             continue
         item_id = str(item.get("id")).replace(":", "_").replace("/", "_")
@@ -364,19 +378,15 @@ def _receipts_for(
                 f"{len(payload)} rows captured for {item.get('id')}"
             ),
         }
-        if op in {"data_dispatch_consumer", "data_original_range"}:
+        if op in _CAPTURE_OPERATION_OUTPUT:
             from harness.naming.plan import indexed_operation_plan
 
             command["command"] = next(
                 planned["command"]
-                for planned in indexed_operation_plan(row, target)
+                for planned in indexed_operation_plan(row, target, root=namespace.root)
                 if planned["id"] == item["id"]
             )
-            command["output"] = (
-                "Original table and consumer bytes captured."
-                if op == "data_dispatch_consumer"
-                else "Original data range inspected."
-            )
+            command["output"] = _CAPTURE_OPERATION_OUTPUT[op]
         if row.get("kind") == "data":
             from harness.naming.evidence import _RUNNER_TOKEN, indexed_observations
 

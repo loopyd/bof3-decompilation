@@ -186,6 +186,8 @@ def collection_row(
 def indexed_operation_plan(
     row: dict[str, Any],
     target: str,
+    *,
+    root: Path | None = None,
 ) -> list[dict[str, object]]:
     """Exact ordered required and supplemental indexed work for one row."""
 
@@ -236,6 +238,28 @@ def indexed_operation_plan(
                 "role": "selected_data_describe",
             }
         )
+        from harness.naming.bytelookup import has_byte_lookup_work
+
+        byte_operations = (
+            ("data_byte_lookup_access", "data_byte_lookup_context")
+            if root is not None and has_byte_lookup_work(root, selected)
+            else ()
+        )
+        for operation in byte_operations:
+            item_id = f"{operation}:{selected}"
+            plan.append(
+                {
+                    "id": item_id,
+                    "operation": operation,
+                    "selector": selected,
+                    "command": (
+                        f"harness:original-bytes {operation} {selected} "
+                        f"(work item {item_id})"
+                    ),
+                    "supplemental": True,
+                    "role": operation,
+                }
+            )
     else:
         selected = ""
     access_selectors = [
@@ -272,12 +296,14 @@ def indexed_operation_plan(
 def row_operation_sequence(
     row: dict[str, Any],
     target: str = "",
+    *,
+    root: Path | None = None,
 ) -> list[str]:
     """Complete code-owned indexed and semantic operation sequence."""
 
     operations = [
         f"indexed:{item['id']}:{item['operation']}:{item['selector']}:{int(bool(item['supplemental']))}"
-        for item in indexed_operation_plan(row, target)
+        for item in indexed_operation_plan(row, target, root=root)
     ]
     operations.extend(
         (

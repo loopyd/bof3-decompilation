@@ -10,6 +10,13 @@ from typing import Any
 
 from harness.domain.ids import parse_function_id
 from harness.naming.debt import address_of
+from harness.naming.bytelookup import (
+    byte_lookup_gaps,
+    capture_byte_lookup_access,
+    capture_byte_lookup_context,
+    decode_byte_lookup_access,
+    decode_byte_lookup_context,
+)
 from harness.naming.consumers import capture_dispatch_consumer, decode_dispatch_consumer
 from harness.naming.description import (
     _describe,
@@ -29,6 +36,15 @@ _STORE_OPS = {"sb", "sh", "sw", "swl", "swr"}
 _ADDRESS_OPS = {"addiu", "addi", "addu", "add", "lui", "ori"}
 _ACCESS_OPS = {"address": _ADDRESS_OPS, "load": _LOAD_OPS, "store": _STORE_OPS}
 _MNEMONIC = re.compile(r"[a-z][a-z0-9]*")
+
+_BYTE_LOOKUP_CAPTURES = {
+    "data_byte_lookup_access": capture_byte_lookup_access,
+    "data_byte_lookup_context": capture_byte_lookup_context,
+}
+_BYTE_LOOKUP_DECODERS = {
+    "data_byte_lookup_access": decode_byte_lookup_access,
+    "data_byte_lookup_context": decode_byte_lookup_context,
+}
 
 
 def _opcode(value: object, access_kind: object) -> str | None:
@@ -208,6 +224,30 @@ def indexed_observations(
             opened.append(
                 {"class": "one_level_beyond", "reason": f"capability gap: {error}"}
             )
+    elif (
+        kind in {"data_byte_lookup_access", "data_byte_lookup_context"} and role == kind
+    ):
+        fact_class = (
+            "selected_access"
+            if kind == "data_byte_lookup_access"
+            else "one_level_beyond"
+        )
+        selected_range = next(
+            (
+                fact["value"]
+                for fact in derived["facts"]
+                if fact["class"] == "selected_range"
+            ),
+            {},
+        )
+        try:
+            candidates = _BYTE_LOOKUP_DECODERS[kind](
+                operation, target, selected_range, input_digest
+            )
+        except ValueError as error:
+            opened.append({"class": fact_class, "reason": f"capability gap: {error}"})
+        else:
+            opened.extend(byte_lookup_gaps(operation["payload"], fact_class))
     trusted = {_digest(fact) for fact in derived["facts"]}
     facts = [
         {key: fact[key] for key in ("class", "polarity", "value")}
@@ -226,7 +266,7 @@ def _validate_indexed_receipts(root, row, payload, operations, derived):
     """Require the complete current receipt set and its recomputed projections."""
     from harness.naming.plan import indexed_operation_plan
 
-    planned = indexed_operation_plan(row, derived["target"])
+    planned = indexed_operation_plan(row, derived["target"], root=root)
     if len(planned) != len(operations) or any(
         expected["id"] != actual["item"]["id"]
         or any(
@@ -269,6 +309,10 @@ def _validate_indexed_receipts(root, row, payload, operations, derived):
             )
         if operation["operation"] == "data_dispatch_consumer":
             _validate_consumer_bytes(root, derived["target"], operation["payload"])
+        if operation["operation"] in _BYTE_LOOKUP_DECODERS:
+            _validate_byte_lookup_bytes(
+                root, operation["operation"], operation["payload"]
+            )
         if operation["operation"] == "data_original_range":
             current = capture_data_range(root, operation["selector"])
             if _digest(operation["payload"]) != _digest(current):
@@ -287,6 +331,16 @@ def _validate_indexed_receipts(root, row, payload, operations, derived):
             raise ValueError(
                 "typed indexed receipt observations differ from replayed facts"
             )
+
+
+def _validate_byte_lookup_bytes(root: Path, operation: str, payload: dict) -> None:
+    """Re-read the original image for this receipt's own captured source."""
+
+    current = _BYTE_LOOKUP_CAPTURES[operation](root, payload["selected"])
+    if _digest(current) != _digest(payload):
+        raise ValueError(
+            "byte lookup receipt differs from current original bytes or range"
+        )
 
 
 def _validate_consumer_bytes(root: Path, target: str, payload: dict) -> None:
@@ -524,7 +578,32 @@ def _analyze_validated_records(
                 ),
             }
         )
-    if not access_facts:
+    for item in operations:
+        operation = item.get("operation")
+        if operation not in _BYTE_LOOKUP_CAPTURES:
+            continue
+        if item.get("role") != operation or item.get("supplemental") is not True:
+            raise ValueError("byte lookup operation provenance is invalid")
+        fact_class = (
+            "selected_access"
+            if operation == "data_byte_lookup_access"
+            else "one_level_beyond"
+        )
+        try:
+            selected_range = next(
+                (fact["value"] for fact in facts if fact["class"] == "selected_range"),
+                {},
+            )
+            facts.extend(
+                _BYTE_LOOKUP_DECODERS[operation](
+                    item, target, selected_range, input_digest
+                )
+            )
+        except ValueError as error:
+            opened.append({"class": fact_class, "reason": f"capability gap: {error}"})
+        else:
+            opened.extend(byte_lookup_gaps(item["payload"], fact_class))
+    if not any(fact["class"] == "selected_access" for fact in facts):
         opened.append(
             {
                 "class": "selected_access",
@@ -558,7 +637,7 @@ def _analyze_validated_records(
                 }
             )
     facts.extend(consumer_facts)
-    if not any(fact["class"] == "one_level_beyond" for fact in consumer_facts):
+    if not any(fact["class"] == "one_level_beyond" for fact in facts):
         opened.append(
             {
                 "class": "one_level_beyond",

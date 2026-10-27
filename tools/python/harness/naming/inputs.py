@@ -118,6 +118,8 @@ _COMMAND_ROLES = frozenset(
         "access_function_xrefs",
         "data_original_range",
         "data_dispatch_consumer",
+        "data_byte_lookup_access",
+        "data_byte_lookup_context",
     }
 )
 # Typed projection payloads stay owner-defined JSON: the naming evidence owner

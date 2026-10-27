@@ -14,8 +14,13 @@ from harness.analysis.index import rows as index_rows
 from harness.domain.ids import parse_function_id
 from harness.domain.manifests import load_target_manifests
 from harness.naming.debt import address_of
+from harness.naming.plan import indexed_operation_plan
 from harness.naming.description import capture_data_range
 from harness.naming.consumers import capture_dispatch_consumer
+from harness.naming.bytelookup import (
+    capture_byte_lookup_access,
+    capture_byte_lookup_context,
+)
 
 
 def _query(connection: Any, item_id: str) -> tuple[str, str, list[dict[str, Any]]]:
@@ -136,6 +141,26 @@ def main() -> int:
                         ),
                     }
                 )
+                captures = {
+                    "data_byte_lookup_access": capture_byte_lookup_access,
+                    "data_byte_lookup_context": capture_byte_lookup_context,
+                }
+                for planned in indexed_operation_plan(row, init["target"], root=root):
+                    operation = str(planned["operation"])
+                    if operation not in captures:
+                        continue
+                    operations.append(
+                        {
+                            "item": {"id": planned["id"]},
+                            "operation": operation,
+                            "selector": planned["selector"],
+                            "supplemental": planned["supplemental"],
+                            "role": planned["role"],
+                            "payload": captures[operation](
+                                root, str(planned["selector"])
+                            ),
+                        }
+                    )
             access_selectors = [
                 item["selector"] for item in operations if item["operation"] == "access"
             ]

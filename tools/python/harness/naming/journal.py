@@ -54,7 +54,9 @@ def operation_digest(
     operations = [
         (
             f"{row.get('kind')}:{row.get('name')}",
-            row_operation_sequence(collection_row(row, target, root=root), target),
+            row_operation_sequence(
+                collection_row(row, target, root=root), target, root=root
+            ),
         )
         for row in report.get("rows", [])
         if isinstance(row, dict)
@@ -338,6 +340,7 @@ def journal_is_fresh(
         key: row_operation_sequence(
             collection_row(value, target, root=root),
             target,
+            root=root,
         )
         for key, value in report_row_values.items()
     }

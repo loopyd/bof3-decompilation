@@ -47,6 +47,15 @@ from harness.naming.state import (
 from harness.naming.telemetry import RunTelemetry, artifact_bytes, write_telemetry
 
 SHARD_ROWS = 10
+_CAPTURE_OPERATIONS = frozenset(
+    {
+        "data_dispatch_consumer",
+        "data_original_range",
+        "data_byte_lookup_access",
+        "data_byte_lookup_context",
+    }
+)
+
 DEFAULT_CONCURRENCY = 1
 MAX_CONCURRENCY = 1
 DEFAULT_ROWS_BUDGET = 128
@@ -76,15 +85,15 @@ def _operations(
                 "xrefs",
                 "data_dispatch_consumer",
                 "data_original_range",
+                "data_byte_lookup_access",
+                "data_byte_lookup_context",
             }
             or (
-                item.get("operation")
-                in {"data_dispatch_consumer", "data_original_range"}
+                item.get("operation") in _CAPTURE_OPERATIONS
                 and not isinstance(item.get("payload"), dict)
             )
             or (
-                item.get("operation")
-                not in {"data_dispatch_consumer", "data_original_range"}
+                item.get("operation") not in _CAPTURE_OPERATIONS
                 and not isinstance(item.get("payload"), list)
             )
             or not isinstance(item.get("supplemental"), bool)
@@ -97,6 +106,8 @@ def _operations(
                     "access_function_xrefs",
                     "data_dispatch_consumer",
                     "data_original_range",
+                    "data_byte_lookup_access",
+                    "data_byte_lookup_context",
                 }
             )
             or (not item.get("supplemental") and item.get("role") is not None)
@@ -349,7 +360,7 @@ def run_evidence(
                     target,
                     row,
                 )
-                expected = indexed_operation_plan(row, target)
+                expected = indexed_operation_plan(row, target, root=root)
                 expected_by_id = {str(item["id"]): item for item in expected}
                 actual = [
                     {
