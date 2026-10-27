@@ -19,12 +19,12 @@ s32 func_800A5D00(void) {
     return 0;
   }
 
-  sum = D_800B4C7C[D_80145518[D_801485EC + D_801485EE][0]];
+  sum = byteValueTable[D_80145518[D_801485EC + D_801485EE][0]];
   if (D_80145518[D_801485EC + D_801485EE][1] != 0xFF) {
-    sum += D_800B4C7C[D_80145518[D_801485EC + D_801485EE][1]];
+    sum += byteValueTable[D_80145518[D_801485EC + D_801485EE][1]];
   }
   if (D_80145518[D_801485EC + D_801485EE][2] != 0xFF) {
-    sum += D_800B4C7C[D_80145518[D_801485EC + D_801485EE][2]];
+    sum += byteValueTable[D_80145518[D_801485EC + D_801485EE][2]];
   }
 
   battler_index = D_801EBF08[5];

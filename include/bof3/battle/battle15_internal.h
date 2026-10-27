@@ -149,7 +149,7 @@ extern s8 D_800B4E8C[]; /* @source 0x800B4E8C @kind unknown */
 extern u8 D_800B4E94[]; /* @source 0x800B4E94 @kind table */
 extern u8 D_800B4E99[]; /* @source 0x800B4E99 @kind table */
 extern u8 D_800B4E9E[]; /* @source 0x800B4E9E @kind table */
-extern u8 D_800B4C7C[]; /* @source 0x800B4C7C @kind unknown */
+extern u8 byteValueTable[]; /* @source 0x800B4C7C @kind unknown */
 extern u8 D_800B4D58[][3]; /* @source 0x800B4D58 @kind table */
 extern BattleSelectionHandler D_800B6BF4[]; /* @source 0x800B6BF4 @kind unknown */
 extern BattleRecord D_801EB630[]; /* @source 0x801EB630 @kind unknown */

@@ -22,7 +22,7 @@ void func_800A82F8(void)
   if (entryCount != 0) {
     accumulator = accumulatorAddress;
     do {
-      *accumulator += D_800B4C7C[D_801463C4[listIndex]];
+      *accumulator += byteValueTable[D_801463C4[listIndex]];
       listIndex++;
     } while (listIndex < D_801463C7);
   }
