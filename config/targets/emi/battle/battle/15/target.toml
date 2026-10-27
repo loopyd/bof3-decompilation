@@ -193,7 +193,7 @@ sources = [
     "src/bof3/battle/func_800AE438.c",
     "src/bof3/battle/func_800AF0F8.c",
     "src/bof3/battle/func_800AF5FC.c",
-    "src/bof3/battle/func_800AF66C.c",
+    "src/bof3/battle/testWorkRangeAgainstRecord.c",
     "src/bof3/battle/func_800AF6B8.c",
     "src/bof3/battle/func_800AF720.c",
     "src/bof3/battle/func_800AFC54.c",

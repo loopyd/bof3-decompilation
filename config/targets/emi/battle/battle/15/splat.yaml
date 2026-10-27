@@ -1496,8 +1496,8 @@ segments:
     - '@behavior: Returns 1 when the size word reaches both scratchpad work-record axis bounds and its eighth bit reaches the range record 0x3E plane distance.'
   - - 101996
     - c
-    - func_800AF66C
-    - '@source: src/bof3/battle/func_800AF66C.c'
+    - testWorkRangeAgainstRecord
+    - '@source: src/bof3/battle/testWorkRangeAgainstRecord.c'
     - '@behavior: Checks horizontal and vertical battle-work bounds for arg1.'
   - - 102072
     - c

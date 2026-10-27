@@ -163,7 +163,7 @@ typedef struct BattleIdentityRecord {
 
 extern BattleIdentityRecord D_800E4050[]; /* @source 0x800E4050 @kind unknown */
 
-u32 func_800AF66C(BattleRange *range, u32 value);
+u32 testWorkRangeAgainstRecord(BattleRange *range, u32 value);
 u32 func_800A99AC(void);
 u8 *findOwnerRecord(u8 id);
 

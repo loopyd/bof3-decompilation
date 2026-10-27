@@ -9,7 +9,7 @@
  * @match 100.00
  * @residual none
  */
-u32 func_800AF66C(BattleRange *range, u32 size) {
+u32 testWorkRangeAgainstRecord(BattleRange *range, u32 size) {
     u32 halfSize;
     BattleRange *work;
     u32 axis34Bound;
