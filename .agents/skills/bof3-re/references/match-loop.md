@@ -38,9 +38,9 @@ through the tooling owner; matching work grants no profile-change authority.
 | Rung | Work | Gate |
 | --- | --- | --- |
 | 1. Representation/access | Prove ABI, widths, qualifiers, pointer cells and original reloads; inspect callees before declaring allocation-only | Original calls, conversions and memory events accounted for |
-| 2. Control flow | Branch direction, loop/return/switch; test branch-local calculations, the branch matrix and evidenced [explicit cursors](matching-knowledge.md#explicit-cursors-and-signed-bounds) | Branch/topology mismatch clears |
+| 2. Control flow | Branch direction, loop/return/switch; test [boolean return expansion](matching-knowledge.md#boolean-return-expansion), branch-local calculations, the branch matrix and evidenced [explicit cursors](matching-knowledge.md#explicit-cursors-and-signed-bounds) | Branch/topology mismatch clears |
 | 3. Value lifetimes | Reuse a consumed local for a later real result; diagnose [orphan stack slots](matching-knowledge.md#orphan-stack-slots); test block-local initialization, [operation scopes](matching-knowledge.md#operation-scopes-and-loop-note-dependencies) and arithmetic grouping | Predicted instruction effect measured; semantics and complete diff checked |
-| 4. Compiler evidence | Inspect owning compiler sources and before/after RTL; follow [guard scheduling](matching-knowledge.md#guard-scheduling-and-value-reuse) or [CSE/operand-order](matching-knowledge.md#cse-lifetimes-and-commutative-targets) evidence for those residuals | Source-backed mechanism predicts a new probe; diagnostics grant no match |
+| 4. Compiler evidence | Find the first divergent pass in owning sources and before/after RTL, including return expansion before CSE/allocation; follow the relevant [compiler lever](matching-knowledge.md#compiler-evidence) | Source-backed mechanism predicts a new probe; diagnostics grant no match |
 | 5. Runtime evidence | For unresolved behavior, use bounded original/candidate observations through `psx-emulator` | Inputs, observations, stop and provenance checked; host edits and coverage limits explicit |
 | 6. Permuter | Opt-in, shape already right; `bin/harness lift permute TARGET@0xADDRESS -j N`; keep owning profile fixed | Attempt completes, residual class recorded |
 | 7. Unresolved | Preserve best coherent clean C and truthful partial metadata; report missing evidence | Non-exact disposition separates retention, blocker and exhaustion |
@@ -81,9 +81,10 @@ ineligible/declined reasons; revisit only with new evidence.
 | No function-shaped bytes: missing prologue/`jr $ra`, pointer runs, printable blocks; or ASM-backlog triage | `bin/harness analysis data-candidates [TARGET...]` | Ranked byte evidence only. Promotion requires reviewed layout transaction, `source splat` and index refresh, not C lift |
 | Fragment/jump-table arm/shared epilogue with head elsewhere; code inside leading bare `[offset, bin, name]` segment or `bin` subsegment | `bin/harness analysis carve TARGET@0xADDRESS START:END` | Isolated two-split row/segment regroup probe preserving `vram`/text order. Never applies. Lane reports evidence; parent owns reviewed Splat placement, no whole-image oracle |
 | Few clean-C shapes explain `first=` | `bin/harness lift sweep SELECTOR SOURCE variants...` | In-process comparison; retain each variant and outcome |
+| Join-spanning boolean result or extra return copy | Compare expression return with [constant-return arms](matching-knowledge.md#boolean-return-expansion) | Predict the RTL change; preserve arithmetic, accesses and ABI; require the complete live gate |
 | Bytes identical to already-exact function | `bin/harness lift clone TARGET@0xADDRESS --from REPRESENTATIVE` | Dry-run emits self-contained raw `func_`/`D_` clone, no foreign header. `--apply` wires and retains only on `lift gate` PASS, otherwise restores. Still needs own exact gate/required review. Declined target-local include/unresolved external is recorded, never bypassed |
 
-Search these four levers before exhaustion. Byte identity proves no shared ownership.
+Search the applicable levers before exhaustion. Byte identity proves no shared ownership.
 
 For a grouped representative, use `--from TARGET@0xADDRESS` to select one attached
 function. Clone retains common declarations and includes and rejects target-local

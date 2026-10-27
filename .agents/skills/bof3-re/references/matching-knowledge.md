@@ -9,7 +9,8 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 [operation scopes](#operation-scopes-and-loop-note-dependencies),
 [delay slots](#delay-slots-and-entry-copies), [representation](#representation-and-volatility),
 [allocation](#allocator-sensitive-functions), [orphan stack slots](#orphan-stack-slots),
-[compiler](#compiler-evidence), [guard scheduling](#guard-scheduling-and-value-reuse),
+[compiler](#compiler-evidence), [boolean returns](#boolean-return-expansion),
+[guard scheduling](#guard-scheduling-and-value-reuse),
 [CSE and operand order](#cse-lifetimes-and-commutative-targets),
 [narrow load sharing](#narrow-load-sharing-and-real-value-reuse),
 [runtime](#runtime-evidence), [storage](#storage-and-analysis-context),
@@ -28,6 +29,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | `lh` plus `lhu` replaces `lh` plus register copy | Trace [narrow load sharing](#narrow-load-sharing-and-real-value-reuse), known bits and later definitions |
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots) |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
+| Boolean result misses the return register; extra return copy | Trace [boolean return expansion](#boolean-return-expansion) before allocation |
 | Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt. For displaced induction setup, inspect [explicit cursors](#explicit-cursors-and-signed-bounds) |
 | Global/BSS offsets | Audit COMMON/section/alignment/order/padding and following symbols |
 | Phantom read-only object | Local static constant versus existing shared extern ownership |
@@ -263,6 +265,34 @@ changes. Verify that prediction in before/after RTL and a supported live compari
 Do not infer exact allocator causality from matching scores, debug-register names
 or source formulas without accounting for suggestions and interference. Keep flags
 fixed; no automatic flag catalogs or compiler-variant batches.
+
+### Boolean return expansion
+
+For join-spanning booleans or extra return copies, inspect initial RTL before
+blaming CSE or allocation.
+
+1. Compare `return condition;` with explicit constant-return arms:
+
+   ```c
+   if (condition) {
+       return 1;
+   }
+   return 0;
+   ```
+
+   Keep operand calculations and memory accesses in their original locations.
+   Preserve short-circuit effects, widths, signedness and return ABI. This lever
+   applies only when the required result is exactly zero or one.
+2. Pin dumps to source hashes and the unchanged compiler profile. Trace expansion,
+   jump optimization, CSE, combine and local/global allocation. GCC 2.7.2 can use
+   a join pseudo for expression returns but hard return registers for constant
+   arms. Jump optimization can merge the arms, CSE remove duplicate comparisons,
+   and combine fold the result into the return register. Verify each claimed
+   change in RTL; pseudo numbers alone do not identify values across forms.
+3. Measure with `lift sweep`; require complete live byte equality and owning
+   review. Restore neutral/regressive forms. Keep the conclusion profile-specific,
+   not recovered source spelling or a universal CSE/allocation rule. Add no pins,
+   dummy work or accesses.
 
 ### Guard scheduling and value reuse
 
