@@ -133,9 +133,10 @@ command stream or framing parser. Interrupted batches retain remaining queued
 commands without replaying completed work.
 Unconfirmed cleanup retains the process handle and blocks retry until close succeeds.
 
-Instruction capture supports canonical call wrappers and 8..32-instruction acyclic
-BEQ/BNE callers with forward local jumps. Require complete path/slot coverage,
-settled constant-address halfword reads, known selected-call arguments and a matching
+Instruction capture supports canonical call wrappers and 8..512-instruction acyclic
+BEQ/BNE callers with forward local jumps. Complete caller ranges are limited to
+2,048 bytes; path and expression bounds remain. Require complete path/slot
+coverage, settled constant-address halfword reads, known selected-call arguments and a matching
 saved-RA frame on every path. The selected call must precede opaque calls on its
 path. Later calls leave outgoing v0/v1 unresolved. Return transitions explicitly
 assume normal memory/call completion and preservation of SP and the saved-entry-RA

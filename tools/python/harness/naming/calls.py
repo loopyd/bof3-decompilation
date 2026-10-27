@@ -8,11 +8,17 @@ from dataclasses import dataclass, replace
 
 from harness.naming.effects import _overlaps_instructions, ram_offset
 
+CALLER_MIN_BYTES = 32
+CALLER_MAX_BYTES = 2048
+CALLER_INSTRUCTION_RANGE = "8..512"
+
 
 def decode_selected_call(code: bytes, start: int, selected: int) -> dict:
     """Decode a wrapper or a complete forward BEQ/BNE caller with opaque calls."""
-    if len(code) % 4 or not 32 <= len(code) <= 128:
-        raise ValueError("selected_call requires 8..32 aligned instructions")
+    if len(code) % 4 or not CALLER_MIN_BYTES <= len(code) <= CALLER_MAX_BYTES:
+        raise ValueError(
+            f"selected_call requires {CALLER_INSTRUCTION_RANGE} aligned instructions"
+        )
     words = struct.unpack(f"<{len(code) // 4}I", code)
     if any(word >> 26 in {4, 5} for word in words):
         return _decode_branch_calls(words, start, selected)
@@ -375,9 +381,9 @@ def _decode_call_wrapper(code: bytes, start: int, selected: int) -> dict:
     arguments. Fixed-address SB/SH stores are retained as ordered direct effects.
     Unknown instructions never establish an absence of guards.
     """
-    if len(code) % 4 or not 32 <= len(code) <= 128:
+    if len(code) % 4 or not CALLER_MIN_BYTES <= len(code) <= CALLER_MAX_BYTES:
         raise ValueError(
-            "selected_call wrapper must contain 8..32 aligned instructions"
+            f"selected_call wrapper must contain {CALLER_INSTRUCTION_RANGE} aligned instructions"
         )
     words = list(struct.unpack(f"<{len(code) // 4}I", code))
     calls = [index for index, word in enumerate(words) if word >> 26 == 3]
@@ -565,7 +571,7 @@ def decode_owner_body(code: bytes, start: int) -> dict:
     calls = [index for index, word in enumerate(words) if word >> 26 == 3]
     if not calls and len(code) >= 16 and words[0] >> 26 == 15:
         return decode_owner_stores(code, start)
-    if not 32 <= len(code) <= 128:
+    if not CALLER_MIN_BYTES <= len(code) <= CALLER_MAX_BYTES:
         raise ValueError(
             "owner_body requires a canonical call wrapper or global-pointer zero-byte stores"
         )

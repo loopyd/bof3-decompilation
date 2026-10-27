@@ -10,20 +10,20 @@
  */
 void func_800A82F8(void)
 {
-  u8 i;
-  u32 count;
-  u8 *dst;
-  u8 *p;
+  u8 listIndex;
+  u32 entryCount;
+  u8 *accumulatorAddress;
+  u8 *accumulator;
 
-  i = 0;
-  count = D_801463C7;
-  dst = &D_801463B8;
-  *dst = 0;
-  if (count != 0) {
-    p = dst;
+  listIndex = 0;
+  entryCount = D_801463C7;
+  accumulatorAddress = &D_801463B8;
+  *accumulatorAddress = 0;
+  if (entryCount != 0) {
+    accumulator = accumulatorAddress;
     do {
-      *p += D_800B4C7C[D_801463C4[i]];
-      i++;
-    } while (i < D_801463C7);
+      *accumulator += D_800B4C7C[D_801463C4[listIndex]];
+      listIndex++;
+    } while (listIndex < D_801463C7);
   }
 }
