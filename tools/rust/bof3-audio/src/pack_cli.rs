@@ -99,7 +99,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     }
     if input.join("audio.xml").exists() {
         let root = manifest::read(&manifest::relative_file(&input, &input, "audio.xml")?)?;
-        if matches!(root.attribute("kind")?, "xa_stream" | "xa_cue") {
+        if matches!(root.attribute("kind")?, "xa_stream" | "xa_cue" | "xa_views") {
             let report = crate::xa::packing::assets(&crate::xa::packing::Options {
                 input,
                 executable,

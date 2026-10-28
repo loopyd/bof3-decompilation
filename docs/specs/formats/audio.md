@@ -255,6 +255,13 @@ bof3-audio extract --mode audio --kind xa_cue --archive FILE.STR \
   --output NEW_DIR [--id ID]
 ```
 
+`--kind xa_views` exports streams and verified cues together. It requires the
+executable and `--xa-history continuous`; arithmetic remains explicit. Without
+`--id`, both asset kinds are selected. A qualified `--id` selects one stream or cue
+view. Asset manifests retain their actual `xa_stream` or `xa_cue` kind, while the
+root names `xa_views`. Keep source snapshots when removing unneeded asset links
+from a root.
+
 Repeated archives and `--disc-root` are supported. `--id` uses the catalog's
 qualified identities or unambiguous numeric channel/cue IDs. Cues require the
 verified executable and recognized media. Streams can omit the executable;
@@ -3072,10 +3079,11 @@ XA manifests use the separate path below.
 [`xa_pack`](../../../tools/rust/bof3-audio/src/xa/packing.rs) is selected by
 `pack --mode audio --input EXTRACTION_ROOT --output NEW_DIRECTORY [--executable
 SLUS_004.22] [--xa-padding reject|zero] [--json]` when `audio.xml` names
-`xa_stream` or `xa_cue`. The root must
+`xa_stream`, `xa_cue` or `xa_views`. The root must
 retain its source snapshots; an isolated asset folder without that root is not a
-self-contained input. The executable is required for cue roots and any recorded
-runtime metadata. Stream roots exported without runtime metadata can pack without
+self-contained input. The executable is required for cue/mixed roots and any recorded
+runtime metadata. Mixed roots accept stream and cue asset manifests and require
+continuous selected-stream history for every view. Stream roots exported without runtime metadata can pack without
 an executable. Original STR paths need not exist.
 
 Source manifests validate complete preserved bytes, hashes, extent status and
@@ -3120,7 +3128,12 @@ under the declared decoder context, without claiming independent hardware fideli
 
 All asset views of a shared physical sector must request identical encoded bytes;
 an edited cue conflicting with an unchanged overlapping view fails rather than
-silently overriding it. Rebuilding preserves unrelated sectors, source length,
+silently overriding it. After merging, packing rederives continuous entry histories
+from the output STR and rejects a view whose incoming state changed, even if its
+shared sector bytes agree. Retain a convergent prefix or remove that view when
+selecting a wider edit. With matching entry history and agreed selected bytes,
+the per-selection exit-history checks remain valid in the merged output.
+Rebuilding preserves unrelated sectors, source length,
 multiplexing, cue placement, subheaders and spare bytes. Sector checks, whole-file
 equality for unchanged sources and file read-back precede staged publication.
 Output files are `streams/<SHA-256-of-source-identity>.STR`. `pack.json` uses

@@ -12,6 +12,7 @@ pub(crate) struct Validated {
     pub indices: Vec<usize>,
     pub arithmetic: Arithmetic,
     pub initial_histories: Histories,
+    pub history_policy: InitialHistory,
     pub wave: Wave,
     pub wav_sha256: String,
 }
@@ -132,6 +133,7 @@ pub(crate) fn validate(
         indices,
         arithmetic,
         initial_histories,
+        history_policy: policy,
         wave,
         wav_sha256: sha256_hex(&bytes),
     })

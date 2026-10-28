@@ -5,7 +5,7 @@ use crate::{
 };
 use serde::Serialize;
 
-#[derive(Clone, Copy, Debug, Serialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 pub enum InitialHistory {
     #[serde(rename = "zero_per_exported_asset")]
     Zero,

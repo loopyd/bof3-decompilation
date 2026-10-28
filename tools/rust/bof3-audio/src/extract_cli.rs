@@ -13,9 +13,10 @@ pub const HELP: &str =
  --type sfx selects source-qualified bank references; every sample in each bank is exported.\n\
  Default reference rate: 44100 Hz (SPU pitch 4096); unity note 60 is an export convention.\n\
  Full original EMI bytes are preserved inside each bank.xml. Output must not exist.\n\
- XA: --kind xa_stream|xa_cue --xa-arithmetic split-floor|combined-rounded\n\
+ XA: --kind xa_stream|xa_cue|xa_views --xa-arithmetic split-floor|combined-rounded\n\
      --xa-history zero|continuous --output NEW_DIR [--id ID] [--executable PSX_EXE]\n\
  XA cues require the executable; streams can use it to retain known cue placement.\n\
+ xa_views exports both kinds and requires the executable and continuous history.\n\
  XA history is zero per asset or carried from preceding sectors of the selected coded stream.\n\
  XA uses its encoded rate. Game seek/reset history is unverified; known truncated STRs fail.\n\
  Music: --mode music [--kind song] --allow-approximations --executable PSX_EXE\n\
@@ -140,7 +141,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     if approximations || loops.is_some() {
         return Err("--allow-approximations and --loops apply only to music extraction".into());
     }
-    if matches!(kind.as_deref(), Some("xa_stream" | "xa_cue")) {
+    if matches!(kind.as_deref(), Some("xa_stream" | "xa_cue" | "xa_views")) {
         if rate.is_some() {
             return Err("--reference-rate is for banks; XA is exported at its encoded rate".into());
         }
@@ -150,10 +151,10 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             executable,
             output: output.ok_or("extract requires --output")?,
             id,
-            kind: if kind.as_deref() == Some("xa_cue") {
-                crate::xa::extraction::Kind::Cue
-            } else {
-                crate::xa::extraction::Kind::Stream
+            kind: match kind.as_deref() {
+                Some("xa_cue") => crate::xa::extraction::Kind::Cue,
+                Some("xa_views") => crate::xa::extraction::Kind::Views,
+                _ => crate::xa::extraction::Kind::Stream,
             },
             arithmetic: arithmetic.ok_or(
                 "XA extraction requires explicit --xa-arithmetic split-floor|combined-rounded",
@@ -186,7 +187,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     }
     if kind.as_deref() != Some("bank") || arithmetic.is_some() || history.is_some() {
         return Err(
-            "extract requires --kind bank|xa_stream|xa_cue; --xa-arithmetic and --xa-history apply only to XA"
+            "extract requires --kind bank|xa_stream|xa_cue|xa_views; --xa-arithmetic and --xa-history apply only to XA"
                 .into(),
         );
     }

@@ -14,12 +14,21 @@ use std::{collections::BTreeMap, fmt::Write, fs, path::PathBuf};
 pub enum Kind {
     Stream,
     Cue,
+    Views,
 }
 impl Kind {
     pub fn name(self) -> &'static str {
         match self {
             Self::Stream => "xa_stream",
             Self::Cue => "xa_cue",
+            Self::Views => "xa_views",
+        }
+    }
+
+    fn accepts(self, asset: &Asset) -> bool {
+        match self {
+            Self::Views => matches!(asset.kind(), "xa_stream" | "xa_cue"),
+            _ => asset.kind() == self.name(),
         }
     }
 }
@@ -52,8 +61,13 @@ pub struct Report {
 
 pub fn extract(options: &Options) -> Result<Report> {
     require_absent(&options.output)?;
-    if matches!(options.kind, Kind::Cue) && options.executable.is_none() {
+    if matches!(options.kind, Kind::Cue | Kind::Views) && options.executable.is_none() {
         return Err("XA cue extraction requires --executable for verified cue tables".into());
+    }
+    if matches!(options.kind, Kind::Views) && options.history != InitialHistory::Continuous {
+        return Err(
+            "mixed XA views require --xa-history continuous for shared stream context".into(),
+        );
     }
     let mut catalog = Catalog::read(options.disc_root.as_deref(), &options.archives)?;
     let runtime = options
@@ -65,12 +79,21 @@ pub fn extract(options: &Options) -> Result<Report> {
         })
         .transpose()?;
     let selected = if let Some(id) = &options.id {
-        vec![catalog.select("audio", Some(options.kind.name()), id)?]
+        let kind = if matches!(options.kind, Kind::Views) {
+            None
+        } else {
+            Some(options.kind.name())
+        };
+        let asset = catalog.select("audio", kind, id)?;
+        if !options.kind.accepts(asset) {
+            return Err("mixed XA views accept only qualified XA stream or cue identities".into());
+        }
+        vec![asset]
     } else {
         catalog
             .assets
             .iter()
-            .filter(|a| a.kind() == options.kind.name())
+            .filter(|a| options.kind.accepts(a))
             .collect()
     };
     if selected.is_empty() {

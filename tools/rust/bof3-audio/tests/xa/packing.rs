@@ -266,7 +266,7 @@ fn complete_original_xa_sources_pack_stream_and_cue_exports_byte_exactly() {
             let extracted = extract(&source, &export, Some(exe.clone()), kind);
             match kind {
                 Kind::Stream => streams += extracted.assets,
-                Kind::Cue => cues += extracted.assets,
+                _ => cues += extracted.assets,
             }
             let report = bof3_audio::xa::packing::assets(&bof3_audio::xa::packing::Options {
                 padding: bof3_audio::xa::packing::Padding::Reject,

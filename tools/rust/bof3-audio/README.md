@@ -89,6 +89,14 @@ with zero targets to the original capacity and reports input and padding loss
 separately per channel. Longer input fails. Sector count, cue placement, history
 boundaries and overlapping-sector agreement still apply.
 
+Use `extract --kind xa_views --xa-history continuous --executable PSX_EXE`
+to retain streams and verified cues in one XA root. Without `--id`, it exports
+both kinds; a qualified ID selects one view. Packing accepts both kinds in that
+root and publishes one STR only when overlapping views request identical sector
+bytes and retain their source-derived entry histories after merging. Update every
+selected view of an edited sector consistently. Mixed roots require continuous
+history and the executable during extraction and packing.
+
 Bank and SoundFont sample packing reports include `loop_reconstruction` with
 original and output loop metadata and the applied policy. Unchanged samples use
 `preserve_original_encoding`, including loops with carried predictor history.

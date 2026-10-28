@@ -92,7 +92,7 @@ pub fn assets(options: &Options) -> Result<Report> {
     }
     document.shape(&["schema", "mode", "kind"], &["source", "asset"], false)?;
     let kind = document.attribute("kind")?;
-    if !matches!(kind, "xa_stream" | "xa_cue") {
+    if !matches!(kind, "xa_stream" | "xa_cue" | "xa_views") {
         return Err("XA pack: unsupported extraction root kind".into());
     }
     document.scalars(
@@ -109,7 +109,7 @@ pub fn assets(options: &Options) -> Result<Report> {
             Ok(exe)
         })
         .transpose()?;
-    if kind == "xa_cue" && executable.is_none() {
+    if matches!(kind, "xa_cue" | "xa_views") && executable.is_none() {
         return Err("XA pack: cue manifests require --executable".into());
     }
     let mut sources = BTreeMap::new();
@@ -136,7 +136,13 @@ pub fn assets(options: &Options) -> Result<Report> {
             );
         }
         let id = node.attribute("id")?;
-        if id != link.attribute("id")? || node.attribute("kind")? != kind {
+        let asset_kind = node.attribute("kind")?;
+        let kind_matches = if kind == "xa_views" {
+            matches!(asset_kind, "xa_stream" | "xa_cue")
+        } else {
+            asset_kind == kind
+        };
+        if id != link.attribute("id")? || !kind_matches {
             return Err("XA pack: root/asset identity or kind conflict".into());
         }
         if !ids.insert(id.to_owned()) || !asset_paths.insert(path.clone()) {
@@ -203,6 +209,7 @@ pub fn assets(options: &Options) -> Result<Report> {
             .map(|exe| loader::resolve(&mut catalog, exe))
             .transpose()?;
         let mut requested = BTreeMap::<usize, (Vec<u8>, String)>::new();
+        let mut contexts = Vec::new();
         for (path, node) in grouped.remove(&source).unwrap_or_default() {
             let source_ref = node.child("source_ref")?;
             crate::xa::manifest::leaf(source_ref, &json!({"sha256": hash}), &["path"])?;
@@ -220,6 +227,13 @@ pub fn assets(options: &Options) -> Result<Report> {
                 &catalog,
                 runtime.as_ref(),
             )?;
+            if kind == "xa_views"
+                && asset.history_policy != crate::xa::selection::InitialHistory::Continuous
+            {
+                return Err(
+                    "XA pack: mixed views require continuous_selected_stream history".into(),
+                );
+            }
             let format = crate::xa::Format::from_coding(asset.stream.coding)?;
             let channels = usize::from(format.channels());
             let capacity = asset
@@ -273,6 +287,14 @@ pub fn assets(options: &Options) -> Result<Report> {
                 None
             };
             let id = node.attribute("id")?.to_owned();
+            contexts.push((
+                id.clone(),
+                asset.stream,
+                asset.indices,
+                asset.arithmetic,
+                asset.history_policy,
+                asset.initial_histories,
+            ));
             for (index, bytes) in rebuilt.patches {
                 if let Some((previous, owner)) = requested.get(&index) {
                     if previous != &bytes {
@@ -298,6 +320,14 @@ pub fn assets(options: &Options) -> Result<Report> {
             bytes[index * XA_SECTOR_BYTES..(index + 1) * XA_SECTOR_BYTES].copy_from_slice(sector);
         }
         let output = XaImage::from_bytes(bytes)?;
+        for (id, stream, indices, arithmetic, policy, initial) in contexts {
+            if !changed_sectors.is_empty()
+                && policy == crate::xa::selection::InitialHistory::Continuous
+                && policy.derive(&output, stream, &indices, arithmetic)? != initial
+            {
+                return Err(format!("XA pack: merged source changes continuous entry history for {id}; retain a convergent prefix or omit that view").into());
+            }
+        }
         if output.sectors() != image.sectors() {
             return Err("XA pack: sector identity or placement changed".into());
         }
