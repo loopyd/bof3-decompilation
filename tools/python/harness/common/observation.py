@@ -240,17 +240,23 @@ class PathWatch:
                 )
 
     def _drain(self) -> None:
-        for _attempt in range(64):
+        remaining_bytes = 64 * 65536
+        interruptions = 0
+        while remaining_bytes > 0:
             try:
                 content = os.read(self._descriptor, 65536)
             except BlockingIOError:
                 return
             except InterruptedError:
+                interruptions += 1
+                if interruptions >= 64:
+                    self._fail("input watch event drain exceeded its bound")
                 continue
             except OSError as error:
                 self._fail(f"input watch became unreadable: {error}")
             if not content:
                 self._fail("input watch returned an empty event stream")
+            remaining_bytes -= len(content)
             try:
                 self._consume(content)
             except BaseException:
