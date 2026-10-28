@@ -43,33 +43,30 @@ The report retains the file's hash and source record. Any different WAV stays
 unresolved, including a changed file with the same header. This classification
 adds no editable text layout or playback acceptance.
 
-## XA cue-prefix audio bodies
+## XA encoded audio bodies
 
-Coverage derives audio-sector prefixes from the original US selector at `0x80163744`.
-It requires the exact original `SLUS_004.22` and the whole-file size and SHA-256
-of each XA source in `config/original-us-disc.json`. The tables at `0x801839C4`,
-`0x801832C4` and `0x80183298` supply 11 cues in `S_XA00.STR`, 880 in
-`MAGIC00.STR` and five in `VOICE.STR`.
+Coverage identifies encoded audio bodies in the original US `S_XA00.STR`,
+`MAGIC00.STR` and `VOICE.STR`. It requires the exact original `SLUS_004.22`
+and each source's whole-file size and SHA-256 from `config/original-us-disc.json`.
+The original selector at `0x80163744` establishes the XA consumer family.
 
-For each cue, the start sector is `start*stride+channel` and the stop threshold
-is `end*stride+channel-150`, relative to the file's base LBA. The stride is eight
-for `S_XA00.STR` and sixteen for the other two files. Coverage selects only
-channel-matching sectors strictly below this threshold, following the comparison
-at `0x80163CF0`. This gives 10,764 bodies in `S_XA00.STR`, 6,936 in
-`MAGIC00.STR` and 252 in `VOICE.STR`, including every requested starting sector.
+Each candidate must have matching subheader copies and Form 2 audio submode
+without video or data bits. Coding must specify supported four-bit mono or
+stereo audio without emphasis. All eighteen groups must have matching parameter
+copies, shifts at most twelve and predictors below four, following the existing
+audio decoder's format checks.
 
-For each selected sector index `s`, only `[2336*s+8, 2336*s+2312)` is known
-nontext. These 2304 bytes contain eighteen complete four-bit XA groups.
-The original selector supplies mode `0xC8`, file/channel filter command `0x0D`
-and read command `0x1B`. The existing audio decoder accounts for every group
-byte as an active parameter, a verified parameter copy or packed samples.
-The pinned original bodies satisfy its format and parameter checks.
+For each validated sector index `s`, only `[2336*s+8, 2336*s+2312)` is known
+nontext. Every byte in this 2304-byte body is an active parameter, a verified
+parameter copy or packed samples. This format classification includes validated
+bodies outside the original cue prefixes.
 
-This is static audio-format classification. It does not establish playback,
-command completion, predictor history or native handling of parameter copies.
+Static format identification does not establish original sector selection,
+arrival, playback, command completion, predictor history or hardware handling
+of parameter copies.
 Subheaders, spare bytes, EDC, other sectors and `CAPCOM30.STR` remain unresolved.
-Exact playback endpoints and packed-ID caller bounds remain unverified. Changed sources,
-other builds and arbitrary files that resemble XA do not receive this classification.
+Exact playback endpoints and packed-ID caller bounds remain unverified. Changed
+sources, other builds and arbitrary files that resemble XA remain unresolved.
 
 ## Executable ASCII
 

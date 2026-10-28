@@ -174,8 +174,8 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
     let policy_sha256 = sha256_hex(&read(policy)?);
     let inputs = files_under(root)?;
     let executable = root.join("SLUS_004.22");
-    let xa_bodies = if inputs.contains(&executable) {
-        crate::original::xa_bodies(&read(&executable)?)?
+    let xa_sources = if inputs.contains(&executable) {
+        crate::original::xa_sources(&read(&executable)?)?
     } else {
         Vec::new()
     };
@@ -210,30 +210,31 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                 "known-nontext",
                 "original US CDDA track 2 PCM WAV export; exact whole-file identity; source writer tools/rust/bof3-disk/src/cue.rs".into(),
             ));
-        } else if let Some(stream) = xa_bodies.iter().find(|stream| {
+        } else if let Some(stream) = xa_sources.iter().find(|stream| {
             stream.file.path == name
                 && stream.file.size == bytes.len()
                 && stream.file.sha256 == record.sha256
         }) {
             record.status = "partially-verified-xa".into();
             let mut cursor = 0;
-            for sector in &stream.sectors {
+            for sector in stream.audio_sectors(&bytes)? {
                 let start = sector * 2336 + 8;
                 record.ranges.push(range(
                     cursor,
                     start - cursor,
                     "unresolved",
-                    "XA bytes outside reviewed cue-prefix audio bodies".into(),
+                    "XA bytes outside validated encoded-audio bodies".into(),
                 ));
                 record.ranges.push(range(start, 2304, "known-nontext",
-                    "original US XA body strictly before cue stop threshold; selector 0x80163744, comparison 0x80163CF0; eighteen validated four-bit audio groups; no playback or complete interval claim".into()));
+                    "original US XA encoded body; supported Form 2 four-bit header, verified parameter copies and active parameters; no claim of game selection, arrival or playback".into()));
                 cursor = start + 2304;
             }
             record.ranges.push(range(
                 cursor,
                 bytes.len() - cursor,
                 "unresolved",
-                "remaining XA bytes; spare, EDC and other sectors unverified".into(),
+                "remaining XA bytes; subheaders, spare, EDC and other sector bodies unverified"
+                    .into(),
             ));
         } else if path.extension().is_some_and(|extension| extension == "EMI") {
             match crate::lexagraph::entries(&bytes) {

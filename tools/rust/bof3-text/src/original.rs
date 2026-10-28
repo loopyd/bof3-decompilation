@@ -1,6 +1,5 @@
 //! Original-US file identity used by coverage and loader-specific payload rules.
 
-use std::collections::BTreeSet;
 use std::sync::OnceLock;
 
 use serde::Deserialize;
@@ -45,59 +44,64 @@ pub fn archive(data: &[u8]) -> Result<bool> {
         .any(|file| file.emi_entries.is_some() && file.size == data.len() && file.sha256 == digest))
 }
 
-pub struct XaBodies {
+pub struct XaSource {
     pub file: &'static File,
-    pub sectors: Vec<usize>,
+    expected_bodies: usize,
 }
 
-/// Static audio sectors before the original stop threshold, without playback claims.
-pub fn xa_bodies(executable: &[u8]) -> Result<Vec<XaBodies>> {
+impl XaSource {
+    /// Identify complete encoded bodies; sector selection and playback remain separate.
+    pub fn audio_sectors(&self, data: &[u8]) -> Result<Vec<usize>> {
+        if data.len() != self.file.size || sha256_hex(data) != self.file.sha256 {
+            return Err(Error::Invalid(
+                "XA body classification requires the exact original source".into(),
+            ));
+        }
+        if data.len() % 2336 != 0 {
+            return Err(Error::Invalid(
+                "original US XA sector extent disagrees".into(),
+            ));
+        }
+        let mut sectors = Vec::new();
+        for (index, sector) in data.chunks_exact(2336).enumerate() {
+            if sector[2] & 0x2e != 0x24 {
+                continue;
+            }
+            let valid_groups = sector[8..2312].chunks_exact(128).all(|group| {
+                group[..4] == group[4..8]
+                    && group[8..12] == group[12..16]
+                    && group[4..12]
+                        .iter()
+                        .all(|&parameter| parameter & 15 <= 12 && parameter >> 4 < 4)
+            });
+            if sector[..4] != sector[4..8] || sector[3] & 0xfa != 0 || !valid_groups {
+                return Err(Error::Invalid(format!(
+                    "original US XA sector {index} disagrees with reviewed four-bit format"
+                )));
+            }
+            sectors.push(index);
+        }
+        if sectors.len() != self.expected_bodies {
+            return Err(Error::Invalid(
+                "original US XA body count disagrees with reviewed profile".into(),
+            ));
+        }
+        Ok(sectors)
+    }
+}
+
+/// Canonical sources whose encoded XA bodies have original-consumer format evidence.
+pub fn xa_sources(executable: &[u8]) -> Result<Vec<XaSource>> {
     if sha256_hex(executable) != US_EXECUTABLE_SHA256 {
         return Ok(Vec::new());
     }
     let original = disc()?;
     let mut streams = Vec::new();
-    for (path, table, words, stride, cue_count, body_count) in [
-        ("BIN/SCE_XA/S_XA00.STR", 0x8018_39c4, 15, 8, 11, 10_764),
-        ("BIN/BMAG_XA/MAGIC00.STR", 0x8018_32c4, 896, 16, 880, 6_936),
-        ("BIN/SCE_XA/VOICE.STR", 0x8018_3298, 10, 16, 5, 252),
+    for (path, expected_bodies) in [
+        ("BIN/SCE_XA/S_XA00.STR", 11_302),
+        ("BIN/BMAG_XA/MAGIC00.STR", 14_856),
+        ("BIN/SCE_XA/VOICE.STR", 297),
     ] {
-        let offset = table - 0x8009_6000;
-        let halfword = |index: usize| {
-            u16::from_le_bytes(
-                executable[offset + index * 2..offset + index * 2 + 2]
-                    .try_into()
-                    .unwrap(),
-            )
-        };
-        let mut position = 0;
-        let mut channel = 0;
-        let mut cues = 0;
-        let mut sectors = BTreeSet::new();
-        while position + 1 < words {
-            let word = halfword(position);
-            let start = usize::from(word & 0x7fff);
-            let end = usize::from(halfword(position + 1) & 0x7fff);
-            let stop = end.saturating_sub(150 / stride);
-            if stop <= start || channel >= stride {
-                return Err(Error::Invalid(
-                    "original US XA cue table disagrees with reviewed profile".into(),
-                ));
-            }
-            sectors.extend((start..stop).map(|group| group * stride + channel));
-            cues += 1;
-            if word & 0x8000 != 0 {
-                channel += 1;
-                position += 2;
-            } else {
-                position += 1;
-            }
-        }
-        if cues != cue_count || sectors.len() != body_count {
-            return Err(Error::Invalid(
-                "original US XA cue/body counts disagree with reviewed profile".into(),
-            ));
-        }
         let file = original
             .files
             .iter()
@@ -107,9 +111,9 @@ pub fn xa_bodies(executable: &[u8]) -> Result<Vec<XaBodies>> {
                     "original US XA source missing from manifest: {path}"
                 ))
             })?;
-        streams.push(XaBodies {
+        streams.push(XaSource {
             file,
-            sectors: sectors.into_iter().collect(),
+            expected_bodies,
         });
     }
     Ok(streams)
