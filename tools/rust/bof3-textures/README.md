@@ -220,6 +220,8 @@ See [Edit a shared font glyph](docs/glyph-edit.md) for a complete words-edit,
 packing, and byte-verification example using the original FIRST atlas.
 [Edit an opening-scene palette](docs/palette-edit.md) covers a palette-word edit,
 its observed field draw context, and re-export of the packed result.
+[Edit a terrain texture and its palette](docs/terrain-edit.md) changes a bounded
+AREA024 index patch and its conditional palette source, with byte verification.
 
 The manifest schema is `bof3.textures-package/v7`. The package includes qualified
 original snapshots, validated baseline snapshots, raw resources, its bound catalog,
