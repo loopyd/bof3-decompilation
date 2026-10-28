@@ -53,12 +53,14 @@ segments:
   - - 2052
     - c
     - setWorkHalfwordsWorld03Area11513_801F3404
+    - '@source: src/bof3/world/area11513_work_state.c'
   - - 2080
     - asm
     - func_801F3420
   - - 2148
     - c
     - resetAdvanceScratchStateCloneWorld03Area11513_801F3464
+    - '@source: src/bof3/world/area11513_work_state.c'
   - - 2212
     - c
     - invokeTwoHelpersWorld03Area11513_801F34A4

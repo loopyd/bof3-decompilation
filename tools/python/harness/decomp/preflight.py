@@ -115,8 +115,8 @@ def _validate_grouped_owner(
         for entry in manifests.values()
         if name in entry.sources + entry.support_sources
     ]
-    if owners != [manifest.id.value] or name not in manifest.sources:
-        raise ValueError("grouped comparison requires one explicit lift owner")
+    if owners != [manifest.id.value]:
+        raise ValueError("grouped comparison requires one explicit source owner")
 
 
 def _grouped_fingerprint(

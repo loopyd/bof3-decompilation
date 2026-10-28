@@ -367,7 +367,7 @@ def splat_source_findings(
                 if ownership_error is not None:
                     raise ValueError(ownership_error)
                 path = root / source
-                if source not in manifest.sources:
+                if source not in manifest.sources + manifest.support_sources:
                     raise ValueError("grouped C source is not a manifest source claim")
                 records = parse_function_records(path.read_text(encoding="utf-8"))
                 expected = {member.virtual_start: member.name for member in members}

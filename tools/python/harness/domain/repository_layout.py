@@ -179,18 +179,19 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         target: tuple(manifest_header_paths(root, manifest))
         for target, manifest in manifests.items()
     }
+    from harness.macros.index import (
+        SHARED_MACRO_HEADERS,
+        macro_input_rows,
+        macro_inputs,
+    )
+
     shared = root / "src/shared"
     templates = tuple(sorted(shared.rglob("*.inc"))) if shared.is_dir() else ()
     paths = {
         root / "include/base/types.h",
         *(
             root / relative
-            for relative in (
-                "include/base/compiler.h",
-                "include/bof3/asm.h",
-                "include/bof3/symbols.h",
-                "include/include_asm.h",
-            )
+            for relative in SHARED_MACRO_HEADERS
             if (root / relative).is_file()
         ),
         *templates,
@@ -300,11 +301,6 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         MappingProxyType({path: digests[path] for path in resolved_paths}),
         MappingProxyType(selected),
         frozenset(optional_paths & absent),
-    )
-    from harness.macros.index import (
-        SHARED_MACRO_HEADERS,
-        macro_input_rows,
-        macro_inputs,
     )
     from harness.types.inputs import type_input_rows
 

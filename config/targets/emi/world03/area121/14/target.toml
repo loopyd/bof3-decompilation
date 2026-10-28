@@ -11,8 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/world03/dispatchState01World03Area12114_801F418C.c",
     "src/bof3/world03/dispatchState04World03Area12114_801F2C3C.c",
-    "src/bof3/world03/resetAdvanceScratchStateCloneWorld03Area12114_801F3478.c",
-    "src/bof3/world03/setWorkHalfwordsWorld03Area12114_801F3418.c",
+    "src/bof3/world/area12114_work_state.c",
     "src/bof3/world03/invokeTwoHelpersWorld03Area12114_801F4754.c",
     "src/bof3/world03/invokeTwoHelpersWorld03Area12114_801F34B8.c",
     "src/bof3/world03/resetMode3AndWorkStateWorld03Area12114_801F564C.c",

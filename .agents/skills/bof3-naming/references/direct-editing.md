@@ -20,11 +20,16 @@ semantic approval. Keep the naming baseline unchanged unless its maintenance is
 explicitly authorized; never hide unresolved rows by accepting the current count.
 
 After editing, run `bin/harness naming check TARGET [SELECTOR ...] --json`,
-`bin/harness source symbols check`, `bin/harness source splat TARGET` and relevant
-build/native checks. Account for every shared declaration and cross-target consumer
-explicitly. Run the same native checks before and after each edit: exact functions
-stay exact; unselected partials preserve their complete measurements and compiled
-image. Selected reconstruction work keeps its separately approved result constraints.
+`bin/harness source symbols check TARGET`, `bin/harness source splat TARGET` and
+relevant build/native checks. Naming checks discover direct identifier references.
+For a header edit, resolve every transitive translation-unit consumer separately.
+Check foreign consumers through their owning targets and retain the original
+cross-target finding. Separate passing selected records from a failing global
+report; neither a baseline update nor an unrelated passing check closes the gap.
+
+Run the same native checks before and after each edit. Exact functions stay exact;
+unselected partials preserve their complete measurements and compiled image.
+Selected reconstruction work keeps its separately approved result constraints.
 
 A retained partial spelling edit preserves its body, `@status partial`, `@match`
 and `@residual` byte for byte, with unchanged live metrics and first mismatch.

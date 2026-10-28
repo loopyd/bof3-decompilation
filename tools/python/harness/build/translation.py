@@ -71,10 +71,12 @@ def prepare_translation(
     owners = [
         manifest
         for manifest in load_target_manifests(root).values()
-        if relative in manifest.sources
+        if relative in manifest.sources + manifest.support_sources
     ]
     if len(owners) != 1:
-        raise ValueError("grouped compilation requires exactly one explicit lift owner")
+        raise ValueError(
+            "grouped compilation requires exactly one explicit source owner"
+        )
     manifest = owners[0]
     layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
     names = []
