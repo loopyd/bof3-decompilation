@@ -223,7 +223,18 @@ impl Interconnect {
                 .into());
             }
             let word = self.cd_mut()?.read_data(4)?;
-            self.ram.write(address & 0x001f_fffc, Width::Word, word)?;
+            let physical = address & 0x001f_fffc;
+            self.ram.write(physical, Width::Word, word)?;
+            if let Some(observation) = &mut self.dma_observation {
+                observation.record(super::super::dma::RamAccess {
+                    channel: 3,
+                    width: Width::Word,
+                    address,
+                    physical_address: physical,
+                    value: word,
+                    from_ram: false,
+                });
+            }
             words += 1;
             if self.dma.cd.finish_word()? {
                 self.dma.complete(3)?;

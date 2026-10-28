@@ -167,11 +167,20 @@ impl Interconnect {
         }
         let bytes = self.cd_mut()?.dma_data(limit)?;
         for (at, byte) in bytes.iter().enumerate() {
-            self.ram.write(
-                (address + at as u32) & 0x001f_ffff,
-                crate::machine::bus::Width::Byte,
-                u32::from(*byte),
-            )?;
+            let destination = address + at as u32;
+            let physical = destination & 0x001f_ffff;
+            self.ram
+                .write(physical, crate::machine::bus::Width::Byte, u32::from(*byte))?;
+            if let Some(observation) = &mut self.dma_observation {
+                observation.record(crate::machine::dma::RamAccess {
+                    channel: 3,
+                    width: crate::machine::bus::Width::Byte,
+                    address: destination,
+                    physical_address: physical,
+                    value: u32::from(*byte),
+                    from_ram: false,
+                });
+            }
         }
         channel.advance_reference_registers();
         self.dma.cd = channel;
