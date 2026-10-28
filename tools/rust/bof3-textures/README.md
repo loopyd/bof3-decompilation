@@ -218,6 +218,8 @@ executable after changing its interpretation sources.
 
 See [Edit a shared font glyph](docs/glyph-edit.md) for a complete words-edit,
 packing, and byte-verification example using the original FIRST atlas.
+[Edit an opening-scene palette](docs/palette-edit.md) covers a palette-word edit,
+its observed field draw context, and re-export of the packed result.
 
 The manifest schema is `bof3.textures-package/v5`. The package includes qualified
 original snapshots, validated baseline snapshots, raw resources, its bound catalog,
@@ -260,9 +262,9 @@ and the palette resource's `words.json`; packing rejects changes to a preview.
 Exact palette words remain the authority for STP and blending metadata.
 
 A qualified palette bank has an editable `words.json` containing its exact
-little-endian PSX color words. Preserve the word count. These banks have proven
-source and staging addresses, but their draw CLUT selections and texture uses
-remain unresolved. Editing a bank does not assign it to a diagnostic image.
+little-endian PSX color words. Preserve the word count. These banks retain proven
+source and staging addresses. The catalog does not select an active CLUT or
+assign a diagnostic image to a game palette.
 
 Use `--category save-icon` or `--kind save-icon-source` to find the embedded
 memory-card icon data in `SHOP.EMI` entry 8 and `START.EMI` entry 9. Their equal
