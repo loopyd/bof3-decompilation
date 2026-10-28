@@ -3298,7 +3298,7 @@ callers, not from PsyQ object implementations:
 | `0x8015CEBC` | Audio shutdown/reset: all-key-off, closes active VAB IDs, releases seven active slots through a linked routine, disables reverb, and ends the sound runtime |
 | `0x8015D044` | Polls the key state of all 24 SPU voices into the game voice-state table |
 | `0x8015DF18` | Queued cue dispatcher used by overlays; its cases issue `SsUtKeyOnV` and detailed voice-volume operations |
-| `0x80161BBC` | Ensures one logical audio bank is active, starting the EMI stream when the selected bank differs |
+| `0x80161BBC` | Compares cue-derived file IDs and conditionally requests an EMI stream; does not inspect resident archive bytes |
 | `0x80161C20` | Starts and records a selected cue through game wrappers at `0x8015D300` and `0x8015D49C` |
 | `0x80161CD0` | Updates a selected cue through the game wrapper at `0x8015D554` |
 
@@ -4005,13 +4005,25 @@ consecutive records of `(u16 file_slot, u8 game_bank, u8 sequence_index)`.
 These cover all 81 verified BGM files and 165 independent sequence selections.
 The next record is not a supported music file; caller-enforced bounds beyond
 this media-backed prefix remain unverified. Original instructions at
-`exe/slus_004_22@0x80161BBC` (file `0xCBBBC`) select the file and avoid reloading
-the current file. The cue dispatcher separately uses the bank/sequence bytes.
+`exe/slus_004_22@0x80161BBC` (file `0xCBBBC`) compare the requested and current
+cues' file IDs before requesting a load. This comparison does not verify the
+resident archive. Direct calls to `exe/slus_004_22@0x80161C20` (file `0xCBC20`)
+select resident bank/sequence resources from the cue record without loading its
+file. The current cue byte records that selection, not an archive identity.
 [Rust checks](../../../tools/rust/bof3-audio/tests/catalog/music.rs) verify the ISO extents,
 archive bytes, and original file-selection/LBA routines for all supported cues.
 
+The original title path in `BIN/ETC/GAME.EMI#1` selects layout 2 and loads file
+slot 607, `BIN/ETC/DEMO.EMI`. Its call at `0x801D0CF0` then starts cue 141,
+bank 0/sequence 0, from the resident DEMO SEP. That cue's canonical file slot is
+288, `BIN/BGM/BGMOPN.EMI`. The two archives contain identical VH/SEP/VB payloads
+for this bank but retain separate whole-file identities. This caller establishes
+one loaded context; it does not assign a universal layout or history to either
+archive.
+
 `query --mode music --cue NUMBER --executable PSX_EXE` resolves cues `0`–`164`
-against supplied archives. Song bundles retain multiple `game_song_ids`; SEP
+against supplied canonical archives, without inspecting resident runtime state.
+Song bundles retain multiple `game_song_ids`; SEP
 sequence indices and encoded sequence IDs remain separate. Full archive hashes
 support renamed originals; changed bytes require preserved identity evidence
 from interchange rather than filename guessing. Identical shipped archives
