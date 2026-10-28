@@ -38,9 +38,9 @@ include encoded size, spare capacity, required terminator bytes and the original
 allocation bytes. Use `extract` for documents accepted by `pack`.
 
 For the US executable, use `extract out/extracted/SLUS_004.22 -o out/exe-text.json`.
-Its `bof3.executable-text/v7` document uses ASCII. Re-extract older documents.
-Edit only each string's `text`. Retain its consumers, output, codec, allocation
-and typed reference sites. The exception format permits one `%X` or `%x` conversion with
+Its `bof3.executable-text/v8` document uses ASCII. Re-extract older documents.
+Edit only each string's `text`. Retain its consumers, output, codec,
+`format_directives`, allocation and typed reference sites. The exception format permits one `%X` or `%x` conversion with
 optional width 1..8 and zero padding, within four bytes. The three-ID format
 requires three ordered hex conversions with optional width 1..2 and zero padding;
 literal ASCII is allowed within 17 encoded bytes and 11 formatted bytes.
@@ -52,14 +52,17 @@ bin/harness text pack --original out/extracted/SLUS_004.22 \
 ```
 
 Omit EMI selectors. Support covers the exception screen, `FILE NOT FOUND`, CD
-interrupt and command names, and fixed BIOS diagnostics. `analyze` reports their
-capacities, including NUL, and output paths. Literal labels allow percent bytes
+interrupt and command names, fixed BIOS diagnostics and BIOS formats. `analyze`
+reports their capacities, including NUL, and output paths. Literal labels allow percent bytes
 passed through `%s` or BIOS puts. Direct printf literals refuse every percent
 character. The `DiskError: ` prefix holds at most eleven bytes plus NUL; its
 output requires CD debugging, which starts disabled. Shared-word label references
 have empty `calls` arrays where intervening calls leave pointer use unproven.
-Other executable ranges and BIOS runtime output remain unresolved. See the tool's
-[format contract](../../../../tools/rust/bof3-text/docs/formats.md#executable-ascii).
+BIOS formats permit literal edits within capacity but require every original
+`format_directives` token unchanged and in order. Other rows retain that array
+empty. Analysis reports no formatted size bound for BIOS formats; `%02x` is a
+minimum width. Other executable ranges and BIOS runtime output remain unresolved.
+See the tool's [format contract](../../../../tools/rust/bof3-text/docs/formats.md#executable-ascii).
 
 `extract out/extracted/BIN/ETC/GAME.EMI -o out/equipment-names.json` exports
 supported equipment and ability name records through `bof3.record-text/v1`. Edit only each

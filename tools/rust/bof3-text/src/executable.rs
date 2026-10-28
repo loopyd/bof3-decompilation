@@ -8,11 +8,11 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-pub(crate) const SCHEMA: &str = "bof3.executable-text/v7";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v8";
 const LOAD: u32 = 0x80096800;
 const SIZE: usize = 1445888;
 // Hash of the entire executable with only the supported allocations zeroed.
-const LAYOUT_SHA256: &str = "b6a054386d3cc8fc31ffed29627d01545ca768a03598949e1209343a0007c762";
+const LAYOUT_SHA256: &str = "6f5f4e0f5bf7922927a02526b5e1db0a43e8ab007d52c4f8516656b2ff4ebf2f";
 const FORMAT_ADDRESS: u32 = 0x80149990;
 const FILE_LABEL: u32 = 0x80149f9c;
 const FILE_FORMAT: u32 = 0x80149fac;
@@ -31,6 +31,10 @@ const CD_PUTS_LABELS: [u32; 5] = [0x8014a2e0, 0x8014a334, 0x8014a3d0, 0x8014a5e0
 const CD_SHARED_LABELS: [u32; 4] = [0x8014a368, 0x8014a370, 0x8014a394, 0x8014a3e8];
 const CD_PRINTF_LITERALS: [u32; 6] = [
     0x8014a428, 0x8014a480, 0x8014a4b4, 0x8014a508, 0x8014a560, 0x8014a580,
+];
+const CD_PRINTF_FORMATS: [u32; 14] = [
+    0x8014a2f0, 0x8014a318, 0x8014a348, 0x8014a37c, 0x8014a384, 0x8014a3dc, 0x8014a3f4, 0x8014a410,
+    0x8014a444, 0x8014a464, 0x8014a470, 0x8014a4e4, 0x8014a53c, 0x8014a5c0,
 ];
 const FORMATTER: u32 = 0x8017e3f4;
 // Original string bytes plus their NUL, excluding alignment padding. The consumer
@@ -117,19 +121,33 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (CD_INTERRUPT_LABELS[4], 10),
     (CD_INTERRUPT_LABELS[5], 7),
     (CD_PUTS_LABELS[0], 13),
+    (0x8014a2f0, 27),
     (DISK_PREFIX, 12),
+    (0x8014a318, 25),
     (CD_PUTS_LABELS[1], 20),
+    (0x8014a348, 6),
     (CD_SHARED_LABELS[0], 8),
     (CD_SHARED_LABELS[1], 9),
+    (0x8014a37c, 7),
+    (0x8014a384, 14),
     (CD_SHARED_LABELS[2], 6),
     (CD_PUTS_LABELS[2], 9),
+    (0x8014a3dc, 11),
     (CD_SHARED_LABELS[3], 12),
+    (0x8014a3f4, 27),
+    (0x8014a410, 23),
     (CD_PRINTF_LITERALS[0], 26),
+    (0x8014a444, 31),
+    (0x8014a464, 12),
+    (0x8014a470, 15),
     (CD_PRINTF_LITERALS[1], 41),
     (CD_PRINTF_LITERALS[2], 48),
+    (0x8014a4e4, 35),
     (CD_PRINTF_LITERALS[3], 29),
+    (0x8014a53c, 35),
     (CD_PRINTF_LITERALS[4], 29),
     (CD_PRINTF_LITERALS[5], 28),
+    (0x8014a5c0, 30),
     (CD_PUTS_LABELS[3], 22),
     (CD_PUTS_LABELS[4], 23),
 ];
@@ -139,6 +157,7 @@ const ALLOCATIONS: &[(u32, usize)] = &[
 pub(crate) enum Codec {
     AsciiLiteral,
     AsciiPrintfLiteral,
+    AsciiBiosPrintfFormat,
     AsciiU32HexFormat,
     AsciiU8TripleHexFormat,
 }
@@ -148,6 +167,7 @@ impl Codec {
         match self {
             Self::AsciiLiteral => "ascii-literal",
             Self::AsciiPrintfLiteral => "ascii-printf-literal",
+            Self::AsciiBiosPrintfFormat => "ascii-bios-printf-format",
             Self::AsciiU32HexFormat => "ascii-u32-hex-format",
             Self::AsciiU8TripleHexFormat => "ascii-u8-triple-hex-format",
         }
@@ -171,6 +191,10 @@ impl Codec {
     pub(crate) fn max_formatted_size(self, text: &str) -> Result<Option<usize>> {
         match self {
             Self::AsciiLiteral => Ok(None),
+            Self::AsciiBiosPrintfFormat => {
+                printf_directives(text)?;
+                Ok(None)
+            }
             Self::AsciiPrintfLiteral => {
                 if text.contains('%') {
                     return invalid("BIOS printf literal cannot contain percent characters");
@@ -192,6 +216,41 @@ impl Codec {
             }
             Self::AsciiU8TripleHexFormat => byte_triplet_size(text.as_bytes()).map(Some),
         }
+    }
+}
+
+fn printf_directives(text: &str) -> Result<Vec<&str>> {
+    let mut directives = Vec::new();
+    let mut remaining = text;
+    while let Some(index) = remaining.find('%') {
+        remaining = &remaining[index..];
+        let token = ["%02x", "%08x", "%s", "%d"]
+            .into_iter()
+            .find(|token| remaining.starts_with(token))
+            .ok_or_else(|| Error::Invalid("unsupported BIOS printf directive".into()))?;
+        directives.push(token);
+        remaining = &remaining[token.len()..];
+    }
+    Ok(directives)
+}
+
+fn format_directives(address: u32) -> &'static [&'static str] {
+    match address {
+        0x8014a2f0 => &["%s", "%s", "%s", "%s"],
+        0x8014a318 => &["%s", "%02x", "%02x"],
+        0x8014a348 => &["%d"],
+        0x8014a37c => &["%s"],
+        0x8014a384 => &["%s"],
+        0x8014a3dc => &["%08x"],
+        0x8014a3f4 => &["%s", "%d"],
+        0x8014a410 => &["%s"],
+        0x8014a444 => &["%s"],
+        0x8014a464 => &["%s"],
+        0x8014a470 => &["%s"],
+        0x8014a4e4 => &["%08x"],
+        0x8014a53c => &["%d"],
+        0x8014a5c0 => &["%d"],
+        _ => &[],
     }
 }
 
@@ -246,6 +305,9 @@ pub enum Reference {
 }
 
 fn codec(address: u32) -> Codec {
+    if CD_PRINTF_FORMATS.contains(&address) {
+        return Codec::AsciiBiosPrintfFormat;
+    }
     if CD_PRINTF_LITERALS.contains(&address) {
         return Codec::AsciiPrintfLiteral;
     }
@@ -265,6 +327,20 @@ fn consumers(address: u32) -> Vec<u32> {
         return vec![0x8017560c];
     }
     match address {
+        0x8014a318 => vec![0x80175c60],
+        0x8014a348 => vec![0x80175c60],
+        0x8014a37c => vec![0x80176734],
+        0x8014a384 => vec![0x80176734],
+        0x8014a3dc => vec![0x80176dfc],
+        0x8014a3f4 => vec![0x80177348],
+        0x8014a410 => vec![0x80177348],
+        0x8014a444 => vec![0x80177348],
+        0x8014a464 => vec![0x80177348],
+        0x8014a470 => vec![0x80177348],
+        0x8014a4e4 => vec![0x80177634],
+        0x8014a53c => vec![0x80177634],
+        0x8014a5c0 => vec![0x801779bc],
+        0x8014a2f0 => vec![0x801761e8, 0x80176468, 0x80176734, 0x80176fe8],
         0x8014a2e0 => vec![0x801761e8, 0x80176468, 0x80176734, 0x80176fe8],
         FILE_LABEL | FILE_FORMAT => vec![0x80166df4],
         DISK_PREFIX | 0x8014a334 => vec![0x80175c60],
@@ -291,8 +367,27 @@ fn all_consumers() -> Vec<u32> {
         .collect()
 }
 
-fn cd_literal_references(address: u32) -> Option<Vec<Reference>> {
+fn cd_diagnostic_references(address: u32) -> Option<Vec<Reference>> {
     let pairs: &[(u32, u32, Option<u32>)] = match address {
+        0x8014a2f0 => &[
+            (0x801762f0, 0x801762f4, Some(0x801762f8)),
+            (0x80176578, 0x8017657c, Some(0x80176580)),
+            (0x801769e8, 0x801769ec, Some(0x801769f0)),
+            (0x801770e0, 0x801770e4, Some(0x801770e8)),
+        ],
+        0x8014a318 => &[(0x80175e8c, 0x80175e90, Some(0x80175e94))],
+        0x8014a348 => &[(0x801761bc, 0x801761c0, Some(0x801761c4))],
+        0x8014a37c => &[(0x80176788, 0x8017678c, Some(0x80176790))],
+        0x8014a384 => &[(0x801767e0, 0x801767e4, Some(0x801767e8))],
+        0x8014a3dc => &[(0x80176e14, 0x80176e18, Some(0x80176e24))],
+        0x8014a3f4 => &[(0x80177460, 0x80177464, Some(0x80177468))],
+        0x8014a410 => &[(0x8017749c, 0x801774a0, Some(0x801775e4))],
+        0x8014a444 => &[(0x80177500, 0x80177504, Some(0x80177508))],
+        0x8014a464 => &[(0x80177568, 0x8017756c, Some(0x80177570))],
+        0x8014a470 => &[(0x801775dc, 0x801775e0, Some(0x801775e4))],
+        0x8014a4e4 => &[(0x80177738, 0x8017773c, Some(0x80177740))],
+        0x8014a53c => &[(0x801778d8, 0x801778dc, Some(0x801778e0))],
+        0x8014a5c0 => &[(0x80177c28, 0x80177c2c, Some(0x80177c30))],
         0x8014a2e0 => &[
             (0x8017629c, 0x801762a0, Some(0x801762a4)),
             (0x80176524, 0x80176528, Some(0x8017652c)),
@@ -359,6 +454,7 @@ fn output(address: u32) -> Output {
         || CD_COMMAND_LABELS.contains(&address)
         || CD_SHARED_LABELS.contains(&address)
         || CD_PRINTF_LITERALS.contains(&address)
+        || CD_PRINTF_FORMATS.contains(&address)
     {
         Output::BiosPrintf {
             stub: BIOS_PRINTF,
@@ -395,7 +491,20 @@ pub struct Text {
     pub capacity: usize,
     pub references: Vec<Reference>,
     pub(crate) codec: Codec,
+    pub format_directives: Vec<String>,
     pub text: String,
+}
+
+impl Text {
+    fn encode(&self) -> Result<Vec<u8>> {
+        let bytes = self.codec.encode(&self.text, self.capacity - 1)?;
+        if self.codec == Codec::AsciiBiosPrintfFormat
+            && printf_directives(&self.text)? != self.format_directives
+        {
+            return invalid("BIOS printf directives must retain their original bytes and order");
+        }
+        Ok(bytes)
+    }
 }
 
 pub fn is_executable(data: &[u8]) -> bool {
@@ -435,8 +544,7 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
         let codec = codec(address);
         let text = std::str::from_utf8(&bytes[..end])
             .map_err(|error| Error::Invalid(error.to_string()))?;
-        codec.encode(text, capacity - 1)?;
-        let references = if let Some(references) = cd_literal_references(address) {
+        let references = if let Some(references) = cd_diagnostic_references(address) {
             references
         } else if address == DISK_PREFIX {
             vec![Reference::AddressPair {
@@ -493,7 +601,7 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
                 .map(|address| Reference::PointerWord { address })
                 .collect()
         };
-        strings.push(Text {
+        let row = Text {
             address,
             consumers: consumers(address),
             output: output(address),
@@ -501,8 +609,14 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
             capacity,
             references,
             codec,
+            format_directives: format_directives(address)
+                .iter()
+                .map(|token| (*token).into())
+                .collect(),
             text: text.into(),
-        });
+        };
+        row.encode()?;
+        strings.push(row);
     }
     Ok(Document {
         schema: SCHEMA.into(),
@@ -538,10 +652,11 @@ pub fn parse(data: &[u8]) -> Result<Document> {
             || text.codec != codec(text.address)
             || text.consumers != consumers(text.address)
             || text.output != output(text.address)
+            || text.format_directives != format_directives(text.address)
         {
             return invalid("unknown or duplicate executable string allocation");
         }
-        text.codec.encode(&text.text, text.capacity - 1)?;
+        text.encode()?;
     }
     if seen.len() != ALLOCATIONS.len() {
         return invalid("executable text document must retain every supported allocation");

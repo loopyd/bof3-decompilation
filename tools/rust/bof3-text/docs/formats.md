@@ -35,19 +35,19 @@ size alone does not identify audio. These checks do not classify container gaps.
 `extract`, `analyze`, `validate` and `pack` also support the US executable's
 exception-screen ASCII strings and the `FILE NOT FOUND` diagnostic with its
 three-ID hexadecimal format, plus the BIOS `DiskError: ` prefix and six CD
-interrupt labels, 22 CD command names and fixed CD diagnostic literals. `extract-corpus` exports
-them when the complete source root includes `SLUS_004.22`. Literal strings use
+interrupt labels, 22 CD command names, fixed CD diagnostic literals and BIOS
+printf formats. `extract-corpus` exports them when the complete source root includes `SLUS_004.22`. Literal strings use
 the pointer words at `0x8017F470..0x8017F53C`, with an exclusive upper bound.
 The consumer at `0x8014B3C4` passes these pointers to renderer `0x80150098`.
 The renderer reads bytes until NUL, advances on ASCII space and handles newline
 `0x0A`. These bytes use ASCII rather than the dialogue character table.
 
-The JSON schema is `bof3.executable-text/v7`. Re-extract older documents before
+The JSON schema is `bof3.executable-text/v8`. Re-extract older documents before
 editing. It contains `source`, mandatory `source_sha256`, `build`, `load_address`,
 `consumers` and `strings`.
 Each string retains its `address`, whole-file `file_offset`, original `capacity`
-including NUL, immutable `consumers`, `codec` and `output`, typed `references`
-and editable `text`. Row `consumers` lists the containing source functions;
+including NUL, immutable `consumers`, `codec`, `format_directives` and `output`,
+typed `references` and editable `text`. Row `consumers` lists the containing source functions;
 document `consumers` is their sorted union. Each `output` is `game-screen`, with
 its renderer and optional formatter, or `bios-printf` or `bios-puts`, with its
 stub, vector and selector.
@@ -99,7 +99,6 @@ stub `0x8017E3E4` jumps to BIOS vector `0xA0` with selector `0x3F`.
 This is separate from the game-screen renderer. The call requires a positive
 CD debug word, which the original executable initializes to zero. Editing the
 prefix does not enable that output; runtime acceptance remains unverified.
-The adjacent format beginning at `0x8014A318` remains unsupported.
 
 The six named CD interrupt labels use `ascii-literal`. Their original allocations
 include NUL and exclude alignment bytes:
@@ -120,7 +119,7 @@ printf at `0x801762F8`, `0x80176580`, `0x801769F0` and `0x801770E8`.
 They index the table directly. Percent characters in a label remain literal
 argument bytes. The immutable `bios-printf` output describes this known output
 path; observed BIOS output and other callers remain unverified. The shared `?`
-string and the diagnostic formats remain unsupported.
+string remains unsupported.
 
 The 22 named CD command strings use the same literal codec and BIOS output.
 Each retains its original bytes plus NUL as its capacity. Use `analyze` to list
@@ -154,6 +153,20 @@ store-to-use relationship unproven. Readers at `0x801762B8`, `0x80176540`,
 printf calls `0x801762F8`, `0x80176580`, `0x801769F0` and `0x801770E8`,
 respectively. This records a shared-word output path without asserting that
 every stored label reaches every reader. BIOS output remains unobserved.
+
+BIOS diagnostic formats use `ascii-bios-printf-format`. Edit only their literal
+text within the original capacity, reserving NUL. Each row's immutable
+`format_directives` lists the exact original conversions in order. Packing
+requires every token unchanged, including case and width, and refuses missing,
+extra or other percent sequences, including `%%`. Other rows retain an empty
+`format_directives` array. Use `analyze` to inspect addresses and capacities.
+
+These formats pass directly to BIOS printf without an intermediate game buffer.
+Analysis omits `max_formatted_size`; it does not bound the rendered output.
+In particular, `%02x` specifies a minimum width, not a two-digit limit.
+The format at `0x8014A318` receives word loads for both hex arguments. The
+reference pairs for `0x8014A410` and `0x8014A470` converge on call `0x801775E4`.
+Observed BIOS output remains unverified.
 
 Build recognition hashes all bytes outside the supported allocations against
 the pinned US layout. This permits re-extraction of supported edits while
