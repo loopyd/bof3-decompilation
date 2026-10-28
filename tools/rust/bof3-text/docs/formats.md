@@ -251,7 +251,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v18`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v19`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -383,8 +383,8 @@ within the field width. Even `-2147483648` fits the eleven-byte output bound.
 These strings have proven consumers through both `0x8014FF0C` and `0x80150098`.
 
 The adjacent eight-byte allocations at BATE `0x801D0C48` and SHISU `0x801D0C2C`
-hold the fallback `-------`. Their `ascii-format-literal` codec permits seven
-printable ASCII bytes and refuses every percent sequence. The original calls
+hold the fallback `-------`. Their `ascii-format-literal` codec permits one to
+seven printable ASCII bytes and refuses every percent sequence. The original calls
 pass no formatting arguments and draw the result through `0x80150098`. Packing
 reserves NUL in all these allocations. Runtime rendering remains unverified.
 
@@ -398,6 +398,15 @@ three clock bytes and calls formatter `0x8017E3F4` at `0x801D597C`, then copies
 the result to a stack buffer. A rendered consumer is unverified, so `renderers`
 remains empty. The filename and Shift-JIS header formats are unsupported.
 
+SHOP's `%d` at `0x801D0C1C` uses `ascii-u16-decimal-format` in a three-byte
+allocation including NUL. Its encoded limit permits only `%d`; the codec's
+conservative output bound is five bytes. Consumer `0x801D3B98` multiplies an
+unsigned byte by ten, so actual output uses at most four bytes. After formatting
+into `0x80145AD4`, it copies eight bytes to text slot zero at `0x801490D8` and
+appends NUL at offset eight. Preserve `renderers: []`: the active message-bank
+binding and rendering during SHOP remain unverified. The padding byte at
+`0x801D0C1F` remains protected.
+
 BATE, SHISU and SHOP each also contain ten 20-byte label records, starting at
 `0x801D0C50`, `0x801D0C34` and `0x801D0D14`, respectively. Each record begins
 with seven literal bytes and a one-byte count. Calls at `0x801D3FB0`,
@@ -409,7 +418,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v18` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v19` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -477,10 +486,14 @@ widths 1..7 with optional zero padding, within the encoded allocation and eleven
 formatted bytes before NUL. Formatter `0x8017E3F4` writes into `0x80145AD4`;
 calls `0x801D3254` and `0x801D350C` draw through `0x8014FF0C`.
 
-The two fallback formats use printable ASCII within three and one encoded bytes.
+The two fallback formats use nonempty printable ASCII within three and one encoded bytes.
 They refuse every percent sequence because their calls supply no formatting
 arguments. Calls `0x801D4BBC`, `0x801D4BF0`, `0x801D4DCC` and `0x801D4E00`
 format into the same buffer and draw through `0x8014FF0C`.
+Empty `ascii-format-literal` replacements are refused because these renderers
+advance past an initial NUL and can consume stale scratch bytes. Nonempty
+all-space replacements terminate safely; arbitrary glyph meanings in COMMU02's
+numeric atlas remain unverified.
 
 The triple format at `0x801D0C24` retains three ordered unsigned byte arguments.
 Calls `0x801D4C44` and `0x801D4D24` load them with `lbu`, format into

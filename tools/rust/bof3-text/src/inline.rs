@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v18";
+pub const SCHEMA: &str = "bof3.inline-text/v19";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -102,8 +102,10 @@ impl Codec {
             }
             return Ok(Some(text.len()));
         }
-        if self == Self::AsciiFormatLiteral && text.contains('%') {
-            return invalid("ASCII format literal cannot contain percent sequences");
+        if self == Self::AsciiFormatLiteral && (text.is_empty() || text.contains('%')) {
+            return invalid(
+                "ASCII format literal must be nonempty and contain no percent sequences",
+            );
         }
         let (arguments, limit, max_width): (&[usize], usize, usize) = match self {
             Self::AsciiFormatLiteral => (&[], 7, 4),
@@ -968,12 +970,12 @@ const LAYOUTS: &[Layout] = &[
         name: "US SHOP labels and numeric formats",
         load: 0x801d0c00,
         size: 87660,
-        sha256: "d38c762c8afb58e51775b5d43b54c7d5159ecc3b6e448d5bd20320d55fbd901d",
+        sha256: "1e06300f0ac335b72bb07b039937cfa8b7ec143b0f0ea74707ef50630eb75758",
         consumers: &[
             0x801d5894, 0x801d9a58, 0x801dca2c, 0x801dd0a8, 0x801dd934, 0x801ddfb0, 0x801dee64,
             0x801df00c, 0x801df6a8, 0x801e112c, 0x801e1e80, 0x801e2f04, 0x801e3284, 0x801e37f4,
             0x801da47c, 0x801dc6fc, 0x801dd578, 0x801ddcb0, 0x801d826c, 0x801d86d4, 0x801d8c58,
-            0x801d9254, 0x801da2f4, 0x801db0dc, 0x801db9f0,
+            0x801d9254, 0x801da2f4, 0x801db0dc, 0x801db9f0, 0x801d3b98,
         ],
         allocations: &[
             Allocation::bounded_format(0x801d0c68, 20, Codec::AsciiU8DecimalTripleFormat, &[]),
@@ -1084,6 +1086,7 @@ const LAYOUTS: &[Layout] = &[
             Allocation::bounded_format(0x801d0cfc, 9, Codec::AsciiDashGlyphLiteral, &[0x8014ff0c]),
             Allocation::bounded_format(0x801d0d0c, 8, Codec::AsciiDashGlyphLiteral, &[0x80150098]),
             Allocation::bounded_format(0x801d0e54, 4, Codec::AsciiDigitGlyphLiteral, &[0x80150098]),
+            Allocation::bounded_format(0x801d0c1c, 3, Codec::AsciiU16DecimalFormat, &[]),
         ],
     },
     Layout {

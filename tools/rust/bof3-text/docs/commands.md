@@ -165,7 +165,7 @@ dialogue commands. See [formats.md](formats.md#record-names).
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v18` document with ten counted labels, eight default names,
+`bof3.inline-text/v19` document with ten counted labels, eight default names,
 68 ordinary keyboard cells and four name-entry menu labels. Re-extract older
 inline documents. Default `--entry all` selects banks.
 See [formats.md](formats.md#default-character-names).
@@ -204,7 +204,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v18`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v19`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 The original BATTLE archive also has supported message records in entry 3.
@@ -311,7 +311,7 @@ BATE and SHISU also expose `%02d` with one unsigned byte argument, at most four
 encoded bytes and three formatted bytes. Their `%7d` rows accept one signed
 32-bit argument, at most three encoded bytes and eleven formatted bytes. Only
 this signed codec permits decimal widths through 7. Its `renderers` array retains
-both proven draw functions. The adjacent `-------` fallback accepts seven
+both proven draw functions. The adjacent `-------` fallback accepts one to seven
 printable ASCII bytes and refuses every percent sequence because its formatter
 receives no arguments. All these allocations reserve NUL.
 
@@ -320,8 +320,13 @@ Preserve their order, at most nineteen encoded bytes, and at most sixteen
 formatted bytes. Decimal widths use 1..4 with optional zero padding. Its traced
 consumer copies the result to a stack buffer; retain `renderers: []` because
 rendering is unverified. The filename and Shift-JIS header formats remain unsupported.
+The `%d` at `0x801D0C1C` retains exactly that format within two encoded bytes.
+Its unsigned argument is at most 2550; the codec allows five formatted bytes.
+Preserve `renderers: []` because only formatting and the eight-byte text-slot
+copy are qualified. Empty `ascii-format-literal` replacements are refused to
+prevent stale scratch output.
 
-Inline documents use `bof3.inline-text/v18`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v19`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.

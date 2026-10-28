@@ -85,7 +85,7 @@ dialogue command markup. Other name families require separate evidence.
 
 US START entry 8 and STATUS entry 0 each expose ten counted labels, eight default
 names, 68 ordinary keyboard cells and four name-entry menu labels through
-`bof3.inline-text/v18`. Select the entry explicitly and omit class and latch
+`bof3.inline-text/v19`. Select the entry explicitly and omit class and latch
 selectors. Re-extract older inline documents. Use a separate document and output
 for each archive. Editing one does not update the other or a save.
 
@@ -112,7 +112,7 @@ observed rendering remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v18`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v19`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -151,12 +151,17 @@ BATE and SHISU also expose `%02d` with one unsigned byte argument and bounds of
 four encoded bytes and three formatted bytes. Their `%7d` rows retain one signed
 32-bit argument, three encoded bytes and eleven formatted bytes. Only this codec
 permits widths through 7. Preserve both proven addresses in `renderers`. The
-adjacent `-------` fallback accepts seven printable ASCII bytes and refuses all
+adjacent `-------` fallback accepts one to seven printable ASCII bytes and refuses all
 percent sequences because its formatter receives no arguments. Reserve NUL.
 SHOP entry 0 also includes an ASCII clock format with three ordered unsigned
 byte arguments, at most nineteen encoded bytes and sixteen formatted bytes.
 Preserve its `renderers: []`; only formatting and a stack-buffer copy are traced.
 The filename and Shift-JIS header formats remain unsupported.
+SHOP's `%d` at `0x801D0C1C` retains exactly `%d` within two encoded bytes and
+uses the five-byte unsigned 16-bit output bound. Preserve `renderers: []`;
+formatting and the eight-byte text-slot copy are qualified, while the active
+message-bank binding is unverified. Refuse empty `ascii-format-literal`
+replacements, which can expose stale scratch bytes after the initial NUL.
 Corpus export includes these documents alongside bank documents.
 Battle append row 1 also accepts `{glyph(0xNN)}`, with a nonzero operand and at most
 five encoded bytes. Other command-bearing and untraced table rows are refused.
