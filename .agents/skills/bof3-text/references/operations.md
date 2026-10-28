@@ -38,7 +38,7 @@ include encoded size, spare capacity, required terminator bytes and the original
 allocation bytes. Use `extract` for documents accepted by `pack`.
 
 For the US executable, use `extract out/extracted/SLUS_004.22 -o out/exe-text.json`.
-Its `bof3.executable-text/v5` document uses ASCII. Re-extract older documents.
+Its `bof3.executable-text/v6` document uses ASCII. Re-extract older documents.
 Edit only each string's `text`. Retain its consumer, output, codec, allocation
 and typed reference sites. The exception format permits one `%X` or `%x` conversion with
 optional width 1..8 and zero padding, within four bytes. The three-ID format
@@ -52,8 +52,8 @@ bin/harness text pack --original out/extracted/SLUS_004.22 \
 ```
 
 Omit EMI selectors. Support covers the exception screen, `FILE NOT FOUND`, and
-the BIOS `DiskError: ` prefix and six named CD interrupt labels. The labels use
-literal ASCII within their original capacities, including NUL. Their percent
+the BIOS `DiskError: ` prefix, six CD interrupt labels and 22 CD command names.
+These labels use literal ASCII within their original capacities, including NUL. Their percent
 characters remain data passed through `%s`. The prefix holds at most eleven ASCII
 bytes plus NUL and refuses every percent character. Its BIOS output requires CD debugging,
 which starts disabled. Other executable ranges and runtime acceptance remain

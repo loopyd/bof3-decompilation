@@ -35,14 +35,14 @@ size alone does not identify audio. These checks do not classify container gaps.
 `extract`, `analyze`, `validate` and `pack` also support the US executable's
 exception-screen ASCII strings and the `FILE NOT FOUND` diagnostic with its
 three-ID hexadecimal format, plus the BIOS `DiskError: ` prefix and six CD
-interrupt labels. `extract-corpus` exports
+interrupt labels and 22 CD command names. `extract-corpus` exports
 them when the complete source root includes `SLUS_004.22`. Literal strings use
 the pointer words at `0x8017F470..0x8017F53C`, with an exclusive upper bound.
 The consumer at `0x8014B3C4` passes these pointers to renderer `0x80150098`.
 The renderer reads bytes until NUL, advances on ASCII space and handles newline
 `0x0A`. These bytes use ASCII rather than the dialogue character table.
 
-The JSON schema is `bof3.executable-text/v5`. Re-extract older documents before
+The JSON schema is `bof3.executable-text/v6`. Re-extract older documents before
 editing. It contains `source`, mandatory `source_sha256`, `build`, `load_address`,
 `consumers` and `strings`.
 Each string retains its `address`, whole-file `file_offset`, original `capacity`
@@ -119,6 +119,20 @@ They index the table directly. Percent characters in a label remain literal
 argument bytes. The immutable `bios-printf` output describes this known output
 path; observed BIOS output and other callers remain unverified. The shared `?`
 string and the diagnostic formats remain unsupported.
+
+The 22 named CD command strings use the same literal codec and BIOS output.
+Each retains its original bytes plus NUL as its capacity. Use `analyze` to list
+their addresses and limits. Their pointer words lie in
+`0x801857A4..0x80185814`, with an exclusive upper bound. Immediate consumer
+`0x801755D8` masks the selector to eight bits and admits indices below 28.
+The shared `?` entries remain protected.
+
+Separate readers pass command names as `%s` arguments to BIOS printf at
+`0x80175E94`, `0x801762F8`, `0x80176580`, `0x801769F0` and `0x801770E8`.
+Calls at `0x80176790` and `0x801767E8` use the formats `%s...\n` and
+`%s: no param\n`, respectively. These readers bypass the lookup. Observed BIOS
+output remains unverified. Editing a name changes its text, without changing command
+numbers, pointers, code or debug settings.
 
 Build recognition hashes all bytes outside the supported allocations against
 the pinned US layout. This permits re-extraction of supported edits while

@@ -8,20 +8,25 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-pub(crate) const SCHEMA: &str = "bof3.executable-text/v5";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v6";
 const LOAD: u32 = 0x80096800;
 const SIZE: usize = 1445888;
 // Hash of the entire executable with only the supported allocations zeroed.
-const LAYOUT_SHA256: &str = "7382f78537f25f4093b6bfa6b7b1774cfe23462692e69c632cc4d0db8802b39c";
+const LAYOUT_SHA256: &str = "cda716590e0e59f1724ab6f48666b3b6a70b98f5991fdf693cd91bc89631092e";
 const FORMAT_ADDRESS: u32 = 0x80149990;
 const FILE_LABEL: u32 = 0x80149f9c;
 const FILE_FORMAT: u32 = 0x80149fac;
 const DISK_PREFIX: u32 = 0x8014a30c;
-const CD_LABELS: [u32; 6] = [
+const CD_INTERRUPT_LABELS: [u32; 6] = [
     0x8014a2a0, 0x8014a2ac, 0x8014a2b4, 0x8014a2c0, 0x8014a2cc, 0x8014a2d8,
 ];
+const CD_COMMAND_LABELS: [u32; 22] = [
+    0x8014a1a4, 0x8014a1b0, 0x8014a1bc, 0x8014a1c8, 0x8014a1d4, 0x8014a1e0, 0x8014a1ec, 0x8014a1fc,
+    0x8014a208, 0x8014a218, 0x8014a224, 0x8014a22c, 0x8014a238, 0x8014a244, 0x8014a24c, 0x8014a258,
+    0x8014a264, 0x8014a270, 0x8014a27c, 0x8014a284, 0x8014a290, 0x8014a298,
+];
 const BIOS_PRINTF: u32 = 0x8017e3e4;
-const CONSUMERS: [u32; 4] = [0x8014b3c4, 0x80166df4, 0x80175c60, 0x8017560c];
+const CONSUMERS: [u32; 5] = [0x8014b3c4, 0x80166df4, 0x80175c60, 0x8017560c, 0x801755d8];
 const FORMATTER: u32 = 0x8017e3f4;
 // Original string bytes plus their NUL, excluding alignment padding. The consumer
 // at 0x8014b3c4 passes pointers from 0x8017f470..0x8017f53c to 0x80150098.
@@ -78,12 +83,34 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (FORMAT_ADDRESS, 5),
     (FILE_LABEL, 15),
     (FILE_FORMAT, 18),
-    (CD_LABELS[0], 10),
-    (CD_LABELS[1], 8),
-    (CD_LABELS[2], 12),
-    (CD_LABELS[3], 9),
-    (CD_LABELS[4], 10),
-    (CD_LABELS[5], 7),
+    (CD_COMMAND_LABELS[0], 9),
+    (CD_COMMAND_LABELS[1], 9),
+    (CD_COMMAND_LABELS[2], 9),
+    (CD_COMMAND_LABELS[3], 9),
+    (CD_COMMAND_LABELS[4], 9),
+    (CD_COMMAND_LABELS[5], 11),
+    (CD_COMMAND_LABELS[6], 11),
+    (CD_COMMAND_LABELS[7], 11),
+    (CD_COMMAND_LABELS[8], 13),
+    (CD_COMMAND_LABELS[9], 10),
+    (CD_COMMAND_LABELS[10], 8),
+    (CD_COMMAND_LABELS[11], 9),
+    (CD_COMMAND_LABELS[12], 9),
+    (CD_COMMAND_LABELS[13], 8),
+    (CD_COMMAND_LABELS[14], 11),
+    (CD_COMMAND_LABELS[15], 9),
+    (CD_COMMAND_LABELS[16], 12),
+    (CD_COMMAND_LABELS[17], 11),
+    (CD_COMMAND_LABELS[18], 8),
+    (CD_COMMAND_LABELS[19], 10),
+    (CD_COMMAND_LABELS[20], 7),
+    (CD_COMMAND_LABELS[21], 8),
+    (CD_INTERRUPT_LABELS[0], 10),
+    (CD_INTERRUPT_LABELS[1], 8),
+    (CD_INTERRUPT_LABELS[2], 12),
+    (CD_INTERRUPT_LABELS[3], 9),
+    (CD_INTERRUPT_LABELS[4], 10),
+    (CD_INTERRUPT_LABELS[5], 7),
     (DISK_PREFIX, 12),
 ];
 
@@ -208,7 +235,10 @@ fn codec(address: u32) -> Codec {
 }
 
 fn consumer(address: u32) -> u32 {
-    if CD_LABELS.contains(&address) {
+    if CD_COMMAND_LABELS.contains(&address) {
+        return CONSUMERS[4];
+    }
+    if CD_INTERRUPT_LABELS.contains(&address) {
         return CONSUMERS[3];
     }
     match address {
@@ -233,7 +263,10 @@ pub(crate) enum Output {
 }
 
 fn output(address: u32) -> Output {
-    if address == DISK_PREFIX || CD_LABELS.contains(&address) {
+    if address == DISK_PREFIX
+        || CD_INTERRUPT_LABELS.contains(&address)
+        || CD_COMMAND_LABELS.contains(&address)
+    {
         Output::BiosPrintf {
             stub: BIOS_PRINTF,
             vector: 0xa0,
@@ -349,7 +382,9 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
                 }
             }]
         } else {
-            let table = if CD_LABELS.contains(&address) {
+            let table = if CD_COMMAND_LABELS.contains(&address) {
+                0x801857a4..0x80185814
+            } else if CD_INTERRUPT_LABELS.contains(&address) {
                 0x80185824..0x8018583c
             } else {
                 0x8017f470..0x8017f53c
