@@ -3858,6 +3858,36 @@ allocations from media, other code and foreground stacks. This service allocatio
 does not initialize game audio state, admit device timing, or establish complete
 standalone startup.
 
+[`Execution::with_kernel`](../../../tools/rust/bof3-audio/src/machine/execution.rs)
+owns a prepared Kernel and its exception environment. It admits IRQs and syscalls
+through that owner, prepares before selecting a service or instruction, rereads
+PC before stopping, and completes guards before advancing devices. Each CPU,
+syscall or HLE transition advances the existing two-tick base schedule once.
+Preparation that completes a host call adds no transition or clock cost.
+`Execution::new` and `from_boot` retain explicit development execution of loaded
+code and original-ROM timing. Owned services do not use the original-ROM clock.
+
+Owned execution rejects a new host call while a continuation remains active.
+Observer, CPU, service, device and call-bound failures retain state and prevent
+further execution on that instance. Unsupported WaitEvent is charged once before
+failure and retains its continuation; this execution owner supplies no external
+wait-progress source. `Execution::kernel()` exposes read-only ownership state.
+
+The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
+development example consumes the linked component directly:
+
+```text
+bank_probe KERNEL_BIN KERNEL_SYM US_EXE BGM_EMI [SEQUENCE TICKS [WAV]]
+```
+
+It checks image/allocation bounds, uses the build's defined-nm symbol rows, runs
+the guest initializer and binds the linked services. It explicitly supplies
+foreground registers, PAD policy and the SPU memory-control input. Its
+`bof3.bank-probe/v2` report identifies both kernel inputs and initialization.
+The example still executes original game/SDK code and uses host-fed media.
+Production bank preparation and the independent BIOS reference tools retain
+their current inputs; this development path does not close their migration.
+
 ### Rust BIOS event state
 
 [Event operations](../../../tools/rust/bof3-audio/src/machine/events.rs) use the

@@ -1,13 +1,15 @@
-//! Bounded guest calls with BIOS exceptions, IRQ delivery and explicit base
-//! instruction-clock service. Original-ROM references preserve interpreter costs
+//! Bounded guest calls with owned services or caller-loaded BIOS code and an
+//! explicit instruction clock. Original-ROM references preserve interpreter costs
 //! and NTSC VBlank phase. Attached CD FIFO callbacks run after delay slots;
 //! mechanical/media, GPU and reference root-counter timing remain unmodeled.
 //! PCM output uses a separate explicit clock.
 use super::{
     boot,
     cpu::{Cpu, FaultKind, Step},
+    exception_calls::Environment,
     executable::ram_offset,
     interconnect::Interconnect,
+    kernel::Kernel,
     output_clock, spu_clock,
 };
 use crate::Result;
@@ -33,9 +35,22 @@ pub struct Execution {
     interrupts: u64,
     output: Option<output_clock::Clock>,
     reference: Option<boot::timing::Clock>,
+    kernel: Option<Services>,
+}
+
+struct Services {
+    kernel: Kernel,
+    environment: Environment,
+    failed: bool,
+}
+
+enum Transition {
+    Stopped,
+    Advanced(Option<Step>),
 }
 
 impl Execution {
+    /// Execute caller-loaded code without host kernel services.
     pub fn new(cpu: Cpu, bus: Interconnect, model: spu_clock::Model) -> Self {
         Self {
             cpu,
@@ -45,7 +60,32 @@ impl Execution {
             interrupts: 0,
             output: None,
             reference: None,
+            kernel: None,
         }
+    }
+
+    /// Execute caller-loaded owned services. Startup owns their code, state,
+    /// stacks and device inputs; this does not load an image or boot firmware.
+    /// Failures retain state and prevent subsequent steps or host calls.
+    pub fn with_kernel(
+        cpu: Cpu,
+        bus: Interconnect,
+        model: spu_clock::Model,
+        kernel: Kernel,
+        environment: Environment,
+    ) -> Result<Self> {
+        kernel.require_plain_context()?;
+        let mut execution = Self::new(cpu, bus, model);
+        execution.kernel = Some(Services {
+            kernel,
+            environment,
+            failed: false,
+        });
+        Ok(execution)
+    }
+
+    pub fn kernel(&self) -> Option<&Kernel> {
+        self.kernel.as_ref().map(|services| &services.kernel)
     }
 
     /// Preserve the original BIOS interpreter's absolute NTSC phase for
@@ -89,33 +129,109 @@ impl Execution {
     /// Return the actual fetched instruction after CPU and scheduled device
     /// service complete. The observer runs at the selected pre-execution
     /// boundary, so it can retain address registers for retirement evidence.
-    /// A delivered syscall returns None because that instruction did not retire.
-    /// Other faults remain errors and may leave execution advanced.
+    /// Syscalls and host service transitions return None because no instruction
+    /// retired. Errors retain advanced state; owned execution cannot resume.
     pub fn step_retired(
         &mut self,
         observer: &mut impl FnMut(&Self) -> Result<()>,
     ) -> Result<Option<Step>> {
+        match self.transition(observer, None)? {
+            Transition::Stopped => Ok(None),
+            Transition::Advanced(step) => Ok(step),
+        }
+    }
+
+    fn transition(
+        &mut self,
+        observer: &mut impl FnMut(&Self) -> Result<()>,
+        stop: Option<u32>,
+    ) -> Result<Transition> {
+        if self.kernel.as_ref().is_some_and(|services| services.failed) {
+            return Err("owned execution is unfinished after a previous failure".into());
+        }
+        let result = self.advance(observer, stop);
+        if result.is_err() {
+            if let Some(services) = &mut self.kernel {
+                services.failed = true;
+            }
+        }
+        result
+    }
+
+    fn advance(
+        &mut self,
+        observer: &mut impl FnMut(&Self) -> Result<()>,
+        stop: Option<u32>,
+    ) -> Result<Transition> {
+        if stop == Some(self.cpu.pc())
+            && self
+                .kernel
+                .as_ref()
+                .is_none_or(|services| services.kernel.require_plain_context().is_ok())
+        {
+            return Ok(Transition::Stopped);
+        }
         let interrupt = match &self.reference {
             Some(clock) => clock.admit_interrupt(&mut self.cpu, &self.bus),
             None => self.cpu.take_interrupt(self.bus.interrupts().pending()),
         };
         if interrupt {
             self.interrupts += 1;
+            if let Some(services) = &mut self.kernel {
+                services.kernel.begin_exception(
+                    &mut self.cpu,
+                    &mut self.bus,
+                    services.environment,
+                )?;
+            }
+        }
+        if let Some(services) = &mut self.kernel {
+            services
+                .kernel
+                .prepare_exception_step(&mut self.cpu, &mut self.bus)?;
+        }
+        if stop == Some(self.cpu.pc()) {
+            if let Some(services) = &self.kernel {
+                services.kernel.require_plain_context()?;
+            }
+            return Ok(Transition::Stopped);
         }
         observer(self)?;
         let before = self.reference_cycles();
-        let step = match &mut self.reference {
-            Some(clock) => clock.step(&mut self.cpu, &mut self.bus),
-            None => self.cpu.step(&mut self.bus),
-        };
-        let retired = match step {
-            Ok(step) => Some(step),
-            Err(fault) if fault.kind == FaultKind::Syscall => {
-                self.cpu.enter_exception(&fault)?;
-                self.syscalls += 1;
-                None
+        let mut waiting = false;
+        let host_call = Kernel::is_call(self.cpu.pc());
+        let retired = if let Some(services) = self.kernel.as_mut().filter(|_| host_call) {
+            waiting = services
+                .kernel
+                .dispatch(&mut self.cpu, &mut self.bus)?
+                .waiting;
+            None
+        } else {
+            let step = match &mut self.reference {
+                Some(clock) => clock.step(&mut self.cpu, &mut self.bus),
+                None => self.cpu.step(&mut self.bus),
+            };
+            match step {
+                Ok(step) => {
+                    if let Some(services) = &mut self.kernel {
+                        services.kernel.complete_exception_step(&self.cpu, &step)?;
+                    }
+                    Some(step)
+                }
+                Err(fault) if fault.kind == FaultKind::Syscall => {
+                    self.cpu.enter_exception(&fault)?;
+                    self.syscalls += 1;
+                    if let Some(services) = &mut self.kernel {
+                        services.kernel.begin_exception(
+                            &mut self.cpu,
+                            &mut self.bus,
+                            services.environment,
+                        )?;
+                    }
+                    None
+                }
+                Err(fault) => return Err(fault.into()),
             }
-            Err(fault) => return Err(fault.into()),
         };
         let branch_boundary = retired.as_ref().is_some_and(|step| step.in_delay_slot);
         let ticks = before.map_or(2, |before| {
@@ -134,7 +250,13 @@ impl Execution {
             self.reference_cycles().unwrap_or(self.clock.ticks()),
             branch_boundary,
         )?;
-        Ok(retired)
+        if waiting {
+            return Err(
+                "owned WaitEvent requires an external progress source; continuation retained"
+                    .into(),
+            );
+        }
+        Ok(Transition::Advanced(retired))
     }
 
     /// Activate an explicit output/scanline phase at this guest boundary.
@@ -181,6 +303,28 @@ impl Execution {
         if entry & 3 != 0 || entry == RETURN || !(1..=10_000_000).contains(&limit) {
             return Err("guest call requires aligned RAM entry and limit 1..=10000000".into());
         }
+        if let Some(services) = &self.kernel {
+            if services.failed {
+                return Err("owned execution is unfinished after a previous failure".into());
+            }
+            services.kernel.require_plain_context()?;
+        }
+        let result = self.run_call(entry, arguments, limit, observer);
+        if result.is_err() {
+            if let Some(services) = &mut self.kernel {
+                services.failed = true;
+            }
+        }
+        result
+    }
+
+    fn run_call(
+        &mut self,
+        entry: u32,
+        arguments: [u32; 4],
+        limit: u64,
+        observer: &mut impl FnMut(&Self) -> Result<()>,
+    ) -> Result<Call> {
         let (instructions, syscalls, interrupts) =
             (self.cpu.instructions(), self.syscalls, self.interrupts);
         self.cpu.resume_at(entry);
@@ -189,10 +333,15 @@ impl Execution {
         }
         self.cpu.set_register(31, RETURN);
         for _ in 0..limit {
-            if self.cpu.pc() == RETURN {
+            if matches!(
+                self.transition(observer, Some(RETURN))?,
+                Transition::Stopped
+            ) {
                 break;
             }
-            self.step_observed(observer)?;
+        }
+        if let Some(services) = &self.kernel {
+            services.kernel.require_plain_context()?;
         }
         if self.cpu.pc() != RETURN {
             return Err(format!(

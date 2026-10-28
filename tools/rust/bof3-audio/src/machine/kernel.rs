@@ -877,7 +877,7 @@ impl Kernel {
         Ok(context.address())
     }
 
-    fn require_plain_context(&self) -> Result<()> {
+    pub(crate) fn require_plain_context(&self) -> Result<()> {
         if self.returning.is_some() {
             return Err("owned exception return is unfinished".into());
         }
