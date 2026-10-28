@@ -134,16 +134,19 @@ def test_batch_build_passes_multiple_cmake_targets(
 
     from harness.build.operations import batch_build
 
-    # Prepare a cached build tree so configure() is a no-op
+    # Keep this argument check on Ninja without invoking configuration.
     cache = tmp_path / "build/cmake/CMakeCache.txt"
     cache.parent.mkdir(parents=True)
     cache.touch()
     (cache.parent / "build.ninja").touch()
 
-    with patch(
-        "harness.build.operations.subprocess.run",
-        return_value=subprocess.CompletedProcess([], 0, "", ""),
-    ) as run:
+    with (
+        patch("harness.build.operations.configure", return_value=cache.parent),
+        patch(
+            "harness.build.operations.subprocess.run",
+            return_value=subprocess.CompletedProcess([], 0, "", ""),
+        ) as run,
+    ):
         batch_build(tmp_path, ["lift_aaa", "lift_bbb", "lift_ccc"])
 
     args = run.call_args[0][0] if run.call_args else []

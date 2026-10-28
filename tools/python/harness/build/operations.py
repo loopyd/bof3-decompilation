@@ -162,8 +162,11 @@ def _reconfigure_in_place(root: Path, build_tree: Path) -> Path:
 
 def build(root: Path, target: str = "lifts") -> subprocess.CompletedProcess[str]:
     build_tree = configure(root)
+    command = ["cmake", "--build", str(build_tree), "--target", target]
+    if not (build_tree / "build.ninja").is_file():
+        command.extend(["--parallel", "1"])
     return subprocess.run(
-        ["cmake", "--build", str(build_tree), "--target", target],
+        command,
         cwd=root,
         text=True,
         capture_output=True,
@@ -183,6 +186,8 @@ def batch_build(root: Path, targets: list[str]) -> subprocess.CompletedProcess[s
     command = ["cmake", "--build", str(build_tree), "--target", *targets]
     if (build_tree / "build.ninja").is_file():
         command.extend(["--", "-k", "0"])
+    else:
+        command.extend(["--parallel", "1"])
     return subprocess.run(
         command,
         cwd=root,

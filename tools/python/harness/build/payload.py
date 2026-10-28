@@ -268,8 +268,9 @@ def build_payload(root: Path, target: str, output: Path) -> dict:
         raise ValueError(
             "payload output must be a fresh canonical directory under out/"
         )
-    with acquire_writer(root):
-        _create_output(root, output)
+    with ExitStack() as leases:
+        with acquire_writer(root):
+            _create_output(root, output)
         with ExitStack() as stack:
             batch = stack.enter_context(InputBatch(root))
             pins = {}
@@ -283,6 +284,7 @@ def build_payload(root: Path, target: str, output: Path) -> dict:
             for name in (
                 manifest.splat,
                 "CMakeLists.txt",
+                "config/compiler/graph.cmake",
                 "config/compiler/object-flags.cmake",
                 "config/compiler/variants.json",
                 *manifest.headers,
@@ -318,6 +320,8 @@ def build_payload(root: Path, target: str, output: Path) -> dict:
                 original_name = "out/extracted/" + relative(manifest.disc_id)
                 original = _bind(batch, pins, original_name)
             candidates = []
+            include_sources = []
+            forced_paths = set()
             for source in manifest_source_paths(root, manifest):
                 name = source.relative_to(root).as_posix()
                 content = _bind(batch, pins, name)
@@ -327,22 +331,8 @@ def build_payload(root: Path, target: str, output: Path) -> dict:
                     root, source, output / "unused.o", allow_grouped=True
                 )
                 operands = inspect_arguments(arguments[1:], cwd=root)
-                includes = stack.enter_context(
-                    closing(
-                        IncludeSnapshot(
-                            root,
-                            source,
-                            forced=tuple(item.path for item in operands.forced),
-                        )
-                    )
-                )
-                _bind_states(batch, pins, includes.describe_inputs())
-
-                def verify_includes(error_type, error, traceback, snapshot=includes):
-                    if error_type is None:
-                        snapshot.validate()
-
-                stack.push(verify_includes)
+                include_sources.append(source)
+                forced_paths.update(item.path for item in operands.forced)
                 if name == manifest.psyq_source:
                     continue
                 records = parse_function_records(content.decode("utf-8"))
@@ -357,6 +347,25 @@ def build_payload(root: Path, target: str, output: Path) -> dict:
                     raise ValueError("payload member belongs to a different target")
                 _bind_states(batch, pins, members["inputs"])
                 candidates.append(name)
+            if include_sources:
+                includes = stack.enter_context(
+                    closing(
+                        IncludeSnapshot(
+                            root,
+                            include_sources[0],
+                            forced=tuple(
+                                sorted(set(include_sources[1:]) | forced_paths)
+                            ),
+                        )
+                    )
+                )
+                _bind_states(batch, pins, includes.describe_inputs())
+
+                def verify_includes(error_type, error, traceback):
+                    if error_type is None:
+                        includes.validate()
+
+                stack.push(verify_includes)
             result = build(root, cmake_target_for_directory(manifest.source_dir))
             atomic_write(
                 root,
@@ -366,6 +375,7 @@ def build_payload(root: Path, target: str, output: Path) -> dict:
             )
             if result.returncode:
                 raise RuntimeError(f"target build failed; see {output / 'build.log'}")
+            leases.enter_context(acquire_writer(root))
             ranges = []
             reports = []
             for source in candidates:

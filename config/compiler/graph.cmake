@@ -1,3 +1,5 @@
+set_property(GLOBAL APPEND PROPERTY JOB_POOLS bof3_grouped=1)
+
 function(bof3_add_lift target source object grouped)
   cmake_parse_arguments(LIFT "" "" "COMMAND;DEPENDS" ${ARGN})
   get_filename_component(object_directory "${object}" DIRECTORY)
@@ -7,6 +9,7 @@ function(bof3_add_lift target source object grouped)
       COMMAND ${LIFT_COMMAND}
       DEPENDS "${source}" ${LIFT_DEPENDS} bof3_inventory
       BYPRODUCTS "${object}" "${object}.s" "${object}.producer.json"
+      JOB_POOL bof3_grouped
       WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
       VERBATIM)
   else()
