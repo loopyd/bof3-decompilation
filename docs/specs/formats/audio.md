@@ -2359,21 +2359,26 @@ full BIOS startup. Independent drive timing and audio fidelity remain open.
 ## Rust CD drive commands and sector routing
 
 [The functional drive](../../../tools/rust/bof3-audio/src/machine/cd_drive.rs)
-requires an explicit already-authenticated, closed, spinning Mode-2 disc context,
+requires an explicit already-authenticated, closed, spinning disc context,
 including position, mode and filter. It implements Getstat, Setloc, Setmode,
 Setfilter, Getparam, GetlocL, SeekL/SeekP, ReadN/ReadS, Pause, Init and
-Mute/Demute transactions. With an explicit TOC it also implements GetTN and
-GetTD. Known invalid parameters yield INT5; unsupported
+Mute/Demute transactions. With an explicit TOC it also implements GetTN, GetTD
+and GetlocP. Play additionally requires an explicit peak-channel phase.
+Known invalid parameters yield INT5; unsupported
 commands and mechanical overlap fail without changing drive state. The explicit
 ready-disc constructor does not perform Init, BIOS startup or authentication.
 The host owner still supplies response/IRQ boundaries, and the caller
 explicitly completes mechanical transitions; no clock duration is assigned.
 
-Construct `Toc` with 1 through 99 strictly increasing, nonnegative track starts
-and an exclusive lead-out after the last start. Positions use `CdPosition`,
-including its 150-sector absolute-MSF offset. Bind the metadata once with
-`Drive::configure_toc` while paused. Init retains the TOC. Data-only callers may
-omit it, but GetTN/GetTD then return an error without changing drive state.
+Construct `Toc` with 1 through 99 `Track` values and an exclusive lead-out.
+Each track supplies `TrackKind::Data` or `TrackKind::Audio`, `pregap_start`,
+program `start` and exclusive `end`. Pregaps are nonnegative and no later than
+their program starts. Programs have positive length, do not overlap the next
+program and end at or before lead-out. Each later pregap starts after the
+previous program start. Positions use `CdPosition`, including its 150-sector
+absolute-MSF offset. Bind metadata once with `Drive::configure_toc` while paused.
+Init retains it. Data-only callers may omit it, but metadata queries then fail
+without changing drive state.
 The drive does not parse a CUE or infer a lead-out from a sector feed.
 
 GetTN returns INT3 with `[status, 1, BCD(last track)]`. GetTD takes one BCD track
@@ -2382,8 +2387,8 @@ number, with zero selecting the lead-out, and returns INT3 with
 Invalid BCD or an out-of-range track returns INT5 with `[status | 1, 0x10]`;
 wrong parameter counts return `[status | 1, 0x20]`. These queries preserve the
 current position, pending Setloc and audio state. The existing mechanical
-overlap guard also applies to them. Metadata does not enable Play, track
-selection, reports, autopause or disc-end scheduling.
+overlap guard also applies to GetTN/GetTD. Playback uses the separate
+[caller-cycle contract](#rust-cdda-playback) below.
 
 Sector arrival requires a completed read seek and the next expected LBA.
 Raw sync, Mode-2 header, duplicated subheaders and EDC are checked before state
@@ -2392,8 +2397,9 @@ checks cover EDC, not ECC repair. Routing returns selected XA, filtered audio,
 or a data block with its INT1 response. The latest header includes filtered
 sectors, preserving the distinction between GetlocL position and audible data.
 Neither data queue overruns nor deferred delivery/retry timing are implemented.
-CDDA/report/autopause/ignore mode bits reject explicitly. Read-error retry
-behaviour remains unsupported.
+The CDDA-read bit `0x01` and 2,328-byte sector bit `0x10` reject explicitly.
+Report `0x04` and autopause `0x02` control Play; Play does not require the
+CDDA-read bit. Read-error retry behaviour remains unsupported.
 
 [Existing checks](../../../tools/rust/bof3-audio/tests/cd_drive.rs) cover
 command errors, seek/read/pause/resume transitions, routing, header progression,
@@ -2614,9 +2620,63 @@ crossed gain, consumed clipping and bypass arithmetic. A Rust queue replay match
 the independent integer reconstruction and captured consumed output, retaining
 an old-gain batch across each supplied latch. This supplied replay schedule does
 not establish native enqueue or deadline timing. Retained native output is counted
-but not claimed as consumed. The functional Rust drive still rejects CDDA mode
-and Play. Playback track selection, reports, autopause, disc end and mechanical
-timing remain open. See [CD references](../../reference/cd-audio.md#selected-cdda-input).
+but not claimed as consumed. Functional Play selects input through the
+[playback contract](#rust-cdda-playback). Mechanical and pending-feed timing
+remain open. See [CD references](../../reference/cd-audio.md#selected-cdda-input).
+
+## Rust CDDA playback
+
+After binding the TOC, call `Drive::configure_playback(peak_right)` once while
+paused to supply the retained native peak-channel phase. `Drive::command`,
+`Drive::complete` and `Interconnect::apply_cd_drive_command` take a `u32` CPU
+cycle at 33,868,800 Hz. The caller supplies these boundaries; the drive does
+not calculate command, seek or sector latency.
+
+Play uses the first parameter and ignores trailing parameters within the
+16-byte host limit. A valid nonzero BCD track selects its program start.
+Invalid BCD or an out-of-range track selects the current SubQ track. Zero or
+no parameter uses pending Setloc, otherwise the current position. Located
+Play acknowledges the old status and enters `PreparingPlay`, retaining the
+old position with Idle activity. The first supplied completion moves to the
+target and enters `SeekingPlay`; the second enters `Playing` and starts the
+report clock. Neither completion emits INT2. Immediate Play starts Playing
+and its report clock at the command cycle. Play preserves XA selection,
+predictors, interpolation and queued output.
+
+GetlocP returns INT3 with eight BCD bytes: track, index, relative MSF and
+absolute MSF. SubQ advances to the next track at its pregap start. Index zero
+counts down to program start; index one counts up. Physical audio selection
+changes at program start. At or beyond lead-out GetlocP returns INT5 with
+`[status | 1, 0x80]`.
+
+Call `Drive::play_sector(position, raw, cycle)` at each supplied playback
+boundary. It requires the current position and a whole 2,352-byte sector;
+`None` explicitly represents a failed media read. Data tracks, program tails
+and failed reads produce silence. Command mute suppresses the feed while
+position and peak phase advance. Playback before an audio first track rejects.
+The returned `PlayDelivery` contains optional selected audio and a response.
+The caller submits audio through `Interconnect::enqueue_cd_cdda`, completes
+any pending feed and publishes the response. These operations do not yet form
+an integrated playback scheduler; pending-feed ordering remains unqualified.
+
+Reports begin after 25,401,600 wrapping CPU cycles, or 750 ms. They occur on
+absolute frame numbers divisible by ten and alternate absolute and relative
+time. Relative seconds carry bit `0x80`. Peak measurement uses unattenuated
+samples, including muted sectors, clamps magnitude to `0x7FFF` and marks the
+right channel with bit `0x8000`. The channel phase toggles on every processed
+sector, including report-disabled sectors, and survives commands and Init.
+
+Autopause stops before feeding the first sector of a different SubQ track,
+including its pregap. It returns INT4 with the motor still on and preserves
+position. Lead-out also returns INT4 before feed, then turns the motor off.
+Play with the motor off rejects; Init turns it on before acknowledgement.
+Init clears runtime report/autopause flags while retaining the raw mode byte.
+
+A bounded native guest comparison qualifies responses, seek phases, selected
+sectors, raw peaks, mute, pregap autopause and disc end with supplied cycles.
+Its selected feeds pass the existing queue and declared dry SPU arithmetic.
+This does not establish an automatic scheduler, native backlog timing, CUE
+parsing, original-game Play coverage or hardware behavior.
 
 ## Rust CD command lifecycle and cue restart
 
@@ -2642,7 +2702,8 @@ mechanical transitions. Unsupported commands and known INT5 parameter errors
 preserve decoder and buffer state. All commands reject while an audio submission
 is pending; the caller must finish that submission first. This preserves the
 native feed's serialized wait boundary without inventing command overlap.
-Successful seek transitions and Init also reject active DMA3 before mutation.
+Successful seek transitions, located Play and Init also reject active DMA3
+before mutation.
 That rejection is a Rust implementation limit, not native overlap behavior.
 
 Response publication and mechanical completion remain caller-owned boundaries.
@@ -5030,8 +5091,9 @@ bounded `driver-startup-*-rizin.txt` listings.
 The [Rust drive](../../../tools/rust/bof3-audio/src/machine/cd_drive.rs)
 implements Init (`0x0A`) as a caller-completed transition. It stops reading,
 resets the current and seek positions to `00:02:00` (LBA 0), clears pending
-Setloc and releases XA selection. It preserves mode, command mute, filter and
-the latest transfer header. A read without a new Setloc uses the reset position
+Setloc and releases XA selection. It preserves the raw mode byte, command mute,
+filter and latest transfer header, but clears runtime report/autopause flags.
+A read without a new Setloc uses the reset position
 rather than the retained header. Acknowledgement reports the pre-transition
 status as INT3/status `0x22` while reading or `0x02` while paused. The separate
 completion boundary produces INT2/status `0x02` and leaves the drive paused.
@@ -5043,8 +5105,8 @@ The current PCSX-Redux Agentic
 names `0x0A` as `CdlInit` and `0x1C` as `CdlReset`. Bounded native observations
 confirm that Init resets both positions and clears pending Setloc while
 preserving mode, command mute and filter. Its runtime autopause and report
-flags clear even though the mode byte survives. This does not extend the Rust
-drive's supported mode bits. Opcode `0x1C` remains unsupported by the Rust drive.
+flags clear even though the mode byte survives, as implemented by the Rust
+drive. Opcode `0x1C` remains unsupported by the Rust drive.
 
 The [host integration](../../../tools/rust/bof3-audio/src/machine/interconnect/cd.rs)
 retains its data-cursor, queued-XA-output and selection policies. At an

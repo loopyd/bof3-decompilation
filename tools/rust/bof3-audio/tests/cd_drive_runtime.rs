@@ -71,7 +71,7 @@ fn submit(bus: &mut FixtureBus, drive: &mut Drive, opcode: u8, parameters: &[u8]
     let command = bus.0.take_cd_command().unwrap().unwrap();
     assert_eq!(command.opcode, opcode);
     assert_eq!(command.parameters, parameters);
-    let response = drive.command(&command).unwrap();
+    let response = drive.command(&command, 0).unwrap();
     deliver(bus, &response);
     response
 }
@@ -119,9 +119,9 @@ fn original_sdk_commands_drive_filtering_position_and_pause() {
         [2, 0xc8, 0, 1, 0]
     );
     submit(&mut bus, &mut drive, 0x16, &[]);
-    deliver(&mut bus, &drive.complete().unwrap().unwrap());
+    deliver(&mut bus, &drive.complete(0).unwrap().unwrap());
     submit(&mut bus, &mut drive, 0x1b, &[]);
-    assert!(drive.complete().unwrap().is_none());
+    assert!(drive.complete(0).unwrap().is_none());
     let (mut selected, mut data_count) = (0, 0);
     for lba in start..start + 16 {
         let sector = disc.read_sector(lba).unwrap();
@@ -155,7 +155,7 @@ fn original_sdk_commands_drive_filtering_position_and_pause() {
     assert_eq!(selected, 1);
     assert_eq!(data_count, 11);
     assert_eq!(submit(&mut bus, &mut drive, 9, &[]).bytes, [0x22]);
-    let complete = drive.complete().unwrap().unwrap();
+    let complete = drive.complete(0).unwrap().unwrap();
     assert_eq!(complete.bytes, [2]);
     deliver(&mut bus, &complete);
     assert_eq!(submit(&mut bus, &mut drive, 1, &[]).bytes, [2]);
@@ -168,12 +168,15 @@ fn raw_voice_routing_preserves_selected_decoder_input_and_history() {
     let position = CdPosition::from_lba(start as i32).unwrap();
     let mut drive = Drive::ready(position, 0xe8, [1, 0]).unwrap();
     drive
-        .command(&Command {
-            opcode: 6,
-            parameters: vec![],
-        })
+        .command(
+            &Command {
+                opcode: 6,
+                parameters: vec![],
+            },
+            0,
+        )
         .unwrap();
-    drive.complete().unwrap();
+    drive.complete(0).unwrap();
     let first = disc.read_sector(start).unwrap();
     let stream = Stream {
         file: first[16],

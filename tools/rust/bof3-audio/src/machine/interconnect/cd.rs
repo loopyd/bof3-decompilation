@@ -76,6 +76,7 @@ impl Interconnect {
         &mut self,
         drive: &mut Drive,
         command: &cd_host::Command,
+        cycle: u32,
     ) -> crate::Result<AppliedCommand> {
         self.cd_host()?;
         if self
@@ -88,9 +89,13 @@ impl Interconnect {
             );
         }
         let mut candidate = drive.clone();
-        let response = candidate.command(command)?;
+        let response = candidate.command(command, cycle)?;
         let seek_reset = matches!(candidate.activity(), Activity::Seeking { .. })
             && candidate.activity() != drive.activity();
+        let play_seek = matches!(
+            candidate.activity(),
+            Activity::PreparingPlay { .. } | Activity::SeekingPlay { .. }
+        ) && candidate.activity() != drive.activity();
         let xa_predictors_reset = response.interrupt == 3
             && (matches!(command.opcode, 0x06 | 0x1b)
                 || (command.opcode == 0x0e
@@ -100,7 +105,7 @@ impl Interconnect {
             || xa_predictors_reset
             || (matches!(command.opcode, 0x09 | 0x0a | 0x0d) && response.interrupt == 3);
         let init = command.opcode == 0x0a && response.interrupt == 3;
-        if (seek_reset || init) && self.dma.cd.active() {
+        if (seek_reset || play_seek || init) && self.dma.cd.active() {
             return Err("CD drive: seek/reset during active DMA3 is not implemented".into());
         }
         if xa_predictors_reset {

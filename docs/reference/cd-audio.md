@@ -179,9 +179,24 @@ CDDA shares whole-batch admission, pending completion, output and reset with XA.
 `Interconnect::enqueue_cd_cdda` supplies command mute and host attenuation to this
 path. The caller supplies selected audio sectors and service boundaries. Native
 stereo, clipping and a gain latch have a bounded consumed-output comparison;
-the retained queued tail is counted separately. The drive supports GetTN/GetTD
-with explicit validated TOC metadata. Play selection, reports, autopause,
-disc-end handling and mechanical timing remain unsupported.
+the retained queued tail is counted separately.
+
+[Functional Rust playback](../specs/formats/audio.md#rust-cdda-playback)
+uses explicit data/audio track kind, pregap, program start/end and lead-out
+metadata. It supports Play, GetlocP, reports, pregap autopause and motor-off
+disc end. Located Play retains Idle/old position until a supplied seek-start
+boundary, then enters Seeking before a second boundary starts Playing.
+Immediate Play starts at the supplied command cycle. The caller supplies the
+retained peak-channel phase, raw sectors and all CPU-cycle/response boundaries.
+
+The [native handlers](../../third_party/pcsx-redux-agentic/src/core/cdrom.cc)
+and [image owner](../../third_party/pcsx-redux-agentic/src/cdrom/cdriso.cc)
+select SubQ tracks at pregap start and physical audio at program start. Reports
+settle for 750 ms, alternate absolute/relative time and measure unattenuated
+channel peaks, including while muted. Autopause stops before the first changed
+SubQ track; lead-out returns End before turning off the motor. Rust follows
+these functional rules under supplied cycles. CUE parsing, integrated pending
+feed ordering, automatic mechanical scheduling and hardware timing remain open.
 
 ## Decoder reset and command mute
 
@@ -200,8 +215,8 @@ use predictor-only resets at those Read and realtime-enable boundaries. Pause,
 seek and Init preserve queued audio, interpolation and data. Init also preserves
 mode, mute and filter while releasing the diagnostic XA selection. The caller
 must complete a pending audio submission before servicing another command.
-Successful Init and seek transitions reject active DMA3 before mutation; this
-is an unsupported Rust overlap case. Full `Queue::reset()` creates an explicit
+Successful Init, seek transitions and located Play reject active DMA3 before
+mutation; this is an unsupported Rust overlap case. Full `Queue::reset()` creates an explicit
 fresh context and is not a command effect.
 
 The Rust drive still allows an already continuing read to avoid its mechanical

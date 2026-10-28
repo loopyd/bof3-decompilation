@@ -303,12 +303,15 @@ fn original_voice_queue_matches_direct_samples_at_steady_sector_rate() {
     let mut drive =
         Drive::ready(CdPosition::from_lba(start as i32).unwrap(), 0xc8, [1, 0]).unwrap();
     drive
-        .command(&bof3_audio::machine::cd_host::Command {
-            opcode: 0x1b,
-            parameters: vec![],
-        })
+        .command(
+            &bof3_audio::machine::cd_host::Command {
+                opcode: 0x1b,
+                parameters: vec![],
+            },
+            0,
+        )
         .unwrap();
-    drive.complete().unwrap();
+    drive.complete(0).unwrap();
     let mut bus = bus(queue());
     let mut direct = reference();
     let mut expected = std::collections::VecDeque::new();

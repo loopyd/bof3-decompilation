@@ -72,7 +72,7 @@ fn init_preserves_mute_queued_audio_data_cursor_and_volume() {
     assert_eq!(bus.cd_host().unwrap().volume().active(), volume);
     assert_eq!(bus.cd_audio().unwrap().statistics().queued_frames, frames);
     assert_eq!(bus.read(0x1f801802, Width::Byte).unwrap(), 1);
-    drive.complete().unwrap();
+    drive.complete(0).unwrap();
     assert_eq!(
         bus.enqueue_cd_audio(&sector(1, 1)).unwrap(),
         Admission::Muted
@@ -90,6 +90,7 @@ fn apply(
             opcode,
             parameters: parameters.to_vec(),
         },
+        0,
     )
     .unwrap()
 }
@@ -161,7 +162,7 @@ fn setloc_and_seek_preserve_audio_and_data_buffers() {
     assert!(!muted.xa_predictors_reset);
     assert!(drive.muted());
     assert_eq!(drive.activity(), seeking);
-    drive.complete().unwrap();
+    drive.complete(0).unwrap();
     assert_eq!(drive.next_lba(), 200);
     assert_eq!(drive.activity(), Activity::Paused);
 }
@@ -188,7 +189,8 @@ fn invalid_seek_and_active_dma_failure_preserve_drive_and_queues() {
             &Command {
                 opcode: 0x15,
                 parameters: vec![]
-            }
+            },
+            0
         )
         .is_err());
     assert_eq!(drive, state);
@@ -229,7 +231,7 @@ fn command_mute_and_host_mute_are_independent_and_keep_existing_output() {
 fn pause_preserves_buffers_and_each_read_resets_only_predictors() {
     let (mut bus, mut drive) = context();
     apply(&mut bus, &mut drive, 0x1b, &[]);
-    drive.complete().unwrap();
+    drive.complete(0).unwrap();
     bus.enqueue_cd_audio(&sector(0, 0)).unwrap();
     bus.present_cd_data(&[7; 2048]).unwrap();
     let stats = bus.cd_audio().unwrap().statistics();
@@ -256,6 +258,6 @@ fn pause_preserves_buffers_and_each_read_resets_only_predictors() {
     );
     bus.write(0x1f801803, Width::Byte, 0x80).unwrap();
     assert_eq!(bus.read(0x1f801802, Width::Byte).unwrap(), 7);
-    drive.complete().unwrap();
+    drive.complete(0).unwrap();
     assert_eq!(drive.activity(), Activity::Paused);
 }

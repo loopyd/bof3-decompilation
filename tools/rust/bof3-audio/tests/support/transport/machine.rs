@@ -173,9 +173,13 @@ impl Fixture {
         self.irq_returns += 1;
         if matches!(
             self.drive.activity(),
-            Activity::Seeking { .. } | Activity::Pausing { .. } | Activity::Resetting
+            Activity::Seeking { .. }
+                | Activity::PreparingPlay { .. }
+                | Activity::SeekingPlay { .. }
+                | Activity::Pausing { .. }
+                | Activity::Resetting
         ) {
-            self.pending = self.drive.complete().unwrap();
+            self.pending = self.drive.complete(0).unwrap();
         }
     }
 
@@ -270,7 +274,7 @@ impl Fixture {
                 self.pending = Some(
                     self.bus
                         .inner
-                        .apply_cd_drive_command(&mut self.drive, &command)
+                        .apply_cd_drive_command(&mut self.drive, &command, 0)
                         .unwrap()
                         .response,
                 );
@@ -312,9 +316,13 @@ impl Fixture {
                     self.call(0x80177264, &[], true);
                     if matches!(
                         self.drive.activity(),
-                        Activity::Seeking { .. } | Activity::Pausing { .. } | Activity::Resetting
+                        Activity::Seeking { .. }
+                            | Activity::PreparingPlay { .. }
+                            | Activity::SeekingPlay { .. }
+                            | Activity::Pausing { .. }
+                            | Activity::Resetting
                     ) {
-                        self.pending = self.drive.complete().unwrap();
+                        self.pending = self.drive.complete(0).unwrap();
                     }
                 }
             }

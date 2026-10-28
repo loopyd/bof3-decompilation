@@ -1,36 +1,92 @@
-//! Functional Mode-2 drive transactions with caller-supplied mechanical boundaries.
+//! Functional CD drive transactions with caller-supplied mechanical boundaries.
 //! No BIOS defaults, authentication, media clock or response latency is inferred.
 use super::{cd_host::Command, cd_position::CdPosition};
 use crate::{codec::edc, Result};
 
-/// Caller-qualified track starts and exclusive lead-out, in absolute CD positions.
-/// Track numbers are consecutive from one. This does not parse image metadata.
+/// Explicit program and pregap boundaries; no image metadata is inferred.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TrackKind {
+    Data,
+    Audio,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Track {
+    pub kind: TrackKind,
+    pub start: CdPosition,
+    pub pregap_start: CdPosition,
+    pub end: CdPosition,
+}
+
+/// Consecutive tracks from one and exclusive lead-out, in absolute positions.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Toc {
-    track_starts: Vec<CdPosition>,
+    tracks: Vec<Track>,
     lead_out: CdPosition,
 }
 
 impl Toc {
-    pub fn new(track_starts: Vec<CdPosition>, lead_out: CdPosition) -> Result<Self> {
-        if !(1..=99).contains(&track_starts.len())
-            || track_starts.iter().any(|position| position.lba() < 0)
-            || track_starts
-                .windows(2)
-                .any(|pair| pair[0].lba() >= pair[1].lba())
-            || track_starts
-                .last()
-                .is_some_and(|position| position.lba() >= lead_out.lba())
+    pub fn new(tracks: Vec<Track>, lead_out: CdPosition) -> Result<Self> {
+        if !(1..=99).contains(&tracks.len())
+            || tracks.iter().any(|track| {
+                track.pregap_start.lba() < 0
+                    || track.pregap_start.lba() > track.start.lba()
+                    || track.start.lba() >= track.end.lba()
+                    || track.end.lba() > lead_out.lba()
+            })
+            || tracks.windows(2).any(|pair| {
+                pair[0].start.lba() >= pair[1].pregap_start.lba()
+                    || pair[0].end.lba() > pair[1].start.lba()
+            })
         {
             return Err(
-                "CD TOC: require 1..99 increasing nonnegative track starts before lead-out".into(),
+                "CD TOC: require 1..99 ordered programs, valid pregaps and exclusive ends at or before lead-out"
+                    .into(),
             );
         }
-        Ok(Self {
-            track_starts,
-            lead_out,
-        })
+        Ok(Self { tracks, lead_out })
     }
+
+    fn physical_track(&self, lba: i32) -> usize {
+        self.tracks
+            .partition_point(|track| track.start.lba() <= lba)
+            .saturating_sub(1)
+    }
+
+    fn position(&self, lba: i32) -> Result<Option<[u8; 8]>> {
+        if lba >= self.lead_out.lba() {
+            return Ok(None);
+        }
+        let mut index = self.physical_track(lba);
+        if self
+            .tracks
+            .get(index + 1)
+            .is_some_and(|track| lba >= track.pregap_start.lba())
+        {
+            index += 1;
+        }
+        let start = self.tracks[index].start.lba();
+        let relative = CdPosition::from_lba((lba - start).abs() - 150)?.bcd();
+        let absolute = CdPosition::from_lba(lba)?.bcd();
+        Ok(Some([
+            bcd(index + 1),
+            u8::from(lba >= start),
+            relative[0],
+            relative[1],
+            relative[2],
+            absolute[0],
+            absolute[1],
+            absolute[2],
+        ]))
+    }
+}
+
+/// A supplied playback boundary. Feed audio through the existing CDDA queue;
+/// response publication and pending-feed completion remain caller-owned.
+#[derive(Debug, PartialEq, Eq)]
+pub struct PlayDelivery {
+    pub audio: Option<Vec<u8>>,
+    pub response: Option<Response>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -52,6 +108,9 @@ pub enum Activity {
     Resetting,
     Seeking { target: i32, read: bool },
     Reading,
+    Playing,
+    PreparingPlay { target: i32 },
+    SeekingPlay { target: i32 },
     Pausing { was_reading: bool },
 }
 
@@ -79,10 +138,16 @@ pub struct Drive {
     muted: bool,
     xa_selection: Option<[u8; 2]>,
     toc: Option<Toc>,
+    peak_right: Option<bool>,
+    play_track: u8,
+    play_start_cycle: u32,
+    motor_on: bool,
+    report: bool,
+    auto_pause: bool,
 }
 
 impl Drive {
-    /// Explicit already-authenticated, closed, spinning, unmuted Mode-2 context.
+    /// Explicit already-authenticated, closed, spinning, unmuted disc context.
     /// This constructor is not a substitute for Init, boot or authentication.
     pub fn ready(position: CdPosition, mode: u8, filter: [u8; 2]) -> Result<Self> {
         check_mode(mode)?;
@@ -100,6 +165,12 @@ impl Drive {
             muted: false,
             xa_selection: None,
             toc: None,
+            peak_right: None,
+            play_track: 0,
+            play_start_cycle: 0,
+            motor_on: true,
+            report: mode & 4 != 0,
+            auto_pause: mode & 2 != 0,
         })
     }
 
@@ -110,6 +181,19 @@ impl Drive {
             return Err("CD drive: TOC requires a paused drive without configured metadata".into());
         }
         self.toc = Some(toc);
+        Ok(())
+    }
+
+    /// Supply the native device's retained peak-channel phase once. Data-only
+    /// callers need no playback context. This does not reset XA or queued audio.
+    pub fn configure_playback(&mut self, peak_right: bool) -> Result<()> {
+        if self.activity != Activity::Paused || self.toc.is_none() || self.peak_right.is_some() {
+            return Err(
+                "CD playback: require paused drive, explicit TOC and no prior playback context"
+                    .into(),
+            );
+        }
+        self.peak_right = Some(peak_right);
         Ok(())
     }
 
@@ -126,11 +210,16 @@ impl Drive {
         self.mode
     }
     pub fn status(&self) -> u8 {
-        2 | match self.activity {
-            Activity::Reading | Activity::Pausing { was_reading: true } => 0x20,
-            Activity::Seeking { .. } => 0x40,
-            Activity::Paused | Activity::Resetting | Activity::Pausing { was_reading: false } => 0,
-        }
+        (u8::from(self.motor_on) * 2)
+            | match self.activity {
+                Activity::Reading | Activity::Pausing { was_reading: true } => 0x20,
+                Activity::Seeking { .. } | Activity::SeekingPlay { .. } => 0x40,
+                Activity::Playing => 0x80,
+                Activity::Paused
+                | Activity::Resetting
+                | Activity::PreparingPlay { .. }
+                | Activity::Pausing { was_reading: false } => 0,
+            }
     }
     fn response(&self, interrupt: u8) -> Response {
         Response {
@@ -148,9 +237,12 @@ impl Drive {
     /// Execute one accepted command. The caller owns host acceptance/IRQ timing.
     /// Unsupported operations return Err without changing drive state; known bad
     /// parameters produce the documented INT5 response instead of success.
-    pub fn command(&mut self, command: &Command) -> Result<Response> {
+    /// cycle is the explicit 33,868,800 Hz command boundary, used by immediate Play.
+    pub fn command(&mut self, command: &Command, cycle: u32) -> Result<Response> {
         let count = match command.opcode {
-            0x01 | 0x06 | 0x09 | 0x0a | 0x0b | 0x0c | 0x0f | 0x10 | 0x13 | 0x15 | 0x16 | 0x1b => 0,
+            0x01 | 0x06 | 0x09 | 0x0a | 0x0b | 0x0c | 0x0f | 0x10 | 0x11 | 0x13 | 0x15 | 0x16
+            | 0x1b => 0,
+            0x03 => command.parameters.len(),
             0x02 => 3,
             0x0d => 2,
             0x0e | 0x14 => 1,
@@ -158,15 +250,22 @@ impl Drive {
                 return Err(format!("CD drive: command {value:#04x} is not implemented").into())
             }
         };
-        if command.parameters.len() != count {
+        if command.parameters.len() > 16 || command.parameters.len() != count {
             return Ok(self.parameter_error(0x20));
         }
         if matches!(
             self.activity,
-            Activity::Seeking { .. } | Activity::Pausing { .. } | Activity::Resetting
-        ) && !matches!(command.opcode, 0x01 | 0x0b | 0x0c | 0x0f | 0x10)
+            Activity::Seeking { .. }
+                | Activity::PreparingPlay { .. }
+                | Activity::SeekingPlay { .. }
+                | Activity::Pausing { .. }
+                | Activity::Resetting
+        ) && !matches!(command.opcode, 0x01 | 0x0b | 0x0c | 0x0f | 0x10 | 0x11)
         {
             return Err("CD drive: command during mechanical transition is not implemented".into());
+        }
+        if command.opcode == 0x0a {
+            self.motor_on = true;
         }
         let response = self.response(3);
         match command.opcode {
@@ -179,6 +278,37 @@ impl Drive {
                     return Err("CD drive: seeking into lead-in is not implemented".into());
                 }
                 self.target = Some(position.lba());
+            }
+            0x03 => {
+                let toc = self
+                    .toc
+                    .as_ref()
+                    .ok_or("CD Play requires explicit TOC metadata")?;
+                if self.peak_right.is_none() || !self.motor_on {
+                    return Err("CD Play requires explicit peak phase and a spinning motor".into());
+                }
+                let requested = command.parameters.first().copied().unwrap_or(0);
+                let mut track = if requested >> 4 <= 9 && requested & 15 <= 9 {
+                    usize::from(requested >> 4) * 10 + usize::from(requested & 15)
+                } else {
+                    100
+                };
+                if track > toc.tracks.len() {
+                    track = toc
+                        .position(self.next_lba)?
+                        .map_or(0, |q| usize::from(q[0] >> 4) * 10 + usize::from(q[0] & 15));
+                }
+                let target = if track != 0 {
+                    Some(toc.tracks[track - 1].start.lba())
+                } else {
+                    self.target
+                };
+                self.target = None;
+                if let Some(target) = target {
+                    self.activity = Activity::PreparingPlay { target };
+                } else {
+                    self.start_playing(cycle);
+                }
             }
             0x06 | 0x1b | 0x15 | 0x16 => {
                 let read = matches!(command.opcode, 0x06 | 0x1b);
@@ -219,6 +349,8 @@ impl Drive {
                 self.target = None;
                 self.resume_lba = None;
                 self.xa_selection = None;
+                self.auto_pause = false;
+                self.report = false;
             }
             0x0d => {
                 self.filter.copy_from_slice(&command.parameters);
@@ -232,6 +364,8 @@ impl Drive {
                     self.xa_selection = None;
                 }
                 self.mode = command.parameters[0];
+                self.auto_pause = self.mode & 2 != 0;
+                self.report = self.mode & 4 != 0;
             }
             0x0f => {
                 return Ok(Response {
@@ -248,24 +382,37 @@ impl Drive {
                     None => self.parameter_error(0x80),
                 })
             }
+            0x11 => {
+                let toc = self
+                    .toc
+                    .as_ref()
+                    .ok_or("CD GetlocP requires explicit TOC metadata")?;
+                return Ok(match toc.position(self.next_lba)? {
+                    Some(position) => Response {
+                        interrupt: 3,
+                        bytes: position.to_vec(),
+                    },
+                    None => self.parameter_error(0x80),
+                });
+            }
             0x13 | 0x14 => {
                 let toc = self
                     .toc
                     .as_ref()
                     .ok_or("CD drive: GetTN/GetTD require explicit TOC metadata")?;
                 let bytes = if command.opcode == 0x13 {
-                    let tracks = toc.track_starts.len() as u8;
+                    let tracks = toc.tracks.len() as u8;
                     vec![self.status(), 1, ((tracks / 10) << 4) | (tracks % 10)]
                 } else {
                     let bcd = command.parameters[0];
                     let track = usize::from(bcd >> 4) * 10 + usize::from(bcd & 15);
-                    if bcd >> 4 > 9 || bcd & 15 > 9 || track > toc.track_starts.len() {
+                    if bcd >> 4 > 9 || bcd & 15 > 9 || track > toc.tracks.len() {
                         return Ok(self.parameter_error(0x10));
                     }
                     let position = if track == 0 {
                         toc.lead_out
                     } else {
-                        toc.track_starts[track - 1]
+                        toc.tracks[track - 1].start
                     };
                     let [minute, second, _] = position.bcd();
                     vec![self.status(), minute, second]
@@ -281,8 +428,10 @@ impl Drive {
     }
 
     /// Complete a supplied seek/pause/reset boundary. No duration is assigned here.
+    /// Located Play needs two boundaries: seek start updates position, then
+    /// seek completion starts playback and its report clock. Neither emits INT2.
     /// An implicit read seek has no INT2; explicit SeekL/SeekP and Pause do.
-    pub fn complete(&mut self) -> Result<Option<Response>> {
+    pub fn complete(&mut self, cycle: u32) -> Result<Option<Response>> {
         match self.activity {
             Activity::Seeking { target, read } => {
                 self.next_lba = target;
@@ -293,12 +442,134 @@ impl Drive {
                 };
                 Ok((!read).then(|| self.response(2)))
             }
+            Activity::PreparingPlay { target } => {
+                self.next_lba = target;
+                self.activity = Activity::SeekingPlay { target };
+                Ok(None)
+            }
+            Activity::SeekingPlay { target } => {
+                self.next_lba = target;
+                self.start_playing(cycle);
+                Ok(None)
+            }
             Activity::Pausing { .. } | Activity::Resetting => {
                 self.activity = Activity::Paused;
                 Ok(Some(self.response(2)))
             }
             _ => Err("CD drive: no mechanical transition to complete".into()),
         }
+    }
+
+    fn start_playing(&mut self, cycle: u32) {
+        self.activity = Activity::Playing;
+        self.play_track = 0;
+        self.play_start_cycle = cycle;
+    }
+
+    /// Process one caller-supplied CDDA boundary at its explicit CPU cycle.
+    /// None represents a failed media read and plays silence. Data tracks and
+    /// program tails also play silence. End/autopause do not consume a sector.
+    /// The caller owns feed wait completion, IRQ publication and all scheduling.
+    pub fn play_sector(
+        &mut self,
+        position: CdPosition,
+        raw: Option<&[u8]>,
+        cycle: u32,
+    ) -> Result<PlayDelivery> {
+        if self.activity != Activity::Playing || position.lba() != self.next_lba {
+            return Err("CD playback: require playing state and current position".into());
+        }
+        let toc = self
+            .toc
+            .as_ref()
+            .ok_or("CD playback requires explicit TOC")?;
+        if self.next_lba >= toc.lead_out.lba() {
+            self.activity = Activity::Paused;
+            let response = self.response(4);
+            self.motor_on = false;
+            return Ok(PlayDelivery {
+                audio: None,
+                response: Some(response),
+            });
+        }
+        let q = toc
+            .position(self.next_lba)?
+            .ok_or("CD playback has no position")?;
+        if self.auto_pause && self.play_track != 0 && q[0] != self.play_track {
+            self.activity = Activity::Paused;
+            return Ok(PlayDelivery {
+                audio: None,
+                response: Some(self.response(4)),
+            });
+        }
+        if raw.is_some_and(|bytes| bytes.len() != 2352) {
+            return Err(
+                "CD playback requires a whole raw sector or an explicit failed read".into(),
+            );
+        }
+        let track = &toc.tracks[toc.physical_track(self.next_lba)];
+        if track.kind == TrackKind::Audio && self.next_lba < track.start.lba() {
+            return Err("CD playback before an audio first track is not implemented".into());
+        }
+        let samples = if track.kind == TrackKind::Audio && self.next_lba < track.end.lba() {
+            raw.unwrap_or(&[0; 2352])
+        } else {
+            &[0; 2352]
+        };
+        let next_lba = self
+            .next_lba
+            .checked_add(1)
+            .ok_or("CD playback position overflow")?;
+        CdPosition::from_lba(next_lba)?;
+        let right = !self
+            .peak_right
+            .ok_or("CD playback requires explicit peak phase")?;
+        let mut response = None;
+        if self.report && cycle.wrapping_sub(self.play_start_cycle) >= 25_401_600 {
+            let frame = (q[7] >> 4) * 10 + (q[7] & 15);
+            if frame.is_multiple_of(10) {
+                let peak = samples
+                    .as_chunks::<4>()
+                    .0
+                    .iter()
+                    .map(|frame| {
+                        let at = if right { 2 } else { 0 };
+                        i16::from_le_bytes([frame[at], frame[at + 1]])
+                            .unsigned_abs()
+                            .min(0x7fff)
+                    })
+                    .max()
+                    .unwrap_or(0)
+                    | if right { 0x8000 } else { 0 };
+                let time = if (frame / 10) & 1 == 0 {
+                    [q[5], q[6], q[7]]
+                } else {
+                    [q[2], q[3] | 0x80, q[4]]
+                };
+                response = Some(Response {
+                    interrupt: 1,
+                    bytes: vec![
+                        self.status(),
+                        q[0],
+                        q[1],
+                        time[0],
+                        time[1],
+                        time[2],
+                        peak as u8,
+                        (peak >> 8) as u8,
+                    ],
+                });
+            }
+        }
+        let audio = (!self.muted).then(|| samples.to_vec());
+        self.peak_right = Some(right);
+        self.play_track = if self.play_track == 0 {
+            q[0]
+        } else {
+            self.play_track
+        };
+        self.next_lba = next_lba;
+        Ok(PlayDelivery { audio, response })
     }
 
     /// Deliver a clean raw Mode-2 sector at the next expected position.
@@ -373,12 +644,16 @@ impl Drive {
 }
 
 fn check_mode(mode: u8) -> Result<()> {
-    if mode & !0xe8 != 0 {
+    if mode & !0xee != 0 {
         return Err(format!(
-            "CD drive: CDDA/report/autopause/ignore mode bits {:#04x} unimplemented",
-            mode & !0xe8
+            "CD drive: CDDA-read/2328-byte mode bits {:#04x} unimplemented",
+            mode & !0xee
         )
         .into());
     }
     Ok(())
+}
+
+fn bcd(value: usize) -> u8 {
+    (((value / 10) << 4) | (value % 10)) as u8
 }

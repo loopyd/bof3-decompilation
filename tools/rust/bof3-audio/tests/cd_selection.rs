@@ -97,8 +97,8 @@ fn drain(queue: &mut Queue) -> Vec<[i16; 2]> {
 #[test]
 fn automatic_selection_ignores_unrelated_eof_and_releases_matching_eof() {
     let mut drive = Drive::ready(CdPosition::from_lba(100).unwrap(), 0x40, [9, 9]).unwrap();
-    drive.command(&command(6, &[])).unwrap();
-    drive.complete().unwrap();
+    drive.command(&command(6, &[]), 0).unwrap();
+    drive.complete(0).unwrap();
     // 255 does not claim automatic selection. EOR is not EOF. A mismatched
     // channel's EOF must not release the already selected channel.
     for (index, (channel, flags, selected)) in [
@@ -125,14 +125,14 @@ fn automatic_selection_ignores_unrelated_eof_and_releases_matching_eof() {
         );
     }
     // Setfilter releases the automatic latch even when mode filtering is off.
-    drive.command(&command(0x0d, &[1, 7])).unwrap();
+    drive.command(&command(0x0d, &[1, 7]), 0).unwrap();
     assert!(matches!(
         drive.sector(&raw(107, &sector(4, 0x64, 0))).unwrap(),
         Delivery::Xa(_)
     ));
     // Filter configuration can explicitly select channel 255.
-    drive.command(&command(0x0e, &[0x48])).unwrap();
-    drive.command(&command(0x0d, &[1, 255])).unwrap();
+    drive.command(&command(0x0e, &[0x48]), 0).unwrap();
+    drive.command(&command(0x0d, &[1, 255]), 0).unwrap();
     assert!(matches!(
         drive.sector(&raw(108, &sector(255, 0x64, 0))).unwrap(),
         Delivery::Xa(_)
@@ -252,13 +252,13 @@ fn setfilter_releases_only_selection_and_invalid_parameters_do_not_release_it() 
     bus.enqueue_cd_audio(&first).unwrap();
     let before = bus.cd_audio().unwrap().statistics();
     let invalid = bus
-        .apply_cd_drive_command(&mut drive, &command(0x0d, &[1]))
+        .apply_cd_drive_command(&mut drive, &command(0x0d, &[1]), 0)
         .unwrap();
     assert!(!invalid.audio_selection_released);
     assert_eq!(invalid.response.interrupt, 5);
     assert!(bus.enqueue_cd_audio(&sector(1, 0x64, 0)).is_err());
     let effect = bus
-        .apply_cd_drive_command(&mut drive, &command(0x0d, &[1, 1]))
+        .apply_cd_drive_command(&mut drive, &command(0x0d, &[1, 1]), 0)
         .unwrap();
     assert!(effect.audio_selection_released);
     assert!(!effect.xa_predictors_reset);
@@ -302,8 +302,8 @@ fn raw_voice_automatic_selection_decodes_complete_first_stream() {
     let count = entry.sector_count();
     let mut drive =
         Drive::ready(CdPosition::from_lba(start as i32).unwrap(), 0xc0, [0, 0]).unwrap();
-    drive.command(&command(6, &[])).unwrap();
-    drive.complete().unwrap();
+    drive.command(&command(6, &[]), 0).unwrap();
+    drive.complete(0).unwrap();
     let mut q = queue();
     q.reset();
     let mut selected = 0;
