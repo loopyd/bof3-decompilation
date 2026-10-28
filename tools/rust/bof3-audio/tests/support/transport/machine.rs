@@ -123,7 +123,10 @@ impl Fixture {
             }
             if Kernel::is_call(cpu.pc()) {
                 if cpu.pc() & 0x1fff_ffff == 0xa0 && cpu.register(9) == 0x72 {
-                    assert_eq!(self.kernel.entry_hook(), Some(0x80184640));
+                    assert_eq!(
+                        self.kernel.entry_hook(&mut self.bus).unwrap(),
+                        Some(0x80184640)
+                    );
                     println!("Original callback setup reaches A0:72 after {} instructions; SDK hook installed, bootstrap still incomplete", cpu.instructions());
                     return;
                 }

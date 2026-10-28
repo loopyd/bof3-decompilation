@@ -4056,15 +4056,21 @@ advancing a host traversal cursor. Trap `0xBFC00118` completes through the live
 exit-hook or explicit missing-hook policy. No BIOS instructions run at these
 traps, and each trap requires its active bound phase.
 
-`Kernel::configure_exception_hook(entry)` separately binds the caller-loaded
-`audio_exception_hook` routine in the same assembly owner. After all four guest
-priorities finish, the exit trap reads and validates the complete live
-`HookEntryInt` buffer, saved PC and four-byte-aligned RAM stack. It then supplies
-the buffer address in A0 and one in A1. Guest instructions load RA, GP, SP, FP
-and S0-S7, set V0 from A1 and jump to saved RA without RFE. This routine does not
-recreate the original exit prefix's K0 calculation or hook-pointer global.
-Functional host dispatch and unbound development callers retain their existing
-exit bridge. Missing-hook policy remains explicit even with this binding.
+`Kernel::configure_exception_hook(entry, pointer)` separately binds the
+caller-loaded `audio_exception_hook` routine and its live pointer cell. The
+assembly exports `audio_exception_hook_pointer` in initialized data and uses
+MIPS HI16/LO16 relocations to address it. Startup loads both sections and passes
+their linked addresses. Binding must precede functional HookEntryInt registration.
+The caller owns the cell's initial value; zero means no registered hook.
+HookEntryInt writes this word, and `entry_hook(bus)` reads the live registration.
+
+After all four guest priorities finish, the exit trap validates the live PCB/TCB,
+complete registered jump buffer, saved PC and four-byte-aligned RAM stack before
+guest entry. Guest instructions resolve the PCB/TCB again, set K0 to TCB+8,
+read the pointer cell into A0 and set A1 to one. They load RA, GP, SP, FP and
+S0-S7, set V0 from A1 and jump to saved RA without RFE. Functional host dispatch
+and unbound development callers retain their existing exit bridge. Missing-hook
+policy remains explicit even with this binding.
 
 The exception stays pending while the hook executes. A later successful B0/17
 restoration clears it. Preflight errors precede register restoration; faults
