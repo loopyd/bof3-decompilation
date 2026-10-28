@@ -84,14 +84,14 @@ start. Coverage identifies only `[2336*s+8, 2336*s+12)` as packet metadata when
 the Form 1 video subheader and exact `60 01 01 80` marker/type bytes match.
 The remaining packet header stays unresolved.
 
-Coverage also identifies conservative coded prefixes in CAPCOM frames 1 through 201.
+Coverage also identifies conservative coded prefixes in CAPCOM frames 1 through 221.
 Their original LOGO consumer at `0x801D7578` reads fresh input and returns zero
 with its next unread halfword in `a0`. Each reviewed prefix excludes the final
 eight fetched bytes to cover unread lookahead. The original packet index, count
 and frame ID bind each prefix to ordered 2016-byte bodies at sector offset 40.
-Coverage admits only the recorded source slices, totaling 1,492,532 bytes.
-It leaves 545,644 video-body bytes unresolved, including excluded tails and
-frames 202 through 231. These bounds establish neither each frame's logical end
+Coverage admits only the recorded source slices, totaling 1,607,660 bytes.
+It leaves 430,516 video-body bytes unresolved, including excluded tails and
+frames 222 through 231. These bounds establish neither each frame's logical end
 nor whole-movie playback.
 
 Static format identification does not establish original sector selection,

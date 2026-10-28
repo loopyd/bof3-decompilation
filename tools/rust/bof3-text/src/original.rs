@@ -57,9 +57,9 @@ pub struct XaRange {
     pub evidence: &'static str,
 }
 
-// Original LOGO fresh-input frames 1..=201: return frontiers minus eight bytes.
+// Original LOGO fresh-input frames 1..=221: return frontiers minus eight bytes.
 // The excluded lookahead and all other frame bytes remain unresolved.
-const CAPCOM_CONSUMED_PREFIX_BYTES: [usize; 201] = [
+const CAPCOM_CONSUMED_PREFIX_BYTES: [usize; 221] = [
     7640, 7690, 7752, 7776, 7810, 7826, 7766, 7668, 7610, 7526, 7484, 7426, 7404, 7440, 7490, 7536,
     7564, 7534, 7622, 7688, 7700, 6704, 7122, 6880, 7080, 6718, 6758, 7266, 6816, 7500, 7442, 7328,
     7322, 7810, 8032, 7804, 7678, 7630, 7874, 6578, 6476, 6468, 6558, 6720, 6744, 6732, 6648, 6814,
@@ -72,7 +72,8 @@ const CAPCOM_CONSUMED_PREFIX_BYTES: [usize; 201] = [
     6950, 6986, 7034, 7070, 7100, 7144, 7170, 7202, 7232, 7260, 7284, 7302, 7326, 7348, 7364, 7378,
     7388, 7400, 7404, 7410, 7410, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040,
     8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 7998,
-    7948, 7888, 7816, 7720, 7586, 7448, 7292, 7130, 6944,
+    7948, 7888, 7816, 7720, 7586, 7448, 7292, 7130, 6944, 6766, 6574, 6808, 6572, 7706, 7336, 6954,
+    6584, 7240, 6720, 6190, 7372, 6546, 5688, 4922, 3942, 3096, 2704, 2704, 2704,
 ];
 
 fn capcom_consumed_prefix(sector: &[u8], start: usize) -> Result<Option<XaRange>> {
@@ -96,7 +97,7 @@ fn capcom_consumed_prefix(sector: &[u8], start: usize) -> Result<Option<XaRange>
     Ok((length != 0).then_some(XaRange {
         offset: start + 40,
         length,
-        evidence: "original US CAPCOM coded prefix, frames 1..201; LOGO 0x801D7578 fresh-input return-zero frontier minus eight bytes for lookahead; exact source identity",
+        evidence: "original US CAPCOM coded prefix, frames 1..221; LOGO 0x801D7578 fresh-input return-zero frontier minus eight bytes for lookahead; exact source identity",
     }))
 }
 
@@ -211,7 +212,7 @@ impl XaSource {
         let expected_prefixes = if self.expected_packet_headers == 0 {
             (0, 0)
         } else {
-            (804, CAPCOM_CONSUMED_PREFIX_BYTES.iter().sum())
+            (872, CAPCOM_CONSUMED_PREFIX_BYTES.iter().sum())
         };
         if (consumed_prefix_count, consumed_prefix_bytes) != expected_prefixes {
             return Err(Error::Invalid(
