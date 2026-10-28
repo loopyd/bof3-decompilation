@@ -1,5 +1,7 @@
 # Sprite selection
 
+## Three-root banks
+
 The `sprite_bank::select` library function follows the original US helper at
 `SLUS_004.22@0x8014dc08`. Supply decoded bank bytes, a root ordinal, the original
 byte selector and the image-skip condition from the same consumer observation.
@@ -30,3 +32,23 @@ bytes editable or bind a physical source to an active runtime entity. It does
 not choose a palette, submit image uploads, establish residency or render a
 frame. Conditional image selection cannot be treated as an unconditional bank
 or image dependency.
+
+## Resident banks
+
+The `resident::select(source, group_index, program_index)` library function
+follows the resident branch at `SLUS_004.22@0x8014d878`. Supply the resident
+payload referenced by `0x801459f0`, the same entity's unsigned 16-bit value at
+`0x2c`, and its program byte at `0x4b`. The function validates the recognized
+resident layout before selecting a program.
+
+The group offset is a 32-bit value relative to the resident base. The program
+offset is a 16-bit value relative to that group. The result contains the program
+header offset, bounded end and original step pairs in payload coordinates.
+Repeated offsets retain the original alias. A missing group or program returns
+an error. Selection returns the two-byte program header; it does not initialize
+or advance playback.
+
+The caller must establish the active resident base and entity together. Table
+membership does not assign an action, game direction, playback mode, image or
+palette. This lookup does not prove runtime reachability, upload residency or
+rendered appearance.

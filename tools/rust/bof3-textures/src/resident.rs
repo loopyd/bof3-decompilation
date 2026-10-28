@@ -163,6 +163,26 @@ pub fn decode(source: &[u8]) -> Result<Document> {
     })
 }
 
+/// Resolve the resident branch at SLUS_004.22@0x8014D878 before initialization.
+/// The caller must bind source to the base at 0x801459F0 and supply the same
+/// entity's u16 group at +0x2C and byte program at +0x4B. No direction is inferred.
+pub fn select(source: &[u8], group_index: u16, program_index: u8) -> Result<Sequence> {
+    let document = decode(source)?;
+    let group = document
+        .groups
+        .get(usize::from(group_index))
+        .ok_or_else(|| invalid(&format!("selected group {group_index} exceeds its table")))?;
+    group
+        .programs
+        .get(usize::from(program_index))
+        .cloned()
+        .ok_or_else(|| {
+            invalid(&format!(
+                "selected program {program_index} exceeds group {group_index}'s table"
+            ))
+        })
+}
+
 /// Change existing forward step pairs and cell records. Unchanged program aliases
 /// do not override edits; changed aliases must agree on the complete step list.
 pub fn encode(source: &[u8], edited: &Document) -> Result<Vec<u8>> {
