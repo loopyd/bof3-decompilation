@@ -913,7 +913,10 @@ twelve bytes including NUL. `0x801D0CF8` draws through `0x8014FF0C`, while
 `0x80150098`. The alignment bytes at `0x801D0D05..0x801D0D08` remain
 protected. The split 16-bit formats draw at matching coordinates. Edit paired
 formats together and keep their separators in the same formatted character
-column. Runtime rendering remains unverified.
+column. Controlled party-change checks cover the edited split HP/AP fields.
+The pairs at `0x801D0CE8`/`0x801D0CF0` and `0x801D0E68`/`0x801D0E70`
+contain identical strings, so their active supplier remains indistinguishable.
+Other numeric paths remain unverified.
 
 ## Bank layout
 

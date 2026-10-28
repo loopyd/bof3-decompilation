@@ -182,6 +182,10 @@ uses the five-byte unsigned 16-bit output bound. Preserve `renderers: []`;
 formatting and the eight-byte text-slot copy are qualified, while the active
 message-bank binding is unverified. Refuse empty `ascii-format-literal`
 replacements, which can expose stale scratch bytes after the initial NUL.
+Controlled SHOP party-change checks cover the split HP/AP fields. Edit both
+halves together and keep their separators in the same formatted character
+column, since both draw at the same coordinates. Identical format-pair
+allocations remain indistinguishable; other SHOP rendering remains unverified.
 Corpus export includes these documents alongside bank documents.
 Battle append row 1 also accepts `{glyph(0xNN)}`, with a nonzero operand and at most
 five encoded bytes. Other command-bearing and untraced table rows are refused.
