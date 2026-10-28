@@ -1,6 +1,32 @@
 //! Shared decoded-PCM edit detection and bounded ADPCM allocation reconstruction.
 use crate::{codec::adpcm, codec::adpcm::encoder, Result};
+use serde::Serialize;
 use std::ops::Range;
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum LoopPolicy {
+    PreserveOriginalEncoding,
+    StabilizePcmLoop,
+    ReencodeWithoutLoop,
+}
+
+#[derive(Debug, Serialize)]
+pub struct LoopReport {
+    pub original: Option<adpcm::SampleLoop>,
+    pub output: Option<adpcm::SampleLoop>,
+    pub policy: LoopPolicy,
+}
+
+impl LoopReport {
+    pub fn preserved(sample_loop: Option<adpcm::SampleLoop>) -> Self {
+        Self {
+            original: sample_loop,
+            output: sample_loop,
+            policy: LoopPolicy::PreserveOriginalEncoding,
+        }
+    }
+}
 
 pub struct Rebuilt {
     pub bytes: Vec<u8>,
@@ -8,6 +34,7 @@ pub struct Rebuilt {
     pub encoding: Option<encoder::Report>,
     pub preserved_tail_bytes: usize,
     pub replaced_original_tail_bytes: usize,
+    pub loop_reconstruction: LoopReport,
 }
 
 pub fn rebuild(original: &[u8], pcm: &[i16], sample_loop: Option<Range<usize>>) -> Result<Rebuilt> {
@@ -22,6 +49,7 @@ pub fn rebuild(original: &[u8], pcm: &[i16], sample_loop: Option<Range<usize>>) 
             encoding: None,
             preserved_tail_bytes: decoded.trailing_bytes,
             replaced_original_tail_bytes: 0,
+            loop_reconstruction: LoopReport::preserved(decoded.sample_loop),
         });
     }
     if pcm.is_empty() {
@@ -56,5 +84,14 @@ pub fn rebuild(original: &[u8], pcm: &[i16], sample_loop: Option<Range<usize>>) 
         preserved_tail_bytes: original.len() - encoded.bytes.len(),
         replaced_original_tail_bytes: encoded.bytes.len().saturating_sub(decoded.decoded_bytes),
         encoding: Some(encoded.report),
+        loop_reconstruction: LoopReport {
+            original: decoded.sample_loop,
+            output: check.sample_loop,
+            policy: if check.sample_loop.is_some() {
+                LoopPolicy::StabilizePcmLoop
+            } else {
+                LoopPolicy::ReencodeWithoutLoop
+            },
+        },
     })
 }

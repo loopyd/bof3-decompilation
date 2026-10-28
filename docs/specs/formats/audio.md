@@ -3046,6 +3046,24 @@ The fresh BGM000 CLI extract/pack/verify smoke output is 266,240 bytes with SHA-
 `e1caf8633ce6be70524bd288b5af1c4b6042e4ca5cb3b02600affd68b8013a91`.
 Evidence is retained under `out/audio-migration/bank-pack-*`.
 
+Bank and SoundFont sample reports include `loop_reconstruction`: `original` and
+`output` hold the decoded loop metadata, including `pcm_repeat_is_stable`, and
+`policy` identifies the reconstruction. `preserve_original_encoding` retains all
+bytes and any carried-history trajectory when parsed PCM and loop endpoints are
+unchanged. `stabilize_pcm_loop` applies to edited looping samples: predictor zero
+at loop entry makes the decoded loop stable on every traversal. It can replace an
+original changing trajectory, and its encoding loss covers the supplied first-pass
+PCM; SoundFont PCM24 rounding loss is reported separately. PCM24 changes that round
+back to unchanged PCM16 can retain `preserve_original_encoding`.
+`reencode_without_loop` applies when the edited output has no loop. Arbitrary
+carried traversal histories cannot be specified by a single WAV/SF2 loop.
+
+Edited bank samples can shrink or grow within their original allocation when
+nonempty PCM and loop boundaries align to 28-frame blocks. Unconsumed allocation
+bytes are preserved; growth reports consumed original tail bytes. Empty deletion,
+implicit padding, post-loop tails without runtime context and allocation overflow
+fail explicitly. Bank reference rates and XA encoded rates retain separate roles.
+
 This does not validate complete game playback, musical edits or disc rebuilding.
 XA manifests use the separate path below.
 

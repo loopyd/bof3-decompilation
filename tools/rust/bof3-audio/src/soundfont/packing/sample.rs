@@ -32,6 +32,7 @@ pub struct SampleReport {
     pub pcm24_rounding_loss: Option<Loss>,
     pub pcm24_total_loss: Option<Loss>,
     pub encoding: Option<encoder::Report>,
+    pub loop_reconstruction: crate::sample::editing::LoopReport,
 }
 pub struct Packed {
     pub body: Vec<u8>,
@@ -562,6 +563,7 @@ fn pack_inner(
             pcm24_rounding_loss: None,
             pcm24_total_loss: None,
             encoding: None,
+            loop_reconstruction: crate::sample::editing::LoopReport::preserved(decoded.sample_loop),
         };
         if let Some(index) = sample.sf2_sample {
             if !owned.insert(index) {
@@ -642,6 +644,7 @@ fn pack_inner(
                 report.pcm24_rounding_loss = Some(quantization::measure(input, &rounded));
                 report.pcm24_total_loss = Some(quantization::measure(input, &actual));
                 report.encoding = rebuilt.encoding;
+                report.loop_reconstruction = rebuilt.loop_reconstruction;
                 body[sample.body_offset..end].copy_from_slice(&rebuilt.bytes);
             }
         }

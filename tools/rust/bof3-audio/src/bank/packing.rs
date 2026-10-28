@@ -16,6 +16,7 @@ pub struct Report {
     pub preserved_tail_bytes: usize,
     pub replaced_original_tail_bytes: usize,
     pub encoding: Option<encoder::Report>,
+    pub loop_reconstruction: crate::sample::editing::LoopReport,
 }
 
 #[derive(Debug)]
@@ -114,6 +115,7 @@ pub fn pack(
             preserved_tail_bytes: rebuilt.preserved_tail_bytes,
             replaced_original_tail_bytes: rebuilt.replaced_original_tail_bytes,
             encoding: rebuilt.encoding,
+            loop_reconstruction: rebuilt.loop_reconstruction,
         },
         bytes: rebuilt.bytes,
     })

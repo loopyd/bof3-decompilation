@@ -89,6 +89,14 @@ with zero targets to the original capacity and reports input and padding loss
 separately per channel. Longer input fails. Sector count, cue placement, history
 boundaries and overlapping-sector agreement still apply.
 
+Bank and SoundFont sample packing reports include `loop_reconstruction` with
+original and output loop metadata and the applied policy. Unchanged samples use
+`preserve_original_encoding`, including loops with carried predictor history.
+Edited loops use `stabilize_pcm_loop`: a predictor-zero entry makes decoded PCM
+repeat on every traversal. This can replace the original changing loop trajectory;
+encoding loss measures the supplied first-pass PCM. Removing a loop or editing a
+nonlooping sample uses `reencode_without_loop`.
+
 `verify --json` writes `bof3.audio-verification/v2`. Its `checks` object reports
 each category with a `status` of `pass`, `fail`, or `missing_evidence` and a
 `reason` describing the evidence or limitation.
