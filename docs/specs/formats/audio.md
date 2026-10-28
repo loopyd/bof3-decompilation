@@ -4104,9 +4104,26 @@ zero to continue the chain. Nested callbacks retain the source cursor; an
 explicit callback return from the exception abandons it before acknowledgement.
 Startup owns the flag values and handler placement.
 
-`Kernel::configure_syscall_handler` binds a distinct caller-owned RAM identifier
-for priority-zero IRQ/syscall handling. An IRQ returns zero and continues the
-chain. A syscall advances the live current TCB's saved EPC by four, including a
+[`syscalls.s`](../../../tools/rust/bof3-audio/driver/kernel/syscalls.s) exports
+`audio_syscall_handler` as an ordinary priority-zero ExCB verifier. Startup loads
+the linked code and installs its entrypoint without a host handler binding.
+Owned trap `0xBFC0011C` validates the live PCB/TCB and returns the TCB address in
+V0. It resolves the current descriptors rather than reusing the entry K0 value.
+The trap requires an active exception handler with no active event or wait
+delivery. Before guest TCB mutations, it rejects saved Cause values outside
+the supported IRQ/syscall domain, `Cause & 0x3C` equal to zero or `0x20`.
+
+Guest instructions select the IRQ/syscall path and update saved EPC, status and
+thread state as described below. Unknown syscalls use B0/7; B0/17 validates and
+restores the live current thread after callbacks. The routine reserves 24 bytes
+on an eight-byte-aligned stack, including a sixteen-byte O32 home area. Only the
+IRQ path returns normally and restores SP and RA. Other paths abandon the frame
+through exception return. Faults retain unfinished state. This service does not
+establish complete startup or original timing equivalence.
+
+The functional development `Kernel::configure_syscall_handler` binds a distinct
+caller-owned RAM identifier for priority-zero IRQ/syscall handling. An IRQ returns
+zero and continues the chain. A syscall advances the live current TCB's saved EPC by four, including a
 branch-delay syscall. Saved A0 selects the operation. Zero returns from the
 exception; one stores one in saved V0 if both saved status bits in `0x404` are
 set, otherwise zero, then clears those bits. Two sets the bits and preserves
