@@ -57,6 +57,49 @@ pub struct XaRange {
     pub evidence: &'static str,
 }
 
+// Original LOGO fresh-input frames 1..=200: return frontiers minus eight bytes.
+// The excluded lookahead and all other frame bytes remain unresolved.
+const CAPCOM_CONSUMED_PREFIX_BYTES: [usize; 200] = [
+    7640, 7690, 7752, 7776, 7810, 7826, 7766, 7668, 7610, 7526, 7484, 7426, 7404, 7440, 7490, 7536,
+    7564, 7534, 7622, 7688, 7700, 6704, 7122, 6880, 7080, 6718, 6758, 7266, 6816, 7500, 7442, 7328,
+    7322, 7810, 8032, 7804, 7678, 7630, 7874, 6578, 6476, 6468, 6558, 6720, 6744, 6732, 6648, 6814,
+    7118, 7036, 7278, 6894, 7190, 7194, 7276, 7704, 7406, 7292, 7786, 7226, 7132, 7182, 7030, 6928,
+    6954, 6810, 7098, 6550, 6846, 7328, 7260, 7406, 6818, 7000, 7164, 7076, 7110, 6844, 6596, 6850,
+    6642, 7602, 7980, 7348, 7264, 7178, 6746, 6796, 6710, 7072, 6526, 6952, 7090, 6660, 7948, 7054,
+    7038, 7076, 6832, 7284, 6984, 7442, 7354, 7068, 7158, 7268, 7634, 7734, 7754, 7754, 7754, 7754,
+    7754, 7754, 7754, 7754, 7754, 7754, 7754, 7754, 7754, 7754, 7754, 7744, 7730, 7720, 7706, 7684,
+    7660, 7628, 7608, 7590, 7602, 7642, 7692, 7744, 7814, 7862, 7928, 7964, 8014, 6842, 6884, 6916,
+    6950, 6986, 7034, 7070, 7100, 7144, 7170, 7202, 7232, 7260, 7284, 7302, 7326, 7348, 7364, 7378,
+    7388, 7400, 7404, 7410, 7410, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040,
+    8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 8040, 7998,
+    7948, 7888, 7816, 7720, 7586, 7448, 7292, 7130,
+];
+
+fn capcom_consumed_prefix(sector: &[u8], start: usize) -> Result<Option<XaRange>> {
+    let index = usize::from(u16::from_le_bytes([sector[12], sector[13]]));
+    let count = usize::from(u16::from_le_bytes([sector[14], sector[15]]));
+    let frame = u32::from_le_bytes([sector[16], sector[17], sector[18], sector[19]]) as usize;
+    if !(4..=5).contains(&count) || index >= count || !(1..=231).contains(&frame) {
+        return Err(Error::Invalid(
+            "original US CAPCOM packet disagrees with reviewed frame structure".into(),
+        ));
+    }
+    let Some(&prefix) = CAPCOM_CONSUMED_PREFIX_BYTES.get(frame - 1) else {
+        return Ok(None);
+    };
+    if prefix > count * 2016 {
+        return Err(Error::Invalid(
+            "original US CAPCOM consumed prefix exceeds its source packets".into(),
+        ));
+    }
+    let length = prefix.saturating_sub(index * 2016).min(2016);
+    Ok((length != 0).then_some(XaRange {
+        offset: start + 40,
+        length,
+        evidence: "original US CAPCOM coded prefix, frames 1..200; LOGO 0x801D7578 fresh-input return-zero frontier minus eight bytes for lookahead; exact source identity",
+    }))
+}
+
 impl XaSource {
     /// Identify reviewed metadata and payloads; original use remains separate.
     pub fn nontext_ranges(&self, data: &[u8]) -> Result<Vec<XaRange>> {
@@ -74,6 +117,8 @@ impl XaSource {
         let mut audio_count = 0;
         let mut empty_count = 0;
         let mut packet_count = 0;
+        let mut consumed_prefix_count = 0;
+        let mut consumed_prefix_bytes = 0;
         for (index, sector) in data.chunks_exact(2336).enumerate() {
             let start = index * 2336;
             if sector[..4] != sector[4..8] {
@@ -106,6 +151,11 @@ impl XaSource {
                         evidence: "original US CAPCOM packet marker/type; LOGO reader at 0x801D29B4/0x801D29C8; exact source identity; no video-body or arrival claim",
                     });
                     packet_count += 1;
+                    if let Some(prefix) = capcom_consumed_prefix(sector, start)? {
+                        consumed_prefix_count += 1;
+                        consumed_prefix_bytes += prefix.length;
+                        ranges.push(prefix);
+                    }
                 } else if sector[8..2056].iter().all(|byte| *byte == 0) {
                     ranges.push(XaRange {
                         offset: start + 8,
@@ -156,6 +206,16 @@ impl XaSource {
         {
             return Err(Error::Invalid(
                 "original US XA body count disagrees with reviewed profile".into(),
+            ));
+        }
+        let expected_prefixes = if self.expected_packet_headers == 0 {
+            (0, 0)
+        } else {
+            (800, CAPCOM_CONSUMED_PREFIX_BYTES.iter().sum())
+        };
+        if (consumed_prefix_count, consumed_prefix_bytes) != expected_prefixes {
+            return Err(Error::Invalid(
+                "original US CAPCOM consumed prefixes disagree with reviewed profile".into(),
             ));
         }
         Ok(ranges)

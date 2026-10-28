@@ -41,8 +41,8 @@ requires the pinned size and SHA-256; changed or arbitrary WAV files stay
 unresolved. See [the format contract](formats.md#cdda-audio-export).
 
 With the exact original `SLUS_004.22` present, coverage also recognizes the
-validated audio bodies, empty Form 1 user payloads, packet marker/type fields
-and reviewed sector metadata in the pinned US XA files as
+validated audio bodies, empty Form 1 user payloads, packet marker/type fields,
+bounded CAPCOM coded prefixes and reviewed sector metadata in the pinned US XA files as
 `partially-verified-xa`. Only those spans
 become known nontext; other payload bytes stay unresolved.
 See [XA payload coverage](formats.md#xa-payload-coverage).

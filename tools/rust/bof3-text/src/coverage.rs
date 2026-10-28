@@ -224,7 +224,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                         cursor,
                         start - cursor,
                         "unresolved",
-                        "XA bytes outside reviewed metadata, audio, empty payloads and packet marker/type fields".into(),
+                        "XA bytes outside reviewed metadata, audio, empty payloads and coded video prefixes".into(),
                     ));
                 }
                 record.ranges.push(range(

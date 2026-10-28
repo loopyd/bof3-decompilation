@@ -82,13 +82,23 @@ checks a packet marker and type at the start of each video sector's user payload
 The CD mode and DMA path at `0x801D28A4` bind that reader to the user-payload
 start. Coverage identifies only `[2336*s+8, 2336*s+12)` as packet metadata when
 the Form 1 video subheader and exact `60 01 01 80` marker/type bytes match.
-The remaining packet header and video payload stay unresolved.
+The remaining packet header stays unresolved.
+
+Coverage also identifies conservative coded prefixes in CAPCOM frames 1 through 200.
+Their original LOGO consumer at `0x801D7578` reads fresh input and returns zero
+with its next unread halfword in `a0`. Each reviewed prefix excludes the final
+eight fetched bytes to cover unread lookahead. The original packet index, count
+and frame ID bind each prefix to ordered 2016-byte bodies at sector offset 40.
+Coverage admits only the recorded source slices, totaling 1,485,588 bytes.
+It leaves 552,588 video-body bytes unresolved, including excluded tails and
+frames 201 through 231. These bounds establish neither each frame's logical end
+nor whole-movie playback.
 
 Static format identification does not establish original sector selection,
 arrival, playback, command completion, predictor history or hardware handling
 of parameter copies.
 Audio spare bytes at `[2312,2332)` and Form 1 user payloads outside the reviewed
-empty payloads and packet marker/type fields remain unresolved.
+empty payloads, packet marker/type fields and reviewed coded prefixes remain unresolved.
 Exact playback endpoints and packed-ID caller bounds remain unverified. Changed
 sources, other builds and arbitrary files that resemble XA remain unresolved.
 
