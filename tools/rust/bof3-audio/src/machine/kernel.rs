@@ -23,6 +23,7 @@ pub struct Kernel {
     counter_handlers: Option<[[u32; 2]; 4]>,
     generic_handler: Option<(u32, u32)>,
     syscall_handler: Option<u32>,
+    cd_removal: Option<u32>,
     exception_delivery: Option<ExceptionDelivery>,
     waiting_event: Option<PendingWait>,
     event_calls: EventCalls,
@@ -46,6 +47,7 @@ impl Default for Kernel {
             counter_handlers: None,
             generic_handler: None,
             syscall_handler: None,
+            cd_removal: None,
             exception_delivery: None,
             waiting_event: None,
             event_calls: EventCalls::default(),
@@ -123,6 +125,19 @@ impl Kernel {
         Ok(())
     }
 
+    /// Bind authored guest A0/72 code. Startup loads its instructions and
+    /// initializes its mutable handles and node pointers; no BIOS state is used.
+    /// The guest routine performs its syscall through normal exception delivery.
+    pub fn configure_cd_removal(&mut self, entry: u32) -> Result<()> {
+        self.require_plain_context()?;
+        if self.cd_removal.is_some() {
+            return Err("owned CD removal entry already configured".into());
+        }
+        self.validate_owned_handler(entry)?;
+        self.cd_removal = Some(entry);
+        Ok(())
+    }
+
     fn validate_owned_handler(&self, handler: u32) -> Result<usize> {
         super::exception_calls::validate_handler(handler)?;
         if Self::is_call(handler) {
@@ -139,6 +154,9 @@ impl Kernel {
             .is_some_and(|(address, _)| ram_offset(address, 4).ok() == Some(offset))
             || self
                 .syscall_handler
+                .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
+            || self
+                .cd_removal
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset));
         if occupied {
             return Err("owned exception handlers require distinct RAM identifiers".into());
@@ -554,6 +572,19 @@ impl Kernel {
                     vector,
                     service,
                     name: "ReturnFromException",
+                    waiting: false,
+                    callback: None,
+                });
+            }
+            (0xa0, 0x72) => {
+                let entry = self
+                    .cd_removal
+                    .ok_or("owned CD removal entry is not configured")?;
+                cpu.resume_at(entry);
+                return Ok(Call {
+                    vector,
+                    service,
+                    name: "_96_remove",
                     waiting: false,
                     callback: None,
                 });

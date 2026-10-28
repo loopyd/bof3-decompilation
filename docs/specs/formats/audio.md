@@ -3900,8 +3900,30 @@ This result is specific to the pinned reference and does not establish other BIO
 revisions or behavior under concurrent mutation. See
 [external evidence](../../reference/psx-kernel.md#exception-chain-registration).
 
-Original BIOS allocation/content and composite `A0:72` CD-driver removal remain
-separate startup obligations.
+The authored [CD removal service](../../../tools/rust/bof3-audio/driver/kernel/cd.s)
+implements `A0:72` as guest instructions. `Kernel::configure_cd_removal(entry)`
+binds a caller-loaded aligned RAM entry; an unconfigured call fails explicitly.
+The kernel forwards the call with its original arguments and return address.
+The routine enters a critical section through an architectural syscall, closes
+five live event handles and removes two priority-zero nodes in order. It returns
+the second removal's value and leaves interrupts disabled. The original caller
+owns the later critical-section exit.
+
+`audio_cd_removal_state` contains five handle words followed by two node-pointer
+words. Startup initializes the handles and node contents, loads relocated pointer
+words, zeroes the service BSS and supplies the event, thread and exception tables.
+The default five handles are zero, so they close event slot zero five times.
+The default node pointers name two distinct caller-owned sixteen-byte BSS nodes;
+they do not assume original BIOS addresses or an installed CD driver. Live state
+can instead identify registered handles and nodes. Failures retain prior event
+closures or node removals; no guest rollback is implied.
+
+The service reserves a 32-byte O32 frame with a sixteen-byte argument home area,
+preserves RA, SP, S0 and S1, and uses the existing event and chain ABI. Its
+internal frame, syscall PC, saved volatile registers and instruction timing are
+owned implementation details. Original BIOS allocation/content, complete
+standalone startup and the full reproducible driver build remain separate
+obligations.
 
 Four default [checks](../../../tools/rust/bof3-audio/tests/exception_chains.rs)
 cover all priorities, alias identity, opaque state, rebinding, malformed graphs
