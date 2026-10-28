@@ -4019,6 +4019,33 @@ transactional failure. Paired checks use
 plain RAM register bindings and the same CPU model. Device timing, remaining
 SDK consumers and complete sound startup remain separate obligations.
 
+The linked [sequence configuration](../../../tools/rust/bof3-audio/driver/audio/configuration.s)
+exports `audio_sequence_configure`. A0 supplies caller-owned records, A1 supplies
+the handle count and A2 supplies the sequence count per handle. Both counts
+truncate to signed sixteen bits. Each record has stride `0xAC`; configuration
+writes only the original selected fields, leaving the other bytes intact.
+Nonpositive handle counts skip pointer and record initialization. A positive
+handle count with a nonpositive sequence count still writes handle pointers,
+using the signed sequence count for their spacing, then skips record writes.
+
+The owned state keeps 32 handle pointers, a 32-by-16-word channel matrix and
+the two count halfwords contiguous in that order. Cold kernel initialization
+clears them. The original allocator's 32-bit mask bounds valid handles to zero
+through thirty-one. Configuration adds no bounds check, so callers must supply
+at most 32 handles and storage for every addressed record. Pointer and count
+loads remain live throughout initialization; caller-buffer aliases can change
+later writes and loop bounds. Invalid storage can fault after earlier writes.
+The component retains the adjacent-state layout but does not promise equivalent
+effects for arbitrary out-of-object counts or addresses.
+
+`audio_sequence_set_playback_byte` stores the low byte of A0 in
+`audio_sequence_playback_byte`. `audio_sequence_set_voice_count` accepts low
+bytes one through twenty-four, stores the byte in `audio_sequence_voice_count`
+and returns it. Other low bytes return 255 without changing the stored count.
+Both control bytes start at zero. These entries retain their original V0
+behavior; the playback-byte setter and configuration add no result contract.
+Original SDK consumers and complete game initialization remain to be migrated.
+
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
 
