@@ -43,7 +43,7 @@ The report retains the file's hash and source record. Any different WAV stays
 unresolved, including a changed file with the same header. This classification
 adds no editable text layout or playback acceptance.
 
-## XA encoded audio bodies
+## XA payload coverage
 
 Coverage identifies encoded audio bodies in the original US `S_XA00.STR`,
 `MAGIC00.STR` and `VOICE.STR`. It requires the exact original `SLUS_004.22`
@@ -61,10 +61,17 @@ nontext. Every byte in this 2304-byte body is an active parameter, a verified
 parameter copy or packed samples. This format classification includes validated
 bodies outside the original cue prefixes.
 
+Coverage also identifies empty Form 1 user payloads in these pinned sources.
+They require matching subheader copies, no audio, video or data submode bits,
+zero coding information and an entirely zero 2048-byte user payload. Only
+`[2336*s+8, 2336*s+2056)` becomes known nontext. Nonzero Form 1 payloads stay
+unresolved. Empty payloads do not establish padding, unused allocation or their
+original purpose and consumer.
+
 Static format identification does not establish original sector selection,
 arrival, playback, command completion, predictor history or hardware handling
 of parameter copies.
-Subheaders, spare bytes, EDC, other sectors and `CAPCOM30.STR` remain unresolved.
+Subheaders, spare bytes, EDC, ECC, other sectors and `CAPCOM30.STR` remain unresolved.
 Exact playback endpoints and packed-ID caller bounds remain unverified. Changed
 sources, other builds and arbitrary files that resemble XA remain unresolved.
 

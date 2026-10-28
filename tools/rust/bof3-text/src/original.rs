@@ -46,12 +46,19 @@ pub fn archive(data: &[u8]) -> Result<bool> {
 
 pub struct XaSource {
     pub file: &'static File,
-    expected_bodies: usize,
+    expected_audio_bodies: usize,
+    expected_empty_payloads: usize,
+}
+
+pub struct XaBody {
+    pub offset: usize,
+    pub length: usize,
+    pub evidence: &'static str,
 }
 
 impl XaSource {
-    /// Identify complete encoded bodies; sector selection and playback remain separate.
-    pub fn audio_sectors(&self, data: &[u8]) -> Result<Vec<usize>> {
+    /// Identify encoded audio and empty user payloads; original use remains separate.
+    pub fn bodies(&self, data: &[u8]) -> Result<Vec<XaBody>> {
         if data.len() != self.file.size || sha256_hex(data) != self.file.sha256 {
             return Err(Error::Invalid(
                 "XA body classification requires the exact original source".into(),
@@ -62,9 +69,23 @@ impl XaSource {
                 "original US XA sector extent disagrees".into(),
             ));
         }
-        let mut sectors = Vec::new();
+        let mut bodies = Vec::new();
+        let mut audio_count = 0;
+        let mut empty_count = 0;
         for (index, sector) in data.chunks_exact(2336).enumerate() {
             if sector[2] & 0x2e != 0x24 {
+                if sector[..4] == sector[4..8]
+                    && sector[2] & 0x2e == 0
+                    && sector[3] == 0
+                    && sector[8..2056].iter().all(|byte| *byte == 0)
+                {
+                    bodies.push(XaBody {
+                        offset: index * 2336 + 8,
+                        length: 2048,
+                        evidence: "original US empty Form 1 user payload; all 2048 bytes zero; original purpose and consumption unverified",
+                    });
+                    empty_count += 1;
+                }
                 continue;
             }
             let valid_groups = sector[8..2312].chunks_exact(128).all(|group| {
@@ -79,28 +100,34 @@ impl XaSource {
                     "original US XA sector {index} disagrees with reviewed four-bit format"
                 )));
             }
-            sectors.push(index);
+            bodies.push(XaBody {
+                offset: index * 2336 + 8,
+                length: 2304,
+                evidence: "original US XA encoded body; supported Form 2 four-bit header, verified parameter copies and active parameters; no claim of game selection, arrival or playback",
+            });
+            audio_count += 1;
         }
-        if sectors.len() != self.expected_bodies {
+        if audio_count != self.expected_audio_bodies || empty_count != self.expected_empty_payloads
+        {
             return Err(Error::Invalid(
                 "original US XA body count disagrees with reviewed profile".into(),
             ));
         }
-        Ok(sectors)
+        Ok(bodies)
     }
 }
 
-/// Canonical sources whose encoded XA bodies have original-consumer format evidence.
+/// Canonical XA sources with reviewed encoded audio or empty Form 1 user payloads.
 pub fn xa_sources(executable: &[u8]) -> Result<Vec<XaSource>> {
     if sha256_hex(executable) != US_EXECUTABLE_SHA256 {
         return Ok(Vec::new());
     }
     let original = disc()?;
     let mut streams = Vec::new();
-    for (path, expected_bodies) in [
-        ("BIN/SCE_XA/S_XA00.STR", 11_302),
-        ("BIN/BMAG_XA/MAGIC00.STR", 14_856),
-        ("BIN/SCE_XA/VOICE.STR", 297),
+    for (path, expected_audio_bodies, expected_empty_payloads) in [
+        ("BIN/SCE_XA/S_XA00.STR", 11_302, 0),
+        ("BIN/BMAG_XA/MAGIC00.STR", 14_856, 0),
+        ("BIN/SCE_XA/VOICE.STR", 297, 3239),
     ] {
         let file = original
             .files
@@ -113,7 +140,8 @@ pub fn xa_sources(executable: &[u8]) -> Result<Vec<XaSource>> {
             })?;
         streams.push(XaSource {
             file,
-            expected_bodies,
+            expected_audio_bodies,
+            expected_empty_payloads,
         });
     }
     Ok(streams)

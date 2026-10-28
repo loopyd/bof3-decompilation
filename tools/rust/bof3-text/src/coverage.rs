@@ -217,17 +217,21 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
         }) {
             record.status = "partially-verified-xa".into();
             let mut cursor = 0;
-            for sector in stream.audio_sectors(&bytes)? {
-                let start = sector * 2336 + 8;
+            for body in stream.bodies(&bytes)? {
+                let start = body.offset;
                 record.ranges.push(range(
                     cursor,
                     start - cursor,
                     "unresolved",
-                    "XA bytes outside validated encoded-audio bodies".into(),
+                    "XA bytes outside validated audio and empty user payloads".into(),
                 ));
-                record.ranges.push(range(start, 2304, "known-nontext",
-                    "original US XA encoded body; supported Form 2 four-bit header, verified parameter copies and active parameters; no claim of game selection, arrival or playback".into()));
-                cursor = start + 2304;
+                record.ranges.push(range(
+                    start,
+                    body.length,
+                    "known-nontext",
+                    body.evidence.into(),
+                ));
+                cursor = start + body.length;
             }
             record.ranges.push(range(
                 cursor,
