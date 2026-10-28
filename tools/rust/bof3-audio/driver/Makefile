@@ -5,7 +5,7 @@ AS = $(REPO)/bin/as
 LD = $(REPO)/bin/ld
 OBJCOPY = $(REPO)/bin/objcopy
 NM = $(REPO)/bin/nm
-SOURCES = $(addprefix kernel/,startup.s cd.s events.s exceptions.s interrupts.s syscalls.s callbacks.s) audio/spu.s
+SOURCES = $(addprefix kernel/,startup.s cd.s events.s exceptions.s interrupts.s syscalls.s callbacks.s) $(addprefix audio/,spu.s tick.s)
 OBJECTS = $(addprefix $(OUT)/,$(SOURCES:.s=.o))
 
 .PHONY: bof3-audio-driver clean
