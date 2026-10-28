@@ -17,7 +17,12 @@ use crate::{
     Result,
 };
 use serde::Serialize;
-use std::{collections::BTreeSet, fmt::Write as _, fs, path::PathBuf};
+use std::{
+    collections::{btree_map::Entry, BTreeMap, BTreeSet},
+    fmt::Write as _,
+    fs,
+    path::PathBuf,
+};
 
 pub struct Options {
     pub disc_root: Option<PathBuf>,
@@ -92,11 +97,13 @@ pub fn banks(options: &Options) -> Result<Report> {
             "WAV unity note 60 is an export convention; original tone center/shift and key ranges are recorded separately",
             "fixed PCM loops with pcm_repeat_is_stable=false approximate continuing ADPCM predictor history",
             "bank roles identify source-qualified dispatcher references; a selected bank retains every sample, including samples with unresolved roles",
+            "bank loader song IDs use each preserved source alone; other supplied archives do not change that export context",
             "active layout, gameplay note/voice context, accepted playback and vocal classification remain unresolved",
             "XML includes full original EMI bytes; bank PCM/loop packing is supported within existing allocations; music extraction remains incomplete",
         ],
     };
     let mut paths = BTreeSet::new();
+    let mut source_songs = BTreeMap::<String, BTreeMap<String, Vec<u16>>>::new();
     for asset in selected {
         let source = catalog
             .sources
@@ -114,6 +121,21 @@ pub fn banks(options: &Options) -> Result<Report> {
         }
         let MediaImage::Emi(image) = media else {
             return Err("bank source is not EMI".into());
+        };
+        let source_songs = match source_songs.entry(asset.source.clone()) {
+            Entry::Occupied(entry) => entry.into_mut(),
+            Entry::Vacant(entry) => {
+                let mut local = Catalog::from_media(&asset.source, MediaImage::Emi(image.clone()))?;
+                loader::resolve(&mut local, &executable)?;
+                entry.insert(
+                    local
+                        .assets
+                        .into_iter()
+                        .filter(|asset| matches!(asset.data, AssetData::Song { .. }))
+                        .map(|asset| (asset.id, asset.game_song_ids))
+                        .collect(),
+                )
+            }
         };
         let entry = asset.entry.ok_or("bank header entry missing")?;
         let folder = format!("banks/{}/bank-{entry}", sha256_hex(asset.source.as_bytes()));
@@ -177,13 +199,9 @@ pub fn banks(options: &Options) -> Result<Report> {
             )?;
         }
         for song in &association.songs {
-            let song_asset = catalog
-                .assets
-                .iter()
-                .find(|a| a.id == *song)
-                .ok_or("associated song missing")?;
+            let game_song_ids = source_songs.get(song).ok_or("associated song missing")?;
             writeln!(manifest, "<song id=\"{}\">", xml::attribute(song)?)?;
-            for cue in &song_asset.game_song_ids {
+            for cue in game_song_ids {
                 writeln!(manifest, "<game_song id=\"{cue}\"/>")?;
             }
             manifest.push_str("</song>\n");

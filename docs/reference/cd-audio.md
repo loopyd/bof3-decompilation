@@ -31,12 +31,14 @@ fidelity require separate evidence.
 Rust's emulator-reference 18.9 kHz path follows native `FeedXA`: insert the signed
 arithmetic midpoint of the previous and current sample, then the current sample,
 through the shared 37.8 kHz zigzag filter. It retains previous samples across
-chunks, sectors and coding changes. Mono fills both rings. A bounded synthetic
-4-bit stereo interval agrees with native decoded PCM, generated frame counts and
-consumed output at unity gain under a fresh-process construction context. The
-native interpolation rings are not directly observed at capture start. Remaining
-queued output, other formats and histories, clipping and hardware fidelity need
-separate evidence.
+chunks, sectors and coding changes. Mono fills both rings. Bounded synthetic
+stereo intervals agree with native decoded PCM, generated frame counts and
+consumed output at unity gain for 4-bit 18.9 kHz input and 8-bit input at both
+encoded rates. The 8-bit intervals consume all generated frames.
+The fresh-process construction context does not directly observe native
+interpolation rings at capture start.
+Other formats and histories, clipping, queued output from other intervals and
+hardware fidelity need separate evidence.
 
 Rust `Volume::apply_xa` follows native XA gain: sum each output's matrix
 products in signed 64-bit arithmetic, multiply by 33617, shift by 22, saturate to

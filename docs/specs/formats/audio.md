@@ -2473,12 +2473,13 @@ input produces 280 output frames and returns to phase six without tail padding.
 
 Bounded original mono and stereo 4-bit comparisons agree with the
 [native XA/CDDA submission path](../../../third_party/pcsx-redux-agentic/src/spu/xa.cc)
-for consumed 37.8 kHz output and native gain conversion. A synthetic stereo 4-bit
-18.9 kHz interval also agrees for decoded samples, generated frame counts and
-consumed output under a fresh-process construction context. That context does
-not directly observe the native interpolation rings. Wider formats and histories,
-clipping, output left queued and hardware fidelity remain unaccepted. Both models
-require explicit selection. See
+for consumed 37.8 kHz output and native gain conversion. Synthetic stereo
+intervals at 18.9 kHz with 4-bit coding and at both encoded rates with 8-bit coding
+also agree for decoded samples, generated frame counts and consumed output under
+a fresh-process construction context. The 8-bit intervals consume all generated
+frames. That context does not directly observe the native interpolation rings.
+Other formats and histories, clipping, output left queued in other intervals and
+hardware fidelity remain unaccepted. Both models require explicit selection. See
 [coefficient provenance and differences](../../reference/cd-audio.md).
 Malformed stereo input or failed sector decoding leaves processing state intact.
 Emphasis remains unsupported.
@@ -2940,9 +2941,12 @@ The root `audio.xml` (`bof3.audio-extraction/v1`) references relative bank
 manifests. Each folder's `bank.xml` (`bof3.audio-bank/v1`) records qualified
 source/header/body and game-bank identities, executable hash and pitch routine
 addresses, all parsed program/tone fields, diagnostics and sample WAV paths.
-Loader metadata retains auxiliary/song links, known game-song IDs and all three
-possible runtime layouts with their addresses/capacities; the active layout
-remains unresolved.
+Loader metadata retains auxiliary/song links and all three possible runtime
+layouts with their addresses/capacities. Game-song IDs use the preserved archive
+alone, so other supplied archives cannot change the bank folder's cue annotations.
+Whole-file aliases may therefore carry multiple candidate IDs. Catalog queries
+retain their supplied-source context and canonical disc-path preference. The
+active layout remains unresolved.
 The `preservation` element contains the entire original EMI as hexadecimal text
 with its byte length and SHA-256, including unrelated entries, padding, ordering
 and trailing bytes. Each bank folder therefore retains its own source snapshot.
@@ -3046,9 +3050,10 @@ associations. Original EMI files are not needed: the catalog is reconstructed
 from XML preservation bytes. [Bank schema validation](../../../tools/rust/bof3-audio/src/bank/manifest.rs)
 checks identities, header/body selection, programs, tones, diagnostics, loader
 layouts, auxiliary/song links and export context against that catalog. Unknown,
-missing, duplicate or conflicting fields fail explicitly. Numeric spelling and
-collection order may vary without changing their meaning. XML metadata is
-preservation evidence; edits to programs, tuning and allocation tables are not
+missing, duplicate or conflicting fields fail explicitly. Cue lists use the same
+single-source context as extraction. Re-extract folders whose cue annotations
+depend on other archives. Numeric spelling and collection order may vary without
+changing their meaning. XML metadata is preservation evidence; edits to programs, tuning and allocation tables are not
 supported. Older manifests missing required fields must be re-extracted.
 
 [`sample_pack`](../../../tools/rust/bof3-audio/src/bank/packing.rs) validates each
