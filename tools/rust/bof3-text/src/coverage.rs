@@ -413,6 +413,41 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                         "remaining record entry consumers unverified".into(),
                                     ));
                                 }
+                            } else if let Some(spans) = (original_us
+                                && entry.index == 0
+                                && entry.transfer_mode == 0
+                                && entry.ram_ptr == 0x8003_b800)
+                                .then(|| crate::original::sprite_bank_ranges(payload))
+                                .flatten()
+                            {
+                                let mut at = 0;
+                                for span in spans {
+                                    if span.offset > at {
+                                        record.ranges.push(range(
+                                            entry.offset + at,
+                                            span.offset - at,
+                                            "unresolved",
+                                            "sprite-bank bytes outside reviewed graphics storage"
+                                                .into(),
+                                        ));
+                                    }
+                                    record.ranges.push(RangeRecord {
+                                        offset: entry.offset + span.offset,
+                                        length: span.length,
+                                        entry: Some(entry.index),
+                                        status: "known-nontext",
+                                        evidence: span.evidence.into(),
+                                    });
+                                    at = span.offset + span.length;
+                                }
+                                if at < payload.len() {
+                                    record.ranges.push(range(
+                                        entry.offset + at,
+                                        payload.len() - at,
+                                        "unresolved",
+                                        "remaining sprite-bank bytes outside reviewed graphics storage".into(),
+                                    ));
+                                }
                             } else {
                                 record.ranges.push(RangeRecord {
                                     offset: entry.offset,

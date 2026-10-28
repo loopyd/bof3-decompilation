@@ -43,6 +43,22 @@ The report retains the file's hash and source record. Any different WAV stays
 unresolved, including a changed file with the same header. This classification
 adds no editable text layout or playback acceptance.
 
+## Raw sprite-bank coverage
+
+For original US `BPLU349.EMI` entry 0, coverage recognizes the image headers,
+packed image words, mode-2 token streams and 32-halfword palette records consumed
+by `SLUS_004.22@0x8014E6D0`, `0x8014E7F8`, `0x8014E8FC` and `0x80166C48`.
+It requires the original archive identity, raw transfer mode, load address
+`0x8003B800` and the exact 331,788-byte payload hash. The fixed ranges use payload
+coordinates and become file offsets by adding the entry's 2048-byte offset.
+
+Only these serialized graphics ranges become known nontext. Mode-2 four-byte
+opaque prefixes, allocation gaps, selection data and all other bytes remain
+unresolved. Packed words contain unused bits; classification does not assign
+those bits a meaning. It does not establish the absence of rasterized text,
+complete CLUTs, runtime selection, upload, residency or display. Other sprite
+banks remain unresolved under this rule.
+
 ## XA payload coverage
 
 Coverage identifies encoded audio bodies in the original US `S_XA00.STR`,
@@ -61,6 +77,11 @@ For each validated sector index `s`, only `[2336*s+8, 2336*s+2312)` is known
 nontext. Every byte in this 2304-byte body is an active parameter, a verified
 parameter copy or packed samples. This format classification includes validated
 bodies outside the original cue prefixes.
+
+The twenty bytes at `[2336*s+2312, 2336*s+2332)` must also be entirely zero.
+Coverage identifies these zero bytes as nontext under the same exact-source
+qualification. Their original purpose and consumption remain unverified; this
+rule does not establish padding or reusable allocation.
 
 Coverage also identifies empty Form 1 user payloads in these pinned sources.
 They require matching subheader copies, no audio, video or data submode bits,
@@ -97,8 +118,8 @@ nor whole-movie playback.
 Static format identification does not establish original sector selection,
 arrival, playback, command completion, predictor history or hardware handling
 of parameter copies.
-Audio spare bytes at `[2312,2332)` and Form 1 user payloads outside the reviewed
-empty payloads, packet marker/type fields and reviewed coded prefixes remain unresolved.
+Form 1 user payloads outside the reviewed empty payloads, packet marker/type
+fields and reviewed coded prefixes remain unresolved.
 Exact playback endpoints and packed-ID caller bounds remain unverified. Changed
 sources, other builds and arbitrary files that resemble XA remain unresolved.
 

@@ -51,7 +51,7 @@ pub struct XaSource {
     expected_packet_headers: usize,
 }
 
-pub struct XaRange {
+pub struct NontextRange {
     pub offset: usize,
     pub length: usize,
     pub evidence: &'static str,
@@ -76,7 +76,7 @@ const CAPCOM_CONSUMED_PREFIX_BYTES: [usize; 221] = [
     6584, 7240, 6720, 6190, 7372, 6546, 5688, 4922, 3942, 3096, 2704, 2704, 2704,
 ];
 
-fn capcom_consumed_prefix(sector: &[u8], start: usize) -> Result<Option<XaRange>> {
+fn capcom_consumed_prefix(sector: &[u8], start: usize) -> Result<Option<NontextRange>> {
     let index = usize::from(u16::from_le_bytes([sector[12], sector[13]]));
     let count = usize::from(u16::from_le_bytes([sector[14], sector[15]]));
     let frame = u32::from_le_bytes([sector[16], sector[17], sector[18], sector[19]]) as usize;
@@ -94,7 +94,7 @@ fn capcom_consumed_prefix(sector: &[u8], start: usize) -> Result<Option<XaRange>
         ));
     }
     let length = prefix.saturating_sub(index * 2016).min(2016);
-    Ok((length != 0).then_some(XaRange {
+    Ok((length != 0).then_some(NontextRange {
         offset: start + 40,
         length,
         evidence: "original US CAPCOM coded prefix, frames 1..221; LOGO 0x801D7578 fresh-input return-zero frontier minus eight bytes for lookahead; exact source identity",
@@ -103,7 +103,7 @@ fn capcom_consumed_prefix(sector: &[u8], start: usize) -> Result<Option<XaRange>
 
 impl XaSource {
     /// Identify reviewed metadata and payloads; original use remains separate.
-    pub fn nontext_ranges(&self, data: &[u8]) -> Result<Vec<XaRange>> {
+    pub fn nontext_ranges(&self, data: &[u8]) -> Result<Vec<NontextRange>> {
         if data.len() != self.file.size || sha256_hex(data) != self.file.sha256 {
             return Err(Error::Invalid(
                 "XA classification requires the exact original source".into(),
@@ -127,7 +127,7 @@ impl XaSource {
                     "original US XA sector {index} has inconsistent subheaders"
                 )));
             }
-            ranges.push(XaRange {
+            ranges.push(NontextRange {
                 offset: start,
                 length: 8,
                 evidence: "original US Mode 2 duplicated sector subheader; exact source identity",
@@ -146,7 +146,7 @@ impl XaSource {
                             "original US packet sector {index} disagrees with reviewed marker/type"
                         )));
                     }
-                    ranges.push(XaRange {
+                    ranges.push(NontextRange {
                         offset: start + 8,
                         length: 4,
                         evidence: "original US CAPCOM packet marker/type; LOGO reader at 0x801D29B4/0x801D29C8; exact source identity; no video-body or arrival claim",
@@ -158,14 +158,14 @@ impl XaSource {
                         ranges.push(prefix);
                     }
                 } else if sector[8..2056].iter().all(|byte| *byte == 0) {
-                    ranges.push(XaRange {
+                    ranges.push(NontextRange {
                         offset: start + 8,
                         length: 2048,
                         evidence: "original US empty Form 1 user payload; all 2048 bytes zero; original purpose and consumption unverified",
                     });
                     empty_count += 1;
                 }
-                ranges.push(XaRange {
+                ranges.push(NontextRange {
                     offset: start + 2056,
                     length: 280,
                     evidence: "original US Form 1 EDC and ECC P/Q fields; reviewed against disk sector owner; exact source identity",
@@ -184,17 +184,27 @@ impl XaSource {
                     "original US XA sector {index} disagrees with reviewed four-bit format"
                 )));
             }
-            ranges.push(XaRange {
+            ranges.push(NontextRange {
                 offset: start + 8,
                 length: 2304,
                 evidence: "original US XA encoded body; supported Form 2 four-bit header, verified parameter copies and active parameters; no claim of game selection, arrival or playback",
+            });
+            if sector[2312..2332].iter().any(|byte| *byte != 0) {
+                return Err(Error::Invalid(format!(
+                    "original US XA sector {index} disagrees with reviewed zero-byte profile"
+                )));
+            }
+            ranges.push(NontextRange {
+                offset: start + 2312,
+                length: 20,
+                evidence: "original US zero-filled Form 2 bytes between encoded sound groups and EDC; all 20 bytes zero; exact source identity; original purpose and consumption unverified",
             });
             if sector[2332..].iter().any(|byte| *byte != 0) {
                 return Err(Error::Invalid(format!(
                     "original US XA sector {index} disagrees with reviewed absent EDC"
                 )));
             }
-            ranges.push(XaRange {
+            ranges.push(NontextRange {
                 offset: start + 2332,
                 length: 4,
                 evidence: "original US Form 2 absent EDC field; stored zero, not a validated checksum; exact source identity",
@@ -221,6 +231,89 @@ impl XaSource {
         }
         Ok(ranges)
     }
+}
+
+// Original BPLU349 entry0: image headers, packed words, token streams and palettes.
+// Mode-2 opaque prefixes and every other byte remain unresolved.
+const BPLU349_GRAPHICS_RANGES: &[(usize, usize)] = &[
+    (76, 4104),
+    (4184, 8),
+    (4196, 899),
+    (5096, 8),
+    (5108, 4685),
+    (9796, 4104),
+    (13904, 8),
+    (13916, 1677),
+    (15596, 8),
+    (15608, 930),
+    (16540, 8),
+    (16552, 6324),
+    (22880, 749),
+    (23632, 8),
+    (23644, 828),
+    (24476, 4159),
+    (28636, 6844),
+    (35484, 318),
+    (35808, 64),
+    (110668, 4104),
+    (114776, 13672),
+    (128452, 5146),
+    (133600, 8),
+    (133612, 5181),
+    (138796, 10940),
+    (149740, 996),
+    (150740, 7549),
+    (158292, 8),
+    (158304, 4919),
+    (163224, 8),
+    (163236, 3537),
+    (166776, 8),
+    (166788, 5259),
+    (172048, 8),
+    (172060, 6015),
+    (178076, 8),
+    (178088, 500),
+    (178596, 128),
+    (221272, 5480),
+    (226756, 1382),
+    (228140, 8),
+    (228152, 4310),
+    (232464, 8),
+    (232476, 931),
+    (233408, 8),
+    (233420, 824),
+    (234248, 1599),
+    (235848, 2748),
+    (238600, 1567),
+    (240168, 8),
+    (240180, 3803),
+    (243984, 6844),
+    (250832, 4104),
+    (254940, 8),
+    (254952, 1684),
+    (256640, 4245),
+    (260888, 8),
+    (260900, 321),
+    (261228, 64),
+];
+
+/// Recognized serialized graphics storage; no rasterized-text or display claim.
+pub fn sprite_bank_ranges(data: &[u8]) -> Option<Vec<NontextRange>> {
+    if data.len() != 331_788
+        || sha256_hex(data) != "3633597f03d7f2129ff7d7fc1ad0fe7c2e6a0affb2562e789c4a0b97b5d14b3e"
+    {
+        return None;
+    }
+    Some(
+        BPLU349_GRAPHICS_RANGES
+            .iter()
+            .map(|&(offset, length)| NontextRange {
+                offset,
+                length,
+                evidence: "original US BPLU349 image headers, packed words, mode-2 tokens and 32-halfword palette records; consumers 0x8014E6D0, 0x8014E7F8, 0x8014E8FC and 0x80166C48; opaque prefixes excluded; exact source identity; no rasterized-text absence or runtime claim",
+            })
+            .collect(),
+    )
 }
 
 /// Canonical sources with reviewed sector metadata and bounded payload fields.
