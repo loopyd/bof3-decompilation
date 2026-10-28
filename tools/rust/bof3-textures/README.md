@@ -219,8 +219,9 @@ executable after changing its interpretation sources.
 See [Edit a shared font glyph](docs/glyph-edit.md) for a complete words-edit,
 packing, and byte-verification example using the original FIRST atlas.
 
-The manifest schema is `bof3.textures-package/v4`. The package includes complete
-snapshots of the captured inputs, raw resources, its bound catalog, and coverage. A
+The manifest schema is `bof3.textures-package/v5`. The package includes qualified
+original snapshots, validated baseline snapshots, raw resources, its bound catalog,
+and coverage. A new original export uses the original snapshots as its baselines. A
 qualified raw upload also has `words.json` and indexed `indices-4.png` and
 `indices-8.png` views. These PNGs use diagnostic grayscale. They do not identify
 a game palette, texture mode, UV layout, or assembled sprite.
@@ -253,7 +254,7 @@ Records 11 through 14 at `0x801d1c6c` select UV `(0, 0)`, a 256x192 rectangle,
 and palette rows 487 through 490 respectively. The four previews apply those
 palettes to the whole atlas. They do not reproduce the loop's scrolling or fades.
 
-Previews retain the original snapshot's colors even when source views are edited.
+Previews retain the package baseline's colors even when source views are edited.
 Keep them unchanged. Edit the corresponding `indices-4.png` or `indices-8.png`
 and the palette resource's `words.json`; packing rejects changes to a preview.
 Exact palette words remain the authority for STP and blending metadata.
@@ -360,9 +361,10 @@ Packing reconstructs from the package's snapshots without opening the former
 source paths. It validates all members and outputs in a private staging directory,
 then publishes a new tree with no-replace rename. It checks the resulting entry
 bytes and every unrelated archive byte. The pack report records these checks
-separately from runtime observations. Packed edits currently require their bound
-package for interpretation; treating an edited archive as an original US input
-is rejected.
+separately from runtime observations. To re-export a packed output, use
+`unpack OUTPUT --package EDIT_PACKAGE --output NEW_PACKAGE`.
+[Reopen packed edits](docs/reopen-edits.md) explains baseline validation and further
+edits. Treating an edited archive as an original US input is rejected.
 
 The `bof3.textures-pack-report/v2` report lists changed physical resources in
 `files[].edited_resources`. Its `potential_impact` lists those resources and their
@@ -373,9 +375,10 @@ visited once. Equal bytes in separate original sources retain separate identitie
 
 Each affected resource retains its dependency targets, evidence statuses and
 unresolved reasons. `impact_complete` is true only when every dependency in this
-impact set has a verified target inside the package catalog. An unchanged package
-has an empty impact set. These fields describe catalog relationships; `runtime`
-continues to report execution evidence separately. The package manifest contains
+impact set has a verified target inside the package catalog. An original package
+without edits has an empty impact set. A reopened package continues to report its
+baseline changes relative to the qualified original. These fields describe catalog
+relationships; `runtime` continues to report execution evidence separately. The package manifest contains
 the graph before editing in `index.resources` and `index.records`, through their
 `dependencies` and `uses` fields.
 

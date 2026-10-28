@@ -20,7 +20,7 @@ use crate::{
     sprite_bank,
 };
 
-pub const SCHEMA: &str = "bof3.textures-package/v4";
+pub const SCHEMA: &str = "bof3.textures-package/v5";
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -62,6 +62,7 @@ pub struct Manifest {
     pub schema: String,
     pub index: Index,
     pub snapshots: Vec<Snapshot>,
+    pub baselines: Vec<Snapshot>,
     pub exports: Vec<Export>,
 }
 
@@ -268,6 +269,7 @@ pub fn unpack(input: &Input, destination: &Path) -> Result<Manifest> {
     let manifest = Manifest {
         schema: SCHEMA.into(),
         snapshots: snapshots(&index),
+        baselines: snapshots(&index),
         exports: exports(&index)?,
         index,
     };
@@ -277,97 +279,157 @@ pub fn unpack(input: &Input, destination: &Path) -> Result<Manifest> {
         if written.insert(&snapshot.member) {
             stage.write(&snapshot.member, &bytes)?;
         }
-        let resources = manifest
-            .index
-            .resources
-            .iter()
-            .zip(&manifest.exports)
-            .filter(|(resource, _)| resource.source == source.path);
-        for (resource, export) in resources {
-            let start = resource.offset as usize;
-            let raw = bytes
-                .get(start..start + resource.size as usize)
-                .ok_or_else(|| Error::Invalid(format!("{} exceeds snapshot", resource.id)))?;
-            stage.write(&export.raw, raw)?;
-            for view in &export.previews {
-                stage.write(
-                    &view.member,
-                    &png::encode(&preview::image(&manifest.index, resource, view, &bytes)?)?,
-                )?;
+        export_source(&stage, &manifest, source, &bytes)?;
+    }
+    publish_package(stage, &manifest)?;
+    Ok(manifest)
+}
+
+fn export_source(
+    stage: &Stage,
+    manifest: &Manifest,
+    source: &sources::SourceFile,
+    bytes: &[u8],
+) -> Result<()> {
+    let resources = manifest
+        .index
+        .resources
+        .iter()
+        .zip(&manifest.exports)
+        .filter(|(resource, _)| resource.source == source.path);
+    for (resource, export) in resources {
+        let start = resource.offset as usize;
+        let raw = bytes
+            .get(start..start + resource.size as usize)
+            .ok_or_else(|| Error::Invalid(format!("{} exceeds snapshot", resource.id)))?;
+        stage.write(&export.raw, raw)?;
+        for view in &export.previews {
+            stage.write(
+                &view.member,
+                &png::encode(&preview::image(&manifest.index, resource, view, bytes)?)?,
+            )?;
+        }
+        if export.decoded.is_some() || export.sprite.is_some() {
+            let decoded = bank_bytes(resource, raw)?;
+            if let Some(member) = &export.decoded {
+                stage.write(member, &decoded)?;
             }
-            if export.decoded.is_some() || export.sprite.is_some() {
-                let decoded = bank_bytes(resource, raw)?;
-                if let Some(member) = &export.decoded {
-                    stage.write(member, &decoded)?;
+            if let Some(member) = &export.sprite {
+                let document = sprite_bank::decode(&decoded)?;
+                stage.write(member, &serde_json::to_vec_pretty(&document)?)?;
+                for view in &export.bank_images {
+                    let descriptor = &document.roots[view.root].images[view.image];
+                    stage.write(
+                        &view.member,
+                        &png::encode(&bank_image_view(&decoded, descriptor)?)?,
+                    )?;
                 }
-                if let Some(member) = &export.sprite {
-                    let document = sprite_bank::decode(&decoded)?;
-                    stage.write(member, &serde_json::to_vec_pretty(&document)?)?;
-                    for view in &export.bank_images {
-                        let descriptor = &document.roots[view.root].images[view.image];
-                        stage.write(
-                            &view.member,
-                            &png::encode(&bank_image_view(&decoded, descriptor)?)?,
-                        )?;
-                    }
-                }
             }
-            if let Some(member) = &export.animation {
-                stage.write(member, &serde_json::to_vec_pretty(&resident::decode(raw)?)?)?;
+        }
+        if let Some(member) = &export.animation {
+            stage.write(member, &serde_json::to_vec_pretty(&resident::decode(raw)?)?)?;
+        }
+        if let (Some(palette), Some(member)) = (&resource.palette_upload, &export.words) {
+            stage.write(
+                member,
+                &serde_json::to_vec_pretty(&palette.decode_words(raw)?)?,
+            )?;
+        }
+        if let Some(info) = &resource.save_icon {
+            let images = save_icon::decode(raw, info)?;
+            if let Some(member) = &export.words {
+                stage.write(member, &serde_json::to_vec_pretty(&images.palette.words)?)?;
             }
-            if let (Some(palette), Some(member)) = (&resource.palette_upload, &export.words) {
+            for (member, frame) in export.save_frames.iter().zip(&images.frames) {
                 stage.write(
                     member,
-                    &serde_json::to_vec_pretty(&palette.decode_words(raw)?)?,
+                    &png::encode(
+                        &images
+                            .palette
+                            .image(info.width, info.height, frame.clone())?,
+                    )?,
                 )?;
             }
-            if let Some(info) = &resource.save_icon {
-                let images = save_icon::decode(raw, info)?;
-                if let Some(member) = &export.words {
-                    stage.write(member, &serde_json::to_vec_pretty(&images.palette.words)?)?;
-                }
-                for (member, frame) in export.save_frames.iter().zip(&images.frames) {
-                    stage.write(
-                        member,
-                        &png::encode(&images.palette.image(
-                            info.width,
-                            info.height,
-                            frame.clone(),
-                        )?)?,
-                    )?;
-                }
+        }
+        if let Some(upload) = &resource.upload {
+            if let Some(member) = &export.colors_16 {
+                stage.write(
+                    member,
+                    &png::encode_words(&png::WordImage {
+                        width: upload.width_words(),
+                        height: upload.height(),
+                        words: upload.linear_words(raw)?,
+                    })?,
+                )?;
             }
-            if let Some(upload) = &resource.upload {
-                if let Some(member) = &export.colors_16 {
-                    stage.write(
-                        member,
-                        &png::encode_words(&png::WordImage {
-                            width: upload.width_words(),
-                            height: upload.height(),
-                            words: upload.linear_words(raw)?,
-                        })?,
-                    )?;
-                }
-                if let Some(member) = &export.words {
-                    stage.write(
-                        member,
-                        &serde_json::to_vec_pretty(&upload.linear_words(raw)?)?,
-                    )?;
-                }
-                for (bits, member) in [(4, &export.indices_4), (8, &export.indices_8)] {
-                    if let Some(member) = member {
-                        stage.write(member, &png::encode(&image(resource, raw, bits)?)?)?;
-                    }
+            if let Some(member) = &export.words {
+                stage.write(
+                    member,
+                    &serde_json::to_vec_pretty(&upload.linear_words(raw)?)?,
+                )?;
+            }
+            for (bits, member) in [(4, &export.indices_4), (8, &export.indices_8)] {
+                if let Some(member) = member {
+                    stage.write(member, &png::encode(&image(resource, raw, bits)?)?)?;
                 }
             }
         }
     }
+    Ok(())
+}
+
+fn publish_package(stage: Stage, manifest: &Manifest) -> Result<()> {
     stage.write("manifest.json", &serde_json::to_vec_pretty(&manifest)?)?;
     stage.write(
         "coverage.json",
         &serde_json::to_vec_pretty(&catalog::coverage(&manifest.index))?,
     )?;
-    stage.publish()?;
+    stage.publish()
+}
+
+/// Re-export only bytes reproduced by a qualified edit package.
+pub fn unpack_output(root: &Path, package_root: &Path, destination: &Path) -> Result<Manifest> {
+    let root = fs::canonicalize(root)?;
+    if !root.is_dir() {
+        return Err(Error::Invalid("packed output must be a directory".into()));
+    }
+    let package_root = fs::canonicalize(package_root)?;
+    let mut manifest = load(&package_root)?;
+    let stage = Stage::new(destination, &root)?;
+    if stage.destination.starts_with(&package_root) || package_root.starts_with(&stage.destination)
+    {
+        return Err(Error::Invalid("package/output overlap is refused".into()));
+    }
+    let mut baselines = Vec::with_capacity(manifest.index.files.len());
+    let mut written = BTreeSet::new();
+    for (source, snapshot) in manifest.index.files.iter().zip(&manifest.snapshots) {
+        let reconstructed = reconstruct(&package_root, &manifest, source, snapshot)?;
+        let actual = read_member(&root, &source.path, sources::MAX_FILE_BYTES)?;
+        if actual != reconstructed.output {
+            return Err(Error::Invalid(format!(
+                "{} differs from the bound package reconstruction",
+                source.path
+            )));
+        }
+        let hash = sha256_hex(&actual);
+        let baseline = Snapshot {
+            source: source.path.clone(),
+            member: format!("snapshots/{hash}.bin"),
+            sha256: hash,
+        };
+        for (member, bytes) in [
+            (&snapshot.member, reconstructed.original.as_slice()),
+            (&baseline.member, actual.as_slice()),
+        ] {
+            if written.insert(member.clone()) {
+                stage.write(member, bytes)?;
+            }
+        }
+        export_source(&stage, &manifest, source, &actual)?;
+        baselines.push(baseline);
+    }
+    manifest.baselines = baselines;
+    publish_package(stage, &manifest)?;
     Ok(manifest)
 }
 
@@ -437,7 +499,132 @@ pub fn load(root: &Path) -> Result<Manifest> {
             "package catalog differs from original snapshot interpretation".into(),
         ));
     }
+    if manifest.baselines.len() != manifest.index.files.len() {
+        return Err(Error::Invalid("package baseline inventory differs".into()));
+    }
+    for ((source, snapshot), baseline) in manifest
+        .index
+        .files
+        .iter()
+        .zip(&manifest.snapshots)
+        .zip(&manifest.baselines)
+    {
+        if baseline.source != source.path
+            || baseline.member != format!("snapshots/{}.bin", baseline.sha256)
+        {
+            return Err(Error::Invalid("package baseline descriptor differs".into()));
+        }
+        let original = read_member(root, &snapshot.member, sources::MAX_FILE_BYTES)?;
+        let bytes = read_member(root, &baseline.member, sources::MAX_FILE_BYTES)?;
+        if bytes.len() as u64 != source.size || sha256_hex(&bytes) != baseline.sha256 {
+            return Err(Error::Invalid(format!(
+                "altered package baseline {}",
+                source.path
+            )));
+        }
+        validate_baseline(&manifest.index, source, &original, &bytes)?;
+    }
     Ok(manifest)
+}
+
+fn validate_resource_edit(resource: &Resource, original: &[u8], edited: &[u8]) -> Result<()> {
+    let encoded = if let Some(upload) = &resource.upload {
+        upload.encode_words(&upload.linear_words(edited)?, original)?
+    } else if let Some(palette) = &resource.palette_upload {
+        palette.encode_words(&palette.decode_words(edited)?, original)?
+    } else if let Some(info) = &resource.save_icon {
+        save_icon::validate_edit(original, edited, info)?;
+        save_icon::encode(original, info, &save_icon::decode(edited, info)?)?
+    } else if resource.resident_animation.is_some() {
+        resident::encode(original, &resident::decode(edited)?)?
+    } else if resource.sprite_bank.is_some() {
+        let before = bank_bytes(resource, original)?;
+        let after = bank_bytes(resource, edited)?;
+        let document = sprite_bank::decode(&after)?;
+        let mut planes = Vec::new();
+        for (root, record) in document.roots.iter().enumerate() {
+            for (image, descriptor) in record.images.iter().enumerate() {
+                if matches!(descriptor.mode, 1 | 2) {
+                    let bytes =
+                        bank_image::decode(&after, descriptor.offset, descriptor.end)?.bytes;
+                    planes.push((root, image, bytes));
+                }
+            }
+        }
+        let edits: Vec<_> = planes
+            .iter()
+            .map(|(root, image, bytes)| sprite_bank::ImageEdit {
+                root: *root,
+                image: *image,
+                bytes,
+            })
+            .collect();
+        let encoded = sprite_bank::encode_images(&before, &document, &edits)?;
+        if encoded != after {
+            return Err(Error::Invalid(format!(
+                "{} baseline changes opaque sprite bytes",
+                resource.id
+            )));
+        }
+        if resource.bank.is_some() {
+            bank::encode(&encoded, original)?
+        } else {
+            encoded
+        }
+    } else {
+        return Err(Error::Invalid(format!(
+            "{} baseline changes a preservation-only resource",
+            resource.id
+        )));
+    };
+    if encoded != edited {
+        return Err(Error::Invalid(format!(
+            "{} baseline changes bytes outside its supported edit contract",
+            resource.id
+        )));
+    }
+    Ok(())
+}
+
+fn validate_baseline(
+    index: &Index,
+    source: &sources::SourceFile,
+    original: &[u8],
+    baseline: &[u8],
+) -> Result<()> {
+    if baseline == original {
+        return Ok(());
+    }
+    if source.emi_entries.is_none() {
+        return Err(Error::Invalid(
+            "non-archive baseline edits are unresolved".into(),
+        ));
+    }
+    let archive = ArchiveImage::from_bytes(original.to_vec())?;
+    let actual = ArchiveImage::from_bytes(baseline.to_vec())?;
+    let mut replacements = Vec::new();
+    for resource in index
+        .resources
+        .iter()
+        .filter(|resource| resource.source == source.path)
+    {
+        let slot = resource
+            .entry
+            .ok_or_else(|| Error::Invalid("archive resource has no entry locator".into()))?;
+        let before = archive.entry(slot)?;
+        let after = actual.entry(slot)?;
+        if before != after {
+            validate_resource_edit(resource, before, after)?;
+            replacements.push((slot, after));
+        }
+    }
+    if archive.replace_entries(&replacements)?.bytes() != baseline {
+        return Err(Error::Invalid(format!(
+            "{} baseline changes unrelated archive bytes",
+            source.path
+        )));
+    }
+    Ok(())
 }
 
 #[derive(Serialize)]
@@ -595,8 +782,22 @@ pub(crate) fn reconstruct(
             source.path
         )));
     }
+    let baseline = manifest
+        .baselines
+        .iter()
+        .find(|baseline| baseline.source == source.path)
+        .ok_or_else(|| Error::Invalid("missing package baseline".into()))?;
+    let baseline_bytes = read_member(root, &baseline.member, sources::MAX_FILE_BYTES)?;
+    if baseline_bytes.len() as u64 != source.size || sha256_hex(&baseline_bytes) != baseline.sha256
+    {
+        return Err(Error::Invalid(format!(
+            "altered package baseline {}",
+            source.path
+        )));
+    }
     let mut replacements: Vec<(usize, Vec<u8>)> = Vec::new();
     let mut edited_resources = Vec::new();
+    let mut edited_entries = Vec::new();
     for (resource, export) in manifest
         .index
         .resources
@@ -604,14 +805,16 @@ pub(crate) fn reconstruct(
         .zip(&manifest.exports)
         .filter(|(resource, _)| resource.source == source.path)
     {
-        let raw = &original[resource.offset as usize..(resource.offset + resource.size) as usize];
+        let range = resource.offset as usize..(resource.offset + resource.size) as usize;
+        let original_raw = &original[range.clone()];
+        let raw = &baseline_bytes[range];
         for view in &export.previews {
             let imported = png::decode(&read_member(
                 root,
                 &view.member,
                 (png::MAX_PIXELS * 2 + 65536) as u64,
             )?)?;
-            if imported != preview::image(&manifest.index, resource, view, &original)? {
+            if imported != preview::image(&manifest.index, resource, view, &baseline_bytes)? {
                 return Err(Error::Invalid(format!(
                     "{}: derivative preview is read-only; edit source indices and palette words",
                     view.member
@@ -635,12 +838,12 @@ pub(crate) fn reconstruct(
         }
         edit.add(&export.raw, imported_raw)?;
         if let Some(member) = &export.sprite {
-            edit.add(member, import_bank(root, resource, export, raw)?)?;
+            edit.add(member, import_bank(root, resource, export, original_raw)?)?;
         }
         if let Some(member) = &export.animation {
             let document: resident::Document =
                 serde_json::from_slice(&read_member(root, member, 16 * 1024 * 1024)?)?;
-            edit.add(member, resident::encode(raw, &document)?)?;
+            edit.add(member, resident::encode(original_raw, &document)?)?;
         }
         if let (Some(palette), Some(member)) = (&resource.palette_upload, &export.words) {
             let words: Vec<u16> =
@@ -652,7 +855,7 @@ pub(crate) fn reconstruct(
             if let Some(member) = &export.words {
                 let mut images = original_images.clone();
                 images.palette.words = serde_json::from_slice(&read_member(root, member, 65536)?)?;
-                edit.add(member, save_icon::encode(raw, info, &images)?)?;
+                edit.add(member, save_icon::encode(original_raw, info, &images)?)?;
             }
             for (frame, member) in export.save_frames.iter().enumerate() {
                 let imported = png::decode(&read_member(root, member, 65536)?)?;
@@ -663,7 +866,7 @@ pub(crate) fn reconstruct(
                 }
                 let mut images = original_images.clone();
                 images.frames[frame] = original_images.palette.import_indices(&imported)?;
-                edit.add(member, save_icon::encode(raw, info, &images)?)?;
+                edit.add(member, save_icon::encode(original_raw, info, &images)?)?;
             }
         }
         if let Some(upload) = &resource.upload {
@@ -706,7 +909,7 @@ pub(crate) fn reconstruct(
         }
         let bytes = edit.finish()?;
         if let Some(info) = &resource.save_icon {
-            save_icon::validate_edit(raw, &bytes, info)?;
+            save_icon::validate_edit(original_raw, &bytes, info)?;
         }
         if resource.resident_animation.is_some()
             && resident::encode(raw, &resident::decode(&bytes)?)? != bytes
@@ -715,6 +918,14 @@ pub(crate) fn reconstruct(
                 "{}: resident edits must preserve all bytes outside existing step pairs and qualified cell records",
                 resource.id
             )));
+        }
+        if bytes != original_raw {
+            edited_entries.push(
+                resource
+                    .entry
+                    .ok_or_else(|| Error::Invalid("non-archive edit is unresolved".into()))?,
+            );
+            edited_resources.push(resource.id.clone());
         }
         if bytes != raw {
             if resource.upload.is_none()
@@ -732,11 +943,10 @@ pub(crate) fn reconstruct(
                 .entry
                 .ok_or_else(|| Error::Invalid("non-archive edit is unresolved".into()))?;
             replacements.push((entry, bytes));
-            edited_resources.push(resource.id.clone());
         }
     }
     let output = if source.emi_entries.is_some() {
-        let archive = ArchiveImage::from_bytes(original.clone())?;
+        let archive = ArchiveImage::from_bytes(baseline_bytes.clone())?;
         let borrowed: Vec<_> = replacements
             .iter()
             .map(|(slot, bytes)| (*slot, bytes.as_slice()))
@@ -753,19 +963,14 @@ pub(crate) fn reconstruct(
         verify_unrelated(&archive, &output, &replacements)?;
         output.bytes().to_vec()
     } else {
-        original.clone()
+        baseline_bytes
     };
-    if replacements.is_empty() && output != original {
-        return Err(Error::Invalid(format!(
-            "{} unchanged reconstruction differs",
-            source.path
-        )));
-    }
+    validate_baseline(&manifest.index, source, &original, &output)?;
     let report = PackedFile {
         source: source.path.clone(),
         original_sha256: source.sha256.clone(),
         output_sha256: sha256_hex(&output),
-        edited_entries: replacements.iter().map(|(slot, _)| *slot).collect(),
+        edited_entries,
         edited_resources,
     };
     Ok(Reconstruction {
@@ -1015,6 +1220,7 @@ pub fn source_package(root: &Path, destination: &Path) -> Result<usize> {
             members.push(relative.join("docs/selection.md"));
             members.push(relative.join("docs/catalog.md"));
             members.push(relative.join("docs/glyph-edit.md"));
+            members.push(relative.join("docs/reopen-edits.md"));
             for file in ["LICENSE", "mise.toml", "rust-toolchain.toml"] {
                 members.push(relative.join(file));
             }

@@ -34,6 +34,9 @@ enum Command {
         output: PathBuf,
         #[arg(long)]
         source: Option<String>,
+        /// Re-export packed outputs whose bytes match this qualified edit package.
+        #[arg(long, conflicts_with = "source")]
+        package: Option<PathBuf>,
     },
     /// Validate a self-contained package and publish a new archive tree.
     Pack {
@@ -128,8 +131,13 @@ fn run(cli: Cli) -> Result<bool> {
             input,
             output,
             source,
+            package,
         } => {
-            let manifest = package::unpack(&sources::qualify(&input, source.as_deref())?, &output)?;
+            let manifest = if let Some(package_root) = package {
+                package::unpack_output(&input, &package_root, &output)?
+            } else {
+                package::unpack(&sources::qualify(&input, source.as_deref())?, &output)?
+            };
             print_json(
                 &serde_json::json!({"schema": manifest.schema, "output": output, "files": manifest.snapshots.len(), "resources": manifest.exports.len(), "full_support": false}),
             )?;
