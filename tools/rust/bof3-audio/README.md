@@ -170,8 +170,10 @@ other qualities fail. PC Ogg delivery accepts 32000, 44100 and 48000 Hz; PSX
 rendering requires 44100 Hz. Neither path converts rates implicitly.
 The report's `delivery` object records the encoder,
 settings, hashes and exact presentation frames. Its decoded PCM error is not
-measured per output. See the [codec contract](../../../docs/reference/audio-codecs.md)
-for the representative numerical quality policy and independent-consumer scope.
+measured per output. Independent representative comparisons require at least
+30 dB SNR and absolute gain error at most 0.01 per nonzero-energy channel.
+Silent channels require decoded peak at most one PCM16 unit. This numerical
+policy does not establish perceptual transparency or game playback fidelity.
 MP3 delivery remains disabled because its full-band noise quality is unresolved.
 
 Build a standalone PS-X EXE for the selected song with the full repository's
