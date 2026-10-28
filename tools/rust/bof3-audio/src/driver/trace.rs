@@ -15,6 +15,7 @@ use std::collections::BTreeMap;
 #[derive(Default)]
 pub struct Trace {
     pub pcs: BTreeMap<u32, u64>,
+    pub external_pcs: BTreeMap<u32, u64>,
     pub regions: BTreeMap<(String, &'static str), u64>,
     pub services: BTreeMap<(String, u32, u32), u64>,
     pub indirect: BTreeMap<(u32, u32), u64>,
@@ -86,6 +87,9 @@ impl Trace {
         } else {
             "other_ram"
         };
+        if location.file_offset.is_none() {
+            *self.external_pcs.entry(pc).or_default() += 1;
+        }
         self.previous = Some(pc);
         *self.regions.entry((stage.into(), region)).or_default() += 1;
         if let Ok(vector) = ram_offset(pc, 4) {

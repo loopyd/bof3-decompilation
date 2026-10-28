@@ -4820,44 +4820,35 @@ this does not prove a sixteen-handler table or that selectors 7–15 are legal.
 Allowed caller domains and initialization writes remain unresolved. Reviewed
 symbols and partial recovered C are corroborating leads, not replacement proof.
 
-Post-bootstrap sequence-0 probes for BGM053 and BGM004 request 44,100 reference
-sample frames and include original play/stop calls; stop completion brings each
-to 44,101. The BGM053 instruction audit includes 14,214 candidate instructions,
-118 direct call entries, 1,503 delay slots and 191 unresolved sites (139 register
-returns, 30 other indirect transfers, 20 breaks and two syscalls). These are
-conservative candidates, not a minimal driver or a function count. BGM004's
-context-expanded audit includes 13,544 instructions and 184 unresolved sites.
+Run the release example as `closure US_EXE [BIOS EMI SEQUENCE FRAMES]`.
+With only the executable argument it audits the static root inventory. The
+five-argument form observes original guest preparation, then plays and stops the
+selected SEP sequence for a bounded output interval. Preparation records all six
+stages and original call results. BIOS boot and host media staging are separate
+from those guest observations.
 
-Both intervals execute 54,180 instructions in low RAM populated by BIOS boot,
-with no BIOS-ROM instruction during the measured interval. Each enters vector
-`0xB0` with selector `0x17` sixty times. Absence of ROM execution therefore does
-not establish BIOS independence. The observer records re-entry after low-RAM
-PC `0xE9C` at original `0x80174AE4` (file `0xDEAE4`), and returns after
-`0x1014` to the guest idle boundary. `0x80174AE4` is a resumed instruction
-inside an initialization/control path, not an inferred function entry. Its
-conditional call reaches `0x80174B58`. Adding observed re-entry roots accounts
-for 34 original instructions absent from direct-root traversal. No measured
-executable-resident PC remains outside either final context-expanded audit.
+The probe uses the shared [trace owner](../../../tools/rust/bof3-audio/src/driver/trace.rs)
+for original instruction locations, stage-qualified regions and BIOS calls,
+register targets, memory footprints and external transitions. It rejects changed
+executable instruction bytes. Each playback host call resets the trace's previous
+PC, so host-directed calls cannot manufacture re-entry edges. Preparation's
+observer lacks host-call boundary notifications; its external transitions remain
+separate raw observations and do not seed re-entry roots.
 
-The BGM053 trace records 1,220 distinct executable-instruction memory footprints
-across 537 addresses; BGM004 records 1,075 across 476. Each footprint carries
-source PC/file offset, effective address, width, access direction and hit count.
-IRQ/SPU registers occur among them. These are pre-instruction address observations
-for unchanged executable-resident code, not complete data ownership: memory
-accesses performed by low-RAM/ROM code, bootstrap initialization, cache-content
-provenance, other sequences and dynamic SFX/voice/XA paths remain unmeasured.
-Register dispatch targets and re-entry predecessors are likewise contextual
-observations, not proofs of all possible targets or callable entry boundaries.
+Observed register targets and qualified playback re-entry targets expand the
+conservative static roots. `observed_not_in_closure` reports executable PCs that
+remain outside that audit. An empty list covers only the supplied scenario.
+Register targets can be return continuations; they do not establish function
+boundaries or the complete domain of an indirect call.
 
-Receipts: `out/audio-migration/driver-closure-final-bgm053.json`,
-`driver-closure-final-bgm004.json`, bounded `driver-closure-*-rizin.txt`, and
-`driver-closure-rizin-status.json`. Reproduce with the release example
-`closure US_EXE BIOS EMI FRAMES`; omit the last three arguments for a static
-root-inventory audit. Six focused [checks](../../../tools/rust/bof3-audio/tests/driver/closure.rs)
-cover delays, indirect/exception boundaries, aliases, external targets, limits,
-profile rejection and the original cue table snapshot. The next required work
-is initialization/data ownership and complete SFX/voice/callback coverage;
-no leaf pruning or standalone execution gate is accepted yet.
+Memory footprints record source PC, effective address, width, direction and hit
+count before instruction execution. They do not establish retirement, incoming
+values, writers or complete data ownership. Host staging, device-internal DMA,
+BIOS bootstrap, wider sequences and SFX/voice/XA histories require separate
+evidence. The [existing checks](../../../tools/rust/bof3-audio/tests/driver/closure.rs)
+cover delay slots, indirect and exception boundaries, aliases, external targets,
+limits, profile rejection and the original cue table snapshot. No sampled trace
+authorizes pruning or standalone acceptance.
 
 
 ### Driver preparation dependencies
