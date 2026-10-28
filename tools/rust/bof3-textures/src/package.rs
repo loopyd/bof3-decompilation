@@ -999,7 +999,10 @@ pub fn source_package(root: &Path, destination: &Path) -> Result<usize> {
             "source-package destination overlaps the EMI crate".into(),
         ));
     }
-    let mut members = vec![PathBuf::from("config/original-us-disc.json")];
+    let mut members = vec![
+        PathBuf::from("config/original-us-disc.json"),
+        PathBuf::from("tools/rust/bof3-disk/README.md"),
+    ];
     for name in ["bof3-textures", "emi-ex"] {
         let relative = PathBuf::from(format!("tools/rust/{name}"));
         let source = root.join(&relative);
@@ -1011,6 +1014,7 @@ pub fn source_package(root: &Path, destination: &Path) -> Result<usize> {
             members.push(relative.join("docs/composition.md"));
             members.push(relative.join("docs/selection.md"));
             members.push(relative.join("docs/catalog.md"));
+            members.push(relative.join("docs/glyph-edit.md"));
             for file in ["LICENSE", "mise.toml", "rust-toolchain.toml"] {
                 members.push(relative.join(file));
             }

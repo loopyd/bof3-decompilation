@@ -216,6 +216,9 @@ executable after changing its interpretation sources.
 
 ## Edit packages
 
+See [Edit a shared font glyph](docs/glyph-edit.md) for a complete words-edit,
+packing, and byte-verification example using the original FIRST atlas.
+
 The manifest schema is `bof3.textures-package/v4`. The package includes complete
 snapshots of the captured inputs, raw resources, its bound catalog, and coverage. A
 qualified raw upload also has `words.json` and indexed `indices-4.png` and
