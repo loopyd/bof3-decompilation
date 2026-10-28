@@ -92,6 +92,7 @@ fn streams_pack_without_original_sources_and_preserve_interleaving_and_opaque_by
         extract(&source, &export, None, Kind::Stream);
         fs::remove_file(source).unwrap();
         let mut options = bof3_audio::xa::packing::Options {
+            padding: bof3_audio::xa::packing::Padding::Reject,
             input: export.clone(),
             executable: None,
             output: directory.0.join("unchanged"),
@@ -144,6 +145,7 @@ fn manifest_conflicts_capacity_failures_and_bad_metadata_do_not_publish() {
     let export = directory.0.join("export");
     extract(&source, &export, None, Kind::Stream);
     let opts = bof3_audio::xa::packing::Options {
+        padding: bof3_audio::xa::packing::Padding::Reject,
         input: export.clone(),
         executable: None,
         output: directory.0.join("failed"),
@@ -224,6 +226,7 @@ fn cli_dispatches_xa_roots_without_an_executable_and_preserves_existing_output()
     assert_eq!(report["sources"][0]["byte_equal"], true);
     assert!(
         bof3_audio::xa::packing::assets(&bof3_audio::xa::packing::Options {
+            padding: bof3_audio::xa::packing::Padding::Reject,
             input: export,
             executable: None,
             output: output.clone()
@@ -266,6 +269,7 @@ fn complete_original_xa_sources_pack_stream_and_cue_exports_byte_exactly() {
                 Kind::Cue => cues += extracted.assets,
             }
             let report = bof3_audio::xa::packing::assets(&bof3_audio::xa::packing::Options {
+                padding: bof3_audio::xa::packing::Padding::Reject,
                 input: export.clone(),
                 executable: Some(exe.clone()),
                 output: packed.clone(),
@@ -331,6 +335,7 @@ fn original_cue_edit_preserves_other_sectors_and_rejects_runtime_conflicts() {
     }
     fs::write(wav, wave.to_bytes().unwrap()).unwrap();
     let mut options = bof3_audio::xa::packing::Options {
+        padding: bof3_audio::xa::packing::Padding::Reject,
         input: export,
         executable: Some(executable),
         output: directory.0.join("edited"),

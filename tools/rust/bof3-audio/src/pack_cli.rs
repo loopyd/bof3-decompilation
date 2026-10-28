@@ -7,6 +7,7 @@ Audio packing:
   pack --mode audio --input FOLDER [--executable PSX_EXE] --output NEW_DIR [--json]
   Bank folders/roots and XA roots preserve unchanged EMI/STR bytes.
   WAV edits must fit allocations; XA cues require compatible history boundaries.
+  XA roots accept --xa-padding reject|zero (default reject) for shorter WAV input.
   Executable required for banks and recorded XA runtime metadata.
 Music packing:
   pack --mode music --input FOLDER --executable PSX_EXE --output NEW_DIR [--json]
@@ -17,6 +18,7 @@ Music packing:
 pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let (mut mode, mut input, mut executable, mut output) = (None, None, None, None);
     let mut json = false;
+    let mut padding = None;
     while let Some(arg) = args.next() {
         match arg.to_str() {
             Some("--mode") if mode.is_none() => {
@@ -35,6 +37,15 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
                     args.next().ok_or("--output needs a new directory")?,
                 ))
             }
+            Some("--xa-padding") if padding.is_none() => {
+                padding = Some(
+                    match args.next().and_then(|v| v.into_string().ok()).as_deref() {
+                        Some("reject") => crate::xa::packing::Padding::Reject,
+                        Some("zero") => crate::xa::packing::Padding::Zero,
+                        _ => return Err("pack: --xa-padding requires reject or zero".into()),
+                    },
+                );
+            }
             Some("--json") if !json => json = true,
             _ => return Err(format!("pack: unknown or repeated option {arg:?}").into()),
         }
@@ -46,6 +57,9 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let input = input.ok_or("--input is required")?;
     let output = output.ok_or("--output is required")?;
     if mode == "music" {
+        if padding.is_some() {
+            return Err("pack: --xa-padding applies only to XA extraction roots".into());
+        }
         let report = crate::music::packing::songs(&pack::Options {
             input,
             output,
@@ -90,6 +104,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
                 input,
                 executable,
                 output,
+                padding: padding.unwrap_or_default(),
             })?;
             if json {
                 println!("{}", serde_json::to_string_pretty(&report)?);
@@ -109,6 +124,11 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
                         source.changed_sectors.len()
                     );
                 }
+                for asset in &report.assets {
+                    if let Some(padding) = &asset.padding {
+                        println!("{}: {} input frames, {} zero-padding frames; per-channel losses in pack.json", asset.id, padding.input_frames, padding.padded_frames);
+                    }
+                }
                 println!(
                     "Encoding loss and verification details: {}/pack.json",
                     report.output
@@ -119,6 +139,9 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             }
             return Ok(0);
         }
+    }
+    if padding.is_some() {
+        return Err("pack: --xa-padding applies only to XA extraction roots".into());
     }
     let report = pack::banks(&pack::Options {
         input,

@@ -303,8 +303,9 @@ equals its original STR. Cue geometry and thresholds match raw executable words.
 A verified local export of voice cue `0x2000`
 contains 71 sectors and 286,272 mono frames. Edited partial selections require
 continuous-stream entry history and the original exit history before following
-unselected audio. WAVs must fill the exact selected capacity; shorter input,
-implicit padding and arbitrary seek/reset histories are rejected. Overlapping
+unselected audio. WAVs fill the original selected capacity. Shorter input requires
+explicit `pack --xa-padding zero`; implicit padding and arbitrary seek/reset
+histories are rejected. Overlapping
 views must request identical encoded sectors. Unsupported emphasis, game seek/reset
 history and hardware playback remain unaccepted.
 
@@ -3052,7 +3053,8 @@ XA manifests use the separate path below.
 
 [`xa_pack`](../../../tools/rust/bof3-audio/src/xa/packing.rs) is selected by
 `pack --mode audio --input EXTRACTION_ROOT --output NEW_DIRECTORY [--executable
-SLUS_004.22] [--json]` when `audio.xml` names `xa_stream` or `xa_cue`. The root must
+SLUS_004.22] [--xa-padding reject|zero] [--json]` when `audio.xml` names
+`xa_stream` or `xa_cue`. The root must
 retain its source snapshots; an isolated asset folder without that root is not a
 self-contained input. The executable is required for cue roots and any recorded
 runtime metadata. Stream roots exported without runtime metadata can pack without
@@ -3069,11 +3071,24 @@ WAV/selected-sector hashes. Unknown fields and conflicting references fail.
 Original WAV hashes are provenance checks; parsed input PCM determines edits, so
 harmless RIFF formatting changes do not force re-encoding.
 
-WAV edits retain the encoded rate/channel layout and exactly fill the selected
-sector capacity. There is no implicit padding, resampling, insertion, relocation,
-new loop metadata or ancillary-metadata loss. The explicit arithmetic and history
+WAV edits retain the encoded rate/channel layout and original selected sector
+capacity. `--xa-padding reject` is the default and rejects shorter input.
+`--xa-padding zero` fills shorter input with zero targets to that capacity; empty
+input requests a full-capacity zero target. It does not remove an asset or change
+sector count, cue placement or scheduled duration. Longer input fails under both
+policies. The option applies only to XA roots, including an explicit `reject`.
+There is no implicit padding, resampling, insertion, relocation, new loop metadata
+or ancillary-metadata loss. The explicit arithmetic and history
 policies define the export context; game seek/reset behavior remains unverified.
 Codec loss is measured before any hardware resampling.
+
+The pack report records `padding_policy`. Each padded asset has a `padding` record
+with `input_frames`, `padded_frames`, and separate `input_loss` and `padding_loss`
+arrays, one loss record per channel in WAV order. Zero targets undergo ADPCM
+quantization; their decoded error is measured separately from the supplied PCM.
+Existing per-sector loss covers the complete encoded sector, including padding.
+Assets that need no padding retain a null `padding` record and remain eligible
+for unchanged-byte reuse.
 
 [`xa_selection`](../../../tools/rust/bof3-audio/src/xa/selection.rs) encodes
 selected sectors without repeatedly rebuilding a whole STR for every cue. A

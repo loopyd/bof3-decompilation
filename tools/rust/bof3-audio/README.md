@@ -83,8 +83,11 @@ file/channel/coding stream. Both are export contexts; game seek/reset behavior
 remains unverified. XA asset XML uses `bof3.xa-asset/v2`, records initial channel
 histories, and validates them against the preserved source during packing. Regenerate
 older manifests. Edited partial cues require matching continuous entry history and
-original exit history before following audio. Exact capacity and overlapping-sector
-agreement still apply.
+original exit history before following audio. Packing rejects shorter WAV input
+by default. For XA roots, `pack --xa-padding zero` fills shorter or empty input
+with zero targets to the original capacity and reports input and padding loss
+separately per channel. Longer input fails. Sector count, cue placement, history
+boundaries and overlapping-sector agreement still apply.
 
 `verify --json` writes `bof3.audio-verification/v2`. Its `checks` object reports
 each category with a `status` of `pass`, `fail`, or `missing_evidence` and a

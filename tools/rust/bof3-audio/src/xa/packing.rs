@@ -1,22 +1,44 @@
 //! XML-directed XA packing with source/overlap checks and verified publication.
 use crate::{
-    archive::MediaImage, archive::XaImage, archive::XA_SECTOR_BYTES, catalog::loader,
-    catalog::model::Catalog, digest::sha256_hex, document::manifest, document::manifest::Element,
-    machine::executable::Executable, machine::profile::Profile, publication::require_absent,
-    publication::write_new, publication::Publication, Result,
+    archive::MediaImage,
+    archive::XaImage,
+    archive::XA_SECTOR_BYTES,
+    catalog::loader,
+    catalog::model::Catalog,
+    codec::quantization::{measure, Loss},
+    digest::sha256_hex,
+    document::manifest,
+    document::manifest::Element,
+    machine::executable::Executable,
+    machine::profile::Profile,
+    publication::require_absent,
+    publication::write_new,
+    publication::Publication,
+    xa::Decoder,
+    Result,
 };
 use serde::Serialize;
 use serde_json::json;
 use std::{
+    borrow::Cow,
     collections::{BTreeMap, BTreeSet},
     fs,
     path::PathBuf,
 };
 
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Padding {
+    #[default]
+    Reject,
+    Zero,
+}
+
 pub struct Options {
     pub input: PathBuf,
     pub executable: Option<PathBuf>,
     pub output: PathBuf,
+    pub padding: Padding,
 }
 
 #[derive(Debug, Serialize)]
@@ -25,6 +47,7 @@ pub struct Report {
     pub output: String,
     pub sources: Vec<SourceReport>,
     pub assets: Vec<AssetReport>,
+    pub padding_policy: Padding,
     pub limitations: Vec<&'static str>,
 }
 
@@ -43,6 +66,15 @@ pub struct AssetReport {
     pub id: String,
     pub input_wav_sha256: String,
     pub reconstruction: crate::xa::selection::Report,
+    pub padding: Option<PaddingReport>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct PaddingReport {
+    pub input_frames: usize,
+    pub padded_frames: usize,
+    pub input_loss: Vec<Loss>,
+    pub padding_loss: Vec<Loss>,
 }
 
 pub fn assets(options: &Options) -> Result<Report> {
@@ -122,9 +154,10 @@ pub fn assets(options: &Options) -> Result<Report> {
     let transaction = Publication::new(&options.output)?;
     fs::create_dir(transaction.staging.join("streams"))?;
     let mut report = Report {
-        schema: "bof3.xa-pack-report/v1", output: options.output.display().to_string(), sources: Vec::new(), assets: Vec::new(),
+        schema: "bof3.xa-pack-report/v1", output: options.output.display().to_string(), sources: Vec::new(), assets: Vec::new(), padding_policy: options.padding,
         limitations: vec![
-            "WAV PCM must fill the exact original sector capacity at its encoded rate/channel layout; insertion, relocation, resampling and implicit padding are unsupported",
+            "WAV PCM retains the encoded rate/channel layout and original sector capacity; shorter input requires explicit zero padding, while longer input, insertion, relocation and resampling are unsupported",
+            "padding loss is separate from input loss, with one record per channel in WAV order; padding does not establish a new audible endpoint",
             "changed cues require compatible entry history and unchanged exit history before following audio; overlapping views must request identical encoded sectors",
             "decoder arithmetic and zero or continuous selected-stream export histories are explicit contexts; actual game seek/reset behavior and audible cue endpoints are not verified",
             "unknown source extents remain unverified; known truncated media is rejected",
@@ -187,15 +220,58 @@ pub fn assets(options: &Options) -> Result<Report> {
                 &catalog,
                 runtime.as_ref(),
             )?;
+            let format = crate::xa::Format::from_coding(asset.stream.coding)?;
+            let channels = usize::from(format.channels());
+            let capacity = asset
+                .indices
+                .len()
+                .checked_mul(format.frames_per_sector())
+                .and_then(|frames| frames.checked_mul(channels))
+                .ok_or("XA pack: selected capacity overflow")?;
+            let input_samples = asset.wave.pcm.len();
+            if input_samples < capacity && options.padding == Padding::Reject {
+                return Err(format!("XA pack: selected capacity is {capacity} interleaved samples, received {input_samples}; shorter WAV input requires explicit --xa-padding zero").into());
+            }
+            if input_samples > capacity {
+                return Err(format!("XA pack: selected capacity is {capacity} interleaved samples, received {input_samples}; longer WAV input cannot be truncated or relocated").into());
+            }
+            let mut pcm = Cow::Borrowed(asset.wave.pcm.as_slice());
+            if input_samples < capacity && options.padding == Padding::Zero {
+                pcm.to_mut().resize(capacity, 0);
+            }
             let rebuilt = crate::xa::selection::encode(
                 &image,
                 asset.stream,
                 &asset.indices,
-                &asset.wave.pcm,
+                &pcm,
                 asset.arithmetic,
                 asset.initial_histories,
             )
             .map_err(|e| format!("{}: {e}", node.attribute("id").unwrap_or("unknown asset")))?;
+            let padding = if pcm.len() > input_samples {
+                let mut decoder =
+                    Decoder::new(asset.stream, asset.arithmetic, asset.initial_histories)?;
+                let mut decoded = Vec::with_capacity(capacity);
+                for (_, bytes) in &rebuilt.patches {
+                    decoded.extend(decoder.decode_sector(bytes)?);
+                }
+                Some(PaddingReport {
+                    input_frames: input_samples / channels,
+                    padded_frames: (capacity - input_samples) / channels,
+                    input_loss: channel_loss(
+                        &pcm[..input_samples],
+                        &decoded[..input_samples],
+                        channels,
+                    ),
+                    padding_loss: channel_loss(
+                        &pcm[input_samples..],
+                        &decoded[input_samples..],
+                        channels,
+                    ),
+                })
+            } else {
+                None
+            };
             let id = node.attribute("id")?.to_owned();
             for (index, bytes) in rebuilt.patches {
                 if let Some((previous, owner)) = requested.get(&index) {
@@ -210,6 +286,7 @@ pub fn assets(options: &Options) -> Result<Report> {
                 id,
                 input_wav_sha256: asset.wav_sha256,
                 reconstruction: rebuilt.report,
+                padding,
             });
         }
         let mut bytes = image.bytes().to_vec();
@@ -259,4 +336,24 @@ pub fn assets(options: &Options) -> Result<Report> {
     }
     transaction.publish()?;
     Ok(report)
+}
+
+fn channel_loss(input: &[i16], decoded: &[i16], channels: usize) -> Vec<Loss> {
+    (0..channels)
+        .map(|channel| {
+            let input = input
+                .iter()
+                .skip(channel)
+                .step_by(channels)
+                .copied()
+                .collect::<Vec<_>>();
+            let decoded = decoded
+                .iter()
+                .skip(channel)
+                .step_by(channels)
+                .copied()
+                .collect::<Vec<_>>();
+            measure(&input, &decoded)
+        })
+        .collect()
 }
