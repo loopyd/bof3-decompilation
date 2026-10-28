@@ -421,7 +421,10 @@ to calls at `0x801D1468` and `0x801D1430`. The overlay-local renderer at
 `0x801D1714` stops at NUL, advances eight pixels per character and treats
 ASCII `0x20` as a space. Edits accept printable ASCII within each allocation.
 Pointer words, alignment padding, other labels and arrow glyphs remain protected.
-Observed rendering and the consumers of the other labels remain unverified.
+Controlled runtime observations verify all three edited labels. The display
+selects `STEREO` when byte `0x80144951` is zero and `MONO` when it is nonzero.
+Natural menu and configuration producers, audio output and the other labels'
+consumers remain unverified.
 
 The supported US battle code payload loaded at `0x80096800` contains two
 five-entry pointer tables at `0x800B6E88` and `0x800B6EC4`. Draw calls at
