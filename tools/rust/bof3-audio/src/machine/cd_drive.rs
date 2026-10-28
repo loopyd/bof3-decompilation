@@ -3,6 +3,36 @@
 use super::{cd_host::Command, cd_position::CdPosition};
 use crate::{codec::edc, Result};
 
+/// Caller-qualified track starts and exclusive lead-out, in absolute CD positions.
+/// Track numbers are consecutive from one. This does not parse image metadata.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Toc {
+    track_starts: Vec<CdPosition>,
+    lead_out: CdPosition,
+}
+
+impl Toc {
+    pub fn new(track_starts: Vec<CdPosition>, lead_out: CdPosition) -> Result<Self> {
+        if !(1..=99).contains(&track_starts.len())
+            || track_starts.iter().any(|position| position.lba() < 0)
+            || track_starts
+                .windows(2)
+                .any(|pair| pair[0].lba() >= pair[1].lba())
+            || track_starts
+                .last()
+                .is_some_and(|position| position.lba() >= lead_out.lba())
+        {
+            return Err(
+                "CD TOC: require 1..99 increasing nonnegative track starts before lead-out".into(),
+            );
+        }
+        Ok(Self {
+            track_starts,
+            lead_out,
+        })
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Response {
     pub interrupt: u8,
@@ -50,6 +80,7 @@ pub struct Drive {
     last_header: Option<[u8; 8]>,
     muted: bool,
     xa_selection: Option<[u8; 2]>,
+    toc: Option<Toc>,
 }
 
 impl Drive {
@@ -70,7 +101,18 @@ impl Drive {
             last_header: None,
             muted: false,
             xa_selection: None,
+            toc: None,
         })
+    }
+
+    /// Bind this disc's immutable metadata once, while paused. Data-only callers
+    /// may omit it; GetTN/GetTD then fail without inventing a track or lead-out.
+    pub fn configure_toc(&mut self, toc: Toc) -> Result<()> {
+        if self.activity != Activity::Paused || self.toc.is_some() {
+            return Err("CD drive: TOC requires a paused drive without configured metadata".into());
+        }
+        self.toc = Some(toc);
+        Ok(())
     }
 
     pub fn activity(&self) -> Activity {
@@ -107,10 +149,10 @@ impl Drive {
     /// parameters produce the documented INT5 response instead of success.
     pub fn command(&mut self, command: &Command) -> Result<Response> {
         let count = match command.opcode {
-            0x01 | 0x06 | 0x09 | 0x0a | 0x0b | 0x0c | 0x0f | 0x10 | 0x15 | 0x16 | 0x1b => 0,
+            0x01 | 0x06 | 0x09 | 0x0a | 0x0b | 0x0c | 0x0f | 0x10 | 0x13 | 0x15 | 0x16 | 0x1b => 0,
             0x02 => 3,
             0x0d => 2,
-            0x0e => 1,
+            0x0e | 0x14 => 1,
             value => {
                 return Err(format!("CD drive: command {value:#04x} is not implemented").into())
             }
@@ -198,6 +240,33 @@ impl Drive {
                     },
                     None => self.parameter_error(0x80),
                 })
+            }
+            0x13 | 0x14 => {
+                let toc = self
+                    .toc
+                    .as_ref()
+                    .ok_or("CD drive: GetTN/GetTD require explicit TOC metadata")?;
+                let bytes = if command.opcode == 0x13 {
+                    let tracks = toc.track_starts.len() as u8;
+                    vec![self.status(), 1, ((tracks / 10) << 4) | (tracks % 10)]
+                } else {
+                    let bcd = command.parameters[0];
+                    let track = usize::from(bcd >> 4) * 10 + usize::from(bcd & 15);
+                    if bcd >> 4 > 9 || bcd & 15 > 9 || track > toc.track_starts.len() {
+                        return Ok(self.parameter_error(0x10));
+                    }
+                    let position = if track == 0 {
+                        toc.lead_out
+                    } else {
+                        toc.track_starts[track - 1]
+                    };
+                    let [minute, second, _] = position.bcd();
+                    vec![self.status(), minute, second]
+                };
+                return Ok(Response {
+                    interrupt: 3,
+                    bytes,
+                });
             }
             _ => unreachable!(),
         }

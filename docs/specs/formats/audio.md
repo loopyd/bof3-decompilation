@@ -2362,11 +2362,28 @@ full BIOS startup. Independent drive timing and audio fidelity remain open.
 requires an explicit already-authenticated, closed, spinning Mode-2 disc context,
 including position, mode and filter. It implements Getstat, Setloc, Setmode,
 Setfilter, Getparam, GetlocL, SeekL/SeekP, ReadN/ReadS, Pause, Init and
-Mute/Demute transactions. Known invalid parameters yield INT5; unsupported
+Mute/Demute transactions. With an explicit TOC it also implements GetTN and
+GetTD. Known invalid parameters yield INT5; unsupported
 commands and mechanical overlap fail without changing drive state. The explicit
 ready-disc constructor does not perform Init, BIOS startup or authentication.
 The host owner still supplies response/IRQ boundaries, and the caller
 explicitly completes mechanical transitions; no clock duration is assigned.
+
+Construct `Toc` with 1 through 99 strictly increasing, nonnegative track starts
+and an exclusive lead-out after the last start. Positions use `CdPosition`,
+including its 150-sector absolute-MSF offset. Bind the metadata once with
+`Drive::configure_toc` while paused. Init retains the TOC. Data-only callers may
+omit it, but GetTN/GetTD then return an error without changing drive state.
+The drive does not parse a CUE or infer a lead-out from a sector feed.
+
+GetTN returns INT3 with `[status, 1, BCD(last track)]`. GetTD takes one BCD track
+number, with zero selecting the lead-out, and returns INT3 with
+`[status, BCD(minute), BCD(second)]`. It omits the frame field without rounding.
+Invalid BCD or an out-of-range track returns INT5 with `[status | 1, 0x10]`;
+wrong parameter counts return `[status | 1, 0x20]`. These queries preserve the
+current position, pending Setloc and audio state. The existing mechanical
+overlap guard also applies to them. Metadata does not enable Play, track
+selection, reports, autopause or disc-end scheduling.
 
 Sector arrival requires a completed read seek and the next expected LBA.
 Raw sync, Mode-2 header, duplicated subheaders and EDC are checked before state
@@ -2375,10 +2392,10 @@ checks cover EDC, not ECC repair. Routing returns selected XA, filtered audio,
 or a data block with its INT1 response. The latest header includes filtered
 sectors, preserving the distinction between GetlocL position and audible data.
 Neither data queue overruns nor deferred delivery/retry timing are implemented.
-Automatic XA channel selection without a filter and CDDA/report/autopause/ignore
-mode bits reject explicitly. Read-error retry behaviour remains unsupported.
+CDDA/report/autopause/ignore mode bits reject explicitly. Read-error retry
+behaviour remains unsupported.
 
-[Five default checks](../../../tools/rust/bof3-audio/tests/cd_drive.rs) cover
+[Existing checks](../../../tools/rust/bof3-audio/tests/cd_drive.rs) cover
 command errors, seek/read/pause/resume transitions, routing, header progression,
 malformed sectors and the existing host acknowledgement contract.
 [Original US SDK checks](../../../tools/rust/bof3-audio/tests/cd_drive_runtime.rs)
@@ -2599,8 +2616,8 @@ the independent integer reconstruction and captured consumed output, retaining
 an old-gain batch across each supplied latch. This supplied replay schedule does
 not establish native enqueue or deadline timing. Retained native output is counted
 but not claimed as consumed. The functional Rust drive still rejects CDDA mode
-and Play: TOC/track selection, reports, autopause, disc end and mechanical timing
-remain open. See [CD references](../../reference/cd-audio.md#selected-cdda-input).
+and Play. Playback track selection, reports, autopause, disc end and mechanical
+timing remain open. See [CD references](../../reference/cd-audio.md#selected-cdda-input).
 
 ## Rust CD command lifecycle and cue restart
 
