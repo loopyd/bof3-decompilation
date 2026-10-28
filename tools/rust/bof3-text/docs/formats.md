@@ -46,8 +46,9 @@ adds no editable text layout or playback acceptance.
 ## XA payload coverage
 
 Coverage identifies encoded audio bodies in the original US `S_XA00.STR`,
-`MAGIC00.STR` and `VOICE.STR`. It requires the exact original `SLUS_004.22`
-and each source's whole-file size and SHA-256 from `config/original-us-disc.json`.
+`MAGIC00.STR`, `VOICE.STR` and `CAPCOM30.STR`. It requires the exact original
+`SLUS_004.22` and each source's whole-file size and SHA-256 from
+`config/original-us-disc.json`.
 The original selector at `0x80163744` establishes the XA consumer family.
 
 Each candidate must have matching subheader copies and Form 2 audio submode
@@ -76,11 +77,18 @@ by the [audio EDC owner](../../bof3-audio/src/codec/edc.rs). They are not matchi
 checksums. Coverage identifies these metadata fields as nontext without adding
 an editable layout.
 
+In `CAPCOM30.STR`, the original LOGO reader at `0x801D29B4` and `0x801D29C8`
+checks a packet marker and type at the start of each video sector's user payload.
+The CD mode and DMA path at `0x801D28A4` bind that reader to the user-payload
+start. Coverage identifies only `[2336*s+8, 2336*s+12)` as packet metadata when
+the Form 1 video subheader and exact `60 01 01 80` marker/type bytes match.
+The remaining packet header and video payload stay unresolved.
+
 Static format identification does not establish original sector selection,
 arrival, playback, command completion, predictor history or hardware handling
 of parameter copies.
-Audio spare bytes at `[2312,2332)`, nonzero Form 1 user payloads and
-`CAPCOM30.STR` remain unresolved.
+Audio spare bytes at `[2312,2332)` and Form 1 user payloads outside the reviewed
+empty payloads and packet marker/type fields remain unresolved.
 Exact playback endpoints and packed-ID caller bounds remain unverified. Changed
 sources, other builds and arbitrary files that resemble XA remain unresolved.
 

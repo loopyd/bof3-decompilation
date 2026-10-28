@@ -48,6 +48,7 @@ pub struct XaSource {
     pub file: &'static File,
     expected_audio_bodies: usize,
     expected_empty_payloads: usize,
+    expected_packet_headers: usize,
 }
 
 pub struct XaRange {
@@ -72,6 +73,7 @@ impl XaSource {
         let mut ranges = Vec::new();
         let mut audio_count = 0;
         let mut empty_count = 0;
+        let mut packet_count = 0;
         for (index, sector) in data.chunks_exact(2336).enumerate() {
             let start = index * 2336;
             if sector[..4] != sector[4..8] {
@@ -85,12 +87,26 @@ impl XaSource {
                 evidence: "original US Mode 2 duplicated sector subheader; exact source identity",
             });
             if sector[2] & 0x2e != 0x24 {
-                if sector[2] & 0x2e != 0 || sector[3] != 0 {
+                let video =
+                    self.expected_packet_headers != 0 && sector[2] & 0x2e == 2 && sector[3] == 0x80;
+                if !video && (sector[2] & 0x2e != 0 || sector[3] != 0) {
                     return Err(Error::Invalid(format!(
                         "original US XA sector {index} disagrees with reviewed Form 1 profile"
                     )));
                 }
-                if sector[8..2056].iter().all(|byte| *byte == 0) {
+                if video {
+                    if sector[8..12] != [0x60, 0x01, 0x01, 0x80] {
+                        return Err(Error::Invalid(format!(
+                            "original US packet sector {index} disagrees with reviewed marker/type"
+                        )));
+                    }
+                    ranges.push(XaRange {
+                        offset: start + 8,
+                        length: 4,
+                        evidence: "original US CAPCOM packet marker/type; LOGO reader at 0x801D29B4/0x801D29C8; exact source identity; no video-body or arrival claim",
+                    });
+                    packet_count += 1;
+                } else if sector[8..2056].iter().all(|byte| *byte == 0) {
                     ranges.push(XaRange {
                         offset: start + 8,
                         length: 2048,
@@ -134,7 +150,9 @@ impl XaSource {
             });
             audio_count += 1;
         }
-        if audio_count != self.expected_audio_bodies || empty_count != self.expected_empty_payloads
+        if audio_count != self.expected_audio_bodies
+            || empty_count != self.expected_empty_payloads
+            || packet_count != self.expected_packet_headers
         {
             return Err(Error::Invalid(
                 "original US XA body count disagrees with reviewed profile".into(),
@@ -144,17 +162,18 @@ impl XaSource {
     }
 }
 
-/// Canonical XA sources with reviewed metadata, audio and empty user payloads.
+/// Canonical sources with reviewed sector metadata and bounded payload fields.
 pub fn xa_sources(executable: &[u8]) -> Result<Vec<XaSource>> {
     if sha256_hex(executable) != US_EXECUTABLE_SHA256 {
         return Ok(Vec::new());
     }
     let original = disc()?;
     let mut streams = Vec::new();
-    for (path, expected_audio_bodies, expected_empty_payloads) in [
-        ("BIN/SCE_XA/S_XA00.STR", 11_302, 0),
-        ("BIN/BMAG_XA/MAGIC00.STR", 14_856, 0),
-        ("BIN/SCE_XA/VOICE.STR", 297, 3239),
+    for (path, expected_audio_bodies, expected_empty_payloads, expected_packet_headers) in [
+        ("BIN/SCE_XA/S_XA00.STR", 11_302, 0, 0),
+        ("BIN/BMAG_XA/MAGIC00.STR", 14_856, 0, 0),
+        ("BIN/SCE_XA/VOICE.STR", 297, 3239, 0),
+        ("LOGO/CAPCOM30.STR", 144, 0, 1011),
     ] {
         let file = original
             .files
@@ -169,6 +188,7 @@ pub fn xa_sources(executable: &[u8]) -> Result<Vec<XaSource>> {
             file,
             expected_audio_bodies,
             expected_empty_payloads,
+            expected_packet_headers,
         });
     }
     Ok(streams)
