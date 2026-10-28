@@ -82,6 +82,10 @@ impl Table {
         })
     }
 
+    pub(crate) fn range(&self) -> (u32, u32) {
+        (self.base, self.base + self.slots * RECORD_BYTES)
+    }
+
     pub fn free_slot(&self, bus: &mut impl Bus) -> Result<u32> {
         for slot in 0..self.slots {
             if bus.read(self.base + slot * RECORD_BYTES + 4, Width::Word)? == 0 {

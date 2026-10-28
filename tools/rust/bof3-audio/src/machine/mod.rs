@@ -15,7 +15,7 @@ pub mod cd_queue;
 pub mod cop0;
 pub mod cpu;
 pub mod dma;
-mod event_calls;
+pub mod event_calls;
 pub mod events;
 pub mod exception_calls;
 pub mod exception_chains;
