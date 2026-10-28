@@ -100,6 +100,19 @@ impl Host {
     pub fn busy(&self) -> bool {
         self.command.is_some()
     }
+    pub(crate) fn index(&self) -> u8 {
+        self.index
+    }
+    pub(crate) fn response_full(&self) -> bool {
+        !self.response.empty() && self.pending_response.is_some()
+    }
+    pub(crate) fn idle(&self) -> bool {
+        self.command.is_none()
+            && !self.awaiting_response
+            && self.response.empty()
+            && self.pending_response.is_none()
+            && !self.awaiting_interrupt
+    }
     pub fn configure_data(&mut self, model: cd_data::Model) -> Result<()> {
         if self.data.is_some() {
             return Err("CD data already configured".into());

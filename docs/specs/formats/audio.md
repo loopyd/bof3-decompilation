@@ -2270,14 +2270,34 @@ byte accesses; the separately configured data port also supports halfword reads.
 
 Command submission retains an opcode and up to 16 parameter bytes and sets BUSY.
 Another command write replaces the pending opcode; parameter writes beyond 16
-are ignored. `service_cd_fifo` performs one caller-supplied MCU FIFO callback:
-it promotes an acknowledged head's pending response, then accepts a command only
+are ignored. Without an attached controller, `service_cd_fifo` performs one
+caller-supplied MCU FIFO callback. It promotes an acknowledged head's pending response, then accepts a command only
 when no response cause or tail blocks it. BUSY clears at command acceptance.
 Unread bytes from an acknowledged head do not by themselves block that callback.
 The host does not interpret commands or supply callback timing.
 
-`respond_cd` inserts a response with 1–16 bytes and interrupt type 1–5. Two
-responses can be retained. A full queue drops another candidate. If an
+`Interconnect::configure_cd_controller(drive, cycle)` instead attaches an explicit
+paused drive and unit-scale FIFO clock. The first pending opcode write installs
+a 26,993-cycle deadline, the native integer conversion of 797 microseconds.
+Replacing that opcode keeps the deadline. Result reads, full acknowledgements
+and completed command handlers replace it when the response queue has space.
+`Execution` advances the clock after instructions and dispatches due callbacks
+after branch delay slots, before next-step IRQ admission. Output-clock
+subdivisions do not dispatch CD work. Reference execution uses absolute MMIO
+access cycles; raw execution retains its two-tick instruction model.
+
+The attached controller executes Getstat, Setloc, Mute/Demute, Setfilter/Setmode,
+Getparam, GetlocL/P and GetTN/TD through the functional drive. Supply required TOC
+metadata before attachment. Mechanical/media commands and partial or composite
+IRQ clears fail explicitly. Manual FIFO acceptance, response/staged-IRQ publication
+and `deliver_cd_data` are unavailable while the controller owns them. Bounded
+native comparison covers immediate-command MMIO, deadline replacement and branch
+dispatch, including unread-head backlog and branch-free delay. Other scheduler
+slots, mechanical/media timing, broader IRQ phase and hardware fidelity remain
+unaccepted.
+
+Without that controller, `respond_cd` inserts a response with 1–16 bytes and
+interrupt type 1–5. Two responses can be retained. A full queue drops another candidate. If an
 acknowledged head already has a tail, a new response promotes that tail and
 appends the candidate. `stage_cd_response` and `raise_cd_interrupt` retain explicit
 separate response/IRQ observations with an otherwise empty response queue;
@@ -2295,14 +2315,15 @@ Absent configuration, decoder reset and manual XA controls fail explicitly.
 Sector requests and data reads require the separate data FIFO below. Its
 serialized delivery API still protects active data reads and pending host work;
 response queuing does not accept native data-overrun or concurrent-DMA behavior.
-Automatic FIFO delays, command/drive scheduling and broader IRQ timing remain
+Automatic mechanical/media scheduling and broader IRQ timing remain
 implementation obligations. Retained
 [register research](../../reference/cd-audio.md#cd-decoder-host-interface)
 qualifies the native comparison separately from hardware acceptance.
 
 [Host checks](../../../tools/rust/bof3-audio/tests/cd_host.rs) exercise FIFO
-capacity/wrap, command readiness, queued response retention, mask/partial
-acknowledgement, IRQ relatching, volume application/mute and rejected accesses.
+capacity/wrap, command readiness, queued response retention, automatic reset-host
+command execution, manual mask/partial acknowledgement, IRQ relatching, volume
+application/mute and rejected accesses.
 The
 [original US driver check](../../../tools/rust/bof3-audio/tests/cd_host_runtime.rs)
 runs command submission at `exe/slus_004_22@0x80176734` (full EXE `0xE0734`)
@@ -2328,7 +2349,8 @@ schedule their arrival. Configuration selects `Model::EmulatorReference`: repeat
 BFRD assertion preserves the read cursor, clearing BFRD rewinds a partial block,
 and exhaustion clears readiness and the consumed block. Byte, halfword and DMA
 word reads share one cursor. Direct presentation rejects unread-block replacement;
-the serialized INT1 selection path below can displace an unrequested block.
+the serialized INT1 selection path below can displace an unrequested block when
+no clocked controller is attached.
 Unavailable data and overreads fail explicitly, without fabricated padding. The
 [external references](../../reference/cd-audio.md#sector-data-and-dma3) disagree
 about overread values; this model is not hardware acceptance.
@@ -2376,8 +2398,10 @@ and GetlocP. Play additionally requires an explicit peak-channel phase.
 Known invalid parameters yield INT5. Unsupported commands and overlap cases
 fail without changing drive state. Read takeover of SeekP is supported below.
 The explicit ready-disc constructor does not perform Init, BIOS startup or authentication.
-The host owner still supplies response/IRQ boundaries, and the caller
-explicitly completes mechanical transitions; no clock duration is assigned.
+Without an attached controller, the host caller supplies response/IRQ boundaries.
+The [clocked controller](#rust-cd-decoder-host-registers) owns those boundaries for
+its supported immediate commands. Mechanical transitions still require explicit
+caller completion; the functional drive assigns no duration.
 
 The ready constructor initializes current and retained seek positions from
 its supplied position. Setloc changes retained seek and marks it pending,
@@ -2525,9 +2549,9 @@ fixture below now also consumes these frames through the SPU at explicitly
 supplied boundaries; neither test establishes physical timing or reference PCM.
 
 The original XA path acknowledges ordinary INT1 data without requesting it.
-`Interconnect::deliver_cd_data` therefore selects a block and publishes INT1 in
-one checked transaction. Prior command/response/IRQ work must be drained. It
-reports displaced unread bytes when the old block is unrequested; an active
+Without an attached clocked controller, `Interconnect::deliver_cd_data` selects a
+block and publishes INT1 in one checked transaction. Prior command/response/IRQ
+work must be drained. The method reports displaced unread bytes when the old block is unrequested; an active
 BFRD read remains protected. Clearing BFRD explicitly releases/rewinds that old
 selection. Missing configuration, invalid sizes and pending work fail before
 replacing data or publishing a response. Four
@@ -2774,9 +2798,12 @@ Successful seek transitions, located Play and Init also reject active DMA3
 before mutation. That rejection is a Rust implementation limit, not native
 overlap behavior.
 
-Response publication and mechanical completion remain caller-owned boundaries.
-The standalone `Drive::command` API supports isolated drive checks; integrated
-execution uses the interconnect method for predictor and mute effects.
+Without an attached controller, response publication remains caller-owned.
+Mechanical completion still requires supplied boundaries. The standalone
+`Drive::command` API supports isolated drive checks; integrated execution uses
+the interconnect method for predictor and mute effects. The
+[clocked controller](#rust-cd-decoder-host-registers) uses that method for its
+supported immediate commands.
 The [functional drive contract](#rust-cd-drive-commands-and-sector-routing)
 uses the native retained-seek restart and Read/Seek/Pause state boundaries.
 A bounded native guest comparison qualifies response bytes, phase positions,
@@ -3950,7 +3977,9 @@ NTSC scanline phase. The cost model counts two base cycles per instruction,
 twenty additional cycles for a BIOS ROM instruction, one per data transaction,
 and the fork's multiply/divide result stalls. Each NTSC line takes 2,146 cycles;
 the frame has 263 lines and VBlank starts at line 243. IRQ admission follows
-the interpreter's branch-delay boundary. These are reference-emulator costs,
+the interpreter's branch-delay boundary. An attached
+[CD controller](#rust-cd-decoder-host-registers) uses those access cycles and
+branch boundaries for FIFO service. These are reference-emulator costs,
 not physical CPU timing.
 
 The bounded [initializer comparison](../../../tools/rust/bof3-audio/tests/boot.rs)

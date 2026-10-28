@@ -1,4 +1,5 @@
-//! CD host/data/DMA3 wiring; service calls are transactions, not elapsed clocks.
+//! CD host, data, DMA3 and optional clocked-controller wiring.
+pub(super) mod clock;
 use super::{error, Interconnect};
 use crate::machine::{
     bus::{Bus, BusError, Width},
@@ -87,6 +88,7 @@ impl Interconnect {
         command: &cd_host::Command,
         cycle: u32,
     ) -> crate::Result<AppliedCommand> {
+        self.require_manual_cd()?;
         self.cd_host()?;
         if self
             .cd_audio
@@ -162,24 +164,29 @@ impl Interconnect {
         self.cd_mut()?.present_data(bytes)
     }
     pub fn deliver_cd_data(&mut self, status: u8, bytes: &[u8]) -> crate::Result<usize> {
+        self.require_manual_cd()?;
         let displaced = self.cd_mut()?.deliver_data(status, bytes)?;
         self.update_cd_irq();
         Ok(displaced)
     }
     pub fn service_cd_fifo(&mut self) -> crate::Result<Option<cd_host::Command>> {
+        self.require_manual_cd()?;
         let command = self.cd_mut()?.service_fifo();
         self.update_cd_irq();
         Ok(command)
     }
     pub fn respond_cd(&mut self, interrupt: u8, bytes: &[u8]) -> crate::Result<()> {
+        self.require_manual_cd()?;
         self.cd_mut()?.respond(interrupt, bytes)?;
         self.update_cd_irq();
         Ok(())
     }
     pub fn stage_cd_response(&mut self, bytes: &[u8]) -> crate::Result<()> {
+        self.require_manual_cd()?;
         self.cd_mut()?.stage_response(bytes)
     }
     pub fn raise_cd_interrupt(&mut self, interrupt: u8) -> crate::Result<()> {
+        self.require_manual_cd()?;
         self.cd_mut()?.raise_interrupt(interrupt)?;
         self.update_cd_irq();
         Ok(())
@@ -236,8 +243,7 @@ impl Interconnect {
             if physical == 0x1f80_1802 && width == Width::Half {
                 self.cd_mut().and_then(|h| h.read_data(2))
             } else if width == Width::Byte {
-                self.cd_mut()
-                    .and_then(|h| h.read((physical & 3) as u8).map(u32::from))
+                self.read_cd_register((physical & 3) as u8).map(u32::from)
             } else {
                 return Err(error(
                     address,
@@ -273,8 +279,7 @@ impl Interconnect {
             if width != Width::Byte {
                 return Err(error(address, "CD host requires byte register writes"));
             }
-            self.cd_mut()
-                .and_then(|h| h.write((physical & 3) as u8, value as u8))
+            self.write_cd_register((physical & 3) as u8, value as u8)
         } else if physical >= 0x1f80_10b0 {
             Self::require_word_port(address, width)?;
             self.dma.cd.write(physical & 15, value)

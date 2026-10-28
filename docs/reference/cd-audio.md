@@ -53,7 +53,7 @@ comparison inputs, separate from drive gain.
 
 [Rust implementation and checks](../specs/formats/audio.md#rust-cdxa-sample-processing)
 retain startup phase, history, gain limits and timing boundaries. Emphasis, drive
-commands/FIFO scheduling, mute effects on decoder state and hardware comparison
+mechanical/media scheduling, mute effects on decoder state and hardware comparison
 remain open; encoded-rate extraction keeps its existing separate contract.
 
 ## CD decoder host interface
@@ -75,11 +75,29 @@ pending command, so acceptance clears it before the command's response. Result
 readiness compares cursor and payload size; reading beyond the end reasserts it,
 while the separately latched drained flag remains set.
 
-Rust exposes that transition through `service_cd_fifo` at a caller-supplied MCU
+Without an attached controller, `service_cd_fifo` applies a caller-supplied MCU
 boundary. Bounded guest backlog, drop, pending-Pause, acknowledgement/drain and
-result-wrap observations agree with the host consumer. The native 797-microsecond
-FIFO schedule and branch-boundary dispatch are not supplied by this API. Media,
-mechanical transitions and callback phase retain separate timing obligations.
+result-wrap observations agree with this host consumer.
+
+`Interconnect::configure_cd_controller` attaches an explicit paused drive and CPU
+cycle origin. Its unit-scale FIFO clock converts 797 microseconds to 26,993 cycles.
+The first pending opcode write installs a deadline; replacing that opcode keeps
+it. Result reads, full acknowledgements and completed command handlers replace
+the deadline only when the two response slots are not both full. `Execution`
+dispatches due callbacks after branch delay slots and before the next IRQ
+admission. Output-clock subdivisions do not dispatch them. Reference execution
+uses its absolute access cycles; raw execution retains its two-tick instruction
+model.
+
+The controller executes Getstat, Setloc, Mute/Demute, Setfilter/Setmode, Getparam,
+GetlocL/P and GetTN/TD through the functional drive. Required TOC metadata must be
+configured before attachment. Mechanical/media commands and partial IRQ clears
+fail explicitly. Manual command acceptance, response publication and data-IRQ
+delivery are unavailable while the controller owns them. Captured native MMIO,
+deadline replacement and branch dispatch agree for bounded immediate-command
+histories, including an unread head with a queued response and a long branch-free
+interval. Mechanical/media scheduling, other scheduler slots, broader IRQ timing
+and hardware fidelity retain separate obligations.
 
 [Implementation and original-driver checks](../specs/formats/audio.md#rust-cd-decoder-host-registers)
 use explicit host state and response boundaries. This reference does not supply

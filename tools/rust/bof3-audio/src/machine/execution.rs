@@ -1,7 +1,8 @@
 //! Bounded guest calls with BIOS exceptions, IRQ delivery and explicit base
 //! instruction-clock service. Original-ROM references preserve interpreter costs
-//! and NTSC VBlank phase. Complete GPU/CD and reference root-counter timing remain
-//! unmodeled; PCM output uses a separate explicit clock.
+//! and NTSC VBlank phase. Attached CD FIFO callbacks run after delay slots;
+//! mechanical/media, GPU and reference root-counter timing remain unmodeled.
+//! PCM output uses a separate explicit clock.
 use super::{
     boot,
     cpu::{Cpu, FaultKind},
@@ -95,14 +96,15 @@ impl Execution {
             Some(clock) => clock.step(&mut self.cpu, &mut self.bus),
             None => self.cpu.step(&mut self.bus),
         };
-        match step {
-            Ok(_) => (),
+        let branch_boundary = match step {
+            Ok(step) => step.in_delay_slot,
             Err(fault) if fault.kind == FaultKind::Syscall => {
                 self.cpu.enter_exception(&fault)?;
                 self.syscalls += 1;
+                false
             }
             Err(fault) => return Err(fault.into()),
-        }
+        };
         let ticks = before.map_or(2, |before| {
             (self.reference_cycles().unwrap() - before) as u32
         });
@@ -115,6 +117,10 @@ impl Execution {
                 self.bus.advance_cpu(ticks)?;
             }
         }
+        self.bus.advance_cd_controller(
+            self.reference_cycles().unwrap_or(self.clock.ticks()),
+            branch_boundary,
+        )?;
         Ok(())
     }
 

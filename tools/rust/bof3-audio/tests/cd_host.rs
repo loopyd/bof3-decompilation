@@ -18,13 +18,22 @@ fn emulator_reset_has_enabled_interrupts_but_no_seeded_response_or_completion() 
     bus.write(0x1f801800, Width::Byte, 1).unwrap();
     assert_eq!(bus.read(0x1f801803, Width::Byte).unwrap(), 0xe0);
     bus.write(0x1f801800, Width::Byte, 0).unwrap();
+    bus.configure_cd_controller(
+        bof3_audio::machine::cd_drive::Drive::ready(
+            bof3_audio::machine::cd_position::CdPosition::from_lba(0).unwrap(),
+            0,
+            [0, 0],
+        )
+        .unwrap(),
+        0,
+    )
+    .unwrap();
     bus.write(0x1f801801, Width::Byte, 1).unwrap();
-    assert_eq!(bus.service_cd_fifo().unwrap().unwrap().opcode, 1);
+    bus.advance_cd_controller(26_994, true).unwrap();
     assert!(bus
         .configure_cd_host_reset(Model::EmulatorReference)
         .is_err());
     assert!(!bus.cd_host().unwrap().busy());
-    bus.respond_cd(3, &[2]).unwrap();
     assert!(bus.cd_host().unwrap().irq_line());
     assert_eq!(bus.read(0x1f801801, Width::Byte).unwrap(), 2);
 }
