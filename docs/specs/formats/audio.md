@@ -2492,8 +2492,9 @@ by 31880 and shifts by 15. The caller supplies initial coefficients; no BIOS
 default is inferred. Gains exceeding double volume per output reject before
 latching because the hardware's larger-gain saturation is unresolved. Reserved
 control bits also reject. The queue samples command and register XA mute before
-interpolation. CDDA gain is not implemented by this API. The CD host register
-owner above decodes the bank and offset writes;
+interpolation. `Volume::apply_cdda` instead uses 31130 before clipping and the
+same post-clamp coefficient; its selected-sector path bypasses interpolation.
+The CD host register owner above decodes the bank and offset writes;
 drive-command execution, sector scheduling and FIFO/audio lifecycle remain open.
 
 [CD processing checks](../../../tools/rust/bof3-audio/tests/cd_audio.rs) compare
@@ -2564,6 +2565,32 @@ its limitations are retained in
 Independent reference PCM, original runtime bootstrap, continuous clock
 integration and lifecycle transitions remain required before PSX rendering
 acceptance or C retirement.
+
+## Rust selected CDDA feed
+
+`Queue::cdda_sector` accepts a complete 2,352-byte selected raw CDDA sector:
+588 little-endian stereo frames at 44.1 kHz. `Volume::apply_cdda` uses the
+active ATV matrix with native CDDA scaling: multiply the matrix sum by 31130,
+arithmetic-shift by 22, clip to signed 16-bit, multiply by 31880, then
+arithmetic-shift by 15. This differs from XA's pre-clamp coefficient of 33617.
+The 44.1 kHz feed bypasses interpolation without changing XA predictor, ring,
+phase, previous-sample or selection state.
+
+`Interconnect::enqueue_cd_cdda` supplies the host's active matrix and command
+mute. XA-only mute does not suppress CDDA. Gain is fixed before submission;
+queued and pending frames retain it across later latches. Both sources share
+strict whole-batch capacity, retry, timeout, consumption and explicit reset.
+Malformed raw sector lengths and arrivals during a pending submission reject
+without state changes.
+
+A bounded native stereo interval qualifies source selection, unity and asymmetric
+crossed gain, consumed clipping and bypass arithmetic. A Rust queue replay matches
+the independent integer reconstruction and captured consumed output, retaining
+an old-gain batch across each supplied latch. This supplied replay schedule does
+not establish native enqueue or deadline timing. Retained native output is counted
+but not claimed as consumed. The functional Rust drive still rejects CDDA mode
+and Play: TOC/track selection, reports, autopause, disc end and mechanical timing
+remain open. See [CD references](../../reference/cd-audio.md#selected-cdda-input).
 
 ## Rust CD command lifecycle and cue restart
 

@@ -1,4 +1,4 @@
-//! XA decode-to-SPU queue. Caller supplies sector arrivals and output boundaries.
+//! XA/CDDA-to-SPU queue. Caller supplies selected sectors and output boundaries.
 use super::cd_audio::{Model as Resampling, Volume, XaAudio};
 use crate::{
     xa::{Arithmetic, Histories, Stream},
@@ -119,7 +119,7 @@ impl Queue {
         volume: &Volume,
     ) -> Result<Admission> {
         if self.pending.is_some() {
-            return Err("XA queue has a pending submission".into());
+            return Err("CD audio queue has a pending submission".into());
         }
         if bytes.len() != 2336 {
             return Err("XA queue requires one whole selected sector".into());
@@ -164,6 +164,41 @@ impl Queue {
         self.finish_submission(WaitOutcome::Retry)
     }
 
+    /// One already-selected raw 2352-byte CDDA sector, little-endian stereo at
+    /// 44.1 kHz. It bypasses XA decoding/interpolation without changing either
+    /// history or selection. The caller owns track selection and drive timing.
+    pub fn cdda_sector(
+        &mut self,
+        bytes: &[u8],
+        command_muted: bool,
+        volume: &Volume,
+    ) -> Result<Admission> {
+        if self.pending.is_some() {
+            return Err("CD audio queue has a pending submission".into());
+        }
+        if bytes.len() != 2352 {
+            return Err("CDDA queue requires one whole selected raw sector".into());
+        }
+        if command_muted {
+            self.statistics.muted_sectors += 1;
+            return Ok(Admission::Muted);
+        }
+        self.pending = Some(
+            bytes
+                .as_chunks::<4>()
+                .0
+                .iter()
+                .map(|frame| {
+                    volume.apply_cdda([
+                        i16::from_le_bytes([frame[0], frame[1]]),
+                        i16::from_le_bytes([frame[2], frame[3]]),
+                    ])
+                })
+                .collect(),
+        );
+        self.finish_submission(WaitOutcome::Retry)
+    }
+
     /// Recheck capacity at a caller-supplied wake/deadline boundary. Available
     /// room wins even at the deadline, as in the native wait predicate. Retry
     /// while full retains the batch; timeout while full discards only its output.
@@ -171,7 +206,7 @@ impl Queue {
         let count = self
             .pending
             .as_ref()
-            .ok_or("XA queue has no pending submission")?
+            .ok_or("CD audio queue has no pending submission")?
             .len();
         let room = match self.model {
             Model::EmulatorReference => self.frames.len() + count < CAPACITY,

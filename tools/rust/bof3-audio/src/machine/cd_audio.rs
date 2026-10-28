@@ -1,4 +1,4 @@
-//! XA-to-SPU sample processing at caller-selected boundaries; no drive scheduler.
+//! CD-to-SPU sample processing at caller-selected boundaries; no drive scheduler.
 use super::xa_filter::ZIGZAG;
 use crate::{
     xa::{Arithmetic, Decoder, Format, Histories, Stream},
@@ -203,9 +203,19 @@ impl Volume {
     /// Native XA gain at sector admission, after interpolation. The queue
     /// owner handles mute before interpolation; queued samples retain this gain.
     pub fn apply_xa(&self, frame: [i16; 2]) -> [i16; 2] {
+        self.apply_matrix(frame, 33617)
+    }
+
+    /// Native CDDA attenuation before its 44.1 kHz bypass. Command mute belongs
+    /// to the queue owner; the XA-only mute bit does not suppress CDDA.
+    pub fn apply_cdda(&self, frame: [i16; 2]) -> [i16; 2] {
+        self.apply_matrix(frame, 31130)
+    }
+
+    fn apply_matrix(&self, frame: [i16; 2], coefficient: i64) -> [i16; 2] {
         let part = |sample, volume| i64::from(sample) * i64::from(volume);
         let scale = |sum: i64| {
-            let clipped = ((sum * 33617) >> 22).clamp(-32768, 32767);
+            let clipped = ((sum * coefficient) >> 22).clamp(-32768, 32767);
             ((clipped * 31880) >> 15) as i16
         };
         [

@@ -37,7 +37,18 @@ impl Interconnect {
             .ok_or("CD audio is not configured")?
             .sector(sector, self.cd_command_muted, host.volume())
     }
-    /// Complete a pending XA submission after supplied output/wait boundaries.
+    /// Submit one already-selected raw CDDA sector; drive selection is external.
+    pub fn enqueue_cd_cdda(
+        &mut self,
+        sector: &[u8],
+    ) -> crate::Result<crate::machine::cd_queue::Admission> {
+        let host = self.cd_host.as_ref().ok_or("CD host is not configured")?;
+        self.cd_audio
+            .as_mut()
+            .ok_or("CD audio is not configured")?
+            .cdda_sector(sector, self.cd_command_muted, host.volume())
+    }
+    /// Complete a pending XA/CDDA submission after supplied output/wait boundaries.
     pub fn finish_cd_audio_submission(
         &mut self,
         outcome: crate::machine::cd_queue::WaitOutcome,
@@ -47,7 +58,7 @@ impl Interconnect {
             .ok_or("CD audio is not configured")?
             .finish_submission(outcome)
     }
-    /// One supplied SPU frame boundary. Drive gain and XA mute were applied
+    /// One supplied SPU frame boundary. Drive gain and source mute were applied
     /// at sector admission. Failed SPU output retains the
     /// queued frame; the existing SPU engine may have advanced internal state.
     pub fn step_spu_cd_output(&mut self, external: [i16; 2]) -> crate::Result<[i16; 2]> {

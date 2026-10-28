@@ -47,9 +47,8 @@ gain at sector admission. A bounded original stereo capture confirms unity and
 an asymmetric crossed matrix, including old queued output consumed after a
 latch. Clipping cases and other matrices need separate native evidence.
 
-Native CD-DA uses 31130 before saturation and 31880 afterward. Rust's XA gain
-API does not implement CD-DA. The native feed also applies the configured host
-volume divisor. That host setting and the capture stage remain explicit
+Native CD-DA and Rust `Volume::apply_cdda` use 31130 before saturation and
+31880 afterward. The native feed also applies the configured host volume divisor. That host setting and the capture stage remain explicit
 comparison inputs, separate from drive gain.
 
 [Rust implementation and checks](../specs/formats/audio.md#rust-cdxa-sample-processing)
@@ -167,6 +166,22 @@ functional routing only.
 The [XA interleave discussion](https://psx-spx.consoledev.net/cdromformat/)
 supports the relationship between encoded mono/stereo rates and sector cadence;
 it does not establish initial phase, game tick timing or audible cue endpoints.
+
+## Selected CDDA input
+
+`Queue::cdda_sector` accepts one already-selected 2,352-byte raw sector as
+588 little-endian stereo frames at 44.1 kHz. It applies the active drive matrix,
+scales by `31130 >> 22`, clips to signed 16-bit, then scales by `31880 >> 15`.
+It bypasses XA interpolation and preserves XA predictors, filter history and
+selection. Command mute suppresses CDDA; the XA-only mute register does not.
+CDDA shares whole-batch admission, pending completion, output and reset with XA.
+
+`Interconnect::enqueue_cd_cdda` supplies command mute and host attenuation to this
+path. The caller supplies selected audio sectors and service boundaries. Native
+stereo, clipping and a gain latch have a bounded consumed-output comparison;
+the retained queued tail is counted separately. Play commands, TOC and track
+selection, reports, autopause, disc-end handling and mechanical timing remain
+unsupported by the Rust drive.
 
 ## Decoder reset and command mute
 
