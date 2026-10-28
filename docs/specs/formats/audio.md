@@ -2011,15 +2011,19 @@ reads this RAM; capture and reverb accesses remain unimplemented.
 Transfer status is component state, not complete
 SPUSTAT emulation or proof of IRQ latency.
 
-DMA4 RAM observation is disabled by default. Call
-`Interconnect::enable_spu_dma_observation(limit)` with a limit of 1–1,000,000
-records to capture successful RAM word accesses. Each record contains the aligned
-DMA access address before RAM mirroring, physical RAM address, word value and
-`from_ram` direction. `take_spu_dma_observation()` drains records and the overflow
+DMA RAM observation is disabled by default. Call
+`Interconnect::enable_dma_observation(limit)` with a limit of 1–1,000,000
+records to capture successful RAM accesses by the implemented DMA3 and DMA4
+paths. Each record contains the channel, access width, DMA access address before
+RAM mirroring, physical RAM address, value and `from_ram` direction. Manual CD
+transfers and SPU transfers record words; clocked CD transfers record their
+actual byte writes. `take_dma_observation()` drains records and the overflow
 flag for that interval, retaining the enabled limit. Overflow drops later records
 without stopping DMA; it makes the interval incomplete. A recorded RAM read can
 precede a later SPU-side failure. Observation adds no bus reads or clock advances
-and preserves transfer ordering. It covers DMA4 RAM accesses only; complete
+and preserves transfer ordering. The limit counts access records: a 2,048-byte
+clocked CD copy needs 2,048 records. Device-to-RAM writes use `from_ram=false`.
+Other DMA channels remain unsupported. Complete
 dependency closure and transfer timing require separate evidence.
 
 ### Original US transfer dispatcher
@@ -2489,6 +2493,12 @@ replaces the deadline; a nonbusy write leaves the callback pending without a
 completion interrupt. MADR/BCR writes remain available while completion is pending.
 Read callbacks can replace the FIFO during that interval without changing bytes
 already copied to RAM.
+
+The [bounded DMA observer](#rust-spu-ram-transfers-and-dma4) records successful
+RAM writes from both paths, with channel 3 and their actual access widths.
+Clocked copies occur inside a CHCR write. Input-ownership consumers must drain
+these records before processing subsequent accesses; an end-of-transition drain
+does not establish arbitrary ordering within a host service call.
 
 Native DICR writes acknowledge selected flags and replace control bits using
 mask `0x00ff803f`. They recompute the stored master flag from retained flags,
