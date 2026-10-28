@@ -159,8 +159,9 @@ unsigned byte argument and `%02d %02d` with two. These accept at most three and
 nine encoded bytes, respectively, with formatted bounds of three and seven.
 The adjacent `ascii-literal` label accepts three printable ASCII bytes, including
 spaces as `0x20`, without command or format interpretation. All these fields
-reserve one NUL byte. Controlled BATE equipment-screen checks cover one category
-label and the `%3d/%3d` format. Other fields and SHISU rendering remain unverified.
+reserve one NUL byte. Controlled BATE equipment-screen checks cover the `WEAPON`
+and `ARMOR` category labels and the `%3d/%3d` format. Other fields and SHISU
+rendering remain unverified.
 BATE and SHISU also expose `%02d` with one unsigned byte argument and bounds of
 four encoded bytes and three formatted bytes. Their `%7d` rows retain one signed
 32-bit argument, three encoded bytes and eleven formatted bytes. Only this codec

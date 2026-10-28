@@ -439,8 +439,9 @@ labels. Calls at `0x801D6F84`, `0x801D7600` and `0x801D7E8C` pass selected
 strings to `0x8014F800`. These `game-literal` fields retain their original string
 length plus NUL, with capacities of five to seven bytes. Alignment padding,
 pointer tables and code remain outside the editable allocations. Controlled runtime
-checks cover one equipment-screen category label. Its identical allocations remain
-indistinguishable; other category slots remain unverified.
+checks cover the equipment-screen `WEAPON` and `ARMOR` category labels. Their
+identical allocations remain indistinguishable; other category slots remain
+unverified.
 
 US `SHISU.EMI` entry 0 loads at `0x801D0C00`. Its category tables at
 `0x801D9E70`, `0x801D9EA4` and `0x801D9EDC` contain five, four and five labels.
