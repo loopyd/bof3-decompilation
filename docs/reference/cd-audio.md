@@ -140,15 +140,16 @@ Unsupported mechanical overlaps and partial IRQ clears fail
 explicitly. Manual acceptance, response publication and data-IRQ delivery are
 unavailable while the controller owns them.
 
-Captured native MMIO, all three deadlines and branch dispatch agree for bounded
+Captured native MMIO, FIFO/command/read deadlines and branch dispatch agree for bounded
 ReadN/S, Play, Pause/Init/Seek and immediate-command histories. These include active
 Pause, requested-buffer overwrite despite response backlog, SeekP takeover,
 TOC errors, XA withholding, muted playback reports, pregap autopause and disc end.
 The same guests' reference execution agrees in MMIO values, relative access cycles
 and result memory. Subcapacity XA/CDDA submission and frame counts also agree,
 without accepting audio-worker phase or PCM.
-Actual backing-read failure, active DMA3 overlap and pending audio host waits
-remain unsupported. Other scheduler interactions, broader IRQ timing and hardware
+Actual backing-read failure and pending audio host waits remain unsupported.
+Attached DMA3 uses immediate copying and a separate completion deadline as
+described below. Other scheduler interactions, broader IRQ timing and hardware
 fidelity retain
 separate obligations. Init does not reconstruct an unknown retained GetlocL
 header in a fresh ready context.
@@ -173,6 +174,18 @@ source or dependency is imported.
   visible size; consuming the block clears the data request. Reasserting BFRD
   preserves the cursor. These are native comparison facts requiring separate
   physical-drive and timing evidence.
+
+The attached Rust controller follows the native DMA path separately from manual
+word service. A busy CHCR write with DPCR channel 3 enabled copies the selected
+FIFO remainder immediately. The low BCR count limits bytes; zero consumes all
+remaining bytes. Completion waits `bytes / 4` cycles, or `bytes / 16` for exact
+CHCR `0x11400100`, then dispatches after FIFO, command and read callbacks at a
+branch boundary. Clearing busy cancels the completion interrupt; enabling DPCR
+alone does not start a transfer. Native MADR/BCR updates use the requested count,
+including when FIFO availability clamps the copy. Bounded guest comparisons
+qualify copying, normal/fast deadlines, register changes, DMA IRQ acknowledgement
+and a read callback while completion is pending. This is comparison-build
+behavior; bus arbitration, CPU stalls and hardware timing remain separate.
 
 [The Rust data/DMA3 contract](../specs/formats/audio.md#rust-cd-sector-data-and-dma3)
 names its emulator reference model and rejects overreads rather than choosing
@@ -321,8 +334,9 @@ use predictor-only resets at those Read and realtime-enable boundaries. Pause,
 seek and Init preserve queued audio, interpolation and data. Init also preserves
 mode, mute, filter and XA ended state. The caller
 must complete a pending audio submission before servicing another command.
-Successful Init, seek transitions and located Play reject active DMA3 before
-mutation; this is an unsupported Rust overlap case. Full `Queue::reset()`
+The manual word-service path rejects Init, seek transitions and located Play
+during active DMA3 before mutation. Attached DMA has already copied its bytes
+while completion remains pending. Full `Queue::reset()`
 creates an explicit fresh context and is not a command effect.
 
 The [functional drive](../specs/formats/audio.md#rust-cd-drive-commands-and-sector-routing)
@@ -335,7 +349,7 @@ responses and phase observations qualify these rules under supplied cycles.
 With supplied boundaries, ReadN/S can replace either unfinished SeekP phase.
 The old seek completion is cancelled, the exact seek target survives, and Read
 acknowledges Idle before its normal two supplied phases. Native observations
-confirm both takeover phases and the absence of a later SeekP INT2. Pending audio and active DMA3 remain rejected
+confirm both takeover phases and the absence of a later SeekP INT2. Pending audio and active manual DMA3 remain rejected
 by the interconnect. The attached controller preserves the same-pass exception
 described above. Other command overlaps and hardware timing remain open.
 Coding follows the first-success latch documented below.

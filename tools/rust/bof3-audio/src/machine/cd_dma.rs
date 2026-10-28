@@ -1,4 +1,4 @@
-//! DMA3 burst-to-RAM register state; caller owns bus service and clocks.
+//! DMA3 registers for caller-budgeted words or clocked native bulk transfers.
 use crate::Result;
 
 #[derive(Clone, Debug, Default)]
@@ -51,6 +51,42 @@ impl Channel {
             _ => return Err("DMA3: unsupported register offset".into()),
         }
         Ok(())
+    }
+    pub(crate) fn write_reference(&mut self, offset: u32, value: u32) -> Result<()> {
+        match offset {
+            0 => self.address = value & 0x00ff_ffff,
+            4 => self.block = value,
+            8 => {
+                if value & (1 << 24) != 0 && !matches!(value, 0x1100_0000 | 0x1140_0100) {
+                    return Err("DMA3: unverified clocked transfer control".into());
+                }
+                self.control = value;
+            }
+            _ => return Err("DMA3: unsupported register offset".into()),
+        }
+        Ok(())
+    }
+    pub(crate) fn reference_transfer(&self) -> (u32, usize, usize) {
+        let count = (self.block & 0xffff) as usize * 4;
+        (
+            self.address & 0x007f_fffc,
+            if count == 0 { usize::MAX } else { count },
+            if self.control == 0x1140_0100 { 16 } else { 4 },
+        )
+    }
+    pub(crate) fn advance_reference_registers(&mut self) {
+        let blocks = match self.block >> 16 {
+            0 => 0x1_0000,
+            count => count,
+        };
+        let bytes = blocks.wrapping_mul(self.block & 0xffff).wrapping_mul(4);
+        self.address = (self.address & 0x007f_fffc).wrapping_add(bytes) & 0x00ff_ffff;
+        self.block &= 0xffff_0000;
+    }
+    pub(crate) fn finish_reference(&mut self) -> bool {
+        let active = self.active();
+        self.control &= !(1 << 24);
+        active
     }
     pub fn next_word(&mut self, requested: bool) -> Option<u32> {
         if !self.active() {

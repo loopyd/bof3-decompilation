@@ -2282,7 +2282,8 @@ drive and unit-scale controller clock. The first pending opcode write installs a
 Replacing that opcode keeps the deadline. Result reads, full acknowledgements
 and completed command handlers replace it when the response queue has space.
 `Execution` dispatches due callbacks after branch delay slots, before next-step
-IRQ admission. Each pass snapshots pending slots, visits FIFO, command continuation, then read and tests each slot's current target once. Output-clock subdivisions
+IRQ admission. Each pass snapshots pending slots, visits FIFO, command continuation, read, then DMA completion and tests each
+slot's current target once. Output-clock subdivisions
 do not dispatch CD work. Reference execution uses absolute MMIO access cycles;
 raw execution retains its two-tick instruction model.
 
@@ -2360,8 +2361,9 @@ during explicit seek preparation. The same guests run through reference
 XA/CDDA submission counts and frame counts agree for a bounded subcapacity
 interval. This does not establish audio-worker phase or audible output.
 
-Actual backing-read failure, active DMA3 overlap and pending audio host-wait
-timing fail explicitly. Other scheduler interactions, broader IRQ phase and
+Actual backing-read failure and pending audio host-wait timing fail explicitly.
+Attached DMA completion can overlap read and command callbacks because copying
+already finished during the CHCR write. Other scheduler interactions, broader IRQ phase and
 hardware fidelity remain unaccepted. A fresh ready drive has no retained GetlocL
 bytes; Init does not reconstruct that unknown transfer history.
 
@@ -2383,9 +2385,9 @@ ATV/ADPCTL writes use the existing drive-volume component.
 Absent configuration, decoder reset and manual XA controls fail explicitly.
 Sector requests and data reads require the separate data FIFO below. Its
 serialized delivery API still protects active data reads and pending host work;
-response queuing does not accept native data-overrun or concurrent-DMA behavior.
-DMA overlap, host waits and broader IRQ timing remain
-implementation obligations. Retained
+response queuing alone does not accept native data-overrun or DMA timing.
+The attached controller supplies the DMA completion path below; host waits and
+broader IRQ timing remain implementation obligations. Retained
 [register research](../../reference/cd-audio.md#cd-decoder-host-interface)
 qualifies the native comparison separately from hardware acceptance.
 
@@ -2416,7 +2418,7 @@ execution, scheduler timing and independent audio fidelity remain open.
 explicitly supplied 2,048- or 2,340-byte block. It does not select sectors or
 schedule their arrival. Configuration selects `Model::EmulatorReference`: repeated
 BFRD assertion preserves the read cursor, clearing BFRD rewinds a partial block,
-and exhaustion clears readiness and the consumed block. Byte, halfword and DMA
+and exhaustion clears readiness while retaining the block for a later rewind. Byte, halfword and DMA
 word reads share one cursor. Direct presentation rejects unread-block replacement;
 the serialized INT1 selection path below can displace an unrequested block when
 no clocked controller is attached.
@@ -2424,6 +2426,7 @@ Unavailable data and overreads fail explicitly, without fabricated padding. The
 [external references](../../reference/cd-audio.md#sector-data-and-dma3) disagree
 about overread values; this model is not hardware acceptance.
 
+Without an attached controller,
 [DMA3](../../../tools/rust/bof3-audio/src/machine/cd_dma.rs) supports burst-mode
 device-to-RAM transfers, incrementing or decrementing addresses, explicit DPCR
 enable and existing DICR/IRQ acknowledgement. Zero BCR count means 65,536 words;
@@ -2433,6 +2436,47 @@ Low address bits are retained but ignored for word access. Addresses wrap at
 Chopping, request mode, reverse direction, pause and snooping remain unsupported.
 `Interconnect::service_cd` supplies a word budget, not elapsed clocks, arbitration
 or CPU stalls. A failed overread retains prior writes and does not signal completion.
+
+With an attached controller, CHCR `0x11000000` and `0x11400100` support native
+bulk device-to-RAM copying. Attachment requires idle DMA3/DMA4 channels and
+selects the native global DICR write mask and master-flag behavior. Manual
+`service_cd` is unavailable while the controller owns DMA. A busy CHCR write
+starts only when DPCR channel 3 is enabled; enabling DPCR later does not start it.
+MADR is aligned and masked with `0x7ffffc`; supported destinations stay within the
+8 MiB RAM mirror region. Unsupported controls and crossing that region reject
+before changing the channel or consuming data.
+
+Copy size is the lesser of the requested FIFO remainder and `(BCR & 0xffff) * 4`;
+a zero count consumes the whole remainder. Copying advances the FIFO immediately
+and clears BFRD on nonzero exhaustion. A partial transfer leaves its cursor and
+request intact. Native post-copy MADR advances from the aligned address by
+`blocks * (BCR & 0xffff) * 4`, where `blocks` is the high BCR half
+with zero interpreted as 65,536, wrapping to 24 bits;
+BCR retains its high half. This register update uses the requested count even
+when fewer bytes were copied.
+
+`cd_dma_deadline` exposes completion at the MMIO access cycle plus copied bytes
+divided by 4, or by 16 for exact CHCR `0x11400100`, with integer truncation.
+Zero-byte copies also schedule completion. The branch callback clears only busy
+bit 24, then signals DMA3 completion if it was still busy. A later CHCR start
+replaces the deadline; a nonbusy write leaves the callback pending without a
+completion interrupt. MADR/BCR writes remain available while completion is pending.
+Read callbacks can replace the FIFO during that interval without changing bytes
+already copied to RAM.
+
+Native DICR writes acknowledge selected flags and replace control bits using
+mask `0x00ff803f`. They recompute the stored master flag from retained flags,
+force/master enable and the written value. Completion creates channel 3's flag
+only when master and channel enables are both set. DMA asserts I_STAT bit 3 on
+the master-flag transition; clearing I_STAT alone does not reassert it while that
+flag remains set. These rules apply to the attached native model; the manual
+word-service model retains its functional IRQ contract.
+
+Bounded native guest execution matches normal/fast transfers, partial and zero
+counts, count clamping, RAM aliases, DPCR gating, busy cancellation and a read
+callback due with DMA completion. Comparisons include immediate transfer bytes,
+start/deadline/completion cycles, CD MMIO and guest result memory. They do not
+establish arbitration, CPU stalls, other control modes or hardware fidelity.
 
 The original US `CdGetSector` at `exe/slus_004_22@0x80175A78` (full EXE offset
 `0xDFA78`) calls the transfer helper at `0x80177154` (`0xE1154`). Its instructions
@@ -2493,7 +2537,7 @@ With supplied boundaries, ReadN/ReadS can take over an unfinished SeekP, both
 before seeking starts and during the Seeking phase. Read cancels the old seek
 completion, retains its exact seek target and starts the normal two-phase Read
 path with an Idle ACK. Cached header validity, queued audio and selected data
-survive; the interconnect still resets XA predictors. No SeekP INT2 follows the takeover. Pending audio and active
+survive; the interconnect still resets XA predictors. No SeekP INT2 follows the takeover. Pending audio and active manual
 DMA3 reject this operation before mutation. The attached controller retains the
 [same-pass callback exception](#rust-cd-decoder-host-registers). Other command
 takeover and overlap cases remain unsupported.
@@ -2868,9 +2912,9 @@ mechanical transitions. Unsupported commands and known INT5 parameter errors
 preserve decoder and buffer state. All commands reject while an audio submission
 is pending; the caller must finish that submission first. This preserves the
 native feed's serialized wait boundary without inventing command overlap.
-Successful seek transitions, located Play and Init also reject active DMA3
-before mutation. That rejection is a Rust implementation limit, not native
-overlap behavior.
+Successful seek transitions, located Play and Init reject active DMA3 in the
+manual word-service path before mutation. Attached bulk DMA has already copied
+the bytes while its completion remains pending.
 
 Without an attached controller, response publication remains caller-owned.
 Mechanical completion still requires supplied boundaries. The standalone

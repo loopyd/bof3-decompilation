@@ -118,7 +118,7 @@ impl Interconnect {
                     && drive.mode() & 0x40 == 0
                     && candidate.mode() & 0x40 != 0));
         let init = command.opcode == 0x0a && response.interrupt == 3;
-        if (seek_reset || play_seek || init) && self.dma.cd.active() {
+        if (seek_reset || play_seek || init) && self.dma.cd.active() && !self.dma.reference() {
             return Err("CD drive: seek/reset during active DMA3 is not implemented".into());
         }
         if xa_predictors_reset {
@@ -199,6 +199,7 @@ impl Interconnect {
     /// Bounded DMA3 word service. Does not advance clocks, arbitrate channels or
     /// stall the CPU. The drive owner separately publishes each sector block.
     pub fn service_cd(&mut self, word_budget: usize) -> crate::Result<usize> {
+        self.require_manual_cd()?;
         if self.dma.priority() & (1 << 15) == 0 || !self.dma.cd.active() {
             return Ok(0);
         }
@@ -282,7 +283,11 @@ impl Interconnect {
             self.write_cd_register((physical & 3) as u8, value as u8)
         } else if physical >= 0x1f80_10b0 {
             Self::require_word_port(address, width)?;
-            self.dma.cd.write(physical & 15, value)
+            if self.dma.reference() {
+                self.write_clocked_cd_dma(physical & 15, value)
+            } else {
+                self.dma.cd.write(physical & 15, value)
+            }
         } else {
             if width != Width::Word {
                 return Err(error(address, "CD bus controls require word accesses"));

@@ -1,7 +1,8 @@
-//! Native FIFO, command and read callbacks at CPU branch boundaries.
+//! Native FIFO, command, read and DMA callbacks at CPU branch boundaries.
 use super::super::Interconnect;
 use crate::{
     machine::{
+        bus::Bus,
         cd_drive::{Activity, Delivery, Drive},
         cd_media::Media,
         cd_queue::Admission,
@@ -15,7 +16,7 @@ const FIFO_CYCLES: u64 = 797 * 33_868_800 / 1_000_000;
 pub(in crate::machine::interconnect) struct Controller {
     drive: Drive,
     cycle: u64,
-    deadlines: [Deadline; 3],
+    deadlines: [Deadline; 4],
     media: Option<Media>,
     lowest_target: u64,
     seekp_command: SeekPCommand,
@@ -31,6 +32,7 @@ enum SeekPCommand {
 const FIFO: usize = 0;
 const COMMAND: usize = 1;
 const READ: usize = 2;
+const DMA: usize = 3;
 
 #[derive(Clone, Copy, Default)]
 struct Deadline {
@@ -76,11 +78,12 @@ impl Interconnect {
                 "CD controller requires an idle host, paused drive and no prior controller".into(),
             );
         }
+        self.dma.configure_reference()?;
         self.cd_command_muted = drive.muted();
         self.cd_controller = Some(Controller {
             drive,
             cycle,
-            deadlines: [Deadline::default(); 3],
+            deadlines: [Deadline::default(); 4],
             media: None,
             lowest_target: cycle,
             seekp_command: SeekPCommand::Other,
@@ -141,6 +144,48 @@ impl Interconnect {
             .pending_target())
     }
 
+    pub fn cd_dma_deadline(&self) -> Result<Option<u64>> {
+        Ok(self
+            .cd_controller
+            .as_ref()
+            .ok_or("CD controller is not configured")?
+            .deadlines[DMA]
+            .pending_target())
+    }
+
+    pub(super) fn write_clocked_cd_dma(&mut self, offset: u32, value: u32) -> Result<()> {
+        let mut channel = self.dma.cd.clone();
+        channel.write_reference(offset, value)?;
+        if offset != 8 || !channel.active() || self.dma.priority() & (1 << 15) == 0 {
+            self.dma.cd = channel;
+            return Ok(());
+        }
+        let (address, limit, divisor) = channel.reference_transfer();
+        let count = self.cd_host()?.dma_data_length(limit)?;
+        if address as usize + count > 0x0080_0000 {
+            return Err("DMA3: clocked transfer crosses the RAM mirror region".into());
+        }
+        let bytes = self.cd_mut()?.dma_data(limit)?;
+        for (at, byte) in bytes.iter().enumerate() {
+            self.ram.write(
+                (address + at as u32) & 0x001f_ffff,
+                crate::machine::bus::Width::Byte,
+                u32::from(*byte),
+            )?;
+        }
+        channel.advance_reference_registers();
+        self.dma.cd = channel;
+        let controller = self
+            .cd_controller
+            .as_mut()
+            .ok_or("CD controller is not configured")?;
+        controller.schedule(
+            DMA,
+            self.reference_access.unwrap_or(controller.cycle),
+            (bytes.len() / divisor) as u64,
+        )
+    }
+
     /// Advance the attached controller's absolute cycle. Dispatch only after a
     /// retired branch delay slot. A failed callback is terminal; accepted host
     /// work is not rolled back. An unattached controller has no scheduled work.
@@ -173,8 +218,12 @@ impl Interconnect {
                         self.service_clocked_cd_fifo(&mut controller, cycle)?;
                     } else if slot == COMMAND {
                         self.service_clocked_cd_command(&mut controller, cycle)?;
-                    } else {
+                    } else if slot == READ {
                         self.service_clocked_cd_read(&mut controller, cycle)?;
+                    } else if self.dma.cd.finish_reference() {
+                        self.dma.complete(3)?;
+                        self.interrupts
+                            .set_line(crate::machine::interrupts::Source::Dma, self.dma.irq_line());
                     }
                 }
             }
@@ -344,11 +393,6 @@ impl Interconnect {
             }
             _ if matches!(controller.drive.status() & 0xe0, 0x20 | 0x80) => {}
             _ => return Ok(()),
-        }
-        if self.dma.cd.active() {
-            return Err(
-                "CD controller: read callback during active DMA3 is not implemented".into(),
-            );
         }
         if controller.drive.status() & 0xe0 == 0x80 {
             return self.service_clocked_cd_play(controller, cycle);

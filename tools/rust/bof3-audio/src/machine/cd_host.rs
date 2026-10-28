@@ -135,6 +135,20 @@ impl Host {
             .ok_or("CD data model is not configured")?
             .replace_at_read(bytes)
     }
+    pub(crate) fn dma_data_length(&self, limit: usize) -> Result<usize> {
+        Ok(self
+            .data
+            .as_ref()
+            .ok_or("CD data model is not configured")?
+            .dma_length(limit))
+    }
+    pub(crate) fn dma_data(&mut self, limit: usize) -> Result<Vec<u8>> {
+        Ok(self
+            .data
+            .as_mut()
+            .ok_or("CD data model is not configured")?
+            .dma_bytes(limit))
+    }
     pub fn data_ready(&self) -> bool {
         self.data.as_ref().is_some_and(cd_data::Fifo::ready)
     }

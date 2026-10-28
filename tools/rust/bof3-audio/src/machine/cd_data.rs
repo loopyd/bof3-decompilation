@@ -81,6 +81,22 @@ impl Fifo {
     pub fn remaining(&self) -> usize {
         self.bytes.len() - self.cursor
     }
+    pub(crate) fn dma_length(&self, limit: usize) -> usize {
+        if self.requested {
+            self.remaining().min(limit)
+        } else {
+            0
+        }
+    }
+    pub(crate) fn dma_bytes(&mut self, limit: usize) -> Vec<u8> {
+        let count = self.dma_length(limit);
+        let bytes = self.bytes[self.cursor..self.cursor + count].to_vec();
+        self.cursor += count;
+        if count != 0 && self.cursor == self.bytes.len() {
+            self.requested = false;
+        }
+        bytes
+    }
     pub fn read(&mut self, count: usize) -> Result<u32> {
         if !matches!(count, 1 | 2 | 4) || !self.requested || count > self.remaining() {
             return Err(
@@ -92,8 +108,6 @@ impl Fifo {
         bytes[..count].copy_from_slice(&self.bytes[self.cursor..self.cursor + count]);
         self.cursor += count;
         if self.cursor == self.bytes.len() {
-            self.bytes.clear();
-            self.cursor = 0;
             self.requested = false;
         }
         Ok(u32::from_le_bytes(bytes))
