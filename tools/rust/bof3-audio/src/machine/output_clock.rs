@@ -1,6 +1,6 @@
-//! Explicit reference clock for SPU output and NTSC VBlank, without GPU/CD
-//! execution or CPU stalls. Origin is the caller-selected activation boundary.
-use super::{interconnect::Interconnect, spu_clock, spu_mixer::Inputs};
+//! Explicit reference clock for SPU/CD output and NTSC VBlank, without GPU/drive
+//! scheduling or CPU stalls. Origin is the caller-selected activation boundary.
+use super::{interconnect::Interconnect, spu_clock};
 use crate::Result;
 use serde::Serialize;
 
@@ -57,7 +57,8 @@ impl Clock {
     /// Advance implemented devices to each output/line boundary. Guest writes
     /// precede this call; IRQ delivery follows at the next CPU step. Errors are
     /// terminal: elapsed work is not rolled back. Drain the bounded PCM queue
-    /// regularly. CD/external input, HBlank duration and dot clocks are absent.
+    /// regularly. Configured CD audio advances at sample boundaries. External
+    /// input, drive scheduling, HBlank duration and dot clocks are absent.
     pub fn advance(
         &mut self,
         bus: &mut Interconnect,
@@ -96,7 +97,7 @@ impl Clock {
                 if self.pending.len() == QUEUE_LIMIT {
                     return Err("SPU output queue full; drain frames before advancing".into());
                 }
-                self.pending.push(bus.step_spu_output(Inputs::default())?);
+                self.pending.push(bus.step_spu_scheduled_output()?);
                 self.frames += 1;
             }
         }

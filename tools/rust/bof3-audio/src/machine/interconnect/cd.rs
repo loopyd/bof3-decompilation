@@ -67,6 +67,15 @@ impl Interconnect {
         self.cd_audio.as_mut().unwrap().consume();
         Ok(output)
     }
+    /// Clocked output consumes configured CD input; no attached source is silent.
+    /// External input has no scheduled source.
+    pub(crate) fn step_spu_scheduled_output(&mut self) -> crate::Result<[i16; 2]> {
+        if self.cd_audio.is_some() {
+            self.step_spu_cd_output([0; 2])
+        } else {
+            self.step_spu_output(super::SpuInputs::default())
+        }
+    }
     /// Apply a captured command and its decoder/buffer effects at one supplied
     /// MCU boundary. Response publication and mechanical completion stay with
     /// the caller. Failed/unsupported commands leave drive and devices intact.

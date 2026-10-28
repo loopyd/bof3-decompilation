@@ -5,7 +5,7 @@ use bof3_audio::{
         cd_audio::{Model as Resampling, Resampler, XaAudio},
         cd_queue::{Admission, Model, Queue, WaitOutcome, CAPACITY},
         interconnect::Interconnect,
-        spu_sample,
+        output_clock, spu_clock, spu_sample,
     },
     xa::{Arithmetic, Decoder, Format, Histories, Stream},
 };
@@ -235,6 +235,8 @@ fn malformed_input_and_empty_output_do_not_advance_decoder_state() {
 #[test]
 fn buffered_frames_retain_admission_matrix_and_capture_post_drive_pre_spu_gain() {
     let mut bus = bus(queue());
+    let mut transfer = spu_clock::Clock::new(spu_clock::Model::EmulatorReference);
+    let mut clock = output_clock::Clock::new(output_clock::Model::PcsxReduxNtsc);
     bus.enqueue_cd_audio(&sector(0x12)).unwrap();
     let reference = drive_gain(reference().sector(&sector(0x12)).unwrap());
     for (index, cd) in reference.iter().copied().take(300).enumerate() {
@@ -248,7 +250,8 @@ fn buffered_frames_retain_admission_matrix_and_capture_post_drive_pre_spu_gain()
             port(&mut bus, 3, 3, 1);
         } // Mute future admission, not tail.
         let expected = cd.map(|v| ((i32::from(v) >> 1) >> 1) as i16);
-        assert_eq!(bus.step_spu_cd_output([0; 2]).unwrap(), expected);
+        clock.advance(&mut bus, &mut transfer, 768).unwrap();
+        assert_eq!(clock.take_frames(), [expected]);
         for (channel, sample) in cd.into_iter().enumerate() {
             let at = channel * 1024 + index * 2;
             assert_eq!(&bus.spu_transfer().ram()[at..at + 2], &sample.to_le_bytes());
@@ -315,6 +318,8 @@ fn original_voice_queue_matches_direct_samples_at_steady_sector_rate() {
     drive.complete(0).unwrap();
     let mut bus = bus(queue());
     let mut direct = reference();
+    let mut transfer = spu_clock::Clock::new(spu_clock::Model::EmulatorReference);
+    let mut clock = output_clock::Clock::new(output_clock::Model::PcsxReduxNtsc);
     let mut expected = std::collections::VecDeque::new();
     let mut selected = 0;
     let mut nonzero = false;
@@ -331,7 +336,10 @@ fn original_voice_queue_matches_direct_samples_at_steady_sector_rate() {
         for _ in 0..294 {
             // 44100 / 150. Phase is an explicit fixture input.
             let cd = expected.pop_front().expect("reference input exhausted");
-            let output = bus.step_spu_cd_output([0; 2]).unwrap();
+            clock.advance(&mut bus, &mut transfer, 768).unwrap();
+            let frames = clock.take_frames();
+            assert_eq!(frames.len(), 1);
+            let output = frames[0];
             assert_eq!(output, cd.map(|v| ((i32::from(v) >> 1) >> 1) as i16));
             nonzero |= output != [0; 2];
         }

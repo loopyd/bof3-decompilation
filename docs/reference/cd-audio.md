@@ -160,6 +160,13 @@ later latches leave queued and pending frames unchanged. Output supplies the
 stored frame, or zero when empty. Explicit reset discards queued and pending
 output and clears decoder state.
 
+The Rust output clock consumes one configured CD frame every 768 CPU ticks
+through SPU capture, routing and gain. No CD source or an empty queue supplies
+zero. Consumption follows successful SPU output; a full 4,096-frame output queue
+retains the next CD frame. Callers drain output and supply the activation phase,
+sector deliveries and pending-submission deadlines. This connection does not
+establish native CPU phase or schedule drive transitions.
+
 Native `playXASector` decodes accepted sectors before deciding whether mute
 permits a feed. `FeedXA` advances interpolation and applies ATV gain before
 submission; the [ring](../../third_party/pcsx-redux-agentic/src/support/circular.h)

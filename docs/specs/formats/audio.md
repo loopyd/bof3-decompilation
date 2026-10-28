@@ -2621,16 +2621,26 @@ coding follows the first-success latch below; physical timing remains unresolved
 Configuration is explicit and cannot replace a live queue. Selected sectors enter
 through `enqueue_cd_audio`; pending batches finish through
 `finish_cd_audio_submission(WaitOutcome::Retry | WaitOutcome::TimedOut)` after
-caller-supplied consumption/wait boundaries. The API does not infer a timeout
-from immediate fullness or supply a sample clock. Queue consumption commits
-only after successful SPU output. A failure retains its queued frame, but the existing SPU engine can have advanced internal
-state before a later failure: this is not a transaction over the whole SPU.
+caller-supplied consumption/wait boundaries. The queue does not infer a timeout
+from immediate fullness. Queue consumption commits only after successful SPU
+output. A failure retains its queued frame, but the SPU engine can have advanced
+internal state before a later failure.
+
+[The output clock](../../../tools/rust/bof3-audio/src/machine/output_clock.rs)
+consumes configured CD audio at each 768-CPU-tick sample boundary, including when
+advanced by `Execution`. It uses the same capture, routing and gain path as
+`step_spu_cd_output`. An absent or empty CD source supplies zero; external input
+is zero. Its 4,096-frame output queue must be drained before advancing further.
+A full output queue stops before consuming the next CD frame. Errors are terminal;
+elapsed device work is not rolled back. Activation phase, sector delivery,
+mechanical transitions and pending-submission deadlines remain caller supplied.
 
 [Queue checks](../../../tools/rust/bof3-audio/tests/cd_queue.rs)
 exercise strict whole-batch capacity, pending retry and timeout, advanced histories
 after timeout, rollback on errors, mute before admission, buffered volume changes,
 capture staging, empty output and failed SPU consumption. A raw-disc check feeds
-256 VOICE sectors with explicit 150-sector/s and 44,100-frame/s boundaries:
+256 VOICE sectors through the output clock at explicit 150-sector/s and
+44,100-frame/s boundaries:
 16 selected XA sectors produce 75,264 SPU output frames, with no queue drops or
 underruns. Output matches direct same-model decoding through the declared gains;
 this is a routing comparison, not an independent fidelity oracle.
