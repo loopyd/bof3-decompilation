@@ -287,16 +287,38 @@ pub(crate) fn resident_records(
     builder.cells(&document.cells, "resident")?;
     for (group_slot, group) in document.groups.iter().enumerate() {
         for (program_slot, program) in group.programs.iter().enumerate() {
-            builder.program(
-                program.offset,
-                program.end,
-                format!("group-{group_slot}/program-slot-{program_slot}"),
-            )?;
+            let usage = format!("group-{group_slot}/program-slot-{program_slot}");
+            match program {
+                resident::Program::Decoded(sequence) => {
+                    builder.program(sequence.offset, sequence.end, usage)?
+                }
+                resident::Program::Unresolved {
+                    offset,
+                    end,
+                    reason,
+                } => {
+                    let id = builder.add("animation-program", *offset, end - offset, usage)?;
+                    let record = builder.records.get_mut(&id).unwrap();
+                    record.decode = "unresolved-program".into();
+                    record.pack = "preservation-only".into();
+                    record.dependencies.push(Dependency {
+                        kind: "animation-reference".into(),
+                        target: None,
+                        status: "unresolved".into(),
+                        reason: reason.clone(),
+                    });
+                }
+            }
         }
     }
+    let partial = document.info().unresolved_programs != 0;
     for record in builder.records.values_mut() {
         record.dependencies.push(Dependency { kind: "resident-base".into(), target: None, status: "unresolved".into(),
             reason: "the resident program/cell source does not bind its image producer, active uploads or texture page".into() });
+        if partial {
+            record.dependencies.push(Dependency { kind: "shared-program-impact".into(), target: None,
+                status: "unresolved".into(), reason: "unresolved programs can have external RAM dependencies; physical edit bounds do not prove complete runtime use relationships".into() });
+        }
     }
     Ok(builder.finish())
 }

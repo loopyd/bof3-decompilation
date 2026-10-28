@@ -114,7 +114,7 @@ JSON on standard output, including when `--json` is omitted.
 
 ## Catalog
 
-The index schema is `bof3.textures-index/v5`. A resource ID combines release,
+The index schema is `bof3.textures-index/v6`. A resource ID combines release,
 original path, and EMI slot or file locator. Equal hashes retain distinct original
 locations. Each physical resource has its byte offset, size, hash, kind, game categories,
 storage, decode and pack status, evidence, dependencies, known uses, and findings.
@@ -221,7 +221,7 @@ packing, and byte-verification example using the original FIRST atlas.
 [Edit an opening-scene palette](docs/palette-edit.md) covers a palette-word edit,
 its observed field draw context, and re-export of the packed result.
 
-The manifest schema is `bof3.textures-package/v5`. The package includes qualified
+The manifest schema is `bof3.textures-package/v6`. The package includes qualified
 original snapshots, validated baseline snapshots, raw resources, its bound catalog,
 and coverage. A new original export uses the original snapshots as its baselines. A
 qualified raw upload also has `words.json` and indexed `indices-4.png` and
@@ -329,8 +329,12 @@ for the context fields and limits. The PNG is a derivative; edit the package's
 source views to change its contents.
 
 A recognized resident animation bank has an editable `animation.json` document
-with schema `bof3.resident-animation/v2`.
-Each group retains its program pointers, byte extents, and existing step pairs.
+with schema `bof3.resident-animation/v3`.
+Each group retains its program pointers and byte extents. Programs with
+`status: decoded` retain their existing step pairs. Programs with
+`status: unresolved` retain their original `offset`, `end` and `reason`; their
+entire source spans are read-only. Structural group or program table errors
+reject the bank. A program-local decode failure does not discard other programs.
 Edit `duration` and `operand` values from 0 to 255. Keep the number of groups,
 programs, and steps, and preserve all `offset` and `end` fields. Durations below
 128 select cells. Durations of 128 or more select a forward step target. An edit
@@ -361,6 +365,9 @@ Query these banks with `--kind resident-animation-bank`. `--animation` accepts
 their resource ID. Image and palette bindings, reverse playback callers, game roles, and
 runtime appearance remain unresolved. Unrecognized resident variants have no
 editable animation document and retain their refusal findings in the catalog.
+Partial banks report decoded and unresolved program counts separately. Their
+unknown references and runtime impact remain coverage blockers. The verifier
+reports `partial-unresolved-programs`, even when unchanged bytes reconstruct.
 
 Edit raw upload words as unsigned 16-bit values, or preserve a PNG's dimensions
 and palette order while editing its indices. A 4-bit view accepts indices 0 to
@@ -557,7 +564,15 @@ unresolved. The sprite-bank owner binds forward programs to compressed banks.
 
 The `resident` module binds the recognized type-0 `0x800d3800` table variant to
 the original base initialization at `0x8014ebb8` and program selection at
-`0x8014d878`. A 32-bit relative group table leads to 16-bit relative program
+`0x8014d878`. It also recognizes the exact original shared BATTLE/BOSS metadata
+loaded at `0x800f0800` when its qualified archive contains the matching common
+battle code. The code at `emi/battle/battle/03@0x801e6c84` skips its callback
+when byte `0x801462e0` equals 5. Otherwise it sets the active base to
+`0x800f0800`, calls the selected callback, and writes constant `0x800d3800`
+after return. This does not restore an observed prior value or prove that the
+callback reaches the resident renderer. That consumer binding stays unresolved.
+
+A 32-bit relative group table leads to 16-bit relative program
 tables. Each table's first offset delimits its entries. References may be
 repeated or out of order. Each program and its cells must fit before the
 next distinct program address, within its group and payload. The parser bounds

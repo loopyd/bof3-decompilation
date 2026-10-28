@@ -20,7 +20,7 @@ use crate::{
     sprite_bank,
 };
 
-pub const SCHEMA: &str = "bof3.textures-package/v5";
+pub const SCHEMA: &str = "bof3.textures-package/v6";
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]

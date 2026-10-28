@@ -9,7 +9,7 @@ use crate::{
     cell::{self, Cell},
 };
 
-pub const SCHEMA: &str = "bof3.resident-animation/v2";
+pub const SCHEMA: &str = "bof3.resident-animation/v3";
 const MAX_PROGRAMS: usize = 65_536;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
@@ -18,6 +18,8 @@ pub struct Info {
     pub groups: usize,
     pub program_indices: usize,
     pub unique_programs: usize,
+    pub decoded_programs: usize,
+    pub unresolved_programs: usize,
     pub cells: usize,
     pub parts: usize,
 }
@@ -31,10 +33,46 @@ pub struct Sequence {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(tag = "status", rename_all = "kebab-case", deny_unknown_fields)]
+pub enum Program {
+    Decoded(Sequence),
+    Unresolved {
+        offset: usize,
+        end: usize,
+        reason: String,
+    },
+}
+
+impl Program {
+    pub fn offset(&self) -> usize {
+        match self {
+            Self::Decoded(sequence) => sequence.offset,
+            Self::Unresolved { offset, .. } => *offset,
+        }
+    }
+
+    pub fn end(&self) -> usize {
+        match self {
+            Self::Decoded(sequence) => sequence.end,
+            Self::Unresolved { end, .. } => *end,
+        }
+    }
+
+    pub fn sequence(&self) -> Result<&Sequence> {
+        match self {
+            Self::Decoded(sequence) => Ok(sequence),
+            Self::Unresolved { offset, reason, .. } => Err(invalid(&format!(
+                "program at byte {offset} is unresolved: {reason}"
+            ))),
+        }
+    }
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct Group {
     pub offset: usize,
-    pub programs: Vec<Sequence>,
+    pub programs: Vec<Program>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
@@ -53,7 +91,27 @@ impl Document {
             unique_programs: self
                 .groups
                 .iter()
-                .flat_map(|group| group.programs.iter().map(|program| program.offset))
+                .flat_map(|group| group.programs.iter().map(Program::offset))
+                .collect::<BTreeSet<_>>()
+                .len(),
+            decoded_programs: self
+                .groups
+                .iter()
+                .flat_map(|group| &group.programs)
+                .filter_map(|program| match program {
+                    Program::Decoded(sequence) => Some(sequence.offset),
+                    _ => None,
+                })
+                .collect::<BTreeSet<_>>()
+                .len(),
+            unresolved_programs: self
+                .groups
+                .iter()
+                .flat_map(|group| &group.programs)
+                .filter_map(|program| match program {
+                    Program::Unresolved { offset, .. } => Some(*offset),
+                    _ => None,
+                })
                 .collect::<BTreeSet<_>>()
                 .len(),
             cells: self.cells.len(),
@@ -68,6 +126,32 @@ fn invalid(reason: &str) -> Error {
 
 fn extent(offset: usize, starts: &BTreeSet<usize>, end: usize) -> usize {
     starts.range((offset + 1)..).next().copied().unwrap_or(end)
+}
+
+fn decode_sequence(
+    source: &[u8],
+    offset: usize,
+    end: usize,
+) -> Result<(Sequence, BTreeMap<usize, Cell>)> {
+    let program = animation::decode(source, offset, end)?;
+    program.start(0)?;
+    for token in program
+        .steps()
+        .iter()
+        .filter(|token| token.duration >= 0x80)
+    {
+        program.start(usize::from(token.operand))?;
+    }
+    let mut cells = BTreeMap::new();
+    cell::decode_cells(source, offset, end, &program, &mut cells)?;
+    Ok((
+        Sequence {
+            offset,
+            end,
+            steps: program.steps().to_vec(),
+        },
+        cells,
+    ))
 }
 
 /// Recognize the first-offset-delimited resident table variant, within 1 MiB.
@@ -137,22 +221,27 @@ pub fn decode(source: &[u8]) -> Result<Document> {
         let mut programs = Vec::new();
         for offset in offsets {
             let end = extent(offset, &starts, end);
-            let program = animation::decode(source, offset, end)?;
-            // Initialization and each forward branch fetch once, even for high tokens.
-            program.start(0)?;
-            for token in program
-                .steps()
-                .iter()
-                .filter(|token| token.duration >= 0x80)
-            {
-                program.start(usize::from(token.operand))?;
+            match decode_sequence(source, offset, end) {
+                Ok((sequence, decoded_cells)) => {
+                    for (address, cell) in decoded_cells {
+                        if cells
+                            .get(&address)
+                            .is_some_and(|existing| existing != &cell)
+                        {
+                            return Err(invalid(
+                                "aliased cells disagree on their allocation or contents",
+                            ));
+                        }
+                        cells.insert(address, cell);
+                    }
+                    programs.push(Program::Decoded(sequence));
+                }
+                Err(error) => programs.push(Program::Unresolved {
+                    offset,
+                    end,
+                    reason: error.to_string(),
+                }),
             }
-            cell::decode_cells(source, offset, end, &program, &mut cells)?;
-            programs.push(Sequence {
-                offset,
-                end,
-                steps: program.steps().to_vec(),
-            });
         }
         groups.push(Group { offset, programs });
     }
@@ -175,12 +264,13 @@ pub fn select(source: &[u8], group_index: u16, program_index: u8) -> Result<Sequ
     group
         .programs
         .get(usize::from(program_index))
-        .cloned()
         .ok_or_else(|| {
             invalid(&format!(
                 "selected program {program_index} exceeds group {group_index}'s table"
             ))
-        })
+        })?
+        .sequence()
+        .cloned()
 }
 
 /// Change existing forward step pairs and cell records. Unchanged program aliases
@@ -197,9 +287,17 @@ pub fn encode(source: &[u8], edited: &Document) -> Result<Vec<u8>> {
         }
         for (program_index, (program, raw)) in group.programs.iter().zip(&raw.programs).enumerate()
         {
-            if program.offset != raw.offset || program.end != raw.end {
+            if program.offset() != raw.offset() || program.end() != raw.end() {
                 return Err(invalid("edit changes a program allocation"));
             }
+            let (Program::Decoded(program), Program::Decoded(raw)) = (program, raw) else {
+                if program != raw {
+                    return Err(invalid(
+                        "unresolved programs and their original findings are read-only",
+                    ));
+                }
+                continue;
+            };
             if program.steps == raw.steps {
                 continue;
             }
@@ -220,8 +318,17 @@ pub fn encode(source: &[u8], edited: &Document) -> Result<Vec<u8>> {
         output[start..end].copy_from_slice(&encoded[start..end]);
     }
     for program in original.groups.iter().flat_map(|group| &group.programs) {
-        animation::decode(source, program.offset, program.end)?
-            .validate_preserved(source, &output)?;
+        match program {
+            Program::Decoded(sequence) => animation::decode(source, sequence.offset, sequence.end)?
+                .validate_preserved(source, &output)?,
+            Program::Unresolved { offset, end, .. } => {
+                if source[*offset..*end] != output[*offset..*end] {
+                    return Err(invalid(
+                        "edit overlaps an unresolved program's immutable source extent",
+                    ));
+                }
+            }
+        }
     }
     decode(&output)?;
     Ok(output)

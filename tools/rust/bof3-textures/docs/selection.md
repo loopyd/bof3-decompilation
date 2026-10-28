@@ -48,7 +48,10 @@ The group offset is a 32-bit value relative to the resident base. The program
 offset is a 16-bit value relative to that group. The result contains the program
 header offset, bounded end and original step pairs in payload coordinates.
 Repeated offsets retain the original alias. A missing group or program returns
-an error. Selection returns the two-byte program header; it does not initialize
+an error. A selected unresolved program also returns its original refusal reason;
+other decoded programs remain selectable. Partial documents use
+`bof3.resident-animation/v3`, with `status: decoded` or `status: unresolved`
+for each program. Unresolved programs and their complete source spans are read-only. Selection returns the two-byte program header; it does not initialize
 or advance playback.
 
 The caller must establish the active resident base and entity together. Table

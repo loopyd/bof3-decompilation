@@ -271,7 +271,15 @@ fn check_file(
                 result.output_sha256 = Some(sha256_hex(bytes));
                 match (content(resource, expected), content(resource, bytes)) {
                     (Ok(Some(expected)), Ok(Some(observed))) => {
-                        result.decode = "verified";
+                        result.decode = if resource
+                            .resident_animation
+                            .as_ref()
+                            .is_some_and(|info| info.unresolved_programs != 0)
+                        {
+                            "partial-unresolved-programs"
+                        } else {
+                            "verified"
+                        };
                         result.editable_views = if expected == observed {
                             "match"
                         } else {
@@ -409,6 +417,7 @@ fn report(index: &Index, files: Vec<FileResult>, scope: &str) -> Value {
         "decode": {"status": if decode_failed { "failed" } else { "partial" },
             "scope": "source words, palettes, bank bytes, image index planes and parsed records; no rendered appearance",
             "verified_resources": files.iter().flat_map(|file| &file.resources).filter(|resource| resource.decode == "verified").count(),
+            "partial_resources": files.iter().flat_map(|file| &file.resources).filter(|resource| resource.decode == "partial-unresolved-programs").count(),
             "unsupported_resources": files.iter().flat_map(|file| &file.resources).filter(|resource| resource.decode == "unsupported").count()},
         "unchanged_reconstruction": {"status": if files.iter().all(|file| file.unchanged_reconstruction == "byte-identical") { "byte-identical" } else { "failed" },
             "scope": "complete original files after supported unchanged inverses; unknown bytes preserved"},

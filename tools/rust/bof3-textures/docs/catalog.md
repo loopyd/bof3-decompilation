@@ -1,10 +1,20 @@
 # Catalog records
 
-The index schema is `bof3.textures-index/v5`. Its `resources` array contains
+The index schema is `bof3.textures-index/v6`. Its `resources` array contains
 physical files and EMI entries. Its `records` array contains images, palettes,
-animation program metadata and cells in validated three-root banks, programs and
+animation program metadata and cells in validated sprite roots, programs and
 cells in validated resident banks, and the qualified save-icon frames and palette.
 Other internal layouts remain unresolved.
+
+Resident metadata reports `decoded_programs` and `unresolved_programs` per
+physical resource, counting unique program offsets. Partial banks retain
+`animation-program` records for unresolved spans with `decode: unresolved-program`
+and `pack: preservation-only`. Their original byte extents and refusal reasons
+stay queryable through `animation-reference` dependencies. Decoded records keep
+their structural references; `shared-program-impact` remains unresolved when
+other programs have unknown RAM dependencies. Coverage sums these counts across
+physical resources, including distinct original copies. It does not deduplicate
+separate shipped locations or establish consumer reachability.
 
 Qualified original US EMI types 6, 7, 8 and 10 have the physical kind
 `audio-owned-container`, with storage `vab-header`, `vab-body`,
@@ -74,7 +84,9 @@ They are not archive offsets. `entry-payload` offsets address the qualified raw
 bank, resident-bank or save-icon payload. The parent retains the archive offset
 and physical source hash.
 Image extents include only consumed header and stream bytes. Palette extents
-contain 64 bytes in three-root banks and 32 bytes in save-icon sources. Program extents contain the header, steps and cell-offset table.
+contain 64 bytes in sprite roots and 32 bytes in save-icon sources. Decoded program extents contain the header, steps and cell-offset table.
+Unresolved program extents include the entire immutable allocation up to the next
+distinct program or group boundary.
 Cell extents contain the count byte and five bytes per part. Allocation tails
 remain opaque.
 

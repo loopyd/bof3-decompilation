@@ -17,7 +17,7 @@ use crate::{
     sprite_bank, stream_family,
 };
 
-pub const SCHEMA: &str = "bof3.textures-index/v5";
+pub const SCHEMA: &str = "bof3.textures-index/v6";
 pub const MAX_INDEX_BYTES: u64 = 512 * 1024 * 1024;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
@@ -374,19 +374,45 @@ pub fn build_from(
                     });
                     resource.palette_upload = Some(palette);
                 }
-                if entry.file_type == 0 && entry.ram_ptr == 0x800d_3800 {
+                let battle_resident_consumer = if entry.file_type == 0
+                    && entry.ram_ptr == 0x800f_0800
+                    && resource.sha256
+                        == "2cd03f3e11d86c2de1fdcc3b3c996eece1c02c45957f71a94362ac95e8959934"
+                {
+                    image.entries().iter().enumerate().find_map(|(slot, candidate)| {
+                        (candidate.file_type == 0 && candidate.ram_ptr == 0x801d_0c00
+                            && candidate.size == 118224
+                            && image.entry(slot).is_ok_and(|bytes| sha256_hex(bytes) == "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"))
+                            .then(|| format!("{}:{}#entry-{slot:03}", sources::RELEASE, file.path))
+                    })
+                } else {
+                    None
+                };
+                if entry.file_type == 0
+                    && (entry.ram_ptr == 0x800d_3800 || battle_resident_consumer.is_some())
+                {
                     match resident::decode(payload) {
                         Ok(document) => {
                             resource.kind = "resident-animation-bank".into();
                             resource.categories = vec!["unclassified-graphics".into()];
                             resource.storage = "us-resident-animation".into();
-                            resource.decode = "forward-programs-and-cell-records-verified".into();
-                            resource.pack = "forward-steps-and-cell-records-verified".into();
-                            resource.resident_animation = Some(document.info());
+                            let info = document.info();
+                            resource.decode = if info.unresolved_programs == 0 {
+                                "forward-programs-and-cell-records-verified"
+                            } else {
+                                "partial-forward-programs-and-cell-records"
+                            }
+                            .into();
+                            resource.pack = if info.unresolved_programs == 0 {
+                                "forward-steps-and-cell-records-verified"
+                            } else {
+                                "decoded-programs-and-cell-records-only"
+                            }
+                            .into();
+                            resource.resident_animation = Some(info);
                             records
                                 .extend(record::resident_records(&resource, payload, &document)?);
                             resource.evidence.extend([
-                                "SLUS_004.22@0x8014EBB8:resident-base-initialization".into(),
                                 "SLUS_004.22@0x8014D878:resident-program-selection".into(),
                                 "SLUS_004.22@0x8014D910:program-initialization".into(),
                                 "SLUS_004.22@0x8014D978:forward-loop-consumer".into(),
@@ -395,6 +421,27 @@ pub fn build_from(
                                 "SLUS_004.22@0x8014C700:five-byte-cell-parts".into(),
                                 "SLUS_004.22@0x8017F53C:cell-dimensions".into(),
                             ]);
+                            if let Some(consumer) = battle_resident_consumer {
+                                resource.evidence.push("emi/battle/battle/03@0x801E6C84:conditional-F0800-base-dispatch-and-constant-D3800-write-after-return".into());
+                                resource.dependencies.push(Dependency { kind: "consumer-selection".into(), target: Some(consumer), status: "unresolved".into(),
+                                    reason: "the original common code conditionally writes 0x800F0800 to 0x801459F0 around a callback; callback selection, path reachability and use by the resident renderer remain unproved".into() });
+                            } else {
+                                resource.evidence.push(
+                                    "SLUS_004.22@0x8014EBB8:resident-base-initialization".into(),
+                                );
+                            }
+                            for program in document.groups.iter().flat_map(|group| &group.programs)
+                            {
+                                if let resident::Program::Unresolved {
+                                    offset,
+                                    end,
+                                    reason,
+                                } = program
+                                {
+                                    resource.dependencies.push(Dependency { kind: "animation-reference".into(), target: None, status: "unresolved".into(),
+                                        reason: format!("program bytes {offset}..{end} are immutable and unresolved: {reason}") });
+                                }
+                            }
                             for kind in ["texture-source", "palette", "reverse-animation"] {
                                 resource.dependencies.push(Dependency {
                                     kind: kind.into(),
@@ -831,6 +878,8 @@ pub fn coverage(index: &Index) -> serde_json::Value {
             "decoded_compressed_banks": index.resources.iter().filter(|resource| resource.bank.is_some()).count(),
             "sprite_banks": index.resources.iter().filter(|resource| resource.sprite_bank.is_some()).count(),
             "resident_animation_banks": index.resources.iter().filter(|resource| resource.resident_animation.is_some()).count(),
+            "decoded_resident_programs": index.resources.iter().filter_map(|resource| resource.resident_animation.as_ref()).map(|info| info.decoded_programs).sum::<usize>(),
+            "unresolved_resident_programs": index.resources.iter().filter_map(|resource| resource.resident_animation.as_ref()).map(|info| info.unresolved_programs).sum::<usize>(),
             "save_icon_sources": index.resources.iter().filter(|resource| resource.save_icon.is_some()).count(),
             "unresolved_resources": index.resources.iter().filter(|resource| !resource.findings.is_empty()).map(|resource| &resource.id).collect::<Vec<_>>()},
         "categories": index.categories.iter().map(|category| category_coverage(index, category)).collect::<Vec<_>>(),
