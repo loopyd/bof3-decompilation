@@ -9,9 +9,8 @@ use serde::Serialize;
 use crate::digest::sha256_hex;
 use crate::filters::KnownPayload;
 use crate::models::{Error, Result, TextClass};
+use crate::original::US_EXECUTABLE_SHA256;
 
-const US_EXECUTABLE_SHA256: &str =
-    "0af39fb1ffcf25e4bdf2730173f397b5b5f6c44989114fe9b59b92ab7c0eb21a";
 const US_CDDA_WAV_SHA256: &str = "8e4a881152ec055823afd1c6275220c960cba2a57391cd920a37e6fb2e99a11b";
 const US_CDDA_WAV_SIZE: usize = 37_044_044;
 
@@ -174,6 +173,12 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
     let inventory = KnownPayload::load(policy)?;
     let policy_sha256 = sha256_hex(&read(policy)?);
     let inputs = files_under(root)?;
+    let executable = root.join("SLUS_004.22");
+    let xa_starts = if inputs.contains(&executable) {
+        crate::original::xa_starts(&read(&executable)?)?
+    } else {
+        Vec::new()
+    };
     let mut records = BTreeMap::new();
     let mut derived: BTreeMap<String, (String, String)> = BTreeMap::new();
     let mut build = "unrecognized";
@@ -204,6 +209,31 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                 bytes.len(),
                 "known-nontext",
                 "original US CDDA track 2 PCM WAV export; exact whole-file identity; source writer tools/rust/bof3-disk/src/cue.rs".into(),
+            ));
+        } else if let Some(stream) = xa_starts.iter().find(|stream| {
+            stream.file.path == name
+                && stream.file.size == bytes.len()
+                && stream.file.sha256 == record.sha256
+        }) {
+            record.status = "partially-verified-xa".into();
+            let mut cursor = 0;
+            for sector in &stream.sectors {
+                let start = sector * 2336 + 8;
+                record.ranges.push(range(
+                    cursor,
+                    start - cursor,
+                    "unresolved",
+                    "XA bytes outside reviewed requested-start audio bodies".into(),
+                ));
+                record.ranges.push(range(start, 2304, "known-nontext",
+                    "original US XA requested start; selector 0x80163744, mode 0xC8, filter 0x0D, read 0x1B; eighteen validated four-bit audio groups; no playback or interval claim".into()));
+                cursor = start + 2304;
+            }
+            record.ranges.push(range(
+                cursor,
+                bytes.len() - cursor,
+                "unresolved",
+                "remaining XA bytes; spare, EDC and other sectors unverified".into(),
             ));
         } else if path.extension().is_some_and(|extension| extension == "EMI") {
             match crate::lexagraph::entries(&bytes) {
