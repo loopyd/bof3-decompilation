@@ -3957,9 +3957,10 @@ captures the current guest thread after architectural exception entry, then
 ExCB priorities in order. The caller supplies an aligned RAM stack, GP and an
 explicit missing-hook policy. Each handler gets a separate sixteen-byte O32
 argument home area and returns through reserved trap `0xBFC00104`. Handlers run
-through the ordinary guest CPU; stack/callee-saved ABI violations reject. This
-functional bridge does not reproduce original BIOS volatile registers, frame
-layout, instruction count or cycles.
+through the ordinary guest CPU unless explicitly bound to owned semantics;
+stack/callee-saved ABI violations reject. This functional bridge does not
+reproduce original BIOS volatile registers, frame layout, instruction count or
+cycles.
 
 The table is captured on entry; each later priority head is read live. A node's
 verifier and second pointer are captured together before execution. A null
@@ -3968,6 +3969,22 @@ second handler. The next link is read after guest handlers complete. Cycles,
 overlapping visited nodes, malformed pointers and more than 4096 nodes per
 priority reject. The execution owner must separately bound guest instructions
 and transitions; a guest fault leaves the continuation unfinished.
+
+`Kernel::configure_counter_handlers` binds eight distinct caller-owned RAM
+identifiers to verifier/acknowledger pairs for timer 0, timer 1, timer 2 and
+VBlank. Startup owns those identifiers and their ExCB placement. Binding is
+explicit, rejects duplicate identifiers and reconfiguration, and requires an
+idle kernel. Unbound pointers continue to execute guest code.
+
+Each owned verifier tests its I_MASK bit, then conditionally reads I_STAT. A
+match delivers event class `0xF2000000 + index`, spec `2`, and returns one after
+all callbacks finish. Nested event delivery retains that continuation. The
+acknowledger then reads the live ChangeClearRCnt flag. Zero continues the chain;
+a nonzero value clears the corresponding I_STAT bit and returns directly from
+the exception, skipping later handlers and the exit hook. Timer indices 0, 1
+and 2 use IRQ bits 4, 5 and 6; VBlank index 3 uses bit 0. These are functional
+handler semantics. Default-chain allocation, generic IRQ/PAD handlers and cycle
+acceptance remain separate.
 
 Completion restores the live `HookEntryInt` jump buffer and resumes its saved
 RA with V0 set to one. Invalid hook PC/stack rejects. Without a hook, callers

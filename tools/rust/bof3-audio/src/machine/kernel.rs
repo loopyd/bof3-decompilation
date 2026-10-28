@@ -20,6 +20,8 @@ pub struct Kernel {
     entry_hook: Option<u32>,
     pad_auto_ack: u32,
     counter_auto_ack: [u32; 4],
+    counter_handlers: Option<[[u32; 2]; 4]>,
+    counter_delivery: bool,
     waiting_event: Option<PendingWait>,
     event_calls: EventCalls,
     exception_calls: Option<ExceptionCalls>,
@@ -39,6 +41,8 @@ impl Default for Kernel {
             entry_hook: None,
             pad_auto_ack: 1,
             counter_auto_ack: [1; 4],
+            counter_handlers: None,
+            counter_delivery: false,
             waiting_event: None,
             event_calls: EventCalls::default(),
             exception_calls: None,
@@ -58,6 +62,43 @@ pub struct Call {
 }
 
 impl Kernel {
+    /// Bind caller-owned service identifiers in guest ExCB nodes. Each pair is
+    /// verifier/acknowledger for timer 0, timer 1, timer 2, then VBlank.
+    /// These identifiers select owned semantics, not instructions to fetch.
+    /// Startup owns their allocation and chain placement; no BIOS address is
+    /// recognized automatically. Ordinary unbound targets still execute code.
+    pub fn configure_counter_handlers(&mut self, handlers: [[u32; 2]; 4]) -> Result<()> {
+        self.require_plain_context()?;
+        if self.counter_handlers.is_some() {
+            return Err("owned counter handlers already configured".into());
+        }
+        let mut offsets = Vec::new();
+        for address in handlers.into_iter().flatten() {
+            super::exception_calls::validate_handler(address)?;
+            if Self::is_call(address) {
+                return Err("owned counter handler conflicts with a kernel service vector".into());
+            }
+            let offset = ram_offset(address, 4)?;
+            if offsets.contains(&offset) {
+                return Err("owned counter handlers require distinct RAM identifiers".into());
+            }
+            offsets.push(offset);
+        }
+        self.counter_handlers = Some(handlers);
+        Ok(())
+    }
+
+    fn counter_action(&self, target: u32) -> Option<(usize, bool)> {
+        self.counter_handlers?
+            .iter()
+            .enumerate()
+            .find_map(|(index, pair)| {
+                pair.iter()
+                    .position(|&address| address == target)
+                    .map(|part| (index, part == 1))
+            })
+    }
+
     /// Functional ABI bridge after CPU exception entry. Stack/GP and the missing
     /// hook policy are explicit inputs, not claimed original BIOS boot contents.
     pub fn begin_exception(
@@ -87,6 +128,46 @@ impl Kernel {
         bus: &mut impl Bus,
         mut callback: Option<u32>,
     ) -> Result<Call> {
+        while let Some(target) = callback {
+            let Some((index, acknowledge)) = self.counter_action(target) else {
+                break;
+            };
+            let bit = 1u32 << [4, 5, 6, 0][index];
+            if acknowledge {
+                if self.counter_auto_ack[index] != 0 {
+                    bus.write(0x1f80_1070, Width::Word, !bit)?;
+                    self.return_exception(cpu, bus)?;
+                    return Ok(Call {
+                        vector: 0x80,
+                        service: 6,
+                        name: "CounterInterruptReturn",
+                        waiting: false,
+                        callback: None,
+                    });
+                }
+            } else if bus.read(0x1f80_1074, Width::Word)? & bit == 0
+                || bus.read(0x1f80_1070, Width::Word)? & bit == 0
+            {
+                cpu.set_register(2, 0);
+            } else {
+                cpu.set_register(4, 0xf200_0000 | index as u32);
+                cpu.set_register(5, 2);
+                self.counter_delivery = true;
+                let event = self.event_calls.start(cpu, bus)?;
+                if event.is_some() {
+                    return Ok(Call {
+                        vector: 0x80,
+                        service: 6,
+                        name: "CounterInterruptEvent",
+                        waiting: false,
+                        callback: event,
+                    });
+                }
+                self.counter_delivery = false;
+                cpu.set_register(2, 1);
+            }
+            callback = self.exception_calls.as_mut().unwrap().resume(cpu, bus)?;
+        }
         if callback.is_none() {
             if let Some(address) = self.entry_hook {
                 let saved = read_jump(bus, address)?;
@@ -127,6 +208,7 @@ impl Kernel {
         self.exception_calls = None;
         self.event_calls = EventCalls::default();
         self.waiting_event = None;
+        self.counter_delivery = false;
         Ok(())
     }
     /// Save the active guest thread after CPU exception entry. Handler dispatch,
@@ -228,6 +310,12 @@ impl Kernel {
         }
         if cpu.pc() == CALLBACK_RETURN {
             let callback = self.event_calls.resume(cpu, bus)?;
+            if self.counter_delivery && self.event_calls.depth() == 0 {
+                self.counter_delivery = false;
+                cpu.set_register(2, 1);
+                let callback = self.exception_calls.as_mut().unwrap().resume(cpu, bus)?;
+                return self.exception_progress(cpu, bus, callback);
+            }
             return Ok(Call {
                 vector: 0xb0,
                 service: 7,
