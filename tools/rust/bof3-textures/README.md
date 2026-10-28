@@ -318,10 +318,12 @@ The bank's `raw.bin` and any `decoded.bin` are read-only; use its qualified view
 Unsupported internal variants retain read-only decoded bytes and refusal findings.
 
 Use `frame EDIT_PACKAGE --asset RESOURCE_ID --context CONTEXT.json --output NEW_DIRECTORY`
-to preview a selected three-root bank cell after validated package edits. It
+to preview a selected three-root or resident bank cell after validated package edits. It
 publishes `frame.png` and a source-bound `frame.json` report without changing the
-package. Supply the entity bytes, selected records, upload coordinates, draw
-commands and part order explicitly. See [Frame command](docs/composition.md#frame-command)
+package. Supply the entity bytes, selected records, draw commands and part order
+explicitly. Three-root banks need upload coordinates; resident cells use separate
+raw texture and palette resource IDs with qualified upload descriptors.
+See [Frame command](docs/composition.md#frame-command)
 for the context fields and limits. The PNG is a derivative; edit the package's
 source views to change its contents.
 

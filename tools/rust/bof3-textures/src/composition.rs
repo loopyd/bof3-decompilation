@@ -190,10 +190,29 @@ impl SampleState {
 /// Indexed source selection, independent of framebuffer writes.
 struct Texels<'a> {
     state: SampleState,
-    texture: WordRegion<'a>,
-    palette: WordRegion<'a>,
+    texture: &'a [WordRegion<'a>],
+    palette: &'a [WordRegion<'a>],
     tpage: u16,
     clut: u16,
+}
+
+fn source_word(regions: &[WordRegion<'_>], x: usize, y: usize, kind: &str) -> Result<u16> {
+    let mut selected = None;
+    for region in regions {
+        if let Some(word) = region.word(x, y) {
+            if selected.is_some_and(|previous| previous != word) {
+                return Err(invalid(&format!(
+                    "overlapping {kind} regions disagree at ({x}, {y})"
+                )));
+            }
+            selected = Some(word);
+        }
+    }
+    selected.ok_or_else(|| {
+        invalid(&format!(
+            "selected {kind} word ({x}, {y}) is outside its supplied source regions"
+        ))
+    })
 }
 
 impl Texels<'_> {
@@ -204,17 +223,14 @@ impl Texels<'_> {
         let v = usize::from(self.state.window(v, 5));
         let page_x = usize::from(self.tpage & 15) * 64;
         let page_y = usize::from((self.tpage >> 4) & 1) * 256;
-        let word = self
-            .texture
-            .word(page_x + u / per_word, page_y + v)
-            .ok_or_else(|| invalid("texture coordinate is outside its supplied source region"))?;
+        let word = source_word(self.texture, page_x + u / per_word, page_y + v, "texture")?;
         let index = usize::from((word >> ((u % per_word) * bits)) & ((1 << bits) - 1));
-        self.palette
-            .word(
-                usize::from(self.clut & 63) * 16 + index,
-                usize::from(self.clut >> 6),
-            )
-            .ok_or_else(|| invalid("selected palette word is outside its supplied source region"))
+        source_word(
+            self.palette,
+            usize::from(self.clut & 63) * 16 + index,
+            usize::from(self.clut >> 6),
+            "palette",
+        )
     }
 }
 
@@ -277,8 +293,8 @@ impl Geometry {
     pub fn sample(
         &self,
         state: SampleState,
-        texture: WordRegion<'_>,
-        palette: WordRegion<'_>,
+        texture: &[WordRegion<'_>],
+        palette: &[WordRegion<'_>],
     ) -> Result<SourceFrame> {
         let [left, top, right, bottom] = self.bounds()?;
         let (tpage, clut) = match *self {
@@ -409,8 +425,8 @@ fn sample_triangle(
 pub struct SourcePart<'a> {
     pub geometry: &'a Geometry,
     pub state: SampleState,
-    pub texture: WordRegion<'a>,
-    pub palette: WordRegion<'a>,
+    pub texture: &'a [WordRegion<'a>],
+    pub palette: &'a [WordRegion<'a>],
 }
 
 /// A source-color derivative before draw offsets, clipping or framebuffer effects.

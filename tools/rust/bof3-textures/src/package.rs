@@ -698,15 +698,31 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
 }
 
 #[derive(Serialize)]
+pub struct FrameArchive {
+    pub source: String,
+    pub original_sha256: String,
+    pub reconstructed_sha256: String,
+}
+
+#[derive(Serialize)]
+pub struct FrameResource {
+    pub role: String,
+    pub resource: String,
+    pub source: String,
+    pub entry: Option<usize>,
+    pub offset: u64,
+    pub size: u64,
+    pub original_sha256: String,
+    pub reconstructed_sha256: String,
+}
+
+#[derive(Serialize)]
 pub struct FrameReport {
     pub schema: String,
     pub resource: String,
-    pub source: String,
-    pub original_archive_sha256: String,
-    pub reconstructed_archive_sha256: String,
-    pub original_resource_sha256: String,
-    pub reconstructed_resource_sha256: String,
-    pub decoded_bank_sha256: String,
+    pub archives: Vec<FrameArchive>,
+    pub resources: Vec<FrameResource>,
+    pub decoded_bank_sha256: Option<String>,
     pub context: preview::FrameContext,
     pub origin: [i16; 2],
     pub width: usize,
@@ -714,6 +730,18 @@ pub struct FrameReport {
     pub color_words_sha256: String,
     pub png_sha256: String,
     pub scope: String,
+}
+
+fn frame_bytes<'a>(resource: &Resource, output: &'a [u8]) -> Result<&'a [u8]> {
+    let end = resource
+        .offset
+        .checked_add(resource.size)
+        .and_then(|end| usize::try_from(end).ok());
+    usize::try_from(resource.offset)
+        .ok()
+        .zip(end)
+        .and_then(|(start, end)| output.get(start..end))
+        .ok_or_else(|| Error::Invalid("frame resource exceeds reconstructed archive".into()))
 }
 
 /// Reconstruct validated package intent and publish a separate source derivative.
@@ -725,32 +753,86 @@ pub fn frame(
 ) -> Result<FrameReport> {
     let root = fs::canonicalize(root)?;
     let manifest = load(&root)?;
-    let resource = manifest
-        .index
-        .resources
-        .iter()
-        .find(|resource| resource.id == asset && resource.sprite_bank.is_some())
-        .ok_or_else(|| Error::Invalid("asset is not a qualified three-root sprite bank".into()))?;
-    let (source, snapshot) = manifest
-        .index
-        .files
-        .iter()
-        .zip(&manifest.snapshots)
-        .find(|(source, _)| source.path == resource.source)
-        .ok_or_else(|| Error::Invalid("frame asset has no source snapshot".into()))?;
+    let find = |id: &str| {
+        manifest
+            .index
+            .resources
+            .iter()
+            .find(|resource| resource.id == id)
+            .ok_or_else(|| {
+                Error::Invalid(format!("frame resource {id} is absent from the package"))
+            })
+    };
+    let resource = find(asset)?;
+    let mut resources = vec![("geometry", resource)];
+    match &context {
+        preview::FrameContext::SpriteBank(_) => {
+            if resource.sprite_bank.is_none() {
+                return Err(Error::Invalid(
+                    "asset is not a qualified three-root sprite bank".into(),
+                ));
+            }
+        }
+        preview::FrameContext::Resident(binding) => {
+            if resource.resident_animation.is_none() {
+                return Err(Error::Invalid(
+                    "asset is not a qualified resident animation bank".into(),
+                ));
+            }
+            let texture = find(&binding.texture_resource)?;
+            let palette = find(&binding.palette_resource)?;
+            if texture.upload.is_none() || palette.palette_upload.is_none() {
+                return Err(Error::Invalid(
+                    "resident frame requires qualified raw texture and palette uploads".into(),
+                ));
+            }
+            resources.extend([("texture", texture), ("palette", palette)]);
+        }
+    }
     let stage = Stage::new(destination, &root)?;
-    let reconstructed = reconstruct(&root, &manifest, source, snapshot)?;
-    let end = resource
-        .offset
-        .checked_add(resource.size)
-        .and_then(|end| usize::try_from(end).ok());
-    let raw = usize::try_from(resource.offset)
-        .ok()
-        .zip(end)
-        .and_then(|(start, end)| reconstructed.output.get(start..end))
-        .ok_or_else(|| Error::Invalid("frame resource exceeds reconstructed archive".into()))?;
-    let decoded = bank_bytes(resource, raw)?;
-    let frame = preview::sprite_frame(&decoded, &context)?;
+    let mut archives = BTreeMap::new();
+    let mut archive_reports = Vec::new();
+    for (_, resource) in &resources {
+        if archives.contains_key(&resource.source) {
+            continue;
+        }
+        let (source, snapshot) = manifest
+            .index
+            .files
+            .iter()
+            .zip(&manifest.snapshots)
+            .find(|(source, _)| source.path == resource.source)
+            .ok_or_else(|| Error::Invalid("frame resource has no source snapshot".into()))?;
+        let reconstructed = reconstruct(&root, &manifest, source, snapshot)?;
+        archive_reports.push(FrameArchive {
+            source: source.path.clone(),
+            original_sha256: source.sha256.clone(),
+            reconstructed_sha256: sha256_hex(&reconstructed.output),
+        });
+        archives.insert(source.path.clone(), reconstructed);
+    }
+    let payloads = resources
+        .iter()
+        .map(|(_, resource)| frame_bytes(resource, &archives[&resource.source].output))
+        .collect::<Result<Vec<_>>>()?;
+    let (frame, decoded_bank_sha256) = match &context {
+        preview::FrameContext::SpriteBank(binding) => {
+            let decoded = bank_bytes(resource, payloads[0])?;
+            (
+                preview::sprite_frame(&decoded, binding)?,
+                Some(sha256_hex(&decoded)),
+            )
+        }
+        preview::FrameContext::Resident(binding) => (
+            preview::resident_frame(
+                payloads[0],
+                binding,
+                (resources[1].1.upload.as_ref().unwrap(), payloads[1]),
+                (resources[2].1.palette_upload.as_ref().unwrap(), payloads[2]),
+            )?,
+            None,
+        ),
+    };
     let png = png::encode_words(&frame.image)?;
     let words: Vec<_> = frame
         .image
@@ -758,22 +840,27 @@ pub fn frame(
         .iter()
         .flat_map(|word| word.to_le_bytes())
         .collect();
+    let resources = resources
+        .iter()
+        .zip(payloads)
+        .map(|((role, resource), raw)| FrameResource {
+            role: (*role).into(),
+            resource: resource.id.clone(),
+            source: resource.source.clone(),
+            entry: resource.entry,
+            offset: resource.offset,
+            size: resource.size,
+            original_sha256: resource.sha256.clone(),
+            reconstructed_sha256: sha256_hex(raw),
+        })
+        .collect();
     let report = FrameReport {
-        schema: "bof3.sprite-source-frame/v1".into(),
-        resource: resource.id.clone(),
-        source: source.path.clone(),
-        original_archive_sha256: source.sha256.clone(),
-        reconstructed_archive_sha256: sha256_hex(&reconstructed.output),
-        original_resource_sha256: resource.sha256.clone(),
-        reconstructed_resource_sha256: sha256_hex(raw),
-        decoded_bank_sha256: sha256_hex(&decoded),
-        context,
+        schema: "bof3.sprite-source-frame/v2".into(), resource: resource.id.clone(),
+        archives: archive_reports, resources, decoded_bank_sha256, context,
         origin: [frame.origin_x, frame.origin_y],
-        width: frame.image.width,
-        height: frame.image.height,
-        color_words_sha256: sha256_hex(&words),
-        png_sha256: sha256_hex(&png),
-        scope: "source derivative; record, entity, upload coordinates, draw state and part order are caller bindings, not runtime verification; no scene rendering or edited-disc acceptance".into(),
+        width: frame.image.width, height: frame.image.height,
+        color_words_sha256: sha256_hex(&words), png_sha256: sha256_hex(&png),
+        scope: "source derivative; record, entity, draw state, source selection and part order are caller bindings, not runtime verification; no scene rendering or edited-disc acceptance".into(),
     };
     stage.write("frame.png", &png)?;
     stage.write("frame.json", &serde_json::to_vec_pretty(&report)?)?;

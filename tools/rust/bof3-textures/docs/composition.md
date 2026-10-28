@@ -44,13 +44,15 @@ qualified quad. Supply `SampleState::from_commands(draw_mode, texture_window)`
 with explicit GP0(E1h) and GP0(E2h) commands. A missing texture-window observation
 cannot be replaced with an assumed zero command.
 
-Each source is a `WordRegion::new(x_words, y, &image)`. The image is a
+Supply texture and palette slices of `WordRegion::new(x_words, y, &image)`. The image is a
 `png::WordImage` whose width counts VRAM words. Regions must fit within 1024 words
 by 512 rows. Supply the decoded texture and palette at their qualified upload
 coordinates. Region construction checks bounds, not physical identity, upload
 execution or residency. Every selected texture and palette word must exist in
 the supplied regions. A partial palette is sufficient only when it contains
-every selected color word. Missing colors cause an error.
+every selected color word. Missing words cause an error. Separate regions retain
+holes between uploads. If regions overlap at a selected word, their values must
+agree; the sampler does not infer transfer order.
 
 The sampler supports 4-bit and 8-bit indices. A rectangle's page must match E1.
 A quad selects its own packet page, which can differ from E1. Both paths wrap
@@ -101,7 +103,7 @@ commands does not establish rendered appearance or edited-disc loading.
 ## Frame command
 
 The `frame` command reconstructs the selected archive from a current edit package,
-then samples one declared cell from a qualified three-root sprite bank. It uses
+then samples one declared cell from a qualified three-root or resident bank. It uses
 the same edit validation and allocation limits as `pack`. The package contains
 its original snapshots, so the command does not reopen former source paths.
 
@@ -109,9 +111,9 @@ its original snapshots, so the command does not reopen former source paths.
 bin/harness textures frame EDIT_PACKAGE --asset RESOURCE_ID --context CONTEXT.json --output NEW_DIRECTORY
 ```
 
-Choose the bank's physical resource ID from the package's `index.resources`,
-whose `sprite_bank` field identifies supported banks. The context is a JSON
-object with all the following fields. Unknown fields are refused.
+Choose the bank's physical resource ID from the package's `index.resources`.
+For a three-root bank, its `sprite_bank` field identifies support. The context is
+a JSON object with all the following fields. Unknown fields are refused.
 
 | Field | Value |
 | --- | --- |
@@ -131,10 +133,28 @@ The command refuses unsupported draw states and geometry, invalid record indices
 missing colors and every other sampler failure described above.
 It does not derive runtime selectors or replace missing draw-state evidence.
 
+For a resident bank, choose an asset with `resident_animation` metadata and use
+schema `bof3.resident-frame-context/v1`. Keep `cell_offset`, `entity`, `graph_type`,
+`draw_mode`, `texture_window` and `part_order` as above. Replace the root, image,
+palette and origin fields with `texture_resource` and `palette_resource`, the
+exact physical resource IDs from the same package. These resources may belong to
+different archives. The selected cell must be declared in the resident bank.
+
+The texture must have a qualified raw upload descriptor and the palette a
+qualified staging descriptor. Texture chunks use their declared 32-word by
+32-row positions. Skipped chunks and final-row holes provide no words. Palette
+staging advances across 256-word rows. Coordinates come from the descriptors;
+the context cannot override them. All sampled texels and palette words must
+exist in those sources. Source selection remains the caller's assertion,
+including when an edited cell samples outside an earlier observed UV envelope.
+
 Create the output parent first and choose a new directory outside the package.
 The command publishes `frame.png` and `frame.json` together. The report retains
-the complete context, original and reconstructed archive and resource hashes,
-decoded-bank hash, source-color word hash, PNG hash, canvas origin and dimensions.
+schema `bof3.sprite-source-frame/v2`, the complete context, and original and
+reconstructed hashes for each resource and unique archive. Resource entries
+identify their role, source, EMI entry and byte extent. The decoded-bank hash is
+present for three-root banks and null for resident sources. The report also
+retains the source-color word hash, PNG hash, canvas origin and dimensions.
 Its source bindings are caller assertions. The report does not certify upload
 execution, runtime residency, scene rendering or edited-disc loading.
 
