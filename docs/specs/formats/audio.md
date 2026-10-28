@@ -3961,6 +3961,29 @@ SDK routines or their consumers. The paired component checks use the same owned
 Kernel/SPU model; original BIOS timing, hardware timeout timing and complete
 standalone startup remain unresolved.
 
+The linked [tick-mode initializer](../../../tools/rust/bof3-audio/driver/audio/tick.s)
+exports `audio_sequence_initialize_tick` and `audio_video_get_mode`. The caller
+supplies the live `audio_video_mode` word before calling the initializer with
+the original mode in A0. This component does not initialize video hardware.
+
+The initializer stores `audio_sequence_tick_flag` as one when input bit `0x1000`
+is set, and selects the low twelve mode bits. Otherwise it clears the flag and
+keeps the full input word. Modes zero and five select rate 50 for video mode one
+and 60 otherwise. Mode one selects rate 60 and rewrites the mode to five for
+video mode zero or 60 otherwise. Modes two and three select rates 240 and 120.
+Mode four selects rate 50 and rewrites the mode to five for video mode one or
+50 otherwise. Other nonnegative modes supply the rate directly; negative
+unflagged modes select rate 60 and keep their mode word. The rate is stored in
+`audio_sequence_tick_rate`. V0 retains the original instruction result without
+an additional return-value contract.
+
+The loaded image initializes the mode and flag to 60 and one. Cold kernel
+initialization clears the rate and video-mode words. Repeated calls read the
+current video-mode word and replace the mode, flag and rate. All six relocated
+dispatch targets remain within the component. Original SDK consumers still use
+their original state until their migration; this component alone does not
+replace their scheduling or adjacent pitch-data reads.
+
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
 
