@@ -920,9 +920,8 @@ writer/consumer agreement, exact PCM, global zones, custom modulators, unknown
 operators/chunks, odd padding, duplicate names, opaque terminal payloads,
 24-bit signed extremes, stereo/ROM handling, malformed indices/links, resource
 limits, every fixture truncation and deterministic byte mutations without panics.
-Music packing uses this reader for the bounded sample inverse below. Instrument
-reconstruction remains open; successful parsing must never be treated as approval
-to discard unsupported SF2 behavior.
+Music packing uses this reader for the bounded sample and instrument inverses
+below. Successful parsing never authorizes discarding unsupported SF2 behavior.
 
 The existing corpus binding check now also reads all 842 constructible banks
 (15,095 instrument zones), checks every sample's exact PCM against the authored
@@ -935,18 +934,21 @@ sample reading, not those rejected contexts or arbitrary external SF2 semantics.
 
 [The sample inverse](../../../tools/rust/bof3-audio/src/soundfont/packing/sample.rs)
 compares an edited SF2 against a fresh binding/export regenerated from preserved
-VAB bytes and the supported executable. It accepts fixed-length PCM edits and
-shared-consistent nonlooping/continuous sample loops. Sample count, storage
-positions, allocation sizes, headers other than loop points, generator/modulator
-records other than sample mode and separately validated tone gain/pan/tuning/envelope/assignment, metadata,
-opaque chunks, terminals and padding must remain unchanged. The sample-only API
-still rejects tone edits; the bank API validates each inverse before returning.
-Unowned PCM, guard samples and generated silence cannot be edited. Added/removed
-records, release-only loops, instrument topology, unsupported tuning/envelope changes and
-allocation reconstruction fail explicitly. All instrument zones
-referring to one shared sample must agree on its loop mode. Loop endpoints must
-align to 28-frame blocks, with the loop ending at the sample end. Disabling a loop
-leaves its unused SF2 header points unchanged; edits to ignored points reject.
+VAB bytes and the supported executable. The sample-only API accepts fixed-length
+PCM edits and shared-consistent nonlooping or continuous loops. It retains sample
+count, storage positions, allocations and instrument structure. Sample headers
+other than loop points, generator/modulator records other than sample mode,
+metadata, opaque chunks, terminals and padding must remain unchanged.
+
+The bank API also validates the tone-control inverses below and the supported
+program, key-range, independent-instrument and appended-allocation reconstruction
+in [Initial channel programs and editable program layers](#initial-channel-programs-and-editable-program-layers).
+Other topology changes, release-only loops and unsupported tuning or envelope
+edits reject explicitly. Unowned PCM, guards and generated silence remain
+immutable. All instrument zones referring to a shared sample must agree on its
+loop mode. Loop endpoints must align to 28-frame blocks and end at the sample
+end. Disabling a loop retains its unused SF2 header points; edits to those ignored
+points reject.
 
 Content comparison uses exact signed PCM24 and loop meaning. SF2 2.01 PCM16 and
 2.04 PCM24 with zero low bytes therefore reuse identical original ADPCM, including
@@ -971,7 +973,9 @@ All 842 constructible corpus banks retain their original body bytes through this
 inverse. The existing 178 pitch-context conversion failures remain explicit.
 Music-folder checks cover edited BGM004 PCM, combined MIDI/sample edits and
 disagreeing selected copies of a shared bank. Evidence uses
-`out/audio-migration/sf2-pack-*`; broad SF2 reconstruction remains open.
+`out/audio-migration/sf2-pack-*`. These checks cover the sample inverse. The later
+sections define additional supported bank reconstruction; arbitrary SF2
+reconstruction remains unsupported.
 
 ## Rust SoundFont tone-control packing
 
