@@ -163,6 +163,17 @@ repeated again. Explicit `--repeats` requests whole-file restarts only in that
 input mode. After the requested file plays, extra fixed-duration time advances
 the final synth state without restarting.
 
+Add `--format ogg` to either music engine to publish `render.ogg` alongside the
+inspectable WAV and report. Vorbis uses the pinned Rust encoder at quality 0.7,
+with stereo coupling disabled. `--quality 0.7` states that setting explicitly;
+other qualities fail. PC Ogg delivery accepts 32000, 44100 and 48000 Hz; PSX
+rendering requires 44100 Hz. Neither path converts rates implicitly.
+The report's `delivery` object records the encoder,
+settings, hashes and exact presentation frames. Its decoded PCM error is not
+measured per output. See the [codec contract](../../../docs/reference/audio-codecs.md)
+for the representative numerical quality policy and independent-consumer scope.
+MP3 delivery remains disabled because its full-band noise quality is unresolved.
+
 Build a standalone PS-X EXE for the selected song with the full repository's
 canonical GCC 2.7.2 toolchain:
 
@@ -221,7 +232,7 @@ regenerated. No compatibility export or packing implementation is retained.
 
 The migration is incomplete. Supported preservation, extraction, edited packing
 and bounded rendering paths are available. Independent PSX fidelity,
-SFX/XA runtime rendering, MP3/Ogg delivery and full verification evidence remain
+SFX/XA runtime rendering, MP3 delivery and full verification evidence remain
 open. Unsupported operations fail explicitly. C source retirement is separately gated; this
 package is not a claim of full parity. TUI, live playback, standalone PSF
 commands and FLAC are retired from the replacement command surface.

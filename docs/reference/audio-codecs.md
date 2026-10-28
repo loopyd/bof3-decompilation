@@ -4,7 +4,42 @@ The approved dependency graph pins
 `oxideav-mp3 =0.1.3` and `oxideav-vorbis =0.0.12`, with the exact transitive
 versions below. License notices are included in the source package.
 Conformance, fidelity, timing, and publication remain separate acceptance
-gates. The production command surface exports WAV only.
+gates. Music rendering exports inspectable WAV and optional Ogg Vorbis.
+MP3 delivery remains disabled pending its content-quality boundary.
+
+## Music delivery
+
+Use `render --format ogg` with either music engine. The command retains
+`render.wav` and `render.json` and adds `render.ogg`. The pinned Rust Vorbis
+encoder uses quality 0.7 with coupling disabled. `--quality 0.7` is optional;
+other values fail. PC delivery supports 32000, 44100 and 48000 Hz. PSX rendering
+requires 44100 Hz. The command never changes the rate implicitly.
+
+Before publication, the command reads back every file, checks encoded byte
+identity and Ogg structure, and verifies the encoded rate, channels and final
+presentation frame count. Failed encoding or verification publishes no output.
+An existing destination remains untouched. The report's `delivery` object uses
+`bof3.audio.delivery/v1` and records actual encoder identity, settings, reference
+and encoded hashes, byte count and stream metadata. Vorbis is lossy. Decoded PCM
+error is not measured for each output.
+
+The numerical acceptance policy compares final production bytes through an
+independent consumer against the exact encoder input. Each nonzero-energy channel
+requires at least 30 dB SNR and absolute gain error at most 0.01. Gain is
+`sum(reference * decoded) / sum(reference * reference)`, without fitted gain or
+alignment. Exact nonzero PCM passes as infinite SNR. Silent channels require
+decoded absolute peak at most one PCM16 unit. The policy retains peak error and
+decoded PCM for inspection. It does not establish perceptual transparency or
+game-to-PC fidelity.
+
+Vorbis 0.7 meets that policy on the retained music, extracted bank sample,
+VOICE-stream excerpt, controller fixture, silence and full-band noise inputs.
+Music comparisons include all three delivery rates. Independent short and
+partial-frame checks also require exact decoded presentation and boundary
+impulses above half source amplitude. Content evidence is bounded to those
+representatives; wider source coverage and other quality settings remain open.
+MP3 192 kbit/s fails the full-band noise SNR and gain bounds, so its passing
+music, sample and voice comparisons do not enable production delivery.
 
 ## Reviewed graph
 
@@ -154,7 +189,8 @@ capture/version, flags, serial/page sequence, lacing, CRCs, header signatures,
 identification fields, monotone granules and final presentation length using
 the [Ogg framing specification](https://xiph.org/ogg/doc/framing.html). This
 inspector does not decode setup/audio packets or establish perceptual quality.
-Broader corpus quality and delivery publication remain open.
+Broader corpus quality and other settings remain open. The command accepts only
+the measured music-delivery configuration described above.
 
 All executable tests and oracle adapters in the audio crate are Rust. Python
 is confined to harness integration tests. mpg123/FFmpeg/Xiph are independent

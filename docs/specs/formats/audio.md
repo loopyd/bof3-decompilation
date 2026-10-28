@@ -1898,8 +1898,16 @@ repeats, duration cutoff, safety limit, event counts, floating-point peak and
 PCM16 clipping. Settings are 256 voices, effects enabled and master volume 0.5;
 voice stealing, engine SF2 approximations, undithered PCM quantization and a fixed
 tail shorter than some envelopes/effects are disclosed. This is not PSX timing
-or waveform acceptance. Archive rendering is described below; MP3/Ogg delivery
-remains unsupported. The harness now forwards audio commands to Rust.
+or waveform acceptance. Archive rendering is described below. Optional Ogg
+delivery uses `--format ogg` and quality 0.7 on either music engine. PC delivery
+accepts 32000, 44100 and 48000 Hz; PSX requires 44100 Hz. It retains the
+inspectable WAV and adds `render.ogg` after
+encoded-byte and Ogg structure/presentation readback. The report's
+`bof3.audio.delivery/v1` object records encoder identity, settings, hashes and
+stream metadata, while leaving per-output decoded PCM error unmeasured.
+See the [codec contract](../../reference/audio-codecs.md) for numerical quality
+acceptance and its representative-content limits. Other Vorbis qualities and
+MP3 delivery remain unsupported. The harness forwards audio commands to Rust.
 
 [PC renderer tests and the opt-in consumer check](../../../tools/rust/bof3-audio/tests/pc_render.rs)
 cover tempo/order and fractional-frame accumulation, 100/200 Hz synthetic output,
