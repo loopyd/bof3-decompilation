@@ -251,7 +251,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v14`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v15`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -409,7 +409,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v14` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v15` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -701,6 +701,31 @@ The pair receives an unsigned byte and constant 128. Each format writes to the
 64-byte scratch buffer at `0x80145AD4` and draws through `0x80150098`. Existing
 16-bit decimal rows retain their five-byte output bound. Other bytes, including
 `0x801D0E78..0x801D0E7C`, remain protected. Runtime rendering remains unverified.
+
+Four quantity and price formats each retain one decimal argument. Capacities
+include NUL; formatted bounds exclude it.
+
+| Address | Original | Capacity | Codec | Formatted bound |
+| --- | --- | --- | --- | --- |
+| `0x801D0E84` | `%2d` | 4 | `ascii-u8-decimal-format` | 3 |
+| `0x801D0E88` | `%6dZ` | 5 | `ascii-price-decimal-format` | 8 |
+| `0x801D0E90` | `%7dZ` | 5 | `ascii-total-decimal-format` | 10 |
+| `0x801D0E98` | `*%2d` | 5 | `ascii-u8-decimal-field-format` | 4 |
+
+The first and last formats receive unsigned-byte quantities. The first permits
+only `%d`, `%1d`, `%2d` or `%3d`: its three-byte output limit excludes added
+literals, and its capacity excludes zero-padding tokens. It draws through digit
+renderer `0x8014FF0C`. The other three draw through `0x80150098` and permit
+printable ASCII literals around the conversion, within their output limits.
+The byte field permits widths 1..4, prices 1..7 and totals 1..9, with optional
+zero padding. Each of these three has four encoded bytes available.
+
+The price helper returns at most 3,276,750; multiplying by an unsigned-byte
+quantity bounds the total at 835,571,250. These bounds require seven and nine
+digits respectively. All four formats use the 64-byte scratch buffer at
+`0x80145AD4`. The largest output, including NUL, occupies eleven bytes.
+The alignment gaps `0x801D0E8D..0x801D0E90`, `0x801D0E95..0x801D0E98` and
+`0x801D0E9D..0x801D0EA0` remain protected. Runtime rendering remains unverified.
 
 ## Bank layout
 

@@ -165,7 +165,7 @@ dialogue commands. See [formats.md](formats.md#record-names).
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v14` document with ten counted labels, eight default names,
+`bof3.inline-text/v15` document with ten counted labels, eight default names,
 68 ordinary keyboard cells and four name-entry menu labels. Re-extract older
 inline documents. Default `--entry all` selects banks.
 See [formats.md](formats.md#default-character-names).
@@ -204,7 +204,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v14`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v15`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 The original BATTLE archive also has supported message records in entry 3.
@@ -321,7 +321,7 @@ formatted bytes. Decimal widths use 1..4 with optional zero padding. Its traced
 consumer copies the result to a stack buffer; retain `renderers: []` because
 rendering is unverified. The filename and Shift-JIS header formats remain unsupported.
 
-Inline documents use `bof3.inline-text/v14`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v15`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.

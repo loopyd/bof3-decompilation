@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v14";
+pub const SCHEMA: &str = "bof3.inline-text/v15";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -26,11 +26,14 @@ pub(crate) enum Codec {
     AsciiI32DecimalFormat,
     AsciiSignedDecimalPairFormat,
     AsciiU8DecimalFormat,
+    AsciiU8DecimalFieldFormat,
     AsciiU8DecimalPairFormat,
     AsciiU8DecimalTripleFormat,
     AsciiU7DecimalFormat,
     AsciiU16DecimalFormat,
     AsciiU16DecimalFieldFormat,
+    AsciiPriceDecimalFormat,
+    AsciiTotalDecimalFormat,
 }
 
 impl Codec {
@@ -101,8 +104,11 @@ impl Codec {
             Self::AsciiU8DecimalPairFormat => (&[3, 3], 7, 4),
             Self::AsciiU8DecimalTripleFormat => (&[3, 3, 3], 16, 4),
             Self::AsciiU8DecimalFormat | Self::AsciiU7DecimalFormat => (&[3], 3, 4),
+            Self::AsciiU8DecimalFieldFormat => (&[3], 4, 4),
             Self::AsciiU16DecimalFormat => (&[5], 5, 4),
             Self::AsciiU16DecimalFieldFormat => (&[5], 9, 4),
+            Self::AsciiPriceDecimalFormat => (&[7], 8, 7),
+            Self::AsciiTotalDecimalFormat => (&[9], 10, 9),
             _ => return Ok(None),
         };
         let size = decimal_format_size(text, arguments, max_width)?;
@@ -165,11 +171,14 @@ impl Codec {
             Self::AsciiI32DecimalFormat => "ascii-i32-decimal-format",
             Self::AsciiSignedDecimalPairFormat => "ascii-signed-decimal-pair-format",
             Self::AsciiU8DecimalFormat => "ascii-u8-decimal-format",
+            Self::AsciiU8DecimalFieldFormat => "ascii-u8-decimal-field-format",
             Self::AsciiU8DecimalPairFormat => "ascii-u8-decimal-pair-format",
             Self::AsciiU8DecimalTripleFormat => "ascii-u8-decimal-triple-format",
             Self::AsciiU7DecimalFormat => "ascii-u7-decimal-format",
             Self::AsciiU16DecimalFormat => "ascii-u16-decimal-format",
             Self::AsciiU16DecimalFieldFormat => "ascii-u16-decimal-field-format",
+            Self::AsciiPriceDecimalFormat => "ascii-price-decimal-format",
+            Self::AsciiTotalDecimalFormat => "ascii-total-decimal-format",
         }
     }
 
@@ -948,10 +957,10 @@ const LAYOUTS: &[Layout] = &[
         name: "US SHOP labels and numeric formats",
         load: 0x801d0c00,
         size: 87660,
-        sha256: "611a7bd908a65fb94a5acabc8f202c36665618f0f16ae9b6af7982821f651b8a",
+        sha256: "c500e473ddc20a68cf60d677c44706cf0542777c61df4e086ed2ff604a7d19f8",
         consumers: &[
             0x801d5894, 0x801d9a58, 0x801dca2c, 0x801dd0a8, 0x801dd934, 0x801ddfb0, 0x801dee64,
-            0x801df00c, 0x801df6a8, 0x801e112c,
+            0x801df00c, 0x801df6a8, 0x801e112c, 0x801e1e80, 0x801e2f04, 0x801e3284, 0x801e37f4,
         ],
         allocations: &[
             Allocation::bounded_format(0x801d0c68, 20, Codec::AsciiU8DecimalTripleFormat, &[]),
@@ -999,6 +1008,25 @@ const LAYOUTS: &[Layout] = &[
                 0x801d0e7c,
                 8,
                 Codec::AsciiU8DecimalPairFormat,
+                &[0x80150098],
+            ),
+            Allocation::bounded_format(0x801d0e84, 4, Codec::AsciiU8DecimalFormat, &[0x8014ff0c]),
+            Allocation::bounded_format(
+                0x801d0e88,
+                5,
+                Codec::AsciiPriceDecimalFormat,
+                &[0x80150098],
+            ),
+            Allocation::bounded_format(
+                0x801d0e90,
+                5,
+                Codec::AsciiTotalDecimalFormat,
+                &[0x80150098],
+            ),
+            Allocation::bounded_format(
+                0x801d0e98,
+                5,
+                Codec::AsciiU8DecimalFieldFormat,
                 &[0x80150098],
             ),
         ],
