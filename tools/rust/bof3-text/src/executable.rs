@@ -8,11 +8,11 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-pub(crate) const SCHEMA: &str = "bof3.executable-text/v13";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v14";
 const LOAD: u32 = 0x80096800;
 const SIZE: usize = 1445888;
 // Hash of the entire executable with only the supported allocations zeroed.
-const LAYOUT_SHA256: &str = "ed2b7148ddf1c18cc73789b5a1dec84e9bac81e670a59d014c63cc96b99bee5a";
+const LAYOUT_SHA256: &str = "f3bde09968a27ff84e37c92226bc6867b99a84f8d006501af1cfc6eeb5a24138";
 const FORMAT_ADDRESS: u32 = 0x80149990;
 const FILE_LABEL: u32 = 0x80149f9c;
 const FILE_FORMAT: u32 = 0x80149fac;
@@ -28,18 +28,20 @@ const CD_COMMAND_LABELS: [u32; 22] = [
 const BIOS_PRINTF: u32 = 0x8017e3e4;
 const BIOS_PUTS: u32 = 0x8017e33c;
 const CD_FALLBACK: u32 = 0x8014a1f8;
-const CD_PUTS_LABELS: [u32; 6] = [
-    0x8014a2e0, 0x8014a334, 0x8014a3d0, 0x8014a5e0, 0x8014a5f8, 0x8014a610,
+const BIOS_PUTS_LABELS: [u32; 7] = [
+    0x8014a2e0, 0x8014a334, 0x8014a3d0, 0x8014a5e0, 0x8014a5f8, 0x8014a610, 0x8014a0dc,
 ];
 const CD_SHARED_LABELS: [u32; 4] = [0x8014a368, 0x8014a370, 0x8014a394, 0x8014a3e8];
-const BIOS_PRINTF_LITERALS: [u32; 8] = [
+const BIOS_PRINTF_LITERALS: [u32; 11] = [
     0x8014a428, 0x8014a480, 0x8014a4b4, 0x8014a508, 0x8014a560, 0x8014a580, 0x80186888, 0x801868b9,
+    0x8014a048, 0x8014a06c, 0x8014a184,
 ];
-const BIOS_PRINTF_FORMATS: [u32; 17] = [
+const BIOS_PRINTF_FORMATS: [u32; 22] = [
     0x8014a2f0, 0x8014a318, 0x8014a348, 0x8014a37c, 0x8014a384, 0x8014a3dc, 0x8014a3f4, 0x8014a410,
     0x8014a444, 0x8014a464, 0x8014a470, 0x8014a4e4, 0x8014a53c, 0x8014a5c0, 0x8014a728, 0x8014a8dc,
-    0x8014a910,
+    0x8014a910, 0x80149fc0, 0x8014a120, 0x8014a13c, 0x8014a158, 0x8014a174,
 ];
+const BIOS_PRINTF_ARGUMENTS: [u32; 3] = [0x80149fd0, 0x80149fe0, 0x80149ff4];
 const GPU_PRINTF_CALLBACK: u32 = 0x8018b158;
 const GPU_PRINTF_CALLBACK_FORMATS: [u32; 27] = [
     0x8014a624, 0x8014a63c, 0x8014a64c, 0x8014a664, 0x8014a674, 0x8014a68c, 0x8014a698, 0x8014a6a4,
@@ -104,6 +106,18 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (FORMAT_ADDRESS, 5),
     (FILE_LABEL, 15),
     (FILE_FORMAT, 18),
+    (0x80149fc0, 14),
+    (0x80149fd0, 13),
+    (0x80149fe0, 19),
+    (0x80149ff4, 20),
+    (0x8014a048, 36),
+    (0x8014a06c, 23),
+    (0x8014a0dc, 16),
+    (0x8014a120, 28),
+    (0x8014a13c, 25),
+    (0x8014a158, 26),
+    (0x8014a174, 15),
+    (0x8014a184, 21),
     (CD_COMMAND_LABELS[0], 9),
     (CD_COMMAND_LABELS[1], 9),
     (CD_COMMAND_LABELS[2], 9),
@@ -133,18 +147,18 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (CD_INTERRUPT_LABELS[3], 9),
     (CD_INTERRUPT_LABELS[4], 10),
     (CD_INTERRUPT_LABELS[5], 7),
-    (CD_PUTS_LABELS[0], 13),
+    (BIOS_PUTS_LABELS[0], 13),
     (0x8014a2f0, 27),
     (DISK_PREFIX, 12),
     (0x8014a318, 25),
-    (CD_PUTS_LABELS[1], 20),
+    (BIOS_PUTS_LABELS[1], 20),
     (0x8014a348, 6),
     (CD_SHARED_LABELS[0], 8),
     (CD_SHARED_LABELS[1], 9),
     (0x8014a37c, 7),
     (0x8014a384, 14),
     (CD_SHARED_LABELS[2], 6),
-    (CD_PUTS_LABELS[2], 9),
+    (BIOS_PUTS_LABELS[2], 9),
     (0x8014a3dc, 11),
     (CD_SHARED_LABELS[3], 12),
     (0x8014a3f4, 27),
@@ -161,9 +175,9 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (BIOS_PRINTF_LITERALS[4], 29),
     (BIOS_PRINTF_LITERALS[5], 28),
     (0x8014a5c0, 30),
-    (CD_PUTS_LABELS[3], 22),
-    (CD_PUTS_LABELS[4], 23),
-    (CD_PUTS_LABELS[5], 18),
+    (BIOS_PUTS_LABELS[3], 22),
+    (BIOS_PUTS_LABELS[4], 23),
+    (BIOS_PUTS_LABELS[5], 18),
     (0x8014a624, 22),
     (0x8014a63c, 15),
     (0x8014a64c, 24),
@@ -274,7 +288,7 @@ fn printf_directives(text: &str) -> Result<Vec<&str>> {
     let mut remaining = text;
     while let Some(index) = remaining.find('%') {
         remaining = &remaining[index..];
-        let token = ["%02x", "%08x", "%3d", "%s", "%d"]
+        let token = ["%02x", "%04x", "%08x", "%3d", "%s", "%d"]
             .into_iter()
             .find(|token| remaining.starts_with(token))
             .ok_or_else(|| Error::Invalid("unsupported BIOS printf directive".into()))?;
@@ -286,6 +300,11 @@ fn printf_directives(text: &str) -> Result<Vec<&str>> {
 
 fn format_directives(address: u32) -> &'static [&'static str] {
     match address {
+        0x80149fc0 => &["%s"],
+        0x8014a120 => &["%04x"],
+        0x8014a13c => &["%04x", "%04x"],
+        0x8014a158 => &["%08x"],
+        0x8014a174 => &["%d", "%08x"],
         0x8014a7f8 => &["%s"],
         0x8014a804 => &["%d", "%d", "%d", "%d"],
         0x8014a818 => &["%s"],
@@ -407,6 +426,18 @@ fn consumers(address: u32) -> Vec<u32> {
         return vec![0x8017560c];
     }
     match address {
+        0x80149fc0 => vec![0x80168374, 0x80168608],
+        0x80149fd0 => vec![0x80168374],
+        0x80149fe0 => vec![0x80168608],
+        0x80149ff4 => vec![0x80168608],
+        0x8014a048 => vec![0x8016b38c],
+        0x8014a06c => vec![0x8016b4b8],
+        0x8014a0dc => vec![0x80174848],
+        0x8014a120 => vec![0x80174b58],
+        0x8014a13c => vec![0x80174b58],
+        0x8014a158 => vec![0x8017516c],
+        0x8014a174 => vec![0x8017516c],
+        0x8014a184 => vec![0x801753ec],
         0x80186888 => vec![0x80178b78],
         0x801868b9 => vec![0x80178c18],
         0x8014a7f8 => vec![0x8017b438],
@@ -486,6 +517,22 @@ fn all_consumers() -> Vec<u32> {
 
 fn diagnostic_references(address: u32) -> Option<Vec<Reference>> {
     let pairs: &[(u32, u32, Option<u32>)] = match address {
+        0x80149fc0 => &[
+            (0x8016840c, 0x80168410, Some(0x8016841c)),
+            (0x801686e0, 0x801686e4, Some(0x801686f0)),
+            (0x80168774, 0x80168778, Some(0x80168784)),
+        ],
+        0x80149fd0 => &[(0x80168414, 0x80168418, Some(0x8016841c))],
+        0x80149fe0 => &[(0x801686e8, 0x801686ec, Some(0x801686f0))],
+        0x80149ff4 => &[(0x8016877c, 0x80168780, Some(0x80168784))],
+        0x8014a048 => &[(0x8016b3c4, 0x8016b3c8, Some(0x8016b3cc))],
+        0x8014a06c => &[(0x8016b5dc, 0x8016b5e0, Some(0x8016b5e4))],
+        0x8014a0dc => &[(0x80174890, 0x80174894, Some(0x80174898))],
+        0x8014a120 => &[(0x80174b9c, 0x80174ba0, Some(0x80174ba4))],
+        0x8014a13c => &[(0x80174cd0, 0x80174cd4, Some(0x80174ce0))],
+        0x8014a158 => &[(0x80175280, 0x80175284, Some(0x8017528c))],
+        0x8014a174 => &[(0x80175294, 0x80175298, Some(0x801752b4))],
+        0x8014a184 => &[(0x80175454, 0x80175458, Some(0x8017545c))],
         0x80186888 => &[(0x80178b94, 0x80178b9c, Some(0x80178b98))],
         0x801868b9 => &[(0x80178c30, 0x80178c38, Some(0x80178c34))],
         0x8014a7f8 => &[(0x8017b4f8, 0x8017b4fc, Some(0x8017b51c))],
@@ -618,7 +665,7 @@ fn output(address: u32) -> Output {
             selector: 0x3f,
         };
     }
-    if CD_PUTS_LABELS.contains(&address) {
+    if BIOS_PUTS_LABELS.contains(&address) {
         return Output::BiosPuts {
             stub: BIOS_PUTS,
             vector: 0xb0,
@@ -630,6 +677,7 @@ fn output(address: u32) -> Output {
         || CD_INTERRUPT_LABELS.contains(&address)
         || CD_COMMAND_LABELS.contains(&address)
         || CD_SHARED_LABELS.contains(&address)
+        || BIOS_PRINTF_ARGUMENTS.contains(&address)
         || BIOS_PRINTF_LITERALS.contains(&address)
         || BIOS_PRINTF_FORMATS.contains(&address)
     {

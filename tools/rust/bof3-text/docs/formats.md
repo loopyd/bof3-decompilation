@@ -42,7 +42,7 @@ The consumer at `0x8014B3C4` passes these pointers to renderer `0x80150098`.
 The renderer reads bytes until NUL, advances on ASCII space and handles newline
 `0x0A`. These bytes use ASCII rather than the dialogue character table.
 
-The JSON schema is `bof3.executable-text/v13`. Re-extract older documents before
+The JSON schema is `bof3.executable-text/v14`. Re-extract older documents before
 editing. It contains `source`, mandatory `source_sha256`, `build`, `load_address`,
 `consumers` and `strings`.
 Each string retains its `address`, whole-file `file_offset`, original `capacity`
@@ -196,6 +196,14 @@ to BIOS printf. They use `ascii-printf-literal`, with empty `format_directives`,
 and refuse percent characters. Their address-pair lower instructions execute in
 the recorded calls' delay slots. No intermediate formatting buffer is present;
 the separate word at `0x801865F8` saves the return address.
+
+SPU timeout, sequence, interrupt, DMA and CD-init diagnostics also pass directly
+to BIOS printf. The three SPU wait labels are `ascii-literal` arguments to `%s`;
+percent characters remain data. The sequence and CD-init messages use
+`ascii-printf-literal` and refuse percent characters. The interrupt formats
+retain their exact `%04x` conversions. The VSync timeout message passes directly
+to BIOS puts, so percent characters remain literal. These output paths use no
+intermediate game buffer; their runtime output remains unobserved.
 
 Build recognition hashes all bytes outside the supported allocations against
 the pinned US layout. This permits re-extraction of supported edits while
