@@ -36,13 +36,13 @@ size alone does not identify audio. These checks do not classify container gaps.
 exception-screen ASCII strings and the `FILE NOT FOUND` diagnostic with its
 three-ID hexadecimal format, plus the BIOS `DiskError: ` prefix and six CD
 interrupt labels, 22 CD command names, fixed CD diagnostic literals and BIOS
-printf formats. `extract-corpus` exports them when the complete source root includes `SLUS_004.22`. Literal strings use
+printf formats and GPU diagnostics. `extract-corpus` exports them when the complete source root includes `SLUS_004.22`. Literal strings use
 the pointer words at `0x8017F470..0x8017F53C`, with an exclusive upper bound.
 The consumer at `0x8014B3C4` passes these pointers to renderer `0x80150098`.
 The renderer reads bytes until NUL, advances on ASCII space and handles newline
 `0x0A`. These bytes use ASCII rather than the dialogue character table.
 
-The JSON schema is `bof3.executable-text/v9`. Re-extract older documents before
+The JSON schema is `bof3.executable-text/v10`. Re-extract older documents before
 editing. It contains `source`, mandatory `source_sha256`, `build`, `load_address`,
 `consumers` and `strings`.
 Each string retains its `address`, whole-file `file_offset`, original `capacity`
@@ -50,8 +50,8 @@ including NUL, immutable `consumers`, `codec`, `format_directives` and `output`,
 typed `references` and editable `text`. Row `consumers` lists the containing source functions;
 document `consumers` is their sorted union. Each `output` is `game-screen`, with
 its renderer and optional formatter, or `bios-printf` or `bios-puts`, with its
-stub, vector and selector.
-Keep output metadata unchanged.
+stub, vector and selector. `bios-printf-callback` records `callback_word`,
+`initial_stub`, `vector` and `selector`. Keep output metadata unchanged.
 Exception literal rows use `ascii-literal` and `pointer-word` references with an `address`.
 Shared pointers appear on one allocation. Retain every allocation and edit only
 `text`.
@@ -165,12 +165,22 @@ requires every token unchanged, including case and width, and refuses missing,
 extra or other percent sequences, including `%%`. Other rows retain an empty
 `format_directives` array. Use `analyze` to inspect addresses and capacities.
 
-These formats pass directly to BIOS printf without an intermediate game buffer.
+The CD formats pass directly to BIOS printf without an intermediate game buffer.
 Analysis omits `max_formatted_size`; it does not bound the rendered output.
 In particular, `%02x` specifies a minimum width, not a two-digit limit.
 The format at `0x8014A318` receives word loads for both hex arguments. The
 reference pairs for `0x8014A410` and `0x8014A470` converge on call `0x801775E4`.
 Observed BIOS output remains unverified.
+
+The GPU diagnostic formats for texture pages, CLUTs, draw environments and
+display environments use the same exact-directive codec. Their
+`bios-printf-callback` output records callback word `0x8018B158`, initially
+`0x8017E3E4` (BIOS A0/3F). The reference `calls` are indirect `jalr` sites through
+fresh loads of that word. Source binding protects the initial callback word;
+it does not prove the callback remains unchanged during execution. No
+intermediate formatting buffer is present in these traced paths. Preserve each
+row's exact directives, including `%3d`. Analysis reports no formatted output
+bound. Runtime callback targets and observed diagnostic output remain unverified.
 
 Build recognition hashes all bytes outside the supported allocations against
 the pinned US layout. This permits re-extraction of supported edits while

@@ -38,7 +38,7 @@ include encoded size, spare capacity, required terminator bytes and the original
 allocation bytes. Use `extract` for documents accepted by `pack`.
 
 For the US executable, use `extract out/extracted/SLUS_004.22 -o out/exe-text.json`.
-Its `bof3.executable-text/v9` document uses ASCII. Re-extract older documents.
+Its `bof3.executable-text/v10` document uses ASCII. Re-extract older documents.
 Edit only each string's `text`. Retain its consumers, output, codec,
 `format_directives`, allocation and typed reference sites. The exception format permits one `%X` or `%x` conversion with
 optional width 1..8 and zero padding, within four bytes. The three-ID format
@@ -55,14 +55,17 @@ Omit EMI selectors. Support covers the exception screen, `FILE NOT FOUND`, CD
 interrupt and command names, fixed BIOS diagnostics and BIOS formats. `analyze`
 reports their capacities, including NUL, and output paths. The shared CD `?` holds
 one ASCII character plus NUL and retains twelve pointer references. Literal labels
-allow percent bytes passed through `%s` or BIOS puts. Direct printf literals refuse every percent
-character. The `DiskError: ` prefix holds at most eleven bytes plus NUL; its
+allow percent bytes passed through `%s` or BIOS puts. Direct printf literals
+refuse every percent character. The `DiskError: ` prefix holds at most eleven bytes plus NUL; its
 output requires CD debugging, which starts disabled. Shared-word label references
 have empty `calls` arrays where intervening calls leave pointer use unproven.
 BIOS formats permit literal edits within capacity but require every original
 `format_directives` token unchanged and in order. Other rows retain that array
 empty. Analysis reports no formatted size bound for BIOS formats; `%02x` is a
-minimum width. Other executable ranges and BIOS runtime output remain unresolved.
+minimum width. GPU diagnostics use `bios-printf-callback`, recording the callback
+word and its initial BIOS stub. Retain their indirect reference calls and exact
+directives, including `%3d`; runtime callback targets remain unverified.
+Other executable ranges and BIOS runtime output remain unresolved.
 See the tool's [format contract](../../../../tools/rust/bof3-text/docs/formats.md#executable-ascii).
 
 `extract out/extracted/BIN/ETC/GAME.EMI -o out/equipment-names.json` exports

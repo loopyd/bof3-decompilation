@@ -8,11 +8,11 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-pub(crate) const SCHEMA: &str = "bof3.executable-text/v9";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v10";
 const LOAD: u32 = 0x80096800;
 const SIZE: usize = 1445888;
 // Hash of the entire executable with only the supported allocations zeroed.
-const LAYOUT_SHA256: &str = "59c86326d15ebe2a24cc1fc7f0197627e7f898b61381d0920aff716bb75fcde7";
+const LAYOUT_SHA256: &str = "fa81b187802288b1a29e13ac92f4d6543548035dcd1667e8641fea201358ecff";
 const FORMAT_ADDRESS: u32 = 0x80149990;
 const FILE_LABEL: u32 = 0x80149f9c;
 const FILE_FORMAT: u32 = 0x80149fac;
@@ -38,6 +38,11 @@ const CD_PRINTF_LITERALS: [u32; 6] = [
 const CD_PRINTF_FORMATS: [u32; 14] = [
     0x8014a2f0, 0x8014a318, 0x8014a348, 0x8014a37c, 0x8014a384, 0x8014a3dc, 0x8014a3f4, 0x8014a410,
     0x8014a444, 0x8014a464, 0x8014a470, 0x8014a4e4, 0x8014a53c, 0x8014a5c0,
+];
+const GPU_PRINTF_CALLBACK: u32 = 0x8018b158;
+const GPU_PRINTF_FORMATS: [u32; 11] = [
+    0x8014a624, 0x8014a63c, 0x8014a64c, 0x8014a664, 0x8014a674, 0x8014a68c, 0x8014a698, 0x8014a6a4,
+    0x8014a6c0, 0x8014a6dc, 0x8014a6e8,
 ];
 const FORMATTER: u32 = 0x8017e3f4;
 // Original string bytes plus their NUL, excluding alignment padding. The consumer
@@ -155,6 +160,17 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (CD_PUTS_LABELS[3], 22),
     (CD_PUTS_LABELS[4], 23),
     (CD_PUTS_LABELS[5], 18),
+    (0x8014a624, 22),
+    (0x8014a63c, 15),
+    (0x8014a64c, 24),
+    (0x8014a664, 16),
+    (0x8014a674, 22),
+    (0x8014a68c, 10),
+    (0x8014a698, 10),
+    (0x8014a6a4, 26),
+    (0x8014a6c0, 26),
+    (0x8014a6dc, 12),
+    (0x8014a6e8, 12),
 ];
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -229,7 +245,7 @@ fn printf_directives(text: &str) -> Result<Vec<&str>> {
     let mut remaining = text;
     while let Some(index) = remaining.find('%') {
         remaining = &remaining[index..];
-        let token = ["%02x", "%08x", "%s", "%d"]
+        let token = ["%02x", "%08x", "%3d", "%s", "%d"]
             .into_iter()
             .find(|token| remaining.starts_with(token))
             .ok_or_else(|| Error::Invalid("unsupported BIOS printf directive".into()))?;
@@ -241,6 +257,17 @@ fn printf_directives(text: &str) -> Result<Vec<&str>> {
 
 fn format_directives(address: u32) -> &'static [&'static str] {
     match address {
+        0x8014a624 => &["%d", "%d", "%d", "%d"],
+        0x8014a63c => &["%d", "%d"],
+        0x8014a64c => &["%3d", "%3d", "%d", "%d"],
+        0x8014a664 => &["%3d", "%3d"],
+        0x8014a674 => &["%d", "%d", "%d", "%d"],
+        0x8014a68c => &["%d"],
+        0x8014a698 => &["%d"],
+        0x8014a6a4 => &["%3d", "%3d", "%d", "%d"],
+        0x8014a6c0 => &["%3d", "%3d", "%d", "%d"],
+        0x8014a6dc => &["%d"],
+        0x8014a6e8 => &["%d"],
         0x8014a2f0 => &["%s", "%s", "%s", "%s"],
         0x8014a318 => &["%s", "%02x", "%02x"],
         0x8014a348 => &["%d"],
@@ -310,7 +337,7 @@ pub enum Reference {
 }
 
 fn codec(address: u32) -> Codec {
-    if CD_PRINTF_FORMATS.contains(&address) {
+    if CD_PRINTF_FORMATS.contains(&address) || GPU_PRINTF_FORMATS.contains(&address) {
         return Codec::AsciiBiosPrintfFormat;
     }
     if CD_PRINTF_LITERALS.contains(&address) {
@@ -332,6 +359,17 @@ fn consumers(address: u32) -> Vec<u32> {
         return vec![0x8017560c];
     }
     match address {
+        0x8014a624 => vec![0x8017a708, 0x8017ace0],
+        0x8014a63c => vec![0x8017a7d8],
+        0x8014a64c => vec![0x8017ace0],
+        0x8014a664 => vec![0x8017ace0],
+        0x8014a674 => vec![0x8017ace0],
+        0x8014a68c => vec![0x8017ace0],
+        0x8014a698 => vec![0x8017ace0],
+        0x8014a6a4 => vec![0x8017ae60],
+        0x8014a6c0 => vec![0x8017ae60],
+        0x8014a6dc => vec![0x8017ae60],
+        0x8014a6e8 => vec![0x8017ae60],
         0x8014a318 => vec![0x80175c60],
         0x8014a348 => vec![0x80175c60],
         0x8014a37c => vec![0x80176734],
@@ -373,8 +411,24 @@ fn all_consumers() -> Vec<u32> {
         .collect()
 }
 
-fn cd_diagnostic_references(address: u32) -> Option<Vec<Reference>> {
+fn diagnostic_references(address: u32) -> Option<Vec<Reference>> {
     let pairs: &[(u32, u32, Option<u32>)] = match address {
+        0x8014a624 => &[
+            (0x8017a73c, 0x8017a740, Some(0x8017a770)),
+            (0x8017a780, 0x8017a784, Some(0x8017a7bc)),
+            (0x8017adc0, 0x8017adc4, Some(0x8017adf4)),
+            (0x8017ae04, 0x8017ae08, Some(0x8017ae44)),
+        ],
+        0x8014a63c => &[(0x8017a7e8, 0x8017a7ec, Some(0x8017a800))],
+        0x8014a64c => &[(0x8017ad08, 0x8017ad0c, Some(0x8017ad10))],
+        0x8014a664 => &[(0x8017ad28, 0x8017ad2c, Some(0x8017ad30))],
+        0x8014a674 => &[(0x8017ad50, 0x8017ad54, Some(0x8017ad58))],
+        0x8014a68c => &[(0x8017ad6c, 0x8017ad70, Some(0x8017ad74))],
+        0x8014a698 => &[(0x8017ad88, 0x8017ad8c, Some(0x8017ad90))],
+        0x8014a6a4 => &[(0x8017ae88, 0x8017ae8c, Some(0x8017ae90))],
+        0x8014a6c0 => &[(0x8017aeb0, 0x8017aeb4, Some(0x8017aeb8))],
+        0x8014a6dc => &[(0x8017aecc, 0x8017aed0, Some(0x8017aed4))],
+        0x8014a6e8 => &[(0x8017aee8, 0x8017aeec, Some(0x8017aef0))],
         0x8014a2f0 => &[
             (0x801762f0, 0x801762f4, Some(0x801762f8)),
             (0x80176578, 0x8017657c, Some(0x80176580)),
@@ -441,6 +495,12 @@ pub(crate) enum Output {
         vector: u32,
         selector: u32,
     },
+    BiosPrintfCallback {
+        callback_word: u32,
+        initial_stub: u32,
+        vector: u32,
+        selector: u32,
+    },
     BiosPuts {
         stub: u32,
         vector: u32,
@@ -449,6 +509,14 @@ pub(crate) enum Output {
 }
 
 fn output(address: u32) -> Output {
+    if GPU_PRINTF_FORMATS.contains(&address) {
+        return Output::BiosPrintfCallback {
+            callback_word: GPU_PRINTF_CALLBACK,
+            initial_stub: BIOS_PRINTF,
+            vector: 0xa0,
+            selector: 0x3f,
+        };
+    }
     if CD_PUTS_LABELS.contains(&address) {
         return Output::BiosPuts {
             stub: BIOS_PUTS,
@@ -552,7 +620,7 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
         let codec = codec(address);
         let text = std::str::from_utf8(&bytes[..end])
             .map_err(|error| Error::Invalid(error.to_string()))?;
-        let references = if let Some(references) = cd_diagnostic_references(address) {
+        let references = if let Some(references) = diagnostic_references(address) {
             references
         } else if address == DISK_PREFIX {
             vec![Reference::AddressPair {
