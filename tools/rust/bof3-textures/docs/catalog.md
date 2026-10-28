@@ -43,12 +43,18 @@ Query it with `--records --source AREA024 --kind surface-word --dependency
 texture-source`. Entries 7 and 8 list the record in their `uses` fields.
 The original word `0x5380007a` produces page `0x0097`, CLUT `0x7980` and UVs
 `(160,112), (175,112), (160,127), (175,127)` at the immediate return boundary.
-All declared entry 7 upload bytes match serialized VRAM. The selected CLUT row
-matches entry 8 words 768 through 1023. These observations establish byte
-residency and a nominal UV association. The active texture-window setting,
-actual sampling, upload history, source uniqueness and display remain unresolved.
+A later packet read from the same physical buffer reaches GPU ingress with
+matching page, CLUT and UV fields. A zero texture-window command precedes it.
+The packet's vertices lie above the captured draw area. Buffer ownership between
+construction and submission, intervening writes and actual sampling remain
+unresolved.
+
+All declared entry 7 upload bytes match serialized VRAM. The nominal UV region
+lies in chunk 54, and the selected CLUT row matches entry 8 words 768 through
+1023. Upload history, source uniqueness and display remain unresolved.
 Other palette rows contain differences whose causes and inverse edits remain
-unresolved. The record keeps its general surface dependencies.
+unresolved. Both edges stay conditional, and the record keeps its general
+surface dependencies.
 
 Resident metadata reports `decoded_programs` and `unresolved_programs` per
 physical resource, counting unique program offsets. Partial banks retain
