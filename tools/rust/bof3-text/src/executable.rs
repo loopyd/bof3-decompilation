@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-pub(crate) const SCHEMA: &str = "bof3.executable-text/v15";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v16";
 const FORMAT_ADDRESS: u32 = 0x80149990;
 const FILE_LABEL: u32 = 0x80149f9c;
 const FILE_FORMAT: u32 = 0x80149fac;
@@ -218,8 +218,59 @@ const LOGO_ALLOCATIONS: &[(u32, usize)] = &[
     (0x801ce07c, 26),
     (0x801ce098, 15),
     (0x801ce0a8, 21),
+    (0x801ce214, 27),
+    (0x801ce230, 12),
+    (0x801ce23c, 25),
+    (0x801ce28c, 8),
+    (0x801ce294, 9),
+    (0x801ce2a0, 7),
+    (0x801ce2a8, 14),
+    (0x801ce2b8, 6),
+    (0x801ce300, 11),
+    (0x801ce30c, 12),
+    (0x801ce374, 22),
+    (0x801ce38c, 15),
+    (0x801ce39c, 24),
+    (0x801ce3b4, 16),
+    (0x801ce3c4, 22),
+    (0x801ce3dc, 10),
+    (0x801ce3e8, 10),
+    (0x801ce3f4, 26),
+    (0x801ce410, 26),
+    (0x801ce42c, 12),
+    (0x801ce438, 12),
+    (0x801ce478, 30),
+    (0x801ce498, 19),
+    (0x801ce4ac, 24),
+    (0x801ce4c4, 43),
+    (0x801ce4f0, 19),
+    (0x801ce504, 27),
+    (0x801ce520, 20),
+    (0x801ce534, 17),
+    (0x801ce548, 12),
+    (0x801ce554, 17),
+    (0x801ce568, 4),
+    (0x801ce56c, 11),
+    (0x801ce578, 10),
+    (0x801ce584, 11),
+    (0x801ce590, 10),
+    (0x801ce59c, 23),
+    (0x801ce5b4, 24),
+    (0x801ce5cc, 19),
+    (0x801ce5e0, 21),
+    (0x801ce5f8, 27),
+    (0x801ce614, 21),
+    (0x801ce62c, 50),
+    (0x801ce660, 24),
 ];
 const LOGO_PRINTF: u32 = 0x801d791c;
+const LOGO_PRINTF_CALLBACK: u32 = 0x801da1bc;
+const LOGO_CALLBACK_TEXT: &[u32] = &[
+    0x801ce374, 0x801ce38c, 0x801ce39c, 0x801ce3b4, 0x801ce3c4, 0x801ce3dc, 0x801ce3e8, 0x801ce3f4,
+    0x801ce410, 0x801ce42c, 0x801ce438, 0x801ce498, 0x801ce4ac, 0x801ce4c4, 0x801ce4f0, 0x801ce504,
+    0x801ce520, 0x801ce534, 0x801ce548, 0x801ce554, 0x801ce568, 0x801ce56c, 0x801ce578, 0x801ce584,
+    0x801ce590, 0x801ce59c, 0x801ce5b4, 0x801ce5cc, 0x801ce5e0, 0x801ce5f8, 0x801ce614,
+];
 
 struct Layout {
     build: &'static str,
@@ -259,7 +310,7 @@ const LAYOUTS: &[Layout] = &[
         build: "US SLUS-00422 logo diagnostic ASCII",
         load: 0x801ce000,
         size: 122880,
-        masked_sha256: "ba99fe80ffdb7494b5e2a8b0fcb2cebe23919c7e2ab275f3e1ee20a3d1832dd4",
+        masked_sha256: "b71832c59ac440532397964252e331709f925c00f21f753baf1a0516e73497e0",
         allocations: LOGO_ALLOCATIONS,
     },
 ];
@@ -348,10 +399,44 @@ fn printf_directives(text: &str) -> Result<Vec<&str>> {
 
 fn format_directives(address: u32) -> &'static [&'static str] {
     match address {
+        0x801ce374 => &["%d", "%d", "%d", "%d"],
+        0x801ce38c => &["%d", "%d"],
+        0x801ce39c => &["%3d", "%3d", "%d", "%d"],
+        0x801ce3b4 => &["%3d", "%3d"],
+        0x801ce3c4 => &["%d", "%d", "%d", "%d"],
+        0x801ce3dc => &["%d"],
+        0x801ce3e8 => &["%d"],
+        0x801ce3f4 => &["%3d", "%3d", "%d", "%d"],
+        0x801ce410 => &["%3d", "%3d", "%d", "%d"],
+        0x801ce42c => &["%d"],
+        0x801ce438 => &["%d"],
+        0x801ce478 => &["%08x", "%08x"],
+        0x801ce498 => &["%d"],
+        0x801ce4ac => &["%d"],
+        0x801ce4c4 => &["%d", "%d", "%d"],
+        0x801ce4f0 => &["%d"],
+        0x801ce504 => &["%08x"],
+        0x801ce520 => &["%d"],
+        0x801ce534 => &["%d"],
+        0x801ce548 => &["%s"],
+        0x801ce554 => &["%d", "%d", "%d", "%d"],
+        0x801ce568 => &["%s"],
+        0x801ce59c => &["%08x", "%d"],
+        0x801ce5b4 => &["%08x", "%d"],
+        0x801ce5cc => &["%08x"],
+        0x801ce5e0 => &["%08x"],
+        0x801ce5f8 => &["%08x"],
+        0x801ce614 => &["%08x"],
+        0x801ce62c => &["%d", "%08x", "%08x", "%08x"],
+        0x801ce660 => &["%08x", "%08x", "%08x"],
         0x801ce044 => &["%04x"],
         0x801ce060 => &["%04x", "%04x"],
         0x801ce07c => &["%08x"],
         0x801ce098 => &["%d", "%08x"],
+        0x801ce214 => &["%s", "%s", "%s", "%s"],
+        0x801ce23c => &["%s", "%02x", "%02x"],
+        0x801ce2a0 | 0x801ce2a8 => &["%s"],
+        0x801ce300 => &["%08x"],
         0x80149fc0 => &["%s"],
         0x8014a120 => &["%04x"],
         0x8014a13c => &["%04x", "%04x"],
@@ -457,10 +542,11 @@ pub enum Reference {
 
 fn codec(address: u32) -> Codec {
     if LOGO_ALLOCATIONS.iter().any(|&(at, _)| at == address) {
-        return if address == 0x801ce0a8 {
-            Codec::AsciiPrintfLiteral
-        } else {
-            Codec::AsciiBiosPrintfFormat
+        return match address {
+            0x801ce0a8 | 0x801ce230 => Codec::AsciiPrintfLiteral,
+            0x801ce28c | 0x801ce294 | 0x801ce2b8 | 0x801ce30c | 0x801ce56c | 0x801ce578
+            | 0x801ce584 | 0x801ce590 => Codec::AsciiLiteral,
+            _ => Codec::AsciiBiosPrintfFormat,
         };
     }
     if BIOS_PRINTF_FORMATS.contains(&address) || GPU_PRINTF_CALLBACK_FORMATS.contains(&address) {
@@ -485,9 +571,51 @@ fn consumers(address: u32) -> Vec<u32> {
         return vec![0x8017560c];
     }
     match address {
+        0x801ce374 => vec![0x801d354c, 0x801d3b24],
+        0x801ce38c => vec![0x801d361c],
+        0x801ce39c => vec![0x801d3b24],
+        0x801ce3b4 => vec![0x801d3b24],
+        0x801ce3c4 => vec![0x801d3b24],
+        0x801ce3dc => vec![0x801d3b24],
+        0x801ce3e8 => vec![0x801d3b24],
+        0x801ce3f4 => vec![0x801d3ca4],
+        0x801ce410 => vec![0x801d3ca4],
+        0x801ce42c => vec![0x801d3ca4],
+        0x801ce438 => vec![0x801d3ca4],
+        0x801ce478 => vec![0x801d3d50],
+        0x801ce498 => vec![0x801d3d50],
+        0x801ce4ac => vec![0x801d3ed4],
+        0x801ce4c4 => vec![0x801d3fe8],
+        0x801ce4f0 => vec![0x801d404c],
+        0x801ce504 => vec![0x801d4118],
+        0x801ce520 => vec![0x801d4174],
+        0x801ce534 => vec![0x801d4210],
+        0x801ce548 => vec![0x801d427c],
+        0x801ce554 => vec![0x801d427c],
+        0x801ce568 => vec![0x801d427c],
+        0x801ce56c => vec![0x801d43a4, 0x801d4438],
+        0x801ce578 => vec![0x801d44d4],
+        0x801ce584 => vec![0x801d4538],
+        0x801ce590 => vec![0x801d459c],
+        0x801ce59c => vec![0x801d4660],
+        0x801ce5b4 => vec![0x801d4718],
+        0x801ce5cc => vec![0x801d4810],
+        0x801ce5e0 => vec![0x801d4884],
+        0x801ce5f8 => vec![0x801d4988],
+        0x801ce614 => vec![0x801d4adc],
+        0x801ce62c => vec![0x801d6b70],
+        0x801ce660 => vec![0x801d6b70],
+
         0x801ce044 | 0x801ce060 => vec![0x801cf36c],
         0x801ce07c | 0x801ce098 => vec![0x801cf980],
         0x801ce0a8 => vec![0x801cfc30],
+        0x801ce214 => vec![0x801d0a2c, 0x801d0cac, 0x801d0f78, 0x801d182c],
+        0x801ce230 | 0x801ce23c => vec![0x801d04a4],
+        0x801ce28c => vec![0x801d0a2c],
+        0x801ce294 => vec![0x801d0cac],
+        0x801ce2a0 | 0x801ce2a8 | 0x801ce2b8 => vec![0x801d0f78],
+        0x801ce300 => vec![0x801d1640],
+        0x801ce30c => vec![0x801d182c],
         0x80149fc0 => vec![0x80168374, 0x80168608],
         0x80149fd0 => vec![0x80168374],
         0x80149fe0 => vec![0x80168608],
@@ -580,11 +708,68 @@ fn all_consumers(layout: &Layout) -> Vec<u32> {
 
 fn diagnostic_references(address: u32) -> Option<Vec<Reference>> {
     let pairs: &[(u32, u32, Option<u32>)] = match address {
+        0x801ce374 => &[
+            (0x801d3580, 0x801d3584, Some(0x801d35b4)),
+            (0x801d35c4, 0x801d35c8, Some(0x801d3600)),
+            (0x801d3c04, 0x801d3c08, Some(0x801d3c38)),
+            (0x801d3c48, 0x801d3c4c, Some(0x801d3c88)),
+        ],
+        0x801ce38c => &[(0x801d362c, 0x801d3630, Some(0x801d3644))],
+        0x801ce39c => &[(0x801d3b4c, 0x801d3b50, Some(0x801d3b54))],
+        0x801ce3b4 => &[(0x801d3b6c, 0x801d3b70, Some(0x801d3b74))],
+        0x801ce3c4 => &[(0x801d3b94, 0x801d3b98, Some(0x801d3b9c))],
+        0x801ce3dc => &[(0x801d3bb0, 0x801d3bb4, Some(0x801d3bb8))],
+        0x801ce3e8 => &[(0x801d3bcc, 0x801d3bd0, Some(0x801d3bd4))],
+        0x801ce3f4 => &[(0x801d3ccc, 0x801d3cd0, Some(0x801d3cd4))],
+        0x801ce410 => &[(0x801d3cf4, 0x801d3cf8, Some(0x801d3cfc))],
+        0x801ce42c => &[(0x801d3d10, 0x801d3d14, Some(0x801d3d18))],
+        0x801ce438 => &[(0x801d3d2c, 0x801d3d30, Some(0x801d3d34))],
+        0x801ce478 => &[(0x801d3da0, 0x801d3da4, Some(0x801d3db8))],
+        0x801ce498 => &[(0x801d3e84, 0x801d3e88, Some(0x801d3e98))],
+        0x801ce4ac => &[(0x801d3f08, 0x801d3f0c, Some(0x801d3f1c))],
+        0x801ce4c4 => &[(0x801d4024, 0x801d4028, Some(0x801d402c))],
+        0x801ce4f0 => &[(0x801d4080, 0x801d4084, Some(0x801d4094))],
+        0x801ce504 => &[(0x801d4140, 0x801d4144, Some(0x801d4148))],
+        0x801ce520 => &[(0x801d41a0, 0x801d41a4, Some(0x801d41b4))],
+        0x801ce534 => &[(0x801d4230, 0x801d4234, Some(0x801d4244))],
+        0x801ce548 => &[(0x801d433c, 0x801d4340, Some(0x801d4360))],
+        0x801ce554 => &[(0x801d4380, 0x801d4384, Some(0x801d4388))],
+        0x801ce568 => &[(0x801d434c, 0x801d4350, Some(0x801d4360))],
+        0x801ce56c => &[
+            (0x801d43b0, 0x801d43b4, Some(0x801d43d4)),
+            (0x801d4444, 0x801d4448, Some(0x801d4468)),
+        ],
+        0x801ce578 => &[(0x801d44e8, 0x801d44ec, Some(0x801d44f4))],
+        0x801ce584 => &[(0x801d454c, 0x801d4550, Some(0x801d4558))],
+        0x801ce590 => &[(0x801d45b8, 0x801d45bc, Some(0x801d45c4))],
+        0x801ce59c => &[(0x801d4690, 0x801d4694, Some(0x801d469c))],
+        0x801ce5b4 => &[(0x801d4740, 0x801d4744, Some(0x801d4758))],
+        0x801ce5cc => &[(0x801d4830, 0x801d4834, Some(0x801d4844))],
+        0x801ce5e0 => &[(0x801d48b4, 0x801d48b8, Some(0x801d48c8))],
+        0x801ce5f8 => &[(0x801d49c0, 0x801d49c4, Some(0x801d49d8))],
+        0x801ce614 => &[(0x801d4b0c, 0x801d4b10, Some(0x801d4b20))],
+        0x801ce62c => &[(0x801d6bc8, 0x801d6bcc, Some(0x801d6c08))],
+        0x801ce660 => &[(0x801d6c2c, 0x801d6c30, Some(0x801d6c34))],
         0x801ce044 => &[(0x801cf3b0, 0x801cf3b4, Some(0x801cf3b8))],
         0x801ce060 => &[(0x801cf4e4, 0x801cf4e8, Some(0x801cf4f4))],
         0x801ce07c => &[(0x801cfa94, 0x801cfa98, Some(0x801cfaa0))],
         0x801ce098 => &[(0x801cfaa8, 0x801cfaac, Some(0x801cfac8))],
         0x801ce0a8 => &[(0x801cfc98, 0x801cfc9c, Some(0x801cfca0))],
+        0x801ce214 => &[
+            (0x801d0b34, 0x801d0b38, Some(0x801d0b3c)),
+            (0x801d0dbc, 0x801d0dc0, Some(0x801d0dc4)),
+            (0x801d122c, 0x801d1230, Some(0x801d1234)),
+            (0x801d1924, 0x801d1928, Some(0x801d192c)),
+        ],
+        0x801ce230 => &[(0x801d0684, 0x801d0688, Some(0x801d068c))],
+        0x801ce23c => &[(0x801d06d0, 0x801d06d4, Some(0x801d06d8))],
+        0x801ce28c => &[(0x801d0a80, 0x801d0a84, None)],
+        0x801ce294 => &[(0x801d0d08, 0x801d0d0c, None)],
+        0x801ce2a0 => &[(0x801d0fcc, 0x801d0fd0, Some(0x801d0fd4))],
+        0x801ce2a8 => &[(0x801d1024, 0x801d1028, Some(0x801d102c))],
+        0x801ce2b8 => &[(0x801d1168, 0x801d116c, None)],
+        0x801ce300 => &[(0x801d1658, 0x801d165c, Some(0x801d1668))],
+        0x801ce30c => &[(0x801d1874, 0x801d1878, None)],
         0x80149fc0 => &[
             (0x8016840c, 0x80168410, Some(0x8016841c)),
             (0x801686e0, 0x801686e4, Some(0x801686f0)),
@@ -725,6 +910,14 @@ pub(crate) enum Output {
 }
 
 fn output(address: u32) -> Output {
+    if LOGO_CALLBACK_TEXT.contains(&address) {
+        return Output::BiosPrintfCallback {
+            callback_word: LOGO_PRINTF_CALLBACK,
+            initial_stub: LOGO_PRINTF,
+            vector: 0xa0,
+            selector: 0x3f,
+        };
+    }
     if LOGO_ALLOCATIONS.iter().any(|&(at, _)| at == address) {
         return Output::BiosPrintf {
             stub: LOGO_PRINTF,

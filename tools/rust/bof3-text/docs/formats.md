@@ -43,7 +43,7 @@ The consumer at `0x8014B3C4` passes these pointers to renderer `0x80150098`.
 The renderer reads bytes until NUL, advances on ASCII space and handles newline
 `0x0A`. These bytes use ASCII rather than the dialogue character table.
 
-The JSON schema is `bof3.executable-text/v15`. Re-extract older documents before
+The JSON schema is `bof3.executable-text/v16`. Re-extract older documents before
 editing. It contains `source`, mandatory `source_sha256`, `build`, `load_address`,
 `consumers` and `strings`.
 Each string retains its `address`, whole-file `file_offset`, original `capacity`
@@ -63,23 +63,29 @@ padding. A shortened string is NUL-padded inside its allocation. Unchanged strin
 preserve every byte. Reference edits, relocation and unproven exception-table
 indices are refused.
 
-`LOGO/LOGO.EXE` has a separate pinned layout, loaded at `0x801CE000`. It exposes
-five direct BIOS printf diagnostics through stub `0x801D791C` (`A0:3F`):
+`LOGO/LOGO.EXE` has a separate pinned layout, loaded at `0x801CE000`. It supports
+kernel, CD and GPU diagnostics. Use `analyze SOURCE --json` to discover their
+addresses, capacities, directives and output paths. Direct BIOS printf calls use
+stub `0x801D791C` (`A0:3F`). The interrupt formats receive unsigned 16-bit values;
+DMA values are full 32-bit words and the MADR index is 0..6. Preserve every
+original directive exactly and in order. The CdInit and `DiskError: ` direct
+printf literals refuse percent characters. Alignment padding remains protected.
 
-| Address | Original format | Capacity including NUL |
-| --- | --- | --- |
-| `0x801CE044` | `unexpected interrupt(%04x)\n` | 28 |
-| `0x801CE060` | `intr timeout(%04x:%04x)\n` | 25 |
-| `0x801CE07C` | `DMA bus error: code=%08x\n` | 26 |
-| `0x801CE098` | `MADR[%d]=%08x\n` | 15 |
-| `0x801CE0A8` | `CdInit: Init failed\n` | 21 |
+LOGO CD labels `CD_sync`, `CD_ready`, `CD_cw` and `CD_datasync` pass through shared
+word `0x801EB4F0` as `%s` data and allow literal percent bytes. Their references
+have empty `calls` arrays; each row records its traced consumer, without claiming
+reachability through every reader of that word. Command and status table labels
+remain unsupported because their getters have unresolved downstream uses. Raw
+table indexes also prevent a closed `%s` argument domain or formatted size bound.
 
-The first two formats receive unsigned 16-bit values. DMA values are full
-32-bit words; the MADR index is 0..6. Preserve every original directive exactly
-and in order. The CdInit literal refuses percent characters. Printable ASCII
-and newline fit within each original allocation, reserving NUL. Alignment
-padding remains protected. Runtime console execution and other LOGO consumers
-remain unverified.
+LOGO GPU callback rows record word `0x801DA1BC`, initially `0x801D791C`; its runtime
+value remains unverified. ResetGraph address and GPU timeout diagnostics call the
+BIOS stub directly. Four image-operation names pass through a helper as `%s`
+data, allowing literal percent bytes. The `&08x` in the original format at
+`0x801CE5F8` is literal text, not an extra directive. The version string at
+`0x801CE444` remains unsupported: ResetGraph prints its carrier address rather
+than its contents. Runtime console execution and other LOGO consumers remain
+unverified.
 
 The `%08X` format at `0x80149990` has a five-byte allocation including NUL and
 uses `ascii-u32-hex-format`. Its `address-pair` references retain `upper` and

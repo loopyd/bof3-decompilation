@@ -143,11 +143,12 @@ Output is always JSON — there is no second codec — and every object carries 
 document's own recorded `source`.
 
 Each supported US `SLUS_004.22` or `LOGO/LOGO.EXE` executable exports one
-`bof3.executable-text/v15` document. Re-extract older documents. Use the default
+`bof3.executable-text/v16` document. Re-extract older documents. Use the default
 `--entry all` and omit `--class` and `--latch`; EMI selectors are refused for
 executable input.
-LOGO exposes five direct BIOS printf diagnostics. Its four formats retain their
-original directives; the CdInit literal refuses percent characters. Other LOGO
+LOGO supports kernel, CD and GPU diagnostics. Use `analyze SOURCE --json` for
+supported allocations. Its direct printf literals refuse percent characters;
+CD labels and image-operation names passed as `%s` data allow them. Other LOGO
 text and runtime console execution remain unverified.
 Keep each row's `consumers`, `format_directives` and output metadata unchanged.
 The shared CD `?` row retains twelve pointer references. BIOS puts accepts
