@@ -48,6 +48,7 @@ fn options(directory: &Directory, archive: PathBuf) -> Options {
         id: None,
         kind: Kind::Stream,
         arithmetic: Arithmetic::CombinedRounded,
+        history: bof3_audio::xa::selection::InitialHistory::Zero,
     }
 }
 
@@ -103,6 +104,8 @@ fn multiplexed_streams_preserve_unknown_sectors_tails_and_file_channel_identitie
             "xa_stream",
             "--xa-arithmetic",
             "combined-rounded",
+            "--xa-history",
+            "zero",
             "--archive",
         ])
         .arg(&options.archives[0])
@@ -194,6 +197,7 @@ fn complete_original_streams_and_all_cues_export_with_independent_pcm_and_table_
         id: None,
         kind: Kind::Stream,
         arithmetic: Arithmetic::CombinedRounded,
+        history: bof3_audio::xa::selection::InitialHistory::Zero,
     };
     let report = extract(&options).unwrap();
     assert_eq!(

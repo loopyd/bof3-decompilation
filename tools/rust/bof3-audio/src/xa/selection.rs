@@ -5,6 +5,44 @@ use crate::{
 };
 use serde::Serialize;
 
+#[derive(Clone, Copy, Debug, Serialize)]
+pub enum InitialHistory {
+    #[serde(rename = "zero_per_exported_asset")]
+    Zero,
+    #[serde(rename = "continuous_selected_stream")]
+    Continuous,
+}
+
+impl InitialHistory {
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::Zero => "zero_per_exported_asset",
+            Self::Continuous => "continuous_selected_stream",
+        }
+    }
+
+    pub(crate) fn derive(
+        self,
+        image: &XaImage,
+        stream: Stream,
+        indices: &[usize],
+        arithmetic: Arithmetic,
+    ) -> Result<Histories> {
+        let first = *indices.first().ok_or("XA history: empty selection")?;
+        let all = stream_indices(image, stream);
+        let position = all
+            .binary_search(&first)
+            .map_err(|_| "XA history: selected sector is not in stream")?;
+        let mut decoder = Decoder::new(stream, arithmetic, Histories::default())?;
+        if matches!(self, Self::Continuous) {
+            for &index in &all[..position] {
+                decoder.decode_sector(image.sector(index)?)?;
+            }
+        }
+        Ok(decoder.histories())
+    }
+}
+
 #[derive(Debug, Serialize)]
 pub struct Report {
     pub schema: &'static str,

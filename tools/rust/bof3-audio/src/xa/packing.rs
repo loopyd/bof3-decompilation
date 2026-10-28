@@ -3,7 +3,7 @@ use crate::{
     archive::MediaImage, archive::XaImage, archive::XA_SECTOR_BYTES, catalog::loader,
     catalog::model::Catalog, digest::sha256_hex, document::manifest, document::manifest::Element,
     machine::executable::Executable, machine::profile::Profile, publication::require_absent,
-    publication::write_new, publication::Publication, xa::Histories, Result,
+    publication::write_new, publication::Publication, Result,
 };
 use serde::Serialize;
 use serde_json::json;
@@ -126,7 +126,7 @@ pub fn assets(options: &Options) -> Result<Report> {
         limitations: vec![
             "WAV PCM must fill the exact original sector capacity at its encoded rate/channel layout; insertion, relocation, resampling and implicit padding are unsupported",
             "changed cues require compatible entry history and unchanged exit history before following audio; overlapping views must request identical encoded sectors",
-            "decoder arithmetic and zero export histories are explicit contexts; actual game seek/reset behavior and audible cue endpoints are not verified",
+            "decoder arithmetic and zero or continuous selected-stream export histories are explicit contexts; actual game seek/reset behavior and audible cue endpoints are not verified",
             "unknown source extents remain unverified; known truncated media is rejected",
             "disc-image rebuilding and complete PSX playback verification are not performed",
         ],
@@ -193,7 +193,7 @@ pub fn assets(options: &Options) -> Result<Report> {
                 &asset.indices,
                 &asset.wave.pcm,
                 asset.arithmetic,
-                Histories::default(),
+                asset.initial_histories,
             )
             .map_err(|e| format!("{}: {e}", node.attribute("id").unwrap_or("unknown asset")))?;
             let id = node.attribute("id")?.to_owned();

@@ -14,9 +14,10 @@ pub const HELP: &str =
  Default reference rate: 44100 Hz (SPU pitch 4096); unity note 60 is an export convention.\n\
  Full original EMI bytes are preserved inside each bank.xml. Output must not exist.\n\
  XA: --kind xa_stream|xa_cue --xa-arithmetic split-floor|combined-rounded\n\
-     --output NEW_DIR [--id ID] [--executable PSX_EXE]\n\
+     --xa-history zero|continuous --output NEW_DIR [--id ID] [--executable PSX_EXE]\n\
  XA cues require the executable; streams can use it to retain known cue placement.\n\
- XA uses its encoded rate and zero initial history per exported asset. Known truncated STRs fail.\n\
+ XA history is zero per asset or carried from preceding sectors of the selected coded stream.\n\
+ XA uses its encoded rate. Game seek/reset history is unverified; known truncated STRs fail.\n\
  Music: --mode music [--kind song] --allow-approximations --executable PSX_EXE\n\
    (--disc-root DIR | --archive FILE...) --output NEW_DIR [--id SONG_ID] [--loops N]\n\
  One SF2 and independent format-1 MIDI files per song; loops default to two traversals.\n\
@@ -33,6 +34,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let mut role = None;
     let mut rate = None;
     let mut arithmetic = None;
+    let mut history = None;
     let mut json = false;
     let mut approximations = false;
     let mut loops = None;
@@ -65,6 +67,13 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
                     }
                 });
             }
+            Some("--xa-history") if history.is_none() => {
+                history = Some(match string(&mut args, "--xa-history")?.as_str() {
+                    "zero" => crate::xa::selection::InitialHistory::Zero,
+                    "continuous" => crate::xa::selection::InitialHistory::Continuous,
+                    _ => return Err("--xa-history requires zero or continuous".into()),
+                });
+            }
             Some("--json") if !json => json = true,
             Some("--allow-approximations") if !approximations => approximations = true,
             Some("--loops") if loops.is_none() => {
@@ -87,7 +96,11 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         }
     }
     if mode.as_deref() == Some("music") {
-        if kind.as_deref().is_some_and(|k| k != "song") || rate.is_some() || arithmetic.is_some() {
+        if kind.as_deref().is_some_and(|k| k != "song")
+            || rate.is_some()
+            || arithmetic.is_some()
+            || history.is_some()
+        {
             return Err(
                 "music extract accepts --kind song; bank/XA rate/arithmetic flags do not apply"
                     .into(),
@@ -145,6 +158,8 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             arithmetic: arithmetic.ok_or(
                 "XA extraction requires explicit --xa-arithmetic split-floor|combined-rounded",
             )?,
+            history: history
+                .ok_or("XA extraction requires explicit --xa-history zero|continuous")?,
         })?;
         if json {
             println!("{}", serde_json::to_string_pretty(&report)?);
@@ -169,9 +184,9 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         }
         return Ok(0);
     }
-    if kind.as_deref() != Some("bank") || arithmetic.is_some() {
+    if kind.as_deref() != Some("bank") || arithmetic.is_some() || history.is_some() {
         return Err(
-            "extract requires --kind bank|xa_stream|xa_cue; --xa-arithmetic applies only to XA"
+            "extract requires --kind bank|xa_stream|xa_cue; --xa-arithmetic and --xa-history apply only to XA"
                 .into(),
         );
     }

@@ -48,7 +48,7 @@ pub fn validate(root: &Path, media_root: Option<&Path>, executable: Option<&Path
         let xml = fs::read_to_string(&path).unwrap();
         let document = Document::parse(&xml).unwrap();
         let asset = document.root_element();
-        assert_eq!(attr(asset, "schema"), "bof3.xa-asset/v1");
+        assert_eq!(attr(asset, "schema"), "bof3.xa-asset/v2");
         assert_eq!(attr(asset, "id"), attr(reference, "id"));
         assert_eq!(attr(asset, "kind"), attr(manifest, "kind"));
         let source = child(asset, "source_ref");

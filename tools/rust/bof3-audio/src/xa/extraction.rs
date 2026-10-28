@@ -4,8 +4,8 @@ use crate::{
     archive::MediaImage, archive::XaImage, catalog::loader, catalog::model::Asset,
     catalog::model::AssetData, catalog::model::Catalog, catalog::model::XaCue, digest::sha256_hex,
     document::xml, interchange::wave::Wave, machine::executable::Executable,
-    publication::require_absent, publication::write_new, publication::Publication, xa::Arithmetic,
-    xa::Decoder, xa::Histories, xa::Stream, Result,
+    publication::require_absent, publication::write_new, publication::Publication,
+    xa::selection::InitialHistory, xa::Arithmetic, xa::Decoder, xa::Stream, Result,
 };
 use serde::Serialize;
 use std::{collections::BTreeMap, fmt::Write, fs, path::PathBuf};
@@ -32,6 +32,7 @@ pub struct Options {
     pub id: Option<String>,
     pub kind: Kind,
     pub arithmetic: Arithmetic,
+    pub history: InitialHistory,
 }
 
 #[derive(Debug, Serialize)]
@@ -84,12 +85,12 @@ pub fn extract(options: &Options) -> Result<Report> {
     let mut root = format!("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<audio schema=\"bof3.audio-extraction/v1\" mode=\"audio\" kind=\"{}\">\n", options.kind.name());
     let mut report = Report {
         schema: "bof3.xa-extract-report/v1", output: options.output.display().to_string(), sources: 0,
-        assets: 0, sectors: 0, pcm_frames: 0, arithmetic: options.arithmetic, initial_history: "zero_per_exported_asset",
+        assets: 0, sectors: 0, pcm_frames: 0, arithmetic: options.arithmetic, initial_history: options.history.name(),
         unverified_sources: Vec::new(),
         unselected_sources: catalog.sources.iter().filter(|s| s.container == "xa" && !grouped.contains_key(s.source.as_str())).map(|s| s.source.clone()).collect(),
         assumptions: vec![
             "PCM concatenates selected audio sectors at their encoded rate; XML retains physical sector placement",
-            "zero initial decoder history per exported asset is a convention, not verified game seek/reset behavior",
+            "history is an explicit export context: zero per asset or zero-start decode of preceding sectors of the selected file/channel/coding stream; neither establishes game seek/reset behavior",
             "decoder arithmetic is explicit; CD resampling, drive timing, de-emphasis and audible cue endpoints are not established",
             "each source STR is preserved once in XML, including unrelated sectors, tails and EDC bytes",
             "SFX/vocal classification and hardware playback remain unverified; packing supports fixed-capacity edits with explicit history boundary checks",
@@ -142,7 +143,10 @@ pub fn extract(options: &Options) -> Result<Report> {
         report.sources += 1;
         for asset in assets {
             let (stream, indices) = selection(asset, &image)?;
-            let mut decoder = Decoder::new(stream, options.arithmetic, Histories::default())?;
+            let initial = options
+                .history
+                .derive(&image, stream, &indices, options.arithmetic)?;
+            let mut decoder = Decoder::new(stream, options.arithmetic, initial)?;
             let folder = format!("xa/{}", sha256_hex(asset.id.as_bytes()));
             let directory = publication.staging.join(&folder);
             fs::create_dir_all(&directory)?;
@@ -171,9 +175,15 @@ pub fn extract(options: &Options) -> Result<Report> {
             if written != wav_bytes || Wave::from_bytes(&written)?.to_bytes()? != wav_bytes {
                 return Err("XA WAV read-back failed".into());
             }
-            let mut manifest = format!("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<xa_asset schema=\"bof3.xa-asset/v1\" id=\"{}\" source=\"{}\" kind=\"{}\" content_type=\"unresolved\">\n<source_ref path=\"../../{snapshot_path}\" sha256=\"{hash}\"/>\n<stream{}{} />\n", xml::attribute(&asset.id)?, xml::attribute(source_id)?, asset.kind(), xml::attributes(&stream, &[])?, xml::attributes(&decoder.format(), &[])?) ;
+            let mut manifest = format!("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<xa_asset schema=\"bof3.xa-asset/v2\" id=\"{}\" source=\"{}\" kind=\"{}\" content_type=\"unresolved\">\n<source_ref path=\"../../{snapshot_path}\" sha256=\"{hash}\"/>\n<stream{}{} />\n", xml::attribute(&asset.id)?, xml::attribute(source_id)?, asset.kind(), xml::attributes(&stream, &[])?, xml::attributes(&decoder.format(), &[])?) ;
             let arithmetic = serde_json::to_value(options.arithmetic)?;
-            writeln!(manifest, "<decoder arithmetic=\"{}\" initial_history=\"zero_per_exported_asset\" resampling=\"none\" audible_endpoint=\"unverified\"/>", arithmetic.as_str().ok_or("arithmetic must be string")?)?;
+            writeln!(manifest, "<decoder arithmetic=\"{}\" initial_history=\"{}\" resampling=\"none\" audible_endpoint=\"unverified\"/>", arithmetic.as_str().ok_or("arithmetic must be string")?, options.history.name())?;
+            writeln!(
+                manifest,
+                "<initial_history><left{}/><right{}/></initial_history>",
+                xml::attributes(&initial.left, &[])?,
+                xml::attributes(&initial.right, &[])?
+            )?;
             writeln!(
                 manifest,
                 "<final_history><left{}/><right{}/></final_history>",

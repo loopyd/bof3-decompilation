@@ -1,8 +1,8 @@
 //! Verify XA extraction manifests against preserved sectors and runtime tables.
 use crate::{
     archive::XaImage, catalog::model::Catalog, digest::sha256_hex, document::manifest,
-    document::manifest::Element, interchange::wave::Wave, xa::Arithmetic, xa::Decoder,
-    xa::Histories, xa::Stream, Result,
+    document::manifest::Element, interchange::wave::Wave, xa::selection::InitialHistory,
+    xa::Arithmetic, xa::Decoder, xa::Histories, xa::Stream, Result,
 };
 use serde_json::json;
 use std::{collections::BTreeSet, fs, path::Path};
@@ -11,6 +11,7 @@ pub(crate) struct Validated {
     pub stream: Stream,
     pub indices: Vec<usize>,
     pub arithmetic: Arithmetic,
+    pub initial_histories: Histories,
     pub wave: Wave,
     pub wav_sha256: String,
 }
@@ -26,12 +27,16 @@ pub(crate) fn validate(
     if node.name != "xa_asset" {
         return Err("XA pack: expected <xa_asset>".into());
     }
+    if node.attribute("schema")? != "bof3.xa-asset/v2" {
+        return Err("XA pack: expected bof3.xa-asset/v2; regenerate the extraction with explicit --xa-history".into());
+    }
     node.shape(
         &["schema", "id", "source", "kind", "content_type"],
         &[
             "source_ref",
             "stream",
             "decoder",
+            "initial_history",
             "final_history",
             "wave",
             "sectors",
@@ -45,7 +50,7 @@ pub(crate) fn validate(
         return Err("XA pack: unsupported asset kind".into());
     }
     let asset = catalog.select("audio", Some(kind), node.attribute("id")?)?;
-    node.scalars(&json!({"schema": "bof3.xa-asset/v1", "id": asset.id, "source": asset.source, "kind": asset.kind(), "content_type": "unresolved"}), &[], &[])?;
+    node.scalars(&json!({"schema": "bof3.xa-asset/v2", "id": asset.id, "source": asset.source, "kind": asset.kind(), "content_type": "unresolved"}), &[], &[])?;
     let (stream, indices) = crate::xa::extraction::selection(asset, image)?;
     let decoder_node = node.child("decoder")?;
     let arithmetic = match decoder_node.attribute("arithmetic")? {
@@ -53,12 +58,22 @@ pub(crate) fn validate(
         "combined_rounded" => Arithmetic::CombinedRounded,
         _ => return Err("XA pack: unsupported decoder arithmetic".into()),
     };
+    let policy = match decoder_node.attribute("initial_history")? {
+        "zero_per_exported_asset" => InitialHistory::Zero,
+        "continuous_selected_stream" => InitialHistory::Continuous,
+        _ => return Err("XA pack: unsupported decoder initial_history policy".into()),
+    };
     leaf(
         decoder_node,
-        &json!({"arithmetic": arithmetic, "initial_history": "zero_per_exported_asset", "resampling": "none", "audible_endpoint": "unverified"}),
+        &json!({"arithmetic": arithmetic, "initial_history": policy, "resampling": "none", "audible_endpoint": "unverified"}),
         &[],
     )?;
-    let mut decoder = Decoder::new(stream, arithmetic, Histories::default())?;
+    let initial_histories = policy.derive(image, stream, &indices, arithmetic)?;
+    let initial = node.child("initial_history")?;
+    initial.shape(&[], &["left", "right"], false)?;
+    leaf(initial.child("left")?, &initial_histories.left, &[])?;
+    leaf(initial.child("right")?, &initial_histories.right, &[])?;
+    let mut decoder = Decoder::new(stream, arithmetic, initial_histories)?;
     let format = decoder.format();
     let stream_node = node.child("stream")?;
     let mut expected = serde_json::to_value(stream)?;
@@ -116,6 +131,7 @@ pub(crate) fn validate(
         stream,
         indices,
         arithmetic,
+        initial_histories,
         wave,
         wav_sha256: sha256_hex(&bytes),
     })

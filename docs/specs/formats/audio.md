@@ -248,9 +248,11 @@ file/channel/coding streams and independently selected verified game cues:
 
 ```sh
 bof3-audio extract --mode audio --kind xa_stream --archive FILE.STR \
-  --xa-arithmetic combined-rounded --output NEW_DIR [--executable SLUS_004.22]
+  --xa-arithmetic combined-rounded --xa-history zero \
+  --output NEW_DIR [--executable SLUS_004.22]
 bof3-audio extract --mode audio --kind xa_cue --archive FILE.STR \
-  --executable SLUS_004.22 --xa-arithmetic split-floor --output NEW_DIR [--id ID]
+  --executable SLUS_004.22 --xa-arithmetic split-floor --xa-history continuous \
+  --output NEW_DIR [--id ID]
 ```
 
 Repeated archives and `--disc-root` are supported. `--id` uses the catalog's
@@ -262,8 +264,13 @@ complete. Reports identify unrecognized extents and sources without selected
 assets, rather than implying that every input has been exported.
 
 Arithmetic is required explicitly as `split-floor` or `combined-rounded`.
-Each exported asset starts with zero decoder history, a documented export
-convention. WAVs retain the encoded rate and mono/stereo layout; bank-only
+`--xa-history zero|continuous` is also required. `zero` starts each exported
+asset with zero predictor history. `continuous` decodes preceding audio sectors
+of the selected `(file, channel, coding)` stream from zero and carries the resulting
+left/right histories into the selection. Multiplexed sectors of other streams are
+excluded; EOF flags do not reset this export context. Neither choice establishes
+the game's coding-transition, seek or reset schedule. WAVs retain the encoded rate
+and mono/stereo layout; bank-only
 `--reference-rate` is rejected. PCM concatenates selected sectors without inserting
 silence for multiplexed gaps. This is not a timed capture of the game's CD/SPU path.
 
@@ -272,9 +279,11 @@ selected STR and one manifest/WAV folder per selected asset. Source XML
 (`bof3.xa-source/v1`) contains the entire original STR as hexadecimal text, byte
 length, hash, source identity and completeness evidence. It preserves interleaving,
 unrelated sectors, payload tails and EDC bytes once, avoiding duplication per cue.
-Asset XML (`bof3.xa-asset/v1`) uses relative source/WAV references and records
+Asset XML (`bof3.xa-asset/v2`) uses relative source/WAV references and records
 stream identity/coding, arithmetic, initial/final histories, hashes, and each
-physical sector's decoded frame offset and submode. Keep the extraction root
+physical sector's decoded frame offset and submode. Packing rederives both initial
+channel histories from the selected policy and preserved source, rejecting edited
+history values. Version 1 asset manifests must be regenerated. Keep the extraction root
 together; individual XA folders refer to its shared source snapshots.
 
 With executable evidence, asset manifests retain cue IDs, table addresses,
@@ -292,8 +301,12 @@ and raw executable-table reads. The complete-disc check passed for 31 streams
 the recorded zero-history/rounded-arithmetic context; every preserved source
 equals its original STR. Cue geometry and thresholds match raw executable words.
 A verified local export of voice cue `0x2000`
-contains 71 sectors and 286,272 mono frames. Edited packing, unsupported emphasis,
-game seek/reset history and hardware playback remain unaccepted.
+contains 71 sectors and 286,272 mono frames. Edited partial selections require
+continuous-stream entry history and the original exit history before following
+unselected audio. WAVs must fill the exact selected capacity; shorter input,
+implicit padding and arbitrary seek/reset histories are rejected. Overlapping
+views must request identical encoded sectors. Unsupported emphasis, game seek/reset
+history and hardware playback remain unaccepted.
 
 ### Byte-identical VAB payload groups
 
@@ -3050,16 +3063,17 @@ sector counts. Known truncated extents fail; unrecognized extents remain explici
 unverified. [Asset validation](../../../tools/rust/bof3-audio/src/xa/manifest.rs)
 reconstructs physical identities from preserved media, checks profile-backed cue
 placement and BCD fields, and validates file/channel/coding, decoder arithmetic,
-zero export history, original final history, sector-to-frame mapping and original
+source-derived initial histories under the selected zero/continuous policy,
+original final history, sector-to-frame mapping and original
 WAV/selected-sector hashes. Unknown fields and conflicting references fail.
 Original WAV hashes are provenance checks; parsed input PCM determines edits, so
 harmless RIFF formatting changes do not force re-encoding.
 
 WAV edits retain the encoded rate/channel layout and exactly fill the selected
 sector capacity. There is no implicit padding, resampling, insertion, relocation,
-new loop metadata or ancillary-metadata loss. The explicit arithmetic model and
-zero per-asset export history remain synthesis assumptions, not established game
-seek/reset behavior. Codec loss is measured before any hardware resampling.
+new loop metadata or ancillary-metadata loss. The explicit arithmetic and history
+policies define the export context; game seek/reset behavior remains unverified.
+Codec loss is measured before any hardware resampling.
 
 [`xa_selection`](../../../tools/rust/bof3-audio/src/xa/selection.rs) encodes
 selected sectors without repeatedly rebuilding a whole STR for every cue. A

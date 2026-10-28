@@ -50,6 +50,7 @@ fn extract(
         id: None,
         kind,
         arithmetic: Arithmetic::CombinedRounded,
+        history: bof3_audio::xa::selection::InitialHistory::Zero,
     })
     .unwrap()
 }
@@ -310,6 +311,7 @@ fn original_cue_edit_preserves_other_sectors_and_rejects_runtime_conflicts() {
         id: Some("4096".into()),
         kind: Kind::Cue,
         arithmetic: Arithmetic::CombinedRounded,
+        history: bof3_audio::xa::selection::InitialHistory::Zero,
     })
     .unwrap();
     let asset = assets(&export).remove(0);

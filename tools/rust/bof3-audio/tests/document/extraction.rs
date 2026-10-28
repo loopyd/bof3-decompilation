@@ -52,6 +52,7 @@ fn xa_extraction_paths_preservation_sector_metadata_and_wave_survive_xml_reading
         id: None,
         kind: Kind::Stream,
         arithmetic: Arithmetic::SplitFloor,
+        history: bof3_audio::xa::selection::InitialHistory::Zero,
     })
     .unwrap();
     let root = manifest::read(&output.join("audio.xml")).unwrap();

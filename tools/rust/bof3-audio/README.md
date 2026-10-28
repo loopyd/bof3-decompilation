@@ -76,6 +76,16 @@ the complete bank remains editable and packable. Its report records
 `selection_role` and `selected_banks` with their source-qualified role evidence.
 The WAVs use the explicit export reference rate and do not represent cue playback.
 
+XA extraction requires `--xa-arithmetic split-floor|combined-rounded` and
+`--xa-history zero|continuous`. Zero history starts each asset independently.
+Continuous history carries a zero-start decode of preceding sectors of the selected
+file/channel/coding stream. Both are export contexts; game seek/reset behavior
+remains unverified. XA asset XML uses `bof3.xa-asset/v2`, records initial channel
+histories, and validates them against the preserved source during packing. Regenerate
+older manifests. Edited partial cues require matching continuous entry history and
+original exit history before following audio. Exact capacity and overlapping-sector
+agreement still apply.
+
 `verify --json` writes `bof3.audio-verification/v2`. Its `checks` object reports
 each category with a `status` of `pass`, `fail`, or `missing_evidence` and a
 `reason` describing the evidence or limitation.
