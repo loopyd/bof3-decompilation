@@ -803,8 +803,11 @@ zero-extended numeric value to `sprintf` at `0x8017E3F4`; the resulting ASCII
 buffer is drawn by `0x80150098`. Keep the `%3d` conversion and edit only the
 surrounding printable ASCII within capacity. This preserves the number and type
 of arguments and the original maximum formatted length. The conversion is part
-of the format text, not a dialogue command.
-Other master-menu labels and observed rendering remain unverified.
+of the format text, not a dialogue command. Split fields draw at matching
+coordinates, so keep their separators in the same formatted character column.
+Controlled runtime checks cover the four stat labels, the `%3d` stat path and both
+split formats. `Pois` and `Conf` rendering remain unverified.
+Other master-menu labels remain unverified.
 
 SHOP also exposes these digit literals, dash fallbacks and numeric formats.
 Capacities include NUL; formatted bounds exclude it. Digit literals accept
@@ -907,7 +910,9 @@ All results use the 64-byte scratch buffer at `0x80145AD4`; the largest occupies
 twelve bytes including NUL. `0x801D0CF8` draws through `0x8014FF0C`, while
 `0x801D0D08` uses both `0x8014FF0C` and `0x80150098`. The unsigned fields use
 `0x80150098`. The alignment bytes at `0x801D0D05..0x801D0D08` remain
-protected. Runtime rendering remains unverified.
+protected. The split 16-bit formats draw at matching coordinates. Edit paired
+formats together and keep their separators in the same formatted character
+column. Runtime rendering remains unverified.
 
 ## Bank layout
 
