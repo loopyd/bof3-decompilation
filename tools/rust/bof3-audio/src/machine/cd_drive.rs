@@ -301,6 +301,13 @@ impl Drive {
         if command.parameters.len() > 16 || command.parameters.len() != count {
             return Ok(self.parameter_error(0x20));
         }
+        // Read cancels an unfinished SeekP command and replaces its continuation.
+        let read_takes_over_seekp = matches!(command.opcode, 0x06 | 0x1b)
+            && matches!(
+                self.activity,
+                Activity::PreparingSeek { physical: true, .. }
+                    | Activity::Seeking { physical: true, .. }
+            );
         if matches!(
             self.activity,
             Activity::PreparingSeek { .. }
@@ -312,6 +319,7 @@ impl Drive {
                 | Activity::Pausing
                 | Activity::Resetting
         ) && !matches!(command.opcode, 0x01 | 0x0b | 0x0c | 0x0f | 0x10 | 0x11)
+            && !read_takes_over_seekp
         {
             return Err("CD drive: command during mechanical transition is not implemented".into());
         }

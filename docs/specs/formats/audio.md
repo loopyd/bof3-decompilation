@@ -2364,9 +2364,9 @@ including position, mode and filter. It implements Getstat, Setloc, Setmode,
 Setfilter, Getparam, GetlocL, SeekL/SeekP, ReadN/ReadS, Pause, Init and
 Mute/Demute transactions. With an explicit TOC it also implements GetTN, GetTD
 and GetlocP. Play additionally requires an explicit peak-channel phase.
-Known invalid parameters yield INT5; unsupported
-commands and mechanical overlap fail without changing drive state. The explicit
-ready-disc constructor does not perform Init, BIOS startup or authentication.
+Known invalid parameters yield INT5. Unsupported commands and overlap cases
+fail without changing drive state. Read takeover of SeekP is supported below.
+The explicit ready-disc constructor does not perform Init, BIOS startup or authentication.
 The host owner still supplies response/IRQ boundaries, and the caller
 explicitly completes mechanical transitions; no clock duration is assigned.
 
@@ -2385,8 +2385,15 @@ and returns INT2 or a TOC-based INT5 error. SeekP subtracts
 `floor((target_lba + 150)/32768)` sectors
 from current position, following the native absolute-MSF adjustment. Retained
 seek remains the exact target. Pause ACKs the old status, becomes Idle
-immediately and returns INT2 at its supplied completion. Command takeover
-remains unsupported.
+immediately and returns INT2 at its supplied completion.
+
+ReadN/ReadS can take over an unfinished SeekP, both before seeking starts and
+during the Seeking phase. Read cancels the old seek completion, retains its exact
+seek target and starts the normal two-phase Read path with an Idle ACK. Cached
+header validity, queued audio and selected data survive; the interconnect still
+resets XA predictors. No SeekP INT2 follows the takeover. Pending audio and active
+DMA3 reject this operation before mutation. Other command takeover and overlap
+cases remain unsupported.
 
 GetlocL validity is separate from its cached bytes. Pause invalidates at ACK;
 SeekL/SeekP invalidate at final completion. Read initiation and its seek phase

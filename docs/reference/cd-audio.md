@@ -235,7 +235,12 @@ current position while retaining the exact seek target. Pause becomes Idle
 and invalidates GetlocL immediately. Cached header bytes survive; Init restores
 their validity, and a new sector replaces them before routing. Native guest
 responses and phase observations qualify these rules under supplied cycles.
-Automatic scheduling, takeover/overlap and hardware timing remain open.
+ReadN/S can replace either unfinished SeekP phase. The old seek completion is
+cancelled, the exact seek target survives, and Read acknowledges Idle before its
+normal two supplied phases. Native observations confirm both takeover phases and
+the absence of a later SeekP INT2. Pending audio and active DMA3 remain rejected
+by the interconnect. Automatic scheduling, other command overlaps and hardware
+timing remain open.
 Coding follows the first-success latch documented below.
 
 Bounded native Init observations agree on position, pending Setloc, mode, mute
