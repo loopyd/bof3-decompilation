@@ -43,6 +43,25 @@ impl ArchiveImage {
         Ok(&self.bytes[start..start + entry.size as usize])
     }
 
+    /// Replace one fixed-size payload while preserving the complete table.
+    /// The payload prefix must stay unchanged so no cached table word needs updating.
+    pub fn replace_entry(&self, index: usize, payload: &[u8]) -> Result<Self, Error> {
+        let original = self.entry(index)?;
+        if payload.len() != original.len() {
+            return Err(Error::InvalidArchive("replacement changes entry size"));
+        }
+        let prefix = original.len().min(4);
+        if payload[..prefix] != original[..prefix] {
+            return Err(Error::InvalidArchive(
+                "replacement changes the payload prefix recorded in the table",
+            ));
+        }
+        let start = self.entries[index].offset as usize;
+        let mut bytes = self.bytes.clone();
+        bytes[start..start + payload.len()].copy_from_slice(payload);
+        Self::from_bytes(bytes)
+    }
+
     /// Replace payloads without relocating entries or altering unrelated bytes.
     ///
     /// Growth may consume only the entry's existing sector-alignment space, not

@@ -25,6 +25,26 @@ The extractor validates the header, TOC bounds, payload bounds, and entry
 index before writing. Entries begin at `0x800` and each payload advances to the
 next `0x800`-byte sector, matching the shipped archives and v1 extractor.
 
+## Preserve an original archive
+
+Replace one entry using its zero-based index and a separate, new output path:
+
+```sh
+build/tools/rust/emi-ex/release/emi-ex replace-entry ORIGINAL.EMI INDEX PAYLOAD.bin -o OUTPUT.EMI
+```
+
+The replacement must have the original entry's size and first four payload bytes.
+For entries shorter than four bytes, the entire payload must stay unchanged.
+The command preserves the complete table, entry placement, padding, trailer and
+every unrelated byte. It rejects invalid archives, unknown indices, size or prefix
+changes, repeated output options and existing output paths. Inputs stay unchanged.
+Generic `pack` constructs an archive and can normalize padding; use `replace-entry`
+when the original archive's opaque bytes must survive.
+
+The library exposes this operation as `ArchiveImage::replace_entry`. Its separate
+`replace_entries` API allows size changes within sector allocation and updates
+table fields, so it has a different preservation contract.
+
 ## Parity matrix
 
 | Contract | Status |

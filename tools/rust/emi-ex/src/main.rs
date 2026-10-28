@@ -5,6 +5,7 @@ use emi_ex_v2::{
 use std::env;
 use std::ffi::{OsStr, OsString};
 use std::fs;
+use std::io::Write;
 use std::path::{Path, PathBuf};
 
 fn main() {
@@ -35,13 +36,81 @@ fn run(mut args: Vec<OsString>) -> Result<(), String> {
             args.remove(0);
             "list"
         }
+        Some("replace-entry") => {
+            args.remove(0);
+            "replace-entry"
+        }
         _ => "extract",
     };
     match mode {
         "pack" => run_pack(&args),
         "list" => run_list(&args),
+        "replace-entry" => run_replace_entry(&args),
         _ => run_extract(&args),
     }
+}
+
+fn run_replace_entry(args: &[OsString]) -> Result<(), String> {
+    let mut output = None;
+    let mut positionals = Vec::new();
+    let mut index = 0;
+    while index < args.len() {
+        match args[index].to_str() {
+            Some("-o" | "--output") => {
+                if output.is_some() {
+                    return Err("replacement output was provided twice".into());
+                }
+                index += 1;
+                output = Some(PathBuf::from(require_arg(args, index, "--output")?));
+            }
+            Some(value) if value.starts_with('-') => {
+                return Err(format!("unknown option {value}"));
+            }
+            _ => positionals.push(&args[index]),
+        }
+        index += 1;
+    }
+    if positionals.len() != 3 || output.is_none() {
+        return Err(
+            "usage: emi-ex replace-entry <archive.EMI> <index> <payload> -o <output.EMI>".into(),
+        );
+    }
+    let entry_index = parse_usize(positionals[1], "replacement index")?;
+    let image = emi_ex_v2::image::ArchiveImage::from_bytes(
+        fs::read(positionals[0]).map_err(|error| error.to_string())?,
+    )
+    .map_err(|error| error.to_string())?;
+    let payload = fs::read(positionals[2]).map_err(|error| error.to_string())?;
+    let replaced = image
+        .replace_entry(entry_index, &payload)
+        .map_err(|error| error.to_string())?;
+    write_new_output(&output.unwrap(), replaced.bytes())
+}
+
+fn write_new_output(path: &Path, bytes: &[u8]) -> Result<(), String> {
+    if let Some(parent) = path
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+    {
+        fs::create_dir_all(parent).map_err(|error| error.to_string())?;
+    }
+    let mut output = fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(path)
+        .map_err(|error| format!("{}: {error}", path.display()))?;
+    let written = output.write_all(bytes).and_then(|()| output.sync_all());
+    drop(output);
+    if let Err(error) = written {
+        return match fs::remove_file(path) {
+            Ok(()) => Err(error.to_string()),
+            Err(cleanup) => Err(format!(
+                "{error}; failed output retained at {}: {cleanup}",
+                path.display()
+            )),
+        };
+    }
+    Ok(())
 }
 
 #[derive(Default)]
@@ -408,6 +477,7 @@ fn print_usage() {
     println!("       emi-ex pack -o <archive.EMI> [-J [manifest]] <folder>");
     println!("       emi-ex pack -o <archive.EMI> [-t N] -i <files...>");
     println!("       emi-ex list <archive.EMI>");
+    println!("       emi-ex replace-entry <archive.EMI> <index> <payload> -o <output.EMI>");
 }
 
 fn run_list(args: &[OsString]) -> Result<(), String> {
@@ -426,8 +496,8 @@ fn run_list(args: &[OsString]) -> Result<(), String> {
     let archive =
         Archive::open(&source).map_err(|error| format!("{}: {error}", source.display()))?;
     println!(
-        "{:<5} {:<10} {:<12} {:<10} {:<6} {}",
-        "IDX", "OFFSET", "RAM_PTR", "SIZE", "TYPE", "FIRST4"
+        "{:<5} {:<10} {:<12} {:<10} {:<6} FIRST4",
+        "IDX", "OFFSET", "RAM_PTR", "SIZE", "TYPE"
     );
     for (index, entry) in archive.entries().iter().enumerate() {
         println!(
