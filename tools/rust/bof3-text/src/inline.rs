@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v13";
+pub const SCHEMA: &str = "bof3.inline-text/v14";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -30,6 +30,7 @@ pub(crate) enum Codec {
     AsciiU8DecimalTripleFormat,
     AsciiU7DecimalFormat,
     AsciiU16DecimalFormat,
+    AsciiU16DecimalFieldFormat,
 }
 
 impl Codec {
@@ -101,6 +102,7 @@ impl Codec {
             Self::AsciiU8DecimalTripleFormat => (&[3, 3, 3], 16, 4),
             Self::AsciiU8DecimalFormat | Self::AsciiU7DecimalFormat => (&[3], 3, 4),
             Self::AsciiU16DecimalFormat => (&[5], 5, 4),
+            Self::AsciiU16DecimalFieldFormat => (&[5], 9, 4),
             _ => return Ok(None),
         };
         let size = decimal_format_size(text, arguments, max_width)?;
@@ -167,6 +169,7 @@ impl Codec {
             Self::AsciiU8DecimalTripleFormat => "ascii-u8-decimal-triple-format",
             Self::AsciiU7DecimalFormat => "ascii-u7-decimal-format",
             Self::AsciiU16DecimalFormat => "ascii-u16-decimal-format",
+            Self::AsciiU16DecimalFieldFormat => "ascii-u16-decimal-field-format",
         }
     }
 
@@ -942,11 +945,14 @@ const LAYOUTS: &[Layout] = &[
         ],
     },
     Layout {
-        name: "US SHOP labels and clock format",
+        name: "US SHOP labels and numeric formats",
         load: 0x801d0c00,
         size: 87660,
-        sha256: "cd91ebe00e58e0f9057d706a4bfe40459c520c70531445738a3c1351be476351",
-        consumers: &[0x801d5894, 0x801d9a58, 0x801dca2c, 0x801dd0a8, 0x801dd934],
+        sha256: "611a7bd908a65fb94a5acabc8f202c36665618f0f16ae9b6af7982821f651b8a",
+        consumers: &[
+            0x801d5894, 0x801d9a58, 0x801dca2c, 0x801dd0a8, 0x801dd934, 0x801ddfb0, 0x801dee64,
+            0x801df00c, 0x801df6a8, 0x801e112c,
+        ],
         allocations: &[
             Allocation::bounded_format(0x801d0c68, 20, Codec::AsciiU8DecimalTripleFormat, &[]),
             Allocation::counted(0x801d0d14),
@@ -973,6 +979,28 @@ const LAYOUTS: &[Layout] = &[
             Allocation::literal(0x801e5b9c, 6, Some(0x801e5bbc), &[0x8014f800]),
             Allocation::literal(0x801e5ba4, 7, Some(0x801e5bc0), &[0x8014f800]),
             Allocation::literal(0x801e5bac, 6, Some(0x801e5bc4), &[0x8014f800]),
+            Allocation::bounded_format(0x801d0e58, 2, Codec::AsciiDigitGlyphLiteral, &[0x8014ff0c]),
+            Allocation::bounded_format(0x801d0e5c, 2, Codec::AsciiDigitGlyphLiteral, &[0x8014ff0c]),
+            Allocation::bounded_format(0x801d0e60, 3, Codec::AsciiU8DecimalFormat, &[0x80150098]),
+            Allocation::bounded_format(0x801d0e64, 4, Codec::AsciiU8DecimalFormat, &[0x80150098]),
+            Allocation::bounded_format(
+                0x801d0e68,
+                8,
+                Codec::AsciiU16DecimalFieldFormat,
+                &[0x80150098],
+            ),
+            Allocation::bounded_format(
+                0x801d0e70,
+                8,
+                Codec::AsciiU16DecimalFieldFormat,
+                &[0x80150098],
+            ),
+            Allocation::bounded_format(
+                0x801d0e7c,
+                8,
+                Codec::AsciiU8DecimalPairFormat,
+                &[0x80150098],
+            ),
         ],
     },
     Layout {

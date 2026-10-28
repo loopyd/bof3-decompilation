@@ -251,7 +251,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v13`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v14`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -409,7 +409,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v13` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v14` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -676,6 +676,31 @@ surrounding printable ASCII within capacity. This preserves the number and type
 of arguments and the original maximum formatted length. The conversion is part
 of the format text, not a dialogue command.
 Other master-menu labels and observed rendering remain unverified.
+
+SHOP also exposes two digit labels and five numeric formats. Capacities include
+NUL; formatted bounds below exclude it. The labels use
+`ascii-digit-glyph-literal`, permitting one space, digit or `:` glyph and refusing
+empty strings or other bytes. Calls `0x801DE0D4` and `0x801DE12C` pass them
+directly to digit renderer `0x8014FF0C`.
+
+| Address | Original | Capacity | Codec | Formatted bound |
+| --- | --- | --- | --- | --- |
+| `0x801D0E58` | `1` | 2 | `ascii-digit-glyph-literal` | 1 |
+| `0x801D0E5C` | `2` | 2 | `ascii-digit-glyph-literal` | 1 |
+| `0x801D0E60` | `%d` | 3 | `ascii-u8-decimal-format` | 3 |
+| `0x801D0E64` | `%3d` | 4 | `ascii-u8-decimal-format` | 3 |
+| `0x801D0E68` | `%3d/   ` | 8 | `ascii-u16-decimal-field-format` | 9 |
+| `0x801D0E70` | `   /%3d` | 8 | `ascii-u16-decimal-field-format` | 9 |
+| `0x801D0E7C` | `%3d/%3d` | 8 | `ascii-u8-decimal-pair-format` | 7 |
+
+The row counter at `0x801D0E60` receives values 1..255; `0x801D0E64` receives
+an unsigned byte. The two 16-bit fields retain one decimal argument and permit
+widths 1..4 with optional zero padding, within seven encoded bytes and nine
+formatted bytes. Their `lhu` readers do not establish a smaller numeric domain.
+The pair receives an unsigned byte and constant 128. Each format writes to the
+64-byte scratch buffer at `0x80145AD4` and draws through `0x80150098`. Existing
+16-bit decimal rows retain their five-byte output bound. Other bytes, including
+`0x801D0E78..0x801D0E7C`, remain protected. Runtime rendering remains unverified.
 
 ## Bank layout
 
