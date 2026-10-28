@@ -3983,8 +3983,23 @@ acknowledger then reads the live ChangeClearRCnt flag. Zero continues the chain;
 a nonzero value clears the corresponding I_STAT bit and returns directly from
 the exception, skipping later handlers and the exit hook. Timer indices 0, 1
 and 2 use IRQ bits 4, 5 and 6; VBlank index 3 uses bit 0. These are functional
-handler semantics. Default-chain allocation, generic IRQ/PAD handlers and cycle
+handler semantics. Default-chain allocation, PAD/syscall handlers and cycle
 acceptance remain separate.
+
+`Kernel::configure_generic_handler` binds one distinct caller-owned RAM identifier
+and an aligned eleven-word RAM flag table, indexed by IRQ bit. It requires an
+idle kernel and rejects reconfiguration or collisions with counter identifiers.
+For bits 2, 9, 1, 10, 8, 0, 4, 5, 6, 7 and 3, the verifier reads I_MASK then
+I_STAT and delivers matching events with spec `0x1000`. Their classes are
+`0xF0000003`, `0xF0000009`, `0xF0000002`, `0xF000000A`, `0xF000000B`,
+`0xF0000001`, `0xF0000005`, `0xF0000006`, `0xF0000006`, `0xF0000008` and
+`0xF0000004`. The repeated timer class preserves the original handler. Each
+source reads the registers again after earlier callbacks finish. After all
+sources, the verifier reads every live flag and writes the complement of the
+nonzero flag bits to I_STAT, including flags for unmatched sources. It returns
+zero to continue the chain. Nested callbacks retain the source cursor; an
+explicit callback return from the exception abandons it before acknowledgement.
+Startup owns the flag values and handler placement.
 
 Completion restores the live `HookEntryInt` jump buffer and resumes its saved
 RA with V0 set to one. Invalid hook PC/stack rejects. Without a hook, callers

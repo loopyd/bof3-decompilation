@@ -21,7 +21,8 @@ pub struct Kernel {
     pad_auto_ack: u32,
     counter_auto_ack: [u32; 4],
     counter_handlers: Option<[[u32; 2]; 4]>,
-    counter_delivery: bool,
+    generic_handler: Option<(u32, u32)>,
+    interrupt_delivery: Option<InterruptDelivery>,
     waiting_event: Option<PendingWait>,
     event_calls: EventCalls,
     exception_calls: Option<ExceptionCalls>,
@@ -42,7 +43,8 @@ impl Default for Kernel {
             pad_auto_ack: 1,
             counter_auto_ack: [1; 4],
             counter_handlers: None,
-            counter_delivery: false,
+            generic_handler: None,
+            interrupt_delivery: None,
             waiting_event: None,
             event_calls: EventCalls::default(),
             exception_calls: None,
@@ -59,6 +61,12 @@ pub struct Call {
     pub waiting: bool,
     /// The CPU now points at this guest handler; the BIOS call is not finished.
     pub callback: Option<u32>,
+}
+
+#[derive(Clone, Copy, Debug)]
+enum InterruptDelivery {
+    Counter,
+    Generic { next: usize },
 }
 
 impl Kernel {
@@ -79,6 +87,12 @@ impl Kernel {
                 return Err("owned counter handler conflicts with a kernel service vector".into());
             }
             let offset = ram_offset(address, 4)?;
+            if self
+                .generic_handler
+                .is_some_and(|(handler, _)| ram_offset(handler, 4).ok() == Some(offset))
+            {
+                return Err("owned counter handler conflicts with generic IRQ identifier".into());
+            }
             if offsets.contains(&offset) {
                 return Err("owned counter handlers require distinct RAM identifiers".into());
             }
@@ -86,6 +100,80 @@ impl Kernel {
         }
         self.counter_handlers = Some(handlers);
         Ok(())
+    }
+
+    /// Bind an owned generic IRQ verifier and eleven live RAM acknowledgement
+    /// flags, indexed by IRQ bit. Startup owns their allocation and ExCB placement.
+    pub fn configure_generic_handler(&mut self, handler: u32, flags: u32) -> Result<()> {
+        self.require_plain_context()?;
+        if self.generic_handler.is_some() {
+            return Err("owned generic IRQ handler already configured".into());
+        }
+        super::exception_calls::validate_handler(handler)?;
+        if Self::is_call(handler) {
+            return Err("owned generic IRQ handler conflicts with a kernel service vector".into());
+        }
+        let offset = ram_offset(handler, 4)?;
+        if self.counter_handlers.is_some_and(|handlers| {
+            handlers
+                .into_iter()
+                .flatten()
+                .any(|address| ram_offset(address, 4).ok() == Some(offset))
+        }) {
+            return Err("owned generic IRQ handler conflicts with counter identifier".into());
+        }
+        if flags & 3 != 0 {
+            return Err("owned generic IRQ flags require aligned RAM".into());
+        }
+        ram_offset(flags, 11 * 4)?;
+        self.generic_handler = Some((handler, flags));
+        Ok(())
+    }
+
+    fn generic_progress(
+        &mut self,
+        cpu: &mut Cpu,
+        bus: &mut impl Bus,
+        next: usize,
+    ) -> Result<Option<u32>> {
+        const SOURCES: [(u32, u32); 11] = [
+            (2, 3),
+            (9, 9),
+            (1, 2),
+            (10, 10),
+            (8, 11),
+            (0, 1),
+            (4, 5),
+            (5, 6),
+            (6, 6),
+            (7, 8),
+            (3, 4),
+        ];
+        for (index, &(bit, class)) in SOURCES.iter().enumerate().skip(next) {
+            let mask = bus.read(0x1f80_1074, Width::Word)?;
+            let status = bus.read(0x1f80_1070, Width::Word)?;
+            if mask & status & (1 << bit) == 0 {
+                continue;
+            }
+            cpu.set_register(4, 0xf000_0000 | class);
+            cpu.set_register(5, 0x1000);
+            self.interrupt_delivery = Some(InterruptDelivery::Generic { next: index + 1 });
+            let callback = self.event_calls.start(cpu, bus)?;
+            if callback.is_some() {
+                return Ok(callback);
+            }
+        }
+        let flags = self.generic_handler.unwrap().1;
+        let mut clear = 0;
+        for bit in 0..11 {
+            if bus.read(flags + bit * 4, Width::Word)? != 0 {
+                clear |= 1 << bit;
+            }
+        }
+        bus.write(0x1f80_1070, Width::Word, !clear)?;
+        self.interrupt_delivery = None;
+        cpu.set_register(2, 0);
+        Ok(None)
     }
 
     fn counter_action(&self, target: u32) -> Option<(usize, bool)> {
@@ -129,6 +217,22 @@ impl Kernel {
         mut callback: Option<u32>,
     ) -> Result<Call> {
         while let Some(target) = callback {
+            if self
+                .generic_handler
+                .is_some_and(|(handler, _)| handler == target)
+            {
+                if let Some(event) = self.generic_progress(cpu, bus, 0)? {
+                    return Ok(Call {
+                        vector: 0x80,
+                        service: 6,
+                        name: "GenericInterruptEvent",
+                        waiting: false,
+                        callback: Some(event),
+                    });
+                }
+                callback = self.exception_calls.as_mut().unwrap().resume(cpu, bus)?;
+                continue;
+            }
             let Some((index, acknowledge)) = self.counter_action(target) else {
                 break;
             };
@@ -152,7 +256,7 @@ impl Kernel {
             } else {
                 cpu.set_register(4, 0xf200_0000 | index as u32);
                 cpu.set_register(5, 2);
-                self.counter_delivery = true;
+                self.interrupt_delivery = Some(InterruptDelivery::Counter);
                 let event = self.event_calls.start(cpu, bus)?;
                 if event.is_some() {
                     return Ok(Call {
@@ -163,7 +267,7 @@ impl Kernel {
                         callback: event,
                     });
                 }
-                self.counter_delivery = false;
+                self.interrupt_delivery = None;
                 cpu.set_register(2, 1);
             }
             callback = self.exception_calls.as_mut().unwrap().resume(cpu, bus)?;
@@ -208,7 +312,7 @@ impl Kernel {
         self.exception_calls = None;
         self.event_calls = EventCalls::default();
         self.waiting_event = None;
-        self.counter_delivery = false;
+        self.interrupt_delivery = None;
         Ok(())
     }
     /// Save the active guest thread after CPU exception entry. Handler dispatch,
@@ -310,11 +414,28 @@ impl Kernel {
         }
         if cpu.pc() == CALLBACK_RETURN {
             let callback = self.event_calls.resume(cpu, bus)?;
-            if self.counter_delivery && self.event_calls.depth() == 0 {
-                self.counter_delivery = false;
-                cpu.set_register(2, 1);
-                let callback = self.exception_calls.as_mut().unwrap().resume(cpu, bus)?;
-                return self.exception_progress(cpu, bus, callback);
+            if self.event_calls.depth() == 0 {
+                if let Some(delivery) = self.interrupt_delivery {
+                    match delivery {
+                        InterruptDelivery::Counter => {
+                            self.interrupt_delivery = None;
+                            cpu.set_register(2, 1);
+                        }
+                        InterruptDelivery::Generic { next } => {
+                            if let Some(event) = self.generic_progress(cpu, bus, next)? {
+                                return Ok(Call {
+                                    vector: 0x80,
+                                    service: 6,
+                                    name: "GenericInterruptEvent",
+                                    waiting: false,
+                                    callback: Some(event),
+                                });
+                            }
+                        }
+                    }
+                    let callback = self.exception_calls.as_mut().unwrap().resume(cpu, bus)?;
+                    return self.exception_progress(cpu, bus, callback);
+                }
             }
             return Ok(Call {
                 vector: 0xb0,
