@@ -31,6 +31,7 @@ pub struct Kernel {
     event_completed: bool,
     exception_dispatch: Option<Dispatch>,
     exception_hook: Option<u32>,
+    exception_reset: Option<u32>,
     exception_return: Option<[u32; 2]>,
     returning: Option<Cpu>,
     exception_delivery: Option<ExceptionDelivery>,
@@ -62,6 +63,7 @@ impl Default for Kernel {
             event_completed: false,
             exception_dispatch: None,
             exception_hook: None,
+            exception_reset: None,
             exception_return: None,
             returning: None,
             exception_delivery: None,
@@ -395,6 +397,25 @@ impl Kernel {
         Ok(())
     }
 
+    /// Bind caller-loaded ResetEntryInt code after the live hook pointer is bound.
+    /// The guest code installs its explicitly allocated default jump buffer and
+    /// returns that buffer in V0; it does not clear the hook pointer.
+    pub fn configure_exception_reset(&mut self, entry: u32) -> Result<()> {
+        self.require_plain_context()?;
+        if self.exception_reset.is_some() {
+            return Err("owned exception reset entry already configured".into());
+        }
+        if self.exception_hook.is_none() || !matches!(self.entry_hook, EntryHook::Guest(_)) {
+            return Err("owned exception reset requires a bound guest hook pointer".into());
+        }
+        if self.exception_return.is_none() {
+            return Err("owned exception reset requires bound context restoration".into());
+        }
+        self.validate_owned_handler(entry)?;
+        self.exception_reset = Some(entry);
+        Ok(())
+    }
+
     /// Bind caller-loaded context restoration and its final RFE instruction.
     /// The CPU loop must report each successful step to complete_exception_step
     /// before admitting another interrupt. Entry resolves the live PCB/TCB.
@@ -503,6 +524,9 @@ impl Kernel {
             })
             || self
                 .exception_hook
+                .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
+            || self
+                .exception_reset
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
             || matches!(self.entry_hook, EntryHook::Guest(address) if ram_offset(address, 4).ok() == Some(offset))
             || self.exception_return.is_some_and(|addresses| {
@@ -1007,6 +1031,19 @@ impl Kernel {
         let mut destination = cpu.register(31);
         let mut waiting = false;
         let name = match (vector, service) {
+            (0xb0, 0x18) => {
+                let entry = self
+                    .exception_reset
+                    .ok_or("owned exception reset entry is not configured")?;
+                cpu.resume_at(entry);
+                return Ok(Call {
+                    vector,
+                    service,
+                    name: "ResetEntryInt",
+                    waiting: false,
+                    callback: None,
+                });
+            }
             (0xb0, 0x17) => {
                 let callback = self.return_exception(cpu, bus)?;
                 return Ok(Call {

@@ -3873,6 +3873,14 @@ further execution on that instance. Unsupported WaitEvent is charged once before
 failure and retains its continuation; this execution owner supplies no external
 wait-progress source. `Execution::kernel()` exposes read-only ownership state.
 
+`Kernel::configure_exception_reset` binds the linked B0/18 ResetEntryInt entry
+after the guest hook pointer and context restoration are bound. That entry
+installs and returns an owned default jump buffer. It does not clear the hook. The linked buffer selects owned
+context restoration with the declared exception stack and zero saved registers;
+it imports no BIOS RAM. The initial hook stays zero until registration or reset.
+Unbound reset calls fail explicitly. The callback manager's complete stop/restart
+lifecycle and diagnostic-output service remain separate startup obligations.
+
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
 
