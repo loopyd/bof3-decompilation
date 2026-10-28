@@ -6,10 +6,13 @@ import hashlib
 import os
 import re
 import shutil
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any, Mapping
 
 from ..build.compilation import compile_object
+from ..common.files import read_file
+from ..domain.psx import payload_for
 from ..io import write_json, RepoLayout
 from ._asm_disasm import (
     disassemble_linked,
@@ -33,7 +36,13 @@ from ..domain.manifests import TargetManifest
 from ..domain.tags import require_single_function
 from ..domain.policy import validate_matching_source
 
-from ._asm_diff_payload import AsmDiffRequest, build_result_payload, render_diff
+from ._asm_diff_payload import (
+    AsmDiffRequest,
+    EmittedRange,
+    build_result_payload,
+    render_diff,
+)
+from .extraction import read_function_bytes, read_linked_image
 
 
 def run_build_object(
@@ -142,6 +151,8 @@ def _asm_diff_compare(
     resolved: dict[str, Any],
     *,
     manifests: Mapping[str, TargetManifest] | None = None,
+    emitted: list[EmittedRange] | None = None,
+    on_linked: Callable[[Path], None] | None = None,
 ) -> dict[str, Any]:
     """Run the link, byte-match, placement, size, and diagnostic steps.
 
@@ -223,6 +234,7 @@ def _asm_diff_compare(
         canonical_bindings=canonical_bindings,
         layout=repo,
         section_addresses=section_addresses,
+        on_linked=on_linked,
     )
     linked_path = object_path.with_suffix(".linked.o")
     for placement in placements:
@@ -240,6 +252,74 @@ def _asm_diff_compare(
                 f"reviewed {placement.section} placement for {function_name} does not "
                 "match original bytes"
             )
+    if emitted is not None and byte_match:
+        if manifest is None:
+            raise ValueError("emitted ranges require an explicit target owner")
+        content = read_file(
+            repo.root,
+            linked_path.relative_to(repo.root).as_posix(),
+            max_bytes=64 * 1024 * 1024,
+        )
+        image = read_linked_image(content, limit=64 * 1024 * 1024)
+        function = read_function_bytes(
+            content, function_name=function_name, address=address
+        )
+        if function.content != compiled_bytes:
+            raise ValueError("linked function changed during emitted-byte capture")
+        allowed = {function.section, *section_addresses, ".reginfo", ".MIPS.abiflags"}
+        if any(
+            section.flags & 2 and section.size and section.name not in allowed
+            for section in image.sections
+        ):
+            raise ValueError("linked runtime data has no reviewed placement")
+        selector = f"{manifest.id.value}@0x{address:08X}"
+        source_name = source_path.relative_to(repo.root).as_posix()
+        binary = read_file(repo.root, manifest.binary, max_bytes=64 * 1024 * 1024)
+        original_payload = payload_for(
+            binary, load_address, binary_name=manifest.binary
+        )
+        ranges = [
+            EmittedRange(
+                source=source_name,
+                address=address,
+                original_file_start=original_payload.binary_offset
+                + address
+                - load_address,
+                content=compiled_bytes,
+                owners=(selector,),
+                symbol=function_name,
+            )
+        ]
+        for placement in placements:
+            sections = [row for row in image.sections if row.name == placement.section]
+            if len(sections) != 1:
+                raise ValueError("linked image omits or duplicates reviewed data")
+            section = sections[0]
+            if (
+                section.kind != 1
+                or not section.flags & 2
+                or section.flags & (4 | 0xC00)
+                or section.address != placement.address
+                or section.size != placement.size
+                or section.content is None
+                or any(
+                    row["target_section"] == section.index for row in image.relocations
+                )
+            ):
+                raise ValueError("linked initialized data has unsupported placement")
+            ranges.append(
+                EmittedRange(
+                    source=source_name,
+                    address=section.address,
+                    original_file_start=original_payload.binary_offset
+                    + section.address
+                    - load_address,
+                    content=section.content,
+                    owners=(selector,),
+                    section=section.name,
+                )
+            )
+        emitted.extend(ranges)
     current_size = len(compiled_bytes)
     image_evidence = {
         "original_sha256": hashlib.sha256(original_bytes).hexdigest(),

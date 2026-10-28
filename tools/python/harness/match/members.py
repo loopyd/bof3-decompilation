@@ -6,6 +6,7 @@ from pathlib import Path
 
 from harness.common.inputs import InputBatch
 from harness.common.paths import leaf_stat
+from harness.domain.claims import collect_manifest_source_addresses
 from harness.domain.layout import parse_splat_text
 from harness.domain.manifests import _parse_manifest
 from harness.domain.psx import is_psx_exe, payload_for, validate_psx_header
@@ -71,7 +72,7 @@ def _capture_data(manifest, payload, binary: bytes, functions: list[dict]) -> di
 def capture_members(root: Path, source: str) -> dict:
     """Read complete current members from explicit ownership, metadata and Splat."""
     owner = owning_manifest(root, root / source)
-    if owner is None or source not in owner.sources:
+    if owner is None or source not in owner.sources + owner.support_sources:
         raise ValueError("grouped source requires one explicit lift owner")
     inputs = {}
     with InputBatch(root) as batch:
@@ -122,6 +123,7 @@ def capture_members(root: Path, source: str) -> dict:
         )
         local_by_name = {symbol.canonical_name: symbol.address for symbol in local}
         functions = []
+        singleton_claims = set()
         selectors, names = set(), set()
         for record in records:
             address = record.address
@@ -152,10 +154,31 @@ def capture_members(root: Path, source: str) -> dict:
                     "comparison member requires one exact reviewed boundary"
                 )
             boundary = boundaries[0]
+            singleton_source = (
+                boundary.source is None
+                and len(records) == 1
+                and record.kind == "function"
+                and boundary.name == symbol
+                and [
+                    path
+                    for path, claimed_address in collect_manifest_source_addresses(
+                        root,
+                        manifest,
+                        read_source=lambda path: read(
+                            path.relative_to(root).as_posix()
+                        ).decode("utf-8"),
+                    )
+                    if claimed_address == address
+                ]
+                == [root / source]
+            )
+            if singleton_source:
+                singleton_claims.add(address)
             size = boundary.virtual_size
             if (
                 boundary.kind != "c"
                 or boundary.source != source
+                and not singleton_source
                 or size is None
                 or size < 8
                 or size % 4
@@ -184,12 +207,12 @@ def capture_members(root: Path, source: str) -> dict:
                     "original": original,
                 }
             )
-        claimed = {
+        claimed = singleton_claims | {
             boundary.virtual_start
             for boundary in layout.boundaries
             if boundary.kind == "c" and boundary.source == source
         }
-        if len(functions) < 2 or claimed != {member["address"] for member in functions}:
+        if not functions or claimed != {member["address"] for member in functions}:
             raise ValueError("comparison must cover every reviewed source group member")
         data_sections = _capture_data(manifest, payload, binary, functions)
     return {

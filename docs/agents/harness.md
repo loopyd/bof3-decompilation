@@ -17,7 +17,7 @@ All paths below are relative to `tools/python/harness/`.
 | `combiner/` | current source members, relationships, effective profiles and checks | `bin/harness combiner list/check` |
 | `decomp/` | metadata reports, lift inventories, pinned missions, diagnosis and audit | `bin/harness source metadata list/check`, `bin/harness decomp` |
 | `match/` | individual/grouped native comparisons, result validation and disposable status cache | `bin/harness lift asm-diff`, `byte-match`, `status` |
-| `build/` | compiler settings, invocation planning, native production and receipts | `bin/harness build`, compiler adapters |
+| `build/` | compiler settings, native production, receipts and hybrid payload delivery | `bin/harness build`, `build payload`, compiler adapters |
 | `analysis/` | shared reverse index and cross-domain factual queries | `bin/harness analysis index/query` |
 | `domain/` | manifests, target identity, binary/layout, source claims and declarations | imported by their consumers |
 | `runtime/` | emulator staging, launch, completion and receipts | `bin/harness runtime` |
@@ -119,13 +119,16 @@ inputs from output collisions. `build.execution` records actual production edges
 `build.receipts` binds native products to that invocation. A producer receipt
 proves provenance, never equality or permission to reuse a result.
 
-`match.members` resolves current grouped ownership, attached records, complete
+`match.members` resolves current source ownership, attached records, complete
 reviewed Splat ranges, original bytes, canonical map bindings and data placements.
 `match.grouped` compiles the whole translation unit and compares every member at
 its original placement. It rejects a differing neighbor when reporting an exact
 member and rejects failed required initialized data even for partial members.
 Unsupported BSS, computed jumps or placements remain unavailable. No external
 preservation record or routing environment selects a different build path.
+`match.images` captures immutable emitted code and reviewed initialized data
+within live native guards. `build.payload` places those ranges in the shipped
+file and delegates resident archive replacement to the Rust EMI owner.
 
 `build.dependencies` captures literal transitive includes, forced inputs and
 negative lookups. `build.programs`, `runtime` and `observations` describe bounded
@@ -157,6 +160,36 @@ Ordinary `lift status` uses a disposable fingerprinted cache and batch-builds
 eligible misses per target. It reloads ownership after builds and retains scoped
 fallbacks. Grouped comparisons bypass ordinary cache and batch-object reuse.
 A status summary is not acceptance evidence; use current live gates for acceptance.
+
+## Hybrid game-file output
+
+Build a complete shipped file with freshly compiled exact ranges and original
+bytes for the remaining ranges:
+
+```sh
+bin/harness build payload exe/logo --output-dir out/payloads/logo --json
+bin/harness build payload emi/etc/game/01 --output-dir out/payloads/game01 --json
+```
+
+Each output directory must be new and under `out/`. The command uses existing
+extracted originals, normalized target binaries and configured native tools.
+Ordinary `bin/harness build TARGET` continues to produce objects.
+
+`payload.bin` contains the whole original-based executable or resident entry.
+Executable output retains its PS-X header. `report.json` records fresh source
+comparisons, provenance, disjoint compiled and retained intervals, byte counts
+and complete file equality. At least one nonempty compiled range must pass the
+live byte comparison. Stored progress does not qualify a range; differing code
+retains original bytes. A group contributes only when all members and placed
+initialized data match. Invalid metadata, overlapping ownership and unsupported
+required placement fail the operation.
+
+For an EMI target, `archive.EMI` replaces the correct original entry through
+the Rust EMI owner. Verification compares the entire archive and re-extracts
+the selected slot into `entry.bin`. Original inputs remain unchanged. Failed
+operations may retain diagnostics but do not publish `report.json`.
+These are hybrid outputs; their compiled coverage does not imply a source-only
+rebuild, disc-image mastering or runtime acceptance.
 
 ## Validation gates
 

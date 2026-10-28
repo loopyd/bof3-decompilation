@@ -32,6 +32,8 @@ from harness.domain.policy import validate_matching_text
 from harness.io import RepoLayout, repo_layout
 from harness.match._asm_diff_payload import (
     AsmDiffRequest,
+    EmittedRange,
+    NativeComparison,
     build_result_payload,
     render_diff,
 )
@@ -45,6 +47,7 @@ SCHEMA = "bof3.grouped-comparison/v8"
 _LIMIT = 64 * 1024 * 1024
 _OWNERS = (
     "tools/python/harness/match/grouped.py",
+    "tools/python/harness/match/images.py",
     "tools/python/harness/build/dependencies.py",
     "tools/python/harness/match/members.py",
     "tools/python/harness/combiner/cli.py",
@@ -106,7 +109,7 @@ def resolve_comparison_outputs(root: Path, name: str) -> tuple[Path, Path, set[P
 
 def _compare_function(
     layout, execution, linked: Path, member: dict, *, data_sections=None
-) -> dict:
+) -> tuple[dict, bytes | None]:
     image = read_function_image(
         linked, function_name=member["symbol"], address=member["address"]
     )
@@ -139,7 +142,7 @@ def _compare_function(
             ),
             min(len(original), len(current)),
         )
-    return {
+    comparison = {
         "selector": member["selector"],
         "symbol": member["symbol"],
         "address": member["address"],
@@ -153,6 +156,7 @@ def _compare_function(
         "flow_verified": flow_verified,
         "first_mismatch_offset": mismatch,
     }
+    return comparison, current if exact and flow_verified else None
 
 
 def compare_members(
@@ -163,6 +167,17 @@ def compare_members(
     output_limit: int = 2 * 1024 * 1024,
 ) -> dict:
     """Require a writer lease and fresh configured production; never accept source edits."""
+    return compare_member_images(root, source, output, output_limit=output_limit).report
+
+
+def compare_member_images(
+    root: Path,
+    source: str,
+    output: str,
+    *,
+    output_limit: int = 2 * 1024 * 1024,
+) -> NativeComparison:
+    """Capture exact emitted bytes before complete-group native guards close."""
     root = root.resolve(strict=True)
     require_writer(root)
     if type(output_limit) is not int or not 1 <= output_limit <= _LIMIT:
@@ -172,9 +187,9 @@ def compare_members(
 
 def _compare_data(
     linked: Path, sections: dict, execution: NativeExecution
-) -> list[dict]:
+) -> tuple[list[dict], tuple[tuple[str, bytes], ...]]:
     if not sections:
-        return []
+        return [], ()
     image = read_linked_image(
         read_file(
             execution.root,
@@ -184,6 +199,7 @@ def _compare_data(
         limit=_LIMIT,
     )
     comparisons = []
+    emitted = []
     for name, expected in sorted(sections.items()):
         candidates = [section for section in image.sections if section.name == name]
         if len(candidates) != 1:
@@ -231,7 +247,9 @@ def _compare_data(
                 "first_mismatch_offset": mismatch,
             }
         )
-    return comparisons
+        if original == current:
+            emitted.append((name, current))
+    return comparisons, tuple(emitted)
 
 
 def compare_selected_member(request: AsmDiffRequest, *, layout: RepoLayout) -> dict:
@@ -259,7 +277,7 @@ def compare_selected_member(request: AsmDiffRequest, *, layout: RepoLayout) -> d
             (output_dir / "group.o").relative_to(root).as_posix(),
             2 * 1024 * 1024,
             request=request,
-        )
+        ).report
 
 
 def _select_request(root: Path, request: AsmDiffRequest, members: dict) -> dict:
@@ -570,20 +588,45 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
         ):
             raise ValueError("linked outputs differ from freshly placed images")
         comparisons = []
+        emitted = []
         for member in members["functions"]:
             guard()
             producer_watch.validate()
             linked_watch.validate()
-            comparisons.append(
-                _compare_function(
-                    layout,
-                    execution,
-                    linked,
-                    member,
-                    data_sections=data_placements,
+            comparison, content = _compare_function(
+                layout,
+                execution,
+                linked,
+                member,
+                data_sections=data_placements,
+            )
+            comparisons.append(comparison)
+            if content is not None:
+                emitted.append(
+                    EmittedRange(
+                        source=source,
+                        address=member["address"],
+                        original_file_start=member["file_start"],
+                        content=content,
+                        owners=(member["selector"],),
+                        symbol=member["symbol"],
+                    )
+                )
+        data_comparisons, data_images = _compare_data(
+            linked, members["data_sections"], execution
+        )
+        for name, content in data_images:
+            section = members["data_sections"][name]
+            emitted.append(
+                EmittedRange(
+                    source=source,
+                    address=section["address"],
+                    original_file_start=section["file_start"],
+                    content=content,
+                    owners=tuple(section["owners"]),
+                    section=name,
                 )
             )
-        data_comparisons = _compare_data(linked, members["data_sections"], execution)
         guard()
         producer_watch.validate()
         linked_watch.validate()
@@ -629,13 +672,14 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
             "write_authorized": False,
         }
         try:
-            return (
+            report = (
                 result
                 if request is None
                 else _render_selected(
                     root, request, selected, result, output, linked, execution
                 )
             )
+            return NativeComparison(report, tuple(emitted) if exact else ())
         finally:
             guard()
             producer_watch.validate()

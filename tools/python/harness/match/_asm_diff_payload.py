@@ -13,6 +13,27 @@ from ._asm_resolve import format_hex
 
 
 @dataclass(frozen=True)
+class EmittedRange:
+    """Immutable compiled bytes captured inside their comparison's live guards."""
+
+    source: str
+    address: int
+    original_file_start: int
+    content: bytes
+    owners: tuple[str, ...]
+    symbol: str | None = None
+    section: str | None = None
+
+
+@dataclass(frozen=True)
+class NativeComparison:
+    """Keep the JSON report separate from exact emitted byte ranges."""
+
+    report: dict[str, Any]
+    ranges: tuple[EmittedRange, ...]
+
+
+@dataclass(frozen=True)
 class AsmDiffRequest:
     source_path: Path
     address: int | None = None

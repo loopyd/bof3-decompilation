@@ -81,6 +81,24 @@ optimization setting only when its absolute interpreter matches the captured
 supervisor identity and hash. Unqualified interpreters, cache prefixes and
 unsupported optimization settings disable ordinary cache reuse.
 
+## Payload delivery
+
+Use `bin/harness build payload TARGET --output-dir out/NEW_DIRECTORY --json`
+for an original-based game file. The output directory must be new. This builds
+the target's claims and captures fresh exact code and reviewed initialized data
+through the native comparison owner. Stored progress alone never qualifies bytes.
+Require a nonempty compiled contribution and inspect `report.json` for complete
+compiled/retained intervals and whole-file equality. Differing sources retain
+original bytes; a group contributes only when every member and its placed data
+match. Malformed metadata or unsupported required placement fails delivery.
+
+`payload.bin` preserves the complete shipped executable header or resident entry.
+For EMI targets, `archive.EMI` preserves the original archive through the Rust
+entry-replacement owner; `entry.bin` verifies the selected slot by extraction.
+Require both whole-archive and selected-entry equality. Inputs remain unchanged.
+Failure may retain diagnostics but never publishes a success `report.json`.
+Hybrid coverage does not establish source-only reconstruction or runtime acceptance.
+
 ## Host capability
 
 Canonical driver, `cpp`, `cc1` are static i386 ELF. Known Codex sandbox failure is

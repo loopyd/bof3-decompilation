@@ -194,6 +194,11 @@ DOMAINS: Mapping[str, Domain] = {
     "build": Domain(
         "compile all lifts, one target, or one function",
         actions={
+            "payload": Action(
+                "build a verified hybrid executable or resident EMI payload",
+                "harness.commands.build_payload",
+                example="bin/harness build payload exe/logo --output-dir out/payloads/logo --json",
+            ),
             "variants": Action(
                 "resolve and stage per-object compiler variants",
                 "harness.commands.compiler_variants",

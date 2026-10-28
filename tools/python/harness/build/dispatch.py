@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from harness.build.arguments import inspect_arguments, observe_input, read_source
+from harness.build.compilation import configured_command
 from harness.build.compiler import (
     build_compiler_arguments,
     has_compiler_annotations,
@@ -66,8 +67,16 @@ def close_dispatch(dispatch: Dispatch) -> None:
         dispatch.programs.close()
 
 
-def _select_annotated_compiler(root, arguments, sources, output, grouped):
+def _select_profile_compiler(
+    root, arguments, sources, output, grouped, *, configured=False
+):
+    if configured and (
+        len(sources) != 1 or sources[0].suffix != ".c" or output is None
+    ):
+        raise ValueError("configured dispatch requires one C source and object output")
     trial = os.environ.get("BOF3_COMPILER_TRIAL")
+    if configured and trial:
+        raise ValueError("configured dispatch cannot use compiler trials")
     if trial:
         directory = Path(trial)
         if (
@@ -89,7 +98,7 @@ def _select_annotated_compiler(root, arguments, sources, output, grouped):
         source
         for source in sources
         if source.suffix == ".c"
-        and (grouped or has_compiler_annotations(read_source(source)))
+        and (configured or grouped or has_compiler_annotations(read_source(source)))
     ]
     if not annotated:
         return None, set()
@@ -105,6 +114,7 @@ def _select_annotated_compiler(root, arguments, sources, output, grouped):
             root / name
             for name in (
                 "tools/python/harness/build/compiler.py",
+                "tools/python/harness/build/compilation.py",
                 "tools/python/harness/build/dispatch.py",
                 "tools/python/harness/domain/functions.py",
                 "tools/python/harness/domain/tags.py",
@@ -128,8 +138,8 @@ def _select_annotated_compiler(root, arguments, sources, output, grouped):
     compiler = select_configured_compiler(root, settings.compiler_id)
     if trial:
         return select_compiler(root) if os.environ.get("PSX_GCC") else compiler, paths
-    configured = os.environ.get("PSX_GCC")
-    if configured and Path(configured) != compiler:
+    explicit = os.environ.get("PSX_GCC")
+    if not configured and explicit and Path(explicit) != compiler:
         raise ValueError("explicit compiler differs from attached function metadata")
     expected = [
         *build_compiler_arguments(root, settings.flags)[1:],
@@ -164,11 +174,11 @@ def _observe_working_directory() -> dict:
     return {"path": str(cwd), "identity": observe_input(cwd)}
 
 
-def plan_compiler(root, arguments, operands, grouped, cwd):
+def plan_compiler(root, arguments, operands, grouped, cwd, *, configured=False):
     """Resolve the native recipe without creating outputs or staging artifacts."""
     sources, output = list(operands.sources), operands.output
-    annotated_compiler, metadata_paths = _select_annotated_compiler(
-        root, arguments, sources, output, grouped
+    annotated_compiler, metadata_paths = _select_profile_compiler(
+        root, arguments, sources, output, grouped, configured=configured
     )
     compiler = (
         annotated_compiler if annotated_compiler is not None else select_compiler(root)
@@ -187,7 +197,29 @@ def plan_compiler(root, arguments, operands, grouped, cwd):
     return compiler, executable, metadata_paths, invocation
 
 
-def prepare_dispatch(root: Path, arguments: list[str]) -> Dispatch:
+def prepare_configured_dispatch(root: Path, source: Path, output: Path) -> Dispatch:
+    """Bind canonical source settings directly without changing the environment."""
+    root = root.resolve(strict=True)
+    if (
+        source.resolve() != source
+        or source.suffix != ".c"
+        or not source.is_relative_to(root / "src")
+        or output.resolve() != output
+        or output.suffix != ".o"
+        or not any(output.is_relative_to(root / name) for name in ("build", "out"))
+    ):
+        raise ValueError(
+            "configured dispatch requires canonical source and object paths"
+        )
+    arguments, _environment = configured_command(
+        root, source, output, allow_grouped=True
+    )
+    return prepare_dispatch(root, arguments[1:], configured=True)
+
+
+def prepare_dispatch(
+    root: Path, arguments: list[str], *, configured: bool = False
+) -> Dispatch:
     """Bind an invocation to its current source, configuration and program inputs."""
     root = root.resolve()
     working_directory = _observe_working_directory()
@@ -196,15 +228,24 @@ def prepare_dispatch(root: Path, arguments: list[str]) -> Dispatch:
     grouped = [
         path for path in sources if count_function_metadata(read_source(path)) >= 2
     ]
-    return _prepare_invocation(root, arguments, operands, grouped, working_directory)
+    if type(configured) is not bool:
+        raise ValueError("compiler selection mode must be a boolean")
+    return _prepare_invocation(
+        root, arguments, operands, grouped, working_directory, configured
+    )
 
 
 def _prepare_invocation(
-    root, arguments, operands, grouped, working_directory
+    root, arguments, operands, grouped, working_directory, configured
 ) -> Dispatch:
     sources, output = list(operands.sources), operands.output
     compiler, executable, metadata_paths, invocation = plan_compiler(
-        root, arguments, operands, grouped, Path(working_directory["path"])
+        root,
+        arguments,
+        operands,
+        grouped,
+        Path(working_directory["path"]),
+        configured=configured,
     )
     source = sources[0] if len(sources) == 1 else None
     preprocessing = invocation.mode == "direct" and "-E" in arguments
@@ -262,6 +303,7 @@ def _prepare_invocation(
             environment,
             invocation,
             programs,
+            configured,
         )
     except BaseException:
         try:
@@ -289,6 +331,7 @@ def _capture_dispatch(
     environment,
     invocation,
     programs,
+    configured,
 ) -> Dispatch:
     observations = {
         str(parent): observe_input(parent) for parent in sorted(directories)
@@ -309,6 +352,7 @@ def _capture_dispatch(
         "source": str(source) if source else None,
         "output": str(output) if output else None,
         "grouped": bool(grouped),
+        "compiler_selection": "configured" if configured else "invocation",
         "sources": [str(path) for path in sources],
         "forced_inputs": forced,
         "observations": observations,
@@ -355,7 +399,9 @@ def validate_dispatch(dispatch: Dispatch) -> None:
         list(dispatch.arguments), cwd=Path(state["working_directory"]["path"])
     )
     sources, output = list(operands.sources), operands.output
-    annotated_compiler, _ = _select_annotated_compiler(
+    if state["compiler_selection"] not in ("configured", "invocation"):
+        raise ValueError("compiler selection mode changed")
+    annotated_compiler, _ = _select_profile_compiler(
         dispatch.root,
         list(dispatch.arguments),
         sources,
@@ -365,6 +411,7 @@ def validate_dispatch(dispatch: Dispatch) -> None:
             for source in sources
             if count_function_metadata(read_source(source)) >= 2
         ],
+        configured=state["compiler_selection"] == "configured",
     )
     selected = sources[0] if len(sources) == 1 else None
     if (

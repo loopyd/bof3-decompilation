@@ -130,6 +130,8 @@ explicit requests or parent-owned tooling/config work. `just check` owns scoped 
 `just check-all` owns full pytest. Report checks/skips/risks/next and reusable
 residual/shape/before-after evidence in references, not source annotations.
 
+For game-file outputs, read [payload delivery](references/native-execution.md#payload-delivery).
+
 Before representation/flow diagnosis read [matching knowledge](references/matching-knowledge.md).
 Before regional format research read [regional leads](references/regional-leads.md).
 Return tool count, wall time, method and measured result with evidence limits.

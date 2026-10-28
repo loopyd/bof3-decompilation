@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import subprocess
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 
 from ..domain.manifests import TargetManifest
@@ -226,6 +226,7 @@ def function_bytes_match(
     canonical_bindings: Mapping[str, int] | None = None,
     layout: RepoLayout | None = None,
     section_addresses: dict[str, int] | None = None,
+    on_linked: Callable[[Path], None] | None = None,
 ) -> tuple[bool, bytes]:
     if type(size) is not int or size <= 0 or size % 4 or len(original_bytes) != size:
         raise ValueError(
@@ -252,6 +253,8 @@ def function_bytes_match(
         layout=repo,
         section_addresses=section_addresses,
     )
+    if on_linked is not None:
+        on_linked(linked)
     compiled = read_function_image(
         linked, function_name=function_name, address=address
     ).content

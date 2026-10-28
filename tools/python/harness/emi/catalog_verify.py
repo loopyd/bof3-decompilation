@@ -20,7 +20,7 @@ def verify_declared_companions(
     """Verify one caller's declared companion facts without a global EMI scan."""
 
     if caller_manifest.kind == "emi":
-        caller = _direct_entry(root, caller_manifest.disc_id)
+        caller = resolve_shipped_entry(root, caller_manifest.disc_id)
         if caller_manifest.load_address != int(caller["load_address"]):
             raise ValueError(
                 f"caller catalog load address mismatch: {caller_manifest.id.value}"
@@ -43,7 +43,7 @@ def verify_declared_companions(
         }
     relations: list[dict[str, Any]] = []
     for companion in caller_manifest.companions:
-        target = _direct_entry(root, companion.disc_id)
+        target = resolve_shipped_entry(root, companion.disc_id)
         if (
             target["sha256"] != companion.payload_sha256
             or int(target["load_address"]) != companion.load_address
@@ -165,7 +165,7 @@ def _jal_target(word: int, caller_address: int) -> int | None:
     return ((caller_address + 4) & 0xF0000000) | ((word & 0x03FFFFFF) << 2)
 
 
-def _direct_entry(root: Path, identifier: str) -> dict[str, Any]:
+def resolve_shipped_entry(root: Path, identifier: str) -> dict[str, Any]:
     """Read one declared extracted EMI entry without inventorying every archive."""
 
     match = TARGET_RE.fullmatch(identifier.replace("\\", "/"))
@@ -173,7 +173,10 @@ def _direct_entry(root: Path, identifier: str) -> dict[str, Any]:
         raise ValueError(f"invalid EMI entry id: {identifier}")
     archive_id = match.group("archive").removesuffix(".EMI")
     archive_id = archive_id[4:] if archive_id.upper().startswith("BIN/") else archive_id
+    _archive_parts(archive_id)
     slot = int(match.group("slot"))
+    if not 0 <= slot <= 255:
+        raise ValueError(f"invalid EMI slot: {slot}")
     archive_dir = root / "out" / "extracted" / "BIN" / archive_id
     manifest_path = archive_dir / "emi.json"
     if not manifest_path.is_file():
@@ -184,14 +187,19 @@ def _direct_entry(root: Path, identifier: str) -> dict[str, Any]:
     matches = [
         entry
         for entry in entries
-        if isinstance(entry, dict) and int(entry.get("index") or 0) == slot
+        if isinstance(entry, dict)
+        and type(entry.get("index")) is int
+        and entry["index"] == slot
     ]
     if len(matches) != 1:
         raise ValueError(
             f"expected one extracted EMI entry for {identifier}; found {len(matches)}"
         )
     raw = matches[0]
-    payload = archive_dir / str(raw.get("name") or f"{slot}.bin")
+    name = raw.get("name")
+    if not isinstance(name, str) or not name or Path(name).name != name or "\\" in name:
+        raise ValueError(f"invalid extracted EMI payload name: {name!r}")
+    payload = archive_dir / name
     if not payload.is_file():
         raise FileNotFoundError(f"missing extracted EMI payload: {payload}")
     entry_type = int(raw.get("type") or 0)
@@ -199,6 +207,10 @@ def _direct_entry(root: Path, identifier: str) -> dict[str, Any]:
     size = payload.stat().st_size
     return {
         "id": f"{archive_id}#{slot}",
+        "archive_path": str(archive_dir.parent / f"{archive_dir.name}.EMI"),
+        "manifest_path": str(manifest_path),
+        "index": slot,
+        "entry": raw,
         "payload_path": str(payload),
         "sha256": file_sha256(payload),
         "load_address": load_address,
