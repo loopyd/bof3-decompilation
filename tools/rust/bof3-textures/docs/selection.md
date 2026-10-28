@@ -1,12 +1,15 @@
 # Sprite selection
 
-## Three-root banks
+## Sprite roots
 
 The `sprite_bank::select` library function follows the original US helper at
 `SLUS_004.22@0x8014dc08`. Supply decoded bank bytes, a root ordinal, the original
 byte selector and the image-skip condition from the same consumer observation.
-The function decodes the supported three-root bank layout before resolving the
-selected slot.
+The function decodes a supported three-root bank or standalone root before
+resolving the selected slot. A standalone payload has root ordinal zero and
+keeps every offset in its original payload coordinates. It does not include a
+synthetic root table. Its RAM destination does not prove which active entity
+selects it.
 
 The main selector dispatches to this helper when entity byte `0x24` has bit
 zero set. Its other branch uses a resident table and is outside this function.

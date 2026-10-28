@@ -1,4 +1,4 @@
-//! Three-root bank variant selected by GAME.EMI#0@0x801C1254.
+//! Three-root banks and standalone roots with the same relative sections.
 //! Selection tails remain opaque until their valid runtime indices are known.
 use crate::cell;
 use crate::{Error, Result, animation, bank_image};
@@ -144,20 +144,27 @@ fn offsets(source: &[u8], table: usize, end: usize, word_bytes: usize) -> Result
         })
         .collect()
 }
-/// Decode only the original three-root, ordered-section variant, within 1 MiB.
+/// Decode original three-root banks or standalone ordered-section roots, within 1 MiB.
 /// Image ends are bounds, not reusable allocation. Edits use consumed bytes only.
 /// Palette records contain 32 exact PSX words. No draw-CLUT binding is implied.
 /// Cells use the existing original part layout. Selection bytes remain opaque.
 pub fn decode(source: &[u8]) -> Result<Document> {
-    if source.len() > 1024 * 1024 || u32at(source, 0)? != 12 {
-        return Err(invalid("unsupported root table"));
+    if source.len() > 1024 * 1024 {
+        return Err(invalid("bank exceeds 1 MiB"));
     }
-    let roots = (0..3)
-        .map(|i| u32at(source, i * 4))
-        .collect::<Result<Vec<_>>>()?;
+    let (roots, table_end) = match u32at(source, 0)? {
+        12 => (
+            (0..3)
+                .map(|i| u32at(source, i * 4))
+                .collect::<Result<Vec<_>>>()?,
+            12,
+        ),
+        16 => (vec![0], 0),
+        _ => return Err(invalid("unsupported root layout")),
+    };
     if roots
         .iter()
-        .any(|offset| *offset < 12 || *offset >= source.len())
+        .any(|offset| *offset < table_end || *offset >= source.len())
     {
         return Err(invalid("root exceeds its bank"));
     }

@@ -179,8 +179,12 @@ fn annotate_sprite(resource: &mut Resource, document: &sprite_bank::Document, st
     resource.decode = "images-palettes-programs-and-cells-verified".into();
     resource.pack = "fixed-record-edits-verified".into();
     resource.sprite_bank = Some(document.info());
+    if document.roots.len() == 3 {
+        resource
+            .evidence
+            .push("BIN/ETC/GAME.EMI#0@0x801C1254:three-root-selection".into());
+    }
     resource.evidence.extend([
-        "BIN/ETC/GAME.EMI#0@0x801C1254:three-root-selection".into(),
         "SLUS_004.22@0x8014DC08:bank-selection-consumer".into(),
         "SLUS_004.22@0x8014E6D0:image-records".into(),
         "SLUS_004.22@0x80166C48:32-word-palette-copy".into(),
@@ -416,7 +420,16 @@ pub fn build_from(
                         "SLUS_004.22@0x80164064:outer-bank-tokens".into(),
                         "SLUS_004.22@0x801642F4:forward-overlapping-copy".into(),
                     ]);
-                    match sprite_bank::decode(&decoded.bytes) {
+                    let document = sprite_bank::decode(&decoded.bytes).and_then(|document| {
+                        if document.roots.len() == 3 {
+                            Ok(document)
+                        } else {
+                            Err(Error::Codec(
+                                "standalone compressed roots are not qualified".into(),
+                            ))
+                        }
+                    });
+                    match document {
                         Ok(document) => {
                             annotate_sprite(&mut resource, &document, "us-three-root-sprite-bank");
                             records.extend(record::sprite_records(
@@ -460,6 +473,42 @@ pub fn build_from(
                         "SLUS_004.22@0x801625E4:direct-sector-copy".into(),
                         "SLUS_004.22@0x80162C14:bounded-copy-destination".into(),
                     ]);
+                }
+                if file.path.starts_with("BIN/BPLCHAR/")
+                    && slot == 3
+                    && entry.file_type == 0
+                    && matches!(
+                        entry.ram_ptr,
+                        0x8003_b80c | 0x8007_a80c | 0x8005_f80c | 0x8007_180c | 0x8005_680c
+                    )
+                    && payload.starts_with(&16u32.to_le_bytes())
+                {
+                    match sprite_bank::decode(payload) {
+                        Ok(document) => {
+                            annotate_sprite(
+                                &mut resource,
+                                &document,
+                                "us-raw-standalone-sprite-root",
+                            );
+                            records.extend(record::sprite_records(
+                                &resource,
+                                payload,
+                                CoordinateSpace::EntryPayload,
+                                &document,
+                            )?);
+                            resource.dependencies.push(Dependency {
+                                kind: "root-installation".into(),
+                                target: None,
+                                status: "unresolved".into(),
+                                reason: "the original entry declares this RAM destination; the active root table, entity and complete loading path are not bound to this source".into(),
+                            });
+                            resource.evidence.extend([
+                                "original-us-emi:type0-entry3-destination-and-root-header".into(),
+                                "SLUS_004.22@0x8014DC14:entity-selected-root".into(),
+                            ]);
+                        }
+                        Err(error) => resource.findings.push(error.to_string()),
+                    }
                 }
                 if entry.file_type == 3 {
                     resource.kind = "texture-upload".into();
