@@ -4056,6 +4056,22 @@ advancing a host traversal cursor. Trap `0xBFC00118` completes through the live
 exit-hook or explicit missing-hook policy. No BIOS instructions run at these
 traps, and each trap requires its active bound phase.
 
+`Kernel::configure_exception_hook(entry)` separately binds the caller-loaded
+`audio_exception_hook` routine in the same assembly owner. After all four guest
+priorities finish, the exit trap reads and validates the complete live
+`HookEntryInt` buffer, saved PC and four-byte-aligned RAM stack. It then supplies
+the buffer address in A0 and one in A1. Guest instructions load RA, GP, SP, FP
+and S0-S7, set V0 from A1 and jump to saved RA without RFE. This routine does not
+recreate the original exit prefix's K0 calculation or hook-pointer global.
+Functional host dispatch and unbound development callers retain their existing
+exit bridge. Missing-hook policy remains explicit even with this binding.
+
+The exception stays pending while the hook executes. A later successful B0/17
+restoration clears it. Preflight errors precede register restoration; faults
+during guest loads may leave a partially restored CPU and unfinished dispatch.
+The binding uses the same idle, duplicate and physical identifier guards as
+other owned handlers. It does not establish full startup or timing equivalence.
+
 The root reserves no stack locals and uses the prepared sixteen-byte O32 handler
 home area. Scanner stack drift rejects before handler invocation. Explicit
 nonlocal exception return discards the owned scanner after successful context

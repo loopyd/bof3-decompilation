@@ -111,3 +111,26 @@ audio_exception_dispatch:
     jr $t0
     nop
 .end audio_exception_dispatch
+
+# Completed guest dispatch supplies the preflighted live jump buffer in A0
+# and one in A1. No stack frame, RFE or TCB restoration belongs to this hook.
+# A later explicit B0/17 restores the interrupted thread and ends dispatch.
+.globl audio_exception_hook
+.ent audio_exception_hook
+audio_exception_hook:
+    lw $ra, 0($a0)
+    lw $gp, 44($a0)
+    lw $sp, 4($a0)
+    lw $fp, 8($a0)
+    lw $s0, 12($a0)
+    lw $s1, 16($a0)
+    lw $s2, 20($a0)
+    lw $s3, 24($a0)
+    lw $s4, 28($a0)
+    lw $s5, 32($a0)
+    lw $s6, 36($a0)
+    lw $s7, 40($a0)
+    addu $v0, $a1, $zero
+    jr $ra
+    nop
+.end audio_exception_hook
