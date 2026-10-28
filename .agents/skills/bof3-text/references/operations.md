@@ -38,7 +38,7 @@ include encoded size, spare capacity, required terminator bytes and the original
 allocation bytes. Use `extract` for documents accepted by `pack`.
 
 For the US executable, use `extract out/extracted/SLUS_004.22 -o out/exe-text.json`.
-Its `bof3.executable-text/v12` document uses ASCII. Re-extract older documents.
+Its `bof3.executable-text/v13` document uses ASCII. Re-extract older documents.
 Edit only each string's `text`. Retain its consumers, output, codec,
 `format_directives`, allocation and typed reference sites. The exception format permits one `%X` or `%x` conversion with
 optional width 1..8 and zero padding, within four bytes. The three-ID format
@@ -68,7 +68,9 @@ directives, including `%3d`; runtime callback targets remain unverified. The
 ResetGraph address and GPU timeout diagnostics record direct BIOS printf calls.
 Image-operation names use `ascii-literal` as `%s` data through a helper;
 percent characters remain literal. Preserve their helper reference calls.
-Other executable ranges and BIOS runtime output remain unresolved.
+Matrix-stack guard messages use `ascii-printf-literal` and refuse percent characters.
+Other executable ranges remain unresolved. Each output path requires separate
+runtime evidence.
 See the tool's [format contract](../../../../tools/rust/bof3-text/docs/formats.md#executable-ascii).
 
 `extract out/extracted/BIN/ETC/GAME.EMI -o out/equipment-names.json` exports

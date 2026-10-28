@@ -42,7 +42,7 @@ The consumer at `0x8014B3C4` passes these pointers to renderer `0x80150098`.
 The renderer reads bytes until NUL, advances on ASCII space and handles newline
 `0x0A`. These bytes use ASCII rather than the dialogue character table.
 
-The JSON schema is `bof3.executable-text/v12`. Re-extract older documents before
+The JSON schema is `bof3.executable-text/v13`. Re-extract older documents before
 editing. It contains `source`, mandatory `source_sha256`, `build`, `load_address`,
 `consumers` and `strings`.
 Each string retains its `address`, whole-file `file_offset`, original `capacity`
@@ -172,7 +172,7 @@ Analysis omits `max_formatted_size`; it does not bound the rendered output.
 In particular, `%02x` specifies a minimum width, not a two-digit limit.
 The format at `0x8014A318` receives word loads for both hex arguments. The
 reference pairs for `0x8014A410` and `0x8014A470` converge on call `0x801775E4`.
-Observed BIOS output remains unverified.
+Other BIOS output paths require their own runtime observations.
 
 GPU diagnostic formats use the same exact-directive codec. Most use
 `bios-printf-callback`, recording callback word `0x8018B158`, initially
@@ -183,13 +183,19 @@ intermediate formatting buffer is present in these traced paths. Preserve each
 row's exact directives, including `%3d`. Analysis reports no formatted output
 bound. The direct BIOS formats above use `bios-printf` output. Original spelling,
 including `SetGrapQue`, is preserved. `DrawOTagEnv` contains only one conversion:
-its original `&08x` is literal text. Runtime callback targets and observed
-diagnostic output remain unverified.
+its original `&08x` is literal text. Callback targets and output through the
+callback remain unverified at runtime.
 
 `ClearImage`, `LoadImage`, `StoreImage` and `MoveImage` use `ascii-literal` with
 empty `format_directives`. Their reference calls pass the names to helper
 `0x8017B438`, which forwards them as `%s` data to the callback. Percent characters
 in these names remain literal data. Each edit preserves bytes outside its allocation.
+
+The matrix-stack guard messages at `0x80186888` and `0x801868B9` pass directly
+to BIOS printf. They use `ascii-printf-literal`, with empty `format_directives`,
+and refuse percent characters. Their address-pair lower instructions execute in
+the recorded calls' delay slots. No intermediate formatting buffer is present;
+the separate word at `0x801865F8` saves the return address.
 
 Build recognition hashes all bytes outside the supported allocations against
 the pinned US layout. This permits re-extraction of supported edits while

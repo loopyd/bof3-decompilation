@@ -8,11 +8,11 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-pub(crate) const SCHEMA: &str = "bof3.executable-text/v12";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v13";
 const LOAD: u32 = 0x80096800;
 const SIZE: usize = 1445888;
 // Hash of the entire executable with only the supported allocations zeroed.
-const LAYOUT_SHA256: &str = "ac5c3f7e5302c704fb16850dedb8fd6ee93cb063e8e4de08b83ee576cc458a8f";
+const LAYOUT_SHA256: &str = "ed2b7148ddf1c18cc73789b5a1dec84e9bac81e670a59d014c63cc96b99bee5a";
 const FORMAT_ADDRESS: u32 = 0x80149990;
 const FILE_LABEL: u32 = 0x80149f9c;
 const FILE_FORMAT: u32 = 0x80149fac;
@@ -32,8 +32,8 @@ const CD_PUTS_LABELS: [u32; 6] = [
     0x8014a2e0, 0x8014a334, 0x8014a3d0, 0x8014a5e0, 0x8014a5f8, 0x8014a610,
 ];
 const CD_SHARED_LABELS: [u32; 4] = [0x8014a368, 0x8014a370, 0x8014a394, 0x8014a3e8];
-const CD_PRINTF_LITERALS: [u32; 6] = [
-    0x8014a428, 0x8014a480, 0x8014a4b4, 0x8014a508, 0x8014a560, 0x8014a580,
+const BIOS_PRINTF_LITERALS: [u32; 8] = [
+    0x8014a428, 0x8014a480, 0x8014a4b4, 0x8014a508, 0x8014a560, 0x8014a580, 0x80186888, 0x801868b9,
 ];
 const BIOS_PRINTF_FORMATS: [u32; 17] = [
     0x8014a2f0, 0x8014a318, 0x8014a348, 0x8014a37c, 0x8014a384, 0x8014a3dc, 0x8014a3f4, 0x8014a410,
@@ -149,17 +149,17 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (CD_SHARED_LABELS[3], 12),
     (0x8014a3f4, 27),
     (0x8014a410, 23),
-    (CD_PRINTF_LITERALS[0], 26),
+    (BIOS_PRINTF_LITERALS[0], 26),
     (0x8014a444, 31),
     (0x8014a464, 12),
     (0x8014a470, 15),
-    (CD_PRINTF_LITERALS[1], 41),
-    (CD_PRINTF_LITERALS[2], 48),
+    (BIOS_PRINTF_LITERALS[1], 41),
+    (BIOS_PRINTF_LITERALS[2], 48),
     (0x8014a4e4, 35),
-    (CD_PRINTF_LITERALS[3], 29),
+    (BIOS_PRINTF_LITERALS[3], 29),
     (0x8014a53c, 35),
-    (CD_PRINTF_LITERALS[4], 29),
-    (CD_PRINTF_LITERALS[5], 28),
+    (BIOS_PRINTF_LITERALS[4], 29),
+    (BIOS_PRINTF_LITERALS[5], 28),
     (0x8014a5c0, 30),
     (CD_PUTS_LABELS[3], 22),
     (CD_PUTS_LABELS[4], 23),
@@ -198,6 +198,8 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (0x8014a8c4, 21),
     (0x8014a8dc, 50),
     (0x8014a910, 24),
+    (0x80186888, 49),
+    (0x801868b9, 41),
 ];
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -386,7 +388,7 @@ fn codec(address: u32) -> Codec {
     if BIOS_PRINTF_FORMATS.contains(&address) || GPU_PRINTF_CALLBACK_FORMATS.contains(&address) {
         return Codec::AsciiBiosPrintfFormat;
     }
-    if CD_PRINTF_LITERALS.contains(&address) {
+    if BIOS_PRINTF_LITERALS.contains(&address) {
         return Codec::AsciiPrintfLiteral;
     }
     match address {
@@ -405,6 +407,8 @@ fn consumers(address: u32) -> Vec<u32> {
         return vec![0x8017560c];
     }
     match address {
+        0x80186888 => vec![0x80178b78],
+        0x801868b9 => vec![0x80178c18],
         0x8014a7f8 => vec![0x8017b438],
         0x8014a804 => vec![0x8017b438],
         0x8014a818 => vec![0x8017b438],
@@ -482,6 +486,8 @@ fn all_consumers() -> Vec<u32> {
 
 fn diagnostic_references(address: u32) -> Option<Vec<Reference>> {
     let pairs: &[(u32, u32, Option<u32>)] = match address {
+        0x80186888 => &[(0x80178b94, 0x80178b9c, Some(0x80178b98))],
+        0x801868b9 => &[(0x80178c30, 0x80178c38, Some(0x80178c34))],
         0x8014a7f8 => &[(0x8017b4f8, 0x8017b4fc, Some(0x8017b51c))],
         0x8014a804 => &[(0x8017b53c, 0x8017b540, Some(0x8017b544))],
         0x8014a818 => &[(0x8017b508, 0x8017b50c, Some(0x8017b51c))],
@@ -624,7 +630,7 @@ fn output(address: u32) -> Output {
         || CD_INTERRUPT_LABELS.contains(&address)
         || CD_COMMAND_LABELS.contains(&address)
         || CD_SHARED_LABELS.contains(&address)
-        || CD_PRINTF_LITERALS.contains(&address)
+        || BIOS_PRINTF_LITERALS.contains(&address)
         || BIOS_PRINTF_FORMATS.contains(&address)
     {
         Output::BiosPrintf {
