@@ -628,7 +628,9 @@ store 2. The drawing loop at `0x801D94D0` passes each ordinary cell to
 zero cells, handles control values separately and copies the chosen byte into
 `0x801DB080` plus the name cursor at `0x801DA588`. Indexed references remain
 empty; the payload pin protects the selector, navigation and draw instructions.
-Command dispatch semantics, other COMMU02 text and observed rendering remain unverified.
+Controlled runtime observations verify edited English keyboard control labels and
+one edited character cell. The visible START control accepts an empty name through
+the End path. Other command paths, pages, formats and COMMU02 text remain unverified.
 
 Four keyboard menu labels and a separator also use this layout:
 
@@ -661,8 +663,10 @@ into `0x801DB080`. Call `0x801D693C` uses that buffer, and `0x801D83D0`
 passes it to renderer `0x8014F800` with a five-glyph limit. These are
 cross-overlay consumers, not instructions inside the name payload. The name
 addresses use indexed code addressing and retain empty pointer-reference lists.
-Each archive needs its own document and output. Save-name propagation and
-observed rendering remain unverified.
+Each archive needs its own document and output. Controlled availability verifies
+one edited record through the empty-name fallback and its name-panel display.
+Identical standalone and embedded payloads leave the supplying archive ambiguous.
+Natural availability, other records and save-name propagation remain unverified.
 
 The `US AREA008 decimal formats` layout covers entry 13 of the original US
 `BIN/WORLD00/AREA008.EMI`, loaded at `0x801F2C00`. Three ASCII allocations use

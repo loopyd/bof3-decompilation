@@ -110,15 +110,17 @@ refuse percent sequences. Pointer words, padding, adjacent glyphs and unrelated
 bytes stay unchanged. Each `game-keyboard-character` cell requires exactly one
 letter, digit, space or one of `! ? - , .` from the active US keyboard alphabet.
 Empty cells, control cells and the other pages stay protected. Use a separate
-document and output for each archive. Other COMMU02 text and observed rendering
-remain unverified.
+document and output for each archive. Controlled runtime checks cover the English
+keyboard's control labels and one edited cell. Other COMMU02 text, formats and
+pages remain unverified.
 
 COMMU00 entry 0 and AREA175 through AREA185 entry 14 each expose sixty
 five-byte default names through the same inline schema. Edit only `text` with
 literal game characters. Preserve the four attribute bytes after each field.
 Each archive needs its own source-bound document and output. The proven copy
-and draw calls belong to the companion COMMU02 overlay; save propagation and
-observed rendering remain unverified.
+and draw calls belong to the companion COMMU02 overlay. Controlled availability
+verifies one edited name through the empty-name fallback. Natural availability,
+other names and save propagation remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
