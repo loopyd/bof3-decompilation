@@ -9,14 +9,14 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
-    "src/bof3/world00/invokeZeroArgWorld00Area00713_801F2C04.c",
-    "src/bof3/world00/setTwoWorld00Area00713_801F2F70.c",
-    "src/bof3/world00/invokeTwoZeroArgsWorld00Area00713_801F2EFC.c",
-    "src/bof3/world00/retreatCounter2By10World00Area00713_801F2F20.c",
-    "src/bof3/world00/advanceCounter2By10World00Area00713_801F2F48.c",
-    "src/bof3/world00/invokeHelperArgWorld00Area00713_801F2C64.c",
-    "src/bof3/world00/invokeHelperArgWorld00Area00713_801F2C44.c",
-    "src/bof3/world00/invokeHelperArgWorld00Area00713_801F2C24.c",
+    "src/bof3/world/invokeZeroArgWorld00Area00713_801F2C04.c",
+    "src/bof3/world/setTwoWorld00Area00713_801F2F70.c",
+    "src/bof3/world/invokeTwoZeroArgsWorld00Area00713_801F2EFC.c",
+    "src/bof3/world/retreatCounter2By10World00Area00713_801F2F20.c",
+    "src/bof3/world/advanceCounter2By10World00Area00713_801F2F48.c",
+    "src/bof3/world/invokeHelperArgWorld00Area00713_801F2C64.c",
+    "src/bof3/world/invokeHelperArgWorld00Area00713_801F2C44.c",
+    "src/bof3/world/invokeHelperArgWorld00Area00713_801F2C24.c",
     "src/bof3/support/area007_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area007_13_psyq.c"

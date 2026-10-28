@@ -1,21 +1,42 @@
 # Source relocation
 
-Explicit `relocate-batch` only, destination `src/bof3/<class>/`. No relocation
-during matching or another mode.
+Use an explicitly selected relocation batch. Put game sources in the existing
+`src/bof3/<subsystem>/` folder that matches their reviewed role. Keep target identity
+in metadata and claims rather than adding target directory levels. Include changes
+to shared code or headers only when the selected plan covers their full consumers.
 
 ## Ownership and invariants
 
-Every lift retains parsable function-level `@behavior` and address-authoritative `@source`; filenames never establish identity. Preserve `@behavior`, `@source`, `@kind`, evidence comments, boundaries, load addresses, SDK maps, and ABI. Use `/* @source 0x... @kind ... */`; `//` breaks gcc-2.6.3 objects.
+Every lift retains parsable function-level `@behavior` and address-authoritative
+`@source`; filenames never establish identity. Preserve `@behavior`, `@source`,
+`@kind`, evidence comments, boundaries, load addresses, SDK maps and ABI. Use block
+comments for metadata; `//` breaks gcc-2.6.3 objects.
 
-Atomically update all affected source/support/header paths, manifest claims including `psyq_source`, Splat C-boundary `@source`, source-local include edges, and compiler flag keys. Do not move target configuration, alter `source_dir`, move public/shared headers or `src/shared/`, or edit `out/`, `build/`, or `toolchains/`. Other organization requires a plan and approval.
+Migrate affected source/support/header claims, Splat C-boundary `@source`, local
+include edges and compiler flag keys together. Preserve each effective compiler
+and ordered flags. Keep private headers under `include/bof3/<subsystem>/`, public
+headers under `include/`, and shared implementations under `src/shared/<subsystem>/`.
+Preserve justified root headers and generated `psyq_source` ownership. Keep target
+configuration and `source_dir` in place. Regenerate build outputs through their
+owners; never hand-edit `build/` or toolchains to repair a move.
 
-## Transaction
+## Direct batch
 
-1. Modified candidate overlap blocks unless parent explicitly adopted edits.
-2. Inspect `bin/harness naming list TARGET --kind files --json`, manifest claims, include edges and compiler flag keys. Follow [direct editing](direct-editing.md) for owned PRE and recovery.
-3. Validate metadata identity and destination class before moving anything. Never rename a Splat boundary address.
-4. Apply complete batch atomically. Move/metadata/regeneration/validation failure
-   reverts whole batch; never fix forward.
-5. Regenerate build metadata with `bin/harness build TARGET`, never by editing `build/`. Prove old paths absent from the graph and every current manifest source present.
-6. Run `bin/harness source symbols check TARGET`, `bin/harness source splat TARGET`, fresh normal asm-diff and byte-match for every touched selector, then fresh independent reviewer.
-7. After authoritative map/Splat/reviewed/manifest changes pass, check `bin/harness analysis readiness TARGET`. If stale, run one `bin/harness analysis index --recover`, require fresh readiness, and never rebuild per file.
+1. Stop on modified candidate overlap unless the parent adopted those edits.
+2. Inspect `bin/harness naming list TARGET --kind files --json`, manifest claims,
+   include edges and compiler flag keys. Follow [direct editing](direct-editing.md)
+   for owned PRE and recovery.
+3. Validate metadata identity and the destination subsystem before moving files.
+   Preserve every Splat boundary address.
+4. Apply the complete batch. A move, metadata, regeneration or validation failure
+   requires restoring the whole owned batch before another candidate.
+5. Run `bin/harness build TARGET` to regenerate build metadata. Verify that the
+   graph omits old paths and includes every current manifest source.
+6. Run `bin/harness source symbols check TARGET`, `bin/harness source splat TARGET`
+   and fresh asm-diff/byte-match for every touched selector. Obtain independent
+   review of the complete batch.
+7. After those gates pass, run `bin/harness analysis readiness TARGET`. If stale,
+   run one `bin/harness analysis index --recover` and require fresh readiness.
+   Refresh once per batch rather than once per file.
+8. Remove obsolete paths after all consumers migrate. Prune only confirmed empty,
+   unclaimed directories. Keep any directory that still owns unrelated files.

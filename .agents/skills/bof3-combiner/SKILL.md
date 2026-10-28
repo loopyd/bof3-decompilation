@@ -49,3 +49,7 @@ work and raw index state. Verify restoration before another writer. Uncertain
 cleanup stops mutation and retains PRE, POST and actual process handles. No
 transaction, ranking or recovery script is required. Frozen campaign membership,
 partial-result constraints, attempt limits and unfinished duties remain binding.
+
+For path-only batches, follow
+[source relocation](../bof3-naming/references/source-relocation.md) for shallow
+source/include placement, build regeneration and empty-directory pruning.
