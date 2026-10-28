@@ -278,9 +278,9 @@ segments:
     - '@behavior: runs the scenario-local handler/state dispatch, then the shared update slice func_801D1740, then finalizes one shared front-end frame through func_80158C80.'
   - - 15256
     - c
-    - func_80199398
-    - '@source: src/bof3/ui/func_80199398.c'
-    - '@behavior: runs the shared frame-service sequence func_801527E4, func_8015A758, func_801BDAB8, updateActiveGameWorkRecords, func_8019A0E4 and func_8014BA54, then finalizes one shared front-end frame through func_80158C80 and finally runs the func_801D0EA0 slice.'
+    - runFrameServicesAndFinalize
+    - '@source: src/bof3/ui/runFrameServicesAndFinalize.c'
+    - '@behavior: Runs func_801527E4, func_8015A758, func_801BDAB8, updateActiveGameWorkRecords, func_8019A0E4 and func_8014BA54 in order, then calls func_80158C80 and func_801D0EA0. Takes no arguments and returns no value.'
   - - 15344
     - c
     - finalizeFrame
@@ -1061,9 +1061,9 @@ segments:
     - '@behavior: Dispatches the mode handler table (0x801C88FC) indexed by the work-area mode byte (work+0x04) through a tail-style jalr call.'
   - - 94740
     - c
-    - func_801ACA14
-    - '@source: src/bof3/ui/func_801ACA14.c'
-    - '@behavior: Boots the current scratch work record: submits the positional effect through func_8019651C and stores the returned effect byte at 0x93 of the work record published at D_80146884, sets scratch flag bit 0x20, resets the three signed tint channels at 0x5D/0x5E/0x5F to the -0x40 level, sets the 0x5C flag byte and the 0x04 handler index to 1, and consumes one unit of the countdown halfword at 0x7E of the D_80146884 work record.'
+    - initializeWorkModeWithTintMinus64
+    - '@source: src/bof3/ui/initializeWorkModeWithTintMinus64.c'
+    - '@behavior: Calls func_8019651C with the scratch work pointer and arguments 0, 0, 0, 1, then stores its low return byte at D_80146884 + 0x93. Sets scratch flag bit 0x20, the three signed tint channels at 0x5D-0x5F to -0x40, flag byte 0x5C and handler byte 0x04 to 1, and decrements the D_80146884 countdown halfword at 0x7E. The helper and return byte have no proven further role.'
   - - 94912
     - asm
     - func_801ACAC0
@@ -1074,9 +1074,9 @@ segments:
     - '@behavior: Dispatches the handler table (0x801C8904) indexed by the work-area mode byte (work+0x04) through a tail-style jalr call.'
   - - 95240
     - c
-    - func_801ACC08
-    - '@source: src/bof3/ui/func_801ACC08.c'
-    - '@behavior: Boots the current scratch work record and steps the entry-0 work mode: submits the positional effect through func_8019651C with the scratch work pointer and stores the returned effect byte at 0x93 of the work record published at D_80146884, sets scratch flag bit 0x20, clears flag bit 0x40, sets the 0x5C flag byte and the 0x04 handler index to 1, resets the three signed tint channels at 0x5D/0x5E/0x5F to the -0x80 level, and consumes one unit of the countdown halfword at 0x7E of the D_80146884 work record.'
+    - initializeWorkModeWithTintMinus128
+    - '@source: src/bof3/ui/initializeWorkModeWithTintMinus128.c'
+    - '@behavior: Calls func_8019651C with the scratch work pointer and arguments 0, 0, 0, 1, then stores its low return byte at D_80146884 + 0x93. Sets scratch flag bit 0x20, clears bit 0x40, sets the three signed tint channels at 0x5D-0x5F to -0x80, flag byte 0x5C and handler byte 0x04 to 1, and decrements the D_80146884 countdown halfword at 0x7E. The helper and return byte have no proven further role.'
   - - 95448
     - asm
     - func_801ACCD8
@@ -1210,9 +1210,9 @@ segments:
     - '@behavior: classifies a requested route index against the scratchpad work area route_index_08 inside a wrapped 8-entry window; returns -1 when the reference bound lies 1 to 4 entries above the requested index and 1 otherwise.'
   - - 120148
     - c
-    - func_801B2D54
-    - '@source: src/bof3/ui/func_801B2D54.c'
-    - '@behavior: runs the shared readiness helper func_8014DAEC and, when it reports ready (non-zero byte), clears byte 0x12B of the shared work record pointer D_80146250.'
+    - stepWorkSequenceAndClearByte12BOnNonzero
+    - '@source: src/bof3/ui/stepWorkSequenceAndClearByte12BOnNonzero.c'
+    - '@behavior: Steps the scratch work sequence through func_8014DAEC and clears D_80146250[0x12B] when its low return byte is nonzero. A nonzero result can mean sequence end or a control redirect. The scratch work pointer and D_80146250 need not identify the same record.'
   - - 120208
     - c
     - func_801B2D90
@@ -1239,7 +1239,7 @@ segments:
     - c
     - func_801B32A4
     - '@source: src/bof3/ui/func_801B32A4.c'
-    - '@behavior: runs the shared work-area select service func_801C4D1C, then publishes state 2 into the work-area flags byte at offset 0x02.'
+    - '@behavior: runs the shared work-area select service selectWorkSequenceForRoute7, then publishes state 2 into the work-area flags byte at offset 0x02.'
   - - 121552
     - c
     - func_801B32D0
@@ -1478,12 +1478,12 @@ segments:
     - '@behavior: Dispatches the handler table (0x801CD2F4) indexed by the work-area byte (work+0x03) through a framed jalr call.'
   - - 138228
     - c
-    - func_801B73F4
-    - '@source: src/bof3/ui/func_801B73F4.c'
+    - selectWorkSequenceAndSetFactorIndex3
+    - '@source: src/bof3/ui/selectWorkSequenceAndSetFactorIndex3.c'
     - '@status: exact'
     - '@match: 100.00'
     - '@residual: none'
-    - '@behavior: entry 0 of the D_801CD2F4 work-state table: submits the route-index-selected selection effect id to the shared helper func_8014D8D4 (0x38 when the scratchpad work-area route index reads 3, 0x39 otherwise), publishes 3 into the active record selector byte at D_80146250 + 0x11C and advances the work-area handler index byte at 0x03 to 1, the next entry of that table.'
+    - '@behavior: Selects sequence 0x38 when the scratch work route index is 3 and sequence 0x39 otherwise through func_8014D8D4. Selecting the current sequence does not restart it. Writes factor-table index 3 at D_80146250 + 0x11C and advances the scratch handler byte at 0x03 to 1. The next D_801CD2F4 entry is func_801B744C, which reads the D_80181BD4 factor table.'
   - - 138316
     - asm
     - func_801B744C
@@ -1681,12 +1681,12 @@ segments:
     - '@behavior: reports whether arg0 selects the current route index: the high nibble must be 0xB0 and the low nibble must equal route_index_08, except that nibble 8 instead accepts route index 3 or 5.'
   - - 155488
     - c
-    - func_801BB760
-    - '@source: src/bof3/ui/func_801BB760.c'
+    - isRouteSampleDifferenceAbove64
+    - '@source: src/bof3/ui/isRouteSampleDifferenceAbove64.c'
     - '@status: partial'
     - '@match: 65.00'
     - '@residual: The call-result copy now matches; report and scratch gate register allocation differ at the original 80-byte size.'
-    - '@behavior: Queries the shared route-parameterised position service func_80154F78 with the two incoming coordinates and the scratch work-area route index, then reports whether the returned value shifted up by 16 bits exceeds 0x400000; the report is suppressed to zero while the scratchpad byte at 0x1F800000 is zero.'
+    - '@behavior: Queries func_80154F78 with the two incoming coordinates and the scratch work route index. Returns 1 only when the scratch flag at D_1F800000[0] is nonzero and the signed 16-bit sample difference returned by that helper exceeds 64. Returns 0 otherwise. The sampled quantity has no proven terrain or height meaning.'
   - - 155568
     - c
     - func_801BB7B0
@@ -1771,9 +1771,9 @@ segments:
     - func_801BEDD0
   - - 169564
     - c
-    - func_801BEE5C
-    - '@source: src/bof3/ui/func_801BEE5C.c'
-    - '@behavior: walks the 0x140-byte-stride local work records at D_80145E90: with a nonzero D_80146254 record count it first scans the records'' leading bytes for the first cleared one and, while that index is still inside the count, publishes each record at D_80146250 and the scratchpad work pointer and selects one of four per-record paths from the flags word of the 164-byte game input record D_80144974[record 0x13C] and from the record route byte at 0x08 measured against D_801CD478[D_801462EC] - flags bit 0x4000 uploads through func_8014D664 with the record 0x4B byte and clears the record 0x0B byte, a differing route byte advances that byte by the record 0x0B step modulo 8 before the same upload from the reloaded work record 0x08 byte, a matching route byte with a nonzero 0x0B byte uploads and clears it, and the remaining case only runs the func_8014D978 ready helper; with the walk finished (or the count non-positive) and bit 2 of D_80146325 clear it walks the same records once more, copying each 32-entry halfword row selected by the record 0x05 byte from the 0x80035600 table into the row 0xC0 bytes higher, calls func_801C2438, clears the work record 0x0B byte and stores tint bytes -0x40 at 0x5D-0x5F with 1 at 0x5C, returning 0 from the first walk and 1 from the second.'
+    - advanceWorkRoutesOrInitializeTint
+    - '@source: src/bof3/ui/advanceWorkRoutesOrInitializeTint.c'
+    - '@behavior: Scans the 0x140-byte-stride work records at D_80145E90 for a nonzero byte at 0x0B, bounded by D_80146254. If one exists, walks all records and publishes each at D_80146250 and the scratch work pointer. Input flag 0x4000 selects func_8014D664 with byte 0x4B, clears work byte 0x0B and skips func_8014D978. Otherwise, a route byte 0x08 matching D_801CD478[D_801462EC] selects func_8014D664 only when byte 0x0B is nonzero and then clears work byte 0x0B. A differing route advances byte 0x08 by byte 0x0B modulo 8 and selects func_8014D664 with the reloaded route byte. Both non-0x4000 paths call func_8014D978. This first walk returns 0 without entering the tint path. When the scan finds no nonzero 0x0B byte, D_80146325 bit 2 skips tint work and returns 1. Otherwise, each record copies its selected 32-halfword palette row at 0x80035600 to the row 0xC0 bytes higher, calls func_801C2438, clears work byte 0x0B, sets tint bytes 0x5D-0x5F to -0x40 and flag byte 0x5C to 1. Returns 1 after that path, including a non-positive record count.'
   - - 170268
     - asm
     - func_801BF11C
@@ -2006,12 +2006,12 @@ segments:
     - func_801C4C48
   - - 193820
     - c
-    - func_801C4D1C
-    - '@source: src/bof3/ui/func_801C4D1C.c'
+    - selectWorkSequenceForRoute7
+    - '@source: src/bof3/ui/selectWorkSequenceForRoute7.c'
     - '@status: exact'
     - '@match: 100.00'
     - '@residual: none'
-    - '@behavior: Shared work-area select service: forwards the route-index-selected selection effect id to the shared EXE-side helper func_8014D8D4, 0x3C when the scratchpad work area route index (g_game_work->route_index_08) reads 7 and 0x3D otherwise.'
+    - '@behavior: Selects sequence 0x3C when the scratch work route index is 7 and sequence 0x3D otherwise through func_8014D8D4. Selecting the current sequence does not restart it.'
   - - 193880
     - asm
     - func_801C4D58

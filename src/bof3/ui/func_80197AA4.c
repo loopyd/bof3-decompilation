@@ -29,7 +29,7 @@ void func_80197AA4(void) {
   u16 *coord_y;
   u16 *entry_serial;
 
-  ready = func_801BEE5C();
+  ready = advanceWorkRoutesOrInitializeTint();
   func_801A06D8();
   runFrameFinalizationServices();
   if (ready) {

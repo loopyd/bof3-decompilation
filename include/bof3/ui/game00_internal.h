@@ -37,7 +37,7 @@ extern u8 D_80146261;
  * at +0 and a y word at +4. */
 /* @source 0x801CD47C @kind table */
 extern u8 D_801CD47C[];
-/* @behavior one-byte record-index table indexed by D_801462EC; func_801BEE5C
+/* @behavior one-byte record-index table indexed by D_801462EC; advanceWorkRoutesOrInitializeTint
  * compares a work record's route byte at 0x08 against its entry. */
 /* @source 0x801CD478 @kind table */
 extern u8 D_801CD478[];
@@ -138,7 +138,7 @@ void func_801C2710(void);
  * restored and the tint is cleared. */
 u8 func_801C27E0(s8 arg0);
 int func_801C5474(void);
-void func_801C4D1C(void);
+void selectWorkSequenceForRoute7(void);
 void func_801C4D58(void);
 u8 func_801C4E14(void);
 u8 func_801C4EC4(void);
@@ -1172,7 +1172,7 @@ void func_80198F1C(void);
 void func_801990D0(void);
 void func_801991B8(void);
 void func_801BEDD0(void);
-s32  func_801BEE5C(void);
+s32  advanceWorkRoutesOrInitializeTint(void);
 void func_801A06D8(void);
 void applyRemapRequest(u8 arg0);
 u8   func_801BF11C(void);

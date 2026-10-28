@@ -2,24 +2,21 @@
 
 /**
  * @source 0x801BEE5C
- * @behavior walks the 0x140-byte-stride local work records at D_80145E90:
- * while the D_80146254 record count is nonzero it first scans the records'
- * leading bytes for the first cleared one, and when that index is still inside
- * the count it publishes each record at D_80146250 and as the scratchpad work
- * pointer, then selects one of four per-record paths from the flags word of the
- * 164-byte game input record in D_80144974 indexed by the record byte at 0x13C
- * and from the record route byte at 0x08 measured against D_801CD478[D_801462EC]:
- * flags bit 0x4000 requests the func_8014D664 upload from record byte 0x4B and
- * clears the record's 0x0B byte; a matching route byte with a nonzero 0x0B byte
- * uploads from the record's 0x08 byte and clears that byte; a differing route
- * byte advances the 0x08 byte by the record's 0x0B step modulo 8 before the
- * upload of the reloaded work record's 0x08 byte; and the func_8014D978 ready
- * helper then runs. With the walk finished (or the count non-positive) and bit 2
- * of D_80146325 clear, it walks the same records once more, copying each
- * 32-entry halfword row selected by the record's 0x05 byte from the 0x80035600
- * table into the row 0xC0 bytes higher, calls func_801C2438, clears the work
- * record's 0x0B byte and stores tint bytes -0x40 into 0x5D-0x5F with 1 at 0x5C.
- * Returns 0 from the first walk and 1 from the second.
+ * @behavior Scans the 0x140-byte-stride work records at D_80145E90 for a nonzero byte
+ * at 0x0B, bounded by D_80146254. If one exists, walks all records and
+ * publishes each at D_80146250 and the scratch work pointer. Input flag
+ * 0x4000 selects func_8014D664 with byte 0x4B, clears work byte 0x0B and
+ * skips func_8014D978. Otherwise, a route byte 0x08 matching
+ * D_801CD478[D_801462EC] selects func_8014D664 only when byte 0x0B is nonzero
+ * and then clears work byte 0x0B. A differing route advances byte 0x08 by
+ * byte 0x0B modulo 8 and selects func_8014D664 with the reloaded route byte.
+ * Both non-0x4000 paths call func_8014D978. This first walk returns 0 without
+ * entering the tint path. When the scan finds no nonzero 0x0B byte,
+ * D_80146325 bit 2 skips tint work and returns 1. Otherwise, each record
+ * copies its selected 32-halfword palette row at 0x80035600 to the row 0xC0
+ * bytes higher, calls func_801C2438, clears work byte 0x0B, sets tint bytes
+ * 0x5D-0x5F to -0x40 and flag byte 0x5C to 1. Returns 1 after that path,
+ * including a non-positive record count.
  * @status partial
  * @match 89.77
  * @residual Prologue and walk-header scheduling residual after the clean-C
@@ -41,7 +38,7 @@
  * for both walks (148/176), and the inner row-copy load reordered before the
  * pad computation (151/176).
  */
-s32 func_801BEE5C(void) {
+s32 advanceWorkRoutesOrInitializeTint(void) {
   s32 count;
   s32 i;
   s32 search_offset;
