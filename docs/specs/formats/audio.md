@@ -4030,31 +4030,50 @@ explicit event and chain state, as described above.
 captures the current guest thread after architectural exception entry, then
 [dispatches](../../../tools/rust/bof3-audio/src/machine/exception_calls.rs) the four
 ExCB priorities in order. The caller supplies an aligned RAM stack, GP and an
-explicit missing-hook policy. Each handler gets a separate sixteen-byte O32
-argument home area and returns through reserved trap `0xBFC00104`. Handlers run
+explicit missing-hook policy. Functional handlers get a sixteen-byte O32
+argument home area and return through reserved trap `0xBFC00104`. Handlers run
 through the ordinary guest CPU unless explicitly bound to owned semantics;
 stack/callee-saved ABI violations reject. Unbound development dispatch uses a
 functional host bridge, without original BIOS volatile-register, frame-layout
 or instruction-timing equivalence.
 
-`Kernel::configure_exception_dispatch(entry)` binds caller-loaded
-[`audio_exception_dispatch`](../../../tools/rust/bof3-audio/driver/kernel/exceptions.s)
-assembly. Entry validates the descriptors, stack, architectural exception vector,
-saved EPC and supported COP2 boundary before changing CPU state. It commits any
-pending load and supplies the validated current TCB address in K0. The routine
-saves the interrupted GPRs except zero and K0, then EPC, HI/LO, status and cause
-with the context layout above. Opaque TCB words remain unchanged.
+`Kernel::configure_exception_dispatch(binding)` binds the linked vector,
+priority-head, node, verifier-call, second-call and exit addresses, plus the
+initialized stack-pointer cell. The call-return boundaries are the two call
+addresses plus eight bytes. All identities require distinct aligned RAM, except
+that the scanner exit must equal a separately bound hook entry. Binding validates
+the complete set before installing it.
 
-Owned trap `0xBFC0010C` supplies the captured ExCB base and installs the explicit
-handler stack, GP and FP after capture. Guest instructions read priority heads,
-capture handler pointers, branch on verifier results and read later links. Trap
-`0xBFC00110` validates each T9 node at priority T8, retaining physical overlap,
-cycle and per-priority traversal limits. Priorities must advance in order.
-Trap `0xBFC00114` invokes the selected T9 handler and guards its stack and
-S0-S7/GP/FP. Returning through `0xBFC00104` resumes the guest scanner without
-advancing a host traversal cursor. Trap `0xBFC00118` completes through the live
-exit-hook or explicit missing-hook policy. No BIOS instructions run at these
-traps, and each trap requires its active bound phase.
+The caller loads the text and initialized data sections of
+[`exceptions.s`](../../../tools/rust/bof3-audio/driver/kernel/exceptions.s), links
+`audio_exception_global_pointer` to its declared GP and initializes
+`audio_exception_stack_pointer` to `environment.stack_top - 16`. Entry validates
+the descriptors, stack cell, architectural exception vector, saved EPC and
+supported COP2 boundary before changing CPU state. It commits any pending load
+and enters `audio_exception_vector`. Guest instructions resolve the live PCB/TCB,
+save the interrupted registers except zero and K0, obtain Cause/EPC through the
+guest helper, and capture the remaining context. Opaque TCB words stay unchanged.
+The original zero instruction slots remain in the capture sequence.
+
+Before selecting **either** `Kernel::is_call` or `Cpu::step`, the CPU loop must
+call `Kernel::prepare_exception_step(cpu, bus)` and then read the resulting PC.
+This validates the linked instruction boundaries without synchronizing pending
+loads, changing ordinary guest registers or adding scheduled transitions. The
+first priority boundary checks the captured table, GP, SP and FP against the
+explicit environment. Guest setup uses FP=SP and the separate sixteen-byte O32
+argument home area.
+
+The scanner reads priority heads and later links live, captures both handler
+pointers, and executes their JALR instructions and delay slots. Boundary checks
+retain priority order, physical overlap/cycle detection and per-priority limits.
+They validate each handler target and stack before its call, then check SP and
+S0-S7/GP/FP at its actual return address. Ordinary guest returns retain their own
+RA and PC. The loop reports every successful retirement to
+`Kernel::complete_exception_step(cpu, step)`; handler entry requires the bound
+JALR and completed NOP delay slot, with its expected RA. Handler targets inside
+the reserved scanner code reject. Explicitly bound functional handlers retain the development bridge;
+callbacks and nonlocal B0/17 keep their continuation obligations. The former
+scanner traps `0xBFC0010C` through `0xBFC00118` are unsupported.
 
 `Kernel::configure_exception_hook(entry, pointer)` separately binds the
 caller-loaded `audio_exception_hook` routine and its live pointer cell. The
@@ -4064,7 +4083,7 @@ their linked addresses. Binding must precede functional HookEntryInt registratio
 The caller owns the cell's initial value; zero means no registered hook.
 HookEntryInt writes this word, and `entry_hook(bus)` reads the live registration.
 
-After all four guest priorities finish, the exit trap validates the live PCB/TCB,
+After all four guest priorities finish, the exit boundary validates the live PCB/TCB,
 complete registered jump buffer, saved PC and four-byte-aligned RAM stack before
 guest entry. Guest instructions resolve the PCB/TCB again, set K0 to TCB+8,
 read the pointer cell into A0 and set A1 to one. They load RA, GP, SP, FP and
@@ -4089,7 +4108,7 @@ as K0, then execute JR K0 with RFE in its delay slot. Saved K0 remains opaque.
 The routine does not reload the diagnostic saved Cause or change COP0 EPC.
 Saved SP has no added validation.
 
-An opted-in CPU loop must call `complete_exception_return(cpu, step)` after each
+An opted-in CPU loop must call `complete_exception_step(cpu, step)` after each
 successful instruction and before admitting the next interrupt. Completion
 requires the configured RFE address, its exact instruction in a delay slot,
 the expected return PC, GPRs, HI/LO, status, COP0 EPC and Cause. Cause's live

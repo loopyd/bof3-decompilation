@@ -1,7 +1,7 @@
 //! Bounded BIOS priority-chain continuations; handlers execute as guest code.
 use super::{
     bus::{Bus, Width},
-    cpu::Cpu,
+    cpu::{Cpu, Step},
     exception_chains::Table,
     executable::ram_offset,
 };
@@ -9,10 +9,6 @@ use crate::Result;
 use std::collections::BTreeSet;
 
 pub(crate) const HANDLER_RETURN: u32 = 0xbfc0_0104;
-pub(crate) const EXCEPTION_ENTER: u32 = 0xbfc0_010c;
-pub(crate) const NODE_ENTER: u32 = 0xbfc0_0110;
-pub(crate) const HANDLER_ENTER: u32 = 0xbfc0_0114;
-pub(crate) const EXCEPTION_EXIT: u32 = 0xbfc0_0118;
 pub(crate) const THREAD_CONTEXT: u32 = 0xbfc0_011c;
 const SAVED: [usize; 10] = [16, 17, 18, 19, 20, 21, 22, 23, 28, 30];
 const MAX_NODES: usize = 4096;
@@ -29,6 +25,44 @@ pub struct Environment {
     pub stack_top: u32,
     pub global_pointer: u32,
     pub missing_hook: MissingHook,
+}
+
+/// Linked instruction boundaries and initialized state for the owned scanner.
+/// The two JALR return boundaries are the call addresses plus eight bytes.
+#[derive(Clone, Copy, Debug)]
+pub struct Dispatch {
+    pub entry: u32,
+    pub priority: u32,
+    pub node: u32,
+    pub verifier: u32,
+    pub handler: u32,
+    pub exit: u32,
+    pub stack_pointer: u32,
+}
+impl Dispatch {
+    pub(crate) fn addresses(self) -> Result<[u32; 9]> {
+        Ok([
+            self.entry,
+            self.priority,
+            self.node,
+            self.verifier,
+            self.verifier
+                .checked_add(8)
+                .ok_or("owned verifier return overflow")?,
+            self.handler,
+            self.handler
+                .checked_add(8)
+                .ok_or("owned handler return overflow")?,
+            self.exit,
+            self.stack_pointer,
+        ])
+    }
+}
+
+pub(crate) enum GuestBoundary {
+    Continue,
+    Handler(u32),
+    Exit,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -51,6 +85,8 @@ pub(crate) struct Calls {
     saved: Option<[u32; 10]>,
     guest: bool,
     return_pc: Option<u32>,
+    handler_entry: Option<u32>,
+    call_instruction: Option<u32>,
     global_pointer: u32,
     pub missing_hook: MissingHook,
 }
@@ -71,6 +107,8 @@ impl Calls {
             saved: None,
             guest: false,
             return_pc: None,
+            handler_entry: None,
+            call_instruction: None,
             global_pointer: environment.global_pointer,
             missing_hook: environment.missing_hook,
         })
@@ -86,63 +124,153 @@ impl Calls {
         self.guest && matches!(self.cursor, Cursor::Guest) && self.saved.is_none()
     }
 
-    pub fn enter_guest(&mut self, cpu: &mut Cpu) -> Result<u32> {
-        if !self.guest || !matches!(self.cursor, Cursor::Capture) {
-            return Err("owned exception entry requires an unfinished guest capture".into());
+    pub fn validate_guest_stack(&self, bus: &mut impl Bus, binding: Dispatch) -> Result<()> {
+        if bus.read(binding.stack_pointer, Width::Word)? != self.stack {
+            return Err(
+                "owned exception stack cell disagrees with the explicit environment".into(),
+            );
         }
-        let destination = cpu.register(31);
-        validate_handler(destination)?;
-        self.cursor = Cursor::Guest;
-        cpu.set_register(4, self.table.base());
-        cpu.set_register(28, self.global_pointer);
-        cpu.set_register(29, self.stack);
-        cpu.set_register(30, self.stack + 16);
-        cpu.resume_at(destination);
-        Ok(destination)
+        Ok(())
     }
 
-    pub fn guard_guest_node(&mut self, cpu: &mut Cpu) -> Result<u32> {
-        self.require_guest_scan()?;
-        let priority = cpu.register(24);
-        if priority >= 4 {
-            return Err("owned exception priority outside 0..4".into());
+    pub fn prepare_guest_step(
+        &mut self,
+        cpu: &Cpu,
+        binding: Dispatch,
+        delivery_active: bool,
+    ) -> Result<GuestBoundary> {
+        if !self.guest {
+            return Ok(GuestBoundary::Continue);
         }
-        let destination = cpu.register(31);
-        validate_handler(destination)?;
-        if priority != self.priority {
-            if priority != self.priority.wrapping_add(1) {
+        let pc = cpu.pc();
+        let boundary = binding.addresses()?.into_iter().take(8).any(|at| at == pc);
+        if self.saved.is_some() {
+            if let Some(expected) = self.call_instruction {
+                if pc != expected || delivery_active {
+                    return Err("owned exception call must retire its JALR and delay slot".into());
+                }
+                return Ok(GuestBoundary::Continue);
+            }
+            if self.return_pc == Some(pc) {
+                if self.handler_entry.is_some() {
+                    return Err("owned exception return preceded handler entry".into());
+                }
+                if delivery_active {
+                    return Err(
+                        "owned exception handler return would abandon event/wait continuation"
+                            .into(),
+                    );
+                }
+                self.validate_handler_return(cpu)?;
+                self.saved = None;
+                self.return_pc = None;
+                self.handler_entry = None;
+                return Ok(GuestBoundary::Continue);
+            }
+            if boundary {
+                return Err("owned exception boundary would abandon an active handler".into());
+            }
+            if self.handler_entry == Some(pc) {
+                if cpu.register(31) != self.return_pc.unwrap() {
+                    return Err("owned exception JALR did not establish its return address".into());
+                }
+                self.handler_entry = None;
+                return Ok(GuestBoundary::Handler(pc));
+            }
+            return Ok(GuestBoundary::Continue);
+        }
+        if boundary && delivery_active {
+            return Err("owned exception boundary would abandon an active delivery".into());
+        }
+        if pc == binding.priority {
+            if matches!(self.cursor, Cursor::Capture) {
+                if cpu.register(19) != self.table.base()
+                    || cpu.register(20) != self.table.base().wrapping_add(32)
+                    || cpu.register(28) != self.global_pointer
+                    || cpu.register(29) != self.stack
+                    || cpu.register(30) != self.stack
+                {
+                    return Err(
+                        "owned exception capture disagrees with its table/stack/GP environment"
+                            .into(),
+                    );
+                }
+                self.cursor = Cursor::Guest;
+            }
+            self.require_guest_scan()?;
+            let next = self.priority.wrapping_add(1);
+            if next >= 4 || cpu.register(19) != self.table.base().wrapping_add(next * 8) {
                 return Err("owned exception priorities must advance in order".into());
             }
+            self.priority = next;
             self.visited.clear();
-            self.priority = priority;
+        } else if pc == binding.node {
+            self.require_guest_scan()?;
+            self.visit(cpu.register(22))?;
+        } else if pc == binding.verifier || pc == binding.handler {
+            self.require_guest_scan()?;
+            if cpu.register(29) != self.stack {
+                return Err("owned exception scanner changed its handler stack".into());
+            }
+            let handler = cpu.register(if pc == binding.verifier { 17 } else { 16 });
+            validate_handler(handler)?;
+            let target = ram_offset(handler, 4)?;
+            if (ram_offset(binding.entry, 4)?..=ram_offset(binding.exit, 4)?).contains(&target) {
+                return Err("owned exception handler targets reserved scanner code".into());
+            }
+            self.call_instruction = Some(pc);
+            self.return_pc = Some(pc + 8);
+            self.handler_entry = Some(handler);
+            self.saved = Some(SAVED.map(|r| cpu.register(r)));
+        } else if pc == binding.exit {
+            self.require_guest_scan()?;
+            if self.priority != 3 {
+                return Err("owned exception exit requires all four priorities".into());
+            }
+            self.cursor = Cursor::Exit;
+            return Ok(GuestBoundary::Exit);
         }
-        let node = cpu.register(25);
-        if node != 0 {
-            self.visit(node)?;
-        }
-        cpu.resume_at(destination);
-        Ok(destination)
+        Ok(GuestBoundary::Continue)
     }
 
-    pub fn enter_guest_handler(&mut self, cpu: &mut Cpu) -> Result<u32> {
-        self.require_guest_scan()?;
-        if cpu.register(29) != self.stack {
-            return Err("owned exception scanner changed its handler stack".into());
+    pub fn complete_guest_step(&mut self, cpu: &Cpu, step: &Step, binding: Dispatch) -> Result<()> {
+        let Some(expected) = self.call_instruction else {
+            return Ok(());
+        };
+        let return_pc = self
+            .return_pc
+            .ok_or("owned exception call lost its return address")?;
+        let target = self
+            .handler_entry
+            .ok_or("owned exception call lost its target")?;
+        if step.pc != expected {
+            return Err("owned exception call retired an unexpected instruction".into());
         }
-        let destination = cpu.register(31);
-        validate_handler(destination)?;
-        let handler = cpu.register(25);
-        validate_handler(handler)?;
-        self.return_pc = Some(destination);
-        self.invoke(cpu, handler)
-    }
-
-    pub fn exit_guest(&mut self) -> Result<()> {
-        self.require_guest_scan()?;
-        if self.priority != 3 {
-            return Err("owned exception exit requires all four priorities".into());
+        if expected == return_pc - 8 {
+            let instruction = if expected == binding.verifier {
+                0x0220_f809
+            } else {
+                0x0200_f809
+            };
+            if step.in_delay_slot
+                || step.instruction != instruction
+                || step.branch_target != Some(target)
+                || cpu.pc() != expected + 4
+                || cpu.register(31) != return_pc
+            {
+                return Err("owned exception call requires its bound JALR instruction".into());
+            }
+            self.call_instruction = Some(expected + 4);
+        } else {
+            if !step.in_delay_slot
+                || step.instruction != 0
+                || cpu.pc() != target
+                || cpu.register(31) != return_pc
+            {
+                return Err("owned exception call requires its completed NOP delay slot".into());
+            }
+            self.call_instruction = None;
         }
-        self.cursor = Cursor::Exit;
         Ok(())
     }
 
@@ -171,18 +299,16 @@ impl Calls {
     }
 
     pub fn resume(&mut self, cpu: &mut Cpu, bus: &mut impl Bus) -> Result<Option<u32>> {
-        let saved = self
-            .saved
+        self.saved
             .ok_or("BIOS exception dispatch: return trap without active handler")?;
-        if cpu.register(29) != self.stack || SAVED.map(|r| cpu.register(r)) != saved {
-            return Err("BIOS exception handler violated stack/callee-saved contract".into());
-        }
+        self.validate_handler_return(cpu)?;
         self.saved = None;
         if self.guest {
             let destination = self
                 .return_pc
                 .take()
                 .ok_or("owned exception handler has no guest continuation")?;
+            self.handler_entry = None;
             cpu.set_register(31, destination);
             cpu.resume_at(destination);
             return Ok(Some(destination));
@@ -254,6 +380,13 @@ impl Calls {
             return Err("BIOS exception dispatch: cycle or overlapping visited nodes".into());
         }
         self.visited.insert(physical);
+        Ok(())
+    }
+
+    fn validate_handler_return(&self, cpu: &Cpu) -> Result<()> {
+        if cpu.register(29) != self.stack || self.saved != Some(SAVED.map(|r| cpu.register(r))) {
+            return Err("BIOS exception handler violated stack/callee-saved contract".into());
+        }
         Ok(())
     }
 
