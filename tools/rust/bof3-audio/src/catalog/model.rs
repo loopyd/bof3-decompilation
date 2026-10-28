@@ -54,7 +54,7 @@ pub struct Asset {
     pub data: AssetData,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Clone, Debug, Serialize)]
 pub struct Role {
     pub role: &'static str,
     pub scope: &'static str,
@@ -65,7 +65,20 @@ pub struct Role {
     pub dispatcher_file_offset: usize,
     pub handler: u32,
     pub handler_file_offset: usize,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub sample_references: Vec<SampleReference>,
     pub playback: &'static str,
+}
+
+#[derive(Clone, Debug, Serialize)]
+pub struct SampleReference {
+    pub row: usize,
+    pub layer: usize,
+    pub program: u8,
+    pub tone: usize,
+    pub header_offset: usize,
+    pub sample_reader: u32,
+    pub sample_reader_file_offset: usize,
 }
 
 #[derive(Debug, Serialize)]
@@ -75,6 +88,9 @@ pub enum AssetData {
         header_sha256: String,
         body_candidates: Vec<String>,
         content: Option<Content>,
+        /// Physical slots include references beyond a program's declared tones.
+        #[serde(skip)]
+        physical_samples: Vec<[u16; 16]>,
         #[serde(flatten)]
         metadata: Bank,
     },

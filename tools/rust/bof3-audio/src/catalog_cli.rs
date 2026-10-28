@@ -16,8 +16,8 @@ pub const HELP: &str =
  Numeric IDs: bank/song entry number, sample ID, SEP sequence ID, XA channel, packed XA cue ID (decimal or 0x-prefixed hex).\n\
  Ambiguous numbers require a qualified ID from index; sequence qualified IDs use sequence index.\n\
  Disc-root identities use relative paths; explicit archives use canonical absolute paths.\n\
- Audio index/query accept --type sfx with --executable for banks referenced by local effects tables.\n\
- This is bank use, not classification of every sample or accepted playback. Vocal roles remain unresolved.\n\
+ Audio index/query accept --type sfx with --executable for banks and physical samples referenced by local effects tables.\n\
+ Roles identify references, not accepted playback. Unreferenced samples and vocal roles remain unresolved.\n\
  Original music archives resolve by whole-file SHA-256. Other song identities,\n\
  active runtime layout, and XA scheduler endpoints remain unresolved.\n";
 
@@ -254,6 +254,13 @@ fn print_asset(asset: &Asset) {
             evidence.handler_file_offset,
             evidence.playback
         );
+        for sample in &evidence.sample_references {
+            println!(
+                "Sample reference: row {}, layer {}, program {}, physical tone {}, VH +0x{:X}; {}@0x{:08X} (EXE +0x{:X})",
+                sample.row, sample.layer, sample.program, sample.tone, sample.header_offset,
+                evidence.target, sample.sample_reader, sample.sample_reader_file_offset
+            );
+        }
     }
 }
 

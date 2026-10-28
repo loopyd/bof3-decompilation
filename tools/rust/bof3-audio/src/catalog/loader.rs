@@ -67,7 +67,7 @@ pub fn resolve(catalog: &mut Catalog, executable: &Executable) -> Result<Report>
     let mut entry_banks = BTreeMap::new();
     let mut unresolved = vec![
         "layout tables are initialized independently; active gameplay layout and load history are not established".into(),
-        "music cues are limited to the verified media-backed prefix; caller bounds, XA scheduler endpoints, and sample/vocal classification remain unresolved; local SFX bank roles identify references, not accepted playback".into(),
+        "music cues are limited to the verified media-backed prefix; caller bounds, XA scheduler endpoints, unreferenced samples and vocal classification remain unresolved; local SFX bank/sample roles identify references, not accepted playback".into(),
         "the loader routines are mapped; CD transfer, bank opening, scheduler, and playback are not executed by this report".into(),
     ];
     for source in &catalog.sources {
@@ -133,13 +133,7 @@ pub fn resolve(catalog: &mut Catalog, executable: &Executable) -> Result<Report>
         }
     }
     let shared_banks = crate::catalog::content::resolve(catalog, &associations, &mut unresolved);
-    super::roles::resolve(
-        catalog,
-        &associations,
-        &layouts,
-        profile.target,
-        executable.header().load_address,
-    );
+    super::roles::resolve(catalog, &associations, &layouts, profile.target, executable);
     let mut references = Vec::new();
     for (address, symbol, role) in [
         (LAYOUT_INITIALIZE, None, "initializes seven audio slots from one of three layout rows"),
