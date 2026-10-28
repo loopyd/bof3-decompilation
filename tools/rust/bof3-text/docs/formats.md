@@ -438,8 +438,9 @@ US `BATE.EMI` entry 0 loads at `0x801D0C00`. Its pointer tables at `0x801D8E4C`,
 labels. Calls at `0x801D6F84`, `0x801D7600` and `0x801D7E8C` pass selected
 strings to `0x8014F800`. These `game-literal` fields retain their original string
 length plus NUL, with capacities of five to seven bytes. Alignment padding,
-pointer tables and code remain outside the editable allocations. Observed rendering
-remains unverified.
+pointer tables and code remain outside the editable allocations. Controlled runtime
+checks cover one equipment-screen category label. Its identical allocations remain
+indistinguishable; other category slots remain unverified.
 
 US `SHISU.EMI` entry 0 loads at `0x801D0C00`. Its category tables at
 `0x801D9E70`, `0x801D9EA4` and `0x801D9EDC` contain five, four and five labels.
@@ -459,7 +460,8 @@ Widths use 1..4 with optional zero padding; output growth and other conversions
 are refused. BATE calls formatter `0x8017E3F4` at `0x801D6FC0` and `0x801D7EAC`;
 SHISU calls it at `0x801D7F68` and `0x801D8E54`. Each call masks its first
 argument to eight bits and supplies 32 or 128 as the second argument. The result
-at `0x80145AD4` is passed to renderer `0x80150098`.
+at `0x80145AD4` is passed to renderer `0x80150098`. Controlled checks cover the edited
+BATE equipment-screen pair; SHISU rendering remains unverified.
 
 Both archives also expose `%2d` and `%02d %02d`. The single-byte format uses
 `ascii-u8-decimal-format`, with three encoded bytes and three formatted bytes.
