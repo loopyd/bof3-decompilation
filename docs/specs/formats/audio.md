@@ -3879,7 +3879,22 @@ installs and returns an owned default jump buffer. It does not clear the hook. T
 context restoration with the declared exception stack and zero saved registers;
 it imports no BIOS RAM. The initial hook stays zero until registration or reset.
 Unbound reset calls fail explicitly. The callback manager's complete stop/restart
-lifecycle and diagnostic-output service remain separate startup obligations.
+lifecycle remains a separate startup obligation.
+
+`Kernel::configure_console` enables bounded A0/3F diagnostic capture once on an
+idle kernel, with an aggregate capacity of 1 to 1,048,576 bytes. Supported
+conversions are `%d`, `%04x`, `%08x` and `%%`. Decimal values are signed 32-bit;
+hexadecimal values are unsigned and lowercase, with minimum zero-padded widths.
+Arguments use A1 through A3, then aligned RAM words beginning at SP + 16.
+Formats must terminate within 4,096 bytes including NUL; a null pointer returns
+zero. Unsupported formats, invalid memory and exhausted capacity fail before
+publishing bytes or a new return value. Unconfigured calls fail explicitly.
+
+`Kernel::console_output()` exposes captured formatter bytes. Literal text does
+not contribute to V0; converted digits, signs, padding and `%%` do, following the
+original BIOS formatter. Capture adds no stdout output, UART behavior or newline
+translation. The service uses the owned HLE schedule and does not reproduce
+original formatter instruction timing or internal stack writes.
 
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
@@ -3890,8 +3905,10 @@ bank_probe KERNEL_BIN KERNEL_SYM US_EXE BGM_EMI [SEQUENCE TICKS [WAV]]
 
 It checks image/allocation bounds, uses the build's defined-nm symbol rows, runs
 the guest initializer and binds the linked services. It explicitly supplies
-foreground registers, PAD policy and the SPU memory-control input. Its
-`bof3.bank-probe/v2` report identifies both kernel inputs and initialization.
+foreground registers, PAD policy, a 65,536-byte diagnostic buffer and the SPU
+memory-control input. The
+`bof3.bank-probe/v2` report identifies both kernel inputs and initialization and
+includes the captured `diagnostic_bytes`.
 The example still executes original game/SDK code and uses host-fed media.
 Production bank preparation and the independent BIOS reference tools retain
 their current inputs; this development path does not close their migration.

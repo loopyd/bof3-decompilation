@@ -4,6 +4,7 @@
 
 use super::{
     bus::{Bus, Width},
+    console::Console,
     cpu::{Cpu, Fault, FaultKind, Step},
     event_calls::{Calls as EventCalls, Service as EventService, CALLBACK_RETURN},
     events::{Table as Events, BUSY},
@@ -19,6 +20,7 @@ const SAVED: [usize; 12] = [31, 29, 30, 16, 17, 18, 19, 20, 21, 22, 23, 28];
 
 #[derive(Clone, Debug)]
 pub struct Kernel {
+    console: Option<Console>,
     entry_hook: EntryHook,
     pad_auto_ack: u32,
     counter_auto_ack: CounterFlags,
@@ -51,6 +53,7 @@ struct PendingWait {
 impl Default for Kernel {
     fn default() -> Self {
         Self {
+            console: None,
             entry_hook: EntryHook::Functional(None),
             pad_auto_ack: 1,
             counter_auto_ack: CounterFlags::Functional([1; 4]),
@@ -146,6 +149,22 @@ impl CounterFlags {
 }
 
 impl Kernel {
+    /// Capture callback diagnostic bytes with an aggregate capacity of 1..=1 MiB.
+    /// Configuration requires an idle kernel and can be performed only once.
+    pub fn configure_console(&mut self, capacity: usize) -> Result<()> {
+        self.require_plain_context()?;
+        if self.console.is_some() {
+            return Err("diagnostic console already configured".into());
+        }
+        self.console = Some(Console::new(capacity)?);
+        Ok(())
+    }
+
+    /// Formatter bytes, without host output or device newline translation.
+    pub fn console_output(&self) -> Option<&[u8]> {
+        self.console.as_ref().map(Console::bytes)
+    }
+
     /// Bind caller-owned service identifiers in guest ExCB nodes. Each pair is
     /// verifier/acknowledger for timer 0, timer 1, timer 2, then VBlank.
     /// These identifiers select owned semantics, not instructions to fetch.
@@ -1031,6 +1050,15 @@ impl Kernel {
         let mut destination = cpu.register(31);
         let mut waiting = false;
         let name = match (vector, service) {
+            (0xa0, 0x3f) => {
+                let count = self
+                    .console
+                    .as_mut()
+                    .ok_or("diagnostic console is not configured")?
+                    .printf(cpu, bus)?;
+                cpu.set_register(2, count);
+                "printf"
+            }
             (0xb0, 0x18) => {
                 let entry = self
                     .exception_reset

@@ -12,6 +12,7 @@ pub mod cd_host;
 pub mod cd_media;
 pub mod cd_position;
 pub mod cd_queue;
+mod console;
 pub mod cop0;
 pub mod cpu;
 pub mod dma;
