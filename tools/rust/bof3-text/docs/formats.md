@@ -35,20 +35,22 @@ size alone does not identify audio. These checks do not classify container gaps.
 `extract`, `analyze`, `validate` and `pack` also support the US executable's
 exception-screen ASCII strings and the `FILE NOT FOUND` diagnostic with its
 three-ID hexadecimal format, plus the BIOS `DiskError: ` prefix and six CD
-interrupt labels and 22 CD command names. `extract-corpus` exports
+interrupt labels, 22 CD command names and fixed CD diagnostic literals. `extract-corpus` exports
 them when the complete source root includes `SLUS_004.22`. Literal strings use
 the pointer words at `0x8017F470..0x8017F53C`, with an exclusive upper bound.
 The consumer at `0x8014B3C4` passes these pointers to renderer `0x80150098`.
 The renderer reads bytes until NUL, advances on ASCII space and handles newline
 `0x0A`. These bytes use ASCII rather than the dialogue character table.
 
-The JSON schema is `bof3.executable-text/v6`. Re-extract older documents before
+The JSON schema is `bof3.executable-text/v7`. Re-extract older documents before
 editing. It contains `source`, mandatory `source_sha256`, `build`, `load_address`,
 `consumers` and `strings`.
 Each string retains its `address`, whole-file `file_offset`, original `capacity`
-including NUL, immutable `consumer`, `codec` and `output`, typed `references`
-and editable `text`. Each `output` is either `game-screen`, with its renderer
-and optional formatter, or `bios-printf`, with its stub, vector and selector.
+including NUL, immutable `consumers`, `codec` and `output`, typed `references`
+and editable `text`. Row `consumers` lists the containing source functions;
+document `consumers` is their sorted union. Each `output` is `game-screen`, with
+its renderer and optional formatter, or `bios-printf` or `bios-puts`, with its
+stub, vector and selector.
 Keep output metadata unchanged.
 Exception literal rows use `ascii-literal` and `pointer-word` references with an `address`.
 Shared pointers appear on one allocation. Retain every allocation and edit only
@@ -111,7 +113,7 @@ include NUL and exclude alignment bytes:
 | `0x8014A2CC` | `DataReady` | 10 | `0x80185828` |
 | `0x8014A2D8` | `NoIntr` | 7 | `0x80185824` |
 
-Each row records the immediate table consumer at `0x8017560C`. It masks the
+Each row records the immediate table consumer `0x8017560C`. It masks the
 selector to eight bits and reads the table only for indices below seven.
 Separate readers pass labels as the third and fourth `%s` arguments to BIOS
 printf at `0x801762F8`, `0x80176580`, `0x801769F0` and `0x801770E8`.
@@ -133,6 +135,25 @@ Calls at `0x80176790` and `0x801767E8` use the formats `%s...\n` and
 `%s: no param\n`, respectively. These readers bypass the lookup. Observed BIOS
 output remains unverified. Editing a name changes its text, without changing command
 numbers, pointers, code or debug settings.
+
+Fixed CD diagnostics retain their original capacities and every proven address
+pair. Use `analyze` for their addresses, limits and containing functions. The
+`CD timeout: ` allocation has four consumers. It and the literals `CDROM: unknown
+intr`, `CD_init:`, `CdRead: sector error\n` and `CdRead: Shell open...\n` use
+`bios-puts`: stub `0x8017E33C`, vector `0xB0`, selector `0x3F`. They use
+`ascii-literal`, so percent characters remain data. The six direct printf
+literals beginning with `CdSearchFile: disc error`, `CD_newmedia:` or
+`CD_cachefile:` use `ascii-printf-literal` and refuse every percent character.
+Original spelling, including `sarching`, is preserved on unchanged round trips.
+
+The labels `CD_sync`, `CD_ready`, `CD_cw` and `CD_datasync` also use
+`ascii-literal`. Their address pairs store pointers in shared word `0x8018B5F0`;
+their reference `calls` arrays are empty because intervening calls leave the
+store-to-use relationship unproven. Readers at `0x801762B8`, `0x80176540`,
+`0x801769B0` and `0x801770AC` load that word as the first `%s` argument to
+printf calls `0x801762F8`, `0x80176580`, `0x801769F0` and `0x801770E8`,
+respectively. This records a shared-word output path without asserting that
+every stored label reaches every reader. BIOS output remains unobserved.
 
 Build recognition hashes all bytes outside the supported allocations against
 the pinned US layout. This permits re-extraction of supported edits while

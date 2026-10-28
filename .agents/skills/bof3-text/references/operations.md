@@ -38,8 +38,8 @@ include encoded size, spare capacity, required terminator bytes and the original
 allocation bytes. Use `extract` for documents accepted by `pack`.
 
 For the US executable, use `extract out/extracted/SLUS_004.22 -o out/exe-text.json`.
-Its `bof3.executable-text/v6` document uses ASCII. Re-extract older documents.
-Edit only each string's `text`. Retain its consumer, output, codec, allocation
+Its `bof3.executable-text/v7` document uses ASCII. Re-extract older documents.
+Edit only each string's `text`. Retain its consumers, output, codec, allocation
 and typed reference sites. The exception format permits one `%X` or `%x` conversion with
 optional width 1..8 and zero padding, within four bytes. The three-ID format
 requires three ordered hex conversions with optional width 1..2 and zero padding;
@@ -51,13 +51,14 @@ bin/harness text pack --original out/extracted/SLUS_004.22 \
   --text out/exe-text.json -o out/edited-exe.bin
 ```
 
-Omit EMI selectors. Support covers the exception screen, `FILE NOT FOUND`, and
-the BIOS `DiskError: ` prefix, six CD interrupt labels and 22 CD command names.
-These labels use literal ASCII within their original capacities, including NUL. Their percent
-characters remain data passed through `%s`. The prefix holds at most eleven ASCII
-bytes plus NUL and refuses every percent character. Its BIOS output requires CD debugging,
-which starts disabled. Other executable ranges and runtime acceptance remain
-unresolved. See the tool's
+Omit EMI selectors. Support covers the exception screen, `FILE NOT FOUND`, CD
+interrupt and command names, and fixed BIOS diagnostics. `analyze` reports their
+capacities, including NUL, and output paths. Literal labels allow percent bytes
+passed through `%s` or BIOS puts. Direct printf literals refuse every percent
+character. The `DiskError: ` prefix holds at most eleven bytes plus NUL; its
+output requires CD debugging, which starts disabled. Shared-word label references
+have empty `calls` arrays where intervening calls leave pointer use unproven.
+Other executable ranges and BIOS runtime output remain unresolved. See the tool's
 [format contract](../../../../tools/rust/bof3-text/docs/formats.md#executable-ascii).
 
 `extract out/extracted/BIN/ETC/GAME.EMI -o out/equipment-names.json` exports

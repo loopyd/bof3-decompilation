@@ -8,11 +8,11 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-pub(crate) const SCHEMA: &str = "bof3.executable-text/v6";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v7";
 const LOAD: u32 = 0x80096800;
 const SIZE: usize = 1445888;
 // Hash of the entire executable with only the supported allocations zeroed.
-const LAYOUT_SHA256: &str = "cda716590e0e59f1724ab6f48666b3b6a70b98f5991fdf693cd91bc89631092e";
+const LAYOUT_SHA256: &str = "b6a054386d3cc8fc31ffed29627d01545ca768a03598949e1209343a0007c762";
 const FORMAT_ADDRESS: u32 = 0x80149990;
 const FILE_LABEL: u32 = 0x80149f9c;
 const FILE_FORMAT: u32 = 0x80149fac;
@@ -26,7 +26,12 @@ const CD_COMMAND_LABELS: [u32; 22] = [
     0x8014a264, 0x8014a270, 0x8014a27c, 0x8014a284, 0x8014a290, 0x8014a298,
 ];
 const BIOS_PRINTF: u32 = 0x8017e3e4;
-const CONSUMERS: [u32; 5] = [0x8014b3c4, 0x80166df4, 0x80175c60, 0x8017560c, 0x801755d8];
+const BIOS_PUTS: u32 = 0x8017e33c;
+const CD_PUTS_LABELS: [u32; 5] = [0x8014a2e0, 0x8014a334, 0x8014a3d0, 0x8014a5e0, 0x8014a5f8];
+const CD_SHARED_LABELS: [u32; 4] = [0x8014a368, 0x8014a370, 0x8014a394, 0x8014a3e8];
+const CD_PRINTF_LITERALS: [u32; 6] = [
+    0x8014a428, 0x8014a480, 0x8014a4b4, 0x8014a508, 0x8014a560, 0x8014a580,
+];
 const FORMATTER: u32 = 0x8017e3f4;
 // Original string bytes plus their NUL, excluding alignment padding. The consumer
 // at 0x8014b3c4 passes pointers from 0x8017f470..0x8017f53c to 0x80150098.
@@ -111,7 +116,22 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (CD_INTERRUPT_LABELS[3], 9),
     (CD_INTERRUPT_LABELS[4], 10),
     (CD_INTERRUPT_LABELS[5], 7),
+    (CD_PUTS_LABELS[0], 13),
     (DISK_PREFIX, 12),
+    (CD_PUTS_LABELS[1], 20),
+    (CD_SHARED_LABELS[0], 8),
+    (CD_SHARED_LABELS[1], 9),
+    (CD_SHARED_LABELS[2], 6),
+    (CD_PUTS_LABELS[2], 9),
+    (CD_SHARED_LABELS[3], 12),
+    (CD_PRINTF_LITERALS[0], 26),
+    (CD_PRINTF_LITERALS[1], 41),
+    (CD_PRINTF_LITERALS[2], 48),
+    (CD_PRINTF_LITERALS[3], 29),
+    (CD_PRINTF_LITERALS[4], 29),
+    (CD_PRINTF_LITERALS[5], 28),
+    (CD_PUTS_LABELS[3], 22),
+    (CD_PUTS_LABELS[4], 23),
 ];
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -226,6 +246,9 @@ pub enum Reference {
 }
 
 fn codec(address: u32) -> Codec {
+    if CD_PRINTF_LITERALS.contains(&address) {
+        return Codec::AsciiPrintfLiteral;
+    }
     match address {
         FORMAT_ADDRESS => Codec::AsciiU32HexFormat,
         FILE_FORMAT => Codec::AsciiU8TripleHexFormat,
@@ -234,18 +257,74 @@ fn codec(address: u32) -> Codec {
     }
 }
 
-fn consumer(address: u32) -> u32 {
+fn consumers(address: u32) -> Vec<u32> {
     if CD_COMMAND_LABELS.contains(&address) {
-        return CONSUMERS[4];
+        return vec![0x801755d8];
     }
     if CD_INTERRUPT_LABELS.contains(&address) {
-        return CONSUMERS[3];
+        return vec![0x8017560c];
     }
     match address {
-        FILE_LABEL | FILE_FORMAT => CONSUMERS[1],
-        DISK_PREFIX => CONSUMERS[2],
-        _ => CONSUMERS[0],
+        0x8014a2e0 => vec![0x801761e8, 0x80176468, 0x80176734, 0x80176fe8],
+        FILE_LABEL | FILE_FORMAT => vec![0x80166df4],
+        DISK_PREFIX | 0x8014a334 => vec![0x80175c60],
+        0x8014a368 => vec![0x801761e8],
+        0x8014a370 => vec![0x80176468],
+        0x8014a394 => vec![0x80176734],
+        0x8014a3d0 => vec![0x80176dfc],
+        0x8014a3e8 => vec![0x80176fe8],
+        0x8014a428 => vec![0x80177348],
+        0x8014a480 | 0x8014a4b4 | 0x8014a508 => vec![0x80177634],
+        0x8014a560 | 0x8014a580 => vec![0x801779bc],
+        0x8014a5e0 => vec![0x80177d08],
+        0x8014a5f8 => vec![0x80177f1c],
+        _ => vec![0x8014b3c4],
     }
+}
+
+fn all_consumers() -> Vec<u32> {
+    ALLOCATIONS
+        .iter()
+        .flat_map(|&(address, _)| consumers(address))
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect()
+}
+
+fn cd_literal_references(address: u32) -> Option<Vec<Reference>> {
+    let pairs: &[(u32, u32, Option<u32>)] = match address {
+        0x8014a2e0 => &[
+            (0x8017629c, 0x801762a0, Some(0x801762a4)),
+            (0x80176524, 0x80176528, Some(0x8017652c)),
+            (0x80176994, 0x80176998, Some(0x8017699c)),
+            (0x80177090, 0x80177094, Some(0x80177098)),
+        ],
+        0x8014a334 => &[(0x801761a8, 0x801761ac, Some(0x801761b0))],
+        0x8014a368 => &[(0x8017623c, 0x80176240, None)],
+        0x8014a370 => &[(0x801764c4, 0x801764c8, None)],
+        0x8014a394 => &[(0x80176924, 0x80176928, None)],
+        0x8014a3d0 => &[(0x80176e00, 0x80176e04, Some(0x80176e0c))],
+        0x8014a3e8 => &[(0x80177030, 0x80177034, None)],
+        0x8014a428 => &[(0x801774d0, 0x801774d4, Some(0x801774d8))],
+        0x8014a480 => &[(0x80177690, 0x80177694, Some(0x80177698))],
+        0x8014a4b4 => &[(0x801776d4, 0x801776d8, Some(0x801776dc))],
+        0x8014a508 => &[(0x80177768, 0x8017776c, Some(0x80177770))],
+        0x8014a560 => &[(0x80177a44, 0x80177a48, Some(0x80177a4c))],
+        0x8014a580 => &[(0x80177a74, 0x80177a78, Some(0x80177a7c))],
+        0x8014a5e0 => &[(0x80177d78, 0x80177d7c, Some(0x80177d80))],
+        0x8014a5f8 => &[(0x80177f68, 0x80177f6c, Some(0x80177f70))],
+        _ => return None,
+    };
+    Some(
+        pairs
+            .iter()
+            .map(|&(upper, lower, call)| Reference::AddressPair {
+                upper,
+                lower,
+                calls: call.into_iter().collect(),
+            })
+            .collect(),
+    )
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -260,12 +339,26 @@ pub(crate) enum Output {
         vector: u32,
         selector: u32,
     },
+    BiosPuts {
+        stub: u32,
+        vector: u32,
+        selector: u32,
+    },
 }
 
 fn output(address: u32) -> Output {
+    if CD_PUTS_LABELS.contains(&address) {
+        return Output::BiosPuts {
+            stub: BIOS_PUTS,
+            vector: 0xb0,
+            selector: 0x3f,
+        };
+    }
     if address == DISK_PREFIX
         || CD_INTERRUPT_LABELS.contains(&address)
         || CD_COMMAND_LABELS.contains(&address)
+        || CD_SHARED_LABELS.contains(&address)
+        || CD_PRINTF_LITERALS.contains(&address)
     {
         Output::BiosPrintf {
             stub: BIOS_PRINTF,
@@ -296,7 +389,7 @@ pub struct Document {
 #[serde(deny_unknown_fields)]
 pub struct Text {
     pub address: u32,
-    pub consumer: u32,
+    pub consumers: Vec<u32>,
     pub(crate) output: Output,
     pub file_offset: usize,
     pub capacity: usize,
@@ -343,7 +436,9 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
         let text = std::str::from_utf8(&bytes[..end])
             .map_err(|error| Error::Invalid(error.to_string()))?;
         codec.encode(text, capacity - 1)?;
-        let references = if address == DISK_PREFIX {
+        let references = if let Some(references) = cd_literal_references(address) {
+            references
+        } else if address == DISK_PREFIX {
             vec![Reference::AddressPair {
                 upper: 0x80175e40,
                 lower: 0x80175e44,
@@ -400,7 +495,7 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
         };
         strings.push(Text {
             address,
-            consumer: consumer(address),
+            consumers: consumers(address),
             output: output(address),
             file_offset,
             capacity,
@@ -415,7 +510,7 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
         source_sha256: sha256_hex(data),
         build: "US SLUS-00422 diagnostic ASCII".into(),
         load_address: LOAD,
-        consumers: CONSUMERS.to_vec(),
+        consumers: all_consumers(),
         strings,
     })
 }
@@ -426,7 +521,7 @@ pub fn parse(data: &[u8]) -> Result<Document> {
     if document.schema != SCHEMA
         || document.load_address != LOAD
         || document.build != "US SLUS-00422 diagnostic ASCII"
-        || document.consumers != CONSUMERS
+        || document.consumers != all_consumers()
         || document.source_sha256.len() != 64
         || !document
             .source_sha256
@@ -441,7 +536,7 @@ pub fn parse(data: &[u8]) -> Result<Document> {
             || !ALLOCATIONS.contains(&(text.address, text.capacity))
             || text.file_offset != offset(text.address)
             || text.codec != codec(text.address)
-            || text.consumer != consumer(text.address)
+            || text.consumers != consumers(text.address)
             || text.output != output(text.address)
         {
             return invalid("unknown or duplicate executable string allocation");

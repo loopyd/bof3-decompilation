@@ -143,9 +143,12 @@ Output is always JSON — there is no second codec — and every object carries 
 document's own recorded `source`.
 
 The supported US `SLUS_004.22` executable exports one
-`bof3.executable-text/v6` document. Re-extract older documents. Use the default
+`bof3.executable-text/v7` document. Re-extract older documents. Use the default
 `--entry all` and omit `--class` and `--latch`; EMI selectors are refused for
 executable input.
+Keep each row's `consumers` list and output metadata unchanged. BIOS puts accepts
+literal percent bytes; direct printf literals refuse them. Shared-word label
+references retain empty `calls` arrays where the downstream use is unproven.
 See [formats.md](formats.md#executable-ascii) for supported allocations and limits.
 
 For the supported US `GAME.EMI`, extraction writes one `bof3.record-text/v1`
