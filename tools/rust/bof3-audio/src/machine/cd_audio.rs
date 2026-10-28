@@ -124,14 +124,10 @@ impl XaAudio {
         self.decoder.reset(Histories::default());
     }
 
-    /// Runtime sectors may change coding without releasing file/channel.
-    /// Rebinding identity requires an explicit selection release. Histories
-    /// remain device-wide; mono leaves the right-channel history untouched.
-    pub(crate) fn select_stream(&mut self, stream: Stream, released: bool) -> Result<()> {
-        let old = self.decoder.stream();
-        if !released && [stream.file, stream.channel] != [old.file, old.channel] {
-            return Err("XA file/channel change requires selection release".into());
-        }
+    /// Bind an already-selected sector without an identity latch. The current
+    /// diagnostic policy reads coding per sector; native format latching remains
+    /// separate. Histories are device-wide, with mono retaining the right side.
+    pub(crate) fn select_stream(&mut self, stream: Stream) -> Result<()> {
         let decoder = Decoder::new(stream, self.decoder.arithmetic(), self.decoder.histories())?;
         self.resampler.change_format(decoder.format())?;
         self.decoder = decoder;

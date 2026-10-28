@@ -53,7 +53,6 @@ pub struct Statistics {
 
 pub struct Queue {
     audio: Option<XaAudio>,
-    selection_released: bool,
     arithmetic: Arithmetic,
     resampling: Resampling,
     frames: VecDeque<[i16; 2]>,
@@ -72,7 +71,6 @@ impl Queue {
     ) -> Result<Self> {
         Ok(Self {
             audio: Some(XaAudio::new(stream, arithmetic, histories, resampling)?),
-            selection_released: false,
             arithmetic,
             resampling,
             frames: VecDeque::new(),
@@ -82,12 +80,6 @@ impl Queue {
         })
     }
 
-    /// Setfilter releases file/channel selection without resetting histories
-    /// or output. EOF does this after decoding, including pending submissions.
-    pub fn release_selection(&mut self) {
-        self.selection_released = true;
-    }
-
     pub fn statistics(&self) -> Statistics {
         Statistics {
             queued_frames: self.frames.len(),
@@ -95,20 +87,19 @@ impl Queue {
             ..self.statistics
         }
     }
-    /// Explicit fresh context: discard queued and pending output and release
-    /// stream binding. This is not a drive command. The next sector starts
+    /// Explicit fresh context: discard queued and pending output and forget
+    /// the decoder context. This is not a drive command. The next sector starts
     /// zero predictor/interpolation history, retaining arithmetic/model choices.
     pub fn reset(&mut self) -> usize {
         let discarded = self.frames.len() + self.pending.take().map_or(0, |frames| frames.len());
         self.frames.clear();
         self.audio = None;
-        self.selection_released = true;
         self.statistics.resets += 1;
         self.statistics.reset_discarded_frames += discarded as u64;
         discarded
     }
 
-    /// Reset only ADPCM predictors and release selection. Native sector feeds
+    /// Reset only ADPCM predictors. Native sector feeds
     /// finish their wait before the CPU can service a command.
     pub fn reset_predictors(&mut self) -> Result<()> {
         if self.pending.is_some() {
@@ -117,7 +108,6 @@ impl Queue {
         if let Some(audio) = self.audio.as_mut() {
             audio.reset_predictors();
         }
-        self.selection_released = true;
         self.statistics.predictor_resets += 1;
         Ok(())
     }
@@ -147,7 +137,7 @@ impl Queue {
         let mut candidate = match &self.audio {
             Some(audio) => {
                 let mut candidate = audio.clone();
-                candidate.select_stream(stream, self.selection_released)?;
+                candidate.select_stream(stream)?;
                 candidate
             }
             None => XaAudio::new(
@@ -159,7 +149,6 @@ impl Queue {
         };
         if command_muted || volume.xa_muted() {
             candidate.muted_sector(bytes)?;
-            self.selection_released = bytes[2] & 0x80 != 0;
             self.audio = Some(candidate);
             self.statistics.muted_sectors += 1;
             return Ok(Admission::Muted);
@@ -168,7 +157,6 @@ impl Queue {
         if frames.len() >= CAPACITY {
             return Err("XA batch exceeds queue capacity".into());
         }
-        self.selection_released = bytes[2] & 0x80 != 0;
         self.pending = Some(
             frames
                 .into_iter()
@@ -181,7 +169,7 @@ impl Queue {
 
     /// One already-selected raw 2352-byte CDDA sector, little-endian stereo at
     /// 44.1 kHz. It bypasses XA decoding/interpolation without changing either
-    /// history or selection. The caller owns track selection and drive timing.
+    /// history. The caller owns track selection and drive timing.
     pub fn cdda_sector(
         &mut self,
         bytes: &[u8],

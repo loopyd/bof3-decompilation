@@ -106,7 +106,6 @@ pub struct Response {
 pub struct AppliedCommand {
     pub response: Response,
     pub xa_predictors_reset: bool,
-    pub audio_selection_released: bool,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -164,7 +163,7 @@ pub struct Drive {
     last_header: Option<[u8; 8]>,
     header_valid: bool,
     muted: bool,
-    xa_selection: Option<[u8; 2]>,
+    xa_ended: bool,
     toc: Option<Toc>,
     peak_right: Option<bool>,
     play_track: u8,
@@ -192,7 +191,7 @@ impl Drive {
             last_header: None,
             header_valid: false,
             muted: false,
-            xa_selection: None,
+            xa_ended: false,
             toc: None,
             peak_right: None,
             play_track: 0,
@@ -375,14 +374,13 @@ impl Drive {
                         status: self.status() & 0xe0,
                     }
                 };
-                self.xa_selection = None;
                 // Read acknowledges Idle even when it interrupts an active read.
                 if matches!(command.opcode, 0x06 | 0x1b) {
+                    self.xa_ended = false;
                     return Ok(self.response(3));
                 }
             }
             0x09 => {
-                self.xa_selection = None;
                 self.activity = Activity::Pausing;
                 self.header_valid = false;
             }
@@ -397,20 +395,18 @@ impl Drive {
                 self.seek_lba = 0;
                 self.setloc_pending = false;
                 self.header_valid = self.last_header.is_some();
-                self.xa_selection = None;
                 self.auto_pause = false;
                 self.report = false;
             }
             0x0d => {
                 self.filter.copy_from_slice(&command.parameters);
-                self.xa_selection = None;
             }
             0x0b => self.muted = true,
             0x0c => self.muted = false,
             0x0e => {
                 check_mode(command.parameters[0])?;
                 if self.mode & 0x40 == 0 && command.parameters[0] & 0x40 != 0 {
-                    self.xa_selection = None;
+                    self.xa_ended = false;
                 }
                 self.mode = command.parameters[0];
                 self.auto_pause = self.mode & 2 != 0;
@@ -682,24 +678,17 @@ impl Drive {
         }
         let audio = raw[18] & 0x44 == 0x44;
         let filtered = self.mode & 8 != 0;
-        let delivery = if audio && filtered && raw[16..18] != self.filter {
-            Delivery::Filtered
-        } else if audio && self.mode & 0x40 != 0 {
-            let stream = [raw[16], raw[17]];
-            // Emulator-reference selection precedes decoder admission. A
-            // filtered-out EOF cannot release another stream's selection.
-            if self.xa_selection.is_some_and(|selected| selected != stream)
-                || (self.xa_selection.is_none() && !filtered && stream[1] == 255)
+        let delivery = if audio && (filtered || self.mode & 0x40 != 0) {
+            if self.mode & 0x40 == 0
+                || self.xa_ended
+                || (filtered && raw[16..18] != self.filter)
+                || raw[17] == 255
             {
                 Delivery::Filtered
             } else {
-                self.xa_selection = (raw[18] & 0x80 == 0).then_some(stream);
+                self.xa_ended = raw[18] & 0x81 == 0x81;
                 Delivery::Xa(raw[16..].to_vec())
             }
-        } else if audio && filtered {
-            // Published routing rejects realtime audio from data delivery even
-            // if XA decoding is disabled. Deferred retry behaviour is excluded.
-            Delivery::Filtered
         } else {
             let bytes = if self.mode & 0x20 != 0 {
                 &raw[12..]

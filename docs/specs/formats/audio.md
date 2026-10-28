@@ -2608,8 +2608,8 @@ confirms unity and asymmetric crossed gain across a guest latch with old output
 still queued. Clipping and other matrices remain unaccepted against native output.
 Empty queue output is zero under the selected reference model and does not
 advance decoder history. Command-driven predictor resets and mute use the
-command lifecycle below. EOF selection release and coding transitions use
-the explicit emulator model below; physical timing remains unresolved.
+command lifecycle below. Drive routing and end flags use the contract below;
+per-sector coding remains diagnostic and physical timing remains unresolved.
 
 Configuration is explicit and cannot replace a live queue. Selected sectors enter
 through `enqueue_cd_audio`; pending batches finish through
@@ -2648,7 +2648,7 @@ active ATV matrix with native CDDA scaling: multiply the matrix sum by 31130,
 arithmetic-shift by 22, clip to signed 16-bit, multiply by 31880, then
 arithmetic-shift by 15. This differs from XA's pre-clamp coefficient of 33617.
 The 44.1 kHz feed bypasses interpolation without changing XA predictor, ring,
-phase, previous-sample or selection state.
+phase or previous-sample state.
 
 `Interconnect::enqueue_cd_cdda` supplies the host's active matrix and command
 mute. XA-only mute does not suppress CDDA. Gain is fixed before submission;
@@ -2730,13 +2730,13 @@ preserve the interpolation ring, phase, previous samples and queued output.
 Pause, SeekL/SeekP and Init preserve predictors as well as audio and selected
 data, including its cursor and BFRD request. Setloc only records a target.
 
-The returned effect reports `xa_predictors_reset` separately from selection
-release. Queue statistics count predictor resets separately from full resets.
+The returned effect reports `xa_predictors_reset`. Queue statistics count
+predictor resets separately from full resets.
 `Queue::reset()` is an explicit fresh-context operation that discards queued
 and pending output, decoder and interpolation history. Drive commands do not
 invoke it. A malformed selected sector cannot change queue state or establish
-a new stream binding. File/channel changes require selection release; coding
-changes use the diagnostic transition policy described below.
+a new decoder context. Already-selected file/channel changes preserve histories;
+coding changes use the diagnostic transition policy described below.
 
 Mute/Demute maintain a command flag separate from the host ADPCTL mute bit.
 Either suppresses XA admission. Mute changes preserve queued frames and ongoing
@@ -2750,7 +2750,7 @@ overlap behavior.
 
 Response publication and mechanical completion remain caller-owned boundaries.
 The standalone `Drive::command` API supports isolated drive checks; integrated
-execution uses the interconnect method for predictor, selection and mute effects.
+execution uses the interconnect method for predictor and mute effects.
 The [functional drive contract](#rust-cd-drive-commands-and-sector-routing)
 uses the native retained-seek restart and Read/Seek/Pause state boundaries.
 A bounded native guest comparison qualifies response bytes, phase positions,
@@ -2769,53 +2769,50 @@ This is a functional routing comparison, not independent native PCM acceptance.
 
 See [CD references](../../reference/cd-audio.md#decoder-reset-and-command-mute)
 for native source and bounded observations. General command overlap, DMA
-cancellation, native XA routing and coding selection, emphasis, original
+cancellation, native coding selection, emphasis, original
 runtime bootstrap, clocks and independent PCM remain acceptance obligations.
 
 ## Rust XA selection and EOF
 
-The functional drive now retains XA file/channel selection independently from
-Setfilter's configured pair. With filtering disabled, the first eligible audio
-sector acquires selection; channel 255 is skipped unless explicitly selected by
-the enabled filter. Other file/channel pairs cannot interrupt it. A matching EOF
-is delivered as audio and releases selection before decoder admission, while
-an unrelated EOF is filtered out. EOR does not release selection. Setfilter
-releases selection even with filtering disabled. Setmode releases it when
-realtime decoding becomes enabled. Seek/read startup and Pause also release
-selection; only reads and realtime activation reset predictors. This diagnostic
-selection policy differs from current native routing and EOF handling, as
-described in [CD references](../../reference/cd-audio.md#xa-selection-and-eof).
+The drive applies the configured filter directly, without an automatic
+file/channel latch. With realtime decoding or subheader filtering enabled,
+realtime audio never reaches the host data FIFO. Realtime decoding routes
+channels other than 255 that match the enabled filter; without filtering, different
+file/channel identities may follow each other. Channel 255 is rejected even
+when explicitly filtered. Header and position still advance for withheld sectors.
 
-`Queue::release_selection` and validated EOF permit the next selected file/channel
-to bind while preserving ADPCM and interpolation histories and queued output.
-The interconnect applies this release for successful Setfilter and reports it
-separately from a predictor reset. A decoded EOF releases selection before
-its submission waits; timeout preserves that release and the advanced histories.
-A decoded first sector acquires the new binding even if its output later times
-out. Muted EOF updates predictors only, as other muted sectors do.
-Malformed sectors preserve all queue state. Coding changes use the runtime
-transition path below; full reset instead establishes a fresh coding context.
+A routed sector carrying both EOF and EOR stops subsequent XA routing without
+an interrupt. Either flag alone continues playback. Filtered sectors and channel
+255 cannot end XA. ReadN/ReadS and a disabled-to-enabled realtime transition
+clear the ended flag. Setfilter, Pause, SeekL/P and Init preserve it. The caller
+completes any pending audio submission before servicing a command. Drive sector
+routing and queue admission remain separate supplied boundaries; decode-failure
+ordering and automatic feed timing remain unsupported.
+
+The queue accepts already-selected identities without a release API. It preserves
+ADPCM and interpolation histories, including across queued, muted and timed-out
+submissions. EOF has no queue-level binding effect. Malformed or unsupported
+selected input rejects without queue mutation. Coding changes remain diagnostic,
+as described below. Full reset establishes a fresh decoder/filter context.
 
 [Selection checks](../../../tools/rust/bof3-audio/tests/cd_selection.rs) cover
-automatic and explicit selection, unrelated EOF, EOR, Setfilter, all three EOF
-admission outcomes, retained history/output, invalid data and emphasis rejection.
-The media check scans all 3,536 raw VOICE sectors: 71 selected channel-0 sectors,
-one EOF and 333,984 frames equal continuous decoding under the same model. That
-extent has no cross-channel handoff after the selected EOF; synthetic cases
-exercise handoffs. It drains output per selected sector and makes no clock or
-independent reference-audio claim. Evidence uses `out/audio-migration/cd-selection-*`;
-[selection references](../../reference/cd-audio.md#xa-selection-and-eof) retain
-the external comparison boundary. Emphasis filtering, runtime bootstrap, device
-clocks and independent audio validation remain open.
+filter routing, EOF/EOR, matching channel 255 rejection, retained histories and
+output, invalid data and emphasis rejection. The original media check explicitly
+filters file 1/channel 0 across the full VOICE extent and compares continuous
+same-model PCM. Same-coding native guest observations qualify routing separately
+from clock and signal acceptance. See
+[selection references](../../reference/cd-audio.md#xa-selection-and-eof).
+Emphasis, runtime bootstrap, device clocks and independent audio validation remain
+open.
 
 ## Rust XA coding transitions
 
 The emulator-reference queue accepts sector-to-sector changes among coding bytes
 `00/01/04/05/10/11/14/15` hex: mono/stereo, 37.8/18.9 kHz and 4/8-bit ADPCM.
-Coding changes do not release file/channel selection. Rebinding those identities
-still requires EOF, Setfilter or full reset. The standalone `XaAudio` export
-decoder keeps its fixed-stream contract; dynamic changes belong to the runtime
-queue's selected-sector path.
+This diagnostic policy reads coding on every admitted sector, unlike the native
+first-sector latch. Already-selected file/channel identities may change without
+resetting histories. The standalone `XaAudio` export decoder keeps its fixed-stream
+contract; dynamic changes belong to the queue's selected-sector path.
 
 Transitions preserve left/right ADPCM predictors, interpolation rings, shared
 cursor, phase and previous interpolation samples. Mono decoding updates only the
@@ -2834,7 +2831,7 @@ a return to the initial format. Timeout cases prefix enough 8-bit stereo/full-ra
 output to block the second batch while keeping the tested format pair adjacent.
 They explicitly finish its pending submission with `WaitOutcome::TimedOut`.
 They check output counts and full PCM hashes,
-plus malformed-input rollback, model boundaries and identity release. The
+plus malformed-input rollback, model boundaries and selected-identity changes. The
 retained [Rust reference model](../../../tools/rust/bof3-audio/tests/reference/xa.rs)
 implements separate decoder/resampling state and arithmetic, reusing numeric
 coefficient tables whose fixed-format vectors are checked separately. The Rust
@@ -5134,7 +5131,7 @@ bounded `driver-startup-*-rizin.txt` listings.
 The [Rust drive](../../../tools/rust/bof3-audio/src/machine/cd_drive.rs)
 implements Init (`0x0A`) as a caller-completed transition. It stops reading,
 resets the current and seek positions to `00:02:00` (LBA 0), clears pending
-Setloc and releases XA selection. It preserves the raw mode byte, command mute,
+Setloc. It preserves XA ended state, the raw mode byte, command mute,
 filter and latest transfer header, but clears runtime report/autopause flags.
 It restores validity of known cached GetlocL bytes.
 A read without a new Setloc uses the reset position
@@ -5153,7 +5150,7 @@ flags clear even though the mode byte survives, as implemented by the Rust
 drive. Opcode `0x1C` remains unsupported by the Rust drive.
 
 The [host integration](../../../tools/rust/bof3-audio/src/machine/interconnect/cd.rs)
-retains its data-cursor, queued-XA-output and selection policies. At an
+retains its data-cursor and queued-XA-output policies. At an
 unrequested-sector boundary, native Init preserves the pending 2048-byte data
 payload, FIFO cursor and XA decoder history, readiness and format. Begin/end
 audio queue accounting shows no discarded frames. It does not expose complete

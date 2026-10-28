@@ -222,7 +222,7 @@ behavior; source facts do not establish mechanical or IRQ timing.
 [Rust command application and original cue restart](../specs/formats/audio.md#rust-cd-command-lifecycle-and-cue-restart)
 use predictor-only resets at those Read and realtime-enable boundaries. Pause,
 seek and Init preserve queued audio, interpolation and data. Init also preserves
-mode, mute and filter while releasing the diagnostic XA selection. The caller
+mode, mute, filter and XA ended state. The caller
 must complete a pending audio submission before servicing another command.
 Successful Init, seek transitions and located Play reject active DMA3 before
 mutation; this is an unsupported Rust overlap case. Full `Queue::reset()`
@@ -236,8 +236,7 @@ and invalidates GetlocL immediately. Cached header bytes survive; Init restores
 their validity, and a new sector replaces them before routing. Native guest
 responses and phase observations qualify these rules under supplied cycles.
 Automatic scheduling, takeover/overlap and hardware timing remain open.
-Automatic XA selection, EOF and per-sector coding policies
-still differ, as documented below.
+Per-sector coding still differs, as documented below.
 
 Bounded native Init observations agree on position, pending Setloc, mode, mute
 and filter. During an active read, a partially consumed 2,048-byte requested FIFO
@@ -259,18 +258,18 @@ histories, signal parity, exact response timing or mechanical latency.
 ## XA selection and EOF
 
 The [native XA routing](../../third_party/pcsx-redux-agentic/src/core/cdrom.cc)
-uses the active filter directly and rejects channel 255 even when explicitly
-filtered. Setfilter updates file/channel fields without releasing a separate
-automatic-selection latch. A routed sector with both EOF and EOR stops XA;
-either bit alone does not. These facts differ from Rust's retained selection
-policy and do not establish physical timing or audio fidelity.
+uses the configured filter directly and rejects channel 255 even when explicitly
+filtered. A routed sector with both EOF and EOR stops XA without an interrupt;
+either bit alone continues. ReadN/S and realtime enable clear ended state.
+Setfilter, Pause, SeekL/P and Init preserve it.
 
-[Rust selection and EOF](../specs/formats/audio.md#rust-xa-selection-and-eof)
-release selection at Setfilter or selected EOF before backlog admission and
-retain decoder history across same-coding handoffs, including dropped/muted EOF.
-Five synthetic checks and the complete raw VOICE scan cover the implemented
-boundary. VOICE has one selected EOF but no subsequent cross-channel handoff;
-handoff evidence is synthetic. Coding-format transitions are covered below.
+[Rust routing and EOF](../specs/formats/audio.md#rust-xa-selection-and-eof)
+follow these rules at supplied boundaries. The queue receives already-selected
+identities without an automatic latch or release operation, preserving decoder
+and interpolation histories and queued output. Same-coding native observations
+qualify routing; original VOICE uses an explicit file 1/channel 0 filter. Decode
+failures, coding latching, feed timing and independent signal acceptance remain
+separate obligations.
 
 ## XA coding transitions
 

@@ -67,7 +67,7 @@ fn init_preserves_mute_queued_audio_data_cursor_and_volume() {
     let volume = bus.cd_host().unwrap().volume().active();
     let reset = apply(&mut bus, &mut drive, 0x0a, &[]);
     assert_eq!(reset.response.bytes, [2]);
-    assert!(!reset.xa_predictors_reset && reset.audio_selection_released);
+    assert!(!reset.xa_predictors_reset);
     assert!(drive.muted());
     assert_eq!(bus.cd_host().unwrap().volume().active(), volume);
     assert_eq!(bus.cd_audio().unwrap().statistics().queued_frames, frames);
@@ -134,7 +134,15 @@ fn reset_rebinds_channel_and_format_with_fresh_history_after_validation() {
     }
     assert_eq!(q.statistics().reset_discarded_frames, discarded as u64);
     assert_eq!(q.statistics().resets, 1);
-    assert!(q.sector(&sector(3, 5), false, &volume()).is_err()); // No mid-stream rebind.
+    assert_eq!(
+        q.sector(&sector(3, 5), false, &volume()).unwrap(),
+        fresh.sector(&bytes, false, &volume()).unwrap()
+    );
+    while fresh.statistics().queued_frames != 0 {
+        assert_eq!(q.preview(), fresh.preview());
+        q.consume();
+        fresh.consume();
+    }
 }
 
 #[test]

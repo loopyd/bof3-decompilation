@@ -106,9 +106,6 @@ impl Interconnect {
                 || (command.opcode == 0x0e
                     && drive.mode() & 0x40 == 0
                     && candidate.mode() & 0x40 != 0));
-        let audio_selection_released = seek_reset
-            || xa_predictors_reset
-            || (matches!(command.opcode, 0x09 | 0x0a | 0x0d) && response.interrupt == 3);
         let init = command.opcode == 0x0a && response.interrupt == 3;
         if (seek_reset || play_seek || init) && self.dma.cd.active() {
             return Err("CD drive: seek/reset during active DMA3 is not implemented".into());
@@ -119,16 +116,10 @@ impl Interconnect {
             }
         }
         self.cd_command_muted = candidate.muted();
-        if audio_selection_released {
-            if let Some(queue) = self.cd_audio.as_mut() {
-                queue.release_selection();
-            }
-        }
         *drive = candidate;
         Ok(AppliedCommand {
             response,
             xa_predictors_reset,
-            audio_selection_released,
         })
     }
     pub fn configure_cd_host(&mut self, volume: [u8; 4]) -> crate::Result<()> {

@@ -175,14 +175,18 @@ fn unsupported_or_malformed_transition_is_atomic_and_published_model_stays_expli
 }
 
 #[test]
-fn coding_changes_do_not_release_identity_but_eof_allows_both_to_change() {
+fn selected_identity_and_coding_changes_do_not_require_eof() {
     let mut q = queue(1, Resampling::EmulatorReference);
     q.sector(&sector(1, 1), false, &volume()).unwrap();
     drain(&mut q);
     let mut other = sector(0x14, 2);
     other[1] = 7;
     other[5] = 7;
-    assert!(q.sector(&other, false, &volume()).is_err());
+    assert!(matches!(
+        q.sector(&other, false, &volume()).unwrap(),
+        Admission::Queued { .. }
+    ));
+    drain(&mut q);
     let mut eof = sector(0, 2);
     eof[2] |= 0x80;
     eof[6] |= 0x80;
@@ -193,5 +197,8 @@ fn coding_changes_do_not_release_identity_but_eof_allows_both_to_change() {
         Admission::Queued { .. }
     ));
     drain(&mut q);
-    assert!(q.sector(&sector(0x14, 3), false, &volume()).is_err());
+    assert!(matches!(
+        q.sector(&sector(0x14, 3), false, &volume()).unwrap(),
+        Admission::Queued { .. }
+    ));
 }

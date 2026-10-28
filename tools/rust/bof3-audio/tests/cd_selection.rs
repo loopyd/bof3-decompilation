@@ -95,20 +95,19 @@ fn drain(queue: &mut Queue) -> Vec<[i16; 2]> {
 }
 
 #[test]
-fn automatic_selection_ignores_unrelated_eof_and_releases_matching_eof() {
+fn filter_routing_and_combined_end_flags_stop_xa() {
     let mut drive = Drive::ready(CdPosition::from_lba(100).unwrap(), 0x40, [9, 9]).unwrap();
     drive.command(&command(6, &[]), 0).unwrap();
     drive.complete(0).unwrap();
     drive.complete(0).unwrap();
-    // 255 does not claim automatic selection. EOR is not EOF. A mismatched
-    // channel's EOF must not release the already selected channel.
+    // No automatic identity latch. EOF and EOR alone continue; both stop XA.
     for (index, (channel, flags, selected)) in [
         (255, 0x64, false),
         (2, 0x65, true),
-        (3, 0xe4, false),
-        (3, 0x64, false),
-        (2, 0xe4, true),
+        (3, 0xe4, true),
         (3, 0x64, true),
+        (2, 0xe4, true),
+        (3, 0xe5, true),
         (2, 0x64, false),
     ]
     .into_iter()
@@ -127,25 +126,28 @@ fn automatic_selection_ignores_unrelated_eof_and_releases_matching_eof() {
             }
         );
     }
-    // Setfilter releases the automatic latch even when mode filtering is off.
+    // Setfilter does not restart an ended stream.
     drive.command(&command(0x0d, &[1, 7]), 0).unwrap();
     assert!(matches!(
         drive.sector(Some(&raw(107, &sector(4, 0x64, 0)))).unwrap(),
-        Delivery::Xa(_)
+        Delivery::Filtered
     ));
-    // Filter configuration can explicitly select channel 255.
+    // A new Read clears ended state, but even a matching filter rejects 255.
+    drive.command(&command(6, &[]), 0).unwrap();
+    drive.complete(0).unwrap();
+    drive.complete(0).unwrap();
     drive.command(&command(0x0e, &[0x48]), 0).unwrap();
     drive.command(&command(0x0d, &[1, 255]), 0).unwrap();
     assert!(matches!(
         drive
-            .sector(Some(&raw(108, &sector(255, 0x64, 0))))
+            .sector(Some(&raw(100, &sector(255, 0x64, 0))))
             .unwrap(),
-        Delivery::Xa(_)
+        Delivery::Filtered
     ));
 }
 
 #[test]
-fn eof_rebinding_keeps_predictors_filter_history_and_tail_for_each_admission() {
+fn identity_changes_keep_predictors_filter_history_and_tail_for_each_admission() {
     for admission in 0..3 {
         let mut q = queue();
         let mut reference = audio();
@@ -214,12 +216,15 @@ fn eof_rebinding_keeps_predictors_filter_history_and_tail_for_each_admission() {
             "must distinguish retained history from reset"
         );
         assert_eq!(drain(&mut q), expected);
-        assert!(q.sector(&sector(2, 0x64, 0), false, &volume()).is_err());
+        assert!(matches!(
+            q.sector(&sector(2, 0x64, 0), false, &volume()).unwrap(),
+            Admission::Queued { .. }
+        ));
     }
 }
 
 #[test]
-fn rejected_eof_and_unsupported_coding_preserve_selection_and_audio_state() {
+fn rejected_eof_and_unsupported_coding_preserve_audio_state() {
     let mut q = queue();
     q.sector(&sector(0, 0x64, 0x12), false, &volume()).unwrap();
     let before = q.statistics();
@@ -227,8 +232,7 @@ fn rejected_eof_and_unsupported_coding_preserve_selection_and_audio_state() {
     bad[8 + 17 * 128 + 4] = 0xf8;
     assert!(q.sector(&bad, false, &volume()).is_err());
     assert_eq!(q.statistics(), before);
-    assert!(q.sector(&sector(1, 0x64, 0), false, &volume()).is_err());
-    q.sector(&sector(0, 0xe4, 0), false, &volume()).unwrap(); // queued, and releases selection
+    q.sector(&sector(0, 0xe4, 0), false, &volume()).unwrap(); // EOF alone remains audio
     let before = q.statistics();
     let mut changed = sector(1, 0x64, 0);
     changed[3] = 0x40;
@@ -243,12 +247,15 @@ fn rejected_eof_and_unsupported_coding_preserve_selection_and_audio_state() {
         q.sector(&sector(1, 0x64, 0), false, &volume()).unwrap(),
         Admission::Queued { .. }
     ));
-    // A queued first sector acquires selection; another channel fails.
-    assert!(q.sector(&sector(2, 0x64, 0), false, &volume()).is_err());
+    // Already-selected identities share queue capacity.
+    assert!(matches!(
+        q.sector(&sector(2, 0x64, 0), false, &volume()).unwrap(),
+        Admission::Pending { .. }
+    ));
 }
 
 #[test]
-fn setfilter_releases_only_selection_and_invalid_parameters_do_not_release_it() {
+fn setfilter_preserves_audio_and_invalid_parameters_preserve_filter() {
     let mut bus = Interconnect::from_ram(Ram::default());
     bus.configure_cd_host([128, 0, 128, 0]).unwrap();
     bus.configure_cd_audio(queue()).unwrap();
@@ -256,16 +263,17 @@ fn setfilter_releases_only_selection_and_invalid_parameters_do_not_release_it() 
     let first = sector(0, 0x64, 0x12);
     bus.enqueue_cd_audio(&first).unwrap();
     let before = bus.cd_audio().unwrap().statistics();
+    let drive_before = drive.clone();
     let invalid = bus
         .apply_cd_drive_command(&mut drive, &command(0x0d, &[1]), 0)
         .unwrap();
-    assert!(!invalid.audio_selection_released);
+    assert_eq!(drive, drive_before);
     assert_eq!(invalid.response.interrupt, 5);
-    assert!(bus.enqueue_cd_audio(&sector(1, 0x64, 0)).is_err());
+    assert_eq!(bus.cd_audio().unwrap().statistics(), before);
     let effect = bus
         .apply_cd_drive_command(&mut drive, &command(0x0d, &[1, 1]), 0)
         .unwrap();
-    assert!(effect.audio_selection_released);
+    assert_eq!(effect.response.interrupt, 3);
     assert!(!effect.xa_predictors_reset);
     assert_eq!(bus.cd_audio().unwrap().statistics(), before);
     // Stream identity changes without clearing the already queued block.
@@ -280,15 +288,12 @@ fn setfilter_releases_only_selection_and_invalid_parameters_do_not_release_it() 
 }
 
 #[test]
-fn selection_release_preserves_tail_and_continuous_decoder_history() {
+fn identity_change_preserves_tail_and_continuous_decoder_history() {
     let mut q = queue();
     let mut reference = audio();
     let first = sector(0, 0x64, 0x12);
     q.sector(&first, false, &volume()).unwrap();
     let expected = drive_gain(reference.sector(&first).unwrap());
-    let before = q.statistics();
-    q.release_selection();
-    assert_eq!(q.statistics(), before);
     assert_eq!(drain(&mut q), expected);
     q.sector(&sector(1, 0x64, 0x34), false, &volume()).unwrap();
     let normalized = sector(0, 0x64, 0x34);
@@ -298,15 +303,15 @@ fn selection_release_preserves_tail_and_continuous_decoder_history() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_TRACK; whole raw VOICE extent automatic selection"]
-fn raw_voice_automatic_selection_decodes_complete_first_stream() {
+#[ignore = "requires BOF3_AUDIO_TRACK; whole raw VOICE extent explicit filter"]
+fn raw_voice_explicit_filter_decodes_complete_first_stream() {
     let path = std::path::PathBuf::from(std::env::var_os("BOF3_AUDIO_TRACK").unwrap());
     let mut disc = DiscImage::open(&path).unwrap();
     let entry = &disc.files()["BIN/SCE_XA/VOICE.STR"];
     let start = entry.lba;
     let count = entry.sector_count();
     let mut drive =
-        Drive::ready(CdPosition::from_lba(start as i32).unwrap(), 0xc0, [0, 0]).unwrap();
+        Drive::ready(CdPosition::from_lba(start as i32).unwrap(), 0xc8, [1, 0]).unwrap();
     drive.command(&command(6, &[]), 0).unwrap();
     drive.complete(0).unwrap();
     drive.complete(0).unwrap();
@@ -337,10 +342,9 @@ fn raw_voice_automatic_selection_decodes_complete_first_stream() {
         }
     }
     println!(
-        "Raw VOICE selection: {count} sectors, {selected} selected, {eof} EOF at sector {eof_at:?}, {channels:?}, {frames} frames; explicit drain per sector, no timing claim"
+        "Raw VOICE explicit filter: {count} sectors, {selected} selected, {eof} EOF at sector {eof_at:?}, {channels:?}, {frames} frames; explicit drain per sector, no timing claim"
     );
-    // This corpus has no cross-channel handoff after the selected EOF. The
-    // synthetic tests above deliberately exercise that separate requirement.
+    // This original scan is explicitly filtered; identity handoffs are synthetic.
     assert_eq!((count, selected, eof, frames), (3536, 71, 1, 333984));
     assert_eq!(channels.into_iter().collect::<Vec<_>>(), [(1, 0)]);
     assert_eq!(q.statistics().dropped_sectors, 0);
