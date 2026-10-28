@@ -5,7 +5,7 @@ AS = $(REPO)/bin/as
 LD = $(REPO)/bin/ld
 OBJCOPY = $(REPO)/bin/objcopy
 NM = $(REPO)/bin/nm
-SOURCES = startup cd events exceptions interrupts syscalls
+SOURCES = startup cd events exceptions interrupts syscalls callbacks
 OBJECTS = $(addprefix $(OUT)/,$(addsuffix .o,$(SOURCES)))
 
 .PHONY: bof3-audio-driver clean
