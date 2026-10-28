@@ -3878,8 +3878,8 @@ after the guest hook pointer and context restoration are bound. That entry
 installs and returns an owned default jump buffer. It does not clear the hook. The linked buffer selects owned
 context restoration with the declared exception stack and zero saved registers;
 it imports no BIOS RAM. The initial hook stays zero until registration or reset.
-Unbound reset calls fail explicitly. The callback manager's complete stop/restart
-lifecycle remains a separate startup obligation.
+Unbound reset calls fail explicitly. The callback manager below owns its saved
+hook and stop/restart state separately from this default buffer.
 
 `Kernel::configure_console` enables bounded A0/3F diagnostic capture once on an
 idle kernel, with an aggregate capacity of 1 to 1,048,576 bytes. Supported
@@ -3895,6 +3895,40 @@ not contribute to V0; converted digits, signs, padding and `%%` do, following th
 original BIOS formatter. Capture adds no stdout output, UART behavior or newline
 translation. The service uses the owned HLE schedule and does not reproduce
 original formatter instruction timing or internal stack writes.
+
+The linked [callback manager](../../../tools/rust/bof3-audio/driver/kernel/callbacks.s)
+preserves the complete US family at `exe/slus_004_22@0x801748E4..0x801753C4`.
+It includes IRQ, VBlank and DMA registration and dispatch, live function and MMIO
+pointer cells, diagnostics, saved context and the full `0x1068`-byte private state.
+The kernel initializer clears this allocation, including its private callback
+stack. The separate initialization and exception stacks remain uncleared.
+
+After preparing the kernel and binding its services, call `audio_callbacks_reset`
+with no active continuation. It disables I_MASK, clears callback state, constructs
+and installs its jump buffer, initializes VBlank and DMA dispatch, removes the CD
+services and enables interrupts. It returns the state address, or zero if already
+initialized. The saved callback SP is state plus `0x1018`. Stop saves I_MASK and
+DPCR, installs the default exception hook and leaves interrupts disabled. Restart
+requires that constructed jump buffer, restores the hook and registers, then
+enables interrupts. Each returns the state address on transition and zero when
+already in the requested state. `audio_callbacks_active` reads the dispatch-busy
+flag, not the initialized flag.
+
+Callers supply IRQ indices 0 through 10, VBlank slots 0 through 7 and DMA channels
+0 through 6. Registration returns the previous callback. Public wrappers reload
+the live function-table pointer and slot on every call. IRQ dispatch acknowledges
+each source before loading its callback, then rereads pending enabled sources.
+VBlank dispatch increments its counter and loads all eight callbacks in order.
+DMA dispatch acknowledges each channel before loading its callback and repeats
+while flags remain pending, without a timeout. Callbacks may change later entries.
+IRQ residual timeout, unexpected IRQ and DMA error paths retain their diagnostics,
+including all seven DMA addresses. The unexpected path returns from the exception
+without clearing I_STAT.
+
+This component uses the owned kernel's explicit service schedule. Its original
+BIOS timing, complete sound-initialization callers and production integration
+remain unresolved. Seven-channel dispatch logic does not imply that the machine
+implements transfers for every DMA channel.
 
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
