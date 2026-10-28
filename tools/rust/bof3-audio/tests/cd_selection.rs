@@ -233,6 +233,7 @@ fn rejected_eof_and_unsupported_coding_preserve_audio_state() {
     assert!(q.sector(&bad, false, &volume()).is_err());
     assert_eq!(q.statistics(), before);
     q.sector(&sector(0, 0xe4, 0), false, &volume()).unwrap(); // EOF alone remains audio
+    q.reset_predictors().unwrap();
     let before = q.statistics();
     let mut changed = sector(1, 0x64, 0);
     changed[3] = 0x40;

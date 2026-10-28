@@ -159,35 +159,37 @@ impl Reference {
     }
 }
 
-pub fn transition(first: u8, second: u8, admission: &str) -> ([usize; 3], String) {
+pub fn transition(first: u8, _second: u8, admission: &str) -> ([usize; 3], String) {
     let mut reference = Reference::new();
     let mut counts = [0; 3];
     let mut output = Vec::new();
     if admission == "dropped" {
         // Independent native ring predicate: leave room for the first batch,
-        // but not the second. Prefix with 8-bit stereo/full-rate sectors so
-        // the tested first -> second transition remains adjacent.
+        // but not the second. Prefix with the nominated first format so its
+        // latch is already active, retaining first -> second adjacency.
         let frame_count = |coding: u8| {
             let channels = if coding & 1 != 0 { 2 } else { 1 };
             let depth = if coding & 16 != 0 { 8 } else { 4 };
             18 * 28 * (32 / depth) / channels * 7 / if coding & 4 != 0 { 3 } else { 6 }
         };
         let mut seed = 100;
-        while counts[0] + frame_count(first) + frame_count(second) < 16384 {
-            let pcm = reference.decode(17, seed);
-            let frames = reference.resample(17, &pcm);
+        let prefix = 16383 - frame_count(first);
+        while counts[0] < prefix {
+            let pcm = reference.decode(first, seed);
+            let frames = reference.resample(first, &pcm);
             counts[0] += frames.len();
             output.extend(frames);
             seed += 1;
         }
-        assert!(counts[0] + frame_count(first) < 16384);
+        output.drain(..counts[0] - prefix);
+        counts[0] = prefix;
     }
-    for (stage, coding) in [first, second, first].into_iter().enumerate() {
-        let pcm = reference.decode(coding, stage + 1);
+    for (stage, count) in counts.iter_mut().enumerate() {
+        let pcm = reference.decode(first, stage + 1);
         if stage != 1 || admission != "muted" {
-            let frames = reference.resample(coding, &pcm);
+            let frames = reference.resample(first, &pcm);
             if stage != 1 || admission == "queued" {
-                counts[stage] += frames.len();
+                *count += frames.len();
                 output.extend(frames);
             }
         }

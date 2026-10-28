@@ -53,6 +53,7 @@ pub struct Statistics {
 
 pub struct Queue {
     audio: Option<XaAudio>,
+    format_ready: bool,
     arithmetic: Arithmetic,
     resampling: Resampling,
     frames: VecDeque<[i16; 2]>,
@@ -71,6 +72,7 @@ impl Queue {
     ) -> Result<Self> {
         Ok(Self {
             audio: Some(XaAudio::new(stream, arithmetic, histories, resampling)?),
+            format_ready: false,
             arithmetic,
             resampling,
             frames: VecDeque::new(),
@@ -94,6 +96,7 @@ impl Queue {
         let discarded = self.frames.len() + self.pending.take().map_or(0, |frames| frames.len());
         self.frames.clear();
         self.audio = None;
+        self.format_ready = false;
         self.statistics.resets += 1;
         self.statistics.reset_discarded_frames += discarded as u64;
         discarded
@@ -108,6 +111,7 @@ impl Queue {
         if let Some(audio) = self.audio.as_mut() {
             audio.reset_predictors();
         }
+        self.format_ready = false;
         self.statistics.predictor_resets += 1;
         Ok(())
     }
@@ -137,7 +141,9 @@ impl Queue {
         let mut candidate = match &self.audio {
             Some(audio) => {
                 let mut candidate = audio.clone();
-                candidate.select_stream(stream)?;
+                if !self.format_ready {
+                    candidate.configure_stream(stream)?;
+                }
                 candidate
             }
             None => XaAudio::new(
@@ -147,13 +153,14 @@ impl Queue {
                 self.resampling,
             )?,
         };
-        if command_muted || volume.xa_muted() {
-            candidate.muted_sector(bytes)?;
+        let muted = command_muted || volume.xa_muted();
+        let frames = candidate.selected_sector(bytes, muted)?;
+        if muted {
             self.audio = Some(candidate);
+            self.format_ready = true;
             self.statistics.muted_sectors += 1;
             return Ok(Admission::Muted);
         }
-        let frames = candidate.sector(bytes)?;
         if frames.len() >= CAPACITY {
             return Err("XA batch exceeds queue capacity".into());
         }
@@ -164,6 +171,7 @@ impl Queue {
                 .collect(),
         );
         self.audio = Some(candidate);
+        self.format_ready = true;
         self.finish_submission(WaitOutcome::Retry)
     }
 

@@ -82,12 +82,15 @@ fn all_coding_transitions_match_independent_state_and_arithmetic_vectors() {
             let mut seed = 100;
             while q.statistics().queued_frames < prefix_frames {
                 assert!(matches!(
-                    q.sector(&sector(17, seed), false, &volume()).unwrap(),
+                    q.sector(&sector(vector.first, seed), false, &volume())
+                        .unwrap(),
                     Admission::Queued { .. }
                 ));
                 seed += 1;
             }
-            assert_eq!(q.statistics().queued_frames, prefix_frames);
+            while q.statistics().queued_frames > prefix_frames {
+                q.consume();
+            }
         }
         q.sector(&sector(vector.first, 1), false, &volume())
             .unwrap();
@@ -149,16 +152,29 @@ fn unsupported_or_malformed_transition_is_atomic_and_published_model_stays_expli
     for resampling in [Resampling::EmulatorReference, Resampling::Published37800] {
         let mut q = queue(1, resampling);
         let mut reference = queue(1, resampling);
+        let before = q.statistics();
+        for bytes in [sector(0x40, 2), sector(2, 2)] {
+            assert!(q.sector(&bytes, false, &volume()).is_err());
+            assert_eq!(q.statistics(), before);
+        }
         let first = sector(1, 1);
         q.sector(&first, false, &volume()).unwrap();
         reference.sector(&first, false, &volume()).unwrap();
         let before = q.statistics();
         let mut malformed = sector(0x14, 2);
         malformed[8 + 17 * 128 + 4] = 0xf8;
-        for bytes in [vec![], sector(0x40, 2), sector(2, 2), malformed] {
+        for bytes in [vec![], malformed] {
             assert!(q.sector(&bytes, false, &volume()).is_err());
             assert_eq!(q.statistics(), before);
         }
+        for coding in [0x40, 2, 0xff] {
+            q.sector(&sector(coding, 2), false, &volume()).unwrap();
+            reference.sector(&sector(1, 2), false, &volume()).unwrap();
+        }
+        assert_eq!(drain(&mut q), drain(&mut reference));
+        q.reset_predictors().unwrap();
+        reference.reset_predictors().unwrap();
+        let before = q.statistics();
         if resampling == Resampling::Published37800 {
             assert!(q
                 .sector(&sector(0, 2), false, &volume())
@@ -167,7 +183,6 @@ fn unsupported_or_malformed_transition_is_atomic_and_published_model_stays_expli
                 .contains("emulator-reference"));
             assert_eq!(q.statistics(), before);
         }
-        assert_eq!(drain(&mut q), drain(&mut reference));
         q.sector(&sector(1, 3), false, &volume()).unwrap();
         reference.sector(&sector(1, 3), false, &volume()).unwrap();
         assert_eq!(drain(&mut q), drain(&mut reference));

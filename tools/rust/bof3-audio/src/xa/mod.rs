@@ -138,6 +138,15 @@ impl Decoder {
     /// enter this decoder. EOF remains audio and does not implicitly reset it.
     /// Errors leave history unchanged, including failures in the final group.
     pub fn decode_sector(&mut self, sector: &[u8]) -> Result<Vec<i16>> {
+        self.decode(sector, Some(self.stream))
+    }
+
+    /// The drive already selected this sector. Runtime format remains latched.
+    pub(crate) fn decode_selected(&mut self, sector: &[u8]) -> Result<Vec<i16>> {
+        self.decode(sector, None)
+    }
+
+    fn decode(&mut self, sector: &[u8], expected: Option<Stream>) -> Result<Vec<i16>> {
         if sector.len() != XA_SECTOR_BYTES {
             return Err("XA decode requires one whole 2336-byte sector".into());
         }
@@ -147,9 +156,9 @@ impl Decoder {
         if sector[2] & 0x2e != 0x24 {
             return Err("XA decode requires Form 2 audio without video/data submode bits".into());
         }
-        if [sector[0], sector[1], sector[3]]
-            != [self.stream.file, self.stream.channel, self.stream.coding]
-        {
+        if expected.is_some_and(|stream| {
+            [sector[0], sector[1], sector[3]] != [stream.file, stream.channel, stream.coding]
+        }) {
             return Err("XA sector file/channel/coding does not match this decoder; select or reset contexts explicitly".into());
         }
         let channels = usize::from(self.format.channels);

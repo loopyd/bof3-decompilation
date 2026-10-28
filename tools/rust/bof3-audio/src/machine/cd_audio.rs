@@ -124,11 +124,14 @@ impl XaAudio {
         self.decoder.reset(Histories::default());
     }
 
-    /// Bind an already-selected sector without an identity latch. The current
-    /// diagnostic policy reads coding per sector; native format latching remains
-    /// separate. Histories are device-wide, with mono retaining the right side.
-    pub(crate) fn select_stream(&mut self, stream: Stream) -> Result<()> {
-        let decoder = Decoder::new(stream, self.decoder.arithmetic(), self.decoder.histories())?;
+    /// Configure the first selected sector after a runtime predictor reset.
+    /// A changed frequency, depth or channel count resets both predictors.
+    pub(crate) fn configure_stream(&mut self, stream: Stream) -> Result<()> {
+        let mut decoder =
+            Decoder::new(stream, self.decoder.arithmetic(), self.decoder.histories())?;
+        if decoder.format() != self.decoder.format() {
+            decoder.reset(Histories::default());
+        }
         self.resampler.change_format(decoder.format())?;
         self.decoder = decoder;
         Ok(())
@@ -150,11 +153,15 @@ impl XaAudio {
         let pcm = self.decoder.decode_sector(bytes)?;
         self.resampler.process(&pcm)
     }
-    /// Emulator-reference mute boundary: decode predictor history, but leave
-    /// interpolation state and queued output untouched.
-    pub(crate) fn muted_sector(&mut self, bytes: &[u8]) -> Result<()> {
-        self.decoder.decode_sector(bytes)?;
-        Ok(())
+    /// Runtime selection ignores later coding bytes. Mute advances predictors
+    /// while preserving interpolation state and queued output.
+    pub(crate) fn selected_sector(&mut self, bytes: &[u8], muted: bool) -> Result<Vec<[i16; 2]>> {
+        let pcm = self.decoder.decode_selected(bytes)?;
+        if muted {
+            Ok(Vec::new())
+        } else {
+            self.resampler.process(&pcm)
+        }
     }
 }
 

@@ -2609,7 +2609,7 @@ still queued. Clipping and other matrices remain unaccepted against native outpu
 Empty queue output is zero under the selected reference model and does not
 advance decoder history. Command-driven predictor resets and mute use the
 command lifecycle below. Drive routing and end flags use the contract below;
-per-sector coding remains diagnostic and physical timing remains unresolved.
+coding follows the first-success latch below; physical timing remains unresolved.
 
 Configuration is explicit and cannot replace a live queue. Selected sectors enter
 through `enqueue_cd_audio`; pending batches finish through
@@ -2736,7 +2736,7 @@ predictor resets separately from full resets.
 and pending output, decoder and interpolation history. Drive commands do not
 invoke it. A malformed selected sector cannot change queue state or establish
 a new decoder context. Already-selected file/channel changes preserve histories;
-coding changes use the diagnostic transition policy described below.
+later coding bytes use the retained format until a predictor reset reopens the latch.
 
 Mute/Demute maintain a command flag separate from the host ADPCTL mute bit.
 Either suppresses XA admission. Mute changes preserve queued frames and ongoing
@@ -2792,8 +2792,8 @@ ordering and automatic feed timing remain unsupported.
 The queue accepts already-selected identities without a release API. It preserves
 ADPCM and interpolation histories, including across queued, muted and timed-out
 submissions. EOF has no queue-level binding effect. Malformed or unsupported
-selected input rejects without queue mutation. Coding changes remain diagnostic,
-as described below. Full reset establishes a fresh decoder/filter context.
+selected input rejects without queue mutation. The first successful decode latches
+the format as described below. Full reset establishes a fresh decoder/filter context.
 
 [Selection checks](../../../tools/rust/bof3-audio/tests/cd_selection.rs) cover
 filter routing, EOF/EOR, matching channel 255 rejection, retained histories and
@@ -2807,43 +2807,45 @@ open.
 
 ## Rust XA coding transitions
 
-The emulator-reference queue accepts sector-to-sector changes among coding bytes
-`00/01/04/05/10/11/14/15` hex: mono/stereo, 37.8/18.9 kHz and 4/8-bit ADPCM.
-This diagnostic policy reads coding on every admitted sector, unlike the native
-first-sector latch. Already-selected file/channel identities may change without
-resetting histories. The standalone `XaAudio` export decoder keeps its fixed-stream
-contract; dynamic changes belong to the queue's selected-sector path.
+The runtime queue parses coding on the first successful selected decode. Supported
+initial coding bytes are `00/01/04/05/10/11/14/15` hex, covering mono/stereo,
+37.8/18.9 kHz and 4/8-bit ADPCM. Later coding bytes are ignored, including reserved
+fields and emphasis. Already-selected file/channel identities can change without
+resetting histories. The public `Decoder` and `XaAudio` export paths retain their
+strict fixed-stream contract.
 
-Transitions preserve left/right ADPCM predictors, interpolation rings, shared
-cursor, phase and previous interpolation samples. Mono decoding updates only the
-left predictor, retaining the right predictor for later stereo input. Mono
-resampling fills both rings and both previous samples with the left input.
-Muted sectors change predictors without resampling. Output timeouts retain
-both advanced predictor and interpolation histories. Queued and pending output
-retain their original samples. Reserved coding fields, emphasis and
-malformed units fail without committing queue state. Coding transitions with
-the separate `Published37800` resampler fail explicitly because its dynamic
-format behaviour has not been established.
+Successful muted and pending submissions establish the latch. Mute advances only
+predictors; output timeouts retain advanced predictor and interpolation histories.
+Malformed input cannot establish or alter the latch. ReadN/ReadS and realtime
+enable reset both predictors and reopen format selection while preserving the
+interpolation ring, cursor, phase, previous samples and queued output. Pause,
+SeekL/P, Init and Setfilter retain the latch. A newly selected frequency, depth or
+channel count also resets both predictors. Mono updates only the left predictor
+and fills both interpolation rings with the left input.
 
-[Three transition checks](../../../tools/rust/bof3-audio/tests/xa/coding.rs)
-include 192 vectors: all 64 format pairs, each queued/muted/dropped, followed by
-a return to the initial format. Timeout cases prefix enough 8-bit stereo/full-rate
-output to block the second batch while keeping the tested format pair adjacent.
-They explicitly finish its pending submission with `WaitOutcome::TimedOut`.
-They check output counts and full PCM hashes,
-plus malformed-input rollback, model boundaries and selected-identity changes. The
-retained [Rust reference model](../../../tools/rust/bof3-audio/tests/reference/xa.rs)
-implements separate decoder/resampling state and arithmetic, reusing numeric
-coefficient tables whose fixed-format vectors are checked separately. The Rust
-transition test compares every generated count/hash with the retained
+Initial reserved coding fields, emphasis and malformed units remain unsupported.
+An actual format change after reset requires `EmulatorReference`; the separate
+`Published37800` resampler rejects it. A later ignored coding byte cannot trigger
+that rejection.
+
+[Three coding checks](../../../tools/rust/bof3-audio/tests/xa/coding.rs) compare
+192 vectors, all 64 first/later format pairs with queued, muted and dropped output,
+followed by another sector. Timeout cases prefill with the first format and
+consume enough output to leave 16,383 frames after the tested first batch. The
+second batch stays pending until explicit `WaitOutcome::TimedOut`. The
+[independent integer model](../../../tools/rust/bof3-audio/tests/reference/xa.rs)
+generates counts and full PCM hashes for the retained
 [fixture](../../../tools/rust/bof3-audio/tests/reference/xa_transitions.json).
-Its initial full-rate tap direction was corrected against the primary source;
-the failed probe remains in `out/audio-migration/xa-coding-focused.log`.
+It shares numeric FIR coefficients, with separately checked fixed-format vectors.
+The checks also cover malformed-input rollback, initial coding rejection,
+ignored later fields, reset model boundaries and selected-identity changes.
 
-Evidence uses `out/audio-migration/xa-coding-*` and
-[coding references](../../reference/cd-audio.md#xa-coding-transitions).
-These synthetic transitions establish the selected model's functional state
-behaviour, not measured hardware filters, clocks or independent game PCM.
+Bounded native guest observations confirm retained coding across changed and
+reserved later bytes and a new format after Read restart. Independent interpolation
+of the captured decoded PCM agrees with queued output across that restart. See
+[coding references](../../reference/cd-audio.md#xa-coding-transitions). These
+observations do not establish malformed-first native failure behavior, emphasis,
+automatic clocks, host wait timing or independent original-game audio acceptance.
 
 ## PS1 SPU emulation
 
