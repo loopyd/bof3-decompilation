@@ -161,6 +161,7 @@ pub fn interpretation_hash() -> String {
             include_str!("stream_family.rs"),
             include_str!("aliases.rs"),
             include_str!("interface.rs"),
+            include_str!("field.rs"),
             include_str!("media.rs"),
             include_str!("save_icon.rs"),
             include_str!("verification.rs"),
@@ -549,6 +550,7 @@ pub fn build_from(
     }
     crate::interface::annotate(&mut resources)?;
     stream_family::annotate(&mut resources);
+    crate::field::annotate(&mut resources, &mut records)?;
     Ok(Index {
         schema: SCHEMA.into(),
         release: sources::RELEASE.into(),

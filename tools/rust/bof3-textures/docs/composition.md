@@ -37,3 +37,22 @@ same consumer observation. The library does not choose a source image, identify
 a resident bank, resolve palette uploads, apply GPU drawing state or rasterize
 vertices. An exact source-bank match in RAM establishes byte identity only.
 Assembled previews and runtime appearance still require those bindings.
+
+## Qualified source associations
+
+The catalog retains one conditional association for the original US
+`BIN/WORLD00/AREA024.EMI#4` cell at payload offset `0x0c51`. Query its logical
+record with `--records` and use `--palette` or `--dependency` to follow its known
+sources. Entry 5 and entry 6 list that cell in their `uses` fields.
+
+This observation uses two quads with 8-bit texture page `0x0089`, CLUT `0x7c02`
+and a preceding zero texture-window command. Entry 5 chunks 6 and 22 match the
+VRAM backing of the inclusive UV envelope `U=128..176, V=16..32` at both capture
+boundaries. The envelope contains indices `0..31`, selecting entry 6 palette
+words `32..63`. Index 17 selects source word 49.
+
+The edges have status `conditional`. The cell retains its unresolved general
+palette and resident dependencies. The association does not establish other draw
+contexts, which UVs rasterization samples, whether the `V=32` endpoint is sampled,
+or unchanged VRAM between capture boundaries. It does not assign a character
+identity or make a flattened preview editable.
