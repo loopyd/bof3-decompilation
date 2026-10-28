@@ -1,12 +1,12 @@
-# Owned kernel component; no game, BIOS or extraction input is consumed.
+# Owned guest component; no game, BIOS or extraction input is consumed.
 REPO ?= ../../../..
 OUT ?= $(REPO)/out/audio/driver
 AS = $(REPO)/bin/as
 LD = $(REPO)/bin/ld
 OBJCOPY = $(REPO)/bin/objcopy
 NM = $(REPO)/bin/nm
-SOURCES = startup cd events exceptions interrupts syscalls callbacks
-OBJECTS = $(addprefix $(OUT)/,$(addsuffix .o,$(SOURCES)))
+SOURCES = $(addprefix kernel/,startup.s cd.s events.s exceptions.s interrupts.s syscalls.s callbacks.s) audio/spu.s
+OBJECTS = $(addprefix $(OUT)/,$(SOURCES:.s=.o))
 
 .PHONY: bof3-audio-driver clean
 .DELETE_ON_ERROR:
@@ -15,7 +15,8 @@ bof3-audio-driver: $(OUT)/kernel.bin $(OUT)/kernel.sym
 $(OUT):
 	mkdir -p "$@"
 
-$(OUT)/%.o: kernel/%.s | $(OUT)
+$(OUT)/%.o: %.s | $(OUT)
+	mkdir -p "$(@D)"
 	"$(AS)" -EL -mips1 -G0 -o "$@" "$<"
 
 $(OUT)/kernel.elf: $(OBJECTS) kernel/layout.ld

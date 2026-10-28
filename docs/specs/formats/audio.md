@@ -3817,7 +3817,7 @@ evidence.
 
 ### Owned kernel allocation
 
-Build the owned kernel service component with the existing project toolchain:
+Build the owned guest component with the existing project toolchain:
 
 ```sh
 make -C tools/rust/bof3-audio/driver bof3-audio-driver
@@ -3931,6 +3931,35 @@ This component uses the owned kernel's explicit service schedule. Its original
 BIOS timing, complete sound-initialization callers and production integration
 remain unresolved. Seven-channel dispatch logic does not imply that the machine
 implements transfers for every DMA channel.
+
+The linked [SPU initializer](../../../tools/rust/bof3-audio/driver/audio/spu.s)
+retains the low-level US initialization routines, FIFO writer, register writer,
+instruction delay and installed DMA callback. After loading the image and
+initializing the kernel, call `audio_spu_initialize` with A0 zero for the complete
+reset path or nonzero for the retained alternate path. Both require the bound
+kernel services, diagnostic capture and usable SPU/DPCR registers. The Rust
+machine also requires explicit voice, envelope, disable and reverb models.
+
+The zero path initializes twenty-four voice shadows and writes the sixteen-byte
+reset pattern through the SPU FIFO. The nonzero path preserves those shadows
+and skips that voice/FIFO reset. Both retain the status waits and timeout
+diagnostics. The FIFO helper consumes readable halfwords and rounds odd byte
+counts upward; it does not check a caller's source allocation.
+
+Cold kernel initialization clears the component's zero-initialized state. The
+loaded image supplies its MMIO pointers, constants, initial voice shadows and
+initial reverb-start value. DMA setup runs once, with its flag set before service
+calls. It installs the DMA-channel-four callback and opens/enables polling event
+class `0xF0000009`, spec `0x20`, mode `0x2000`. The callback clears the transfer
+mode, then loads the live transfer callback. A nonzero target receives the
+inherited register state; otherwise it delivers that event. Kernel event capacity
+and caller callback behavior remain inputs. Failed execution retains state and
+requires a fresh instance.
+
+This component does not replace the game-level sound initializer, the remaining
+SDK routines or their consumers. The paired component checks use the same owned
+Kernel/SPU model; original BIOS timing, hardware timeout timing and complete
+standalone startup remain unresolved.
 
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
