@@ -135,13 +135,18 @@ audio_exception_hook:
     nop
 .end audio_exception_hook
 
-# Entry receives the preflighted current TCB+8 in K0. The CPU loop retains
-# exception ownership until audio_exception_return_rfe retires successfully.
+# Entry resolves the live PCB and current TCB through the descriptor at 0x108.
+# The CPU loop retains ownership until audio_exception_return_rfe retires.
 # Saved K0 is opaque; K0 becomes the return PC. EPC and Cause stay unchanged.
 .globl audio_exception_return
 .ent audio_exception_return
 audio_exception_return:
-    addu $a0, $k0, $zero
+    addiu $k0, $zero, 0x100
+    lw $k0, 8($k0)
+    nop
+    lw $k0, 0($k0)
+    nop
+    addi $a0, $k0, 8
     lw $v0, 0x88($a0)
     nop
     mtlo $v0

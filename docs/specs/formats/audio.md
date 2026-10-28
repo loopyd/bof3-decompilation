@@ -4075,11 +4075,13 @@ other owned handlers. It does not establish full startup or timing equivalence.
 `Kernel::configure_exception_return(entry, rfe_pc)` separately binds
 `audio_exception_return` and its final `audio_exception_return_rfe` instruction.
 The return bridge resolves the live PCB/TCB and preflights all restored values
-through the existing context reader before changing the real CPU. It supplies
-TCB+8 in K0 and reports the guest entry as the call's callback. Guest instructions
-restore LO, HI, status and saved GPRs, use saved EPC as K0, then execute JR K0
-with RFE in its delay slot. Saved K0 remains opaque. The routine does not reload
-the diagnostic saved Cause or change COP0 EPC. Saved SP has no added validation.
+through the existing context reader before changing the real CPU. It reports the
+guest entry as the call's callback without supplying a TCB register argument.
+Guest instructions read the PCB pointer at `0x108`, then its live current TCB,
+and derive TCB+8 in A0. They restore LO, HI, status and saved GPRs, use saved EPC
+as K0, then execute JR K0 with RFE in its delay slot. Saved K0 remains opaque.
+The routine does not reload the diagnostic saved Cause or change COP0 EPC.
+Saved SP has no added validation.
 
 An opted-in CPU loop must call `complete_exception_return(cpu, step)` after each
 successful instruction and before admitting the next interrupt. Completion
