@@ -56,6 +56,17 @@ Other palette rows contain differences whose causes and inverse edits remain
 unresolved. Both edges stay conditional, and the record keeps its general
 surface dependencies.
 
+The surface word at payload offset 58940, grid record 723, also retains
+conditional texture and palette edges. Its original word `0x13800095` reaches
+the constructor with the complete metadata entry present in RAM. Recorded writes
+connect its page `0x0097`, CLUT `0x7980` and UVs `(80,144), (95,144), (80,159),
+(95,159)` to the matching GPU payload. Its encoded vertices lie inside the known
+draw area with zero draw offset and texture window. Final serialized VRAM matches
+all entry 7 upload bytes, including the nominal UV region in chunk 69, and entry
+8's selected CLUT row. Final residency does not establish earlier texture or
+palette reads, visible appearance, upload history or a unique source producer.
+The other palette-row differences and general surface dependencies stay unresolved.
+
 Resident metadata reports `decoded_programs` and `unresolved_programs` per
 physical resource, counting unique program offsets. Partial banks retain
 `animation-program` records for unresolved spans with `decode: unresolved-program`
