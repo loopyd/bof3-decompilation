@@ -171,7 +171,8 @@ percent sequences because its formatter receives no arguments. Reserve NUL.
 For SISYOU, keep `%3d` and edit only the surrounding printable ASCII. Its split
 fields draw at the same coordinates; keep both separators in the same formatted
 character column. Controlled checks cover the `Pwr`, `Def`, `Int` and `Agl`
-labels and the split HP/AP fields. `Pois` and `Conf` rendering remain unverified.
+labels and the split HP/AP fields. Separate character-status fixtures cover
+`Pois` and `Conf`; natural illness acquisition remains unverified.
 SHOP entry 0 also includes an ASCII clock format with three ordered unsigned
 byte arguments, at most nineteen encoded bytes and sixteen formatted bytes.
 Preserve its `renderers: []`; only formatting and a stack-buffer copy are traced.

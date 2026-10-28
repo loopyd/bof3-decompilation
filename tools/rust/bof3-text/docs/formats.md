@@ -806,8 +806,9 @@ of arguments and the original maximum formatted length. The conversion is part
 of the format text, not a dialogue command. Split fields draw at matching
 coordinates, so keep their separators in the same formatted character column.
 Controlled runtime checks cover the four stat labels, the `%3d` stat path and both
-split formats. `Pois` and `Conf` rendering remain unverified.
-Other master-menu labels remain unverified.
+split formats. Separate single-bit character-status fixtures cover `Pois` and
+`Conf`. Natural illness acquisition, combined-status behavior and other
+master-menu labels remain unverified.
 
 SHOP also exposes these digit literals, dash fallbacks and numeric formats.
 Capacities include NUL; formatted bounds exclude it. Digit literals accept
