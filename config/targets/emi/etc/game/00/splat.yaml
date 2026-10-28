@@ -2008,9 +2008,9 @@ segments:
     - c
     - func_801C4D1C
     - '@source: src/bof3/ui/func_801C4D1C.c'
-    - '@status: partial'
-    - '@match: 93.33'
-    - '@residual: one instruction position: the original issues the scratchpad work-area load (lui/lw 0x1F800044) before the frame setup (addiu sp,sp,-0x18) and this build issues it after. Identical instruction count, size and multiset; invariant across four clean-C shapes, and the same ordering occurs in the still-asm sibling func_801B73F4.'
+    - '@status: exact'
+    - '@match: 100.00'
+    - '@residual: none'
     - '@behavior: Shared work-area select service: forwards the route-index-selected selection effect id to the shared EXE-side helper func_8014D8D4, 0x3C when the scratchpad work area route index (g_game_work->route_index_08) reads 7 and 0x3D otherwise.'
   - - 193880
     - asm
