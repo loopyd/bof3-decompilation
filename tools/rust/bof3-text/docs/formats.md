@@ -171,6 +171,16 @@ establish support for another region or prove observed rendering.
 
 ## Inline overlay text
 
+US `COMMU03.EMI` entry 6 loads at `0x801D0C00`. Its `PLAY      EXIT`, `MONO`
+and `STEREO` labels at `0x801D0C1C`, `0x801D0C2C` and `0x801D0C34` use
+`ascii-literal`, with capacities of fifteen, five and seven bytes including NUL.
+Pointer words at `0x801D190C`, `0x801D1908` and `0x801D1904` supply the strings
+to calls at `0x801D1468` and `0x801D1430`. The overlay-local renderer at
+`0x801D1714` stops at NUL, advances eight pixels per character and treats
+ASCII `0x20` as a space. Edits accept printable ASCII within each allocation.
+Pointer words, alignment padding, other labels and arrow glyphs remain protected.
+Observed rendering and the consumers of the other labels remain unverified.
+
 The supported US battle code payload loaded at `0x80096800` contains two
 five-entry pointer tables at `0x800B6E88` and `0x800B6EC4`. Draw calls at
 `0x800B28C8` and `0x800B2F70` pass their selected strings to renderer

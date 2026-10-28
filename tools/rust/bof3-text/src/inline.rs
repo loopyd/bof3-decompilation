@@ -442,6 +442,36 @@ struct Layout {
 
 const LAYOUTS: &[Layout] = &[
     Layout {
+        name: "US COMMU03 audio menu labels",
+        load: 0x801d0c00,
+        size: 3404,
+        sha256: "e048461790edc3765ec361da4e7a931851f862c990103b99e1abcdc0ad870e52",
+        consumers: &[0x801d1430, 0x801d1468],
+        allocations: &[
+            Allocation {
+                address: 0x801d0c1c,
+                capacity: 15,
+                reference: Some(0x801d190c),
+                renderers: &[0x801d1714],
+                codec: Codec::AsciiLiteral,
+            },
+            Allocation {
+                address: 0x801d0c2c,
+                capacity: 5,
+                reference: Some(0x801d1908),
+                renderers: &[0x801d1714],
+                codec: Codec::AsciiLiteral,
+            },
+            Allocation {
+                address: 0x801d0c34,
+                capacity: 7,
+                reference: Some(0x801d1904),
+                renderers: &[0x801d1714],
+                codec: Codec::AsciiLiteral,
+            },
+        ],
+    },
+    Layout {
         name: "US COMMU02 menu labels",
         load: 0x801d0c00,
         size: 42208,

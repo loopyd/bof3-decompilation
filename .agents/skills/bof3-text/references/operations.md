@@ -101,6 +101,11 @@ rows. Counted rows accept seven literal bytes. Default names use
 zero-fills unused field bytes and updates counted rows' lengths. Pack against the
 same archive with its recorded entry or `all`, without class or latch selectors.
 Each matching archive payload needs its own source-bound document and output.
+COMMU03 entry 6 exposes three audio menu labels through `ascii-literal`, with
+capacities of fifteen, five and seven bytes including NUL. Use printable ASCII,
+including `0x20` spaces. Retain the overlay-local renderer `0x801D1714` and
+pointer references. Other labels, arrow glyphs and observed rendering remain
+unverified.
 `ascii-decimal-format` rows retain exactly one `%3d` and allow only surrounding
 printable ASCII within capacity. Other percent sequences are refused.
 AREA008 entry 13 also exposes three bounded decimal formats. Preserve their
