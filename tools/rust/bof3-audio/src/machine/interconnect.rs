@@ -202,6 +202,7 @@ impl Interconnect {
                 self.spu_transfer.ram_mut(),
                 sends.reverb,
                 control & 0x80 != 0,
+                self.spu_mixer.reverb_gain(),
             )?
         } else {
             [0; 2]

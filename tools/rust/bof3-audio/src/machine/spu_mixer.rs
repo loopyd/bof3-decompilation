@@ -13,7 +13,7 @@ pub struct Inputs {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Sends {
     pub dry: [i32; 2],
-    pub reverb: [i16; 2],
+    pub reverb: [i32; 2],
 }
 
 #[derive(Clone, Debug, Default)]
@@ -102,20 +102,20 @@ impl Mixer {
                 }
             }
         }
-        Sends {
-            dry,
-            reverb: wet.map(clamp),
-        }
+        Sends { dry, reverb: wet }
     }
 
-    /// Reverb return is the unscaled stereo output of that engine. Clamp the
+    pub fn reverb_gain(&self) -> [i16; 2] {
+        self.reverb
+    }
+
+    /// Reverb return already includes wet gain before interpolation. Clamp the
     /// accumulated mix before main gain. The sole +32768 full-negative-gain rail
     /// is unverified on hardware and fails explicitly rather than inventing wrap.
-    pub fn finish(&mut self, sends: Sends, reverb_return: [i16; 2]) -> Result<[i16; 2]> {
+    pub fn finish(&mut self, sends: Sends, reverb_return: [i32; 2]) -> Result<[i16; 2]> {
         let mut result = [0; 2];
         for channel in 0..2 {
-            let sum = i64::from(sends.dry[channel])
-                + i64::from(scale(reverb_return[channel], self.reverb[channel]));
+            let sum = i64::from(sends.dry[channel]) + i64::from(reverb_return[channel]);
             let value = scale(sum.clamp(-32768, 32767) as i16, self.main[channel].level());
             result[channel] = i16::try_from(value).map_err(|_| {
                 "SPU final +32768 gain rail has unverified wrap/saturation behavior"
@@ -130,7 +130,4 @@ impl Mixer {
 
 fn scale(sample: i16, gain: i16) -> i32 {
     (i32::from(sample) * i32::from(gain)) >> 15
-}
-fn clamp(value: i32) -> i16 {
-    value.clamp(-32768, 32767) as i16
 }

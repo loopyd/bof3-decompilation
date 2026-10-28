@@ -54,15 +54,23 @@ fn memory_network_preserves_signed_rounding_and_write_disable_does_not_mute_outp
     let original = ram.clone();
     let mut reverb = configured(&registers, 0xc000);
     assert_eq!(
-        reverb.tick_half_rate(&mut ram, [0; 2], false).unwrap(),
-        [125, -126]
+        reverb.tick(&mut ram, [0; 2], false, [32767; 2]).unwrap(),
+        [-1, 0]
+    );
+    assert_eq!(
+        reverb.tick(&mut ram, [0; 2], false, [32767; 2]).unwrap(),
+        [0, 0]
     );
     assert_eq!(ram, original);
     assert_eq!(reverb.cursor_bytes(), 0x60002);
-    reverb.write(0x1a2, 0xc000).unwrap();
+    let mut reverb = configured(&registers, 0xc000);
     assert_eq!(
-        reverb.tick_half_rate(&mut ram, [0; 2], true).unwrap(),
-        [125, 249]
+        reverb.tick(&mut ram, [0; 2], true, [32767; 2]).unwrap(),
+        [-1, 0]
+    );
+    assert_eq!(
+        reverb.tick(&mut ram, [0; 2], true, [32767; 2]).unwrap(),
+        [0, -1]
     );
     // Right delay addresses alias the just-written left APF state: 500/250.
     // Right APF1 = floor((-1001-500)/2)=-751; APF2=-1; return=249.
@@ -83,21 +91,33 @@ fn disabled_reverb_resamples_stored_ram_and_preserves_it_through_cursor_wrap() {
         bytes.copy_from_slice(&1000i16.to_le_bytes());
     }
     let original = ram.clone();
-    let mut reverb = configured(&[0; 32], 0xffff);
+    let mut reverb = configured(&[0; 32], 0xfffe);
     for frame in 0..100u32 {
-        let sample = reverb.tick(&mut ram, [32767, -32768], false).unwrap();
+        let sample = reverb
+            .tick(&mut ram, [32767, -32768], false, [32767; 2])
+            .unwrap();
         if frame > 40 {
             // Even FIR coefficients sum to 16382, not 16384.
-            assert_eq!(sample, [if frame & 1 == 0 { 1000 } else { 999 }; 2]);
+            assert_eq!(
+                sample,
+                if frame & 1 == 0 {
+                    [998, 999]
+                } else {
+                    [999, 998]
+                }
+            );
         }
-        assert_eq!(reverb.cursor_bytes(), 0x7fff8 + (frame.div_ceil(2) % 4) * 2);
+        assert_eq!(reverb.cursor_bytes(), 0x7fff0 + (frame.div_ceil(2) % 8) * 2);
     }
     assert_eq!(ram, original);
-    // ESA resets only the work cursor, not the resampling history.
+    // A changed valid ESA resets only the cursor, preserving filter history.
     reverb.write(0x1a2, 0x8000).unwrap();
-    assert_eq!(reverb.tick(&mut ram, [0; 2], false).unwrap(), [1000; 2]);
+    assert_eq!(
+        reverb.tick(&mut ram, [0; 2], false, [32767; 2]).unwrap(),
+        [998, 999]
+    );
     assert!(reverb
-        .tick(&mut ram[..RAM_BYTES - 1], [0; 2], true)
+        .tick(&mut ram[..RAM_BYTES - 1], [0; 2], true, [32767; 2])
         .is_err());
     assert_eq!(reverb.cursor_bytes(), 0x40000);
     for offset in [0x1a0, 0x1c1, 0x200] {
@@ -107,7 +127,7 @@ fn disabled_reverb_resamples_stored_ram_and_preserves_it_through_cursor_wrap() {
 }
 
 #[test]
-fn reflection_minus_one_coefficient_retains_explicit_source_anomaly() {
+fn reflection_minus_one_coefficient_uses_signed_complement_and_saturation() {
     let mut registers = [0; 32];
     registers[2] = 0x8000;
     registers[10] = 8;
@@ -118,9 +138,11 @@ fn reflection_minus_one_coefficient_retains_explicit_source_anomaly() {
     let mut ram = vec![0; RAM_BYTES];
     put(&mut ram, 0x4003e, 1000);
     put(&mut ram, 0x40046, -32768);
-    reverb.tick_half_rate(&mut ram, [0; 2], true).unwrap();
-    assert_eq!(get(&ram, 0x40040), -2000);
-    assert_eq!(get(&ram, 0x40048), 0);
+    for _ in 0..2 {
+        reverb.tick(&mut ram, [0; 2], true, [32767; 2]).unwrap();
+    }
+    assert_eq!(get(&ram, 0x40040), 2000);
+    assert_eq!(get(&ram, 0x40048), -32768);
 }
 
 #[test]
@@ -142,13 +164,15 @@ fn different_side_reflections_read_opposite_channel_delay() {
     let mut ram = vec![0; RAM_BYTES];
     put(&mut ram, 0x60008, 2000);
     put(&mut ram, 0x60010, -4000);
-    reverb.tick_half_rate(&mut ram, [0; 2], true).unwrap();
+    for _ in 0..2 {
+        reverb.tick(&mut ram, [0; 2], true, [32767; 2]).unwrap();
+    }
     assert_eq!(get(&ram, 0x60018), 500);
     assert_eq!(get(&ram, 0x60020), -1000);
 }
 
 #[test]
-fn reference_address_fold_preserves_alias_below_nominal_work_area() {
+fn reference_address_fold_repeats_inside_work_area_with_asymmetric_lower_boundary() {
     let mut registers = [0; 32];
     registers[26] = 8;
     registers[27] = 9;
@@ -157,15 +181,17 @@ fn reference_address_fold_preserves_alias_below_nominal_work_area() {
     let mut reverb = configured(&registers, 0xc000);
     let mut ram = vec![0; RAM_BYTES];
     // At cursor 0x30000 halfwords, register zero with displacement -1:
-    // (0x30000+0x3ffff+0x30000)&0x3ffff = 0x1ffff.
-    put(&mut ram, 0x3fffe, 1234);
-    reverb.tick_half_rate(&mut ram, [0; 2], true).unwrap();
+    // The native lower fold adds 0x3ffff-base, resolving to 0x3fffe.
+    put(&mut ram, 0x7fffc, 1234);
+    for _ in 0..2 {
+        reverb.tick(&mut ram, [0; 2], true, [32767; 2]).unwrap();
+    }
     assert_eq!(get(&ram, 0x60000), 1234);
-    assert_eq!(get(&ram, 0x3fffe), 1234);
+    assert_eq!(get(&ram, 0x7fffc), 1234);
 }
 
 #[test]
-fn room_impulses_and_disabled_tail_match_scalar_integer_reference() {
+fn room_impulses_and_disabled_tail_match_native_integer_reference() {
     let mut reverb = configured(&ROOM, ((RAM_BYTES - 0x26c0) / 8) as u16);
     let mut ram = vec![0; RAM_BYTES];
     let mut bytes = Vec::new();
@@ -180,7 +206,10 @@ fn room_impulses_and_disabled_tail_match_scalar_integer_reference() {
         } else {
             [0; 2]
         };
-        for sample in reverb.tick(&mut ram, input, frame < 44100).unwrap() {
+        for sample in reverb
+            .tick(&mut ram, input, frame < 44100, [32767; 2])
+            .unwrap()
+        {
             bytes.extend(sample.to_le_bytes());
             energy[frame / 44100] += u64::from(sample.unsigned_abs());
         }
@@ -189,11 +218,11 @@ fn room_impulses_and_disabled_tail_match_scalar_integer_reference() {
     assert!(energy.iter().all(|&e| e > 1_000_000));
     assert_eq!(
         sha256_hex(&bytes),
-        "e847c13ababdb98655b02a9ddb408361a517572a621bd3f029b2a80ef4eee6d0"
+        "4f34425e6c39078dd7c8712ab8909f4997675c75b4a0e7ffa91aa974707a45db"
     );
     assert_eq!(
         sha256_hex(&ram),
-        "63861ac1df8d3e27ddfc746fa1bcc5b18337702ba7b2d50481e531b84bbc46b3"
+        "009e4dcc81a93b0549ddb21e3efc4d403444b73ab4816b7c8576a4e615963c9c"
     );
 }
 

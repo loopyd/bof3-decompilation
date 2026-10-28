@@ -307,7 +307,14 @@ fn configured_reverb_reads_shared_ram_and_returns_stored_audio_with_writes_disab
     for frame in 0..58 {
         let sample = bus.step_spu_output(Inputs::default()).unwrap();
         if frame > 40 {
-            assert_eq!(sample, [if frame & 1 == 0 { 250 } else { 249 }; 2]);
+            assert_eq!(
+                sample,
+                if frame & 1 == 0 {
+                    [249, 250]
+                } else {
+                    [250, 249]
+                }
+            );
         }
     }
     assert_eq!(&bus.spu_transfer().ram()[0x60000..0x60040], before);
@@ -315,7 +322,11 @@ fn configured_reverb_reads_shared_ram_and_returns_stored_audio_with_writes_disab
     half(&mut bus, 0x1f801daa, 0xc090);
     bus.step_spu_output(Inputs::default()).unwrap();
     bus.step_spu_output(Inputs::default()).unwrap();
-    assert_eq!(&bus.spu_transfer().ram()[0x6003a..0x6003c], &[0, 0]);
+    // Aliased APF2 restores the sample read before APF1 clears the cell.
+    assert_eq!(
+        &bus.spu_transfer().ram()[0x6003a..0x6003c],
+        &1000i16.to_le_bytes()
+    );
     assert_eq!(bus.spu_transfer().ram()[0x1001], 5); // Uploaded sample remains intact.
 }
 

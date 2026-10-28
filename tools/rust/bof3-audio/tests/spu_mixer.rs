@@ -31,7 +31,7 @@ fn voice_sums_stay_wide_until_clipping_before_main_gain() {
         Inputs::default(),
     );
     assert_eq!(sends.dry, [720000, -720000]);
-    assert_eq!(sends.reverb, [32767, -32768]);
+    assert_eq!(sends.reverb, [720000, -720000]);
     assert_eq!(mixer.finish(sends, [0; 2]).unwrap(), [16383, -16384]);
     let sends = mixer.prepare(&voices([30000; 2], 1 << 23), 0xc000, Inputs::default());
     assert_eq!(sends.reverb, [30000; 2]);
@@ -99,7 +99,9 @@ fn signed_reverb_return_and_main_registers_preserve_distinct_scales() {
         dry: [1000, -1000],
         reverb: [0; 2],
     };
-    assert_eq!(mixer.finish(sends, [20000, -20000]).unwrap(), [5500, -5500]);
+    let gained_return =
+        [20000, -20000].map(|sample| (sample * i32::from(mixer.reverb_gain()[0])) >> 15);
+    assert_eq!(mixer.finish(sends, gained_return).unwrap(), [5500, -5500]);
     assert!(mixer.require_dry(0xc000).is_err()); // Disabled reverb can have a tail.
     mixer.write(0x184, 0).unwrap();
     mixer.write(0x186, 0).unwrap();

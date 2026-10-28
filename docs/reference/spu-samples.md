@@ -85,18 +85,26 @@ The 39 coefficients sum to 32766. The twenty even-index coefficients sum to
 16382, so one upsampling phase is slightly below unity gain.
 
 The [native reverb unit](../../third_party/pcsx-redux-agentic/src/spu/reverb.cc)
-supplies the current comparison for quantization, saturation and alternating
-left/right scheduling. Its `wrapOffset` repeatedly folds offsets at the work-area
-boundaries. The [Rust reverb model](../../tools/rust/bof3-audio/src/machine/spu_reverb.rs)
-retains one conditional base addition, allowing some negative/large offsets
-below the nominal work area. This differs from the native fold and from strict
-modulo by work-area size. The existing alias vector preserves that diagnostic
-policy; original hardware behavior remains unresolved.
+supplies the current comparison for signed rounding, saturation, alternating
+left/right calculations and FIR phase. The
+[Rust reference model](../../tools/rust/bof3-audio/src/machine/spu_reverb.rs)
+keeps sends and interpolated returns wide, applies signed wet gain before
+interpolation, and preserves immediate RAM alias ordering. Signed offsets fold
+repeatedly inside the work area. The lower fold adds `0x3ffff-base`, while the
+upper fold subtracts `0x40000-base`; this asymmetry differs from ring modulo.
 
-[Implementation evidence](../specs/formats/audio.md#rust-spu-reverb-execution)
-includes exact Room preset identity in the supplied US executable, separate
-integer PCM/RAM vectors and shared-memory output tests. It does not establish
-game preset selection, hardware bit accuracy, initial filter phase or bus timing.
+The [native register handler](../../third_party/pcsx-redux-agentic/src/spu/registers.cc)
+disables the work area for ESA values through `0x0200` and for `0xffff`.
+Rewriting the same valid base preserves the cursor. Base changes preserve FIR
+histories. A disabled base freezes the cursor, phase and filters, returning zero
+on the left while the right can repeat a stored sample. The reference model
+preserves these native quirks without claiming hardware agreement.
+
+[Implementation checks](../specs/formats/audio.md#rust-spu-reverb-execution)
+cover Room preset identity in the supplied US executable, integer PCM/RAM
+comparisons and shared-memory output. A bounded native capture also checks
+steady stored-RAM output with writes disabled. Game preset selection, hardware
+bit accuracy, startup phase and bus timing remain unresolved.
 
 ## Zero-step playback
 

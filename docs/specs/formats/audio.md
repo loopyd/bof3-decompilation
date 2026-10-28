@@ -2130,10 +2130,12 @@ voice sums and separate reverb sends, signed CD/external input gains, voice mute
 fixed main gain and its independently writable current-volume registers. Voice
 mute suppresses voice dry/wet sends while enabled CD/external inputs remain
 routed. Input reverb flags cannot enable an otherwise disabled input. Reverb
-input is clamped independently; the accumulated dry plus scaled reverb return is
-clamped before main gain. That ordering follows the inspected emulator, not an
-accepted hardware trace. The unverified final `+32768` full-negative-gain rail
-fails explicitly. Main/voice sweeps now use the component below.
+sends stay wide through the input FIR; decimated network inputs saturate to
+signed 16-bit values. The mixer adds the already gained, interpolated reverb
+return to the dry sum and clamps before main gain. The native reference leaves
+main gain writes unimplemented, so its output does not validate this final gain
+path. The unverified final `+32768` full-negative-gain rail fails explicitly.
+Main/voice sweeps use the component below.
 
 `Interconnect::step_spu_output` executes one caller-scheduled frame and returns
 stereo PCM. It requires configured voice models, SPUCNT enable and normal RAM
@@ -2213,41 +2215,49 @@ emulator quantization, saturation, channel ordering and address folding; it is
 not an accepted hardware implementation. No emulator code or dependency is imported.
 See [external evidence and discrepancies](../../reference/spu-samples.md#reverb).
 
-The 22.05 kHz network receives and returns 44.1 kHz frames through the published
-39-tap FIR. Initial filter histories and phase are zeroed component state, not
-recovered BIOS state. ESA writes reset the RAM cursor, preserving filter history.
-SPUCNT reverb enable gates RAM writes while reads, output, filters and cursor
-continue. Wet gain remains in the mixer, after the reverb return. Capture follows
-reverb execution at the explicit frame boundary; bus arbitration and IRQ9 remain
-unmodeled. A configured engine runs even when wet gains are zero, preserving
-state for later volume changes. An unconfigured audible reverb path still fails.
+The network alternates left and right calculations at 44.1 kHz and advances
+the RAM cursor after the right calculation. A complete stereo iteration runs at
+22.05 kHz. The published 39-tap FIR decimates wide input sums, then saturates
+each network input. Products shift individually before addition, and named IIR,
+comb and all-pass intermediates saturate to signed 16-bit values. Signed wet
+gain applies before output interpolation. FIR returns remain wide until final
+mixing. Initial filter histories are zero and the first calculation is left;
+these are explicit component startup state, not recovered BIOS state.
 
-The source model's address calculation adds the base once on overflow and masks
-to 18 halfword-address bits. Large or negative offsets can alias below the nominal
-work area; this differs from interpreting the published description as modulo by
-work-area size. The published Room preset includes zero reflection destinations,
-so this is a material validation question. The model preserves the alias rather
-than silently substituting different memory behavior. Aliased right-channel
-reads can observe left-channel writes from the same network step.
+SPUCNT reverb enable gates RAM writes. With a valid base, reads, filtering and
+cursor advancement continue even when writes or wet gains are zero. ESA values
+through `0x0200` and `0xffff` disable the work area. A changed valid base resets
+the cursor; rewriting the same base retains it. Base writes preserve FIR
+histories. The disabled-base path freezes histories, cursor and phase and emits
+zero on the left, while the right can repeat a retained sample. These rules
+preserve current native behavior without establishing hardware correctness.
 
-[Reverb tests](../../../tools/rust/bof3-audio/tests/spu_reverb.rs) cover signed
+Offsets are signed 16-bit register values, multiplied by four into halfword
+addresses. APF delay subtraction remains signed. Addresses repeatedly fold at
+the work-area boundaries. The upper fold subtracts `0x40000-base`; the lower
+adds `0x3ffff-base`, so this model is not ordinary modulo by work-area size.
+RAM writes take effect immediately. Later aliased reads, including the second
+all-pass stage, observe those writes.
+
+[Reverb checks](../../../tools/rust/bof3-audio/tests/spu_reverb.rs) cover signed
 rounding, cross-channel reflection, write-disabled output, FIR gain/phase,
-cursor wrap, history retention, alias order and the special `-32768` reflection
-coefficient. A separate scalar integer calculation matches 88,200 Room frames
-with periodic asymmetric impulses, including 44,100 frames with RAM writes
-disabled. PCM SHA-256 is
-`e847c13ababdb98655b02a9ddb408361a517572a621bd3f029b2a80ef4eee6d0`;
-final RAM SHA-256 is
-`63861ac1df8d3e27ddfc746fa1bcc5b18337702ba7b2d50481e531b84bbc46b3`.
+cursor wrap, history retention, alias order and the `-32768` reflection
+coefficient. Host comparisons against the unchanged native C++ unit cover
+asymmetric Room impulses and disabled tails, signed offsets, wide sends,
+wet-gain changes and base changes, comparing PCM, cursor and complete RAM.
 The exact-hash US executable contains the 32 published Room register values at
 full-file offset `0xEE024`, runtime `exe/slus_004_22@0x80184024`. This is preset
 identity, not proof that a game path selected or executed that preset.
 
 [Output integration checks](../../../tools/rust/bof3-audio/tests/spu_output.rs)
-upload stored audio through the SPU FIFO, read it through the configured reverb,
-observe wet/main gain and preserve RAM while writes are disabled. Independent
-game traces and hardware audio, exact rounding, address aliases, startup phase,
-CPU/device timing and original preset-selection execution remain acceptance work.
+upload stored audio through the SPU FIFO, observe wet/main gain and preserve RAM
+with writes disabled. A bounded native mixed-PCM capture agrees with steady
+stored-RAM reverb output after the separately identified native host Volume,
+clipping and float conversion. It does not validate Rust main gain, startup
+phase, dynamic game preset execution or host queue timing. Capture follows
+reverb execution at the explicit frame boundary; bus arbitration, IRQ9,
+independent game traces and hardware audio remain acceptance work. An
+unconfigured audible reverb path still fails.
 
 ## Rust CD decoder host registers
 
