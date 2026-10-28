@@ -121,13 +121,13 @@ fn annotate_surface(resources: &mut [Resource], records: &mut [Record]) -> Resul
             kind: "texture-source".into(),
             target: Some(resources[texture].id.clone()),
             status: "conditional".into(),
-            reason: "Original grid record 563 reaches the coordinate consumer with word 0x5380007a. Its immediate post-call fields contain page 0x0097 and UVs (160,112), (175,112), (160,127), (175,127). A later packet from the same physical buffer reaches GPU ingress with matching page and UV fields after a zero texture-window command. Its vertices lie above the captured draw area. All declared entry 7 upload bytes match serialized VRAM; the nominal UV region lies in chunk 54. Buffer ownership between construction and submission, intervening writes, actual sampling and upload history remain unresolved.".into(),
+            reason: "Original grid record 563 reaches the coordinate consumer with word 0x5380007a. Its immediate post-call fields contain page 0x0097 and UVs (160,112), (175,112), (160,127), (175,127). Recorded CPU writes connect the constructed fields to the main-loop DrawOTag entry. The subsequent native GPU payload matches the submitted bytes in the same execution, after a zero texture-window command. Its vertices lie above the captured draw area. All declared entry 7 upload bytes match serialized VRAM; the nominal UV region lies in chunk 54. RAM writes after the DrawOTag entry, actual sampling and upload history remain unresolved.".into(),
         },
         Dependency {
             kind: "palette".into(),
             target: Some(resources[palette].id.clone()),
             status: "conditional".into(),
-            reason: "Original grid record 563 produces CLUT 0x7980. A later packet from the same physical buffer carries that CLUT at GPU ingress. Serialized VRAM row 486 at word X=0 matches entry 8 words 768..1023, and the entire entry matches resident RAM. Buffer ownership across that interval, actual palette reads and source uniqueness remain unresolved. Other palette rows retain observed differences; their mutation causes and inverse edits remain unresolved.".into(),
+            reason: "Original grid record 563 produces CLUT 0x7980. Its recorded CPU store persists through the main-loop DrawOTag entry, and the subsequent native GPU payload carries that CLUT in the same execution. Serialized VRAM row 486 at word X=0 matches entry 8 words 768..1023, and the entire entry matches resident RAM. RAM writes after the DrawOTag entry, actual palette reads and source uniqueness remain unresolved. Other palette rows retain observed differences; their mutation causes and inverse edits remain unresolved.".into(),
         },
     ]);
     word.dependencies
@@ -135,6 +135,7 @@ fn annotate_surface(resources: &mut [Resource], records: &mut [Record]) -> Resul
     word.evidence.extend([
         "SLUS_004.22@0x80154358:AREA024-grid-563-original-metadata-call".into(),
         "SLUS_004.22@0x80154360:AREA024-grid-563-primitive-and-resident-bytes".into(),
+        "SLUS_004.22@0x8015584C:AREA024-grid-563-committed-writes-before-GPU-submission".into(),
         "SLUS_004.22@0x8017B9CC:AREA024-same-buffer-quad-at-GPU-ingress-after-zero-texture-window"
             .into(),
     ]);
