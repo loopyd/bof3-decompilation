@@ -1,23 +1,20 @@
-//! Development-only direct closure and bounded post-bootstrap playback coverage.
+//! Development-only direct closure, guest preparation and bounded playback coverage.
 use bof3_audio::{
-    driver::closure::{self, Root},
+    driver::{
+        closure::{self, Root},
+        trace::Trace,
+    },
     machine::{
-        executable::{ram_offset, Executable},
-        firmware::Image,
-        music, output_clock,
-        profile::Profile,
+        bank::Stage, executable::Executable, firmware::Image, music, output_clock, profile::Profile,
     },
     Result,
 };
 use emi_ex_v2::image::ArchiveImage;
-use std::{
-    collections::{BTreeMap, BTreeSet},
-    fs,
-};
+use std::{collections::BTreeSet, fs};
 fn main() -> Result<()> {
     let args: Vec<_> = std::env::args_os().skip(1).collect();
-    if args.len() != 1 && args.len() != 4 {
-        return Err("usage: closure US_EXE [BIOS EMI FRAMES]".into());
+    if args.len() != 1 && args.len() != 5 {
+        return Err("usage: closure US_EXE [BIOS EMI SEQUENCE FRAMES]".into());
     }
     let exe = Executable::from_bytes(fs::read(&args[0])?)?;
     let profile = Profile::identify(&exe)?;
@@ -25,21 +22,27 @@ fn main() -> Result<()> {
     let mut roots = inventory.roots.clone();
     let mut dynamic = None;
     let mut observed_executable = BTreeSet::new();
-    if args.len() == 4 {
-        let frames: u64 = args[3].to_str().ok_or("frames must be UTF-8")?.parse()?;
+    if args.len() == 5 {
+        let sequence: usize = args[3].to_str().ok_or("sequence must be UTF-8")?.parse()?;
+        let frames: u64 = args[4].to_str().ok_or("frames must be UTF-8")?.parse()?;
         if !(1..=44100 * 600).contains(&frames) {
             return Err("closure probe: frames must be 1..=26460000".into());
         }
         let archive = ArchiveImage::from_bytes(fs::read(&args[2])?)?;
-        let mut prepared = music::prepare(
+        let mut trace = Trace::default();
+        let mut prepared = music::prepare_observed(
             &exe,
             Image::from_bytes(fs::read(&args[1])?)?,
             &archive,
             None,
-            0,
+            sequence,
+            &mut |stage, execution| trace.observe(&exe, stage_name(stage), execution),
         )?;
         for call in &prepared.calls {
-            roots.push(Root{address:call.entry,reason:"original music preparation call; initialization itself is not dynamically observed".into()});
+            roots.push(Root {
+                address: call.entry,
+                reason: "observed original music preparation call".into(),
+            });
         }
         for (address, reason) in [
             (0x8016b9cc, "original sequence play"),
@@ -53,110 +56,69 @@ fn main() -> Result<()> {
         }
         let e = &mut prepared.execution;
         e.enable_output(output_clock::Model::PcsxReduxNtsc)?;
-        let mut hits = BTreeMap::<u32, u64>::new();
-        let mut indirect = BTreeMap::<(u32, u32), u64>::new();
-        let mut regions = BTreeMap::<&str, u64>::new();
-        let mut bios_calls = BTreeMap::<(u32, u32), u64>::new();
-        let mut memory = BTreeMap::<(u32, u32, u8, &str), u64>::new();
-        let mut previous = None;
-        let mut reentries = BTreeMap::<(u32, u32), u64>::new();
-        let mut observer = |e: &bof3_audio::machine::execution::Execution| -> Result<()> {
-            let pc = e.cpu.pc();
-            if matches!(pc, 0xa0 | 0xb0 | 0xc0) {
-                *bios_calls.entry((pc, e.cpu.register(9))).or_default() += 1;
-            }
-            let location = closure::location(&exe, pc);
-            if location.file_offset.is_some() {
-                if let Some(before) = previous {
-                    if closure::location(&exe, before).file_offset.is_none() {
-                        *reentries.entry((before, pc)).or_default() += 1;
-                    }
-                }
-            }
-            previous = Some(pc);
-            let region = if location.file_offset.is_some() {
-                "executable"
-            } else if Image::offset(pc).is_some() {
-                "bios"
-            } else {
-                "other RAM"
-            };
-            *hits.entry(pc).or_default() += 1;
-            *regions.entry(region).or_default() += 1;
-            if let Some(offset) = location.file_offset {
-                let ram = ram_offset(pc, 4)?;
-                if e.bus.ram().bytes()[ram..ram + 4] != exe.bytes()[offset..offset + 4] {
-                    return Err(
-                        format!("closure probe: executable bytes modified at {pc:#010x}").into(),
-                    );
-                }
-                let word = u32::from_le_bytes(exe.bytes()[offset..offset + 4].try_into()?);
-                let access = match word >> 26 {
-                    0x20 | 0x24 => Some((1, "read")),
-                    0x21 | 0x25 => Some((2, "read")),
-                    0x23 => Some((4, "read")),
-                    0x22 | 0x26 => Some((4, "merge read")),
-                    0x28 => Some((1, "write")),
-                    0x29 => Some((2, "write")),
-                    0x2b => Some((4, "write")),
-                    0x2a | 0x2e => Some((4, "merge read/write")),
-                    _ => None,
-                };
-                if let Some((width, kind)) = access {
-                    let mut address = e
-                        .cpu
-                        .register(((word >> 21) & 31) as usize)
-                        .wrapping_add(word as i16 as i32 as u32);
-                    if kind.starts_with("merge") {
-                        address &= !3;
-                    }
-                    *memory.entry((pc, address, width, kind)).or_default() += 1;
-                }
-                if word >> 26 == 0 && matches!(word & 63, 8 | 9) {
-                    let register = ((word >> 21) & 31) as usize;
-                    *indirect.entry((pc, e.cpu.register(register))).or_default() += 1;
-                }
-            }
-            Ok(())
-        };
+        // Preparation's observer has no host-call boundary notification. Preserve
+        // its raw external transitions, but do not infer re-entry roots from them.
+        let preparation_transitions = std::mem::take(&mut trace.reentries);
+        trace.begin_call();
         let play = e.call_observed(
             0x8016b9cc,
-            [prepared.handle, 0, 1, 1],
+            [prepared.handle, sequence as u32, 1, 1],
             100000,
-            &mut observer,
+            &mut |e| trace.observe(&exe, "play", e),
         )?;
         while e.output().unwrap().frames() < frames {
-            e.call_observed(0x801753dc, [0; 4], 100000, &mut observer)?;
+            trace.begin_call();
+            e.call_observed(0x801753dc, [0; 4], 100000, &mut |e| {
+                trace.observe(&exe, "idle", e)
+            })?;
             e.take_audio_frames()?;
         }
+        trace.begin_call();
         let stop = e.call_observed(
             0x8016d534,
-            [prepared.handle, 0, 0, 0],
+            [prepared.handle, sequence as u32, 0, 0],
             100000,
-            &mut observer,
+            &mut |e| trace.observe(&exe, "stop", e),
         )?;
         observed_executable.extend(
-            hits.keys()
+            trace
+                .pcs
+                .keys()
                 .copied()
                 .filter(|&pc| closure::location(&exe, pc).file_offset.is_some()),
         );
-        for &(source, target) in reentries.keys() {
+        for &(source, target) in trace.reentries.keys() {
             roots.push(Root {address:target,reason:format!("observed re-entry after external PC {source:#010x}; predecessor can be a delay slot, not a callsite")});
         }
-        for &(source, target) in indirect.keys() {
+        for &(source, target) in trace.indirect.keys() {
             if closure::location(&exe, target).file_offset.is_some() {
                 roots.push(Root{address:target,reason:format!("observed register target from {source:#010x}; may be a return continuation, not a function entry")});
             }
         }
-        dynamic = Some(
-            serde_json::json!({"requested_frames":frames,"actual_frames":e.output().unwrap().frames(),"boot":prepared.boot,"identity":prepared.identity,"play":play,"stop":stop,"initialization_observed":false,"regions":regions,
-            "bios_calls":bios_calls.iter().map(|(&(vector,selector),&count)|serde_json::json!({"vector":vector,"selector":selector,"count":count})).collect::<Vec<_>>(),
-            "locations":hits.iter().map(|(&address,&count)|serde_json::json!({"location":closure::location(&exe,address),"count":count})).collect::<Vec<_>>(),
-            "external_reentries":reentries.iter().map(|(&(source,target),&count)|serde_json::json!({"after_external_pc":source,"target":closure::location(&exe,target),"count":count})).collect::<Vec<_>>(),
-            "memory_footprints":memory.iter().map(|(&(source,address,width,kind),&count)|serde_json::json!({"source":closure::location(&exe,source),"address":address,"width":width,"kind":kind,"count":count})).collect::<Vec<_>>(),
-            "observed_register_targets":indirect.iter().map(|(&(source,target),&count)|serde_json::json!({"source":closure::location(&exe,source),"target":closure::location(&exe,target),"count":count})).collect::<Vec<_>>(),
-            "limitations":["One sequence, post-bootstrap reference-clock interval only; initialization, other sequences, SFX and voice/XA coverage are incomplete.","Register targets and memory addresses are pre-instruction observations for unchanged executable-resident code; other RAM/BIOS memory accesses and full instruction-cache provenance remain unobserved."]}),
-        );
+        dynamic = Some(serde_json::json!({
+            "requested_frames": frames,
+            "actual_frames": e.output().unwrap().frames(),
+            "boot": prepared.boot,
+            "identity": prepared.identity,
+            "preparation_calls": prepared.calls,
+            "play": play,
+            "stop": stop,
+            "initialization_observed": true,
+            "preparation_host_call_boundaries_observed": false,
+            "regions": trace.regions.iter().map(|((stage,region),count)|serde_json::json!({"stage":stage,"region":region,"count":count})).collect::<Vec<_>>(),
+            "bios_calls": trace.services.iter().map(|((stage,vector,selector),count)|serde_json::json!({"stage":stage,"vector":vector,"selector":selector,"count":count})).collect::<Vec<_>>(),
+            "locations": trace.pcs.iter().chain(&trace.external_pcs).map(|(&address,&count)|serde_json::json!({"location":closure::location(&exe,address),"count":count})).collect::<Vec<_>>(),
+            "external_reentries": trace.reentries.iter().map(|(&(source,target),&count)|serde_json::json!({"after_external_pc":source,"target":closure::location(&exe,target),"count":count})).collect::<Vec<_>>(),
+            "preparation_external_transitions": preparation_transitions.iter().map(|(&(source,target),&count)|serde_json::json!({"after_external_pc":source,"target":closure::location(&exe,target),"count":count})).collect::<Vec<_>>(),
+            "memory_footprints": trace.memory.iter().map(|(&(source,address,width,kind),&count)|serde_json::json!({"source":closure::location(&exe,source),"address":address,"width":width,"kind":kind,"count":count})).collect::<Vec<_>>(),
+            "observed_register_targets": trace.indirect.iter().map(|(&(source,target),&count)|serde_json::json!({"source":closure::location(&exe,source),"target":closure::location(&exe,target),"count":count})).collect::<Vec<_>>(),
+            "limitations": [
+                "One selected sequence and playback interval; other sequences, SFX and voice/XA histories remain incomplete.",
+                "Preparation observes guest instructions after BIOS boot. Host staging, device-internal DMA accesses, incoming values/writers and BIOS bootstrap instructions are not observed.",
+                "Preparation external transitions can cross host-directed calls and do not seed re-entry roots. Playback calls reset the shared trace at each host boundary.",
+                "Register targets and memory footprints are pre-instruction observations for unchanged executable-resident code; they do not establish retirement or complete data closure."
+            ]
+        }));
     }
     let mut seen = BTreeSet::new();
     roots.retain(|r| seen.insert(r.address));
@@ -173,4 +135,15 @@ fn main() -> Result<()> {
         )?
     );
     Ok(())
+}
+
+fn stage_name(stage: Stage) -> &'static str {
+    match stage {
+        Stage::Initialization => "initialization",
+        Stage::Layout => "layout",
+        Stage::Header => "header",
+        Stage::Samples => "samples",
+        Stage::Sequence => "sequence",
+        Stage::Callbacks => "callbacks",
+    }
 }
