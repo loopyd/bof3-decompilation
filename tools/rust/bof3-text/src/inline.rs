@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v20";
+pub const SCHEMA: &str = "bof3.inline-text/v21";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -850,15 +850,21 @@ const LAYOUTS: &[Layout] = &[
         name: "US BATE labels and numeric formats",
         load: 0x801d0c00,
         size: 33864,
-        sha256: "e236a8cc5c8f08b7bfd28b48361fb26dc214d175bf1f44fdbf5d6e22e9edc3ea",
+        sha256: "04de0ab074178f161111a03fe1ea1d257919d9a6e33feafcac378d578795474b",
         consumers: &[
-            0x801d2ce8, 0x801d2d5c, 0x801d2dc4, 0x801d2e20, 0x801d396c, 0x801d3994, 0x801d39bc,
-            0x801d39d8, 0x801d3a48, 0x801d3a6c, 0x801d3ac4, 0x801d3ae4, 0x801d3b10, 0x801d3fb0,
-            0x801d48d4, 0x801d48fc, 0x801d4a4c, 0x801d4a74, 0x801d4a88, 0x801d4aa4, 0x801d574c,
-            0x801d620c, 0x801d6f84, 0x801d6fc0, 0x801d7600, 0x801d7e8c, 0x801d7eac, 0x801d8394,
-            0x801d83b8, 0x801d83d0, 0x801d83f8, 0x801d841c, 0x801d8438,
+            0x801d28e0, 0x801d2908, 0x801d2ce8, 0x801d2d04, 0x801d2d30, 0x801d2d5c, 0x801d2d78,
+            0x801d2d98, 0x801d2dc4, 0x801d2de0, 0x801d2e00, 0x801d2e20, 0x801d2e3c, 0x801d2e54,
+            0x801d3864, 0x801d3898, 0x801d38ac, 0x801d38d0, 0x801d38e4, 0x801d3908, 0x801d391c,
+            0x801d3934, 0x801d396c, 0x801d3994, 0x801d39bc, 0x801d39d8, 0x801d3a48, 0x801d3a6c,
+            0x801d3ac4, 0x801d3ae4, 0x801d3b10, 0x801d3fb0, 0x801d48d4, 0x801d48fc, 0x801d4a4c,
+            0x801d4a74, 0x801d4a88, 0x801d4aa4, 0x801d574c, 0x801d5780, 0x801d57a8, 0x801d57b8,
+            0x801d57d4, 0x801d57e4, 0x801d5800, 0x801d5810, 0x801d582c, 0x801d5940, 0x801d5964,
+            0x801d60b0, 0x801d60dc, 0x801d6118, 0x801d6140, 0x801d6150, 0x801d616c, 0x801d617c,
+            0x801d6198, 0x801d620c, 0x801d6f84, 0x801d6fc0, 0x801d7600, 0x801d7e8c, 0x801d7eac,
+            0x801d8394, 0x801d83b8, 0x801d83d0, 0x801d83f8, 0x801d841c, 0x801d8438,
         ],
         allocations: &[
+            Allocation::bounded_format(0x801d0c20, 4, Codec::AsciiU16DecimalFormat, &[0x80150098]),
             Allocation::bounded_format(
                 0x801d0c44,
                 4,
@@ -926,15 +932,21 @@ const LAYOUTS: &[Layout] = &[
         name: "US SHISU labels and numeric formats",
         load: 0x801d0c00,
         size: 38196,
-        sha256: "55d7be1bc021db08740a316ed1ea02a092e2e4e662663def72ab7553a4f63185",
+        sha256: "98d777a6fc806f6ae1b341c37e6f4c807d738d395a66ca6d44a012a567f5d7b0",
         consumers: &[
-            0x801d3c90, 0x801d3d04, 0x801d3d6c, 0x801d3dc8, 0x801d4914, 0x801d493c, 0x801d4964,
-            0x801d4980, 0x801d49f0, 0x801d4a14, 0x801d4a6c, 0x801d4a8c, 0x801d4ab8, 0x801d4f58,
-            0x801d587c, 0x801d58a4, 0x801d59f4, 0x801d5a1c, 0x801d5a30, 0x801d5a4c, 0x801d66f4,
-            0x801d71b4, 0x801d7f2c, 0x801d7f68, 0x801d85a8, 0x801d8e34, 0x801d8e54, 0x801d933c,
-            0x801d9360, 0x801d9378, 0x801d93a0, 0x801d93c4, 0x801d93e0,
+            0x801d3888, 0x801d38b0, 0x801d3c90, 0x801d3cac, 0x801d3cd8, 0x801d3d04, 0x801d3d20,
+            0x801d3d40, 0x801d3d6c, 0x801d3d88, 0x801d3da8, 0x801d3dc8, 0x801d3de4, 0x801d3dfc,
+            0x801d480c, 0x801d4840, 0x801d4854, 0x801d4878, 0x801d488c, 0x801d48b0, 0x801d48c4,
+            0x801d48dc, 0x801d4914, 0x801d493c, 0x801d4964, 0x801d4980, 0x801d49f0, 0x801d4a14,
+            0x801d4a6c, 0x801d4a8c, 0x801d4ab8, 0x801d4f58, 0x801d587c, 0x801d58a4, 0x801d59f4,
+            0x801d5a1c, 0x801d5a30, 0x801d5a4c, 0x801d66f4, 0x801d6728, 0x801d6750, 0x801d6760,
+            0x801d677c, 0x801d678c, 0x801d67a8, 0x801d67b8, 0x801d67d4, 0x801d68e8, 0x801d690c,
+            0x801d7058, 0x801d7084, 0x801d70c0, 0x801d70e8, 0x801d70f8, 0x801d7114, 0x801d7124,
+            0x801d7140, 0x801d71b4, 0x801d7f2c, 0x801d7f68, 0x801d85a8, 0x801d8e34, 0x801d8e54,
+            0x801d933c, 0x801d9360, 0x801d9378, 0x801d93a0, 0x801d93c4, 0x801d93e0,
         ],
         allocations: &[
+            Allocation::bounded_format(0x801d0c04, 4, Codec::AsciiU16DecimalFormat, &[0x80150098]),
             Allocation::bounded_format(
                 0x801d0c28,
                 4,
