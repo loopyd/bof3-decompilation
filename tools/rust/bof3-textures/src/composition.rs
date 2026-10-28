@@ -252,6 +252,98 @@ impl Geometry {
     }
 }
 
+/// One source-qualified rectangle in the caller's explicit preview order.
+/// Sources and commands can differ between parts; no shared state is inferred.
+#[derive(Clone, Copy, Debug)]
+pub struct RectanglePart<'a> {
+    pub geometry: &'a Geometry,
+    pub state: RectangleState,
+    pub texture: WordRegion<'a>,
+    pub palette: WordRegion<'a>,
+}
+
+/// A source-color derivative before draw offsets, clipping or framebuffer effects.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SourceFrame {
+    pub origin_x: i16,
+    pub origin_y: i16,
+    pub image: WordImage,
+}
+
+fn packet_coordinate(value: u16) -> i32 {
+    i32::from(((value << 5) as i16) >> 5)
+}
+
+/// Assemble indexed rectangles in explicit back-to-front order. Zero color words
+/// leave the earlier part intact; every other word replaces it, including STP
+/// black. This produces a source preview, not a replay of GPU rendering.
+pub fn assemble_rectangles(parts: &[RectanglePart<'_>]) -> Result<SourceFrame> {
+    if parts.is_empty() || parts.len() > 255 {
+        return Err(invalid("source frame requires 1..=255 rectangle parts"));
+    }
+    let mut left = i32::MAX;
+    let mut top = i32::MAX;
+    let mut right = i32::MIN;
+    let mut bottom = i32::MIN;
+    for part in parts {
+        let Geometry::Rectangle {
+            origin,
+            width,
+            height,
+            ..
+        } = *part.geometry
+        else {
+            return Err(invalid("quad source-frame assembly is unsupported"));
+        };
+        if width == 0 || height == 0 {
+            return Err(invalid("source frame contains an empty rectangle"));
+        }
+        let x = packet_coordinate(origin.x);
+        let y = packet_coordinate(origin.y);
+        left = left.min(x);
+        top = top.min(y);
+        right = right.max(x + i32::from(width));
+        bottom = bottom.max(y + i32::from(height));
+    }
+    let width = (right - left) as usize;
+    let height = (bottom - top) as usize;
+    let count = width
+        .checked_mul(height)
+        .filter(|count| *count <= crate::png::MAX_PIXELS)
+        .ok_or_else(|| invalid("source frame exceeds the PNG pixel bound"))?;
+    let mut image = WordImage {
+        width,
+        height,
+        words: vec![0; count],
+    };
+    for part in parts {
+        let sampled = part
+            .geometry
+            .sample_rectangle(part.state, part.texture, part.palette)?;
+        let Geometry::Rectangle { origin, .. } = *part.geometry else {
+            return Err(invalid("quad source-frame assembly is unsupported"));
+        };
+        let x = (packet_coordinate(origin.x) - left) as usize;
+        let y = (packet_coordinate(origin.y) - top) as usize;
+        for (row, colors) in sampled.words.chunks_exact(sampled.width).enumerate() {
+            let start = (y + row) * width + x;
+            for (target, color) in image.words[start..start + sampled.width]
+                .iter_mut()
+                .zip(colors)
+            {
+                if *color != 0 {
+                    *target = *color;
+                }
+            }
+        }
+    }
+    Ok(SourceFrame {
+        origin_x: left as i16,
+        origin_y: top as i16,
+        image,
+    })
+}
+
 /// Compose qualified geometry without selecting a bank or image.
 /// Unlike a bitmap mirror, original flip dispatch changes primitive type,
 /// placement, UV endpoints and sometimes the page. No raster sampling is implied.

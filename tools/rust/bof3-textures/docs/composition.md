@@ -64,6 +64,30 @@ Its hardware rules follow the [PSX GPU specification](https://psx-spx.consoledev
 It does not clip, shade, blend, apply framebuffer masks or determine layer order.
 Per-part source selection does not establish assembled-frame or runtime accuracy.
 
+## Rectangle source frames
+
+`composition::assemble_rectangles(&parts)` places sampled rectangles on one
+source-color canvas. Each `RectanglePart` supplies its `geometry`, `state`,
+`texture` and `palette`. Supply parts in explicit back-to-front order. The
+function does not derive submission order from cell records or ordering tables.
+
+The returned `SourceFrame` contains the top-left `origin_x` and `origin_y` and a
+`png::WordImage`. Placement uses the signed low 11 bits of each packet XY field,
+before drawing offsets or clipping. Canvas bounds include every rectangle's
+declared extent, even transparent edges. The canvas starts with zero words.
+A later zero color word leaves an earlier part intact. Every nonzero word
+replaces the earlier word, including STP black `0x8000`.
+
+Frames require 1 through 255 parts and at most `png::MAX_PIXELS` canvas pixels.
+Every part must satisfy `sample_rectangle` and its source bounds. Quads and empty
+rectangles fail. The output can pass to `png::encode_words` as a derivative;
+editable cells, image indices and palettes remain separate.
+
+This source preview does not apply color modulation, semitransparency, draw
+offsets, clipping, framebuffer masks or other scene objects. Its part order and
+source bindings require caller evidence. Matching the preview to captured
+commands does not establish rendered appearance or edited-disc loading.
+
 ## Qualified source associations
 
 The catalog retains one conditional association for the original US
