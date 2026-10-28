@@ -2276,25 +2276,44 @@ when no response cause or tail blocks it. BUSY clears at command acceptance.
 Unread bytes from an acknowledged head do not by themselves block that callback.
 The host does not interpret commands or supply callback timing.
 
-`Interconnect::configure_cd_controller(drive, cycle)` instead attaches an explicit
-paused drive and unit-scale FIFO clock. The first pending opcode write installs
-a 26,993-cycle deadline, the native integer conversion of 797 microseconds.
+`Interconnect::configure_cd_controller(drive, cycle)` attaches an explicit paused
+drive and unit-scale controller clock. The first pending opcode write installs a
+26,993-cycle FIFO deadline, the native integer conversion of 797 microseconds.
 Replacing that opcode keeps the deadline. Result reads, full acknowledgements
 and completed command handlers replace it when the response queue has space.
-`Execution` advances the clock after instructions and dispatches due callbacks
-after branch delay slots, before next-step IRQ admission. Output-clock
-subdivisions do not dispatch CD work. Reference execution uses absolute MMIO
-access cycles; raw execution retains its two-tick instruction model.
+`Execution` dispatches due callbacks after branch delay slots, before next-step
+IRQ admission. Each pass snapshots pending slots, visits FIFO before command
+continuation and tests each slot's current target once. Output-clock subdivisions
+do not dispatch CD work. Reference execution uses absolute MMIO access cycles;
+raw execution retains its two-tick instruction model.
 
-The attached controller executes Getstat, Setloc, Mute/Demute, Setfilter/Setmode,
-Getparam, GetlocL/P and GetTN/TD through the functional drive. Supply required TOC
-metadata before attachment. Mechanical/media commands and partial or composite
-IRQ clears fail explicitly. Manual FIFO acceptance, response/staged-IRQ publication
-and `deliver_cd_data` are unavailable while the controller owns them. Bounded
-native comparison covers immediate-command MMIO, deadline replacement and branch
-dispatch, including unread-head backlog and branch-free delay. Other scheduler
-slots, mechanical/media timing, broader IRQ phase and hardware fidelity remain
-unaccepted.
+The controller executes Getstat, Setloc, Mute/Demute, Setfilter/Setmode, Getparam,
+GetlocL/P, GetTN/TD, Pause, Init and SeekL/P through the functional drive. Supply
+required TOC metadata before attachment; automatic seek timing requires it.
+Idle Pause completes after 200 microseconds and Init after 120 milliseconds.
+Seek first waits 15 milliseconds, then uses the native destination/track and
+distance delay, plus 650 milliseconds when effective speed changed. Setmode
+changes effective speed separately from the retained raw mode byte. Init resets
+effective speed and its settling latch while preserving that byte. Continuation
+starts do not request another FIFO callback; final completions do when space
+permits.
+
+Attached IRQ assertions follow native events: head insertion/promotion and mask
+writes assert when unmasked, including repeated writes of the same mask. Init's
+ACK uses the old mask; its subsequent reset to `0x1f` does not assert IRQ. Result
+reads and unrelated register writes do not assert it. The manual host path
+retains its separate line model. Media commands, overlapping mechanical commands
+and partial or composite IRQ clears fail explicitly. Manual FIFO acceptance,
+response/staged-IRQ publication and `deliver_cd_data` are unavailable while the
+controller owns them.
+
+Bounded native comparisons cover immediate-command MMIO, both deadlines,
+Pause/Init/Seek continuations, speed settling, queued completions and masked Init
+IRQ assertions. The matching guest also runs through reference `Execution` with
+its MMIO values, relative access cycles and result buffer compared. Active-read
+Pause timing, automatic media/read cadence, other scheduler slots, broader IRQ
+phase and hardware fidelity remain unaccepted. A fresh ready drive has no retained
+GetlocL bytes; Init does not reconstruct that unknown transfer history.
 
 Without that controller, `respond_cd` inserts a response with 1–16 bytes and
 interrupt type 1–5. Two responses can be retained. A full queue drops another candidate. If an
@@ -2308,15 +2327,15 @@ actual payload size, so it clears exactly at the end and reasserts on an
 overread until that boundary is reached again. The queue separately remembers
 that the payload has been drained. Odd banks expose numeric interrupt flags,
 even banks their mask. Acknowledgement and parameter clearing do not consume
-result bytes. IRQ2 enters the existing edge-latched interrupt controller.
+result bytes. CD IRQ assertions enter bit 2 of the interrupt controller.
 ATV/ADPCTL writes use the existing drive-volume component.
 
 Absent configuration, decoder reset and manual XA controls fail explicitly.
 Sector requests and data reads require the separate data FIFO below. Its
 serialized delivery API still protects active data reads and pending host work;
 response queuing does not accept native data-overrun or concurrent-DMA behavior.
-Automatic mechanical/media scheduling and broader IRQ timing remain
-implementation obligations. Retained
+Automatic media scheduling and broader IRQ timing remain implementation
+obligations. Retained
 [register research](../../reference/cd-audio.md#cd-decoder-host-interface)
 qualifies the native comparison separately from hardware acceptance.
 

@@ -156,6 +156,8 @@ pub enum Delivery {
 pub struct Drive {
     activity: Activity,
     mode: u8,
+    double_speed: bool,
+    speed_changed: bool,
     filter: [u8; 2],
     next_lba: i32,
     seek_lba: i32,
@@ -184,6 +186,8 @@ impl Drive {
         Ok(Self {
             activity: Activity::Paused,
             mode,
+            double_speed: mode & 0x80 != 0,
+            speed_changed: false,
             filter,
             next_lba: position.lba(),
             seek_lba: position.lba(),
@@ -236,6 +240,27 @@ impl Drive {
     }
     pub(crate) fn mode(&self) -> u8 {
         self.mode
+    }
+    pub(crate) fn double_speed(&self) -> bool {
+        self.double_speed
+    }
+    /// Native explicit-seek duration, before consuming the speed-settle latch.
+    pub(crate) fn seek_delay_cycles(&self) -> Result<u64> {
+        let Activity::PreparingSeek {
+            target, physical, ..
+        } = self.activity
+        else {
+            return Err("CD drive: seek delay requires a preparing seek".into());
+        };
+        self.toc
+            .as_ref()
+            .ok_or("CD seek timing requires explicit TOC metadata")?;
+        let micros = match self.media_error_code(target, physical) {
+            Some(0x10) => 650_000,
+            Some(4) => 4_000_000,
+            _ => (i64::from(target) - i64::from(self.next_lba)).unsigned_abs() * 3 + 167_000,
+        } + if self.speed_changed { 650_000 } else { 0 };
+        Ok(micros * 33_868_800 / 1_000_000)
     }
     pub fn status(&self) -> u8 {
         (u8::from(self.motor_on) * 2)
@@ -399,6 +424,8 @@ impl Drive {
                 // ACK retains pre-transition status; completion is caller-supplied.
                 // Opcode 0x1c is the separate CdlReset.
                 self.activity = Activity::Resetting;
+                self.double_speed = false;
+                self.speed_changed = false;
                 self.next_lba = 0;
                 self.seek_lba = 0;
                 self.setloc_pending = false;
@@ -417,6 +444,9 @@ impl Drive {
                     self.xa_ended = false;
                 }
                 self.mode = command.parameters[0];
+                let double_speed = self.mode & 0x80 != 0;
+                self.speed_changed |= self.double_speed != double_speed;
+                self.double_speed = double_speed;
                 self.auto_pause = self.mode & 2 != 0;
                 self.report = self.mode & 4 != 0;
             }
@@ -488,6 +518,7 @@ impl Drive {
     pub fn complete(&mut self, cycle: u32) -> Result<Option<Response>> {
         match self.activity {
             Activity::PreparingRead { target } => {
+                self.speed_changed = false;
                 self.next_lba = target;
                 self.activity = Activity::SeekingRead { target };
                 Ok(None)
@@ -503,6 +534,7 @@ impl Drive {
             Activity::PreparingSeek {
                 target, physical, ..
             } => {
+                self.speed_changed = false;
                 self.activity = Activity::Seeking { target, physical };
                 Ok(None)
             }
@@ -516,6 +548,7 @@ impl Drive {
                 }))
             }
             Activity::PreparingPlay { target } => {
+                self.speed_changed = false;
                 self.next_lba = target;
                 self.activity = Activity::SeekingPlay { target };
                 Ok(None)

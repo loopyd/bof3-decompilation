@@ -297,7 +297,9 @@ impl Interconnect {
             Ok(())
         };
         result.map_err(|e| error(address, &e.to_string()))?;
-        self.update_cd_irq();
+        if self.cd_controller.is_none() {
+            self.update_cd_irq();
+        }
         Ok(())
     }
 }

@@ -94,6 +94,9 @@ impl Host {
     pub fn irq_line(&self) -> bool {
         self.interrupt_enable & self.response.interrupt != 0
     }
+    pub(crate) fn init_interrupt_mask(&mut self) {
+        self.interrupt_enable = 0x1f;
+    }
     pub fn volume(&self) -> &Volume {
         &self.volume
     }
@@ -210,7 +213,8 @@ impl Host {
     /// Insert a native response candidate at a supplied MCU boundary. Retain two
     /// responses; a full queue drops another candidate. An acknowledged head
     /// with a tail promotes that tail before appending the new candidate.
-    pub fn respond(&mut self, interrupt: u8, bytes: &[u8]) -> Result<()> {
+    /// Returns whether insertion selected a head and requests an IRQ assertion.
+    pub fn respond(&mut self, interrupt: u8, bytes: &[u8]) -> Result<bool> {
         if !(1..=5).contains(&interrupt) {
             return Err("CD host: response requires IRQ 1..5".into());
         }
@@ -221,12 +225,14 @@ impl Host {
         self.awaiting_response = false;
         if self.response.interrupt == 0 && self.pending_response.is_some() {
             self.response = self.pending_response.replace(response).unwrap();
+            return Ok(true);
         } else if self.response.empty() {
             self.response = response;
+            return Ok(true);
         } else if self.pending_response.is_none() {
             self.pending_response = Some(response);
         }
-        Ok(())
+        Ok(false)
     }
 
     pub fn read(&mut self, offset: u8) -> Result<u8> {
