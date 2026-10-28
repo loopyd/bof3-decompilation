@@ -3984,6 +3984,41 @@ dispatch targets remain within the component. Original SDK consumers still use
 their original state until their migration; this component alone does not
 replace their scheduling or adjacent pitch-data reads.
 
+The linked [voice-attribute component](../../../tools/rust/bof3-audio/driver/audio/voices.s)
+exports `audio_spu_set_voice_attributes`, `audio_spu_set_voice_range`,
+`audio_spu_note_to_pitch` and `audio_spu_write_address`. It reuses the
+initializer's live SPU register pointer, address-conversion state and twenty-four
+voice shadows. Attribute calls require readable caller storage through byte
+`0x3D`. The word at offset `0x00` selects voices and the word at `0x04` selects
+attributes. A zero attribute mask enables all attributes. The wrapper considers
+voices zero through twenty-three and retains the original post-write instruction
+delay.
+
+The range entry receives the attribute pointer, signed first and last voices and
+delay-suppression flag in A0 through A3. It clamps a negative first voice to
+zero and a last voice above twenty-three to twenty-three. Invalid or reversed
+ranges return `-3`; it reads the attribute mask before rejecting the range.
+Volume modes, rate/level saturation, pitch conversion, address rounding and
+per-attribute register updates retain the original instructions.
+
+Pitch conversion masks A1 and A3 to sixteen bits and retains signed semitone
+remainder arithmetic, including negative table indices. The writable
+`audio_spu_reverb_presets` has ten 68-byte presets immediately followed by the
+193-halfword `audio_spu_pitch_table`. The pitch helper's complete indexed read
+range, from `-176` through `191`, stays within this group. Negative indices read
+current preset-tail values. No padding or independent copy may separate that data.
+Owning the group does not establish that other callers leave it unchanged or
+migrate the original reverb setter.
+
+The address helper preserves the live conversion flag, divisor, alignment mask
+and shift. Selector `-1` returns the shifted low halfword; selector `-2` returns
+the rounded address. Other selectors write a halfword through the live register
+pointer without an index guard. When conversion is enabled, a zero divisor
+executes the original division and `BREAK 7`; callers must not assume
+transactional failure. Paired checks use
+plain RAM register bindings and the same CPU model. Device timing, remaining
+SDK consumers and complete sound startup remain separate obligations.
+
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
 
