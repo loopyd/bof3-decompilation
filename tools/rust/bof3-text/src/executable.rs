@@ -8,17 +8,20 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-pub(crate) const SCHEMA: &str = "bof3.executable-text/v4";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v5";
 const LOAD: u32 = 0x80096800;
 const SIZE: usize = 1445888;
 // Hash of the entire executable with only the supported allocations zeroed.
-const LAYOUT_SHA256: &str = "0ae832ab31b439b6ed04072e3cdbc956cf07b8a8389ead466e613bdf206c5ea4";
+const LAYOUT_SHA256: &str = "7382f78537f25f4093b6bfa6b7b1774cfe23462692e69c632cc4d0db8802b39c";
 const FORMAT_ADDRESS: u32 = 0x80149990;
 const FILE_LABEL: u32 = 0x80149f9c;
 const FILE_FORMAT: u32 = 0x80149fac;
 const DISK_PREFIX: u32 = 0x8014a30c;
+const CD_LABELS: [u32; 6] = [
+    0x8014a2a0, 0x8014a2ac, 0x8014a2b4, 0x8014a2c0, 0x8014a2cc, 0x8014a2d8,
+];
 const BIOS_PRINTF: u32 = 0x8017e3e4;
-const CONSUMERS: [u32; 3] = [0x8014b3c4, 0x80166df4, 0x80175c60];
+const CONSUMERS: [u32; 4] = [0x8014b3c4, 0x80166df4, 0x80175c60, 0x8017560c];
 const FORMATTER: u32 = 0x8017e3f4;
 // Original string bytes plus their NUL, excluding alignment padding. The consumer
 // at 0x8014b3c4 passes pointers from 0x8017f470..0x8017f53c to 0x80150098.
@@ -75,6 +78,12 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (FORMAT_ADDRESS, 5),
     (FILE_LABEL, 15),
     (FILE_FORMAT, 18),
+    (CD_LABELS[0], 10),
+    (CD_LABELS[1], 8),
+    (CD_LABELS[2], 12),
+    (CD_LABELS[3], 9),
+    (CD_LABELS[4], 10),
+    (CD_LABELS[5], 7),
     (DISK_PREFIX, 12),
 ];
 
@@ -199,6 +208,9 @@ fn codec(address: u32) -> Codec {
 }
 
 fn consumer(address: u32) -> u32 {
+    if CD_LABELS.contains(&address) {
+        return CONSUMERS[3];
+    }
     match address {
         FILE_LABEL | FILE_FORMAT => CONSUMERS[1],
         DISK_PREFIX => CONSUMERS[2],
@@ -221,7 +233,7 @@ pub(crate) enum Output {
 }
 
 fn output(address: u32) -> Output {
-    if address == DISK_PREFIX {
+    if address == DISK_PREFIX || CD_LABELS.contains(&address) {
         Output::BiosPrintf {
             stub: BIOS_PRINTF,
             vector: 0xa0,
@@ -337,7 +349,12 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
                 }
             }]
         } else {
-            (0x8017f470..0x8017f53c)
+            let table = if CD_LABELS.contains(&address) {
+                0x80185824..0x8018583c
+            } else {
+                0x8017f470..0x8017f53c
+            };
+            table
                 .step_by(4)
                 .filter(|reference| {
                     let at = offset(*reference);

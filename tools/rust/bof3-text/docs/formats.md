@@ -34,14 +34,15 @@ size alone does not identify audio. These checks do not classify container gaps.
 
 `extract`, `analyze`, `validate` and `pack` also support the US executable's
 exception-screen ASCII strings and the `FILE NOT FOUND` diagnostic with its
-three-ID hexadecimal format, plus the BIOS `DiskError: ` prefix. `extract-corpus` exports
+three-ID hexadecimal format, plus the BIOS `DiskError: ` prefix and six CD
+interrupt labels. `extract-corpus` exports
 them when the complete source root includes `SLUS_004.22`. Literal strings use
 the pointer words at `0x8017F470..0x8017F53C`, with an exclusive upper bound.
 The consumer at `0x8014B3C4` passes these pointers to renderer `0x80150098`.
 The renderer reads bytes until NUL, advances on ASCII space and handles newline
 `0x0A`. These bytes use ASCII rather than the dialogue character table.
 
-The JSON schema is `bof3.executable-text/v4`. Re-extract older documents before
+The JSON schema is `bof3.executable-text/v5`. Re-extract older documents before
 editing. It contains `source`, mandatory `source_sha256`, `build`, `load_address`,
 `consumers` and `strings`.
 Each string retains its `address`, whole-file `file_offset`, original `capacity`
@@ -96,8 +97,28 @@ stub `0x8017E3E4` jumps to BIOS vector `0xA0` with selector `0x3F`.
 This is separate from the game-screen renderer. The call requires a positive
 CD debug word, which the original executable initializes to zero. Editing the
 prefix does not enable that output; runtime acceptance remains unverified.
-The adjacent format beginning at `0x8014A318` and interrupt-label table remain
-unsupported.
+The adjacent format beginning at `0x8014A318` remains unsupported.
+
+The six named CD interrupt labels use `ascii-literal`. Their original allocations
+include NUL and exclude alignment bytes:
+
+| Address | Original text | Capacity | Pointer word |
+| --- | --- | --- | --- |
+| `0x8014A2A0` | `DiskError` | 10 | `0x80185838` |
+| `0x8014A2AC` | `DataEnd` | 8 | `0x80185834` |
+| `0x8014A2B4` | `Acknowledge` | 12 | `0x80185830` |
+| `0x8014A2C0` | `Complete` | 9 | `0x8018582C` |
+| `0x8014A2CC` | `DataReady` | 10 | `0x80185828` |
+| `0x8014A2D8` | `NoIntr` | 7 | `0x80185824` |
+
+Each row records the immediate table consumer at `0x8017560C`. It masks the
+selector to eight bits and reads the table only for indices below seven.
+Separate readers pass labels as the third and fourth `%s` arguments to BIOS
+printf at `0x801762F8`, `0x80176580`, `0x801769F0` and `0x801770E8`.
+They index the table directly. Percent characters in a label remain literal
+argument bytes. The immutable `bios-printf` output describes this known output
+path; observed BIOS output and other callers remain unverified. The shared `?`
+string and the diagnostic formats remain unsupported.
 
 Build recognition hashes all bytes outside the supported allocations against
 the pinned US layout. This permits re-extraction of supported edits while

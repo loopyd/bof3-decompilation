@@ -143,7 +143,7 @@ Output is always JSON — there is no second codec — and every object carries 
 document's own recorded `source`.
 
 The supported US `SLUS_004.22` executable exports one
-`bof3.executable-text/v4` document. Re-extract older documents. Use the default
+`bof3.executable-text/v5` document. Re-extract older documents. Use the default
 `--entry all` and omit `--class` and `--latch`; EMI selectors are refused for
 executable input.
 See [formats.md](formats.md#executable-ascii) for supported allocations and limits.
