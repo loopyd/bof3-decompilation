@@ -30,8 +30,8 @@ fn interpolation_models_match_independent_signed_vectors_and_chunk_boundaries() 
         (
             Model::EmulatorReference,
             5,
-            279,
-            "c6f7caec5c80a90968773f8fac24149bb039ec81746ad3d0a5ef70814ad165a4",
+            280,
+            "493693c975ab6fabaee7e0ac93f283a1c47e3387ecc8d8956c4d6e052edbfaae",
         ),
     ] {
         let mut full = Resampler::new(Format::from_coding(coding).unwrap(), model).unwrap();
@@ -120,7 +120,7 @@ fn sectors_keep_phase_and_reject_identity_or_decode_errors_without_advancing() {
         let source_frames = Format::from_coding(coding).unwrap().frames_per_sector();
         let expected = source_frames * 7 / if coding & 4 == 0 { 6 } else { 3 };
         let first = actual.sector(&bytes).unwrap();
-        assert_eq!(first.len(), expected - usize::from(coding & 4 != 0));
+        assert_eq!(first.len(), expected);
         assert_eq!(first, reference.sector(&bytes).unwrap());
         let mut wrong = bytes.clone();
         wrong[1] = 4;

@@ -28,13 +28,15 @@ They cover consumed output under the captured settings, including distinct stere
 channels. Remaining queued output, other formats and histories, and hardware
 fidelity require separate evidence.
 
-The retained Rust 18.9 kHz table has 175 coefficients, SHA-256
-`02f3c9597f8e4b8f961e7981ac758034a2ff8eb5200b01ba410106e3460bffa1`.
-Its coefficient provenance remains uncertain. This diagnostic path sums products
-before shifting and uses a separate phase schedule. Native `FeedXA` instead
-inserts the midpoint of each sample pair and runs the resulting 37.8 kHz input
-through the shared zigzag filter. Neither the retained half-rate policy nor the
-native implementation establishes half-rate hardware fidelity.
+Rust's emulator-reference 18.9 kHz path follows native `FeedXA`: insert the signed
+arithmetic midpoint of the previous and current sample, then the current sample,
+through the shared 37.8 kHz zigzag filter. It retains previous samples across
+chunks, sectors and coding changes. Mono fills both rings. A bounded synthetic
+4-bit stereo interval agrees with native decoded PCM, generated frame counts and
+consumed output at unity gain under a fresh-process construction context. The
+native interpolation rings are not directly observed at capture start. Remaining
+queued output, other formats and histories, clipping and hardware fidelity need
+separate evidence.
 
 Rust `Volume::apply_xa` follows native XA gain: sum each output's matrix
 products in signed 64-bit arithmetic, multiply by 33617, shift by 22, saturate to
@@ -217,9 +219,9 @@ predictor unused, while the CD feed duplicates mono into both interpolation
 rings. Mute skips the feed after decoding.
 
 The Rust diagnostic transition policy reads coding per admitted sector, retains
-shared cursor/phase state and leaves the right predictor/interpolation ring
-untouched for mono, duplicating interpolated left. Its backlog drop preserves
-decoder history. These are explicit modeled choices requiring comparison with
+shared cursor/phase and previous interpolation samples. Mono leaves the right
+predictor untouched but fills both interpolation rings and previous samples.
+Backlog drops preserve decoder history. These are explicit modeled choices requiring comparison with
 the current native path and independent hardware evidence.
 
 [Rust transition validation](../specs/formats/audio.md#rust-xa-coding-transitions)

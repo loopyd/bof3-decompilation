@@ -1,5 +1,5 @@
 //! XA-to-SPU sample processing at caller-selected boundaries; no drive scheduler.
-use super::xa_filter::{HALF_RATE, ZIGZAG};
+use super::xa_filter::ZIGZAG;
 use crate::{
     xa::{Arithmetic, Decoder, Format, Histories, Stream},
     Result,
@@ -9,7 +9,7 @@ use crate::{
 pub enum Model {
     /// Published 37.8 kHz indexing. No published 18.9 kHz algorithm is established.
     Published37800,
-    /// Native 37.8 kHz alignment and retained diagnostic half-rate filter.
+    /// Native ring alignment, with midpoint insertion for 18.9 kHz input.
     EmulatorReference,
 }
 
@@ -20,6 +20,7 @@ pub struct Resampler {
     ring: [[i16; 32]; 2],
     position: usize,
     phase: u8,
+    previous: [i16; 2],
 }
 
 impl Resampler {
@@ -40,6 +41,7 @@ impl Resampler {
             ring: [[0; 32]; 2],
             position: 0,
             phase: 6,
+            previous: [0; 2],
         })
     }
     pub fn pending_phase(&self) -> u8 {
@@ -69,64 +71,44 @@ impl Resampler {
         if !pcm.len().is_multiple_of(channels) {
             return Err("XA resampling input ends within a stereo frame".into());
         }
-        let frames = pcm.len() / channels;
         let mut output = Vec::new();
-        if self.format.sample_rate() == 37800 {
-            for frame in pcm.chunks_exact(channels) {
-                self.ring[0][self.position] = frame[0];
-                if channels == 2 {
-                    self.ring[1][self.position] = frame[1];
-                }
-                self.position = (self.position + 1) & 31;
-                self.phase -= 1;
-                if self.phase != 0 {
-                    continue;
-                }
-                self.phase = 6;
-                for weights in ZIGZAG {
-                    output.push(std::array::from_fn(|output_channel| {
-                        let channel = if channels == 1 { 0 } else { output_channel };
-                        let sum: i32 = weights
-                            .iter()
-                            .enumerate()
-                            .map(|(tap, &weight)| {
-                                let sample = self.ring[channel][(self.position + 63 - tap) & 31];
-                                (i32::from(sample) * i32::from(weight)) >> 15
-                            })
-                            .sum();
-                        clip(sum)
-                    }));
-                }
+        for frame in pcm.chunks_exact(channels) {
+            let stereo = [frame[0], frame[channels - 1]];
+            if self.format.sample_rate() == 18900 {
+                let midpoint = std::array::from_fn(|channel| {
+                    ((i32::from(self.previous[channel]) + i32::from(stereo[channel])) >> 1) as i16
+                });
+                self.push(midpoint, &mut output);
             }
-        } else {
-            let mut consumed = 0;
-            while consumed < frames {
-                if self.phase >= 7 {
-                    self.phase -= 7;
-                    self.position = (self.position + 1) & 31;
-                    self.ring[0][self.position] = pcm[consumed * channels];
-                    if channels == 2 {
-                        self.ring[1][self.position] = pcm[consumed * channels + 1];
-                    }
-                    consumed += 1;
-                }
-                let weights = &HALF_RATE[usize::from(self.phase)];
-                output.push(std::array::from_fn(|output_channel| {
-                    let channel = if channels == 1 { 0 } else { output_channel };
-                    let sum: i64 = weights
-                        .iter()
-                        .enumerate()
-                        .map(|(tap, &weight)| {
-                            i64::from(self.ring[channel][(self.position + 32 - 25 + tap) & 31])
-                                * i64::from(weight)
-                        })
-                        .sum();
-                    clip((sum >> 15) as i32)
-                }));
-                self.phase += 3;
-            }
+            self.push(stereo, &mut output);
+            self.previous = stereo;
         }
         Ok(output)
+    }
+
+    fn push(&mut self, frame: [i16; 2], output: &mut Vec<[i16; 2]>) {
+        for (ring, sample) in self.ring.iter_mut().zip(frame) {
+            ring[self.position] = sample;
+        }
+        self.position = (self.position + 1) & 31;
+        self.phase -= 1;
+        if self.phase != 0 {
+            return;
+        }
+        self.phase = 6;
+        for weights in ZIGZAG {
+            output.push(std::array::from_fn(|channel| {
+                let sum: i32 = weights
+                    .iter()
+                    .enumerate()
+                    .map(|(tap, &weight)| {
+                        let sample = self.ring[channel][(self.position + 63 - tap) & 31];
+                        (i32::from(sample) * i32::from(weight)) >> 15
+                    })
+                    .sum();
+                clip(sum)
+            }));
+        }
     }
 }
 

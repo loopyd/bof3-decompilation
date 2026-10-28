@@ -1,5 +1,5 @@
 //! Independent integer/vector model ported from the retained pre-migration oracles.
-//! The 37.8 kHz ring indexing is corrected against native feed/output observations.
+//! Ring indexing and half-rate midpoints follow native feed/output observations.
 //! Shares only numeric FIR coefficients, never production decoding or queue state.
 
 #[path = "../../src/machine/xa_filter.rs"]
@@ -66,6 +66,7 @@ struct Reference {
     rings: [[i32; 32]; 2],
     cursor: usize,
     phase: usize,
+    previous: [i32; 2],
 }
 impl Reference {
     fn new() -> Self {
@@ -74,6 +75,7 @@ impl Reference {
             rings: [[0; 32]; 2],
             cursor: 0,
             phase: 6,
+            previous: [0; 2],
         }
     }
     fn decode(&mut self, coding: u8, seed: usize) -> Vec<Vec<i16>> {
@@ -120,67 +122,38 @@ impl Reference {
         }
         pcm
     }
-    fn interpolate(&self, half: bool, table: usize, channel: usize) -> i16 {
-        let weights: &[i16] = if half {
-            &coefficients::HALF_RATE[table]
-        } else {
-            &coefficients::ZIGZAG[table]
-        };
+    fn interpolate(&self, table: usize, channel: usize) -> i16 {
         let mut sum = 0i64;
-        for (tap, &weight) in weights.iter().enumerate() {
-            let index = if half {
-                (self.cursor + 32 - 25 + tap) % 32
-            } else {
-                (self.cursor + 31 - tap) % 32
-            };
+        for (tap, &weight) in coefficients::ZIGZAG[table].iter().enumerate() {
+            let index = (self.cursor + 31 - tap) % 32;
             let product = i64::from(self.rings[channel][index]) * i64::from(weight);
-            sum += if half { product } else { product >> 15 };
-        }
-        if half {
-            sum >>= 15;
+            sum += product.div_euclid(1 << 15);
         }
         sum.clamp(-32768, 32767) as i16
     }
-    fn emit(&self, half: bool, stereo: bool, table: usize) -> [i16; 2] {
-        let left = self.interpolate(half, table, 0);
-        [
-            left,
-            if stereo {
-                self.interpolate(half, table, 1)
-            } else {
-                left
-            },
-        ]
-    }
     fn resample(&mut self, coding: u8, pcm: &[Vec<i16>]) -> Vec<[i16; 2]> {
-        let half = coding & 4 != 0;
-        let stereo = coding & 1 != 0;
+        let repeats = if coding & 4 != 0 { 2 } else { 1 };
         let mut output = Vec::new();
         for frame in pcm {
-            if half {
-                while self.phase < 7 {
-                    output.push(self.emit(half, stereo, self.phase));
-                    self.phase += 3;
+            let current = [i32::from(frame[0]), i32::from(frame[frame.len() - 1])];
+            for repeat in 0..repeats {
+                for (channel, &sample) in current.iter().enumerate() {
+                    self.rings[channel][self.cursor] = if repeats == 2 && repeat == 0 {
+                        (self.previous[channel] + sample).div_euclid(2)
+                    } else {
+                        sample
+                    };
                 }
-                self.phase -= 7;
-                self.cursor = (self.cursor + 1) % 32;
-            }
-            for (channel, &sample) in frame.iter().enumerate() {
-                self.rings[channel][self.cursor] = i32::from(sample);
-            }
-            if half {
-                output.push(self.emit(half, stereo, self.phase));
-                self.phase += 3;
-            } else {
                 self.cursor = (self.cursor + 1) % 32;
                 self.phase -= 1;
                 if self.phase == 0 {
                     self.phase = 6;
                     for table in 0..7 {
-                        output.push(self.emit(half, stereo, table));
+                        output.push([self.interpolate(table, 0), self.interpolate(table, 1)]);
                     }
                 }
             }
+            self.previous = current;
         }
         output
     }
@@ -236,8 +209,8 @@ fn fixed_interpolation_vectors_preserve_qualified_reference_hashes() {
         ),
         (
             5,
-            279,
-            "c6f7caec5c80a90968773f8fac24149bb039ec81746ad3d0a5ef70814ad165a4",
+            280,
+            "493693c975ab6fabaee7e0ac93f283a1c47e3387ecc8d8956c4d6e052edbfaae",
         ),
     ] {
         let frames = Reference::new().resample(coding, &pcm);

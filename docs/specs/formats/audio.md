@@ -2464,17 +2464,22 @@ reset, end padding or tail flush. Extraction remains at encoded rate.
 `Published37800` implements the published seven-phase filter alignment and rejects
 18.9 kHz, for which that source gives no complete algorithm. `EmulatorReference`
 uses the same 37.8 kHz history alignment, with the first tap at the most recently
-written sample. A bounded original mono 4-bit comparison agrees with the
+written sample. For 18.9 kHz input, it inserts the signed arithmetic midpoint of
+the previous and current sample before each current sample, then uses the shared
+filter. Mono fills both interpolation rings. Previous samples, rings, cursor and
+phase survive chunk and sector boundaries. An explicit reset starts with zero
+history and previous samples, position zero and phase six. A 120-frame half-rate
+input produces 280 output frames and returns to phase six without tail padding.
+
+Bounded original mono and stereo 4-bit comparisons agree with the
 [native XA/CDDA submission path](../../../third_party/pcsx-redux-agentic/src/spu/xa.cc)
-with native gain conversion. The production XA matrix below follows those
-gain stages. The distinct half-rate filter, wider
-formats and histories, and output left queued remain unaccepted.
-Both require explicit selection; neither establishes hardware fidelity. See
-[coefficient provenance and differences](../../reference/cd-audio.md). Reset
-contexts have zero filter history, position zero and phase six. Phase/history
-survive every chunk and sector boundary. In the half-rate reference, 120 input
-frames initially emit 279 frames with phase three pending; subsequent complete
-sectors retain that phase rather than silently pad to an idealized duration.
+for consumed 37.8 kHz output and native gain conversion. A synthetic stereo 4-bit
+18.9 kHz interval also agrees for decoded samples, generated frame counts and
+consumed output under a fresh-process construction context. That context does
+not directly observe the native interpolation rings. Wider formats and histories,
+clipping, output left queued and hardware fidelity remain unaccepted. Both models
+require explicit selection. See
+[coefficient provenance and differences](../../reference/cd-audio.md).
 Malformed stereo input or failed sector decoding leaves processing state intact.
 Emphasis remains unsupported.
 
@@ -2646,10 +2651,11 @@ decoder keeps its fixed-stream contract; dynamic changes belong to the runtime
 queue's selected-sector path.
 
 Transitions preserve left/right ADPCM predictors, interpolation rings, shared
-cursor and phase. Mono processing updates only left history and duplicates the
-interpolated left result to both outputs. Right history survives for later
-stereo input. Muted sectors change predictors without resampling; dropped
-sectors change neither predictor nor interpolation history. Previously queued
+cursor, phase and previous interpolation samples. Mono decoding updates only the
+left predictor, retaining the right predictor for later stereo input. Mono
+resampling fills both rings and both previous samples with the left input.
+Muted sectors change predictors without resampling. Dropped sectors change
+neither predictor nor interpolation history. Previously queued
 output retains its original samples. Reserved coding fields, emphasis and
 malformed units fail without committing queue state. Coding transitions with
 the separate `Published37800` resampler fail explicitly because its dynamic
@@ -2662,7 +2668,7 @@ plus malformed-input rollback, model boundaries and identity release. The
 retained [Rust reference model](../../../tools/rust/bof3-audio/tests/reference/xa.rs)
 implements separate decoder/resampling state and arithmetic, reusing numeric
 coefficient tables whose fixed-format vectors are checked separately. The Rust
-transition test compares every generated count/hash with the unchanged
+transition test compares every generated count/hash with the retained
 [fixture](../../../tools/rust/bof3-audio/tests/reference/xa_transitions.json).
 Its initial full-rate tap direction was corrected against the primary source;
 the failed probe remains in `out/audio-migration/xa-coding-focused.log`.
