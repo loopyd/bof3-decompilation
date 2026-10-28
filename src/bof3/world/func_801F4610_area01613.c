@@ -23,7 +23,7 @@ void func_801F4610(void) {
     return;
   }
 
-  func_8019A194();
+  findCurrentWorldSlotIndex();
   func_8014DD3C(0x205);
   D_1F800044->unk_48 = 0;
   FIELD_REF(u8, D_1F800044, 0x24u) = 0;

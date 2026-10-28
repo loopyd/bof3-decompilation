@@ -7,13 +7,18 @@ extern u8   D_8014933E;
 extern void func_8014D290(struct GameWorkArea* arg0);
 extern void func_8015A944(struct GameWorkArea* arg0);
 
-/* @behavior UNKNOWN: verify this recovered game-work loop against target assembly.
+/* @behavior Walks 30 game-work records of size 0x98 and publishes each record through
+ * the scratch work pointer. For records with flag byte 0 bit 0 set and byte
+ * 6 other than 9, sets byte 0x29 to 4 when byte 0x24 bit 0x10 is set,
+ * otherwise to D_8014933E. Records with byte 6 equal to 9 skip dispatch when
+ * D_8014933E is 4. Other active records call func_8015A944 when the
+ * published record byte 6 is 10, otherwise func_8014D290.
  * @source 0x801A0514
  * @status exact
  * @match 100.00
  * @residual none
  */
-void func_801A0514(void) {
+void updateActiveGameWorkRecords(void) {
   s32                  var_s0_15;
   s32                  var_v1_19;
   struct GameWorkArea* temp_a0_28;

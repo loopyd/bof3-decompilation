@@ -1,6 +1,6 @@
 #include "bof3/ui/game00_internal.h"
 
-/* @behavior resolves the current world state ID through func_8019A194 and
+/* @behavior resolves the current world state ID through findCurrentWorldSlotIndex and
  * returns word 0 of the matching 0x1C-byte slot record in the eleven-entry
  * table at 0x801C7F70; that word is the slot's record pointer (the caller
  * dereferences it) and the record key byte sits at record+4.
@@ -9,10 +9,10 @@
  * @match 100.00
  * @residual none
  */
-s32 func_8019A1D4(void)
+s32 getCurrentWorldSlotRecord(void)
 {
   u8 index;
 
-  index = func_8019A194();
+  index = findCurrentWorldSlotIndex();
   return D_801C7F70[index][0];
 }

@@ -280,7 +280,7 @@ segments:
     - c
     - func_80199398
     - '@source: src/bof3/ui/func_80199398.c'
-    - '@behavior: runs the shared frame-service sequence func_801527E4, func_8015A758, func_801BDAB8, func_801A0514, func_8019A0E4 and func_8014BA54, then finalizes one shared front-end frame through func_80158C80 and finally runs the func_801D0EA0 slice.'
+    - '@behavior: runs the shared frame-service sequence func_801527E4, func_8015A758, func_801BDAB8, updateActiveGameWorkRecords, func_8019A0E4 and func_8014BA54, then finalizes one shared front-end frame through func_80158C80 and finally runs the func_801D0EA0 slice.'
   - - 15344
     - c
     - finalizeFrame
@@ -377,32 +377,33 @@ segments:
     - '@behavior: For every one of the 20 entry records whose flags_00 byte is nonzero, publishes the record address as the active work area through the scratchpad pointer cell at 0x1F800044, then dispatches the handler table at 0x801C7C70 indexed by the record byte at offset 0x05.'
   - - 18836
     - c
-    - func_8019A194
+    - findCurrentWorldSlotIndex
+    - '@source: src/bof3/world/findCurrentWorldSlotIndex.c'
   - - 18900
     - c
-    - func_8019A1D4
-    - '@source: src/bof3/ui/func_8019A1D4_game00.c'
-    - '@behavior: resolves the current world state ID through func_8019A194 and returns word 0 of the matching 0x1C-byte slot record in the eleven-entry table at 0x801C7F70; the caller dereferences that word as the slot record pointer and the record key byte sits at record+4.'
+    - getCurrentWorldSlotRecord
+    - '@source: src/bof3/world/getCurrentWorldSlotRecord.c'
+    - '@behavior: resolves the current world state ID through findCurrentWorldSlotIndex and returns word 0 of the matching 0x1C-byte slot record in the eleven-entry table at 0x801C7F70; the caller dereferences that word as the slot record pointer and the record key byte sits at record+4.'
   - - 18960
     - c
-    - func_8019A210
-    - '@source: src/bof3/ui/func_8019A210.c'
-    - '@behavior: calls handler 0 of the eleven 0x1C-byte world-slot records at 0x801C7F5C for the world-slot index func_8019A194 returns for the current world state ID.'
+    - dispatchWorldSlotHandler0
+    - '@source: src/bof3/world/dispatchWorldSlotHandler0.c'
+    - '@behavior: calls handler 0 of the eleven 0x1C-byte world-slot records at 0x801C7F5C for the world-slot index findCurrentWorldSlotIndex returns for the current world state ID.'
   - - 19032
     - c
     - dispatchWorldSlotHandler1
     - '@source: src/bof3/ui/dispatchWorldSlotHandler1.c'
-    - '@behavior: calls handler 1 of the eleven 0x1C-byte world-slot records at 0x801C7F5C for the world-slot index func_8019A194 returns for the current world state ID.'
+    - '@behavior: calls handler 1 of the eleven 0x1C-byte world-slot records at 0x801C7F5C for the world-slot index findCurrentWorldSlotIndex returns for the current world state ID.'
   - - 19104
     - c
     - dispatchWorldSlotHandler2
     - '@source: src/bof3/ui/dispatchWorldSlotHandler2.c'
-    - '@behavior: calls handler 2 of the eleven 0x1C-byte world-slot records at 0x801C7F5C for the world-slot index func_8019A194 returns for the current world state ID.'
+    - '@behavior: calls handler 2 of the eleven 0x1C-byte world-slot records at 0x801C7F5C for the world-slot index findCurrentWorldSlotIndex returns for the current world state ID.'
   - - 19176
     - c
-    - func_8019A2E8
-    - '@source: src/bof3/ui/func_8019A2E8.c'
-    - '@behavior: calls handler 3 of the eleven 0x1C-byte world-slot records at 0x801C7F5C for the world-slot index func_8019A194 returns for the current world state ID.'
+    - dispatchWorldSlotHandler3
+    - '@source: src/bof3/world/dispatchWorldSlotHandler3.c'
+    - '@behavior: calls handler 3 of the eleven 0x1C-byte world-slot records at 0x801C7F5C for the world-slot index findCurrentWorldSlotIndex returns for the current world state ID.'
   - - 19248
     - c
     - dispatchAreaOverlayStateByte1ForPendingWorld_game00_8019A330
@@ -410,9 +411,9 @@ segments:
     - '@behavior: Overlay trampoline selected by the pending world id D_80143F00: when that u16 reads 0x68 it calls the concurrently resident per-area overlay routine at 0x801F53D4, otherwise the one at 0x801F5918; both resident routines dispatch their overlay work-state-byte-1 handler table.'
   - - 19312
     - c
-    - func_8019A370
-    - '@source: src/bof3/ui/func_8019A370.c'
-    - '@behavior: calls handler 4 of the eleven 0x1C-byte world-slot records at 0x801C7F5C for the world-slot index func_8019A194 returns for the current world state ID.'
+    - dispatchWorldSlotHandler4
+    - '@source: src/bof3/world/dispatchWorldSlotHandler4.c'
+    - '@behavior: calls handler 4 of the eleven 0x1C-byte world-slot records at 0x801C7F5C for the world-slot index findCurrentWorldSlotIndex returns for the current world state ID.'
   - - 19384
     - c
     - func_8019A3B8
@@ -834,9 +835,9 @@ segments:
     - '@behavior: returns the first bounding-box record reached from the pointer table D_80181164[index] whose box contains the point (x, y): record[0] <= x, record[1] <= y, record[2] >= x and record[3] >= y; the scan advances the record pointer eight bytes at a time with no count bound, so the box list is expected to contain the point.'
   - - 44308
     - c
-    - func_801A0514
-    - '@source: src/bof3/ui/func_801A0514.c'
-    - '@behavior: UNKNOWN: verify this recovered game-work loop against target assembly.'
+    - updateActiveGameWorkRecords
+    - '@source: src/bof3/ui/updateActiveGameWorkRecords.c'
+    - '@behavior: Walks 30 game-work records of size 0x98 and publishes each record through the scratch work pointer. For records with flag byte 0 bit 0 set and byte 6 other than 9, sets byte 0x29 to 4 when byte 0x24 bit 0x10 is set, otherwise to D_8014933E. Records with byte 6 equal to 9 skip dispatch when D_8014933E is 4. Other active records call func_8015A944 when the published record byte 6 is 10, otherwise func_8014D290.'
   - - 44572
     - asm
     - func_801A061C
@@ -961,7 +962,7 @@ segments:
     - c
     - func_801A839C
     - '@source: src/bof3/ui/func_801A839C.c'
-    - '@behavior: resolves the current world state ID through func_8019A194 and tail-calls the matching no-argument handler from the handler table at 0x801C85C4.'
+    - '@behavior: resolves the current world state ID through findCurrentWorldSlotIndex and tail-calls the matching no-argument handler from the handler table at 0x801C85C4.'
   - - 76764
     - asm
     - func_801A83DC

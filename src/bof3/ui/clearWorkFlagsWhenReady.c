@@ -3,7 +3,7 @@
 /* File-local prototype: the target header deliberately does not declare this
  * shared main-executable service (see the note there - its callers disagree on
  * the signature, and a header declaration collides with
- * src/bof3/ui/func_801A0514.c's struct GameWorkArea* prototype). */
+ * src/bof3/ui/updateActiveGameWorkRecords.c's struct GameWorkArea* prototype). */
 void func_8014D290(void);
 
 /*

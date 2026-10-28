@@ -199,7 +199,8 @@ u8   func_801B6610(s16 arg0, s16 arg1);
 void func_80196070(void);
 u8   func_8019601C(void);
 s16  func_8015477C(s32 arg0, s32 arg1);
-u8   func_8019A194(void);
+/* @source 0x8019A194 */
+u8   findCurrentWorldSlotIndex(void);
 
 void func_801F2C04(void);
 void seedScratchDefaults(void);

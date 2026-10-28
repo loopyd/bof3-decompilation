@@ -8,7 +8,7 @@
  * @match 100.00
  * @residual none
  */
-u8 func_8019A194(void)
+u8 findCurrentWorldSlotIndex(void)
 {
     s32 index;
     s32 offset;

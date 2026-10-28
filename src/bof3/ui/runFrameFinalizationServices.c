@@ -11,7 +11,7 @@ void runFrameFinalizationServices(void) {
   func_801527E4();
   func_8015A758();
   func_801BDAB8();
-  func_801A0514();
+  updateActiveGameWorkRecords();
   func_8019A0E4();
   func_8019625C();
   func_8014BA54();

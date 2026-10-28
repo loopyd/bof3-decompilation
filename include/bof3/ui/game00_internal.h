@@ -103,7 +103,7 @@ u8 func_8014DAEC(void);
  * declared here. Its callers disagree on the signature - eight sources call it
  * with no arguments (and include/bof3/battle/battle03_internal.h declares
  * `void func_8014D290(void)`), while the pre-existing exact lift
- * src/bof3/ui/func_801A0514.c declares it with a struct GameWorkArea* parameter
+ * src/bof3/ui/updateActiveGameWorkRecords.c declares it with a struct GameWorkArea* parameter
  * and materialises that argument. An empty-parameter-list declaration here
  * conflicts with that file's local prototype and breaks the target build, so the
  * one declaration is left file-local to each caller until the callee's own bytes
@@ -553,13 +553,13 @@ typedef struct GameWorldSlotRecord {
 extern GameWorldSlotRecord D_801C7F5C[11];
 /* @behavior eleven 0x1C-byte world-slot records: word 0 holds the slot's record
  * pointer, the key byte holding the current world state ID sits at record+4
- * (byte view D_801C7F74), and func_8019A1D4 returns word 0 of the slot.
+ * (byte view D_801C7F74), and getCurrentWorldSlotRecord returns word 0 of the slot.
  * @source 0x801C7F70 @kind table */
 extern s32 D_801C7F70[11][7];
 /* @source 0x801C7F74 @kind table */
 extern u8 D_801C7F74[11][0x1C];
 
-u8 func_8019A194(void);
+u8 findCurrentWorldSlotIndex(void);
 /* @behavior world/front flags: bit0=scenario pending, bit3=alt front mode */
 /* @source 0x80143F02 @kind unknown */
 extern volatile u8 D_80143F02;
@@ -925,7 +925,7 @@ extern volatile u16        D_801490A4;
 /* @source 0x80144F28 @kind unknown */
 extern u8                  D_80144F28[];
 /* @behavior no-argument handler table selected by the current world state ID
- * resolved through func_8019A194; its 0x2C span ends where the
+ * resolved through findCurrentWorldSlotIndex; its 0x2C span ends where the
  * D_801C85F0 table begins. */
 /* @source 0x801C85C4 @kind table */
 extern GameEntry0StateHandler D_801C85C4[];
@@ -1217,10 +1217,15 @@ void func_801A02E8(void);
  * @source 0x801A0380
  */
 void func_801A0380(s32 x, s32 y, u32 selector);
-/* @behavior Iterates active entity slots and dispatches per-type handlers.
+/* @behavior Walks 30 game-work records of size 0x98 and publishes each record through
+ * the scratch work pointer. For records with flag byte 0 bit 0 set and byte
+ * 6 other than 9, sets byte 0x29 to 4 when byte 0x24 bit 0x10 is set,
+ * otherwise to D_8014933E. Records with byte 6 equal to 9 skip dispatch when
+ * D_8014933E is 4. Other active records call func_8015A944 when the
+ * published record byte 6 is 10, otherwise func_8014D290.
  * @source 0x801A0514
  */
-void func_801A0514(void);
+void updateActiveGameWorkRecords(void);
 void func_801B3CCC(u32 arg0);
 void advancePanelXTo320(void);
 void retreatPanelXToNeg170(void);
