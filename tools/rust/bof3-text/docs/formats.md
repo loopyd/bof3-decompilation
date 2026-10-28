@@ -43,7 +43,7 @@ The consumer at `0x8014B3C4` passes these pointers to renderer `0x80150098`.
 The renderer reads bytes until NUL, advances on ASCII space and handles newline
 `0x0A`. These bytes use ASCII rather than the dialogue character table.
 
-The JSON schema is `bof3.executable-text/v16`. Re-extract older documents before
+The JSON schema is `bof3.executable-text/v17`. Re-extract older documents before
 editing. It contains `source`, mandatory `source_sha256`, `build`, `load_address`,
 `consumers` and `strings`.
 Each string retains its `address`, whole-file `file_offset`, original `capacity`
@@ -64,7 +64,7 @@ preserve every byte. Reference edits, relocation and unproven exception-table
 indices are refused.
 
 `LOGO/LOGO.EXE` has a separate pinned layout, loaded at `0x801CE000`. It supports
-kernel, CD and GPU diagnostics. Use `analyze SOURCE --json` to discover their
+kernel, CD, GPU and MDEC diagnostics. Use `analyze SOURCE --json` to discover their
 addresses, capacities, directives and output paths. Direct BIOS printf calls use
 stub `0x801D791C` (`A0:3F`). The interrupt formats receive unsigned 16-bit values;
 DMA values are full 32-bit words and the MADR index is 0..6. Preserve every
@@ -86,6 +86,14 @@ data, allowing literal percent bytes. The `&08x` in the original format at
 `0x801CE444` remains unsupported: ResetGraph prints its carrier address rather
 than its contents. Runtime console execution and other LOGO consumers remain
 unverified.
+
+LOGO MDEC diagnostics call the BIOS stub directly. The two formats at
+`0x801CE6B4` and `0x801CE6DC` use `ascii-bios-printf-tab-format`, which also
+allows ASCII tab (`0x09`) within their original capacities. Other executable
+codecs continue to refuse tabs. Their DMA flags and FIFO status arguments are
+individual bits; DMA addresses are full 32-bit words. The bad-option format
+receives the original signed word without narrowing. The two sync names pass
+through helper `0x801D7414` as `%s` data and allow literal percent bytes.
 
 The `%08X` format at `0x80149990` has a five-byte allocation including NUL and
 uses `ascii-u32-hex-format`. Its `address-pair` references retain `upper` and
@@ -183,7 +191,8 @@ printf calls `0x801762F8`, `0x80176580`, `0x801769F0` and `0x801770E8`,
 respectively. This records a shared-word output path without asserting that
 every stored label reaches every reader. BIOS output remains unobserved.
 
-BIOS diagnostic formats use `ascii-bios-printf-format`. Edit only their literal
+BIOS diagnostic formats use `ascii-bios-printf-format` or the LOGO MDEC
+`ascii-bios-printf-tab-format`. Edit only their literal
 text within the original capacity, reserving NUL. Each row's immutable
 `format_directives` lists the exact original conversions in order. Packing
 requires every token unchanged, including case and width, and refuses missing,

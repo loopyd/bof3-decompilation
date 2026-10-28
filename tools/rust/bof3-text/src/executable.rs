@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-pub(crate) const SCHEMA: &str = "bof3.executable-text/v16";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v17";
 const FORMAT_ADDRESS: u32 = 0x80149990;
 const FILE_LABEL: u32 = 0x80149f9c;
 const FILE_FORMAT: u32 = 0x80149fac;
@@ -262,6 +262,12 @@ const LOGO_ALLOCATIONS: &[(u32, usize)] = &[
     (0x801ce614, 21),
     (0x801ce62c, 50),
     (0x801ce660, 24),
+    (0x801ce678, 26),
+    (0x801ce694, 13),
+    (0x801ce6a4, 14),
+    (0x801ce6b4, 38),
+    (0x801ce6dc, 53),
+    (0x801ce714, 13),
 ];
 const LOGO_PRINTF: u32 = 0x801d791c;
 const LOGO_PRINTF_CALLBACK: u32 = 0x801da1bc;
@@ -310,7 +316,7 @@ const LAYOUTS: &[Layout] = &[
         build: "US SLUS-00422 logo diagnostic ASCII",
         load: 0x801ce000,
         size: 122880,
-        masked_sha256: "b71832c59ac440532397964252e331709f925c00f21f753baf1a0516e73497e0",
+        masked_sha256: "4bcea15bf0395cc97212d2715a28c191ea8881db3cb58de415d3af18b587109e",
         allocations: LOGO_ALLOCATIONS,
     },
 ];
@@ -321,6 +327,7 @@ pub(crate) enum Codec {
     AsciiLiteral,
     AsciiPrintfLiteral,
     AsciiBiosPrintfFormat,
+    AsciiBiosPrintfTabFormat,
     AsciiU32HexFormat,
     AsciiU8TripleHexFormat,
 }
@@ -331,6 +338,7 @@ impl Codec {
             Self::AsciiLiteral => "ascii-literal",
             Self::AsciiPrintfLiteral => "ascii-printf-literal",
             Self::AsciiBiosPrintfFormat => "ascii-bios-printf-format",
+            Self::AsciiBiosPrintfTabFormat => "ascii-bios-printf-tab-format",
             Self::AsciiU32HexFormat => "ascii-u32-hex-format",
             Self::AsciiU8TripleHexFormat => "ascii-u8-triple-hex-format",
         }
@@ -339,9 +347,11 @@ impl Codec {
     pub(crate) fn encode(self, text: &str, maximum: usize) -> Result<Vec<u8>> {
         let bytes = text.as_bytes();
         if bytes.len() > maximum
-            || !bytes
-                .iter()
-                .all(|byte| (0x20..=0x7e).contains(byte) || *byte == b'\n')
+            || !bytes.iter().all(|byte| {
+                (0x20..=0x7e).contains(byte)
+                    || *byte == b'\n'
+                    || (self == Self::AsciiBiosPrintfTabFormat && *byte == b'\t')
+            })
         {
             return invalid(format!(
                 "executable text must fit {maximum} ASCII bytes plus NUL"
@@ -354,7 +364,7 @@ impl Codec {
     pub(crate) fn max_formatted_size(self, text: &str) -> Result<Option<usize>> {
         match self {
             Self::AsciiLiteral => Ok(None),
-            Self::AsciiBiosPrintfFormat => {
+            Self::AsciiBiosPrintfFormat | Self::AsciiBiosPrintfTabFormat => {
                 printf_directives(text)?;
                 Ok(None)
             }
@@ -399,6 +409,10 @@ fn printf_directives(text: &str) -> Result<Vec<&str>> {
 
 fn format_directives(address: u32) -> &'static [&'static str] {
     match address {
+        0x801ce678 => &["%d"],
+        0x801ce6b4 => &["%d", "%d", "%08x", "%08x"],
+        0x801ce6dc => &["%d", "%d", "%d", "%d", "%d", "%d", "%d"],
+        0x801ce714 => &["%s"],
         0x801ce374 => &["%d", "%d", "%d", "%d"],
         0x801ce38c => &["%d", "%d"],
         0x801ce39c => &["%3d", "%3d", "%d", "%d"],
@@ -545,7 +559,8 @@ fn codec(address: u32) -> Codec {
         return match address {
             0x801ce0a8 | 0x801ce230 => Codec::AsciiPrintfLiteral,
             0x801ce28c | 0x801ce294 | 0x801ce2b8 | 0x801ce30c | 0x801ce56c | 0x801ce578
-            | 0x801ce584 | 0x801ce590 => Codec::AsciiLiteral,
+            | 0x801ce584 | 0x801ce590 | 0x801ce694 | 0x801ce6a4 => Codec::AsciiLiteral,
+            0x801ce6b4 | 0x801ce6dc => Codec::AsciiBiosPrintfTabFormat,
             _ => Codec::AsciiBiosPrintfFormat,
         };
     }
@@ -571,6 +586,10 @@ fn consumers(address: u32) -> Vec<u32> {
         return vec![0x8017560c];
     }
     match address {
+        0x801ce678 => vec![0x801d70ac],
+        0x801ce694 => vec![0x801d72cc],
+        0x801ce6a4 => vec![0x801d7364],
+        0x801ce6b4 | 0x801ce6dc | 0x801ce714 => vec![0x801d7414],
         0x801ce374 => vec![0x801d354c, 0x801d3b24],
         0x801ce38c => vec![0x801d361c],
         0x801ce39c => vec![0x801d3b24],
@@ -708,6 +727,12 @@ fn all_consumers(layout: &Layout) -> Vec<u32> {
 
 fn diagnostic_references(address: u32) -> Option<Vec<Reference>> {
     let pairs: &[(u32, u32, Option<u32>)] = match address {
+        0x801ce678 => &[(0x801d7188, 0x801d718c, Some(0x801d7190))],
+        0x801ce694 => &[(0x801d731c, 0x801d7320, Some(0x801d7324))],
+        0x801ce6a4 => &[(0x801d73b4, 0x801d73b8, Some(0x801d73bc))],
+        0x801ce6b4 => &[(0x801d7430, 0x801d7434, Some(0x801d7484))],
+        0x801ce6dc => &[(0x801d748c, 0x801d7490, Some(0x801d74d8))],
+        0x801ce714 => &[(0x801d741c, 0x801d7420, Some(0x801d7428))],
         0x801ce374 => &[
             (0x801d3580, 0x801d3584, Some(0x801d35b4)),
             (0x801d35c4, 0x801d35c8, Some(0x801d3600)),
@@ -991,8 +1016,10 @@ pub struct Text {
 impl Text {
     fn encode(&self) -> Result<Vec<u8>> {
         let bytes = self.codec.encode(&self.text, self.capacity - 1)?;
-        if self.codec == Codec::AsciiBiosPrintfFormat
-            && printf_directives(&self.text)? != self.format_directives
+        if matches!(
+            self.codec,
+            Codec::AsciiBiosPrintfFormat | Codec::AsciiBiosPrintfTabFormat
+        ) && printf_directives(&self.text)? != self.format_directives
         {
             return invalid("BIOS printf directives must retain their original bytes and order");
         }

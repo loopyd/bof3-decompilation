@@ -143,10 +143,10 @@ Output is always JSON — there is no second codec — and every object carries 
 document's own recorded `source`.
 
 Each supported US `SLUS_004.22` or `LOGO/LOGO.EXE` executable exports one
-`bof3.executable-text/v16` document. Re-extract older documents. Use the default
+`bof3.executable-text/v17` document. Re-extract older documents. Use the default
 `--entry all` and omit `--class` and `--latch`; EMI selectors are refused for
 executable input.
-LOGO supports kernel, CD and GPU diagnostics. Use `analyze SOURCE --json` for
+LOGO supports kernel, CD, GPU and MDEC diagnostics. Use `analyze SOURCE --json` for
 supported allocations. Its direct printf literals refuse percent characters;
 CD labels and image-operation names passed as `%s` data allow them. Other LOGO
 text and runtime console execution remain unverified.
@@ -160,6 +160,8 @@ initial BIOS stub; their reference calls are indirect. The ResetGraph address
 and GPU timeout diagnostics record direct BIOS printf calls. Image-operation
 names pass through a helper as `%s` data and allow literal percent characters.
 Analysis leaves formatted size unbounded. Runtime callback targets remain unverified.
+Only the two LOGO MDEC rows with `ascii-bios-printf-tab-format` also accept tabs;
+other executable codecs refuse them. Their sync names pass as `%s` data.
 See [formats.md](formats.md#executable-ascii) for supported allocations and limits.
 
 For the supported US `GAME.EMI`, extraction writes one `bof3.record-text/v1`
