@@ -1,11 +1,5 @@
 #include "bof3/ui/game00_internal.h"
 
-/* @behavior UNKNOWN: verify this recovered game-work loop against target assembly.
- * @source 0x801A0514
- * @status exact
- * @match 100.00
- * @residual none
- */
 #define ENTITY_MAX       30
 #define ENTITY_SLOT_SIZE 0x98
 
@@ -13,6 +7,12 @@ extern u8   D_8014933E;
 extern void func_8014D290(struct GameWorkArea* arg0);
 extern void func_8015A944(struct GameWorkArea* arg0);
 
+/* @behavior UNKNOWN: verify this recovered game-work loop against target assembly.
+ * @source 0x801A0514
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
 void func_801A0514(void) {
   s32                  var_s0_15;
   s32                  var_v1_19;

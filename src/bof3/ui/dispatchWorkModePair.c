@@ -1,11 +1,12 @@
 #include "bof3/ui/game00_internal.h"
 
 /* @source 0x801AD35C
+ * @behavior Dispatches the work mode through a two-entry local handler table.
  * @status exact
  * @match 100.00
  * @residual none
  */
-/* @behavior Dispatches the work mode through a two-entry local handler table. */
+
 void NO_SIBLING_CALLS dispatchWorkModePair(void)
 {
     GameEntry0StateHandler handlers[2] = {

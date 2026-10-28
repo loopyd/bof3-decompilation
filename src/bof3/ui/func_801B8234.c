@@ -1,11 +1,12 @@
 #include "bof3/ui/game00_internal.h"
 
 /* @source 0x801B8234
+ * @behavior set state byte and dispatch the current work handler
  * @status exact
  * @match 100.00
  * @residual none
  */
-/* @behavior set state byte and dispatch the current work handler */
+
 void func_801B8234(void)
 {
   D_80146250[0x12B] = 2;

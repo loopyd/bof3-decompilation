@@ -1,7 +1,8 @@
 #include "bof3/ui/game00_internal.h"
 
-/* @behavior Resets local route state and selects mode 4 on shared work. */
+
 /* @source 0x801B876C
+ * @behavior Resets local route state and selects mode 4 on shared work.
  * @status exact
  * @match 100.00
  * @residual none

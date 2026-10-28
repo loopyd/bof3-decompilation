@@ -282,8 +282,9 @@ segments:
     - '@source: src/bof3/ui/dispatchPanelTaskHandler.c'
     - '@behavior: Dispatches the handler table (0x801C7BEC) indexed by the panel task byte (task+0x02) through a tail-style jalr call.'
   - - 15772
-    - asm
+    - c
     - func_8019959C
+    - '@source: src/bof3/ui/func_8019959C.c'
   - - 15780
     - c
     - func_801995A4
@@ -300,8 +301,9 @@ segments:
     - '@source: src/bof3/ui/advancePanelXTo80.c'
     - '@behavior: advances the panel x coordinate by 32 and stops at 80.'
   - - 15992
-    - asm
+    - c
     - submitPanelPosition
+    - '@source: src/bof3/ui/submitPanelPosition.c'
   - - 16040
     - c
     - func_801996A8
@@ -313,8 +315,9 @@ segments:
     - '@source: src/bof3/ui/advancePanelXTo320_game00_801996FC.c'
     - '@behavior: Adds 32 to 16-bit panel x; signed results above 320 clamp to 320 and clear state.'
   - - 16188
-    - asm
+    - c
     - retreatPanelXTo152
+    - '@source: src/bof3/ui/retreatPanelXTo152.c'
   - - 16252
     - asm
     - func_8019977C
@@ -816,6 +819,9 @@ segments:
     - func_801A0514
     - '@source: src/bof3/ui/func_801A0514.c'
     - '@behavior: UNKNOWN: verify this recovered game-work loop against target assembly.'
+  - - 44572
+    - asm
+    - func_801A061C
   - - 44760
     - asm
     - func_801A06D8
@@ -918,8 +924,9 @@ segments:
     - '@source: src/bof3/ui/dispatchIndexedStateHandler.c'
     - '@behavior: dispatches through the indexed handler table at D_801C84BC using the s8 state selector at D_801448EB.'
   - - 74984
-    - asm
+    - c
     - func_801A7CE8
+    - '@source: src/bof3/ui/func_801A7CE8.c'
   - - 74992
     - asm
     - func_801A7CF0
@@ -1350,8 +1357,9 @@ segments:
     - asm
     - func_801B5AE4
   - - 132060
-    - asm
+    - c
     - applyRemapRequest
+    - '@source: src/bof3/ui/applyRemapRequest.c'
   - - 132180
     - c
     - func_801B5C54
@@ -2025,8 +2033,9 @@ segments:
     - '@source: src/bof3/ui/dispatchScenarioSubstate.c'
     - '@behavior: dispatches the current scenario sub-state through the local state-handler table at 0x801CD568.'
   - - 196656
-    - asm
+    - c
     - func_801C5830
+    - '@source: src/bof3/ui/func_801C5830.c'
   - - 196664
     - c
     - func_801C5838

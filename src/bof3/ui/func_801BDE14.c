@@ -6,6 +6,7 @@
  * coordinate/range test, returning its signed slot index or -1.
  * @status exact
  * @match 100.00
+ * @residual none
  */
 s8 func_801BDE14(s32 x, s32 y, s32 range)
 {

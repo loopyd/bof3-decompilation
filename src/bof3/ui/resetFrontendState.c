@@ -1,7 +1,8 @@
 #include "bof3/ui/game00_internal.h"
 
-/* @behavior resets frontend state bytes and copies a 16-byte state table. */
+
 /* @source 0x801A7C2C
+ * @behavior resets frontend state bytes and copies a 16-byte state table.
  * @status exact
  * @match 100.00
  * @residual none

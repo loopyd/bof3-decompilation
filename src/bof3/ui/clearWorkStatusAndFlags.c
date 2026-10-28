@@ -1,7 +1,8 @@
 #include "bof3/ui/game00_internal.h"
 
-/* @behavior clears work-area status bytes then clears work flags */
+
 /* @source 0x8019A7D4
+ * @behavior clears work-area status bytes then clears work flags
  * @status exact
  * @match 100.00
  * @residual none
