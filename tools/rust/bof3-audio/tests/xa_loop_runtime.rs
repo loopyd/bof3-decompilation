@@ -81,7 +81,8 @@ fn original_next_cue_preserves_buffers_and_resets_selected_predictors() {
     // block from the original disc before requesting a new cue.
     for lba in cue.runtime_start_lba..cue.runtime_start_lba + 6 {
         let raw = disc.read_sector(lba).unwrap();
-        match fixture.drive.sector(&raw).unwrap() {
+        match fixture.drive.sector(Some(&raw)).unwrap() {
+            Delivery::Error(response) => panic!("unexpected media error: {response:?}"),
             Delivery::Xa(bytes) => {
                 let frames = resampler
                     .process(&decoder.decode_sector(&bytes).unwrap())
@@ -137,7 +138,7 @@ fn original_next_cue_preserves_buffers_and_resets_selected_predictors() {
     let mut checked = false;
     for _ in 0..16 {
         let raw = disc.read_sector(fixture.drive.next_lba() as u32).unwrap();
-        if let Delivery::Xa(bytes) = fixture.drive.sector(&raw).unwrap() {
+        if let Delivery::Xa(bytes) = fixture.drive.sector(Some(&raw)).unwrap() {
             assert_eq!([bytes[0], bytes[1]], [1, 1]);
             decoder = Decoder::new(
                 Stream {
@@ -366,7 +367,10 @@ fn run_cue_comparison(
                         if let Some(evidence) = &mut fixture.evidence {
                             evidence.observe_sector(lba, &raw);
                         }
-                        match fixture.drive.sector(&raw).unwrap() {
+                        match fixture.drive.sector(Some(&raw)).unwrap() {
+                            Delivery::Error(response) => {
+                                panic!("unexpected media error: {response:?}")
+                            }
                             Delivery::Xa(bytes) => {
                                 assert_eq!([bytes[0], bytes[1]], [cue.filter_file, cue.channel]);
                                 if !configured_audio {

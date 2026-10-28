@@ -109,6 +109,15 @@ retains its documented first-delivery policy and rejects unimplemented overruns
 and retry scheduling. Native routing and scheduled guest behavior still require
 comparison; source inspection is not a hardware trace.
 
+Native Read/Seek checks use SubQ track identity, including pregaps. Read and
+SeekL reject audio with INT5 `[status | 4, 0x04]`; positions at or beyond
+lead-out reject with `[status | 4, 0x10]`. SeekP permits audio and checks the
+unfudged target after adjusting current position. Read errors perform no media
+read and retain position, cached header and data. Explicit Seek completion
+invalidates GetlocL on either outcome. Rust applies these rules when supplied
+an explicit TOC; data-only contexts without metadata remain unchecked. Actual
+failed data reads remain unsupported.
+
 [Implementation, original SDK checks and raw-disc evidence](../specs/formats/audio.md#rust-cd-drive-commands-and-sector-routing)
 keep command semantics separate from timing, drive initialization and physical
 audio acceptance. The raw data source is a 2,352-byte-sector disc image; extracted
@@ -226,8 +235,8 @@ current position while retaining the exact seek target. Pause becomes Idle
 and invalidates GetlocL immediately. Cached header bytes survive; Init restores
 their validity, and a new sector replaces them before routing. Native guest
 responses and phase observations qualify these rules under supplied cycles.
-Automatic scheduling, TOC-based Read/Seek errors, takeover/overlap and hardware
-timing remain open. Automatic XA selection, EOF and per-sector coding policies
+Automatic scheduling, takeover/overlap and hardware timing remain open.
+Automatic XA selection, EOF and per-sector coding policies
 still differ, as documented below.
 
 Bounded native Init observations agree on position, pending Setloc, mode, mute

@@ -2375,17 +2375,18 @@ its supplied position. Setloc changes retained seek and marks it pending,
 without moving current position. Every ReadN/ReadS restarts at retained seek,
 including a Read issued while already Reading. Its ACK reports Idle; the first
 `complete(cycle)` moves to retained seek and enters Seeking, and the second
-enters Reading. The caller then supplies that boundary's first sector. These
-Read boundaries emit no INT2. Sector advancement changes current position,
-leaving retained seek unchanged.
+enters Reading or returns a TOC-based INT5 error. On success the caller supplies
+that boundary's first sector. Read boundaries emit no INT2. Sector advancement
+changes current position, leaving retained seek unchanged.
 
 Explicit SeekL/SeekP ACK the old status and retain current position. The first
 completion enters Seeking; the second moves current position, enters Idle
-and returns INT2. SeekP subtracts `floor((target_lba + 150)/32768)` sectors
+and returns INT2 or a TOC-based INT5 error. SeekP subtracts
+`floor((target_lba + 150)/32768)` sectors
 from current position, following the native absolute-MSF adjustment. Retained
 seek remains the exact target. Pause ACKs the old status, becomes Idle
-immediately and returns INT2 at its supplied completion. TOC-based Read/Seek
-track errors and command takeover remain unsupported.
+immediately and returns INT2 at its supplied completion. Command takeover
+remains unsupported.
 
 GetlocL validity is separate from its cached bytes. Pause invalidates at ACK;
 SeekL/SeekP invalidate at final completion. Read initiation and its seek phase
@@ -2415,7 +2416,23 @@ current position, pending Setloc and audio state. The existing mechanical
 overlap guard also applies to GetTN/GetTD. Playback uses the separate
 [caller-cycle contract](#rust-cdda-playback) below.
 
-Sector arrival requires a completed read seek and the next expected LBA.
+With an explicit TOC, Read and SeekL reject audio tracks with INT5
+`[status | 4, 0x04]`. Read, SeekL and SeekP reject positions at or beyond
+lead-out with `[status | 4, 0x10]`. These checks use SubQ track identity, which
+changes at pregap start. SeekP permits audio and checks its unfudged retained
+target after adjusting current position. Read errors stop before a backing
+read, preserve current position and cached-header validity, and leave data
+and queued audio intact. Completed seeks invalidate GetlocL on success or error.
+Without a TOC the explicitly declared data-only context remains unchecked
+against track metadata.
+
+`Drive::sector(Option<&[u8]>)` supplies a boundary after a completed read seek.
+It returns `Delivery::Error` for a TOC error reached through normal sector
+advancement, before requiring raw bytes. An initial error already returned by
+`complete` leaves the drive Idle and cannot be emitted again by `sector`.
+At a valid data position, `None` rejects without mutation; actual failed
+media-read behavior remains unsupported. Supplied sectors must use the next
+expected LBA.
 Raw sync, Mode-2 header, duplicated subheaders and EDC are checked before state
 advances. Form-2 sectors may omit EDC under the existing codec contract; Form-1
 checks cover EDC, not ECC repair. Routing returns selected XA, filtered audio,

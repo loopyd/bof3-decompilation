@@ -53,9 +53,9 @@ impl Toc {
             .saturating_sub(1)
     }
 
-    fn position(&self, lba: i32) -> Result<Option<[u8; 8]>> {
+    fn subq_track(&self, lba: i32) -> Option<usize> {
         if lba >= self.lead_out.lba() {
-            return Ok(None);
+            return None;
         }
         let mut index = self.physical_track(lba);
         if self
@@ -65,6 +65,13 @@ impl Toc {
         {
             index += 1;
         }
+        Some(index)
+    }
+
+    fn position(&self, lba: i32) -> Result<Option<[u8; 8]>> {
+        let Some(index) = self.subq_track(lba) else {
+            return Ok(None);
+        };
         let start = self.tracks[index].start.lba();
         let relative = CdPosition::from_lba((lba - start).abs() - 150)?.bcd();
         let absolute = CdPosition::from_lba(lba)?.bcd();
@@ -134,6 +141,8 @@ pub enum Activity {
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Delivery {
+    /// TOC-proven media error before a backing read; caller publishes INT5.
+    Error(Response),
     /// Caller publishes the block and INT1 at its selected service boundary.
     Data {
         bytes: Vec<u8>,
@@ -255,6 +264,22 @@ impl Drive {
         Response {
             interrupt: 5,
             bytes: vec![self.status() | 1, code],
+        }
+    }
+
+    fn media_error_code(&self, lba: i32, physical_seek: bool) -> Option<u8> {
+        let toc = self.toc.as_ref()?;
+        match toc.subq_track(lba) {
+            None => Some(0x10),
+            Some(index) if !physical_seek && toc.tracks[index].kind == TrackKind::Audio => Some(4),
+            _ => None,
+        }
+    }
+
+    fn media_error(&self, code: u8) -> Response {
+        Response {
+            interrupt: 5,
+            bytes: vec![self.status() | 4, code],
         }
     }
 
@@ -464,6 +489,10 @@ impl Drive {
                 Ok(None)
             }
             Activity::SeekingRead { .. } => {
+                if let Some(code) = self.media_error_code(self.next_lba, false) {
+                    self.activity = Activity::Paused;
+                    return Ok(Some(self.media_error(code)));
+                }
                 self.activity = Activity::Reading;
                 Ok(None)
             }
@@ -477,7 +506,10 @@ impl Drive {
                 self.next_lba = target - if physical { (target + 150) / 32768 } else { 0 };
                 self.activity = Activity::Paused;
                 self.header_valid = false;
-                Ok(Some(self.response(2)))
+                Ok(Some(match self.media_error_code(target, physical) {
+                    Some(code) => self.media_error(code),
+                    None => self.response(2),
+                }))
             }
             Activity::PreparingPlay { target } => {
                 self.next_lba = target;
@@ -609,13 +641,19 @@ impl Drive {
         Ok(PlayDelivery { audio, response })
     }
 
-    /// Deliver a clean raw Mode-2 sector at the next expected position.
-    /// No overrun, deferred-data retry or disc-end behaviour is fabricated.
-    /// All checks precede state changes, including EDC and routing checks.
-    pub fn sector(&mut self, raw: &[u8]) -> Result<Delivery> {
+    /// Supply one Read boundary. TOC errors precede any backing read and accept
+    /// None; a valid data position requires a whole raw Mode-2 sector. Actual
+    /// failed data reads, overruns and deferred retry remain unsupported.
+    /// Input checks precede data state changes, including EDC and routing checks.
+    pub fn sector(&mut self, raw: Option<&[u8]>) -> Result<Delivery> {
         if self.activity != Activity::Reading {
             return Err("CD drive: sector arrival requires completed read seek".into());
         }
+        if let Some(code) = self.media_error_code(self.next_lba, false) {
+            self.activity = Activity::Paused;
+            return Ok(Delivery::Error(self.media_error(code)));
+        }
+        let raw = raw.ok_or("CD drive: failed data media reads are not implemented")?;
         if raw.len() != 2352
             || raw[..12] != [0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0]
             || raw[15] != 2

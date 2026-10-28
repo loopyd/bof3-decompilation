@@ -115,7 +115,9 @@ fn automatic_selection_ignores_unrelated_eof_and_releases_matching_eof() {
     .enumerate()
     {
         let bytes = sector(channel, flags, 0x21);
-        let delivery = drive.sector(&raw(100 + index as i32, &bytes)).unwrap();
+        let delivery = drive
+            .sector(Some(&raw(100 + index as i32, &bytes)))
+            .unwrap();
         assert_eq!(
             delivery,
             if selected {
@@ -128,14 +130,16 @@ fn automatic_selection_ignores_unrelated_eof_and_releases_matching_eof() {
     // Setfilter releases the automatic latch even when mode filtering is off.
     drive.command(&command(0x0d, &[1, 7]), 0).unwrap();
     assert!(matches!(
-        drive.sector(&raw(107, &sector(4, 0x64, 0))).unwrap(),
+        drive.sector(Some(&raw(107, &sector(4, 0x64, 0)))).unwrap(),
         Delivery::Xa(_)
     ));
     // Filter configuration can explicitly select channel 255.
     drive.command(&command(0x0e, &[0x48]), 0).unwrap();
     drive.command(&command(0x0d, &[1, 255]), 0).unwrap();
     assert!(matches!(
-        drive.sector(&raw(108, &sector(255, 0x64, 0))).unwrap(),
+        drive
+            .sector(Some(&raw(108, &sector(255, 0x64, 0))))
+            .unwrap(),
         Delivery::Xa(_)
     ));
 }
@@ -316,7 +320,7 @@ fn raw_voice_automatic_selection_decodes_complete_first_stream() {
     let mut eof_at = None;
     for index in 0..count {
         let bytes = disc.read_sector(start + index as u32).unwrap();
-        if let Delivery::Xa(bytes) = drive.sector(&bytes).unwrap() {
+        if let Delivery::Xa(bytes) = drive.sector(Some(&bytes)).unwrap() {
             selected += 1;
             eof += usize::from(bytes[2] & 0x80 != 0);
             if bytes[2] & 0x80 != 0 {

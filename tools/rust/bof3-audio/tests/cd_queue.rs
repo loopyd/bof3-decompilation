@@ -320,7 +320,7 @@ fn original_voice_queue_matches_direct_samples_at_steady_sector_rate() {
     let mut nonzero = false;
     for lba in start..start + 256 {
         let raw = disc.read_sector(lba).unwrap();
-        if let Delivery::Xa(bytes) = drive.sector(&raw).unwrap() {
+        if let Delivery::Xa(bytes) = drive.sector(Some(&raw)).unwrap() {
             assert!(matches!(
                 bus.enqueue_cd_audio(&bytes).unwrap(),
                 Admission::Queued { .. }

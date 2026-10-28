@@ -127,7 +127,7 @@ fn original_sdk_commands_drive_filtering_position_and_pause() {
     let (mut selected, mut data_count) = (0, 0);
     for lba in start..start + 16 {
         let sector = disc.read_sector(lba).unwrap();
-        let result = drive.sector(&sector).unwrap();
+        let result = drive.sector(Some(&sector)).unwrap();
         if sector[18] & 0x44 != 0x44 {
             let Delivery::Data { bytes, response } = result else {
                 panic!("data sector was lost")
@@ -204,7 +204,8 @@ fn raw_voice_routing_preserves_selected_decoder_input_and_history() {
     let (mut selected, mut frames, mut data_count) = (0, 0, 0);
     for lba in start..start + 256 {
         let raw = disc.read_sector(lba).unwrap();
-        match drive.sector(&raw).unwrap() {
+        match drive.sector(Some(&raw)).unwrap() {
+            Delivery::Error(response) => panic!("unexpected media error: {response:?}"),
             Delivery::Xa(bytes) => {
                 assert_eq!(&bytes, &raw[16..]);
                 let actual = routed.sector(&bytes).unwrap();

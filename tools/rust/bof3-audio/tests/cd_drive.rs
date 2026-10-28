@@ -91,25 +91,25 @@ fn setloc_seek_read_pause_and_restart_have_distinct_boundaries() {
         }
     );
     assert!(drive.command(&command(9, &[]), 0).is_err());
-    assert!(drive.sector(&sector(555, [1, 0, 8, 0])).is_err());
+    assert!(drive.sector(Some(&sector(555, [1, 0, 8, 0]))).is_err());
     assert_eq!(drive.complete(0).unwrap(), None);
     assert_eq!(drive.next_lba(), 1234);
     assert_eq!(drive.complete(0).unwrap().unwrap().bytes, [2]);
     assert_eq!(drive.next_lba(), 555);
     start(&mut drive);
-    drive.sector(&sector(555, [1, 0, 8, 0])).unwrap();
+    drive.sector(Some(&sector(555, [1, 0, 8, 0]))).unwrap();
     // Setloc alone does not redirect the currently running read.
     drive
         .command(&command(2, &CdPosition::from_lba(777).unwrap().bcd()), 0)
         .unwrap();
     assert_eq!(drive.next_lba(), 556);
-    drive.sector(&sector(556, [1, 0, 8, 0])).unwrap();
+    drive.sector(Some(&sector(556, [1, 0, 8, 0]))).unwrap();
     drive.command(&command(0x1b, &[]), 0).unwrap();
     assert_eq!(drive.activity(), Activity::PreparingRead { target: 777 });
     drive.complete(0).unwrap();
     drive.complete(0).unwrap();
     let latest = sector(777, [1, 0, 8, 0]);
-    drive.sector(&latest).unwrap();
+    drive.sector(Some(&latest)).unwrap();
     assert_eq!(
         drive.command(&command(0x10, &[]), 0).unwrap().bytes,
         latest[12..20]
@@ -136,9 +136,12 @@ fn filtering_distinguishes_realtime_audio_from_data_and_updates_latest_header() 
     let mut drive = drive(0xe8);
     start(&mut drive);
     let xa = sector(1234, [1, 0, 0xe4, 0]); // EOF remains XA data.
-    assert_eq!(drive.sector(&xa).unwrap(), Delivery::Xa(xa[16..].to_vec()));
+    assert_eq!(
+        drive.sector(Some(&xa)).unwrap(),
+        Delivery::Xa(xa[16..].to_vec())
+    );
     let other = sector(1235, [1, 1, 0x64, 0]);
-    assert_eq!(drive.sector(&other).unwrap(), Delivery::Filtered);
+    assert_eq!(drive.sector(Some(&other)).unwrap(), Delivery::Filtered);
     assert_eq!(
         drive.command(&command(0x10, &[]), 0).unwrap().bytes,
         other[12..20]
@@ -146,7 +149,7 @@ fn filtering_distinguishes_realtime_audio_from_data_and_updates_latest_header() 
     // File/channel filtering must not reject ordinary data on first delivery.
     let data = sector(1236, [7, 31, 8, 0]);
     assert_eq!(
-        drive.sector(&data).unwrap(),
+        drive.sector(Some(&data)).unwrap(),
         Delivery::Data {
             bytes: data[12..].to_vec(),
             response: Response {
@@ -157,17 +160,17 @@ fn filtering_distinguishes_realtime_audio_from_data_and_updates_latest_header() 
     );
     drive.command(&command(0x0e, &[0x08]), 0).unwrap();
     assert_eq!(
-        drive.sector(&sector(1237, [1, 0, 0x64, 0])).unwrap(),
+        drive.sector(Some(&sector(1237, [1, 0, 0x64, 0]))).unwrap(),
         Delivery::Filtered
     );
     let data = sector(1238, [7, 31, 8, 0]);
-    let Delivery::Data { bytes, .. } = drive.sector(&data).unwrap() else {
+    let Delivery::Data { bytes, .. } = drive.sector(Some(&data)).unwrap() else {
         panic!()
     };
     assert_eq!(bytes, data[24..2072]);
     drive.command(&command(0x0e, &[0]), 0).unwrap();
     assert!(matches!(
-        drive.sector(&sector(1239, [1, 0, 0x64, 0])).unwrap(),
+        drive.sector(Some(&sector(1239, [1, 0, 0x64, 0]))).unwrap(),
         Delivery::Data { .. }
     ));
 }
@@ -188,7 +191,7 @@ fn malformed_or_unsupported_sector_does_not_advance_position_or_header() {
     cases.push(form2);
     for bad in cases {
         let before = drive.clone();
-        assert!(drive.sector(&bad).is_err());
+        assert!(drive.sector(Some(&bad)).is_err());
         assert_eq!(drive, before);
     }
 }
@@ -222,7 +225,7 @@ fn init_resets_positions_and_preserves_mode_mute_filter_and_header() {
     drive.complete(0).unwrap();
     drive.complete(0).unwrap();
     let header = sector(100, [7, 31, 8, 0]);
-    drive.sector(&header).unwrap();
+    drive.sector(Some(&header)).unwrap();
     drive.command(&command(0x0b, &[]), 0).unwrap();
     let target = CdPosition::from_lba(300).unwrap();
     drive.command(&command(2, &target.bcd()), 0).unwrap();
@@ -246,7 +249,7 @@ fn init_resets_positions_and_preserves_mode_mute_filter_and_header() {
     let pending = drive.clone();
     assert!(drive.command(&command(6, &[]), 0).is_err());
     assert!(drive.command(&command(0x0a, &[]), 0).is_err());
-    assert!(drive.sector(&[0; 2352]).is_err());
+    assert!(drive.sector(Some(&[0; 2352])).is_err());
     assert_eq!(drive, pending);
 
     let completed = drive.complete(0).unwrap().unwrap();
