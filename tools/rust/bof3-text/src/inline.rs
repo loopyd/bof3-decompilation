@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v21";
+pub const SCHEMA: &str = "bof3.inline-text/v22";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -711,8 +711,12 @@ const LAYOUTS: &[Layout] = &[
         name: "US START and STATUS labels and default names",
         load: 0x801d0c00,
         size: 117986,
-        sha256: "c1e7ee9841d703197a0c78c76660673af7a8be2c20ed4a13754c8c512c79f9f5",
-        consumers: &[0x801d15c0, 0x801dcf50, 0x801e4ad8, 0x801e6680, 0x801e692c],
+        sha256: "f6f2963dc68fda2b0e4506b9ee5caa269f222d52bf6ba42613bca178308ca2ba",
+        consumers: &[
+            0x801d15c0, 0x801dcf50, 0x801e4ad8, 0x801e6680, 0x801e692c, 0x801dbc88, 0x801dbcfc,
+            0x801dbd64, 0x801dbdc0, 0x801dc90c, 0x801dc934, 0x801dc95c, 0x801dc978, 0x801de6ec,
+            0x801df1ac,
+        ],
         allocations: &[
             Allocation::counted(0x801d0c7c),
             Allocation::counted(0x801d0c90),
@@ -804,6 +808,21 @@ const LAYOUTS: &[Layout] = &[
             Allocation::literal(0x801ed194, 4, Some(0x801ed1bc), &[0x8014fc90]),
             Allocation::literal(0x801ed198, 5, Some(0x801ed1c0), &[0x8014fc90]),
             Allocation::literal(0x801ed1a0, 5, Some(0x801ed1c4), &[0x8014fc90]),
+            Allocation::literal(0x801ec940, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801ec944, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801ec948, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801ec94c, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801ec99c, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801ec9a2, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801ec9a8, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801ec9ae, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801ecb0c, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801ecb12, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801ecb18, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801ecb1e, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801ecb2c, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801ecb32, 4, None, &[0x8014f800]),
+            Allocation::literal(0x801ecb38, 4, None, &[0x8014f800]),
         ],
     },
     Layout {

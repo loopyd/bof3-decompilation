@@ -94,8 +94,8 @@ The tool preserves stats and other record bytes. These fields do not use
 dialogue command markup. Other name families require separate evidence.
 
 US START entry 8 and STATUS entry 0 each expose ten counted labels, eight default
-names, 68 ordinary keyboard cells and four name-entry menu labels through
-`bof3.inline-text/v21`. Select the entry explicitly and omit class and latch
+names, 68 ordinary keyboard cells, four name-entry menu labels and fifteen stat
+labels through `bof3.inline-text/v22`. Select that entry without class or latch
 selectors. Re-extract older inline documents. Use a separate document and output
 for each archive. Editing one does not update the other or a save.
 
@@ -124,7 +124,7 @@ other names and save propagation remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v21`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v22`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -132,6 +132,10 @@ rows. Counted rows accept seven literal bytes. Default names use
 zero-fills unused field bytes and updates counted rows' lengths. Pack against the
 same archive with its recorded entry or `all`, without class or latch selectors.
 Each matching archive payload needs its own source-bound document and output.
+START entry 8 and STATUS entry 0 each expose fifteen stat labels in addition to
+the counted labels, default names and keyboard fields. Each `game-literal` stat
+allocation permits three encoded bytes plus NUL. Preserve the two trailing bytes
+in six-byte records. Their numeric format and edited rendering remain unverified.
 COMMU03 entry 6 exposes three audio menu labels through `ascii-literal`, with
 capacities of fifteen, five and seven bytes including NUL. Use printable ASCII,
 including `0x20` spaces. Retain the overlay-local renderer `0x801D1714` and

@@ -183,9 +183,11 @@ dialogue commands. See [formats.md](formats.md#record-names).
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v21` document with ten counted labels, eight default names,
-68 ordinary keyboard cells and four name-entry menu labels. Re-extract older
-inline documents. Default `--entry all` selects banks.
+`bof3.inline-text/v22` document with ten counted labels, eight default names,
+68 ordinary keyboard cells, four name-entry menu labels and fifteen stat labels.
+Each stat label permits three encoded bytes plus NUL. Preserve the two trailing
+bytes in six-byte stat records. Re-extract older inline documents. Default
+`--entry all` selects banks.
 See [formats.md](formats.md#default-character-names).
 
 For COMMU02 menu labels, select `--entry 8` in `ETC/COMMU02.EMI` or
@@ -222,7 +224,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v21`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v22`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 The original BATTLE archive also has supported message records in entry 3.
@@ -345,7 +347,7 @@ Preserve `renderers: []` because only formatting and the eight-byte text-slot
 copy are qualified. Empty `ascii-format-literal` replacements are refused to
 prevent stale scratch output.
 
-Inline documents use `bof3.inline-text/v21`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v22`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.
