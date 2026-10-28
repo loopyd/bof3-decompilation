@@ -21,6 +21,7 @@ mod literalindex;
 mod logging;
 mod models;
 mod monsters;
+mod original;
 mod pack;
 mod query;
 mod records;

@@ -799,6 +799,7 @@ fn query_latches(
     let key = window_key(windows, &archive_label(archive))?
         .unwrap_or("")
         .to_string();
+    let original_us = crate::original::archive(data)?;
     let mut preceding: Vec<(crate::models::Entry, &[u8])> = Vec::new();
     for (entry, payload) in crate::lexagraph::entries(data)? {
         let input = crate::models::PreFilterInput {
@@ -807,7 +808,8 @@ fn query_latches(
             payload,
             class: TextClass::from_load_argument(entry.ram_ptr),
             // The container's earlier payloads, so the pairing rule works on this path too.
-            transfer_mode: Some(entry.transfer_mode),
+            toc: Some(entry),
+            original_us,
             preceding: &preceding,
         };
         let filters = crate::filters::compose(
@@ -1809,6 +1811,10 @@ fn run_windows(
     }
     let digest = sha256_of(&payload_path)?;
     for row in &rows {
+        // Loader-specific exclusions must recheck the current archive bytes on every scan.
+        if row["check"] == "original_us_vram_tiles" {
+            continue;
+        }
         let records = row["records"].as_array().cloned().unwrap_or_default();
         let Some(record) = records.first().and_then(|value| value.as_str()) else {
             return Err(Error::Invalid(format!(
@@ -1956,10 +1962,19 @@ fn identified_payloads(
             .map_err(|_| Error::Invalid(format!("{}: outside {}", path.display(), base.display())))?
             .to_string_lossy()
             .replace('\\', "/");
+        let original_us = crate::original::archive(&data)?;
         let mut preceding: Vec<(crate::models::Entry, &[u8])> = Vec::new();
         for (entry, payload) in crate::lexagraph::entries(&data)? {
             let identified = payloads.identify(payload).or_else(|| {
-                payloads.identify_paired(&preceding, Some(entry.transfer_mode), payload)
+                payloads.identify_context(&crate::models::PreFilterInput {
+                    archive: &archive,
+                    entry: entry.index,
+                    payload,
+                    class: None,
+                    toc: Some(entry),
+                    original_us,
+                    preceding: &preceding,
+                })
             });
             preceding.push((entry, payload));
             let Some(family) = identified else {

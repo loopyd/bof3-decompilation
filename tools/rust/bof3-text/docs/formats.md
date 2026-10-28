@@ -697,3 +697,25 @@ references and consumer metadata. They have `class: null`; executable hits omit
 direct `query`. A class filter selects bank or heuristic results only. Index
 integrity checks reproduce each selected literal document against source bytes;
 they do not establish full source coverage or runtime rendering.
+
+### Original-US mode-3 VRAM tiles
+
+The payload filter recognizes raw VRAM upload words only when the entire EMI
+matches a size and SHA256 in `config/original-us-disc.json`. Renaming an identical
+archive preserves qualification. Modified archives and other regions remain
+unresolved by this rule. The filter checks the current archive on every scan;
+these exclusions are not stored as unconditional registry windows.
+
+In the US executable, `recordEmiPackedDispatch` at `0x80162698` sends mode-3
+sectors to ring state 3. The consumer at `0x80163378` passes each complete
+`0x800`-byte sector to `LoadImage` as a 32-by-32-word rectangle. The upload
+routine at `0x8017CE9C` emits the GPU upload command and transfers the words.
+These words are nontext data; this rule does not determine pixel depth, CLUT
+selection, or whether the game displays them.
+
+The TOC word at `+4` packs a tile column in bits 24–29, row in bits 16–20,
+and row width in bits 8–13. The rule requires a positive width and payload,
+whole sectors, a sector count divisible by the row width, and a complete
+rectangle within 32 columns and 16 rows of tiles. The payload's first word
+must equal the TOC check word at `+8`, and the transfer mode at `+12` must be 3.
+Partial sectors, wrapped coordinates, and incomplete rows remain unresolved.

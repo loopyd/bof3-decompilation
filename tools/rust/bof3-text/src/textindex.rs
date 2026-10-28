@@ -342,6 +342,7 @@ fn collect(
 ) -> Result<(crate::lexagraph::Tally, Vec<crate::lexagraph::WindowDetail>)> {
     let mut tally = crate::lexagraph::Tally::default();
     let mut details: Vec<crate::lexagraph::WindowDetail> = Vec::new();
+    let original_us = crate::original::archive(data)?;
     let mut preceding: Vec<(crate::models::Entry, &[u8])> = Vec::new();
     for (entry, payload) in lexagraph::entries(data)? {
         let address = format!("{:#010x}", entry.ram_ptr);
@@ -392,7 +393,8 @@ fn collect(
                     payload,
                     // This branch is the one taken when no structural class claims the subfile.
                     class: None,
-                    transfer_mode: Some(entry.transfer_mode),
+                    toc: Some(entry),
+                    original_us,
                     preceding: &preceding,
                 };
                 let (latches, subfile) = filters.scan_bytes(&input, lexagraph::MIN_RUN);

@@ -74,18 +74,37 @@
         "detail": "Within one EMI archive, a mode-7 body pairs only with the latest preceding mode-6 VAB version-7 header. The header size must match a program count no greater than 128; sample count at +0x16 must be at most 255. Size-table slots zero through that count, inclusive, sum to the nonempty body length in eight-byte units."
       },
       "format": "VAB body: concatenated raw PSX 4-bit ADPCM samples (content type 7)"
+    },
+    {
+      "magic": "",
+      "family": "texture",
+      "format": "Original-US mode-3 raw VRAM tile words",
+      "records": [
+        "tools/rust/bof3-text/docs/formats.md"
+      ],
+      "check": {
+        "kind": "original_us_vram_tiles",
+        "detail": "Exact original-US EMI size/SHA256 membership; TOC mode 3; payload check word equals TOC +8; positive whole 0x800-byte sectors; complete tile rows within 1024x512-word VRAM. Packed TOC +4 gives column=(arg>>24)&0x3f, row=(arg>>16)&0x1f, width=(arg>>8)&0x3f. Width must be positive; sector count divisible by width; column+width <=32 and row+sector_count/width <=16."
+      },
+      "measured": {
+        "payloads": 592,
+        "removed": 9321,
+        "removed_subfiles": 558,
+        "removed_marginal": 0,
+        "basis": "standalone (removed, removed_subfiles): measured with --no-windows --no-readable against --no-windows --no-payloads --no-readable, so the figure is what the exclusion accounts for on its own. marginal (removed_marginal): measured with the shape rule active, so it is what the exclusion still removes once unreadable runs are gone. Both are corpus-wide measurements made once and recorded here, because an excluded payload is never parsed at run time."
+      }
     }
   ],
   "not_machine_identifiable": [
     {
       "family": "texture",
-      "what": "ct1 sprite packages (texel bands + CLUT + animation programs), ct3 finished VRAM pages, ct8 cue tables",
+      "what": "ct1 sprite packages (texel bands + CLUT + animation programs), ct8 cue tables, and mode-3 inputs outside the qualified original-US tile rule",
       "records": [
         "docs/specs/bof3-eu/02-disc-emi-containers.md:97",
         "docs/specs/bof3-eu/02-disc-emi-containers.md:99",
         "docs/specs/bof3-eu/02-disc-emi-containers.md:104"
       ],
-      "why": "the register names them by content type, but their payloads carry no documented signature and our tooling cannot derive the content type from the container's type-dependent load argument"
+      "why": "These payloads have no self-identifying signature. Only exact original-US archives meeting the mode-3 tile rule are classified from loader evidence."
     },
     {
       "family": "3d-model",
@@ -111,6 +130,6 @@
       "pBAV": 1020,
       "pQES": 119
     },
-    "note": "A census of every subfile's first four bytes finds only these two repeated ASCII-looking signatures; the other repeated heads are zero words, little-endian address words such as 0x320A8000, and similar non-signature content that no record names, so none of them is excluded."
+    "note": "The repeated signatures are pBAV and pQES. Other payloads require contextual checks; absence of a signature alone does not classify them."
   }
 }

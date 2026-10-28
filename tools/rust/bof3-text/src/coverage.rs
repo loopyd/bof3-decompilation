@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
 use crate::digest::sha256_hex;
 use crate::filters::KnownPayload;
@@ -12,7 +12,6 @@ use crate::models::{Error, Result, TextClass};
 
 const US_EXECUTABLE_SHA256: &str =
     "0af39fb1ffcf25e4bdf2730173f397b5b5f6c44989114fe9b59b92ab7c0eb21a";
-const ORIGINAL_US_DISC: &str = include_str!("../../../../config/original-us-disc.json");
 
 #[derive(Serialize)]
 pub struct Report {
@@ -39,21 +38,6 @@ struct FileRecord {
     derived_from: Option<String>,
 }
 
-#[derive(Deserialize)]
-struct OriginalDisc {
-    release: String,
-    project_sha256: String,
-    files: Vec<OriginalFile>,
-}
-
-#[derive(Deserialize)]
-struct OriginalFile {
-    path: String,
-    size: usize,
-    sha256: String,
-    emi_entries: Option<usize>,
-}
-
 #[derive(Serialize)]
 struct DiscMembership {
     qualification_sha256: String,
@@ -69,8 +53,7 @@ struct DiscMembership {
 }
 
 fn disc_membership(records: &BTreeMap<String, FileRecord>) -> Result<DiscMembership> {
-    let original: OriginalDisc = serde_json::from_str(ORIGINAL_US_DISC)
-        .map_err(|error| Error::Invalid(format!("original US disc qualification: {error}")))?;
+    let original = crate::original::disc()?;
     let mut missing_files = Vec::new();
     let mut changed_files = Vec::new();
     let mut matched_files = 0;
@@ -85,9 +68,9 @@ fn disc_membership(records: &BTreeMap<String, FileRecord>) -> Result<DiscMembers
     }
     let present_files = original.files.len() - missing_files.len();
     Ok(DiscMembership {
-        qualification_sha256: sha256_hex(ORIGINAL_US_DISC.as_bytes()),
-        release: original.release,
-        project_sha256: original.project_sha256,
+        qualification_sha256: sha256_hex(crate::original::DISC.as_bytes()),
+        release: original.release.clone(),
+        project_sha256: original.project_sha256.clone(),
         original_files_match: missing_files.is_empty() && changed_files.is_empty(),
         expected_files: original.files.len(),
         matched_files,
@@ -237,6 +220,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                             "EMI header and TOC".into(),
                         ));
                         let mut cursor = header_end;
+                        let original_us = crate::original::archive(&bytes)?;
                         let mut preceding = Vec::new();
                         let mut expected_metadata = Vec::new();
                         for (entry, payload) in &entries {
@@ -265,11 +249,15 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                     ),
                                 }
                             } else if let Some(family) = inventory.identify(payload).or_else(|| {
-                                inventory.identify_paired(
-                                    &preceding,
-                                    Some(entry.transfer_mode),
+                                inventory.identify_context(&crate::models::PreFilterInput {
+                                    archive: &name,
+                                    entry: entry.index,
                                     payload,
-                                )
+                                    class: None,
+                                    toc: Some(*entry),
+                                    original_us,
+                                    preceding: &preceding,
+                                })
                             }) {
                                 (
                                     "known-nontext",

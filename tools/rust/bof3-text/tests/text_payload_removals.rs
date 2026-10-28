@@ -143,10 +143,13 @@ fn the_recorded_removals_are_reproducible() {
     for row in &payloads {
         let archive = row["archive"].as_str().unwrap_or_default().to_string();
         let entry = row["entry"].as_u64().unwrap_or_default() as usize;
-        // the pairing family carries no magic of its own; name it the way the inventory does
+        // Contextual families use their check kind because they have no signature.
         let magic = row["magic"].as_str().unwrap_or_default();
         let magic = if magic.is_empty() {
-            "pBAV+ct7".to_string()
+            row["check"]
+                .as_str()
+                .expect("a contextual check kind")
+                .to_string()
         } else {
             magic.to_string()
         };
@@ -211,7 +214,10 @@ fn the_recorded_removals_are_reproducible() {
     {
         let magic = match entry["magic"].as_str() {
             Some(value) if !value.is_empty() => value.to_string(),
-            _ => "pBAV+ct7".to_string(),
+            _ => entry["check"]["kind"]
+                .as_str()
+                .expect("a contextual check kind")
+                .to_string(),
         };
         let measured = &entry["measured"];
         assert_eq!(

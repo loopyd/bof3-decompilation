@@ -420,6 +420,23 @@ pub fn paired_vab_body(header: &[u8], body: &[u8]) -> bool {
     total == body.len() && !body.is_empty()
 }
 
+/// Whole sectors sent as 32-by-32-word tiles by the original-US mode-3 consumer.
+fn vram_tiles(entry: crate::models::Entry, payload: &[u8]) -> bool {
+    if entry.transfer_mode != 3
+        || payload.is_empty()
+        || payload.len() % 0x800 != 0
+        || payload.len() != entry.size as usize
+        || u32::from_le_bytes(payload[..4].try_into().unwrap()) != entry.check_word
+    {
+        return false;
+    }
+    let column = ((entry.ram_ptr >> 24) & 0x3f) as usize;
+    let row = ((entry.ram_ptr >> 16) & 0x1f) as usize;
+    let width = ((entry.ram_ptr >> 8) & 0x3f) as usize;
+    let sectors = payload.len() / 0x800;
+    width > 0 && sectors % width == 0 && column + width <= 32 && row + sectors / width <= 16
+}
+
 /// One identified family, as the inventory states it.
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct PayloadFamily {
@@ -476,7 +493,7 @@ struct Inventory {
 pub struct KnownPayload {
     families: Vec<PayloadFamily>,
     /// The family the inventory names for a body identified by pairing, when it names one.
-    body_family: Option<PayloadFamily>,
+    context_families: Vec<PayloadFamily>,
 }
 
 impl KnownPayload {
@@ -522,13 +539,24 @@ impl KnownPayload {
                 )));
             }
         }
-        let body_family = inventory
-            .identified_without_signature
-            .into_iter()
-            .find(|family| family.check.kind == "vab_body_pairing");
+        for family in &inventory.identified_without_signature {
+            if family.records.is_empty()
+                || !matches!(
+                    family.check.kind.as_str(),
+                    "vab_body_pairing" | "original_us_vram_tiles"
+                )
+            {
+                return Err(Error::Invalid(format!(
+                    "{}: contextual family {} requires a named record and supported check",
+                    path.display(),
+                    family.format
+                )));
+            }
+        }
+        let context_families = inventory.identified_without_signature;
         Ok(Self {
             families: inventory.exclusions,
-            body_family,
+            context_families,
         })
     }
 
@@ -537,13 +565,13 @@ impl KnownPayload {
     pub fn totals(&self) -> Vec<(String, String, usize, usize, String)> {
         self.families
             .iter()
-            .chain(self.body_family.as_ref())
+            .chain(self.context_families.iter())
             .filter_map(|family| {
                 let measured = family.measured.as_ref()?;
                 Some((
                     family.family.clone(),
                     if family.magic.is_empty() {
-                        "pBAV+ct7".to_string()
+                        family.check.kind.clone()
                     } else {
                         family.magic.clone()
                     },
@@ -566,25 +594,24 @@ impl KnownPayload {
 }
 
 impl KnownPayload {
-    /// Identify a mode-7 body against the latest mode-6 header selected by the EMI loader.
-    pub fn identify_paired<'a>(
-        &'a self,
-        preceding: &[(crate::models::Entry, &[u8])],
-        transfer_mode: Option<u16>,
-        payload: &[u8],
-    ) -> Option<&'a PayloadFamily> {
-        if transfer_mode != Some(7) {
-            return None;
-        }
-        let pairs = preceding
+    /// Identify payloads whose meaning requires the current archive's TOC context.
+    pub fn identify_context<'a>(&'a self, input: &PreFilterInput<'_>) -> Option<&'a PayloadFamily> {
+        let entry = input.toc?;
+        self.context_families
             .iter()
-            .rev()
-            .find(|(entry, _)| entry.transfer_mode == 6)
-            .is_some_and(|(_, header)| paired_vab_body(header, payload));
-        if pairs {
-            return self.body_family.as_ref();
-        }
-        None
+            .find(|family| match family.check.kind.as_str() {
+                "vab_body_pairing" => {
+                    entry.transfer_mode == 7
+                        && input
+                            .preceding
+                            .iter()
+                            .rev()
+                            .find(|(earlier, _)| earlier.transfer_mode == 6)
+                            .is_some_and(|(_, header)| paired_vab_body(header, input.payload))
+                }
+                "original_us_vram_tiles" => input.original_us && vram_tiles(entry, input.payload),
+                _ => false,
+            })
     }
 }
 
@@ -592,7 +619,7 @@ impl PreFilter for KnownPayload {
     fn admit(&self, input: &PreFilterInput<'_>) -> AdmittedRanges {
         let identified = self
             .identify(input.payload)
-            .or_else(|| self.identify_paired(input.preceding, input.transfer_mode, input.payload));
+            .or_else(|| self.identify_context(input));
         match identified {
             Some(family) => AdmittedRanges {
                 ranges: Vec::new(),
@@ -764,7 +791,7 @@ impl ScanFilters<'_> {
     /// Bump the policy version when filter or reading semantics change.
     pub fn fingerprint(&self) -> Result<String> {
         let bytes = serde_json::to_vec(&(
-            "bof3.text-filters/v11",
+            "bof3.text-filters/v12",
             [
                 crate::executable::SCHEMA,
                 crate::inline::SCHEMA,
@@ -773,7 +800,7 @@ impl ScanFilters<'_> {
             ],
             self.windows.source_hash(),
             &self.payloads.families,
-            &self.payloads.body_family,
+            &self.payloads.context_families,
             self.readable,
             self.vocabulary.disabled,
             &self.vocabulary.words,

@@ -50,6 +50,7 @@ pub struct Entry {
     pub size: u32,
     pub ram_ptr: u32,
     pub transfer_mode: u16,
+    pub check_word: u32,
 }
 
 /// One dialogue row: a slot inside a bank.
@@ -493,8 +494,10 @@ pub struct PreFilterInput<'a> {
     pub payload: &'a [u8],
     /// The subfile's class, when its load argument names one.
     pub class: Option<TextClass>,
-    /// The TOC transfer mode, absent for inputs outside an EMI archive.
-    pub transfer_mode: Option<u16>,
+    /// The current TOC record, absent for inputs outside an EMI archive.
+    pub toc: Option<Entry>,
+    /// Actual archive bytes match an original-US EMI in the disc manifest.
+    pub original_us: bool,
     /// Earlier TOC entries and payloads in container order. Mode 7 uses the latest mode-6 header.
     pub preceding: &'a [(Entry, &'a [u8])],
 }
