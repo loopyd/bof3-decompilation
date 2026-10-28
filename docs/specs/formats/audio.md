@@ -5525,13 +5525,19 @@ the preceding checks.
 
 ### Retired XA instruction and memory dependencies
 
-The development observer in `src/driver/retirement.rs` now records the actual
+The development observer in `src/driver/retirement.rs` records the actual
 fetched instruction returned by successful CPU steps, including BIOS ROM and
 kernel RAM. Pre-step registers retain effective addresses across delayed-load
 commits. Each memory record distinguishes the effective address, bus address and
 width, consumed/stored byte lanes and cache-isolation state. Merged loads still
 read a full bus word: their consumed lanes do not remove device read side effects.
 Original executable words are checked against the pinned image before recording.
+`Execution::step_retired` returns that successful CPU step after scheduled device
+service. Its read-only observer runs after IRQ admission and before execution,
+so callers can capture `retirement::Before` there. A delivered syscall returns
+`None`; other faults remain errors. A pre-step RAM read alone does not establish
+which instruction the cache supplied. CPU retirement records exclude host and
+DMA accesses and do not establish startup ownership.
 
 The six full-reset S_XA/MAGIC/VOICE scenarios, at one and four sectors per tick,
 preserve the existing command, scheduler, stop and dry PCM comparisons. The

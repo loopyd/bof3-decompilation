@@ -5,7 +5,7 @@
 //! PCM output uses a separate explicit clock.
 use super::{
     boot,
-    cpu::{Cpu, FaultKind},
+    cpu::{Cpu, FaultKind, Step},
     executable::ram_offset,
     interconnect::Interconnect,
     output_clock, spu_clock,
@@ -83,6 +83,18 @@ impl Execution {
     /// Observe the instruction selected after IRQ admission, before execution.
     /// The observer cannot mutate guest state. Its failure aborts this run.
     pub fn step_observed(&mut self, observer: &mut impl FnMut(&Self) -> Result<()>) -> Result<()> {
+        self.step_retired(observer).map(|_| ())
+    }
+
+    /// Return the actual fetched instruction after CPU and scheduled device
+    /// service complete. The observer runs at the selected pre-execution
+    /// boundary, so it can retain address registers for retirement evidence.
+    /// A delivered syscall returns None because that instruction did not retire.
+    /// Other faults remain errors and may leave execution advanced.
+    pub fn step_retired(
+        &mut self,
+        observer: &mut impl FnMut(&Self) -> Result<()>,
+    ) -> Result<Option<Step>> {
         let interrupt = match &self.reference {
             Some(clock) => clock.admit_interrupt(&mut self.cpu, &self.bus),
             None => self.cpu.take_interrupt(self.bus.interrupts().pending()),
@@ -96,15 +108,16 @@ impl Execution {
             Some(clock) => clock.step(&mut self.cpu, &mut self.bus),
             None => self.cpu.step(&mut self.bus),
         };
-        let branch_boundary = match step {
-            Ok(step) => step.in_delay_slot,
+        let retired = match step {
+            Ok(step) => Some(step),
             Err(fault) if fault.kind == FaultKind::Syscall => {
                 self.cpu.enter_exception(&fault)?;
                 self.syscalls += 1;
-                false
+                None
             }
             Err(fault) => return Err(fault.into()),
         };
+        let branch_boundary = retired.as_ref().is_some_and(|step| step.in_delay_slot);
         let ticks = before.map_or(2, |before| {
             (self.reference_cycles().unwrap() - before) as u32
         });
@@ -121,7 +134,7 @@ impl Execution {
             self.reference_cycles().unwrap_or(self.clock.ticks()),
             branch_boundary,
         )?;
-        Ok(())
+        Ok(retired)
     }
 
     /// Activate an explicit output/scanline phase at this guest boundary.
