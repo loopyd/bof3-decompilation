@@ -357,7 +357,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v19`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v20`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -453,6 +453,22 @@ These `game-literal` fields also retain their original string length plus NUL,
 with capacities of five to seven bytes. Slot padding, pointers and code remain
 protected.
 
+BATE and SHISU also expose fifteen stat-label allocations each through
+`game-literal`. Each accepts at most three encoded bytes and one NUL.
+The first three groups contain `Pwr`, `Def`, `Int` and `Agl`; the last contains
+`Pwr`, `Def` and `Agl`.
+
+| Archive | Group bases | Record strides |
+| --- | --- | --- |
+| BATE | `0x801D8B28`, `0x801D8B84`, `0x801D8CF4`, `0x801D8D14` | 4, 6, 6, 6 |
+| SHISU | `0x801D9B4C`, `0x801D9BA8`, `0x801D9D18`, `0x801D9D38` | 4, 6, 6, 6 |
+
+Each allocation covers only its first four bytes. The two trailing bytes in
+six-byte records stay protected. Fixed address calculations pass these fields
+to `0x8014F800`, so their pointer-reference lists are empty. The comparison loops
+select four records; the summary loops select three. All related instructions
+remain pinned outside the editable allocations. Edited rendering remains unverified.
+
 BATE and SHISU entry 0 also expose `%3d/%3d` at `0x801D0D5C` and
 `0x801D0D40`, respectively. Each eight-byte allocation includes NUL. The
 `ascii-u8-decimal-pair-format` codec preserves two ordered decimal arguments and
@@ -530,7 +546,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v19` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v20` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
