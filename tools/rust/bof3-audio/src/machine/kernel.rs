@@ -7,7 +7,10 @@ use super::{
     cpu::{Cpu, Fault, FaultKind},
     event_calls::{Calls as EventCalls, CALLBACK_ENTER, CALLBACK_RETURN},
     events::{Table as Events, BUSY},
-    exception_calls::{Calls as ExceptionCalls, Environment, MissingHook, HANDLER_RETURN},
+    exception_calls::{
+        Calls as ExceptionCalls, Environment, MissingHook, EXCEPTION_ENTER, EXCEPTION_EXIT,
+        HANDLER_ENTER, HANDLER_RETURN, NODE_ENTER,
+    },
     exception_chains::Table as ExceptionChains,
     executable::ram_offset,
 };
@@ -25,6 +28,7 @@ pub struct Kernel {
     syscall_handler: Option<u32>,
     cd_removal: Option<u32>,
     event_delivery: Option<u32>,
+    exception_dispatch: Option<u32>,
     exception_delivery: Option<ExceptionDelivery>,
     waiting_event: Option<PendingWait>,
     event_calls: EventCalls,
@@ -50,6 +54,7 @@ impl Default for Kernel {
             syscall_handler: None,
             cd_removal: None,
             event_delivery: None,
+            exception_dispatch: None,
             exception_delivery: None,
             waiting_event: None,
             event_calls: EventCalls::default(),
@@ -154,6 +159,19 @@ impl Kernel {
         Ok(())
     }
 
+    /// Bind caller-loaded exception capture and priority dispatch assembly.
+    /// The entry receives the validated current TCB in K0. Its owned traps
+    /// retain node and handler guards; guest instructions perform the traversal.
+    pub fn configure_exception_dispatch(&mut self, entry: u32) -> Result<()> {
+        self.require_plain_context()?;
+        if self.exception_dispatch.is_some() {
+            return Err("owned exception dispatch entry already configured".into());
+        }
+        self.validate_owned_handler(entry)?;
+        self.exception_dispatch = Some(entry);
+        Ok(())
+    }
+
     fn validate_owned_handler(&self, handler: u32) -> Result<usize> {
         super::exception_calls::validate_handler(handler)?;
         if Self::is_call(handler) {
@@ -176,6 +194,9 @@ impl Kernel {
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
             || self
                 .event_delivery
+                .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
+            || self
+                .exception_dispatch
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset));
         if occupied {
             return Err("owned exception handlers require distinct RAM identifiers".into());
@@ -313,8 +334,23 @@ impl Kernel {
         environment: Environment,
     ) -> Result<Call> {
         self.require_plain_context()?;
-        let calls = ExceptionCalls::prepare(bus, environment)?;
+        let mut calls = ExceptionCalls::prepare(bus, environment)?;
         let context = super::thread_context::Context::current(bus)?;
+        if let Some(entry) = self.exception_dispatch {
+            context.validate_exception(cpu, bus)?;
+            cpu.synchronize_load();
+            calls.bind_guest();
+            self.exception_calls = Some(calls);
+            cpu.set_register(26, context.address());
+            cpu.resume_at(entry);
+            return Ok(Call {
+                vector: 0x80,
+                service: 6,
+                name: "GuestExceptionEntry",
+                waiting: false,
+                callback: Some(entry),
+            });
+        }
         context.save_exception(cpu, bus)?;
         cpu.set_register(28, environment.global_pointer);
         cpu.set_register(30, environment.stack_top);
@@ -334,6 +370,13 @@ impl Kernel {
         mut callback: Option<u32>,
     ) -> Result<Call> {
         while let Some(target) = callback {
+            if self
+                .exception_calls
+                .as_ref()
+                .is_some_and(ExceptionCalls::guest_running)
+            {
+                break;
+            }
             if self.syscall_handler == Some(target) {
                 if let Some(call) = self.syscall_progress(cpu, bus)? {
                     return Ok(call);
@@ -490,7 +533,16 @@ impl Kernel {
     }
 
     pub fn is_call(pc: u32) -> bool {
-        if pc == CALLBACK_RETURN || pc == HANDLER_RETURN || pc == CALLBACK_ENTER {
+        if matches!(
+            pc,
+            CALLBACK_RETURN
+                | HANDLER_RETURN
+                | CALLBACK_ENTER
+                | EXCEPTION_ENTER
+                | NODE_ENTER
+                | HANDLER_ENTER
+                | EXCEPTION_EXIT
+        ) {
             return true;
         }
         matches!(
@@ -523,6 +575,41 @@ impl Kernel {
             return Err("not a BIOS entry vector".into());
         }
         cpu.synchronize_load();
+        if matches!(
+            cpu.pc(),
+            EXCEPTION_ENTER | NODE_ENTER | HANDLER_ENTER | EXCEPTION_EXIT
+        ) {
+            if self.event_calls.depth() != 0
+                || self.waiting_event.is_some()
+                || self.exception_delivery.is_some()
+            {
+                return Err("owned exception guard would abandon an active delivery".into());
+            }
+            let calls = self
+                .exception_calls
+                .as_mut()
+                .ok_or("owned exception guard without dispatch")?;
+            let (callback, name) = match cpu.pc() {
+                EXCEPTION_ENTER => (calls.enter_guest(cpu)?, "GuestExceptionCapture"),
+                NODE_ENTER => (calls.guard_guest_node(cpu)?, "GuestExceptionNode"),
+                HANDLER_ENTER => {
+                    let callback = calls.enter_guest_handler(cpu)?;
+                    return self.exception_progress(cpu, bus, Some(callback));
+                }
+                EXCEPTION_EXIT => {
+                    calls.exit_guest()?;
+                    return self.exception_progress(cpu, bus, None);
+                }
+                _ => unreachable!(),
+            };
+            return Ok(Call {
+                vector: 0x80,
+                service: 6,
+                name,
+                waiting: false,
+                callback: Some(callback),
+            });
+        }
         if cpu.pc() == CALLBACK_ENTER {
             let callback = self.event_calls.start_callback(cpu)?;
             return Ok(Call {

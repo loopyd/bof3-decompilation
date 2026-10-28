@@ -62,6 +62,30 @@ impl Context {
     /// Capture after architectural exception delivery, before any handler runs.
     /// Bus write faults are terminal; this is not an atomic memory transaction.
     pub fn save_exception(&self, cpu: &mut Cpu, bus: &mut impl Bus) -> Result<()> {
+        self.validate_exception(cpu, bus)?;
+        cpu.synchronize_load();
+        for register in 1..32 {
+            if register != 26 {
+                bus.write(
+                    self.address + 8 + register as u32 * 4,
+                    Width::Word,
+                    cpu.register(register),
+                )?;
+            }
+        }
+        for (offset, value) in [
+            (0x88, cpu.cop0().read(14)?),
+            (0x8c, cpu.hi()),
+            (0x90, cpu.lo()),
+            (0x94, cpu.cop0().status()),
+            (0x98, cpu.cop0().read(13)?),
+        ] {
+            bus.write(self.address + offset, Width::Word, value)?;
+        }
+        Ok(())
+    }
+
+    pub(crate) fn validate_exception(&self, cpu: &Cpu, bus: &mut impl Bus) -> Result<()> {
         if !matches!(cpu.pc(), 0x8000_0080 | 0xbfc0_0180) {
             return Err(
                 "BIOS thread context: capture requires an architectural exception vector".into(),
@@ -78,25 +102,6 @@ impl Context {
                 "BIOS thread context: COP2 interrupt PC adjustment requires GTE execution evidence"
                     .into(),
             );
-        }
-        cpu.synchronize_load();
-        for register in 1..32 {
-            if register != 26 {
-                bus.write(
-                    self.address + 8 + register as u32 * 4,
-                    Width::Word,
-                    cpu.register(register),
-                )?;
-            }
-        }
-        for (offset, value) in [
-            (0x88, epc),
-            (0x8c, cpu.hi()),
-            (0x90, cpu.lo()),
-            (0x94, cpu.cop0().status()),
-            (0x98, cause),
-        ] {
-            bus.write(self.address + offset, Width::Word, value)?;
         }
         Ok(())
     }

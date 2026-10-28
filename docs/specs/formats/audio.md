@@ -3785,12 +3785,13 @@ unknown syscalls and branch-delay syscall HLE remain explicit failures. Ordinary
 unsupported machine faults are not silently converted into architectural traps.
 The developer probe records COP0 state and modeled syscalls.
 
-`A0:72` remains unsupported: research establishes CD-event closure and handler
-removal obligations, including an original BIOS chain-removal bug. No CD-removal
-no-op or invented initial BIOS event/chain state was added. Its implementation,
-general exception handlers, scheduler timing and the full sound runtime remain
-open. Retained [external references](../../reference/psx-kernel.md) distinguish
-hardware rules and replacement-BIOS comparisons from original US evidence.
+`A0:72` requires the configured owned guest CD-removal service described below.
+The pinned US BIOS supports removal from validated finite exception chains;
+its uninitialized-stack loads are unreachable on the supported path. Startup
+still owns initial event and chain state. Full sound startup and scheduler
+timing remain open. Retained [external references](../../reference/psx-kernel.md)
+distinguish hardware rules and replacement-BIOS comparisons from original US
+evidence.
 
 ### Rust BIOS event state
 
@@ -3832,8 +3833,9 @@ The supplied US `SYSTEM.CNF` has SHA-256
 and specifies hexadecimal `EVENT = 16` (**22 slots**), with `TCB = 4`.
 This count does not establish the original BIOS allocation address or initial
 event contents. The test's explicit 22-record allocation is not game bootstrap
-evidence. CD-driver removal, initial BIOS events, general exception-chain execution
-and full sound initialization remain open; `A0:72` still rejects.
+evidence. Initial BIOS events and complete sound startup remain separate
+obligations. `A0:72` requires the configured guest CD-removal service described
+below.
 
 ### Rust BIOS event callbacks
 
@@ -3872,8 +3874,9 @@ A bound service never switches to host scanning after failure. Unbound developme
 callers retain the functional host model.
 
 The bound service's instructions advance the caller's normal CPU/device schedule.
-This does not reproduce the remaining host exception-entry or handler costs or
-establish original-BIOS, native or hardware timing equivalence.
+Original-BIOS timing also depends on the selected exception dispatcher, handler
+implementation and caller clock. Guest execution alone does not establish native
+or hardware timing equivalence.
 
 WaitEvent may yield inside a callback and resume through the same continuation.
 Its pending context includes callback depth; a distinct nested wait cannot reuse
@@ -3996,8 +3999,8 @@ instructions to `B0:17` and resumes the explicit saved thread rather than its
 caller. Its synthetic PCB/TCB is not evidence of BIOS boot contents. Retained
 [references](../../reference/psx-kernel.md#thread-exception-contexts) and
 `out/audio-migration/thread-context-*` separate these bounds from original-game
-startup and independent audio fidelity. CD-driver removal `A0:72` remains
-unsupported until initial BIOS event/chain state is established.
+startup and independent audio fidelity. The owned CD-removal service requires
+explicit event and chain state, as described above.
 
 ### Rust BIOS priority-chain execution
 
@@ -4008,9 +4011,36 @@ ExCB priorities in order. The caller supplies an aligned RAM stack, GP and an
 explicit missing-hook policy. Each handler gets a separate sixteen-byte O32
 argument home area and returns through reserved trap `0xBFC00104`. Handlers run
 through the ordinary guest CPU unless explicitly bound to owned semantics;
-stack/callee-saved ABI violations reject. This functional bridge does not
-reproduce original BIOS volatile registers, frame layout, instruction count or
-cycles.
+stack/callee-saved ABI violations reject. Unbound development dispatch uses a
+functional host bridge, without original BIOS volatile-register, frame-layout
+or instruction-timing equivalence.
+
+`Kernel::configure_exception_dispatch(entry)` binds caller-loaded
+[`audio_exception_dispatch`](../../../tools/rust/bof3-audio/driver/kernel/exceptions.s)
+assembly. Entry validates the descriptors, stack, architectural exception vector,
+saved EPC and supported COP2 boundary before changing CPU state. It commits any
+pending load and supplies the validated current TCB address in K0. The routine
+saves the interrupted GPRs except zero and K0, then EPC, HI/LO, status and cause
+with the context layout above. Opaque TCB words remain unchanged.
+
+Owned trap `0xBFC0010C` supplies the captured ExCB base and installs the explicit
+handler stack, GP and FP after capture. Guest instructions read priority heads,
+capture handler pointers, branch on verifier results and read later links. Trap
+`0xBFC00110` validates each T9 node at priority T8, retaining physical overlap,
+cycle and per-priority traversal limits. Priorities must advance in order.
+Trap `0xBFC00114` invokes the selected T9 handler and guards its stack and
+S0-S7/GP/FP. Returning through `0xBFC00104` resumes the guest scanner without
+advancing a host traversal cursor. Trap `0xBFC00118` completes through the live
+exit-hook or explicit missing-hook policy. No BIOS instructions run at these
+traps, and each trap requires its active bound phase.
+
+The root reserves no stack locals and uses the prepared sixteen-byte O32 handler
+home area. Scanner stack drift rejects before handler invocation. Explicit
+nonlocal exception return discards the owned scanner after successful context
+restoration. Guest faults retain unfinished state; bound dispatch never falls
+back to host scanning. Instructions advance the caller's CPU/device schedule.
+Remaining host handler semantics, full startup and original timing equivalence
+still require acceptance.
 
 The table is captured on entry; each later priority head is read live. A node's
 verifier and second pointer are captured together before execution. A null
@@ -4194,13 +4224,12 @@ payload. Evidence uses `out/audio-migration/firmware-*`.
 The original US startup caller `exe/slus_004_22@0x80174B30` (full EXE `0xDEB30`)
 calls wrapper `0x8017ED14` (`0xE8D14`), which selects A0 service `72`. Its next call
 at `0x80174B38` (`0xDEB38`) invokes `0x8017EE1C` (`0xE8E1C`), an explicit syscall-2
-critical-section exit. This confirms the caller's sequence, not the BIOS body's
-effects. No BIOS dump was found in the inspected project input/media/toolchain
-paths. A supplied BIOS/context or independently established trace is still needed
-to resolve boot allocations and CD-removal bug effects. The existing HLE startup
-probe remains stopped at `A0:72`; no service-success substitution was added.
-[External references](../../reference/psx-kernel.md#bios-rom-and-cd-removal-evidence)
-and `out/audio-migration/cd-removal-*` retain the research boundary.
+critical-section exit. The configured owned service executes CD-event closure
+and node removal, with the caller retaining responsibility for that later exit.
+The pinned original-BIOS comparisons establish the supported finite-chain
+behavior. They do not establish original boot allocations or initial event
+contents. See the [service contract](#rust-bios-exception-chain-registration) and
+[external references](../../reference/psx-kernel.md#bios-rom-and-cd-removal-evidence).
 
 ### Independent BIOS handoff and sound initialization comparison
 

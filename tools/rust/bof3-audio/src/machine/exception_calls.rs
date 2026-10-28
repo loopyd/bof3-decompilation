@@ -9,6 +9,10 @@ use crate::Result;
 use std::collections::BTreeSet;
 
 pub(crate) const HANDLER_RETURN: u32 = 0xbfc0_0104;
+pub(crate) const EXCEPTION_ENTER: u32 = 0xbfc0_010c;
+pub(crate) const NODE_ENTER: u32 = 0xbfc0_0110;
+pub(crate) const HANDLER_ENTER: u32 = 0xbfc0_0114;
+pub(crate) const EXCEPTION_EXIT: u32 = 0xbfc0_0118;
 const SAVED: [usize; 10] = [16, 17, 18, 19, 20, 21, 22, 23, 28, 30];
 const MAX_NODES: usize = 4096;
 
@@ -28,6 +32,8 @@ pub struct Environment {
 
 #[derive(Clone, Copy, Debug)]
 enum Cursor {
+    Capture,
+    Guest,
     Priority,
     Node(u32),
     Verifier { node: u32, second: u32 },
@@ -42,6 +48,9 @@ pub(crate) struct Calls {
     visited: BTreeSet<usize>,
     stack: u32,
     saved: Option<[u32; 10]>,
+    guest: bool,
+    return_pc: Option<u32>,
+    global_pointer: u32,
     pub missing_hook: MissingHook,
 }
 impl Calls {
@@ -59,8 +68,88 @@ impl Calls {
             visited: BTreeSet::new(),
             stack,
             saved: None,
+            guest: false,
+            return_pc: None,
+            global_pointer: environment.global_pointer,
             missing_hook: environment.missing_hook,
         })
+    }
+
+    pub fn bind_guest(&mut self) {
+        self.guest = true;
+        self.cursor = Cursor::Capture;
+        self.priority = u32::MAX;
+    }
+
+    pub fn guest_running(&self) -> bool {
+        self.guest && matches!(self.cursor, Cursor::Guest) && self.saved.is_none()
+    }
+
+    pub fn enter_guest(&mut self, cpu: &mut Cpu) -> Result<u32> {
+        if !self.guest || !matches!(self.cursor, Cursor::Capture) {
+            return Err("owned exception entry requires an unfinished guest capture".into());
+        }
+        let destination = cpu.register(31);
+        validate_handler(destination)?;
+        self.cursor = Cursor::Guest;
+        cpu.set_register(4, self.table.base());
+        cpu.set_register(28, self.global_pointer);
+        cpu.set_register(29, self.stack);
+        cpu.set_register(30, self.stack + 16);
+        cpu.resume_at(destination);
+        Ok(destination)
+    }
+
+    pub fn guard_guest_node(&mut self, cpu: &mut Cpu) -> Result<u32> {
+        self.require_guest_scan()?;
+        let priority = cpu.register(24);
+        if priority >= 4 {
+            return Err("owned exception priority outside 0..4".into());
+        }
+        let destination = cpu.register(31);
+        validate_handler(destination)?;
+        if priority != self.priority {
+            if priority != self.priority.wrapping_add(1) {
+                return Err("owned exception priorities must advance in order".into());
+            }
+            self.visited.clear();
+            self.priority = priority;
+        }
+        let node = cpu.register(25);
+        if node != 0 {
+            self.visit(node)?;
+        }
+        cpu.resume_at(destination);
+        Ok(destination)
+    }
+
+    pub fn enter_guest_handler(&mut self, cpu: &mut Cpu) -> Result<u32> {
+        self.require_guest_scan()?;
+        if cpu.register(29) != self.stack {
+            return Err("owned exception scanner changed its handler stack".into());
+        }
+        let destination = cpu.register(31);
+        validate_handler(destination)?;
+        let handler = cpu.register(25);
+        validate_handler(handler)?;
+        self.return_pc = Some(destination);
+        self.invoke(cpu, handler)
+    }
+
+    pub fn exit_guest(&mut self) -> Result<()> {
+        self.require_guest_scan()?;
+        if self.priority != 3 {
+            return Err("owned exception exit requires all four priorities".into());
+        }
+        self.cursor = Cursor::Exit;
+        Ok(())
+    }
+
+    fn require_guest_scan(&self) -> Result<()> {
+        if !self.guest_running() || self.return_pc.is_some() {
+            return Err("owned exception guard requires an active guest scan".into());
+        }
+        Ok(())
     }
 
     pub fn resume(&mut self, cpu: &mut Cpu, bus: &mut impl Bus) -> Result<Option<u32>> {
@@ -71,6 +160,15 @@ impl Calls {
             return Err("BIOS exception handler violated stack/callee-saved contract".into());
         }
         self.saved = None;
+        if self.guest {
+            let destination = self
+                .return_pc
+                .take()
+                .ok_or("owned exception handler has no guest continuation")?;
+            cpu.set_register(31, destination);
+            cpu.resume_at(destination);
+            return Ok(Some(destination));
+        }
         match self.cursor {
             Cursor::Verifier { node, second } => {
                 if cpu.register(2) != 0 {
@@ -104,23 +202,7 @@ impl Calls {
                     self.cursor = Cursor::Priority;
                 }
                 Cursor::Node(node) => {
-                    let physical = self.table.node(node)?;
-                    if self.visited.len() == MAX_NODES {
-                        return Err(
-                            "BIOS exception dispatch: 4096-node priority safety limit".into()
-                        );
-                    }
-                    if self
-                        .visited
-                        .range(physical.saturating_sub(15)..physical + 16)
-                        .next()
-                        .is_some()
-                    {
-                        return Err(
-                            "BIOS exception dispatch: cycle or overlapping visited nodes".into(),
-                        );
-                    }
-                    self.visited.insert(physical);
+                    self.visit(node)?;
                     // Both pointers are captured before the verifier runs. The
                     // next link is read only after the guest handlers complete.
                     let first = bus.read(node + 8, Width::Word)?;
@@ -138,6 +220,23 @@ impl Calls {
                 _ => return Err("BIOS exception dispatch: handler has not returned".into()),
             }
         }
+    }
+
+    fn visit(&mut self, node: u32) -> Result<()> {
+        let physical = self.table.node(node)?;
+        if self.visited.len() == MAX_NODES {
+            return Err("BIOS exception dispatch: 4096-node priority safety limit".into());
+        }
+        if self
+            .visited
+            .range(physical.saturating_sub(15)..physical + 16)
+            .next()
+            .is_some()
+        {
+            return Err("BIOS exception dispatch: cycle or overlapping visited nodes".into());
+        }
+        self.visited.insert(physical);
+        Ok(())
     }
 
     fn invoke(&mut self, cpu: &mut Cpu, handler: u32) -> Result<u32> {

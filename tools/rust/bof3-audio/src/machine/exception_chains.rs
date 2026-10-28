@@ -19,6 +19,10 @@ pub struct Table {
 }
 
 impl Table {
+    pub(crate) fn base(&self) -> u32 {
+        self.base
+    }
+
     /// Consume the BIOS-owned descriptor; an EXE alone does not initialize it.
     pub fn read(bus: &mut impl Bus) -> Result<Self> {
         let base = bus.read(0x100, Width::Word)?;
