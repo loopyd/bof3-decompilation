@@ -2287,11 +2287,11 @@ do not dispatch CD work. Reference execution uses absolute MMIO access cycles;
 raw execution retains its two-tick instruction model.
 
 The controller executes Getstat, Setloc, Mute/Demute, Setfilter/Setmode, Getparam,
-GetlocL/P, GetTN/TD, Pause, Init, SeekL/P and ReadN/S through the functional drive.
-Supply
-required TOC metadata before attachment; automatic seek timing requires it.
+GetlocL/P, GetTN/TD, Pause, Init, SeekL/P, ReadN/S and Play through the functional
+drive. Supply required TOC metadata before attachment; automatic seek timing
+requires it.
 Pause completes after 200 microseconds when idle, or 70/35 milliseconds while
-reading at single/double speed. Init completes after 120 milliseconds.
+reading or playing at single/double speed. Init completes after 120 milliseconds.
 Seek first waits 15 milliseconds, then uses the native destination/track and
 distance delay, plus 650 milliseconds when effective speed changed. Setmode
 changes effective speed separately from the retained raw mode byte. Init resets
@@ -2303,7 +2303,7 @@ Attach `cd_media::Media` with `Interconnect::configure_cd_media` before scheduli
 work. Its owned File extents declare first LBA, file-sector offset and sector
 count in raw 2,352-byte units. They must be ordered, nonoverlapping and within
 their files. Media does not infer a TOC or parse a CUE. Configure the data FIFO
-for data delivery and the audio queue for selected XA delivery.
+for data delivery and the audio queue for selected XA or unmuted CDDA delivery.
 
 ReadN/S acknowledge and schedule a read callback after 20 milliseconds. That
 callback moves to the located position and schedules the combined seek, speed
@@ -2316,27 +2316,40 @@ leaves the prior data buffer intact. ADPBUSY follows realtime reading and the XA
 end latch. Pause/Init leave the old read deadline to cancel when visited. Read
 can cancel an unfinished SeekP continuation.
 
+Play also uses the read slot. Located Play waits 20 milliseconds, then combines
+its physical seek, speed settling and first-sector period. The next callback
+starts the report clock and processes the first sector. Immediate Play starts
+its report clock at acceptance and schedules one sector period. Audio program
+sectors require backing even when muted; data tracks and program tails synthesize
+silence. Unmuted CDDA submission precedes report publication. Muted playback
+still advances position, peak phase and reports. Autopause and disc end neither
+consume nor reschedule a sector. Old read callbacks can feed and reschedule
+during explicit seek preparation while its retained status is PlayingCDDA; once
+the seek enters Seeking, those callbacks cancel.
+
 Attached IRQ assertions follow native events: head insertion/promotion and mask
 writes assert when unmasked, including repeated writes of the same mask. Init's
 ACK uses the old mask; its subsequent reset to `0x1f` does not assert IRQ. Result
 reads and unrelated register writes do not assert it. The manual host path
-retains its separate line model. Automatic Play, unsupported mechanical overlaps
+retains its separate line model. Unsupported mechanical overlaps
 and partial or composite IRQ clears fail explicitly. Manual FIFO acceptance,
 response/staged-IRQ publication and `deliver_cd_data` are unavailable while the
 controller owns them.
 
 Bounded native comparisons cover immediate commands, Pause/Init/Seek continuations,
-ReadN/S cadence, active-read Pause, speed settling, response backlog, requested
-buffer replacement, SeekP takeover and XA withholding. The same guests run through
-reference `Execution` with MMIO values, relative access cycles and result buffers
-compared. XA submission counts and frame counts agree for the bounded subcapacity
+ReadN/S and Play cadence, active Pause, speed settling, response backlog, requested
+buffer replacement, SeekP takeover, XA withholding, muted reports, pregap autopause
+and disc end. The same guests run through reference `Execution` with MMIO values,
+relative access cycles and result buffers
+compared. XA/CDDA submission counts and frame counts agree for bounded subcapacity
 interval. This does not establish audio-worker phase or audible output.
 
-Actual backing-read failure, automatic Play, active DMA3 overlap, pending audio
+Actual backing-read failure, active DMA3 overlap, pending audio
 host-wait timing and a cancelled continuation already selected in the same branch
 pass fail explicitly. A media error during explicit seek preparation also fails
-before discarding that pending seek. Other scheduler interactions, broader IRQ
-phase and hardware fidelity remain unaccepted. A fresh ready drive has no retained
+before discarding that pending seek, as do playback end/autopause during that
+preparation. Other scheduler interactions, broader IRQ phase and hardware
+fidelity remain unaccepted. A fresh ready drive has no retained
 GetlocL bytes; Init does not reconstruct that unknown transfer history.
 
 Without that controller, `respond_cd` inserts a response with 1–16 bytes and
@@ -2358,7 +2371,7 @@ Absent configuration, decoder reset and manual XA controls fail explicitly.
 Sector requests and data reads require the separate data FIFO below. Its
 serialized delivery API still protects active data reads and pending host work;
 response queuing does not accept native data-overrun or concurrent-DMA behavior.
-Automatic Play, DMA overlap, host waits and broader IRQ timing remain
+DMA overlap, host waits and broader IRQ timing remain
 implementation obligations. Retained
 [register research](../../reference/cd-audio.md#cd-decoder-host-interface)
 qualifies the native comparison separately from hardware acceptance.
@@ -2764,8 +2777,10 @@ remain open. See [CD references](../../reference/cd-audio.md#selected-cdda-input
 After binding the TOC, call `Drive::configure_playback(peak_right)` once while
 paused to supply the retained native peak-channel phase. `Drive::command`,
 `Drive::complete` and `Interconnect::apply_cd_drive_command` take a `u32` CPU
-cycle at 33,868,800 Hz. The caller supplies these boundaries; the drive does
-not calculate command, seek or sector latency.
+cycle at 33,868,800 Hz. Without an attached controller the caller supplies these
+boundaries; the functional drive does not schedule callbacks. The optional
+[controller](#rust-cd-decoder-host-registers) derives Play latency and sector
+boundaries from its clock and owned media.
 
 Play uses the first parameter and ignores trailing parameters within the
 16-byte host limit. A valid nonzero BCD track selects its program start.
@@ -2791,8 +2806,9 @@ and failed reads produce silence. Command mute suppresses the feed while
 position and peak phase advance. Playback before an audio first track rejects.
 The returned `PlayDelivery` contains optional selected audio and a response.
 The caller submits audio through `Interconnect::enqueue_cd_cdda`, completes
-any pending feed and publishes the response. These operations do not yet form
-an integrated playback scheduler; pending-feed ordering remains unqualified.
+any pending feed and publishes the response. The attached controller performs
+these operations automatically when admission completes immediately; pending
+host-wait timing remains unsupported.
 
 Reports begin after 25,401,600 wrapping CPU cycles, or 750 ms. They occur on
 absolute frame numbers divisible by ten and alternate absolute and relative
@@ -2810,8 +2826,9 @@ Init clears runtime report/autopause flags while retaining the raw mode byte.
 A bounded native guest comparison qualifies responses, seek phases, selected
 sectors, raw peaks, mute, pregap autopause and disc end with supplied cycles.
 Its selected feeds pass the existing queue and declared dry SPU arithmetic.
-This does not establish an automatic scheduler, native backlog timing, CUE
-parsing, original-game Play coverage or hardware behavior.
+The attached controller has a separate bounded native comparison for automatic
+deadlines, branch dispatch, MMIO and guest results. Native backlog timing, CUE
+parsing, original-game Play coverage and hardware behavior remain unaccepted.
 
 ## Rust CD command lifecycle and cue restart
 

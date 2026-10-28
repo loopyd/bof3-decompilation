@@ -265,10 +265,12 @@ impl Drive {
         } + if self.speed_changed { 650_000 } else { 0 })
     }
     pub(crate) fn read_seek_delay_cycles(&self) -> Result<u64> {
-        let Activity::PreparingRead { target } = self.activity else {
-            return Err("CD drive: read seek delay requires preparing read".into());
+        let (target, physical) = match self.activity {
+            Activity::PreparingRead { target } => (target, false),
+            Activity::PreparingPlay { target } => (target, true),
+            _ => return Err("CD drive: read seek delay requires preparing read or Play".into()),
         };
-        let micros = self.seek_delay_micros(target, false, 1_000)? + self.read_period_micros();
+        let micros = self.seek_delay_micros(target, physical, 1_000)? + self.read_period_micros();
         Ok(micros * 33_868_800 / 1_000_000)
     }
     fn read_period_micros(&self) -> u64 {
@@ -597,6 +599,32 @@ impl Drive {
         self.play_start_cycle = cycle;
     }
 
+    /// Select backing only for an audio program sector. End/autopause callbacks,
+    /// data tracks and program tails need no backing read.
+    pub(crate) fn play_media_lba(&self) -> Result<Option<i32>> {
+        let toc = self
+            .toc
+            .as_ref()
+            .ok_or("CD playback requires explicit TOC")?;
+        if self.next_lba >= toc.lead_out.lba() {
+            return Ok(None);
+        }
+        let q = toc
+            .position(self.next_lba)?
+            .ok_or("CD playback has no position")?;
+        if self.auto_pause && self.play_track != 0 && q[0] != self.play_track {
+            return Ok(None);
+        }
+        let track = &toc.tracks[toc.physical_track(self.next_lba)];
+        if track.kind == TrackKind::Audio && self.next_lba < track.start.lba() {
+            return Err("CD playback before an audio first track is not implemented".into());
+        }
+        Ok(
+            (track.kind == TrackKind::Audio && self.next_lba < track.end.lba())
+                .then_some(self.next_lba),
+        )
+    }
+
     /// Process one caller-supplied CDDA boundary at its explicit CPU cycle.
     /// None represents a failed media read and plays silence. Data tracks and
     /// program tails also play silence. End/autopause do not consume a sector.
@@ -607,7 +635,7 @@ impl Drive {
         raw: Option<&[u8]>,
         cycle: u32,
     ) -> Result<PlayDelivery> {
-        if self.activity != Activity::Playing || position.lba() != self.next_lba {
+        if self.status() & 0xe0 != 0x80 || position.lba() != self.next_lba {
             return Err("CD playback: require playing state and current position".into());
         }
         let toc = self
@@ -615,6 +643,11 @@ impl Drive {
             .as_ref()
             .ok_or("CD playback requires explicit TOC")?;
         if self.next_lba >= toc.lead_out.lba() {
+            if matches!(self.activity, Activity::PreparingSeek { .. }) {
+                return Err(
+                    "CD playback: end during explicit seek preparation is not implemented".into(),
+                );
+            }
             self.activity = Activity::Paused;
             let response = self.response(4);
             self.motor_on = false;
@@ -627,6 +660,12 @@ impl Drive {
             .position(self.next_lba)?
             .ok_or("CD playback has no position")?;
         if self.auto_pause && self.play_track != 0 && q[0] != self.play_track {
+            if matches!(self.activity, Activity::PreparingSeek { .. }) {
+                return Err(
+                    "CD playback: autopause during explicit seek preparation is not implemented"
+                        .into(),
+                );
+            }
             self.activity = Activity::Paused;
             return Ok(PlayDelivery {
                 audio: None,

@@ -57,8 +57,8 @@ impl Controller {
 impl Interconnect {
     /// Attach an explicit paused drive and unit-scale native controller clock.
     /// The selected cycle is the caller's CPU phase. FIFO and Pause/Init/Seek
-    /// continuations execute at branch boundaries. ReadN/S require owned media;
-    /// automatic Play and host-wait timing are not implemented.
+    /// continuations execute at branch boundaries. ReadN/S and Play require
+    /// owned media; host-wait timing is not implemented.
     pub fn configure_cd_controller(&mut self, drive: Drive, cycle: u64) -> Result<()> {
         if self.cd_controller.is_some()
             || !self.cd_host()?.idle()
@@ -217,7 +217,7 @@ impl Interconnect {
         let Some(command) = command else {
             return Ok(());
         };
-        if !matches!(command.opcode, 0x01 | 0x02 | 0x06 | 0x09..=0x11 | 0x13..=0x16 | 0x1b) {
+        if !matches!(command.opcode, 0x01..=0x03 | 0x06 | 0x09..=0x11 | 0x13..=0x16 | 0x1b) {
             return Err(format!(
                 "CD controller: automatic command {:#04x} is not implemented",
                 command.opcode
@@ -225,6 +225,9 @@ impl Interconnect {
             .into());
         }
         let read = matches!(command.opcode, 0x06 | 0x1b);
+        if command.opcode == 3 && controller.media.is_none() {
+            return Err("CD Play requires configured media".into());
+        }
         if read && command.parameters.is_empty() && controller.media.is_none() {
             return Err("CD read requires configured media".into());
         }
@@ -244,6 +247,15 @@ impl Interconnect {
         let applied = self.apply_cd_drive_command(&mut controller.drive, &command, cycle as u32)?;
         self.respond_clocked_cd(applied.response.interrupt, &applied.response.bytes)?;
         if applied.response.interrupt == 3 {
+            if command.opcode == 3 {
+                let delay = if matches!(controller.drive.activity(), Activity::PreparingPlay { .. })
+                {
+                    20_000 * 33_868_800 / 1_000_000
+                } else {
+                    controller.drive.read_period_cycles()
+                };
+                controller.schedule(READ, cycle, delay)?;
+            }
             if read {
                 if takes_over_seekp {
                     controller.deadlines[COMMAND].pending = false;
@@ -303,23 +315,26 @@ impl Interconnect {
 
     fn service_clocked_cd_read(&mut self, controller: &mut Controller, cycle: u64) -> Result<()> {
         match controller.drive.activity() {
-            Activity::PreparingRead { .. } => {
+            Activity::PreparingRead { .. } | Activity::PreparingPlay { .. } => {
                 let delay = controller.drive.read_seek_delay_cycles()?;
                 controller.drive.complete(cycle as u32)?;
                 return controller.schedule(READ, cycle, delay);
             }
-            Activity::SeekingRead { .. } => {
+            Activity::SeekingRead { .. } | Activity::SeekingPlay { .. } => {
                 if let Some(response) = controller.drive.complete(cycle as u32)? {
                     return self.respond_clocked_cd(response.interrupt, &response.bytes);
                 }
             }
-            _ if controller.drive.status() & 0xe0 == 0x20 => {}
+            _ if matches!(controller.drive.status() & 0xe0, 0x20 | 0x80) => {}
             _ => return Ok(()),
         }
         if self.dma.cd.active() {
             return Err(
                 "CD controller: read callback during active DMA3 is not implemented".into(),
             );
+        }
+        if controller.drive.status() & 0xe0 == 0x80 {
+            return self.service_clocked_cd_play(controller, cycle);
         }
         let raw = if controller.drive.read_media_valid() {
             Some(
@@ -354,6 +369,39 @@ impl Interconnect {
             Delivery::Filtered => {}
         }
         controller.schedule(READ, cycle, controller.drive.read_period_cycles())
+    }
+
+    fn service_clocked_cd_play(&mut self, controller: &mut Controller, cycle: u64) -> Result<()> {
+        let raw = if let Some(lba) = controller.drive.play_media_lba()? {
+            Some(
+                controller
+                    .media
+                    .as_mut()
+                    .ok_or("CD Play requires configured media")?
+                    .read_sector(lba)?,
+            )
+        } else {
+            None
+        };
+        let delivery = controller.drive.play_sector(
+            crate::machine::cd_position::CdPosition::from_lba(controller.drive.next_lba())?,
+            raw.as_ref().map(|bytes| &bytes[..]),
+            cycle as u32,
+        )?;
+        if let Some(bytes) = delivery.audio {
+            if matches!(self.enqueue_cd_cdda(&bytes)?, Admission::Pending { .. }) {
+                return Err(
+                    "CD controller: pending audio host-wait timing is not implemented".into(),
+                );
+            }
+        }
+        if let Some(response) = delivery.response {
+            self.respond_clocked_cd(response.interrupt, &response.bytes)?;
+        }
+        if controller.drive.status() & 0xe0 == 0x80 {
+            controller.schedule(READ, cycle, controller.drive.read_period_cycles())?;
+        }
+        Ok(())
     }
 
     fn schedule_clocked_cd_fifo_if_space(

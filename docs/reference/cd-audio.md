@@ -90,11 +90,11 @@ uses its absolute access cycles; raw execution retains its two-tick instruction
 model.
 
 The controller executes Getstat, Setloc, Mute/Demute, Setfilter/Setmode, Getparam,
-GetlocL/P, GetTN/TD, Pause, Init, SeekL/P and ReadN/S through the functional drive.
-Automatic
-seek timing requires explicit TOC metadata. FIFO, command-continuation and read slots
-use the native pending-slot snapshot, visit order and current-target test. Idle
-Pause waits 200 microseconds, active-read Pause 70/35 milliseconds at single/double
+GetlocL/P, GetTN/TD, Pause, Init, SeekL/P, ReadN/S and Play through the functional
+drive. Automatic seek timing requires explicit TOC metadata. FIFO,
+command-continuation and read slots use the native pending-slot snapshot, visit
+order and current-target test. Idle
+Pause waits 200 microseconds, active Pause 70/35 milliseconds at single/double
 speed, and Init 120 milliseconds. Seek waits 15
 milliseconds before its destination/distance delay and any 650-millisecond speed
 settling. Effective speed and its sticky settling latch are separate from raw
@@ -110,23 +110,31 @@ buffer. Read can take over an unfinished SeekP, and old read callbacks cancel
 after Pause/Init. Delay conversion truncates the complete duration once and
 schedules from the callback's actual cycle.
 
+Play uses that same read slot and effective sector period. Located Play waits
+20 milliseconds before its physical seek, speed settling and first-sector delay;
+immediate Play starts its period directly. The controller reads audio program
+sectors from owned media, synthesizes silence for data tracks and program tails,
+submits unmuted CDDA before publishing reports, and stops scheduling at autopause
+or disc end. Muted sectors still advance position, peak phase and reports.
+
 Attached IRQ assertions occur at native head insertion/promotion and mask-write
 events. Init inserts its ACK using the old mask, then resets the mask silently.
 Reading results or writing unrelated registers does not reassert the interrupt;
 repeating an unmasked mask write does. The manual API retains its line model.
-Automatic Play, unsupported mechanical overlaps and partial IRQ clears fail
+Unsupported mechanical overlaps and partial IRQ clears fail
 explicitly. Manual acceptance, response publication and data-IRQ delivery are
 unavailable while the controller owns them.
 
 Captured native MMIO, all three deadlines and branch dispatch agree for bounded
-ReadN/S, Pause/Init/Seek and immediate-command histories. These include active-read
+ReadN/S, Play, Pause/Init/Seek and immediate-command histories. These include active
 Pause, requested-buffer overwrite despite response backlog, SeekP takeover,
-TOC errors and XA withholding. The same guests' reference execution agrees in
-MMIO values, relative access cycles and result memory. Subcapacity XA submission
-and frame counts also agree, without accepting audio-worker phase or PCM.
+TOC errors, XA withholding, muted playback reports, pregap autopause and disc end.
+The same guests' reference execution agrees in MMIO values, relative access cycles
+and result memory. Subcapacity XA/CDDA submission and frame counts also agree,
+without accepting audio-worker phase or PCM.
 Actual backing-read failure, active DMA3 overlap, pending audio host waits,
-shared-pass stale continuations and media errors during explicit seek preparation
-remain unsupported. Automatic Play, other scheduler interactions, broader IRQ
+shared-pass stale continuations and media/playback termination during explicit
+seek preparation remain unsupported. Other scheduler interactions, broader IRQ
 timing and hardware fidelity retain separate obligations. Init does not reconstruct
 an unknown retained GetlocL header in a fresh ready context.
 
@@ -265,8 +273,9 @@ the retained queued tail is counted separately.
 [Functional Rust playback](../specs/formats/audio.md#rust-cdda-playback)
 uses explicit data/audio track kind, pregap, program start/end and lead-out
 metadata. It supports Play, GetlocP, reports, pregap autopause and motor-off
-disc end. Located Play retains Idle/old position until a supplied seek-start
-boundary, then enters Seeking before a second boundary starts Playing.
+disc end. Without an attached controller, located Play retains Idle/old position
+until a supplied seek-start boundary, then enters Seeking before a second
+boundary starts Playing.
 Immediate Play starts at the supplied command cycle. The caller supplies the
 retained peak-channel phase, raw sectors and all CPU-cycle/response boundaries.
 
@@ -276,8 +285,9 @@ select SubQ tracks at pregap start and physical audio at program start. Reports
 settle for 750 ms, alternate absolute/relative time and measure unattenuated
 channel peaks, including while muted. Autopause stops before the first changed
 SubQ track; lead-out returns End before turning off the motor. Rust follows
-these functional rules under supplied cycles. CUE parsing, integrated pending
-feed ordering, automatic mechanical scheduling and hardware timing remain open.
+these functional rules under supplied cycles. The attached controller supplies
+the bounded Play deadlines and owned media described above. CUE parsing, pending
+feed timing, other mechanical overlaps and hardware timing remain open.
 
 ## Decoder reset and command mute
 
