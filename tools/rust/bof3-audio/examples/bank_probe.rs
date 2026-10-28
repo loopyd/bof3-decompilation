@@ -118,6 +118,7 @@ fn prepare_kernel(
     }
     bus.write(0x1f80_1014, Width::Word, 0x2009_31e1)?;
     let mut kernel = Kernel::default();
+    kernel.configure_console(64 * 1024)?;
     kernel.configure_counter_flags(symbol("audio_counter_flags")?)?;
     kernel.configure_cd_removal(symbol("audio_cd_remove")?)?;
     kernel.configure_event_delivery(Service {
@@ -428,6 +429,7 @@ fn main() -> Result<()> {
         serde_json::to_string_pretty(&serde_json::json!({
             "schema":"bof3.bank-probe/v2","kernel_sha256":sha256_hex(&kernel_image),
             "kernel_symbols_sha256":sha256_hex(kernel_symbols.as_bytes()),"kernel_initialization":initialized,
+            "diagnostic_bytes":execution.kernel().and_then(Kernel::console_output),
             "archive_sha256":sha256_hex(archive.bytes()),
             "slot":slot,"vh_entry":vh,"vb_entry":vb,"sep_entry":sep,
             "samples":bank.declared_samples,"body_bytes":body.len(),"transfer_bytes":transfer_bytes,"stage":stage,
