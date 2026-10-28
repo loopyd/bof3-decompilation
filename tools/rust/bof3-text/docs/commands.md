@@ -143,7 +143,7 @@ Output is always JSON — there is no second codec — and every object carries 
 document's own recorded `source`.
 
 The supported US `SLUS_004.22` executable exports one
-`bof3.executable-text/v10` document. Re-extract older documents. Use the default
+`bof3.executable-text/v11` document. Re-extract older documents. Use the default
 `--entry all` and omit `--class` and `--latch`; EMI selectors are refused for
 executable input.
 Keep each row's `consumers`, `format_directives` and output metadata unchanged.
@@ -152,7 +152,8 @@ literal percent bytes; direct printf literals refuse them. Shared-word label
 references retain empty `calls` arrays where the downstream use is unproven.
 BIOS formats allow literal edits within capacity while retaining every original
 directive exactly and in order. GPU diagnostics record a callback word and its
-initial BIOS stub; their reference calls are indirect. Analysis leaves formatted
+initial BIOS stub; their reference calls are indirect. The ResetGraph address
+diagnostic instead records its direct BIOS printf call. Analysis leaves formatted
 size unbounded. Runtime callback targets remain unverified.
 See [formats.md](formats.md#executable-ascii) for supported allocations and limits.
 
