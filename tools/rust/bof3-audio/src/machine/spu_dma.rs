@@ -2,6 +2,56 @@
 
 use crate::Result;
 
+/// A successful DMA4 RAM word access. A read can precede a later SPU-side failure.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct RamAccess {
+    /// Aligned DMA transaction address before RAM mirror folding.
+    pub address: u32,
+    /// Address used by the successful RAM access after mirror folding.
+    pub physical_address: u32,
+    pub value: u32,
+    pub from_ram: bool,
+}
+
+/// Ordered diagnostic accesses. Overflow leaves execution unchanged and makes
+/// the captured interval incomplete. Draining starts a fresh interval.
+#[derive(Debug)]
+pub struct Observation {
+    pub accesses: Vec<RamAccess>,
+    pub overflowed: bool,
+    limit: usize,
+}
+
+impl Observation {
+    pub(crate) fn new(limit: usize) -> Result<Self> {
+        if !(1..=1_000_000).contains(&limit) {
+            return Err("DMA4 observation limit must be 1..=1000000 accesses".into());
+        }
+        Ok(Self {
+            accesses: Vec::new(),
+            overflowed: false,
+            limit,
+        })
+    }
+
+    pub(crate) fn record(&mut self, access: RamAccess) {
+        if self.accesses.len() < self.limit {
+            self.accesses.push(access);
+        } else {
+            self.overflowed = true;
+        }
+    }
+
+    pub(crate) fn take(&mut self) -> Self {
+        let next = Self {
+            accesses: Vec::new(),
+            overflowed: false,
+            limit: self.limit,
+        };
+        std::mem::replace(self, next)
+    }
+}
+
 #[derive(Clone, Debug, Default)]
 pub struct Channel {
     address: u32,
