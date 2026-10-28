@@ -1,10 +1,20 @@
 //! Bank WAV/XML extraction with complete EMI preservation and staged publication.
 
 use crate::{
-    archive::MediaImage, catalog::loader, catalog::model::Asset, catalog::model::AssetData,
-    catalog::model::Catalog, codec::adpcm, digest::sha256_hex, document::xml, interchange::wave,
-    machine::executable::Executable, publication::require_absent, publication::write_new,
-    publication::Publication, Result,
+    archive::MediaImage,
+    catalog::loader,
+    catalog::model::Asset,
+    catalog::model::AssetData,
+    catalog::model::{Catalog, Role},
+    codec::adpcm,
+    digest::sha256_hex,
+    document::xml,
+    interchange::wave,
+    machine::executable::Executable,
+    publication::require_absent,
+    publication::write_new,
+    publication::Publication,
+    Result,
 };
 use serde::Serialize;
 use std::{collections::BTreeSet, fmt::Write as _, fs, path::PathBuf};
@@ -15,7 +25,14 @@ pub struct Options {
     pub executable: PathBuf,
     pub output: PathBuf,
     pub id: Option<String>,
+    pub role: Option<String>,
     pub reference_rate: u32,
+}
+
+#[derive(Debug, Serialize)]
+pub struct Selection {
+    pub bank: String,
+    pub roles: Vec<Role>,
 }
 
 #[derive(Debug, Serialize)]
@@ -27,6 +44,8 @@ pub struct Report {
     pub pcm_frames: usize,
     pub approximate_loops: usize,
     pub reference_rate: u32,
+    pub selection_role: Option<String>,
+    pub selected_banks: Vec<Selection>,
     pub assumptions: Vec<&'static str>,
 }
 
@@ -35,9 +54,19 @@ pub fn banks(options: &Options) -> Result<Report> {
     // an intrinsic VAB sample rate. Keep the exact SPU register representable.
     reference_pitch(options.reference_rate)?;
     require_absent(&options.output)?;
+    if options.role.as_deref().is_some_and(|role| role != "sfx") {
+        return Err(
+            "bank extract supports only --type sfx; vocal classification remains unresolved".into(),
+        );
+    }
     let mut catalog = Catalog::read(options.disc_root.as_deref(), &options.archives)?;
     let executable = Executable::from_bytes(fs::read(&options.executable)?)?;
     let mapping = loader::resolve(&mut catalog, &executable)?;
+    if let Some(role) = &options.role {
+        catalog.assets.retain(|asset| {
+            asset.kind() != "bank" || asset.roles.iter().any(|evidence| evidence.role == role)
+        });
+    }
     let selected = if let Some(id) = &options.id {
         vec![catalog.select("audio", Some("bank"), id)?]
     } else {
@@ -48,7 +77,7 @@ pub fn banks(options: &Options) -> Result<Report> {
             .collect()
     };
     if selected.is_empty() {
-        return Err("extract: no banks found in selected sources".into());
+        return Err("extract: no banks match the selected sources and role".into());
     }
     let transaction = Publication::new(&options.output)?;
     let mut root = String::from("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<audio schema=\"bof3.audio-extraction/v1\" mode=\"audio\" kind=\"bank\">\n");
@@ -56,11 +85,14 @@ pub fn banks(options: &Options) -> Result<Report> {
         schema: "bof3.audio-extract-report/v1", output: options.output.display().to_string(),
         banks: 0, samples: 0, pcm_frames: 0, approximate_loops: 0,
         reference_rate: options.reference_rate,
+        selection_role: options.role.clone(),
+        selected_banks: Vec::new(),
         assumptions: vec![
             "WAV rate is an export reference context; VAB samples have no universal playback rate",
             "WAV unity note 60 is an export convention; original tone center/shift and key ranges are recorded separately",
             "fixed PCM loops with pcm_repeat_is_stable=false approximate continuing ADPCM predictor history",
-            "gameplay note/voice context and SFX/vocal classification remain unresolved",
+            "bank roles identify source-qualified dispatcher references; a selected bank retains every sample, including samples with unresolved roles",
+            "active layout, gameplay note/voice context, accepted playback and vocal classification remain unresolved",
             "XML includes full original EMI bytes; bank PCM/loop packing is supported within existing allocations; music extraction remains incomplete",
         ],
     };
@@ -229,6 +261,10 @@ pub fn banks(options: &Options) -> Result<Report> {
             return Err("bank XML read-back verification failed".into());
         }
         write_root_bank(&mut root, asset, &folder, &hash)?;
+        report.selected_banks.push(Selection {
+            bank: asset.id.clone(),
+            roles: asset.roles.clone(),
+        });
         report.banks += 1;
     }
     root.push_str("</audio>\n");

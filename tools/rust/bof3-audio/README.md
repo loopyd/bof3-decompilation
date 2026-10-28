@@ -67,7 +67,14 @@ not key on; out-of-bank references remain unresolved. A reference can select
 a silent tone. Roles do not establish active layout, loaded state, arbitration,
 audibility or independent PCM. Shared payloads do not transfer roles.
 Unreferenced samples and XA roles remain unresolved, and `--type vocals` fails
-until vocal-role evidence is available. `extract` does not yet accept role filters.
+until vocal-role evidence is available.
+
+`extract --mode audio --kind bank --type sfx` uses the same bank-role filter.
+Use a qualified bank `--id` from the index to select one bank. Extraction retains
+every sample in each selected bank, including samples with unresolved roles, so
+the complete bank remains editable and packable. Its report records
+`selection_role` and `selected_banks` with their source-qualified role evidence.
+The WAVs use the explicit export reference rate and do not represent cue playback.
 
 `verify --json` writes `bof3.audio-verification/v2`. Its `checks` object reports
 each category with a `status` of `pass`, `fail`, or `missing_evidence` and a

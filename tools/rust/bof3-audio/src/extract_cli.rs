@@ -8,8 +8,9 @@ use std::{ffi::OsString, path::PathBuf};
 
 pub const HELP: &str =
     "\n extract --mode audio --kind bank (--disc-root DIR | --archive FILE...)\n\
-   --executable PSX_EXE --output NEW_DIR [--id ID] [--reference-rate HZ] [--json]\n\
+   --executable PSX_EXE --output NEW_DIR [--id ID] [--type sfx] [--reference-rate HZ] [--json]\n\
  Writes one WAV/XML folder per selected bank and a root audio.xml manifest.\n\
+ --type sfx selects source-qualified bank references; every sample in each bank is exported.\n\
  Default reference rate: 44100 Hz (SPU pitch 4096); unity note 60 is an export convention.\n\
  Full original EMI bytes are preserved inside each bank.xml. Output must not exist.\n\
  XA: --kind xa_stream|xa_cue --xa-arithmetic split-floor|combined-rounded\n\
@@ -19,7 +20,7 @@ pub const HELP: &str =
  Music: --mode music [--kind song] --allow-approximations --executable PSX_EXE\n\
    (--disc-root DIR | --archive FILE...) --output NEW_DIR [--id SONG_ID] [--loops N]\n\
  One SF2 and independent format-1 MIDI files per song; loops default to two traversals.\n\
- Music edits cannot yet be packed; full fidelity and --type classification remain unverified.\n";
+ Full playback fidelity and vocal classification remain unverified.\n";
 
 pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let mut mode = None;
@@ -29,6 +30,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let mut executable = None;
     let mut output = None;
     let mut id = None;
+    let mut role = None;
     let mut rate = None;
     let mut arithmetic = None;
     let mut json = false;
@@ -68,10 +70,20 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             Some("--loops") if loops.is_none() => {
                 loops = Some(string(&mut args, "--loops")?.parse()?)
             }
-            Some("--type") => {
-                return Err("--type sfx|vocals: classification is not yet verified".into())
+            Some("--type") if role.is_none() => {
+                role = Some(string(&mut args, "--type")?);
             }
             _ => return Err(format!("unknown or repeated extract option {arg:?}").into()),
+        }
+    }
+    if let Some(role) = &role {
+        if mode.as_deref() != Some("audio") || kind.as_deref() != Some("bank") {
+            return Err("extract --type requires --mode audio --kind bank".into());
+        }
+        match role.as_str() {
+            "sfx" => {}
+            "vocals" => return Err("--type vocals: classification is not yet verified".into()),
+            _ => return Err("--type requires sfx or vocals".into()),
         }
     }
     if mode.as_deref() == Some("music") {
@@ -169,6 +181,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         executable: executable.ok_or("extract requires --executable")?,
         output: output.ok_or("extract requires --output")?,
         id,
+        role,
         reference_rate: rate.unwrap_or(44100),
     })?;
     if json {
@@ -182,6 +195,15 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             "{} fixed PCM loops approximate continuing ADPCM predictor history",
             report.approximate_loops
         );
+        for selection in &report.selected_banks {
+            println!("Selected bank: {}", selection.bank);
+            for role in &selection.roles {
+                println!(
+                    "Role: {} [{}] from {} rows {:?}; {}",
+                    role.role, role.scope, role.auxiliary_entry, role.reference_rows, role.playback
+                );
+            }
+        }
         for assumption in report.assumptions {
             println!("Note: {assumption}");
         }

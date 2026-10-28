@@ -124,6 +124,7 @@ fn original_bank_folders_pack_standalone_and_as_root_with_verified_edits() {
         executable: opts.executable.clone(),
         output: export.clone(),
         id: None,
+        role: None,
         reference_rate: 44100,
     })
     .unwrap();
@@ -270,6 +271,7 @@ fn entire_bank_corpus_round_trips_whole_emi_files() {
             executable: opts.executable.clone(),
             output: export.clone(),
             id: None,
+            role: None,
             reference_rate: 44100,
         })
         .unwrap();
@@ -333,6 +335,7 @@ fn multiple_banks_merge_edits_but_reject_conflicting_preservation() {
         executable: opts.executable.clone(),
         output: export.clone(),
         id: None,
+        role: None,
         reference_rate: 44100,
     })
     .unwrap();

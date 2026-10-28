@@ -137,6 +137,7 @@ fn original_bank_xml_preservation_metadata_and_wav_content_agree_with_source() {
         executable: PathBuf::from(std::env::var_os("BOF3_AUDIO_EXE").unwrap()),
         output: output.clone(),
         id: None,
+        role: None,
         reference_rate: 44100,
     })
     .unwrap();

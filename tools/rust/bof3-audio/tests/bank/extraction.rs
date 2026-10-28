@@ -67,6 +67,7 @@ fn options(directory: &Directory, archive: PathBuf) -> Options {
         executable: PathBuf::from(std::env::var_os("BOF3_AUDIO_EXE").unwrap()),
         output: directory.0.join("export"),
         id: None,
+        role: None,
         reference_rate: 44100,
     }
 }
@@ -160,6 +161,7 @@ fn invalid_surface_rate_and_existing_output_fail_before_media_access() {
         executable: "missing".into(),
         output: directory.0.clone(),
         id: None,
+        role: None,
         reference_rate: 48000,
     };
     assert!(banks(&options)
@@ -200,6 +202,7 @@ fn all_original_banks_export_exact_archive_snapshots_and_independent_pcm_referen
         executable: std::env::var_os("BOF3_AUDIO_EXE").unwrap().into(),
         output: directory.0.join("corpus"),
         id: None,
+        role: None,
         reference_rate: 44100,
     };
     let report = banks(&options).unwrap();

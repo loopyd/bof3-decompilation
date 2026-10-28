@@ -320,6 +320,42 @@ cover changed headers/bodies, untouched archive padding, missing/multiple
 bodies, sample bounds and identical payloads assigned to distinct game IDs.
 This is byte-content evidence, not SFX/vocal classification or PCM equivalence.
 
+### Source-qualified effects references
+
+With the verified US executable, `index --mode audio --type sfx` and `query`
+select source-qualified bank and sample references in the original local effects
+dispatcher. Use `--kind bank` or `--kind sample` and a qualified `--id` to narrow
+selection. [Role resolution](../../../tools/rust/bof3-audio/src/catalog/roles.rs)
+requires one resolved body, bounded local auxiliary records and populated programs.
+Equal bank payloads do not transfer roles between source identities.
+
+Bank roles use `local_dispatch_reference`. Sample roles use
+`local_dispatch_sample_reference`. Their evidence retains the auxiliary table
+and rows, dispatcher and handler addresses and EXE offsets. Each sample reference
+also records its ordered layer, program, physical tone, VH halfword offset and
+original SDK sample-reader address. All sixteen physical tone slots remain
+eligible regardless of a program's declared tone count.
+
+For a local auxiliary record, `t = byte2 >> 4` and `n = (byte3 >> 5) & 3`.
+The dispatcher selects `n` copies of tone `t+n`, followed by tone `t`.
+Repeated selections retain their layer order. Cue attribute reads use the
+original fixed offset tables and must fit the VH. SDK sample selection separately
+uses the packed program block. The halfword reader at
+`exe/slus_004_22@0x8016E5E8`, full EXE offset `0xD85E8`, rejects sample zero.
+References beyond the declared sample allocations remain unresolved. Music's
+low-byte selection and zero-reference alias rules do not apply to this path.
+
+A reference can select a silent tone. Roles do not establish active layout,
+loaded state, accepted arbitration, audibility or PCM fidelity. Unreferenced
+samples and XA roles remain unresolved. `--type vocals` fails explicitly until
+source-qualified vocal evidence is available.
+
+`extract --mode audio --kind bank --type sfx` applies the bank-role filter and
+exports every sample in each selected bank, including samples with unresolved
+roles. The extraction report records `selection_role` and `selected_banks` with
+source-qualified role evidence. Preservation XML retains the complete bank and
+`playback_context="unresolved"`. WAV reference-rate export does not execute cues.
+
 ### Complete XA extents and US cue selection
 
 ISO directory lengths count 2048-byte logical blocks. A raw XA extraction keeps
@@ -2827,17 +2863,19 @@ now records those differences; edited archive reconstruction remains unimplement
 
 ```sh
 bof3-audio extract --mode audio --kind bank --archive FILE.EMI \
-  --executable SLUS_004.22 --output NEW_DIR [--id ID] [--reference-rate HZ] [--json]
+  --executable SLUS_004.22 --output NEW_DIR [--id ID] [--type sfx] [--reference-rate HZ] [--json]
 ```
 
 Use repeated `--archive` arguments or `--disc-root` for direct media input.
-Omitting `--id` selects all banks. Numeric selections must be unambiguous;
+Omitting `--id` selects every bank matching the optional role filter.
+Numeric selections must be unambiguous;
 qualified identities use the catalog's source and header-entry identity.
 The exact US executable profile supplies verified loader associations. A bank
 needs one resolved body large enough for every declared sample; ambiguous or
-missing bodies fail before publication. SFX/vocal classification and music
-extraction remain unsupported, with explicit diagnostics; XA uses the separate
-stream/cue extraction surface above.
+missing bodies fail before publication. `--type sfx` selects bank references
+under the [effects-role contract](#source-qualified-effects-references), retaining
+all samples in each selected bank. Vocal classification remains unresolved.
+Music uses `--mode music`; XA uses the separate stream/cue extraction surface.
 
 The root `audio.xml` (`bof3.audio-extraction/v1`) references relative bank
 manifests. Each folder's `bank.xml` (`bof3.audio-bank/v1`) records qualified
