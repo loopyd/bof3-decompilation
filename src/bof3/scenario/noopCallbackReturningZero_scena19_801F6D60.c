@@ -15,8 +15,8 @@
  * twin stub at 0x801F6D58 is word index 3 of that same run. No `lui`/`addiu` pair
  * anywhere inside the overlay materialises the run base 0x801F6DBC, so this slot
  * is only reached through the pointer word, by a reader outside this payload.
- * @status unverified
- * @match 0.00
+ * @status exact
+ * @match 100.00
  * @residual none
  */
 s32 noopCallbackReturningZero_scena19_801F6D60(void) {

@@ -15,8 +15,8 @@
  * indexes with the unsigned byte at offset 0x7A of a record
  * (`lbu $v0,0x7A($a0)`) and calls as (record, D_8014686C), so a record whose byte
  * 0x7A reads 0 also dispatches to this empty body.
- * @status unverified
- * @match 0.00
+ * @status exact
+ * @match 100.00
  * @residual none
  */
 void noopProgressHandler_scena19_801F6D50(void) {}

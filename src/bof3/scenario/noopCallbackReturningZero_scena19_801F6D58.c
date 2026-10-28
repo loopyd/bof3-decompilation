@@ -17,8 +17,8 @@
  * (`lw $v0,0x6DE0($at)` in func_801F6D10), so this entry is only observed through
  * the stored pointer word. The preceding 8-byte entry at 0x801F6D50 is the
  * argument-less void no-op twin (`jr $ra` / nop).
- * @status unverified
- * @match 0.00
+ * @status exact
+ * @match 100.00
  * @residual none
  */
 s32 noopCallbackReturningZero_scena19_801F6D58(void) {
