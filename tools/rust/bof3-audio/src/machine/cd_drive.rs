@@ -613,6 +613,21 @@ impl Drive {
         }
     }
 
+    fn set_idle(&mut self) {
+        self.activity = match self.activity {
+            // Read/Play termination changes status without cancelling the
+            // explicit seek's independently scheduled first continuation.
+            Activity::PreparingSeek {
+                target, physical, ..
+            } => Activity::PreparingSeek {
+                target,
+                physical,
+                status: 0,
+            },
+            _ => Activity::Paused,
+        };
+    }
+
     fn start_playing(&mut self, cycle: u32) {
         self.activity = Activity::Playing;
         self.play_track = 0;
@@ -663,12 +678,7 @@ impl Drive {
             .as_ref()
             .ok_or("CD playback requires explicit TOC")?;
         if self.next_lba >= toc.lead_out.lba() {
-            if matches!(self.activity, Activity::PreparingSeek { .. }) {
-                return Err(
-                    "CD playback: end during explicit seek preparation is not implemented".into(),
-                );
-            }
-            self.activity = Activity::Paused;
+            self.set_idle();
             let response = self.response(4);
             self.motor_on = false;
             return Ok(PlayDelivery {
@@ -680,13 +690,7 @@ impl Drive {
             .position(self.next_lba)?
             .ok_or("CD playback has no position")?;
         if self.auto_pause && self.play_track != 0 && q[0] != self.play_track {
-            if matches!(self.activity, Activity::PreparingSeek { .. }) {
-                return Err(
-                    "CD playback: autopause during explicit seek preparation is not implemented"
-                        .into(),
-                );
-            }
-            self.activity = Activity::Paused;
+            self.set_idle();
             return Ok(PlayDelivery {
                 audio: None,
                 response: Some(self.response(4)),
@@ -771,13 +775,7 @@ impl Drive {
             return Err("CD drive: sector arrival requires completed read seek".into());
         }
         if let Some(code) = self.media_error_code(self.next_lba, false) {
-            if matches!(self.activity, Activity::PreparingSeek { .. }) {
-                return Err(
-                    "CD drive: media error during explicit seek preparation is not implemented"
-                        .into(),
-                );
-            }
-            self.activity = Activity::Paused;
+            self.set_idle();
             return Ok(Delivery::Error(self.media_error(code)));
         }
         let raw = raw.ok_or("CD drive: failed data media reads are not implemented")?;

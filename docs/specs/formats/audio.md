@@ -2325,6 +2325,12 @@ retained seek target. Takeover before the old command deadline cancels it
 completely. Each dispatched pass retains the current native comparison build's
 lowest target at that pass's cycle, even when tested deadlines are future.
 
+Read TOC errors and Play autopause/lead-out during explicit SeekL/SeekP preparation
+publish their Idle error/end response while preserving the pending seek target and
+type. They retain position and cached header, advance no sector and schedule no
+further Read callback. Lead-out constructs its response before stopping the motor;
+autopause retains it. The independently scheduled command continuation still runs.
+
 Play also uses the read slot. Located Play waits 20 milliseconds, then combines
 its physical seek, speed settling and first-sector period. The next callback
 starts the report clock and processes the first sector. Immediate Play starts
@@ -2348,17 +2354,16 @@ controller owns them.
 Bounded native comparisons cover immediate commands, Pause/Init/Seek continuations,
 ReadN/S and Play cadence, active Pause, speed settling, response backlog, requested
 buffer replacement, ordinary and same-pass SeekP takeover, XA withholding, muted
-reports, pregap autopause and disc end. The same guests run through reference
+reports, pregap autopause, disc end and data-to-audio errors or playback termination
+during explicit seek preparation. The same guests run through reference
 `Execution` with MMIO values, relative access cycles and result buffers compared.
 XA/CDDA submission counts and frame counts agree for a bounded subcapacity
 interval. This does not establish audio-worker phase or audible output.
 
 Actual backing-read failure, active DMA3 overlap and pending audio host-wait
-timing fail explicitly. A media error during explicit seek preparation also fails
-before discarding that pending seek, as do playback end/autopause during that
-preparation. Other scheduler interactions, broader IRQ phase and hardware
-fidelity remain unaccepted. A fresh ready drive has no retained
-GetlocL bytes; Init does not reconstruct that unknown transfer history.
+timing fail explicitly. Other scheduler interactions, broader IRQ phase and
+hardware fidelity remain unaccepted. A fresh ready drive has no retained GetlocL
+bytes; Init does not reconstruct that unknown transfer history.
 
 Without that controller, `respond_cd` inserts a response with 1–16 bytes and
 interrupt type 1–5. Two responses can be retained. A full queue drops another candidate. If an

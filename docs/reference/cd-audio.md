@@ -119,6 +119,12 @@ callback uses current status and retained seek target. Ordinary takeover before
 the old command deadline cancels SeekP completely. Each dispatched pass keeps
 the current native comparison build's lowest target at that pass's cycle.
 
+During explicit SeekL/SeekP preparation, a Read TOC error or Play autopause/lead-out
+can change the drive to Idle without cancelling the pending seek. These transitions
+retain the current position and header, advance no sector and install no further
+read deadline. Lead-out builds its response before stopping the motor;
+autopause retains the motor. The seek continuation then uses the retained target.
+
 Play uses that same read slot and effective sector period. Located Play waits
 20 milliseconds before its physical seek, speed settling and first-sector delay;
 immediate Play starts its period directly. The controller reads audio program
@@ -141,9 +147,9 @@ TOC errors, XA withholding, muted playback reports, pregap autopause and disc en
 The same guests' reference execution agrees in MMIO values, relative access cycles
 and result memory. Subcapacity XA/CDDA submission and frame counts also agree,
 without accepting audio-worker phase or PCM.
-Actual backing-read failure, active DMA3 overlap, pending audio host waits and
-media/playback termination during explicit seek preparation remain unsupported.
-Other scheduler interactions, broader IRQ timing and hardware fidelity retain
+Actual backing-read failure, active DMA3 overlap and pending audio host waits
+remain unsupported. Other scheduler interactions, broader IRQ timing and hardware
+fidelity retain
 separate obligations. Init does not reconstruct an unknown retained GetlocL
 header in a fresh ready context.
 
