@@ -1,6 +1,7 @@
 //! Corpus export of supported text layouts, with per-source results.
 
 use std::fs;
+use std::io::Read;
 use std::path::Path;
 
 use serde::Serialize;
@@ -54,11 +55,17 @@ pub fn extract(root: &Path, output: &Path) -> Result<Export> {
         failures: 0,
         sources: Vec::new(),
     };
-    for (path, name) in inputs.iter().filter(|(path, _)| {
-        path.extension().is_some_and(|extension| extension == "EMI")
-            || path.file_name().is_some_and(|name| name == "SLUS_004.22")
-    }) {
-        let result = export_archive(root, path, output, name);
+    for (path, name) in &inputs {
+        let result = (|| {
+            if !path.extension().is_some_and(|extension| extension == "EMI") {
+                let mut header = Vec::with_capacity(8);
+                fs::File::open(path)?.take(8).read_to_end(&mut header)?;
+                if !crate::executable::is_executable(&header) {
+                    return Ok(Vec::new());
+                }
+            }
+            export_archive(root, path, output, name)
+        })();
         match result {
             Ok(rows) => {
                 report.exported += rows.len();

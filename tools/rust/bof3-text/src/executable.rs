@@ -1,4 +1,4 @@
-//! Fixed ASCII allocations consumed by the US executable's diagnostics.
+//! Fixed ASCII allocations consumed by the supported US executables' diagnostics.
 
 use std::collections::BTreeSet;
 use std::path::Path;
@@ -8,11 +8,7 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-pub(crate) const SCHEMA: &str = "bof3.executable-text/v14";
-const LOAD: u32 = 0x80096800;
-const SIZE: usize = 1445888;
-// Hash of the entire executable with only the supported allocations zeroed.
-const LAYOUT_SHA256: &str = "f3bde09968a27ff84e37c92226bc6867b99a84f8d006501af1cfc6eeb5a24138";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v15";
 const FORMAT_ADDRESS: u32 = 0x80149990;
 const FILE_LABEL: u32 = 0x80149f9c;
 const FILE_FORMAT: u32 = 0x80149fac;
@@ -53,7 +49,7 @@ const GPU_PRINTF_ARGUMENTS: [u32; 4] = [0x8014a81c, 0x8014a828, 0x8014a834, 0x80
 const FORMATTER: u32 = 0x8017e3f4;
 // Original string bytes plus their NUL, excluding alignment padding. The consumer
 // at 0x8014b3c4 passes pointers from 0x8017f470..0x8017f53c to 0x80150098.
-const ALLOCATIONS: &[(u32, usize)] = &[
+const SLUS_ALLOCATIONS: &[(u32, usize)] = &[
     (0x80149814, 10),
     (0x80149820, 5),
     (0x80149828, 3),
@@ -216,6 +212,58 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (0x801868b9, 41),
 ];
 
+const LOGO_ALLOCATIONS: &[(u32, usize)] = &[
+    (0x801ce044, 28),
+    (0x801ce060, 25),
+    (0x801ce07c, 26),
+    (0x801ce098, 15),
+    (0x801ce0a8, 21),
+];
+const LOGO_PRINTF: u32 = 0x801d791c;
+
+struct Layout {
+    build: &'static str,
+    load: u32,
+    size: usize,
+    masked_sha256: &'static str,
+    allocations: &'static [(u32, usize)],
+}
+
+impl Layout {
+    fn offset(&self, address: u32) -> usize {
+        (address - self.load) as usize + 0x800
+    }
+
+    fn recognizes(&self, data: &[u8]) -> bool {
+        if data.len() != self.size || !is_executable(data) {
+            return false;
+        }
+        let mut masked = data.to_vec();
+        for &(address, capacity) in self.allocations {
+            let offset = self.offset(address);
+            masked[offset..offset + capacity].fill(0);
+        }
+        sha256_hex(&masked) == self.masked_sha256
+    }
+}
+
+const LAYOUTS: &[Layout] = &[
+    Layout {
+        build: "US SLUS-00422 diagnostic ASCII",
+        load: 0x80096800,
+        size: 1445888,
+        masked_sha256: "f3bde09968a27ff84e37c92226bc6867b99a84f8d006501af1cfc6eeb5a24138",
+        allocations: SLUS_ALLOCATIONS,
+    },
+    Layout {
+        build: "US SLUS-00422 logo diagnostic ASCII",
+        load: 0x801ce000,
+        size: 122880,
+        masked_sha256: "ba99fe80ffdb7494b5e2a8b0fcb2cebe23919c7e2ab275f3e1ee20a3d1832dd4",
+        allocations: LOGO_ALLOCATIONS,
+    },
+];
+
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "kebab-case")]
 pub(crate) enum Codec {
@@ -300,6 +348,10 @@ fn printf_directives(text: &str) -> Result<Vec<&str>> {
 
 fn format_directives(address: u32) -> &'static [&'static str] {
     match address {
+        0x801ce044 => &["%04x"],
+        0x801ce060 => &["%04x", "%04x"],
+        0x801ce07c => &["%08x"],
+        0x801ce098 => &["%d", "%08x"],
         0x80149fc0 => &["%s"],
         0x8014a120 => &["%04x"],
         0x8014a13c => &["%04x", "%04x"],
@@ -404,6 +456,13 @@ pub enum Reference {
 }
 
 fn codec(address: u32) -> Codec {
+    if LOGO_ALLOCATIONS.iter().any(|&(at, _)| at == address) {
+        return if address == 0x801ce0a8 {
+            Codec::AsciiPrintfLiteral
+        } else {
+            Codec::AsciiBiosPrintfFormat
+        };
+    }
     if BIOS_PRINTF_FORMATS.contains(&address) || GPU_PRINTF_CALLBACK_FORMATS.contains(&address) {
         return Codec::AsciiBiosPrintfFormat;
     }
@@ -426,6 +485,9 @@ fn consumers(address: u32) -> Vec<u32> {
         return vec![0x8017560c];
     }
     match address {
+        0x801ce044 | 0x801ce060 => vec![0x801cf36c],
+        0x801ce07c | 0x801ce098 => vec![0x801cf980],
+        0x801ce0a8 => vec![0x801cfc30],
         0x80149fc0 => vec![0x80168374, 0x80168608],
         0x80149fd0 => vec![0x80168374],
         0x80149fe0 => vec![0x80168608],
@@ -506,8 +568,9 @@ fn consumers(address: u32) -> Vec<u32> {
     }
 }
 
-fn all_consumers() -> Vec<u32> {
-    ALLOCATIONS
+fn all_consumers(layout: &Layout) -> Vec<u32> {
+    layout
+        .allocations
         .iter()
         .flat_map(|&(address, _)| consumers(address))
         .collect::<BTreeSet<_>>()
@@ -517,6 +580,11 @@ fn all_consumers() -> Vec<u32> {
 
 fn diagnostic_references(address: u32) -> Option<Vec<Reference>> {
     let pairs: &[(u32, u32, Option<u32>)] = match address {
+        0x801ce044 => &[(0x801cf3b0, 0x801cf3b4, Some(0x801cf3b8))],
+        0x801ce060 => &[(0x801cf4e4, 0x801cf4e8, Some(0x801cf4f4))],
+        0x801ce07c => &[(0x801cfa94, 0x801cfa98, Some(0x801cfaa0))],
+        0x801ce098 => &[(0x801cfaa8, 0x801cfaac, Some(0x801cfac8))],
+        0x801ce0a8 => &[(0x801cfc98, 0x801cfc9c, Some(0x801cfca0))],
         0x80149fc0 => &[
             (0x8016840c, 0x80168410, Some(0x8016841c)),
             (0x801686e0, 0x801686e4, Some(0x801686f0)),
@@ -657,6 +725,13 @@ pub(crate) enum Output {
 }
 
 fn output(address: u32) -> Output {
+    if LOGO_ALLOCATIONS.iter().any(|&(at, _)| at == address) {
+        return Output::BiosPrintf {
+            stub: LOGO_PRINTF,
+            vector: 0xa0,
+            selector: 0x3f,
+        };
+    }
     if GPU_PRINTF_CALLBACK_FORMATS.contains(&address) || GPU_PRINTF_ARGUMENTS.contains(&address) {
         return Output::BiosPrintfCallback {
             callback_word: GPU_PRINTF_CALLBACK,
@@ -736,31 +811,20 @@ pub fn is_executable(data: &[u8]) -> bool {
     data.starts_with(b"PS-X EXE")
 }
 
-fn offset(address: u32) -> usize {
-    (address - LOAD) as usize + 0x800
-}
-
 /// Recognition binds all bytes outside the documented editable allocations.
 pub fn supports(data: &[u8]) -> bool {
-    if data.len() != SIZE || !is_executable(data) {
-        return false;
-    }
-    let mut masked = data.to_vec();
-    for &(address, capacity) in ALLOCATIONS {
-        masked[offset(address)..offset(address) + capacity].fill(0);
-    }
-    sha256_hex(&masked) == LAYOUT_SHA256
+    LAYOUTS.iter().any(|layout| layout.recognizes(data))
 }
 
 pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
-    if !supports(data) {
-        return invalid(
-            "unsupported executable layout; only the pinned US diagnostic strings are supported",
-        );
-    }
+    let layout = LAYOUTS.iter().find(|layout| layout.recognizes(data)).ok_or_else(|| {
+        Error::Invalid(
+            "unsupported executable layout; only the pinned US diagnostic strings are supported".into(),
+        )
+    })?;
     let mut strings = Vec::new();
-    for &(address, capacity) in ALLOCATIONS {
-        let file_offset = offset(address);
+    for &(address, capacity) in layout.allocations {
+        let file_offset = layout.offset(address);
         let bytes = &data[file_offset..file_offset + capacity];
         let end = bytes
             .iter()
@@ -822,7 +886,7 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
             table
                 .step_by(4)
                 .filter(|reference| {
-                    let at = offset(*reference);
+                    let at = layout.offset(*reference);
                     u32::from_le_bytes(data[at..at + 4].try_into().unwrap()) == address
                 })
                 .map(|address| Reference::PointerWord { address })
@@ -849,9 +913,9 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
         schema: SCHEMA.into(),
         source: path.to_string_lossy().into(),
         source_sha256: sha256_hex(data),
-        build: "US SLUS-00422 diagnostic ASCII".into(),
-        load_address: LOAD,
-        consumers: all_consumers(),
+        build: layout.build.into(),
+        load_address: layout.load,
+        consumers: all_consumers(layout),
         strings,
     })
 }
@@ -859,10 +923,12 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
 pub fn parse(data: &[u8]) -> Result<Document> {
     let document: Document =
         serde_json::from_slice(data).map_err(|error| Error::Invalid(error.to_string()))?;
+    let layout = LAYOUTS
+        .iter()
+        .find(|layout| document.load_address == layout.load && document.build == layout.build)
+        .ok_or_else(|| Error::Invalid("invalid executable text document identity".into()))?;
     if document.schema != SCHEMA
-        || document.load_address != LOAD
-        || document.build != "US SLUS-00422 diagnostic ASCII"
-        || document.consumers != all_consumers()
+        || document.consumers != all_consumers(layout)
         || document.source_sha256.len() != 64
         || !document
             .source_sha256
@@ -874,8 +940,8 @@ pub fn parse(data: &[u8]) -> Result<Document> {
     let mut seen = BTreeSet::new();
     for text in &document.strings {
         if !seen.insert(text.address)
-            || !ALLOCATIONS.contains(&(text.address, text.capacity))
-            || text.file_offset != offset(text.address)
+            || !layout.allocations.contains(&(text.address, text.capacity))
+            || text.file_offset != layout.offset(text.address)
             || text.codec != codec(text.address)
             || text.consumers != consumers(text.address)
             || text.output != output(text.address)
@@ -885,7 +951,7 @@ pub fn parse(data: &[u8]) -> Result<Document> {
         }
         text.encode()?;
     }
-    if seen.len() != ALLOCATIONS.len() {
+    if seen.len() != layout.allocations.len() {
         return invalid("executable text document must retain every supported allocation");
     }
     Ok(document)
@@ -895,6 +961,8 @@ pub fn rebuild(path: &Path, data: &[u8], document: &Document) -> Result<Vec<u8>>
     let original = extract(path, data)?;
     if std::fs::canonicalize(&document.source)? != std::fs::canonicalize(path)?
         || document.source_sha256 != original.source_sha256
+        || document.build != original.build
+        || document.load_address != original.load_address
     {
         return invalid("executable text document does not match this source path and SHA-256");
     }

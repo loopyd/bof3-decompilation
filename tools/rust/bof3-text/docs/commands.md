@@ -35,8 +35,8 @@ the physical-membership blocker. Additional files keep their existing range and
 derivative classifications. Membership does not establish their roles or text
 coverage. The harness rebuilds the binary when this qualification changes.
 
-The US executable is recognized by its original SHA-256. Recognition establishes
-build identity, not complete text coverage. Other builds remain unrecognized;
+Supported US executable layouts are pinned outside their editable allocations.
+Recognition establishes build identity, not complete text coverage. Other builds remain unrecognized;
 EU and JP support is explicitly unverified. Unknown consumers, nonzero container
 gaps and unverified non-EMI ranges stay unresolved. Supported executable ASCII
 allocations carry their pointer and consumer evidence; other executable bytes
@@ -142,10 +142,13 @@ Output is always JSON — there is no second codec — and every object carries 
 `source` identifying the subfile and its class. Packing is driven by the
 document's own recorded `source`.
 
-The supported US `SLUS_004.22` executable exports one
-`bof3.executable-text/v14` document. Re-extract older documents. Use the default
+Each supported US `SLUS_004.22` or `LOGO/LOGO.EXE` executable exports one
+`bof3.executable-text/v15` document. Re-extract older documents. Use the default
 `--entry all` and omit `--class` and `--latch`; EMI selectors are refused for
 executable input.
+LOGO exposes five direct BIOS printf diagnostics. Its four formats retain their
+original directives; the CdInit literal refuses percent characters. Other LOGO
+text and runtime console execution remain unverified.
 Keep each row's `consumers`, `format_directives` and output metadata unchanged.
 The shared CD `?` row retains twelve pointer references. BIOS puts accepts
 literal percent bytes; direct printf literals refuse them. Shared-word label
@@ -229,8 +232,9 @@ the destination is created.
 An archive failure is recorded and makes the command exit 1. Outputs from a failed
 run remain for diagnosis; use a new destination for the next run. This operation
 also exports equipment and ability names as `GAME.EMI/records.json`. It covers the supported
-banks, name fields and `SLUS_004.22` ASCII strings. Executable
-documents use `SLUS_004.22.json` at the export root and also round-trip before
+banks, name fields and supported executable ASCII strings. Executable inputs are
+discovered by their PS-X EXE header. Documents use their relative source path
+plus `.json`, such as `SLUS_004.22.json` or `LOGO/LOGO.EXE.json`, and round-trip before
 publication. Supported inline strings use `ARCHIVE.EMI/ENTRY.json` alongside
 bank documents. START's labels and default names use `START.EMI/8.json`, and
 STATUS's use `STATUS.EMI/0.json`, at their archive-relative paths. Use `coverage`
@@ -340,7 +344,7 @@ their argument count and enforce both encoded and formatted limits.
 Without `--class`, queries include verified inline allocations, equipment and
 ability names, default character names and encounter-template names alongside
 banks. `--entry` accepts a supported entry, a comma-separated list or `all`.
-For the supported US executable, omit entry and class selectors to query its
+For either supported US executable, omit entry and class selectors to query its
 ASCII allocations. For example:
 
 ```sh
@@ -590,7 +594,7 @@ A raw-text (`heuristic`) document takes a different path: it is patched in place
 its recorded `latch` extent, and any edit that changes the encoded byte length is
 refused, because no allocation is proven for raw text.
 
-For the supported US executable, pass `SLUS_004.22` as `--original` and its
+For either supported US executable, pass that executable as `--original` and its
 ASCII document as `--text`. The tool checks the pinned layout, complete source
 SHA-256, canonical source path, complete allocation list and unchanged pointer
 references. Text must fit the original ASCII allocation with a final NUL.

@@ -32,17 +32,18 @@ size alone does not identify audio. These checks do not classify container gaps.
 
 ## Executable ASCII
 
-`extract`, `analyze`, `validate` and `pack` also support the US executable's
-exception-screen ASCII strings and the `FILE NOT FOUND` diagnostic with its
+`extract`, `analyze`, `validate` and `pack` also support exception-screen ASCII
+in the US `SLUS_004.22` executable and the `FILE NOT FOUND` diagnostic with its
 three-ID hexadecimal format, plus the BIOS `DiskError: ` prefix and six CD
 interrupt labels, 22 CD command names, fixed CD diagnostic literals and BIOS
-printf formats and GPU diagnostics. `extract-corpus` exports them when the complete source root includes `SLUS_004.22`. Literal strings use
+printf formats and GPU diagnostics. `extract-corpus` exports supported executable
+strings under their relative source paths. Exception literal strings use
 the pointer words at `0x8017F470..0x8017F53C`, with an exclusive upper bound.
 The consumer at `0x8014B3C4` passes these pointers to renderer `0x80150098`.
 The renderer reads bytes until NUL, advances on ASCII space and handles newline
 `0x0A`. These bytes use ASCII rather than the dialogue character table.
 
-The JSON schema is `bof3.executable-text/v14`. Re-extract older documents before
+The JSON schema is `bof3.executable-text/v15`. Re-extract older documents before
 editing. It contains `source`, mandatory `source_sha256`, `build`, `load_address`,
 `consumers` and `strings`.
 Each string retains its `address`, whole-file `file_offset`, original `capacity`
@@ -61,6 +62,24 @@ for NUL and refuses growth beyond the original string, excluding alignment
 padding. A shortened string is NUL-padded inside its allocation. Unchanged strings
 preserve every byte. Reference edits, relocation and unproven exception-table
 indices are refused.
+
+`LOGO/LOGO.EXE` has a separate pinned layout, loaded at `0x801CE000`. It exposes
+five direct BIOS printf diagnostics through stub `0x801D791C` (`A0:3F`):
+
+| Address | Original format | Capacity including NUL |
+| --- | --- | --- |
+| `0x801CE044` | `unexpected interrupt(%04x)\n` | 28 |
+| `0x801CE060` | `intr timeout(%04x:%04x)\n` | 25 |
+| `0x801CE07C` | `DMA bus error: code=%08x\n` | 26 |
+| `0x801CE098` | `MADR[%d]=%08x\n` | 15 |
+| `0x801CE0A8` | `CdInit: Init failed\n` | 21 |
+
+The first two formats receive unsigned 16-bit values. DMA values are full
+32-bit words; the MADR index is 0..6. Preserve every original directive exactly
+and in order. The CdInit literal refuses percent characters. Printable ASCII
+and newline fit within each original allocation, reserving NUL. Alignment
+padding remains protected. Runtime console execution and other LOGO consumers
+remain unverified.
 
 The `%08X` format at `0x80149990` has a five-byte allocation including NUL and
 uses `ascii-u32-hex-format`. Its `address-pair` references retain `upper` and
