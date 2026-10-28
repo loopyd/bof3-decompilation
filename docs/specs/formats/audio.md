@@ -4153,12 +4153,20 @@ and transitions; a guest fault leaves the continuation unfinished.
 [`interrupts.s`](../../../tools/rust/bof3-audio/driver/kernel/interrupts.s)
 exports verifier/acknowledger pairs `audio_counter_0_*` through
 `audio_counter_2_*` and `audio_vblank_*`, plus `audio_generic_irq`. The linker
-resolves flag addresses through MIPS HI16/LO16 relocations. Startup loads both
-linked sections at their declared addresses and installs the entrypoints as
-ordinary ExCB targets. No host handler binding intercepts these entrypoints.
-They use B0/7 for event delivery and B0/17 for nonlocal exception return. Each
-event-delivering routine reserves 24 bytes on an eight-byte-aligned stack,
-including a sixteen-byte O32 argument home area. Ordinary returns restore SP and RA.
+resolves state addresses through MIPS HI16/LO16 relocations and links direct JALs
+to `audio_event_deliver` and `audio_exception_return`. Startup loads all linked
+code and data, installs the entrypoints as ordinary ExCB targets and binds both
+services. No host handler binding intercepts these entrypoints. All nine routines
+reserve the original 24-byte frame, including unmatched verifier and zero-flag
+acknowledgement paths. Ordinary returns restore SP and RA. Nonzero counter flags
+write I_STAT in the direct exception-return call's delay slot.
+
+`audio_irq_registers` is an initialized live pointer word containing `0x1F801070`.
+Counter routines load it for their register accesses. The generic routine loads
+it on entry and reloads it after every event-delivery call before checking the
+next source or acknowledging interrupts. Each source reads I_MASK then I_STAT;
+its callback finishes before later source reads. Startup owns the pointer's
+allocation and initial value with the rest of the linked data.
 
 The image initializes `audio_counter_flags` to four one-valued words and
 `audio_generic_flags` to eleven zero-valued words. Startup binds the counter
