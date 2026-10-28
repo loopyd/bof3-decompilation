@@ -22,7 +22,7 @@ const SAVED: [usize; 12] = [31, 29, 30, 16, 17, 18, 19, 20, 21, 22, 23, 28];
 pub struct Kernel {
     entry_hook: Option<u32>,
     pad_auto_ack: u32,
-    counter_auto_ack: [u32; 4],
+    counter_auto_ack: CounterFlags,
     counter_handlers: Option<[[u32; 2]; 4]>,
     generic_handler: Option<(u32, u32)>,
     syscall_handler: Option<u32>,
@@ -48,7 +48,7 @@ impl Default for Kernel {
         Self {
             entry_hook: None,
             pad_auto_ack: 1,
-            counter_auto_ack: [1; 4],
+            counter_auto_ack: CounterFlags::Functional([1; 4]),
             counter_handlers: None,
             generic_handler: None,
             syscall_handler: None,
@@ -81,6 +81,33 @@ enum ExceptionDelivery {
     Syscall,
 }
 
+#[derive(Clone, Debug)]
+enum CounterFlags {
+    Functional([u32; 4]),
+    Guest(u32),
+}
+
+impl CounterFlags {
+    fn read(&self, bus: &mut impl Bus, index: usize) -> Result<u32> {
+        if index >= 4 {
+            return Err("invalid timer/vblank auto-ack index".into());
+        }
+        match self {
+            Self::Functional(flags) => Ok(flags[index]),
+            Self::Guest(base) => Ok(bus.read(*base + index as u32 * 4, Width::Word)?),
+        }
+    }
+
+    fn exchange(&mut self, bus: &mut impl Bus, index: usize, value: u32) -> Result<u32> {
+        let old = self.read(bus, index)?;
+        match self {
+            Self::Functional(flags) => flags[index] = value,
+            Self::Guest(base) => bus.write(*base + index as u32 * 4, Width::Word, value)?,
+        }
+        Ok(old)
+    }
+}
+
 impl Kernel {
     /// Bind caller-owned service identifiers in guest ExCB nodes. Each pair is
     /// verifier/acknowledger for timer 0, timer 1, timer 2, then VBlank.
@@ -89,6 +116,9 @@ impl Kernel {
     /// recognized automatically. Ordinary unbound targets still execute code.
     pub fn configure_counter_handlers(&mut self, handlers: [[u32; 2]; 4]) -> Result<()> {
         self.require_plain_context()?;
+        if matches!(self.counter_auto_ack, CounterFlags::Guest(_)) {
+            return Err("guest counter flags conflict with functional counter handlers".into());
+        }
         if self.counter_handlers.is_some() {
             return Err("owned counter handlers already configured".into());
         }
@@ -101,6 +131,24 @@ impl Kernel {
             offsets.push(offset);
         }
         self.counter_handlers = Some(handlers);
+        Ok(())
+    }
+
+    /// Bind four initialized guest acknowledgement words, ordered timer 0, timer
+    /// 1, timer 2, VBlank. ChangeClearRCnt exchanges these live RAM words. Guest
+    /// handlers execute as ordinary ExCB targets and read the same allocation.
+    pub fn configure_counter_flags(&mut self, flags: u32) -> Result<()> {
+        self.require_plain_context()?;
+        if self.counter_handlers.is_some()
+            || matches!(self.counter_auto_ack, CounterFlags::Guest(_))
+        {
+            return Err("owned counter acknowledgement state already configured".into());
+        }
+        if flags & 3 != 0 {
+            return Err("owned counter flags require aligned RAM".into());
+        }
+        ram_offset(flags, 4 * 4)?;
+        self.counter_auto_ack = CounterFlags::Guest(flags);
         Ok(())
     }
 
@@ -405,7 +453,7 @@ impl Kernel {
             };
             let bit = 1u32 << [4, 5, 6, 0][index];
             if acknowledge {
-                if self.counter_auto_ack[index] != 0 {
+                if self.counter_auto_ack.read(bus, index)? != 0 {
                     bus.write(0x1f80_1070, Width::Word, !bit)?;
                     self.return_exception(cpu, bus)?;
                     return Ok(Call {
@@ -566,8 +614,13 @@ impl Kernel {
     pub fn pad_auto_ack(&self) -> u32 {
         self.pad_auto_ack
     }
-    pub fn counter_auto_ack(&self) -> &[u32; 4] {
-        &self.counter_auto_ack
+    pub fn counter_auto_ack(&self, bus: &mut impl Bus) -> Result<[u32; 4]> {
+        Ok([
+            self.counter_auto_ack.read(bus, 0)?,
+            self.counter_auto_ack.read(bus, 1)?,
+            self.counter_auto_ack.read(bus, 2)?,
+            self.counter_auto_ack.read(bus, 3)?,
+        ])
     }
 
     pub fn dispatch(&mut self, cpu: &mut Cpu, bus: &mut impl Bus) -> Result<Call> {
@@ -819,12 +872,9 @@ impl Kernel {
                 "ChangeClearPAD"
             }
             (0xc0, 0x0a) => {
-                let flag = self
-                    .counter_auto_ack
-                    .get_mut(argument as usize)
-                    .ok_or("invalid timer/vblank auto-ack index")?;
-                let old = *flag;
-                *flag = cpu.register(5);
+                let old =
+                    self.counter_auto_ack
+                        .exchange(bus, argument as usize, cpu.register(5))?;
                 cpu.set_register(2, old);
                 "ChangeClearRCnt"
             }
