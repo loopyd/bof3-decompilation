@@ -8,11 +8,11 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-pub(crate) const SCHEMA: &str = "bof3.executable-text/v8";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v9";
 const LOAD: u32 = 0x80096800;
 const SIZE: usize = 1445888;
 // Hash of the entire executable with only the supported allocations zeroed.
-const LAYOUT_SHA256: &str = "6f5f4e0f5bf7922927a02526b5e1db0a43e8ab007d52c4f8516656b2ff4ebf2f";
+const LAYOUT_SHA256: &str = "59c86326d15ebe2a24cc1fc7f0197627e7f898b61381d0920aff716bb75fcde7";
 const FORMAT_ADDRESS: u32 = 0x80149990;
 const FILE_LABEL: u32 = 0x80149f9c;
 const FILE_FORMAT: u32 = 0x80149fac;
@@ -27,7 +27,10 @@ const CD_COMMAND_LABELS: [u32; 22] = [
 ];
 const BIOS_PRINTF: u32 = 0x8017e3e4;
 const BIOS_PUTS: u32 = 0x8017e33c;
-const CD_PUTS_LABELS: [u32; 5] = [0x8014a2e0, 0x8014a334, 0x8014a3d0, 0x8014a5e0, 0x8014a5f8];
+const CD_FALLBACK: u32 = 0x8014a1f8;
+const CD_PUTS_LABELS: [u32; 6] = [
+    0x8014a2e0, 0x8014a334, 0x8014a3d0, 0x8014a5e0, 0x8014a5f8, 0x8014a610,
+];
 const CD_SHARED_LABELS: [u32; 4] = [0x8014a368, 0x8014a370, 0x8014a394, 0x8014a3e8];
 const CD_PRINTF_LITERALS: [u32; 6] = [
     0x8014a428, 0x8014a480, 0x8014a4b4, 0x8014a508, 0x8014a560, 0x8014a580,
@@ -99,6 +102,7 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (CD_COMMAND_LABELS[4], 9),
     (CD_COMMAND_LABELS[5], 11),
     (CD_COMMAND_LABELS[6], 11),
+    (CD_FALLBACK, 2),
     (CD_COMMAND_LABELS[7], 11),
     (CD_COMMAND_LABELS[8], 13),
     (CD_COMMAND_LABELS[9], 10),
@@ -150,6 +154,7 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (0x8014a5c0, 30),
     (CD_PUTS_LABELS[3], 22),
     (CD_PUTS_LABELS[4], 23),
+    (CD_PUTS_LABELS[5], 18),
 ];
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -353,7 +358,8 @@ fn consumers(address: u32) -> Vec<u32> {
         0x8014a480 | 0x8014a4b4 | 0x8014a508 => vec![0x80177634],
         0x8014a560 | 0x8014a580 => vec![0x801779bc],
         0x8014a5e0 => vec![0x80177d08],
-        0x8014a5f8 => vec![0x80177f1c],
+        0x8014a5f8 | 0x8014a610 => vec![0x80177f1c],
+        CD_FALLBACK => vec![0x801755d8, 0x8017560c],
         _ => vec![0x8014b3c4],
     }
 }
@@ -408,6 +414,7 @@ fn cd_diagnostic_references(address: u32) -> Option<Vec<Reference>> {
         0x8014a580 => &[(0x80177a74, 0x80177a78, Some(0x80177a7c))],
         0x8014a5e0 => &[(0x80177d78, 0x80177d7c, Some(0x80177d80))],
         0x8014a5f8 => &[(0x80177f68, 0x80177f6c, Some(0x80177f70))],
+        0x8014a610 => &[(0x80177fb0, 0x80177fb4, Some(0x80177fb8))],
         _ => return None,
     };
     Some(
@@ -450,6 +457,7 @@ fn output(address: u32) -> Output {
         };
     }
     if address == DISK_PREFIX
+        || address == CD_FALLBACK
         || CD_INTERRUPT_LABELS.contains(&address)
         || CD_COMMAND_LABELS.contains(&address)
         || CD_SHARED_LABELS.contains(&address)
@@ -585,7 +593,9 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
                 }
             }]
         } else {
-            let table = if CD_COMMAND_LABELS.contains(&address) {
+            let table = if address == CD_FALLBACK {
+                0x801857a4..0x80185844
+            } else if CD_COMMAND_LABELS.contains(&address) {
                 0x801857a4..0x80185814
             } else if CD_INTERRUPT_LABELS.contains(&address) {
                 0x80185824..0x8018583c

@@ -38,7 +38,7 @@ include encoded size, spare capacity, required terminator bytes and the original
 allocation bytes. Use `extract` for documents accepted by `pack`.
 
 For the US executable, use `extract out/extracted/SLUS_004.22 -o out/exe-text.json`.
-Its `bof3.executable-text/v8` document uses ASCII. Re-extract older documents.
+Its `bof3.executable-text/v9` document uses ASCII. Re-extract older documents.
 Edit only each string's `text`. Retain its consumers, output, codec,
 `format_directives`, allocation and typed reference sites. The exception format permits one `%X` or `%x` conversion with
 optional width 1..8 and zero padding, within four bytes. The three-ID format
@@ -53,8 +53,9 @@ bin/harness text pack --original out/extracted/SLUS_004.22 \
 
 Omit EMI selectors. Support covers the exception screen, `FILE NOT FOUND`, CD
 interrupt and command names, fixed BIOS diagnostics and BIOS formats. `analyze`
-reports their capacities, including NUL, and output paths. Literal labels allow percent bytes
-passed through `%s` or BIOS puts. Direct printf literals refuse every percent
+reports their capacities, including NUL, and output paths. The shared CD `?` holds
+one ASCII character plus NUL and retains twelve pointer references. Literal labels
+allow percent bytes passed through `%s` or BIOS puts. Direct printf literals refuse every percent
 character. The `DiskError: ` prefix holds at most eleven bytes plus NUL; its
 output requires CD debugging, which starts disabled. Shared-word label references
 have empty `calls` arrays where intervening calls leave pointer use unproven.

@@ -42,7 +42,7 @@ The consumer at `0x8014B3C4` passes these pointers to renderer `0x80150098`.
 The renderer reads bytes until NUL, advances on ASCII space and handles newline
 `0x0A`. These bytes use ASCII rather than the dialogue character table.
 
-The JSON schema is `bof3.executable-text/v8`. Re-extract older documents before
+The JSON schema is `bof3.executable-text/v9`. Re-extract older documents before
 editing. It contains `source`, mandatory `source_sha256`, `build`, `load_address`,
 `consumers` and `strings`.
 Each string retains its `address`, whole-file `file_offset`, original `capacity`
@@ -118,15 +118,19 @@ Separate readers pass labels as the third and fourth `%s` arguments to BIOS
 printf at `0x801762F8`, `0x80176580`, `0x801769F0` and `0x801770E8`.
 They index the table directly. Percent characters in a label remain literal
 argument bytes. The immutable `bios-printf` output describes this known output
-path; observed BIOS output and other callers remain unverified. The shared `?`
-string remains unsupported.
+path; observed BIOS output and other callers remain unverified.
 
 The 22 named CD command strings use the same literal codec and BIOS output.
 Each retains its original bytes plus NUL as its capacity. Use `analyze` to list
 their addresses and limits. Their pointer words lie in
 `0x801857A4..0x80185814`, with an exclusive upper bound. Immediate consumer
 `0x801755D8` masks the selector to eight bits and admits indices below 28.
-The shared `?` entries remain protected.
+The shared `?` allocation at `0x8014A1F8` accepts one literal ASCII character
+plus NUL. Its twelve immutable pointer words include command indices 15, 18,
+23..26 and 28..31, interrupt index 6 and adjacent word `0x80185840`. The checked
+lookups retain their bounds; separate printf readers bypass those bounds. This
+row records both immediate lookup consumers. The separate `none` return string
+has no proven downstream output consumer and remains unsupported.
 
 Separate readers pass command names as `%s` arguments to BIOS printf at
 `0x80175E94`, `0x801762F8`, `0x80176580`, `0x801769F0` and `0x801770E8`.
@@ -138,8 +142,8 @@ numbers, pointers, code or debug settings.
 Fixed CD diagnostics retain their original capacities and every proven address
 pair. Use `analyze` for their addresses, limits and containing functions. The
 `CD timeout: ` allocation has four consumers. It and the literals `CDROM: unknown
-intr`, `CD_init:`, `CdRead: sector error\n` and `CdRead: Shell open...\n` use
-`bios-puts`: stub `0x8017E33C`, vector `0xB0`, selector `0x3F`. They use
+intr`, `CD_init:`, `CdRead: sector error\n`, `CdRead: Shell open...\n` and
+`CdRead: retry...\n` use `bios-puts`: stub `0x8017E33C`, vector `0xB0`, selector `0x3F`. They use
 `ascii-literal`, so percent characters remain data. The six direct printf
 literals beginning with `CdSearchFile: disc error`, `CD_newmedia:` or
 `CD_cachefile:` use `ascii-printf-literal` and refuse every percent character.
