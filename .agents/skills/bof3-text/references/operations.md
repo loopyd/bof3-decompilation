@@ -85,7 +85,7 @@ dialogue command markup. Other name families require separate evidence.
 
 US START entry 8 and STATUS entry 0 each expose ten counted labels, eight default
 names, 68 ordinary keyboard cells and four name-entry menu labels through
-`bof3.inline-text/v17`. Select the entry explicitly and omit class and latch
+`bof3.inline-text/v18`. Select the entry explicitly and omit class and latch
 selectors. Re-extract older inline documents. Use a separate document and output
 for each archive. Editing one does not update the other or a save.
 
@@ -112,7 +112,7 @@ observed rendering remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v17`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v18`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use

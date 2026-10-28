@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v17";
+pub const SCHEMA: &str = "bof3.inline-text/v18";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -22,6 +22,7 @@ pub(crate) enum Codec {
     AsciiLiteral,
     AsciiFormatLiteral,
     AsciiDigitGlyphLiteral,
+    AsciiDashGlyphLiteral,
     AsciiDecimalFormat,
     AsciiI32DecimalFormat,
     AsciiI32WideDecimalFormat,
@@ -83,6 +84,12 @@ impl Codec {
     }
 
     pub(crate) fn max_formatted_size(self, text: &str) -> Result<Option<usize>> {
+        if self == Self::AsciiDashGlyphLiteral {
+            if text.is_empty() || !text.bytes().all(|byte| byte == b' ' || byte == b'-') {
+                return invalid("dash glyph literal requires one or more spaces or '-' glyphs");
+            }
+            return Ok(Some(text.len()));
+        }
         if self == Self::AsciiDigitGlyphLiteral {
             if text.is_empty()
                 || !text
@@ -169,6 +176,7 @@ impl Codec {
             Self::AsciiLiteral => "ascii-literal",
             Self::AsciiFormatLiteral => "ascii-format-literal",
             Self::AsciiDigitGlyphLiteral => "ascii-digit-glyph-literal",
+            Self::AsciiDashGlyphLiteral => "ascii-dash-glyph-literal",
             Self::AsciiDecimalFormat => "ascii-decimal-format",
             Self::AsciiI32DecimalFormat => "ascii-i32-decimal-format",
             Self::AsciiI32WideDecimalFormat => "ascii-i32-wide-decimal-format",
@@ -960,7 +968,7 @@ const LAYOUTS: &[Layout] = &[
         name: "US SHOP labels and numeric formats",
         load: 0x801d0c00,
         size: 87660,
-        sha256: "976b022949a709368879c7e66a3cf2d2960092a2a9213edbcdd97cf93c652b1e",
+        sha256: "d38c762c8afb58e51775b5d43b54c7d5159ecc3b6e448d5bd20320d55fbd901d",
         consumers: &[
             0x801d5894, 0x801d9a58, 0x801dca2c, 0x801dd0a8, 0x801dd934, 0x801ddfb0, 0x801dee64,
             0x801df00c, 0x801df6a8, 0x801e112c, 0x801e1e80, 0x801e2f04, 0x801e3284, 0x801e37f4,
@@ -1073,6 +1081,9 @@ const LAYOUTS: &[Layout] = &[
                 Codec::AsciiI32DecimalFormat,
                 &[0x8014ff0c, 0x80150098],
             ),
+            Allocation::bounded_format(0x801d0cfc, 9, Codec::AsciiDashGlyphLiteral, &[0x8014ff0c]),
+            Allocation::bounded_format(0x801d0d0c, 8, Codec::AsciiDashGlyphLiteral, &[0x80150098]),
+            Allocation::bounded_format(0x801d0e54, 4, Codec::AsciiDigitGlyphLiteral, &[0x80150098]),
         ],
     },
     Layout {

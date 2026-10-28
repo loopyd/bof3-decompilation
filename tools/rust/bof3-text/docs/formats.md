@@ -251,7 +251,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v17`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v18`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -409,7 +409,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v17` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v18` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -677,14 +677,17 @@ of arguments and the original maximum formatted length. The conversion is part
 of the format text, not a dialogue command.
 Other master-menu labels and observed rendering remain unverified.
 
-SHOP also exposes two digit labels and five numeric formats. Capacities include
-NUL; formatted bounds below exclude it. The labels use
-`ascii-digit-glyph-literal`, permitting one space, digit or `:` glyph and refusing
-empty strings or other bytes. Calls `0x801DE0D4` and `0x801DE12C` pass them
-directly to digit renderer `0x8014FF0C`.
+SHOP also exposes these digit literals, dash fallbacks and numeric formats.
+Capacities include NUL; formatted bounds exclude it. Digit literals accept
+nonempty spaces, digits or `:` within their capacity. The one-character labels
+at `0x801D0E58` and `0x801D0E5C` draw directly through `0x8014FF0C`; the
+three-character separator at `0x801D0E54` uses `0x80150098`.
 
 | Address | Original | Capacity | Codec | Formatted bound |
 | --- | --- | --- | --- | --- |
+| `0x801D0CFC` | `--------` | 9 | `ascii-dash-glyph-literal` | 8 |
+| `0x801D0D0C` | `-------` | 8 | `ascii-dash-glyph-literal` | 7 |
+| `0x801D0E54` | `  :` | 4 | `ascii-digit-glyph-literal` | 3 |
 | `0x801D0E58` | `1` | 2 | `ascii-digit-glyph-literal` | 1 |
 | `0x801D0E5C` | `2` | 2 | `ascii-digit-glyph-literal` | 1 |
 | `0x801D0E60` | `%d` | 3 | `ascii-u8-decimal-format` | 3 |
@@ -692,6 +695,14 @@ directly to digit renderer `0x8014FF0C`.
 | `0x801D0E68` | `%3d/   ` | 8 | `ascii-u16-decimal-field-format` | 9 |
 | `0x801D0E70` | `   /%3d` | 8 | `ascii-u16-decimal-field-format` | 9 |
 | `0x801D0E7C` | `%3d/%3d` | 8 | `ascii-u8-decimal-pair-format` | 7 |
+
+Dash fallbacks accept one or more ASCII spaces or `-` glyphs and refuse every
+percent sequence. They pass through `sprintf` into the 64-byte scratch buffer at
+`0x80145AD4`, then draw through `0x8014FF0C` for `0x801D0CFC` or `0x80150098`
+for `0x801D0D0C`. Empty strings are refused because the renderers advance before
+testing the next byte for NUL and could consume stale scratch bytes. Nonempty
+all-space strings are safe. The three alignment bytes at
+`0x801D0D05..0x801D0D08` remain protected.
 
 The row counter at `0x801D0E60` receives values 1..255; `0x801D0E64` receives
 an unsigned byte. The two 16-bit fields retain one decimal argument and permit
@@ -766,9 +777,8 @@ exactly one decimal argument.
 All results use the 64-byte scratch buffer at `0x80145AD4`; the largest occupies
 twelve bytes including NUL. `0x801D0CF8` draws through `0x8014FF0C`, while
 `0x801D0D08` uses both `0x8014FF0C` and `0x80150098`. The unsigned fields use
-`0x80150098`. Separate dash strings at `0x801D0CFC` and `0x801D0D0C`, their
-terminators and alignment padding remain protected. Runtime rendering remains
-unverified.
+`0x80150098`. The alignment bytes at `0x801D0D05..0x801D0D08` remain
+protected. Runtime rendering remains unverified.
 
 ## Bank layout
 
