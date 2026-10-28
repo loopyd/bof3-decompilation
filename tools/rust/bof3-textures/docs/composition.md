@@ -33,10 +33,36 @@ rules. Zero-area or wrapped coordinates remain encoded geometry; the library
 does not claim that they rasterize a visible primitive.
 
 The caller must establish that the entity, cell and graph type belong to the
-same consumer observation. The library does not choose a source image, identify
-a resident bank, resolve palette uploads, apply GPU drawing state or rasterize
-vertices. An exact source-bank match in RAM establishes byte identity only.
-Assembled previews and runtime appearance still require those bindings.
+same consumer observation. Geometry alone does not choose an image, identify a
+resident bank or resolve palette uploads. An exact source-bank match in RAM
+establishes byte identity only.
+
+## Rectangle source texels
+
+`Geometry::sample_rectangle` selects exact palette color words for one indexed
+rectangle. Supply `RectangleState::from_commands(draw_mode, texture_window)`
+with explicit GP0(E1h) and GP0(E2h) commands. A missing texture-window observation
+cannot be replaced with an assumed zero command.
+
+Each source is a `WordRegion::new(x_words, y, &image)`. The image is a
+`png::WordImage` whose width counts VRAM words. Regions must fit within 1024 words
+by 512 rows. Supply the decoded texture and palette at their qualified upload
+coordinates. Region construction checks bounds, not physical identity, upload
+execution or residency. Every selected texture and palette word must exist in
+the supplied regions. A partial palette is sufficient only when it contains
+every selected color word. Missing colors cause an error.
+
+The sampler supports 4-bit and 8-bit indices. It checks the rectangle's page
+against E1, wraps UV bytes, applies E2 masks and offsets, and resolves the encoded
+CLUT coordinates. Color words retain transparent zero and STP bits. The result
+can pass directly to `png::encode_words`. It remains a source derivative and
+does not replace editable image, palette or cell records.
+
+The sampler refuses quads, empty rectangles, odd UV coordinates or width,
+extended VRAM, hardware rectangle flips, direct color and mismatched commands.
+Its hardware rules follow the [PSX GPU specification](https://psx-spx.consoledev.net/graphicsprocessingunitgpu/).
+It does not clip, shade, blend, apply framebuffer masks or determine layer order.
+Per-part source selection does not establish assembled-frame or runtime accuracy.
 
 ## Qualified source associations
 

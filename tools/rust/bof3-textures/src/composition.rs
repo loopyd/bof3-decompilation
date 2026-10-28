@@ -1,7 +1,7 @@
 //! Packet geometry from SLUS_004.22@0x8014C6F8 and 0x8014CF9C.
 //! The caller supplies the entity and graph type. These values
 //! do not establish source residency, packet submission or rendered appearance.
-use crate::{Error, Result, cell::Cell};
+use crate::{Error, Result, cell::Cell, png::WordImage};
 use serde::Serialize;
 
 fn invalid(reason: &str) -> Error {
@@ -119,6 +119,137 @@ pub enum Geometry {
         tpage: u16,
         clut: u16,
     },
+}
+
+/// A caller-qualified rectangular source in 1024-word by 512-row VRAM coordinates.
+/// Construction validates bounds, not source identity or upload residency.
+#[derive(Clone, Copy, Debug)]
+pub struct WordRegion<'a> {
+    x_words: usize,
+    y: usize,
+    image: &'a WordImage,
+}
+
+impl<'a> WordRegion<'a> {
+    pub fn new(x_words: usize, y: usize, image: &'a WordImage) -> Result<Self> {
+        image.validate()?;
+        if x_words
+            .checked_add(image.width)
+            .is_none_or(|end| end > 1024)
+            || y.checked_add(image.height).is_none_or(|end| end > 512)
+        {
+            return Err(invalid("source region exceeds retail VRAM"));
+        }
+        Ok(Self { x_words, y, image })
+    }
+
+    fn word(self, x: usize, y: usize) -> Option<u16> {
+        let x = x.checked_sub(self.x_words)?;
+        let y = y.checked_sub(self.y)?;
+        if x >= self.image.width || y >= self.image.height {
+            return None;
+        }
+        self.image.words.get(y * self.image.width + x).copied()
+    }
+}
+
+/// Explicit GP0(E1h/E2h) state for indexed rectangle source sampling.
+/// Extended VRAM, hardware rectangle flips and direct color remain unsupported.
+#[derive(Clone, Copy, Debug)]
+pub struct RectangleState {
+    draw_mode: u32,
+    texture_window: u32,
+}
+
+impl RectangleState {
+    pub fn from_commands(draw_mode: u32, texture_window: u32) -> Result<Self> {
+        if draw_mode >> 24 != 0xe1 || draw_mode & 0x00ff_f800 != 0 {
+            return Err(invalid(
+                "rectangle sampling requires a retail E1 command without hardware flips",
+            ));
+        }
+        if (draw_mode >> 7) & 3 > 1 {
+            return Err(invalid(
+                "rectangle sampling requires 4-bit or 8-bit indices",
+            ));
+        }
+        if texture_window & 0xfff0_0000 != 0xe200_0000 {
+            return Err(invalid(
+                "rectangle sampling requires an explicit E2 command",
+            ));
+        }
+        Ok(Self {
+            draw_mode,
+            texture_window,
+        })
+    }
+
+    fn window(self, coordinate: u8, shift: u32) -> u8 {
+        let mask = ((self.texture_window >> shift) & 31) as u8;
+        let offset = ((self.texture_window >> (shift + 10)) & 31) as u8;
+        (coordinate & !(mask << 3)) | ((offset & mask) << 3)
+    }
+}
+
+impl Geometry {
+    /// Select exact source color words, one rectangle at a time. The caller binds
+    /// both regions and commands to this geometry. No framebuffer operations,
+    /// layer ordering, shading, blending or upload execution are modeled.
+    pub fn sample_rectangle(
+        &self,
+        state: RectangleState,
+        texture: WordRegion<'_>,
+        palette: WordRegion<'_>,
+    ) -> Result<WordImage> {
+        let Self::Rectangle {
+            origin,
+            width,
+            height,
+            tpage,
+            clut,
+        } = *self
+        else {
+            return Err(invalid("quad texel sampling is unsupported"));
+        };
+        if u32::from(tpage) != state.draw_mode & 0x1ff {
+            return Err(invalid("rectangle page differs from its E1 command"));
+        }
+        if clut & 0x8000 != 0 {
+            return Err(invalid("rectangle CLUT exceeds retail VRAM"));
+        }
+        if width == 0 || height == 0 || origin.u & 1 != 0 || origin.v & 1 != 0 || width & 1 != 0 {
+            return Err(invalid(
+                "rectangle sampling requires nonempty dimensions and even UV and width",
+            ));
+        }
+        let bits = if tpage & 0x80 == 0 { 4 } else { 8 };
+        let per_word = 16 / bits;
+        let page_x = usize::from(tpage & 15) * 64;
+        let page_y = usize::from((tpage >> 4) & 1) * 256;
+        let palette_x = usize::from(clut & 63) * 16;
+        let palette_y = usize::from(clut >> 6);
+        let mut words = Vec::with_capacity(usize::from(width) * usize::from(height));
+        for y in 0..height {
+            let v = usize::from(state.window(origin.v.wrapping_add(y), 5));
+            for x in 0..width {
+                let u = usize::from(state.window(origin.u.wrapping_add(x), 0));
+                let word = texture
+                    .word(page_x + u / per_word, page_y + v)
+                    .ok_or_else(|| {
+                        invalid("texture coordinate is outside its supplied source region")
+                    })?;
+                let index = usize::from((word >> ((u % per_word) * bits)) & ((1 << bits) - 1));
+                words.push(palette.word(palette_x + index, palette_y).ok_or_else(|| {
+                    invalid("selected palette word is outside its supplied source region")
+                })?);
+            }
+        }
+        Ok(WordImage {
+            width: usize::from(width),
+            height: usize::from(height),
+            words,
+        })
+    }
 }
 
 /// Compose qualified geometry without selecting a bank or image.
