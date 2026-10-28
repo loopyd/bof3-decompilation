@@ -3853,6 +3853,28 @@ or proof of the original BIOS frame layout or volatile register values. Unaligne
 or inaccessible handlers, invalid stacks, ABI violations and excessive nesting
 fail explicitly. Instruction faults retain unfinished continuation state.
 
+`Kernel::configure_event_delivery(entry)` binds caller-loaded
+[`audio_event_deliver`](../../../tools/rust/bof3-audio/driver/kernel/events.s)
+assembly for direct `B0:07` calls and owned counter, generic IRQ and syscall event
+delivery. Startup supplies its code, validated EvCB descriptor and an O32 stack.
+The routine takes class and specification in A0/A1, captures the table range once,
+and scans later records after each callback. It changes matching polling records
+to ready and skips null callbacks. Its forty-byte frame includes the callback's
+sixteen-byte argument home area.
+
+The owned host trap `0xBFC00108` takes the selected callback in T9 and guards its
+stack and S0–S7/FP before resuming the scanner. No BIOS instruction is fetched at
+this trap. Callback guard frames do not add a logical delivery level, so nested
+delivery and WaitEvent retain the same depth contract. A callback can return from
+the active exception through `B0:17`, discarding its owned continuations. Invalid
+modes fault through guest `BREAK`; invalid callbacks and ABI violations reject.
+A bound service never switches to host scanning after failure. Unbound development
+callers retain the functional host model.
+
+The bound service's instructions advance the caller's normal CPU/device schedule.
+This does not reproduce the remaining host exception-entry or handler costs or
+establish original-BIOS, native or hardware timing equivalence.
+
 WaitEvent may yield inside a callback and resume through the same continuation.
 Its pending context includes callback depth; a distinct nested wait cannot reuse
 that context. The execution owner must bound guest instructions and HLE transitions

@@ -5,7 +5,7 @@
 use super::{
     bus::{Bus, Width},
     cpu::{Cpu, Fault, FaultKind},
-    event_calls::{Calls as EventCalls, CALLBACK_RETURN},
+    event_calls::{Calls as EventCalls, CALLBACK_ENTER, CALLBACK_RETURN},
     events::{Table as Events, BUSY},
     exception_calls::{Calls as ExceptionCalls, Environment, MissingHook, HANDLER_RETURN},
     exception_chains::Table as ExceptionChains,
@@ -24,6 +24,7 @@ pub struct Kernel {
     generic_handler: Option<(u32, u32)>,
     syscall_handler: Option<u32>,
     cd_removal: Option<u32>,
+    event_delivery: Option<u32>,
     exception_delivery: Option<ExceptionDelivery>,
     waiting_event: Option<PendingWait>,
     event_calls: EventCalls,
@@ -48,6 +49,7 @@ impl Default for Kernel {
             generic_handler: None,
             syscall_handler: None,
             cd_removal: None,
+            event_delivery: None,
             exception_delivery: None,
             waiting_event: None,
             event_calls: EventCalls::default(),
@@ -138,6 +140,20 @@ impl Kernel {
         Ok(())
     }
 
+    /// Bind authored guest DeliverEvent code. Startup loads the routine and
+    /// allocates the validated EvCB table and callback stack. Direct B0/7 and
+    /// owned exception handlers use this routine in the normal CPU loop.
+    /// Without a binding, development callers retain the functional host model.
+    pub fn configure_event_delivery(&mut self, entry: u32) -> Result<()> {
+        self.require_plain_context()?;
+        if self.event_delivery.is_some() {
+            return Err("owned event delivery entry already configured".into());
+        }
+        self.validate_owned_handler(entry)?;
+        self.event_delivery = Some(entry);
+        Ok(())
+    }
+
     fn validate_owned_handler(&self, handler: u32) -> Result<usize> {
         super::exception_calls::validate_handler(handler)?;
         if Self::is_call(handler) {
@@ -157,6 +173,9 @@ impl Kernel {
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
             || self
                 .cd_removal
+                .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
+            || self
+                .event_delivery
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset));
         if occupied {
             return Err("owned exception handlers require distinct RAM identifiers".into());
@@ -207,7 +226,7 @@ impl Kernel {
                 cpu.set_register(4, 0xf000_0010);
                 cpu.set_register(5, 0x4000);
                 self.exception_delivery = Some(ExceptionDelivery::Syscall);
-                if let Some(callback) = self.event_calls.start(cpu, bus)? {
+                if let Some(callback) = self.event_calls.start(cpu, bus, self.event_delivery)? {
                     return Ok(Some(Call {
                         vector: 0x80,
                         service: 6,
@@ -256,7 +275,7 @@ impl Kernel {
             cpu.set_register(4, 0xf000_0000 | class);
             cpu.set_register(5, 0x1000);
             self.exception_delivery = Some(ExceptionDelivery::Generic { next: index + 1 });
-            let callback = self.event_calls.start(cpu, bus)?;
+            let callback = self.event_calls.start(cpu, bus, self.event_delivery)?;
             if callback.is_some() {
                 return Ok(callback);
             }
@@ -362,7 +381,7 @@ impl Kernel {
                 cpu.set_register(4, 0xf200_0000 | index as u32);
                 cpu.set_register(5, 2);
                 self.exception_delivery = Some(ExceptionDelivery::Counter);
-                let event = self.event_calls.start(cpu, bus)?;
+                let event = self.event_calls.start(cpu, bus, self.event_delivery)?;
                 if event.is_some() {
                     return Ok(Call {
                         vector: 0x80,
@@ -471,7 +490,7 @@ impl Kernel {
     }
 
     pub fn is_call(pc: u32) -> bool {
-        if pc == CALLBACK_RETURN || pc == HANDLER_RETURN {
+        if pc == CALLBACK_RETURN || pc == HANDLER_RETURN || pc == CALLBACK_ENTER {
             return true;
         }
         matches!(
@@ -504,6 +523,16 @@ impl Kernel {
             return Err("not a BIOS entry vector".into());
         }
         cpu.synchronize_load();
+        if cpu.pc() == CALLBACK_ENTER {
+            let callback = self.event_calls.start_callback(cpu)?;
+            return Ok(Call {
+                vector: CALLBACK_ENTER,
+                service: 7,
+                name: "GuestEventCallback",
+                waiting: false,
+                callback: Some(callback),
+            });
+        }
         if cpu.pc() == HANDLER_RETURN {
             if self.event_calls.depth() != 0 || self.waiting_event.is_some() {
                 return Err(
@@ -617,7 +646,7 @@ impl Kernel {
                 "HookEntryInt"
             }
             (0xb0, 0x07) => {
-                let callback = self.event_calls.start(cpu, bus)?;
+                let callback = self.event_calls.start(cpu, bus, self.event_delivery)?;
                 return Ok(Call {
                     vector,
                     service,
