@@ -459,7 +459,8 @@ bytes and NUL. Eighteen formatter sites per overlay pass one zero-extended byte
 or halfword, then draw scratch `0x80145AD4` through `0x80150098`. Preserve one
 decimal argument and the five-character output bound. Fixed address calculations
 keep pointer-reference lists empty; the following format remains protected.
-Edited rendering remains unverified.
+Controlled BATE observations verify a narrower minimum width on one stat
+panel. Other BATE paths and SHISU rendering remain unverified.
 
 BATE and SHISU also expose fifteen stat-label allocations each through
 `game-literal`. Each accepts at most three encoded bytes and one NUL.
@@ -475,7 +476,8 @@ Each allocation covers only its first four bytes. The two trailing bytes in
 six-byte records stay protected. Fixed address calculations pass these fields
 to `0x8014F800`, so their pointer-reference lists are empty. The comparison loops
 select four records; the summary loops select three. All related instructions
-remain pinned outside the editable allocations. Edited rendering remains unverified.
+remain pinned outside the editable allocations. Controlled BATE observations
+verify the group at `0x801D8CF4`. Other groups and SHISU rendering remain unverified.
 
 BATE and SHISU entry 0 also expose `%3d/%3d` at `0x801D0D5C` and
 `0x801D0D40`, respectively. Each eight-byte allocation includes NUL. The
