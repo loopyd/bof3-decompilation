@@ -134,3 +134,62 @@ audio_exception_hook:
     jr $ra
     nop
 .end audio_exception_hook
+
+# Entry receives the preflighted current TCB+8 in K0. The CPU loop retains
+# exception ownership until audio_exception_return_rfe retires successfully.
+# Saved K0 is opaque; K0 becomes the return PC. EPC and Cause stay unchanged.
+.globl audio_exception_return
+.ent audio_exception_return
+audio_exception_return:
+    addu $a0, $k0, $zero
+    lw $v0, 0x88($a0)
+    nop
+    mtlo $v0
+    nop
+    lw $v0, 0x84($a0)
+    nop
+    mthi $v0
+    nop
+    lw $v0, 0x8c($a0)
+    nop
+    mtc0 $v0, $12
+    nop
+    lw $v0, 0x08($a0)
+    lw $v1, 0x0c($a0)
+    lw $a1, 0x14($a0)
+    lw $a2, 0x18($a0)
+    lw $a3, 0x1c($a0)
+    lw $t0, 0x20($a0)
+    lw $t1, 0x24($a0)
+    lw $t2, 0x28($a0)
+    lw $t3, 0x2c($a0)
+    lw $t4, 0x30($a0)
+    lw $t5, 0x34($a0)
+    lw $t6, 0x38($a0)
+    lw $t7, 0x3c($a0)
+    lw $s0, 0x40($a0)
+    lw $s1, 0x44($a0)
+    lw $s2, 0x48($a0)
+    lw $s3, 0x4c($a0)
+    lw $s4, 0x50($a0)
+    lw $s5, 0x54($a0)
+    lw $s6, 0x58($a0)
+    lw $s7, 0x5c($a0)
+    lw $t8, 0x60($a0)
+    lw $t9, 0x64($a0)
+    lw $k1, 0x6c($a0)
+    lw $gp, 0x70($a0)
+    lw $sp, 0x74($a0)
+    lw $fp, 0x78($a0)
+    lw $ra, 0x7c($a0)
+    nop
+    lw $at, 0x04($a0)
+    lw $k0, 0x80($a0)
+    nop
+    lw $a0, 0x10($a0)
+    nop
+    jr $k0
+.globl audio_exception_return_rfe
+audio_exception_return_rfe:
+    .word 0x42000010
+.end audio_exception_return

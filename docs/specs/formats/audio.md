@@ -4072,6 +4072,31 @@ during guest loads may leave a partially restored CPU and unfinished dispatch.
 The binding uses the same idle, duplicate and physical identifier guards as
 other owned handlers. It does not establish full startup or timing equivalence.
 
+`Kernel::configure_exception_return(entry, rfe_pc)` separately binds
+`audio_exception_return` and its final `audio_exception_return_rfe` instruction.
+The return bridge resolves the live PCB/TCB and preflights all restored values
+through the existing context reader before changing the real CPU. It supplies
+TCB+8 in K0 and reports the guest entry as the call's callback. Guest instructions
+restore LO, HI, status and saved GPRs, use saved EPC as K0, then execute JR K0
+with RFE in its delay slot. Saved K0 remains opaque. The routine does not reload
+the diagnostic saved Cause or change COP0 EPC. Saved SP has no added validation.
+
+An opted-in CPU loop must call `complete_exception_return(cpu, step)` after each
+successful instruction and before admitting the next interrupt. Completion
+requires the configured RFE address, its exact instruction in a delay slot,
+the expected return PC, GPRs, HI/LO, status, COP0 EPC and Cause. Cause's live
+external IRQ bit can change with the CPU loop's interrupt input. Only then does
+the kernel discard the exception's callbacks, waits and dispatch state.
+Preflight errors leave the real CPU unrestored. Guest fetch/load faults or
+completion mismatches retain unfinished ownership and may leave partially
+restored registers. Another kernel
+dispatch, binding or exception entry rejects while return is pending.
+
+Unbound development callers keep synchronous host restoration. The guest path's
+status write precedes later loads, so unsupported user-mode or cache-isolation
+histories can fault during restoration. Full startup, CPU-loop integration and
+scheduler equivalence remain separate acceptance requirements.
+
 The root reserves no stack locals and uses the prepared sixteen-byte O32 handler
 home area. Scanner stack drift rejects before handler invocation. Explicit
 nonlocal exception return discards the owned scanner after successful context
