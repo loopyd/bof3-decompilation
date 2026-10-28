@@ -36,6 +36,33 @@ exactly. `--animation ID` matches the named program and its referenced cells.
 `--palette ID` matches the palette itself and any verified palette references.
 An unresolved draw CLUT does not create such a reference.
 
+`query INDEX --dependency glyph-layout` finds the conditional 8x12 glyph mapping
+for `FIRST.EMI` entry 3. The edge targets the original executable. It is
+`unresolved` when that source is absent and `partial` when captured. Equal atlas
+copies retain their own consumer dependencies.
+
+The ordinary-byte branch at `SLUS_004.22@0x8014FA58` computes `d = byte - 48`,
+`q = trunc(d / 31)` and `r = d - 31*q`. It stores the low eight bits of `8*r`
+as U and `72 + 12*q + crop_top` as V. Width is 8 and height is
+`12 - crop_reduction`. Initial flag bits 4 through 7 select one of 16 crop records at
+`0x8017F580`; each record stores `crop_top` followed by `crop_reduction`.
+The low four palette flag bits select CLUT `0x7800..0x780f` in FIRST entry 8.
+These formulas require nonaliasing source and packet storage and preservation
+of the relevant saved registers across calls.
+
+Control `0x15` takes a separate two-byte glyph path. It computes
+`n = next_byte + 91`, `q = trunc(n / 21)` and `r = n - 21*q`. U is the low eight
+bits of `12*r`; V is the low eight bits of `12*q + crop_top`, without the
+ordinary path's `+72`. Both paths emit width 8 and advance X by 8 despite the
+extended path's 12-pixel UV pitch. Controls `0x05` and `0x06` change the
+low-nibble CLUT state without reloading the initial crop.
+
+Controls `0x00`, `0x01`, `0x05`, `0x06`, `0x07`, `0x15` and `0xff` have separate
+dispatch paths. `0xff` advances X without emitting a rectangle. The edge
+describes source selection, not text decoding or complete glyph enumeration.
+Active texture-window state, GPU submission and display remain unresolved.
+Existing raw atlas and palette views control image edits.
+
 Each record ID contains its physical parent ID, coordinate space, kind and byte
 offset. Equal bytes at different offsets have different IDs. Repeated table
 pointers merge into one record with all table-slot uses. `parent` identifies

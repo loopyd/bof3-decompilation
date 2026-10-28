@@ -143,6 +143,10 @@ Atlases with qualified consumer evidence name their physical palette sources in
 `partial` palette association records original consumer coordinates and source
 ranges; it does not establish runtime loading or the selected palette at every call.
 `FIRST.EMI` entry 8 covers only 16 of the 8x8 renderer's 64 possible CLUT selectors.
+The 8x12 caller uses four palette flag bits and a separate crop table. Query
+`--dependency glyph-layout` for its original executable dependency and byte-to-UV
+formulas. Control bytes have separate paths; this mapping does not enumerate
+valid text or establish GPU submission, texture-window state or display.
 The `SHISU.EMI` portrait mapping names both physical palette banks. Twelve bounded
 selection records describe 40x48 rectangles and their palette columns on rows
 481 and 482. They do not prove the complete valid selection domain or cover the

@@ -145,7 +145,7 @@ const ATLASES: &[Atlas] = &[
         categories: &["font", "interface"],
         content: "Latin and Japanese glyphs, symbols, icons and interface labels",
         consumer: Some(
-            "SLUS_004.22@0x80150098:8x8-glyphs; SLUS_004.22@0x8014FC00:retail-page-0x2f",
+            "SLUS_004.22@0x80150098:8x8-glyphs; SLUS_004.22@0x8014F84C:8x12-glyph-selection; SLUS_004.22@0x8014FB80:rectangle-packet; SLUS_004.22@0x8014FC00:retail-page-0x2f",
         ),
         palettes: &[PaletteBinding {
             entry: 8,
@@ -154,7 +154,7 @@ const ATLASES: &[Atlas] = &[
                 0, 16, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240,
             ],
             sha256: "166ead38de405cf28c1cfc35a7c4a2b9b4a69ae95a128b970cf4b9df8b4567c7",
-            selection: "FIRST entry 8 stages VRAM row 480, words 0..255. The original 8x8 renderer selects CLUT 0x7800 | (A2 & 63), so this source covers only selectors 0..15. Retail page 0x2f matches the atlas at (960, 0), 4 bits per pixel. Actual selector, upload order, overwrites and rendering are unresolved.",
+            selection: "FIRST entry 8 stages VRAM row 480, words 0..255. The 8x8 renderer selects CLUT 0x7800 | (A2 & 63), so this source covers only selectors 0..15 of that path. The 8x12 caller selects the low four flag bits, including palette-control operands. Retail page 0x2f matches the atlas at (960, 0), 4 bits per pixel. Call selection, upload order, intervening overwrites and rendering remain unresolved.",
         }],
     },
     Atlas {
@@ -380,8 +380,28 @@ pub(crate) fn annotate(resources: &mut [Resource]) -> Result<()> {
             bind_palette(resources, image_index, atlas, binding, number == 0)?;
         }
     }
+    annotate_glyph_layout(resources);
     annotate_staging(resources)?;
     Ok(())
+}
+
+fn annotate_glyph_layout(resources: &mut [Resource]) {
+    let Some(index) = locate(resources, "BIN/ETC/FIRST.EMI", 3) else {
+        return;
+    };
+    let executable = format!("{}:SLUS_004.22#file", sources::RELEASE);
+    let captured = resources.iter().any(|resource| resource.id == executable);
+    let layout = "SLUS_004.22@0x8014FA58: ordinary-byte branch uses d=byte-48, q=trunc(d/31), r=d-31*q; U=low8(8*r), V=low8(72+12*q+crop_top). Control 0x15 instead uses n=next_byte+91, q=trunc(n/21), r=n-21*q; U=low8(12*r), V=low8(12*q+crop_top), without the ordinary path's +72. Both emit width=8, height=12-crop_reduction and advance X by 8. The 16 two-byte crop records at 0x8017F580 store crop_top then crop_reduction; initial flag bits 4..7 select the record once. Low four palette flag bits select CLUT 0x7800..0x780f; controls 0x05/0x06 change this state without reloading crop. Controls 0x00/0x01/0x05/0x06/0x07/0x15/0xff precede ordinary-byte dispatch; 0xff advances X without emitting. These formulas require nonaliasing source/packet storage and preservation of relevant saved registers across calls. Texture-window state, valid text domains, GPU submission and display remain unresolved.";
+    resources[index].dependencies.push(Dependency {
+        kind: "glyph-layout".into(),
+        target: Some(executable),
+        status: if captured { "partial" } else { "unresolved" }.into(),
+        reason: if captured {
+            layout.into()
+        } else {
+            format!("{layout} The original executable is outside this input.")
+        },
+    });
 }
 
 fn annotate_staging(resources: &mut [Resource]) -> Result<()> {
