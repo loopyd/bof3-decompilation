@@ -3815,6 +3815,49 @@ timing remain open. Retained [external references](../../reference/psx-kernel.md
 distinguish hardware rules and replacement-BIOS comparisons from original US
 evidence.
 
+### Owned kernel allocation
+
+Build the owned kernel service component with the existing project toolchain:
+
+```sh
+make -C tools/rust/bof3-audio/driver bof3-audio-driver
+```
+
+The target reads authored assembly and its linker layout. It produces
+`out/audio/driver/kernel.bin`, the linked ELF, a map and ordered symbols.
+It does not build the complete audio closure. The source package and production
+execution loop do not yet consume this component.
+
+Load `audio_kernel_image..audio_kernel_image_end` at its linked address, then call
+`audio_kernel_initialize` on an eight-byte-aligned RAM stack with interrupts
+disabled and no active service continuation. The initializer preserves SP, RA
+and callee-saved registers and returns zero. It clears service BSS, installs the
+descriptors at physical `0x100..0x118` and `0x120..0x128`, and initializes four
+ExCB priorities, six nodes, one PCB/current TCB and sixteen 28-byte EvCB records.
+The initial TCB state word is `0x4000`; its saved context is populated on exception
+entry. The chain runs the syscall verifier at priority zero, VBlank/counters
+2/1/0 at priority one, and generic IRQ at priority three.
+
+The layout reserves a 1,024-byte initialization stack and a separate 4,096-byte
+exception stack. Stacks are not cleared by the initializer. The exception stack
+cell points sixteen bytes below its end, and exception GP is zero. The initializer
+also resets the hook pointer, counter/generic flags, MMIO pointer, CD handles and
+CD nodes. Host PAD acknowledgement policy remains a separate Kernel input.
+Capacities, stack sizes and initial flags are owned policy, not recovered original
+BIOS allocations. Initialization requires an idle machine; repeating it destroys
+registered state.
+
+Bind the linked event, scanner, hook, return and syscall instruction boundaries
+through the existing typed Kernel APIs, and bind `audio_counter_flags` to its live
+RAM allocation. Use the linked exception-stack end as `Environment::stack_top`.
+The execution loop must enter owned exception delivery for IRQs and syscalls,
+prepare before selecting each service or instruction, reread PC after preparation,
+and complete guards after successful instruction retirement. The linker excludes
+the host staging range beginning at `0x80010000`; callers must also exclude these
+allocations from media, other code and foreground stacks. This service allocation
+does not initialize game audio state, admit device timing, or establish complete
+standalone startup.
+
 ### Rust BIOS event state
 
 [Event operations](../../../tools/rust/bof3-audio/src/machine/events.rs) use the
