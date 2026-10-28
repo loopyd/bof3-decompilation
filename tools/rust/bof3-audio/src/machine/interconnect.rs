@@ -37,6 +37,7 @@ pub struct Interconnect {
     dma: Dma,
     timers: Timers,
     spu_transfer: SpuTransfer,
+    spu_dma_observation: Option<super::spu_dma::Observation>,
     spu_voices: Option<spu_voice_ports::Ports>,
     spu_readback: Option<Readback>,
     reference_access: Option<u64>,
@@ -70,6 +71,7 @@ impl Interconnect {
             dma: Dma::default(),
             timers: Timers::default(),
             spu_transfer: SpuTransfer::default(),
+            spu_dma_observation: None,
             spu_voices: None,
             spu_readback: None,
             reference_access: None,
@@ -93,6 +95,22 @@ impl Interconnect {
     }
     pub fn dma(&self) -> &Dma {
         &self.dma
+    }
+    /// Opt in to bounded, ordered successful DMA4 RAM accesses. No extra bus
+    /// reads or clock changes occur. Overflow is reported without stopping DMA.
+    pub fn enable_spu_dma_observation(&mut self, limit: usize) -> crate::Result<()> {
+        if self.spu_dma_observation.is_some() {
+            return Err("DMA4 observation already enabled".into());
+        }
+        self.spu_dma_observation = Some(super::spu_dma::Observation::new(limit)?);
+        Ok(())
+    }
+    /// Drain accesses and overflow for the interval, retaining the enabled limit.
+    /// None means observation has not been enabled.
+    pub fn take_spu_dma_observation(&mut self) -> Option<super::spu_dma::Observation> {
+        self.spu_dma_observation
+            .as_mut()
+            .map(super::spu_dma::Observation::take)
     }
     pub fn ram(&self) -> &Ram {
         &self.ram
@@ -347,10 +365,26 @@ impl Interconnect {
             let physical = address & 0x001f_fffc;
             if from_ram {
                 let word = self.ram.read(physical, Width::Word)?;
+                if let Some(observation) = &mut self.spu_dma_observation {
+                    observation.record(super::spu_dma::RamAccess {
+                        address,
+                        physical_address: physical,
+                        value: word,
+                        from_ram,
+                    });
+                }
                 self.spu_transfer.dma_write(word)?;
             } else {
                 let word = self.spu_transfer.dma_read()?;
                 self.ram.write(physical, Width::Word, word)?;
+                if let Some(observation) = &mut self.spu_dma_observation {
+                    observation.record(super::spu_dma::RamAccess {
+                        address,
+                        physical_address: physical,
+                        value: word,
+                        from_ram,
+                    });
+                }
             }
             let slice_ended = self.dma.spu.finish_word()?;
             if slice_ended && (!self.dma.spu.active() || self.dma.interrupt() & (1 << 4) != 0) {

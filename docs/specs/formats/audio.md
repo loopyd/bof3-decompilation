@@ -2011,6 +2011,17 @@ reads this RAM; capture and reverb accesses remain unimplemented.
 Transfer status is component state, not complete
 SPUSTAT emulation or proof of IRQ latency.
 
+DMA4 RAM observation is disabled by default. Call
+`Interconnect::enable_spu_dma_observation(limit)` with a limit of 1–1,000,000
+records to capture successful RAM word accesses. Each record contains the aligned
+DMA access address before RAM mirroring, physical RAM address, word value and
+`from_ram` direction. `take_spu_dma_observation()` drains records and the overflow
+flag for that interval, retaining the enabled limit. Overflow drops later records
+without stopping DMA; it makes the interval incomplete. A recorded RAM read can
+precede a later SPU-side failure. Observation adds no bus reads or clock advances
+and preserves transfer ordering. It covers DMA4 RAM accesses only; complete
+dependency closure and transfer timing require separate evidence.
+
 ### Original US transfer dispatcher
 
 All addresses below belong to the exact-hash `exe/slus_004_22` profile from
