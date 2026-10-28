@@ -41,9 +41,9 @@ requires the pinned size and SHA-256; changed or arbitrary WAV files stay
 unresolved. See [the format contract](formats.md#cdda-audio-export).
 
 With the exact original `SLUS_004.22` present, coverage also recognizes the
-validated encoded audio bodies and empty Form 1 user payloads in the three pinned
-US XA files as `partially-verified-xa`. Only those spans become known nontext;
-surrounding bytes and other sectors stay unresolved.
+validated audio bodies, empty Form 1 user payloads and reviewed sector metadata
+in the three pinned US XA files as `partially-verified-xa`. Only those spans
+become known nontext; other payload bytes stay unresolved.
 See [XA payload coverage](formats.md#xa-payload-coverage).
 
 Supported US executable layouts are pinned outside their editable allocations.

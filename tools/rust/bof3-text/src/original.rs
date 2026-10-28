@@ -50,18 +50,18 @@ pub struct XaSource {
     expected_empty_payloads: usize,
 }
 
-pub struct XaBody {
+pub struct XaRange {
     pub offset: usize,
     pub length: usize,
     pub evidence: &'static str,
 }
 
 impl XaSource {
-    /// Identify encoded audio and empty user payloads; original use remains separate.
-    pub fn bodies(&self, data: &[u8]) -> Result<Vec<XaBody>> {
+    /// Identify reviewed metadata and payloads; original use remains separate.
+    pub fn nontext_ranges(&self, data: &[u8]) -> Result<Vec<XaRange>> {
         if data.len() != self.file.size || sha256_hex(data) != self.file.sha256 {
             return Err(Error::Invalid(
-                "XA body classification requires the exact original source".into(),
+                "XA classification requires the exact original source".into(),
             ));
         }
         if data.len() % 2336 != 0 {
@@ -69,23 +69,40 @@ impl XaSource {
                 "original US XA sector extent disagrees".into(),
             ));
         }
-        let mut bodies = Vec::new();
+        let mut ranges = Vec::new();
         let mut audio_count = 0;
         let mut empty_count = 0;
         for (index, sector) in data.chunks_exact(2336).enumerate() {
+            let start = index * 2336;
+            if sector[..4] != sector[4..8] {
+                return Err(Error::Invalid(format!(
+                    "original US XA sector {index} has inconsistent subheaders"
+                )));
+            }
+            ranges.push(XaRange {
+                offset: start,
+                length: 8,
+                evidence: "original US Mode 2 duplicated sector subheader; exact source identity",
+            });
             if sector[2] & 0x2e != 0x24 {
-                if sector[..4] == sector[4..8]
-                    && sector[2] & 0x2e == 0
-                    && sector[3] == 0
-                    && sector[8..2056].iter().all(|byte| *byte == 0)
-                {
-                    bodies.push(XaBody {
-                        offset: index * 2336 + 8,
+                if sector[2] & 0x2e != 0 || sector[3] != 0 {
+                    return Err(Error::Invalid(format!(
+                        "original US XA sector {index} disagrees with reviewed Form 1 profile"
+                    )));
+                }
+                if sector[8..2056].iter().all(|byte| *byte == 0) {
+                    ranges.push(XaRange {
+                        offset: start + 8,
                         length: 2048,
                         evidence: "original US empty Form 1 user payload; all 2048 bytes zero; original purpose and consumption unverified",
                     });
                     empty_count += 1;
                 }
+                ranges.push(XaRange {
+                    offset: start + 2056,
+                    length: 280,
+                    evidence: "original US Form 1 EDC and ECC P/Q fields; reviewed against disk sector owner; exact source identity",
+                });
                 continue;
             }
             let valid_groups = sector[8..2312].chunks_exact(128).all(|group| {
@@ -95,15 +112,25 @@ impl XaSource {
                         .iter()
                         .all(|&parameter| parameter & 15 <= 12 && parameter >> 4 < 4)
             });
-            if sector[..4] != sector[4..8] || sector[3] & 0xfa != 0 || !valid_groups {
+            if sector[3] & 0xfa != 0 || !valid_groups {
                 return Err(Error::Invalid(format!(
                     "original US XA sector {index} disagrees with reviewed four-bit format"
                 )));
             }
-            bodies.push(XaBody {
-                offset: index * 2336 + 8,
+            ranges.push(XaRange {
+                offset: start + 8,
                 length: 2304,
                 evidence: "original US XA encoded body; supported Form 2 four-bit header, verified parameter copies and active parameters; no claim of game selection, arrival or playback",
+            });
+            if sector[2332..].iter().any(|byte| *byte != 0) {
+                return Err(Error::Invalid(format!(
+                    "original US XA sector {index} disagrees with reviewed absent EDC"
+                )));
+            }
+            ranges.push(XaRange {
+                offset: start + 2332,
+                length: 4,
+                evidence: "original US Form 2 absent EDC field; stored zero, not a validated checksum; exact source identity",
             });
             audio_count += 1;
         }
@@ -113,11 +140,11 @@ impl XaSource {
                 "original US XA body count disagrees with reviewed profile".into(),
             ));
         }
-        Ok(bodies)
+        Ok(ranges)
     }
 }
 
-/// Canonical XA sources with reviewed encoded audio or empty Form 1 user payloads.
+/// Canonical XA sources with reviewed metadata, audio and empty user payloads.
 pub fn xa_sources(executable: &[u8]) -> Result<Vec<XaSource>> {
     if sha256_hex(executable) != US_EXECUTABLE_SHA256 {
         return Ok(Vec::new());

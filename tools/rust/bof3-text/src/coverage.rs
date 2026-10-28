@@ -217,29 +217,32 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
         }) {
             record.status = "partially-verified-xa".into();
             let mut cursor = 0;
-            for body in stream.bodies(&bytes)? {
-                let start = body.offset;
-                record.ranges.push(range(
-                    cursor,
-                    start - cursor,
-                    "unresolved",
-                    "XA bytes outside validated audio and empty user payloads".into(),
-                ));
+            for span in stream.nontext_ranges(&bytes)? {
+                let start = span.offset;
+                if start > cursor {
+                    record.ranges.push(range(
+                        cursor,
+                        start - cursor,
+                        "unresolved",
+                        "XA bytes outside reviewed metadata, audio and empty user payloads".into(),
+                    ));
+                }
                 record.ranges.push(range(
                     start,
-                    body.length,
+                    span.length,
                     "known-nontext",
-                    body.evidence.into(),
+                    span.evidence.into(),
                 ));
-                cursor = start + body.length;
+                cursor = start + span.length;
             }
-            record.ranges.push(range(
-                cursor,
-                bytes.len() - cursor,
-                "unresolved",
-                "remaining XA bytes; subheaders, spare, EDC and other sector bodies unverified"
-                    .into(),
-            ));
+            if cursor < bytes.len() {
+                record.ranges.push(range(
+                    cursor,
+                    bytes.len() - cursor,
+                    "unresolved",
+                    "remaining XA bytes outside reviewed ranges".into(),
+                ));
+            }
         } else if path.extension().is_some_and(|extension| extension == "EMI") {
             match crate::lexagraph::entries(&bytes) {
                 Err(error) => {

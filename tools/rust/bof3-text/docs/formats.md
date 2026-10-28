@@ -68,10 +68,19 @@ zero coding information and an entirely zero 2048-byte user payload. Only
 unresolved. Empty payloads do not establish padding, unused allocation or their
 original purpose and consumer.
 
+The same exact-source qualification identifies duplicated subheaders at `[0,8)`
+within each sector. Form 1 correction fields at `[2056,2336)` contain EDC and
+ECC P/Q, verified against the [disk sector owner](../../bof3-disk/src/replace/sector.rs).
+Form 2 fields at `[2332,2336)` are stored zero and represent absent EDC, as defined
+by the [audio EDC owner](../../bof3-audio/src/codec/edc.rs). They are not matching
+checksums. Coverage identifies these metadata fields as nontext without adding
+an editable layout.
+
 Static format identification does not establish original sector selection,
 arrival, playback, command completion, predictor history or hardware handling
 of parameter copies.
-Subheaders, spare bytes, EDC, ECC, other sectors and `CAPCOM30.STR` remain unresolved.
+Audio spare bytes at `[2312,2332)`, nonzero Form 1 user payloads and
+`CAPCOM30.STR` remain unresolved.
 Exact playback endpoints and packed-ID caller bounds remain unverified. Changed
 sources, other builds and arbitrary files that resemble XA remain unresolved.
 
