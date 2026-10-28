@@ -1,4 +1,4 @@
-//! Fixed ASCII allocations consumed by the US executable's diagnostic screens.
+//! Fixed ASCII allocations consumed by the US executable's diagnostics.
 
 use std::collections::BTreeSet;
 use std::path::Path;
@@ -8,15 +8,17 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-pub(crate) const SCHEMA: &str = "bof3.executable-text/v3";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v4";
 const LOAD: u32 = 0x80096800;
 const SIZE: usize = 1445888;
 // Hash of the entire executable with only the supported allocations zeroed.
-const LAYOUT_SHA256: &str = "77b703f2e8e833e658d083fff15c3d10a4f4521f56b21313cf66c76915fa042a";
+const LAYOUT_SHA256: &str = "0ae832ab31b439b6ed04072e3cdbc956cf07b8a8389ead466e613bdf206c5ea4";
 const FORMAT_ADDRESS: u32 = 0x80149990;
 const FILE_LABEL: u32 = 0x80149f9c;
 const FILE_FORMAT: u32 = 0x80149fac;
-const CONSUMERS: [u32; 2] = [0x8014b3c4, 0x80166df4];
+const DISK_PREFIX: u32 = 0x8014a30c;
+const BIOS_PRINTF: u32 = 0x8017e3e4;
+const CONSUMERS: [u32; 3] = [0x8014b3c4, 0x80166df4, 0x80175c60];
 const FORMATTER: u32 = 0x8017e3f4;
 // Original string bytes plus their NUL, excluding alignment padding. The consumer
 // at 0x8014b3c4 passes pointers from 0x8017f470..0x8017f53c to 0x80150098.
@@ -73,12 +75,14 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (FORMAT_ADDRESS, 5),
     (FILE_LABEL, 15),
     (FILE_FORMAT, 18),
+    (DISK_PREFIX, 12),
 ];
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "kebab-case")]
 pub(crate) enum Codec {
     AsciiLiteral,
+    AsciiPrintfLiteral,
     AsciiU32HexFormat,
     AsciiU8TripleHexFormat,
 }
@@ -87,6 +91,7 @@ impl Codec {
     pub(crate) fn as_str(self) -> &'static str {
         match self {
             Self::AsciiLiteral => "ascii-literal",
+            Self::AsciiPrintfLiteral => "ascii-printf-literal",
             Self::AsciiU32HexFormat => "ascii-u32-hex-format",
             Self::AsciiU8TripleHexFormat => "ascii-u8-triple-hex-format",
         }
@@ -110,6 +115,12 @@ impl Codec {
     pub(crate) fn max_formatted_size(self, text: &str) -> Result<Option<usize>> {
         match self {
             Self::AsciiLiteral => Ok(None),
+            Self::AsciiPrintfLiteral => {
+                if text.contains('%') {
+                    return invalid("BIOS printf literal cannot contain percent characters");
+                }
+                Ok(Some(text.len()))
+            }
             Self::AsciiU32HexFormat => {
                 if !matches!(
                     text.as_bytes(),
@@ -182,15 +193,45 @@ fn codec(address: u32) -> Codec {
     match address {
         FORMAT_ADDRESS => Codec::AsciiU32HexFormat,
         FILE_FORMAT => Codec::AsciiU8TripleHexFormat,
+        DISK_PREFIX => Codec::AsciiPrintfLiteral,
         _ => Codec::AsciiLiteral,
     }
 }
 
 fn consumer(address: u32) -> u32 {
-    if matches!(address, FILE_LABEL | FILE_FORMAT) {
-        CONSUMERS[1]
+    match address {
+        FILE_LABEL | FILE_FORMAT => CONSUMERS[1],
+        DISK_PREFIX => CONSUMERS[2],
+        _ => CONSUMERS[0],
+    }
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(tag = "kind", rename_all = "kebab-case", deny_unknown_fields)]
+pub(crate) enum Output {
+    GameScreen {
+        renderer: u32,
+        formatter: Option<u32>,
+    },
+    BiosPrintf {
+        stub: u32,
+        vector: u32,
+        selector: u32,
+    },
+}
+
+fn output(address: u32) -> Output {
+    if address == DISK_PREFIX {
+        Output::BiosPrintf {
+            stub: BIOS_PRINTF,
+            vector: 0xa0,
+            selector: 0x3f,
+        }
     } else {
-        CONSUMERS[0]
+        Output::GameScreen {
+            renderer: 0x80150098,
+            formatter: matches!(address, FORMAT_ADDRESS | FILE_FORMAT).then_some(FORMATTER),
+        }
     }
 }
 
@@ -203,8 +244,6 @@ pub struct Document {
     build: String,
     load_address: u32,
     consumers: Vec<u32>,
-    renderer: u32,
-    formatter: u32,
     pub strings: Vec<Text>,
 }
 
@@ -213,6 +252,7 @@ pub struct Document {
 pub struct Text {
     pub address: u32,
     pub consumer: u32,
+    pub(crate) output: Output,
     pub file_offset: usize,
     pub capacity: usize,
     pub references: Vec<Reference>,
@@ -258,7 +298,13 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
         let text = std::str::from_utf8(&bytes[..end])
             .map_err(|error| Error::Invalid(error.to_string()))?;
         codec.encode(text, capacity - 1)?;
-        let references = if address == FORMAT_ADDRESS {
+        let references = if address == DISK_PREFIX {
+            vec![Reference::AddressPair {
+                upper: 0x80175e40,
+                lower: 0x80175e44,
+                calls: vec![0x80175e48],
+            }]
+        } else if address == FORMAT_ADDRESS {
             vec![
                 Reference::AddressPair {
                     upper: 0x8014b518,
@@ -303,6 +349,7 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
         strings.push(Text {
             address,
             consumer: consumer(address),
+            output: output(address),
             file_offset,
             capacity,
             references,
@@ -317,8 +364,6 @@ pub fn extract(path: &Path, data: &[u8]) -> Result<Document> {
         build: "US SLUS-00422 diagnostic ASCII".into(),
         load_address: LOAD,
         consumers: CONSUMERS.to_vec(),
-        renderer: 0x80150098,
-        formatter: FORMATTER,
         strings,
     })
 }
@@ -330,8 +375,6 @@ pub fn parse(data: &[u8]) -> Result<Document> {
         || document.load_address != LOAD
         || document.build != "US SLUS-00422 diagnostic ASCII"
         || document.consumers != CONSUMERS
-        || document.renderer != 0x80150098
-        || document.formatter != FORMATTER
         || document.source_sha256.len() != 64
         || !document
             .source_sha256
@@ -347,6 +390,7 @@ pub fn parse(data: &[u8]) -> Result<Document> {
             || text.file_offset != offset(text.address)
             || text.codec != codec(text.address)
             || text.consumer != consumer(text.address)
+            || text.output != output(text.address)
         {
             return invalid("unknown or duplicate executable string allocation");
         }

@@ -34,18 +34,21 @@ size alone does not identify audio. These checks do not classify container gaps.
 
 `extract`, `analyze`, `validate` and `pack` also support the US executable's
 exception-screen ASCII strings and the `FILE NOT FOUND` diagnostic with its
-three-ID hexadecimal format. `extract-corpus` exports
+three-ID hexadecimal format, plus the BIOS `DiskError: ` prefix. `extract-corpus` exports
 them when the complete source root includes `SLUS_004.22`. Literal strings use
 the pointer words at `0x8017F470..0x8017F53C`, with an exclusive upper bound.
 The consumer at `0x8014B3C4` passes these pointers to renderer `0x80150098`.
 The renderer reads bytes until NUL, advances on ASCII space and handles newline
 `0x0A`. These bytes use ASCII rather than the dialogue character table.
 
-The JSON schema is `bof3.executable-text/v3`. Re-extract older documents before
+The JSON schema is `bof3.executable-text/v4`. Re-extract older documents before
 editing. It contains `source`, mandatory `source_sha256`, `build`, `load_address`,
-`consumers`, `renderer`, `formatter` and `strings`.
+`consumers` and `strings`.
 Each string retains its `address`, whole-file `file_offset`, original `capacity`
-including NUL, immutable `consumer` and `codec`, typed `references` and editable `text`.
+including NUL, immutable `consumer`, `codec` and `output`, typed `references`
+and editable `text`. Each `output` is either `game-screen`, with its renderer
+and optional formatter, or `bios-printf`, with its stub, vector and selector.
+Keep output metadata unchanged.
 Exception literal rows use `ascii-literal` and `pointer-word` references with an `address`.
 Shared pointers appear on one allocation. Retain every allocation and edit only
 `text`.
@@ -83,6 +86,18 @@ This codec permits exactly three `%X` or `%x` conversions, optionally with
 width 1..2 and zero padding, plus literal ASCII. It refuses other percent
 sequences, flags, dynamic widths, reordered arguments and output exceeding
 11 bytes plus NUL. The encoded format must fit 17 bytes plus NUL.
+
+The `DiskError: ` prefix at `0x8014A30C` uses `ascii-printf-literal` and a
+12-byte allocation, including NUL. It accepts at most eleven printable ASCII
+bytes or newlines and refuses every percent character, including `%%`. Its
+`address-pair` reference at `0x80175E40`/`0x80175E44` feeds call `0x80175E48`
+in the CD interrupt consumer at `0x80175C60`. The output is `bios-printf`:
+stub `0x8017E3E4` jumps to BIOS vector `0xA0` with selector `0x3F`.
+This is separate from the game-screen renderer. The call requires a positive
+CD debug word, which the original executable initializes to zero. Editing the
+prefix does not enable that output; runtime acceptance remains unverified.
+The adjacent format beginning at `0x8014A318` and interrupt-label table remain
+unsupported.
 
 Build recognition hashes all bytes outside the supported allocations against
 the pinned US layout. This permits re-extraction of supported edits while

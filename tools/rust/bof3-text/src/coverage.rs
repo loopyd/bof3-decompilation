@@ -430,7 +430,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                 "executable ranges outside the supported ASCII consumers".into(),
                             ));
                         }
-                        record.ranges.push(range(text.file_offset, text.capacity, "known-text", format!("US executable reference sites {:?}; codec {}; consumer {:#x}, formatter 0x8017e3f4 for hexadecimal formats, renderer 0x80150098; runtime acceptance pending", text.references, text.codec.as_str(), text.consumer)));
+                        record.ranges.push(range(text.file_offset, text.capacity, "known-text", format!("US executable reference sites {:?}; codec {}; consumer {:#x}; output {:?}; runtime acceptance pending", text.references, text.codec.as_str(), text.consumer, text.output)));
                         cursor = text.file_offset + text.capacity;
                     }
                     if cursor < bytes.len() {
