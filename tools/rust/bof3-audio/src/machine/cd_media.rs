@@ -1,4 +1,4 @@
-//! Owned raw-sector backing extents. Drive TOC metadata selects valid positions.
+//! Native primary DATA backing and independently selected raw CDDA extents.
 use crate::Result;
 use std::{
     fs::File,
@@ -13,18 +13,29 @@ pub struct Extent {
 }
 
 pub struct Media {
-    extents: Vec<Extent>,
+    data: File,
+    data_cache: Option<[u8; 2352]>,
+    audio: Vec<Extent>,
+}
+
+pub(crate) enum DataSector {
+    Complete([u8; 2352]),
+    Retained([u8; 2352]),
 }
 
 impl Media {
-    /// Bind ordered, nonoverlapping raw 2352-byte program extents. Offsets and
-    /// lengths are explicit; this does not parse a CUE or infer a TOC.
-    pub fn new(extents: Vec<Extent>) -> Result<Self> {
-        if !(1..=99).contains(&extents.len()) {
-            return Err("CD media requires 1..99 raw backing extents".into());
+    /// Bind the primary raw DATA file and ordered CDDA program extents. DATA
+    /// uses global LBAs in that file, independently of TOC track selection.
+    /// CDDA offsets are explicit; this does not parse a CUE or infer a TOC.
+    pub fn new(data: File, audio: Vec<Extent>) -> Result<Self> {
+        let data_bytes = data.metadata()?.len();
+        if data_bytes == 0 || !data_bytes.is_multiple_of(2352) || audio.len() > 99 {
+            return Err(
+                "CD media requires whole raw DATA sectors and at most 99 CDDA extents".into(),
+            );
         }
         let mut previous_end = 0;
-        for extent in &extents {
+        for extent in &audio {
             let end = i64::from(extent.first_lba) + i64::from(extent.sectors);
             let file_end = extent
                 .file_sector
@@ -42,12 +53,35 @@ impl Media {
             }
             previous_end = end as i32;
         }
-        Ok(Self { extents })
+        Ok(Self {
+            data,
+            data_cache: None,
+            audio,
+        })
     }
 
-    pub(crate) fn read_sector(&mut self, lba: i32) -> Result<[u8; 2352]> {
+    pub(crate) fn read_data_sector(&mut self, lba: i32) -> Result<DataSector> {
+        if lba < 0 {
+            return Err("CD DATA backing requires a nonnegative global LBA".into());
+        }
+        self.data.seek(SeekFrom::Start(lba as u64 * 2352))?;
+        let mut bytes = [0; 2352];
+        match self.data.read(&mut bytes)? {
+            2352 => {
+                self.data_cache = Some(bytes);
+                Ok(DataSector::Complete(bytes))
+            }
+            0 => self
+                .data_cache
+                .map(DataSector::Retained)
+                .ok_or_else(|| "CD DATA EOF requires a previously defined complete buffer".into()),
+            _ => Err("CD DATA partial positive reads are not implemented".into()),
+        }
+    }
+
+    pub(crate) fn read_audio_sector(&mut self, lba: i32) -> Result<[u8; 2352]> {
         let extent = self
-            .extents
+            .audio
             .iter_mut()
             .find(|extent| {
                 lba >= extent.first_lba

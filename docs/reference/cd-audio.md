@@ -147,7 +147,8 @@ TOC errors, XA withholding, muted playback reports, pregap autopause and disc en
 The same guests' reference execution agrees in MMIO values, relative access cycles
 and result memory. Subcapacity XA/CDDA submission and frame counts also agree,
 without accepting audio-worker phase or PCM.
-Actual backing-read failure and pending audio host waits remain unsupported.
+Other DATA I/O failures, partial reads and pending audio host waits remain
+unsupported. Zero-byte EOF after a defined DATA read is described below.
 Attached DMA3 uses immediate copying and a separate completion deadline as
 described below. Other scheduler interactions, broader IRQ timing and hardware
 fidelity retain
@@ -174,6 +175,18 @@ source or dependency is imported.
   visible size; consuming the block clears the data request. Reasserting BFRD
   preserves the cursor. These are native comparison facts requiring separate
   physical-drive and timing evidence.
+
+Native raw DATA reads use the primary image file at global LBAs, independently
+of per-track CDDA backing. In a multi-file DATA CUE, a later valid data track can
+therefore reach EOF in that primary file. After a complete DATA read defines the
+buffer, native EOF retains it. The CD callback reuses its stale header, reruns
+routing, advances position and schedules the next read. Host-data delivery copies
+the FIFO and emits normal INT1; withheld XA does not. Rust follows this bounded
+comparison behavior; it does not invent an INT5 or retry. Pause,
+seek, Init and later Read commands preserve the image-owned cache. CDDA neither
+replaces nor clears it. Undefined initial buffers, partial positive reads and
+other I/O errors remain unsupported. These are pinned-reader facts, requiring
+separate hardware evidence.
 
 The attached Rust controller follows the native DMA path separately from manual
 word service. A busy CHCR write with DPCR channel 3 enabled copies the selected
@@ -216,8 +229,9 @@ lead-out reject with `[status | 4, 0x10]`. SeekP permits audio and checks the
 unfudged target after adjusting current position. Read errors perform no media
 read and retain position, cached header and data. Explicit Seek completion
 invalidates GetlocL on either outcome. Rust applies these rules when supplied
-an explicit TOC; data-only contexts without metadata remain unchecked. Actual
-failed data reads remain unsupported.
+an explicit TOC; data-only contexts without metadata remain unchecked. Other
+failed data reads remain unsupported; defined-buffer EOF uses the primary-file
+path above.
 
 [Implementation, original SDK checks and raw-disc evidence](../specs/formats/audio.md#rust-cd-drive-commands-and-sector-routing)
 keep command semantics separate from timing, drive initialization and physical

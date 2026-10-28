@@ -2301,10 +2301,24 @@ starts do not request another FIFO callback; final completions do when space
 permits.
 
 Attach `cd_media::Media` with `Interconnect::configure_cd_media` before scheduling
-work. Its owned File extents declare first LBA, file-sector offset and sector
-count in raw 2,352-byte units. They must be ordered, nonoverlapping and within
-their files. Media does not infer a TOC or parse a CUE. Configure the data FIFO
-for data delivery and the audio queue for selected XA or unmuted CDDA delivery.
+work. `Media::new` takes an owned primary DATA File and zero to 99 CDDA extents.
+The primary file must contain whole raw 2,352-byte sectors. DATA reads use global
+LBAs in that file, independently of TOC track selection. CDDA extents declare
+first LBA, file-sector offset and sector count; they must be ordered,
+nonoverlapping and within their files. Media does not infer a TOC or parse a CUE.
+Configure the data FIFO for data delivery and the audio queue for selected XA or
+unmuted CDDA delivery.
+
+A complete DATA read defines the image owner's retained buffer. Zero-byte EOF
+then reuses that buffer, including its old header and payload. The drive reruns
+routing and advances its current position; host-data delivery copies the FIFO
+and publishes normal INT1, while withheld XA does not. This matches the pinned
+native reader's primary-file behavior for later DATA tracks in a multi-file CUE.
+Only this retained automatic delivery bypasses equality between the header LBA
+and current drive LBA; Mode-2 shape, subheader, EDC and routing checks remain.
+Manual `Drive::sector` stays strict. The cache survives Read, Pause, Seek and
+Init, and CDDA does not modify it. EOF before a complete buffer, partial positive
+reads and other I/O errors fail explicitly.
 
 ReadN/S acknowledge and schedule a read callback after 20 milliseconds. That
 callback moves to the located position and schedules the combined seek, speed
@@ -2361,7 +2375,8 @@ during explicit seek preparation. The same guests run through reference
 XA/CDDA submission counts and frame counts agree for a bounded subcapacity
 interval. This does not establish audio-worker phase or audible output.
 
-Actual backing-read failure and pending audio host-wait timing fail explicitly.
+Other DATA I/O failures, partial reads and pending audio host-wait timing fail
+explicitly. Defined-buffer EOF follows the retained-data path above.
 Attached DMA completion can overlap read and command callbacks because copying
 already finished during the CHCR write. Other scheduler interactions, broader IRQ phase and
 hardware fidelity remain unaccepted. A fresh ready drive has no retained GetlocL
@@ -2584,9 +2599,10 @@ against track metadata.
 It returns `Delivery::Error` for a TOC error reached through normal sector
 advancement, before requiring raw bytes. An initial error already returned by
 `complete` leaves the drive Idle and cannot be emitted again by `sector`.
-At a valid data position, `None` rejects without mutation; actual failed
-media-read behavior remains unsupported. Supplied sectors must use the next
-expected LBA.
+At a valid data position, `None` rejects without mutation. Supplied sectors must
+use the next expected LBA. The attached media owner separately supplies retained
+bytes after a qualified zero-byte EOF; other failed media reads remain
+unsupported.
 Raw sync, Mode-2 header, duplicated subheaders and EDC are checked before state
 advances. Form-2 sectors may omit EDC under the existing codec contract; Form-1
 checks cover EDC, not ECC repair. Routing returns selected XA, filtered audio,

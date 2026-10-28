@@ -4,7 +4,7 @@ use crate::{
     machine::{
         bus::Bus,
         cd_drive::{Activity, Delivery, Drive},
-        cd_media::Media,
+        cd_media::{DataSector, Media},
         cd_queue::Admission,
     },
     Result,
@@ -403,14 +403,16 @@ impl Interconnect {
                     .media
                     .as_mut()
                     .ok_or("CD read requires configured media")?
-                    .read_sector(controller.drive.next_lba())?,
+                    .read_data_sector(controller.drive.next_lba())?,
             )
         } else {
             None
         };
-        let delivery = controller
-            .drive
-            .sector(raw.as_ref().map(|bytes| &bytes[..]))?;
+        let delivery = match raw.as_ref() {
+            Some(DataSector::Complete(bytes)) => controller.drive.sector(Some(bytes))?,
+            Some(DataSector::Retained(bytes)) => controller.drive.retained_sector(bytes)?,
+            None => controller.drive.sector(None)?,
+        };
         match delivery {
             Delivery::Error(response) => {
                 self.respond_clocked_cd(response.interrupt, &response.bytes)?;
@@ -439,7 +441,7 @@ impl Interconnect {
                     .media
                     .as_mut()
                     .ok_or("CD Play requires configured media")?
-                    .read_sector(lba)?,
+                    .read_audio_sector(lba)?,
             )
         } else {
             None

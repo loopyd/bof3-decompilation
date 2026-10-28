@@ -768,9 +768,21 @@ impl Drive {
 
     /// Supply one Read boundary. TOC errors precede any backing read and accept
     /// None; a valid data position requires a whole raw Mode-2 sector. Actual
-    /// failed data reads, overruns and deferred retry remain unsupported.
-    /// Input checks precede data state changes, including EDC and routing checks.
+    /// failed data reads require the owned media cache. Overruns and deferred
+    /// retry remain unsupported. Input checks precede data state changes.
     pub fn sector(&mut self, raw: Option<&[u8]>) -> Result<Delivery> {
+        self.sector_with_position(raw, true)
+    }
+
+    pub(crate) fn retained_sector(&mut self, raw: &[u8; 2352]) -> Result<Delivery> {
+        self.sector_with_position(Some(raw), false)
+    }
+
+    fn sector_with_position(
+        &mut self,
+        raw: Option<&[u8]>,
+        check_position: bool,
+    ) -> Result<Delivery> {
         if self.status() & 0xe0 != 0x20 {
             return Err("CD drive: sector arrival requires completed read seek".into());
         }
@@ -787,7 +799,7 @@ impl Drive {
             return Err("CD drive: expected raw Mode-2 sector with matching subheaders".into());
         }
         let position = CdPosition::from_bcd(raw[12..15].try_into()?)?;
-        if position.lba() != self.next_lba {
+        if check_position && position.lba() != self.next_lba {
             return Err(format!(
                 "CD drive: sector LBA {} differs from expected {}",
                 position.lba(),
