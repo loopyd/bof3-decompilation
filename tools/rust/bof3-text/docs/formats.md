@@ -251,7 +251,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v15`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v16`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -409,7 +409,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v15` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v16` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -726,6 +726,24 @@ digits respectively. All four formats use the 64-byte scratch buffer at
 `0x80145AD4`. The largest output, including NUL, occupies eleven bytes.
 The alignment gaps `0x801D0E8D..0x801D0E90`, `0x801D0E95..0x801D0E98` and
 `0x801D0E9D..0x801D0EA0` remain protected. Runtime rendering remains unverified.
+
+Four further SHOP formats use the existing byte-decimal codecs. Capacities
+include NUL; formatted bounds exclude it.
+
+| Address | Original | Capacity | Codec | Formatted bound |
+| --- | --- | --- | --- | --- |
+| `0x801D0DE0` | `%02d` | 5 | `ascii-u8-decimal-format` | 3 |
+| `0x801D0E20` | `%3d/%3d` | 8 | `ascii-u8-decimal-pair-format` | 7 |
+| `0x801D0E44` | `%2d` | 4 | `ascii-u8-decimal-format` | 3 |
+| `0x801D0E48` | `%02d %02d` | 10 | `ascii-u8-decimal-pair-format` | 7 |
+
+Each argument is an unsigned byte. The second argument at `0x801D0E20` is
+32 or 128. Single formats retain one conversion and pair formats retain two,
+with widths 1..4 and optional zero padding within the encoded and output limits.
+The first format draws digits and spaces through `0x8014FF0C`; the others draw
+through `0x80150098`. All use the 64-byte scratch buffer at `0x80145AD4`.
+The alignment gaps `0x801D0DE5..0x801D0DEC`, `0x801D0E28..0x801D0E2C` and
+`0x801D0E52..0x801D0E54` remain protected. Runtime rendering remains unverified.
 
 ## Bank layout
 

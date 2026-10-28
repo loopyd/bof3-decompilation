@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v15";
+pub const SCHEMA: &str = "bof3.inline-text/v16";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -957,10 +957,11 @@ const LAYOUTS: &[Layout] = &[
         name: "US SHOP labels and numeric formats",
         load: 0x801d0c00,
         size: 87660,
-        sha256: "c500e473ddc20a68cf60d677c44706cf0542777c61df4e086ed2ff604a7d19f8",
+        sha256: "e449aac8daaaf08db3384e8512724c19a3c19183b9e76e8b8b8d4f26227f47fa",
         consumers: &[
             0x801d5894, 0x801d9a58, 0x801dca2c, 0x801dd0a8, 0x801dd934, 0x801ddfb0, 0x801dee64,
             0x801df00c, 0x801df6a8, 0x801e112c, 0x801e1e80, 0x801e2f04, 0x801e3284, 0x801e37f4,
+            0x801da47c, 0x801dc6fc, 0x801dd578, 0x801ddcb0,
         ],
         allocations: &[
             Allocation::bounded_format(0x801d0c68, 20, Codec::AsciiU8DecimalTripleFormat, &[]),
@@ -1027,6 +1028,20 @@ const LAYOUTS: &[Layout] = &[
                 0x801d0e98,
                 5,
                 Codec::AsciiU8DecimalFieldFormat,
+                &[0x80150098],
+            ),
+            Allocation::bounded_format(0x801d0de0, 5, Codec::AsciiU8DecimalFormat, &[0x8014ff0c]),
+            Allocation::bounded_format(
+                0x801d0e20,
+                8,
+                Codec::AsciiU8DecimalPairFormat,
+                &[0x80150098],
+            ),
+            Allocation::bounded_format(0x801d0e44, 4, Codec::AsciiU8DecimalFormat, &[0x80150098]),
+            Allocation::bounded_format(
+                0x801d0e48,
+                10,
+                Codec::AsciiU8DecimalPairFormat,
                 &[0x80150098],
             ),
         ],
