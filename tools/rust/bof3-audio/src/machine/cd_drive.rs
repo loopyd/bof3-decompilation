@@ -254,6 +254,24 @@ impl Drive {
         };
         Ok(self.seek_delay_micros(target, physical, 167_000)? * 33_868_800 / 1_000_000)
     }
+    pub(crate) fn seekp_delay_cycles(&self) -> Result<u64> {
+        Ok(self.seek_delay_micros(self.seek_lba, true, 167_000)? * 33_868_800 / 1_000_000)
+    }
+    /// Native invokes the retained SeekP handler even after its queue is cleared.
+    /// Its phase follows current status, independently of Read's seek phase.
+    pub(crate) fn continue_seekp(&mut self) -> Option<Response> {
+        self.setloc_pending = false;
+        if self.status() & 0xe0 == 0x40 {
+            Some(self.finish_seek(self.seek_lba, true))
+        } else {
+            self.speed_changed = false;
+            self.activity = Activity::Seeking {
+                target: self.seek_lba,
+                physical: true,
+            };
+            None
+        }
+    }
     fn seek_delay_micros(&self, target: i32, physical: bool, base: u64) -> Result<u64> {
         self.toc
             .as_ref()
@@ -565,15 +583,7 @@ impl Drive {
                 self.activity = Activity::Seeking { target, physical };
                 Ok(None)
             }
-            Activity::Seeking { target, physical } => {
-                self.next_lba = target - if physical { (target + 150) / 32768 } else { 0 };
-                self.activity = Activity::Paused;
-                self.header_valid = false;
-                Ok(Some(match self.media_error_code(target, physical) {
-                    Some(code) => self.media_error(code),
-                    None => self.response(2),
-                }))
-            }
+            Activity::Seeking { target, physical } => Ok(Some(self.finish_seek(target, physical))),
             Activity::PreparingPlay { target } => {
                 self.speed_changed = false;
                 self.next_lba = target;
@@ -590,6 +600,16 @@ impl Drive {
                 Ok(Some(self.response(2)))
             }
             _ => Err("CD drive: no mechanical transition to complete".into()),
+        }
+    }
+
+    fn finish_seek(&mut self, target: i32, physical: bool) -> Response {
+        self.next_lba = target - if physical { (target + 150) / 32768 } else { 0 };
+        self.activity = Activity::Paused;
+        self.header_valid = false;
+        match self.media_error_code(target, physical) {
+            Some(code) => self.media_error(code),
+            None => self.response(2),
         }
     }
 

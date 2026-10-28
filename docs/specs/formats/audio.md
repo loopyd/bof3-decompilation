@@ -2314,7 +2314,16 @@ replacement resets the cursor and preserves BFRD, independently of response
 queue retention or drops. Selected XA enters the existing queue; withheld XA
 leaves the prior data buffer intact. ADPBUSY follows realtime reading and the XA
 end latch. Pause/Init leave the old read deadline to cancel when visited. Read
-can cancel an unfinished SeekP continuation.
+can cancel an unfinished SeekP continuation. If FIFO and command callbacks are
+already due in one branch snapshot, the cancelled SeekP callback still runs with
+its retained opcode. It clears Read's seek phase, consumes any speed settling
+and restarts the physical seek without another ACK. The pending read callback
+later cancels; the restarted SeekP uses its normal completion or error path. Its
+executing queue remains cleared, so a repeated Read leaves COMMAND scheduled.
+That later SeekP callback chooses its phase from current status and uses the
+retained seek target. Takeover before the old command deadline cancels it
+completely. Each dispatched pass retains the current native comparison build's
+lowest target at that pass's cycle, even when tested deadlines are future.
 
 Play also uses the read slot. Located Play waits 20 milliseconds, then combines
 its physical seek, speed settling and first-sector period. The next callback
@@ -2338,15 +2347,14 @@ controller owns them.
 
 Bounded native comparisons cover immediate commands, Pause/Init/Seek continuations,
 ReadN/S and Play cadence, active Pause, speed settling, response backlog, requested
-buffer replacement, SeekP takeover, XA withholding, muted reports, pregap autopause
-and disc end. The same guests run through reference `Execution` with MMIO values,
-relative access cycles and result buffers
-compared. XA/CDDA submission counts and frame counts agree for bounded subcapacity
+buffer replacement, ordinary and same-pass SeekP takeover, XA withholding, muted
+reports, pregap autopause and disc end. The same guests run through reference
+`Execution` with MMIO values, relative access cycles and result buffers compared.
+XA/CDDA submission counts and frame counts agree for a bounded subcapacity
 interval. This does not establish audio-worker phase or audible output.
 
-Actual backing-read failure, active DMA3 overlap, pending audio
-host-wait timing and a cancelled continuation already selected in the same branch
-pass fail explicitly. A media error during explicit seek preparation also fails
+Actual backing-read failure, active DMA3 overlap and pending audio host-wait
+timing fail explicitly. A media error during explicit seek preparation also fails
 before discarding that pending seek, as do playback end/autopause during that
 preparation. Other scheduler interactions, broader IRQ phase and hardware
 fidelity remain unaccepted. A fresh ready drive has no retained
@@ -2476,13 +2484,14 @@ from current position, following the native absolute-MSF adjustment. Retained
 seek remains the exact target. Pause ACKs the old status, becomes Idle
 immediately and returns INT2 at its supplied completion.
 
-ReadN/ReadS can take over an unfinished SeekP, both before seeking starts and
-during the Seeking phase. Read cancels the old seek completion, retains its exact
-seek target and starts the normal two-phase Read path with an Idle ACK. Cached
-header validity, queued audio and selected data survive; the interconnect still
-resets XA predictors. No SeekP INT2 follows the takeover. Pending audio and active
-DMA3 reject this operation before mutation. Other command takeover and overlap
-cases remain unsupported.
+With supplied boundaries, ReadN/ReadS can take over an unfinished SeekP, both
+before seeking starts and during the Seeking phase. Read cancels the old seek
+completion, retains its exact seek target and starts the normal two-phase Read
+path with an Idle ACK. Cached header validity, queued audio and selected data
+survive; the interconnect still resets XA predictors. No SeekP INT2 follows the takeover. Pending audio and active
+DMA3 reject this operation before mutation. The attached controller retains the
+[same-pass callback exception](#rust-cd-decoder-host-registers). Other command
+takeover and overlap cases remain unsupported.
 
 GetlocL validity is separate from its cached bytes. Pause invalidates at ACK;
 SeekL/SeekP invalidate at final completion. Read initiation and its seek phase

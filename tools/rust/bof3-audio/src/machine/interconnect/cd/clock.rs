@@ -18,6 +18,14 @@ pub(in crate::machine::interconnect) struct Controller {
     deadlines: [Deadline; 3],
     media: Option<Media>,
     lowest_target: u64,
+    seekp_command: SeekPCommand,
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum SeekPCommand {
+    Other,
+    Executing,
+    Cleared,
 }
 
 const FIFO: usize = 0;
@@ -75,6 +83,7 @@ impl Interconnect {
             deadlines: [Deadline::default(); 3],
             media: None,
             lowest_target: cycle,
+            seekp_command: SeekPCommand::Other,
         });
         Ok(())
     }
@@ -153,17 +162,12 @@ impl Interconnect {
             {
                 return Ok(());
             }
-            let mut lowest_target = cycle;
-            let mut future_target: Option<u64> = None;
             for (slot, was_pending) in pending.into_iter().enumerate() {
                 if !was_pending {
                     continue;
                 }
                 let target = controller.deadlines[slot].target;
-                if target > cycle {
-                    future_target =
-                        Some(future_target.map_or(target, |previous| previous.min(target)));
-                } else {
+                if target <= cycle {
                     controller.deadlines[slot].pending = false;
                     if slot == FIFO {
                         self.service_clocked_cd_fifo(&mut controller, cycle)?;
@@ -174,12 +178,10 @@ impl Interconnect {
                     }
                 }
             }
-            if let Some(target) = future_target {
-                lowest_target = target;
-            }
-            // Native branchTest overwrites schedule()'s minimum with the future
-            // targets encountered in its original pending-slot snapshot.
-            controller.lowest_target = lowest_target;
+            // This native build initializes signed32 lowestDistance with
+            // INT64_MAX, yielding -1. No positive distance replaces the pass's
+            // current-cycle target, including after a callback schedules work.
+            controller.lowest_target = cycle;
             Ok(())
         })();
         self.cd_controller = Some(controller);
@@ -231,12 +233,6 @@ impl Interconnect {
         if read && command.parameters.is_empty() && controller.media.is_none() {
             return Err("CD read requires configured media".into());
         }
-        let takes_over_seekp = read
-            && matches!(
-                controller.drive.activity(),
-                Activity::PreparingSeek { physical: true, .. }
-                    | Activity::Seeking { physical: true, .. }
-            );
         let pause_delay = if controller.drive.status() & 0xe0 == 0 {
             200
         } else if controller.drive.double_speed() {
@@ -257,8 +253,11 @@ impl Interconnect {
                 controller.schedule(READ, cycle, delay)?;
             }
             if read {
-                if takes_over_seekp {
+                if controller.seekp_command == SeekPCommand::Executing {
                     controller.deadlines[COMMAND].pending = false;
+                    // Queue clear retains opcode22. A selected callback still
+                    // invokes it, but a later Read does not cancel it again.
+                    controller.seekp_command = SeekPCommand::Cleared;
                 }
                 controller.schedule(READ, cycle, 20_000 * 33_868_800 / 1_000_000)?;
             }
@@ -274,6 +273,11 @@ impl Interconnect {
                 _ => None,
             };
             if let Some(micros) = delay {
+                controller.seekp_command = if command.opcode == 0x16 {
+                    SeekPCommand::Executing
+                } else {
+                    SeekPCommand::Other
+                };
                 return controller.schedule(COMMAND, cycle, micros * 33_868_800 / 1_000_000);
             }
         }
@@ -285,6 +289,22 @@ impl Interconnect {
         controller: &mut Controller,
         cycle: u64,
     ) -> Result<()> {
+        if controller.seekp_command != SeekPCommand::Other {
+            let delay = if controller.drive.status() & 0xe0 != 0x40 {
+                Some(controller.drive.seekp_delay_cycles()?)
+            } else {
+                None
+            };
+            let response = controller.drive.continue_seekp();
+            if let Some(delay) = delay {
+                controller.schedule(COMMAND, cycle, delay)?;
+            }
+            if let Some(response) = response {
+                self.respond_clocked_cd(response.interrupt, &response.bytes)?;
+                self.schedule_clocked_cd_fifo_if_space(controller, cycle)?;
+            }
+            return Ok(());
+        }
         if !matches!(
             controller.drive.activity(),
             Activity::PreparingSeek { .. }
@@ -292,10 +312,7 @@ impl Interconnect {
                 | Activity::Pausing
                 | Activity::Resetting
         ) {
-            return Err(
-                "CD controller: cancelled continuation in a shared branch pass is not implemented"
-                    .into(),
-            );
+            return Err("CD controller: command continuation has no owning transition".into());
         }
         let seek_delay = if matches!(controller.drive.activity(), Activity::PreparingSeek { .. }) {
             Some(controller.drive.seek_delay_cycles()?)

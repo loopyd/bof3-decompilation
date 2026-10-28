@@ -110,6 +110,15 @@ buffer. Read can take over an unfinished SeekP, and old read callbacks cancel
 after Pause/Init. Delay conversion truncates the complete duration once and
 schedules from the callback's actual cycle.
 
+A cancelled SeekP callback still runs if FIFO and command were already due in
+the same branch snapshot. It clears Read's seek phase and restarts the physical
+seek without another acknowledgement. The pending read callback later cancels;
+SeekP uses its normal completion or error path. Its executing queue stays cleared,
+so a repeated Read leaves that command deadline scheduled. The later SeekP
+callback uses current status and retained seek target. Ordinary takeover before
+the old command deadline cancels SeekP completely. Each dispatched pass keeps
+the current native comparison build's lowest target at that pass's cycle.
+
 Play uses that same read slot and effective sector period. Located Play waits
 20 milliseconds before its physical seek, speed settling and first-sector delay;
 immediate Play starts its period directly. The controller reads audio program
@@ -132,11 +141,11 @@ TOC errors, XA withholding, muted playback reports, pregap autopause and disc en
 The same guests' reference execution agrees in MMIO values, relative access cycles
 and result memory. Subcapacity XA/CDDA submission and frame counts also agree,
 without accepting audio-worker phase or PCM.
-Actual backing-read failure, active DMA3 overlap, pending audio host waits,
-shared-pass stale continuations and media/playback termination during explicit
-seek preparation remain unsupported. Other scheduler interactions, broader IRQ
-timing and hardware fidelity retain separate obligations. Init does not reconstruct
-an unknown retained GetlocL header in a fresh ready context.
+Actual backing-read failure, active DMA3 overlap, pending audio host waits and
+media/playback termination during explicit seek preparation remain unsupported.
+Other scheduler interactions, broader IRQ timing and hardware fidelity retain
+separate obligations. Init does not reconstruct an unknown retained GetlocL
+header in a fresh ready context.
 
 [Implementation and original-driver checks](../specs/formats/audio.md#rust-cd-decoder-host-registers)
 use explicit host state and response boundaries. This reference does not supply
@@ -317,12 +326,12 @@ current position while retaining the exact seek target. Pause becomes Idle
 and invalidates GetlocL immediately. Cached header bytes survive; Init restores
 their validity, and a new sector replaces them before routing. Native guest
 responses and phase observations qualify these rules under supplied cycles.
-ReadN/S can replace either unfinished SeekP phase. The old seek completion is
-cancelled, the exact seek target survives, and Read acknowledges Idle before its
-normal two supplied phases. Native observations confirm both takeover phases and
-the absence of a later SeekP INT2. Pending audio and active DMA3 remain rejected
-by the interconnect. Automatic scheduling, other command overlaps and hardware
-timing remain open.
+With supplied boundaries, ReadN/S can replace either unfinished SeekP phase.
+The old seek completion is cancelled, the exact seek target survives, and Read
+acknowledges Idle before its normal two supplied phases. Native observations
+confirm both takeover phases and the absence of a later SeekP INT2. Pending audio and active DMA3 remain rejected
+by the interconnect. The attached controller preserves the same-pass exception
+described above. Other command overlaps and hardware timing remain open.
 Coding follows the first-success latch documented below.
 
 Bounded native Init observations agree on position, pending Setloc, mode, mute
