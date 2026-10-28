@@ -270,7 +270,7 @@ impl Fixture {
                     self.finish_interrupt(&cpu);
                 }
             }
-            if let Some(command) = self.bus.inner.take_cd_command().unwrap() {
+            if let Some(command) = self.bus.inner.service_cd_fifo().unwrap() {
                 assert!(self.pending.is_none());
                 self.commands
                     .push((command.opcode, command.parameters.clone()));

@@ -68,7 +68,7 @@ fn submit(bus: &mut FixtureBus, drive: &mut Drive, opcode: u8, parameters: &[u8]
     }
     let cpu = execute(bus, 0x80176734, &[u32::from(opcode), 0x80010000, 0, 1]);
     assert_eq!(cpu.register(2), 0, "command {opcode:#04x}");
-    let command = bus.0.take_cd_command().unwrap().unwrap();
+    let command = bus.0.service_cd_fifo().unwrap().unwrap();
     assert_eq!(command.opcode, opcode);
     assert_eq!(command.parameters, parameters);
     let response = drive.command(&command, 0).unwrap();

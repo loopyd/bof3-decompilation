@@ -62,10 +62,10 @@ fn original_us_command_writer_submits_parameters_through_mmio() {
         }
         let cpu = execute(&mut bus, 0x80176734, &[command, 0x80010000, 0, 1]);
         assert_eq!(cpu.register(2), 0);
-        let sent = bus.0.take_cd_command().unwrap().unwrap();
+        let sent = bus.0.service_cd_fifo().unwrap().unwrap();
         assert_eq!(sent.opcode, command as u8);
         assert_eq!(sent.parameters, parameters);
-        assert!(bus.0.cd_host().unwrap().busy());
+        assert!(!bus.0.cd_host().unwrap().busy());
         bus.0.respond_cd(3, &[2]).unwrap();
         execute(&mut bus, 0x80175c60, &[]);
         assert_eq!(bus.read(0x1f801803, Width::Byte).unwrap() & 7, 0);

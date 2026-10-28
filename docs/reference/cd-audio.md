@@ -62,8 +62,24 @@ remain open; encoded-rate extraction keeps its existing separate contract.
 cover bank selection, parameter/result FIFOs, response readiness, interrupt
 mask/acknowledgement and volume ports. Interrupt numbers occupy a bitmasked
 field; they are not independent one-hot flags. Response availability and IRQ
-delivery can occur separately. Overlapping commands and decoder reset have
-unresolved behaviour and are not approximated by the Rust host component.
+delivery can occur separately. The Rust host retains numeric mask/partial-clear
+behavior; the native comparison below covers full acknowledgements. Decoder
+reset remains unsupported.
+
+The [native queue owner](../../third_party/pcsx-redux-agentic/src/core/cdrom.cc)
+retains two response elements. A third candidate is dropped when both are full.
+FIFO service promotes an acknowledged head's tail, even over unread head bytes,
+and accepts a command only when no response cause or tail remains. Insertion can
+also promote an acknowledged head before appending a new tail. BUSY follows the
+pending command, so acceptance clears it before the command's response. Result
+readiness compares cursor and payload size; reading beyond the end reasserts it,
+while the separately latched drained flag remains set.
+
+Rust exposes that transition through `service_cd_fifo` at a caller-supplied MCU
+boundary. Bounded guest backlog, drop, pending-Pause, acknowledgement/drain and
+result-wrap observations agree with the host consumer. The native 797-microsecond
+FIFO schedule and branch-boundary dispatch are not supplied by this API. Media,
+mechanical transitions and callback phase retain separate timing obligations.
 
 [Implementation and original-driver checks](../specs/formats/audio.md#rust-cd-decoder-host-registers)
 use explicit host state and response boundaries. This reference does not supply

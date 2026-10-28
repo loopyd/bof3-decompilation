@@ -71,7 +71,7 @@ fn pending_host_work_and_bad_blocks_preserve_data_and_response() {
     let mut host = host();
     host.write(1, 1).unwrap();
     assert!(host.deliver_data(0x22, &[1; 2048]).is_err());
-    host.take_command().unwrap();
+    host.service_fifo().unwrap();
     assert!(host.deliver_data(0x22, &[1; 2048]).is_err());
     host.stage_response(&[2]).unwrap();
     host.read(1).unwrap();

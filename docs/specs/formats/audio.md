@@ -2268,33 +2268,42 @@ and empty FIFO/interrupt state are a test/execution context, not recovered BIOS
 defaults. The existing physical/cached/uncached I/O aliases apply. Registers use
 byte accesses; the separately configured data port also supports halfword reads.
 
-Command submission captures a byte and sets BUSY; `take_cd_command` transfers
-the parameter FIFO to the separate drive owner. `stage_cd_response` publishes
-response bytes and clears BUSY; `raise_cd_interrupt` signals them independently.
-`respond_cd` is convenience for explicitly coincident boundaries, not an assumed
-latency. The host does not interpret commands, invent disc status or advance
-clocks. No command automatically receives a success response.
+Command submission retains an opcode and up to 16 parameter bytes and sets BUSY.
+Another command write replaces the pending opcode; parameter writes beyond 16
+are ignored. `service_cd_fifo` performs one caller-supplied MCU FIFO callback:
+it promotes an acknowledged head's pending response, then accepts a command only
+when no response cause or tail blocks it. BUSY clears at command acceptance.
+Unread bytes from an acknowledged head do not by themselves block that callback.
+The host does not interpret commands or supply callback timing.
 
-Parameter capacity is 16 bytes. Result reads retain padded 16-byte wrap while
-readiness clears after the actual payload. Odd banks expose interrupt flags,
-even banks their mask; acknowledgement and parameter clearing are separate from
-result consumption. IRQ2 enters the existing edge-latched interrupt controller.
-ATV/ADPCTL writes use the existing drive-volume component. Retained
+`respond_cd` inserts a response with 1–16 bytes and interrupt type 1–5. Two
+responses can be retained. A full queue drops another candidate. If an
+acknowledged head already has a tail, a new response promotes that tail and
+appends the candidate. `stage_cd_response` and `raise_cd_interrupt` retain explicit
+separate response/IRQ observations with an otherwise empty response queue;
+they do not infer latency or admit FIFO service before the staged IRQ.
+
+Result reads use a padded 16-byte ring. Readiness compares the cursor with the
+actual payload size, so it clears exactly at the end and reasserts on an
+overread until that boundary is reached again. The queue separately remembers
+that the payload has been drained. Odd banks expose numeric interrupt flags,
+even banks their mask. Acknowledgement and parameter clearing do not consume
+result bytes. IRQ2 enters the existing edge-latched interrupt controller.
+ATV/ADPCTL writes use the existing drive-volume component.
+
+Absent configuration, decoder reset and manual XA controls fail explicitly.
+Sector requests and data reads require the separate data FIFO below. Its
+serialized delivery API still protects active data reads and pending host work;
+response queuing does not accept native data-overrun or concurrent-DMA behavior.
+Automatic FIFO delays, command/drive scheduling and broader IRQ timing remain
+implementation obligations. Retained
 [register research](../../reference/cd-audio.md#cd-decoder-host-interface)
-is external evidence, not full hardware acceptance.
+qualifies the native comparison separately from hardware acceptance.
 
-Overlapping commands/responses, parameter overflow, absent configuration,
-decoder reset and manual XA controls fail explicitly. Sector requests and data
-reads require the separately configured data FIFO described below.
-Responses require 1–16 bytes and interrupt type 1–5. A later response cannot
-replace one awaiting delivery, acknowledgement or draining. Reading the response
-before its interrupt does not permit another command to overwrite that state.
-Drive-command execution, response queues/latencies and XA
-playback status remain implementation obligations.
-
-[Six host checks](../../../tools/rust/bof3-audio/tests/cd_host.rs) exercise FIFO
-capacity/wrap, busy/readiness boundaries, mask/partial acknowledgement, IRQ
-relatching, volume application/mute and rejected accesses. The
+[Host checks](../../../tools/rust/bof3-audio/tests/cd_host.rs) exercise FIFO
+capacity/wrap, command readiness, queued response retention, mask/partial
+acknowledgement, IRQ relatching, volume application/mute and rejected accesses.
+The
 [original US driver check](../../../tools/rust/bof3-audio/tests/cd_host_runtime.rs)
 runs command submission at `exe/slus_004_22@0x80176734` (full EXE `0xE0734`)
 for Getstat, Setloc, Setmode and Setfilter. It verifies parameter bytes and return

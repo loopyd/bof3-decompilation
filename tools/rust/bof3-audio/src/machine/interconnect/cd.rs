@@ -166,8 +166,10 @@ impl Interconnect {
         self.update_cd_irq();
         Ok(displaced)
     }
-    pub fn take_cd_command(&mut self) -> crate::Result<Option<cd_host::Command>> {
-        Ok(self.cd_mut()?.take_command())
+    pub fn service_cd_fifo(&mut self) -> crate::Result<Option<cd_host::Command>> {
+        let command = self.cd_mut()?.service_fifo();
+        self.update_cd_irq();
+        Ok(command)
     }
     pub fn respond_cd(&mut self, interrupt: u8, bytes: &[u8]) -> crate::Result<()> {
         self.cd_mut()?.respond(interrupt, bytes)?;

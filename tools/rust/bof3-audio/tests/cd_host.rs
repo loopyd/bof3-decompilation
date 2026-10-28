@@ -19,11 +19,11 @@ fn emulator_reset_has_enabled_interrupts_but_no_seeded_response_or_completion() 
     assert_eq!(bus.read(0x1f801803, Width::Byte).unwrap(), 0xe0);
     bus.write(0x1f801800, Width::Byte, 0).unwrap();
     bus.write(0x1f801801, Width::Byte, 1).unwrap();
-    assert_eq!(bus.take_cd_command().unwrap().unwrap().opcode, 1);
+    assert_eq!(bus.service_cd_fifo().unwrap().unwrap().opcode, 1);
     assert!(bus
         .configure_cd_host_reset(Model::EmulatorReference)
         .is_err());
-    assert!(bus.cd_host().unwrap().busy());
+    assert!(!bus.cd_host().unwrap().busy());
     bus.respond_cd(3, &[2]).unwrap();
     assert!(bus.cd_host().unwrap().irq_line());
     assert_eq!(bus.read(0x1f801801, Width::Byte).unwrap(), 2);
@@ -37,24 +37,26 @@ fn command_parameters_busy_and_response_readiness_have_explicit_boundaries() {
         host.write(2, i).unwrap();
     }
     assert_eq!(host.read(0).unwrap(), 0);
-    assert!(host.write(2, 17).is_err());
+    host.write(2, 17).unwrap(); // A full native parameter FIFO ignores another byte.
     host.write(1, 0x19).unwrap();
     assert_eq!(host.read(0).unwrap(), 0x80);
-    assert!(host.respond(3, &[2]).is_err());
+    assert!(host.stage_response(&[2]).is_err());
     assert_eq!(
-        host.take_command(),
+        host.service_fifo(),
         Some(Command {
             opcode: 0x19,
             parameters: (0..16).collect()
         })
     );
-    assert!(host.take_command().is_none());
-    assert!(host.busy());
-    assert_eq!(host.read(0).unwrap(), 0x98);
-    assert!(host.write(1, 1).is_err());
+    assert!(host.service_fifo().is_none());
+    assert!(!host.busy());
+    assert_eq!(host.read(0).unwrap(), 0x18);
     host.respond(3, &[2, 0x20]).unwrap();
     assert_eq!(host.read(0).unwrap(), 0x38);
     assert!(!host.busy());
+    host.write(1, 1).unwrap();
+    assert!(host.busy());
+    assert!(host.service_fifo().is_none());
     assert_eq!(host.read(1).unwrap(), 2);
     assert_eq!(host.read(0).unwrap() & 0x20, 0x20);
     assert_eq!(host.read(1).unwrap(), 0x20);
@@ -63,7 +65,11 @@ fn command_parameters_busy_and_response_readiness_have_explicit_boundaries() {
         assert_eq!(host.read(1).unwrap(), 0);
     }
     assert_eq!(host.read(1).unwrap(), 2);
-    assert_eq!(host.read(0).unwrap() & 0x20, 0);
+    assert_eq!(host.read(0).unwrap() & 0x20, 0x20);
+    host.write(0, 1).unwrap();
+    host.write(3, 0x1f).unwrap();
+    assert_eq!(host.service_fifo().unwrap().opcode, 1);
+    assert!(!host.busy());
 }
 
 #[test]
@@ -78,9 +84,9 @@ fn flags_are_numeric_bitmasked_and_acknowledgement_does_not_drain_response() {
     assert_eq!(host.read(3).unwrap(), 0xe2);
     assert!(!host.irq_line());
     host.write(3, 7).unwrap();
-    assert!(host.respond(2, &[3]).is_err());
-    assert_eq!(host.read(1).unwrap(), 2);
     host.respond(2, &[3]).unwrap();
+    assert_eq!(host.read(1).unwrap(), 2);
+    assert!(host.service_fifo().is_none());
     assert_eq!(host.read(3).unwrap(), 0xe2);
     host.write(2, 2).unwrap();
     assert!(host.irq_line());
@@ -99,20 +105,21 @@ fn response_readiness_can_precede_interrupt_without_accepting_an_overlapping_com
     bus.write(0x1f801802, Width::Byte, 7).unwrap();
     bus.write(0x1f801800, Width::Byte, 0).unwrap();
     bus.write(0x1f801801, Width::Byte, 1).unwrap();
-    assert_eq!(bus.take_cd_command().unwrap().unwrap().opcode, 1);
+    assert_eq!(bus.service_cd_fifo().unwrap().unwrap().opcode, 1);
     bus.stage_cd_response(&[2]).unwrap();
     assert!(!bus.cd_host().unwrap().busy());
     assert_eq!(bus.read(0x1f801800, Width::Byte).unwrap() & 0x20, 0x20);
     assert_eq!(bus.interrupts().status() & 4, 0);
     assert_eq!(bus.read(0x1f801801, Width::Byte).unwrap(), 2);
-    assert!(bus.write(0x1f801801, Width::Byte, 1).is_err());
+    bus.write(0x1f801801, Width::Byte, 1).unwrap();
+    assert!(bus.cd_host().unwrap().busy());
+    assert!(bus.service_cd_fifo().unwrap().is_none());
     assert!(bus.stage_cd_response(&[3]).is_err());
     bus.raise_cd_interrupt(3).unwrap();
     assert_eq!(bus.interrupts().status() & 4, 4);
     bus.write(0x1f801800, Width::Byte, 1).unwrap();
     bus.write(0x1f801803, Width::Byte, 7).unwrap();
-    bus.write(0x1f801800, Width::Byte, 0).unwrap();
-    bus.write(0x1f801801, Width::Byte, 1).unwrap();
+    assert_eq!(bus.service_cd_fifo().unwrap().unwrap().opcode, 1);
 }
 
 #[test]
@@ -167,10 +174,19 @@ fn unsupported_device_paths_and_response_overwrites_fail_without_false_success()
     assert!(host.read(2).is_err());
     assert!(host.write(3, 0x80).is_err());
     host.respond(3, &[2]).unwrap();
-    assert!(host.respond(2, &[3]).is_err());
-    assert!(host.write(1, 1).is_err());
+    host.respond(2, &[3]).unwrap();
+    host.respond(5, &[0x99]).unwrap(); // Full queue drops this candidate.
+    host.write(1, 1).unwrap();
+    assert!(host.service_fifo().is_none());
     host.write(0, 1).unwrap();
     assert!(host.write(3, 0x87).is_err());
     assert_eq!(host.read(3).unwrap(), 0xe3);
     assert_eq!(host.read(1).unwrap(), 2);
+    host.write(3, 0x1f).unwrap();
+    assert!(host.service_fifo().is_none());
+    assert_eq!(host.read(3).unwrap(), 0xe2);
+    assert_eq!(host.read(1).unwrap(), 3);
+    host.write(3, 0x1f).unwrap();
+    assert_eq!(host.service_fifo().unwrap().opcode, 1);
+    assert_eq!(host.read(3).unwrap(), 0xe0);
 }

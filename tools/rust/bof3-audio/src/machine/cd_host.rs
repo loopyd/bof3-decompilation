@@ -19,15 +19,49 @@ pub struct Host {
     index: u8,
     parameters: Vec<u8>,
     command: Option<u8>,
-    busy: bool,
-    response: [u8; 16],
-    response_cursor: usize,
-    response_remaining: usize,
+    awaiting_response: bool,
+    response: Response,
+    pending_response: Option<Response>,
     awaiting_interrupt: bool,
     interrupt_enable: u8,
-    interrupt_flags: u8,
     volume: Volume,
     data: Option<cd_data::Fifo>,
+}
+
+#[derive(Default)]
+struct Response {
+    payload: [u8; 16],
+    size: usize,
+    cursor: usize,
+    drained: bool,
+    interrupt: u8,
+}
+
+impl Response {
+    fn new(interrupt: u8, bytes: &[u8]) -> Result<Self> {
+        if bytes.is_empty() || bytes.len() > 16 {
+            return Err("CD host: response requires 1..16 bytes".into());
+        }
+        let mut response = Self {
+            size: bytes.len(),
+            interrupt,
+            ..Self::default()
+        };
+        response.payload[..bytes.len()].copy_from_slice(bytes);
+        Ok(response)
+    }
+
+    fn empty(&self) -> bool {
+        self.interrupt == 0 && (self.size == 0 || self.drained)
+    }
+
+    fn read(&mut self) -> u8 {
+        self.cursor &= 15;
+        let value = self.payload[self.cursor];
+        self.cursor += 1;
+        self.drained |= self.cursor == self.size;
+        value
+    }
 }
 
 impl Host {
@@ -48,25 +82,23 @@ impl Host {
             index: 0,
             parameters: Vec::new(),
             command: None,
-            busy: false,
-            response: [0; 16],
-            response_cursor: 0,
-            response_remaining: 0,
+            awaiting_response: false,
+            response: Response::default(),
+            pending_response: None,
             awaiting_interrupt: false,
             interrupt_enable: 0,
-            interrupt_flags: 0,
             volume: Volume::new(volume)?,
             data: None,
         })
     }
     pub fn irq_line(&self) -> bool {
-        self.interrupt_enable & self.interrupt_flags != 0
+        self.interrupt_enable & self.response.interrupt != 0
     }
     pub fn volume(&self) -> &Volume {
         &self.volume
     }
     pub fn busy(&self) -> bool {
-        self.busy
+        self.command.is_some()
     }
     pub fn configure_data(&mut self, model: cd_data::Model) -> Result<()> {
         if self.data.is_some() {
@@ -88,10 +120,10 @@ impl Host {
     /// Prior command/response/IRQ work must be fully drained. An unrequested
     /// old data block may be displaced; active reads remain protected.
     pub fn deliver_data(&mut self, status: u8, bytes: &[u8]) -> Result<usize> {
-        if self.busy
-            || self.command.is_some()
-            || self.interrupt_flags != 0
-            || self.response_remaining != 0
+        if self.command.is_some()
+            || self.awaiting_response
+            || !self.response.empty()
+            || self.pending_response.is_some()
             || self.awaiting_interrupt
         {
             return Err("CD host: INT1 delivery requires idle command/response/IRQ state".into());
@@ -112,51 +144,76 @@ impl Host {
             .read(bytes)
     }
 
-    /// Explicit MCU acceptance boundary. BUSY remains set until its response.
-    pub fn take_command(&mut self) -> Option<Command> {
-        self.command.take().map(|opcode| Command {
+    /// Explicit native FIFO callback boundary, without an inferred delay.
+    /// An acknowledged head can be replaced by the tail even if unread. A
+    /// command starts only after both response causes have cleared.
+    pub fn service_fifo(&mut self) -> Option<Command> {
+        if self.awaiting_interrupt {
+            return None;
+        }
+        if self.response.interrupt == 0 {
+            if let Some(response) = self.pending_response.take() {
+                self.response = response;
+            }
+        }
+        if self.response.interrupt != 0 || self.pending_response.is_some() {
+            return None;
+        }
+        let opcode = self.command.take()?;
+        self.awaiting_response = true;
+        Some(Command {
             opcode,
             parameters: std::mem::take(&mut self.parameters),
         })
     }
 
-    /// Publish response bytes and clear BUSY independently of IRQ delivery.
+    /// Publish an explicit pre-IRQ observation with an otherwise empty response
+    /// queue. BUSY clears at command acceptance, independently of this boundary.
     pub fn stage_response(&mut self, bytes: &[u8]) -> Result<()> {
-        if bytes.is_empty() || bytes.len() > 16 {
-            return Err("CD host: response requires 1..16 bytes".into());
-        }
+        let response = Response::new(0, bytes)?;
         if self.command.is_some() {
             return Err("CD host: drive must accept the pending command before responding".into());
         }
-        if self.interrupt_flags != 0 || self.response_remaining != 0 || self.awaiting_interrupt {
-            return Err("CD host: previous response must be acknowledged and drained; response queue scheduling is external".into());
+        if !self.response.empty() || self.pending_response.is_some() || self.awaiting_interrupt {
+            return Err("CD host: staged response requires an empty response queue".into());
         }
-        self.response.fill(0);
-        self.response[..bytes.len()].copy_from_slice(bytes);
-        self.response_cursor = 0;
-        self.response_remaining = bytes.len();
+        self.response = response;
+        self.awaiting_response = false;
         self.awaiting_interrupt = true;
-        self.busy = false;
         Ok(())
     }
 
     /// Signal the previously staged response, even if software already read it.
     pub fn raise_interrupt(&mut self, interrupt: u8) -> Result<()> {
-        if !(1..=5).contains(&interrupt) || !self.awaiting_interrupt || self.interrupt_flags != 0 {
+        if !(1..=5).contains(&interrupt) || !self.awaiting_interrupt || self.response.interrupt != 0
+        {
             return Err("CD host: IRQ 1..5 requires a staged response and no pending IRQ".into());
         }
-        self.interrupt_flags = interrupt;
+        self.response.interrupt = interrupt;
         self.awaiting_interrupt = false;
         Ok(())
     }
 
-    /// Convenience for explicitly coincident response/IRQ boundaries, not latency.
+    /// Insert a native response candidate at a supplied MCU boundary. Retain two
+    /// responses; a full queue drops another candidate. An acknowledged head
+    /// with a tail promotes that tail before appending the new candidate.
     pub fn respond(&mut self, interrupt: u8, bytes: &[u8]) -> Result<()> {
         if !(1..=5).contains(&interrupt) {
             return Err("CD host: response requires IRQ 1..5".into());
         }
-        self.stage_response(bytes)?;
-        self.raise_interrupt(interrupt)
+        let response = Response::new(interrupt, bytes)?;
+        if self.awaiting_interrupt {
+            return Err("CD host: staged response must receive its interrupt first".into());
+        }
+        self.awaiting_response = false;
+        if self.response.interrupt == 0 && self.pending_response.is_some() {
+            self.response = self.pending_response.replace(response).unwrap();
+        } else if self.response.empty() {
+            self.response = response;
+        } else if self.pending_response.is_none() {
+            self.pending_response = Some(response);
+        }
+        Ok(())
     }
 
     pub fn read(&mut self, offset: u8) -> Result<u8> {
@@ -165,19 +222,14 @@ impl Host {
                 self.index
                     | (u8::from(self.parameters.is_empty()) << 3)
                     | (u8::from(self.parameters.len() < 16) << 4)
-                    | (u8::from(self.response_remaining != 0) << 5)
+                    | (u8::from(self.response.cursor != self.response.size) << 5)
                     | (u8::from(self.data_ready()) << 6)
-                    | (u8::from(self.busy) << 7)
+                    | (u8::from(self.busy()) << 7)
             }
-            1 => {
-                let value = self.response[self.response_cursor];
-                self.response_cursor = (self.response_cursor + 1) & 15;
-                self.response_remaining = self.response_remaining.saturating_sub(1);
-                value
-            }
+            1 => self.response.read(),
             2 => self.read_data(1)? as u8,
             3 if self.index & 1 == 0 => 0xe0 | self.interrupt_enable,
-            3 => 0xe0 | self.interrupt_flags,
+            3 => 0xe0 | self.response.interrupt,
             _ => return Err("CD host: register offset outside 0..3".into()),
         })
     }
@@ -186,23 +238,12 @@ impl Host {
         match (self.index, offset) {
             (_, 0) => self.index = value & 3,
             (0, 1) => {
-                if self.busy
-                    || self.interrupt_flags != 0
-                    || self.response_remaining != 0
-                    || self.awaiting_interrupt
-                {
-                    return Err(
-                        "CD host: overlapping command or undrained response is unsupported".into(),
-                    );
-                }
                 self.command = Some(value);
-                self.busy = true;
             }
             (0, 2) => {
-                if self.parameters.len() == 16 {
-                    return Err("CD host: parameter FIFO overflow is unsupported".into());
+                if self.parameters.len() < 16 {
+                    self.parameters.push(value);
                 }
-                self.parameters.push(value);
             }
             (0, 3) if value & !0x80 == 0 => {
                 if let Some(data) = &mut self.data {
@@ -222,7 +263,7 @@ impl Host {
                         "CD host: decoder reset and XA sound-map clear are unimplemented".into(),
                     );
                 }
-                self.interrupt_flags &= !(value & 0x1f);
+                self.response.interrupt &= !(value & 0x1f);
                 if value & 0x40 != 0 {
                     self.parameters.clear();
                 }

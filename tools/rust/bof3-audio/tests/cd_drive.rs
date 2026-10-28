@@ -204,13 +204,14 @@ fn drive_responses_use_existing_host_irq_and_drain_contract() {
     host.write(2, 0x1f).unwrap();
     host.write(0, 0).unwrap();
     host.write(1, 0x0f).unwrap();
-    let cmd = host.take_command().unwrap();
+    let cmd = host.service_fifo().unwrap();
     let response = drive.command(&cmd, 0).unwrap();
     host.stage_response(&response.bytes).unwrap();
     assert!(!host.irq_line());
     host.raise_interrupt(response.interrupt).unwrap();
     assert!(host.irq_line());
-    assert!(host.write(1, 1).is_err());
+    host.write(1, 1).unwrap();
+    assert!(host.service_fifo().is_none());
     let bytes: Vec<_> = (0..5).map(|_| host.read(1).unwrap()).collect();
     assert_eq!(bytes, [2, 0, 0, 1, 0]);
     host.write(0, 1).unwrap();
