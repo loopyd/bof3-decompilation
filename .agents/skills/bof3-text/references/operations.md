@@ -12,6 +12,8 @@ and exit status together. The report accounts for every file and EMI payload,
 pins content hashes, distinguishes verified derivatives, and retains unresolved
 ranges. Strict failure is expected while full coverage remains open. The source
 root includes the executable and non-EMI files, not only `BIN`.
+The original US track-2 PCM WAV export has a pinned whole-file nontext identity;
+changed or arbitrary WAV files stay unresolved.
 
 US bank support does not establish EU or JP encoding. An unrecognized build or
 unknown consumer requires investigation before semantic claims or supported writes.

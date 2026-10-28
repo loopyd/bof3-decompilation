@@ -35,6 +35,11 @@ the physical-membership blocker. Additional files keep their existing range and
 derivative classifications. Membership does not establish their roles or text
 coverage. The harness rebuilds the binary when this qualification changes.
 
+The byte-identical PCM WAV export of original US audio track 2 is
+`verified-audio-export`, with its whole file classified as known nontext. This
+requires the pinned size and SHA-256; changed or arbitrary WAV files stay
+unresolved. See [the format contract](formats.md#cdda-audio-export).
+
 Supported US executable layouts are pinned outside their editable allocations.
 Recognition establishes build identity, not complete text coverage. Other builds remain unrecognized;
 EU and JP support is explicitly unverified. Unknown consumers, nonzero container

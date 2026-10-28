@@ -12,7 +12,7 @@ The editable schemas below belong to extraction, validation and packing.
 ## Locating the subfile
 
 The dialogue subfile is the EMI entry whose TOC `load_argument` is `0x80010000`.
-Each US archive contains exactly one; `index` reports its payload offset and whether
+Each supported dialogue archive contains one; `index` reports its payload offset and whether
 it parses.
 
 ## VAB audio payloads
@@ -29,6 +29,19 @@ The original US loader selects the header at `0x80162790` and transfers the body
 through `0x80162898`, `0x80163418` and `0x80174354` to SPU DMA. The SDK loop at
 `0x80173ED0..0x80173F28` uses the active sample count. Matching another entry's
 size alone does not identify audio. These checks do not classify container gaps.
+
+## CDDA audio export
+
+Coverage recognizes the exact PCM WAV export of original US audio track 2 by its
+whole-file size and SHA-256. The complete 44-byte header describes signed 16-bit
+stereo PCM at 44100 Hz. Its only data chunk contains the original audio bytes
+from the CUE's `INDEX 01` to the track's end, copied by `extract_audio_tracks` in
+[`bof3-disk/src/cue.rs`](../../bof3-disk/src/cue.rs). There are no extra chunks or
+trailing bytes. The header and PCM data are known nontext.
+
+The report retains the file's hash and source record. Any different WAV stays
+unresolved, including a changed file with the same header. This classification
+adds no editable text layout or playback acceptance.
 
 ## Executable ASCII
 

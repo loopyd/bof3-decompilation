@@ -12,6 +12,8 @@ use crate::models::{Error, Result, TextClass};
 
 const US_EXECUTABLE_SHA256: &str =
     "0af39fb1ffcf25e4bdf2730173f397b5b5f6c44989114fe9b59b92ab7c0eb21a";
+const US_CDDA_WAV_SHA256: &str = "8e4a881152ec055823afd1c6275220c960cba2a57391cd920a37e6fb2e99a11b";
+const US_CDDA_WAV_SIZE: usize = 37_044_044;
 
 #[derive(Serialize)]
 pub struct Report {
@@ -195,7 +197,15 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
             .then(|| crate::records::extract(path, &bytes).ok())
             .flatten()
             .map(|document| (0, document.names));
-        if path.extension().is_some_and(|extension| extension == "EMI") {
+        if bytes.len() == US_CDDA_WAV_SIZE && record.sha256 == US_CDDA_WAV_SHA256 {
+            record.status = "verified-audio-export".into();
+            record.ranges.push(range(
+                0,
+                bytes.len(),
+                "known-nontext",
+                "original US CDDA track 2 PCM WAV export; exact whole-file identity; source writer tools/rust/bof3-disk/src/cue.rs".into(),
+            ));
+        } else if path.extension().is_some_and(|extension| extension == "EMI") {
             match crate::lexagraph::entries(&bytes) {
                 Err(error) => {
                     record
