@@ -43,13 +43,20 @@ The report retains the file's hash and source record. Any different WAV stays
 unresolved, including a changed file with the same header. This classification
 adds no editable text layout or playback acceptance.
 
-## XA requested-start audio bodies
+## XA cue-prefix audio bodies
 
-Coverage derives requested starts from the original US selector at `0x80163744`.
+Coverage derives audio-sector prefixes from the original US selector at `0x80163744`.
 It requires the exact original `SLUS_004.22` and the whole-file size and SHA-256
 of each XA source in `config/original-us-disc.json`. The tables at `0x801839C4`,
-`0x801832C4` and `0x80183298` supply 11 starts in `S_XA00.STR`, 880 in
+`0x801832C4` and `0x80183298` supply 11 cues in `S_XA00.STR`, 880 in
 `MAGIC00.STR` and five in `VOICE.STR`.
+
+For each cue, the start sector is `start*stride+channel` and the stop threshold
+is `end*stride+channel-150`, relative to the file's base LBA. The stride is eight
+for `S_XA00.STR` and sixteen for the other two files. Coverage selects only
+channel-matching sectors strictly below this threshold, following the comparison
+at `0x80163CF0`. This gives 10,764 bodies in `S_XA00.STR`, 6,936 in
+`MAGIC00.STR` and 252 in `VOICE.STR`, including every requested starting sector.
 
 For each selected sector index `s`, only `[2336*s+8, 2336*s+2312)` is known
 nontext. These 2304 bytes contain eighteen complete four-bit XA groups.
@@ -61,7 +68,7 @@ The pinned original bodies satisfy its format and parameter checks.
 This is static audio-format classification. It does not establish playback,
 command completion, predictor history or native handling of parameter copies.
 Subheaders, spare bytes, EDC, other sectors and `CAPCOM30.STR` remain unresolved.
-Cue endpoints and packed-ID caller bounds remain unverified. Changed sources,
+Exact playback endpoints and packed-ID caller bounds remain unverified. Changed sources,
 other builds and arbitrary files that resemble XA do not receive this classification.
 
 ## Executable ASCII

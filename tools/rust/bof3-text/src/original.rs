@@ -45,22 +45,22 @@ pub fn archive(data: &[u8]) -> Result<bool> {
         .any(|file| file.emi_entries.is_some() && file.size == data.len() && file.sha256 == digest))
 }
 
-pub struct XaStarts {
+pub struct XaBodies {
     pub file: &'static File,
     pub sectors: Vec<usize>,
 }
 
-/// Requested starts from original selector 0x80163744, without playback intervals.
-pub fn xa_starts(executable: &[u8]) -> Result<Vec<XaStarts>> {
+/// Static audio sectors before the original stop threshold, without playback claims.
+pub fn xa_bodies(executable: &[u8]) -> Result<Vec<XaBodies>> {
     if sha256_hex(executable) != US_EXECUTABLE_SHA256 {
         return Ok(Vec::new());
     }
     let original = disc()?;
     let mut streams = Vec::new();
-    for (path, table, words, stride, count) in [
-        ("BIN/SCE_XA/S_XA00.STR", 0x8018_39c4, 15, 8, 11),
-        ("BIN/BMAG_XA/MAGIC00.STR", 0x8018_32c4, 896, 16, 880),
-        ("BIN/SCE_XA/VOICE.STR", 0x8018_3298, 10, 16, 5),
+    for (path, table, words, stride, cue_count, body_count) in [
+        ("BIN/SCE_XA/S_XA00.STR", 0x8018_39c4, 15, 8, 11, 10_764),
+        ("BIN/BMAG_XA/MAGIC00.STR", 0x8018_32c4, 896, 16, 880, 6_936),
+        ("BIN/SCE_XA/VOICE.STR", 0x8018_3298, 10, 16, 5, 252),
     ] {
         let offset = table - 0x8009_6000;
         let halfword = |index: usize| {
@@ -72,16 +72,20 @@ pub fn xa_starts(executable: &[u8]) -> Result<Vec<XaStarts>> {
         };
         let mut position = 0;
         let mut channel = 0;
+        let mut cues = 0;
         let mut sectors = BTreeSet::new();
         while position + 1 < words {
             let word = halfword(position);
             let start = usize::from(word & 0x7fff);
             let end = usize::from(halfword(position + 1) & 0x7fff);
-            if end <= start || channel >= stride || !sectors.insert(start * stride + channel) {
+            let stop = end.saturating_sub(150 / stride);
+            if stop <= start || channel >= stride {
                 return Err(Error::Invalid(
-                    "original US XA start table disagrees with reviewed profile".into(),
+                    "original US XA cue table disagrees with reviewed profile".into(),
                 ));
             }
+            sectors.extend((start..stop).map(|group| group * stride + channel));
+            cues += 1;
             if word & 0x8000 != 0 {
                 channel += 1;
                 position += 2;
@@ -89,9 +93,9 @@ pub fn xa_starts(executable: &[u8]) -> Result<Vec<XaStarts>> {
                 position += 1;
             }
         }
-        if sectors.len() != count {
+        if cues != cue_count || sectors.len() != body_count {
             return Err(Error::Invalid(
-                "original US XA start count disagrees with reviewed profile".into(),
+                "original US XA cue/body counts disagree with reviewed profile".into(),
             ));
         }
         let file = original
@@ -103,7 +107,7 @@ pub fn xa_starts(executable: &[u8]) -> Result<Vec<XaStarts>> {
                     "original US XA source missing from manifest: {path}"
                 ))
             })?;
-        streams.push(XaStarts {
+        streams.push(XaBodies {
             file,
             sectors: sectors.into_iter().collect(),
         });

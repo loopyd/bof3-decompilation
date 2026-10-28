@@ -174,8 +174,8 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
     let policy_sha256 = sha256_hex(&read(policy)?);
     let inputs = files_under(root)?;
     let executable = root.join("SLUS_004.22");
-    let xa_starts = if inputs.contains(&executable) {
-        crate::original::xa_starts(&read(&executable)?)?
+    let xa_bodies = if inputs.contains(&executable) {
+        crate::original::xa_bodies(&read(&executable)?)?
     } else {
         Vec::new()
     };
@@ -210,7 +210,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                 "known-nontext",
                 "original US CDDA track 2 PCM WAV export; exact whole-file identity; source writer tools/rust/bof3-disk/src/cue.rs".into(),
             ));
-        } else if let Some(stream) = xa_starts.iter().find(|stream| {
+        } else if let Some(stream) = xa_bodies.iter().find(|stream| {
             stream.file.path == name
                 && stream.file.size == bytes.len()
                 && stream.file.sha256 == record.sha256
@@ -223,10 +223,10 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                     cursor,
                     start - cursor,
                     "unresolved",
-                    "XA bytes outside reviewed requested-start audio bodies".into(),
+                    "XA bytes outside reviewed cue-prefix audio bodies".into(),
                 ));
                 record.ranges.push(range(start, 2304, "known-nontext",
-                    "original US XA requested start; selector 0x80163744, mode 0xC8, filter 0x0D, read 0x1B; eighteen validated four-bit audio groups; no playback or interval claim".into()));
+                    "original US XA body strictly before cue stop threshold; selector 0x80163744, comparison 0x80163CF0; eighteen validated four-bit audio groups; no playback or complete interval claim".into()));
                 cursor = start + 2304;
             }
             record.ranges.push(range(
