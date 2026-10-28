@@ -40,7 +40,8 @@ PYTHON_POLICY = {
     "asm-diff": (False, 2, SETUP_HINT),
     "build": (False, 2, SETUP_HINT),
     "byte-match": (False, 2, SETUP_HINT),
-    "combiner": (False, 2, ""),
+    "combiner-list": (False, 2, ""),
+    "combiner-check": (False, 2, ""),
     "companion-check": (False, 2, VENV_HINT),
     "compiler-variants": (True, 2, SETUP_HINT),
     "data-scan": (False, 2, ""),
@@ -52,9 +53,10 @@ PYTHON_POLICY = {
     "index": (False, 2, ""),
     "m2c": (False, 2, SETUP_HINT),
     "m2ctx": (False, 2, SETUP_HINT),
-    "macro-audit": (False, 2, ""),
-    "naming-audit": (False, 2, ""),
-    "naming-evidence-run": (False, 2, VENV_HINT),
+    "macro-list": (False, 2, ""),
+    "macro-check": (False, 2, ""),
+    "naming-list": (False, 2, ""),
+    "naming-check": (False, 2, ""),
     "next-lift": (False, 2, SETUP_HINT),
     "permute": (True, 1, "run `just venv` from {root}"),
     "plans": (False, 2, ""),
@@ -71,7 +73,8 @@ PYTHON_POLICY = {
     "splat": (False, 2, SETUP_HINT),
     "str-media": (False, 2, ""),
     "symbols": (True, 2, SETUP_HINT),
-    "type-audit": (False, 2, ""),
+    "type-list": (False, 2, ""),
+    "type-check": (False, 2, ""),
 }
 
 

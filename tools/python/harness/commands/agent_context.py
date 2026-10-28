@@ -34,15 +34,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="shell-safe transport for cleanup symbol/type OLD -> NEW",
     )
     parser.add_argument(
-        "--target",
-        help="historical cleanup target form; normalized to audit-target",
-    )
-    parser.add_argument(
-        "--parent-compatibility",
-        action="store_true",
-        help="allow temporary parent-only old audit normalization",
-    )
-    parser.add_argument(
         "--mode",
         choices=("stable", "compatibility"),
         default="stable",
@@ -66,17 +57,6 @@ def _validate_arguments(
     args.cleanup = None
     if args.rename_to is not None:
         args.scope.extend(("->", args.rename_to[0]))
-    if args.target is not None:
-        if args.role != "cleanup" or args.scope:
-            parser.error("--target requires cleanup role and no request tokens")
-        if args.mode == "compatibility":
-            args.target_compatibility = args.target
-        else:
-            args.target_compatibility = None
-            args.cleanup = parse_cleanup_request(
-                ("audit-target", args.target), root=args.root
-            )
-        return
     args.target_compatibility = None
     if args.mode == "compatibility" and args.role == "agents":
         if len(args.scope) > 1:
@@ -91,17 +71,11 @@ def _validate_arguments(
         args.documented_placeholder = True
         return
     if args.role == "cleanup":
-        if args.mode == "compatibility" and len(args.scope) == 1:
-            try:
-                args.function = _selector(args.scope[0])
-            except argparse.ArgumentTypeError:
-                pass
-            else:
-                return
+        if args.mode != "stable":
+            parser.error("cleanup requires canonical stable context")
         try:
             args.cleanup = parse_cleanup_request(
                 args.scope,
-                parent_compatibility=args.parent_compatibility,
                 root=args.root,
             )
         except ValueError as error:
@@ -110,8 +84,6 @@ def _validate_arguments(
     if _documented_placeholder(args.role, args.scope):
         args.documented_placeholder = True
         return
-    if args.parent_compatibility:
-        parser.error("--parent-compatibility requires cleanup role")
     if args.rename_to is not None:
         parser.error("-> transport requires cleanup symbol or type mode")
     if args.mode == "compatibility" and args.role not in {
@@ -194,6 +166,7 @@ def _documented_placeholder_usage(role: str) -> str:
             "macro-opportunity TARGET ID",
             "type-opportunity TARGET ID",
             "naming-opportunity TARGET ID",
+            "combiner-opportunity TARGET ID",
         ),
         "reverse": ("bin/harness agent context reverse TARGET@0xADDRESS",),
         "review": ("bin/harness agent context review TARGET@0xADDRESS",),

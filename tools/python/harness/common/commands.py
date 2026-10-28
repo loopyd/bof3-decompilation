@@ -27,7 +27,8 @@ TOOL_TOKENS: dict[str, tuple[str, ...]] = {
     "build": ("build",),
     "byte-match": ("lift", "byte-match"),
     "campaign-consolidate": ("lift", "campaign"),
-    "combiner": ("combiner",),
+    "combiner-list": ("combiner", "list"),
+    "combiner-check": ("combiner", "check"),
     "companion-check": ("lift", "companion-check"),
     "compiler-variants": ("build", "variants"),
     "data-scan": ("analysis", "scan"),
@@ -41,9 +42,10 @@ TOOL_TOKENS: dict[str, tuple[str, ...]] = {
     "lift-gate": ("lift", "gate"),
     "m2c": ("lift", "m2c"),
     "m2ctx": ("lift", "m2ctx"),
-    "macro-audit": ("macros",),
-    "naming-audit": ("naming",),
-    "naming-evidence-run": ("naming", "evidence"),
+    "macro-list": ("macros", "list"),
+    "macro-check": ("macros", "check"),
+    "naming-list": ("naming", "list"),
+    "naming-check": ("naming", "check"),
     "next-lift": ("lift", "next"),
     "package-psx-audio": ("audio", "package"),
     "permute": ("lift", "permute"),
@@ -63,7 +65,8 @@ TOOL_TOKENS: dict[str, tuple[str, ...]] = {
     "splat": ("source", "splat"),
     "str-media": ("media", "str"),
     "symbols": ("source", "symbols"),
-    "type-audit": ("types",),
+    "type-list": ("types", "list"),
+    "type-check": ("types", "check"),
 }
 
 
@@ -99,7 +102,7 @@ def tool_id(argv: Sequence[object]) -> str | None:
     """Return the logical tool id encoded by a canonical argv, if any.
 
     The longest matching token prefix wins, so ``build variants`` resolves to
-    ``compiler-variants`` and ``naming evidence`` to ``naming-evidence-run``.
+    ``compiler-variants``.
     """
 
     items = [str(item) for item in argv]

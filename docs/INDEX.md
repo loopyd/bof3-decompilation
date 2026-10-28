@@ -22,15 +22,16 @@ scoped documentation as maintenance/research input, not required runtime reading
 | Autonomous lift/naming/type/macro loop or resume | [`$bof3-lift-loop`](../.agents/skills/bof3-lift-loop/SKILL.md) | Active-session mission protocol; parallel independent reads/reviews, serialized writes; no harness model launcher |
 | Parent pre-edit native lift diagnosis / retained candidate audit | [Parent lift diagnosis](agents/codex.md#parent-lift-diagnosis) | [Retained audit](agents/codex.md#retained-lift-audit), `$bof3-re`; original pins/cutoff, no model or source edits |
 | Scoped worker or independent review mission | [Skill-only operator](agents/codex.md#skill-only-operator) | `$bof3-lift-loop` delegates `$bof3-re` or the selected domain skill through actual session tools; no self-acceptance |
-| Macro opportunity indexing, ranking or resolution | [Macro resolution guide](agents/macros.md) | [Explicit cleanup routing](agents/tool-usage.md#cleanup-opportunity-routing), owning code/checks; matching or tooling route when making changes |
+| Source combining and cleanup | [`$bof3-combiner`](../.agents/skills/bof3-combiner/SKILL.md) | Current members, profiles, complete native checks and owned recovery |
+| Macro facts, extraction or review | [Macro resolution guide](agents/macros.md) | [Explicit cleanup routing](agents/tool-usage.md#cleanup-opportunity-routing), owning code/checks; matching or tooling route when making changes |
 | Multi-function C metadata or function consolidation | [Combiner](agents/combiner.md) | Tooling/matching owners; production consolidation remains gated; OpenSpec records remaining work |
 | Type representation opportunities and reviewed application | [Tool usage](agents/tool-usage.md#3b-target-analysis-freshness--rebuild--query) | [Cleanup routing](agents/tool-usage.md#cleanup-opportunity-routing), `$bof3-types`; [harness ownership](agents/harness.md) |
-| Symbol naming opportunity discovery or assessment | [Naming opportunities](agents/tool-usage.md#symbol-naming-opportunities) | `$bof3-naming`; [harness ownership](agents/harness.md); evidence and identity routes remain separate |
-| Function-argument or local-variable naming | [Source identifier naming](agents/tool-usage.md#source-identifier-naming) | `$bof3-naming`; [harness ownership](agents/harness.md); PRE-bound, single-function, native byte-identity gate |
+| Symbol naming opportunity discovery or assessment | [Naming opportunities](agents/tool-usage.md#naming-facts-and-checks) | `$bof3-naming`; [harness ownership](agents/harness.md); facts and checks support skill-directed edits |
+| Function-argument or local-variable naming | [Source identifier naming](agents/tool-usage.md#naming-facts-and-checks) | `$bof3-naming`; [harness ownership](agents/harness.md); PRE-bound, single-function, native byte-identity gate |
 | Change planning or implementation | `openspec list` | `$openspec-propose`, `$openspec-update-change` or `$openspec-apply-change`; refresh live evidence before implementation |
 | Skill performance audit, converged directives, bundled harness improvements | [Observation folder](observations/INDEX.md) | The owning skill's ledger; directives stay in `.agents/skills/<skill>/` and its agent instructions |
 | Symbol/type/metadata identity maintenance | [Project context](agents/project-context.md) | `$bof3-naming` transaction mode |
-| Naming evidence/audit closure | [Naming audit contract](../.agents/skills/bof3-naming/references/naming-audit-v3.md) | `$bof3-naming` audit mode |
+| Naming investigation and unresolved debt | [Naming audit contract](../.agents/skills/bof3-naming/references/opportunities.md) | `$bof3-naming` investigation |
 | Markdown references, search, context, aggregation, edit, repair or compaction | [Documentation operations](agents/documentation.md) | `$bof3-docs`; [reference inspection](agents/documentation.md#reference-inspection), owning implementation/policy source before edits |
 | Runtime, format, target, or data research | [Specifications index](specs/INDEX.md) | Relevant spec and original evidence |
 | BOF3JS EU game knowledge, format or behavior leads | [EU knowledgebase](specs/bof3-eu/README.md) | Relevant chapter; verify regional differences against original US evidence |
@@ -56,9 +57,9 @@ scoped documentation as maintenance/research input, not required runtime reading
 | --- | --- |
 | [`$bof3-lift-loop`](../.agents/skills/bof3-lift-loop/SKILL.md) | instruction-only active-session operator, bounded missions, parallel evidence/review and serialized domain writes |
 | [`$bof3-re`](../.agents/skills/bof3-re/SKILL.md) | target-qualified lifting and independent review |
-| [`$bof3-macros`](../.agents/skills/bof3-macros/SKILL.md) | macro opportunities, human-value ranking and reviewed resolution |
-| [`$bof3-types`](../.agents/skills/bof3-types/SKILL.md) | established C types, representation opportunities and reviewed application |
-| [`$bof3-naming`](../.agents/skills/bof3-naming/SKILL.md) | naming opportunities, evidence, audits, source-identifier naming and reviewed identity transactions |
+| [`$bof3-macros`](../.agents/skills/bof3-macros/SKILL.md) | macro selection, direct extraction and consumer review |
+| [`$bof3-types`](../.agents/skills/bof3-types/SKILL.md) | established C types, current facts/checks and direct representation refinements |
+| [`$bof3-naming`](../.agents/skills/bof3-naming/SKILL.md) | naming investigation, current facts/checks and direct symbol, source-file, argument/local edits |
 | [`$bof3-test`](../.agents/skills/bof3-test/SKILL.md) | per-module pytest units, scoped runs and reviewed test-suite optimization |
 | `$openspec-propose`, `$openspec-update-change`, `$openspec-apply-change` | change planning, revision and implementation |
 | [`$psx-rizin`](../.agents/skills/psx-rizin/SKILL.md) | concrete analyzer questions |

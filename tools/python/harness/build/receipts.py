@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import stat
 import sys
 from contextlib import closing, nullcontext
@@ -12,7 +13,7 @@ from pathlib import Path
 from harness.build.dispatch import close_dispatch, prepare_dispatch, validate_dispatch
 from harness.build.driver import execute_compiler
 from harness.build.execution import verify_execution
-from harness.build.preservation import hash_preservation, validate_fingerprint
+from harness.common.digests import json_sha256
 from harness.common.files import atomic_write, read_file
 from harness.common.lease import ACTIVE_WRITER, acquire_writer, verify_writer
 from harness.common.observation import PathWatch
@@ -141,7 +142,7 @@ def _run_producer(root: Path, arguments: list[str]) -> tuple[int, dict | None]:
                     produced = {
                         "receipt": str(receipt),
                         "sha256": hashlib.sha256(content).hexdigest(),
-                        "invocation_fingerprint": hash_preservation(dispatch.state),
+                        "invocation_fingerprint": json_sha256(dispatch.state),
                         "execution_fingerprint": _verify_execution(
                             dispatch, outputs, execution
                         ),
@@ -201,7 +202,10 @@ def produce_object(root: Path, arguments: list[str]) -> dict:
 
 def verify_production(root: Path, arguments: list[str], expected_sha256: str) -> dict:
     """Verify externally pinned configured provenance without granting object reuse."""
-    validate_fingerprint(expected_sha256)
+    if not isinstance(expected_sha256, str) or not re.fullmatch(
+        r"[0-9a-f]{64}", expected_sha256
+    ):
+        raise ValueError("producer verification requires an external SHA-256")
     root = root.resolve()
     with _resolve_lease(root):
         dispatch = prepare_dispatch(root, arguments)
@@ -227,7 +231,7 @@ def verify_production(root: Path, arguments: list[str], expected_sha256: str) ->
                 outputs = _collect_outputs(dispatch)
                 execution = document.get("execution")
                 expected = json.loads(_encode_receipt(dispatch, outputs, execution))
-                if hash_preservation(document) != hash_preservation(expected):
+                if json_sha256(document) != json_sha256(expected):
                     raise ValueError(
                         "producer receipt differs from current configured provenance"
                     )
@@ -239,7 +243,7 @@ def verify_production(root: Path, arguments: list[str], expected_sha256: str) ->
                     "reusable": False,
                     "receipt": str(receipt),
                     "sha256": expected_sha256,
-                    "invocation_fingerprint": hash_preservation(dispatch.state),
+                    "invocation_fingerprint": json_sha256(dispatch.state),
                     "execution_fingerprint": _verify_execution(
                         dispatch, outputs, execution
                     ),

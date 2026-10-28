@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from types import MappingProxyType
 
+from harness.build.arguments import parse_arguments
 from harness.common.inputs import InputBatch, relative
 from harness.common.observation import PathWatch
 from harness.domain.includes import parse_literal_includes
@@ -237,3 +238,60 @@ class IncludeSnapshot:
         watch, self._watch = self._watch, None
         if watch is not None:
             watch.close()
+
+
+def collect_forced_paths(root: Path, arguments: list[str], cwd: Path) -> set[str]:
+    """Bind explicit forced operands to canonical repository paths without reads."""
+    if (
+        not isinstance(arguments, list)
+        or not arguments
+        or any(not isinstance(argument, str) for argument in arguments)
+    ):
+        raise ValueError("profile requires ordered compiler arguments")
+    paths = set()
+    for argument in parse_arguments(arguments[1:]):
+        if argument.role in {"-include", "-imacros"}:
+            try:
+                name = (cwd / argument.value).relative_to(root).as_posix()
+            except ValueError:
+                raise ValueError(
+                    "profile forced inputs must be repository-local"
+                ) from None
+            paths.add(relative(name))
+    return paths
+
+
+def validate_include_search(root: Path, arguments: list[str]) -> None:
+    """Require the literal include search supported by guarded snapshots."""
+    parsed = parse_arguments(arguments[1:])
+    roots = [
+        str(root / name) for name in ("src", "include", "toolchains/psyq/4.7/include")
+    ]
+    if [argument.value for argument in parsed if argument.role == "-I"] != roots or any(
+        argument.role
+        in {
+            "-isystem",
+            "-idirafter",
+            "-iprefix",
+            "-iwithprefix",
+            "-iwithprefixbefore",
+        }
+        or argument.tokens[0] in {"-I-", "-nostdinc", "-nostdinc++"}
+        or argument.tokens[0].startswith(
+            (
+                "-isystem",
+                "-idirafter",
+                "-iprefix",
+                "-iwithprefix",
+                "-iquote",
+                "-isysroot",
+                "-imultilib",
+                "-imultiarch",
+                "-Wp,",
+                "-Xpreprocessor",
+                "--",
+            )
+        )
+        for argument in parsed
+    ):
+        raise ValueError("profile includes require the configured literal search roots")

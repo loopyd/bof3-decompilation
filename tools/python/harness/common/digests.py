@@ -31,3 +31,14 @@ def file_record(path: Path, *, reader=None, events=None) -> dict:
             count += len(block)
             digest.update(block)
     return {"path": str(path), "bytes": count, "sha256": digest.hexdigest()}
+
+
+def json_sha256(value: object) -> str:
+    """Hash canonical finite JSON for native invocation and output bindings."""
+    try:
+        encoded = json.dumps(
+            value, sort_keys=True, separators=(",", ":"), allow_nan=False
+        ).encode()
+    except (TypeError, ValueError, RecursionError) as error:
+        raise ValueError("digest requires finite JSON-compatible values") from error
+    return hashlib.sha256(encoded).hexdigest()

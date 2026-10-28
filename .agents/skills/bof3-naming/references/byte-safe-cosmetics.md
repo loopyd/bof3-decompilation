@@ -6,7 +6,7 @@ Apply ladder top-down; stop at first rung resolving drift.
 
 ## Metadata preflight and authority
 
-Before any rung, require parsable function-level `@behavior` and address-authoritative `@source`; a missing tag fails preflight. Preserve `@behavior`, `@source`, `@kind`, `INFERRED:`, and evidence comments; correct stale tags in place, never infer identity from filename or directory ancestry. Naming evidence and eligibility come from [Naming audit v3](naming-audit-v3.md); atomic application, map/binding authority, and rollback come from [Identity transactions](identity-transactions.md); file moves come only from [Source relocation](source-relocation.md). Macro opportunity discovery, ranking, definition and extraction belong to [`$bof3-macros`](../../bof3-macros/SKILL.md); this ladder only removes a provably dead macro. Type layout and C-representation decisions belong to [`$bof3-types`](../../bof3-types/SKILL.md).
+Before any rung, require parsable function-level `@behavior` and address-authoritative `@source`; a missing tag fails preflight. Preserve `@behavior`, `@source`, `@kind`, `INFERRED:`, and evidence comments; correct stale tags in place, never infer identity from filename or directory ancestry. Naming evidence follows [investigation](opportunities.md); map/binding authority and rollback follow [direct editing](direct-editing.md); file moves come only from [Source relocation](source-relocation.md). Macro opportunity discovery, ranking, definition and extraction belong to [`$bof3-macros`](../../bof3-macros/SKILL.md); this ladder only removes a provably dead macro. Type layout and C-representation decisions belong to [`$bof3-types`](../../bof3-types/SKILL.md).
 
 ## Cosmetic ladder
 

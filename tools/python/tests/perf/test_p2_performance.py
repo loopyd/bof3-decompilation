@@ -10,7 +10,6 @@ from harness.analysis import engine
 from harness.commands import rz_project
 from harness.domain.repository_layout import load_repository_layout
 from harness.macros.index import macro_input_rows
-from harness.naming.telemetry import RunTelemetry, write_telemetry
 from harness.types.inputs import type_input_rows
 
 
@@ -68,17 +67,3 @@ def test_repository_layout_precomputes_canonical_fingerprint_rows() -> None:
         )
     assert layout.files.contents.keys() == layout.files.digests.keys()
     assert layout.files.contents.keys() == layout.files.stats.keys()
-
-
-def test_telemetry_is_bounded_and_reconciles(tmp_path: Path) -> None:
-    telemetry = RunTelemetry()
-    telemetry.rows_planned = 10
-    telemetry.rows_completed = 7
-    telemetry.rows_skipped = 3
-    telemetry.phase("prepare")
-    payload = telemetry.payload("abc")
-    path = tmp_path / "telemetry.json"
-    write_telemetry(path, payload)
-    assert path.stat().st_size <= 4096
-    assert abs(payload["wall_seconds"] - payload["accounted_seconds"]) <= 0.01
-    assert payload["rows"]["completed"] + payload["rows"]["skipped"] == 10

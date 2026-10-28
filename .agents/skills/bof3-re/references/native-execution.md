@@ -28,11 +28,10 @@ bind every claimed source, support source and header. Effective translation-unit
 settings also bind `-include` and `-imacros` operands and their literal dependencies.
 Missing forced inputs, changed compiler configuration, unsupported search settings,
 directives or header mappings, and unresolved includes refuse cached inspection.
-Preservation profiles pin literal transitive headers and negative lookups for
-current, retained and prospective source images and forced inputs. Verification
-refuses changed headers, newly present candidates and discoveries outside the
-pinned closure. Profile capture rejects other include-search settings. Active
-preprocessing and complete compiler-input closure retain their existing gates.
+Native comparisons capture literal transitive headers, forced inputs and negative
+lookups, and reject changed inputs during the comparison. Unsupported include
+search settings refuse cached inspection. These captures do not establish complete
+active preprocessing or compiler-input closure.
 
 Path-watch refusals retain the first refusing event's registered directory paths,
 escaped entry bytes, watch ID, mask and cookie. Freshness guards remain effective.
@@ -43,68 +42,26 @@ CLI adapters, lift gates and decompilation comparisons propagate
 comparisons and later members. Keep POST and owned recovery until child
 termination is established.
 
-Use `bin/harness combiner inspect-recovery` to inspect retained owned recovery;
-inspection grants no restoration authority. Establish actual writer-tree
-termination and exclusion before recovery. `bin/harness combiner recover` requires
-externally pinned recovery and authorization digests, distinct implementation,
-parent and reviewer IDs, retained independent review and terminal-tool evidence.
-An authorization with `approved: false` refuses before source mutation. Recovery
-restores only declared changed paths' original PRE identities and absence states.
-Check Git, raw index, unrelated workspace state and consumed-input freshness
-separately. Restoration grants neither source acceptance nor retry authority.
+Grouped native comparisons use current explicit target claims, complete attached
+metadata, reviewed Splat ranges, map bindings and effective compiler settings.
+They compile the whole source and compare every member at its original placement.
+A differing neighbor fails the selected check. No preservation-routing environment
+or transaction record is needed. The concern skill retains PRE and proves that
+source movement preserves established compiler settings.
+
+Initialized sections require compatible reviewed manifest placements and complete
+linked-byte comparison. Unsupported BSS or computed jumps remain unavailable.
+Guarded absolute jump tables require a leading load-delay nop, an unsigned bound,
+at most 4,096 entries in reviewed readonly data, and targets within the complete
+function. Preserve canonical map bindings and complete literal/forced dependencies.
+Grouped results bypass ordinary batch-object and cached-status reuse. Current
+checks do not provide semantic approval or persistent reuse authority.
 
 Shared CMake configuration retries newly observed race signatures under its
 existing lock. A recurring signature, nontransient error or unconfirmed cleanup
-propagates unchanged; retries have no numerical ceiling.
+propagates unchanged. Follow shared [editing and recovery](editing-recovery.md)
+for owned restoration after confirmed writer termination.
 
-Grouped lift comparisons require an explicit member address and externally pinned
-preservation routing. They freshly compile the whole source and compare every
-complete member range. A differing neighbor fails the selected command. Requests
-must retain the reviewed image, load, range and canonical target-map bindings.
-Canonical bindings take precedence; exact address-encoding labels share the ordinary
-linker's resolver. Initialized sections require compatible member declarations in
-the pinned manifest and complete linked-byte comparison at their reviewed placement.
-Any differing initialized section fails the group. Guarded absolute jump tables
-require a leading load-delay nop, an unsigned index bound and at most 4,096 entries
-contained in reviewed linked readonly data. Every target must stay inside the
-complete function; reachable entry past the leading nop is refused. Other computed
-jumps, BSS and C binding overrides are refused. Input and consumer closure and
-production consolidation acceptance retain their owner gates.
-
-Source-bound routes can verify up to 32 preservation records captured from one
-shared PRE state. Each group must own a different target and disjoint edits, with
-no configuration migration. Every record retains its original compiler profile
-and source images. Verification checks every group against the joint POST
-inventory and input closure. Shared PRE states must agree; retained, destination
-and forced dependencies must still match their original pins. Routes refuse
-overlapping targets or edits, sequential captures, changed dependencies and
-destination compiler-key collisions. Capture all profiles and transactions before
-applying any group. Keep recovery ownership and producer lease handoff explicit.
-An active compiler override must match every group.
-
-Decompilation preflight requires complete reviewed membership, one explicit lift
-owner and matching attached spellings for a grouped source. Every member uses the
-fresh public comparison route. Groups bypass ordinary batch-object and cached-status
-reuse until their complete input and consumer closure has accepted owner evidence.
-
-Grouped comparison runs through `bin/harness combiner compare SOURCE --output OUT.o`
-and needs a preservation record selected through `BOF3_PRESERVATION_RECORD` and
-`BOF3_PRESERVATION_FINGERPRINT`, or an externally pinned `BOF3_PRESERVATION_ROUTES`
-table; without one it refuses. Inspect the PRE profile with `combiner profile`,
-passing the destination draft through `--destination-source` and its sha256, then
-freeze the record with `combiner preservation capture`. The post manifest must place
-the grouped destination at the first member's recorded position and remove every other
-member entry, and the post Splat must only rewrite member source markers. The
-comparison reports per-member function bytes and the initialized-data sections each
-member owns, with `scope` naming both. A noncontiguous member range is compared like a
-contiguous one.
-
-The grouped comparison covers no BSS: a reviewed BSS placement is refused, so a member
-that needs BSS requires separate original evidence. A size-preserving change to one
-member reports `byte_match: false` with a first-mismatch offset and exit 1. A member
-that grows into another reviewed member or data placement is refused at section
-placement; any other size change is reported as a size delta without flow
-verification.
 Ordinary status fingerprints watch compiler configuration throughout capture and
 reject changes even when the original bytes or absence are restored. Literal and
 forced dependency checks retain their separate freshness guards.

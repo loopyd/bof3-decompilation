@@ -1,4 +1,4 @@
-"""Compile one preserved group and compare every complete native function range."""
+"""Compile one current source group and compare every complete native function range."""
 
 from __future__ import annotations
 
@@ -11,13 +11,15 @@ from pathlib import Path
 from harness.build.dependencies import IncludeSnapshot
 from harness.build.dispatch import close_dispatch, prepare_dispatch, validate_dispatch
 from harness.build.driver import protect_staging
-from harness.build.preservation import (
-    hash_preservation,
-    read_preservation_document,
-    validate_preservation_size,
+
+from harness.build.compiler import (
+    build_compiler_arguments,
+    resolve_compiler_settings,
+    parse_object_flags,
+    parse_object_compilers,
+    validate_object_configuration,
 )
 from harness.build.receipts import produce_object, verify_production
-from harness.build.routing import select_preservation, verify_selection
 from harness.match.members import capture_members
 from harness.common.files import read_file
 from harness.common.files import atomic_write
@@ -39,7 +41,7 @@ from harness.match.execution import NativeExecution
 from harness.match.extraction import read_function_image, read_linked_image
 from harness.match.placement import extract_grouped_function, place_grouped_object
 
-SCHEMA = "bof3.combiner-comparison/v7"
+SCHEMA = "bof3.grouped-comparison/v8"
 _LIMIT = 64 * 1024 * 1024
 _OWNERS = (
     "tools/python/harness/match/grouped.py",
@@ -160,7 +162,7 @@ def compare_members(
     *,
     output_limit: int = 2 * 1024 * 1024,
 ) -> dict:
-    """Require a writer lease and fresh routed production; never accept source edits."""
+    """Require a writer lease and fresh configured production; never accept source edits."""
     root = root.resolve(strict=True)
     require_writer(root)
     if type(output_limit) is not int or not 1 <= output_limit <= _LIMIT:
@@ -233,7 +235,7 @@ def _compare_data(
 
 
 def compare_selected_member(request: AsmDiffRequest, *, layout: RepoLayout) -> dict:
-    """Compare the complete preserved group before reporting its selected member."""
+    """Compare the complete current group before reporting its selected member."""
     root = layout.root.resolve(strict=True)
     source = request.source_path.expanduser().resolve(strict=True)
     if type(request.address) is not int:
@@ -267,20 +269,18 @@ def _select_request(root: Path, request: AsmDiffRequest, members: dict) -> dict:
         if member["address"] == request.address
     ]
     if len(selected) != 1:
-        raise ValueError("selected address is absent from the complete preserved group")
+        raise ValueError("selected address is absent from the complete current group")
     member = selected[0]
     if (
         request.binary_path is not None
         and request.binary_path.expanduser().resolve() != root / members["binary"]
     ):
-        raise ValueError(
-            "grouped comparison cannot replace the preserved original image"
-        )
+        raise ValueError("grouped comparison cannot replace the current original image")
     if (
         request.load_address is not None
         and request.load_address != members["load_address"]
     ):
-        raise ValueError("grouped comparison cannot replace the preserved load address")
+        raise ValueError("grouped comparison cannot replace the current load address")
     if request.size is not None and (
         type(request.size) is not int or request.size != len(member["original"])
     ):
@@ -292,7 +292,7 @@ def _select_request(root: Path, request: AsmDiffRequest, members: dict) -> dict:
         or dict(request.canonical_bindings) != members["bindings"]
     ):
         raise ValueError(
-            "grouped comparison bindings differ from the preserved target maps"
+            "grouped comparison bindings differ from the current target maps"
         )
     if request.symbols_c_path is not None:
         raise ValueError(
@@ -303,7 +303,7 @@ def _select_request(root: Path, request: AsmDiffRequest, members: dict) -> dict:
         and tuple(request.section_placements)
         != members["section_placements"][member["address"]]
     ):
-        raise ValueError("grouped data placement differs from the preserved manifest")
+        raise ValueError("grouped data placement differs from the current manifest")
     if type(request.diagnostics) is not bool:
         raise ValueError("grouped comparison diagnostics must be boolean")
     return member
@@ -311,7 +311,8 @@ def _select_request(root: Path, request: AsmDiffRequest, members: dict) -> dict:
 
 def _render_selected(root, request, member, result, output, linked, execution):
     output_dir = output.parent
-    validate_preservation_size(result)
+    if len(json.dumps(result, indent=2, sort_keys=True).encode()) > 4 * 1024 * 1024:
+        raise ValueError("grouped comparison report exceeds its byte bound")
 
     def write(name, content):
         atomic_write(
@@ -327,7 +328,9 @@ def _render_selected(root, request, member, result, output, linked, execution):
     comparison = next(
         item for item in result["members"] if item["address"] == member["address"]
     )
-    if comparison["byte_match"] and not result["all_native_bytes_match"]:
+    if not result["all_data_bytes_match"] or (
+        comparison["byte_match"] and not result["all_native_bytes_match"]
+    ):
         failed = ", ".join(
             item["selector"]
             for item in result["members"]
@@ -440,19 +443,23 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
     execution = NativeExecution(root, output_limit)
     tools = layout.psyqo_toolchain_root / "bin"
     with ExitStack() as stack:
-        selection = stack.enter_context(
-            closing(select_preservation(root, [source_path], [source_path]))
+        members = capture_members(root, source)
+        configuration = read_file(
+            root,
+            "config/compiler/object-flags.cmake",
+            missing_ok=True,
+            max_bytes=_LIMIT,
         )
-        if selection.record is None:
-            raise ValueError(
-                "comparison requires externally pinned preservation routing"
-            )
-        record = read_preservation_document(selection.record)
-        preserved = verify_selection(root, selection)
-        if preserved["destination"] != source:
-            raise ValueError("comparison source differs from its preserved destination")
+        text = configuration.decode("utf-8") if configuration is not None else ""
+        validate_object_configuration(text)
+        settings = resolve_compiler_settings(
+            source,
+            source_path.read_text(encoding="utf-8"),
+            parse_object_flags(text),
+            parse_object_compilers(text),
+        )
         arguments = [
-            *preserved["profile"]["arguments"][1:],
+            *build_compiler_arguments(root, settings.flags)[1:],
             "-c",
             str(source_path),
             "-o",
@@ -460,13 +467,6 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
         ]
         dispatch = prepare_dispatch(root, arguments)
         stack.callback(close_dispatch, dispatch)
-        if (
-            dispatch.record_path != selection.record
-            or dispatch.record_fingerprint != selection.fingerprint
-        ):
-            raise ValueError(
-                "comparison compiler selected different preservation history"
-            )
         includes = stack.enter_context(
             closing(
                 IncludeSnapshot(
@@ -485,18 +485,12 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
         )
         extra_paths.update(
             root / name
-            for name, state in preserved["inputs"].items()
+            for name, state in members["inputs"].items()
             if state is not None
         )
         protected = (
-            {root / name for name in preserved["inputs"]}
-            | extra_paths
-            | includes.paths
-            | selection.reserved
-            | {selection.record}
+            {root / name for name in members["inputs"]} | extra_paths | includes.paths
         )
-        if selection.routes is not None:
-            protected.add(selection.routes)
         if artifacts & protected:
             raise ValueError("comparison artifact collides with a retained input")
         protected_inputs = tuple(sorted(protected))
@@ -504,16 +498,16 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
         protect_staging(dispatch, inputs=protected_inputs)
         native_watch = stack.enter_context(closing(PathWatch(extra_paths)))
         native_inputs = _capture_states(root, extra_paths)
+        if capture_members(root, source) != members:
+            raise ValueError("grouped member inputs changed during capture")
         includes.validate()
         for path, content in includes.content.items():
             if not path.is_relative_to(root / "toolchains"):
                 validate_matching_text(content.decode("utf-8"))
-        members = capture_members(root, record, preserved)
         selected = None if request is None else _select_request(root, request, members)
 
         def guard():
             require_writer(root)
-            selection.validate()
             dispatch.watch.validate()
             dispatch.programs.validate(dispatch.invocation)
             native_watch.validate()
@@ -609,15 +603,14 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
         result = {
             "schema": SCHEMA,
             "scope": "all-selected-function-and-initialized-data-bytes",
-            "target": preserved["target"],
+            "target": members["target"],
             "source": source,
             "original_binary": members["binary"],
             "load_address": members["load_address"],
-            "preservation_fingerprint": selection.fingerprint,
             "producer": production,
             "placement": placed,
             "fresh_compilation": True,
-            "configured_preserved": True,
+            "configured_profile": dispatch.state["recipe"],
             "member_count": len(comparisons),
             "members": comparisons,
             "status": "exact" if exact else "different",
@@ -635,7 +628,6 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
             "accepted": False,
             "write_authorized": False,
         }
-        result["fingerprint"] = hash_preservation(result)
         try:
             return (
                 result

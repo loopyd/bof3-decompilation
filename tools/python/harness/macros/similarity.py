@@ -193,8 +193,6 @@ def near_duplicates_payload(
             {
                 "id": _candidate_id(candidate_key),
                 "kind": "parameterized_near_duplicate",
-                "status": "blocked",
-                "rank": instruction_count * len(members),
                 "target_scope": target
                 or (
                     members[0]["target"]
@@ -218,35 +216,9 @@ def near_duplicates_payload(
                     "analyzer_boundary_agreement": True,
                     "normalization": "register/opcode/funct exact; only non-branch immediate/address fields erased",
                 },
-                "counterexamples": [],
-                "semantic_guards": {
-                    name: {
-                        "status": "unproven",
-                        "evidence": "instruction shape does not prove source-level semantics",
-                    }
-                    for name in (
-                        "evaluation_count",
-                        "side_effects",
-                        "integer_promotions",
-                        "precedence",
-                        "lvalue",
-                        "volatile",
-                        "aliasing",
-                        "control_flow",
-                    )
-                },
-                "blockers": [
-                    "parameter_semantics_unreviewed",
-                    "source_c_shape_equivalence_unproven",
-                    "compiler_profile_equivalence_unproven",
-                    "cross_target_report_only"
-                    if len({m["target"] for m in members}) > 1
-                    else "target_local_review_required",
-                    "read_only_analysis_only",
-                ],
             }
         )
-    payload.sort(key=lambda row: (-row["rank"], row["id"]))
+    payload.sort(key=lambda row: (-row["evidence"]["instruction_count"], row["id"]))
     return payload if limit == 0 else payload[:limit]
 
 

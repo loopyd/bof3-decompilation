@@ -1,1 +1,1 @@
-"""Reviewed source-consolidation discovery and inspection."""
+"""Current source-group facts and mechanical checks."""

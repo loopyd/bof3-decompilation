@@ -214,6 +214,8 @@ def test_report_keeps_live_results_when_index_is_unavailable(
 
 
 def test_report_reuses_a_content_addressed_cache(tmp_path: Path, monkeypatch) -> None:
+    from harness.decomp import metadata
+
     monkeypatch.setattr(
         dsp.MatchStatusCache,
         "_tool_fingerprint",
@@ -239,12 +241,18 @@ def test_report_reuses_a_content_addressed_cache(tmp_path: Path, monkeypatch) ->
         return _diff(request)
 
     first = decomp_status.build_report(tmp_path, ("exe/logo",), diff_runner=cached_diff)
-    second = decomp_status.build_report(
-        tmp_path, ("exe/logo",), diff_runner=cached_diff
-    )
+    cache_path = tmp_path / "out/matching/status-cache.sqlite"
+    cache_before = cache_path.read_bytes()
+    second = metadata.report(tmp_path, "exe/logo")
 
     assert calls == 1
-    assert first == second
+    measured = second["records"][0]["measurement"]
+    original = first["targets"][0]["functions"][0]
+    assert measured["state"] == "fresh_cached"
+    assert measured["status"] == original["status"]
+    assert measured["instruction_count"] == original["instruction_count"]
+    assert measured["original_size"] == original["original_size"]
+    assert cache_path.read_bytes() == cache_before
 
 
 def test_context_detail_keeps_full_report_available() -> None:

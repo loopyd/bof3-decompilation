@@ -35,7 +35,6 @@ from harness.domain.ids import (
 )
 from harness.domain.manifests import load_target_manifests
 from harness.macros.cli import add_query_commands as add_macro_queries
-from harness.naming.cli import add_query_commands as add_naming_queries
 from harness.output import add_detail_argument, resolve_detail
 from harness.types.cli import add_query_commands as add_type_queries
 
@@ -262,7 +261,6 @@ def build_parser() -> argparse.ArgumentParser:
         "xrefs", help="find target-local indexed references to an address"
     )
     xrefs.add_argument("function", metavar=FUNCTION_ID_FORMAT, help=FUNCTION_ID_HELP)
-    add_naming_queries(sub)
     owners = sub.add_parser(
         "owners",
         help="find other indexed images with function bytes covering an address",

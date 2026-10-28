@@ -27,10 +27,9 @@ Ownership is explicit: lifts, bindings, headers, and PsyQ source are claimed
 in `config/targets/<target>/target.toml`
 (`sources`/`support_sources`/`headers`/`psyq_source`) with `@source`/
 `@behavior`; identity (binary, layout, symbols) stays centralized; `source_dir`
-is only the historical Splat root. Until the [combiner rollout](combiner.md) clears
-its supporting gates, each production lift is one C source plus its claimed
-target-private header (`include/bof3/<subsystem>/`); filenames never supply
-address fallback. Function C, local headers, maps, and Splat layouts are
+is only the historical Splat root. A source may hold several functions when
+[combiner checks](combiner.md) preserve every complete member, compatible build
+settings, bindings and required data. Filenames never supply address fallback. Function C, local headers, maps, and Splat layouts are
 hand-edited as evidence improves. Shared declarations belong in
 `include/<subsystem>/` only when multiple targets or an external contract
 require them. Follow [exact duplicate groups](matching.md#exact-duplicate-groups)
@@ -90,12 +89,10 @@ never cite them as durable facts or commit their generated contents.
 | Authored lifts | Metadata-resolved source under `src/bof3/` |
 | Macro opportunity policy and tool reference | `docs/agents/macros.md` |
 
-Until the [multi-function rollout](combiner.md) clears registry and native
-gates, keep new production lifts one function per C source; inspection and read-only
-source/index ownership support attached per-function records. Existing grouped
-sources are not grandfathered into native or transaction acceptance. This is a
-staged migration, not a permanent ban on
-cohesive multi-function files. Lift identity comes from manifest claims,
+Use the [combiner skill](../../.agents/skills/bof3-combiner/SKILL.md) for meaningful
+target-local source groups and cleanup. Current checks compile the whole source
+and compare every member; existing grouped files require the same evidence.
+Lift identity comes from manifest claims,
 maps, Splat, and function-level `@source`/`@behavior` metadata—not filenames or
 directory ancestry. Maps use sorted `name = 0xADDRESS;` rows with uppercase
 addresses. Bind target symbols through plain declarations plus sanctioned

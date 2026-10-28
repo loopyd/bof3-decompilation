@@ -5,7 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 
 from harness.analysis.project import status
-from harness.commands import analysis_readiness, symbols
+from harness.commands import analysis_readiness
+from harness.naming import map_checks
 
 
 def test_readiness_reuses_loaded_manifests(monkeypatch, tmp_path: Path) -> None:
@@ -35,7 +36,7 @@ def test_symbols_composes_maps_without_reloading_manifests(
 ) -> None:
     """The global symbols hot loop must pass its already-loaded PsyQ space."""
 
-    source = Path(symbols.__file__).read_text(encoding="utf-8")
+    source = Path(map_checks.__file__).read_text(encoding="utf-8")
     assert "psyq_space=manifest.psyq_space" in source
 
 

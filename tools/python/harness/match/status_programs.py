@@ -10,7 +10,7 @@ import sys
 from harness.build.compilation import configured_command
 from harness.build.compiler import COMPILER_INPUTS
 from harness.build.invocation import Invocation, Stage
-from harness.build.profiles import _SUPPORTED_CC_SHA256
+
 from harness.build.programs import ProgramSnapshot, describe_inputs
 from harness.common.digests import digest
 
@@ -19,30 +19,11 @@ from harness.common.observation import PathWatch
 from harness.common.process import run_bounded
 from harness.io import file_sha256, repo_layout, unique_object
 
-_PYTHON_ENV_SHA256 = "04eee0b601b47d438b012a33dada20d8dfbd1e31ea6377fbc061ea843a6e75bc"
-
-_ROUTING_ENVIRONMENT = frozenset(
-    {
-        "BOF3_PRESERVATION_RECORD",
-        "BOF3_PRESERVATION_FINGERPRINT",
-        "BOF3_PRESERVATION_ROUTES",
-        "BOF3_PRESERVATION_ROUTES_SHA256",
-    }
+_SUPPORTED_CC_SHA256 = (
+    "03beb440f6788826c8e8b1bba6ecd5718f1c41d24db25d76482f1fa4e2e489de"
 )
 
-
-def _compiler_environment() -> dict[str, str]:
-    """Environment minus preservation-routing selection variables.
-
-    Those variables choose a preservation record; they are not part of the compiler
-    environment and must not change a status identity or its comparison stages.
-    """
-    return {
-        name: value
-        for name, value in os.environ.items()
-        if name not in _ROUTING_ENVIRONMENT
-    }
-
+_PYTHON_ENV_SHA256 = "04eee0b601b47d438b012a33dada20d8dfbd1e31ea6377fbc061ea843a6e75bc"
 
 _INPUTS = (
     *COMPILER_INPUTS,
@@ -115,7 +96,7 @@ def _inspection(root: Path, source: Path) -> dict:
 
 
 def _comparison_inputs(root: Path) -> dict:
-    environment = tuple(_compiler_environment().items())
+    environment = tuple(dict(os.environ).items())
     tools = repo_layout(root).psyqo_toolchain_root / "bin"
     stages = [
         Stage(
@@ -157,7 +138,7 @@ class StatusPrograms:
     def __init__(self, root: Path, inspections: object | None = None):
         self.root = root
         self.inspections = inspections
-        self.environment = _compiler_environment()
+        self.environment = dict(os.environ)
         self.snapshots: dict[str, tuple[dict, ProgramSnapshot, dict]] = {}
         self.watch = PathWatch({root / name for name in _INPUTS})
         try:
@@ -222,13 +203,13 @@ class StatusPrograms:
                 "inspection": inspection,
                 "programs": programs,
                 "comparison": self.common,
-                "environment": digest(_compiler_environment()),
+                "environment": digest(dict(os.environ)),
             }
         )
 
     def validate(self) -> None:
         self.watch.validate()
-        if _compiler_environment() != self.environment:
+        if dict(os.environ) != self.environment:
             raise ValueError("status process environment changed")
         if _helper_inputs(self.root) != self.helpers:
             raise ValueError("status implementation inputs changed")

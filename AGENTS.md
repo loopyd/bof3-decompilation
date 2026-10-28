@@ -20,6 +20,7 @@ dependencies.
 | Text corpus extraction, analysis, modification and tool refinement | `.agents/skills/bof3-text/SKILL.md` |
 | Naming, identity, source identifiers | `.agents/skills/bof3-naming/SKILL.md` |
 | Type representation / macro work | `.agents/skills/bof3-types/SKILL.md` / `.agents/skills/bof3-macros/SKILL.md` |
+| Source combining and cleanup | `.agents/skills/bof3-combiner/SKILL.md` |
 | Python harness, CLI, skill scripts | `.agents/skills/bof3-re/references/tooling-contract.md` |
 | Tests / Markdown | `.agents/skills/bof3-test/SKILL.md` / `.agents/skills/bof3-docs/SKILL.md` |
 | Change planning / implementation | Shared `openspec-propose` / `openspec-apply-change` skills in `~/.agents/skills/` |

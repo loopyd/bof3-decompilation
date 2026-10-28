@@ -1,4 +1,4 @@
-"""Four-use, largest-first assembly block leads from original reviewed functions."""
+"""Repeated normalized instruction intervals from complete reviewed functions."""
 
 from __future__ import annotations
 
@@ -8,7 +8,6 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
-from harness.analysis.index import connect
 from harness.domain.layout import parse_splat_layout
 from harness.domain.manifests import load_target_manifests
 from harness.domain.mips import normalized_instruction_stream
@@ -19,18 +18,10 @@ from harness.domain.psx import (
     validate_psx_header,
 )
 from harness.domain.symbols import load_map, sdk_map_path
-from harness.macros.opportunities import _GENERATED, _guards
+from harness.macros.facts import _GENERATED
 from harness.macros.repeats import repeated_intervals
 
-SCHEMA = "bof3.macro-block-opportunities/v1"
 MINIMUM_USES = 4
-HUMAN_CRITERIA = (
-    "coherent_operation",
-    "meaningful_parameters",
-    "clear_call_sites",
-    "reduced_repetition",
-    "maintainability",
-)
 
 
 def validate_minimum(value: object) -> int:
@@ -218,8 +209,6 @@ def block_opportunities_payload(
             {
                 "id": "assembly_block:" + pattern[:16],
                 "kind": "assembly_block",
-                "status": "blocked",
-                "rank": size * len(members),
                 "instruction_count": size,
                 "pattern": pattern,
                 "target_scope": "cross_target"
@@ -232,60 +221,9 @@ def block_opportunities_payload(
                     "minimum_uses": MINIMUM_USES,
                     "normalized_words": [f"0x{word:08X}" for word in shape],
                 },
-                "semantic_guards": _guards(),
-                "human_review": {
-                    "status": "unreviewed",
-                    "question": "would a human make this macro?",
-                    "criteria": list(HUMAN_CRITERIA),
-                },
-                "blockers": [
-                    "source_block_mapping_unproven",
-                    "entry_exit_and_delay_slot_context_unproven",
-                    "live_registers_and_memory_effects_unproven",
-                    "human_value_review_required",
-                    "read_only_analysis_only",
-                ],
             }
         )
     candidates.sort(
         key=lambda row: (-row["instruction_count"], -len(row["members"]), row["id"])
     )
     return candidates
-
-
-def block_report(root: Path, *, min_instructions: int, target: str | None, limit: int):
-    minimum = validate_minimum(min_instructions)
-    if type(limit) is not int or limit < 0:
-        raise ValueError("block limit must be a nonnegative integer")
-    connection = connect(root)
-    try:
-        if (
-            target is not None
-            and connection.execute(
-                "SELECT 1 FROM targets WHERE id=?", (target,)
-            ).fetchone()
-            is None
-        ):
-            raise ValueError(f"unknown assembly block target: {target}")
-        candidates = block_opportunities_payload(
-            connection, root, min_instructions=minimum
-        )
-    finally:
-        connection.close()
-    visible = [
-        row
-        for row in candidates
-        if target is None
-        or any(member["target"] == target for member in row["members"])
-    ]
-    return {
-        "schema": SCHEMA,
-        "min_instructions": minimum,
-        "minimum_uses": MINIMUM_USES,
-        "view_target": target,
-        "candidate_count": len(visible),
-        "safe_application_count": 0,
-        "ordering": "instruction_count_desc,support_desc,id",
-        "attempt_budget": None,
-        "candidates": visible if limit == 0 else visible[:limit],
-    }

@@ -1,1 +1,1 @@
-"""Naming audit and evidence implementation."""
+"""Current naming facts and mechanical checks."""

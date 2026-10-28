@@ -56,6 +56,7 @@ def types_payload(
         representation = resolve_identity_declaration(
             connection, row["id"], identities=representations
         )
+        row["representation_id"] = representation
         row["byte_size"] = connection.execute(
             "SELECT byte_size FROM type_declarations WHERE id = ?", (representation,)
         ).fetchone()[0]

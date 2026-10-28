@@ -31,18 +31,14 @@ Read after `SOUL.md` and `AGENTS.md`; lift-side C rules stay in `AGENTS.md`.
   repeated prefix such as `macro_transactions.py`. Use noun subpackages when a
   category needs decomposition; do not invent opaque synonyms just to fit filenames.
   `__init__.py` and `__main__.py` are Python protocol exceptions, not private files.
-- `harness.macros`, `harness.naming`, and `harness.types` own their respective
-  opportunity discovery, evidence, transactions, audits, editing and CLI policy.
-  Naming identifies symbols; types own C representation and layout decisions.
-  `harness.combiner` owns source-consolidation policy; shared function identity and
-  attached metadata stay in `harness.domain`, compiler selection in `harness.build`.
-  `harness.docs` reports documentation drift; the docs skill owns Markdown edits.
-  Domain facts and approvals stay with their owners.
-  An `opportunities.py` owner discovers and describes leads; `cli.py` only adapts
-  arguments. Lead enumeration is not ranking, evidence closure or edit authority.
-  Cross-domain queries dispatch to these owners instead of re-exporting them.
-  Keep one concern skill for discovery, evidence, audit and transaction modes;
-  route-specific references preserve authority boundaries, not separate skill copies.
+- `harness.macros`, `naming`, `types` and `combiner` own current facts and
+  mechanical checks. Concern skills own investigation, semantic decisions, direct
+  edits and review. Naming owns identity; types own representation. Shared function
+  identity and attached metadata stay in `domain`; compiler selection stays in
+  `build`. `harness.docs` reports drift; the docs skill owns Markdown edits.
+  `opportunities.py` describes leads; `cli.py` adapts arguments. Cross-domain queries
+  call the actual factual owners without re-exporting them. Keep one authored body
+  per concern skill and references only where they avoid repetition.
 - No compatibility re-export shims (`x as x`, `# noqa: F401` facades).
   Importers reference the owning module directly.
 - Header order: one-line module docstring, `from __future__ import
@@ -63,8 +59,7 @@ Read after `SOUL.md` and `AGENTS.md`; lift-side C rules stay in `AGENTS.md`.
 ## DRY and simplicity
 
 - `harness.common` owns genuinely shared mechanisms in single-noun categories:
-  `cli`, `digests`, `files`, `paths`, `process`, `workspace`, `evidence`,
-  `execution`, `review`, and `revalidation`. It is not a miscellaneous dumping
+  `cli`, `digests`, `files`, `paths`, `process` and `workspace`. It is not a miscellaneous dumping
   ground or a second owner of macro/naming/type policy.
 - Extract repeated behavior only when semantics and trust boundaries agree.
   Domain adapters supply policy explicitly; common mechanisms must not import

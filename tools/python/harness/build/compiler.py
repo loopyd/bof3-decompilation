@@ -25,11 +25,7 @@ COMPILER_INPUTS = (
     "tools/python/harness/build/observations.py",
     "tools/python/harness/build/execution.py",
     "tools/python/harness/build/dependencies.py",
-    "tools/python/harness/build/profiles.py",
-    "tools/python/harness/build/migration.py",
-    "tools/python/harness/build/preservation.py",
     "tools/python/harness/build/dispatch.py",
-    "tools/python/harness/build/routing.py",
     "tools/python/harness/build/driver.py",
     "tools/python/harness/build/receipts.py",
     "tools/python/harness/build/inventory.py",
@@ -425,3 +421,12 @@ def parse_object_compilers(text: str) -> dict[str, str]:
             raise ValueError(f"duplicate BOF3_OBJCOMPILER key: {key}")
         compilers[key] = compiler_id
     return compilers
+
+
+def select_compiler(root: Path) -> Path:
+    """Select the explicit or default native compiler for unannotated inputs."""
+    import os
+    from harness.io import repo_layout
+
+    configured = os.environ.get("PSX_GCC")
+    return Path(configured) if configured else repo_layout(root).gcc272_psx_root / "gcc"

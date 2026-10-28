@@ -12,10 +12,10 @@ Atomically update all affected source/support/header paths, manifest claims incl
 ## Transaction
 
 1. Modified candidate overlap blocks unless parent explicitly adopted edits.
-2. Consume the recursive inventory and manifest-less shared-config findings from [Naming audit v3](naming-audit-v3.md#recursive-inventory-and-audit-authority); do not redefine audit discovery while applying a move.
+2. Inspect `bin/harness naming list TARGET --kind files --json`, manifest claims, include edges and compiler flag keys. Follow [direct editing](direct-editing.md) for owned PRE and recovery.
 3. Validate metadata identity and destination class before moving anything. Never rename a Splat boundary address.
 4. Apply complete batch atomically. Move/metadata/regeneration/validation failure
    reverts whole batch; never fix forward.
 5. Regenerate build metadata with `bin/harness build TARGET`, never by editing `build/`. Prove old paths absent from the graph and every current manifest source present.
-6. Run `bin/harness source symbols check TARGET`, `bin/harness source splat TARGET`, fresh normal asm-diff and byte-match for every touched selector, then fresh `bof3-reviewer`.
-7. After authoritative map/Splat/reviewed/manifest changes pass, run both status commands. If either is stale, run one `bin/harness analysis index --recover`, require both fresh, and never rebuild per file.
+6. Run `bin/harness source symbols check TARGET`, `bin/harness source splat TARGET`, fresh normal asm-diff and byte-match for every touched selector, then fresh independent reviewer.
+7. After authoritative map/Splat/reviewed/manifest changes pass, check `bin/harness analysis readiness TARGET`. If stale, run one `bin/harness analysis index --recover`, require fresh readiness, and never rebuild per file.

@@ -21,9 +21,10 @@ mandatory. `bin/harness decomp diagnose` still requires an existing claimed sour
 Native equality is not progress-metadata validity. An exact record uses
 `@status exact`, `@match 100.00`, and `@residual none`; put explanatory notes on
 separate comment lines, not after a semicolon in a tag value. At naming handoff,
-`bin/harness naming prepare TARGET` reports metadata debt. Its explicit repair mode
-requires fresh exact proof and preserves notes; never weaken the parser or repair
-unrelated rows to make a selected function ready.
+`bin/harness source metadata list TARGET` reports authored claims separately from
+measured results. The metadata skill records an exact match only after fresh
+full-range byte proof, then runs `source metadata check`. Preserve notes and
+unrelated rows.
 
 ```sh
 bin/harness source splat TARGET

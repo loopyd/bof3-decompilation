@@ -1,4 +1,4 @@
-"""Bind compiler invocations to stable sources and externally pinned profile history."""
+"""Bind compiler invocations to stable sources and current configured profiles."""
 
 from __future__ import annotations
 
@@ -20,16 +20,8 @@ from harness.build.compiler import (
 )
 from harness.build.invocation import Invocation, plan_dispatch, plan_invocation
 from harness.build.programs import ProgramSnapshot
-from harness.build.preservation import (
-    hash_preservation,
-)
-from harness.build.profiles import select_compiler
-from harness.build.routing import (
-    PRESERVATION_ENVIRONMENT,
-    Selection,
-    select_preservation,
-    verify_selection,
-)
+from harness.common.digests import json_sha256
+from harness.build.compiler import select_compiler
 from harness.common.files import read_file
 from harness.common.observation import PathWatch
 from harness.domain.tags import count_function_metadata
@@ -53,7 +45,6 @@ _ENVIRONMENT = (
     "COMPILER_PATH",
     "BOF3_COMPILER_TRIAL",
     "PATH",
-    *PRESERVATION_ENVIRONMENT,
 )
 
 
@@ -72,10 +63,7 @@ def close_dispatch(dispatch: Dispatch) -> None:
     try:
         dispatch.watch.close()
     finally:
-        try:
-            dispatch.programs.close()
-        finally:
-            dispatch.selection.close()
+        dispatch.programs.close()
 
 
 def _select_annotated_compiler(root, arguments, sources, output, grouped):
@@ -164,12 +152,9 @@ class Dispatch:
     compiler: Path
     source: Path | None
     output: Path | None
-    record_path: Path | None
-    record_fingerprint: str | None
     state: dict
     fingerprint: str
     watch: PathWatch
-    selection: Selection
     invocation: Invocation
     programs: ProgramSnapshot
 
@@ -203,7 +188,7 @@ def plan_compiler(root, arguments, operands, grouped, cwd):
 
 
 def prepare_dispatch(root: Path, arguments: list[str]) -> Dispatch:
-    """Freeze an invocation after checking its externally pinned grouped history."""
+    """Bind an invocation to its current source, configuration and program inputs."""
     root = root.resolve()
     working_directory = _observe_working_directory()
     operands = inspect_arguments(arguments, cwd=Path(working_directory["path"]))
@@ -211,74 +196,33 @@ def prepare_dispatch(root: Path, arguments: list[str]) -> Dispatch:
     grouped = [
         path for path in sources if count_function_metadata(read_source(path)) >= 2
     ]
-    selection = select_preservation(root, sources, grouped)
-    try:
-        return _prepare_selected(
-            root, arguments, operands, grouped, selection, working_directory
-        )
-    except BaseException:
-        selection.close()
-        raise
+    return _prepare_invocation(root, arguments, operands, grouped, working_directory)
 
 
-def _prepare_selected(
-    root, arguments, operands, grouped, selection, working_directory
+def _prepare_invocation(
+    root, arguments, operands, grouped, working_directory
 ) -> Dispatch:
     sources, output = list(operands.sources), operands.output
-    selection.protect_outputs(output)
     compiler, executable, metadata_paths, invocation = plan_compiler(
         root, arguments, operands, grouped, Path(working_directory["path"])
     )
-    record_path, record_fingerprint = selection.record, selection.fingerprint
     source = sources[0] if len(sources) == 1 else None
-    proof = None
-    if grouped or record_path is not None:
-        if len(sources) != 1 or len(grouped) != 1 or record_path is None:
-            raise ValueError(
-                "grouped compilation requires one source and external preservation history"
-            )
-        if (
-            source.resolve() != source
-            or not source.is_relative_to(root / "src/bof3")
-            or source.suffix != ".c"
-        ):
-            raise ValueError(
-                "grouped compilation requires a canonical src/bof3/ C source"
-            )
-        if (
-            output is None
-            or output.resolve() != output
-            or output.suffix != ".o"
-            or not any(output.is_relative_to(root / name) for name in ("build", "out"))
-        ):
-            raise ValueError("grouped output must be a canonical build/ or out/ object")
-        proof = verify_selection(root, selection, compiler=compiler)
-        if proof["destination"] != source.relative_to(root).as_posix():
-            raise ValueError(
-                "preservation destination differs from the actual compiler source"
-            )
-        expected = [
-            *proof["profile"]["arguments"][1:],
-            "-c",
-            str(source),
-            "-o",
-            str(output),
-        ]
-        if arguments != expected:
-            raise ValueError(
-                "grouped compiler arguments differ from the ordered preserved invocation"
-            )
+    if grouped and (
+        len(sources) != 1
+        or source.resolve() != source
+        or not source.is_relative_to(root / "src/bof3")
+        or output is None
+        or output.resolve() != output
+        or output.suffix != ".o"
+        or not any(output.is_relative_to(root / name) for name in ("build", "out"))
+    ):
+        raise ValueError(
+            "grouped compilation requires one canonical source and a build/ or out/ object"
+        )
     paths = {*operands.inputs, executable, *metadata_paths}
     cwd = Path(working_directory["path"])
     if cwd.parent != cwd:
         paths.add(cwd)
-    if selection.routes is not None:
-        paths.add(selection.routes)
-    if proof:
-        paths.update(root / name for name in proof["inputs"])
-        paths.add(record_path)
-        paths.update(path for _, path, _ in selection.history)
-    selection.protect_outputs(output, inputs=paths)
     environment = dict(os.environ)
     programs = ProgramSnapshot(root, invocation)
     watch = None
@@ -290,10 +234,9 @@ def _prepare_selected(
                 output.with_name(output.name + ".producer.json"),
             ]
             if output
-            else []
+            else [],
+            inputs=[path for path in paths if not path.is_dir()],
         )
-        if proof and proof["profile"]["programs"] != programs.describe():
-            raise ValueError("dispatch programs differ from preserved profile")
         if output is not None:
             output.parent.mkdir(parents=True, exist_ok=True)
         directories = {
@@ -308,15 +251,12 @@ def _prepare_selected(
             executable,
             source,
             output,
-            record_path,
-            record_fingerprint,
             grouped,
             sources,
             operands.describe_forced(),
             paths,
             directories,
             watch,
-            selection,
             working_directory,
             environment,
             invocation,
@@ -338,15 +278,12 @@ def _capture_dispatch(
     executable,
     source,
     output,
-    record_path,
-    record_fingerprint,
     grouped,
     sources,
     forced,
     paths,
     directories,
     watch,
-    selection,
     working_directory,
     environment,
     invocation,
@@ -370,16 +307,13 @@ def _capture_dispatch(
         "executable": str(executable),
         "source": str(source) if source else None,
         "output": str(output) if output else None,
-        "record": str(record_path) if record_path else None,
-        "record_fingerprint": record_fingerprint,
         "grouped": bool(grouped),
         "sources": [str(path) for path in sources],
         "forced_inputs": forced,
         "observations": observations,
         "contents": contents,
         "environment": {name: environment.get(name) for name in _ENVIRONMENT},
-        "environment_fingerprint": hash_preservation(environment),
-        "routing": selection.describe(),
+        "environment_fingerprint": json_sha256(environment),
         "programs": programs.describe(),
     }
     if invocation.describe() != plan_dispatch(state, environment).describe():
@@ -391,12 +325,9 @@ def _capture_dispatch(
         compiler,
         source,
         output,
-        record_path,
-        record_fingerprint,
         state,
-        hash_preservation(state),
+        json_sha256(state),
         watch,
-        selection,
         invocation,
         programs,
     )
@@ -406,19 +337,18 @@ def _capture_dispatch(
 
 def validate_dispatch(dispatch: Dispatch) -> None:
     """Reject source, configuration or argument drift through a live invocation."""
-    dispatch.selection.validate()
-    dispatch.selection.protect_outputs(dispatch.output)
     dispatch.watch.validate()
     dispatch.programs.validate(dispatch.invocation)
-    if hash_preservation(dispatch.state) != dispatch.fingerprint:
+    if json_sha256(dispatch.state) != dispatch.fingerprint:
         raise ValueError("compiler invocation binding changed")
     state = dispatch.state
     if state["programs"] != dispatch.programs.describe():
         raise ValueError("compiler program generation binding changed")
     if state["working_directory"] != _observe_working_directory():
         raise ValueError("compiler working directory changed during dispatch")
-    dispatch.selection.protect_outputs(
-        dispatch.output, inputs=(Path(name) for name in state["observations"])
+    dispatch.programs.protect_outputs(
+        [dispatch.output] if dispatch.output else [],
+        inputs=[Path(name) for name in state["contents"]],
     )
     operands = inspect_arguments(
         list(dispatch.arguments), cwd=Path(state["working_directory"]["path"])
@@ -445,33 +375,21 @@ def validate_dispatch(dispatch: Dispatch) -> None:
         or state["output"] != (str(output) if output else None)
     ):
         raise ValueError("compiler source or output binding changed")
-    if (
-        state["record"] != (str(dispatch.record_path) if dispatch.record_path else None)
-        or state["record_fingerprint"] != dispatch.record_fingerprint
-        or dispatch.record_path != dispatch.selection.record
-        or dispatch.record_fingerprint != dispatch.selection.fingerprint
-        or state["routing"] != dispatch.selection.describe()
-        or dispatch.compiler
-        != (
-            annotated_compiler
-            if annotated_compiler is not None
-            else select_compiler(dispatch.root)
-        )
-        or state["executable"]
-        != str(
-            _resolve_executable(
-                os.environ.get("PSX_CC_DRIVER") or str(dispatch.compiler)
-            )
-        )
+    if dispatch.compiler != (
+        annotated_compiler
+        if annotated_compiler is not None
+        else select_compiler(dispatch.root)
+    ) or state["executable"] != str(
+        _resolve_executable(os.environ.get("PSX_CC_DRIVER") or str(dispatch.compiler))
     ):
-        raise ValueError("compiler or preservation selection changed")
+        raise ValueError("compiler selection changed")
     if (
         state["arguments"] != list(dispatch.arguments)
         or state["compiler"] != str(dispatch.compiler)
         or state["root"] != str(dispatch.root)
     ):
         raise ValueError("compiler invocation differs from its binding")
-    if state.get("environment_fingerprint") != hash_preservation(dict(os.environ)):
+    if state.get("environment_fingerprint") != json_sha256(dict(os.environ)):
         raise ValueError("compiler environment changed during dispatch")
     if (
         dispatch.invocation.describe() != state["recipe"]
@@ -497,34 +415,12 @@ def validate_dispatch(dispatch: Dispatch) -> None:
     ]
     if bool(grouped) != state["grouped"]:
         raise ValueError("compiler source grouping changed")
-    if grouped:
-        if not dispatch.record_path or not dispatch.record_fingerprint:
-            raise ValueError("grouped compilation lacks preserved history")
-        proof = verify_selection(
-            dispatch.root, dispatch.selection, compiler=dispatch.compiler
-        )
-        if (
-            proof["destination"]
-            != dispatch.source.relative_to(dispatch.root).as_posix()
-            or proof["profile"]["programs"] != state["programs"]
-        ):
-            raise ValueError("preservation no longer selects the compiler source")
-        expected = [
-            *proof["profile"]["arguments"][1:],
-            "-c",
-            str(dispatch.source),
-            "-o",
-            str(dispatch.output),
-        ]
-        if list(dispatch.arguments) != expected:
-            raise ValueError("compiler arguments no longer match preserved order")
     for name, observation in state["observations"].items():
         if observe_input(Path(name)) != observation:
             raise ValueError(f"compiler input or ancestor changed: {name}")
     dispatch.watch.validate()
-    dispatch.selection.validate()
     dispatch.programs.validate(dispatch.invocation)
     if state["working_directory"] != _observe_working_directory():
         raise ValueError("compiler working directory changed during validation")
-    if state.get("environment_fingerprint") != hash_preservation(dict(os.environ)):
+    if state.get("environment_fingerprint") != json_sha256(dict(os.environ)):
         raise ValueError("compiler environment changed during validation")

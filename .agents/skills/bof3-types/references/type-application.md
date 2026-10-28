@@ -1,289 +1,60 @@
-# Type application
+# Type refinement
 
-Branches: [discovery](#discovery), [prepare/run](#prepare-and-run),
-[reconstruction](#reviewed-reconstruction), [parent review](#parent-review), [revalidation](#revalidation),
-[shared promotion](#shared-promotion). Before writes/native work read
-[transaction lifecycle](transaction-lifecycle.md) and
-[native execution](../../bof3-re/references/native-execution.md).
+## Inspect and prove
 
-## Discovery
+Use `bin/harness types list TARGET --kind all --json` for declarations, fields,
+constraints, conflicts, lexical uses and original-access storage leads. Listings
+require a fresh existing index and never refresh it. A display limit does not
+reduce check coverage. Refresh disposable evidence explicitly only at an authorized
+checkpoint after authoritative edits pass.
 
-Check `bin/harness analysis rz-project status TARGET --json` and
-`bin/harness analysis query --json status`; stale evidence blocks preparation.
-Parent alone refreshes at safe checkpoints with `analysis index --recover`, which
-refreshes all stale snapshots/rebuilds disposable index. Require both statuses
-fresh; never refresh pinned transactions. Inspect `bin/harness analysis query --help`
-for `types`, `type-uses`, `type-candidates` and owners. Prioritize target-qualified
-original accesses/callers/consumers over analyzer representations.
+Inspect target/shared headers and PsyQ definitions before adding aliases,
+aggregates, fields or prototypes. Keep same-spelling target-private types distinct.
+Resolve tags, typedef aliases, pointer/array aliases and forward declarations by
+identity; a pointer alias does not inherit pointee layout. Unknown layout remains
+unknown until original accesses and independent caller/consumer evidence settle it.
 
-Reuse target/shared/PsyQ types before new alias/aggregate/prototype. Prove width,
-signedness, pointer depth, alignment, offsets, qualifiers and ABI. Unaligned `u32`
-can silently shift later fields; represent unaligned words with `u8[N]`, verify
-actual layout, not comments. Pad from next free byte, not last field start. Use
-SDK `MATRIX` when evidence fits; adjacent stack blobs can be separate locals,
-not one duplicated aggregate. Recover stable target-local fields before permuting.
-`volatile` needs asynchronous/hardware evidence; pointer-cell volatility differs
-from pointee volatility. Hex for addresses/masks/encoded values, decimal for human
-quantities. Matching improvements remain target evidence, not universal rules.
+Prove width, signedness, pointer depth, alignment, offsets, qualifiers and ABI.
+Distinguish storage section from representation and semantic role. Unaligned words
+may need `u8[N]`; calculate padding from the next free byte and verify actual layout.
+Reuse SDK `MATRIX` when evidence fits. Adjacent stack blobs may be separate locals.
+Pointer-cell volatility differs from pointee volatility; each needs asynchronous
+or hardware evidence. Use hex for addresses/masks/encoded values and decimal for
+human quantities.
 
-## Prepare and run
+## Edit and check
 
-```sh
-bin/harness types account out/reviews/type-account.json
-bin/harness types validate-account out/reviews/type-account.json
-bin/harness types baseline
-bin/harness types prepare REQUEST MANIFEST
-bin/harness types run MANIFEST CHANGES APPLICATION --implementation-run-id RUN
-bin/harness types verify APPLICATION --expected-application-digest APPLICATION_PIN
-```
+Follow [editing and recovery](../../bof3-re/references/editing-recovery.md) before
+writes. Record proposed representation, supporting observations, owned files and
+all consumers, including support sources, shared headers and every grouped member.
+Follow each source's effective compiler, flags, include search and forced includes;
+lexical absence alone does not exclude a preprocessor consumer.
 
-Account inventory separately from acceptance. Require independent candidate review,
-current fingerprint, resolved representation/semantics and two independent
-observations. Adopt exact dirty preflight/baseline digest without later drift
-exemption. Parse/hash one confined metadata-checked canonical repo-relative
-opportunity sample capped at 4 MiB; reject symlinks, oversize or observed mutation.
-Cap each shared private proof at 64 MiB, not aggregate memory. Rederive live inputs
-after admission capture.
+Apply the authorized representation directly in its owning header/source. Keep
+storage extent, initialization, address ownership and unrelated declarations fixed.
+Update every affected field access and prototype consistently. Check
+`bin/harness types check TARGET [SELECTOR ...] --json`, source/map/layout consistency
+and the existing build/native gates. Measurable layout conflicts fail; unsupported
+or missing evidence remains unavailable. Native exactness proves bytes over the
+complete reviewed original range, not the semantic correctness of a type.
 
-Map Changes JSON only from manifest-owned paths to complete replacements. Follow
-lifecycle checks/immutable receipts/ordinary-failure rollback. Derive grouped C
-membership from reviewed Splat even when an attached record is missing. Require
-one explicit lift owner and every attached ordinary function in
-`affected_functions`. Reconcile complete records with reviewed boundaries, claims,
-indexed symbols/statuses/source hashes. Preserve record order, metadata, spellings
-and bytes outside implementations; bodies/signatures may change. Cap C capture at
-4 MiB. Run per-member native checks, which currently reject ordinary grouped
-compilation. Preparation grants no native preservation or consolidation authority.
-Header queries use each source's effective compiler settings, native literal search
-roots and `-include`/`-imacros` inputs. Every indexed identity reached through these
-inputs must appear in `affected_functions`, including all grouped members. Missing
-inputs, unsupported search or preprocessing, and changes during the query refuse.
-Include traversal covers every explicitly claimed C source and support unit,
-including units without indexed function IDs. Each consuming unit requires a
-declared target's build gate; indexed functions also require their own checks.
-Preparation rejects undeclared consumer owners and keeps writable scope fixed.
-Live manifest rederivation repeats this check. Active preprocessing and native
-preservation still require the build and input-closure gates.
-Retain application digest externally before verification, never from the supplied
-artifact. For shared preparation,
-require two independently accepted private envelopes with distinct targets/paths/
-digests, identical address-free representation/semantic contracts, private/exact
-wrappers and shared dependency proof. Integrity pins or legacy
-`expected_application_digest` cannot substitute.
+For shared promotion, first establish independently reviewed private evidence in
+at least two distinct targets with the same address-free representation and
+semantic contract. Prove shared ownership and include dependency coverage, then
+check every affected target explicitly. A single compile or identical spelling
+cannot establish shared suitability. Preserve existing frozen campaign evidence
+and its unfinished private/shared review duties.
 
-## Reviewed reconstruction
+## Mixed reconstruction and partials
 
-V4 `bof3.type-transaction-request/v4` uses `concern: reconstruction` for one
-existing target-owned header and ordinary single-function sources. Retain V2
-`target`, `header`, `index_candidate_ids`, `candidate_artifacts`,
-`affected_functions` and optional `adopted_baseline`. Add `type_concern` from
-`alias|layout|field|prototype`, sorted nonempty `reconstruction_functions` and
-`proposal:{path,sha256}`. Shared, linked and grouped changes are unsupported.
-Derive the complete header consumer set; selection never excludes a consumer.
-V2/V3 preservation remains strict.
+A type change may include C reconstruction only when that work is authorized and
+its expected POST result is independently reviewed before edits. Keep existing
+exact consumers exact. Preserve every unselected partial's compiled image,
+measurements, first mismatch and progress metadata. Selected partials must meet the
+reviewed expected result, never decrease matching instructions or increase absolute
+size difference, and receive semantic review of every changed instruction. A higher
+percentage alone cannot qualify an edit. Record honest partial residuals.
 
-Pin a bounded `bof3.type-reconstruction-proposal/v1` with exactly `schema`,
-`request_digest`, `pre_state`, `images`, `members`, `review`, `digest`.
-`request_digest` covers the request without `proposal` and `adopted_baseline`.
-`pre_state` covers every allowed path. `images` maps exactly the changed header
-and selected source paths to complete POST SHA-256 hashes. Preparation captures
-fresh PRE and refuses differing image identities; never prepare from installed
-POST or rewrite historical proofs.
-
-Each sorted member has `selector`, `pre`, `expected`, `metadata`, `findings`.
-`pre` and `expected` each map `asm-diff` and `byte-match` to
-`{exit_code,payload,identity_digest}`. Capture full JSON with
-`bin/harness lift asm-diff SELECTOR --json --detail full --image-evidence` and
-`bin/harness lift byte-match SELECTOR --json --image-evidence` only through an
-authorized diagnostic run with rollback. `function_image` binds
-`original_sha256` and freshly linked `current_sha256`. The comparison owner
-normalizes output locations and repository path spelling, retaining output-key
-membership and all result fields. Raw stdout hashes remain native receipt facts.
-Expected results are fixed before application, never learned from POST.
-
-`metadata` has `status`, two-decimal string `match`, and `residual`. The pinned
-source must agree with the native result and retain identity, ABI, other metadata
-and surrounding source. Exact progress requires `exact`, `100.00`, `none`.
-Each member and the joint review supply nonempty findings for `semantics`, `abi`,
-`range`, `memory_events`, `control_flow`, `frame`, `aids`. Scores never prove
-semantics or permit aliases, barriers or unsupported qualifiers.
-
-`review` has `accepted:true`, distinct `author_run_id`, `reviewer_run_id`,
-`artifact:{path,sha256}` and `findings`. Its retained JSON artifact is exactly
-`schema: bof3.type-reconstruction-review/v1`, `accepted:true`, both run IDs,
-`request_digest`, `pre_state_digest`, `images_digest`, `members_digest` and
-`findings`, binding the independently inspected proposal. Artifact, proposal,
-source and native identities stay live through execution and replay. The actual
-implementation run ID must be nonempty and distinct from both review IDs.
-
-Existing exact consumers must stay exact. Unselected partials retain identical
-native output. Selected partials must equal their reviewed expectations, keep the
-original range, never lose matching instructions or increase absolute size delta.
-Partial-to-exact uses exact validation, not a mismatch exit. Bodies, header and
-reviewed progress metadata publish together through existing owned recovery.
-This permits measured improvements, not generic non-regression approval.
-
-V4 manifests retain the proposal/reference, original preservation checks and derived
-selected checks. Verification, review, resume and check-only revalidation retain
-that policy without rebasing. Final parent acceptance remains separate; V4 proofs
-cannot supply shared promotion. Failed gates roll back; uncertain cleanup stops
-under the existing lifecycle. Rejected source aids cannot enter through V4.
-
-## Parent review
-
-### Linked storage and aggregate route
-
-Use `bof3.type-transaction-request/v3` with the `linked` concern for exactly
-`emi/battle/battle/15@1F800044:storage` and
-`emi/battle/battle/15@1F800044:aggregate_region`. It requires target
-`emi/battle/battle/15` and existing `include/bof3/battle/battle15_internal.h`.
-Keep V2 concerns isolated; linked proofs cannot supply shared promotion.
-
-Retain v3 `schema`, `target`, `concern`, `header`,
-`index_candidate_ids`, `candidate_artifacts`, `affected_functions` and optional
-`adopted_baseline`. Add `linked_pair`, with exactly `storage_id`,
-`aggregate_id`, `relation`, `artifact`, `artifact_sha256` and `artifact_digest`.
-Use `pointer-cell-pointee`; sort artifacts by index ID and pass `alias`/`layout`
-reviews separately. Retain `0x1F800044..0x1F800048` and original-backed observations
-in both.
-
-The pinned joint artifact is `bof3.type-linked-candidate/v1`, with exactly
-`schema`, `target`, `storage`, `aggregate`, `link`, `review` and `digest`.
-All nested records are closed:
-
-| Record | Required keys |
-| --- | --- |
-| `storage` | `binding`, `cell`, `semantics` |
-| `aggregate` | `binding`, `object`, `semantics` |
-| Each `binding` | `index_id`, `index_row_digest`, `artifact`, `artifact_sha256`, `artifact_digest` |
-| `cell` | `owner`, `address`, `end`, `width`, `alignment`, `pointer_depth`, `cell_qualifiers`, `pointee_qualifiers`, `initialization`, `lifetime`, `observations` |
-| `object` | `owner`, `base`, `extent`, `alignment`, `fields`, `padding`, `observations` |
-| Each `semantics` | `role`, `observations` |
-| `link` | `relation`, `storage_id`, `aggregate_id`, `storage_artifact_digest`, `aggregate_artifact_digest`, `entry_conditions`, `observations` |
-| `review` | `verdict`, `reviewer`, `artifact`, `artifact_sha256` |
-
-Each owner has `target` and unique manifest-backed `paths`. The cell is four
-bytes at `0x1F800044`, with end `0x1F800048` and pointer depth one. Cell and
-pointee qualifiers are separate unique arrays of `const` and `volatile`.
-A fixed base has `kind: fixed` and `address`; its extent must fit a finite
-reviewed owner range. A runtime base has `kind: runtime`, `storage_id`,
-`indirection`, `producer`, `entry_conditions` and `observations`. Its producer
-is a canonical original function selector and indirection is one.
-
-Fields have `offset`, `width`, `type`, `signedness`, `role` and `observations`.
-Padding has `offset`, `width` and `observations`. Offsets are nonnegative;
-widths, extents and alignments are positive integers, excluding booleans.
-Disjoint fields and padding cover the complete extent. Field types must resolve
-to C89 scalars or existing complete indexed declarations. Signedness is `signed`,
-`unsigned` or `not-applicable`. Observations resolve to accepted role IDs;
-link observations have separate `storage` and `aggregate` arrays. Empty entry
-conditions require the joint review artifact to state `unconditional entry coverage`.
-Joint, role and reviewer artifacts are distinct, bounded, canonical files.
-
-The v3 manifest retains the full joint record and immutable artifact inputs under
-`linked_pair`, with contract revision `bof3.type-linked-storage-layout/v1`.
-Application `representation` and `semantics` each retain `storage`, `aggregate`
-and `link`. Replay rejects omitted roles and changed summaries. The parent review
-artifact names both frozen IDs and the joint digest. Existing parent bindings,
-native receipts, history and rollback rules still apply. Additional
-proof owners require explicit participation without writable paths.
-
-Preparation includes indexed original uses and transitive private-header consumers.
-Independent review must establish the complete original transfer, aliases, entries,
-residency, initialization, lifetime and compiler layout. Indexed membership and
-structural validation do not supply those facts or native preservation.
-
-```sh
-bin/harness types review APPLICATION REVIEWED --parent-attestation PARENT_JSON --expected-application-digest APPLICATION_PIN
-bin/harness types final-verify REVIEWED --expected-envelope-digest ENVELOPE_PIN
-```
-
-After distinct reviewer inspects actual application/receipts, parent supplies closed
-`bof3.type-parent-review/v1`: `schema`, `accepted:true`, distinct nonempty
-`parent_run_id`, `implementation_run_id`, `reviewer_run_id`,
-`review_artifact:{path,sha256}`, `binding`, `preservation`.
-Artifact canonical absolute retained nonempty reviewer bytes; implementation ID
-matches captured run. Preservation exactly `scope`, `body`, `abi`, `range`, `index`,
-`adopted_baseline`, all `true`, attesting actual PRE comparison, never inferred prose.
-
-Binding exactly `application_digest`, `application_proof_digest` including original
-attestation, `manifest_digest`, `request_digest`, `review_context_digest`,
-`post_state_digest`, `native_receipts_digest` over full array,
-`adopted_baseline_digest` over full context baseline. Structured pins follow owner
-canonical compact sorted-key JSON digest; artifact SHA-256 covers bytes. Missing
-context/legacy omitted-ID cannot promote.
-
-Closed `bof3.type-reviewed-application/v1`: `schema`, original `application`,
-`parent_review`, `digest` over other fields. Externally pin before `final-verify`.
-Replay validates original proofs/receipts, current closure, reviewer bytes and
-unrelated adopted state without gates/edits/proof rewriting. Same-state replay
-valid; different owner/application/context/state rejects. Trust local parent/runtime,
-not malicious-writer authentication. Shared input pins exactly `path`, `target`,
-`expected_envelope_digest`; canonical paths under `out/reviews`.
-
-Published resume:
-
-```sh
-bin/harness types resume ORIGINAL_MANIFEST APPLICATION --expected-manifest-digest MANIFEST_PIN --expected-application-digest APPLICATION_PIN --implementation-run-id ORIGINAL_RUN
-```
-
-Add paired `--reviewed-envelope REVIEWED --expected-envelope-digest ENVELOPE_PIN`
-for current acceptance check. Follow lifecycle resume constraints.
-
-## Revalidation
-
-```sh
-bin/harness types revalidate PRIVATE_ENVELOPE CHECK --expected-envelope-digest PRIVATE_PIN --execution-run-id FRESH_RUN --adopted-baseline CURRENT_BASELINE --intervening ORDERED_PINS_JSON
-bin/harness types verify-revalidation CHECK --expected-revalidation-digest CHECK_PIN
-bin/harness types review-revalidation CHECK FRESH --expected-revalidation-digest CHECK_PIN --parent-attestation FRESH_PARENT_JSON
-bin/harness types final-verify-revalidation FRESH --expected-envelope-digest FRESH_PIN
-```
-
-CHECK/FRESH must be new canonical paths under `out/reviews/evidence`. Omit
-`--intervening` only for still-current proofs. Otherwise ordered closed
-`{envelope,expected_envelope_digest}` objects retain full accepted private envelopes
-and original external pins. Original POST/intervening PRE, consecutive transitions
-and final/current state must agree across native build/tools/environment/index and
-unrelated adopted workspace. Only reviewed changed paths explain drift; original
-owned POST bytes stay intact. Build drift valid only inside recorded owner build
-transitions, never gaps. Manifest evidence membership is not mutation authority.
-No source reapplication; new gates must leave current state unchanged. Unexpected
-writes require explicit recovery. Adoption alone never excuses drift.
-
-Owner APIs `revalidate_application`, `verify_revalidation`, `review_revalidation`,
-`verify_reviewed_revalidation` transport same contract. Fresh execution produces
-`bof3.type-application-revalidation/v1`; externally pin. `checked:true` is not
-acceptance. Fresh parent object `bof3.type-revalidation-parent-review/v1` uses same
-identity/artifact/preservation fields; implementation binds new execution. Reviewer
-differs from all original review identities and retains fresh artifact; parent may
-remain. Binding exactly `revalidation_digest`, `prerequisite_envelope_digest`,
-`manifest_digest` over full revalidation manifest, `review_context_digest`,
-`pre_state_digest`, `native_receipts_digest`, `adopted_baseline_digest`.
-Closed `bof3.type-reviewed-revalidation/v1`: `schema`, `revalidation`,
-`parent_review`, `digest`. Replay checks history and current closure without writes.
-
-Before distinct-target private executions declare same sorted
-`--participating-targets TARGET TARGET`, one or two canonical targets including all
-mutation targets; requires implementation ID. This captures binary/Splat/maps/
-reviewed/include evidence, adds no writable paths or participant gates. Omission
-captures selected target only. Revalidation inherits scope, never expands it;
-missing/mismatched historical scope rejects. Each private result still needs fresh
-native gates and independent review.
-
-## Shared promotion
-
-Original private envelopes support preparation only. Shared parent acceptance
-requires exactly two fresh accepted revalidations, distinct targets/executions,
-identical explicit two-target capture and common native inputs/environment/index/
-build/workspace. Retain complete nested envelopes/pins plus `shared_pre`
-state/build/baseline. Mixed original/fresh proofs reject. Shared `run` requires new
-implementation ID, same participation, live rederivation and captured PRE equality
-before edits/gates; omissions cannot downgrade to legacy.
-
-Shared `review`/`final-verify` require new implementation/reviewer not reused from
-private prerequisites or revalidation, new reviewer artifact and external envelope
-pin. Replay validates frozen private histories/common PRE separately from authorized
-shared delta, new gates, current POST/context and unrelated adopted state. Never
-compare private closure directly to intended shared POST or reconstruct missing
-history. Address-free contracts, ownership/exact wrappers and all consumers remain
-mandatory. Fresh private evidence is not shared POST acceptance or live promotion.
+Require independent final review of representation, ABI and all affected consumers.
+On native or review failure, stop owned writers before restoring only owned PRE.
+Uncertain cleanup/restoration remains a blocker; preserve evidence and report it.

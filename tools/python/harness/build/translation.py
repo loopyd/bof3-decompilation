@@ -41,7 +41,7 @@ def prepare_translation(
         return assembly
     if dispatch is None:
         raise ValueError(
-            "grouped translation requires an active preserved compiler invocation"
+            "grouped translation requires an active configured compiler invocation"
         )
     validate_dispatch(dispatch)
     records = parse_function_records(text, validate_progress=False)

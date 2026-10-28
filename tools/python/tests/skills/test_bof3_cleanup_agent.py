@@ -25,19 +25,19 @@ SELECTOR = "exe/logo@0x801CE758"
             ("symbol", "exe/logo", "old", "->", "new"),
             "symbol",
             "bof3-naming",
-            ("identity-transactions.md",),
+            ("direct-editing.md",),
         ),
         (
             ("type", "exe/logo", "old", "->", "new"),
             "type",
             "bof3-naming",
-            ("identity-transactions.md",),
+            ("direct-editing.md",),
         ),
         (
             ("repair", "exe/logo", "function:func_801CE758"),
             "repair",
             "bof3-naming",
-            ("identity-transactions.md",),
+            ("direct-editing.md",),
         ),
         (
             (
@@ -49,7 +49,7 @@ SELECTOR = "exe/logo@0x801CE758"
             ),
             "retained-lift",
             "bof3-naming",
-            ("identity-transactions.md", "byte-safe-cosmetics.md"),
+            ("direct-editing.md", "byte-safe-cosmetics.md"),
         ),
         (
             ("relocate-batch", "exe/logo", "ui", SELECTOR),
@@ -67,7 +67,7 @@ SELECTOR = "exe/logo@0x801CE758"
             ("audit-target", "exe/logo"),
             "audit-target",
             "bof3-naming",
-            ("naming-audit-v3.md",),
+            ("opportunities.md",),
         ),
     ),
 )
@@ -133,16 +133,6 @@ def test_cleanup_request_is_frozen_and_retains_structured_state() -> None:
     )
     with pytest.raises(FrozenInstanceError):
         request.mode = "repair"  # type: ignore[misc]
-
-
-def test_parent_old_audit_normalizes_docs_only_with_warning() -> None:
-    request = parse_cleanup_request(
-        ("audit", "docs/agents/tool-usage.md", "docs/INDEX.md"),
-        parent_compatibility=True,
-    )
-    assert request.mode == "docs"
-    assert request.warning
-    assert request.arguments == ("docs/agents/tool-usage.md", "docs/INDEX.md")
 
 
 @pytest.mark.parametrize(
@@ -261,7 +251,6 @@ def test_full_frozen_request_is_revalidated_before_reads() -> None:
         replace(request, target="exe/missing"),
         replace(request, rows=("../function:name",)),
         replace(request, arguments=("function:other",)),
-        replace(request, warning="forged"),
     )
     for candidate in forged:
         with pytest.raises((ValueError, IndexError)):

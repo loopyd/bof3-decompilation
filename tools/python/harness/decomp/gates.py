@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Callable
 
 from harness.build.operations import cmake_target_for_source
-from harness.common.checks import check_evidence, validate_partial_evidence
+from harness.match.validation import check_evidence, validate_partial_evidence
 from harness.common.commands import command as canonical
 from harness.common.commands import tool_id
 from harness.common.digests import digest

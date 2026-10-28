@@ -9,7 +9,7 @@ from __future__ import annotations
 import sqlite3
 from typing import Any
 
-from harness.naming.readiness import canonical_storage
+from .storage import canonical_storage
 
 from ..domain.ids import FunctionId
 from ..domain.layout import parse_splat_layout

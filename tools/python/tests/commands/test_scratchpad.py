@@ -175,7 +175,7 @@ def test_payload_for_battle_range_lift_uses_ps1_and_preprocessed_source(
     )
     assert payload.platform == "ps1"
     assert payload.compiler == "gcc2.7.2-psx"
-    assert payload.diff_label == "func_800AF66C"
+    assert payload.diff_label == "testWorkRangeAgainstRecord"
     assert '#include "internal.h"' not in payload.source_code
     assert "#define g_battle_work" not in payload.context
     assert "extern u8* volatile g_battle_work;" in payload.context
@@ -184,7 +184,7 @@ def test_payload_for_battle_range_lift_uses_ps1_and_preprocessed_source(
     assert "range_axis_34" in payload.context
     assert "(* ((   u32" not in payload.source_code
     assert "work->range_axis_34" in payload.source_code
-    assert "glabel func_800AF66C" in payload.target_asm
+    assert "glabel testWorkRangeAgainstRecord" in payload.target_asm
     exported = json.dumps(payload.as_api_data())
     assert "inputs/" not in exported and "/toolchains/" not in exported
     assert "OpenEvent" not in payload.context and "SVECTOR" not in payload.context

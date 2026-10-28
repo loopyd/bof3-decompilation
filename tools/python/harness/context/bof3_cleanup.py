@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 import json
 from pathlib import Path
 import re
@@ -11,7 +11,6 @@ import re
 from ..domain.ids import FunctionId, normalize_target_id, parse_function_id
 from ..domain.manifests import load_target_manifests
 from ..docs.paths import validate_cleanup_paths
-from ..naming.campaign import resolve_campaign_report
 from .base import ContextRequest, ContextSection, _context_profile
 from .common import BOF3_PATHS, selector_sections, target_audit_sections
 
@@ -29,10 +28,10 @@ _ROW = re.compile(
 _SKILL_REFERENCES = {
     "bof3-naming": {
         "opportunity": (),
-        "audit": ("references/naming-audit-v3.md",),
-        "identity": ("references/identity-transactions.md",),
+        "audit": ("references/opportunities.md",),
+        "identity": ("references/direct-editing.md",),
         "retained": (
-            "references/identity-transactions.md",
+            "references/direct-editing.md",
             "references/byte-safe-cosmetics.md",
         ),
         "relocation": ("references/source-relocation.md",),
@@ -42,6 +41,7 @@ _SKILL_REFERENCES = {
     },
     "bof3-macros": {"opportunity": ()},
     "bof3-types": {"opportunity": ()},
+    "bof3-combiner": {"opportunity": ()},
 }
 _ROUTE = {
     "symbol": ("bof3-naming", "identity"),
@@ -54,6 +54,7 @@ _ROUTE = {
     "macro-opportunity": ("bof3-macros", "opportunity"),
     "type-opportunity": ("bof3-types", "opportunity"),
     "naming-opportunity": ("bof3-naming", "opportunity"),
+    "combiner-opportunity": ("bof3-combiner", "opportunity"),
 }
 
 
@@ -68,7 +69,7 @@ class SelectedSkill:
 
 @dataclass(frozen=True)
 class CleanupRequest:
-    """One normalized cleanup transaction produced only by this parser."""
+    """One normalized cleanup request produced only by this parser."""
 
     mode: str
     target: str | None
@@ -77,8 +78,6 @@ class CleanupRequest:
     rows: tuple[str, ...]
     arguments: tuple[str, ...]
     selected_skill: SelectedSkill
-    report: str | None = None
-    warning: str | None = None
 
     def as_dict(self, *, loaded_bytes: int | None = None) -> dict[str, object]:
         """Return the stable structured request rendered for the agent."""
@@ -98,8 +97,6 @@ class CleanupRequest:
             "rows": list(self.rows),
             "arguments": list(self.arguments),
             "selected_skill": selected,
-            "report": self.report,
-            "warning": self.warning,
         }
 
 
@@ -183,28 +180,14 @@ def _validate_opportunity(value: str) -> str:
 def parse_cleanup_request(
     arguments: Sequence[str],
     *,
-    parent_compatibility: bool = False,
     root: Path = _REPOSITORY_ROOT,
 ) -> CleanupRequest:
-    """Parse canonical cleanup forms plus bounded parent old-audit input."""
+    """Parse canonical cleanup forms."""
 
     tokens = tuple(arguments)
     if not tokens:
         raise ValueError("cleanup requires one canonical request")
     mode = tokens[0]
-    warning = None
-    if mode == "audit":
-        if not parent_compatibility:
-            raise ValueError("old audit form is parent-only; use docs or audit-target")
-        try:
-            paths = validate_cleanup_paths(root, tokens[1:])
-        except ValueError as error:
-            raise ValueError(
-                "old audit accepts documentation paths only; use audit-target TARGET"
-            ) from error
-        mode = "docs"
-        tokens = (mode, *paths)
-        warning = "old parent audit form normalized to docs; compatibility is temporary"
     if mode not in _ROUTE:
         raise ValueError(f"unknown cleanup mode: {mode}")
 
@@ -212,7 +195,6 @@ def parse_cleanup_request(
     selector: FunctionId | None = None
     state: str | None = None
     rows: tuple[str, ...] = ()
-    report: str | None = None
     values: tuple[str, ...]
     if mode in {"symbol", "type"}:
         if len(tokens) != 5 or tokens[3] != "->":
@@ -247,7 +229,12 @@ def parse_cleanup_request(
         class_name = _repository_class(root, tokens[2])
         selectors = tuple(_selector(value, target) for value in tokens[3:])
         values = (class_name, *(str(value) for value in selectors))
-    elif mode in {"macro-opportunity", "type-opportunity", "naming-opportunity"}:
+    elif mode in {
+        "macro-opportunity",
+        "type-opportunity",
+        "naming-opportunity",
+        "combiner-opportunity",
+    }:
         if len(tokens) != 3:
             raise ValueError(f"{mode} requires exactly TARGET ID")
         target = _known_target(root, tokens[1])
@@ -258,9 +245,6 @@ def parse_cleanup_request(
         if len(tokens) != 2:
             raise ValueError("audit-target requires exactly one TARGET")
         target = _known_target(root, tokens[1])
-        report = (
-            resolve_campaign_report(root, target).relative_to(root.resolve()).as_posix()
-        )
         values = ()
 
     return CleanupRequest(
@@ -271,8 +255,6 @@ def parse_cleanup_request(
         rows=rows,
         arguments=values,
         selected_skill=_selected_skill(mode),
-        report=report,
-        warning=warning,
     )
 
 
@@ -300,6 +282,7 @@ def _canonical_tokens(cleanup: CleanupRequest) -> tuple[str, ...]:
         "macro-opportunity",
         "type-opportunity",
         "naming-opportunity",
+        "combiner-opportunity",
     }:
         return (cleanup.mode, cleanup.target or "", *cleanup.arguments)
     if cleanup.mode == "docs":
@@ -309,14 +292,7 @@ def _canonical_tokens(cleanup: CleanupRequest) -> tuple[str, ...]:
 
 def _validate_frozen_request(root: Path, cleanup: CleanupRequest) -> None:
     expected = parse_cleanup_request(_canonical_tokens(cleanup), root=root)
-    normalized_warning = (
-        "old parent audit form normalized to docs; compatibility is temporary"
-        if cleanup.mode == "docs"
-        else None
-    )
-    if cleanup.warning not in {None, normalized_warning}:
-        raise ValueError("cleanup request warning is not canonical")
-    if cleanup != replace(expected, warning=cleanup.warning):
+    if cleanup != expected:
         raise ValueError("cleanup request including selected_skill is not canonical")
 
 

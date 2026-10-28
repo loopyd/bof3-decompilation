@@ -3,10 +3,8 @@
 from __future__ import annotations
 
 from collections import defaultdict, deque
-from pathlib import Path
 from typing import Any
 
-from harness.analysis.index import connect
 from harness.macros.queries import macro_uses_payload, macros_payload
 
 SCHEMA = "bof3.macro-impact/v1"
@@ -29,6 +27,29 @@ def definition_impact_payload(
         by_source[(definition["owner_target"], definition["source_path"])].append(
             definition
         )
+    # A selected wrapper also depends on definitions referenced by its macro body.
+    dependencies = defaultdict(set)
+    for use in uses:
+        if use["use_context"] != "definition_body":
+            continue
+        containers = [
+            row
+            for owner in (use["target_id"], "__shared__")
+            for row in by_source.get((owner, use["source_path"]), ())
+            if row["source_line"] <= use["source_line"]
+        ]
+        if containers:
+            start = max(row["source_line"] for row in containers)
+            for row in containers:
+                if row["source_line"] == start:
+                    dependencies[row["id"]].add(use["definition_id"])
+    roots = set(definition_ids)
+    pending_definitions = list(roots)
+    while pending_definitions:
+        for dependency in dependencies[pending_definitions.pop()]:
+            if dependency not in definition_ids:
+                definition_ids.add(dependency)
+                pending_definitions.append(dependency)
     consumers: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for use in uses:
         consumers[(use["definition_id"], use["target_id"])].append(use)
@@ -81,7 +102,7 @@ def definition_impact_payload(
     reached_ids = definition_ids | {identity for identity, _target in reached}
     return {
         "schema": SCHEMA,
-        "root_definitions": sorted(definition_ids),
+        "root_definitions": sorted(roots),
         "definitions": [row for row in definitions if row["id"] in reached_ids],
         "definition_contexts": [
             {"definition_id": identity, "target": target}
@@ -102,20 +123,9 @@ def definition_impact_payload(
         "targets": sorted({use["target_id"] for use in impacted_uses}),
         "unresolved_definition_uses": unresolved,
         "scope": "global indexed lexical consumers; target-qualified transitive definition-body references",
-        "complete": False,
-        "safe_application_count": 0,
         "limitations": [
             "Name matches do not prove include order, conditional selection, undefinition, or expansion binding.",
             "Unindexed inputs and computed macro names or token-pasting need separate compiler/use-site review.",
             "Consumers are review leads, not affected-function authority or permission to edit external targets.",
         ],
     }
-
-
-def describe_definition_impact(root: Path, definition_id: str) -> dict[str, Any]:
-    """Inspect a current definition's consumers through one validated index."""
-    connection = connect(root)
-    try:
-        return definition_impact_payload(connection, {definition_id})
-    finally:
-        connection.close()

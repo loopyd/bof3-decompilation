@@ -242,24 +242,19 @@ def test_type_query_cli_details_filters_and_json(capsys, monkeypatch) -> None:
     assert main(["--json", "type-uses", "g_thing", "--target", "exe/test"]) == 0
     assert json.loads(capsys.readouterr().out)[0]["type_name"] == "Thing"
 
-    assert (
-        main(
-            [
-                "--json",
-                "type-candidates",
-                "--target",
-                "exe/test",
-                "--status",
-                "blocked",
-                "--kind",
-                "aggregate_region",
-            ]
-        )
-        == 0
+    from harness.types.cli import main as types_main
+
+    monkeypatch.setattr(
+        "harness.types.inspection._target", lambda _root, target: target
     )
-    candidate = json.loads(capsys.readouterr().out)[0]
-    assert candidate["representation_status"] == "lead"
-    assert candidate["semantic_status"] == "unresolved"
+    monkeypatch.setattr(
+        "harness.types.inspection.connect", lambda _root: typed_connection()
+    )
+    assert types_main(["list", "exe/test", "--kind", "storage", "--json"]) == 0
+    lead = json.loads(capsys.readouterr().out)["records"][0]
+    assert lead["kind"] == "aggregate_region"
+    assert lead["width"] == 4
+    assert lead["blocker"] == "gap"
 
 
 def test_macro_query_cli_filters_and_decodes_payload(capsys, monkeypatch) -> None:
@@ -329,38 +324,6 @@ def test_xrefs_require_target_qualified_address(capsys, monkeypatch) -> None:
     assert main(["xrefs", "0x80100020"]) == 2
 
     assert "function ID must be TARGET@8-digit-address" in capsys.readouterr().err
-
-
-def test_inventory_lists_target_raw_functions_and_data(
-    capsys, monkeypatch, tmp_path
-) -> None:
-    monkeypatch.setattr(
-        "harness.naming.opportunities.load_target_manifests",
-        lambda _root: {"exe/t": object()},
-    )
-    monkeypatch.setattr(
-        "harness.naming.opportunities.collect_symbol_debt",
-        lambda _root, _manifests: (
-            frozenset({"exe/t:func_80100000", "exe/u:func_80200000"}),
-            frozenset({"exe/t:D_80100010"}),
-        ),
-    )
-    monkeypatch.setattr(
-        "harness.commands.rev_query.connect",
-        lambda _root: (_ for _ in ()).throw(
-            AssertionError("inventory must not open index")
-        ),
-    )
-
-    assert (
-        main(["--root", str(tmp_path), "--json", "--limit", "1", "inventory", "exe/t"])
-        == 0
-    )
-
-    assert json.loads(capsys.readouterr().out) == [
-        {"kind": "function", "name": "func_80100000"},
-        {"kind": "data", "name": "D_80100010"},
-    ]
 
 
 def test_describe_reports_payload_splat_symbol_and_references(

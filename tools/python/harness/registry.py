@@ -208,16 +208,13 @@ DOMAINS: Mapping[str, Domain] = {
         ),
     ),
     "combiner": Domain(
-        "inspect, preserve and rehearse multi-function images",
+        "source membership, relationships and native checks",
         actions={},
         passthrough=Action(
-            "inspect, preserve and rehearse multi-function images",
+            "source membership, relationships and native checks",
             "harness.combiner.cli",
             kind="passthrough",
-            example=(
-                "bin/harness combiner inspect-source "
-                "src/bof3/battle/func_800A0A04_battle15.c"
-            ),
+            example=("bin/harness combiner list exe/logo --limit 10"),
         ),
     ),
     "decomp": Domain(
@@ -317,15 +314,13 @@ DOMAINS: Mapping[str, Domain] = {
         },
     ),
     "macros": Domain(
-        "macro opportunity indexing and reviewed resolution",
+        "macro facts and native consumer checks",
         actions={},
         passthrough=Action(
-            "macro opportunity indexing and reviewed resolution",
+            "macro facts and native consumer checks",
             "harness.macros.cli",
             kind="passthrough",
-            example=(
-                "bin/harness macros describe src/bof3/battle/func_800A0A04_battle15.c"
-            ),
+            example=("bin/harness macros list exe/logo --limit 10"),
         ),
     ),
     "media": Domain(
@@ -344,22 +339,13 @@ DOMAINS: Mapping[str, Domain] = {
         },
     ),
     "naming": Domain(
-        "symbol/naming opportunity, evidence and reviewed transactions",
-        actions={
-            "evidence": Action(
-                "run one bounded naming evidence collection",
-                "harness.naming.runner",
-                example=(
-                    "bin/harness naming evidence exe/test "
-                    "out/reviews/reports/exe__test.json"
-                ),
-            ),
-        },
+        "current naming facts and mechanical checks",
+        actions={},
         passthrough=Action(
-            "symbol/naming opportunity, evidence and reviewed transactions",
+            "list naming facts or check current identities and consumers",
             "harness.naming.cli",
             kind="passthrough",
-            example="bin/harness naming opportunities emi/battle/battle/15",
+            example="bin/harness naming list emi/battle/battle/15 --limit 10",
         ),
     ),
     "plans": Domain(
@@ -403,6 +389,11 @@ DOMAINS: Mapping[str, Domain] = {
     "source": Domain(
         "generated split/symbol inputs and source validation",
         actions={
+            "metadata": Action(
+                "list authored function claims or check current native measurements",
+                "harness.commands.metadata",
+                example="bin/harness source metadata list exe/logo --limit 10",
+            ),
             "splat": Action(
                 "regenerate reviewed segment output",
                 "harness.commands.splat",
@@ -604,13 +595,13 @@ DOMAINS: Mapping[str, Domain] = {
         },
     ),
     "types": Domain(
-        "type declarations, representation and reviewed transactions",
+        "current type declarations, uses and representation checks",
         actions={},
         passthrough=Action(
-            "type declarations, representation and reviewed transactions",
+            "current type declarations, uses and representation checks",
             "harness.types.cli",
             kind="passthrough",
-            example="bin/harness types baseline",
+            example="bin/harness types list exe/logo --limit 10",
         ),
     ),
 }

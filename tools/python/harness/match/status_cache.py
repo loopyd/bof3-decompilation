@@ -17,7 +17,7 @@ from harness.build.compiler import (
     resolve_compiler_settings,
 )
 from harness.build.dependencies import IncludeSnapshot
-from harness.build.profiles import collect_forced_paths, validate_include_search
+from harness.build.dependencies import collect_forced_paths, validate_include_search
 from harness.common.files import read_file
 from harness.common.directory import validate_repo_path
 from harness.common.observation import PathWatch
@@ -184,11 +184,24 @@ def _validate_identity(target: str, source: str, address: int) -> dict[str, str]
 class MatchStatusCache:
     """SQLite-backed, throwaway cache whose misses are always safe to recompute."""
 
-    def __init__(self, root: Path) -> None:
+    def __init__(self, root: Path, *, read_only: bool = False) -> None:
         self.root = root
+        self.read_only = read_only
         self.programs: StatusPrograms | None = None
         self._pending_inspections: dict[str, str] = {}
         self.path = root / "out" / "matching" / "status-cache.sqlite"
+        if read_only:
+            self.connection = sqlite3.connect(self.path.as_uri() + "?mode=ro", uri=True)
+            try:
+                row = self.connection.execute(
+                    "SELECT value FROM metadata WHERE key = 'schema'"
+                ).fetchone()
+                if row is None or row[0] != _SCHEMA:
+                    raise ValueError("status cache schema is stale")
+            except BaseException:
+                self.connection.close()
+                raise
+            return
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.connection = sqlite3.connect(self.path)
         self.connection.execute(
@@ -257,6 +270,9 @@ class MatchStatusCache:
             self._flush_inspections()
 
     def _flush_inspections(self) -> None:
+        if self.read_only:
+            self._pending_inspections.clear()
+            return
         if not self._pending_inspections:
             return
         self.connection.executemany(
@@ -287,6 +303,29 @@ class MatchStatusCache:
             return None
         return record
 
+    def observation(
+        self, target: str, source: str, address: int, fingerprint: str
+    ) -> tuple[str, dict[str, Any] | None]:
+        """Distinguish missing and stale summaries without treating either as proof."""
+        expected = _validate_identity(target, source, address)
+        row = self.connection.execute(
+            "SELECT fingerprint, record FROM results "
+            "WHERE target = ? AND source = ? AND address = ?",
+            (target, source, address),
+        ).fetchone()
+        if row is None:
+            return "absent", None
+        try:
+            record = json.loads(row[1])
+        except (ValueError, TypeError):
+            return "stale", None
+        if not isinstance(record, dict) or any(
+            record.get(name) != value for name, value in expected.items()
+        ):
+            return "stale", None
+        state = "fresh_cached" if fingerprint and row[0] == fingerprint else "stale"
+        return state, record
+
     def put(
         self,
         target: str,
@@ -295,6 +334,8 @@ class MatchStatusCache:
         fingerprint: str,
         record: dict[str, Any],
     ) -> None:
+        if self.read_only:
+            raise ValueError("cannot write a read-only status cache")
         expected = _validate_identity(target, source, address)
         if not isinstance(record, dict) or any(
             record.get(name) != value for name, value in expected.items()

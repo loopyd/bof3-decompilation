@@ -1,4 +1,4 @@
-"""Run the GCC, maspsx and assembler pipeline behind one preservation gate."""
+"""Run the GCC, maspsx and assembler pipeline under one guarded invocation."""
 
 from __future__ import annotations
 

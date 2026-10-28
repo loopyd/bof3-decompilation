@@ -12,7 +12,7 @@ import pytest
 from harness.commands import analysis_readiness, index
 
 
-def test_analysis_readiness_reports_unavailable_work_graphs_without_index(
+def test_analysis_readiness_reports_unavailable_facts_without_index(
     tmp_path: Path, monkeypatch
 ) -> None:
     monkeypatch.setattr(
@@ -35,7 +35,7 @@ def test_analysis_readiness_reports_unavailable_work_graphs_without_index(
 
     payload = analysis_readiness.readiness(tmp_path)
 
-    assert payload["schema"] == "bof3.analysis-readiness/v2"
+    assert payload["schema"] == "bof3.analysis-readiness/v3"
     assert payload["ready"] is False
     assert payload["stale_facts"] == {
         "count": 2,
@@ -51,7 +51,7 @@ def test_analysis_readiness_reports_unavailable_work_graphs_without_index(
     assert payload["recovery"] == "bin/harness analysis index --recover"
 
 
-def test_analysis_readiness_includes_naming_type_macro_work_graphs(
+def test_analysis_readiness_includes_naming_type_macro_facts(
     tmp_path: Path, monkeypatch
 ) -> None:
     monkeypatch.setattr(
@@ -67,7 +67,7 @@ def test_analysis_readiness_includes_naming_type_macro_work_graphs(
         lambda _root, target, **_kwargs: {"target": target, "fresh": True},
     )
     summaries = {
-        concern: {"work_graph": []} for concern in ("naming", "types", "macros")
+        concern: {"inventory_count": 0} for concern in ("naming", "types", "macros")
     }
     monkeypatch.setattr(analysis_readiness, "_summaries", lambda *_args: summaries)
 
@@ -79,7 +79,7 @@ def test_analysis_readiness_includes_naming_type_macro_work_graphs(
     assert payload["recovery"] is None
 
 
-def test_analysis_readiness_summary_filters_all_counts_and_work_to_target(
+def test_analysis_readiness_summary_filters_all_counts_to_target(
     tmp_path: Path, monkeypatch
 ) -> None:
     database = sqlite3.connect(":memory:")
@@ -101,69 +101,12 @@ def test_analysis_readiness_summary_filters_all_counts_and_work_to_target(
     database.execute("INSERT INTO macro_templates VALUES ('__shared__')")
     database.execute("UPDATE type_declarations SET diagnostic='x' WHERE rowid=1")
     monkeypatch.setattr(analysis_readiness, "connect", lambda _root: database)
-    monkeypatch.setattr(
-        analysis_readiness,
-        "inventory_expected",
-        lambda _root, target, _manifests: (
-            {("function", "func_00000001")}
-            if target == "a"
-            else {("data", "D_00000002")}
-        ),
-    )
-
-    class Work:
-        def items(self, _address, _kind):
-            return ["one", "two"]
-
-    monkeypatch.setattr(
-        analysis_readiness, "required_work_snapshot", lambda *_args: Work()
-    )
 
     class Debt:
         def to_rows(self):
             return {"raw_functions": ["a:x", "b:y"], "raw_data": []}
 
     monkeypatch.setattr(analysis_readiness, "collect_naming_debt", lambda *_: Debt())
-    monkeypatch.setattr(
-        analysis_readiness,
-        "type_account",
-        lambda _root, _connection=None, _target=None, **_kwargs: {
-            "rows": [
-                {"id": "ta", "target": "a", "kind": "field", "status": "blocked"},
-                {"id": "tb", "target": "b", "kind": "prototype", "status": "proposed"},
-            ]
-        },
-    )
-    monkeypatch.setattr(
-        analysis_readiness,
-        "macro_account",
-        lambda _root, _connection=None, _target=None, **_kwargs: {
-            "rows": [
-                {
-                    "id": "ma",
-                    "kind": "constant",
-                    "status": "blocked",
-                    "targets": ["a"],
-                    "shared": False,
-                },
-                {
-                    "id": "mb",
-                    "kind": "accessor",
-                    "status": "accepted",
-                    "targets": ["a", "b"],
-                    "shared": False,
-                },
-                {
-                    "id": "mc",
-                    "kind": "constant",
-                    "status": "accepted",
-                    "targets": ["b"],
-                    "shared": False,
-                },
-            ]
-        },
-    )
-
     summary = cast(
         dict[str, Any],
         analysis_readiness._summaries(
@@ -181,7 +124,6 @@ def test_analysis_readiness_summary_filters_all_counts_and_work_to_target(
     )
 
     assert summary["naming"]["inventory_count"] == 1
-    assert summary["naming"]["required_work_count"] == 2
     assert summary["naming"]["debt"] == {"raw_functions": 1, "raw_data": 0}
     assert summary["types"] == {
         "inventory_count": 2,
@@ -189,49 +131,20 @@ def test_analysis_readiness_summary_filters_all_counts_and_work_to_target(
         "usage_count": 2,
         "conflict_count": 2,
         "diagnostic_count": 1,
-        "candidate_count": 1,
-        "proposed_transactions": 0,
-        "unresolved_evidence_ceiling_count": 1,
-        "work_graph": [{"status": "blocked", "count": 1}],
     }
     assert summary["macros"] == {
         "inventory_count": 3,
         "use_count": 2,
         "template_count": 3,
-        "candidate_count": 2,
-        "proposed_transactions": 1,
-        "unresolved_evidence_ceiling_count": 1,
-        "work_graph": [
-            {"status": "accepted", "count": 1},
-            {"status": "blocked", "count": 1},
-        ],
     }
-
-
-def test_target_macro_rows_are_canonical_global_subsets() -> None:
-    rows = [
-        {"id": "local-a", "targets": ["a"], "shared": False},
-        {"id": "cross", "targets": ["a", "b"], "shared": False},
-        {"id": "shared", "targets": [], "shared": True},
-        {"id": "local-b", "targets": ["b"], "shared": False},
-    ]
-
-    a_rows = analysis_readiness._target_macro_rows(rows, "a")
-    b_rows = analysis_readiness._target_macro_rows(rows, "b")
-
-    assert [row["id"] for row in a_rows] == ["local-a", "cross", "shared"]
-    assert [row["id"] for row in b_rows] == ["cross", "shared", "local-b"]
-    assert {row["id"] for row in a_rows + b_rows} == {row["id"] for row in rows}
-    assert all(row in rows for row in a_rows + b_rows)
 
 
 def test_analysis_readiness_default_output_has_strict_bounds(monkeypatch) -> None:
     payload = {
-        "schema": "bof3.analysis-readiness/v2",
+        "schema": "bof3.analysis-readiness/v3",
         "ready": True,
         "summaries": {
-            concern: {"inventory_count": 0, "work_graph": []}
-            for concern in ("naming", "types", "macros")
+            concern: {"inventory_count": 0} for concern in ("naming", "types", "macros")
         },
     }
     monkeypatch.setattr(analysis_readiness, "readiness", lambda *_args: payload)
@@ -244,32 +157,9 @@ def test_analysis_readiness_default_output_has_strict_bounds(monkeypatch) -> Non
             == 0
         )
     encoded = output.getvalue().encode()
-    assert json.loads(encoded)["summaries"]["types"]["work_graph"] == []
+    assert json.loads(encoded)["summaries"]["types"]["inventory_count"] == 0
     assert len(encoded) <= 1024
     assert encoded.count(b"\n") <= 40
-
-
-def test_all_target_macro_rows_partition_canonical_global_account() -> None:
-    targets = ["a", "b", "c"]
-    global_rows = [
-        {"id": "local-a", "targets": ["a"], "shared": False},
-        {"id": "cross", "targets": ["a", "b"], "shared": False},
-        {"id": "shared", "targets": [], "shared": True},
-        {"id": "local-c", "targets": ["c"], "shared": False},
-    ]
-    observed_union: set[str] = set()
-
-    for target in targets:
-        expected = [
-            row
-            for row in global_rows
-            if row["shared"] is True or target in row["targets"]
-        ]
-        actual = analysis_readiness._target_macro_rows(global_rows, target)
-        assert [row["id"] for row in actual] == [row["id"] for row in expected]
-        observed_union.update(str(row["id"]) for row in actual)
-
-    assert observed_union == {"local-a", "cross", "shared", "local-c"}
 
 
 def test_analysis_readiness_live_target_output_ceiling() -> None:
@@ -286,7 +176,7 @@ def test_analysis_readiness_live_target_output_ceiling() -> None:
         check=False,
     )
     assert result.returncode == 0, result.stderr.decode()
-    assert json.loads(result.stdout)["schema"] == "bof3.analysis-readiness/v2"
+    assert json.loads(result.stdout)["schema"] == "bof3.analysis-readiness/v3"
     assert len(result.stdout) <= 2_500
     assert result.stdout.count(b"\n") <= 100
 

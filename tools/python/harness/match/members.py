@@ -10,6 +10,8 @@ from harness.domain.layout import parse_splat_text
 from harness.domain.manifests import _parse_manifest
 from harness.domain.psx import is_psx_exe, payload_for, validate_psx_header
 from harness.domain.symbols import load_target_symbols, parse_map
+from harness.domain.functions import parse_function_records
+from harness.domain.sources import owning_manifest, compiled_symbol_name
 
 _LIMIT = 64 * 1024 * 1024
 
@@ -66,20 +68,15 @@ def _capture_data(manifest, payload, binary: bytes, functions: list[dict]) -> di
     return sections
 
 
-def capture_members(root: Path, record: dict, preserved: dict) -> dict:
-    """Read only preserved paths; the caller retains the dispatch watch and lease."""
-    profile = record["profile"]
-    if (
-        record["fingerprint"] != preserved["preservation_fingerprint"]
-        or profile["target"] != preserved["target"]
-        or profile["destination"] != preserved["destination"]
-    ):
-        raise ValueError("comparison members differ from preserved identity")
+def capture_members(root: Path, source: str) -> dict:
+    """Read complete current members from explicit ownership, metadata and Splat."""
+    owner = owning_manifest(root, root / source)
+    if owner is None or source not in owner.sources:
+        raise ValueError("grouped source requires one explicit lift owner")
+    inputs = {}
     with InputBatch(root) as batch:
 
         def read(name: str, *, required: bool = True) -> bytes:
-            if name not in preserved["inputs"]:
-                raise ValueError(f"comparison input lacks a preservation pin: {name}")
             before = leaf_stat(root, name)
             if before is not None and before.st_nlink != 1:
                 raise ValueError(f"comparison input has multiple links: {name}")
@@ -87,16 +84,16 @@ def capture_members(root: Path, record: dict, preserved: dict) -> dict:
             after = leaf_stat(root, name)
             if after is not None and after.st_nlink != 1:
                 raise ValueError(f"comparison input has multiple links: {name}")
-            if state != preserved["inputs"][name] or (required and content is None):
-                raise ValueError(f"comparison input differs from preservation: {name}")
+            if required and content is None:
+                raise ValueError(f"comparison input is absent: {name}")
+            inputs[name] = state
             return content if content is not None else b""
 
-        manifest = _parse_manifest(root / record["manifest"], read(record["manifest"]))
-        if (
-            manifest.id.value != preserved["target"]
-            or manifest.splat != record["layout"]
-        ):
-            raise ValueError("comparison manifest differs from preserved ownership")
+        manifest_name = f"config/targets/{owner.id.value}/target.toml"
+        manifest = _parse_manifest(root / manifest_name, read(manifest_name))
+        if manifest != owner:
+            raise ValueError("grouped manifest changed during member discovery")
+        records = parse_function_records(read(source).decode("utf-8"))
         binary = read(manifest.binary)
         if is_psx_exe(binary):
             validate_psx_header(
@@ -126,68 +123,80 @@ def capture_members(root: Path, record: dict, preserved: dict) -> dict:
         local_by_name = {symbol.canonical_name: symbol.address for symbol in local}
         functions = []
         selectors, names = set(), set()
-        for member in profile["members"]:
-            for function in member["functions"]:
-                selector, symbol = function["selector"], function["symbol"]
-                target, raw_address = selector.rsplit("@", 1)
-                address = int(raw_address, 16)
-                if (
-                    target != manifest.id.value
-                    or selector in selectors
-                    or symbol in names
-                    or local_by_name.get(symbol) != address
-                ):
-                    raise ValueError(
-                        "comparison member identity is duplicate or unbound"
-                    )
-                boundaries = [
-                    boundary
-                    for boundary in layout.boundaries
-                    if boundary.virtual_start == address
-                ]
-                if len(boundaries) != 1:
-                    raise ValueError(
-                        "comparison member requires one exact reviewed boundary"
-                    )
-                boundary = boundaries[0]
-                size = boundary.virtual_size
-                if (
-                    boundary.kind != "c"
-                    or boundary.source != profile["destination"]
-                    or size is None
-                    or size < 8
-                    or size % 4
-                    or address % 4
-                    or boundary.file_size != size
-                    or not payload.load_address
-                    <= address
-                    < address + size
-                    <= payload.payload_end
-                    or boundary.file_start
-                    != payload.binary_offset + address - payload.load_address
-                    or boundary.file_end != boundary.file_start + size
-                ):
-                    raise ValueError(
-                        "comparison member has an invalid original byte range"
-                    )
-                original = binary[boundary.file_start : boundary.file_end]
-                if len(original) != size:
-                    raise ValueError("comparison original bytes are truncated")
-                selectors.add(selector)
-                names.add(symbol)
-                functions.append(
-                    {
-                        "selector": selector,
-                        "symbol": symbol,
-                        "address": address,
-                        "file_start": boundary.file_start,
-                        "original": original,
-                    }
+        for record in records:
+            if record.kind != "function":
+                raise ValueError(
+                    "grouped comparison requires ordinary function members"
                 )
-        if len(functions) < 2 or sorted(selectors) != preserved["selectors"]:
-            raise ValueError("comparison must cover every preserved group member")
+            address = record.address
+            selector = f"{manifest.id.value}@0x{address:08X}"
+            symbol = compiled_symbol_name(
+                root,
+                root / source,
+                address=address,
+                manifest=manifest,
+                layout=layout,
+                symbols=symbols,
+            )
+            if (
+                selector in selectors
+                or symbol in names
+                or local_by_name.get(symbol) != address
+                or symbol != record.spelling
+            ):
+                raise ValueError("comparison member identity is duplicate or unbound")
+            boundaries = [
+                boundary
+                for boundary in layout.boundaries
+                if boundary.virtual_start == address
+            ]
+            if len(boundaries) != 1:
+                raise ValueError(
+                    "comparison member requires one exact reviewed boundary"
+                )
+            boundary = boundaries[0]
+            size = boundary.virtual_size
+            if (
+                boundary.kind != "c"
+                or boundary.source != source
+                or size is None
+                or size < 8
+                or size % 4
+                or address % 4
+                or boundary.file_size != size
+                or not payload.load_address
+                <= address
+                < address + size
+                <= payload.payload_end
+                or boundary.file_start
+                != payload.binary_offset + address - payload.load_address
+                or boundary.file_end != boundary.file_start + size
+            ):
+                raise ValueError("comparison member has an invalid original byte range")
+            original = binary[boundary.file_start : boundary.file_end]
+            if len(original) != size:
+                raise ValueError("comparison original bytes are truncated")
+            selectors.add(selector)
+            names.add(symbol)
+            functions.append(
+                {
+                    "selector": selector,
+                    "symbol": symbol,
+                    "address": address,
+                    "file_start": boundary.file_start,
+                    "original": original,
+                }
+            )
+        claimed = {
+            boundary.virtual_start
+            for boundary in layout.boundaries
+            if boundary.kind == "c" and boundary.source == source
+        }
+        if len(functions) < 2 or claimed != {member["address"] for member in functions}:
+            raise ValueError("comparison must cover every reviewed source group member")
         data_sections = _capture_data(manifest, payload, binary, functions)
     return {
+        "inputs": inputs,
         "target": manifest.id.value,
         "binary": manifest.binary,
         "load_address": manifest.load_address,

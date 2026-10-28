@@ -66,7 +66,7 @@ disposition before successor starts.
    calls/representation and scoped checks; generated validation artifacts only.
    Lane reviewer handles non-exact selectors only. Parent resolves unavailable
    native checks. Serial batch gate waits for all lanes to close.
-5. **Name.** `$bof3-naming`; separate opportunity/evidence/audit/transaction authority.
+5. **Name.** `$bof3-naming`; inspect current naming facts and apply evidenced edits within scope.
    Reuse valid target evidence. Preserve storage/ABI/address identity. Exact lane
    confirms semantic name/module and filename/Splat/map/header/manifest agreement;
    edit requires renewed gate. Reviewer supplies missing naming evidence. Selected

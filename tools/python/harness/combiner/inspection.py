@@ -1,69 +1,152 @@
-"""Read-only per-function source inspection for consolidation planning."""
+"""Read current source membership and profiles or check complete native consumers."""
 
 from __future__ import annotations
 
-from hashlib import sha256
 from pathlib import Path
+import sqlite3
 
-from harness.common.inputs import InputBatch
-from harness.domain.functions import parse_function_records
+from harness.build.compiler import (
+    build_compiler_arguments,
+    resolve_compiler_settings,
+    parse_object_flags,
+    parse_object_compilers,
+    validate_object_configuration,
+)
+from harness.common.files import read_file
+from harness.decomp import metadata
+from harness.decomp.consumers import identifier_consumers
+from harness.domain.ids import normalize_target_id, parse_function_id
+from harness.domain.layout import parse_splat_layout
+from harness.domain.manifests import load_target_manifests
+from harness.domain.registry import resolve_function
+from .opportunities import relationship_rows
 
-_LIMIT = 16 * 1024 * 1024
+
+def _target(root: Path, target: str) -> str:
+    target = normalize_target_id(target).value
+    if target not in load_target_manifests(root):
+        raise ValueError(f"unknown target: {target}")
+    return target
 
 
-def inspect_source(root: Path, value: str) -> dict[str, object]:
-    """Report lexical members of an explicitly named repository C file."""
-
-    relative = Path(value)
-    if (
-        relative.is_absolute()
-        or relative.as_posix() != value
-        or ".." in relative.parts
-        or relative.suffix != ".c"
-        or relative.parts[:2] != ("src", "bof3")
-    ):
-        raise ValueError("source must be a canonical src/bof3/ C path")
+def _profiles(root: Path, records: list[dict]) -> tuple[dict, list[dict]]:
+    profiles, findings = {}, []
     try:
-        root = root.resolve()
-        with InputBatch(root) as inputs:
-            state, data = inputs.read(
-                root / relative, max_bytes=_LIMIT, single_link=True
+        configuration = read_file(
+            root, "config/compiler/object-flags.cmake", missing_ok=True
+        )
+        text = configuration.decode("utf-8") if configuration is not None else ""
+        validate_object_configuration(text)
+        flags, compilers = parse_object_flags(text), parse_object_compilers(text)
+    except (OSError, UnicodeError, ValueError) as error:
+        return {}, [
+            {"status": "unavailable", "code": "configuration", "message": str(error)}
+        ]
+    for source in sorted({row["source"] for row in records}):
+        try:
+            settings = resolve_compiler_settings(
+                source, (root / source).read_text(encoding="utf-8"), flags, compilers
             )
-            if data is None:
-                raise ValueError("source must be a regular single-link repository file")
-            try:
-                text = data.decode("utf-8")
-            except UnicodeError as error:
-                raise ValueError("source must be UTF-8 text") from error
-            records = parse_function_records(text)
-    except OSError as error:
-        raise ValueError(f"source capture failed: {value}: {error}") from error
-    return {
-        "schema": "bof3.combiner-source/v1",
-        "source": value,
-        "sha256": state["sha256"],
-        "write_authorized": False,
-        "native_verified": False,
-        "coverage_verified": False,
-        "functions": [
-            {
-                "address": f"0x{record.address:08X}",
-                "kind": record.kind,
-                "spelling": record.spelling,
-                "line": record.line,
-                "status": record.status,
-                "metadata_sha256": sha256(record.metadata.encode("utf-8")).hexdigest(),
-                "implementation_sha256": sha256(
-                    text[
-                        record.implementation_start : record.implementation_end
-                    ].encode("utf-8")
-                ).hexdigest(),
-                "metadata_range": [record.metadata_start, record.metadata_end],
-                "implementation_range": [
-                    record.implementation_start,
-                    record.implementation_end,
-                ],
+            profiles[source] = {
+                "compiler_id": settings.compiler_id or "gcc-2.7.2-psx",
+                "arguments": build_compiler_arguments(root, settings.flags),
             }
-            for record in records
-        ],
-    }
+        except (OSError, UnicodeError, ValueError) as error:
+            findings.append(
+                {
+                    "status": "failed",
+                    "code": "profile",
+                    "source": source,
+                    "message": str(error),
+                }
+            )
+    return profiles, findings
+
+
+def list_report(root: Path, target: str, *, limit: int | None = None) -> dict:
+    root = root.resolve()
+    target = _target(root, target)
+    if limit is not None and limit < 1:
+        raise ValueError("listing requires a positive limit")
+    result = metadata.report(root, target, check=False)
+    result["operation"] = "combiner"
+    profiles, findings = _profiles(root, result["records"])
+    facts = {}
+    try:
+        facts = relationship_rows(root, target)
+        manifest = load_target_manifests(root)[target]
+        layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
+        boundaries = {row.virtual_start: row for row in layout.boundaries}
+        for row in result["records"]:
+            row["kind"] = "source_member"
+            row["profile"] = profiles.get(row["source"])
+            address = int(row["address"], 16) if row["address"] else None
+            row["relationships"] = facts.get(address)
+            boundary = boundaries.get(address)
+            row["reviewed_size"] = boundary.virtual_size if boundary else None
+            if address is not None and address not in facts:
+                findings.append(
+                    {
+                        "status": "unavailable",
+                        "code": "index_member",
+                        "source": row["source"],
+                        "message": "authored function is absent from the current index",
+                    }
+                )
+    except (OSError, UnicodeError, RuntimeError, ValueError, sqlite3.Error) as error:
+        findings.append(
+            {"status": "unavailable", "code": "relationships", "message": str(error)}
+        )
+    result["records"] = (
+        result["records"] if limit is None else result["records"][:limit]
+    )
+    result["truncated"] = limit is not None and result["total"] > limit
+    result["findings"].extend(findings)
+    result["incomplete"] = any(
+        row["status"] == "unavailable" for row in result["findings"]
+    )
+    result["passed"] = not result["findings"]
+    return result
+
+
+def check_report(root: Path, target: str, selectors: tuple[str, ...] = ()) -> dict:
+    root = root.resolve()
+    target = _target(root, target)
+    selected = {parse_function_id(value) for value in selectors}
+    if any(value.target.value != target for value in selected):
+        raise ValueError("every selector must belong to the selected target")
+    scope = metadata.report(root, target, check=False, selectors=selectors)
+    consumers = set(selectors)
+    findings = []
+    if selected:
+        try:
+            names = set()
+            for row in scope["records"]:
+                if row["selector"]:
+                    resolved = resolve_function(root, row["selector"])
+                    if resolved.compiled_symbol is None:
+                        raise ValueError(
+                            f"unresolved compiled symbol: {row['selector']}"
+                        )
+                    names.add(resolved.compiled_symbol)
+            discovered, coverage = identifier_consumers(root, target, names)
+            consumers.update(discovered)
+            findings.extend(coverage)
+        except (OSError, UnicodeError, RuntimeError, ValueError) as error:
+            findings.append(
+                {"status": "unavailable", "code": "consumers", "message": str(error)}
+            )
+    result = metadata.report(
+        root, target, check=True, selectors=tuple(sorted(consumers)) if selected else ()
+    )
+    result["operation"] = "combiner"
+    profiles, profile_findings = _profiles(root, result["records"])
+    result["profiles"] = profiles
+    result["findings"].extend([*findings, *profile_findings])
+    result["scope"]["selectors"] = sorted(str(value) for value in selected)
+    result["scope"]["whole_target"] = not bool(selected)
+    result["incomplete"] = any(
+        row["status"] == "unavailable" for row in result["findings"]
+    )
+    result["passed"] = not result["findings"]
+    return result

@@ -4,20 +4,15 @@ from __future__ import annotations
 
 import argparse
 import json
-from collections import Counter
 from pathlib import Path
 
 from harness.common.cli import add_root_argument, resolved_root, run_main
-from harness.macros.accounting import candidate_account as macro_account
-from harness.naming.context import inventory_expected
-from harness.naming.readiness import required_work_snapshot
-from harness.types.review import candidate_account as type_account
 
 from ..analysis.index import connect
 from ..analysis.project import status as project_status
 from ..domain.ids import normalize_target_id
 from ..domain.manifests import TargetManifest, load_target_manifests
-from harness.naming.debt import address_of, collect_naming_debt
+from harness.naming.debt import collect_naming_debt
 
 
 def _count(
@@ -43,100 +38,39 @@ def _macro_count(connection, table: str, target: str | None) -> int:
     )
 
 
-def _work_summary(rows: list[dict[str, object]]) -> list[dict[str, object]]:
-    counts = Counter(str(row["status"]) for row in rows)
-    return [
-        {"status": status, "count": count} for status, count in sorted(counts.items())
-    ]
-
-
-def _target_macro_rows(
-    rows: list[dict[str, object]], target: str | None
-) -> list[dict[str, object]]:
-    if target is None:
-        return rows
-    result = []
-    for row in rows:
-        targets = row.get("targets")
-        if row.get("shared") is True or (
-            isinstance(targets, list) and target in targets
-        ):
-            result.append(row)
-    return result
-
-
 def _summaries(
     root: Path,
     manifests: dict[str, TargetManifest],
     targets: list[str],
     detail: bool = False,
 ) -> dict[str, object]:
+    """Expose fresh inventory counts without constructing operation accounts."""
     connection = connect(root)
     try:
         target = targets[0] if len(targets) == 1 else None
-        expected = {item: inventory_expected(root, item, manifests) for item in targets}
-        work = {
-            item: required_work_snapshot(root, item, manifests[item], connection)
-            for item in targets
-        }
-        debt_rows = collect_naming_debt(root, manifests).to_rows()
+        debt_rows = collect_naming_debt(
+            root, {item: manifests[item] for item in targets}
+        ).to_rows()
         if target is not None:
-            claimed_sources = set(manifests[target].sources)
+            sources = set(manifests[target].sources)
             debt_rows = {
                 key: [
                     row
                     for row in rows
                     if row.startswith(f"{target}:")
-                    or (key.endswith("files") and row in claimed_sources)
+                    or (key.endswith("files") and row in sources)
                 ]
                 for key, rows in debt_rows.items()
             }
-        type_report = type_account(root, lambda _root: connection, target, close=False)
-        type_rows = [
-            row
-            for row in type_report["rows"]
-            if target is None or row["target"] == target
-        ]
-        macro_report = macro_account(root, connection, target)
-        macro_rows = _target_macro_rows(macro_report["rows"], target)
-        naming_rows = {item: len(expected[item]) for item in targets}
-        naming_detail = {
-            item: [
-                {
-                    "kind": kind,
-                    "name": name,
-                    "status": "blocked",
-                    "required_work": work[item].items(address_of(name), kind),
-                }
-                for kind, name in sorted(expected[item])
-            ]
-            for item in targets
+        naming = {
+            "inventory_count": len(debt_rows.get("raw_functions", ()))
+            + len(debt_rows.get("raw_data", ())),
+            "debt": {key: len(value) for key, value in debt_rows.items()},
         }
-        naming_work = {
-            item: sum(len(row["required_work"]) for row in naming_detail[item])
-            for item in targets
-        }
-        naming_summary = [
-            {
-                "target": item,
-                "inventory_count": naming_rows[item],
-                "required_work_count": naming_work[item],
-            }
-            for item in targets
-        ]
-        type_counts = Counter(row["status"] for row in type_rows)
-        macro_counts = Counter(row["status"] for row in macro_rows)
+        if detail:
+            naming["rows"] = debt_rows
         return {
-            "naming": {
-                "inventory_count": sum(naming_rows.values()),
-                "target_rows": naming_rows,
-                "required_work_count": sum(naming_work.values()),
-                "target_required_work": naming_work,
-                "proposed_transactions": 0,
-                "unresolved_evidence_ceiling_count": sum(naming_rows.values()),
-                "debt": {key: len(value) for key, value in debt_rows.items()},
-                "work_graph": naming_detail if detail else naming_summary,
-            },
+            "naming": naming,
             "types": {
                 "inventory_count": _count(connection, "type_declarations", target),
                 "field_count": _count(connection, "type_fields", target),
@@ -144,16 +78,11 @@ def _summaries(
                 "conflict_count": _count(connection, "type_conflicts", target),
                 "diagnostic_count": int(
                     connection.execute(
-                        "SELECT COUNT(*) FROM type_declarations"
-                        " WHERE diagnostic IS NOT NULL"
+                        "SELECT COUNT(*) FROM type_declarations WHERE diagnostic IS NOT NULL"
                         + (" AND target_id = ?" if target else ""),
                         (target,) if target else (),
                     ).fetchone()[0]
                 ),
-                "candidate_count": len(type_rows),
-                "proposed_transactions": type_counts.get("proposed", 0),
-                "unresolved_evidence_ceiling_count": type_counts.get("blocked", 0),
-                "work_graph": type_rows if detail else _work_summary(type_rows),
             },
             "macros": {
                 "inventory_count": _macro_count(
@@ -161,10 +90,6 @@ def _summaries(
                 ),
                 "use_count": _count(connection, "macro_uses", target),
                 "template_count": _macro_count(connection, "macro_templates", target),
-                "candidate_count": len(macro_rows),
-                "proposed_transactions": macro_counts.get("accepted", 0),
-                "unresolved_evidence_ceiling_count": macro_counts.get("blocked", 0),
-                "work_graph": macro_rows if detail else _work_summary(macro_rows),
             },
         }
     finally:
@@ -213,7 +138,7 @@ def readiness(
         summaries = _unavailable(index_error)
     ready = index_ready and all(item.get("fresh") for item in snapshots)
     return {
-        "schema": "bof3.analysis-readiness/v2",
+        "schema": "bof3.analysis-readiness/v3",
         "ready": ready,
         "index_ready": index_ready,
         "index_error": index_error,
