@@ -3875,9 +3875,10 @@ reference evidence. Full runtime fidelity remains an acceptance gate.
 [ExCB operations](../../../tools/rust/bof3-audio/src/machine/exception_chains.rs)
 read the guest descriptor at `0x100`/`0x104` and require four eight-byte priority
 records. C0 service `02` inserts a sixteen-byte node at the selected head and
-returns zero; service `03` removes the exact head pointer and returns that
-pointer. The node's first word links the next node, followed by the conditional
-second-handler pointer, first-handler pointer and an opaque word. Registration
+returns zero; service `03` removes the exact matching pointer from any chain
+position and returns that pointer, or zero when absent. The node's first word
+links the next node, followed by the conditional second-handler pointer,
+first-handler pointer and an opaque word. Registration
 does not execute handlers. Removal preserves every word of the detached node,
 including its old next link; unused priority-record words remain unchanged.
 
@@ -3889,13 +3890,18 @@ ranges, overlapping metadata/nodes, duplicate links, cycles and chains exceeding
 not a promised atomic transaction. Each kernel call reloads the descriptor and
 reads guest links, so guest edits and table rebinding remain visible.
 
-Published BIOS evidence describes broken non-head removal using an uninitialized
-stack value. Rust therefore rejects absent/non-head removal explicitly, without
-silently repairing the linked list. The inspected OpenBIOS comparison supports
-the head/return behavior but repairs the non-head case; its repaired search is
-not adopted. See [external evidence](../../reference/psx-kernel.md#exception-chain-registration).
-Original BIOS allocation/content and bug-specific stack effects remain unknown;
-`A0:72` CD-driver removal still rejects, rather than claiming an empty driver.
+The pinned US BIOS implements ordinary removal for valid finite chains at RAM
+`0x1444..0x1508`, BIOS file `0x10F44..0x11008`. Its two uninitialized-stack
+loads are unreachable from normal entry with stable arguments. Earlier branches
+exclude the conditions that would execute those loads. The loop maintains the
+predecessor and updates only its next link on a match. An absent target, including
+zero or a different pointer alias, returns zero without dereferencing that target.
+This result is specific to the pinned reference and does not establish other BIOS
+revisions or behavior under concurrent mutation. See
+[external evidence](../../reference/psx-kernel.md#exception-chain-registration).
+
+Original BIOS allocation/content and composite `A0:72` CD-driver removal remain
+separate startup obligations.
 
 Four default [checks](../../../tools/rust/bof3-audio/tests/exception_chains.rs)
 cover all priorities, alias identity, opaque state, rebinding, malformed graphs

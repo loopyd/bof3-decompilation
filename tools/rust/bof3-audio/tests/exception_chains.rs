@@ -49,21 +49,15 @@ fn four_priority_chains_keep_exact_aliases_and_preserve_detached_nodes() {
         assert_eq!(read(&mut ram, second), first);
         assert_eq!(read(&mut ram, first), 0);
         let before = ram.bytes().to_vec();
-        assert!(chains
-            .dequeue_head(&mut ram, priority, first)
-            .unwrap_err()
-            .to_string()
-            .contains("non-head"));
+        assert_eq!(chains.dequeue(&mut ram, priority, first).unwrap(), first);
+        assert_eq!(read(&mut ram, second), 0);
+        assert_eq!(read(&mut ram, first), 0);
+        // Restore the original link so the existing head-removal checks follow.
+        word(&mut ram, second, first);
         assert_eq!(ram.bytes(), before);
-        assert_eq!(
-            chains.dequeue_head(&mut ram, priority, second).unwrap(),
-            second
-        );
+        assert_eq!(chains.dequeue(&mut ram, priority, second).unwrap(), second);
         assert_eq!(read(&mut ram, second), first); // removal does not zero next
-        assert_eq!(
-            chains.dequeue_head(&mut ram, priority, first).unwrap(),
-            first
-        );
+        assert_eq!(chains.dequeue(&mut ram, priority, first).unwrap(), first);
         assert_eq!(read(&mut ram, BASE + priority * 8), 0);
         assert_eq!(
             read(&mut ram, BASE + priority * 8 + 4),
@@ -107,10 +101,11 @@ fn kernel_services_observe_guest_edits_and_descriptor_rebinding() {
     invoke(&mut kernel, &mut cpu, &mut ram, 2, 3, address).unwrap();
     assert_eq!((cpu.pc(), cpu.register(2)), (RETURN, 0));
     // A BIOS pointer comparison is raw equality, not physical alias equality.
-    assert!(invoke(&mut kernel, &mut cpu, &mut ram, 3, 3, 0xa000_4000).is_err());
-    assert_eq!((cpu.pc(), cpu.register(2)), (0xa000_00c0, 0));
+    invoke(&mut kernel, &mut cpu, &mut ram, 3, 3, 0xa000_4000).unwrap();
+    assert_eq!((cpu.pc(), cpu.register(2)), (RETURN, 0));
     word(&mut ram, 0x100, 0x8000_5000);
-    assert!(invoke(&mut kernel, &mut cpu, &mut ram, 3, 3, address).is_err());
+    invoke(&mut kernel, &mut cpu, &mut ram, 3, 3, address).unwrap();
+    assert_eq!((cpu.pc(), cpu.register(2)), (RETURN, 0));
     word(&mut ram, 0x8000_5018, address);
     word(&mut ram, address, 0x8000_4100);
     node(&mut ram, 0x8000_4100);
@@ -158,7 +153,7 @@ fn malformed_descriptors_nodes_cycles_and_duplicates_fail_before_mutation() {
     for next in [0xa0004000, 0x80004004, 0x1f801c00] {
         word(&mut ram, 0x80004000, next);
         let before = ram.bytes().to_vec();
-        assert!(chains.dequeue_head(&mut ram, 0, 0x80004000).is_err());
+        assert!(chains.dequeue(&mut ram, 0, 0x80004000).is_err());
         assert!(chains.enqueue(&mut ram, 0, 0x5000).is_err());
         assert_eq!(ram.bytes(), before);
     }
@@ -193,9 +188,9 @@ fn traversal_limit_stops_corrupt_guest_state_without_host_recursion_or_writes() 
         .to_string()
         .contains("would exceed"));
     assert_eq!(ram.bytes(), before);
-    assert_eq!(chains.dequeue_head(&mut ram, 0, 0x10000).unwrap(), 0x10000);
+    assert_eq!(chains.dequeue(&mut ram, 0, 0x10000).unwrap(), 0x10000);
     chains.enqueue(&mut ram, 0, 0x30000).unwrap();
-    assert_eq!(chains.dequeue_head(&mut ram, 0, 0x30000).unwrap(), 0x30000);
+    assert_eq!(chains.dequeue(&mut ram, 0, 0x30000).unwrap(), 0x30000);
 }
 
 #[test]

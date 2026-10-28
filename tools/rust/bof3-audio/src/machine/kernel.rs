@@ -692,7 +692,7 @@ impl Kernel {
             }
             (0xc0, 0x03) => {
                 let removed =
-                    ExceptionChains::read(bus)?.dequeue_head(bus, argument, cpu.register(5))?;
+                    ExceptionChains::read(bus)?.dequeue(bus, argument, cpu.register(5))?;
                 cpu.set_register(2, removed);
                 "SysDeqIntRP"
             }

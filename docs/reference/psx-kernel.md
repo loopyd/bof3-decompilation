@@ -23,8 +23,8 @@ close its hardware evidence gate.
 RFE changes the status stack; it does not select a return PC. Critical-section
 entry tests and clears saved interrupt-enable and interrupt-mask bits; exit
 sets them without returning a value. CD-handler removal also depends on event
-and chain state. The BIOS reference describes broken non-head chain removal;
-the Rust machine must not silently replace that with a corrected list operation.
+and chain state. Removal follows the pinned original BIOS instructions rather
+than inferring behavior from the published non-head warning.
 
 The [BIOS event reference](https://psx-spx.consoledev.net/kernelbios/#bios-event-functions)
 and [control-block layout](https://psx-spx.consoledev.net/kernelbios/#bios-control-blocks)
@@ -51,19 +51,33 @@ and independent audio comparison remain separate acceptance gates.
 ## Exception-chain registration
 
 The [published priority-chain layout and removal warning](https://psx-spx.consoledev.net/kernelbios/#priority-chains)
-define four priorities and node links with two handler pointers. A handler's
-second function depends on a nonzero first-function result. Non-head removal is
-documented as reading an uninitialized stack location; a correct general list
-removal would change that behavior.
+describe four priorities and node links with two handler pointers. A handler's
+second function depends on a nonzero first-function result. The warning describes
+uninitialized-stack reads during non-head removal; it does not establish a
+reachable failure in every BIOS revision.
 
-[OpenBIOS registration code](../../third_party/pcsx-redux-agentic/src/mips/openbios/handlers/setup.c),
-inspected 2026-09-24, provides a separate comparison: enqueue returns zero;
-successful head removal returns the removed pointer and leaves its link intact.
-Its non-head search is repaired, so it is not evidence for original bug behavior.
-The [Rust implementation](../specs/formats/audio.md#rust-bios-exception-chain-registration)
-supports bounded registration/head removal and explicitly rejects unresolved
-contexts. No BIOS code, payload or dependency is imported. The original game
-wrappers are tested against a synthetic RAM table, not a claimed BIOS boot image.
+The pinned US BIOS, SHA-256
+`11052b6499e466bbf0a709b1f9cb6834a9418e66680387912451e971cf8a1fef`,
+implements C0/3 at RAM `0x1444..0x1508`, BIOS file `0x10F44..0x11008`.
+The branches at RAM `0x146C` and `0x149C` test unchanged head/target values,
+so the stack load at `0x14A4` is unreachable from normal entry. Likewise,
+`0x148C` and `0x14B0` test unchanged next-pointer values and skip the load
+at `0x14B8`. The latter branch's delay slot initializes the predecessor.
+The subsequent loop updates that predecessor before advancing the current node.
+Relevant loads have intervening instructions before use.
+
+For stable valid finite chains, removal therefore updates the head or predecessor
+link, returns the exact matched pointer and preserves every detached-node word.
+Empty or absent searches return zero without writes. Comparisons retain full
+pointer alias bits. This does not establish malformed-chain, concurrent-mutation,
+other-revision, allocation or timing behavior.
+
+[OpenBIOS registration code](../../third_party/pcsx-redux-agentic/src/mips/openbios/handlers/setup.c)
+provides a separate implementation comparison. The
+[Rust implementation](../specs/formats/audio.md#rust-bios-exception-chain-registration)
+uses the pinned original semantics within its bounded validated chain domain.
+No BIOS code, payload or dependency is imported. Optional original game wrapper
+checks use a synthetic RAM table, not a claimed BIOS boot image.
 
 ## Thread exception contexts
 

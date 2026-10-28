@@ -1,6 +1,5 @@
 //! BIOS ExCB links in guest RAM. BIOS boot allocation is separate.
-//! Only head removal is supported: original non-head removal reads an
-//! uninitialized stack word, so implementing ordinary list removal is incorrect.
+//! Removal follows the pinned US BIOS across validated finite chains.
 
 use super::{
     bus::{Bus, Width},
@@ -103,17 +102,26 @@ impl Table {
         Ok(())
     }
 
-    pub fn dequeue_head(&self, bus: &mut impl Bus, priority: u32, node: u32) -> Result<u32> {
+    pub fn dequeue(&self, bus: &mut impl Bus, priority: u32, node: u32) -> Result<u32> {
         let entry = self.entry(priority)?;
         let head = bus.read(entry, Width::Word)?;
-        if head == 0 || head != node {
-            return Err("BIOS SysDeqIntRP requires the exact non-null head pointer; absent/non-head removal has unverified original stack-dependent behavior".into());
+        let nodes = self.chain(bus, head)?;
+        let mut link = entry;
+        let mut current = head;
+        for _ in 0..=nodes.len() {
+            if current == 0 {
+                return Ok(0);
+            }
+            let next = bus.read(current, Width::Word)?;
+            if current == node {
+                bus.write(link, Width::Word, next)?;
+                // The detached node retains its old next link and other words.
+                return Ok(current);
+            }
+            link = current;
+            current = next;
         }
-        self.chain(bus, head)?;
-        let next = bus.read(head, Width::Word)?;
-        bus.write(entry, Width::Word, next)?;
-        // The detached node retains its old next link and other three words.
-        Ok(head)
+        Err("BIOS SysDeqIntRP: chain changed after validation".into())
     }
 }
 
