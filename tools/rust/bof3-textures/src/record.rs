@@ -5,7 +5,7 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Error, Result, animation,
+    Error, Result, animation, area,
     catalog::{Dependency, QueryFields, Queryable, Resource},
     cell,
     digest::sha256_hex,
@@ -110,6 +110,10 @@ impl<'a> Builder<'a> {
             "save-icon-frame" => format!("{}@0x801EF27C:save-header-frame-source", self.parent.id),
             "animation-program" => "SLUS_004.22@0x8014D910:program-initialization".into(),
             "sprite-cell" => "SLUS_004.22@0x8014C6F8:five-byte-cell-parts".into(),
+            "surface-word" => "SLUS_004.22@0x80154294:nonzero-cell-packed-word".into(),
+            "surface-coordinate" | "surface-coordinate-pair" => {
+                "SLUS_004.22@0x80155560:selected-coordinate-read".into()
+            }
             _ => unreachable!(),
         };
         self.records.insert(id.clone(), Record {
@@ -318,6 +322,35 @@ pub(crate) fn resident_records(
         if partial {
             record.dependencies.push(Dependency { kind: "shared-program-impact".into(), target: None,
                 status: "unresolved".into(), reason: "unresolved programs can have external RAM dependencies; physical edit bounds do not prove complete runtime use relationships".into() });
+        }
+    }
+    Ok(builder.finish())
+}
+
+pub(crate) fn area_records(
+    parent: &Resource,
+    source: &[u8],
+    document: &area::Document,
+) -> Result<Vec<Record>> {
+    let mut builder = Builder::new(parent, source, CoordinateSpace::EntryPayload);
+    for word in &document.records {
+        let id = builder.add(
+            "surface-word",
+            word.offset,
+            4,
+            "conditional-direct-cell".into(),
+        )?;
+        let record = builder.records.get_mut(&id).unwrap();
+        record.dependencies.extend(parent.dependencies.clone());
+        if let Some(span) = area::resolve(source, word.word)?.coordinate_read {
+            let kind = if span.size == 8 {
+                "surface-coordinate-pair"
+            } else {
+                "surface-coordinate"
+            };
+            let coordinates = builder.add(kind, span.offset, span.size, id.clone())?;
+            builder.records.get_mut(&coordinates).unwrap().pack = "preservation-only".into();
+            builder.edge(&id, "surface-coordinates", coordinates, "the original packed word selects these coordinate bytes; this is a read span, not a writable table allocation".into());
         }
     }
     Ok(builder.finish())

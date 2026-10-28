@@ -10,7 +10,7 @@ use emi_ex_v2::image::ArchiveImage;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Error, Result, bank, bank_image,
+    Error, Result, area, bank, bank_image,
     catalog::{self, Dependency, Index, Resource},
     digest::sha256_hex,
     formats,
@@ -20,7 +20,7 @@ use crate::{
     sprite_bank,
 };
 
-pub const SCHEMA: &str = "bof3.textures-package/v6";
+pub const SCHEMA: &str = "bof3.textures-package/v7";
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -50,6 +50,7 @@ pub struct Export {
     pub previews: Vec<preview::Info>,
     pub decoded: Option<String>,
     pub animation: Option<String>,
+    pub surface: Option<String>,
     pub sprite: Option<String>,
     pub bank_images: Vec<BankImage>,
     pub save_frames: Vec<String>,
@@ -112,6 +113,7 @@ fn exports(index: &Index) -> Result<Vec<Export>> {
                     .resident_animation
                     .as_ref()
                     .map(|_| format!("{directory}/animation.json")),
+                surface: resource.area_surface.as_ref().map(|_| format!("{directory}/surface.json")),
                 sprite: resource
                     .sprite_bank
                     .as_ref()
@@ -329,6 +331,9 @@ fn export_source(
         if let Some(member) = &export.animation {
             stage.write(member, &serde_json::to_vec_pretty(&resident::decode(raw)?)?)?;
         }
+        if let Some(member) = &export.surface {
+            stage.write(member, &serde_json::to_vec_pretty(&area::decode(raw)?)?)?;
+        }
         if let (Some(palette), Some(member)) = (&resource.palette_upload, &export.words) {
             stage.write(
                 member,
@@ -537,6 +542,8 @@ fn validate_resource_edit(resource: &Resource, original: &[u8], edited: &[u8]) -
         save_icon::encode(original, info, &save_icon::decode(edited, info)?)?
     } else if resource.resident_animation.is_some() {
         resident::encode(original, &resident::decode(edited)?)?
+    } else if resource.area_surface.is_some() {
+        area::encode(original, &area::decode(edited)?)?
     } else if resource.sprite_bank.is_some() {
         let before = bank_bytes(resource, original)?;
         let after = bank_bytes(resource, edited)?;
@@ -1001,7 +1008,11 @@ pub(crate) fn reconstruct(
         }
         let mut edit = ByteEdits::new(raw);
         let imported_raw = read_member(root, &export.raw, resource.size.max(1))?;
-        if (resource.bank.is_some() || resource.sprite_bank.is_some()) && imported_raw != raw {
+        if (resource.bank.is_some()
+            || resource.sprite_bank.is_some()
+            || resource.area_surface.is_some())
+            && imported_raw != raw
+        {
             return Err(Error::Invalid(format!(
                 "{}: raw bank view is read-only; use its qualified editable views",
                 export.raw
@@ -1015,6 +1026,11 @@ pub(crate) fn reconstruct(
             let document: resident::Document =
                 serde_json::from_slice(&read_member(root, member, 16 * 1024 * 1024)?)?;
             edit.add(member, resident::encode(original_raw, &document)?)?;
+        }
+        if let Some(member) = &export.surface {
+            let document: area::Document =
+                serde_json::from_slice(&read_member(root, member, 16 * 1024 * 1024)?)?;
+            edit.add(member, area::encode(original_raw, &document)?)?;
         }
         if let (Some(palette), Some(member)) = (&resource.palette_upload, &export.words) {
             let words: Vec<u16> =
@@ -1090,6 +1106,14 @@ pub(crate) fn reconstruct(
                 resource.id
             )));
         }
+        if resource.area_surface.is_some()
+            && area::encode(original_raw, &area::decode(&bytes)?)? != bytes
+        {
+            return Err(Error::Invalid(format!(
+                "{}: area edits exceed qualified packed words",
+                resource.id
+            )));
+        }
         if bytes != original_raw {
             edited_entries.push(
                 resource
@@ -1102,6 +1126,7 @@ pub(crate) fn reconstruct(
             if resource.upload.is_none()
                 && resource.palette_upload.is_none()
                 && resource.resident_animation.is_none()
+                && resource.area_surface.is_none()
                 && resource.sprite_bank.is_none()
                 && resource.save_icon.is_none()
             {

@@ -7,7 +7,7 @@ use serde::Serialize;
 use serde_json::{Value, json};
 
 use crate::{
-    Error, Result, bank, bank_image,
+    Error, Result, area, bank, bank_image,
     catalog::{self, Index, Resource},
     digest::sha256_hex,
     formats, package, resident, save_icon,
@@ -21,6 +21,7 @@ enum Content {
     Palette(Vec<u16>),
     SaveIcon(save_icon::Images),
     Resident(resident::Document),
+    Area(area::Document),
     Sprite(sprite_bank::Document, Vec<bank_image::Decoded>),
     DecodedBank(Vec<u8>),
 }
@@ -37,6 +38,9 @@ fn content(resource: &Resource, bytes: &[u8]) -> Result<Option<Content>> {
     }
     if resource.resident_animation.is_some() {
         return Ok(Some(Content::Resident(resident::decode(bytes)?)));
+    }
+    if resource.area_surface.is_some() {
+        return Ok(Some(Content::Area(area::decode(bytes)?)));
     }
     if resource.sprite_bank.is_some() {
         let decoded = sprite_bytes(resource, bytes)?;
@@ -97,6 +101,7 @@ fn inverse(resource: &Resource, original: &[u8]) -> Result<Option<Vec<u8>>> {
             &images,
         )?)),
         Some(Content::Resident(document)) => Ok(Some(resident::encode(original, &document)?)),
+        Some(Content::Area(document)) => Ok(Some(area::encode(original, &document)?)),
         Some(Content::Sprite(document, _)) => {
             let decoded = sprite_bytes(resource, original)?;
             let mut planes = Vec::new();
@@ -277,6 +282,8 @@ fn check_file(
                             .is_some_and(|info| info.unresolved_programs != 0)
                         {
                             "partial-unresolved-programs"
+                        } else if resource.area_surface.is_some() {
+                            "partial-area-metadata"
                         } else {
                             "verified"
                         };
@@ -417,7 +424,7 @@ fn report(index: &Index, files: Vec<FileResult>, scope: &str) -> Value {
         "decode": {"status": if decode_failed { "failed" } else { "partial" },
             "scope": "source words, palettes, bank bytes, image index planes and parsed records; no rendered appearance",
             "verified_resources": files.iter().flat_map(|file| &file.resources).filter(|resource| resource.decode == "verified").count(),
-            "partial_resources": files.iter().flat_map(|file| &file.resources).filter(|resource| resource.decode == "partial-unresolved-programs").count(),
+            "partial_resources": files.iter().flat_map(|file| &file.resources).filter(|resource| matches!(resource.decode, "partial-unresolved-programs" | "partial-area-metadata")).count(),
             "unsupported_resources": files.iter().flat_map(|file| &file.resources).filter(|resource| resource.decode == "unsupported").count()},
         "unchanged_reconstruction": {"status": if files.iter().all(|file| file.unchanged_reconstruction == "byte-identical") { "byte-identical" } else { "failed" },
             "scope": "complete original files after supported unchanged inverses; unknown bytes preserved"},

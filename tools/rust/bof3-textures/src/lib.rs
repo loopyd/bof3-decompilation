@@ -2,6 +2,7 @@
 
 mod aliases;
 pub mod animation;
+pub mod area;
 pub mod bank;
 pub mod bank_image;
 pub mod catalog;

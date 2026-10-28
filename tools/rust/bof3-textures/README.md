@@ -114,7 +114,7 @@ JSON on standard output, including when `--json` is omitted.
 
 ## Catalog
 
-The index schema is `bof3.textures-index/v6`. A resource ID combines release,
+The index schema is `bof3.textures-index/v7`. A resource ID combines release,
 original path, and EMI slot or file locator. Equal hashes retain distinct original
 locations. Each physical resource has its byte offset, size, hash, kind, game categories,
 storage, decode and pack status, evidence, dependencies, known uses, and findings.
@@ -221,7 +221,7 @@ packing, and byte-verification example using the original FIRST atlas.
 [Edit an opening-scene palette](docs/palette-edit.md) covers a palette-word edit,
 its observed field draw context, and re-export of the packed result.
 
-The manifest schema is `bof3.textures-package/v6`. The package includes qualified
+The manifest schema is `bof3.textures-package/v7`. The package includes qualified
 original snapshots, validated baseline snapshots, raw resources, its bound catalog,
 and coverage. A new original export uses the original snapshots as its baselines. A
 qualified raw upload also has `words.json` and indexed `indices-4.png` and
@@ -368,6 +368,30 @@ editable animation document and retain their refusal findings in the catalog.
 Partial banks report decoded and unresolved program counts separately. Their
 unknown references and runtime impact remain coverage blockers. The verifier
 reports `partial-unresolved-programs`, even when unchanged bytes reconstruct.
+
+Qualified type-0 area payloads at `0x80104000` export `surface.json` with schema
+`bof3.area-surface/v1`. Its records are the unique four-byte words selected by
+nonzero original cell IDs. Change `word` as an unsigned 32-bit integer. Keep the
+schema, dimensions, grid identity, record order and offsets unchanged. The raw
+view, cell IDs, headers, coordinate tables and all other payload bytes are
+read-only. A word edit that overlaps any of those protected reads is refused.
+
+Bits 16, 17 and 18 permute the coordinate pairs; bit 15 controls the primitive's
+semi-transparency flag. Nibble mode, selected when `word & 0xF00 == 0`, stores the
+U and V tile origins in bits 0..3 and 4..7. Rectangle and paired modes select
+coordinate bytes through the original header. Packing accepts those selections
+only within the original consumer-qualified read spans, after all word edits
+are combined. A payload bound alone does not authorize a new table reference.
+
+Query these payloads with `--kind area-surface-metadata`. `surface-word` records
+identify editable words; `surface-coordinate` and `surface-coordinate-pair`
+records identify read-only source reads. The `area` Rust module also resolves
+coordinate permutations, CLUT fields and both page-encoding branches. The
+original graph-type getter selects the page branch; no stable getter value or
+active draw state is assumed. Physical texel and palette uploads, complete table
+allocations, vertex geometry, primitive submission and runtime appearance remain
+unresolved. Verification reports `partial-area-metadata` and full support remains
+false even when the metadata and archive inverse checks pass.
 
 Edit raw upload words as unsigned 16-bit values, or preserve a PNG's dimensions
 and palette order while editing its indices. A 4-bit view accepts indices 0 to

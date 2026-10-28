@@ -7,7 +7,7 @@ use emi_ex_v2::image::ArchiveImage;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Error, Result, bank,
+    Error, Result, area, bank,
     digest::sha256_hex,
     formats::Upload,
     palette::PaletteUpload,
@@ -17,7 +17,7 @@ use crate::{
     sprite_bank, stream_family,
 };
 
-pub const SCHEMA: &str = "bof3.textures-index/v6";
+pub const SCHEMA: &str = "bof3.textures-index/v7";
 pub const MAX_INDEX_BYTES: u64 = 512 * 1024 * 1024;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
@@ -118,6 +118,7 @@ pub struct Resource {
     pub sprite_bank: Option<sprite_bank::Info>,
     pub stream_request: Option<stream_family::Request>,
     pub resident_animation: Option<resident::Info>,
+    pub area_surface: Option<area::Info>,
     pub save_icon: Option<save_icon::Info>,
     pub findings: Vec<String>,
 }
@@ -157,6 +158,7 @@ pub fn interpretation_hash() -> String {
             include_str!("bank_image.rs"),
             include_str!("animation.rs"),
             include_str!("resident.rs"),
+            include_str!("area.rs"),
             include_str!("cell.rs"),
             include_str!("sprite_bank.rs"),
             include_str!("stream_family.rs"),
@@ -275,6 +277,7 @@ pub fn build_from(
                     sprite_bank: None,
                     stream_request: None,
                     resident_animation: None,
+                    area_surface: None,
                     save_icon: None,
                     findings: vec!["logical records and consumers have not been enumerated".into()],
                 };
@@ -299,6 +302,50 @@ pub fn build_from(
                             .push("SLUS_004.22@0x801629F0:audio-auxiliary-destination".into());
                     }
                     resource.findings.clear();
+                }
+                if entry.file_type == 0 && entry.ram_ptr == 0x8010_4000 {
+                    let document = area::decode(payload)?;
+                    if area::encode(payload, &document)? != payload {
+                        return Err(Error::Invalid(format!(
+                            "{} area inverse differs",
+                            resource.id
+                        )));
+                    }
+                    resource.kind = "area-surface-metadata".into();
+                    resource.categories = vec!["unclassified-graphics".into()];
+                    resource.storage = "area-cell-packed-words".into();
+                    resource.decode = "direct-cell-coordinate-fields-verified".into();
+                    resource.pack = "selected-packed-word-edits-verified".into();
+                    resource.evidence_status = "consumer-qualified".into();
+                    resource.evidence.extend([
+                        "SLUS_004.22@0x80154294:conditional-cell-record-selection".into(),
+                        "SLUS_004.22@0x80155560:coordinate-clut-page-fields".into(),
+                        "SLUS_004.22@0x80154094:byte-grid-pointer".into(),
+                    ]);
+                    for (kind, reason) in [
+                        (
+                            "surface-texels",
+                            "physical texture sources, upload context and active page residency remain unresolved",
+                        ),
+                        (
+                            "surface-palette",
+                            "CLUT field calculation does not bind original palette uploads or their lifecycle",
+                        ),
+                        (
+                            "surface-consumers",
+                            "direct cells do not enumerate sequential records, complete table allocations, vertices or all runtime uses",
+                        ),
+                    ] {
+                        resource.dependencies.push(Dependency {
+                            kind: kind.into(),
+                            target: None,
+                            status: "unresolved".into(),
+                            reason: reason.into(),
+                        });
+                    }
+                    resource.findings = vec!["only original nonzero cell-selected packed words are editable; headers, cell IDs, coordinate tables and unclaimed bytes remain immutable".into()];
+                    resource.area_surface = Some(document.info(payload)?);
+                    records.extend(record::area_records(&resource, payload, &document)?);
                 }
                 if entry.file_type == 0
                     && let Some(info) =
@@ -638,6 +685,7 @@ pub fn build_from(
                 sprite_bank: None,
                 stream_request: None,
                 resident_animation: None,
+                area_surface: None,
                 save_icon: None,
                 findings,
             };
@@ -878,6 +926,7 @@ pub fn coverage(index: &Index) -> serde_json::Value {
             "decoded_compressed_banks": index.resources.iter().filter(|resource| resource.bank.is_some()).count(),
             "sprite_banks": index.resources.iter().filter(|resource| resource.sprite_bank.is_some()).count(),
             "resident_animation_banks": index.resources.iter().filter(|resource| resource.resident_animation.is_some()).count(),
+            "area_surface_sources": index.resources.iter().filter(|resource| resource.area_surface.is_some()).count(),
             "decoded_resident_programs": index.resources.iter().filter_map(|resource| resource.resident_animation.as_ref()).map(|info| info.decoded_programs).sum::<usize>(),
             "unresolved_resident_programs": index.resources.iter().filter_map(|resource| resource.resident_animation.as_ref()).map(|info| info.unresolved_programs).sum::<usize>(),
             "save_icon_sources": index.resources.iter().filter(|resource| resource.save_icon.is_some()).count(),

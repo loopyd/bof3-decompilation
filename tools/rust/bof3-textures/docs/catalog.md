@@ -1,10 +1,25 @@
 # Catalog records
 
-The index schema is `bof3.textures-index/v6`. Its `resources` array contains
+The index schema is `bof3.textures-index/v7`. Its `resources` array contains
 physical files and EMI entries. Its `records` array contains images, palettes,
 animation program metadata and cells in validated sprite roots, programs and
 cells in validated resident banks, and the qualified save-icon frames and palette.
-Other internal layouts remain unresolved.
+Area payloads additionally expose directly selected packed words and their
+coordinate-read spans. Other internal layouts remain unresolved.
+
+`area_surface` reports width, height, cell count, unique selected words and
+coordinate-read spans. `surface-word` records have four entry-payload bytes.
+`surface-coordinate` and `surface-coordinate-pair` records retain four- and
+eight-byte reads, including overlapping views, as preservation-only records.
+These reads are not complete table allocations. Cell ID zero selects no record;
+unselected words, gaps and tails are not promoted to decoded geometry.
+
+The original `SLUS_004.22@0x80154294` consumer selects a word at
+`grid + align_up(2 * width * height, 4) + 4 * cell_id`, where
+`grid = 0x80104000 + 4 * u16[0x80104002]`. The selected word reaches the coordinate
+consumer at `0x80155560`. Its CLUT and page calculations do not identify a
+physical palette or texture source. Those dependencies, complete consumer uses
+and runtime appearance remain unresolved and queryable.
 
 Resident metadata reports `decoded_programs` and `unresolved_programs` per
 physical resource, counting unique program offsets. Partial banks retain

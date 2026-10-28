@@ -29,7 +29,7 @@ package, then pack into another new destination.
 
 ## Original identity and current baseline
 
-Package schema `bof3.textures-package/v6` separates `snapshots` from `baselines`.
+Package schema `bof3.textures-package/v7` separates `snapshots` from `baselines`.
 Both lists follow the catalog's original source order and identify snapshot
 members by SHA-256. In an original export, both refer to the same bytes. A reopened
 package retains each qualified original snapshot and adds the reconstructed
@@ -45,6 +45,10 @@ EMI owner's fixed-allocation replacement rules. Changes to opaque fields,
 unsupported resources, archive padding, or unrelated entries are refused.
 Changing a baseline hash in the manifest does not authorize those changes.
 Compressed edits retain the qualified original allocation across re-exports.
+Area `surface.json` edits retain the original direct-selected word set and
+coordinate-read policy across re-exports. A prior edit does not qualify a new
+coordinate allocation. Raw area bytes, headers, grid IDs, coordinate bytes and
+unknown spans remain read-only.
 
 Pack and verification reports continue to compare the resulting bytes with the
 qualified originals. Baseline edits remain in the reported changed resources
