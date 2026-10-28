@@ -9,7 +9,6 @@ use super::{
     events::{Table as Events, BUSY},
     exception_calls::{
         Calls as ExceptionCalls, Dispatch, Environment, GuestBoundary, MissingHook, HANDLER_RETURN,
-        THREAD_CONTEXT,
     },
     exception_chains::Table as ExceptionChains,
     executable::ram_offset,
@@ -26,6 +25,7 @@ pub struct Kernel {
     counter_handlers: Option<[[u32; 2]; 4]>,
     generic_handler: Option<(u32, u32)>,
     syscall_handler: Option<u32>,
+    syscall_verifier: Option<u32>,
     cd_removal: Option<u32>,
     event_delivery: Option<u32>,
     exception_dispatch: Option<Dispatch>,
@@ -55,6 +55,7 @@ impl Default for Kernel {
             counter_handlers: None,
             generic_handler: None,
             syscall_handler: None,
+            syscall_verifier: None,
             cd_removal: None,
             event_delivery: None,
             exception_dispatch: None,
@@ -212,6 +213,19 @@ impl Kernel {
         Ok(())
     }
 
+    /// Preflight an ordinary guest IRQ/syscall verifier at actual handler entry.
+    /// The CPU loop must call prepare_exception_step before selecting code or a
+    /// service. This binding supplies no registers and intercepts no semantics.
+    pub fn configure_syscall_verifier(&mut self, entry: u32) -> Result<()> {
+        self.require_plain_context()?;
+        if self.syscall_verifier.is_some() {
+            return Err("owned syscall verifier already configured".into());
+        }
+        self.validate_owned_handler(entry)?;
+        self.syscall_verifier = Some(entry);
+        Ok(())
+    }
+
     /// Bind authored guest A0/72 code. Startup loads its instructions and
     /// initializes its mutable handles and node pointers; no BIOS state is used.
     /// The guest routine performs its syscall through normal exception delivery.
@@ -284,6 +298,18 @@ impl Kernel {
     pub fn prepare_exception_step(&mut self, cpu: &mut Cpu, bus: &mut impl Bus) -> Result<()> {
         if self.returning.is_some() {
             return Ok(());
+        }
+        if self.syscall_verifier == Some(cpu.pc()) {
+            if self.event_calls.depth() != 0
+                || self.waiting_event.is_some()
+                || self.exception_delivery.is_some()
+            {
+                return Err("owned verifier entry would abandon an active delivery".into());
+            }
+            self.exception_calls
+                .as_mut()
+                .ok_or("owned verifier entry without exception dispatch")?
+                .validate_verifier_entry(cpu, bus)?;
         }
         let (Some(binding), Some(calls)) = (self.exception_dispatch, self.exception_calls.as_mut())
         else {
@@ -417,6 +443,9 @@ impl Kernel {
             .is_some_and(|(address, _)| ram_offset(address, 4).ok() == Some(offset))
             || self
                 .syscall_handler
+                .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
+            || self
+                .syscall_verifier
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
             || self
                 .cd_removal
@@ -789,10 +818,7 @@ impl Kernel {
     }
 
     pub fn is_call(pc: u32) -> bool {
-        if matches!(
-            pc,
-            CALLBACK_RETURN | HANDLER_RETURN | CALLBACK_ENTER | THREAD_CONTEXT
-        ) {
+        if matches!(pc, CALLBACK_RETURN | HANDLER_RETURN | CALLBACK_ENTER) {
             return true;
         }
         matches!(
@@ -833,26 +859,6 @@ impl Kernel {
             return Err("not a BIOS entry vector".into());
         }
         cpu.synchronize_load();
-        if cpu.pc() == THREAD_CONTEXT {
-            if self.event_calls.depth() != 0
-                || self.waiting_event.is_some()
-                || self.exception_delivery.is_some()
-            {
-                return Err("owned thread guard would abandon an active delivery".into());
-            }
-            let callback = self
-                .exception_calls
-                .as_ref()
-                .ok_or("owned thread guard without dispatch")?
-                .guard_thread_context(cpu, bus)?;
-            return Ok(Call {
-                vector: 0x80,
-                service: 6,
-                name: "GuestThreadContext",
-                waiting: false,
-                callback: Some(callback),
-            });
-        }
         if cpu.pc() == CALLBACK_ENTER {
             let callback = self.event_calls.start_callback(cpu)?;
             return Ok(Call {

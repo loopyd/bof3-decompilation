@@ -9,7 +9,6 @@ use crate::Result;
 use std::collections::BTreeSet;
 
 pub(crate) const HANDLER_RETURN: u32 = 0xbfc0_0104;
-pub(crate) const THREAD_CONTEXT: u32 = 0xbfc0_011c;
 const SAVED: [usize; 10] = [16, 17, 18, 19, 20, 21, 22, 23, 28, 30];
 const MAX_NODES: usize = 4096;
 
@@ -274,21 +273,30 @@ impl Calls {
         Ok(())
     }
 
-    pub fn guard_thread_context(&self, cpu: &mut Cpu, bus: &mut impl Bus) -> Result<u32> {
-        if self.saved.is_none() {
-            return Err("owned thread guard requires an active exception handler".into());
+    pub fn validate_verifier_entry(&mut self, cpu: &Cpu, bus: &mut impl Bus) -> Result<()> {
+        if self.saved.is_none()
+            || self.handler_entry != Some(cpu.pc())
+            || self.call_instruction.is_some()
+            || cpu.register(31)
+                != if self.guest {
+                    self.return_pc
+                        .ok_or("owned verifier lost its return address")?
+                } else {
+                    HANDLER_RETURN
+                }
+        {
+            return Err("owned verifier entry requires its active exception handler".into());
         }
-        let destination = cpu.register(31);
-        validate_handler(destination)?;
         let context = super::thread_context::Context::current(bus)?.address();
         if !matches!(bus.read(context + 0x98, Width::Word)? & 0x3c, 0 | 0x20) {
             return Err(
                 "owned syscall handler: other exception failure policy is unsupported".into(),
             );
         }
-        cpu.set_register(2, context);
-        cpu.resume_at(destination);
-        Ok(destination)
+        if !self.guest {
+            self.handler_entry = None;
+        }
+        Ok(())
     }
 
     fn require_guest_scan(&self) -> Result<()> {
@@ -303,12 +311,12 @@ impl Calls {
             .ok_or("BIOS exception dispatch: return trap without active handler")?;
         self.validate_handler_return(cpu)?;
         self.saved = None;
+        self.handler_entry = None;
         if self.guest {
             let destination = self
                 .return_pc
                 .take()
                 .ok_or("owned exception handler has no guest continuation")?;
-            self.handler_entry = None;
             cpu.set_register(31, destination);
             cpu.resume_at(destination);
             return Ok(Some(destination));
@@ -395,6 +403,7 @@ impl Calls {
         cpu.set_register(29, self.stack);
         cpu.set_register(31, HANDLER_RETURN);
         self.saved = Some(SAVED.map(|r| cpu.register(r)));
+        self.handler_entry = Some(handler);
         cpu.resume_at(handler);
         Ok(handler)
     }

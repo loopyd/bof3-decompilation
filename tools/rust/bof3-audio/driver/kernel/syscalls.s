@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
-# Ordinary priority-zero ExCB verifier. The owned BFC0011C guard validates the
-# live PCB/TCB and supported IRQ/syscall cause before returning the TCB in V0.
-# Guest instructions update the saved context. B0/7 delivers unknown syscalls;
+# Ordinary priority-zero ExCB verifier. Its configured entry preflights the live
+# PCB/TCB and supported IRQ/syscall cause without supplying guest registers.
+# Guest instructions resolve the PCB/TCB and update the saved context. B0/7 delivers unknown syscalls;
 # B0/17 restores the live current thread and abandons this exception stack.
 .set noreorder
 .set noat
@@ -10,12 +10,12 @@
 .globl audio_syscall_handler
 .ent audio_syscall_handler
 audio_syscall_handler:
+    lui $t6, 0xa000
+    lw $t6, 0x108($t6)
     addiu $sp, $sp, -24
     sw $ra, 20($sp)
-    lui $t0, 0xbfc0
-    ori $t0, $t0, 0x011c
-    jalr $t0
-    nop
+    lw $v0, 0($t6)
+    addu $a0, $t6, $zero
     lw $t0, 0x98($v0)
     nop
     andi $t0, $t0, 0x3c
