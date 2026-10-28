@@ -88,6 +88,51 @@ offsets, clipping, framebuffer masks or other scene objects. Its part order and
 source bindings require caller evidence. Matching the preview to captured
 commands does not establish rendered appearance or edited-disc loading.
 
+## Rectangle frame command
+
+The `frame` command reconstructs the selected archive from a current edit package,
+then samples one declared cell from a qualified three-root sprite bank. It uses
+the same edit validation and allocation limits as `pack`. The package contains
+its original snapshots, so the command does not reopen former source paths.
+
+```sh
+bin/harness textures frame EDIT_PACKAGE --asset RESOURCE_ID --context CONTEXT.json --output NEW_DIRECTORY
+```
+
+Choose the bank's physical resource ID from the package's `index.resources`,
+whose `sprite_bank` field identifies supported banks. The context is a JSON
+object with all the following fields. Unknown fields are refused.
+
+| Field | Value |
+| --- | --- |
+| `schema` | `bof3.sprite-frame-context/v1` |
+| `root`, `image`, `palette` | Zero-based indices in the selected bank's `sprite.json` |
+| `cell_offset` | A declared cell's decoded-bank byte offset in that root |
+| `entity` | An array of 96 through 152 unsigned bytes from the selected draw context |
+| `graph_type` | The consumer's unsigned-byte graph type |
+| `texture_origin` | `[x_words, y]` for the selected decoded image in VRAM |
+| `palette_origin` | `[x_words, y]` for the selected 32-word palette in VRAM |
+| `draw_mode`, `texture_window` | Unsigned 32-bit GP0(E1h) and GP0(E2h) command words |
+| `part_order` | Every cell part index exactly once, in back-to-front order |
+
+JSON numbers use decimal notation. Context files are bounded at 64 KiB. Every
+selected texel and color must lie in the supplied image and palette regions.
+The command refuses quads, unsupported draw states, invalid record indices,
+missing colors and every other rectangle-sampler failure described above.
+It does not derive runtime selectors or replace missing draw-state evidence.
+
+Create the output parent first and choose a new directory outside the package.
+The command publishes `frame.png` and `frame.json` together. The report retains
+the complete context, original and reconstructed archive and resource hashes,
+decoded-bank hash, source-color word hash, PNG hash, canvas origin and dimensions.
+Its source bindings are caller assertions. The report does not certify upload
+execution, runtime residency, scene rendering or edited-disc loading.
+
+To change a frame, edit the package's supported image, palette or cell views and
+run `frame` with a new output directory. Frame outputs are separate derivatives,
+not package members or editable inverse representations. Regenerate old packages
+with the current executable when their interpretation hash is stale.
+
 ## Qualified source associations
 
 The catalog retains one conditional association for the original US

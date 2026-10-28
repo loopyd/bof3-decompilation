@@ -317,6 +317,14 @@ opaque flags, headers, pointer tables, codec metadata, and unrelated bytes.
 The bank's `raw.bin` and any `decoded.bin` are read-only; use its qualified views.
 Unsupported internal variants retain read-only decoded bytes and refusal findings.
 
+Use `frame EDIT_PACKAGE --asset RESOURCE_ID --context CONTEXT.json --output NEW_DIRECTORY`
+to preview a selected three-root bank cell after validated package edits. It
+publishes `frame.png` and a source-bound `frame.json` report without changing the
+package. Supply the entity bytes, selected records, upload coordinates, draw
+commands and part order explicitly. See [Rectangle frame command](docs/composition.md#rectangle-frame-command)
+for the context fields and limits. The PNG is a derivative; edit the package's
+source views to change its contents.
+
 A recognized resident animation bank has an editable `animation.json` document
 with schema `bof3.resident-animation/v2`.
 Each group retains its program pointers, byte extents, and existing step pairs.
@@ -508,7 +516,8 @@ escaped package paths, missing members, and existing destinations cause failure.
 The [composition library](docs/composition.md) computes qualified rectangle and
 quad geometry from an explicit entity and graph type. It preserves the original
 flip dispatch, scale rounding, UV wrapping, texture-page correction and encoded
-CLUT fields. It does not infer source residency or render an assembled frame.
+CLUT fields. Its rectangle sampler and ordered source frames retain exact color
+words. They do not infer source residency or reproduce scene rendering.
 
 The [selection library](docs/selection.md) resolves one explicit root selector
 through the original consumer. It preserves the image-skip path, independent

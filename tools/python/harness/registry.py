@@ -464,6 +464,12 @@ DOMAINS: Mapping[str, Domain] = {
                 kind="passthrough",
                 example="bin/harness textures pack out/textures/first --output out/textures/packed --json",
             ),
+            "frame": Action(
+                "publish a rectangle source-frame derivative",
+                "harness.commands.textures",
+                kind="passthrough",
+                example="bin/harness textures frame EDIT_PACKAGE --asset RESOURCE_ID --context CONTEXT.json --output NEW_DIRECTORY",
+            ),
             "verify": Action(
                 "report independent graphics verification properties",
                 "harness.commands.textures",

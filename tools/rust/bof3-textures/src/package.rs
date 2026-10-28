@@ -697,6 +697,90 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
     Ok(report)
 }
 
+#[derive(Serialize)]
+pub struct FrameReport {
+    pub schema: String,
+    pub resource: String,
+    pub source: String,
+    pub original_archive_sha256: String,
+    pub reconstructed_archive_sha256: String,
+    pub original_resource_sha256: String,
+    pub reconstructed_resource_sha256: String,
+    pub decoded_bank_sha256: String,
+    pub context: preview::FrameContext,
+    pub origin: [i16; 2],
+    pub width: usize,
+    pub height: usize,
+    pub color_words_sha256: String,
+    pub png_sha256: String,
+    pub scope: String,
+}
+
+/// Reconstruct validated package intent and publish a separate source derivative.
+pub fn frame(
+    root: &Path,
+    asset: &str,
+    context: preview::FrameContext,
+    destination: &Path,
+) -> Result<FrameReport> {
+    let root = fs::canonicalize(root)?;
+    let manifest = load(&root)?;
+    let resource = manifest
+        .index
+        .resources
+        .iter()
+        .find(|resource| resource.id == asset && resource.sprite_bank.is_some())
+        .ok_or_else(|| Error::Invalid("asset is not a qualified three-root sprite bank".into()))?;
+    let (source, snapshot) = manifest
+        .index
+        .files
+        .iter()
+        .zip(&manifest.snapshots)
+        .find(|(source, _)| source.path == resource.source)
+        .ok_or_else(|| Error::Invalid("frame asset has no source snapshot".into()))?;
+    let stage = Stage::new(destination, &root)?;
+    let reconstructed = reconstruct(&root, &manifest, source, snapshot)?;
+    let end = resource
+        .offset
+        .checked_add(resource.size)
+        .and_then(|end| usize::try_from(end).ok());
+    let raw = usize::try_from(resource.offset)
+        .ok()
+        .zip(end)
+        .and_then(|(start, end)| reconstructed.output.get(start..end))
+        .ok_or_else(|| Error::Invalid("frame resource exceeds reconstructed archive".into()))?;
+    let decoded = bank_bytes(resource, raw)?;
+    let frame = preview::sprite_frame(&decoded, &context)?;
+    let png = png::encode_words(&frame.image)?;
+    let words: Vec<_> = frame
+        .image
+        .words
+        .iter()
+        .flat_map(|word| word.to_le_bytes())
+        .collect();
+    let report = FrameReport {
+        schema: "bof3.sprite-source-frame/v1".into(),
+        resource: resource.id.clone(),
+        source: source.path.clone(),
+        original_archive_sha256: source.sha256.clone(),
+        reconstructed_archive_sha256: sha256_hex(&reconstructed.output),
+        original_resource_sha256: resource.sha256.clone(),
+        reconstructed_resource_sha256: sha256_hex(raw),
+        decoded_bank_sha256: sha256_hex(&decoded),
+        context,
+        origin: [frame.origin_x, frame.origin_y],
+        width: frame.image.width,
+        height: frame.image.height,
+        color_words_sha256: sha256_hex(&words),
+        png_sha256: sha256_hex(&png),
+        scope: "source derivative; record, entity, upload coordinates, draw state and part order are caller bindings, not runtime verification; no scene rendering or edited-disc acceptance".into(),
+    };
+    stage.write("frame.png", &png)?;
+    stage.write("frame.json", &serde_json::to_vec_pretty(&report)?)?;
+    stage.publish()?;
+    Ok(report)
+}
+
 fn edit_impact(index: &Index, files: &[PackedFile]) -> Result<(Vec<ResourceImpact>, bool)> {
     let nodes: BTreeMap<_, _> = index
         .resources

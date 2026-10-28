@@ -1,14 +1,120 @@
-//! Read-only atlas derivatives from conditional original palette associations.
+//! Source derivatives from explicit sprite bindings or conditional atlas palettes.
 
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Error, Result,
+    Error, Result, bank_image,
     catalog::{Index, Resource},
+    composition::{self, DrawContext, RectanglePart, RectangleState, SourceFrame, WordRegion},
     formats, interface,
     palette::Palette,
-    png::IndexedImage,
+    png::{IndexedImage, WordImage},
+    sprite_bank,
 };
+
+/// Explicit caller bindings for a three-root bank source derivative.
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct FrameContext {
+    pub schema: String,
+    pub root: usize,
+    pub image: usize,
+    pub palette: usize,
+    pub cell_offset: usize,
+    pub entity: Vec<u8>,
+    pub graph_type: u8,
+    pub texture_origin: [usize; 2],
+    pub palette_origin: [usize; 2],
+    pub draw_mode: u32,
+    pub texture_window: u32,
+    pub part_order: Vec<usize>,
+}
+
+/// Sample caller-selected records, without inferring an active entity or upload.
+pub fn sprite_frame(source: &[u8], context: &FrameContext) -> Result<SourceFrame> {
+    let invalid = |reason: &str| Error::Invalid(format!("source-frame context: {reason}"));
+    if context.schema != "bof3.sprite-frame-context/v1" {
+        return Err(invalid("unsupported schema"));
+    }
+    if !(0x60..=0x98).contains(&context.entity.len()) {
+        return Err(invalid("entity must contain 96 through 152 bytes"));
+    }
+    let document = sprite_bank::decode(source)?;
+    let root = document
+        .roots
+        .get(context.root)
+        .ok_or_else(|| invalid("missing root"))?;
+    let image = root
+        .images
+        .get(context.image)
+        .ok_or_else(|| invalid("missing image"))?;
+    let palette = root
+        .palettes
+        .get(context.palette)
+        .ok_or_else(|| invalid("missing palette"))?;
+    let cell = root
+        .cells
+        .iter()
+        .find(|cell| cell.offset == context.cell_offset)
+        .ok_or_else(|| invalid("cell offset is not a declared cell in this root"))?;
+    if context.part_order.len() != cell.parts.len() {
+        return Err(invalid(
+            "part order must include every cell part exactly once",
+        ));
+    }
+    let mut seen = vec![false; cell.parts.len()];
+    for &index in &context.part_order {
+        let slot = seen
+            .get_mut(index)
+            .ok_or_else(|| invalid("part order index exceeds cell parts"))?;
+        if std::mem::replace(slot, true) {
+            return Err(invalid("part order repeats a cell part"));
+        }
+    }
+    let decoded = bank_image::decode(source, image.offset, image.end)?;
+    let texture = WordImage {
+        width: usize::from(image.width_words),
+        height: usize::from(image.height),
+        words: decoded
+            .bytes
+            .as_chunks::<2>()
+            .0
+            .iter()
+            .map(|bytes| u16::from_le_bytes(*bytes))
+            .collect(),
+    };
+    let palette = WordImage {
+        width: palette.words.len(),
+        height: 1,
+        words: palette.words.to_vec(),
+    };
+    let texture = WordRegion::new(
+        context.texture_origin[0],
+        context.texture_origin[1],
+        &texture,
+    )?;
+    let palette = WordRegion::new(
+        context.palette_origin[0],
+        context.palette_origin[1],
+        &palette,
+    )?;
+    let state = RectangleState::from_commands(context.draw_mode, context.texture_window)?;
+    let geometry = composition::compose(
+        cell,
+        DrawContext::from_entity(&context.entity, context.graph_type)?,
+    )?;
+    let parts: Vec<_> = context
+        .part_order
+        .iter()
+        .map(|&index| RectanglePart {
+            geometry: &geometry[index],
+            state,
+            texture,
+            palette,
+        })
+        .collect();
+    composition::assemble_rectangles(&parts)
+}
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]

@@ -46,6 +46,16 @@ enum Command {
         #[arg(long)]
         json: bool,
     },
+    /// Publish a source-frame PNG from an edit package and explicit caller bindings.
+    Frame {
+        input: PathBuf,
+        #[arg(long)]
+        asset: String,
+        #[arg(long)]
+        context: PathBuf,
+        #[arg(long)]
+        output: PathBuf,
+    },
     /// List game categories independently of current source support.
     Categories {
         #[arg(long)]
@@ -144,6 +154,15 @@ fn run(cli: Cli) -> Result<bool> {
         }
         Command::Pack { input, output, .. } => {
             print_json(&package::pack(&input, &output)?)?;
+        }
+        Command::Frame {
+            input,
+            asset,
+            context,
+            output,
+        } => {
+            let context = serde_json::from_slice(&sources::read_bounded(&context, 64 * 1024)?)?;
+            print_json(&package::frame(&input, &asset, context, &output)?)?;
         }
         Command::Categories { .. } => {
             print_json(&catalog::categories())?;
