@@ -3983,7 +3983,7 @@ acknowledger then reads the live ChangeClearRCnt flag. Zero continues the chain;
 a nonzero value clears the corresponding I_STAT bit and returns directly from
 the exception, skipping later handlers and the exit hook. Timer indices 0, 1
 and 2 use IRQ bits 4, 5 and 6; VBlank index 3 uses bit 0. These are functional
-handler semantics. Default-chain allocation, PAD/syscall handlers and cycle
+handler semantics. Default-chain allocation, PAD handling and cycle
 acceptance remain separate.
 
 `Kernel::configure_generic_handler` binds one distinct caller-owned RAM identifier
@@ -4000,6 +4000,23 @@ nonzero flag bits to I_STAT, including flags for unmatched sources. It returns
 zero to continue the chain. Nested callbacks retain the source cursor; an
 explicit callback return from the exception abandons it before acknowledgement.
 Startup owns the flag values and handler placement.
+
+`Kernel::configure_syscall_handler` binds a distinct caller-owned RAM identifier
+for priority-zero IRQ/syscall handling. An IRQ returns zero and continues the
+chain. A syscall advances the live current TCB's saved EPC by four, including a
+branch-delay syscall. Saved A0 selects the operation. Zero returns from the
+exception; one stores one in saved V0 if both saved status bits in `0x404` are
+set, otherwise zero, then clears those bits. Two sets the bits and preserves
+saved V0. Three installs saved A1 as the
+PCB's current TCB and sets the previous TCB's saved V0 to one. Return resolves
+and validates that live current TCB, so a failed switch may leave the PCB changed.
+Other syscall numbers deliver `0xF0000010`/`0x4000`, finish all callbacks, then
+return from the exception. Callbacks may change the live saved return context or
+return from the exception themselves. Other values of saved Cause masked by `0x3C` reject
+with an unfinished continuation; their original failure policy remains unsupported.
+This binding has the same idle, reconfiguration and identifier-collision guards
+as the other owned handlers. It does not supply default thread state or replace
+the separate context-free critical-section ABI.
 
 Completion restores the live `HookEntryInt` jump buffer and resumes its saved
 RA with V0 set to one. Invalid hook PC/stack rejects. Without a hook, callers
