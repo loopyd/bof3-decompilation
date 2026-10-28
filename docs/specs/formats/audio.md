@@ -838,8 +838,9 @@ plus the length difference. `changed_source_events` counts all rewritten or
 removed original events. `timing_edits` is empty because the rebuilt stream no
 longer uses the original delta spans. These counts do not identify individual
 insertions or removals. Ambiguous bend correspondence, controller-loop structure
-changes and other controller messages reject explicitly. Loop reconstruction,
-scheduler timing, bank availability and independent audio fidelity remain open.
+changes and other controller messages reject explicitly. Structural loop
+reconstruction, scheduler timing, bank availability and independent audio fidelity
+remain open.
 
 ### MIDI timing reconstruction
 
@@ -877,11 +878,12 @@ All 119 original SEP entries still round-trip byte-exactly.
 checks 15 streams through delta reader `0x8016AAD4` and dispatcher `0x8016D0E0`,
 including relocated loop targets and requested ticks. These synthetic RAM probes
 do not establish original scheduler timing or independent audio fidelity.
-[Music publication](../../../tools/rust/bof3-audio/tests/support/music/timing.rs)
-checks resized SEP publication with untouched other sequences and archive entries.
-The linear event path above handles supported insertion, removal and channel changes
-separately. Broader channel changes, loop-structure editing and full musical
-acceptance remain open.
+[Music packing](../../../tools/rust/bof3-audio/src/music/packing.rs) requires a grown
+SEP to fit the selected bank slot's sequence capacity in every known game layout.
+EMI allocation capacity is checked separately; the active game layout remains
+unresolved. The linear event path above handles supported insertion, removal and
+channel changes. Channel transformations outside the supported inverses,
+structural loop editing and full musical acceptance remain open.
 
 ## Rust SoundFont reading
 
