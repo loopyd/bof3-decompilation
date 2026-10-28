@@ -8,11 +8,11 @@ use serde::{Deserialize, Serialize};
 use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid};
 
-pub(crate) const SCHEMA: &str = "bof3.executable-text/v11";
+pub(crate) const SCHEMA: &str = "bof3.executable-text/v12";
 const LOAD: u32 = 0x80096800;
 const SIZE: usize = 1445888;
 // Hash of the entire executable with only the supported allocations zeroed.
-const LAYOUT_SHA256: &str = "c53a8190d44eee53611b09c63e9a683ea8d511d502d936ecccab2e762f7cc4ea";
+const LAYOUT_SHA256: &str = "ac5c3f7e5302c704fb16850dedb8fd6ee93cb063e8e4de08b83ee576cc458a8f";
 const FORMAT_ADDRESS: u32 = 0x80149990;
 const FILE_LABEL: u32 = 0x80149f9c;
 const FILE_FORMAT: u32 = 0x80149fac;
@@ -35,16 +35,19 @@ const CD_SHARED_LABELS: [u32; 4] = [0x8014a368, 0x8014a370, 0x8014a394, 0x8014a3
 const CD_PRINTF_LITERALS: [u32; 6] = [
     0x8014a428, 0x8014a480, 0x8014a4b4, 0x8014a508, 0x8014a560, 0x8014a580,
 ];
-const BIOS_PRINTF_FORMATS: [u32; 15] = [
+const BIOS_PRINTF_FORMATS: [u32; 17] = [
     0x8014a2f0, 0x8014a318, 0x8014a348, 0x8014a37c, 0x8014a384, 0x8014a3dc, 0x8014a3f4, 0x8014a410,
-    0x8014a444, 0x8014a464, 0x8014a470, 0x8014a4e4, 0x8014a53c, 0x8014a5c0, 0x8014a728,
+    0x8014a444, 0x8014a464, 0x8014a470, 0x8014a4e4, 0x8014a53c, 0x8014a5c0, 0x8014a728, 0x8014a8dc,
+    0x8014a910,
 ];
 const GPU_PRINTF_CALLBACK: u32 = 0x8018b158;
-const GPU_PRINTF_CALLBACK_FORMATS: [u32; 18] = [
+const GPU_PRINTF_CALLBACK_FORMATS: [u32; 27] = [
     0x8014a624, 0x8014a63c, 0x8014a64c, 0x8014a664, 0x8014a674, 0x8014a68c, 0x8014a698, 0x8014a6a4,
     0x8014a6c0, 0x8014a6dc, 0x8014a6e8, 0x8014a748, 0x8014a75c, 0x8014a774, 0x8014a7a0, 0x8014a7b4,
-    0x8014a7d0, 0x8014a7e4,
+    0x8014a7d0, 0x8014a7e4, 0x8014a7f8, 0x8014a804, 0x8014a818, 0x8014a84c, 0x8014a864, 0x8014a87c,
+    0x8014a890, 0x8014a8a8, 0x8014a8c4,
 ];
+const GPU_PRINTF_ARGUMENTS: [u32; 4] = [0x8014a81c, 0x8014a828, 0x8014a834, 0x8014a840];
 const FORMATTER: u32 = 0x8017e3f4;
 // Original string bytes plus their NUL, excluding alignment padding. The consumer
 // at 0x8014b3c4 passes pointers from 0x8017f470..0x8017f53c to 0x80150098.
@@ -180,6 +183,21 @@ const ALLOCATIONS: &[(u32, usize)] = &[
     (0x8014a7b4, 27),
     (0x8014a7d0, 20),
     (0x8014a7e4, 17),
+    (0x8014a7f8, 12),
+    (0x8014a804, 17),
+    (0x8014a818, 4),
+    (0x8014a81c, 11),
+    (0x8014a828, 10),
+    (0x8014a834, 11),
+    (0x8014a840, 10),
+    (0x8014a84c, 23),
+    (0x8014a864, 24),
+    (0x8014a87c, 19),
+    (0x8014a890, 21),
+    (0x8014a8a8, 27),
+    (0x8014a8c4, 21),
+    (0x8014a8dc, 50),
+    (0x8014a910, 24),
 ];
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -266,6 +284,17 @@ fn printf_directives(text: &str) -> Result<Vec<&str>> {
 
 fn format_directives(address: u32) -> &'static [&'static str] {
     match address {
+        0x8014a7f8 => &["%s"],
+        0x8014a804 => &["%d", "%d", "%d", "%d"],
+        0x8014a818 => &["%s"],
+        0x8014a84c => &["%08x", "%d"],
+        0x8014a864 => &["%08x", "%d"],
+        0x8014a87c => &["%08x"],
+        0x8014a890 => &["%08x"],
+        0x8014a8a8 => &["%08x"],
+        0x8014a8c4 => &["%08x"],
+        0x8014a8dc => &["%d", "%08x", "%08x", "%08x"],
+        0x8014a910 => &["%08x", "%08x", "%08x"],
         0x8014a728 => &["%08x", "%08x"],
         0x8014a748 => &["%d"],
         0x8014a75c => &["%d"],
@@ -376,6 +405,21 @@ fn consumers(address: u32) -> Vec<u32> {
         return vec![0x8017560c];
     }
     match address {
+        0x8014a7f8 => vec![0x8017b438],
+        0x8014a804 => vec![0x8017b438],
+        0x8014a818 => vec![0x8017b438],
+        0x8014a81c => vec![0x8017b560, 0x8017b5f4],
+        0x8014a828 => vec![0x8017b690],
+        0x8014a834 => vec![0x8017b6f4],
+        0x8014a840 => vec![0x8017b758],
+        0x8014a84c => vec![0x8017b81c],
+        0x8014a864 => vec![0x8017b8d4],
+        0x8014a87c => vec![0x8017b9cc],
+        0x8014a890 => vec![0x8017ba40],
+        0x8014a8a8 => vec![0x8017bb44],
+        0x8014a8c4 => vec![0x8017bc98],
+        0x8014a8dc => vec![0x8017dd2c],
+        0x8014a910 => vec![0x8017dd2c],
         0x8014a728 => vec![0x8017af0c],
         0x8014a748 => vec![0x8017af0c],
         0x8014a75c => vec![0x8017b090],
@@ -438,6 +482,24 @@ fn all_consumers() -> Vec<u32> {
 
 fn diagnostic_references(address: u32) -> Option<Vec<Reference>> {
     let pairs: &[(u32, u32, Option<u32>)] = match address {
+        0x8014a7f8 => &[(0x8017b4f8, 0x8017b4fc, Some(0x8017b51c))],
+        0x8014a804 => &[(0x8017b53c, 0x8017b540, Some(0x8017b544))],
+        0x8014a818 => &[(0x8017b508, 0x8017b50c, Some(0x8017b51c))],
+        0x8014a81c => &[
+            (0x8017b56c, 0x8017b570, Some(0x8017b590)),
+            (0x8017b600, 0x8017b604, Some(0x8017b624)),
+        ],
+        0x8014a828 => &[(0x8017b6a4, 0x8017b6a8, Some(0x8017b6b0))],
+        0x8014a834 => &[(0x8017b708, 0x8017b70c, Some(0x8017b714))],
+        0x8014a840 => &[(0x8017b774, 0x8017b778, Some(0x8017b780))],
+        0x8014a84c => &[(0x8017b84c, 0x8017b850, Some(0x8017b858))],
+        0x8014a864 => &[(0x8017b8fc, 0x8017b900, Some(0x8017b914))],
+        0x8014a87c => &[(0x8017b9ec, 0x8017b9f0, Some(0x8017ba00))],
+        0x8014a890 => &[(0x8017ba70, 0x8017ba74, Some(0x8017ba84))],
+        0x8014a8a8 => &[(0x8017bb7c, 0x8017bb80, Some(0x8017bb94))],
+        0x8014a8c4 => &[(0x8017bcc8, 0x8017bccc, Some(0x8017bcdc))],
+        0x8014a8dc => &[(0x8017dd84, 0x8017dd88, Some(0x8017ddc4))],
+        0x8014a910 => &[(0x8017dde8, 0x8017ddec, Some(0x8017ddf0))],
         0x8014a728 => &[(0x8017af5c, 0x8017af60, Some(0x8017af74))],
         0x8014a748 => &[(0x8017b040, 0x8017b044, Some(0x8017b054))],
         0x8014a75c => &[(0x8017b0c4, 0x8017b0c8, Some(0x8017b0d8))],
@@ -542,7 +604,7 @@ pub(crate) enum Output {
 }
 
 fn output(address: u32) -> Output {
-    if GPU_PRINTF_CALLBACK_FORMATS.contains(&address) {
+    if GPU_PRINTF_CALLBACK_FORMATS.contains(&address) || GPU_PRINTF_ARGUMENTS.contains(&address) {
         return Output::BiosPrintfCallback {
             callback_word: GPU_PRINTF_CALLBACK,
             initial_stub: BIOS_PRINTF,
