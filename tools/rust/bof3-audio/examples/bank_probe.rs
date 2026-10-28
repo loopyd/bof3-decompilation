@@ -92,6 +92,7 @@ fn prepare_kernel(
         "audio_exception_hook",
         "audio_exception_return",
         "audio_exception_return_rfe",
+        "audio_exception_reset",
         "audio_syscall_handler",
     ] {
         let address = symbol(name)?;
@@ -103,6 +104,7 @@ fn prepare_kernel(
         ("audio_counter_flags", 16),
         ("audio_exception_hook_pointer", 4),
         ("audio_exception_stack_pointer", 4),
+        ("audio_exception_default_hook", 48),
     ] {
         let address = symbol(name)?;
         if address & 3 != 0 || address < base || address.checked_add(bytes).is_none_or(|a| a > end)
@@ -143,6 +145,7 @@ fn prepare_kernel(
         symbol("audio_exception_return")?,
         symbol("audio_exception_return_rfe")?,
     )?;
+    kernel.configure_exception_reset(symbol("audio_exception_reset")?)?;
     let mut cpu = Cpu::new(symbol("audio_kernel_initialize")?);
     cpu.set_register(29, init_top);
     let mut execution = Execution::with_kernel(

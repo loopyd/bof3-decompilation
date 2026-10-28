@@ -249,11 +249,25 @@ audio_exception_return_rfe:
     .word 0x42000010
 .end audio_exception_return
 
+.globl audio_exception_reset
+.ent audio_exception_reset
+audio_exception_reset:
+    lui $v0, %hi(audio_exception_default_hook)
+    addiu $v0, $v0, %lo(audio_exception_default_hook)
+    lui $at, %hi(audio_exception_hook_pointer)
+    jr $ra
+    sw $v0, %lo(audio_exception_hook_pointer)($at)
+.end audio_exception_reset
+
 .section .data.audio_exception_hook,"aw"
 .balign 4
 .globl audio_exception_hook_pointer
 audio_exception_hook_pointer:
     .word 0
+.globl audio_exception_default_hook
+audio_exception_default_hook:
+    .word audio_exception_return, audio_exception_stack_end - 16
+    .word 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 .section .data.audio_exception_stack,"aw"
 .balign 4
