@@ -135,6 +135,9 @@ segments:
     - dispatchSubstate1
     - '@source: src/bof3/ui/dispatchSubstate1.c'
     - '@behavior: dispatches the current front-end sub-state through the first local state-handler table.'
+  - - 7712
+    - asm
+    - func_80197620
   - - 8660
     - c
     - enterState2OnInput
@@ -196,26 +199,41 @@ segments:
     - dispatchSubstate3
     - '@source: src/bof3/ui/dispatchSubstate3.c'
     - '@behavior: dispatches the current front-end sub-state through the third local state-handler table.'
+  - - 10864
+    - asm
+    - func_80198270
   - - 11436
     - c
     - dispatchSubstate4
     - '@source: src/bof3/ui/dispatchSubstate4.c'
     - '@behavior: dispatches the current front-end sub-state through the fourth local state-handler table.'
+  - - 11496
+    - asm
+    - func_801984E8
   - - 12100
     - c
     - dispatchSubstate5
     - '@source: src/bof3/ui/dispatchSubstate5.c'
     - '@behavior: dispatches the current front-end sub-state through the fifth local state-handler table.'
+  - - 12160
+    - asm
+    - func_80198780
   - - 12548
     - c
     - dispatchSubstate6
     - '@source: src/bof3/ui/dispatchSubstate6.c'
     - '@behavior: dispatches the current front-end sub-state through the sixth local state-handler table.'
+  - - 12608
+    - asm
+    - func_80198940
   - - 12996
     - c
     - dispatchSubstate7
     - '@source: src/bof3/ui/dispatchSubstate7.c'
     - '@behavior: dispatches the current front-end sub-state through the seventh local state-handler table.'
+  - - 13056
+    - asm
+    - func_80198B00
   - - 13252
     - c
     - waitTransition
@@ -1689,6 +1707,9 @@ segments:
     - updateWorkRouteIndex
     - '@source: src/bof3/ui/updateWorkRouteIndex.c'
     - '@behavior: Conditionally updates the route_index_08 byte in the scratchpad work area. If bit 0 is set the value is left unchanged. If the current value matches arg_a or arg_b, the byte is set to arg_c; otherwise it is set to arg_c ^ 4.'
+  - - 155956
+    - asm
+    - func_801BB934
   - - 164536
     - asm
     - func_801BDAB8
@@ -2022,11 +2043,17 @@ segments:
     - func_801C5558
     - '@source: src/bof3/ui/func_801C5558.c'
     - '@behavior: ticks an animation-position counter, computes offset-adjusted coordinates, and sets a completion flag when the counter crosses a per-entity threshold.'
+  - - 196128
+    - asm
+    - func_801C5620
   - - 196504
     - c
     - clearWorkWordsCTo14
     - '@source: src/bof3/ui/clearWorkWordsCTo14.c'
     - '@behavior: clears three consecutive words at offsets 0x0c through 0x14 in the work record referenced by scratchpad pointer slot 17.'
+  - - 196532
+    - asm
+    - func_801C57B4
   - - 196596
     - c
     - dispatchScenarioSubstate
