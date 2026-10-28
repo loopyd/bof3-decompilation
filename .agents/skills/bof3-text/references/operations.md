@@ -156,14 +156,17 @@ characters in all twelve bytes. Runtime rendering remains unverified.
 BATE and SHISU entry 0 each expose `%3d` through `ascii-u16-decimal-format`.
 Retain one decimal argument, at most three encoded bytes plus NUL, and at most
 five formatted characters. Its eighteen formatter sites per overlay use unsigned
-byte or halfword arguments, then draw through `0x80150098`. Edited rendering
-remains unverified.
+byte or halfword arguments, then draw through `0x80150098`. Controlled BATE checks
+verify width-two decimal rendering on one stat panel. Other paths and SHISU
+rendering remain unverified.
 
 BATE and SHISU entry 0 each expose fifteen stat labels through `game-literal`.
 Each four-byte allocation permits three encoded bytes and NUL; the two trailing
 bytes of six-byte records remain protected. Their fixed-address consumers use
 `0x8014F800`. Edit each archive separately and retain every allocation and its
-empty pointer-reference list. Edited stat-label rendering remains unverified.
+empty pointer-reference list. Controlled BATE checks verify the four-label group
+at `0x801D8CF4`. Other groups, natural request production and SHISU rendering
+remain unverified.
 
 BATE and SHISU entry 0 each include an ASCII format with two ordered unsigned
 byte arguments. Preserve both arguments, at most seven encoded bytes, and at
