@@ -3774,7 +3774,8 @@ or a completed game initialization.
 The functional `B0:5B` ChangeClearPAD service installs the full A0 word as the
 PAD acknowledgement flag and returns its previous value in V0. `C0:0A`
 ChangeClearRCnt exchanges the selected timer/VBlank flag with A1 and also
-returns the old word. Startup must establish the required flag state separately
+returns the old word. It uses the active functional or configured guest RAM
+allocation. Startup must establish the required flag state separately
 from these service-return semantics.
 
 [Checks](../../../tools/rust/bof3-audio/tests/cop0.rs) also cover transfer delay,
@@ -4050,10 +4051,31 @@ overlapping visited nodes, malformed pointers and more than 4096 nodes per
 priority reject. The execution owner must separately bound guest instructions
 and transitions; a guest fault leaves the continuation unfinished.
 
-`Kernel::configure_counter_handlers` binds eight distinct caller-owned RAM
-identifiers to verifier/acknowledger pairs for timer 0, timer 1, timer 2 and
-VBlank. Startup owns those identifiers and their ExCB placement. Binding is
-explicit, rejects duplicate identifiers and reconfiguration, and requires an
+[`interrupts.s`](../../../tools/rust/bof3-audio/driver/kernel/interrupts.s)
+exports verifier/acknowledger pairs `audio_counter_0_*` through
+`audio_counter_2_*` and `audio_vblank_*`, plus `audio_generic_irq`. The linker
+resolves flag addresses through MIPS HI16/LO16 relocations. Startup loads both
+linked sections at their declared addresses and installs the entrypoints as
+ordinary ExCB targets. No host handler binding intercepts these entrypoints.
+They use B0/7 for event delivery and B0/17 for nonlocal exception return. Each
+event-delivering routine reserves 24 bytes on an eight-byte-aligned stack,
+including a sixteen-byte O32 argument home area. Ordinary returns restore SP and RA.
+
+The image initializes `audio_counter_flags` to four one-valued words and
+`audio_generic_flags` to eleven zero-valued words. Startup binds the counter
+allocation with `Kernel::configure_counter_flags(address)`. ChangeClearRCnt and
+the guest acknowledgers then use the same live RAM words, preserving full-word
+values and returning the prior word on exchange. The binding requires idle
+aligned RAM state and excludes functional counter-handler binding in either
+order. `Kernel::counter_auto_ack(bus)` reads the active allocation. The generic
+routine reads its linked flag allocation directly. Callbacks may change either
+allocation before the corresponding acknowledgement. Instructions run through
+the caller's CPU/device schedule; original timing and full startup remain open.
+
+The functional development `Kernel::configure_counter_handlers` binds eight
+distinct caller-owned RAM identifiers to verifier/acknowledger pairs for timer 0,
+timer 1, timer 2 and VBlank. Startup owns those identifiers and their ExCB placement.
+Binding is explicit, rejects duplicate identifiers and reconfiguration, and requires an
 idle kernel. Unbound pointers continue to execute guest code.
 
 Each owned verifier tests its I_MASK bit, then conditionally reads I_STAT. A
@@ -4066,9 +4088,10 @@ and 2 use IRQ bits 4, 5 and 6; VBlank index 3 uses bit 0. These are functional
 handler semantics. Default-chain allocation, PAD handling and cycle
 acceptance remain separate.
 
-`Kernel::configure_generic_handler` binds one distinct caller-owned RAM identifier
-and an aligned eleven-word RAM flag table, indexed by IRQ bit. It requires an
-idle kernel and rejects reconfiguration or collisions with counter identifiers.
+The functional development `Kernel::configure_generic_handler` binds one distinct
+caller-owned RAM identifier and an aligned eleven-word RAM flag table, indexed
+by IRQ bit. It requires an idle kernel and rejects reconfiguration or collisions
+with counter identifiers.
 For bits 2, 9, 1, 10, 8, 0, 4, 5, 6, 7 and 3, the verifier reads I_MASK then
 I_STAT and delivers matching events with spec `0x1000`. Their classes are
 `0xF0000003`, `0xF0000009`, `0xF0000002`, `0xF000000A`, `0xF000000B`,
