@@ -360,7 +360,9 @@ impl Kernel {
                 "UnDeliverEvent"
             }
             (0xb0, 0x5b) => {
+                let old = self.pad_auto_ack;
                 self.pad_auto_ack = argument;
+                cpu.set_register(2, old);
                 "ChangeClearPAD"
             }
             (0xc0, 0x0a) => {

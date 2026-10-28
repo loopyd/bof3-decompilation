@@ -3771,6 +3771,12 @@ the Rust machine. Exit, entry and repeated entry verify enabled/disabled state
 and return values. These are isolated wrapper checks, not BIOS-handler dispatch
 or a completed game initialization.
 
+The functional `B0:5B` ChangeClearPAD service installs the full A0 word as the
+PAD acknowledgement flag and returns its previous value in V0. `C0:0A`
+ChangeClearRCnt exchanges the selected timer/VBlank flag with A1 and also
+returns the old word. Startup must establish the required flag state separately
+from these service-return semantics.
+
 [Checks](../../../tools/rust/bof3-audio/tests/cop0.rs) also cover transfer delay,
 cause write masks, taken/untaken delay-slot exceptions, RFE in a return jump's
 delay slot, address errors, hardware/software interrupt masks and ROM-vector
