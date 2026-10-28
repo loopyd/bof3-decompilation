@@ -3883,16 +3883,18 @@ hook and stop/restart state separately from this default buffer.
 
 `Kernel::configure_console` enables bounded A0/3F diagnostic capture once on an
 idle kernel, with an aggregate capacity of 1 to 1,048,576 bytes. Supported
-conversions are `%d`, `%04x`, `%08x` and `%%`. Decimal values are signed 32-bit;
+conversions are `%d`, `%04x`, `%08x`, `%s` and `%%`. Decimal values are signed 32-bit;
 hexadecimal values are unsigned and lowercase, with minimum zero-padded widths.
 Arguments use A1 through A3, then aligned RAM words beginning at SP + 16.
-Formats must terminate within 4,096 bytes including NUL; a null pointer returns
-zero. Unsupported formats, invalid memory and exhausted capacity fail before
-publishing bytes or a new return value. Unconfigured calls fail explicitly.
+Formats and string arguments must terminate within 4,096 bytes including NUL.
+String conversion preserves bytes without decoding or interpreting embedded
+format characters. A null string argument prints `(null)`; a null format pointer
+returns zero. Unsupported formats, invalid memory and exhausted capacity fail
+before publishing bytes or a new return value. Unconfigured calls fail explicitly.
 
 `Kernel::console_output()` exposes captured formatter bytes. Literal text does
-not contribute to V0; converted digits, signs, padding and `%%` do, following the
-original BIOS formatter. Capture adds no stdout output, UART behavior or newline
+not contribute to V0; converted string bytes, digits, signs, padding and `%%` do,
+following the original BIOS formatter. Capture adds no stdout output, UART behavior or newline
 translation. The service uses the owned HLE schedule and does not reproduce
 original formatter instruction timing or internal stack writes.
 

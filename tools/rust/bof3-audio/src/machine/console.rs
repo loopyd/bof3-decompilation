@@ -1,4 +1,4 @@
-//! Bounded formatter-byte capture for the callback manager's integer diagnostics.
+//! Bounded formatter-byte capture for owned guest diagnostics.
 
 use super::{
     bus::{Bus, Width},
@@ -9,6 +9,12 @@ use crate::Result;
 
 const FORMAT_BYTES: u32 = 4096;
 const MAX_CAPACITY: usize = 1024 * 1024;
+
+enum Conversion {
+    Decimal,
+    Hex(usize),
+    String,
+}
 
 #[derive(Clone, Debug)]
 pub(super) struct Console {
@@ -48,27 +54,30 @@ impl Console {
                 count += 1;
             } else {
                 let remaining = &format[position..];
-                let (length, decimal, width) = if remaining.starts_with(b"d") {
-                    (1, true, 0)
+                let (length, conversion) = if remaining.starts_with(b"d") {
+                    (1, Conversion::Decimal)
                 } else if remaining.starts_with(b"04x") {
-                    (3, false, 4)
+                    (3, Conversion::Hex(4))
                 } else if remaining.starts_with(b"08x") {
-                    (3, false, 8)
+                    (3, Conversion::Hex(8))
+                } else if remaining.starts_with(b"s") {
+                    (1, Conversion::String)
                 } else {
                     return Err(
-                        "unsupported diagnostic format; expected %d, %04x, %08x or %%".into(),
+                        "unsupported diagnostic format; expected %d, %04x, %08x, %s or %%".into(),
                     );
                 };
                 let value = read_argument(cpu, bus, argument)?;
                 argument += 1;
                 position += length;
-                let field = if decimal {
-                    (value as i32).to_string()
-                } else {
-                    format!("{value:0width$x}")
+                let field = match conversion {
+                    Conversion::Decimal => (value as i32).to_string().into_bytes(),
+                    Conversion::Hex(width) => format!("{value:0width$x}").into_bytes(),
+                    Conversion::String if value == 0 => b"(null)".to_vec(),
+                    Conversion::String => read_text(bus, value, "diagnostic string")?,
                 };
                 count += u32::try_from(field.len())?;
-                output.extend_from_slice(field.as_bytes());
+                output.extend_from_slice(&field);
             }
             if output.len() > self.capacity - self.bytes.len() {
                 return Err("diagnostic output capacity exceeded".into());
@@ -83,11 +92,15 @@ fn read_format(bus: &mut impl Bus, address: u32) -> Result<Vec<u8>> {
     if address == 0 {
         return Ok(Vec::new());
     }
+    read_text(bus, address, "diagnostic format")
+}
+
+fn read_text(bus: &mut impl Bus, address: u32, name: &str) -> Result<Vec<u8>> {
     let mut bytes = Vec::new();
     for offset in 0..FORMAT_BYTES {
         let current = address
             .checked_add(offset)
-            .ok_or("diagnostic format address overflows")?;
+            .ok_or_else(|| format!("{name} address overflows"))?;
         ram_offset(current, 1)?;
         let byte = bus.read(current, Width::Byte)? as u8;
         if byte == 0 {
@@ -95,7 +108,7 @@ fn read_format(bus: &mut impl Bus, address: u32) -> Result<Vec<u8>> {
         }
         bytes.push(byte);
     }
-    Err("diagnostic format exceeds 4096 bytes including NUL".into())
+    Err(format!("{name} exceeds 4096 bytes including NUL").into())
 }
 
 fn read_argument(cpu: &Cpu, bus: &mut impl Bus, index: u32) -> Result<u32> {
