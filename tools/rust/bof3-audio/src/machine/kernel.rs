@@ -9,7 +9,7 @@ use super::{
     events::{Table as Events, BUSY},
     exception_calls::{
         Calls as ExceptionCalls, Environment, MissingHook, EXCEPTION_ENTER, EXCEPTION_EXIT,
-        HANDLER_ENTER, HANDLER_RETURN, NODE_ENTER,
+        HANDLER_ENTER, HANDLER_RETURN, NODE_ENTER, THREAD_CONTEXT,
     },
     exception_chains::Table as ExceptionChains,
     executable::ram_offset,
@@ -590,6 +590,7 @@ impl Kernel {
                 | NODE_ENTER
                 | HANDLER_ENTER
                 | EXCEPTION_EXIT
+                | THREAD_CONTEXT
         ) {
             return true;
         }
@@ -630,7 +631,7 @@ impl Kernel {
         cpu.synchronize_load();
         if matches!(
             cpu.pc(),
-            EXCEPTION_ENTER | NODE_ENTER | HANDLER_ENTER | EXCEPTION_EXIT
+            EXCEPTION_ENTER | NODE_ENTER | HANDLER_ENTER | EXCEPTION_EXIT | THREAD_CONTEXT
         ) {
             if self.event_calls.depth() != 0
                 || self.waiting_event.is_some()
@@ -645,6 +646,7 @@ impl Kernel {
             let (callback, name) = match cpu.pc() {
                 EXCEPTION_ENTER => (calls.enter_guest(cpu)?, "GuestExceptionCapture"),
                 NODE_ENTER => (calls.guard_guest_node(cpu)?, "GuestExceptionNode"),
+                THREAD_CONTEXT => (calls.guard_thread_context(cpu, bus)?, "GuestThreadContext"),
                 HANDLER_ENTER => {
                     let callback = calls.enter_guest_handler(cpu)?;
                     return self.exception_progress(cpu, bus, Some(callback));

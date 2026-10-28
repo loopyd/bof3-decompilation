@@ -13,6 +13,7 @@ pub(crate) const EXCEPTION_ENTER: u32 = 0xbfc0_010c;
 pub(crate) const NODE_ENTER: u32 = 0xbfc0_0110;
 pub(crate) const HANDLER_ENTER: u32 = 0xbfc0_0114;
 pub(crate) const EXCEPTION_EXIT: u32 = 0xbfc0_0118;
+pub(crate) const THREAD_CONTEXT: u32 = 0xbfc0_011c;
 const SAVED: [usize; 10] = [16, 17, 18, 19, 20, 21, 22, 23, 28, 30];
 const MAX_NODES: usize = 4096;
 
@@ -143,6 +144,23 @@ impl Calls {
         }
         self.cursor = Cursor::Exit;
         Ok(())
+    }
+
+    pub fn guard_thread_context(&self, cpu: &mut Cpu, bus: &mut impl Bus) -> Result<u32> {
+        if self.saved.is_none() {
+            return Err("owned thread guard requires an active exception handler".into());
+        }
+        let destination = cpu.register(31);
+        validate_handler(destination)?;
+        let context = super::thread_context::Context::current(bus)?.address();
+        if !matches!(bus.read(context + 0x98, Width::Word)? & 0x3c, 0 | 0x20) {
+            return Err(
+                "owned syscall handler: other exception failure policy is unsupported".into(),
+            );
+        }
+        cpu.set_register(2, context);
+        cpu.resume_at(destination);
+        Ok(destination)
     }
 
     fn require_guest_scan(&self) -> Result<()> {
