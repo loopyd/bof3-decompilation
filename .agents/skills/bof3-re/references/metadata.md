@@ -23,6 +23,11 @@ empty, multiple or ambiguous output blocks acceptance. Complete assembler member
 checks also reject extra functions outside the annotated invocations. Preserve
 each member's effective compiler settings when grouping or moving sources.
 
+Private templates may use a continued top-level `#define`. Keep continued lines
+inside that directive. Source conditionals and directives inside implementations
+remain unsupported. Balanced GNU prefix attributes retain their source offsets;
+they do not replace compiler-profile and native checks.
+
 Naming lists inspect generated arguments and locals from that configured output.
 Their lexical facts do not prove the meaning of a name or authorize a metadata
 update. Recheck all members after changing a shared definition.

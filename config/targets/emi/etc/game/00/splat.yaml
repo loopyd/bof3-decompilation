@@ -403,7 +403,7 @@ segments:
   - - 19772
     - c
     - func_8019A53C
-    - '@source: src/bof3/ui/func_8019A53C.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C80A4) indexed by the work-area byte (work+0x06) through a framed jalr call.'
   - - 19840
     - asm
@@ -422,7 +422,7 @@ segments:
   - - 20484
     - c
     - func_8019A804
-    - '@source: src/bof3/ui/func_8019A804.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C80BC) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 20552
     - c
@@ -474,7 +474,7 @@ segments:
   - - 21924
     - c
     - func_8019ADA4
-    - '@source: src/bof3/ui/func_8019ADA4.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C80F8) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 21992
     - asm
@@ -493,7 +493,7 @@ segments:
   - - 22796
     - c
     - func_8019B10C
-    - '@source: src/bof3/ui/func_8019B10C.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C8120) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 22864
     - asm
@@ -507,7 +507,7 @@ segments:
   - - 23396
     - c
     - func_8019B364
-    - '@source: src/bof3/ui/func_8019B364.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C812C) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 23464
     - asm
@@ -560,7 +560,7 @@ segments:
   - - 28192
     - c
     - func_8019C620
-    - '@source: src/bof3/ui/func_8019C620.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C8144) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 28260
     - asm
@@ -582,7 +582,7 @@ segments:
   - - 29588
     - c
     - func_8019CB94
-    - '@source: src/bof3/ui/func_8019CB94.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C8154) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 29656
     - asm
@@ -629,12 +629,12 @@ segments:
   - - 34252
     - c
     - func_8019DDCC
-    - '@source: src/bof3/ui/func_8019DDCC.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C8164) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 34320
     - c
     - func_8019DE10
-    - '@source: src/bof3/ui/func_8019DE10.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C817C) indexed by the work-area byte (work+0x02) through a framed jalr call.'
   - - 34388
     - asm
@@ -653,7 +653,7 @@ segments:
   - - 35428
     - c
     - func_8019E264
-    - '@source: src/bof3/ui/func_8019E264.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C8198) indexed by the work-area byte (work+0x02) through a framed jalr call.'
   - - 35496
     - asm
@@ -664,7 +664,7 @@ segments:
   - - 35876
     - c
     - func_8019E424
-    - '@source: src/bof3/ui/func_8019E424.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C81A0) indexed by the work-area byte (work+0x02) through a framed jalr call.'
   - - 35944
     - c
@@ -683,7 +683,7 @@ segments:
   - - 36736
     - c
     - func_8019E780
-    - '@source: src/bof3/ui/func_8019E780.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C81B0) indexed by the work-area byte (work+0x02) through a framed jalr call.'
   - - 36804
     - asm
@@ -694,7 +694,7 @@ segments:
   - - 37144
     - c
     - func_8019E918
-    - '@source: src/bof3/ui/func_8019E918.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C81B8) indexed by the work-area byte (work+0x02) through a framed jalr call.'
   - - 37212
     - asm
@@ -710,7 +710,7 @@ segments:
   - - 37620
     - c
     - func_8019EAF4
-    - '@source: src/bof3/ui/func_8019EAF4.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C81C0) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 37688
     - c
@@ -734,7 +734,7 @@ segments:
   - - 39628
     - c
     - func_8019F2CC
-    - '@source: src/bof3/ui/func_8019F2CC.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C81CC) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 39696
     - c
@@ -767,7 +767,7 @@ segments:
   - - 41356
     - c
     - func_8019F98C
-    - '@source: src/bof3/ui/func_8019F98C.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801C81DC) indexed by the work-area byte (work+0x01) through a framed jalr call.'
   - - 41424
     - c
@@ -1207,7 +1207,7 @@ segments:
   - - 121440
     - c
     - func_801B3260
-    - '@source: src/bof3/ui/func_801B3260.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD130) indexed by the work-area byte (work+0x02) through a framed jalr call.'
   - - 121508
     - c
@@ -1217,7 +1217,7 @@ segments:
   - - 121552
     - c
     - func_801B32D0
-    - '@source: src/bof3/ui/func_801B32D0.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD140) indexed by the work-area byte (work+0x03) through a framed jalr call.'
   - - 121620
     - asm
@@ -1248,7 +1248,7 @@ segments:
   - - 122176
     - c
     - func_801B3540
-    - '@source: src/bof3/ui/func_801B3540.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD154) indexed by the work-area byte (work+0x03) through a framed jalr call.'
   - - 122244
     - c
@@ -1399,7 +1399,7 @@ segments:
   - - 135616
     - c
     - func_801B69C0
-    - '@source: src/bof3/ui/func_801B69C0.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD2B0) indexed by the work-area byte (work+0x02) through a framed jalr call.'
   - - 135684
     - asm
@@ -1434,7 +1434,7 @@ segments:
   - - 137836
     - c
     - func_801B726C
-    - '@source: src/bof3/ui/func_801B726C.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD2EC) indexed by the work-area byte (work+0x03) through a framed jalr call.'
   - - 137904
     - c
@@ -1447,7 +1447,7 @@ segments:
   - - 138160
     - c
     - func_801B73B0
-    - '@source: src/bof3/ui/func_801B73B0.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD2F4) indexed by the work-area byte (work+0x03) through a framed jalr call.'
   - - 138228
     - c
@@ -1477,7 +1477,7 @@ segments:
   - - 139532
     - c
     - func_801B790C
-    - '@source: src/bof3/ui/func_801B790C.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD310) indexed by the work-area byte (work+0x04) through a framed jalr call.'
   - - 139600
     - c
@@ -1509,7 +1509,7 @@ segments:
   - - 140544
     - c
     - func_801B7D00
-    - '@source: src/bof3/ui/func_801B7D00.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD330) indexed by the work-area byte (work+0x04) through a framed jalr call.'
   - - 140612
     - c
@@ -1612,7 +1612,7 @@ segments:
   - - 145868
     - c
     - func_801B91CC
-    - '@source: src/bof3/ui/func_801B91CC.c'
+    - '@source: src/bof3/ui/workDispatchGame00.c'
     - '@behavior: Dispatches the handler table (0x801CD37C) indexed by the work-area byte (work+0x03) through a framed jalr call.'
   - - 145936
     - asm

@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from harness.common.lexicon import mask_c_text
-from harness.domain.functions import parse_function_records
+from harness.domain.functions import mask_function_attributes, parse_function_records
 from harness.domain.manifests import load_target_manifests
 
 KINDS = ("argument", "local")
@@ -158,7 +158,7 @@ def _signature_and_body(implementation: str) -> tuple[str, str]:
 def _parameter_span(signature: str) -> tuple[int, int]:
     """Locate the parameter-list span inside one function signature."""
 
-    masked = mask_c_text(signature)
+    masked = mask_function_attributes(signature)
     depth = 0
     opening = None
     for index, character in enumerate(masked):

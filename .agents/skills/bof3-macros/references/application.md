@@ -26,8 +26,11 @@ establish independently reviewed exact private wrappers in at least two owning
 targets with identical semantic and parameter contracts. Check every wrapper and
 shared consumer; representatives do not cover omitted functions.
 
-Run the current macro check and complete original-range byte gates. Preserve exacts
-and unselected partials under the shared recovery rules. Obtain independent review
+Run the current macro check and complete original-range byte gates. Distinguish
+changed definitions from unchanged shared dependencies when reviewing its consumer
+set. Report conservative findings and the actual command result. An edit to shared
+code still requires every affected consumer. Preserve exacts and unselected
+partials under the shared recovery rules. Obtain independent review
 of semantic hazards, parameter mapping, all use sites and human value. Only then
 record selected progress through the metadata owner and recheck it. Keep failed,
 unavailable and unreviewed results separate from accepted cleanup.

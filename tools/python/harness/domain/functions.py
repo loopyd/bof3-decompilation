@@ -20,8 +20,7 @@ from .tags import (
 )
 
 _IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
-_DIRECTIVE = re.compile(r"^[ \t]*#([^\n]*)(?:\n|$)", re.MULTILINE)
-_LOGICAL_DIRECTIVE = re.compile(r"^[ \t]*#(?:[^\n]*\\\n)*[^\n]*(?:\n|$)", re.MULTILINE)
+_DIRECTIVE = re.compile(r"^[ \t]*#((?:[^\n]*\\\n)*[^\n]*)(?:\n|$)", re.MULTILINE)
 _SOURCE = re.compile(r"@source\b")
 _BEHAVIOR = re.compile(r"@behavior\b")
 
@@ -73,12 +72,43 @@ def _find_closing(masked: str, start: int, opening: str, closing: str) -> int:
     raise ValueError(f"unterminated implementation delimiter {opening!r}")
 
 
+def mask_function_attributes(text: str) -> str:
+    """Mask balanced GNU prefix attributes while retaining signature offsets."""
+
+    masked, _ = _mask_lexemes(text)
+    position = 0
+    while (opening := masked.find("(", position)) >= 0:
+        names = list(_IDENTIFIER.finditer(masked, position, opening))
+        if not names or names[-1].group() != "__attribute__":
+            break
+        attribute = names[-1]
+        if masked[attribute.end() : opening].strip():
+            raise ValueError("unsupported GNU attribute prefix")
+        end = _find_closing(masked, opening, "(", ")")
+        inner = opening + 1
+        inner += len(masked[inner:]) - len(masked[inner:].lstrip())
+        if inner >= end - 1 or masked[inner] != "(":
+            raise ValueError("GNU attributes require nested parentheses")
+        inner_end = _find_closing(masked, inner, "(", ")")
+        if masked[inner_end : end - 1].strip():
+            raise ValueError("unsupported GNU attribute suffix")
+        masked = (
+            masked[: attribute.start()]
+            + re.sub(r"[^\n]", " ", masked[attribute.start() : end])
+            + masked[end:]
+        )
+        position = end
+    return masked
+
+
 def _parse_implementation(masked: str, start: int) -> tuple[int, int, str, str]:
     start += len(masked[start:]) - len(masked[start:].lstrip())
-    opening = masked.find("(", start)
-    if opening < 0:
+    implementation = mask_function_attributes(masked[start:])
+    relative_opening = implementation.find("(")
+    if relative_opening < 0:
         raise ValueError("function metadata has no following implementation")
-    prefix = masked[start:opening].strip()
+    opening = start + relative_opening
+    prefix = implementation[:relative_opening].strip()
     if not prefix or re.sub(r"[A-Za-z_][A-Za-z0-9_]*|[\s*]+", "", prefix):
         raise ValueError("function metadata is not immediately above an implementation")
     names = _IDENTIFIER.findall(prefix)
@@ -120,9 +150,9 @@ def parse_function_records(
 ) -> tuple[FunctionRecord, ...]:
     """Inspect attached metadata without expanding macros or claiming native identity.
 
-    Ordinary ANSI C89 definitions and standalone template invocations are supported.
-    Conditional source, continued lines and unsupported declarators reject rather
-    than assign ambiguous ranges. Data declaration tags without behavior are ignored.
+    C89 definitions, GNU prefix attributes and standalone templates are supported.
+    Continuations require top-level macro definitions. Conditional source and
+    unsupported declarators reject. Data tags without behavior are ignored.
     """
 
     masked, comments = _mask_lexemes(text)
@@ -140,9 +170,22 @@ def parse_function_records(
                     raise ValueError("function metadata requires @behavior")
     if not candidates:
         return ()
-    if re.search(r"\\\r?\n", text):
-        raise ValueError("continued source requires explicit preprocessing review")
     directives = list(_DIRECTIVE.finditer(masked))
+    for continuation in re.finditer(r"\\\r?\n", text):
+        definitions = [
+            item
+            for item in directives
+            if item.start() <= continuation.start() < item.end()
+            and re.match(r"\s*define\b", item.group(1))
+        ]
+        if len(definitions) != 1:
+            raise ValueError("continued source requires a top-level macro definition")
+        preceding = _DIRECTIVE.sub("", masked[: definitions[0].start()])
+        if any(
+            preceding.count(opening) != preceding.count(closing)
+            for opening, closing in (("{", "}"), ("(", ")"), ("[", "]"))
+        ):
+            raise ValueError("continued macro definition must be top-level")
     if any(
         re.match(r"\s*(?:if|ifdef|ifndef|elif|else|endif)\b", item.group(1))
         for item in directives
@@ -217,9 +260,7 @@ def has_function_templates(text: str) -> bool:
     """
 
     masked, _ = _mask_lexemes(text)
-    masked = _LOGICAL_DIRECTIVE.sub(
-        lambda match: re.sub(r"[^\n]", " ", match.group()), masked
-    )
+    masked = _DIRECTIVE.sub(lambda match: re.sub(r"[^\n]", " ", match.group()), masked)
     for candidate in re.finditer(r"(?m)^[ \t]*[A-Za-z_][A-Za-z0-9_]*\s*\(", masked):
         preceding = masked[: candidate.start()]
         if any(
