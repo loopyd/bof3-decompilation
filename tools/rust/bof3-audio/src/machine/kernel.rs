@@ -241,7 +241,7 @@ impl Kernel {
 
     /// Bind caller-loaded context restoration and its final RFE instruction.
     /// The CPU loop must report each successful step to complete_exception_return
-    /// before admitting another interrupt. Entry receives TCB+8 in K0.
+    /// before admitting another interrupt. Entry resolves the live PCB/TCB.
     pub fn configure_exception_return(&mut self, entry: u32, rfe_pc: u32) -> Result<()> {
         self.require_plain_context()?;
         if self.exception_return.is_some() {
@@ -601,7 +601,6 @@ impl Kernel {
             let mut expected = cpu.clone();
             context.restore(&mut expected, bus)?;
             self.returning = Some(expected);
-            cpu.set_register(26, context.address() + 8);
             cpu.resume_at(entry);
             return Ok(Some(entry));
         }
