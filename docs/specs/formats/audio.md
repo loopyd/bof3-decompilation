@@ -4195,12 +4195,22 @@ Startup owns the flag values and handler placement.
 
 [`syscalls.s`](../../../tools/rust/bof3-audio/driver/kernel/syscalls.s) exports
 `audio_syscall_handler` as an ordinary priority-zero ExCB verifier. Startup loads
-the linked code and installs its entrypoint without a host handler binding.
-Owned trap `0xBFC0011C` validates the live PCB/TCB and returns the TCB address in
-V0. It resolves the current descriptors rather than reusing the entry K0 value.
-The trap requires an active exception handler with no active event or wait
-delivery. Before guest TCB mutations, it rejects saved Cause values outside
-the supported IRQ/syscall domain, `Cause & 0x3C` equal to zero or `0x20`.
+the linked code, installs its entrypoint and calls
+`Kernel::configure_syscall_verifier(entry)`. This entry binding preflights live
+PCB/TCB state and saved Cause without supplying V0, RA or PC. It requires the
+matching active handler and no event, wait or host delivery continuation. Guest
+scanner entry also requires completed JALR/delay-slot evidence; functional
+scanning requires its reserved handler-return RA. Failed validation retains the
+entry phase. The CPU loop must call `prepare_exception_step` before selecting
+services or instructions, including with a functional scanner.
+
+The six-instruction guest prefix reads the PCB through uncached descriptor
+`0xA0000108`, then the current TCB through that live PCB. It interleaves stack
+setup with the loads, sets A0 to the PCB and obtains V0 from RAM. Entry preflight
+rejects saved Cause values outside the supported IRQ/syscall domain,
+`Cause & 0x3C` equal to zero or `0x20`, before the routine writes its stack frame.
+The former `0xBFC0011C` trap is unsupported. An unconfigured ordinary guest entry
+has no maintained PCB/TCB or saved-Cause preflight guarantee.
 
 Guest instructions select the IRQ/syscall path and update saved EPC, status and
 thread state as described below. Unknown syscalls use B0/7; B0/17 validates and
