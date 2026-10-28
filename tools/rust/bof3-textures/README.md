@@ -385,7 +385,11 @@ are combined. A payload bound alone does not authorize a new table reference.
 
 Query these payloads with `--kind area-surface-metadata`. `surface-word` records
 identify editable words; `surface-coordinate` and `surface-coordinate-pair`
-records identify read-only source reads. The `area` Rust module also resolves
+records identify read-only source reads. `area_surface.request` reports the
+original area index, request slot and disc LBA. The `area-request`,
+`area-slot-lba` and `area-palette-stage` dependencies describe the conditional
+load-to-staging path and its missing observations. See [catalog records](docs/catalog.md).
+The `area` Rust module also resolves
 coordinate permutations, CLUT fields and both page-encoding branches. The
 original graph-type getter selects the page branch; no stable getter value or
 active draw state is assumed. Physical texel and palette uploads, complete table

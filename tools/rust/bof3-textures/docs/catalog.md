@@ -14,6 +14,22 @@ eight-byte reads, including overlapping views, as preservation-only records.
 These reads are not complete table allocations. Cell ID zero selects no record;
 unselected words, gaps and tails are not promoted to decoded geometry.
 
+For qualified area archives, `area_surface.request` contains the original
+16-bit `index`, request `slot` and disc `lba`. The selected original-disc extents
+match the complete archive bytes. This mapping covers indices 0 through 199;
+it does not establish an argument bound in the game. Query `--dependency
+area-request`, `--dependency area-slot-lba` or `--dependency area-palette-stage`
+to inspect the required GAME and EXE consumers. Missing consumers remain
+unresolved; captured consumers retain partial status because execution and
+intervening writes have not been established.
+
+The conditional GAME path requests `(s0 & 0xFFFF) + 683`, waits for
+`byte[0x80146494] == 3`, then calls `SLUS_004.22@0x8014E284`. On stable valid
+memory, this routine clears `[0x80037000,0x80037800)` and copies 32 rows of
+512 bytes from `0x80033800` to `0x80037800`. The final four copied rows are zero.
+This static relationship does not identify a surface's palette source or prove
+completed uploads, later palette mutations, CLUT selection or display.
+
 The original `SLUS_004.22@0x80154294` consumer selects a word at
 `grid + align_up(2 * width * height, 4) + 4 * cell_id`, where
 `grid = 0x80104000 + 4 * u16[0x80104002]`. The selected word reaches the coordinate

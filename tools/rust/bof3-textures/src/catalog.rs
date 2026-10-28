@@ -695,6 +695,7 @@ pub fn build_from(
     }
     crate::interface::annotate(&mut resources)?;
     stream_family::annotate(&mut resources);
+    annotate_area_requests(&mut resources);
     crate::field::annotate(&mut resources, &mut records)?;
     Ok(Index {
         schema: SCHEMA.into(),
@@ -708,6 +709,54 @@ pub fn build_from(
         resources,
         records,
     })
+}
+
+fn annotate_area_requests(resources: &mut [Resource]) {
+    let exe = format!("{}:SLUS_004.22#file", sources::RELEASE);
+    let game = format!("{}:BIN/ETC/GAME.EMI#entry-000", sources::RELEASE);
+    let has_exe = resources.iter().any(|resource| resource.id == exe);
+    let has_game = resources.iter().any(|resource| resource.id == game);
+    for resource in resources {
+        let Some(info) = resource.area_surface.as_mut() else {
+            continue;
+        };
+        let Some(request) = area::source_request(&resource.source) else {
+            continue;
+        };
+        resource.evidence.extend([
+            "BIN/ETC/GAME.EMI#0@0x8019FB80:conditional-area-slot-request".into(),
+            "SLUS_004.22@0x80162160:slot-lba-lookup".into(),
+            "SLUS_004.22@0x80182444:original-area-disc-extents".into(),
+            "SLUS_004.22@0x80162D00:status-three-predicate".into(),
+            "BIN/ETC/GAME.EMI#0@0x8019FBFC:palette-stage-call".into(),
+            "SLUS_004.22@0x8014E284:clear-and-copy-palette-rows".into(),
+        ]);
+        resource.dependencies.push(Dependency {
+            kind: "area-request".into(),
+            target: Some(game.clone()),
+            status: if has_game { "partial" } else { "unresolved" }.into(),
+            reason: format!(
+                "For current masked s0 = {}, the original GAME path requests slot {} when its stored 16-bit value differs and its state byte is 5. Incoming argument preservation, path reachability and request completion remain unproved.",
+                request.index, request.slot,
+            ),
+        });
+        resource.dependencies.push(Dependency {
+            kind: "area-slot-lba".into(),
+            target: Some(exe.clone()),
+            status: if has_exe { "partial" } else { "unresolved" }.into(),
+            reason: format!(
+                "Original EXE table slot {} selects LBA {}; all selected original-disc sector payload bytes equal this complete qualified archive. The loader reloads the stored slot across external calls; intervening writes and active residency remain unresolved.",
+                request.slot, request.lba,
+            ),
+        });
+        resource.dependencies.push(Dependency {
+            kind: "area-palette-stage".into(),
+            target: Some(exe.clone()),
+            status: if has_exe { "partial" } else { "unresolved" }.into(),
+            reason: "The local GAME path waits for byte[0x80146494] == 3 before calling 0x8014E284. On stable valid memory, that routine clears [0x80037000,0x80037800), then copies 32 rows of 512 bytes from 0x80033800 to 0x80037800. Later palette mutation, uploads, CLUT uses and display remain unresolved.".into(),
+        });
+        info.request = Some(request);
+    }
 }
 
 impl Index {
