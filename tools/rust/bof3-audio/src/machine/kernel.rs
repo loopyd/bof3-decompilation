@@ -8,8 +8,8 @@ use super::{
     event_calls::{Calls as EventCalls, CALLBACK_ENTER, CALLBACK_RETURN},
     events::{Table as Events, BUSY},
     exception_calls::{
-        Calls as ExceptionCalls, Environment, MissingHook, EXCEPTION_ENTER, EXCEPTION_EXIT,
-        HANDLER_ENTER, HANDLER_RETURN, NODE_ENTER, THREAD_CONTEXT,
+        Calls as ExceptionCalls, Dispatch, Environment, GuestBoundary, MissingHook, HANDLER_RETURN,
+        THREAD_CONTEXT,
     },
     exception_chains::Table as ExceptionChains,
     executable::ram_offset,
@@ -28,7 +28,7 @@ pub struct Kernel {
     syscall_handler: Option<u32>,
     cd_removal: Option<u32>,
     event_delivery: Option<u32>,
-    exception_dispatch: Option<u32>,
+    exception_dispatch: Option<Dispatch>,
     exception_hook: Option<u32>,
     exception_return: Option<[u32; 2]>,
     returning: Option<Cpu>,
@@ -239,16 +239,76 @@ impl Kernel {
         Ok(())
     }
 
-    /// Bind caller-loaded exception capture and priority dispatch assembly.
-    /// The entry receives the validated current TCB in K0. Its owned traps
-    /// retain node and handler guards; guest instructions perform the traversal.
-    pub fn configure_exception_dispatch(&mut self, entry: u32) -> Result<()> {
+    /// Bind the linked vector, scanner boundaries and initialized stack cell.
+    /// The CPU loop calls prepare_exception_step before selecting each service
+    /// or instruction. Guest instructions resolve the live PCB/TCB and capture
+    /// state; boundary validation adds no guest calls or scheduled transitions.
+    pub fn configure_exception_dispatch(&mut self, binding: Dispatch) -> Result<()> {
         self.require_plain_context()?;
         if self.exception_dispatch.is_some() {
             return Err("owned exception dispatch entry already configured".into());
         }
-        self.validate_owned_handler(entry)?;
-        self.exception_dispatch = Some(entry);
+        if self
+            .exception_hook
+            .is_some_and(|entry| entry != binding.exit)
+        {
+            return Err("owned exception scanner must exit at the bound hook entry".into());
+        }
+        let mut offsets = Vec::new();
+        for (index, address) in binding.addresses()?.into_iter().enumerate() {
+            let offset = if index == 7 && self.exception_hook == Some(address) {
+                ram_offset(address, 4)?
+            } else {
+                self.validate_owned_handler(address)?
+            };
+            if offsets.contains(&offset) {
+                return Err(
+                    "owned exception boundaries and stack cell require distinct RAM".into(),
+                );
+            }
+            offsets.push(offset);
+        }
+        if !offsets[..8].windows(2).all(|pair| pair[0] < pair[1])
+            || (offsets[0]..=offsets[7]).contains(&offsets[8])
+        {
+            return Err("owned exception boundaries must follow linked code order".into());
+        }
+        self.exception_dispatch = Some(binding);
+        Ok(())
+    }
+
+    /// Validate the next owned scanner boundary before selecting is_call/step.
+    /// Re-read the PC afterwards: explicit functional handlers or missing-hook
+    /// policy can redirect execution. Ordinary guest calls and returns retain
+    /// their own RA, delay slots, pending loads and instruction-clock cost.
+    pub fn prepare_exception_step(&mut self, cpu: &mut Cpu, bus: &mut impl Bus) -> Result<()> {
+        if self.returning.is_some() {
+            return Ok(());
+        }
+        let (Some(binding), Some(calls)) = (self.exception_dispatch, self.exception_calls.as_mut())
+        else {
+            return Ok(());
+        };
+        let delivery_active = self.event_calls.depth() != 0
+            || self.waiting_event.is_some()
+            || self.exception_delivery.is_some();
+        match calls.prepare_guest_step(cpu, binding, delivery_active)? {
+            GuestBoundary::Continue => {}
+            GuestBoundary::Handler(target) => {
+                self.exception_progress(cpu, bus, Some(target))?;
+            }
+            GuestBoundary::Exit => {
+                if let (Some(entry), Some(buffer)) =
+                    (self.exception_hook, self.entry_hook.read(bus)?)
+                {
+                    super::thread_context::Context::current(bus)?;
+                    read_hook_jump(bus, buffer)?;
+                    debug_assert_eq!(entry, cpu.pc());
+                } else {
+                    self.exception_progress(cpu, bus, None)?;
+                }
+            }
+        }
         Ok(())
     }
 
@@ -263,7 +323,13 @@ impl Kernel {
         if matches!(self.entry_hook, EntryHook::Functional(Some(_))) {
             return Err("owned exception hook must bind before HookEntryInt registration".into());
         }
-        let first = self.validate_owned_handler(entry)?;
+        if self
+            .exception_dispatch
+            .is_some_and(|binding| binding.exit != entry)
+        {
+            return Err("owned hook entry must match the bound scanner exit".into());
+        }
+        let first = self.validate_owned_identity(entry, true)?;
         let cell = self.validate_owned_handler(pointer)?;
         if first == cell {
             return Err("owned exception hook entry and pointer require distinct RAM".into());
@@ -274,7 +340,7 @@ impl Kernel {
     }
 
     /// Bind caller-loaded context restoration and its final RFE instruction.
-    /// The CPU loop must report each successful step to complete_exception_return
+    /// The CPU loop must report each successful step to complete_exception_step
     /// before admitting another interrupt. Entry resolves the live PCB/TCB.
     pub fn configure_exception_return(&mut self, entry: u32, rfe_pc: u32) -> Result<()> {
         self.require_plain_context()?;
@@ -294,9 +360,17 @@ impl Kernel {
         self.returning.is_some()
     }
 
-    /// Complete only after the bound RFE retires in the return jump's delay slot.
-    /// Faults and mismatched restoration retain all unfinished continuations.
-    pub fn complete_exception_return(&mut self, cpu: &Cpu, step: &Step) -> Result<bool> {
+    /// Report every successful CPU retirement. Scanner calls require their
+    /// actual JALR and NOP delay slot before handler entry. Return completion
+    /// requires the bound RFE in its jump delay slot; faults retain ownership.
+    pub fn complete_exception_step(&mut self, cpu: &Cpu, step: &Step) -> Result<bool> {
+        if self.returning.is_none() {
+            if let (Some(binding), Some(calls)) =
+                (self.exception_dispatch, self.exception_calls.as_mut())
+            {
+                calls.complete_guest_step(cpu, step, binding)?;
+            }
+        }
         let Some(expected) = &self.returning else {
             return Ok(false);
         };
@@ -324,6 +398,10 @@ impl Kernel {
     }
 
     fn validate_owned_handler(&self, handler: u32) -> Result<usize> {
+        self.validate_owned_identity(handler, false)
+    }
+
+    fn validate_owned_identity(&self, handler: u32, hook_exit: bool) -> Result<usize> {
         super::exception_calls::validate_handler(handler)?;
         if Self::is_call(handler) {
             return Err("owned handler conflicts with a kernel service vector".into());
@@ -346,9 +424,14 @@ impl Kernel {
             || self
                 .event_delivery
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
-            || self
-                .exception_dispatch
-                .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
+            || self.exception_dispatch.is_some_and(|binding| {
+                binding.addresses().is_ok_and(|addresses| {
+                    addresses.into_iter().enumerate().any(|(index, address)| {
+                        !(hook_exit && index == 7 && address == handler)
+                            && ram_offset(address, 4).ok() == Some(offset)
+                    })
+                })
+            })
             || self
                 .exception_hook
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
@@ -496,19 +579,19 @@ impl Kernel {
         self.require_plain_context()?;
         let mut calls = ExceptionCalls::prepare(bus, environment)?;
         let context = super::thread_context::Context::current(bus)?;
-        if let Some(entry) = self.exception_dispatch {
+        if let Some(binding) = self.exception_dispatch {
             context.validate_exception(cpu, bus)?;
+            calls.validate_guest_stack(bus, binding)?;
             cpu.synchronize_load();
             calls.bind_guest();
             self.exception_calls = Some(calls);
-            cpu.set_register(26, context.address());
-            cpu.resume_at(entry);
+            cpu.resume_at(binding.entry);
             return Ok(Call {
                 vector: 0x80,
                 service: 6,
                 name: "GuestExceptionEntry",
                 waiting: false,
-                callback: Some(entry),
+                callback: Some(binding.entry),
             });
         }
         context.save_exception(cpu, bus)?;
@@ -708,14 +791,7 @@ impl Kernel {
     pub fn is_call(pc: u32) -> bool {
         if matches!(
             pc,
-            CALLBACK_RETURN
-                | HANDLER_RETURN
-                | CALLBACK_ENTER
-                | EXCEPTION_ENTER
-                | NODE_ENTER
-                | HANDLER_ENTER
-                | EXCEPTION_EXIT
-                | THREAD_CONTEXT
+            CALLBACK_RETURN | HANDLER_RETURN | CALLBACK_ENTER | THREAD_CONTEXT
         ) {
             return true;
         }
@@ -757,52 +833,22 @@ impl Kernel {
             return Err("not a BIOS entry vector".into());
         }
         cpu.synchronize_load();
-        if matches!(
-            cpu.pc(),
-            EXCEPTION_ENTER | NODE_ENTER | HANDLER_ENTER | EXCEPTION_EXIT | THREAD_CONTEXT
-        ) {
+        if cpu.pc() == THREAD_CONTEXT {
             if self.event_calls.depth() != 0
                 || self.waiting_event.is_some()
                 || self.exception_delivery.is_some()
             {
-                return Err("owned exception guard would abandon an active delivery".into());
+                return Err("owned thread guard would abandon an active delivery".into());
             }
-            let calls = self
+            let callback = self
                 .exception_calls
-                .as_mut()
-                .ok_or("owned exception guard without dispatch")?;
-            let (callback, name) = match cpu.pc() {
-                EXCEPTION_ENTER => (calls.enter_guest(cpu)?, "GuestExceptionCapture"),
-                NODE_ENTER => (calls.guard_guest_node(cpu)?, "GuestExceptionNode"),
-                THREAD_CONTEXT => (calls.guard_thread_context(cpu, bus)?, "GuestThreadContext"),
-                HANDLER_ENTER => {
-                    let callback = calls.enter_guest_handler(cpu)?;
-                    return self.exception_progress(cpu, bus, Some(callback));
-                }
-                EXCEPTION_EXIT => {
-                    calls.exit_guest()?;
-                    if let (Some(entry), Some(buffer)) =
-                        (self.exception_hook, self.entry_hook.read(bus)?)
-                    {
-                        super::thread_context::Context::current(bus)?;
-                        read_hook_jump(bus, buffer)?;
-                        cpu.resume_at(entry);
-                        return Ok(Call {
-                            vector: 0x80,
-                            service: 6,
-                            name: "GuestExceptionHook",
-                            waiting: false,
-                            callback: Some(entry),
-                        });
-                    }
-                    return self.exception_progress(cpu, bus, None);
-                }
-                _ => unreachable!(),
-            };
+                .as_ref()
+                .ok_or("owned thread guard without dispatch")?
+                .guard_thread_context(cpu, bus)?;
             return Ok(Call {
                 vector: 0x80,
                 service: 6,
-                name,
+                name: "GuestThreadContext",
                 waiting: false,
                 callback: Some(callback),
             });
@@ -818,6 +864,11 @@ impl Kernel {
             });
         }
         if cpu.pc() == HANDLER_RETURN {
+            if self.exception_dispatch.is_some() {
+                return Err(
+                    "owned guest handlers must return through their JALR continuation".into(),
+                );
+            }
             if self.event_calls.depth() != 0 || self.waiting_event.is_some() {
                 return Err(
                     "BIOS exception handler return would abandon event/wait continuation".into(),
