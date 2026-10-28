@@ -1388,8 +1388,9 @@ witness records MMIO writes without synthesizing audio. Fixtures install a
 controlled post-bank-open state; they do not execute the bank loader, full
 initialization or scheduler. Special handle `0x21`, live controller updates,
 non-seven-bit inputs, master gain, reverb processing and PCM remain outside this
-model. The subsequent static fit below uses this arithmetic; dynamic-controller
-comparison and full execution remain required.
+model. The subsequent static fit below uses this arithmetic. The
+[music approximation policy](#rust-music-extraction-with-explicit-approximations)
+records measured live-control differences; full execution remains separate.
 
 ### SF2 static gain and reverb mapping
 
@@ -1746,11 +1747,28 @@ index (0–15), matching the original US SEP initializer. Channel volume is 127
 and pan is 64; full expression, centered bend and dry effects remain export
 contexts. Other gameplay overrides are not established.
 Source-to-MIDI event indices account for the inserted setup events. Source
-programs, CC7/CC10 and normalized bend values retain order, but standard SF2
-controller curves and persistent channel bends still differ from tone-local,
-existing-voice-only game behavior. Scheduler quantization, initial gameplay
-state, dynamic-controller equivalence and measured PSX/PC PCM differences remain
-open. These differences are reported, not silently treated as faithful conversion.
+programs, CC7/CC10 and normalized bend values retain order.
+
+On the ordinary original US path, note-on caches raw velocity separately from
+channel-scaled velocity. Live CC7/CC10 gain updates use that cache and replace
+zero volume or pan with one for their arithmetic. CC7 then stores the requested
+channel volume, including zero. A subsequent CC10 replaces stored zero volume
+with one only while processing a matching voice record. Requested pan zero stays
+stored as zero, so held and later notes can have different staged right-channel
+magnitudes. These observations exclude special handle `0x21` and do not establish
+audible leakage or calibrated PSX output amplitude.
+
+The game's bend updates matching existing records using tone-local sensitivity;
+a later note starts unbent. Standard MIDI bend persists for later notes, and
+RustySynth's controller curves differ from the game's live gain/pan arithmetic.
+Its CC7 zero produces silent PCM, while the inspected game path stages a small
+nonzero magnitude. The accepted export policy retains these measured differences,
+the [key-on-only stopped-pitch limitation](#stopped-pitch-soundfont-mapping),
+fitted envelope error, fixed-loop history approximation and dry reverb. It does
+not establish dynamic-controller equivalence. Pre-lossy PCM comparisons retain
+separate clocks, onset and mixer scales; raw unaligned error cannot establish
+fidelity. Scheduler quantization, initial gameplay overrides, named SPU arithmetic
+disagreements and independent native PCM acceptance remain unresolved.
 
 MIDI byte round trips, RustySynth's independent MIDI/SF2 parsers and explicit
 preset checks precede publication. Missing presets cannot fall back silently to
