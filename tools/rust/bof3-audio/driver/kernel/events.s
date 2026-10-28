@@ -1,76 +1,92 @@
 # SPDX-License-Identifier: MIT
-# Owned DeliverEvent service. A0 is the event class; A1 is the specification.
-# The caller validates the EvCB descriptor at 0x120/0x124 and supplies an O32
-# stack. Callbacks preserve the O32 callee-saved registers and return normally,
-# or end the active exception through the host kernel's ReturnFromException.
-# The table range is captured once. Later records are read after each callback.
-# BFC00108 is the owned host callback guard, with the selected target in T9.
-# It validates each callback's stack and callee-saved registers before resuming.
+# DeliverEvent with the original guest frame, live record reads and JALR ABI.
+# Startup binds the scanner, mode, callback and final return boundaries. The
+# CPU loop validates ownership without changing guest registers or delay slots.
 .set noreorder
 .set noat
 .section .text
 .balign 4
-.globl audio_event_deliver
+.globl audio_event_deliver, audio_event_loop, audio_event_mode
+.globl audio_event_callback, audio_event_callback_return
+.globl audio_event_return, audio_event_return_delay
 .ent audio_event_deliver
 audio_event_deliver:
-    addiu $sp, $sp, -40
+    lui $t6, 0xa000
+    lw $t6, 0x124($t6)
+    addiu $at, $zero, 28
+    divu $zero, $t6, $at
+    addiu $sp, $sp, -64
+    lui $v1, 0xa000
+    lw $v1, 0x120($v1)
+    sw $s6, 32($sp)
+    sw $s4, 24($sp)
+    sw $s5, 28($sp)
+    sw $s0, 20($sp)
+    addu $s5, $a0, $zero
+    addu $s6, $a1, $zero
     sw $ra, 36($sp)
-    sw $s0, 32($sp)
-    sw $s1, 28($sp)
-    sw $s2, 24($sp)
-    sw $s3, 20($sp)
-    addu $s0, $a0, $zero
-    addu $s1, $a1, $zero
-    lw $s2, 0x120($zero)
-    lw $t0, 0x124($zero)
+    addu $s0, $v1, $zero
+    mflo $t7
+    sll $t8, $t7, 3
+    subu $t8, $t8, $t7
+    sll $t8, $t8, 2
+    addu $v0, $v1, $t8
+    sltu $at, $v1, $v0
+    beq $at, $zero, .Lepilogue
+    addu $s4, $v0, $zero
+    sw $s1, 48($sp)
+    sw $s2, 44($sp)
+    sw $s3, 40($sp)
+    addiu $s3, $zero, 0x1000
+    addiu $s2, $zero, 0x4000
+    addiu $s1, $zero, 0x2000
+audio_event_loop:
+    lw $t9, 4($s0)
     nop
-    addu $s3, $s2, $t0
-.Lnext:
-    beq $s2, $s3, .Ldone
+    bne $s1, $t9, audio_event_callback_return
     nop
-    lw $t0, 4($s2)
-    addiu $t1, $zero, 0x2000
-    bne $t0, $t1, .Ladvance
+    lw $t0, 0($s0)
     nop
-    lw $t0, 0($s2)
+    bne $s5, $t0, audio_event_callback_return
     nop
-    bne $t0, $s0, .Ladvance
+    lw $t1, 8($s0)
     nop
-    lw $t0, 8($s2)
+    bne $s6, $t1, audio_event_callback_return
     nop
-    bne $t0, $s1, .Ladvance
+    lw $v0, 12($s0)
     nop
-    lw $t0, 12($s2)
+audio_event_mode:
+    bne $s1, $v0, .Lcallback_mode
     nop
-    beq $t0, $t1, .Lpoll
-    addiu $t1, $zero, 0x1000
-    bne $t0, $t1, .Linvalid
+    beq $zero, $zero, audio_event_callback_return
+    sw $s2, 4($s0)
+.Lcallback_mode:
+    bne $s3, $v0, audio_event_callback_return
     nop
-    lw $t9, 16($s2)
+    lw $v0, 16($s0)
     nop
-    beq $t9, $zero, .Ladvance
+    beq $v0, $zero, audio_event_callback_return
     nop
-    lui $t0, 0xbfc0
-    ori $t0, $t0, 0x0108
-    jalr $t0
+audio_event_callback:
+    jalr $v0
     nop
-    beq $zero, $zero, .Ladvance
+audio_event_callback_return:
+    addiu $s0, $s0, 28
+    sltu $at, $s0, $s4
+    bne $at, $zero, audio_event_loop
     nop
-.Lpoll:
-    addiu $t0, $zero, 0x4000
-    sw $t0, 4($s2)
-.Ladvance:
-    beq $zero, $zero, .Lnext
-    addiu $s2, $s2, 28
-.Linvalid:
-    break 1
-.Ldone:
+    lw $s1, 48($sp)
+    lw $s2, 44($sp)
+    lw $s3, 40($sp)
+    nop
+.Lepilogue:
     lw $ra, 36($sp)
-    lw $s0, 32($sp)
-    lw $s1, 28($sp)
-    lw $s2, 24($sp)
-    lw $s3, 20($sp)
-    addiu $sp, $sp, 40
+    lw $s0, 20($sp)
+    lw $s4, 24($sp)
+    lw $s5, 28($sp)
+    lw $s6, 32($sp)
+audio_event_return:
     jr $ra
-    nop
+audio_event_return_delay:
+    addiu $sp, $sp, 64
 .end audio_event_deliver

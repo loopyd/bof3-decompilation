@@ -5,7 +5,7 @@
 use super::{
     bus::{Bus, Width},
     cpu::{Cpu, Fault, FaultKind, Step},
-    event_calls::{Calls as EventCalls, CALLBACK_ENTER, CALLBACK_RETURN},
+    event_calls::{Calls as EventCalls, Service as EventService, CALLBACK_RETURN},
     events::{Table as Events, BUSY},
     exception_calls::{
         Calls as ExceptionCalls, Dispatch, Environment, GuestBoundary, MissingHook, HANDLER_RETURN,
@@ -27,7 +27,8 @@ pub struct Kernel {
     syscall_handler: Option<u32>,
     syscall_verifier: Option<u32>,
     cd_removal: Option<u32>,
-    event_delivery: Option<u32>,
+    event_delivery: Option<EventService>,
+    event_completed: bool,
     exception_dispatch: Option<Dispatch>,
     exception_hook: Option<u32>,
     exception_return: Option<[u32; 2]>,
@@ -58,6 +59,7 @@ impl Default for Kernel {
             syscall_verifier: None,
             cd_removal: None,
             event_delivery: None,
+            event_completed: false,
             exception_dispatch: None,
             exception_hook: None,
             exception_return: None,
@@ -239,17 +241,22 @@ impl Kernel {
         Ok(())
     }
 
-    /// Bind authored guest DeliverEvent code. Startup loads the routine and
-    /// allocates the validated EvCB table and callback stack. Direct B0/7 and
-    /// owned exception handlers use this routine in the normal CPU loop.
+    /// Bind the guest DeliverEvent routine and its scanner/call/return boundaries.
+    /// The CPU loop validates direct entries and reports every retired step.
     /// Without a binding, development callers retain the functional host model.
-    pub fn configure_event_delivery(&mut self, entry: u32) -> Result<()> {
+    pub fn configure_event_delivery(&mut self, binding: EventService) -> Result<()> {
         self.require_plain_context()?;
         if self.event_delivery.is_some() {
             return Err("owned event delivery entry already configured".into());
         }
-        self.validate_owned_handler(entry)?;
-        self.event_delivery = Some(entry);
+        let mut offsets = Vec::new();
+        for address in binding.addresses()? {
+            offsets.push(self.validate_owned_handler(address)?);
+        }
+        if !offsets.windows(2).all(|pair| pair[0] < pair[1]) {
+            return Err("owned event boundaries must follow distinct linked code order".into());
+        }
+        self.event_delivery = Some(binding);
         Ok(())
     }
 
@@ -298,6 +305,29 @@ impl Kernel {
     pub fn prepare_exception_step(&mut self, cpu: &mut Cpu, bus: &mut impl Bus) -> Result<()> {
         if self.returning.is_some() {
             return Ok(());
+        }
+        if self
+            .exception_return
+            .is_some_and(|[entry, _]| entry == cpu.pc())
+        {
+            self.return_exception(cpu, bus)?;
+            return Ok(());
+        }
+        if self.event_completed {
+            self.finish_exception_delivery(cpu, bus)?;
+            self.event_completed = false;
+            if self.returning.is_some() {
+                return Ok(());
+            }
+        }
+        if let Some(binding) = self.event_delivery {
+            self.event_calls.prepare_guest_step(
+                cpu,
+                bus,
+                binding,
+                self.exception_calls.is_some(),
+                self.waiting_event.as_ref().map(|wait| wait.callback_depth),
+            )?;
         }
         if self.syscall_verifier == Some(cpu.pc()) {
             if self.event_calls.depth() != 0
@@ -391,6 +421,12 @@ impl Kernel {
     /// requires the bound RFE in its jump delay slot; faults retain ownership.
     pub fn complete_exception_step(&mut self, cpu: &Cpu, step: &Step) -> Result<bool> {
         if self.returning.is_none() {
+            if self.event_calls.complete_guest_step(cpu, step)?
+                && self.event_calls.depth() == 0
+                && self.exception_delivery.is_some()
+            {
+                self.event_completed = true;
+            }
             if let (Some(binding), Some(calls)) =
                 (self.exception_dispatch, self.exception_calls.as_mut())
             {
@@ -450,9 +486,13 @@ impl Kernel {
             || self
                 .cd_removal
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
-            || self
-                .event_delivery
-                .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
+            || self.event_delivery.is_some_and(|binding| {
+                binding.addresses().is_ok_and(|addresses| {
+                    addresses
+                        .into_iter()
+                        .any(|address| ram_offset(address, 4).ok() == Some(offset))
+                })
+            })
             || self.exception_dispatch.is_some_and(|binding| {
                 binding.addresses().is_ok_and(|addresses| {
                     addresses.into_iter().enumerate().any(|(index, address)| {
@@ -519,7 +559,12 @@ impl Kernel {
                 cpu.set_register(4, 0xf000_0010);
                 cpu.set_register(5, 0x4000);
                 self.exception_delivery = Some(ExceptionDelivery::Syscall);
-                if let Some(callback) = self.event_calls.start(cpu, bus, self.event_delivery)? {
+                if let Some(callback) = self.event_calls.start(
+                    cpu,
+                    bus,
+                    self.event_delivery,
+                    self.exception_calls.is_some(),
+                )? {
                     return Ok(Some(Call {
                         vector: 0x80,
                         service: 6,
@@ -568,7 +613,12 @@ impl Kernel {
             cpu.set_register(4, 0xf000_0000 | class);
             cpu.set_register(5, 0x1000);
             self.exception_delivery = Some(ExceptionDelivery::Generic { next: index + 1 });
-            let callback = self.event_calls.start(cpu, bus, self.event_delivery)?;
+            let callback = self.event_calls.start(
+                cpu,
+                bus,
+                self.event_delivery,
+                self.exception_calls.is_some(),
+            )?;
             if callback.is_some() {
                 return Ok(callback);
             }
@@ -696,7 +746,12 @@ impl Kernel {
                 cpu.set_register(4, 0xf200_0000 | index as u32);
                 cpu.set_register(5, 2);
                 self.exception_delivery = Some(ExceptionDelivery::Counter);
-                let event = self.event_calls.start(cpu, bus, self.event_delivery)?;
+                let event = self.event_calls.start(
+                    cpu,
+                    bus,
+                    self.event_delivery,
+                    self.exception_calls.is_some(),
+                )?;
                 if event.is_some() {
                     return Ok(Call {
                         vector: 0x80,
@@ -748,7 +803,9 @@ impl Kernel {
             let mut expected = cpu.clone();
             context.restore(&mut expected, bus)?;
             self.returning = Some(expected);
-            cpu.resume_at(entry);
+            if cpu.pc() != entry {
+                cpu.resume_at(entry);
+            }
             return Ok(Some(entry));
         }
         context.restore(cpu, bus)?;
@@ -756,11 +813,58 @@ impl Kernel {
         Ok(None)
     }
 
+    fn finish_exception_delivery(
+        &mut self,
+        cpu: &mut Cpu,
+        bus: &mut impl Bus,
+    ) -> Result<Option<Call>> {
+        if self.event_calls.depth() != 0 {
+            return Ok(None);
+        }
+        let Some(delivery) = self.exception_delivery else {
+            return Ok(None);
+        };
+        match delivery {
+            ExceptionDelivery::Counter => {
+                self.exception_delivery = None;
+                cpu.set_register(2, 1);
+            }
+            ExceptionDelivery::Syscall => {
+                let callback = self.return_exception(cpu, bus)?;
+                return Ok(Some(Call {
+                    vector: 0x80,
+                    service: 6,
+                    name: "SyscallExceptionReturn",
+                    waiting: false,
+                    callback,
+                }));
+            }
+            ExceptionDelivery::Generic { next } => {
+                if let Some(event) = self.generic_progress(cpu, bus, next)? {
+                    return Ok(Some(Call {
+                        vector: 0x80,
+                        service: 6,
+                        name: "GenericInterruptEvent",
+                        waiting: false,
+                        callback: Some(event),
+                    }));
+                }
+            }
+        }
+        let callback = self
+            .exception_calls
+            .as_mut()
+            .ok_or("event delivery lost its exception owner")?
+            .resume(cpu, bus)?;
+        self.exception_progress(cpu, bus, callback).map(Some)
+    }
+
     fn clear_exception_continuations(&mut self) {
         // Entry rejects preexisting HLE continuations. Therefore these all belong
         // to the exception being abandoned by this explicit nonlocal return.
         self.exception_calls = None;
         self.event_calls = EventCalls::default();
+        self.event_completed = false;
         self.waiting_event = None;
         self.exception_delivery = None;
     }
@@ -818,7 +922,7 @@ impl Kernel {
     }
 
     pub fn is_call(pc: u32) -> bool {
-        if matches!(pc, CALLBACK_RETURN | HANDLER_RETURN | CALLBACK_ENTER) {
+        if matches!(pc, CALLBACK_RETURN | HANDLER_RETURN) {
             return true;
         }
         matches!(
@@ -859,16 +963,6 @@ impl Kernel {
             return Err("not a BIOS entry vector".into());
         }
         cpu.synchronize_load();
-        if cpu.pc() == CALLBACK_ENTER {
-            let callback = self.event_calls.start_callback(cpu)?;
-            return Ok(Call {
-                vector: CALLBACK_ENTER,
-                service: 7,
-                name: "GuestEventCallback",
-                waiting: false,
-                callback: Some(callback),
-            });
-        }
         if cpu.pc() == HANDLER_RETURN {
             if self.exception_dispatch.is_some() {
                 return Err(
@@ -888,39 +982,16 @@ impl Kernel {
             return self.exception_progress(cpu, bus, callback);
         }
         if cpu.pc() == CALLBACK_RETURN {
+            if self
+                .waiting_event
+                .as_ref()
+                .is_some_and(|wait| wait.callback_depth >= self.event_calls.depth())
+            {
+                return Err("BIOS callback return would abandon WaitEvent".into());
+            }
             let callback = self.event_calls.resume(cpu, bus)?;
-            if self.event_calls.depth() == 0 {
-                if let Some(delivery) = self.exception_delivery {
-                    match delivery {
-                        ExceptionDelivery::Counter => {
-                            self.exception_delivery = None;
-                            cpu.set_register(2, 1);
-                        }
-                        ExceptionDelivery::Syscall => {
-                            let callback = self.return_exception(cpu, bus)?;
-                            return Ok(Call {
-                                vector: 0x80,
-                                service: 6,
-                                name: "SyscallExceptionReturn",
-                                waiting: false,
-                                callback,
-                            });
-                        }
-                        ExceptionDelivery::Generic { next } => {
-                            if let Some(event) = self.generic_progress(cpu, bus, next)? {
-                                return Ok(Call {
-                                    vector: 0x80,
-                                    service: 6,
-                                    name: "GenericInterruptEvent",
-                                    waiting: false,
-                                    callback: Some(event),
-                                });
-                            }
-                        }
-                    }
-                    let callback = self.exception_calls.as_mut().unwrap().resume(cpu, bus)?;
-                    return self.exception_progress(cpu, bus, callback);
-                }
+            if let Some(call) = self.finish_exception_delivery(cpu, bus)? {
+                return Ok(call);
             }
             return Ok(Call {
                 vector: 0xb0,
@@ -987,7 +1058,12 @@ impl Kernel {
                 "HookEntryInt"
             }
             (0xb0, 0x07) => {
-                let callback = self.event_calls.start(cpu, bus, self.event_delivery)?;
+                let callback = self.event_calls.start(
+                    cpu,
+                    bus,
+                    self.event_delivery,
+                    self.exception_calls.is_some(),
+                )?;
                 return Ok(Call {
                     vector,
                     service,

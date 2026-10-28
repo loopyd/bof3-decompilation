@@ -3877,23 +3877,31 @@ or proof of the original BIOS frame layout or volatile register values. Unaligne
 or inaccessible handlers, invalid stacks, ABI violations and excessive nesting
 fail explicitly. Instruction faults retain unfinished continuation state.
 
-`Kernel::configure_event_delivery(entry)` binds caller-loaded
+`Kernel::configure_event_delivery(event_calls::Service)` binds caller-loaded
 [`audio_event_deliver`](../../../tools/rust/bof3-audio/driver/kernel/events.s)
-assembly for direct `B0:07` calls and owned counter, generic IRQ and syscall event
-delivery. Startup supplies its code, validated EvCB descriptor and an O32 stack.
-The routine takes class and specification in A0/A1, captures the table range once,
-and scans later records after each callback. It changes matching polling records
-to ready and skips null callbacks. Its forty-byte frame includes the callback's
-sixteen-byte argument home area.
+assembly for direct guest entry, `B0:07` forwarding and owned exception delivery.
+The binding supplies the entry, scan, loaded-mode, callback JALR and final JR
+addresses. Callback return and final delay-slot addresses are derived from them.
+All boundaries require distinct aligned RAM identities in linked code order.
+Startup supplies the code, validated EvCB descriptor and an aligned guest stack.
 
-The owned host trap `0xBFC00108` takes the selected callback in T9 and guards its
-stack and S0–S7/FP before resuming the scanner. No BIOS instruction is fetched at
-this trap. Callback guard frames do not add a logical delivery level, so nested
-delivery and WaitEvent retain the same depth contract. A callback can return from
-the active exception through `B0:17`, discarding its owned continuations. Invalid
-modes fault through guest `BREAK`; invalid callbacks and ABI violations reject.
-A bound service never switches to host scanning after failure. Unbound development
-callers retain the functional host model.
+The routine uses the original 64-byte frame, including the callback's sixteen-byte
+argument home area. Guest instructions capture the table range and A0/A1, scan
+later records after each callback, mark matching polling records ready and skip
+null callbacks. Entry validation leaves SP, RA, registers and pending loads intact.
+`B0:07` forwarding changes only the execution destination after normal BIOS entry
+load synchronization. Each callback executes through the actual JALR and its NOP
+delay slot. Boundary guards check its target, stack and S0 through S7/FP. Final
+return requires the actual JR and stack-restoring delay slot before ownership ends.
+No guest callback or return trap is used. `0xBFC00108` is unsupported.
+
+Deliveries retain the depth-64 nesting limit and WaitEvent ownership. Matching
+unsupported modes reject before mode selection; inaccessible or overlapping
+callbacks, incomplete call/return phases and ABI violations reject with unfinished
+ownership retained. A callback can abandon the active exception through `B0:17`
+or direct entry to the bound ReturnFromException routine. Successful RFE completion
+then clears its owned continuations. Unbound development callers retain the
+functional host model.
 
 The bound service's instructions advance the caller's normal CPU/device schedule.
 Original-BIOS timing also depends on the selected exception dispatcher, handler
@@ -4100,8 +4108,10 @@ other owned handlers. It does not establish full startup or timing equivalence.
 `Kernel::configure_exception_return(entry, rfe_pc)` separately binds
 `audio_exception_return` and its final `audio_exception_return_rfe` instruction.
 The return bridge resolves the live PCB/TCB and preflights all restored values
-through the existing context reader before changing the real CPU. It reports the
-guest entry as the call's callback without supplying a TCB register argument.
+through the existing context reader. `B0:17` forwarding reports the guest entry as
+the call's callback without supplying a TCB register argument. Direct entry uses
+`prepare_exception_step` to record the expected restored context while preserving
+the CPU's registers, execution destination and pending loads.
 Guest instructions read the PCB pointer at `0x108`, then its live current TCB,
 and derive TCB+8 in A0. They restore LO, HI, status and saved GPRs, use saved EPC
 as K0, then execute JR K0 with RFE in its delay slot. Saved K0 remains opaque.
@@ -4212,9 +4222,15 @@ rejects saved Cause values outside the supported IRQ/syscall domain,
 The former `0xBFC0011C` trap is unsupported. An unconfigured ordinary guest entry
 has no maintained PCB/TCB or saved-Cause preflight guarantee.
 
-Guest instructions select the IRQ/syscall path and update saved EPC, status and
-thread state as described below. Unknown syscalls use B0/7; B0/17 validates and
-restores the live current thread after callbacks. The routine reserves 24 bytes
+The complete verifier uses a linked four-word dispatch table for syscall selectors
+zero through three. Startup loads that initialized table with the routine. Guest
+instructions select the IRQ/syscall path and update saved EPC, status and thread
+state as described below. Thread switching writes the captured PCB in A0. Unknown
+syscalls call the linked DeliverEvent routine directly; restoration calls the
+linked ReturnFromException routine directly. The latter entry validates the live
+current thread and records expected restoration without changing the CPU. The
+caller must bind both services. A terminal BREAK rejects execution if the nonlocal
+restore unexpectedly returns. The routine reserves 24 bytes
 on an eight-byte-aligned stack, including a sixteen-byte O32 home area. Only the
 IRQ path returns normally and restores SP and RA. Other paths abandon the frame
 through exception return. Faults retain unfinished state. This service does not
