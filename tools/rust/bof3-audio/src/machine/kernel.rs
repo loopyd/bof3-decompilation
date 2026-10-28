@@ -20,7 +20,7 @@ const SAVED: [usize; 12] = [31, 29, 30, 16, 17, 18, 19, 20, 21, 22, 23, 28];
 
 #[derive(Clone, Debug)]
 pub struct Kernel {
-    entry_hook: Option<u32>,
+    entry_hook: EntryHook,
     pad_auto_ack: u32,
     counter_auto_ack: CounterFlags,
     counter_handlers: Option<[[u32; 2]; 4]>,
@@ -49,7 +49,7 @@ struct PendingWait {
 impl Default for Kernel {
     fn default() -> Self {
         Self {
-            entry_hook: None,
+            entry_hook: EntryHook::Functional(None),
             pad_auto_ack: 1,
             counter_auto_ack: CounterFlags::Functional([1; 4]),
             counter_handlers: None,
@@ -85,6 +85,32 @@ enum ExceptionDelivery {
     Counter,
     Generic { next: usize },
     Syscall,
+}
+
+#[derive(Clone, Debug)]
+enum EntryHook {
+    Functional(Option<u32>),
+    Guest(u32),
+}
+
+impl EntryHook {
+    fn read(&self, bus: &mut impl Bus) -> Result<Option<u32>> {
+        match self {
+            Self::Functional(value) => Ok(*value),
+            Self::Guest(address) => {
+                let value = bus.read(*address, Width::Word)?;
+                Ok((value != 0).then_some(value))
+            }
+        }
+    }
+
+    fn register(&mut self, bus: &mut impl Bus, value: u32) -> Result<()> {
+        match self {
+            Self::Functional(hook) => *hook = Some(value),
+            Self::Guest(address) => bus.write(*address, Width::Word, value)?,
+        }
+        Ok(())
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -226,15 +252,23 @@ impl Kernel {
         Ok(())
     }
 
-    /// Bind caller-loaded HookEntryInt restoration code for completed guest
-    /// exception dispatch. Entry receives the validated live buffer in A0 and
-    /// one in A1. Guest loads restore the saved registers and resume saved RA.
-    pub fn configure_exception_hook(&mut self, entry: u32) -> Result<()> {
+    /// Bind caller-loaded HookEntryInt code and its initialized pointer cell.
+    /// Bind before functional registration. Guest entry resolves the live
+    /// PCB/TCB and hook pointer; zero in the cell means no registered hook.
+    pub fn configure_exception_hook(&mut self, entry: u32, pointer: u32) -> Result<()> {
         self.require_plain_context()?;
         if self.exception_hook.is_some() {
             return Err("owned exception hook entry already configured".into());
         }
-        self.validate_owned_handler(entry)?;
+        if matches!(self.entry_hook, EntryHook::Functional(Some(_))) {
+            return Err("owned exception hook must bind before HookEntryInt registration".into());
+        }
+        let first = self.validate_owned_handler(entry)?;
+        let cell = self.validate_owned_handler(pointer)?;
+        if first == cell {
+            return Err("owned exception hook entry and pointer require distinct RAM".into());
+        }
+        self.entry_hook = EntryHook::Guest(pointer);
         self.exception_hook = Some(entry);
         Ok(())
     }
@@ -318,6 +352,7 @@ impl Kernel {
             || self
                 .exception_hook
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
+            || matches!(self.entry_hook, EntryHook::Guest(address) if ram_offset(address, 4).ok() == Some(offset))
             || self.exception_return.is_some_and(|addresses| {
                 addresses
                     .into_iter()
@@ -565,7 +600,7 @@ impl Kernel {
             callback = self.exception_calls.as_mut().unwrap().resume(cpu, bus)?;
         }
         if callback.is_none() {
-            if let Some(address) = self.entry_hook {
+            if let Some(address) = self.entry_hook.read(bus)? {
                 let saved = read_hook_jump(bus, address)?;
                 for (register, value) in SAVED.iter().zip(saved) {
                     cpu.set_register(*register, value);
@@ -696,8 +731,8 @@ impl Kernel {
                 | 0xa000_00c0
         )
     }
-    pub fn entry_hook(&self) -> Option<u32> {
-        self.entry_hook
+    pub fn entry_hook(&self, bus: &mut impl Bus) -> Result<Option<u32>> {
+        self.entry_hook.read(bus)
     }
     pub fn pending_callbacks(&self) -> usize {
         self.event_calls.depth()
@@ -746,10 +781,11 @@ impl Kernel {
                 }
                 EXCEPTION_EXIT => {
                     calls.exit_guest()?;
-                    if let (Some(entry), Some(buffer)) = (self.exception_hook, self.entry_hook) {
+                    if let (Some(entry), Some(buffer)) =
+                        (self.exception_hook, self.entry_hook.read(bus)?)
+                    {
+                        super::thread_context::Context::current(bus)?;
                         read_hook_jump(bus, buffer)?;
-                        cpu.set_register(4, buffer);
-                        cpu.set_register(5, 1);
                         cpu.resume_at(entry);
                         return Ok(Call {
                             vector: 0x80,
@@ -890,7 +926,7 @@ impl Kernel {
             }
             (0xb0, 0x19) => {
                 validate_buffer(argument)?;
-                self.entry_hook = Some(argument);
+                self.entry_hook.register(bus, argument)?;
                 "HookEntryInt"
             }
             (0xb0, 0x07) => {

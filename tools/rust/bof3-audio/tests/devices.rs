@@ -142,7 +142,7 @@ fn kernel_registration_and_unsupported_calls_never_become_success_stubs() {
     cpu.set_register(4, 0x8000_2000);
     cpu.set_register(31, 0x8001_0000);
     kernel.dispatch(&mut cpu, &mut bus).unwrap();
-    assert_eq!(kernel.entry_hook(), Some(0x8000_2000));
+    assert_eq!(kernel.entry_hook(&mut bus).unwrap(), Some(0x8000_2000));
     cpu.resume_at(0xb0);
     cpu.set_register(9, 0xff);
     cpu.set_register(2, 0x1234);
