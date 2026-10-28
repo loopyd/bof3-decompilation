@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     Error, Result, bank_image,
     catalog::{Index, Resource},
-    composition::{self, DrawContext, RectanglePart, RectangleState, SourceFrame, WordRegion},
+    composition::{self, DrawContext, SampleState, SourceFrame, SourcePart, WordRegion},
     formats, interface,
     palette::Palette,
     png::{IndexedImage, WordImage},
@@ -98,7 +98,7 @@ pub fn sprite_frame(source: &[u8], context: &FrameContext) -> Result<SourceFrame
         context.palette_origin[1],
         &palette,
     )?;
-    let state = RectangleState::from_commands(context.draw_mode, context.texture_window)?;
+    let state = SampleState::from_commands(context.draw_mode, context.texture_window)?;
     let geometry = composition::compose(
         cell,
         DrawContext::from_entity(&context.entity, context.graph_type)?,
@@ -106,14 +106,14 @@ pub fn sprite_frame(source: &[u8], context: &FrameContext) -> Result<SourceFrame
     let parts: Vec<_> = context
         .part_order
         .iter()
-        .map(|&index| RectanglePart {
+        .map(|&index| SourcePart {
             geometry: &geometry[index],
             state,
             texture,
             palette,
         })
         .collect();
-    composition::assemble_rectangles(&parts)
+    composition::assemble(&parts)
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]

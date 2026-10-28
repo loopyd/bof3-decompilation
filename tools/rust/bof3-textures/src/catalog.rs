@@ -148,6 +148,7 @@ pub fn interpretation_hash() -> String {
             include_str!("package.rs"),
             include_str!("png.rs"),
             include_str!("preview.rs"),
+            include_str!("composition.rs"),
             include_str!("sources.rs"),
             include_str!("palette.rs"),
             include_str!("packed.rs"),

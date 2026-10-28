@@ -37,10 +37,10 @@ same consumer observation. Geometry alone does not choose an image, identify a
 resident bank or resolve palette uploads. An exact source-bank match in RAM
 establishes byte identity only.
 
-## Rectangle source texels
+## Indexed source texels
 
-`Geometry::sample_rectangle` selects exact palette color words for one indexed
-rectangle. Supply `RectangleState::from_commands(draw_mode, texture_window)`
+`Geometry::sample` selects palette color words for one indexed rectangle or
+qualified quad. Supply `SampleState::from_commands(draw_mode, texture_window)`
 with explicit GP0(E1h) and GP0(E2h) commands. A missing texture-window observation
 cannot be replaced with an assumed zero command.
 
@@ -52,35 +52,45 @@ execution or residency. Every selected texture and palette word must exist in
 the supplied regions. A partial palette is sufficient only when it contains
 every selected color word. Missing colors cause an error.
 
-The sampler supports 4-bit and 8-bit indices. It checks the rectangle's page
-against E1, wraps UV bytes, applies E2 masks and offsets, and resolves the encoded
-CLUT coordinates. Color words retain transparent zero and STP bits. The result
-can pass directly to `png::encode_words`. It remains a source derivative and
-does not replace editable image, palette or cell records.
+The sampler supports 4-bit and 8-bit indices. A rectangle's page must match E1.
+A quad selects its own packet page, which can differ from E1. Both paths wrap
+sampled UV bytes, apply E2 masks and offsets, and resolve the encoded CLUT.
+Color words retain transparent zero and STP bits. The returned `SourceFrame`
+contains its signed origin and a `png::WordImage` suitable for `png::encode_words`.
+It remains a source derivative and does not replace editable records.
 
-The sampler refuses quads, empty rectangles, odd UV coordinates or width,
-extended VRAM, hardware rectangle flips, direct color and mismatched commands.
-Its hardware rules follow the [PSX GPU specification](https://psx-spx.consoledev.net/graphicsprocessingunitgpu/).
+Quads require the axis-aligned XY and UV grid emitted by `compose`. The sampler
+splits them into triangles in packet order, excludes bottom and right edges,
+and handles reversed coordinates and UV endpoints. UV edge increments truncate
+in 16.16 before row accumulation. Each span includes the first integer pixel's
+edge correction and a half-texel sampling bias. Ideal image resizing can select
+different texels. The model follows the [PSX GPU specification](https://psx-spx.consoledev.net/graphicsprocessingunitgpu/)
+and retained [hardware interpolation probes](../../../../third_party/pcsx-redux-agentic/src/mips/tests/gpu-raster-phase20/raster-expected-phase20.h).
+
+The sampler refuses empty rectangles, odd rectangle UV coordinates or width,
+zero-area quads, quads spanning at least 1024 X pixels or 512 Y pixels,
+other quad layouts, extended VRAM, hardware rectangle flips and direct color.
 It does not clip, shade, blend, apply framebuffer masks or determine layer order.
 Per-part source selection does not establish assembled-frame or runtime accuracy.
 
-## Rectangle source frames
+## Source frames
 
-`composition::assemble_rectangles(&parts)` places sampled rectangles on one
-source-color canvas. Each `RectanglePart` supplies its `geometry`, `state`,
+`composition::assemble(&parts)` places sampled parts on one source-color canvas.
+Each `SourcePart` supplies its `geometry`, `state`,
 `texture` and `palette`. Supply parts in explicit back-to-front order. The
 function does not derive submission order from cell records or ordering tables.
 
 The returned `SourceFrame` contains the top-left `origin_x` and `origin_y` and a
 `png::WordImage`. Placement uses the signed low 11 bits of each packet XY field,
 before drawing offsets or clipping. Canvas bounds include every rectangle's
-declared extent, even transparent edges. The canvas starts with zero words.
+declared extent, even transparent edges. A quad's bounds exclude its maximum
+X and Y coordinates. The canvas starts with zero words.
 A later zero color word leaves an earlier part intact. Every nonzero word
 replaces the earlier word, including STP black `0x8000`.
 
 Frames require 1 through 255 parts and at most `png::MAX_PIXELS` canvas pixels.
-Every part must satisfy `sample_rectangle` and its source bounds. Quads and empty
-rectangles fail. The output can pass to `png::encode_words` as a derivative;
+Every part must satisfy `sample` and its source bounds. The output can pass to
+`png::encode_words` as a derivative;
 editable cells, image indices and palettes remain separate.
 
 This source preview does not apply color modulation, semitransparency, draw
@@ -88,7 +98,7 @@ offsets, clipping, framebuffer masks or other scene objects. Its part order and
 source bindings require caller evidence. Matching the preview to captured
 commands does not establish rendered appearance or edited-disc loading.
 
-## Rectangle frame command
+## Frame command
 
 The `frame` command reconstructs the selected archive from a current edit package,
 then samples one declared cell from a qualified three-root sprite bank. It uses
@@ -117,8 +127,8 @@ object with all the following fields. Unknown fields are refused.
 
 JSON numbers use decimal notation. Context files are bounded at 64 KiB. Every
 selected texel and color must lie in the supplied image and palette regions.
-The command refuses quads, unsupported draw states, invalid record indices,
-missing colors and every other rectangle-sampler failure described above.
+The command refuses unsupported draw states and geometry, invalid record indices,
+missing colors and every other sampler failure described above.
 It does not derive runtime selectors or replace missing draw-state evidence.
 
 Create the output parent first and choose a new directory outside the package.

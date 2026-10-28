@@ -321,7 +321,7 @@ Use `frame EDIT_PACKAGE --asset RESOURCE_ID --context CONTEXT.json --output NEW_
 to preview a selected three-root bank cell after validated package edits. It
 publishes `frame.png` and a source-bound `frame.json` report without changing the
 package. Supply the entity bytes, selected records, upload coordinates, draw
-commands and part order explicitly. See [Rectangle frame command](docs/composition.md#rectangle-frame-command)
+commands and part order explicitly. See [Frame command](docs/composition.md#frame-command)
 for the context fields and limits. The PNG is a derivative; edit the package's
 source views to change its contents.
 
@@ -516,8 +516,10 @@ escaped package paths, missing members, and existing destinations cause failure.
 The [composition library](docs/composition.md) computes qualified rectangle and
 quad geometry from an explicit entity and graph type. It preserves the original
 flip dispatch, scale rounding, UV wrapping, texture-page correction and encoded
-CLUT fields. Its rectangle sampler and ordered source frames retain exact color
-words. They do not infer source residency or reproduce scene rendering.
+CLUT fields. Its indexed sampler handles rectangles and the consumer's
+axis-aligned quads, including fixed-point triangle interpolation. Ordered source
+frames retain exact color words. They do not infer source residency or reproduce
+scene rendering.
 
 The [selection library](docs/selection.md) resolves one explicit root selector
 through the original consumer. It preserves the image-skip path, independent

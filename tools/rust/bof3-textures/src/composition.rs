@@ -153,30 +153,26 @@ impl<'a> WordRegion<'a> {
     }
 }
 
-/// Explicit GP0(E1h/E2h) state for indexed rectangle source sampling.
+/// Explicit GP0(E1h/E2h) state for indexed source sampling.
 /// Extended VRAM, hardware rectangle flips and direct color remain unsupported.
 #[derive(Clone, Copy, Debug)]
-pub struct RectangleState {
+pub struct SampleState {
     draw_mode: u32,
     texture_window: u32,
 }
 
-impl RectangleState {
+impl SampleState {
     pub fn from_commands(draw_mode: u32, texture_window: u32) -> Result<Self> {
         if draw_mode >> 24 != 0xe1 || draw_mode & 0x00ff_f800 != 0 {
             return Err(invalid(
-                "rectangle sampling requires a retail E1 command without hardware flips",
+                "source sampling requires a retail E1 command without hardware flips",
             ));
         }
         if (draw_mode >> 7) & 3 > 1 {
-            return Err(invalid(
-                "rectangle sampling requires 4-bit or 8-bit indices",
-            ));
+            return Err(invalid("source sampling requires 4-bit or 8-bit indices"));
         }
         if texture_window & 0xfff0_0000 != 0xe200_0000 {
-            return Err(invalid(
-                "rectangle sampling requires an explicit E2 command",
-            ));
+            return Err(invalid("source sampling requires an explicit E2 command"));
         }
         Ok(Self {
             draw_mode,
@@ -191,73 +187,228 @@ impl RectangleState {
     }
 }
 
-impl Geometry {
-    /// Select exact source color words, one rectangle at a time. The caller binds
-    /// both regions and commands to this geometry. No framebuffer operations,
-    /// layer ordering, shading, blending or upload execution are modeled.
-    pub fn sample_rectangle(
-        &self,
-        state: RectangleState,
-        texture: WordRegion<'_>,
-        palette: WordRegion<'_>,
-    ) -> Result<WordImage> {
-        let Self::Rectangle {
-            origin,
-            width,
-            height,
-            tpage,
-            clut,
-        } = *self
-        else {
-            return Err(invalid("quad texel sampling is unsupported"));
-        };
-        if u32::from(tpage) != state.draw_mode & 0x1ff {
-            return Err(invalid("rectangle page differs from its E1 command"));
-        }
-        if clut & 0x8000 != 0 {
-            return Err(invalid("rectangle CLUT exceeds retail VRAM"));
-        }
-        if width == 0 || height == 0 || origin.u & 1 != 0 || origin.v & 1 != 0 || width & 1 != 0 {
-            return Err(invalid(
-                "rectangle sampling requires nonempty dimensions and even UV and width",
-            ));
-        }
-        let bits = if tpage & 0x80 == 0 { 4 } else { 8 };
+/// Indexed source selection, independent of framebuffer writes.
+struct Texels<'a> {
+    state: SampleState,
+    texture: WordRegion<'a>,
+    palette: WordRegion<'a>,
+    tpage: u16,
+    clut: u16,
+}
+
+impl Texels<'_> {
+    fn color(&self, u: u8, v: u8) -> Result<u16> {
+        let bits = if self.tpage & 0x80 == 0 { 4 } else { 8 };
         let per_word = 16 / bits;
-        let page_x = usize::from(tpage & 15) * 64;
-        let page_y = usize::from((tpage >> 4) & 1) * 256;
-        let palette_x = usize::from(clut & 63) * 16;
-        let palette_y = usize::from(clut >> 6);
-        let mut words = Vec::with_capacity(usize::from(width) * usize::from(height));
-        for y in 0..height {
-            let v = usize::from(state.window(origin.v.wrapping_add(y), 5));
-            for x in 0..width {
-                let u = usize::from(state.window(origin.u.wrapping_add(x), 0));
-                let word = texture
-                    .word(page_x + u / per_word, page_y + v)
-                    .ok_or_else(|| {
-                        invalid("texture coordinate is outside its supplied source region")
-                    })?;
-                let index = usize::from((word >> ((u % per_word) * bits)) & ((1 << bits) - 1));
-                words.push(palette.word(palette_x + index, palette_y).ok_or_else(|| {
-                    invalid("selected palette word is outside its supplied source region")
-                })?);
-            }
-        }
-        Ok(WordImage {
-            width: usize::from(width),
-            height: usize::from(height),
-            words,
-        })
+        let u = usize::from(self.state.window(u, 0));
+        let v = usize::from(self.state.window(v, 5));
+        let page_x = usize::from(self.tpage & 15) * 64;
+        let page_y = usize::from((self.tpage >> 4) & 1) * 256;
+        let word = self
+            .texture
+            .word(page_x + u / per_word, page_y + v)
+            .ok_or_else(|| invalid("texture coordinate is outside its supplied source region"))?;
+        let index = usize::from((word >> ((u % per_word) * bits)) & ((1 << bits) - 1));
+        self.palette
+            .word(
+                usize::from(self.clut & 63) * 16 + index,
+                usize::from(self.clut >> 6),
+            )
+            .ok_or_else(|| invalid("selected palette word is outside its supplied source region"))
     }
 }
 
-/// One source-qualified rectangle in the caller's explicit preview order.
-/// Sources and commands can differ between parts; no shared state is inferred.
+fn packet_coordinate(value: u16) -> i32 {
+    i32::from(((value << 5) as i16) >> 5)
+}
+
+impl Geometry {
+    fn bounds(&self) -> Result<[i32; 4]> {
+        match *self {
+            Self::Rectangle {
+                origin,
+                width,
+                height,
+                ..
+            } => {
+                if width == 0 || height == 0 {
+                    return Err(invalid("source frame contains an empty rectangle"));
+                }
+                let x = packet_coordinate(origin.x);
+                let y = packet_coordinate(origin.y);
+                Ok([x, y, x + i32::from(width), y + i32::from(height)])
+            }
+            Self::Quad {
+                vertices: [a, b, c, d],
+                ..
+            } => {
+                let [x0, x1, y0, y1] = [
+                    packet_coordinate(a.x),
+                    packet_coordinate(b.x),
+                    packet_coordinate(a.y),
+                    packet_coordinate(c.y),
+                ];
+                if a.x != c.x
+                    || b.x != d.x
+                    || a.y != b.y
+                    || c.y != d.y
+                    || a.u != c.u
+                    || b.u != d.u
+                    || a.v != b.v
+                    || c.v != d.v
+                {
+                    return Err(invalid(
+                        "quad does not have the qualified axis-aligned XY/UV layout",
+                    ));
+                }
+                if x0 == x1 || y0 == y1 {
+                    return Err(invalid("source frame contains a zero-area quad"));
+                }
+                if (x1 - x0).abs() >= 1024 || (y1 - y0).abs() >= 512 {
+                    return Err(invalid("quad exceeds the GPU primitive extent limit"));
+                }
+                Ok([x0.min(x1), y0.min(y1), x0.max(x1), y0.max(y1)])
+            }
+        }
+    }
+
+    /// Select indexed source color words before framebuffer effects. Quads use
+    /// their packet page, affine triangle interpolation and half-open edges.
+    pub fn sample(
+        &self,
+        state: SampleState,
+        texture: WordRegion<'_>,
+        palette: WordRegion<'_>,
+    ) -> Result<SourceFrame> {
+        let [left, top, right, bottom] = self.bounds()?;
+        let (tpage, clut) = match *self {
+            Self::Rectangle { tpage, clut, .. } | Self::Quad { tpage, clut, .. } => (tpage, clut),
+        };
+        if tpage & !0x1ff != 0 || (tpage >> 7) & 3 > 1 || clut & 0x8000 != 0 {
+            return Err(invalid(
+                "source sampling requires retail indexed page and CLUT fields",
+            ));
+        }
+        let texels = Texels {
+            state,
+            texture,
+            palette,
+            tpage,
+            clut,
+        };
+        let width = (right - left) as usize;
+        let height = (bottom - top) as usize;
+        let mut frame = SourceFrame {
+            origin_x: left as i16,
+            origin_y: top as i16,
+            image: WordImage {
+                width,
+                height,
+                words: vec![0; width * height],
+            },
+        };
+        match *self {
+            Self::Rectangle {
+                origin,
+                width,
+                height,
+                ..
+            } => {
+                if u32::from(tpage) != state.draw_mode & 0x1ff {
+                    return Err(invalid("rectangle page differs from its E1 command"));
+                }
+                if origin.u & 1 != 0 || origin.v & 1 != 0 || width & 1 != 0 {
+                    return Err(invalid("rectangle sampling requires even UV and width"));
+                }
+                for y in 0..height {
+                    for x in 0..width {
+                        frame.image.words[usize::from(y) * usize::from(width) + usize::from(x)] =
+                            texels.color(origin.u.wrapping_add(x), origin.v.wrapping_add(y))?;
+                    }
+                }
+            }
+            Self::Quad { vertices, .. } => {
+                for indices in [[0, 1, 2], [1, 2, 3]] {
+                    sample_triangle(indices.map(|i| vertices[i]), &texels, &mut frame)?;
+                }
+            }
+        }
+        Ok(frame)
+    }
+}
+
+// Every qualified quad is an axis-aligned XY/UV grid. Its two triangles can
+// still select different texels from an ideal image resize: UV edge increments
+// truncate in 16.16 before row accumulation. X intersections retain the full
+// ratio. Each span starts at its first integer X with a half-texel bias.
+fn sample_triangle(
+    vertices: [Vertex; 3],
+    texels: &Texels<'_>,
+    frame: &mut SourceFrame,
+) -> Result<()> {
+    let points = vertices.map(|p| {
+        [
+            i64::from(packet_coordinate(p.x)),
+            i64::from(packet_coordinate(p.y)),
+            i64::from(p.u),
+            i64::from(p.v),
+        ]
+    });
+    let [a, b, c] = points;
+    let area = (b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1]);
+    if area == 0 {
+        return Ok(());
+    }
+    let gradients = [2, 3].map(|uv| {
+        (((b[uv] - a[uv]) * (c[1] - a[1]) - (c[uv] - a[uv]) * (b[1] - a[1])) * 65536) / area
+    });
+    let first_y = points.iter().map(|p| p[1]).min().unwrap();
+    let last_y = points.iter().map(|p| p[1]).max().unwrap();
+    for y in first_y..last_y {
+        let mut edges = Vec::with_capacity(2);
+        for [i, j] in [[0, 1], [1, 2], [2, 0]] {
+            let (mut start, mut end) = (points[i], points[j]);
+            if start[1] > end[1] {
+                std::mem::swap(&mut start, &mut end);
+            }
+            if y < start[1] || y >= end[1] {
+                continue;
+            }
+            let row = y - start[1];
+            let height = end[1] - start[1];
+            edges.push([
+                start[0] * 65536 + (end[0] - start[0]) * 65536 * row / height,
+                start[2] * 65536 + row * ((end[2] - start[2]) * 65536 / height),
+                start[3] * 65536 + row * ((end[3] - start[3]) * 65536 / height),
+            ]);
+        }
+        if edges.len() != 2 {
+            return Err(invalid("quad triangle has an invalid scanline"));
+        }
+        edges.sort_unstable_by_key(|edge| edge[0]);
+        let first_x = (edges[0][0] + 65535) >> 16;
+        let last_x = (edges[1][0] + 65535) >> 16;
+        for x in first_x..last_x {
+            let distance = x * 65536 - edges[0][0];
+            let [u, v] = [0, 1].map(|axis| {
+                ((edges[0][axis + 1] + ((distance * gradients[axis]) >> 16) + 32768) >> 16) as u8
+            });
+            let color = texels.color(u, v)?;
+            if color != 0 {
+                let row = (y - i64::from(frame.origin_y)) as usize;
+                let column = (x - i64::from(frame.origin_x)) as usize;
+                frame.image.words[row * frame.image.width + column] = color;
+            }
+        }
+    }
+    Ok(())
+}
+
+/// One source-qualified part in the caller's explicit preview order.
 #[derive(Clone, Copy, Debug)]
-pub struct RectanglePart<'a> {
+pub struct SourcePart<'a> {
     pub geometry: &'a Geometry,
-    pub state: RectangleState,
+    pub state: SampleState,
     pub texture: WordRegion<'a>,
     pub palette: WordRegion<'a>,
 }
@@ -270,41 +421,23 @@ pub struct SourceFrame {
     pub image: WordImage,
 }
 
-fn packet_coordinate(value: u16) -> i32 {
-    i32::from(((value << 5) as i16) >> 5)
-}
-
-/// Assemble indexed rectangles in explicit back-to-front order. Zero color words
-/// leave the earlier part intact; every other word replaces it, including STP
-/// black. This produces a source preview, not a replay of GPU rendering.
-pub fn assemble_rectangles(parts: &[RectanglePart<'_>]) -> Result<SourceFrame> {
+/// Assemble sampled parts in explicit back-to-front order. Zero color words
+/// leave earlier parts intact. Every other word replaces them, including STP black.
+pub fn assemble(parts: &[SourcePart<'_>]) -> Result<SourceFrame> {
     if parts.is_empty() || parts.len() > 255 {
-        return Err(invalid("source frame requires 1..=255 rectangle parts"));
+        return Err(invalid("source frame requires 1..=255 parts"));
     }
-    let mut left = i32::MAX;
-    let mut top = i32::MAX;
-    let mut right = i32::MIN;
-    let mut bottom = i32::MIN;
+    let mut bounds = [i32::MAX, i32::MAX, i32::MIN, i32::MIN];
     for part in parts {
-        let Geometry::Rectangle {
-            origin,
-            width,
-            height,
-            ..
-        } = *part.geometry
-        else {
-            return Err(invalid("quad source-frame assembly is unsupported"));
-        };
-        if width == 0 || height == 0 {
-            return Err(invalid("source frame contains an empty rectangle"));
-        }
-        let x = packet_coordinate(origin.x);
-        let y = packet_coordinate(origin.y);
-        left = left.min(x);
-        top = top.min(y);
-        right = right.max(x + i32::from(width));
-        bottom = bottom.max(y + i32::from(height));
+        let [left, top, right, bottom] = part.geometry.bounds()?;
+        bounds = [
+            bounds[0].min(left),
+            bounds[1].min(top),
+            bounds[2].max(right),
+            bounds[3].max(bottom),
+        ];
     }
+    let [left, top, right, bottom] = bounds;
     let width = (right - left) as usize;
     let height = (bottom - top) as usize;
     let count = width
@@ -319,15 +452,17 @@ pub fn assemble_rectangles(parts: &[RectanglePart<'_>]) -> Result<SourceFrame> {
     for part in parts {
         let sampled = part
             .geometry
-            .sample_rectangle(part.state, part.texture, part.palette)?;
-        let Geometry::Rectangle { origin, .. } = *part.geometry else {
-            return Err(invalid("quad source-frame assembly is unsupported"));
-        };
-        let x = (packet_coordinate(origin.x) - left) as usize;
-        let y = (packet_coordinate(origin.y) - top) as usize;
-        for (row, colors) in sampled.words.chunks_exact(sampled.width).enumerate() {
+            .sample(part.state, part.texture, part.palette)?;
+        let x = (i32::from(sampled.origin_x) - left) as usize;
+        let y = (i32::from(sampled.origin_y) - top) as usize;
+        for (row, colors) in sampled
+            .image
+            .words
+            .chunks_exact(sampled.image.width)
+            .enumerate()
+        {
             let start = (y + row) * width + x;
-            for (target, color) in image.words[start..start + sampled.width]
+            for (target, color) in image.words[start..start + sampled.image.width]
                 .iter_mut()
                 .zip(colors)
             {
