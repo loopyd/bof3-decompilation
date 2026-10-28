@@ -29,6 +29,7 @@ pub struct Kernel {
     cd_removal: Option<u32>,
     event_delivery: Option<u32>,
     exception_dispatch: Option<u32>,
+    exception_hook: Option<u32>,
     exception_delivery: Option<ExceptionDelivery>,
     waiting_event: Option<PendingWait>,
     event_calls: EventCalls,
@@ -55,6 +56,7 @@ impl Default for Kernel {
             cd_removal: None,
             event_delivery: None,
             exception_dispatch: None,
+            exception_hook: None,
             exception_delivery: None,
             waiting_event: None,
             event_calls: EventCalls::default(),
@@ -220,6 +222,19 @@ impl Kernel {
         Ok(())
     }
 
+    /// Bind caller-loaded HookEntryInt restoration code for completed guest
+    /// exception dispatch. Entry receives the validated live buffer in A0 and
+    /// one in A1. Guest loads restore the saved registers and resume saved RA.
+    pub fn configure_exception_hook(&mut self, entry: u32) -> Result<()> {
+        self.require_plain_context()?;
+        if self.exception_hook.is_some() {
+            return Err("owned exception hook entry already configured".into());
+        }
+        self.validate_owned_handler(entry)?;
+        self.exception_hook = Some(entry);
+        Ok(())
+    }
+
     fn validate_owned_handler(&self, handler: u32) -> Result<usize> {
         super::exception_calls::validate_handler(handler)?;
         if Self::is_call(handler) {
@@ -245,6 +260,9 @@ impl Kernel {
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
             || self
                 .exception_dispatch
+                .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
+            || self
+                .exception_hook
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset));
         if occupied {
             return Err("owned exception handlers require distinct RAM identifiers".into());
@@ -489,12 +507,7 @@ impl Kernel {
         }
         if callback.is_none() {
             if let Some(address) = self.entry_hook {
-                let saved = read_jump(bus, address)?;
-                super::exception_calls::validate_handler(saved[0])?;
-                if saved[1] & 3 != 0 {
-                    return Err("BIOS exception hook: unaligned saved stack".into());
-                }
-                ram_offset(saved[1], 0)?;
+                let saved = read_hook_jump(bus, address)?;
                 for (register, value) in SAVED.iter().zip(saved) {
                     cpu.set_register(*register, value);
                 }
@@ -653,6 +666,19 @@ impl Kernel {
                 }
                 EXCEPTION_EXIT => {
                     calls.exit_guest()?;
+                    if let (Some(entry), Some(buffer)) = (self.exception_hook, self.entry_hook) {
+                        read_hook_jump(bus, buffer)?;
+                        cpu.set_register(4, buffer);
+                        cpu.set_register(5, 1);
+                        cpu.resume_at(entry);
+                        return Ok(Call {
+                            vector: 0x80,
+                            service: 6,
+                            name: "GuestExceptionHook",
+                            waiting: false,
+                            callback: Some(entry),
+                        });
+                    }
                     return self.exception_progress(cpu, bus, None);
                 }
                 _ => unreachable!(),
@@ -929,5 +955,15 @@ fn read_jump(bus: &mut impl Bus, address: u32) -> Result<[u32; 12]> {
     for (slot, register) in saved.iter_mut().enumerate() {
         *register = bus.read(address + slot as u32 * 4, Width::Word)?;
     }
+    Ok(saved)
+}
+
+fn read_hook_jump(bus: &mut impl Bus, address: u32) -> Result<[u32; 12]> {
+    let saved = read_jump(bus, address)?;
+    super::exception_calls::validate_handler(saved[0])?;
+    if saved[1] & 3 != 0 {
+        return Err("BIOS exception hook: unaligned saved stack".into());
+    }
+    ram_offset(saved[1], 0)?;
     Ok(saved)
 }
