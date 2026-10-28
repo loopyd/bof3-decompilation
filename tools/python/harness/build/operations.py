@@ -134,7 +134,6 @@ def _configure_locked(root: Path) -> Path:
                     except ProcessCleanupError:
                         raise
                     except RuntimeError:
-                        shutil.rmtree(build_tree)
                         break
                 break
         # CMake cannot overwrite either a foreign cache or an incomplete cache
