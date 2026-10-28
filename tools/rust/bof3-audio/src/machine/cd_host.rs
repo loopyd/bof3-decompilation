@@ -129,6 +129,12 @@ impl Host {
             .ok_or("CD data model is not configured")?
             .present(bytes)
     }
+    pub(crate) fn replace_read_data(&mut self, bytes: &[u8]) -> Result<()> {
+        self.data
+            .as_mut()
+            .ok_or("CD data model is not configured")?
+            .replace_at_read(bytes)
+    }
     pub fn data_ready(&self) -> bool {
         self.data.as_ref().is_some_and(cd_data::Fifo::ready)
     }

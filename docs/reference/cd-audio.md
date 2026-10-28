@@ -90,33 +90,49 @@ uses its absolute access cycles; raw execution retains its two-tick instruction
 model.
 
 The controller executes Getstat, Setloc, Mute/Demute, Setfilter/Setmode, Getparam,
-GetlocL/P, GetTN/TD, Pause, Init and SeekL/P through the functional drive. Automatic
-seek timing requires explicit TOC metadata. FIFO and command-continuation slots
+GetlocL/P, GetTN/TD, Pause, Init, SeekL/P and ReadN/S through the functional drive.
+Automatic
+seek timing requires explicit TOC metadata. FIFO, command-continuation and read slots
 use the native pending-slot snapshot, visit order and current-target test. Idle
-Pause waits 200 microseconds; Init waits 120 milliseconds. Seek waits 15
+Pause waits 200 microseconds, active-read Pause 70/35 milliseconds at single/double
+speed, and Init 120 milliseconds. Seek waits 15
 milliseconds before its destination/distance delay and any 650-millisecond speed
 settling. Effective speed and its sticky settling latch are separate from raw
 mode: Init resets them without changing the Getparam mode byte.
+
+`configure_cd_media` attaches owned raw 2,352-byte backing extents before scheduled
+work. Data delivery also needs the data FIFO; selected XA needs the audio queue.
+ReadN/S wait 20 milliseconds before their located seek, then combine the seek,
+speed settling and first-sector period into one delay. Periodic reads use 13,333
+or 6,666 microseconds. Data replacement resets the cursor while retaining BFRD;
+response queue fullness does not block it. Withheld XA preserves the old data
+buffer. Read can take over an unfinished SeekP, and old read callbacks cancel
+after Pause/Init. Delay conversion truncates the complete duration once and
+schedules from the callback's actual cycle.
 
 Attached IRQ assertions occur at native head insertion/promotion and mask-write
 events. Init inserts its ACK using the old mask, then resets the mask silently.
 Reading results or writing unrelated registers does not reassert the interrupt;
 repeating an unmasked mask write does. The manual API retains its line model.
-Media commands, unsupported mechanical overlaps and partial IRQ clears fail
+Automatic Play, unsupported mechanical overlaps and partial IRQ clears fail
 explicitly. Manual acceptance, response publication and data-IRQ delivery are
 unavailable while the controller owns them.
 
-Captured native MMIO, both deadlines and branch dispatch agree for bounded
-Pause/Init/Seek and immediate-command histories, including speed settling,
-queued completions and masked Init IRQ assertions. The same guest's reference
-execution agrees in MMIO values, relative access cycles and result memory.
-Active-read Pause, media scheduling, other scheduler slots, broader IRQ timing
-and hardware fidelity retain separate obligations. Init does not reconstruct an
-unknown retained GetlocL header in a fresh ready context.
+Captured native MMIO, all three deadlines and branch dispatch agree for bounded
+ReadN/S, Pause/Init/Seek and immediate-command histories. These include active-read
+Pause, requested-buffer overwrite despite response backlog, SeekP takeover,
+TOC errors and XA withholding. The same guests' reference execution agrees in
+MMIO values, relative access cycles and result memory. Subcapacity XA submission
+and frame counts also agree, without accepting audio-worker phase or PCM.
+Actual backing-read failure, active DMA3 overlap, pending audio host waits,
+shared-pass stale continuations and media errors during explicit seek preparation
+remain unsupported. Automatic Play, other scheduler interactions, broader IRQ
+timing and hardware fidelity retain separate obligations. Init does not reconstruct
+an unknown retained GetlocL header in a fresh ready context.
 
 [Implementation and original-driver checks](../specs/formats/audio.md#rust-cd-decoder-host-registers)
 use explicit host state and response boundaries. This reference does not supply
-drive firmware, sector scheduling, BIOS state or hardware timing; no upstream
+drive firmware, BIOS state or hardware timing; no upstream
 source or dependency is imported.
 
 ## Sector data and DMA3

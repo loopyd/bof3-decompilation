@@ -252,15 +252,40 @@ impl Drive {
         else {
             return Err("CD drive: seek delay requires a preparing seek".into());
         };
+        Ok(self.seek_delay_micros(target, physical, 167_000)? * 33_868_800 / 1_000_000)
+    }
+    fn seek_delay_micros(&self, target: i32, physical: bool, base: u64) -> Result<u64> {
         self.toc
             .as_ref()
             .ok_or("CD seek timing requires explicit TOC metadata")?;
-        let micros = match self.media_error_code(target, physical) {
+        Ok(match self.media_error_code(target, physical) {
             Some(0x10) => 650_000,
             Some(4) => 4_000_000,
-            _ => (i64::from(target) - i64::from(self.next_lba)).unsigned_abs() * 3 + 167_000,
-        } + if self.speed_changed { 650_000 } else { 0 };
+            _ => (i64::from(target) - i64::from(self.next_lba)).unsigned_abs() * 3 + base,
+        } + if self.speed_changed { 650_000 } else { 0 })
+    }
+    pub(crate) fn read_seek_delay_cycles(&self) -> Result<u64> {
+        let Activity::PreparingRead { target } = self.activity else {
+            return Err("CD drive: read seek delay requires preparing read".into());
+        };
+        let micros = self.seek_delay_micros(target, false, 1_000)? + self.read_period_micros();
         Ok(micros * 33_868_800 / 1_000_000)
+    }
+    fn read_period_micros(&self) -> u64 {
+        if self.double_speed {
+            6_666
+        } else {
+            13_333
+        }
+    }
+    pub(crate) fn read_period_cycles(&self) -> u64 {
+        self.read_period_micros() * 33_868_800 / 1_000_000
+    }
+    pub(crate) fn read_media_valid(&self) -> bool {
+        self.media_error_code(self.next_lba, false).is_none()
+    }
+    pub(crate) fn adpcm_busy(&self) -> bool {
+        self.mode & 0x40 != 0 && self.status() & 0xe0 == 0x20 && !self.xa_ended
     }
     pub fn status(&self) -> u8 {
         (u8::from(self.motor_on) * 2)
@@ -683,10 +708,16 @@ impl Drive {
     /// failed data reads, overruns and deferred retry remain unsupported.
     /// Input checks precede data state changes, including EDC and routing checks.
     pub fn sector(&mut self, raw: Option<&[u8]>) -> Result<Delivery> {
-        if self.activity != Activity::Reading {
+        if self.status() & 0xe0 != 0x20 {
             return Err("CD drive: sector arrival requires completed read seek".into());
         }
         if let Some(code) = self.media_error_code(self.next_lba, false) {
+            if matches!(self.activity, Activity::PreparingSeek { .. }) {
+                return Err(
+                    "CD drive: media error during explicit seek preparation is not implemented"
+                        .into(),
+                );
+            }
             self.activity = Activity::Paused;
             return Ok(Delivery::Error(self.media_error(code)));
         }

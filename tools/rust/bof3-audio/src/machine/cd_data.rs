@@ -53,6 +53,16 @@ impl Fifo {
         self.cursor = 0;
         Ok(displaced)
     }
+    /// Native read callback replaces the sector even during a requested read.
+    /// The request latch survives; its cursor restarts on the new block.
+    pub(crate) fn replace_at_read(&mut self, bytes: &[u8]) -> Result<()> {
+        if !matches!(bytes.len(), 2048 | 2340) {
+            return Err("CD data: expected 2048- or 2340-byte read block".into());
+        }
+        self.bytes = bytes.to_vec();
+        self.cursor = 0;
+        Ok(())
+    }
     pub fn request(&mut self, active: bool) -> Result<()> {
         if active && self.cursor == self.bytes.len() {
             return Err("CD data: request without an available output block".into());

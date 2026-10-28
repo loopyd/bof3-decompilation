@@ -1,7 +1,11 @@
-//! Native FIFO and command continuations at CPU branch boundaries.
+//! Native FIFO, command and read callbacks at CPU branch boundaries.
 use super::super::Interconnect;
 use crate::{
-    machine::cd_drive::{Activity, Drive},
+    machine::{
+        cd_drive::{Activity, Delivery, Drive},
+        cd_media::Media,
+        cd_queue::Admission,
+    },
     Result,
 };
 
@@ -11,19 +15,36 @@ const FIFO_CYCLES: u64 = 797 * 33_868_800 / 1_000_000;
 pub(in crate::machine::interconnect) struct Controller {
     drive: Drive,
     cycle: u64,
-    deadlines: [Option<u64>; 2],
+    deadlines: [Deadline; 3],
+    media: Option<Media>,
     lowest_target: u64,
 }
 
 const FIFO: usize = 0;
 const COMMAND: usize = 1;
+const READ: usize = 2;
+
+#[derive(Clone, Copy, Default)]
+struct Deadline {
+    target: u64,
+    pending: bool,
+}
+
+impl Deadline {
+    fn pending_target(self) -> Option<u64> {
+        self.pending.then_some(self.target)
+    }
+}
 
 impl Controller {
     fn schedule(&mut self, slot: usize, cycle: u64, delay: u64) -> Result<()> {
         let target = cycle
             .checked_add(delay)
             .ok_or("CD controller clock overflow")?;
-        self.deadlines[slot] = Some(target);
+        self.deadlines[slot] = Deadline {
+            target,
+            pending: true,
+        };
         self.lowest_target = self.lowest_target.min(target);
         Ok(())
     }
@@ -36,7 +57,8 @@ impl Controller {
 impl Interconnect {
     /// Attach an explicit paused drive and unit-scale native controller clock.
     /// The selected cycle is the caller's CPU phase. FIFO and Pause/Init/Seek
-    /// continuations execute at branch boundaries; media commands fail explicitly.
+    /// continuations execute at branch boundaries. ReadN/S require owned media;
+    /// automatic Play and host-wait timing are not implemented.
     pub fn configure_cd_controller(&mut self, drive: Drive, cycle: u64) -> Result<()> {
         if self.cd_controller.is_some()
             || !self.cd_host()?.idle()
@@ -50,7 +72,8 @@ impl Interconnect {
         self.cd_controller = Some(Controller {
             drive,
             cycle,
-            deadlines: [None; 2],
+            deadlines: [Deadline::default(); 3],
+            media: None,
             lowest_target: cycle,
         });
         Ok(())
@@ -69,7 +92,8 @@ impl Interconnect {
             .cd_controller
             .as_ref()
             .ok_or("CD controller is not configured")?
-            .deadlines[FIFO])
+            .deadlines[FIFO]
+            .pending_target())
     }
 
     pub fn cd_command_deadline(&self) -> Result<Option<u64>> {
@@ -77,7 +101,35 @@ impl Interconnect {
             .cd_controller
             .as_ref()
             .ok_or("CD controller is not configured")?
-            .deadlines[COMMAND])
+            .deadlines[COMMAND]
+            .pending_target())
+    }
+
+    /// Attach owned raw-sector backing before any scheduled work starts.
+    pub fn configure_cd_media(&mut self, media: Media) -> Result<()> {
+        let controller = self
+            .cd_controller
+            .as_mut()
+            .ok_or("CD controller is not configured")?;
+        if controller.media.is_some()
+            || controller.drive.activity() != Activity::Paused
+            || controller.deadlines.iter().any(|slot| slot.pending)
+        {
+            return Err(
+                "CD media requires a paused controller without media or scheduled work".into(),
+            );
+        }
+        controller.media = Some(media);
+        Ok(())
+    }
+
+    pub fn cd_read_deadline(&self) -> Result<Option<u64>> {
+        Ok(self
+            .cd_controller
+            .as_ref()
+            .ok_or("CD controller is not configured")?
+            .deadlines[READ]
+            .pending_target())
     }
 
     /// Advance the attached controller's absolute cycle. Dispatch only after a
@@ -94,7 +146,7 @@ impl Interconnect {
             controller.cycle = cycle;
             // Snapshot only pending slots. FIFO can replace a continuation's
             // current target before that slot is visited in the same pass.
-            let pending = controller.deadlines.map(|target| target.is_some());
+            let pending = controller.deadlines.map(|slot| slot.pending);
             if !branch_boundary
                 || !pending.iter().any(|&value| value)
                 || controller.lowest_target >= cycle
@@ -107,16 +159,18 @@ impl Interconnect {
                 if !was_pending {
                     continue;
                 }
-                let target = controller.deadlines[slot].unwrap();
+                let target = controller.deadlines[slot].target;
                 if target > cycle {
                     future_target =
                         Some(future_target.map_or(target, |previous| previous.min(target)));
                 } else {
-                    controller.deadlines[slot] = None;
+                    controller.deadlines[slot].pending = false;
                     if slot == FIFO {
                         self.service_clocked_cd_fifo(&mut controller, cycle)?;
-                    } else {
+                    } else if slot == COMMAND {
                         self.service_clocked_cd_command(&mut controller, cycle)?;
+                    } else {
+                        self.service_clocked_cd_read(&mut controller, cycle)?;
                     }
                 }
             }
@@ -163,13 +217,23 @@ impl Interconnect {
         let Some(command) = command else {
             return Ok(());
         };
-        if !matches!(command.opcode, 0x01 | 0x02 | 0x09..=0x11 | 0x13..=0x16) {
+        if !matches!(command.opcode, 0x01 | 0x02 | 0x06 | 0x09..=0x11 | 0x13..=0x16 | 0x1b) {
             return Err(format!(
                 "CD controller: automatic command {:#04x} is not implemented",
                 command.opcode
             )
             .into());
         }
+        let read = matches!(command.opcode, 0x06 | 0x1b);
+        if read && command.parameters.is_empty() && controller.media.is_none() {
+            return Err("CD read requires configured media".into());
+        }
+        let takes_over_seekp = read
+            && matches!(
+                controller.drive.activity(),
+                Activity::PreparingSeek { physical: true, .. }
+                    | Activity::Seeking { physical: true, .. }
+            );
         let pause_delay = if controller.drive.status() & 0xe0 == 0 {
             200
         } else if controller.drive.double_speed() {
@@ -180,6 +244,12 @@ impl Interconnect {
         let applied = self.apply_cd_drive_command(&mut controller.drive, &command, cycle as u32)?;
         self.respond_clocked_cd(applied.response.interrupt, &applied.response.bytes)?;
         if applied.response.interrupt == 3 {
+            if read {
+                if takes_over_seekp {
+                    controller.deadlines[COMMAND].pending = false;
+                }
+                controller.schedule(READ, cycle, 20_000 * 33_868_800 / 1_000_000)?;
+            }
             let delay = match command.opcode {
                 0x09 => Some(pause_delay),
                 0x0a => {
@@ -203,6 +273,18 @@ impl Interconnect {
         controller: &mut Controller,
         cycle: u64,
     ) -> Result<()> {
+        if !matches!(
+            controller.drive.activity(),
+            Activity::PreparingSeek { .. }
+                | Activity::Seeking { .. }
+                | Activity::Pausing
+                | Activity::Resetting
+        ) {
+            return Err(
+                "CD controller: cancelled continuation in a shared branch pass is not implemented"
+                    .into(),
+            );
+        }
         let seek_delay = if matches!(controller.drive.activity(), Activity::PreparingSeek { .. }) {
             Some(controller.drive.seek_delay_cycles()?)
         } else {
@@ -217,6 +299,61 @@ impl Interconnect {
             self.schedule_clocked_cd_fifo_if_space(controller, cycle)?;
         }
         Ok(())
+    }
+
+    fn service_clocked_cd_read(&mut self, controller: &mut Controller, cycle: u64) -> Result<()> {
+        match controller.drive.activity() {
+            Activity::PreparingRead { .. } => {
+                let delay = controller.drive.read_seek_delay_cycles()?;
+                controller.drive.complete(cycle as u32)?;
+                return controller.schedule(READ, cycle, delay);
+            }
+            Activity::SeekingRead { .. } => {
+                if let Some(response) = controller.drive.complete(cycle as u32)? {
+                    return self.respond_clocked_cd(response.interrupt, &response.bytes);
+                }
+            }
+            _ if controller.drive.status() & 0xe0 == 0x20 => {}
+            _ => return Ok(()),
+        }
+        if self.dma.cd.active() {
+            return Err(
+                "CD controller: read callback during active DMA3 is not implemented".into(),
+            );
+        }
+        let raw = if controller.drive.read_media_valid() {
+            Some(
+                controller
+                    .media
+                    .as_mut()
+                    .ok_or("CD read requires configured media")?
+                    .read_sector(controller.drive.next_lba())?,
+            )
+        } else {
+            None
+        };
+        let delivery = controller
+            .drive
+            .sector(raw.as_ref().map(|bytes| &bytes[..]))?;
+        match delivery {
+            Delivery::Error(response) => {
+                self.respond_clocked_cd(response.interrupt, &response.bytes)?;
+                return Ok(());
+            }
+            Delivery::Data { bytes, response } => {
+                self.cd_mut()?.replace_read_data(&bytes)?;
+                self.respond_clocked_cd(response.interrupt, &response.bytes)?;
+            }
+            Delivery::Xa(bytes) => {
+                if matches!(self.enqueue_cd_audio(&bytes)?, Admission::Pending { .. }) {
+                    return Err(
+                        "CD controller: pending audio host-wait timing is not implemented".into(),
+                    );
+                }
+            }
+            Delivery::Filtered => {}
+        }
+        controller.schedule(READ, cycle, controller.drive.read_period_cycles())
     }
 
     fn schedule_clocked_cd_fifo_if_space(
@@ -252,7 +389,15 @@ impl Interconnect {
     }
 
     pub(super) fn read_cd_register(&mut self, offset: u8) -> Result<u8> {
-        let value = self.cd_mut()?.read(offset)?;
+        let mut value = self.cd_mut()?.read(offset)?;
+        if offset == 0
+            && self
+                .cd_controller
+                .as_ref()
+                .is_some_and(|controller| controller.drive.adpcm_busy())
+        {
+            value |= 4;
+        }
         if offset == 1 {
             self.schedule_cd_fifo_if_space()?;
         }

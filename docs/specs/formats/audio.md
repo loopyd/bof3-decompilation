@@ -2282,15 +2282,16 @@ drive and unit-scale controller clock. The first pending opcode write installs a
 Replacing that opcode keeps the deadline. Result reads, full acknowledgements
 and completed command handlers replace it when the response queue has space.
 `Execution` dispatches due callbacks after branch delay slots, before next-step
-IRQ admission. Each pass snapshots pending slots, visits FIFO before command
-continuation and tests each slot's current target once. Output-clock subdivisions
+IRQ admission. Each pass snapshots pending slots, visits FIFO, command continuation, then read and tests each slot's current target once. Output-clock subdivisions
 do not dispatch CD work. Reference execution uses absolute MMIO access cycles;
 raw execution retains its two-tick instruction model.
 
 The controller executes Getstat, Setloc, Mute/Demute, Setfilter/Setmode, Getparam,
-GetlocL/P, GetTN/TD, Pause, Init and SeekL/P through the functional drive. Supply
+GetlocL/P, GetTN/TD, Pause, Init, SeekL/P and ReadN/S through the functional drive.
+Supply
 required TOC metadata before attachment; automatic seek timing requires it.
-Idle Pause completes after 200 microseconds and Init after 120 milliseconds.
+Pause completes after 200 microseconds when idle, or 70/35 milliseconds while
+reading at single/double speed. Init completes after 120 milliseconds.
 Seek first waits 15 milliseconds, then uses the native destination/track and
 distance delay, plus 650 milliseconds when effective speed changed. Setmode
 changes effective speed separately from the retained raw mode byte. Init resets
@@ -2298,20 +2299,43 @@ effective speed and its settling latch while preserving that byte. Continuation
 starts do not request another FIFO callback; final completions do when space
 permits.
 
+Attach `cd_media::Media` with `Interconnect::configure_cd_media` before scheduling
+work. Its owned File extents declare first LBA, file-sector offset and sector
+count in raw 2,352-byte units. They must be ordered, nonoverlapping and within
+their files. Media does not infer a TOC or parse a CUE. Configure the data FIFO
+for data delivery and the audio queue for selected XA delivery.
+
+ReadN/S acknowledge and schedule a read callback after 20 milliseconds. That
+callback moves to the located position and schedules the combined seek, speed
+settling and first-sector period. Subsequent callbacks read every 13,333 or 6,666
+microseconds at single or double speed. Each delay starts at the actual callback
+cycle. A valid raw Mode-2 sector updates GetlocL and advances position. Data
+replacement resets the cursor and preserves BFRD, independently of response
+queue retention or drops. Selected XA enters the existing queue; withheld XA
+leaves the prior data buffer intact. ADPBUSY follows realtime reading and the XA
+end latch. Pause/Init leave the old read deadline to cancel when visited. Read
+can cancel an unfinished SeekP continuation.
+
 Attached IRQ assertions follow native events: head insertion/promotion and mask
 writes assert when unmasked, including repeated writes of the same mask. Init's
 ACK uses the old mask; its subsequent reset to `0x1f` does not assert IRQ. Result
 reads and unrelated register writes do not assert it. The manual host path
-retains its separate line model. Media commands, overlapping mechanical commands
+retains its separate line model. Automatic Play, unsupported mechanical overlaps
 and partial or composite IRQ clears fail explicitly. Manual FIFO acceptance,
 response/staged-IRQ publication and `deliver_cd_data` are unavailable while the
 controller owns them.
 
-Bounded native comparisons cover immediate-command MMIO, both deadlines,
-Pause/Init/Seek continuations, speed settling, queued completions and masked Init
-IRQ assertions. The matching guest also runs through reference `Execution` with
-its MMIO values, relative access cycles and result buffer compared. Active-read
-Pause timing, automatic media/read cadence, other scheduler slots, broader IRQ
+Bounded native comparisons cover immediate commands, Pause/Init/Seek continuations,
+ReadN/S cadence, active-read Pause, speed settling, response backlog, requested
+buffer replacement, SeekP takeover and XA withholding. The same guests run through
+reference `Execution` with MMIO values, relative access cycles and result buffers
+compared. XA submission counts and frame counts agree for the bounded subcapacity
+interval. This does not establish audio-worker phase or audible output.
+
+Actual backing-read failure, automatic Play, active DMA3 overlap, pending audio
+host-wait timing and a cancelled continuation already selected in the same branch
+pass fail explicitly. A media error during explicit seek preparation also fails
+before discarding that pending seek. Other scheduler interactions, broader IRQ
 phase and hardware fidelity remain unaccepted. A fresh ready drive has no retained
 GetlocL bytes; Init does not reconstruct that unknown transfer history.
 
@@ -2334,8 +2358,8 @@ Absent configuration, decoder reset and manual XA controls fail explicitly.
 Sector requests and data reads require the separate data FIFO below. Its
 serialized delivery API still protects active data reads and pending host work;
 response queuing does not accept native data-overrun or concurrent-DMA behavior.
-Automatic media scheduling and broader IRQ timing remain implementation
-obligations. Retained
+Automatic Play, DMA overlap, host waits and broader IRQ timing remain
+implementation obligations. Retained
 [register research](../../reference/cd-audio.md#cd-decoder-host-interface)
 qualifies the native comparison separately from hardware acceptance.
 

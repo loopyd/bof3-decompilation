@@ -9,6 +9,7 @@ pub mod cd_data;
 pub mod cd_dma;
 pub mod cd_drive;
 pub mod cd_host;
+pub mod cd_media;
 pub mod cd_position;
 pub mod cd_queue;
 pub mod cop0;
