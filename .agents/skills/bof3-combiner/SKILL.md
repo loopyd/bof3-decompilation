@@ -25,7 +25,9 @@ description: Combine or clean up BOF3 source files with meaningful grouping, dir
    function settings may express it. Conflicting profiles require a separately
    evidenced decision, never silently dropping path-specific settings.
 5. Edit authorized files directly. Keep every complete metadata block attached to
-   its function, preserve spellings/order unless independently justified, migrate
+   its definition or standalone macro invocation under the
+   [metadata rules](../bof3-re/references/metadata.md). Preserve spellings/order
+   unless independently justified. Migrate
    source/header/support claims and Splat C markers together, and remove obsolete
    files and callers. Retain all distinct source bodies and private declarations.
    Check declaration visibility, static-name collisions, include order, initialization,

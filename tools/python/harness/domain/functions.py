@@ -21,6 +21,7 @@ from .tags import (
 
 _IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 _DIRECTIVE = re.compile(r"^[ \t]*#([^\n]*)(?:\n|$)", re.MULTILINE)
+_LOGICAL_DIRECTIVE = re.compile(r"^[ \t]*#(?:[^\n]*\\\n)*[^\n]*(?:\n|$)", re.MULTILINE)
 _SOURCE = re.compile(r"@source\b")
 _BEHAVIOR = re.compile(r"@behavior\b")
 
@@ -206,6 +207,34 @@ def parse_function_records(
         addresses.add(address)
         previous_end = end
     return tuple(records)
+
+
+def has_function_templates(text: str) -> bool:
+    """Find top-level standalone invocations without tightening ordinary metadata.
+
+    A generated unit must pass complete attached-record parsing during expansion,
+    even if an unrelated definition supplies its expected assembler symbol.
+    """
+
+    masked, _ = _mask_lexemes(text)
+    masked = _LOGICAL_DIRECTIVE.sub(
+        lambda match: re.sub(r"[^\n]", " ", match.group()), masked
+    )
+    for candidate in re.finditer(r"(?m)^[ \t]*[A-Za-z_][A-Za-z0-9_]*\s*\(", masked):
+        preceding = masked[: candidate.start()]
+        if any(
+            preceding.count(opening) != preceding.count(closing)
+            for opening, closing in (("{", "}"), ("(", ")"), ("[", "]"))
+        ):
+            continue
+        opening = masked.index("(", candidate.start())
+        end = _find_closing(masked, opening, "(", ")")
+        if masked[end:].lstrip().startswith("{"):
+            continue
+        _, _, kind, _ = _parse_implementation(masked, candidate.start())
+        if kind == "template":
+            return True
+    return False
 
 
 def select_function_record(text: str, address: int) -> FunctionRecord:

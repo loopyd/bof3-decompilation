@@ -25,7 +25,7 @@ from typing import TYPE_CHECKING
 from .claims import collect_manifest_source_addresses
 from .functions import parse_function_records
 from .layout import SplatBoundary, ReviewedSplatLayout, parse_splat_layout
-from .sources import expected_lift_sources
+from .sources import compiled_symbol_name, expected_lift_sources
 from .psx import payload_for, reviewed_range_digest
 from .symbols import (
     MapSymbol,
@@ -371,9 +371,20 @@ def splat_source_findings(
                     raise ValueError("grouped C source is not a manifest source claim")
                 records = parse_function_records(path.read_text(encoding="utf-8"))
                 expected = {member.virtual_start: member.name for member in members}
-                actual = {record.address: record.spelling for record in records}
-                if any(record.kind != "function" for record in records):
-                    raise ValueError("grouped record is not a function implementation")
+                actual = {
+                    record.address: (
+                        record.spelling
+                        if record.kind == "function"
+                        else compiled_symbol_name(
+                            root,
+                            path,
+                            record.address,
+                            manifest=manifest,
+                            layout=layout,
+                        )
+                    )
+                    for record in records
+                }
                 if actual != expected:
                     raise ValueError(
                         "grouped attached records differ from Splat identities"

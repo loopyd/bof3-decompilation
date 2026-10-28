@@ -7,8 +7,10 @@ native results. Edit the smallest useful extraction directly.
 
 Resolve all direct and transitive consumers of the definition, including other
 parameters and uses outside the selected repetition. Inspect the complete writable
-files. A grouped source requires all attached ordinary functions and reviewed
-Splat members, even when a member lacks metadata. An unidentified use or sibling
+files. Attach generated function records to individual invocations under the
+[metadata rules](../../bof3-re/references/metadata.md). Include every ordinary and
+generated function and reviewed Splat member, even when it lacks metadata.
+An unidentified use or sibling
 cannot substitute for a checked consumer. Keep every member's address, range,
 metadata, declaration and binding intact.
 

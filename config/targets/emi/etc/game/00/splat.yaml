@@ -292,7 +292,7 @@ segments:
   - - 15864
     - c
     - retreatPanelXToNeg170
-    - '@source: src/bof3/ui/retreatPanelXToNeg170_game00_801995F8.c'
+    - '@source: src/bof3/ui/panelMotionGame00.c'
     - '@behavior: retreats panel x with the template clamp behavior.'
   - - 15928
     - c
@@ -334,12 +334,12 @@ segments:
   - - 16696
     - c
     - retreatPanelField6ToNeg20
-    - '@source: src/bof3/ui/retreatPanelField6ToNeg20_game00_80199938.c'
+    - '@source: src/bof3/ui/panelMotionGame00.c'
     - '@behavior: retreats panel field six by 16 and clamps it to -20.'
   - - 16760
     - c
     - advancePanelField6To16
-    - '@source: src/bof3/ui/advancePanelField6To16_game00_80199978.c'
+    - '@source: src/bof3/ui/panelMotionGame00.c'
     - '@behavior: advances the panel task field_06 by 0x10, clamps to max 0x10, and clears state when the clamp is reached.'
   - - 16824
     - c

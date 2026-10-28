@@ -46,8 +46,8 @@ def partition_assembly(text: str, names: Iterable[str]) -> str:
     """
 
     expected = tuple(names)
-    if len(expected) < 2 or len(set(expected)) != len(expected):
-        raise ValueError("section partition requires at least two distinct functions")
+    if not expected or len(set(expected)) != len(expected):
+        raise ValueError("section partition requires distinct owned functions")
     for name in expected:
         function_section(name)
     active = None

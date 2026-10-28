@@ -133,7 +133,7 @@ def _select_annotated_compiler(root, arguments, sources, output, grouped):
         raise ValueError("explicit compiler differs from attached function metadata")
     expected = [
         *build_compiler_arguments(root, settings.flags)[1:],
-        "-c",
+        "-E" if "-E" in arguments else "-c",
         str(source),
         "-o",
         str(output),
@@ -207,17 +207,18 @@ def _prepare_invocation(
         root, arguments, operands, grouped, Path(working_directory["path"])
     )
     source = sources[0] if len(sources) == 1 else None
+    preprocessing = invocation.mode == "direct" and "-E" in arguments
     if grouped and (
         len(sources) != 1
         or source.resolve() != source
         or not source.is_relative_to(root / "src/bof3")
         or output is None
         or output.resolve() != output
-        or output.suffix != ".o"
+        or output.suffix != (".i" if preprocessing else ".o")
         or not any(output.is_relative_to(root / name) for name in ("build", "out"))
     ):
         raise ValueError(
-            "grouped compilation requires one canonical source and a build/ or out/ object"
+            "grouped compilation requires one canonical source and a build/ or out/ object or preprocessed source"
         )
     paths = {*operands.inputs, executable, *metadata_paths}
     cwd = Path(working_directory["path"])

@@ -14,6 +14,19 @@ Resolve each selected `TARGET@0xADDRESS` through the current manifest claims,
 Keep one `@source` and one nonempty `@behavior` attached to each function. In a
 grouped source, preserve every other function's record and implementation.
 
+For a macro-generated function, put its complete block immediately above the
+standalone invocation. Keep one block per emitted function, including in a source
+that also contains ordinary definitions. Resolve the emitted symbol through the
+target and address, never through a macro argument's position. The configured
+preprocessor must attribute exactly one reviewed function to each invocation;
+empty, multiple or ambiguous output blocks acceptance. Complete assembler member
+checks also reject extra functions outside the annotated invocations. Preserve
+each member's effective compiler settings when grouping or moving sources.
+
+Naming lists inspect generated arguments and locals from that configured output.
+Their lexical facts do not prove the meaning of a name or authorize a metadata
+update. Recheck all members after changing a shared definition.
+
 Investigate behavior from original bytes, callers, data and other available
 evidence. Record unknown behavior honestly. A native byte match does not prove a
 chosen name, type or explanation. Obtain the independent semantic review required

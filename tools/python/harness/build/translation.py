@@ -6,11 +6,12 @@ from pathlib import Path
 
 from harness.build.arguments import read_source
 from harness.build.dispatch import Dispatch, validate_dispatch
-from harness.domain.functions import parse_function_records
+from harness.build.expansion import expand_function_members
+from harness.domain.functions import has_function_templates, parse_function_records
 from harness.domain.layout import parse_splat_layout
 from harness.domain.manifests import load_target_manifests
-from harness.domain.sources import compiled_symbol_name
-from harness.domain.tags import count_function_metadata
+from harness.domain.sources import compiled_symbol_name, owning_manifest
+from harness.domain.tags import count_function_metadata, parse_source_tag
 
 from .sections import partition_assembly
 
@@ -35,7 +36,24 @@ def prepare_translation(
             raise ValueError("translation source differs from its compiler invocation")
         validate_dispatch(dispatch)
     text = read_source(source).replace("\r\n", "\n").replace("\r", "\n")
-    if count_function_metadata(text) < 2:
+    count = count_function_metadata(text)
+    if count < 2:
+        if count == 1:
+            manifest = owning_manifest(root, source)
+            if manifest is not None and has_function_templates(text):
+                if dispatch is None:
+                    raise ValueError(
+                        "generated translation requires an active configured compiler invocation"
+                    )
+                expand_function_members(root, source)
+                validate_dispatch(dispatch)
+                name = compiled_symbol_name(
+                    root,
+                    source,
+                    parse_source_tag(text),
+                    manifest=manifest,
+                )
+                partition_assembly(assembly, [name])
         if dispatch is not None:
             validate_dispatch(dispatch)
         return assembly
@@ -45,6 +63,10 @@ def prepare_translation(
         )
     validate_dispatch(dispatch)
     records = parse_function_records(text, validate_progress=False)
+    generated = any(record.kind == "template" for record in records)
+    if generated:
+        expand_function_members(root, source)
+        validate_dispatch(dispatch)
     relative = source.relative_to(root.resolve()).as_posix()
     owners = [
         manifest

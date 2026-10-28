@@ -280,14 +280,26 @@ def collect_source_identifiers(root: Path, target: str) -> list[dict[str, Any]]:
             raise ValueError(
                 f"cannot inspect identifiers in {relative}: {error}"
             ) from error
+        expanded = None
         for record in records:
-            if record.kind != "function":
-                raise ValueError(
-                    f"identifier inspection requires an ordinary function: {relative}:{record.line}"
-                )
             implementation = text[
                 record.implementation_start : record.implementation_end
             ]
+            function = record.spelling
+            provenance = {}
+            if record.kind == "template":
+                from harness.build.expansion import expand_function_members
+
+                if expanded is None:
+                    expanded = expand_function_members(root, root / relative)
+                member = expanded[record.address]
+                implementation = member.implementation
+                function = member.symbol
+                provenance = {
+                    "implementation_kind": "template",
+                    "macro": record.spelling,
+                    "invocation": member.invocation,
+                }
             signature, body = _signature_and_body(implementation)
             tokens = _IDENTIFIER.findall(mask_c_text(implementation))
             selector = f"{target}@{record.address:08X}"
@@ -306,13 +318,14 @@ def collect_source_identifiers(root: Path, target: str) -> list[dict[str, Any]]:
                                 "id": f"{selector}@{kind}:{name}",
                                 "target": target,
                                 "selector": selector,
-                                "function": record.spelling,
+                                "function": function,
                                 "kind": kind,
                                 "name": name,
                                 "source": relative,
                                 "line": record.line,
                                 "uses": tokens.count(name),
                                 "declaration": " ".join(statement.split()),
+                                **provenance,
                             }
                         )
     return sorted(

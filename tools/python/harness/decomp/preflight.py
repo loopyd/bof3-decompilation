@@ -163,20 +163,24 @@ def _validate_grouped_source(
             row for row in layout.boundaries if row.virtual_start == record.address
         ]
         if (
-            record.kind != "function"
-            or len(boundaries) != 1
+            len(boundaries) != 1
             or boundaries[0].kind != "c"
             or boundaries[0].source != name
-            or reviewed_function_name(
-                root,
-                manifest.id.value,
-                record.address,
-                layout=layout,
-                manifest=manifest,
-                symbols=[row for row in symbols if row.name == record.spelling],
-            )
-            != record.spelling
         ):
+            raise ValueError("grouped implementation differs from reviewed identity")
+        compiled_name = reviewed_function_name(
+            root,
+            manifest.id.value,
+            record.address,
+            layout=layout,
+            manifest=manifest,
+            symbols=[
+                row
+                for row in symbols
+                if record.kind == "template" or row.name == record.spelling
+            ],
+        )
+        if record.kind == "function" and compiled_name != record.spelling:
             raise ValueError("grouped implementation differs from reviewed identity")
 
 

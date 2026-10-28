@@ -124,10 +124,6 @@ def capture_members(root: Path, source: str) -> dict:
         functions = []
         selectors, names = set(), set()
         for record in records:
-            if record.kind != "function":
-                raise ValueError(
-                    "grouped comparison requires ordinary function members"
-                )
             address = record.address
             selector = f"{manifest.id.value}@0x{address:08X}"
             symbol = compiled_symbol_name(
@@ -142,7 +138,8 @@ def capture_members(root: Path, source: str) -> dict:
                 selector in selectors
                 or symbol in names
                 or local_by_name.get(symbol) != address
-                or symbol != record.spelling
+                or record.kind == "function"
+                and symbol != record.spelling
             ):
                 raise ValueError("comparison member identity is duplicate or unbound")
             boundaries = [

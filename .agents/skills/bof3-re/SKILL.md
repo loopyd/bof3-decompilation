@@ -23,7 +23,7 @@ are forbidden. Return proposals for parent acceptance.
 | Review | [Checklist](references/review/review-checklist.md), [non-match sharing](references/review/sharing-nonmatches.md) |
 | Compiler/assembler/linker/registry/invocation change | [Pipeline validation](references/pipeline-validation.md) |
 | Match/repair | [Match loop](references/match-loop.md) |
-| Function identity, behavior or progress metadata | [Metadata maintenance](references/metadata.md) |
+| Function identity, behavior, progress or macro-generated function metadata | [Metadata maintenance](references/metadata.md) |
 | Data/fragment/clone/shape eligibility | [Levers](references/match-loop.md#eligible-condition-levers) |
 | Existing lift diagnosis/audit | [Parent diagnosis and audit](references/parent-diagnosis.md) |
 

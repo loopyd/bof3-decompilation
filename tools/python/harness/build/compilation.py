@@ -18,7 +18,12 @@ from harness.domain.tags import require_single_function
 
 
 def configured_command(
-    root: Path, source: Path, output: Path, *, allow_grouped: bool = False
+    root: Path,
+    source: Path,
+    output: Path,
+    *,
+    allow_grouped: bool = False,
+    preprocess: bool = False,
 ) -> tuple[list[str], dict[str, str]]:
     """Mirror the configured build's ordered arguments and compiler overlay."""
     text = read_source(source)
@@ -35,7 +40,7 @@ def configured_command(
         )
     arguments = [
         *build_compiler_arguments(root, settings.flags),
-        "-c",
+        "-E" if preprocess else "-c",
         str(source),
         "-o",
         str(output),

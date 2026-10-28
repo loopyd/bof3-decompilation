@@ -32,6 +32,7 @@ COMPILER_INPUTS = (
     "tools/python/harness/build/cli.py",
     "tools/python/harness/build/sections.py",
     "tools/python/harness/build/translation.py",
+    "tools/python/harness/build/expansion.py",
     "tools/python/harness/common/digests.py",
     "tools/python/harness/common/files.py",
     "tools/python/harness/common/quarantine.py",
