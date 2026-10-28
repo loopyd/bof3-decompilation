@@ -119,8 +119,10 @@ fn original_sdk_commands_drive_filtering_position_and_pause() {
         [2, 0xc8, 0, 1, 0]
     );
     submit(&mut bus, &mut drive, 0x16, &[]);
+    assert!(drive.complete(0).unwrap().is_none());
     deliver(&mut bus, &drive.complete(0).unwrap().unwrap());
     submit(&mut bus, &mut drive, 0x1b, &[]);
+    assert!(drive.complete(0).unwrap().is_none());
     assert!(drive.complete(0).unwrap().is_none());
     let (mut selected, mut data_count) = (0, 0);
     for lba in start..start + 16 {
@@ -176,6 +178,7 @@ fn raw_voice_routing_preserves_selected_decoder_input_and_history() {
             0,
         )
         .unwrap();
+    drive.complete(0).unwrap();
     drive.complete(0).unwrap();
     let first = disc.read_sector(start).unwrap();
     let stream = Stream {

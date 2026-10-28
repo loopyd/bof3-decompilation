@@ -90,8 +90,13 @@ impl Interconnect {
         }
         let mut candidate = drive.clone();
         let response = candidate.command(command, cycle)?;
-        let seek_reset = matches!(candidate.activity(), Activity::Seeking { .. })
-            && candidate.activity() != drive.activity();
+        let seek_reset = matches!(
+            candidate.activity(),
+            Activity::PreparingSeek { .. }
+                | Activity::Seeking { .. }
+                | Activity::PreparingRead { .. }
+                | Activity::SeekingRead { .. }
+        ) && candidate.activity() != drive.activity();
         let play_seek = matches!(
             candidate.activity(),
             Activity::PreparingPlay { .. } | Activity::SeekingPlay { .. }

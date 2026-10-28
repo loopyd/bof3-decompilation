@@ -171,12 +171,15 @@ impl Fixture {
         assert_eq!(cpu.pc(), expected.cop0().read(14).unwrap());
         assert_eq!(cpu.cop0().status(), expected.cop0().status());
         self.irq_returns += 1;
-        if matches!(
+        while matches!(
             self.drive.activity(),
-            Activity::Seeking { .. }
+            Activity::PreparingSeek { .. }
+                | Activity::PreparingRead { .. }
+                | Activity::SeekingRead { .. }
+                | Activity::Seeking { .. }
                 | Activity::PreparingPlay { .. }
                 | Activity::SeekingPlay { .. }
-                | Activity::Pausing { .. }
+                | Activity::Pausing
                 | Activity::Resetting
         ) {
             self.pending = self.drive.complete(0).unwrap();
@@ -314,12 +317,15 @@ impl Fixture {
                     && self.bus.inner.cd_host().unwrap().irq_line()
                 {
                     self.call(0x80177264, &[], true);
-                    if matches!(
+                    while matches!(
                         self.drive.activity(),
-                        Activity::Seeking { .. }
+                        Activity::PreparingSeek { .. }
+                            | Activity::PreparingRead { .. }
+                            | Activity::SeekingRead { .. }
+                            | Activity::Seeking { .. }
                             | Activity::PreparingPlay { .. }
                             | Activity::SeekingPlay { .. }
-                            | Activity::Pausing { .. }
+                            | Activity::Pausing
                             | Activity::Resetting
                     ) {
                         self.pending = self.drive.complete(0).unwrap();

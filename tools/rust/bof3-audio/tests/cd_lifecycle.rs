@@ -158,10 +158,11 @@ fn setloc_and_seek_preserve_audio_and_data_buffers() {
     assert_eq!(bus.read(0x1f801802, Width::Byte).unwrap(), 7);
     let seeking = drive.activity();
     let muted = apply(&mut bus, &mut drive, 0x0b, &[]);
-    assert_eq!(muted.response.bytes, [0x42]);
+    assert_eq!(muted.response.bytes, [2]);
     assert!(!muted.xa_predictors_reset);
     assert!(drive.muted());
     assert_eq!(drive.activity(), seeking);
+    drive.complete(0).unwrap();
     drive.complete(0).unwrap();
     assert_eq!(drive.next_lba(), 200);
     assert_eq!(drive.activity(), Activity::Paused);
@@ -232,6 +233,7 @@ fn pause_preserves_buffers_and_each_read_resets_only_predictors() {
     let (mut bus, mut drive) = context();
     apply(&mut bus, &mut drive, 0x1b, &[]);
     drive.complete(0).unwrap();
+    drive.complete(0).unwrap();
     bus.enqueue_cd_audio(&sector(0, 0)).unwrap();
     bus.present_cd_data(&[7; 2048]).unwrap();
     let stats = bus.cd_audio().unwrap().statistics();
@@ -245,6 +247,8 @@ fn pause_preserves_buffers_and_each_read_resets_only_predictors() {
             );
         }
         assert!(apply(&mut bus, &mut drive, 0x1b, &[]).xa_predictors_reset);
+        drive.complete(0).unwrap();
+        drive.complete(0).unwrap();
         let mut expected = stats;
         expected.predictor_resets += index as u64 + 1;
         assert_eq!(bus.cd_audio().unwrap().statistics(), expected);

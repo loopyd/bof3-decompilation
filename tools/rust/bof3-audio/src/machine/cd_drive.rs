@@ -106,12 +106,30 @@ pub struct AppliedCommand {
 pub enum Activity {
     Paused,
     Resetting,
-    Seeking { target: i32, read: bool },
+    PreparingSeek {
+        target: i32,
+        physical: bool,
+        status: u8,
+    },
+    Seeking {
+        target: i32,
+        physical: bool,
+    },
+    PreparingRead {
+        target: i32,
+    },
+    SeekingRead {
+        target: i32,
+    },
     Reading,
     Playing,
-    PreparingPlay { target: i32 },
-    SeekingPlay { target: i32 },
-    Pausing { was_reading: bool },
+    PreparingPlay {
+        target: i32,
+    },
+    SeekingPlay {
+        target: i32,
+    },
+    Pausing,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -132,9 +150,10 @@ pub struct Drive {
     mode: u8,
     filter: [u8; 2],
     next_lba: i32,
-    target: Option<i32>,
-    resume_lba: Option<i32>,
+    seek_lba: i32,
+    setloc_pending: bool,
     last_header: Option<[u8; 8]>,
+    header_valid: bool,
     muted: bool,
     xa_selection: Option<[u8; 2]>,
     toc: Option<Toc>,
@@ -159,9 +178,10 @@ impl Drive {
             mode,
             filter,
             next_lba: position.lba(),
-            target: None,
-            resume_lba: None,
+            seek_lba: position.lba(),
+            setloc_pending: false,
             last_header: None,
+            header_valid: false,
             muted: false,
             xa_selection: None,
             toc: None,
@@ -212,13 +232,17 @@ impl Drive {
     pub fn status(&self) -> u8 {
         (u8::from(self.motor_on) * 2)
             | match self.activity {
-                Activity::Reading | Activity::Pausing { was_reading: true } => 0x20,
-                Activity::Seeking { .. } | Activity::SeekingPlay { .. } => 0x40,
+                Activity::Reading => 0x20,
+                Activity::PreparingSeek { status, .. } => status,
+                Activity::Seeking { .. }
+                | Activity::SeekingRead { .. }
+                | Activity::SeekingPlay { .. } => 0x40,
                 Activity::Playing => 0x80,
                 Activity::Paused
                 | Activity::Resetting
+                | Activity::PreparingRead { .. }
                 | Activity::PreparingPlay { .. }
-                | Activity::Pausing { was_reading: false } => 0,
+                | Activity::Pausing => 0,
             }
     }
     fn response(&self, interrupt: u8) -> Response {
@@ -255,10 +279,13 @@ impl Drive {
         }
         if matches!(
             self.activity,
-            Activity::Seeking { .. }
+            Activity::PreparingSeek { .. }
+                | Activity::Seeking { .. }
+                | Activity::PreparingRead { .. }
+                | Activity::SeekingRead { .. }
                 | Activity::PreparingPlay { .. }
                 | Activity::SeekingPlay { .. }
-                | Activity::Pausing { .. }
+                | Activity::Pausing
                 | Activity::Resetting
         ) && !matches!(command.opcode, 0x01 | 0x0b | 0x0c | 0x0f | 0x10 | 0x11)
         {
@@ -277,7 +304,8 @@ impl Drive {
                 if position.lba() < 0 {
                     return Err("CD drive: seeking into lead-in is not implemented".into());
                 }
-                self.target = Some(position.lba());
+                self.seek_lba = position.lba();
+                self.setloc_pending = true;
             }
             0x03 => {
                 let toc = self
@@ -298,12 +326,12 @@ impl Drive {
                         .position(self.next_lba)?
                         .map_or(0, |q| usize::from(q[0] >> 4) * 10 + usize::from(q[0] & 15));
                 }
-                let target = if track != 0 {
-                    Some(toc.tracks[track - 1].start.lba())
-                } else {
-                    self.target
-                };
-                self.target = None;
+                if track != 0 {
+                    self.seek_lba = toc.tracks[track - 1].start.lba();
+                    self.setloc_pending = true;
+                }
+                let target = self.setloc_pending.then_some(self.seek_lba);
+                self.setloc_pending = false;
                 if let Some(target) = target {
                     self.activity = Activity::PreparingPlay { target };
                 } else {
@@ -311,32 +339,27 @@ impl Drive {
                 }
             }
             0x06 | 0x1b | 0x15 | 0x16 => {
-                let read = matches!(command.opcode, 0x06 | 0x1b);
-                if read {
-                    self.xa_selection = None;
-                }
-                if read
-                    && self.target.is_none_or(|target| target == self.next_lba)
-                    && self.activity == Activity::Reading
-                {
-                    self.target = None;
-                    return Ok(response);
-                }
-                // Read without Setloc resumes the most recently received sector.
-                let target = self
-                    .target
-                    .take()
-                    .unwrap_or(self.resume_lba.unwrap_or(self.next_lba));
-                self.activity = Activity::Seeking { target, read };
+                self.setloc_pending = false;
+                let target = self.seek_lba;
+                self.activity = if matches!(command.opcode, 0x06 | 0x1b) {
+                    Activity::PreparingRead { target }
+                } else {
+                    Activity::PreparingSeek {
+                        target,
+                        physical: command.opcode == 0x16,
+                        status: self.status() & 0xe0,
+                    }
+                };
                 self.xa_selection = None;
-                self.resume_lba = None;
-                self.last_header = None;
+                // Read acknowledges Idle even when it interrupts an active read.
+                if matches!(command.opcode, 0x06 | 0x1b) {
+                    return Ok(self.response(3));
+                }
             }
             0x09 => {
                 self.xa_selection = None;
-                self.activity = Activity::Pausing {
-                    was_reading: self.activity == Activity::Reading,
-                }
+                self.activity = Activity::Pausing;
+                self.header_valid = false;
             }
             0x0a => {
                 // CdlInit resets current/seek positions to 00:02:00 and clears
@@ -346,8 +369,9 @@ impl Drive {
                 // Opcode 0x1c is the separate CdlReset.
                 self.activity = Activity::Resetting;
                 self.next_lba = 0;
-                self.target = None;
-                self.resume_lba = None;
+                self.seek_lba = 0;
+                self.setloc_pending = false;
+                self.header_valid = self.last_header.is_some();
                 self.xa_selection = None;
                 self.auto_pause = false;
                 self.report = false;
@@ -374,7 +398,7 @@ impl Drive {
                 })
             }
             0x10 => {
-                return Ok(match self.last_header {
+                return Ok(match self.last_header.filter(|_| self.header_valid) {
                     Some(header) => Response {
                         interrupt: 3,
                         bytes: header.to_vec(),
@@ -430,17 +454,30 @@ impl Drive {
     /// Complete a supplied seek/pause/reset boundary. No duration is assigned here.
     /// Located Play needs two boundaries: seek start updates position, then
     /// seek completion starts playback and its report clock. Neither emits INT2.
-    /// An implicit read seek has no INT2; explicit SeekL/SeekP and Pause do.
+    /// Read also needs two boundaries; the second makes sector delivery ready.
+    /// Explicit SeekL/SeekP retain position until their second boundary, with INT2.
     pub fn complete(&mut self, cycle: u32) -> Result<Option<Response>> {
         match self.activity {
-            Activity::Seeking { target, read } => {
+            Activity::PreparingRead { target } => {
                 self.next_lba = target;
-                self.activity = if read {
-                    Activity::Reading
-                } else {
-                    Activity::Paused
-                };
-                Ok((!read).then(|| self.response(2)))
+                self.activity = Activity::SeekingRead { target };
+                Ok(None)
+            }
+            Activity::SeekingRead { .. } => {
+                self.activity = Activity::Reading;
+                Ok(None)
+            }
+            Activity::PreparingSeek {
+                target, physical, ..
+            } => {
+                self.activity = Activity::Seeking { target, physical };
+                Ok(None)
+            }
+            Activity::Seeking { target, physical } => {
+                self.next_lba = target - if physical { (target + 150) / 32768 } else { 0 };
+                self.activity = Activity::Paused;
+                self.header_valid = false;
+                Ok(Some(self.response(2)))
             }
             Activity::PreparingPlay { target } => {
                 self.next_lba = target;
@@ -452,7 +489,7 @@ impl Drive {
                 self.start_playing(cycle);
                 Ok(None)
             }
-            Activity::Pausing { .. } | Activity::Resetting => {
+            Activity::Pausing | Activity::Resetting => {
                 self.activity = Activity::Paused;
                 Ok(Some(self.response(2)))
             }
@@ -637,7 +674,7 @@ impl Drive {
             }
         };
         self.last_header = Some(raw[12..20].try_into()?);
-        self.resume_lba = Some(position.lba());
+        self.header_valid = true;
         self.next_lba = next_lba;
         Ok(delivery)
     }

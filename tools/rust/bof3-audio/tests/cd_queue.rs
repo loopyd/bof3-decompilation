@@ -312,6 +312,7 @@ fn original_voice_queue_matches_direct_samples_at_steady_sector_rate() {
         )
         .unwrap();
     drive.complete(0).unwrap();
+    drive.complete(0).unwrap();
     let mut bus = bus(queue());
     let mut direct = reference();
     let mut expected = std::collections::VecDeque::new();

@@ -2370,6 +2370,31 @@ ready-disc constructor does not perform Init, BIOS startup or authentication.
 The host owner still supplies response/IRQ boundaries, and the caller
 explicitly completes mechanical transitions; no clock duration is assigned.
 
+The ready constructor initializes current and retained seek positions from
+its supplied position. Setloc changes retained seek and marks it pending,
+without moving current position. Every ReadN/ReadS restarts at retained seek,
+including a Read issued while already Reading. Its ACK reports Idle; the first
+`complete(cycle)` moves to retained seek and enters Seeking, and the second
+enters Reading. The caller then supplies that boundary's first sector. These
+Read boundaries emit no INT2. Sector advancement changes current position,
+leaving retained seek unchanged.
+
+Explicit SeekL/SeekP ACK the old status and retain current position. The first
+completion enters Seeking; the second moves current position, enters Idle
+and returns INT2. SeekP subtracts `floor((target_lba + 150)/32768)` sectors
+from current position, following the native absolute-MSF adjustment. Retained
+seek remains the exact target. Pause ACKs the old status, becomes Idle
+immediately and returns INT2 at its supplied completion. TOC-based Read/Seek
+track errors and command takeover remain unsupported.
+
+GetlocL validity is separate from its cached bytes. Pause invalidates at ACK;
+SeekL/SeekP invalidate at final completion. Read initiation and its seek phase
+preserve validity. An accepted sector replaces the header and restores
+validity before routing, including filtered sectors. Init restores known
+cached bytes without clearing them. A fresh ready context has no known header
+and rejects GetlocL until a sector supplies one. Invalid GetlocL returns INT5
+with `[status | 1, 0x80]`.
+
 Construct `Toc` with 1 through 99 `Track` values and an exclusive lead-out.
 Each track supplies `TrackKind::Data` or `TrackKind::Audio`, `pregap_start`,
 program `start` and exclusive `end`. Pregaps are nonnegative and no later than
@@ -2402,7 +2427,7 @@ Report `0x04` and autopause `0x02` control Play; Play does not require the
 CDDA-read bit. Read-error retry behaviour remains unsupported.
 
 [Existing checks](../../../tools/rust/bof3-audio/tests/cd_drive.rs) cover
-command errors, seek/read/pause/resume transitions, routing, header progression,
+command errors, seek/read/pause/restart transitions, routing, header progression,
 malformed sectors and the existing host acknowledgement contract.
 [Original US SDK checks](../../../tools/rust/bof3-audio/tests/cd_drive_runtime.rs)
 submit commands through `0x80176734` (full EXE `0xE0734`) and consume drive-produced
@@ -2682,8 +2707,8 @@ parsing, original-game Play coverage or hardware behavior.
 
 `Interconnect::apply_cd_drive_command` executes a captured command on a drive
 candidate before committing its device effects. Every accepted ReadN/ReadS
-resets ADPCM predictors, including a continuing read. Setmode does the same
-when realtime decoding changes from disabled to enabled. These operations
+resets ADPCM predictors, including a Read issued while already Reading.
+Setmode does the same when realtime decoding changes from disabled to enabled. These operations
 preserve the interpolation ring, phase, previous samples and queued output.
 Pause, SeekL/SeekP and Init preserve predictors as well as audio and selected
 data, including its cursor and BFRD request. Setloc only records a target.
@@ -2703,20 +2728,21 @@ preserve decoder and buffer state. All commands reject while an audio submission
 is pending; the caller must finish that submission first. This preserves the
 native feed's serialized wait boundary without inventing command overlap.
 Successful seek transitions, located Play and Init also reject active DMA3
-before mutation.
-That rejection is a Rust implementation limit, not native overlap behavior.
+before mutation. That rejection is a Rust implementation limit, not native
+overlap behavior.
 
 Response publication and mechanical completion remain caller-owned boundaries.
 The standalone `Drive::command` API supports isolated drive checks; integrated
 execution uses the interconnect method for predictor, selection and mute effects.
-The functional drive retains its continuing-read fast path and last-received
-sector resume policy. These differ from native Read restart and retained-seek
-position behavior. Predictor-reset agreement does not establish drive scheduling,
-command status timing or natural startup.
+The [functional drive contract](#rust-cd-drive-commands-and-sector-routing)
+uses the native retained-seek restart and Read/Seek/Pause state boundaries.
+A bounded native guest comparison qualifies response bytes, phase positions,
+SeekP adjustment and cached-header validity under supplied cycles. It does not
+establish automatic drive scheduling, broader command overlap or natural startup.
 
 [Lifecycle checks](../../../tools/rust/bof3-audio/tests/cd_lifecycle.rs) cover
 fresh context, preserved buffers, invalid/DMA-active failures, independent mute
-sources and continuing-read predictor resets. The
+sources and restarted-Read predictor resets. The
 [original scheduler fixture](../../../tools/rust/bof3-audio/tests/xa_loop_runtime.rs)
 applies the same command effects. Its cue restart retains previously queued
 output and selected data. Located ReadS resets predictors once, and the new
@@ -5093,6 +5119,7 @@ implements Init (`0x0A`) as a caller-completed transition. It stops reading,
 resets the current and seek positions to `00:02:00` (LBA 0), clears pending
 Setloc and releases XA selection. It preserves the raw mode byte, command mute,
 filter and latest transfer header, but clears runtime report/autopause flags.
+It restores validity of known cached GetlocL bytes.
 A read without a new Setloc uses the reset position
 rather than the retained header. Acknowledgement reports the pre-transition
 status as INT3/status `0x22` while reading or `0x02` while paused. The separate

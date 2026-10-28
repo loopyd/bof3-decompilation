@@ -99,6 +99,7 @@ fn automatic_selection_ignores_unrelated_eof_and_releases_matching_eof() {
     let mut drive = Drive::ready(CdPosition::from_lba(100).unwrap(), 0x40, [9, 9]).unwrap();
     drive.command(&command(6, &[]), 0).unwrap();
     drive.complete(0).unwrap();
+    drive.complete(0).unwrap();
     // 255 does not claim automatic selection. EOR is not EOF. A mismatched
     // channel's EOF must not release the already selected channel.
     for (index, (channel, flags, selected)) in [
@@ -303,6 +304,7 @@ fn raw_voice_automatic_selection_decodes_complete_first_stream() {
     let mut drive =
         Drive::ready(CdPosition::from_lba(start as i32).unwrap(), 0xc0, [0, 0]).unwrap();
     drive.command(&command(6, &[]), 0).unwrap();
+    drive.complete(0).unwrap();
     drive.complete(0).unwrap();
     let mut q = queue();
     q.reset();

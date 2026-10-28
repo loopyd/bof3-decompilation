@@ -216,14 +216,19 @@ seek and Init preserve queued audio, interpolation and data. Init also preserves
 mode, mute and filter while releasing the diagnostic XA selection. The caller
 must complete a pending audio submission before servicing another command.
 Successful Init, seek transitions and located Play reject active DMA3 before
-mutation; this is an unsupported Rust overlap case. Full `Queue::reset()` creates an explicit
-fresh context and is not a command effect.
+mutation; this is an unsupported Rust overlap case. Full `Queue::reset()`
+creates an explicit fresh context and is not a command effect.
 
-The Rust drive still allows an already continuing read to avoid its mechanical
-restart and resumes from its last received sector. Native Read restarts using
-the retained seek position. Automatic selection, EOF and per-sector coding
-policies also differ, as documented below. Predictor-reset agreement leaves
-these scheduling and routing differences open.
+The [functional drive](../specs/formats/audio.md#rust-cd-drive-commands-and-sector-routing)
+restarts every Read at retained seek, even during an active read. Its supplied
+Read and explicit Seek boundaries follow native state phases; SeekP adjusts
+current position while retaining the exact seek target. Pause becomes Idle
+and invalidates GetlocL immediately. Cached header bytes survive; Init restores
+their validity, and a new sector replaces them before routing. Native guest
+responses and phase observations qualify these rules under supplied cycles.
+Automatic scheduling, TOC-based Read/Seek errors, takeover/overlap and hardware
+timing remain open. Automatic XA selection, EOF and per-sector coding policies
+still differ, as documented below.
 
 Bounded native Init observations agree on position, pending Setloc, mode, mute
 and filter. During an active read, a partially consumed 2,048-byte requested FIFO

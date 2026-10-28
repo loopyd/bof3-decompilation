@@ -18,6 +18,8 @@ fn drive(mode: u8) -> Drive {
 }
 fn start(drive: &mut Drive) {
     assert_eq!(drive.command(&command(6, &[]), 0).unwrap().bytes, [2]);
+    assert_eq!(drive.status(), 2);
+    assert_eq!(drive.complete(0).unwrap(), None);
     assert_eq!(drive.status(), 0x42);
     assert_eq!(drive.complete(0).unwrap(), None);
     assert_eq!(drive.status(), 0x22);
@@ -74,7 +76,7 @@ fn configuration_errors_and_unsupported_commands_do_not_mutate_drive() {
 }
 
 #[test]
-fn setloc_seek_read_pause_and_resume_have_distinct_boundaries() {
+fn setloc_seek_read_pause_and_restart_have_distinct_boundaries() {
     let mut drive = drive(0);
     let position = CdPosition::from_lba(555).unwrap();
     drive.command(&command(2, &position.bcd()), 0).unwrap();
@@ -82,13 +84,16 @@ fn setloc_seek_read_pause_and_resume_have_distinct_boundaries() {
     drive.command(&command(0x15, &[]), 0).unwrap();
     assert_eq!(
         drive.activity(),
-        Activity::Seeking {
+        Activity::PreparingSeek {
             target: 555,
-            read: false
+            physical: false,
+            status: 0
         }
     );
     assert!(drive.command(&command(9, &[]), 0).is_err());
     assert!(drive.sector(&sector(555, [1, 0, 8, 0])).is_err());
+    assert_eq!(drive.complete(0).unwrap(), None);
+    assert_eq!(drive.next_lba(), 1234);
     assert_eq!(drive.complete(0).unwrap().unwrap().bytes, [2]);
     assert_eq!(drive.next_lba(), 555);
     start(&mut drive);
@@ -100,13 +105,8 @@ fn setloc_seek_read_pause_and_resume_have_distinct_boundaries() {
     assert_eq!(drive.next_lba(), 556);
     drive.sector(&sector(556, [1, 0, 8, 0])).unwrap();
     drive.command(&command(0x1b, &[]), 0).unwrap();
-    assert_eq!(
-        drive.activity(),
-        Activity::Seeking {
-            target: 777,
-            read: true
-        }
-    );
+    assert_eq!(drive.activity(), Activity::PreparingRead { target: 777 });
+    drive.complete(0).unwrap();
     drive.complete(0).unwrap();
     let latest = sector(777, [1, 0, 8, 0]);
     drive.sector(&latest).unwrap();
@@ -115,7 +115,7 @@ fn setloc_seek_read_pause_and_resume_have_distinct_boundaries() {
         latest[12..20]
     );
     assert_eq!(drive.command(&command(9, &[]), 0).unwrap().bytes, [0x22]);
-    assert_eq!(drive.status(), 0x22);
+    assert_eq!(drive.status(), 2);
     assert_eq!(
         drive.complete(0).unwrap(),
         Some(Response {
@@ -124,7 +124,7 @@ fn setloc_seek_read_pause_and_resume_have_distinct_boundaries() {
         })
     );
     start(&mut drive);
-    assert_eq!(drive.next_lba(), 777); // No Setloc: repeat the last received sector.
+    assert_eq!(drive.next_lba(), 777); // No Setloc: restart at the retained seek target.
     drive.command(&command(9, &[]), 0).unwrap();
     drive.complete(0).unwrap();
     drive.command(&command(9, &[]), 0).unwrap();
@@ -220,6 +220,7 @@ fn init_resets_positions_and_preserves_mode_mute_filter_and_header() {
     let mut drive = Drive::ready(CdPosition::from_lba(100).unwrap(), 0xe8, [7, 31]).unwrap();
     drive.command(&command(6, &[]), 0).unwrap();
     drive.complete(0).unwrap();
+    drive.complete(0).unwrap();
     let header = sector(100, [7, 31, 8, 0]);
     drive.sector(&header).unwrap();
     drive.command(&command(0x0b, &[]), 0).unwrap();
@@ -254,11 +255,5 @@ fn init_resets_positions_and_preserves_mode_mute_filter_and_header() {
     assert_eq!(drive.next_lba(), 0);
     assert!(drive.complete(0).is_err());
     drive.command(&command(6, &[]), 0).unwrap();
-    assert_eq!(
-        drive.activity(),
-        Activity::Seeking {
-            target: 0,
-            read: true
-        }
-    );
+    assert_eq!(drive.activity(), Activity::PreparingRead { target: 0 });
 }
