@@ -2510,22 +2510,23 @@ de-emphasis and independent hardware audio remain required.
 ## Rust XA audio queue and SPU consumption
 
 [The XA queue](../../../tools/rust/bof3-audio/src/machine/cd_queue.rs) connects
-sector decoding/resampling to frame consumption. Its required
-`Model::EmulatorReference` retains a diagnostic admission rule:
-more than ten buffered frames drops the arriving sector without committing
-predictor or interpolation history. Ten or fewer permits admission. Drops,
-muted sectors, actual frame consumption and empty output are counted separately.
-Rust validates even a dropped sector on a private decoder candidate.
-Malformed input fails without
-changing the queue, statistics or either history. No hardware capacity or clock
-latency is inferred from this rule.
+sector decoding/resampling to frame consumption. `Model::EmulatorReference`
+uses the native stream-1 ring predicate: queued plus incoming frames must be
+less than 16,384. A batch that cannot fit returns `Admission::Pending` without
+partially inserting it. Decode and interpolation histories have already advanced.
+`Queue::finish_submission` rechecks capacity at a supplied retry or timeout
+boundary. Room admits the whole batch; timeout while full discards its output
+and retains those histories. Another sector rejects while submission is pending.
+Queued and pending frames, timeout drops, muted sectors, consumption and empty
+output are counted separately. Malformed input fails on a private candidate
+without changing queue state. Host wait timing and hardware latency remain open.
 
 XA mute is sampled at sector admission. An admitted muted sector advances ADPCM
 predictor history, but does not resample or append output. Previously queued
 frames remain available. Unmuted admission applies the active drive matrix
 after interpolation, before insertion. Later volume latches do not rescale the
-queued tail. `Interconnect::step_spu_cd_output` passes those frames to the
-existing SPU CD gain, routing, reverb and final gain. Capture therefore sees
+queued or pending tail. `Interconnect::step_spu_cd_output` passes those frames
+to the existing SPU CD gain, routing, reverb and final gain. Capture therefore sees
 post-drive, pre-SPU-gain samples. A bounded native original stereo comparison
 confirms unity and asymmetric crossed gain across a guest latch with old output
 still queued. Clipping and other matrices remain unaccepted against native output.
@@ -2536,14 +2537,16 @@ transitions are implemented under the explicit emulator model below; physical
 timing remains unresolved.
 
 Configuration is explicit and cannot replace a live queue. Selected sectors enter
-through `enqueue_cd_audio`; there is no automatic stream switch or sample-clock
-inference. Queue consumption commits only after successful SPU output. A failure
-retains its queued frame, but the existing SPU engine can have advanced internal
+through `enqueue_cd_audio`; pending batches finish through
+`finish_cd_audio_submission(WaitOutcome::Retry | WaitOutcome::TimedOut)` after
+caller-supplied consumption/wait boundaries. The API does not infer a timeout
+from immediate fullness or supply a sample clock. Queue consumption commits
+only after successful SPU output. A failure retains its queued frame, but the existing SPU engine can have advanced internal
 state before a later failure: this is not a transaction over the whole SPU.
 
-[Five default queue checks](../../../tools/rust/bof3-audio/tests/cd_queue.rs)
-exercise the eleven/ten-frame boundary, preserved histories after drops and
-errors, muted predictor/interpolator distinction, buffered volume/mute changes,
+[Queue checks](../../../tools/rust/bof3-audio/tests/cd_queue.rs)
+exercise strict whole-batch capacity, pending retry and timeout, advanced histories
+after timeout, rollback on errors, mute before admission, buffered volume changes,
 capture staging, empty output and failed SPU consumption. A raw-disc check feeds
 256 VOICE sectors with explicit 150-sector/s and 44,100-frame/s boundaries:
 16 selected XA sectors produce 75,264 SPU output frames, with no queue drops or
@@ -2624,9 +2627,10 @@ These are emulator-reference behaviours, not established hardware timing.
 `Queue::release_selection` and validated EOF permit the next selected file/channel
 to bind while preserving ADPCM and interpolation histories and queued output.
 The interconnect applies this release for successful Setfilter and reports it
-separately from a full audio reset. A backlog-dropped EOF still releases
-selection; a dropped first sector acquires the new binding without committing
-decoded history. Muted EOF updates predictors only, as other muted sectors do.
+separately from a full audio reset. A decoded EOF releases selection before
+its submission waits; timeout preserves that release and the advanced histories.
+A decoded first sector acquires the new binding even if its output later times
+out. Muted EOF updates predictors only, as other muted sectors do.
 Malformed sectors preserve all queue state. Coding changes use the runtime
 transition path below; full reset instead establishes a fresh coding context.
 
@@ -2655,16 +2659,19 @@ Transitions preserve left/right ADPCM predictors, interpolation rings, shared
 cursor, phase and previous interpolation samples. Mono decoding updates only the
 left predictor, retaining the right predictor for later stereo input. Mono
 resampling fills both rings and both previous samples with the left input.
-Muted sectors change predictors without resampling. Dropped sectors change
-neither predictor nor interpolation history. Previously queued
-output retains its original samples. Reserved coding fields, emphasis and
+Muted sectors change predictors without resampling. Output timeouts retain
+both advanced predictor and interpolation histories. Queued and pending output
+retain their original samples. Reserved coding fields, emphasis and
 malformed units fail without committing queue state. Coding transitions with
 the separate `Published37800` resampler fail explicitly because its dynamic
 format behaviour has not been established.
 
 [Three transition checks](../../../tools/rust/bof3-audio/tests/xa/coding.rs)
 include 192 vectors: all 64 format pairs, each queued/muted/dropped, followed by
-a return to the initial format. They check output counts and full PCM hashes,
+a return to the initial format. Timeout cases prefix enough 8-bit stereo/full-rate
+output to block the second batch while keeping the tested format pair adjacent.
+They explicitly finish its pending submission with `WaitOutcome::TimedOut`.
+They check output counts and full PCM hashes,
 plus malformed-input rollback, model boundaries and identity release. The
 retained [Rust reference model](../../../tools/rust/bof3-audio/tests/reference/xa.rs)
 implements separate decoder/resampling state and arithmetic, reusing numeric

@@ -3,7 +3,7 @@ use bof3_audio::{
         adsr,
         bus::{Bus, Ram, Width},
         cd_audio::{Model as Resampling, Resampler, XaAudio},
-        cd_queue::{Admission, Model, Queue},
+        cd_queue::{Admission, Model, Queue, WaitOutcome, CAPACITY},
         interconnect::Interconnect,
         spu_sample,
     },
@@ -96,49 +96,73 @@ fn port(bus: &mut Interconnect, bank: u32, offset: u32, value: u32) {
 }
 
 #[test]
-fn backlog_drop_preserves_histories_and_ten_frame_boundary() {
+fn whole_batch_wait_retries_and_timeout_retains_advanced_histories() {
     let mut queue = queue();
     let mut direct = reference();
-    let expected_first = drive_gain(direct.sector(&sector(0x12)).unwrap());
+    let mut expected = Vec::new();
+    for value in [0x12, 0x23, 0x34] {
+        let frames = drive_gain(direct.sector(&sector(value)).unwrap());
+        assert_eq!(
+            queue.sector(&sector(value), false, &volume()).unwrap(),
+            Admission::Queued {
+                frames: frames.len()
+            }
+        );
+        expected.extend(frames);
+    }
+    let pending = drive_gain(direct.sector(&sector(0x45)).unwrap());
+    let buffered = queue.statistics().queued_frames;
     assert_eq!(
-        queue.sector(&sector(0x12), false, &volume()).unwrap(),
-        Admission::Queued {
-            frames: expected_first.len()
+        queue.sector(&sector(0x45), false, &volume()).unwrap(),
+        Admission::Pending {
+            frames: pending.len(),
+            buffered_frames: buffered
         }
     );
-    assert_eq!(
-        queue.sector(&sector(0x76), false, &volume()).unwrap(),
-        Admission::Dropped {
-            buffered_frames: expected_first.len()
-        }
-    );
+    let before = queue.statistics();
+    assert!(queue.sector(&sector(0x76), false, &volume()).is_err());
+    assert_eq!(queue.statistics(), before);
+    // Exact fill is excluded by the native strict inequality.
     let mut actual = Vec::new();
-    while queue.statistics().queued_frames > 11 {
+    while queue.statistics().queued_frames + pending.len() > CAPACITY {
         actual.push(queue.preview());
         queue.consume();
     }
-    assert_eq!(
-        queue.sector(&sector(0x65), false, &volume()).unwrap(),
-        Admission::Dropped {
-            buffered_frames: 11
-        }
-    );
+    assert!(matches!(
+        queue.finish_submission(WaitOutcome::Retry).unwrap(),
+        Admission::Pending { .. }
+    ));
     actual.push(queue.preview());
     queue.consume();
-    let second = drive_gain(direct.sector(&sector(0x34)).unwrap());
+    // The predicate is checked again at the deadline; available room wins.
     assert_eq!(
-        queue.sector(&sector(0x34), false, &volume()).unwrap(),
+        queue.finish_submission(WaitOutcome::TimedOut).unwrap(),
         Admission::Queued {
-            frames: second.len()
+            frames: pending.len()
         }
     );
-    actual.extend(drain(&mut queue));
+    expected.extend(pending);
+    assert_eq!(queue.statistics().queued_frames, CAPACITY - 1);
+    direct.sector(&sector(0x76)).unwrap(); // Timeout discards output, not histories.
+    assert!(matches!(
+        queue.sector(&sector(0x76), false, &volume()).unwrap(),
+        Admission::Pending { .. }
+    ));
     assert_eq!(
-        actual,
-        expected_first.into_iter().chain(second).collect::<Vec<_>>()
+        queue.finish_submission(WaitOutcome::TimedOut).unwrap(),
+        Admission::Dropped {
+            buffered_frames: CAPACITY - 1
+        }
     );
-    assert_eq!(queue.statistics().dropped_sectors, 2);
-    assert_eq!(queue.statistics().admitted_sectors, 2);
+    assert_eq!(queue.statistics().pending_frames, 0);
+    actual.extend(drain(&mut queue));
+    assert_eq!(actual, expected);
+    let next = drive_gain(direct.sector(&sector(0x56)).unwrap());
+    queue.sector(&sector(0x56), false, &volume()).unwrap();
+    assert_eq!(drain(&mut queue), next);
+    assert!(queue.finish_submission(WaitOutcome::Retry).is_err());
+    assert_eq!(queue.statistics().dropped_sectors, 1);
+    assert_eq!(queue.statistics().admitted_sectors, 5);
 }
 
 #[test]
@@ -150,15 +174,21 @@ fn muted_sector_advances_predictors_only_and_keeps_buffered_tail() {
         Resampling::EmulatorReference,
     )
     .unwrap();
-    let first = drive_gain(
+    let mut first = drive_gain(
         filter
             .process(&decoder.decode_sector(&sector(0x12)).unwrap())
             .unwrap(),
     );
     queue.sector(&sector(0x12), false, &volume()).unwrap();
-    for _ in 0..first.len() - 10 {
-        queue.consume();
+    for _ in 0..2 {
+        queue.sector(&sector(0x12), false, &volume()).unwrap();
+        first.extend(drive_gain(
+            filter
+                .process(&decoder.decode_sector(&sector(0x12)).unwrap())
+                .unwrap(),
+        ));
     }
+    // An audible batch would wait at this occupancy; mute still decodes only.
     let old = queue.preview();
     assert_eq!(
         queue.sector(&sector(0x67), true, &volume()).unwrap(),
@@ -166,7 +196,7 @@ fn muted_sector_advances_predictors_only_and_keeps_buffered_tail() {
     );
     decoder.decode_sector(&sector(0x67)).unwrap(); // No interpolation while muted.
     assert_eq!(queue.preview(), old);
-    assert_eq!(drain(&mut queue), first[first.len() - 10..]);
+    assert_eq!(drain(&mut queue), first);
     let next = drive_gain(
         filter
             .process(&decoder.decode_sector(&sector(0x34)).unwrap())
@@ -194,7 +224,7 @@ fn malformed_input_and_empty_output_do_not_advance_decoder_state() {
     }
     queue.sector(&sector(0x12), false, &volume()).unwrap();
     let before = queue.statistics();
-    assert!(queue.sector(&invalid, false, &volume()).is_err()); // Validate even dropped input.
+    assert!(queue.sector(&invalid, false, &volume()).is_err()); // Validate input before any admission.
     assert_eq!(queue.statistics(), before);
     assert_eq!(
         drain(&mut queue),
@@ -242,6 +272,19 @@ fn failed_spu_output_retains_queue_and_reconfiguration_is_rejected() {
     bus.write(0x1f801dac, Width::Half, 4).unwrap();
     bus.step_spu_cd_output([0; 2]).unwrap();
     assert_eq!(bus.cd_audio().unwrap().statistics().consumed_frames, 1);
+    while matches!(
+        bus.enqueue_cd_audio(&sector(0x34)).unwrap(),
+        Admission::Queued { .. }
+    ) {}
+    assert!(matches!(
+        bus.finish_cd_audio_submission(WaitOutcome::Retry).unwrap(),
+        Admission::Pending { .. }
+    ));
+    assert!(matches!(
+        bus.finish_cd_audio_submission(WaitOutcome::TimedOut)
+            .unwrap(),
+        Admission::Dropped { .. }
+    ));
 }
 
 #[test]

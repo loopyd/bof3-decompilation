@@ -37,6 +37,16 @@ impl Interconnect {
             .ok_or("CD audio is not configured")?
             .sector(sector, self.cd_command_muted, host.volume())
     }
+    /// Complete a pending XA submission after supplied output/wait boundaries.
+    pub fn finish_cd_audio_submission(
+        &mut self,
+        outcome: crate::machine::cd_queue::WaitOutcome,
+    ) -> crate::Result<crate::machine::cd_queue::Admission> {
+        self.cd_audio
+            .as_mut()
+            .ok_or("CD audio is not configured")?
+            .finish_submission(outcome)
+    }
     /// One supplied SPU frame boundary. Drive gain and XA mute were applied
     /// at sector admission. Failed SPU output retains the
     /// queued frame; the existing SPU engine may have advanced internal state.

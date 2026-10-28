@@ -136,24 +136,34 @@ verification open.
 
 ## XA queue admission and output
 
-The [Rust queue](../../tools/rust/bof3-audio/src/machine/cd_queue.rs) retains a
-diagnostic policy that drops incoming XA above ten buffered frames without
-committing decoder history. Muted admission decodes ADPCM but skips resampling
-and insertion. Unmuted admission applies active drive gain after interpolation
-and stores the scaled frames. Later latches leave queued frames unchanged.
-Output supplies the stored frame, or zero when empty. The watermark remains
-a diagnostic model choice requiring independent lifecycle and timing evidence.
+The [Rust queue](../../tools/rust/bof3-audio/src/machine/cd_queue.rs) follows
+native stream-1 whole-batch admission: queued plus incoming frames must be less
+than the 16,384-frame ring size. Decoding and interpolation advance before the
+batch waits. A full queue returns `Admission::Pending`; the caller supplies
+`WaitOutcome::Retry` after consumption or `WaitOutcome::TimedOut` at an observed
+deadline. Available space admits the whole batch even at that deadline. A timeout
+while full discards only the pending output, retaining both advanced histories.
+Another sector cannot enter until the pending submission finishes or resets.
+The model does not measure the native host's 200 ms wait or infer hardware timing.
+
+Mute advances ADPCM predictors but skips interpolation and submission, regardless
+of queue occupancy. Unmuted decoding applies active drive gain before waiting;
+later latches leave queued and pending frames unchanged. Output supplies the
+stored frame, or zero when empty. Explicit reset discards queued and pending
+output and clears decoder state.
 
 Native `playXASector` decodes accepted sectors before deciding whether mute
-permits a feed. `FeedXA` applies ATV gain before submission to the separate CD
-stream; the [audio callback](../../third_party/pcsx-redux-agentic/src/spu/sdlaudio.cc)
-zero-fills stream underruns. These owners do not implement the Rust ten-frame
-admission rule. The Rust gain placement follows native feed-time processing.
+permits a feed. `FeedXA` advances interpolation and applies ATV gain before
+submission; the [ring](../../third_party/pcsx-redux-agentic/src/support/circular.h)
+waits for whole-batch capacity. Failed submission leaves those histories advanced.
+The [audio callback](../../third_party/pcsx-redux-agentic/src/spu/sdlaudio.cc)
+zero-fills stream underruns. Rust exposes the wait boundary through
+`Interconnect::finish_cd_audio_submission`; callers provide its timing.
 
 [The Rust queue and SPU checks](../specs/formats/audio.md#rust-xa-audio-queue-and-spu-consumption)
-retain the diagnostic admission policy, expose drops and underruns, and reject
-malformed sectors even when they would be dropped. Explicit steady-rate raw-disc
-tests and the original scheduler fixture establish functional routing only.
+cover admission, retry, timeout, mute and malformed-input rollback.
+Explicit steady-rate raw-disc tests and the original scheduler fixture establish
+functional routing only.
 The [XA interleave discussion](https://psx-spx.consoledev.net/cdromformat/)
 supports the relationship between encoded mono/stereo rates and sector cadence;
 it does not establish initial phase, game tick timing or audible cue endpoints.
@@ -223,8 +233,8 @@ rings. Mute skips the feed after decoding.
 The Rust diagnostic transition policy reads coding per admitted sector, retains
 shared cursor/phase and previous interpolation samples. Mono leaves the right
 predictor untouched but fills both interpolation rings and previous samples.
-Backlog drops preserve decoder history. These are explicit modeled choices requiring comparison with
-the current native path and independent hardware evidence.
+Output timeouts retain the advanced decoder and interpolation histories.
+These reference-model choices still require independent hardware evidence.
 
 [Rust transition validation](../specs/formats/audio.md#rust-xa-coding-transitions)
 covers all eight supported coding formats with 192 synthetic vectors generated

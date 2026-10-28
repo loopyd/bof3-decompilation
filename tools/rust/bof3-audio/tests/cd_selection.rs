@@ -6,7 +6,7 @@ use bof3_audio::{
         cd_drive::{Delivery, Drive},
         cd_host::Command,
         cd_position::CdPosition,
-        cd_queue::{Admission, Model, Queue},
+        cd_queue::{Admission, Model, Queue, WaitOutcome},
         interconnect::Interconnect,
     },
     xa::{Arithmetic, Histories, Stream},
@@ -146,7 +146,17 @@ fn eof_rebinding_keeps_predictors_filter_history_and_tail_for_each_admission() {
         let mut reference = audio();
         let first = sector(0, 0x64, 0x12);
         q.sector(&first, false, &volume()).unwrap();
-        let first_frames = drive_gain(reference.sector(&first).unwrap());
+        let mut first_frames = drive_gain(reference.sector(&first).unwrap());
+        if admission == 2 {
+            // Three 4-bit mono blocks fill 14,112 frames; the EOF batch must wait.
+            for _ in 0..2 {
+                assert!(matches!(
+                    q.sector(&first, false, &volume()).unwrap(),
+                    Admission::Queued { .. }
+                ));
+                first_frames.extend(drive_gain(reference.sector(&first).unwrap()));
+            }
+        }
         if admission != 2 {
             assert_eq!(drain(&mut q), first_frames);
         }
@@ -163,7 +173,12 @@ fn eof_rebinding_keeps_predictors_filter_history_and_tail_for_each_admission() {
                 // and resampler below; no private release API is the oracle.
             }
             _ => {
-                assert!(matches!(result, Admission::Dropped { .. }));
+                assert!(matches!(result, Admission::Pending { .. }));
+                assert!(matches!(
+                    q.finish_submission(WaitOutcome::TimedOut).unwrap(),
+                    Admission::Dropped { .. }
+                ));
+                reference.sector(&eof).unwrap();
                 assert_eq!(drain(&mut q), first_frames);
             }
         }
@@ -208,7 +223,7 @@ fn rejected_eof_and_unsupported_coding_preserve_selection_and_audio_state() {
     assert!(q.sector(&bad, false, &volume()).is_err());
     assert_eq!(q.statistics(), before);
     assert!(q.sector(&sector(1, 0x64, 0), false, &volume()).is_err());
-    q.sector(&sector(0, 0xe4, 0), false, &volume()).unwrap(); // dropped, but releases selection
+    q.sector(&sector(0, 0xe4, 0), false, &volume()).unwrap(); // queued, and releases selection
     let before = q.statistics();
     let mut changed = sector(1, 0x64, 0);
     changed[3] = 0x40;
@@ -221,9 +236,9 @@ fn rejected_eof_and_unsupported_coding_preserve_selection_and_audio_state() {
     assert_eq!(q.statistics(), before);
     assert!(matches!(
         q.sector(&sector(1, 0x64, 0), false, &volume()).unwrap(),
-        Admission::Dropped { .. }
+        Admission::Queued { .. }
     ));
-    // A dropped first sector still acquires selection; another channel fails.
+    // A queued first sector acquires selection; another channel fails.
     assert!(q.sector(&sector(2, 0x64, 0), false, &volume()).is_err());
 }
 
@@ -252,11 +267,11 @@ fn setfilter_releases_only_selection_and_invalid_parameters_do_not_release_it() 
     // Stream identity changes without clearing the already queued block.
     assert!(matches!(
         bus.enqueue_cd_audio(&sector(1, 0x64, 0x76)).unwrap(),
-        Admission::Dropped { .. }
+        Admission::Queued { .. }
     ));
     assert_eq!(
         bus.cd_audio().unwrap().statistics().queued_frames,
-        before.queued_frames
+        before.queued_frames * 2
     );
 }
 

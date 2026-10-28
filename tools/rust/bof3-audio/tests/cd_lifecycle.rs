@@ -79,9 +79,7 @@ fn init_preserves_mute_queued_audio_data_cursor_and_volume() {
     drive.complete().unwrap();
     assert_eq!(
         bus.enqueue_cd_audio(&sector(1, 1)).unwrap(),
-        Admission::Dropped {
-            buffered_frames: frames
-        }
+        Admission::Muted
     );
 }
 fn apply(
@@ -107,8 +105,19 @@ fn reset_rebinds_channel_and_format_with_fresh_history_after_validation() {
     for _ in 0..31 {
         q.consume();
     }
-    let discarded = q.statistics().queued_frames;
+    for _ in 0..2 {
+        assert!(matches!(
+            q.sector(&sector(0, 0), false, &volume()).unwrap(),
+            Admission::Queued { .. }
+        ));
+    }
+    assert!(matches!(
+        q.sector(&sector(0, 0), false, &volume()).unwrap(),
+        Admission::Pending { .. }
+    ));
+    let discarded = q.statistics().queued_frames + q.statistics().pending_frames;
     assert_eq!(q.reset(), discarded);
+    assert_eq!(q.statistics().pending_frames, 0);
     assert_eq!(q.preview(), [0; 2]);
     let before = q.statistics();
     let mut invalid = sector(1, 1);

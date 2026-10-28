@@ -163,25 +163,46 @@ pub fn transition(first: u8, second: u8, admission: &str) -> ([usize; 3], String
     let mut reference = Reference::new();
     let mut counts = [0; 3];
     let mut output = Vec::new();
+    if admission == "dropped" {
+        // Independent native ring predicate: leave room for the first batch,
+        // but not the second. Prefix with 8-bit stereo/full-rate sectors so
+        // the tested first -> second transition remains adjacent.
+        let frame_count = |coding: u8| {
+            let channels = if coding & 1 != 0 { 2 } else { 1 };
+            let depth = if coding & 16 != 0 { 8 } else { 4 };
+            18 * 28 * (32 / depth) / channels * 7 / if coding & 4 != 0 { 3 } else { 6 }
+        };
+        let mut seed = 100;
+        while counts[0] + frame_count(first) + frame_count(second) < 16384 {
+            let pcm = reference.decode(17, seed);
+            let frames = reference.resample(17, &pcm);
+            counts[0] += frames.len();
+            output.extend(frames);
+            seed += 1;
+        }
+        assert!(counts[0] + frame_count(first) < 16384);
+    }
     for (stage, coding) in [first, second, first].into_iter().enumerate() {
-        if stage != 1 || admission != "dropped" {
-            let pcm = reference.decode(coding, stage + 1);
+        let pcm = reference.decode(coding, stage + 1);
+        if stage != 1 || admission != "muted" {
+            let frames = reference.resample(coding, &pcm);
             if stage != 1 || admission == "queued" {
-                let frames = reference.resample(coding, &pcm);
-                counts[stage] = frames.len();
-                output.extend(frames.into_iter().map(|frame| {
-                    frame.map(|sample| {
-                        let scaled = (i64::from(sample) * 128 * 33617)
-                            .div_euclid(1 << 22)
-                            .clamp(-32768, 32767);
-                        (scaled * 31880).div_euclid(1 << 15) as i16
-                    })
-                }));
+                counts[stage] += frames.len();
+                output.extend(frames);
             }
+        }
+    }
+    for frame in &mut output {
+        for sample in frame {
+            let scaled = (i64::from(*sample) * 128 * 33617)
+                .div_euclid(1 << 22)
+                .clamp(-32768, 32767);
+            *sample = (scaled * 31880).div_euclid(1 << 15) as i16;
         }
     }
     (counts, hash(&output))
 }
+
 fn hash(frames: &[[i16; 2]]) -> String {
     sha256_hex(
         &frames

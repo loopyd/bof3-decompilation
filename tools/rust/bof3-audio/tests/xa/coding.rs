@@ -2,7 +2,7 @@ use bof3_audio::{
     digest::sha256_hex,
     machine::{
         cd_audio::Model as Resampling,
-        cd_queue::{Admission, Model, Queue},
+        cd_queue::{Admission, Model, Queue, WaitOutcome},
     },
     xa::{Arithmetic, Histories, Stream},
 };
@@ -74,6 +74,21 @@ fn all_coding_transitions_match_independent_state_and_arithmetic_vectors() {
         assert_eq!(hash, vector.sha256);
         let mut q = queue(vector.first, Resampling::EmulatorReference);
         let mut output = Vec::new();
+        if vector.admission == "dropped" {
+            let format = bof3_audio::xa::Format::from_coding(vector.first).unwrap();
+            let first_frames =
+                format.frames_per_sector() * 7 / if vector.first & 4 != 0 { 3 } else { 6 };
+            let prefix_frames = vector.counts[0] - first_frames;
+            let mut seed = 100;
+            while q.statistics().queued_frames < prefix_frames {
+                assert!(matches!(
+                    q.sector(&sector(17, seed), false, &volume()).unwrap(),
+                    Admission::Queued { .. }
+                ));
+                seed += 1;
+            }
+            assert_eq!(q.statistics().queued_frames, prefix_frames);
+        }
         q.sector(&sector(vector.first, 1), false, &volume())
             .unwrap();
         assert_eq!(q.statistics().queued_frames, vector.counts[0]);
@@ -95,12 +110,15 @@ fn all_coding_transitions_match_independent_state_and_arithmetic_vectors() {
                 }
             ),
             "muted" => assert_eq!(second, Admission::Muted),
-            "dropped" => assert_eq!(
-                second,
-                Admission::Dropped {
-                    buffered_frames: vector.counts[0]
-                }
-            ),
+            "dropped" => {
+                assert!(matches!(second, Admission::Pending { .. }));
+                assert_eq!(
+                    q.finish_submission(WaitOutcome::TimedOut).unwrap(),
+                    Admission::Dropped {
+                        buffered_frames: vector.counts[0]
+                    }
+                );
+            }
             _ => panic!("unknown reference admission"),
         }
         output.extend(drain(&mut q));
