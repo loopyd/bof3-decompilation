@@ -1,7 +1,5 @@
-#include "bof3/world/area00813_internal.h"
+#include "bof3/world/area13113_internal.h"
 #include "game/counter_step.h"
-
-extern volatile u16 counter2;
 
 /* @source 0x801F2DC8
  * @behavior marks the local counter active and retreats it by 20.

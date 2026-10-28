@@ -1,4 +1,4 @@
-#include "bof3/world/area00813_internal.h"
+#include "bof3/world/area13113_internal.h"
 
 /* @source 0x801F2D78
  * @behavior Overlay counter step: marks the shared counter active by storing 2
