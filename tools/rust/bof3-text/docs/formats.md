@@ -251,7 +251,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v16`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v17`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -409,7 +409,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v16` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v17` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -744,6 +744,31 @@ The first format draws digits and spaces through `0x8014FF0C`; the others draw
 through `0x80150098`. All use the 64-byte scratch buffer at `0x80145AD4`.
 The alignment gaps `0x801D0DE5..0x801D0DEC`, `0x801D0E28..0x801D0E2C` and
 `0x801D0E52..0x801D0E54` remain protected. Runtime rendering remains unverified.
+
+Five earlier SHOP fields include unsigned 16-bit and signed-word paths.
+Capacities include NUL; formatted bounds exclude it.
+
+| Address | Original | Capacity | Codec | Formatted bound |
+| --- | --- | --- | --- | --- |
+| `0x801D0CE4` | `%3d` | 4 | `ascii-u16-decimal-format` | 5 |
+| `0x801D0CE8` | `%3d/   ` | 8 | `ascii-u16-decimal-field-format` | 9 |
+| `0x801D0CF0` | `   /%3d` | 8 | `ascii-u16-decimal-field-format` | 9 |
+| `0x801D0CF8` | `%8d` | 4 | `ascii-i32-wide-decimal-format` | 11 |
+| `0x801D0D08` | `%7d` | 4 | `ascii-i32-decimal-format` | 11 |
+
+The unsigned fields cover 0..65535 and permit widths 1..4. The signed fields
+have unmasked word arguments; retain the full signed 32-bit output bound,
+including a possible minus sign. The wide codec permits widths 1..8; the existing
+signed codec retains widths 1..7. Their capacities exclude zero-padding tokens,
+and their eleven-byte output limit excludes added literals. All five retain
+exactly one decimal argument.
+
+All results use the 64-byte scratch buffer at `0x80145AD4`; the largest occupies
+twelve bytes including NUL. `0x801D0CF8` draws through `0x8014FF0C`, while
+`0x801D0D08` uses both `0x8014FF0C` and `0x80150098`. The unsigned fields use
+`0x80150098`. Separate dash strings at `0x801D0CFC` and `0x801D0D0C`, their
+terminators and alignment padding remain protected. Runtime rendering remains
+unverified.
 
 ## Bank layout
 
