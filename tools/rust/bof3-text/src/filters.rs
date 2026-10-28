@@ -368,7 +368,7 @@ impl PayloadCheck {
                     return false;
                 }
                 let programs = u16::from_le_bytes([payload[0x12], payload[0x13]]) as usize;
-                0x20 + 128 * 16 + programs * 16 * 32 + 512 == payload.len()
+                programs <= 128 && 0x20 + 128 * 16 + programs * 16 * 32 + 512 == payload.len()
             }
             Self::SeqEventChain => {
                 if payload.len() < 19 || &payload[..4] != b"pQES" {
@@ -399,14 +399,19 @@ impl PayloadCheck {
 
 /// Does `body` pair with `header` as that header's VAB sample body?
 ///
-/// The pairing is the record's own identity — the doc says the body is the sibling whose size equals
-/// the header's VAG-size-table sum multiplied by 8 — so it is a check, not a guess.
+/// Version 7 uses sample-size slots zero through the declared sample count, in eight-byte units.
 pub fn paired_vab_body(header: &[u8], body: &[u8]) -> bool {
-    if header.len() < 512 || &header[..4] != b"pBAV" {
+    if !PayloadCheck::VabHeaderSize.holds(header)
+        || u32::from_le_bytes(header[4..8].try_into().unwrap()) != 7
+    {
+        return false;
+    }
+    let samples = u16::from_le_bytes(header[0x16..0x18].try_into().unwrap()) as usize;
+    if samples >= 256 {
         return false;
     }
     let table = header.len() - 512;
-    let total: usize = (0..256)
+    let total: usize = (0..=samples)
         .map(|index| {
             u16::from_le_bytes([header[table + 2 * index], header[table + 2 * index + 1]]) as usize
         })
@@ -561,16 +566,21 @@ impl KnownPayload {
 }
 
 impl KnownPayload {
-    /// The family that identifies this payload by **pairing** with the subfile before it, when the
-    /// inventory names one for a paired body and the pairing holds.
+    /// Identify a mode-7 body against the latest mode-6 header selected by the EMI loader.
     pub fn identify_paired<'a>(
         &'a self,
-        preceding: &[&[u8]],
+        preceding: &[(crate::models::Entry, &[u8])],
+        transfer_mode: Option<u16>,
         payload: &[u8],
     ) -> Option<&'a PayloadFamily> {
+        if transfer_mode != Some(7) {
+            return None;
+        }
         let pairs = preceding
             .iter()
-            .any(|header| header.starts_with(b"pBAV") && paired_vab_body(header, payload));
+            .rev()
+            .find(|(entry, _)| entry.transfer_mode == 6)
+            .is_some_and(|(_, header)| paired_vab_body(header, payload));
         if pairs {
             return self.body_family.as_ref();
         }
@@ -582,7 +592,7 @@ impl PreFilter for KnownPayload {
     fn admit(&self, input: &PreFilterInput<'_>) -> AdmittedRanges {
         let identified = self
             .identify(input.payload)
-            .or_else(|| self.identify_paired(input.preceding, input.payload));
+            .or_else(|| self.identify_paired(input.preceding, input.transfer_mode, input.payload));
         match identified {
             Some(family) => AdmittedRanges {
                 ranges: Vec::new(),
@@ -754,7 +764,7 @@ impl ScanFilters<'_> {
     /// Bump the policy version when filter or reading semantics change.
     pub fn fingerprint(&self) -> Result<String> {
         let bytes = serde_json::to_vec(&(
-            "bof3.text-filters/v10",
+            "bof3.text-filters/v11",
             [
                 crate::executable::SCHEMA,
                 crate::inline::SCHEMA,

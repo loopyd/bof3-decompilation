@@ -556,6 +556,7 @@ pub fn entries(data: &[u8]) -> Result<Vec<(Entry, &[u8])>> {
                 offset,
                 size: size as u32,
                 ram_ptr,
+                transfer_mode: u16::from_le_bytes(data[at + 12..at + 14].try_into().unwrap()),
             },
             &data[offset..offset + size],
         ));
@@ -575,7 +576,7 @@ pub fn scan_archive_excluding(
     filters: &crate::filters::ScanFilters<'_>,
 ) -> Result<Vec<(Entry, Vec<Latch>, Tally)>> {
     let mut out = Vec::new();
-    let mut preceding: Vec<&[u8]> = Vec::new();
+    let mut preceding: Vec<(crate::models::Entry, &[u8])> = Vec::new();
     for (entry, payload) in entries(data)? {
         let input = crate::models::PreFilterInput {
             archive,
@@ -583,11 +584,12 @@ pub fn scan_archive_excluding(
             payload,
             class: TextClass::from_load_argument(entry.ram_ptr),
             // The VAB body is identified by pairing with a header earlier in this container.
+            transfer_mode: Some(entry.transfer_mode),
             preceding: &preceding,
         };
         // One place decides admissibility: the classified-window barrier and the payload inventory.
         let (latches, tally) = filters.scan_bytes(&input, min_run);
-        preceding.push(payload);
+        preceding.push((entry, payload));
         out.push((entry, latches, tally));
     }
     Ok(out)
@@ -697,6 +699,7 @@ mod scan_excluding_tests {
             entry: 0,
             payload,
             class: None,
+            transfer_mode: None,
             preceding: &[],
         };
         crate::filters::scan_admitted(

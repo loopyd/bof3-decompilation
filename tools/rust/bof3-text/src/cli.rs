@@ -799,7 +799,7 @@ fn query_latches(
     let key = window_key(windows, &archive_label(archive))?
         .unwrap_or("")
         .to_string();
-    let mut preceding: Vec<&[u8]> = Vec::new();
+    let mut preceding: Vec<(crate::models::Entry, &[u8])> = Vec::new();
     for (entry, payload) in crate::lexagraph::entries(data)? {
         let input = crate::models::PreFilterInput {
             archive: &key,
@@ -807,6 +807,7 @@ fn query_latches(
             payload,
             class: TextClass::from_load_argument(entry.ram_ptr),
             // The container's earlier payloads, so the pairing rule works on this path too.
+            transfer_mode: Some(entry.transfer_mode),
             preceding: &preceding,
         };
         let filters = crate::filters::compose(
@@ -816,7 +817,7 @@ fn query_latches(
             crate::filters::Readability::of_opt_out(cli.no_readable),
         );
         let (latches, subfile) = filters.scan_bytes(&input, crate::lexagraph::MIN_RUN);
-        preceding.push(payload);
+        preceding.push((entry, payload));
         tally.add(&subfile);
         total += latches.len();
         // Abutting windows of a run the scanner had to split are matched as one group, exactly as
@@ -1955,12 +1956,12 @@ fn identified_payloads(
             .map_err(|_| Error::Invalid(format!("{}: outside {}", path.display(), base.display())))?
             .to_string_lossy()
             .replace('\\', "/");
-        let mut preceding: Vec<&[u8]> = Vec::new();
+        let mut preceding: Vec<(crate::models::Entry, &[u8])> = Vec::new();
         for (entry, payload) in crate::lexagraph::entries(&data)? {
-            let identified = payloads
-                .identify(payload)
-                .or_else(|| payloads.identify_paired(&preceding, payload));
-            preceding.push(payload);
+            let identified = payloads.identify(payload).or_else(|| {
+                payloads.identify_paired(&preceding, Some(entry.transfer_mode), payload)
+            });
+            preceding.push((entry, payload));
             let Some(family) = identified else {
                 continue;
             };

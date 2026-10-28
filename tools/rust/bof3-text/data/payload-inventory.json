@@ -14,7 +14,7 @@
       ],
       "check": {
         "kind": "vab_header_size",
-        "detail": "numProg is a u16 LE at +0x12; the header must be exactly 0x20 + 128*16 + numProg*16*32 + 512 bytes, which is the subfile's size"
+        "detail": "numProg is a u16 LE at +0x12 and must be at most 128; the header must be exactly 0x20 + 128*16 + numProg*16*32 + 512 bytes"
       },
       "measured": {
         "payloads": 1020,
@@ -55,21 +55,23 @@
       "records": [
         "docs/specs/bof3-eu/02-disc-emi-containers.md:103",
         "docs/specs/bof3-eu/13-audio.md:27",
-        "docs/specs/bof3-eu/02-disc-emi-containers.md:138"
+        "docs/specs/bof3-eu/02-disc-emi-containers.md:138",
+        "tools/rust/bof3-text/docs/formats.md"
       ],
-      "basis": "pairing, not a signature: within the same container the body is the subfile whose size equals the preceding VAB header's VAG-size-table sum multiplied by 8",
+      "basis": "Within one EMI archive, a mode-7 body pairs only with the latest preceding mode-6 VAB version-7 header. The header size must match a program count no greater than 128; sample count at +0x16 must be at most 255. Size-table slots zero through that count, inclusive, sum to the nonempty body length in eight-byte units.",
       "measured": {
         "headers": 1020,
-        "containers_where_the_pairing_holds": 840,
-        "removed": 399,
-        "removed_subfiles": 319,
+        "removed": 617,
+        "removed_subfiles": 499,
         "removed_marginal": 0,
-        "basis": "standalone (removed, removed_subfiles): measured with --no-windows --no-readable against --no-windows --no-payloads --no-readable, so the figure is what the exclusion accounts for on its own. marginal (removed_marginal): measured with the shape rule active, so it is what the exclusion still removes once unreadable runs are gone. Both are corpus-wide measurements made once and recorded here, because an excluded payload is never parsed at run time."
+        "basis": "standalone (removed, removed_subfiles): measured with --no-windows --no-readable against --no-windows --no-payloads --no-readable, so the figure is what the exclusion accounts for on its own. marginal (removed_marginal): measured with the shape rule active, so it is what the exclusion still removes once unreadable runs are gone. Both are corpus-wide measurements made once and recorded here, because an excluded payload is never parsed at run time.",
+        "paired_bodies": 1020,
+        "containers": 809
       },
       "magic": "",
       "check": {
         "kind": "vab_body_pairing",
-        "detail": "pairing, not a signature: within the same container the body is the subfile whose size equals the preceding VAB header's VAG-size-table sum multiplied by 8"
+        "detail": "Within one EMI archive, a mode-7 body pairs only with the latest preceding mode-6 VAB version-7 header. The header size must match a program count no greater than 128; sample count at +0x16 must be at most 255. Size-table slots zero through that count, inclusive, sum to the nonempty body length in eight-byte units."
       },
       "format": "VAB body: concatenated raw PSX 4-bit ADPCM samples (content type 7)"
     }

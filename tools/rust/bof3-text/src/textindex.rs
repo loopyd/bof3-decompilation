@@ -342,7 +342,7 @@ fn collect(
 ) -> Result<(crate::lexagraph::Tally, Vec<crate::lexagraph::WindowDetail>)> {
     let mut tally = crate::lexagraph::Tally::default();
     let mut details: Vec<crate::lexagraph::WindowDetail> = Vec::new();
-    let mut preceding: Vec<&[u8]> = Vec::new();
+    let mut preceding: Vec<(crate::models::Entry, &[u8])> = Vec::new();
     for (entry, payload) in lexagraph::entries(data)? {
         let address = format!("{:#010x}", entry.ram_ptr);
         match TextClass::from_load_argument(entry.ram_ptr) {
@@ -351,6 +351,7 @@ fn collect(
                     Ok(section) => section,
                     Err(error) => {
                         skipped.push(format!("{archive}#{}: {error}", entry.index));
+                        preceding.push((entry, payload));
                         continue;
                     }
                 };
@@ -391,11 +392,10 @@ fn collect(
                     payload,
                     // This branch is the one taken when no structural class claims the subfile.
                     class: None,
-                    // The container's earlier payloads, so the pairing rule works on this path too.
+                    transfer_mode: Some(entry.transfer_mode),
                     preceding: &preceding,
                 };
                 let (latches, subfile) = filters.scan_bytes(&input, lexagraph::MIN_RUN);
-                preceding.push(payload);
                 tally.add(&subfile);
                 details.extend(crate::lexagraph::details(archive, entry.index, &subfile));
                 for latch in latches {
@@ -419,6 +419,7 @@ fn collect(
                 }
             }
         }
+        preceding.push((entry, payload));
     }
     Ok((tally, details))
 }

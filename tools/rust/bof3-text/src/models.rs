@@ -49,6 +49,7 @@ pub struct Entry {
     pub offset: usize,
     pub size: u32,
     pub ram_ptr: u32,
+    pub transfer_mode: u16,
 }
 
 /// One dialogue row: a slot inside a bank.
@@ -492,10 +493,10 @@ pub struct PreFilterInput<'a> {
     pub payload: &'a [u8],
     /// The subfile's class, when its load argument names one.
     pub class: Option<TextClass>,
-    /// The payloads **before this one in the same container**, in order. The VAB body is identified by
-    /// pairing with a header anywhere earlier in the container — the sequence data often sits between
-    /// the two — so the filter needs the container's context, not just the immediate predecessor.
-    pub preceding: &'a [&'a [u8]],
+    /// The TOC transfer mode, absent for inputs outside an EMI archive.
+    pub transfer_mode: Option<u16>,
+    /// Earlier TOC entries and payloads in container order. Mode 7 uses the latest mode-6 header.
+    pub preceding: &'a [(Entry, &'a [u8])],
 }
 
 /// A byte range a pre-filter refuses to latch, and why.

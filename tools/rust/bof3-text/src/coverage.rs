@@ -243,48 +243,52 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                             if let Some(gap) = padding(&bytes, cursor, entry.offset) {
                                 record.ranges.push(gap);
                             }
-                            let (status, evidence) =
-                                if let Some(class) = TextClass::from_load_argument(entry.ram_ptr) {
-                                    match crate::extract::parse_section(payload) {
-                                        Ok(section) => {
-                                            text_count += 1;
-                                            (
-                                                "known-text",
-                                                format!(
-                                                    "{} pointer banks; {} rows; load argument {}",
-                                                    section.banks.len(),
-                                                    section.rows(),
-                                                    class.name()
-                                                ),
-                                            )
-                                        }
-                                        Err(error) => (
-                                            "unresolved",
-                                            format!("declared text bank failed parsing: {error}"),
-                                        ),
+                            let (status, evidence) = if let Some(class) =
+                                TextClass::from_load_argument(entry.ram_ptr)
+                            {
+                                match crate::extract::parse_section(payload) {
+                                    Ok(section) => {
+                                        text_count += 1;
+                                        (
+                                            "known-text",
+                                            format!(
+                                                "{} pointer banks; {} rows; load argument {}",
+                                                section.banks.len(),
+                                                section.rows(),
+                                                class.name()
+                                            ),
+                                        )
                                     }
-                                } else if let Some(family) = inventory
-                                    .identify(payload)
-                                    .or_else(|| inventory.identify_paired(&preceding, payload))
-                                {
-                                    (
-                                        "known-nontext",
-                                        format!(
-                                            "{}: {}; records: {}",
-                                            family.family,
-                                            family.check.kind,
-                                            family.records.join(", ")
-                                        ),
-                                    )
-                                } else {
-                                    (
+                                    Err(error) => (
                                         "unresolved",
-                                        format!(
-                                            "consumer unverified; load argument 0x{:08x}",
-                                            entry.ram_ptr
-                                        ),
-                                    )
-                                };
+                                        format!("declared text bank failed parsing: {error}"),
+                                    ),
+                                }
+                            } else if let Some(family) = inventory.identify(payload).or_else(|| {
+                                inventory.identify_paired(
+                                    &preceding,
+                                    Some(entry.transfer_mode),
+                                    payload,
+                                )
+                            }) {
+                                (
+                                    "known-nontext",
+                                    format!(
+                                        "{}: {}; records: {}",
+                                        family.family,
+                                        family.check.kind,
+                                        family.records.join(", ")
+                                    ),
+                                )
+                            } else {
+                                (
+                                    "unresolved",
+                                    format!(
+                                        "consumer unverified; load argument 0x{:08x}",
+                                        entry.ram_ptr
+                                    ),
+                                )
+                            };
                             let inline = crate::inline::supports(*entry, payload)
                                 .then(|| crate::inline::extract(path, &bytes, *entry, payload).ok())
                                 .flatten();
@@ -390,7 +394,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                             );
                             expected_metadata.push((entry.index, entry.ram_ptr, entry.size));
                             cursor = entry.offset + payload.len();
-                            preceding.push(*payload);
+                            preceding.push((*entry, *payload));
                         }
                         if let Some(gap) = padding(&bytes, cursor, bytes.len()) {
                             record.ranges.push(gap);

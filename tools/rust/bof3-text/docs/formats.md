@@ -15,6 +15,21 @@ The dialogue subfile is the EMI entry whose TOC `load_argument` is `0x80010000`.
 Each US archive contains exactly one; `index` reports its payload offset and whether
 it parses.
 
+## VAB audio payloads
+
+Audio body identification requires an EMI mode-7 entry and the latest preceding
+mode-6 header in the same archive. The header must have the exact VAB header size,
+at most 128 programs, version 7 and a sample count at `+0x16` no greater than 255.
+Only size-table slots zero through that count contribute to the body length,
+in eight-byte units;
+inactive slots may contain nonzero bytes. The body must consume that length
+exactly and be nonempty.
+
+The original US loader selects the header at `0x80162790` and transfers the body
+through `0x80162898`, `0x80163418` and `0x80174354` to SPU DMA. The SDK loop at
+`0x80173ED0..0x80173F28` uses the active sample count. Matching another entry's
+size alone does not identify audio. These checks do not classify container gaps.
+
 ## Executable ASCII
 
 `extract`, `analyze`, `validate` and `pack` also support the US executable's

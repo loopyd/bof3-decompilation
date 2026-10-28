@@ -154,7 +154,7 @@ fn every_window_names_an_owner_and_a_hash() {
     .collect();
     assert_eq!(named, expected, "the registry's kinds changed");
     assert_eq!(kinds["banked_payload"].as_u64().unwrap_or(0), 244);
-    assert_eq!(kinds["known_payload"].as_u64().unwrap_or(0), 1_979);
+    assert_eq!(kinds["known_payload"].as_u64().unwrap_or(0), 2_159);
     assert_eq!(kinds["pointer_table"].as_u64().unwrap_or(0), 288);
     assert_eq!(kinds["row_extent"].as_u64().unwrap_or(0), 46_057);
     assert_eq!(kinds["reviewed_textbin"].as_u64().unwrap_or(0), 3);

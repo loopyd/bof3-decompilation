@@ -49,7 +49,7 @@ fn the_aggregate_facts_match_the_artifacts() {
         counter(&map["totals"], "text_like_runs_in_data_subfiles"),
         0
     );
-    assert_eq!(length(&registry["windows"]), 48_571);
+    assert_eq!(length(&registry["windows"]), 48_751);
     assert_eq!(
         map["totals"]["latches_removed_by_windows"],
         serde_json::json!(0)
