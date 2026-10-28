@@ -4,7 +4,7 @@
 
 use super::{
     bus::{Bus, Width},
-    cpu::{Cpu, Fault, FaultKind},
+    cpu::{Cpu, Fault, FaultKind, Step},
     event_calls::{Calls as EventCalls, CALLBACK_ENTER, CALLBACK_RETURN},
     events::{Table as Events, BUSY},
     exception_calls::{
@@ -30,6 +30,8 @@ pub struct Kernel {
     event_delivery: Option<u32>,
     exception_dispatch: Option<u32>,
     exception_hook: Option<u32>,
+    exception_return: Option<[u32; 2]>,
+    returning: Option<Cpu>,
     exception_delivery: Option<ExceptionDelivery>,
     waiting_event: Option<PendingWait>,
     event_calls: EventCalls,
@@ -57,6 +59,8 @@ impl Default for Kernel {
             event_delivery: None,
             exception_dispatch: None,
             exception_hook: None,
+            exception_return: None,
+            returning: None,
             exception_delivery: None,
             waiting_event: None,
             event_calls: EventCalls::default(),
@@ -235,6 +239,56 @@ impl Kernel {
         Ok(())
     }
 
+    /// Bind caller-loaded context restoration and its final RFE instruction.
+    /// The CPU loop must report each successful step to complete_exception_return
+    /// before admitting another interrupt. Entry receives TCB+8 in K0.
+    pub fn configure_exception_return(&mut self, entry: u32, rfe_pc: u32) -> Result<()> {
+        self.require_plain_context()?;
+        if self.exception_return.is_some() {
+            return Err("owned exception return already configured".into());
+        }
+        let first = self.validate_owned_handler(entry)?;
+        let last = self.validate_owned_handler(rfe_pc)?;
+        if first == last {
+            return Err("owned exception return requires distinct entry and RFE addresses".into());
+        }
+        self.exception_return = Some([entry, rfe_pc]);
+        Ok(())
+    }
+
+    pub fn pending_exception_return(&self) -> bool {
+        self.returning.is_some()
+    }
+
+    /// Complete only after the bound RFE retires in the return jump's delay slot.
+    /// Faults and mismatched restoration retain all unfinished continuations.
+    pub fn complete_exception_return(&mut self, cpu: &Cpu, step: &Step) -> Result<bool> {
+        let Some(expected) = &self.returning else {
+            return Ok(false);
+        };
+        let [_, rfe_pc] = self
+            .exception_return
+            .ok_or("owned exception return lost its binding")?;
+        if step.pc != rfe_pc {
+            return Ok(false);
+        }
+        if step.instruction != 0x4200_0010
+            || !step.in_delay_slot
+            || cpu.pc() != expected.pc()
+            || (0..32).any(|r| cpu.register(r) != expected.register(r))
+            || cpu.hi() != expected.hi()
+            || cpu.lo() != expected.lo()
+            || cpu.cop0().status() != expected.cop0().status()
+            || cpu.cop0().read(14)? != expected.cop0().read(14)?
+            || (cpu.cop0().read(13)? ^ expected.cop0().read(13)?) & !0x400 != 0
+        {
+            return Err("owned exception return retired with a mismatched context".into());
+        }
+        self.clear_exception_continuations();
+        self.returning = None;
+        Ok(true)
+    }
+
     fn validate_owned_handler(&self, handler: u32) -> Result<usize> {
         super::exception_calls::validate_handler(handler)?;
         if Self::is_call(handler) {
@@ -263,7 +317,12 @@ impl Kernel {
                 .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
             || self
                 .exception_hook
-                .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset));
+                .is_some_and(|address| ram_offset(address, 4).ok() == Some(offset))
+            || self.exception_return.is_some_and(|addresses| {
+                addresses
+                    .into_iter()
+                    .any(|address| ram_offset(address, 4).ok() == Some(offset))
+            });
         if occupied {
             return Err("owned exception handlers require distinct RAM identifiers".into());
         }
@@ -324,13 +383,13 @@ impl Kernel {
                 }
             }
         }
-        self.return_exception(cpu, bus)?;
+        let callback = self.return_exception(cpu, bus)?;
         Ok(Some(Call {
             vector: 0x80,
             service: 6,
             name: "SyscallExceptionReturn",
             waiting: false,
-            callback: None,
+            callback,
         }))
     }
 
@@ -473,13 +532,13 @@ impl Kernel {
             if acknowledge {
                 if self.counter_auto_ack.read(bus, index)? != 0 {
                     bus.write(0x1f80_1070, Width::Word, !bit)?;
-                    self.return_exception(cpu, bus)?;
+                    let callback = self.return_exception(cpu, bus)?;
                     return Ok(Call {
                         vector: 0x80,
                         service: 6,
                         name: "CounterInterruptReturn",
                         waiting: false,
-                        callback: None,
+                        callback,
                     });
                 }
             } else if bus.read(0x1f80_1074, Width::Word)? & bit == 0
@@ -517,7 +576,7 @@ impl Kernel {
             } else {
                 match self.exception_calls.as_ref().ok_or("BIOS exception exit without continuation")?.missing_hook {
                     MissingHook::Reject => return Err("BIOS exception dispatch: no registered exit hook; default BIOS state is unverified".into()),
-                    MissingHook::ReturnFromException => self.return_exception(cpu, bus)?,
+                    MissingHook::ReturnFromException => callback = self.return_exception(cpu, bus)?,
                 }
             }
         }
@@ -530,18 +589,34 @@ impl Kernel {
         })
     }
 
-    fn return_exception(&mut self, cpu: &mut Cpu, bus: &mut impl Bus) -> Result<()> {
+    fn return_exception(&mut self, cpu: &mut Cpu, bus: &mut impl Bus) -> Result<Option<u32>> {
+        if self.returning.is_some() {
+            return Err("owned exception return is already pending".into());
+        }
         if self.exception_calls.is_none() {
             self.require_plain_context()?;
         }
-        super::thread_context::Context::current(bus)?.restore(cpu, bus)?;
+        let context = super::thread_context::Context::current(bus)?;
+        if let Some([entry, _]) = self.exception_return {
+            let mut expected = cpu.clone();
+            context.restore(&mut expected, bus)?;
+            self.returning = Some(expected);
+            cpu.set_register(26, context.address() + 8);
+            cpu.resume_at(entry);
+            return Ok(Some(entry));
+        }
+        context.restore(cpu, bus)?;
+        self.clear_exception_continuations();
+        Ok(None)
+    }
+
+    fn clear_exception_continuations(&mut self) {
         // Entry rejects preexisting HLE continuations. Therefore these all belong
         // to the exception being abandoned by this explicit nonlocal return.
         self.exception_calls = None;
         self.event_calls = EventCalls::default();
         self.waiting_event = None;
         self.exception_delivery = None;
-        Ok(())
     }
     /// Save the active guest thread after CPU exception entry. Handler dispatch,
     /// BIOS initial state and nested HLE continuation unwinding remain separate.
@@ -553,6 +628,9 @@ impl Kernel {
     }
 
     fn require_plain_context(&self) -> Result<()> {
+        if self.returning.is_some() {
+            return Err("owned exception return is unfinished".into());
+        }
         if self.exception_calls.is_some() {
             return Err("BIOS nested exception dispatch is unsupported".into());
         }
@@ -564,7 +642,7 @@ impl Kernel {
     /// Bounded BIOS syscall semantics, separate from priority-chain dispatch.
     /// This handles only the two critical-section calls.
     pub fn dispatch_syscall(&mut self, cpu: &mut Cpu, fault: &Fault) -> Result<Call> {
-        if self.exception_calls.is_some() {
+        if self.exception_calls.is_some() || self.returning.is_some() {
             return Err("BIOS nested syscall during exception dispatch is unsupported".into());
         }
         let service = cpu.register(4);
@@ -638,6 +716,9 @@ impl Kernel {
     }
 
     pub fn dispatch(&mut self, cpu: &mut Cpu, bus: &mut impl Bus) -> Result<Call> {
+        if self.returning.is_some() {
+            return Err("owned exception return requires successful retirement completion".into());
+        }
         if !Self::is_call(cpu.pc()) {
             return Err("not a BIOS entry vector".into());
         }
@@ -724,13 +805,13 @@ impl Kernel {
                             cpu.set_register(2, 1);
                         }
                         ExceptionDelivery::Syscall => {
-                            self.return_exception(cpu, bus)?;
+                            let callback = self.return_exception(cpu, bus)?;
                             return Ok(Call {
                                 vector: 0x80,
                                 service: 6,
                                 name: "SyscallExceptionReturn",
                                 waiting: false,
-                                callback: None,
+                                callback,
                             });
                         }
                         ExceptionDelivery::Generic { next } => {
@@ -764,13 +845,13 @@ impl Kernel {
         let mut waiting = false;
         let name = match (vector, service) {
             (0xb0, 0x17) => {
-                self.return_exception(cpu, bus)?;
+                let callback = self.return_exception(cpu, bus)?;
                 return Ok(Call {
                     vector,
                     service,
                     name: "ReturnFromException",
                     waiting: false,
-                    callback: None,
+                    callback,
                 });
             }
             (0xa0, 0x72) => {
