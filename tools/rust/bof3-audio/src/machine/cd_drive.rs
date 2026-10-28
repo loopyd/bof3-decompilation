@@ -42,10 +42,8 @@ pub struct Response {
 #[derive(Debug)]
 pub struct AppliedCommand {
     pub response: Response,
-    pub audio_reset: bool,
+    pub xa_predictors_reset: bool,
     pub audio_selection_released: bool,
-    pub discarded_audio_frames: usize,
-    pub discarded_data_bytes: usize,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -124,6 +122,9 @@ impl Drive {
     pub fn muted(&self) -> bool {
         self.muted
     }
+    pub(crate) fn mode(&self) -> u8 {
+        self.mode
+    }
     pub fn status(&self) -> u8 {
         2 | match self.activity {
             Activity::Reading | Activity::Pausing { was_reading: true } => 0x20,
@@ -181,6 +182,9 @@ impl Drive {
             }
             0x06 | 0x1b | 0x15 | 0x16 => {
                 let read = matches!(command.opcode, 0x06 | 0x1b);
+                if read {
+                    self.xa_selection = None;
+                }
                 if read
                     && self.target.is_none_or(|target| target == self.next_lba)
                     && self.activity == Activity::Reading
@@ -224,6 +228,9 @@ impl Drive {
             0x0c => self.muted = false,
             0x0e => {
                 check_mode(command.parameters[0])?;
+                if self.mode & 0x40 == 0 && command.parameters[0] & 0x40 != 0 {
+                    self.xa_selection = None;
+                }
                 self.mode = command.parameters[0];
             }
             0x0f => {

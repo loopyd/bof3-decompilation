@@ -67,11 +67,7 @@ fn init_preserves_mute_queued_audio_data_cursor_and_volume() {
     let volume = bus.cd_host().unwrap().volume().active();
     let reset = apply(&mut bus, &mut drive, 0x0a, &[]);
     assert_eq!(reset.response.bytes, [2]);
-    assert!(!reset.audio_reset && reset.audio_selection_released);
-    assert_eq!(
-        (reset.discarded_audio_frames, reset.discarded_data_bytes),
-        (0, 0)
-    );
+    assert!(!reset.xa_predictors_reset && reset.audio_selection_released);
     assert!(drive.muted());
     assert_eq!(bus.cd_host().unwrap().volume().active(), volume);
     assert_eq!(bus.cd_audio().unwrap().statistics().queued_frames, frames);
@@ -141,7 +137,7 @@ fn reset_rebinds_channel_and_format_with_fresh_history_after_validation() {
 }
 
 #[test]
-fn setloc_preserves_buffers_and_seek_atomically_discards_selected_state() {
+fn setloc_and_seek_preserve_audio_and_data_buffers() {
     let (mut bus, mut drive) = context();
     bus.enqueue_cd_audio(&sector(0, 0)).unwrap();
     let frames = bus.cd_audio().unwrap().statistics().queued_frames;
@@ -152,20 +148,17 @@ fn setloc_preserves_buffers_and_seek_atomically_discards_selected_state() {
         2,
         &CdPosition::from_lba(200).unwrap().bcd(),
     );
-    assert!(!setloc.audio_reset);
+    assert!(!setloc.xa_predictors_reset);
     assert_eq!(bus.cd_audio().unwrap().statistics().queued_frames, frames);
     let seek = apply(&mut bus, &mut drive, 0x16, &[]);
-    assert!(seek.audio_reset);
-    assert_eq!(
-        (seek.discarded_audio_frames, seek.discarded_data_bytes),
-        (frames, 2048)
-    );
-    assert_eq!(bus.cd_audio().unwrap().statistics().queued_frames, 0);
-    assert!(bus.write(0x1f801803, Width::Byte, 0x80).is_err());
+    assert!(!seek.xa_predictors_reset);
+    assert_eq!(bus.cd_audio().unwrap().statistics().queued_frames, frames);
+    bus.write(0x1f801803, Width::Byte, 0x80).unwrap();
+    assert_eq!(bus.read(0x1f801802, Width::Byte).unwrap(), 7);
     let seeking = drive.activity();
     let muted = apply(&mut bus, &mut drive, 0x0b, &[]);
     assert_eq!(muted.response.bytes, [0x42]);
-    assert!(!muted.audio_reset);
+    assert!(!muted.xa_predictors_reset);
     assert!(drive.muted());
     assert_eq!(drive.activity(), seeking);
     drive.complete().unwrap();
@@ -209,7 +202,7 @@ fn command_mute_and_host_mute_are_independent_and_keep_existing_output() {
     let (mut bus, mut drive) = context();
     let response = apply(&mut bus, &mut drive, 0x0b, &[]);
     assert_eq!(response.response.bytes, [2]);
-    assert!(drive.muted() && !response.audio_reset);
+    assert!(drive.muted() && !response.xa_predictors_reset);
     assert_eq!(
         bus.enqueue_cd_audio(&sector(0, 0)).unwrap(),
         Admission::Muted
@@ -233,14 +226,14 @@ fn command_mute_and_host_mute_are_independent_and_keep_existing_output() {
 }
 
 #[test]
-fn pause_discards_audio_but_keeps_data_and_read_continuation_does_not_reset() {
+fn pause_preserves_buffers_and_each_read_resets_only_predictors() {
     let (mut bus, mut drive) = context();
     apply(&mut bus, &mut drive, 0x1b, &[]);
     drive.complete().unwrap();
     bus.enqueue_cd_audio(&sector(0, 0)).unwrap();
     bus.present_cd_data(&[7; 2048]).unwrap();
     let stats = bus.cd_audio().unwrap().statistics();
-    for explicit_target in [false, true] {
+    for (index, explicit_target) in [false, true].into_iter().enumerate() {
         if explicit_target {
             apply(
                 &mut bus,
@@ -249,14 +242,18 @@ fn pause_discards_audio_but_keeps_data_and_read_continuation_does_not_reset() {
                 &CdPosition::from_lba(100).unwrap().bcd(),
             );
         }
-        assert!(!apply(&mut bus, &mut drive, 0x1b, &[]).audio_reset);
-        assert_eq!(bus.cd_audio().unwrap().statistics(), stats);
+        assert!(apply(&mut bus, &mut drive, 0x1b, &[]).xa_predictors_reset);
+        let mut expected = stats;
+        expected.predictor_resets += index as u64 + 1;
+        assert_eq!(bus.cd_audio().unwrap().statistics(), expected);
     }
     let pause = apply(&mut bus, &mut drive, 9, &[]);
     assert_eq!(pause.response.bytes, [0x22]);
-    assert!(pause.audio_reset);
-    assert_eq!(pause.discarded_audio_frames, stats.queued_frames);
-    assert_eq!(pause.discarded_data_bytes, 0);
+    assert!(!pause.xa_predictors_reset);
+    assert_eq!(
+        bus.cd_audio().unwrap().statistics().queued_frames,
+        stats.queued_frames
+    );
     bus.write(0x1f801803, Width::Byte, 0x80).unwrap();
     assert_eq!(bus.read(0x1f801802, Width::Byte).unwrap(), 7);
     drive.complete().unwrap();

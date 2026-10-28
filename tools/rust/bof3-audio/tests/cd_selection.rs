@@ -261,8 +261,7 @@ fn setfilter_releases_only_selection_and_invalid_parameters_do_not_release_it() 
         .apply_cd_drive_command(&mut drive, &command(0x0d, &[1, 1]))
         .unwrap();
     assert!(effect.audio_selection_released);
-    assert!(!effect.audio_reset);
-    assert_eq!(effect.discarded_audio_frames, 0);
+    assert!(!effect.xa_predictors_reset);
     assert_eq!(bus.cd_audio().unwrap().statistics(), before);
     // Stream identity changes without clearing the already queued block.
     assert!(matches!(

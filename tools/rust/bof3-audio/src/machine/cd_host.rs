@@ -84,9 +84,6 @@ impl Host {
     pub fn data_ready(&self) -> bool {
         self.data.as_ref().is_some_and(cd_data::Fifo::ready)
     }
-    pub(crate) fn reset_data(&mut self) -> usize {
-        self.data.as_mut().map_or(0, cd_data::Fifo::reset)
-    }
     /// Atomically select data and publish INT1 at an explicit delivery boundary.
     /// Prior command/response/IRQ work must be fully drained. An unrequested
     /// old data block may be displaced; active reads remain protected.

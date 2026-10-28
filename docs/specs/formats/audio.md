@@ -2559,10 +2559,9 @@ post-drive, pre-SPU-gain samples. A bounded native original stereo comparison
 confirms unity and asymmetric crossed gain across a guest latch with old output
 still queued. Clipping and other matrices remain unaccepted against native output.
 Empty queue output is zero under the selected reference model and does not
-advance decoder history. Seek/read/Pause reset and CD command mute are now
-connected through the command lifecycle below. EOF selection release and coding
-transitions are implemented under the explicit emulator model below; physical
-timing remains unresolved.
+advance decoder history. Command-driven predictor resets and mute use the
+command lifecycle below. EOF selection release and coding transitions use
+the explicit emulator model below; physical timing remains unresolved.
 
 Configuration is explicit and cannot replace a live queue. Selected sectors enter
 through `enqueue_cd_audio`; pending batches finish through
@@ -2622,48 +2621,51 @@ timing remain open. See [CD references](../../reference/cd-audio.md#selected-cdd
 ## Rust CD command lifecycle and cue restart
 
 `Interconnect::apply_cd_drive_command` executes a captured command on a drive
-candidate before committing its device effects. Under the explicit emulator
-reference, entering a seek/read transition clears queued audio, releases its
-stream binding and clears selected data/BFRD. Setloc alone only records a target.
-A read command already continuing at the next sector does not reset either
-buffer, including when Setloc specifies that same sector. Pause clears audio
-while preserving the data selection. Mute/Demute maintain a separate command
-mute flag; admission is muted if either it or the host ADPCTL bit is set.
-Changing mute leaves already queued frames intact and does not cancel a seek.
+candidate before committing its device effects. Every accepted ReadN/ReadS
+resets ADPCM predictors, including a continuing read. Setmode does the same
+when realtime decoding changes from disabled to enabled. These operations
+preserve the interpolation ring, phase, previous samples and queued output.
+Pause, SeekL/SeekP and Init preserve predictors as well as audio and selected
+data, including its cursor and BFRD request. Setloc only records a target.
 
-The returned command effect reports whether audio reset occurred and how many
-audio frames/data bytes were discarded. The queue retains cumulative statistics,
-including reset count and discarded frames. After reset, the next successfully
-validated selected sector binds file/channel/coding with zero predictor and
-interpolation history, retaining configured arithmetic and resampling models.
-A malformed candidate cannot establish that binding. A file/channel change
-requires selection release; coding changes use the emulator-reference transition
-path described below, preserving device history.
+The returned effect reports `xa_predictors_reset` separately from selection
+release. Queue statistics count predictor resets separately from full resets.
+`Queue::reset()` is an explicit fresh-context operation that discards queued
+and pending output, decoder and interpolation history. Drive commands do not
+invoke it. A malformed selected sector cannot change queue state or establish
+a new stream binding. File/channel changes require selection release; coding
+changes use the diagnostic transition policy described below.
 
-Known parameter errors produce INT5 without reset; unsupported commands and
-seek/reset during active DMA3 fail before changing drive, audio or data state.
-Response/IRQ delivery and mechanical completion remain explicit caller-owned
-boundaries. The standalone `Drive::command` API remains available for isolated
-drive checks; integrated execution must use the interconnect method to apply
-buffer/mute effects. No command silently installs a BIOS or drive boot state.
+Mute/Demute maintain a command flag separate from the host ADPCTL mute bit.
+Either suppresses XA admission. Mute changes preserve queued frames and ongoing
+mechanical transitions. Unsupported commands and known INT5 parameter errors
+preserve decoder and buffer state. All commands reject while an audio submission
+is pending; the caller must finish that submission first. This preserves the
+native feed's serialized wait boundary without inventing command overlap.
+Successful seek transitions and Init also reject active DMA3 before mutation.
+That rejection is a Rust implementation limit, not native overlap behavior.
 
-[Five lifecycle checks](../../../tools/rust/bof3-audio/tests/cd_lifecycle.rs)
-cover fresh stream/format binding, Setloc versus seek, invalid/DMA-active failures,
-independent mute sources, Pause data preservation and continuing-read behaviour.
-The [original scheduler fixture](../../../tools/rust/bof3-audio/tests/xa_loop_runtime.rs)
-now applies these effects to all commands. A restart from cue `0x2000` to `0x2001`
-begins with 4,704 buffered frames plus an acknowledged unrequested data sector.
-Original initialization, SeekP and located ReadS clear the old buffers and cause
-two command-application resets. Channel 1's first accepted block then matches
-fresh same-model decoding through every SPU output frame. No game state or
-completion flag is patched. This establishes the functional restart path with
-declared guest/drive/SPU context, not physical reset latency or reference audio.
+Response publication and mechanical completion remain caller-owned boundaries.
+The standalone `Drive::command` API supports isolated drive checks; integrated
+execution uses the interconnect method for predictor, selection and mute effects.
+The functional drive retains its continuing-read fast path and last-received
+sector resume policy. These differ from native Read restart and retained-seek
+position behavior. Predictor-reset agreement does not establish drive scheduling,
+command status timing or natural startup.
 
-The two existing full-cue service schedules still reach idle with their prior
-frame counts and zero final drive matrix. Logs use
-`out/audio-migration/cd-lifecycle-*`; external reset/mute evidence is retained in
-[CD references](../../reference/cd-audio.md#decoder-reset-and-command-mute).
-General command overlap, DMA cancellation, emphasis filtering, original
+[Lifecycle checks](../../../tools/rust/bof3-audio/tests/cd_lifecycle.rs) cover
+fresh context, preserved buffers, invalid/DMA-active failures, independent mute
+sources and continuing-read predictor resets. The
+[original scheduler fixture](../../../tools/rust/bof3-audio/tests/xa_loop_runtime.rs)
+applies the same command effects. Its cue restart retains previously queued
+output and selected data. Located ReadS resets predictors once, and the new
+channel decodes through the retained interpolation state. Output agrees with
+separate decoder/resampler processing under the supplied gain and SPU context.
+This is a functional routing comparison, not independent native PCM acceptance.
+
+See [CD references](../../reference/cd-audio.md#decoder-reset-and-command-mute)
+for native source and bounded observations. General command overlap, DMA
+cancellation, native XA routing and coding selection, emphasis, original
 runtime bootstrap, clocks and independent PCM remain acceptance obligations.
 
 ## Rust XA selection and EOF
@@ -2674,14 +2676,16 @@ sector acquires selection; channel 255 is skipped unless explicitly selected by
 the enabled filter. Other file/channel pairs cannot interrupt it. A matching EOF
 is delivered as audio and releases selection before decoder admission, while
 an unrelated EOF is filtered out. EOR does not release selection. Setfilter
-releases selection even with filtering disabled; Setmode alone preserves it.
-Seek/read startup and Pause clear selection with the existing decoder reset.
-These are emulator-reference behaviours, not established hardware timing.
+releases selection even with filtering disabled. Setmode releases it when
+realtime decoding becomes enabled. Seek/read startup and Pause also release
+selection; only reads and realtime activation reset predictors. This diagnostic
+selection policy differs from current native routing and EOF handling, as
+described in [CD references](../../reference/cd-audio.md#xa-selection-and-eof).
 
 `Queue::release_selection` and validated EOF permit the next selected file/channel
 to bind while preserving ADPCM and interpolation histories and queued output.
 The interconnect applies this release for successful Setfilter and reports it
-separately from a full audio reset. A decoded EOF releases selection before
+separately from a predictor reset. A decoded EOF releases selection before
 its submission waits; timeout preserves that release and the advanced histories.
 A decoded first sector acquires the new binding even if its output later times
 out. Muted EOF updates predictors only, as other muted sectors do.

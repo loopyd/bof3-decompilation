@@ -118,6 +118,12 @@ pub struct XaAudio {
     resampler: Resampler,
 }
 impl XaAudio {
+    /// Read and realtime-enable commands reset ADPCM predictors while the
+    /// device-wide interpolation ring, phase and previous sample continue.
+    pub(crate) fn reset_predictors(&mut self) {
+        self.decoder.reset(Histories::default());
+    }
+
     /// Runtime sectors may change coding without releasing file/channel.
     /// Rebinding identity requires an explicit selection release. Histories
     /// remain device-wide; mono leaves the right-channel history untouched.

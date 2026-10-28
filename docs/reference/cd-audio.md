@@ -179,29 +179,36 @@ CDDA shares whole-batch admission, pending completion, output and reset with XA.
 `Interconnect::enqueue_cd_cdda` supplies command mute and host attenuation to this
 path. The caller supplies selected audio sectors and service boundaries. Native
 stereo, clipping and a gain latch have a bounded consumed-output comparison;
-the retained queued tail is counted separately. Play commands, TOC and track
-selection, reports, autopause, disc-end handling and mechanical timing remain
-unsupported by the Rust drive.
+the retained queued tail is counted separately. The drive supports GetTN/GetTD
+with explicit validated TOC metadata. Play selection, reports, autopause,
+disc-end handling and mechanical timing remain unsupported.
 
 ## Decoder reset and command mute
 
 The [native command handlers](../../third_party/pcsx-redux-agentic/src/core/cdrom.cc)
-reset XA predictors/readiness on ReadN startup. Pause stops reading without that
-XA reset; SeekL/SeekP also do not call `resetXA`. Mute/Demute change a flag
-separate from ADPCTL mute. CdlInit, opcode `0x0A`, resets current and seek position
-to `00:02:00` and clears pending Setloc. Its source still leaves parts of reset
-and scheduled-work cancellation unresolved. Mechanical and IRQ timings require
-separate verification.
+reset XA predictors, first-sector, format-ready and ended state on every
+accepted ReadN/ReadS and when Setmode enables realtime decoding. Pause,
+SeekL/SeekP and Init preserve XA predictors. None of these commands clears the
+SPU interpolation ring or queued audio. They also preserve selected data and
+its read cursor. Mute/Demute change a flag separate from ADPCTL mute. CdlInit,
+opcode `0x0A`, resets current and seek position to `00:02:00` and clears pending
+Setloc. Native reset and scheduled-work cancellation still contain unresolved
+behavior; source facts do not establish mechanical or IRQ timing.
 
 [Rust command application and original cue restart](../specs/formats/audio.md#rust-cd-command-lifecycle-and-cue-restart)
-retain explicit modeled command boundaries and reject active-DMA reset. The
-Rust policy clears audio state on seek/read startup and Pause, allows an already
-continuing read to avoid restart, and resets positions and pending Setloc at
-`0x0A`. Init preserves mode, mute, filter, data selection and queued audio while
-releasing XA selection. Successful Init and seek transitions reject active DMA3
-before changing drive or buffer state. Audio-reset policies still differ from
-the native handlers. Selection release and diagnostic coding transitions are
-implemented separately below.
+use predictor-only resets at those Read and realtime-enable boundaries. Pause,
+seek and Init preserve queued audio, interpolation and data. Init also preserves
+mode, mute and filter while releasing the diagnostic XA selection. The caller
+must complete a pending audio submission before servicing another command.
+Successful Init and seek transitions reject active DMA3 before mutation; this
+is an unsupported Rust overlap case. Full `Queue::reset()` creates an explicit
+fresh context and is not a command effect.
+
+The Rust drive still allows an already continuing read to avoid its mechanical
+restart and resumes from its last received sector. Native Read restarts using
+the retained seek position. Automatic selection, EOF and per-sector coding
+policies also differ, as documented below. Predictor-reset agreement leaves
+these scheduling and routing differences open.
 
 Bounded native Init observations agree on position, pending Setloc, mode, mute
 and filter. During an active read, a partially consumed 2,048-byte requested FIFO

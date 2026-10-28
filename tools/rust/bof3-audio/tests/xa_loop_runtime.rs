@@ -34,14 +34,14 @@ fn original_xa_scheduler_reaches_reading_through_sdk_callbacks() {
 
 #[test]
 #[ignore = "requires BOF3_AUDIO_EXE and BOF3_AUDIO_TRACK; original cue restart with pending audio/data and changed XA channel"]
-fn original_next_cue_discards_old_buffers_and_rebinds_selected_stream() {
+fn original_next_cue_preserves_buffers_and_resets_selected_predictors() {
     use bof3_audio::{
         archive::disc::DiscImage,
         machine::{
-            cd_audio::{Model, XaAudio},
+            cd_audio::{Model, Resampler},
             cd_queue::Queue,
         },
-        xa::{Arithmetic, Histories, Stream},
+        xa::{Arithmetic, Decoder, Histories, Stream},
     };
     let (mut fixture, cue) = reading_fixture(0x2000);
     let track = std::path::PathBuf::from(std::env::var_os("BOF3_AUDIO_TRACK").unwrap());
@@ -65,12 +65,36 @@ fn original_next_cue_discards_old_buffers_and_rebinds_selected_stream() {
             .unwrap(),
         )
         .unwrap();
+    let mut decoder = Decoder::new(
+        Stream {
+            file: first[16],
+            channel: first[17],
+            coding: first[19],
+        },
+        Arithmetic::SplitFloor,
+        Histories::default(),
+    )
+    .unwrap();
+    let mut resampler = Resampler::new(decoder.format(), Model::EmulatorReference).unwrap();
+    let mut expected = Vec::new();
     // Retain one selected audio block and one acknowledged, unrequested data
     // block from the original disc before requesting a new cue.
     for lba in cue.runtime_start_lba..cue.runtime_start_lba + 6 {
         let raw = disc.read_sector(lba).unwrap();
         match fixture.drive.sector(&raw).unwrap() {
             Delivery::Xa(bytes) => {
+                let frames = resampler
+                    .process(&decoder.decode_sector(&bytes).unwrap())
+                    .unwrap();
+                expected.extend(frames.into_iter().map(|frame| {
+                    fixture
+                        .bus
+                        .inner
+                        .cd_host()
+                        .unwrap()
+                        .volume()
+                        .apply_xa(frame)
+                }));
                 fixture.bus.inner.enqueue_cd_audio(&bytes).unwrap();
             }
             Delivery::Data { bytes, response } => {
@@ -102,18 +126,20 @@ fn original_next_cue_discards_old_buffers_and_rebinds_selected_stream() {
     assert_eq!(fixture.state(), 5);
     assert_eq!(fixture.drive.activity(), Activity::Reading);
     let stats = fixture.bus.inner.cd_audio().unwrap().statistics();
-    assert_eq!(stats.queued_frames, 0);
-    assert_eq!(stats.reset_discarded_frames, old as u64);
-    assert_eq!(stats.resets, 2); // SeekP and the subsequent located ReadS.
+    assert_eq!(stats.queued_frames, old);
+    assert_eq!(stats.reset_discarded_frames, 0);
+    assert_eq!(stats.resets, 0);
+    assert_eq!(stats.predictor_resets, 1); // Located ReadS, with no reset on SeekP.
     fixture.bus.write(0x1f801800, Width::Byte, 0).unwrap();
-    assert!(fixture.bus.write(0x1f801803, Width::Byte, 0x80).is_err());
+    fixture.bus.write(0x1f801803, Width::Byte, 0x80).unwrap();
+    assert!(fixture.bus.inner.cd_host().unwrap().data_ready());
     assert!(fixture.commands.iter().any(|c| *c == (13, vec![1, 1])));
     let mut checked = false;
     for _ in 0..16 {
         let raw = disc.read_sector(fixture.drive.next_lba() as u32).unwrap();
         if let Delivery::Xa(bytes) = fixture.drive.sector(&raw).unwrap() {
             assert_eq!([bytes[0], bytes[1]], [1, 1]);
-            let mut fresh = XaAudio::new(
+            decoder = Decoder::new(
                 Stream {
                     file: bytes[0],
                     channel: bytes[1],
@@ -121,10 +147,20 @@ fn original_next_cue_discards_old_buffers_and_rebinds_selected_stream() {
                 },
                 Arithmetic::SplitFloor,
                 Histories::default(),
-                Model::EmulatorReference,
             )
             .unwrap();
-            let expected = fresh.sector(&bytes).unwrap();
+            let frames = resampler
+                .process(&decoder.decode_sector(&bytes).unwrap())
+                .unwrap();
+            expected.extend(frames.into_iter().map(|frame| {
+                fixture
+                    .bus
+                    .inner
+                    .cd_host()
+                    .unwrap()
+                    .volume()
+                    .apply_xa(frame)
+            }));
             fixture.bus.inner.enqueue_cd_audio(&bytes).unwrap();
             assert_eq!(
                 fixture
@@ -162,7 +198,7 @@ fn original_next_cue_discards_old_buffers_and_rebinds_selected_stream() {
         }
     }
     assert!(checked);
-    eprintln!("Original cue restart 0x2000 -> 0x2001: 4,704 queued frames and pending data cleared, two command-coupled resets, channel 1 rebound without patching game state.");
+    eprintln!("Original cue restart 0x2000 -> 0x2001: 4,704 queued frames and selected data preserved, one predictor reset, channel 1 rebound with continuous interpolation without patching game state.");
 }
 
 #[test]

@@ -47,6 +47,7 @@ pub struct Statistics {
     pub consumed_frames: u64,
     pub empty_frames: u64,
     pub resets: u64,
+    pub predictor_resets: u64,
     pub reset_discarded_frames: u64,
 }
 
@@ -94,9 +95,9 @@ impl Queue {
             ..self.statistics
         }
     }
-    /// Explicit emulator-reference seek/read reset: discard queued and pending output
-    /// and release stream binding. The next selected sector starts zero
-    /// predictor/interpolation history, retaining arithmetic/model choices.
+    /// Explicit fresh context: discard queued and pending output and release
+    /// stream binding. This is not a drive command. The next sector starts
+    /// zero predictor/interpolation history, retaining arithmetic/model choices.
     pub fn reset(&mut self) -> usize {
         let discarded = self.frames.len() + self.pending.take().map_or(0, |frames| frames.len());
         self.frames.clear();
@@ -105,6 +106,20 @@ impl Queue {
         self.statistics.resets += 1;
         self.statistics.reset_discarded_frames += discarded as u64;
         discarded
+    }
+
+    /// Reset only ADPCM predictors and release selection. Native sector feeds
+    /// finish their wait before the CPU can service a command.
+    pub fn reset_predictors(&mut self) -> Result<()> {
+        if self.pending.is_some() {
+            return Err("CD audio queue has a pending submission".into());
+        }
+        if let Some(audio) = self.audio.as_mut() {
+            audio.reset_predictors();
+        }
+        self.selection_released = true;
+        self.statistics.predictor_resets += 1;
+        Ok(())
     }
 
     /// Input must already be selected by the drive. Validate on a private

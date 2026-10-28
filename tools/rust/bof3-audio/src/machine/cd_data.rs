@@ -68,13 +68,6 @@ impl Fifo {
     pub fn ready(&self) -> bool {
         self.requested && self.cursor < self.bytes.len()
     }
-    pub fn reset(&mut self) -> usize {
-        let discarded = self.remaining();
-        self.bytes.clear();
-        self.cursor = 0;
-        self.requested = false;
-        discarded
-    }
     pub fn remaining(&self) -> usize {
         self.bytes.len() - self.cursor
     }

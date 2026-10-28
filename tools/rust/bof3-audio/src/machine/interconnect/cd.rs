@@ -9,8 +9,8 @@ use crate::machine::{
 };
 
 impl Interconnect {
-    /// Attach a fresh, explicitly configured XA context once. Seek reset and
-    /// command mute are coupled through apply_cd_drive_command.
+    /// Attach a fresh, explicitly configured XA context once. Predictor resets
+    /// and command mute are coupled through apply_cd_drive_command.
     pub fn configure_cd_audio(
         &mut self,
         queue: crate::machine::cd_queue::Queue,
@@ -70,36 +70,44 @@ impl Interconnect {
     /// Apply a captured command and its decoder/buffer effects at one supplied
     /// MCU boundary. Response publication and mechanical completion stay with
     /// the caller. Failed/unsupported commands leave drive and devices intact.
-    /// This handles the serialized path; reset during active DMA3 rejects.
+    /// A pending sector submission must finish first. Seek/Init during active
+    /// DMA3 remain unsupported by this serialized service path.
     pub fn apply_cd_drive_command(
         &mut self,
         drive: &mut Drive,
         command: &cd_host::Command,
     ) -> crate::Result<AppliedCommand> {
         self.cd_host()?;
+        if self
+            .cd_audio
+            .as_ref()
+            .is_some_and(|queue| queue.statistics().pending_frames != 0)
+        {
+            return Err(
+                "CD drive: command during pending audio submission is not implemented".into(),
+            );
+        }
         let mut candidate = drive.clone();
         let response = candidate.command(command)?;
         let seek_reset = matches!(candidate.activity(), Activity::Seeking { .. })
             && candidate.activity() != drive.activity();
-        let reset = seek_reset || (command.opcode == 9 && response.interrupt == 3);
-        let audio_selection_released =
-            reset || (matches!(command.opcode, 0x0a | 0x0d) && response.interrupt == 3);
+        let xa_predictors_reset = response.interrupt == 3
+            && (matches!(command.opcode, 0x06 | 0x1b)
+                || (command.opcode == 0x0e
+                    && drive.mode() & 0x40 == 0
+                    && candidate.mode() & 0x40 != 0));
+        let audio_selection_released = seek_reset
+            || xa_predictors_reset
+            || (matches!(command.opcode, 0x09 | 0x0a | 0x0d) && response.interrupt == 3);
         let init = command.opcode == 0x0a && response.interrupt == 3;
         if (seek_reset || init) && self.dma.cd.active() {
             return Err("CD drive: seek/reset during active DMA3 is not implemented".into());
         }
-        let discarded_audio_frames = if reset {
-            self.cd_audio
-                .as_mut()
-                .map_or(0, crate::machine::cd_queue::Queue::reset)
-        } else {
-            0
-        };
-        let discarded_data_bytes = if seek_reset {
-            self.cd_mut()?.reset_data()
-        } else {
-            0
-        };
+        if xa_predictors_reset {
+            if let Some(queue) = self.cd_audio.as_mut() {
+                queue.reset_predictors()?;
+            }
+        }
         self.cd_command_muted = candidate.muted();
         if audio_selection_released {
             if let Some(queue) = self.cd_audio.as_mut() {
@@ -109,10 +117,8 @@ impl Interconnect {
         *drive = candidate;
         Ok(AppliedCommand {
             response,
-            audio_reset: reset,
+            xa_predictors_reset,
             audio_selection_released,
-            discarded_audio_frames,
-            discarded_data_bytes,
         })
     }
     pub fn configure_cd_host(&mut self, volume: [u8; 4]) -> crate::Result<()> {
