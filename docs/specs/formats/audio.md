@@ -3887,6 +3887,14 @@ Preparation that completes a host call adds no transition or clock cost.
 `Execution::new` retains the raw base schedule, and `from_boot` retains original-ROM
 timing. Owned device phase remains separate from the original-ROM clock.
 
+Owned driver startup installs the A0/B0 vectors in RAM `0xA0..0xC0`, alongside
+its kernel descriptors at `0x100..0x128`. A0/72 and B0/07,17,18 execute the
+vectors, table lookup and delay slots before their existing guest routines,
+without a host forwarding transition. Their direct body guards still apply.
+The loader requires the current vector symbols, validates the four service
+table targets and checks the installed vector bytes after initialization.
+Other BIOS services retain their documented functional timing.
+
 Owned execution rejects a new host call while a continuation remains active.
 Observer, CPU, service, device and call-bound failures retain state and prevent
 further execution on that instance. A foreground WaitEvent polls its retained

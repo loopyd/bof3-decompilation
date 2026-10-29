@@ -208,7 +208,11 @@ impl Execution {
             .or(self.instruction.as_ref())
             .map(boot::timing::Clock::cycles);
         let mut waiting = false;
-        let host_call = Kernel::is_call(self.cpu.pc());
+        let host_call = Kernel::is_call(self.cpu.pc())
+            && !self
+                .kernel
+                .as_ref()
+                .is_some_and(|services| services.kernel.executes_vector(&self.cpu));
         let retired = if let Some(services) = self.kernel.as_mut().filter(|_| host_call) {
             waiting = services
                 .kernel

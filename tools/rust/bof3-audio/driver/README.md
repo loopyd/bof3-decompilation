@@ -32,6 +32,11 @@ The Rust [`machine::driver::Image`](../src/machine/driver.rs) validates artifact
 hashes, required symbols and allocation bounds, then starts services in zeroed
 RAM with explicit event, exception, timer, CD, DMA and SPU bindings. It uses the
 1,024-byte initialization stack and separate 4,096-byte exception stack.
+Startup also owns RAM `0xA0..0xC0` for the A0/B0 entry vectors and
+`0x100..0x128` for kernel descriptors. A0/72 and B0/07,17,18 execute those
+vectors and relocated service tables before their owned guest bodies. The
+loader requires the current vector symbols, checks their four table bindings
+and verifies the installed bytes. Direct body guards remain active.
 After service initialization, the host selects GP zero, foreground SP
 `0x801FFF00` and status `0x401`, with automatic PAD acknowledgement disabled.
 Sound initialization, layout selection and host-fed bank/SEP transfer follow
