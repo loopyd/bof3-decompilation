@@ -137,6 +137,13 @@ audio_sound_bank_ids:
 
 .section .bss
 
+# exe/slus_004_22@0x8018B308..0x8018B410, live cue working fields.
+# Preserve adjacency to the lower-voice attribute object.
+.balign 4
+.globl audio_cue_work
+audio_cue_work:
+    .space 264
+
 # exe/slus_004_22@0x8018B410, 12 bytes.
 .balign 4
 .globl audio_sound_lower_voice_attributes

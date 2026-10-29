@@ -4569,6 +4569,38 @@ the caller needs a new snapshot; cue dispatch does not refresh it implicitly.
 Both entries preserve the live software key word and read the configured ENVX
 model. They do not synchronize that word from hardware key-on registers.
 
+[`audio/cues.s`](../../../tools/rust/bof3-audio/driver/audio/cues.s) provides
+`audio_cue_dispatch`, seven handlers and `audio_effects_set_voice_volume`.
+Dispatch takes the row from A0 bits 0–7 and the live callback index from bits
+8–11. Seven callbacks are initialized; the raw entry does not bound that index.
+Bits 12–15 control the default volume override. Dispatch returns a path-dependent
+V0 value. Its gate and previous voice/arbitration fields persist across calls;
+it consumes the existing status snapshot without polling implicitly.
+
+The handlers read caller-loaded auxiliary rows and header pointers. Program
+lookup uses the low seven program bits. Tone lookup starts eight bytes into the
+same writable 256-byte `audio_cue_lookup` object. Attribute offsets are
+`(program_offset + tone_offset + 0x820) & 0xFFFF`; callers must back the resulting
+header accesses. Additional layers repeat the highest selected tone and execute
+in descending layer order. Redirection recognizes absolute bank IDs according
+to the selected handler and uses the final calculated offset. It reads the
+replacement voice byte without masking it. The raw handlers retain unchecked
+row and lookup behavior.
+
+`audio_cue_dispatch_prefix` holds four prefix bytes followed by seven writable
+callbacks. Its gate is the byte at `+2`. Preserve its adjacency to
+`audio_loader_spu_bases`, and keep the 264-byte `audio_cue_work` directly before
+`audio_sound_lower_voice_attributes`. The callable handlers require the row
+halfword at `audio_cue_work+0xFC` and valid live auxiliary/header storage.
+
+The cached-volume entry accepts voice, left gain and right gain in A0..A2.
+An unsigned low-halfword voice below 24 writes the right gain halfword, reads
+the dirty byte, writes the left gain halfword and sets dirty bits 0–1. It returns
+zero; other voices return `FFFFFFFF`. It performs no immediate device write.
+The same-voice sufficient-priority dispatch path supplies its second override
+gain to both channels for the final layer; other dispatch paths preserve the
+two distinct override gains.
+
 `kernel/timers.s` provides the stackless `audio_counter_set` and
 `audio_counter_reset` leaves used by sequence callback registration. Both accept
 counter IDs zero through two from A0's low sixteen bits and return one. Other
