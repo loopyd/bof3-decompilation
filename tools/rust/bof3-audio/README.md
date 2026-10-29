@@ -164,6 +164,31 @@ tail is two seconds, included in the reported 600-second audio safety limit.
 If loop/end stopping cannot complete within that limit, rendering fails without
 publishing a truncated song. Guest calls also have transition limits, including
 guest instructions and service calls.
+SFX rendering accepts an explicit SDK note or one local game cue in a fresh bank:
+
+```sh
+bin/harness audio render --mode sfx --engine psx \
+  --archive out/extracted/BIN/BATTLE/COMN_SE.EMI --driver out/audio/driver \
+  --header-entry 0 --body-entry 2 --history cold --duration 0.25 --tail 0.2 \
+  --voice 7 --program 0 --tone 0 --key 24 --fine 0 --left 100 --right 100 \
+  --output out/sfx-render --json
+```
+
+All seven note values are required. They select SDK playback directly and do not
+establish a game cue mapping or classify the sample. To execute one local game
+cue instead, replace those options with `--auxiliary-entry 1 --cue-row 0`.
+The entries and cue row belong to the named archive. Unsupported cross-bank
+records and unresolved sample references fail without publishing output.
+
+`--history cold` and a positive `--duration` are required. Repeated-event
+histories, multi-bank playback and vocal/XA streaming remain unsupported.
+The renderer polls game voice status before playback and after the body. It
+releases the explicit SDK voice, or all 24 voices for a game cue in the otherwise
+empty machine. The fixed tail includes guest release and safe-call delay and may
+end before silence. The `bof3.psx-effects-render/v1` report records the selected
+bank, playback values, calls, status snapshots, cutoff and clock limits.
+Independent native timing and PCM agreement remain open.
+
 PC rendering accepts the same archive/sequence with `--engine pc`,
 `--executable` and `--allow-approximations`, without BIOS or layout. It shares
 music extraction's MIDI/SF2 translation, defaults to two infinite-loop traversals,
@@ -174,7 +199,7 @@ repeated again. Explicit `--repeats` requests whole-file restarts only in that
 input mode. After the requested file plays, extra fixed-duration time advances
 the final synth state without restarting.
 
-Add `--format ogg` to either music engine to publish `render.ogg` alongside the
+Add `--format ogg` to a supported render mode to publish `render.ogg` alongside the
 inspectable WAV and report. Vorbis uses the pinned Rust encoder at quality 0.7,
 with stereo coupling disabled. `--quality 0.7` states that setting explicitly;
 other qualities fail. PC Ogg delivery accepts 32000, 44100 and 48000 Hz; PSX
@@ -245,7 +270,7 @@ regenerated. No compatibility export or packing implementation is retained.
 
 The migration is incomplete. Supported preservation, extraction, edited packing
 and bounded rendering paths are available. Independent PSX fidelity,
-SFX/XA runtime rendering, MP3 delivery and full verification evidence remain
+repeated SFX histories, vocal/XA runtime rendering, MP3 delivery and full verification evidence remain
 open. Unsupported operations fail explicitly. C source retirement is separately gated; this
 package is not a claim of full parity. TUI, live playback, standalone PSF
 commands and FLAC are retired from the replacement command surface.

@@ -4669,6 +4669,42 @@ The PSX CLI requires `--driver DIRECTORY` and rejects reference-only options.
 for development comparisons and the current compiled player. Other production
 operations and independent timing/PCM acceptance remain incomplete.
 
+### Owned cold-bank effects rendering
+
+The PSX `render --mode sfx` path runs one SDK note or local game cue through the
+owned driver. It requires `--archive`, `--driver`, `--header-entry`,
+`--body-entry`, `--history cold`, a positive `--duration` and a new `--output`
+directory. `--layout 0|1|2` selects a layout with the existing bank-capacity
+checks. Output is stereo at 44,100 Hz. `--tail` defaults to two seconds and
+`--timeout` defaults to 600 seconds, including body and tail.
+
+For an SDK note, supply `--voice`, `--program`, `--tone`, `--key`, `--fine`,
+`--left` and `--right`. All values are explicit. Voices are 0..23; key, fine pitch
+and channel volumes are 0..127. The populated program and tone must identify a
+canonical sample reference in the selected bank. This selection does not infer a
+game cue mapping or a semantic role for the sample.
+
+For a local game cue, replace the note options with `--auxiliary-entry` and
+`--cue-row`. The type-8 table must belong to the selected header in the same
+archive. The existing cue owner validates records and executes the guest
+dispatcher, including its allocation and arbitration. Cross-bank records,
+unverified flags and out-of-bank tone or sample reads still require runtime
+context and fail explicitly.
+
+The renderer initializes a fresh bank, starts the guest callbacks and polls all
+24 voice statuses before the selected event. It polls again after the body. At
+the next safe call boundary it releases the explicit SDK voice, or all 24 voices
+for a game cue in the otherwise empty machine. Output has exactly the requested
+body and tail frames. The fixed tail includes call-boundary delay and guest
+release and can end before silence.
+
+The `bof3.psx-effects-render/v1` report records the bank and artifact identities,
+selection, cold history, initialization, play, poll and release calls, voice
+snapshots, cutoff frames and output clock. WAV and report publication use the
+existing verified transaction. Optional Ogg delivery uses the accepted quality
+0.7 policy. Repeated-event histories, multi-bank playback and vocal/XA streaming
+remain unsupported. Native timing and independent PCM agreement remain open.
+
 ### Rust BIOS event state
 
 [Event operations](../../../tools/rust/bof3-audio/src/machine/events.rs) use the
