@@ -201,19 +201,63 @@ fn bank_bytes(resource: &Resource, source: &[u8]) -> Result<Vec<u8>> {
     }
 }
 
+fn retain_image_allocations(
+    original: &sprite_bank::Document,
+    current: &mut sprite_bank::Document,
+) -> Result<()> {
+    if current.roots.len() != original.roots.len() {
+        return Err(Error::Invalid(
+            "sprite image root allocation differs".into(),
+        ));
+    }
+    for (root, before) in current.roots.iter_mut().zip(&original.roots) {
+        if root.images.len() != before.images.len() {
+            return Err(Error::Invalid(
+                "sprite image table allocation differs".into(),
+            ));
+        }
+        for (image, before) in root.images.iter_mut().zip(&before.images) {
+            if image.consumed_bytes > before.consumed_bytes {
+                return Err(Error::Invalid(
+                    "sprite image stream exceeds its original consumed allocation".into(),
+                ));
+            }
+            image.consumed_bytes = before.consumed_bytes;
+            if *image != *before {
+                return Err(Error::Invalid("sprite image descriptor differs".into()));
+            }
+        }
+    }
+    Ok(())
+}
+
 fn import_bank(
     root: &Path,
     resource: &Resource,
     export: &Export,
     original: &[u8],
+    baseline: &[u8],
 ) -> Result<Vec<u8>> {
     let Some(member) = &export.sprite else {
         return Ok(original.to_vec());
     };
     let decoded = bank_bytes(resource, original)?;
-    let document: sprite_bank::Document =
+    let mut document: sprite_bank::Document =
         serde_json::from_slice(&read_member(root, member, 64 * 1024 * 1024)?)?;
     let original_document = sprite_bank::decode(&decoded)?;
+    let baseline_document = sprite_bank::decode(&bank_bytes(resource, baseline)?)?;
+    if document.roots.len() != baseline_document.roots.len()
+        || document
+            .roots
+            .iter()
+            .zip(&baseline_document.roots)
+            .any(|(root, baseline)| root.images != baseline.images)
+    {
+        return Err(Error::Invalid(format!(
+            "{member}: preserve the baseline image descriptors"
+        )));
+    }
+    retain_image_allocations(&original_document, &mut document)?;
     let mut planes = Vec::with_capacity(export.bank_images.len());
     for view in &export.bank_images {
         let descriptor = &original_document.roots[view.root].images[view.image];
@@ -548,7 +592,8 @@ fn validate_resource_edit(resource: &Resource, original: &[u8], edited: &[u8]) -
     } else if resource.sprite_bank.is_some() {
         let before = bank_bytes(resource, original)?;
         let after = bank_bytes(resource, edited)?;
-        let document = sprite_bank::decode(&after)?;
+        let mut document = sprite_bank::decode(&after)?;
+        retain_image_allocations(&sprite_bank::decode(&before)?, &mut document)?;
         let mut planes = Vec::new();
         for (root, record) in document.roots.iter().enumerate() {
             for (image, descriptor) in record.images.iter().enumerate() {
@@ -1022,7 +1067,10 @@ pub(crate) fn reconstruct(
         }
         edit.add_units(&export.raw, imported_raw, if word_units { 2 } else { 1 })?;
         if let Some(member) = &export.sprite {
-            edit.add(member, import_bank(root, resource, export, original_raw)?)?;
+            edit.add(
+                member,
+                import_bank(root, resource, export, original_raw, raw)?,
+            )?;
         }
         if let Some(member) = &export.animation {
             let document: resident::Document =

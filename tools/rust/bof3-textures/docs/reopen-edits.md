@@ -45,6 +45,9 @@ EMI owner's fixed-allocation replacement rules. Changes to opaque fields,
 unsupported resources, archive padding, or unrelated entries are refused.
 Changing a baseline hash in the manifest does not authorize those changes.
 Compressed edits retain the qualified original allocation across re-exports.
+An image's `consumed_bytes` field reports its baseline stream length. Re-export
+can reduce that value; further edits still use the original snapshot's capacity.
+Keep the exported image descriptors unchanged.
 Area `surface.json` edits retain the original direct-selected word set and
 coordinate-read policy across re-exports. A prior edit does not qualify a new
 coordinate allocation. Raw area bytes, headers, grid IDs, coordinate bytes and
