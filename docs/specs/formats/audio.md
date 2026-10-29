@@ -4336,6 +4336,39 @@ parameter callbacks afterward before taking their unguarded dispatch paths.
 The complete table installer is available for direct guest entry; full game
 startup and production routing remain separate obligations.
 
+`audio_sound_initialize` in the linked
+[sound startup component](../../../tools/rust/bof3-audio/driver/audio/startup.s)
+provides the game-level sound initialization entry. Run `audio_kernel_initialize`
+first, bind its required services and device inputs, set `audio_video_mode`, and
+supply a valid O32 foreground stack. The sound entry takes no arguments. Its
+`0x18`-byte frame is additional to the nested routine and exception stacks.
+It returns the final voice-attribute setter's V0 and ignores earlier call
+results. A zero return does not establish that every earlier operation succeeded;
+failures can leave partial state.
+
+The entry resets the audio library, configures two handles with four `0xAC`-byte
+sequence records each, initializes tick mode one, selects and enables reverb mode
+one, clears the playback byte and sets the live voice count to sixteen. The
+`audio_sound_sequence_records` allocation holds all eight records. Configuration
+writes selected fields rather than clearing each record. The adjacent seven-byte
+`audio_sound_channels` array receives `0..6`; after the preserved nine-byte gap,
+`audio_sound_bank_ids` receives seven `FF` bytes.
+
+The twelve-byte `audio_sound_gains` allocation receives `07FF` at offsets
+`+0/+2` and `3FFF` at `+8/+A`; bytes `+4..+7` remain untouched. The lower and
+upper voice-attribute blocks each own twelve bytes. The lower block receives
+voice mask `0000FFFF`, attribute flags three and left/right gains `07FF`.
+The upper block receives mask `00FF0000`, flags three and gains `3FFF`.
+Only the upper block is passed to the setter, applying those gains to voices
+16 through 23. Storing the lower block does not apply its gains.
+
+Startup installs the thirteen command bindings described above. Repeated calls
+retain unwritten application fields and reuse the active callback manager;
+they do not repeat cold BSS clearing. Custom command and parameter-callback
+bindings must be installed afterward. This entry's direct callees are owned.
+Scheduler and loading closure, production routing and independent native audio
+acceptance remain open.
+
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
 
