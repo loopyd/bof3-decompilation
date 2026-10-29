@@ -378,7 +378,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v22`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v23`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -399,7 +399,7 @@ command bytes one through four and the other two pages stay protected. Strings
 `0x801ED198` and `0x801ED1A0`. Their allocations are three, four, five and five
 bytes, including NUL. The pointer table at `0x801ED1B8` supplies them to the
 `0x8014FC90` call at `0x801E692C`. Alignment bytes and pointer words stay fixed.
-The final fifteen strings expose four stat-label groups through `game-literal`.
+The next fifteen strings expose four stat-label groups through `game-literal`.
 The groups start at `0x801EC940`, `0x801EC99C`, `0x801ECB0C` and `0x801ECB2C`.
 The first three contain `Pwr`, `Def`, `Int` and `Agl`; the last contains `Pwr`,
 `Def` and `Agl`. The first group uses four-byte records and the others use
@@ -408,11 +408,19 @@ accepts up to three encoded bytes. The two trailing bytes of six-byte records
 stay protected. The fixed-address consumers call `0x8014F800` at
 `0x801DBC88`, `0x801DBCFC`, `0x801DBD64`, `0x801DBDC0`, `0x801DC90C`,
 `0x801DC934`, `0x801DC95C`, `0x801DC978`, `0x801DE6EC` and `0x801DF1AC`.
-These stat labels have no pointer-table references. Their shared numeric format
-remains protected because its other consumers are unresolved. Edited stat-label
-rendering remains unverified.
+These stat labels have no pointer-table references. Controlled Equipment member
+selection verifies edited labels in the group at `0x801ECB0C`. Identical START
+and STATUS payloads leave the active supplier indistinguishable. Other groups and natural menu availability remain unverified.
 
-Retain all 105 allocations and edit only `text`. Re-extract older inline
+The final string exposes the four-byte `%3d` allocation at `0x801D0C4C` through
+`ascii-u16-decimal-format`. Its eighteen formatter sites read one unsigned byte
+or halfword, write to the 64-byte scratch buffer at `0x80145AD4`, then draw through
+`0x80150098`. Retain one decimal argument, at most three encoded bytes plus NUL,
+and at most five formatted characters. Format widths use 1 through 4. The next
+allocation at `0x801D0C50` stays protected. Edited numeric rendering remains
+unverified.
+
+Retain all 106 allocations and edit only `text`. Re-extract older inline
 documents before editing or packing.
 
 Recognition pins the selected payload outside its supported allocations.
@@ -590,7 +598,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v22` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v23` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
