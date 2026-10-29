@@ -4144,8 +4144,7 @@ initialization. Positive counts install the storage pointer and initialize only
 its first record. These entries preserve partial writes and do not add bounds
 checks or transactional failure. `audio_spu_set_transfer_mode` clears its mode
 word for A0 equal to one and sets it to one for every other value.
-Complete game initialization and its installed
-sequence handlers remain separate obligations.
+Complete game initialization remains a separate obligation.
 
 The linked [sequence commands](../../../tools/rust/bof3-audio/driver/audio/commands.s)
 use the signed low halfwords of A0 and A1 as handle and sequence indices.
@@ -4177,8 +4176,8 @@ The reverb command writes zero or two to `audio_sequence_voice_state_e1e0`;
 it does not directly enable SPU reverb. The tempo command reads three big-endian
 bytes, divides 60,000,000 by that value and retains the original tick arithmetic,
 HI/LO effects and BREAK paths. Invalid arithmetic can leave earlier cursor and
-state writes visible. The complete handler installer is not yet linked into the
-owned startup path.
+state writes visible. These handlers are available through the linked installer
+described below. Full startup remains a separate obligation.
 
 The linked [voice controls](../../../tools/rust/bof3-audio/driver/audio/controls.s)
 export sequence gain, pan, bend, release and bank/tone-selection routines.
@@ -4277,7 +4276,7 @@ fields, callback cells, handles and event cursors remain visible. Afterward the
 command reads delta time through the current handle and stores the delay in its
 previously cached record. The command frame needs `0xD8` bytes; nested attribute
 calls raise that to `0xF8`, plus any callback depth and the O32 caller home area.
-The complete installer and production startup remain open.
+Production startup remains open.
 
 The linked [note component](../../../tools/rust/bof3-audio/driver/audio/notes.s)
 exports the note command, note-on and note-off routines and their allocation,
@@ -4324,6 +4323,18 @@ and partial writes. The note-on frame uses `0x148` bytes; the deepest command,
 allocation and mask-update path uses `0x1A8` bytes plus the O32 caller home area.
 Full startup, production routing, scheduler timing and native audio fidelity
 remain separate obligations.
+
+`audio_sequence_install_handlers` in the linked
+[initialization component](../../../tools/rust/bof3-audio/driver/audio/initialization.s)
+installs thirteen owned command pointers in the shared voice globals. It takes
+no arguments, uses no stack frame and returns the data-entry command address in
+V0. The routine performs 36 ordered word stores without reading the table.
+It clears words at offsets `+28`, `+64`, `+68` and `+76..+152`, including the
+parameter-callback slots. It leaves `+72`, `+156` and all other words untouched.
+Repeated installation replaces custom bindings. Callers must bind valid
+parameter callbacks afterward before taking their unguarded dispatch paths.
+The complete table installer is available for direct guest entry; full game
+startup and production routing remain separate obligations.
 
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
