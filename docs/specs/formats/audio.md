@@ -3853,7 +3853,7 @@ RAM allocation. Use the linked exception-stack end as `Environment::stack_top`.
 The execution loop must enter owned exception delivery for IRQs and syscalls,
 prepare before selecting each service or instruction, reread PC after preparation,
 and complete guards after successful instruction retirement. The linker and
-loader reserve `0x80020000..0x80040000` for the owned image, state and stacks.
+loader reserve `0x80020000..0x80050000` for the owned image, state and stacks.
 Host media staging remains in `0x80010000..0x80020000`. Callers must exclude the
 owned allocation from media, other code and foreground stacks. This development
 profile does not load the original BIOS shell or standalone player alongside it.
@@ -4392,6 +4392,39 @@ of seven words. SPU-base words remain numeric device addresses, while header and
 sequence pointers relocate with their owned storage. The first LUI/ORI pair uses
 an explicit unadjusted upper-half linker symbol, since ORI does not sign-extend
 its low half. Bank opening, upload and production routing remain separate work.
+
+`audio_bank_open_head_sticky` in the linked
+[bank component](../../../tools/rust/bof3-audio/driver/audio/banks.s) takes a mutable
+header pointer in A0, a signed sixteen-bit bank ID in A1 and an explicit SPU byte
+base in A2. Supported IDs are `0..15`, or `-1` to select the first free slot.
+The entry supplies allocation mode one and returns the signed sixteen-bit result.
+`audio_bank_open_head` takes the allocation mode in A2 and SPU base in A3 instead.
+A zero low halfword selects the live SPU allocator; other values use the supplied
+base. The combined wrapper, core and allocator frames require `0x478` foreground
+stack bytes, in addition to the separate exception stack.
+
+Opening retains pointers into the caller's writable header and updates its
+program records and sample-address halfwords. The core accepts the `VAB` upper
+three magic bytes. Low byte `70` with signed version at least five selects 128
+program records; other accepted headers use 64. Version below five scales sample
+length words by four, otherwise by eight. The core reads the low sample-count
+byte and includes the leading sample-table entry, so it processes count plus one
+lengths and address writes. Callers must provide the full referenced header extent.
+
+The existing bank-pointer arrays, sixteen flags and open count remain live shared
+state. The component adds sixteen-word `audio_bank_body_sizes` and
+`audio_bank_spu_bases` arrays. Success leaves the transfer latch busy. A busy-entry
+rejection leaves the latch unchanged; later returned errors clear it and retain
+earlier header and pointer mutations. Opening is not transactional. It does not
+upload samples or open a sequence.
+
+`audio_spu_allocate` and `audio_spu_coalesce_allocations` retain the original
+allocator's rounding, wrapping arithmetic, free-block sorting, splitting and
+coalescing. They use the records and live count/pointer fields initialized by
+sound startup. Direct callers must supply writable records with capacity for
+splits and valid sentinel termination. The coalescer does not bound its sentinel
+scan independently. The guest code does not validate arbitrary IDs, headers or
+allocation histories. Production routing and native audio acceptance remain open.
 
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:

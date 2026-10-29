@@ -66,7 +66,7 @@ fn prepare_kernel(
         || !(exception_stack < exception_top && exception_top == bss_end)
         || init_top & 7 != 0
         || exception_top & 7 != 0
-        || bss_end > 0x8004_0000
+        || bss_end > 0x8005_0000
     {
         return Err("kernel image/allocation metadata is inconsistent or outside its arena".into());
     }
