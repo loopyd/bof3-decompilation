@@ -4471,6 +4471,18 @@ retain the original break exception. The combined opening frames require `0x58`
 stack bytes before callees. Opening does not start playback; scheduler, production
 routing and native audio acceptance remain open.
 
+`audio_sequence_play` takes the handle, record index, mode and repeat count in
+A0 through A3. Handle, index and repeat count use their signed low sixteen bits;
+mode uses its low byte. `audio_sequence_set_play_mode` implements the same state
+changes directly. Every mode clears record flag masks `0x200` and `4` and stores
+the repeat halfword at `+0x46`. Mode one sets mask `1`, clears halfword `+0x48`,
+sets byte `+0x2B` and passes the saved gains through `audio_sequence_set_gain`.
+That callee retains its gain clamping and shared voice-owner write. Mode zero
+sets mask `2`. Other modes preserve both masks, and neither recognized mode
+clears the other's mask. These entries do not validate allocation or capacity.
+The combined wrapper, mode setter and gain frames require `0x48` stack bytes.
+The scheduler must run separately to consume these flags.
+
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
 
