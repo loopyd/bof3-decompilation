@@ -485,8 +485,10 @@ The item-category labels ITEM, WEAPON, ARMOR, OPTION and VITAL occupy
 Their capacities are five, seven, six, seven and six bytes including NUL.
 The reader at `0x801DFBF4` selects pointers from `0x801ECC64` using the panel
 category byte and draws through `0x8014F800` at `0x801DFF24`. Keep the nine
-alignment bytes and twenty pointer bytes protected. Edited category rendering
-and general selector bounds remain unverified.
+alignment bytes and twenty pointer bytes protected. A controlled packed-media
+Items observation verifies ITEM changed to XTEM. Other category labels, general
+selector bounds, executed-pointer binding and natural availability remain
+unverified; identical payloads leave the START or STATUS supplier unresolved.
 
 The skill-category labels HEAL, ASSIST, ATTACK and SKILL occupy
 `0x801ECC78`, `0x801ECC80`, `0x801ECC88` and `0x801ECC90`, with capacities
