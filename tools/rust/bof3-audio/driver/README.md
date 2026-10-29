@@ -120,8 +120,13 @@ display enable, DMA direction and NTSC display mode update its status. Reset
 and IRQ acknowledgement clear the GPU interrupt latch. The output clock and
 original reference clock supply VBlank transitions for field parity. GPU
 status/control accesses require words. PAL mode, other GP1 commands, GP0, VRAM
-and GPU DMA remain unsupported. Reference root-counter timing still requires
-separate integration.
+and GPU DMA remain unsupported.
+
+Original BIOS reference boot uses absolute CPU cycles for the NTSC root-counter
+scheduler. Counter reads, target and mode writes, blanking gates and IRQs follow
+the emulator's update order. Scheduling wraps rate products at 32 bits and
+uses 64-bit absolute CPU cycles. This profile uses the default disabled
+`RCntFix` setting and retains the mode-triggered timer-2 jitter rule. Owned startup and PCM output use their separate clocks.
 
 The production PSX music renderer uses this driver. Other production operations,
 full SFX/vocal contexts, native timing and independent PCM acceptance remain open.

@@ -1,7 +1,7 @@
 //! Bounded guest calls with owned services or caller-loaded BIOS code and an
 //! explicit instruction clock. Original-ROM references preserve interpreter costs
 //! and NTSC VBlank phase. Attached CD FIFO callbacks run after delay slots;
-//! mechanical/media, GPU and reference root-counter timing remain unmodeled.
+//! mechanical/media timing and graphics processing remain unmodeled.
 //! PCM output uses a separate explicit clock.
 use super::{
     boot,

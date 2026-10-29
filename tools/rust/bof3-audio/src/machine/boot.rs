@@ -54,6 +54,7 @@ pub fn load_us(firmware: Image, executable: &Executable, transition_limit: u64) 
     }
     let mut bus = Interconnect::from_ram(Ram::default());
     bus.configure_gpu_status()?;
+    bus.configure_reference_timers()?;
     bus.attach_firmware(firmware)?;
     let mut cpu = Cpu::pcsx_redux_reset();
     let mut timing = timing::Clock::default();

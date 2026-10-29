@@ -70,6 +70,16 @@ impl Interconnect {
         }
         if (0x1f80_1100..0x1f80_1130).contains(&physical) {
             Self::require_word_port(address, width)?;
+            if let Some(timers) = &mut self.reference_timers {
+                return timers
+                    .read(
+                        ((physical - 0x1f80_1100) >> 4) as usize,
+                        physical & 15,
+                        &mut self.interrupts,
+                        self.gpu_status.as_mut().expect("configured reference GPU"),
+                    )
+                    .map_err(|e| error(address, &e.to_string()));
+            }
             return self
                 .timers
                 .read(((physical - 0x1f80_1100) >> 4) as usize, physical & 15)
@@ -166,6 +176,17 @@ impl Interconnect {
         }
         if (0x1f80_1100..0x1f80_1130).contains(&physical) {
             Self::require_word_port(address, width)?;
+            if let Some(timers) = &mut self.reference_timers {
+                return timers
+                    .write(
+                        ((physical - 0x1f80_1100) >> 4) as usize,
+                        physical & 15,
+                        value,
+                        &mut self.interrupts,
+                        self.gpu_status.as_mut().expect("configured reference GPU"),
+                    )
+                    .map_err(|e| error(address, &e.to_string()));
+            }
             return self
                 .timers
                 .write(

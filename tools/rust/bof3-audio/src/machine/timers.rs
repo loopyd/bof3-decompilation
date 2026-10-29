@@ -2,6 +2,8 @@
 //! CPU/GPU clock integration and sub-clock pulse widths remain separate gates.
 //! https://psx-spx.consoledev.net/timers/
 
+pub(crate) mod reference;
+
 use super::interrupts::{Interrupts, Source};
 use crate::Result;
 
