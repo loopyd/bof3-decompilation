@@ -4147,6 +4147,39 @@ word for A0 equal to one and sets it to one for every other value.
 Complete game initialization and its installed
 sequence handlers remain separate obligations.
 
+The linked [sequence commands](../../../tools/rust/bof3-audio/driver/audio/commands.s)
+use the signed low halfwords of A0 and A1 as handle and sequence indices.
+The existing handle table selects caller-owned records with stride `0xAC`.
+Callers supply valid records, event bytes and current MIDI-channel indices.
+These routines add no index or cursor bounds checks.
+`audio_sequence_read_delta` advances the live cursor before each byte read,
+accepts a terminated seven-bit continuation sequence of any length and uses
+wrapping arithmetic. It returns ten times the decoded value and adds that
+result to record `+0x80`. An initial zero byte leaves the accumulator unchanged.
+Program, parameter, loop and ordinary controller paths store the returned delay
+at `+0x88`. The program command uses the live channel byte at `+0x12`.
+
+`audio_sequence_controller_command` consumes a parameter byte before dispatch.
+Controllers 6, 7, 10, 11 or 64, 98, 99, 100, 101, 91 and 121 use the ten live
+callback words at shared voice-global offsets `+0x20..+0x44`, respectively.
+These slots require valid O32 callbacks. There is no null check. Callbacks receive
+the handle and sequence indices. All except controller 121 also receive the
+consumed parameter in A2. Controller 121 retains its incoming controller value
+in A2. Callback branches return without the dispatcher's own delta read or delay
+write. The callback owns completion of that event.
+
+`audio_sequence_data_command` can call the existing matrix entry at
+`handle * 16 + sequence`. This optional callback is null-checked and receives
+the low byte of A2. The command then rereads the handle and cursor through the
+delta reader. Callback changes remain live. The selected command frames require
+up to `0x20` stack bytes and an O32 caller home area. Callback depth is additional.
+The reverb command writes zero or two to `audio_sequence_voice_state_e1e0`;
+it does not directly enable SPU reverb. The tempo command reads three big-endian
+bytes, divides 60,000,000 by that value and retains the original tick arithmetic,
+HI/LO effects and BREAK paths. Invalid arithmetic can leave earlier cursor and
+state writes visible. The complete handler installer and its remaining voice,
+gain and bend callees are not yet linked into the owned startup path.
+
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
 
