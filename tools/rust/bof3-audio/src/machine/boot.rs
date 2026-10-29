@@ -53,6 +53,7 @@ pub fn load_us(firmware: Image, executable: &Executable, transition_limit: u64) 
         return Err("BIOS shell handoff requires transition limit 1..=10000000".into());
     }
     let mut bus = Interconnect::from_ram(Ram::default());
+    bus.configure_gpu_status()?;
     bus.attach_firmware(firmware)?;
     let mut cpu = Cpu::pcsx_redux_reset();
     let mut timing = timing::Clock::default();

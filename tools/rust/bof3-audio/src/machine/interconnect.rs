@@ -36,6 +36,7 @@ pub struct Interconnect {
     interrupts: Interrupts,
     dma: Dma,
     timers: Timers,
+    gpu_status: Option<super::gpu_status::Status>,
     spu_transfer: SpuTransfer,
     dma_observation: Option<super::dma::Observation>,
     spu_voices: Option<spu_voice_ports::Ports>,
@@ -70,6 +71,7 @@ impl Interconnect {
             interrupts: Interrupts::default(),
             dma: Dma::default(),
             timers: Timers::default(),
+            gpu_status: None,
             spu_transfer: SpuTransfer::default(),
             dma_observation: None,
             spu_voices: None,
@@ -161,6 +163,22 @@ impl Interconnect {
 
     pub(crate) fn set_reference_access(&mut self, cycle: Option<u64>) {
         self.reference_access = cycle;
+    }
+
+    /// Attach reset-state NTSC status/control before starting its frame clock.
+    /// This enables no graphics, VRAM transfers or GPU DMA.
+    pub fn configure_gpu_status(&mut self) -> crate::Result<()> {
+        if self.gpu_status.is_some() {
+            return Err("GPU status model already configured".into());
+        }
+        self.gpu_status = Some(super::gpu_status::Status::default());
+        Ok(())
+    }
+
+    pub(crate) fn gpu_vblank(&mut self, active: bool) {
+        if let Some(status) = &mut self.gpu_status {
+            status.set_vblank(active);
+        }
     }
 
     /// Per-voice signals before main gain, mixing, capture, CD and reverb. The
@@ -450,6 +468,7 @@ impl Interconnect {
         self.timers.set_hblank(active, &mut self.interrupts)
     }
     pub fn set_vblank(&mut self, active: bool) {
+        self.gpu_vblank(active);
         self.timers.set_vblank(active);
         self.interrupts.set_line(Source::Vblank, active);
     }

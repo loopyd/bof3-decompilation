@@ -22,6 +22,16 @@ impl Interconnect {
             return Ok(u32::from_le_bytes(word));
         }
         let physical = Self::physical(address);
+        if physical == 0x1f80_1814 {
+            if width != Width::Word {
+                return Err(error(address, "GPU status requires a word read"));
+            }
+            return self
+                .gpu_status
+                .as_ref()
+                .map(|status| status.read())
+                .ok_or_else(|| error(address, "GPU status model is not configured"));
+        }
         if Self::is_cd_port(physical) {
             return self.read_cd_port(address, width);
         }
@@ -104,6 +114,20 @@ impl Interconnect {
             return Ok(());
         }
         let physical = Self::physical(address);
+        if physical == 0x1f80_1814 {
+            if width != Width::Word {
+                return Err(error(address, "GPU control requires a word write"));
+            }
+            self.gpu_status
+                .as_mut()
+                .ok_or_else(|| error(address, "GPU status model is not configured"))?
+                .control(value)
+                .map_err(|e| error(address, &e.to_string()))?;
+            if matches!(value >> 24, 0 | 2) {
+                self.interrupts.acknowledge(!2);
+            }
+            return Ok(());
+        }
         if physical == 0x1f80_2041 {
             if width != Width::Byte {
                 return Err(error(address, "POST display requires a byte write"));
