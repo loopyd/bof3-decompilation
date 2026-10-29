@@ -37,6 +37,27 @@ impl Console {
         &self.bytes
     }
 
+    /// Capture logical diagnostic bytes for owned callers that discard V0.
+    /// This does not emulate BIOS stdout, putchar state or its return value.
+    pub(super) fn puts(&mut self, cpu: &Cpu, bus: &mut impl Bus) -> Result<()> {
+        let address = cpu.register(4);
+        if address == 0 {
+            return Err("diagnostic puts requires a nonnull RAM string".into());
+        }
+        let output = read_text(bus, address, "diagnostic puts string")?;
+        if output
+            .iter()
+            .any(|byte| !matches!(byte, b'\n' | b'\r' | 0x20..=0x7e))
+        {
+            return Err("diagnostic puts supports printable ASCII, CR and LF only".into());
+        }
+        if output.len() > self.capacity - self.bytes.len() {
+            return Err("diagnostic output capacity exceeded".into());
+        }
+        self.bytes.extend_from_slice(&output);
+        Ok(())
+    }
+
     pub(super) fn printf(&mut self, cpu: &Cpu, bus: &mut impl Bus) -> Result<u32> {
         let format = read_format(bus, cpu.register(4))?;
         let mut output = Vec::new();
@@ -56,6 +77,8 @@ impl Console {
                 let remaining = &format[position..];
                 let (length, conversion) = if remaining.starts_with(b"d") {
                     (1, Conversion::Decimal)
+                } else if remaining.starts_with(b"02x") {
+                    (3, Conversion::Hex(2))
                 } else if remaining.starts_with(b"04x") {
                     (3, Conversion::Hex(4))
                 } else if remaining.starts_with(b"08x") {
@@ -64,7 +87,8 @@ impl Console {
                     (1, Conversion::String)
                 } else {
                     return Err(
-                        "unsupported diagnostic format; expected %d, %04x, %08x, %s or %%".into(),
+                        "unsupported diagnostic format; expected %d, %02x, %04x, %08x, %s or %%"
+                            .into(),
                     );
                 };
                 let value = read_argument(cpu, bus, argument)?;

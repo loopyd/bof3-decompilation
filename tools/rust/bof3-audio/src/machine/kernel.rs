@@ -1129,6 +1129,14 @@ impl Kernel {
                 cpu.set_register(2, count);
                 "printf"
             }
+            (0xb0, 0x3f) => {
+                self.console
+                    .as_mut()
+                    .ok_or("diagnostic console is not configured")?
+                    .puts(cpu, bus)?;
+                // The owned diagnostic ABI preserves V0; its callers discard it.
+                "puts"
+            }
             (0xb0, 0x18) => {
                 let entry = self
                     .exception_reset
