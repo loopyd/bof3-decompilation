@@ -742,7 +742,20 @@ audio_spu_transfer_busy:
 .globl audio_bank_body_sizes
 audio_bank_body_sizes:
     .space 64
+# exe/slus_004_22@0x80190BD0, open count and six-byte gap.
+.globl audio_sequence_voice_state_0bd0
+audio_sequence_voice_state_0bd0:
+    .space 2
+    .space 6
 # exe/slus_004_22@0x80190BD8, 64 bytes.
 .globl audio_bank_spu_bases
 audio_bank_spu_bases:
     .space 64
+
+# exe/slus_004_22@0x80190C18, history and release mask.
+.globl audio_sequence_envelope_history
+audio_sequence_envelope_history:
+    .space 64
+.globl audio_sequence_release_mask
+audio_sequence_release_mask:
+    .space 4
