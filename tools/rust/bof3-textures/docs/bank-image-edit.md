@@ -71,6 +71,62 @@ spans. A shorter result does not reduce the original capacity for later edits.
 An oversized result is refused without a completed output. See
 [Reopen packed edits](reopen-edits.md) before continuing from the new package.
 
+## Edit cell records and animation steps
+
+Use a separate package for this example. It changes a stored frame reference,
+duration, anchor, U coordinate, and flip flag while preserving the image bytes.
+
+```sh
+build/tools/rust/bof3-textures/release/bof3-textures unpack out/extracted/BIN/BPLCHAR/BPLD012.EMI --output out/textures/sprite-record-package
+```
+
+Find entry 7's sprite document and change these existing records:
+
+```python
+import json
+from pathlib import Path
+
+root = Path("out/textures/sprite-record-package")
+manifest = json.loads((root / "manifest.json").read_text())
+resource = "SLUS_004.22:BIN/BPLCHAR/BPLD012.EMI#entry-007"
+export = next(item for item in manifest["exports"] if item["resource"] == resource)
+path = root / export["sprite"]
+document = json.loads(path.read_text())
+bank_root = document["roots"][0]
+program = bank_root["programs"][0]
+assert program["offset"] == 38906
+assert program["steps"][0] == {"duration": 4, "operand": 0}
+program["steps"][0] = {"duration": 5, "operand": 1}
+cell = bank_root["cells"][0]
+assert cell["offset"] == 38968
+part = cell["parts"][0]
+assert (part["x"], part["u"], part["horizontal_flip"]) == (-11, 0, False)
+part.update(x=-10, u=8, horizontal_flip=True)
+path.write_text(json.dumps(document) + "\n")
+```
+
+The step keeps its normal-frame role and refers to an existing cell. The first
+stored cell receives a separate record edit. Keep other fields, list lengths,
+offsets, and opaque flags unchanged. Durations count consumer updates, not a
+promised number of displayed frames or milliseconds. This example does not
+select a playback direction or establish which records a game entity uses.
+
+Pack, verify, and re-export the new records:
+
+```sh
+build/tools/rust/bof3-textures/release/bof3-textures pack out/textures/sprite-record-package --output out/textures/sprite-record-packed --json
+build/tools/rust/bof3-textures/release/bof3-textures verify out/textures/sprite-record-packed --package out/textures/sprite-record-package --json
+build/tools/rust/bof3-textures/release/bof3-textures unpack out/textures/sprite-record-packed --package out/textures/sprite-record-package --output out/textures/sprite-record-reopened
+```
+
+Require the same successful byte-check fields described above. Inspect the
+reopened `sprite.json`: its edited step and cell fields must match the requested
+values, and other records must remain unchanged. Image PNGs and palette words
+must match the unedited package. A valid stored UV or flip flag does not establish
+its assembled appearance without the entity, source uploads, and draw state.
+
+## Preserve source allocations
+
 For other qualified records, mode 1 accepts index bytes from 0 to 31; mode 2 and
 raw-word records accept bytes from 0 to 255. Keep dimensions, record counts,
 offsets, image modes, headers, and diagnostic palettes unchanged. Shared views
