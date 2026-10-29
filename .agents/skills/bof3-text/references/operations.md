@@ -199,8 +199,8 @@ spaces as `0x20`, without command or format interpretation. All these fields
 reserve one NUL byte. Controlled BATE equipment-screen checks cover `WEAPON`,
 `ARMOR`, `OPTION` and the `%3d/%3d` format. The `OPTION` observation uses an
 upstream cursor fixture; its natural availability remains unverified. Observed
-calls bind `ARMOR` and `OPTION` to table `0x801D8EB8`; the active `WEAPON`
-allocation, other fields and SHISU rendering remain unverified.
+calls bind `WEAPON`, `ARMOR` and `OPTION` to table `0x801D8EB8`. Other fields
+and SHISU rendering remain unverified.
 BATE and SHISU also expose `%02d` with one unsigned byte argument and bounds of
 four encoded bytes and three formatted bytes. Their `%7d` rows retain one signed
 32-bit argument, three encoded bytes and eleven formatted bytes. Only this codec

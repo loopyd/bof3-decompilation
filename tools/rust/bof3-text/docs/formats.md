@@ -541,12 +541,12 @@ strings to `0x8014F800`. These `game-literal` fields retain their original strin
 length plus NUL, with capacities of five to seven bytes. Alignment padding,
 pointer tables and code remain outside the editable allocations. Controlled runtime
 checks cover the equipment-screen `WEAPON`, `ARMOR` and `OPTION` category labels.
-Observed calls bind `ARMOR` to `0x801D8EA0` and `OPTION` to `0x801D8EA8` through
-table `0x801D8EB8`. The `OPTION` check uses a controlled cursor value of 4;
+Observed calls bind `WEAPON` to `0x801D8E98`, `ARMOR` to `0x801D8EA0` and
+`OPTION` to `0x801D8EA8` through table `0x801D8EB8`.
+The `OPTION` check uses a controlled cursor value of 4;
 original code copies that value into the reader's input and selects category 3.
-The reviewed controller path toggles the cursor with XOR 3. A natural route to
-`OPTION`, the active `WEAPON` allocation and other category slots remain
-unverified.
+The reviewed controller path toggles the cursor with XOR 3. Natural availability
+of `OPTION` and rendering of other category slots remain unverified.
 
 US `SHISU.EMI` entry 0 loads at `0x801D0C00`. Its category tables at
 `0x801D9E70`, `0x801D9EA4` and `0x801D9EDC` contain five, four and five labels.
