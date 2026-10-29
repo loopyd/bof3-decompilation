@@ -4530,6 +4530,30 @@ selectors A0/A1 must each be zero or one; the output-gain selector A0 must be
 zero or one. Other values can forward uninitialized stack fields rather than
 return a defined rejection.
 
+[`audio/effects.s`](../../../tools/rust/bof3-audio/driver/audio/effects.s)
+provides explicit-voice key-on and key-off. `audio_effects_key_on` takes voice,
+bank, program and tone in A0..A3. Incoming stack words at `SP+0x10..SP+0x1C`
+hold note, fine, left gain and right gain. Note/fine use low halfwords; gains
+use signed low halfwords. These words must be readable even when the shared
+busy word is one. A voice's unsigned low halfword must be below 24. Bank,
+program, tone and sample accesses retain the existing selection checks and
+require valid backing storage; the raw entry adds no index clamps.
+
+Both entries return `FFFFFFFF` when busy equals one and leave that word intact.
+Other busy values admit execution; normal success or rejection clears it.
+Key-on returns the signed low-halfword voice on success; key-off returns zero.
+Zero tone samples reject after selection writes. Sample `00FF` selects noise;
+other nonzero samples take the pitched path. Owner `0x21` reads handle slot 33,
+which aliases `audio_sequence_channel_matrix+4`. Noise mode dereferences that
+live pointer at `+0x74/+0x76`; pitched mode skips those gain reads. Preserve the
+shared cell and supply its backing record when using noise playback.
+
+Key-on reserves a `0x40` frame before calling its helpers. Equal gains, including
+zero/zero, bypass division. Unequal signed gains can execute BREAK 7 when the
+selected denominator is zero. Faults retain the busy word and earlier mutations.
+These entries preserve the original guest behavior; production cue selection,
+native scheduling and independent audio acceptance remain separate.
+
 `kernel/timers.s` provides the stackless `audio_counter_set` and
 `audio_counter_reset` leaves used by sequence callback registration. Both accept
 counter IDs zero through two from A0's low sixteen bits and return one. Other
