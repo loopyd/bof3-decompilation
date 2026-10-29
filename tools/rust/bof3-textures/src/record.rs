@@ -75,6 +75,10 @@ struct Builder<'a> {
     records: BTreeMap<String, Record>,
 }
 
+pub(crate) fn entry_id(parent: &str, kind: &str, offset: usize) -> String {
+    format!("{parent}/entry-payload/{kind}@{offset:08x}")
+}
+
 impl<'a> Builder<'a> {
     fn id(&self, kind: &str, offset: usize) -> String {
         format!(
@@ -109,6 +113,7 @@ impl<'a> Builder<'a> {
             "palette-record" => "SLUS_004.22@0x80166C48:32-word-palette-copy".into(),
             "save-icon-frame" => format!("{}@0x801EF27C:save-header-frame-source", self.parent.id),
             "animation-program" => "SLUS_004.22@0x8014D910:program-initialization".into(),
+            "resident-group" => "SLUS_004.22@0x8014D878:relative-program-table".into(),
             "sprite-cell" => "SLUS_004.22@0x8014C6F8:five-byte-cell-parts".into(),
             "surface-word" => "SLUS_004.22@0x80154294:nonzero-cell-packed-word".into(),
             "sprite-definition" => "SLUS_004.22@0x8014DD3C:counted-draw-state-record".into(),
@@ -311,6 +316,13 @@ pub(crate) fn resident_records(
     let mut builder = Builder::new(parent, source, CoordinateSpace::EntryPayload);
     builder.cells(&document.cells, "resident")?;
     for (group_slot, group) in document.groups.iter().enumerate() {
+        let group_id = builder.add(
+            "resident-group",
+            group.offset,
+            2 * group.programs.len(),
+            format!("group-slot-{group_slot}"),
+        )?;
+        builder.records.get_mut(&group_id).unwrap().pack = "preservation-only".into();
         for (program_slot, program) in group.programs.iter().enumerate() {
             let usage = format!("group-{group_slot}/program-slot-{program_slot}");
             match program {
@@ -334,6 +346,20 @@ pub(crate) fn resident_records(
                     });
                 }
             }
+            let program_id = builder.id("animation-program", program.offset());
+            builder.edge(
+                &group_id,
+                "animation",
+                program_id.clone(),
+                format!("program slot {program_slot} is a u16 offset relative to this group; membership does not establish a valid runtime selector"),
+            );
+            builder.edge(
+                &program_id,
+                "resident-group",
+                group_id.clone(),
+                "this immutable group table references the program; execution is not inferred"
+                    .into(),
+            );
         }
     }
     let partial = document.info().unresolved_programs != 0;

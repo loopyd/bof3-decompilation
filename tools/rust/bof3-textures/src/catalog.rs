@@ -233,6 +233,8 @@ pub fn build_from(
 ) -> Result<Index> {
     let mut resources = Vec::new();
     let mut records = Vec::new();
+    let mut definition_groups = BTreeMap::new();
+    let mut resident_groups = BTreeMap::new();
     let qualification = sources::qualification()?;
     for file in &input.files {
         let bytes = read(file)?;
@@ -355,6 +357,14 @@ pub fn build_from(
                             resource.sprite_definitions = Some(document.info(payload)?);
                             records
                                 .extend(record::definition_records(&resource, payload, &document)?);
+                            definition_groups.insert(
+                                resource.id.clone(),
+                                document
+                                    .definitions
+                                    .iter()
+                                    .map(|row| (row.offset, row.group))
+                                    .collect::<Vec<_>>(),
+                            );
                         }
                         Err(error) => resource.findings.push(error.to_string()),
                     }
@@ -515,6 +525,16 @@ pub fn build_from(
                             resource.resident_animation = Some(info);
                             records
                                 .extend(record::resident_records(&resource, payload, &document)?);
+                            if entry.ram_ptr == 0x800d_3800 {
+                                resident_groups.insert(
+                                    resource.id.clone(),
+                                    document
+                                        .groups
+                                        .iter()
+                                        .map(|group| group.offset)
+                                        .collect::<Vec<_>>(),
+                                );
+                            }
                             resource.evidence.extend([
                                 "SLUS_004.22@0x8014D878:resident-program-selection".into(),
                                 "SLUS_004.22@0x8014D910:program-initialization".into(),
@@ -753,6 +773,12 @@ pub fn build_from(
     crate::interface::annotate(&mut resources)?;
     stream_family::annotate(&mut resources);
     annotate_area_requests(&mut resources);
+    annotate_definition_groups(
+        &mut resources,
+        &mut records,
+        &definition_groups,
+        &resident_groups,
+    )?;
     crate::field::annotate(&mut resources, &mut records)?;
     Ok(Index {
         schema: SCHEMA.into(),
@@ -766,6 +792,90 @@ pub fn build_from(
         resources,
         records,
     })
+}
+
+fn annotate_definition_groups(
+    resources: &mut [Resource],
+    records: &mut [Record],
+    definitions: &BTreeMap<String, Vec<(usize, u8)>>,
+    residents: &BTreeMap<String, Vec<usize>>,
+) -> Result<()> {
+    let resource_slots: BTreeMap<_, _> = resources
+        .iter()
+        .enumerate()
+        .map(|(slot, resource)| (resource.id.clone(), slot))
+        .collect();
+    let record_slots: BTreeMap<_, _> = records
+        .iter()
+        .enumerate()
+        .map(|(slot, record)| (record.id.clone(), slot))
+        .collect();
+    for (parent, definitions) in definitions {
+        let source = &resources[resource_slots[parent]].source;
+        let candidates: Vec<_> = residents
+            .iter()
+            .filter(|(id, _)| resources[resource_slots[*id]].source == *source)
+            .collect();
+        for &(offset, group) in definitions {
+            let definition = record::entry_id(parent, "sprite-definition", offset);
+            let slot = record_slots[&definition];
+            let selected = match candidates.as_slice() {
+                [(resident, groups)] => groups.get(usize::from(group)).map(|offset| {
+                    (
+                        *resident,
+                        record::entry_id(resident, "resident-group", *offset),
+                    )
+                }),
+                _ => None,
+            };
+            let (target, status, reason) = if let Some((resident, target)) = selected {
+                let target_slot = *record_slots.get(&target).ok_or_else(|| {
+                    Error::Invalid(
+                        "sprite definition selects a missing resident group record".into(),
+                    )
+                })?;
+                records[target_slot].uses.push(definition.clone());
+                resources[resource_slots[resident]]
+                    .uses
+                    .push(definition.clone());
+                (
+                    Some(target),
+                    "conditional",
+                    format!(
+                        "Group {group} selects this same-archive table only if the definition supplied the same entity's +0x2C, flag +0x24 bit zero is clear, these declared sources are loaded, and the active definition/resident pointers remain 0x800E3804/0x800D3800 with stable entity state. The final +0x4B byte independently selects a program; valid selectors, lookup execution and later overwrites remain unresolved."
+                    ),
+                )
+            } else {
+                (
+                    None,
+                    "unresolved",
+                    format!(
+                        "Group {group} lacks one unambiguous decoded same-archive 0x800D3800 group table; active bases, entity flags and loading require separate qualification."
+                    ),
+                )
+            };
+            records[slot].dependencies.push(Dependency {
+                kind: "resident-group".into(),
+                target,
+                status: status.into(),
+                reason,
+            });
+        }
+    }
+    for resource in resources {
+        resource.uses.sort();
+        resource.uses.dedup();
+    }
+    for record in records {
+        record.uses.sort();
+        record.uses.dedup();
+        record.dependencies.sort_by(|a, b| {
+            (&a.kind, &a.target, &a.status, &a.reason)
+                .cmp(&(&b.kind, &b.target, &b.status, &b.reason))
+        });
+        record.dependencies.dedup();
+    }
+    Ok(())
 }
 
 fn annotate_area_requests(resources: &mut [Resource]) {

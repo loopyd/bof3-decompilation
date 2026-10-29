@@ -25,6 +25,23 @@ dependencies. Their four editable draw-state bytes do not establish complete
 texel, CLUT, direction or loading associations. Verification retains
 `partial-sprite-definitions`; IDs, groups and opaque bytes are immutable.
 
+`resident-group` records contain only the group's immutable 16-bit relative
+program-offset table. Repeated group pointers produce one record with all
+`group-slot-N` uses. Verified `animation` edges identify its programs, including
+unresolved program spans; each program has a structural `resident-group` edge
+back to the table. These edges describe stored references, not valid runtime
+selectors or execution.
+
+A sprite definition has a conditional `resident-group` edge when its archive
+contains exactly one decoded `0x800D3800` resident source and its group byte is
+in range. The target group's `uses` lists the referring definitions. The edge
+requires the matching sources to be loaded, active pointers `0x800E3804` and
+`0x800D3800`, stable entity state, and flag `0x24` bit zero clear. It does not
+remove unresolved base, texture, palette or entity-selection dependencies.
+Missing, ambiguous or out-of-range groups retain an unresolved edge.
+Definitions can share a group. The final entity byte at `0x4B` independently
+selects a program, so definition order does not identify programs or directions.
+
 `area_surface` reports width, height, cell count, unique selected words and
 coordinate-read spans. `surface-word` records have four entry-payload bytes.
 `surface-coordinate` and `surface-coordinate-pair` records retain four- and

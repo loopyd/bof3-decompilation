@@ -396,6 +396,17 @@ base. Entity selection, loading, complete shared uses and edited appearance
 remain unresolved. Verification reports `partial-sprite-definitions` even when
 the source records and archive bytes reconstruct exactly.
 
+Use `query INDEX --records --kind resident-group` to inspect immutable program
+tables. Their `animation` edges identify the programs stored in each table;
+`uses` retains aliased group slots and conditional definition references.
+`--records --kind sprite-definition --dependency resident-group` finds the
+definition-to-group links. These links require the same archive's qualified
+definition and resident payloads, active pointers `0x800E3804` and `0x800D3800`,
+and a stable entity whose flag byte at `0x24` has bit zero clear. They do not
+establish that loading or the ID lookup executed. The final entity byte at
+`0x4B` independently selects a program; direction and valid selectors remain
+unresolved. Group tables are read-only, including through `animation.json`.
+
 Qualified type-0 area payloads at `0x80104000` export `surface.json` with schema
 `bof3.area-surface/v1`. Its records are the unique four-byte words selected by
 nonzero original cell IDs. Change `word` as an unsigned 32-bit integer. Keep the
@@ -652,7 +663,8 @@ runtime families keep full-support acceptance open.
 ## Logical bank records
 
 `query INDEX --records` queries individual records in validated sprite banks and
-resident banks, plus qualified save-icon frames and palettes.
+resident banks, sprite definitions, resident groups, and qualified save-icon
+frames and palettes.
 The default query reports physical files and EMI entries. Both scopes support the
 same filters. [Catalog records](docs/catalog.md) explains identities, byte
 coordinates, structural references and coverage units.
