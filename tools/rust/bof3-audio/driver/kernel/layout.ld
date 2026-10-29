@@ -20,8 +20,18 @@ SECTIONS
         *(.data.audio_irq_registers)
         *(.data.audio_syscall_dispatch)
     }
+    # The shared callback word is also numeric pitch data. Keep its code VMA
+    # exact and pack the source bytes in the low image for guest installation.
+    audio_sequence_scheduler_load = ABSOLUTE(ALIGN(., 4));
+    .audio_sequence_scheduler 0x8016C548 : AT(audio_sequence_scheduler_load) {
+        *(.text.audio_sequence_scheduler)
+        audio_sequence_scheduler_end = .;
+    }
+    audio_sequence_scheduler_load_end =
+        audio_sequence_scheduler_load + SIZEOF(.audio_sequence_scheduler);
+    . = audio_sequence_scheduler_load_end;
     audio_kernel_image_end = .;
-    .bss ALIGN(8) (NOLOAD) : {
+    .bss ALIGN(8) (NOLOAD) : AT(ALIGN(audio_kernel_image_end, 8)) {
         audio_kernel_bss = .;
         *(.bss)
         *(.bss.audio_sound_auxiliary)
@@ -34,6 +44,17 @@ SECTIONS
     }
     ASSERT(audio_kernel_bss_end <= 0x80050000,
            "kernel allocation exceeds the owned arena")
+    ASSERT(audio_sequence_scheduler == 0x8016C548 &&
+           audio_sequence_scheduler_end == 0x8016C7BC &&
+           SIZEOF(.audio_sequence_scheduler) == 628,
+           "scheduler execution address or size changed")
+    ASSERT((audio_sequence_scheduler_load & 3) == 0 &&
+           audio_sequence_scheduler_load_end == audio_kernel_image_end &&
+           audio_sequence_scheduler_load >= ADDR(.data) + SIZEOF(.data) &&
+           audio_sequence_scheduler_load_end <= audio_kernel_bss,
+           "scheduler payload overlaps initialized data or BSS")
+    ASSERT(audio_kernel_bss_end <= audio_sequence_scheduler,
+           "scheduler execution range overlaps the low allocation")
     /DISCARD/ : {
         *(.reginfo) *(.MIPS.abiflags) *(.pdr) *(.comment) *(.gnu.attributes)
     }

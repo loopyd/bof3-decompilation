@@ -3838,6 +3838,18 @@ The initial TCB state word is `0x4000`; its saved context is populated on except
 entry. The chain runs the syscall verifier at priority zero, VBlank/counters
 2/1/0 at priority one, and generic IRQ at priority three.
 
+The image also contains a packed scheduler payload between
+`audio_sequence_scheduler_load` and `audio_sequence_scheduler_load_end`.
+The initializer copies its 628 bytes to the exact execution range
+`audio_sequence_scheduler..audio_sequence_scheduler_end`,
+`0x8016C548..0x8016C7BC`. Reserve that RAM range separately from the low image,
+state and stacks. The packed payload is data until the guest copies it; callers
+must execute the installed range. Both the linker and loader check its size,
+alignment and disjoint load/execution bounds. Include the 157-word copy's five
+instructions per word and six setup instructions in the initialization budget.
+The entry requires a cold instruction-cache context; hardware cache coherence
+has not been accepted by the functional host comparisons.
+
 The layout reserves a 1,024-byte initialization stack and a separate 4,096-byte
 exception stack. Stacks are not cleared by the initializer. The exception stack
 cell points sixteen bytes below its end, and exception GP is zero. The initializer
@@ -4220,8 +4232,10 @@ through 127 and shift bytes zero through 255, its signed table index spans
 separate from `audio_spu_pitch_table`. Both retain their actual neighbors in one
 contiguous allocation, including live library defaults, tick words, control
 words and the sequence register pointer. Negative or trailing indices can read
-those current values. The original word at `0x80184448` remains numeric adjacent
-data; it creates no executable binding. Larger unchecked fine inputs remain
+those current values. The word at original `0x80184448` is also the live scheduler
+callback pointer. Its linked value remains exactly `0x8016C548`, preserving both
+numeric halfwords, including MIPS shift-count wrapping. Callback registration
+and pitch reads use the same writable word. Larger unchecked fine inputs remain
 outside the accepted indexed range.
 
 `audio_sequence_select_tones` uses the live selection count, note, tone block
@@ -4483,6 +4497,39 @@ clears the other's mask. These entries do not validate allocation or capacity.
 The combined wrapper, mode setter and gain frames require `0x48` stack bytes.
 The scheduler must run separately to consume these flags.
 
+[`audio/scheduler.s`](../../../tools/rust/bof3-audio/driver/audio/scheduler.s)
+provides callback registration, the scheduling entry and complete event
+consumption. `audio_music_start_callbacks` starts registration and applies the
+original output settings. `audio_sequence_start_callbacks` passes zero to
+`audio_sequence_register_callbacks`; the alternate entry passes one. Registration
+uses the live tick mode and flag, preserves its delay loop, selects the original
+counter/VBlank callback path and retains the previous callback when chaining.
+`audio_sequence_dispatch_callbacks` calls the optional saved callback before the
+required current scheduler pointer. `audio_sequence_dispatch_half_rate` toggles
+its live word and invokes the required callback on alternate calls.
+
+`audio_sequence_scheduler` uses the live signed handle/record counts, allocation
+mask, record pointers and flags. A busy word equal to one skips the scan. Other
+values admit a scan that sets the word to one, flushes voices, processes each
+selected record and clears the word on return. Active records consume events and
+gain/tempo ramps. Stop, resume and reset flags have their original ordering and
+pointer reloads. The reset path clears the final record flags. Callers supply
+valid arrays, records, event streams and live callback bindings; these routines
+add no capacity or event-count limit and retain partial mutations on failure.
+The decoder preserves running status, channel changes, live indirect handlers,
+repeat/end handling and linked-record starts. Required callbacks have no null
+fallback. Scheduler timing and independent audio acceptance remain separate.
+
+`audio_spu_set_common_attributes` takes the original mask and attribute structure
+through A0. Its writable left/right mode tables each contain eight code pointers.
+Mask zero selects every attribute and requires readable fields through `A0+0x27`.
+`audio_spu_set_master_volume` takes signed low-halfword gains in A0/A1;
+`audio_spu_set_output_switch` and `audio_sequence_set_output_gain` retain their
+original low-byte selectors and masked common-attribute writes. Output-switch
+selectors A0/A1 must each be zero or one; the output-gain selector A0 must be
+zero or one. Other values can forward uninitialized stack fields rather than
+return a defined rejection.
+
 `kernel/timers.s` provides the stackless `audio_counter_set` and
 `audio_counter_reset` leaves used by sequence callback registration. Both accept
 counter IDs zero through two from A0's low sixteen bits and return one. Other
@@ -4509,6 +4556,9 @@ foreground registers, PAD policy, a 65,536-byte diagnostic buffer and the SPU
 memory-control input. The
 `bof3.bank-probe/v2` report identifies both kernel inputs and initialization and
 includes the captured `diagnostic_bytes`.
+This mixed development consumer verifies the guest's complete scheduler copy,
+then restores exactly the original executable's scheduler bytes before invoking
+original SDK routines. Owned consumers retain the guest-installed source code.
 The example still executes original game/SDK code and uses host-fed media.
 Production bank preparation and the independent BIOS reference tools retain
 their current inputs; this development path does not close their migration.
