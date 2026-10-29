@@ -223,6 +223,8 @@ packing, and byte-verification example using the original FIRST atlas.
 its observed field draw context, and re-export of the packed result.
 [Edit a terrain texture and its palette](docs/terrain-edit.md) changes a bounded
 AREA024 index patch and its conditional palette source, with byte verification.
+[Edit a compressed sprite image](docs/bank-image-edit.md) covers a mode-2 index
+plane, a stored palette word, compression limits, and re-export.
 
 The manifest schema is `bof3.textures-package/v8`. The package includes qualified
 original snapshots, validated baseline snapshots, raw resources, its bound catalog,
