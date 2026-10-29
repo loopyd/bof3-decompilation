@@ -4177,8 +4177,63 @@ The reverb command writes zero or two to `audio_sequence_voice_state_e1e0`;
 it does not directly enable SPU reverb. The tempo command reads three big-endian
 bytes, divides 60,000,000 by that value and retains the original tick arithmetic,
 HI/LO effects and BREAK paths. Invalid arithmetic can leave earlier cursor and
-state writes visible. The complete handler installer and its remaining voice,
-gain and bend callees are not yet linked into the owned startup path.
+state writes visible. The complete handler installer and its remaining note
+and data-entry callees are not yet linked into the owned startup path.
+
+The linked [voice controls](../../../tools/rust/bof3-audio/driver/audio/controls.s)
+export sequence gain, pan, bend, release and bank/tone-selection routines.
+`audio_sequence_set_gain` and the gain getters take a packed low-halfword owner:
+the low byte is the handle and the high byte is the sequence index. Set gain
+receives left gain, right gain and update mode in A1 through A3. It changes zero
+low-halfword gains to one, caps them at 127 and updates matching active voices
+only when the signed low halfword of mode equals one. The getters preserve
+signed halfword results. `audio_sequence_get_gain` writes left then right through
+A1 and A2 and returns the live signed owner halfword. Output aliases can change
+later reads and that return value.
+
+`audio_sequence_select_bank_program` receives bank and program in A0 and A1.
+A valid bank has a low halfword below 16 and an open flag equal to one. The signed
+program halfword must be below the live signed program limit; the original adds
+no lower-bound check. Callers must back every addressed program record, including
+negative indices. Success updates the selected bank, program, header, program
+array, tone array and tone-block cells. Failure returns -1 and leaves those cells
+unchanged. Both bend and program-gain callers continue with the previous context
+after failure. Bank arrays, selected cells and voice caches share the original
+voice-global storage and remain writable.
+
+`audio_sequence_bend_program` takes owner, bank, program and bend in A0 through
+A3. It visits the live voice count and bends voices whose owner, bank and program
+match. `audio_sequence_bend_voice` takes the voice index followed by those three
+identifiers, with a fifth word for bend at caller SP+16. The neutral bend is 64.
+`audio_sequence_set_program_gain` instead takes owner, bank, program and volume,
+with a fifth halfword for pan at caller SP+16. Zero volume or pan becomes one.
+The routine updates matching cached voice volumes and dirty bits but does not
+store the channel volume. The volume command stores it after the call; the pan
+command stores its byte after the call. Both commands then consume delta time.
+The bend command consumes its bend byte before calling the program routine and
+then consumes delta time. The nested bend path needs `0x78` foreground stack
+bytes and the O32 caller home area. The live voice count must stay within 24.
+
+`audio_sequence_note_to_pitch` reads the selected tone's center and unsigned
+shift bytes and accepts note and fine input in A0 and A1. For fine values zero
+through 127 and shift bytes zero through 255, its signed table index spans
+-176 through 207. Its writable 193-halfword `audio_sequence_pitch_table` is
+separate from `audio_spu_pitch_table`. Both retain their actual neighbors in one
+contiguous allocation, including live library defaults, tick words, control
+words and the sequence register pointer. Negative or trailing indices can read
+those current values. The original word at `0x80184448` remains numeric adjacent
+data; it creates no executable binding. Larger unchecked fine inputs remain
+outside the accepted indexed range.
+
+`audio_sequence_select_tones` uses the live selection count, note, tone block
+and tone array. It accepts inclusive key bounds and writes each sample index's
+low byte through A1 before writing the tone index through A0.
+Callers provide enough readable tones and writable output bytes for the live
+count. It adds no count or output bound. `audio_sequence_release_owner_voices`
+releases every voice whose signed owner halfword matches A0, using the same live
+selected-voice cell as the existing release routine. These complete routines
+retain the original integer arithmetic and partial-write behavior. They do not
+establish complete SDK startup, scheduler timing or native audio fidelity.
 
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:

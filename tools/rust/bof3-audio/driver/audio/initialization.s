@@ -846,23 +846,6 @@ audio_sequence_release_voice:
     nop
 .end audio_sequence_release_voice
 
-.section .data
-.balign 4
-
-# exe/slus_004_22@0x80184410, 48 bytes.
-.balign 4
-.globl audio_library_register_defaults
-audio_library_register_defaults:
-    .half 0x0000, 0x0000, 0x1000, 0x3000, 0x00bf, 0x0000, 0x0000, 0x0000
-    .half 0x3fff, 0x3fff, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000
-    .half 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000
-
-# exe/slus_004_22@0x80184458, 4 bytes.
-.balign 4
-.globl audio_sequence_registers_pointer
-audio_sequence_registers_pointer:
-    .word 0x1f801c00
-
 .section .bss
 .balign 4
 
@@ -888,10 +871,19 @@ audio_sequence_reverb_attributes:
     .space 24
 .globl audio_sequence_voice_dirty
 audio_sequence_voice_dirty:
-    .space 248
+    .space 24
+.globl audio_sequence_bank_programs
+audio_sequence_bank_programs:
+    .space 160
+.globl audio_sequence_bank_headers
+audio_sequence_bank_headers:
+    .space 64
 .globl audio_sequence_voice_state_e1e0
 audio_sequence_voice_state_e1e0:
-    .space 80
+    .space 8
+.globl audio_sequence_bank_tones
+audio_sequence_bank_tones:
+    .space 72
 .globl audio_spu_register_shadow
 audio_spu_register_shadow:
     .space 22
@@ -903,12 +895,21 @@ audio_sequence_voice_state_e248:
     .space 4
 .globl audio_sequence_voice_control_e24c
 audio_sequence_voice_control_e24c:
-    .space 24
+    .space 4
+.globl audio_sequence_selected_programs
+audio_sequence_selected_programs:
+    .space 8
+.globl audio_sequence_selected_header
+audio_sequence_selected_header:
+    .space 4
+.globl audio_sequence_selected_tones
+audio_sequence_selected_tones:
+    .space 8
 .globl audio_sequence_voice_count
 audio_sequence_voice_count:
     .space 68
 
-# exe/slus_004_22@0x8018E7D0, 8 bytes.
+# exe/slus_004_22@0x8018E7D0, 36 bytes.
 .balign 4
 .globl audio_sequence_allocation_mask
 audio_sequence_allocation_mask:
@@ -916,9 +917,24 @@ audio_sequence_allocation_mask:
 .globl audio_sequence_voice_callback_secondary
 audio_sequence_voice_callback_secondary:
     .space 4
-
-# exe/slus_004_22@0x8018E7F2, 2 bytes.
-.balign 4
+.globl audio_sequence_tone_selection
+audio_sequence_tone_selection:
+    .space 1
+.globl audio_sequence_selected_bank
+audio_sequence_selected_bank:
+    .space 3
+.globl audio_sequence_selected_tone
+audio_sequence_selected_tone:
+    .space 2
+.globl audio_sequence_selected_program
+audio_sequence_selected_program:
+    .space 1
+.globl audio_sequence_selected_tone_block
+audio_sequence_selected_tone_block:
+    .space 15
+.globl audio_sequence_voice_owner
+audio_sequence_voice_owner:
+    .space 4
 .globl audio_sequence_active_voice
 audio_sequence_active_voice:
     .space 2
