@@ -1,19 +1,16 @@
 //! PCSX-Redux interpreter costs and NTSC VBlank phase for original-ROM evidence.
-//! This does not model programmable root counters, GPU commands or bus arbitration.
+//! Root counters share the interpreter cycle and native update frontier.
+//! GPU command processing and bus arbitration remain separate.
 use super::super::{
     bus::{Bus, BusError, Width},
     cpu::{Cpu, Fault, Step},
     interconnect::Interconnect,
-    interrupts::Source,
 };
-
-const LINE_CYCLES: u64 = 33_868_800 / (60 * 263);
 
 #[derive(Default)]
 pub(crate) struct Clock {
     cycles: u64,
     muldiv_ready: u64,
-    line: u64,
     branch_boundary: bool,
 }
 
@@ -63,16 +60,9 @@ impl Clock {
             self.cycles += counted.accesses;
         }
         self.branch_boundary = result.as_ref().is_ok_and(|step| step.in_delay_slot);
-        if self.branch_boundary && (self.line + 1) * LINE_CYCLES <= self.cycles {
-            self.line += 1;
-            if self.line % 263 == 243 {
-                counted.bus.gpu_vblank(true);
-                counted.bus.interrupts_mut().set_line(Source::Vblank, true);
-                counted.bus.interrupts_mut().set_line(Source::Vblank, false);
-            } else if self.line % 263 == 0 {
-                counted.bus.gpu_vblank(false);
-            }
-        }
+        counted
+            .bus
+            .advance_reference_time(self.cycles, self.branch_boundary);
         result
     }
 }

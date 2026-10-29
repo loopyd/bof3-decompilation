@@ -36,6 +36,7 @@ pub struct Interconnect {
     interrupts: Interrupts,
     dma: Dma,
     timers: Timers,
+    reference_timers: Option<super::timers::reference::Counters>,
     gpu_status: Option<super::gpu_status::Status>,
     spu_transfer: SpuTransfer,
     dma_observation: Option<super::dma::Observation>,
@@ -71,6 +72,7 @@ impl Interconnect {
             interrupts: Interrupts::default(),
             dma: Dma::default(),
             timers: Timers::default(),
+            reference_timers: None,
             gpu_status: None,
             spu_transfer: SpuTransfer::default(),
             dma_observation: None,
@@ -163,6 +165,32 @@ impl Interconnect {
 
     pub(crate) fn set_reference_access(&mut self, cycle: Option<u64>) {
         self.reference_access = cycle;
+        if let (Some(timers), Some(cycle)) = (&mut self.reference_timers, cycle) {
+            timers.set_cycle(cycle);
+        }
+    }
+
+    pub(crate) fn configure_reference_timers(&mut self) -> crate::Result<()> {
+        if self.reference_timers.is_some() {
+            return Err("reference root counters already configured".into());
+        }
+        if self.gpu_status.is_none() {
+            return Err("reference root counters require GPU status".into());
+        }
+        self.reference_timers = Some(super::timers::reference::Counters::default());
+        Ok(())
+    }
+
+    pub(crate) fn advance_reference_time(&mut self, cycle: u64, branch: bool) {
+        if let Some(timers) = &mut self.reference_timers {
+            timers.set_cycle(cycle);
+            if branch && timers.due() {
+                timers.update(
+                    &mut self.interrupts,
+                    self.gpu_status.as_mut().expect("configured reference GPU"),
+                );
+            }
+        }
     }
 
     /// Attach reset-state NTSC status/control before starting its frame clock.
