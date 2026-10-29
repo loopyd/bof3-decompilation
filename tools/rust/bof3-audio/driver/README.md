@@ -126,7 +126,13 @@ Original BIOS reference boot uses absolute CPU cycles for the NTSC root-counter
 scheduler. Counter reads, target and mode writes, blanking gates and IRQs follow
 the emulator's update order. Scheduling wraps rate products at 32 bits and
 uses 64-bit absolute CPU cycles. This profile uses the default disabled
-`RCntFix` setting and retains the mode-triggered timer-2 jitter rule. Owned startup and PCM output use their separate clocks.
+`RCntFix` setting and retains the mode-triggered timer-2 jitter rule.
+
+Owned execution counts instruction fetch, data access and multiply/divide costs
+with the same interpreter model. Host kernel services retain two functional
+ticks per dispatch; their latency is unverified. Owned timers and PCM output
+keep their separate device clocks. Output phase starts after initialization,
+and instruction costs alone do not establish native timing or PCM equivalence.
 
 The production PSX music renderer uses this driver. Other production operations,
 full SFX/vocal contexts, native timing and independent PCM acceptance remain open.

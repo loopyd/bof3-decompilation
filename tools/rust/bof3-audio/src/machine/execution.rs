@@ -35,6 +35,7 @@ pub struct Execution {
     interrupts: u64,
     output: Option<output_clock::Clock>,
     reference: Option<boot::timing::Clock>,
+    instruction: Option<boot::timing::Clock>,
     kernel: Option<Services>,
 }
 
@@ -60,12 +61,15 @@ impl Execution {
             interrupts: 0,
             output: None,
             reference: None,
+            instruction: None,
             kernel: None,
         }
     }
 
     /// Execute caller-loaded owned services. Startup owns their code, state,
     /// stacks and device inputs; this does not load an image or boot firmware.
+    /// Instructions use interpreter costs; host services retain two functional
+    /// ticks per dispatch, without a native latency claim.
     /// Failures retain state and prevent subsequent steps or host calls.
     pub fn with_kernel(
         cpu: Cpu,
@@ -76,6 +80,7 @@ impl Execution {
     ) -> Result<Self> {
         kernel.require_plain_context()?;
         let mut execution = Self::new(cpu, bus, model);
+        execution.instruction = Some(boot::timing::Clock::default());
         execution.kernel = Some(Services {
             kernel,
             environment,
@@ -197,7 +202,11 @@ impl Execution {
             return Ok(Transition::Stopped);
         }
         observer(self)?;
-        let before = self.reference_cycles();
+        let before = self
+            .reference
+            .as_ref()
+            .or(self.instruction.as_ref())
+            .map(boot::timing::Clock::cycles);
         let mut waiting = false;
         let host_call = Kernel::is_call(self.cpu.pc());
         let retired = if let Some(services) = self.kernel.as_mut().filter(|_| host_call) {
@@ -205,11 +214,17 @@ impl Execution {
                 .kernel
                 .dispatch(&mut self.cpu, &mut self.bus)?
                 .waiting;
+            if let Some(clock) = &mut self.instruction {
+                clock.functional_service();
+            }
             None
         } else {
             let step = match &mut self.reference {
                 Some(clock) => clock.step(&mut self.cpu, &mut self.bus),
-                None => self.cpu.step(&mut self.bus),
+                None => match &mut self.instruction {
+                    Some(clock) => clock.step_instruction(&mut self.cpu, &mut self.bus),
+                    None => self.cpu.step(&mut self.bus),
+                },
             };
             match step {
                 Ok(step) => {
@@ -235,7 +250,13 @@ impl Execution {
         };
         let branch_boundary = retired.as_ref().is_some_and(|step| step.in_delay_slot);
         let ticks = before.map_or(2, |before| {
-            (self.reference_cycles().unwrap() - before) as u32
+            (self
+                .reference
+                .as_ref()
+                .or(self.instruction.as_ref())
+                .unwrap()
+                .cycles()
+                - before) as u32
         });
         // Raw-state execution retains its explicit base BIAS schedule.
         if let Some(output) = &mut self.output {
