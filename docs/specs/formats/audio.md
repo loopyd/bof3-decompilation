@@ -4178,7 +4178,7 @@ it does not directly enable SPU reverb. The tempo command reads three big-endian
 bytes, divides 60,000,000 by that value and retains the original tick arithmetic,
 HI/LO effects and BREAK paths. Invalid arithmetic can leave earlier cursor and
 state writes visible. The complete handler installer and its remaining note
-and data-entry callees are not yet linked into the owned startup path.
+callees are not yet linked into the owned startup path.
 
 The linked [voice controls](../../../tools/rust/bof3-audio/driver/audio/controls.s)
 export sequence gain, pan, bend, release and bank/tone-selection routines.
@@ -4234,6 +4234,50 @@ releases every voice whose signed owner halfword matches A0, using the same live
 selected-voice cell as the existing release routine. These complete routines
 retain the original integer arithmetic and partial-write behavior. They do not
 establish complete SDK startup, scheduler timing or native audio fidelity.
+
+The linked [parameter component](../../../tools/rust/bof3-audio/driver/audio/parameters.s)
+exports `audio_sequence_data_entry_command` and program/tone attribute copies.
+The program getter takes bank, program and output pointer in A0 through A2.
+It copies bytes zero through four and the halfword at byte offset six, leaving
+byte five and the
+rest of the caller object untouched. The tone getter and setter take bank,
+program, tone index and caller pointer in A0 through A3. They copy bytes zero
+through thirteen and halfwords at offsets `0x10`, `0x12`, `0x14` and `0x16`;
+byte seven precedes byte six. Holes and trailing bytes remain unchanged. The original instructions
+reload the selected array pointer between fields, then retain a captured pointer
+for the last four tone halfwords. Overlapping caller objects can affect later
+reads or writes.
+
+These copies first require the bank flag to equal one, returning -1 without
+copying when it does not. Their signed bank index is unchecked at that read;
+callers must back the accessed flag. They then call the bank/program selector
+and continue after its failure, using the previous selected pointers. Tone
+indexing truncates the sum of the tone index and block-times-sixteen to a signed
+halfword before multiplying by 32. Callers supply valid program/tone records and
+aligned copied halfwords. Later faults leave earlier byte writes visible.
+
+The data-entry command takes signed low-halfword handle and sequence indices,
+with its value in A2. It retains the pending-loop transition before checking
+record byte `+0x29`, and checks callback byte `+0x2A` only when that branch does
+not apply. A `+0x29` value of two can read, alter and write each selected tone.
+The command does not repair the original transformations that store an unchanged
+field. The callback branch uses the live byte at `+0x15` to index
+`audio_sequence_parameter_callbacks`, which aliases shared voice globals at
+`+76`. That index is unchecked and can overlap later voice state. Every invoked
+slot requires a valid O32 callback; there is no null check.
+
+When record byte `+0x16` is sixteen, the callback branch iterates the live
+program tone count; otherwise it calls once. Callbacks receive bank, program,
+tone index (or the non-loop selector) and a 32-byte aggregate by value, followed
+by the callback selector and low command byte. These are thirteen O32 argument
+words: A0 through A3 and caller stack offsets `+0x10..+0x30`. This branch never
+initializes its local aggregate at frame offsets `+0x48..+0x67`; it passes the
+incoming stack contents unchanged. Callback changes to the local count, record
+fields, callback cells, handles and event cursors remain visible. Afterward the
+command reads delta time through the current handle and stores the delay in its
+previously cached record. The command frame needs `0xD8` bytes; nested attribute
+calls raise that to `0xF8`, plus any callback depth and the O32 caller home area.
+The complete installer, note routines and production startup remain open.
 
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
