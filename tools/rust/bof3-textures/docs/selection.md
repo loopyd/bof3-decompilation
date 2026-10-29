@@ -52,6 +52,17 @@ does not evaluate the entry request or its mutable tables. Those tables and
 entity state do not establish a valid request domain, direction names or a
 physical bank binding. Preserve their context when qualifying a selector.
 
+### Definition lookup
+
+The metadata helper at `SLUS_004.22@0x8014dd3c` masks `a0` to 16 bits and
+selects the first matching definition ID. It uses `a1` for the record byte
+offset. Each write destination comes from a fresh load of the scratchpad
+pointer at `0x1f800044`; incoming `a1` does not identify that destination.
+The helper also reloads the mutable definition-table pointer between fields.
+Combining the resulting page, V base, CLUT selector, depth and group into one
+draw state requires stable pointers and destination state across the lookup.
+A successful lookup does not establish later resident-program selection.
+
 ## Resident banks
 
 The `resident::select(source, group_index, program_index)` library function
