@@ -4102,6 +4102,51 @@ direction with buffered DMA-read data; its drain/discard behavior is unverified.
 These components retain the explicit device schedule and do not establish native
 timing, full sound startup or production rendering acceptance.
 
+The linked [library initializer](../../../tools/rust/bof3-audio/driver/audio/initialization.s)
+exports `audio_library_reset`, which calls the callback manager, SPU initializer
+and library initializer in order. `audio_library_initialize` copies the live
+register-default tables to the SPU, initializes 24 voices, clears the existing
+channel matrix, sets the tick rate to 60 and clears the allocation mask.
+`audio_sequence_initialize_voices` takes the low byte of A0 and clamps it to 24.
+Zero is valid. It clears the register cache and selected control fields, updates
+only active voice records, then flushes all 24 records. Inactive record contents
+remain live, including their callback flags.
+
+The shared voice globals preserve original relative offsets. The 24 records
+have stride 52 bytes. `audio_sequence_buffered_registers` starts inside record
+23 and spans 256 halfwords. Its indexed cells overlap the reverb attributes,
+dirty bytes, SPU register shadow and voice count. These names share storage.
+`audio_sequence_registers_pointer` and `audio_spu_registers_pointer` remain
+distinct mutable cells despite their equal initial value of `0x1F801C00`.
+
+`audio_sequence_flush_voices` advances a sixteen-slot envelope-history ring but
+ANDs only its first fifteen words. The playback byte inhibits that history
+check. The live voice count must be zero through 24. Flush reads the primary
+callback when signed record halfword `+0x1C` is nonzero, then the secondary
+callback when halfword `+0x28` is nonzero.
+Both receive the voice index in A0. There is no null check. Callers must bind
+valid O32 callbacks whenever those flags can be nonzero, including on inactive
+voices. Callback changes to later flags, pointers and cached registers remain
+visible. Flush then applies the live dirty bytes and clears pending key masks.
+The selected library and voice call chain reserves up to `0xA0` foreground stack
+bytes with O32 caller home areas. Callback-manager internals and bound callbacks
+need additional stack. Exceptions use the separately allocated kernel stack.
+
+`audio_spu_update_voice_mask` takes mode, mask and two halfword register indices.
+Mode zero clears bits, one sets bits and other modes query. It returns the low
+24 bits. The low bit of `audio_spu_state_3f78` selects shared buffered cells
+instead of the live SPU pointer. Indices are unchecked. The owned buffer covers
+indices zero through 255; immediate accesses require valid destination registers.
+`audio_sequence_release_voice` uses the live selected-voice halfword and requires
+a valid voice record. `audio_spu_initialize_allocations` takes a signed count and
+caller storage for eight-byte records. Nonpositive counts return zero without
+initialization. Positive counts install the storage pointer and initialize only
+its first record. These entries preserve partial writes and do not add bounds
+checks or transactional failure. `audio_spu_set_transfer_mode` clears its mode
+word for A0 equal to one and sets it to one for every other value.
+Complete game initialization and its installed
+sequence handlers remain separate obligations.
+
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
 

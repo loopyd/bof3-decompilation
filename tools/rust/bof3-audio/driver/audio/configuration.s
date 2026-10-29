@@ -192,11 +192,3 @@ audio_sequence_handle_count:
 .globl audio_sequence_count
 audio_sequence_count:
     .space 2
-# exe/slus_004_22@0x8018E98C, 1 byte.
-.globl audio_sequence_playback_byte
-audio_sequence_playback_byte:
-    .space 1
-# exe/slus_004_22@0x8018E264, 1 byte.
-.globl audio_sequence_voice_count
-audio_sequence_voice_count:
-    .space 1

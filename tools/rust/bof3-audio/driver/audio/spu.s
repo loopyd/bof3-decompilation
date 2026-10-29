@@ -799,8 +799,3 @@ audio_spu_state_3f84:
 .globl audio_spu_state_3f88
 audio_spu_state_3f88:
     .space 4
-# exe/slus_004_22@0x8018E230, accessed extent 20 bytes.
-.balign 4
-.globl audio_spu_register_shadow
-audio_spu_register_shadow:
-    .space 20
