@@ -526,8 +526,12 @@ category values 1, 2 or 3 from the panel's byte at offset 9, then draws through
 `0x8014F800` at `0x801E0E2C`. These are local assignments; intervening callee
 effects and natural availability remain unverified. ITEM and VITAL in this table
 stay protected because their selected consumers are unresolved. Keep all nine
-alignment bytes and twenty pointer bytes protected. Edited rendering remains
-unverified.
+alignment bytes and twenty pointer bytes protected. Controlled Equipment
+rendering verifies first-glyph edits in WEAPON, ARMOR and OPTION at observed
+selectors 0, 1 and 4, with categories 1, 2 and 3 and callback state zero. These
+captures follow ordinary menu inputs from the controlled availability fixture.
+Selected calls, call and delay-store retirement and general selector bounds
+remain unverified.
 
 The settings reader at `0x801E2C00` exposes fifteen fixed-width fields from the
 first fifteen eight-byte records at `0x801ECD24`. These contain Fast, Med., Slow,

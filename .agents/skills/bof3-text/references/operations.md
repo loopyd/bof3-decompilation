@@ -125,6 +125,10 @@ Controlled Ability rendering verifies first-glyph edits in HEAL, ASSIST, ATTACK
 and SKILL. Preinstruction captures bind the selected HEAL and SKILL pointers.
 Selected ASSIST and ATTACK calls, general selector bounds and natural
 availability remain unverified.
+Controlled Equipment rendering verifies first-glyph edits in WEAPON, ARMOR and
+OPTION at observed selectors 0, 1 and 4. These captures follow ordinary menu
+inputs from the controlled availability fixture. Selected calls, general selector
+bounds and natural availability remain unverified.
 See the [record groups](../../../../tools/rust/bof3-text/docs/formats.md#default-character-names)
 before choosing a duplicate label.
 
