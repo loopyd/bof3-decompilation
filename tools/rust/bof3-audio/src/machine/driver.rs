@@ -287,6 +287,7 @@ impl Image {
     /// explicit subsequent guest call, before layout selection and bank upload.
     pub fn start(&self, observer: &mut impl FnMut(&Execution) -> Result<()>) -> Result<Started> {
         let mut bus = Interconnect::from_ram(self.ram()?);
+        bus.configure_gpu_status()?;
         let base = self.symbol("audio_kernel_image")?;
         bus.write(0x1f80_1014, Width::Word, 0x2009_31e1)?;
         let mut kernel = Kernel::default();

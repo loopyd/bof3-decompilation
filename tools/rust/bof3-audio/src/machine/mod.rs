@@ -25,6 +25,7 @@ pub mod executable;
 pub mod execution;
 pub mod firmware;
 mod gaussian;
+pub mod gpu_status;
 pub mod interconnect;
 pub mod interrupts;
 pub mod kernel;

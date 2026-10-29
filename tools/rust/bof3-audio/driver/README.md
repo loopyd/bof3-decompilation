@@ -113,6 +113,16 @@ The source requires functional register and clock inputs. Linking these entries
 does not establish native GPU timing, scheduled CD playback, XA rendering or vocal
 roles.
 
+Owned startup and original BIOS reference boot attach the NTSC software-GPU
+status model in reset state. Raw RAM callers use `Interconnect::configure_gpu_status`
+before starting their frame clock. GP1 reset, FIFO clear, IRQ acknowledgement,
+display enable, DMA direction and NTSC display mode update its status. Reset
+and IRQ acknowledgement clear the GPU interrupt latch. The output clock and
+original reference clock supply VBlank transitions for field parity. GPU
+status/control accesses require words. PAL mode, other GP1 commands, GP0, VRAM
+and GPU DMA remain unsupported. Reference root-counter timing still requires
+separate integration.
+
 The production PSX music renderer uses this driver. Other production operations,
 full SFX/vocal contexts, native timing and independent PCM acceptance remain open.
 The authored sources use the project [MIT license](../LICENSE); dependency

@@ -66,8 +66,11 @@ impl Clock {
         if self.branch_boundary && (self.line + 1) * LINE_CYCLES <= self.cycles {
             self.line += 1;
             if self.line % 263 == 243 {
+                counted.bus.gpu_vblank(true);
                 counted.bus.interrupts_mut().set_line(Source::Vblank, true);
                 counted.bus.interrupts_mut().set_line(Source::Vblank, false);
+            } else if self.line % 263 == 0 {
+                counted.bus.gpu_vblank(false);
             }
         }
         result
