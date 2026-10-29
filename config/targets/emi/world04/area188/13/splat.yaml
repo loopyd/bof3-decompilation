@@ -86,7 +86,7 @@ segments:
   - - 3264
     - c
     - invokeHelperWorld04Area18813_801F38C0
-    - '@source: src/bof3/world04/invokeHelperWorld04Area18813_801F38C0.c'
+    - '@source: src/bof3/world/invokeHelperWorld04Area18813_801F38C0.c'
   - - 3296
     - asm
     - func_801F38E0
