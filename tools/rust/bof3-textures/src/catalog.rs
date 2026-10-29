@@ -17,7 +17,7 @@ use crate::{
     sprite_bank, sprite_definition, stream_family,
 };
 
-pub const SCHEMA: &str = "bof3.textures-index/v8";
+pub const SCHEMA: &str = "bof3.textures-index/v9";
 pub const MAX_INDEX_BYTES: u64 = 512 * 1024 * 1024;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
@@ -771,7 +771,7 @@ pub fn build_from(
         }
     }
     crate::interface::annotate(&mut resources)?;
-    stream_family::annotate(&mut resources);
+    stream_family::annotate(&mut resources, &mut records);
     annotate_area_requests(&mut resources);
     annotate_definition_groups(
         &mut resources,

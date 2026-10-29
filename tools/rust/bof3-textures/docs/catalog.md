@@ -1,6 +1,6 @@
 # Catalog records
 
-The index schema is `bof3.textures-index/v8`. Its `resources` array contains
+The index schema is `bof3.textures-index/v9`. Its `resources` array contains
 physical files and EMI entries. Its `records` array contains images, palettes,
 animation program metadata and cells in validated sprite roots, programs and
 cells in validated resident banks, and the qualified save-icon frames and palette.
@@ -16,6 +16,32 @@ clear. The checkpoint precedes the root load, so it does not establish retired
 reads or stores, uploads, a selector domain or rendered appearance. Query this
 record with `--records --kind animation-selection`. Its package's
 `selections.json` permits mirror-byte edits only.
+
+Qualified three-root `PL` banks and their records have category
+`field-character`. The parent's `stream_request.party_records` lists each
+`root`, `selector_id`, `record_index` and `default_name`. The original EXE table
+at `0x80181B10` maps IDs 0 through 10 to records
+`[0,1,2,3,4,5,6,0,1,0,7]`. Their original five-byte defaults are Ryu, Nina,
+Garr, Teepo, Rei, Momo, Peco and Whelp. A repeated name does not identify an
+age or transformation.
+
+GAME entry 0 routine `0x801C1400` calls the root initializer with an identifier,
+then reloads the identifier and copies the mapped `0xA4`-byte mutable record
+from `0x80144968` to entity offset `0x74`. Combining the identifier reads
+requires stable table bytes and saved-register preservation across the call.
+The START entry 8 and STATUS entry 0 initializer at `0x801D15C0` copies default
+records 0 through 6 at stride `0xA4` from `0x801EB514`. Its separate final copy
+uses default record 7 at `0x801EB990` and the destination selector at executable
+address `0x80181B1A`.
+
+Query `--category field-character --dependency party-record` for these banks,
+or add `--records` for their stored images, palettes, programs and cells.
+Record edges refer to their physical parent; the parent retains the GAME,
+EXE and default-name dependencies. Missing source captures remain unresolved.
+Captured consumers retain partial status because current records, selected
+roots, execution and rendering are unobserved. The field mapping does not
+qualify `BPLD` or `BPLU` battle uses, NPCs, masters, fairies, ages, actions or
+directions. Those request families have `party_records: null`.
 
 Each `sprite-definition-table` resource has `sprite_definitions` metadata with
 `definitions` and `tail_bytes` counts. Its storage is

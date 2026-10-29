@@ -115,7 +115,7 @@ JSON on standard output, including when `--json` is omitted.
 
 ## Catalog
 
-The index schema is `bof3.textures-index/v8`. A resource ID combines release,
+The index schema is `bof3.textures-index/v9`. A resource ID combines release,
 original path, and EMI slot or file locator. Equal hashes retain distinct original
 locations. Each physical resource has its byte offset, size, hash, kind, game categories,
 storage, decode and pack status, evidence, dependencies, known uses, and findings.
@@ -177,8 +177,15 @@ Qualified bank destinations in the `PL`, `BPLD` and `BPLU` source families have 
 `stream_request` record. It identifies the original EXE request family, index,
 loader slot, disc LBA and three selector identifiers. Only the 19 qualified
 members of each family are mapped. The original request function accepts a byte
-index without enforcing these family extents. The identifiers do not establish
-character names, ages, actions or game roles.
+index without enforcing these family extents.
+
+Three-root `PL` banks additionally expose `stream_request.party_records` and the
+`field-character` category. Each item records its root ordinal, selector ID,
+mutable record index and original default name. GAME's field-party initializer
+and the original EXE table bind these identifiers to START/STATUS default
+records. Ages, forms, actions, directions and current mutable names remain
+unresolved. `BPLD` and `BPLU` retain `party_records: null`; the field consumer
+does not qualify their game roles.
 
 Use `--dependency stream-request` or `--dependency root-selection` to find these
 records. The edges name the original EXE and GAME entry 0 consumer. They remain
@@ -229,7 +236,7 @@ AREA024 index patch and its conditional palette source, with byte verification.
 [Edit a compressed sprite image](docs/bank-image-edit.md) covers a mode-2 index
 plane, a stored palette word, compression limits, and re-export.
 
-The manifest schema is `bof3.textures-package/v9`. The package includes qualified
+The manifest schema is `bof3.textures-package/v10`. The package includes qualified
 original snapshots, validated baseline snapshots, raw resources, its bound catalog,
 and coverage. A new original export uses the original snapshots as its baselines. A
 qualified raw upload also has `words.json` and indexed `indices-4.png` and

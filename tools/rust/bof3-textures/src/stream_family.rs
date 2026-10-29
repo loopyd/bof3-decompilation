@@ -3,8 +3,20 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     catalog::{Dependency, Resource},
+    record::Record,
     sources,
 };
+
+/// The default save record selected by an original field-party identifier.
+/// This does not identify an age, action, direction or current mutable name.
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct PartyRecord {
+    pub root: u8,
+    pub selector_id: u8,
+    pub record_index: u8,
+    pub default_name: String,
+}
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -14,7 +26,13 @@ pub struct Request {
     pub slot: u16,
     pub lba: u32,
     pub selector_ids: [u8; 3],
+    pub party_records: Option<[PartyRecord; 3]>,
 }
+
+const PARTY_RECORDS: [u8; 11] = [0, 1, 2, 3, 4, 5, 6, 0, 1, 0, 7];
+const DEFAULT_NAMES: [&str; 8] = [
+    "Ryu", "Nina", "Garr", "Teepo", "Rei", "Momo", "Peco", "Whelp",
+];
 
 struct Family {
     number: u8,
@@ -86,6 +104,7 @@ fn request(source: &str) -> Option<Request> {
                     slot: family.first_slot + index as u16,
                     lba: family.lbas[index],
                     selector_ids: *ids,
+                    party_records: None,
                 });
             }
         }
@@ -93,17 +112,24 @@ fn request(source: &str) -> Option<Request> {
     None
 }
 
-pub(crate) fn annotate(resources: &mut [Resource]) {
+pub(crate) fn annotate(resources: &mut [Resource], records: &mut [Record]) {
     let exe = format!("{}:SLUS_004.22#file", sources::RELEASE);
     let game = format!("{}:BIN/ETC/GAME.EMI#entry-000", sources::RELEASE);
     let has_exe = resources.iter().any(|resource| resource.id == exe);
     let has_game = resources.iter().any(|resource| resource.id == game);
+    let defaults = [
+        format!("{}:BIN/ETC/START.EMI#entry-008", sources::RELEASE),
+        format!("{}:BIN/ETC/STATUS.EMI#entry-000", sources::RELEASE),
+    ];
+    let has_defaults = defaults
+        .each_ref()
+        .map(|id| resources.iter().any(|resource| &resource.id == id));
     for resource in resources.iter_mut() {
         if resource.load_argument != Some(0x8003_b800) || !matches!(resource.emi_type, Some(0 | 1))
         {
             continue;
         }
-        let Some(request) = request(&resource.source) else {
+        let Some(mut request) = request(&resource.source) else {
             continue;
         };
         resource.evidence.extend([
@@ -175,6 +201,61 @@ pub(crate) fn annotate(resources: &mut [Resource]) {
             status: "unresolved".into(),
             reason: "The header declares destination 0x8003b800. Type-0 and type-1 writes can share it; transfer order, overwrites and active draw-time bytes are not established by a request.".into(),
         });
+        if request.family == 0
+            && resource
+                .sprite_bank
+                .as_ref()
+                .is_some_and(|bank| bank.roots == 3)
+        {
+            request.party_records = Some(std::array::from_fn(|root| {
+                let selector_id = request.selector_ids[root];
+                let record_index = PARTY_RECORDS[usize::from(selector_id)];
+                PartyRecord {
+                    root: root as u8,
+                    selector_id,
+                    record_index,
+                    default_name: DEFAULT_NAMES[usize::from(record_index)].into(),
+                }
+            }));
+            resource.categories = vec!["field-character".into()];
+            resource.evidence.extend([
+                "BIN/ETC/GAME.EMI#0@0x801C1400:field-party-record-copy".into(),
+                "SLUS_004.22@0x80181B10:identifier-to-party-record".into(),
+                "BIN/ETC/START.EMI#8@0x801D15C0:default-record-initializer".into(),
+                "BIN/ETC/STATUS.EMI#0@0x801D15C0:identical-default-record-initializer".into(),
+            ]);
+            for edge in &mut resource.dependencies {
+                if edge.kind == "game-role" {
+                    edge.reason = "The field-party record use is qualified. Age and form labels, actions, directions and complete consumer uses remain unresolved.".into();
+                }
+            }
+            resource.dependencies.push(Dependency {
+                kind: "party-record".into(),
+                target: Some(game.clone()),
+                status: if has_game && has_exe { "partial" } else { "unresolved" }.into(),
+                reason: "GAME 0x801C14B8 passes an identifier to the root initializer. After the call, 0x801C14E8 reloads it and uses EXE 0x80181B10 to copy 0xA4 bytes from 0x80144968 + record_index*0xA4 to entity+0x74. Linking the two identifier reads requires stable table bytes and preserved saved registers. Current identifiers, scratch pointers, records and execution are unobserved.".into(),
+            });
+            for (target, captured) in defaults.iter().zip(has_defaults) {
+                resource.dependencies.push(Dependency {
+                    kind: "default-name".into(),
+                    target: Some(target.clone()),
+                    status: if captured && has_exe { "partial" } else { "unresolved" }.into(),
+                    reason: "The identical START/STATUS initializer copies default records 0..6 from 0x801EB514 at stride 0xA4 to 0x80144968. It separately copies source record 7 from 0x801EB990 to the slot selected by EXE byte 0x80181B1A. The five-byte default names label records, not age variants, actions, mutable names or observed actors.".into(),
+                });
+            }
+            for record in records
+                .iter_mut()
+                .filter(|record| record.parent == resource.id)
+            {
+                record.categories = resource.categories.clone();
+                record.dependencies.push(Dependency {
+                    kind: "party-record".into(),
+                    target: Some(resource.id.clone()),
+                    status: "conditional".into(),
+                    reason: "The parent bank's party_records maps root ordinals to field-party default records. This stored record belongs to that bank; the mapping does not establish its active root, action, direction, execution or appearance.".into(),
+                });
+            }
+        }
         resource.stream_request = Some(request);
     }
     annotate_entry_order(resources, has_exe);
