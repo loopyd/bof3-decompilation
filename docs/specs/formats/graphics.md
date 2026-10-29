@@ -89,10 +89,12 @@ decoding and inverse encoding for the qualified US layouts:
 | Storage | Original US consumer | Contract |
 | --- | --- | --- |
 | Outer compressed bank | `SLUS_004.22@0x80164064` | Preserve original streams; edited output must fit its consumed allocation. |
+| Raw-word bank image | `SLUS_004.22@0x8014E6D0` | Uncompressed words follow an eight-byte image header. Dimensions and consumed allocation stay fixed. |
 | Mode-1 image | `SLUS_004.22@0x8014E7F8` | Six packed five-bit values per word, with unused bits retained. |
 | Mode-2 image | `SLUS_004.22@0x8014E8FC` | Bounded LZSS with a 512-byte dictionary and preserved prefix and final-token overshoot. |
 | Three-root bank | `BIN/ETC/GAME.EMI#0@0x801C1254` | Separate image, palette, program and selection sections; selection tails remain opaque. |
 | Standalone sprite root | `SLUS_004.22@0x8014DC08` | The root starts at payload offset zero with entry-relative section offsets. Active root installation remains unresolved. |
+| Sprite palette record | `SLUS_004.22@0x80166C48` | Each record supplies 32 exact color words. It does not establish a complete draw CLUT or its neighboring colors. |
 | Counted sprite definitions | `SLUS_004.22@0x8014DD3C` | Eight-byte records follow a four-byte header. Draw-state edits retain IDs, groups and order; texel and palette sources remain unresolved. |
 | Resident programs | `SLUS_004.22@0x8014D878` | Relative group and program tables; source-bound cell offsets and bounded step pairs. |
 | Cell parts | `SLUS_004.22@0x8014C6F8` | Five-byte parts; size table at `0x8017F53C`; geometry depends on entity state. |
