@@ -912,7 +912,7 @@ audio_sequence_selected_tones:
 audio_sequence_voice_count:
     .space 68
 
-# exe/slus_004_22@0x8018E7D0, 36 bytes.
+# exe/slus_004_22@0x8018E7D0, 40 bytes.
 .balign 4
 .globl audio_sequence_allocation_mask
 audio_sequence_allocation_mask:
@@ -940,6 +940,12 @@ audio_sequence_voice_owner:
     .space 4
 .globl audio_sequence_active_voice
 audio_sequence_active_voice:
+    .space 2
+.globl audio_sequence_selected_register_index
+audio_sequence_selected_register_index:
+    .space 2
+.globl audio_sequence_selected_tone_index
+audio_sequence_selected_tone_index:
     .space 2
 
 # exe/slus_004_22@0x8018E7F8, 405 bytes.

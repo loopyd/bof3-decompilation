@@ -4177,8 +4177,8 @@ The reverb command writes zero or two to `audio_sequence_voice_state_e1e0`;
 it does not directly enable SPU reverb. The tempo command reads three big-endian
 bytes, divides 60,000,000 by that value and retains the original tick arithmetic,
 HI/LO effects and BREAK paths. Invalid arithmetic can leave earlier cursor and
-state writes visible. The complete handler installer and its remaining note
-callees are not yet linked into the owned startup path.
+state writes visible. The complete handler installer is not yet linked into the
+owned startup path.
 
 The linked [voice controls](../../../tools/rust/bof3-audio/driver/audio/controls.s)
 export sequence gain, pan, bend, release and bank/tone-selection routines.
@@ -4277,7 +4277,53 @@ fields, callback cells, handles and event cursors remain visible. Afterward the
 command reads delta time through the current handle and stores the delay in its
 previously cached record. The command frame needs `0xD8` bytes; nested attribute
 calls raise that to `0xF8`, plus any callback depth and the O32 caller home area.
-The complete installer, note routines and production startup remain open.
+The complete installer and production startup remain open.
+
+The linked [note component](../../../tools/rust/bof3-audio/driver/audio/notes.s)
+exports the note command, note-on and note-off routines and their allocation,
+preparation, pitch and key-control helpers. `audio_sequence_note_on` takes the
+packed owner, bank, program and note in A0 through A3. It reads velocity and pan
+as low halfwords at caller SP+16 and SP+20. The command wrapper instead takes
+separate handle and sequence indices, note and velocity in A0 through A3.
+It returns immediately for zero record gain. Zero velocity calls note-off;
+otherwise the current channel-mask bit can suppress note-on. The wrapper adds
+no delta read.
+
+Note-on selects the bank and program before changing live selection cells.
+Selection or tone-block rejection returns -1. Zero velocity calls note-off
+after those selection writes. Each accepted tone can allocate and alter a voice
+before a later tone fails. There is no rollback. Success accumulates selected
+voice bits; allocation failure sets the result to -1 and retains earlier writes.
+`audio_sequence_note_off` visits the live voice count and compares note, program,
+owner and bank in order. It releases every match and returns the match count.
+Noise and ordinary voices use separate release paths.
+
+`audio_sequence_allocate_voice` preserves first-free selection, signed priority
+comparisons, envelope and age tie-breaking, halfword age wrap and status-two
+reverb-mask cleanup. A returned index at or above the live voice count means
+allocation failed. `audio_sequence_prepare_voice` clears the selected bit in
+all sixteen envelope-history words, preserves the following release-mask word,
+and caches sample addresses and ADSR halfwords with the original dirty bits.
+The register and tone indices share the two halfwords immediately after
+`audio_sequence_active_voice`; they are writable parts of the selection state.
+`audio_sequence_selected_pitch` reads the live selected note, center and fine
+bytes and uses the existing pitch table and its neighbors.
+
+The key helpers preserve integer gain and pan arithmetic, mono selection,
+register-write order and unrelated mask bits. `audio_sequence_stop_noise`
+literally clears the selected voice fields and writes zero to both KEYON
+halfwords. This ABI does not promise an immediate audible stop. The special
+owner `0x21` still reads handle slot 33, which aliases the existing channel
+matrix, before its special-case branch. Its noise path also uses that derived
+record. Callers must back those accesses.
+
+Callers supply valid records, selected arrays, headers and aligned halfwords.
+The live voice count must fit the 24 owned records, and tone-selection output
+must fit both 128-byte local arrays. These routines retain unchecked indices
+and partial writes. The note-on frame uses `0x148` bytes; the deepest command,
+allocation and mask-update path uses `0x1A8` bytes plus the O32 caller home area.
+Full startup, production routing, scheduler timing and native audio fidelity
+remain separate obligations.
 
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
