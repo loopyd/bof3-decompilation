@@ -1,7 +1,8 @@
 # SPDX-License-Identifier: MIT
 # Owned cold kernel allocation. Call before admitting interrupts or registering
 # events, with no active kernel continuation and a separate aligned RAM stack.
-# This initializes service state, not game audio state or device registers.
+# This initializes service state and installs the fixed-address scheduler.
+# It does not initialize audio state or device registers.
 .set noreorder
 .set noat
 .section .text.audio_kernel_initialize,"ax"
@@ -18,6 +19,19 @@ audio_kernel_initialize:
     addiu $t0, $t0, 4
     bne $t0, $t1, .Lclear_state
     nop
+
+    lui $t0, %hi(audio_sequence_scheduler_load)
+    addiu $t0, $t0, %lo(audio_sequence_scheduler_load)
+    lui $t1, %hi(audio_sequence_scheduler)
+    addiu $t1, $t1, %lo(audio_sequence_scheduler)
+    lui $t2, %hi(audio_sequence_scheduler_load_end)
+    addiu $t2, $t2, %lo(audio_sequence_scheduler_load_end)
+.Lcopy_scheduler:
+    lw $t3, 0($t0)
+    addiu $t0, $t0, 4
+    sw $t3, 0($t1)
+    bne $t0, $t2, .Lcopy_scheduler
+    addiu $t1, $t1, 4
 
     lui $t0, %hi(.Lchains)
     addiu $t0, $t0, %lo(.Lchains)

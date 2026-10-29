@@ -56,6 +56,10 @@ fn prepare_kernel(
     let init_top = symbol("audio_initialization_stack_end")?;
     let exception_stack = symbol("audio_exception_stack")?;
     let exception_top = symbol("audio_exception_stack_end")?;
+    let scheduler = symbol("audio_sequence_scheduler")?;
+    let scheduler_end = symbol("audio_sequence_scheduler_end")?;
+    let scheduler_load = symbol("audio_sequence_scheduler_load")?;
+    let scheduler_load_end = symbol("audio_sequence_scheduler_load_end")?;
     let image_bytes = u32::try_from(image.len())?;
     if image.is_empty()
         || base != 0x8002_0000
@@ -71,6 +75,28 @@ fn prepare_kernel(
         return Err("kernel image/allocation metadata is inconsistent or outside its arena".into());
     }
     ram_offset(base, (bss_end - base) as usize)?;
+    if scheduler != 0x8016_c548
+        || scheduler_end != 0x8016_c7bc
+        || scheduler_load & 3 != 0
+        || scheduler_load < base
+        || scheduler_load_end.checked_sub(scheduler_load) != Some(628)
+        || scheduler_load_end != end
+        || bss_end > scheduler
+    {
+        return Err("scheduler load/execution metadata is inconsistent".into());
+    }
+    ram_offset(scheduler, 628)?;
+    let scheduler_payload = image
+        .get((scheduler_load - base) as usize..(scheduler_load_end - base) as usize)
+        .ok_or("scheduler payload is outside the image")?;
+    let scheduler_original_offset = scheduler
+        .checked_sub(executable.header().load_address)
+        .ok_or("scheduler reference precedes the executable")?
+        as usize;
+    let scheduler_original = executable
+        .text()
+        .get(scheduler_original_offset..scheduler_original_offset + 628)
+        .ok_or("executable lacks the complete scheduler reference")?;
     let exe_start = ram_offset(executable.header().load_address, executable.text().len())?;
     let exe_end = exe_start + executable.text().len();
     if ram_offset(base, 0)? < exe_end && exe_start < ram_offset(bss_end, 0)? {
@@ -116,6 +142,13 @@ fn prepare_kernel(
     for (offset, byte) in image.iter().enumerate() {
         bus.write(base + offset as u32, Width::Byte, u32::from(*byte))?;
     }
+    let scheduler_neighbors = [
+        bus.read(scheduler - 4, Width::Word)?,
+        bus.read(scheduler_end, Width::Word)?,
+    ];
+    for address in (scheduler..scheduler_end).step_by(4) {
+        bus.write(address, Width::Word, 0xa5a5_a5a5)?;
+    }
     bus.write(0x1f80_1014, Width::Word, 0x2009_31e1)?;
     let mut kernel = Kernel::default();
     kernel.configure_console(64 * 1024)?;
@@ -160,16 +193,64 @@ fn prepare_kernel(
             missing_hook: MissingHook::ReturnFromException,
         },
     )?;
-    // Clearing each four-byte state word retires four instructions. The
-    // remaining fixed kernel setup fits within 1,000 transitions.
-    let initialization_limit = u64::from(init_stack - bss) + 1_000;
-    let initialized = execution.call(
+    // Each state word takes four instructions; each scheduler word takes five.
+    // The copy has six setup instructions; other fixed setup fits within 1,000.
+    let initialization_limit = u64::from(init_stack - bss) + 1_000 + 157 * 5 + 6;
+    let mut scheduler_stores = Vec::new();
+    let initialized = execution.call_observed(
         symbol("audio_kernel_initialize")?,
         [0; 4],
         initialization_limit,
+        &mut |e| {
+            let at = ram_offset(e.cpu.pc(), 4)?;
+            let word = u32::from_le_bytes(e.bus.ram().bytes()[at..at + 4].try_into()?);
+            if matches!(word >> 26, 40 | 41 | 43) {
+                let address = e
+                    .cpu
+                    .register(((word >> 21) & 31) as usize)
+                    .wrapping_add((word as i16 as i32) as u32);
+                if (scheduler..scheduler_end).contains(&address) {
+                    scheduler_stores.push((
+                        word >> 26,
+                        address,
+                        e.cpu.register(((word >> 16) & 31) as usize),
+                    ));
+                }
+            }
+            Ok(())
+        },
     )?;
     if initialized.result != 0 {
         return Err("kernel initialization returned an unexpected result".into());
+    }
+    let expected_stores: Vec<_> = scheduler_payload
+        .chunks_exact(4)
+        .enumerate()
+        .map(|(i, bytes)| {
+            (
+                43,
+                scheduler + i as u32 * 4,
+                u32::from_le_bytes(bytes.try_into().unwrap()),
+            )
+        })
+        .collect();
+    let scheduler_at = ram_offset(scheduler, 628)?;
+    if scheduler_stores != expected_stores
+        || &execution.bus.ram().bytes()[scheduler_at..scheduler_at + 628] != scheduler_payload
+        || execution.bus.read(scheduler - 4, Width::Word)? != scheduler_neighbors[0]
+        || execution.bus.read(scheduler_end, Width::Word)? != scheduler_neighbors[1]
+    {
+        return Err("guest scheduler installation changed bytes or neighboring RAM".into());
+    }
+    // This example executes the original SDK. Restore its reference code only
+    // after proving owned initialization installed every source-built word.
+    for (offset, byte) in scheduler_original.iter().enumerate() {
+        execution
+            .bus
+            .write(scheduler + offset as u32, Width::Byte, u32::from(*byte))?;
+    }
+    if &execution.bus.ram().bytes()[scheduler_at..scheduler_at + 628] != scheduler_original {
+        return Err("scheduler reference restoration did not preserve original bytes".into());
     }
     // The owned machine explicitly disables automatic PAD acknowledgement.
     execution.cpu.set_register(9, 0x5b);
