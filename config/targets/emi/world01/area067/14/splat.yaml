@@ -95,7 +95,7 @@ segments:
   - - 4836
     - c
     - advanceCounterWorld01Area06714_801F3EE4
-    - '@source: src/bof3/world01/advanceCounterWorld01Area06714_801F3EE4.c'
+    - '@source: src/bof3/world/advanceCounterWorld01Area06714_801F3EE4.c'
     - '@behavior: increments the shared 32-bit work counter at 0x801468BC by 0x800'
   - - 4864
     - asm
@@ -133,12 +133,12 @@ segments:
   - - 6208
     - c
     - advanceCounter2World01Area06714_801F4440
-    - '@source: src/bof3/world01/advanceCounter2World01Area06714_801F4440.c'
+    - '@source: src/bof3/world/advanceCounter2World01Area06714_801F4440.c'
     - '@behavior: increments the shared 32-bit work counter at 0x80146954 by 0x800'
   - - 6236
     - c
     - retreatCounter2World01Area06714_801F445C
-    - '@source: src/bof3/world01/retreatCounter2World01Area06714_801F445C.c'
+    - '@source: src/bof3/world/retreatCounter2World01Area06714_801F445C.c'
     - '@behavior: decrements the shared 32-bit work counter at 0x80146954 by 0x800'
   - - 6264
     - asm
