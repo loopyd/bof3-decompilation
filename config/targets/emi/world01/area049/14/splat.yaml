@@ -65,7 +65,7 @@ segments:
   - - 2024
     - c
     - advanceCounterWorld01Area04914_801F33E8
-    - '@source: src/bof3/world01/advanceCounterWorld01Area04914_801F33E8.c'
+    - '@source: src/bof3/world/advanceCounterWorld01Area04914_801F33E8.c'
   - - 2064
     - asm
     - func_801F3410
