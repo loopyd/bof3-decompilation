@@ -44,7 +44,7 @@ segments:
   - - 616
     - c
     - advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68
-    - '@source: src/bof3/world03/advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68.c'
+    - '@source: src/bof3/world/advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68.c'
     - '@behavior: Overlay work-record handoff: publishes the record based at 0x80146888 at the scratchpad pointer slot 0x44, ramps its 32-bit word at offset 0x34 by 0x4000 four times, arms the saved record state byte at offset 0x01 with mode 5 and restores the saved record.'
   - - 700
     - asm
@@ -52,7 +52,7 @@ segments:
   - - 828
     - c
     - advanceWorkWordAndSetScratchStateToMode7World03Area13413_801F2F3C
-    - '@source: src/bof3/world03/advanceWorkWordAndSetScratchStateToMode7World03Area13413_801F2F3C.c'
+    - '@source: src/bof3/world/advanceWorkWordAndSetScratchStateToMode7World03Area13413_801F2F3C.c'
     - '@behavior: Overlay work-record handoff: saves the scratchpad pointer cell 0x1F800044, publishes the record at 0x80146888 in its place, ramps the record word at offset 0x34 by 0x4000 four times with an unsigned-byte counter in a bottom-tested loop, then arms the saved record state byte at offset 0x01 with 7 and republishes the saved record; the same 0x54-byte shape as the exact sibling advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68 apart from that immediate.'
   - - 912
     - asm
@@ -66,7 +66,7 @@ segments:
   - - 1252
     - c
     - advanceWorkWordAndSetScratchStateToMode11World03Area13413_801F30E4
-    - '@source: src/bof3/world03/advanceWorkWordAndSetScratchStateToMode11World03Area13413_801F30E4.c'
+    - '@source: src/bof3/world/advanceWorkWordAndSetScratchStateToMode11World03Area13413_801F30E4.c'
     - '@behavior: Overlay work-record handoff: saves the scratchpad pointer cell 0x1F800044, publishes the record at 0x80146888 in its place, ramps the record word at offset 0x34 by 0x4000 four times with an unsigned-byte counter in a bottom-tested loop, then arms the saved record state byte at offset 0x01 with 11 and republishes the saved record; the same 0x54-byte shape as the exact sibling advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68 apart from that immediate.'
   - - 1336
     - asm
@@ -103,7 +103,7 @@ segments:
   - - 2080
     - c
     - invokeHelperWorld03Area13413_801F3420
-    - '@source: src/bof3/world03/invokeHelperWorld03Area13413_801F3420.c'
+    - '@source: src/bof3/world/invokeHelperWorld03Area13413_801F3420.c'
   - - 2112
     - asm
     - func_801F3440
@@ -181,18 +181,18 @@ segments:
   - - 4424
     - c
     - invokeHelperWorld03Area13413_801F3D48
-    - '@source: src/bof3/world03/invokeHelperWorld03Area13413_801F3D48.c'
+    - '@source: src/bof3/world/invokeHelperWorld03Area13413_801F3D48.c'
   - - 4456
     - c
     - invokeHelperWorld03Area13413_801F3D68
-    - '@source: src/bof3/world03/invokeHelperWorld03Area13413_801F3D68.c'
+    - '@source: src/bof3/world/invokeHelperWorld03Area13413_801F3D68.c'
   - - 4488
     - asm
     - func_801F3D88
   - - 4620
     - c
     - dispatchStateByte1Table5804World03Area13413_801F3E0C
-    - '@source: src/bof3/world03/dispatchStateByte1Table5804World03Area13413_801F3E0C.c'
+    - '@source: src/bof3/world/dispatchStateByte1Table5804World03Area13413_801F3E0C.c'
     - '@behavior: Overlay step dispatch calling the handler pointer at the state byte 1 index of the local handler table based at 0x801F5804, the same shape as the exact sibling dispatchStateByte1Table57a4World03Area13413_801F3560.'
   - - 4688
     - c
@@ -209,11 +209,11 @@ segments:
   - - 5552
     - c
     - invokeHelperWorld03Area13413_801F41B0
-    - '@source: src/bof3/world03/invokeHelperWorld03Area13413_801F41B0.c'
+    - '@source: src/bof3/world/invokeHelperWorld03Area13413_801F41B0.c'
   - - 5584
     - c
     - dispatchStateByte1Table581cWorld03Area13413_801F41D0
-    - '@source: src/bof3/world03/dispatchStateByte1Table581cWorld03Area13413_801F41D0.c'
+    - '@source: src/bof3/world/dispatchStateByte1Table581cWorld03Area13413_801F41D0.c'
     - '@behavior: Overlay step dispatch calling the handler pointer at the state byte 1 index of the second local handler table based at 0x801F581C, the twin of the boundary at 0x801F3E0C.'
   - - 5652
     - asm
@@ -227,7 +227,7 @@ segments:
   - - 5956
     - c
     - dispatchStateByte1Table5828World03Area13413_801F4344
-    - '@source: src/bof3/world03/dispatchStateByte1Table5828World03Area13413_801F4344.c'
+    - '@source: src/bof3/world/dispatchStateByte1Table5828World03Area13413_801F4344.c'
     - '@behavior: Overlay step dispatch calling the handler pointer at the state byte 1 index of the third local handler table based at 0x801F5828, the twin of the boundaries at 0x801F581C, 0x801F5804 and 0x801F57A4.'
   - - 6024
     - asm
@@ -241,7 +241,7 @@ segments:
   - - 6460
     - c
     - invokeHelperWorld03Area13413_801F453C
-    - '@source: src/bof3/world03/invokeHelperWorld03Area13413_801F453C.c'
+    - '@source: src/bof3/world/invokeHelperWorld03Area13413_801F453C.c'
   - - 6492
     - asm
     - func_801F455C
@@ -254,11 +254,11 @@ segments:
   - - 6828
     - c
     - invokeHelperWorld03Area13413_801F46AC
-    - '@source: src/bof3/world03/invokeHelperWorld03Area13413_801F46AC.c'
+    - '@source: src/bof3/world/invokeHelperWorld03Area13413_801F46AC.c'
   - - 6860
     - c
     - invokeHelperWorld03Area13413_801F46CC
-    - '@source: src/bof3/world03/invokeHelperWorld03Area13413_801F46CC.c'
+    - '@source: src/bof3/world/invokeHelperWorld03Area13413_801F46CC.c'
   - - 6892
     - asm
     - func_801F46EC
