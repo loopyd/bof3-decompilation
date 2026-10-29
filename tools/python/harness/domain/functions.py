@@ -20,7 +20,7 @@ from .tags import (
 )
 
 _IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
-_DIRECTIVE = re.compile(r"^[ \t]*#((?:[^\n]*\\\n)*[^\n]*)(?:\n|$)", re.MULTILINE)
+_DIRECTIVE = re.compile(r"^[ \t]*#((?:[^\n]*\\\r?\n)*[^\n]*)(?:\n|$)", re.MULTILINE)
 _SOURCE = re.compile(r"@source\b")
 _BEHAVIOR = re.compile(r"@behavior\b")
 
@@ -60,6 +60,12 @@ def _mask_lexemes(text: str) -> tuple[str, list[re.Match[str]]]:
     if "/*" in code or any(character in code for character in "\"'"):
         raise ValueError("unterminated C comment or literal")
     return code, comments
+
+
+def _mask_directives(masked: str) -> str:
+    """Hide logical directives without changing source offsets or line numbers."""
+
+    return _DIRECTIVE.sub(lambda match: re.sub(r"[^\n]", " ", match.group()), masked)
 
 
 def _find_closing(masked: str, start: int, opening: str, closing: str) -> int:
@@ -151,7 +157,8 @@ def parse_function_records(
     """Inspect attached metadata without expanding macros or claiming native identity.
 
     C89 definitions, GNU prefix attributes and standalone templates are supported.
-    Continuations require top-level macro definitions. Conditional source and
+    Continuations require macro definitions. Unconditional define/undef directives
+    may occupy the outer body of an ordinary function. Conditional source and
     unsupported declarators reject. Data tags without behavior are ignored.
     """
 
@@ -171,6 +178,7 @@ def parse_function_records(
     if not candidates:
         return ()
     directives = list(_DIRECTIVE.finditer(masked))
+    structural = _mask_directives(masked)
     for continuation in re.finditer(r"\\\r?\n", text):
         definitions = [
             item
@@ -179,13 +187,7 @@ def parse_function_records(
             and re.match(r"\s*define\b", item.group(1))
         ]
         if len(definitions) != 1:
-            raise ValueError("continued source requires a top-level macro definition")
-        preceding = _DIRECTIVE.sub("", masked[: definitions[0].start()])
-        if any(
-            preceding.count(opening) != preceding.count(closing)
-            for opening, closing in (("{", "}"), ("(", ")"), ("[", "]"))
-        ):
-            raise ValueError("continued macro definition must be top-level")
+            raise ValueError("continued source requires a macro definition")
     if any(
         re.match(r"\s*(?:if|ifdef|ifndef|elif|else|endif)\b", item.group(1))
         for item in directives
@@ -217,10 +219,10 @@ def parse_function_records(
             raise ValueError(f"duplicate function metadata address 0x{address:08X}")
         if any(item.start() <= comment.start() < item.end() for item in directives):
             raise ValueError("function metadata cannot occur inside a directive")
-        gap = _DIRECTIVE.sub("", masked[previous_end : comment.start()]).strip()
+        gap = structural[previous_end : comment.start()].strip()
         if gap and gap[-1] != ";":
             raise ValueError("function metadata interrupts an unfinished declaration")
-        preceding = _DIRECTIVE.sub("", masked[: comment.start()])
+        preceding = structural[: comment.start()]
         if (
             any(
                 preceding.count(opening) != preceding.count(closing)
@@ -231,9 +233,9 @@ def parse_function_records(
             raise ValueError(
                 "function metadata must precede a top-level implementation"
             )
-        start, end, kind, spelling = _parse_implementation(masked, comment.end())
-        if any(start <= item.start() < end for item in directives):
-            raise ValueError("implementation directives require preprocessing review")
+        start, end, kind, spelling = _parse_implementation(structural, comment.end())
+        if any(comment.end() <= item.start() < start for item in directives):
+            raise ValueError("directive interrupts attached function metadata")
         records.append(
             FunctionRecord(
                 address,
@@ -249,6 +251,54 @@ def parse_function_records(
         )
         addresses.add(address)
         previous_end = end
+    for directive in directives:
+        owner = next(
+            (
+                record
+                for record in records
+                if record.implementation_start <= directive.start()
+                and directive.end() <= record.implementation_end
+            ),
+            None,
+        )
+        if owner is not None:
+            body = -1
+            if owner.kind == "function":
+                implementation = mask_function_attributes(
+                    structural[owner.implementation_start : owner.implementation_end]
+                )
+                opening = implementation.index("(")
+                parameter_end = _find_closing(implementation, opening, "(", ")")
+                following = (
+                    parameter_end
+                    + len(implementation[parameter_end:])
+                    - len(implementation[parameter_end:].lstrip())
+                )
+                if implementation[following] != "{":
+                    raise ValueError("function requires a body after its parameters")
+                body = owner.implementation_start + following
+            prefix = structural[body : directive.start()] if body >= 0 else ""
+            if (
+                owner.kind != "function"
+                or body < 0
+                or directive.start() <= body
+                or prefix.count("{") - prefix.count("}") != 1
+                or any(
+                    prefix.count(opening) != prefix.count(closing)
+                    for opening, closing in (("(", ")"), ("[", "]"))
+                )
+                or not re.match(r"\s*(?:define|undef)\b", directive.group(1))
+            ):
+                raise ValueError("directive requires an outer ordinary function body")
+        else:
+            prefix = structural[: directive.start()]
+            if any(
+                prefix.count(opening) != prefix.count(closing)
+                for opening, closing in (("{", "}"), ("(", ")"), ("[", "]"))
+            ):
+                raise ValueError(
+                    "directive is not top-level or in an owned function body"
+                )
     return tuple(records)
 
 
@@ -260,7 +310,7 @@ def has_function_templates(text: str) -> bool:
     """
 
     masked, _ = _mask_lexemes(text)
-    masked = _DIRECTIVE.sub(lambda match: re.sub(r"[^\n]", " ", match.group()), masked)
+    masked = _mask_directives(masked)
     for candidate in re.finditer(r"(?m)^[ \t]*[A-Za-z_][A-Za-z0-9_]*\s*\(", masked):
         preceding = masked[: candidate.start()]
         if any(
@@ -276,6 +326,23 @@ def has_function_templates(text: str) -> bool:
         if kind == "template":
             return True
     return False
+
+
+def requires_function_expansion(text: str) -> bool:
+    """Route templates and directives within C delimiters to configured expansion."""
+
+    if has_function_templates(text):
+        return True
+    masked, _ = _mask_lexemes(text)
+    structural = _mask_directives(masked)
+    return any(
+        any(
+            structural[: directive.start()].count(opening)
+            != structural[: directive.start()].count(closing)
+            for opening, closing in (("{", "}"), ("(", ")"), ("[", "]"))
+        )
+        for directive in _DIRECTIVE.finditer(masked)
+    )
 
 
 def select_function_record(text: str, address: int) -> FunctionRecord:

@@ -7,7 +7,11 @@ from pathlib import Path
 from typing import Any
 
 from harness.common.lexicon import mask_c_text
-from harness.domain.functions import mask_function_attributes, parse_function_records
+from harness.domain.functions import (
+    mask_function_attributes,
+    parse_function_records,
+    requires_function_expansion,
+)
 from harness.domain.manifests import load_target_manifests
 
 KINDS = ("argument", "local")
@@ -287,7 +291,7 @@ def collect_source_identifiers(root: Path, target: str) -> list[dict[str, Any]]:
             ]
             function = record.spelling
             provenance = {}
-            if record.kind == "template":
+            if record.kind == "template" or requires_function_expansion(implementation):
                 from harness.build.expansion import expand_function_members
 
                 if expanded is None:
@@ -295,11 +299,17 @@ def collect_source_identifiers(root: Path, target: str) -> list[dict[str, Any]]:
                 member = expanded[record.address]
                 implementation = member.implementation
                 function = member.symbol
-                provenance = {
-                    "implementation_kind": "template",
-                    "macro": record.spelling,
-                    "invocation": member.invocation,
-                }
+                if record.kind == "template":
+                    provenance = {
+                        "implementation_kind": "template",
+                        "macro": record.spelling,
+                        "invocation": member.invocation,
+                    }
+                else:
+                    provenance = {
+                        "implementation_kind": "function",
+                        "configured_expansion": True,
+                    }
             signature, body = _signature_and_body(implementation)
             tokens = _IDENTIFIER.findall(mask_c_text(implementation))
             selector = f"{target}@{record.address:08X}"

@@ -23,14 +23,19 @@ empty, multiple or ambiguous output blocks acceptance. Complete assembler member
 checks also reject extra functions outside the annotated invocations. Preserve
 each member's effective compiler settings when grouping or moving sources.
 
-Private templates may use a continued top-level `#define`. Keep continued lines
-inside that directive. Source conditionals and directives inside implementations
-remain unsupported. Balanced GNU prefix attributes retain their source offsets;
-they do not replace compiler-profile and native checks.
+Private templates may use a continued top-level `#define`. Ordinary functions
+may use unconditional `#define` and `#undef` at their outer body level. Keep
+continuations inside `#define`. Configured expansion and complete assembler
+checks must bind each ordinary or generated member to exactly one function.
+Reject conditionals, other implementation directives and directives in signatures,
+nested blocks or gaps between metadata and its implementation. Preserve raw
+function bodies when repairing metadata admission. Balanced GNU prefix attributes
+retain source offsets; compiler-profile and native checks still apply.
 
-Naming lists inspect generated arguments and locals from that configured output.
-Their lexical facts do not prove the meaning of a name or authorize a metadata
-update. Recheck all members after changing a shared definition.
+Naming lists inspect arguments and locals from configured output when expansion
+is required. Ordinary functions retain ordinary provenance. Lexical facts do not
+prove a name's meaning or authorize metadata edits. Recheck all members after
+changing a shared definition.
 
 Investigate behavior from original bytes, callers, data and other available
 evidence. Record unknown behavior honestly. A native byte match does not prove a

@@ -7,7 +7,7 @@ from pathlib import Path
 from harness.build.arguments import read_source
 from harness.build.dispatch import Dispatch, validate_dispatch
 from harness.build.expansion import expand_function_members
-from harness.domain.functions import has_function_templates, parse_function_records
+from harness.domain.functions import parse_function_records, requires_function_expansion
 from harness.domain.layout import parse_splat_layout
 from harness.domain.manifests import load_target_manifests
 from harness.domain.sources import compiled_symbol_name, owning_manifest
@@ -40,10 +40,10 @@ def prepare_translation(
     if count < 2:
         if count == 1:
             manifest = owning_manifest(root, source)
-            if manifest is not None and has_function_templates(text):
+            if manifest is not None and requires_function_expansion(text):
                 if dispatch is None:
                     raise ValueError(
-                        "generated translation requires an active configured compiler invocation"
+                        "translation expansion requires an active configured compiler invocation"
                     )
                 expand_function_members(root, source)
                 validate_dispatch(dispatch)
@@ -63,8 +63,7 @@ def prepare_translation(
         )
     validate_dispatch(dispatch)
     records = parse_function_records(text, validate_progress=False)
-    generated = any(record.kind == "template" for record in records)
-    if generated:
+    if requires_function_expansion(text):
         expand_function_members(root, source)
         validate_dispatch(dispatch)
     relative = source.relative_to(root.resolve()).as_posix()
