@@ -121,9 +121,9 @@ categories 1 through 4. These observations accept category-label glyphs only. A
 preinstruction capture binds the selected ITEM pointer and its record with
 category 0. Other selected calls, general selector bounds, natural availability
 and the START or STATUS supplier remain unverified.
-Controlled Ability rendering verifies HEAL changed to XEAL. A preinstruction
-capture binds its selected pointer. Other skill-category labels, general selector
-bounds and natural availability remain unverified.
+Controlled Ability rendering verifies HEAL changed to XEAL and SKILL changed to
+XKILL. Preinstruction captures bind both selected pointers. ASSIST, ATTACK,
+general selector bounds and natural availability remain unverified.
 See the [record groups](../../../../tools/rust/bof3-text/docs/formats.md#default-character-names)
 before choosing a duplicate label.
 

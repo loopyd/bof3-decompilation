@@ -511,11 +511,13 @@ five, seven, seven and six bytes including NUL. The reader at `0x801E0354`
 selects from `0x801ECC98` using the panel's byte at offset `0xB` and draws at
 `0x801E05A0`. Its length call uses the resident A0/1B BIOS stub. Keep the seven
 alignment bytes and sixteen pointer bytes protected. Controlled Ability rendering
-verifies HEAL changed to XEAL. A preinstruction capture at `0x801E05A0` binds
-record `S1=0x80148570`, selector zero, slot `0x801ECC98` and pointer
-`V0=0x801ECC78`. Its callback state at `+3` and reader byte at `+8` are both zero.
-This does not prove call or delay-store retirement. Other labels, general selector
-bounds and natural availability remain unverified.
+verifies HEAL changed to XEAL at selector 0 and SKILL changed to XKILL at selector
+3. Preinstruction captures at `0x801E05A0` bind record `S1=0x80148570` to slot
+`0x801ECC98` and pointer `V0=0x801ECC78` for HEAL, and slot `0x801ECCA4` and
+pointer `V0=0x801ECC90` for SKILL. Both callback states at `+3` are zero; the reader
+byte at `+8` is zero for HEAL and three for SKILL. Call and delay-store retirement
+remain unverified, as do ASSIST, ATTACK, general selector bounds and natural
+availability.
 
 The separate equipment-category table at `0x801ECCD0` exposes WEAPON, ARMOR
 and OPTION at `0x801ECCB0`, `0x801ECCB8` and `0x801ECCC0`, with capacities
