@@ -856,8 +856,9 @@ fields. Document `index` identifies the supported allocation, not its original
 table row. Command-bearing row 3 and untraced rows 4 and 5 remain outside
 this layout's editable allocations.
 
-The same BATTLE entry exposes three ASCII allocations for its digit-sprite
-renderers. Capacities include NUL and exclude alignment bytes:
+The same BATTLE layout exposes three ASCII allocations for its digit-sprite
+renderers. Identical payload copies in other US archives use local entry indices.
+Capacities include NUL and exclude alignment bytes:
 
 | Address | Original text | Capacity | Codec | Renderer |
 | --- | --- | --- | --- | --- |
@@ -873,11 +874,15 @@ optional width 1..4, within three encoded and five formatted bytes.
 
 Both renderers skip ASCII spaces and subtract `0x30` from every other byte to
 select a sprite. The fallback therefore accepts exactly one space, digit or `:`.
-The original `:` selects glyph index ten; its displayed shape is unverified.
+The original `:` selects glyph index ten.
 Other ASCII and percent sequences are refused. The numeric formats cannot add
 literals within their five-byte output bound. Packing preserves the two alignment
-bytes at `0x801D0C72` and the adjacent data at `0x801D0C7C`. Runtime rendering
-remains unverified.
+bytes at `0x801D0C72` and the adjacent data at `0x801D0C7C`.
+
+Observed rendering covers fallback digit `9` beneath enemy names, width one at
+HP/AP value 15, and width one at queued animation digit 2. Other widths, values
+and battle contexts remain unverified. Identical payload copies leave the active
+archive indistinguishable.
 
 The `US master labels and numeric formats` layout supports `Pwr`, `Def`, `Int`
 and `Agl` in SISYOU entry 0, loaded at `0x801D0C00`. Their four-byte allocations start at

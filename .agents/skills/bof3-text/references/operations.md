@@ -222,8 +222,11 @@ BATTLE entry 3 also exposes two digit-sprite decimal formats and their fallback.
 Decimal rows retain one unsigned sixteen-bit argument, at most three encoded
 bytes and five formatted bytes. The one-byte `ascii-digit-glyph-literal` fallback
 accepts a space, digit or the original `:` glyph index. Other ASCII and percent
-sequences are refused. The glyph's displayed shape and runtime rendering remain
-unverified.
+sequences are refused. Runtime observations cover fallback digit `9` beneath
+enemy names and width-one decimal rendering at HP/AP value 15 and queued
+animation digit 2. Other values, widths and battle contexts remain unverified.
+Runtime media must include the copy the game loads; identical BATTLE payloads
+occur in multiple US archives with different entry indices.
 An empty pointer-reference list means indexed or code addressing; retain it and
 the consumer metadata. The pinned payload protects those instructions.
 
