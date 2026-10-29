@@ -192,7 +192,7 @@ dialogue commands. See [formats.md](formats.md#record-names).
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v23` document with ten counted labels, eight default names,
+`bof3.inline-text/v24` document with ten counted labels, eight default names,
 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat labels and
 one unsigned sixteen-bit decimal format.
 Each stat label permits three encoded bytes plus NUL. Preserve the two trailing
@@ -235,7 +235,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v23`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v24`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 The original BATTLE archive also has supported message records in entry 3.
@@ -322,12 +322,15 @@ editing. The deferred masked-byte format has an unverified final renderer and
 retains `renderers: []`. See [inline formats](formats.md#inline-overlay-text)
 for its supported arguments and limits.
 
-AREA030, AREA089 and AREA129 entry 4 each include two numeric formats and two
-twelve-byte fixed labels. The formats accept one unsigned sixteen-bit decimal
-argument, at most three encoded ASCII bytes and five formatted bytes. Their
-draw limits remain three and five characters respectively. Fixed labels use
-all twelve bytes with literal game encoding. See [inline formats](formats.md#inline-overlay-text)
-for source addresses and the limits of the consumer evidence.
+AREA030, AREA089 and AREA129 entry 4 each include five numeric formats, one
+nonempty digit literal and two twelve-byte fixed labels. Prefix arguments include
+a signed halfword plus one and an unsigned halfword plus one. Their output bounds
+are six, seven and four bytes for `%2d`, `%d/6` and `*%2d`, respectively. Do not
+truncate the `%d/6` argument at 65535. Use `analyze` for each allocation's encoded
+and formatted limits. The formats at `0x801D0C38` and `0x801D0C8C` retain their
+three- and five-character draw limits. Fixed labels use all twelve bytes with
+literal game encoding. See [inline formats](formats.md#inline-overlay-text)
+for source addresses and the consumer evidence.
 
 BATE and SHISU entry 0 each include `%3d/%3d` with two unsigned byte arguments.
 The `ascii-u8-decimal-pair-format` codec preserves their order, at most seven
@@ -358,7 +361,7 @@ Preserve `renderers: []` because only formatting and the eight-byte text-slot
 copy are qualified. Empty `ascii-format-literal` replacements are refused to
 prevent stale scratch output.
 
-Inline documents use `bof3.inline-text/v23`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v24`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.

@@ -419,7 +419,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v23`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v24`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -642,7 +642,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v23` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v24` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -821,13 +821,40 @@ source-bound document and edited output.
 
 | Address | Original text | Capacity | Codec |
 | --- | --- | --- | --- |
+| `0x801D0C04` | `%2d` | 4 | `ascii-i16-plus-one-decimal-format` |
+| `0x801D0C08` | `%d/6` | 5 | `ascii-u16-decimal-field-format` |
+| `0x801D0C10` | `23` | 3 | `ascii-digit-glyph-literal` |
+| `0x801D0C14` | `*%2d` | 5 | `ascii-u8-decimal-field-format` |
 | `0x801D0C38` | `%3d` | 4 | `ascii-u16-decimal-format` |
 | `0x801D0C8C` | `%4d` | 4 | `ascii-u16-decimal-format` |
 | `0x801E28C4` | `Manillo` | 12 | `game-fixed-literal` |
 | `0x801E28D0` | `????????????` | 12 | `game-fixed-literal` |
 
-The numeric formats retain one decimal argument bounded by `[0, 65535]`, at
-most five formatted bytes before NUL, and at most three encoded ASCII bytes.
+The `%2d` field at `0x801D0C04` has four consumers. Their argument domain
+includes a signed halfword plus one, covering `[-32767, 32768]`. Its codec retains
+one decimal argument, at most three encoded bytes plus NUL, and at most six
+formatted bytes. It accepts `%d` with an optional width from 1 to 4. Extra
+literal characters exceed its conservative output bound.
+
+The `%d/6` field receives an unsigned halfword plus one, covering `[1, 65536]`.
+There is no proven limit of six and no sixteen-bit wrap. The field codec uses a
+five-digit argument budget. Its four-byte encoded limit restricts every accepted
+edit to at most seven formatted bytes, including literals. The `*%2d` field
+receives a guarded unsigned byte in `[2, 255]` and permits at most four formatted
+bytes, including literals. Both retain one decimal argument and accept widths
+from 1 to 4, with optional zero padding when it fits the allocation.
+
+The `23` field passes directly to `0x8014FF0C`. It requires one or two glyphs
+from spaces, digits and the `:` glyph index. Empty input is refused because the
+renderer advances before testing the next NUL. The three prefix formats
+write into `0x80145AD4`. Three `%2d` sites draw through `0x8014FF0C`, and the
+fourth uses `0x8014F800`; `%d/6` and `*%2d` use `0x80150098`.
+Header-adjacent bytes at `[0x801D0C0D,0x801D0C10)`, `0x801D0C13` and
+`[0x801D0C19,0x801D0C1C)` remain protected. The last span contains nonzero data.
+
+The formats at `0x801D0C38` and `0x801D0C8C` retain one decimal argument bounded
+by `[0, 65535]`. They permit at most five formatted bytes before NUL and three
+encoded ASCII bytes.
 They accept `%d` with an optional width from 1 to 4. Zero padding cannot fit
 these allocations. Other conversions, missing arguments and extra literals
 that exceed either bound are refused. Consumer `0x801E1004` uses the first
@@ -837,7 +864,7 @@ The first consumer preserves its three-character draw limit; the second uses
 five. The formatter's output bound does not prove that every digit appears
 within the first consumer's shorter draw limit.
 
-The two labels use the game's literal encoding and all twelve field bytes.
+The two fixed labels use the game's literal encoding and all twelve field bytes.
 Consumer `0x801E1004` copies twelve bytes, appends NUL in the destination buffer
 and calls `0x8014F800` with a fifteen-character limit. Shorter edits zero-fill
 the remaining field bytes. Other labels, dynamic record names and runtime

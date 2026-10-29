@@ -99,7 +99,7 @@ dialogue command markup. Other name families require separate evidence.
 
 US START entry 8 and STATUS entry 0 each expose ten counted labels, eight default
 names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
-labels and one numeric format through `bof3.inline-text/v23`. Select that entry
+labels and one numeric format through `bof3.inline-text/v24`. Select that entry
 without class or latch selectors. Re-extract older inline documents. Use a
 separate document and output for each archive. Editing one does not update the
 other or a save.
@@ -129,7 +129,7 @@ other names and save propagation remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v23`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v24`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -164,11 +164,12 @@ three. Optional widths use 1..4 with optional zero padding; other conversions ar
 refused. The masked row's final renderer is unverified and records `renderers: []`.
 Retain that empty array. See the [inline format contract](../../../../tools/rust/bof3-text/docs/formats.md)
 for argument bounds and allocation sizes.
-AREA030, AREA089 and AREA129 entry 4 each expose two unsigned sixteen-bit decimal
-formats and two fixed twelve-byte labels. Numeric output is bounded by five
-bytes, but the first format's draw limit remains three characters. Preserve
-the formats' arguments and both size bounds; fixed labels accept literal game
-characters in all twelve bytes. Runtime rendering remains unverified.
+AREA030, AREA089 and AREA129 entry 4 each expose five numeric formats, one
+nonempty digit literal and two fixed twelve-byte labels. Arguments include signed
+and unsigned halfwords plus one; `%d/6` can receive 65536. Use `analyze` for each
+encoded and formatted bound. The formats at `0x801D0C38` and `0x801D0C8C` retain
+three- and five-character draw limits. Fixed labels use literal game characters
+in all twelve bytes. Runtime rendering remains unverified.
 
 BATE and SHISU entry 0 each expose `%3d` through `ascii-u16-decimal-format`.
 Retain one decimal argument, at most three encoded bytes plus NUL, and at most
