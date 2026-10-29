@@ -425,30 +425,30 @@ audio_callbacks_register_irq:
     bnez $s1, .Lcallbacks_80174e1c
     addiu $v0, $zero, 4
     sltiu $s0, $s2, 1
-    jal .Lcallbacks_clear_pad
+    jal audio_callbacks_clear_pad
     addu $a0, $s0, $zero
     addiu $a0, $zero, 3
-    jal .Lcallbacks_clear_counter
+    jal audio_callbacks_clear_counter
     addu $a1, $s0, $zero
     addiu $v0, $zero, 4
 .Lcallbacks_80174e1c:
     bne $s1, $v0, .Lcallbacks_80174e34
     addiu $v0, $zero, 5
     addu $a0, $zero, $zero
-    jal .Lcallbacks_clear_counter
+    jal audio_callbacks_clear_counter
     sltiu $a1, $s2, 1
     addiu $v0, $zero, 5
 .Lcallbacks_80174e34:
     bne $s1, $v0, .Lcallbacks_80174e4c
     addiu $v0, $zero, 6
     addiu $a0, $zero, 1
-    jal .Lcallbacks_clear_counter
+    jal audio_callbacks_clear_counter
     sltiu $a1, $s2, 1
     addiu $v0, $zero, 6
 .Lcallbacks_80174e4c:
     bne $s1, $v0, .Lcallbacks_80174e5c
     addiu $a0, $zero, 2
-    jal .Lcallbacks_clear_counter
+    jal audio_callbacks_clear_counter
     sltiu $a1, $s2, 1
 .Lcallbacks_80174e5c:
     lui $v0, %hi(audio_callbacks_mask_pointer)
@@ -945,14 +945,16 @@ audio_callbacks_clear_dma:
     nop
 
 # Original service wrapper at exe/slus_004_22@0x8017EEBC.
-.Lcallbacks_clear_pad:
+.globl audio_callbacks_clear_pad
+audio_callbacks_clear_pad:
     addiu $t2, $zero, 0xb0
     jr $t2
     addiu $t1, $zero, 0x5b
     nop
 
 # Original service wrapper at exe/slus_004_22@0x8017EEDC.
-.Lcallbacks_clear_counter:
+.globl audio_callbacks_clear_counter
+audio_callbacks_clear_counter:
     addiu $t2, $zero, 0xc0
     jr $t2
     addiu $t1, $zero, 0xa

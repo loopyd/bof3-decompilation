@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# Owned XA selection, completion, selected state handlers and CD positions.
+# Owned XA selection, completion, nine-state dispatch, gain and CD positions.
 # Provenance: exe/slus_004_22, SHA-256
 # 0af39fb1ffcf25e4bdf2730173f397b5b5f6c44989114fe9b59b92ab7c0eb21a.
 .set noreorder
@@ -428,6 +428,454 @@ audio_cd_position_to_int:
     addiu $v0, $v0, -0x96
 .end audio_cd_position_to_int
 
+.section .text
+.balign 4
+# exe/slus_004_22@0x801638b0..0x801639b8.
+.globl audio_xa_tick
+.ent audio_xa_tick
+audio_xa_tick:
+    addiu $sp, $sp, -0x18
+    sw $s0, 0x10($sp)
+    lui $s0, %hi(audio_xa_state + 0x21)
+    addiu $s0, $s0, %lo(audio_xa_state + 0x21)
+    sw $ra, 0x14($sp)
+    lb $v0, 0($s0)
+    nop
+    sll $v0, $v0, 2
+    lui $at, %hi(audio_xa_handlers)
+    addu $at, $at, $v0
+    lw $v0, %lo(audio_xa_handlers)($at)
+    nop
+    jalr $v0
+    nop
+    lui $v0, %hi(audio_xa_state + 0x10)
+    lhu $v0, %lo(audio_xa_state + 0x10)($v0)
+    lui $v1, %hi(audio_xa_state + 0x20)
+    lb $v1, %lo(audio_xa_state + 0x20)($v1)
+    addiu $v0, $v0, 1
+    lui $at, %hi(audio_xa_state + 0x10)
+    sh $v0, %lo(audio_xa_state + 0x10)($at)
+    beqz $v1, .Lxa_8016392c
+    nop
+    lb $v0, 0($s0)
+    nop
+    slti $v0, $v0, 6
+    beqz $v0, .Lxa_8016392c
+    addiu $v0, $zero, 8
+    lui $at, %hi(audio_xa_state + 0x10)
+    sh $zero, %lo(audio_xa_state + 0x10)($at)
+    sb $v0, 0($s0)
+.Lxa_8016392c:
+    lui $v0, %hi(audio_xa_state + 0x10)
+    lhu $v0, %lo(audio_xa_state + 0x10)($v0)
+    nop
+    sltiu $v0, $v0, 0xb5
+    bnez $v0, .Lxa_801639a4
+    addiu $v1, $zero, 1
+    lui $v0, %hi(audio_xa_state + 0x14)
+    lhu $v0, %lo(audio_xa_state + 0x14)($v0)
+    lui $at, %hi(audio_xa_state + 0x21)
+    sb $v1, %lo(audio_xa_state + 0x21)($at)
+    addiu $v1, $v0, 1
+    sll $v0, $v0, 0x10
+    sra $v0, $v0, 0x10
+    slti $v0, $v0, 6
+    lui $at, %hi(audio_xa_state + 0x14)
+    sh $v1, %lo(audio_xa_state + 0x14)($at)
+    beqz $v0, .Lxa_80163984
+    nop
+    jal audio_xa_response_has_bit4
+    nop
+    beqz $v0, .Lxa_801639a4
+    nop
+.Lxa_80163984:
+    lui $v0, %hi(audio_xa_state + 0x21)
+    lb $v0, %lo(audio_xa_state + 0x21)($v0)
+    nop
+    slti $v0, $v0, 6
+    beqz $v0, .Lxa_801639a4
+    addiu $v0, $zero, 8
+    lui $at, %hi(audio_xa_state + 0x21)
+    sb $v0, %lo(audio_xa_state + 0x21)($at)
+.Lxa_801639a4:
+    lw $ra, 0x14($sp)
+    lw $s0, 0x10($sp)
+    addiu $sp, $sp, 0x18
+    jr $ra
+    nop
+.end audio_xa_tick
+
+# exe/slus_004_22@0x801639d0..0x80163a54.
+.globl audio_xa_state_1
+.ent audio_xa_state_1
+audio_xa_state_1:
+    addiu $sp, $sp, -0x20
+    addiu $v0, $zero, 0xc8
+    addiu $a0, $zero, 1
+    addu $a1, $zero, $zero
+    sw $ra, 0x1c($sp)
+    sw $s0, 0x18($sp)
+    jal audio_cd_sync
+    sb $v0, 0x10($sp)
+    beqz $v0, .Lxa_80163a40
+    addiu $a0, $zero, 0xe
+    addiu $a1, $sp, 0x10
+    lui $s0, %hi(audio_xa_state + 0x18)
+    addiu $s0, $s0, %lo(audio_xa_state + 0x18)
+    jal audio_cd_control
+    addu $a2, $s0, $zero
+    beqz $v0, .Lxa_80163a40
+    addiu $a0, $zero, 0x16
+    lui $at, %hi(audio_xa_state + 0x22)
+    sb $zero, %lo(audio_xa_state + 0x22)($at)
+    addiu $a1, $s0, 0x14
+    jal audio_cd_control
+    addu $a2, $zero, $zero
+    beqz $v0, .Lxa_80163a40
+    addiu $v0, $zero, 2
+    lui $at, %hi(audio_xa_state + 0x21)
+    sb $v0, %lo(audio_xa_state + 0x21)($at)
+    lui $at, %hi(audio_xa_state + 0x26)
+    sb $zero, %lo(audio_xa_state + 0x26)($at)
+.Lxa_80163a40:
+    lw $ra, 0x1c($sp)
+    lw $s0, 0x18($sp)
+    addiu $sp, $sp, 0x20
+    jr $ra
+    nop
+.end audio_xa_state_1
+
+# exe/slus_004_22@0x80163af0..0x80163b74.
+.globl audio_xa_state_3
+.ent audio_xa_state_3
+audio_xa_state_3:
+    addiu $sp, $sp, -0x18
+    addiu $a0, $zero, 1
+    addu $a1, $zero, $zero
+    sw $ra, 0x14($sp)
+    jal audio_cd_sync
+    sw $s0, 0x10($sp)
+    beqz $v0, .Lxa_80163b58
+    addiu $a0, $zero, 0xd
+    lui $s0, %hi(audio_xa_state + 0x28)
+    addiu $s0, $s0, %lo(audio_xa_state + 0x28)
+    addu $a1, $s0, $zero
+    jal audio_cd_control
+    addu $a2, $zero, $zero
+    beqz $v0, .Lxa_80163b58
+    addiu $a0, $zero, 0x1b
+    lui $at, %hi(audio_xa_state + 0x22)
+    sb $zero, %lo(audio_xa_state + 0x22)($at)
+    addiu $a1, $s0, 4
+    jal audio_cd_control
+    addu $a2, $zero, $zero
+    beqz $v0, .Lxa_80163b58
+    addiu $v0, $zero, 4
+    lui $at, %hi(audio_xa_state + 0x21)
+    sb $v0, %lo(audio_xa_state + 0x21)($at)
+    lui $at, %hi(audio_xa_state + 0x12)
+    sh $zero, %lo(audio_xa_state + 0x12)($at)
+.Lxa_80163b58:
+    lui $at, %hi(audio_xa_state + 0x10)
+    sh $zero, %lo(audio_xa_state + 0x10)($at)
+    lw $ra, 0x14($sp)
+    lw $s0, 0x10($sp)
+    addiu $sp, $sp, 0x18
+    jr $ra
+    nop
+.end audio_xa_state_3
+
+# exe/slus_004_22@0x80163b74..0x80163c58.
+.globl audio_xa_state_4
+.ent audio_xa_state_4
+audio_xa_state_4:
+    addiu $sp, $sp, -0x18
+    sw $s0, 0x10($sp)
+    lui $s0, %hi(audio_xa_state + 0x22)
+    addiu $s0, $s0, %lo(audio_xa_state + 0x22)
+    sw $ra, 0x14($sp)
+    lb $v0, 0($s0)
+    nop
+    bgez $v0, .Lxa_80163be8
+    addiu $v1, $zero, 3
+    lui $v0, %hi(audio_xa_state + 0x14)
+    lhu $v0, %lo(audio_xa_state + 0x14)($v0)
+    lui $at, %hi(audio_xa_state + 0x21)
+    sb $v1, %lo(audio_xa_state + 0x21)($at)
+    addiu $v1, $v0, 1
+    sll $v0, $v0, 0x10
+    sra $v0, $v0, 0x10
+    slti $v0, $v0, 6
+    lui $at, %hi(audio_xa_state + 0x14)
+    sh $v1, %lo(audio_xa_state + 0x14)($at)
+    beqz $v0, .Lxa_80163bd8
+    addiu $v0, $zero, 8
+    jal audio_xa_response_has_bit4
+    nop
+    beqz $v0, .Lxa_80163c44
+    addiu $v0, $zero, 8
+.Lxa_80163bd8:
+    lui $at, %hi(audio_xa_state + 0x21)
+    sb $v0, %lo(audio_xa_state + 0x21)($at)
+    j .Lxa_80163c44
+    nop
+.Lxa_80163be8:
+    beqz $v0, .Lxa_80163c44
+    nop
+    jal audio_xa_ramp_gain
+    addiu $a0, $zero, 0x80
+    lui $v0, %hi(audio_xa_state + 0x12)
+    lhu $v0, %lo(audio_xa_state + 0x12)($v0)
+    nop
+    addiu $v1, $v0, 1
+    sltiu $v0, $v0, 6
+    lui $at, %hi(audio_xa_state + 0x12)
+    sh $v1, %lo(audio_xa_state + 0x12)($at)
+    bnez $v0, .Lxa_80163c44
+    addiu $v0, $zero, 5
+    lui $at, %hi(audio_xa_state + 0x21)
+    sb $v0, %lo(audio_xa_state + 0x21)($at)
+    addiu $v0, $zero, 1
+    lui $at, %hi(audio_xa_state + 0x12)
+    sh $zero, %lo(audio_xa_state + 0x12)($at)
+    lui $at, %hi(audio_xa_state + 0x10)
+    sh $zero, %lo(audio_xa_state + 0x10)($at)
+    sb $zero, 0($s0)
+    lui $at, %hi(audio_xa_state + 0x23)
+    sb $v0, %lo(audio_xa_state + 0x23)($at)
+.Lxa_80163c44:
+    lw $ra, 0x14($sp)
+    lw $s0, 0x10($sp)
+    addiu $sp, $sp, 0x18
+    jr $ra
+    nop
+.end audio_xa_state_4
+
+# exe/slus_004_22@0x80163c58..0x80163d20.
+.globl audio_xa_state_5
+.ent audio_xa_state_5
+audio_xa_state_5:
+    addiu $sp, $sp, -0x18
+    sw $s0, 0x10($sp)
+    lui $s0, %hi(audio_xa_state + 0x12)
+    addiu $s0, $s0, %lo(audio_xa_state + 0x12)
+    sw $ra, 0x14($sp)
+    lhu $v0, 0($s0)
+    nop
+    addiu $v0, $v0, 1
+    sh $v0, 0($s0)
+    andi $v0, $v0, 1
+    beqz $v0, .Lxa_80163d0c
+    nop
+    lui $v0, %hi(audio_xa_state + 0x22)
+    lb $v0, %lo(audio_xa_state + 0x22)($v0)
+    nop
+    bgtz $v0, .Lxa_80163cb4
+    addiu $a0, $zero, 0x10
+    lui $at, %hi(audio_xa_state + 0x22)
+    sb $zero, %lo(audio_xa_state + 0x22)($at)
+    jal audio_cd_control_nonblocking
+    addu $a1, $zero, $zero
+    j .Lxa_80163d0c
+    nop
+.Lxa_80163cb4:
+    lui $at, %hi(audio_xa_state + 0x22)
+    sb $zero, %lo(audio_xa_state + 0x22)($at)
+    lui $at, %hi(audio_xa_state + 0x10)
+    sh $zero, %lo(audio_xa_state + 0x10)($at)
+    jal audio_cd_last_command
+    nop
+    addiu $v1, $zero, 0x10
+    bne $v0, $v1, .Lxa_80163d0c
+    nop
+    jal audio_cd_position_to_int
+    addiu $a0, $s0, 6
+    lui $v1, %hi(audio_xa_state + 0x4)
+    lw $v1, %lo(audio_xa_state + 0x4)($v1)
+    lui $at, %hi(audio_xa_state + 0x8)
+    sw $v0, %lo(audio_xa_state + 0x8)($at)
+    slt $v0, $v0, $v1
+    bnez $v0, .Lxa_80163d0c
+    addiu $v0, $zero, 6
+    lui $at, %hi(audio_xa_state + 0x21)
+    sb $v0, %lo(audio_xa_state + 0x21)($at)
+    lui $at, %hi(audio_xa_state + 0x22)
+    sb $zero, %lo(audio_xa_state + 0x22)($at)
+.Lxa_80163d0c:
+    lw $ra, 0x14($sp)
+    lw $s0, 0x10($sp)
+    addiu $sp, $sp, 0x18
+    jr $ra
+    nop
+.end audio_xa_state_5
+
+# exe/slus_004_22@0x80163d20..0x80163d80.
+.globl audio_xa_state_6
+.ent audio_xa_state_6
+audio_xa_state_6:
+    addiu $sp, $sp, -0x18
+    sw $ra, 0x10($sp)
+    lui $at, %hi(audio_xa_state + 0x22)
+    sb $zero, %lo(audio_xa_state + 0x22)($at)
+    jal audio_xa_ramp_gain
+    addu $a0, $zero, $zero
+    addiu $a0, $zero, 1
+    jal audio_cd_sync
+    addu $a1, $zero, $zero
+    beqz $v0, .Lxa_80163d70
+    addiu $a0, $zero, 9
+    addu $a1, $zero, $zero
+    jal audio_cd_control
+    addu $a2, $zero, $zero
+    beqz $v0, .Lxa_80163d70
+    addiu $v0, $zero, 7
+    lui $at, %hi(audio_xa_state + 0x21)
+    sb $v0, %lo(audio_xa_state + 0x21)($at)
+    lui $at, %hi(audio_xa_state + 0x10)
+    sh $zero, %lo(audio_xa_state + 0x10)($at)
+.Lxa_80163d70:
+    lw $ra, 0x10($sp)
+    addiu $sp, $sp, 0x18
+    jr $ra
+    nop
+.end audio_xa_state_6
+
+# exe/slus_004_22@0x80163e3c..0x80163e88.
+.globl audio_xa_state_8
+.ent audio_xa_state_8
+audio_xa_state_8:
+    addiu $sp, $sp, -0x18
+    sw $s0, 0x10($sp)
+    lui $s0, %hi(audio_xa_state + 0x10)
+    addiu $s0, $s0, %lo(audio_xa_state + 0x10)
+    addiu $a0, $zero, 1
+    addiu $a1, $s0, 8
+    sw $ra, 0x14($sp)
+    jal audio_cd_sync
+    sh $zero, 0($s0)
+    beqz $v0, .Lxa_80163e74
+    addiu $v0, $zero, 6
+    lui $at, %hi(audio_xa_state + 0x21)
+    sb $v0, %lo(audio_xa_state + 0x21)($at)
+    sh $zero, 0($s0)
+.Lxa_80163e74:
+    lw $ra, 0x14($sp)
+    lw $s0, 0x10($sp)
+    addiu $sp, $sp, 0x18
+    jr $ra
+    nop
+.end audio_xa_state_8
+
+# exe/slus_004_22@0x80163eb0..0x80163f50.
+.globl audio_xa_set_gain
+.ent audio_xa_set_gain
+audio_xa_set_gain:
+    addiu $sp, $sp, -0x18
+    lui $v1, %hi(audio_xa_state + 0x24)
+    addiu $v1, $v1, %lo(audio_xa_state + 0x24)
+    sw $ra, 0x10($sp)
+    sb $a0, 0($v1)
+    lui $v0, %hi(audio_xa_gain_flag)
+    lbu $v0, %lo(audio_xa_gain_flag)($v0)
+    nop
+    bnez $v0, .Lxa_80163f04
+    nop
+    lbu $v0, 0($v1)
+    lui $at, %hi(audio_xa_state + 0x31)
+    sb $zero, %lo(audio_xa_state + 0x31)($at)
+    lui $at, %hi(audio_xa_state + 0x33)
+    sb $zero, %lo(audio_xa_state + 0x33)($at)
+    lui $at, %hi(audio_xa_state + 0x30)
+    sb $v0, %lo(audio_xa_state + 0x30)($at)
+    lui $at, %hi(audio_xa_state + 0x32)
+    sb $v0, %lo(audio_xa_state + 0x32)($at)
+    j .Lxa_80163f30
+    nop
+.Lxa_80163f04:
+    lbu $v0, 0($v1)
+    nop
+    srl $v0, $v0, 1
+    lui $at, %hi(audio_xa_state + 0x30)
+    sb $v0, %lo(audio_xa_state + 0x30)($at)
+    lui $at, %hi(audio_xa_state + 0x31)
+    sb $v0, %lo(audio_xa_state + 0x31)($at)
+    lui $at, %hi(audio_xa_state + 0x32)
+    sb $v0, %lo(audio_xa_state + 0x32)($at)
+    lui $at, %hi(audio_xa_state + 0x33)
+    sb $v0, %lo(audio_xa_state + 0x33)($at)
+.Lxa_80163f30:
+    lui $a0, %hi(audio_xa_state + 0x30)
+    addiu $a0, $a0, %lo(audio_xa_state + 0x30)
+    jal audio_cd_mix
+    nop
+    lw $ra, 0x10($sp)
+    addiu $sp, $sp, 0x18
+    jr $ra
+    nop
+.end audio_xa_set_gain
+
+# exe/slus_004_22@0x80163f50..0x80164020.
+.globl audio_xa_ramp_gain
+.ent audio_xa_ramp_gain
+audio_xa_ramp_gain:
+    addiu $sp, $sp, -0x20
+    lui $a1, %hi(audio_xa_state + 0x24)
+    addiu $a1, $a1, %lo(audio_xa_state + 0x24)
+    sw $ra, 0x18($sp)
+    sw $s1, 0x14($sp)
+    sw $s0, 0x10($sp)
+    lbu $v1, 0($a1)
+    andi $a0, $a0, 0xff
+    sltu $v0, $v1, $a0
+    beqz $v0, .Lxa_80163fb8
+    addu $a2, $a1, $zero
+    addu $s0, $a1, $zero
+    addu $s1, $a0, $zero
+.Lxa_80163f84:
+    lbu $a0, 0($s0)
+    jal audio_xa_set_gain
+    nop
+    lbu $v0, 0($s0)
+    nop
+    addiu $v0, $v0, 1
+    sb $v0, 0($s0)
+    andi $v0, $v0, 0xff
+    sltu $v0, $v0, $s1
+    beqz $v0, .Lxa_80163ff8
+    nop
+    j .Lxa_80163f84
+    nop
+.Lxa_80163fb8:
+    sltu $v0, $a0, $v1
+    beqz $v0, .Lxa_80163ff8
+    nop
+    addu $s0, $a2, $zero
+    addu $s1, $a0, $zero
+.Lxa_80163fcc:
+    lbu $a0, 0($s0)
+    jal audio_xa_set_gain
+    nop
+    lbu $v0, 0($s0)
+    nop
+    addiu $v0, $v0, -1
+    sb $v0, 0($s0)
+    andi $v0, $v0, 0xff
+    sltu $v0, $s1, $v0
+    bnez $v0, .Lxa_80163fcc
+    nop
+.Lxa_80163ff8:
+    lui $a0, %hi(audio_xa_state + 0x24)
+    lbu $a0, %lo(audio_xa_state + 0x24)($a0)
+    jal audio_xa_set_gain
+    nop
+    lw $ra, 0x18($sp)
+    lw $s1, 0x14($sp)
+    lw $s0, 0x10($sp)
+    addiu $sp, $sp, 0x20
+    jr $ra
+    nop
+.end audio_xa_ramp_gain
+
 .section .data
 .balign 4
 # Original adjacent arrays at 0x80183230..0x80183248.
@@ -438,6 +886,10 @@ audio_xa_file_slots:
 audio_xa_table_pointers:
     .word 0, 0, 0
 
+# Original nine-entry table at 0x80183274..0x80183298.
+.globl audio_xa_handlers
+audio_xa_handlers:
+    .word audio_xa_state_0, audio_xa_state_1, audio_xa_state_2, audio_xa_state_3, audio_xa_state_4, audio_xa_state_5, audio_xa_state_6, audio_xa_state_7, audio_xa_state_8
 .section .bss
 .balign 4
 # Original zero state at 0x8014680C..0x80146841, rounded to word alignment.
@@ -452,14 +904,13 @@ audio_xa_state:
 audio_xa_file_lbas:
     .space 2732
 
-.balign 4
-# Original zero callback cell at 0x80185780; shared with future CD dispatch.
-.globl audio_cd_sync_callback
-audio_cd_sync_callback:
-    .space 4
-
 # Original zero byte at 0x80146494; START clears it and state 7 writes three.
 # Other uses remain unresolved.
 .globl audio_xa_start_clear_byte
 audio_xa_start_clear_byte:
+    .space 1
+
+# Original live zero byte at 0x80144951; its producer remains caller-owned.
+.globl audio_xa_gain_flag
+audio_xa_gain_flag:
     .space 1

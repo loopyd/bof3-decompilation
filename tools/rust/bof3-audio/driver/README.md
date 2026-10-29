@@ -91,9 +91,27 @@ signed LBA in V0, subtracting the 150-frame lead-in. It reads offsets +0, +1
 and +2 in order, clobbers A0 and converts unchecked nibbles, including invalid
 BCD. It performs no writes and preserves HI/LO.
 
-The nine-entry tick dispatcher and six other state handlers still require
-owned CD SDK routines. Scheduled CD dispatch and playback remain open; these
-entries alone do not provide XA rendering or vocal roles.
+`audio_xa_tick` dispatches all nine states through the live signed state byte.
+The caller must keep that byte within 0..8. The guest preserves the original
+unchecked table access, state transitions, completion polling and watchdog order.
+`audio_xa_set_gain` writes the current gain and calls the CD mixer. The live
+`audio_xa_gain_flag` selects the original gain matrix and starts at zero; its
+producer and meaning remain unresolved. `audio_xa_ramp_gain` rereads gain after
+each mixer call and performs the final mixer call even when already at its target.
+
+The CD SDK entries own command retries, blocking and polling responses, IRQ
+FIFO draining, callback dispatch, recovery, initialization and banked gain writes.
+Their mutable tables share the callback word used by XA. Response copies read
+live bytes in ascending order; the XA completion callback uses descending order.
+Callers must provide valid command indices, parameter buffers and response storage
+for the selected SDK entry. The build does not include the unrelated CD DMA helpers.
+
+`audio_vsync` retains both positive waits and negative counter queries, including
+GPU status and timer reads before the mode branch. It shares the callback manager's
+VBlank counter and uses its PAD and root-counter service wrappers on timeout.
+The source requires functional register and clock inputs. Linking these entries
+does not establish native GPU timing, scheduled CD playback, XA rendering or vocal
+roles.
 
 The production PSX music renderer uses this driver. Other production operations,
 full SFX/vocal contexts, native timing and independent PCM acceptance remain open.
