@@ -50,20 +50,18 @@ pub fn collect(archive: &str, data: &[u8]) -> Result<Vec<Document>> {
             crate::executable::extract(path, data)?,
         )?]);
     }
-    if crate::records::supports(data) {
-        return Ok(vec![document(
-            archive,
-            crate::records::extract(path, data)?,
-        )?]);
-    }
     let mut documents = Vec::new();
+    if crate::records::supports(data) {
+        documents.push(document(archive, crate::records::extract(path, data)?)?);
+    }
     for (entry, payload) in crate::lexagraph::entries(data)? {
         if crate::monsters::supports(entry, payload) {
             documents.push(document(
                 archive,
                 crate::monsters::extract(path, data, entry, payload)?,
             )?);
-        } else if crate::inline::supports(entry, payload) {
+        }
+        if crate::inline::supports(data, entry, payload) {
             documents.push(document(
                 archive,
                 crate::inline::extract(path, data, entry, payload)?,

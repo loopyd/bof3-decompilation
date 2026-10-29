@@ -17,17 +17,38 @@ const BASELINES: [(&str, &[&str]); 2] = [
     ("per-archive-scan-digests-windowed.txt", &[]),
 ];
 
+// Retained digests include absolute archive paths from the shared corpus.
 fn repo_root() -> PathBuf {
-    let mut candidate = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    while candidate.pop() {
-        if candidate.join("out").is_dir() && candidate.join("tools/rust/bof3-text").is_dir() {
-            return candidate;
-        }
-    }
-    panic!(
-        "could not locate the repository root from {}",
-        env!("CARGO_MANIFEST_DIR")
+    let result = Command::new("git")
+        .args([
+            "-C",
+            env!("CARGO_MANIFEST_DIR"),
+            "rev-parse",
+            "--path-format=absolute",
+            "--git-common-dir",
+        ])
+        .output()
+        .expect("git should locate the repository shared by its worktrees");
+    assert!(
+        result.status.success(),
+        "could not locate the shared repository: {}",
+        String::from_utf8_lossy(&result.stderr).trim()
     );
+    let common = PathBuf::from(
+        String::from_utf8(result.stdout)
+            .expect("the repository path should be UTF-8")
+            .trim(),
+    );
+    let root = common
+        .parent()
+        .expect("the common Git directory should have a parent")
+        .to_path_buf();
+    assert!(
+        root.join("out").is_dir() && root.join("tools/rust/bof3-text").is_dir(),
+        "the shared corpus repository {} is missing its expected directories",
+        root.display()
+    );
+    root
 }
 
 fn corpus() -> PathBuf {

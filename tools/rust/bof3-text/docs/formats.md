@@ -43,6 +43,113 @@ The report retains the file's hash and source record. Any different WAV stays
 unresolved, including a changed file with the same header. This classification
 adds no editable text layout or playback acceptance.
 
+## Inline pointer coverage
+
+Supported inline layouts declare four-byte pointer words bound to the validated
+payload layout. Coverage checks that each word lies inside the payload and stores
+the text allocation's little-endian address, then classifies those four bytes as
+known nontext. Pointer words and text allocations must not overlap. Other payload
+bytes retain their existing classification; this rule does not classify padding
+or code or establish runtime rendering.
+
+## Raw sprite-bank coverage
+
+For original US `BPLU349.EMI` entry 0, coverage recognizes the image headers,
+packed image words, mode-2 token streams and 32-halfword palette records consumed
+by `SLUS_004.22@0x8014E6D0`, `0x8014E7F8`, `0x8014E8FC` and `0x80166C48`.
+It requires the original archive identity, raw transfer mode, load address
+`0x8003B800` and the exact 331,788-byte payload hash. The fixed ranges use payload
+coordinates and become file offsets by adding the entry's 2048-byte offset.
+
+Only these serialized graphics ranges become known nontext. Mode-2 four-byte
+opaque prefixes, allocation gaps, selection data and all other bytes remain
+unresolved. Packed words contain unused bits; classification does not assign
+those bits a meaning. It does not establish the absence of rasterized text,
+complete CLUTs, runtime selection, upload, residency or display. Other sprite
+banks remain unresolved under this rule.
+
+## Counted sprite metadata coverage
+
+Coverage recognizes consumed fields in original US raw entries loaded at
+`0x800E3800`. The complete archive must match the original disc inventory, and
+the payload length must be `4 + 8 * count`, where `count` is byte zero.
+Changed sources and other shapes remain unresolved under this rule.
+
+The original consumer at `SLUS_004.22@0x8014DD3C` reads the count as a loop bound
+and finds the first matching little-endian record ID at bytes 0..1. It copies
+record bytes 2, 4, 5, 6 and 7 into actor fields; byte 7 becomes a halfword.
+Coverage therefore classifies the count byte and record ranges `[0,3)` and `[4,8)` as known nontext.
+Header bytes `[1,4)` and record byte 3 remain unresolved. Although a halfword load
+fetches record byte 3, the following byte store discards it.
+
+These ranges qualify numeric stored fields. They do not establish runtime
+selection, unique physical suppliers, complete payload ownership, the absence
+of rasterized text or safe editing.
+
+## Staged palette coverage
+
+Coverage recognizes the complete 5120-byte palette allocation in original US
+`AREA024.EMI` entry 8. It requires the original archive identity, entry offset
+737280, raw transfer mode, load address `0x80033E00` and exact payload hash.
+The allocation contains 2560 little-endian image words, without a header.
+
+The staging routine at `0x8014E284` copies this span into the image buffer
+described by `0x8014E22C`. The original SDK profile at `0x8017CE9C` interprets
+the descriptor as image dimensions and consumes words through CPU and DMA paths.
+This qualifies the stored representation. Mutable limits, dispatch bindings,
+debug callbacks and queue paths remain separate execution questions. The rule
+does not establish a full palette upload, sampling, display, unique ownership or
+the absence of rasterized text. Other entries and archive gaps stay unchanged.
+
+## Resident animation field coverage
+
+Coverage recognizes fixed fields in entry 4 of four original US archives. Each
+requires its original archive identity, entry offset 198656, raw transfer mode,
+load address `0x800D3800` and exact payload hash.
+
+| Archive | Payload bytes | Metadata bytes | Referenced cells | Cell count and XYUV bytes |
+| --- | ---: | ---: | ---: | ---: |
+| `AREA024.EMI` | 11368 | 1917 | 354 | 7442 |
+| `AREA000.EMI` | 10592 | 1951 | 349 | 6793 |
+| `AREA001.EMI` | 11968 | 1808 | 326 | 7990 |
+| `AREA002.EMI` | 11104 | 1654 | 300 | 7432 |
+
+The metadata covers root-relative u32 group offsets, group-relative u16 program
+offsets, program count bytes, duration/operand pairs and referenced relative cell
+offsets. Original consumers `0x8014D878..0x8014D8AC`, `0x8014D928..0x8014D964`
+and `0x8014DBB4..0x8014DC04` qualify these fields. First offsets delimit recognized
+directories; they do not store separate counts or establish runtime selector
+bounds. Duplicate program slots retain their shared target. Program header byte
+0 constrains profile recognition but remains unclassified.
+
+Original pointer construction at `0x8014C6D8..0x8014C6F4` binds the relative cell
+offsets to the count and five-byte part consumer at `0x8014C6F8..0x8014CD8C`.
+Its quad paths interpret signed X/Y and unsigned U/V fields. The rectangle helper
+at `0x8014CF9C` remains outside the reviewed source. This classification identifies
+stored fields; it does not establish each cell's selected path or rectangle behavior.
+
+Packed part flags, allocation tails, unreferenced offset words and unreferenced
+cells remain unresolved. These include AREA024's word `[6836,6838)` and cells
+`[5495,5504)` and `[7180,7221)`, and AREA000's word `[6518,6520)` and cell
+`[6541,6572)`. AREA001 excludes words `[5252,5254)` and `[11818,11820)`
+and cells `[5371,5380)` and `[11841,11872)`. AREA002 excludes words
+`[7328,7330)` and `[10906,10908)` and cells `[7447,7456)` and
+`[10929,10960)`. Other payload bytes retain their prior status. The rule does not
+establish complete program consumption, runtime execution, rendering or a unique
+supplier. The writer of base pointer `0x801459F0` and the loader handoff remain
+unqualified; entries at the same load address do not inherit any profile.
+
+## Executable geometry table coverage
+
+Coverage recognizes the 32-byte numeric table at `0x8017F53C..0x8017F55C`
+(file offsets `[955708,955740)`) in the exact original US `SLUS_004.22`.
+The original consumer at `0x8014C7F0..0x8014C818` masks its index to 0–15,
+doubles it and reads an unsigned width/height pair. The sixteen pairs combine
+widths and heights of 8, 16, 24 and 32 pixels.
+
+This qualifies the stored numeric representation. Runtime use, callee effects,
+rectangle behavior, mutable tables and other executables remain unverified.
+
 ## XA payload coverage
 
 Coverage identifies encoded audio bodies in the original US `S_XA00.STR`,
@@ -61,6 +168,11 @@ For each validated sector index `s`, only `[2336*s+8, 2336*s+2312)` is known
 nontext. Every byte in this 2304-byte body is an active parameter, a verified
 parameter copy or packed samples. This format classification includes validated
 bodies outside the original cue prefixes.
+
+The twenty bytes at `[2336*s+2312, 2336*s+2332)` must also be entirely zero.
+Coverage identifies these zero bytes as nontext under the same exact-source
+qualification. Their original purpose and consumption remain unverified; this
+rule does not establish padding or reusable allocation.
 
 Coverage also identifies empty Form 1 user payloads in these pinned sources.
 They require matching subheader copies, no audio, video or data submode bits,
@@ -84,21 +196,29 @@ start. Coverage identifies only `[2336*s+8, 2336*s+12)` as packet metadata when
 the Form 1 video subheader and exact `60 01 01 80` marker/type bytes match.
 The remaining packet header stays unresolved.
 
-Coverage also identifies conservative coded prefixes in CAPCOM frames 1 through 200.
+Coverage also identifies conservative coded prefixes in CAPCOM frames 1 through 221.
 Their original LOGO consumer at `0x801D7578` reads fresh input and returns zero
 with its next unread halfword in `a0`. Each reviewed prefix excludes the final
 eight fetched bytes to cover unread lookahead. The original packet index, count
 and frame ID bind each prefix to ordered 2016-byte bodies at sector offset 40.
-Coverage admits only the recorded source slices, totaling 1,485,588 bytes.
-It leaves 552,588 video-body bytes unresolved, including excluded tails and
-frames 201 through 231. These bounds establish neither each frame's logical end
-nor whole-movie playback.
+Coverage admits 1,607,660 bytes from those observed frontiers.
+
+For frames 222 through 231, coverage identifies 2704 bytes per frame as exact
+packet-bound copies of the qualified frame 221 prefix. Their first 2712 assembled
+bytes match, including eight lookahead bytes that remain excluded. This is a
+stored-format classification; later acquisition and decoder entry or return
+remain unverified. The initial twelve bytes contain eight header bytes and four
+initially cached coded bytes.
+
+Across both evidence bases, 403,476 video-body bytes remain unresolved, including
+excluded lookahead and tails. These bounds establish neither each frame's logical
+end nor whole-movie playback.
 
 Static format identification does not establish original sector selection,
 arrival, playback, command completion, predictor history or hardware handling
 of parameter copies.
-Audio spare bytes at `[2312,2332)` and Form 1 user payloads outside the reviewed
-empty payloads, packet marker/type fields and reviewed coded prefixes remain unresolved.
+Form 1 user payloads outside the reviewed empty payloads, packet marker/type
+fields and reviewed coded prefixes remain unresolved.
 Exact playback endpoints and packed-ID caller bounds remain unverified. Changed
 sources, other builds and arbitrary files that resemble XA remain unresolved.
 
@@ -340,8 +460,9 @@ US literal character table, including `0xFF` for space. They contain no dialogue
 commands or markup. A shorter name is NUL-padded to twelve bytes; a full field
 needs no terminator inside the record. Overflow and unknown characters fail.
 
-Build recognition pins every archive byte outside these name fields. Packing
-also checks the complete current source SHA-256, canonical source path and all
+Build recognition pins every archive byte outside these name fields and the five
+supported category allocations. Extract names with `--layout record-names`.
+Packing a name document changes only name fields and also checks the complete current source SHA-256, canonical source path and all
 record identities. Stats, flags, prices, offsets and other entries remain
 unchanged. Other record families require their own consumer evidence. Runtime
 acceptance remains a separate gate.
@@ -357,10 +478,25 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v19`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v28`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
+The formation builder at `0x801DAC1C` selects counted rows by active party size.
+The duplicate labels belong to separate groups:
+
+| Party members | String indices | Original labels |
+| --- | --- | --- |
+| 1 | 0 | Normal |
+| 2 | 1 through 3 | Normal, Attack, Defense |
+| 3 | 4 through 9 | Normal, Attack, Defense, Chain, Magic, Refuge |
+
+Each row reserves its eighth byte for the encoded length and permits seven
+literal character bytes. The other twelve bytes of each twenty-byte record stay
+protected. Packed-media observations verify all three groups under controlled
+party and formation availability. Natural availability and unique START or STATUS
+supply remain unverified.
+
 Names use `game-fixed-literal`, have capacity five and may occupy all five bytes.
 Shorter names are NUL-padded.
 
@@ -373,12 +509,98 @@ characters into the five-byte name buffer at `0x801ED100`.
 
 The next 68 strings expose ordinary cells through `game-keyboard-character`.
 Each accepts exactly one letter, digit, space or one of `! ? - , .`. Zero cells,
-command bytes one through four and the other two pages stay protected. The final
-four strings are `OK`, `Del`, `Next` and `Back` at `0x801ED190`, `0x801ED194`,
+command bytes one through four and the other two pages stay protected. Strings
+86 through 89 are `OK`, `Del`, `Next` and `Back` at `0x801ED190`, `0x801ED194`,
 `0x801ED198` and `0x801ED1A0`. Their allocations are three, four, five and five
 bytes, including NUL. The pointer table at `0x801ED1B8` supplies them to the
 `0x8014FC90` call at `0x801E692C`. Alignment bytes and pointer words stay fixed.
-Retain all ninety allocations and edit only `text`. Re-extract older inline
+The next fifteen strings expose four stat-label groups through `game-literal`.
+The groups start at `0x801EC940`, `0x801EC99C`, `0x801ECB0C` and `0x801ECB2C`.
+The first three contain `Pwr`, `Def`, `Int` and `Agl`; the last contains `Pwr`,
+`Def` and `Agl`. The first group uses four-byte records and the others use
+six-byte records. Each editable allocation is four bytes, including NUL, and
+accepts up to three encoded bytes. The two trailing bytes of six-byte records
+stay protected. The fixed-address consumers call `0x8014F800` at
+`0x801DBC88`, `0x801DBCFC`, `0x801DBD64`, `0x801DBDC0`, `0x801DC90C`,
+`0x801DC934`, `0x801DC95C`, `0x801DC978`, `0x801DE6EC` and `0x801DF1AC`.
+These stat labels have no pointer-table references. Controlled Status and
+Equipment member selection verify edited labels in the groups at `0x801EC940`
+and `0x801ECB0C`, respectively. Identical START and STATUS payloads leave the
+active supplier indistinguishable. Other groups and natural menu availability
+remain unverified.
+
+The numeric format exposes the four-byte `%3d` allocation at `0x801D0C4C` through
+`ascii-u16-decimal-format`. Its eighteen formatter sites read one unsigned byte
+or halfword, write to the 64-byte scratch buffer at `0x80145AD4`, then draw through
+`0x80150098`. Retain one decimal argument, at most three encoded bytes plus NUL,
+and at most five formatted characters. Format widths use 1 through 4. The next
+allocation at `0x801D0C50` stays protected. Controlled Equipment member
+selection verifies decimal width 2 in this stat panel. Other numeric paths and
+values remain unverified.
+
+The item-category labels ITEM, WEAPON, ARMOR, OPTION and VITAL occupy
+`0x801ECC3C`, `0x801ECC44`, `0x801ECC4C`, `0x801ECC54` and `0x801ECC5C`.
+Their capacities are five, seven, six, seven and six bytes including NUL.
+The reader at `0x801DFBF4` selects pointers from `0x801ECC64` using the panel
+category byte and draws through `0x8014F800` at `0x801DFF24`. Keep the nine
+alignment bytes and twenty pointer bytes protected. Controlled packed-media
+Items observations verify all five edited category labels. A preinstruction capture
+at `0x801DFF24` binds `V0=0x801ECC3C`, slot `S0=0x801ECC64` and record
+`S1=0x80148504`, with handler 6, type 12, callback state 2 at `+3`, reader byte
+zero at `+8` and category zero at `+A`. It does not
+prove call or delay-store retirement. WEAPON, ARMOR, OPTION and VITAL use separate
+controlled records with categories 1 through 4. These observations accept
+category-label glyphs only. Other selected calls, general selector bounds and
+natural availability remain unverified; identical payloads leave the START
+or STATUS supplier unresolved.
+
+The skill-category labels HEAL, ASSIST, ATTACK and SKILL occupy
+`0x801ECC78`, `0x801ECC80`, `0x801ECC88` and `0x801ECC90`, with capacities
+five, seven, seven and six bytes including NUL. The reader at `0x801E0354`
+selects from `0x801ECC98` using the panel's byte at offset `0xB` and draws at
+`0x801E05A0`. Its length call uses the resident A0/1B BIOS stub. Keep the seven
+alignment bytes and sixteen pointer bytes protected. Controlled Ability rendering
+verifies first-glyph edits in all four labels at selectors 0 through 3.
+Preinstruction captures at `0x801E05A0` bind record `S1=0x80148570` to slot
+`0x801ECC98` and pointer `V0=0x801ECC78` for HEAL, and slot `0x801ECCA4` and
+pointer `V0=0x801ECC90` for SKILL. Both callback states at `+3` are zero; the reader
+byte at `+8` is zero for HEAL and three for SKILL. Selected ASSIST and ATTACK
+calls, call and delay-store retirement, general selector bounds and natural
+availability remain unverified.
+
+The separate equipment-category table at `0x801ECCD0` exposes WEAPON, ARMOR
+and OPTION at `0x801ECCB0`, `0x801ECCB8` and `0x801ECCC0`, with capacities
+seven, six and seven bytes including NUL. The reader at `0x801E0A70` assigns
+category values 1, 2 or 3 from the panel's byte at offset 9, then draws through
+`0x8014F800` at `0x801E0E2C`. These are local assignments; intervening callee
+effects and natural availability remain unverified. ITEM and VITAL in this table
+stay protected because their selected consumers are unresolved. Keep all nine
+alignment bytes and twenty pointer bytes protected. Controlled Equipment
+rendering verifies first-glyph edits in WEAPON, ARMOR and OPTION at observed
+selectors 0, 1 and 4, with categories 1, 2 and 3 and callback state zero. These
+captures follow ordinary menu inputs from the controlled availability fixture.
+Selected calls, call and delay-store retirement and general selector bounds
+remain unverified.
+
+The settings reader at `0x801E2C00` exposes fifteen fixed-width fields from the
+first fifteen eight-byte records at `0x801ECD24`. These contain Fast, Med., Slow,
+two groups of 1 through 4, Stereo, Mono, Off and On. Each record retains its count
+byte and signed horizontal offset. Edit only the field beginning two bytes into
+the record, using `game-fixed-literal` and its recorded one-, four- or six-byte
+capacity. The two draw paths at `0x801E2CDC` and `0x801E2D18` pass that count to
+`0x8014F800` or `0x8014FC90`. A full field needs no NUL; shorter text is zero-filled.
+The literal codec maps encoded byte `0x3E` in Med. to a period.
+
+The caller at `0x801E26A8` supplies six local selectors. The first five groups
+contain 3, 4, 4, 2 and 2 records; the sixth has count zero. Manual and Auto remain
+protected because this path skips their group. Preserve all thirty count/position
+bytes, fifty trailing bytes, sixteen Manual/Auto bytes and sixteen group-map
+bytes. Controlled Config rendering of all fifteen edited fields is verified with
+a menu availability fixture. The selected reader call, transitive
+callee effects, Manual/Auto consumption, natural availability and the unique
+archive supplier remain unverified.
+
+Retain all 133 allocations and edit only `text`. Re-extract older inline
 documents before editing or packing.
 
 Recognition pins the selected payload outside its supported allocations.
@@ -413,6 +635,17 @@ establish support for another region or prove observed rendering.
 
 ## Inline overlay text
 
+US `GAME.EMI` entry 0 also exposes five category labels through
+`--entry 0 --layout inline`. The entry loads at `0x80195800`. Its table at
+`0x801C7C5C` points to `ITEM`, `WEAPON`, `ARMOR`, `OPTION` and `VITAL` at
+`0x801C7C34`, `0x801C7C3C`, `0x801C7C44`, `0x801C7C4C` and `0x801C7C54`.
+The `0x80199D00` call passes the selected string to `0x8014F800`. These
+`game-literal` allocations contain five, seven, six, seven and six bytes,
+respectively, including NUL. Nine alignment bytes and the pointer table remain
+protected. Recognition permits edits in both the category and name allocations;
+each document's packer changes only its own fields. Natural selector bounds and
+edited category rendering remain unverified.
+
 US `COMMU03.EMI` entry 6 loads at `0x801D0C00`. Its `PLAY      EXIT`, `MONO`
 and `STEREO` labels at `0x801D0C1C`, `0x801D0C2C` and `0x801D0C34` use
 `ascii-literal`, with capacities of fifteen, five and seven bytes including NUL.
@@ -421,7 +654,10 @@ to calls at `0x801D1468` and `0x801D1430`. The overlay-local renderer at
 `0x801D1714` stops at NUL, advances eight pixels per character and treats
 ASCII `0x20` as a space. Edits accept printable ASCII within each allocation.
 Pointer words, alignment padding, other labels and arrow glyphs remain protected.
-Observed rendering and the consumers of the other labels remain unverified.
+Controlled runtime observations verify all three edited labels. The display
+selects `STEREO` when byte `0x80144951` is zero and `MONO` when it is nonzero.
+Natural menu and configuration producers, audio output and the other labels'
+consumers remain unverified.
 
 The supported US battle code payload loaded at `0x80096800` contains two
 five-entry pointer tables at `0x800B6E88` and `0x800B6EC4`. Draw calls at
@@ -435,8 +671,14 @@ US `BATE.EMI` entry 0 loads at `0x801D0C00`. Its pointer tables at `0x801D8E4C`,
 labels. Calls at `0x801D6F84`, `0x801D7600` and `0x801D7E8C` pass selected
 strings to `0x8014F800`. These `game-literal` fields retain their original string
 length plus NUL, with capacities of five to seven bytes. Alignment padding,
-pointer tables and code remain outside the editable allocations. Observed rendering
-remains unverified.
+pointer tables and code remain outside the editable allocations. Controlled runtime
+checks cover the equipment-screen `WEAPON`, `ARMOR` and `OPTION` category labels.
+Observed calls bind `WEAPON` to `0x801D8E98`, `ARMOR` to `0x801D8EA0` and
+`OPTION` to `0x801D8EA8` through table `0x801D8EB8`.
+The `OPTION` check uses a controlled cursor value of 4;
+original code copies that value into the reader's input and selects category 3.
+The reviewed controller path toggles the cursor with XOR 3. Natural availability
+of `OPTION` and rendering of other category slots remain unverified.
 
 US `SHISU.EMI` entry 0 loads at `0x801D0C00`. Its category tables at
 `0x801D9E70`, `0x801D9EA4` and `0x801D9EDC` contain five, four and five labels.
@@ -448,6 +690,32 @@ These `game-literal` fields also retain their original string length plus NUL,
 with capacities of five to seven bytes. Slot padding, pointers and code remain
 protected.
 
+BATE `0x801D0C20` and SHISU `0x801D0C04` each expose `%3d` through
+`ascii-u16-decimal-format`. Each four-byte allocation permits three encoded
+bytes and NUL. Eighteen formatter sites per overlay pass one zero-extended byte
+or halfword, then draw scratch `0x80145AD4` through `0x80150098`. Preserve one
+decimal argument and the five-character output bound. Fixed address calculations
+keep pointer-reference lists empty; the following format remains protected.
+Controlled BATE observations verify a narrower minimum width on one stat
+panel. Other BATE paths and SHISU rendering remain unverified.
+
+BATE and SHISU also expose fifteen stat-label allocations each through
+`game-literal`. Each accepts at most three encoded bytes and one NUL.
+The first three groups contain `Pwr`, `Def`, `Int` and `Agl`; the last contains
+`Pwr`, `Def` and `Agl`.
+
+| Archive | Group bases | Record strides |
+| --- | --- | --- |
+| BATE | `0x801D8B28`, `0x801D8B84`, `0x801D8CF4`, `0x801D8D14` | 4, 6, 6, 6 |
+| SHISU | `0x801D9B4C`, `0x801D9BA8`, `0x801D9D18`, `0x801D9D38` | 4, 6, 6, 6 |
+
+Each allocation covers only its first four bytes. The two trailing bytes in
+six-byte records stay protected. Fixed address calculations pass these fields
+to `0x8014F800`, so their pointer-reference lists are empty. The comparison loops
+select four records; the summary loops select three. All related instructions
+remain pinned outside the editable allocations. Controlled BATE observations
+verify the group at `0x801D8CF4`. Other groups and SHISU rendering remain unverified.
+
 BATE and SHISU entry 0 also expose `%3d/%3d` at `0x801D0D5C` and
 `0x801D0D40`, respectively. Each eight-byte allocation includes NUL. The
 `ascii-u8-decimal-pair-format` codec preserves two ordered decimal arguments and
@@ -456,7 +724,8 @@ Widths use 1..4 with optional zero padding; output growth and other conversions
 are refused. BATE calls formatter `0x8017E3F4` at `0x801D6FC0` and `0x801D7EAC`;
 SHISU calls it at `0x801D7F68` and `0x801D8E54`. Each call masks its first
 argument to eight bits and supplies 32 or 128 as the second argument. The result
-at `0x80145AD4` is passed to renderer `0x80150098`.
+at `0x80145AD4` is passed to renderer `0x80150098`. Controlled checks cover the edited
+BATE equipment-screen pair; SHISU rendering remains unverified.
 
 Both archives also expose `%2d` and `%02d %02d`. The single-byte format uses
 `ascii-u8-decimal-format`, with three encoded bytes and three formatted bytes.
@@ -524,7 +793,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v19` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v28` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
@@ -703,13 +972,40 @@ source-bound document and edited output.
 
 | Address | Original text | Capacity | Codec |
 | --- | --- | --- | --- |
+| `0x801D0C04` | `%2d` | 4 | `ascii-i16-plus-one-decimal-format` |
+| `0x801D0C08` | `%d/6` | 5 | `ascii-u16-decimal-field-format` |
+| `0x801D0C10` | `23` | 3 | `ascii-digit-glyph-literal` |
+| `0x801D0C14` | `*%2d` | 5 | `ascii-u8-decimal-field-format` |
 | `0x801D0C38` | `%3d` | 4 | `ascii-u16-decimal-format` |
 | `0x801D0C8C` | `%4d` | 4 | `ascii-u16-decimal-format` |
 | `0x801E28C4` | `Manillo` | 12 | `game-fixed-literal` |
 | `0x801E28D0` | `????????????` | 12 | `game-fixed-literal` |
 
-The numeric formats retain one decimal argument bounded by `[0, 65535]`, at
-most five formatted bytes before NUL, and at most three encoded ASCII bytes.
+The `%2d` field at `0x801D0C04` has four consumers. Their argument domain
+includes a signed halfword plus one, covering `[-32767, 32768]`. Its codec retains
+one decimal argument, at most three encoded bytes plus NUL, and at most six
+formatted bytes. It accepts `%d` with an optional width from 1 to 4. Extra
+literal characters exceed its conservative output bound.
+
+The `%d/6` field receives an unsigned halfword plus one, covering `[1, 65536]`.
+There is no proven limit of six and no sixteen-bit wrap. The field codec uses a
+five-digit argument budget. Its four-byte encoded limit restricts every accepted
+edit to at most seven formatted bytes, including literals. The `*%2d` field
+receives a guarded unsigned byte in `[2, 255]` and permits at most four formatted
+bytes, including literals. Both retain one decimal argument and accept widths
+from 1 to 4, with optional zero padding when it fits the allocation.
+
+The `23` field passes directly to `0x8014FF0C`. It requires one or two glyphs
+from spaces, digits and the `:` glyph index. Empty input is refused because the
+renderer advances before testing the next NUL. The three prefix formats
+write into `0x80145AD4`. Three `%2d` sites draw through `0x8014FF0C`, and the
+fourth uses `0x8014F800`; `%d/6` and `*%2d` use `0x80150098`.
+Header-adjacent bytes at `[0x801D0C0D,0x801D0C10)`, `0x801D0C13` and
+`[0x801D0C19,0x801D0C1C)` remain protected. The last span contains nonzero data.
+
+The formats at `0x801D0C38` and `0x801D0C8C` retain one decimal argument bounded
+by `[0, 65535]`. They permit at most five formatted bytes before NUL and three
+encoded ASCII bytes.
 They accept `%d` with an optional width from 1 to 4. Zero padding cannot fit
 these allocations. Other conversions, missing arguments and extra literals
 that exceed either bound are refused. Consumer `0x801E1004` uses the first
@@ -719,7 +1015,7 @@ The first consumer preserves its three-character draw limit; the second uses
 five. The formatter's output bound does not prove that every digit appears
 within the first consumer's shorter draw limit.
 
-The two labels use the game's literal encoding and all twelve field bytes.
+The two fixed labels use the game's literal encoding and all twelve field bytes.
 Consumer `0x801E1004` copies twelve bytes, appends NUL in the destination buffer
 and calls `0x8014F800` with a fifteen-character limit. Shorter edits zero-fill
 the remaining field bytes. Other labels, dynamic record names and runtime
@@ -756,8 +1052,9 @@ fields. Document `index` identifies the supported allocation, not its original
 table row. Command-bearing row 3 and untraced rows 4 and 5 remain outside
 this layout's editable allocations.
 
-The same BATTLE entry exposes three ASCII allocations for its digit-sprite
-renderers. Capacities include NUL and exclude alignment bytes:
+The same BATTLE layout exposes three ASCII allocations for its digit-sprite
+renderers. Identical payload copies in other US archives use local entry indices.
+Capacities include NUL and exclude alignment bytes:
 
 | Address | Original text | Capacity | Codec | Renderer |
 | --- | --- | --- | --- | --- |
@@ -773,11 +1070,15 @@ optional width 1..4, within three encoded and five formatted bytes.
 
 Both renderers skip ASCII spaces and subtract `0x30` from every other byte to
 select a sprite. The fallback therefore accepts exactly one space, digit or `:`.
-The original `:` selects glyph index ten; its displayed shape is unverified.
+The original `:` selects glyph index ten.
 Other ASCII and percent sequences are refused. The numeric formats cannot add
 literals within their five-byte output bound. Packing preserves the two alignment
-bytes at `0x801D0C72` and the adjacent data at `0x801D0C7C`. Runtime rendering
-remains unverified.
+bytes at `0x801D0C72` and the adjacent data at `0x801D0C7C`.
+
+Observed rendering covers fallback digit `9` beneath enemy names, width one at
+HP/AP value 15, and width one at queued animation digit 2. Other widths, values
+and battle contexts remain unverified. Identical payload copies leave the active
+archive indistinguishable.
 
 The `US master labels and numeric formats` layout supports `Pwr`, `Def`, `Int`
 and `Agl` in SISYOU entry 0, loaded at `0x801D0C00`. Their four-byte allocations start at
@@ -797,8 +1098,12 @@ zero-extended numeric value to `sprintf` at `0x8017E3F4`; the resulting ASCII
 buffer is drawn by `0x80150098`. Keep the `%3d` conversion and edit only the
 surrounding printable ASCII within capacity. This preserves the number and type
 of arguments and the original maximum formatted length. The conversion is part
-of the format text, not a dialogue command.
-Other master-menu labels and observed rendering remain unverified.
+of the format text, not a dialogue command. Split fields draw at matching
+coordinates, so keep their separators in the same formatted character column.
+Controlled runtime checks cover the four stat labels, the `%3d` stat path and both
+split formats. Separate single-bit character-status fixtures cover `Pois` and
+`Conf`. Natural illness acquisition, combined-status behavior and other
+master-menu labels remain unverified.
 
 SHOP also exposes these digit literals, dash fallbacks and numeric formats.
 Capacities include NUL; formatted bounds exclude it. Digit literals accept
@@ -901,7 +1206,12 @@ All results use the 64-byte scratch buffer at `0x80145AD4`; the largest occupies
 twelve bytes including NUL. `0x801D0CF8` draws through `0x8014FF0C`, while
 `0x801D0D08` uses both `0x8014FF0C` and `0x80150098`. The unsigned fields use
 `0x80150098`. The alignment bytes at `0x801D0D05..0x801D0D08` remain
-protected. Runtime rendering remains unverified.
+protected. The split 16-bit formats draw at matching coordinates. Edit paired
+formats together and keep their separators in the same formatted character
+column. Controlled party-change checks cover the edited split HP/AP fields.
+The pairs at `0x801D0CE8`/`0x801D0CF0` and `0x801D0E68`/`0x801D0E70`
+contain identical strings, so their active supplier remains indistinguishable.
+Other numeric paths remain unverified.
 
 ## Bank layout
 

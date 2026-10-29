@@ -6,7 +6,7 @@ use serde::Serialize;
 
 use crate::command;
 use crate::extract;
-use crate::models::{Result, Section};
+use crate::models::{Entry, Result, Section, TextClass};
 
 /// Query allocations from a verified literal codec, retaining its source metadata.
 pub fn literal(
@@ -118,52 +118,53 @@ pub fn literal(
     Ok(report)
 }
 
-/// One indexed dialogue subfile.
+/// One supported text layout in a source file.
 #[derive(Clone, Debug, Serialize)]
 pub struct IndexedEntry {
-    pub entry: usize,
+    pub entry: Option<usize>,
     pub offset: usize,
-    pub ram_ptr: String,
-    pub size: u32,
-    /// Text class.
-    pub class: crate::models::TextClass,
-    pub banks: usize,
+    pub ram_ptr: Option<String>,
+    pub size: usize,
+    pub class: String,
+    pub banks: Option<usize>,
     pub rows: usize,
-    pub used: usize,
-    /// Rows whose extent carries an option list after its `{end}`.
-    pub options: usize,
+    pub used: Option<usize>,
+    /// Bank rows whose extent carries an option list after its `{end}`.
+    pub options: Option<usize>,
     pub status: String,
 }
 
-/// Index every dialogue subfile of an archive.
-pub fn index(data: &[u8]) -> Result<Vec<IndexedEntry>> {
-    let mut indexed = Vec::new();
-    for (entry, class) in extract::text_entries(data)? {
-        let payload = &data[entry.offset..entry.offset + entry.size as usize];
-        let mut record = IndexedEntry {
-            entry: entry.index,
-            offset: entry.offset,
-            ram_ptr: format!("{:#010x}", entry.ram_ptr),
-            size: entry.size,
-            class,
-            banks: 0,
-            rows: 0,
-            used: 0,
-            options: 0,
-            status: "ok".to_string(),
-        };
-        match extract::parse_section(payload) {
-            Ok(section) => {
-                record.banks = section.banks.len();
-                record.rows = section.rows();
-                record.used = section.used();
-                record.options = extract::option_rows(&section);
+/// Summarize banks while retaining parse failures in their status fields.
+pub fn index_banks<'a>(
+    entries: impl IntoIterator<Item = (Entry, TextClass, &'a [u8])>,
+) -> Vec<IndexedEntry> {
+    entries
+        .into_iter()
+        .map(|(entry, class, payload)| {
+            let mut record = IndexedEntry {
+                entry: Some(entry.index),
+                offset: entry.offset,
+                ram_ptr: Some(format!("{:#010x}", entry.ram_ptr)),
+                size: entry.size as usize,
+                class: class.name().into(),
+                banks: Some(0),
+                rows: 0,
+                used: Some(0),
+                options: Some(0),
+                status: "ok".into(),
+            };
+            match extract::parse_section(payload) {
+                Ok(section) => {
+                    record.banks = Some(section.banks.len());
+                    record.rows = section.rows();
+                    record.used = Some(section.used());
+                    record.options = Some(extract::option_rows(&section));
+                }
+                Err(error) => record.status = error.to_string(),
             }
-            Err(error) => record.status = error.to_string(),
-        }
-        indexed.push(record);
-    }
-    Ok(indexed)
+            record
+        })
+        .collect()
 }
 
 /// One row selected by a query.

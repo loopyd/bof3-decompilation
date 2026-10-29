@@ -325,7 +325,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                     ),
                                 )
                             };
-                            let inline = crate::inline::supports(*entry, payload)
+                            let inline = crate::inline::supports(&bytes, *entry, payload)
                                 .then(|| crate::inline::extract(path, &bytes, *entry, payload).ok())
                                 .flatten();
                             let monster = crate::monsters::supports(*entry, payload)
@@ -333,36 +333,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                     crate::monsters::extract(path, &bytes, *entry, payload).ok()
                                 })
                                 .flatten();
-                            if let Some(mut document) = inline {
-                                text_count += 1;
-                                document.strings.sort_by_key(|text| text.file_offset);
-                                let mut at = entry.offset;
-                                for text in document.strings {
-                                    if text.file_offset > at {
-                                        record.ranges.push(range(
-                                            at,
-                                            text.file_offset - at,
-                                            "unresolved",
-                                            "bytes outside the supported inline allocations".into(),
-                                        ));
-                                    }
-                                    record.ranges.push(RangeRecord {
-                                        offset: text.file_offset, length: text.capacity,
-                                        entry: Some(entry.index), status: "known-text",
-                                        evidence: format!("{} allocation {:#x}; consumers {}; renderers {}; codec {}; runtime acceptance pending", document.layout, text.address, document.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), if text.renderers.is_empty() { "unverified".into() } else { text.renderers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", ") }, text.codec.as_str()),
-                                    });
-                                    at = text.file_offset + text.capacity;
-                                }
-                                let end = entry.offset + payload.len();
-                                if at < end {
-                                    record.ranges.push(range(
-                                        at,
-                                        end - at,
-                                        "unresolved",
-                                        "remaining inline payload consumers unverified".into(),
-                                    ));
-                                }
-                            } else if let Some(names) = monster
+                            let entry_names = monster
                                 .as_ref()
                                 .map(|document| &document.names)
                                 .or_else(|| {
@@ -370,19 +341,64 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                         .as_ref()
                                         .filter(|(index, _)| entry.index == *index)
                                         .map(|(_, names)| names)
-                                })
-                            {
-                                text_count += 1;
-                                let mut at = entry.offset;
-                                for row in names {
-                                    if row.file_offset > at {
-                                        record.ranges.push(range(
-                                            at,
-                                            row.file_offset - at,
-                                            "unresolved",
-                                            "bytes outside the supported name record fields".into(),
-                                        ));
+                                });
+                            let inline_layout = inline.is_some();
+                            let mixed = inline_layout && entry_names.is_some();
+                            let mut allocations = Vec::new();
+                            if let Some(document) = inline {
+                                for text in document.strings {
+                                    for reference in &text.references {
+                                        let relative = reference
+                                            .checked_sub(entry.ram_ptr)
+                                            .ok_or_else(|| {
+                                                Error::Invalid(
+                                                    "inline pointer precedes payload".into(),
+                                                )
+                                            })?
+                                            as usize;
+                                        let reference_end =
+                                            relative.checked_add(4).ok_or_else(|| {
+                                                Error::Invalid(
+                                                    "inline pointer offset overflow".into(),
+                                                )
+                                            })?;
+                                        let word = payload
+                                            .get(relative..reference_end)
+                                            .ok_or_else(|| {
+                                                Error::Invalid(
+                                                    "inline pointer outside payload".into(),
+                                                )
+                                            })?;
+                                        if u32::from_le_bytes(word.try_into().unwrap())
+                                            != text.address
+                                        {
+                                            return Err(Error::Invalid(
+                                                "inline pointer target mismatch".into(),
+                                            ));
+                                        }
+                                        let offset = entry
+                                            .offset
+                                            .checked_add(relative)
+                                            .ok_or_else(|| {
+                                                Error::Invalid(
+                                                    "inline pointer file offset overflow".into(),
+                                                )
+                                            })?;
+                                        allocations.push(RangeRecord {
+                                            offset, length: 4,
+                                            entry: Some(entry.index), status: "known-nontext",
+                                            evidence: format!("{} source-bound pointer word {reference:#x} targets inline allocation {:#x}", document.layout, text.address),
+                                        });
                                     }
+                                    allocations.push(RangeRecord {
+                                        offset: text.file_offset, length: text.capacity,
+                                        entry: Some(entry.index), status: "known-text",
+                                        evidence: format!("{} allocation {:#x}; consumers {}; renderers {}; codec {}; runtime acceptance pending", document.layout, text.address, document.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), if text.renderers.is_empty() { "unverified".into() } else { text.renderers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", ") }, text.codec.as_str()),
+                                    });
+                                }
+                            }
+                            if let Some(names) = entry_names {
+                                for row in names {
                                     let consumer = if row.family == "monsters" {
                                         "battle template copy 0x800ac218; lookup 0x800ac704; eight-byte name copy 0x801dea18"
                                     } else if row.family == "characters" {
@@ -392,7 +408,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                     } else {
                                         "resolver 0x80165d48; COMMU00 entry 0 twelve-byte copy 0x801f1a30"
                                     };
-                                    record.ranges.push(RangeRecord {
+                                    allocations.push(RangeRecord {
                                         offset: row.file_offset,
                                         length: row.capacity,
                                         entry: Some(entry.index),
@@ -402,15 +418,93 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                             row.family, row.index
                                         ),
                                     });
-                                    at = row.file_offset + row.capacity;
                                 }
-                                let end = entry.offset + payload.len();
+                            }
+                            if !allocations.is_empty() {
+                                text_count += 1;
+                                allocations.sort_by_key(|text| text.offset);
+                                let gap = if mixed {
+                                    "bytes outside the supported text allocations"
+                                } else if inline_layout {
+                                    "bytes outside the supported inline allocations"
+                                } else {
+                                    "bytes outside the supported name record fields"
+                                };
+                                let tail = if mixed {
+                                    "remaining text entry consumers unverified"
+                                } else if inline_layout {
+                                    "remaining inline payload consumers unverified"
+                                } else {
+                                    "remaining record entry consumers unverified"
+                                };
+                                let mut at = entry.offset;
+                                let end =
+                                    entry.offset.checked_add(payload.len()).ok_or_else(|| {
+                                        Error::Invalid("inline payload end overflow".into())
+                                    })?;
+                                for allocation in allocations {
+                                    let allocation_end = allocation
+                                        .offset
+                                        .checked_add(allocation.length)
+                                        .ok_or_else(|| {
+                                            Error::Invalid("allocation end overflow".into())
+                                        })?;
+                                    if allocation.offset < at || allocation_end > end {
+                                        return Err(Error::Invalid(
+                                            "overlapping or out-of-entry supported allocations"
+                                                .into(),
+                                        ));
+                                    }
+                                    if allocation.offset > at {
+                                        record.ranges.push(range(
+                                            at,
+                                            allocation.offset - at,
+                                            "unresolved",
+                                            gap.into(),
+                                        ));
+                                    }
+                                    at = allocation_end;
+                                    record.ranges.push(allocation);
+                                }
                                 if at < end {
                                     record.ranges.push(range(
                                         at,
                                         end - at,
                                         "unresolved",
-                                        "remaining record entry consumers unverified".into(),
+                                        tail.into(),
+                                    ));
+                                }
+                            } else if let Some(spans) = crate::original::graphics_storage_ranges(
+                                *entry,
+                                payload,
+                                original_us,
+                            ) {
+                                let mut at = 0;
+                                for span in spans {
+                                    if span.offset > at {
+                                        record.ranges.push(range(
+                                            entry.offset + at,
+                                            span.offset - at,
+                                            "unresolved",
+                                            "sprite-bank bytes outside reviewed graphics storage"
+                                                .into(),
+                                        ));
+                                    }
+                                    record.ranges.push(RangeRecord {
+                                        offset: entry.offset + span.offset,
+                                        length: span.length,
+                                        entry: Some(entry.index),
+                                        status: "known-nontext",
+                                        evidence: span.evidence.into(),
+                                    });
+                                    at = span.offset + span.length;
+                                }
+                                if at < payload.len() {
+                                    record.ranges.push(range(
+                                        entry.offset + at,
+                                        payload.len() - at,
+                                        "unresolved",
+                                        "remaining sprite-bank bytes outside reviewed graphics storage".into(),
                                     ));
                                 }
                             } else {
@@ -468,18 +562,40 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
         } else if crate::executable::is_executable(&bytes) && crate::executable::supports(&bytes) {
             match crate::executable::extract(path, &bytes) {
                 Ok(document) => {
+                    let mut spans: Vec<_> = document.strings.into_iter().map(|text| {
+                        range(text.file_offset, text.capacity, "known-text", format!("US executable reference sites {:?}; codec {}; consumers {}; output {:?}; runtime acceptance pending", text.references, text.codec.as_str(), text.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), text.output))
+                    }).collect();
+                    spans.extend(
+                        crate::original::executable_nontext_ranges(&bytes)
+                            .into_iter()
+                            .map(|field| {
+                                range(
+                                    field.offset,
+                                    field.length,
+                                    "known-nontext",
+                                    field.evidence.into(),
+                                )
+                            }),
+                    );
+                    spans.sort_by_key(|span| span.offset);
                     let mut cursor = 0;
-                    for text in document.strings {
-                        if text.file_offset > cursor {
+                    for span in spans {
+                        let end = span.offset + span.length;
+                        if span.offset < cursor || end > bytes.len() {
+                            return Err(Error::Invalid(
+                                "executable coverage ranges overlap or exceed the source".into(),
+                            ));
+                        }
+                        if span.offset > cursor {
                             record.ranges.push(range(
                                 cursor,
-                                text.file_offset - cursor,
+                                span.offset - cursor,
                                 "unresolved",
                                 "executable ranges outside the supported ASCII consumers".into(),
                             ));
                         }
-                        record.ranges.push(range(text.file_offset, text.capacity, "known-text", format!("US executable reference sites {:?}; codec {}; consumers {}; output {:?}; runtime acceptance pending", text.references, text.codec.as_str(), text.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), text.output)));
-                        cursor = text.file_offset + text.capacity;
+                        cursor = end;
+                        record.ranges.push(span);
                     }
                     if cursor < bytes.len() {
                         record.ranges.push(range(

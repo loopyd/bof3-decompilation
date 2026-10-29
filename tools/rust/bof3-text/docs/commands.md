@@ -27,6 +27,10 @@ Symlinks, special files, non-UTF-8 paths and unreadable inputs fail rather than
 disappearing. Paths retain their actual components; a literal backslash in a Linux
 filename is not a directory separator.
 
+For supported inline layouts, declared pointer words become known nontext only
+after source validation and a check that each stored little-endian target matches
+its text allocation. Adjacent bytes remain unresolved unless separately qualified.
+
 `disc_membership` compares each original US file with the paths, sizes and hashes
 in `config/original-us-disc.json`, compiled into the binary. It pins the
 qualification's SHA-256, release and source-project hash, lists missing and changed
@@ -121,21 +125,30 @@ bin/harness text search --grep McNeil \
 and `vocabulary` do not load an unrelated generated vocabulary at dispatch.
 Search/scan/readability commands still require their actual filter inputs.
 
-## `index ARCHIVE.EMI [--class CLASS] [-e|--entry N]`
+## `index SOURCE [--class CLASS] [-e|--entry N]`
 
-Lists every text subfile (EMI entries whose TOC load argument is a known text bank),
-with its class, and whether it parses.
+Lists supported text banks, inline strings, record names, monster names and
+executable ASCII. EMI rows retain their TOC entry, file offset, load argument and
+payload size. Executables use one row for the whole file, with offset zero and no
+EMI entry or load argument. The listing reports bank parse failures in `status`.
 
 ```
 ENTRY  OFFSET     RAM_PTR    SIZE       CLASS     BANKS  ROWS   USED   OPTIONS  STATUS
 11     0x000b8000 0x80010000 9170       dialogue 1      256    130    2        ok
 ```
 
-`--class` and `-e/--entry` restrict the listing, and an absent class is refused with the
-classes the archive does contain. `--json` emits `{"archive": ..., "entries": [...]}` where each entry carries
-`entry`, `offset`, `ram_ptr`, `size`, `class`, `banks`, `rows`, `used`, `options`
-and a `status` string. `options` counts rows whose extent carries a choice option
-list after its `{end}`.
+`--class` restricts the listing to an existing bank class. `-e/--entry` selects
+one EMI entry, including a supported literal layout. Executables refuse both
+selectors. An absent selection fails.
+
+`--json` emits `{"archive": ..., "entries": [...]}`. Each row carries `entry`,
+`offset`, `ram_ptr`, `size`, `class`, `banks`, `rows`, `used`, `options` and
+`status`. Literal classes are `inline_text`, `record_names`, `monster_names` and
+`executable_ascii`; their `rows` count is the number of allocated strings or names.
+Their bank-only fields `banks`, `used` and `options` are null. Executable `entry`
+and `ram_ptr` are also null. The text table prints null fields as `-`.
+For banks, `options` counts rows whose extent carries a choice option list after
+its `{end}`.
 
 ## `extract ARCHIVE.EMI -o|--output OUT [-e|--entry N] [--class CLASS] [--latch ENTRY:OFFSET+LENGTH]`
 
@@ -176,16 +189,33 @@ Only the two LOGO MDEC rows with `ascii-bios-printf-tab-format` also accept tabs
 other executable codecs refuse them. Their sync names pass as `%s` data.
 See [formats.md](formats.md#executable-ascii) for supported allocations and limits.
 
-For the supported US `GAME.EMI`, extraction writes one `bof3.record-text/v1`
-document of equipment and ability names. Use `--entry all` or `--entry 0` and omit
-`--class` and `--latch`. These fixed-width names use literal characters without
-dialogue commands. See [formats.md](formats.md#record-names).
+US `GAME.EMI` entry 0 contains two supported layouts. Select
+`--layout record-names` to extract equipment and ability names through
+`bof3.record-text/v1`. Select `--entry 0 --layout inline` to extract five category
+labels through `bof3.inline-text/v28`. An omitted layout selector fails before
+creating output. Omit `--class` and `--latch` for either layout. Record names
+also accept `--entry all`. Other unambiguous inline entries need no layout selector.
+See [record names](formats.md#record-names) and
+[inline text](formats.md#inline-overlay-text) for their field limits.
+
+`analyze`, `index`, `query` and `extract-corpus` include both GAME layouts.
+Analysis lists names under `record_entries` and labels under `inline_entries`.
+Corpus export writes `GAME.EMI/records.json` and `GAME.EMI/0.json`. Each document
+binds the exact source archive. To combine edits, pack one layout, extract the
+other document from that output, then pack it against that output as its source.
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v19` document with ten counted labels, eight default names,
-68 ordinary keyboard cells and four name-entry menu labels. Re-extract older
-inline documents. Default `--entry all` selects banks.
+`bof3.inline-text/v28` document with ten counted labels, eight default names,
+68 ordinary keyboard cells, four name-entry menu labels, fifteen stat labels,
+one unsigned sixteen-bit decimal format, five item-category labels, four skill-category
+labels, three equipment-category labels and fifteen fixed-width settings fields.
+Settings fields use their recorded glyph limits without reserving a NUL byte.
+The category labels reserve one NUL byte and retain their pointer references.
+Each stat label permits three encoded bytes plus NUL. Preserve the two trailing
+bytes in six-byte stat records. The decimal format retains one argument, at most
+three encoded bytes plus NUL and at most five formatted characters. Re-extract
+older inline documents. Default `--entry all` selects banks.
 See [formats.md](formats.md#default-character-names).
 
 For COMMU02 menu labels, select `--entry 8` in `ETC/COMMU02.EMI` or
@@ -222,7 +252,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v19`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v28`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 The original BATTLE archive also has supported message records in entry 3.
@@ -309,12 +339,15 @@ editing. The deferred masked-byte format has an unverified final renderer and
 retains `renderers: []`. See [inline formats](formats.md#inline-overlay-text)
 for its supported arguments and limits.
 
-AREA030, AREA089 and AREA129 entry 4 each include two numeric formats and two
-twelve-byte fixed labels. The formats accept one unsigned sixteen-bit decimal
-argument, at most three encoded ASCII bytes and five formatted bytes. Their
-draw limits remain three and five characters respectively. Fixed labels use
-all twelve bytes with literal game encoding. See [inline formats](formats.md#inline-overlay-text)
-for source addresses and the limits of the consumer evidence.
+AREA030, AREA089 and AREA129 entry 4 each include five numeric formats, one
+nonempty digit literal and two twelve-byte fixed labels. Prefix arguments include
+a signed halfword plus one and an unsigned halfword plus one. Their output bounds
+are six, seven and four bytes for `%2d`, `%d/6` and `*%2d`, respectively. Do not
+truncate the `%d/6` argument at 65535. Use `analyze` for each allocation's encoded
+and formatted limits. The formats at `0x801D0C38` and `0x801D0C8C` retain their
+three- and five-character draw limits. Fixed labels use all twelve bytes with
+literal game encoding. See [inline formats](formats.md#inline-overlay-text)
+for source addresses and the consumer evidence.
 
 BATE and SHISU entry 0 each include `%3d/%3d` with two unsigned byte arguments.
 The `ascii-u8-decimal-pair-format` codec preserves their order, at most seven
@@ -324,7 +357,8 @@ also exposes `%2d` with one unsigned byte argument and `%02d %02d` with two.
 Their encoded limits are three and nine bytes; formatted limits are three and
 seven bytes. An adjacent `ascii-literal` label accepts three printable ASCII
 bytes, using `0x20` for spaces. It does not interpret format conversions or command
-markup. Each allocation reserves a NUL byte. Runtime rendering remains unverified.
+markup. Each allocation reserves a NUL byte. Controlled BATE checks cover
+`%3d/%3d`. Other fields and SHISU rendering remain unverified.
 
 BATE and SHISU also expose `%02d` with one unsigned byte argument, at most four
 encoded bytes and three formatted bytes. Their `%7d` rows accept one signed
@@ -345,7 +379,7 @@ Preserve `renderers: []` because only formatting and the eight-byte text-slot
 copy are qualified. Empty `ascii-format-literal` replacements are refused to
 prevent stale scratch output.
 
-Inline documents use `bof3.inline-text/v19`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v28`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.

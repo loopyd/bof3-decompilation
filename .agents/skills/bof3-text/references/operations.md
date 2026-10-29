@@ -28,7 +28,11 @@ the source tree. Each exported document must parse back and
 reproduce its original bytes. Any export failure makes the operation fail; retain
 the manifest and inspect failures before claiming coverage.
 
-For a single archive, use `index`, `extract`, `analyze` and `query`. For example:
+For a single source, use `index`, `extract`, `analyze` and `query`. `index` lists
+supported banks and literal layouts, including executable ASCII. Its `rows` count
+covers strings or names for literal layouts; bank-only counts are null. Use
+`--entry` for an EMI entry and `--class` for a bank class. Executables refuse EMI
+selectors. For example:
 
 ```sh
 bin/harness text analyze out/extracted/BIN/WORLD00/AREA000.EMI
@@ -85,7 +89,7 @@ helper `0x801D7414`. Other executable ranges remain unresolved. Each output path
 runtime evidence.
 See the tool's [format contract](../../../../tools/rust/bof3-text/docs/formats.md#executable-ascii).
 
-`extract out/extracted/BIN/ETC/GAME.EMI -o out/equipment-names.json` exports
+`extract out/extracted/BIN/ETC/GAME.EMI --layout record-names -o out/equipment-names.json` exports
 supported equipment and ability name records through `bof3.record-text/v1`. Edit only each
 record's `text`, using literal characters and at most twelve encoded bytes.
 Retain every record and its identity. Pack against that same `GAME.EMI` into a
@@ -93,11 +97,40 @@ new output, with `--entry all` or `--entry 0` and no class or latch selector.
 The tool preserves stats and other record bytes. These fields do not use
 dialogue command markup. Other name families require separate evidence.
 
+The same GAME entry exposes five category labels with `--entry 0 --layout inline`.
+Retain each `game-literal` allocation, its NUL byte and pointer reference. An
+omitted layout selector is ambiguous and fails before writing. Discovery, analysis
+and corpus export include both layouts. To edit both, pack one layout and extract
+the other document from that output before packing it against the new source.
+Edited category rendering and natural selector bounds remain unverified.
+
 US START entry 8 and STATUS entry 0 each expose ten counted labels, eight default
-names, 68 ordinary keyboard cells and four name-entry menu labels through
-`bof3.inline-text/v19`. Select the entry explicitly and omit class and latch
-selectors. Re-extract older inline documents. Use a separate document and output
-for each archive. Editing one does not update the other or a save.
+names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
+labels, one numeric format, five item-category labels, four skill-category labels,
+three equipment-category labels and fifteen fixed-width settings fields through
+`bof3.inline-text/v28`. Select that entry without class or latch selectors.
+Settings fields retain their recorded glyph limits, count bytes and positions.
+Controlled Config rendering of all fifteen edited fields is verified with a menu
+availability fixture.
+Re-extract older inline documents. Use a separate document and output for each
+archive. Editing one does not update the other or a save. Counted formation labels
+use separate groups for one, two and three party members. Controlled packed-media
+observations verify all ten counted labels and the five edited category labels in
+Items. WEAPON, ARMOR, OPTION and VITAL use separate controlled records with
+categories 1 through 4. These observations accept category-label glyphs only. A
+preinstruction capture binds the selected ITEM pointer and its record with
+category 0. Other selected calls, general selector bounds, natural availability
+and the START or STATUS supplier remain unverified.
+Controlled Ability rendering verifies first-glyph edits in HEAL, ASSIST, ATTACK
+and SKILL. Preinstruction captures bind the selected HEAL and SKILL pointers.
+Selected ASSIST and ATTACK calls, general selector bounds and natural
+availability remain unverified.
+Controlled Equipment rendering verifies first-glyph edits in WEAPON, ARMOR and
+OPTION at observed selectors 0, 1 and 4. These captures follow ordinary menu
+inputs from the controlled availability fixture. Selected calls, general selector
+bounds and natural availability remain unverified.
+See the [record groups](../../../../tools/rust/bof3-text/docs/formats.md#default-character-names)
+before choosing a duplicate label.
 
 COMMU02 entry 8 and COMMU02B entry 7 each expose fifteen menu labels, one ASCII
 separator, eight ASCII formats and 68 keyboard cells through the inline schema.
@@ -124,7 +157,7 @@ other names and save propagation remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v19`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v28`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
@@ -132,11 +165,29 @@ rows. Counted rows accept seven literal bytes. Default names use
 zero-fills unused field bytes and updates counted rows' lengths. Pack against the
 same archive with its recorded entry or `all`, without class or latch selectors.
 Each matching archive payload needs its own source-bound document and output.
+START entry 8 and STATUS entry 0 each expose fifteen stat labels in addition to
+the counted labels, default names and keyboard fields. Each `game-literal` stat
+allocation permits three encoded bytes plus NUL. Preserve the two trailing bytes
+in six-byte records. Each entry also exposes `%3d` through
+`ascii-u16-decimal-format`. Retain one decimal argument, at most three encoded
+bytes plus NUL and at most five formatted characters. Its eighteen formatter
+sites draw through `0x80150098`. Controlled Status and Equipment member
+selection verify edited labels in the groups at `0x801EC940` and `0x801ECB0C`,
+respectively. Identical START and STATUS payloads leave the active supplier
+indistinguishable. Equipment member selection also verifies decimal width 2 in
+its stat panel. Other groups, numeric paths and values, and natural menu
+availability remain unverified.
+
+The five item-category labels use `game-literal` with capacities of five, seven,
+six, seven and six bytes including NUL. Preserve their pointer references and
+nine alignment bytes.
+
 COMMU03 entry 6 exposes three audio menu labels through `ascii-literal`, with
 capacities of fifteen, five and seven bytes including NUL. Use printable ASCII,
 including `0x20` spaces. Retain the overlay-local renderer `0x801D1714` and
-pointer references. Other labels, arrow glyphs and observed rendering remain
-unverified.
+pointer references. Controlled runtime checks verify the three edited labels.
+Natural menu and configuration producers, other labels, arrow glyphs and audio
+output remain unverified.
 `ascii-decimal-format` rows retain exactly one `%3d` and allow only surrounding
 printable ASCII within capacity. Other percent sequences are refused.
 AREA008 entry 13 also exposes three bounded decimal formats. Preserve their
@@ -146,11 +197,28 @@ three. Optional widths use 1..4 with optional zero padding; other conversions ar
 refused. The masked row's final renderer is unverified and records `renderers: []`.
 Retain that empty array. See the [inline format contract](../../../../tools/rust/bof3-text/docs/formats.md)
 for argument bounds and allocation sizes.
-AREA030, AREA089 and AREA129 entry 4 each expose two unsigned sixteen-bit decimal
-formats and two fixed twelve-byte labels. Numeric output is bounded by five
-bytes, but the first format's draw limit remains three characters. Preserve
-the formats' arguments and both size bounds; fixed labels accept literal game
-characters in all twelve bytes. Runtime rendering remains unverified.
+AREA030, AREA089 and AREA129 entry 4 each expose five numeric formats, one
+nonempty digit literal and two fixed twelve-byte labels. Arguments include signed
+and unsigned halfwords plus one; `%d/6` can receive 65536. Use `analyze` for each
+encoded and formatted bound. The formats at `0x801D0C38` and `0x801D0C8C` retain
+three- and five-character draw limits. Fixed labels use literal game characters
+in all twelve bytes. Runtime rendering remains unverified.
+
+BATE and SHISU entry 0 each expose `%3d` through `ascii-u16-decimal-format`.
+Retain one decimal argument, at most three encoded bytes plus NUL, and at most
+five formatted characters. Its eighteen formatter sites per overlay use unsigned
+byte or halfword arguments, then draw through `0x80150098`. Controlled BATE checks
+verify width-two decimal rendering on one stat panel. Other paths and SHISU
+rendering remain unverified.
+
+BATE and SHISU entry 0 each expose fifteen stat labels through `game-literal`.
+Each four-byte allocation permits three encoded bytes and NUL; the two trailing
+bytes of six-byte records remain protected. Their fixed-address consumers use
+`0x8014F800`. Edit each archive separately and retain every allocation and its
+empty pointer-reference list. Controlled BATE checks verify the four-label group
+at `0x801D8CF4`. Other groups, natural request production and SHISU rendering
+remain unverified.
+
 BATE and SHISU entry 0 each include an ASCII format with two ordered unsigned
 byte arguments. Preserve both arguments, at most seven encoded bytes, and at
 most seven formatted bytes. The original format is `%3d/%3d`. Each archive also exposes `%2d` with one
@@ -158,13 +226,22 @@ unsigned byte argument and `%02d %02d` with two. These accept at most three and
 nine encoded bytes, respectively, with formatted bounds of three and seven.
 The adjacent `ascii-literal` label accepts three printable ASCII bytes, including
 spaces as `0x20`, without command or format interpretation. All these fields
-reserve one NUL byte; runtime rendering remains unverified.
+reserve one NUL byte. Controlled BATE equipment-screen checks cover `WEAPON`,
+`ARMOR`, `OPTION` and the `%3d/%3d` format. The `OPTION` observation uses an
+upstream cursor fixture; its natural availability remains unverified. Observed
+calls bind `WEAPON`, `ARMOR` and `OPTION` to table `0x801D8EB8`. Other fields
+and SHISU rendering remain unverified.
 BATE and SHISU also expose `%02d` with one unsigned byte argument and bounds of
 four encoded bytes and three formatted bytes. Their `%7d` rows retain one signed
 32-bit argument, three encoded bytes and eleven formatted bytes. Only this codec
 permits widths through 7. Preserve both proven addresses in `renderers`. The
 adjacent `-------` fallback accepts one to seven printable ASCII bytes and refuses all
 percent sequences because its formatter receives no arguments. Reserve NUL.
+For SISYOU, keep `%3d` and edit only the surrounding printable ASCII. Its split
+fields draw at the same coordinates; keep both separators in the same formatted
+character column. Controlled checks cover the `Pwr`, `Def`, `Int` and `Agl`
+labels and the split HP/AP fields. Separate character-status fixtures cover
+`Pois` and `Conf`; natural illness acquisition remains unverified.
 SHOP entry 0 also includes an ASCII clock format with three ordered unsigned
 byte arguments, at most nineteen encoded bytes and sixteen formatted bytes.
 Preserve its `renderers: []`; only formatting and a stack-buffer copy are traced.
@@ -174,6 +251,10 @@ uses the five-byte unsigned 16-bit output bound. Preserve `renderers: []`;
 formatting and the eight-byte text-slot copy are qualified, while the active
 message-bank binding is unverified. Refuse empty `ascii-format-literal`
 replacements, which can expose stale scratch bytes after the initial NUL.
+Controlled SHOP party-change checks cover the split HP/AP fields. Edit both
+halves together and keep their separators in the same formatted character
+column, since both draw at the same coordinates. Identical format-pair
+allocations remain indistinguishable; other SHOP rendering remains unverified.
 Corpus export includes these documents alongside bank documents.
 Battle append row 1 also accepts `{glyph(0xNN)}`, with a nonzero operand and at most
 five encoded bytes. Other command-bearing and untraced table rows are refused.
@@ -181,8 +262,11 @@ BATTLE entry 3 also exposes two digit-sprite decimal formats and their fallback.
 Decimal rows retain one unsigned sixteen-bit argument, at most three encoded
 bytes and five formatted bytes. The one-byte `ascii-digit-glyph-literal` fallback
 accepts a space, digit or the original `:` glyph index. Other ASCII and percent
-sequences are refused. The glyph's displayed shape and runtime rendering remain
-unverified.
+sequences are refused. Runtime observations cover fallback digit `9` beneath
+enemy names and width-one decimal rendering at HP/AP value 15 and queued
+animation digit 2. Other values, widths and battle contexts remain unverified.
+Runtime media must include the copy the game loads; identical BATTLE payloads
+occur in multiple US archives with different entry indices.
 An empty pointer-reference list means indexed or code addressing; retain it and
 the consumer metadata. The pinned payload protects those instructions.
 
