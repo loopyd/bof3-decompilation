@@ -110,6 +110,8 @@ labels, one numeric format, five item-category labels, four skill-category label
 three equipment-category labels and fifteen fixed-width settings fields through
 `bof3.inline-text/v28`. Select that entry without class or latch selectors.
 Settings fields retain their recorded glyph limits, count bytes and positions.
+Controlled Config rendering of all fifteen edited fields is verified with a menu
+availability fixture.
 Re-extract older inline documents. Use a separate document and output for each
 archive. Editing one does not update the other or a save. Counted formation labels
 use separate groups for one, two and three party members. Controlled packed-media

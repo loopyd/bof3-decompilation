@@ -534,8 +534,10 @@ The caller at `0x801E26A8` supplies six local selectors. The first five groups
 contain 3, 4, 4, 2 and 2 records; the sixth has count zero. Manual and Auto remain
 protected because this path skips their group. Preserve all thirty count/position
 bytes, fifty trailing bytes, sixteen Manual/Auto bytes and sixteen group-map
-bytes. Transitive callee effects, settings execution, edited rendering, natural
-availability and the unique archive supplier remain unverified.
+bytes. Controlled Config rendering of all fifteen edited fields is verified with
+a menu availability fixture. The selected reader call, transitive
+callee effects, Manual/Auto consumption, natural availability and the unique
+archive supplier remain unverified.
 
 Retain all 133 allocations and edit only `text`. Re-extract older inline
 documents before editing or packing.
