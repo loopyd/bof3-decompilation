@@ -29,6 +29,7 @@ pub struct Kernel {
     syscall_handler: Option<u32>,
     syscall_verifier: Option<u32>,
     cd_removal: Option<u32>,
+    guest_vectors: bool,
     event_delivery: Option<EventService>,
     event_completed: bool,
     exception_dispatch: Option<Dispatch>,
@@ -70,6 +71,7 @@ impl Default for Kernel {
             syscall_handler: None,
             syscall_verifier: None,
             cd_removal: None,
+            guest_vectors: false,
             event_delivery: None,
             event_completed: false,
             exception_dispatch: None,
@@ -1050,6 +1052,36 @@ impl Kernel {
                 | 0xa000_00c0
         )
     }
+
+    /// The owned initializer installs A0/B0 vectors and tables for these four
+    /// complete services. Their normal entry guards still run at each body.
+    pub(crate) fn configure_guest_vectors(&mut self) -> Result<()> {
+        self.require_plain_context()?;
+        if self.cd_removal.is_none()
+            || self.event_delivery.is_none()
+            || self.exception_return.is_none()
+            || self.exception_reset.is_none()
+        {
+            return Err("owned vectors require all four guest service bindings".into());
+        }
+        self.guest_vectors = true;
+        Ok(())
+    }
+
+    pub(crate) fn executes_vector(&self, cpu: &Cpu) -> bool {
+        if !self.guest_vectors {
+            return false;
+        }
+        // The first vector instruction retires any incoming delayed load.
+        // Select admission using that value without changing the actual CPU.
+        let mut incoming = cpu.clone();
+        incoming.synchronize_load();
+        matches!(
+            (incoming.pc() & 0x1fff_ffff, incoming.register(9)),
+            (0xa0, 0x72) | (0xb0, 0x07 | 0x17 | 0x18)
+        )
+    }
+
     pub fn entry_hook(&self, bus: &mut impl Bus) -> Result<Option<u32>> {
         self.entry_hook.read(bus)
     }

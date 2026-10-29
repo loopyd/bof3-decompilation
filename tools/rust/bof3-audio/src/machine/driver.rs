@@ -217,6 +217,9 @@ impl Image {
             ("audio_exception_hook_pointer", 4),
             ("audio_exception_stack_pointer", 4),
             ("audio_exception_default_hook", 48),
+            ("audio_entry_vectors", 32),
+            ("audio_a0_services", 0x73 * 4),
+            ("audio_b0_services", 0x19 * 4),
         ] {
             let address = self.symbol(name)?;
             if address & 3 != 0
@@ -228,7 +231,33 @@ impl Image {
                 );
             }
         }
+        if self
+            .symbol("audio_entry_vectors_end")?
+            .checked_sub(self.symbol("audio_entry_vectors")?)
+            != Some(32)
+        {
+            return Err("owned driver: vector metadata is inconsistent".into());
+        }
+        self.entry("audio_a0_dispatch")?;
+        self.entry("audio_b0_dispatch")?;
+        for (slot, entry) in self.vector_bindings()? {
+            let at = (slot - base) as usize;
+            if u32::from_le_bytes(self.bytes[at..at + 4].try_into().unwrap()) != entry {
+                return Err("owned driver: vector service binding differs from its entry".into());
+            }
+        }
         Ok(())
+    }
+
+    fn vector_bindings(&self) -> Result<[(u32, u32); 4]> {
+        let a0 = self.symbol("audio_a0_services")?;
+        let b0 = self.symbol("audio_b0_services")?;
+        Ok([
+            (a0 + 0x72 * 4, self.entry("audio_cd_remove")?),
+            (b0 + 0x07 * 4, self.entry("audio_event_deliver")?),
+            (b0 + 0x17 * 4, self.entry("audio_exception_return")?),
+            (b0 + 0x18 * 4, self.entry("audio_exception_reset")?),
+        ])
     }
 
     fn data(&self, name: &str, bytes: u32) -> Result<u32> {
@@ -320,6 +349,7 @@ impl Image {
             self.entry("audio_exception_return_rfe")?,
         )?;
         kernel.configure_exception_reset(self.entry("audio_exception_reset")?)?;
+        kernel.configure_guest_vectors()?;
         let initialize = self.entry("audio_kernel_initialize")?;
         let mut cpu = Cpu::new(initialize);
         cpu.set_register(29, self.symbol("audio_initialization_stack_end")?);
@@ -348,6 +378,7 @@ impl Image {
             u64::from(self.symbol("audio_kernel_state_end")? - self.symbol("audio_kernel_bss")?)
                 + 1_000
                 + 157 * 5
+                + 8 * 5
                 + 6;
         let initialization =
             execution.call_observed(initialize, [0; 4], initialization_limit, observer)?;
@@ -355,6 +386,20 @@ impl Image {
             return Err(
                 "owned driver: service initialization returned an unexpected result".into(),
             );
+        }
+        let vectors = (self.symbol("audio_entry_vectors")? - base) as usize;
+        let installed = ram_offset(0xa0, 32)?;
+        if execution.bus.ram().bytes()[installed..installed + 32]
+            != self.bytes[vectors..vectors + 32]
+        {
+            return Err("owned driver: vector installation differs from its source bytes".into());
+        }
+        for (slot, entry) in self.vector_bindings()? {
+            if execution.bus.read(slot, Width::Word)? != entry {
+                return Err(
+                    "owned driver: live vector service binding differs from its entry".into(),
+                );
+            }
         }
         let scheduler = self.symbol("audio_sequence_scheduler")?;
         let load = self.symbol("audio_sequence_scheduler_load")?;

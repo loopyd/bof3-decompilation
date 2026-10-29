@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 # Owned cold kernel allocation. Call before admitting interrupts or registering
 # events, with no active kernel continuation and a separate aligned RAM stack.
-# This initializes service state and installs the fixed-address scheduler.
+# This initializes service state, the entry vectors and fixed-address scheduler.
 # It does not initialize audio state or device registers.
 .set noreorder
 .set noat
@@ -19,6 +19,18 @@ audio_kernel_initialize:
     addiu $t0, $t0, 4
     bne $t0, $t1, .Lclear_state
     nop
+
+    lui $t0, %hi(audio_entry_vectors)
+    addiu $t0, $t0, %lo(audio_entry_vectors)
+    addiu $t1, $zero, 0xa0
+    lui $t2, %hi(audio_entry_vectors_end)
+    addiu $t2, $t2, %lo(audio_entry_vectors_end)
+.Lcopy_vectors:
+    lw $t3, 0($t0)
+    addiu $t0, $t0, 4
+    sw $t3, 0($t1)
+    bne $t0, $t2, .Lcopy_vectors
+    addiu $t1, $t1, 4
 
     lui $t0, %hi(audio_sequence_scheduler_load)
     addiu $t0, $t0, %lo(audio_sequence_scheduler_load)
