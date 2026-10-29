@@ -80,12 +80,14 @@ segments:
   - - 1620
     - c
     - countdownScratchStateToMode15World03Area13413_801F3254
+    - '@source: src/bof3/world/area13413_countdown.c'
   - - 1676
     - asm
     - func_801F328C
   - - 1764
     - c
     - countdownScratchStateToMode17World03Area13413_801F32E4
+    - '@source: src/bof3/world/area13413_countdown.c'
   - - 1820
     - asm
     - func_801F331C
@@ -155,12 +157,14 @@ segments:
   - - 3964
     - c
     - countdownScratchStateToMode15World03Area13413_801F3B7C
+    - '@source: src/bof3/world/area13413_countdown.c'
   - - 4020
     - asm
     - func_801F3BB4
   - - 4108
     - c
     - countdownScratchStateToMode17World03Area13413_801F3C0C
+    - '@source: src/bof3/world/area13413_countdown.c'
   - - 4164
     - asm
     - func_801F3C44

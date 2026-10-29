@@ -22,6 +22,7 @@ SHARED_MACRO_HEADERS = (
     Path("include/bof3/symbols.h"),
     Path("include/world/work_state.h"),
     Path("include/world/gate_status.h"),
+    Path("include/world/countdown.h"),
     Path("include/include_asm.h"),
 )
 

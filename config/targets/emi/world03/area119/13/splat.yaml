@@ -38,6 +38,7 @@ segments:
   - - 224
     - c
     - countdownScratchStateToMode3World03Area11913_801F2CE0
+    - '@source: src/bof3/world/area11913_countdown.c'
   - - 280
     - asm
     - func_801F2D18
@@ -47,6 +48,7 @@ segments:
   - - 452
     - c
     - countdownScratchStateToMode6World03Area11913_801F2DC4
+    - '@source: src/bof3/world/area11913_countdown.c'
   - - 508
     - asm
     - func_801F2DFC
