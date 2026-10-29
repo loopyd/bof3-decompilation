@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v24";
+pub const SCHEMA: &str = "bof3.inline-text/v25";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -469,6 +469,20 @@ struct Layout {
 }
 
 const LAYOUTS: &[Layout] = &[
+    Layout {
+        name: "US GAME category labels",
+        load: crate::game::LOAD,
+        size: crate::game::PAYLOAD_SIZE,
+        sha256: crate::game::PAYLOAD_SHA256,
+        consumers: &[0x80199d00],
+        allocations: &[
+            Allocation::literal(0x801c7c34, 5, Some(0x801c7c5c), &[0x8014f800]),
+            Allocation::literal(0x801c7c3c, 7, Some(0x801c7c60), &[0x8014f800]),
+            Allocation::literal(0x801c7c44, 6, Some(0x801c7c64), &[0x8014f800]),
+            Allocation::literal(0x801c7c4c, 7, Some(0x801c7c68), &[0x8014f800]),
+            Allocation::literal(0x801c7c54, 6, Some(0x801c7c6c), &[0x8014f800]),
+        ],
+    },
     Layout {
         name: "US COMMU03 audio menu labels",
         load: 0x801d0c00,
@@ -1248,12 +1262,18 @@ pub struct Text {
     text: String,
 }
 
-fn layout_for(entry: Entry, payload: &[u8]) -> Option<&'static Layout> {
+fn layout_for(data: &[u8], entry: Entry, payload: &[u8]) -> Option<&'static Layout> {
     LAYOUTS.iter().find(|layout| {
         if entry.ram_ptr != layout.load || payload.len() != layout.size {
             return false;
         }
         let mut masked = payload.to_vec();
+        if layout.load == crate::game::LOAD && layout.size == crate::game::PAYLOAD_SIZE {
+            if entry.index != 0 || entry.offset != 0x800 || !crate::game::supports_archive(data) {
+                return false;
+            }
+            crate::game::mask_text(&mut masked);
+        }
         for allocation in layout.allocations {
             let at = (allocation.address - layout.load) as usize;
             masked[at..at + allocation.capacity].fill(0);
@@ -1262,12 +1282,12 @@ fn layout_for(entry: Entry, payload: &[u8]) -> Option<&'static Layout> {
     })
 }
 
-pub fn supports(entry: Entry, payload: &[u8]) -> bool {
-    layout_for(entry, payload).is_some()
+pub fn supports(data: &[u8], entry: Entry, payload: &[u8]) -> bool {
+    layout_for(data, entry, payload).is_some()
 }
 
 pub fn extract(path: &Path, data: &[u8], entry: Entry, payload: &[u8]) -> Result<Document> {
-    let layout = layout_for(entry, payload)
+    let layout = layout_for(data, entry, payload)
         .ok_or_else(|| Error::Invalid("unsupported inline text layout".into()))?;
     let strings = layout
         .allocations
@@ -1375,7 +1395,7 @@ pub fn rebuild(path: &Path, data: &[u8], document: &Document) -> Result<Vec<u8>>
         .find(|(entry, _)| entry.index == checked.entry)
         .ok_or_else(|| Error::Invalid("inline text source entry is absent".into()))?;
     if entry.offset != checked.entry_offset
-        || !layout_for(entry, payload).is_some_and(|layout| layout.name == checked.layout)
+        || !layout_for(data, entry, payload).is_some_and(|layout| layout.name == checked.layout)
     {
         return invalid("inline text source entry does not match the supported layout");
     }

@@ -15,6 +15,7 @@ mod digest;
 mod executable;
 mod extract;
 mod filters;
+mod game;
 mod inline;
 mod lexagraph;
 mod literalindex;

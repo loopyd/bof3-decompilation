@@ -108,15 +108,6 @@ fn literal_report(
 
 pub fn analyze(path: &Path) -> Result<Value> {
     let data = fs::read(path)?;
-    if crate::records::supports(&data) {
-        return literal_report(
-            crate::records::extract(path, &data)?,
-            "names",
-            &data,
-            Encoding::GameLiteral,
-            0,
-        );
-    }
     if crate::executable::is_executable(&data) {
         return literal_report(
             crate::executable::extract(path, &data)?,
@@ -126,6 +117,17 @@ pub fn analyze(path: &Path) -> Result<Value> {
             1,
         );
     }
+    let record_entries = if crate::records::supports(&data) {
+        vec![literal_report(
+            crate::records::extract(path, &data)?,
+            "names",
+            &data,
+            Encoding::GameLiteral,
+            0,
+        )?]
+    } else {
+        Vec::new()
+    };
     let mut entries = Vec::new();
     let mut inline_entries = Vec::new();
     let mut monster_entries = Vec::new();
@@ -140,7 +142,7 @@ pub fn analyze(path: &Path) -> Result<Value> {
             )?);
             continue;
         }
-        if crate::inline::supports(entry, payload) {
+        if crate::inline::supports(&data, entry, payload) {
             inline_entries.push(literal_report(
                 crate::inline::extract(path, &data, entry, payload)?,
                 "strings",
@@ -204,6 +206,6 @@ pub fn analyze(path: &Path) -> Result<Value> {
         entries.push(json!({"entry": entry.index, "class": class, "offset": entry.offset, "size": entry.size, "rows": rows}));
     }
     Ok(
-        json!({"schema": "bof3.text-analysis/v1", "archive": path.to_string_lossy(), "archive_sha256": crate::digest::sha256_hex(&data), "scope": "verified EMI banks, inline allocations and monster name fields", "entries": entries, "inline_entries": inline_entries, "monster_entries": monster_entries}),
+        json!({"schema": "bof3.text-analysis/v1", "archive": path.to_string_lossy(), "archive_sha256": crate::digest::sha256_hex(&data), "scope": "verified EMI banks, inline allocations and record-name fields", "entries": entries, "record_entries": record_entries, "inline_entries": inline_entries, "monster_entries": monster_entries}),
     )
 }

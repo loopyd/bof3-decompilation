@@ -90,21 +90,6 @@ fn export_archive(
     name: &str,
 ) -> Result<Vec<serde_json::Value>> {
     let data = fs::read(path)?;
-    if crate::records::supports(&data) {
-        let document = crate::records::extract(path, &data)?;
-        let body = crate::records::render(&document)?;
-        let imported = crate::records::parse(&body)?;
-        if crate::records::rebuild(path, &data, &imported)? != data {
-            return Err(Error::Invalid(format!("{name} does not round-trip")));
-        }
-        let relative = path.strip_prefix(root).unwrap().join("records.json");
-        let destination = output.join(&relative);
-        fs::create_dir_all(destination.parent().unwrap())?;
-        fs::write(destination, body)?;
-        return Ok(vec![
-            serde_json::json!({"archive": name, "archive_sha256": sha256_hex(&data), "entry": 0, "document": relative.to_string_lossy(), "class": "record_names", "status": "exported", "round_trip": true}),
-        ]);
-    }
     if crate::executable::is_executable(&data) {
         let document = crate::executable::extract(path, &data)?;
         let body = crate::executable::render(&document)?;
@@ -123,6 +108,22 @@ fn export_archive(
     let entries = crate::lexagraph::entries(&data)?;
     // Validate and stage every document before publishing any part of this archive's export.
     let mut documents = Vec::new();
+    if crate::records::supports(&data) {
+        let document = crate::records::extract(path, &data)?;
+        let body = crate::records::render(&document)?;
+        let imported = crate::records::parse(&body)?;
+        if crate::records::rebuild(path, &data, &imported)? != data {
+            return Err(Error::Invalid(format!("{name} does not round-trip")));
+        }
+        let relative = path.strip_prefix(root).unwrap().join("records.json");
+        documents.push((
+            relative,
+            body,
+            entries[0].0,
+            serde_json::json!("record_names"),
+        ));
+    }
+
     for (entry, payload) in entries {
         if crate::monsters::supports(entry, payload) {
             let document = crate::monsters::extract(path, &data, entry, payload)?;
@@ -141,7 +142,7 @@ fn export_archive(
             documents.push((relative, body, entry, serde_json::json!("monster_names")));
             continue;
         }
-        if crate::inline::supports(entry, payload) {
+        if crate::inline::supports(&data, entry, payload) {
             let document = crate::inline::extract(path, &data, entry, payload)?;
             let body = crate::inline::render(&document)?;
             let imported = crate::inline::parse(&body)?;

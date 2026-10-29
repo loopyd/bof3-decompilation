@@ -265,6 +265,9 @@ pub enum Mode {
         /// Entry index, comma-separated list, or `all`
         #[arg(short = 'e', long = "entry", default_value = "all")]
         entry: String,
+        /// Select a literal layout when an entry contains more than one
+        #[arg(long, value_parser = ["record-names", "inline"])]
+        layout: Option<String>,
         /// Restrict to one text class
         #[arg(long, value_parser = class_value_parser())]
         class: Option<String>,
@@ -524,6 +527,7 @@ fn run(cli: &Cli) -> Result<()> {
             entry,
             class,
             latch,
+            layout,
         } => run_extract(
             cli,
             archive,
@@ -531,6 +535,7 @@ fn run(cli: &Cli) -> Result<()> {
             entry,
             class.as_deref(),
             latch.as_deref(),
+            layout.as_deref(),
         ),
         Mode::Validate { document, commands } => run_validate(cli, document, *commands),
         Mode::Query {
@@ -3255,9 +3260,44 @@ fn run_extract(
     entry_spec: &str,
     class_filter: Option<&str>,
     latch: Option<&str>,
+    layout: Option<&str>,
 ) -> Result<()> {
     let data = read(archive, "archive")?;
-    if crate::records::supports(&data) {
+    if layout == Some("inline") {
+        if class_filter.is_some() || latch.is_some() {
+            return invalid("inline layout does not accept class or latch selectors");
+        }
+        let index = entry_spec
+            .parse::<usize>()
+            .map_err(|_| Error::Invalid("inline layout requires one entry index".into()))?;
+        let entries = crate::lexagraph::entries(&data)?;
+        let &(entry, payload) = entries
+            .iter()
+            .find(|(entry, payload)| {
+                entry.index == index && crate::inline::supports(&data, *entry, payload)
+            })
+            .ok_or_else(|| {
+                Error::Invalid("selected entry has no supported inline layout".into())
+            })?;
+        let document = crate::inline::extract(archive, &data, entry, payload)?;
+        write_output(output, &crate::inline::render(&document)?, archive)?;
+        println!(
+            "extracted {} inline strings -> {}",
+            document.strings.len(),
+            output.display()
+        );
+        return Ok(());
+    }
+    let record_names = crate::records::supports(&data);
+    if layout == Some("record-names") && !record_names {
+        return invalid("archive has no supported record-name layout");
+    }
+    if record_names && layout.is_none() {
+        return invalid(
+            "entry 0 contains record names and inline labels; select --layout record-names or --layout inline",
+        );
+    }
+    if record_names {
         if !matches!(entry_spec, "all" | "0") || class_filter.is_some() || latch.is_some() {
             return invalid("record names use entry 0 and no class or latch selector");
         }
@@ -3299,7 +3339,7 @@ fn run_extract(
             return Ok(());
         }
         if let Some(&(entry, payload)) = entries.iter().find(|(entry, payload)| {
-            entry.index == index && crate::inline::supports(*entry, payload)
+            entry.index == index && crate::inline::supports(&data, *entry, payload)
         }) {
             let document = crate::inline::extract(archive, &data, entry, payload)?;
             write_output(output, &crate::inline::render(&document)?, archive)?;
@@ -3509,36 +3549,37 @@ fn query_sources<'a>(archive: &Path, data: &'a [u8], spec: &str) -> Result<Query
         if !wanted(entry.index) {
             continue;
         }
-        let literal = if entry.index == 0 && record_names {
+        if entry.index == 0 && record_names {
             let document = crate::records::extract(archive, data)?;
-            Some(LiteralSource::new(
+            sources.literals.push(LiteralSource::new(
                 Some(entry),
                 "record_names",
                 document.names.len(),
                 document,
-            )?)
-        } else if crate::monsters::supports(entry, payload) {
+            )?);
+            found.insert(entry.index);
+        }
+        if crate::monsters::supports(entry, payload) {
             let document = crate::monsters::extract(archive, data, entry, payload)?;
-            Some(LiteralSource::new(
+            sources.literals.push(LiteralSource::new(
                 Some(entry),
                 "monster_names",
                 document.names.len(),
                 document,
-            )?)
-        } else if crate::inline::supports(entry, payload) {
+            )?);
+            found.insert(entry.index);
+        }
+        if crate::inline::supports(data, entry, payload) {
             let document = crate::inline::extract(archive, data, entry, payload)?;
-            Some(LiteralSource::new(
+            sources.literals.push(LiteralSource::new(
                 Some(entry),
                 "inline_text",
                 document.strings.len(),
                 document,
-            )?)
-        } else {
-            None
-        };
-        if let Some(literal) = literal {
-            sources.literals.push(literal);
+            )?);
             found.insert(entry.index);
+        }
+        if found.contains(&entry.index) {
             continue;
         }
         if let Some(class) = TextClass::from_load_argument(entry.ram_ptr) {
@@ -3712,6 +3753,19 @@ fn run_pack(
         let bytes = read(text_path, "document")?;
         let value: serde_json::Value =
             serde_json::from_slice(&bytes).map_err(|error| Error::Invalid(error.to_string()))?;
+        if value["schema"] == crate::records::SCHEMA {
+            if !matches!(entry_spec, "all" | "0") || class_filter.is_some() || latch.is_some() {
+                return invalid("record names use entry 0 and no class or latch selector");
+            }
+            let document = crate::records::parse(&bytes)?;
+            let packed = crate::records::rebuild(original, &data, &document)?;
+            write_output(output, &packed, original)?;
+            println!(
+                "{}",
+                serde_json::json!({"output": output, "bytes": packed.len(), "names": document.names.len()})
+            );
+            return Ok(());
+        }
         if value["schema"] == crate::monsters::SCHEMA {
             let document = crate::monsters::parse(&bytes)?;
             if (entry_spec != "all" && entry_spec != document.entry.to_string())
@@ -3748,19 +3802,6 @@ fn run_pack(
             );
             return Ok(());
         }
-    }
-    if crate::records::supports(&data) {
-        if !matches!(entry_spec, "all" | "0") || class_filter.is_some() || latch.is_some() {
-            return invalid("record names use entry 0 and no class or latch selector");
-        }
-        let document = crate::records::parse(&read(text_path, "document")?)?;
-        let packed = crate::records::rebuild(original, &data, &document)?;
-        write_output(output, &packed, original)?;
-        println!(
-            "{}",
-            serde_json::json!({"output": output, "bytes": packed.len(), "names": document.names.len()})
-        );
-        return Ok(());
     }
     if crate::executable::is_executable(&data) {
         executable_selection(entry_spec, class_filter, latch)?;

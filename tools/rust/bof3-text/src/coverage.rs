@@ -325,7 +325,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                     ),
                                 )
                             };
-                            let inline = crate::inline::supports(*entry, payload)
+                            let inline = crate::inline::supports(&bytes, *entry, payload)
                                 .then(|| crate::inline::extract(path, &bytes, *entry, payload).ok())
                                 .flatten();
                             let monster = crate::monsters::supports(*entry, payload)
@@ -333,36 +333,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                     crate::monsters::extract(path, &bytes, *entry, payload).ok()
                                 })
                                 .flatten();
-                            if let Some(mut document) = inline {
-                                text_count += 1;
-                                document.strings.sort_by_key(|text| text.file_offset);
-                                let mut at = entry.offset;
-                                for text in document.strings {
-                                    if text.file_offset > at {
-                                        record.ranges.push(range(
-                                            at,
-                                            text.file_offset - at,
-                                            "unresolved",
-                                            "bytes outside the supported inline allocations".into(),
-                                        ));
-                                    }
-                                    record.ranges.push(RangeRecord {
-                                        offset: text.file_offset, length: text.capacity,
-                                        entry: Some(entry.index), status: "known-text",
-                                        evidence: format!("{} allocation {:#x}; consumers {}; renderers {}; codec {}; runtime acceptance pending", document.layout, text.address, document.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), if text.renderers.is_empty() { "unverified".into() } else { text.renderers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", ") }, text.codec.as_str()),
-                                    });
-                                    at = text.file_offset + text.capacity;
-                                }
-                                let end = entry.offset + payload.len();
-                                if at < end {
-                                    record.ranges.push(range(
-                                        at,
-                                        end - at,
-                                        "unresolved",
-                                        "remaining inline payload consumers unverified".into(),
-                                    ));
-                                }
-                            } else if let Some(names) = monster
+                            let entry_names = monster
                                 .as_ref()
                                 .map(|document| &document.names)
                                 .or_else(|| {
@@ -370,19 +341,21 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                         .as_ref()
                                         .filter(|(index, _)| entry.index == *index)
                                         .map(|(_, names)| names)
-                                })
-                            {
-                                text_count += 1;
-                                let mut at = entry.offset;
+                                });
+                            let inline_layout = inline.is_some();
+                            let mixed = inline_layout && entry_names.is_some();
+                            let mut allocations = Vec::new();
+                            if let Some(document) = inline {
+                                for text in document.strings {
+                                    allocations.push(RangeRecord {
+                                        offset: text.file_offset, length: text.capacity,
+                                        entry: Some(entry.index), status: "known-text",
+                                        evidence: format!("{} allocation {:#x}; consumers {}; renderers {}; codec {}; runtime acceptance pending", document.layout, text.address, document.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), if text.renderers.is_empty() { "unverified".into() } else { text.renderers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", ") }, text.codec.as_str()),
+                                    });
+                                }
+                            }
+                            if let Some(names) = entry_names {
                                 for row in names {
-                                    if row.file_offset > at {
-                                        record.ranges.push(range(
-                                            at,
-                                            row.file_offset - at,
-                                            "unresolved",
-                                            "bytes outside the supported name record fields".into(),
-                                        ));
-                                    }
                                     let consumer = if row.family == "monsters" {
                                         "battle template copy 0x800ac218; lookup 0x800ac704; eight-byte name copy 0x801dea18"
                                     } else if row.family == "characters" {
@@ -392,7 +365,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                     } else {
                                         "resolver 0x80165d48; COMMU00 entry 0 twelve-byte copy 0x801f1a30"
                                     };
-                                    record.ranges.push(RangeRecord {
+                                    allocations.push(RangeRecord {
                                         offset: row.file_offset,
                                         length: row.capacity,
                                         entry: Some(entry.index),
@@ -402,15 +375,52 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                             row.family, row.index
                                         ),
                                     });
-                                    at = row.file_offset + row.capacity;
                                 }
+                            }
+                            if !allocations.is_empty() {
+                                text_count += 1;
+                                allocations.sort_by_key(|text| text.offset);
+                                let gap = if mixed {
+                                    "bytes outside the supported text allocations"
+                                } else if inline_layout {
+                                    "bytes outside the supported inline allocations"
+                                } else {
+                                    "bytes outside the supported name record fields"
+                                };
+                                let tail = if mixed {
+                                    "remaining text entry consumers unverified"
+                                } else if inline_layout {
+                                    "remaining inline payload consumers unverified"
+                                } else {
+                                    "remaining record entry consumers unverified"
+                                };
+                                let mut at = entry.offset;
                                 let end = entry.offset + payload.len();
+                                for allocation in allocations {
+                                    if allocation.offset < at
+                                        || allocation.offset + allocation.length > end
+                                    {
+                                        return Err(Error::Invalid(
+                                            "overlapping or out-of-entry text allocations".into(),
+                                        ));
+                                    }
+                                    if allocation.offset > at {
+                                        record.ranges.push(range(
+                                            at,
+                                            allocation.offset - at,
+                                            "unresolved",
+                                            gap.into(),
+                                        ));
+                                    }
+                                    at = allocation.offset + allocation.length;
+                                    record.ranges.push(allocation);
+                                }
                                 if at < end {
                                     record.ranges.push(range(
                                         at,
                                         end - at,
                                         "unresolved",
-                                        "remaining record entry consumers unverified".into(),
+                                        tail.into(),
                                     ));
                                 }
                             } else if let Some(spans) = crate::original::graphics_storage_ranges(

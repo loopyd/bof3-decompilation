@@ -9,16 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Error, Result, invalid, literal_byte, literal_char};
 
 pub const SCHEMA: &str = "bof3.record-text/v1";
-const LOAD: u32 = 0x80195800;
-const LAYOUT_SHA256: &str = "a5caeb5e57907656436b77d840daf2be7c9703958e6a309fcaf956d4a65e4708";
-const TABLES: &[(&str, usize, usize, usize)] = &[
-    ("items", 0x33964, 92, 0x12),
-    ("key-items", 0x33fdc, 16, 0x10),
-    ("weapons", 0x340dc, 83, 0x18),
-    ("armor", 0x348a4, 68, 0x16),
-    ("accessories", 0x34e7c, 52, 0x14),
-    ("abilities", 0x3570c, 228, 0x14),
-];
+use crate::game::{LOAD, NAME_TABLES as TABLES};
 
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -46,23 +37,7 @@ pub struct Name {
 }
 
 pub fn supports(data: &[u8]) -> bool {
-    let Ok(entries) = crate::lexagraph::entries(data) else {
-        return false;
-    };
-    if !entries
-        .first()
-        .is_some_and(|(entry, _)| entry.ram_ptr == LOAD)
-        || data.len() < 0x368dc
-    {
-        return false;
-    }
-    let mut masked = data.to_vec();
-    for &(_, start, count, stride) in TABLES {
-        for index in 0..count {
-            masked[start + index * stride..start + index * stride + 12].fill(0);
-        }
-    }
-    sha256_hex(&masked) == LAYOUT_SHA256
+    crate::game::supports_archive(data)
 }
 
 pub(crate) fn encode_name(text: &str, capacity: usize) -> Result<Vec<u8>> {

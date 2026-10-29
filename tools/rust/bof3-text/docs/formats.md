@@ -402,8 +402,9 @@ US literal character table, including `0xFF` for space. They contain no dialogue
 commands or markup. A shorter name is NUL-padded to twelve bytes; a full field
 needs no terminator inside the record. Overflow and unknown characters fail.
 
-Build recognition pins every archive byte outside these name fields. Packing
-also checks the complete current source SHA-256, canonical source path and all
+Build recognition pins every archive byte outside these name fields and the five
+supported category allocations. Extract names with `--layout record-names`.
+Packing a name document changes only name fields and also checks the complete current source SHA-256, canonical source path and all
 record identities. Stats, flags, prices, offsets and other entries remain
 unchanged. Other record families require their own consumer evidence. Runtime
 acceptance remains a separate gate.
@@ -419,7 +420,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v24`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v25`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -513,6 +514,17 @@ Different archives remain separate sources. This layout recognition does not
 establish support for another region or prove observed rendering.
 
 ## Inline overlay text
+
+US `GAME.EMI` entry 0 also exposes five category labels through
+`--entry 0 --layout inline`. The entry loads at `0x80195800`. Its table at
+`0x801C7C5C` points to `ITEM`, `WEAPON`, `ARMOR`, `OPTION` and `VITAL` at
+`0x801C7C34`, `0x801C7C3C`, `0x801C7C44`, `0x801C7C4C` and `0x801C7C54`.
+The `0x80199D00` call passes the selected string to `0x8014F800`. These
+`game-literal` allocations contain five, seven, six, seven and six bytes,
+respectively, including NUL. Nine alignment bytes and the pointer table remain
+protected. Recognition permits edits in both the category and name allocations;
+each document's packer changes only its own fields. Natural selector bounds and
+edited category rendering remain unverified.
 
 US `COMMU03.EMI` entry 6 loads at `0x801D0C00`. Its `PLAY      EXIT`, `MONO`
 and `STEREO` labels at `0x801D0C1C`, `0x801D0C2C` and `0x801D0C34` use
@@ -661,7 +673,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v24` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v25` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all

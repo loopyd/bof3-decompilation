@@ -89,7 +89,7 @@ helper `0x801D7414`. Other executable ranges remain unresolved. Each output path
 runtime evidence.
 See the tool's [format contract](../../../../tools/rust/bof3-text/docs/formats.md#executable-ascii).
 
-`extract out/extracted/BIN/ETC/GAME.EMI -o out/equipment-names.json` exports
+`extract out/extracted/BIN/ETC/GAME.EMI --layout record-names -o out/equipment-names.json` exports
 supported equipment and ability name records through `bof3.record-text/v1`. Edit only each
 record's `text`, using literal characters and at most twelve encoded bytes.
 Retain every record and its identity. Pack against that same `GAME.EMI` into a
@@ -97,9 +97,16 @@ new output, with `--entry all` or `--entry 0` and no class or latch selector.
 The tool preserves stats and other record bytes. These fields do not use
 dialogue command markup. Other name families require separate evidence.
 
+The same GAME entry exposes five category labels with `--entry 0 --layout inline`.
+Retain each `game-literal` allocation, its NUL byte and pointer reference. An
+omitted layout selector is ambiguous and fails before writing. Discovery, analysis
+and corpus export include both layouts. To edit both, pack one layout and extract
+the other document from that output before packing it against the new source.
+Edited category rendering and natural selector bounds remain unverified.
+
 US START entry 8 and STATUS entry 0 each expose ten counted labels, eight default
 names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
-labels and one numeric format through `bof3.inline-text/v24`. Select that entry
+labels and one numeric format through `bof3.inline-text/v25`. Select that entry
 without class or latch selectors. Re-extract older inline documents. Use a
 separate document and output for each archive. Editing one does not update the
 other or a save. Counted formation labels use separate groups for one, two and
@@ -132,7 +139,7 @@ other names and save propagation remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v24`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v25`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use

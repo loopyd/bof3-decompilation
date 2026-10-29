@@ -185,14 +185,24 @@ Only the two LOGO MDEC rows with `ascii-bios-printf-tab-format` also accept tabs
 other executable codecs refuse them. Their sync names pass as `%s` data.
 See [formats.md](formats.md#executable-ascii) for supported allocations and limits.
 
-For the supported US `GAME.EMI`, extraction writes one `bof3.record-text/v1`
-document of equipment and ability names. Use `--entry all` or `--entry 0` and omit
-`--class` and `--latch`. These fixed-width names use literal characters without
-dialogue commands. See [formats.md](formats.md#record-names).
+US `GAME.EMI` entry 0 contains two supported layouts. Select
+`--layout record-names` to extract equipment and ability names through
+`bof3.record-text/v1`. Select `--entry 0 --layout inline` to extract five category
+labels through `bof3.inline-text/v25`. An omitted layout selector fails before
+creating output. Omit `--class` and `--latch` for either layout. Record names
+also accept `--entry all`. Other unambiguous inline entries need no layout selector.
+See [record names](formats.md#record-names) and
+[inline text](formats.md#inline-overlay-text) for their field limits.
+
+`analyze`, `index`, `query` and `extract-corpus` include both GAME layouts.
+Analysis lists names under `record_entries` and labels under `inline_entries`.
+Corpus export writes `GAME.EMI/records.json` and `GAME.EMI/0.json`. Each document
+binds the exact source archive. To combine edits, pack one layout, extract the
+other document from that output, then pack it against that output as its source.
 
 For supported US `START.EMI` and `STATUS.EMI`, select `--entry 8` for START or
 `--entry 0` for STATUS, without class or latch selectors. Extraction writes one
-`bof3.inline-text/v24` document with ten counted labels, eight default names,
+`bof3.inline-text/v25` document with ten counted labels, eight default names,
 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat labels and
 one unsigned sixteen-bit decimal format.
 Each stat label permits three encoded bytes plus NUL. Preserve the two trailing
@@ -235,7 +245,7 @@ For supported embedded overlay text, select the code entry explicitly:
 bin/harness text extract out/extracted/BIN/BATTLE/BATTLE.EMI --entry 15 -o out/battle-categories.json
 ```
 
-This emits `bof3.inline-text/v24`; omit class and latch selectors. `analyze` lists
+This emits `bof3.inline-text/v25`; omit class and latch selectors. `analyze` lists
 the supported entry in each archive. Default `--entry all` selects banks in
 archives containing both layouts; `extract-corpus` exports both.
 The original BATTLE archive also has supported message records in entry 3.
@@ -361,7 +371,7 @@ Preserve `renderers: []` because only formatting and the eight-byte text-slot
 copy are qualified. Empty `ascii-format-literal` replacements are refused to
 prevent stale scratch output.
 
-Inline documents use `bof3.inline-text/v24`; validation checks all allocations,
+Inline documents use `bof3.inline-text/v25`; validation checks all allocations,
 per-string renderers and codecs, references and capacity. Terminated or counted
 rows reserve one NUL or length byte; fixed literal rows use their full capacity.
 It reports `strings`. Re-extract older inline or character-only documents.
