@@ -6,7 +6,7 @@ AS = $(CROSS_COMPILE)as
 LD = $(CROSS_COMPILE)ld
 OBJCOPY = $(CROSS_COMPILE)objcopy
 NM = $(CROSS_COMPILE)nm
-SOURCES = $(addprefix kernel/,startup.s cd.s events.s exceptions.s interrupts.s syscalls.s callbacks.s timers.s) $(addprefix audio/,spu.s tick.s voices.s configuration.s transfers.s reverb.s initialization.s commands.s controls.s parameters.s notes.s startup.s layout.s banks.s body.s sequences.s scheduler.s effects.s status.s cues.s)
+SOURCES = $(addprefix kernel/,startup.s cd.s events.s exceptions.s interrupts.s syscalls.s callbacks.s timers.s) $(addprefix audio/,spu.s tick.s voices.s configuration.s transfers.s reverb.s initialization.s commands.s controls.s parameters.s notes.s startup.s layout.s banks.s body.s sequences.s scheduler.s effects.s status.s cues.s xa.s)
 OBJECTS = $(addprefix $(OUT)/,$(SOURCES:.s=.o))
 
 .PHONY: bof3-audio-driver clean
