@@ -41,7 +41,7 @@ segments:
   - - 524
     - c
     - invokeHelperWorld04Area17513_801F2E0C
-    - '@source: src/bof3/world04/invokeHelperWorld04Area17513_801F2E0C.c'
+    - '@source: src/bof3/world/invokeHelperWorld04Area17513_801F2E0C.c'
   - - 556
     - asm
     - func_801F2E2C
@@ -51,12 +51,12 @@ segments:
   - - 1508
     - c
     - dispatchWorkByte1HandlerWorld04Area17513_801F31E4
-    - '@source: src/bof3/world04/dispatchWorkByte1HandlerWorld04Area17513_801F31E4.c'
+    - '@source: src/bof3/world/dispatchWorkByte1HandlerWorld04Area17513_801F31E4.c'
     - '@behavior: Reads the non-volatile scratchpad work-object pointer cell at 0x1F800044, indexes the five-entry handler table D_801F45F8 at 0x801F45F8 with the byte at offset 0x01 of that object (scaled by four) and calls the selected handler; it takes no arguments, returns nothing and touches no other work byte.'
   - - 1576
     - c
     - setWorkByte9AndClearTintWorld04Area17513_801F3228
-    - '@source: src/bof3/world04/setWorkByte9AndClearTintWorld04Area17513_801F3228.c'
+    - '@source: src/bof3/world/setWorkByte9AndClearTintWorld04Area17513_801F3228.c'
     - '@behavior: Stores 0x10 into the byte at offset 0x09 and 1 into the byte at offset 0x01 of the scratchpad work object published through the non-volatile pointer cell at 0x1F800044, then zeroes the three tint channel bytes at offsets 0x5F, 0x5E and 0x5D of that object.'
   - - 1636
     - asm
@@ -70,19 +70,19 @@ segments:
   - - 2072
     - c
     - invokeHelperWorld04Area17513_801F3418
-    - '@source: src/bof3/world04/invokeHelperWorld04Area17513_801F3418.c'
+    - '@source: src/bof3/world/invokeHelperWorld04Area17513_801F3418.c'
   - - 2104
     - asm
     - func_801F3438
   - - 2348
     - c
     - dispatchWorkByte1Table460cWorld04Area17513_801F352C
-    - '@source: src/bof3/world04/dispatchWorkByte1Table460cWorld04Area17513_801F352C.c'
+    - '@source: src/bof3/world/dispatchWorkByte1Table460cWorld04Area17513_801F352C.c'
     - '@behavior: Reads the non-volatile scratchpad work-object pointer cell at 0x1F800044 and calls the handler pointer selected by the dispatch byte at offset 0x01 of that object in the four-entry handler table D_801F460C at 0x801F460C; takes no arguments, returns nothing and reads or writes no other work-object byte.'
   - - 2416
     - c
     - clearWorkByte9AdvanceWorkByte1ThenQueueCue20EWorld04Area17513_801F3570
-    - '@source: src/bof3/world04/clearWorkByte9AdvanceWorkByte1ThenQueueCue20EWorld04Area17513_801F3570.c'
+    - '@source: src/bof3/world/clearWorkByte9AdvanceWorkByte1ThenQueueCue20EWorld04Area17513_801F3570.c'
     - '@behavior: Clears the byte at offset 0x09 of the scratchpad work object published through the pointer cell at 0x1F800044, advances the dispatch byte at offset 0x01 of that object by one and then queues the front-end cue 0x20E through func_8015DF18.'
   - - 2484
     - asm
@@ -93,14 +93,14 @@ segments:
   - - 2748
     - c
     - invokeHelperWorld04Area17513_801F36BC
-    - '@source: src/bof3/world04/invokeHelperWorld04Area17513_801F36BC.c'
+    - '@source: src/bof3/world/invokeHelperWorld04Area17513_801F36BC.c'
   - - 2780
     - asm
     - func_801F36DC
   - - 3180
     - c
     - setStatusFFFFSubstate2IfGateElse3World04Area17513_801F386C
-    - '@source: src/bof3/world04/setStatusFFFFSubstate2IfGateElse3World04Area17513_801F386C.c'
+    - '@source: src/bof3/world/setStatusFFFFSubstate2IfGateElse3World04Area17513_801F386C.c'
     - '@behavior: Loads the shared gate byte D_801490C7, clears the shared status halfword D_801490A8 to 0xFFFF, and then stores 2 into the shared sub-state byte D_80146875 while the gate byte is nonzero, and 3 when the gate byte is zero.'
   - - 3228
     - asm
@@ -108,12 +108,12 @@ segments:
   - - 3304
     - c
     - setStatus5AAndPtrByte7AFFIfGateElseFFFFWorld04Area17513_801F38E8
-    - '@source: src/bof3/world04/setStatus5AAndPtrByte7AFFIfGateElseFFFFWorld04Area17513_801F38E8.c'
+    - '@source: src/bof3/world/setStatus5AAndPtrByte7AFFIfGateElseFFFFWorld04Area17513_801F38E8.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while it equals 1, stores 0x5A into the shared status halfword D_801490A8 and 0xFF into the byte at offset 0x7A of the pointer held at 0x80148208; when the gate byte differs from 1 it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 3372
     - c
     - setStatus5FAndByte801448ECIfGateElseFFFFWorld04Area17513_801F392C
-    - '@source: src/bof3/world04/setStatus5FAndByte801448ECIfGateElseFFFFWorld04Area17513_801F392C.c'
+    - '@source: src/bof3/world/setStatus5FAndByte801448ECIfGateElseFFFFWorld04Area17513_801F392C.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and, while it equals 1, stores 0x5F into the shared status halfword D_801490A8 and 1 into the shared byte at 0x801448EC; when the gate byte differs from 1 it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 3440
     - c
@@ -184,7 +184,7 @@ segments:
   - - 4448
     - c
     - setStatusEFAndByte2IfGateElse1World04Area17513_801F3D60
-    - '@source: src/bof3/world04/setStatusEFAndByte2IfGateElse1World04Area17513_801F3D60.c'
+    - '@source: src/bof3/world/setStatusEFAndByte2IfGateElse1World04Area17513_801F3D60.c'
     - '@behavior: Loads the shared gate byte D_801490C7, stores 2 into the byte at 0x801F294C while the gate byte is nonzero and 1 when the gate byte is zero, then stores 0xEF into the shared status halfword D_801490A8.'
   - - 4500
     - c
@@ -215,7 +215,7 @@ segments:
   - - 5084
     - c
     - copySharedXToWorkXIfInRangeWorld04Area17513_801F3FDC
-    - '@source: src/bof3/world04/copySharedXToWorkXIfInRangeWorld04Area17513_801F3FDC.c'
+    - '@source: src/bof3/world/copySharedXToWorkXIfInRangeWorld04Area17513_801F3FDC.c'
     - '@behavior: Loads the shared X channel D_80149308 and, while it is at most 0x2E0000, stores it into the X field at offset 0x34 of the work record reached through the pointer slot at 0x1F800044.'
   - - 5132
     - asm
