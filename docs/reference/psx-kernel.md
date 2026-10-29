@@ -335,11 +335,12 @@ connects the game loader to these routines:
   archive padding beyond the declared VB data when its length is not a
   multiple of 64 bytes. Padding cannot be synthesized as zero.
 
-`examples/bank_probe.rs BIOS US_EXE BGM_EMI` boots the verified US ROM, loads
-the executable at the shell handoff, runs original sound/layout initialization,
-stages the archive buffers, and executes the original head/body/SEP routines.
-The real BIOS handles DMA interrupts; no host BIOS service replaces it. The
-probe checks SPU RAM against the immutable archive including final DMA padding,
+`examples/bank_probe.rs DRIVER_DIRECTORY US_EXE BGM_EMI` starts the
+[owned kernel](../specs/formats/audio.md#owned-kernel-allocation), then loads
+the original executable payload for development reference execution. It runs
+original sound/layout initialization, stages the archive buffers, and executes
+the original head/body/SEP routines through owned kernel services. The probe
+checks SPU RAM against the immutable archive including final DMA padding,
 rejects failed completion waits and invalid SEP handles, and records bounded
 call outcomes. Host staging does not establish original CD loader execution.
 
@@ -390,13 +391,13 @@ bytes. Flags at record `+0x90` select play, stop and other transitions; active
 play reaches the existing verified per-sequence scheduler. The guest code,
 not the host, advances event cursors and writes SPU key-on registers.
 
-`bank_probe BIOS US_EXE BGM_EMI SEQUENCE TICKS` now optionally starts one parsed
+`bank_probe DRIVER_DIRECTORY US_EXE BGM_EMI SEQUENCE TICKS` now optionally starts one parsed
 SEP sequence and pulses VBlank for 1–10000 bounded iterations. Before each
 bounded `GetVideoMode` leaf call (`0x801753DC`), it asserts VBlank. Execution
-delivers the pending interrupt to the real BIOS, which reaches the SDK callback
+delivers the pending interrupt through owned services to the SDK callback
 and original scheduler before returning to the leaf. Each iteration requires
 one IRQ and records instructions, sequence cursor/delay/flags and key-on
-readback. Missing sequence indices are rejected before boot. Ticks are injected
+readback. Missing sequence indices are rejected before startup. Ticks are injected
 without video timing or SPU output frames; register activity is not PCM evidence.
 
 | Archive / sequence index | IRQ iterations | Iterations with key-on readback |
@@ -462,13 +463,13 @@ Default execution without an output clock retains the earlier call behavior.
 The diagnostic now accepts:
 
 ```text
-bank_probe BIOS US_EXE BGM_EMI SEQUENCE TICKS WAV
+bank_probe DRIVER_DIRECTORY US_EXE BGM_EMI SEQUENCE TICKS WAV
 ```
 
 With a WAV path, `TICKS` counts clocked VBlank events rather than injected
 interrupts. The host repeatedly calls the original `GetVideoMode` leaf while
 instruction time drives devices; it does not call the sequence scheduler or
-write event cursors. Real BIOS IRQ handling reaches the original game callback
+write event cursors. Owned IRQ handling reaches the original game callback
 and produces SPU writes. The WAV is written to a temporary sibling, synced,
 parsed back and atomically linked into place without overwriting an existing
 file. The mode without a WAV retains the earlier injected-IRQ diagnostic.
