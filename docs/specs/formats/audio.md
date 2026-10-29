@@ -4447,6 +4447,30 @@ opening still uses IDs zero through fifteen. Upload and wait use the existing
 SPU transfer, FIFO, address and callback state. Production routing and native
 timing or audio acceptance remain open.
 
+The linked [sequence component](../../../tools/rust/bof3-audio/driver/audio/sequences.s)
+provides `audio_sequence_open`. A0 points to sequence bytes, A1 supplies the bank
+ID and A2 supplies the record count. The bank ID and count use their signed low
+sixteen bits. The entry reserves the first clear bit in the live allocation mask
+and returns its signed handle. A full mask prints a diagnostic and returns `-1`.
+Zero or negative counts still reserve a handle without reading the input.
+
+`audio_sequence_open_record` takes the handle, record index, bank ID and input
+pointer in A0 through A3. It uses the live handle pointer and a `0xAC` record
+stride. The first record recognizes byte `0x53` or `0x70` as an eight-byte prefix
+and rejects a nonzero byte at offset five. Other first bytes omit that prefix;
+later records skip two bytes. The helper reads resolution, tempo, length and the
+initial delta, initializes channel controls, and derives timing from the live
+tick rate. It returns the header byte count plus the encoded payload length.
+The wrapper uses this result to find the next record.
+
+Callers must supply valid handle pointers, enough writable records and readable
+input through each terminating delta byte. The guest entries do not bound these
+accesses or roll back reserved handles and partial writes after errors. Untouched
+record fields retain their contents. Zero tempo or applicable zero timing divisors
+retain the original break exception. The combined opening frames require `0x58`
+stack bytes before callees. Opening does not start playback; scheduler, production
+routing and native audio acceptance remain open.
+
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
 
