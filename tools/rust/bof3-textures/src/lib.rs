@@ -2,6 +2,7 @@
 
 mod aliases;
 pub mod animation;
+pub mod area;
 pub mod bank;
 pub mod bank_image;
 pub mod catalog;
@@ -24,6 +25,7 @@ pub mod resident;
 pub mod save_icon;
 pub mod sources;
 pub mod sprite_bank;
+pub mod sprite_definition;
 pub mod stream_family;
 pub mod verification;
 

@@ -10,17 +10,17 @@ use emi_ex_v2::image::ArchiveImage;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Error, Result, bank, bank_image,
+    Error, Result, area, bank, bank_image,
     catalog::{self, Dependency, Index, Resource},
     digest::sha256_hex,
-    formats,
+    field, formats,
     png::{self, IndexedImage},
     preview, resident, save_icon,
     sources::{self, Input},
-    sprite_bank,
+    sprite_bank, sprite_definition,
 };
 
-pub const SCHEMA: &str = "bof3.textures-package/v5";
+pub const SCHEMA: &str = "bof3.textures-package/v10";
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -50,7 +50,10 @@ pub struct Export {
     pub previews: Vec<preview::Info>,
     pub decoded: Option<String>,
     pub animation: Option<String>,
+    pub surface: Option<String>,
+    pub definitions: Option<String>,
     pub sprite: Option<String>,
+    pub selections: Option<String>,
     pub bank_images: Vec<BankImage>,
     pub save_frames: Vec<String>,
     pub palette_binding: String,
@@ -112,10 +115,14 @@ fn exports(index: &Index) -> Result<Vec<Export>> {
                     .resident_animation
                     .as_ref()
                     .map(|_| format!("{directory}/animation.json")),
+                surface: resource.area_surface.as_ref().map(|_| format!("{directory}/surface.json")),
+                definitions: resource.sprite_definitions.as_ref().map(|_| format!("{directory}/definitions.json")),
                 sprite: resource
                     .sprite_bank
                     .as_ref()
                     .map(|_| format!("{directory}/sprite.json")),
+                selections: field::has_selections(resource)
+                    .then(|| format!("{directory}/selections.json")),
                 bank_images: resource
                     .sprite_bank
                     .as_ref()
@@ -125,17 +132,13 @@ fn exports(index: &Index) -> Result<Vec<Export>> {
                             .enumerate()
                             .flat_map(|(root, modes)| {
                                 let directory = &directory;
-                                modes
-                                    .iter()
-                                    .enumerate()
-                                    .filter(|(_, mode)| matches!(mode, 1 | 2))
-                                    .map(move |(image, _)| BankImage {
-                                        root,
-                                        image,
-                                        member: format!(
-                                            "{directory}/root-{root}/image-{image}.png"
-                                        ),
-                                    })
+                                (0..modes.len()).map(move |image| BankImage {
+                                    root,
+                                    image,
+                                    member: format!(
+                                        "{directory}/root-{root}/image-{image}.png"
+                                    ),
+                                })
                             })
                             .collect()
                     })
@@ -178,11 +181,6 @@ fn image(resource: &Resource, payload: &[u8], bits: u8) -> Result<IndexedImage> 
 }
 
 fn bank_image_view(source: &[u8], descriptor: &bank_image::Info) -> Result<IndexedImage> {
-    if !matches!(descriptor.mode, 1 | 2) {
-        return Err(Error::Invalid(
-            "bank PNG requires an indexed mode-1 or mode-2 record".into(),
-        ));
-    }
     Ok(IndexedImage {
         width: usize::from(descriptor.width_words) * 2,
         height: usize::from(descriptor.height),
@@ -206,19 +204,63 @@ fn bank_bytes(resource: &Resource, source: &[u8]) -> Result<Vec<u8>> {
     }
 }
 
+fn retain_image_allocations(
+    original: &sprite_bank::Document,
+    current: &mut sprite_bank::Document,
+) -> Result<()> {
+    if current.roots.len() != original.roots.len() {
+        return Err(Error::Invalid(
+            "sprite image root allocation differs".into(),
+        ));
+    }
+    for (root, before) in current.roots.iter_mut().zip(&original.roots) {
+        if root.images.len() != before.images.len() {
+            return Err(Error::Invalid(
+                "sprite image table allocation differs".into(),
+            ));
+        }
+        for (image, before) in root.images.iter_mut().zip(&before.images) {
+            if image.consumed_bytes > before.consumed_bytes {
+                return Err(Error::Invalid(
+                    "sprite image stream exceeds its original consumed allocation".into(),
+                ));
+            }
+            image.consumed_bytes = before.consumed_bytes;
+            if *image != *before {
+                return Err(Error::Invalid("sprite image descriptor differs".into()));
+            }
+        }
+    }
+    Ok(())
+}
+
 fn import_bank(
     root: &Path,
     resource: &Resource,
     export: &Export,
     original: &[u8],
+    baseline: &[u8],
 ) -> Result<Vec<u8>> {
     let Some(member) = &export.sprite else {
         return Ok(original.to_vec());
     };
     let decoded = bank_bytes(resource, original)?;
-    let document: sprite_bank::Document =
+    let mut document: sprite_bank::Document =
         serde_json::from_slice(&read_member(root, member, 64 * 1024 * 1024)?)?;
     let original_document = sprite_bank::decode(&decoded)?;
+    let baseline_document = sprite_bank::decode(&bank_bytes(resource, baseline)?)?;
+    if document.roots.len() != baseline_document.roots.len()
+        || document
+            .roots
+            .iter()
+            .zip(&baseline_document.roots)
+            .any(|(root, baseline)| root.images != baseline.images)
+    {
+        return Err(Error::Invalid(format!(
+            "{member}: preserve the baseline image descriptors"
+        )));
+    }
+    retain_image_allocations(&original_document, &mut document)?;
     let mut planes = Vec::with_capacity(export.bank_images.len());
     for view in &export.bank_images {
         let descriptor = &original_document.roots[view.root].images[view.image];
@@ -249,7 +291,28 @@ fn import_bank(
             bytes,
         })
         .collect();
-    let intended = sprite_bank::encode_images(&decoded, &document, &edits)?;
+    let mut intended = sprite_bank::encode_images(&decoded, &document, &edits)?;
+    if let Some(member) = &export.selections {
+        let selections: sprite_bank::Selections =
+            serde_json::from_slice(&read_member(root, member, 65536)?)?;
+        let mut bound = field::selections(resource, &decoded)?;
+        if selections.schema != sprite_bank::SELECTION_SCHEMA
+            || selections.slots.len() != bound.len()
+        {
+            return Err(Error::Invalid(format!(
+                "{member}: selection allocation differs"
+            )));
+        }
+        for (slot, original) in bound.iter_mut().zip(&selections.slots) {
+            slot.mirror_flag = original.mirror_flag;
+            if slot != original {
+                return Err(Error::Invalid(format!(
+                    "{member}: preserve bound root, selector and image-skip state"
+                )));
+            }
+        }
+        intended = sprite_bank::encode_selections(&intended, &selections.slots)?;
+    }
     let encoded = if resource.bank.is_some() {
         bank::encode(&intended, original)?
     } else {
@@ -314,6 +377,15 @@ fn export_source(
             if let Some(member) = &export.decoded {
                 stage.write(member, &decoded)?;
             }
+            if let Some(member) = &export.selections {
+                stage.write(
+                    member,
+                    &serde_json::to_vec_pretty(&sprite_bank::Selections {
+                        schema: sprite_bank::SELECTION_SCHEMA.into(),
+                        slots: field::selections(resource, &decoded)?,
+                    })?,
+                )?;
+            }
             if let Some(member) = &export.sprite {
                 let document = sprite_bank::decode(&decoded)?;
                 stage.write(member, &serde_json::to_vec_pretty(&document)?)?;
@@ -328,6 +400,15 @@ fn export_source(
         }
         if let Some(member) = &export.animation {
             stage.write(member, &serde_json::to_vec_pretty(&resident::decode(raw)?)?)?;
+        }
+        if let Some(member) = &export.surface {
+            stage.write(member, &serde_json::to_vec_pretty(&area::decode(raw)?)?)?;
+        }
+        if let Some(member) = &export.definitions {
+            stage.write(
+                member,
+                &serde_json::to_vec_pretty(&sprite_definition::decode(raw)?)?,
+            )?;
         }
         if let (Some(palette), Some(member)) = (&resource.palette_upload, &export.words) {
             stage.write(
@@ -537,18 +618,20 @@ fn validate_resource_edit(resource: &Resource, original: &[u8], edited: &[u8]) -
         save_icon::encode(original, info, &save_icon::decode(edited, info)?)?
     } else if resource.resident_animation.is_some() {
         resident::encode(original, &resident::decode(edited)?)?
+    } else if resource.area_surface.is_some() {
+        area::encode(original, &area::decode(edited)?)?
+    } else if resource.sprite_definitions.is_some() {
+        sprite_definition::encode(original, &sprite_definition::decode(edited)?)?
     } else if resource.sprite_bank.is_some() {
         let before = bank_bytes(resource, original)?;
         let after = bank_bytes(resource, edited)?;
-        let document = sprite_bank::decode(&after)?;
+        let mut document = sprite_bank::decode(&after)?;
+        retain_image_allocations(&sprite_bank::decode(&before)?, &mut document)?;
         let mut planes = Vec::new();
         for (root, record) in document.roots.iter().enumerate() {
             for (image, descriptor) in record.images.iter().enumerate() {
-                if matches!(descriptor.mode, 1 | 2) {
-                    let bytes =
-                        bank_image::decode(&after, descriptor.offset, descriptor.end)?.bytes;
-                    planes.push((root, image, bytes));
-                }
+                let bytes = bank_image::decode(&after, descriptor.offset, descriptor.end)?.bytes;
+                planes.push((root, image, bytes));
             }
         }
         let edits: Vec<_> = planes
@@ -560,6 +643,8 @@ fn validate_resource_edit(resource: &Resource, original: &[u8], edited: &[u8]) -
             })
             .collect();
         let encoded = sprite_bank::encode_images(&before, &document, &edits)?;
+        let encoded =
+            sprite_bank::encode_selections(&encoded, &field::selections(resource, &after)?)?;
         if encoded != after {
             return Err(Error::Invalid(format!(
                 "{} baseline changes opaque sprite bytes",
@@ -697,6 +782,177 @@ pub fn pack(root: &Path, destination: &Path) -> Result<PackReport> {
     Ok(report)
 }
 
+#[derive(Serialize)]
+pub struct FrameArchive {
+    pub source: String,
+    pub original_sha256: String,
+    pub reconstructed_sha256: String,
+}
+
+#[derive(Serialize)]
+pub struct FrameResource {
+    pub role: String,
+    pub resource: String,
+    pub source: String,
+    pub entry: Option<usize>,
+    pub offset: u64,
+    pub size: u64,
+    pub original_sha256: String,
+    pub reconstructed_sha256: String,
+}
+
+#[derive(Serialize)]
+pub struct FrameReport {
+    pub schema: String,
+    pub resource: String,
+    pub archives: Vec<FrameArchive>,
+    pub resources: Vec<FrameResource>,
+    pub decoded_bank_sha256: Option<String>,
+    pub context: preview::FrameContext,
+    pub origin: [i16; 2],
+    pub width: usize,
+    pub height: usize,
+    pub color_words_sha256: String,
+    pub png_sha256: String,
+    pub scope: String,
+}
+
+fn frame_bytes<'a>(resource: &Resource, output: &'a [u8]) -> Result<&'a [u8]> {
+    let end = resource
+        .offset
+        .checked_add(resource.size)
+        .and_then(|end| usize::try_from(end).ok());
+    usize::try_from(resource.offset)
+        .ok()
+        .zip(end)
+        .and_then(|(start, end)| output.get(start..end))
+        .ok_or_else(|| Error::Invalid("frame resource exceeds reconstructed archive".into()))
+}
+
+/// Reconstruct validated package intent and publish a separate source derivative.
+pub fn frame(
+    root: &Path,
+    asset: &str,
+    context: preview::FrameContext,
+    destination: &Path,
+) -> Result<FrameReport> {
+    let root = fs::canonicalize(root)?;
+    let manifest = load(&root)?;
+    let find = |id: &str| {
+        manifest
+            .index
+            .resources
+            .iter()
+            .find(|resource| resource.id == id)
+            .ok_or_else(|| {
+                Error::Invalid(format!("frame resource {id} is absent from the package"))
+            })
+    };
+    let resource = find(asset)?;
+    let mut resources = vec![("geometry", resource)];
+    match &context {
+        preview::FrameContext::SpriteBank(_) => {
+            if resource.sprite_bank.is_none() {
+                return Err(Error::Invalid(
+                    "asset is not a qualified three-root sprite bank".into(),
+                ));
+            }
+        }
+        preview::FrameContext::Resident(binding) => {
+            if resource.resident_animation.is_none() {
+                return Err(Error::Invalid(
+                    "asset is not a qualified resident animation bank".into(),
+                ));
+            }
+            let texture = find(&binding.texture_resource)?;
+            let palette = find(&binding.palette_resource)?;
+            if texture.upload.is_none() || palette.palette_upload.is_none() {
+                return Err(Error::Invalid(
+                    "resident frame requires qualified raw texture and palette uploads".into(),
+                ));
+            }
+            resources.extend([("texture", texture), ("palette", palette)]);
+        }
+    }
+    let stage = Stage::new(destination, &root)?;
+    let mut archives = BTreeMap::new();
+    let mut archive_reports = Vec::new();
+    for (_, resource) in &resources {
+        if archives.contains_key(&resource.source) {
+            continue;
+        }
+        let (source, snapshot) = manifest
+            .index
+            .files
+            .iter()
+            .zip(&manifest.snapshots)
+            .find(|(source, _)| source.path == resource.source)
+            .ok_or_else(|| Error::Invalid("frame resource has no source snapshot".into()))?;
+        let reconstructed = reconstruct(&root, &manifest, source, snapshot)?;
+        archive_reports.push(FrameArchive {
+            source: source.path.clone(),
+            original_sha256: source.sha256.clone(),
+            reconstructed_sha256: sha256_hex(&reconstructed.output),
+        });
+        archives.insert(source.path.clone(), reconstructed);
+    }
+    let payloads = resources
+        .iter()
+        .map(|(_, resource)| frame_bytes(resource, &archives[&resource.source].output))
+        .collect::<Result<Vec<_>>>()?;
+    let (frame, decoded_bank_sha256) = match &context {
+        preview::FrameContext::SpriteBank(binding) => {
+            let decoded = bank_bytes(resource, payloads[0])?;
+            (
+                preview::sprite_frame(&decoded, binding)?,
+                Some(sha256_hex(&decoded)),
+            )
+        }
+        preview::FrameContext::Resident(binding) => (
+            preview::resident_frame(
+                payloads[0],
+                binding,
+                (resources[1].1.upload.as_ref().unwrap(), payloads[1]),
+                (resources[2].1.palette_upload.as_ref().unwrap(), payloads[2]),
+            )?,
+            None,
+        ),
+    };
+    let png = png::encode_words(&frame.image)?;
+    let words: Vec<_> = frame
+        .image
+        .words
+        .iter()
+        .flat_map(|word| word.to_le_bytes())
+        .collect();
+    let resources = resources
+        .iter()
+        .zip(payloads)
+        .map(|((role, resource), raw)| FrameResource {
+            role: (*role).into(),
+            resource: resource.id.clone(),
+            source: resource.source.clone(),
+            entry: resource.entry,
+            offset: resource.offset,
+            size: resource.size,
+            original_sha256: resource.sha256.clone(),
+            reconstructed_sha256: sha256_hex(raw),
+        })
+        .collect();
+    let report = FrameReport {
+        schema: "bof3.sprite-source-frame/v2".into(), resource: resource.id.clone(),
+        archives: archive_reports, resources, decoded_bank_sha256, context,
+        origin: [frame.origin_x, frame.origin_y],
+        width: frame.image.width, height: frame.image.height,
+        color_words_sha256: sha256_hex(&words), png_sha256: sha256_hex(&png),
+        scope: "source derivative; record, entity, draw state, source selection and part order are caller bindings, not runtime verification; no scene rendering or edited-disc acceptance".into(),
+    };
+    stage.write("frame.png", &png)?;
+    stage.write("frame.json", &serde_json::to_vec_pretty(&report)?)?;
+    stage.publish()?;
+    Ok(report)
+}
+
 fn edit_impact(index: &Index, files: &[PackedFile]) -> Result<(Vec<ResourceImpact>, bool)> {
     let nodes: BTreeMap<_, _> = index
         .resources
@@ -828,34 +1084,55 @@ pub(crate) fn reconstruct(
                 "{member}: decoded bank view is read-only; use qualified sprite.json and indexed PNG views"
             )));
         }
+        let word_units = resource.upload.is_some()
+            || resource.palette_upload.is_some()
+            || resource.save_icon.is_some();
         let mut edit = ByteEdits::new(raw);
         let imported_raw = read_member(root, &export.raw, resource.size.max(1))?;
-        if (resource.bank.is_some() || resource.sprite_bank.is_some()) && imported_raw != raw {
+        if (resource.bank.is_some()
+            || resource.sprite_bank.is_some()
+            || resource.sprite_definitions.is_some()
+            || resource.area_surface.is_some())
+            && imported_raw != raw
+        {
             return Err(Error::Invalid(format!(
                 "{}: raw bank view is read-only; use its qualified editable views",
                 export.raw
             )));
         }
-        edit.add(&export.raw, imported_raw)?;
+        edit.add_units(&export.raw, imported_raw, if word_units { 2 } else { 1 })?;
         if let Some(member) = &export.sprite {
-            edit.add(member, import_bank(root, resource, export, original_raw)?)?;
+            edit.add(
+                member,
+                import_bank(root, resource, export, original_raw, raw)?,
+            )?;
         }
         if let Some(member) = &export.animation {
             let document: resident::Document =
                 serde_json::from_slice(&read_member(root, member, 16 * 1024 * 1024)?)?;
             edit.add(member, resident::encode(original_raw, &document)?)?;
         }
+        if let Some(member) = &export.surface {
+            let document: area::Document =
+                serde_json::from_slice(&read_member(root, member, 16 * 1024 * 1024)?)?;
+            edit.add(member, area::encode(original_raw, &document)?)?;
+        }
+        if let Some(member) = &export.definitions {
+            let document: sprite_definition::Document =
+                serde_json::from_slice(&read_member(root, member, 1024 * 1024)?)?;
+            edit.add(member, sprite_definition::encode(original_raw, &document)?)?;
+        }
         if let (Some(palette), Some(member)) = (&resource.palette_upload, &export.words) {
             let words: Vec<u16> =
                 serde_json::from_slice(&read_member(root, member, 16 * 1024 * 1024)?)?;
-            edit.add(member, palette.encode_words(&words, raw)?)?;
+            edit.add_units(member, palette.encode_words(&words, raw)?, 2)?;
         }
         if let Some(info) = &resource.save_icon {
             let original_images = save_icon::decode(raw, info)?;
             if let Some(member) = &export.words {
                 let mut images = original_images.clone();
                 images.palette.words = serde_json::from_slice(&read_member(root, member, 65536)?)?;
-                edit.add(member, save_icon::encode(original_raw, info, &images)?)?;
+                edit.add_units(member, save_icon::encode(original_raw, info, &images)?, 2)?;
             }
             for (frame, member) in export.save_frames.iter().enumerate() {
                 let imported = png::decode(&read_member(root, member, 65536)?)?;
@@ -879,12 +1156,12 @@ pub(crate) fn reconstruct(
                         "{member}: preserve the raw upload's word-grid dimensions"
                     )));
                 }
-                edit.add(member, upload.encode_words(&imported.words, raw)?)?;
+                edit.add_units(member, upload.encode_words(&imported.words, raw)?, 2)?;
             }
             if let Some(member) = &export.words {
                 let words: Vec<u16> =
                     serde_json::from_slice(&read_member(root, member, 16 * 1024 * 1024)?)?;
-                edit.add(member, upload.encode_words(&words, raw)?)?;
+                edit.add_units(member, upload.encode_words(&words, raw)?, 2)?;
             }
             for (bits, member) in [(4, &export.indices_4), (8, &export.indices_8)] {
                 if let Some(member) = member {
@@ -919,6 +1196,23 @@ pub(crate) fn reconstruct(
                 resource.id
             )));
         }
+        if resource.area_surface.is_some()
+            && area::encode(original_raw, &area::decode(&bytes)?)? != bytes
+        {
+            return Err(Error::Invalid(format!(
+                "{}: area edits exceed qualified packed words",
+                resource.id
+            )));
+        }
+        if resource.sprite_definitions.is_some()
+            && sprite_definition::encode(original_raw, &sprite_definition::decode(&bytes)?)?
+                != bytes
+        {
+            return Err(Error::Invalid(format!(
+                "{}: sprite-definition edits exceed qualified draw-state bytes",
+                resource.id
+            )));
+        }
         if bytes != original_raw {
             edited_entries.push(
                 resource
@@ -931,6 +1225,8 @@ pub(crate) fn reconstruct(
             if resource.upload.is_none()
                 && resource.palette_upload.is_none()
                 && resource.resident_animation.is_none()
+                && resource.area_surface.is_none()
+                && resource.sprite_definitions.is_none()
                 && resource.sprite_bank.is_none()
                 && resource.save_icon.is_none()
             {
@@ -1028,22 +1324,34 @@ impl<'a> ByteEdits<'a> {
     }
 
     fn add(&mut self, member: &str, replacement: Vec<u8>) -> Result<()> {
+        self.add_units(member, replacement, 1)
+    }
+
+    fn add_units(&mut self, member: &str, replacement: Vec<u8>, unit: usize) -> Result<()> {
         if replacement.len() != self.original.len() {
             return Err(Error::Invalid(format!(
                 "{member}: edit changes original allocation"
             )));
         }
-        for (offset, (old, new)) in self.original.iter().zip(replacement).enumerate() {
-            if *old == new {
+        for (index, (old, new)) in self
+            .original
+            .chunks(unit)
+            .zip(replacement.chunks(unit))
+            .enumerate()
+        {
+            if old == new {
                 continue;
             }
-            let (other, owners) = self
-                .changes
-                .entry(offset)
-                .or_insert_with(|| (new, BTreeSet::new()));
-            owners.insert(member.into());
-            if *other != new {
-                self.conflicts.insert(offset);
+            for (byte, &value) in new.iter().enumerate() {
+                let offset = index * unit + byte;
+                let (other, owners) = self
+                    .changes
+                    .entry(offset)
+                    .or_insert_with(|| (value, BTreeSet::new()));
+                owners.insert(member.into());
+                if *other != value {
+                    self.conflicts.insert(offset);
+                }
             }
         }
         Ok(())
@@ -1216,11 +1524,14 @@ pub fn source_package(root: &Path, destination: &Path) -> Result<usize> {
         }
         collect_rust(&root, &relative.join("src"), &mut members)?;
         if name == "bof3-textures" {
+            members.push(relative.join("docs/bank-image-edit.md"));
             members.push(relative.join("docs/composition.md"));
             members.push(relative.join("docs/selection.md"));
+            members.push(relative.join("docs/source-paths.md"));
             members.push(relative.join("docs/catalog.md"));
             members.push(relative.join("docs/glyph-edit.md"));
             members.push(relative.join("docs/palette-edit.md"));
+            members.push(relative.join("docs/terrain-edit.md"));
             members.push(relative.join("docs/reopen-edits.md"));
             for file in ["LICENSE", "mise.toml", "rust-toolchain.toml"] {
                 members.push(relative.join(file));

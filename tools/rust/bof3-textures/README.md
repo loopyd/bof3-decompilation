@@ -5,8 +5,9 @@ self-contained archive packages. It can edit raw VRAM upload words, their
 4-bit or 8-bit index interpretations, exact color-word images, and qualified
 palette-word banks within their original allocations.
 It also edits qualified resident animation step pairs and five-byte cell records.
-Recognized three-root sprite banks have editable index planes, palette words,
-programs, and cells, with both compression layers bounded by their original spans.
+Qualified sprite-definition tables expose editable draw-state bytes.
+Recognized sprite banks and standalone roots have editable index planes, palette
+words, programs, and cells. Compression layers stay within their original spans.
 
 Full graphics support is incomplete. Category discovery lists the intended game
 roles. Most resource roles, CLUT associations, sprite composition,
@@ -114,11 +115,14 @@ JSON on standard output, including when `--json` is omitted.
 
 ## Catalog
 
-The index schema is `bof3.textures-index/v5`. A resource ID combines release,
+The index schema is `bof3.textures-index/v9`. A resource ID combines release,
 original path, and EMI slot or file locator. Equal hashes retain distinct original
 locations. Each physical resource has its byte offset, size, hash, kind, game categories,
 storage, decode and pack status, evidence, dependencies, known uses, and findings.
 The catalog retains unknown entries and non-EMI files for further disposition.
+
+[Graphics source paths](docs/source-paths.md) separates stored payloads, decoded
+records, resident bases and runtime producers, including their unresolved links.
 
 Query supports `--category`, `--source`, `--asset`, `--storage`, `--kind`,
 `--palette`, `--animation`, `--dependency`, and `--evidence`. Source matching uses
@@ -173,8 +177,15 @@ Qualified bank destinations in the `PL`, `BPLD` and `BPLU` source families have 
 `stream_request` record. It identifies the original EXE request family, index,
 loader slot, disc LBA and three selector identifiers. Only the 19 qualified
 members of each family are mapped. The original request function accepts a byte
-index without enforcing these family extents. The identifiers do not establish
-character names, ages, actions or game roles.
+index without enforcing these family extents.
+
+Three-root `PL` banks additionally expose `stream_request.party_records` and the
+`field-character` category. Each item records its root ordinal, selector ID,
+mutable record index and original default name. GAME's field-party initializer
+and the original EXE table bind these identifiers to START/STATUS default
+records. Ages, forms, actions, directions and current mutable names remain
+unresolved. `BPLD` and `BPLU` retain `party_records: null`; the field consumer
+does not qualify their game roles.
 
 Use `--dependency stream-request` or `--dependency root-selection` to find these
 records. The edges name the original EXE and GAME entry 0 consumer. They remain
@@ -220,8 +231,12 @@ See [Edit a shared font glyph](docs/glyph-edit.md) for a complete words-edit,
 packing, and byte-verification example using the original FIRST atlas.
 [Edit an opening-scene palette](docs/palette-edit.md) covers a palette-word edit,
 its observed field draw context, and re-export of the packed result.
+[Edit a terrain texture and its palette](docs/terrain-edit.md) changes a bounded
+AREA024 index patch and its conditional palette source, with byte verification.
+[Edit a compressed sprite image](docs/bank-image-edit.md) covers a mode-2 index
+plane, a stored palette word, compression limits, and re-export.
 
-The manifest schema is `bof3.textures-package/v5`. The package includes qualified
+The manifest schema is `bof3.textures-package/v10`. The package includes qualified
 original snapshots, validated baseline snapshots, raw resources, its bound catalog,
 and coverage. A new original export uses the original snapshots as its baselines. A
 qualified raw upload also has `words.json` and indexed `indices-4.png` and
@@ -239,8 +254,11 @@ that a game consumer selects 16-bit color rendering.
 Keep this PNG in 8-bit RGBA format with its original dimensions. Packing refuses
 RGB channels outside the exact expansion, other alpha values, nonblack pixels
 with alpha 0, and black pixels with alpha 255. It never rounds colors. Edits to
-`colors-16.png`, `words.json`, raw bytes, and index views must agree wherever
-their changed bytes overlap. The tool reports conflicting views and publishes
+`colors-16.png`, `words.json`, and raw word edits request complete 16-bit words.
+Each changed word must agree with overlapping edits, including index views.
+Edits to different words combine; an unchanged word does not override an edit.
+Palette and save-icon color words follow the same rule. Index views retain
+byte-level reconciliation. The tool reports conflicting views and publishes
 nothing. Older packages must be unpacked again with the current executable.
 
 Qualified FIRST glyph, SHISU portrait, and DEMO logo, label and scrolling-panel atlases also
@@ -286,8 +304,9 @@ Memory-card import, export and save operations remain with the emulator's
 memory-card owner.
 
 A qualified outer compressed bank has a read-only `decoded.bin` view. Recognized
-three-root banks export `sprite.json` with schema `bof3.sprite-bank/v1`, plus
-`root-N/image-N.png` views for mode-1 and mode-2 records. Query them with
+sprite banks and standalone roots export `sprite.json` with schema
+`bof3.sprite-bank/v1`, plus `root-N/image-N.png` views for every decoded image
+record. Query them with
 `--kind sprite-bank`. The catalog's `sprite_bank` field reports the record counts
 and image modes. Add `--records` to query its logical images, palettes, programs
 and cells by their own source-bound identities. PNG width is twice the record's VRAM word width; each pixel
@@ -307,19 +326,35 @@ CLUT: decoded images can select indices above 31. Exact words preserve STP, but
 the neighboring colors, draw CLUT, and runtime palette updates remain unresolved.
 
 Edit PNG indices while preserving dimensions and the diagnostic palette.
-Mode-1 records accept indices from 0 to 31; mode-2 records accept 0 to 255.
+Mode-1 records accept bytes from 0 to 31. Mode-2 and raw-word records accept
+bytes from 0 to 255. These byte planes do not select a GPU texture mode.
 Changed aliases must agree on their complete palette, program, cell, or image
 record. Conflicts name every changed view of the shared record. Unchanged aliases
 do not override an edit. Image streams and any outer bank must fit their original
 consumed byte spans. Raw banks retain their original payload size. Following pointers and
-unconsumed bytes do not grant extra capacity. Packing preserves selection tails,
-opaque flags, headers, pointer tables, codec metadata, and unrelated bytes.
+unconsumed bytes do not grant extra capacity. Packing preserves selection tails
+except explicit qualified mirror edits in `selections.json`. It preserves opaque
+flags, headers, pointer tables, codec metadata, and unrelated bytes.
 The bank's `raw.bin` and any `decoded.bin` are read-only; use its qualified views.
 Unsupported internal variants retain read-only decoded bytes and refusal findings.
 
+Use `frame EDIT_PACKAGE --asset RESOURCE_ID --context CONTEXT.json --output NEW_DIRECTORY`
+to preview a selected sprite-bank or resident cell after validated package edits. It
+publishes `frame.png` and a source-bound `frame.json` report without changing the
+package. Supply the entity bytes, selected records, draw commands and part order
+explicitly. Sprite banks need upload coordinates; resident cells use separate
+raw texture and palette resource IDs with qualified upload descriptors.
+See [Frame command](docs/composition.md#frame-command)
+for the context fields and limits. The PNG is a derivative; edit the package's
+source views to change its contents.
+
 A recognized resident animation bank has an editable `animation.json` document
-with schema `bof3.resident-animation/v2`.
-Each group retains its program pointers, byte extents, and existing step pairs.
+with schema `bof3.resident-animation/v3`.
+Each group retains its program pointers and byte extents. Programs with
+`status: decoded` retain their existing step pairs. Programs with
+`status: unresolved` retain their original `offset`, `end` and `reason`; their
+entire source spans are read-only. Structural group or program table errors
+reject the bank. A program-local decode failure does not discard other programs.
 Edit `duration` and `operand` values from 0 to 255. Keep the number of groups,
 programs, and steps, and preserve all `offset` and `end` fields. Durations below
 128 select cells. Durations of 128 or more select a forward step target. An edit
@@ -350,6 +385,69 @@ Query these banks with `--kind resident-animation-bank`. `--animation` accepts
 their resource ID. Image and palette bindings, reverse playback callers, game roles, and
 runtime appearance remain unresolved. Unrecognized resident variants have no
 editable animation document and retain their refusal findings in the catalog.
+Partial banks report decoded and unresolved program counts separately. Their
+unknown references and runtime impact remain coverage blockers. The verifier
+reports `partial-unresolved-programs`, even when unchanged bytes reconstruct.
+
+Qualified type-0 sprite-definition tables at `0x800E3800` export
+`definitions.json` with schema `bof3.sprite-definitions/v1`. The first header
+byte counts eight-byte records beginning at payload offset 4. Each record retains
+its little-endian `id`, `clut_selector`, opaque byte, `page`, `v_base`,
+`indexed_8bit` byte and `group`. The original lookup at `0x8014DD3C` selects the
+first matching ID. These are draw-state records, not texture or palette data.
+
+Edit only `clut_selector`, `page`, `v_base` and `indexed_8bit`, each from 0 to 255.
+Keep IDs, groups, offsets, record order, count and schema unchanged. The depth
+field retains its raw byte; nonzero selects the consumer's 8-bit branch. Packing
+preserves the other header bytes, record byte 3 and all trailing bytes.
+The table's `raw.bin` is read-only. Query physical tables with
+`--kind sprite-definition-table`, or add `--records --kind sprite-definition`
+for individual records. `sprite_definitions` reports record and tail-byte counts.
+
+Page, V base and CLUT selector values do not identify physical image or palette
+sources. Group selection also depends on the active entity flags and resident
+base. Entity selection, loading, complete shared uses and edited appearance
+remain unresolved. Verification reports `partial-sprite-definitions` even when
+the source records and archive bytes reconstruct exactly.
+
+Use `query INDEX --records --kind resident-group` to inspect immutable program
+tables. Their `animation` edges identify the programs stored in each table;
+`uses` retains aliased group slots and conditional definition references.
+`--records --kind sprite-definition --dependency resident-group` finds the
+definition-to-group links. These links require the same archive's qualified
+definition and resident payloads, active pointers `0x800E3804` and `0x800D3800`,
+and a stable entity whose flag byte at `0x24` has bit zero clear. They do not
+establish that loading or the ID lookup executed. The final entity byte at
+`0x4B` independently selects a program; direction and valid selectors remain
+unresolved. Group tables are read-only, including through `animation.json`.
+
+Qualified type-0 area payloads at `0x80104000` export `surface.json` with schema
+`bof3.area-surface/v1`. Its records are the unique four-byte words selected by
+nonzero original cell IDs. Change `word` as an unsigned 32-bit integer. Keep the
+schema, dimensions, grid identity, record order and offsets unchanged. The raw
+view, cell IDs, headers, coordinate tables and all other payload bytes are
+read-only. A word edit that overlaps any of those protected reads is refused.
+
+Bits 16, 17 and 18 permute the coordinate pairs; bit 15 controls the primitive's
+semi-transparency flag. Nibble mode, selected when `word & 0xF00 == 0`, stores the
+U and V tile origins in bits 0..3 and 4..7. Rectangle and paired modes select
+coordinate bytes through the original header. Packing accepts those selections
+only within the original consumer-qualified read spans, after all word edits
+are combined. A payload bound alone does not authorize a new table reference.
+
+Query these payloads with `--kind area-surface-metadata`. `surface-word` records
+identify editable words; `surface-coordinate` and `surface-coordinate-pair`
+records identify read-only source reads. `area_surface.request` reports the
+original area index, request slot and disc LBA. The `area-request`,
+`area-slot-lba` and `area-palette-stage` dependencies describe the conditional
+load-to-staging path and its missing observations. See [catalog records](docs/catalog.md).
+The `area` Rust module also resolves
+coordinate permutations, CLUT fields and both page-encoding branches. The
+original graph-type getter selects the page branch; no stable getter value or
+active draw state is assumed. Physical texel and palette uploads, complete table
+allocations, vertex geometry, primitive submission and runtime appearance remain
+unresolved. Verification reports `partial-area-metadata` and full support remains
+false even when the metadata and archive inverse checks pass.
 
 Edit raw upload words as unsigned 16-bit values, or preserve a PNG's dimensions
 and palette order while editing its indices. A 4-bit view accepts indices 0 to
@@ -453,7 +551,7 @@ not establish CLUT boundaries, upload timing, or the appearance of an edited ass
 The library's `packed` module implements the mode-1 byte expansion consumed at
 `SLUS_004.22@0x8014E7F8`. Six five-bit values occupy bit positions 0, 5, 10, 16,
 21, and 26 in each little-endian word. Encoding preserves bits 15 and 31 and
-unused tail values. The three-root owner below binds these records to qualified bank sections.
+unused tail values. The sprite-bank owner below binds these records to qualified bank sections.
 
 The `lzss` module implements the mode-2 byte stream consumed at
 `SLUS_004.22@0x8014E8FC`. It retains the four-byte opaque prefix and uses
@@ -461,7 +559,7 @@ LSB-first flags with a 512-byte dictionary. The initial cursor is `0x1ee`;
 only dictionary offsets below it are initialized to zero. Reading an unwritten
 offset fails. Final-reference bytes beyond the declared image length are
 reported separately and preserved during encoding. Unchanged streams remain
-exact, and edited streams must fit the original allocation. The three-root owner supplies the source extents used by editable packages.
+exact, and edited streams must fit the original allocation. The sprite-bank owner supplies the source extents used by editable packages.
 
 The `bank` module implements the outer stream consumed at
 `SLUS_004.22@0x80164064`, with forward overlapping copies at `0x801642F4`.
@@ -471,11 +569,11 @@ exceed 1 MiB. The decoder rejects references before the output start. The librar
 inverse preserves unchanged streams exactly, retains opaque header and trailing
 bytes, and requires edited output to fit the original consumed span. This byte
 inverse does not validate logical sprite edits. Packages validate their record
-edits through the three-root owner before encoding the outer bank.
+edits through the sprite-bank owner before encoding the outer bank.
 The qualified raw `BPLU349.EMI#0` payload bypasses this outer codec. Original
 type-0 dispatch at `SLUS_004.22@0x801622A8` selects `0x801625E4`, which copies
 sectors into the entry's destination through `0x80162C14`. Packing edits its
-three-root records directly and preserves bytes outside the edited spans.
+sprite-bank records directly and preserves bytes outside the edited spans.
 
 The `bank_image` library reads the eight-byte records consumed at
 `SLUS_004.22@0x8014e6d0`. The header stores a 16-bit width in VRAM words,
@@ -487,19 +585,27 @@ the surrounding bank, and codec metadata. Edited streams must fit a separately
 qualified allocation. Without proven reusable tail bytes, callers must bound
 encoding at the original consumed length. A following image or animation pointer
 does not establish free space. The library preserves mode-2 final-token overshoot
-separately from image bytes. The three-root owner supplies these extents for package edits. Draw CLUT
+separately from image bytes. The sprite-bank owner supplies these extents for package edits. Draw CLUT
 bindings and runtime appearance remain unresolved.
 
 The `sprite_bank` owner recognizes the three-root table selected by
-`BIN/ETC/GAME.EMI#0@0x801c1254`. Each root contains ordered image, palette,
-program, and selection sections. The first relative offset delimits each table;
-image and palette tables use 32-bit offsets, and program tables use 16-bit
+`BIN/ETC/GAME.EMI#0@0x801c1254` and standalone roots in qualified original
+`BIN/BPLCHAR/` entries. A standalone root starts with the image-table offset
+`0x10` and exports the same `bof3.sprite-bank/v1` document with one root at
+payload offset zero. Its storage is `us-raw-standalone-sprite-root`. The catalog
+keeps `root-installation` unresolved because the physical entry and declared RAM
+destination do not establish an active root table or entity.
+
+Each root contains ordered image, palette, program, and selection sections.
+The first relative offset delimits each table. Image and palette tables use
+32-bit offsets, and program tables use 16-bit
 offsets. Each table has at most 256 indices. The palette consumer at
 `SLUS_004.22@0x80166c48` copies 32 words per selected record. The selection
 consumer at `0x8014dc08` can skip an image upload according to entity state.
-Selection tails stay opaque: contained triples do not establish valid runtime
-indices or editable records. Recognizing these sections does not assign a bank
-to a field or battle category.
+Selection tails stay opaque outside the qualified field-route slots described
+below. Contained triples alone do not establish valid runtime indices or editable
+records. Recognizing these sections does not assign a bank to a field or battle
+category.
 
 Input files are bounded at 128 MiB, indexed images at 1,048,576 pixels, and each
 codec process at 20 seconds. Invalid extents, malformed images, changed snapshots,
@@ -508,12 +614,29 @@ escaped package paths, missing members, and existing destinations cause failure.
 The [composition library](docs/composition.md) computes qualified rectangle and
 quad geometry from an explicit entity and graph type. It preserves the original
 flip dispatch, scale rounding, UV wrapping, texture-page correction and encoded
-CLUT fields. It does not infer source residency or render an assembled frame.
+CLUT fields. Its indexed sampler handles rectangles and the consumer's
+axis-aligned quads, including fixed-point triangle interpolation. Ordered source
+frames retain exact color words. They do not infer source residency or reproduce
+scene rendering.
 
 The [selection library](docs/selection.md) resolves one explicit root selector
 through the original consumer. It preserves the image-skip path, independent
 program selection and raw mirror byte. It does not infer a valid selector range
-or make the surrounding tail editable.
+or make the surrounding tail editable. The package owner separately qualifies
+selectors 0 through 7 in each root of the 19 three-root `PL` field banks through
+an original GAME route-update path. It validates all 24 triples before exporting
+`selections.json` with schema `bof3.sprite-selections/v1`. The actor, active root,
+saved-register and copy-buffer assumptions remain conditional. This does not
+qualify other route paths, battle families, compass names or actual reachability.
+
+Only each slot's `mirror_flag` is editable. Zero disables horizontal mirroring;
+any nonzero byte enables it. Keep the schema, root, selector, image-skip state
+and slot count unchanged. Exported slots use `skip_image=false` to validate image
+references. That view does not assert observed entity state. Packing and
+re-export preserve the stored byte independently of program and image edits.
+The original incoming helper context for `BIN/PLCHAR/PL27A.EMI#3` root 2,
+selector 5 remains separately identified. It does not establish retired stores,
+palette choice, uploads or rendered appearance.
 
 The `animation` library reads bounded program headers, step pairs, and cell
 offsets using the US consumers at `0x8014d910`, `0x8014d978`, and `0x8014daec`.
@@ -532,11 +655,19 @@ to reverse first fetches the current token again. A zero duration lasts 256
 consumer updates. Missing cell references cause an error, including high-token
 operands that are valid forward targets but exceed the cell table in reverse.
 Caller reachability, game direction mapping, and rendered composition remain
-unresolved. The three-root owner binds forward programs to compressed banks.
+unresolved. The sprite-bank owner binds forward programs to compressed banks.
 
 The `resident` module binds the recognized type-0 `0x800d3800` table variant to
 the original base initialization at `0x8014ebb8` and program selection at
-`0x8014d878`. A 32-bit relative group table leads to 16-bit relative program
+`0x8014d878`. It also recognizes the exact original shared BATTLE/BOSS metadata
+loaded at `0x800f0800` when its qualified archive contains the matching common
+battle code. The code at `emi/battle/battle/03@0x801e6c84` skips its callback
+when byte `0x801462e0` equals 5. Otherwise it sets the active base to
+`0x800f0800`, calls the selected callback, and writes constant `0x800d3800`
+after return. This does not restore an observed prior value or prove that the
+callback reaches the resident renderer. That consumer binding stays unresolved.
+
+A 32-bit relative group table leads to 16-bit relative program
 tables. Each table's first offset delimits its entries. References may be
 repeated or out of order. Each program and its cells must fit before the
 next distinct program address, within its group and payload. The parser bounds
@@ -560,8 +691,9 @@ runtime families keep full-support acceptance open.
 
 ## Logical bank records
 
-`query INDEX --records` queries individual records in validated three-root and
-resident banks, plus qualified save-icon frames and palettes.
+`query INDEX --records` queries individual records in validated sprite banks and
+resident banks, sprite definitions, resident groups, and qualified save-icon
+frames and palettes.
 The default query reports physical files and EMI entries. Both scopes support the
 same filters. [Catalog records](docs/catalog.md) explains identities, byte
 coordinates, structural references and coverage units.

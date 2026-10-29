@@ -7,17 +7,17 @@ use emi_ex_v2::image::ArchiveImage;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Error, Result, bank,
+    Error, Result, area, bank,
     digest::sha256_hex,
     formats::Upload,
     palette::PaletteUpload,
     record::{self, CoordinateSpace, Record},
     resident, save_icon,
     sources::{self, Input, SourceFile},
-    sprite_bank, stream_family,
+    sprite_bank, sprite_definition, stream_family,
 };
 
-pub const SCHEMA: &str = "bof3.textures-index/v5";
+pub const SCHEMA: &str = "bof3.textures-index/v9";
 pub const MAX_INDEX_BYTES: u64 = 512 * 1024 * 1024;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
@@ -118,6 +118,8 @@ pub struct Resource {
     pub sprite_bank: Option<sprite_bank::Info>,
     pub stream_request: Option<stream_family::Request>,
     pub resident_animation: Option<resident::Info>,
+    pub area_surface: Option<area::Info>,
+    pub sprite_definitions: Option<sprite_definition::Info>,
     pub save_icon: Option<save_icon::Info>,
     pub findings: Vec<String>,
 }
@@ -148,6 +150,7 @@ pub fn interpretation_hash() -> String {
             include_str!("package.rs"),
             include_str!("png.rs"),
             include_str!("preview.rs"),
+            include_str!("composition.rs"),
             include_str!("sources.rs"),
             include_str!("palette.rs"),
             include_str!("packed.rs"),
@@ -156,8 +159,10 @@ pub fn interpretation_hash() -> String {
             include_str!("bank_image.rs"),
             include_str!("animation.rs"),
             include_str!("resident.rs"),
+            include_str!("area.rs"),
             include_str!("cell.rs"),
             include_str!("sprite_bank.rs"),
+            include_str!("sprite_definition.rs"),
             include_str!("stream_family.rs"),
             include_str!("aliases.rs"),
             include_str!("interface.rs"),
@@ -178,8 +183,12 @@ fn annotate_sprite(resource: &mut Resource, document: &sprite_bank::Document, st
     resource.decode = "images-palettes-programs-and-cells-verified".into();
     resource.pack = "fixed-record-edits-verified".into();
     resource.sprite_bank = Some(document.info());
+    if document.roots.len() == 3 {
+        resource
+            .evidence
+            .push("BIN/ETC/GAME.EMI#0@0x801C1254:three-root-selection".into());
+    }
     resource.evidence.extend([
-        "BIN/ETC/GAME.EMI#0@0x801C1254:three-root-selection".into(),
         "SLUS_004.22@0x8014DC08:bank-selection-consumer".into(),
         "SLUS_004.22@0x8014E6D0:image-records".into(),
         "SLUS_004.22@0x80166C48:32-word-palette-copy".into(),
@@ -224,6 +233,8 @@ pub fn build_from(
 ) -> Result<Index> {
     let mut resources = Vec::new();
     let mut records = Vec::new();
+    let mut definition_groups = BTreeMap::new();
+    let mut resident_groups = BTreeMap::new();
     let qualification = sources::qualification()?;
     for file in &input.files {
         let bytes = read(file)?;
@@ -270,6 +281,8 @@ pub fn build_from(
                     sprite_bank: None,
                     stream_request: None,
                     resident_animation: None,
+                    area_surface: None,
+                    sprite_definitions: None,
                     save_icon: None,
                     findings: vec!["logical records and consumers have not been enumerated".into()],
                 };
@@ -294,6 +307,111 @@ pub fn build_from(
                             .push("SLUS_004.22@0x801629F0:audio-auxiliary-destination".into());
                     }
                     resource.findings.clear();
+                }
+                if entry.file_type == 0 && entry.ram_ptr == 0x800e_3800 {
+                    match sprite_definition::decode(payload) {
+                        Ok(document) => {
+                            if sprite_definition::encode(payload, &document)? != payload {
+                                return Err(Error::Invalid(format!(
+                                    "{} sprite-definition inverse differs",
+                                    resource.id
+                                )));
+                            }
+                            resource.kind = "sprite-definition-table".into();
+                            resource.categories = vec!["unclassified-graphics".into()];
+                            resource.storage = "us-counted-sprite-definitions".into();
+                            resource.decode = "counted-draw-state-records-verified".into();
+                            resource.pack = "fixed-draw-state-bytes-verified".into();
+                            resource.evidence_status = "consumer-qualified".into();
+                            resource.evidence.extend([
+                                "SLUS_004.22@0x8014EBB8:resident-and-definition-base-initialization".into(),
+                                "SLUS_004.22@0x8014DD3C:first-ID-draw-state-lookup".into(),
+                                "SLUS_004.22@0x8014D878:conditional-resident-group-and-program".into(),
+                            ]);
+                            for (kind, reason) in [
+                                (
+                                    "texture-source",
+                                    "page and V-base fields do not identify completed uploads or active texel sources",
+                                ),
+                                (
+                                    "palette",
+                                    "the CLUT selector byte does not bind physical palette words or their lifecycle",
+                                ),
+                                (
+                                    "entity-selection",
+                                    "ID membership does not prove a caller, direction, category or active entity",
+                                ),
+                                (
+                                    "resident-base",
+                                    "the group byte is conditional on active entity flags and the current resident base",
+                                ),
+                            ] {
+                                resource.dependencies.push(Dependency {
+                                    kind: kind.into(),
+                                    target: None,
+                                    status: "unresolved".into(),
+                                    reason: reason.into(),
+                                });
+                            }
+                            resource.findings = vec!["only CLUT selector, page, V-base and depth bytes are editable; IDs, groups, opaque bytes and allocation remain immutable".into()];
+                            resource.sprite_definitions = Some(document.info(payload)?);
+                            records
+                                .extend(record::definition_records(&resource, payload, &document)?);
+                            definition_groups.insert(
+                                resource.id.clone(),
+                                document
+                                    .definitions
+                                    .iter()
+                                    .map(|row| (row.offset, row.group))
+                                    .collect::<Vec<_>>(),
+                            );
+                        }
+                        Err(error) => resource.findings.push(error.to_string()),
+                    }
+                }
+                if entry.file_type == 0 && entry.ram_ptr == 0x8010_4000 {
+                    let document = area::decode(payload)?;
+                    if area::encode(payload, &document)? != payload {
+                        return Err(Error::Invalid(format!(
+                            "{} area inverse differs",
+                            resource.id
+                        )));
+                    }
+                    resource.kind = "area-surface-metadata".into();
+                    resource.categories = vec!["unclassified-graphics".into()];
+                    resource.storage = "area-cell-packed-words".into();
+                    resource.decode = "direct-cell-coordinate-fields-verified".into();
+                    resource.pack = "selected-packed-word-edits-verified".into();
+                    resource.evidence_status = "consumer-qualified".into();
+                    resource.evidence.extend([
+                        "SLUS_004.22@0x80154294:conditional-cell-record-selection".into(),
+                        "SLUS_004.22@0x80155560:coordinate-clut-page-fields".into(),
+                        "SLUS_004.22@0x80154094:byte-grid-pointer".into(),
+                    ]);
+                    for (kind, reason) in [
+                        (
+                            "surface-texels",
+                            "physical texture sources, upload context and active page residency remain unresolved",
+                        ),
+                        (
+                            "surface-palette",
+                            "CLUT field calculation does not bind original palette uploads or their lifecycle",
+                        ),
+                        (
+                            "surface-consumers",
+                            "direct cells do not enumerate sequential records, complete table allocations, vertices or all runtime uses",
+                        ),
+                    ] {
+                        resource.dependencies.push(Dependency {
+                            kind: kind.into(),
+                            target: None,
+                            status: "unresolved".into(),
+                            reason: reason.into(),
+                        });
+                    }
+                    resource.findings = vec!["only original nonzero cell-selected packed words are editable; headers, cell IDs, coordinate tables and unclaimed bytes remain immutable".into()];
+                    resource.area_surface = Some(document.info(payload)?);
+                    records.extend(record::area_records(&resource, payload, &document)?);
                 }
                 if entry.file_type == 0
                     && let Some(info) =
@@ -369,19 +487,55 @@ pub fn build_from(
                     });
                     resource.palette_upload = Some(palette);
                 }
-                if entry.file_type == 0 && entry.ram_ptr == 0x800d_3800 {
+                let battle_resident_consumer = if entry.file_type == 0
+                    && entry.ram_ptr == 0x800f_0800
+                    && resource.sha256
+                        == "2cd03f3e11d86c2de1fdcc3b3c996eece1c02c45957f71a94362ac95e8959934"
+                {
+                    image.entries().iter().enumerate().find_map(|(slot, candidate)| {
+                        (candidate.file_type == 0 && candidate.ram_ptr == 0x801d_0c00
+                            && candidate.size == 118224
+                            && image.entry(slot).is_ok_and(|bytes| sha256_hex(bytes) == "f25ef137618bc024a6aec98c2c4d9a571c6f23884762fb4567406e6552b383c1"))
+                            .then(|| format!("{}:{}#entry-{slot:03}", sources::RELEASE, file.path))
+                    })
+                } else {
+                    None
+                };
+                if entry.file_type == 0
+                    && (entry.ram_ptr == 0x800d_3800 || battle_resident_consumer.is_some())
+                {
                     match resident::decode(payload) {
                         Ok(document) => {
                             resource.kind = "resident-animation-bank".into();
                             resource.categories = vec!["unclassified-graphics".into()];
                             resource.storage = "us-resident-animation".into();
-                            resource.decode = "forward-programs-and-cell-records-verified".into();
-                            resource.pack = "forward-steps-and-cell-records-verified".into();
-                            resource.resident_animation = Some(document.info());
+                            let info = document.info();
+                            resource.decode = if info.unresolved_programs == 0 {
+                                "forward-programs-and-cell-records-verified"
+                            } else {
+                                "partial-forward-programs-and-cell-records"
+                            }
+                            .into();
+                            resource.pack = if info.unresolved_programs == 0 {
+                                "forward-steps-and-cell-records-verified"
+                            } else {
+                                "decoded-programs-and-cell-records-only"
+                            }
+                            .into();
+                            resource.resident_animation = Some(info);
                             records
                                 .extend(record::resident_records(&resource, payload, &document)?);
+                            if entry.ram_ptr == 0x800d_3800 {
+                                resident_groups.insert(
+                                    resource.id.clone(),
+                                    document
+                                        .groups
+                                        .iter()
+                                        .map(|group| group.offset)
+                                        .collect::<Vec<_>>(),
+                                );
+                            }
                             resource.evidence.extend([
-                                "SLUS_004.22@0x8014EBB8:resident-base-initialization".into(),
                                 "SLUS_004.22@0x8014D878:resident-program-selection".into(),
                                 "SLUS_004.22@0x8014D910:program-initialization".into(),
                                 "SLUS_004.22@0x8014D978:forward-loop-consumer".into(),
@@ -390,6 +544,27 @@ pub fn build_from(
                                 "SLUS_004.22@0x8014C700:five-byte-cell-parts".into(),
                                 "SLUS_004.22@0x8017F53C:cell-dimensions".into(),
                             ]);
+                            if let Some(consumer) = battle_resident_consumer {
+                                resource.evidence.push("emi/battle/battle/03@0x801E6C84:conditional-F0800-base-dispatch-and-constant-D3800-write-after-return".into());
+                                resource.dependencies.push(Dependency { kind: "consumer-selection".into(), target: Some(consumer), status: "unresolved".into(),
+                                    reason: "the original common code conditionally writes 0x800F0800 to 0x801459F0 around a callback; callback selection, path reachability and use by the resident renderer remain unproved".into() });
+                            } else {
+                                resource.evidence.push(
+                                    "SLUS_004.22@0x8014EBB8:resident-base-initialization".into(),
+                                );
+                            }
+                            for program in document.groups.iter().flat_map(|group| &group.programs)
+                            {
+                                if let resident::Program::Unresolved {
+                                    offset,
+                                    end,
+                                    reason,
+                                } = program
+                                {
+                                    resource.dependencies.push(Dependency { kind: "animation-reference".into(), target: None, status: "unresolved".into(),
+                                        reason: format!("program bytes {offset}..{end} are immutable and unresolved: {reason}") });
+                                }
+                            }
                             for kind in ["texture-source", "palette", "reverse-animation"] {
                                 resource.dependencies.push(Dependency {
                                     kind: kind.into(),
@@ -415,7 +590,16 @@ pub fn build_from(
                         "SLUS_004.22@0x80164064:outer-bank-tokens".into(),
                         "SLUS_004.22@0x801642F4:forward-overlapping-copy".into(),
                     ]);
-                    match sprite_bank::decode(&decoded.bytes) {
+                    let document = sprite_bank::decode(&decoded.bytes).and_then(|document| {
+                        if document.roots.len() == 3 {
+                            Ok(document)
+                        } else {
+                            Err(Error::Codec(
+                                "standalone compressed roots are not qualified".into(),
+                            ))
+                        }
+                    });
+                    match document {
                         Ok(document) => {
                             annotate_sprite(&mut resource, &document, "us-three-root-sprite-bank");
                             records.extend(record::sprite_records(
@@ -459,6 +643,42 @@ pub fn build_from(
                         "SLUS_004.22@0x801625E4:direct-sector-copy".into(),
                         "SLUS_004.22@0x80162C14:bounded-copy-destination".into(),
                     ]);
+                }
+                if file.path.starts_with("BIN/BPLCHAR/")
+                    && slot == 3
+                    && entry.file_type == 0
+                    && matches!(
+                        entry.ram_ptr,
+                        0x8003_b80c | 0x8007_a80c | 0x8005_f80c | 0x8007_180c | 0x8005_680c
+                    )
+                    && payload.starts_with(&16u32.to_le_bytes())
+                {
+                    match sprite_bank::decode(payload) {
+                        Ok(document) => {
+                            annotate_sprite(
+                                &mut resource,
+                                &document,
+                                "us-raw-standalone-sprite-root",
+                            );
+                            records.extend(record::sprite_records(
+                                &resource,
+                                payload,
+                                CoordinateSpace::EntryPayload,
+                                &document,
+                            )?);
+                            resource.dependencies.push(Dependency {
+                                kind: "root-installation".into(),
+                                target: None,
+                                status: "unresolved".into(),
+                                reason: "the original entry declares this RAM destination; the active root table, entity and complete loading path are not bound to this source".into(),
+                            });
+                            resource.evidence.extend([
+                                "original-us-emi:type0-entry3-destination-and-root-header".into(),
+                                "SLUS_004.22@0x8014DC14:entity-selected-root".into(),
+                            ]);
+                        }
+                        Err(error) => resource.findings.push(error.to_string()),
+                    }
                 }
                 if entry.file_type == 3 {
                     resource.kind = "texture-upload".into();
@@ -541,6 +761,8 @@ pub fn build_from(
                 sprite_bank: None,
                 stream_request: None,
                 resident_animation: None,
+                area_surface: None,
+                sprite_definitions: None,
                 save_icon: None,
                 findings,
             };
@@ -549,7 +771,14 @@ pub fn build_from(
         }
     }
     crate::interface::annotate(&mut resources)?;
-    stream_family::annotate(&mut resources);
+    stream_family::annotate(&mut resources, &mut records);
+    annotate_area_requests(&mut resources);
+    annotate_definition_groups(
+        &mut resources,
+        &mut records,
+        &definition_groups,
+        &resident_groups,
+    )?;
     crate::field::annotate(&mut resources, &mut records)?;
     Ok(Index {
         schema: SCHEMA.into(),
@@ -563,6 +792,138 @@ pub fn build_from(
         resources,
         records,
     })
+}
+
+fn annotate_definition_groups(
+    resources: &mut [Resource],
+    records: &mut [Record],
+    definitions: &BTreeMap<String, Vec<(usize, u8)>>,
+    residents: &BTreeMap<String, Vec<usize>>,
+) -> Result<()> {
+    let resource_slots: BTreeMap<_, _> = resources
+        .iter()
+        .enumerate()
+        .map(|(slot, resource)| (resource.id.clone(), slot))
+        .collect();
+    let record_slots: BTreeMap<_, _> = records
+        .iter()
+        .enumerate()
+        .map(|(slot, record)| (record.id.clone(), slot))
+        .collect();
+    for (parent, definitions) in definitions {
+        let source = &resources[resource_slots[parent]].source;
+        let candidates: Vec<_> = residents
+            .iter()
+            .filter(|(id, _)| resources[resource_slots[*id]].source == *source)
+            .collect();
+        for &(offset, group) in definitions {
+            let definition = record::entry_id(parent, "sprite-definition", offset);
+            let slot = record_slots[&definition];
+            let selected = match candidates.as_slice() {
+                [(resident, groups)] => groups.get(usize::from(group)).map(|offset| {
+                    (
+                        *resident,
+                        record::entry_id(resident, "resident-group", *offset),
+                    )
+                }),
+                _ => None,
+            };
+            let (target, status, reason) = if let Some((resident, target)) = selected {
+                let target_slot = *record_slots.get(&target).ok_or_else(|| {
+                    Error::Invalid(
+                        "sprite definition selects a missing resident group record".into(),
+                    )
+                })?;
+                records[target_slot].uses.push(definition.clone());
+                resources[resource_slots[resident]]
+                    .uses
+                    .push(definition.clone());
+                (
+                    Some(target),
+                    "conditional",
+                    format!(
+                        "Group {group} selects this same-archive table only if the definition supplied the same entity's +0x2C, flag +0x24 bit zero is clear, these declared sources are loaded, and the active definition/resident pointers remain 0x800E3804/0x800D3800 with stable entity state. The final +0x4B byte independently selects a program; valid selectors, lookup execution and later overwrites remain unresolved."
+                    ),
+                )
+            } else {
+                (
+                    None,
+                    "unresolved",
+                    format!(
+                        "Group {group} lacks one unambiguous decoded same-archive 0x800D3800 group table; active bases, entity flags and loading require separate qualification."
+                    ),
+                )
+            };
+            records[slot].dependencies.push(Dependency {
+                kind: "resident-group".into(),
+                target,
+                status: status.into(),
+                reason,
+            });
+        }
+    }
+    for resource in resources {
+        resource.uses.sort();
+        resource.uses.dedup();
+    }
+    for record in records {
+        record.uses.sort();
+        record.uses.dedup();
+        record.dependencies.sort_by(|a, b| {
+            (&a.kind, &a.target, &a.status, &a.reason)
+                .cmp(&(&b.kind, &b.target, &b.status, &b.reason))
+        });
+        record.dependencies.dedup();
+    }
+    Ok(())
+}
+
+fn annotate_area_requests(resources: &mut [Resource]) {
+    let exe = format!("{}:SLUS_004.22#file", sources::RELEASE);
+    let game = format!("{}:BIN/ETC/GAME.EMI#entry-000", sources::RELEASE);
+    let has_exe = resources.iter().any(|resource| resource.id == exe);
+    let has_game = resources.iter().any(|resource| resource.id == game);
+    for resource in resources {
+        let Some(info) = resource.area_surface.as_mut() else {
+            continue;
+        };
+        let Some(request) = area::source_request(&resource.source) else {
+            continue;
+        };
+        resource.evidence.extend([
+            "BIN/ETC/GAME.EMI#0@0x8019FB80:conditional-area-slot-request".into(),
+            "SLUS_004.22@0x80162160:slot-lba-lookup".into(),
+            "SLUS_004.22@0x80182444:original-area-disc-extents".into(),
+            "SLUS_004.22@0x80162D00:status-three-predicate".into(),
+            "BIN/ETC/GAME.EMI#0@0x8019FBFC:palette-stage-call".into(),
+            "SLUS_004.22@0x8014E284:clear-and-copy-palette-rows".into(),
+        ]);
+        resource.dependencies.push(Dependency {
+            kind: "area-request".into(),
+            target: Some(game.clone()),
+            status: if has_game { "partial" } else { "unresolved" }.into(),
+            reason: format!(
+                "For current masked s0 = {}, the original GAME path requests slot {} when its stored 16-bit value differs and its state byte is 5. Incoming argument preservation, path reachability and request completion remain unproved.",
+                request.index, request.slot,
+            ),
+        });
+        resource.dependencies.push(Dependency {
+            kind: "area-slot-lba".into(),
+            target: Some(exe.clone()),
+            status: if has_exe { "partial" } else { "unresolved" }.into(),
+            reason: format!(
+                "Original EXE table slot {} selects LBA {}; all selected original-disc sector payload bytes equal this complete qualified archive. The loader reloads the stored slot across external calls; intervening writes and active residency remain unresolved.",
+                request.slot, request.lba,
+            ),
+        });
+        resource.dependencies.push(Dependency {
+            kind: "area-palette-stage".into(),
+            target: Some(exe.clone()),
+            status: if has_exe { "partial" } else { "unresolved" }.into(),
+            reason: "The local GAME path waits for byte[0x80146494] == 3 before calling 0x8014E284. On stable valid memory, that routine clears [0x80037000,0x80037800), then copies 32 rows of 512 bytes from 0x80033800 to 0x80037800. Later palette mutation, uploads, CLUT uses and display remain unresolved.".into(),
+        });
+        info.request = Some(request);
+    }
 }
 
 impl Index {
@@ -781,6 +1142,9 @@ pub fn coverage(index: &Index) -> serde_json::Value {
             "decoded_compressed_banks": index.resources.iter().filter(|resource| resource.bank.is_some()).count(),
             "sprite_banks": index.resources.iter().filter(|resource| resource.sprite_bank.is_some()).count(),
             "resident_animation_banks": index.resources.iter().filter(|resource| resource.resident_animation.is_some()).count(),
+            "area_surface_sources": index.resources.iter().filter(|resource| resource.area_surface.is_some()).count(),
+            "decoded_resident_programs": index.resources.iter().filter_map(|resource| resource.resident_animation.as_ref()).map(|info| info.decoded_programs).sum::<usize>(),
+            "unresolved_resident_programs": index.resources.iter().filter_map(|resource| resource.resident_animation.as_ref()).map(|info| info.unresolved_programs).sum::<usize>(),
             "save_icon_sources": index.resources.iter().filter(|resource| resource.save_icon.is_some()).count(),
             "unresolved_resources": index.resources.iter().filter(|resource| !resource.findings.is_empty()).map(|resource| &resource.id).collect::<Vec<_>>()},
         "categories": index.categories.iter().map(|category| category_coverage(index, category)).collect::<Vec<_>>(),

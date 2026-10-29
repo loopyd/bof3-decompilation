@@ -5,11 +5,11 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Error, Result, animation,
+    Error, Result, animation, area,
     catalog::{Dependency, QueryFields, Queryable, Resource},
     cell,
     digest::sha256_hex,
-    resident, save_icon, sprite_bank,
+    resident, save_icon, sprite_bank, sprite_definition,
 };
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, Eq)]
@@ -75,6 +75,10 @@ struct Builder<'a> {
     records: BTreeMap<String, Record>,
 }
 
+pub(crate) fn entry_id(parent: &str, kind: &str, offset: usize) -> String {
+    format!("{parent}/entry-payload/{kind}@{offset:08x}")
+}
+
 impl<'a> Builder<'a> {
     fn id(&self, kind: &str, offset: usize) -> String {
         format!(
@@ -109,7 +113,14 @@ impl<'a> Builder<'a> {
             "palette-record" => "SLUS_004.22@0x80166C48:32-word-palette-copy".into(),
             "save-icon-frame" => format!("{}@0x801EF27C:save-header-frame-source", self.parent.id),
             "animation-program" => "SLUS_004.22@0x8014D910:program-initialization".into(),
+            "animation-selection" => "SLUS_004.22@0x8014DC08:selection-triple".into(),
+            "resident-group" => "SLUS_004.22@0x8014D878:relative-program-table".into(),
             "sprite-cell" => "SLUS_004.22@0x8014C6F8:five-byte-cell-parts".into(),
+            "surface-word" => "SLUS_004.22@0x80154294:nonzero-cell-packed-word".into(),
+            "sprite-definition" => "SLUS_004.22@0x8014DD3C:counted-draw-state-record".into(),
+            "surface-coordinate" | "surface-coordinate-pair" => {
+                "SLUS_004.22@0x80155560:selected-coordinate-read".into()
+            }
             _ => unreachable!(),
         };
         self.records.insert(id.clone(), Record {
@@ -275,6 +286,62 @@ pub(crate) fn sprite_records(
             )?;
         }
     }
+    for slot in crate::field::selections(parent, source)? {
+        let root = document
+            .roots
+            .get(slot.root)
+            .ok_or_else(|| Error::Invalid("field selection refers to a missing root".into()))?;
+        let selected = sprite_bank::select_from(source, root, slot.selector, slot.skip_image)?;
+        let id = builder.add(
+            "animation-selection",
+            selected.triple_offset,
+            3,
+            format!("root-{}/selection-{}", slot.root, slot.selector),
+        )?;
+        builder.edge(&id, "animation", builder.id("animation-program", selected.program.offset),
+            "The validated triple selects this program if the qualified field root and route selector reach 0x8014DC08; execution is not inferred.".into());
+        if let Some(image) = selected.image {
+            builder.edge(&id, "image", builder.id("bank-image", image.offset),
+                "The image-enabled view validates this table reference. Entity byte zero bit 0x02 must be clear for the consumer to use it; no upload or rendering acceptance.".into());
+        }
+        let record = builder.records.get_mut(&id).unwrap();
+        record
+            .evidence
+            .push("BIN/ETC/GAME.EMI#0@0x801BEFA0:conditional-route-selector-mask-7".into());
+        record.dependencies.push(Dependency {
+            kind: "selector-domain".into(),
+            target: None,
+            status: "conditional".into(),
+            reason: "GAME 0x801BEFA0..0x801BEFC8 masks the route update to 0..7 before the call to 0x8014D664. Applying it to this root requires a stable actor and scratch pointer, the qualified root installation, preserved saved registers/stack, and a valid 0xA00-byte forward copy to 0x800F0800+0xA00*entity[5] without aliasing the source, bank, actor, scratch or stack. Other paths and selectors remain unresolved.".into(),
+        });
+        if crate::field::observed_selection(parent, &slot) {
+            record.evidence.push(
+                "SLUS_004.22@0x8014DC14:observed-incoming-selector-5-root-2-image-enabled".into(),
+            );
+        }
+        record.evidence.sort();
+        record.evidence.dedup();
+    }
+    Ok(builder.finish())
+}
+
+pub(crate) fn definition_records(
+    parent: &Resource,
+    source: &[u8],
+    document: &sprite_definition::Document,
+) -> Result<Vec<Record>> {
+    let mut builder = Builder::new(parent, source, CoordinateSpace::EntryPayload);
+    for (slot, definition) in document.definitions.iter().enumerate() {
+        builder.add(
+            "sprite-definition",
+            definition.offset,
+            8,
+            format!(
+                "definition-slot-{slot}/id-{}/group-{}",
+                definition.id, definition.group
+            ),
+        )?;
+    }
     Ok(builder.finish())
 }
 
@@ -286,17 +353,89 @@ pub(crate) fn resident_records(
     let mut builder = Builder::new(parent, source, CoordinateSpace::EntryPayload);
     builder.cells(&document.cells, "resident")?;
     for (group_slot, group) in document.groups.iter().enumerate() {
+        let group_id = builder.add(
+            "resident-group",
+            group.offset,
+            2 * group.programs.len(),
+            format!("group-slot-{group_slot}"),
+        )?;
+        builder.records.get_mut(&group_id).unwrap().pack = "preservation-only".into();
         for (program_slot, program) in group.programs.iter().enumerate() {
-            builder.program(
-                program.offset,
-                program.end,
-                format!("group-{group_slot}/program-slot-{program_slot}"),
-            )?;
+            let usage = format!("group-{group_slot}/program-slot-{program_slot}");
+            match program {
+                resident::Program::Decoded(sequence) => {
+                    builder.program(sequence.offset, sequence.end, usage)?
+                }
+                resident::Program::Unresolved {
+                    offset,
+                    end,
+                    reason,
+                } => {
+                    let id = builder.add("animation-program", *offset, end - offset, usage)?;
+                    let record = builder.records.get_mut(&id).unwrap();
+                    record.decode = "unresolved-program".into();
+                    record.pack = "preservation-only".into();
+                    record.dependencies.push(Dependency {
+                        kind: "animation-reference".into(),
+                        target: None,
+                        status: "unresolved".into(),
+                        reason: reason.clone(),
+                    });
+                }
+            }
+            let program_id = builder.id("animation-program", program.offset());
+            builder.edge(
+                &group_id,
+                "animation",
+                program_id.clone(),
+                format!("program slot {program_slot} is a u16 offset relative to this group; membership does not establish a valid runtime selector"),
+            );
+            builder.edge(
+                &program_id,
+                "resident-group",
+                group_id.clone(),
+                "this immutable group table references the program; execution is not inferred"
+                    .into(),
+            );
         }
     }
+    let partial = document.info().unresolved_programs != 0;
     for record in builder.records.values_mut() {
         record.dependencies.push(Dependency { kind: "resident-base".into(), target: None, status: "unresolved".into(),
             reason: "the resident program/cell source does not bind its image producer, active uploads or texture page".into() });
+        if partial {
+            record.dependencies.push(Dependency { kind: "shared-program-impact".into(), target: None,
+                status: "unresolved".into(), reason: "unresolved programs can have external RAM dependencies; physical edit bounds do not prove complete runtime use relationships".into() });
+        }
+    }
+    Ok(builder.finish())
+}
+
+pub(crate) fn area_records(
+    parent: &Resource,
+    source: &[u8],
+    document: &area::Document,
+) -> Result<Vec<Record>> {
+    let mut builder = Builder::new(parent, source, CoordinateSpace::EntryPayload);
+    for word in &document.records {
+        let id = builder.add(
+            "surface-word",
+            word.offset,
+            4,
+            "conditional-direct-cell".into(),
+        )?;
+        let record = builder.records.get_mut(&id).unwrap();
+        record.dependencies.extend(parent.dependencies.clone());
+        if let Some(span) = area::resolve(source, word.word)?.coordinate_read {
+            let kind = if span.size == 8 {
+                "surface-coordinate-pair"
+            } else {
+                "surface-coordinate"
+            };
+            let coordinates = builder.add(kind, span.offset, span.size, id.clone())?;
+            builder.records.get_mut(&coordinates).unwrap().pack = "preservation-only".into();
+            builder.edge(&id, "surface-coordinates", coordinates, "the original packed word selects these coordinate bytes; this is a read span, not a writable table allocation".into());
+        }
     }
     Ok(builder.finish())
 }

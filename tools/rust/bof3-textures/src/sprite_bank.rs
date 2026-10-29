@@ -1,5 +1,5 @@
-//! Three-root bank variant selected by GAME.EMI#0@0x801C1254.
-//! Selection tails remain opaque until their valid runtime indices are known.
+//! Three-root banks and standalone roots with the same relative sections.
+//! Selection tails remain opaque outside explicitly qualified slots.
 use crate::cell;
 use crate::{Error, Result, animation, bank_image};
 use serde::{Deserialize, Serialize};
@@ -62,6 +62,27 @@ pub struct Selection {
     pub program: Program,
     /// Copied unchanged to entity byte 0x2A, not a palette selector.
     pub mirror_flag: u8,
+}
+
+/// One caller-qualified slot whose stored mirror byte may change.
+/// Root, selector and image-skip state have the same prerequisites as `select`.
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct SelectionEdit {
+    pub root: usize,
+    pub selector: u8,
+    pub skip_image: bool,
+    pub mirror_flag: u8,
+}
+
+pub const SELECTION_SCHEMA: &str = "bof3.sprite-selections/v1";
+
+/// Package-selected slots. The package owner validates their physical binding.
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct Selections {
+    pub schema: String,
+    pub slots: Vec<SelectionEdit>,
 }
 
 impl Document {
@@ -144,20 +165,27 @@ fn offsets(source: &[u8], table: usize, end: usize, word_bytes: usize) -> Result
         })
         .collect()
 }
-/// Decode only the original three-root, ordered-section variant, within 1 MiB.
+/// Decode original three-root banks or standalone ordered-section roots, within 1 MiB.
 /// Image ends are bounds, not reusable allocation. Edits use consumed bytes only.
 /// Palette records contain 32 exact PSX words. No draw-CLUT binding is implied.
 /// Cells use the existing original part layout. Selection bytes remain opaque.
 pub fn decode(source: &[u8]) -> Result<Document> {
-    if source.len() > 1024 * 1024 || u32at(source, 0)? != 12 {
-        return Err(invalid("unsupported root table"));
+    if source.len() > 1024 * 1024 {
+        return Err(invalid("bank exceeds 1 MiB"));
     }
-    let roots = (0..3)
-        .map(|i| u32at(source, i * 4))
-        .collect::<Result<Vec<_>>>()?;
+    let (roots, table_end) = match u32at(source, 0)? {
+        12 => (
+            (0..3)
+                .map(|i| u32at(source, i * 4))
+                .collect::<Result<Vec<_>>>()?,
+            12,
+        ),
+        16 => (vec![0], 0),
+        _ => return Err(invalid("unsupported root layout")),
+    };
     if roots
         .iter()
-        .any(|offset| *offset < 12 || *offset >= source.len())
+        .any(|offset| *offset < table_end || *offset >= source.len())
     {
         return Err(invalid("root exceeds its bank"));
     }
@@ -251,8 +279,11 @@ fn root_at(document: &Document, index: usize) -> Result<&Root> {
         .ok_or_else(|| invalid("missing root index"))
 }
 /// Resolve one explicit selector through SLUS_004.22@0x8014DC08.
-/// The caller must qualify the root, selector and image-skip condition from the
-/// same consumer. Physical extent checks do not prove a valid runtime selector.
+/// The call at 0x8014D868 reads selector from entity byte +0x4B.
+/// The call at 0x8014D564 instead passes its incoming a0 low byte. Qualify the
+/// helper argument, root and image-skip condition from the same observed context
+/// or conditional static path. Static qualification does not prove execution.
+/// Entry requests to 0x8014D6B8 can differ. Extent checks do not prove validity.
 /// skip_image represents entity byte 0 bit 1, not entity byte 0x24.
 pub fn select(
     source: &[u8],
@@ -262,6 +293,16 @@ pub fn select(
 ) -> Result<Selection> {
     let document = decode(source)?;
     let root = root_at(&document, root_index)?;
+    select_from(source, root, selector, skip_image)
+}
+
+/// The root must have been decoded from these same source bytes.
+pub(crate) fn select_from(
+    source: &[u8],
+    root: &Root,
+    selector: u8,
+    skip_image: bool,
+) -> Result<Selection> {
     // decode bounds the whole source to 1 MiB and selector to one byte.
     let triple_offset = root.selection_offset + usize::from(selector) * 3;
     let end = triple_offset + 3;
@@ -292,6 +333,34 @@ pub fn select(
         program,
         mirror_flag: triple[2],
     })
+}
+
+/// Encode mirror bytes for explicit caller-qualified slots, without inferring a
+/// selector domain. Image/program indices and every other source byte stay intact.
+/// Changed aliases must agree; unchanged views do not override an edit.
+pub fn encode_selections(source: &[u8], edits: &[SelectionEdit]) -> Result<Vec<u8>> {
+    let document = decode(source)?;
+    if edits.len() > document.roots.len() * 256 {
+        return Err(invalid("too many explicit selection edits"));
+    }
+    let mut mirrors = crate::aliases::Aliases::new();
+    for edit in edits {
+        let root = root_at(&document, edit.root)?;
+        let selected = select_from(source, root, edit.selector, edit.skip_image)?;
+        if edit.mirror_flag != selected.mirror_flag {
+            mirrors.add(
+                selected.triple_offset + 2,
+                &edit.mirror_flag,
+                format!("root-{}/selection-{}", edit.root, edit.selector),
+            );
+        }
+    }
+    let mirrors = mirrors.finish("sprite selection")?;
+    let mut output = source.to_vec();
+    for (offset, value) in mirrors {
+        output[offset] = *value;
+    }
+    Ok(output)
 }
 
 /// Change palette words, animation pairs and cell parts in their existing records.

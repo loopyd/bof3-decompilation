@@ -1,10 +1,169 @@
 # Catalog records
 
-The index schema is `bof3.textures-index/v5`. Its `resources` array contains
+The index schema is `bof3.textures-index/v9`. Its `resources` array contains
 physical files and EMI entries. Its `records` array contains images, palettes,
-animation program metadata and cells in validated three-root banks, programs and
+animation program metadata and cells in validated sprite roots, programs and
 cells in validated resident banks, and the qualified save-icon frames and palette.
-Other internal layouts remain unresolved.
+Area payloads additionally expose directly selected packed words and their
+coordinate-read spans. Qualified `0x800E3800` payloads additionally expose
+eight-byte `sprite-definition` records. Other internal layouts remain unresolved.
+
+Qualified three-root `PL` banks expose `animation-selection` records for
+selectors 0 through 7 in each root. Original GAME route code masks one update
+path to this range. Each triple must fit its root and select valid image and
+program records. Image and animation edges describe those structural references.
+The conditional `selector-domain` edge retains the actor, root, saved-register
+and copy-buffer assumptions. It does not establish which slots execute.
+Query these records with `--records --kind animation-selection`. Their package's
+`selections.json` permits mirror-byte edits only. Other selection bytes remain
+opaque.
+
+The captured original `BIN/PLCHAR/PL27A.EMI#3` root `2`, selector `5` remains
+separately identified by its incoming-context evidence. Its triple at decoded
+offset `310043` selects image `0`, program `1` and a raw mirror flag. Image-skip
+was clear at that checkpoint. The checkpoint precedes the root load and does not
+establish retired reads or stores, uploads, other observed slots or rendered
+appearance. Other exported slots use an image-enabled structural view without
+claiming that entity state was observed.
+
+Qualified three-root `PL` banks and their records have category
+`field-character`. The parent's `stream_request.party_records` lists each
+`root`, `selector_id`, `record_index` and `default_name`. The original EXE table
+at `0x80181B10` maps IDs 0 through 10 to records
+`[0,1,2,3,4,5,6,0,1,0,7]`. Their original five-byte defaults are Ryu, Nina,
+Garr, Teepo, Rei, Momo, Peco and Whelp. A repeated name does not identify an
+age or transformation.
+
+GAME entry 0 routine `0x801C1400` calls the root initializer with an identifier,
+then reloads the identifier and copies the mapped `0xA4`-byte mutable record
+from `0x80144968` to entity offset `0x74`. Combining the identifier reads
+requires stable table bytes and saved-register preservation across the call.
+The START entry 8 and STATUS entry 0 initializer at `0x801D15C0` copies default
+records 0 through 6 at stride `0xA4` from `0x801EB514`. Its separate final copy
+uses default record 7 at `0x801EB990` and the destination selector at executable
+address `0x80181B1A`.
+
+Query `--category field-character --dependency party-record` for these banks,
+or add `--records` for their stored images, palettes, programs and cells.
+Record edges refer to their physical parent; the parent retains the GAME,
+EXE and default-name dependencies. Missing source captures remain unresolved.
+Captured consumers retain partial status because current records, selected
+roots, execution and rendering are unobserved. The field mapping does not
+qualify `BPLD` or `BPLU` battle uses, NPCs, masters, fairies, ages, actions or
+directions. Those request families have `party_records: null`.
+
+Each `sprite-definition-table` resource has `sprite_definitions` metadata with
+`definitions` and `tail_bytes` counts. Its storage is
+`us-counted-sprite-definitions`. The byte count precedes the records in a
+four-byte header; only its first byte is interpreted. Each record retains its
+entry-payload offset and ID, CLUT selector, opaque byte, page, V base, depth byte
+and group. The original `SLUS_004.22@0x8014DD3C` lookup selects the first matching
+ID, so duplicate IDs remain distinct ordered records. Record uses identify their
+table slot, ID and group without assigning an active entity or game category.
+
+The original initializer at `0x8014EBB8` stores definition base `0x800E3804` and
+resident base `0x800D3800`. These initial values do not establish current RAM
+producers or runtime selection for every archive. The physical tables retain
+unresolved `texture-source`, `palette`, `entity-selection` and `resident-base`
+dependencies. Their four editable draw-state bytes do not establish complete
+texel, CLUT, direction or loading associations. Verification retains
+`partial-sprite-definitions`; IDs, groups and opaque bytes are immutable.
+
+`resident-group` records contain only the group's immutable 16-bit relative
+program-offset table. Repeated group pointers produce one record with all
+`group-slot-N` uses. Verified `animation` edges identify its programs, including
+unresolved program spans; each program has a structural `resident-group` edge
+back to the table. These edges describe stored references, not valid runtime
+selectors or execution.
+
+A sprite definition has a conditional `resident-group` edge when its archive
+contains exactly one decoded `0x800D3800` resident source and its group byte is
+in range. The target group's `uses` lists the referring definitions. The edge
+requires the matching sources to be loaded, active pointers `0x800E3804` and
+`0x800D3800`, stable entity state, and flag `0x24` bit zero clear. It does not
+remove unresolved base, texture, palette or entity-selection dependencies.
+Missing, ambiguous or out-of-range groups retain an unresolved edge.
+Definitions can share a group. The final entity byte at `0x4B` independently
+selects a program, so definition order does not identify programs or directions.
+
+`area_surface` reports width, height, cell count, unique selected words and
+coordinate-read spans. `surface-word` records have four entry-payload bytes.
+`surface-coordinate` and `surface-coordinate-pair` records retain four- and
+eight-byte reads, including overlapping views, as preservation-only records.
+These reads are not complete table allocations. Cell ID zero selects no record;
+unselected words, gaps and tails are not promoted to decoded geometry.
+
+For qualified area archives, `area_surface.request` contains the original
+16-bit `index`, request `slot` and disc `lba`. The selected original-disc extents
+match the complete archive bytes. This mapping covers indices 0 through 199;
+it does not establish an argument bound in the game. Query `--dependency
+area-request`, `--dependency area-slot-lba` or `--dependency area-palette-stage`
+to inspect the required GAME and EXE consumers. Missing consumers remain
+unresolved; captured consumers retain partial status because execution and
+intervening writes have not been established.
+
+The conditional GAME path requests `(s0 & 0xFFFF) + 683`, waits for
+`byte[0x80146494] == 3`, then calls `SLUS_004.22@0x8014E284`. On stable valid
+memory, this routine clears `[0x80037000,0x80037800)` and copies 32 rows of
+512 bytes from `0x80033800` to `0x80037800`. The final four copied rows are zero.
+This static relationship does not identify a surface's palette source or prove
+completed uploads, later palette mutations, CLUT selection or display.
+
+The original `SLUS_004.22@0x80154294` consumer selects a word at
+`grid + align_up(2 * width * height, 4) + 4 * cell_id`, where
+`grid = 0x80104000 + 4 * u16[0x80104002]`. The selected word reaches the coordinate
+consumer at `0x80155560`. Its CLUT and page calculations do not identify a
+physical palette or texture source on their own. General dependencies, complete
+consumer uses and runtime appearance remain unresolved and queryable.
+
+One original `BIN/WORLD00/AREA024.EMI#13` surface word at payload offset 58300,
+grid record 563, retains conditional `texture-source` and `palette` edges.
+Query it with `--records --source AREA024 --kind surface-word --dependency
+texture-source`. Entries 7 and 8 list the record in their `uses` fields.
+The original word `0x5380007a` produces page `0x0097`, CLUT `0x7980` and UVs
+`(160,112), (175,112), (160,127), (175,127)` at the immediate return boundary.
+Recorded CPU writes connect the constructed fields to the main-loop DrawOTag
+entry. The subsequent native GPU payload matches the submitted bytes in the same
+execution. A zero texture-window command precedes the packet. The RAM recording
+ends at the DrawOTag entry, so later RAM writes remain unobserved. The packet's
+vertices lie above the captured draw area. Actual sampling remains unresolved.
+
+All declared entry 7 upload bytes match serialized VRAM. The nominal UV region
+lies in chunk 54, and the selected CLUT row matches entry 8 words 768 through
+1023. Upload history, source uniqueness and display remain unresolved.
+Other palette rows contain differences whose causes and inverse edits remain
+unresolved. Both edges stay conditional, and the record keeps its general
+surface dependencies.
+
+The surface word at payload offset 58940, grid record 723, also retains
+conditional texture and palette edges. Its original word `0x13800095` reaches
+the constructor with the complete metadata entry present in RAM. Recorded writes
+connect its page `0x0097`, CLUT `0x7980` and UVs `(80,144), (95,144), (80,159),
+(95,159)` to the matching GPU payload. Its encoded vertices lie inside the known
+draw area with zero draw offset and texture window. Final serialized VRAM matches
+all entry 7 upload bytes, including the nominal UV region in chunk 69, and entry
+8's selected CLUT row. Final residency alone does not establish earlier texture
+or palette reads, upload history or a unique source producer.
+
+A combined edit replaces the 16x16 index patch with index 179 and entry 8 word
+947 with `0x7c1f`. Independent original and edited media boots with the same
+opening input schedule show a magenta surface patch in the opening mine. The
+complete metadata entry and known packet remain equal in both final RAM captures.
+This comparison does not trace the later GPU consumption or isolate the texel
+and palette changes' contributions. Both edges remain conditional. Complete
+shared uses, other palette-row differences and general surface dependencies
+stay unresolved. See the [terrain edit guide](terrain-edit.md) for the supported
+combined edit.
+
+Resident metadata reports `decoded_programs` and `unresolved_programs` per
+physical resource, counting unique program offsets. Partial banks retain
+`animation-program` records for unresolved spans with `decode: unresolved-program`
+and `pack: preservation-only`. Their original byte extents and refusal reasons
+stay queryable through `animation-reference` dependencies. Decoded records keep
+their structural references; `shared-program-impact` remains unresolved when
+other programs have unknown RAM dependencies. Coverage sums these counts across
+physical resources, including distinct original copies. It does not deduplicate
+separate shipped locations or establish consumer reachability.
 
 Qualified original US EMI types 6, 7, 8 and 10 have the physical kind
 `audio-owned-container`, with storage `vab-header`, `vab-body`,
@@ -74,14 +233,17 @@ They are not archive offsets. `entry-payload` offsets address the qualified raw
 bank, resident-bank or save-icon payload. The parent retains the archive offset
 and physical source hash.
 Image extents include only consumed header and stream bytes. Palette extents
-contain 64 bytes in three-root banks and 32 bytes in save-icon sources. Program extents contain the header, steps and cell-offset table.
+contain 64 bytes in sprite roots and 32 bytes in save-icon sources. Decoded program extents contain the header, steps and cell-offset table.
+Unresolved program extents include the entire immutable allocation up to the next
+distinct program or group boundary.
 Cell extents contain the count byte and five bytes per part. Allocation tails
 remain opaque.
 
 Program-to-cell dependencies are verified structural table references. Cell-to-program
 dependencies let a cell identify the programs that reference it. These
 edges do not establish execution, selection domains, image residency, draw CLUTs,
-texture pages or upload order. Selection tails are not enumerated as records.
+texture pages or upload order. Selection tails outside the qualified field-route
+slots remain opaque.
 The save-icon frame-to-palette references follow the original header producer.
 A palette query returns the palette and its three source frames. Each original
 archive copy retains its own IDs. These source relationships do not establish
