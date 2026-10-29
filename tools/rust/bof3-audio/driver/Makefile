@@ -1,10 +1,11 @@
 # Owned guest component; no game, BIOS or extraction input is consumed.
 REPO ?= ../../../..
 OUT ?= $(REPO)/out/audio/driver
-AS = $(REPO)/bin/as
-LD = $(REPO)/bin/ld
-OBJCOPY = $(REPO)/bin/objcopy
-NM = $(REPO)/bin/nm
+CROSS_COMPILE ?= $(REPO)/toolchains/psyqo/bin/mipsel-none-elf-
+AS = $(CROSS_COMPILE)as
+LD = $(CROSS_COMPILE)ld
+OBJCOPY = $(CROSS_COMPILE)objcopy
+NM = $(CROSS_COMPILE)nm
 SOURCES = $(addprefix kernel/,startup.s cd.s events.s exceptions.s interrupts.s syscalls.s callbacks.s timers.s) $(addprefix audio/,spu.s tick.s voices.s configuration.s transfers.s reverb.s initialization.s commands.s controls.s parameters.s notes.s startup.s layout.s banks.s body.s sequences.s scheduler.s effects.s status.s cues.s)
 OBJECTS = $(addprefix $(OUT)/,$(SOURCES:.s=.o))
 

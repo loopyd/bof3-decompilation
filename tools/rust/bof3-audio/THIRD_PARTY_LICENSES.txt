@@ -3,6 +3,10 @@ Third-party licenses for bof3-audio 0.1.0
 Generated from the locked Rust dependency graph. Development-only dependencies
 of emi-ex-v2 are excluded. No native library bindings occur in this graph.
 
+Authored host and guest-driver sources use the project MIT terms in LICENSE.
+GNU Make and MIPS GNU binutils are external build prerequisites; their binaries
+are not redistributed in this source package.
+
 
 ========================================================================
 itoa 1.0.18
