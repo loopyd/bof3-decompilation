@@ -293,8 +293,8 @@ memory-card owner.
 
 A qualified outer compressed bank has a read-only `decoded.bin` view. Recognized
 sprite banks and standalone roots export `sprite.json` with schema
-`bof3.sprite-bank/v1`, plus `root-N/image-N.png` views for mode-1 and mode-2
-records. Query them with
+`bof3.sprite-bank/v1`, plus `root-N/image-N.png` views for every decoded image
+record. Query them with
 `--kind sprite-bank`. The catalog's `sprite_bank` field reports the record counts
 and image modes. Add `--records` to query its logical images, palettes, programs
 and cells by their own source-bound identities. PNG width is twice the record's VRAM word width; each pixel
@@ -314,7 +314,8 @@ CLUT: decoded images can select indices above 31. Exact words preserve STP, but
 the neighboring colors, draw CLUT, and runtime palette updates remain unresolved.
 
 Edit PNG indices while preserving dimensions and the diagnostic palette.
-Mode-1 records accept indices from 0 to 31; mode-2 records accept 0 to 255.
+Mode-1 records accept bytes from 0 to 31. Mode-2 and raw-word records accept
+bytes from 0 to 255. These byte planes do not select a GPU texture mode.
 Changed aliases must agree on their complete palette, program, cell, or image
 record. Conflicts name every changed view of the shared record. Unchanged aliases
 do not override an edit. Image streams and any outer bank must fit their original

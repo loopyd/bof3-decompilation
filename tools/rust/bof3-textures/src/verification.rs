@@ -116,11 +116,9 @@ fn inverse(resource: &Resource, original: &[u8]) -> Result<Option<Vec<u8>>> {
             let mut planes = Vec::new();
             for (root, record) in document.roots.iter().enumerate() {
                 for (image, descriptor) in record.images.iter().enumerate() {
-                    if matches!(descriptor.mode, 1 | 2) {
-                        let bytes =
-                            bank_image::decode(&decoded, descriptor.offset, descriptor.end)?.bytes;
-                        planes.push((root, image, bytes));
-                    }
+                    let bytes =
+                        bank_image::decode(&decoded, descriptor.offset, descriptor.end)?.bytes;
+                    planes.push((root, image, bytes));
                 }
             }
             let edits: Vec<_> = planes

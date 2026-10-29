@@ -129,17 +129,13 @@ fn exports(index: &Index) -> Result<Vec<Export>> {
                             .enumerate()
                             .flat_map(|(root, modes)| {
                                 let directory = &directory;
-                                modes
-                                    .iter()
-                                    .enumerate()
-                                    .filter(|(_, mode)| matches!(mode, 1 | 2))
-                                    .map(move |(image, _)| BankImage {
-                                        root,
-                                        image,
-                                        member: format!(
-                                            "{directory}/root-{root}/image-{image}.png"
-                                        ),
-                                    })
+                                (0..modes.len()).map(move |image| BankImage {
+                                    root,
+                                    image,
+                                    member: format!(
+                                        "{directory}/root-{root}/image-{image}.png"
+                                    ),
+                                })
                             })
                             .collect()
                     })
@@ -182,11 +178,6 @@ fn image(resource: &Resource, payload: &[u8], bits: u8) -> Result<IndexedImage> 
 }
 
 fn bank_image_view(source: &[u8], descriptor: &bank_image::Info) -> Result<IndexedImage> {
-    if !matches!(descriptor.mode, 1 | 2) {
-        return Err(Error::Invalid(
-            "bank PNG requires an indexed mode-1 or mode-2 record".into(),
-        ));
-    }
     Ok(IndexedImage {
         width: usize::from(descriptor.width_words) * 2,
         height: usize::from(descriptor.height),
@@ -561,11 +552,8 @@ fn validate_resource_edit(resource: &Resource, original: &[u8], edited: &[u8]) -
         let mut planes = Vec::new();
         for (root, record) in document.roots.iter().enumerate() {
             for (image, descriptor) in record.images.iter().enumerate() {
-                if matches!(descriptor.mode, 1 | 2) {
-                    let bytes =
-                        bank_image::decode(&after, descriptor.offset, descriptor.end)?.bytes;
-                    planes.push((root, image, bytes));
-                }
+                let bytes = bank_image::decode(&after, descriptor.offset, descriptor.end)?.bytes;
+                planes.push((root, image, bytes));
             }
         }
         let edits: Vec<_> = planes
