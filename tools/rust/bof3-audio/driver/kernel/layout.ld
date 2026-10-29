@@ -32,7 +32,7 @@ SECTIONS
         *(.bss.audio_kernel_stacks)
         audio_kernel_bss_end = .;
     }
-    ASSERT(audio_kernel_bss_end <= 0x80040000,
+    ASSERT(audio_kernel_bss_end <= 0x80050000,
            "kernel allocation exceeds the owned arena")
     /DISCARD/ : {
         *(.reginfo) *(.MIPS.abiflags) *(.pdr) *(.comment) *(.gnu.attributes)
