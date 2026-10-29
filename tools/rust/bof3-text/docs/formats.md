@@ -101,21 +101,31 @@ debug callbacks and queue paths remain separate execution questions. The rule
 does not establish a full palette upload, sampling, display, unique ownership or
 the absence of rasterized text. Other entries and archive gaps stay unchanged.
 
-## Resident animation metadata coverage
+## Resident animation field coverage
 
-Coverage recognizes 1917 structural bytes in original US `AREA024.EMI` entry 4.
+Coverage recognizes 9359 structural bytes in original US `AREA024.EMI` entry 4.
 It requires the original archive identity, entry offset 198656, raw transfer mode,
-load address `0x800D3800` and exact 11,368-byte payload hash. The fixed ranges cover
-root-relative u32 group offsets, group-relative u16 program offsets, program count
-bytes, duration/operand pairs and referenced relative cell offsets.
+load address `0x800D3800` and exact 11,368-byte payload hash. The fixed metadata
+ranges cover root-relative u32 group offsets, group-relative u16 program offsets,
+program count bytes, duration/operand pairs and referenced relative cell offsets.
 
 Original consumers `0x8014D878..0x8014D8AC`, `0x8014D928..0x8014D964` and
-`0x8014DBB4..0x8014DC04` qualify these numeric fields. First offsets delimit the
-recognized directories; they do not store separate counts or establish runtime
-selector bounds. Duplicate program slots retain their shared target. Each
-program's first byte, the unreferenced offset word at `[6836,6838)`, all cell
-bodies and other payload bytes remain unresolved. This stored-format rule does
-not establish complete program consumption, runtime execution or a unique supplier.
+`0x8014DBB4..0x8014DC04` qualify the metadata. First offsets delimit recognized
+directories; they do not store separate counts or establish runtime selector
+bounds. Duplicate program slots retain their shared target.
+
+The referenced cells contribute 354 count bytes and 7088 numeric part bytes.
+Original pointer construction at `0x8014C6D8..0x8014C6F4` binds the relative cell
+offsets to the count and five-byte part consumer at `0x8014C6F8..0x8014CD8C`.
+Its quad paths interpret signed X/Y and unsigned U/V fields. The rectangle helper
+at `0x8014CF9C` remains outside the reviewed source. This classification identifies
+stored fields; it does not establish each cell's selected path or rectangle behavior.
+
+Each program's first byte, the unreferenced offset word at `[6836,6838)`, packed
+part flags, allocation tails and the unreferenced cells at `[5495,5504)` and
+`[7180,7221)` remain unresolved. Other payload bytes retain their prior status.
+The rule does not establish complete program consumption, runtime execution,
+rendering or a unique supplier.
 
 ## XA payload coverage
 

@@ -250,7 +250,7 @@ impl XaSource {
 }
 
 // Original AREA024 entry4: directory offsets and consumed program fields.
-// Program header byte 0, unreferenced offset words and cell bodies stay unresolved.
+// Program header byte 0 and unreferenced offset words stay unresolved.
 const AREA024_ANIMATION_METADATA_RANGES: &[(usize, usize)] = &[
     (0, 140),
     (141, 5),
@@ -391,6 +391,37 @@ const AREA024_ANIMATION_METADATA_RANGES: &[(usize, usize)] = &[
     (11_291, 25),
 ];
 
+// Referenced original cells only; counts and XYUV fields exclude packed flags and tails.
+const AREA024_REFERENCED_CELL_OFFSETS: &[usize] = &[
+    146, 194, 216, 238, 276, 324, 345, 366, 382, 403, 419, 466, 487, 503, 524, 545, 566, 628, 649,
+    675, 696, 722, 753, 784, 815, 858, 879, 900, 921, 957, 978, 1_006, 1_028, 1_062, 1_093, 1_119,
+    1_140, 1_172, 1_234, 1_260, 1_281, 1_307, 1_333, 1_359, 1_398, 1_429, 1_465, 1_491, 1_546,
+    1_587, 1_628, 1_669, 1_720, 1_751, 1_788, 1_819, 1_856, 1_884, 1_916, 1_954, 1_992, 2_024,
+    2_072, 2_132, 2_208, 2_284, 2_384, 2_460, 2_536, 2_607, 2_648, 2_706, 2_782, 2_848, 2_968,
+    3_000, 3_022, 3_040, 3_058, 3_110, 3_131, 3_142, 3_153, 3_164, 3_175, 3_212, 3_223, 3_234,
+    3_250, 3_266, 3_282, 3_304, 3_315, 3_332, 3_350, 3_390, 3_401, 3_422, 3_453, 3_480, 3_498,
+    3_532, 3_548, 3_559, 3_585, 3_614, 3_625, 3_636, 3_652, 3_682, 3_693, 3_704, 3_720, 3_738,
+    3_766, 3_808, 3_819, 3_852, 3_892, 3_968, 4_044, 4_144, 4_220, 4_296, 4_372, 4_443, 4_526,
+    4_602, 4_706, 4_734, 4_756, 4_778, 4_806, 4_854, 4_890, 4_916, 4_937, 4_958, 4_979, 5_032,
+    5_048, 5_064, 5_080, 5_101, 5_117, 5_140, 5_178, 5_209, 5_265, 5_301, 5_332, 5_378, 5_439,
+    5_528, 5_566, 5_604, 5_632, 5_664, 5_726, 5_762, 5_793, 5_824, 5_850, 5_876, 5_934, 5_965,
+    5_991, 6_032, 6_063, 6_104, 6_144, 6_175, 6_211, 6_244, 6_286, 6_344, 6_350, 6_361, 6_442,
+    6_493, 6_524, 6_555, 6_596, 6_627, 6_668, 6_719, 6_765, 6_778, 6_840, 6_851, 6_877, 6_928,
+    6_969, 7_015, 7_036, 7_057, 7_088, 7_134, 7_221, 7_258, 7_289, 7_320, 7_351, 7_410, 7_441,
+    7_472, 7_508, 7_564, 7_600, 7_646, 7_682, 7_746, 7_787, 7_823, 7_884, 7_920, 7_956, 7_992,
+    8_018, 8_054, 8_085, 8_148, 8_154, 8_165, 8_191, 8_202, 8_228, 8_244, 8_286, 8_342, 8_398,
+    8_486, 8_542, 8_598, 8_659, 8_720, 8_781, 8_817, 8_864, 8_930, 9_004, 9_050, 9_068, 9_086,
+    9_108, 9_140, 9_146, 9_157, 9_168, 9_192, 9_198, 9_204, 9_210, 9_222, 9_240, 9_258, 9_270,
+    9_282, 9_294, 9_312, 9_378, 9_384, 9_390, 9_401, 9_412, 9_423, 9_429, 9_440, 9_461, 9_472,
+    9_483, 9_538, 9_544, 9_550, 9_556, 9_567, 9_578, 9_594, 9_620, 9_636, 9_652, 9_663, 9_718,
+    9_724, 9_730, 9_736, 9_752, 9_768, 9_789, 9_805, 9_816, 9_827, 9_833, 9_848, 9_870, 9_906,
+    9_952, 9_983, 10_036, 10_082, 10_128, 10_174, 10_230, 10_268, 10_316, 10_362, 10_420, 10_491,
+    10_612, 10_618, 10_624, 10_630, 10_636, 10_642, 10_648, 10_654, 10_660, 10_698, 10_704, 10_710,
+    10_716, 10_722, 10_728, 10_734, 10_776, 10_782, 10_788, 10_794, 10_800, 10_806, 10_812, 10_818,
+    10_864, 10_870, 10_881, 10_887, 10_893, 10_899, 10_905, 10_911, 10_917, 10_956, 11_017, 11_063,
+    11_104, 11_140, 11_201, 11_247, 11_316, 11_322, 11_328, 11_339, 11_345, 11_361,
+];
+
 // Original BPLU349 entry0: image headers, packed words, token streams and palettes.
 // Mode-2 opaque prefixes and every other byte remain unresolved.
 const BPLU349_GRAPHICS_RANGES: &[(usize, usize)] = &[
@@ -482,14 +513,31 @@ pub fn graphics_storage_ranges(
             if sha256_hex(data)
                 == "1b36c8e96987f4c2256daa9e24e477d90c73616242be2588906525a4c8dc2c99" =>
         {
-            Some(AREA024_ANIMATION_METADATA_RANGES
+            let mut ranges: Vec<_> = AREA024_ANIMATION_METADATA_RANGES
             .iter()
             .map(|&(offset, length)| NontextRange {
                 offset,
                 length,
-                evidence: "original US AREA024 entry 4 root/group-relative directory offsets, program counts, duration/operand pairs and referenced relative cell offsets; original consumers 0x8014D878..0x8014D8AC, 0x8014D928..0x8014D964 and 0x8014DBB4..0x8014DC04; exact source identity; first-offset-delimited directories are not runtime selector bounds; program header byte 0, unreferenced offset words and cells excluded; no runtime or unique-supplier claim",
+                evidence: "original US AREA024 entry 4 root/group-relative directory offsets, program counts, duration/operand pairs and referenced relative cell offsets; original consumers 0x8014D878..0x8014D8AC, 0x8014D928..0x8014D964 and 0x8014DBB4..0x8014DC04; exact source identity; first-offset-delimited directories are not runtime selector bounds; program header byte 0 and unreferenced offset words excluded; no runtime or unique-supplier claim",
             })
-            .collect())
+            .collect();
+            let evidence = "original US AREA024 entry 4 referenced cell counts and signed X/Y, unsigned U/V fields; pointer chain 0x8014D964, 0x8014DBFC..0x8014DC04 and 0x8014C6D8..0x8014C6F4; count/five-byte part consumer 0x8014C6F8..0x8014CD8C; quad-path numeric fields only, no rectangle-helper behavior claim; packed flags, tails and unreferenced cells excluded; exact source identity; no runtime selection or rendering claim";
+            for &cell in AREA024_REFERENCED_CELL_OFFSETS {
+                ranges.push(NontextRange {
+                    offset: cell,
+                    length: 1,
+                    evidence,
+                });
+                for part in 0..usize::from(data[cell]) {
+                    ranges.push(NontextRange {
+                        offset: cell + 2 + 5 * part,
+                        length: 4,
+                        evidence,
+                    });
+                }
+            }
+            ranges.sort_by_key(|range| range.offset);
+            Some(ranges)
         }
         (8, 737_280, 0, 0x8003_3e00, 5120)
             if sha256_hex(data)
