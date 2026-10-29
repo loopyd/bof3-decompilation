@@ -357,7 +357,8 @@ also exposes `%2d` with one unsigned byte argument and `%02d %02d` with two.
 Their encoded limits are three and nine bytes; formatted limits are three and
 seven bytes. An adjacent `ascii-literal` label accepts three printable ASCII
 bytes, using `0x20` for spaces. It does not interpret format conversions or command
-markup. Each allocation reserves a NUL byte. Runtime rendering remains unverified.
+markup. Each allocation reserves a NUL byte. Controlled BATE checks cover
+`%3d/%3d`. Other fields and SHISU rendering remain unverified.
 
 BATE and SHISU also expose `%02d` with one unsigned byte argument, at most four
 encoded bytes and three formatted bytes. Their `%7d` rows accept one signed

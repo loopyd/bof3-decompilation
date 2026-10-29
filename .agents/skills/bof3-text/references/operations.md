@@ -180,7 +180,7 @@ availability remain unverified.
 
 The five item-category labels use `game-literal` with capacities of five, seven,
 six, seven and six bytes including NUL. Preserve their pointer references and
-nine alignment bytes. Edited category rendering remains unverified.
+nine alignment bytes.
 
 COMMU03 entry 6 exposes three audio menu labels through `ascii-literal`, with
 capacities of fifteen, five and seven bytes including NUL. Use printable ASCII,
