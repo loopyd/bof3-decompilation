@@ -420,7 +420,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v25`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v26`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -471,7 +471,7 @@ and `0x801ECB0C`, respectively. Identical START and STATUS payloads leave the
 active supplier indistinguishable. Other groups and natural menu availability
 remain unverified.
 
-The final string exposes the four-byte `%3d` allocation at `0x801D0C4C` through
+The numeric format exposes the four-byte `%3d` allocation at `0x801D0C4C` through
 `ascii-u16-decimal-format`. Its eighteen formatter sites read one unsigned byte
 or halfword, write to the 64-byte scratch buffer at `0x80145AD4`, then draw through
 `0x80150098`. Retain one decimal argument, at most three encoded bytes plus NUL,
@@ -480,7 +480,15 @@ allocation at `0x801D0C50` stays protected. Controlled Equipment member
 selection verifies decimal width 2 in this stat panel. Other numeric paths and
 values remain unverified.
 
-Retain all 106 allocations and edit only `text`. Re-extract older inline
+The item-category labels ITEM, WEAPON, ARMOR, OPTION and VITAL occupy
+`0x801ECC3C`, `0x801ECC44`, `0x801ECC4C`, `0x801ECC54` and `0x801ECC5C`.
+Their capacities are five, seven, six, seven and six bytes including NUL.
+The reader at `0x801DFBF4` selects pointers from `0x801ECC64` using the panel
+category byte and draws through `0x8014F800` at `0x801DFF24`. Keep the nine
+alignment bytes and twenty pointer bytes protected. Edited category rendering
+and general selector bounds remain unverified.
+
+Retain all 111 allocations and edit only `text`. Re-extract older inline
 documents before editing or packing.
 
 Recognition pins the selected payload outside its supported allocations.
@@ -673,7 +681,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v25` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v26` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
