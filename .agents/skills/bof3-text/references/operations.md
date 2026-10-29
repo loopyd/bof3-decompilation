@@ -106,15 +106,17 @@ Edited category rendering and natural selector bounds remain unverified.
 
 US START entry 8 and STATUS entry 0 each expose ten counted labels, eight default
 names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
-labels, one numeric format, five item-category labels, four skill-category labels
-and three equipment-category labels through
-`bof3.inline-text/v27`. Select that entry without class or latch selectors.
-Re-extract older inline documents. Use a
-separate document and output for each archive. Editing one does not update the
-other or a save. Counted formation labels use separate groups for one, two and
-three party members. Controlled packed-media observations verify all ten counted
-labels and ITEM edited to XTEM in Items. Other category labels, executed-pointer
-binding, natural availability and the START or STATUS supplier remain unverified.
+labels, one numeric format, five item-category labels, four skill-category labels,
+three equipment-category labels and fifteen fixed-width settings fields through
+`bof3.inline-text/v28`. Select that entry without class or latch selectors.
+Settings fields retain their recorded glyph limits, count bytes and positions.
+Re-extract older inline documents. Use a separate document and output for each
+archive. Editing one does not update the other or a save. Counted formation labels
+use separate groups for one, two and three party members. Controlled packed-media
+observations verify all ten counted labels and ITEM edited to XTEM in Items. A
+preinstruction capture binds the selected ITEM pointer and category-zero record.
+Other category labels, natural availability and the START or STATUS supplier
+remain unverified.
 See the [record groups](../../../../tools/rust/bof3-text/docs/formats.md#default-character-names)
 before choosing a duplicate label.
 
@@ -143,7 +145,7 @@ other names and save propagation remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v27`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v28`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use

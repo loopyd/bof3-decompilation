@@ -420,7 +420,7 @@ the mutable array at `0x80144968`. SISYOU entry 0 routine `0x801D39CC` copies fi
 name bytes and appends NUL. Its draw call at `0x801D1848` passes a record pointer
 and a five-byte limit to executable renderer `0x8014F800`.
 
-Extract the selected entry as `bof3.inline-text/v27`. Its first eighteen strings include
+Extract the selected entry as `bof3.inline-text/v28`. Its first eighteen strings include
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
@@ -486,9 +486,12 @@ Their capacities are five, seven, six, seven and six bytes including NUL.
 The reader at `0x801DFBF4` selects pointers from `0x801ECC64` using the panel
 category byte and draws through `0x8014F800` at `0x801DFF24`. Keep the nine
 alignment bytes and twenty pointer bytes protected. A controlled packed-media
-Items observation verifies ITEM changed to XTEM. Other category labels, general
-selector bounds, executed-pointer binding and natural availability remain
-unverified; identical payloads leave the START or STATUS supplier unresolved.
+Items observation verifies ITEM changed to XTEM. A preinstruction capture at
+`0x801DFF24` binds `V0=0x801ECC3C`, slot `S0=0x801ECC64` and record
+`S1=0x80148504`, with handler 6, type 12, state 2 and category zero. It does not
+prove call or delay-store retirement. Other category labels, general selector
+bounds and natural availability remain unverified; identical payloads leave
+the START or STATUS supplier unresolved.
 
 The skill-category labels HEAL, ASSIST, ATTACK and SKILL occupy
 `0x801ECC78`, `0x801ECC80`, `0x801ECC88` and `0x801ECC90`, with capacities
@@ -508,7 +511,23 @@ stay protected because their selected consumers are unresolved. Keep all nine
 alignment bytes and twenty pointer bytes protected. Edited rendering remains
 unverified.
 
-Retain all 118 allocations and edit only `text`. Re-extract older inline
+The settings reader at `0x801E2C00` exposes fifteen fixed-width fields from the
+first fifteen eight-byte records at `0x801ECD24`. These contain Fast, Med., Slow,
+two groups of 1 through 4, Stereo, Mono, Off and On. Each record retains its count
+byte and signed horizontal offset. Edit only the field beginning two bytes into
+the record, using `game-fixed-literal` and its recorded one-, four- or six-byte
+capacity. The two draw paths at `0x801E2CDC` and `0x801E2D18` pass that count to
+`0x8014F800` or `0x8014FC90`. A full field needs no NUL; shorter text is zero-filled.
+The literal codec maps encoded byte `0x3E` in Med. to a period.
+
+The caller at `0x801E26A8` supplies six local selectors. The first five groups
+contain 3, 4, 4, 2 and 2 records; the sixth has count zero. Manual and Auto remain
+protected because this path skips their group. Preserve all thirty count/position
+bytes, fifty trailing bytes, sixteen Manual/Auto bytes and sixteen group-map
+bytes. Transitive callee effects, settings execution, edited rendering, natural
+availability and the unique archive supplier remain unverified.
+
+Retain all 133 allocations and edit only `text`. Re-extract older inline
 documents before editing or packing.
 
 Recognition pins the selected payload outside its supported allocations.
@@ -701,7 +720,7 @@ and zero-fills unused character bytes. It preserves the remaining 12 bytes of
 each record. Glyph commands are refused. Caller selector bounds, other text
 and observed rendering remain unverified.
 
-`bof3.inline-text/v27` retains `source`, `source_sha256`, `layout`, `entry`,
+`bof3.inline-text/v28` retains `source`, `source_sha256`, `layout`, `entry`,
 `entry_offset`, `load_address`, `consumers` and `strings`. Each string
 has `index`, `address`, whole-file `file_offset`, `payload_offset`, `capacity`,
 `renderers`, `codec`, pointer-word `references` and editable `text`. Retain all
