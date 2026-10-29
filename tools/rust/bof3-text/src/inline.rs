@@ -9,7 +9,7 @@ use crate::digest::sha256_hex;
 use crate::models::{Entry, Error, Result, invalid, literal_byte, literal_char};
 use crate::records::{decode_name, encode_name};
 
-pub const SCHEMA: &str = "bof3.inline-text/v26";
+pub const SCHEMA: &str = "bof3.inline-text/v27";
 
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -750,7 +750,7 @@ const LAYOUTS: &[Layout] = &[
         name: "US START and STATUS labels and default names",
         load: 0x801d0c00,
         size: 117986,
-        sha256: "ee36ab30878c52b6aae6bcbbf09ca65e03bd920b03b662c64372dc9f96501ecd",
+        sha256: "1d51e7ffb616875ce65d6584ec5d32a9bbe6212c2cb3ce51d78d39b38301754c",
         consumers: &[
             0x801d15c0, 0x801dcf50, 0x801e4ad8, 0x801e6680, 0x801e692c, 0x801dbc88, 0x801dbcfc,
             0x801dbd64, 0x801dbdc0, 0x801dc90c, 0x801dc934, 0x801dc95c, 0x801dc978, 0x801de6ec,
@@ -759,7 +759,7 @@ const LAYOUTS: &[Layout] = &[
             0x801dc870, 0x801dc884, 0x801dc8a8, 0x801dc8bc, 0x801dc8d4, 0x801de720, 0x801de748,
             0x801de758, 0x801de774, 0x801de784, 0x801de7a0, 0x801de7b0, 0x801de7cc, 0x801de8e0,
             0x801de904, 0x801df050, 0x801df07c, 0x801df0b8, 0x801df0e0, 0x801df0f0, 0x801df10c,
-            0x801df11c, 0x801df138, 0x801dff24,
+            0x801df11c, 0x801df138, 0x801dff24, 0x801e05a0, 0x801e0e2c,
         ],
         allocations: &[
             Allocation::counted(0x801d0c7c),
@@ -873,6 +873,13 @@ const LAYOUTS: &[Layout] = &[
             Allocation::literal(0x801ecc4c, 6, Some(0x801ecc6c), &[0x8014f800]),
             Allocation::literal(0x801ecc54, 7, Some(0x801ecc70), &[0x8014f800]),
             Allocation::literal(0x801ecc5c, 6, Some(0x801ecc74), &[0x8014f800]),
+            Allocation::literal(0x801ecc78, 5, Some(0x801ecc98), &[0x8014f800]),
+            Allocation::literal(0x801ecc80, 7, Some(0x801ecc9c), &[0x8014f800]),
+            Allocation::literal(0x801ecc88, 7, Some(0x801ecca0), &[0x8014f800]),
+            Allocation::literal(0x801ecc90, 6, Some(0x801ecca4), &[0x8014f800]),
+            Allocation::literal(0x801eccb0, 7, Some(0x801eccd4), &[0x8014f800]),
+            Allocation::literal(0x801eccb8, 6, Some(0x801eccd8), &[0x8014f800]),
+            Allocation::literal(0x801eccc0, 7, Some(0x801eccdc), &[0x8014f800]),
         ],
     },
     Layout {

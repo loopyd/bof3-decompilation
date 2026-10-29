@@ -106,8 +106,9 @@ Edited category rendering and natural selector bounds remain unverified.
 
 US START entry 8 and STATUS entry 0 each expose ten counted labels, eight default
 names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
-labels, one numeric format and five item-category labels through
-`bof3.inline-text/v26`. Select that entry without class or latch selectors.
+labels, one numeric format, five item-category labels, four skill-category labels
+and three equipment-category labels through
+`bof3.inline-text/v27`. Select that entry without class or latch selectors.
 Re-extract older inline documents. Use a
 separate document and output for each archive. Editing one does not update the
 other or a save. Counted formation labels use separate groups for one, two and
@@ -140,7 +141,7 @@ other names and save propagation remain unverified.
 
 For embedded overlay text, use `analyze` to find the supported `inline_entries`
 and select that code entry explicitly with `extract --entry N`. The document
-uses `bof3.inline-text/v26`. Re-extract older inline documents. Edit only `text`,
+uses `bof3.inline-text/v27`. Re-extract older inline documents. Edit only `text`,
 retain all strings, per-string renderers, codecs and references. Reserve one byte
 for the NUL in terminated rows or the trailing count in `game-counted-literal`
 rows. Counted rows accept seven literal bytes. Default names use
