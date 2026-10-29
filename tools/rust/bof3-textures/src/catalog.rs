@@ -14,10 +14,10 @@ use crate::{
     record::{self, CoordinateSpace, Record},
     resident, save_icon,
     sources::{self, Input, SourceFile},
-    sprite_bank, stream_family,
+    sprite_bank, sprite_definition, stream_family,
 };
 
-pub const SCHEMA: &str = "bof3.textures-index/v7";
+pub const SCHEMA: &str = "bof3.textures-index/v8";
 pub const MAX_INDEX_BYTES: u64 = 512 * 1024 * 1024;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
@@ -119,6 +119,7 @@ pub struct Resource {
     pub stream_request: Option<stream_family::Request>,
     pub resident_animation: Option<resident::Info>,
     pub area_surface: Option<area::Info>,
+    pub sprite_definitions: Option<sprite_definition::Info>,
     pub save_icon: Option<save_icon::Info>,
     pub findings: Vec<String>,
 }
@@ -161,6 +162,7 @@ pub fn interpretation_hash() -> String {
             include_str!("area.rs"),
             include_str!("cell.rs"),
             include_str!("sprite_bank.rs"),
+            include_str!("sprite_definition.rs"),
             include_str!("stream_family.rs"),
             include_str!("aliases.rs"),
             include_str!("interface.rs"),
@@ -278,6 +280,7 @@ pub fn build_from(
                     stream_request: None,
                     resident_animation: None,
                     area_surface: None,
+                    sprite_definitions: None,
                     save_icon: None,
                     findings: vec!["logical records and consumers have not been enumerated".into()],
                 };
@@ -302,6 +305,59 @@ pub fn build_from(
                             .push("SLUS_004.22@0x801629F0:audio-auxiliary-destination".into());
                     }
                     resource.findings.clear();
+                }
+                if entry.file_type == 0 && entry.ram_ptr == 0x800e_3800 {
+                    match sprite_definition::decode(payload) {
+                        Ok(document) => {
+                            if sprite_definition::encode(payload, &document)? != payload {
+                                return Err(Error::Invalid(format!(
+                                    "{} sprite-definition inverse differs",
+                                    resource.id
+                                )));
+                            }
+                            resource.kind = "sprite-definition-table".into();
+                            resource.categories = vec!["unclassified-graphics".into()];
+                            resource.storage = "us-counted-sprite-definitions".into();
+                            resource.decode = "counted-draw-state-records-verified".into();
+                            resource.pack = "fixed-draw-state-bytes-verified".into();
+                            resource.evidence_status = "consumer-qualified".into();
+                            resource.evidence.extend([
+                                "SLUS_004.22@0x8014EBB8:resident-and-definition-base-initialization".into(),
+                                "SLUS_004.22@0x8014DD3C:first-ID-draw-state-lookup".into(),
+                                "SLUS_004.22@0x8014D878:conditional-resident-group-and-program".into(),
+                            ]);
+                            for (kind, reason) in [
+                                (
+                                    "texture-source",
+                                    "page and V-base fields do not identify completed uploads or active texel sources",
+                                ),
+                                (
+                                    "palette",
+                                    "the CLUT selector byte does not bind physical palette words or their lifecycle",
+                                ),
+                                (
+                                    "entity-selection",
+                                    "ID membership does not prove a caller, direction, category or active entity",
+                                ),
+                                (
+                                    "resident-base",
+                                    "the group byte is conditional on active entity flags and the current resident base",
+                                ),
+                            ] {
+                                resource.dependencies.push(Dependency {
+                                    kind: kind.into(),
+                                    target: None,
+                                    status: "unresolved".into(),
+                                    reason: reason.into(),
+                                });
+                            }
+                            resource.findings = vec!["only CLUT selector, page, V-base and depth bytes are editable; IDs, groups, opaque bytes and allocation remain immutable".into()];
+                            resource.sprite_definitions = Some(document.info(payload)?);
+                            records
+                                .extend(record::definition_records(&resource, payload, &document)?);
+                        }
+                        Err(error) => resource.findings.push(error.to_string()),
+                    }
                 }
                 if entry.file_type == 0 && entry.ram_ptr == 0x8010_4000 {
                     let document = area::decode(payload)?;
@@ -686,6 +742,7 @@ pub fn build_from(
                 stream_request: None,
                 resident_animation: None,
                 area_surface: None,
+                sprite_definitions: None,
                 save_icon: None,
                 findings,
             };

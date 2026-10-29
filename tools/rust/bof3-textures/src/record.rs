@@ -9,7 +9,7 @@ use crate::{
     catalog::{Dependency, QueryFields, Queryable, Resource},
     cell,
     digest::sha256_hex,
-    resident, save_icon, sprite_bank,
+    resident, save_icon, sprite_bank, sprite_definition,
 };
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, Eq)]
@@ -111,6 +111,7 @@ impl<'a> Builder<'a> {
             "animation-program" => "SLUS_004.22@0x8014D910:program-initialization".into(),
             "sprite-cell" => "SLUS_004.22@0x8014C6F8:five-byte-cell-parts".into(),
             "surface-word" => "SLUS_004.22@0x80154294:nonzero-cell-packed-word".into(),
+            "sprite-definition" => "SLUS_004.22@0x8014DD3C:counted-draw-state-record".into(),
             "surface-coordinate" | "surface-coordinate-pair" => {
                 "SLUS_004.22@0x80155560:selected-coordinate-read".into()
             }
@@ -278,6 +279,26 @@ pub(crate) fn sprite_records(
                 format!("root-{root_index}/program-slot-{slot}"),
             )?;
         }
+    }
+    Ok(builder.finish())
+}
+
+pub(crate) fn definition_records(
+    parent: &Resource,
+    source: &[u8],
+    document: &sprite_definition::Document,
+) -> Result<Vec<Record>> {
+    let mut builder = Builder::new(parent, source, CoordinateSpace::EntryPayload);
+    for (slot, definition) in document.definitions.iter().enumerate() {
+        builder.add(
+            "sprite-definition",
+            definition.offset,
+            8,
+            format!(
+                "definition-slot-{slot}/id-{}/group-{}",
+                definition.id, definition.group
+            ),
+        )?;
     }
     Ok(builder.finish())
 }

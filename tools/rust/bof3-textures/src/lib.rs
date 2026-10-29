@@ -25,6 +25,7 @@ pub mod resident;
 pub mod save_icon;
 pub mod sources;
 pub mod sprite_bank;
+pub mod sprite_definition;
 pub mod stream_family;
 pub mod verification;
 

@@ -12,7 +12,7 @@ use crate::{
     digest::sha256_hex,
     formats, package, resident, save_icon,
     sources::{self, Input, SourceFile},
-    sprite_bank,
+    sprite_bank, sprite_definition,
 };
 
 #[derive(PartialEq, Eq)]
@@ -22,6 +22,7 @@ enum Content {
     SaveIcon(save_icon::Images),
     Resident(resident::Document),
     Area(area::Document),
+    Definitions(sprite_definition::Document),
     Sprite(sprite_bank::Document, Vec<bank_image::Decoded>),
     DecodedBank(Vec<u8>),
 }
@@ -41,6 +42,11 @@ fn content(resource: &Resource, bytes: &[u8]) -> Result<Option<Content>> {
     }
     if resource.area_surface.is_some() {
         return Ok(Some(Content::Area(area::decode(bytes)?)));
+    }
+    if resource.sprite_definitions.is_some() {
+        return Ok(Some(Content::Definitions(sprite_definition::decode(
+            bytes,
+        )?)));
     }
     if resource.sprite_bank.is_some() {
         let decoded = sprite_bytes(resource, bytes)?;
@@ -102,6 +108,9 @@ fn inverse(resource: &Resource, original: &[u8]) -> Result<Option<Vec<u8>>> {
         )?)),
         Some(Content::Resident(document)) => Ok(Some(resident::encode(original, &document)?)),
         Some(Content::Area(document)) => Ok(Some(area::encode(original, &document)?)),
+        Some(Content::Definitions(document)) => {
+            Ok(Some(sprite_definition::encode(original, &document)?))
+        }
         Some(Content::Sprite(document, _)) => {
             let decoded = sprite_bytes(resource, original)?;
             let mut planes = Vec::new();
@@ -284,6 +293,8 @@ fn check_file(
                             "partial-unresolved-programs"
                         } else if resource.area_surface.is_some() {
                             "partial-area-metadata"
+                        } else if resource.sprite_definitions.is_some() {
+                            "partial-sprite-definitions"
                         } else {
                             "verified"
                         };

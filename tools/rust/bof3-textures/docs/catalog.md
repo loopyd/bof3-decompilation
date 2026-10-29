@@ -1,11 +1,29 @@
 # Catalog records
 
-The index schema is `bof3.textures-index/v7`. Its `resources` array contains
+The index schema is `bof3.textures-index/v8`. Its `resources` array contains
 physical files and EMI entries. Its `records` array contains images, palettes,
 animation program metadata and cells in validated sprite roots, programs and
 cells in validated resident banks, and the qualified save-icon frames and palette.
 Area payloads additionally expose directly selected packed words and their
-coordinate-read spans. Other internal layouts remain unresolved.
+coordinate-read spans. Qualified `0x800E3800` payloads additionally expose
+eight-byte `sprite-definition` records. Other internal layouts remain unresolved.
+
+Each `sprite-definition-table` resource has `sprite_definitions` metadata with
+`definitions` and `tail_bytes` counts. Its storage is
+`us-counted-sprite-definitions`. The byte count precedes the records in a
+four-byte header; only its first byte is interpreted. Each record retains its
+entry-payload offset and ID, CLUT selector, opaque byte, page, V base, depth byte
+and group. The original `SLUS_004.22@0x8014DD3C` lookup selects the first matching
+ID, so duplicate IDs remain distinct ordered records. Record uses identify their
+table slot, ID and group without assigning an active entity or game category.
+
+The original initializer at `0x8014EBB8` stores definition base `0x800E3804` and
+resident base `0x800D3800`. These initial values do not establish current RAM
+producers or runtime selection for every archive. The physical tables retain
+unresolved `texture-source`, `palette`, `entity-selection` and `resident-base`
+dependencies. Their four editable draw-state bytes do not establish complete
+texel, CLUT, direction or loading associations. Verification retains
+`partial-sprite-definitions`; IDs, groups and opaque bytes are immutable.
 
 `area_surface` reports width, height, cell count, unique selected words and
 coordinate-read spans. `surface-word` records have four entry-payload bytes.

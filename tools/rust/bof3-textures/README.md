@@ -5,6 +5,7 @@ self-contained archive packages. It can edit raw VRAM upload words, their
 4-bit or 8-bit index interpretations, exact color-word images, and qualified
 palette-word banks within their original allocations.
 It also edits qualified resident animation step pairs and five-byte cell records.
+Qualified sprite-definition tables expose editable draw-state bytes.
 Recognized sprite banks and standalone roots have editable index planes, palette
 words, programs, and cells. Compression layers stay within their original spans.
 
@@ -114,7 +115,7 @@ JSON on standard output, including when `--json` is omitted.
 
 ## Catalog
 
-The index schema is `bof3.textures-index/v7`. A resource ID combines release,
+The index schema is `bof3.textures-index/v8`. A resource ID combines release,
 original path, and EMI slot or file locator. Equal hashes retain distinct original
 locations. Each physical resource has its byte offset, size, hash, kind, game categories,
 storage, decode and pack status, evidence, dependencies, known uses, and findings.
@@ -223,7 +224,7 @@ its observed field draw context, and re-export of the packed result.
 [Edit a terrain texture and its palette](docs/terrain-edit.md) changes a bounded
 AREA024 index patch and its conditional palette source, with byte verification.
 
-The manifest schema is `bof3.textures-package/v7`. The package includes qualified
+The manifest schema is `bof3.textures-package/v8`. The package includes qualified
 original snapshots, validated baseline snapshots, raw resources, its bound catalog,
 and coverage. A new original export uses the original snapshots as its baselines. A
 qualified raw upload also has `words.json` and indexed `indices-4.png` and
@@ -373,6 +374,27 @@ editable animation document and retain their refusal findings in the catalog.
 Partial banks report decoded and unresolved program counts separately. Their
 unknown references and runtime impact remain coverage blockers. The verifier
 reports `partial-unresolved-programs`, even when unchanged bytes reconstruct.
+
+Qualified type-0 sprite-definition tables at `0x800E3800` export
+`definitions.json` with schema `bof3.sprite-definitions/v1`. The first header
+byte counts eight-byte records beginning at payload offset 4. Each record retains
+its little-endian `id`, `clut_selector`, opaque byte, `page`, `v_base`,
+`indexed_8bit` byte and `group`. The original lookup at `0x8014DD3C` selects the
+first matching ID. These are draw-state records, not texture or palette data.
+
+Edit only `clut_selector`, `page`, `v_base` and `indexed_8bit`, each from 0 to 255.
+Keep IDs, groups, offsets, record order, count and schema unchanged. The depth
+field retains its raw byte; nonzero selects the consumer's 8-bit branch. Packing
+preserves the other header bytes, record byte 3 and all trailing bytes.
+The table's `raw.bin` is read-only. Query physical tables with
+`--kind sprite-definition-table`, or add `--records --kind sprite-definition`
+for individual records. `sprite_definitions` reports record and tail-byte counts.
+
+Page, V base and CLUT selector values do not identify physical image or palette
+sources. Group selection also depends on the active entity flags and resident
+base. Entity selection, loading, complete shared uses and edited appearance
+remain unresolved. Verification reports `partial-sprite-definitions` even when
+the source records and archive bytes reconstruct exactly.
 
 Qualified type-0 area payloads at `0x80104000` export `surface.json` with schema
 `bof3.area-surface/v1`. Its records are the unique four-byte words selected by

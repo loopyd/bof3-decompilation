@@ -17,10 +17,10 @@ use crate::{
     png::{self, IndexedImage},
     preview, resident, save_icon,
     sources::{self, Input},
-    sprite_bank,
+    sprite_bank, sprite_definition,
 };
 
-pub const SCHEMA: &str = "bof3.textures-package/v7";
+pub const SCHEMA: &str = "bof3.textures-package/v8";
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -51,6 +51,7 @@ pub struct Export {
     pub decoded: Option<String>,
     pub animation: Option<String>,
     pub surface: Option<String>,
+    pub definitions: Option<String>,
     pub sprite: Option<String>,
     pub bank_images: Vec<BankImage>,
     pub save_frames: Vec<String>,
@@ -114,6 +115,7 @@ fn exports(index: &Index) -> Result<Vec<Export>> {
                     .as_ref()
                     .map(|_| format!("{directory}/animation.json")),
                 surface: resource.area_surface.as_ref().map(|_| format!("{directory}/surface.json")),
+                definitions: resource.sprite_definitions.as_ref().map(|_| format!("{directory}/definitions.json")),
                 sprite: resource
                     .sprite_bank
                     .as_ref()
@@ -334,6 +336,12 @@ fn export_source(
         if let Some(member) = &export.surface {
             stage.write(member, &serde_json::to_vec_pretty(&area::decode(raw)?)?)?;
         }
+        if let Some(member) = &export.definitions {
+            stage.write(
+                member,
+                &serde_json::to_vec_pretty(&sprite_definition::decode(raw)?)?,
+            )?;
+        }
         if let (Some(palette), Some(member)) = (&resource.palette_upload, &export.words) {
             stage.write(
                 member,
@@ -544,6 +552,8 @@ fn validate_resource_edit(resource: &Resource, original: &[u8], edited: &[u8]) -
         resident::encode(original, &resident::decode(edited)?)?
     } else if resource.area_surface.is_some() {
         area::encode(original, &area::decode(edited)?)?
+    } else if resource.sprite_definitions.is_some() {
+        sprite_definition::encode(original, &sprite_definition::decode(edited)?)?
     } else if resource.sprite_bank.is_some() {
         let before = bank_bytes(resource, original)?;
         let after = bank_bytes(resource, edited)?;
@@ -1013,6 +1023,7 @@ pub(crate) fn reconstruct(
         let imported_raw = read_member(root, &export.raw, resource.size.max(1))?;
         if (resource.bank.is_some()
             || resource.sprite_bank.is_some()
+            || resource.sprite_definitions.is_some()
             || resource.area_surface.is_some())
             && imported_raw != raw
         {
@@ -1034,6 +1045,11 @@ pub(crate) fn reconstruct(
             let document: area::Document =
                 serde_json::from_slice(&read_member(root, member, 16 * 1024 * 1024)?)?;
             edit.add(member, area::encode(original_raw, &document)?)?;
+        }
+        if let Some(member) = &export.definitions {
+            let document: sprite_definition::Document =
+                serde_json::from_slice(&read_member(root, member, 1024 * 1024)?)?;
+            edit.add(member, sprite_definition::encode(original_raw, &document)?)?;
         }
         if let (Some(palette), Some(member)) = (&resource.palette_upload, &export.words) {
             let words: Vec<u16> =
@@ -1117,6 +1133,15 @@ pub(crate) fn reconstruct(
                 resource.id
             )));
         }
+        if resource.sprite_definitions.is_some()
+            && sprite_definition::encode(original_raw, &sprite_definition::decode(&bytes)?)?
+                != bytes
+        {
+            return Err(Error::Invalid(format!(
+                "{}: sprite-definition edits exceed qualified draw-state bytes",
+                resource.id
+            )));
+        }
         if bytes != original_raw {
             edited_entries.push(
                 resource
@@ -1130,6 +1155,7 @@ pub(crate) fn reconstruct(
                 && resource.palette_upload.is_none()
                 && resource.resident_animation.is_none()
                 && resource.area_surface.is_none()
+                && resource.sprite_definitions.is_none()
                 && resource.sprite_bank.is_none()
                 && resource.save_icon.is_none()
             {
