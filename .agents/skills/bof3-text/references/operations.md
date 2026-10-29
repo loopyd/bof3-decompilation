@@ -141,8 +141,9 @@ in six-byte records. Each entry also exposes `%3d` through
 bytes plus NUL and at most five formatted characters. Its eighteen formatter
 sites draw through `0x80150098`. Controlled Equipment member selection verifies
 edited labels in the group at `0x801ECB0C`. Identical START and STATUS payloads
-leave the active supplier indistinguishable. Other groups,
-edited numeric rendering and natural menu availability remain unverified.
+leave the active supplier indistinguishable. Controlled observations also verify
+decimal width 2 in that stat panel. Other groups, numeric paths and values, and
+natural menu availability remain unverified.
 COMMU03 entry 6 exposes three audio menu labels through `ascii-literal`, with
 capacities of fifteen, five and seven bytes including NUL. Use printable ASCII,
 including `0x20` spaces. Retain the overlay-local renderer `0x801D1714` and

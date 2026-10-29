@@ -417,8 +417,9 @@ The final string exposes the four-byte `%3d` allocation at `0x801D0C4C` through
 or halfword, write to the 64-byte scratch buffer at `0x80145AD4`, then draw through
 `0x80150098`. Retain one decimal argument, at most three encoded bytes plus NUL,
 and at most five formatted characters. Format widths use 1 through 4. The next
-allocation at `0x801D0C50` stays protected. Edited numeric rendering remains
-unverified.
+allocation at `0x801D0C50` stays protected. Controlled Equipment member
+selection verifies decimal width 2 in this stat panel. Other numeric paths and
+values remain unverified.
 
 Retain all 106 allocations and edit only `text`. Re-extract older inline
 documents before editing or packing.
