@@ -4554,6 +4554,21 @@ selected denominator is zero. Faults retain the busy word and earlier mutations.
 These entries preserve the original guest behavior; production cue selection,
 native scheduling and independent audio acceptance remain separate.
 
+[`audio/status.s`](../../../tools/rust/bof3-audio/driver/audio/status.s)
+provides `audio_spu_key_status` and `audio_effects_refresh_status`. The status
+leaf selects the lowest set bit among A0 bits 0–23. A mask with no such bit
+returns `FFFFFFFF` without reading shared state or device registers. For a
+selected voice, it reads the live register base, software key bit and ENVX
+halfword at `base + voice * 16 + 12`. Software bit/ENVX pairs return
+`0/0 → 0`, `0/nonzero → 2`, `1/0 → 3` and `1/nonzero → 1`.
+
+The refresh entry takes no arguments, queries each voice in order and writes
+24 status words at `audio_sequence_voice_globals+0x5F0..0x650`, then returns
+zero. That storage aliases `audio_sequence_bank_programs+0x40..0xA0`. Call refresh when
+the caller needs a new snapshot; cue dispatch does not refresh it implicitly.
+Both entries preserve the live software key word and read the configured ENVX
+model. They do not synchronize that word from hardware key-on registers.
+
 `kernel/timers.s` provides the stackless `audio_counter_set` and
 `audio_counter_reset` leaves used by sequence callback registration. Both accept
 counter IDs zero through two from A0's low sixteen bits and return one. Other
