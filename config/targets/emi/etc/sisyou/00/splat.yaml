@@ -256,6 +256,9 @@ segments:
     - commitMasterSelectionAndResetMode
     - '@source: src/bof3/ui/commitMasterSelectionAndResetMode.c'
     - '@behavior: when the phase byte D_80143BB0 is not 2, copies the byte of the 0x801D4270 selection table selected by masterIndex into the 152-byte-stride 0x80146889 record selected by 0x80146867 unless that byte is 0xFF, then clears modeIndex and advances the 0x801448EC counter.'
+  - - 13144
+    - bin
+    - D_801D3F58
   - - 13148
     - asm
     - T_801D3F5C
