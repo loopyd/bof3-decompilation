@@ -80,7 +80,7 @@ segments:
   - - 4612
     - c
     - dispatchStateByte1Table6268World02Area07714_801F3E04
-    - '@source: src/bof3/world02/dispatchStateByte1Table6268World02Area07714_801F3E04.c'
+    - '@source: src/bof3/world/dispatchStateByte1Table6268World02Area07714_801F3E04.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044 and calls the handler at the record byte +0x01 index of the local handler table based at 0x801F6268.'
   - - 4680
     - asm
@@ -91,7 +91,7 @@ segments:
   - - 5172
     - c
     - dispatchStateByte1Table6270World02Area07714_801F4034
-    - '@source: src/bof3/world02/dispatchStateByte1Table6270World02Area07714_801F4034.c'
+    - '@source: src/bof3/world/dispatchStateByte1Table6270World02Area07714_801F4034.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044 and calls the handler at the record byte +0x01 index of the local handler table based at 0x801F6270.'
   - - 5240
     - asm
@@ -126,7 +126,7 @@ segments:
   - - 8412
     - c
     - dispatchStateByte2Table6284World02Area07714_801F4CDC
-    - '@source: src/bof3/world02/dispatchStateByte2Table6284World02Area07714_801F4CDC.c'
+    - '@source: src/bof3/world/dispatchStateByte2Table6284World02Area07714_801F4CDC.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the work record byte at +0x02 as an index and calls the handler pointer at that index of the local handler table based at 0x801F6284.'
   - - 8480
     - asm
@@ -149,12 +149,12 @@ segments:
   - - 9976
     - c
     - dispatchStateByte2Table62a8World02Area07714_801F52F8
-    - '@source: src/bof3/world02/dispatchStateByte2Table62a8World02Area07714_801F52F8.c'
+    - '@source: src/bof3/world/dispatchStateByte2Table62a8World02Area07714_801F52F8.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the work record byte at +0x02 as an index and calls the handler pointer at that index of the local handler table based at 0x801F62A8.'
   - - 10044
     - c
     - setWorkHalfword320AndIncrementWorkByte2World02Area07714_801F533C
-    - '@source: src/bof3/world02/setWorkHalfword320AndIncrementWorkByte2World02Area07714_801F533C.c'
+    - '@source: src/bof3/world/setWorkHalfword320AndIncrementWorkByte2World02Area07714_801F533C.c'
     - '@behavior: loads the scratch work-record cursor from the scratchpad pointer cell 0x1F800044, writes the halfword 0x320 to the record +0x3E field, increments the record +0x02 step byte, then runs the local panel update at 0x801F54B8.'
   - - 10100
     - asm
@@ -192,7 +192,7 @@ segments:
   - - 11676
     - c
     - initArea07714State
-    - '@source: src/bof3/world02/initArea07714State.c'
+    - '@source: src/bof3/world/initArea07714State.c'
     - '@behavior: runs the shared front-end startup helper at 0x8015C088 and then writes 0x2C, 0 and 7 to the three consecutive shared mode bytes at 0x801448EB, 0x801448EC and 0x801448ED.'
   - - 11740
     - c
@@ -215,7 +215,7 @@ segments:
   - - 12204
     - c
     - decrementCountdownId71InSlot1World02Area07714_801F5BAC
-    - '@source: src/bof3/world02/decrementCountdownId71InSlot1World02Area07714_801F5BAC.c'
+    - '@source: src/bof3/world/decrementCountdownId71InSlot1World02Area07714_801F5BAC.c'
     - '@behavior: asks the same-binary helper at 0x801665A0 for one unit of the shared countdown entry with identifier 71 (0x47) in slot 1, passing (1, 71, 1, 0) and discarding its status byte.'
   - - 12248
     - c
@@ -232,12 +232,12 @@ segments:
   - - 12672
     - c
     - retreatCounterAndQueueCue200World02Area07714_801F5D80
-    - '@source: src/bof3/world02/retreatCounterAndQueueCue200World02Area07714_801F5D80.c'
+    - '@source: src/bof3/world/retreatCounterAndQueueCue200World02Area07714_801F5D80.c'
     - '@behavior: reads the shared halfword counter at 0x8014932A, sets the shared area status byte at 0x80149333 to 2, retreats that counter by 0x14 and then queues the fixed cue 0x200 through the main-exe cue dispatcher at 0x8015DF18.'
   - - 12736
     - c
     - advanceCounterWorld02Area07714_801F5DC0
-    - '@source: src/bof3/world02/advanceCounterWorld02Area07714_801F5DC0.c'
+    - '@source: src/bof3/world/advanceCounterWorld02Area07714_801F5DC0.c'
   - - 12776
     - c
     - setTwoWorld02Area07714_801F5DE8
