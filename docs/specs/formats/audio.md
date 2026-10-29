@@ -3827,8 +3827,9 @@ The target reads authored assembly and its linker layout. It produces
 `out/audio/driver/kernel.bin`, the linked ELF, a map, ordered `kernel.sym`
 symbols and a `kernel.json` manifest. The `bof3.audio-driver/v1` manifest names
 the `mips1-le-o32` ABI and SHA-256 hashes of the binary and symbol bytes.
-The production PSX music renderer consumes this component. The source package,
-other production operations and complete vocal closure still require migration.
+The production PSX music renderer consumes this component. The source package
+includes the authored inputs and [portable build instructions](../../../tools/rust/bof3-audio/driver/README.md).
+Other production operations and complete vocal closure still require migration.
 
 Load `audio_kernel_image..audio_kernel_image_end` at its linked address, then call
 `audio_kernel_initialize` on an eight-byte-aligned RAM stack with interrupts

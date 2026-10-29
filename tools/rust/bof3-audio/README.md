@@ -2,10 +2,10 @@
 
 This source package preserves repository paths. It includes `bof3-audio`, its
 local `emi-ex-v2` dependency, lockfiles, the audio project’s mise toolchain pin,
-tests and dependency license notices.
+tests, authored guest driver inputs and license notices.
 No game executable, disc sectors, BIOS image or extracted media is included.
-The crates declare MIT licensing; third-party terms are retained in
-`THIRD_PARTY_LICENSES.txt` beside this file.
+The authored tooling and driver use the MIT terms in `LICENSE`; third-party
+terms are retained in `THIRD_PARTY_LICENSES.txt` beside this file.
 
 All audio-crate tests, test helpers and reference models are Rust. Python tests
 belong only in the repository harness for command integration and packaging;
@@ -34,9 +34,14 @@ after extraction. Run the trust and install steps before using the harness; it
 does not trust project files automatically. Mise’s
 [Rust integration](https://mise.jdx.dev/lang/rust.html) owns toolchain selection.
 
-In the full repository, `bin/harness audio build` builds and prints the binary
-path. `bin/harness audio index|query|map|extract|render|pack|compile|verify ...` builds and
-forwards arguments to Rust. `audio build OPERATION ...` remains available.
+Build the guest driver with GNU Make, `sha256sum` and the existing approved MIPS
+GNU binutils. The [driver instructions](driver/README.md) give the portable
+build command and artifact contract. No tool binaries are bundled.
+
+In the full repository, `bin/harness audio build` builds the host and guest
+driver, then prints the host binary path. The driver artifacts are written to
+`out/audio/driver/`. `bin/harness audio index|query|map|extract|render|pack|compile|verify ...`
+builds both and forwards arguments to Rust. `audio build OPERATION ...` remains available.
 `audio package [OUT]` writes a deterministic source ZIP, defaulting to
 `out/bof3-audio-source.zip`; publication failures preserve an existing ZIP.
 
@@ -128,10 +133,9 @@ check; exit code 0 means no performed check failed and does not establish accept
 playback. Invalid inputs fail before an evidence report is produced.
 
 US music rendering executes the source-built owned guest driver through Rust,
-using explicit reference clocks. Build the driver in the full repository first:
+using explicit reference clocks. In the full repository:
 
 ```sh
-make -C tools/rust/bof3-audio/driver bof3-audio-driver
 bin/harness audio render --mode music --engine psx \
   --archive out/extracted/BIN/BGM/BGM000.EMI \
   --driver out/audio/driver \
@@ -144,8 +148,9 @@ media identities, owned calls, timing limits and unverified fidelity gates.
 The `bof3.psx-render/v2` report includes owned startup and artifact hashes.
 The PSX branch requires `--driver DIRECTORY`, rejects `--executable`, and no
 longer accepts `--bios`. Original-reference execution remains in development
-examples and the explicit `machine::reference` owner. The source package still
-needs driver build support before this workflow is available from that package.
+examples and the explicit `machine::reference` owner. In an extracted source
+package, build the host and driver as described above, then invoke the host
+binary directly with the same render arguments and supplied media.
 The renderer automatically selects the first game layout (0, 1, then 2) whose
 header, sequence and SPU bank capacities fit the archive. Selection uses archive
 sizes and bank slot, never filenames or cue IDs. `--layout 0|1|2` overrides this
@@ -245,6 +250,6 @@ open. Unsupported operations fail explicitly. C source retirement is separately 
 package is not a claim of full parity. TUI, live playback, standalone PSF
 commands and FLAC are retired from the replacement command surface.
 
-Use [PCSX-Redux Agentic](../../../third_party/pcsx-redux-agentic/) for SPU/CD
+Use [PCSX-Redux Agentic](https://github.com/loopyd/pcsx-redux-agentic) for SPU/CD
 implementation comparisons and runtime captures. Agreement with the fork alone
 does not establish hardware fidelity.

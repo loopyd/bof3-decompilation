@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -22,21 +24,34 @@ def prepare(tmp_path, monkeypatch):
     config = root / "tools/rust/bof3-audio/mise.toml"
     config.parent.mkdir(parents=True)
     config.write_text('[tools]\nrust = "1.98.1"\n')
+    driver = config.parent / "driver"
+    driver.mkdir()
+    (driver / "Makefile").write_text("bof3-audio-driver:\n")
     monkeypatch.setattr(audio, "repo_layout", lambda: SimpleNamespace(root=root))
     monkeypatch.setattr(
-        audio.shutil, "which", lambda name: "/tools/mise" if name == "mise" else None
+        audio.shutil,
+        "which",
+        lambda name: f"/tools/{name}" if name in {"mise", "make"} else None,
     )
     calls = []
     launches = []
 
-    def cargo(command, **kwargs):
+    def build(command, **kwargs):
         calls.append((command, kwargs))
-        binary = root / "out/audio/release/bof3-audio"
-        binary.parent.mkdir(parents=True, exist_ok=True)
-        binary.touch()
+        if command[0] == "/tools/mise":
+            outputs = [root / "out/audio/release/bof3-audio"]
+        else:
+            assert command[0] == "/tools/make"
+            outputs = [
+                root / "out/audio/driver" / name
+                for name in ("kernel.bin", "kernel.sym", "kernel.json")
+            ]
+        for output in outputs:
+            output.parent.mkdir(parents=True, exist_ok=True)
+            output.touch()
         return subprocess.CompletedProcess(command, 0, "", "compiler progress")
 
-    monkeypatch.setattr(audio.subprocess, "run", cargo)
+    monkeypatch.setattr(audio.subprocess, "run", build)
     monkeypatch.setattr(
         audio, "exec_tool", lambda path, args: launches.append((path, args))
     )
@@ -70,6 +85,15 @@ def test_direct_operations_build_and_forward_without_legacy_arguments(
         str(root / "out/audio"),
     ]
     assert options["cwd"] == root
+    command, options = calls[1]
+    assert command == [
+        "/tools/make",
+        "-C",
+        str(root / "tools/rust/bof3-audio/driver"),
+        "bof3-audio-driver",
+    ]
+    assert options["cwd"] == root
+    assert len(calls) == 2
     assert capsys.readouterr().out == ""
 
 
@@ -80,7 +104,13 @@ def test_build_always_checks_cargo_inputs_and_can_optionally_execute(
     assert audio.build_main([]) == 0
     assert capsys.readouterr().out.strip() == str(root / "out/audio/release/bof3-audio")
     audio.build_main(["verify", "--mode", "audio", "--archive", "a.EMI"])
-    assert len(calls) == 2
+    assert len(calls) == 4
+    assert [call[0][0] for call in calls] == [
+        "/tools/mise",
+        "/tools/make",
+        "/tools/mise",
+        "/tools/make",
+    ]
     assert launches[0][1] == ["verify", "--mode", "audio", "--archive", "a.EMI"]
 
 
@@ -96,6 +126,7 @@ def test_failed_build_does_not_launch_stale_binary(tmp_path, monkeypatch, capsys
     _, _, launches = prepare(tmp_path, monkeypatch)
     audio.build_main([])
     capsys.readouterr()
+    build = audio.subprocess.run
     monkeypatch.setattr(
         audio.subprocess,
         "run",
@@ -107,6 +138,20 @@ def test_failed_build_does_not_launch_stale_binary(tmp_path, monkeypatch, capsys
     captured = capsys.readouterr()
     assert captured.out == "build output\n"
     assert "build error" in captured.err and "Cargo diagnostics" in captured.err
+    assert not launches
+
+    def failed_driver(command, **kwargs):
+        if command[0] == "/tools/mise":
+            return build(command, **kwargs)
+        return subprocess.CompletedProcess(
+            command, 1, "driver output\n", "driver error\n"
+        )
+
+    monkeypatch.setattr(audio.subprocess, "run", failed_driver)
+    assert audio.build_main(["index", "--help"]) == 2
+    captured = capsys.readouterr()
+    assert captured.out == "driver output\n"
+    assert "driver error" in captured.err and "make diagnostics" in captured.err
     assert not launches
 
 
@@ -131,7 +176,23 @@ def source_fixture(tmp_path):
     crate = root / "tools/rust/bof3-audio"
     (crate / "mise.toml").write_text('[tools]\nrust = "1.98.1"\n')
     (crate / "README.md").write_text("source instructions\n")
+    (crate / "LICENSE").write_text("authored MIT license\n")
     (crate / "THIRD_PARTY_LICENSES.txt").write_text("license inventory\n")
+    driver = crate / "driver"
+    (driver / "kernel").mkdir(parents=True)
+    (driver / "Makefile").write_text("bof3-audio-driver:\n")
+    (driver / "README.md").write_text("driver build instructions\n")
+    (driver / "kernel/layout.ld").write_text("SECTIONS {}\n")
+    (driver / "kernel/startup.s").write_text(".text\n")
+    for name in (
+        "kernel.bin",
+        "kernel.sym",
+        "kernel.json",
+        "kernel.o",
+        "kernel.map",
+        "kernel.elf",
+    ):
+        (driver / name).write_text("generated output\n")
     (crate / "src/test.bin").write_bytes(b"not source")
     (crate / "target").mkdir()
     (crate / "target/artifact.rs").write_text("not authored")
@@ -148,9 +209,15 @@ def test_package_is_reproducible_includes_untracked_sources_and_excludes_media(
     assert first.read_bytes() == second.read_bytes()
     with zipfile.ZipFile(first) as archive:
         names = archive.namelist()
-        assert len(names) == 9
+        assert len(names) == 14
         assert "bof3-audio/tools/rust/bof3-audio/mise.toml" in names
         assert "bof3-audio/tools/rust/emi-ex/src/lib.rs" in names
+        assert "bof3-audio/tools/rust/bof3-audio/LICENSE" in names
+        assert "bof3-audio/tools/rust/bof3-audio/driver/Makefile" in names
+        assert "bof3-audio/tools/rust/bof3-audio/driver/README.md" in names
+        assert "bof3-audio/tools/rust/bof3-audio/driver/kernel/layout.ld" in names
+        assert "bof3-audio/tools/rust/bof3-audio/driver/kernel/startup.s" in names
+        assert not any("/driver/kernel." in name for name in names)
         assert not any("target" in name or name.endswith(".bin") for name in names)
 
 
@@ -176,6 +243,11 @@ def test_missing_input_and_symlink_preserve_existing_package(tmp_path):
     with pytest.raises(ValueError, match="missing"):
         audio.write_package(root, output)
     lock.write_text("version = 4\n")
+    makefile = root / "tools/rust/bof3-audio/driver/Makefile"
+    makefile.unlink()
+    with pytest.raises(ValueError, match="missing.*driver/Makefile"):
+        audio.write_package(root, output)
+    makefile.write_text("bof3-audio-driver:\n")
     (root / "tools/rust/emi-ex/src/leak.rs").symlink_to(output)
     with pytest.raises(ValueError, match="symlink"):
         audio.write_package(root, output)
@@ -210,8 +282,8 @@ def test_source_package_builds_and_tests_without_proprietary_media(tmp_path):
             for name in names
         )
         assert "bof3-audio/tools/rust/bof3-audio/THIRD_PARTY_LICENSES.txt" in names
-        archive.extractall(tmp_path / "unpacked")
-    source = tmp_path / "unpacked/bof3-audio/tools/rust/bof3-audio"
+        archive.extractall(tmp_path / "unpacked with spaces")
+    source = tmp_path / "unpacked with spaces/bof3-audio/tools/rust/bof3-audio"
     environment = dict(os.environ, MISE_STATE_DIR=str(tmp_path / "mise-state"))
     trusted = subprocess.run(
         ["mise", "trust", str(source / "mise.toml")],
@@ -245,6 +317,31 @@ def test_source_package_builds_and_tests_without_proprietary_media(tmp_path):
         timeout=10,
     )
     assert result.returncode == 0 and "--mode audio|music" in result.stdout
+    driver = source / "driver"
+    command = ["make", "-C", str(driver), "bof3-audio-driver"]
+    for variable, name in (
+        ("AS", "as"),
+        ("LD", "ld"),
+        ("OBJCOPY", "objcopy"),
+        ("NM", "nm"),
+    ):
+        command.append(
+            f"{variable}={ROOT / 'toolchains/psyqo/bin' / ('mipsel-none-elf-' + name)}"
+        )
+    result = subprocess.run(command, capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0, result.stdout + result.stderr
+    artifacts = source.parents[2] / "out/audio/driver"
+    manifest = json.loads((artifacts / "kernel.json").read_text())
+    assert manifest["schema"] == "bof3.audio-driver/v1"
+    assert manifest["abi"] == "mips1-le-o32"
+    assert (
+        manifest["image_sha256"]
+        == hashlib.sha256((artifacts / "kernel.bin").read_bytes()).hexdigest()
+    )
+    assert (
+        manifest["symbols_sha256"]
+        == hashlib.sha256((artifacts / "kernel.sym").read_bytes()).hexdigest()
+    )
 
 
 def test_retired_analysis_and_audio_artifacts_are_untracked_and_absent():

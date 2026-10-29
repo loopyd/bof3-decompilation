@@ -21,7 +21,7 @@ PACKAGE_ROOT = "bof3-audio"
 
 
 def build_binary() -> Path | None:
-    """Build local crate inputs with the audio project's mise toolchain."""
+    """Build the host and owned guest driver with the project toolchains."""
     mise = shutil.which("mise")
     if mise is None:
         print(
@@ -34,6 +34,14 @@ def build_binary() -> Path | None:
     if not config.is_file():
         print(
             f"bof3-audio build requires its project toolchain config: {config}",
+            file=sys.stderr,
+        )
+        return None
+    make = shutil.which("make")
+    driver = root / "tools/rust/bof3-audio/driver"
+    if make is None or not (driver / "Makefile").is_file():
+        print(
+            "bof3-audio build requires make and the authored driver Makefile",
             file=sys.stderr,
         )
         return None
@@ -65,6 +73,24 @@ def build_binary() -> Path | None:
         sys.stderr.write(result.stderr)
         print(
             "bof3-audio build failed: inspect mise/Cargo diagnostics and the project toolchain",
+            file=sys.stderr,
+        )
+        return None
+    result = subprocess.run(
+        [make, "-C", str(driver), "bof3-audio-driver"],
+        cwd=root,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0 or not all(
+        (target / "driver" / name).is_file()
+        for name in ("kernel.bin", "kernel.sym", "kernel.json")
+    ):
+        sys.stdout.write(result.stdout)
+        sys.stderr.write(result.stderr)
+        print(
+            "bof3-audio driver build failed: inspect make diagnostics and the MIPS binutils toolchain",
             file=sys.stderr,
         )
         return None
@@ -103,11 +129,13 @@ def collect_sources(root: Path) -> list[Path]:
             if not source.is_file() or source.is_symlink():
                 raise ValueError(f"missing or unsafe package input: {source}")
             files.append(source)
-        for directory in ("src", "tests", "examples", "player"):
+        for directory in ("src", "tests", "examples", "player", "driver"):
+            if directory == "driver" and name != "bof3-audio":
+                continue
             base = crate / directory
             if base.is_symlink():
                 raise ValueError(f"source directory is a symlink: {base}")
-            if directory == "src" and not base.is_dir():
+            if directory in {"src", "driver"} and not base.is_dir():
                 raise ValueError(f"missing source directory: {base}")
             for source in sorted(base.rglob("*")):
                 if source.is_symlink():
@@ -117,11 +145,18 @@ def collect_sources(root: Path) -> list[Path]:
                         f"Python belongs in harness integration tests, not the audio crate: {source}"
                     )
                 if source.is_file() and (
-                    source.suffix in {".rs", ".json"}
+                    directory in {"src", "tests", "examples"}
+                    and source.suffix in {".rs", ".json"}
                     or directory == "player"
                     and (
                         source.suffix in {".c", ".h", ".s", ".ld"}
                         or source.name in {"Makefile", "README.md"}
+                    )
+                    or directory == "driver"
+                    and (
+                        source.suffix in {".s", ".ld"}
+                        or source.name in {"Makefile", "README.md"}
+                        or source.name.startswith(("LICENSE", "NOTICE"))
                     )
                 ):
                     files.append(source)
@@ -132,7 +167,15 @@ def collect_sources(root: Path) -> list[Path]:
                 if source.is_symlink() or not source.is_file():
                     raise ValueError(f"unsafe documentation/license input: {source}")
                 files.append(source)
-    for required in ("README.md", "THIRD_PARTY_LICENSES.txt"):
+    for required in (
+        "README.md",
+        "LICENSE",
+        "THIRD_PARTY_LICENSES.txt",
+        "driver/Makefile",
+        "driver/README.md",
+        "driver/kernel/layout.ld",
+        "driver/kernel/startup.s",
+    ):
         if root / "tools/rust/bof3-audio" / required not in files:
             raise ValueError(f"missing bof3-audio package {required}")
     return sorted(files)
