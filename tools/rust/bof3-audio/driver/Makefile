@@ -10,7 +10,7 @@ OBJECTS = $(addprefix $(OUT)/,$(SOURCES:.s=.o))
 
 .PHONY: bof3-audio-driver clean
 .DELETE_ON_ERROR:
-bof3-audio-driver: $(OUT)/kernel.bin $(OUT)/kernel.sym
+bof3-audio-driver: $(OUT)/kernel.bin $(OUT)/kernel.sym $(OUT)/kernel.json
 
 $(OUT):
 	mkdir -p "$@"
@@ -28,5 +28,10 @@ $(OUT)/kernel.bin: $(OUT)/kernel.elf
 $(OUT)/kernel.sym: $(OUT)/kernel.elf
 	"$(NM)" -n --defined-only "$<" > "$@"
 
+$(OUT)/kernel.json: $(OUT)/kernel.bin $(OUT)/kernel.sym
+	image_hash=$$(sha256sum < "$(OUT)/kernel.bin") && \
+	symbols_hash=$$(sha256sum < "$(OUT)/kernel.sym") && \
+	printf '{"schema":"bof3.audio-driver/v1","abi":"mips1-le-o32","image_sha256":"%s","symbols_sha256":"%s"}\n' "$${image_hash%% *}" "$${symbols_hash%% *}" > "$@"
+
 clean:
-	rm -f $(OBJECTS) "$(OUT)/kernel.elf" "$(OUT)/kernel.bin" "$(OUT)/kernel.sym" "$(OUT)/kernel.map"
+	rm -f $(OBJECTS) "$(OUT)/kernel.elf" "$(OUT)/kernel.bin" "$(OUT)/kernel.sym" "$(OUT)/kernel.json" "$(OUT)/kernel.map"

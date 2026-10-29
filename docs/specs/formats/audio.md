@@ -3824,7 +3824,9 @@ make -C tools/rust/bof3-audio/driver bof3-audio-driver
 ```
 
 The target reads authored assembly and its linker layout. It produces
-`out/audio/driver/kernel.bin`, the linked ELF, a map and ordered symbols.
+`out/audio/driver/kernel.bin`, the linked ELF, a map, ordered `kernel.sym`
+symbols and a `kernel.json` manifest. The `bof3.audio-driver/v1` manifest names
+the `mips1-le-o32` ABI and SHA-256 hashes of the binary and symbol bytes.
 It does not build the complete audio closure. The source package and production
 execution loop do not yet consume this component.
 
@@ -4618,18 +4620,25 @@ The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
 
 ```text
-bank_probe KERNEL_BIN KERNEL_SYM US_EXE BGM_EMI [SEQUENCE TICKS [WAV]]
+bank_probe DRIVER_DIRECTORY US_EXE BGM_EMI [SEQUENCE TICKS [WAV]]
 ```
 
-It checks image/allocation bounds, uses the build's defined-nm symbol rows, runs
-the guest initializer and binds the linked services. It explicitly supplies
-foreground registers, PAD policy, a 65,536-byte diagnostic buffer and the SPU
-memory-control input. The
-`bof3.bank-probe/v2` report identifies both kernel inputs and initialization and
-includes the captured `diagnostic_bytes`.
-This mixed development consumer verifies the guest's complete scheduler copy,
-then restores exactly the original executable's scheduler bytes before invoking
-original SDK routines. Owned consumers retain the guest-installed source code.
+The maintained [driver loader](../../../tools/rust/bof3-audio/src/machine/driver.rs)
+checks the manifest hashes, allocation bounds, stack alignment and required
+service symbols before returning a machine. It starts from zeroed RAM, loads
+only the built image and runs the guest service initializer. It sets GP to zero,
+reserves foreground stack space at `0x801F0000..0x80200000` with initial SP
+`0x801FFF00`, disables automatic PAD acknowledgement and enables CPU status
+`0x401` after initialization. It binds the linked services, a 65,536-byte
+diagnostic buffer, SPU memory control `0x200931E1` and the existing emulator
+reference SPU models. Audio and layout initialization remain subsequent calls.
+
+The `bof3.bank-probe/v3` report includes owned startup hashes and policy,
+the initialization call and captured `diagnostic_bytes`. After owned startup,
+this development example copies the declared original EXE payload into the
+existing RAM and checks the original scheduler bytes. It takes reference GP
+and foreground SP from that EXE before calling original SDK routines.
+The driver loader itself does not read an EXE or BIOS.
 The example still executes original game/SDK code and uses host-fed media.
 Production bank preparation and the independent BIOS reference tools retain
 their current inputs; this development path does not close their migration.

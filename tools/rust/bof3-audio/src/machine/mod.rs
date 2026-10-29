@@ -16,6 +16,7 @@ mod console;
 pub mod cop0;
 pub mod cpu;
 pub mod dma;
+pub mod driver;
 pub mod event_calls;
 pub mod events;
 pub mod exception_calls;
