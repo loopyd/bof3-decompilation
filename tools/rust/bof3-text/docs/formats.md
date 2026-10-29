@@ -103,7 +103,7 @@ the absence of rasterized text. Other entries and archive gaps stay unchanged.
 
 ## Resident animation field coverage
 
-Coverage recognizes fixed fields in entry 4 of three original US archives. Each
+Coverage recognizes fixed fields in entry 4 of four original US archives. Each
 requires its original archive identity, entry offset 198656, raw transfer mode,
 load address `0x800D3800` and exact payload hash.
 
@@ -112,6 +112,7 @@ load address `0x800D3800` and exact payload hash.
 | `AREA024.EMI` | 11368 | 1917 | 354 | 7442 |
 | `AREA000.EMI` | 10592 | 1951 | 349 | 6793 |
 | `AREA001.EMI` | 11968 | 1808 | 326 | 7990 |
+| `AREA002.EMI` | 11104 | 1654 | 300 | 7432 |
 
 The metadata covers root-relative u32 group offsets, group-relative u16 program
 offsets, program count bytes, duration/operand pairs and referenced relative cell
@@ -131,8 +132,9 @@ Packed part flags, allocation tails, unreferenced offset words and unreferenced
 cells remain unresolved. These include AREA024's word `[6836,6838)` and cells
 `[5495,5504)` and `[7180,7221)`, and AREA000's word `[6518,6520)` and cell
 `[6541,6572)`. AREA001 excludes words `[5252,5254)` and `[11818,11820)`
-and cells `[5371,5380)` and `[11841,11872)`. Other payload bytes retain their
-prior status. The rule does not
+and cells `[5371,5380)` and `[11841,11872)`. AREA002 excludes words
+`[7328,7330)` and `[10906,10908)` and cells `[7447,7456)` and
+`[10929,10960)`. Other payload bytes retain their prior status. The rule does not
 establish complete program consumption, runtime execution, rendering or a unique
 supplier. The writer of base pointer `0x801459F0` and the loader handoff remain
 unqualified; entries at the same load address do not inherit any profile.
