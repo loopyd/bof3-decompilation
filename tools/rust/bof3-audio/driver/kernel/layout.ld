@@ -3,7 +3,7 @@ ENTRY(audio_kernel_initialize)
 audio_exception_global_pointer = 0;
 SECTIONS
 {
-    . = 0x80008000;
+    . = 0x80020000;
     audio_kernel_image = .;
     .text : {
         *(.text.audio_kernel_initialize)
@@ -28,8 +28,8 @@ SECTIONS
         *(.bss.audio_kernel_stacks)
         audio_kernel_bss_end = .;
     }
-    ASSERT(audio_kernel_bss_end <= 0x80010000,
-           "kernel allocation overlaps the host media staging range")
+    ASSERT(audio_kernel_bss_end <= 0x80040000,
+           "kernel allocation exceeds the owned arena")
     /DISCARD/ : {
         *(.reginfo) *(.MIPS.abiflags) *(.pdr) *(.comment) *(.gnu.attributes)
     }

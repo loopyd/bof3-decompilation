@@ -250,10 +250,9 @@ impl Execution {
             self.reference_cycles().unwrap_or(self.clock.ticks()),
             branch_boundary,
         )?;
-        if waiting {
+        if waiting && self.reference.is_some() {
             return Err(
-                "owned WaitEvent requires an external progress source; continuation retained"
-                    .into(),
+                "original-BIOS reference timing does not implement owned WaitEvent polling".into(),
             );
         }
         Ok(Transition::Advanced(retired))
@@ -287,6 +286,7 @@ impl Execution {
 
     /// Host-directed routine entry using current CPU/kernel/device state.
     /// RETURN is a stop address only; no instruction or trampoline is written.
+    /// The limit counts transitions, including BIOS calls and blocked wait polls.
     /// Errors may leave guest execution advanced; callers must not retry calls.
     pub fn call(&mut self, entry: u32, arguments: [u32; 4], limit: u64) -> Result<Call> {
         self.call_observed(entry, arguments, limit, &mut |_| Ok(()))
@@ -340,15 +340,15 @@ impl Execution {
                 break;
             }
         }
-        if let Some(services) = &self.kernel {
-            services.kernel.require_plain_context()?;
-        }
         if self.cpu.pc() != RETURN {
             return Err(format!(
-                "guest call {entry:#010x} instruction safety limit at {:#010x}",
+                "guest call {entry:#010x} transition safety limit at {:#010x}",
                 self.cpu.pc()
             )
             .into());
+        }
+        if let Some(services) = &self.kernel {
+            services.kernel.require_plain_context()?;
         }
         Ok(Call {
             entry,

@@ -38,6 +38,7 @@ pub struct Kernel {
     returning: Option<Cpu>,
     exception_delivery: Option<ExceptionDelivery>,
     waiting_event: Option<PendingWait>,
+    suspended_wait: Option<SuspendedWait>,
     event_calls: EventCalls,
     exception_calls: Option<ExceptionCalls>,
 }
@@ -48,6 +49,13 @@ struct PendingWait {
     address: u32,
     return_pc: u32,
     callback_depth: usize,
+}
+
+#[derive(Clone, Debug)]
+struct SuspendedWait {
+    wait: PendingWait,
+    thread: usize,
+    entry: u32,
 }
 
 impl Default for Kernel {
@@ -71,6 +79,7 @@ impl Default for Kernel {
             returning: None,
             exception_delivery: None,
             waiting_event: None,
+            suspended_wait: None,
             event_calls: EventCalls::default(),
             exception_calls: None,
         }
@@ -496,6 +505,7 @@ impl Kernel {
         }
         self.clear_exception_continuations();
         self.returning = None;
+        self.resume_wait();
         Ok(true)
     }
 
@@ -698,13 +708,22 @@ impl Kernel {
         bus: &mut impl Bus,
         environment: Environment,
     ) -> Result<Call> {
-        self.require_plain_context()?;
+        let pending = self.interrupt_wait(cpu)?;
         let mut calls = ExceptionCalls::prepare(bus, environment)?;
         let context = super::thread_context::Context::current(bus)?;
+        let suspended = match pending {
+            Some(wait) => Some(SuspendedWait {
+                wait,
+                thread: ram_offset(context.address(), 4)?,
+                entry: cpu.cop0().read(14)?,
+            }),
+            None => None,
+        };
         if let Some(binding) = self.exception_dispatch {
             context.validate_exception(cpu, bus)?;
             calls.validate_guest_stack(bus, binding)?;
             cpu.synchronize_load();
+            self.suspend_wait(suspended);
             calls.bind_guest();
             self.exception_calls = Some(calls);
             cpu.resume_at(binding.entry);
@@ -717,6 +736,7 @@ impl Kernel {
             });
         }
         context.save_exception(cpu, bus)?;
+        self.suspend_wait(suspended);
         cpu.set_register(28, environment.global_pointer);
         cpu.set_register(30, environment.stack_top);
         self.exception_calls = Some(calls);
@@ -726,6 +746,42 @@ impl Kernel {
 
     pub fn pending_exception(&self) -> bool {
         self.exception_calls.is_some()
+    }
+
+    fn interrupt_wait(&self, cpu: &Cpu) -> Result<Option<PendingWait>> {
+        let Some(wait) = &self.waiting_event else {
+            self.require_plain_context()?;
+            return Ok(None);
+        };
+        if self.returning.is_some()
+            || self.exception_calls.is_some()
+            || self.exception_delivery.is_some()
+            || self.event_completed
+            || self.suspended_wait.is_some()
+            || self.event_calls.depth() != 0
+            || wait.callback_depth != 0
+            || cpu.cop0().read(13)? & 0x8000_007c != 0
+            || !matches!(cpu.cop0().read(14)?, 0xb0 | 0x8000_00b0 | 0xa000_00b0)
+            || cpu.register(9) != 0x0a
+            || cpu.register(4) != wait.handle
+            || cpu.register(31) != wait.return_pc
+        {
+            return Err("BIOS interrupt cannot suspend this WaitEvent continuation".into());
+        }
+        Ok(Some(wait.clone()))
+    }
+
+    fn suspend_wait(&mut self, wait: Option<SuspendedWait>) {
+        if wait.is_some() {
+            self.waiting_event = None;
+            self.suspended_wait = wait;
+        }
+    }
+
+    fn resume_wait(&mut self) {
+        if let Some(suspended) = self.suspended_wait.take() {
+            self.waiting_event = Some(suspended.wait);
+        }
     }
 
     fn exception_progress(
@@ -842,17 +898,28 @@ impl Kernel {
             self.require_plain_context()?;
         }
         let context = super::thread_context::Context::current(bus)?;
+        let mut expected = cpu.clone();
+        context.restore(&mut expected, bus)?;
+        if let Some(suspended) = &self.suspended_wait {
+            if ram_offset(context.address(), 4)? != suspended.thread
+                || expected.pc() != suspended.entry
+                || expected.register(9) != 0x0a
+                || expected.register(4) != suspended.wait.handle
+                || expected.register(31) != suspended.wait.return_pc
+            {
+                return Err("BIOS exception return would abandon suspended WaitEvent".into());
+            }
+        }
         if let Some([entry, _]) = self.exception_return {
-            let mut expected = cpu.clone();
-            context.restore(&mut expected, bus)?;
             self.returning = Some(expected);
             if cpu.pc() != entry {
                 cpu.resume_at(entry);
             }
             return Ok(Some(entry));
         }
-        context.restore(cpu, bus)?;
+        *cpu = expected;
         self.clear_exception_continuations();
+        self.resume_wait();
         Ok(None)
     }
 
@@ -903,8 +970,8 @@ impl Kernel {
     }
 
     fn clear_exception_continuations(&mut self) {
-        // Entry rejects preexisting HLE continuations. Therefore these all belong
-        // to the exception being abandoned by this explicit nonlocal return.
+        // The foreground wait is suspended separately. These continuations
+        // belong to the exception ending through this explicit nonlocal return.
         self.exception_calls = None;
         self.event_calls = EventCalls::default();
         self.event_completed = false;
@@ -927,7 +994,10 @@ impl Kernel {
         if self.exception_calls.is_some() {
             return Err("BIOS nested exception dispatch is unsupported".into());
         }
-        if self.event_calls.depth() != 0 || self.waiting_event.is_some() {
+        if self.event_calls.depth() != 0
+            || self.waiting_event.is_some()
+            || self.suspended_wait.is_some()
+        {
             return Err("BIOS exception context: active event/wait continuation cannot be unwound implicitly".into());
         }
         Ok(())

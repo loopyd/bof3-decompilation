@@ -58,7 +58,7 @@ fn prepare_kernel(
     let exception_top = symbol("audio_exception_stack_end")?;
     let image_bytes = u32::try_from(image.len())?;
     if image.is_empty()
-        || base < 0x8000_0128
+        || base != 0x8002_0000
         || base & 3 != 0
         || end.checked_sub(base) != Some(image_bytes)
         || !(end <= bss && bss < init_stack && init_stack < init_top)
@@ -66,9 +66,9 @@ fn prepare_kernel(
         || !(exception_stack < exception_top && exception_top == bss_end)
         || init_top & 7 != 0
         || exception_top & 7 != 0
-        || bss_end > 0x8001_0000
+        || bss_end > 0x8004_0000
     {
-        return Err("kernel image/allocation metadata is inconsistent or overlaps staging".into());
+        return Err("kernel image/allocation metadata is inconsistent or outside its arena".into());
     }
     ram_offset(base, (bss_end - base) as usize)?;
     let exe_start = ram_offset(executable.header().load_address, executable.text().len())?;
