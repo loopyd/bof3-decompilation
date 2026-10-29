@@ -4483,6 +4483,19 @@ clears the other's mask. These entries do not validate allocation or capacity.
 The combined wrapper, mode setter and gain frames require `0x48` stack bytes.
 The scheduler must run separately to consume these flags.
 
+`kernel/timers.s` provides the stackless `audio_counter_set` and
+`audio_counter_reset` leaves used by sequence callback registration. Both accept
+counter IDs zero through two from A0's low sixteen bits and return one. Other
+IDs return zero without reading `audio_counter_registers_pointer`. The pointer
+initially contains `0x1F801100` and remains writable. Configuration writes mode
+zero, A1's low halfword as the target, then reloads the pointer for the final mode
+write. The mode starts at `0x48`. For counters zero and one, A2 mask `0x10` adds
+mode mask `1`, and a clear A2 low bit adds mode mask `0x100`. For counter two, a
+clear A2 low bit selects mode `0x248`. A2 mask `0x1000` adds mode mask `0x10` for
+every counter. Reset writes only the count halfword. These leaves preserve the
+device write order; callback registration and elapsed timer timing are separate
+requirements.
+
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
 
