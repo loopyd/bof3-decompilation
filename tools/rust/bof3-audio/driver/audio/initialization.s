@@ -859,7 +859,10 @@ audio_sequence_allocation_records:
 .balign 4
 .globl audio_sequence_voice_globals
 audio_sequence_voice_globals:
-    .space 160
+    .space 76
+.globl audio_sequence_parameter_callbacks
+audio_sequence_parameter_callbacks:
+    .space 84
 .globl audio_sequence_voice_records
 audio_sequence_voice_records:
     .space 1208
