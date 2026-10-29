@@ -494,13 +494,14 @@ The item-category labels ITEM, WEAPON, ARMOR, OPTION and VITAL occupy
 Their capacities are five, seven, six, seven and six bytes including NUL.
 The reader at `0x801DFBF4` selects pointers from `0x801ECC64` using the panel
 category byte and draws through `0x8014F800` at `0x801DFF24`. Keep the nine
-alignment bytes and twenty pointer bytes protected. A controlled packed-media
-Items observation verifies ITEM changed to XTEM. A preinstruction capture at
-`0x801DFF24` binds `V0=0x801ECC3C`, slot `S0=0x801ECC64` and record
+alignment bytes and twenty pointer bytes protected. Controlled packed-media
+Items observations verify all five edited category labels. A preinstruction capture
+at `0x801DFF24` binds `V0=0x801ECC3C`, slot `S0=0x801ECC64` and record
 `S1=0x80148504`, with handler 6, type 12, state 2 and category zero. It does not
-prove call or delay-store retirement. A separate controlled record with category 1
-verifies WEAPON changed to XEAPON. Other category labels, general selector bounds
-and natural availability remain unverified; identical payloads leave the START
+prove call or delay-store retirement. WEAPON, ARMOR, OPTION and VITAL use separate
+controlled records with categories 1 through 4. These observations accept
+category-label glyphs only. Other selected calls, general selector bounds and
+natural availability remain unverified; identical payloads leave the START
 or STATUS supplier unresolved.
 
 The skill-category labels HEAL, ASSIST, ATTACK and SKILL occupy
