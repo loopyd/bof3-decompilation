@@ -85,8 +85,9 @@ segments:
     - c
     - func_801F0E1C
   - - 8904
-    - asm
+    - c
     - activateTaskStatusC003
+    - '@source: src/bof3/ui/activateTaskStatusC003.c'
   - - 8968
     - c
     - activateScratchTaskWithBandLabel
