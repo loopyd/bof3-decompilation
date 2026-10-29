@@ -110,10 +110,18 @@ Their original LOGO consumer at `0x801D7578` reads fresh input and returns zero
 with its next unread halfword in `a0`. Each reviewed prefix excludes the final
 eight fetched bytes to cover unread lookahead. The original packet index, count
 and frame ID bind each prefix to ordered 2016-byte bodies at sector offset 40.
-Coverage admits only the recorded source slices, totaling 1,607,660 bytes.
-It leaves 430,516 video-body bytes unresolved, including excluded tails and
-frames 222 through 231. These bounds establish neither each frame's logical end
-nor whole-movie playback.
+Coverage admits 1,607,660 bytes from those observed frontiers.
+
+For frames 222 through 231, coverage identifies 2704 bytes per frame as exact
+packet-bound copies of the qualified frame 221 prefix. Their first 2712 assembled
+bytes match, including eight lookahead bytes that remain excluded. This is a
+stored-format classification; later acquisition and decoder entry or return
+remain unverified. The initial twelve bytes contain eight header bytes and four
+initially cached coded bytes.
+
+Across both evidence bases, 403,476 video-body bytes remain unresolved, including
+excluded lookahead and tails. These bounds establish neither each frame's logical
+end nor whole-movie playback.
 
 Static format identification does not establish original sector selection,
 arrival, playback, command completion, predictor history or hardware handling
