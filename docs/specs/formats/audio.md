@@ -4369,6 +4369,30 @@ bindings must be installed afterward. This entry's direct callees are owned.
 Scheduler and loading closure, production routing and independent native audio
 acceptance remain open.
 
+`audio_loader_initialize_layout` in the linked
+[layout component](../../../tools/rust/bof3-audio/driver/audio/layout.s) initializes
+seven loader slots and their header and sequence pointer arrays. Its low A0 byte
+must be zero, one or two. It reads the live SPU-base and capacity tables on each
+call and preserves the original wrapping address arithmetic. The guest entry
+does not validate the selector or table values.
+
+Each twenty-byte slot receives its SPU base, header pointer, auxiliary pointer,
+sequence pointer and halfword ID `0..6`. The flags halfword at offset eighteen
+remains untouched. Header and sequence storage share the 73,728-byte
+`audio_loader_staging` allocation, and each slot has a 124-byte auxiliary record.
+Zero-capacity slots can point one byte past the allocation's last byte. The entry
+computes these addresses without accessing staging or auxiliary contents.
+It returns the seventh auxiliary record's address in V0 and uses no stack.
+
+The linker preserves the original adjacency of auxiliary records, sound gains,
+the eight-byte gap, both pointer arrays, sequence records, channels and bank IDs.
+Cold kernel initialization clears these BSS allocations; later layout calls retain
+unwritten fields and payload bytes. Three mutable tables each have three rows
+of seven words. SPU-base words remain numeric device addresses, while header and
+sequence pointers relocate with their owned storage. The first LUI/ORI pair uses
+an explicit unadjusted upper-half linker symbol, since ORI does not sign-extend
+its low half. Bank opening, upload and production routing remain separate work.
+
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
 

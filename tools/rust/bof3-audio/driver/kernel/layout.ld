@@ -24,6 +24,10 @@ SECTIONS
     .bss ALIGN(8) (NOLOAD) : {
         audio_kernel_bss = .;
         *(.bss)
+        *(.bss.audio_sound_auxiliary)
+        *(.bss.audio_sound_gains)
+        *(.bss.audio_sound_pointers)
+        *(.bss.audio_sound_sequences)
         *(.bss.audio_kernel_state)
         *(.bss.audio_kernel_stacks)
         audio_kernel_bss_end = .;
@@ -34,3 +38,6 @@ SECTIONS
         *(.reginfo) *(.MIPS.abiflags) *(.pdr) *(.comment) *(.gnu.attributes)
     }
 }
+
+# The root uses ORI rather than a sign-extending low-half instruction.
+audio_loader_staging_high = ABSOLUTE(audio_loader_staging >> 16);

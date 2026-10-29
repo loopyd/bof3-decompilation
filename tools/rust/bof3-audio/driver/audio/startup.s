@@ -105,13 +105,16 @@ audio_sound_initialize:
     nop
 .end audio_sound_initialize
 
-.section .bss
+.section .bss.audio_sound_gains,"aw",@nobits
 
 # exe/slus_004_22@0x80148A04, 12 bytes.
 .balign 4
 .globl audio_sound_gains
 audio_sound_gains:
     .space 12
+    .space 8 # Original gap before the loader pointer arrays.
+
+.section .bss.audio_sound_sequences,"aw",@nobits
 
 # exe/slus_004_22@0x80148A50, 1376 bytes.
 .balign 4
@@ -131,6 +134,8 @@ audio_sound_channels:
 .globl audio_sound_bank_ids
 audio_sound_bank_ids:
     .space 7
+
+.section .bss
 
 # exe/slus_004_22@0x8018B410, 12 bytes.
 .balign 4
