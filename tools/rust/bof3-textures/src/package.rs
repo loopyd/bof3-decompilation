@@ -1417,6 +1417,7 @@ pub fn source_package(root: &Path, destination: &Path) -> Result<usize> {
             members.push(relative.join("docs/catalog.md"));
             members.push(relative.join("docs/glyph-edit.md"));
             members.push(relative.join("docs/palette-edit.md"));
+            members.push(relative.join("docs/terrain-edit.md"));
             members.push(relative.join("docs/reopen-edits.md"));
             for file in ["LICENSE", "mise.toml", "rust-toolchain.toml"] {
                 members.push(relative.join(file));
