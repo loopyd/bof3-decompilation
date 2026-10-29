@@ -1,7 +1,7 @@
 # Direct naming edits
 
 Use [editing and recovery](../../bof3-re/references/editing-recovery.md) for owned
-PRE capture, adopted dirty work, native bounds, independent review and restoration.
+PRE capture, adopted dirty work, native bounds, independent review and recovery.
 First capture `bin/harness naming list TARGET --kind all --json` and live checks
 for the selected identity and all affected callers. Record old/new spellings and
 why the evidence supports the new name.
@@ -35,4 +35,6 @@ A retained partial spelling edit preserves its body, `@status partial`, `@match`
 and `@residual` byte for byte, with unchanged live metrics and first mismatch.
 Partial nonzero results are expected evidence, not passing exactness. Metadata
 corrections follow the metadata owner after a successful live gate. On failure,
-stop native jobs and restore only the owned PRE state; report unresolved recovery.
+follow [failure and continuation](../../bof3-re/references/editing-recovery.md#failure-and-continuation).
+Confirm writer termination, keep the batch applied and preserve evidence while
+fixing the cause. Recheck affected gates and report unresolved recovery.

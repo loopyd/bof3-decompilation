@@ -59,8 +59,9 @@ checks do not provide semantic approval or persistent reuse authority.
 
 Shared CMake configuration retries newly observed race signatures under its
 existing lock. A recurring signature, nontransient error or unconfirmed cleanup
-propagates unchanged. Follow shared [editing and recovery](editing-recovery.md)
-for owned restoration after confirmed writer termination.
+propagates unchanged. Follow shared
+[failure and continuation](editing-recovery.md#failure-and-continuation)
+for recovery after confirmed writer termination.
 
 Ordinary status fingerprints watch compiler configuration throughout capture and
 reject changes even when the original bytes or absence are restored. Literal and

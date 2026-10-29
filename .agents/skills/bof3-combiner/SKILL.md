@@ -43,12 +43,14 @@ description: Combine or clean up BOF3 source files with meaningful grouping, dir
    [metadata owner](../bof3-re/references/metadata.md) after the live gate, then
    recheck the edited records. Separate scoped success from campaign completion.
 
-After failed comparison or review, confirm writer termination and restore only
-owned PRE, including deleted files and original absence states. Preserve unrelated
-work and raw index state. Verify restoration before another writer. Uncertain
-cleanup stops mutation and retains PRE, POST and actual process handles. No
-transaction, ranking or recovery script is required. Frozen campaign membership,
-partial-result constraints, attempt limits and unfinished duties remain binding.
+After failed comparison or review, follow
+[failure and continuation](../bof3-re/references/editing-recovery.md#failure-and-continuation).
+Confirm writer termination, keep the batch applied and fix the cause before
+rechecking affected gates. Restore only when explicitly authorized. Preserve
+unrelated work and raw index state. Uncertain cleanup stops mutation; retain PRE,
+POST, failed evidence and actual process handles. No transaction, ranking or
+recovery script is required. Frozen campaign membership, partial-result
+constraints, attempt limits and unfinished duties remain binding.
 
 For path-only batches, follow
 [source relocation](../bof3-naming/references/source-relocation.md) for shallow

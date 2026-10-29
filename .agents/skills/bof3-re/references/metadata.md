@@ -63,6 +63,8 @@ repair records or grant semantic acceptance. Inspect partial residuals against
 the actual diff; the tool cannot establish their meaning.
 
 If inputs change, run a new live comparison before retaining an exact conclusion.
-After a failed gate or review, confirm writer termination and restore only owned
-edits to PRE. Preserve unrelated dirty work and the index. Report uncertain
-cleanup or restoration as a blocker.
+After a failed gate or review, follow
+[failure and continuation](editing-recovery.md#failure-and-continuation).
+Confirm writer termination, keep the batch applied and preserve PRE, POST and
+failed evidence while fixing the cause. Recheck affected gates. Preserve unrelated
+dirty work and the index. Report uncertain cleanup or recovery as a blocker.
