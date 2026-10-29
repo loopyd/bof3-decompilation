@@ -59,6 +59,21 @@ those bits a meaning. It does not establish the absence of rasterized text,
 complete CLUTs, runtime selection, upload, residency or display. Other sprite
 banks remain unresolved under this rule.
 
+## Staged palette coverage
+
+Coverage recognizes the complete 5120-byte palette allocation in original US
+`AREA024.EMI` entry 8. It requires the original archive identity, entry offset
+737280, raw transfer mode, load address `0x80033E00` and exact payload hash.
+The allocation contains 2560 little-endian image words, without a header.
+
+The staging routine at `0x8014E284` copies this span into the image buffer
+described by `0x8014E22C`. The original SDK profile at `0x8017CE9C` interprets
+the descriptor as image dimensions and consumes words through CPU and DMA paths.
+This qualifies the stored representation. Mutable limits, dispatch bindings,
+debug callbacks and queue paths remain separate execution questions. The rule
+does not establish a full palette upload, sampling, display, unique ownership or
+the absence of rasterized text. Other entries and archive gaps stay unchanged.
+
 ## XA payload coverage
 
 Coverage identifies encoded audio bodies in the original US `S_XA00.STR`,

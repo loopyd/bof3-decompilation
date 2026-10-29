@@ -5,7 +5,7 @@ use std::sync::OnceLock;
 use serde::Deserialize;
 
 use crate::digest::sha256_hex;
-use crate::models::{Error, Result};
+use crate::models::{Entry, Error, Result};
 
 pub const DISC: &str = include_str!("../../../../config/original-us-disc.json");
 pub const US_EXECUTABLE_SHA256: &str =
@@ -314,22 +314,33 @@ const BPLU349_GRAPHICS_RANGES: &[(usize, usize)] = &[
 ];
 
 /// Recognized serialized graphics storage; no rasterized-text or display claim.
-pub fn sprite_bank_ranges(data: &[u8]) -> Option<Vec<NontextRange>> {
-    if data.len() != 331_788
-        || sha256_hex(data) != "3633597f03d7f2129ff7d7fc1ad0fe7c2e6a0affb2562e789c4a0b97b5d14b3e"
-    {
-        return None;
-    }
-    Some(
-        BPLU349_GRAPHICS_RANGES
+pub fn graphics_storage_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
+    match (entry.index, entry.offset, entry.transfer_mode, entry.ram_ptr, data.len()) {
+        (0, 2048, 0, 0x8003_b800, 331_788)
+            if sha256_hex(data)
+                == "3633597f03d7f2129ff7d7fc1ad0fe7c2e6a0affb2562e789c4a0b97b5d14b3e" =>
+        {
+            Some(BPLU349_GRAPHICS_RANGES
             .iter()
             .map(|&(offset, length)| NontextRange {
                 offset,
                 length,
                 evidence: "original US BPLU349 image headers, packed words, mode-2 tokens and 32-halfword palette records; consumers 0x8014E6D0, 0x8014E7F8, 0x8014E8FC and 0x80166C48; opaque prefixes excluded; exact source identity; no rasterized-text absence or runtime claim",
             })
-            .collect(),
-    )
+            .collect())
+        }
+        (8, 737_280, 0, 0x8003_3e00, 5120)
+            if sha256_hex(data)
+                == "e9fcb1395884aff7dc732517fd685e9fb26fe87ccf78f757055e410cda8e9e18" =>
+        {
+            Some(vec![NontextRange {
+                offset: 0,
+                length: data.len(),
+                evidence: "original US AREA024 entry 8 serialized palette/image words; staging 0x8014E284, descriptor 0x8014E22C and original SDK image-word profile 0x8017CE9C; exact source identity; no actual full-palette upload, sampling, display or text-absence claim",
+            }])
+        }
+        _ => None,
+    }
 }
 
 /// Canonical sources with reviewed sector metadata and bounded payload fields.

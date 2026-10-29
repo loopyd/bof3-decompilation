@@ -413,11 +413,8 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                         "remaining record entry consumers unverified".into(),
                                     ));
                                 }
-                            } else if let Some(spans) = (original_us
-                                && entry.index == 0
-                                && entry.transfer_mode == 0
-                                && entry.ram_ptr == 0x8003_b800)
-                                .then(|| crate::original::sprite_bank_ranges(payload))
+                            } else if let Some(spans) = original_us
+                                .then(|| crate::original::graphics_storage_ranges(*entry, payload))
                                 .flatten()
                             {
                                 let mut at = 0;
