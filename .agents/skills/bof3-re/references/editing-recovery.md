@@ -44,10 +44,14 @@ independent review; self-review is not independent evidence.
 ## Failure and continuation
 
 After failed comparison, drift, cancellation or review, confirm all owned native
-writers have terminated before restoration. Restore only owned PRE contents,
-existence and file identities; remove only files created by this edit. Preserve
-unrelated work and index bytes. Verify restored state and required native results
-before starting another writer.
+writers have terminated before recovery or further native work. Keep the batch
+applied, fix the cause and recheck affected gates before acceptance or another
+candidate.
+
+When explicitly authorized, restore only owned PRE contents, existence and file
+identities; remove only files created by this edit. Preserve unrelated work and
+index bytes. Verify restored state and required native results before starting
+another writer.
 
 Uncertain cleanup or restoration stops mutation. Retain PRE, POST, actual handles
 and error evidence, and report the unresolved condition. Do not reset the tree,

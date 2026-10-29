@@ -28,8 +28,9 @@ owners; never hand-edit `build/` or toolchains to repair a move.
    for owned PRE and recovery.
 3. Validate metadata identity and the destination subsystem before moving files.
    Preserve every Splat boundary address.
-4. Apply the complete batch. A move, metadata, regeneration or validation failure
-   requires restoring the whole owned batch before another candidate.
+4. Apply the complete batch. On failure, keep it applied, preserve evidence and
+   follow [editing and recovery](../../bof3-re/references/editing-recovery.md#failure-and-continuation).
+   Fix the cause and recheck affected gates before starting another candidate.
 5. Run `bin/harness build TARGET` to regenerate build metadata. Verify that the
    graph omits old paths and includes every current manifest source.
 6. Run `bin/harness source symbols check TARGET`, `bin/harness source splat TARGET`
