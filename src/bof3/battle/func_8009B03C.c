@@ -1,15 +1,11 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @source 0x8009B03C */
-/* @behavior Initialises the battle panel selection state at 0x80148570: writes
- * the byte at 0x801485B8 and the 0x24-byte-lower byte at 0x80148594 through a
- * 0x80148570 base, sets the D_801485B9/D_801485BA/D_801485BB bytes and the
- * D_801485BC/D_801485BE halfwords, the D_801485C2/D_801485C3/D_801485C5 bytes,
- * stores the 0x800B6F50 pointer in D_801485D8 and copies work byte +0x05 of
- * the record at 0x801EBF08 into D_801485C4 and 0x80148656, then clears the
- * head byte D_80148570 and the D_8014859C..D_801485A1 byte run, saves the
- * D_80148574/D_80148576 cursor pair into 0x80148598/0x8014859A and sets that
- * cursor to 0x140. Its only caller is 0x80099364.
+/* @source 0x8009B03C
+ * @behavior Writes fixed byte and halfword fields around 0x80148570 and stores
+ * 0x800B6F50 at 0x801485D8. Copies byte +0x05 through the pointer loaded from
+ * 0x801EBF08 to 0x801485C4, and rereads that byte for 0x80148656. Saves the
+ * halfwords at 0x80148574/0x80148576 into 0x80148598/0x8014859A and sets the
+ * halfword at 0x80148574 to 0x140.
  * @status partial
  * @match 73.97
  * @residual 54/73 instructions, 292 bytes matching the original's 292; first

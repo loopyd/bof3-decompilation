@@ -1,8 +1,8 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @behavior Returns whether the selected entry kind is 0x4C, 0x4D, 0xB4, or 0xB5. */
-
 /* @source 0x800AB470
+ * @behavior Returns 1 when the unsigned halfword at 0x80145FAA + 0x140 * (u8)arg0 is
+ * 0x4C, 0x4D, 0xB4 or 0xB5; returns 0 otherwise.
  * @status exact
  * @match 100.00
  * @residual none
