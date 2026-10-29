@@ -562,18 +562,40 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
         } else if crate::executable::is_executable(&bytes) && crate::executable::supports(&bytes) {
             match crate::executable::extract(path, &bytes) {
                 Ok(document) => {
+                    let mut spans: Vec<_> = document.strings.into_iter().map(|text| {
+                        range(text.file_offset, text.capacity, "known-text", format!("US executable reference sites {:?}; codec {}; consumers {}; output {:?}; runtime acceptance pending", text.references, text.codec.as_str(), text.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), text.output))
+                    }).collect();
+                    spans.extend(
+                        crate::original::executable_nontext_ranges(&bytes)
+                            .into_iter()
+                            .map(|field| {
+                                range(
+                                    field.offset,
+                                    field.length,
+                                    "known-nontext",
+                                    field.evidence.into(),
+                                )
+                            }),
+                    );
+                    spans.sort_by_key(|span| span.offset);
                     let mut cursor = 0;
-                    for text in document.strings {
-                        if text.file_offset > cursor {
+                    for span in spans {
+                        let end = span.offset + span.length;
+                        if span.offset < cursor || end > bytes.len() {
+                            return Err(Error::Invalid(
+                                "executable coverage ranges overlap or exceed the source".into(),
+                            ));
+                        }
+                        if span.offset > cursor {
                             record.ranges.push(range(
                                 cursor,
-                                text.file_offset - cursor,
+                                span.offset - cursor,
                                 "unresolved",
                                 "executable ranges outside the supported ASCII consumers".into(),
                             ));
                         }
-                        record.ranges.push(range(text.file_offset, text.capacity, "known-text", format!("US executable reference sites {:?}; codec {}; consumers {}; output {:?}; runtime acceptance pending", text.references, text.codec.as_str(), text.consumers.iter().map(|address| format!("{address:#x}")).collect::<Vec<_>>().join(", "), text.output)));
-                        cursor = text.file_offset + text.capacity;
+                        cursor = end;
+                        record.ranges.push(span);
                     }
                     if cursor < bytes.len() {
                         record.ranges.push(range(

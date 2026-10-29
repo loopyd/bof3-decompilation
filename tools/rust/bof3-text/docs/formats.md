@@ -103,7 +103,7 @@ the absence of rasterized text. Other entries and archive gaps stay unchanged.
 
 ## Resident animation field coverage
 
-Coverage recognizes fixed fields in entry 4 of two original US archives. Each
+Coverage recognizes fixed fields in entry 4 of three original US archives. Each
 requires its original archive identity, entry offset 198656, raw transfer mode,
 load address `0x800D3800` and exact payload hash.
 
@@ -111,6 +111,7 @@ load address `0x800D3800` and exact payload hash.
 | --- | ---: | ---: | ---: | ---: |
 | `AREA024.EMI` | 11368 | 1917 | 354 | 7442 |
 | `AREA000.EMI` | 10592 | 1951 | 349 | 6793 |
+| `AREA001.EMI` | 11968 | 1808 | 326 | 7990 |
 
 The metadata covers root-relative u32 group offsets, group-relative u16 program
 offsets, program count bytes, duration/operand pairs and referenced relative cell
@@ -129,10 +130,23 @@ stored fields; it does not establish each cell's selected path or rectangle beha
 Packed part flags, allocation tails, unreferenced offset words and unreferenced
 cells remain unresolved. These include AREA024's word `[6836,6838)` and cells
 `[5495,5504)` and `[7180,7221)`, and AREA000's word `[6518,6520)` and cell
-`[6541,6572)`. Other payload bytes retain their prior status. The rule does not
+`[6541,6572)`. AREA001 excludes words `[5252,5254)` and `[11818,11820)`
+and cells `[5371,5380)` and `[11841,11872)`. Other payload bytes retain their
+prior status. The rule does not
 establish complete program consumption, runtime execution, rendering or a unique
 supplier. The writer of base pointer `0x801459F0` and the loader handoff remain
-unqualified; entries at the same load address do not inherit either profile.
+unqualified; entries at the same load address do not inherit any profile.
+
+## Executable geometry table coverage
+
+Coverage recognizes the 32-byte numeric table at `0x8017F53C..0x8017F55C`
+(file offsets `[955708,955740)`) in the exact original US `SLUS_004.22`.
+The original consumer at `0x8014C7F0..0x8014C818` masks its index to 0–15,
+doubles it and reads an unsigned width/height pair. The sixteen pairs combine
+widths and heights of 8, 16, 24 and 32 pixels.
+
+This qualifies the stored numeric representation. Runtime use, callee effects,
+rectangle behavior, mutable tables and other executables remain unverified.
 
 ## XA payload coverage
 
