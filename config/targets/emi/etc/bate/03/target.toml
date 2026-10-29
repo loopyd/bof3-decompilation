@@ -13,9 +13,7 @@ support_sources = [
     "src/bof3/support/bate_03_psyq.c",
 ]
 psyq_source = "src/bof3/support/bate_03_psyq.c"
-headers = [
-    "include/bof3/battle/bate_03_internal.h",
-]
+headers = []
 
 [[replicas]]
 disc_id = "BIN/ETC/COMMU01.EMI#2"
