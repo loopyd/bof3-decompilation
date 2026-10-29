@@ -20,6 +20,7 @@ SHARED_MACRO_HEADERS = (
     Path("include/base/compiler.h"),
     Path("include/bof3/asm.h"),
     Path("include/bof3/symbols.h"),
+    Path("include/game/counter_step.h"),
     Path("include/game/workarea.h"),
     Path("include/world/work_state.h"),
     Path("include/world/gate_status.h"),

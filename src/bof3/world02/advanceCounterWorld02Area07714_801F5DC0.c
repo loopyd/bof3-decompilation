@@ -1,4 +1,5 @@
 #include "bof3/bof3.h"
+#include "game/counter_step.h"
 
 extern u16 D_8014932A;
 extern u8 D_80149333;
@@ -10,10 +11,4 @@ extern u8 D_80149333;
  * @match 100.00
  * @residual none
  */
-void advanceCounterWorld02Area07714_801F5DC0(void) {
-  u16 count;
-
-  count = D_8014932A;
-  D_80149333 = 2;
-  D_8014932A = (u16)(count + 0x14);
-}
+COUNTER_ADVANCE(advanceCounterWorld02Area07714_801F5DC0, D_8014932A, D_80149333)

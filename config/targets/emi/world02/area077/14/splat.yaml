@@ -237,6 +237,7 @@ segments:
   - - 12736
     - c
     - advanceCounterWorld02Area07714_801F5DC0
+    - '@source: src/bof3/world02/advanceCounterWorld02Area07714_801F5DC0.c'
   - - 12776
     - c
     - setTwoWorld02Area07714_801F5DE8

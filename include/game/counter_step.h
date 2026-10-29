@@ -1,5 +1,5 @@
-/* Counter-step template: writes a fixed mode byte then steps a u16 counter.
- * Byte-identical across area008/area026 (see docs/agents/lessons.md).
+/* COUNTER_ADVANCE and COUNTER_RETREAT read a u16 counter, write mode 2,
+ * then store the counter plus or minus 0x14.
  *
  * Usage:
  *   #include "internal.h"
