@@ -258,8 +258,9 @@ fn root_at(document: &Document, index: usize) -> Result<&Root> {
         .ok_or_else(|| invalid("missing root index"))
 }
 /// Resolve one explicit selector through SLUS_004.22@0x8014DC08.
-/// The caller must qualify the root, selector and image-skip condition from the
-/// same consumer. Physical extent checks do not prove a valid runtime selector.
+/// selector is the final entity byte at +0x4B, not the entry request to
+/// SLUS_004.22@0x8014D6B8. The caller must qualify it, the root and image-skip
+/// condition from the same consumer. Extent checks do not prove a valid selector.
 /// skip_image represents entity byte 0 bit 1, not entity byte 0x24.
 pub fn select(
     source: &[u8],

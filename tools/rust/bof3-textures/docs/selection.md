@@ -3,8 +3,9 @@
 ## Sprite roots
 
 The `sprite_bank::select` library function follows the original US helper at
-`SLUS_004.22@0x8014dc08`. Supply decoded bank bytes, a root ordinal, the original
-byte selector and the image-skip condition from the same consumer observation.
+`SLUS_004.22@0x8014dc08`. Supply decoded bank bytes, a root ordinal, the final
+selector byte at entity `0x4b` and the image-skip condition from the same
+consumer observation.
 The function decodes a supported three-root bank or standalone root before
 resolving the selected slot. A standalone payload has root ordinal zero and
 keeps every offset in its original payload coordinates. It does not include a
@@ -35,6 +36,21 @@ bytes editable or bind a physical source to an active runtime entity. It does
 not choose a palette, submit image uploads, establish residency or render a
 frame. Conditional image selection cannot be treated as an unconditional bank
 or image dependency.
+
+### Entry requests
+
+The request passed to `SLUS_004.22@0x8014d6b8` can differ from the final
+selector byte. That wrapper masks the request to eight bits. When request bit
+`0x80` is set, the main path at `0x8014d6dc` uses the low seven bits to select
+a four-byte record through the pointer table at `0x80181c7c`. Entity word
+`0x64` selects the table pointer. Record byte two becomes entity byte `0x4b`,
+and byte three becomes entity byte `0x2a`. The first two record bytes form an
+ID passed to the metadata lookup at `0x8014dd3c`.
+
+Use the resulting entity byte when calling `sprite_bank::select`. The library
+does not evaluate the entry request or its mutable tables. Those tables and
+entity state do not establish a valid request domain, direction names or a
+physical bank binding. Preserve their context when qualifying a selector.
 
 ## Resident banks
 
