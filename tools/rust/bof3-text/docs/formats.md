@@ -416,9 +416,11 @@ accepts up to three encoded bytes. The two trailing bytes of six-byte records
 stay protected. The fixed-address consumers call `0x8014F800` at
 `0x801DBC88`, `0x801DBCFC`, `0x801DBD64`, `0x801DBDC0`, `0x801DC90C`,
 `0x801DC934`, `0x801DC95C`, `0x801DC978`, `0x801DE6EC` and `0x801DF1AC`.
-These stat labels have no pointer-table references. Controlled Equipment member
-selection verifies edited labels in the group at `0x801ECB0C`. Identical START
-and STATUS payloads leave the active supplier indistinguishable. Other groups and natural menu availability remain unverified.
+These stat labels have no pointer-table references. Controlled Status and
+Equipment member selection verify edited labels in the groups at `0x801EC940`
+and `0x801ECB0C`, respectively. Identical START and STATUS payloads leave the
+active supplier indistinguishable. Other groups and natural menu availability
+remain unverified.
 
 The final string exposes the four-byte `%3d` allocation at `0x801D0C4C` through
 `ascii-u16-decimal-format`. Its eighteen formatter sites read one unsigned byte
