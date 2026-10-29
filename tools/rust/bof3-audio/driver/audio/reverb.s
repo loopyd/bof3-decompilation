@@ -1053,7 +1053,3 @@ audio_spu_service_wait_event:
 .globl audio_spu_reverb_zeroes
 audio_spu_reverb_zeroes:
     .space 1024
-# exe/slus_004_22@0x8018E0D0, 20 bytes.
-.globl audio_sequence_reverb_attributes
-audio_sequence_reverb_attributes:
-    .space 20

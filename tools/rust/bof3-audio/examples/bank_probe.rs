@@ -160,7 +160,14 @@ fn prepare_kernel(
             missing_hook: MissingHook::ReturnFromException,
         },
     )?;
-    let initialized = execution.call(symbol("audio_kernel_initialize")?, [0; 4], 10_000)?;
+    // Clearing each four-byte state word retires four instructions. The
+    // remaining fixed kernel setup fits within 1,000 transitions.
+    let initialization_limit = u64::from(init_stack - bss) + 1_000;
+    let initialized = execution.call(
+        symbol("audio_kernel_initialize")?,
+        [0; 4],
+        initialization_limit,
+    )?;
     if initialized.result != 0 {
         return Err("kernel initialization returned an unexpected result".into());
     }
