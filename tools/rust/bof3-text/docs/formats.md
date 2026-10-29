@@ -103,14 +103,19 @@ the absence of rasterized text. Other entries and archive gaps stay unchanged.
 
 ## Resident animation metadata coverage
 
-Coverage recognizes 25 structural bytes in original US `AREA024.EMI` entry 4.
+Coverage recognizes 1917 structural bytes in original US `AREA024.EMI` entry 4.
 It requires the original archive identity, entry offset 198656, raw transfer mode,
-load address `0x800D3800` and exact payload hash. Program `0x800D440C` contributes
-its count byte, six duration/frame pairs and six relative cell offsets at payload
-range `[0xC0D,0xC26)`. Original consumers `0x8014D928`, `0x8014D950` and
-`0x8014DBB4..0x8014DC04` qualify these numeric fields. The header's first byte,
-cell bodies and other programs remain unresolved. This stored-format rule does
-not establish runtime execution or a unique supplier.
+load address `0x800D3800` and exact 11,368-byte payload hash. The fixed ranges cover
+root-relative u32 group offsets, group-relative u16 program offsets, program count
+bytes, duration/operand pairs and referenced relative cell offsets.
+
+Original consumers `0x8014D878..0x8014D8AC`, `0x8014D928..0x8014D964` and
+`0x8014DBB4..0x8014DC04` qualify these numeric fields. First offsets delimit the
+recognized directories; they do not store separate counts or establish runtime
+selector bounds. Duplicate program slots retain their shared target. Each
+program's first byte, the unreferenced offset word at `[6836,6838)`, all cell
+bodies and other payload bytes remain unresolved. This stored-format rule does
+not establish complete program consumption, runtime execution or a unique supplier.
 
 ## XA payload coverage
 
