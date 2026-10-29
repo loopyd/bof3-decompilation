@@ -5,7 +5,8 @@ and one color in entry 8. The catalog conditionally associates this patch with
 surface record 723 in entry 13. The observed page is `0x0097`, the CLUT is
 `0x7980`, and the UV bounds are `(80,144)` through `(95,159)`.
 See [catalog records](catalog.md) for the source and consumer qualifications.
-Runtime appearance and complete shared uses remain unresolved.
+This combined edit has produced a magenta surface patch in the opening mine.
+Other contexts and complete shared uses remain unresolved.
 
 Build the executable using the [build instructions](../README.md#build).
 Create the output parent and keep each destination new and outside its inputs.

@@ -63,9 +63,18 @@ connect its page `0x0097`, CLUT `0x7980` and UVs `(80,144), (95,144), (80,159),
 (95,159)` to the matching GPU payload. Its encoded vertices lie inside the known
 draw area with zero draw offset and texture window. Final serialized VRAM matches
 all entry 7 upload bytes, including the nominal UV region in chunk 69, and entry
-8's selected CLUT row. Final residency does not establish earlier texture or
-palette reads, visible appearance, upload history or a unique source producer.
-The other palette-row differences and general surface dependencies stay unresolved.
+8's selected CLUT row. Final residency alone does not establish earlier texture
+or palette reads, upload history or a unique source producer.
+
+A combined edit replaces the 16x16 index patch with index 179 and entry 8 word
+947 with `0x7c1f`. Independent original and edited media boots with the same
+opening input schedule show a magenta surface patch in the opening mine. The
+complete metadata entry and known packet remain equal in both final RAM captures.
+This comparison does not trace the later GPU consumption or isolate the texel
+and palette changes' contributions. Both edges remain conditional. Complete
+shared uses, other palette-row differences and general surface dependencies
+stay unresolved. See the [terrain edit guide](terrain-edit.md) for the supported
+combined edit.
 
 Resident metadata reports `decoded_programs` and `unresolved_programs` per
 physical resource, counting unique program offsets. Partial banks retain
