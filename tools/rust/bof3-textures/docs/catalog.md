@@ -8,14 +8,23 @@ Area payloads additionally expose directly selected packed words and their
 coordinate-read spans. Qualified `0x800E3800` payloads additionally expose
 eight-byte `sprite-definition` records. Other internal layouts remain unresolved.
 
-Original `BIN/PLCHAR/PL27A.EMI#3` exposes one `animation-selection` record at
-decoded offset `310043`. Its three bytes select image `0`, program `1` and a raw
-mirror flag for root `2`, selector `5`. The record has image and animation edges.
-The original incoming helper context qualifies this source slot with image-skip
-clear. The checkpoint precedes the root load, so it does not establish retired
-reads or stores, uploads, a selector domain or rendered appearance. Query this
-record with `--records --kind animation-selection`. Its package's
-`selections.json` permits mirror-byte edits only.
+Qualified three-root `PL` banks expose `animation-selection` records for
+selectors 0 through 7 in each root. Original GAME route code masks one update
+path to this range. Each triple must fit its root and select valid image and
+program records. Image and animation edges describe those structural references.
+The conditional `selector-domain` edge retains the actor, root, saved-register
+and copy-buffer assumptions. It does not establish which slots execute.
+Query these records with `--records --kind animation-selection`. Their package's
+`selections.json` permits mirror-byte edits only. Other selection bytes remain
+opaque.
+
+The captured original `BIN/PLCHAR/PL27A.EMI#3` root `2`, selector `5` remains
+separately identified by its incoming-context evidence. Its triple at decoded
+offset `310043` selects image `0`, program `1` and a raw mirror flag. Image-skip
+was clear at that checkpoint. The checkpoint precedes the root load and does not
+establish retired reads or stores, uploads, other observed slots or rendered
+appearance. Other exported slots use an image-enabled structural view without
+claiming that entity state was observed.
 
 Qualified three-root `PL` banks and their records have category
 `field-character`. The parent's `stream_request.party_records` lists each
@@ -233,7 +242,8 @@ remain opaque.
 Program-to-cell dependencies are verified structural table references. Cell-to-program
 dependencies let a cell identify the programs that reference it. These
 edges do not establish execution, selection domains, image residency, draw CLUTs,
-texture pages or upload order. Selection tails are not enumerated as records.
+texture pages or upload order. Selection tails outside the qualified field-route
+slots remain opaque.
 The save-icon frame-to-palette references follow the original header producer.
 A palette query returns the palette and its three source frames. Each original
 archive copy retains its own IDs. These source relationships do not establish

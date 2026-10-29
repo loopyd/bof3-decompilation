@@ -93,7 +93,7 @@ const FAMILIES: [Family; 3] = [
     },
 ];
 
-fn request(source: &str) -> Option<Request> {
+pub(crate) fn request(source: &str) -> Option<Request> {
     for family in &FAMILIES {
         for (index, ids) in SELECTORS.iter().enumerate() {
             let path = format!("{}{:X}{:X}{:X}.EMI", family.prefix, ids[0], ids[1], ids[2]);

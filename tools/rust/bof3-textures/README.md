@@ -602,10 +602,10 @@ The first relative offset delimits each table. Image and palette tables use
 offsets. Each table has at most 256 indices. The palette consumer at
 `SLUS_004.22@0x80166c48` copies 32 words per selected record. The selection
 consumer at `0x8014dc08` can skip an image upload according to entity state.
-Selection tails stay opaque except the separately qualified PL27A root 2,
-selector 5 mirror byte. Contained triples alone do not establish valid runtime
-indices or editable records. Recognizing these sections does not assign a bank
-to a field or battle category.
+Selection tails stay opaque outside the qualified field-route slots described
+below. Contained triples alone do not establish valid runtime indices or editable
+records. Recognizing these sections does not assign a bank to a field or battle
+category.
 
 Input files are bounded at 128 MiB, indexed images at 1,048,576 pixels, and each
 codec process at 20 seconds. Invalid extents, malformed images, changed snapshots,
@@ -622,14 +622,21 @@ scene rendering.
 The [selection library](docs/selection.md) resolves one explicit root selector
 through the original consumer. It preserves the image-skip path, independent
 program selection and raw mirror byte. It does not infer a valid selector range
-or make the surrounding tail editable. Original `BIN/PLCHAR/PL27A.EMI#3`
-additionally exports `selections.json` with schema `bof3.sprite-selections/v1`.
-Only its bound slot's `mirror_flag` is editable. Zero disables horizontal
-mirroring; any nonzero byte enables it. Keep the schema, root, selector,
-image-skip state and slot count unchanged. Packing and re-export preserve the
-stored byte independently of program and image edits. The original incoming
-helper context binds this slot to its physical source, but does not establish
-retired stores, palette choice, uploads or rendered appearance.
+or make the surrounding tail editable. The package owner separately qualifies
+selectors 0 through 7 in each root of the 19 three-root `PL` field banks through
+an original GAME route-update path. It validates all 24 triples before exporting
+`selections.json` with schema `bof3.sprite-selections/v1`. The actor, active root,
+saved-register and copy-buffer assumptions remain conditional. This does not
+qualify other route paths, battle families, compass names or actual reachability.
+
+Only each slot's `mirror_flag` is editable. Zero disables horizontal mirroring;
+any nonzero byte enables it. Keep the schema, root, selector, image-skip state
+and slot count unchanged. Exported slots use `skip_image=false` to validate image
+references. That view does not assert observed entity state. Packing and
+re-export preserve the stored byte independently of program and image edits.
+The original incoming helper context for `BIN/PLCHAR/PL27A.EMI#3` root 2,
+selector 5 remains separately identified. It does not establish retired stores,
+palette choice, uploads or rendered appearance.
 
 The `animation` library reads bounded program headers, step pairs, and cell
 offsets using the US consumers at `0x8014d910`, `0x8014d978`, and `0x8014daec`.

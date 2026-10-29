@@ -4,7 +4,9 @@
 
 The `sprite_bank::select` library function follows the original US helper at
 `SLUS_004.22@0x8014dc08`. Supply decoded bank bytes, a root ordinal, the helper's
-selector byte and the image-skip condition from the same consumer observation.
+selector byte and the image-skip condition from the same consumer observation
+or qualified conditional static path. Static qualification does not establish
+execution.
 The function decodes a supported three-root bank or standalone root before
 resolving the selected slot. A standalone payload has root ordinal zero and
 keeps every offset in its original payload coordinates. It does not include a
@@ -59,13 +61,32 @@ edits. It does not infer direction names, discover selectors, establish an
 active entity or publish a package. The package's `sprite.json` still keeps
 selection tails read-only. Separately qualified slots use `selections.json`.
 
-### Pack the qualified PL27A slot
+### Pack field-route mirror slots
 
-Original `BIN/PLCHAR/PL27A.EMI#3` exports `selections.json` with schema
-`bof3.sprite-selections/v1`. Its `slots` list contains root `2`, selector `5`,
-`skip_image=false` and the stored `mirror_flag`. Only `mirror_flag` is editable.
+The 19 qualified three-root `PL` field banks export `selections.json` with schema
+`bof3.sprite-selections/v1`. Its `slots` list contains selectors 0 through 7 in
+each root, `skip_image=false` and the stored `mirror_flag`. The package validates
+all 24 image and program references before exporting them. This image-enabled
+view does not claim observed entity state. Only `mirror_flag` is editable.
 Keep every other field and the list length unchanged. Find the member path in
-the package manifest's matching export.
+the package manifest's matching export. Other families and tail bytes remain
+outside this edit route.
+
+Original `BIN/ETC/GAME.EMI#0` routine `0x801BEE5C` has a route-update path at
+`0x801BEFA0..0x801BEFC8` that masks the updated entity byte `0x08` with `7`.
+It stores the byte, reloads the scratch pointer at `0x1F800044`, reads that
+entity's byte `0x08` and calls `SLUS_004.22@0x8014D664`. The direct wrapper passes
+the selector's low byte to `0x8014D54C` and initializes playback with a zero
+cursor. Other paths in the routine can pass an unbounded existing byte.
+
+Applying this range to a bank requires the fresh scratch pointer to keep
+selecting the route actor and its `0x4C` word to identify the qualified root.
+Nested helpers must preserve the relevant saved registers and stack. The
+`0xA00`-byte forward copy to `0x800F0800 + 0xA00 * entity[5]` must remain within
+valid buffers and must not alias the source, bank, actor, scratch or stack.
+These premises qualify conditional edit slots. They do not prove that all eight
+selectors execute in every root or assign compass, action or age names. The
+entity's image-skip bit still controls whether the image branch executes.
 
 ```sh
 bin/harness textures unpack out/extracted/BIN/PLCHAR/PL27A.EMI \
@@ -90,7 +111,7 @@ selector `5` and entity `0x80145E90`. Its root word points to `0x8007DEE0`,
 root offset `272096` in the complete source-bound bank at `0x8003B800`.
 The selected triple is at decoded offset `310043`; its mirror byte is at
 `310045`. This is a preinstruction root-load checkpoint. It does not establish
-retired triple reads or stores, other valid selectors, CLUT choice, uploads or
+retired triple reads or stores, other observed selectors, CLUT choice, uploads or
 rendered appearance.
 
 ### Entry requests

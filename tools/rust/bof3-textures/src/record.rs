@@ -287,7 +287,11 @@ pub(crate) fn sprite_records(
         }
     }
     for slot in crate::field::selections(parent, source)? {
-        let selected = sprite_bank::select(source, slot.root, slot.selector, slot.skip_image)?;
+        let root = document
+            .roots
+            .get(slot.root)
+            .ok_or_else(|| Error::Invalid("field selection refers to a missing root".into()))?;
+        let selected = sprite_bank::select_from(source, root, slot.selector, slot.skip_image)?;
         let id = builder.add(
             "animation-selection",
             selected.triple_offset,
@@ -295,11 +299,28 @@ pub(crate) fn sprite_records(
             format!("root-{}/selection-{}", slot.root, slot.selector),
         )?;
         builder.edge(&id, "animation", builder.id("animation-program", selected.program.offset),
-            "Original incoming helper selector 5 at 0x8014DC14 is bound to this source/root; subsequent reads and stores were not observed.".into());
+            "The validated triple selects this program if the qualified field root and route selector reach 0x8014DC08; execution is not inferred.".into());
         if let Some(image) = selected.image {
             builder.edge(&id, "image", builder.id("bank-image", image.offset),
-                "Image-skip bit was clear in the qualified incoming context; no upload or rendering acceptance.".into());
+                "The image-enabled view validates this table reference. Entity byte zero bit 0x02 must be clear for the consumer to use it; no upload or rendering acceptance.".into());
         }
+        let record = builder.records.get_mut(&id).unwrap();
+        record
+            .evidence
+            .push("BIN/ETC/GAME.EMI#0@0x801BEFA0:conditional-route-selector-mask-7".into());
+        record.dependencies.push(Dependency {
+            kind: "selector-domain".into(),
+            target: None,
+            status: "conditional".into(),
+            reason: "GAME 0x801BEFA0..0x801BEFC8 masks the route update to 0..7 before the call to 0x8014D664. Applying it to this root requires a stable actor and scratch pointer, the qualified root installation, preserved saved registers/stack, and a valid 0xA00-byte forward copy to 0x800F0800+0xA00*entity[5] without aliasing the source, bank, actor, scratch or stack. Other paths and selectors remain unresolved.".into(),
+        });
+        if crate::field::observed_selection(parent, &slot) {
+            record.evidence.push(
+                "SLUS_004.22@0x8014DC14:observed-incoming-selector-5-root-2-image-enabled".into(),
+            );
+        }
+        record.evidence.sort();
+        record.evidence.dedup();
     }
     Ok(builder.finish())
 }

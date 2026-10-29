@@ -1,5 +1,5 @@
 //! Three-root banks and standalone roots with the same relative sections.
-//! Selection tails remain opaque until their valid runtime indices are known.
+//! Selection tails remain opaque outside explicitly qualified slots.
 use crate::cell;
 use crate::{Error, Result, animation, bank_image};
 use serde::{Deserialize, Serialize};
@@ -281,7 +281,8 @@ fn root_at(document: &Document, index: usize) -> Result<&Root> {
 /// Resolve one explicit selector through SLUS_004.22@0x8014DC08.
 /// The call at 0x8014D868 reads selector from entity byte +0x4B.
 /// The call at 0x8014D564 instead passes its incoming a0 low byte. Qualify the
-/// helper argument, the root and image-skip condition from the same consumer.
+/// helper argument, root and image-skip condition from the same observed context
+/// or conditional static path. Static qualification does not prove execution.
 /// Entry requests to 0x8014D6B8 can differ. Extent checks do not prove validity.
 /// skip_image represents entity byte 0 bit 1, not entity byte 0x24.
 pub fn select(
@@ -295,7 +296,13 @@ pub fn select(
     select_from(source, root, selector, skip_image)
 }
 
-fn select_from(source: &[u8], root: &Root, selector: u8, skip_image: bool) -> Result<Selection> {
+/// The root must have been decoded from these same source bytes.
+pub(crate) fn select_from(
+    source: &[u8],
+    root: &Root,
+    selector: u8,
+    skip_image: bool,
+) -> Result<Selection> {
     // decode bounds the whole source to 1 MiB and selector to one byte.
     let triple_offset = root.selection_offset + usize::from(selector) * 3;
     let end = triple_offset + 3;

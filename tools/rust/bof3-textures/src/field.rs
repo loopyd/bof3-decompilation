@@ -5,39 +5,67 @@ use crate::{
     catalog::{Dependency, Resource},
     record::{CoordinateSpace, Record},
     sprite_bank::{self, SelectionEdit},
+    stream_family,
 };
 
 pub(crate) fn has_selections(resource: &Resource) -> bool {
+    resource.load_argument == Some(0x8003b800)
+        && matches!(resource.emi_type, Some(0 | 1))
+        && resource
+            .sprite_bank
+            .as_ref()
+            .is_some_and(|bank| bank.roots == 3)
+        && stream_family::request(&resource.source).is_some_and(|request| request.family == 0)
+}
+
+pub(crate) fn observed_selection(resource: &Resource, slot: &SelectionEdit) -> bool {
     resource.source == "BIN/PLCHAR/PL27A.EMI"
         && resource.entry == Some(3)
         && resource.offset == 73728
         && resource.size == 239772
         && resource.load_argument == Some(0x8003b800)
         && resource.sha256 == "396ae98f20eefc3212ad657b9be8787db3445cf97fe80160baab1c5a21e8e5c1"
-        && resource.sprite_bank.is_some()
+        && slot.root == 2
+        && slot.selector == 5
+        && !slot.skip_image
 }
 
-/// One original incoming helper context, not a selector domain or rendered use.
+/// Conditional GAME route slots, with a separately captured PL27A context.
+/// The image-enabled view validates references without asserting entity state.
 pub(crate) fn selections(resource: &Resource, decoded: &[u8]) -> Result<Vec<SelectionEdit>> {
     if !has_selections(resource) {
         return Ok(Vec::new());
     }
-    let selected = sprite_bank::select(decoded, 2, 5, false)?;
-    if decoded.len() != 310136
-        || selected.triple_offset != 310043
-        || selected.image_index != 0
-        || selected.program_index != 1
-    {
+    let document = sprite_bank::decode(decoded)?;
+    if document.roots.len() != 3 {
         return Err(Error::Invalid(
-            "PL27A qualified selection binding differs".into(),
+            "field selection bank must have three roots".into(),
         ));
     }
-    Ok(vec![SelectionEdit {
-        root: 2,
-        selector: 5,
-        skip_image: false,
-        mirror_flag: selected.mirror_flag,
-    }])
+    let mut slots = Vec::with_capacity(24);
+    for (root, record) in document.roots.iter().enumerate() {
+        for selector in 0..8 {
+            let selected = sprite_bank::select_from(decoded, record, selector, false)?;
+            let slot = SelectionEdit {
+                root,
+                selector,
+                skip_image: false,
+                mirror_flag: selected.mirror_flag,
+            };
+            if observed_selection(resource, &slot)
+                && (decoded.len() != 310136
+                    || selected.triple_offset != 310043
+                    || selected.image_index != 0
+                    || selected.program_index != 1)
+            {
+                return Err(Error::Invalid(
+                    "PL27A qualified selection binding differs".into(),
+                ));
+            }
+            slots.push(slot);
+        }
+    }
+    Ok(slots)
 }
 
 const AREA024: &str = "BIN/WORLD00/AREA024.EMI";
