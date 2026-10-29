@@ -506,8 +506,9 @@ banks simultaneously. Fresh disassembly confirms direct base loads from
 in its delay slot. Cue-specific alternate-layout selection in overlays remains
 unverified.
 
-`psx_render` and `render --mode music --engine psx` expose this runtime with
-`--archive`, `--executable`, `--bios`, explicit `--sequence`, and optional
+`psx_render` and `render --mode music --engine psx` execute the
+[source-built owned driver](../specs/formats/audio.md#owned-kernel-allocation)
+with `--archive`, `--driver DIRECTORY`, explicit `--sequence`, and optional
 `--duration` or `--loops` (mutually exclusive). The renderer tries game layouts 0, 1, then 2 and selects the first
 whose VH/SEP capacities and SPU interval fit the archive's bank slot and aligned
 VB DMA size. No cue IDs or archive filenames participate. `--layout 0|1|2`
@@ -516,12 +517,13 @@ report records both `requested_layout` (null for automatic) and resolved `layout
 This host fit policy does not infer the original game's scene-specific selection.
 Output is fixed at 44100 Hz. `--tail` defaults to two seconds and
 `--timeout` is an audio-duration safety limit, positive and at most 600 seconds.
-Every guest call also has an instruction budget, so a stuck callback fails.
+Every guest call also has a transition budget, including instructions and service
+calls, so a stuck callback fails.
 PC-only MIDI/SoundFont/repeat options, invalid selections and unsupported modes
 are rejected instead of ignored.
 
-The renderer requests one original SEP play and retains encoded controller
-loops. The explicit duration is the body cutoff; then the original stop/reset
+The renderer requests one owned SEP play and retains encoded controller
+loops. The explicit duration is the body cutoff; then the owned stop/reset
 routine runs at a safe guest-call boundary while clocks continue. The tail
 includes that possible boundary delay and the game's deferred key-off/voice
 flush. PCM is trimmed to exactly the requested body plus tail. Reports retain
@@ -529,11 +531,11 @@ executed frames, stop-call start/return frames and clock state so overshoot is
 visible. `--repeats` is not reinterpreted as game-loop traversal counting.
 Loop-count stopping and default two-traversal behavior are implemented below.
 
-`render.wav` and versioned `bof3.psx-render/v1` `render.json` are verified in a
+`render.wav` and versioned `bof3.psx-render/v2` `render.json` are verified in a
 staging directory before publication. The report qualifies each component by
 archive SHA-256 and entry, retains VH header ID separately from game bank ID,
-and retains encoded sequence ID separately from sequence index. BIOS/executable
-hashes, initialization/play/stop call evidence, explicit model limitations and
+and retains encoded sequence ID separately from sequence index. Owned artifact
+hashes and startup policy, initialization/play/stop call evidence, model limits and
 `independent_pcm_validated: false` accompany the output. Unsupported execution
 fails without publishing a successful rendering directory.
 
@@ -541,36 +543,38 @@ Production command availability does not close independent fidelity, complete
 runtime coverage, codec, or C-retirement gates. The
 [audio README](../../tools/rust/bof3-audio/README.md) provides runnable commands.
 
-## Original-runtime loop-count stopping
+## Sequence loop-count stopping
 
 `psx_render` defaults to two traversals of an infinite controller loop (`--loops
 N` overrides this); an end marker stops a non-looping or finite-loop sequence
 once. `--duration` retains the exact fixed body cutoff. Finite encoded repeat
-counts are unchanged. The renderer requests one original SEP play, so these
+counts are unchanged. The renderer requests one owned SEP play, so these
 controls do not restart the whole song. Tail frames count toward the audio
 safety limit; failure to reach a loop/end boundary before the reserved tail
 starts rejects publication. A zero-delay callback that never returns fails its
-instruction limit even if a boundary has been observed.
+transition limit even if a boundary has been observed.
 
 `Execution::step_observed` invokes a read-only observer after IRQ admission and
 before the selected instruction. This avoids counting a PC that was interrupted
-before execution. `music_progress` observes these verified US instructions:
+before execution. The owned renderer resolves loop and end observations from
+exported driver labels. Original-reference execution observes the corresponding
+verified US instructions below:
 
-| Purpose | Runtime address | Full US EXE offset | Selection evidence |
+| Purpose | Original runtime address | Full US EXE offset | Selection evidence |
 | --- | --- | --- | --- |
 | Save controller-loop start cursor | `0x8016A308` | `0xD4308` | `s0` equals selected record; delay-slot store of `v1` to `+0x0C` |
 | Infinite-loop jump | `0x8016A374` | `0xD4374` | `s0` equals record, count `+0x28` is 127, `v0` equals saved cursor; delay-slot store to `+4` |
 | End marker handler entry | `0x8016CF1C` | `0xD6F1C` | Low halfwords of `a0/a1` select handle and sequence |
 
-Finite-loop jumps at `0x8016A354` are not infinite-loop traversals. No event,
+Original finite-loop jumps at `0x8016A354` are not infinite-loop traversals. No event,
 loop counter or original instruction is rewritten. The first selected boundary
 latches frame/instruction/PC/cursor evidence; stopping runs at the next safe guest
 call return. Tail timing includes that delay and original deferred voice flush.
 Reports add `requested_body` and `progress`, including loop/end counters and the
 latched reason. Independent PCM fidelity remains unverified.
 
-Preparation passes the parsed sequence count (at most four)
-to original `0x8016B38C` (EXE offset `0xD538C`). Its `a2` count controls the loop
+Preparation passes the parsed sequence count (at most four) to
+`audio_sequence_open` (original `0x8016B38C`, EXE offset `0xD538C`). Its `a2` count controls the loop
 calling `0x8016B4B8`; it is not a capacity argument. Original four-sequence assets
 retain four, and a valid single-sequence archive no longer parses zero padding
 as additional headers or divides by a zero tempo.
@@ -578,5 +582,5 @@ as additional headers or divides by a zero tempo.
 Sequence and renderer tests cover finite/infinite/end observers, unselected-handle
 isolation, admitted IRQs and delay slots, loop limits, exact body/tail frames,
 reduced SEP sets, layout selection, timeouts, and nonreturning callbacks.
-These are original-runtime execution and host-policy checks; independent
-reference-audio agreement remains unverified.
+These cover owned driver execution, explicit original-reference execution and
+host policy; independent reference-audio agreement remains unverified.

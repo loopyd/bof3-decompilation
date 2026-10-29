@@ -151,7 +151,7 @@ fn current_policy_population_publication_and_original_runtime_playback() {
     let bios = fs::read(std::env::var_os("BOF3_AUDIO_BIOS").unwrap()).unwrap();
     for (archive, audible) in [(&original, false), (&packed, true)] {
         let media = archive.replace_entries(&[(1, &sep)]).unwrap();
-        let psx = psx_render::render(
+        let psx = bof3_audio::machine::reference::render_music(
             &executable,
             Image::from_bytes(bios.clone()).unwrap(),
             &media,

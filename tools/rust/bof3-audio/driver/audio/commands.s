@@ -191,6 +191,8 @@ audio_sequence_loop_command:
     lw $v1, 4($s0)
     sw $v0, 0x88($s0)
     j .Lcommands_8016a3a0
+.globl audio_sequence_loop_start_store
+audio_sequence_loop_start_store:
     sw $v1, 0xc($s0)
 .Lcommands_8016a30c:
     lbu $v1, 0x28($s0)
@@ -222,6 +224,8 @@ audio_sequence_loop_command:
     lw $v0, 0xc($s0)
     sw $zero, 0x88($s0)
     j .Lcommands_8016a3a0
+.globl audio_sequence_infinite_loop_store
+audio_sequence_infinite_loop_store:
     sw $v0, 4($s0)
 .Lcommands_8016a378:
     sra $a0, $a0, 0x10

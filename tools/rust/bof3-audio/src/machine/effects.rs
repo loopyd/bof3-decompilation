@@ -10,9 +10,6 @@ use super::{
 use crate::Result;
 use serde::Serialize;
 
-pub const KEY_ON: u32 = 0x8016_e400;
-pub const KEY_OFF: u32 = 0x8016_e794;
-
 #[derive(Clone, Copy, Debug, Serialize)]
 pub struct Note {
     pub voice: u8,
@@ -27,8 +24,8 @@ pub struct Note {
 /// All selection and pitch/volume context is explicit. The original routine
 /// rejects voices outside 0..24; it does not automatically allocate a voice.
 /// Observe the guest call after validation and ABI argument staging.
-pub fn key_on(
-    prepared: &mut Prepared,
+pub fn key_on<P>(
+    prepared: &mut Prepared<P>,
     note: Note,
     observer: &mut impl FnMut(&Execution) -> Result<()>,
 ) -> Result<Call> {
@@ -76,7 +73,7 @@ pub fn key_on(
     }
     e.cpu.set_register(29, stack);
     let call = e.call_observed(
-        KEY_ON,
+        prepared.audio.key_on,
         [
             note.voice.into(),
             prepared.identity.game_bank_id.into(),
@@ -100,18 +97,20 @@ pub fn key_on(
 
 /// Release an explicit voice through the original adjacent SDK wrapper.
 /// Unlike the managed-voice all-off routine, this covers all 24 voice indices.
-pub fn key_off(
-    prepared: &mut Prepared,
+pub fn key_off<P>(
+    prepared: &mut Prepared<P>,
     voice: u8,
     observer: &mut impl FnMut(&Execution) -> Result<()>,
 ) -> Result<Call> {
     if voice >= 24 {
         return Err("PSX effects: explicit voice must be 0..23".into());
     }
-    let call =
-        prepared
-            .execution
-            .call_observed(KEY_OFF, [voice.into(), 0, 0, 0], 100_000, observer)?;
+    let call = prepared.execution.call_observed(
+        prepared.audio.key_off,
+        [voice.into(), 0, 0, 0],
+        100_000,
+        observer,
+    )?;
     if call.result != 0 {
         return Err(format!("PSX effects: original key-off returned {:#x}", call.result).into());
     }

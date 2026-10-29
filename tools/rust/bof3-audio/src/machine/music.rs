@@ -1,13 +1,10 @@
-//! Verified US single-bank/SEP loading through original guest routines.
+//! Owned single-bank SEP loading and resolved playback bindings.
 //! Host staging replaces disc transport; runtime identities remain separate.
 use super::{
     bank::{self, Stage},
-    boot,
     bus::{Bus, Width},
-    executable::Executable,
+    driver::{self, Audio},
     execution::{Call, Execution},
-    firmware::Image,
-    profile::Profile,
 };
 use crate::{sequence::SequenceSet, Result};
 use emi_ex_v2::image::ArchiveImage;
@@ -31,9 +28,10 @@ pub struct Identity {
     pub next_slot_boundary: u32,
 }
 
-pub struct Prepared {
+pub struct Prepared<P = driver::Evidence> {
     pub execution: Execution,
-    pub boot: boot::Evidence,
+    pub startup: P,
+    pub(crate) audio: Audio,
     pub identity: Identity,
     pub calls: Vec<Call>,
     pub handle: u32,
@@ -41,33 +39,41 @@ pub struct Prepared {
 }
 
 pub fn prepare(
-    executable: &Executable,
-    firmware: Image,
+    image: &driver::Image,
     archive: &ArchiveImage,
     requested_layout: Option<u8>,
     sequence: usize,
 ) -> Result<Prepared> {
-    prepare_observed(
-        executable,
-        firmware,
-        archive,
-        requested_layout,
-        sequence,
-        &mut |_, _| Ok(()),
-    )
+    prepare_observed(image, archive, requested_layout, sequence, &mut |_, _| {
+        Ok(())
+    })
 }
 
-/// Observe original guest preparation instructions after BIOS boot. Host archive
-/// staging and BIOS boot are separate evidence; observation cannot mutate state.
+/// Observe owned preparation instructions. Archive staging remains host work;
+/// the observer cannot mutate guest state.
 pub fn prepare_observed(
-    executable: &Executable,
-    firmware: Image,
+    image: &driver::Image,
     archive: &ArchiveImage,
     requested_layout: Option<u8>,
     sequence: usize,
     observer: &mut impl FnMut(Stage, &Execution) -> Result<()>,
 ) -> Result<Prepared> {
-    Profile::identify(executable)?;
+    prepare_with(
+        archive,
+        requested_layout,
+        sequence,
+        observer,
+        |options, observer| bank::prepare(image, archive, options, observer),
+    )
+}
+
+pub(crate) fn prepare_with<P, O: FnMut(Stage, &Execution) -> Result<()>>(
+    archive: &ArchiveImage,
+    requested_layout: Option<u8>,
+    sequence: usize,
+    observer: &mut O,
+    prepare: impl FnOnce(&bank::Options, &mut O) -> Result<bank::Prepared<P>>,
+) -> Result<Prepared<P>> {
     let unique = |kinds: &[u16]| -> Result<usize> {
         let entries: Vec<_> = archive
             .entries()
@@ -91,10 +97,7 @@ pub fn prepare_observed(
     if sequence >= 4 || sequences.sequences.len() > 4 {
         return Err("PSX music: original US layout permits four sequences per handle".into());
     }
-    let loaded = bank::prepare(
-        executable,
-        firmware,
-        archive,
+    let loaded = prepare(
         &bank::Options {
             header_entry: vh,
             body_entry: vb,
@@ -103,6 +106,7 @@ pub fn prepare_observed(
         },
         observer,
     )?;
+    let audio = loaded.audio;
     let bank = loaded.identity;
     let slot = bank.slot.clone();
     let id = u32::from(bank.game_bank_id);
@@ -130,7 +134,7 @@ pub fn prepare_observed(
     let opened = call(
         &mut execution,
         Stage::Sequence,
-        0x8016b38c,
+        audio.sequence_open,
         [
             slot.sequence_address,
             id,
@@ -148,14 +152,17 @@ pub fn prepare_observed(
     calls.push(call(
         &mut execution,
         Stage::Callbacks,
-        0x8015ce70,
+        audio.callbacks,
         [0; 4],
         100_000,
     )?);
-    let base = execution.bus.read(0x80190308 + handle * 4, Width::Word)?;
+    let base = execution
+        .bus
+        .read(audio.sequence_handles + handle * 4, Width::Word)?;
     Ok(Prepared {
         execution,
-        boot: loaded.boot,
+        startup: loaded.startup,
+        audio,
         identity,
         calls,
         handle,

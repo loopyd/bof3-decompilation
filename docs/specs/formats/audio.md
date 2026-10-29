@@ -3827,8 +3827,8 @@ The target reads authored assembly and its linker layout. It produces
 `out/audio/driver/kernel.bin`, the linked ELF, a map, ordered `kernel.sym`
 symbols and a `kernel.json` manifest. The `bof3.audio-driver/v1` manifest names
 the `mips1-le-o32` ABI and SHA-256 hashes of the binary and symbol bytes.
-It does not build the complete audio closure. The source package and production
-execution loop do not yet consume this component.
+The production PSX music renderer consumes this component. The source package,
+other production operations and complete vocal closure still require migration.
 
 Load `audio_kernel_image..audio_kernel_image_end` at its linked address, then call
 `audio_kernel_initialize` on an eight-byte-aligned RAM stack with interrupts
@@ -4640,8 +4640,16 @@ existing RAM and checks the original scheduler bytes. It takes reference GP
 and foreground SP from that EXE before calling original SDK routines.
 The driver loader itself does not read an EXE or BIOS.
 The example still executes original game/SDK code and uses host-fed media.
-Production bank preparation and the independent BIOS reference tools retain
-their current inputs; this development path does not close their migration.
+Production bank and SEP preparation accept the validated owned image, execute
+owned initialization and transfer routines, and resolve their state from linked
+symbols. Layout candidates run in isolated scratch RAM; the selected layout is
+then installed on the playback machine. Music rendering binds both loop-store
+instructions and the end-event entry, preserving pre-execution observations.
+Its `bof3.psx-render/v2` report records owned startup instead of BIOS boot.
+The PSX CLI requires `--driver DIRECTORY` and rejects reference-only options.
+`machine::reference` retains explicit original EXE/BIOS preparation and rendering
+for development comparisons and the current compiled player. Other production
+operations and independent timing/PCM acceptance remain incomplete.
 
 ### Rust BIOS event state
 

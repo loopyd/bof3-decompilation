@@ -5,7 +5,7 @@ use bof3_audio::{
         trace::Trace,
     },
     machine::{
-        bank::Stage, executable::Executable, firmware::Image, music, output_clock, profile::Profile,
+        bank::Stage, executable::Executable, firmware::Image, output_clock, profile::Profile,
     },
     Result,
 };
@@ -30,7 +30,7 @@ fn main() -> Result<()> {
         }
         let archive = ArchiveImage::from_bytes(fs::read(&args[2])?)?;
         let mut trace = Trace::default();
-        let mut prepared = music::prepare_observed(
+        let mut prepared = bof3_audio::machine::reference::prepare_music_observed(
             &exe,
             Image::from_bytes(fs::read(&args[1])?)?,
             &archive,
@@ -98,7 +98,7 @@ fn main() -> Result<()> {
         dynamic = Some(serde_json::json!({
             "requested_frames": frames,
             "actual_frames": e.output().unwrap().frames(),
-            "boot": prepared.boot,
+            "boot": prepared.startup,
             "identity": prepared.identity,
             "preparation_calls": prepared.calls,
             "play": play,

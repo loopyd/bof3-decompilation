@@ -50,6 +50,37 @@ pub struct Started {
     pub evidence: Evidence,
 }
 
+#[derive(Clone, Copy)]
+pub(crate) struct Audio {
+    pub initialize: u32,
+    pub layout: u32,
+    pub slot_table: u32,
+    pub header_capacities: u32,
+    pub sequence_capacities: u32,
+    pub open_head: u32,
+    pub transfer: u32,
+    pub completed: u32,
+    pub sequence_open: u32,
+    pub callbacks: u32,
+    pub sequence_handles: u32,
+    pub play: u32,
+    pub stop: u32,
+    pub idle: u32,
+    pub key_on: u32,
+    pub key_off: u32,
+    pub cue_dispatch: u32,
+    pub cue_refresh: u32,
+    pub auxiliary_end: u32,
+    pub cue_gate: u32,
+    pub cue_work: u32,
+    pub voice_status: u32,
+    pub cue_lookup: u32,
+    pub tone_read: u32,
+    pub loop_start: u32,
+    pub infinite_loop: u32,
+    pub sequence_end: u32,
+}
+
 impl Image {
     /// Read only the built owned artifact and its integrity metadata.
     pub fn read(directory: &Path) -> Result<Self> {
@@ -200,14 +231,63 @@ impl Image {
         Ok(())
     }
 
+    fn data(&self, name: &str, bytes: u32) -> Result<u32> {
+        let address = self.symbol(name)?;
+        let end = self.symbol("audio_kernel_bss_end")?;
+        if address < self.symbol("audio_kernel_image")?
+            || address.checked_add(bytes).is_none_or(|limit| limit > end)
+        {
+            return Err(format!("owned driver: audio data {name} exceeds its allocation").into());
+        }
+        Ok(address)
+    }
+
+    pub(crate) fn audio(&self) -> Result<Audio> {
+        Ok(Audio {
+            initialize: self.entry("audio_sound_initialize")?,
+            layout: self.entry("audio_loader_initialize_layout")?,
+            slot_table: self.data("audio_loader_slots", 140)?,
+            header_capacities: self.data("audio_loader_header_capacities", 84)?,
+            sequence_capacities: self.data("audio_loader_sequence_capacities", 84)?,
+            open_head: self.entry("audio_bank_open_head_sticky")?,
+            transfer: self.entry("audio_bank_transfer_partial")?,
+            completed: self.entry("audio_bank_transfer_completed")?,
+            sequence_open: self.entry("audio_sequence_open")?,
+            callbacks: self.entry("audio_music_start_callbacks")?,
+            sequence_handles: self.data("audio_sequence_handles", 8)?,
+            play: self.entry("audio_sequence_play")?,
+            stop: self.entry("audio_sequence_stop_record")?,
+            idle: self.entry("audio_video_get_mode")?,
+            key_on: self.entry("audio_effects_key_on")?,
+            key_off: self.entry("audio_effects_key_off")?,
+            cue_dispatch: self.entry("audio_cue_dispatch")?,
+            cue_refresh: self.entry("audio_effects_refresh_status")?,
+            auxiliary_end: self.data("audio_sound_gains", 12)?,
+            cue_gate: self.data("audio_cue_dispatch_prefix", 32)? + 2,
+            cue_work: self.data("audio_cue_work", 264)?,
+            voice_status: self.data("audio_sequence_voice_globals", 1616)? + 0x5f0,
+            cue_lookup: self.data("audio_cue_lookup", 256)?,
+            tone_read: self.entry("audio_effects_tone_read")?,
+            loop_start: self.entry("audio_sequence_loop_start_store")?,
+            infinite_loop: self.entry("audio_sequence_infinite_loop_store")?,
+            sequence_end: self.entry("audio_sequence_end_event")?,
+        })
+    }
+
+    pub(crate) fn ram(&self) -> Result<Ram> {
+        let mut ram = Ram::default();
+        let base = self.symbol("audio_kernel_image")?;
+        for (offset, &byte) in self.bytes.iter().enumerate() {
+            ram.write(base + offset as u32, Width::Byte, u32::from(byte))?;
+        }
+        Ok(ram)
+    }
+
     /// Initialize services in zeroed RAM. Audio initialization remains an
     /// explicit subsequent guest call, before layout selection and bank upload.
     pub fn start(&self, observer: &mut impl FnMut(&Execution) -> Result<()>) -> Result<Started> {
-        let mut bus = Interconnect::from_ram(Ram::default());
+        let mut bus = Interconnect::from_ram(self.ram()?);
         let base = self.symbol("audio_kernel_image")?;
-        for (offset, &byte) in self.bytes.iter().enumerate() {
-            bus.write(base + offset as u32, Width::Byte, u32::from(byte))?;
-        }
         bus.write(0x1f80_1014, Width::Word, 0x2009_31e1)?;
         let mut kernel = Kernel::default();
         kernel.configure_console(64 * 1024)?;

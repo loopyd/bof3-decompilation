@@ -5,7 +5,7 @@ use bof3_audio::{
         executable::{ram_offset, Executable},
         execution::Execution,
         firmware::Image,
-        music, output_clock,
+        output_clock,
     },
     Result,
 };
@@ -38,7 +38,7 @@ fn main() -> Result<()> {
     sep.extend(events);
     sep.resize(source.entry(1)?.len(), 0);
     let archive = source.replace_entries(&[(0, header.as_slice()), (1, sep.as_slice())])?;
-    let mut prepared = music::prepare(
+    let mut prepared = bof3_audio::machine::reference::prepare_music(
         &exe,
         Image::from_bytes(fs::read(&args[1])?)?,
         &archive,
@@ -94,7 +94,7 @@ fn main() -> Result<()> {
     println!(
         "{}",
         serde_json::to_string_pretty(&serde_json::json!({"schema":"bof3.zero-runtime-probe/v1",
-        "boot":prepared.boot,"identity":prepared.identity,"peak":peak,"events":log}))?
+        "boot":prepared.startup,"identity":prepared.identity,"peak":peak,"events":log}))?
     );
     Ok(())
 }

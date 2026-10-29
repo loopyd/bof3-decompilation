@@ -93,8 +93,8 @@ fn cli_rejects_incomplete_or_mixed_engine_requests_without_publication() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_BIOS, BOF3_AUDIO_EXE and BOF3_AUDIO_CORPUS"]
-fn original_runtime_cli_publishes_exact_duration_tail_and_qualified_evidence() {
+#[ignore = "requires BOF3_AUDIO_DRIVER and BOF3_AUDIO_CORPUS"]
+fn owned_driver_cli_publishes_exact_duration_tail_and_qualified_evidence() {
     let root = std::env::temp_dir().join(format!("bof3-psx-render-{}", std::process::id()));
     fs::create_dir(&root).unwrap();
     let output = root.join("rendered");
@@ -104,10 +104,8 @@ fn original_runtime_cli_publishes_exact_duration_tail_and_qualified_evidence() {
         let mut c = Command::new(env!("CARGO_BIN_EXE_bof3-audio"));
         c.args(["render", "--mode", "music", "--engine", "psx", "--archive"])
             .arg(&archive)
-            .arg("--executable")
-            .arg(std::env::var_os("BOF3_AUDIO_EXE").unwrap())
-            .arg("--bios")
-            .arg(std::env::var_os("BOF3_AUDIO_BIOS").unwrap())
+            .arg("--driver")
+            .arg(std::env::var_os("BOF3_AUDIO_DRIVER").unwrap())
             .args([
                 "--sequence",
                 "0",
@@ -128,7 +126,7 @@ fn original_runtime_cli_publishes_exact_duration_tail_and_qualified_evidence() {
         String::from_utf8_lossy(&result.stderr)
     );
     let report: serde_json::Value = serde_json::from_slice(&result.stdout).unwrap();
-    assert_eq!(report["schema"], "bof3.psx-render/v1");
+    assert_eq!(report["schema"], "bof3.psx-render/v2");
     assert_eq!(
         report["identity"]["archive_sha256"],
         "e1caf8633ce6be70524bd288b5af1c4b6042e4ca5cb3b02600affd68b8013a91"
@@ -168,7 +166,6 @@ fn ambiguous_entries_and_manifest_body_conflicts_fail_before_bios_boot() {
     use bof3_audio::machine::{
         executable::Executable,
         firmware::{Image, ROM_BYTES},
-        music,
     };
     use emi_ex_v2::image::ArchiveImage;
     let exe =
@@ -179,7 +176,7 @@ fn ambiguous_entries_and_manifest_body_conflicts_fail_before_bios_boot() {
     let bytes = fs::read(path).unwrap();
     let archive = ArchiveImage::from_bytes(bytes.clone()).unwrap();
     let error = |archive: &ArchiveImage, sequence| {
-        music::prepare(
+        bof3_audio::machine::reference::prepare_music(
             &exe,
             Image::from_bytes(vec![0; ROM_BYTES]).unwrap(),
             archive,
@@ -206,7 +203,7 @@ fn ambiguous_entries_and_manifest_body_conflicts_fail_before_bios_boot() {
 #[test]
 #[ignore = "requires BOF3_AUDIO_BIOS, BOF3_AUDIO_EXE and BOF3_AUDIO_CORPUS"]
 fn automatic_layout_fits_large_archives_without_cue_or_filename_rules() {
-    use bof3_audio::machine::{executable::Executable, firmware::Image, music};
+    use bof3_audio::machine::{executable::Executable, firmware::Image};
     use emi_ex_v2::image::ArchiveImage;
     let exe =
         Executable::from_bytes(fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap())
@@ -218,7 +215,7 @@ fn automatic_layout_fits_large_archives_without_cue_or_filename_rules() {
         let archive =
             ArchiveImage::from_bytes(fs::read(corpus.join("BIN/BGM").join(name)).unwrap()).unwrap();
         let prepare = |layout| {
-            music::prepare(
+            bof3_audio::machine::reference::prepare_music(
                 &exe,
                 Image::from_bytes(firmware.clone()).unwrap(),
                 &archive,
@@ -248,18 +245,14 @@ fn automatic_layout_fits_large_archives_without_cue_or_filename_rules() {
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_BIOS, BOF3_AUDIO_EXE and BOF3_AUDIO_CORPUS"]
-fn original_runtime_loop_limits_preserve_finite_counts_end_markers_and_pcm_prefix() {
-    use bof3_audio::{
-        machine::music_progress::Stop,
-        machine::{executable::Executable, firmware::Image},
-        psx_render,
-    };
+#[ignore = "requires BOF3_AUDIO_DRIVER and BOF3_AUDIO_CORPUS"]
+fn owned_driver_loop_limits_preserve_finite_counts_end_markers_and_pcm_prefix() {
+    use bof3_audio::{machine::driver::Image, machine::music_progress::Stop, psx_render};
     use emi_ex_v2::image::ArchiveImage;
-    let exe =
-        Executable::from_bytes(fs::read(std::env::var_os("BOF3_AUDIO_EXE").unwrap()).unwrap())
-            .unwrap();
-    let bios = fs::read(std::env::var_os("BOF3_AUDIO_BIOS").unwrap()).unwrap();
+    let image = Image::read(&std::path::PathBuf::from(
+        std::env::var_os("BOF3_AUDIO_DRIVER").unwrap(),
+    ))
+    .unwrap();
     let corpus = std::path::PathBuf::from(std::env::var_os("BOF3_AUDIO_CORPUS").unwrap());
     let archive =
         ArchiveImage::from_bytes(fs::read(corpus.join("BIN/BGM/BGM000.EMI")).unwrap()).unwrap();
@@ -282,14 +275,8 @@ fn original_runtime_loop_limits_preserve_finite_counts_end_markers_and_pcm_prefi
         release_frames: 4410,
         safety_frames: 44100 * 10,
     };
-    let render = |archive: &ArchiveImage, options: &Options| {
-        psx_render::render(
-            &exe,
-            Image::from_bytes(bios.clone()).unwrap(),
-            archive,
-            options,
-        )
-    };
+    let render =
+        |archive: &ArchiveImage, options: &Options| psx_render::render(&image, archive, options);
     let infinite = sequence(127, 48);
     let one = render(&infinite, &options).unwrap();
     let two = render(
@@ -325,10 +312,8 @@ fn original_runtime_loop_limits_preserve_finite_counts_end_markers_and_pcm_prefi
     let result = Command::new(env!("CARGO_BIN_EXE_bof3-audio"))
         .args(["render", "--mode", "music", "--engine", "psx", "--archive"])
         .arg(&input)
-        .arg("--executable")
-        .arg(std::env::var_os("BOF3_AUDIO_EXE").unwrap())
-        .arg("--bios")
-        .arg(std::env::var_os("BOF3_AUDIO_BIOS").unwrap())
+        .arg("--driver")
+        .arg(std::env::var_os("BOF3_AUDIO_DRIVER").unwrap())
         .args(["--sequence", "0", "--tail", "0.1", "--json", "--output"])
         .arg(&output)
         .output()
@@ -352,7 +337,7 @@ fn original_runtime_loop_limits_preserve_finite_counts_end_markers_and_pcm_prefi
         .report
         .initialization_calls
         .iter()
-        .find(|call| call.entry == 0x8016b38c)
+        .find(|call| call.entry == image.entry("audio_sequence_open").unwrap())
         .unwrap();
     assert_eq!(opened.arguments[2], 1);
     fs::remove_dir_all(root).unwrap();
@@ -378,11 +363,11 @@ fn original_runtime_loop_limits_preserve_finite_counts_end_markers_and_pcm_prefi
         .err()
         .unwrap()
         .to_string();
-    assert!(error.contains("instruction"), "{error}");
+    assert!(error.contains("transition safety limit"), "{error}");
 }
 
 #[test]
-#[ignore = "requires BOF3_AUDIO_BIOS, BOF3_AUDIO_EXE and BOF3_AUDIO_CORPUS"]
+#[ignore = "requires BOF3_AUDIO_DRIVER and BOF3_AUDIO_CORPUS"]
 fn default_loop_limit_times_out_without_publishing_a_truncated_song() {
     let output = std::env::temp_dir().join(format!("bof3-loop-timeout-{}", std::process::id()));
     assert!(!output.exists());
@@ -390,10 +375,8 @@ fn default_loop_limit_times_out_without_publishing_a_truncated_song() {
     let result = Command::new(env!("CARGO_BIN_EXE_bof3-audio"))
         .args(["render", "--mode", "music", "--engine", "psx", "--archive"])
         .arg(corpus.join("BIN/BGM/BGM000.EMI"))
-        .arg("--executable")
-        .arg(std::env::var_os("BOF3_AUDIO_EXE").unwrap())
-        .arg("--bios")
-        .arg(std::env::var_os("BOF3_AUDIO_BIOS").unwrap())
+        .arg("--driver")
+        .arg(std::env::var_os("BOF3_AUDIO_DRIVER").unwrap())
         .args([
             "--sequence",
             "0",

@@ -37,7 +37,7 @@ fn main() -> Result<()> {
     let exe = Executable::from_bytes(fs::read(&args[0])?)?;
     let archive = ArchiveImage::from_bytes(fs::read(&args[2])?)?;
     let mut trace = Trace::default();
-    let mut prepared = bank::prepare(
+    let mut prepared = bof3_audio::machine::reference::prepare_bank(
         &exe,
         Image::from_bytes(fs::read(&args[1])?)?,
         &archive,
@@ -86,7 +86,7 @@ fn main() -> Result<()> {
             Action::Cue { row } => {
                 calls.push(cues::dispatch(&mut prepared, &table, row, &mut |e| {
                     trace.observe(&exe, "Dispatch", e)?;
-                    if e.cpu.pc() == effects::KEY_ON {
+                    if e.cpu.pc() == bof3_audio::machine::reference::KEY_ON {
                         let at = ram_offset(e.cpu.register(29), 32)?;
                         notes.push(std::array::from_fn(|i| {
                             if i < 4 {
@@ -205,7 +205,7 @@ fn main() -> Result<()> {
         .filter(|pc| !covered.contains(pc))
         .collect();
     let report = serde_json::json!({
-        "schema":"bof3.audio.driver-cues/v2", "boot":prepared.boot,"identity":prepared.identity,"table":table,"schedule":schedule,
+        "schema":"bof3.audio.driver-cues/v2", "boot":prepared.startup,"identity":prepared.identity,"table":table,"schedule":schedule,
         "preparation":prepared.calls,"callbacks":callbacks,"events":event_reports,"releases":releases,
         "body_frames":body_frames,"tail_frames":tail,"frames":wave.frames(),"peak":peak,"nonzero_samples":nonzero,"wav_sha256":sha256_hex(&bytes),
         "observed_original_instructions":trace.pcs.len(),"closure":audit,"observed_not_in_closure":missing,

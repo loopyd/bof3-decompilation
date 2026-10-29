@@ -83,7 +83,7 @@ fn original_runtime_and_pc_both_produce_silence_for_a_zero_tone_program() {
         sep.extend(events);
         sep.resize(original.entry(1).unwrap().len(), 0);
         let archive = original.replace_entries(&[(1, &sep)]).unwrap();
-        let psx = psx_render::render(
+        let psx = bof3_audio::machine::reference::render_music(
             &exe,
             Image::from_bytes(bios.clone()).unwrap(),
             &archive,

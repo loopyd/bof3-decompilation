@@ -10,12 +10,6 @@ use crate::{catalog::loader, digest::sha256_hex, Result};
 use emi_ex_v2::image::ArchiveImage;
 use serde::Serialize;
 
-pub const DISPATCH: u32 = 0x8015_df18;
-pub const REFRESH: u32 = 0x8015_d044;
-// Original initialization writes the sound-control halfwords at 0x80148A04/06.
-// They bound the final auxiliary buffer and must not be overwritten.
-const AUXILIARY_END: u32 = 0x8014_8a04;
-
 #[derive(Debug, Serialize)]
 pub struct State {
     pub dispatch_gate: i8,
@@ -27,19 +21,20 @@ pub struct State {
 }
 
 /// Read the game's snapshot, which is distinct from current SPU hardware state.
-pub fn state(prepared: &Prepared) -> Result<State> {
+pub fn state<P>(prepared: &Prepared<P>) -> Result<State> {
     let ram = prepared.execution.bus.ram().bytes();
     let half = |address| -> Result<i16> {
         let at = ram_offset(address, 2)?;
         Ok(i16::from_le_bytes(ram[at..at + 2].try_into()?))
     };
-    let at = ram_offset(0x8018_e140, 24 * 4)?;
+    let audio = prepared.audio;
+    let at = ram_offset(audio.voice_status, 24 * 4)?;
     Ok(State {
-        dispatch_gate: ram[ram_offset(0x8018_232a, 1)?] as i8,
-        previous_voice: half(0x8018_b3f0)?,
-        previous_arbitration: half(0x8018_b3ec)?,
-        current_voice: half(0x8018_b318)?,
-        current_arbitration: half(0x8018_b3e8)?,
+        dispatch_gate: ram[ram_offset(audio.cue_gate, 1)?] as i8,
+        previous_voice: half(audio.cue_work + 0xe8)?,
+        previous_arbitration: half(audio.cue_work + 0xe4)?,
+        current_voice: half(audio.cue_work + 0x10)?,
+        current_arbitration: half(audio.cue_work + 0xe0)?,
         voice_status: std::array::from_fn(|i| {
             u32::from_le_bytes(ram[at + i * 4..at + i * 4 + 4].try_into().unwrap())
         }),
@@ -48,13 +43,13 @@ pub fn state(prepared: &Prepared) -> Result<State> {
 
 /// Execute the game's separate 24-voice status poll. Do not implicitly poll
 /// during dispatch: callers can submit multiple cues against one snapshot.
-pub fn refresh(
-    prepared: &mut Prepared,
+pub fn refresh<P>(
+    prepared: &mut Prepared<P>,
     observer: &mut impl FnMut(&Execution) -> Result<()>,
 ) -> Result<Call> {
     prepared
         .execution
-        .call_observed(REFRESH, [0; 4], 100_000, observer)
+        .call_observed(prepared.audio.cue_refresh, [0; 4], 100_000, observer)
 }
 
 #[derive(Debug, Serialize)]
@@ -70,7 +65,7 @@ pub struct Table {
 
 /// Host staging of the type-8 payload, as with VAB/SEP preparation. This does
 /// not execute the CD loader or establish its scheduling and transport behavior.
-pub fn stage(prepared: &mut Prepared, archive: &ArchiveImage, index: usize) -> Result<Table> {
+pub fn stage<P>(prepared: &mut Prepared<P>, archive: &ArchiveImage, index: usize) -> Result<Table> {
     if sha256_hex(archive.bytes()) != prepared.identity.archive_sha256 {
         return Err("PSX cues: auxiliary archive differs from prepared bank".into());
     }
@@ -97,15 +92,15 @@ pub fn stage(prepared: &mut Prepared, archive: &ArchiveImage, index: usize) -> R
         return Err("PSX cues: expected 1..256 complete four-byte records".into());
     }
     let address = prepared.identity.slot.auxiliary_address;
-    if address >= AUXILIARY_END {
+    if address >= prepared.audio.auxiliary_end {
         return Err("PSX cues: auxiliary destination overlaps sound-control state".into());
     }
-    let mut next = AUXILIARY_END;
+    let mut next = prepared.audio.auxiliary_end;
     for slot in 0..loader::LOADER_SLOTS {
-        let target = prepared
-            .execution
-            .bus
-            .read(loader::LOADER_TABLE + slot as u32 * 20 + 8, Width::Word)?;
+        let target = prepared.execution.bus.read(
+            prepared.audio.slot_table + slot as u32 * 20 + 8,
+            Width::Word,
+        )?;
         if target > address {
             next = next.min(target);
         }
@@ -142,8 +137,8 @@ pub fn stage(prepared: &mut Prepared, archive: &ArchiveImage, index: usize) -> R
 /// remain guest instructions, not host reconstruction.
 /// Runtime tone guards may fail after guest state changes; stop or reinitialize
 /// the prepared machine after an error rather than continuing that history.
-pub fn dispatch(
-    prepared: &mut Prepared,
+pub fn dispatch<P>(
+    prepared: &mut Prepared<P>,
     table: &Table,
     row: usize,
     observer: &mut impl FnMut(&Execution) -> Result<()>,
@@ -181,14 +176,18 @@ pub fn dispatch(
         return Err("PSX cues: layered tones exceed the physical program block".into());
     }
     let e = &mut prepared.execution;
-    let offset = e
-        .bus
-        .read(0x8018_21e0 + u32::from(program_id) * 2, Width::Half)?;
+    let offset = e.bus.read(
+        prepared.audio.cue_lookup + u32::from(program_id) * 2,
+        Width::Half,
+    )?;
     // Cue attributes and SDK playback selection are separate original paths.
     // In particular the fixed cue offset table need not select the program's
     // packed VAB block. Preserve the guest lookup, but bound all attribute reads.
     for index in tone..tone + count {
-        let tone_offset = e.bus.read(0x8018_21e8 + index as u32 * 2, Width::Half)?;
+        let tone_offset = e.bus.read(
+            prepared.audio.cue_lookup + 8 + index as u32 * 2,
+            Width::Half,
+        )?;
         let end = 0x820 + offset as usize + tone_offset as usize + 7;
         if end > prepared.identity.header_bytes {
             return Err("PSX cues: original attribute lookup exceeds the loaded VH payload".into());
@@ -208,15 +207,16 @@ pub fn dispatch(
     let tones_start = prepared.identity.slot.header_address + 0x820;
     let tones_end = tones_start + u32::from(prepared.bank.declared_programs) * 512;
     let samples = prepared.bank.declared_samples;
+    let tone_read = prepared.audio.tone_read;
     e.call_observed(
-        DISPATCH,
+        prepared.audio.cue_dispatch,
         [(u32::from(table.game_bank_id) << 8) | row as u32, 0, 0, 0],
         100_000,
         &mut |execution| {
             // SsUtKeyOnV reads a physical tone slot, even beyond the declared
             // tone count. Observe its computed address before the first load;
             // game handlers do not always select consecutive tone indices.
-            if execution.cpu.pc() == 0x8016_e5dc {
+            if execution.cpu.pc() == tone_read {
                 let address = execution.cpu.register(2);
                 if address < tones_start
                     || address.checked_add(32).is_none_or(|end| end > tones_end)

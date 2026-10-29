@@ -48,7 +48,7 @@ fn effects_banks_upload_nonzero_id_and_play_explicit_voices_without_sequences() 
                 ..note(voice, key)
             },
             &mut |e| {
-                if e.cpu.pc() == effects::KEY_ON {
+                if e.cpu.pc() == bof3_audio::machine::reference::KEY_ON {
                     let at = (e.cpu.register(29) & 0x1fff_ffff) as usize + 16;
                     entry_arguments = Some(std::array::from_fn::<_, 4, _>(|i| {
                         u32::from_le_bytes(

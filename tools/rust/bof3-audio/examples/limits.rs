@@ -34,7 +34,7 @@ fn main() -> Result<()> {
                 if Some(sha256_hex(archive.bytes()).as_str()) != table["sha256"].as_str() {
                     return Err("archive changed since coverage audit".into());
                 }
-                let mut p = bank::prepare(
+                let mut p = bof3_audio::machine::reference::prepare_bank(
                     &exe,
                     Image::from_bytes(bios.clone())?,
                     &archive,
@@ -63,7 +63,7 @@ fn main() -> Result<()> {
                 let mut voices = BTreeSet::new();
                 let mut observe = |e: &bof3_audio::machine::execution::Execution| -> Result<()> {
                     let pc = e.cpu.pc();
-                    if pc == effects::KEY_ON {
+                    if pc == bof3_audio::machine::reference::KEY_ON {
                         let at = ram_offset(e.cpu.register(29), 32)?;
                         let arguments = std::array::from_fn::<_, 8, _>(|i| {
                             if i < 4 {
@@ -95,7 +95,7 @@ fn main() -> Result<()> {
                 };
                 let result = if bypass {
                     p.execution.call_observed(
-                        cues::DISPATCH,
+                        bof3_audio::machine::reference::DISPATCH,
                         [(u32::from(aux.game_bank_id) << 8) | index as u32, 0, 0, 0],
                         100_000,
                         &mut observe,

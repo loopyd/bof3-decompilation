@@ -71,7 +71,7 @@ fn invalid_controls_fail_before_media_reads_or_publication() {
         ),
         (
             vec!["--allow-approximations", "--bios", "absent"],
-            "PSX-only",
+            "unknown or duplicate render option",
         ),
     ] {
         let r = Command::new(env!("CARGO_BIN_EXE_bof3-audio"))

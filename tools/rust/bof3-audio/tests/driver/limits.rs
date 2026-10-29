@@ -2,7 +2,7 @@ use super::fixtures::prepare_entries;
 use bof3_audio::{
     machine::{
         bus::{Bus, Width},
-        cues, effects,
+        cues,
         executable::ram_offset,
         output_clock,
     },
@@ -32,7 +32,7 @@ fn source_cue_needing_sample_outside_the_loaded_bank_is_rejected() -> Result<()>
     assert_eq!(p.execution.bus.read(sizes + 6, Width::Half)?, 0);
     let mut calls = Vec::new();
     let error = cues::dispatch(&mut p, &table, 5, &mut |e| {
-        if e.cpu.pc() == effects::KEY_ON {
+        if e.cpu.pc() == bof3_audio::machine::reference::KEY_ON {
             calls.push([
                 e.cpu.register(4),
                 e.cpu.register(5),
@@ -94,7 +94,7 @@ fn physical_tone_slots_preserve_original_skips_and_undeclared_playable_tones() -
         let mut results = Vec::new();
         let mut return_pc = None;
         cues::dispatch(&mut p, &table, row, &mut |e| {
-            if e.cpu.pc() == effects::KEY_ON {
+            if e.cpu.pc() == bof3_audio::machine::reference::KEY_ON {
                 let at = ram_offset(e.cpu.register(29), 32)?;
                 calls.push(std::array::from_fn::<_, 8, _>(|i| {
                     if i < 4 {

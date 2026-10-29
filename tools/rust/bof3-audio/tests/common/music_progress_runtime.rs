@@ -24,8 +24,22 @@ fn original_handlers_report_infinite_boundaries_without_counting_finite_loops() 
         spu_clock::Model::EmulatorReference,
     );
     execution.cpu.set_register(29, 0x801f_ff00);
-    let mut progress = Progress::new(1, 2, record, Some(2)).unwrap();
-    let mut other = Progress::new(0, 0, BASE, Some(1)).unwrap();
+    let mut progress = Progress::new(
+        bof3_audio::machine::reference::progress_instructions(),
+        1,
+        2,
+        record,
+        Some(2),
+    )
+    .unwrap();
+    let mut other = Progress::new(
+        bof3_audio::machine::reference::progress_instructions(),
+        0,
+        0,
+        BASE,
+        Some(1),
+    )
+    .unwrap();
     let call =
         |execution: &mut Execution, progress: &mut Progress, other: &mut Progress, entry, args| {
             execution
@@ -80,7 +94,14 @@ fn original_handlers_report_infinite_boundaries_without_counting_finite_loops() 
         Stop::InfiniteLoopLimit
     );
     assert_eq!(progress.boundary.as_ref().unwrap().pc, 0x8016a374);
-    let mut end = Progress::new(1, 2, record, Some(2)).unwrap();
+    let mut end = Progress::new(
+        bof3_audio::machine::reference::progress_instructions(),
+        1,
+        2,
+        record,
+        Some(2),
+    )
+    .unwrap();
     call(
         &mut execution,
         &mut end,

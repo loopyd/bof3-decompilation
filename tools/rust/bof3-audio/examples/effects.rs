@@ -57,7 +57,7 @@ fn main() -> Result<()> {
     let exe = Executable::from_bytes(fs::read(&args[0])?)?;
     let archive = ArchiveImage::from_bytes(fs::read(&args[2])?)?;
     let mut trace = Trace::default();
-    let mut prepared = bank::prepare(
+    let mut prepared = bof3_audio::machine::reference::prepare_bank(
         &exe,
         Image::from_bytes(fs::read(&args[1])?)?,
         &archive,
@@ -135,7 +135,7 @@ fn main() -> Result<()> {
         .copied()
         .collect();
     let report = serde_json::json!({
-        "schema":"bof3.audio.driver-effects/v1", "boot":prepared.boot,
+        "schema":"bof3.audio.driver-effects/v1", "boot":prepared.startup,
         "identity":prepared.identity,"note":note,"calls":prepared.calls,
         "callbacks":callbacks,"key_on":key_on,"release":release,
         "requested_body_frames":frames,"body_frames":body_frames,"tail_frames":tail,
