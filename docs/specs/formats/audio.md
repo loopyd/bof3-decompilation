@@ -3852,9 +3852,12 @@ through the existing typed Kernel APIs, and bind `audio_counter_flags` to its li
 RAM allocation. Use the linked exception-stack end as `Environment::stack_top`.
 The execution loop must enter owned exception delivery for IRQs and syscalls,
 prepare before selecting each service or instruction, reread PC after preparation,
-and complete guards after successful instruction retirement. The linker excludes
-the host staging range beginning at `0x80010000`; callers must also exclude these
-allocations from media, other code and foreground stacks. This service allocation
+and complete guards after successful instruction retirement. The linker and
+loader reserve `0x80020000..0x80040000` for the owned image, state and stacks.
+Host media staging remains in `0x80010000..0x80020000`. Callers must exclude the
+owned allocation from media, other code and foreground stacks. This development
+profile does not load the original BIOS shell or standalone player alongside it.
+This service allocation
 does not initialize game audio state, admit device timing, or establish complete
 standalone startup.
 
@@ -3869,9 +3872,15 @@ code and original-ROM timing. Owned services do not use the original-ROM clock.
 
 Owned execution rejects a new host call while a continuation remains active.
 Observer, CPU, service, device and call-bound failures retain state and prevent
-further execution on that instance. Unsupported WaitEvent is charged once before
-failure and retains its continuation; this execution owner supplies no external
-wait-progress source. `Execution::kernel()` exposes read-only ownership state.
+further execution on that instance. A foreground WaitEvent polls its retained
+event record while each transition advances the existing device clocks. An IRQ
+suspends that wait until validated restoration of the same thread, BIOS entry,
+service, handle and return address. Callback-origin waits and nested exceptions
+cannot be suspended this way. A changed return context fails with ownership
+retained. Host-call limits count transitions, including BIOS calls and wait polls;
+a wait without a progress source exhausts that bound. Original-ROM reference
+timing does not support owned wait polling. `Execution::kernel()` exposes
+read-only ownership state.
 
 `Kernel::configure_exception_reset` binds the linked B0/18 ResetEntryInt entry
 after the guest hook pointer and context restoration are bound. That entry
@@ -4045,6 +4054,53 @@ and returns it. Other low bytes return 255 without changing the stored count.
 Both control bytes start at zero. These entries retain their original V0
 behavior; the playback-byte setter and configuration add no result contract.
 Original SDK consumers and complete game initialization remain to be migrated.
+
+The linked [reverb component](../../../tools/rust/bof3-audio/driver/audio/reverb.s)
+exports mode, attribute, register, enable and work-area-clear routines. It shares
+the initializer's live SPU state and the ten writable 68-byte presets. The single
+`audio_spu_initial_reverb_start` allocation contains ten writable mode addresses.
+`audio_sequence_set_reverb_mode` accepts low-halfword modes zero through nine.
+A negative signed low halfword selects the corresponding positive mode and clears
+its work area. Invalid modes return -1. The wrapper retains its mode result even
+when the attribute routine rejects an allocation conflict.
+
+`audio_spu_set_reverb_attributes` consumes a word-aligned 20-byte caller record:
+a word mask, word mode, two depth halfwords, word delay and word feedback.
+Mask zero selects all fields; bits 0 through 4 select mode, left depth, right depth, delay and
+feedback. Mode bit `0x100` requests clearing. Delay and feedback retain the
+original mode-seven/eight arithmetic. `audio_spu_set_reverb_registers` consumes
+a word-aligned mask followed by 32 halfwords. Mask zero selects all registers;
+other masks select individual bits. Input records and register pointers remain live,
+including effects from overlapping input and output memory.
+
+The allocation-conflict helper reads finite eight-byte records through
+`audio_spu_state_3f88`, or accepts a null root. Bit 31 skips a record before bit
+30 is tested as the terminator; both bits set therefore skip. Other records
+use the low 28 address bits and the following size word, preserving unsigned
+comparisons and wrapping addition. Callers must supply a readable terminating
+record sequence. These routines add no allocation bound or malformed-list repair.
+
+`audio_spu_clear_reverb` requires initialized DMA4, its installed callback and
+enabled polling event. It uploads the live 1,024-byte `audio_spu_reverb_zeroes`
+buffer in chunks and waits for actual DMA completion through IRQ delivery.
+Changing that buffer changes uploaded bytes. It restores the transfer callback
+and restores `audio_spu_state_3acc` when its incoming value was one. Mode zero
+clears the fixed final area; other modes use the live mode address and transfer
+shift. Invalid modes or allocation conflicts return -1.
+
+The linked [transfer dispatcher](../../../tools/rust/bof3-audio/driver/audio/transfers.s)
+uses A0 selector zero for SPU-to-RAM reads, one for RAM-to-SPU writes, two for
+the A1 SPU byte address, and three for the A1 RAM buffer and A2 byte count.
+Selector three rounds the count upward to 64-byte DMA blocks, so the entire rounded RAM extent must be
+valid. A zero count retains DMA's zero-block semantics; there is no empty-transfer
+shortcut. Status waits retain their -2 timeout result. Other selectors return zero.
+The dispatcher writes all four incoming arguments into the caller's 16-byte
+home area before allocating its stack frame. These components require O32 home
+areas and up to `0xF8` bytes of nested foreground stack, plus the separately
+allocated exception stack. The current machine rejects stopping or changing
+direction with buffered DMA-read data; its drain/discard behavior is unverified.
+These components retain the explicit device schedule and do not establish native
+timing, full sound startup or production rendering acceptance.
 
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:

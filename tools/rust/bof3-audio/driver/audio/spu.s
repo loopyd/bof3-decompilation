@@ -657,11 +657,14 @@ audio_spu_reset_pattern:
 .globl audio_spu_voice_control_shadow
 audio_spu_voice_control_shadow:
     .fill 24, 2, 0xc000
-# exe/slus_004_22@0x80183F8C, accessed extent 4 bytes.
+# exe/slus_004_22@0x80183F8C, ten live reverb work addresses.
 .balign 4
 .globl audio_spu_initial_reverb_start
 audio_spu_initial_reverb_start:
     .word 0x0000fffe
+    .word 0x0000fb28, 0x0000fc18, 0x0000f6f8
+    .word 0x0000f204, 0x0000ea44, 0x0000e128
+    .word 0x0000cff8, 0x0000cff8, 0x0000f880
 .globl audio_spu_timeout_format
 audio_spu_timeout_format:
     .asciz "SPU:T/O [%s]\n"
