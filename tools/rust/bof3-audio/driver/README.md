@@ -52,8 +52,27 @@ The 56-byte `audio_xa_state` preserves original field offsets. The selector
 writes the start LBA at +0, stop threshold at +4, current LBA at +8, filter
 file at +0x28 and channel at +0x29. Other bytes remain live and untouched.
 The stop threshold is a scheduler input, not an accepted audible endpoint.
-XA start, callback installation and scheduled playback require further owned
-routines; this leaf alone does not provide XA rendering or vocal roles.
+The `audio_xa_start` entry takes the same packed ID in A0 and requires the
+same table/LBA bindings. It selects the cue, initializes the original control fields, writes the
+start position at state +0x2C and installs `audio_xa_completion_callback` in the
+shared `audio_cd_sync_callback` word. V0 returns the previous callback pointer.
+START preserves the completion byte at +0x22 and poll halfword at +0x12; callers
+must retain their live values across repeated calls. It also clears the separate
+`audio_xa_start_clear_byte`, whose other uses remain unresolved.
+
+`audio_cd_int_to_position` takes a signed LBA in A0 and a writable three-byte
+output in A1, returning that output pointer in V0. It preserves the original
+unchecked 32-bit arithmetic and stores bytes at +2, +1, then +0. The host's
+validated BCD domain is -150..449849; this guest entry does not enforce it.
+`audio_cd_set_sync_callback` replaces the shared callback word with A0 and
+returns its previous value without invoking either callback.
+
+The completion callback takes the completion code in A0 and response pointer
+in A1. Code 2 sets state +0x22 to 1 before copying eight live response bytes,
+indices 7 through 0, into state +0x18..+0x1F. Other codes set +0x22 to 255
+without reading A1. Overlapping response and state buffers follow that exact
+order. Scheduled CD dispatch and playback still require further owned routines;
+these entries alone do not provide XA rendering or vocal roles.
 
 The production PSX music renderer uses this driver. Other production operations,
 full SFX/vocal contexts, native timing and independent PCM acceptance remain open.
