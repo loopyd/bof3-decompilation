@@ -142,18 +142,6 @@ audio_sequence_tick_dispatch:
     .word .Ltick_8016da54
     .word .Ltick_8016dacc
 
-.section .data
-# exe/slus_004_22@0x80184440, one accessed word.
-.balign 4
-.globl audio_sequence_tick_mode
-audio_sequence_tick_mode:
-    .word 60
-# exe/slus_004_22@0x80184444, one accessed word.
-.balign 4
-.globl audio_sequence_tick_flag
-audio_sequence_tick_flag:
-    .word 1
-
 .section .bss
 # exe/slus_004_22@0x80190300, one accessed word.
 .balign 4
