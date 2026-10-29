@@ -1006,6 +1006,9 @@ pub(crate) fn reconstruct(
                 "{member}: decoded bank view is read-only; use qualified sprite.json and indexed PNG views"
             )));
         }
+        let word_units = resource.upload.is_some()
+            || resource.palette_upload.is_some()
+            || resource.save_icon.is_some();
         let mut edit = ByteEdits::new(raw);
         let imported_raw = read_member(root, &export.raw, resource.size.max(1))?;
         if (resource.bank.is_some()
@@ -1018,7 +1021,7 @@ pub(crate) fn reconstruct(
                 export.raw
             )));
         }
-        edit.add(&export.raw, imported_raw)?;
+        edit.add_units(&export.raw, imported_raw, if word_units { 2 } else { 1 })?;
         if let Some(member) = &export.sprite {
             edit.add(member, import_bank(root, resource, export, original_raw)?)?;
         }
@@ -1035,14 +1038,14 @@ pub(crate) fn reconstruct(
         if let (Some(palette), Some(member)) = (&resource.palette_upload, &export.words) {
             let words: Vec<u16> =
                 serde_json::from_slice(&read_member(root, member, 16 * 1024 * 1024)?)?;
-            edit.add(member, palette.encode_words(&words, raw)?)?;
+            edit.add_units(member, palette.encode_words(&words, raw)?, 2)?;
         }
         if let Some(info) = &resource.save_icon {
             let original_images = save_icon::decode(raw, info)?;
             if let Some(member) = &export.words {
                 let mut images = original_images.clone();
                 images.palette.words = serde_json::from_slice(&read_member(root, member, 65536)?)?;
-                edit.add(member, save_icon::encode(original_raw, info, &images)?)?;
+                edit.add_units(member, save_icon::encode(original_raw, info, &images)?, 2)?;
             }
             for (frame, member) in export.save_frames.iter().enumerate() {
                 let imported = png::decode(&read_member(root, member, 65536)?)?;
@@ -1066,12 +1069,12 @@ pub(crate) fn reconstruct(
                         "{member}: preserve the raw upload's word-grid dimensions"
                     )));
                 }
-                edit.add(member, upload.encode_words(&imported.words, raw)?)?;
+                edit.add_units(member, upload.encode_words(&imported.words, raw)?, 2)?;
             }
             if let Some(member) = &export.words {
                 let words: Vec<u16> =
                     serde_json::from_slice(&read_member(root, member, 16 * 1024 * 1024)?)?;
-                edit.add(member, upload.encode_words(&words, raw)?)?;
+                edit.add_units(member, upload.encode_words(&words, raw)?, 2)?;
             }
             for (bits, member) in [(4, &export.indices_4), (8, &export.indices_8)] {
                 if let Some(member) = member {
@@ -1224,22 +1227,34 @@ impl<'a> ByteEdits<'a> {
     }
 
     fn add(&mut self, member: &str, replacement: Vec<u8>) -> Result<()> {
+        self.add_units(member, replacement, 1)
+    }
+
+    fn add_units(&mut self, member: &str, replacement: Vec<u8>, unit: usize) -> Result<()> {
         if replacement.len() != self.original.len() {
             return Err(Error::Invalid(format!(
                 "{member}: edit changes original allocation"
             )));
         }
-        for (offset, (old, new)) in self.original.iter().zip(replacement).enumerate() {
-            if *old == new {
+        for (index, (old, new)) in self
+            .original
+            .chunks(unit)
+            .zip(replacement.chunks(unit))
+            .enumerate()
+        {
+            if old == new {
                 continue;
             }
-            let (other, owners) = self
-                .changes
-                .entry(offset)
-                .or_insert_with(|| (new, BTreeSet::new()));
-            owners.insert(member.into());
-            if *other != new {
-                self.conflicts.insert(offset);
+            for (byte, &value) in new.iter().enumerate() {
+                let offset = index * unit + byte;
+                let (other, owners) = self
+                    .changes
+                    .entry(offset)
+                    .or_insert_with(|| (value, BTreeSet::new()));
+                owners.insert(member.into());
+                if *other != value {
+                    self.conflicts.insert(offset);
+                }
             }
         }
         Ok(())

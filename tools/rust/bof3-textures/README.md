@@ -241,8 +241,11 @@ that a game consumer selects 16-bit color rendering.
 Keep this PNG in 8-bit RGBA format with its original dimensions. Packing refuses
 RGB channels outside the exact expansion, other alpha values, nonblack pixels
 with alpha 0, and black pixels with alpha 255. It never rounds colors. Edits to
-`colors-16.png`, `words.json`, raw bytes, and index views must agree wherever
-their changed bytes overlap. The tool reports conflicting views and publishes
+`colors-16.png`, `words.json`, and raw word edits request complete 16-bit words.
+Each changed word must agree with overlapping edits, including index views.
+Edits to different words combine; an unchanged word does not override an edit.
+Palette and save-icon color words follow the same rule. Index views retain
+byte-level reconciliation. The tool reports conflicting views and publishes
 nothing. Older packages must be unpacked again with the current executable.
 
 Qualified FIRST glyph, SHISU portrait, and DEMO logo, label and scrolling-panel atlases also
