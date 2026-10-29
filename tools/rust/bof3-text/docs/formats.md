@@ -489,9 +489,10 @@ alignment bytes and twenty pointer bytes protected. A controlled packed-media
 Items observation verifies ITEM changed to XTEM. A preinstruction capture at
 `0x801DFF24` binds `V0=0x801ECC3C`, slot `S0=0x801ECC64` and record
 `S1=0x80148504`, with handler 6, type 12, state 2 and category zero. It does not
-prove call or delay-store retirement. Other category labels, general selector
-bounds and natural availability remain unverified; identical payloads leave
-the START or STATUS supplier unresolved.
+prove call or delay-store retirement. A separate controlled record with category 1
+verifies WEAPON changed to XEAPON. Other category labels, general selector bounds
+and natural availability remain unverified; identical payloads leave the START
+or STATUS supplier unresolved.
 
 The skill-category labels HEAL, ASSIST, ATTACK and SKILL occupy
 `0x801ECC78`, `0x801ECC80`, `0x801ECC88` and `0x801ECC90`, with capacities

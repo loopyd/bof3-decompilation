@@ -113,10 +113,11 @@ Settings fields retain their recorded glyph limits, count bytes and positions.
 Re-extract older inline documents. Use a separate document and output for each
 archive. Editing one does not update the other or a save. Counted formation labels
 use separate groups for one, two and three party members. Controlled packed-media
-observations verify all ten counted labels and ITEM edited to XTEM in Items. A
-preinstruction capture binds the selected ITEM pointer and category-zero record.
-Other category labels, natural availability and the START or STATUS supplier
-remain unverified.
+observations verify all ten counted labels, ITEM edited to XTEM and WEAPON edited
+to XEAPON in Items. WEAPON uses a controlled record with category 1. A
+preinstruction capture binds the selected ITEM pointer and its record with
+category 0. Other category labels, natural availability and the START or STATUS
+supplier remain unverified.
 See the [record groups](../../../../tools/rust/bof3-text/docs/formats.md#default-character-names)
 before choosing a duplicate label.
 
