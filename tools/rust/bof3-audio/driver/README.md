@@ -37,6 +37,24 @@ After service initialization, the host selects GP zero, foreground SP
 Sound initialization, layout selection and host-fed bank/SEP transfer follow
 as separate guest calls. No original ROM or game installation is required.
 
+The `audio_xa_select_cue` leaf takes a packed cue ID in A0. The signed upper
+value `A0 >> 12` must be 0, 1 or 2; the low 12 bits select the cue. Before
+calling, bind the three live `audio_xa_table_pointers` to readable guest
+halfword tables and populate `audio_xa_file_lbas` at each selected file slot.
+The adjacent `audio_xa_file_slots` words default to 681, 434 and 682. Slots
+may change within the allocated 0..682 index range when their LBA is supplied.
+Every halfword reached by the original high-bit table walk, including the
+selected pair, must exist. Tables may alias live state; the guest reads them
+in original instruction order. Zeroed pointers or LBA storage do not configure
+a source, and the leaf does not validate these caller preconditions.
+
+The 56-byte `audio_xa_state` preserves original field offsets. The selector
+writes the start LBA at +0, stop threshold at +4, current LBA at +8, filter
+file at +0x28 and channel at +0x29. Other bytes remain live and untouched.
+The stop threshold is a scheduler input, not an accepted audible endpoint.
+XA start, callback installation and scheduled playback require further owned
+routines; this leaf alone does not provide XA rendering or vocal roles.
+
 The production PSX music renderer uses this driver. Other production operations,
 full SFX/vocal contexts, native timing and independent PCM acceptance remain open.
 The authored sources use the project [MIT license](../LICENSE); dependency
