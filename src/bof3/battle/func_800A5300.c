@@ -1,8 +1,8 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @behavior UNKNOWN: exact behavior is not yet documented. */
-
-/* @sets D_80148597 to 2, D_801483C3 to 1, increments counter at D_801462E4.
+/* @behavior Stores 2 into byte D_80148597, reads byte D_801462E4, stores 1
+ * into byte D_801483C3, then stores the previously read value plus 1 modulo
+ * 256 into D_801462E4.
  * @source 0x800A5300
  * @status exact
  * @match 100.00

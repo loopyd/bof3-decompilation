@@ -1,8 +1,7 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @behavior UNKNOWN: exact behavior is not yet documented. */
-
-/* @increments the global counter at D_801462E4 if D_801485E0 equals 0xA3.
+/* @behavior Increments byte D_801462E4 modulo 256 only when the signed
+ * halfword at D_801485E0 equals 0xA3.
  * @source 0x800A60A8
  * @status exact
  * @match 100.00

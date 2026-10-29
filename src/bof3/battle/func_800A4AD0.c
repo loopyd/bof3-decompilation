@@ -1,8 +1,8 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @behavior UNKNOWN: exact behavior is not yet documented. */
-
-/* @initializes several global state variables.
+/* @behavior Reads byte D_801462E5, clears bytes D_801462E4 and D_801462E6,
+ * stores the original value plus 3 modulo 256 into D_801462E3, and stores the
+ * original value with bit 0x80 set into D_801462E5.
  * @source 0x800A4AD0
  * @status exact
  * @match 100.00

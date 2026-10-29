@@ -1,10 +1,9 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @behavior UNKNOWN: exact behavior is not yet documented. */
-
-/* @returns whether the byte at offset 0x85 of D_80146250 differs from arg1 (masked).
- * Only checks when (arg0 & 0xFF) < 3.
- * @source 0x800A3688
+/* @source 0x800A3688
+ * @behavior Returns 1 when the low byte of arg0 is at least 3. Otherwise, returns 1
+ * if byte +0x85 through the pointer loaded from 0x80146250 differs from the low
+ * byte of arg1, or 0 if they are equal.
  * @status exact
  * @match 100.00
  * @residual none

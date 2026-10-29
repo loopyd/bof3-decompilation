@@ -1,9 +1,7 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @behavior UNKNOWN: exact behavior is not yet documented. */
-
-/* @calls func_800A403C with argument 2
- * @source 0x8009E7E4
+/* @source 0x8009E7E4
+ * @behavior Calls func_800A403C with argument 2.
  * @status exact
  * @match 100.00
  * @residual none

@@ -1,10 +1,8 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @behavior UNKNOWN: exact behavior is not yet documented. */
-
-/* @stores halfword 0x5A at offset 4, halfword -0x17 at offset 6 of D_80148648,
- * and increments byte at offset 3.
- * @source 0x800B0A2C
+/* @source 0x800B0A2C
+ * @behavior Loads the pointer at 0x80148648, stores halfwords 0x005A at +0x04 and
+ * 0xFFE9 at +0x06, and increments byte +0x03 modulo 256.
  * @status exact
  * @match 100.00
  * @residual none

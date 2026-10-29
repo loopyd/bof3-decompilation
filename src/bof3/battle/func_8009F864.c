@@ -1,9 +1,7 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @behavior UNKNOWN: exact behavior is not yet documented. */
-
-/* @calls resetSelectionApplyInput with argument 0x4
- * @source 0x8009F864
+/* @source 0x8009F864
+ * @behavior Calls resetSelectionApplyInput with argument 4.
  * @status exact
  * @match 100.00
  * @residual none

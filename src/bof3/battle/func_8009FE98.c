@@ -1,9 +1,8 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @behavior UNKNOWN: exact behavior is not yet documented. */
-
-/* @stores 0x-F0 to offset 2 of the pointer loaded from D_8014639C.record.
- * @source 0x8009FE98
+/* @source 0x8009FE98
+ * @behavior Stores -240 in the halfword at byte +0x04 through the pointer loaded
+ * from 0x801463A0.
  * @status exact
  * @match 100.00
  * @residual none

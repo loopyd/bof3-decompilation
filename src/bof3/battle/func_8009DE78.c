@@ -1,9 +1,8 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @behavior UNKNOWN: exact behavior is not yet documented. */
-
-/* @stores 0x-64 to offset 2 of the pointer loaded from D_8014639C.record.
- * @source 0x8009DE78
+/* @source 0x8009DE78
+ * @behavior Stores -100 into the signed halfword at byte offset 4 of the pointer
+ * loaded from D_801463A0.
  * @status exact
  * @match 100.00
  * @residual none
