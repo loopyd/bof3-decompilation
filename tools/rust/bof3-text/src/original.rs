@@ -314,7 +314,14 @@ const BPLU349_GRAPHICS_RANGES: &[(usize, usize)] = &[
 ];
 
 /// Recognized serialized graphics storage; no rasterized-text or display claim.
-pub fn graphics_storage_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextRange>> {
+pub fn graphics_storage_ranges(
+    entry: Entry,
+    data: &[u8],
+    original_us: bool,
+) -> Option<Vec<NontextRange>> {
+    if !original_us {
+        return None;
+    }
     match (entry.index, entry.offset, entry.transfer_mode, entry.ram_ptr, data.len()) {
         (0, 2048, 0, 0x8003_b800, 331_788)
             if sha256_hex(data)
@@ -338,6 +345,30 @@ pub fn graphics_storage_ranges(entry: Entry, data: &[u8]) -> Option<Vec<NontextR
                 length: data.len(),
                 evidence: "original US AREA024 entry 8 serialized palette/image words; staging 0x8014E284, descriptor 0x8014E22C and original SDK image-word profile 0x8017CE9C; exact source identity; no actual full-palette upload, sampling, display or text-absence claim",
             }])
+        }
+        (_, _, 0, 0x800e_3800, length)
+            if length >= 4 && length == 4 + usize::from(data[0]) * 8 =>
+        {
+            let evidence = "original US counted sprite metadata; count byte at 0x800E3800 and eight-byte records at 0x800E3804; original consumer 0x8014DD3C uses numeric count/IDs and actor fields; header bytes 1..3 and record byte 3 excluded; no runtime selection, unique supplier or text-absence claim";
+            let mut ranges = vec![NontextRange {
+                offset: 0,
+                length: 1,
+                evidence,
+            }];
+            for index in 0..usize::from(data[0]) {
+                let offset = 4 + index * 8;
+                ranges.push(NontextRange {
+                    offset,
+                    length: 3,
+                    evidence,
+                });
+                ranges.push(NontextRange {
+                    offset: offset + 4,
+                    length: 4,
+                    evidence,
+                });
+            }
+            Some(ranges)
         }
         _ => None,
     }

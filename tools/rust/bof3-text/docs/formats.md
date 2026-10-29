@@ -59,6 +59,24 @@ those bits a meaning. It does not establish the absence of rasterized text,
 complete CLUTs, runtime selection, upload, residency or display. Other sprite
 banks remain unresolved under this rule.
 
+## Counted sprite metadata coverage
+
+Coverage recognizes consumed fields in original US raw entries loaded at
+`0x800E3800`. The complete archive must match the original disc inventory, and
+the payload length must be `4 + 8 * count`, where `count` is byte zero.
+Changed sources and other shapes remain unresolved under this rule.
+
+The original consumer at `SLUS_004.22@0x8014DD3C` reads the count as a loop bound
+and finds the first matching little-endian record ID at bytes 0..1. It copies
+record bytes 2, 4, 5, 6 and 7 into actor fields; byte 7 becomes a halfword.
+Coverage therefore classifies the count byte and record ranges `[0,3)` and `[4,8)` as known nontext.
+Header bytes `[1,4)` and record byte 3 remain unresolved. Although a halfword load
+fetches record byte 3, the following byte store discards it.
+
+These ranges qualify numeric stored fields. They do not establish runtime
+selection, unique physical suppliers, complete payload ownership, the absence
+of rasterized text or safe editing.
+
 ## Staged palette coverage
 
 Coverage recognizes the complete 5120-byte palette allocation in original US

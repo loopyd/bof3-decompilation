@@ -413,10 +413,11 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                         "remaining record entry consumers unverified".into(),
                                     ));
                                 }
-                            } else if let Some(spans) = original_us
-                                .then(|| crate::original::graphics_storage_ranges(*entry, payload))
-                                .flatten()
-                            {
+                            } else if let Some(spans) = crate::original::graphics_storage_ranges(
+                                *entry,
+                                payload,
+                                original_us,
+                            ) {
                                 let mut at = 0;
                                 for span in spans {
                                     if span.offset > at {
