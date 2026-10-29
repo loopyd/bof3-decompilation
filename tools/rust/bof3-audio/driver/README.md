@@ -58,7 +58,7 @@ start position at state +0x2C and installs `audio_xa_completion_callback` in the
 shared `audio_cd_sync_callback` word. V0 returns the previous callback pointer.
 START preserves the completion byte at +0x22 and poll halfword at +0x12; callers
 must retain their live values across repeated calls. It also clears the separate
-`audio_xa_start_clear_byte`, whose other uses remain unresolved.
+`audio_xa_start_clear_byte`, which state 7 sets to 3; other uses remain unresolved.
 
 `audio_cd_int_to_position` takes a signed LBA in A0 and a writable three-byte
 output in A1, returning that output pointer in V0. It preserves the original
@@ -71,8 +71,29 @@ The completion callback takes the completion code in A0 and response pointer
 in A1. Code 2 sets state +0x22 to 1 before copying eight live response bytes,
 indices 7 through 0, into state +0x18..+0x1F. Other codes set +0x22 to 255
 without reading A1. Overlapping response and state buffers follow that exact
-order. Scheduled CD dispatch and playback still require further owned routines;
-these entries alone do not provide XA rendering or vocal roles.
+order.
+
+The standalone state entries `audio_xa_state_0`, `audio_xa_state_2` and
+`audio_xa_state_7` take no arguments and use the same live state. State 0 clears
+the timer and completion fields. States 2 and 7 treat completion as a signed byte and
+on negative completion compare the old signed halfword retry count with six
+while incrementing its stored halfword. State 2 advances positive completion to
+state 3. On positive completion, state 7 clears state, timer and completion,
+writes 2 at +0x23 and 3 to the separate byte, and exchanges the callback
+with NULL; V0 then returns the previous callback pointer.
+Zero completion leaves those state fields unchanged. These entries preserve
+original register results on their other paths.
+
+`audio_xa_response_has_bit4` returns Boolean bit4 of response byte +0x18.
+`audio_xa_is_idle` returns true only when state +0x21 is zero.
+`audio_cd_position_to_int` takes three readable bytes in A0 and returns the
+signed LBA in V0, subtracting the 150-frame lead-in. It reads offsets +0, +1
+and +2 in order, clobbers A0 and converts unchecked nibbles, including invalid
+BCD. It performs no writes and preserves HI/LO.
+
+The nine-entry tick dispatcher and six other state handlers still require
+owned CD SDK routines. Scheduled CD dispatch and playback remain open; these
+entries alone do not provide XA rendering or vocal roles.
 
 The production PSX music renderer uses this driver. Other production operations,
 full SFX/vocal contexts, native timing and independent PCM acceptance remain open.
