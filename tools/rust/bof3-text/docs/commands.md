@@ -27,6 +27,10 @@ Symlinks, special files, non-UTF-8 paths and unreadable inputs fail rather than
 disappearing. Paths retain their actual components; a literal backslash in a Linux
 filename is not a directory separator.
 
+For supported inline layouts, declared pointer words become known nontext only
+after source validation and a check that each stored little-endian target matches
+its text allocation. Adjacent bytes remain unresolved unless separately qualified.
+
 `disc_membership` compares each original US file with the paths, sizes and hashes
 in `config/original-us-disc.json`, compiled into the binary. It pins the
 qualification's SHA-256, release and source-project hash, lists missing and changed

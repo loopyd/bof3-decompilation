@@ -1285,7 +1285,7 @@ pub struct Text {
     pub capacity: usize,
     pub renderers: Vec<u32>,
     pub(crate) codec: Codec,
-    references: Vec<u32>,
+    pub(crate) references: Vec<u32>,
     text: String,
 }
 

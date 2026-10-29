@@ -347,6 +347,49 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                             let mut allocations = Vec::new();
                             if let Some(document) = inline {
                                 for text in document.strings {
+                                    for reference in &text.references {
+                                        let relative = reference
+                                            .checked_sub(entry.ram_ptr)
+                                            .ok_or_else(|| {
+                                                Error::Invalid(
+                                                    "inline pointer precedes payload".into(),
+                                                )
+                                            })?
+                                            as usize;
+                                        let reference_end =
+                                            relative.checked_add(4).ok_or_else(|| {
+                                                Error::Invalid(
+                                                    "inline pointer offset overflow".into(),
+                                                )
+                                            })?;
+                                        let word = payload
+                                            .get(relative..reference_end)
+                                            .ok_or_else(|| {
+                                                Error::Invalid(
+                                                    "inline pointer outside payload".into(),
+                                                )
+                                            })?;
+                                        if u32::from_le_bytes(word.try_into().unwrap())
+                                            != text.address
+                                        {
+                                            return Err(Error::Invalid(
+                                                "inline pointer target mismatch".into(),
+                                            ));
+                                        }
+                                        let offset = entry
+                                            .offset
+                                            .checked_add(relative)
+                                            .ok_or_else(|| {
+                                                Error::Invalid(
+                                                    "inline pointer file offset overflow".into(),
+                                                )
+                                            })?;
+                                        allocations.push(RangeRecord {
+                                            offset, length: 4,
+                                            entry: Some(entry.index), status: "known-nontext",
+                                            evidence: format!("{} source-bound pointer word {reference:#x} targets inline allocation {:#x}", document.layout, text.address),
+                                        });
+                                    }
                                     allocations.push(RangeRecord {
                                         offset: text.file_offset, length: text.capacity,
                                         entry: Some(entry.index), status: "known-text",
@@ -395,13 +438,21 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                     "remaining record entry consumers unverified"
                                 };
                                 let mut at = entry.offset;
-                                let end = entry.offset + payload.len();
+                                let end =
+                                    entry.offset.checked_add(payload.len()).ok_or_else(|| {
+                                        Error::Invalid("inline payload end overflow".into())
+                                    })?;
                                 for allocation in allocations {
-                                    if allocation.offset < at
-                                        || allocation.offset + allocation.length > end
-                                    {
+                                    let allocation_end = allocation
+                                        .offset
+                                        .checked_add(allocation.length)
+                                        .ok_or_else(|| {
+                                            Error::Invalid("allocation end overflow".into())
+                                        })?;
+                                    if allocation.offset < at || allocation_end > end {
                                         return Err(Error::Invalid(
-                                            "overlapping or out-of-entry text allocations".into(),
+                                            "overlapping or out-of-entry supported allocations"
+                                                .into(),
                                         ));
                                     }
                                     if allocation.offset > at {
@@ -412,7 +463,7 @@ pub fn report(root: &Path, policy: &Path) -> Result<Report> {
                                             gap.into(),
                                         ));
                                     }
-                                    at = allocation.offset + allocation.length;
+                                    at = allocation_end;
                                     record.ranges.push(allocation);
                                 }
                                 if at < end {

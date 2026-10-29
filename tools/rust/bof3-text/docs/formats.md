@@ -43,6 +43,15 @@ The report retains the file's hash and source record. Any different WAV stays
 unresolved, including a changed file with the same header. This classification
 adds no editable text layout or playback acceptance.
 
+## Inline pointer coverage
+
+Supported inline layouts declare four-byte pointer words bound to the validated
+payload layout. Coverage checks that each word lies inside the payload and stores
+the text allocation's little-endian address, then classifies those four bytes as
+known nontext. Pointer words and text allocations must not overlap. Other payload
+bytes retain their existing classification; this rule does not classify padding
+or code or establish runtime rendering.
+
 ## Raw sprite-bank coverage
 
 For original US `BPLU349.EMI` entry 0, coverage recognizes the image headers,
