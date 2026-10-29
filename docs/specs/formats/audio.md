@@ -3879,11 +3879,13 @@ standalone startup.
 [`Execution::with_kernel`](../../../tools/rust/bof3-audio/src/machine/execution.rs)
 owns a prepared Kernel and its exception environment. It admits IRQs and syscalls
 through that owner, prepares before selecting a service or instruction, rereads
-PC before stopping, and completes guards before advancing devices. Each CPU,
-syscall or HLE transition advances the existing two-tick base schedule once.
+PC before stopping, and completes guards before advancing devices. Instructions
+use the shared interpreter costs for fetches, data accesses and multiply/divide
+readiness. Host services and wait polls retain two functional ticks per dispatch;
+their native latency is unverified. Each transition advances its device clocks once.
 Preparation that completes a host call adds no transition or clock cost.
-`Execution::new` and `from_boot` retain explicit development execution of loaded
-code and original-ROM timing. Owned services do not use the original-ROM clock.
+`Execution::new` retains the raw base schedule, and `from_boot` retains original-ROM
+timing. Owned device phase remains separate from the original-ROM clock.
 
 Owned execution rejects a new host call while a continuation remains active.
 Observer, CPU, service, device and call-bound failures retain state and prevent
@@ -3958,10 +3960,10 @@ IRQ residual timeout, unexpected IRQ and DMA error paths retain their diagnostic
 including all seven DMA addresses. The unexpected path returns from the exception
 without clearing I_STAT.
 
-This component uses the owned kernel's explicit service schedule. Its original
-BIOS timing, complete sound-initialization callers and production integration
-remain unresolved. Seven-channel dispatch logic does not imply that the machine
-implements transfers for every DMA channel.
+Owned sound initialization and production music use this component with the
+kernel's explicit service schedule. Complete caller coverage, original BIOS
+timing and other production contexts remain unresolved. Seven-channel dispatch
+logic does not imply that the machine implements transfers for every DMA channel.
 
 The linked [SPU initializer](../../../tools/rust/bof3-audio/driver/audio/spu.s)
 retains the low-level US initialization routines, FIFO writer, register writer,

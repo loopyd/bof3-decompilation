@@ -1,6 +1,6 @@
-//! PCSX-Redux interpreter costs and NTSC VBlank phase for original-ROM evidence.
-//! Root counters share the interpreter cycle and native update frontier.
-//! GPU command processing and bus arbitration remain separate.
+//! PCSX-Redux interpreter instruction costs shared by owned and original code.
+//! Original-ROM calls also dispatch root counters at the native update frontier.
+//! Host service latency, GPU commands and bus arbitration remain separate.
 use super::super::{
     bus::{Bus, BusError, Width},
     cpu::{Cpu, Fault, Step},
@@ -24,6 +24,16 @@ impl Clock {
     }
 
     pub(crate) fn step(&mut self, cpu: &mut Cpu, bus: &mut Interconnect) -> Result<Step, Fault> {
+        let result = self.step_instruction(cpu, bus);
+        bus.advance_reference_time(self.cycles, self.branch_boundary);
+        result
+    }
+
+    pub(crate) fn step_instruction(
+        &mut self,
+        cpu: &mut Cpu,
+        bus: &mut Interconnect,
+    ) -> Result<Step, Fault> {
         let pc = cpu.pc();
         let registers: [u32; 32] = std::array::from_fn(|i| cpu.register(i));
         let mut counted = Counted {
@@ -60,10 +70,12 @@ impl Clock {
             self.cycles += counted.accesses;
         }
         self.branch_boundary = result.as_ref().is_ok_and(|step| step.in_delay_slot);
-        counted
-            .bus
-            .advance_reference_time(self.cycles, self.branch_boundary);
         result
+    }
+
+    pub(crate) fn functional_service(&mut self) {
+        self.cycles += 2;
+        self.branch_boundary = false;
     }
 }
 

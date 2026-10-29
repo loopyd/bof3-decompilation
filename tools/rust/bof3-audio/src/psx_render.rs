@@ -97,7 +97,7 @@ pub fn render(
     options.validate()?;
     let runtime = music::prepare(image, archive, options.layout, options.sequence)?;
     render_prepared(runtime, options, "owned_us_driver", vec![
-        "Reference NTSC scanline/output clocks with two base ticks per instruction; CPU stalls and hardware sub-frame timing are unverified.",
+        "Instruction fetch, data access and multiply/divide costs use the reference interpreter model. Host kernel services retain two functional ticks per dispatch; their latency and hardware sub-frame timing are unverified.",
         "Host stages one VAB/SEP archive into the owned layout; original CD transport and multi-bank selection are not implemented.",
         "Output phase starts after owned initialization. Native timing and independent PCM agreement remain unverified.",
         "Duration or the observed loop/end boundary selects the body cutoff. Stop runs at the next safe guest-call boundary; tail includes that delay and the guest key-off/voice flush.",
