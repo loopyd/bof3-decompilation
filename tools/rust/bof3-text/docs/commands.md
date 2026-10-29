@@ -121,21 +121,30 @@ bin/harness text search --grep McNeil \
 and `vocabulary` do not load an unrelated generated vocabulary at dispatch.
 Search/scan/readability commands still require their actual filter inputs.
 
-## `index ARCHIVE.EMI [--class CLASS] [-e|--entry N]`
+## `index SOURCE [--class CLASS] [-e|--entry N]`
 
-Lists every text subfile (EMI entries whose TOC load argument is a known text bank),
-with its class, and whether it parses.
+Lists supported text banks, inline strings, record names, monster names and
+executable ASCII. EMI rows retain their TOC entry, file offset, load argument and
+payload size. Executables use one row for the whole file, with offset zero and no
+EMI entry or load argument. The listing reports bank parse failures in `status`.
 
 ```
 ENTRY  OFFSET     RAM_PTR    SIZE       CLASS     BANKS  ROWS   USED   OPTIONS  STATUS
 11     0x000b8000 0x80010000 9170       dialogue 1      256    130    2        ok
 ```
 
-`--class` and `-e/--entry` restrict the listing, and an absent class is refused with the
-classes the archive does contain. `--json` emits `{"archive": ..., "entries": [...]}` where each entry carries
-`entry`, `offset`, `ram_ptr`, `size`, `class`, `banks`, `rows`, `used`, `options`
-and a `status` string. `options` counts rows whose extent carries a choice option
-list after its `{end}`.
+`--class` restricts the listing to an existing bank class. `-e/--entry` selects
+one EMI entry, including a supported literal layout. Executables refuse both
+selectors. An absent selection fails.
+
+`--json` emits `{"archive": ..., "entries": [...]}`. Each row carries `entry`,
+`offset`, `ram_ptr`, `size`, `class`, `banks`, `rows`, `used`, `options` and
+`status`. Literal classes are `inline_text`, `record_names`, `monster_names` and
+`executable_ascii`; their `rows` count is the number of allocated strings or names.
+Their bank-only fields `banks`, `used` and `options` are null. Executable `entry`
+and `ram_ptr` are also null. The text table prints null fields as `-`.
+For banks, `options` counts rows whose extent carries a choice option list after
+its `{end}`.
 
 ## `extract ARCHIVE.EMI -o|--output OUT [-e|--entry N] [--class CLASS] [--latch ENTRY:OFFSET+LENGTH]`
 

@@ -28,7 +28,11 @@ the source tree. Each exported document must parse back and
 reproduce its original bytes. Any export failure makes the operation fail; retain
 the manifest and inspect failures before claiming coverage.
 
-For a single archive, use `index`, `extract`, `analyze` and `query`. For example:
+For a single source, use `index`, `extract`, `analyze` and `query`. `index` lists
+supported banks and literal layouts, including executable ASCII. Its `rows` count
+covers strings or names for literal layouts; bank-only counts are null. Use
+`--entry` for an EMI entry and `--class` for a bank class. Executables refuse EMI
+selectors. For example:
 
 ```sh
 bin/harness text analyze out/extracted/BIN/WORLD00/AREA000.EMI

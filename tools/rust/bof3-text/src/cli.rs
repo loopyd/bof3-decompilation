@@ -244,7 +244,7 @@ pub enum Mode {
         #[arg(long)]
         no_windows: bool,
     },
-    /// List every text subfile of an EMI archive
+    /// List supported text layouts in an EMI archive or PS-X executable
     Index {
         /// Archive to inspect
         archive: PathBuf,
@@ -3139,25 +3139,45 @@ fn run_index(
 ) -> Result<()> {
     let data = read(archive, "archive")?;
     let wanted = resolve_class(class_filter)?;
-    let mut entries = query::index(&data)?;
-    if wanted.is_some() || entry_filter.is_some() {
-        entries.retain(|entry| {
-            wanted.is_none_or(|class| entry.class == class)
-                && entry_filter.is_none_or(|index| entry.entry == index)
-        });
-        if entries.is_empty() {
-            return invalid(match (wanted, entry_filter) {
-                (Some(class), Some(index)) => {
-                    format!("archive has no {class} text subfile at entry #{index}")
-                }
-                (Some(class), None) => format!("archive has no {class} text subfile"),
-                (None, Some(index)) => format!("archive has no text subfile at entry #{index}"),
-                (None, None) => "archive has no matching text subfile".to_string(),
-            });
-        }
+    let entry_spec = entry_filter.map_or_else(|| "all".into(), |index| index.to_string());
+    if crate::executable::is_executable(&data) {
+        executable_selection(&entry_spec, class_filter, None)?;
     }
+    let sources = if let Some(class) = wanted {
+        QuerySources {
+            literals: Vec::new(),
+            banks: select(&data, "all", Some(class))?,
+        }
+    } else {
+        query_sources(archive, &data, &entry_spec)?
+    };
+    let mut entries = query::index_banks(sources.banks);
+    entries.extend(sources.literals.into_iter().map(|source| {
+        let entry = source.entry;
+        query::IndexedEntry {
+            entry: entry.map(|entry| entry.index),
+            offset: entry.map_or(0, |entry| entry.offset),
+            ram_ptr: entry.map(|entry| format!("{:#010x}", entry.ram_ptr)),
+            size: entry.map_or(data.len(), |entry| entry.size as usize),
+            class: source.class.into(),
+            banks: None,
+            rows: source.rows,
+            used: None,
+            options: None,
+            status: "ok".into(),
+        }
+    }));
+    entries.retain(|entry| entry_filter.is_none_or(|index| entry.entry == Some(index)));
+    entries.sort_by_key(|entry| entry.entry);
     if entries.is_empty() {
-        return invalid("archive has no text subfile (load argument 0x80010000 or 0x8001A000)");
+        return invalid(match (wanted, entry_filter) {
+            (Some(class), Some(index)) => {
+                format!("archive has no {class} text subfile at entry #{index}")
+            }
+            (Some(class), None) => format!("archive has no {class} text subfile"),
+            (None, Some(index)) => format!("archive has no text subfile at entry #{index}"),
+            (None, None) => "archive has no supported verified text layout".into(),
+        });
     }
     info!("{} text subfile(s) in {}", entries.len(), archive.display());
     if cli.json {
@@ -3196,15 +3216,23 @@ fn run_index(
         };
         println!(
             "{:<6} {:#010x} {:<10} {:<10} {:<9} {:<6} {:<6} {:<6} {:<8} {}",
-            entry.entry,
+            entry
+                .entry
+                .map_or_else(|| "-".into(), |value| value.to_string()),
             entry.offset,
-            entry.ram_ptr,
+            entry.ram_ptr.as_deref().unwrap_or("-"),
             entry.size,
             entry.class,
-            entry.banks,
+            entry
+                .banks
+                .map_or_else(|| "-".into(), |value| value.to_string()),
             entry.rows,
-            entry.used,
-            entry.options,
+            entry
+                .used
+                .map_or_else(|| "-".into(), |value| value.to_string()),
+            entry
+                .options
+                .map_or_else(|| "-".into(), |value| value.to_string()),
             status
         );
     }
@@ -3420,8 +3448,32 @@ struct QueryOptions<'a> {
     match_offset: bool,
 }
 
+struct LiteralSource {
+    entry: Option<crate::models::Entry>,
+    class: &'static str,
+    rows: usize,
+    document: serde_json::Value,
+}
+
+impl LiteralSource {
+    fn new(
+        entry: Option<crate::models::Entry>,
+        class: &'static str,
+        rows: usize,
+        document: impl serde::Serialize,
+    ) -> Result<Self> {
+        Ok(Self {
+            entry,
+            class,
+            rows,
+            document: serde_json::to_value(document)
+                .map_err(|error| Error::Invalid(error.to_string()))?,
+        })
+    }
+}
+
 struct QuerySources<'a> {
-    literals: Vec<serde_json::Value>,
+    literals: Vec<LiteralSource>,
     banks: Vec<(crate::models::Entry, TextClass, &'a [u8])>,
 }
 
@@ -3432,10 +3484,13 @@ fn query_sources<'a>(archive: &Path, data: &'a [u8], spec: &str) -> Result<Query
     };
     if crate::executable::is_executable(data) {
         executable_selection(spec, None, None)?;
-        sources.literals.push(
-            serde_json::to_value(crate::executable::extract(archive, data)?)
-                .map_err(|error| Error::Invalid(error.to_string()))?,
-        );
+        let document = crate::executable::extract(archive, data)?;
+        sources.literals.push(LiteralSource::new(
+            None,
+            "executable_ascii",
+            document.strings.len(),
+            document,
+        )?);
         return Ok(sources);
     }
     let indices = match parse_selection(spec)? {
@@ -3448,34 +3503,41 @@ fn query_sources<'a>(archive: &Path, data: &'a [u8], spec: &str) -> Result<Query
             .as_ref()
             .is_none_or(|indices| indices.contains(&index))
     };
-    let mut literal_entries = std::collections::BTreeSet::new();
-    if crate::records::supports(data) && wanted(0) {
-        literal_entries.insert(0);
-        sources.literals.push(
-            serde_json::to_value(crate::records::extract(archive, data)?)
-                .map_err(|error| Error::Invalid(error.to_string()))?,
-        );
-    }
-    let mut found = literal_entries.clone();
+    let record_names = crate::records::supports(data);
+    let mut found = std::collections::BTreeSet::new();
     for (entry, payload) in crate::lexagraph::entries(data)? {
-        if !wanted(entry.index) || literal_entries.contains(&entry.index) {
+        if !wanted(entry.index) {
             continue;
         }
-        let document = if crate::monsters::supports(entry, payload) {
-            Some(serde_json::to_value(crate::monsters::extract(
-                archive, data, entry, payload,
-            )?))
+        let literal = if entry.index == 0 && record_names {
+            let document = crate::records::extract(archive, data)?;
+            Some(LiteralSource::new(
+                Some(entry),
+                "record_names",
+                document.names.len(),
+                document,
+            )?)
+        } else if crate::monsters::supports(entry, payload) {
+            let document = crate::monsters::extract(archive, data, entry, payload)?;
+            Some(LiteralSource::new(
+                Some(entry),
+                "monster_names",
+                document.names.len(),
+                document,
+            )?)
         } else if crate::inline::supports(entry, payload) {
-            Some(serde_json::to_value(crate::inline::extract(
-                archive, data, entry, payload,
-            )?))
+            let document = crate::inline::extract(archive, data, entry, payload)?;
+            Some(LiteralSource::new(
+                Some(entry),
+                "inline_text",
+                document.strings.len(),
+                document,
+            )?)
         } else {
             None
         };
-        if let Some(document) = document {
-            sources
-                .literals
-                .push(document.map_err(|error| Error::Invalid(error.to_string()))?);
+        if let Some(literal) = literal {
+            sources.literals.push(literal);
             found.insert(entry.index);
             continue;
         }
@@ -3528,8 +3590,8 @@ fn run_query(
         query_sources(archive, &data, entry_spec)?
     };
     let mut report = Vec::new();
-    for document in sources.literals {
-        let result = query::literal(document, needle, ignore_case, match_offset, commands)?;
+    for source in sources.literals {
+        let result = query::literal(source.document, needle, ignore_case, match_offset, commands)?;
         if !cli.json {
             println!("query {}: {}", archive.display(), result["source_schema"]);
             if commands {
