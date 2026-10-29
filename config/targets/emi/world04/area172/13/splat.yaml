@@ -119,7 +119,7 @@ segments:
   - - 5924
     - c
     - clearSharedFlagBit4EWorld04Area17213_801F4324
-    - '@source: src/bof3/world04/clearSharedFlagBit4EWorld04Area17213_801F4324.c'
+    - '@source: src/bof3/world/clearSharedFlagBit4EWorld04Area17213_801F4324.c'
     - '@behavior: Clears bit 0x4E of the shared main-RAM flag bank at 0x80144F28 through the shared bit-clear helper func_8015B5A8; takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the call.'
   - - 5964
     - asm
@@ -166,7 +166,7 @@ segments:
   - - 8536
     - c
     - queueSharedUiElement9x3Size50World04Area17213_801F4D58
-    - '@source: src/bof3/world04/queueSharedUiElement9x3Size50World04Area17213_801F4D58.c'
+    - '@source: src/bof3/world/queueSharedUiElement9x3Size50World04Area17213_801F4D58.c'
     - '@behavior: Queues the shared world-marker element at (0x9, 0x3) with size 0x50 through the shared marker queue func_801A4BC0; takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the call.'
   - - 8576
     - asm
