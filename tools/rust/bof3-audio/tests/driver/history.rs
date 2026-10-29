@@ -8,10 +8,14 @@ use bof3_audio::{
     Result,
 };
 
-fn trigger(p: &mut Prepared, table: &cues::Table, row: usize) -> Result<usize> {
+fn trigger(
+    p: &mut Prepared<bof3_audio::machine::boot::Evidence>,
+    table: &cues::Table,
+    row: usize,
+) -> Result<usize> {
     let mut count = 0;
     cues::dispatch(p, table, row, &mut |e| {
-        if e.cpu.pc() == effects::KEY_ON {
+        if e.cpu.pc() == bof3_audio::machine::reference::KEY_ON {
             count += 1;
         }
         Ok(())
@@ -19,7 +23,7 @@ fn trigger(p: &mut Prepared, table: &cues::Table, row: usize) -> Result<usize> {
     Ok(count)
 }
 
-fn advance(p: &mut Prepared, frames: u64) -> Result<()> {
+fn advance(p: &mut Prepared<bof3_audio::machine::boot::Evidence>, frames: u64) -> Result<()> {
     while p.execution.output().unwrap().frames() < frames {
         p.execution.call(0x801753dc, [0; 4], 100_000)?;
         p.execution.take_audio_frames()?;

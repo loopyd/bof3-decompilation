@@ -1,7 +1,7 @@
 //! Local auxiliary corpus audit; original dispatch only, not PCM fidelity.
 use bof3_audio::{
     digest::sha256_hex,
-    machine::{bank, cues, effects, executable::Executable, firmware::Image},
+    machine::{bank, cues, executable::Executable, firmware::Image},
     Result,
 };
 use emi_ex_v2::image::ArchiveImage;
@@ -39,7 +39,7 @@ fn audit(exe: &Executable, bios: &Image, archive: &ArchiveImage, aux: usize) -> 
     if bodies.len() != 1 {
         return Err(format!("VH {header} owns {} bodies", bodies.len()).into());
     }
-    let mut prepared = bank::prepare(
+    let mut prepared = bof3_audio::machine::reference::prepare_bank(
         exe,
         Image::from_bytes(bios.bytes().to_vec())?,
         archive,
@@ -60,7 +60,7 @@ fn audit(exe: &Executable, bios: &Image, archive: &ArchiveImage, aux: usize) -> 
         let mut notes = Vec::new();
         let before = prepared.execution.cpu.instructions();
         let result = cues::dispatch(&mut prepared, &table, row, &mut |e| {
-            if e.cpu.pc() == effects::KEY_ON {
+            if e.cpu.pc() == bof3_audio::machine::reference::KEY_ON {
                 notes.push([
                     e.cpu.register(4),
                     e.cpu.register(5),

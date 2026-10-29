@@ -140,6 +140,8 @@ audio_effects_key_on:
     lw $v1, %lo(audio_sequence_voice_globals + 0x70c)($v1)
     sll $v0, $v0, 5
     addu $v0, $v0, $v1
+.globl audio_effects_tone_read
+audio_effects_tone_read:
     lbu $v1, 0($v0)
     lui $at, %hi(audio_sequence_allocation_mask + 0x17)
     sb $v1, %lo(audio_sequence_allocation_mask + 0x17)($at)

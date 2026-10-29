@@ -2,7 +2,7 @@ use super::fixtures::prepare;
 use bof3_audio::{
     machine::{
         bus::{Bus, Width},
-        cues, effects,
+        cues,
         executable::ram_offset,
         output_clock,
     },
@@ -47,7 +47,7 @@ fn game_cues_preserve_ordered_layers_program_selection_and_silent_samples() -> R
         let mut notes = Vec::new();
         let mut volumes = Vec::new();
         cues::dispatch(&mut p, &table, row, &mut |e| {
-            if e.cpu.pc() == effects::KEY_ON {
+            if e.cpu.pc() == bof3_audio::machine::reference::KEY_ON {
                 let at = ram_offset(e.cpu.register(29), 32)?;
                 notes.push(std::array::from_fn::<_, 8, _>(|i| {
                     if i < 4 {

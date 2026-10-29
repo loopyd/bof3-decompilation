@@ -398,7 +398,7 @@ fn source_archive() -> emi_ex_v2::image::ArchiveImage {
 fn original_runtime_pitch_bend_activates_a_note_that_started_at_zero_step() {
     use bof3_audio::{
         machine::{executable::Executable, firmware::Image},
-        psx_render::{self, Body, Options},
+        psx_render::{Body, Options},
     };
     use std::fs;
     let exe =
@@ -429,7 +429,7 @@ fn original_runtime_pitch_bend_activates_a_note_that_started_at_zero_step() {
         let archive = source
             .replace_entries(&[(0, header.as_slice()), (1, sep.as_slice())])
             .unwrap();
-        let rendered = psx_render::render(
+        let rendered = bof3_audio::machine::reference::render_music(
             &exe,
             Image::from_bytes(bios.clone()).unwrap(),
             &archive,

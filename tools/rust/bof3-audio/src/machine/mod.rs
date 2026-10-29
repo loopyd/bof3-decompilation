@@ -32,6 +32,7 @@ pub mod music;
 pub mod music_progress;
 pub mod output_clock;
 pub mod profile;
+pub mod reference;
 pub mod spu_clock;
 pub mod spu_dma;
 pub mod spu_mixer;

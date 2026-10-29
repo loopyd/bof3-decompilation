@@ -5,7 +5,6 @@ use bof3_audio::{
         bank::Stage,
         executable::{ram_offset, Executable},
         firmware::Image,
-        music,
     },
     Result,
 };
@@ -77,7 +76,7 @@ fn main() -> Result<()> {
         }
         Ok(())
     };
-    let prepared = music::prepare_observed(
+    let prepared = bof3_audio::machine::reference::prepare_music_observed(
         &exe,
         Image::from_bytes(fs::read(&args[1])?)?,
         &image,
@@ -102,7 +101,7 @@ fn main() -> Result<()> {
     println!(
         "{}",
         serde_json::to_string_pretty(&serde_json::json!({
-            "schema":"bof3.audio.driver-initialization/v1","boot":prepared.boot,"identity":prepared.identity,
+            "schema":"bof3.audio.driver-initialization/v1","boot":prepared.startup,"identity":prepared.identity,
             "calls":prepared.calls,"stage_instructions":counts,"regions":regions.iter().map(|(&(stage,region),&count)|serde_json::json!({"stage":stage,"region":region,"count":count})).collect::<Vec<_>>(),
             "services":services.iter().map(|(service,count)|serde_json::json!({"service":service,"count":count})).collect::<Vec<_>>(),
             "observed_original_instructions":pcs.len(),"closure":audit,

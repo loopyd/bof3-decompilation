@@ -127,20 +127,25 @@ and omitted comparisons report `missing_evidence`. Exit code 1 indicates a faile
 check; exit code 0 means no performed check failed and does not establish accepted
 playback. Invalid inputs fail before an evidence report is produced.
 
-US music rendering executes the supplied BIOS and game sound
-runtime through Rust, using explicit reference clocks:
+US music rendering executes the source-built owned guest driver through Rust,
+using explicit reference clocks. Build the driver in the full repository first:
 
 ```sh
+make -C tools/rust/bof3-audio/driver bof3-audio-driver
 bin/harness audio render --mode music --engine psx \
   --archive out/extracted/BIN/BGM/BGM000.EMI \
-  --executable out/extracted/SLUS_004.22 --bios inputs/external/bios/scph5501.bin \
+  --driver out/audio/driver \
   --sequence 0 --loops 2 --tail 2 --output out/music-render --json
 ```
 
 `--sequence` is an independent SEP index within the named archive. Output is a
 new directory containing `render.wav` and `render.json`; the report records
-media identities, original calls, timing limits and unverified fidelity gates.
-The exact supported US executable and SCPH-5501 BIOS hashes are required.
+media identities, owned calls, timing limits and unverified fidelity gates.
+The `bof3.psx-render/v2` report includes owned startup and artifact hashes.
+The PSX branch requires `--driver DIRECTORY`, rejects `--executable`, and no
+longer accepts `--bios`. Original-reference execution remains in development
+examples and the explicit `machine::reference` owner. The source package still
+needs driver build support before this workflow is available from that package.
 The renderer automatically selects the first game layout (0, 1, then 2) whose
 header, sequence and SPU bank capacities fit the archive. Selection uses archive
 sizes and bank slot, never filenames or cue IDs. `--layout 0|1|2` overrides this
@@ -152,7 +157,8 @@ encoded finite repeat counts stay intact. `--duration SECONDS` selects a fixed
 body length instead and cannot be combined with `--loops`. The default release
 tail is two seconds, included in the reported 600-second audio safety limit.
 If loop/end stopping cannot complete within that limit, rendering fails without
-publishing a truncated song. Guest calls also have instruction limits.
+publishing a truncated song. Guest calls also have transition limits, including
+guest instructions and service calls.
 PC rendering accepts the same archive/sequence with `--engine pc`,
 `--executable` and `--allow-approximations`, without BIOS or layout. It shares
 music extraction's MIDI/SF2 translation, defaults to two infinite-loop traversals,

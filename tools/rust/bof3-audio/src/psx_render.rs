@@ -1,13 +1,11 @@
-//! US game music execution with observed loop/end boundaries and reference clocks.
+//! Owned music execution with bound loop/end observations and reference clocks.
 //! Independent PCM fidelity remains an acceptance gate.
 use crate::{
     interchange::wave::Wave,
     machine::{
-        boot,
         bus::{Bus, Width},
-        executable::Executable,
+        driver,
         execution::Call,
-        firmware::Image,
         music, music_progress, output_clock,
     },
     Result,
@@ -60,12 +58,12 @@ impl Options {
 }
 
 #[derive(Debug, Serialize)]
-pub struct Report {
+pub struct Report<P = driver::Evidence> {
     pub schema: &'static str,
     pub engine: &'static str,
     pub sample_rate: u32,
     pub identity: music::Identity,
-    pub boot: boot::Evidence,
+    pub startup: P,
     pub initialization_calls: Vec<Call>,
     pub play_call: Call,
     pub stop_call: Call,
@@ -86,29 +84,42 @@ pub struct Report {
     pub limitations: Vec<&'static str>,
 }
 
-pub struct Rendered {
+pub struct Rendered<P = driver::Evidence> {
     pub wave: Wave,
-    pub report: Report,
+    pub report: Report<P>,
 }
 
 pub fn render(
-    executable: &Executable,
-    firmware: Image,
+    image: &driver::Image,
     archive: &ArchiveImage,
     options: &Options,
 ) -> Result<Rendered> {
     options.validate()?;
-    let mut runtime = music::prepare(
-        executable,
-        firmware,
-        archive,
-        options.layout,
-        options.sequence,
-    )?;
+    let runtime = music::prepare(image, archive, options.layout, options.sequence)?;
+    render_prepared(runtime, options, "owned_us_driver", vec![
+        "Reference NTSC scanline/output clocks with two base ticks per instruction; CPU stalls and hardware sub-frame timing are unverified.",
+        "Host stages one VAB/SEP archive into the owned layout; original CD transport and multi-bank selection are not implemented.",
+        "Output phase starts after owned initialization. Native timing and independent PCM agreement remain unverified.",
+        "Duration or the observed loop/end boundary selects the body cutoff. Stop runs at the next safe guest-call boundary; tail includes that delay and the guest key-off/voice flush.",
+        "CD/XA input and SFX playback contexts are outside this music rendering path.",
+    ])
+}
+
+pub(crate) fn render_prepared<P>(
+    mut runtime: music::Prepared<P>,
+    options: &Options,
+    engine: &'static str,
+    limitations: Vec<&'static str>,
+) -> Result<Rendered<P>> {
     let execution = &mut runtime.execution;
     let instruction_start = execution.cpu.instructions();
     execution.enable_output(output_clock::Model::PcsxReduxNtsc)?;
     let mut progress = music_progress::Progress::new(
+        music_progress::Instructions {
+            loop_start: runtime.audio.loop_start,
+            infinite_loop: runtime.audio.infinite_loop,
+            end: runtime.audio.sequence_end,
+        },
         runtime.handle,
         options.sequence as u32,
         runtime.record,
@@ -119,7 +130,7 @@ pub fn render(
     )?;
     // One original SEP play: encoded controller loops retain guest semantics.
     let play_call = execution.call_observed(
-        0x8016b9cc,
+        runtime.audio.play,
         [runtime.handle, options.sequence as u32, 1, 1],
         100_000,
         &mut |e| progress.observe(e),
@@ -148,14 +159,16 @@ pub fn render(
             }
             _ => {}
         }
-        execution.call_observed(0x801753dc, [0; 4], 100_000, &mut |e| progress.observe(e))?;
+        execution.call_observed(runtime.audio.idle, [0; 4], 100_000, &mut |e| {
+            progress.observe(e)
+        })?;
         pcm.extend(execution.take_audio_frames()?.into_iter().flatten());
     };
     let total = body_frames + options.release_frames;
     let sequence_flags_at_cutoff = execution.bus.read(runtime.record + 0x90, Width::Word)?;
     let stop_call_started_at_frame = execution.output().unwrap().frames();
     let stop_call = execution.call_observed(
-        0x8016d534,
+        runtime.audio.stop,
         [runtime.handle, options.sequence as u32, 0, 0],
         100_000,
         &mut |e| progress.observe(e),
@@ -163,10 +176,12 @@ pub fn render(
     pcm.extend(execution.take_audio_frames()?.into_iter().flatten());
     let stop_call_returned_at_frame = execution.output().unwrap().frames();
     if execution.bus.read(runtime.record + 0x90, Width::Word)? & 1 != 0 {
-        return Err("PSX render: original sequence stop left playback active".into());
+        return Err("PSX render: sequence stop left playback active".into());
     }
     while execution.output().unwrap().frames() < total {
-        execution.call_observed(0x801753dc, [0; 4], 100_000, &mut |e| progress.observe(e))?;
+        execution.call_observed(runtime.audio.idle, [0; 4], 100_000, &mut |e| {
+            progress.observe(e)
+        })?;
         pcm.extend(execution.take_audio_frames()?.into_iter().flatten());
     }
     pcm.truncate(usize::try_from(
@@ -177,21 +192,29 @@ pub fn render(
     let peak_magnitude = pcm.iter().map(|s| s.unsigned_abs()).max().unwrap_or(0);
     let clock = execution.output().unwrap();
     let report = Report {
-        schema: "bof3.psx-render/v1", engine: "original_us_runtime", sample_rate: SAMPLE_RATE,
-        identity: runtime.identity, boot: runtime.boot, initialization_calls: runtime.calls,
-        requested_body: options.body, progress,
-        play_call, stop_call, body_frames, release_frames: options.release_frames,
-        output_frames: total, safety_frames: options.safety_frames, stop_call_started_at_frame,
-        stop_call_returned_at_frame, sequence_flags_at_cutoff,
-        executed_frames: clock.frames(), execution_instructions: execution.cpu.instructions() - instruction_start,
-        output_clock: serde_json::to_value(clock)?, peak_magnitude, independent_pcm_validated: false,
-        limitations: vec![
-            "Reference NTSC scanline/output clocks with two base ticks per instruction; CPU stalls and hardware sub-frame timing are unverified.",
-            "Host stages one VAB/SEP archive into game layout; original CD transport and multi-bank selection are not implemented.",
-            "Output phase starts after initialization. Original BIOS and audio routines execute; hardware/reference PCM agreement is unverified.",
-            "Duration or the observed loop/end boundary selects the body cutoff. Original stop runs at the next safe guest-call boundary; tail includes that delay and the guest key-off/voice flush.",
-            "CD/XA input, delivery codecs and SFX playback contexts are outside this music rendering path.",
-        ],
+        schema: "bof3.psx-render/v2",
+        engine,
+        sample_rate: SAMPLE_RATE,
+        identity: runtime.identity,
+        startup: runtime.startup,
+        initialization_calls: runtime.calls,
+        requested_body: options.body,
+        progress,
+        play_call,
+        stop_call,
+        body_frames,
+        release_frames: options.release_frames,
+        output_frames: total,
+        safety_frames: options.safety_frames,
+        stop_call_started_at_frame,
+        stop_call_returned_at_frame,
+        sequence_flags_at_cutoff,
+        executed_frames: clock.frames(),
+        execution_instructions: execution.cpu.instructions() - instruction_start,
+        output_clock: serde_json::to_value(clock)?,
+        peak_magnitude,
+        independent_pcm_validated: false,
+        limitations,
     };
     Ok(Rendered {
         wave: Wave::new(2, SAMPLE_RATE, pcm)?,

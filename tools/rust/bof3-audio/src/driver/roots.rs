@@ -1,7 +1,7 @@
 //! Supported-US root candidates and bounded dispatch-table snapshot evidence.
 use super::closure::{location, Location, Root};
 use crate::{
-    machine::cues, machine::executable::Executable, machine::profile::Profile, xa::cue, Result,
+    machine::executable::Executable, machine::profile::Profile, machine::reference, xa::cue, Result,
 };
 use serde::Serialize;
 #[derive(Debug, Serialize)]
@@ -26,8 +26,8 @@ pub fn inventory(executable: &Executable) -> Result<Inventory> {
         (profile.set_tick_mode,"verified tick mode initialization"),
         (profile.pitch_entry,"verified note-on pitch"),
         (profile.spu_pitch_entry,"verified SPU pitch"),
-        (cues::DISPATCH,"dispatchSoundCue entry; original mask/table/JALR instructions corroborate partial recovered C"),
-        (cues::REFRESH,"original 24-voice status snapshot used by cue arbitration"),
+        (reference::DISPATCH,"dispatchSoundCue entry; original mask/table/JALR instructions corroborate partial recovered C"),
+        (reference::REFRESH,"original 24-voice status snapshot used by cue arbitration"),
         (0x80175534,"original US CD reset dispatcher; modes 1/2 observed with booted ROM and explicit device response/timing inputs"),
         (cue::SELECTOR,"verified XA cue selector"),
         (cue::START,"verified XA cue start"),

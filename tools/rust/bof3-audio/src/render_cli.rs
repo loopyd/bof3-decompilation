@@ -1,9 +1,9 @@
-//! PC interchange and original-runtime rendering with verified publication.
+//! PC interchange and owned-driver rendering with verified publication.
 use crate::{
     codec::vorbis,
     digest::sha256_hex,
     interchange::wave::Wave,
-    machine::{executable::Executable, firmware::Image},
+    machine::{driver::Image, executable::Executable},
     pc_archive,
     pc_render::{self, Options},
     psx_render,
@@ -21,7 +21,7 @@ render --mode music --engine pc --archive EMI --executable PSX_EXE
   --sequence INDEX --allow-approximations --output NEW_DIR
   [--duration SECONDS | --loops N] [--sample-rate HZ] [--tail SECONDS]
   [--timeout SECONDS] [--json]
-  render --mode music --engine psx --archive EMI --executable PSX_EXE --bios ROM
+  render --mode music --engine psx --archive EMI --driver DIRECTORY
     --sequence INDEX --output NEW_DIR [--duration SECONDS | --loops N] [--layout 0|1|2]
     [--tail SECONDS] [--timeout SECONDS] [--json]
   [--format wav|ogg] [--quality 0.7]
@@ -41,7 +41,7 @@ PSX uses the verified US profile and explicit reference clocks at 44100 Hz.
 pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     let (mut mode, mut engine) = (None, None);
     let (mut midi, mut font, mut output) = (None, None, None);
-    let (mut archive, mut executable, mut bios) = (None, None, None);
+    let (mut archive, mut executable, mut driver) = (None, None, None);
     let (mut sequence, mut layout, mut loops) = (None, None, None);
     let (mut rate, mut repeats) = (None, None);
     let (mut duration, mut tail, mut timeout) = (None, None, None);
@@ -62,7 +62,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             "--executable" if executable.is_none() => {
                 executable = Some(PathBuf::from(value(&mut args, flag)?))
             }
-            "--bios" if bios.is_none() => bios = Some(PathBuf::from(value(&mut args, flag)?)),
+            "--driver" if driver.is_none() => driver = Some(PathBuf::from(value(&mut args, flag)?)),
             "--sequence" if sequence.is_none() => {
                 sequence = Some(string(&mut args, flag)?.parse()?)
             }
@@ -114,11 +114,11 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
     {
         if midi.is_some()
             || font.is_some()
-            || bios.is_some()
+            || driver.is_some()
             || layout.is_some()
             || repeats.is_some()
         {
-            return Err("PC archive render accepts --loops or --duration; MIDI/SoundFont/--repeats are a separate input mode, BIOS/layout are PSX-only".into());
+            return Err("PC archive render accepts --loops or --duration; MIDI/SoundFont/--repeats are a separate input mode, driver/layout are PSX-only".into());
         }
         let options = pc_archive::Options {
             sequence: sequence
@@ -142,13 +142,13 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
         (rendered.wave, serde_json::to_value(rendered.report)?)
     } else if engine.as_deref() == Some("pc") {
         if executable.is_some()
-            || bios.is_some()
+            || driver.is_some()
             || sequence.is_some()
             || layout.is_some()
             || loops.is_some()
             || allow_approximations
         {
-            return Err("PC render accepts MIDI/SoundFont inputs; archive, executable, BIOS, sequence, loop and layout options belong to PSX rendering".into());
+            return Err("PC render accepts MIDI/SoundFont inputs; archive, executable, driver, sequence, loop and layout options are invalid for PC MIDI rendering".into());
         }
         let rendered = pc_render::render(
             &std::fs::read(midi.ok_or("render requires --midi")?)?,
@@ -184,14 +184,14 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             safety_frames,
         };
         options.validate()?;
-        let executable = Executable::from_bytes(std::fs::read(
-            executable.ok_or("PSX render requires --executable")?,
-        )?)?;
-        let bios = Image::from_bytes(std::fs::read(bios.ok_or("PSX render requires --bios")?)?)?;
+        if executable.is_some() {
+            return Err("PSX render no longer accepts --executable; use --driver DIRECTORY".into());
+        }
+        let image = Image::read(&driver.ok_or("PSX render requires --driver DIRECTORY")?)?;
         let archive = ArchiveImage::from_bytes(std::fs::read(
             archive.ok_or("PSX render requires --archive")?,
         )?)?;
-        let rendered = psx_render::render(&executable, bios, &archive, &options)?;
+        let rendered = psx_render::render(&image, &archive, &options)?;
         (rendered.wave, serde_json::to_value(rendered.report)?)
     };
     let bytes = wave.to_bytes()?;

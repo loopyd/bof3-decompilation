@@ -2,7 +2,7 @@
 //! This does not establish stable scheduling contexts or independent PCM fidelity.
 use bof3_audio::{
     catalog::model::AssetData, catalog::model::Catalog, digest::sha256_hex, machine::bus::Bus,
-    machine::bus::Width, machine::executable::Executable, machine::firmware::Image, machine::music,
+    machine::bus::Width, machine::executable::Executable, machine::firmware::Image,
     machine::output_clock, voice::tuning::KeyTuning, voice::tuning::Reference,
 };
 use emi_ex_v2::image::ArchiveImage;
@@ -23,7 +23,8 @@ fn main() -> bof3_audio::Result<()> {
     let bios_bytes = fs::read(&args[1])?;
     let firmware = Image::from_bytes(bios_bytes.clone())?;
     let archive = ArchiveImage::from_bytes(fs::read(&args[2])?)?;
-    let mut prepared = music::prepare(&exe, firmware, &archive, None, 0)?;
+    let mut prepared =
+        bof3_audio::machine::reference::prepare_music(&exe, firmware, &archive, None, 0)?;
     let mut reference = Reference::from_executable(&exe)?;
     let profile = reference.profile().clone();
     let execution = &mut prepared.execution;
@@ -210,7 +211,7 @@ fn main() -> bof3_audio::Result<()> {
         "{}",
         serde_json::to_string_pretty(&serde_json::json!({
             "schema":"bof3.initialized-pitch-probe/v1", "executable_sha256":profile.exe_sha256,
-            "boot":prepared.boot,"bank":prepared.identity,"initialization_calls":prepared.calls,"table_hashes":table_hashes,
+            "boot":prepared.startup,"bank":prepared.identity,"initialization_calls":prepared.calls,"table_hashes":table_hashes,
             "playback_frames":playback_frames,"pitch_table_stores":table_writes,
             "instruction_observer":"RAM and immutable BIOS ROM; other execution regions reject",
             "synthetic_probe_state":"interrupt admission disabled after playback snapshot",

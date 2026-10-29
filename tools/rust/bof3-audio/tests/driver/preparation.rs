@@ -23,7 +23,7 @@ fn inputs() -> (Executable, Vec<u8>, ArchiveImage) {
 #[ignore = "requires BOF3_AUDIO_EXE, BOF3_AUDIO_BIOS and BOF3_AUDIO_CORPUS"]
 fn preparation_observer_preserves_machine_state_and_playback() {
     let (exe, bios, archive) = inputs();
-    let mut plain = music::prepare(
+    let mut plain = bof3_audio::machine::reference::prepare_music(
         &exe,
         Image::from_bytes(bios.clone()).unwrap(),
         &archive,
@@ -32,7 +32,7 @@ fn preparation_observer_preserves_machine_state_and_playback() {
     )
     .unwrap();
     let mut counts = BTreeMap::<Stage, u64>::new();
-    let mut observed = music::prepare_observed(
+    let mut observed = bof3_audio::machine::reference::prepare_music_observed(
         &exe,
         Image::from_bytes(bios).unwrap(),
         &archive,
@@ -77,17 +77,18 @@ fn preparation_observer_preserves_machine_state_and_playback() {
         plain.execution.bus.spu_transfer().ram(),
         observed.execution.bus.spu_transfer().ram()
     );
-    let playback = |p: &mut music::Prepared| -> Result<Vec<[i16; 2]>> {
-        let e = &mut p.execution;
-        e.enable_output(output_clock::Model::PcsxReduxNtsc)?;
-        e.call(0x8016b9cc, [p.handle, 0, 1, 1], 100000)?;
-        let mut pcm = Vec::new();
-        while e.output().unwrap().frames() < 8192 {
-            e.call(0x801753dc, [0; 4], 100000)?;
-            pcm.extend(e.take_audio_frames()?);
-        }
-        Ok(pcm)
-    };
+    let playback =
+        |p: &mut music::Prepared<bof3_audio::machine::boot::Evidence>| -> Result<Vec<[i16; 2]>> {
+            let e = &mut p.execution;
+            e.enable_output(output_clock::Model::PcsxReduxNtsc)?;
+            e.call(0x8016b9cc, [p.handle, 0, 1, 1], 100000)?;
+            let mut pcm = Vec::new();
+            while e.output().unwrap().frames() < 8192 {
+                e.call(0x801753dc, [0; 4], 100000)?;
+                pcm.extend(e.take_audio_frames()?);
+            }
+            Ok(pcm)
+        };
     assert_eq!(
         playback(&mut plain).unwrap(),
         playback(&mut observed).unwrap()
@@ -98,7 +99,7 @@ fn preparation_observer_preserves_machine_state_and_playback() {
 fn preparation_observer_failure_aborts_the_guest_call() {
     let (exe, bios, archive) = inputs();
     let mut called = 0;
-    let result = music::prepare_observed(
+    let result = bof3_audio::machine::reference::prepare_music_observed(
         &exe,
         Image::from_bytes(bios).unwrap(),
         &archive,

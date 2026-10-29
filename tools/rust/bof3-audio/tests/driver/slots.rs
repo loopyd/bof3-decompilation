@@ -2,7 +2,7 @@ use super::fixtures::prepare_entries;
 use bof3_audio::{
     machine::{
         bus::{Bus, Width},
-        cues, effects,
+        cues,
         executable::ram_offset,
         output_clock,
     },
@@ -40,7 +40,7 @@ fn all_seven_handlers_preserve_their_bank_identity_and_bounded_auxiliary_state()
         let mut notes = Vec::new();
         cues::dispatch(&mut p, &table, row, &mut |e| {
             visited |= e.cpu.pc() == handler;
-            if e.cpu.pc() == effects::KEY_ON {
+            if e.cpu.pc() == bof3_audio::machine::reference::KEY_ON {
                 notes.push((e.cpu.register(4), e.cpu.register(5), e.cpu.register(6)));
             }
             Ok(())
@@ -70,7 +70,7 @@ fn original_cue_attributes_can_alias_another_program_without_rewriting_sdk_selec
     assert_eq!(p.execution.bus.read(0x801821e6, Width::Half)?, 0);
     let mut notes = Vec::new();
     cues::dispatch(&mut p, &table, 6, &mut |e| {
-        if e.cpu.pc() == effects::KEY_ON {
+        if e.cpu.pc() == bof3_audio::machine::reference::KEY_ON {
             let at = ram_offset(e.cpu.register(29), 32)?;
             notes.push(std::array::from_fn::<_, 8, _>(|i| {
                 if i < 4 {

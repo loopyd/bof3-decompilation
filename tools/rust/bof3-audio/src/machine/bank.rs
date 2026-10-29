@@ -1,13 +1,9 @@
-//! Shared original-runtime VAB initialization and upload for music and effects.
+//! Owned VAB planning, initialization and upload for music and effects.
 use super::{
-    adsr, boot,
     bus::{Bus, Width},
-    executable::Executable,
+    cpu::Cpu,
+    driver::{self, Audio},
     execution::{Call, Execution},
-    firmware::Image,
-    profile::Profile,
-    spu_clock, spu_reverb, spu_sample,
-    spu_voice_ports::DisableModel,
 };
 use crate::{bank::Bank, catalog::loader, digest::sha256_hex, Result};
 use emi_ex_v2::image::ArchiveImage;
@@ -30,9 +26,10 @@ pub struct Identity {
     pub next_slot_boundary: u32,
 }
 
-pub struct Prepared {
+pub struct Prepared<P = driver::Evidence> {
     pub execution: Execution,
-    pub boot: boot::Evidence,
+    pub startup: P,
+    pub(crate) audio: Audio,
     pub identity: Identity,
     pub calls: Vec<Call>,
     pub bank: Bank,
@@ -66,14 +63,32 @@ pub struct Options {
 }
 
 pub fn prepare(
-    executable: &Executable,
-    firmware: Image,
+    image: &driver::Image,
     archive: &ArchiveImage,
     options: &Options,
     observer: &mut impl FnMut(Stage, &Execution) -> Result<()>,
 ) -> Result<Prepared> {
-    let profile = Profile::identify(executable)?;
-    let plan = plan(executable, archive, options)?;
+    let plan = plan(image, archive, options)?;
+    let audio = image.audio()?;
+    let started = image.start(&mut |e| observer(Stage::Initialization, e))?;
+    load(
+        started.execution,
+        started.evidence,
+        vec![started.initialization],
+        audio,
+        plan,
+        observer,
+    )
+}
+
+pub(crate) fn load<P>(
+    mut execution: Execution,
+    startup: P,
+    mut calls: Vec<Call>,
+    audio: Audio,
+    plan: Plan<'_>,
+    observer: &mut impl FnMut(Stage, &Execution) -> Result<()>,
+) -> Result<Prepared<P>> {
     let Plan {
         identity,
         bank,
@@ -85,41 +100,25 @@ pub fn prepare(
     let layout = identity.layout;
     let dma_bytes = identity.dma_bytes;
     let body = &source[..identity.body_bytes];
-    let machine = boot::load_us(firmware, executable, 3_000_000)?;
-    let mut execution = Execution::new(
-        machine.cpu,
-        machine.bus,
-        spu_clock::Model::EmulatorReference,
-    );
-    execution.bus.configure_spu_voices(
-        spu_sample::Model::EmulatorReference,
-        adsr::Model::EmulatorReference,
-    )?;
-    execution
-        .bus
-        .configure_spu_disable(DisableModel::EmulatorReference)?;
-    execution
-        .bus
-        .configure_spu_reverb(spu_reverb::Model::EmulatorReference)?;
     let mut call = |execution: &mut Execution, stage: Stage, entry, arguments, limit| {
         execution.call_observed(entry, arguments, limit, &mut |e| observer(stage, e))
     };
-    let mut calls = vec![
+    calls.extend([
         call(
             &mut execution,
             Stage::Initialization,
-            profile.sound_initialize,
+            audio.initialize,
             [0; 4],
             1_000_000,
         )?,
         call(
             &mut execution,
             Stage::Layout,
-            loader::LAYOUT_INITIALIZE,
+            audio.layout,
             [u32::from(layout), 0, 0, 0],
             1000,
         )?,
-    ];
+    ]);
     let reverb_base = execution.bus.read(0x1f801da2, Width::Half)? * 8;
     if slot.spu_base as usize + dma_bytes > reverb_base as usize {
         return Err(format!(
@@ -133,7 +132,7 @@ pub fn prepare(
     let opened = call(
         &mut execution,
         Stage::Header,
-        0x80173c50,
+        audio.open_head,
         [slot.header_address, id, slot.spu_base, 0],
         100_000,
     )?;
@@ -151,7 +150,7 @@ pub fn prepare(
         let transfer = call(
             &mut execution,
             Stage::Samples,
-            0x80174354,
+            audio.transfer,
             [0x80010000, chunk.len() as u32, id, 0],
             100_000,
         )?;
@@ -171,7 +170,7 @@ pub fn prepare(
         let wait = call(
             &mut execution,
             Stage::Samples,
-            0x80174598,
+            audio.completed,
             [1, 0, 0, 0],
             100_000,
         )?;
@@ -186,7 +185,8 @@ pub fn prepare(
     }
     Ok(Prepared {
         execution,
-        boot: machine.evidence,
+        startup,
+        audio,
         identity,
         calls,
         bank,
@@ -203,11 +203,21 @@ pub struct Plan<'a> {
 }
 
 pub fn plan<'a>(
-    executable: &Executable,
+    image: &driver::Image,
     archive: &'a ArchiveImage,
     options: &Options,
 ) -> Result<Plan<'a>> {
-    Profile::identify(executable)?;
+    plan_with_layout(archive, options, |selector| layout(image, selector))
+}
+
+pub(crate) fn plan_with_layout<'a>(
+    archive: &'a ArchiveImage,
+    options: &Options,
+    mut provider: impl FnMut(u8) -> Result<crate::catalog::model::Layout>,
+) -> Result<Plan<'a>> {
+    if options.layout.is_some_and(|v| v > 2) {
+        return Err("US audio layout selector must be 0, 1, or 2".into());
+    }
     let vh = options.header_entry;
     let vb = options.body_entry;
     for (index, kind) in [(vh, 6), (vb, 7)] {
@@ -265,7 +275,7 @@ pub fn plan<'a>(
     let candidates: Vec<u8> = requested_layout.map_or_else(|| vec![0, 1, 2], |v| vec![v]);
     let mut selection = None;
     for layout in candidates {
-        let slots = loader::initialize_layout(executable, layout)?;
+        let slots = provider(layout)?;
         let slot = slots
             .slots
             .get(archive.entries()[vh].ram_ptr as usize)
@@ -318,5 +328,40 @@ pub fn plan<'a>(
         header,
         sequence: sep_bytes,
         transfer: source,
+    })
+}
+
+/// Execute a candidate layout in isolated scratch RAM, without changing playback.
+pub fn layout(image: &driver::Image, selector: u8) -> Result<crate::catalog::model::Layout> {
+    use crate::catalog::model::{Layout, Slot};
+    if selector > 2 {
+        return Err("US audio layout selector must be 0, 1, or 2".into());
+    }
+    let audio = image.audio()?;
+    let mut ram = image.ram()?;
+    let mut cpu = Cpu::new(audio.layout);
+    cpu.set_register(4, u32::from(selector));
+    cpu.set_register(31, 0x8000_1000);
+    let instructions = cpu.run_until(&mut ram, 0x8000_1000, 1000)?;
+    let mut slots = Vec::new();
+    for index in 0..loader::LOADER_SLOTS {
+        let address = audio.slot_table + index as u32 * 20;
+        let table_index = u32::from(selector) * 28 + index as u32 * 4;
+        slots.push(Slot {
+            index,
+            spu_base: ram.read(address, Width::Word)?,
+            header_address: ram.read(address + 4, Width::Word)?,
+            auxiliary_address: ram.read(address + 8, Width::Word)?,
+            sequence_address: ram.read(address + 12, Width::Word)?,
+            vab_id: ram.read(address + 16, Width::Half)? as u16,
+            flags: ram.read(address + 18, Width::Half)? as u16,
+            header_capacity: ram.read(audio.header_capacities + table_index, Width::Word)?,
+            sequence_capacity: ram.read(audio.sequence_capacities + table_index, Width::Word)?,
+        });
+    }
+    Ok(Layout {
+        selector,
+        instructions,
+        slots,
     })
 }

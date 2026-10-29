@@ -89,7 +89,7 @@ pub fn run(mut args: impl Iterator<Item = OsString>) -> Result<u8> {
             _ => Err(format!("compile needs one entry of types {types:?}, found {rows:?}").into()),
         }
     };
-    let plan = bank::plan(
+    let plan = crate::machine::reference::plan_bank(
         &exe,
         &archive,
         &bank::Options {
