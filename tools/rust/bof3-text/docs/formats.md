@@ -101,6 +101,17 @@ debug callbacks and queue paths remain separate execution questions. The rule
 does not establish a full palette upload, sampling, display, unique ownership or
 the absence of rasterized text. Other entries and archive gaps stay unchanged.
 
+## Resident animation metadata coverage
+
+Coverage recognizes 25 structural bytes in original US `AREA024.EMI` entry 4.
+It requires the original archive identity, entry offset 198656, raw transfer mode,
+load address `0x800D3800` and exact payload hash. Program `0x800D440C` contributes
+its count byte, six duration/frame pairs and six relative cell offsets at payload
+range `[0xC0D,0xC26)`. Original consumers `0x8014D928`, `0x8014D950` and
+`0x8014DBB4..0x8014DC04` qualify these numeric fields. The header's first byte,
+cell bodies and other programs remain unresolved. This stored-format rule does
+not establish runtime execution or a unique supplier.
+
 ## XA payload coverage
 
 Coverage identifies encoded audio bodies in the original US `S_XA00.STR`,

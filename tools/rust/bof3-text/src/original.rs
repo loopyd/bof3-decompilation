@@ -336,6 +336,16 @@ pub fn graphics_storage_ranges(
             })
             .collect())
         }
+        (4, 198_656, 0, 0x800d_3800, 11_368)
+            if sha256_hex(data)
+                == "1b36c8e96987f4c2256daa9e24e477d90c73616242be2588906525a4c8dc2c99" =>
+        {
+            Some(vec![NontextRange {
+                offset: 0xc0d,
+                length: 25,
+                evidence: "original US AREA024 entry 4 program 0x800D440C count, duration/frame pairs and relative cell offsets; original consumers 0x8014D928, 0x8014D950 and 0x8014DBB4..0x8014DC04; exact source identity; header byte 0, cells and other programs excluded; no runtime or unique-supplier claim",
+            }])
+        }
         (8, 737_280, 0, 0x8003_3e00, 5120)
             if sha256_hex(data)
                 == "e9fcb1395884aff7dc732517fd685e9fb26fe87ccf78f757055e410cda8e9e18" =>
