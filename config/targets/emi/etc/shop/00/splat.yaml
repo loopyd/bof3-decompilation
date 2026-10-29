@@ -21,6 +21,18 @@ segments:
 - - 0
   - bin
   - header
+- name: header_code_801d3654
+  type: code
+  start: 10836
+  vram: 2149398100
+  subsegments:
+  - - 10836
+    - c
+    - scaleByPercentFloor1
+    - '@source: src/bof3/ui/scaleByPercentFloor1.c'
+- - 10888
+  - bin
+  - header_retained_00002a88
 - name: main
   type: code
   start: 11640

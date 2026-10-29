@@ -186,49 +186,45 @@ def _capture_ordinary(root, source, output_root, members):
             linked_watch.validate()
 
         emitted = []
-        try:
-            report = _asm_diff_compare(
-                layout,
-                request,
-                resolved,
-                emitted=emitted,
-                on_linked=capture_linked,
+        report = _asm_diff_compare(
+            layout,
+            request,
+            resolved,
+            emitted=emitted,
+            on_linked=capture_linked,
+        )
+        if linked_watch is None or linked_states is None:
+            raise ValueError("ordinary comparison omitted its linked output capture")
+        report.update(
+            fresh_compilation=True,
+            configured_fingerprint=dispatch.fingerprint,
+            configured_profile=dispatch.state["recipe"],
+            execution_fingerprint=execution_fingerprint,
+            native_inputs=states,
+            include_inputs=includes.describe_inputs(),
+            source_image=includes.image.describe(),
+            native_outputs={**object_states, **linked_states},
+        )
+        guard()
+        object_watch.validate()
+        if _capture_states(root, outputs) != object_states:
+            raise ValueError("fresh ordinary object changed during capture")
+        if (
+            verify_execution(
+                dispatch.invocation,
+                dispatch.fingerprint,
+                dispatch.state["grouped"],
+                execution,
+                outputs={
+                    str(root / name): state["sha256"]
+                    for name, state in object_states.items()
+                },
             )
-            if linked_watch is None or linked_states is None:
-                raise ValueError(
-                    "ordinary comparison omitted its linked output capture"
-                )
-            report.update(
-                fresh_compilation=True,
-                configured_fingerprint=dispatch.fingerprint,
-                configured_profile=dispatch.state["recipe"],
-                execution_fingerprint=execution_fingerprint,
-                native_inputs=states,
-                include_inputs=includes.describe_inputs(),
-                source_image=includes.image.describe(),
-                native_outputs={**object_states, **linked_states},
-            )
-            return NativeComparison(report, tuple(emitted))
-        finally:
-            guard()
-            object_watch.validate()
-            if _capture_states(root, outputs) != object_states:
-                raise ValueError("fresh ordinary object changed during capture")
-            if (
-                verify_execution(
-                    dispatch.invocation,
-                    dispatch.fingerprint,
-                    dispatch.state["grouped"],
-                    execution,
-                    outputs={
-                        str(root / name): state["sha256"]
-                        for name, state in object_states.items()
-                    },
-                )
-                != execution_fingerprint
-            ):
-                raise ValueError("ordinary compiler execution binding changed")
-            if linked_watch is not None:
-                linked_watch.validate()
-                if _capture_states(root, {linked_path}) != linked_states:
-                    raise ValueError("linked ordinary output changed during capture")
+            != execution_fingerprint
+        ):
+            raise ValueError("ordinary compiler execution binding changed")
+        if linked_watch is not None:
+            linked_watch.validate()
+            if _capture_states(root, {linked_path}) != linked_states:
+                raise ValueError("linked ordinary output changed during capture")
+        return NativeComparison(report, tuple(emitted))

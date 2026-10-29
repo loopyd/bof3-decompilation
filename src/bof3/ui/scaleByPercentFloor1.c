@@ -1,7 +1,6 @@
 #include "bof3/ui/shop00_internal.h"
 
-/* @behavior returns (arg0 * (arg1 & 0xFFFF)) / 100, floored to 1; both call
- *           sites pass a record byte as the percent argument.
+/* @behavior returns (arg0 * (arg1 & 0xFFFF)) / 100, floored to 1.
  * @source 0x801D3654
  * @status exact
  * @match 100.00
