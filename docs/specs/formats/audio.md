@@ -4426,6 +4426,27 @@ splits and valid sentinel termination. The coalescer does not bound its sentinel
 scan independently. The guest code does not validate arbitrary IDs, headers or
 allocation histories. Production routing and native audio acceptance remain open.
 
+The linked [body component](../../../tools/rust/bof3-audio/driver/audio/body.s)
+provides `audio_bank_transfer_partial`. A0 is the source RAM pointer, A1 is the
+requested byte count and A2 is the bank ID. An opened bank has flag two. The first
+chunk selects DMA and sets its SPU destination; later chunks must select the same
+bank. The entry returns `-2` while bytes remain, the bank ID on completion, or
+`-1` on rejection. DMA reads complete 64-byte blocks, so the caller must retain
+readable source padding through the final block. The write helper caps one request
+at `0x7EFF0` bytes, but the partial-upload entry subtracts its selected chunk
+without using that helper's return. Callers must keep chunks within this limit.
+
+`audio_bank_transfer_completed` sign-extends its low-halfword argument. Value one
+waits by polling `TestEvent`; other values poll once. FIFO mode or an already-clear
+transfer latch returns one immediately. Blocking waits require working DMA IRQ
+and event delivery and have no guest timeout. The progress word and selected-bank
+halfword share the existing pitch-table suffix. Bank ID sixteen passes the raw
+upload bound and aliases the adjacent count and envelope-history words when its
+flag permits entry. The linker preserves that storage adjacency; supported bank
+opening still uses IDs zero through fifteen. Upload and wait use the existing
+SPU transfer, FIFO, address and callback state. Production routing and native
+timing or audio acceptance remain open.
+
 The [`bank_probe`](../../../tools/rust/bof3-audio/examples/bank_probe.rs)
 development example consumes the linked component directly:
 

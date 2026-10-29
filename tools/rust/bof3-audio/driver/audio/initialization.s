@@ -969,21 +969,6 @@ audio_sequence_playback_byte:
 audio_sequence_envelope_history_index:
     .space 4
 
-# exe/slus_004_22@0x80190BD0, 2 bytes.
-.balign 4
-.globl audio_sequence_voice_state_0bd0
-audio_sequence_voice_state_0bd0:
-    .space 2
-
-# exe/slus_004_22@0x80190C18, 68 bytes.
-.balign 4
-.globl audio_sequence_envelope_history
-audio_sequence_envelope_history:
-    .space 64
-.globl audio_sequence_release_mask
-audio_sequence_release_mask:
-    .space 4
-
 # exe/slus_004_22@0x80161DC8..0x80161F58
 .section .text
 .balign 4
