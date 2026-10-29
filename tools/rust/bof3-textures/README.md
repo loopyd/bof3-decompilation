@@ -121,6 +121,9 @@ locations. Each physical resource has its byte offset, size, hash, kind, game ca
 storage, decode and pack status, evidence, dependencies, known uses, and findings.
 The catalog retains unknown entries and non-EMI files for further disposition.
 
+[Graphics source paths](docs/source-paths.md) separates stored payloads, decoded
+records, resident bases and runtime producers, including their unresolved links.
+
 Query supports `--category`, `--source`, `--asset`, `--storage`, `--kind`,
 `--palette`, `--animation`, `--dependency`, and `--evidence`. Source matching uses
 substrings. Other filters match exact identifiers. Filters combine with AND.

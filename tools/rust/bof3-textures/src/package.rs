@@ -1489,8 +1489,10 @@ pub fn source_package(root: &Path, destination: &Path) -> Result<usize> {
         }
         collect_rust(&root, &relative.join("src"), &mut members)?;
         if name == "bof3-textures" {
+            members.push(relative.join("docs/bank-image-edit.md"));
             members.push(relative.join("docs/composition.md"));
             members.push(relative.join("docs/selection.md"));
+            members.push(relative.join("docs/source-paths.md"));
             members.push(relative.join("docs/catalog.md"));
             members.push(relative.join("docs/glyph-edit.md"));
             members.push(relative.join("docs/palette-edit.md"));
