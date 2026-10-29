@@ -423,6 +423,21 @@ Extract the selected entry as `bof3.inline-text/v24`. Its first eighteen strings
 the ten counted labels at `0x801D0C7C`, with stride 20, followed by these eight
 names at indices 10 through 17. The label consumer calls `0x8014FC90` at
 `0x801DCF50`, using the same count convention as the BATE, SHISU and SHOP tables.
+The formation builder at `0x801DAC1C` selects counted rows by active party size.
+The duplicate labels belong to separate groups:
+
+| Party members | String indices | Original labels |
+| --- | --- | --- |
+| 1 | 0 | Normal |
+| 2 | 1 through 3 | Normal, Attack, Defense |
+| 3 | 4 through 9 | Normal, Attack, Defense, Chain, Magic, Refuge |
+
+Each row reserves its eighth byte for the encoded length and permits seven
+literal character bytes. The other twelve bytes of each twenty-byte record stay
+protected. Packed-media observations verify all three groups under controlled
+party and formation availability. Natural availability and unique START or STATUS
+supply remain unverified.
+
 Names use `game-fixed-literal`, have capacity five and may occupy all five bytes.
 Shorter names are NUL-padded.
 

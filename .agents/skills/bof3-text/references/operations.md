@@ -102,7 +102,10 @@ names, 68 ordinary keyboard cells, four name-entry menu labels, fifteen stat
 labels and one numeric format through `bof3.inline-text/v24`. Select that entry
 without class or latch selectors. Re-extract older inline documents. Use a
 separate document and output for each archive. Editing one does not update the
-other or a save.
+other or a save. Counted formation labels use separate groups for one, two and
+three party members. Controlled packed-media observations cover all ten labels.
+Natural party and formation availability remain unverified. See the [record groups](../../../../tools/rust/bof3-text/docs/formats.md#default-character-names)
+before choosing a duplicate label.
 
 COMMU02 entry 8 and COMMU02B entry 7 each expose fifteen menu labels, one ASCII
 separator, eight ASCII formats and 68 keyboard cells through the inline schema.
