@@ -366,3 +366,100 @@ audio_sequence_no_free_handle_message:
 .globl audio_sequence_invalid_sep_message
 audio_sequence_invalid_sep_message:
     .byte 0x54, 0x68, 0x69, 0x73, 0x20, 0x69, 0x73, 0x20, 0x6e, 0x6f, 0x74, 0x20, 0x53, 0x45, 0x50, 0x20, 0x44, 0x61, 0x74, 0x61, 0x2e, 0x0a, 0x00
+
+# exe/slus_004_22 playback entry and mode setter.
+.section .text
+.balign 4
+
+# exe/slus_004_22@0x8016B9CC..0x8016BA04
+.globl audio_sequence_play
+.ent audio_sequence_play
+audio_sequence_play:
+    addiu $sp, $sp, -0x18
+    sw $ra, 0x10($sp)
+    sll $a0, $a0, 0x10
+    sll $a1, $a1, 0x10
+    sll $a3, $a3, 0x10
+    sra $a0, $a0, 0x10
+    sra $a1, $a1, 0x10
+    andi $a2, $a2, 0xff
+    jal .Lplay_8016bb98
+    sra $a3, $a3, 0x10
+    lw $ra, 0x10($sp)
+    addiu $sp, $sp, 0x18
+    jr $ra
+    nop
+.end audio_sequence_play
+
+# exe/slus_004_22@0x8016BB98..0x8016BC98
+.globl audio_sequence_set_play_mode
+.ent audio_sequence_set_play_mode
+audio_sequence_set_play_mode:
+.Lplay_8016bb98:
+    addiu $sp, $sp, -0x18
+    addu $t3, $a0, $zero
+    sll $v0, $t3, 0x10
+    lui $v1, %hi(audio_sequence_handles)
+    addiu $v1, $v1, %lo(audio_sequence_handles)
+    sra $v0, $v0, 0xe
+    addu $t2, $v0, $v1
+    sll $v1, $a1, 0x10
+    sra $v1, $v1, 0x10
+    sll $v0, $v1, 1
+    addu $v0, $v0, $v1
+    sll $v0, $v0, 2
+    subu $v0, $v0, $v1
+    sll $v0, $v0, 2
+    subu $v0, $v0, $v1
+    sw $ra, 0x10($sp)
+    lw $v1, 0($t2)
+    sll $t1, $v0, 2
+    addu $t0, $v1, $t1
+    lw $v0, 0x90($t0)
+    addiu $v1, $zero, -0x201
+    and $v0, $v0, $v1
+    sw $v0, 0x90($t0)
+    lw $v1, 0($t2)
+    addiu $a0, $zero, -5
+    addu $v1, $t1, $v1
+    lw $v0, 0x90($v1)
+    andi $a2, $a2, 0xff
+    and $v0, $v0, $a0
+    sw $v0, 0x90($v1)
+    addiu $v0, $zero, 1
+    bne $a2, $v0, .Lplay_8016bc64
+    sh $a3, 0x46($t0)
+    sll $a0, $a1, 8
+    or $a0, $t3, $a0
+    sll $a0, $a0, 0x10
+    lw $v1, 0($t2)
+    sra $a0, $a0, 0x10
+    addu $v1, $t1, $v1
+    lw $v0, 0x90($v1)
+    addu $a3, $zero, $zero
+    ori $v0, $v0, 1
+    sw $v0, 0x90($v1)
+    lhu $a1, 0x74($t0)
+    lhu $a2, 0x76($t0)
+    addiu $v0, $zero, 1
+    sh $zero, 0x48($t0)
+    jal audio_sequence_set_gain
+    sb $v0, 0x2b($t0)
+    j .Lplay_8016bc88
+    nop
+.Lplay_8016bc64:
+    bnez $a2, .Lplay_8016bc88
+    nop
+    lw $v1, 0($t2)
+    nop
+    addu $v1, $t1, $v1
+    lw $v0, 0x90($v1)
+    nop
+    ori $v0, $v0, 2
+    sw $v0, 0x90($v1)
+.Lplay_8016bc88:
+    lw $ra, 0x10($sp)
+    addiu $sp, $sp, 0x18
+    jr $ra
+    nop
+.end audio_sequence_set_play_mode
