@@ -64,6 +64,27 @@ pub struct Selection {
     pub mirror_flag: u8,
 }
 
+/// One caller-qualified slot whose stored mirror byte may change.
+/// Root, selector and image-skip state have the same prerequisites as `select`.
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct SelectionEdit {
+    pub root: usize,
+    pub selector: u8,
+    pub skip_image: bool,
+    pub mirror_flag: u8,
+}
+
+pub const SELECTION_SCHEMA: &str = "bof3.sprite-selections/v1";
+
+/// Package-selected slots. The package owner validates their physical binding.
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+pub struct Selections {
+    pub schema: String,
+    pub slots: Vec<SelectionEdit>,
+}
+
 impl Document {
     pub fn info(&self) -> Info {
         Info {
@@ -258,9 +279,10 @@ fn root_at(document: &Document, index: usize) -> Result<&Root> {
         .ok_or_else(|| invalid("missing root index"))
 }
 /// Resolve one explicit selector through SLUS_004.22@0x8014DC08.
-/// selector is the final entity byte at +0x4B, not the entry request to
-/// SLUS_004.22@0x8014D6B8. The caller must qualify it, the root and image-skip
-/// condition from the same consumer. Extent checks do not prove a valid selector.
+/// The call at 0x8014D868 reads selector from entity byte +0x4B.
+/// The call at 0x8014D564 instead passes its incoming a0 low byte. Qualify the
+/// helper argument, the root and image-skip condition from the same consumer.
+/// Entry requests to 0x8014D6B8 can differ. Extent checks do not prove validity.
 /// skip_image represents entity byte 0 bit 1, not entity byte 0x24.
 pub fn select(
     source: &[u8],
@@ -270,6 +292,10 @@ pub fn select(
 ) -> Result<Selection> {
     let document = decode(source)?;
     let root = root_at(&document, root_index)?;
+    select_from(source, root, selector, skip_image)
+}
+
+fn select_from(source: &[u8], root: &Root, selector: u8, skip_image: bool) -> Result<Selection> {
     // decode bounds the whole source to 1 MiB and selector to one byte.
     let triple_offset = root.selection_offset + usize::from(selector) * 3;
     let end = triple_offset + 3;
@@ -300,6 +326,34 @@ pub fn select(
         program,
         mirror_flag: triple[2],
     })
+}
+
+/// Encode mirror bytes for explicit caller-qualified slots, without inferring a
+/// selector domain. Image/program indices and every other source byte stay intact.
+/// Changed aliases must agree; unchanged views do not override an edit.
+pub fn encode_selections(source: &[u8], edits: &[SelectionEdit]) -> Result<Vec<u8>> {
+    let document = decode(source)?;
+    if edits.len() > document.roots.len() * 256 {
+        return Err(invalid("too many explicit selection edits"));
+    }
+    let mut mirrors = crate::aliases::Aliases::new();
+    for edit in edits {
+        let root = root_at(&document, edit.root)?;
+        let selected = select_from(source, root, edit.selector, edit.skip_image)?;
+        if edit.mirror_flag != selected.mirror_flag {
+            mirrors.add(
+                selected.triple_offset + 2,
+                &edit.mirror_flag,
+                format!("root-{}/selection-{}", edit.root, edit.selector),
+            );
+        }
+    }
+    let mirrors = mirrors.finish("sprite selection")?;
+    let mut output = source.to_vec();
+    for (offset, value) in mirrors {
+        output[offset] = *value;
+    }
+    Ok(output)
 }
 
 /// Change palette words, animation pairs and cell parts in their existing records.

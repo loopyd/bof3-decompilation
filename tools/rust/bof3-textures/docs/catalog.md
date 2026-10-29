@@ -8,6 +8,15 @@ Area payloads additionally expose directly selected packed words and their
 coordinate-read spans. Qualified `0x800E3800` payloads additionally expose
 eight-byte `sprite-definition` records. Other internal layouts remain unresolved.
 
+Original `BIN/PLCHAR/PL27A.EMI#3` exposes one `animation-selection` record at
+decoded offset `310043`. Its three bytes select image `0`, program `1` and a raw
+mirror flag for root `2`, selector `5`. The record has image and animation edges.
+The original incoming helper context qualifies this source slot with image-skip
+clear. The checkpoint precedes the root load, so it does not establish retired
+reads or stores, uploads, a selector domain or rendered appearance. Query this
+record with `--records --kind animation-selection`. Its package's
+`selections.json` permits mirror-byte edits only.
+
 Each `sprite-definition-table` resource has `sprite_definitions` metadata with
 `definitions` and `tail_bytes` counts. Its storage is
 `us-counted-sprite-definitions`. The byte count precedes the records in a

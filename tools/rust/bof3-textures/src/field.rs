@@ -4,7 +4,41 @@ use crate::{
     Error, Result,
     catalog::{Dependency, Resource},
     record::{CoordinateSpace, Record},
+    sprite_bank::{self, SelectionEdit},
 };
+
+pub(crate) fn has_selections(resource: &Resource) -> bool {
+    resource.source == "BIN/PLCHAR/PL27A.EMI"
+        && resource.entry == Some(3)
+        && resource.offset == 73728
+        && resource.size == 239772
+        && resource.load_argument == Some(0x8003b800)
+        && resource.sha256 == "396ae98f20eefc3212ad657b9be8787db3445cf97fe80160baab1c5a21e8e5c1"
+        && resource.sprite_bank.is_some()
+}
+
+/// One original incoming helper context, not a selector domain or rendered use.
+pub(crate) fn selections(resource: &Resource, decoded: &[u8]) -> Result<Vec<SelectionEdit>> {
+    if !has_selections(resource) {
+        return Ok(Vec::new());
+    }
+    let selected = sprite_bank::select(decoded, 2, 5, false)?;
+    if decoded.len() != 310136
+        || selected.triple_offset != 310043
+        || selected.image_index != 0
+        || selected.program_index != 1
+    {
+        return Err(Error::Invalid(
+            "PL27A qualified selection binding differs".into(),
+        ));
+    }
+    Ok(vec![SelectionEdit {
+        root: 2,
+        selector: 5,
+        skip_image: false,
+        mirror_flag: selected.mirror_flag,
+    }])
+}
 
 const AREA024: &str = "BIN/WORLD00/AREA024.EMI";
 const METADATA_SHA256: &str = "1b36c8e96987f4c2256daa9e24e477d90c73616242be2588906525a4c8dc2c99";

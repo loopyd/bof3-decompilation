@@ -3,17 +3,18 @@
 ## Sprite roots
 
 The `sprite_bank::select` library function follows the original US helper at
-`SLUS_004.22@0x8014dc08`. Supply decoded bank bytes, a root ordinal, the final
-selector byte at entity `0x4b` and the image-skip condition from the same
-consumer observation.
+`SLUS_004.22@0x8014dc08`. Supply decoded bank bytes, a root ordinal, the helper's
+selector byte and the image-skip condition from the same consumer observation.
 The function decodes a supported three-root bank or standalone root before
 resolving the selected slot. A standalone payload has root ordinal zero and
 keeps every offset in its original payload coordinates. It does not include a
 synthetic root table. Its RAM destination does not prove which active entity
 selects it.
 
-The main selector dispatches to this helper when entity byte `0x24` has bit
-zero set. Its other branch uses a resident table and is outside this function.
+The main call at `SLUS_004.22@0x8014d868` uses entity byte `0x4b` when entity
+byte `0x24` has bit zero set. The call at `SLUS_004.22@0x8014d564` instead passes
+its incoming `a0` low byte. The other main branch uses a resident table and is
+outside this function.
 
 The helper reads three bytes at `selection_offset + 3 * selector`. Byte zero
 selects an image. Byte one selects an animation program. Byte two is copied to
@@ -37,6 +38,61 @@ not choose a palette, submit image uploads, establish residency or render a
 frame. Conditional image selection cannot be treated as an unconditional bank
 or image dependency.
 
+### Stored mirror edits
+
+The `sprite_bank::encode_selections` library function accepts decoded bank bytes
+and explicit `SelectionEdit` values. Each value supplies `root`, `selector`,
+`skip_image` and the desired raw `mirror_flag`. The caller must qualify the slot
+and image-skip condition just as for `select`. An in-bounds triple does not prove
+that its selector is valid for a game consumer.
+
+The encoder validates each selected image and program through the same lookup.
+The image-skip branch leaves the image index opaque. Only byte two of a selected
+triple can change. The image and program indices, unselected tail bytes and all
+other bank bytes remain unchanged. Zero disables horizontal mirroring; nonzero
+values enable it in the qualified original consumer.
+
+Changed views of one physical mirror byte must agree. An unchanged view does not
+override an edit. The encoder bounds the edit list to 256 times the number of
+decoded roots. It rejects missing roots, invalid references and conflicting
+edits. It does not infer direction names, discover selectors, establish an
+active entity or publish a package. The package's `sprite.json` still keeps
+selection tails read-only. Separately qualified slots use `selections.json`.
+
+### Pack the qualified PL27A slot
+
+Original `BIN/PLCHAR/PL27A.EMI#3` exports `selections.json` with schema
+`bof3.sprite-selections/v1`. Its `slots` list contains root `2`, selector `5`,
+`skip_image=false` and the stored `mirror_flag`. Only `mirror_flag` is editable.
+Keep every other field and the list length unchanged. Find the member path in
+the package manifest's matching export.
+
+```sh
+bin/harness textures unpack out/extracted/BIN/PLCHAR/PL27A.EMI \
+  --source BIN/PLCHAR/PL27A.EMI --output out/textures/pl27a-edit
+# Edit mirror_flag in the exported selections.json.
+bin/harness textures pack out/textures/pl27a-edit \
+  --output out/textures/pl27a-packed
+bin/harness textures verify out/textures/pl27a-packed \
+  --package out/textures/pl27a-edit --json
+bin/harness textures unpack out/textures/pl27a-packed \
+  --package out/textures/pl27a-edit --output out/textures/pl27a-reopened
+```
+
+Use new destinations. Verification exits `1` while broader graphics acceptance
+is incomplete; inspect its byte-check results separately. The reopened selection
+document reports the packed mirror byte. Image, palette and animation edits can
+be combined with this edit before the outer bank is encoded. Other selection
+bytes remain protected.
+
+The qualified original incoming context at `SLUS_004.22@0x8014DC14` supplies
+selector `5` and entity `0x80145E90`. Its root word points to `0x8007DEE0`,
+root offset `272096` in the complete source-bound bank at `0x8003B800`.
+The selected triple is at decoded offset `310043`; its mirror byte is at
+`310045`. This is a preinstruction root-load checkpoint. It does not establish
+retired triple reads or stores, other valid selectors, CLUT choice, uploads or
+rendered appearance.
+
 ### Entry requests
 
 The request passed to `SLUS_004.22@0x8014d6b8` can differ from the final
@@ -47,10 +103,11 @@ a four-byte record through the pointer table at `0x80181c7c`. Entity word
 and byte three becomes entity byte `0x2a`. The first two record bytes form an
 ID passed to the metadata lookup at `0x8014dd3c`.
 
-Use the resulting entity byte when calling `sprite_bank::select`. The library
-does not evaluate the entry request or its mutable tables. Those tables and
-entity state do not establish a valid request domain, direction names or a
-physical bank binding. Preserve their context when qualifying a selector.
+For this main path, use the resulting entity byte with `sprite_bank::select`.
+The library does not evaluate the entry request or its mutable tables.
+Those tables and entity state do not establish a valid request domain,
+direction names or a physical bank binding. Preserve their context when
+qualifying a selector.
 
 ### Definition lookup
 

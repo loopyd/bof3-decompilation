@@ -29,7 +29,7 @@ package, then pack into another new destination.
 
 ## Original identity and current baseline
 
-Package schema `bof3.textures-package/v8` separates `snapshots` from `baselines`.
+Package schema `bof3.textures-package/v9` separates `snapshots` from `baselines`.
 Both lists follow the catalog's original source order and identify snapshot
 members by SHA-256. In an original export, both refer to the same bytes. A reopened
 package retains each qualified original snapshot and adds the reconstructed

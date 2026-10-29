@@ -229,7 +229,7 @@ AREA024 index patch and its conditional palette source, with byte verification.
 [Edit a compressed sprite image](docs/bank-image-edit.md) covers a mode-2 index
 plane, a stored palette word, compression limits, and re-export.
 
-The manifest schema is `bof3.textures-package/v8`. The package includes qualified
+The manifest schema is `bof3.textures-package/v9`. The package includes qualified
 original snapshots, validated baseline snapshots, raw resources, its bound catalog,
 and coverage. A new original export uses the original snapshots as its baselines. A
 qualified raw upload also has `words.json` and indexed `indices-4.png` and
@@ -325,8 +325,9 @@ Changed aliases must agree on their complete palette, program, cell, or image
 record. Conflicts name every changed view of the shared record. Unchanged aliases
 do not override an edit. Image streams and any outer bank must fit their original
 consumed byte spans. Raw banks retain their original payload size. Following pointers and
-unconsumed bytes do not grant extra capacity. Packing preserves selection tails,
-opaque flags, headers, pointer tables, codec metadata, and unrelated bytes.
+unconsumed bytes do not grant extra capacity. Packing preserves selection tails
+except explicit qualified mirror edits in `selections.json`. It preserves opaque
+flags, headers, pointer tables, codec metadata, and unrelated bytes.
 The bank's `raw.bin` and any `decoded.bin` are read-only; use its qualified views.
 Unsupported internal variants retain read-only decoded bytes and refusal findings.
 
@@ -594,7 +595,8 @@ The first relative offset delimits each table. Image and palette tables use
 offsets. Each table has at most 256 indices. The palette consumer at
 `SLUS_004.22@0x80166c48` copies 32 words per selected record. The selection
 consumer at `0x8014dc08` can skip an image upload according to entity state.
-Selection tails stay opaque: contained triples do not establish valid runtime
+Selection tails stay opaque except the separately qualified PL27A root 2,
+selector 5 mirror byte. Contained triples alone do not establish valid runtime
 indices or editable records. Recognizing these sections does not assign a bank
 to a field or battle category.
 
@@ -613,7 +615,14 @@ scene rendering.
 The [selection library](docs/selection.md) resolves one explicit root selector
 through the original consumer. It preserves the image-skip path, independent
 program selection and raw mirror byte. It does not infer a valid selector range
-or make the surrounding tail editable.
+or make the surrounding tail editable. Original `BIN/PLCHAR/PL27A.EMI#3`
+additionally exports `selections.json` with schema `bof3.sprite-selections/v1`.
+Only its bound slot's `mirror_flag` is editable. Zero disables horizontal
+mirroring; any nonzero byte enables it. Keep the schema, root, selector,
+image-skip state and slot count unchanged. Packing and re-export preserve the
+stored byte independently of program and image edits. The original incoming
+helper context binds this slot to its physical source, but does not establish
+retired stores, palette choice, uploads or rendered appearance.
 
 The `animation` library reads bounded program headers, step pairs, and cell
 offsets using the US consumers at `0x8014d910`, `0x8014d978`, and `0x8014daec`.

@@ -13,14 +13,14 @@ use crate::{
     Error, Result, area, bank, bank_image,
     catalog::{self, Dependency, Index, Resource},
     digest::sha256_hex,
-    formats,
+    field, formats,
     png::{self, IndexedImage},
     preview, resident, save_icon,
     sources::{self, Input},
     sprite_bank, sprite_definition,
 };
 
-pub const SCHEMA: &str = "bof3.textures-package/v8";
+pub const SCHEMA: &str = "bof3.textures-package/v9";
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -53,6 +53,7 @@ pub struct Export {
     pub surface: Option<String>,
     pub definitions: Option<String>,
     pub sprite: Option<String>,
+    pub selections: Option<String>,
     pub bank_images: Vec<BankImage>,
     pub save_frames: Vec<String>,
     pub palette_binding: String,
@@ -120,6 +121,8 @@ fn exports(index: &Index) -> Result<Vec<Export>> {
                     .sprite_bank
                     .as_ref()
                     .map(|_| format!("{directory}/sprite.json")),
+                selections: field::has_selections(resource)
+                    .then(|| format!("{directory}/selections.json")),
                 bank_images: resource
                     .sprite_bank
                     .as_ref()
@@ -288,7 +291,28 @@ fn import_bank(
             bytes,
         })
         .collect();
-    let intended = sprite_bank::encode_images(&decoded, &document, &edits)?;
+    let mut intended = sprite_bank::encode_images(&decoded, &document, &edits)?;
+    if let Some(member) = &export.selections {
+        let selections: sprite_bank::Selections =
+            serde_json::from_slice(&read_member(root, member, 65536)?)?;
+        let mut bound = field::selections(resource, &decoded)?;
+        if selections.schema != sprite_bank::SELECTION_SCHEMA
+            || selections.slots.len() != bound.len()
+        {
+            return Err(Error::Invalid(format!(
+                "{member}: selection allocation differs"
+            )));
+        }
+        for (slot, original) in bound.iter_mut().zip(&selections.slots) {
+            slot.mirror_flag = original.mirror_flag;
+            if slot != original {
+                return Err(Error::Invalid(format!(
+                    "{member}: preserve bound root, selector and image-skip state"
+                )));
+            }
+        }
+        intended = sprite_bank::encode_selections(&intended, &selections.slots)?;
+    }
     let encoded = if resource.bank.is_some() {
         bank::encode(&intended, original)?
     } else {
@@ -352,6 +376,15 @@ fn export_source(
             let decoded = bank_bytes(resource, raw)?;
             if let Some(member) = &export.decoded {
                 stage.write(member, &decoded)?;
+            }
+            if let Some(member) = &export.selections {
+                stage.write(
+                    member,
+                    &serde_json::to_vec_pretty(&sprite_bank::Selections {
+                        schema: sprite_bank::SELECTION_SCHEMA.into(),
+                        slots: field::selections(resource, &decoded)?,
+                    })?,
+                )?;
             }
             if let Some(member) = &export.sprite {
                 let document = sprite_bank::decode(&decoded)?;
@@ -610,6 +643,8 @@ fn validate_resource_edit(resource: &Resource, original: &[u8], edited: &[u8]) -
             })
             .collect();
         let encoded = sprite_bank::encode_images(&before, &document, &edits)?;
+        let encoded =
+            sprite_bank::encode_selections(&encoded, &field::selections(resource, &after)?)?;
         if encoded != after {
             return Err(Error::Invalid(format!(
                 "{} baseline changes opaque sprite bytes",

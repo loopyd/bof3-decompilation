@@ -113,6 +113,7 @@ impl<'a> Builder<'a> {
             "palette-record" => "SLUS_004.22@0x80166C48:32-word-palette-copy".into(),
             "save-icon-frame" => format!("{}@0x801EF27C:save-header-frame-source", self.parent.id),
             "animation-program" => "SLUS_004.22@0x8014D910:program-initialization".into(),
+            "animation-selection" => "SLUS_004.22@0x8014DC08:selection-triple".into(),
             "resident-group" => "SLUS_004.22@0x8014D878:relative-program-table".into(),
             "sprite-cell" => "SLUS_004.22@0x8014C6F8:five-byte-cell-parts".into(),
             "surface-word" => "SLUS_004.22@0x80154294:nonzero-cell-packed-word".into(),
@@ -283,6 +284,21 @@ pub(crate) fn sprite_records(
                 program.end,
                 format!("root-{root_index}/program-slot-{slot}"),
             )?;
+        }
+    }
+    for slot in crate::field::selections(parent, source)? {
+        let selected = sprite_bank::select(source, slot.root, slot.selector, slot.skip_image)?;
+        let id = builder.add(
+            "animation-selection",
+            selected.triple_offset,
+            3,
+            format!("root-{}/selection-{}", slot.root, slot.selector),
+        )?;
+        builder.edge(&id, "animation", builder.id("animation-program", selected.program.offset),
+            "Original incoming helper selector 5 at 0x8014DC14 is bound to this source/root; subsequent reads and stores were not observed.".into());
+        if let Some(image) = selected.image {
+            builder.edge(&id, "image", builder.id("bank-image", image.offset),
+                "Image-skip bit was clear in the qualified incoming context; no upload or rendering acceptance.".into());
         }
     }
     Ok(builder.finish())

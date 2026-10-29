@@ -10,7 +10,7 @@ use crate::{
     Error, Result, area, bank, bank_image,
     catalog::{self, Index, Resource},
     digest::sha256_hex,
-    formats, package, resident, save_icon,
+    field, formats, package, resident, save_icon,
     sources::{self, Input, SourceFile},
     sprite_bank, sprite_definition,
 };
@@ -23,7 +23,11 @@ enum Content {
     Resident(resident::Document),
     Area(area::Document),
     Definitions(sprite_definition::Document),
-    Sprite(sprite_bank::Document, Vec<bank_image::Decoded>),
+    Sprite(
+        sprite_bank::Document,
+        Vec<bank_image::Decoded>,
+        Vec<sprite_bank::SelectionEdit>,
+    ),
     DecodedBank(Vec<u8>),
 }
 
@@ -57,7 +61,11 @@ fn content(resource: &Resource, bytes: &[u8]) -> Result<Option<Content>> {
             .flat_map(|root| &root.images)
             .map(|image| bank_image::decode(&decoded, image.offset, image.end))
             .collect::<Result<_>>()?;
-        return Ok(Some(Content::Sprite(document, images)));
+        return Ok(Some(Content::Sprite(
+            document,
+            images,
+            field::selections(resource, &decoded)?,
+        )));
     }
     if resource.bank.is_some() {
         return Ok(Some(Content::DecodedBank(bank::decode(bytes)?.bytes)));
@@ -111,7 +119,7 @@ fn inverse(resource: &Resource, original: &[u8]) -> Result<Option<Vec<u8>>> {
         Some(Content::Definitions(document)) => {
             Ok(Some(sprite_definition::encode(original, &document)?))
         }
-        Some(Content::Sprite(document, _)) => {
+        Some(Content::Sprite(document, _, selections)) => {
             let decoded = sprite_bytes(resource, original)?;
             let mut planes = Vec::new();
             for (root, record) in document.roots.iter().enumerate() {
@@ -130,6 +138,7 @@ fn inverse(resource: &Resource, original: &[u8]) -> Result<Option<Vec<u8>>> {
                 })
                 .collect();
             let encoded = sprite_bank::encode_images(&decoded, &document, &edits)?;
+            let encoded = sprite_bank::encode_selections(&encoded, &selections)?;
             Ok(Some(if resource.bank.is_some() {
                 bank::encode(&encoded, original)?
             } else {
