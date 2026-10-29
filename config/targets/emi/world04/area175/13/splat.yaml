@@ -115,6 +115,7 @@ segments:
   - - 3440
     - c
     - setStatus63IfGateElse62World04Area17513_801F3970
+    - '@source: src/bof3/world/area17513_gate_status.c'
   - - 3480
     - asm
     - func_801F3998
@@ -124,9 +125,11 @@ segments:
   - - 3636
     - c
     - setStatus70IfGateElseFFFFWorld04Area17513_801F3A34
+    - '@source: src/bof3/world/area17513_gate_status.c'
   - - 3676
     - c
     - setStatus70IfGateElseFFFFWorld04Area17513_801F3A5C
+    - '@source: src/bof3/world/area17513_gate_status.c'
   - - 3716
     - asm
     - func_801F3A84
@@ -136,10 +139,11 @@ segments:
   - - 3916
     - c
     - setStatus7EIfGateElseFFFFWorld04Area17513_801F3B4C
+    - '@source: src/bof3/world/area17513_gate_status.c'
   - - 3956
     - c
     - setStatus7EIfGateElseFFFFWorld04Area17513_801F3B74
-    - '@source: src/bof3/world04/setStatus7EIfGateElseFFFFWorld04Area17513_801F3B74.c'
+    - '@source: src/bof3/world/area17513_gate_status.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0x7E into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0xFFFF when the gate byte is zero.'
   - - 3996
     - c
@@ -153,12 +157,12 @@ segments:
   - - 4172
     - c
     - setStatus8AIfGateElseFFFFWorld04Area17513_801F3C4C
-    - '@source: src/bof3/world04/setStatus8AIfGateElseFFFFWorld04Area17513_801F3C4C.c'
+    - '@source: src/bof3/world/area17513_gate_status.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0x8A into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0xFFFF when the gate byte is zero.'
   - - 4212
     - c
     - setStatus8AIfGateElseFFFFWorld04Area17513_801F3C74
-    - '@source: src/bof3/world04/setStatus8AIfGateElseFFFFWorld04Area17513_801F3C74.c'
+    - '@source: src/bof3/world/area17513_gate_status.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0x8A into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0xFFFF when the gate byte is zero.'
   - - 4252
     - c
@@ -166,7 +170,7 @@ segments:
   - - 4260
     - c
     - setStatusA0IfGateElse9FWorld04Area17513_801F3CA4
-    - '@source: src/bof3/world04/setStatusA0IfGateElse9FWorld04Area17513_801F3CA4.c'
+    - '@source: src/bof3/world/area17513_gate_status.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0xA0 into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0x9F when the gate byte is zero.'
   - - 4300
     - asm
@@ -191,7 +195,7 @@ segments:
   - - 4648
     - c
     - setStatusF8IfGateElseF9World04Area17513_801F3E28
-    - '@source: src/bof3/world04/setStatusF8IfGateElseF9World04Area17513_801F3E28.c'
+    - '@source: src/bof3/world/area17513_gate_status.c'
     - '@behavior: Loads the shared gate byte D_801490C7 and stores 0xF8 into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0xF9 when the gate byte is zero.'
   - - 4688
     - asm

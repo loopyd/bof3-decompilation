@@ -50,9 +50,11 @@ segments:
   - - 1188
     - c
     - setStatusNineUnlessGateWorld01Area05613_801F30A4
+    - '@source: src/bof3/world/area05613_gate_status.c'
   - - 1228
     - c
     - setStatusTenUnlessGateWorld01Area05613_801F30CC
+    - '@source: src/bof3/world/area05613_gate_status.c'
   - - 1268
     - asm
     - func_801F30F4

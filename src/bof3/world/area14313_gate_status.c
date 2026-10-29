@@ -1,4 +1,5 @@
 #include "bof3/bof3.h"
+#include "world/gate_status.h"
 
 extern s8 D_801490C7;
 extern u16 D_801490A8;
@@ -11,14 +12,4 @@ extern u16 D_801490A8;
  * @match 100.00
  * @residual none
  */
-void setStatus4AIfGateElse49World03Area14313_801F3ACC(void) {
-  s32 value;
-
-  value = D_801490C7;
-  if (value != 0) {
-    value = 0x4A;
-  } else {
-    value = 0x49;
-  }
-  D_801490A8 = value;
-}
+WORLD_DEFINE_GATE_STATUS(setStatus4AIfGateElse49World03Area14313_801F3ACC, D_801490C7, D_801490A8, 0x4A, 0x49)

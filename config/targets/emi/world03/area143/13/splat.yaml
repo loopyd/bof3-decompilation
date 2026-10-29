@@ -89,6 +89,7 @@ segments:
   - - 3788
     - c
     - setStatus4AIfGateElse49World03Area14313_801F3ACC
+    - '@source: src/bof3/world/area14313_gate_status.c'
   - - 3828
     - asm
     - func_801F3AF4
