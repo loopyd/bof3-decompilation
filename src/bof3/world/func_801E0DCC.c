@@ -1,7 +1,7 @@
 #include "bof3/world/area03004_internal.h"
 
-/* @behavior appends a sprite primitive using indexed texture geometry. */
 /* @source 0x801E0DCC
+ * @behavior appends a sprite primitive using indexed texture geometry.
  * @status exact
  * @match 100.00
  * @residual none

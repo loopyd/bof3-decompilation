@@ -1,5 +1,9 @@
 #include "bof3/world/area03004_internal.h"
 
+typedef struct PackedCoords {
+  u8 value[6];
+} PackedCoords;
+
 /* @source 0x801E1004
  * @behavior draws three AREA030 panel decorations from the packed coordinate
  * record at D_801D0C30 (origin, plus the count-scaled 20/25-pixel offsets on
@@ -15,10 +19,6 @@
  * @match 100.00
  * @residual none
  */
-typedef struct PackedCoords {
-  u8 value[6];
-} PackedCoords;
-
 void func_801E1004(s32 arg0, s32 arg1, s32 arg2) {
   PackedCoords coords;
   s32 i;
