@@ -215,6 +215,19 @@ audio_loader_initialize_layout:
 
 .section .data
 .balign 4
+# exe/slus_004_22@0x80182328..0x80182348, live gate and seven callbacks.
+# Unchecked callback indices beyond six reach the following SPU-base table.
+.globl audio_cue_dispatch_prefix
+audio_cue_dispatch_prefix:
+    .word 0
+    .word audio_cue_handler_0
+    .word audio_cue_handler_1
+    .word audio_cue_handler_2
+    .word audio_cue_handler_3
+    .word audio_cue_handler_4
+    .word audio_cue_handler_5
+    .word audio_cue_handler_6
+
 # exe/slus_004_22@0x80182348..0x80182444, three mutable tables.
 .globl audio_loader_spu_bases
 audio_loader_spu_bases:
