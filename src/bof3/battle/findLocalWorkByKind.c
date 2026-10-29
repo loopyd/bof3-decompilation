@@ -1,11 +1,13 @@
 #include "bof3/battle/battle03_internal.h"
 
 /* @source 0x801DBB20
+ * @behavior Scans the three 0x140-byte records at D_80145E90 in index order
+ * and returns the first whose byte +0x79 equals arg0. Returns NULL when none
+ * matches.
  * @status exact
  * @match 100.00
  * @residual none
  */
-/* @behavior Returns the first of three local work records whose byte +0x79 matches the selector, or NULL. */
 Battle03LocalWork *findLocalWorkByKind(u8 arg0)
 {
     u8 i;

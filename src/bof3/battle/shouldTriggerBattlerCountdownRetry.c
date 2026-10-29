@@ -1,15 +1,16 @@
 #include "bof3/battle/battle03_internal.h"
 
+extern int rand(void);
+
 /* @source 0x801DDCB4
- * @behavior Decides whether the countdown of the battler selected by arg0 fires
- * on this frame: the countdown byte is local work +0x121 for the first three
- * battlers and enemy work +0xFD otherwise, a zero countdown never fires, a roll
- * of rand() % 100 at or below the rate byte keeps the countdown (the
- * battleCommandEntryTable byte +8 selected by the countdown byte for the
- * countdown values 1 and 2, the fixed 0x4C bound otherwise), and the retry roll
- * compares rand() % 10000 with 10000 minus 50 times the entry byte of
- * battleCommandEntryTable selected by the retry index byte (local work +0xA6
- * or enemy work +0xB6).
+ * @behavior Uses the low byte of arg0 to read the counter at local work +0x121
+ * for slots below 3 or enemy work +0xFD otherwise. Returns 0 for a zero
+ * counter. Returns 1 when rand() % 100 is at most
+ * battleCommandEntryTable[counter + 8] for counters 1 and 2, or below
+ * 0x4C for larger counters. Otherwise reads the retry index at local
+ * work +0xA6 or enemy work +0xB6 and returns whether rand() % 10000 is
+ * at most 10000 minus 50 times battleCommandEntryTable[index]. The
+ * function does not write either work record.
  * @status partial
  * @match 87.72
  * @residual Live asm diff 100/114 instructions, 456 versus 456 bytes. The
@@ -33,8 +34,6 @@
  * unreduced battler, the same address as `&D_801EB630[(arg0 & 0xff) - 3u]` but
  * inside the 0x118-byte record array. Rungs 4 and 5 are unauthorized here.
  */
-
-extern int rand(void);
 
 u8 shouldTriggerBattlerCountdownRetry(u32 arg0) {
   u8  counter;

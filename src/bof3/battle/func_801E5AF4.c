@@ -4,6 +4,8 @@
  * dispatches through the current queued-slot byte `5` selector.
  * @source 0x801E5AF4
  * @status exact
+ * @match 100.00
+ * @residual none
  */
 void NO_SIBLING_CALLS func_801E5AF4(void) {
   Battle03NineteenDispatchTable table;

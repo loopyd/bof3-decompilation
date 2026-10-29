@@ -1,11 +1,14 @@
 #include "bof3/battle/battle03_internal.h"
 
 /* @source 0x801E7558
+ * @behavior Subtracts 0x2000 from word +0x40 of the work record at D_801EB4E0
+ * when that word is nonzero. If it is already zero, sets bit 0x40 of work byte
+ * +0x00 and increments byte +0x01 through the scratchpad pointer cell at
+ * 0x1F800044.
  * @status exact
  * @match 100.00
  * @residual none
  */
-/* @behavior Decrements the active work timer by 0x2000 when nonzero; otherwise sets flag 0x40 and increments scratchpad state. */
 void countdownOrFlag40Advance(void) {
     Battle03LocalWork* work;
 
