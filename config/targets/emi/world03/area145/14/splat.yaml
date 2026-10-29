@@ -55,6 +55,7 @@ segments:
   - - 784
     - c
     - invokeHelperWorld03Area14514_801F2F10
+    - '@source: src/bof3/world03/invokeHelperWorld03Area14514_801F2F10.c'
   - - 816
     - asm
     - func_801F2F30

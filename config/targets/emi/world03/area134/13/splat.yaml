@@ -103,6 +103,7 @@ segments:
   - - 2080
     - c
     - invokeHelperWorld03Area13413_801F3420
+    - '@source: src/bof3/world03/invokeHelperWorld03Area13413_801F3420.c'
   - - 2112
     - asm
     - func_801F3440
@@ -180,9 +181,11 @@ segments:
   - - 4424
     - c
     - invokeHelperWorld03Area13413_801F3D48
+    - '@source: src/bof3/world03/invokeHelperWorld03Area13413_801F3D48.c'
   - - 4456
     - c
     - invokeHelperWorld03Area13413_801F3D68
+    - '@source: src/bof3/world03/invokeHelperWorld03Area13413_801F3D68.c'
   - - 4488
     - asm
     - func_801F3D88
@@ -206,6 +209,7 @@ segments:
   - - 5552
     - c
     - invokeHelperWorld03Area13413_801F41B0
+    - '@source: src/bof3/world03/invokeHelperWorld03Area13413_801F41B0.c'
   - - 5584
     - c
     - dispatchStateByte1Table581cWorld03Area13413_801F41D0
@@ -237,6 +241,7 @@ segments:
   - - 6460
     - c
     - invokeHelperWorld03Area13413_801F453C
+    - '@source: src/bof3/world03/invokeHelperWorld03Area13413_801F453C.c'
   - - 6492
     - asm
     - func_801F455C
@@ -249,9 +254,11 @@ segments:
   - - 6828
     - c
     - invokeHelperWorld03Area13413_801F46AC
+    - '@source: src/bof3/world03/invokeHelperWorld03Area13413_801F46AC.c'
   - - 6860
     - c
     - invokeHelperWorld03Area13413_801F46CC
+    - '@source: src/bof3/world03/invokeHelperWorld03Area13413_801F46CC.c'
   - - 6892
     - asm
     - func_801F46EC

@@ -1,4 +1,5 @@
 #include "bof3/bof3.h"
+#include "game/workarea.h"
 
 void func_80196070(void);
 
@@ -8,6 +9,4 @@ void func_80196070(void);
  * @match 100.00
  * @residual none
  */
-void invokeHelperWorld04Area17513_801F36BC(void) {
-  func_80196070();
-}
+WORKAREA_RESET(invokeHelperWorld04Area17513_801F36BC)

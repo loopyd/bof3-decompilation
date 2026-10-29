@@ -41,6 +41,7 @@ segments:
   - - 524
     - c
     - invokeHelperWorld04Area17513_801F2E0C
+    - '@source: src/bof3/world04/invokeHelperWorld04Area17513_801F2E0C.c'
   - - 556
     - asm
     - func_801F2E2C
@@ -69,6 +70,7 @@ segments:
   - - 2072
     - c
     - invokeHelperWorld04Area17513_801F3418
+    - '@source: src/bof3/world04/invokeHelperWorld04Area17513_801F3418.c'
   - - 2104
     - asm
     - func_801F3438
@@ -91,6 +93,7 @@ segments:
   - - 2748
     - c
     - invokeHelperWorld04Area17513_801F36BC
+    - '@source: src/bof3/world04/invokeHelperWorld04Area17513_801F36BC.c'
   - - 2780
     - asm
     - func_801F36DC

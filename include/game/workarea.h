@@ -1,6 +1,6 @@
-/* Work-area reset template (byte-identical across EMI code blobs).
- * Thin tail-call to func_80196070 — clears the scratchpad game work-area
- * header (flags_00, unk_01, flags_02, pad_03[0..1]).
+/* Work-area reset template for EMI code.
+ * Calls func_80196070, which clears the scratchpad game work-area header
+ * fields flags_00, unk_01, flags_02 and pad_03[0..1], then returns.
  *
  * Usage:
  *   #include "internal.h"
