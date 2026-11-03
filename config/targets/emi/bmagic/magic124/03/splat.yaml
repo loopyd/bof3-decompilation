@@ -51,8 +51,9 @@ segments:
     - c
     - noopHandlerBmagicMagic12403_801EF268
   - - 1648
-    - asm
-    - func_801EF270
+    - c
+    - dispatchStateByte1Table08dcBmagicMagic12403_801EF270
+    - '@source: src/bof3/world/magic12403DispatchTables.c'
   - - 1716
     - asm
     - func_801EF2B4
