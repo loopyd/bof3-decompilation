@@ -9,8 +9,8 @@ load_address = 0x801f2c00
 
 sources = [
     "src/bof3/world/func_801F2C04_area01613.c",
+    "src/bof3/world/area01613DispatchTables.c",
     "src/bof3/world/advanceState02Step.c",
-    "src/bof3/world/dispatchState02.c",
     "src/bof3/world/dispatchState03.c",
     "src/bof3/world/func_801F36D0_area01613.c",
     "src/bof3/world/func_801F3060_area01613.c",
@@ -23,7 +23,6 @@ sources = [
     "src/bof3/world/emitSemiTransparentSprite.c",
     "src/bof3/world/func_801F3B00.c",
     "src/bof3/world/func_801F350C.c",
-    "src/bof3/world/func_801F341C_area01613.c",
     "src/bof3/world/dispatchAdvanceStates.c",
     "src/bof3/world/advanceScratchHeightState02.c",
     "src/bof3/world/func_801F3608.c",
@@ -31,8 +30,6 @@ sources = [
     "src/bof3/world/func_801F40C4.c",
     "src/bof3/world/func_801F41BC_area01613.c",
     "src/bof3/world/func_801F4528_area01613.c",
-    "src/bof3/world/dispatchArea016ScratchMode.c",
-    "src/bof3/world/func_801F45CC.c",
     "src/bof3/world/func_801F4610_area01613.c",
     "src/bof3/world/resetAdvanceScratchState.c",
     "src/bof3/world/seedScratchDefaults.c",

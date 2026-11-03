@@ -61,8 +61,9 @@ segments:
     - setWorkHalfwordsWorld00Area03313_801F3334
     - '@source: src/bof3/world/area03313_work_state.c'
   - - 1872
-    - asm
-    - func_801F3350
+    - c
+    - dispatchStateByte1Table4f78World00Area03313_801F3350
+    - '@source: src/bof3/world/area03313DispatchTables.c'
   - - 1940
     - c
     - resetAdvanceScratchStateCloneWorld00Area03313_801F3394
@@ -71,8 +72,9 @@ segments:
     - c
     - invokeTwoHelpersWorld00Area03313_801F33D4
   - - 2044
-    - asm
-    - func_801F33FC
+    - c
+    - dispatchStateByte2Table4f80World00Area03313_801F33FC
+    - '@source: src/bof3/world/area03313DispatchTables.c'
   - - 2112
     - asm
     - func_801F3440
@@ -113,8 +115,9 @@ segments:
     - asm
     - func_801F3FF8
   - - 5292
-    - asm
-    - func_801F40AC
+    - c
+    - dispatchStateByte1Table5010World00Area03313_801F40AC
+    - '@source: src/bof3/world/area03313DispatchTables.c'
   - - 5360
     - asm
     - func_801F40F0
@@ -125,8 +128,9 @@ segments:
     - asm
     - func_801F445C
   - - 6400
-    - asm
-    - func_801F4500
+    - c
+    - dispatchStateByte1Table5034World00Area03313_801F4500
+    - '@source: src/bof3/world/area03313DispatchTables.c'
   - - 6468
     - asm
     - func_801F4544

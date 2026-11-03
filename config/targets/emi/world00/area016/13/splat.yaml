@@ -75,7 +75,7 @@ segments:
   - - 2076
     - c
     - func_801F341C
-    - '@source: src/bof3/world/func_801F341C_area01613.c'
+    - '@source: src/bof3/world/area01613DispatchTables.c'
     - '@behavior: dispatches the scratch mode byte at offset 1 through the local four-entry handler table.'
   - - 2144
     - c
@@ -90,7 +90,7 @@ segments:
   - - 2248
     - c
     - dispatchState02
-    - '@source: src/bof3/world/dispatchState02.c'
+    - '@source: src/bof3/world/area01613DispatchTables.c'
     - '@behavior: dispatches the scratchpad state byte at offset 0x02 through the local handler table at 0x801F511C.'
   - - 2316
     - c
@@ -160,7 +160,7 @@ segments:
   - - 5496
     - c
     - dispatchArea016ScratchMode
-    - '@source: src/bof3/world/dispatchArea016ScratchMode.c'
+    - '@source: src/bof3/world/area01613DispatchTables.c'
     - '@behavior: dispatches the scratch mode byte at offset 1 through the local handler table.'
   - - 5564
     - c
@@ -180,7 +180,7 @@ segments:
   - - 6604
     - c
     - func_801F45CC
-    - '@source: src/bof3/world/func_801F45CC.c'
+    - '@source: src/bof3/world/area01613DispatchTables.c'
     - '@behavior: dispatches the scratch mode byte at offset 1 through the local handler table.'
   - - 6672
     - c
