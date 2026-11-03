@@ -8,6 +8,9 @@ WEAK_SYMBOL_AT(D_1F800000, 0x1f800000);
 WEAK_SYMBOL_AT(recordTable, 0x80143fc8);
 WEAK_SYMBOL_AT(workStateHandlerTable, 0x80195ed4);
 
+/* ---- Original Game00 ASM entry; no C prototype or emitted body ---- */
+WEAK_SYMBOL_AT(dispatchActiveGameWorkRecordsByKind, 0x801a061c);
+
 /* ---- Main-RAM bitmap geometry (main exe data segment, ref'd by overlay) ---- */
 WEAK_SYMBOL_AT(D_80104000, 0x80104000);
 WEAK_SYMBOL_AT(D_80104001, 0x80104001);
@@ -209,7 +212,7 @@ WEAK_SYMBOL_AT(D_801C80EC, 0x801c80ec);
 WEAK_SYMBOL_AT(D_801CD120, 0x801cd120);
 /* ---- Two-entry work-flag handler table dispatched by
  * dispatchWorkFlags02HandlerThenReadyUpdate ---- */
-WEAK_SYMBOL_AT(D_801CD1B0, 0x801cd1b0);
+WEAK_SYMBOL_AT(workFlags02HandlerPairTable, 0x801cd1b0);
 WEAK_SYMBOL_AT(D_801CD140, 0x801cd140);
 WEAK_SYMBOL_AT(D_801CD1C8, 0x801cd1c8);
 WEAK_SYMBOL_AT(D_801CD47C, 0x801cd47c);

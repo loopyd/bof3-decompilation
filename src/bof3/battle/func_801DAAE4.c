@@ -5,143 +5,233 @@ extern int rand(void);
  * selection bytes at `0x8014630c`, then resets the current owner cursor.
  * @source 0x801DAAE4
  * @status partial
- * @match 41.26
- * @residual 144/349 instructions, 1396 original bytes versus 1296. The ranking
- * list is plain storage, so the sort swaps encode as the original's inline
- * `lwl`/`lwr`/`swl`/`swr` word moves and the value reload is a single `lh`. The
- * local arm keeps the original's four ordered value stores, the product is
- * truncated to 16 bits before the divide as the original does, and both fill arms
- * store the slot index before the value. The three late phase-2 record reads reach
- * the record through the flat byte-record symbols `D_80145FA9`/`D_80145F0A` and
- * `D_80145F28` indexed by `index*0x140`, which is the original's per-use
- * `lui $at,%hi` + `addu at,at,s0` + `%lo` load instead of one shared record base.
- * `D_801EAF3C`/`D_801EAF48` are bound as their own symbols, so the percent read
- * folds as `lui $at,0x801f` + `addu $at,$at,rank` + `lhu -20676($at)` and the
- * bonus base hoists into `$s4` as the original does. The first live difference is
- * the frame: 56 bytes here against 48, because the kind-table address `0x801ca719`
- * is materialised as `lui $s5,0x801d` + `addiu $s5,$s5,-22759` in a callee-saved
- * register the original does not hold, while the original reaches the same byte
- * as `lui $at,0x801d` + `addu $at,$at,index` + `lbu -22759($at)`; both compilers
- * keep the mode constant `4` in `$s4`. The original's dead `addu` running sum over
- * the local records is also missing, since this compiler's dead-store pass removes
- * it.
+ * @match 94.27
+ * @residual 329 matching instructions out of 349 current and 349 original;
+ * both ranges are 1396 bytes with a 48-byte frame. Bytes differ; the first
+ * aligned difference is saved-register setup at +0x0C. Prefix differences
+ * include maximum register and constant/reset setup, the eliminated unused
+ * sum, conditional halfword addressing, second-mode allocation and affected
+ * branch destinations.
+ * Kind has an independent word local for the signed decision tree. Rank holds
+ * five, then the helper result. An ordinary byte holds the separate second
+ * mode sample, then the fresh helper argument after the optional store.
+ * Both rank results are truncated to their low byte only at table consumers.
+ * The unsigned halfword maximum becomes the existing held one after its last
+ * maximum use. A separate halfword phase local serves fill and outer index;
+ * low-byte consumers and guards keep increments below 255. The enemy index is
+ * bounded to 0..7. Row and entry offsets have genuine load/store consumers.
+ * The local row offset precedes the zero store and first mode read. Quotient
+ * storage precedes the fresh local halfword sample. Enemy bonus and halfword
+ * reads precede ranking publication.
+ * The held count admits the first outer sort iteration; later guards retain
+ * their distinct volatile entry/latch observations. Count is reset before
+ * each clear/copy phase. The copy entry tests for nonzero and its latch uses
+ * a fresh count sample. The publication store uses a plain byte view; the
+ * shared declaration and all five later count reads remain volatile.
  */
 void func_801DAAE4(void) {
-  u16 max_local_value;
-  u8                count;
-  u8                index;
+  u8 count;
+  u16 phase_value;
+  u16 maximum_one;
 
-  max_local_value = 0u;
-  index = 0u;
-  while (index < 3u) {
-    volatile Battle03LocalWork* battle_work;
+  {
+    u32 total;
 
-    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
-    if ((BATTLE_GLOBAL_BYTE_63BA == 0u) ||
-        ((BATTLE_LOCAL_WORD_128(battle_work) & 0x8000u) != 0u)) {
-      if ((func_801DB9E4(index) != 0u) &&
-          (max_local_value < BATTLE_LOCAL_HALF_98(battle_work))) {
-        max_local_value = BATTLE_LOCAL_HALF_98(battle_work);
+    total = 0u;
+    maximum_one = 0u;
+    count = 0u;
+    while (count < 3u) {
+      if ((BATTLE_GLOBAL_BYTE_63BA == 0u) ||
+          ((D_80145FB8[count].flags_00 & 0x8000u) != 0u)) {
+        if (func_801DB9E4(count) != 0u) {
+          u16 value;
+
+          value = D_80145F28[count].half_00;
+          total += value;
+          if (maximum_one < value) {
+            maximum_one = value;
+          }
+        }
       }
+      count += 1u;
     }
-    index += 1u;
   }
 
   count = 0u;
-  index = 0u;
-  while (index < 3u) {
-    volatile Battle03LocalWork* battle_work;
+  {
+    maximum_one = 1u;
+    phase_value = 0u;
+    while ((u8)phase_value < 3u) {
+      if ((BATTLE_GLOBAL_BYTE_63BA == 0u) ||
+          ((D_80145FB8[(u8)phase_value].flags_00 & 0x8000u) != 0u)) {
+        if (func_801DB9E4((u8)phase_value) != 0u) {
+          u32 local_row_offset;
+          u32 rank;
+          u32 kind;
+          u8 mode_or_argument;
+          u32 rank_entry_offset;
+          u32 rank_table_offset;
 
-    battle_work = &BATTLE_LOCAL_WORK_ARRAY[index];
-    if ((BATTLE_GLOBAL_BYTE_63BA == 0u) ||
-        ((BATTLE_LOCAL_WORD_128(battle_work) & 0x8000u) != 0u)) {
-      if (func_801DB9E4(index) != 0u) {
-        D_801EB550[count].index = index;
-        D_801EB550[count].value = 0;
-        if (BATTLE_LOCAL_BYTE_119(battle_work) == 4u) {
-          u8 kind_mode;
-
-          kind_mode = D_801CA718[((u32)BATTLE_LOCAL_HALF_11A(battle_work) *
-                                  0x14u) + 1u];
-          if (kind_mode == 1u || kind_mode == 3u) {
-            D_801EB550[count].value = 2;
-          } else if (kind_mode == 0u) {
+          D_801EB550[count].index = (u8)phase_value;
+          do {
+            local_row_offset = (u32)(u8)phase_value * 0x140u;
+            D_801EB550[count].value = 0;
+          } while (0);
+          if (FIELD_REF(volatile u8, (u8*)D_80145FA9 + local_row_offset, 0u) == 4u) {
+            kind = D_801CA718[((u32)FIELD_REF(volatile u16, &D_80145FA9[(u8)phase_value], 1u) * 0x14u) + 1u];
+            if (kind == maximum_one) {
+              goto store_kind_two;
+            }
+            if ((s32)kind >= 2) {
+              goto check_kind_three;
+            }
+            if (kind == 0u) {
+              goto store_kind_four;
+            }
+            goto kind_done;
+          check_kind_three:
+            if (kind == 3u) {
+              goto store_kind_two;
+            }
+            goto kind_done;
+          store_kind_four:
             D_801EB550[count].value = 4;
+            goto kind_done;
+          store_kind_two:
+            D_801EB550[count].value = 2;
           }
+        kind_done:
+          rank = 5u;
+          mode_or_argument = D_80145FA9[(u8)phase_value].byte_00;
+          if (mode_or_argument == rank) {
+            D_801EB550[count].value = maximum_one;
+          }
+          mode_or_argument = D_80145F0A[(u8)phase_value].byte_00;
+          rank = findThresholdRank(mode_or_argument, 1u);
+          rank_entry_offset = (u32)count * 4u;
+          rank_table_offset = (u32)(u8)rank * 2u;
+          do {
+            FIELD_REF(s16, D_801EB550, rank_entry_offset) =
+                (s16)(FIELD_REF(s16, D_801EB550, rank_entry_offset) *
+                      FIELD_REF(u16, D_801EAF3C, rank_table_offset)) / 100;
+          } while (0);
+          FIELD_REF(s16, D_801EB550, rank_entry_offset) =
+              (s16)(FIELD_REF(s16, D_801EB550, rank_entry_offset) +
+                    D_80145F28[(u8)phase_value].half_00);
+          count += 1u;
         }
-        if (D_80145FA9[index].byte_00 == 5u) {
-          D_801EB550[count].value = 1;
-        }
-        D_801EB550[count].value =
-            (s16)(D_801EB550[count].value *
-                  D_801EAF3C[findThresholdRank(
-                      D_80145F0A[index].byte_00, 1u)]) /
-            100;
-        D_801EB550[count].value =
-            (s16)(D_801EB550[count].value + D_80145F28[index].half_00);
-        count += 1u;
       }
+      phase_value += 1u;
     }
-    index += 1u;
   }
 
-  index = 3u;
-  while (index < 0x0bu) {
-    volatile Battle03EnemyWork* battle_work;
+  {
+    u32 admitted_enemy;
+    const s8 *bonus_base;
 
-    battle_work = &BATTLE_ENEMY_WORK_ARRAY[index - 3u];
-    if ((BATTLE_GLOBAL_BYTE_63BA == 0u) ||
-        ((BATTLE_ENEMY_WORD_104(battle_work) & 0x8000u) != 0u)) {
-      if (func_801DB9E4(index) != 0u) {
-        u32 rank;
-        s8  random_bonus;
+    phase_value = 3u;
+    bonus_base = D_801EAF48;
+    while ((u8)phase_value < 0x0bu) {
+      if ((BATTLE_GLOBAL_BYTE_63BA == 0u) ||
+          ((D_801EB734[(u8)phase_value - 3u].word_00 & 0x8000u) != 0u)) {
+        if (func_801DB9E4(admitted_enemy = (u8)phase_value) != 0u) {
+          u32 rank;
+          u32 enemy_index;
+          u32 enemy_row_offset;
+          u32 enemy_rank_entry_offset;
+          u32 random_value;
+          u32 scaled_offset;
+          u32 row_address;
+          s8  random_bonus;
+          u16 enemy_value;
 
-        rank = findThresholdRank(BATTLE_ENEMY_BYTE_88(battle_work), 0u);
-        random_bonus =
-            D_801EAF48[(rank * 0x10u) + (rand() & 0xfu)];
-        D_801EB550[count].index = index;
-        D_801EB550[count].value =
-            (s16)(BATTLE_ENEMY_HALF_A8(battle_work) + random_bonus);
-        count += 1u;
+          enemy_index = admitted_enemy - 3u;
+          enemy_row_offset = (u32)enemy_index * 0x118u;
+          rank = findThresholdRank(FIELD_REF(volatile u8, D_801EB6D8, enemy_row_offset - 0x20u), 0u);
+          random_value = rand();
+          enemy_rank_entry_offset = (u32)count * 4u;
+          scaled_offset = (u8)rank * 0x10u;
+          row_address = scaled_offset + (u32)bonus_base;
+          random_bonus = PSX_PTR(const s8, row_address)[random_value & 0xfu];
+          enemy_value = FIELD_REF(volatile u16, D_801EB6D8, enemy_row_offset);
+          FIELD_REF(u16, D_801EB550, enemy_rank_entry_offset + 2u) = (u8)phase_value;
+          FIELD_REF(s16, D_801EB550, enemy_rank_entry_offset) =
+              (s16)(enemy_value + random_bonus);
+          count += 1u;
+        }
       }
+      phase_value += 1u;
     }
-    index += 1u;
   }
 
-  BATTLE_GLOBAL_BYTE_6323 = count;
+  {
+  u8 *published_count;
+
+  published_count = (u8 *)&BATTLE_GLOBAL_BYTE_6323;
+  *published_count = count;
   if (count > 1u) {
-    u8 left;
+    s32 sampled_count;
+    volatile u8 *entry_count;
 
-    left = 0u;
-    while (left < count - 1) {
-      u8 right;
+    sampled_count = (s32)count;
+    phase_value = 0u;
+    while ((u8)phase_value < sampled_count - 1) {
+      entry_count = &BATTLE_GLOBAL_BYTE_6323;
+      {
+      u32 entry_index;
 
-      right = left + 1u;
-      while (right < count) {
-        if (D_801EB550[left].value < D_801EB550[right].value) {
+      count = (u8)phase_value + 1u;
+      entry_index = count;
+      if (entry_index < *entry_count) {
+        volatile u8 *latch_count;
+
+        do {
+        u32 left_entry_offset;
+        Battle03RankEntry *left_swap;
+
+        do {
+          left_entry_offset = (u32)(u8)phase_value * 4u;
+          left_swap = FIELD_ADDR(Battle03RankEntry, D_801EB550, left_entry_offset);
+        } while (0);
+        latch_count = &BATTLE_GLOBAL_BYTE_6323;
+        if (FIELD_REF(s16, D_801EB550, left_entry_offset) < D_801EB550[entry_index].value) {
           Battle03RankEntry temp;
 
-          temp = D_801EB550[left];
-          D_801EB550[left] = D_801EB550[right];
-          D_801EB550[right] = temp;
+          temp = *left_swap;
+          *left_swap = D_801EB550[entry_index];
+          D_801EB550[entry_index] = temp;
         }
-        right += 1u;
+        count += 1u;
+        entry_index = count;
+        } while (entry_index < *latch_count);
       }
-      left += 1u;
+      }
+      do {
+        phase_value += 1u;
+      } while (0);
+      sampled_count = BATTLE_GLOBAL_BYTE_6323;
     }
   }
 
-  index = 0u;
-  while (index < 0x0bu) {
-    BATTLE_GLOBAL_BYTE_630C(index) = 0xffu;
-    index += 1u;
+  count = 0u;
+  while (count < 0x0bu) {
+    FIELD_REF(volatile u8, &D_8014630C, count) = 0xffu;
+    count += 1u;
+  }
+  count = 0u;
+
+  {
+  volatile u8 *copy_count;
+
+  copy_count = &BATTLE_GLOBAL_BYTE_6323;
+  if (*copy_count != 0u) {
+    do {
+      FIELD_REF(volatile u8, &D_8014630C, count) = (u8)D_801EB550[count].index;
+      count += 1u;
+    } while (count < *copy_count);
   }
 
-  index = 0u;
-  while (index < BATTLE_GLOBAL_BYTE_6323) {
-    BATTLE_GLOBAL_BYTE_630C(index) = (u8)D_801EB550[index].index;
-    index += 1u;
   }
-
+  }
   BATTLE_GLOBAL_BYTE_6322 = 0u;
 }

@@ -840,7 +840,7 @@ segments:
     - '@behavior: Walks 30 game-work records of size 0x98 and publishes each record through the scratch work pointer. For records with flag byte 0 bit 0 set and byte 6 other than 9, sets byte 0x29 to 4 when byte 0x24 bit 0x10 is set, otherwise to D_8014933E. Records with byte 6 equal to 9 skip dispatch when D_8014933E is 4. Other active records call func_8015A944 when the published record byte 6 is 10, otherwise func_8014D290.'
   - - 44572
     - asm
-    - func_801A061C
+    - dispatchActiveGameWorkRecordsByKind
   - - 44760
     - asm
     - func_801A06D8
@@ -1982,16 +1982,16 @@ segments:
     - c
     - dispatchPositionCheckBySpeed
     - '@source: src/bof3/ui/dispatchPositionCheckBySpeed.c'
-    - '@behavior: forwards the position check of the supplied x/y coordinates and signed 16-bit reference to the sibling routine selected by the record speed byte: a nonzero speed byte calls func_801C41D0 and a zero speed byte calls func_801C4040, and the byte result of that routine is returned.'
+    - '@behavior: forwards the position check of the supplied x/y coordinates and signed 16-bit reference to the sibling routine selected by the record speed byte: a nonzero speed byte calls isPositionRejectedForNonzeroSelector and a zero speed byte calls isPositionRejectedForZeroSelector, and the byte result of that routine is returned.'
   - - 190080
     - asm
     - func_801C3E80
   - - 190528
     - asm
-    - func_801C4040
+    - isPositionRejectedForZeroSelector
   - - 190928
     - asm
-    - func_801C41D0
+    - isPositionRejectedForNonzeroSelector
   - - 192300
     - c
     - func_801C472C

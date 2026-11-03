@@ -2,8 +2,10 @@
 
 For each variant it installs the file at SOURCE_PATH, measures the native asm diff,
 and prints one table row (variant, insns matched, bytes, first difference).  The
-original file content is restored on exit, and the best variant (highest matched
-insns, then fewest bytes) is left installed when the caller passes ``--keep-best``.
+original file content is restored after confirmed writer cleanup. If cleanup is
+unconfirmed, the candidate and PRE backup remain for recovery. The best variant
+(highest matched insns, then fewest bytes) is left installed when the caller passes
+``--keep-best``.
 
 Cost contract: spawning ``bin/harness lift asm-diff`` per variant re-pays the whole
 per-invocation pipeline (CMake configure check, glob verification, the pinned
@@ -19,6 +21,7 @@ whenever resolution or compilation is unavailable, so behaviour never regresses.
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import shlex
@@ -29,6 +32,7 @@ import tempfile
 from pathlib import Path
 
 from harness.common.cli import add_example_argument, run_main
+from harness.common.process import ProcessCleanupError, run_bounded
 from harness.io import repo_layout
 
 USAGE = (
@@ -43,19 +47,73 @@ _BYTES_RE = re.compile(r".*bytes=([0-9]+)->([0-9]+).*")
 _FIRST_RE = re.compile(r".*first=([^ ]+).*")
 
 
+_SUBPROCESS_COMPARE = """
+import json
+import os
+import sys
+from harness.cli import main
+from harness.common.process import ProcessCleanupError
+
+try:
+    code = main(sys.argv[2:])
+except ProcessCleanupError as error:
+    os.write(int(sys.argv[1]), b"1")
+    payload = {"message": str(error), "observed": error.observed}
+    os.write(int(sys.argv[1]), json.dumps(payload).encode("utf-8"))
+    raise
+raise SystemExit(code)
+"""
+
+
+def _run_owned(command: list[str], directory: str | Path) -> dict:
+    result = run_bounded(
+        Path(directory), command, output_limit=64 * 1024 * 1024, errors="strict"
+    )
+    if result["failure"]:
+        raise RuntimeError(f"sweep command aborted: {result['failure']}")
+    return result
+
+
 def _measure(selector: str) -> tuple[str, str, str]:
-    command = [
-        str(repo_layout().root / "bin" / "harness"),
-        "lift",
-        "asm-diff",
-        selector,
-        "--detail",
-        "normal",
-    ]
-    result = subprocess.run(command, check=False, capture_output=True, text=True)
+    with tempfile.TemporaryFile() as cleanup:
+        command = [
+            sys.executable,
+            "-c",
+            _SUBPROCESS_COMPARE,
+            str(cleanup.fileno()),
+            "lift",
+            "asm-diff",
+            selector,
+            "--detail",
+            "normal",
+        ]
+        try:
+            result = run_bounded(
+                Path(repo_layout().root),
+                command,
+                output_limit=64 * 1024 * 1024,
+                errors="strict",
+                pass_fds=(cleanup.fileno(),),
+            )
+        finally:
+            cleanup.seek(0)
+            retained = cleanup.read()
+            if retained:
+                error = ProcessCleanupError(
+                    "isolated comparison cleanup is unconfirmed"
+                )
+                try:
+                    payload = json.loads(retained[1:])
+                    error = ProcessCleanupError(payload["message"])
+                    error.observed = payload["observed"]
+                except (KeyError, TypeError, ValueError):
+                    error.add_note("comparison cleanup details could not be decoded")
+                raise error
+    if result["failure"]:
+        raise RuntimeError(f"sweep comparison aborted: {result['failure']}")
     lines = [
         line
-        for line in (result.stdout + result.stderr).splitlines()
+        for line in (result["stdout"] + result["stderr"]).splitlines()
         if _LINE_RE.match(line)
     ]
     line = lines[-1] if lines else ""
@@ -161,6 +219,8 @@ def _prepare_fast(source: Path) -> _FastContext | None:
             commands, directory = [single], str(directory)
         else:
             commands, directory = command_and_cwd
+    except ProcessCleanupError:
+        raise
     except Exception:
         return None
     if not commands:
@@ -174,16 +234,10 @@ def _measure_compiled(context: _FastContext) -> tuple[str, str, str]:
     from harness.match._asm_diff_run import _asm_diff_compare
 
     for command in context.commands:
-        compile_result = subprocess.run(
-            command,
-            cwd=context.directory,
-            check=False,
-            capture_output=True,
-            text=True,
-        )
-        if compile_result.returncode != 0:
+        compile_result = _run_owned(command, context.directory)
+        if compile_result["exit_code"] != 0:
             raise RuntimeError(
-                (compile_result.stdout + compile_result.stderr).strip()[-400:]
+                (compile_result["stdout"] + compile_result["stderr"]).strip()[-400:]
             )
     payload = _asm_diff_compare(context.repo, context.request, context.resolved)
     instructions = payload.get("instruction_count") or {}
@@ -213,6 +267,7 @@ def _run(args: argparse.Namespace) -> int:
     best_file: Path | None = None
     best_insn = -1
     backup: Path | None = None
+    cleanup_unconfirmed = False
     try:
         descriptor, name = tempfile.mkstemp()
         os.close(descriptor)
@@ -228,6 +283,8 @@ def _run(args: argparse.Namespace) -> int:
             if context is not None:
                 try:
                     insns, bytes_text, first = _measure_compiled(context)
+                except ProcessCleanupError:
+                    raise
                 except Exception as error:
                     print(f"  fast route declined: {error}")
                     context = None
@@ -242,14 +299,21 @@ def _run(args: argparse.Namespace) -> int:
                 best_insn = int(matched)
                 best_file = variant
         return 0
+    except ProcessCleanupError as error:
+        cleanup_unconfirmed = True
+        recovery = f"source={source}; PRE={backup}"
+        error.add_note(f"sweep recovery retained; {recovery}")
+        print(f"shape-sweep: cleanup unconfirmed; retained {recovery}", file=sys.stderr)
+        raise
     finally:
-        if keep_best and best_file is not None:
-            shutil.copyfile(best_file, source)
-            print(f"shape-sweep: kept best variant {best_file.name}")
-        elif backup is not None:
-            shutil.copyfile(backup, source)
-        if backup is not None:
-            backup.unlink(missing_ok=True)
+        if not cleanup_unconfirmed:
+            if keep_best and best_file is not None:
+                shutil.copyfile(best_file, source)
+                print(f"shape-sweep: kept best variant {best_file.name}")
+            elif backup is not None:
+                shutil.copyfile(backup, source)
+            if backup is not None:
+                backup.unlink(missing_ok=True)
 
 
 def build_parser() -> argparse.ArgumentParser:

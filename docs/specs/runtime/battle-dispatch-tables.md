@@ -23,4 +23,4 @@ local table, scales an unsigned-byte selector by four, and dispatches through
 `jalr` with a `nop` delay slot. This proves a fixed-width dispatch-table
 consumer fact only; it does not establish a semantic symbol name.
 
-Naming collection policy stays in the [agent tool guide](../../agents/tool-usage.md#symbol-naming-opportunities).
+Naming collection policy stays in the [agent tool guide](../../agents/tool-usage.md#naming-facts-and-checks).

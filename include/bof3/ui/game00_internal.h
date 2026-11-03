@@ -219,8 +219,10 @@ u8 func_801C3B78(s32 arg0, s32 arg1, u8 arg2, u8 arg3);
 s32 func_801C364C(s32 arg0, s32 arg1, s32 arg2);
 /* Reference-scaled position checks of the same active-record range test as
  * func_801BDD58; the third argument is taken as a signed 16-bit reference. */
-u8 func_801C4040(s32 x, s32 y, s16 reference);
-u8 func_801C41D0(s32 x, s32 y, s16 reference);
+/* @source 0x801C4040 */
+u8 isPositionRejectedForZeroSelector(s32 x, s32 y, s16 reference);
+/* @source 0x801C41D0 */
+u8 isPositionRejectedForNonzeroSelector(s32 x, s32 y, s16 reference);
 u8 func_801C476C(s32 arg0, s32 arg1, u8 arg2, u8 arg3);
 u8 func_801C48FC(s32 arg0, s32 arg1, u8 arg2, u8 arg3);
 u8 func_801C6FD4(s16 arg0, s16 arg1);
@@ -396,7 +398,7 @@ extern GameEntry0StateHandler D_801CD120[];
  * handler, whose entries are the sibling update routines 0x801B3768 and
  * 0x801B3A3C. */
 /* @source 0x801CD1B0 @kind table */
-extern GameEntry0StateHandler D_801CD1B0[];
+extern GameEntry0StateHandler workFlags02HandlerPairTable[];
 /* @source 0x801CD130 @kind table */
 extern GameEntry0StateHandler D_801CD130[];
 /* @source 0x801CD330 @kind table */

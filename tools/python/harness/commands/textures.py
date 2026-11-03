@@ -108,6 +108,7 @@ def build_parser() -> argparse.ArgumentParser:
             "query",
             "unpack",
             "pack",
+            "frame",
             "verify",
             "coverage",
             "package",

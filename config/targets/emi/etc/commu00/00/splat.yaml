@@ -107,11 +107,13 @@ segments:
     - '@source: src/bof3/ui/func_801F1110_commu00.c'
     - '@behavior: Marks the scratch task active and stores the variant-selected label word on the indexed task: 0xC009 for rotation byte 0, 0xC00B or 0xD4 for rotation byte 1 depending on the shared flag-bank probe, and 0xD5 for every other rotation byte.'
   - - 9732
-    - asm
+    - c
     - setVariantTaskStatus
+    - '@source: src/bof3/ui/setVariantTaskStatus.c'
   - - 9812
-    - asm
+    - c
     - activateTaskStatusC00A
+    - '@source: src/bof3/ui/activateTaskStatusC00A.c'
   - - 9876
     - c
     - selectUiMode14

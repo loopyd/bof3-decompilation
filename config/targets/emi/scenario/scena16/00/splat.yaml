@@ -27,8 +27,9 @@ segments:
   vram: 2149543056
   subsegments:
   - - 144
-    - asm
+    - c
     - dispatchPrimaryState
+    - '@source: src/bof3/scenario/dispatchPrimaryState_scena16.c'
   - - 204
     - asm
     - bootPrimaryState
@@ -43,8 +44,9 @@ segments:
     - '@source: src/bof3/scenario/seedRouteEnterState3_scena16.c'
     - '@behavior: Seeds one routed setup path: arms the shared halfword channels D_801492D8 and D_8014932C with 0x100, clears D_801492DC and D_801492DA, runs func_8015C100 and, when func_8015B5D4(D_8014686C, 1) reports success as zero, clears the effect bank D_8014832E, runs func_8015B580(D_8014686C, 1) and enters secondary state 3 by storing 3 in D_80146874. D_8014686C is read once per call.'
   - - 688
-    - asm
+    - c
     - seedRouteEnterState2
+    - '@source: src/bof3/scenario/seedRouteEnterState2_scena16.c'
   - - 816
     - c
     - func_801F6F30
@@ -56,8 +58,9 @@ segments:
     - '@source: src/bof3/scenario/dispatchSecondaryState_scena16.c'
     - '@behavior: Dispatches through the secondary SCENA16 state table: loads the signed front-end state byte D_80146874 with a signed byte load, scales it by four onto the overlay-local handler table secondaryStateTable (0x801F8558) and calls the selected handler with jalr and no arguments; reads no other memory and writes none.'
   - - 1408
-    - asm
+    - c
     - noopSecondaryState
+    - '@source: src/bof3/scenario/noopSecondaryState_scena16.c'
   - - 1416
     - c
     - finalizeSecondaryPath
@@ -93,14 +96,17 @@ segments:
     - asm
     - returnZero3
   - - 6064
-    - asm
+    - c
     - clampPaletteChannels
+    - '@source: src/bof3/scenario/clampPaletteChannels.c'
   - - 6236
-    - asm
+    - c
     - copyPaletteBlock
+    - '@source: src/bof3/scenario/copyPaletteBlock_scena16.c'
   - - 6316
-    - asm
+    - c
     - resetEffectBank
+    - '@source: src/bof3/scenario/resetEffectBank_scena16.c'
   - - 6448
     - asm
     - noopRecordHandler
