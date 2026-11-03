@@ -46,6 +46,11 @@ extern void (*D_801E1D8C[])(void);
 extern void (*D_801E1F78[])(void);
 extern void (*D_801E1F44[])(void);
 extern u16 D_801E1DA0[]; /* @source 0x801E1DA0 @kind data */
+typedef struct Area030StepEntry {
+  s32 first;
+  s32 second;
+} Area030StepEntry;
+extern Area030StepEntry D_801E1D58[]; /* @source 0x801E1D58 @kind table */
 extern u8 D_80143FEC[];   /* @source 0x80143FEC @kind unknown */
 extern u8 D_80144124[];   /* @source 0x80144124 @kind unknown */
 extern u8 modeByte;      /* @source 0x80144125 @kind unknown */

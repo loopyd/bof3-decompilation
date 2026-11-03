@@ -525,6 +525,12 @@ or unreviewed boundary change. m2ctx needs declarations/types/prototypes/macros/
 not unrelated bodies/static data that shift rodata. GNU assembler GTE spelling may
 use exact `.word` only in generated/SDK assembly, never C matching technique.
 
+Read the effective address of a dense symbol load, not the printed base. A
+`lui at,0x8015` with the displacement `0x930C` resolves to `0x8014930C` because the
+displacement is sign-extended, while `0x8015930C` would need the base `0x8016`. The
+same displacement therefore appears under two different bases, and a misnamed symbol
+still builds and links; the map and binding addresses are what settle it.
+
 A Splat `asm` span is not automatically code. Disassemble the span against the target
 binary before treating it as a lift target:
 `bin/objdump -D -b binary -m mips:isa32 -EL --adjust-vma=<segment va>

@@ -87,8 +87,9 @@ segments:
     - func_801D210C
     - '@source: src/bof3/world/func_801D210C.c'
   - - 6132
-    - asm
+    - c
     - func_801D23F4
+    - '@source: src/bof3/world/func_801D23F4.c'
   - - 6640
     - c
     - func_801D25F0

@@ -17,6 +17,7 @@ sources = [
     "src/bof3/world/dispatchCompanion.c",
     "src/bof3/world/func_801D11C0_area03004.c",
     "src/bof3/world/func_801D20C8.c",
+    "src/bof3/world/func_801D23F4.c",
     "src/bof3/world/func_801D210C.c",
     "src/bof3/world/func_801D12C8_area03004.c",
     "src/bof3/world/func_801D1538.c",
