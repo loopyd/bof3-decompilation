@@ -23,6 +23,7 @@ TOOL_TOKENS: dict[str, tuple[str, ...]] = {
     "agent-context": ("agent", "context"),
     "analysis-readiness": ("analysis", "readiness"),
     "asm-diff": ("lift", "asm-diff"),
+    "asm-compare": ("lift", "asm-compare"),
     "bof3-disk": ("media", "disc"),
     "build": ("build",),
     "byte-match": ("lift", "byte-match"),

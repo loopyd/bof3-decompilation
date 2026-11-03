@@ -260,6 +260,9 @@ DOMAINS: Mapping[str, Domain] = {
         "target-qualified one-function lifting loop",
         actions={
             "asm-diff": _lift("asm-diff", "compare one authored lift's assembly"),
+            "asm-compare": _lift(
+                "asm-compare", "print aligned original and current assembly"
+            ),
             "byte-match": _lift("byte-match", "compare one authored lift's bytes"),
             "m2c": _lift(
                 "m2c",
@@ -459,6 +462,12 @@ DOMAINS: Mapping[str, Domain] = {
                 "harness.commands.textures",
                 kind="passthrough",
                 example="bin/harness textures pack out/textures/first --output out/textures/packed --json",
+            ),
+            "frame": Action(
+                "publish a rectangle source-frame derivative",
+                "harness.commands.textures",
+                kind="passthrough",
+                example="bin/harness textures frame EDIT_PACKAGE --asset RESOURCE_ID --context CONTEXT.json --output NEW_DIRECTORY",
             ),
             "verify": Action(
                 "report independent graphics verification properties",

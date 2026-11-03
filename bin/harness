@@ -36,7 +36,8 @@ case "$domain $action" in
         ;;
     # `build variants` reached the fixed-interpreter arm above; every other
     # build request keeps the default interpreter with the setup hint.
-    "build "* | "lift asm-diff" | "lift byte-match" | "lift m2c" | \
+    "build "* | "lift asm-diff" | "lift asm-compare" | "lift byte-match" | \
+        "lift m2c" | \
         "lift m2ctx" | "lift promote" | "lift status" | "lift next" | \
         "source splat" | "analysis rizin" | "analysis spimdisasm")
         missing_hint='run `just setup` first'

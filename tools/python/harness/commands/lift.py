@@ -25,13 +25,19 @@ from ..match._asm_diff_payload import AsmDiffRequest
 from ..match.asm_diff import run_asm_diff_one
 from ..match.bundle import write_bundle
 from ..output import add_detail_argument, resolve_detail
-from ._asm_diff_output import format_asm_diff_llm, format_asm_diff_summary
+from ._asm_diff_output import (
+    format_asm_diff_llm,
+    format_asm_diff_summary,
+    format_asm_side_by_side,
+)
 from ._lift_m2c import run_m2c, run_m2ctx
 
 
 def _example(command: str) -> str:
     if command == "m2c":
         return "bin/harness lift m2c exe/logo@0x801CE758 -o candidate.c"
+    if command == "asm-compare":
+        return "bin/harness lift asm-compare exe/logo@0x801CE758 --context 3"
     return f"bin/harness lift {command} exe/logo@0x801CE758"
 
 
@@ -183,6 +189,16 @@ def run_asm_diff(args: argparse.Namespace) -> int:
     )
 
 
+def run_asm_compare(args: argparse.Namespace) -> int:
+    function, manifest, source = resolve_function_selector(args.function)
+    source = _require_lifted_source(function, source)
+    payload = _run_match(function, manifest, source, diagnostics=True)
+    print(
+        format_asm_side_by_side(payload, root=repo_layout().root, context=args.context)
+    )
+    return 0 if payload["exact_match"] else 1
+
+
 def run_byte_match(args: argparse.Namespace) -> int:
     function, manifest, source = resolve_function_selector(args.function)
     source = _require_lifted_source(function, source)
@@ -270,6 +286,15 @@ def main(argv: list[str] | None = None) -> int:
         parser.set_defaults(
             handler=run_asm_diff if command == "asm-diff" else run_byte_match
         )
+    elif command == "asm-compare":
+        parser.add_argument("function", nargs="?", help=FUNCTION_ID_HELP)
+        parser.add_argument(
+            "--context",
+            type=int,
+            default=None,
+            help="show differing rows plus this many equal rows each side; default is every row",
+        )
+        parser.set_defaults(handler=run_asm_compare)
     elif command == "promote":
         parser.add_argument("function", nargs="?", help=FUNCTION_ID_HELP)
         parser.add_argument("candidate", nargs="?")

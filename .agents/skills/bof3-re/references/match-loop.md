@@ -8,6 +8,28 @@ the [first-source route](#first-source). Diagnose `first=`, classify through the
 fix and rerun normal diff. Revert percentage regressions immediately. Use full diff
 only for first/ambiguous diagnosis; partial catalogs cannot replace live diagnosis.
 
+## Comparison views
+
+Three views read the same native diff. Pick one before editing.
+
+| Command | Shows |
+| --- | --- |
+| `bin/harness lift asm-diff TARGET@0xADDRESS` | summary plus the first hunk |
+| `bin/harness lift asm-diff TARGET@0xADDRESS --detail full` | the complete patch |
+| `bin/harness lift asm-compare TARGET@0xADDRESS` | every original and current instruction as aligned, numbered rows |
+
+In `asm-compare` the left column is the original and the right column is the
+current build. A differing row ends with `<<<`; `--` marks a side that has no
+instruction at that point. `--context N` keeps differing rows plus N equal rows
+on each side. Exit 0 means byte match, 1 means differences, 2 means the request
+failed.
+
+Reach for `asm-compare` when the score or a patch hunk does not explain the
+difference: saved-register, insertion and scheduling drift read as a shifted
+block in a patch, while the aligned rows show which side gained the instruction
+and what stayed equal around it. Discovery of further actions: `bin/harness lift
+--help`.
+
 ## First source
 
 For genuinely absent C, require parent admission for the selected source. Pin original
@@ -58,7 +80,8 @@ delay slot, prove branch operands and liveness; never introduce a clobber.
 
 Use `lift sweep` for eligible clean-C alternatives without a call or variant quota.
 No per-variant `asm-diff`/`byte-match` loop or local Python/shell compile/
-compare harness. In-process sweep resolves comparison context/canonical compile
+compare harness. Reading one comparison needs no script: `lift asm-compare`
+renders the aligned rows. In-process sweep resolves comparison context/canonical compile
 command once, then compiles/compares each variant. Each variant rewrites/relinks.
 Use `--subprocess` only for deliberate legacy reproduction.
 
