@@ -236,6 +236,12 @@ the original reuses one cursor load across stores that the current build reloads
 3. Judge argument width from the mask. `andi 0xffff` means a `u16` parameter; a
    cast to `s16` emits `sll`/`sra` instead. Widening a shared prototype is safe when
    the existing exact callers still pass whole-number constants.
+4. For a run of consecutive word clears that shares one cursor load, take a `u32*`
+   local and index by word: `words = (u32*)D_x; words[24] = 0u;`. A `u8*` local with
+   byte offsets emits the same stores yet blocks the delay-slot fill of the call
+   that follows the run, leaving a `nop` where the original has the last store.
+5. Store a negative byte constant through an `s8*` pointer. `(u8)-100` folds to 156
+   and emits `li ...,156` where the original has `li ...,-100`.
 
 ## Allocator-sensitive functions
 

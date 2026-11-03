@@ -98,8 +98,9 @@ segments:
     - func_801D2978
     - '@source: src/bof3/world/func_801D2978.c'
   - - 7612
-    - asm
+    - c
     - func_801D29BC
+    - '@source: src/bof3/world/func_801D29BC.c'
   - - 7904
     - c
     - func_801D2AE0
@@ -112,8 +113,9 @@ segments:
     - asm
     - func_801D2C34
   - - 9796
-    - asm
+    - c
     - func_801D3244
+    - '@source: src/bof3/world/func_801D3244.c'
   - - 10072
     - c
     - func_801D3358

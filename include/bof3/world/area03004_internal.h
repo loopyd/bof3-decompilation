@@ -46,6 +46,7 @@ extern void (*D_801E1D8C[])(void);
 extern void (*D_801E1F78[])(void);
 extern void (*D_801E1F44[])(void);
 extern u16 D_801E1DA0[]; /* @source 0x801E1DA0 @kind data */
+extern u8 D_80143FEC[];   /* @source 0x80143FEC @kind unknown */
 extern u8 D_80144124[];   /* @source 0x80144124 @kind unknown */
 extern u8 modeByte;      /* @source 0x80144125 @kind unknown */
 extern u8 D_80145E93;    /* @source 0x80145E93 @kind unknown */
@@ -466,7 +467,7 @@ void func_801D1B88(s16 arg0, s16 arg1, s16 arg2, u8 arg3);
 void queueIconStrip(s16 arg0, s16 arg1, u8 arg2, s8 arg3);
 void func_801D2AE0(void);
 void func_801D2C34(s16 arg0, s16 arg1, s8 arg2, u8 arg3);
-void func_801D3244(s16 arg0, s16 arg1, u8 arg2, s8 arg3, u8 arg4, s8 arg5);
+void func_801D3244(s16 arg0, s16 arg1, s32 arg2, s8 arg3, u8 arg4, u8 arg5);
 void advancePanelScroll(void);
 void func_801D6F08(void);
 void seedMenuScratch(void);
