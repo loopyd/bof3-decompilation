@@ -52,6 +52,21 @@ extern void (*D_801E1D8C[])(void);
 extern void (*D_801E1F78[])(void);
 extern void (*D_801E1F44[])(void);
 extern u16 D_801E1DA0[]; /* @source 0x801E1DA0 @kind data */
+typedef struct Area030LinePair {
+  u32 tag;
+  u8 r0;
+  u8 g0;
+  u8 b0;
+  u8 pad_07;
+  s16 x0;
+  s16 y0;
+  s16 x1;
+  s16 y1;
+  s16 x2;
+  s16 y2;
+  s16 x3;
+  s16 y3;
+} Area030LinePair;
 typedef struct Area030StepEntry {
   s32 first;
   s32 second;
@@ -382,6 +397,7 @@ void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
 int  func_8017E3F4(char* buffer, char* fmt, ...);
 void func_801D195C(s16 arg0, s16 arg1);
 void func_801D18CC(s16 arg0, s16 arg1, u8 arg2);
+void func_8017A9A4(void* arg0);
 /* Target-local icon-row/numeric-label drawer at 0x801E1320: the AREA030 panel
  * step calls it with the constant top-left corner (176, 156). */
 void func_801E1320(s16 x, s16 y);
@@ -427,7 +443,7 @@ void func_801AE3F0(u16 arg0, u16 arg1, u32 arg2, u32 arg3, u32 arg4,
  * the entry-table pointer 0x80143FC8 in its fifth stack argument, and reports
  * a byte-valued match. Body not lifted in this target. */
 u8 func_801BDD58(s32 x, s32 y, s16 reference, s32 range, void* work);
-s16  func_8015477C(u16 arg0, u16 arg1);
+s16  func_8015477C(s32 arg0, s32 arg1);
 s32  func_801E0ABC(s32 arg0, s32 arg1);
 void func_801E19CC(s16 arg0, s16 arg1);
 s32  func_801E1C10(void);

@@ -27,6 +27,7 @@ sources = [
     "src/bof3/world/func_801D1744_area03004.c",
     "src/bof3/world/func_801D1818_area03004.c",
     "src/bof3/world/func_801D18CC_area03004.c",
+    "src/bof3/world/func_801D195C.c",
     "src/bof3/world/func_801D25F0.c",
     "src/bof3/world/func_801D2978.c",
     "src/bof3/world/func_801D29BC.c",

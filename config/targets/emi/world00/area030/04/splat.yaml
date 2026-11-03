@@ -69,8 +69,12 @@ segments:
     - '@source: src/bof3/world/func_801D18CC_area03004.c'
     - '@behavior: Builds the AREA030 8x8 sprite primitive in place at the shared primitive cursor g_PrimCursor: SetSprt8 stamps the tag, the colour bytes r0/g0/b0 are set to the gray 0x80, the CLUT halfword to 0x7A40, the texture cell to (u0,v0) = (0xB8,0x48) and the position to the caller halfwords (arg0,arg1); then GpuAppendPrim appends the 0x10-byte primitive under the caller graphics-mode byte arg2.'
   - - 3420
-    - asm
+    - c
     - func_801D195C
+    - '@source: src/bof3/world/func_801D195C.c'
+  - - 3856
+    - asm
+    - func_801D1B10
   - - 3976
     - asm
     - func_801D1B88
