@@ -1180,4 +1180,18 @@ extern u8 battleCommandEntryTable[];
 /* @source 0x801EB4E8 @kind unknown */
 extern Battle03EnemyWork* battleCurrentEnemyWorkState;
 
+/* Emit one battle dispatcher: invoke the handler that the work-object byte at the
+ * named slot selects from a local pointer table. Put each emitted function's
+ * metadata block directly above its standalone invocation, so every member keeps
+ * its own record. */
+#define BATTLE_DISPATCH_WORK_SLOT_ONE(name, table)                             \
+  void name(void) {                                                            \
+    table[battleWork[1]]();                                                    \
+  }
+
+#define BATTLE_DISPATCH_WORK_SLOT_TWO(name, table)                             \
+  void name(void) {                                                            \
+    table[battleWork[2]]();                                                    \
+  }
+
 #endif

@@ -670,6 +670,7 @@ segments:
   - - 60956
     - c
     - dispatchLocalByte2Table
+    - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 61024
     - asm
     - func_801DFA60
@@ -681,6 +682,7 @@ segments:
   - - 61404
     - c
     - dispatchScratchByte2Table
+    - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 61472
     - c
     - copyScratchToLocalWork
@@ -775,7 +777,7 @@ segments:
   - - 68208
     - c
     - dispatchState2ClassTable
-    - '@source: src/bof3/battle/dispatchState2ClassTable.c'
+    - '@source: src/bof3/battle/battle03DispatchTables.c'
     - '@behavior: Dispatches the current local state-2 class byte through its table.'
   - - 68276
     - asm
@@ -828,6 +830,7 @@ segments:
   - - 69476
     - c
     - dispatchState2EventTable
+    - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 69544
     - c
     - func_801E1BA8
@@ -844,6 +847,7 @@ segments:
   - - 69848
     - c
     - dispatchState2FollowupTable
+    - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 69916
     - c
     - submitEffectThenAdvanceByte2WhenLoaderReady
@@ -862,7 +866,7 @@ segments:
   - - 70268
     - c
     - dispatchDefaultClassTable
-    - '@source: src/bof3/battle/dispatchDefaultClassTable.c'
+    - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 70336
     - c
     - copySelectedWorkToQueuedSlot
@@ -950,7 +954,7 @@ segments:
   - - 75208
     - c
     - dispatchPresentationState1
-    - '@source: src/bof3/battle/dispatchPresentationState1.c'
+    - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 75276
     - c
     - func_801E320C
@@ -959,6 +963,7 @@ segments:
   - - 75436
     - c
     - dispatchByte2TableB3e4
+    - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 75504
     - c
     - dispatchByte3TableB3ec
@@ -1011,6 +1016,7 @@ segments:
   - - 77312
     - c
     - dispatchByte2TableB404
+    - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 77380
     - asm
     - func_801E3A44
@@ -1022,6 +1028,7 @@ segments:
   - - 77672
     - c
     - dispatchByte2TableB40c
+    - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 77740
     - c
     - resetScratchByte4Set2
@@ -1099,6 +1106,7 @@ segments:
   - - 81640
     - c
     - dispatchByte2TableB460
+    - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 81708
     - asm
     - func_801E4B2C
@@ -1135,6 +1143,7 @@ segments:
   - - 82788
     - c
     - dispatchByte2TableB478
+    - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 82856
     - asm
     - func_801E4FA8
