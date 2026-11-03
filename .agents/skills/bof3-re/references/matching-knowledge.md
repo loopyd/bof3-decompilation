@@ -16,6 +16,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 [narrow load sharing](#narrow-load-sharing-and-real-value-reuse),
 [halfword read-modify-write](#halfword-read-modify-write),
 [scratch cursor groups](#scratch-cursor-group-variables),
+[shared and branch-local loads](#shared-and-branch-local-cursor-loads),
 [runtime](#runtime-evidence), [storage](#storage-and-analysis-context),
 [failure/capture](#failure-and-capture).
 
@@ -215,6 +216,22 @@ and the current build keeps one register for all of them.
    store also reproduces a load-delay `nop` that a merged read removes.
 5. Confirm with live asm-diff. Register choice inside later groups can still
    differ; the dump explains which quantity moved.
+
+### Shared and branch-local cursor loads
+
+Use when the body and size match but a branch target is off by eight bytes, or when
+the original reuses one cursor load across stores that the current build reloads.
+
+1. When a byte store and the following word stores in the original share a single
+   cursor load, write both through one local pointer. Reading the volatile pointer
+   cell directly reloads it for every use, which adds a `lui`/`lw` pair per store.
+2. When a reload runs on one arm only, make it the last statement of that arm.
+   Written after the `if`, both arms share it and the branch target lands eight
+   bytes before the original target. Size stays equal because the instruction count
+   does not change; only the target exposes the difference.
+3. Judge argument width from the mask. `andi 0xffff` means a `u16` parameter; a
+   cast to `s16` emits `sll`/`sra` instead. Widening a shared prototype is safe when
+   the existing exact callers still pass whole-number constants.
 
 ## Allocator-sensitive functions
 

@@ -379,7 +379,7 @@ void func_801D799C(s16 arg0, s16 arg1, u8 arg2, u8 arg3);
 void func_801D934C(u16 arg0, u16 arg1, u16 arg2, u16 arg3);
 void func_801D95C4(u16 arg0, u16 arg1, u16 arg2, u16 arg3, u8 arg4);
 void func_801D9534(s16 arg0, u16 arg1, s16 arg2, s16 arg3, u8 arg4);
-void func_801D7C10(s16 arg0, s16 arg1, u8 arg2);
+void func_801D7C10(u16 arg0, u16 arg1, u8 arg2);
 void func_801D88E0(s16 arg0, s16 arg1);
 void func_801D7EB0(s16 arg0, s16 arg1);
 void func_801D8364(s16 arg0, s16 arg1);

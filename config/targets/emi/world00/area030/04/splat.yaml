@@ -175,8 +175,13 @@ segments:
     - func_801D42A0
     - '@source: src/bof3/world/func_801D42A0.c'
   - - 14052
-    - asm
+    - c
     - func_801D42E4
+    - '@source: src/bof3/world/func_801D42E4.c'
+  - - 14200
+    - c
+    - func_801D4378
+    - '@source: src/bof3/world/func_801D4378.c'
   - - 14704
     - c
     - func_801D4570
