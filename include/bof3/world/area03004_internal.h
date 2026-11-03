@@ -46,6 +46,7 @@ extern Area030EntryRecord D_80143FC8[]; /* @source 0x80143FC8 @kind bss */
 extern u8  D_80144952;    /* @source 0x80144952 @kind unknown */
 /* Local AREA030 scratch-mode handler table indexed by scratch cursor byte 1. */
 extern void (*D_801E1D80[])(void);
+extern void (*D_801E1D10[])(void);
 extern void (*D_801E1D20[])(void);
 extern void (*D_801E1D78[])(void);
 extern void (*D_801E1D8C[])(void);
@@ -544,5 +545,18 @@ void configureSpriteClut(s16 arg0, s16 arg1, u8 arg2);
 void appendDimTile(void);
 
 #define WORLD00_AREA030_SCRATCH_PTR PSX_REF(volatile u8*, 0x1f800044u)
+
+/* Emit one AREA030 dispatcher: invoke the handler that the scratch work byte at
+ * offset 1 selects from a local pointer table. Put each emitted function's
+ * metadata block directly above its standalone invocation. */
+#define WORLD00_AREA030_DISPATCH_SLOT_ONE(name, table)                         \
+  void NO_SIBLING_CALLS name(void) {                                           \
+    table[D_1F800044[1]]();                                                    \
+  }
+
+#define WORLD00_AREA030_DISPATCH_SLOT_TWO(name, table)                         \
+  void NO_SIBLING_CALLS name(void) {                                           \
+    table[D_1F800044[2]]();                                                    \
+  }
 
 #endif

@@ -73,8 +73,12 @@ segments:
     - func_801D195C
     - '@source: src/bof3/world/func_801D195C.c'
   - - 3856
-    - asm
+    - c
     - func_801D1B10
+    - '@source: src/bof3/world/area03004DispatchSlotOne.c'
+  - - 3924
+    - asm
+    - func_801D1B54
   - - 3976
     - asm
     - func_801D1B88
@@ -85,7 +89,7 @@ segments:
   - - 5320
     - c
     - func_801D20C8
-    - '@source: src/bof3/world/func_801D20C8.c'
+    - '@source: src/bof3/world/area03004DispatchSlotOne.c'
   - - 5388
     - c
     - func_801D210C
@@ -104,7 +108,7 @@ segments:
   - - 7544
     - c
     - func_801D2978
-    - '@source: src/bof3/world/func_801D2978.c'
+    - '@source: src/bof3/world/area03004DispatchSlotOne.c'
   - - 7612
     - c
     - func_801D29BC
@@ -116,7 +120,7 @@ segments:
   - - 8176
     - c
     - func_801D2BF0
-    - '@source: src/bof3/world/func_801D2BF0.c'
+    - '@source: src/bof3/world/area03004DispatchSlotOne.c'
   - - 8244
     - asm
     - func_801D2C34
@@ -127,7 +131,7 @@ segments:
   - - 10072
     - c
     - func_801D3358
-    - '@source: src/bof3/world/func_801D3358.c'
+    - '@source: src/bof3/world/area03004DispatchSlotOne.c'
   - - 10140
     - c
     - func_801D339C
@@ -190,7 +194,7 @@ segments:
   - - 13984
     - c
     - func_801D42A0
-    - '@source: src/bof3/world/func_801D42A0.c'
+    - '@source: src/bof3/world/area03004DispatchSlotOne.c'
   - - 14052
     - c
     - func_801D42E4
@@ -361,7 +365,7 @@ segments:
   - - 36628
     - c
     - func_801D9B14
-    - '@source: src/bof3/world/func_801D9B14.c'
+    - '@source: src/bof3/world/area03004DispatchSlotOne.c'
     - '@behavior: dispatches the byte at offset 2 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E21E0.'
   - - 36696
     - c
@@ -755,7 +759,7 @@ segments:
   - - 62376
     - c
     - func_801DFFA8
-    - '@source: src/bof3/world/func_801DFFA8.c'
+    - '@source: src/bof3/world/area03004DispatchSlotOne.c'
     - '@behavior: dispatches the byte at offset 2 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2340.'
   - - 62444
     - c
@@ -770,7 +774,7 @@ segments:
   - - 62688
     - c
     - func_801E00E0
-    - '@source: src/bof3/world/func_801E00E0.c'
+    - '@source: src/bof3/world/area03004DispatchSlotOne.c'
     - '@behavior: dispatches the byte at offset 2 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2348.'
   - - 62756
     - asm
