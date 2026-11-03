@@ -44,6 +44,9 @@ extern void (*D_801E1D20[])(void);
 extern void (*D_801E1D78[])(void);
 extern void (*D_801E1D8C[])(void);
 extern void (*D_801E1F78[])(void);
+extern void (*D_801E1F44[])(void);
+extern u16 D_801E1DA0[]; /* @source 0x801E1DA0 @kind data */
+extern u8 D_80144124[];   /* @source 0x80144124 @kind unknown */
 extern u8 modeByte;      /* @source 0x80144125 @kind unknown */
 extern u8 D_80145E93;    /* @source 0x80145E93 @kind unknown */
 extern u32 D_80145EC4;    /* @source 0x80145EC4 @kind unknown */

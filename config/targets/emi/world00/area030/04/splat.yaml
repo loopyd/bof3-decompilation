@@ -119,8 +119,13 @@ segments:
     - func_801D3358
     - '@source: src/bof3/world/func_801D3358.c'
   - - 10140
-    - asm
+    - c
     - func_801D339C
+    - '@source: src/bof3/world/func_801D339C.c'
+  - - 10400
+    - c
+    - func_801D34A0
+    - '@source: src/bof3/world/func_801D34A0.c'
   - - 10512
     - c
     - func_801D3510
@@ -130,8 +135,9 @@ segments:
     - func_801D3574
     - '@source: src/bof3/world/func_801D3574.c'
   - - 10700
-    - asm
+    - c
     - func_801D35CC
+    - '@source: src/bof3/world/func_801D35CC.c'
   - - 10832
     - c
     - func_801D3650

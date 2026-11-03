@@ -191,9 +191,13 @@ Use when a scratch halfword is decremented or advanced and then compared.
    zero-extended load, the store truncates, and the sign extension happens after
    the store. That reproduces the usual `lhu`, `addiu`, `sh`, `sll`/`sra`, `slti`
    sequence.
-2. Do not route the value through an `s16` local. GCC copies it with `move` and
-   emits a register `slt` instead of `slti`. Do not widen it to `s32`. GCC then
-   sign-extends before the store and loses the post-store extension.
+2. When the cell is volatile and the original does not reload it, keep the
+   decremented value in an `s32` local and cast at both uses:
+   `value = *(volatile u16*)(p + n) - delta; *(volatile s16*)(p + n) = (s16)value;`
+   then `if ((s16)value < limit)`. The store then precedes the sign extension.
+   Widening without the comparison cast, or storing the uncast value, moves the
+   extension ahead of the store. An `s16` local is still wrong: GCC copies it with
+   `move` and emits a register `slt` instead of `slti`.
 3. When the original stalls on its first load, or keeps two cursor registers,
    read the cell again into a second pointer variable placed after the first
    store. See [scratch cursor group variables](#scratch-cursor-group-variables).
@@ -506,6 +510,15 @@ resolution through owning generated-layout tooling; no handwritten assembly work
 or unreviewed boundary change. m2ctx needs declarations/types/prototypes/macros/helpers,
 not unrelated bodies/static data that shift rodata. GNU assembler GTE spelling may
 use exact `.word` only in generated/SDK assembly, never C matching technique.
+
+A Splat `asm` span is not automatically code. Disassemble the span against the target
+binary before treating it as a lift target:
+`bin/objdump -D -b binary -m mips:isa32 -EL --adjust-vma=<segment va>
+--start-address=<lo> --stop-address=<hi> out/binaries/<target>.bin`. Text and table
+spans disassemble as `.word` runs or implausible instructions and belong to a data or
+rodata segment change instead. Measure span sizes from the segment list rather than
+assuming a symbol name marks a function start: one `asm` span can hold several
+functions, and its first entry can begin mid-function.
 
 ## Failure and capture
 
