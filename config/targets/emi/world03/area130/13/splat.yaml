@@ -30,8 +30,9 @@ segments:
   vram: 2149526556
   subsegments:
   - - 28
-    - asm
-    - func_801F2C1C
+    - c
+    - dispatchStateByte1Table3ed8World03Area13013_801F2C1C
+    - '@source: src/bof3/world/area13013DispatchTables.c'
   - - 96
     - asm
     - func_801F2C60
@@ -49,8 +50,9 @@ segments:
     - asm
     - func_801F30D0
   - - 1512
-    - asm
-    - func_801F31E8
+    - c
+    - dispatchStateByte1Table3ee4World03Area13013_801F31E8
+    - '@source: src/bof3/world/area13013DispatchTables.c'
   - - 1580
     - asm
     - func_801F322C

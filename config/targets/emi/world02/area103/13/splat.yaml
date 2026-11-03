@@ -27,8 +27,9 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - dispatchStateByte1Table5934World02Area10313_801F2C04
+    - '@source: src/bof3/world/area10313DispatchTables.c'
   - - 72
     - asm
     - func_801F2C48
@@ -52,8 +53,9 @@ segments:
     - asm
     - func_801F352C
   - - 2772
-    - asm
-    - func_801F36D4
+    - c
+    - dispatchStateByte1Table5948World02Area10313_801F36D4
+    - '@source: src/bof3/world/area10313DispatchTables.c'
   - - 2840
     - asm
     - func_801F3718
@@ -67,8 +69,9 @@ segments:
     - asm
     - func_801F38DC
   - - 4048
-    - asm
-    - func_801F3BD0
+    - c
+    - dispatchStateByte2Table5954World02Area10313_801F3BD0
+    - '@source: src/bof3/world/area10313DispatchTables.c'
   - - 4116
     - asm
     - func_801F3C14
@@ -127,8 +130,9 @@ segments:
     - asm
     - func_801F4E70
   - - 8960
-    - asm
-    - func_801F4F00
+    - c
+    - dispatchStateByte2Table5a28World02Area10313_801F4F00
+    - '@source: src/bof3/world/area10313DispatchTables.c'
   - - 9028
     - asm
     - func_801F4F44

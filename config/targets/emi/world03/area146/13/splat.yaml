@@ -42,8 +42,9 @@ segments:
     - asm
     - func_801F2D50
   - - 400
-    - asm
-    - func_801F2D90
+    - c
+    - dispatchStateByte1Table3b00World03Area14613_801F2D90
+    - '@source: src/bof3/world/area14613DispatchTables.c'
   - - 468
     - asm
     - func_801F2DD4
