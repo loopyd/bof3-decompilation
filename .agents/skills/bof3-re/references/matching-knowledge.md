@@ -9,10 +9,13 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 [operation scopes](#operation-scopes-and-loop-note-dependencies),
 [delay slots](#delay-slots-and-entry-copies), [representation](#representation-and-volatility),
 [allocation](#allocator-sensitive-functions), [orphan stack slots](#orphan-stack-slots),
+[named scale products](#named-scale-products),
 [compiler](#compiler-evidence), [boolean returns](#boolean-return-expansion),
 [guard scheduling](#guard-scheduling-and-value-reuse),
 [CSE and operand order](#cse-lifetimes-and-commutative-targets),
 [narrow load sharing](#narrow-load-sharing-and-real-value-reuse),
+[halfword read-modify-write](#halfword-read-modify-write),
+[scratch cursor groups](#scratch-cursor-group-variables),
 [runtime](#runtime-evidence), [storage](#storage-and-analysis-context),
 [failure/capture](#failure-and-capture).
 
@@ -27,7 +30,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Saved copy moves to entry or commutative operands stay swapped | Trace [CSE lifetimes and commutative targets](#cse-lifetimes-and-commutative-targets) |
 | Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler |
 | `lh` plus `lhu` replaces `lh` plus register copy | Trace [narrow load sharing](#narrow-load-sharing-and-real-value-reuse), known bits and later definitions |
-| Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots) |
+| Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots), then name repeated scale products (#named-scale-products) |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
 | Boolean result misses the return register; extra return copy | Trace [boolean return expansion](#boolean-return-expansion) before allocation |
 | Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt. For displaced induction setup, inspect [explicit cursors](#explicit-cursors-and-signed-bounds) |
@@ -178,6 +181,41 @@ change. Bitfields require target layout and codegen proof, not guessed packing.
 Regroup unsigned address sums through a row/base temporary when original addition
 order differs; prove value equivalence and preserve all memory events.
 
+### Halfword read-modify-write
+
+Use when a scratch halfword is decremented or advanced and then compared.
+
+1. Address the field through a plain `s16*` and keep the arithmetic in place:
+   `*half = (s16)(*half + delta);` then compare `*half`. The add stays on the
+   zero-extended load, the store truncates, and the sign extension happens after
+   the store. That reproduces the usual `lhu`, `addiu`, `sh`, `sll`/`sra`, `slti`
+   sequence.
+2. Do not route the value through an `s16` local. GCC copies it with `move` and
+   emits a register `slt` instead of `slti`. Do not widen it to `s32`. GCC then
+   sign-extends before the store and loses the post-store extension.
+3. When the original stalls on its first load, or keeps two cursor registers,
+   read the cell again into a second pointer variable placed after the first
+   store. See [scratch cursor group variables](#scratch-cursor-group-variables).
+4. Confirm with live asm-diff and the whole-function gate before retaining.
+
+### Scratch cursor group variables
+
+Use when a function reloads the same pointer cell before each store or call group
+and the current build keeps one register for all of them.
+
+1. Read the cell into its own variable at each original reload point. One variable
+   reused across groups becomes a single global pseudo, and that pseudo conflicts
+   with the registers the original used across its whole range.
+2. Read the allocator dump before changing spelling. `.greg` reports the number of
+   global pseudos, each conflict set and the register each pseudo receives.
+3. Give the variables distinct names. GCC then keeps separate quantities, so each
+   can take the register the original used. Renaming one variable in place does not
+   split it.
+4. Place each reload where the original has it. A second read after the first
+   store also reproduces a load-delay `nop` that a merged read removes.
+5. Confirm with live asm-diff. Register choice inside later groups can still
+   differ; the dump explains which quantity moved.
+
 ## Allocator-sensitive functions
 
 Same-CFG near match plus narrow probe causing spills/frame/size/save-register/
@@ -243,6 +281,27 @@ though the `USE` emits no instruction.
    Require the original frame, complete function bytes and reviewed readonly data
    for exact acceptance. Preserve semantic and memory-event equivalence; smaller
    frames or fewer `USE`s alone are not acceptance evidence.
+
+### Named scale products
+
+Use this lever when the body matches instruction for instruction but the frame is
+larger, and the body contains a repeated index scale such as `span * 3` in both a
+load and an address. The unnamed product can force a temporary that widens the
+frame without any body access to the extra bytes.
+
+1. Bind both forms before and after to the same source and compiler settings.
+   Confirm the body already matches and only the prologue and epilogue differ.
+2. Name the product once as a scalar local and index the same array symbol through
+   it in both places: `offset = span * 3;` then `D_x[offset + 2]` and
+   `&D_x[offset]`. Keep the symbol name on both uses; a pointer local used for both
+   changes the base materialisation order and emits the base late.
+3. Measure. Require the original frame, the original base load position and the
+   complete function bytes before accepting.
+
+`func_801D41E4` (47/47, 188 B) needed this after four forms: branch polarity first,
+array symbol for both row uses, then the named product. The named product also
+shrank the frame from 32 to the original 24 bytes, which no body instruction had
+shown.
 
 ## Compiler evidence
 

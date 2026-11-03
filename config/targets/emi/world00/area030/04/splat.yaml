@@ -72,23 +72,122 @@ segments:
     - asm
     - func_801D1B88
   - - 5172
-    - asm
+    - c
     - queueIconStrip
-  - - 6124
+    - '@source: src/bof3/world/queueIconStrip.c'
+  - - 5320
+    - c
+    - func_801D20C8
+    - '@source: src/bof3/world/func_801D20C8.c'
+  - - 5388
+    - c
+    - func_801D210C
+    - '@source: src/bof3/world/func_801D210C.c'
+  - - 6132
     - asm
-    - func_801D23EC
+    - func_801D23F4
+  - - 6640
+    - c
+    - func_801D25F0
+    - '@source: src/bof3/world/func_801D25F0.c'
+  - - 6728
+    - asm
+    - func_801D2648
+  - - 7544
+    - c
+    - func_801D2978
+    - '@source: src/bof3/world/func_801D2978.c'
+  - - 7612
+    - asm
+    - func_801D29BC
   - - 7904
-    - asm
+    - c
     - func_801D2AE0
+    - '@source: src/bof3/world/func_801D2AE0.c'
+  - - 8176
+    - c
+    - func_801D2BF0
+    - '@source: src/bof3/world/func_801D2BF0.c'
   - - 8244
     - asm
     - func_801D2C34
   - - 9796
     - asm
     - func_801D3244
-  - - 11576
+  - - 10072
+    - c
+    - func_801D3358
+    - '@source: src/bof3/world/func_801D3358.c'
+  - - 10140
     - asm
+    - func_801D339C
+  - - 10512
+    - c
+    - func_801D3510
+    - '@source: src/bof3/world/func_801D3510.c'
+  - - 10612
+    - c
+    - func_801D3574
+    - '@source: src/bof3/world/func_801D3574.c'
+  - - 10700
+    - asm
+    - func_801D35CC
+  - - 10832
+    - c
+    - func_801D3650
+    - '@source: src/bof3/world/func_801D3650.c'
+  - - 10884
+    - c
+    - func_801D3684
+    - '@source: src/bof3/world/func_801D3684.c'
+  - - 11000
+    - asm
+    - func_801D36F8
+  - - 11300
+    - c
+    - func_801D3824
+    - '@source: src/bof3/world/func_801D3824.c'
+  - - 11416
+    - c
+    - func_801D3898
+    - '@source: src/bof3/world/func_801D3898.c'
+  - - 11528
+    - c
+    - func_801D3908
+    - '@source: src/bof3/world/func_801D3908.c'
+  - - 11576
+    - c
     - advancePanelScroll
+    - '@source: src/bof3/world/advancePanelScroll.c'
+  - - 11704
+    - c
+    - func_801D39B8
+    - '@source: src/bof3/world/func_801D39B8.c'
+  - - 11860
+    - asm
+    - func_801D3A54
+  - - 13796
+    - c
+    - func_801D41E4
+    - '@source: src/bof3/world/func_801D41E4.c'
+  - - 13984
+    - c
+    - func_801D42A0
+    - '@source: src/bof3/world/func_801D42A0.c'
+  - - 14052
+    - asm
+    - func_801D42E4
+  - - 14704
+    - c
+    - func_801D4570
+    - '@source: src/bof3/world/func_801D4570.c'
+  - - 14840
+    - c
+    - func_801D45F8
+    - '@source: src/bof3/world/func_801D45F8.c'
+  - - 14976
+    - asm
+    - func_801D4680
   - - 20296
     - c
     - func_801D5B48

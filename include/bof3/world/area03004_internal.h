@@ -38,6 +38,34 @@ extern Area030EntryRecord D_80143FC8[]; /* @source 0x80143FC8 @kind bss */
 /* Shared CLUT-bank byte read as the trailing argument of the main-executable
  * shaded-panel helper func_801AE3F0 by the AREA030 cell drawers. */
 extern u8  D_80144952;    /* @source 0x80144952 @kind unknown */
+/* Local AREA030 scratch-mode handler table indexed by scratch cursor byte 1. */
+extern void (*D_801E1D80[])(void);
+extern void (*D_801E1D20[])(void);
+extern void (*D_801E1D78[])(void);
+extern void (*D_801E1D8C[])(void);
+extern void (*D_801E1F78[])(void);
+extern u8 modeByte;      /* @source 0x80144125 @kind unknown */
+extern u8 D_80145E93;    /* @source 0x80145E93 @kind unknown */
+extern u32 D_80145EC4;    /* @source 0x80145EC4 @kind unknown */
+extern u32 D_80145EC8;    /* @source 0x80145EC8 @kind unknown */
+extern u32 D_801440BC;    /* @source 0x801440BC @kind unknown */
+/* Per-mode pair of words copied into the AREA030 scratch record at +0x14 and +0x20. */
+typedef struct Area030ModePair { u32 first; u32 second; } Area030ModePair;
+extern Area030ModePair D_801E1D38[]; /* @source 0x801E1D38 @kind data */
+s32 func_8015477c(s32 arg0, s32 arg1);
+void func_8014dd3c(s32 arg0);
+void func_8014d6b8(s32 arg0);
+s32 func_8014daec(void);
+void func_8014d290(void);
+void func_8014d4e0(void);
+void advancePanelScroll(void);
+void func_8014f800(s32 arg0, s16 arg1, s32 arg2, u8 arg3, u32 arg4);
+/* Per-index byte and word pair consumed by the shaded panel request at 0x8014F800. */
+typedef struct Area030PanelEntry { u8 byte_00; u8 pad_01[3]; u32 word_04; u8 byte_08; u8 pad_09[3]; } Area030PanelEntry;
+extern Area030PanelEntry D_801E1E78[]; /* @source 0x801E1E78 @kind data */
+extern u8 D_801E1F20[][4]; /* @source 0x801E1F20 @kind data */
+extern u8 D_801E1F14[]; /* @source 0x801E1F14 @kind data */
+u32 func_8019601c(void);
 /* Shared palette-stage serial byte published as 1 by the AREA030 color-row
  * builder func_801D130C after it rewrites the 0x800396C0 color row. */
 extern u8  D_80145988;    /* @source 0x80145988 @kind unknown */
@@ -351,6 +379,11 @@ void func_801D799C(s16 arg0, s16 arg1, u8 arg2, u8 arg3);
 void func_801D934C(u16 arg0, u16 arg1, u16 arg2, u16 arg3);
 void func_801D95C4(u16 arg0, u16 arg1, u16 arg2, u16 arg3, u8 arg4);
 void func_801D9534(s16 arg0, u16 arg1, s16 arg2, s16 arg3, u8 arg4);
+void func_801D7C10(s16 arg0, s16 arg1, u8 arg2);
+void func_801D88E0(s16 arg0, s16 arg1);
+void func_801D7EB0(s16 arg0, s16 arg1);
+void func_801D8364(s16 arg0, s16 arg1);
+void func_801D9740(u8 arg0, u8* arg1, u8 arg2, s16 arg3);
 /* Target-local AREA030 panel drawer at 0x801E1758: the AREA030 panel steps call
  * it with the computed vertical origin and the constant 0x56. */
 void func_801E1758(s16 arg0, s16 arg1);
