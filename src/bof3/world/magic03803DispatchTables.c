@@ -1,15 +1,7 @@
 #include "bof3/bof3.h"
 
-typedef void (*BmagicMagic03803Handler)(void);
-
-/*
- * Handler-pointer table at 0x801EF9A4, the table this dispatcher indexes:
- * entries 0..6 are 0x801EF114, 0x801EF8B8, 0x801EF1AC, 0x801EF3BC,
- * 0x801EF590, 0x801EF710 and 0x801EF884. The four packed byte words at
- * 0x801EF9C0..0x801EF9CC follow them in the same 0x34-byte run, then the
- * pointers 0x801EF8FC and 0x801EF954.
- */
-extern BmagicMagic03803Handler D_801EF9A4[];
+extern void (*D_801EF9A4[])(void);
+extern void (*D_801EF9D0[])(void);
 
 /* @source 0x801EF0D0
  * @behavior Dispatches one frame of the overlay work handler from the
@@ -25,6 +17,16 @@ extern BmagicMagic03803Handler D_801EF9A4[];
  * @match 100.00
  * @residual none
  */
-void dispatchWorkByte1HandlerBmagicMagic03803_801EF0D0(void) {
-  D_801EF9A4[SPAD_PTR_SLOT(u8, 0x44u)[1]]();
-}
+BOF3_DISPATCH_WORK_SLOT_ONE(dispatchWorkByte1HandlerBmagicMagic03803_801EF0D0, D_801EF9A4);
+
+/* @source 0x801EF8B8
+ * @behavior Overlay step dispatch: reads the state byte at +2 of
+ *           the work record published at the scratchpad pointer cell
+ *           0x1F800044 and calls the handler pointer at that index of the
+ *           local handler table based at 0x801EF9D0. Takes no
+ *           arguments and returns nothing.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+BOF3_DISPATCH_WORK_SLOT_TWO(dispatchStateByte2Tablef9d0BmagicMagic03803_801EF8B8, D_801EF9D0);

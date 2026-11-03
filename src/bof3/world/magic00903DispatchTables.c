@@ -1,14 +1,6 @@
 #include "bof3/bof3.h"
 
-typedef void (*BmagicMagic00903Handler)(void);
-
-/*
- * Handler-pointer table at 0x801EF89C, the table this dispatcher indexes:
- * entry 0 = 0x801EF120, entry 1 = 0x801EF6B0, entry 2 = 0x801EF198,
- * entry 3 = 0x801EF2D4, entry 4 = 0x801EF340. The non-code words at
- * 0x801EF8B0 follow the last entry inside the same 0x38-byte run.
- */
-extern BmagicMagic00903Handler D_801EF89C[];
+extern void (*D_801EF89C[])(void);
 
 /* @source 0x801EF0DC
  * @behavior Dispatches one frame of the overlay work handler from the
@@ -24,6 +16,4 @@ extern BmagicMagic00903Handler D_801EF89C[];
  * @match 100.00
  * @residual none
  */
-void dispatchWorkByte1HandlerBmagicMagic00903_801EF0DC(void) {
-  D_801EF89C[SPAD_PTR_SLOT(u8, 0x44u)[1]]();
-}
+BOF3_DISPATCH_WORK_SLOT_ONE(dispatchWorkByte1HandlerBmagicMagic00903_801EF0DC, D_801EF89C);
