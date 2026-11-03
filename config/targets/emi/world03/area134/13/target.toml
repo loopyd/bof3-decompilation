@@ -10,7 +10,7 @@ load_address = 0x801F2C00
 sources = []
 support_sources = [
     "src/bof3/world/advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68.c",
-    "src/bof3/world/dispatchStateByte1Table5828World03Area13413_801F4344.c",
+    "src/bof3/world/area13413DispatchTables.c",
     "src/bof3/world/setScratchStateToMode1WhenPadMatchesWorld03Area13413_801F3E50.c",
     "src/bof3/world/findFreeWorkRecordAt800E4800World03Area13413_801F4938.c",
     "src/bof3/world/resetScratchStateToMode1World03Area13413_801F35A4.c",
@@ -36,9 +36,6 @@ support_sources = [
     "src/bof3/support/area134_13_psyq.c",
     "src/bof3/world/area13413_countdown.c",
     "src/bof3/world/clearScratchStateAndAreaStatusWorld03Area13413_801F31B8.c",
-    "src/bof3/world/dispatchStateByte1Table57a4World03Area13413_801F3560.c",
-    "src/bof3/world/dispatchStateByte1Table5804World03Area13413_801F3E0C.c",
-    "src/bof3/world/dispatchStateByte1Table581cWorld03Area13413_801F41D0.c",
     "src/bof3/world/advanceWorkWordAndSetScratchStateToMode7World03Area13413_801F2F3C.c",
     "src/bof3/world/advanceWorkWordAndSetScratchStateToMode11World03Area13413_801F30E4.c",
 ]

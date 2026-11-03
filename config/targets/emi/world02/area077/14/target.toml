@@ -9,9 +9,8 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
-    "src/bof3/world/dispatchStateByte2Table6284World02Area07714_801F4CDC.c",
-    "src/bof3/world/dispatchStateByte2Table62a8World02Area07714_801F52F8.c",
     "src/bof3/world/setTwoWorld02Area07714_801F5DE8.c",
+    "src/bof3/world/area07714DispatchTables.c",
     "src/bof3/world/setWorld02Area07714_801F61DC.c",
     "src/bof3/world/invokeHelperArgWorld02Area07714_801F60A4.c",
     "src/bof3/world/invokeHelperArgWorld02Area07714_801F6084.c",
@@ -24,8 +23,6 @@ support_sources = [
     "src/bof3/world/setWorkHalfword320AndIncrementWorkByte2World02Area07714_801F533C.c",
     "src/bof3/world/initArea07714State.c",
     "src/bof3/world/retreatCounterAndQueueCue200World02Area07714_801F5D80.c",
-    "src/bof3/world/dispatchStateByte1Table6268World02Area07714_801F3E04.c",
-    "src/bof3/world/dispatchStateByte1Table6270World02Area07714_801F4034.c",
     "src/bof3/support/area077_14_psyq.c",
 ]
 psyq_source = "src/bof3/support/area077_14_psyq.c"

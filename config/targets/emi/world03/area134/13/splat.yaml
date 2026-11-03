@@ -27,8 +27,9 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - dispatchStateByte1Table5744World03Area13413_801F2C04
+    - '@source: src/bof3/world/area13413DispatchTables.c'
   - - 72
     - asm
     - func_801F2C48
@@ -113,6 +114,7 @@ segments:
   - - 2400
     - c
     - dispatchStateByte1Table57a4World03Area13413_801F3560
+    - '@source: src/bof3/world/area13413DispatchTables.c'
   - - 2468
     - c
     - resetScratchStateToMode1World03Area13413_801F35A4
@@ -192,7 +194,7 @@ segments:
   - - 4620
     - c
     - dispatchStateByte1Table5804World03Area13413_801F3E0C
-    - '@source: src/bof3/world/dispatchStateByte1Table5804World03Area13413_801F3E0C.c'
+    - '@source: src/bof3/world/area13413DispatchTables.c'
     - '@behavior: Overlay step dispatch calling the handler pointer at the state byte 1 index of the local handler table based at 0x801F5804, the same shape as the exact sibling dispatchStateByte1Table57a4World03Area13413_801F3560.'
   - - 4688
     - c
@@ -213,7 +215,7 @@ segments:
   - - 5584
     - c
     - dispatchStateByte1Table581cWorld03Area13413_801F41D0
-    - '@source: src/bof3/world/dispatchStateByte1Table581cWorld03Area13413_801F41D0.c'
+    - '@source: src/bof3/world/area13413DispatchTables.c'
     - '@behavior: Overlay step dispatch calling the handler pointer at the state byte 1 index of the second local handler table based at 0x801F581C, the twin of the boundary at 0x801F3E0C.'
   - - 5652
     - asm
@@ -227,7 +229,7 @@ segments:
   - - 5956
     - c
     - dispatchStateByte1Table5828World03Area13413_801F4344
-    - '@source: src/bof3/world/dispatchStateByte1Table5828World03Area13413_801F4344.c'
+    - '@source: src/bof3/world/area13413DispatchTables.c'
     - '@behavior: Overlay step dispatch calling the handler pointer at the state byte 1 index of the third local handler table based at 0x801F5828, the twin of the boundaries at 0x801F581C, 0x801F5804 and 0x801F57A4.'
   - - 6024
     - asm
@@ -243,8 +245,9 @@ segments:
     - invokeHelperWorld03Area13413_801F453C
     - '@source: src/bof3/world/invokeHelperWorld03Area13413_801F453C.c'
   - - 6492
-    - asm
-    - func_801F455C
+    - c
+    - dispatchStateByte1Table5838World03Area13413_801F455C
+    - '@source: src/bof3/world/area13413DispatchTables.c'
   - - 6560
     - asm
     - func_801F45A0

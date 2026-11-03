@@ -27,8 +27,9 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - dispatchStateByte1Table6250World02Area07714_801F2C04
+    - '@source: src/bof3/world/area07714DispatchTables.c'
   - - 72
     - asm
     - func_801F2C48
@@ -69,8 +70,9 @@ segments:
     - asm
     - func_801F3BC4
   - - 4212
-    - asm
-    - func_801F3C74
+    - c
+    - dispatchStateByte1Table6260World02Area07714_801F3C74
+    - '@source: src/bof3/world/area07714DispatchTables.c'
   - - 4280
     - asm
     - func_801F3CB8
@@ -80,7 +82,7 @@ segments:
   - - 4612
     - c
     - dispatchStateByte1Table6268World02Area07714_801F3E04
-    - '@source: src/bof3/world/dispatchStateByte1Table6268World02Area07714_801F3E04.c'
+    - '@source: src/bof3/world/area07714DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044 and calls the handler at the record byte +0x01 index of the local handler table based at 0x801F6268.'
   - - 4680
     - asm
@@ -91,7 +93,7 @@ segments:
   - - 5172
     - c
     - dispatchStateByte1Table6270World02Area07714_801F4034
-    - '@source: src/bof3/world/dispatchStateByte1Table6270World02Area07714_801F4034.c'
+    - '@source: src/bof3/world/area07714DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044 and calls the handler at the record byte +0x01 index of the local handler table based at 0x801F6270.'
   - - 5240
     - asm
@@ -126,7 +128,7 @@ segments:
   - - 8412
     - c
     - dispatchStateByte2Table6284World02Area07714_801F4CDC
-    - '@source: src/bof3/world/dispatchStateByte2Table6284World02Area07714_801F4CDC.c'
+    - '@source: src/bof3/world/area07714DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the work record byte at +0x02 as an index and calls the handler pointer at that index of the local handler table based at 0x801F6284.'
   - - 8480
     - asm
@@ -149,7 +151,7 @@ segments:
   - - 9976
     - c
     - dispatchStateByte2Table62a8World02Area07714_801F52F8
-    - '@source: src/bof3/world/dispatchStateByte2Table62a8World02Area07714_801F52F8.c'
+    - '@source: src/bof3/world/area07714DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the work record byte at +0x02 as an index and calls the handler pointer at that index of the local handler table based at 0x801F62A8.'
   - - 10044
     - c
@@ -172,8 +174,9 @@ segments:
     - asm
     - func_801F54B8
   - - 10760
-    - asm
-    - func_801F5608
+    - c
+    - dispatchStateByte2Table62bcWorld02Area07714_801F5608
+    - '@source: src/bof3/world/area07714DispatchTables.c'
   - - 10828
     - asm
     - func_801F564C
