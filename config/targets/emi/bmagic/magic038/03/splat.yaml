@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801EF084
   - - 1232
-    - asm
-    - func_801EF0D0
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic03803_801EF0D0
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic03803_801EF0D0.c'
+    - '@behavior: Overlay work-byte-1 dispatcher: takes the scratchpad work object reached through pointer slot 0x1F800044, reads its unsigned state byte at offset 1, scales it by four and calls that entry of the overlay-local handler-pointer table at 0x801EF9A4 (seven in-image code pointers, entry 0 = 0x801EF114 through entry 6 = 0x801EF884, followed by the packed byte words at 0x801EF9C0) with no arguments; reads no other state, writes none, and the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 1300
     - asm
     - func_801EF114

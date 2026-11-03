@@ -44,6 +44,8 @@ segments:
     - asm
     - func_801EEE20
   - - 856
-    - asm
-    - func_801EEF58
+    - c
+    - forwardBattleByteThenRaiseFlag4AndInvokeHelperBmagicMagic01000_801EEF58
+    - '@source: src/bof3/bmagic/forwardBattleByteThenRaiseFlag4AndInvokeHelperBmagicMagic01000_801EEF58.c'
+    - '@behavior: Loads the shared battle byte at 0x80146384 unsigned, passes it to the shared helper func_800A9820, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and invokes the shared helper func_801E5988; it takes no arguments, returns nothing and keeps $ra in a 0x18-byte frame.'
 - - 928

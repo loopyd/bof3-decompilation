@@ -51,8 +51,8 @@ segments:
     - asm
     - func_801EF350
   - - 1944
-    - asm
-    - func_801EF398
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic02003_801EF398
   - - 2012
     - asm
     - func_801EF3DC

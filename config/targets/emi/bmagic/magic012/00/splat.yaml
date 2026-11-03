@@ -39,8 +39,8 @@ segments:
     - c
     - dispatchWorkByte1HandlerBmagicMagic01200_801EEFF8
   - - 1084
-    - asm
-    - func_801EF03C
+    - c
+    - dispatchWorkByte2HandlerBmagicMagic01200_801EF03C
   - - 1152
     - asm
     - func_801EF080

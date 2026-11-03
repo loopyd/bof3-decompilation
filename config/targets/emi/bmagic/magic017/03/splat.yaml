@@ -42,8 +42,8 @@ segments:
     - asm
     - func_801EEFD8
   - - 1044
-    - asm
-    - func_801EF014
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic01703_801EF014
   - - 1112
     - asm
     - func_801EF058
