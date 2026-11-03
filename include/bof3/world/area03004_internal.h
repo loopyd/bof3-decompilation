@@ -546,13 +546,6 @@ void appendDimTile(void);
 
 #define WORLD00_AREA030_SCRATCH_PTR PSX_REF(volatile u8*, 0x1f800044u)
 
-/* Emit one AREA030 dispatcher: invoke the handler that the scratch work byte at
- * offset 1 selects from a local pointer table. Put each emitted function's
- * metadata block directly above its standalone invocation. */
-#define WORLD00_AREA030_DISPATCH_SLOT_ONE(name, table)                         \
-  void NO_SIBLING_CALLS name(void) {                                           \
-    table[D_1F800044[1]]();                                                    \
-  }
 
 #define WORLD00_AREA030_DISPATCH_SLOT_TWO(name, table)                         \
   void NO_SIBLING_CALLS name(void) {                                           \

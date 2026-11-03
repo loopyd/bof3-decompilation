@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-WORLD00_AREA030_DISPATCH_SLOT_ONE(func_801D20C8, D_801E1D20);
+BOF3_DISPATCH_WORK_SLOT_ONE(func_801D20C8, D_801E1D20);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * third local handler table at 0x801E1D78.
@@ -16,7 +16,7 @@ WORLD00_AREA030_DISPATCH_SLOT_ONE(func_801D20C8, D_801E1D20);
  * @match 100.00
  * @residual none
  */
-WORLD00_AREA030_DISPATCH_SLOT_ONE(func_801D2978, D_801E1D78);
+BOF3_DISPATCH_WORK_SLOT_ONE(func_801D2978, D_801E1D78);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * local handler table at 0x801E1D80.
@@ -25,7 +25,7 @@ WORLD00_AREA030_DISPATCH_SLOT_ONE(func_801D2978, D_801E1D78);
  * @match 100.00
  * @residual none
  */
-WORLD00_AREA030_DISPATCH_SLOT_ONE(func_801D2BF0, D_801E1D80);
+BOF3_DISPATCH_WORK_SLOT_ONE(func_801D2BF0, D_801E1D80);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * local handler table at 0x801E1D8C.
@@ -34,7 +34,7 @@ WORLD00_AREA030_DISPATCH_SLOT_ONE(func_801D2BF0, D_801E1D80);
  * @match 100.00
  * @residual none
  */
-WORLD00_AREA030_DISPATCH_SLOT_ONE(func_801D3358, D_801E1D8C);
+BOF3_DISPATCH_WORK_SLOT_ONE(func_801D3358, D_801E1D8C);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * local handler table at 0x801E1F78.
@@ -43,7 +43,7 @@ WORLD00_AREA030_DISPATCH_SLOT_ONE(func_801D3358, D_801E1D8C);
  * @match 100.00
  * @residual none
  */
-WORLD00_AREA030_DISPATCH_SLOT_ONE(func_801D42A0, D_801E1F78);
+BOF3_DISPATCH_WORK_SLOT_ONE(func_801D42A0, D_801E1F78);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * local handler table at 0x801E1D10.
@@ -52,7 +52,7 @@ WORLD00_AREA030_DISPATCH_SLOT_ONE(func_801D42A0, D_801E1F78);
  * @match 100.00
  * @residual none
  */
-WORLD00_AREA030_DISPATCH_SLOT_ONE(func_801D1B10, D_801E1D10);
+BOF3_DISPATCH_WORK_SLOT_ONE(func_801D1B10, D_801E1D10);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 2 through the
  * local handler table at 0x801E21E0.
@@ -61,7 +61,7 @@ WORLD00_AREA030_DISPATCH_SLOT_ONE(func_801D1B10, D_801E1D10);
  * @match 100.00
  * @residual none
  */
-WORLD00_AREA030_DISPATCH_SLOT_TWO(func_801D9B14, D_801E21E0);
+BOF3_DISPATCH_WORK_SLOT_TWO(func_801D9B14, D_801E21E0);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 2 through the
  * local handler table at 0x801E2340.
@@ -70,7 +70,7 @@ WORLD00_AREA030_DISPATCH_SLOT_TWO(func_801D9B14, D_801E21E0);
  * @match 100.00
  * @residual none
  */
-WORLD00_AREA030_DISPATCH_SLOT_TWO(func_801DFFA8, D_801E2340);
+BOF3_DISPATCH_WORK_SLOT_TWO(func_801DFFA8, D_801E2340);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 2 through the
  * local handler table at 0x801E2348.
@@ -79,4 +79,4 @@ WORLD00_AREA030_DISPATCH_SLOT_TWO(func_801DFFA8, D_801E2340);
  * @match 100.00
  * @residual none
  */
-WORLD00_AREA030_DISPATCH_SLOT_TWO(func_801E00E0, D_801E2348);
+BOF3_DISPATCH_WORK_SLOT_TWO(func_801E00E0, D_801E2348);
