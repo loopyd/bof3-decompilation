@@ -27,8 +27,9 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - dispatchStateByte1Table5124WorldWorld03Area11813_801F2C04
+    - '@source: src/bof3/world/area11813DispatchTables.c'
   - - 72
     - asm
     - func_801F2C48
@@ -39,8 +40,9 @@ segments:
     - asm
     - func_801F2D78
   - - 544
-    - asm
-    - func_801F2E20
+    - c
+    - dispatchStateByte1Table5130WorldWorld03Area11813_801F2E20
+    - '@source: src/bof3/world/area11813DispatchTables.c'
   - - 612
     - asm
     - func_801F2E64
@@ -48,8 +50,9 @@ segments:
     - asm
     - func_801F2EA0
   - - 1044
-    - asm
-    - func_801F3014
+    - c
+    - dispatchStateByte2Table516cWorldWorld03Area11813_801F3014
+    - '@source: src/bof3/world/area11813DispatchTables.c'
   - - 1112
     - asm
     - func_801F3058
@@ -72,8 +75,9 @@ segments:
     - asm
     - func_801F381C
   - - 4112
-    - asm
-    - func_801F3C10
+    - c
+    - dispatchStateByte2Table5184WorldWorld03Area11813_801F3C10
+    - '@source: src/bof3/world/area11813DispatchTables.c'
   - - 4180
     - asm
     - func_801F3C54
@@ -84,8 +88,9 @@ segments:
     - asm
     - func_801F3FD0
   - - 5388
-    - asm
-    - func_801F410C
+    - c
+    - dispatchStateByte2Table519cWorldWorld03Area11813_801F410C
+    - '@source: src/bof3/world/area11813DispatchTables.c'
   - - 5456
     - asm
     - func_801F4150

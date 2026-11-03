@@ -27,8 +27,9 @@ segments:
   vram: 2149526532
   subsegments:
   - - 4
-    - asm
-    - func_801F2C04
+    - c
+    - dispatchStateByte1Table58dcWorldWorld02Area08813_801F2C04
+    - '@source: src/bof3/world/area08813DispatchTables.c'
   - - 72
     - asm
     - func_801F2C48
@@ -98,8 +99,9 @@ segments:
     - setWorkHalfwordsWorld02Area08813_801F3F64
     - '@source: src/bof3/world/area08813_work_state.c'
   - - 4992
-    - asm
-    - func_801F3F80
+    - c
+    - dispatchStateByte1Table61b4WorldWorld02Area08813_801F3F80
+    - '@source: src/bof3/world/area08813DispatchTables.c'
   - - 5060
     - c
     - resetAdvanceScratchStateCloneWorld02Area08813_801F3FC4
@@ -108,8 +110,9 @@ segments:
     - c
     - invokeTwoHelpersWorld02Area08813_801F4004
   - - 5164
-    - asm
-    - func_801F402C
+    - c
+    - dispatchStateByte2Table61bcWorldWorld02Area08813_801F402C
+    - '@source: src/bof3/world/area08813DispatchTables.c'
   - - 5232
     - asm
     - func_801F4070
@@ -150,8 +153,9 @@ segments:
     - asm
     - func_801F4C28
   - - 8408
-    - asm
-    - func_801F4CD8
+    - c
+    - dispatchStateByte1Table624cWorldWorld02Area08813_801F4CD8
+    - '@source: src/bof3/world/area08813DispatchTables.c'
   - - 8476
     - asm
     - func_801F4D1C
@@ -162,8 +166,9 @@ segments:
     - asm
     - func_801F5088
   - - 9516
-    - asm
-    - func_801F512C
+    - c
+    - dispatchStateByte1Table6270WorldWorld02Area08813_801F512C
+    - '@source: src/bof3/world/area08813DispatchTables.c'
   - - 9584
     - asm
     - func_801F5170
