@@ -1,15 +1,6 @@
 #include "bof3/bof3.h"
 
-typedef void (*BmagicMagic07803Handler)(void);
-
-/* Code-pointer run based at 0x801F0878, selected by the work object's byte at
- * offset 0x01. Its nine words are the in-image handlers 0x801EEF28, 0x801EFF84,
- * 0x801EF08C, 0x801EF0E0, 0x801EF12C, 0x801EF1CC, 0x801EF228, 0x801EF278 and
- * 0x801EF2CC, all of them boundaries of this overlay; the scalar words that
- * follow at 0x801F089C are not code pointers and are not claimed here. The
- * target map owns the run's base address under the pre-promotion spelling
- * func_801F0878, the final subsegment of this overlay's main code segment. */
-extern BmagicMagic07803Handler func_801F0878[];
+extern void (*D_801F0878[])(void);
 
 /* @source 0x801EEEE4
  * @behavior Overlay per-frame handler dispatcher: it reads the scratchpad work
@@ -29,6 +20,4 @@ extern BmagicMagic07803Handler func_801F0878[];
  * @match 100.00
  * @residual none
  */
-void dispatchWorkByte1HandlerBmagicMagic07803_801EEEE4(void) {
-  func_801F0878[SPAD_PTR_SLOT(u8, 0x44u)[1]]();
-}
+BOF3_DISPATCH_WORK_SLOT_ONE(dispatchWorkByte1HandlerBmagicMagic07803_801EEEE4, D_801F0878);
