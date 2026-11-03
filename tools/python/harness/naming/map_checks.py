@@ -16,6 +16,7 @@ from harness.domain.identity import (
     splat_source_findings,
 )
 from harness.domain.layout import parse_splat_layout
+from harness.domain.symbols import MapSymbol
 from harness.domain.manifests import load_target_manifests
 from harness.domain.sources import (
     LiftMetadataError,
@@ -39,6 +40,28 @@ from harness.domain.tags import (
 from .debt import collect_naming_debt, load_naming_baseline, naming_debt_regressions
 
 
+def duplicate_name_findings(maps: dict[str, list[MapSymbol]]) -> list[str]:
+    """Report names that more than one map layer defines.
+
+    Per-address precedence makes a lower layer's binding legal, but ``splat``
+    rejects a repeated symbol name outright, so a composed map the harness accepts
+    must not carry one. Only names are reported: two names at one address are
+    distinct aliases and remain legal.
+    """
+
+    seen: dict[str, list[tuple[str, int]]] = {}
+    for layer, symbols in maps.items():
+        for symbol in symbols:
+            seen.setdefault(symbol.name.casefold(), []).append((layer, symbol.address))
+    findings: list[str] = []
+    for name, places in sorted(seen.items()):
+        if len(places) < 2:
+            continue
+        detail = ", ".join(f"{layer} 0x{address:08X}" for layer, address in places)
+        findings.append(f"duplicate symbol {name}: {detail}")
+    return findings
+
+
 def symbol_findings(
     root: Path, selected_target: str | None = None, *, reviewed: bool = False
 ) -> list[str]:
@@ -60,12 +83,17 @@ def symbol_findings(
         addresses = {symbol.address for symbol in symbols}
         # Bindings may reference shared engine globals and PSX SDK symbols, not
         # just the target-local map; validate them against the composed set.
-        by_address = {
-            symbol.address: symbol
-            for symbol in load_target_symbols(
-                root, target, psyq_space=manifest.psyq_space
+        composed = load_target_symbols(root, target, psyq_space=manifest.psyq_space)
+        errors.extend(
+            duplicate_name_findings(
+                {
+                    "shared": load_map(shared_map_path(root)),
+                    "sdk": load_map(sdk_map_path(root, manifest.psyq_space)),
+                    "local": symbols,
+                }
             )
-        }
+        )
+        by_address = {symbol.address: symbol for symbol in composed}
         source_dir = root / manifest.source_dir
         try:
             layout = parse_splat_layout(root / manifest.splat, manifest.load_address)

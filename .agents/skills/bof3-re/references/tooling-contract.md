@@ -97,6 +97,15 @@ monkeypatch targets and layout assertions migrate with owners, never weaken.
 Patch module owning global, not facade. Moving tests requires fixing `__file__`
 paths and cross-test imports; unit dirs remain on `pythonpath`, `build` collected.
 
+Know what each gate covers before trusting it. `lift gate` runs the target symbol
+map check, splat and one native measurement per selector; it does not read the
+source's `@status`/`@match` claims, so a false claim passes it. `source validate`
+checks claim shape and the linked diff without compiling. Nothing compares a
+declared percentage with a measurement, so keep claims in step with the gate by
+hand. Splat rejects a symbol name that two map layers define, even at one address,
+while `composed_map_findings` allows same-address override; the symbol check now
+rejects the repeat too, because a map the harness accepts must also build.
+
 Run relevant existing unit checks, Ruff and scoped `git diff --check`. `justfile`
 owns exact gate membership: `just check` runs shared gates without pytest units,
 `just check-unit UNIT` adds one unit, `just check-all` adds all units. Report each
