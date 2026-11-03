@@ -39,8 +39,9 @@ segments:
     - asm
     - func_801F2E10
   - - 748
-    - asm
-    - func_801F2EEC
+    - c
+    - dispatchStateByte1Table4df4World04Area18813_801F2EEC
+    - '@source: src/bof3/world/area18813DispatchTables.c'
   - - 816
     - c
     - clearWorkByte9SelectWorkState1AndShade0FWorld04Area18813_801F2F30
@@ -48,8 +49,9 @@ segments:
     - asm
     - func_801F2F6C
   - - 1224
-    - asm
-    - func_801F30C8
+    - c
+    - dispatchStateByte1Table4dfcWorld04Area18813_801F30C8
+    - '@source: src/bof3/world/area18813DispatchTables.c'
   - - 1292
     - asm
     - func_801F310C
@@ -57,8 +59,9 @@ segments:
     - asm
     - func_801F3148
   - - 1728
-    - asm
-    - func_801F32C0
+    - c
+    - dispatchStateByte1Table4e04World04Area18813_801F32C0
+    - '@source: src/bof3/world/area18813DispatchTables.c'
   - - 1796
     - asm
     - func_801F3304
