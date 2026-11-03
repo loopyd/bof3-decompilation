@@ -32,7 +32,13 @@ typedef struct Area030EntryRecord {
   u8 unk_02;
   u8 unk_03;
   u8 unk_04;
-  u8 pad_05[0x6F];
+  u8 byte_05;
+  u8 byte_06;
+  u8 pad_07[4];
+  u8 byte_0B;
+  u8 pad_0C[0x3E];
+  u8 byte_4A;
+  u8 pad_4B[0x29];
 } Area030EntryRecord;
 extern Area030EntryRecord D_80143FC8[]; /* @source 0x80143FC8 @kind bss */
 /* Shared CLUT-bank byte read as the trailing argument of the main-executable

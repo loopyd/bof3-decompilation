@@ -184,6 +184,13 @@ change. Bitfields require target layout and codegen proof, not guessed packing.
 Regroup unsigned address sums through a row/base temporary when original addition
 order differs; prove value equivalence and preserve all memory events.
 
+Pin a reload where the original reads it with a typed value local. Reading a cell
+straight into the store keeps the load next to that store, while assigning it to a
+`u8` local at an earlier statement pins the load at that statement and leaves the
+store later, which is the shape a record-arming block shows. A pointer local instead
+defers the dereference, so choose the local's type by which side of the load the
+original fixes.
+
 Keep a narrow parameter narrow. Copying an `s16` argument into an `s32` local moves
 the sign extension to the entry block, where the original converts at each use site.
 Read the parameter directly and cast at the use instead. The mirror case is a cast

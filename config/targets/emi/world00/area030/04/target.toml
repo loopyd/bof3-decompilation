@@ -39,6 +39,7 @@ sources = [
     "src/bof3/world/func_801D3510.c",
     "src/bof3/world/func_801D3574.c",
     "src/bof3/world/func_801D35CC.c",
+    "src/bof3/world/func_801D36F8.c",
     "src/bof3/world/func_801D3650.c",
     "src/bof3/world/func_801D3684.c",
     "src/bof3/world/func_801D3824.c",

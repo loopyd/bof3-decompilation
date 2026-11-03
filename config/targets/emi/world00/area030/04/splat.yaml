@@ -153,8 +153,9 @@ segments:
     - func_801D3684
     - '@source: src/bof3/world/func_801D3684.c'
   - - 11000
-    - asm
+    - c
     - func_801D36F8
+    - '@source: src/bof3/world/func_801D36F8.c'
   - - 11300
     - c
     - func_801D3824
