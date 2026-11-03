@@ -31,8 +31,9 @@ segments:
     - c
     - func_80096AB0
   - - 744
-    - asm
+    - c
     - dispatchSubstateTable43c0
+    - '@source: src/bof3/battle/dispatchSubstateTable43c0.c'
   - - 804
     - c
     - storeSlot3AdvanceSubstate
@@ -56,8 +57,9 @@ segments:
     - c
     - dispatchSubstateTable43d4
   - - 1852
-    - asm
+    - c
     - dispatchSubstateTable43ec
+    - '@source: src/bof3/battle/dispatchSubstateTable43ec.c'
   - - 1912
     - c
     - func_80096F78
@@ -77,8 +79,9 @@ segments:
     - asm
     - func_8009761C
   - - 3900
-    - asm
+    - c
     - dispatchSubstateTable43f4
+    - '@source: src/bof3/battle/dispatchSubstateTable43f4.c'
   - - 3960
     - asm
     - func_80097778
@@ -95,8 +98,9 @@ segments:
     - c
     - queueEvent106ResetStateC
   - - 5404
-    - asm
+    - c
     - dispatchSubstateTable4408
+    - '@source: src/bof3/battle/dispatchSubstateTable4408.c'
   - - 5464
     - c
     - func_80097D58
@@ -106,8 +110,9 @@ segments:
     - asm
     - func_80097DC0
   - - 5816
-    - asm
+    - c
     - selectionSetupEnabled
+    - '@source: src/bof3/battle/selectionSetupEnabled.c'
   - - 5824
     - c
     - func_80097EC0
@@ -147,8 +152,9 @@ segments:
     - c
     - func_800983C4
   - - 7176
-    - asm
+    - c
     - armSecondaryGridAdvanceRoot
+    - '@source: src/bof3/battle/armSecondaryGridAdvanceRoot.c'
   - - 7248
     - asm
     - func_80098450
@@ -159,8 +165,9 @@ segments:
     - asm
     - func_800989FC
   - - 8968
-    - asm
+    - c
     - dispatchSubstateTable4458
+    - '@source: src/bof3/battle/dispatchSubstateTable4458.c'
   - - 9028
     - asm
     - func_80098B44
@@ -303,8 +310,9 @@ segments:
     - asm
     - func_8009C794
   - - 24680
-    - asm
+    - c
     - testEntryBitE1
+    - '@source: src/bof3/battle/testEntryBitE1.c'
   - - 24700
     - c
     - setEntryBitE1
@@ -629,8 +637,10 @@ segments:
     - asm
     - func_8009FB38
   - - 38416
-    - asm
-    - func_8009FE10
+    - c
+    - applyInputMask40ArmRecordField4Neg20Field6Neg4
+    - '@source: src/bof3/battle/applyInputMask40ArmRecordField4Neg20Field6Neg4.c'
+    - '@behavior: Applies the 0x40 input mask to the active battler index byte D_80146394 through func_800A31E0, then raises bit 2 of byte +0x08 of the selection record reachable through 0x801463A0 and stores -0x14 and -4 in its halfwords at +0x04 and +0x06, reloading that pointer before each access.'
   - - 38512
     - c
     - func_8009FE70
@@ -814,8 +824,9 @@ segments:
     - '@source: src/bof3/battle/func_800A2880.c'
     - '@behavior: Scales the selected action''s power for the battler defence rate, element affinity, randomised damage band and guard flags, then halves it while the +0x04 guard word of the battler record carries bit 0x200; a battler whose +0x00 word carries 0x10000 takes no damage.'
   - - 49888
-    - asm
+    - c
     - func_800A2AE0
+    - '@source: src/bof3/battle/func_800A2AE0.c'
   - - 50544
     - c
     - func_800A2D70
@@ -890,8 +901,9 @@ segments:
     - asm
     - func_800A4294
   - - 56408
-    - asm
+    - c
     - func_800A4458
+    - '@source: src/bof3/battle/func_800A4458.c'
   - - 56968
     - c
     - dispatchSubstateTable4cac
@@ -1204,14 +1216,16 @@ segments:
     - asm
     - func_800AA8FC
   - - 82548
-    - asm
+    - c
     - adjustBattleWorkValuesForMode
+    - '@source: src/bof3/battle/adjustBattleWorkValuesForMode.c'
   - - 83080
     - asm
     - func_800AAC88
   - - 83644
-    - asm
+    - c
     - func_800AAEBC
+    - '@source: src/bof3/battle/func_800AAEBC.c'
   - - 84152
     - asm
     - func_800AB0B8
@@ -1688,6 +1702,7 @@ segments:
   - - 113176
     - c
     - func_800B2218
+    - '@source: src/bof3/battle/func_800B2218.c'
   - - 113240
     - c
     - dispatchPanelStateTable6e34
@@ -1696,6 +1711,7 @@ segments:
   - - 113324
     - c
     - func_800B22AC
+    - '@source: src/bof3/battle/func_800B22AC.c'
   - - 113388
     - c
     - panelMoveLeftClamp53
@@ -1707,9 +1723,11 @@ segments:
   - - 113592
     - c
     - func_800B23B8
+    - '@source: src/bof3/battle/func_800B23B8.c'
   - - 113656
     - c
     - func_800B23F8
+    - '@source: src/bof3/battle/func_800B23F8.c'
   - - 113720
     - c
     - panelStepRightClamp62
@@ -1724,6 +1742,7 @@ segments:
   - - 113932
     - c
     - func_800B250C
+    - '@source: src/bof3/battle/func_800B250C.c'
   - - 113996
     - c
     - func_800B254C
@@ -1741,6 +1760,7 @@ segments:
   - - 117356
     - c
     - func_800B326C
+    - '@source: src/bof3/battle/func_800B326C.c'
   - - 117540
     - asm
     - func_800B3324

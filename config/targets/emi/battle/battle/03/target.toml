@@ -246,6 +246,7 @@ sources = [
     "src/bof3/battle/initUiBundleSlot4.c",
     "src/bof3/battle/integrateMotionOrResetState_battle03.c",
     "src/bof3/battle/integrateMotionOrSet2.c",
+    "src/bof3/battle/integratePositionPairUntilTargetThenResetState.c",
     "src/bof3/battle/localReadyOrHelper1.c",
     "src/bof3/battle/localReadyOrHelper2.c",
     "src/bof3/battle/lookupStateByteMapped.c",

@@ -30,8 +30,10 @@ segments:
   vram: 2149510232
   subsegments:
   - - 88
-    - asm
-    - func_801EEC58
+    - c
+    - dispatchSubstateTable0c98BatlEnd00_801EEC58
+    - '@source: src/bof3/battle/dispatchSubstateTable0c98BatlEnd00_801EEC58.c'
+    - '@behavior: Battle substate dispatch: reads the unsigned byte at 0x801462E3, scales it by four and calls the handler pointer at that index of the table based at 0x801F0C98 with no arguments; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 148
     - asm
     - func_801EEC94

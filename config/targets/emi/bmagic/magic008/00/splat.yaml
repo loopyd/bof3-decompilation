@@ -208,8 +208,10 @@ segments:
     - asm
     - func_801F117C
   - - 9668
-    - asm
-    - func_801F11C4
+    - c
+    - subtractWorkColorTripletBy3ThenAdvanceWorkByte2WhenChannelIs80BmagicMagic00800_801F11C4
+    - '@source: src/bof3/bmagic/subtractWorkColorTripletBy3ThenAdvanceWorkByte2WhenChannelIs80BmagicMagic00800_801F11C4.c'
+    - '@behavior: Entry 4 of the six-entry work-state table at 0x801EEC94, which 0x801F0DA8 dispatches on scratchpad work-object byte 2. Per frame it subtracts 3 from the work object color channels at bytes 0x5D/0x5E/0x5F (the r0/g0/b0 triplet that state entry 0x801F0E54 seeds with 0xB0), then re-reads the channel at 0x5D as a signed byte and, when it equals -0x80, decrements byte 0xB of the shared battle work record at 0x801EB4E0 and advances work byte 2 to the table entry 0x801F1274. Each of the four accesses re-materializes the scratchpad pointer cell address at 0x1F800044; leaf with no frame.'
   - - 9844
     - c
     - invokeHelperBmagicMagic00800_801F1274

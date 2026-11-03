@@ -121,6 +121,7 @@ func_8009F998 = 0x8009F998;
 func_8009F9B8 = 0x8009F9B8;
 armRecordFlag8ResetFields = 0x8009F9E0;
 func_8009FAE4 = 0x8009FAE4;
+applyInputMask40ArmRecordField4Neg20Field6Neg4 = 0x8009FE10;
 func_8009FE70 = 0x8009FE70;
 func_8009FE84 = 0x8009FE84;
 func_8009FE98 = 0x8009FE98;

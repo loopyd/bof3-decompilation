@@ -313,6 +313,7 @@ initScratchWorkState = 0x801E3334;
 integrateMotionOrResetState = 0x801E3398;
 dispatchByte3TableB3f4 = 0x801E3438;
 applyModeOffsetPairToWork = 0x801E347C;
+integratePositionPairUntilTargetThenResetState = 0x801E352C;
 initStateByEnemyFlag2 = 0x801E35D8;
 func_801E3638 = 0x801E3638;
 func_801E383C = 0x801E383C;

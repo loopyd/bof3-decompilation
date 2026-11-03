@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EEC7C
   - - 696
-    - asm
-    - func_801EEEB8
+    - c
+    - initBattleScenePrimsAndAdvanceSubstate
+    - '@source: src/bof3/battle/initBattleScenePrimsAndAdvanceSubstate.c'
+    - '@behavior: Rebuilds the battle scene draw environment and its 0x80 sprite through the target''s two setup routines, then, while the shared scene gate D_80143C40 stays clear, publishes 0x2C to the battle halfword D_801463B0 and advances the overlay dispatch substate byte D_801462E3.'
   - - 784
     - asm
     - func_801EEF10

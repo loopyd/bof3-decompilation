@@ -981,8 +981,10 @@ segments:
     - '@source: src/bof3/battle/applyModeOffsetPairToWork_battle03.c'
     - '@behavior: Clears scratch work flag bit 6, runs the enemy script byte helper func_801E2314 for class 0, mirrors the work pair +0x34/+0x38 into +0x18/+0x1C, subtracts the mode-rotated 8.0 offset pair from +0x34, republishes the mode-rotated 0.5 offset pair at +0x0C/+0x10, then advances scratch work byte +0x02.'
   - - 76076
-    - asm
-    - func_801E352C
+    - c
+    - integratePositionPairUntilTargetThenResetState
+    - '@source: src/bof3/battle/integratePositionPairUntilTargetThenResetState.c'
+    - '@behavior: Integrates the scratch work delta pair +0x0C/+0x10 into the position pair +0x34/+0x38 and publishes the signed distance of that pair through func_8015477C in work halfword +0x3E; once the position pair equals the mirrored target pair +0x18/+0x1C it reseeds the scratch state bytes +0x01..+0x03 with 3/0/0.'
   - - 76248
     - c
     - initStateByEnemyFlag2
