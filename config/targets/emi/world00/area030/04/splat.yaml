@@ -42,14 +42,17 @@ segments:
     - '@source: src/bof3/world/func_801D130C_area03004.c'
     - '@behavior: AREA030 color-row builder: copies 30 halfwords (row elements 0x61..0x7E) of the 32-halfword color row at 0x800396C0 from the 0x40-byte row of the 0x80037800 color block selected by the shared row byte 0x80145EB7, setting the high bit of each copied halfword, clears the row end elements 0x800396C0/0x800396FE, then publishes that row byte into scratch work byte 0xB, sets bit 5 of work byte 0, writes 0x7B into work byte 0x27, seeds work bytes 0x5C..0x5F with 1/0xC0/0xC0/0xC0, publishes 1 into the palette-stage serial 0x80145988, advances the work-record stage byte at work offset 3 and calls func_8014D4E0 without arguments.'
   - - 2100
-    - asm
+    - c
     - func_801D1434
+    - '@source: src/bof3/world/func_801D1434.c'
   - - 2360
-    - asm
+    - c
     - func_801D1538
+    - '@source: src/bof3/world/func_801D1538.c'
   - - 2460
-    - asm
+    - c
     - func_801D159C
+    - '@source: src/bof3/world/func_801D159C.c'
   - - 2884
     - c
     - func_801D1744

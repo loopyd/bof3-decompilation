@@ -217,7 +217,9 @@ typedef struct Area030TextSlot {
 } Area030TextSlot;
 extern Area030TextSlot D_801E28F4[]; /* @source 0x801E28F4 @kind table */
 extern s8 D_801E28F8[];              /* @source 0x801E28F8 @kind table */
+extern u8  D_80144002;    /* @source 0x80144002 @kind unknown */
 extern u8  D_80145AD4[];  /* @source 0x80145AD4 @kind unknown */
+extern const char D_801D0C04[]; /* @source 0x801D0C04 @kind rodata */
 extern u16 D_801E218C[]; /* @source 0x801E218C @kind table */
 extern u16 D_801E218E[]; /* @source 0x801E218E @kind table */
 extern u16 D_801E2190[]; /* @source 0x801E2190 @kind table */

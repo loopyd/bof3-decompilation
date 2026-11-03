@@ -57,7 +57,9 @@ eligible alternatives. Locals may change register web. GCC can normalize
 chain inversion regardless of spelling; another spelling alone is not new evidence.
 
 Branch calls `if (cond) f(x+A); else f(x+B);` can merge into one `jal` where ternary
-argument does not. Early returns versus initialized result changes `$v0` lifetime.
+argument does not. The same holds for identical argument lists: writing the call in
+both arms can produce the single original call site through cross-jumping, and it
+keeps the per-arm argument setup the original shows. Early returns versus initialized result changes `$v0` lifetime.
 GCC loop rotation can move invariants: assigning inside loop body can permit late
 hoisting/preheader copies; moving before loop can lose them. Keep only measured
 semantically correct shape; record negative experiments before trying another shape.
@@ -181,6 +183,12 @@ them. Preserve public constness and ABI unless caller/callee evidence supports a
 change. Bitfields require target layout and codegen proof, not guessed packing.
 Regroup unsigned address sums through a row/base temporary when original addition
 order differs; prove value equivalence and preserve all memory events.
+
+Keep a narrow parameter narrow. Copying an `s16` argument into an `s32` local moves
+the sign extension to the entry block, where the original converts at each use site.
+Read the parameter directly and cast at the use instead. The mirror case is a cast
+used twice: `(s8)value` in both the call and the comparison lets one conversion serve
+both, while reassigning `value = (s8)value;` between them duplicates it.
 
 ### Halfword read-modify-write
 
