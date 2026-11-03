@@ -36,8 +36,9 @@ segments:
     - asm
     - func_801EEE90
   - - 752
-    - asm
-    - func_801EEEF0
+    - c
+    - dispatchStateByte1Tablef784BmagicMagic15803_801EEEF0
+    - '@source: src/bof3/world/magic15803DispatchTables.c'
   - - 820
     - asm
     - func_801EEF34

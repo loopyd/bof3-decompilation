@@ -54,8 +54,9 @@ segments:
     - asm
     - func_801EF228
   - - 1752
-    - asm
-    - func_801EF2D8
+    - c
+    - dispatchStateByte1Table08b0BmagicMagic16703_801EF2D8
+    - '@source: src/bof3/world/magic16703DispatchTables.c'
   - - 1820
     - asm
     - func_801EF31C

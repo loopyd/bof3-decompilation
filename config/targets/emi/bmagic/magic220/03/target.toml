@@ -10,6 +10,7 @@ load_address = 0x801EEC00
 sources = []
 support_sources = [
     "src/bof3/support/magic220_03_psyq.c",
+    "src/bof3/world/magic22003DispatchTables.c",
 ]
 psyq_source = "src/bof3/support/magic220_03_psyq.c"
 

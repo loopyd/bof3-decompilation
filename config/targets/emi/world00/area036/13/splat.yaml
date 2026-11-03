@@ -36,8 +36,9 @@ segments:
     - asm
     - func_801F2C64
   - - 280
-    - asm
-    - func_801F2D18
+    - c
+    - dispatchStateByte1Table3304World00Area03613_801F2D18
+    - '@source: src/bof3/world/area03613DispatchTables.c'
   - - 348
     - asm
     - func_801F2D5C

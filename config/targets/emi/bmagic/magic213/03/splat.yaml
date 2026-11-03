@@ -36,11 +36,13 @@ segments:
     - asm
     - func_801EEF74
   - - 960
-    - asm
-    - func_801EEFC0
+    - c
+    - dispatchStateByte1Tablef8a0BmagicMagic21303_801EEFC0
+    - '@source: src/bof3/world/magic21303DispatchTables.c'
   - - 1028
-    - asm
-    - func_801EF004
+    - c
+    - dispatchStateByte2Tablef8a4BmagicMagic21303_801EF004
+    - '@source: src/bof3/world/magic21303DispatchTables.c'
   - - 1096
     - asm
     - func_801EF048
@@ -54,8 +56,9 @@ segments:
     - asm
     - func_801EF490
   - - 2272
-    - asm
-    - func_801EF4E0
+    - c
+    - dispatchStateByte1Tablef8b4BmagicMagic21303_801EF4E0
+    - '@source: src/bof3/world/magic21303DispatchTables.c'
   - - 2340
     - asm
     - func_801EF524

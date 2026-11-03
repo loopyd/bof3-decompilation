@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = []
 support_sources = [
     "src/bof3/world/noopHandlerWorld01Area06813_801F3E40.c",
+    "src/bof3/world/area06813DispatchTables.c",
     "src/bof3/world/noopHandlerWorld01Area06813_801F375C.c",
     "src/bof3/world/noopHandlerWorld01Area06813_801F3530.c",
     "src/bof3/world/noopHandlerWorld01Area06813_801F306C.c",
