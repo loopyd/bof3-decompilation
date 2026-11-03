@@ -148,7 +148,66 @@ def _measure_native(root: Path, selector: str) -> tuple[int, str, str]:
         byte_status = "MATCH" if payload.get("byte_match") else "DIFFER"
         status = "MATCH" if payload.get("exact_match") else "DIFF"
         line = f"{status} {function.value} {_evidence_line(payload)}\n"
-        return 0 if payload.get("exact_match") else 1, line, byte_status
+        note, metadata_rc = _metadata_findings(source, function.address, payload)
+        native_rc = 0 if payload.get("exact_match") else 1
+        return (native_rc or metadata_rc), line + note, byte_status
+
+
+_METADATA_MATCH_TOLERANCE = 0.05
+
+
+def _metadata_findings(source: Path, address: int, payload: dict) -> tuple[str, int]:
+    """Compare the declared progress tags with the measurement just taken.
+
+    Returns one report line and a return code: 1 when the declaration contradicts
+    the measurement, 0 when it agrees or cannot be attributed to this selector.
+    """
+
+    from harness.domain.tags import parse_progress_tags, parse_source_tag
+
+    text = source.read_text(encoding="utf-8")
+    try:
+        declared_address = parse_source_tag(text)
+        progress = parse_progress_tags(text)
+    except ValueError as error:
+        message = str(error)
+        if "multiple function metadata blocks" in message:
+            return f"metadata: not compared ({message})\n", 0
+        return f"metadata: {message}\n", 1
+    if progress is None:
+        return "metadata: no @status/@match/@residual declared\n", 0
+    if declared_address is not None and declared_address != address:
+        return (
+            "metadata: not compared (@source 0x"
+            f"{declared_address:08X} does not name this selector)\n",
+            0,
+        )
+
+    declared_status, declared_match, _residual = progress
+    measured_exact = bool(payload["exact_match"])
+    counts = payload["instruction_count"]
+    measured_percent = float(counts["match_percent"])
+    findings: list[str] = []
+    if declared_status == "exact" and not measured_exact:
+        findings.append(
+            "@status exact contradicts the measurement "
+            f"({counts['matching']}/{counts['original']} instructions, "
+            f"{measured_percent:.2f}%)"
+        )
+    if declared_status == "partial" and measured_exact:
+        findings.append("@status partial contradicts an exact measurement")
+    if (
+        declared_match is not None
+        and abs(declared_match - measured_percent) > _METADATA_MATCH_TOLERANCE
+    ):
+        findings.append(
+            f"@match {declared_match:.2f} contradicts the measured "
+            f"{measured_percent:.2f}%"
+        )
+    if findings:
+        return f"metadata: {'; '.join(findings)}\n", 1
+    match_text = "-" if declared_match is None else f"{declared_match:.2f}"
+    return f"metadata: @status {declared_status} @match {match_text} agrees\n", 0
 
 
 def _run(args: argparse.Namespace) -> int:

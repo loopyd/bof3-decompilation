@@ -124,18 +124,41 @@ def _ranked_rows(root: Path, target: str, limit: int) -> list[dict]:
     return json.loads(result.stdout)
 
 
+_MAX_SCREEN_POOL = 512
+
+
+def _surviving_rows(root: Path, target: str, limit: int) -> tuple[list[dict], int]:
+    """Return screened rows, widening the ranked pool while nothing survives.
+
+    The ranking limit is applied before the claimed/trap screen, so a fixed pool
+    reports no candidate whenever the top rows all fail it. Widening doubles the
+    pool until a row survives or the ranking is exhausted.
+    """
+
+    requested = max(1, limit)
+    claimed = _claimed_addresses(root)
+    while True:
+        rows = _ranked_rows(root, target, requested)
+        survivors = _trap_screen(root, _drop_claimed(rows, claimed))
+        if survivors or len(rows) < requested or requested >= _MAX_SCREEN_POOL:
+            return survivors, len(rows)
+        requested = min(requested * 2, _MAX_SCREEN_POOL)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="bin/harness lift next", description=__doc__)
     parser.add_argument("target", help="target id, e.g. emi/battle/battle/15")
-    parser.add_argument("--limit", type=int, default=12, help="rows to screen")
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=12,
+        help="initial rows to screen; the pool doubles while nothing survives",
+    )
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
 
     root = _ROOT
-    rows = _drop_claimed(
-        _ranked_rows(root, args.target, args.limit), _claimed_addresses(root)
-    )
-    survivors = _trap_screen(root, rows)
+    survivors, _screened = _surviving_rows(root, args.target, args.limit)
     if not survivors:
         if args.json:
             print(json.dumps({"target": args.target, "candidate": None}, indent=2))
