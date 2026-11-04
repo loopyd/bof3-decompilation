@@ -25,7 +25,7 @@ segments:
   vram: 2149526528
   subsegments:
   - - 0
-    - asm
+    - rodata
     - T_801F2C00
   - - 4
     - c

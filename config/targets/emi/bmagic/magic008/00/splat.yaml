@@ -252,6 +252,6 @@ segments:
     - c
     - invokeHelperBmagicMagic00800_801F1BCC
   - - 12268
-    - asm
+    - rodata
     - dispatchHandlerTable801F1BEC
 - - 12316

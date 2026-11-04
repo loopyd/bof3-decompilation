@@ -921,6 +921,6 @@ segments:
     - asm
     - func_801E4FC8
   - - 83268
-    - asm
+    - rodata
     - T_801E5144
 - - 87660

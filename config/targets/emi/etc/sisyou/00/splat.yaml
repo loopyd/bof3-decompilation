@@ -24,7 +24,7 @@ segments:
   vram: 2149387264
   subsegments:
   - - 0
-    - asm
+    - rodata
     - T_801D0C00
   - - 24
     - c
@@ -260,7 +260,7 @@ segments:
     - bin
     - D_801D3F58
   - - 13148
-    - asm
+    - rodata
     - T_801D3F5C
 - - 13960
   - bin

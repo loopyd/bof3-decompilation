@@ -25,7 +25,7 @@ segments:
   vram: 2149387264
   subsegments:
   - - 0
-    - asm
+    - rodata
     - T_801D0C00
   - - 16
     - c

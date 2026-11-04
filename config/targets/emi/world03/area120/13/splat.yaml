@@ -117,6 +117,6 @@ segments:
     - asm
     - D_801F43B8
   - - 6604
-    - asm
-    - func_801F45CC
+    - rodata
+    - T_801F45CC
 - - 9180

@@ -65,6 +65,6 @@ segments:
     - asm
     - func_801EF79C
   - - 4016
-    - asm
+    - rodata
     - dispatchHandlerTable801EFBB0
 - - 4068

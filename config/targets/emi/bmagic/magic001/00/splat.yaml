@@ -129,6 +129,6 @@ segments:
     - asm
     - func_801F0238
   - - 6324
-    - asm
+    - rodata
     - dispatchHandlerTable801F04B4
 - - 6332

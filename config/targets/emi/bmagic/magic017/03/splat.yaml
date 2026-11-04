@@ -79,6 +79,6 @@ segments:
     - c
     - invokeHelperBmagicMagic01703_801EF970
   - - 3472
-    - asm
+    - rodata
     - dispatchHandlerTable801EF990
 - - 3476

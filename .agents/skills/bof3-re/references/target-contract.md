@@ -44,6 +44,15 @@ Raw entries may contain leading pointer/count/data headers. A plausible instruct
 or Splat label does not outweigh original bytes: check calls, prologue/return paths
 and whole range before reviewed boundary promotion.
 
+Never leave data labelled `asm`. An `asm` subsegment claims instructions; text, byte
+and pointer blobs, count words, string runs and handler tables are data and take
+`rodata` with a `T_` or role name. Splitting a function out of a mixed blob means
+relabelling the pieces: leading and trailing bytes become `rodata` at the same
+boundaries. A `func_` label on a pointer table is a contradiction; rename the row and
+relabel the segment. Keep the indentation of the original kind line when editing
+Splat, and re-run `source splat` for the target, because a misindented kind parses as
+a nested list and fails with `unsupported Splat subsegment`.
+
 Runtime-filled tables can be zero on disc; inspect producers/consumers. Cross-target
 pointers can reference simultaneously loaded companion overlays; preserve reviewed
 entry, never create out-of-payload local boundary. Same address alone proves nothing.

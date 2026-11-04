@@ -49,6 +49,6 @@ segments:
     - asm
     - func_801F30D4
   - - 2084
-    - asm
+    - rodata
     - dispatchHandlerTable801F3424
 - - 2356

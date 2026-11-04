@@ -187,6 +187,6 @@ segments:
     - asm
     - func_801F1B14
   - - 12228
-    - asm
+    - rodata
     - dispatchHandlerTable801F1BC4
 - - 14564
