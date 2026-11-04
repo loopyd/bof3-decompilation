@@ -43,8 +43,11 @@ segments:
     - dispatchStateByte1Table0a24BmagicMagic00603_801EEE04
     - '@source: src/bof3/bmagic/magic00603DispatchTables.c'
   - - 584
+    - textbin
+    - T_801EEE48
+  - - 592
     - asm
-    - func_801EEE48
+    - func_801EEE50
   - - 808
     - asm
     - func_801EEF28

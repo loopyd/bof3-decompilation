@@ -161,4 +161,7 @@ segments:
   - - 40168
     - asm
     - func_801DA8E8
+  - - 40616
+    - textbin
+    - T_801DAAA8
 - - 42208

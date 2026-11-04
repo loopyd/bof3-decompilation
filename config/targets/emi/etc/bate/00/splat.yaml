@@ -83,4 +83,16 @@ segments:
   - - 27816
     - asm
     - func_801D78A8
+  - - 28368
+    - asm
+    - func_801D7AD0
+  - - 30216
+    - asm
+    - func_801D8208
+  - - 30984
+    - asm
+    - func_801D8508
+  - - 31456
+    - textbin
+    - T_801D86E0
 - - 33864

@@ -80,8 +80,11 @@ segments:
     - dispatchStateByte1Table04a0BmagicMagic07603_801EF8A8
     - '@source: src/bof3/bmagic/magic07603DispatchTables.c'
   - - 3308
+    - textbin
+    - T_801EF8EC
+  - - 3316
     - asm
-    - func_801EF8EC
+    - func_801EF8F4
   - - 3680
     - asm
     - func_801EFA60

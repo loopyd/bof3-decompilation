@@ -101,4 +101,28 @@ segments:
   - - 26648
     - asm
     - func_801D7418
+  - - 27380
+    - asm
+    - func_801D76F4
+  - - 28668
+    - asm
+    - func_801D7BFC
+  - - 30556
+    - asm
+    - func_801D835C
+  - - 31824
+    - asm
+    - func_801D8850
+  - - 32376
+    - asm
+    - func_801D8A78
+  - - 34224
+    - asm
+    - func_801D91B0
+  - - 34992
+    - asm
+    - func_801D94B0
+  - - 35464
+    - textbin
+    - T_801D9688
 - - 38196
