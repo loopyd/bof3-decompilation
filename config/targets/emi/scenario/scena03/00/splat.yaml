@@ -281,4 +281,10 @@ segments:
   - - 25380
     - asm
     - func_801FCF24
+  - - 25476
+    - textbin
+    - T_801FCF84
+  - - 25668
+    - asm
+    - func_801FD044
 - - 25672

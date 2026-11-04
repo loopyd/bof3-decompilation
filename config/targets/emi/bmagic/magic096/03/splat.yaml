@@ -48,6 +48,12 @@ segments:
   - - 740
     - asm
     - func_801EEEE4
+  - - 868
+    - textbin
+    - T_801EEF64
+  - - 932
+    - asm
+    - func_801EEFA4
   - - 952
     - asm
     - func_801EEFB8

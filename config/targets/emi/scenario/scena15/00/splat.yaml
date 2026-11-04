@@ -301,6 +301,15 @@ segments:
     - c
     - noopHandlerScenarioScena1500_801FE574
   - - 31100
-    - asm
+    - textbin
     - func_801FE57C
+  - - 31196
+    - asm
+    - func_801FE5DC
+  - - 31484
+    - textbin
+    - T_801FE6FC
+  - - 31516
+    - asm
+    - func_801FE71C
 - - 31576

@@ -108,3 +108,6 @@ clearWorkRecordsAndResetEffectSlotsScenarioScena0800_801FE800 = 0x801FE800;
 armEffectGroupThenResetEffectSlotsScenarioScena0800_801FE840 = 0x801FE840;
 invokeHelperArgScenarioScena0800_801FE874 = 0x801FE874;
 func_801FE894 = 0x801FE894;
+func_801FE994 = 0x801FE994;
+T_801FE9F4 = 0x801FE9F4;
+func_801FEA74 = 0x801FEA74;

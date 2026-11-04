@@ -377,6 +377,15 @@ segments:
     - asm
     - func_801FDBF4
   - - 28948
-    - asm
+    - textbin
     - func_801FDD14
+  - - 29044
+    - asm
+    - func_801FDD74
+  - - 29108
+    - textbin
+    - T_801FDDB4
+  - - 29236
+    - asm
+    - func_801FDE34
 - - 29644

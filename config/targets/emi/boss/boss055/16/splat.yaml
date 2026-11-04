@@ -169,4 +169,13 @@ segments:
   - - 7380
     - asm
     - func_800C34D4
+  - - 7476
+    - textbin
+    - T_800C3534
+  - - 7604
+    - asm
+    - func_800C35B4
+  - - 7636
+    - textbin
+    - T_800C35D4
 - - 7700

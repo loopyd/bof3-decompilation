@@ -125,4 +125,16 @@ segments:
   - - 5916
     - asm
     - func_801F431C
+  - - 6812
+    - textbin
+    - T_801F469C
+  - - 6876
+    - asm
+    - func_801F46DC
+  - - 7612
+    - textbin
+    - T_801F49BC
+  - - 7676
+    - asm
+    - func_801F49FC
 - - 7832

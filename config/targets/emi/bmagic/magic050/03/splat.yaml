@@ -48,6 +48,12 @@ segments:
   - - 844
     - asm
     - func_801EEF4C
+  - - 908
+    - textbin
+    - T_801EEF8C
+  - - 972
+    - asm
+    - func_801EEFCC
   - - 988
     - asm
     - func_801EEFDC

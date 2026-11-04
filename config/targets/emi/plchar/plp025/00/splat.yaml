@@ -111,6 +111,9 @@ segments:
     - asm
     - func_801CFF64
   - - 7080
-    - asm
+    - textbin
     - func_801CFFA8
+  - - 7144
+    - asm
+    - func_801CFFE8
 - - 7172

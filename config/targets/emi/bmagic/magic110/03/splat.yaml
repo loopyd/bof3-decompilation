@@ -78,6 +78,12 @@ segments:
   - - 2996
     - asm
     - func_801EF7B4
+  - - 3060
+    - textbin
+    - T_801EF7F4
+  - - 3124
+    - asm
+    - func_801EF834
   - - 3140
     - asm
     - func_801EF844
@@ -115,6 +121,9 @@ segments:
     - asm
     - func_801F01E8
   - - 6252
-    - asm
+    - textbin
     - func_801F046C
+  - - 6316
+    - asm
+    - func_801F04AC
 - - 6356

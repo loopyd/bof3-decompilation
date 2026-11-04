@@ -81,3 +81,5 @@ func_801FCE6C = 0x801FCE6C;
 invokeHelperArgScenarioScena0300_801FCEDC = 0x801FCEDC;
 invokeHelperArgThenHelperScenarioScena0300_801FCEFC = 0x801FCEFC;
 func_801FCF24 = 0x801FCF24;
+T_801FCF84 = 0x801FCF84;
+func_801FD044 = 0x801FD044;

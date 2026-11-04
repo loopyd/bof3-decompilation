@@ -162,4 +162,10 @@ segments:
   - - 7088
     - asm
     - func_801D27B0
+  - - 7120
+    - textbin
+    - T_801D27D0
+  - - 7184
+    - asm
+    - func_801D2810
 - - 7192

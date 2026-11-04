@@ -59,6 +59,12 @@ segments:
   - - 2076
     - asm
     - func_801EF41C
+  - - 2172
+    - textbin
+    - T_801EF47C
+  - - 2236
+    - asm
+    - func_801EF4BC
   - - 2248
     - asm
     - func_801EF4C8

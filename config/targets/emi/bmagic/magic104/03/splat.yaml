@@ -51,6 +51,12 @@ segments:
   - - 1248
     - asm
     - func_801EF0E0
+  - - 1312
+    - textbin
+    - T_801EF120
+  - - 1376
+    - asm
+    - func_801EF160
   - - 1400
     - asm
     - func_801EF178
@@ -90,4 +96,7 @@ segments:
   - - 7336
     - asm
     - func_801F08A8
+  - - 7400
+    - textbin
+    - T_801F08E8
 - - 7432

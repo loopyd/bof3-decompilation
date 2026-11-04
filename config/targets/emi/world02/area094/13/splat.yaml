@@ -83,4 +83,22 @@ segments:
   - - 2308
     - asm
     - func_801F3504
+  - - 7108
+    - textbin
+    - T_801F47C4
+  - - 7268
+    - asm
+    - func_801F4864
+  - - 8676
+    - textbin
+    - T_801F4DE4
+  - - 8868
+    - asm
+    - func_801F4EA4
+  - - 9732
+    - textbin
+    - T_801F5204
+  - - 9988
+    - asm
+    - func_801F5304
 - - 10101

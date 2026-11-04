@@ -115,6 +115,9 @@ segments:
     - c
     - invokeHelperBmagicMagic06703_801F0498
   - - 6328
-    - asm
+    - textbin
     - func_801F04B8
+  - - 6360
+    - asm
+    - func_801F04D8
 - - 6384

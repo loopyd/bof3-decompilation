@@ -405,6 +405,15 @@ segments:
     - c
     - invokeHelperArgScenarioScena0800_801FE874
   - - 31892
-    - asm
+    - textbin
     - func_801FE894
+  - - 32148
+    - asm
+    - func_801FE994
+  - - 32244
+    - textbin
+    - T_801FE9F4
+  - - 32372
+    - asm
+    - func_801FEA74
 - - 32384

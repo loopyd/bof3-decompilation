@@ -38,4 +38,22 @@ segments:
   - - 280
     - asm
     - func_801F2D18
+  - - 3448
+    - textbin
+    - T_801F3978
+  - - 3512
+    - asm
+    - func_801F39B8
+  - - 4696
+    - textbin
+    - T_801F3E58
+  - - 4792
+    - asm
+    - func_801F3EB8
+  - - 5048
+    - textbin
+    - T_801F3FB8
+  - - 5176
+    - asm
+    - func_801F4038
 - - 5180

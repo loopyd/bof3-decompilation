@@ -207,4 +207,22 @@ segments:
   - - 13144
     - asm
     - func_801F5F58
+  - - 13176
+    - textbin
+    - T_801F5F78
+  - - 13240
+    - asm
+    - func_801F5FB8
+  - - 14328
+    - textbin
+    - T_801F63F8
+  - - 14360
+    - asm
+    - func_801F6418
+  - - 14520
+    - textbin
+    - T_801F64B8
+  - - 14584
+    - asm
+    - func_801F64F8
 - - 14628

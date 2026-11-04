@@ -27,8 +27,11 @@ segments:
   vram: 2148276228
   subsegments:
   - - 4
-    - asm
+    - textbin
     - func_800C1804
+  - - 36
+    - asm
+    - func_800C1824
   - - 124
     - asm
     - func_800C187C

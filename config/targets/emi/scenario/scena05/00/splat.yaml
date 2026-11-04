@@ -249,6 +249,15 @@ segments:
     - '@source: src/bof3/scenario/invokeHelperArgThenHelperScenarioScena0500_801FD580.c'
     - '@behavior: Thin overlay wrapper calling the helper at 0x801C1ABC with the constant argument 0 and then the helper at 0x801C1630 with no arguments; the 0x18-byte frame only keeps $ra across the two calls.'
   - - 27048
-    - asm
+    - textbin
     - func_801FD5A8
+  - - 27240
+    - asm
+    - func_801FD668
+  - - 27272
+    - textbin
+    - T_801FD688
+  - - 27304
+    - asm
+    - func_801FD6A8
 - - 27396

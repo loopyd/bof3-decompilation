@@ -81,6 +81,12 @@ segments:
   - - 3328
     - asm
     - func_801EF900
+  - - 3392
+    - textbin
+    - T_801EF940
+  - - 3456
+    - asm
+    - func_801EF980
   - - 3472
     - asm
     - func_801EF990

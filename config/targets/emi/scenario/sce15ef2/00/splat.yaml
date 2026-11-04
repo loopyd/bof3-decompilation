@@ -106,6 +106,9 @@ segments:
     - asm
     - func_801D19A8
   - - 3868
-    - asm
+    - textbin
     - func_801D1B1C
+  - - 3900
+    - asm
+    - func_801D1B3C
 - - 3924

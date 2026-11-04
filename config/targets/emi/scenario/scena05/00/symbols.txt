@@ -68,3 +68,6 @@ invokeHelperArgThenHelperScenarioScena0500_801FD530 = 0x801FD530;
 invokeHelperArgThenHelperScenarioScena0500_801FD558 = 0x801FD558;
 invokeHelperArgThenHelperScenarioScena0500_801FD580 = 0x801FD580;
 func_801FD5A8 = 0x801FD5A8;
+func_801FD668 = 0x801FD668;
+T_801FD688 = 0x801FD688;
+func_801FD6A8 = 0x801FD6A8;
