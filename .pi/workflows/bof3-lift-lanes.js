@@ -264,7 +264,7 @@ const parseReport = (text) => {
 
 const verdictOf = (text, lane) => {
   const report = parseReport(text);
-  if (!report || report.lane !== lane.key || report.target !== lane.target) return "unknown";
+  if (!report || report.lane !== lane.key || !sameTarget(report.target, lane.target)) return "unknown";
   return ["accepted", "repair", "blocked"].includes(report.workflow) ? report.workflow : "unknown";
 };
 
@@ -324,6 +324,11 @@ const laneChain = (lane) => {
 
 // Fail closed on incomplete membership or contradictory exact evidence. This is
 // report routing, not independent native verification; parent gates still own closure.
+// Target ids are case-insensitive here for the same reason addresses are: a lane
+// echoing "EMI/Battle/Battle/03" names the same target as "emi/battle/battle/03".
+const sameTarget = (left, right) =>
+  String(left || "").trim().toLowerCase() === String(right || "").trim().toLowerCase();
+
 // --- selector identity ---
 // A lane may name the same function as the registry ref it was given, or as the
 // canonical `target@0xADDRESS` form, with either hex case. Routing compares the
@@ -344,15 +349,16 @@ const laneIdentities = (lane) => lane.refs.map((ref) => selectorIdentity(ref)).f
 const matchesLane = (lane, text, identities) => {
   const value = selectorIdentity(text);
   if (!value) return false;
+  const prefix = value.prefix.toLowerCase();
   return identities.some((identity) => identity.address === value.address &&
-    (identity.prefix === value.prefix ||
-     value.prefix.toLowerCase() === String(lane.target).toLowerCase()));
+    (identity.prefix.toLowerCase() === prefix ||
+     prefix === String(lane.target).toLowerCase()));
 };
 // --- end selector identity ---
 
 const resultState = (lane, text) => {
   const report = parseReport(text);
-  if (!report || report.lane !== lane.key || report.target !== lane.target) return "invalid";
+  if (!report || report.lane !== lane.key || !sameTarget(report.target, lane.target)) return "invalid";
   const rows = report.results;
   if (!Array.isArray(rows) || rows.length !== lane.refs.length) return "invalid";
   const identities = laneIdentities(lane);
