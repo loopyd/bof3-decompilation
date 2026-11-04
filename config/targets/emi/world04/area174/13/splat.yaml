@@ -134,8 +134,8 @@ segments:
     - asm
     - func_801F4A5C
   - - 7860
-    - asm
-    - func_801F4AB4
+    - c
+    - dispatchWorkByte4LocalHandlersWorld04Area17413_801F4AB4
   - - 7948
     - asm
     - func_801F4B0C

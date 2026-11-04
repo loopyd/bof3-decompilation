@@ -1,4 +1,5 @@
+appendRenderPrim = 0x8014E5A0;
 D_801D0C04 = 0x801D0C04;
 func_801D1250 = 0x801D1250;
-func_801D1714 = 0x801D1714;
+drawGlyphStringQuadsCommu03_06 = 0x801D1714;
 T_801D18AC = 0x801D18AC;

@@ -107,8 +107,9 @@ segments:
     - asm
     - func_801F0628
   - - 6796
-    - asm
-    - func_801F068C
+    - c
+    - clearWorkBytesBmagicMagic22003_801F068C
+    - '@source: src/bof3/bmagic/clearWorkBytesBmagicMagic22003_801F068C.c'
   - - 6876
     - textbin
     - T_801F06DC

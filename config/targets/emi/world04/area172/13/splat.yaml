@@ -56,8 +56,10 @@ segments:
     - dispatchStateByte1Table5090World04Area17213_801F2FF0
     - '@source: src/bof3/world/area17213DispatchTables.c'
   - - 1076
-    - asm
-    - func_801F3034
+    - c
+    - setScratchWorkByte9ClearHalf2eAdvanceStateWorld04Area17213_801F3034
+    - '@source: src/bof3/world/setScratchWorkByte9ClearHalf2eAdvanceStateWorld04Area17213_801F3034.c'
+    - '@behavior: Sets work byte +9 to 8, clears original work halfword +0x2E, and advances reloaded work state byte +1.'
   - - 1124
     - asm
     - func_801F3064

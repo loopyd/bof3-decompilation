@@ -58,8 +58,9 @@ segments:
     - asm
     - func_801EF3EC
   - - 2824
-    - asm
-    - func_801EF708
+    - c
+    - reserveFirstFreeRecordBmagicMagic15803_801EF708
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic15803_801EF708.c'
   - - 2924
     - textbin
     - D_801EF76C

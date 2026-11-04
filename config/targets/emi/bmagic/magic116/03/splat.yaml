@@ -48,8 +48,8 @@ segments:
     - asm
     - func_801EEE7C
   - - 952
-    - asm
-    - func_801EEFB8
+    - c
+    - findFreeRecordBmagicMagic11603_801EEFB8
   - - 1012
     - asm
     - func_801EEFF4

@@ -72,8 +72,13 @@ segments:
     - asm
     - func_801D4730
   - - 17360
+    - c
+    - sumLevelExpBate00_801D4FD0
+    - '@source: src/bof3/ui/sumLevelExpBate00_801D4FD0.c'
+    - '@behavior: sums character level experience entries, rejecting counts of 100 or greater'
+  - - 17484
     - asm
-    - func_801D4FD0
+    - func_801D504C
   - - 22140
     - asm
     - func_801D627C
