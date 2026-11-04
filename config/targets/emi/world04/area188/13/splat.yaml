@@ -53,8 +53,9 @@ segments:
     - dispatchStateByte1Table4dfcWorld04Area18813_801F30C8
     - '@source: src/bof3/world/area18813DispatchTables.c'
   - - 1292
-    - asm
-    - func_801F310C
+    - c
+    - clearWorkByte9SelectWorkState1AndShade0FWorld04Area18813_801F310C
+    - '@source: src/bof3/world/clearWorkByte9SelectWorkState1AndShade0FWorld04Area18813_801F310C.c'
   - - 1352
     - asm
     - func_801F3148

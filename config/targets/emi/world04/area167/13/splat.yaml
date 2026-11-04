@@ -114,8 +114,9 @@ segments:
     - asm
     - func_801F43B8
   - - 6196
-    - asm
-    - func_801F4434
+    - c
+    - copyWords7a8cToWork34383cWorld04Area16713_801F4434
+    - '@source: src/bof3/world/copyWords7a8cToWork34383cWorld04Area16713_801F4434.c'
   - - 6252
     - c
     - setWorld04Area16713_801F446C

@@ -91,8 +91,9 @@ segments:
     - c
     - noopHandlerWorld01Area04914_801F36F8
   - - 2816
-    - asm
-    - func_801F3700
+    - c
+    - retreatCounter2By4World01Area04914_801F3700
+    - '@source: src/bof3/world/retreatCounter2By4World01Area04914_801F3700.c'
   - - 2856
     - asm
     - func_801F3728

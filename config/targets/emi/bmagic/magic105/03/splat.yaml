@@ -46,8 +46,9 @@ segments:
     - asm
     - func_801EEFBC
   - - 1132
-    - asm
-    - func_801EF06C
+    - c
+    - copyWorkTripletSeedOffsetPairAndAdvanceWorkByte2BmagicMagic10503_801EF06C
+    - '@source: src/bof3/bmagic/copyWorkTripletSeedOffsetPairAndAdvanceWorkByte2BmagicMagic10503_801EF06C.c'
   - - 1316
     - asm
     - func_801EF124

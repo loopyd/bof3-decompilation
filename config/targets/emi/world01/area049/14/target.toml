@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/retreatCounter2By4World01Area04914_801F3700.c",
     "src/bof3/world/setTwoWorld01Area04914_801F3750.c",
     "src/bof3/world/setTwoWorld01Area04914_801F3438.c",
     "src/bof3/world/noopHandlerWorld01Area04914_801F36F8.c",

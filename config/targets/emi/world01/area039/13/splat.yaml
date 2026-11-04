@@ -75,8 +75,8 @@ segments:
     - asm
     - func_801F2F68
   - - 916
-    - asm
-    - func_801F2F94
+    - c
+    - setSharedByteZeroIfByte80144F5AFourElseOneWorld01Area03913_801F2F94
   - - 968
     - textbin
     - D_801F2FC8

@@ -87,8 +87,8 @@ segments:
     - asm
     - func_801D5B2C
   - - 29284
-    - asm
-    - func_801D7E64
+    - c
+    - countActiveRecords_commu02_08
   - - 29344
     - asm
     - func_801D7EA0
