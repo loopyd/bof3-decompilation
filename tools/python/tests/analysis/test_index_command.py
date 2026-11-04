@@ -48,7 +48,7 @@ def test_analysis_readiness_reports_unavailable_facts_without_index(
         "available": False,
         "error": "missing index",
     }
-    assert payload["recovery"] == "bin/harness analysis index --recover"
+    assert payload["recovery"] == "bin/harness analysis index"
 
 
 def test_analysis_readiness_includes_naming_type_macro_facts(
@@ -181,7 +181,7 @@ def test_analysis_readiness_live_target_output_ceiling() -> None:
     assert result.stdout.count(b"\n") <= 100
 
 
-def test_recover_reanalyzes_every_stale_target_before_rebuild(
+def test_stale_snapshots_are_reanalyzed_before_rebuild(
     tmp_path: Path, monkeypatch
 ) -> None:
     calls: list[tuple[str, str]] = []
@@ -218,7 +218,7 @@ def test_recover_reanalyzes_every_stale_target_before_rebuild(
 
     monkeypatch.setattr(index, "rebuild", rebuild)
 
-    assert index.run(Namespace(root=tmp_path, recover=True)) == 0
+    assert index.run(Namespace(root=tmp_path)) == 0
     assert calls == [
         ("analyze", "stale/a"),
         ("analyze", "stale/b"),
@@ -226,9 +226,7 @@ def test_recover_reanalyzes_every_stale_target_before_rebuild(
     ]
 
 
-def test_recover_does_not_recheck_targets_that_were_initially_fresh(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_fresh_targets_are_not_rechecked(tmp_path: Path, monkeypatch) -> None:
     calls = {"fresh": 0}
     rebuilt = False
     monkeypatch.setattr(
@@ -256,14 +254,12 @@ def test_recover_does_not_recheck_targets_that_were_initially_fresh(
 
     monkeypatch.setattr(index, "rebuild", rebuild)
     with pytest.raises(ValueError, match="stale targets: stale"):
-        index.run(Namespace(root=tmp_path, recover=True))
+        index.run(Namespace(root=tmp_path))
     assert calls["fresh"] == 1
     assert rebuilt is False
 
 
-def test_recover_noops_when_snapshots_and_index_are_fresh(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_fresh_snapshots_and_index_are_not_rebuilt(tmp_path: Path, monkeypatch) -> None:
     manifests = {"fresh/a": object(), "fresh/b": object()}
     status_calls: list[str] = []
     rebuilt = False
@@ -284,19 +280,19 @@ def test_recover_noops_when_snapshots_and_index_are_fresh(
     def forbidden_rebuild(_root: Path) -> Path:
         nonlocal rebuilt
         rebuilt = True
-        raise AssertionError("fresh recovery must not rebuild")
+        raise AssertionError("a fresh index must not rebuild")
 
     monkeypatch.setattr(index, "rebuild", forbidden_rebuild)
 
     output = io.StringIO()
     with redirect_stdout(output):
-        assert index.run(Namespace(root=tmp_path, recover=True)) == 0
+        assert index.run(Namespace(root=tmp_path)) == 0
     assert status_calls == ["fresh/a", "fresh/b"]
     assert output.getvalue() == "out/index/reverse.sqlite\n"
     assert rebuilt is False
 
 
-def test_recover_rebuilds_when_index_is_missing_despite_fresh_snapshots(
+def test_missing_index_is_rebuilt_despite_fresh_snapshots(
     tmp_path: Path, monkeypatch
 ) -> None:
     monkeypatch.setattr(
@@ -312,10 +308,10 @@ def test_recover_rebuilds_when_index_is_missing_despite_fresh_snapshots(
     output.parent.mkdir(parents=True)
     monkeypatch.setattr(index, "rebuild", lambda _root: output)
 
-    assert index.run(Namespace(root=tmp_path, recover=True)) == 0
+    assert index.run(Namespace(root=tmp_path)) == 0
 
 
-def test_recover_refuses_rebuild_when_target_remains_stale(
+def test_unrecoverable_stale_target_refuses_rebuild(
     tmp_path: Path, monkeypatch
 ) -> None:
     rebuilt = False
@@ -333,5 +329,5 @@ def test_recover_refuses_rebuild_when_target_remains_stale(
     monkeypatch.setattr(index, "rebuild", rebuild)
 
     with pytest.raises(ValueError, match="stale targets: stale"):
-        index.run(Namespace(root=tmp_path, recover=True))
+        index.run(Namespace(root=tmp_path))
     assert rebuilt is False

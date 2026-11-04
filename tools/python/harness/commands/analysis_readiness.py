@@ -145,7 +145,7 @@ def readiness(
         "snapshots": snapshots,
         "stale_facts": _stale_facts(snapshots, index_ready),
         "summaries": summaries,
-        "recovery": None if ready else "bin/harness analysis index --recover",
+        "recovery": None if ready else "bin/harness analysis index",
     }
 
 

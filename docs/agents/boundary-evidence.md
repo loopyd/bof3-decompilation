@@ -53,8 +53,8 @@ and refuses overwrite. Keep referenced probe workspaces with the report.
 Review original consumers and the full range before accepting a representation.
 If the candidate is justified, apply the minimal target-owned change through the
 [matching contract](matching.md), regenerate Splat and run applicable native gates.
-Then run `bin/harness analysis index --recover` and `just index`; only their actual
-success satisfies index freshness. This command never waives that prerequisite
+Then run `bin/harness analysis index` and `just index`; the first regenerates any
+stale snapshot itself, and only their actual success satisfies index freshness. This command never waives that prerequisite
 or resumes a blocked campaign.
 
 Implementation: `harness.analysis.boundary` collects evidence,

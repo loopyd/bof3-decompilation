@@ -37,7 +37,7 @@ owners; never hand-edit `build/` or toolchains to repair a move.
    and fresh asm-diff/byte-match for every touched selector. Obtain independent
    review of the complete batch.
 7. After those gates pass, run `bin/harness analysis readiness TARGET`. If stale,
-   run one `bin/harness analysis index --recover` and require fresh readiness.
+   run one `bin/harness analysis index` and require fresh readiness.
    Refresh once per batch rather than once per file.
 8. Remove obsolete paths after all consumers migrate. Prune only confirmed empty,
    unclaimed directories. Keep any directory that still owns unrelated files.

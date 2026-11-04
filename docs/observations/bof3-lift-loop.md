@@ -553,7 +553,8 @@ to inspect and admit 17 naming-debt rows, including a delimiter-parsing failure
 and repair. This made the naming gate green by changing its admitted set, with
 zero renames; see the [naming baseline case](bof3-naming.md#campaign-baseline-admission-and-parser-recovery).
 
-The batch check at 1101–1102 returned:
+The batch check at 1101–1102 returned (the `--recover` spelling in this record is
+historical; `bin/harness analysis index` now regenerates stale snapshots itself):
 
 | Check | Retained result | Evidence limit |
 | --- | --- | --- |

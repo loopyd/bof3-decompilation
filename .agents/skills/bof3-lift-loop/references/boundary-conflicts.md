@@ -1,6 +1,6 @@
 # Boundary conflicts blocking the index
 
-`analysis index` or `analysis index --recover` error
+`analysis index` error
 `conflicting function/global symbol: TARGET:NAME` means a reviewed Splat `asm`
 subsegment claims a function where a header declares a global. Preserve error;
 never weaken index validation, rename away conflict or edit generated output.
@@ -14,7 +14,7 @@ never weaken index validation, rename away conflict or edit generated output.
    identical extraction, unchanged offsets and linker script unchanged except
    selected object path. `supported` probe is candidate evidence, not acceptance.
 4. Apply only justified target-local `asm` -> `textbin` through `$bof3-re` ownership
-   gates. Regenerate Splat, run `bin/harness analysis index --recover` and `just index`.
+   gates. Regenerate Splat, run `bin/harness analysis index` and `just index`.
 5. Require both distinct review of classification/byte/layout preservation against
    original bytes and successful index commands. Neither substitutes for the other.
 6. Retain original range hashes, probe workspace and resulting index rows. Splat

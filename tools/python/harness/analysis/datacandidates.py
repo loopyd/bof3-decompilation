@@ -145,7 +145,7 @@ def collect_data_candidates(
         "limits": (
             "Byte-shape evidence only: no whole-image proof, no semantic role, no "
             "layout authority. Promotion requires the reviewed matching transaction "
-            "plus `source splat` and a successful `analysis index --recover`/`just index`."
+            "plus `source splat` and a successful `analysis index`/`just index`."
         ),
     }
 

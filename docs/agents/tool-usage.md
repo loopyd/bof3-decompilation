@@ -259,10 +259,10 @@ bin/harness analysis query quick-wins --target TARGET
 # Or: bin/harness analysis query metrics TARGET@0xADDRESS --detail normal
 ```
 
-Stop if `rz-project status` reports a stale snapshot; rebuild that target's
-snapshot before running `bin/harness analysis index`. Rebuild the index only after freshness
-succeeds, then query the requested target without touching reviewed maps.
-`bin/harness analysis query` refuses stale snapshot/index evidence. Use
+`bin/harness analysis index` reanalyzes every stale snapshot before it rebuilds, so
+the status call is a readiness check rather than a repair step. Stop if a target
+remains stale after indexing; `bin/harness analysis query` refuses stale
+snapshot/index evidence. Use
 `--exclusions` to inspect rows rejected by canonical-code checks; use
 `--detail full` for complete rows.
 
@@ -331,7 +331,8 @@ literals are excluded. Same-spelled variables, fields or macros can still be
 lexical candidates: these rows never satisfy `types --untyped`, prove a type
 binding, close include consumers or grant transaction/native acceptance.
 Older index schemas are rejected; refresh explicitly with
-`bin/harness analysis index` after snapshot freshness checks. Queries never rebuild it implicitly.
+`bin/harness analysis index`, which reanalyzes stale snapshots before rebuilding.
+Queries never rebuild it implicitly.
 Both full and status readers validate the exact generated index definitions on
 required tables, including partial uniqueness predicates. Missing, altered or
 extra indexes on those tables require rebuilding; unrelated extra tables remain
@@ -364,8 +365,9 @@ on failure. The default schema API retains its existing transaction behavior.
 `bin/harness analysis readiness [TARGET]` reports snapshot/index freshness and
 current naming, type and macro inventory counts using `bof3.analysis-readiness/v3`.
 `TARGET` restricts counts to that target; shared macro definitions remain visible.
-Use `--detail full` for naming-debt rows. A stale index remains unavailable until
-explicit `bin/harness analysis index --recover`; readiness never refreshes it.
+Use `--detail full` for naming-debt rows. `bin/harness analysis index` regenerates
+stale snapshots before rebuilding, so the index never stays unavailable pending a
+flag; readiness reports staleness but does not refresh it.
 
 ### 5. Lift and iterate
 
