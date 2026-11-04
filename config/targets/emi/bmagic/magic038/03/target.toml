@@ -11,6 +11,6 @@ sources = [
 ]
 support_sources = [
     "src/bof3/support/magic038_03_psyq.c",
-    "src/bof3/world/magic03803DispatchTables.c",
+    "src/bof3/bmagic/magic03803DispatchTables.c",
 ]
 psyq_source = "src/bof3/support/magic038_03_psyq.c"

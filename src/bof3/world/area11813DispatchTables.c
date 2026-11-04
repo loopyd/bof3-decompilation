@@ -1,4 +1,4 @@
-#include "bof3/bof3.h"
+#include "bof3/emi/dispatchers.h"
 
 extern void (*D_801F5124[])(void);
 extern void (*D_801F5130[])(void);
@@ -15,7 +15,7 @@ extern void (*D_801F519C[])(void);
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_ONE(dispatchStateByte1Table5124WorldWorld03Area11813_801F2C04, D_801F5124);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table5124WorldWorld03Area11813_801F2C04, D_801F5124);
 
 /* @source 0x801F2E20
  * @behavior Overlay step dispatch: reads the state byte at +1 of the work record
@@ -26,7 +26,7 @@ BOF3_DISPATCH_WORK_SLOT_ONE(dispatchStateByte1Table5124WorldWorld03Area11813_801
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_ONE(dispatchStateByte1Table5130WorldWorld03Area11813_801F2E20, D_801F5130);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table5130WorldWorld03Area11813_801F2E20, D_801F5130);
 
 /* @source 0x801F3014
  * @behavior Overlay step dispatch: reads the state byte at +2 of the work record
@@ -37,7 +37,7 @@ BOF3_DISPATCH_WORK_SLOT_ONE(dispatchStateByte1Table5130WorldWorld03Area11813_801
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_TWO(dispatchStateByte2Table516cWorldWorld03Area11813_801F3014, D_801F516C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table516cWorldWorld03Area11813_801F3014, D_801F516C);
 
 /* @source 0x801F3C10
  * @behavior Overlay step dispatch: reads the state byte at +2 of the work record
@@ -48,7 +48,7 @@ BOF3_DISPATCH_WORK_SLOT_TWO(dispatchStateByte2Table516cWorldWorld03Area11813_801
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_TWO(dispatchStateByte2Table5184WorldWorld03Area11813_801F3C10, D_801F5184);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table5184WorldWorld03Area11813_801F3C10, D_801F5184);
 
 /* @source 0x801F410C
  * @behavior Overlay step dispatch: reads the state byte at +2 of the work record
@@ -59,4 +59,4 @@ BOF3_DISPATCH_WORK_SLOT_TWO(dispatchStateByte2Table5184WorldWorld03Area11813_801
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_TWO(dispatchStateByte2Table519cWorldWorld03Area11813_801F410C, D_801F519C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table519cWorldWorld03Area11813_801F410C, D_801F519C);

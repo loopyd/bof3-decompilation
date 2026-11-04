@@ -1,4 +1,4 @@
-#include "bof3/bof3.h"
+#include "bof3/emi/dispatchers.h"
 
 extern void (*D_801F38CC[])(void);
 extern void (*D_801F3924[])(void);
@@ -13,7 +13,7 @@ extern void (*D_801F3924[])(void);
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_TWO(dispatchStateByte2Table38ccWorld04Area15713_801F2C04, D_801F38CC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table38ccWorld04Area15713_801F2C04, D_801F38CC);
 
 /* @source 0x801F3440
  * @behavior Overlay step dispatch: reads the state byte at +2 of
@@ -25,4 +25,4 @@ BOF3_DISPATCH_WORK_SLOT_TWO(dispatchStateByte2Table38ccWorld04Area15713_801F2C04
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_TWO(dispatchStateByte2Table3924World04Area15713_801F3440, D_801F3924);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table3924World04Area15713_801F3440, D_801F3924);

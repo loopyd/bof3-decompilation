@@ -32,7 +32,7 @@ segments:
   - - 24
     - c
     - dispatchMode
-    - '@source: src/bof3/world/dispatchMode.c'
+    - '@source: src/bof3/world/area00813DispatchTables.c'
     - '@behavior: dispatches the current scratchpad mode through the local handler table.'
   - - 92
     - c
@@ -87,7 +87,7 @@ segments:
   - - 1604
     - c
     - func_801F3244
-    - '@source: src/bof3/world/func_801F3244.c'
+    - '@source: src/bof3/world/area00813DispatchTables.c'
     - '@behavior: dispatches the current area-state mode byte through the local handler table at 0x801F46B0.'
   - - 1672
     - c
@@ -176,7 +176,7 @@ segments:
   - - 3684
     - c
     - func_801F3A64
-    - '@source: src/bof3/world/func_801F3A64.c'
+    - '@source: src/bof3/world/area00813DispatchTables.c'
     - '@behavior: dispatches the current area-state mode byte through the local handler table at 0x801F46EC.'
   - - 3752
     - c

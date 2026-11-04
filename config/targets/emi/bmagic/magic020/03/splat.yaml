@@ -53,6 +53,7 @@ segments:
   - - 1944
     - c
     - dispatchWorkByte1HandlerBmagicMagic02003_801EF398
+    - '@source: src/emi/bmagic/magic020/03/magic02003DispatchTables.c'
   - - 2012
     - asm
     - func_801EF3DC

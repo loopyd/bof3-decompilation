@@ -38,9 +38,11 @@ segments:
   - - 1016
     - c
     - dispatchWorkByte1HandlerBmagicMagic01200_801EEFF8
+    - '@source: src/bof3/bmagic/magic01200DispatchTables.c'
   - - 1084
     - c
     - dispatchWorkByte2HandlerBmagicMagic01200_801EF03C
+    - '@source: src/bof3/bmagic/magic01200DispatchTables.c'
   - - 1152
     - asm
     - func_801EF080
@@ -64,5 +66,5 @@ segments:
     - func_801EF79C
   - - 4016
     - asm
-    - func_801EFBB0
+    - dispatchHandlerTable801EFBB0
 - - 4068

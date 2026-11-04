@@ -59,7 +59,7 @@ segments:
   - - 2244
     - c
     - dispatchStateByte1Table0c10BmagicMagic06203_801EF4C4
-    - '@source: src/bof3/world/magic06203DispatchTables.c'
+    - '@source: src/bof3/bmagic/magic06203DispatchTables.c'
   - - 2312
     - asm
     - func_801EF508
@@ -81,7 +81,7 @@ segments:
   - - 4028
     - c
     - dispatchStateByte2Table0c24BmagicMagic06203_801EFBBC
-    - '@source: src/bof3/world/magic06203DispatchTables.c'
+    - '@source: src/bof3/bmagic/magic06203DispatchTables.c'
   - - 4096
     - asm
     - func_801EFC00

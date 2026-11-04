@@ -44,6 +44,7 @@ segments:
   - - 840
     - c
     - dispatchWorkByte1HandlerBmagicMagic04003_801EEF48
+    - '@source: src/emi/bmagic/magic040/03/magic04003DispatchTables.c'
   - - 908
     - asm
     - func_801EEF8C

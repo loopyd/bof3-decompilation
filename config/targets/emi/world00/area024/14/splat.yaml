@@ -30,7 +30,7 @@ segments:
   - - 20
     - c
     - dispatchScratchMode
-    - '@source: src/bof3/world/dispatchScratchMode.c'
+    - '@source: src/bof3/world/area02414DispatchTables.c'
     - '@behavior: dispatches the scratch mode byte at offset 1 through the local handler table at 0x801F4200.'
   - - 88
     - c
@@ -151,6 +151,6 @@ segments:
     - '@source: src/bof3/world/resetStateFlagB.c'
     - '@behavior: slot-1 callback of the local pointer table D_801F5AB4: sets D_801490A8 to -1.'
   - - 5632
-    - rodata
-    - T_801F4200
+    - asm
+    - D_801F4200
 - - 12036

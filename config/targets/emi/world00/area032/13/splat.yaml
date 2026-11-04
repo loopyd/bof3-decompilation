@@ -27,6 +27,10 @@ segments:
   - - 0
     - asm
     - T_801F2C00
+  - - 4
+    - c
+    - dispatchStateByte1Table3f6cWorld00Area03213_801F2C04
+    - '@source: src/bof3/world/area03213DispatchTables.c'
   - - 72
     - c
     - func_801F2C48
@@ -60,7 +64,7 @@ segments:
   - - 1192
     - c
     - dispatchScratchWorkByte1
-    - '@source: src/bof3/world/dispatchScratchWorkByte1.c'
+    - '@source: src/bof3/world/area03213DispatchTables.c'
     - '@behavior: Dispatches scratch work byte 1 through the local handler table.'
   - - 1260
     - c

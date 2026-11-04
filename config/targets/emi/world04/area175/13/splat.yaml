@@ -30,8 +30,9 @@ segments:
   vram: 2149526552
   subsegments:
   - - 24
-    - asm
-    - func_801F2C18
+    - c
+    - dispatchStateByte1Table45ecWorld04Area17513_801F2C18
+    - '@source: src/bof3/world/area17513DispatchTables.c'
   - - 92
     - asm
     - func_801F2C5C
@@ -51,7 +52,7 @@ segments:
   - - 1508
     - c
     - dispatchWorkByte1HandlerWorld04Area17513_801F31E4
-    - '@source: src/bof3/world/dispatchWorkByte1HandlerWorld04Area17513_801F31E4.c'
+    - '@source: src/bof3/world/area17513DispatchTables.c'
     - '@behavior: Reads the non-volatile scratchpad work-object pointer cell at 0x1F800044, indexes the five-entry handler table D_801F45F8 at 0x801F45F8 with the byte at offset 0x01 of that object (scaled by four) and calls the selected handler; it takes no arguments, returns nothing and touches no other work byte.'
   - - 1576
     - c
@@ -77,7 +78,7 @@ segments:
   - - 2348
     - c
     - dispatchWorkByte1Table460cWorld04Area17513_801F352C
-    - '@source: src/bof3/world/dispatchWorkByte1Table460cWorld04Area17513_801F352C.c'
+    - '@source: src/bof3/world/area17513DispatchTables.c'
     - '@behavior: Reads the non-volatile scratchpad work-object pointer cell at 0x1F800044 and calls the handler pointer selected by the dispatch byte at offset 0x01 of that object in the four-entry handler table D_801F460C at 0x801F460C; takes no arguments, returns nothing and reads or writes no other work-object byte.'
   - - 2416
     - c

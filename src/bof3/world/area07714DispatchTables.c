@@ -1,4 +1,4 @@
-#include "bof3/bof3.h"
+#include "bof3/emi/dispatchers.h"
 
 extern void (*D_801F6250[])(void);
 extern void (*D_801F6260[])(void);
@@ -8,7 +8,7 @@ extern void (*D_801F6284[])(void);
 extern void (*D_801F62A8[])(void);
 extern void (*D_801F62BC[])(void);
 
-#define BOF3_DISPATCH_WORK_SLOT_TWO(name, table)                                  \
+#define EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, name, table)                                  \
   void name(void) {                                                            \
     table[SPAD_PTR_SLOT(u8, 0x44)[2]]();                                       \
   }
@@ -23,7 +23,7 @@ extern void (*D_801F62BC[])(void);
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_ONE(dispatchStateByte1Table6250World02Area07714_801F2C04, D_801F6250);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table6250World02Area07714_801F2C04, D_801F6250);
 
 /* @source 0x801F3C74
  * @behavior Overlay step dispatch: reads the state byte at +1 of the work record published
@@ -34,7 +34,7 @@ BOF3_DISPATCH_WORK_SLOT_ONE(dispatchStateByte1Table6250World02Area07714_801F2C04
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_ONE(dispatchStateByte1Table6260World02Area07714_801F3C74, D_801F6260);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table6260World02Area07714_801F3C74, D_801F6260);
 
 /* @source 0x801F3E04
  * @behavior Overlay step dispatch: reads the non-volatile scratchpad work
@@ -52,7 +52,7 @@ BOF3_DISPATCH_WORK_SLOT_ONE(dispatchStateByte1Table6260World02Area07714_801F3C74
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_ONE(dispatchStateByte1Table6268World02Area07714_801F3E04, D_801F6268);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table6268World02Area07714_801F3E04, D_801F6268);
 
 /* @source 0x801F4034
  * @behavior Overlay step dispatch: reads the non-volatile scratchpad work
@@ -70,7 +70,7 @@ BOF3_DISPATCH_WORK_SLOT_ONE(dispatchStateByte1Table6268World02Area07714_801F3E04
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_ONE(dispatchStateByte1Table6270World02Area07714_801F4034, D_801F6270);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table6270World02Area07714_801F4034, D_801F6270);
 
 /* @source 0x801F4CDC
  * @behavior Overlay state dispatch: loads the non-volatile scratchpad work
@@ -89,7 +89,7 @@ BOF3_DISPATCH_WORK_SLOT_ONE(dispatchStateByte1Table6270World02Area07714_801F4034
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_TWO(dispatchStateByte2Table6284World02Area07714_801F4CDC, D_801F6284);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table6284World02Area07714_801F4CDC, D_801F6284);
 
 /* @source 0x801F52F8
  * @behavior Overlay state dispatch: loads the non-volatile scratchpad work
@@ -108,7 +108,7 @@ BOF3_DISPATCH_WORK_SLOT_TWO(dispatchStateByte2Table6284World02Area07714_801F4CDC
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_TWO(dispatchStateByte2Table62a8World02Area07714_801F52F8, D_801F62A8);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table62a8World02Area07714_801F52F8, D_801F62A8);
 
 /* @source 0x801F5608
  * @behavior Overlay step dispatch: reads the state byte at +2 of the work record published
@@ -119,4 +119,4 @@ BOF3_DISPATCH_WORK_SLOT_TWO(dispatchStateByte2Table62a8World02Area07714_801F52F8
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_TWO(dispatchStateByte2Table62bcWorld02Area07714_801F5608, D_801F62BC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchStateByte2Table62bcWorld02Area07714_801F5608, D_801F62BC);

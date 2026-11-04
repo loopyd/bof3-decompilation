@@ -44,11 +44,11 @@ segments:
   - - 1100
     - c
     - dispatchStateByte1Tablef9b4BmagicMagic14603_801EF04C
-    - '@source: src/bof3/world/magic14603DispatchTables.c'
+    - '@source: src/bof3/bmagic/magic14603DispatchTables.c'
   - - 1168
     - c
     - dispatchStateByte2Tablef9b8BmagicMagic14603_801EF090
-    - '@source: src/bof3/world/magic14603DispatchTables.c'
+    - '@source: src/bof3/bmagic/magic14603DispatchTables.c'
   - - 1236
     - asm
     - func_801EF0D4
@@ -58,7 +58,7 @@ segments:
   - - 1788
     - c
     - dispatchStateByte1Tablef9c0BmagicMagic14603_801EF2FC
-    - '@source: src/bof3/world/magic14603DispatchTables.c'
+    - '@source: src/bof3/bmagic/magic14603DispatchTables.c'
   - - 1856
     - asm
     - func_801EF340

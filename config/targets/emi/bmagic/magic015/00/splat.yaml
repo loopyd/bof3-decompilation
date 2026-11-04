@@ -71,6 +71,7 @@ segments:
   - - 3556
     - c
     - dispatchWorkByte1HandlerBmagicMagic01500_801EF9E4
+    - '@source: src/emi/bmagic/magic015/00/magic01500DispatchTables.c'
   - - 3624
     - asm
     - func_801EFA28

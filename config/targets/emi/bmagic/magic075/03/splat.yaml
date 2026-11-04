@@ -44,7 +44,7 @@ segments:
   - - 1012
     - c
     - dispatchStateByte1Tablef7a0BmagicMagic07503_801EEFF4
-    - '@source: src/bof3/world/magic07503DispatchTables.c'
+    - '@source: src/bof3/bmagic/magic07503DispatchTables.c'
   - - 1080
     - asm
     - func_801EF038

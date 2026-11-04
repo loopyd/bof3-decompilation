@@ -1,4 +1,4 @@
-#include "bof3/bof3.h"
+#include "bof3/emi/dispatchers.h"
 
 extern void (*D_801F3304[])(void);
 
@@ -12,4 +12,4 @@ extern void (*D_801F3304[])(void);
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_ONE(dispatchStateByte1Table3304World00Area03613_801F2D18, D_801F3304);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table3304World00Area03613_801F2D18, D_801F3304);

@@ -49,7 +49,7 @@ segments:
   - - 868
     - c
     - dispatchWorkByte1HandlerBmagicMagic03903_801EEF64
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic03903_801EEF64.c'
+    - '@source: src/bof3/bmagic/magic03903DispatchTables.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044, scales its unsigned byte at offset 1 by four, and invokes the selected entry of the overlay-local two-entry code-pointer table at 0x801F0424 (0x801EEFA8, 0x801EF4E4) with no arguments; it keeps only $ra in a 0x18-byte frame and writes no state.'
   - - 936
     - asm

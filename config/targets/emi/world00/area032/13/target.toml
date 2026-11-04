@@ -10,11 +10,11 @@ load_address = 0x801f2c00
 
 sources = [
     "src/bof3/world/func_801F2C48_area03213.c",
+    "src/bof3/world/area03213DispatchTables.c",
     "src/bof3/world/func_801F2D18.c",
     "src/bof3/world/func_801F2DAC_area03213.c",
     "src/bof3/world/func_801F2E64.c",
     "src/bof3/world/resetWorkarea_801F2EE4.c",
-    "src/bof3/world/dispatchScratchWorkByte1.c",
     "src/bof3/world/func_801F2F04.c",
     "src/bof3/world/func_801F30EC_area03213.c",
     "src/bof3/world/func_801F3480.c",

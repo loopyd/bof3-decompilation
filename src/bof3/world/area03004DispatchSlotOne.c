@@ -1,4 +1,5 @@
 #include "bof3/world/area03004_internal.h"
+#include "bof3/emi/dispatchers.h"
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * second local handler table at 0x801E1D20.
@@ -7,7 +8,7 @@
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_ONE(func_801D20C8, D_801E1D20);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, func_801D20C8, D_801E1D20);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * third local handler table at 0x801E1D78.
@@ -16,7 +17,7 @@ BOF3_DISPATCH_WORK_SLOT_ONE(func_801D20C8, D_801E1D20);
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_ONE(func_801D2978, D_801E1D78);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, func_801D2978, D_801E1D78);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * local handler table at 0x801E1D80.
@@ -25,7 +26,7 @@ BOF3_DISPATCH_WORK_SLOT_ONE(func_801D2978, D_801E1D78);
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_ONE(func_801D2BF0, D_801E1D80);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, func_801D2BF0, D_801E1D80);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * local handler table at 0x801E1D8C.
@@ -34,7 +35,7 @@ BOF3_DISPATCH_WORK_SLOT_ONE(func_801D2BF0, D_801E1D80);
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_ONE(func_801D3358, D_801E1D8C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, func_801D3358, D_801E1D8C);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * local handler table at 0x801E1F78.
@@ -43,7 +44,7 @@ BOF3_DISPATCH_WORK_SLOT_ONE(func_801D3358, D_801E1D8C);
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_ONE(func_801D42A0, D_801E1F78);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, func_801D42A0, D_801E1F78);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * local handler table at 0x801E1D10.
@@ -52,7 +53,7 @@ BOF3_DISPATCH_WORK_SLOT_ONE(func_801D42A0, D_801E1F78);
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_ONE(func_801D1B10, D_801E1D10);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, func_801D1B10, D_801E1D10);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 2 through the
  * local handler table at 0x801E21E0.
@@ -61,7 +62,7 @@ BOF3_DISPATCH_WORK_SLOT_ONE(func_801D1B10, D_801E1D10);
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_TWO(func_801D9B14, D_801E21E0);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, func_801D9B14, D_801E21E0);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 2 through the
  * local handler table at 0x801E2340.
@@ -70,7 +71,7 @@ BOF3_DISPATCH_WORK_SLOT_TWO(func_801D9B14, D_801E21E0);
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_TWO(func_801DFFA8, D_801E2340);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, func_801DFFA8, D_801E2340);
 
 /* @behavior dispatches the scratch cursor mode byte at offset 2 through the
  * local handler table at 0x801E2348.
@@ -79,4 +80,4 @@ BOF3_DISPATCH_WORK_SLOT_TWO(func_801DFFA8, D_801E2340);
  * @match 100.00
  * @residual none
  */
-BOF3_DISPATCH_WORK_SLOT_TWO(func_801E00E0, D_801E2348);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, func_801E00E0, D_801E2348);

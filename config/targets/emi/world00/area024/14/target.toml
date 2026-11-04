@@ -9,11 +9,11 @@ load_address = 0x801f2c00
 
 sources = [
     "src/bof3/world/advanceStateSelectMode2.c",
+    "src/bof3/world/area02414DispatchTables.c",
     "src/bof3/world/advanceStateSelectMode3.c",
     "src/bof3/world/dispatchWorkStates.c",
     "src/bof3/world/drawSpin.c",
     "src/bof3/world/emitSpinTriangle_area02414.c",
-    "src/bof3/world/dispatchScratchMode.c",
     "src/bof3/world/func_801F2C58.c",
     "src/bof3/world/func_801F2CB0_area02414.c",
     "src/bof3/world/func_801F2D5C_area02414.c",

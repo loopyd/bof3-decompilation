@@ -127,7 +127,7 @@ segments:
   - - 5712
     - c
     - dispatchWorkByte1HandlerBmagicMagic00800_801F0250
-    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00800_801F0250.c'
+    - '@source: src/bof3/bmagic/magic00800DispatchTables.c'
     - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its state byte at offset 1 selects an entry of the overlay-local handler table at 0x801F1BEC (0x801F0294, 0x801F0568, 0x801F0964, 0x801F0DA8, 0x801F1294, 0x801F1708), and that entry is invoked with no arguments. It reads no state other than that byte and writes none; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 5780
     - asm
@@ -253,5 +253,5 @@ segments:
     - invokeHelperBmagicMagic00800_801F1BCC
   - - 12268
     - asm
-    - func_801F1BEC
+    - dispatchHandlerTable801F1BEC
 - - 12316

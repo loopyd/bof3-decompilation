@@ -9,9 +9,9 @@ load_address = 0x801f2c00
 
 sources = [
     "src/bof3/world/advanceCounter1.c",
+    "src/bof3/world/area00813DispatchTables.c",
     "src/bof3/world/advanceCounter2.c",
     "src/bof3/world/advanceCounter3.c",
-    "src/bof3/world/dispatchMode.c",
     "src/bof3/world/drawFlagStatus.c",
     "src/bof3/world/drawScratchStatus.c",
     "src/bof3/world/func_801F2D24_area00813.c",
@@ -22,7 +22,6 @@ sources = [
     "src/bof3/world/func_801F30B8_area00813.c",
     "src/bof3/world/func_801F317C.c",
     "src/bof3/world/func_801F31D0_area00813.c",
-    "src/bof3/world/func_801F3244.c",
     "src/bof3/world/func_801F32AC.c",
     "src/bof3/world/func_801F3344_area00813.c",
     "src/bof3/world/func_801F33F0_area00813.c",
@@ -37,7 +36,6 @@ sources = [
     "src/bof3/world/func_801F37B4.c",
     "src/bof3/world/func_801F39B4.c",
     "src/bof3/world/func_801F39BC_area00813.c",
-    "src/bof3/world/func_801F3A64.c",
     "src/bof3/world/func_801F3AA8.c",
     "src/bof3/world/func_801F3AE8.c",
     "src/bof3/world/func_801F3BB4_area00813.c",

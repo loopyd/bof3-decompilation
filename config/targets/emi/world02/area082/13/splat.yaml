@@ -100,7 +100,7 @@ segments:
   - - 3932
     - c
     - dispatchStateByte2Table576cWorld02Area08213_801F3B5C
-    - '@source: src/bof3/world/dispatchStateByte2Table576cWorld02Area08213_801F3B5C.c'
+    - '@source: src/bof3/world/area08213DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the record dispatch byte at offset 0x02 as the index and calls the handler at that index of the overlay-local handler table based at 0x801F576C (eight shipped entries, 0x801F3BA0 through 0x801F4334, ending where the overlay byte data begins at 0x801F578C); takes no arguments and forwards none.'
   - - 4000
     - asm
@@ -135,7 +135,7 @@ segments:
   - - 7636
     - c
     - dispatchStateByte2Table57d0World02Area08213_801F49D4
-    - '@source: src/bof3/world/dispatchStateByte2Table57d0World02Area08213_801F49D4.c'
+    - '@source: src/bof3/world/area08213DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the record dispatch byte at offset 0x02 as the index and calls the handler at that index of the overlay-local handler table based at 0x801F57D0 (sixteen shipped entries, 0x801F4A18 through 0x801F52D8, ending where the following byte data begins at 0x801F5810); takes no arguments and forwards none.'
   - - 7704
     - asm

@@ -38,7 +38,7 @@ segments:
   - - 740
     - c
     - dispatchWorkByte1HandlerBmagicMagic07803_801EEEE4
-    - '@source: src/bof3/world/magic07803DispatchTables.c'
+    - '@source: src/bof3/bmagic/magic07803DispatchTables.c'
     - '@behavior: Overlay per-frame handler dispatcher: reads the scratchpad work-object pointer cell at 0x1F800044, takes the object byte at offset 0x01 as an index, scales it by four and invokes the selected entry of the nine-word in-image code pointer run based at 0x801F0878 (0x801EEF28, 0x801EFF84, 0x801EF08C, 0x801EF0E0, 0x801EF12C, 0x801EF1CC, 0x801EF228, 0x801EF278, 0x801EF2CC) with no arguments. It reads no other state and writes none; the pointer cell is loaded before the 0x18-byte frame is created and that frame only keeps $ra across the indirect call.'
   - - 808
     - asm

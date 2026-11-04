@@ -44,6 +44,7 @@ segments:
   - - 1044
     - c
     - dispatchWorkByte1HandlerBmagicMagic01703_801EF014
+    - '@source: src/emi/bmagic/magic017/03/magic01703DispatchTables.c'
   - - 1112
     - asm
     - func_801EF058
@@ -79,5 +80,5 @@ segments:
     - invokeHelperBmagicMagic01703_801EF970
   - - 3472
     - asm
-    - func_801EF990
+    - dispatchHandlerTable801EF990
 - - 3476

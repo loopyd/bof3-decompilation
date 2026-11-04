@@ -1,4 +1,5 @@
 #include "bof3/battle/battle03_internal.h"
+#include "bof3/emi/dispatchers.h"
 
 /* @behavior dispatches the current local byte-2 state through its handler table.
  * @source 0x801DFA1C
@@ -6,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchLocalByte2Table, D_801EB1B4);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchLocalByte2Table, D_801EB1B4);
 
 /* @source 0x801DFBDC
  * @behavior dispatches byte 2 of the scratchpad-resident state object through
@@ -15,7 +16,7 @@ BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchLocalByte2Table, D_801EB1B4);
  * @match 100.00
  * @residual none
  */
-BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchScratchByte2Table, D_801EB1BC);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchScratchByte2Table, D_801EB1BC);
 
 /* @behavior dispatches the current local state-2 class byte through its table.
  * @source 0x801E1670
@@ -23,7 +24,7 @@ BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchScratchByte2Table, D_801EB1BC);
  * @match 100.00
  * @residual none
  */
-BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchState2ClassTable, D_801EB224);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchState2ClassTable, D_801EB224);
 
 /* @behavior dispatches the current local state-2 event byte through its table.
  * @source 0x801E1B64
@@ -31,7 +32,7 @@ BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchState2ClassTable, D_801EB224);
  * @match 100.00
  * @residual none
  */
-BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchState2EventTable, D_801EB26C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchState2EventTable, D_801EB26C);
 
 /* @behavior dispatches the current local state-2 followup byte through its table.
  * @source 0x801E1CD8
@@ -39,7 +40,7 @@ BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchState2EventTable, D_801EB26C);
  * @match 100.00
  * @residual none
  */
-BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchState2FollowupTable, D_801EB274);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchState2FollowupTable, D_801EB274);
 
 /* @behavior dispatches the current default-class local byte through its table.
  * @source 0x801E1E7C
@@ -47,7 +48,7 @@ BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchState2FollowupTable, D_801EB274);
  * @match 100.00
  * @residual none
  */
-BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchDefaultClassTable, D_801EB27C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchDefaultClassTable, D_801EB27C);
 
 /* @behavior dispatches the current local presentation state-1 byte through its
  * table.
@@ -56,7 +57,7 @@ BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchDefaultClassTable, D_801EB27C);
  * @match 100.00
  * @residual none
  */
-BATTLE_DISPATCH_WORK_SLOT_ONE(dispatchPresentationState1, D_801EB3B0);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchPresentationState1, D_801EB3B0);
 
 /* @source 0x801E32AC
  * @behavior dispatches through D_801EB3E4 using byte 2 of the object addressed
@@ -65,7 +66,7 @@ BATTLE_DISPATCH_WORK_SLOT_ONE(dispatchPresentationState1, D_801EB3B0);
  * @match 100.00
  * @residual none
  */
-BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchByte2TableB3e4, D_801EB3E4);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2TableB3e4, D_801EB3E4);
 
 /* @source 0x801E3A00
  * @behavior dispatches through D_801EB404 using byte 2 of the object addressed
@@ -74,7 +75,7 @@ BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchByte2TableB3e4, D_801EB3E4);
  * @match 100.00
  * @residual none
  */
-BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchByte2TableB404, D_801EB404);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2TableB404, D_801EB404);
 
 /* @source 0x801E3B68
  * @behavior dispatches through D_801EB40C using byte two of the non-volatile
@@ -83,7 +84,7 @@ BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchByte2TableB404, D_801EB404);
  * @match 100.00
  * @residual none
  */
-BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchByte2TableB40c, D_801EB40C);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2TableB40c, D_801EB40C);
 
 /* @source 0x801E4AE8
  * @behavior loads the non-volatile scratchpad pointer cell at 0x1F800044,
@@ -92,7 +93,7 @@ BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchByte2TableB40c, D_801EB40C);
  * @match 100.00
  * @residual none
  */
-BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchByte2TableB460, D_801EB460);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2TableB460, D_801EB460);
 
 /* @source 0x801E4F64
  * @behavior reads the non-volatile scratchpad pointer cell at 0x1F800044,
@@ -101,4 +102,4 @@ BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchByte2TableB460, D_801EB460);
  * @match 100.00
  * @residual none
  */
-BATTLE_DISPATCH_WORK_SLOT_TWO(dispatchByte2TableB478, D_801EB478);
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2TableB478, D_801EB478);

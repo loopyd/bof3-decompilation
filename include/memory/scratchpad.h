@@ -65,17 +65,6 @@
 #define SPAD_PTR_SLOT(type, byte_offset)                                       \
   PSX_REF(type*, SPAD_ADDRESS(byte_offset))
 
-/* Emit one work-record dispatcher: call the handler that the work record's state
- * byte at the named slot selects from a local handler table. The body stays
- * address-free because the table is a parameter, and each emitted function keeps
- * its own metadata block above its standalone invocation.
- *
- *     BOF3_DISPATCH_WORK_SLOT_ONE(dispatchStepTableA, D_801F6250);
- */
-#define BOF3_DISPATCH_WORK_SLOT_ONE(name, table)                               \
-  void name(void) {                                                            \
-    table[SPAD_PTR_SLOT(u8, 0x44)[1]]();                                       \
-  }
 
 #define BOF3_DISPATCH_WORK_SLOT_TWO(name, table)                               \
   void name(void) {                                                            \

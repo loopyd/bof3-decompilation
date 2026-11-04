@@ -50,7 +50,7 @@ segments:
   - - 1244
     - c
     - dispatchWorkByte1HandlerBmagicMagic00903_801EF0DC
-    - '@source: src/bof3/world/magic00903DispatchTables.c'
+    - '@source: src/bof3/bmagic/magic00903DispatchTables.c'
     - '@behavior: Overlay work-byte-1 dispatcher: takes the scratchpad work object reached through pointer slot 0x1F800044, reads its unsigned state byte at offset 1, scales it by four and calls that entry of the overlay-local handler-pointer table at 0x801EF89C (five in-image code pointers, entry 0 = 0x801EF120 through entry 4 = 0x801EF340, followed by the non-code words at 0x801EF8B0) with no arguments; reads no other state, writes none, and the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 1312
     - asm
