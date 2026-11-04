@@ -89,6 +89,6 @@ segments:
     - asm
     - func_801EFBDC
   - - 4140
-    - asm
-    - func_801EFC2C
+    - textbin
+    - T_801EFC2C
 - - 11872

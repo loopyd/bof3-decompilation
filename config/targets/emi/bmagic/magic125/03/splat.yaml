@@ -98,6 +98,6 @@ segments:
     - asm
     - func_801F0588
   - - 6616
-    - asm
-    - func_801F05D8
+    - textbin
+    - T_801F05D8
 - - 14340

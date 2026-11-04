@@ -166,6 +166,6 @@ segments:
     - c
     - noopHandlerScenarioScena0400_801FA178
   - - 13696
-    - asm
-    - func_801FA180
+    - textbin
+    - T_801FA180
 - - 14176

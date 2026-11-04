@@ -60,6 +60,6 @@ segments:
     - asm
     - func_801D16A4
   - - 2896
-    - asm
-    - func_801D1750
+    - textbin
+    - T_801D1750
 - - 2936

@@ -132,6 +132,6 @@ segments:
     - asm
     - func_801D0368
   - - 8108
-    - asm
-    - func_801D03AC
+    - textbin
+    - T_801D03AC
 - - 8220

@@ -147,6 +147,6 @@ segments:
     - asm
     - func_801D0A10
   - - 9812
-    - asm
-    - func_801D0A54
+    - textbin
+    - T_801D0A54
 - - 9932

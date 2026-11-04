@@ -85,6 +85,6 @@ segments:
     - asm
     - func_801EFA20
   - - 3716
-    - asm
-    - func_801EFA84
+    - textbin
+    - T_801EFA84
 - - 9484
