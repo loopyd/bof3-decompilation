@@ -324,15 +324,45 @@ const laneChain = (lane) => {
 
 // Fail closed on incomplete membership or contradictory exact evidence. This is
 // report routing, not independent native verification; parent gates still own closure.
+// --- selector identity ---
+// A lane may name the same function as the registry ref it was given, or as the
+// canonical `target@0xADDRESS` form, with either hex case. Routing compares the
+// resolved identity, not the spelling: same address and a prefix that is either the
+// ref's registry prefix or the lane's target id.
+const selectorIdentity = (text) => {
+  const value = String(text || "").trim();
+  const at = value.lastIndexOf("@");
+  if (at <= 0) return null;
+  const prefix = value.slice(0, at).trim();
+  const address = value.slice(at + 1).trim().toLowerCase();
+  if (!/^0x[0-9a-f]{8}$/.test(address)) return null;
+  return { prefix, address };
+};
+
+const laneIdentities = (lane) => lane.refs.map((ref) => selectorIdentity(ref)).filter(Boolean);
+
+const matchesLane = (lane, text, identities) => {
+  const value = selectorIdentity(text);
+  if (!value) return false;
+  return identities.some((identity) => identity.address === value.address &&
+    (identity.prefix === value.prefix ||
+     value.prefix.toLowerCase() === String(lane.target).toLowerCase()));
+};
+// --- end selector identity ---
+
 const resultState = (lane, text) => {
   const report = parseReport(text);
   if (!report || report.lane !== lane.key || report.target !== lane.target) return "invalid";
   const rows = report.results;
   if (!Array.isArray(rows) || rows.length !== lane.refs.length) return "invalid";
+  const identities = laneIdentities(lane);
   const seen = new Set();
   for (const row of rows) {
-    if (!row || !lane.refs.includes(row.selector) || seen.has(row.selector)) return "invalid";
-    seen.add(row.selector);
+    if (!row || !matchesLane(lane, row.selector, identities)) return "invalid";
+    const identity = selectorIdentity(row.selector);
+    const key = `${identity.address}|${identity.prefix.toLowerCase()}`;
+    if (seen.has(key)) return "invalid";
+    seen.add(key);
     if (!["exact", "partial", "data", "no-op", "blocked"].includes(row.outcome)) return "invalid";
     if (row.outcome === "exact" && (row.gate?.verdict !== "PASS" ||
         (row.match_percent !== undefined && row.match_percent !== 100))) return "invalid";
