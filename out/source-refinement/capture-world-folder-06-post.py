@@ -1,0 +1,174 @@
+"""Capture all34 folder06 POST members against reviewed PRE raw images and actual ELFs."""
+import argparse
+from contextlib import closing
+from dataclasses import asdict
+import hashlib
+import json
+from pathlib import Path
+from harness.build.compilation import configured_command
+from harness.build.compiler import load_compiler_configuration, resolve_compiler_settings
+from harness.build.dependencies import IncludeSnapshot
+from harness.common.inputs import InputBatch
+from harness.common.lease import acquire_writer
+from harness.common.process import ProcessCleanupError
+from harness.domain.functions import parse_function_records
+from harness.match.extraction import read_function_bytes, read_linked_image
+from harness.match.images import capture_source_images
+from harness.match.members import capture_members
+
+root = Path(__file__).resolve().parents[2]
+assert Path.cwd() == root, "Run from repository root"
+parser = argparse.ArgumentParser()
+for option in ("post-plan-sha256", "pre-summary-sha256", "application-sha256", "pre-index-sha256"):
+    parser.add_argument("--" + option, required=True)
+parser.add_argument("--pre-root", default="out/source-refinement/world-folder-06-pre")
+args = parser.parse_args()
+assert not Path(args.pre_root).is_absolute() and ".." not in Path(args.pre_root).parts
+plan_name = "out/source-refinement/world-folder-06-post-plan.json"
+plan_sha = args.post_plan_sha256
+out = root / "out/source-refinement/world-folder-06-post"
+assert not out.exists()
+sha = lambda value: hashlib.sha256(value).hexdigest()
+def save(path, value):
+    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n")
+data = (root / plan_name).read_bytes()
+assert sha(data) == plan_sha
+plan = json.loads(data)
+groups = [{**m, "members": [{**m, "record": m["current_record"]}]} for m in plan["selected"]] + plan["untouched_authored_siblings"]
+assert len(groups) == 31 and sum(len(g["members"]) for g in groups) == 34 and sum(m["original_size"] for g in groups for m in g["members"]) == 1560
+out.mkdir()
+(out / "plan.json").write_bytes(data)
+summary = {"status": "running", "task": "4.12", "plan_sha256": plan_sha, "sources": [], "members": [], "limits": "Complete34-member POST preservation only. Public rendered instruction metrics are unavailable through diagnostics=False; complete raw images and actual ELFs are authoritative. Final concern/build gates and independent acceptance remain pending."}
+save(out / "summary.json", summary)
+try:
+    with acquire_writer(root), InputBatch(root) as batch:
+        states = {}
+        def bind(name):
+            state, body = batch.read(root / name, max_bytes=64 * 1024 * 1024, include_metadata=True, single_link=True)
+            assert name not in states or state == states[name], name
+            states[name] = state
+            return body
+        assert sha(bind(plan_name)) == plan_sha
+        for name, expected in plan["current_input_states"].items():
+            body = bind(name)
+            assert states[name] == expected, name
+            if name in plan["proposed_output_sha256"]:
+                saved = out / "owned-post" / name
+                saved.parent.mkdir(parents=True, exist_ok=True)
+                saved.write_bytes(body)
+        application_data = bind(plan["application_report"])
+        assert sha(application_data) == args.application_sha256 == plan["application_sha256"]
+        application = json.loads(application_data)
+        assert application["guards_and_writer_closed"] and len(application["moves"]) == 30 and len(application["config_edits"]) == 2
+        assert plan["accepted_pre_sha256"] == args.pre_summary_sha256 and plan["accepted_pre_root"] == args.pre_root
+        pre_data = bind(args.pre_root + "/summary.json")
+        assert sha(pre_data) == args.pre_summary_sha256
+        pre = json.loads(pre_data)
+        assert pre["status"] == "complete PRE captures" and pre["member_count"] == 34 and pre["complete_original_bytes"] == 1560 and pre["guards_and_writer_closed"]
+        pre_rows = {m["selector"]: m for m in pre["members"]}
+        assert len(pre_rows) == 34 and set(pre_rows) == {m["selector"] for g in groups for m in g["members"]}
+        index = bind(".git/index")
+        assert sha(index) == args.pre_index_sha256 and states[".git/index"] == pre["runtime_index_state"] == application["index_before"] == application["index_after"]
+        (out / "index.post.bin").write_bytes(index)
+        summary["runtime_index_state"] = states[".git/index"]
+        bind(Path(__file__).resolve().relative_to(root).as_posix())
+        sources = [root / unit["source"] for unit in plan["normal_build_units"]]
+        assert len(sources) == len(set(sources)) == 32
+        with closing(IncludeSnapshot(root, sources[0], forced=tuple(sources[1:]))) as includes:
+            for name, expected in includes.describe_inputs().items():
+                bind(name)
+                assert states[name] == expected, name
+            def guard():
+                includes.validate()
+                for name in list(states):
+                    bind(name)
+            flags, compilers = load_compiler_configuration(root)
+            prepared = []
+            for group in groups:
+                source = group["source"]
+                text = bind(source).decode()
+                assert sha(text.encode()) == group["source_sha256"]
+                if "old_source" in group:
+                    assert bind(group["old_source"]) is None
+                    old = application["before_states"][group["old_source"]]
+                    assert states[source] == application["after_states"][source]
+                    assert all(states[source]["metadata"][k] == old["metadata"][k] for k in ("st_dev", "st_ino", "st_mode", "st_nlink", "st_uid", "st_gid", "st_size", "st_mtime_ns"))
+                assert sorted((asdict(rec) for rec in parse_function_records(text)), key=lambda record: record["address"]) == sorted((m["record"] for m in group["members"]), key=lambda record: record["address"])
+                assert asdict(resolve_compiler_settings(source, text, flags, compilers)) == group["effective_settings"]
+                command, _ = configured_command(root, root / source, Path(group["configured_arguments"][-1]), allow_grouped=True)
+                assert command == group["configured_arguments"]
+                captured = capture_members(root, source)
+                planned = {m["selector"]: m for m in group["members"]}
+                assert captured["target"] == group["target"] and {m["selector"] for m in captured["functions"]} == set(planned) and not captured["data_sections"] and not any(captured["section_placements"].values())
+                for member in captured["functions"]:
+                    old = planned[member["selector"]]
+                    assert member["symbol"] == old["symbol"] and member["file_start"] == old["file_start"] and member["original"] == bind(old["original_path"]) and len(member["original"]) == old["original_size"] and sha(member["original"]) == old["original_sha256"]
+                for name, expected in captured["inputs"].items():
+                    bind(name)
+                    assert (expected is None and states[name] is None) or expected is not None and states[name] is not None and expected["sha256"] == states[name]["sha256"], name
+                for member in group["members"]:
+                    before = pre_rows[member["selector"]]
+                    assert before["source"] == group.get("old_source", source)
+                    original = bind(member["original_path"])
+                    pre_elf = bind(before["elf_path"])
+                    assert sha(pre_elf) == before["elf_sha256"]
+                    pre_current = read_function_bytes(pre_elf, function_name=member["symbol"], address=member["record"]["address"]).content
+                    assert pre_current == original == bind(before["saved_at"] + "/original.bin") == bind(before["saved_at"] + "/current.bin")
+                    assert sha(original) == before["original_sha256"] == before["current_sha256"]
+                prepared.append((group, planned))
+            guard()
+            save(out / "starting-input-states.json", states)
+            for group, planned in prepared:
+                source = group["source"]
+                destination = out / (group["target"].replace("/", "--") + "-" + Path(source).stem)
+                destination.mkdir()
+                guard()
+                comparison = capture_source_images(root, source, destination)
+                report = comparison.report
+                save(destination / "comparison.json", report)
+                assert report["fresh_compilation"] and len(comparison.ranges) == len(planned)
+                if len(planned) == 1:
+                    assert report["schema"] == "harness.byte-match-one/v1" and report["status"] == "exact_match" and report["byte_match"] and report["exact_match"] and report["size_delta"] == 0 and report["original_size"] == report["current_size"] == next(iter(planned.values()))["original_size"]
+                    outputs = report["native_outputs"]
+                    linked = [name for name in outputs if name.endswith(".linked.o")]
+                else:
+                    assert report["status"] == "exact" and report["all_native_bytes_match"] and report["member_count"] == len(planned) and not report["data_sections"]
+                    outputs = report["outputs"]
+                    linked = [name for name in outputs if name.endswith(".elf")]
+                assert len(linked) == 1
+                for name, expected in outputs.items():
+                    body = bind(name)
+                    assert states[name] == expected, name
+                    (destination / ("retained-" + Path(name).name)).write_bytes(body)
+                elf = bind(linked[0])
+                (destination / "actual.elf").write_bytes(elf)
+                image = read_linked_image(elf, limit=64 * 1024 * 1024)
+                assert not image.relocations and {s.name for s in image.symbols if s.info & 15 == 2 and s.section} == {m["symbol"] for m in planned.values()}
+                assert {r.owners[0] for r in comparison.ranges} == set(planned) and all(len(r.owners) == 1 and r.section is None for r in comparison.ranges)
+                for emitted in comparison.ranges:
+                    member = planned[emitted.owners[0]]
+                    original = bind(member["original_path"])
+                    actual = read_function_bytes(elf, function_name=member["symbol"], address=member["record"]["address"]).content
+                    assert actual == emitted.content == original and emitted.source == source and emitted.address == member["record"]["address"] and emitted.original_file_start == member["file_start"]
+                    saved = destination / f"{member['record']['address']:08X}"
+                    saved.mkdir()
+                    (saved / "original.bin").write_bytes(original)
+                    (saved / "current.bin").write_bytes(actual)
+                    save(saved / "metadata-profile.json", {"record": member["record"], "effective_settings": group["effective_settings"], "configured_arguments": group["configured_arguments"]})
+                    summary["members"].append({"selector": member["selector"], "source": source, "symbol": member["symbol"], "size": len(actual), "original_sha256": sha(original), "current_sha256": sha(actual), "raw_word_count": len(actual) // 4, "saved_at": str(saved.relative_to(root)), "elf_path": str((destination / "actual.elf").relative_to(root)), "elf_sha256": sha(elf), "instruction_count": None, "instruction_metric_boundary": "Diagnostics=False does not provide rendered instruction metrics; complete raw images and actual ELF functions match reviewed PRE/originals."})
+                guard()
+                summary["sources"].append({"source": source, "target": group["target"], "member_count": len(planned), "comparison": str((destination / "comparison.json").relative_to(root))})
+                save(out / "summary.json", summary)
+                print(source, flush=True)
+            guard()
+            save(out / "terminal-input-states.json", states)
+    assert len(summary["sources"]) == 31 and len(summary["members"]) == 34 and sum(m["size"] for m in summary["members"]) == 1560
+    summary.update(status="complete POST captures", member_count=34, complete_original_bytes=1560, guards_and_writer_closed=True)
+    save(out / "summary.json", summary)
+except BaseException as error:
+    summary.update(status="failed", error=f"{type(error).__name__}: {error}")
+    if isinstance(error, ProcessCleanupError):
+        summary["cleanup"] = "unconfirmed; stop native work"
+        summary["cleanup_observation"] = error.observed
+    save(out / "summary.json", summary)
+    raise

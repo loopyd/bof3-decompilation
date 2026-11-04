@@ -97,13 +97,39 @@ def plan(target: str) -> dict:
                 "name": entry["label"],
             }
         )
+    manifest_sources = re.findall(r'"(src/bof3/[^"]+\.c)"', manifest)
+    for row in rows:
+        if row["kind"] == "c" and not row["source"]:
+            marker = f"0x{row['address']:08X}".lower()
+            for source in manifest_sources:
+                path = ROOT / source
+                if not path.is_file():
+                    continue
+                text = path.read_text()
+                if f"@source {marker}" in text.lower() and "@behavior" in text:
+                    row["source"] = source
+                    break
     for row in rows:
         if row["kind"] == "asm":
             row["name"] = (
                 f"dispatchStateByte{row['slot']}Table{row['table'] & 0xFFFF:04x}"
                 f"{token}_{row['address']:08X}"
             )
-    return {"cfg": cfg, "load": load, "rows": rows, "splat": splat, "token": token}
+    names = {}
+    for line in (cfg / "symbols.txt").read_text().splitlines():
+        found = re.match(r"(\w+) = 0x([0-9a-fA-F]+);", line)
+        if found:
+            names[int(found.group(2), 16)] = found.group(1)
+    renames = {}
+    for row in rows:
+        owner = names.get(row["table"])
+        if owner and owner.startswith("func_"):
+            renames[owner] = f"dispatchHandlerTable{row['table']:08X}"
+            row["table_symbol"] = renames[owner]
+        else:
+            row["table_symbol"] = owner or f"D_{row['table']:08X}"
+    return {"cfg": cfg, "load": load, "rows": rows, "splat": splat,
+            "token": token, "renames": renames}
 
 
 def block_text(row: dict) -> str:
@@ -125,7 +151,9 @@ def apply(target: str, planned: dict) -> dict:
     cfg = planned["cfg"]
     rows = planned["rows"]
     _, family, area, index = target.split("/")
-    grouped = f"src/bof3/world/{area}{index}DispatchTables.c"
+    existing = re.findall(r'"(src/bof3/[^"]+\.c)"', (cfg / "target.toml").read_text())
+    source_dir = str(Path(existing[0]).parent) if existing else "src/bof3/world"
+    grouped = f"{source_dir}/{area}{index}DispatchTables.c"
     journal = {"created": [grouped], "deleted": [], "config": [
         str((cfg / name).relative_to(ROOT)) for name in ("target.toml", "symbols.txt", "splat.yaml")
     ]}
@@ -134,7 +162,7 @@ def apply(target: str, planned: dict) -> dict:
         if row["kind"] == "c" and row["source"]:
             path = ROOT / row["source"]
             text = path.read_text()
-            if len(re.findall(r"@source 0x[0-9A-Fa-f]{8}", text)) > 1:
+            if len(re.findall(r"@behavior", text)) > 1:
                 return {"skip": f"{row['source']} holds several functions"}
             marker = f"0x{row['address']:08X}"
             found = [
@@ -147,12 +175,23 @@ def apply(target: str, planned: dict) -> dict:
             blocks.append({"row": row, "block": found[-1].strip()})
         else:
             blocks.append({"row": row, "block": block_text(row)})
-    lines = ['#include "bof3/bof3.h"', ""]
-    lines.append("\n".join(f"extern void (*D_{row['table']:08X}[])(void);" for row in rows))
+    lines = ['#include "bof3/emi/dispatchers.h"', ""]
+    lines.append(
+        "\n".join(
+            f"extern void (*{row['table_symbol']}[])(void); "
+            f"/* @source 0x{row['table']:08X} @kind data */"
+            for row in rows
+        )
+    )
     for item in blocks:
         row = item["row"]
         variant = "ONE" if row["slot"] == 1 else "TWO"
-        lines += ["", item["block"], f"BOF3_DISPATCH_WORK_SLOT_{variant}({row['name']}, D_{row['table']:08X});"]
+        lines += [
+            "",
+            item["block"],
+            f"EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_{row['slot']}, "
+            f"{row['name']}, {row['table_symbol']});",
+        ]
     (ROOT / grouped).parent.mkdir(parents=True, exist_ok=True)
     (ROOT / grouped).write_text("\n".join(lines).rstrip() + "\n")
     for row in rows:
@@ -169,6 +208,8 @@ def apply(target: str, planned: dict) -> dict:
     manifest.write_text(text)
     symbols = cfg / "symbols.txt"
     text = symbols.read_text()
+    for old_name, new_name in planned.get("renames", {}).items():
+        text = text.replace(f"{old_name} = ", f"{new_name} = ")
     for row in rows:
         if row["kind"] == "asm":
             text = text.replace(f"{row['label']} = ", f"{row['name']} = ")
@@ -178,14 +219,26 @@ def apply(target: str, planned: dict) -> dict:
     out = []
     cursor = 0
     by_offset = {row["offset"]: row for row in rows}
+    table_pointer_offsets = {
+        row["table"] - planned["load"]: row["table_symbol"] for row in rows
+    }
     for entry in entries(text):
+        if entry["offset"] in table_pointer_offsets:
+            out.append(text[cursor:entry["start"]])
+            cursor = entry["end"]
+            out.append(
+                f"  - - {entry['offset']}\n    - asm\n    - "
+                f"{table_pointer_offsets[entry['offset']]}\n"
+            )
+            continue
         out.append(text[cursor:entry["start"]])
         cursor = entry["end"]
         row = by_offset.get(entry["offset"])
         if row is None:
             out.append(text[entry["start"]:entry["end"]])
             continue
-        head = f"  - - {entry['offset']}\n    - c\n    - {row['name']}\n"
+        label = row["name"]
+        head = f"  - - {entry['offset']}\n    - c\n    - {label}\n"
         tail = ""
         for line in entry["body"][2:]:
             if SOURCE_RE.match(line):
@@ -229,10 +282,6 @@ def run(targets: list[str]) -> None:
         planned = plan(target)
         if "skip" in planned:
             skipped.append((target, planned["skip"]))
-            continue
-        lifted = [row for row in planned["rows"] if row["kind"] != "asm"]
-        if lifted:
-            skipped.append((target, f"{len(lifted)} dispatcher(s) already lifted"))
             continue
         applied = apply(target, planned)
         if "skip" in applied:

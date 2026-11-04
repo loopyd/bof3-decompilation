@@ -8,11 +8,6 @@ extern void (*D_801F6284[])(void);
 extern void (*D_801F62A8[])(void);
 extern void (*D_801F62BC[])(void);
 
-#define EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, name, table)                                  \
-  void name(void) {                                                            \
-    table[SPAD_PTR_SLOT(u8, 0x44)[2]]();                                       \
-  }
-
 
 /* @source 0x801F2C04
  * @behavior Overlay step dispatch: reads the state byte at +1 of the work record published

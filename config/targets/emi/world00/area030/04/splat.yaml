@@ -26,6 +26,13 @@ segments:
   - - 0
     - asm
     - T_801D0C00
+  - - 152
+    - c
+    - dispatchStateByte1Table1cd4World00Area03004_801D0C98
+    - '@source: src/bof3/world/area03004DispatchSlotOne.c'
+  - - 220
+    - asm
+    - T_801D0CDC
   - - 1472
     - c
     - func_801D11C0

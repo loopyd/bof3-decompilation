@@ -1,6 +1,8 @@
 #include "bof3/world/area03004_internal.h"
 #include "bof3/emi/dispatchers.h"
 
+extern void (*D_801E1CD4[])(void); /* @source 0x801E1CD4 @kind data */
+
 /* @behavior dispatches the scratch cursor mode byte at offset 1 through the
  * second local handler table at 0x801E1D20.
  * @source 0x801D20C8
@@ -81,3 +83,15 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, func_801DFFA8, D_801E2340);
  * @residual none
  */
 EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, func_801E00E0, D_801E2348);
+
+
+/* @source 0x801D0C98
+ * @behavior Overlay step dispatch embedded in the leading data block: reads the
+ *           state byte at +1 of the work record published at the scratchpad pointer
+ *           cell 0x1F800044 and calls the handler pointer at that index of the local
+ *           handler table based at 0x801E1CD4. Takes no arguments and returns nothing.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchStateByte1Table1cd4World00Area03004_801D0C98, D_801E1CD4);
