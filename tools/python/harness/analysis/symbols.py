@@ -31,6 +31,8 @@ def insert_symbols(
         if symbol.is_alias:
             continue
         declared_global = symbol.canonical_name in globals_
+        if symbol.symbol_type in {"jtbl", "jtbl_label", "label"}:
+            declared_global = False
         if (
             declared_global
             and connection.execute(
@@ -45,7 +47,9 @@ def insert_symbols(
             )
         kind = (
             "data"
-            if declared_global or symbol.canonical_name.startswith("D_")
+            if declared_global
+            or symbol.canonical_name.startswith("D_")
+            or symbol.symbol_type in {"jtbl", "jtbl_label", "label"}
             else "function"
         )
         connection.execute(

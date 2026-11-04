@@ -53,6 +53,12 @@ relabel the segment. Keep the indentation of the original kind line when editing
 Splat, and re-run `source splat` for the target, because a misindented kind parses as
 a nested list and fails with `unsupported Splat subsegment`.
 
+Data embedded inside code needs a symbol type, not a subsegment. Splat accepts
+`name = 0xADDRESS; // type:jtbl` for a jump table, plus `jtbl_label` and `label` for
+its branches; the map parser preserves the attribute and the index classifies those
+rows as data. A function's asm subsegment therefore stays whole while its table is
+declared, which is the only form that keeps the function's own addressing intact.
+
 Audit the rule with `bin/harness analysis data-labels TARGET --check`. It walks every
 `asm` subsegment in 32-byte windows and reports merged runs whose words are mostly
 in-image pointers, mostly printable text, or mostly repeated or zero. Windows exist

@@ -20,6 +20,7 @@ from pathlib import Path
 
 from harness.domain.layout import parse_splat_text
 from harness.domain.manifests import load_target_manifests
+from harness.domain.symbols import load_target_symbols
 from harness.common.cli import add_example_argument, add_root_argument, run_main
 
 #: Kinds that are decisive on their own: every word is an in-image pointer, or the
@@ -50,6 +51,12 @@ def _window_kind(
 
     if not words:
         return None
+    # A window holding a call, branch or return is code, whatever its numeric shape:
+    # runs of jal followed by nop look repetitive and would otherwise read as data.
+    for word in words:
+        opcode = word >> 26
+        if opcode in {2, 3, 4, 5, 6, 7} or word == 0x03E00008 or word == 0x0000000C:
+            return None
     pointers = sum(1 for word in words if word % 4 == 0 and load <= word < image_end)
     if pointers >= max(4, (len(words) * 3) // 4):
         return "pointer_table"
@@ -84,9 +91,7 @@ def _merge(hits: list[dict]) -> list[dict]:
     # One short window is often a code sequence full of address constants; require a
     # second window or a window made entirely of pointers before reporting.
     return [
-        row
-        for row in merged
-        if row["windows"] > 1 or row["pointers"] == row["words"]
+        row for row in merged if row["windows"] > 1 or row["pointers"] == row["words"]
     ]
 
 
@@ -108,6 +113,13 @@ def collect_label_findings(root: Path, target_ids: list[str]) -> dict:
         if not splat.is_file() or not image_path.is_file():
             continue
         layout = parse_splat_text(splat.read_text(), manifest.load_address)
+        modelled = {
+            symbol.address - manifest.load_address
+            for symbol in load_target_symbols(
+                root, target, psyq_space=manifest.psyq_space
+            )
+            if symbol.symbol_type in {"jtbl", "jtbl_label"}
+        }
         image = image_path.read_bytes()
         image_end = manifest.load_address + len(image)
         starts = [item.file_start for item in layout.boundaries]
@@ -158,6 +170,11 @@ def collect_label_findings(root: Path, target_ids: list[str]) -> dict:
                 )
             for row in _merge(hits):
                 row["size"] = row["end"] - row["start"]
+                # A window that starts on a modelled jump table is data the layout
+                # already declares, so it is not an unlabelled finding.
+                if row["start"] in modelled:
+                    row["modelled"] = True
+                    continue
                 findings.append(row)
     findings.sort(key=lambda row: (row["target"], row["start"]))
     return {

@@ -21,6 +21,9 @@ _ENTRY = re.compile(
 # that is read at two widths (for example a byte flag also stored as a word) can be
 # named twice without claiming its address a second time. Splat already accepts symbol
 # arithmetic on the right-hand side, so the row stays inside the small map grammar.
+#: Splat symbol types this harness models; mirrors splat's own accepted set.
+SYMBOL_TYPES = frozenset({"func", "jtbl", "jtbl_label", "label"})
+
 _ALIAS = re.compile(
     r"^\s*(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*"
     r"(?P<target>[A-Za-z_][A-Za-z0-9_]*)\s*;\s*(?://.*)?$"
@@ -43,6 +46,10 @@ class MapSymbol:
     # Non-empty only for an alias row (``name = target;``): the name of the base
     # symbol this row shares an address with.  Aliases never claim the address.
     alias_of: str = ""
+    # Splat symbol type from the row's ``// type:X`` attribute. ``jtbl`` marks a
+    # jump table embedded in code, ``label``/``jtbl_label`` a branch or table label;
+    # empty is an ordinary symbol.
+    symbol_type: str = ""
 
     @property
     def is_alias(self) -> bool:
@@ -77,8 +84,22 @@ def parse_map(
             continue
         match = _ENTRY.match(line)
         if match is not None:
+            symbol_type = ""
+            comment = line[line.find("//") :] if "//" in line else ""
+            for attribute in comment[2:].split():
+                key, _, value = attribute.partition(":")
+                if key == "type" and value:
+                    if value not in SYMBOL_TYPES:
+                        raise ValueError(
+                            f"{source}:{line_number}: unknown symbol type: {value}"
+                        )
+                    symbol_type = value
             result.append(
-                MapSymbol(int(match.group("address"), 16), match.group("name"))
+                MapSymbol(
+                    int(match.group("address"), 16),
+                    match.group("name"),
+                    symbol_type=symbol_type,
+                )
             )
             continue
         alias = _ALIAS.match(line)
@@ -104,7 +125,10 @@ def parse_map(
     if not canonicalize:
         return sorted(result)
     return sorted(
-        (MapSymbol(row.address, row.canonical_name, row.alias_of) for row in result)
+        (
+            MapSymbol(row.address, row.canonical_name, row.alias_of, row.symbol_type)
+            for row in result
+        )
     )
 
 
@@ -155,7 +179,12 @@ def format_map(symbols: list[MapSymbol]) -> str:
         (
             f"{symbol.canonical_name} = {symbol.alias_of};\n"
             if symbol.is_alias
-            else f"{symbol.canonical_name} = 0x{symbol.address:08X};\n"
+            else (
+                f"{symbol.canonical_name} = 0x{symbol.address:08X}; "
+                f"// type:{symbol.symbol_type}\n"
+                if symbol.symbol_type
+                else f"{symbol.canonical_name} = 0x{symbol.address:08X};\n"
+            )
         )
         for symbol in sorted(symbols)
     )
