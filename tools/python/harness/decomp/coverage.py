@@ -182,24 +182,35 @@ def target_coverage(inputs, target, manifest):
         starts = [b.virtual_start for b in layout.boundaries if b.is_function]
         row["reviewed_starts"] = starts
         authored = []
-        for path in manifest.sources:
+        # Every claimed C source may own functions: `sources` and `support_sources`
+        # both carry @source claims, and the reverse index marks a function lifted
+        # from either. Reading only `sources` made every support-source lift
+        # invisible here, so a target with an empty `sources` list reported no
+        # authored work at all. The two lists differ in strictness, not in
+        # ownership: a `sources` entry must carry function metadata, while a
+        # support source is often a binding or PsyQ stub that owns no address.
+        for path, required in [(path, True) for path in manifest.sources] + [
+            (path, False) for path in manifest.support_sources
+        ]:
             text = inputs.read(path).decode()
             records = collect_lift_metadata(text)
             if not records:
-                errors.append(f"missing authored function metadata: {path}")
+                if required:
+                    errors.append(f"missing authored function metadata: {path}")
                 continue
             for address, metadata in records.items():
                 behavior = parse_behavior_tag(metadata)
                 if behavior is None:
-                    errors.append(
-                        f"missing authored function metadata: {path}@0x{address:08X}"
-                    )
+                    if required:
+                        errors.append(
+                            f"missing authored function metadata: {path}@0x{address:08X}"
+                        )
                     continue
                 authored.append(
                     {"address": address, "source": path, "behavior": behavior}
                 )
         row["authored"] = authored
-        row["excluded_support_sources"] = list(manifest.support_sources)
+        row["support_sources"] = list(manifest.support_sources)
         if not manifest.has_explicit_sources:
             errors.append(
                 "legacy source inventory unavailable: explicit claims required"
