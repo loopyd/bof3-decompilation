@@ -33,6 +33,7 @@ TOOL_TOKENS: dict[str, tuple[str, ...]] = {
     "companion-check": ("lift", "companion-check"),
     "compiler-variants": ("build", "variants"),
     "data-scan": ("analysis", "scan"),
+    "data-labels": ("analysis", "data-labels"),
     "decomp-audit": ("decomp", "audit"),
     "decomp-diagnose": ("decomp", "diagnose"),
     "decomp-status": ("lift", "status"),

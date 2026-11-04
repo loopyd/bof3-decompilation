@@ -105,6 +105,6 @@ segments:
     - c
     - noopHandlerBossBoss03516_800C1CFC
   - - 1284
-    - asm
+    - textbin
     - D_800C1D04
 - - 1504

@@ -27,7 +27,7 @@ segments:
   vram: 2149387268
   subsegments:
   - - 4
-    - asm
+    - textbin
     - D_801D0C04
   - - 104
     - asm
@@ -135,6 +135,6 @@ segments:
     - asm
     - func_801D4B58
   - - 16312
-    - asm
+    - textbin
     - D_801D4BB8
 - - 16948

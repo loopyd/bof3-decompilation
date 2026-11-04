@@ -148,7 +148,7 @@ segments:
     - '@source: src/bof3/world/func_801F3360_area02613.c'
     - '@behavior: claims the next free front-end record from the allocator func_8019601C and, when the returned index is not 0xFF, marks the 0x74-byte record it selects at 0x80143FC8 as occupied (byte 0x00 set to 1), writes 0x33 into its byte 0x05, stores 0x70000 and 0x68000 in its words 0x34/0x38 and the distance returned by func_8015477C for that word pair, scaled by 0x10000, in its word 0x3C.'
   - - 2028
-    - asm
+    - textbin
     - D_801F33EC
 - - 8420
   - bin

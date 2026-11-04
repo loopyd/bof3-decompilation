@@ -69,6 +69,6 @@ segments:
     - asm
     - func_800C1AEC
   - - 820
-    - asm
+    - textbin
     - D_800C1B34
 - - 904

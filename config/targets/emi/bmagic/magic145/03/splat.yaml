@@ -61,6 +61,6 @@ segments:
     - asm
     - func_801EF118
   - - 2068
-    - asm
+    - textbin
     - D_801EF414
 - - 2120

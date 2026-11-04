@@ -42,7 +42,7 @@ segments:
     - asm
     - func_801F2E48
   - - 1056
-    - asm
+    - textbin
     - D_801F3020
   - - 1240
     - asm

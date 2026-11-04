@@ -201,6 +201,6 @@ segments:
     - c
     - noopHandlerWorld02Area10814_801F56E0
   - - 10984
-    - asm
+    - textbin
     - D_801F56E8
 - - 14320

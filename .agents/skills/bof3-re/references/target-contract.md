@@ -53,6 +53,17 @@ relabel the segment. Keep the indentation of the original kind line when editing
 Splat, and re-run `source splat` for the target, because a misindented kind parses as
 a nested list and fails with `unsupported Splat subsegment`.
 
+Audit the rule with `bin/harness analysis data-labels TARGET --check`. It walks every
+`asm` subsegment in 32-byte windows and reports merged runs whose words are mostly
+in-image pointers, mostly printable text, or mostly repeated or zero. Windows exist
+because one `asm` row can span a pointer table plus unrelated bytes, and a whole-range
+ratio averages the evidence away. A single window is reported only when every word is
+a pointer, since a code sequence dense with address constants looks similar otherwise.
+`--check` exits 1 while a finding remains. Promotion of the `asm` range stays a
+reviewed edit plus `source splat` for the target; a range the map names as a global
+takes `textbin`, which is how `analysis index` stops reporting it as a function/global
+conflict.
+
 Runtime-filled tables can be zero on disc; inspect producers/consumers. Cross-target
 pointers can reference simultaneously loaded companion overlays; preserve reviewed
 entry, never create out-of-payload local boundary. Same address alone proves nothing.

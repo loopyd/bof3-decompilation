@@ -162,12 +162,12 @@ segments:
     - asm
     - func_801F532C
   - - 10292
-    - asm
+    - textbin
     - D_801F5434
   - - 10860
-    - asm
+    - textbin
     - D_801F566C
   - - 10892
-    - asm
+    - textbin
     - D_801F568C
 - - 12588

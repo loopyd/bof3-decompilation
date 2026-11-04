@@ -129,6 +129,6 @@ segments:
     - asm
     - func_801F0BB0
   - - 8344
-    - asm
+    - textbin
     - D_801F0C98
 - - 8417

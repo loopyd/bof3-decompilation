@@ -30,6 +30,6 @@ segments:
     - c
     - invokeZeroArgWorld00Area01413_801F2C04
   - - 36
-    - asm
+    - textbin
     - D_801F2C24
 - - 2752

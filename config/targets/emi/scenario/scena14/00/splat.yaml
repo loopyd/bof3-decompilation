@@ -178,6 +178,6 @@ segments:
     - asm
     - func_801FC328
   - - 22532
-    - asm
+    - textbin
     - D_801FC404
 - - 22724

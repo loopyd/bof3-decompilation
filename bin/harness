@@ -43,7 +43,7 @@ case "$domain $action" in
         missing_hint='run `just setup` first'
         ;;
     "lift companion-check" | "naming evidence" | "analysis query" | \
-        "analysis rz-project")
+        "analysis data-labels" | "analysis rz-project")
         missing_hint='run `just venv` first'
         ;;
 esac

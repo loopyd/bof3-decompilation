@@ -75,6 +75,6 @@ segments:
     - c
     - invokeHelperArgZeroThenOneBossBoss00716_800C1D50
   - - 1400
-    - asm
+    - textbin
     - D_800C1D78
 - - 1560

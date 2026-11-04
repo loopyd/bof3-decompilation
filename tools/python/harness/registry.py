@@ -120,6 +120,11 @@ DOMAINS: Mapping[str, Domain] = {
                 "harness.commands.data_scan",
                 example="bin/harness analysis scan --all",
             ),
+            "data-labels": Action(
+                "flag asm subsegments whose bytes are decisively data",
+                "harness.analysis.datalabels",
+                example="bin/harness analysis data-labels emi/world00/area030/04 --check",
+            ),
             "data-candidates": Action(
                 "rank unlifted asm ranges that look like data, not functions",
                 "harness.analysis.datacandidates",

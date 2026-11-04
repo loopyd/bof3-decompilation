@@ -186,6 +186,6 @@ segments:
     - c
     - invokeHelperArgThenHelperScenarioScena1100_801FAE98
   - - 17088
-    - asm
+    - textbin
     - D_801FAEC0
 - - 17304

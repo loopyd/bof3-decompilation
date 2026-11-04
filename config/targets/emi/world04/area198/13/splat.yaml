@@ -95,12 +95,12 @@ segments:
     - asm
     - func_801F3DCC
   - - 4604
-    - asm
+    - textbin
     - D_801F3DFC
   - - 4776
-    - asm
+    - textbin
     - D_801F3EA8
   - - 4880
-    - asm
+    - textbin
     - D_801F3F10
 - - 6132

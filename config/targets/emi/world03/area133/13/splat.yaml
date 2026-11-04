@@ -45,6 +45,6 @@ segments:
     - c
     - copyModeByteWorld03Area13313_801F2DBC
   - - 468
-    - asm
+    - textbin
     - D_801F2DD4
 - - 4604

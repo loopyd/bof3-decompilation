@@ -93,6 +93,6 @@ segments:
     - asm
     - func_800C2030
   - - 2168
-    - asm
+    - textbin
     - D_800C2078
 - - 2252

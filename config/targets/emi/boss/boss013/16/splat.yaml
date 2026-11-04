@@ -114,6 +114,6 @@ segments:
     - asm
     - func_800C243C
   - - 3544
-    - asm
+    - textbin
     - D_800C25D8
 - - 3812

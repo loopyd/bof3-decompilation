@@ -57,6 +57,6 @@ segments:
     - c
     - invokeHelperArgBossBoss01516_800C197C
   - - 412
-    - asm
+    - textbin
     - D_800C199C
 - - 492

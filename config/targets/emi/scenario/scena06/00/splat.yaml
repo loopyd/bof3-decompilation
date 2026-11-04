@@ -240,6 +240,6 @@ segments:
     - c
     - invokeHelperTwiceThenHelperScenarioScena0600_801FE38C
   - - 30652
-    - asm
+    - textbin
     - D_801FE3BC
 - - 30964

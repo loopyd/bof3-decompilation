@@ -111,6 +111,6 @@ segments:
     - c
     - invokeHelperBossBoss03616_800C2000
   - - 2080
-    - asm
+    - textbin
     - D_800C2020
 - - 2240

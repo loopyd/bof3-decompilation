@@ -81,6 +81,6 @@ segments:
     - asm
     - func_800C1C64
   - - 1200
-    - asm
+    - textbin
     - D_800C1CB0
 - - 1384

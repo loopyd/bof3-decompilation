@@ -139,6 +139,6 @@ segments:
     - c
     - clearWorkBytesBmagicMagic00303_801F0A28
   - - 7800
-    - asm
+    - textbin
     - D_801F0A78
 - - 11832

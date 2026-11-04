@@ -192,6 +192,6 @@ segments:
     - c
     - noopHandlerScenarioScena1300_801FBEE8
   - - 21232
-    - asm
+    - textbin
     - D_801FBEF0
 - - 21488

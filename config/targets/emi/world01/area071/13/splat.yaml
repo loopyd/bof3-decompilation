@@ -33,6 +33,6 @@ segments:
     - asm
     - func_801F2CF4
   - - 380
-    - asm
+    - textbin
     - D_801F2D7C
 - - 1344

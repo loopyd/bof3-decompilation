@@ -57,6 +57,6 @@ segments:
     - c
     - noopHandlerBoss037_800C1988
   - - 400
-    - asm
+    - textbin
     - D_800C1990
 - - 480

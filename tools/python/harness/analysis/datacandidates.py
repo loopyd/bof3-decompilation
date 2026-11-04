@@ -64,6 +64,8 @@ def _classify(chunk: bytes, load_address: int, image_end: int) -> dict:
         "has_jr_ra": has_return,
         "jal_count": calls,
         "sltiu_count": opcodes.count(_SLTIU),
+        "zero_words": sum(1 for word in words if word == 0),
+        "unique_words": len(set(words)),
         "sample": [f"0x{word:08x}" for word in words[:6]],
     }
 
@@ -91,6 +93,7 @@ def collect_data_candidates(
             continue
         image = binary_path.read_bytes()
         image_end = manifest.load_address + len(image)
+        starts = [item.file_start for item in projected.boundaries]
         for boundary in projected.boundaries:
             # Unlifted ``asm`` rows are the candidate pool: Splat presents every one
             # as a function boundary, and this owner tests which byte ranges do not
@@ -99,6 +102,13 @@ def collect_data_candidates(
                 continue
             start = boundary.file_start
             end = boundary.file_end
+            if end is None and start is not None:
+                # A trailing subsegment before the EOF marker has no following
+                # boundary; its range runs to the end of the image. Without this the
+                # tail of every payload went unexamined, which is where trailing
+                # pointer and numeric tables live.
+                following = [candidate for candidate in starts if candidate > start]
+                end = min(following) if following else len(image)
             if start is None or end is None:
                 continue
             if end - start < 8 or end > len(image):

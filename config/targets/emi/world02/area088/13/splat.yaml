@@ -179,9 +179,9 @@ segments:
     - asm
     - func_801F52C8
   - - 11484
-    - asm
+    - textbin
     - D_801F58DC
   - - 12544
-    - asm
+    - textbin
     - D_801F5D00
 - - 13954

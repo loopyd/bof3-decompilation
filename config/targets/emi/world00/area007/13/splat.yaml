@@ -54,6 +54,6 @@ segments:
     - c
     - setTwoWorld00Area00713_801F2F70
   - - 908
-    - asm
+    - textbin
     - D_801F2F8C
 - - 2548

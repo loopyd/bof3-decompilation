@@ -168,6 +168,6 @@ segments:
     - asm
     - func_800C2AA4
   - - 5176
-    - asm
+    - textbin
     - D_800C2C38
 - - 5588

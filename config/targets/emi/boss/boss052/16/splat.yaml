@@ -78,6 +78,6 @@ segments:
     - c
     - invokeHelperBossBoss05216_800C1F1C
   - - 1852
-    - asm
+    - textbin
     - D_800C1F3C
 - - 1960

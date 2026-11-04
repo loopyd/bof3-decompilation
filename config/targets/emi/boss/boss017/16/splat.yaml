@@ -69,6 +69,6 @@ segments:
     - c
     - invokeZeroArgBossBoss01716_800C1A50
   - - 624
-    - asm
+    - textbin
     - D_800C1A70
 - - 768

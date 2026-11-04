@@ -33,6 +33,6 @@ segments:
     - c
     - invokeHelperWorld01Area07213_801F2D2C
   - - 332
-    - asm
+    - textbin
     - D_801F2D4C
 - - 536

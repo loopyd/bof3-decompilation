@@ -127,6 +127,6 @@ segments:
     - rodata
     - T_801F407C
   - - 5276
-    - asm
+    - textbin
     - D_801F409C
 - - 9072

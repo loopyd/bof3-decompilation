@@ -48,6 +48,6 @@ segments:
     - asm
     - func_801EF0F8
   - - 3544
-    - asm
+    - textbin
     - D_801EF9D8
 - - 4984

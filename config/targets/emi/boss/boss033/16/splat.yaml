@@ -117,6 +117,6 @@ segments:
     - asm
     - func_800C26A4
   - - 3908
-    - asm
+    - textbin
     - D_800C2744
 - - 4056
