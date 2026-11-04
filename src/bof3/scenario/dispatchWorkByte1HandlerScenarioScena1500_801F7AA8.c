@@ -1,4 +1,5 @@
 #include "bof3/bof3.h"
+#include "bof3/emi/dispatchers.h"
 
 typedef void (*Scena1500FrameHandler)(void);
 
@@ -24,6 +25,4 @@ extern Scena1500FrameHandler D_801FE5A0[];
  * @match 100.00
  * @residual none
  */
-void dispatchWorkByte1HandlerScenarioScena1500_801F7AA8(void) {
-  D_801FE5A0[D_1F800044[1]]();
-}
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1HandlerScenarioScena1500_801F7AA8, D_801FE5A0);

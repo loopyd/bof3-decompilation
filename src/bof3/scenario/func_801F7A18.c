@@ -1,4 +1,5 @@
 #include "bof3/scenario/scena00_internal.h"
+#include "bof3/emi/dispatchers.h"
 
 /* @source 0x801F7A18
  * @behavior Dispatches the overlay's second-level per-frame handler from the
@@ -14,6 +15,4 @@
  * @match 100.00
  * @residual none
  */
-void func_801F7A18(void) {
-  D_801FC9AC[D_1F800044[1]]();
-}
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, func_801F7A18, D_801FC9AC);

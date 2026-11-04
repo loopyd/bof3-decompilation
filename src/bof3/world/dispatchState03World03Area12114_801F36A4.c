@@ -1,4 +1,5 @@
 #include "bof3/bof3.h"
+#include "bof3/emi/dispatchers.h"
 
 extern void (*D_801F67F0[])(void);
 
@@ -11,6 +12,4 @@ extern void (*D_801F67F0[])(void);
  * @match 100.00
  * @residual none
  */
-void dispatchState03World03Area12114_801F36A4(void) {
-  D_801F67F0[SPAD_PTR_SLOT(u8, 0x44)[3]]();
-}
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_3, dispatchState03World03Area12114_801F36A4, D_801F67F0);

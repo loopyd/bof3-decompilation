@@ -1,4 +1,5 @@
 #include "bof3/scenario/scena00_internal.h"
+#include "bof3/emi/dispatchers.h"
 
 /* @source 0x801F6DC0
  * @behavior Dispatches the overlay's per-frame handler from the scratchpad work
@@ -10,6 +11,4 @@
  * @match 100.00
  * @residual none
  */
-void dispatchWorkByte1Handler(void) {
-  D_801FC980[D_1F800044[1]]();
-}
+EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_1, dispatchWorkByte1Handler, D_801FC980);
