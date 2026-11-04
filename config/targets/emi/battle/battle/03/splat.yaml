@@ -795,7 +795,7 @@ segments:
   - - 69008
     - c
     - dispatchByte2ThenReset
-    - '@source: src/bof3/battle/dispatchByte2ThenReset.c'
+    - '@source: src/bof3/battle/battle03DispatchTables.c'
     - '@behavior: Dispatches the handler selected by scratchpad slot 0x44 byte 2, then calls resetScratchWhenGlobalBit4.'
   - - 69084
     - c
@@ -1121,7 +1121,7 @@ segments:
   - - 82316
     - c
     - dispatchByte2ThenReset2
-    - '@source: src/bof3/battle/dispatchByte2ThenReset2.c'
+    - '@source: src/bof3/battle/battle03DispatchTables.c'
     - '@behavior: Dispatches a handler selected by scratchpad work byte +0x02, then calls resetEnemyScratchWhenBit4.'
   - - 82392
     - c

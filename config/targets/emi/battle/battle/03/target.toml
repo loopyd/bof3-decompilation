@@ -66,8 +66,6 @@ sources = [
     "src/bof3/battle/dispatchByte1FiveTable.c",
     "src/bof3/battle/dispatchByte1PairFlagged.c",
     "src/bof3/battle/dispatchByte1PairTable.c",
-    "src/bof3/battle/dispatchByte2ThenReset.c",
-    "src/bof3/battle/dispatchByte2ThenReset2.c",
     "src/bof3/battle/dispatchByte3TableB3ec.c",
     "src/bof3/battle/dispatchByte3TableB3f4.c",
     "src/bof3/battle/dispatchByte3TableB424.c",

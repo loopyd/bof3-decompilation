@@ -33,11 +33,26 @@
 #define EMI_DISPATCH_WORK_BYTE_3 3
 #define EMI_DISPATCH_WORK_BYTE_4 4
 
+/* Shape enumerators: what the emitted function does in addition to dispatching.
+ * ``EMI_DISPATCH_SHAPE_PLAIN`` is the bare call; ``EMI_DISPATCH_SHAPE_RESET`` calls a
+ * reset helper after it, which the caller names as the fourth argument. */
+#define EMI_DISPATCH_SHAPE_PLAIN 0
+#define EMI_DISPATCH_SHAPE_RESET 1
+
 /* Emit one dispatcher. `variant` is one of the enumerators above, `name` is the
  * emitted function and `table` the local handler table it indexes. */
 #define EMI_DEFINE_DISPATCHER(variant, name, table)                            \
   void name(void) {                                                            \
     table[SPAD_PTR_SLOT(u8, 0x44)[variant]]();                                 \
+  }
+
+/* Emit a dispatcher that also runs its reset helper once the handler returns. The
+ * two shapes exist because the overlays use both; sharing the enumerator keeps one
+ * spelling for each shape instead of a third hand-written body. */
+#define EMI_DEFINE_DISPATCHER_THEN_RESET(variant, name, table, reset)          \
+  void name(void) {                                                            \
+    table[SPAD_PTR_SLOT(u8, 0x44)[variant]]();                                 \
+    reset();                                                                   \
   }
 
 #endif

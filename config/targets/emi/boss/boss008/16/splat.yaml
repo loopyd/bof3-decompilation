@@ -29,12 +29,14 @@ segments:
   - - 4
     - c
     - dispatchStateByte1Table2660BossBoss00816_800C1804
+    - '@source: src/bof3/boss/boss00816DispatchTables.c'
   - - 72
     - asm
     - func_800C1848
   - - 160
     - c
     - dispatchStateByte2Table2690BossBoss00816_800C18A0
+    - '@source: src/bof3/boss/boss00816DispatchTables.c'
   - - 228
     - asm
     - func_800C18E4
@@ -71,6 +73,7 @@ segments:
   - - 1240
     - c
     - dispatchStateByte1Table26ccBossBoss00816_800C1CD8
+    - '@source: src/bof3/boss/boss00816DispatchTables.c'
   - - 1308
     - asm
     - func_800C1D1C
@@ -89,6 +92,7 @@ segments:
   - - 1476
     - c
     - dispatchStateByte1Table2708BossBoss00816_800C1DC4
+    - '@source: src/bof3/boss/boss00816DispatchTables.c'
   - - 1544
     - asm
     - func_800C1E08

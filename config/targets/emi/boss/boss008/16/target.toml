@@ -9,9 +9,8 @@ load_address = 0x800C1800
 
 sources = []
 support_sources = [
-    "src/bof3/boss/dispatchStateByte1Table2660BossBoss00816_800C1804.c",
-    "src/bof3/boss/dispatchStateByte2Table2690BossBoss00816_800C18A0.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss00816_800C1C88.c",
+    "src/bof3/boss/boss00816DispatchTables.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss00816_800C1D74.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss00816_800C1E60.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss00816_800C1F4C.c",
@@ -36,8 +35,6 @@ support_sources = [
     "src/bof3/boss/publishBattleHooksBossBoss00816_800C2088.c",
     "src/bof3/boss/publishBattleHooksBossBoss00816_800C2184.c",
     "src/bof3/boss/publishBattleHooksBossBoss00816_800C2280.c",
-    "src/bof3/boss/dispatchStateByte1Table26ccBossBoss00816_800C1CD8.c",
-    "src/bof3/boss/dispatchStateByte1Table2708BossBoss00816_800C1DC4.c",
     "src/bof3/support/boss008_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss008_16_psyq.c"

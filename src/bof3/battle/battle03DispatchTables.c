@@ -103,3 +103,19 @@ EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2TableB460, D_801EB4
  * @residual none
  */
 EMI_DEFINE_DISPATCHER(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2TableB478, D_801EB478);
+
+/* @source 0x801E1990
+ * @behavior Dispatches the handler selected by scratchpad slot 0x44 byte 2, then calls resetScratchWhenGlobalBit4.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+EMI_DEFINE_DISPATCHER_THEN_RESET(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2ThenReset, D_801EB258, resetScratchWhenGlobalBit4);
+
+/* @source 0x801E4D8C
+ * @behavior Dispatches a handler selected by scratchpad work byte +0x02, then calls resetEnemyScratchWhenBit4.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+EMI_DEFINE_DISPATCHER_THEN_RESET(EMI_DISPATCH_WORK_BYTE_2, dispatchByte2ThenReset2, D_801EB46C, resetEnemyScratchWhenBit4);
