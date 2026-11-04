@@ -258,6 +258,19 @@ the original reuses one cursor load across stores that the current build reloads
 5. Store a negative byte constant through an `s8*` pointer. `(u8)-100` folds to 156
    and emits `li ...,156` where the original has `li ...,-100`.
 
+### Scratchpad cells and record views
+
+A bare constant scratchpad address is CSE'd into one register: `lui` plus `ori` once,
+then `lw 0(vN)` per access. When the original re-materialises the constant per access,
+name the cell: declare an extern at its fixed address so each access emits its own
+`lui 0x1F80` plus `lw 68(vN)`. Applies to any fixed-address data the original reloads
+per use; the named symbol in the map restores that repetition.
+
+Give a work record a word-typed view before chasing pointer roles. A typed pointer over
+the same storage fixes which value the pointer holds and where the second cell load
+lands. A byte view leaves both ambiguous, so the gap shows up as a displaced load rather
+than a wrong one. Check the original access order before widening the view.
+
 ## Allocator-sensitive functions
 
 Same-CFG near match plus narrow probe causing spills/frame/size/save-register/
