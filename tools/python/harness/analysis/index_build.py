@@ -387,7 +387,10 @@ def _insert_functions(
                 int(source is not None),
                 source.as_posix() if isinstance(source, Path) else source,
                 lift_lifecycle(lifecycle_text),
-                (function.analyzer_size + 3) // 4,
+                # The declared boundary wins once reviewed: the analyzer stops short of
+                # a trailing delay-slot nop often enough (533 reviewed functions here)
+                # that sizing from it under-reports the instruction count by one.
+                ((identity[1] if identity else function.analyzer_size) + 3) // 4,
                 function.basic_blocks,
                 function.edges,
                 function.cyclomatic_complexity,

@@ -232,6 +232,8 @@ def test_splat_success_line_uses_canonical_id(
     )
     assert rc == 0
     captured = capsys.readouterr()
-    assert captured.out.strip() == f"{CANONICAL}: splat OK"
+    assert captured.out.strip() == (
+        f"{CANONICAL}: splat OK (no declared asm function boundaries; nothing to emit)"
+    )
     assert captured.err == ""
     assert any("splat.yaml" in str(arg) for arg in calls[0])

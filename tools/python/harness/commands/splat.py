@@ -120,6 +120,21 @@ def _project_regenerated_stubs(root: Path, manifest) -> None:
         stub.unlink()
 
 
+def _summary(root: Path, manifest) -> str:
+    """Report what the split produced, not just that it exited zero.
+
+    A payload declared as one opaque ``bin`` segment splits successfully and still
+    produces no assembly. Saying "OK" alone sends the caller to re-run a split that
+    cannot ever satisfy it.
+    """
+
+    asm = root / "out" / "splat" / manifest.id.value / "asm"
+    files = list(asm.glob("*.s")) if asm.is_dir() else []
+    if files:
+        return f"splat OK ({len(files)} asm files)"
+    return "splat OK (no declared asm function boundaries; nothing to emit)"
+
+
 def run(args: argparse.Namespace) -> int:
     root = args.root.resolve()
     manifest = lookup_target_manifest(root, args.target)
@@ -151,7 +166,7 @@ def run(args: argparse.Namespace) -> int:
                 print(result.stderr, end="", file=sys.stderr)
         else:
             _project_regenerated_stubs(root, manifest)
-            print(f"{manifest.id.value}: splat OK")
+            print(f"{manifest.id.value}: {_summary(root, manifest)}")
     elif result.returncode == 0:
         _project_regenerated_stubs(root, manifest)
     return result.returncode

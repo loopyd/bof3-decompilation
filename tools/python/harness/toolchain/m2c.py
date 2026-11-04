@@ -12,6 +12,7 @@ from ..domain.claims import (
     resolve_manifest_source_for_address,
 )
 from ..domain.ids import FunctionId
+from ..domain.layout import parse_splat_text
 from ..domain.manifests import TargetManifest
 from ..domain.symbols import load_target_symbols
 from ..io import repo_layout
@@ -45,8 +46,53 @@ def splat_assembly(manifest: TargetManifest, address: int) -> Path:
             if named.is_file():
                 return named
             break
-    raise FileNotFoundError(
-        f"Splat assembly not found: {expected}; run the target's Splat split first"
+    raise FileNotFoundError(_missing_assembly(root, manifest, address, expected))
+
+
+def _declared_function_starts(root: Path, manifest: TargetManifest) -> list[int]:
+    """Function boundaries the target's Splat configuration declares."""
+
+    splat = root / manifest.splat
+    if not splat.is_file():
+        return []
+    try:
+        layout = parse_splat_text(splat.read_text(), manifest.load_address)
+    except (OSError, UnicodeError, ValueError):
+        return []
+    return sorted(
+        boundary.virtual_start
+        for boundary in layout.boundaries
+        if boundary.is_function and boundary.kind == "asm"
+    )
+
+
+def _missing_assembly(
+    root: Path, manifest: TargetManifest, address: int, expected: Path
+) -> str:
+    """Explain why one function has no assembly, and what would fix it.
+
+    "Run the split first" is unactionable when the address was never declared as a
+    function boundary: some payloads are data-only and carry no code at all, so no
+    split will ever produce the file.
+    """
+
+    starts = _declared_function_starts(root, manifest)
+    identity = f"{manifest.id.value}@0x{address:08X}"
+    if starts and address in starts:
+        return (
+            f"Splat assembly stale for {identity}: {expected} is missing although the "
+            f"configuration declares it; re-run the target's Splat split"
+        )
+    if not starts:
+        return (
+            f"{identity} has no declared function boundary: {manifest.splat} declares "
+            "no asm code at all, so no split can produce it"
+        )
+    nearest = min(starts, key=lambda start: abs(start - address))
+    return (
+        f"{identity} is not a declared function boundary: {manifest.splat} declares "
+        f"{len(starts)} asm function boundaries and none at this address "
+        f"(nearest 0x{nearest:08X})"
     )
 
 

@@ -33,6 +33,11 @@ _MAP_ROW = re.compile(
 _SOURCE_TAG = re.compile(r"@source\s+0x([0-9A-Fa-f]+)")
 _INTERNAL_INCLUDE = re.compile(r'#include\s+["<][^">]*_internal\.h[">]')
 _CALL = re.compile(r"\b([A-Za-z_]\w*)\s*\(")
+#: Spans that are not code: block/line comments and string or character literals.
+_NON_CODE = re.compile(
+    r"/\*.*?\*/|//[^\n]*|\"(?:\\.|[^\"\\\\])*\"|'(?:\\.|[^'\\\\])*'",
+    re.DOTALL,
+)
 _DECLARATION = re.compile(
     r"^\s*(?:extern\s+)?[A-Za-z_][\w \t*]*(?:\b([A-Za-z_]\w*))\s*(?:\([^;]*\)|\[[^\]]*\])?\s*;",
     re.MULTILINE,
@@ -152,12 +157,14 @@ def generate_clone_source(
         + representative_text[tag.end(1) :]
     )
     # Rename the definition (and any self-recursion) before touching externals.
-    text = re.sub(rf"\b{re.escape(representative_name)}\b", clone_name, text)
+    name_pattern = re.compile(rf"\b{re.escape(representative_name)}\b")
+    text = _substitute_in_code(text, name_pattern, clone_name)
     for name, address in sorted(symbols.items()):
-        if not re.search(rf"\b{re.escape(name)}\b", text):
+        pattern = re.compile(rf"\b{re.escape(name)}\b")
+        if not _matches_in_code(text, pattern):
             continue
         replacement = raw_spelling(name, address, is_function=name in functions)
-        text = re.sub(rf"\b{re.escape(name)}\b", replacement, text)
+        text = _substitute_in_code(text, pattern, replacement)
         rewrites.append((name, replacement))
     _require_self_contained(text, clone_name)
     return ClonePlan(source_text=text, clone_name=clone_name, rewrites=tuple(rewrites))
@@ -170,8 +177,9 @@ def _representative_name(text: str, address: int) -> str:
     so the match requires the parameter list to be followed by a body brace.
     """
 
+    code = _code_only(text)
     definitions: set[str] = set()
-    for match in _CALL.finditer(text):
+    for match in _CALL.finditer(code):
         name = match.group(1)
         if name in {"if", "for", "while", "switch", "return", "sizeof"}:
             continue
@@ -179,7 +187,7 @@ def _representative_name(text: str, address: int) -> str:
             rf"^[A-Za-z_][\w \t*]*\b{re.escape(name)}\s*\([^;{{}}]*\)\s*\{{",
             re.MULTILINE,
         )
-        if definition.search(text):
+        if definition.search(code):
             definitions.add(name)
     if len(definitions) == 1:
         return next(iter(definitions))
@@ -188,12 +196,60 @@ def _representative_name(text: str, address: int) -> str:
     )
 
 
+def _substitute_in_code(text: str, pattern: re.Pattern[str], repl: str) -> str:
+    """Rewrite identifier matches in code only, never in comments or literals.
+
+    Symbol names are ordinary English words often enough (``read``, ``size``) that a
+    blanket substitution also edits prose in comments and data in string literals.
+    Non-code spans keep their original text; the metadata ``@source`` address has
+    its own deliberate edit.
+    """
+
+    pieces: list[str] = []
+    cursor = 0
+    for span in _NON_CODE.finditer(text):
+        pieces.append(pattern.sub(repl, text[cursor : span.start()]))
+        pieces.append(span.group(0))
+        cursor = span.end()
+    pieces.append(pattern.sub(repl, text[cursor:]))
+    return "".join(pieces)
+
+
+def _matches_in_code(text: str, pattern: re.Pattern[str]) -> bool:
+    """Whether ``pattern`` matches outside comments and literals."""
+
+    cursor = 0
+    for span in _NON_CODE.finditer(text):
+        if pattern.search(text[cursor : span.start()]):
+            return True
+        cursor = span.end()
+    return pattern.search(text[cursor:]) is not None
+
+
+def _code_only(text: str) -> str:
+    """Blank out comments and literals so structural scans read code alone.
+
+    A comment mentioning a helper, or a string holding call-like text, otherwise
+    looks like a declaration or a call to the scans below.
+    """
+
+    pieces: list[str] = []
+    cursor = 0
+    for span in _NON_CODE.finditer(text):
+        pieces.append(text[cursor : span.start()])
+        pieces.append(" " * (span.end() - span.start()))
+        cursor = span.end()
+    pieces.append(text[cursor:])
+    return "".join(pieces)
+
+
 def _require_self_contained(text: str, clone_name: str) -> None:
     """Every call target must be declared in the file or a raw mapped spelling."""
 
-    declared = set(_DECLARATION.findall(text))
+    code = _code_only(text)
+    declared = set(_DECLARATION.findall(code))
     declared.add(clone_name)
-    for match in _CALL.finditer(text):
+    for match in _CALL.finditer(code):
         name = match.group(1)
         if name in {"if", "for", "while", "switch", "return", "sizeof"}:
             continue
