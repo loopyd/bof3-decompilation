@@ -75,7 +75,6 @@ typedef struct Area030StepEntry {
 extern Area030StepEntry D_801E1D58[]; /* @source 0x801E1D58 @kind table */
 extern u8 D_80143FEC[];   /* @source 0x80143FEC @kind unknown */
 extern u8 D_80144124[];   /* @source 0x80144124 @kind unknown */
-extern u8 modeByte;      /* @source 0x80144125 @kind unknown */
 extern u8 D_80145E93;    /* @source 0x80145E93 @kind unknown */
 extern u32 D_80145EC4;    /* @source 0x80145EC4 @kind unknown */
 extern u32 D_80145EC8;    /* @source 0x80145EC8 @kind unknown */
@@ -256,7 +255,7 @@ extern u8  D_801E2384[];  /* @source 0x801E2384 @kind unknown */
 extern u8  D_801E2388[];  /* @source 0x801E2388 @kind unknown */
 extern u8  D_801E238C[];  /* @source 0x801E238C @kind unknown */
 extern u8  D_801E2390[];  /* @source 0x801E2390 @kind unknown */
-extern u8* g_PrimCursor;    /* @source 0x8014598C @kind unknown */
+extern u8* g_PrimCursor;    /* @source 0x8014598C @kind bss */
 extern s32 D_8014421C;     /* @source 0x8014421C @kind unknown */
 extern u16 D_80145AA8;     /* @source 0x80145AA8 @kind unknown */
 extern u16 D_80145AC2;     /* @source 0x80145AC2 @kind unknown */

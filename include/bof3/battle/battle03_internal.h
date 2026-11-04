@@ -337,7 +337,7 @@ extern Battle03Handler              D_801463A4; /* @source 0x801463A4 @kind unkn
 extern Battle03Handler              D_801463A8; /* @source 0x801463A8 @kind unknown */
 extern u8                           groupQueueTable[]; /* @source 0x801462F6 @kind unknown */
 extern u8                           groupQueueCursor; /* @source 0x80146303 @kind unknown */
-extern Battle03LocalWork           *D_1F800044; /* @source 0x1F800044 @kind unknown */
+extern Battle03LocalWork           *D_1F800044; /* @source 0x1F800044 @kind bss */
 extern Battle03Handler              D_801EB210[]; /* @source 0x801EB210 @kind unknown */
 extern Battle03Handler              D_801EB27C[]; /* @source 0x801EB27C @kind unknown */
 /* @source 0x801EB294 @kind unknown */
@@ -388,11 +388,11 @@ extern volatile u8            D_8014832E; /* @source 0x8014832E @kind unknown */
 extern Battle03LocalWork* volatile D_80146250; /* @source 0x80146250 @kind unknown */
 extern u8                           D_80146254; /* @source 0x80146254 @kind unknown */
 extern const volatile u16 D_801EAFD0[];
-extern Battle03LocalWork*          D_1F800044; /* @source 0x1F800044 @kind unknown */
+extern Battle03LocalWork*          D_1F800044; /* @source 0x1F800044 @kind bss */
 extern volatile u8* battleWork; /* @source 0x1F800044 @kind unknown */
-extern u8*          g_PrimCursor; /* @source 0x8014598C @kind unknown */
+extern u8*          g_PrimCursor; /* @source 0x8014598C @kind bss */
 extern u8           D_80145AD4[]; /* @source 0x80145AD4 @kind unknown */
-extern const char   D_801D0C70[]; /* @source 0x801D0C70 @kind unknown */
+extern const char   D_801D0C70[]; /* @source 0x801D0C70 @kind rodata */
 extern const char   D_801D0C74[]; /* @source 0x801D0C74 @kind unknown */
 extern Battle03FiveDispatchTable D_801D0C84; /* @source 0x801D0C84 @kind table */
 extern u8           D_801462E1[]; /* @source 0x801462E1 @kind unknown */

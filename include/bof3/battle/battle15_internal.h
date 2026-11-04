@@ -460,7 +460,7 @@ extern volatile u16  D_8014862A; /* @source 0x8014862A @kind unknown */
 extern volatile u8   D_8014862E; /* @source 0x8014862E @kind unknown */
 
 /* Shared primitive cursor (PsyQ SDK, owned by the main exe). */
-extern u8* g_PrimCursor; /* @source 0x8014598C @kind unknown */
+extern u8* g_PrimCursor; /* @source 0x8014598C @kind bss */
 
 /* PsyQ SDK primitive arena bookkeeping shared with appendRenderPrim. */
 extern u8 D_80143D44; /* @source 0x80143D44 @kind unknown */

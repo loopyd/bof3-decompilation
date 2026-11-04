@@ -130,6 +130,6 @@ segments:
     - '@source: src/bof3/world/func_801F394C_area02713.c'
     - '@behavior: Drives the shared front-end mode byte at 0x801448EC through this area''s five-step startup: mode 0 waits until the shared phase byte 0x80143BB0 differs from 2, then runs func_8015C088, releases the shared 0x80144F28 block for bit 0 through func_8015B580 and advances to 1; mode 1 runs func_801BE1B0(2) and advances to 2; mode 2 waits for the shared counter byte 0x80146867 to read 0x10, seeds the shared halfword 0x801448EE with 0x10 and advances to 3; mode 3 counts that halfword down and, once it reaches zero, requests the shared front selector context (0x1B, 0x260000, 0x380000, 0x90) through func_8019FA28, advances to 4 and increments the counter byte; mode 4, when the counter byte reaches 0x31, clears it, releases the area through func_8015C058, clears bit 0 of the shared 0x80144F28 block through func_8015B5A8 and resets the shared flag 0x801448EB together with the mode byte.'
   - - 3764
-    - asm
+    - textbin
     - handlerTable
 - - 8548
