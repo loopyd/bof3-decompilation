@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801EF55C
   - - 2528
-    - asm
-    - func_801EF5E0
+    - c
+    - incrementWorkByte9AndAddVelocityPairThenAdvanceWorkByte2At18BmagicMagic04303_801EF5E0
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndAddVelocityPairThenAdvanceWorkByte2At18BmagicMagic04303_801EF5E0.c'
+    - '@behavior: Advances work-object byte 0x9 by one and adds its word 0xC and word 0x10 channels into word 0x34 and word 0x38, then increments work-object byte 0x2 once byte 0x9 reaches 0x18.'
   - - 2636
     - asm
     - func_801EF64C

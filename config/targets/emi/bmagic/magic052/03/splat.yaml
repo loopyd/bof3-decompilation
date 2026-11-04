@@ -33,8 +33,9 @@ segments:
     - asm
     - func_801EEC1C
   - - 124
-    - asm
-    - func_801EEC7C
+    - c
+    - setWorkByte9To8SetWorkByteATo4AndIncrementWorkByte1BmagicMagic05203_801EEC7C
+    - '@source: src/bof3/bmagic/setWorkByte9To8SetWorkByteATo4AndIncrementWorkByte1BmagicMagic05203_801EEC7C.c'
   - - 188
     - asm
     - func_801EECBC
