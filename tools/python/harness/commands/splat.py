@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import re
+
+import json
 import argparse
 import sys
 from pathlib import Path
@@ -120,6 +123,96 @@ def _project_regenerated_stubs(root: Path, manifest) -> None:
         stub.unlink()
 
 
+def _sdk_text(object_path: Path, root: Path) -> bytes | None:
+    """Return an SDK object's .text bytes, or None when it holds no .text."""
+    import subprocess
+
+    executable = repo_layout(root).root / "bin" / "objcopy"
+    if not executable.is_file():
+        return None
+    result = subprocess.run(
+        [str(executable), "-O", "binary", "--only-section=.text", str(object_path), "/dev/stdout"],
+        capture_output=True,
+    )
+    if result.returncode != 0 or not result.stdout:
+        return None
+    return result.stdout
+
+
+def _sdk_slot_report(root: Path, manifest) -> list[dict]:
+    """Check every SDK-owned asm boundary against the SDK object that owns it.
+
+    A slot whose shipped bytes appear in a declared SDK object builds from that
+    object; one that does not is an ``sdk_variant`` - the shipped library was a
+    different build - which is recorded rather than treated as a failure.
+    """
+
+    layout_text = (root / manifest.splat).read_text(encoding="utf-8")
+    sdk_map: dict[int, str] = {}
+    for entry in re.findall(r'^\s*- (config/sdk/\S+\.txt)\s*$', layout_text, re.M):
+        for line in (root / entry).read_text(encoding="utf-8").splitlines():
+            match = re.match(r"\s*(\w+)\s*=\s*(0x[0-9A-Fa-f]+)\s*;", line)
+            if match:
+                sdk_map[int(match.group(2), 16)] = match.group(1)
+    if not sdk_map:
+        return []
+    # Claimed members are a reviewed sample, not every object the slot may come
+    # from, so the whole staged SDK is searched before calling a slot a variant.
+    claimed = re.findall(
+        r'"((?:[^"]*/)?psyq/[^"]+\.(?:o|obj))"', (root / "config/targets" / manifest.id.value / "target.toml").read_text(encoding="utf-8")
+    )
+    members = list(claimed)
+    for library in sorted((root / "toolchains" / "psyq").glob("*/")):
+        for directory in sorted(library.glob("lib*")):
+            for obj in sorted(directory.glob("*.o")):
+                members.append(obj.relative_to(root / "toolchains").as_posix())
+    payload = (root / manifest.binary).read_bytes()
+    layout = parse_splat_layout(root / manifest.splat, manifest.load_address)
+    asm_names = {
+        path.stem: path
+        for path in (root / "out" / "splat" / manifest.id.value / "asm").glob("*.s")
+    }
+    texts = {}
+    rows = []
+    for boundary in layout.boundaries:
+        if boundary.kind != "asm" or boundary.virtual_start not in sdk_map:
+            continue
+        start = boundary.virtual_start - manifest.load_address
+        size = boundary.file_size
+        body = payload[start : start + size]
+        if not body or not size:
+            continue
+        owner = None
+        for member in members:
+            obj = root / "toolchains" / member
+            if not obj.is_file():
+                continue
+            if obj not in texts:
+                texts[obj] = _sdk_text(obj, root) or b""
+            index = texts[obj].find(body)
+            if index >= 0:
+                owner = (member, index)
+                break
+        rows.append(
+            {
+                "function": f"0x{boundary.virtual_start:08X}",
+                "name": sdk_map[boundary.virtual_start],
+                "symbol": (asm_names.get(boundary.name or "", Path()).stem or None),
+                "bytes": size,
+                "status": "exact_sdk" if owner else "sdk_variant",
+                "object": owner[0] if owner else None,
+                "object_offset": f"0x{owner[1]:X}" if owner else None,
+            }
+        )
+    destination = root / "out" / "psyq" / f"slots-{manifest.id.value.replace('/', '-')}.json"
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(json.dumps(rows, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    for row in rows:
+        where = f"{row['object']}@{row['object_offset']}" if row["object"] else "no matching sdk object"
+        print(f"sdk-slot {row['status']} {row['function']} {row['name']} ({row['bytes']} B) {where}")
+    return rows
+
+
 def _summary(root: Path, manifest) -> str:
     """Report what the split produced, not just that it exited zero.
 
@@ -167,8 +260,10 @@ def run(args: argparse.Namespace) -> int:
         else:
             _project_regenerated_stubs(root, manifest)
             print(f"{manifest.id.value}: {_summary(root, manifest)}")
+            _sdk_slot_report(root, manifest)
     elif result.returncode == 0:
         _project_regenerated_stubs(root, manifest)
+        _sdk_slot_report(root, manifest)
     return result.returncode
 
 
