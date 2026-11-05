@@ -10,6 +10,12 @@ never weaken index validation, rename away conflict or edit generated output.
    or repairs index.
 2. Classify complete original range: text, pointer/jump table, numeric table or
    code. Record decoding. Data in `.text` is not dialogue merely because unlifted.
+   A boundary that never allocates its own frame, restores a frame it did not
+   create, and starts with inherited saved registers is a switch arm, not a
+   function: find the `jr`-free head (prologue plus jump table), and note where its
+   segment boundary falls. A head inside a `bin` subsegment and a tail in the next
+   segment means the function straddles a segment split, which is a parent-owned
+   structural regroup - not a lane edit and not a boundary rename.
 3. For finite unclaimed `asm` data, isolated before/after Splat splits must prove
    identical extraction, unchanged offsets and linker script unchanged except
    selected object path. `supported` probe is candidate evidence, not acceptance.
