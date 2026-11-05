@@ -53,12 +53,15 @@ disposition before successor starts.
 
 1. **Reconcile.** Inspect dirty tree and real handles. Skip accepted work only after
    current owner verification. Uncertain application/cleanup stops guarded writes.
-2. **Select/scout.** Freeze fresh target-qualified opportunities and original bytes;
-   exclude duplicates, accepted/owned work and unresolved shared effects. Read
-   independent inputs in parallel. Bulk template/carve/clean-C-requeue levers are
-   measured exhausted. Select per-function via `bin/harness lift next`, shortest surviving
-   boundaries, then partials missing an instruction/constant. Allocation/ordering
-   residuals mark measured clean-C ceiling, not spelling debt.
+2. **Select/scout.** Freeze both kinds of opportunity: fresh target-qualified
+   boundaries and existing partials that still carry a named residual. Exclude
+   duplicates, accepted/owned work and unresolved shared effects; read independent
+   inputs in parallel. Bulk template/carve/clean-C-requeue levers are measured
+   exhausted. Fresh work comes from `bin/harness lift next`, shortest surviving
+   boundaries first. A partial is selected from its measured `@status partial`
+   source. Mark each partial lane `kind: "partial"` so it enters the workflow on the
+   strong rung instead of relearning its own residual on the cheap one.
+   Allocation/ordering residuals mark measured clean-C ceiling, not spelling debt.
 3. **Lift.** `$bof3-re`, one function, explicit paths, pre-edit diagnosis, clean C89,
    original-byte proof, truthful metadata and live gate. Verify original return ABI;
    decompiler return guesses prove nothing. Domain owner retains rollback gates.

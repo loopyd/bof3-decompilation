@@ -28,6 +28,12 @@
 // PASS ends the lane and goes straight to naming; the reviewer only sees a ladder
 // that ended non-exact.
 //
+// A lane whose refs are existing partials passes `kind: "partial"` and starts on the
+// strongest rung: the cheap rung already produced that residual, so repeating it would
+// spend a child to relearn the report. `models` on a lane overrides the ladder for that
+// lane only. Naming runs on the model that reached exact; review and repair run on the
+// lane's strongest rung.
+//
 // After every lane closes, one harvest child rewrites the bof3-re references from
 // this batch's exact results only ($skill-master authoring, $unslop prose, $caveman
 // compaction) and runs the skills tests plus the docs drift check. It never commits.
@@ -65,19 +71,33 @@ const modelLadder = (
 if (modelLadder.length === 0) {
   return { ok: false, error: "bof3-lift-lanes: args.models resolved to an empty model ladder" };
 }
-// Stage models: repair and review run on the last rung, which is the one expected to
-// carry a hard residual; naming runs on the first, where ordinary evidence suffices.
-const ladderModel = (index) => modelLadder[Math.min(index, modelLadder.length - 1)];
-const reviewModel = ladderModel(modelLadder.length - 1);
-const repairModel = ladderModel(modelLadder.length - 1);
-const namingModel = ladderModel(0);
-const harvestModel = ladderModel(0);
+// A lane's own ladder, and the rung it starts on. A partial has already been lifted
+// once by the cheap rung, so it enters at the strongest model: repeating the rung that
+// produced the residual spends a child to learn what the report already says.
+const laneLadder = (lane) => {
+  const models = lane.models.length ? lane.models : modelLadder;
+  return { models, start: lane.kind === "partial" ? models.length - 1 : 0 };
+};
+const laneModel = (lane, index) => {
+  const { models } = laneLadder(lane);
+  return models[Math.min(index, models.length - 1)];
+};
+const laneLastModel = (lane) => laneModel(lane, laneLadder(lane).models.length - 1);
+const harvestModel = modelLadder[0];
 
 const lanes = rawLanes.map((lane, index) => ({
   key: String(lane.key || `lane-${index + 1}`),
   target: String(lane.target || ""),
   refs: Array.isArray(lane.refs) ? lane.refs.map(String) : [],
   cwd: typeof lane.cwd === "string" && lane.cwd.trim() ? lane.cwd.trim() : "",
+  // "partial" marks a selector that already has an authored source and a measured
+  // residual. Such a lane starts on the strongest rung instead of re-running the
+  // cheap one that already failed it. Anything else is a fresh lift.
+  kind: String(lane.kind || "").trim().toLowerCase() === "partial" ? "partial" : "fresh",
+  // Per-lane ladder override; empty means the batch ladder.
+  models: Array.isArray(lane.models)
+    ? lane.models.map((value) => String(value || "").trim()).filter(Boolean)
+    : [],
   // Optional bounded parent instruction appended to the lift and repair briefs.
   note: typeof lane.note === "string" ? lane.note.trim() : "",
 }));
@@ -128,6 +148,38 @@ const liftRetryBrief = (lane, index, model, priorText) => [
   ``,
   `Earlier rung result (its final JSON):`,
   String(priorText || ""),
+  resultContract(lane),
+  lane.note ? "Parent note for this lane:" : "",
+  lane.note || "",
+].filter((line, position, all) => !(line === "" && all[position - 1] === "")).join("\n");
+
+// A partial lane's first child. Same selectors and write set, but the target already
+// holds authored C with a measured residual, so the strong rung starts from that report
+// rather than from a blank first source.
+const partialBrief = (lane, model) => [
+  `BOF3 partial lift+naming lane '${lane.key}' — target '${lane.target}' — starting on '${model}'.`,
+  ``,
+  `Each selector below already has an authored source that was measured non-exact, so`,
+  `this lane starts on the strongest rung. Do not author a fresh first seed: read the`,
+  `retained source, its metadata and the earlier report, reproduce the live diff, and`,
+  `attack the first named residual with one change at a time.`,
+  ``,
+  `Registry refs (identical set, nothing added or substituted):`,
+  ...lane.refs.map((ref) => `  ${ref}`),
+  ``,
+  `Write set: the existing function sources under src/bof3/ for '${lane.target}'; that`,
+  `target's own header if one exists; config/targets/'${lane.target}'/{splat.yaml,symbols.txt,target.toml};`,
+  `your report out/lift-batches/${lane.key}-${lane.target.replace(/^emi\//, "").replace(/\//g, "-")}-${String(lane.refs[0] || "").split("@")[1] || "unaddressed"}.md.`,
+  `Do NOT touch another target, config/splat.yaml, the index, caches,`,
+  `config/symbol-naming-baseline.json, or Git.`,
+  ``,
+  `Start with 'bin/harness agent context reverse <REF>' once, using the full shipped ref`,
+  `exactly as supplied above — a bare target id is rejected and emits no skill output.`,
+  `Then read the current source and its @status/@match/@residual block, and take the live`,
+  `diff with 'bin/harness lift gate --target ${lane.target} <REF> [<REF> ...]'.`,
+  `Keep the owning compiler and flags fixed. The ladder is exhausted after this rung, so`,
+  `an exact PASS ends the lane; anything else goes to review with the full ledger.`,
+  `Levers, sweep use and the result contract are exactly as a fresh lane:`,
   resultContract(lane),
   lane.note ? "Parent note for this lane:" : "",
   lane.note || "",
@@ -462,8 +514,14 @@ const worthRetrying = (text) => {
 // instead of re-deriving the function. Non-exact rungs hand off; only a ladder that ends
 // non-exact reaches review.
 const liftRung = (lane, index, priorText) => {
-  const model = ladderModel(index);
+  const ladder = laneLadder(lane);
+  const model = laneModel(lane, index);
   const liftKey = `${lane.key}-lift-${index}`;
+  const task = priorText
+    ? liftRetryBrief(lane, index, model, priorText)
+    : index === ladder.start && ladder.start > 0
+      ? partialBrief(lane, model)
+      : liftBrief(lane);
   return runs
     .run(liftKey, {
       label: `Lift ${lane.key} (${lane.target}) on ${model}`,
@@ -471,7 +529,7 @@ const liftRung = (lane, index, priorText) => {
       model,
       ...(lane.cwd ? { cwd: lane.cwd } : {}),
       output: false,
-      task: index === 0 ? liftBrief(lane) : liftRetryBrief(lane, index, model, priorText),
+      task,
     })
     .then(
       (lift) => {
@@ -483,7 +541,7 @@ const liftRung = (lane, index, priorText) => {
         // that blocked on evidence it did not have, will answer the same way on any
         // model; spending the second rung there buys nothing.
         if (state === "exact" || state === "invalid" ||
-            !worthRetrying(text) || index + 1 >= modelLadder.length) {
+            !worthRetrying(text) || index + 1 >= ladder.models.length) {
           return finishAttempt(lane, attempt);
         }
         return liftRung(lane, index + 1, text);
@@ -492,7 +550,7 @@ const liftRung = (lane, index, priorText) => {
     );
 };
 
-const laneChain = (lane) => liftRung(lane, 0, "");
+const laneChain = (lane) => liftRung(lane, laneLadder(lane).start, "");
 
 // Fail closed on incomplete membership or contradictory exact evidence. This is
 // report routing, not independent native verification; parent gates still own closure.
@@ -580,7 +638,7 @@ const namingStage = (lane, liftText, liftModel) => {
     .run(nameKey, {
       label: `Name ${lane.key} (${lane.target}) after exact lift`,
       agent: "bof3-namer",
-      model: namingModel,
+      model: liftModel,
       ...(lane.cwd ? { cwd: lane.cwd } : {}),
       output: false,
       task: namingBrief(lane, liftText, liftModel),
@@ -610,7 +668,7 @@ const reviewOnce = (lane, proposedText, round, triedRepairs) => {
     .run(reviewKey, {
       label: `Review ${lane.key} non-exact lift`,
       agent: "bof3-reviewer",
-      model: reviewModel,
+      model: laneLastModel(lane),
       ...(lane.cwd ? { cwd: lane.cwd } : {}),
       output: false,
       task: reviewBrief(lane, proposedText),
@@ -636,7 +694,7 @@ const reviewOnce = (lane, proposedText, round, triedRepairs) => {
           .run(repairKey, {
             label: `Repair ${lane.key} after review`,
             agent: "bof3-lifter",
-            model: repairModel,
+            model: laneLastModel(lane),
             ...(lane.cwd ? { cwd: lane.cwd } : {}),
             output: false,
             task: repairBrief(lane, text, proposedText),

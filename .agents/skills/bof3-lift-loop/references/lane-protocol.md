@@ -9,11 +9,24 @@ with per-lane failure isolation and bounded concurrency.
 ```js
 subagent({
   workflowScriptPath: ".pi/workflows/bof3-lift-lanes.js",
-  args: { lanes: [{ key: "l1", target: "<TARGET>",
-                    refs: ["<DISC_ID>#<INDEX>@0xADDRESS"] }] },
+  args: { lanes: [
+    { key: "l1", target: "<TARGET>", refs: ["<DISC_ID>#<INDEX>@0xADDRESS"] },
+    { key: "l2", target: "<TARGET>", kind: "partial",
+      refs: ["<DISC_ID>#<INDEX>@0xADDRESS"] }
+  ] },
   globalConcurrencyLimit: 8
 })
 ```
+
+Two lane kinds, one workflow. A fresh lane starts on the first rung of the model
+ladder (`ninerouter/ds-combo`, then `ninerouter/gpt-combo`); a lane marked
+`kind: "partial"` starts on the strongest rung, because the cheap rung already
+produced the residual it would otherwise re-measure. `models` on a lane overrides the
+ladder for that lane only. Each rung after the first receives the previous rung's
+report and attacks the named residual. A 100% gate PASS ends the lane and goes to the
+naming transaction; the reviewer fires only when the whole ladder ended non-exact, and
+repair then runs on the strongest rung. After every lane closes, one harvest child
+improves the `bof3-re` references from that batch's exact lanes only.
 
 One disjoint target per lane. Lane writes target-owned `src/bof3/**`, owning header
 and target `splat.yaml`/`symbols.txt`/`target.toml` only. Parent owns shared headers,
