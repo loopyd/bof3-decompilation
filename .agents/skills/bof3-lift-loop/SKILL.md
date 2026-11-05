@@ -60,7 +60,9 @@ disposition before successor starts.
    exhausted. Fresh work comes from `bin/harness lift next`, shortest surviving
    boundaries first. A partial is selected from its measured `@status partial`
    source. Mark each partial lane `kind: "partial"` so it enters the workflow on the
-   strong rung instead of relearning its own residual on the cheap one.
+   strong rung instead of relearning its own residual on the cheap one; its carried
+   ledger closes the shapes already measured, and the strong rung gets its own attempts
+   for the rest.
    Allocation/ordering residuals mark measured clean-C ceiling, not spelling debt.
 3. **Lift.** `$bof3-re`, one function, explicit paths, pre-edit diagnosis, clean C89,
    original-byte proof, truthful metadata and live gate. Verify original return ABI;

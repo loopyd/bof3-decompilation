@@ -25,7 +25,12 @@ produced the residual it would otherwise re-measure. `models` on a lane override
 ladder for that lane only. Each rung after the first receives the previous rung's
 report and attacks the named residual. A 100% gate PASS ends the lane and goes to the
 naming transaction; the reviewer fires only when the whole ladder ended non-exact, and
-repair then runs on the strongest rung. After every lane closes, one harvest child
+repair then runs on the strongest rung. Each rung returns a compact `ledger` of the
+shapes it measured, and the next rung, review and repair all inherit it. The ledger is
+knowledge, not a spent budget: every shape on it is closed, and the receiving rung has
+its own attempt allowance for shapes that are not. That is what stops an elevated
+partial from re-running experiments the cheap rung already burned, while still letting
+the stronger model try the one thing the earlier ledger left open. After every lane closes, one harvest child
 improves the `bof3-re` references from that batch's exact lanes only - any exact, whether
 a first seed, a partial closed on a later rung, a repaired exact, or an exact lift whose
 naming stage was blocked. A partial lane that closes on the strong rung is the most
