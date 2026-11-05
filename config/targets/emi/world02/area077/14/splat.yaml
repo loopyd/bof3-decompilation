@@ -193,8 +193,10 @@ segments:
     - asm
     - func_801F5710
   - - 11196
-    - asm
-    - func_801F57BC
+    - c
+    - cycleThreePaletteBlocksWorld02Area07714_801F57BC
+    - '@source: src/bof3/world/cycleThreePaletteBlocksWorld02Area07714_801F57BC.c'
+    - '@behavior: copies three palette blocks selected by work byte +9 modulo four, then increments that byte.'
   - - 11392
     - asm
     - func_801F5880

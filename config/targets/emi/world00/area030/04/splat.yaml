@@ -221,8 +221,13 @@ segments:
     - func_801D45F8
     - '@source: src/bof3/world/func_801D45F8.c'
   - - 14976
+    - c
+    - advancePanelSlideAndUpdateStateWorld00Area03004_801D4680
+    - '@source: src/bof3/world/advancePanelSlideAndUpdateStateWorld00Area03004_801D4680.c'
+    - '@behavior: increments work byte 9, draws sliding panels and updates state byte 1 at step four.'
+  - - 15492
     - asm
-    - func_801D4680
+    - func_801D4884
   - - 20296
     - c
     - func_801D5B48

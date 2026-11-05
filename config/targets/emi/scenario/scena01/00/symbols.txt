@@ -1,4 +1,5 @@
 scenarioScena0100Work = 0x1F800044;
+modeAt8014933BScenarioScena0100 = 0x8014933B;
 func_801F71C0 = 0x801F71C0;
 func_801F729C = 0x801F729C;
 dispatchWorkByte1HandlerScenarioScena0100_801F73B8 = 0x801F73B8;
@@ -12,7 +13,7 @@ func_801F7A24 = 0x801F7A24;
 clearWorkTableAt800E4800ScenarioScena0100_801F7AB8 = 0x801F7AB8;
 func_801F7AE4 = 0x801F7AE4;
 updateWorkTableAndReportActiveScenarioScena0100_801F7C54 = 0x801F7C54;
-func_801F7D04 = 0x801F7D04;
+updateWorkHalfword2EAndDrawScenarioScena0100_801F7D04 = 0x801F7D04;
 func_801F7DCC = 0x801F7DCC;
 func_801F7EDC = 0x801F7EDC;
 dispatchProgressHandlerScenarioScena0100_801F7FC4 = 0x801F7FC4;

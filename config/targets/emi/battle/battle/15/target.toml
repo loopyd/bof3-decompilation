@@ -204,6 +204,7 @@ sources = [
     "src/bof3/battle/func_800B0498.c",
     "src/bof3/battle/func_800B0A2C.c",
     "src/bof3/battle/panelStepDownSettle29.c",
+    "src/bof3/battle/panelStepUpSettleMinus23.c",
     "src/bof3/battle/func_800B0B0C.c",
     "src/bof3/battle/panelStepRightSettle5B.c",
     "src/bof3/battle/panelStepLeftSettle5B.c",

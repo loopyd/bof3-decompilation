@@ -220,8 +220,10 @@ segments:
     - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0800_801F95D4.c'
     - '@behavior: Overlay work-byte-1 dispatcher: takes the scratchpad work object reached through pointer slot 0x1F800044, reads its unsigned byte at offset 1, scales it by four and calls that entry of the overlay-local handler-pointer table at 0x801FE908 (entry 29 of the 51-entry run at 0x801FE894, holding 0x801F9618, 0x801F9668, 0x801F98B0 and the rest of the run) with no arguments; reads no other state, writes none, and the 0x18-byte frame only keeps $ra across the indirect call. No word in this overlay stores its address; the in-image reference is the shared handler-pointer word 0x801C7DCC of the concurrently loaded etc/game overlay.'
   - - 10776
-    - asm
-    - func_801F9618
+    - c
+    - invokeHelperThenConditionallyAdvanceWorkByte1ScenarioScena0800_801F9618
+    - '@source: src/bof3/scenario/invokeHelperThenConditionallyAdvanceWorkByte1ScenarioScena0800_801F9618.c'
+    - '@behavior: Calls the overlay-local helper at 0x801F9688, then increments unsigned work byte 1 through scratchpad pointer slot 0x44 modulo 256 unless the unsigned halfword at 0x80143F00 equals 2; takes no arguments and returns no value.'
   - - 10856
     - c
     - invokeHelperScenarioScena0800_801F9668

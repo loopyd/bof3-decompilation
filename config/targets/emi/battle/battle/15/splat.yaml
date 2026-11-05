@@ -1608,8 +1608,10 @@ segments:
     - '@source: src/bof3/battle/panelStepDownSettle29.c'
     - '@behavior: Steps the signed panel y by 0x10 below 0x29, otherwise resets it to 0x29, then draws the panel slots.'
   - - 107184
-    - asm
-    - func_800B0AB0
+    - c
+    - panelStepUpSettleMinus23
+    - '@source: src/bof3/battle/panelStepUpSettleMinus23.c'
+    - '@behavior: Subtracts 0x10 from signed panel y at or above -0x16, otherwise resets it to -0x17, then draws the panel slots.'
   - - 107276
     - c
     - func_800B0B0C

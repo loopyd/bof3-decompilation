@@ -188,8 +188,9 @@ segments:
     - asm
     - func_801F5684
   - - 11060
-    - asm
-    - func_801F5734
+    - c
+    - setModeFromMaskOverlapAndWorkByteBWorld03Area12114_801F5734
+    - '@source: src/bof3/world/setModeFromMaskOverlapAndWorkByteBWorld03Area12114_801F5734.c'
   - - 11160
     - asm
     - func_801F5798

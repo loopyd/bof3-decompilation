@@ -1339,8 +1339,10 @@ segments:
     - '@source: src/bof3/battle/func_801E6D28.c'
     - '@behavior: Returns from the battle work gate when the 0x801462E8 halfword carries bit 0x400 and the current work record byte +5 already equals the global byte 0x80146374; otherwise it masks the selected record status halfword +0x80/+0x82 with 0x58 and increments scratchpad byte +1 of the 0x1F800044 object when any group bit is set and isBattlerInactiveOrFlag4000 accepts that record.'
   - - 90708
-    - asm
-    - func_801E6E54
+    - c
+    - initializeGroupFlagScratchAndRequest
+    - '@source: src/bof3/battle/initializeGroupFlagScratchAndRequest.c'
+    - '@behavior: Initializes scratch work for the next enabled group flag and requests its table byte before advancing scratch byte one by two.'
   - - 91040
     - c
     - clearScratchByte1

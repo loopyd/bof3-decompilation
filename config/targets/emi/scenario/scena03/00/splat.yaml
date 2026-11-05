@@ -129,8 +129,10 @@ segments:
     - c
     - invokeHelperScenarioScena0300_801F85DC
   - - 6652
-    - asm
-    - func_801F85FC
+    - c
+    - dispatchWorkByte1HandlerScenarioScena0300_801F85FC
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0300_801F85FC.c'
+    - '@behavior: Dispatches the overlay-local handler table at 0x801FCFAC using unsigned work-object byte 1 from scratchpad pointer cell 0x1F800044.'
   - - 6720
     - asm
     - func_801F8640

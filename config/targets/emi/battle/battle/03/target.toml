@@ -228,6 +228,7 @@ sources = [
     "src/bof3/battle/initModeTuple530.c",
     "src/bof3/battle/initScratchMotionFields.c",
     "src/bof3/battle/initScratchWorkState.c",
+    "src/bof3/battle/initializeGroupFlagScratchAndRequest.c",
     "src/bof3/battle/initStateByEnemyFlag2.c",
     "src/bof3/battle/initUiBundleSlot0.c",
     "src/bof3/battle/initUiBundleSlot2.c",

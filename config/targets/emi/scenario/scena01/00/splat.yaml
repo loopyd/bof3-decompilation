@@ -69,8 +69,8 @@ segments:
     - c
     - updateWorkTableAndReportActiveScenarioScena0100_801F7C54
   - - 4356
-    - asm
-    - func_801F7D04
+    - c
+    - updateWorkHalfword2EAndDrawScenarioScena0100_801F7D04
   - - 4556
     - asm
     - func_801F7DCC
