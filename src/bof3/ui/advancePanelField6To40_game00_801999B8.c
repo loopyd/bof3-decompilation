@@ -1,4 +1,6 @@
 #include "bof3/ui/game00_internal.h"
+#include "ui/panel_task.h"
+#include "shared/ui/panel_task.inc"
 
 /* @source 0x801999B8
  * @behavior advances the panel task field_06 by 0x10, clamps to max 0x28, and
@@ -7,15 +9,4 @@
  * @match 100.00
  * @residual none
  */
-void advancePanelField6To40(void) {
-  PanelTask* task;
-  u16        next;
-
-  task = D_80148648;
-  next = task->field_06 + 0x10;
-  task->field_06 = next;
-  if ((s16)next >= 0x29) {
-    task->field_06 = 0x28;
-    task->state = 0;
-  }
-}
+PANEL_ADVANCE_FIELD6(advancePanelField6To40, 0x28)

@@ -12,18 +12,25 @@
     }                                                                          \
   }
 
-#define PANEL_RETREAT_X(func)                                                  \
+#define PANEL_RETREAT_X(func, min)                                             \
   void func(void) {                                                            \
     PanelTask* task_root;                                                      \
     s16        next_x;                                                         \
     task_root = D_80148648;                                                    \
     next_x = (s16)((s32)task_root->x - 0x20);                                  \
     task_root->x = (u16)next_x;                                                \
-    if (next_x < -0xAA) {                                                      \
-      next_x = -0xAA;                                                          \
+    if (next_x < (min)) {                                                      \
+      next_x = (min);                                                          \
       task_root->x = (u16)next_x;                                              \
       task_root->state = 0u;                                                   \
     }                                                                          \
+  }
+
+#define PANEL_APPLY_POSITION(func)                                             \
+  void func(void) {                                                            \
+    PanelTask* task_root;                                                      \
+    task_root = D_80148648;                                                    \
+    func_801647C4(task_root->x, task_root->field_06, 0);                       \
   }
 
 #define PANEL_RETREAT_X_CLAMP(func, limit)                                     \
@@ -44,10 +51,10 @@
     PanelTask* task_root;                                                      \
     u16        next_val;                                                       \
     task_root = D_80148648;                                                    \
-    next_val = (u16)(*((volatile u16*)((u8*)task_root + 6)) + 0x10);           \
-    *((volatile u16*)((u8*)task_root + 6)) = next_val;                         \
+    next_val = (u16)(task_root->field_06 + 0x10);                              \
+    task_root->field_06 = next_val;                                            \
     if ((s16)next_val >= (limit) + 1) {                                        \
-      *((volatile u16*)((u8*)task_root + 6)) = (limit);                        \
+      task_root->field_06 = (limit);                                           \
       task_root->state = 0;                                                    \
     }                                                                          \
   }

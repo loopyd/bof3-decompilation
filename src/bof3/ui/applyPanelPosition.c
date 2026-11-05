@@ -1,4 +1,6 @@
 #include "bof3/ui/shop00_internal.h"
+#include "ui/panel_task.h"
+#include "shared/ui/panel_task.inc"
 
 /* @source 0x801E2B94
  * @behavior passes the panel position and field six to the common UI helper.
@@ -6,8 +8,4 @@
  * @match 100.00
  * @residual none
  */
-void applyPanelPosition(void) {
-  PanelTask* task = g_PanelTaskRoot;
-
-  func_801647C4(task->x, task->field_06, 0);
-}
+PANEL_APPLY_POSITION(applyPanelPosition)

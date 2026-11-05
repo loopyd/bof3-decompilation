@@ -1,4 +1,6 @@
 #include "bof3/ui/shop00_internal.h"
+#include "ui/panel_task.h"
+#include "shared/ui/panel_task.inc"
 #include "base/compiler.h"
 
 /* @source 0x801E2D1C
@@ -8,13 +10,4 @@
  * @match 100.00
  * @residual none
  */
-void retreatPanelField6To62(void) {
-  PanelTask* task_root;
-
-  task_root = D_80148648;
-  task_root->field_06 = (u16)(task_root->field_06 - 0x10);
-  if ((s16)task_root->field_06 < 0x3E) {
-    task_root->field_06 = 0x3E;
-    task_root->state = 0;
-  }
-}
+PANEL_RETREAT_FIELD6(retreatPanelField6To62, 0x10, 0x3E)

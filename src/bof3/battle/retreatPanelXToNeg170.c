@@ -9,4 +9,4 @@
  * @residual none
  */
 
-PANEL_RETREAT_X(retreatPanelXToNeg170)
+PANEL_RETREAT_X(retreatPanelXToNeg170, -0xAA)

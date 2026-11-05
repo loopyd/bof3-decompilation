@@ -8,7 +8,7 @@
  * @match 100.00
  * @residual none
  */
-PANEL_RETREAT_X(retreatPanelXToNeg170)
+PANEL_RETREAT_X(retreatPanelXToNeg170, -0xAA)
 
 /* @source 0x80199938
  * @behavior retreats panel field six by 16 and clamps it to -20.

@@ -1,4 +1,6 @@
 #include "bof3/battle/battle15_internal.h"
+#include "ui/panel_task.h"
+#include "shared/ui/panel_task.inc"
 
 /* @source 0x800B20D4
  * @behavior UNKNOWN: exact behavior is not yet documented.
@@ -7,8 +9,4 @@
  * @residual none
  */
 
-void applyPanelPosition(void) {
-  PanelTask* task = g_PanelTaskRoot;
-
-  func_801647C4(task->x, task->field_06, 0);
-}
+PANEL_APPLY_POSITION(applyPanelPosition)

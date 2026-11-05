@@ -1,4 +1,6 @@
 #include "bof3/battle/battle15_internal.h"
+#include "ui/panel_task.h"
+#include "shared/ui/panel_task.inc"
 
 /* @source 0x800B254C
  * @behavior UNKNOWN: exact behavior is not yet documented.
@@ -7,14 +9,4 @@
  * @residual none
  */
 
-void retreatPanelXTo152(void) {
-  PanelTask* task = g_PanelTaskRoot;
-  s16        val;
-
-  val = task->x - 0x20;
-  task->x = val;
-  if (val < 0x98) {
-    task->x = 0x98;
-    task->state = 0;
-  }
-}
+PANEL_RETREAT_X_CLAMP(retreatPanelXTo152, 0x98)

@@ -1,4 +1,6 @@
 #include "bof3/ui/shop00_internal.h"
+#include "ui/panel_task.h"
+#include "shared/ui/panel_task.inc"
 
 /* @source 0x801E3204
  * @behavior subtracts 0x20 from the panel task x position, clamps to max 0x84, and
@@ -7,15 +9,4 @@
  * @match 100.00
  * @residual none
  */
-void retreatPanelXTo132(void) {
-  PanelTask* task_root;
-  u16        next_val;
-
-  task_root = D_80148648;
-  next_val = (u16)(task_root->x - 0x20);
-  task_root->x = next_val;
-  if ((s16)next_val < 0x84) {
-    task_root->x = 0x84;
-    task_root->state = 0;
-  }
-}
+PANEL_RETREAT_X_CLAMP(retreatPanelXTo132, 0x84)
