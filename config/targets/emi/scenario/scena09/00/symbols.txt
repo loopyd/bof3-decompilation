@@ -1,6 +1,7 @@
+scenarioScena0900Work = 0x1F800044;
 D_8014932A = 0x8014932A;
 dispatchWorkByte1HandlerScenarioScena0900_801F735C = 0x801F735C;
-func_801F73A0 = 0x801F73A0;
+initializeRecordBankArmByte9AndAdvanceStateScenarioScena0900_801F73A0 = 0x801F73A0;
 resetWorkStateWhenNoRecordActiveScenarioScena0900_801F73F0 = 0x801F73F0;
 func_801F7424 = 0x801F7424;
 clearSelectedRecordBankLeadBytesScenarioScena0900_801F7574 = 0x801F7574;

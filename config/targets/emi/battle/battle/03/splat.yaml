@@ -1010,8 +1010,10 @@ segments:
     - '@source: src/bof3/battle/func_801E383C.c'
     - '@behavior: Index 0 of the enemy byte-2 handler table D_801EB3FC dispatched by func_801E3638. While the battle selection gate byte 0x801462EF is set and the active selection slot byte D_801EB4D8 either equals scratch work byte +0x05 or carries bit 0x40, submits the positional effect of the scratch work record through func_8019651C (zero offsets, mode 0), stores the returned effect byte at scratch work byte +0x07 (the array index the next handler func_801E38C0 expands into the 12-byte D_80145BD4 records) and advances the scratch state byte +0x02 to 1.'
   - - 76992
-    - asm
-    - func_801E38C0
+    - c
+    - updateEnemySelectionEffectFactor
+    - '@source: src/bof3/battle/updateEnemySelectionEffectFactor.c'
+    - '@behavior: Copies the oscillating factor into bytes 4, 3 and 2 of the effect record selected by scratch work byte 7; submits the effect to func_80196670 and resets scratch state byte 2 when the selection gate is clear or the selection neither matches scratch byte 5 nor carries bit 0x40.'
   - - 77184
     - c
     - func_801E3980

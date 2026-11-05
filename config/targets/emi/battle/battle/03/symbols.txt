@@ -320,6 +320,7 @@ integratePositionPairUntilTargetThenResetState = 0x801E352C;
 initStateByEnemyFlag2 = 0x801E35D8;
 func_801E3638 = 0x801E3638;
 func_801E383C = 0x801E383C;
+updateEnemySelectionEffectFactor = 0x801E38C0;
 func_801E3980 = 0x801E3980;
 dispatchByte2TableB404 = 0x801E3A00;
 decrementWorkByte9SubmitEnemyCue = 0x801E3A44;

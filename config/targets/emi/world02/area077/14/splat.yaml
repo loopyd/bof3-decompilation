@@ -170,8 +170,10 @@ segments:
     - '@source: src/bof3/world/incrementWorkStepIfStateNonzeroWorld02Area07714_801F5374.c'
     - '@behavior: increments work byte +2 when state byte 0x8014933B is nonzero, then always calls the local panel update at 0x801F54B8.'
   - - 10172
-    - asm
-    - func_801F53BC
+    - c
+    - incrementWorkFieldsAndAdvanceStepAt350000World02Area07714_801F53BC
+    - '@source: src/bof3/world/incrementWorkFieldsAndAdvanceStepAt350000World02Area07714_801F53BC.c'
+    - '@behavior: adds 0x2000 to work word +0x38 and 0x10 to halfword +0x3E; increments byte +2 when word +0x38 reaches 0x350000, then calls the local helper at 0x801F54B8.'
   - - 10268
     - c
     - incrementWorkStepIfStateZeroWorld02Area07714_801F541C

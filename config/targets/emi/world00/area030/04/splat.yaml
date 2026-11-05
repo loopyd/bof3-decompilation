@@ -265,8 +265,8 @@ segments:
     - asm
     - func_801D56F4
   - - 19308
-    - asm
-    - func_801D576C
+    - c
+    - dispatchStateByte3Table1fd4World00Area03004_801D576C
   - - 19376
     - asm
     - func_801D57B0

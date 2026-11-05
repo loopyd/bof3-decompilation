@@ -1,7 +1,7 @@
 scenarioScena0800Work = 0x1F800044;
 dispatchWorkByte1HandlerScenarioScena0800_801F6F48 = 0x801F6F48;
 func_801F6F8C = 0x801F6F8C;
-func_801F6FC4 = 0x801F6FC4;
+tickCountdownByte9Advance12BitWorkWord0CAndStateScenarioScena0800_801F6FC4 = 0x801F6FC4;
 resetWorkFlagsOnNonzeroRefreshScenarioScena0800_801F7048 = 0x801F7048;
 dispatchWorkByte1HandlerScenarioScena0800_801F707C = 0x801F707C;
 func_801F70C0 = 0x801F70C0;

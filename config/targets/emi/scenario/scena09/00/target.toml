@@ -9,6 +9,7 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/initializeRecordBankArmByte9AndAdvanceStateScenarioScena0900_801F73A0.c",
     "src/bof3/scenario/clearSelectedRecordBankLeadBytesScenarioScena0900_801F7574.c",
     "src/bof3/scenario/addSignedTableStepToHalfword8014932AScenarioScena0900_801FC590.c",
     "src/bof3/scenario/dispatchPrimaryStateHandlerScenarioScena0900_801F83D8.c",

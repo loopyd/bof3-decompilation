@@ -181,6 +181,7 @@ sources = [
     "src/bof3/battle/func_801E320C.c",
     "src/bof3/battle/func_801E3638_battle03.c",
     "src/bof3/battle/func_801E383C.c",
+    "src/bof3/battle/updateEnemySelectionEffectFactor.c",
     "src/bof3/battle/func_801E3980_battle03.c",
     "src/bof3/battle/func_801E3B04_battle03.c",
     "src/bof3/battle/func_801E44D4_battle03.c",

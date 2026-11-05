@@ -57,8 +57,10 @@ segments:
     - asm
     - func_801F754C
   - - 3296
-    - asm
-    - func_801F78E0
+    - c
+    - tickCountdownAndClearSelectedRecordBytesScenarioScena0300_801F78E0
+    - '@source: src/bof3/scenario/tickCountdownAndClearSelectedRecordBytesScenarioScena0300_801F78E0.c'
+    - '@behavior: Ticks work byte 9 while setting selected record bit 0x40; at zero clears that bit and two selected record lead bytes, then sets work byte 1 to 2.'
   - - 3604
     - asm
     - func_801F7A14

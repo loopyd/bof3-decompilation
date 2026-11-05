@@ -186,8 +186,9 @@ segments:
     - c
     - resetMode3AndWorkStateWorld03Area12114_801F564C
   - - 10884
-    - asm
-    - func_801F5684
+    - c
+    - updateWorkByte8FromMaskWorld03Area12114_801F5684
+    - '@source: src/bof3/world/updateWorkByte8FromMaskWorld03Area12114_801F5684.c'
   - - 11060
     - c
     - setModeFromMaskOverlapAndWorkByteBWorld03Area12114_801F5734

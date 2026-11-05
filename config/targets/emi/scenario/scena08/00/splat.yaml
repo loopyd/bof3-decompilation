@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801F6F8C
   - - 964
-    - asm
-    - func_801F6FC4
+    - c
+    - tickCountdownByte9Advance12BitWorkWord0CAndStateScenarioScena0800_801F6FC4
+    - '@source: src/bof3/scenario/tickCountdownByte9Advance12BitWorkWord0CAndStateScenarioScena0800_801F6FC4.c'
+    - '@behavior: Call helper 0x801F802C when shared word 0x80143E6C has its low two bits clear, then call helper 0x801F7E14. Decrement work byte 9 modulo 256, advance word 0x0C by 0x80 modulo 0x1000, and increment byte 1 on countdown expiry.'
   - - 1096
     - c
     - resetWorkFlagsOnNonzeroRefreshScenarioScena0800_801F7048

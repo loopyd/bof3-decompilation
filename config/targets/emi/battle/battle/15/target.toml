@@ -271,6 +271,7 @@ sources = [
     "src/bof3/battle/dispatchPanelStateTable6e50.c",
     "src/bof3/battle/dispatchPanelStateTable6e40.c",
     "src/bof3/battle/applyInputMask40ArmRecordField4Neg20Field6Neg4.c",
+    "src/bof3/battle/runSelectionPassThenSetSelectedRecordFlag8000.c",
 ]
 support_sources = [
     "src/bof3/support/battle15_symbols.c",

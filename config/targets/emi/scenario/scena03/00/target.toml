@@ -9,6 +9,7 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/tickCountdownAndClearSelectedRecordBytesScenarioScena0300_801F78E0.c",
     "src/bof3/scenario/tickCountdownAndClearTwoRecordBytesScenarioScena0300_801F7260.c",
     "src/bof3/scenario/addAlternatingSignedTableStepToTwoHalfwordsScenarioScena0300_801FC410.c",
     "src/bof3/scenario/addSignedTableStepToTwoHalfwordsScenarioScena0300_801FC3B4.c",
