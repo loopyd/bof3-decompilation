@@ -117,7 +117,7 @@ segments:
     - c
     - func_80097EC0
     - '@source: src/bof3/battle/func_80097EC0.c'
-    - '@behavior: Initialises the primary battle selection-grid scratch band at 0x80148570 from the active message-slot work record and the saved group/page/cursor row of the 0x801454F4 table; 0x80148584 receives bit 1 of the active selection slot flag word when bits 1 and 17 of that word are both set.'
+    - '@behavior: Initialises the primary battle selection-grid scratch band at 0x80148570 from the active message-slot work record and the saved group/page/cursor row of the 0x801454F4 table; 0x80148584 receives bit 1 of the active selection slot flag word when bit 1 is set and bit 17 is clear.'
   - - 6120
     - c
     - func_80097FE8
