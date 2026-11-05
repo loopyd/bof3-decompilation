@@ -369,8 +369,10 @@ segments:
     - c
     - func_8009DD20
   - - 30032
-    - asm
-    - func_8009DD50
+    - c
+    - storePendingDamage9999OrEstimateThenClampZero
+    - '@source: src/bof3/battle/storePendingDamage9999OrEstimateThenClampZero.c'
+    - '@behavior: Stores 9999 in the pending-damage halfword at byte +0x04 of the battle selection record reached through D_8014639C.record, after running the selection-input pass func_800A3F28, when the acting battler''s 0x140-stride local-work byte at D_80145F09[D_80146374 * 0x140] is 0x0A; otherwise stores the func_800A4294 kind-3 estimate minus the 0x118-stride enemy-work halfword at 0x801EB6D6 + (D_80146394 - 3) * 0x118, then clamps that halfword to zero when it is negative.'
   - - 30232
     - c
     - func_8009DE18

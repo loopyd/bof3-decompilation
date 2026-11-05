@@ -511,17 +511,17 @@ segments:
     - c
     - func_801DA3F4
     - '@source: src/bof3/world/func_801DA3F4_area03004.c'
-    - '@behavior: decrements byte 9 of the work record published at the scratchpad cursor 0x1F800044, redraws the AREA030 panel at the origin 0x44 + 0x50 * remaining count through func_801E19CC, then once that count reaches zero arms byte 6 of the record and advances its dispatch byte 3; the dim tile is appended through appendDimTile last.'
+    - '@behavior: decrements byte 9 of the work record published at the scratchpad cursor 0x1F800044, redraws the AREA030 panel at the origin 0x44 + 0x50 * remaining count through drawArea030Panel, then once that count reaches zero arms byte 6 of the record and advances its dispatch byte 3; the dim tile is appended through appendDimTile last.'
   - - 39064
     - c
     - func_801DA498
     - '@source: src/bof3/world/func_801DA498_area03004.c'
-    - '@behavior: draws the AREA030 panel combination for the shared 0x44/0x4E origin through func_801E19CC; when the shared pad state word D_80145AA8 shares a bit with the pressed-button masks D_80145AC2 / D_80145AC4 it advances byte 3 of the work record published at the scratchpad cursor 0x1F800044; then appends the dim tile through appendDimTile.'
+    - '@behavior: draws the AREA030 panel combination for the shared 0x44/0x4E origin through drawArea030Panel; when the shared pad state word D_80145AA8 shares a bit with the pressed-button masks D_80145AC2 / D_80145AC4 it advances byte 3 of the work record published at the scratchpad cursor 0x1F800044; then appends the dim tile through appendDimTile.'
   - - 39176
     - c
     - func_801DA508
     - '@source: src/bof3/world/func_801DA508_area03004.c'
-    - '@behavior: increments byte 9 of the work record published at the scratchpad cursor 0x1F800044, redraws the AREA030 panel at the origin 0x44 - 0x50 * that count through func_801E19CC, and once that count reaches 4 dispatches sound cue 0x102 through func_8015DF18, arms byte 6 of the record and stores 4 in its dispatch byte 3; the dim tile is appended through appendDimTile last.'
+    - '@behavior: increments byte 9 of the work record published at the scratchpad cursor 0x1F800044, redraws the AREA030 panel at the origin 0x44 - 0x50 * that count through drawArea030Panel, and once that count reaches 4 dispatches sound cue 0x102 through func_8015DF18, arms byte 6 of the record and stores 4 in its dispatch byte 3; the dim tile is appended through appendDimTile last.'
   - - 39348
     - c
     - func_801DA5B4
@@ -991,8 +991,10 @@ segments:
     - asm
     - func_801E1758
   - - 69068
-    - asm
-    - func_801E19CC
+    - c
+    - drawArea030Panel
+    - '@source: src/bof3/world/drawArea030Panel.c'
+    - '@behavior: draws the AREA030 panel combination at the requested origin: submits the 0xB3 by 0x42 inset panel rectangle through func_801AE3F0 with the shared CLUT-bank byte D_80144952 as the trailing argument, selects graphics mode 9/1, draws the 0x25 sprite at x, fifteen 0x26 sprites spaced eight pixels from x + 0x20, the 0x27 and 0x28 sprites at x + 0x98 and x + 0xB0, the two func_801D799C text rows of width 0x28 at (x, y + 0x18) and (x + 0xB0, y + 0x18), the 0x30 sprite at x on the y + 0x40 row, twenty-one 0x31 sprites spaced eight pixels from x + 8 on that row and the 0x32 sprite at x + 0xB0 on that row, and finally the two main-RAM offset-table textures (the 0x80010000 base plus the selected halfword) at (x + 0x3E, y + 6) and (x + 6, y + 0x19) with colour 0 and flag 0xFF through func_8014F800.'
   - - 69648
     - c
     - func_801E1C10

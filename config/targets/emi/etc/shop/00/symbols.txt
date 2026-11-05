@@ -128,6 +128,7 @@ tickPhaseTimerThenAdvanceUiPhase = 0x801D65EC;
 func_801D6668 = 0x801D6668;
 setUiFlags = 0x801D66AC;
 setUiFlagsGated = 0x801D66C8;
+tickPhaseTimerThenAdvanceWorkCounterB = 0x801D66F8;
 func_801D6CE4 = 0x801D6CE4;
 appendFullscreenDimTile = 0x801D6E94;
 func_801D7080 = 0x801D7080;

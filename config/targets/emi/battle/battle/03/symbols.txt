@@ -344,6 +344,7 @@ dispatchByte2TableB40c = 0x801E3B68;
 resetScratchByte4Set2 = 0x801E3BAC;
 dispatchByte3TableB424 = 0x801E3BD0;
 advanceByte3WhenReady2 = 0x801E4104;
+updateEnemyQueuedFlagAndRearmWorkState = 0x801E414C;
 checkEnemyQueuedPredicate = 0x801E4368;
 dispatchPresentationByte3 = 0x801E4490;
 func_801E44D4 = 0x801E44D4;

@@ -210,8 +210,8 @@ segments:
     - c
     - setScenarioScena0100_801FD934
   - - 27976
-    - asm
-    - func_801FD948
+    - c
+    - setSubstate28ClearProgressAndSharedStateBytesAndRequestPrimaryState9ScenarioScena0100_801FD948
   - - 28064
     - c
     - clearTwoStateBytesThenRequestPrimaryState11ScenarioScena0100_801FD9A0

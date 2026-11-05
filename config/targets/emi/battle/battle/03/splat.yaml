@@ -1064,8 +1064,10 @@ segments:
     - '@source: src/bof3/battle/advanceByte3WhenReady2.c'
     - '@behavior: Increments scratchpad byte +0x03 when enemyReadyOrHelper2 returns nonzero.'
   - - 79180
-    - asm
-    - func_801E414C
+    - c
+    - updateEnemyQueuedFlagAndRearmWorkState
+    - '@source: src/bof3/battle/updateEnemyQueuedFlagAndRearmWorkState.c'
+    - '@behavior: Runs func_8014DAEC, then submits the scratch work through func_80196718 and clears bit 0x40 of the global 0x801462E8 halfword with 6/4 in scratch work bytes +0x01/+0x02 while the current enemy work halfword +0x82 carries bit 0x4000; otherwise it clears that 0x40 bit and raises the halfword 0x1000 bit when 0x40 was set, or with the 0x80146384 byte free of 0xC0 bits raises 0x40 when the 0x80146375 byte reads 1 and checkEnemyQueuedPredicate agrees or when it reads 4 and the kind mask 0x800 of the 0x801CA71C entry selected by halfword 0x801463C0 is set, the predicate agrees and the kind-keyed byte 0x801CA718 + 0x14 * index has no 0x10 bit, clears the pending bit of byte +0x05, masks 0x70 then 0x200 out of the enemy work word +0x100 and leaves 2/0 in bytes +0x01/+0x02; both paths clear scratch work byte +0x03.'
   - - 79720
     - c
     - checkEnemyQueuedPredicate

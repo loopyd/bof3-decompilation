@@ -180,6 +180,7 @@ sources = [
     "src/bof3/world/func_801D7B64_area03004.c",
     "src/bof3/world/advancePanelStepResourceAndReloadCountdownWorld00Area03004_801D5958.c",
     "src/bof3/world/initializeTwoEntryRecordsAndAdvanceStateWorld00Area03004_801D57B0.c",
+    "src/bof3/world/drawArea030Panel.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",

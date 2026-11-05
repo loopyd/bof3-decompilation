@@ -72,6 +72,7 @@ func_8009DA94 = 0x8009DA94;
 func_8009DC6C = 0x8009DC6C;
 func_8009DCC8 = 0x8009DCC8;
 func_8009DD20 = 0x8009DD20;
+storePendingDamage9999OrEstimateThenClampZero = 0x8009DD50;
 func_8009DE18 = 0x8009DE18;
 setRecordField4Neg20 = 0x8009DE50;
 func_8009DE64 = 0x8009DE64;

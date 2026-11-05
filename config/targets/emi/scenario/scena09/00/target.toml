@@ -58,5 +58,6 @@ support_sources = [
     "src/bof3/scenario/waitFlag2CThenRequestPrimaryState9Substate14ScenarioScena0900_801FDC1C.c",
     "src/bof3/scenario/advanceAndRenderActiveRecordsInSelectedBankScenarioScena0900_801F75BC.c",
     "src/bof3/scenario/copyRecordPartyBytesThenInvokeHelperScenarioScena0900_801FE234.c",
+    "src/bof3/scenario/waitFlag33ThenClearProgressForParty4AndRequestPrimaryState0FSubstate32Or34ScenarioScena0900_801FDC70.c",
 ]
 psyq_source = "src/bof3/support/scena09_00_psyq.c"

@@ -320,6 +320,7 @@ sources = [
     "src/bof3/battle/submitRolledEffectAndAdvance.c",
     "src/bof3/battle/callLocalReady2ThenSubmitRolledEffectAndAdvance.c",
     "src/bof3/battle/initBattlerFieldRecordsAndAdvanceFrontState.c",
+    "src/bof3/battle/updateEnemyQueuedFlagAndRearmWorkState.c",
 ]
 support_sources = [
     "src/bof3/support/battle03_symbols.c",

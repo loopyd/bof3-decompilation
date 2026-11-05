@@ -556,6 +556,17 @@ void buildSlotList(u8 arg0);
  * mask it explicitly with andi 0xFF.
  * @source 0x801D81B4 */
 u32 tickPhaseTimerThenAdvanceWorkCounter(u8* arg0, u8 arg1);
+/* Literal variant of the byte-counter step above (lifted: src/bof3/ui/
+ * tickPhaseTimerThenAdvanceWorkCounterB.c): it reads the counter byte through
+ * its pointer argument, submits the texture row 0x1C at row 0x16 through
+ * func_8014F800 with func_801502D0(byte + 0x85) as the fifth argument, counts
+ * phaseTimer down, re-arms the timer with 0xA once the countdown reaches zero
+ * or the pad state D_80145AA8 is nonzero, increments the byte and reports
+ * whether it now equals the limit by returning 0 or 1 in a full word. No
+ * assembled call site and no payload pointer names this entry, so the widths
+ * below are the ones its body shows.
+ * @source 0x801D66F8 */
+u32 tickPhaseTimerThenAdvanceWorkCounterB(u8* arg0, u8 arg1);
 void func_801644D8(u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4, u32 arg5);
 /* Main-exe byte-result query called by this target's shop list/state rebuild
  * func_801E0F78 and by the unlifted handlers func_801DA77C and func_801DF9EC

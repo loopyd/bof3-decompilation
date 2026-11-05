@@ -121,6 +121,7 @@ sources = [
     "src/bof3/ui/drawShopPanelsThenDecrementUiSubstep.c",
     "src/bof3/ui/tickPhaseTimerThenCloseShopPanelsOnCancel.c",
     "src/bof3/ui/retreatShopPanelRowThenAdvanceUiSubstep.c",
+    "src/bof3/ui/tickPhaseTimerThenAdvanceWorkCounterB.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",

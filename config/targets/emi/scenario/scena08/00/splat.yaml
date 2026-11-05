@@ -130,8 +130,10 @@ segments:
     - '@source: src/bof3/scenario/dispatchWorkByte2HandlerThenProcessBufferScenarioScena0800_801F7AD0.c'
     - '@behavior: Dispatches work byte 2 through the handler table at 0x801FE8E4, then invokes helpers 0x801F8D98 and 0x801F90C8 in order with buffer 0x800E48E0; takes no arguments and discards helper returns.'
   - - 3884
-    - asm
-    - func_801F7B2C
+    - c
+    - seedWorkDistancePairArmCountdownByte9AdvanceWorkByte2AndQueueCue202ScenarioScena0800_801F7B2C
+    - '@source: src/bof3/scenario/seedWorkDistancePairArmCountdownByte9AdvanceWorkByte2AndQueueCue202ScenarioScena0800_801F7B2C.c'
+    - '@behavior: Overlay per-frame work-state handler, entry 0 of the work-byte-2 handler table at 0x801FE8E4: seeds the shared halfword at 0x800E4C1E with 0xC0, reads the work pointer from scratchpad slot 0x44 and stores the position pair 0x6B0000/0x460000 in its words at offsets 0x34 and 0x38, publishes the func_8015477C distance of that pair scaled by 0x10000 in word 0x3C, stores 0x20 in its countdown byte 0x09, increments its work-byte-2 dispatch state modulo 256 and queues sound cue 0x202.'
   - - 4008
     - asm
     - func_801F7BA8

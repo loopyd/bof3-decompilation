@@ -250,6 +250,11 @@ body's uses alone. The mirror case is a cast used twice: `(s8)value` in both the
 and the comparison lets one conversion serve both, while reassigning
 `value = (s8)value;` between them duplicates it.
 
+Mirror the width rule at the assignment: when a narrow callee return feeds a narrow
+cell, keep the accumulator local at the cell's width. A wider local converts the
+return where it is assigned and costs an `sll`/`sra` pair the original does not have,
+while the narrow local leaves the truncation to the store.
+
 ### Halfword read-modify-write
 
 Use when a scratch halfword is decremented or advanced and then compared.
@@ -365,7 +370,9 @@ expression to each call instead emits its own `lui %hi`/`lbu %lo` pair and loses
 shared base. One read needs the same local when a store to another cell sits between
 the base and the read: the pointer copy takes the base load early enough to fill the
 preceding delay slot, while the inline symbol expression materialises the base after
-that store and costs two instructions. A local that only re-types a promoted value
+that store and costs two instructions. A cell that is loaded, stored and re-armed
+inside a guard wants it too: one base for all three uses is what lets the original
+keep the re-arm constant in both branch delay slots. A local that only re-types a promoted value
 (`u16 row = y;`) folds away and changes nothing.
 
 Give a work record a word-typed view before chasing pointer roles. A typed pointer over
