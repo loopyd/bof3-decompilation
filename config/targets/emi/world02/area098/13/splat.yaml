@@ -223,6 +223,6 @@ segments:
     - textbin
     - T_801F64B8
   - - 14584
-    - asm
-    - func_801F64F8
+    - textbin
+    - T_801F64F8
 - - 14628
