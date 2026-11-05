@@ -394,8 +394,10 @@ segments:
     - '@source: src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectSlotScenarioScena0800_801FE698.c'
     - '@behavior: Overlay per-record callback (entry 3 of the eleven-entry callback table at 0x801FE9C0): re-arms the overlay effect group for ids 7, 2 and 0x0A through func_80166E88(7, 2, 0x0A, 0), clears the shared live-local work-record count byte D_80146254, runs the per-id effect teardown func_801C187C for id 0x0A and finishes with the helper func_801C1630. Ignores its arguments, reads no other memory, writes none and keeps $ra across the four calls in its 0x18-byte frame.'
   - - 31452
-    - asm
-    - func_801FE6DC
+    - c
+    - clearIndexedFlagBit0AndWorkCountThenResetEffect7ScenarioScena0800_801FE6DC
+    - '@source: src/bof3/scenario/clearIndexedFlagBit0AndWorkCountThenResetEffect7ScenarioScena0800_801FE6DC.c'
+    - '@behavior: Clears bit 0 at D_8014496F plus 0xA4 times the unsigned index D_80181B1A, clears work-record count D_80146254, then calls func_801C187C with id 7. Ignores callback arguments; the indexed byte role is unknown.'
   - - 31552
     - c
     - invokeHelperArgScenarioScena0800_801FE740

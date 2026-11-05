@@ -9,6 +9,7 @@ load_address = 0x801d0c00
 
 sources = [
     "src/bof3/battle/initEnemyCueCountdownWhenLoaderReady.c",
+    "src/bof3/battle/collectRandomEnemyEntries_battle03_801E531C.c",
     "src/bof3/battle/submitCountdownEntriesAndAdvance.c",
     "src/bof3/battle/countdownWorkByte9SubmitCue.c",
     "src/bof3/battle/copyQueuedWorkToScratchAndRun.c",

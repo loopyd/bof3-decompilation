@@ -1182,8 +1182,10 @@ segments:
     - submitEffectUnlessNeg1
     - '@source: src/bof3/battle/submitEffectUnlessNeg1.c'
   - - 83740
-    - asm
-    - func_801E531C
+    - c
+    - collectRandomEnemyEntries_battle03_801E531C
+    - '@source: src/bof3/battle/collectRandomEnemyEntries_battle03_801E531C.c'
+    - '@behavior: Samples two current-enemy entries against byte thresholds and merges accepted IDs into the counted list.'
   - - 84204
     - asm
     - func_801E54EC

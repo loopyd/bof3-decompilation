@@ -40,8 +40,10 @@ segments:
     - asm
     - func_801F2D94
   - - 488
-    - asm
-    - func_801F2DE8
+    - c
+    - selectScratchState4Or13ByWorkWordWorld03Area13413_801F2DE8
+    - '@source: src/bof3/world/selectScratchState4Or13ByWorkWordWorld03Area13413_801F2DE8.c'
+    - '@behavior: Compares signed work words at 0x801468BC and 0x80145EC4, publishes 0x80145E90 at 0x80146250, preserves the scratchpad work-pointer handoffs and selects saved state 4 or state 13 with byte 9 cleared.'
   - - 616
     - c
     - advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68

@@ -784,8 +784,8 @@ segments:
     - asm
     - func_800A1D84
   - - 47392
-    - asm
-    - func_800A2120
+    - c
+    - runSelectionPassSetSelectedFlag1000ThenCallA9BD8
   - - 47568
     - asm
     - func_800A21D0

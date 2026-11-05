@@ -143,8 +143,10 @@ segments:
     - asm
     - func_801F8640
   - - 6928
-    - asm
-    - func_801F8710
+    - c
+    - drawAndGrowWorkByte9ThenAdvanceScenarioScena0300_801F8710
+    - '@source: src/bof3/scenario/drawAndGrowWorkByte9ThenAdvanceScenarioScena0300_801F8710.c'
+    - '@behavior: Draws using work byte 9, adds 15 with byte wrapping, then sets values above 60 to 255 and advances work byte 1.'
   - - 7076
     - asm
     - func_801F87A4

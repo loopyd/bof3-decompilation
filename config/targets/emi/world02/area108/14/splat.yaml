@@ -178,8 +178,9 @@ segments:
     - asm
     - func_801F4DC8
   - - 8860
-    - asm
-    - func_801F4E9C
+    - c
+    - setWorkByte24Bit4World02Area10814_801F4E9C
+    - '@source: src/bof3/world/setWorkByte24Bit4World02Area10814_801F4E9C.c'
   - - 8892
     - asm
     - func_801F4EBC

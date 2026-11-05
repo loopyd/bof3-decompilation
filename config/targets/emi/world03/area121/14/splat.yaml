@@ -194,8 +194,9 @@ segments:
     - setModeFromMaskOverlapAndWorkByteBWorld03Area12114_801F5734
     - '@source: src/bof3/world/setModeFromMaskOverlapAndWorkByteBWorld03Area12114_801F5734.c'
   - - 11160
-    - asm
-    - func_801F5798
+    - c
+    - updateMaskChargeAndDecayWorkByteBWorld03Area12114_801F5798
+    - '@source: src/bof3/world/updateMaskChargeAndDecayWorkByteBWorld03Area12114_801F5798.c'
   - - 11544
     - c
     - dispatchStateByte1Table68a4World03Area12114_801F5918

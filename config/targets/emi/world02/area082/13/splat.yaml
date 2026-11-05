@@ -35,8 +35,10 @@ segments:
     - '@source: src/bof3/world/setWorkCountdownClearOriginIncrementWorkByte1World02Area08213_801F2C6C.c'
     - '@behavior: loads the scratchpad work object published at pointer-slot 0x1F800044, arms its countdown halfword at offset 0x2C with 0x20, clears its origin words at offsets 0x64, 0x68 and 0x6C, then advances its dispatch byte at offset 0x01 by one.'
   - - 156
-    - asm
-    - func_801F2C9C
+    - c
+    - decrementCountdownAdd4WorkWords64And68World02Area08213_801F2C9C
+    - '@source: src/bof3/world/decrementCountdownAdd4WorkWords64And68World02Area08213_801F2C9C.c'
+    - '@behavior: decrements the work countdown at +0x2C and adds four to words +0x64 and +0x68; on expiry rearms the countdown to 16 and increments dispatch byte +0x01.'
   - - 240
     - c
     - decrementCountdownRearmTo12IncrementWorkByte1World02Area08213_801F2CF0

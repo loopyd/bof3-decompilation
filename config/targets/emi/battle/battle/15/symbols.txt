@@ -141,6 +141,7 @@ runSelectionPassThenSetSelectedRecordFlag8000 = 0x800A1414;
 runSelectionPassThenSetSelectedRecordFlag100 = 0x800A1704;
 runSelectionPassThenSetSelectedRecordFlag10000 = 0x800A1A30;
 setRecordByte8To2StoreIndexedModifierField6 = 0x800A1AD0;
+runSelectionPassSetSelectedFlag1000ThenCallA9BD8 = 0x800A2120;
 func_800A23CC = 0x800A23CC;
 func_800A2404 = 0x800A2404;
 runSelectionPassThenApplyMask8WhenRollClear = 0x800A250C;

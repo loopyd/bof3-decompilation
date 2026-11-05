@@ -813,7 +813,7 @@ u8   checkEnemyQueuedPredicate(void);
 void func_801E2314(u32 arg0);
 void initEnemyCueCountdownWhenLoaderReady(void);
 void resetEnemyScratchWhenBit4(void);
-void func_801E531C(void);
+void collectRandomEnemyEntries_battle03_801E531C(void);
 void submitEffectUnlessNeg1(u16 arg0);
 void countdownWorkByte9SubmitCue(void);
 void decrementWorkByte9SubmitEnemyCue(void);

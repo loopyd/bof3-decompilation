@@ -244,8 +244,8 @@ segments:
     - asm
     - func_801D4C84
   - - 17008
-    - asm
-    - func_801D4E70
+    - c
+    - decrementEntrySpriteSlideAndSetState8World00Area03004_801D4E70
   - - 17480
     - asm
     - func_801D5048

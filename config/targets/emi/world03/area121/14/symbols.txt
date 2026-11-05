@@ -1,3 +1,4 @@
+area12114WorkCursor_1F800044 = 0x1F800044;
 D_80146250 = 0x80146250;
 dispatchState04World03Area12114_801F2C3C = 0x801F2C3C;
 func_801F2C80 = 0x801F2C80;
@@ -50,7 +51,7 @@ setMode4AndClearWorkByte2IfMaskOverlapWorld03Area12114_801F55EC = 0x801F55EC;
 resetMode3AndWorkStateWorld03Area12114_801F564C = 0x801F564C;
 updateWorkByte8FromMaskWorld03Area12114_801F5684 = 0x801F5684;
 setModeFromMaskOverlapAndWorkByteBWorld03Area12114_801F5734 = 0x801F5734;
-func_801F5798 = 0x801F5798;
+updateMaskChargeAndDecayWorkByteBWorld03Area12114_801F5798 = 0x801F5798;
 dispatchStateByte1Table68a4World03Area12114_801F5918 = 0x801F5918;
 func_801F595C = 0x801F595C;
 func_801F5AA0 = 0x801F5AA0;

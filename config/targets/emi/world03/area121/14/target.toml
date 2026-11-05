@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/updateMaskChargeAndDecayWorkByteBWorld03Area12114_801F5798.c",
     "src/bof3/world/updateWorkByte8FromMaskWorld03Area12114_801F5684.c",
     "src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld03Area12114_801F36E8.c",
     "src/bof3/world/setModeFromMaskOverlapAndWorkByteBWorld03Area12114_801F5734.c",

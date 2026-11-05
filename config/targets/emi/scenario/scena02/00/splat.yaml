@@ -234,8 +234,8 @@ segments:
     - asm
     - func_801FD3BC
   - - 26636
-    - asm
-    - func_801FD40C
+    - c
+    - clearSharedBytes6566AndRequestPrimaryState0FScenarioScena0200_801FD40C
   - - 26704
     - c
     - requestPrimaryState10Substate0FAndQueueCue106ScenarioScena0200_801FD450
