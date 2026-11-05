@@ -358,7 +358,9 @@ def scalar_declaration_context(text: str) -> str:
 def collect_declaration_references(
     text: str, scope: str = ""
 ) -> set[model.DeclarationKey]:
-    masked = _mask_lexemes(text)
+    # Array extents arrive as ``[0x0c]`` in field expressions; without masking the
+    # numeric literal the identifier scan reports ``x0c`` as a missing type.
+    masked = re.sub(r"0[xX][0-9A-Fa-f]+\b|\b\d+\b", " ", _mask_lexemes(text))
     references = set()
     for match in re.finditer(r"\b(?:struct|union|enum)\s+([A-Za-z_]\w*)", masked):
         references.add(model.DeclarationKey(scope, "tag", match.group(1)))
@@ -457,6 +459,102 @@ def public_declaration_context(preprocessed: str, source: str, *, base: str) -> 
         declaration_records(preprocessed), origin="supplemental"
     )
     return render_declaration_context(occurrences, source, base=base)
+
+
+_IDENTIFIER = re.compile(r"[A-Za-z_]\w*")
+_DECLARATION_KEYWORDS = frozenset(
+    {
+        "auto",
+        "char",
+        "const",
+        "double",
+        "enum",
+        "extern",
+        "float",
+        "inline",
+        "int",
+        "long",
+        "register",
+        "restrict",
+        "short",
+        "signed",
+        "static",
+        "struct",
+        "typedef",
+        "union",
+        "unsigned",
+        "void",
+        "volatile",
+    }
+)
+
+
+_PROTOTYPE = re.compile(
+    r"^(?P<ret>.*?)\b(?P<name>[A-Za-z_]\w*)\s*\((?P<params>[^()]*)\)\s*;$", re.S
+)
+
+
+def _opaque_type_declarations(statements: list[str], base: str = "") -> list[str]:
+    """Declare compound types the context references but does not define.
+
+    A target's symbol map can type an extern, or a callee prototype, with a name whose
+    typedef lives in a header that target does not own, so the emitted context mentions
+    a type nothing declares. m2c then rejects the whole context ("syntax error when
+    parsing C context"), which reads like a selector problem. An opaque typedef is
+    enough for a pointer-typed use and claims nothing about layout.
+    """
+
+    defined: set[str] = set()
+    # ``base`` carries the shared scalar aliases, so it must count as declaring a
+    # type name: an opaque ``struct u8`` would shadow the real ``unsigned char``.
+    for statement in [*base.split(";"), *statements]:
+        stripped = statement.lstrip()
+        if not stripped.startswith("typedef"):
+            continue
+        for record in declaration_records(stripped):
+            defined.update(record.names)
+    missing: list[str] = []
+
+    def want(name: str) -> None:
+        if (
+            name not in _DECLARATION_KEYWORDS
+            and name not in defined
+            and name not in missing
+        ):
+            missing.append(name)
+
+    def first_type(text: str) -> str:
+        """The leading type name of one return or parameter fragment."""
+
+        for piece in text.replace("*", " * ").split():
+            if piece == "*" or piece in _DECLARATION_KEYWORDS:
+                continue
+            if _IDENTIFIER.fullmatch(piece):
+                return piece
+        return ""
+
+    for statement in statements:
+        stripped = statement.strip()
+        prototype = _PROTOTYPE.match(stripped)
+        if prototype:
+            for fragment in [
+                prototype.group("ret"),
+                *prototype.group("params").split(","),
+            ]:
+                name = first_type(fragment)
+                if name:
+                    want(name)
+            continue
+        if not stripped.startswith("extern"):
+            continue
+        declarators = {
+            name for record in declaration_records(stripped) for name in record.names
+        }
+        head = stripped[len("extern") :].split(";", 1)[0]
+        for name in _IDENTIFIER.findall(head):
+            if name not in declarators:
+                want(name)
+    return [f"typedef struct {name} {name};" for name in missing]
 
 
 def render_declaration_context(
@@ -588,9 +686,10 @@ def render_declaration_context(
                 "unsupported declaration dependency order: "
                 + " | ".join(units[unit][0].statement for unit in remaining)
             )
+    opaque = _opaque_type_declarations(output, base)
     return (
         base
         + ("\n" if base and not base.endswith("\n") else "")
-        + "\n".join(output)
+        + "\n".join(opaque + output)
         + "\n"
     )
