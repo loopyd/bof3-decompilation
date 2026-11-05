@@ -1,0 +1,62 @@
+name: Deploy decompilation progress
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out prepared pages branch
+        uses: actions/checkout@v6
+        with:
+          ref: gh-pages
+          fetch-depth: 0
+          path: site
+          persist-credentials: false
+      - name: Verify source revision and public files
+        env:
+          SOURCE_REVISION: ${{ github.sha }}
+        run: |
+          prepared=$(git -C site log --format=%H --fixed-strings --grep="Publish decompilation status for $SOURCE_REVISION" -1)
+          test -n "$prepared" || { echo "No prepared snapshot for main. Install the pages pre-push hook." >&2; exit 1; }
+          git -C site checkout --detach "$prepared"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          site = Path('site')
+          snapshot = json.loads((site / 'status.json').read_text())
+          if snapshot['revision'] != os.environ['SOURCE_REVISION']:
+              raise SystemExit('Snapshot does not match main. Install the pages pre-push hook and push again.')
+          allowed = {'index.html', 'style.css', 'app.js', 'bof3-logo.webp', 'status.json', '.nojekyll', '.git'}
+          if {p.name for p in site.iterdir()} != allowed:
+              raise SystemExit('Unexpected file in public branch')
+          for path in site.iterdir():
+              if path.name != '.git' and (path.is_symlink() or not path.is_file()):
+                  raise SystemExit('Public artifacts must be regular files')
+          PY
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload static page
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -32,6 +32,16 @@ def _lift(name: str, help: str, example: str = "") -> Action:
 
 
 DOMAINS: Mapping[str, Domain] = {
+    "pages": Domain(
+        "export and publish decompilation progress",
+        actions={},
+        passthrough=Action(
+            "build progress pages or install the main-push hook",
+            "harness.pages.cli",
+            kind="passthrough",
+            example="bin/harness pages install-hook",
+        ),
+    ),
     "setup": Domain(
         "prepare and build repository toolchains",
         actions={},

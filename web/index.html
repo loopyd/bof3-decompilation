@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0c131c">
+  <meta name="description" content="Breath of Fire III decompilation progress, drawn from the project's reverse index.">
+  <title>Breath of Fire III · Decompilation progress</title>
+  <link rel="icon" href="bof3-logo.webp" type="image/webp">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="masthead">
+      <a class="project-mark" href="https://github.com/loopyd/bof3-decompilation" aria-label="Breath of Fire III decompilation repository">
+        <span class="mark" aria-hidden="true">III</span><span>BOF3 <span class="muted">/ decompilation</span></span>
+      </a>
+      <a class="repo-link" href="https://github.com/loopyd/bof3-decompilation">View source <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="small-rule"></span> A PlayStation reconstruction project</p>
+          <h1 id="page-title">Piece by piece.<br><em>Back to the source.</em></h1>
+          <p class="intro">Reconstructing Breath of Fire III as matching C.<br>Follow the progress across executables and EMI overlays.</p>
+          <div class="snapshot-line"><span class="signal" aria-hidden="true"></span><span id="snapshot-label">Loading reverse-index snapshot…</span></div>
+        </div>
+        <div class="hero-art"><div class="seal" aria-hidden="true">III</div><img src="bof3-logo.webp" width="377" height="197" alt="Breath of Fire III" fetchpriority="high"></div>
+      </section>
+
+      <div id="error" class="error" role="alert" hidden></div>
+      <noscript><p class="error">Enable JavaScript to load the progress snapshot and use the tabs.</p></noscript>
+
+      <section id="dashboard" aria-label="Decompilation progress" hidden>
+        <div class="section-heading"><p class="eyebrow">The reconstruction so far</p><div class="legend" aria-label="Status legend"><span><i class="completed"></i>Completed</span><span><i class="partial"></i>Partial</span><span><i class="unlifted"></i>Unlifted</span></div></div>
+        <div class="overview">
+          <div class="overview-main"><span class="overview-label">Indexed functions completed</span><div class="completion"><strong id="overall-percent"></strong><span id="overall-fraction"></span></div><div id="overall-bar"></div></div>
+          <div id="overview-stats" class="overview-stats"></div>
+        </div>
+
+        <div class="browser-heading">
+          <div class="tabs" role="tablist" aria-label="Target type">
+            <button type="button" id="tab-exe" role="tab" aria-selected="true" aria-controls="panel-exe">Executables <span id="exe-count"></span></button>
+            <button type="button" id="tab-emi" role="tab" aria-selected="false" aria-controls="panel-emi" tabindex="-1">EMI overlays <span id="emi-count"></span></button>
+          </div>
+          <div class="filters"><label class="search"><span class="sr-only">Search targets</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg><input id="search" type="search" placeholder="Find a target…" autocomplete="off"></label><label id="family-label" hidden><span class="sr-only">Filter EMI family</span><select id="family"><option value="">All families</option></select></label></div>
+        </div>
+        <div id="results-count" class="results-count" role="status" aria-live="polite"></div>
+        <section id="panel-exe" role="tabpanel" aria-labelledby="tab-exe" tabindex="0"></section>
+        <section id="panel-emi" role="tabpanel" aria-labelledby="tab-emi" tabindex="0" hidden></section>
+        <p id="empty" class="empty" hidden>No targets match these filters.</p>
+      </section>
+
+      <aside class="evidence-note"><span class="note-symbol" aria-hidden="true">i</span><div><h2>What these numbers mean</h2><p>Progress counts target-qualified functions in the reverse index, not bytes or whole-game coverage. Completed means indexed <code>exact</code> status. Partial means an indexed lift with work remaining. Unlifted includes invalid lift metadata, which receives no progress credit. These declarations do not establish a fresh native build or runtime acceptance.</p><p id="invalid-note"></p></div></aside>
+    </main>
+    <footer><div><span class="footer-name">Breath of Fire III</span><span>Community decompilation project</span></div><p>Breath of Fire III and its logo © Capcom.<br>This community project is not affiliated with Capcom.</p><a id="snapshot-link" href="status.json">Snapshot data <span aria-hidden="true">↗</span></a></footer>
+  </div>
+</body>
+</html>

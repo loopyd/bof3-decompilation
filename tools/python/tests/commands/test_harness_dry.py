@@ -279,6 +279,7 @@ def test_package_initializer_edges_are_locked() -> None:
     expected = {
         "harness.media": set(),
         "harness.analysis": set(),
+        "harness.pages": set(),
         "harness.naming": set(),
         "harness.macros": set(),
         "harness.combiner": set(),
