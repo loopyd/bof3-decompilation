@@ -81,8 +81,10 @@ segments:
     - dispatchStateByte1Table24a4BmagicMagic15103_801EF9F0
     - '@source: src/bof3/bmagic/magic15103DispatchTables.c'
   - - 3636
-    - asm
-    - func_801EFA34
+    - c
+    - dispatchWorkByte2HandlerBmagicMagic15103_801EFA34
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic15103_801EFA34.c'
+    - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its state byte at offset 2 selects an entry of the six-entry code pointer table at 0x801EEC38 (0x801EFAAC, 0x801EFBAC, 0x801EFC68, 0x801EFD24, 0x801EFD80, 0x801EFDC0), and that entry is invoked with no arguments. The six table words are copied into this function''s own 0x30-byte frame first, so the call target is read back from the copy. It reads no other state and writes none.'
   - - 3756
     - asm
     - func_801EFAAC

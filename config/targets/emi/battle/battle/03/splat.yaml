@@ -193,8 +193,10 @@ segments:
     - asm
     - func_801D7D10
   - - 29360
-    - asm
-    - func_801D7EB0
+    - c
+    - drawBattlePanelStrip
+    - '@source: src/bof3/battle/drawBattlePanelStrip.c'
+    - '@behavior: Draws the wide battle panel strip at the anchor (arg0, arg1): opens the 0x3C0-texture draw mode, emits the 0x118 x 0x0F panel tile (D_801EAE50 row 3) at (arg0, arg1 + 2) and the two quadrangle caps from D_801EAD30 rows 8 and 9 at (arg0, arg1) and (arg0, arg1 + 0x11), then outlines the rectangle inset to (arg0 + 2, arg1 + 2) through (arg0 + 0x115, arg1 + 0x10) with four semi-transparent sprite prims (top and left edges from texture page 1, right and bottom edges from texture page 0) tinted by palette entry 1 of the CLUT bank byte D_80144952.'
   - - 29840
     - asm
     - func_801D8090
@@ -1595,7 +1597,7 @@ segments:
     - c
     - func_801EA650
     - '@source: src/bof3/battle/func_801EA650.c'
-    - '@behavior: Dispatches the panel task handler selected by state byte +0x03 through the three-entry handler table copied off 0x801D0FF8, then forwards the active panel halfwords +0x4/+0x6 to func_801D7EB0 and forwards those same halfwords offset by +4/+3 as signed halfwords, the constant 0xFF, and the +0xA byte and +0x4 word of the 0x0C-stride event slot selected by panel byte +0xA to func_8014F800.'
+    - '@behavior: Dispatches the panel task handler selected by state byte +0x03 through the three-entry handler table copied off 0x801D0FF8, then forwards the active panel halfwords +0x4/+0x6 to drawBattlePanelStrip and forwards those same halfwords offset by +4/+3 as signed halfwords, the constant 0xFF, and the +0xA byte and +0x4 word of the 0x0C-stride event slot selected by panel byte +0xA to func_8014F800.'
   - - 105256
     - c
     - advancePanelState
@@ -1633,7 +1635,7 @@ segments:
     - c
     - func_801EA9FC
     - '@source: src/bof3/battle/func_801EA9FC.c'
-    - '@behavior: Reads the panel state halfword +0x06 of the state object published at 0x80148648: when it reads -0x16 it clears the D_801EC2E4 byte and panel state byte +0x03, otherwise it rewrites that halfword 8 lower, then forwards the state halfwords +0x04/+0x06 to func_801D7EB0 and forwards those halfwords offset by +4/+3 as signed halfwords, the constant 0, the constant 0xFF and the +0x04 word of the 0x08-stride UI ring entry selected by uiRingHead - 1 to func_8014F800.'
+    - '@behavior: Reads the panel state halfword +0x06 of the state object published at 0x80148648: when it reads -0x16 it clears the D_801EC2E4 byte and panel state byte +0x03, otherwise it rewrites that halfword 8 lower, then forwards the state halfwords +0x04/+0x06 to drawBattlePanelStrip and forwards those halfwords offset by +4/+3 as signed halfwords, the constant 0, the constant 0xFF and the +0x04 word of the 0x08-stride UI ring entry selected by uiRingHead - 1 to func_8014F800.'
   - - 106168
     - c
     - func_801EAAB8

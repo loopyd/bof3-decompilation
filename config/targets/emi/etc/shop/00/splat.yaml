@@ -511,8 +511,9 @@ segments:
     - swapBytesC
     - '@source: src/bof3/ui/swapBytesC.c'
   - - 59512
-    - asm
-    - func_801DF478
+    - c
+    - swapSelectionIds
+    - '@source: src/bof3/ui/swapSelectionIds.c'
   - - 60072
     - asm
     - func_801DF6A8

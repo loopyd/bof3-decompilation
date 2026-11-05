@@ -170,6 +170,7 @@ func_801DE88C = 0x801DE88C;
 func_801DE8E8 = 0x801DE8E8;
 func_801DEE20 = 0x801DEE20;
 swapBytesC = 0x801DF464;
+swapSelectionIds = 0x801DF478;
 appendFullscreenDimTileB = 0x801DF90C;
 func_801DF978 = 0x801DF978;
 func_801DF9B4 = 0x801DF9B4;

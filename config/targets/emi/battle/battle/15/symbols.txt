@@ -154,6 +154,7 @@ runSelectionPassSetSelectedFlag1000ThenCallA9BD8 = 0x800A2120;
 runSelectionPassSetSelectedFlag4000ClearByteThenCallA9BD8 = 0x800A22CC;
 func_800A23CC = 0x800A23CC;
 func_800A2404 = 0x800A2404;
+storeKind2EstimateMinusSelectedHalfwordClampZero = 0x800A243C;
 runSelectionPassThenApplyMask8WhenRollClear = 0x800A250C;
 func_800A2560 = 0x800A2560;
 func_800A2880 = 0x800A2880;

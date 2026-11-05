@@ -67,8 +67,9 @@ segments:
     - asm
     - func_801EF7FC
   - - 3688
-    - asm
-    - func_801EFA68
+    - c
+    - addMotionPairIntoHalfwordsDecrementCountdownSetByte9To6SeedMotionPairByModeAdvanceWorkByte2BmagicMagic13103_801EFA68
+    - '@source: src/bof3/bmagic/addMotionPairIntoHalfwordsDecrementCountdownSetByte9To6SeedMotionPairByModeAdvanceWorkByte2BmagicMagic13103_801EFA68.c'
   - - 3940
     - c
     - addMotionPairIntoHalfwordsDecrementCountdownSetByte9To24AdvanceWorkByte2BmagicMagic13103_801EFB64

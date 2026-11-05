@@ -325,6 +325,10 @@ the original reuses one cursor load across stores that the current build reloads
 1. When a byte store and the following word stores in the original share a single
    cursor load, write both through one local pointer. Reading the volatile pointer
    cell directly reloads it for every use, which adds a `lui`/`lw` pair per store.
+   The mirror case is a cell the original reloads per use with an unfilled load
+   delay: keep that access inline through the named cell, because a pointer local
+   placed ahead of the neighbouring work raises the load, fills the slot the original
+   leaves as `nop`, and moves the branch target earlier by one nop per group.
 2. When a reload runs on one arm only, make it the last statement of that arm.
    Written after the `if`, both arms share it and the branch target lands eight
    bytes before the original target. Size stays equal because the instruction count
@@ -502,7 +506,12 @@ extra bytes.
 
 1. Bind both forms before and after to the same source and compiler settings.
    Confirm the mismatch is the prologue/epilogue, the base materialisation or the
-   preheader, not the instruction body.
+   preheader, not the instruction body. One occurrence is enough and no loop is
+   needed: an inline `((cell * 2) + 1) * 32` offset in a single load came out a few
+   bytes short with two saved registers exchanged because GCC folded the `+0x20` into
+   the load displacement, while naming that offset as an `s32` or `u32` local restored
+   the separate base, and three algebraic respellings of the same inline constant
+   measured identically.
 2. Name the product once as a scalar local and index the same array symbol through
    it in both places: `offset = span * 3;` then `D_x[offset + 2]` and
    `&D_x[offset]`. Keep the symbol name on both uses; a pointer local used for both

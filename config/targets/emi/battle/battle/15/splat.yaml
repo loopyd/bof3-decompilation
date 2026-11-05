@@ -823,8 +823,10 @@ segments:
     - '@source: src/bof3/battle/func_800A2404.c'
     - '@behavior: Stores 4 into battle state byte D_80146375 and 0x6A into battle state halfword D_801463C0, then runs the 0x6A action selection storeSelectedValueSetRecordByte8To1WhenRollRejected.'
   - - 48188
-    - asm
-    - func_800A243C
+    - c
+    - storeKind2EstimateMinusSelectedHalfwordClampZero
+    - '@source: src/bof3/battle/storeKind2EstimateMinusSelectedHalfwordClampZero.c'
+    - '@behavior: Stores into the selection-record halfword at byte +0x04 the func_800A4294 kind-2 estimate minus the selected battler''s work-record halfword - the 0x140-stride party record halfword at 0x80145F26 for battler bytes below 3, otherwise the 0x118-stride enemy record halfword at 0x801EB6C4 + 0x12 rebased by -3 - after re-reading the battler byte D_80146394 in each arm, then clamps the stored halfword to zero when it is negative.'
   - - 48396
     - c
     - runSelectionPassThenApplyMask8WhenRollClear

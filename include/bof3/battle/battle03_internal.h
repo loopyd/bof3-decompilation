@@ -684,7 +684,7 @@ void func_801636A0(u32 arg0, u32 arg1);
 void func_80164A44(u32 arg0);
 s32  func_8019651C(void* arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4);
 void func_80196718(void* arg0);
-void func_801D7EB0(s32 arg0, s32 arg1);
+void drawBattlePanelStrip(s32 arg0, s32 arg1);
 u8   isBattlerBlockedOrUnavailable(u32 arg0);
 u8   shouldTriggerBattlerCountdownRetry(u32 arg0);
 void func_801644D8(u32 arg0, s32 arg1, s32 arg2, s32 arg3, s32 arg4, u32 arg5);

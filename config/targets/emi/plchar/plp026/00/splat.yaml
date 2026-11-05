@@ -27,8 +27,8 @@ segments:
   vram: 2149377028
   subsegments:
   - - 4
-    - asm
-    - func_801CE404
+    - c
+    - dispatchStateByte2Table0a54PlcharPlp02600_801CE404
   - - 72
     - asm
     - func_801CE448

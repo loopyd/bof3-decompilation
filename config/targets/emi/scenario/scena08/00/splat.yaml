@@ -91,8 +91,10 @@ segments:
     - asm
     - func_801F75E4
   - - 2696
-    - asm
-    - func_801F7688
+    - c
+    - projectWorkCursorStoreScreenPairSeedHalfword32AndCountdown5AThenDrawAndAdvanceScenarioScena0800_801F7688
+    - '@source: src/bof3/scenario/projectWorkCursorStoreScreenPairSeedHalfword32AndCountdown5AThenDrawAndAdvanceScenarioScena0800_801F7688.c'
+    - '@behavior: Overlay work-state handler, entry 10 of the twelve-entry handler sub-table at 0x801FE8A0 (entry 13 of the 51-entry run at 0x801FE894) that the 0x801FE8A0 dispatcher selects with unsigned byte 1 of the scratchpad work object. It fills the 0x20-byte projection scratch through helper 0x801AFE18, projects the work object cursor words at 0x34/0x38/0x3C through helper 0x801AFF04 into a local screen pair, and stores that pair into the work object halfwords 0x2E (projected x) and 0x30 (projected y). It seeds halfword 0x32 with 0x140 and countdown halfword 0x5A with 0x14, and increments work byte 1 modulo 256 so the next frame dispatches entry 11 at 0x801F774C, which subtracts 16 from halfword 0x32 each frame while that countdown runs. It then draws two 0x18-byte cells through helper 0x801F8108 with the signed halfwords 0x2E and 0x30 and lays out the ring through helper 0x801F85F0 with the signed halfwords 0x2E, 0x30 and 0x32, reloading the scratchpad work pointer once per call group. Takes no arguments and returns nothing.'
   - - 2892
     - c
     - invokeHelper85F0Subtract16FromWorkHalfword32AndTickCountdown5AScenarioScena0800_801F774C

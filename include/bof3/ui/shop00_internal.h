@@ -114,6 +114,23 @@ extern u8 D_80148656[];
  * @source 0x8014865D
  * @kind unknown */
 extern u8 D_8014865D;
+/* Shop selection cursor of the visible/off-screen id lists: the kind byte
+ * selects the list (0 = D_80144F5A, nonzero = D_801E6244) and the byte at
+ * +1 is the slot index inside it. The selection swap swapSelectionIds
+ * exchanges this cursor pair with the saved pair D_8014865A/D_8014865D and
+ * loads all four cells signed (lb), which is why the three cells below are
+ * declared signed; the unlifted confirm handler func_801DE4C8 writes the 0x7F
+ * "no saved slot" sentinel into the saved pair and also reads D_80148658 and
+ * D_80148659 zero-extended at two sites. Not owned by the shared map; the
+ * generated undefined-symbol list carries the addresses, so no target-map row
+ * is added.
+ * @source 0x80148658
+ * @kind unknown */
+extern s8 D_80148658;
+/* @source 0x80148659 @kind unknown */
+extern s8 D_80148659;
+/* @source 0x8014865A @kind unknown */
+extern s8 D_8014865A;
 /* Work-block byte at +5 of the block D_80148656, re-armed with 1 by the phase
  * step func_801D3AE4 when its frame timer wraps and read/incremented by the
  * byte-counter step tickPhaseTimerThenAdvanceWorkCounter, which those steps
@@ -400,6 +417,17 @@ extern u8 D_801E6074;
  * row.
  * @source 0x801E60FC @kind unknown */
 extern u8 D_801E60FC;
+/* EMI-local off-screen id list and its count byte: the unlifted rebuild handler
+ * func_801DE200 clears the count, then appends the id of every enabled 164-byte
+ * field record that the visible list D_80144F5A does not already hold. The
+ * selection swap swapSelectionIds indexes the list with the saved slot index
+ * and rewrites every entry equal to the saved id. Both cells sit inside this
+ * EMI's tail segment, so no undefined or target-map row exists for them; the
+ * names are exact address labels.
+ * @source 0x801E6244 @kind table */
+extern u8 D_801E6244[];
+/* @source 0x801E6250 @kind unknown */
+extern u8 D_801E6250;
 
 /* Overlay-local kept-entry cursor of the save-slot collector
  * collectSaveSlotsThenCountFreeBlocks: it clears this byte before the scan,
@@ -678,6 +706,11 @@ u32 func_801502D0(u32 arg0);
  * those call sites, not a recovered callee contract.
  * @source 0x80150284 */
 void func_80150284(u32 arg0);
+/* Byte-pair swap of this EMI (lifted: src/bof3/ui/swapBytesC.c) called by the
+ * selection swap swapSelectionIds with two addresses inside the id list its
+ * kind byte selects; it exchanges the two bytes in place.
+ * @source 0x801DF464 */
+void swapBytesC(u8* arg0, u8* arg1);
 void func_8014FF0C(s16 arg0, s16 arg1, s32 arg2, const void* arg3);
 void func_801647C4(u16 arg0, u16 arg1, s32 arg2);
 void func_801636A0(u32 arg0, u32 arg1);
@@ -1123,6 +1156,14 @@ extern s32 D_80144F50;
  * mode byte) and it is owned by the shared map, so no target map row is added.
  * @source 0x80144F5A @kind unknown */
 extern u8 D_80144F5A[];
+
+/* Second main-RAM id byte list of the visible slots, walked by the selection
+ * swap swapSelectionIds in step with D_80144F5A: every slot whose byte equals
+ * the current selection id is overwritten with the saved one. Not owned by the
+ * shared map; the generated undefined-symbol list carries the address, so no
+ * target-map row is added.
+ * @source 0x80144F5D @kind unknown */
+extern u8 D_80144F5D[];
 
 /* Main-RAM flag byte whose bits 3, 4 and 5 are the shop requirement ids 0xB,
  * 0xD and 0xE tested by the entry predicate func_801E4C2C; the sisyou overlay
