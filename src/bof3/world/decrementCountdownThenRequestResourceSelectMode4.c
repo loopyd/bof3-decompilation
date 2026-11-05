@@ -5,7 +5,9 @@
 extern void func_8014D6B8(u32 flag);
 
 /* @source 0x801F2E1C
- * @behavior selects area mode 9 when the shared high-bit flag is set; selects
+ * @behavior mode-3 handler of the scratchpad mode dispatch table
+ *           (modeHandlerTable entry 3, dispatched by dispatchMode): selects
+ *           area mode 9 when the shared high-bit flag is set; selects
  *           mode 6 and restarts the shared secondary state bytes when the
  *           shared state byte 0x80146865 reads 1; otherwise decrements the
  *           shared countdown byte and, when the decremented value is below 2,
@@ -18,7 +20,7 @@ extern void func_8014D6B8(u32 flag);
  * @match 100.00
  * @residual none
  */
-void func_801F2E1C(void) {
+void decrementCountdownThenRequestResourceSelectMode4(void) {
   volatile World00Area008State* previous;
   u8 remaining;
 

@@ -35,18 +35,18 @@ segments:
     - T_801D0CDC
   - - 1472
     - c
-    - func_801D11C0
-    - '@source: src/bof3/world/func_801D11C0_area03004.c'
+    - publishPanelTemplateAndSelectStateWorld00Area03004_801D11C0
+    - '@source: src/bof3/world/publishPanelTemplateAndSelectStateWorld00Area03004_801D11C0.c'
     - '@behavior: AREA030 scratch-record publish step: when the shared phase byte 0x80145E92 reads 1 it clears the work-record state byte at scratch offset 2 and returns; otherwise, once the shared halfword 0x8014930E has reached 0x39, it sets that state byte to 3 and copies the shared template bytes 0x80145EBA/0x80145ED9/0x80145EDA/0x80145EDB into scratch offsets 0x2A/0x49/0x4A/0x4B, the shared words 0x80145EE0/0x80145EE4 into scratch offsets 0x50/0x54 and the shared halfwords 0x80145EE8/0x80145EEA into scratch offsets 0x58/0x5A, then calls func_8014D4E0 without arguments.'
   - - 1736
     - c
-    - func_801D12C8
-    - '@source: src/bof3/world/func_801D12C8_area03004.c'
+    - dispatchStateByte3Table1d00World00Area03004_801D12C8
+    - '@source: src/bof3/world/dispatchStateByte3Table1d00World00Area03004_801D12C8.c'
     - '@behavior: dispatches the AREA030 work-record stage byte at scratch offset 3 of the record cursor 0x1F800044 through the three-entry overlay stage-handler table at 0x801E1D00 (handlers 0x801D130C, 0x801D1434, 0x801D1538), discarding the handler result.'
   - - 1804
     - c
-    - func_801D130C
-    - '@source: src/bof3/world/func_801D130C_area03004.c'
+    - buildColorRowAndStartTintFadeWorld00Area03004_801D130C
+    - '@source: src/bof3/world/buildColorRowAndStartTintFadeWorld00Area03004_801D130C.c'
     - '@behavior: AREA030 color-row builder: copies 30 halfwords (row elements 0x61..0x7E) of the 32-halfword color row at 0x800396C0 from the 0x40-byte row of the 0x80037800 color block selected by the shared row byte 0x80145EB7, setting the high bit of each copied halfword, clears the row end elements 0x800396C0/0x800396FE, then publishes that row byte into scratch work byte 0xB, sets bit 5 of work byte 0, writes 0x7B into work byte 0x27, seeds work bytes 0x5C..0x5F with 1/0xC0/0xC0/0xC0, publishes 1 into the palette-stage serial 0x80145988, advances the work-record stage byte at work offset 3 and calls func_8014D4E0 without arguments.'
   - - 2100
     - c

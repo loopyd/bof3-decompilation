@@ -8,13 +8,13 @@ splat = "config/targets/emi/world00/area016/13/splat.yaml"
 load_address = 0x801f2c00
 
 sources = [
-    "src/bof3/world/func_801F2C04_area01613.c",
+    "src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld00Area01613_801F2C04.c",
     "src/bof3/world/area01613DispatchTables.c",
     "src/bof3/world/advanceState02Step.c",
     "src/bof3/world/dispatchState03.c",
     "src/bof3/world/func_801F36D0_area01613.c",
     "src/bof3/world/func_801F3060_area01613.c",
-    "src/bof3/world/func_801F2EEC_area01613.c",
+    "src/bof3/world/projectScrollIntoScratchSelectByte0BThenDispatchModeWorld00Area01613_801F2EEC.c",
     "src/bof3/world/func_801F30EC_area01613.c",
     "src/bof3/world/func_801F3224_area01613.c",
     "src/bof3/world/func_801F32A0_area01613.c",

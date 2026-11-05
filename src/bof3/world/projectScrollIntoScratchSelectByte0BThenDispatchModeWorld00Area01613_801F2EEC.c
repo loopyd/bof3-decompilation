@@ -12,7 +12,7 @@
  * @match 100.00
  * @residual none
  */
-void NO_SIBLING_CALLS func_801F2EEC(void) {
+void NO_SIBLING_CALLS projectScrollIntoScratchSelectByte0BThenDispatchModeWorld00Area01613_801F2EEC(void) {
   World00Area016Scratch* scratch;
   World00Area016Scratch* state;
   s32 scale;

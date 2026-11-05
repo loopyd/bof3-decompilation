@@ -46,19 +46,19 @@ segments:
     - '@behavior: Selects disabled mode when the shared high-bit flag is set; otherwise installs and enables the area resource, then selects mode 2.'
   - - 292
     - c
-    - func_801F2D24
-    - '@source: src/bof3/world/func_801F2D24_area00813.c'
-    - '@behavior: selects area mode 9 when the shared high-bit flag is set; selects mode 6 and restarts the shared secondary state bytes when the shared state byte 0x80146865 reads 1; otherwise installs the local area state as both the current state and the scratchpad state and, when the shared area state halfword reads 4 while the shared state byte 0x8014601A reads 1, stores the random mode-table byte into the shared countdown, restores the previous scratchpad state pointer and selects mode 3 on it.'
+    - armCountdownWhenStateReadySelectMode3
+    - '@source: src/bof3/world/armCountdownWhenStateReadySelectMode3.c'
+    - '@behavior: mode-2 handler of the scratchpad mode dispatch table (modeHandlerTable entry 2, dispatched by dispatchMode): selects area mode 9 when the shared high-bit flag is set; selects mode 6 and restarts the shared secondary state bytes when the shared state byte 0x80146865 reads 1; otherwise installs the local area state as both the current state and the scratchpad state and, when the shared area state halfword reads 4 while the shared state byte 0x8014601A reads 1, stores the random mode-table byte into the shared countdown, restores the previous scratchpad state pointer and selects mode 3 on it.'
   - - 540
     - c
-    - func_801F2E1C
-    - '@source: src/bof3/world/func_801F2E1C_area00813.c'
-    - '@behavior: selects area mode 9 when the shared high-bit flag is set; selects mode 6 and restarts the shared secondary state bytes when the shared state byte 0x80146865 reads 1; otherwise decrements the shared countdown byte and, when the decremented value is below 2, clears the shared secondary state byte, installs the local area state as both the current state and the scratchpad state, requests the shared area resource selector with argument 1, stores the random countdown-table byte into the shared countdown, restores the previous scratchpad state pointer and selects mode 4 on it.'
+    - decrementCountdownThenRequestResourceSelectMode4
+    - '@source: src/bof3/world/decrementCountdownThenRequestResourceSelectMode4.c'
+    - '@behavior: mode-3 handler of the scratchpad mode dispatch table (modeHandlerTable entry 3, dispatched by dispatchMode): selects area mode 9 when the shared high-bit flag is set; selects mode 6 and restarts the shared secondary state bytes when the shared state byte 0x80146865 reads 1; otherwise decrements the shared countdown byte and, when the decremented value is below 2, clears the shared secondary state byte, installs the local area state as both the current state and the scratchpad state, requests the shared area resource selector with argument 1, stores the random countdown-table byte into the shared countdown, restores the previous scratchpad state pointer and selects mode 4 on it.'
   - - 804
     - c
-    - func_801F2F24
-    - '@source: src/bof3/world/func_801F2F24.c'
-    - '@behavior: selects area mode 9 when the shared high-bit flag byte 0x80146867 is set; otherwise selects mode 5 when the neighbouring shared byte 0x80146866 reads 3.'
+    - advanceWhenSecondaryStateByteIs3SelectMode5
+    - '@source: src/bof3/world/advanceWhenSecondaryStateByteIs3SelectMode5.c'
+    - '@behavior: mode-4 handler of the scratchpad mode dispatch table (modeHandlerTable entry 4, dispatched by dispatchMode): selects area mode 9 when the shared high-bit flag byte 0x80146867 is set; otherwise selects mode 5 when the neighbouring shared byte 0x80146866 reads 3.'
   - - 888
     - c
     - func_801F2F78

@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801D0E64(void) {
+void clearWorkFlagsWhenWorkByte11Is9(void) {
   u8* work;
 
   work = PSX_REF(u8*, SPAD_BASE + 0x44u);

@@ -29,9 +29,10 @@ void func_801DE45C(void) {
     /* The original reads the phase byte before the phaseTimer store and writes
      * the incremented value back after it, with the re-arm constant hoisted
      * above the load into the branch delay slot (sibling shape:
-     * func_801D39F8). The read is a byte-required plain symbol access: the
-     * volatile view acts as a scheduling barrier, so gcc materializes the
-     * constant after the load and the branch delay slot needs a nop. */
+     * advanceUiPhaseOrSelectSavedStatePhase). The read is a byte-required plain
+     * symbol access: the volatile view acts as a scheduling barrier, so gcc
+     * materializes the constant after the load and the branch delay slot needs
+     * a nop. */
     phase = D_80148651;
     *timer = 3;
     D_80148651 = phase + 1;

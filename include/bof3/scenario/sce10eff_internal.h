@@ -86,8 +86,8 @@ extern void (*D_801D2734[])(void);
 extern u8* D_801D2744;
 
 s16 func_8015477C(s32 arg0, s32 arg1);
-void func_801D0C70(void);
-void func_801D0E64(void);
+void seedFrontEndRecordsAdvanceStateAndQueueCue203(void);
+void clearWorkFlagsWhenWorkByte11Is9(void);
 void func_801D0E9C(void);
 void func_8015DF18(u16 arg0);
 void func_8017AA30(void* arg0);

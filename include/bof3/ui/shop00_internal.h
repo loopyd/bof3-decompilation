@@ -807,7 +807,7 @@ extern void (*commandHandlerTable[])(u32);
 
 /* @source 0x801E52C4
  * @kind table — UI phase handler pointers (this EMI); dispatched by
- * func_801D39BC with the phase byte D_80148651 as index. */
+ * dispatchUiPhaseTable with the phase byte D_80148651 as index. */
 extern void (*D_801E52C4[])(void);
 
 /* @source 0x801E5360
@@ -827,7 +827,7 @@ extern void (*D_801E5BEC[])(void);
 
 /* @source 0x801E52D8
  * @kind table — UI phase handler pointers (this EMI); dispatched by
- * func_801D3AA8 with the phase byte D_80148652 as index. */
+ * dispatchUiSubStepTable with the phase byte D_80148652 as index. */
 extern void (*D_801E52D8[])(void);
 
 /* @source 0x801E5D10

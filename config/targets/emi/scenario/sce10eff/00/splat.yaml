@@ -29,18 +29,18 @@ segments:
     - T_801D0C00
   - - 16
     - c
-    - func_801D0C10
-    - '@source: src/bof3/scenario/func_801D0C10.c'
-    - '@behavior: Dispatches the scratchpad work byte at offset 1 through the three-entry local handler table published at 0x801D0C04 (func_801D0C70, func_801D0E64, func_801D0E9C).'
+    - dispatchWorkByte1HandlerScenarioSce10eff00_801D0C10
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce10eff00_801D0C10.c'
+    - '@behavior: Dispatches the scratchpad work byte at offset 1 through the three-entry local handler table published at 0x801D0C04 (seedFrontEndRecordsAdvanceStateAndQueueCue203, clearWorkFlagsWhenWorkByte11Is9, func_801D0E9C).'
   - - 112
     - c
-    - func_801D0C70
-    - '@source: src/bof3/scenario/func_801D0C70.c'
+    - seedFrontEndRecordsAdvanceStateAndQueueCue203
+    - '@source: src/bof3/scenario/seedFrontEndRecordsAdvanceStateAndQueueCue203.c'
     - '@behavior: Seeds nine slots of the 0x74-byte front-end record table at 0x80143FC8 after caching the scratchpad work pointer at 0x1F800044 into 0x801D2744: one record for slot 0, then four records for slot 1 and four more for slot 2, claiming one record per iteration from func_8019601C and storing the 0..3 iteration counter in record byte 0x04 and the slot number in record byte 0x02, then clears work byte 0x0B, increments work byte 0x01 and queues cue 0x203 through func_8015DF18.'
   - - 612
     - c
-    - func_801D0E64
-    - '@source: src/bof3/scenario/func_801D0E64.c'
+    - clearWorkFlagsWhenWorkByte11Is9
+    - '@source: src/bof3/scenario/clearWorkFlagsWhenWorkByte11Is9.c'
     - '@behavior: Clears the shared scratchpad work-area header when byte 11 of the scratchpad-resident state object equals 9.'
   - - 668
     - c

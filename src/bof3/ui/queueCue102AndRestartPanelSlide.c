@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801D0C48(void) {
+void queueCue102AndRestartPanelSlide(void) {
   game_queue_frontend_cue(0x102);
   D_801D4289 = 4;
   D_801D4286 = D_801D4286 + 1;

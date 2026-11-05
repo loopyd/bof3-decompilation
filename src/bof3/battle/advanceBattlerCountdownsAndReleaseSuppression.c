@@ -12,7 +12,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801D4D44(void) {
+void advanceBattlerCountdownsAndReleaseSuppression(void) {
   u8  index;
   u8* local_work;
   u8* enemy_work;

@@ -18,7 +18,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801EF214(void) {
+void advanceVillageExpansionTier(void) {
   u32 total;
   u32 count;
   s32 i;

@@ -41,8 +41,8 @@ segments:
   subsegments:
   - - 15440
     - c
-    - func_801D4850
-    - '@source: src/bof3/battle/func_801D4850.c'
+    - clearPendingBattlerPairsExceptModeKind
+    - '@source: src/bof3/battle/clearPendingBattlerPairsExceptModeKind.c'
 - - 16064
   - bin
   - header_retained_00003ec0
@@ -53,8 +53,8 @@ segments:
   subsegments:
   - - 16708
     - c
-    - func_801D4D44
-    - '@source: src/bof3/battle/func_801D4D44.c'
+    - advanceBattlerCountdownsAndReleaseSuppression
+    - '@source: src/bof3/battle/advanceBattlerCountdownsAndReleaseSuppression.c'
 - - 17416
   - bin
   - header_retained_00004408
@@ -65,8 +65,8 @@ segments:
   subsegments:
   - - 18680
     - c
-    - func_801D54F8
-    - '@source: src/bof3/battle/func_801D54F8.c'
+    - resolveLocalFlag800Countdown
+    - '@source: src/bof3/battle/resolveLocalFlag800Countdown.c'
   - - 19032
     - c
     - advanceLocalFlag40Countdown

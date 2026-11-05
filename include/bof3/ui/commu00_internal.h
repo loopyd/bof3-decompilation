@@ -139,8 +139,9 @@ extern u8           D_80143BB0;
  */
 extern u32          D_801455B4;
 /* @source 0x801455B8 @kind unknown: shared counter snapshot word of the
- * village-expansion tier path; func_801EF214 compares the counter at
- * 0x8014502C against it and advances it by the tier total consumed.
+ * village-expansion tier path; advanceVillageExpansionTier compares the
+ * counter at 0x8014502C against it and advances it by the tier total
+ * consumed.
  */
 extern u32          D_801455B8;
 /* @source 0x801455C0 @kind unknown: u16 notification scan count latched to the
@@ -283,9 +284,9 @@ extern u8           D_801F294C[4];
  */
 extern u16          D_801F24FC[];
 /* @source 0x801F2514 @kind table: u16 tier totals indexed by the
- * village-expansion state byte at 0x801455C4; func_801EF214 requires the
- * counter at 0x8014502C to have moved that far past its snapshot before the
- * tier byte may advance.
+ * village-expansion state byte at 0x801455C4; advanceVillageExpansionTier
+ * requires the counter at 0x8014502C to have moved that far past its
+ * snapshot before the tier byte may advance.
  */
 extern u16          D_801F2514[];
 /* @source 0x801F25A4 @kind unknown: three-byte variant records indexed by the
@@ -332,8 +333,8 @@ extern u8           D_801F2705[];
  */
 extern u8           D_801F2706[];
 /* @source 0x801F2708 @kind table: +3 byte column of the sixty stride-9 local
- * records; func_801EF214 sums it over the active records whose kind byte equals
- * the tier index plus one.
+ * records; advanceVillageExpansionTier sums it over the active records whose
+ * kind byte equals the tier index plus one.
  */
 extern u8           D_801F2708[];
 /* @source 0x801F268C @kind table: function pointers indexed by the fairy slot index byte. */
@@ -361,7 +362,7 @@ void func_8014DD3C(u16 arg0);
 void func_801EEDF8(void);
 void func_801EEEF0(u32 row_index);
 void func_801EF110(u8 active_count);
-void func_801EF214(void);
+void advanceVillageExpansionTier(void);
 void func_801EF398(void);
 void func_801EF52C(void);
 void func_801EF784(void);

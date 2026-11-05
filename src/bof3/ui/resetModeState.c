@@ -10,7 +10,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801D0C18(void) {
+void resetModeState(void) {
   modeIndex = 0;
   D_801D4286 = 0;
   D_801D4287 = 0;

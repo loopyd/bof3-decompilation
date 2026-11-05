@@ -10,7 +10,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801D0C88(void) {
+void decrementPanelSlideAndAdvanceHandlerIndex(void) {
   s32 i;
 
   D_801D4289 = D_801D4289 - 1;

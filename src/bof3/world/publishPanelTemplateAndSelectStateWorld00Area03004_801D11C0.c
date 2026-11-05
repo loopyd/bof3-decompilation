@@ -13,7 +13,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801D11C0(void) {
+void publishPanelTemplateAndSelectStateWorld00Area03004_801D11C0(void) {
   u8* work;
 
   if (D_80145E92 == 1) {

@@ -33,18 +33,18 @@ segments:
     - '@source: src/bof3/world/area03213DispatchTables.c'
   - - 72
     - c
-    - func_801F2C48
-    - '@source: src/bof3/world/func_801F2C48_area03213.c'
+    - projectSharedCoordinatesIntoCursorThenAdvanceWorld00Area03213_801F2C48
+    - '@source: src/bof3/world/projectSharedCoordinatesIntoCursorThenAdvanceWorld00Area03213_801F2C48.c'
     - '@behavior: Projects the camera position and azimuth at 0x80145EC4, 0x80145EC8 and 0x80145ECE into the scratchpad vertex at 0x1F800014, then stores the projected depth and screen pair into the scratch record at 0x1F800044, clearing its work byte 9 and advancing its state byte 1.'
   - - 280
     - c
-    - func_801F2D18
-    - '@source: src/bof3/world/func_801F2D18.c'
+    - drawAndGrowWorkByte9ThenAdvanceWorld00Area03213_801F2D18
+    - '@source: src/bof3/world/drawAndGrowWorkByte9ThenAdvanceWorld00Area03213_801F2D18.c'
     - '@behavior: Emits the scratch record quad ring, then advances its work byte by 0x0f; at 0x3d or above it parks that byte at 0xff and advances the state byte.'
   - - 428
     - c
-    - func_801F2DAC
-    - '@source: src/bof3/world/func_801F2DAC_area03213.c'
+    - drawMaxRadiusAndCountDownWorkByte9QueueCue203ThenAdvanceWorld00Area03213_801F2DAC
+    - '@source: src/bof3/world/drawMaxRadiusAndCountDownWorkByte9QueueCue203ThenAdvanceWorld00Area03213_801F2DAC.c'
     - '@behavior: Emits the scratch cursor record quad ring through func_801F2F04 with the record angle pair at 0x2E/0x30 and the work byte at 9 mapped to the 0x3C/0x3D ring selector, plays cue 0x203 through the shared dispatcher while that byte reads 0xD7, then decrements the work byte and, once it reaches zero, parks it at 0x3C and advances the state byte at 1.'
   - - 612
     - c

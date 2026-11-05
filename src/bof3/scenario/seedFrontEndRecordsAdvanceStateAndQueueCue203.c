@@ -14,7 +14,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801D0C70(void) {
+void seedFrontEndRecordsAdvanceStateAndQueueCue203(void) {
   u8 index;
   u8 i;
 

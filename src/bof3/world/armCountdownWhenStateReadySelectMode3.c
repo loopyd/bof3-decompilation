@@ -3,7 +3,9 @@
 #include <rand.h>
 
 /* @source 0x801F2D24
- * @behavior selects area mode 9 when the shared high-bit flag is set; selects
+ * @behavior mode-2 handler of the scratchpad mode dispatch table
+ *           (modeHandlerTable entry 2, dispatched by dispatchMode): selects
+ *           area mode 9 when the shared high-bit flag is set; selects
  *           mode 6 and restarts the shared secondary state bytes when the
  *           shared state byte 0x80146865 reads 1; otherwise installs the
  *           local area state as both the current state and the scratchpad
@@ -15,7 +17,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801F2D24(void) {
+void armCountdownWhenStateReadySelectMode3(void) {
   volatile World00Area008State* previous;
 
   if ((D_80146867 & 0x80u) != 0u) {

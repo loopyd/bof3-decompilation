@@ -1,13 +1,15 @@
 #include "bof3/world/area00813_internal.h"
 
-/* @behavior Selects area mode 9 when flag bit 7 is set, otherwise mode 5
- * when the secondary state byte equals 3.
+/* @behavior mode-4 handler of the scratchpad mode dispatch table
+ * (modeHandlerTable entry 4, dispatched by dispatchMode): selects area mode 9
+ * when flag bit 7 is set, otherwise mode 5 when the secondary state byte
+ * equals 3.
  * @source 0x801F2F24
  * @status exact
  * @match 100.00
  * @residual none
  */
-void func_801F2F24(void)
+void advanceWhenSecondaryStateByteIs3SelectMode5(void)
 {
   s32 state;
 

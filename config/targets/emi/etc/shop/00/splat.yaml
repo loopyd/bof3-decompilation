@@ -43,16 +43,16 @@ segments:
     - func_801D3978
   - - 11708
     - c
-    - func_801D39BC
-    - '@source: src/bof3/ui/func_801D39BC.c'
+    - dispatchUiPhaseTable
+    - '@source: src/bof3/ui/dispatchUiPhaseTable.c'
   - - 11768
     - c
-    - func_801D39F8
-    - '@source: src/bof3/ui/func_801D39F8.c'
+    - advanceUiPhaseOrSelectSavedStatePhase
+    - '@source: src/bof3/ui/advanceUiPhaseOrSelectSavedStatePhase.c'
   - - 11944
     - c
-    - func_801D3AA8
-    - '@source: src/bof3/ui/func_801D3AA8.c'
+    - dispatchUiSubStepTable
+    - '@source: src/bof3/ui/dispatchUiSubStepTable.c'
   - - 12004
     - c
     - func_801D3AE4
@@ -453,7 +453,7 @@ segments:
     - c
     - func_801DE45C
     - '@source: src/bof3/ui/func_801DE45C.c'
-    - '@behavior: calls the this-EMI sprite-grid renderer func_801DBD24 with the main-RAM index byte D_80144953, calls func_801DEE64, then decrements the frame timer phaseTimer through its address and, when the byte wraps to zero, reads the UI phase byte D_80148651 before re-arming phaseTimer with 3 and writing the phase byte back incremented (sibling shape func_801D39F8).'
+    - '@behavior: calls the this-EMI sprite-grid renderer func_801DBD24 with the main-RAM index byte D_80144953, calls func_801DEE64, then decrements the frame timer phaseTimer through its address and, when the byte wraps to zero, reads the UI phase byte D_80148651 before re-arming phaseTimer with 3 and writing the phase byte back incremented (sibling shape advanceUiPhaseOrSelectSavedStatePhase).'
   - - 55496
     - asm
     - func_801DE4C8

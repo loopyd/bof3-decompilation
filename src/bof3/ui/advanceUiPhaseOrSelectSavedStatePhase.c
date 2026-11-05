@@ -12,7 +12,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801D39F8(void) {
+void advanceUiPhaseOrSelectSavedStatePhase(void) {
   u8 phase;
 
   phase = D_80148651;

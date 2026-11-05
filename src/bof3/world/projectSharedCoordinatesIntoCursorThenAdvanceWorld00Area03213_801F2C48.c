@@ -15,7 +15,8 @@
  * load-delay slot and the screen-X load delay left unfilled. The straightforward
  * order emitted the reload in $v1 with a trailing nop (96.15% before that step).
  */
-void func_801F2C48(void) {
+void projectSharedCoordinatesIntoCursorThenAdvanceWorld00Area03213_801F2C48(
+    void) {
   SVECTOR* vtx;
   long*    sxy;
   long     depth;

@@ -9,8 +9,13 @@
  * @status exact
  * @match 100.00
  * @residual none
+ * State 2 of the local handler table at 0x801F3F6C: the ring radius is held at
+ * the maximum the grow state reaches (0x3C/0x3D, flickering on work byte 9's
+ * low bit) while that byte counts down 0xFF -> 0, and cue 0x203 is queued on
+ * the 0xD7 frame.
  */
-void func_801F2DAC(void) {
+void drawMaxRadiusAndCountDownWorkByte9QueueCue203ThenAdvanceWorld00Area03213_801F2DAC(
+    void) {
   u8 work;
 
   func_801F2F04(*(s16*)(D_1F800044 + 0x2e), *(s16*)(D_1F800044 + 0x30),

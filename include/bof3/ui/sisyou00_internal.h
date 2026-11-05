@@ -216,14 +216,14 @@ extern u8 modeIndex;
 extern u8 D_801D4286;
 /* @source 0x801D4287 @kind unknown */
 /* Second byte of the three-byte gap between the handler index and the phase
- * byte, cleared by func_801D0C18. */
+ * byte, cleared by resetModeState. */
 extern u8 D_801D4287;
 /* @source 0x801D4288 @kind unknown */
 /* Third byte of the three-byte gap between the handler index and the phase
- * byte, cleared by func_801D0C18. */
+ * byte, cleared by resetModeState. */
 extern u8 D_801D4288;
 /* @source 0x801D4289 @kind bss */
-/* Phase byte written as 4 by the frontend cue-advance helper. */
+/* Phase byte written as 4 by queueCue102AndRestartPanelSlide. */
 extern u8 D_801D4289;
 /* @source 0x801D428A @kind unknown */
 extern u8 D_801D428A;

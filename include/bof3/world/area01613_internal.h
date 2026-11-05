@@ -202,7 +202,7 @@ s16  func_8015477C(s32 arg0, s32 arg1);
 /* @source 0x8019A194 */
 u8   findCurrentWorldSlotIndex(void);
 
-void func_801F2C04(void);
+void setStatusFFFFAndSelectMode2IfGateClearWorld00Area01613_801F2C04(void);
 void seedScratchDefaults(void);
 void dispatchState02(void);
 void advanceScratchHeightState02(void);

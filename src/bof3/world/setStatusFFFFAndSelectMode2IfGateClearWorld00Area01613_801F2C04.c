@@ -8,7 +8,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801F2C04(void) {
+void setStatusFFFFAndSelectMode2IfGateClearWorld00Area01613_801F2C04(void) {
   if (D_801490C7 == 0) {
     D_801448EC[0] = 2;
     D_801490A8 = 0xFFFFu;

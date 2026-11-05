@@ -37,8 +37,8 @@ segments:
     - '@behavior: Advances the signed counter byte at 0x801455C2 by the record-weighted elapsed-tick delta: reads the shared counter word at 0x8014502C and its snapshot at 0x801455B4, truncates their unsigned difference divided by five to 16 bits and returns immediately when that tick count is zero; otherwise it walks the sixty stride-8 active-record entries at 0x801455C8/0x801455C9 and sums the container-local byte at 0x801F2705 plus three, at stride nine, over the present entries whose kind byte equals nine, then stores the low-16-bit snapshot of that sum minus twice the supplied active-record count, multiplied by the tick count, added to the sign-extended 0x801455C2 byte, clamped to 0..99, back into 0x801455C2 and republishes the counter word as the new snapshot.'
   - - 1556
     - c
-    - func_801EF214
-    - '@source: src/bof3/ui/func_801EF214_commu00.c'
+    - advanceVillageExpansionTier
+    - '@source: src/bof3/ui/advanceVillageExpansionTier.c'
     - '@behavior: Advances the village-expansion tier byte at 0x801455C4 once the shared battle counter has moved far enough past its snapshot: returns while the tier byte already reads seven, then for each of the eight armed stride-8 local slots at 0x801457A8/0x801457A9 that carry kind four with a nonzero second byte, it sums the stride-9 byte column at 0x801F2708 over the present active-record entries whose kind byte equals the tier index plus one and counts the matches; it returns when none matched, and otherwise compares the counter word at 0x8014502C minus its snapshot at 0x801455B8 against the tier total at 0x801F2514 floored at one, then advances the tier byte, adds the tier total to the snapshot word and appends notification kind 7 to the pending queue at 0x80145E60/0x80145E5D.'
   - - 1944
     - asm

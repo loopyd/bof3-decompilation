@@ -100,7 +100,8 @@ extern u8 D_801E1F20[][4]; /* @source 0x801E1F20 @kind data */
 extern u8 D_801E1F14[]; /* @source 0x801E1F14 @kind data */
 u32 func_8019601c(void);
 /* Shared palette-stage serial byte published as 1 by the AREA030 color-row
- * builder func_801D130C after it rewrites the 0x800396C0 color row. */
+ * builder buildColorRowAndStartTintFadeWorld00Area03004_801D130C after it
+ * rewrites the 0x800396C0 color row. */
 extern u8  D_80145988;    /* @source 0x80145988 @kind unknown */
 /* Signed limit byte (and its +3 companion byte) of the AREA030 message state
  * advanced by func_801DE018. */
@@ -138,12 +139,14 @@ extern u8  D_80144286;    /* @source 0x80144286 @kind unknown */
 extern u8  D_80144287;    /* @source 0x80144287 @kind unknown */
 extern u8  D_80145E92;    /* @source 0x80145E92 @kind unknown */
 extern u8  D_80145E93;    /* @source 0x80145E93 @kind unknown */
-/* Shared AREA030 color-block row index byte: func_801D130C reads it once per
+/* Shared AREA030 color-block row index byte:
+ * buildColorRowAndStartTintFadeWorld00Area03004_801D130C reads it once per
  * copied element and uses it to select the 0x40-byte row of the 0x80037800
  * color block that feeds the 0x800396C0 color row. */
 extern u8  D_80145EB7;    /* @source 0x80145EB7 @kind unknown */
 /* Shared AREA030 panel-template bytes published into the scratch work record
- * by func_801D11C0 (offsets 0x2A and 0x49..0x4B) and its shared word/halfword
+ * by publishPanelTemplateAndSelectStateWorld00Area03004_801D11C0 (offsets 0x2A
+ * and 0x49..0x4B) and its shared word/halfword
  * companions at 0x80145EE0/0x80145EE4 (scratch 0x50/0x54) and
  * 0x80145EE8/0x80145EEA (scratch 0x58/0x5A). */
 extern u8  D_80145EBA;    /* @source 0x80145EBA @kind unknown */
@@ -224,7 +227,8 @@ extern ThresholdData D_801D0C70; /* @source 0x801D0C70 @kind rodata */
 extern u8 D_801D0C8C[]; /* @source 0x801D0C8C @kind rodata */
 extern u8  D_801C8964[];  /* @source 0x801C8964 @kind unknown */
 /* Three-entry AREA030 work-record stage-handler table at 0x801E1D00, indexed
- * by the record stage byte at scratch offset 3 by func_801D12C8. The three
+ * by the record stage byte at scratch offset 3 by
+ * dispatchStateByte3Table1d00World00Area03004_801D12C8. The three
  * code pointers observed at 0x801E1D00/0x801E1D04/0x801E1D08 are the
  * consecutive stage handlers 0x801D130C, 0x801D1434 and 0x801D1538. It sits
  * inside the T_801E1CD4 data blob, preceded there by an unrelated pointer
@@ -479,8 +483,8 @@ void updateArea030OverlayFrame(void);
  * wait loops func_801985C8 (jals 0x80198614, 0x80198694). */
 void runArea030FrameServices(void);
 
-void func_801D11C0(void);
-void func_801D12C8(void);
+void publishPanelTemplateAndSelectStateWorld00Area03004_801D11C0(void);
+void dispatchStateByte3Table1d00World00Area03004_801D12C8(void);
 void func_801D9B14(void);
 void func_801D9B58(void);
 void func_801D9C9C(void);

@@ -14,7 +14,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801F7134(s32 semi_transparent) {
+void drawWorkObjectTintSprite(s32 semi_transparent) {
   SPRT* sprt;
   s32 page;
 

@@ -28,18 +28,18 @@ segments:
     - T_801D0C00
   - - 24
     - c
-    - func_801D0C18
-    - '@source: src/bof3/ui/func_801D0C18_sisyou00.c'
+    - resetModeState
+    - '@source: src/bof3/ui/resetModeState.c'
     - '@behavior: clears the five shared mode and handler bytes at 0x801D4285 through 0x801D4289, each through its own fixed-address byte symbol.'
   - - 72
     - c
-    - func_801D0C48
-    - '@source: src/bof3/ui/func_801D0C48_sisyou00.c'
+    - queueCue102AndRestartPanelSlide
+    - '@source: src/bof3/ui/queueCue102AndRestartPanelSlide.c'
     - '@behavior: queues frontend cue 0x102 through the EXE-side dispatcher, writes the phase byte at 0x801D4289 as 4, then advances the handler index.'
   - - 136
     - c
-    - func_801D0C88
-    - '@source: src/bof3/ui/func_801D0C88_sisyou00.c'
+    - decrementPanelSlideAndAdvanceHandlerIndex
+    - '@source: src/bof3/ui/decrementPanelSlideAndAdvanceHandlerIndex.c'
     - '@behavior: decrements the shared step byte at 0x801D4289, draws every one of the D_80146254 0x140-byte-stride records at 0x80145FCC through func_801D177C and func_801D1444, emits the shared panel strip through func_801D1E54, then clears the 0x801D428A step byte and advances the handler index once the step byte reaches 0.'
   - - 468
     - c

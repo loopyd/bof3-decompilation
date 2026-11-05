@@ -20,7 +20,7 @@ sources = [
     "src/bof3/ui/copySelectedRecordKindToTaskRecord.c",
     "src/bof3/ui/func_801EEDF8_commu00.c",
     "src/bof3/ui/func_801EF110_commu00.c",
-    "src/bof3/ui/func_801EF214_commu00.c",
+    "src/bof3/ui/advanceVillageExpansionTier.c",
     "src/bof3/ui/func_801F01F4_commu00.c",
     "src/bof3/ui/activateTaskWithRandomLabel.c",
     "src/bof3/ui/func_801F08D8.c",

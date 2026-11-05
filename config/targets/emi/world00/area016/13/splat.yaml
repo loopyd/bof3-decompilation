@@ -29,8 +29,8 @@ segments:
     - T_801F2C00
   - - 4
     - c
-    - func_801F2C04
-    - '@source: src/bof3/world/func_801F2C04_area01613.c'
+    - setStatusFFFFAndSelectMode2IfGateClearWorld00Area01613_801F2C04
+    - '@source: src/bof3/world/setStatusFFFFAndSelectMode2IfGateClearWorld00Area01613_801F2C04.c'
     - '@behavior: writes 2 to the shared mode byte at 0x801448EC when the shared gate byte at 0x801490C7 is zero, and stores -1 into the shared status halfword at 0x801490A8 on every path.'
   - - 56
     - c
@@ -39,8 +39,8 @@ segments:
     - '@behavior: while the shared mode byte at 0x801448EC is 0, calls the shared func_8015C088 helper and probes the shared scroll pair 0x80145EC6/0x80145ECA through func_80166CB0; a 0xA1 probe searches the local 0x801F4FC4 table (16 halfwords per entry) for the entry matching the shared 0x80143F10 word and chooses the halfword at its 0x80146870 column, otherwise the four-byte rows at 0x801F4DA0 are scanned for the row matching 0x80145EC6/0x80145ECA and that row''s byte 3 selects one of the three five-byte records at 0x801F50E4 whose four codes fill the 0x20-byte records at 0x801490D8 with twelve 0x5C bytes, with the 0x801F50F4 table, or with func_80165D48(0, code + 0x38) while clearing 0x801490E4 for each record, and starts action selection + 0x16 through func_80150224; every path then writes 2 to the shared phase byte 0x80143BB0 and increments the mode byte, while a mode byte of 1 with a phase byte other than 2 calls the shared func_8015C058 helper and clears 0x801448EB, the mode byte and 0x801448ED.'
   - - 748
     - c
-    - func_801F2EEC
-    - '@source: src/bof3/world/func_801F2EEC_area01613.c'
+    - projectScrollIntoScratchSelectByte0BThenDispatchModeWorld00Area01613_801F2EEC
+    - '@source: src/bof3/world/projectScrollIntoScratchSelectByte0BThenDispatchModeWorld00Area01613_801F2EEC.c'
     - '@behavior: projects the shared scroll offsets 0x80145E9C/0x80145EA0 scaled by the shared scale byte 0x80145E99 onto the scratch words at offsets 0x0C and 0x10, then selects the scratch byte at offset 0x0B from the probe helper''s code 0xA1, 0xA0, 0xAE, else 4 when shared flag word 0x8014625A has bit 0x1000 set, else 0, and finally dispatches the scratch mode byte at offset 1 through the local handler table at 0x801F5100.'
   - - 1120
     - c

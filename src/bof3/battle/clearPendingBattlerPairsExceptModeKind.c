@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801D4850(void) {
+void clearPendingBattlerPairsExceptModeKind(void) {
   if ((D_80146375 != 4u) ||
       (D_801463C0 != 0x27u)) {
     if (D_80146374 < 3u) {

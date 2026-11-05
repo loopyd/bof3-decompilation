@@ -8,7 +8,7 @@
  * @match 100.00
  * @residual none
  */
-u8 func_801D54F8(void) {
+u8 resolveLocalFlag800Countdown(void) {
   u8 index;
   u8 count;
   u8 last_index;

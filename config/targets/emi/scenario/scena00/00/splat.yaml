@@ -68,25 +68,25 @@ segments:
     - dispatchWorkByte1Handler_801F70F0
     - '@source: src/bof3/scenario/dispatchWorkByte1Handler_801F70F0.c'
     - '@behavior: Dispatches the overlay''s per-frame handler for the scratchpad work object''s later states: the work-object pointer cell at 0x1F800044 is read, its state byte at offset 1 selects entry (state + 2) of the local handler table at 0x801FC980 whose 0x801FC988 word is the 0x801F7264 handler, and that entry is invoked; no other state is read or written. The 0x801F6DC0 dispatcher indexes the same table from its first entry.'
-- name: func_801F7134
+- name: drawWorkObjectTintSprite
   type: code
   start: 1332
   vram: 2149544244
   subsegments:
   - - 1332
     - c
-    - func_801F7134
-    - '@source: src/bof3/scenario/func_801F7134.c'
+    - drawWorkObjectTintSprite
+    - '@source: src/bof3/scenario/drawWorkObjectTintSprite.c'
     - '@behavior: Seeds the shared primitive cursor (g_PrimCursor) with one semi-transparent texture sprite: the drawing-mode tpage comes from the LIBGPU graph type (0x32D for graph types 1 and 2, 0xDD otherwise), SetDrawMode is issued on the cursor with zero dfe/dtd and a null tw, a 0x0C-byte primitive is appended, SetSprt lays the cursor out as an SPRT with x0/y0 = 32, u0 = 0, v0 = 32, w = 256, h = 1768 and clut = 0x7A80, its r0/g0/b0 come from bytes 0x5D/0x5E/0x5F of the scratchpad work object published at 0x1F800044, the shade texture is cleared, SetSemiTrans receives the low byte of the argument, and a 0x14-byte primitive is appended.'
-- name: func_801F7264
+- name: clearWorkObjectTintArmCountdownAndAdvance
   type: code
   start: 1636
   vram: 2149544548
   subsegments:
   - - 1636
     - c
-    - func_801F7264
-    - '@source: src/bof3/scenario/func_801F7264.c'
+    - clearWorkObjectTintArmCountdownAndAdvance
+    - '@source: src/bof3/scenario/clearWorkObjectTintArmCountdownAndAdvance.c'
     - '@behavior: Handler for state 2 of the scratchpad work object per-frame dispatch (the object byte at offset 0x01 selects the entry of the handler table at 0x801FC980): it re-reads the work object pointer published at 0x1F800044, zeroes the three color channels at 0x5D/0x5E/0x5F of that object, stores 0xF0 in the object byte at 0x09 and moves the dispatch state byte at 0x01 to 1; no other state is read or written.'
 - name: brightenWorkObjectColorAndCommitProgress
   type: code
@@ -97,17 +97,17 @@ segments:
     - c
     - brightenWorkObjectColorAndCommitProgress
     - '@source: src/bof3/scenario/brightenWorkObjectColorAndCommitProgress.c'
-    - '@behavior: Takes no arguments and returns nothing: seeds the scratchpad work object''s sprite through func_801F7134(1), then brightens that object''s three color channels (bytes 0x5D/0x5E/0x5F, the r0/g0/b0 the seeder copies into the SPRT) by 2 each, and once the channel at 0x5D reads exactly 0x80 commits the fade: writes 0x14 into the scenario progress byte g_ScenarioProgress, sets the object''s state byte at 0x01 to 2 and its byte at 0x09 to 0xFF.'
-- name: func_801F7350
+    - '@behavior: Takes no arguments and returns nothing: seeds the scratchpad work object''s sprite through drawWorkObjectTintSprite(1), then brightens that object''s three color channels (bytes 0x5D/0x5E/0x5F, the r0/g0/b0 the seeder copies into the SPRT) by 2 each, and once the channel at 0x5D reads exactly 0x80 commits the fade: writes 0x14 into the scenario progress byte g_ScenarioProgress, sets the object''s state byte at 0x01 to 2 and its byte at 0x09 to 0xFF.'
+- name: drawWorkObjectTintSpriteAndTickCountdown
   type: code
   start: 1872
   vram: 2149544784
   subsegments:
   - - 1872
     - c
-    - func_801F7350
-    - '@source: src/bof3/scenario/func_801F7350.c'
-    - '@behavior: Advances the per-frame work-object countdown after reseeding the scratchpad work object''s sprite through func_801F7134(1): while the object''s byte at 0x09 is non-zero it is decremented by one, and when it reads zero the object''s state byte at 0x01 is incremented and byte 0x09 is re-armed to 0xFF so the same handler runs again. Takes no arguments and returns nothing.'
+    - drawWorkObjectTintSpriteAndTickCountdown
+    - '@source: src/bof3/scenario/drawWorkObjectTintSpriteAndTickCountdown.c'
+    - '@behavior: Advances the per-frame work-object countdown after reseeding the scratchpad work object''s sprite through drawWorkObjectTintSprite(1): while the object''s byte at 0x09 is non-zero it is decremented by one, and when it reads zero the object''s state byte at 0x01 is incremented and byte 0x09 is re-armed to 0xFF so the same handler runs again. Takes no arguments and returns nothing.'
 - name: func_801F73A8
   type: code
   start: 1960
@@ -117,7 +117,7 @@ segments:
     - c
     - func_801F73A8
     - '@source: src/bof3/scenario/func_801F73A8.c'
-    - '@behavior: Takes no arguments and returns nothing: reseeds the scratchpad work object''s sprite through func_801F7134(1), then darkens that object''s three color channels (bytes 0x5D/0x5E/0x5F, the r0/g0/b0 the seeder copies into the SPRT) by 2 each; once the channel at 0x5D reads exactly zero it clears the object''s byte at 0x09 and resets the shared work flags through func_80196070.'
+    - '@behavior: Takes no arguments and returns nothing: reseeds the scratchpad work object''s sprite through drawWorkObjectTintSprite(1), then darkens that object''s three color channels (bytes 0x5D/0x5E/0x5F, the r0/g0/b0 the seeder copies into the SPRT) by 2 each; once the channel at 0x5D reads exactly zero it clears the object''s byte at 0x09 and resets the shared work flags through func_80196070.'
 - name: func_801F7440
   type: code
   start: 2112

@@ -24,7 +24,7 @@
  * original read; each read owns its local because a shared local moves the
  * whole tail web into $a0 and loses the original's $v1/$v0 split.
  */
-void func_801D130C(void) {
+void buildColorRowAndStartTintFadeWorld00Area03004_801D130C(void) {
   u8*  cur;
   u8*  cur2;
   u8*  cur3;

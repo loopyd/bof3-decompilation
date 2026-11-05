@@ -3,7 +3,8 @@
 /* @behavior fades the three AREA030 work-record tint bytes at offsets 0x5D..0x5F
  * down by 16 and, once the first reaches -128, clears all three, clears bit 5 of
  * work byte 0, copies byte 0x0B into byte 0x27 and advances the stage byte 3;
- * before that point it runs the target-local func_801D11C0 step instead.
+ * before that point it runs the target-local
+ * publishPanelTemplateAndSelectStateWorld00Area03004_801D11C0 step instead.
  * @source 0x801D1434
  * @status exact
  * @match 100.00
@@ -35,6 +36,6 @@ void func_801D1434(void) {
     third = (u8*)D_1F800044;
     third[3u] = (u8)(third[3u] + 1u);
   } else {
-    func_801D11C0();
+    publishPanelTemplateAndSelectStateWorld00Area03004_801D11C0();
   }
 }
