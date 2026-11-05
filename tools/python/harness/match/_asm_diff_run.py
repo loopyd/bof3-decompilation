@@ -45,10 +45,25 @@ from ._asm_diff_payload import (
 from .extraction import read_function_bytes, read_linked_image
 
 
+# One process compares many members of the same translation unit - a grouped
+# source with thirty functions would otherwise be compiled thirty times. The
+# cache is per process, so it cannot outlive the command that populated it, and
+# it is keyed by the source's identity as well as its path.
+_BUILT: set[tuple[Path, int, int]] = set()
+
+
 def run_build_object(
     layout: RepoLayout, source_path: Path, build_log_path: Path | None
 ) -> None:
     object_path = object_path_for_source(layout, source_path)
+    stat = source_path.stat()
+    key = (source_path, stat.st_mtime_ns, stat.st_size)
+    if (
+        key in _BUILT
+        and object_path.is_file()
+        and object_path.stat().st_mtime >= stat.st_mtime
+    ):
+        return
     result = compile_object(layout.root, source_path, object_path)
     log_text = result.stdout
     if result.stderr:
@@ -68,6 +83,7 @@ def run_build_object(
         raise RuntimeError(
             f"object build did not refresh {object_path}; see {build_log_path}"
         )
+    _BUILT.add(key)
 
 
 def _asm_diff_resolve(

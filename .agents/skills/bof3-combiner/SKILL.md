@@ -33,8 +33,10 @@ description: Combine or clean up BOF3 source files with meaningful grouping, dir
    Check declaration visibility, static-name collisions, include order, initialization,
    aliasing and volatile behavior across the whole resulting translation unit.
 6. Run `bin/harness combiner check TARGET SELECTOR...` and required live asm-diff
-   and byte-match gates. Grouped native checks compile the complete current source
-   and compare every member and reviewed initialized-data section. Check all affected
+   and byte-match gates. Name the members: a selector-scoped check compiles the
+   complete grouped source once and compares every member and reviewed
+   initialized-data section, while a target-wide check reports the mechanical
+   facts only, because the alternative compares every record in the target. Check all affected
    callers and owning targets. Compilation, one matching member or a percentage
    does not establish preservation. Follow
    [native execution](../bof3-re/references/native-execution.md) for resource bounds.

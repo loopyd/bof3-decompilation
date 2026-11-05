@@ -83,7 +83,12 @@ class ResolvedFunction:
     compiled_symbol: str | None
 
 
-def resolve_function(root: Path, value: str | FunctionId) -> ResolvedFunction:
+def resolve_function(
+    root: Path,
+    value: str | FunctionId,
+    *,
+    manifests: dict[str, TargetManifest] | None = None,
+) -> ResolvedFunction:
     """Resolve one ``TARGET@0xADDRESS`` selector (or parsed ID) to a function.
 
     Shares :func:`resolve_target`'s canonical manifest path/identity
@@ -96,7 +101,13 @@ def resolve_function(root: Path, value: str | FunctionId) -> ResolvedFunction:
     """
 
     function = parse_function_id(value) if isinstance(value, str) else value
-    manifest = lookup_target_manifest(root, function.target.value)
+    # Callers resolving many selectors load the manifests once and pass them in;
+    # each lookup otherwise re-reads and re-validates every target manifest.
+    manifest = (
+        manifests.get(normalize_target_id(function.target.value).value)
+        if manifests is not None
+        else lookup_target_manifest(root, function.target.value)
+    )
     if manifest is None:
         raise ValueError(f"unknown target: {function.target.value!r}")
     target_id = normalize_target_id(function.target.value)

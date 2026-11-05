@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import tempfile
 from contextlib import ExitStack, closing, nullcontext
 from pathlib import Path
@@ -252,6 +253,57 @@ def _compare_data(
     return comparisons, tuple(emitted)
 
 
+# Comparing one member of a grouped source compiles and links the whole group.
+# A caller that walks thirty members would repeat that work thirty times, so the
+# finished group comparison is cached per process and re-rendered from a copy of
+# its artifacts. The cache is keyed by the source's identity, not just its path.
+_GROUP_CACHE: dict[tuple[str, int, int], tuple[dict, Path, Path, object, dict]] = {}
+
+# Filled by _compare_members so the caller can cache one finished group.
+_LAST_GROUP: tuple[dict, Path, Path, object, dict] | None = None
+
+
+def _render_from_cache(
+    root: Path,
+    request: AsmDiffRequest,
+    layout: RepoLayout,
+    cached: tuple[dict, Path, Path, object, dict],
+) -> dict | None:
+    """Render another member of an already-compared group, or None on a miss."""
+    result, output, linked, execution, members = cached
+    selected = next(
+        (
+            member
+            for member in members["functions"]
+            if member["address"] == request.address
+        ),
+        None,
+    )
+    if selected is None:
+        return None
+    output_root = (request.output_root or layout.out_dir / "matching").absolute()
+    if (
+        not output_root.is_relative_to(root / "out")
+        or output_root.resolve() != output_root
+    ):
+        raise ValueError("grouped comparison diagnostics require a canonical out/ path")
+    output_dir = Path(tempfile.mkdtemp(prefix="grouped-", dir=output_root))
+    copies = [output, output.with_name(output.name + ".s"), linked,
+              linked.with_suffix(linked.suffix + ".ld")]
+    for path in copies:
+        if path.is_file():
+            shutil.copy2(path, output_dir / path.name)
+    return _render_selected(
+        root,
+        request,
+        selected,
+        result,
+        output_dir / output.name,
+        output_dir / linked.name,
+        execution,
+    )
+
+
 def compare_selected_member(request: AsmDiffRequest, *, layout: RepoLayout) -> dict:
     """Compare the complete current group before reporting its selected member."""
     root = layout.root.resolve(strict=True)
@@ -266,18 +318,28 @@ def compare_selected_member(request: AsmDiffRequest, *, layout: RepoLayout) -> d
         or output_root.resolve() != output_root
     ):
         raise ValueError("grouped comparison diagnostics require a canonical out/ path")
+    stat = source.stat()
+    cache_key = (str(source), stat.st_mtime_ns, stat.st_size)
+    cached = _GROUP_CACHE.get(cache_key)
+    if cached is not None:
+        rendered = _render_from_cache(root, request, layout, cached)
+        if rendered is not None:
+            return rendered
     lease = acquire_writer(root) if ACTIVE_WRITER.get() is None else nullcontext()
     with lease:
         require_writer(root)
         output_root.mkdir(parents=True, exist_ok=True)
         output_dir = Path(tempfile.mkdtemp(prefix="grouped-", dir=output_root))
-        return _compare_members(
+        comparison = _compare_members(
             root,
             source.relative_to(root).as_posix(),
             (output_dir / "group.o").relative_to(root).as_posix(),
             2 * 1024 * 1024,
             request=request,
-        ).report
+        )
+        if _LAST_GROUP is not None:
+            _GROUP_CACHE[cache_key] = _LAST_GROUP
+        return comparison.report
 
 
 def _select_request(root: Path, request: AsmDiffRequest, members: dict) -> dict:
@@ -679,6 +741,8 @@ def _compare_members(root, source, output_name, output_limit, *, request=None):
                     root, request, selected, result, output, linked, execution
                 )
             )
+            global _LAST_GROUP
+            _LAST_GROUP = (result, output, linked, execution, members)
             return NativeComparison(report, tuple(emitted) if exact else ())
         finally:
             guard()

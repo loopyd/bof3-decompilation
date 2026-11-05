@@ -26,6 +26,20 @@ def identifier_consumers(
     findings: list[dict] = []
     text_cache: dict[Path, str] = {}
     token_cache: dict[Path, set[str]] = {}
+    owned_names: dict[str, set[str]] = {}
+
+    def own_names(owner: str) -> set[str]:
+        """Names the target defines itself; its own definitions are not consumers."""
+        if owner not in owned_names:
+            path = root / "config" / "targets" / owner / "symbols.txt"
+            names_here: set[str] = set()
+            if path.is_file():
+                for line in path.read_text(encoding="utf-8").splitlines():
+                    name, _, address = line.partition("=")
+                    if address.strip():
+                        names_here.add(name.strip())
+            owned_names[owner] = names_here
+        return owned_names[owner]
 
     def text(path: Path) -> str:
         if path not in text_cache:
@@ -54,12 +68,20 @@ def identifier_consumers(
                 )
                 for path in dependencies:
                     text(path)
-                if not any(
-                    names & token_cache[path] for path in [source, *dependencies]
-                ):
+                matched = {
+                    name
+                    for path in [source, *dependencies]
+                    for name in names & token_cache[path]
+                }
+                if not matched:
                     continue
                 addresses = collect_lift_metadata(body)
                 if owner != target:
+                    # A duplicated function carries the same name in several
+                    # targets; where the other target defines that name itself,
+                    # the mention is its own definition rather than our consumer.
+                    if matched and matched <= own_names(owner):
+                        continue
                     findings.append(
                         {
                             "status": "unavailable",

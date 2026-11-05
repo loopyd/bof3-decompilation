@@ -121,9 +121,12 @@ def check_report(root: Path, target: str, selectors: tuple[str, ...] = ()) -> di
     if selected:
         try:
             names = set()
+            manifests = load_target_manifests(root)
             for row in scope["records"]:
                 if row["selector"]:
-                    resolved = resolve_function(root, row["selector"])
+                    resolved = resolve_function(
+                        root, row["selector"], manifests=manifests
+                    )
                     if resolved.compiled_symbol is None:
                         raise ValueError(
                             f"unresolved compiled symbol: {row['selector']}"
@@ -136,8 +139,25 @@ def check_report(root: Path, target: str, selectors: tuple[str, ...] = ()) -> di
             findings.append(
                 {"status": "unavailable", "code": "consumers", "message": str(error)}
             )
-    result = metadata.report(
-        root, target, check=True, selectors=tuple(sorted(consumers)) if selected else ()
+    # Native evidence is requested per selector: without one there is no bounded
+    # member set to verify, and the alternative - comparing every record in the
+    # target, one build each - cost minutes for a purely mechanical answer.
+    result = (
+        metadata.report(root, target, check=True, selectors=tuple(sorted(consumers)))
+        if selected
+        else {
+            "operation": "metadata",
+            "action": "check",
+            "scope": {"target": target, "selectors": [], "whole_target": True},
+            "consumers": [],
+            "total": 0,
+            "truncated": False,
+            "records": [],
+            "findings": [],
+            "incomplete": False,
+            "passed": True,
+            "live": "not measured here; pass the members as selectors or run bin/harness lift gate",
+        }
     )
     result["operation"] = "combiner"
     profiles, profile_findings = _profiles(root, result["records"])
