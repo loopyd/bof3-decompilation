@@ -48,7 +48,7 @@ void decrementEntryPanelSlideAndAdvanceStateWorld00Area03004_801D4984(void) {
     mode = D_1F800044;
     mask = (u8)(1u << mode[6]);
   }
-  func_801D7C10(88, 40, mask);
+  drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
   state = D_1F800044;
   if (state[9] == 0) {
     state[1]++;

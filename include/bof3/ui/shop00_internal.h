@@ -412,6 +412,20 @@ extern u8 D_801E60F0;
  * @kind unknown */
 extern u8 D_801E60F4;
 
+/* Overlay-local run of four signed halfwords (eight bytes) that ends where
+ * D_801E6108, the slot byte of the shop header row, begins. Zero-filled in the
+ * shipped payload, so its contents are not observable there and its role is
+ * not recovered. Two handlers walk it with the same 0..3 bound and the same
+ * nonzero test: the sub-step handler
+ * emitPanelStripThenRebuildShopStateOnClearGate indexes it with a signed
+ * halfword loop counter and passes that counter to func_8016BB6C, and
+ * func_801D62DC indexes it with an unsigned byte counter and passes the same
+ * counter. Signed halfword element width is the original's `lh` load at both
+ * sites. The D_<address> name binds to its own address, so no target-map row
+ * is added.
+ * @source 0x801E6100 @kind unknown */
+extern s16 D_801E6100[];
+
 /* Second overlay-local byte in the tail of this image (zero-filled in the
  * shipped payload); cleared by the phase-advance handler func_801DF9B4.
  * @source 0x801E6260
@@ -600,10 +614,20 @@ u8 func_801665A0(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
  * the widths observed at those call sites, not a recovered callee contract.
  * @source 0x801650B4 */
 u8 func_801650B4(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+/* Main-exe per-entry helper called by the two handlers that walk the four
+ * halfwords D_801E6100: emitPanelStripThenRebuildShopStateOnClearGate passes
+ * the constant 0 and its signed halfword loop counter, and func_801D62DC
+ * passes the constant 0 and its byte counter, both as bare `addiu a0,zero,0`
+ * plus an already-materialized second argument. Neither call site masks the
+ * second argument to a byte, so the widths below are the widths observed at
+ * those call sites, not a recovered callee contract.
+ * @source 0x8016BB6C */
+void func_8016BB6C(s32 arg0, s32 arg1);
 u32 func_801502D0(u32 arg0);
 /* Main-exe cue dispatcher called by this target's phase steps with a single
- * word cue id: func_801D3AE4 passes 0xD1, and the unlifted steps func_801D446C
- * and func_801D5D98 pass 0xD5 and 0xD0, always as a bare `addiu a0,zero,K`.
+ * word cue id: func_801D3AE4 passes 0xD1,
+ * emitPanelStripThenRebuildShopStateOnClearGate passes 0xD5 and func_801D5D98
+ * passes 0xD0, always as a bare `addiu a0,zero,K`.
  * All three call sites drop the result, and the id range sits next to the cue
  * ids handed to func_8015DF18, so the width below is the width observed at
  * those call sites, not a recovered callee contract.

@@ -27,7 +27,7 @@ void decrementEntryPanelSlideInitializeRecordAndAdvanceStateWorld00Area03004_801
     mode = D_1F800044;
     mask = (u8)(1u << mode[6]);
   }
-  func_801D7C10(88, 40, mask);
+  drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
   step = D_1F800044;
   step[9]--;
   panel = D_1F800044;

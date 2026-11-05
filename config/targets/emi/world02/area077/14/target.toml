@@ -38,6 +38,7 @@ support_sources = [
     "src/bof3/world/retreatCounterAndQueueCue200World02Area07714_801F5D80.c",
     "src/bof3/world/stepPaletteSequenceOnTickCadenceAndResetOnFlagMismatchWorld02Area07714_801F4FFC.c",
     "src/bof3/world/stepRampedAndTableSelectedPaletteBlocksOnTickCadenceWorld02Area07714_801F515C.c",
+    "src/bof3/world/drawFadingScreenTrailInXRangeWorld02Area07714_801F3778.c",
     "src/bof3/support/area077_14_psyq.c",
 ]
 psyq_source = "src/bof3/support/area077_14_psyq.c"

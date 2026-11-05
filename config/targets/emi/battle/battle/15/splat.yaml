@@ -714,8 +714,10 @@ segments:
     - asm
     - func_800A0660
   - - 40912
-    - asm
-    - func_800A07D0
+    - c
+    - doubleEnemyRecordHalfwordsClampedToFFFF
+    - '@source: src/bof3/battle/doubleEnemyRecordHalfwordsClampedToFFFF.c'
+    - '@behavior: Runs the selection-input refresh pass func_800A3F28, then doubles the two halfwords at +0x00 and +0x02 of the 0x118-stride enemy work record field base D_801EB6B4/D_801EB6B6 selected by the active battler byte D_80146394 rebased by -3, saturates each doubled value at 0xFFFF, and stores both back.'
   - - 41112
     - asm
     - func_800A0898

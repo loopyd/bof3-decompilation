@@ -133,8 +133,9 @@ segments:
     - setStatusFFFFAndStateEntryWhenGateClearWorld02Area10814_801F4320
     - '@source: src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld02Area10814_801F4320.c'
   - - 5984
-    - asm
-    - func_801F4360
+    - c
+    - setStatusFFFFAndStateEntryWhenGateClearWorld02Area10814_801F4360
+    - '@source: src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld02Area10814_801F4360.c'
   - - 6052
     - c
     - clearSharedByteBitPair0World02Area10814_801F43A4

@@ -28,7 +28,7 @@ void advanceEntryPanelAndSpriteSlideAndSelectStateWorld00Area03004_801D5048(void
   if (panel[0x0B] == 0) {
     func_801D9534(20, (18 - panel[9] * 16) & 0xFFFE, 280, 19, 0);
     sliding = D_1F800044;
-    func_801D7C10(88 + sliding[9] * 45, 40, 0);
+    drawLabeledStatusCellsWorld00Area03004_801D7C10(88 + sliding[9] * 45, 40, 0);
   } else {
     func_801D9534(20, 18, 280, 19, 0);
     if (D_80145E93 >= 3) {
@@ -37,7 +37,7 @@ void advanceEntryPanelAndSpriteSlideAndSelectStateWorld00Area03004_801D5048(void
     } else {
       mask = 0;
     }
-    func_801D7C10(88, 40, mask);
+    drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
   }
   step = D_1F800044;
   step[9]++;

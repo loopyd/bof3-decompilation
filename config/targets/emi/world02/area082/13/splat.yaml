@@ -160,8 +160,10 @@ segments:
     - asm
     - func_801F4B3C
   - - 8244
-    - asm
-    - func_801F4C34
+    - c
+    - fillScreenGradientAdvanceWorkByte2AtScenarioProgress29World02Area08213_801F4C34
+    - '@source: src/bof3/world/fillScreenGradientAdvanceWorkByte2AtScenarioProgress29World02Area08213_801F4C34.c'
+    - '@behavior: clears the shared palette-stage byte at 0x8014933A, paints the whole 0x140 x 0xF0 screen with the constant colour word 0x10001805 through the gradient fill helper at 0x801F5428, and, only when the shared scenario progress byte at 0x80146864 is 0x29, re-reads the scratchpad work pointer cell 0x1F800044 and advances that work record byte +0x02 by one.'
   - - 8336
     - asm
     - func_801F4C90

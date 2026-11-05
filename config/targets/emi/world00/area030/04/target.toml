@@ -78,6 +78,7 @@ sources = [
     "src/bof3/world/func_801D7784_area03004.c",
     "src/bof3/world/func_801D799C.c",
     "src/bof3/world/func_801D7D68_area03004.c",
+    "src/bof3/world/drawLabeledStatusCellsWorld00Area03004_801D7C10.c",
     "src/bof3/world/func_801D90FC_area03004.c",
     "src/bof3/world/func_801D9534.c",
     "src/bof3/world/func_801D9B58.c",

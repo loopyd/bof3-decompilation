@@ -26,7 +26,7 @@ void advancePanelSlideAndUpdateStateWorld00Area03004_801D4680(void) {
   if (header[0xB] == 0) {
     func_801D9534(20, (18 - header[9] * 16) & 0xFFFE, 280, 19, 0);
     left = D_1F800044;
-    func_801D7C10((u16)(88 + left[9] * 45), 40, 0);
+    drawLabeledStatusCellsWorld00Area03004_801D7C10((u16)(88 + left[9] * 45), 40, 0);
   } else {
     func_801D9534(20, 18, 280, 19, 0);
     mask = 0;
@@ -34,7 +34,7 @@ void advancePanelSlideAndUpdateStateWorld00Area03004_801D4680(void) {
       mode = D_1F800044;
       mask = (u8)(1u << mode[6]);
     }
-    func_801D7C10(88, 40, mask);
+    drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
   }
   middle = D_1F800044;
   func_801D88E0((s16)(16 - middle[9] * 45), 64);

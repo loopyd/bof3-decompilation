@@ -36,6 +36,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Byte-cell load hoisted above the record's word stores, extra live registers | Split the record view by access width: [record views](#scratchpad-cells-and-record-views) |
 | Indirect call loads the selected pointer but the original fills frame slots with the whole table | Assign the named extern table to a local of its aggregate type, then index the local; indexing the extern indexes the table in place |
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots), then name repeated scale products (#named-scale-products) |
+| Pointer read hoisted above a call, extra saved register, frame unchanged | Bind the call-derived scaled value to its own local before the pointer read; folding the mask/shift into the later address expression keeps the pointer live across the call |
 | Call result stored inside the next call's delay slot | The original stores a `jal` result into its outgoing argument slot right after that call, before the next call's argument setup. Bind the result to a local; nesting the call in the later argument list moves that store into the following `jal` delay slot |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
 | Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests |
@@ -439,6 +440,17 @@ locals can also serve mutually exclusive arms when each arm defines before use a
 value escapes the join. Split phase values when their interference differs; share a
 consumed scalar only with a real later consumer. Review the whole allocator output,
 not one register pair.
+
+A head exchange is the same rung with the opposite fix. When size, frame, memory
+events and every instruction agree except that two locals of one type hold each
+other's adjacent registers from the first divergent instruction, treat it as a
+reference-count ordering fact: read `.lreg` counts and `.greg` order, then give the
+local that must take the earlier register a second genuine use - load the raw narrow
+value into that same local and compute the widened result from it - so its count
+rises and the allocation order reverses. One lane spent its whole shape sweep on
+this exchange and closed it on the compiler-evidence rung alone with that one change.
+Declaration-order swaps, a named limit constant and respelled clamps measured neutral
+at the same score, so they are not candidates for it.
 
 A narrowed induction temporary needs a complete reachable-range proof, including
 the final endpoint. A higher score at the same size can be a retainable partial

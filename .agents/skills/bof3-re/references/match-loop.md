@@ -59,7 +59,7 @@ through the tooling owner; matching work grants no profile-change authority.
 
 | Rung | Work | Gate |
 | --- | --- | --- |
-| 1. Representation/access | Prove ABI, widths, qualifiers, pointer cells and original reloads; inspect callees before declaring allocation-only | Original calls, conversions and memory events accounted for |
+| 1. Representation/access | Prove ABI, widths, qualifiers, pointer cells and original reloads; inspect callees before declaring allocation-only. For an unlifted callee the declared parameter form is representation too: by-value pair/aggregate parameters expand at this call site and can justify a preheader register or a size deficit the scalar spelling never produces | Original calls, conversions and memory events accounted for |
 | 2. Control flow | Branch direction, loop/return/switch; test [boolean return expansion](matching-knowledge.md#boolean-return-expansion), branch-local calculations, the branch matrix and evidenced [explicit cursors](matching-knowledge.md#explicit-cursors-and-signed-bounds) | Branch/topology mismatch clears |
 | 3. Value lifetimes | Reuse a consumed local for a later real result; diagnose [orphan stack slots](matching-knowledge.md#orphan-stack-slots); test block-local initialization, [operation scopes](matching-knowledge.md#operation-scopes-and-loop-note-dependencies) and arithmetic grouping | Predicted instruction effect measured; semantics and complete diff checked |
 | 4. Compiler evidence | Find the first divergent pass in owning sources and before/after RTL, including return expansion before CSE/allocation; follow the relevant [compiler lever](matching-knowledge.md#compiler-evidence) | Source-backed mechanism predicts a new probe; diagnostics grant no match |

@@ -270,6 +270,10 @@ extern const char D_801D0C04[]; /* @source 0x801D0C04 @kind rodata */
  * entry-panel counter row func_801D7B64 submits as the text-pointer argument of
  * the shared text drawer func_8014FF0C. */
 extern const char D_801D0C10[]; /* @source 0x801D0C10 @kind rodata */
+/* Twelve-byte rodata run "GearDataRule" that the AREA030 status-cell row
+ * drawLabeledStatusCellsWorld00Area03004_801D7C10 submits as three separate
+ * 4-character label runs through the shared text drawer func_8014F800. */
+extern const char D_801E21C0[]; /* @source 0x801E21C0 @kind rodata */
 extern u16 D_801E218C[]; /* @source 0x801E218C @kind table */
 extern u16 D_801E218E[]; /* @source 0x801E218E @kind table */
 extern u16 D_801E2190[]; /* @source 0x801E2190 @kind table */
@@ -448,7 +452,10 @@ void func_801D799C(s16 arg0, s16 arg1, u8 arg2, u8 arg3);
 void func_801D934C(u16 arg0, u16 arg1, u16 arg2, u16 arg3);
 void func_801D95C4(u16 arg0, u16 arg1, u16 arg2, u16 arg3, u8 arg4);
 void func_801D9534(s16 arg0, u16 arg1, s16 arg2, s16 arg3, u8 arg4);
-void func_801D7C10(u16 arg0, u16 arg1, u8 arg2);
+void drawLabeledStatusCellsWorld00Area03004_801D7C10(u16 x, u16 y, u8 mask);
+/* Target-local AREA030 status-panel cell drawer at 0x801D7D68: the status-cell
+ * row above draws its three cells through it with the per-cell flag. */
+void func_801D7D68(s16 x, s16 y, u8 flag);
 void func_801D88E0(s16 arg0, s16 arg1);
 /* Target-local drawer of the two stacked AREA030 status boxes at 0x801D8D70:
  * the left status column of func_801D88E0 runs it with (16 - 45 * count, 64)

@@ -58,7 +58,7 @@ void advanceEntrySpriteSlideAndAdvanceStateWorld00Area03004_801D4C84(void) {
     mode = D_1F800044;
     mask = (u8)(1u << mode[6]);
   }
-  func_801D7C10(88, 40, mask);
+  drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
   state = D_1F800044;
   if (state[9] == 4) {
     FIELD_REF(u16, state, 0x3E) = FIELD_REF(u16, state, 0x3C);

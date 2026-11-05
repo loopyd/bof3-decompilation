@@ -30,8 +30,8 @@ segments:
   vram: 2149543588
   subsegments:
   - - 676
-    - asm
-    - func_801F6EA4
+    - c
+    - dispatchWorkByte1HandlerScenarioScena1300_801F6EA4
   - - 744
     - c
     - clearWorkTintArmCountdownAndAdvanceWorkByte1ScenarioScena1300_801F6EE8

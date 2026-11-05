@@ -42,5 +42,5 @@ void drawSelectedEntryPanelsWorld00Area03004_801D4B60(void) {
     mode = D_1F800044;
     mask = (u8)(1u << mode[6]);
   }
-  func_801D7C10(88, 40, mask);
+  drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
 }

@@ -58,8 +58,10 @@ segments:
     - asm
     - func_801F36E8
   - - 2936
-    - asm
-    - func_801F3778
+    - c
+    - drawFadingScreenTrailInXRangeWorld02Area07714_801F3778
+    - '@source: src/bof3/world/drawFadingScreenTrailInXRangeWorld02Area07714_801F3778.c'
+    - '@behavior: walks consecutive 4-byte screen pairs and keeps the pairs whose x lies in the window rect x extent [rect->x, rect->x + rect->w), drawing each kept pair as one shaded point primitive when the previous pair x is not below it and otherwise drawing the shaded line between the two packed pairs; the byte shade starts at 0x40 and drops by 2 per iteration until zero.'
   - - 3224
     - asm
     - func_801F3898

@@ -40,7 +40,7 @@ void func_801D4378(void) {
     count = cursor[9u];
     func_801D9534(20, (u16)((18 - (count << 4)) & 0xFFFEu), 280, 19, 0);
     count = ((u8*)D_1F800044)[9u];
-    func_801D7C10((u16)(88 + count * 45), 40, 0);
+    drawLabeledStatusCellsWorld00Area03004_801D7C10((u16)(88 + count * 45), 40, 0);
   } else {
     func_801D9534(20, 18, 280, 19, 0);
     mask = 0u;
@@ -48,7 +48,7 @@ void func_801D4378(void) {
       maskCursor = (u8*)D_1F800044;
       mask = (u8)(1u << maskCursor[6u]);
     }
-    func_801D7C10(88, 40, mask);
+    drawLabeledStatusCellsWorld00Area03004_801D7C10(88, 40, mask);
   }
 
   count = ((u8*)D_1F800044)[9u];

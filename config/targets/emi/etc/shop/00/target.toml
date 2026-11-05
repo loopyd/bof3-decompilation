@@ -111,6 +111,7 @@ sources = [
     "src/bof3/ui/func_801D408C_shop00.c",
     "src/bof3/ui/func_801D43A4.c",
     "src/bof3/ui/tickPhaseTimerThenAdvanceUiSubstep.c",
+    "src/bof3/ui/emitPanelStripThenRebuildShopStateOnClearGate.c",
     "src/bof3/ui/tickPhaseTimerThenAdvanceUiPhase.c",
     "src/bof3/ui/func_801D4970.c",
     "src/bof3/ui/func_801DB938_shop00.c",

@@ -198,8 +198,10 @@ segments:
     - '@source: src/bof3/scenario/findFreeWorkRecordScenarioScena0800_801F8B14.c'
     - '@behavior: Work-record claim scan: walks the 0x8 entries of the 0x1C-byte-stride record table at 0x800E4800 with an unsigned byte counter and returns the address of the first entry whose lead byte reads zero, or zero when all 0x8 entries are claimed; reads only each entry lead byte, makes no call and has no frame.'
   - - 8016
-    - asm
-    - func_801F8B50
+    - c
+    - seedClaimedWorkRecordFromWorkObjectScenarioScena0800_801F8B50
+    - '@source: src/bof3/scenario/seedClaimedWorkRecordFromWorkObjectScenarioScena0800_801F8B50.c'
+    - '@behavior: Seeds the work record it receives in $a0: stores 1 in its claim byte 0, 0 in its state byte 1, 8 in its countdown byte 2, 0 in its byte 3, 0x40 in its re-arm byte 4 and clears its word 0x08, then copies the scratch work object at pointer slot 0x1F800044 into the record''s position triple - word 0x0C from work word 0x34, word 0x10 from work word 0x38 and word 0x14 from work word 0x3C - with ((rand() & 0xFF) << 11) - 0x40000 added to the two scattered words, re-reading the work pointer after each rand() call.'
   - - 8184
     - asm
     - func_801F8BF8

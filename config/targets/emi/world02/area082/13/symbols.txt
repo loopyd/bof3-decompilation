@@ -10,6 +10,7 @@ dispatchStateByte2Table576cWorld02Area08213_801F3B5C = 0x801F3B5C;
 dispatchStateByte2Table57d0World02Area08213_801F49D4 = 0x801F49D4;
 initializeWorkFieldsWorld02Area08213_801F4A18 = 0x801F4A18;
 applyPaletteScaleSet8014933AIncrementWorkByte2World02Area08213_801F4AFC = 0x801F4AFC;
+fillScreenGradientAdvanceWorkByte2AtScenarioProgress29World02Area08213_801F4C34 = 0x801F4C34;
 func_801F51BC = 0x801F51BC;
 func_801F527C = 0x801F527C;
 func_801F52D8 = 0x801F52D8;

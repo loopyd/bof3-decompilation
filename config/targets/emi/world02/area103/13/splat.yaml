@@ -163,8 +163,10 @@ segments:
     - asm
     - func_801F5738
   - - 11128
-    - asm
-    - func_801F5778
+    - c
+    - advanceScenarioProgressWhenWorkByte79ClearWorld02Area10313_801F5778
+    - '@source: src/bof3/world/advanceScenarioProgressWhenWorkByte79ClearWorld02Area10313_801F5778.c'
+    - '@behavior: reads byte 0x79 of the work record published through the pointer cell at 0x80146250 and, while that byte is zero, advances the low byte of the shared scenario-progress cell at 0x80146864 by one through a single computed cell address.'
   - - 11188
     - c
     - addSignedTableStepToWord80149318World02Area10313_801F57B4
