@@ -18,6 +18,19 @@ subagent({
 })
 ```
 
+Raise the open-tool notice threshold on every batch: pass
+`options: { control: { activeNoticeAfterMs: 3600000 } }`. The default is four
+minutes, and a target gate routinely runs longer, so each lane fires
+`needs_attention` control events while it is working normally. Every such event
+starts a parent turn, and under a goal an undecided turn pauses the campaign.
+With the threshold above the longest gate, only a real failure or a supervisor
+request wakes the parent.
+
+End every parent turn with a goal disposition, never prose alone. A saved `wait`
+does not survive into a new turn: replying without `update_goal` leaves no
+disposition and the goal pauses on the next checkpoint. After re-gating or
+committing, save the next `wait` (or `ready`) in the same turn.
+
 Pass `ledger` on a lane to hand it the closed shapes from earlier runs: an array of
 `{shape, measured}` entries the parent assembles from the target's earlier reports.
 Rows whose measurement is the same emitted class - same instruction and byte counts, same
