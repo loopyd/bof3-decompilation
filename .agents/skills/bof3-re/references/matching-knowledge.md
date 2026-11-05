@@ -164,7 +164,10 @@ Volatile store cannot move into jump delay slot. Narrow volatile pointee may cau
 `lbu` plus manual sign extension versus original `lb`. Remove unjustified qualifier
 only with semantic evidence; reviewed plain view may restore shape. Volatile pointer
 cell forces reload without qualifying pointee; use API reference. Never add volatility
-as arbitrary scheduler control. Original-proven ordering remains explicit evidence.
+as arbitrary scheduler control. The shared scratchpad work cell is the one place this is
+already decided: five byte-exact sources declare it `u8* volatile`, so when the original
+keeps consecutive handoff stores that no call separates, declare that cell volatile rather
+than inventing a barrier. Cite the siblings when you do, and leave any other cell alone. Original-proven ordering remains explicit evidence.
 
 Unaligned fields/padding/SDK stack types follow type-application reference. For
 pooled member addresses, compare direct access through the existing member with
