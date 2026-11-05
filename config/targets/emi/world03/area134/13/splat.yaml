@@ -60,8 +60,10 @@ segments:
     - '@source: src/bof3/world/advanceWorkWordAndSetScratchStateToMode7World03Area13413_801F2F3C.c'
     - '@behavior: Overlay work-record handoff: saves the scratchpad pointer cell 0x1F800044, publishes the record at 0x80146888 in its place, ramps the record word at offset 0x34 by 0x4000 four times with an unsigned-byte counter in a bottom-tested loop, then arms the saved record state byte at offset 0x01 with 7 and republishes the saved record; the same 0x54-byte shape as the exact sibling advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68 apart from that immediate.'
   - - 912
-    - asm
-    - func_801F2F90
+    - c
+    - selectScratchState8Or13ByWorkWordWorld03Area13413_801F2F90
+    - '@source: src/bof3/world/selectScratchState8Or13ByWorkWordWorld03Area13413_801F2F90.c'
+    - '@behavior: Compares signed work words at 0x801468BC and 0x80145EC4, publishes 0x80145E90 at 0x80146250, preserves the scratchpad work-pointer handoffs and selects saved state 8 or state 13 with byte 9 cleared.'
   - - 1040
     - asm
     - func_801F3010

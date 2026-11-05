@@ -221,8 +221,10 @@ segments:
     - asm
     - func_801F1294
   - - 10044
-    - asm
-    - func_801F133C
+    - c
+    - seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic00800_801F133C
+    - '@source: src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic00800_801F133C.c'
+    - '@behavior: Calls helper 0x800AFF98, stores its returned byte in work byte 9, reloads the scratchpad work pointer and increments work byte 2.'
   - - 10116
     - asm
     - func_801F1384

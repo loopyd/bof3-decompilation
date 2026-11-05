@@ -158,8 +158,8 @@ segments:
     - asm
     - func_801F4B4C
   - - 9080
-    - asm
-    - func_801F4F78
+    - c
+    - classifyDirectionToPointWorld03Area12114_801F4F78
   - - 9256
     - asm
     - func_801F5028

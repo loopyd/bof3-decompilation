@@ -1,4 +1,5 @@
 g_battle_work = 0x1F800044;
+func_800AFF98 = 0x800AFF98;
 func_801E5988 = 0x801E5988;
 dispatchWorkByte1HandlerBmagicMagic00800_801EECF0 = 0x801EECF0;
 func_801EED5C = 0x801EED5C;
@@ -53,7 +54,7 @@ func_801F117C = 0x801F117C;
 subtractWorkColorTripletBy3ThenAdvanceWorkByte2WhenChannelIs80BmagicMagic00800_801F11C4 = 0x801F11C4;
 invokeHelperBmagicMagic00800_801F1274 = 0x801F1274;
 func_801F1294 = 0x801F1294;
-func_801F133C = 0x801F133C;
+seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic00800_801F133C = 0x801F133C;
 func_801F1384 = 0x801F1384;
 func_801F1400 = 0x801F1400;
 func_801F1474 = 0x801F1474;

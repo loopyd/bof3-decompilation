@@ -195,8 +195,8 @@ segments:
     - c
     - clearSharedBytes6566AndRequestPrimaryState0BSubstate7ScenarioScena0200_801FD0CC
   - - 25876
-    - asm
-    - func_801FD114
+    - c
+    - clearSharedBytes6566AndRequestPrimaryState0BSubstate2ScenarioScena0200_801FD114
   - - 25948
     - c
     - noopHandlerScenarioScena0200_801FD15C

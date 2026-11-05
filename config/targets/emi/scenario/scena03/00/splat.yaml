@@ -86,8 +86,10 @@ segments:
     - '@source: src/bof3/scenario/tickCountdownReload128AndAdvanceWorkByte1ScenarioScena0300_801F7C50.c'
     - '@behavior: Calls two local helpers with work plus 0x0C, decrements work byte 9, and reloads 128 and advances work byte 1 at zero.'
   - - 4320
-    - asm
-    - func_801F7CE0
+    - c
+    - tickCountdownSubtract8And64FromWorkHalfwordsAndAdvanceWorkByte1ScenarioScena0300_801F7CE0
+    - '@source: src/bof3/scenario/tickCountdownSubtract8And64FromWorkHalfwordsAndAdvanceWorkByte1ScenarioScena0300_801F7CE0.c'
+    - '@behavior: Calls two local helpers, subtracts 8 and 64 from captured work halfwords 0x5A and 0x5C, and ticks byte 9; at zero advances work byte 1.'
   - - 4480
     - asm
     - func_801F7D80

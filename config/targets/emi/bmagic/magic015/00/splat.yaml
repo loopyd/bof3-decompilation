@@ -45,8 +45,8 @@ segments:
     - asm
     - func_801EF200
   - - 1608
-    - asm
-    - func_801EF248
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic01500_801EF248
   - - 1716
     - asm
     - func_801EF2B4

@@ -264,8 +264,8 @@ segments:
     - c
     - advanceEntryPanelSlideAndSelectStateWorld00Area03004_801D5574
   - - 19188
-    - asm
-    - func_801D56F4
+    - c
+    - dispatchStateByte2OrClearWorkFlagsWorld00Area03004_801D56F4
   - - 19308
     - c
     - dispatchStateByte3Table1fd4World00Area03004_801D576C

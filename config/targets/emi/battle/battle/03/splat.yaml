@@ -1326,8 +1326,10 @@ segments:
     - '@source: src/bof3/battle/func_801E6AA0.c'
     - '@behavior: Copies the three 0x801D0F38 completion handlers to the stack and runs the one selected by byte +0x01 of the scratch object published at 0x1F800044, then calls func_8014D4E0 when that object''s byte +0x00 has bit 0 set.'
   - - 89896
-    - asm
-    - func_801E6B28
+    - c
+    - initEntry18WorkAndRequestByKindMask
+    - '@source: src/bof3/battle/initEntry18WorkAndRequestByKindMask.c'
+    - '@behavior: Loads entry 0x18, initializes scratch bytes +0x24 and +0x2A, requests 0 or 2 according to kind mask 0x200, and advances byte +1.'
   - - 90056
     - c
     - advanceByte1WhenReady

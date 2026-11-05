@@ -8,6 +8,7 @@ splat = "config/targets/emi/battle/battle/03/splat.yaml"
 load_address = 0x801d0c00
 
 sources = [
+    "src/bof3/battle/initEntry18WorkAndRequestByKindMask.c",
     "src/bof3/battle/selectLocalCleanupSubstate.c",
     "src/bof3/battle/initEnemyCueCountdownWhenLoaderReady.c",
     "src/bof3/battle/collectRandomEnemyEntries_battle03_801E531C.c",

@@ -792,8 +792,10 @@ segments:
     - asm
     - func_800A21D0
   - - 47820
-    - asm
-    - func_800A22CC
+    - c
+    - runSelectionPassSetSelectedFlag4000ClearByteThenCallA9BD8
+    - '@source: src/bof3/battle/runSelectionPassSetSelectedFlag4000ClearByteThenCallA9BD8.c'
+    - '@behavior: Runs selection pass func_800A3F28, sets selected flag 0x4000, reloads the selection to clear the byte at word +0x0E, then calls func_800A9BD8 with D_80146394.'
   - - 48076
     - c
     - func_800A23CC
