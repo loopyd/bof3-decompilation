@@ -31,6 +31,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Saved copy moves to entry or commutative operands stay swapped | Trace [CSE lifetimes and commutative targets](#cse-lifetimes-and-commutative-targets) |
 | Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler |
 | `lh` plus `lhu` replaces `lh` plus register copy | Trace [narrow load sharing](#narrow-load-sharing-and-real-value-reuse), known bits and later definitions |
+| Byte-cell load hoisted above the record's word stores, extra live registers | Split the record view by access width: [record views](#scratchpad-cells-and-record-views) |
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots), then name repeated scale products (#named-scale-products) |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
 | Boolean result misses the return register; extra return copy | Trace [boolean return expansion](#boolean-return-expansion) before allocation |
@@ -280,8 +281,17 @@ re-materialised into one register between stores shows where its statement start
 
 Give a work record a word-typed view before chasing pointer roles. A typed pointer over
 the same storage fixes which value the pointer holds and where the second cell load
-lands. A byte view leaves both ambiguous, so the gap shows up as a displaced load rather
+lands; a byte view leaves both ambiguous, so the gap shows up as a displaced load rather
 than a wrong one. Check the original access order before widening the view.
+
+Split record views by access width, not only by type. When word-pair updates match but a
+byte cell's load is hoisted above them, keep the word pairs on one word-typed pointer
+and reach that byte through a `u8*` derived from it:
+`words[13] += words[3]; ((u8 *)words)[9]++; words[14] += words[4];`. Correct store
+order alone still hoisted the byte load and kept extra live registers; the split view
+closed it, so this drift needs the wider representation change rather than another
+reorder. The same accesses read through signed words emit identical bytes, so
+signedness is not that lever.
 
 ### Signed table index feeding a scaled offset
 
