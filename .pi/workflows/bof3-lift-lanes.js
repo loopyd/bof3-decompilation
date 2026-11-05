@@ -651,8 +651,23 @@ const finishAttempt = (lane, attempt) => {
 // Naming runs on an exact lift. The lift is already at 100%, so a naming edit that
 // regresses the gate must be restored by the namer; the lane stays complete either way
 // and the verdict records whether an identity was applied.
+// A model sometimes answers with a JS object literal (unquoted keys) instead of JSON.
+// That is a formatting slip, not a failed naming transaction, so recover the three
+// fields that decide the verdict rather than downgrading an exact lift.
+const looseNaming = (text) => {
+  const naming = /"?naming"?\s*:\s*"?(applied|no-change|blocked)"?/.exec(text);
+  if (!naming) return null;
+  const gate = /gate"?\s*:\s*\{[^}]*verdict"?\s*:\s*"?(PASS|FAIL)/.exec(text);
+  const restored = /"?restored"?\s*:\s*(true|false)/.exec(text);
+  return {
+    naming: naming[1],
+    gate: gate ? { verdict: gate[1] } : undefined,
+    restored: restored ? restored[1] === "true" : false,
+  };
+};
+
 const namingVerdict = (text) => {
-  const report = parseReport(text);
+  const report = parseReport(text) || looseNaming(text);
   if (!report) return "invalid";
   const naming = String(report.naming || "").trim();
   if (!["applied", "no-change", "blocked"].includes(naming)) return "invalid";

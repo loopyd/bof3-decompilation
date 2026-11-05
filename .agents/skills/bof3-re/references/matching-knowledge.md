@@ -123,8 +123,9 @@ differs. Diagnose before changing statement order; keep compiler/flags fixed.
    and invariant insertion, then `.sched`/`.sched2`. An index loop can acquire
    pointer setup after another initializer; scheduling may preserve that order.
    Keep every dump out of the repository: `cc1 -da`/`-dR` writes `<basename>.*`
-   into the current directory, so pass `-dumpbase` with a `/tmp` path or move the
-   files before any commit. Two lanes have already left dumps at the repo root.
+   into the compiler's working directory. `-dumpbase` takes a bare base name, so a
+   `/tmp/...` path there does not move the files — run the compile from `/tmp`, or
+   move the dumps immediately. Four lanes have leaked dumps to the repo root this way.
 2. Test an explicit cursor and endpoint. Use `do` only when original control
    flow and the complete input domain prove at least one iteration. Prove
    start, stride, count, final cursor and parallel indices, including exit and
