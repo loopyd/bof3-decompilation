@@ -311,17 +311,17 @@ segments:
   - - 15864
     - c
     - retreatPanelXToNeg170
-    - '@source: src/bof3/ui/panelMotionGame00.c'
+    - '@source: src/bof3/ui/panelTasksGame00.c'
     - '@behavior: retreats panel x with the template clamp behavior.'
   - - 15928
     - c
     - advancePanelXTo80
-    - '@source: src/bof3/ui/advancePanelXTo80.c'
+    - '@source: src/bof3/ui/panelTasksGame00.c'
     - '@behavior: advances the panel x coordinate by 32 and stops at 80.'
   - - 15992
     - c
     - applyPanelPosition
-    - '@source: src/bof3/ui/applyPanelPosition_game00_80199678.c'
+    - '@source: src/bof3/ui/panelTasksGame00.c'
   - - 16040
     - c
     - func_801996A8
@@ -330,24 +330,24 @@ segments:
   - - 16124
     - c
     - advancePanelXTo320
-    - '@source: src/bof3/ui/advancePanelXTo320_game00_801996FC.c'
+    - '@source: src/bof3/ui/panelTasksGame00.c'
     - '@behavior: Adds 32 to 16-bit panel x; signed results above 320 clamp to 320 and clear state.'
   - - 16188
     - c
     - retreatPanelXTo152
-    - '@source: src/bof3/ui/retreatPanelXTo152.c'
+    - '@source: src/bof3/ui/panelTasksGame00.c'
   - - 16252
     - asm
     - func_8019977C
   - - 16364
     - c
     - retreatPanelXToNeg170B
-    - '@source: src/bof3/ui/retreatPanelXToNeg170B.c'
+    - '@source: src/bof3/ui/panelTasksGame00.c'
     - '@behavior: retreats panel x with the template clamp behavior.'
   - - 16428
     - c
     - advancePanelXTo17
-    - '@source: src/bof3/ui/advancePanelXTo17_game00_8019982C.c'
+    - '@source: src/bof3/ui/panelTasksGame00.c'
     - '@behavior: Adds 32 to 16-bit panel x; signed results above 17 clamp to 17 and clear state.'
   - - 16492
     - asm
@@ -355,17 +355,17 @@ segments:
   - - 16696
     - c
     - retreatPanelField6ToNeg20
-    - '@source: src/bof3/ui/panelMotionGame00.c'
+    - '@source: src/bof3/ui/panelTasksGame00.c'
     - '@behavior: retreats panel field six by 16 and clamps it to -20.'
   - - 16760
     - c
     - advancePanelField6To16
-    - '@source: src/bof3/ui/panelMotionGame00.c'
+    - '@source: src/bof3/ui/panelTasksGame00.c'
     - '@behavior: advances the panel task field_06 by 0x10, clamps to max 0x10, and clears state when the clamp is reached.'
   - - 16824
     - c
     - advancePanelField6To40
-    - '@source: src/bof3/ui/advancePanelField6To40_game00_801999B8.c'
+    - '@source: src/bof3/ui/panelTasksGame00.c'
     - '@behavior: advances the panel task field_06 by 0x10, clamps to max 0x28, and clears state when the clamp is reached.'
   - - 16888
     - asm

@@ -1707,6 +1707,7 @@ segments:
   - - 112852
     - c
     - applyPanelPosition
+    - '@source: src/bof3/battle/panelTasksBattle15.c'
   - - 112900
     - c
     - dispatchPanelStateTable6e20
@@ -1728,7 +1729,7 @@ segments:
   - - 113176
     - c
     - advancePanelXTo320
-    - '@source: src/bof3/battle/advancePanelXTo320.c'
+    - '@source: src/bof3/battle/panelTasksBattle15.c'
   - - 113240
     - c
     - dispatchPanelStateTable6e34
@@ -1737,7 +1738,7 @@ segments:
   - - 113324
     - c
     - advancePanelXTo320B
-    - '@source: src/bof3/battle/advancePanelXTo320B.c'
+    - '@source: src/bof3/battle/panelTasksBattle15.c'
   - - 113388
     - c
     - panelMoveLeftClamp53
@@ -1751,11 +1752,11 @@ segments:
   - - 113592
     - c
     - retreatPanelXToNeg170
-    - '@source: src/bof3/battle/retreatPanelXToNeg170.c'
+    - '@source: src/bof3/battle/panelTasksBattle15.c'
   - - 113656
     - c
     - advancePanelXTo17
-    - '@source: src/bof3/battle/advancePanelXTo17.c'
+    - '@source: src/bof3/battle/panelTasksBattle15.c'
   - - 113720
     - c
     - panelStepRightClamp62
@@ -1770,10 +1771,11 @@ segments:
   - - 113932
     - c
     - advancePanelXTo320C
-    - '@source: src/bof3/battle/advancePanelXTo320C.c'
+    - '@source: src/bof3/battle/panelTasksBattle15.c'
   - - 113996
     - c
     - retreatPanelXTo152
+    - '@source: src/bof3/battle/panelTasksBattle15.c'
   - - 114060
     - c
     - func_800B258C

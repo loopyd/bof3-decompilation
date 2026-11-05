@@ -654,11 +654,11 @@ segments:
   - - 73032
     - c
     - retreatPanelField6ToNeg20
-    - '@source: src/bof3/ui/retreatPanelField6ToNeg20.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 73096
     - c
     - advancePanelField6To16
-    - '@source: src/bof3/ui/advancePanelField6To16.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 73160
     - c
     - func_801E29C8
@@ -667,11 +667,11 @@ segments:
   - - 73264
     - c
     - retreatPanelField6ToNeg20B
-    - '@source: src/bof3/ui/retreatPanelField6ToNeg20B.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 73328
     - c
     - advancePanelField6To38
-    - '@source: src/bof3/ui/advancePanelField6To38.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 73392
     - c
     - func_801E2AB0
@@ -680,15 +680,15 @@ segments:
   - - 73492
     - c
     - retreatPanelField6ToNeg20C
-    - '@source: src/bof3/ui/retreatPanelField6ToNeg20C.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 73556
     - c
     - advancePanelField6To38B
-    - '@source: src/bof3/ui/advancePanelField6To38B.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 73620
     - c
     - applyPanelPosition
-    - '@source: src/bof3/ui/applyPanelPosition.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 73668
     - c
     - func_801E2BC4
@@ -702,15 +702,15 @@ segments:
   - - 73884
     - c
     - retreatPanelXToNeg150
-    - '@source: src/bof3/ui/retreatPanelXToNeg150.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 73948
     - c
     - advancePanelXTo17
-    - '@source: src/bof3/ui/advancePanelXTo17.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 74012
     - c
     - retreatPanelField6To62
-    - '@source: src/bof3/ui/retreatPanelField6To62.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 74076
     - c
     - func_801E2D5C
@@ -723,11 +723,11 @@ segments:
   - - 74288
     - c
     - retreatPanelXToNeg150B
-    - '@source: src/bof3/ui/retreatPanelXToNeg150B.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 74352
     - c
     - advancePanelXTo15
-    - '@source: src/bof3/ui/advancePanelXTo15.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 74416
     - c
     - func_801E2EB0
@@ -739,15 +739,15 @@ segments:
   - - 75204
     - c
     - advancePanelXTo320
-    - '@source: src/bof3/ui/advancePanelXTo320.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 75268
     - c
     - retreatPanelXTo132
-    - '@source: src/bof3/ui/retreatPanelXTo132.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 75332
     - c
     - retreatPanelXTo70
-    - '@source: src/bof3/ui/retreatPanelXTo70.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 75396
     - asm
     - func_801E3284
@@ -764,11 +764,11 @@ segments:
   - - 76660
     - c
     - advancePanelXTo320B
-    - '@source: src/bof3/ui/advancePanelXTo320B.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 76724
     - c
     - retreatPanelXTo75
-    - '@source: src/bof3/ui/retreatPanelXTo75.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 76788
     - asm
     - func_801E37F4
@@ -785,19 +785,19 @@ segments:
   - - 77816
     - c
     - advancePanelXTo320C
-    - '@source: src/bof3/ui/advancePanelXTo320C.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 77880
     - c
     - retreatPanelXTo150
-    - '@source: src/bof3/ui/retreatPanelXTo150.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 77944
     - c
     - advancePanelXTo40
-    - '@source: src/bof3/ui/advancePanelXTo40.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 78008
     - c
     - retreatPanelXToNeg170
-    - '@source: src/bof3/ui/retreatPanelXToNeg170.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 78072
     - c
     - func_801E3CF8
@@ -806,19 +806,19 @@ segments:
   - - 78156
     - c
     - advancePanelXTo320D
-    - '@source: src/bof3/ui/advancePanelXTo320D.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 78220
     - c
     - retreatPanelXTo150B
-    - '@source: src/bof3/ui/retreatPanelXTo150B.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 78284
     - c
     - retreatPanelXTo17
-    - '@source: src/bof3/ui/retreatPanelXTo17.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 78348
     - c
     - advancePanelXTo150
-    - '@source: src/bof3/ui/advancePanelXTo150.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 78412
     - c
     - func_801E3E4C
@@ -827,11 +827,11 @@ segments:
   - - 78516
     - c
     - retreatPanelXToNeg150C
-    - '@source: src/bof3/ui/retreatPanelXToNeg150C.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 78580
     - c
     - advancePanelXTo17B
-    - '@source: src/bof3/ui/advancePanelXTo17B.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 78644
     - c
     - func_801E3F34
@@ -848,15 +848,15 @@ segments:
   - - 79480
     - c
     - retreatPanelXToNeg120
-    - '@source: src/bof3/ui/retreatPanelXToNeg120.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 79544
     - c
     - advancePanelXTo100
-    - '@source: src/bof3/ui/advancePanelXTo100.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 79608
     - c
     - retreatPanelXTo17B
-    - '@source: src/bof3/ui/retreatPanelXTo17B.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 79672
     - c
     - func_801E4338
@@ -865,11 +865,11 @@ segments:
   - - 79756
     - c
     - advancePanelXTo320E
-    - '@source: src/bof3/ui/advancePanelXTo320E.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 79820
     - c
     - retreatPanelXTo140
-    - '@source: src/bof3/ui/retreatPanelXTo140.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 79884
     - c
     - func_801E440C
@@ -878,11 +878,11 @@ segments:
   - - 79968
     - c
     - advancePanelField6To240
-    - '@source: src/bof3/ui/advancePanelField6To240.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 80032
     - c
     - retreatPanelField6To128
-    - '@source: src/bof3/ui/retreatPanelField6To128.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 80096
     - c
     - func_801E44E0
@@ -891,11 +891,11 @@ segments:
   - - 80192
     - c
     - advancePanelXTo320F
-    - '@source: src/bof3/ui/advancePanelXTo320F.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 80256
     - c
     - retreatPanelXTo210
-    - '@source: src/bof3/ui/retreatPanelXTo210.c'
+    - '@source: src/bof3/ui/panelTasksShop00.c'
   - - 80320
     - asm
     - func_801E45C0

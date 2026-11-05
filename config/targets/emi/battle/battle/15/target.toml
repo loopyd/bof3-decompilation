@@ -9,6 +9,7 @@ load_address = 0x80096800
 
 sources = [
     "src/bof3/battle/panelStepLeftClamp11.c",
+    "src/bof3/battle/panelTasksBattle15.c",
     "src/bof3/battle/runSelectionPassSetSelectedFlag4000ClearByteThenCallA9BD8.c",
     "src/bof3/battle/runSelectionPassSetSelectedFlag1000ThenCallA9BD8.c",
     "src/bof3/battle/runSelectionPassThenSetSelectedRecordFlag10000.c",
@@ -219,15 +220,8 @@ sources = [
     "src/bof3/battle/panelStepRightSettle5B.c",
     "src/bof3/battle/panelStepLeftSettle5B.c",
     "src/bof3/battle/func_800B20CC.c",
-    "src/bof3/battle/applyPanelPosition.c",
     "src/bof3/battle/dispatchPanelStateTable6e20.c",
     "src/bof3/battle/dispatchPanelStateTable6e34.c",
-    "src/bof3/battle/advancePanelXTo320.c",
-    "src/bof3/battle/advancePanelXTo320B.c",
-    "src/bof3/battle/retreatPanelXToNeg170.c",
-    "src/bof3/battle/advancePanelXTo17.c",
-    "src/bof3/battle/advancePanelXTo320C.c",
-    "src/bof3/battle/retreatPanelXTo152.c",
     "src/bof3/battle/func_800B258C.c",
     "src/bof3/battle/func_800B326C.c",
     "src/bof3/battle/initMenuState13.c",
