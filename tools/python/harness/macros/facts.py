@@ -168,7 +168,9 @@ def _classification(
         return "forbidden_matching_aid"
     if name.startswith("INCLUDE_ASM") or name.startswith("INCLUDE_RODATA"):
         return "matching_helper"
-    if Path(source).suffix == ".inc" and parameters is not None and "{" in body_mask:
+    if parameters is not None and "{" in body_mask:
+        # A macro whose body declares a function is a template wherever it lives;
+        # an extension-based rule misses templates that live in a header.
         return "body_emitting_template"
     return "object_like" if parameters is None else "function_like"
 

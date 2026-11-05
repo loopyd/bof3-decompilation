@@ -37,9 +37,10 @@ def test_register_pins_are_forbidden(tmp_path: Path) -> None:
     validate_matching_text('/* REGISTER_PIN */ const char *note = "barrier()";')
     validate_matching_source(ROOT, ROOT / "include/bof3/symbols.h")
     source = tmp_path / "src/lift.c"
-    template = tmp_path / "src/shared/panel.inc"
+    template = tmp_path / "include/panel.inc"
     template.parent.mkdir(parents=True)
-    source.write_text('#include "shared/panel.inc"\n')
+    source.parent.mkdir(parents=True)
+    source.write_text('#include "panel.inc"\n')
     template.write_text('REGISTER_PIN(int, value, "v0");\n')
     with pytest.raises(ValueError, match="forbidden"):
         validate_matching_source(tmp_path, source)

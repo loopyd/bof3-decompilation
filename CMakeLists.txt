@@ -36,10 +36,7 @@ include("${CMAKE_SOURCE_DIR}/config/compiler/graph.cmake")
 file(GLOB_RECURSE BOF3_ASM_SOURCES CONFIGURE_DEPENDS
      "${CMAKE_SOURCE_DIR}/src/*.s" "${CMAKE_SOURCE_DIR}/src/*.S")
 file(GLOB_RECURSE BOF3_SHARED_HEADERS CONFIGURE_DEPENDS
-     "${CMAKE_SOURCE_DIR}/include/*.h" "${CMAKE_SOURCE_DIR}/include/*.inc"
-     "${CMAKE_SOURCE_DIR}/src/shared/*.inc")
-file(GLOB_RECURSE BOF3_SHARED_SOURCES CONFIGURE_DEPENDS
-     "${CMAKE_SOURCE_DIR}/src/shared/*.h" "${CMAKE_SOURCE_DIR}/src/shared/*.inc")
+     "${CMAKE_SOURCE_DIR}/include/*.h" "${CMAKE_SOURCE_DIR}/include/*.inc")
 file(GLOB_RECURSE BOF3_COMPILER_INPUTS CONFIGURE_DEPENDS
      "${CMAKE_SOURCE_DIR}/tools/python/harness/build/*.py"
      "${CMAKE_SOURCE_DIR}/tools/python/harness/domain/*.py"
@@ -283,7 +280,7 @@ foreach(source IN LISTS BOF3_C_SOURCES BOF3_ASM_SOURCES)
       COMMAND ${_cc_command} ${BOF3_CPPFLAGS} ${object_cflags} ${BOF3_CC_ASFLAGS}
               -c "${source}" -o "${object}"
       DEPENDS ${source_headers} ${BOF3_SHARED_HEADERS}
-              ${BOF3_SHARED_SOURCES} ${BOF3_COMPILER_INPUTS})
+              ${BOF3_COMPILER_INPUTS})
   else()
     bof3_add_lift("${lift_target}" "${source}" "${object}" FALSE
       COMMAND "${BOF3_AS}" ${BOF3_ASFLAGS} -o "${object}" "${source}")

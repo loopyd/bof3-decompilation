@@ -80,8 +80,8 @@ keep other objects extern, verify following addresses unchanged.
 
 Hash plus size is lead. Prove each reviewed range/original bytes, match deterministic
 representative, independently port second target with local names/declarations.
-Only two cross-target exact same-shape members justify worthwhile shared
-`src/shared/<domain>/<role>.inc`. Never multiply partial source across a byte group.
+Only two cross-target exact same-shape members justify a shared template
+header such as `include/<domain>/<role>_templates.h`. Never multiply partial source across a byte group.
 Normalize evidenced names before sharing; parameters only for actual differences.
 Each member keeps metadata wrapper, declarations/map/Splat and own native checks.
 No cross-overlay linked extern/wrapper call. Runtime service instead needs single

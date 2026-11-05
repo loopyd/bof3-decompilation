@@ -267,8 +267,8 @@ def test_macro_query_cli_filters_and_decodes_payload(capsys, monkeypatch) -> Non
         )
         connection.execute(
             "INSERT INTO macro_definitions VALUES "
-            "('d', '__shared__', 'EMIT', 'src/shared/x.inc', 1, '[\"name\"]', "
-            "'void name(void) {}', '[]', 'body_emitting_template', 'shared_template', "
+            "('d', '__shared__', 'EMIT', 'include/game/counter_step.h', 1, '[\"name\"]', "
+            "'void name(void) {}', '[]', 'body_emitting_template', 'sanctioned_helper', "
             "'[\"target_local_wrapper_required\"]', 0, 'existing', 'abc', NULL)"
         )
         connection.execute(

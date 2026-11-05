@@ -40,13 +40,6 @@ class MacroInput:
     generated_psyq: bool = False
 
 
-def shared_template_paths(root: Path) -> list[Path]:
-    """Return only explicitly shared source templates."""
-
-    directory = root / "src/shared"
-    return sorted(directory.rglob("*.inc")) if directory.is_dir() else []
-
-
 def macro_inputs(
     root: Path,
     target: str,
@@ -54,7 +47,6 @@ def macro_inputs(
     *,
     source_paths: tuple[Path, ...] | None = None,
     header_paths: tuple[Path, ...] | None = None,
-    template_paths: tuple[Path, ...] | None = None,
     shared_header_paths: tuple[Path, ...] | None = None,
     validate_paths: bool = True,
 ) -> list[MacroInput]:
@@ -92,10 +84,6 @@ def macro_inputs(
     rows.extend(
         MacroInput(path, "__shared__", "sanctioned_helper") for path in shared_headers
     )
-    templates = (
-        shared_template_paths(root) if template_paths is None else template_paths
-    )
-    rows.extend(MacroInput(path, "__shared__", "shared_template") for path in templates)
     unique = {
         (row.owner, row.path): row
         for row in rows
@@ -126,7 +114,6 @@ def macro_input_rows(
     digest_file=file_sha256,
     source_paths: tuple[Path, ...] | None = None,
     header_paths: tuple[Path, ...] | None = None,
-    template_paths: tuple[Path, ...] | None = None,
     validate_paths: bool = True,
     inputs: tuple[MacroInput, ...] | None = None,
 ) -> list[tuple[str, str, str, str]]:
@@ -146,7 +133,6 @@ def macro_input_rows(
                 manifest,
                 source_paths=source_paths,
                 header_paths=header_paths,
-                template_paths=template_paths,
                 validate_paths=validate_paths,
             )
             if inputs is None
@@ -219,7 +205,9 @@ def _insert_template(
             owner,
             source_path,
             name,
-            "body_emitting_inc",
+            "body_emitting_header"
+            if Path(source_path).suffix == ".h"
+            else "body_emitting_inc",
             "target_local_wrapper_required",
             source_sha256,
         ),
@@ -373,5 +361,4 @@ __all__ = [
     "macro_input_digest",
     "macro_input_rows",
     "macro_inputs",
-    "shared_template_paths",
 ]

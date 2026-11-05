@@ -15,7 +15,8 @@ comments for metadata; `//` breaks gcc-2.6.3 objects.
 Migrate affected source/support/header claims, Splat C-boundary `@source`, local
 include edges and compiler flag keys together. Preserve each effective compiler
 and ordered flags. Keep private headers under `include/bof3/<subsystem>/`, public
-headers under `include/`, and shared implementations under `src/shared/<subsystem>/`.
+headers under `include/`, and shared implementation templates under
+`include/<subsystem>/`.
 Preserve justified root headers and generated `psyq_source` ownership. Keep target
 configuration and `source_dir` in place. Regenerate build outputs through their
 owners; never hand-edit `build/` or toolchains to repair a move.

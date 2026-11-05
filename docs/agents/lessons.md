@@ -86,8 +86,8 @@ address, extern, or provenance. "Has authored C" ≠ "has a matching lift":
 percentage ranks effort, never authorizes propagation.
 - Validate a second member independently before sharing code; normalize
 equivalent variables and struct fields before extracting a shared body.
-- Use a semantic `src/shared/<domain>/*.inc` body only after two independently
-matching cross-target members; keep metadata-tagged target-local wrappers so
+- Use a semantic `include/<domain>/*_templates.h` body only after two
+independently matching cross-target members; keep metadata-tagged target-local wrappers so
 each target compiles and validates its own symbol.
 
 ### Argument-register pins as allocator residual

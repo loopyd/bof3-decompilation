@@ -21,7 +21,7 @@ def _manifest(root: Path):
     header = root / "include/private.h"
     source = root / "src/test/wrapper.c"
     psyq = root / "src/test/test_psyq.c"
-    template = root / "src/shared/ui/task.inc"
+    template = root / "include/game/counter_step.h"
     symbols = root / "include/bof3/symbols.h"
     for path in (header, source, psyq, template, symbols):
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -30,7 +30,7 @@ def _manifest(root: Path):
         encoding="utf-8",
     )
     source.write_text(
-        '#include "shared/ui/task.inc"\nEMIT_TASK(run_task, VALUE)\n',
+        '#include "game/counter_step.h"\nEMIT_TASK(run_task, VALUE)\n',
         encoding="utf-8",
     )
     psyq.write_text(
@@ -98,7 +98,7 @@ def test_registry_indexes_claims_templates_and_generated_psyq(tmp_path: Path) ->
         '["else"]',
     ]
     assert any(
-        row[:4] == ("__shared__", "EMIT_TASK", "src/shared/ui/task.inc", 1)
+        row[:4] == ("__shared__", "EMIT_TASK", "include/game/counter_step.h", 1)
         and row[5] == "body_emitting_template"
         for row in definitions
     )
@@ -108,9 +108,9 @@ def test_registry_indexes_claims_templates_and_generated_psyq(tmp_path: Path) ->
     assert templates == [
         (
             "__shared__",
-            "src/shared/ui/task.inc",
+            "include/game/counter_step.h",
             "EMIT_TASK",
-            "body_emitting_inc",
+            "body_emitting_header",
             "target_local_wrapper_required",
         )
     ]

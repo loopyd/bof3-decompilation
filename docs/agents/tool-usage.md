@@ -555,7 +555,7 @@ migration acceptance. [Reference setup](../reference/audio-runtime-setup.md)
 documents BIOS management and SDL3 policy. [Emulator integration](pcsx-redux-agentic.md)
 covers the fork build, embedded missions and skill installation.
 
-The shared panel-task implementation template lives at `src/shared/ui/panel_task.inc`; target-local wrappers compile it and retain symbol/address ownership.
+The shared panel-task implementation templates live at `include/ui/panel_task_templates.h`; target-local wrappers compile them and retain symbol/address ownership.
 
 Every command is one `bin/harness <domain> <action> [subaction]` invocation.
 `bin/harness --help` lists the domains and actions, `bin/harness <domain>

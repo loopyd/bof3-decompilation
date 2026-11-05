@@ -81,7 +81,6 @@ class RepositoryLayout:
     splats: Mapping[str, ReviewedSplatLayout]
     source_paths: Mapping[str, tuple[Path, ...]]
     header_paths: Mapping[str, tuple[Path, ...]]
-    shared_template_paths: tuple[Path, ...]
     files: RepositoryFiles
     type_input_rows: Mapping[str, tuple[tuple[str, str, str], ...]]
     macro_input_rows: Mapping[str, tuple[tuple[str, str, str, str], ...]]
@@ -185,8 +184,6 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         macro_inputs,
     )
 
-    shared = root / "src/shared"
-    templates = tuple(sorted(shared.rglob("*.inc"))) if shared.is_dir() else ()
     paths = {
         root / "include/base/types.h",
         *(
@@ -194,7 +191,6 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
             for relative in SHARED_MACRO_HEADERS
             if (root / relative).is_file()
         ),
-        *templates,
     }
     optional_paths = {root / "config/targets/shared/symbols.txt"}
     fallback_sources: dict[str, tuple[Path, ...]] = {}
@@ -325,7 +321,6 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
                 manifest,
                 source_paths=sources[target],
                 header_paths=headers[target],
-                template_paths=templates,
                 shared_header_paths=tuple(
                     root / relative
                     for relative in SHARED_MACRO_HEADERS
@@ -345,7 +340,6 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
                 digest_file=files.digest,
                 source_paths=sources[target],
                 header_paths=headers[target],
-                template_paths=templates,
                 validate_paths=False,
                 inputs=macro_sources[target],
             )
@@ -364,7 +358,6 @@ def load_repository_layout(root: Path) -> RepositoryLayout:
         MappingProxyType(splats),
         MappingProxyType(sources),
         MappingProxyType(headers),
-        templates,
         files,
         MappingProxyType(type_rows),
         MappingProxyType(macro_rows),

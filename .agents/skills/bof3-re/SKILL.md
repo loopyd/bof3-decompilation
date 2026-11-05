@@ -112,7 +112,7 @@ Record ineligible/declined reasons; new evidence alone reopens eligibility.
 ## Duplicates + handoff
 
 Duplicate hash is lead, not shared ownership. Prove boundaries, representative and
-second target independently before worthwhile shared `src/shared/<domain>/*.inc`.
+second target independently before a shared template header under `include/<domain>/`.
 Keep address wrappers, local maps and boundaries.
 
 One `bin/harness lift gate --target TARGET SELECTOR [SELECTOR ...]` measures each

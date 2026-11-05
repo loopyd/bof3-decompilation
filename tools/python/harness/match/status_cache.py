@@ -49,7 +49,6 @@ def _paths(root: Path, manifest: TargetManifest) -> Iterable[Path]:
     for directory in (
         root / "config" / "compiler",
         root / "include",
-        root / "src" / "shared",
         root / manifest.source_dir,
     ):
         if directory.is_dir():

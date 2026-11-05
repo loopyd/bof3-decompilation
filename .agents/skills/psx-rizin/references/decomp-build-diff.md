@@ -41,9 +41,9 @@ Before tuning C:
 | `config/targets/` | per-target identity, layout, symbols, image, load address |
 | `include/memory/` | generic PS1 memory/accessor headers |
 | `include/bof3/` | shared + target-private declarations |
+| `include/<domain>/` | shared implementation templates |
 | `src/bof3/<domain>/` | metadata-owned executable + EMI lifts |
 | `src/bof3/support/` | target-qualified support + generated bindings |
-| `src/shared/<domain>/` | cross-target embedded templates |
 | `build/` | generated objects/binaries |
 | `out/` | disposable snapshots, index, matching workspaces |
 

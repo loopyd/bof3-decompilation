@@ -78,7 +78,7 @@ duplicates). Constants as template parameters only when members genuinely
 differ; exact members normally share the same readable constants.
 
 After two cross-target members independently match, a worthwhile common body
-may live in `src/shared/<domain>/<role>.inc`. Each member keeps a small
+may live in a template header such as `include/<domain>/<role>_templates.h`. Each member keeps a small
 metadata-tagged target-local wrapper defining the compiled function macro and
 explicit parameters before including the template; the wrapper filename may be
 semantic. No wrapper call or linked extern function: either can change
@@ -95,8 +95,8 @@ body at compile time only when that reduces maintenance.
 EMI callsite evidence to that address. Keep its C under the narrowest semantic
 `src/bof3/<class>/` path, ownership carried by explicit manifest claims and
 target metadata; promote only its stable contract to `include/bof3/core.h`.
-- `src/shared/` owns embedded implementation templates, never standalone
-runtime objects; no generic `src/engine/` ownership until a real link target
+- Template headers own embedded implementations, never standalone runtime
+objects; no generic `src/engine/` ownership until a real link target
 exists.
 
 ## Candidate validation
