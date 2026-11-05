@@ -299,6 +299,7 @@ setState8WhenReady = 0x801E1D88;
 func_801E1DD4 = 0x801E1DD4;
 dispatchDefaultClassTable = 0x801E1E7C;
 copySelectedWorkToQueuedSlot = 0x801E1EC0;
+submitRolledEffectAndAdvance = 0x801E2024;
 raiseFlag4AndUpdate = 0x801E2120;
 func_801E2170 = 0x801E2170;
 func_801E2284 = 0x801E2284;

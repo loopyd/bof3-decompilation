@@ -1,6 +1,7 @@
 func_801E5988 = 0x801E5988;
 workByte1HandlerTableBmagicMagic01500 = 0x801EEC04;
 workByte1HandlerTableBmagicMagic01500_801EEC14 = 0x801EEC14;
+workByte1HandlerTableBmagicMagic01500_801EEC24 = 0x801EEC24;
 dispatchWorkByte1HandlerBmagicMagic01500_801EECA0 = 0x801EECA0;
 func_801EED0C = 0x801EED0C;
 func_801EF150 = 0x801EF150;
@@ -10,7 +11,7 @@ dispatchWorkByte1HandlerBmagicMagic01500_801EF248 = 0x801EF248;
 func_801EF2B4 = 0x801EF2B4;
 func_801EF594 = 0x801EF594;
 func_801EF610 = 0x801EF610;
-func_801EF644 = 0x801EF644;
+dispatchWorkByte1HandlerBmagicMagic01500_801EF644 = 0x801EF644;
 func_801EF6B0 = 0x801EF6B0;
 func_801EF93C = 0x801EF93C;
 func_801EF9B0 = 0x801EF9B0;

@@ -267,8 +267,10 @@ segments:
     - asm
     - func_801F9C00
   - - 12376
-    - asm
-    - func_801F9C58
+    - c
+    - updateWorkWordsAndClearFlagsAtF0000ScenarioScena0800_801F9C58
+    - '@source: src/bof3/scenario/updateWorkWordsAndClearFlagsAtF0000ScenarioScena0800_801F9C58.c'
+    - '@behavior: Per-frame handler for work byte 1 == 9 (entry 9 of the 0x801FE908 handler sub-table, entry 38 of the 0x801FE894 run): add 0x10000 to work word 0x38, add word 0x14 into word 0x3C, subtract 0x200000 from word 0x14, call the overlay effect helper at 0x801F9F8C with work address 0x34/0x20/8/0, then reload the scratchpad work pointer and call the shared work-flag reset helper at 0x80196070 when word 0x34 reads 0xF0000.'
   - - 12512
     - c
     - seedWorkWordsAdvanceStateAndQueueCue20AScenarioScena0800_801F9CE0

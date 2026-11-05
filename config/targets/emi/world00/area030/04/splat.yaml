@@ -284,8 +284,10 @@ segments:
     - asm
     - func_801D5958
   - - 20040
-    - asm
+    - c
     - func_801D5A48
+    - '@source: src/bof3/world/func_801D5A48_area03004.c'
+    - '@behavior: AREA030 panel-step initializer (handler index 2 of the work-byte-3 table at 0x801E1FD4): requests resource 0x21 through the shared func_8014DD3C helper, writes 0x80 to work-record byte 0x24, writes 1 to bytes 0x29 and 0x2A, clears byte 0x48, stores the halfwords 0xA2 at 0x2E and 0xC2 at 0x30, clears bytes 0x5D..0x5F, 9, 0xA and 6 twice, clears the word at 0xC, stores 4 at the word 0x18, requests resource 0 through the shared func_8014D6B8 helper and finally increments dispatch byte 3 of the record published at the scratchpad cursor 0x1F800044.'
   - - 20296
     - c
     - func_801D5B48

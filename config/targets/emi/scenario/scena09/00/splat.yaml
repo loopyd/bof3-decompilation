@@ -49,8 +49,10 @@ segments:
     - c
     - clearSelectedRecordBankLeadBytesScenarioScena0900_801F7574
   - - 2492
-    - asm
-    - func_801F75BC
+    - c
+    - advanceAndRenderActiveRecordsInSelectedBankScenarioScena0900_801F75BC
+    - '@source: src/bof3/scenario/advanceAndRenderActiveRecordsInSelectedBankScenarioScena0900_801F75BC.c'
+    - '@behavior: Per-frame effect-bank sweep of this overlay, reached from the work-byte-1 handler resetWorkStateWhenNoRecordActiveScenarioScena0900_801F73F0 (0x801F73F0). It first runs the shared projection setup func_801AFE18 (0x801AFE18) on a 0x20-byte stack scratch area, then walks the 0x20 records of 0x28-byte stride in the 0x800E5000 effect bank selected by scratchpad work byte 6 with bank stride 0x500: for each record whose lead byte at offset 0 is non-zero it adds the velocity words at 0x08, 0x0C and 0x10 to the position words at 0x18, 0x1C and 0x20, subtracts 0x40000 from the 0x10 velocity, decrements the fade byte at 0x03 by 4, reseeds the pattern byte at 0x04 from rand() masked to 7, decrements the countdown byte at 0x02 and clears the lead byte when that countdown reaches zero, then calls the record emitter func_801F7424 (0x801F7424) with the record. It takes no arguments, returns 1 once at least one active record was handled and 0 otherwise, and its 0x40-byte frame holds that 0x20-byte scratch area plus the saved registers of the sweep. Its only in-image jal is the call site at 0x801F73F8 inside resetWorkStateWhenNoRecordActiveScenarioScena0900_801F73F0 (0x801F73F0), and no image data word addresses it, so the overlay reaches it through that work-byte-1 handler, whose already-lifted source records the same record-bank shape.'
   - - 2768
     - asm
     - func_801F76D0

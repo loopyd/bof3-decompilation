@@ -628,6 +628,10 @@ void func_800AD074(u8 arg0);
 void adjustBattleWorkValuesForMode(void);
 void func_800A4458(void);
 void func_800A9BD8(u8 arg0);
+/* Owned by the SLUS address space (asm span func_800A8F58 in
+ * emi/battle/battle/15); only its low return byte is consumed, by the
+ * default-class countdown handler submitRolledEffectAndAdvance. */
+u8   func_800A8F58(void);
 /* Owned by the SLUS address space (boundary func_800A9820 in emi/battle/battle/15);
  * the first parameter is the zero-extended battle byte D_80146384. */
 void func_800A9820(u8 arg0);
@@ -663,6 +667,7 @@ void func_801501E4(void* arg0, u32 arg1, u32 arg2);
 void func_80150098(s16 arg0, s16 arg1, u32 arg2, void* arg3);
 u32  func_801E590C(u32 arg0, u32 arg1);
 void copySelectedWorkToQueuedSlot(void);
+void submitRolledEffectAndAdvance(void);
 u8   func_801E2E30(void);
 s16  func_8015477C(s32 arg0, s32 arg1);
 

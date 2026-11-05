@@ -33,6 +33,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler |
 | `lh` plus `lhu` replaces `lh` plus register copy | Trace [narrow load sharing](#narrow-load-sharing-and-real-value-reuse), known bits and later definitions |
 | Byte-cell load hoisted above the record's word stores, extra live registers | Split the record view by access width: [record views](#scratchpad-cells-and-record-views) |
+| Indirect call loads the selected pointer but the original fills frame slots with the whole table | Assign the named extern table to a local of its aggregate type, then index the local; indexing the extern indexes the table in place |
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots), then name repeated scale products (#named-scale-products) |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
 | Boolean result misses the return register; extra return copy | Trace [boolean return expansion](#boolean-return-expansion) before allocation |
@@ -286,6 +287,13 @@ then `lw 0(vN)` per access. When the original re-materialises the constant per a
 name the cell: declare an extern at its fixed address so each access emits its own
 `lui 0x1F80` plus `lw 68(vN)`. Applies to any fixed-address data the original reloads
 per use; the named symbol in the map restores that repetition.
+
+A shared header that maps a cell name to a macro over a constant address
+(`#define D_X g_Cell`) folds the same way, once, because the macro hides the
+symbol. `#undef` it in the source when the original reloads the cell per access and
+read the target-local symbol instead; unconditional `#undef` at outer body level is
+admissible for an ordinary function. Sibling sources on more than one target closed
+a hoisted-base residual here, so reach for this before allocation work.
 
 Stores follow the same rule. Each `sb` to a distinct fixed-address cell carries its own
 `lui $at, %hi(sym)`, so declare one named extern per cell. A build that holds one base

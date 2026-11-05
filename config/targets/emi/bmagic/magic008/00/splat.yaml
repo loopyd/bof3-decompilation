@@ -241,8 +241,10 @@ segments:
     - asm
     - func_801F1708
   - - 11196
-    - asm
-    - func_801F17BC
+    - c
+    - seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic00800_801F17BC
+    - '@source: src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic00800_801F17BC.c'
+    - '@behavior: Entry 0 of the nine-word handler table at 0x801EECC8 that 0x801F1708 copies to its frame and dispatches on scratchpad work byte 2. Calls helper 0x800AFF98, stores its returned byte in work byte 9, reloads the scratchpad work pointer and increments work byte 2.'
   - - 11268
     - asm
     - func_801F1804

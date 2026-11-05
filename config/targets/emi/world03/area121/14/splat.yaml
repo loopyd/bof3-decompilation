@@ -152,8 +152,9 @@ segments:
     - asm
     - func_801F477C
   - - 7936
-    - asm
-    - func_801F4B00
+    - c
+    - dispatchStateByte2Table689cThenUpdateMaskChargeWorld03Area12114_801F4B00
+    - '@source: src/bof3/world/area12114DispatchTables.c'
   - - 8012
     - asm
     - func_801F4B4C
