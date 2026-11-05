@@ -753,8 +753,8 @@ segments:
     - asm
     - func_800A15DC
   - - 44804
-    - asm
-    - func_800A1704
+    - c
+    - runSelectionPassThenSetSelectedRecordFlag100
   - - 44964
     - asm
     - func_800A17A4

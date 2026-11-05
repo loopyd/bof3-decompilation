@@ -1467,8 +1467,10 @@ segments:
     - c
     - incrementStateByte3
   - - 99964
-    - asm
-    - func_801E927C
+    - c
+    - submitCountdownEntriesAndAdvance
+    - '@source: src/bof3/battle/submitCountdownEntriesAndAdvance.c'
+    - '@behavior: Submits five countdown-positioned entries through func_801644D8, then advances panel state byte +3 when countdown zero is zero or decrements all seven countdowns otherwise.'
   - - 100240
     - c
     - func_801E9390

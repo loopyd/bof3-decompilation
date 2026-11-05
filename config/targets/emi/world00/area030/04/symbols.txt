@@ -132,6 +132,7 @@ advancePanelSlideAndUpdateStateWorld00Area03004_801D4680 = 0x801D4680;
 selectFirstAvailableEntryAndAdvanceStateWorld00Area03004_801D4884 = 0x801D4884;
 decrementEntryPanelSlideAndAdvanceStateWorld00Area03004_801D4984 = 0x801D4984;
 drawSelectedEntryPanelsWorld00Area03004_801D4B60 = 0x801D4B60;
+drawEntryPanelsAndInitializeStateWorld00Area03004_801D52D4 = 0x801D52D4;
 dispatchStateByte3Table1fd4World00Area03004_801D576C = 0x801D576C;
 func_801D5B48 = 0x801D5B48;
 func_801D5B70 = 0x801D5B70;

@@ -100,8 +100,8 @@ segments:
     - asm
     - func_801F01F8
   - - 5732
-    - asm
-    - func_801F0264
+    - c
+    - decrementWorkByteAAndAdvanceWorkByte2OnZeroBmagicMagic13103_801F0264
   - - 5808
     - asm
     - func_801F02B0

@@ -250,8 +250,8 @@ segments:
     - asm
     - func_801D5048
   - - 18132
-    - asm
-    - func_801D52D4
+    - c
+    - drawEntryPanelsAndInitializeStateWorld00Area03004_801D52D4
   - - 18328
     - asm
     - func_801D5398

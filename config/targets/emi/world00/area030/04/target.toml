@@ -163,6 +163,7 @@ sources = [
     "src/bof3/world/updateArea030OverlayFrame.c",
     "src/bof3/world/decrementEntryPanelSlideAndAdvanceStateWorld00Area03004_801D4984.c",
     "src/bof3/world/dispatchStateByte3Table1fd4World00Area03004_801D576C.c",
+    "src/bof3/world/drawEntryPanelsAndInitializeStateWorld00Area03004_801D52D4.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",

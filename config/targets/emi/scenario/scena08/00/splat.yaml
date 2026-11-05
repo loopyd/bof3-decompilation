@@ -262,8 +262,10 @@ segments:
     - asm
     - func_801F9C58
   - - 12512
-    - asm
-    - func_801F9CE0
+    - c
+    - seedWorkWordsAdvanceStateAndQueueCue20AScenarioScena0800_801F9CE0
+    - '@source: src/bof3/scenario/seedWorkWordsAdvanceStateAndQueueCue20AScenarioScena0800_801F9CE0.c'
+    - '@behavior: Seed work words 0x34/0x38/0x3C, clear word 0x14, advance byte 1, and dispatch sound cue 0x20A.'
   - - 12592
     - asm
     - func_801F9D30

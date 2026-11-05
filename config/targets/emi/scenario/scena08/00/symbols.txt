@@ -1,4 +1,5 @@
 scenarioScena0800Work = 0x1F800044;
+dispatchSoundCue = 0x8015DF18;
 dispatchWorkByte1HandlerScenarioScena0800_801F6F48 = 0x801F6F48;
 func_801F6F8C = 0x801F6F8C;
 tickCountdownByte9Advance12BitWorkWord0CAndStateScenarioScena0800_801F6FC4 = 0x801F6FC4;
@@ -63,7 +64,7 @@ func_801F9AC0 = 0x801F9AC0;
 func_801F9B68 = 0x801F9B68;
 func_801F9C00 = 0x801F9C00;
 func_801F9C58 = 0x801F9C58;
-func_801F9CE0 = 0x801F9CE0;
+seedWorkWordsAdvanceStateAndQueueCue20AScenarioScena0800_801F9CE0 = 0x801F9CE0;
 func_801F9D30 = 0x801F9D30;
 dispatchWorkByte1HandlerScenarioScena0800_801F9DBC = 0x801F9DBC;
 seedWorkWords34AndCopyTo0CThenAdvanceStateScenarioScena0800_801F9E00 = 0x801F9E00;

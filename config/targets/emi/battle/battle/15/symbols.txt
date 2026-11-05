@@ -138,6 +138,7 @@ func_800A0BF4 = 0x800A0BF4;
 func_800A0C44 = 0x800A0C44;
 func_800A0E68 = 0x800A0E68;
 runSelectionPassThenSetSelectedRecordFlag8000 = 0x800A1414;
+runSelectionPassThenSetSelectedRecordFlag100 = 0x800A1704;
 setRecordByte8To2StoreIndexedModifierField6 = 0x800A1AD0;
 func_800A23CC = 0x800A23CC;
 func_800A2404 = 0x800A2404;

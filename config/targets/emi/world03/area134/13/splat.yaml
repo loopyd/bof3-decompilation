@@ -171,8 +171,10 @@ segments:
     - c
     - getAndClearWorld03Area13413_801F3B14
   - - 3876
-    - asm
-    - func_801F3B24
+    - c
+    - advanceWorkWord38AndSetScratchStateToMode14WithCountdownWorld03Area13413_801F3B24
+    - '@source: src/bof3/world/advanceWorkWord38AndSetScratchStateToMode14WithCountdownWorld03Area13413_801F3B24.c'
+    - '@behavior: Publishes the work record at 0x80146920, adds 0x4000 twice to its word at offset 0x38, sets saved record state byte 1 to mode 14, restores the scratchpad pointer and sets saved record countdown byte 9 to 8.'
   - - 3964
     - c
     - countdownScratchStateToMode15World03Area13413_801F3B7C

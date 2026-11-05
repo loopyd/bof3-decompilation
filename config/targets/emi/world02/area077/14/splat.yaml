@@ -196,8 +196,10 @@ segments:
     - asm
     - func_801F56C4
   - - 11024
-    - asm
-    - func_801F5710
+    - c
+    - cycleTwoPaletteBlocksAndAdvanceStepWorld02Area07714_801F5710
+    - '@source: src/bof3/world/cycleTwoPaletteBlocksAndAdvanceStepWorld02Area07714_801F5710.c'
+    - '@behavior: copies two palette blocks selected by half of work byte +9, increments that byte and advances byte +2 when the updated byte is at least 6.'
   - - 11196
     - c
     - cycleThreePaletteBlocksWorld02Area07714_801F57BC

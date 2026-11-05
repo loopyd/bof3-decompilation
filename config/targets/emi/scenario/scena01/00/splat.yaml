@@ -213,8 +213,8 @@ segments:
     - asm
     - func_801FD948
   - - 28064
-    - asm
-    - func_801FD9A0
+    - c
+    - clearTwoStateBytesThenRequestPrimaryState11ScenarioScena0100_801FD9A0
   - - 28132
     - asm
     - func_801FD9E4
