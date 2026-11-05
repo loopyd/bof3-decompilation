@@ -200,8 +200,10 @@ segments:
     - c
     - zeroResultScenarioScena0900_801FD278
   - - 26240
-    - asm
-    - func_801FD280
+    - c
+    - dispatchCoordinateLookupHandlerScenarioScena0900_801FD280
+    - '@source: 0x801FD280'
+    - '@behavior: Looks up two unsigned halfword coordinates in fourteen records at 0x801FE474 through helper 0x801A7AD8, returns -1 for a negative signed-byte index, otherwise invokes the indexed no-argument handler at 0x801FE4BC and returns its signed low byte.'
   - - 26344
     - asm
     - func_801FD2E8

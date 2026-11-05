@@ -138,8 +138,10 @@ segments:
     - asm
     - func_801F4D20
   - - 8696
-    - asm
-    - func_801F4DF8
+    - c
+    - copyTwoPaletteBlocksAndAdvanceOnFlagMatchWorld02Area07714_801F4DF8
+    - '@source: src/bof3/world/copyTwoPaletteBlocksAndAdvanceOnFlagMatchWorld02Area07714_801F4DF8.c'
+    - '@behavior: copies two table-selected palette blocks and clears work bytes +9/+10 and advances byte +2 when the shared flag word satisfies the work halfword nibble test.'
   - - 8900
     - asm
     - func_801F4EC4

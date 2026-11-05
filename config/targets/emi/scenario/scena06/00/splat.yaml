@@ -111,8 +111,8 @@ segments:
     - c
     - noopHandlerScenarioScena0600_801FCE10
   - - 25112
-    - asm
-    - func_801FCE18
+    - c
+    - clearProgressAndSharedStateBytesThenRequestPrimaryState1ScenarioScena0600_801FCE18
   - - 25196
     - asm
     - func_801FCE6C

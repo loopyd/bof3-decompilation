@@ -762,8 +762,10 @@ segments:
     - asm
     - func_800A1978
   - - 45616
-    - asm
-    - func_800A1A30
+    - c
+    - runSelectionPassThenSetSelectedRecordFlag10000
+    - '@source: src/bof3/battle/runSelectionPassThenSetSelectedRecordFlag10000.c'
+    - '@behavior: Runs selection pass func_800A3F28, then sets flag 0x10000 in the selected local or reserve record guard word.'
   - - 45776
     - c
     - setRecordByte8To2StoreIndexedModifierField6

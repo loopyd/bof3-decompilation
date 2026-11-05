@@ -77,8 +77,10 @@ segments:
     - asm
     - func_801F7BB0
   - - 4176
-    - asm
-    - func_801F7C50
+    - c
+    - tickCountdownReload128AndAdvanceWorkByte1ScenarioScena0300_801F7C50
+    - '@source: src/bof3/scenario/tickCountdownReload128AndAdvanceWorkByte1ScenarioScena0300_801F7C50.c'
+    - '@behavior: Calls two local helpers with work plus 0x0C, decrements work byte 9, and reloads 128 and advances work byte 1 at zero.'
   - - 4320
     - asm
     - func_801F7CE0

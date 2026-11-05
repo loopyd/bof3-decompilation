@@ -259,8 +259,8 @@ segments:
     - asm
     - func_801D54F8
   - - 18804
-    - asm
-    - func_801D5574
+    - c
+    - advanceEntryPanelSlideAndSelectStateWorld00Area03004_801D5574
   - - 19188
     - asm
     - func_801D56F4

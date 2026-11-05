@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/copyTwoPaletteBlocksAndAdvanceOnFlagMatchWorld02Area07714_801F4DF8.c",
     "src/bof3/world/cycleTwoPaletteBlocksAndAdvanceStepWorld02Area07714_801F5710.c",
     "src/bof3/world/incrementWorkFieldsAndAdvanceStepAt350000World02Area07714_801F53BC.c",
     "src/bof3/world/decrementWorkFieldsAndResetStepWorld02Area07714_801F5464.c",

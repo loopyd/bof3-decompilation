@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/selectScratchState23OrClearAreaStatusWorld03Area13413_801F33C0.c",
     "src/bof3/world/advanceWorkWord38AndSetScratchStateToMode14WithCountdownWorld03Area13413_801F3B24.c",
     "src/bof3/world/retreatWorkWord38AndSetScratchStateToMode16WithCountdownWorld03Area13413_801F328C.c",
     "src/bof3/world/advanceWorkWord38AndSetScratchStateToMode14WithCountdownWorld03Area13413_801F31FC.c",

@@ -1118,8 +1118,10 @@ segments:
     - dispatchByte2TableB460
     - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 81708
-    - asm
-    - func_801E4B2C
+    - c
+    - initEnemyCueCountdownWhenLoaderReady
+    - '@source: src/bof3/battle/initEnemyCueCountdownWhenLoaderReady.c'
+    - '@behavior: Initializes enemy cue countdown when the loader is ready and advances the selection-dependent work state.'
   - - 82044
     - c
     - countdownWorkByte9SubmitCue

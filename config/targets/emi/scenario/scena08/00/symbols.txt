@@ -1,4 +1,5 @@
 scenarioScena0800Work = 0x1F800044;
+scenarioScena0800StateBytes = 0x80144EC8;
 dispatchSoundCue = 0x8015DF18;
 dispatchWorkByte1HandlerScenarioScena0800_801F6F48 = 0x801F6F48;
 func_801F6F8C = 0x801F6F8C;
@@ -76,7 +77,7 @@ invokeHelperScenarioScena0800_801F9F6C = 0x801F9F6C;
 func_801F9F8C = 0x801F9F8C;
 func_801FA19C = 0x801FA19C;
 dispatchProgressHandlerScenarioScena0800_801FA294 = 0x801FA294;
-func_801FA2D0 = 0x801FA2D0;
+clearStateAndProgressEnterPhase1AndSetBit43ScenarioScena0800_801FA2D0 = 0x801FA2D0;
 func_801FA32C = 0x801FA32C;
 func_801FA3E4 = 0x801FA3E4;
 dispatchProgressHandlerScenarioScena0800_801FAB5C = 0x801FAB5C;

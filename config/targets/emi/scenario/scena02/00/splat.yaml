@@ -225,8 +225,8 @@ segments:
     - asm
     - func_801FD2E0
   - - 26416
-    - asm
-    - func_801FD330
+    - c
+    - clearSharedBytes6566AndRequestPrimaryState0BScenarioScena0200_801FD330
   - - 26484
     - asm
     - func_801FD374

@@ -308,8 +308,8 @@ segments:
     - c
     - dispatchProgressHandlerScenarioScena0800_801FA294
   - - 14032
-    - asm
-    - func_801FA2D0
+    - c
+    - clearStateAndProgressEnterPhase1AndSetBit43ScenarioScena0800_801FA2D0
   - - 14124
     - asm
     - func_801FA32C

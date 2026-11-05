@@ -105,8 +105,10 @@ segments:
     - c
     - noopHandlerWorld03Area13413_801F33B8
   - - 1984
-    - asm
-    - func_801F33C0
+    - c
+    - selectScratchState23OrClearAreaStatusWorld03Area13413_801F33C0
+    - '@source: src/bof3/world/selectScratchState23OrClearAreaStatusWorld03Area13413_801F33C0.c'
+    - '@behavior: Selects work state 23 for area status 0xFF or mode 0x80; otherwise clears area status and work state, then clears work byte 2.'
   - - 2080
     - c
     - invokeHelperWorld03Area13413_801F3420

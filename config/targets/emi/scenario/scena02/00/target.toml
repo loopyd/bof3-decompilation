@@ -9,6 +9,7 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/clearSharedBytes6566AndRequestPrimaryState0BScenarioScena0200_801FD330.c",
     "src/bof3/scenario/requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC5D0.c",
     "src/bof3/scenario/requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC518.c",
     "src/bof3/scenario/requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC1A4.c",
