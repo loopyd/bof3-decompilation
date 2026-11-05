@@ -10,6 +10,7 @@ load_address = 0x801F6C00
 sources = []
 support_sources = [
     "src/bof3/scenario/invokeHelper85F0AdvanceWorkHalfword32AndTickCountdown5AScenarioScena0800_801F73D4.c",
+    "src/bof3/scenario/invokeHelper85F0Subtract16FromWorkHalfword32AndTickCountdown5AScenarioScena0800_801F774C.c",
     "src/bof3/scenario/tickCountdownByte9SubtractHalfword800E4C1EAndResetWorkFlagsScenarioScena0800_801F7D54.c",
     "src/bof3/scenario/clearIndexedFlagBit0AndWorkCountThenResetEffect7ScenarioScena0800_801FE6DC.c",
     "src/bof3/scenario/clearStateAndProgressEnterPhase1AndSetBit43ScenarioScena0800_801FA2D0.c",

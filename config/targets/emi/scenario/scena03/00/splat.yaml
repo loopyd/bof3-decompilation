@@ -260,8 +260,10 @@ segments:
     - c
     - func_801FC6C4
   - - 23300
-    - asm
-    - func_801FC704
+    - c
+    - dispatchRouteHandlerScenarioScena0300_801FC704
+    - '@source: src/bof3/scenario/dispatchRouteHandlerScenarioScena0300_801FC704.c'
+    - '@behavior: Route dispatcher of this overlay: reads the shared unsigned route word D_80143F00 and, for routes 0x25/0x29/0x32/0x33/0x45/0x63, runs the matching overlay route handler (func_801FC944, func_801FC8AC, func_801FCAB8, func_801FC7EC, func_801FC9DC, func_801FCB4C) with both incoming packed record words forwarded unchanged and returns that handler result sign-extended from its low byte (sll/sra 24); any other route value returns 0. The 0x18-byte frame only keeps $ra across the selected call, and the address is word 17 of the overlay 32-word code-pointer run at 0x801FCF84.'
   - - 23532
     - asm
     - func_801FC7EC

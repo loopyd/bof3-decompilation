@@ -1651,8 +1651,10 @@ segments:
     - c
     - panelStepLeftClamp11
   - - 108336
-    - asm
-    - func_800B0F30
+    - c
+    - panelStepRightClamp5B
+    - '@source: src/bof3/battle/panelStepRightClamp5B.c'
+    - '@behavior: Runs the panel-task pass func_800B0F9C, steps signed panel x right by 0x20 while it is below 0x5B, then clamps a signed x of 0x5C or more back to 0x5B.'
   - - 108444
     - asm
     - func_800B0F9C

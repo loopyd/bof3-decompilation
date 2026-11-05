@@ -19,7 +19,7 @@ void startScratchWorkTransform(void) {
   record = D_80146250;
   if ((record->unk_80 & 0x4000u) != 0u) {
     D_1F800044->unk_03 = 2u;
-    D_1F800044->pad_09[1] = 0u;
+    D_1F800044->pad_0a[0] = 0u;
   } else {
     s32 delta = -0x2000;
     work = D_1F800044;
@@ -27,7 +27,7 @@ void startScratchWorkTransform(void) {
     work->unk_0c = 0;
     work->unk_10 = delta;
     transformFirstPointPairByMode((s32)work);
-    D_1F800044->pad_09[1] = 4;
+    D_1F800044->pad_0a[0] = 4;
     localReadyOrHelper2();
     func_8015D71C(0x205);
     D_1F800044->unk_03++;

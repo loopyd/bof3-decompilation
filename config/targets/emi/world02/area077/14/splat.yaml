@@ -145,8 +145,10 @@ segments:
     - '@source: src/bof3/world/copyTwoPaletteBlocksAndAdvanceOnFlagMatchWorld02Area07714_801F4DF8.c'
     - '@behavior: copies two table-selected palette blocks and clears work bytes +9/+10 and advances byte +2 when the shared flag word satisfies the work halfword nibble test.'
   - - 8900
-    - asm
-    - func_801F4EC4
+    - c
+    - stepPaletteBlocksOnTickCadenceAndResetCountersWorld02Area07714_801F4EC4
+    - '@source: src/bof3/world/stepPaletteBlocksOnTickCadenceAndResetCountersWorld02Area07714_801F4EC4.c'
+    - '@behavior: splits work byte +9 into five-tick phases and copies palette block 8 minus the quotient to block 0 of the table-0x801F627D row on a zero remainder, increments byte +9, copies block byte +10 plus one while byte +10 is below nine, increments byte +10, and clears bytes +9/+10 and increments byte +2 once byte +9 reaches 0x1F.'
   - - 9212
     - asm
     - func_801F4FFC

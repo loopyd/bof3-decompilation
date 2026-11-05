@@ -744,8 +744,10 @@ segments:
     - '@source: src/bof3/battle/func_801E0E0C.c'
     - '@behavior: Reports whether the first three D_80145E90 local work records are all strictly ready: inactive records are skipped, and an active record fails when its +0x80 halfword carries 0x4004, its +0x124 word carries 4, its +0x128 word carries 2, or, while +0x80 carries 0x4000, its bytes +0x86/+0x87 read 0x18 or its +0x85 byte reads 0x43.'
   - - 66316
-    - asm
-    - func_801E0F0C
+    - c
+    - countdownWorkByte9QueueSlotAndEmitEvent
+    - '@source: src/bof3/battle/countdownWorkByte9QueueSlotAndEmitEvent.c'
+    - '@behavior: Counts down the scratch work byte +0x09 and returns while it is still nonzero. On expiry it re-arms the published local work record D_80146250 -- flag 0x4000 of halfword +0x80 is cleared, bit 0x4 of word +0x124 is cleared, halfword +0x88 becomes 1 and byte +0x8C is halved -- then allocates a queued slot store through func_801E590C(0, 1) and marks that entry with byte +0x07 = 1, byte +0x27 = 6 and the scratch work pointer in +0x74. It requests resource scratch byte +0x08 plus 4 through func_8014D6B8 and func_8015D71C(0x206), and while the dispatched-handler gate byte D_80146329 is clear it initializes the UI bundle slot, substitutes the name of the local work record selected by scratch byte +0x05 and queues the event row addressed by work byte +0x79. Both paths finish with scratch byte +0x03 set to 2 and localReadyOrHelper1.'
   - - 66640
     - c
     - func_801E1050

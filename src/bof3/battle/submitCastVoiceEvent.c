@@ -11,7 +11,7 @@
  * @residual none
  */
 void submitCastVoiceEvent(void) {
-  if (D_1F800044->pad_09[0] == 0) {
+  if (D_1F800044->unk_09 == 0) {
     submitCurrentWorkEffectVariant(5);
     if ((D_80146250->unk_128 & 0x2u) != 0u && BATTLE_GLOBAL_BYTE_63C9 != 4u &&
         (BATTLE_GLOBAL_BYTE_63C9 < 7u || BATTLE_GLOBAL_BYTE_63C9 > 8u)) {
@@ -19,7 +19,7 @@ void submitCastVoiceEvent(void) {
     }
     D_1F800044->unk_02++;
   } else {
-    D_1F800044->pad_09[0]--;
+    D_1F800044->unk_09--;
   }
   localReadyOrHelper2();
 }

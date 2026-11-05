@@ -29,6 +29,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | `addu $at,index,$at` versus `addu $at,$at,index` | Named extern array can shift expansion to assembler; never pin scratch `$at` |
 | Fixed-address constant steals entry copy | Named extern binding can prevent constant-address CSE; verify entire register web |
 | Saved copy moves to entry or commutative operands stay swapped | Trace [CSE lifetimes and commutative targets](#cse-lifetimes-and-commutative-targets) |
+| First mismatch stays at one entry-block offset through width, mask and cast probes | Reorder the loop-variable initializer statements (`i`, destination, source); declaration order does not move it. One measured order was exact, another moved the first mismatch later at a lower score |
 | Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler |
 | `lh` plus `lhu` replaces `lh` plus register copy | Trace [narrow load sharing](#narrow-load-sharing-and-real-value-reuse), known bits and later definitions |
 | Byte-cell load hoisted above the record's word stores, extra live registers | Split the record view by access width: [record views](#scratchpad-cells-and-record-views) |
@@ -60,7 +61,12 @@ chain inversion regardless of spelling; another spelling alone is not new eviden
 Branch calls `if (cond) f(x+A); else f(x+B);` can merge into one `jal` where ternary
 argument does not. The same holds for identical argument lists: writing the call in
 both arms can produce the single original call site through cross-jumping, and it
-keeps the per-arm argument setup the original shows. Early returns versus initialized result changes `$v0` lifetime.
+keeps the per-arm argument setup the original shows. Early returns versus initialized
+result changes `$v0` lifetime. When the guard wraps calls and stores and each side
+returns a different constant, put the work inside the inverted `if` with the
+fallthrough return after it: a result local live across the calls cost a saved
+register and frame bytes, while an early return before the block dropped the constant
+load on the fallthrough path.
 GCC loop rotation can move invariants: assigning inside loop body can permit late
 hoisting/preheader copies; moving before loop can lose them. Keep only measured
 semantically correct shape; record negative experiments before trying another shape.
@@ -228,12 +234,15 @@ Use when a scratch halfword is decremented or advanced and then compared.
 
 ### Scratch cursor group variables
 
-Use when a function reloads the same pointer cell before each store or call group
-and the current build keeps one register for all of them.
+Use when a function re-reads or re-derives a base before each store or call group and
+the current build keeps one register for all of them, whether that base is a pointer
+cell load or a record address computed from a cursor.
 
 1. Read the cell into its own variable at each original reload point. One variable
    reused across groups becomes a single global pseudo, and that pseudo conflicts
-   with the registers the original used across its whole range.
+   with the registers the original used across its whole range. The same split
+   applies to per-group record temporaries: a cursor shared by two store groups
+   kept both in one register and left the block's tail mismatched.
 2. Read the allocator dump before changing spelling. `.greg` reports the number of
    global pseudos, each conflict set and the register each pseudo receives.
 3. Give the variables distinct names. GCC then keeps separate quantities, so each
@@ -243,6 +252,10 @@ and the current build keeps one register for all of them.
    store also reproduces a load-delay `nop` that a merged read removes.
 5. Confirm with live asm-diff. Register choice inside later groups can still
    differ; the dump explains which quantity moved.
+6. Count the original's groups before naming variables. Splitting groups one at a
+   time raised the score at that group's first mismatch and no further. Once every
+   group has its own variable, a remaining tail mismatch is usually a value width
+   on the indexed row, not another cursor.
 
 ### Shared and branch-local cursor loads
 

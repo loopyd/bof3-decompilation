@@ -21,11 +21,11 @@ void func_801DF914(void) {
   work = D_80146250;
   if ((work->unk_128 & 0x2u) != 0u) {
     index = &BATTLE_GLOBAL_BYTE_63C9;
-    D_1F800044->pad_09[0] = D_801EB198[*index];
-    D_1F800044->pad_09[1] = D_801EB198[*index];
+    D_1F800044->unk_09 = D_801EB198[*index];
+    D_1F800044->pad_0a[0] = D_801EB198[*index];
   } else {
-    D_1F800044->pad_09[0] = D_801EB18C[work->unk_79];
-    D_1F800044->pad_09[1] = D_801EB18C[D_80146250->unk_79];
+    D_1F800044->unk_09 = D_801EB18C[work->unk_79];
+    D_1F800044->pad_0a[0] = D_801EB18C[D_80146250->unk_79];
   }
   func_8014D8D4(D_1F800044->unk_08 + 0x0Cu);
   localReadyOrHelper1();

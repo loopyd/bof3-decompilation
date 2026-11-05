@@ -8,9 +8,9 @@
  */
 void countdownWorkByte9DecayTripleEnemyReady(void)
 {
-    if (D_1F800044->pad_09[0] != 0) {
-        D_1F800044->pad_09[0]--;
-    } else if (--D_1F800044->pad_09[1] != 0u) {
+    if (D_1F800044->unk_09 != 0) {
+        D_1F800044->unk_09--;
+    } else if (--D_1F800044->pad_0a[0] != 0u) {
         D_1F800044->unk_5d -= 0x10;
         D_1F800044->unk_5e -= 0x10;
         D_1F800044->unk_5f -= 0x10;

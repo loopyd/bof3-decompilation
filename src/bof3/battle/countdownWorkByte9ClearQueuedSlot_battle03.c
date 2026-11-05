@@ -10,7 +10,7 @@ void countdownWorkByte9ClearQueuedSlot(void) {
   u16* flags;
 
   func_8014DAEC();
-  if (--D_1F800044->pad_09[0] == 0u) {
+  if (--D_1F800044->unk_09 == 0u) {
     flags = (u16*)&BATTLE_GLOBAL_HALF_62E8;
     *flags |= 0x20u;
     clearQueuedSlotBytes();

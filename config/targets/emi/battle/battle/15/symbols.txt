@@ -266,6 +266,7 @@ func_800B0B0C = 0x800B0B0C;
 dispatchPanelTaskTable6a14 = 0x800B0CE4;
 panelStepRightSettle5B = 0x800B0E24;
 panelStepLeftClamp11 = 0x800B0EC4;
+panelStepRightClamp5B = 0x800B0F30;
 dispatchPanelStateTable6a34 = 0x800B138C;
 panelStepLeftSettle5B = 0x800B14BC;
 dispatchPanelStateTable6a40 = 0x800B155C;

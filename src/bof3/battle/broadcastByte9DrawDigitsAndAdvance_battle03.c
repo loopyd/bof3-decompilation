@@ -14,15 +14,15 @@ void broadcastByte9DrawDigitsAndAdvance(void)
     u8 value;
     u8 next;
 
-    value = D_1F800044->pad_09[0];
+    value = D_1F800044->unk_09;
     SPAD_REF(u8, 2) = value;
     SPAD_REF(u8, 1) = value;
     SPAD_REF(u8, 0) = value;
     func_801D99AC(0, 0, 0xB);
 
-    next = D_1F800044->pad_09[0];
+    next = D_1F800044->unk_09;
     next++;
-    D_1F800044->pad_09[0] = next;
+    D_1F800044->unk_09 = next;
     if (next == 0xFF) {
         D_1F800044->unk_01 = (u8)(D_1F800044->unk_01 + 1);
     }

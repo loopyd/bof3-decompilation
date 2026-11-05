@@ -16,6 +16,7 @@ support_sources = [
     "src/bof3/world/area08213DispatchTables.c",
     "src/bof3/world/clearWorkTableAt800E4800World02Area08213_801F3910.c",
     "src/bof3/world/decrementCountdownRearmTo12IncrementWorkByte1World02Area08213_801F2CF0.c",
+    "src/bof3/world/scalePaletteChannelsWorld02Area08213_801F5388.c",
     "src/bof3/world/setWorkCountdownClearOriginIncrementWorkByte1World02Area08213_801F2C6C.c",
     "src/bof3/world/setWorkHalfwordsIncrementWorkByte1World02Area08213_801F336C.c",
     "src/bof3/world/setWorkWord5World02Area08213_801F55F4.c",

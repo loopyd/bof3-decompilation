@@ -55,5 +55,6 @@ support_sources = [
     "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDE0C.c",
     "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDECC.c",
     "src/bof3/scenario/armEffectGroupThenInvokeThreeHelpersScenarioScena0900_801FDF10.c",
+    "src/bof3/scenario/waitFlag2CThenRequestPrimaryState9Substate14ScenarioScena0900_801FDC1C.c",
 ]
 psyq_source = "src/bof3/support/scena09_00_psyq.c"

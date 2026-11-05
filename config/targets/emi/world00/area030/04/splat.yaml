@@ -194,8 +194,16 @@ segments:
     - func_801D39B8
     - '@source: src/bof3/world/func_801D39B8.c'
   - - 11860
+    - c
+    - advancePanelTextCursor
+    - '@source: src/bof3/world/advancePanelTextCursor.c'
+    - '@behavior: AREA030 panel message step (state-1 handler table entry 9 at 0x801E1F44): counts the reveal timer byte 0x09 and the vertical offset halfword 0x2E of the work record published at the scratchpad cursor 0x1F800044 down by one and two; while the timer runs it submits the partially revealed message run at record word 0x50 through func_801D9740 with the shade span (8 - 0x09 * 2) & 0xFE and the row argument 0x09 * 2 + 0x11D, and once the timer reaches zero it steps the run cursor past the message control codes 0x12/0x15, counts one revealed token in byte 0x49, rearms the timer with 4 and, when the count reaches the limit byte 0x00 of the 12-byte entry table 0x801E1E78, clamps it, loads the pause byte 0x0A from the entry attribute byte 0x08, reloads the timer from the entry countdown byte 0x09, advances the record state index byte 0x01 and repoints the cursor at the entry word 0x04; finally it submits the shaded panel through func_8014F800 with the revealed count and the entry word 0x04.'
+  - - 12404
     - asm
-    - func_801D3A54
+    - func_801D3C74
+  - - 13120
+    - asm
+    - func_801D3F40
   - - 13796
     - c
     - func_801D41E4

@@ -194,8 +194,10 @@ segments:
     - asm
     - func_801F52D8
   - - 10120
-    - asm
-    - func_801F5388
+    - c
+    - scalePaletteChannelsWorld02Area08213_801F5388
+    - '@source: src/bof3/world/scalePaletteChannelsWorld02Area08213_801F5388.c'
+    - '@behavior: multiplies each 5-bit colour channel of all 0x100 entries of the palette window at 0x80034000 by the signed caller scale, shifts every product right by 7 (0x80 is the unity scale), packs the three channels back with bit 15 of the source word preserved and stores the result into the palette window at 0x80038000; it then stores 1 into the shared palette-stage byte at 0x80145988 and returns.'
   - - 10280
     - asm
     - func_801F5428

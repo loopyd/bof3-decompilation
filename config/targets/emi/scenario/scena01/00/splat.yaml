@@ -216,8 +216,8 @@ segments:
     - c
     - clearTwoStateBytesThenRequestPrimaryState11ScenarioScena0100_801FD9A0
   - - 28132
-    - asm
-    - func_801FD9E4
+    - c
+    - clearTwoStateBytesThenRequestPrimaryState11Substate5ScenarioScena0100_801FD9E4
   - - 28204
     - c
     - requestPrimaryState0BSubstate0FScenarioScena0100_801FDA2C

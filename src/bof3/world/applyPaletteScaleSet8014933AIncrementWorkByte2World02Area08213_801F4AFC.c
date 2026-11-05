@@ -2,7 +2,7 @@
 
 extern u8 D_8014933A;
 
-void func_801F5388(s32 arg0);
+void scalePaletteChannelsWorld02Area08213_801F5388(s32 scale);
 
 /* @source 0x801F4AFC
  * @behavior Overlay step handler: applies the palette-scale helper at
@@ -25,7 +25,7 @@ void applyPaletteScaleSet8014933AIncrementWorkByte2World02Area08213_801F4AFC(
     void) {
   u8* work;
 
-  func_801F5388(0x80);
+  scalePaletteChannelsWorld02Area08213_801F5388(0x80);
   work = SPAD_PTR_SLOT(u8, 0x44);
   D_8014933A = 1;
   work[2]++;

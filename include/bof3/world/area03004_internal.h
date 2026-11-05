@@ -90,8 +90,11 @@ void func_8014d290(void);
 void func_8014d4e0(void);
 void advancePanelScroll(void);
 void func_8014f800(s32 arg0, s16 arg1, s32 arg2, u8 arg3, u32 arg4);
-/* Per-index byte and word pair consumed by the shaded panel request at 0x8014F800. */
-typedef struct Area030PanelEntry { u8 byte_00; u8 pad_01[3]; u32 word_04; u8 byte_08; u8 pad_09[3]; } Area030PanelEntry;
+/* Per-index byte and word pair consumed by the shaded panel request at 0x8014F800.
+ * byte_00 is the message-run token limit, word_04 the run cursor the AREA030 panel
+ * message step 0x801D3A54 repoints to, byte_08 the attribute compared against the
+ * 0xFF sentinel and byte_09 the reveal-timer reload. */
+typedef struct Area030PanelEntry { u8 byte_00; u8 pad_01[3]; u32 word_04; u8 byte_08; u8 byte_09; u8 pad_0A[2]; } Area030PanelEntry;
 extern Area030PanelEntry D_801E1E78[]; /* @source 0x801E1E78 @kind data */
 extern u8 D_801E1F20[][4]; /* @source 0x801E1F20 @kind data */
 extern u8 D_801E1F14[]; /* @source 0x801E1F14 @kind data */

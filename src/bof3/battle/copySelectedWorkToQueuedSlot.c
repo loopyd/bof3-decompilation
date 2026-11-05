@@ -32,7 +32,7 @@ void copySelectedWorkToQueuedSlot(void) {
   scratch = D_1F800044;
   D_801EC330[index].ptr_74 = (u32)scratch;
   scratch->flags_00 |= 0x40u;
-  D_1F800044->pad_09[0] = 0x10u;
-  D_1F800044->pad_09[1] = 0x10u;
+  D_1F800044->unk_09 = 0x10u;
+  D_1F800044->pad_0a[0] = 0x10u;
   D_1F800044->unk_02 += 1u;
 }

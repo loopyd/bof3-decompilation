@@ -10,5 +10,5 @@ void storeLocalReady2Result(void) {
     u8 result;
 
     result = localReadyOrHelper2();
-    D_1F800044->pad_09[2] = result;
+    D_1F800044->pad_0a[1] = result;
 }

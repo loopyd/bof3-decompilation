@@ -14,5 +14,5 @@ void func_801E4ECC(void) {
   if (!(D_801CA71C[index].mask_00 & 0x800u)) {
     enemyReadyOrHelper2();
   }
-  D_1F800044->pad_09[0]++;
+  D_1F800044->unk_09++;
 }

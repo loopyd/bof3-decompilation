@@ -8,8 +8,8 @@
  */
 void countdownWorkByteAdvancePairEnemyReady(void)
 {
-    if (--D_1F800044->pad_09[1] == 0u) {
-        D_1F800044->pad_09[1] = 4;
+    if (--D_1F800044->pad_0a[0] == 0u) {
+        D_1F800044->pad_0a[0] = 4;
         D_1F800044->unk_03++;
     }
     D_1F800044->unk_34 += D_1F800044->unk_0c;

@@ -88,8 +88,10 @@ segments:
     - asm
     - func_801F7688
   - - 2892
-    - asm
-    - func_801F774C
+    - c
+    - invokeHelper85F0Subtract16FromWorkHalfword32AndTickCountdown5AScenarioScena0800_801F774C
+    - '@source: src/bof3/scenario/invokeHelper85F0Subtract16FromWorkHalfword32AndTickCountdown5AScenarioScena0800_801F774C.c'
+    - '@behavior: Call helper 0x801F85F0 with signed work halfwords 0x2E, 0x30 and 0x32, reload the work pointer, decrement halfword 0x5A and subtract 16 from halfword 0x32 modulo 65536, then reset work flags when the countdown reaches zero.'
   - - 2996
     - asm
     - func_801F77B4

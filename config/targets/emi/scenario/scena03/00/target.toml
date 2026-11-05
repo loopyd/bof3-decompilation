@@ -47,6 +47,7 @@ support_sources = [
     "src/bof3/scenario/setScenarioFlagBit11ThenInvokeHelperScenarioScena0300_801FC520.c",
     "src/bof3/scenario/setScenarioFlagBit12ThenInvokeHelperScenarioScena0300_801FC54C.c",
     "src/bof3/scenario/setScenarioFlagBit13ThenInvokeHelperScenarioScena0300_801FC578.c",
+    "src/bof3/scenario/dispatchRouteHandlerScenarioScena0300_801FC704.c",
     "src/bof3/support/scena03_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/scena03_00_psyq.c"
