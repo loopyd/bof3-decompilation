@@ -177,8 +177,8 @@ segments:
     - asm
     - func_801FCB94
   - - 24540
-    - asm
-    - func_801FCBDC
+    - c
+    - alternateTwoTickCounterPhasesScenarioScena0200_801FCBDC
   - - 24852
     - asm
     - func_801FCD14

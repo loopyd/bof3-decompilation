@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/initializeWorkFieldsWorld02Area08213_801F4A18.c",
     "src/bof3/world/applyPaletteScaleSet8014933AIncrementWorkByte2World02Area08213_801F4AFC.c",
     "src/bof3/world/area08213DispatchTables.c",
     "src/bof3/world/clearWorkTableAt800E4800World02Area08213_801F3910.c",

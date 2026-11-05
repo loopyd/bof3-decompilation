@@ -103,8 +103,10 @@ segments:
     - asm
     - func_801EFC90
   - - 4348
-    - asm
-    - func_801EFCFC
+    - c
+    - raiseFlag4AndInvokeHelperBmagicMagic00800_801EFCFC
+    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic00800_801EFCFC.c'
+    - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the helper at 0x801E5988 unconditionally. This entry is selected by work byte 1 through the code pointer at 0x801EEC48. Its bytes are identical to the entries at 0x801EEFDC, 0x801EF728 and 0x801EFA40.'
   - - 4400
     - c
     - dispatchWorkByte1HandlerBmagicMagic00800_801EFD30

@@ -138,8 +138,10 @@ segments:
     - '@source: src/bof3/world/area08213DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the record dispatch byte at offset 0x02 as the index and calls the handler at that index of the overlay-local handler table based at 0x801F57D0 (sixteen shipped entries, 0x801F4A18 through 0x801F52D8, ending where the following byte data begins at 0x801F5810); takes no arguments and forwards none.'
   - - 7704
-    - asm
-    - func_801F4A18
+    - c
+    - initializeWorkFieldsWorld02Area08213_801F4A18
+    - '@source: src/bof3/world/initializeWorkFieldsWorld02Area08213_801F4A18.c'
+    - '@behavior: initializes scratch work fields, transforms saved words +0x0C/+0x10 into +0x34/+0x38 and advances byte +0x02; takes no arguments and returns nothing.'
   - - 7824
     - asm
     - func_801F4A90

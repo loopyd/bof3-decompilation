@@ -144,8 +144,9 @@ segments:
     - c
     - clearSharedByteBitPair2World02Area10814_801F43DC
   - - 6136
-    - asm
-    - func_801F43F8
+    - c
+    - clearSharedByteBitPair3World02Area10814_801F43F8
+    - '@source: src/bof3/world/clearSharedByteBitPair3World02Area10814_801F43F8.c'
   - - 6164
     - asm
     - func_801F4414

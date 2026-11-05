@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EECB0
   - - 480
-    - asm
-    - func_801EEDE0
+    - c
+    - dispatchWorkByte2LocalPairBmagicMagic15103_801EEDE0
+    - '@source: src/bof3/bmagic/dispatchWorkByte2LocalPairBmagicMagic15103_801EEDE0.c'
+    - '@behavior: Dispatches the scratchpad work byte 2 through a local pair of handlers at 0x801EEE38 and 0x801EF318 without checking the index.'
   - - 568
     - asm
     - func_801EEE38

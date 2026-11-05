@@ -36,8 +36,8 @@ segments:
     - asm
     - func_801F2C80
   - - 188
-    - asm
-    - func_801F2CBC
+    - c
+    - advanceHalfword932cTo1500World03Area12114_801F2CBC
   - - 304
     - asm
     - func_801F2D30

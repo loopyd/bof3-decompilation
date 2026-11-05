@@ -30,8 +30,8 @@ segments:
   vram: 2149510304
   subsegments:
   - - 160
-    - asm
-    - func_801EECA0
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic01500_801EECA0
   - - 268
     - asm
     - func_801EED0C

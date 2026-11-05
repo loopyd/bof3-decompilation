@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/world/clearSharedByteBitPair0World02Area10814_801F43A4.c",
     "src/bof3/world/clearSharedByteBitPair1World02Area10814_801F43C0.c",
     "src/bof3/world/clearSharedByteBitPair2World02Area10814_801F43DC.c",
+    "src/bof3/world/clearSharedByteBitPair3World02Area10814_801F43F8.c",
     "src/bof3/world/noopHandlerWorld02Area10814_801F56E0.c",
     "src/bof3/support/area108_14_psyq.c",
 ]

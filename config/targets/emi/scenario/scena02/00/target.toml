@@ -9,6 +9,7 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/alternateTwoTickCounterPhasesScenarioScena0200_801FCBDC.c",
     "src/bof3/scenario/clearSharedByteAndProgressThenAdvanceStateScenarioScena0200_801F71D8.c",
     "src/bof3/scenario/setScenarioFlagBit31ScenarioScena0200_801FD65C.c",
     "src/bof3/scenario/setScenarioFlagBit0DScenarioScena0200_801FD290.c",

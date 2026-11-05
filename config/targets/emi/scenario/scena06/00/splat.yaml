@@ -153,8 +153,8 @@ segments:
     - c
     - zeroResultScenarioScena0600_801FD294
   - - 26268
-    - asm
-    - func_801FD29C
+    - c
+    - seedSharedFieldsScenarioScena0600_801FD29C
   - - 26444
     - asm
     - func_801FD34C

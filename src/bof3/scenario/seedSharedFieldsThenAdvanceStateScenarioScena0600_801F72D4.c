@@ -2,13 +2,13 @@
 
 extern s8 D_80146872;
 
-void func_801FD29C(void);
+void seedSharedFieldsScenarioScena0600_801FD29C(void);
 
 /* @source 0x801F72D4
  * @behavior Entry 0 of this overlay's 35-pointer frame-state handler table at
  * 0x801FE3D8 (0x801F72D4, 0x801F7300, 0x801F7A00, ..., 0x801FD234), the table
  * the overlay dispatcher func_801F7298 indexes with the signed main-RAM state
- * byte D_80146872: it first calls func_801FD29C, which copies the overlay's
+ * byte D_80146872: it first calls seedSharedFieldsScenarioScena0600_801FD29C, which copies the overlay's
  * eight-byte constant block at 0x801FE464 (0x32, 0x32, 0x1E, 0x18, 0x00, 0x0C,
  * 0x00, 0x00) into the shared main-RAM halfword fields 0x80144DF8, 0x80144E00,
  * 0x80144E04, 0x80144E06, 0x80144E08, 0x80144E0A and their 0x20-mirror bank
@@ -22,6 +22,6 @@ void func_801FD29C(void);
  * @residual none
  */
 void seedSharedFieldsThenAdvanceStateScenarioScena0600_801F72D4(void) {
-  func_801FD29C();
+  seedSharedFieldsScenarioScena0600_801FD29C();
   D_80146872 = 1;
 }

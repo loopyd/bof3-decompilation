@@ -48,8 +48,8 @@ segments:
     - asm
     - func_801F752C
   - - 2504
-    - asm
-    - func_801F75C8
+    - c
+    - decrementWorkByte9AndAdvanceStateScenarioScena0100_801F75C8
   - - 2628
     - c
     - resetWorkStateWhenNoEntryClearedScenarioScena0100_801F7644
