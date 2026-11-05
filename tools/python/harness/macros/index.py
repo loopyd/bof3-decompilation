@@ -26,6 +26,7 @@ SHARED_MACRO_HEADERS = (
     Path("include/world/gate_status.h"),
     Path("include/world/countdown.h"),
     Path("include/include_asm.h"),
+    Path("include/ui/panel_task_templates.h"),
 )
 
 

@@ -1,4 +1,16 @@
-/* Shared compile-time panel function templates; include from target wrappers only. */
+/* Compile-time panel function templates.
+ *
+ * Each macro below emits one complete panel wrapper, so include this header from
+ * the target source that owns the wrapper and nothing else. The target header
+ * must already define the panel root alias D_80148648 and, for PANEL_ICON_PRIM,
+ * the primitive cursor and draw helpers; the templates never name a target.
+ */
+
+#ifndef UI_PANEL_TASK_TEMPLATES_H
+#define UI_PANEL_TASK_TEMPLATES_H
+
+#include "ui/panel_task.h"
+
 #define PANEL_ADVANCE_X(func, limit)                                           \
   void func(void) {                                                            \
     PanelTask* task_root;                                                      \
@@ -73,39 +85,39 @@
     }                                                                          \
   }
 
-/* Two field-six forms that no existing template reproduces byte-for-byte: the
+/* Two field-six forms that no other template reproduces byte-for-byte: the
  * single-expression advance folds the store into the comparison, and the retreat
- * reaches its floor through an inverted test. Both are kept separate on purpose -
- * rewriting either into its nearest template changes the generated comparison. */
+ * reaches its floor through an inverted test. Rewriting either into its nearest
+ * template changes the generated comparison, so they stay separate. */
 #define PANEL_ADVANCE_FIELD6_ONCE(func, limit)                                 \
-  void func(void) {                                                           \
-    PanelTask* task_root;                                                     \
-    task_root = D_80148648;                                                   \
-    if ((s16)(*(u16*)((u8*)task_root + 6) =                                   \
-                  (u16)(*(u16*)((u8*)task_root + 6) + 0x10)) >=              \
-        (limit) + 1) {                                                        \
-      *(u16*)((u8*)task_root + 6) = (limit);                                  \
-      task_root->state = 0;                                                   \
-    }                                                                         \
+  void func(void) {                                                            \
+    PanelTask* task_root;                                                      \
+    task_root = D_80148648;                                                    \
+    if ((s16)(*(u16*)((u8*)task_root + 6) =                                    \
+                  (u16)(*(u16*)((u8*)task_root + 6) + 0x10)) >=                \
+        (limit) + 1) {                                                         \
+      *(u16*)((u8*)task_root + 6) = (limit);                                   \
+      task_root->state = 0;                                                    \
+    }                                                                          \
   }
 
 #define PANEL_RETREAT_FIELD6_FLOOR(func, step, min)                            \
-  void func(void) {                                                           \
-    PanelTask* task_root;                                                     \
-    u16        next_val;                                                      \
-    task_root = D_80148648;                                                   \
-    next_val = (u16)((*(u16*)((u8*)task_root + 6)) - (step));                 \
-    *(u16*)((u8*)task_root + 6) = next_val;                                   \
-    if ((s16)next_val >= (min) + 1) {                                         \
-      *(s16*)((u8*)task_root + 6) = (min);                                    \
-      task_root->state = 0;                                                   \
-    }                                                                         \
+  void func(void) {                                                            \
+    PanelTask* task_root;                                                      \
+    u16        next_val;                                                       \
+    task_root = D_80148648;                                                    \
+    next_val = (u16)((*(u16*)((u8*)task_root + 6)) - (step));                  \
+    *(u16*)((u8*)task_root + 6) = next_val;                                    \
+    if ((s16)next_val >= (min) + 1) {                                          \
+      *(s16*)((u8*)task_root + 6) = (min);                                     \
+      task_root->state = 0;                                                    \
+    }                                                                          \
   }
 
 #define PANEL_ICON_PRIM(func)                                                  \
   void func(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u16 arg4, u8 arg5) {       \
     IconPrim* icon;                                                            \
-    icon = (IconPrim*)g_PrimCursor;                                              \
+    icon = (IconPrim*)g_PrimCursor;                                            \
     SetSprt8((SPRT_8*)icon);                                                   \
     icon->unk_08 = arg0;                                                       \
     icon->unk_0A = arg1;                                                       \
@@ -118,3 +130,5 @@
     SetSemiTrans(icon, 0);                                                     \
     func_8014E5A0(1, 0x10);                                                    \
   }
+
+#endif /* UI_PANEL_TASK_TEMPLATES_H */

@@ -1,6 +1,6 @@
 #include "bof3/ui/shop00_internal.h"
 #include "ui/panel_task.h"
-#include "shared/ui/panel_task.inc"
+#include "ui/panel_task_templates.h"
 #include "base/compiler.h"
 
 /* @source 0x801E2948

@@ -426,19 +426,20 @@ def test_function_collision_matrix() -> None:
 
 
 def test_shared_function_templates_stay_target_owned() -> None:
-    template = ROOT / "src/shared/ui/panel_task.inc"
+    template = ROOT / "include/ui/panel_task_templates.h"
     assert template.is_file()
+    assert "UI_PANEL_TASK_TEMPLATES_H" in template.read_text(encoding="utf-8")
     wrappers = [
         path
         for path in (ROOT / "src/bof3").rglob("*.c")
-        if '"shared/ui/panel_task.inc"' in path.read_text(encoding="utf-8")
+        if '"ui/panel_task_templates.h"' in path.read_text(encoding="utf-8")
     ]
     assert len(wrappers) >= 2
     assert all("@source" in path.read_text(encoding="utf-8") for path in wrappers)
     assert "PANEL_ADVANCE_X" not in (ROOT / "include/ui/panel_task.h").read_text(
         encoding="utf-8"
     )
-    assert not any(path.suffix == ".inc" for path in (ROOT / "src/shared").rglob("*.c"))
+    assert not (ROOT / "src/shared").exists()
 
 
 def test_harness_modules_stay_decomposed() -> None:

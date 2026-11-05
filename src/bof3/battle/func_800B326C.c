@@ -1,6 +1,6 @@
 #include "bof3/battle/battle15_internal.h"
 #include "ui/panel_task.h"
-#include "shared/ui/panel_task.inc"
+#include "ui/panel_task_templates.h"
 
 /* @source 0x800B326C
  * @behavior UNKNOWN: exact behavior is not yet documented.

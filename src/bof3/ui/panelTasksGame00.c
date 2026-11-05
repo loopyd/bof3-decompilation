@@ -1,6 +1,6 @@
 #include "bof3/ui/game00_internal.h"
 #include "ui/panel_task.h"
-#include "shared/ui/panel_task.inc"
+#include "ui/panel_task_templates.h"
 
 /* @source 0x801999B8
  * @behavior advances the panel task field_06 by 0x10, clamps to max 0x28, and
