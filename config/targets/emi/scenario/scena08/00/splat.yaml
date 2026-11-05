@@ -133,8 +133,10 @@ segments:
     - c
     - tickCountdownByte9AndAdvanceWorkByte2ScenarioScena0800_801F7CF8
   - - 4436
-    - asm
-    - func_801F7D54
+    - c
+    - tickCountdownByte9SubtractHalfword800E4C1EAndResetWorkFlagsScenarioScena0800_801F7D54
+    - '@source: src/bof3/scenario/tickCountdownByte9SubtractHalfword800E4C1EAndResetWorkFlagsScenarioScena0800_801F7D54.c'
+    - '@behavior: Subtract 24 from halfword 0x800E4C1E modulo 65536, decrement work byte 9 modulo 256, and call work-flag reset helper 0x80196070 on countdown expiry. Takes no arguments and returns nothing.'
   - - 4524
     - c
     - findFreeWorkRecordScenarioScena0800_801F7DAC

@@ -177,8 +177,8 @@ segments:
     - c
     - clearTwoStateBytesThenRequestPrimaryState17ScenarioScena0100_801FD4F0
   - - 26932
-    - asm
-    - func_801FD534
+    - c
+    - clearTwoStateBytesThenRequestPrimaryState17Substate5ScenarioScena0100_801FD534
   - - 27004
     - asm
     - func_801FD57C

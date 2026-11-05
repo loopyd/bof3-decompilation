@@ -512,8 +512,10 @@ segments:
     - '@source: src/bof3/battle/func_8009F2E8.c'
     - '@behavior: Stores 4 into battle state byte D_80146375 and 0x62 into battle state halfword D_801463C0, then calls func_8009DCC8.'
   - - 35616
-    - asm
+    - c
     - func_8009F320
+    - '@source: src/bof3/battle/func_8009F320.c'
+    - '@behavior: Runs selection pass func_800A3F28, then sets flag 0x200 in the word indexed by D_80146394, choosing the local or reserve array according to D_80146374.'
   - - 35804
     - c
     - func_8009F3DC

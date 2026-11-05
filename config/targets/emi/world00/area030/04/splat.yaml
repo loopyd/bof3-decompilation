@@ -241,8 +241,10 @@ segments:
     - '@source: src/bof3/world/drawSelectedEntryPanelsWorld00Area03004_801D4B60.c'
     - '@behavior: draws fixed selected-entry panels, entry number, header and mode indicators with unavailable-entry sentinels.'
   - - 16516
-    - asm
-    - func_801D4C84
+    - c
+    - advanceEntrySpriteSlideAndAdvanceStateWorld00Area03004_801D4C84
+    - '@source: src/bof3/world/advanceEntrySpriteSlideAndAdvanceStateWorld00Area03004_801D4C84.c'
+    - '@behavior: increments the entry sprite slide count, draws entry panels and indicators, and at count 4 copies work halfword 0x3C to 0x3E and advances state byte 1.'
   - - 17008
     - c
     - decrementEntrySpriteSlideAndSetState8World00Area03004_801D4E70

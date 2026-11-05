@@ -71,8 +71,10 @@ segments:
     - c
     - armCountdownAndAdvanceWorkByte1ScenarioScena0300_801F7AE0
   - - 3856
-    - asm
-    - func_801F7B10
+    - c
+    - tickCountdownReload8IncrementWorkHalfword5EAndAdvanceWorkByte1ScenarioScena0300_801F7B10
+    - '@source: src/bof3/scenario/tickCountdownReload8IncrementWorkHalfword5EAndAdvanceWorkByte1ScenarioScena0300_801F7B10.c'
+    - '@behavior: Calls two local helpers, increments captured work halfword 0x5E, and ticks byte 9; at zero reloads 8 and advances work byte 1.'
   - - 4016
     - asm
     - func_801F7BB0

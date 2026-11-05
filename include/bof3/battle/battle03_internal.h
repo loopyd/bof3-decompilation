@@ -805,6 +805,7 @@ u8   hasUiRingWork(void);
 void func_801DEA64(s32 arg0);
 void queueActiveBattlerSnapshots(void);
 u8   func_801E0E0C(void);
+void selectLocalCleanupSubstate(void);
 void func_801E0B64(void);
 void resetScratchWhenGlobalBit4(void);
 void func_801E1DD4(void);

@@ -133,8 +133,8 @@ segments:
     - c
     - seedWorkWordTripletSetWord14AndAdvanceWorkByte2BmagicMagic13103_801F0BCC
   - - 8268
-    - asm
-    - func_801F0C4C
+    - c
+    - advanceWorkWord14By20SetByteBAndAdvanceWorkByte2At200BmagicMagic13103_801F0C4C
   - - 8344
     - asm
     - func_801F0C98

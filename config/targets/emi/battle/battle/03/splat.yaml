@@ -733,8 +733,8 @@ segments:
     - c
     - dispatchSubstate3TableB1f4
   - - 64392
-    - asm
-    - func_801E0788
+    - c
+    - selectLocalCleanupSubstate
   - - 65380
     - asm
     - func_801E0B64

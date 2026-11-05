@@ -1,4 +1,5 @@
 scenarioScena0800Work = 0x1F800044;
+scenarioScena0800Halfword800E4C1E = 0x800E4C1E;
 scenarioScena0800StateBytes = 0x80144EC8;
 dispatchSoundCue = 0x8015DF18;
 dispatchWorkByte1HandlerScenarioScena0800_801F6F48 = 0x801F6F48;
@@ -30,7 +31,7 @@ func_801F7BA8 = 0x801F7BA8;
 func_801F7C08 = 0x801F7C08;
 tickCountdownByte9SubtractWorkWord38AndAdvanceWorkByte2ScenarioScena0800_801F7C98 = 0x801F7C98;
 tickCountdownByte9AndAdvanceWorkByte2ScenarioScena0800_801F7CF8 = 0x801F7CF8;
-func_801F7D54 = 0x801F7D54;
+tickCountdownByte9SubtractHalfword800E4C1EAndResetWorkFlagsScenarioScena0800_801F7D54 = 0x801F7D54;
 findFreeWorkRecordScenarioScena0800_801F7DAC = 0x801F7DAC;
 clearWorkTableAt800E4800ScenarioScena0800_801F7DE8 = 0x801F7DE8;
 func_801F7E14 = 0x801F7E14;

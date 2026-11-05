@@ -174,8 +174,8 @@ segments:
     - c
     - setProgress1FAndRequestPrimaryState7ScenarioScena0200_801FCB54
   - - 24468
-    - asm
-    - func_801FCB94
+    - c
+    - clearProgressAndSubstateThenDispatchCue202ScenarioScena0200_801FCB94
   - - 24540
     - c
     - alternateTwoTickCounterPhasesScenarioScena0200_801FCBDC
