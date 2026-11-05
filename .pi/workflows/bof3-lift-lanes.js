@@ -633,7 +633,7 @@ const worthRetrying = (text) => {
 // previous rung's report plus the selector set, so it continues from measured evidence
 // instead of re-deriving the function. Non-exact rungs hand off; only a ladder that ends
 // non-exact reaches review.
-const liftRung = (lane, index, priorText) => {
+const liftRung = (lane, index, priorText, firstPercent) => {
   const ladder = laneLadder(lane);
   const model = laneModel(lane, index);
   const liftKey = `${lane.key}-lift-${index}`;
@@ -656,7 +656,9 @@ const liftRung = (lane, index, priorText) => {
         retainReport(lane, liftKey, lift);
         const text = String((lift && lift.output) || "");
         const state = resultState(lane, text);
-        const attempt = { text, state, model, rung: index + 1 };
+        const percent = bestPercent(text);
+        const baseline = firstPercent === undefined ? percent : firstPercent;
+        const attempt = { text, state, model, rung: index + 1, percent, firstPercent: baseline };
         // Only a measured partial earns another rung. A boundary proven data, or a lane
         // that blocked on evidence it did not have, will answer the same way on any
         // model; spending the second rung there buys nothing.
@@ -664,13 +666,13 @@ const liftRung = (lane, index, priorText) => {
             !worthRetrying(text) || index + 1 >= ladder.models.length) {
           return finishAttempt(lane, attempt);
         }
-        return liftRung(lane, index + 1, text);
+        return liftRung(lane, index + 1, text, baseline);
       },
       (error) => ({ lane: lane.key, target: lane.target, state: "lane-error", error: String(error).slice(0, 300) }),
     );
 };
 
-const laneChain = (lane) => liftRung(lane, laneLadder(lane).start, "");
+const laneChain = (lane) => liftRung(lane, laneLadder(lane).start, "", undefined);
 
 // Fail closed on incomplete membership or contradictory exact evidence. This is
 // report routing, not independent native verification; parent gates still own closure.
@@ -705,6 +707,17 @@ const matchesLane = (lane, text, identities) => {
      prefix === String(lane.target).toLowerCase()));
 };
 // --- end selector identity ---
+
+// Best match percentage a lane reported, so an escalated rung that improved a partial is
+// distinguishable from one that merely re-measured it.
+const bestPercent = (text) => {
+  const report = parseReport(text);
+  if (!report || !Array.isArray(report.results)) return null;
+  const values = report.results
+    .map((row) => (row && (row.match_percent ?? row.gate?.match_percent)))
+    .filter((value) => typeof value === "number" && Number.isFinite(value));
+  return values.length ? Math.max(...values) : null;
+};
 
 const resultState = (lane, text) => {
   const report = parseReport(text);
@@ -745,7 +758,14 @@ const finishAttempt = (lane, attempt) => {
   if (attempt.state === "exact") {
     return namingStage(lane, attempt.text, attempt.model, attempt.rung);
   }
-  return reviewOnce(lane, attempt.text, 1, new Set());
+  const improved = typeof attempt.percent === "number" &&
+    typeof attempt.firstPercent === "number" && attempt.percent > attempt.firstPercent;
+  return reviewOnce(lane, attempt.text, 1, new Set()).then((row) => ({
+    ...row,
+    rung: attempt.rung,
+    model: attempt.model,
+    ...(improved ? { improved: attempt.percent } : {}),
+  }));
 };
 
 // Naming runs on an exact lift. The lift is already at 100%, so a naming edit that
