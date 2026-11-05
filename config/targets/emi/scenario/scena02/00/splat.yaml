@@ -240,8 +240,8 @@ segments:
     - c
     - requestPrimaryState10Substate0FAndQueueCue106ScenarioScena0200_801FD450
   - - 26768
-    - asm
-    - func_801FD490
+    - c
+    - clearProgressAndSharedStateBytesThenRequestPrimaryState12ScenarioScena0200_801FD490
   - - 26852
     - c
     - noopHandlerScenarioScena0200_801FD4E4

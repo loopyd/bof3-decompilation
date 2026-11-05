@@ -351,6 +351,7 @@ initScratchMotionFields = 0x801E47A4;
 integrateMotionOrSet2 = 0x801E47E0;
 applyGravityOrReset = 0x801E48D4;
 dispatchResultSubstateTable = 0x801E4928;
+applyEnemyCounterDeltaOrDeplete = 0x801E496C;
 func_801E4A50 = 0x801E4A50;
 dispatchByte2TableB460 = 0x801E4AE8;
 initEnemyCueCountdownWhenLoaderReady = 0x801E4B2C;

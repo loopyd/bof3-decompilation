@@ -67,10 +67,12 @@ argument does not. The same holds for identical argument lists: writing the call
 both arms can produce the single original call site through cross-jumping, and it
 keeps the per-arm argument setup the original shows. Early returns versus initialized
 result changes `$v0` lifetime. When the guard wraps calls and stores and each side
-returns a different constant, put the work inside the inverted `if` with the
-fallthrough return after it: a result local live across the calls cost a saved
-register and frame bytes, while an early return before the block dropped the constant
-load on the fallthrough path.
+returns a different constant, put the work inside the `if` with the constant
+fallthrough return after the block: the work arm goes out of line behind `beq` while
+`j <epilogue>` keeps `move $v0,$zero` in its delay slot. A result local live across the
+calls cost a saved register and frame bytes, and an early `return B;` before the block
+relocated that return out of line instead - `.text` size stayed equal and only the
+branch shape differed (`bne` to a trailing `move $v0,$zero`).
 GCC loop rotation can move invariants: assigning inside loop body can permit late
 hoisting/preheader copies; moving before loop can lose them. Keep only measured
 semantically correct shape; record negative experiments before trying another shape.
@@ -325,7 +327,10 @@ admissible for an ordinary function. Sibling sources on more than one target clo
 a hoisted-base residual here, so reach for this before allocation work.
 
 Stores follow the same rule. Each `sb` to a distinct fixed-address cell carries its own
-`lui $at, %hi(sym)`, so declare one named extern per cell. A build that holds one base
+`lui $at, %hi(sym)`, so declare one named extern per cell. That holds for one cell read
+and written back: keep `cell = cell - 1` as the bare symbol expression, which folds the
+read into `lui`+`lbu %lo` and re-materialises `$at` for the store, because a pointer
+local gives that read and store one shared base instead. A build that holds one base
 register across the run instead has a shared base or aggregate view the original
 lacked. Inside one block, stores keep source statement order, and a constant
 re-materialised into one register between stores shows where its statement starts.

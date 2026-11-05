@@ -247,8 +247,9 @@ segments:
     - c
     - setScenarioFlagBit13ThenInvokeHelperScenarioScena0300_801FC578
   - - 22948
-    - asm
-    - func_801FC5A4
+    - c
+    - requestSubState6AndArmCountdown30WhenSharedNibbleIs15ScenarioScena0300_801FC5A4
+    - '@source: src/bof3/scenario/requestSubState6AndArmCountdown30WhenSharedNibbleIs15ScenarioScena0300_801FC5A4.c'
   - - 23036
     - asm
     - func_801FC5FC

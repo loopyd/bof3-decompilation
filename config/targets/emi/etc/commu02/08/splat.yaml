@@ -135,8 +135,8 @@ segments:
     - c
     - countFlaggedFieldRecords_commu02_08
   - - 34548
-    - asm
-    - func_801D92F4
+    - c
+    - findFlaggedFieldRecordSlot
   - - 34632
     - asm
     - func_801D9348

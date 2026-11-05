@@ -51,5 +51,6 @@ support_sources = [
     "src/bof3/support/scena03_00_psyq.c",
     "src/bof3/scenario/armCountdownAdvanceWorkByte1ThenQueueCue204ScenarioScena0300_801F8328.c",
     "src/bof3/scenario/projectSharedCoordinatesIntoWorkRecordThenAdvanceScenarioScena0300_801F8640.c",
+    "src/bof3/scenario/requestSubState6AndArmCountdown30WhenSharedNibbleIs15ScenarioScena0300_801FC5A4.c",
 ]
 psyq_source = "src/bof3/support/scena03_00_psyq.c"

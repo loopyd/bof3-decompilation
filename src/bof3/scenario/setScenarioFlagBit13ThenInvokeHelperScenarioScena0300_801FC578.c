@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 void func_8015B580(u32 arg0, s32 arg1);
-void func_801FC5A4(void);
+void requestSubState6AndArmCountdown30WhenSharedNibbleIs15ScenarioScena0300_801FC5A4(void);
 
 /* @source 0x801FC578
  * @behavior Handler slot 4 of the overlay's nine-pointer handler table at
@@ -24,5 +24,5 @@ void func_801FC5A4(void);
  */
 void setScenarioFlagBit13ThenInvokeHelperScenarioScena0300_801FC578(s32 arg0, s32 arg1) {
   func_8015B580(arg1, 0x13);
-  func_801FC5A4();
+  requestSubState6AndArmCountdown30WhenSharedNibbleIs15ScenarioScena0300_801FC5A4();
 }

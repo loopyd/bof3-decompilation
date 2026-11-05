@@ -75,8 +75,10 @@ segments:
     - asm
     - func_801D3D84
   - - 13268
-    - asm
-    - func_801D3FD4
+    - c
+    - drawShopPanelsThenDecrementUiSubstep
+    - '@source: src/bof3/ui/drawShopPanelsThenDecrementUiSubstep.c'
+    - '@behavior: shop UI sub-step handler at entry 4 of the sub-step table D_801E52D8, which the dispatcher func_801D3AA8 selects with the UI sub-step byte D_80148652: draws the shop panel row through func_801D6D6C at the fixed origin (0x6E, 0x4C), emits the shop panel strip through func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth argument, draws the message panel through func_801DA2F4 at (0x62, 0x28) with the constant 0 and the main-RAM value D_80144F50 when the saved-state byte D_8014865C is not the -1 sentinel, then submits the texture row 0x1C at row 0x16 through func_8014F800 with the constant 0xFF as the fourth argument and the value returned by func_801502D0(0xA2) as the fifth. When the shared pad-state halfword D_80145AA8 is nonzero it finally steps the UI sub-step byte D_80148652 back by one; a clear halfword leaves that byte untouched.'
   - - 13452
     - c
     - func_801D408C

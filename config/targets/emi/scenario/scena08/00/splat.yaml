@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801F7268
   - - 1824
-    - asm
-    - func_801F7320
+    - c
+    - invokeHelper85F0DecrementWorkHalfword32AndTickCountdown5AQueueCue209ScenarioScena0800_801F7320
+    - '@source: src/bof3/scenario/invokeHelper85F0DecrementWorkHalfword32AndTickCountdown5AQueueCue209ScenarioScena0800_801F7320.c'
+    - '@behavior: Call the overlay helper at 0x801F85F0 with the signed work halfwords 0x2E, 0x30 and 0x32, reload the scratchpad work pointer at 0x1F800044, then decrement work halfword 0x32 modulo 65536 only when the low two bits of work halfword 0x5A are clear, reloading the work pointer as the last statement of that arm. Decrement work halfword 0x5A modulo 65536; when that countdown reaches zero the arm queues the front-end sound cue 0x209, reloads the work pointer, re-arms 0x5A with 0x14 and advances work byte 1 modulo 256. Takes no arguments and returns nothing; the frame only keeps $ra across its two calls.'
   - - 2004
     - c
     - invokeHelper85F0AdvanceWorkHalfword32AndTickCountdown5AScenarioScena0800_801F73D4

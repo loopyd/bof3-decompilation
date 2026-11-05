@@ -266,6 +266,10 @@ extern s8 D_801E28F8[];              /* @source 0x801E28F8 @kind table */
 extern u8  D_80144002;    /* @source 0x80144002 @kind unknown */
 extern u8  D_80145AD4[];  /* @source 0x80145AD4 @kind unknown */
 extern const char D_801D0C04[]; /* @source 0x801D0C04 @kind rodata */
+/* Two-character rodata label "23" (bytes 0x32 0x33 0x00 0x00) that the AREA030
+ * entry-panel counter row func_801D7B64 submits as the text-pointer argument of
+ * the shared text drawer func_8014FF0C. */
+extern const char D_801D0C10[]; /* @source 0x801D0C10 @kind rodata */
 extern u16 D_801E218C[]; /* @source 0x801E218C @kind table */
 extern u16 D_801E218E[]; /* @source 0x801E218E @kind table */
 extern u16 D_801E2190[]; /* @source 0x801E2190 @kind table */

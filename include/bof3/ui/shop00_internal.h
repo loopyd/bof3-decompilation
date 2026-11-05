@@ -1056,6 +1056,16 @@ extern u8 D_80144F59;
  * @source 0x80144F28 @kind unknown */
 extern u8 D_80144F28;
 
+/* Shared pad-state halfword: the sub-step handler
+ * drawShopPanelsThenDecrementUiSubstep only tests it for a nonzero value and
+ * steps the UI sub-step byte D_80148652 back by one. Other overlays AND it with
+ * the pressed-button masks D_80145AC2/D_80145AC4 (this target's func_801DA678
+ * does the same) and test single bits such as 0x1000, so it carries the current
+ * button state bits. It is not owned by the shared map, so this target declares
+ * it locally and adds a target-map row.
+ * @source 0x80145AA8 @kind unknown */
+extern u16 D_80145AA8;
+
 /* Main-RAM halfword cells cleared together (`sh $zero`) by the sub-step handler
  * func_801D5D98 on its cue 0xD0 path, immediately before it arms sub-step
  * 0x14. The two stores are adjacent and hand-written to $at in the original;

@@ -9,6 +9,7 @@ load_address = 0x801D0C00
 
 sources = [
     "src/bof3/ui/findActiveRecordSlot.c",
+    "src/bof3/ui/findFlaggedFieldRecordSlot.c",
 ]
 support_sources = [
     "src/bof3/ui/countFlaggedFieldRecords_commu02_08.c",

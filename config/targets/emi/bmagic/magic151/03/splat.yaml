@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801EF2A0
   - - 1816
-    - asm
-    - func_801EF318
+    - c
+    - dispatchWorkByte3HandlerBmagicMagic15103_801EF318
+    - '@source: src/bof3/bmagic/dispatchWorkByte3HandlerBmagicMagic15103_801EF318.c'
+    - '@behavior: Dispatches the scratchpad work byte 3 through the five-entry code pointer table at 0x801EEC24 copied into the function frame, without checking the index.'
   - - 1928
     - asm
     - func_801EF388

@@ -1114,8 +1114,10 @@ segments:
     - '@source: src/bof3/battle/dispatchResultSubstateTable.c'
     - '@behavior: Dispatches the current queued-result substate byte through its table.'
   - - 81260
-    - asm
-    - func_801E496C
+    - c
+    - applyEnemyCounterDeltaOrDeplete
+    - '@source: src/bof3/battle/applyEnemyCounterDeltaOrDeplete.c'
+    - '@behavior: Applies the signed enemy-work halfword +0xF8 delta to the current halfword +0x94: when the delta is not below the current value it stores 0 into +0x94 and 0x4000 into +0x82; otherwise it raises front-end cue 0x206 for a negative delta, subtracts the delta from +0x94 and lowers that result to the +0xA0 ceiling. While enemy byte +0xFC has bit 0 set it then forwards the delta and scratch byte +0x05 to func_800AAC88, runs enemyReadyOrHelper1 and advances scratch byte +0x03.'
   - - 81488
     - c
     - func_801E4A50

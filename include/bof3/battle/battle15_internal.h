@@ -732,6 +732,11 @@ extern u8 battlePanelIndexFormat;
 /* @source 0x800969C4 @kind table */
 extern BattleWorkStateDispatchTable battleWorkStateHandlerTable;
 
+/* Second four-entry work-state handler table, dispatched by
+ * dispatchBattleWorkStateHandlerB; only entry 0 (0x800AE82C) differs. */
+/* @source 0x800969D4 @kind table */
+extern BattleWorkStateDispatchTable battleWorkStateHandlerTableB;
+
 extern u8 D_801462EC; /* @source 0x801462EC @kind unknown */
 extern s16 D_8014930A; /* @source 0x8014930A @kind unknown */
 extern s16 D_8014930E; /* @source 0x8014930E @kind unknown */
