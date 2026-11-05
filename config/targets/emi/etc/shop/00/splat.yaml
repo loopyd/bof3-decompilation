@@ -623,8 +623,10 @@ segments:
     - asm
     - func_801E2150
   - - 71796
-    - asm
-    - func_801E2474
+    - c
+    - tickPhaseTimerThenCloseShopPanelsOnCancel
+    - '@source: src/bof3/ui/tickPhaseTimerThenCloseShopPanelsOnCancel.c'
+    - '@behavior: shop sub-step handler reached as entry 1 of the three-entry sub-step table D_801E5D50 (the shipped word at 0x801E5D54 is this function), which the dispatcher func_801E2114 indexes with the UI sub-step byte D_80148652: every call republishes the panel state by arming the s16 cell D_80148340 with the selected field-record id D_80148361 plus 0x122 and copying the list cursor byte D_8014835F (the byte the entry-0 sibling func_801E2150 steps with the pad) into the slot byte D_80148360, then counts the shared frame timer phaseTimer down and returns immediately while it is nonzero; once the timer reads zero and the pad state D_80145AA8 carries the cancel mask D_80145AC4 it plays the main-exe cues 0x106 and 0x102 through the cue dispatcher func_8015DF18, arms D_80148357 with 2, returns both 0x24-byte panel records anchored at D_80148378 to the state byte 1 that the opener func_801E2724 overwrites with 2, re-arms the published slot byte D_80148360 with the 0x7F none sentinel, re-arms phaseTimer with 8 and advances the UI sub-step byte D_80148652 by one.'
   - - 72012
     - c
     - func_801E254C

@@ -780,8 +780,10 @@ segments:
     - '@source: src/bof3/battle/setRecordByte8To2StoreIndexedModifierField6.c'
     - '@behavior: Sets selection record byte +0x08 to 2, applies the indexed battle modifier with element flag 1, and stores its result in record field +0x06.'
   - - 45880
-    - asm
-    - func_800A1B38
+    - c
+    - storeSelectedValueWhenRollAccepted
+    - '@source: src/bof3/battle/storeSelectedValueWhenRollAccepted.c'
+    - '@behavior: Runs the selection roll func_800A3C9C for the current battler byte D_80146374 and selection byte D_80146394, then copies the selected battler''s leading halfword - the 0x140-stride party work record above 0x80145F18 for selection bytes below 3, otherwise the 0x118-stride enemy work record above 0x801EB6C4 rebased by -3 - into the selection record halfword at byte +0x04.'
   - - 46052
     - asm
     - func_800A1BE4

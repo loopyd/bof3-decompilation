@@ -79,8 +79,10 @@ segments:
     - asm
     - func_801F3408
   - - 2160
-    - asm
-    - func_801F3470
+    - c
+    - setWorkHalfword32To16WhenWorkTableIdleIncrementWorkByte1World02Area08213_801F3470
+    - '@source: src/bof3/world/setWorkHalfword32To16WhenWorkTableIdleIncrementWorkByte1World02Area08213_801F3470.c'
+    - '@behavior: overlay step handler, entry index 10 of the twelve-pointer step table at 0x801F5734; calls the work-table tick helper func_801F3AAC and, when it reports that no work-table entry is active, re-reads the scratch work pointer cell 0x1F800044, writes the halfword 0x10 to the work record +0x32 field and increments the record +0x01 step byte; takes no arguments and returns nothing.'
   - - 2232
     - asm
     - func_801F34B8

@@ -1066,6 +1066,15 @@ extern u8 D_80144F28;
  * @source 0x80145AA8 @kind unknown */
 extern u16 D_80145AA8;
 
+/* Shared pressed-button mask tested against the same pad state D_80145AA8: the
+ * entry-0 sibling func_801E2150 takes its cue-0x106 cancel arm when this mask
+ * matches the pad state, and the pad helper func_801DA678 tests it next to
+ * D_80145AC2 against that state. emi/etc/sisyou/00 and emi/world00/area030/04
+ * declare the same address. The shared map does not own it; the
+ * D_<address> name binds to its own address, so no target-map row is added.
+ * @source 0x80145AC4 @kind unknown */
+extern u16 D_80145AC4;
+
 /* Main-RAM halfword cells cleared together (`sh $zero`) by the sub-step handler
  * func_801D5D98 on its cue 0xD0 path, immediately before it arms sub-step
  * 0x14. The two stores are adjacent and hand-written to $at in the original;

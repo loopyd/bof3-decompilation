@@ -313,6 +313,11 @@ extern u8 D_80145027;      /* @source 0x80145027 @kind unknown */
 extern u8 D_80145028;      /* @source 0x80145028 @kind unknown */
 extern u8 D_801E2720[];    /* @source 0x801E2720 @kind unknown */
 extern u8 D_801E2748[];    /* @source 0x801E2748 @kind unknown */
+/* Latch byte of the AREA030 work-record entry group: cleared by the entry
+ * handler at 0x801D9B9C, armed with 1 by the record walker func_801DE82C
+ * (sb at 0x801DE8E4) and cleared again by func_801DEBC4 (sb at 0x801DEBEC).
+ * Role not established; kept address-anchored. */
+extern u8  D_801E3200;     /* @source 0x801E3200 @kind unknown */
 /* Flag byte armed/cleared by the 0x40 mode handler func_801D9E40: set when the
  * func_801E1C10 icon row is full, cleared otherwise. */
 extern u8  D_801E3204;      /* @source 0x801E3204 @kind unknown */

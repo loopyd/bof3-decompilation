@@ -139,6 +139,7 @@ startEmiStreamSlotWhenLoaderReady = 0x801D7108;
 enterPhase4WhenLoaderReady = 0x801D716C;
 dispatchStateTableAd20 = 0x801D71A4;
 snapshotBattlersAndAdvanceState = 0x801D71E0;
+initBattlerFieldRecordsAndAdvanceFrontState = 0x801D7350;
 retreatStateWhenGateClear = 0x801D74D4;
 func_801D750C = 0x801D750C;
 func_801D7A40 = 0x801D7A40;

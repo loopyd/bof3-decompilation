@@ -144,8 +144,8 @@ segments:
     - asm
     - func_801FB1B4
   - - 18256
-    - asm
-    - func_801FB350
+    - c
+    - dispatchRecordCallbackScenarioScena1300_801FB350
   - - 18320
     - c
     - incrementWorkHalfword7EScenarioScena1300_801FB390

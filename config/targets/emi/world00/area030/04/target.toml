@@ -81,6 +81,7 @@ sources = [
     "src/bof3/world/func_801D90FC_area03004.c",
     "src/bof3/world/func_801D9534.c",
     "src/bof3/world/func_801D9B58.c",
+    "src/bof3/world/armDistanceTimerAndRequestResourceWorld00Area03004_801D9B9C.c",
     "src/bof3/world/func_801D9C4C.c",
     "src/bof3/world/func_801D9C9C.c",
     "src/bof3/world/func_801D9CF4.c",

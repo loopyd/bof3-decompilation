@@ -342,8 +342,11 @@ Reads follow it in the other direction. When the original materialises a fixed-a
 symbol once into a saved register and re-reads one byte of it before each call,
 declare a local `u8 *` to that symbol so one base serves every read. Passing the symbol
 expression to each call instead emits its own `lui %hi`/`lbu %lo` pair and loses the
-shared base. A local that only re-types a promoted value (`u16 row = y;`) folds away
-and changes nothing.
+shared base. One read needs the same local when a store to another cell sits between
+the base and the read: the pointer copy takes the base load early enough to fill the
+preceding delay slot, while the inline symbol expression materialises the base after
+that store and costs two instructions. A local that only re-types a promoted value
+(`u16 row = y;`) folds away and changes nothing.
 
 Give a work record a word-typed view before chasing pointer roles. A typed pointer over
 the same storage fixes which value the pointer holds and where the second cell load
@@ -443,18 +446,29 @@ though the `USE` emits no instruction.
 
 ### Named scale products
 
-Use this lever when the body matches instruction for instruction but the frame is
-larger, and the body contains a repeated index scale such as `span * 3` in both a
-load and an address. The unnamed product can force a temporary that widens the
-frame without any body access to the extra bytes.
+Use this lever when a repeated index scale such as `span * 3` sits inline in a load
+and an address, and the difference is outside the body you are shaping: a larger
+frame, a saved register or hoisted base, or a shifted induction setup. The unnamed
+product can force a temporary that widens the frame without any body access to the
+extra bytes.
 
 1. Bind both forms before and after to the same source and compiler settings.
-   Confirm the body already matches and only the prologue and epilogue differ.
+   Confirm the mismatch is the prologue/epilogue, the base materialisation or the
+   preheader, not the instruction body.
 2. Name the product once as a scalar local and index the same array symbol through
    it in both places: `offset = span * 3;` then `D_x[offset + 2]` and
    `&D_x[offset]`. Keep the symbol name on both uses; a pointer local used for both
    changes the base materialisation order and emits the base late.
-3. Measure. Require the original frame, the original base load position and the
+3. An inline scale inside a fixed-address array subscript makes the whole symbol
+   address loop-invariant. GCC hoists that base into a saved register before the
+   loop and indexes from it, one instruction more than the original's per-iteration
+   `lui $at,%hi(X)` + `addu $at,$at,offset` + `lbu %lo($at)` fold; the named offset
+   restores the fold. A bare-index subscript such as `D_y[i]` already folds, so
+   leave that one inline.
+4. Two passes over one table with the same stride need one offset local per pass.
+   A shared local ties the second pass' product to the first pass' quantity, so the
+   scale stops being block-local; keep each pass' own index reset and multiply.
+5. Measure. Require the original frame, the original base load position and the
    complete function bytes before accepting.
 
 `func_801D41E4` (47/47, 188 B) needed this after four forms: branch polarity first,

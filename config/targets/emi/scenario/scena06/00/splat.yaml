@@ -129,8 +129,8 @@ segments:
     - c
     - clearProgressAndSharedStateBytesThenRequestPrimaryState4ScenarioScena0600_801FCFC0
   - - 25620
-    - asm
-    - func_801FD014
+    - c
+    - setSubstate14ClearProgressAndSharedStateBytesAndRequestPrimaryState4ScenarioScena0600_801FD014
   - - 25708
     - asm
     - func_801FD06C

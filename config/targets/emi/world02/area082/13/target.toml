@@ -21,6 +21,7 @@ support_sources = [
     "src/bof3/world/setWorkCountdownClearOriginIncrementWorkByte1World02Area08213_801F2C6C.c",
     "src/bof3/world/setWorkHalfwordsIncrementWorkByte1World02Area08213_801F336C.c",
     "src/bof3/world/setWorkWord5World02Area08213_801F55F4.c",
+    "src/bof3/world/setWorkHalfword32To16WhenWorkTableIdleIncrementWorkByte1World02Area08213_801F3470.c",
     "src/bof3/support/area082_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area082_13_psyq.c"

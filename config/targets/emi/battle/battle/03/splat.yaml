@@ -172,8 +172,10 @@ segments:
     - asm
     - func_801D7234
   - - 26448
-    - asm
-    - func_801D7350
+    - c
+    - initBattlerFieldRecordsAndAdvanceFrontState
+    - '@source: src/bof3/battle/initBattlerFieldRecordsAndAdvanceFrontState.c'
+    - '@behavior: Resets the eight enemy work records and every queued slot key byte, arms the field record of each active local work record (halfword +0x14 and byte +0x18 set to 1, +0x1A advanced while below 5, bit 0x4000 of halfword +0x0C and bit 0x02 of byte +0x07 cleared) and rebuilds it through func_80164A44, copies the armed templates into the local work records, then clears the pending bytes 0x80146329 and 0x801462E0..0x801462E4 and advances the shared front-end sub-state word 0x80143B92.'
   - - 26836
     - c
     - retreatStateWhenGateClear

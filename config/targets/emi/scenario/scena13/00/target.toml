@@ -12,6 +12,7 @@ support_sources = [
     "src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectScenarioScena1300_801FBC88.c",
     "src/bof3/scenario/clearWorkTintArmCountdownAndAdvanceWorkByte1ScenarioScena1300_801F6EE8.c",
     "src/bof3/scenario/dispatchPrimaryStateHandlerScenarioScena1300_801F8474.c",
+    "src/bof3/scenario/dispatchRecordCallbackScenarioScena1300_801FB350.c",
     "src/bof3/scenario/dispatchScenarioStateHandlerScenarioScena1300_801F7D14.c",
     "src/bof3/scenario/incrementWorkHalfword7EScenarioScena1300_801FB390.c",
     "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena1300_801FBE98.c",

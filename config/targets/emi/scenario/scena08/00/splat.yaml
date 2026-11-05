@@ -331,8 +331,10 @@ segments:
     - c
     - clearStateAndProgressEnterPhase1AndSetBit43ScenarioScena0800_801FA2D0
   - - 14124
-    - asm
-    - func_801FA32C
+    - c
+    - reinitializeAllFieldRecordsAndKeepRecordZeroFlaggedScenarioScena0800_801FA32C
+    - '@source: src/bof3/scenario/reinitializeAllFieldRecordsAndKeepRecordZeroFlaggedScenarioScena0800_801FA32C.c'
+    - '@behavior: Field-record reset run by this overlay phase-1 entry handler at 0x801FA2D0: it sets bit 0 of the flag byte at 0x8014496F in all eight 164-byte-stride field records of the table at 0x80144968 so the shared field-record reinitializer func_801C16B8 in the concurrently loaded etc/game overlay visits every record (that helper clears each flagged record byte at 0x1A, calls 0x80164A44 with the record base, zeroes the halfword at 0x0C and re-seeds the halfwords at 0x14/0x16 and the byte at 0x18 from its 0x1C/0x1E/0x2A cells), and then clears bit 0 of records 1 through 7 so only record 0 stays flagged. Both passes walk an unsigned byte index over the fixed stride in a bottom-tested loop; it takes no arguments, returns nothing, and its 0x18-byte frame only keeps $ra across the single call.'
   - - 14308
     - asm
     - func_801FA3E4

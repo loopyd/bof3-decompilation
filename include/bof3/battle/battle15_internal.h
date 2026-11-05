@@ -552,6 +552,12 @@ s32  func_800A3A10(s32 battler_index, s32 selection_kind);
  * func_800A2D70 and returns a 0/1 success flag; its first parameter is not read
  * by the decoded body at 0x800A3B6C. */
 s32  func_800A3B6C(s32 arg0, s32 battler_index, s32 selection_mask);
+/* Selection roll at 0x800A3C9C: the 0x800B496C modifier-table twin of
+ * func_800A3A10 (identical body apart from its callee). Its first parameter is
+ * not read by the decoded body; the second selects the battler (& 0xFF) and the
+ * selection mask is the halfword of the 0x14-byte row 0x801CA71C[D_801463C0].
+ * Returns a 0/1 success flag. */
+s32  func_800A3C9C(s32 arg0, s32 battler_index);
 u16  func_800A36F0(u8 battler_index, u16 flags);
 void func_800A3F28(void);
 void func_800ABF5C(void);

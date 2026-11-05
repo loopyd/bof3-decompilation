@@ -5,7 +5,7 @@ extern u8 scenarioScena0800StateBytes[];
 extern u32 g_ScenarioProgress;
 extern s8 D_80146872;
 
-void func_801FA32C(void);
+void reinitializeAllFieldRecordsAndKeepRecordZeroFlaggedScenarioScena0800_801FA32C(void);
 void func_801FE12C(void);
 void func_8015B580(void* bitmap, u8 bit_index);
 
@@ -26,7 +26,7 @@ void clearStateAndProgressEnterPhase1AndSetBit43ScenarioScena0800_801FA2D0(void)
   state[0] = 0;
   g_ScenarioProgress = 0;
   D_80146872 = 1;
-  func_801FA32C();
+  reinitializeAllFieldRecordsAndKeepRecordZeroFlaggedScenarioScena0800_801FA32C();
   func_801FE12C();
   func_8015B580(state + 0x60, 0x43);
 }
