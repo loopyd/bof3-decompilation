@@ -82,7 +82,7 @@ const liftBrief = (lane) => [
   ``,
   `Write set: new/edited function sources under src/bof3/ for '${lane.target}'; that target's own header`,
   `if one exists; config/targets/'${lane.target}'/{splat.yaml,symbols.txt,target.toml}; your report`,
-  `out/lift-batches/${lane.key}-${lane.target.replace(/^emi\//, "").replace(/\//g, "-")}.md. Do NOT touch another target, config/splat.yaml, the index, caches,`,
+  `out/lift-batches/${lane.key}-${lane.target.replace(/^emi\//, "").replace(/\//g, "-")}-${String(lane.refs[0] || "").split("@")[1] || "unaddressed"}.md. Do NOT touch another target, config/splat.yaml, the index, caches,`,
   `config/symbol-naming-baseline.json, or Git.`,
   ``,
   `Selection: only the supplied refs. Report data/no-op/blocked rows instead`,
@@ -147,7 +147,7 @@ const liftBrief = (lane) => [
 const reviewBrief = (lane, liftOutput) => [
   `A BOF3 lane '${lane.key}' (target '${lane.target}') reports a non-exact outcome. You are READ-ONLY.`,
   `Review ONLY the selector(s) that are not exact — do not re-verify an exact one.`,
-  `Read the lane report at out/lift-batches/${lane.key}-${lane.target.replace(/^emi\//, "").replace(/\//g, "-")}.md and the original bytes. For each failing selector,`,
+  `Read the lane report at out/lift-batches/${lane.key}-${lane.target.replace(/^emi\//, "").replace(/\//g, "-")}-${String(lane.refs[0] || "").split("@")[1] || "unaddressed"}.md and the original bytes. For each failing selector,`,
   `propose a concrete C solution only when evidence supports its shape and expected instruction effect.`,
   `If no proposal is justified, return workflow:"blocked" with the evidence gap, empty experiments and`,
   `ladder_exhausted:false. Do not invent a repair identity or call missing evidence exhaustion.`,
