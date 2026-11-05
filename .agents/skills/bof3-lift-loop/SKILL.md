@@ -74,6 +74,9 @@ disposition before successor starts.
    Lane reviewer handles non-exact selectors only. Parent resolves unavailable
    native checks. Serial batch gate waits for all lanes to close.
 5. **Name.** `$bof3-naming`; inspect current naming facts and apply evidenced edits within scope.
+   Route existing naming debt through the same workflow with `kind: "naming"` lanes: they
+   skip the lift ladder and go straight to the namer, which is what lets naming debt be
+   requeued and resolved by this loop instead of a separate campaign.
    Reuse valid target evidence. Preserve storage/ABI/address identity. Exact lane
    confirms semantic name/module and filename/Splat/map/header/manifest agreement;
    edit requires renewed gate. Reviewer supplies missing naming evidence. Selected

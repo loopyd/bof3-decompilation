@@ -28,7 +28,20 @@ brief then lists them as closed history the lane must not re-author or re-measur
 requires it to say which shape it is deliberately not repeating. Assemble it before
 launch; the workflow cannot read files.
 
-Two lane kinds, one workflow. A fresh lane starts on the first rung of the model
+Three lane kinds, one workflow. `kind: "naming"` is naming debt rather than lifting: the
+function already matches, only its identity is open, so the lane runs one namer on the
+lowest rung and no model rung is spent. Select those rows with
+`bin/harness naming list TARGET --json`; a naming lane reports `naming-applied`,
+`naming-no-change`, `naming-deferred` or `naming-blocked`, and an applied rename must keep
+the owning gate at 100% or be restored.
+
+Scope a naming lane to functions authored in its own target. A function whose body lives in
+another target is also named in a shared prototype or macro, so a single-target rename forks
+the name into two spellings; those rows are deferred with a fan-out inventory instead of
+renamed. Verify once per lane - one naming check and, only if something was edited, one gate
+covering every selector - because a gate on a large target builds the whole target.
+
+A fresh lane starts on the first rung of the model
 ladder (`ninerouter/ds-combo`, then `ninerouter/gpt-combo`); a lane marked
 `kind: "partial"` starts on the strongest rung, because the cheap rung already
 produced the residual it would otherwise re-measure. `models` on a lane overrides the

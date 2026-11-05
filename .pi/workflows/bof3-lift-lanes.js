@@ -30,7 +30,8 @@
 //
 // A lane whose refs are existing partials passes `kind: "partial"` and starts on the
 // strongest rung: the cheap rung already produced that residual, so repeating it would
-// spend a child to relearn the report. `models` on a lane overrides the ladder for that
+// spend a child to relearn the report. A lane whose refs are naming debt passes
+// `kind: "naming"` and skips the ladder entirely - one namer, no lift stage. `models` on a lane overrides the ladder for that
 // lane only. Naming always runs on the lowest rung, because it applies an identity from
 // evidence that already exists rather than searching for one; review and repair run on
 // the lane's strongest rung.
@@ -94,7 +95,12 @@ const lanes = rawLanes.map((lane, index) => ({
   // "partial" marks a selector that already has an authored source and a measured
   // residual. Such a lane starts on the strongest rung instead of re-running the
   // cheap one that already failed it. Anything else is a fresh lift.
-  kind: String(lane.kind || "").trim().toLowerCase() === "partial" ? "partial" : "fresh",
+  // "fresh" lifts a boundary, "partial" elevates an authored residual to the strong rung,
+  // "naming" skips the models entirely: the function is already exact and only its
+  // identity is in debt, so the namer is the only stage that can do anything.
+  kind: ["partial", "naming"].includes(String(lane.kind || "").trim().toLowerCase())
+    ? String(lane.kind).trim().toLowerCase()
+    : "fresh",
   // Closed shapes from earlier runs, supplied by the parent. The workflow has no
   // filesystem, so the parent assembles this from prior reports; passing it in is what
   // makes a later run continue instead of rediscovering experiments.
@@ -109,6 +115,22 @@ const lanes = rawLanes.map((lane, index) => ({
 
 const bad = lanes.filter((lane) => !lane.target || lane.refs.length === 0 ||
   new Set(lane.refs).size !== lane.refs.length);
+// One disjoint target per lane is a write-set guarantee, not a style rule: two lanes on
+// one target edit the same splat.yaml/symbols.txt/target.toml and one will clobber the
+// other. Reject that here, where it costs nothing, rather than after both have written.
+const targetCounts = lanes.reduce((counts, lane) => {
+  const key = String(lane.target || "").trim().toLowerCase();
+  counts.set(key, (counts.get(key) || 0) + 1);
+  return counts;
+}, new Map());
+const sharedTargets = [...targetCounts.entries()].filter(([, count]) => count > 1);
+if (sharedTargets.length > 0) {
+  return {
+    ok: false,
+    error: "bof3-lift-lanes: one lane per target; group these selectors into a single lane: " +
+      sharedTargets.map(([target, count]) => `${target} (${count} lanes)`).join(", "),
+  };
+}
 if (bad.length > 0) {
   return { ok: false, error: "bof3-lift-lanes: every lane needs a target and at least one ref: " + bad.map((l) => l.key).join(", ") };
 }
@@ -295,6 +317,61 @@ const partialBrief = (lane, model) => [
 
 // Naming transaction for one exact lift. The namer owns identity edits; the native gate
 // stays the acceptance gate, so any applied rename must re-gate clean or be restored.
+// Naming-debt lane. No model rung is spent: the function already matches, so the only
+// open question is its identity.
+const namingDebtBrief = (lane, model) => [
+  `BOF3 naming-debt lane '${lane.key}' — target '${lane.target}' on '${model}'.`,
+  ``,
+  `These selectors are already exact and appear in the target's naming debt. No lift is`,
+  `wanted: do not re-derive the function, do not change its body, and do not run the lift`,
+  `ladder. Resolve the identity only.`,
+  ``,
+  `Registry refs:`,
+  ...lane.refs.map((ref) => `  ${ref}`),
+  ``,
+  `Write set: the lifted function sources under src/bof3/ for '${lane.target}'; that`,
+  `target's own header if one exists; config/targets/'${lane.target}'/{splat.yaml,symbols.txt,target.toml};`,
+  `your report out/lift-batches/${lane.key}-${lane.target.replace(/^emi\//, "").replace(/\//g, "-")}-${String(lane.refs[0] || "").split("@")[1] || "unaddressed"}.md.`,
+  `Do NOT touch another target, config/splat.yaml, the index, caches,`,
+  `config/symbol-naming-baseline.json, or Git.`,
+  ``,
+  `Steps:`,
+  `1. 'bin/harness naming list ${lane.target} --json' once, and read only the rows covering`,
+  `   your selectors. A selector with no debt row is a no-op: report it and move on.`,
+  `2. Classify each row before any evidence work, because the two kinds verify differently.`,
+  `   - Authored here: the selector has a lift source in this target ('naming check' or a`,
+  `     gate names it). Then rename the whole owned surface - identifier, filename, Splat`,
+  `     label, symbols.txt row, target-private header declaration, every target-owned caller`,
+  `     spelling - and verify in this target.`,
+  `   - Reference row: the selector is a symbol row for a function whose body is authored in`,
+  `     another target (typically the exe), and it is named in a shared prototype or macro`,
+  `     that every sibling target sees. Do NOT rename it here, not even this target's own`,
+  `     references: the shared header, the owning source, each sibling map row and every`,
+  `     caller spelling must change together or the tree ends up with two names for one`,
+  `     function, which is worse than the debt. Report naming:"deferred" with the fan-out`,
+  `     inventory: owning target and its gate result, the shared prototype and macro that`,
+  `     spell the old name, and every other target whose map or source still carries it.`,
+  `     The parent runs that as one transaction.`,
+  `3. Prove the identity from original bytes, callers/consumers and exact siblings. An`,
+  `   unevidenced role keeps its address-anchored name; "no-change" is a valid outcome -`,
+  `   never invent a name to fill the stage.`,
+  `4. Verify once, not per selector: ONE 'bin/harness naming check ${lane.target}' with all selectors`,
+  `   --json' and, if you edited anything, ONE 'bin/harness lift gate' covering every`,
+  `   selector of the lane, so the target-scoped build stages run once. A gate on a large`,
+  `   target takes minutes, so a second one doubles the lane's cost for nothing. An applied`,
+  `   rename MUST keep its owning gate at 100% with identical bytes; on regression restore`,
+  `   the previous spelling, re-gate, and report naming:"blocked" with restored:true.`,
+  ``,
+  ...carriedLedger(lane),
+  ``,
+  `Return one JSON object (plain or in one json fence):`,
+  `{lane:"${lane.key}",target:"${lane.target}",selector:"<ref>",naming:"applied|no-change|deferred|blocked",`,
+  `gate:{verdict:"PASS|FAIL"},restored:true|false,name:"<final function name>",`,
+  `source_path:"...",source_sha256:"<64 lowercase hex>",evidence:"<one sentence>",harness_calls:{used:0}}.`,
+  lane.note ? "Parent note for this lane:" : "",
+  lane.note || "",
+].filter((line, position, all) => !(line === "" && all[position - 1] === "")).join("\n");
+
 const namingBrief = (lane, liftText, liftModel) => [
   `BOF3 naming transaction for lane '${lane.key}' — target '${lane.target}'.`,
   ``,
@@ -675,7 +752,37 @@ const liftRung = (lane, index, priorText, firstPercent) => {
     );
 };
 
-const laneChain = (lane) => liftRung(lane, laneLadder(lane).start, "", undefined);
+// Naming debt is resolved by identity alone. The lane runs one namer on the lowest rung
+// and reports naming-applied / naming-no-change / naming-blocked; no lift stage is spent,
+// because the function already matches and the ladder has nothing to search.
+const namingDebtStage = (lane) => {
+  const nameKey = `${lane.key}-name`;
+  const model = laneModel(lane, 0);
+  return runs
+    .run(nameKey, {
+      label: `Name debt ${lane.key} (${lane.target}) on ${model}`,
+      agent: "bof3-namer",
+      model,
+      ...(lane.cwd ? { cwd: lane.cwd } : {}),
+      output: false,
+      task: namingDebtBrief(lane, model),
+    })
+    .then(
+      (named) => {
+        retainReport(lane, nameKey, named);
+        const verdict = namingVerdict(String((named && named.output) || ""));
+        const state = ["applied", "no-change", "deferred"].includes(verdict) ? "complete" : "blocked";
+        return { lane: lane.key, target: lane.target, state,
+          verdict: `naming-${verdict}`, kind: "naming", model };
+      },
+      (error) => ({ lane: lane.key, target: lane.target, state: "lane-error",
+        error: String(error).slice(0, 300), kind: "naming" }),
+    );
+};
+
+const laneChain = (lane) => (lane.kind === "naming"
+  ? namingDebtStage(lane)
+  : liftRung(lane, laneLadder(lane).start, "", undefined));
 
 // Fail closed on incomplete membership or contradictory exact evidence. This is
 // report routing, not independent native verification; parent gates still own closure.
@@ -793,7 +900,7 @@ const namingVerdict = (text) => {
   const report = parseReport(text) || looseNaming(text);
   if (!report) return "invalid";
   const naming = String(report.naming || "").trim();
-  if (!["applied", "no-change", "blocked"].includes(naming)) return "invalid";
+  if (!["applied", "no-change", "deferred", "blocked"].includes(naming)) return "invalid";
   if (naming === "applied") {
     const gate = report.gate && report.gate.verdict;
     const restored = report.restored === true;
