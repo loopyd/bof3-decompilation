@@ -9,6 +9,7 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/requestPrimaryState7OnIndexedBoundsScenarioScena0200_801FBF94.c",
     "src/bof3/scenario/requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC308.c",
     "src/bof3/scenario/requestPrimaryState7OnIndexedBoundsScenarioScena0200_801FC25C.c",
     "src/bof3/scenario/alternateTwoTickCounterPhasesScenarioScena0200_801FCBDC.c",

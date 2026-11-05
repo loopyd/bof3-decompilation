@@ -178,8 +178,9 @@ segments:
     - asm
     - func_801F5578
   - - 10732
-    - asm
-    - func_801F55EC
+    - c
+    - setMode4AndClearWorkByte2IfMaskOverlapWorld03Area12114_801F55EC
+    - '@source: src/bof3/world/setMode4AndClearWorkByte2IfMaskOverlapWorld03Area12114_801F55EC.c'
   - - 10828
     - c
     - resetMode3AndWorkStateWorld03Area12114_801F564C

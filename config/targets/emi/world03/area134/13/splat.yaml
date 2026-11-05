@@ -140,8 +140,10 @@ segments:
     - asm
     - func_801F3818
   - - 3224
-    - asm
-    - func_801F3898
+    - c
+    - advanceWorkWordAndSetScratchStateToMode7World03Area13413_801F3898
+    - '@source: src/bof3/world/advanceWorkWordAndSetScratchStateToMode7World03Area13413_801F3898.c'
+    - '@behavior: Saves the scratchpad work pointer, publishes the record at 0x80146920, advances its word at offset 0x34 by 0x4000 four times, selects mode 7 in the saved record and restores the pointer.'
   - - 3308
     - asm
     - func_801F38EC

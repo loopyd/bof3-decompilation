@@ -330,6 +330,7 @@ checkEnemyQueuedPredicate = 0x801E4368;
 dispatchPresentationByte3 = 0x801E4490;
 func_801E44D4 = 0x801E44D4;
 countdownWorkByteAdvancePairEnemyReady = 0x801E4544;
+countdownWorkByteRetreatPairOrQueueEnemySlot = 0x801E45DC;
 func_801E46EC = 0x801E46EC;
 dispatchByte3TableB444 = 0x801E4760;
 initScratchMotionFields = 0x801E47A4;

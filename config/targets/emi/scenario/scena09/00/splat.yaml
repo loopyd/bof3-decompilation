@@ -117,8 +117,8 @@ segments:
     - c
     - noopHandlerScenarioScena0900_801FC588
   - - 22928
-    - asm
-    - func_801FC590
+    - c
+    - addSignedTableStepToHalfword8014932AScenarioScena0900_801FC590
   - - 23004
     - c
     - noopHandlerScenarioScena0900_801FC5DC

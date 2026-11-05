@@ -74,8 +74,10 @@ segments:
     - dispatchStateByte1Table6260World02Area07714_801F3C74
     - '@source: src/bof3/world/area07714DispatchTables.c'
   - - 4280
-    - asm
-    - func_801F3CB8
+    - c
+    - seedWorkTable64AndAdvanceStepWorld02Area07714_801F3CB8
+    - '@source: src/bof3/world/seedWorkTable64AndAdvanceStepWorld02Area07714_801F3CB8.c'
+    - '@behavior: copies three shared seed words into the scratch work record, sets word +0x0C to 180, seeds 64 table records and advances dispatch byte +1.'
   - - 4388
     - asm
     - func_801F3D24

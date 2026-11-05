@@ -111,8 +111,10 @@ segments:
     - '@source: src/bof3/scenario/resetWorkFlagsOnZeroRefreshScenarioScena0800_801F7A9C.c'
     - '@behavior: Overlay-local conditional work-flag reset: calls the table-refresh helper at 0x801F8BF8, which walks the 0x8 entries of the 0x1C-byte-stride record table at 0x800E4800 and leaves a flag word in its return register, masks that result to its low byte and calls the shared work-area reset helper at 0x80196070 only when that low byte is zero; takes no arguments and returns nothing.'
   - - 3792
-    - asm
-    - func_801F7AD0
+    - c
+    - dispatchWorkByte2HandlerThenProcessBufferScenarioScena0800_801F7AD0
+    - '@source: src/bof3/scenario/dispatchWorkByte2HandlerThenProcessBufferScenarioScena0800_801F7AD0.c'
+    - '@behavior: Dispatches work byte 2 through the handler table at 0x801FE8E4, then invokes helpers 0x801F8D98 and 0x801F90C8 in order with buffer 0x800E48E0; takes no arguments and discards helper returns.'
   - - 3884
     - asm
     - func_801F7B2C

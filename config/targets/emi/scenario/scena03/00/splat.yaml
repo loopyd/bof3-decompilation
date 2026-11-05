@@ -117,8 +117,8 @@ segments:
     - c
     - invokeHelperScenarioScena0300_801F842C
   - - 6220
-    - asm
-    - func_801F844C
+    - c
+    - dispatchWorkByte1HandlerScenarioScena0300_801F844C
   - - 6288
     - asm
     - func_801F8490
