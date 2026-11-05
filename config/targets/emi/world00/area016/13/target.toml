@@ -34,7 +34,7 @@ sources = [
     "src/bof3/world/resetAdvanceScratchState.c",
     "src/bof3/world/seedScratchDefaults.c",
     "src/bof3/world/func_801F3828_area01613.c",
-    "src/bof3/world/func_801F4740_area01613.c",
+    "src/bof3/world/invokeTwoHelpersWorld00Area01613_801F4740.c",
     "src/bof3/world/func_801F4768_area01613.c",
     "src/bof3/world/func_801F3360_area01613.c",
     "src/bof3/world/func_801F42F8_area01613.c",

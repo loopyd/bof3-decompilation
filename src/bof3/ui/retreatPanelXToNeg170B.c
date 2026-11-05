@@ -8,4 +8,4 @@
  * @match 100.00
  * @residual none
  */
-PANEL_RETREAT_X(retreatPanelXToNeg170_2)
+PANEL_RETREAT_X(retreatPanelXToNeg170B)

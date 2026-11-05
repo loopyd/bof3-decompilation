@@ -304,8 +304,8 @@ segments:
     - '@behavior: shop panel phase step sharing the entry sequence of the sibling steps func_801D7B74 and func_801D7CC8: calls func_801D7E1C with the work-block index byte D_80148656[0], 0x98, 0x3F, 0 and 0xFF, then buildSlotList with 0, then forwards the same work-block index byte read signed to the shop panel helper func_801D8E2C as the even value (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 1 and 6, and finally tests the byte counter func_801D81B4(&D_80148656[5], D_8014865F); when that counter returns a nonzero low byte the step rolls the UI phase byte D_80148651 back by six.'
   - - 29192
     - c
-    - func_801D7E08
-    - '@source: src/bof3/ui/func_801D7E08.c'
+    - swapBytesB
+    - '@source: src/bof3/ui/swapBytesB.c'
   - - 29212
     - asm
     - func_801D7E1C
@@ -485,8 +485,8 @@ segments:
     - func_801DF00C
   - - 59492
     - c
-    - func_801DF464
-    - '@source: src/bof3/ui/func_801DF464.c'
+    - swapBytesC
+    - '@source: src/bof3/ui/swapBytesC.c'
   - - 59512
     - asm
     - func_801DF478

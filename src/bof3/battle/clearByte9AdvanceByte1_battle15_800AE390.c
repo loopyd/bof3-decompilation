@@ -7,7 +7,7 @@
  * @residual none
  */
 
-void func_800AE390(void) {
+void clearByte9AdvanceByte1(void) {
   u8* work;
 
   g_battle_work[9] = 0;

@@ -1,14 +1,20 @@
 #include "bof3/battle/battle15_internal.h"
 
-/* @source 0x800B20D4
+/* @source 0x800B254C
  * @behavior UNKNOWN: exact behavior is not yet documented.
  * @status exact
  * @match 100.00
  * @residual none
  */
 
-void func_800B20D4(void) {
+void retreatPanelXTo152(void) {
   PanelTask* task = g_PanelTaskRoot;
+  s16        val;
 
-  func_801647C4(task->x, task->field_06, 0);
+  val = task->x - 0x20;
+  task->x = val;
+  if (val < 0x98) {
+    task->x = 0x98;
+    task->state = 0;
+  }
 }

@@ -1,12 +1,14 @@
 #include "bof3/battle/battle15_internal.h"
-#include "ui/panel_task.h"
-#include "shared/ui/panel_task.inc"
 
-/* @source 0x800B23B8
+/* @source 0x800B20D4
  * @behavior UNKNOWN: exact behavior is not yet documented.
  * @status exact
  * @match 100.00
  * @residual none
  */
 
-PANEL_RETREAT_X(func_800B23B8)
+void applyPanelPosition(void) {
+  PanelTask* task = g_PanelTaskRoot;
+
+  func_801647C4(task->x, task->field_06, 0);
+}

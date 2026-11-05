@@ -1237,7 +1237,7 @@ void updateActiveGameWorkRecords(void);
 void func_801B3CCC(u32 arg0);
 void advancePanelXTo320(void);
 void retreatPanelXToNeg170(void);
-void retreatPanelXToNeg170_2(void);
+void retreatPanelXToNeg170B(void);
 void advancePanelXTo17(void);
 void retreatPanelField6ToNeg20(void);
 

@@ -19,6 +19,24 @@ composing target and each affected consumer. Preserve `INFERRED:` observations
 until their missing verification is available.
 
 A useful result is an evidenced name or an explicit unresolved row with the next
-bounded investigation. Preserve the selected queue and reasons for deferral in its
-existing change or campaign notes. No generated account or terminal report confers
-semantic acceptance or edit authority.
+bounded investigation. Preserve the selected queue and reasons for deferral in
+its existing change or campaign notes. No generated account or terminal report
+confers semantic acceptance or edit authority.
+
+## Duplicate sets
+
+Identical bodies across targets carry one role, so a set that is named in one
+overlay and still `func_<ADDR>` in another is one transaction, not a per-target
+guess. Find the sets in `duplicate_groups` and `duplicate_members`
+(`reviewed_sha256` plus `reviewed_size`) and rank the half-named ones. A member's
+name is evidence only when its bytes hash equal to the named copy's, so the group
+sha carries the proof and resemblance does not.
+
+The parent decides every name and hands one lane per affected target a pinned
+list, because lanes cannot see each other and independent choices re-fork the
+set. Same body means same role; suffixes exist only for collisions inside one
+target, so letter them in ascending address order and keep an already-named copy
+unchanged unless two spellings describe the same body, in which case unifying
+them is the point of the transaction. Files stay separate: each target compiles
+its own copy, and a shared filename needs the collision form used elsewhere.
+Each affected target still gates once.

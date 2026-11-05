@@ -6,7 +6,7 @@
  * @match 100.00
  * @residual none
  */
-void submitPanelPosition(void) {
+void applyPanelPosition(void) {
   PanelTask* task = g_PanelTaskRoot;
 
   func_801647C4(task->x, task->field_06, 0);

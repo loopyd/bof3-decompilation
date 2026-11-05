@@ -1452,7 +1452,7 @@ segments:
     - dispatchWorkTable6bf4
   - - 97168
     - c
-    - func_800AE390
+    - clearByte9AdvanceByte1
   - - 97216
     - asm
     - func_800AE3C0
@@ -1706,7 +1706,7 @@ segments:
     - func_800B20CC
   - - 112852
     - c
-    - func_800B20D4
+    - applyPanelPosition
   - - 112900
     - c
     - dispatchPanelStateTable6e20
@@ -1727,8 +1727,8 @@ segments:
     - '@behavior: Decrements the panel x coordinate and clamps it to 0x52 below the signed threshold.'
   - - 113176
     - c
-    - func_800B2218
-    - '@source: src/bof3/battle/func_800B2218.c'
+    - advancePanelXTo320
+    - '@source: src/bof3/battle/advancePanelXTo320.c'
   - - 113240
     - c
     - dispatchPanelStateTable6e34
@@ -1736,8 +1736,8 @@ segments:
     - '@behavior: Dispatches the handler selected by the panel task state byte from the table at 0x800B6E34, then forwards the panel task to func_800B2C90.'
   - - 113324
     - c
-    - func_800B22AC
-    - '@source: src/bof3/battle/func_800B22AC.c'
+    - advancePanelXTo320B
+    - '@source: src/bof3/battle/advancePanelXTo320B.c'
   - - 113388
     - c
     - panelMoveLeftClamp53
@@ -1750,12 +1750,12 @@ segments:
     - '@behavior: Dispatches panel state through table 0x800B6E40 and forwards mapped fields to func_800B3324.'
   - - 113592
     - c
-    - func_800B23B8
-    - '@source: src/bof3/battle/func_800B23B8.c'
+    - retreatPanelXToNeg170
+    - '@source: src/bof3/battle/retreatPanelXToNeg170.c'
   - - 113656
     - c
-    - func_800B23F8
-    - '@source: src/bof3/battle/func_800B23F8.c'
+    - advancePanelXTo17
+    - '@source: src/bof3/battle/advancePanelXTo17.c'
   - - 113720
     - c
     - panelStepRightClamp62
@@ -1769,11 +1769,11 @@ segments:
     - panelStepRightClamp98
   - - 113932
     - c
-    - func_800B250C
-    - '@source: src/bof3/battle/func_800B250C.c'
+    - advancePanelXTo320C
+    - '@source: src/bof3/battle/advancePanelXTo320C.c'
   - - 113996
     - c
-    - func_800B254C
+    - retreatPanelXTo152
   - - 114060
     - c
     - func_800B258C

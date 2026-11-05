@@ -189,8 +189,8 @@ segments:
     - '@behavior: when the shared byte at 0x8014496D is 9, or bit 0 of the shared byte at 0x80146871 is set, calls the shared 0x80196070 helper and returns; otherwise it calls the shared 0x8019A194 helper, requests resource 0x205 through the shared func_8014DD3C helper, clears the scratch bytes at offsets 0x48, 0x24, 0x2A and 0x5D..0x5F, stamps 0xA0 into the map byte at the column and row held by the four-byte record at 0x801F4DA0 selected by the scratch byte at offset 0x0B (0x8014931C + row * 0x80104000 + column), calls the shared func_8014D6B8 helper with 0 and sets the mode byte at offset 0x01 to 1.'
   - - 6976
     - c
-    - func_801F4740
-    - '@source: src/bof3/world/func_801F4740_area01613.c'
+    - invokeTwoHelpersWorld00Area01613_801F4740
+    - '@source: src/bof3/world/invokeTwoHelpersWorld00Area01613_801F4740.c'
     - '@behavior: calls the shared helpers func_8014D978 and func_8014D260 with no arguments in that order, ignores both results, and returns.'
   - - 7016
     - c

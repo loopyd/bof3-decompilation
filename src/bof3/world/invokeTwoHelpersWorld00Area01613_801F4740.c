@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801F4740(void) {
+void invokeTwoHelpersWorld00Area01613_801F4740(void) {
   func_8014D978();
   func_8014D260();
 }

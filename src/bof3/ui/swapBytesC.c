@@ -6,7 +6,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801DF464(u8* arg0, u8* arg1) {
+void swapBytesC(u8* arg0, u8* arg1) {
   u8 temp;
 
   temp = *arg0;

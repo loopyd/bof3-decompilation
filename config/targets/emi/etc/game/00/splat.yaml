@@ -320,8 +320,8 @@ segments:
     - '@behavior: advances the panel x coordinate by 32 and stops at 80.'
   - - 15992
     - c
-    - submitPanelPosition
-    - '@source: src/bof3/ui/submitPanelPosition.c'
+    - applyPanelPosition
+    - '@source: src/bof3/ui/applyPanelPosition_game00_80199678.c'
   - - 16040
     - c
     - func_801996A8
@@ -341,8 +341,8 @@ segments:
     - func_8019977C
   - - 16364
     - c
-    - retreatPanelXToNeg170_2
-    - '@source: src/bof3/ui/retreatPanelXToNeg170_2.c'
+    - retreatPanelXToNeg170B
+    - '@source: src/bof3/ui/retreatPanelXToNeg170B.c'
     - '@behavior: retreats panel x with the template clamp behavior.'
   - - 16428
     - c
