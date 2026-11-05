@@ -139,11 +139,11 @@ void func_801C187C(s32 arg0);
 
 void dispatchPrimaryState(void);
 void bootPrimaryState(void);
-void func_801F6D90(void);
+void selectRouteForPendingWorld(void);
 void seedRouteEnterState3(void);
 void seedRouteEnterState2(void);
-void func_801F6F30(void);
-void func_801F7230(void);
+void stageRoutePath2Setup(void);
+void runSecondaryState2Controller(void);
 void func_801F7790(void);
 void func_801F7CC4(void);
 void dispatchSecondaryState(void);

@@ -33,7 +33,7 @@ support_sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0300_801F6E70.c",
     "src/bof3/scenario/forwardRoute47RecordScenarioScena0300_801FCCDC.c",
     "src/bof3/scenario/func_801FC690.c",
-    "src/bof3/scenario/func_801FC6C4.c",
+    "src/bof3/scenario/requestPrimaryState7AndArmCountdown30ScenarioScena0300_801FC6C4.c",
     "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena0300_801FCEFC.c",
     "src/bof3/scenario/invokeHelperArgScenarioScena0300_801FCEDC.c",
     "src/bof3/scenario/invokeHelperScenarioScena0300_801F88DC.c",

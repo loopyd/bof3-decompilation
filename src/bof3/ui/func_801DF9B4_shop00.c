@@ -12,7 +12,8 @@ void func_801DF9B4(void) {
   func_801E0F78();
   /* The original increments the phase byte through a non-volatile, register-held
    * address: its store is scheduled past the epilogue `lw ra`, where a volatile
-   * access stays pinned ahead of it (sibling shape: func_80096AB0). */
+   * access stays pinned ahead of it (sibling shape:
+   * queueScriptRecord0AdvanceRoot). */
   PSX_REF(u8, (u32)&D_80148651) += 1;
   D_801E6260 = 0;
 }

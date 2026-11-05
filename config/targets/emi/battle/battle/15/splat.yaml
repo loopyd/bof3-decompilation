@@ -29,7 +29,7 @@ segments:
     - T_80096800
   - - 688
     - c
-    - func_80096AB0
+    - queueScriptRecord0AdvanceRoot
   - - 744
     - c
     - dispatchSubstateTable43c0
@@ -62,7 +62,7 @@ segments:
     - '@source: src/bof3/battle/dispatchSubstateTable43ec.c'
   - - 1912
     - c
-    - func_80096F78
+    - queueEvent4000RingTripleAndAdvance
   - - 1980
     - asm
     - func_80096FBC
@@ -103,7 +103,7 @@ segments:
     - '@source: src/bof3/battle/dispatchSubstateTable4408.c'
   - - 5464
     - c
-    - func_80097D58
+    - armFinalizeSlotFromKindFlags
     # @source 0x80097D58
     # @behavior Configure the active selection slot from selection-kind flags.
   - - 5568
@@ -128,7 +128,7 @@ segments:
     - dispatchSubstateTable4418
   - - 6372
     - c
-    - func_800980E4
+    - storeSlot3QueueScriptRecordAdvanceRoot
   - - 6468
     - asm
     - func_80098144
@@ -150,7 +150,7 @@ segments:
     - dispatchSubstateTable4450
   - - 7108
     - c
-    - func_800983C4
+    - queueEvent4000RingTripleAndAdvanceB
   - - 7176
     - c
     - armSecondaryGridAdvanceRoot
@@ -248,7 +248,7 @@ segments:
     - func_8009AC18
   - - 18300
     - c
-    - func_8009AF7C
+    - selectionSetupEnabledB
   - - 18308
     - c
     - func_8009AF84

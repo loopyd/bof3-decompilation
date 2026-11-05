@@ -23,6 +23,18 @@
  * clears byte 0 when the countdown expires. Byte 4 is evidenced as the re-arm
  * value for a record of this family by func_801F8B50, which seeds a record's
  * byte 4 with 0x40 while seeding its byte 2 with 8.
+ *
+ * Name evidence: "tickCountdown" is this target's accepted wording for the
+ * `(u8)(object[2] - 1)` countdown chain followed by a zero test of the masked
+ * byte, taken from its exact siblings at 0x801F8D18
+ * (tickCountdownAndAdvanceStateScenarioScena0800_801F8D18) and at 0x801F8D4C
+ * (tickCountdownAdvanceWorkWord8AndClearByte0ScenarioScena0800_801F8D4C);
+ * "AdvanceWorkByte3" names the evidenced unconditional `+= 6` on byte 3 in the
+ * offset-anchored wording this repository keeps where a field role is not
+ * evidenced, "ReloadFromByte4" the evidenced `object[2] = object[4]` re-arm
+ * whose value is a field rather than a constant, and "AndAdvanceState" the
+ * `object[1]++` on the state byte the byte-1 dispatchers of this overlay select
+ * handlers with. No role is claimed for byte 3 or for the received pointer.
  * @status exact
  * @match 100
  * @residual none
@@ -38,7 +50,7 @@
  * the byte-3 value instead forces `lbu $3,3($4)` to the head and loses the load
  * order (rejected).
  */
-void func_801F8CDC(u8* object) {
+void tickCountdownAdvanceWorkByte3ReloadFromByte4AndAdvanceStateScenarioScena0800_801F8CDC(u8* object) {
   u8 countdown;
 
   object[3] = (u8)(object[3] + 6);

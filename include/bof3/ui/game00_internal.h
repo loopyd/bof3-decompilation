@@ -528,8 +528,8 @@ extern u8           D_80143FBC;
 /* @source 0x80143B92 @kind unknown */
 extern u16 D_80143B92;
 /* @behavior sub-state/flag byte selecting the direction the world y at
- * 0x801492DC is stepped toward its 512 target in func_801990D0 (zero = downward,
- * nonzero = upward). */
+ * 0x801492DC is stepped toward its 512 target in stepWorldPositionToTarget
+ * (zero = downward, nonzero = upward). */
 /* @source 0x80143BB1 @kind unknown */
 extern u8 D_80143BB1;
 /* @behavior world/phase index for entry-0 world dispatch */
@@ -569,10 +569,11 @@ extern volatile u8 D_80143F02;
  * any visible input record carries flag bit 5. */
 /* @source 0x80145AA4 @kind unknown */
 extern u16 D_80145AA4;
-/* @behavior gate mask ANDed with the pad state word above by func_80198F1C: a
- * shared bit selects the input-driven world-axis stepping path (the same word
- * carries 0x4000/0x1000 for the x axis and 0x2000/0x8000 for the y axis), no
- * shared bit takes the no-input settle path. */
+/* @behavior gate mask ANDed with the pad state word above by
+ * adjustPairedValuesFromMask: a shared bit selects the input-driven world-axis
+ * stepping path (the same word carries 0x4000/0x1000 for the x axis and
+ * 0x2000/0x8000 for the y axis), no shared bit takes the no-input settle
+ * path. */
 /* @source 0x80145ABA @kind unknown */
 extern u16 D_80145ABA;
 /* Work gate pair ANDed together before the pending front-end request path may
@@ -603,7 +604,7 @@ extern u8 D_80143F1E;
 /* @source 0x80143F1F @kind unknown */
 extern u8 D_80143F1F;
 /* @behavior active selection id from front-end picker; the low three bytes are
- * the front-end clock advanced by func_80198CAC */
+ * the front-end clock advanced by tickFrontendClockAndCountdowns */
 /* @source 0x80144FC0 @kind unknown */
 extern volatile u32 D_80144FC0;
 /* @behavior front-end clock byte below D_80144FC1 */
@@ -612,11 +613,13 @@ extern u8 D_80144FC1;
 /* @behavior front-end clock byte below D_80144FC2 */
 /* @source 0x80144FC2 @kind unknown */
 extern u8 D_80144FC2;
-/* @behavior front-end clock frame byte wrapping to zero at 30 in func_80198CAC */
+/* @behavior front-end clock frame byte wrapping to zero at 30 in
+ * tickFrontendClockAndCountdowns */
 /* @source 0x80144FC3 @kind unknown */
 extern u8 D_80144FC3;
-/* @behavior front-end countdown word decremented by func_80198CAC; D_80145554
- * is its lowest byte, D_80145557 the frame byte wrapping at 29 */
+/* @behavior front-end countdown word decremented by
+ * tickFrontendClockAndCountdowns; D_80145554 is its lowest byte, D_80145557 the
+ * frame byte wrapping at 29 */
 /* @source 0x80145554 @kind unknown */
 extern u8 D_80145554;
 /* @source 0x80145555 @kind unknown */
@@ -625,8 +628,9 @@ extern u8 D_80145555;
 extern u8 D_80145556;
 /* @source 0x80145557 @kind unknown */
 extern u8 D_80145557;
-/* @behavior second front-end countdown word decremented by func_80198CAC;
- * D_80145558 is its lowest byte, D_8014555B the frame byte wrapping at 29 */
+/* @behavior second front-end countdown word decremented by
+ * tickFrontendClockAndCountdowns; D_80145558 is its lowest byte, D_8014555B the
+ * frame byte wrapping at 29 */
 /* @source 0x80145558 @kind unknown */
 extern u8 D_80145558;
 /* @source 0x80145559 @kind unknown */
@@ -855,12 +859,14 @@ extern s16 D_8014930A;
 /* @behavior signed world-coord Y argument for scenario entry */
 /* @source 0x8014930E @kind unknown */
 extern s16                 D_8014930E;
-/* @behavior 16-bit companion that func_801990D0 keeps in step with the signed
- * front-end world x at 0x801492D8 by mirroring every per-frame delta. */
+/* @behavior 16-bit companion that stepWorldPositionToTarget keeps in step with
+ * the signed front-end world x at 0x801492D8 by mirroring every per-frame
+ * delta. */
 /* @source 0x801481D8 @kind unknown */
 extern u16                 D_801481D8[];
-/* @behavior 16-bit companion that func_801990D0 keeps in step with the signed
- * front-end world y at 0x801492DC by mirroring every per-frame delta. */
+/* @behavior 16-bit companion that stepWorldPositionToTarget keeps in step with
+ * the signed front-end world y at 0x801492DC by mirroring every per-frame
+ * delta. */
 /* @source 0x801481DC @kind unknown */
 extern u16                 D_801481DC[];
 /* @behavior the three 16.16 panel-axis accumulators advanced by the paired
@@ -1029,7 +1035,7 @@ void func_80158C80(void);
 /* @behavior runs one selection-side post-dispatch update slice.
  * @source 0x80198CAC
  */
-void func_80198CAC(void);
+void tickFrontendClockAndCountdowns(void);
 
 /* @behavior resets the entry-0 front script/runtime bank for the requested mode.
  * @source 0x801C1400
@@ -1170,8 +1176,8 @@ void dispatchSubstate5(void);
 void dispatchSubstate6(void);
 void dispatchSubstate7(void);
 void func_80199230(void);
-void func_80198F1C(void);
-void func_801990D0(void);
+void adjustPairedValuesFromMask(void);
+void stepWorldPositionToTarget(void);
 void func_801991B8(void);
 void func_801BEDD0(void);
 s32  advanceWorkRoutesOrInitializeTint(void);

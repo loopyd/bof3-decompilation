@@ -30,7 +30,7 @@ s32 func_8015C088(void);
  * @match 100.00
  * @residual none
  */
-s32 func_801FC6C4(void) {
+s32 requestPrimaryState7AndArmCountdown30ScenarioScena0300_801FC6C4(void) {
   func_8015C088();
   D_80146876 = 0x1E;
   D_80146874 = 7;

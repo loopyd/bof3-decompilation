@@ -42,7 +42,7 @@
  * @residual none
  */
 /* Keep each state's advancement pointer local to that state. */
-void func_801F7230(void) {
+void runSecondaryState2Controller(void) {
   switch (D_80146875) {
     case 0: {
       u8* next;

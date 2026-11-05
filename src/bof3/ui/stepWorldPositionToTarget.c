@@ -13,7 +13,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801990D0(void) {
+void stepWorldPositionToTarget(void) {
   s16* xpos;
   s16* ypos;
   s16  x;

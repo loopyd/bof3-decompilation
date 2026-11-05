@@ -12,7 +12,7 @@
  * @match 100.00
  * @residual none
  */
-void func_800980E4(void) {
+void storeSlot3QueueScriptRecordAdvanceRoot(void) {
   u8  result;
   u8* game_ram;
 

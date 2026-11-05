@@ -17,7 +17,7 @@
  * @match 100.00
  * @residual none
  */
-void func_80198F1C(void) {
+void adjustPairedValuesFromMask(void) {
   s16* pos;
   u16* counter;
   s16  v;

@@ -244,18 +244,18 @@ segments:
     - func_80198C38
   - - 13484
     - c
-    - func_80198CAC
-    - '@source: src/bof3/ui/func_80198CAC_game00.c'
+    - tickFrontendClockAndCountdowns
+    - '@source: src/bof3/ui/tickFrontendClockAndCountdowns.c'
     - '@behavior: ticks the front-end clock bytes at D_80144FC0–D_80144FC3 (the frame byte D_80144FC3 wraps to zero at 30, then D_80144FC2 at 60, then D_80144FC1 at 60, then D_80144FC0 increments below 99 and otherwise pins the two 60-value bytes to 59, the whole tick being skipped once the low three bytes read 63:3B:3B) and then counts the two front-end countdown words at D_80145554 and D_80145558 down by one tick (frame bytes D_80145557/D_8014555B reload 29, the other bytes reload 59, and the lowest byte decrements while nonzero or clears the two bytes above it), skipping a countdown word that is already zero; the whole body is skipped while D_80143BB0 holds 9.'
   - - 14108
     - c
-    - func_80198F1C
-    - '@source: src/bof3/ui/func_80198F1C_game00.c'
+    - adjustPairedValuesFromMask
+    - '@source: src/bof3/ui/adjustPairedValuesFromMask.c'
     - '@behavior: snapshots the pad state word at D_80145AA4 and gates it with the mask at D_80145ABA: with no shared bit it publishes the world-facing direction byte at D_80143BB1 from the signed front-end world y at D_801492DC (0 above 512, 1 below 512, untouched at 512) and advances the front-end sub-state word at D_80143B92, otherwise it steps the signed world x at D_801492D8 by -22 toward -681 (bit 0x4000) or by +22 toward -455 (bit 0x1000) and the signed world y at D_801492DC by +22 toward 853 (bit 0x2000) or by -22 toward 171 (bit 0x8000), mirroring each accepted delta into the u16 companion at D_801481D8 (x) / D_801481DC (y).'
   - - 14544
     - c
-    - func_801990D0
-    - '@source: src/bof3/ui/stepWorldPositionToTarget_game00_801990D0.c'
+    - stepWorldPositionToTarget
+    - '@source: src/bof3/ui/stepWorldPositionToTarget.c'
     - '@behavior: steps the signed front-end world x at D_801492D8 down by 22 toward its -682 clamp while mirroring the delta into the u16 companion at D_801481D8, then steps the signed world y at D_801492DC toward 512 by 22 in the direction selected by the flag byte at D_80143BB1 (zero = downward, nonzero = upward) while mirroring that delta into the u16 companion at D_801481DC; each pair clamps to its target and the y pair is left untouched once it already equals 512.'
   - - 14776
     - asm

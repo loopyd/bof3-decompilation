@@ -102,7 +102,7 @@ void updateStateMachine(void) {
  */
 void dispatchWorldUpdate(void) {
   if (D_80143B92 == 0) {
-    func_80198F1C();
+    adjustPairedValuesFromMask();
   } else {
     updateWorldPosition();
   }
@@ -116,5 +116,5 @@ void dispatchWorldUpdate(void) {
  * @residual none
  */
 void updateWorld(void) {
-  func_80198F1C();
+  adjustPairedValuesFromMask();
 }

@@ -2,12 +2,13 @@
 
 /**
  * @source 0x80097D58
+ * Slot 0 of the selection finalize substate table at 0x800B4408.
  * @behavior Configure the active selection slot from its selection-kind flags.
  * @status exact
  * @match 100.00
  * @residual none
  */
-void func_80097D58(void)
+void armFinalizeSlotFromKindFlags(void)
 {
     u8 *slot;
     u16 kind;

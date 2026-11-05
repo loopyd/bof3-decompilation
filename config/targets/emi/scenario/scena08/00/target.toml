@@ -47,7 +47,7 @@ support_sources = [
     "src/bof3/scenario/clearWorkTableIncrementWorkByte2SetCountdownScenarioScena0800_801F79B0.c",
     "src/bof3/scenario/findFreeWorkRecordScenarioScena0800_801F7DAC.c",
     "src/bof3/scenario/findFreeWorkRecordScenarioScena0800_801F8B14.c",
-    "src/bof3/scenario/func_801F8CDC.c",
+    "src/bof3/scenario/tickCountdownAdvanceWorkByte3ReloadFromByte4AndAdvanceStateScenarioScena0800_801F8CDC.c",
     "src/bof3/scenario/clearProgressThenRequestPrimaryState7Substate10ScenarioScena0800_801FE0A0.c",
     "src/bof3/scenario/clearWorkRecordsAndResetEffectSlotsScenarioScena0800_801FE800.c",
     "src/bof3/scenario/dispatchWorkByte2HandlerScenarioScena0800_801F796C.c",

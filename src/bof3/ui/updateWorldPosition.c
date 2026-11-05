@@ -8,7 +8,7 @@
  * @residual none
  */
 void updateWorldPosition(void) {
-  func_801990D0();
+  stepWorldPositionToTarget();
   if (D_801492D8 == -682 && D_801492DC == 512) {
     D_80143BB0 = 0;
     D_80143B90 = 2;

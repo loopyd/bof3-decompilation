@@ -17,7 +17,7 @@
  * @match 100.00
  * @residual none
  */
-void func_80198CAC(void) {
+void tickFrontendClockAndCountdowns(void) {
   u8* clock;
 
   if (D_80143BB0 == 9u) {

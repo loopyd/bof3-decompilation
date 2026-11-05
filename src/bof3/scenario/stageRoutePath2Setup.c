@@ -39,7 +39,7 @@
  * @match 100.00
  * @residual none
  */
-void func_801F6F30(void) {
+void stageRoutePath2Setup(void) {
   u8 *scratch;
   u16 *ramp;
   u8 index;

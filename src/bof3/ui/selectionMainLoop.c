@@ -26,7 +26,7 @@ void selectionMainLoop(void) {
   while (1) {
     callbacks = GAME_SELECTION_CALLBACK_TABLE;
     callbacks[GAME_SEL_STATE->state]();
-    func_80198CAC();
+    tickFrontendClockAndCountdowns();
     func_8014B87C(1u);
   }
 }

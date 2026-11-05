@@ -7,7 +7,7 @@
  * @match 100.00
  * @residual none
  */
-void func_80096AB0(void) {
+void queueScriptRecord0AdvanceRoot(void) {
   func_801DE94C(0, 0);
   PSX_REF(u8, (u32)&D_801462E3) += 1;
 }

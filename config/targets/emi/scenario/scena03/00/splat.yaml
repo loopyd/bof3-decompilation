@@ -260,7 +260,8 @@ segments:
     - '@behavior: Slot 7 of the overlay nine-pointer handler table at 0x801FD00C selected by record byte 0x7A in the record dispatcher func_801FC46C; runs the shared front-end startup helper func_8015C088, then requests primary scene state 6 with a cleared sub-state (D_80146874 = 6, D_80146875 = 0) and returns 0.'
   - - 23236
     - c
-    - func_801FC6C4
+    - requestPrimaryState7AndArmCountdown30ScenarioScena0300_801FC6C4
+    - '@source: src/bof3/scenario/requestPrimaryState7AndArmCountdown30ScenarioScena0300_801FC6C4.c'
   - - 23300
     - c
     - dispatchRouteHandlerScenarioScena0300_801FC704

@@ -197,8 +197,8 @@ segments:
     - func_801F8BF8
   - - 8412
     - c
-    - func_801F8CDC
-    - '@source: src/bof3/scenario/func_801F8CDC.c'
+    - tickCountdownAdvanceWorkByte3ReloadFromByte4AndAdvanceStateScenarioScena0800_801F8CDC
+    - '@source: src/bof3/scenario/tickCountdownAdvanceWorkByte3ReloadFromByte4AndAdvanceStateScenarioScena0800_801F8CDC.c'
     - '@behavior: Overlay per-frame handler: decrements the countdown byte at offset 2 of the object it receives in $a0, advances the object byte at offset 3 by 6 unconditionally, and only when the decremented countdown reads zero re-arms that countdown from the object byte at offset 4 and increments the object state byte at offset 1. It is entry 6 of the sub-run at 0x801FE8E4 of the 51-entry per-frame handler run at 0x801FE894, reads and writes no other memory and makes no call.'
   - - 8472
     - c
