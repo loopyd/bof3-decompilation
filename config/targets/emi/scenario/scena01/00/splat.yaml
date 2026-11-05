@@ -219,8 +219,8 @@ segments:
     - asm
     - func_801FD9E4
   - - 28204
-    - asm
-    - func_801FDA2C
+    - c
+    - requestPrimaryState0BSubstate0FScenarioScena0100_801FDA2C
   - - 28260
     - c
     - zeroResultScenarioScena0100_801FDA64

@@ -389,6 +389,7 @@ initializeGroupFlagScratchAndRequest = 0x801E6E54;
 clearScratchByte1 = 0x801E6FA0;
 countdownScratchByte1ByGroupFlags = 0x801E71EC;
 dispatchByte1PairTable = 0x801E72A8;
+copyQueuedWorkToScratchAndRun = 0x801E72F4;
 dispatchModeFiveTable = 0x801E74B8;
 setMode2AdvanceByte1 = 0x801E7528;
 countdownOrFlag40Advance = 0x801E7558;

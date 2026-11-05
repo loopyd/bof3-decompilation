@@ -11,6 +11,6 @@ void dispatchByte1PairTable(void)
 {
     Battle03Handler handlers[2];
 
-    handlers[0] = func_801E72F4;
+    handlers[0] = copyQueuedWorkToScratchAndRun;
     handlers[battleWork[1]]();
 }

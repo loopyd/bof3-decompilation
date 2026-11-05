@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/incrementWorkStepIfStateNonzeroWorld02Area07714_801F5374.c",
     "src/bof3/world/cycleThreePaletteBlocksWorld02Area07714_801F57BC.c",
     "src/bof3/world/seedWorkTable64AndAdvanceStepWorld02Area07714_801F3CB8.c",
     "src/bof3/world/resetStatusAndMapScenarioProgressWorld02Area07714_801F5A08.c",

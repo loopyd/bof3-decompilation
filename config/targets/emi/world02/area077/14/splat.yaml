@@ -165,8 +165,10 @@ segments:
     - '@source: src/bof3/world/setWorkHalfword320AndIncrementWorkByte2World02Area07714_801F533C.c'
     - '@behavior: loads the scratch work-record cursor from the scratchpad pointer cell 0x1F800044, writes the halfword 0x320 to the record +0x3E field, increments the record +0x02 step byte, then runs the local panel update at 0x801F54B8.'
   - - 10100
-    - asm
-    - func_801F5374
+    - c
+    - incrementWorkStepIfStateNonzeroWorld02Area07714_801F5374
+    - '@source: src/bof3/world/incrementWorkStepIfStateNonzeroWorld02Area07714_801F5374.c'
+    - '@behavior: increments work byte +2 when state byte 0x8014933B is nonzero, then always calls the local panel update at 0x801F54B8.'
   - - 10172
     - asm
     - func_801F53BC

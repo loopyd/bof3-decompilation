@@ -9,6 +9,7 @@ load_address = 0x801d0c00
 
 sources = [
     "src/bof3/battle/countdownWorkByte9SubmitCue.c",
+    "src/bof3/battle/copyQueuedWorkToScratchAndRun.c",
     "src/bof3/battle/retreatWorkPairOrQueueSlot.c",
     "src/bof3/battle/accumulateEligibleTemplateWord.c",
     "src/bof3/battle/battle03DispatchTables.c",

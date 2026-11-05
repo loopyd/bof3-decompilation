@@ -112,8 +112,8 @@ segments:
     - asm
     - func_801F0438
   - - 6336
-    - asm
-    - func_801F04C0
+    - c
+    - seedWorkWordPairAndFlagsThenAdvanceWorkByte2BmagicMagic13103_801F04C0
   - - 6460
     - asm
     - func_801F053C

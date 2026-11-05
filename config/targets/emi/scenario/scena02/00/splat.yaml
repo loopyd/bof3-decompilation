@@ -135,8 +135,8 @@ segments:
     - c
     - requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC044
   - - 21748
-    - asm
-    - func_801FC0F4
+    - c
+    - requestPrimaryState7OnIndexedOffsetBoundsScenarioScena0200_801FC0F4
   - - 21924
     - asm
     - func_801FC1A4

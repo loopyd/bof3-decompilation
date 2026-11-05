@@ -594,7 +594,7 @@ void func_8014D290(void);
 void func_8014D4E0(void);
 void dispatchByte1PairTable(void);
 void dispatchModeFiveTable(void);
-void func_801E72F4(void);
+void copyQueuedWorkToScratchAndRun(void);
 void func_8014D5F0(u8 arg0, u32 arg1, s32 arg2);
 u16  func_8017A620(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void func_8017A904(u32 arg0, s32 arg1);

@@ -129,6 +129,7 @@ func_801D4378 = 0x801D4378;
 func_801D4570 = 0x801D4570;
 func_801D45F8 = 0x801D45F8;
 advancePanelSlideAndUpdateStateWorld00Area03004_801D4680 = 0x801D4680;
+selectFirstAvailableEntryAndAdvanceStateWorld00Area03004_801D4884 = 0x801D4884;
 func_801D5B48 = 0x801D5B48;
 func_801D5B70 = 0x801D5B70;
 func_801D5C48 = 0x801D5C48;

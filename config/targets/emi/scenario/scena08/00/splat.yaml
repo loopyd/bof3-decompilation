@@ -277,8 +277,10 @@ segments:
     - asm
     - func_801F9E50
   - - 12996
-    - asm
-    - func_801F9EC4
+    - c
+    - subtractWorkWord0CAndAdvanceStateAt98000ScenarioScena0800_801F9EC4
+    - '@source: src/bof3/scenario/subtractWorkWord0CAndAdvanceStateAt98000ScenarioScena0800_801F9EC4.c'
+    - '@behavior: Subtract 0x20000 from work word 0x0C, call the overlay helper at 0x801FA19C with work addresses 0x34 and 0x0C, then reload the work pointer and increment byte 1 if word 0x0C equals 0x98000.'
   - - 13100
     - c
     - incrementWorkByte1ScenarioScena0800_801F9F2C

@@ -226,8 +226,13 @@ segments:
     - '@source: src/bof3/world/advancePanelSlideAndUpdateStateWorld00Area03004_801D4680.c'
     - '@behavior: increments work byte 9, draws sliding panels and updates state byte 1 at step four.'
   - - 15492
+    - c
+    - selectFirstAvailableEntryAndAdvanceStateWorld00Area03004_801D4884
+    - '@source: src/bof3/world/selectFirstAvailableEntryAndAdvanceStateWorld00Area03004_801D4884.c'
+    - '@behavior: selects the first nonzero entry amount or marks none available, draws fixed panels and advances state.'
+  - - 15748
     - asm
-    - func_801D4884
+    - func_801D4984
   - - 20296
     - c
     - func_801D5B48

@@ -1358,8 +1358,8 @@ segments:
     - c
     - dispatchByte1PairTable
   - - 91892
-    - asm
-    - func_801E72F4
+    - c
+    - copyQueuedWorkToScratchAndRun
   - - 92344
     - c
     - dispatchModeFiveTable

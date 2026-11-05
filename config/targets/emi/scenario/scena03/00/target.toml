@@ -9,6 +9,7 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/addSignedTableStepToTwoHalfwordsScenarioScena0300_801FC3B4.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0300_801F85FC.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0300_801F844C.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0300_801F82E4.c",

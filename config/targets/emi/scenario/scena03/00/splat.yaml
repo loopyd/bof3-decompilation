@@ -197,8 +197,10 @@ segments:
     - asm
     - func_801FC1D0
   - - 22452
-    - asm
-    - func_801FC3B4
+    - c
+    - addSignedTableStepToTwoHalfwordsScenarioScena0300_801FC3B4
+    - '@source: src/bof3/scenario/addSignedTableStepToTwoHalfwordsScenarioScena0300_801FC3B4.c'
+    - '@behavior: Adds sixteen times a signed table step indexed by D_80146876 & 3 to halfwords at 0x80145ECE and 0x8014600E, rereading the table between wrapping stores.'
   - - 22544
     - asm
     - func_801FC410

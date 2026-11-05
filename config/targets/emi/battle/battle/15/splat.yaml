@@ -893,8 +893,10 @@ segments:
     - asm
     - func_800A40D0
   - - 55648
-    - asm
-    - func_800A4160
+    - c
+    - querySelectionClampIndexedByte14
+    - '@source: src/bof3/battle/querySelectionClampIndexedByte14.c'
+    - '@behavior: Tests the current selection roll; on acceptance clamps indexed selection-record byte +0x14 using a signed-byte delta, calls func_800A9BD8 with the current battler byte, and returns 0; otherwise returns 1.'
   - - 55768
     - c
     - resetSelectionApplyInput
