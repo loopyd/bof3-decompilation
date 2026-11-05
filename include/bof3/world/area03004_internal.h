@@ -83,6 +83,10 @@ extern u8 D_80145E93;    /* @source 0x80145E93 @kind unknown */
 extern u32 D_80145EC4;    /* @source 0x80145EC4 @kind unknown */
 extern u32 D_80145EC8;    /* @source 0x80145EC8 @kind unknown */
 extern u32 D_801440BC;    /* @source 0x801440BC @kind unknown */
+/* Shared word cleared by the AREA030 pad decision step 0x801DA638 before it
+ * queues sound cue 0x200. No reader of this word is lifted in the target, so
+ * the role stays address-anchored; only the stored width is proven. */
+extern u32 D_801440C8;    /* @source 0x801440C8 @kind unknown */
 /* Per-mode pair of words copied into the AREA030 scratch record at +0x14 and +0x20. */
 typedef struct Area030ModePair { u32 first; u32 second; } Area030ModePair;
 extern Area030ModePair D_801E1D38[]; /* @source 0x801E1D38 @kind data */
@@ -584,6 +588,7 @@ void func_801DC64C(void);
 void func_801DC708(void);
 void func_801DC7EC(void);
 void func_801DA5F8(void);
+void applyEntryPadConfirmOrCancelWorld00Area03004_801DA638(void);
 void func_801DA8E8(void);
 void func_801DAE84(void);
 void func_801DAED4(void);

@@ -791,8 +791,10 @@ segments:
     - '@source: src/bof3/battle/storeSelectedValueWhenRollAccepted.c'
     - '@behavior: Runs the selection roll func_800A3C9C for the current battler byte D_80146374 and selection byte D_80146394, then copies the selected battler''s leading halfword - the 0x140-stride party work record above 0x80145F18 for selection bytes below 3, otherwise the 0x118-stride enemy work record above 0x801EB6C4 rebased by -3 - into the selection record halfword at byte +0x04.'
   - - 46052
-    - asm
-    - func_800A1BE4
+    - c
+    - storeKind1EstimateMinusSelectedHalfwordClampZero
+    - '@source: src/bof3/battle/storeKind1EstimateMinusSelectedHalfwordClampZero.c'
+    - '@behavior: Stores into the selection-record halfword at byte +0x04 the func_800A4294 kind-1 estimate minus the selected battler''s work-record halfword - the 0x140-stride party record halfword at 0x80145F26 for battler bytes below 3, otherwise the 0x118-stride enemy record halfword at 0x801EB6C4 + 0x12 rebased by -3 - after re-reading the battler byte D_80146394 in each arm, then clamps the stored halfword to zero when it is negative.'
   - - 46260
     - asm
     - func_800A1CB4

@@ -285,6 +285,7 @@ sources = [
     "src/bof3/battle/copyOwnerRecordFieldsByMode.c",
     "src/bof3/battle/storePendingDamage9999OrEstimateThenClampZero.c",
     "src/bof3/battle/doubleEnemyRecordHalfwordsClampedToFFFF.c",
+    "src/bof3/battle/storeKind1EstimateMinusSelectedHalfwordClampZero.c",
 ]
 support_sources = [
     "src/bof3/support/battle15_symbols.c",

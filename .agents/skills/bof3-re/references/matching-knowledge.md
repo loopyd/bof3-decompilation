@@ -40,6 +40,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Call result stored inside the next call's delay slot | The original stores a `jal` result into its outgoing argument slot right after that call, before the next call's argument setup. Bind the result to a local; nesting the call in the later argument list moves that store into the following `jal` delay slot |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
 | Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests |
+| Three-term sum stays one instruction long, or the first divergence sits at a later term | Sweep the three associations `a + (b + c)`, `(a + b) + c`, `(b + c) + a` before touching guards, casts or truthiness spellings of that sum; the mirrored nesting stalled one instruction short with the divergence pushed to the last term, and the re-spellings measured neutral |
 | Boolean result misses the return register; extra return copy | Trace [boolean return expansion](#boolean-return-expansion) before allocation |
 | Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt. For displaced induction setup, inspect [explicit cursors](#explicit-cursors-and-signed-bounds) |
 | Global/BSS offsets | Audit COMMON/section/alignment/order/padding and following symbols |
@@ -258,7 +259,8 @@ while the narrow local leaves the truncation to the store.
 
 ### Halfword read-modify-write
 
-Use when a scratch halfword is decremented or advanced and then compared.
+Use when a scratch halfword is decremented or advanced and then compared, or when
+adjacent fields of one record are updated in a row.
 
 1. Address the field through a plain `s16*` and keep the arithmetic in place:
    `*half = (s16)(*half + delta);` then compare `*half`. The add stays on the
@@ -275,7 +277,14 @@ Use when a scratch halfword is decremented or advanced and then compared.
 3. When the original stalls on its first load, or keeps two cursor registers,
    read the cell again into a second pointer variable placed after the first
    store. See [scratch cursor group variables](#scratch-cursor-group-variables).
-4. Confirm with live asm-diff and the whole-function gate before retaining.
+4. Update adjacent fields with one in-place read-modify-write each, in the
+   original store order. Binding every loaded value to a local first measured a
+   partial whose first divergence was the first add, because the separate locals
+   let GCC hoist all the loads above the whole add chain; the all-in-place form
+   matched on the next probe. Once every update is in place, the remaining store
+   positions are free: interleaving the countdown store between two updates also
+   matched.
+5. Confirm with live asm-diff and the whole-function gate before retaining.
 
 ### Scratch cursor group variables
 

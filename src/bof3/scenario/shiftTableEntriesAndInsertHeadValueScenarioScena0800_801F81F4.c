@@ -19,7 +19,9 @@ extern u16 D_801FE9EC[];
  * is scaled once (sll by 1) and added to both bases; the argument is stored
  * straight from $a0 with no masking (sh $a0, 0(%lo(D_801FE9EC))). Its three
  * callers each fill the table newest-first: func_801F70C0 (jal at 0x801F710C),
- * func_801F743C (jal at 0x801F7488) and func_801F8534 (jal at 0x801F85B4) run a
+ * func_801F743C (jal at 0x801F7488) and
+ * projectWorkCursorStoreScreenPairAndDrawSpritePairAndRingScenarioScena0800_801F8534
+ * (jal at 0x801F85B4) run a
  * 0x40-iteration loop that adds (rand() & 0xFF) to the unsigned halfword at +0x58
  * of the scratchpad work object reached through the pointer slot 0x1F800044 and
  * pass the running total here. The table is read back only by func_801F823C,

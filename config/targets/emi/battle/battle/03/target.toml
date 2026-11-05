@@ -322,6 +322,7 @@ sources = [
     "src/bof3/battle/initBattlerFieldRecordsAndAdvanceFrontState.c",
     "src/bof3/battle/updateEnemyQueuedFlagAndRearmWorkState.c",
     "src/bof3/battle/drawBattlerCountdownEntries.c",
+    "src/bof3/battle/drawColorTilePrim.c",
 ]
 support_sources = [
     "src/bof3/support/battle03_symbols.c",

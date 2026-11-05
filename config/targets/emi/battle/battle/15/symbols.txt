@@ -149,6 +149,7 @@ runSelectionPassThenSetSelectedRecordFlag100 = 0x800A1704;
 runSelectionPassThenSetSelectedRecordFlag10000 = 0x800A1A30;
 setRecordByte8To2StoreIndexedModifierField6 = 0x800A1AD0;
 storeSelectedValueWhenRollAccepted = 0x800A1B38;
+storeKind1EstimateMinusSelectedHalfwordClampZero = 0x800A1BE4;
 runSelectionPassSetSelectedFlag1000ThenCallA9BD8 = 0x800A2120;
 runSelectionPassSetSelectedFlag4000ClearByteThenCallA9BD8 = 0x800A22CC;
 func_800A23CC = 0x800A23CC;

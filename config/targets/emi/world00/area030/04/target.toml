@@ -96,6 +96,7 @@ sources = [
     "src/bof3/world/func_801DA508_area03004.c",
     "src/bof3/world/func_801DA5B4.c",
     "src/bof3/world/func_801DA5F8_area03004.c",
+    "src/bof3/world/applyEntryPadConfirmOrCancelWorld00Area03004_801DA638.c",
     "src/bof3/world/func_801DA714_area03004.c",
     "src/bof3/world/func_801DA78C_area03004.c",
     "src/bof3/world/func_801DA8E8.c",

@@ -535,8 +535,10 @@ segments:
     - '@source: src/bof3/world/func_801DA5F8_area03004.c'
     - '@behavior: increments the shared byte counter at 0x801440B1, calls func_8014D8D4 with 1, then stores 1 in byte 3 of the work record published at the scratchpad cursor 0x1F800044.'
   - - 39480
-    - asm
-    - func_801DA638
+    - c
+    - applyEntryPadConfirmOrCancelWorld00Area03004_801DA638
+    - '@source: src/bof3/world/applyEntryPadConfirmOrCancelWorld00Area03004_801DA638.c'
+    - '@behavior: AREA030 work-record pad decision step, the index-1 handler of the record step table at 0x801E2248: when the shared pad state D_80145AA8 shares a bit with the mask D_80145AC2 it clears the shared word D_801440C8, plays sound cue 0x200 through func_8015DF18, disables the selected-record cue bytes D_801E31FC and D_801E31F8 with 0xFF, requests resource 2 through func_8014D8D4, then restarts the work record published at the scratchpad cursor 0x1F800044 with the position word 0x410000 at offset 0x38, a cleared slide count byte 9 and step byte 3 set to 2; otherwise, when the pad state shares a bit with the second mask D_80145AC4 and the shared mode byte modeByte is clear, it clears the shared counter D_801440B1, stores 1 in the record state byte 2 and returns the record to step 0. The shared helper func_8014D978 runs last on every path.'
   - - 39700
     - c
     - func_801DA714

@@ -377,6 +377,40 @@ extern u8 D_801E6110;
  * @source 0x801E6078 @kind unknown */
 extern u8 D_801E6078;
 
+/* Overlay-local entry count of the save-slot collector
+ * collectSaveSlotsThenCountFreeBlocks: it stores the count returned by the
+ * main-exe directory reader func_801EFCA8 there and re-reads it for the loop
+ * test of every entry. The list navigation handlers func_801D4E74 and
+ * func_801D69E0 step the same byte as the selected row of that list, and
+ * func_801D4BBC clears it once the list has been published. Zero-filled in the
+ * shipped payload, so its value there is not observable; kept as a raw byte at
+ * the width of the original loads and stores. Not owned by the shared map, so
+ * this target declares it locally and adds a target-map row.
+ * @source 0x801E6074 @kind unknown */
+extern u8 D_801E6074;
+
+/* Overlay-local remaining-capacity byte of the save list: the collector
+ * collectSaveSlotsThenCountFreeBlocks publishes 0xF minus the blocks used by the
+ * BOF3 entries it kept, so a nonzero value means the list has room for one more
+ * entry. func_801D4E74 widens its cursor bound by one when this byte is nonzero
+ * and D_801E6078 is not 3, and func_801D4BBC selects the id 5 instead of 4.
+ * Zero-filled in the shipped payload, so its value there is not observable;
+ * kept as a raw byte at the width of the original loads and stores. Not owned
+ * by the shared map, so this target declares it locally and adds a target-map
+ * row.
+ * @source 0x801E60FC @kind unknown */
+extern u8 D_801E60FC;
+
+/* Overlay-local kept-entry cursor of the save-slot collector
+ * collectSaveSlotsThenCountFreeBlocks: it clears this byte before the scan,
+ * uses it as the destination index of every kept entry, increments it through
+ * its own address, and finally publishes it as D_801E6078. Zero-filled in the
+ * shipped payload, so its value there is not observable; kept as a raw byte at
+ * the width of the original loads and stores. Not owned by the shared map, so
+ * this target declares it locally and adds a target-map row.
+ * @source 0x801E610C @kind unknown */
+extern u8 D_801E610C;
+
 /* Overlay-local +0x15 slot byte of the first of the three 0x1C-byte records
  * of the panel record table D_801E6098: the table's record base is 0x801E6098,
  * so this byte is record 0's slot field at +0x15, and records 1 and 2 hold
@@ -473,6 +507,17 @@ void func_801AEBA0(s16 arg0, s16 arg1, s16 arg2, s16 arg3, s32 arg4);
  * @source 0x801AE3F0 */
 void func_801AE3F0(u16 arg0, u16 arg1, u32 arg2, u32 arg3, u32 arg4,
                    u32 arg5);
+
+/* Main-exe save-directory reader (executable space, unlifted) called by the
+ * save-slot collector collectSaveSlotsThenCountFreeBlocks with the wildcard
+ * pattern D_801D0C94 and the 0x10 entry limit: the same call site stores the
+ * returned count as a byte into D_801E6074 and tests that byte, so the return is
+ * read only as a byte here. The record size it fills the table D_8018E990 with
+ * is not part of that call site's evidence; the collector's own 0x18 stride is
+ * what that table's entry type records. The widths below are the widths observed
+ * at that call site, not a recovered callee contract.
+ * @source 0x801EFCA8 */
+s32 func_801EFCA8(char* pattern, s32 limit);
 
 extern const char D_801D0E58[];
 extern const char D_801D0E5C[];
@@ -1159,11 +1204,15 @@ extern u8 D_8018E260;
  * the compiler emit the original's symbol-relative
  * `lui $at, %hi(entry); addu $at, $at, scaled_index; lbu %lo(...)($at)` form
  * instead of materialising the table address into a callee-saved register.
+ * The +0x14 word is read whole (`lw`) by the save-slot collector
+ * collectSaveSlotsThenCountFreeBlocks, which splits it into a 13-bit low half
+ * and the bits above 13; that word is the only typed member of the entry.
  * @source 0x8018E990 @kind table */
 typedef struct ShopSlotEntry {
   u8 unk_00[0x11];
   u8 unk_11;
-  u8 unk_12[6];
+  u8 unk_12[2];
+  u32 unk_14;
 } ShopSlotEntry;
 extern ShopSlotEntry D_8018E990[];
 
@@ -1271,6 +1320,25 @@ extern u8 D_801E6108;
  * owned by the shared map; declared locally with a target-map row.
  * @source 0x801D0C98 @kind rodata */
 extern const char D_801D0C98[];
+
+/* EMI-local 16-character save-name prefix of this game ("BASLUS-00422BOF3", the
+ * PSX save-file name prefix, stored without a terminator inside those 16 bytes)
+ * that the save-slot collector collectSaveSlotsThenCountFreeBlocks compares
+ * against the first 0x10 bytes of every directory entry through strncmp. The
+ * payload holds it unmodified, so the contents above are original data. Not
+ * owned by the shared map, so this target declares it locally and adds a
+ * target-map row.
+ * @source 0x801D0C20 @kind rodata */
+extern const char D_801D0C20[];
+
+/* EMI-local save-name pattern handed to the main-exe directory reader
+ * func_801EFCA8 by the save-slot collector collectSaveSlotsThenCountFreeBlocks:
+ * the payload holds the two bytes "*" and a terminator here, and the reader is
+ * called with the 0x10 entry limit that the collected list never exceeds. Not
+ * owned by the shared map, so this target declares it locally and adds a
+ * target-map row.
+ * @source 0x801D0C94 @kind rodata */
+extern char D_801D0C94[];
 
 /* Main-RAM ability record table: 0x14-byte records at 0x801CA70C whose cost
  * byte at +0x0E is the sort key of the skill-notes ordering command handler

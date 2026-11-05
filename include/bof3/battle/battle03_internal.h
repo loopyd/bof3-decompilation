@@ -798,7 +798,7 @@ extern Battle03RankEntry D_801EB550[];
 extern const s8 D_801EAF48[];
 void func_801D9AB4(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
 void func_801D9C80(s16 arg0, s16 arg1, s32 arg2, s32 arg3);
-void func_801D9DBC(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4);
+void drawColorTilePrim(s16 arg0, s16 arg1, s32 arg2, s32 arg3, u8 arg4);
 void func_801D9E9C(s16 arg0, s16 arg1, u16 arg2, u16 arg3, s8 arg4);
 void func_801DA078(s16 arg0, s16 arg1, s32 arg2);
 void drawFlatLinePrim(s16 arg0, s16 arg1, s16 arg2, s16 arg3, u8 arg4, u8 arg5,

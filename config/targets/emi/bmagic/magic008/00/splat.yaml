@@ -84,8 +84,10 @@ segments:
     - asm
     - func_801EF7C8
   - - 3540
-    - asm
-    - func_801EF9D4
+    - c
+    - clearRecordFlag40AndInvokeHelperWhenWorkByteBIsFFThenAdvanceWorkByte1BmagicMagic00800_801EF9D4
+    - '@source: src/bof3/bmagic/clearRecordFlag40AndInvokeHelperWhenWorkByteBIsFFThenAdvanceWorkByte1BmagicMagic00800_801EF9D4.c'
+    - '@behavior: Work byte 0x1 state 1 of this overlay: entry 1 of the four-entry handler table at 0x801EEC30 (0x801EF7C8, 0x801EF9D4, 0x801EFA40, 0x801EF010), which 0x801EF75C dispatches on the scratchpad work object''s state byte 0x1. It reads the work-object pointer cell at 0x1F800044 and, only when the work object''s byte at offset 0xB is 0xFF, clears bit 0x40 of byte 0 of the shared battle work record at 0x801EB4E0 (through the 0xBF mask), invokes the shared battle helper at 0x800AEF98 with the event selector 4 and the value 0, and then re-reads the scratchpad cell and increments work byte 0x1 with a byte-width add, which selects table entry 2 (0x801EFA40). The 0x18-byte frame only keeps $ra across that call; it reads or writes no other state and returns nothing.'
   - - 3648
     - c
     - raiseFlag4AndInvokeHelperBmagicMagic00800_801EFA40

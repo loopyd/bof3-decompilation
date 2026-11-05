@@ -83,7 +83,10 @@ No per-variant `asm-diff`/`byte-match` loop or local Python/shell compile/
 compare harness. Reading one comparison needs no script: `lift asm-compare`
 renders the aligned rows. In-process sweep resolves comparison context/canonical compile
 command once, then compiles/compares each variant. Each variant rewrites/relinks.
-Use `--subprocess` only for deliberate legacy reproduction.
+Use `--subprocess` only for deliberate legacy reproduction. Give every variant the
+measured `@source`/`@behavior` metadata: one without them is refused before
+comparing and the sweeper prints `-`, so record that as a non-measurement and fix
+the variant rather than reading it as a neutral result.
 
 Before each sweep, state the semantic precondition and predicted instruction
 change. Compare the full result, not score alone. Restore neutral/regressive probes.

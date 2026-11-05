@@ -93,8 +93,10 @@ segments:
     - '@source: src/bof3/bmagic/seedWorkMotionFieldsWhenGlobalWorkByteBIs1BmagicMagic01500_801EFD7C.c'
     - '@behavior: Entry 0x11 of the overlay handler table at 0x801EEC04: only when byte 0xB of the shared battle work record read through 0x801EB4E0 equals 1 does it seed the scratchpad work object published at the pointer cell 0x1F800044. The seed sets both words of the 16.16 motion pair at offsets 0x40 and 0x44 to 0x10000, byte 0x48 to 2, byte 9 to 8, and then advances work byte 2, the handler index, with a byte-width read-modify-write. The cell is re-read before each store group because a store through the loaded pointer may alias it.'
   - - 4584
-    - asm
-    - func_801EFDE8
+    - c
+    - decrementMotionCountdownAdjustMotionPairAndHalfwordThenCopyRecordTripletResetCountdownAndAdvanceWorkByte2BmagicMagic01500_801EFDE8
+    - '@source: src/bof3/bmagic/decrementMotionCountdownAdjustMotionPairAndHalfwordThenCopyRecordTripletResetCountdownAndAdvanceWorkByte2BmagicMagic01500_801EFDE8.c'
+    - '@behavior: Per-frame motion step of one handler of the overlay header handler table that starts at 0x801EEC04 and stores this function at 0x801EEC48: it reads the scratchpad work object through the pointer cell 0x1F800044, decrements the countdown byte 0x9, subtracts 0x2000 from the 16.16 motion word 0x40, adds 0x20 to the halfword 0x3E and adds 0x3000 to the motion word 0x44, then, when the new countdown byte is zero, copies words 0x34, 0x38 and 0x3C of the shared battle work record read through 0x801EB4E0 into the same work-object offsets, resets work byte 0x9 to 8 and advances work byte 2, the handler index. The cell is re-read before the copy group because a store through the record pointer may alias it.'
   - - 4740
     - c
     - decrementMotionCountdownAdjustMotionPairThenDecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic01500_801EFE84

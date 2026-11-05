@@ -226,8 +226,9 @@ segments:
     - asm
     - func_801F5ECC
   - - 13304
-    - asm
-    - func_801F5FF8
+    - c
+    - advanceWord6cBy14AndSetState1WhenByte9ExpiresWorld03Area12114_801F5FF8
+    - '@source: src/bof3/world/advanceWord6cBy14AndSetState1WhenByte9ExpiresWorld03Area12114_801F5FF8.c'
   - - 13416
     - asm
     - func_801F6068

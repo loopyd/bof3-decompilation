@@ -271,8 +271,10 @@ segments:
     - appendFullscreenDimTile
     - '@source: src/bof3/ui/appendFullscreenDimTile.c'
   - - 25344
-    - asm
-    - func_801D6F00
+    - c
+    - collectSaveSlotsThenCountFreeBlocks
+    - '@source: src/bof3/ui/collectSaveSlotsThenCountFreeBlocks.c'
+    - '@behavior: rebuilds the save-slot list of this overlay from the main-exe save-directory reader func_801EFCA8, called with the wildcard pattern D_801D0C94 and the 0x10 entry limit into the 0x18-byte entry table D_8018E990: stores the returned entry count into D_801E6074, clears the kept-entry cursor D_801E610C and then walks the entries in order, keeping every entry whose first 0x10 bytes equal the game-name prefix D_801D0C20 by copying the whole 0x18-byte entry to the cursor position and incrementing that cursor. Each entry also contributes to a used-block byte, the bits above 13 of its +0x14 word plus one when its low 13 bits are nonzero; the step publishes 0xF minus that total into D_801E60FC and the kept-entry count into D_801E6078, the slot count that rebuildPanelRecordTable scans and the navigation handlers func_801D4E74/func_801D69E0 clamp their cursor against.'
   - - 25728
     - c
     - func_801D7080

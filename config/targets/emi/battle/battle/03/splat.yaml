@@ -264,8 +264,10 @@ segments:
     - '@source: src/bof3/battle/func_801D9C80.c'
     - '@behavior: Emits one colored tile primitive at the current primitive cursor: the dimensions come from the 2-entry row of D_801EAE50 selected by the low byte of arg2, the red/green/blue channels are packed from the palette entry selected by the CLUT bank byte D_80144952 and the low byte of arg3, and the primitive is marked semi-transparent before the 0x10-mode close.'
   - - 37308
-    - asm
-    - func_801D9DBC
+    - c
+    - drawColorTilePrim
+    - '@source: src/bof3/battle/drawColorTilePrim.c'
+    - '@behavior: Emits one colored tile primitive at the current primitive cursor: the dimensions come from the 2-entry row of D_801EAE50 selected by the low byte of arg2, the three colour bytes take the 5-bit channels of the 15-bit value arg3 (bits 10-14 at +0x04, bits 5-9 at +0x05, bits 0-4 at +0x06), the primitive is marked semi-transparent with the arg4 byte and the packet is closed with the 0x10-byte primitive-append helper.'
   - - 37532
     - asm
     - func_801D9E9C

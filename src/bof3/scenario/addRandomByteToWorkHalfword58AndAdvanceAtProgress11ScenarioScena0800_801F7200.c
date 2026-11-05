@@ -3,7 +3,7 @@
 
 extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
 extern u8 g_ScenarioProgress;
-void func_801F8534(void);
+void projectWorkCursorStoreScreenPairAndDrawSpritePairAndRingScenarioScena0800_801F8534(void);
 
 /* @source 0x801F7200
  * @behavior Call local helper 0x801F8534, then add the low byte of rand()
@@ -20,7 +20,7 @@ void addRandomByteToWorkHalfword58AndAdvanceAtProgress11ScenarioScena0800_801F72
   s32 random;
   u8* work;
 
-  func_801F8534();
+  projectWorkCursorStoreScreenPairAndDrawSpritePairAndRingScenarioScena0800_801F8534();
   random = rand();
   work = scenarioScena0800Work;
   *(u16*)(work + 0x58) += random & 0xFF;
