@@ -150,8 +150,10 @@ segments:
     - '@source: src/bof3/world/stepPaletteBlocksOnTickCadenceAndResetCountersWorld02Area07714_801F4EC4.c'
     - '@behavior: splits work byte +9 into five-tick phases and copies palette block 8 minus the quotient to block 0 of the table-0x801F627D row on a zero remainder, increments byte +9, copies block byte +10 plus one while byte +10 is below nine, increments byte +10, and clears bytes +9/+10 and increments byte +2 once byte +9 reaches 0x1F.'
   - - 9212
-    - asm
-    - func_801F4FFC
+    - c
+    - stepPaletteSequenceOnTickCadenceAndResetOnFlagMismatchWorld02Area07714_801F4FFC
+    - '@source: src/bof3/world/stepPaletteSequenceOnTickCadenceAndResetOnFlagMismatchWorld02Area07714_801F4FFC.c'
+    - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, copies palette block paletteSourceBlocks801F6298[(byte +9 >> 2) % 6] to block 0 of the table-0x801F627D row when work byte +9 is a multiple of four, copies block 9 to block 0 of the table-0x801F6278 row, and clears bytes +9/+10 and increments byte +2 when shared word 0x80144F28 shifted right four and nibble-masked by work halfword +0x3A differs from its low nibble while that phase quotient remainder is zero, then increments byte +9.'
   - - 9564
     - asm
     - func_801F515C

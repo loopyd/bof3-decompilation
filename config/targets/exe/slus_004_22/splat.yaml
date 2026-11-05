@@ -104,7 +104,7 @@ segments:
     start: 0xb753c
     vram: 0x8014dd3c
     subsegments:
-      - [0xb753c, asm, func_8014DD3C]
+      - [0xb753c, c, applyMainLookupRecord, '@source: src/bof3/world/applyMainLookupRecord.c']
   - [0xb7678, bin, pre_exe_image_load]
   - name: exe_image_load
     type: code

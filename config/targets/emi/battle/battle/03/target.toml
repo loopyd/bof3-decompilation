@@ -311,6 +311,7 @@ sources = [
     "src/bof3/battle/startWorkVariantEmiStreamAndAdvanceByte1.c",
     "src/bof3/battle/initializeFlippedWorkDecayAndAdvance.c",
     "src/bof3/battle/clearBattlerFlagsAndDecrement462F3.c",
+    "src/bof3/battle/accumulateEnemyHalfwordsAndResetScratch.c",
     "src/bof3/battle/countdownWorkByte9QueueSlotAndEmitEvent.c",
     "src/bof3/battle/submitRolledEffectAndAdvance.c",
     "src/bof3/battle/callLocalReady2ThenSubmitRolledEffectAndAdvance.c",

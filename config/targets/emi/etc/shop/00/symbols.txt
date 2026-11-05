@@ -103,6 +103,7 @@ dispatchUiSubStepTable = 0x801D3AA8;
 func_801D3AE4 = 0x801D3AE4;
 func_801D408C = 0x801D408C;
 func_801D41B0 = 0x801D41B0;
+appendDimTileOrRedrawPanelStrip = 0x801D430C;
 func_801D43A4 = 0x801D43A4;
 tickPhaseTimerThenAdvanceUiSubstep = 0x801D43F0;
 func_801D4614 = 0x801D4614;

@@ -202,8 +202,10 @@ segments:
     - asm
     - func_801F5428
   - - 10644
-    - asm
-    - func_801F5594
+    - c
+    - advanceHalfword0aByWorkByte79World02Area08213_801F5594
+    - '@source: src/bof3/world/advanceHalfword0aByWorkByte79World02Area08213_801F5594.c'
+    - '@behavior: reads the +0x79 byte of the work record published through the global pointer cell 0x80146250 and advances the halfword at offset 0x0A of the record published through 0x80148210 by 0x0A when that byte is 4 and by 0x16 for every other value, leaving the halfword untouched when it is 8; each arm reloads the 0x80148210 cell and the two arms share one trailing halfword store.'
   - - 10740
     - c
     - setWorkWord5World02Area08213_801F55F4

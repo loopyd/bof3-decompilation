@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801F70C0
   - - 1380
-    - asm
-    - func_801F7164
+    - c
+    - addRandomByteToWorkHalfword58AndTickCountdown5AAdvance2CAnd32ScenarioScena0800_801F7164
+    - '@source: src/bof3/scenario/addRandomByteToWorkHalfword58AndTickCountdown5AAdvance2CAnd32ScenarioScena0800_801F7164.c'
+    - '@behavior: Call local helper 0x801F8534, then add the low byte of rand() to work halfword 0x58 modulo 65536 and advance work halfword 0x2C when the low two bits of work halfword 0x5A are clear. Reload the scratchpad work pointer at 0x1F800044, advance work halfword 0x32 by 1 and decrement work halfword 0x5A modulo 65536; when that countdown reaches zero reload it with 0x96 and increment work byte 1 modulo 256.'
   - - 1536
     - c
     - addRandomByteToWorkHalfword58AndAdvanceAtProgress11ScenarioScena0800_801F7200

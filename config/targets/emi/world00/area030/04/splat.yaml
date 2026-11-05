@@ -855,8 +855,10 @@ segments:
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
     - '@behavior: dispatches the byte at offset 2 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E2348.'
   - - 62756
-    - asm
-    - func_801E0124
+    - c
+    - resetWorkRecordAndRequestEntryWorld00Area03004_801E0124
+    - '@source: src/bof3/world/resetWorkRecordAndRequestEntryWorld00Area03004_801E0124.c'
+    - '@behavior: AREA030 work-record entry-phase start (handler 0 of the 0x801E2348 table dispatched through scratch work-record byte 2): it queues cue 0x206 through func_8015DF18 and clears the 32-bit record word at 0x3C, then loads the entry halfword at 0x12 of the D_801E2AB8 scale record selected by record byte 0x06 through func_8014DD3C; next it clears bit 5 of record byte 0 and zeroes record byte 0x2A, loads entry 0 through func_8014D6B8 and zeroes record byte 0x48, and finally advances the phase byte 0x02 that selects the next handler of the same table.'
   - - 62940
     - c
     - func_801E01DC

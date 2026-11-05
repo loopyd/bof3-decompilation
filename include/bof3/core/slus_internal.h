@@ -154,7 +154,8 @@ void frontLocalModeCallbackLoop(void);
  * bodies reference these named accessors. */
 #define EMI_STREAM_INDEX_HINT PSX_REF(volatile u8, 0x80145024u)
 
-/* @source 0x1F800044 @kind unknown */
-extern u8 g_game_work;
+/* Scratchpad cell holding the pointer to the active work record. */
+/* @source 0x1F800044 @kind data */
+extern u8* g_game_work;
 
 #endif

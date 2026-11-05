@@ -370,11 +370,15 @@ typedef struct SpriteGeometry {
 extern SpriteGeometry D_801E2424[]; /* @source 0x801E2424 @kind table */
 
 /* AREA030 per-slot scale records: func_801DF334 forms
- * `0x801E2AB8 + index * 36` and the sibling slot handlers read words at
- * +0x10/+0x12 and bytes at +0x1A..+0x20 of the same records. Only the two
- * fields read by func_801E0ABC are named here. */
+ * `0x801E2AB8 + index * 36` and the sibling slot handlers read halfwords at
+ * +0x10/+0x12 and bytes at +0x1A..+0x20 of the same records. Only the fields
+ * with a proven consumer are named here. */
 typedef struct Area030ScaleRecord {
-  u8 unk_00[0x1B];
+  u8 unk_00[0x12];
+  /* +0x12: entry loaded through func_8014DD3C by the work-record entry-phase
+   * start at 0x801E0124 for the record selected by work byte 0x06. */
+  u16 entry_12;
+  u8 unk_14[7];
   u8 unk_1B;     /* +0x1B: single-byte scale row read by func_801E03F8 */
   u8 unk_1C[3];
   u8 limit;      /* +0x1F: highest slot amount that still scales */

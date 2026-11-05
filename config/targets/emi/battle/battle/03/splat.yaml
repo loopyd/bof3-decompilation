@@ -1197,8 +1197,10 @@ segments:
     - '@source: src/bof3/battle/collectRandomEnemyEntries_battle03_801E531C.c'
     - '@behavior: Samples two current-enemy entries against byte thresholds and merges accepted IDs into the counted list.'
   - - 84204
-    - asm
-    - func_801E54EC
+    - c
+    - accumulateEnemyHalfwordsAndResetScratch
+    - '@source: src/bof3/battle/accumulateEnemyHalfwordsAndResetScratch.c'
+    - '@behavior: Raises scratch work flag 0x40, accumulates the current enemy halfwords +0x86/+0x84 into D_8014632C/D_80146330, sets enemy halfword +0x82 bit 0x4000 and clears +0x84, clears the selected battler action flags, runs the random enemy entry collection, decrements the D_801462F3 counter and raises D_80146328 bit 1 on zero, conditionally clears global halfword 62E8 bit 0x4000, runs func_800AD074 on enemy byte +0x7C, submits the scratch work, clears enemy word +0x100 bits 0x70 and the pending bit, then re-arms scratch bytes +1..+3 as 2/0/0.'
   - - 84604
     - c
     - resetEnemyScratchState

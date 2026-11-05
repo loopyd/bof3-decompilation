@@ -156,8 +156,10 @@ segments:
     - '@source: src/bof3/world/loadWorkHalfwordsFromTable637cWorld02Area10814_801F4918.c'
     - '@behavior: reads the 1-based selector byte at 0x80147B67, indexes the four-byte row table at 0x801F637C with it and writes the row into the scratch work record published at scratchpad pointer cell 0x1F800044: byte 0 to halfword +0x36, byte 2 to halfword +0x3A and bytes 1 and 3 as a 0-or-0x8000 flag in halfwords +0x34 and +0x38.'
   - - 7576
-    - asm
-    - func_801F4998
+    - c
+    - loadWorkHalfwordsFromTable63a0World02Area10814_801F4998
+    - '@source: src/bof3/world/loadWorkHalfwordsFromTable63a0World02Area10814_801F4998.c'
+    - '@behavior: reads the 1-based selector byte at 0x80147B67, indexes the four-byte row table at 0x801F63A0 with it and writes the row into the scratch work record published at scratchpad pointer cell 0x1F800044: byte 0 to halfword +0x36, byte 2 to halfword +0x3A and bytes 1 and 3 as a 0-or-0x8000 flag in halfwords +0x34 and +0x38.'
   - - 7704
     - asm
     - func_801F4A18

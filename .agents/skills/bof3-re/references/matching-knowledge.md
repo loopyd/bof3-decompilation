@@ -31,7 +31,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Fixed-address constant steals entry copy | Named extern binding can prevent constant-address CSE; verify entire register web |
 | Saved copy moves to entry or commutative operands stay swapped | Trace [CSE lifetimes and commutative targets](#cse-lifetimes-and-commutative-targets) |
 | First mismatch stays at one entry-block offset through width, mask and cast probes | Reorder the loop-variable initializer statements (`i`, destination, source); declaration order does not move it. One measured order was exact, another moved the first mismatch later at a lower score |
-| Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler |
+| Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler. One measured source is a narrowed `volatile` cell read into a wider index, where reading the cell through a non-volatile byte view drops the mask |
 | `lh` plus `lhu` replaces `lh` plus register copy | Trace [narrow load sharing](#narrow-load-sharing-and-real-value-reuse), known bits and later definitions |
 | Byte-cell load hoisted above the record's word stores, extra live registers | Split the record view by access width: [record views](#scratchpad-cells-and-record-views) |
 | Indirect call loads the selected pointer but the original fills frame slots with the whole table | Assign the named extern table to a local of its aggregate type, then index the local; indexing the extern indexes the table in place |
@@ -306,6 +306,13 @@ name the cell: declare an extern at its fixed address so each access emits its o
 `lui 0x1F80` plus `lw 68(vN)`. Applies to any fixed-address data the original reloads
 per use; the named symbol in the map restores that repetition.
 
+Pick the access spelling from the original's hi/lo pair, not from symbol ownership:
+`lui` plus `ori` is an integer-constant address, while a map symbol emits
+`%hi`/`%lo`, folds into the load when the offset fits and otherwise builds its base
+with `addiu`. A cell that owns a map row can still need a literal accessor at one use
+site; the hi/lo pair and base register in that load separate the two forms before
+another local arrangement is tried.
+
 A shared header that maps a cell name to a macro over a constant address
 (`#define D_X g_Cell`) folds the same way, once, because the macro hides the
 symbol. `#undef` it in the source when the original reloads the cell per access and
@@ -380,11 +387,16 @@ register `andi`; no generic punning framework.
 Trace each local from definition through its final consumer and address escapes.
 After its value is consumed, test reusing it for a later real helper result or
 calculation with a compatible type. Preserve call order, signed multiplication,
-shifts and narrowing. The new result must have a genuine consumer. Never add dummy
-uses to inflate liveness. Compatible locals can also serve mutually exclusive arms
-when each arm defines before use and no value escapes the join. Split phase values
-when their interference differs; share a consumed scalar only with a real later
-consumer. Review the whole allocator output, not one register pair.
+shifts and narrowing. The new result must have a genuine consumer. When the residual
+is a tail register exchange, write that result back into the same local before its
+consumer: a fresh local leaves both quantities live and the exchange survives, while
+the self-assignment merges them. Mask, shift and operand-order spellings of that tail
+stall at one hunk with the size already exact, so the residual belongs to this rung,
+not to another shaping attempt. Never add dummy uses to inflate liveness. Compatible
+locals can also serve mutually exclusive arms when each arm defines before use and no
+value escapes the join. Split phase values when their interference differs; share a
+consumed scalar only with a real later consumer. Review the whole allocator output,
+not one register pair.
 
 A narrowed induction temporary needs a complete reachable-range proof, including
 the final endpoint. A higher score at the same size can be a retainable partial

@@ -175,7 +175,11 @@ typedef struct Battle03EnemyWork {
   u16                      unk_80;
   /* unk_82/unk_fd proven by the func_801D57AC countdown path */
   u16                      unk_82;
-  u8                       pad_84[4];
+  /* unk_84/unk_86 are the two halfword counters
+   * accumulateEnemyHalfwordsAndResetScratch adds into the 0x8014632C and
+   * 0x80146330 accumulators; the same step clears unk_84. */
+  u16                      unk_84;
+  u16                      unk_86;
   /* unk_88 proven by the func_801DD978 slot-selection scan */
   u16                      unk_88;
   u8                       pad_8a[0xa];
@@ -827,7 +831,7 @@ void submitEffectUnlessNeg1(u16 arg0);
 void countdownWorkByte9SubmitCue(void);
 void decrementWorkByte9SubmitEnemyCue(void);
 void applyGravityOrReset(void);
-void func_801E54EC(void);
+void accumulateEnemyHalfwordsAndResetScratch(void);
 void resetEnemyScratchState(void);
 void raiseBit80AllocSlot(void);
 void clearQueuedSlotBytes(void);
@@ -1016,6 +1020,7 @@ u8   countMessageTokens(u8* arg0);
 #define BATTLE_ENEMY_BYTE_04(work)  PSX_REF(volatile u8, (u32)(work) + 4u)
 #define BATTLE_ENEMY_BYTE_05(work)  PSX_REF(volatile u8, (u32)(work) + 5u)
 #define BATTLE_ENEMY_HALF_AA(work)  PSX_REF(volatile u16, (u32)(work) + 0xaau)
+#define BATTLE_ENEMY_HALF_84(work)  PSX_REF(volatile u16, (u32)(work) + 0x84u)
 #define BATTLE_ENEMY_BYTE_88(work)  PSX_REF(volatile u8, (u32)(work) + 0x88u)
 #define BATTLE_ENEMY_HALF_A8(work)  PSX_REF(volatile u16, (u32)(work) + 0xa8u)
 #define BATTLE_ENEMY_HALF_FA(work)  PSX_REF(volatile u16, (u32)(work) + 0xfau)

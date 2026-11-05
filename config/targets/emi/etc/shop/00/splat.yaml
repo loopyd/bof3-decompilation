@@ -90,8 +90,10 @@ segments:
     - asm
     - func_801D41EC
   - - 14092
-    - asm
-    - func_801D430C
+    - c
+    - appendDimTileOrRedrawPanelStrip
+    - '@source: src/bof3/ui/appendDimTileOrRedrawPanelStrip.c'
+    - '@behavior: shop UI sub-step handler at entry 1 of the sub-step table D_801E52F0, which the dispatcher func_801D41B0 selects with the UI sub-step byte D_80148652: when the global gate halfword D_80143C40 is clear it appends the fullscreen dim tile through appendFullscreenDimTile and advances the UI sub-step byte by one; when the gate is set and the saved-state byte D_8014865C is not the -1 sentinel it re-emits the shop panel strip through func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth argument, then submits the texture row 0x1C at row 0x16 through func_8014F800 with the value returned by func_801502D0(0xA4); when the saved-state byte is the -1 sentinel both cells stay untouched.'
   - - 14244
     - c
     - func_801D43A4

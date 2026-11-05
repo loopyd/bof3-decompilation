@@ -164,8 +164,10 @@ segments:
     - asm
     - func_801F5778
   - - 11188
-    - asm
-    - func_801F57B4
+    - c
+    - addSignedTableStepToWord80149318World02Area10313_801F57B4
+    - '@source: src/bof3/world/addSignedTableStepToWord80149318World02Area10313_801F57B4.c'
+    - '@behavior: selects a signed byte from the four-entry table at 0x801F5D68 with the low two bits of the shared frame counter 0x80143E6C, publishes mode 2 in the area status byte 0x80149333, then adds eight times that signed step to the word 0x80149318 after re-reading it, so the counter cycle contributes 0, 8, 0 and -8 over four frames.'
   - - 11260
     - asm
     - func_801F57FC
