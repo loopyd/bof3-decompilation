@@ -38,7 +38,9 @@ the owning gate at 100% or be restored.
 Scope a naming lane to functions authored in its own target. A function whose body lives in
 another target is also named in a shared prototype or macro, so a single-target rename forks
 the name into two spellings; those rows are deferred with a fan-out inventory instead of
-renamed. Verify once per lane - one naming check and, only if something was edited, one gate
+renamed. A selector must also be measured exact: renaming a partial proves nothing, because
+the gate fails on a body nobody edited, so the lane reports it blocked for a lift instead.
+Verify once per lane - one naming check and, only if something was edited, one gate
 covering every selector - because a gate on a large target builds the whole target.
 
 A fresh lane starts on the first rung of the model
