@@ -130,12 +130,14 @@ def _observe_claim_parent(path: Path) -> tuple | None:
         status = path.stat(follow_symlinks=False)
     except (FileNotFoundError, NotADirectoryError):
         return None
+    # Identity only. Timestamps change whenever *any* entry is added or removed, which
+    # is exactly what concurrent lane writers do in a shared source directory, and the
+    # claimed files themselves are hashed below. A replaced or retargeted directory
+    # changes device, inode or file type, which is the hazard worth failing on.
     return (
         status.st_dev,
         status.st_ino,
         stat.S_IFMT(status.st_mode),
-        status.st_mtime_ns,
-        status.st_ctime_ns,
     )
 
 
