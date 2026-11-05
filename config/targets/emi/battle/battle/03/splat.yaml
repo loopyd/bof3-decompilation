@@ -1372,8 +1372,10 @@ segments:
     - '@source: src/bof3/battle/countdownOrFlag40Advance.c'
     - '@behavior: Decrements the active timer or sets its flag and increments scratchpad state.'
   - - 92592
-    - asm
-    - func_801E75B0
+    - c
+    - startWorkVariantEmiStreamAndAdvanceByte1
+    - '@source: src/bof3/battle/startWorkVariantEmiStreamAndAdvanceByte1.c'
+    - '@behavior: Starts an EMI stream slot selected by work halfword +0x2C and byte +0x08, then increments scratchpad work byte +0x01.'
   - - 92724
     - asm
     - func_801E7634

@@ -155,6 +155,7 @@ func_800A36F0 = 0x800A36F0;
 clampIndexedBattleByte14 = 0x800A39B4;
 func_800A3A10 = 0x800A3A10;
 func_800A3F28 = 0x800A3F28;
+querySelectionClampIndexedByte14FromTable = 0x800A40D0;
 querySelectionClampIndexedByte14 = 0x800A4160;
 resetSelectionApplyInput = 0x800A41D8;
 querySelectionApplyInput = 0x800A4238;

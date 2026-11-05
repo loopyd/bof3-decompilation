@@ -231,8 +231,13 @@ segments:
     - '@source: src/bof3/world/selectFirstAvailableEntryAndAdvanceStateWorld00Area03004_801D4884.c'
     - '@behavior: selects the first nonzero entry amount or marks none available, draws fixed panels and advances state.'
   - - 15748
+    - c
+    - decrementEntryPanelSlideAndAdvanceStateWorld00Area03004_801D4984
+    - '@source: src/bof3/world/decrementEntryPanelSlideAndAdvanceStateWorld00Area03004_801D4984.c'
+    - '@behavior: decrements the entry-panel slide byte, draws entry panels and advances state when the byte reaches zero.'
+  - - 16224
     - asm
-    - func_801D4984
+    - func_801D4B60
   - - 20296
     - c
     - func_801D5B48

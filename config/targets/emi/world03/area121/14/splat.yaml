@@ -101,8 +101,9 @@ segments:
     - c
     - dispatchState03World03Area12114_801F36A4
   - - 2792
-    - asm
-    - func_801F36E8
+    - c
+    - setWorkHalfword30AndAdvanceState3UnlessGatedWorld03Area12114_801F36E8
+    - '@source: src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld03Area12114_801F36E8.c'
   - - 2920
     - asm
     - func_801F3768

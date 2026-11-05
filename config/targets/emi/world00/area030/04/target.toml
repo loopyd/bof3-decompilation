@@ -160,6 +160,7 @@ sources = [
     "src/bof3/world/submitPanelPair.c",
     "src/bof3/world/submitTpageDrawMode.c",
     "src/bof3/world/updateArea030OverlayFrame.c",
+    "src/bof3/world/decrementEntryPanelSlideAndAdvanceStateWorld00Area03004_801D4984.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",

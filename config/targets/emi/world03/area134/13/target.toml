@@ -44,5 +44,6 @@ support_sources = [
     "src/bof3/world/clearScratchStateAndAreaStatusWorld03Area13413_801F31B8.c",
     "src/bof3/world/advanceWorkWordAndSetScratchStateToMode7World03Area13413_801F2F3C.c",
     "src/bof3/world/advanceWorkWordAndSetScratchStateToMode11World03Area13413_801F30E4.c",
+    "src/bof3/world/advanceWorkWord38AndSetScratchStateToMode18World03Area13413_801F3C44.c",
 ]
 psyq_source = "src/bof3/support/area134_13_psyq.c"

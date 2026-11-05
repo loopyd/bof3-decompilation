@@ -44,8 +44,8 @@ segments:
     - asm
     - func_801F7424
   - - 2420
-    - asm
-    - func_801F7574
+    - c
+    - clearSelectedRecordBankLeadBytesScenarioScena0900_801F7574
   - - 2492
     - asm
     - func_801F75BC

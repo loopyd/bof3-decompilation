@@ -173,8 +173,8 @@ segments:
     - asm
     - func_801F53BC
   - - 10268
-    - asm
-    - func_801F541C
+    - c
+    - incrementWorkStepIfStateZeroWorld02Area07714_801F541C
   - - 10340
     - asm
     - func_801F5464

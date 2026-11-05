@@ -274,8 +274,10 @@ segments:
     - '@source: src/bof3/scenario/seedWorkWords34AndCopyTo0CThenAdvanceStateScenarioScena0800_801F9E00.c'
     - '@behavior: Seeds work words 0x34/0x38/0x3C with 0x198000/0x198000/0x4000000, copies them to 0x0C/0x10/0x14 with 0x40000 added to the first word, and increments work byte 1.'
   - - 12880
-    - asm
-    - func_801F9E50
+    - c
+    - subtractWorkWords34And0CAndAdvanceStateAt98000ScenarioScena0800_801F9E50
+    - '@source: src/bof3/scenario/subtractWorkWords34And0CAndAdvanceStateAt98000ScenarioScena0800_801F9E50.c'
+    - '@behavior: Subtract 0x20000 from work words 0x34 and 0x0C, call the overlay helper at 0x801FA19C with those addresses, reload the work pointer and increment byte 1 if word 0x34 equals 0x98000.'
   - - 12996
     - c
     - subtractWorkWord0CAndAdvanceStateAt98000ScenarioScena0800_801F9EC4

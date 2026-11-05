@@ -151,6 +151,7 @@ sources = [
     "src/bof3/battle/func_800A3A10.c",
     "src/bof3/battle/func_800A3F28.c",
     "src/bof3/battle/querySelectionClampIndexedByte14.c",
+    "src/bof3/battle/querySelectionClampIndexedByte14FromTable.c",
     "src/bof3/battle/func_800A4458.c",
     "src/bof3/battle/func_800A4AD0.c",
     "src/bof3/battle/func_800A4B08.c",
