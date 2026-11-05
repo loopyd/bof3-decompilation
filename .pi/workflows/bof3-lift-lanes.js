@@ -95,6 +95,18 @@ const lanes = rawLanes.map((lane, index) => ({
   // residual. Such a lane starts on the strongest rung instead of re-running the
   // cheap one that already failed it. Anything else is a fresh lift.
   kind: String(lane.kind || "").trim().toLowerCase() === "partial" ? "partial" : "fresh",
+  // Closed shapes from earlier runs, supplied by the parent. The workflow has no
+  // filesystem, so the parent assembles this from prior reports; passing it in is what
+  // makes a later run continue instead of rediscovering experiments.
+  ledger: Array.isArray(lane.ledger)
+    ? lane.ledger
+        .map((row) => ({
+          shape: String((row && row.shape) || "").trim(),
+          measured: String((row && row.measured) || "").trim(),
+          disposition: String((row && row.disposition) || "").trim(),
+        }))
+        .filter((row) => row.shape)
+    : [],
   // Per-lane ladder override; empty means the batch ladder.
   models: Array.isArray(lane.models)
     ? lane.models.map((value) => String(value || "").trim()).filter(Boolean)
@@ -142,6 +154,7 @@ const liftRetryBrief = (lane, index, model, priorText) => [
   `Every shape listed there is closed; this rung has its own attempt allowance for shapes`,
   `that are not. Read it before your first experiment and name the untried shape you are`,
   `exercising.`,
+  ...carriedLedger(lane),
   ``,
   `Registry refs (identical set, nothing added or substituted):`,
   ...lane.refs.map((ref) => `  ${ref}`),
@@ -169,6 +182,30 @@ const liftRetryBrief = (lane, index, model, priorText) => [
   lane.note || "",
 ].filter((line, position, all) => !(line === "" && all[position - 1] === "")).join("\n");
 
+// Render the carried ledger as closed history the lane must not repeat.
+const carriedLedger = (lane) => {
+  if (!lane.ledger.length) {
+    return [
+      `Carried ledger: none supplied. Recover one first - read the target's earlier reports`,
+      `under out/lift-batches/ for this selector and treat every shape they measured as`,
+      `closed before you author anything.`,
+    ];
+  }
+  const rows = lane.ledger.slice(0, 40).map((row, index) => {
+    const verdict = row.disposition ? ` [${row.disposition}]` : "";
+    const measured = row.measured ? ` - ${row.measured}` : "";
+    return `  ${index + 1}. ${row.shape}${measured}${verdict}`;
+  });
+  return [
+    `Carried ledger: ${lane.ledger.length} closed shape(s) from earlier runs.`,
+    ...rows,
+    `Every shape above is closed: do not author it again, in any spelling, and do not`,
+    `re-measure it to confirm. Pick up at the residual those runs left open, say which`,
+    `closed shape you are deliberately not repeating if one looks tempting, and append`,
+    `your own measurements to this history when you report.`,
+  ];
+};
+
 // A partial lane's first child. Same selectors and write set, but the target already
 // holds authored C with a measured residual, so the strong rung starts from that report
 // rather than from a blank first source.
@@ -185,6 +222,7 @@ const partialBrief = (lane, model) => [
   `before your first experiment, name the shape you are trying, and never repeat one that`,
   `is already listed as measured. A rung that ends without a new measurement must say why`,
   `no untried shape followed from the evidence.`,
+  ...carriedLedger(lane),
   ``,
   `Registry refs (identical set, nothing added or substituted):`,
   ...lane.refs.map((ref) => `  ${ref}`),

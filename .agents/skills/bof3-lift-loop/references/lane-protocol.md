@@ -18,6 +18,12 @@ subagent({
 })
 ```
 
+Pass `ledger` on a lane to hand it the closed shapes from earlier runs: an array of
+`{shape, measured}` entries the parent assembles from the target's earlier reports. The
+brief then lists them as closed history the lane must not re-author or re-measure, and
+requires it to say which shape it is deliberately not repeating. Assemble it before
+launch; the workflow cannot read files.
+
 Two lane kinds, one workflow. A fresh lane starts on the first rung of the model
 ladder (`ninerouter/ds-combo`, then `ninerouter/gpt-combo`); a lane marked
 `kind: "partial"` starts on the strongest rung, because the cheap rung already
