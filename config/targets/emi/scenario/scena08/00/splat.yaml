@@ -243,8 +243,10 @@ segments:
     - asm
     - func_801F995C
   - - 11792
-    - asm
-    - func_801F9A10
+    - c
+    - updateWorkWordsAndAdvanceStateAt4B0000ScenarioScena0800_801F9A10
+    - '@source: 0x801F9A10'
+    - '@behavior: Add work words 0x0C/0x10/0x14 to 0x34/0x38/0x3C, subtract 0x200000 from word 0x14, call helper 0x801F9F8C, and set countdown 60 and advance byte 1 when word 0x38 equals 0x4B0000.'
   - - 11968
     - asm
     - func_801F9AC0

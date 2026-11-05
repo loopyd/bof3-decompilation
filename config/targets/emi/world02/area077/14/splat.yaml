@@ -176,8 +176,10 @@ segments:
     - c
     - incrementWorkStepIfStateZeroWorld02Area07714_801F541C
   - - 10340
-    - asm
-    - func_801F5464
+    - c
+    - decrementWorkFieldsAndResetStepWorld02Area07714_801F5464
+    - '@source: src/bof3/world/decrementWorkFieldsAndResetStepWorld02Area07714_801F5464.c'
+    - '@behavior: subtracts 0x2000 from work word +0x38 and 0x10 from halfword +0x3E; sets byte +2 to 1 when word +0x38 reaches 0x340000, then calls the local helper at 0x801F54B8.'
   - - 10424
     - asm
     - func_801F54B8

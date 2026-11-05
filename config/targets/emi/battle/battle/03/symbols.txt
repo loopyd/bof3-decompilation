@@ -246,6 +246,7 @@ forwardSelectedEffectId = 0x801DF34C;
 resetReadyAdvanceByte1 = 0x801DF3B8;
 func_801DF3F8 = 0x801DF3F8;
 func_801DF768 = 0x801DF768;
+updateSelectionEffectFactor = 0x801DF7EC;
 callNextLocalHandler = 0x801DF8AC;
 func_801DF914 = 0x801DF914;
 dispatchLocalByte2Table = 0x801DFA1C;

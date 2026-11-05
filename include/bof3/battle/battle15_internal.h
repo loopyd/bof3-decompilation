@@ -550,6 +550,7 @@ void func_800ABBE0(void);
 void func_800ABC30(void);
 void func_800A9BD8(u8 battler_index);
 void clampIndexedBattleByte14(s16 delta, s32 index);
+s32  func_800A403C(u8 index);
 u8   querySelectionClampIndexedByte14FromTable(u8 index);
 u8   resetSelectionApplyInput(s32 input_mask);
 /* @source 0x801DB524 */

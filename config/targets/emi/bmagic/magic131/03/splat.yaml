@@ -130,8 +130,8 @@ segments:
     - asm
     - func_801F0B44
   - - 8140
-    - asm
-    - func_801F0BCC
+    - c
+    - seedWorkWordTripletSetWord14AndAdvanceWorkByte2BmagicMagic13103_801F0BCC
   - - 8268
     - asm
     - func_801F0C4C

@@ -236,8 +236,46 @@ segments:
     - '@source: src/bof3/world/decrementEntryPanelSlideAndAdvanceStateWorld00Area03004_801D4984.c'
     - '@behavior: decrements the entry-panel slide byte, draws entry panels and advances state when the byte reaches zero.'
   - - 16224
+    - c
+    - drawSelectedEntryPanelsWorld00Area03004_801D4B60
+    - '@source: src/bof3/world/drawSelectedEntryPanelsWorld00Area03004_801D4B60.c'
+    - '@behavior: draws fixed selected-entry panels, entry number, header and mode indicators with unavailable-entry sentinels.'
+  - - 16516
     - asm
-    - func_801D4B60
+    - func_801D4C84
+  - - 17008
+    - asm
+    - func_801D4E70
+  - - 17480
+    - asm
+    - func_801D5048
+  - - 18132
+    - asm
+    - func_801D52D4
+  - - 18328
+    - asm
+    - func_801D5398
+  - - 18680
+    - asm
+    - func_801D54F8
+  - - 18804
+    - asm
+    - func_801D5574
+  - - 19188
+    - asm
+    - func_801D56F4
+  - - 19308
+    - asm
+    - func_801D576C
+  - - 19376
+    - asm
+    - func_801D57B0
+  - - 19800
+    - asm
+    - func_801D5958
+  - - 20040
+    - asm
+    - func_801D5A48
   - - 20296
     - c
     - func_801D5B48

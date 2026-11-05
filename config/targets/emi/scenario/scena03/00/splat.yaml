@@ -38,8 +38,10 @@ segments:
     - asm
     - func_801F6EB4
   - - 1632
-    - asm
-    - func_801F7260
+    - c
+    - tickCountdownAndClearTwoRecordBytesScenarioScena0300_801F7260
+    - '@source: src/bof3/scenario/tickCountdownAndClearTwoRecordBytesScenarioScena0300_801F7260.c'
+    - '@behavior: Ticks work byte 9 with flag bit 0x40 set; at zero clears that bit and two selected record lead bytes, then sets work byte 1 to 2.'
   - - 1844
     - asm
     - func_801F7334

@@ -9,6 +9,7 @@ load_address = 0x801d0c00
 
 
 sources = [
+    "src/bof3/world/drawSelectedEntryPanelsWorld00Area03004_801D4B60.c",
     "src/bof3/world/selectFirstAvailableEntryAndAdvanceStateWorld00Area03004_801D4884.c",
     "src/bof3/world/advancePanelSlideAndUpdateStateWorld00Area03004_801D4680.c",
     "src/bof3/world/initializeWorkWordsAndAdvanceStateWorld00Area03004_801D1B54.c",

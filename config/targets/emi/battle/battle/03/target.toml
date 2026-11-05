@@ -162,6 +162,7 @@ sources = [
     "src/bof3/battle/func_801DEF0C.c",
     "src/bof3/battle/func_801DF3F8.c",
     "src/bof3/battle/func_801DF768.c",
+    "src/bof3/battle/updateSelectionEffectFactor.c",
     "src/bof3/battle/func_801DF914.c",
     "src/bof3/battle/func_801E020C.c",
     "src/bof3/battle/func_801E0E0C.c",
