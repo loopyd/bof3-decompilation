@@ -225,9 +225,8 @@ const namingBrief = (lane, liftText, liftModel) => [
 
 // End-of-batch knowledge harvest. Exact lanes only: a partial teaches nothing portable.
 const harvestBrief = (board) => {
-  const exact = board.filter((row) => row.state === "complete" &&
-    ["exact-all", "exact-named"].includes(String(row.verdict)));
-  const named = board.filter((row) => String(row.verdict).startsWith("exact-naming-"));
+  const exact = board.filter((row) => row.state === "complete" && isExactVerdict(row.verdict));
+  const named = exact.filter((row) => String(row.verdict).startsWith("exact-naming-"));
   return [
     `BOF3 lift-batch knowledge harvest. Every lane in this batch has finished; you are the`,
     `only writer now and no function is being lifted.`,
@@ -244,6 +243,11 @@ const harvestBrief = (board) => {
     `  .agents/skills/bof3-re/references/reverse/mission-protocol.md`,
     `  .agents/skills/bof3-re/SKILL.md  (only to point at a reference you changed)`,
     `Never touch src/, config/, include/, workflows, gates, caches, or Git.`,
+    ``,
+    `A lane that started from an existing partial and closed it on a later rung is the`,
+    `most useful evidence here: record which lever closed which residual class, and note`,
+    `that it needed the stronger rung. Still keep it generic - residual class and lever,`,
+    `never the function, address or batch numbers.`,
     ``,
     `What counts as a lesson worth keeping:`,
     `- it comes from a lane that ended 100% exact in this batch, or from a lever that was`,
@@ -607,13 +611,25 @@ const resultState = (lane, text) => {
   return rows.every((row) => row.outcome === "exact") ? "exact" : "non-exact";
 };
 
+// Any lane that ended at 100% is harvest-eligible, whatever path closed it: a first-seed
+// exact, a partial closed by a later rung, a repair that reached exact, or an exact lift
+// whose naming stage was blocked. The lift evidence is what teaches a lever; the naming
+// outcome is bookkeeping.
+const isExactVerdict = (verdict) => {
+  const value = String(verdict || "");
+  return value === "exact-all" || value === "exact-named" || value === "repaired-exact" ||
+    value.startsWith("exact-naming-");
+};
+
 // A lane reaches review only after every ladder rung ended non-exact.
 const finishAttempt = (lane, attempt) => {
   if (attempt.state === "invalid") {
     return Promise.resolve({ lane: lane.key, target: lane.target, state: "blocked",
       verdict: "invalid-result", model: attempt.model, rung: attempt.rung });
   }
-  if (attempt.state === "exact") return namingStage(lane, attempt.text, attempt.model);
+  if (attempt.state === "exact") {
+    return namingStage(lane, attempt.text, attempt.model, attempt.rung);
+  }
   return reviewOnce(lane, attempt.text, 1, new Set());
 };
 
@@ -633,7 +649,7 @@ const namingVerdict = (text) => {
   return naming;
 };
 
-const namingStage = (lane, liftText, liftModel) => {
+const namingStage = (lane, liftText, liftModel, liftRung) => {
   const nameKey = `${lane.key}-name`;
   return runs
     .run(nameKey, {
@@ -657,11 +673,14 @@ const namingStage = (lane, liftText, liftModel) => {
           verdict: verdict === "applied" ? "exact-named"
             : verdict === "no-change" ? "exact-all"
             : `exact-naming-${verdict}`,
+          kind: lane.kind,
           model: liftModel,
+          rung: liftRung,
         };
       },
       (error) => ({ lane: lane.key, target: lane.target, state: "complete",
-        verdict: "exact-naming-error", error: String(error).slice(0, 300), model: liftModel }),
+        verdict: "exact-naming-error", error: String(error).slice(0, 300),
+        kind: lane.kind, model: liftModel, rung: liftRung }),
     );
 };
 
@@ -711,7 +730,8 @@ const reviewOnce = (lane, proposedText, round, triedRepairs) => {
                 return { lane: lane.key, target: lane.target, state: "blocked", verdict: "invalid-result" };
               }
               if (result === "exact") {
-                return { lane: lane.key, target: lane.target, state: "complete", verdict: "repaired-exact" };
+                return { lane: lane.key, target: lane.target, state: "complete",
+                  verdict: "repaired-exact", kind: lane.kind, model: laneLastModel(lane) };
               }
               return reviewOnce(lane, repairText, round + 1, triedRepairs);
             },
@@ -727,8 +747,7 @@ const board = await runs.all(lanes.map((lane) => laneChain(lane)));
 // Harvest only from exact results, and only once every lane has closed, so the child
 // writes references with no lift in flight. A harvest failure never fails the batch:
 // the lifts are already measured and the references are the improvable part.
-const exactRows = board.filter((row) => row.state === "complete" &&
-  ["exact-all", "exact-named"].includes(String(row.verdict)));
+const exactRows = board.filter((row) => row.state === "complete" && isExactVerdict(row.verdict));
 const harvest = exactRows.length === 0
   ? { state: "skipped", reason: "no exact lane in this batch" }
   : await runs
