@@ -45,8 +45,10 @@ segments:
     - '@source: src/bof3/world/decrementCountdownRearmTo12IncrementWorkByte1World02Area08213_801F2CF0.c'
     - '@behavior: loads the scratch work record cursor from scratchpad pointer-slot 0x1F800044 and decrements the unsigned halfword countdown at offset 0x2C; while that value is non-zero it stores it back and returns, and only when the countdown reaches zero does it arm the countdown with 0xC and advance the record dispatch byte at offset 0x01 by one.'
   - - 304
-    - asm
-    - func_801F2D30
+    - c
+    - decrementCountdownAdjustWorkWordsRearm24World02Area08213_801F2D30
+    - '@source: src/bof3/world/decrementCountdownAdjustWorkWordsRearm24World02Area08213_801F2D30.c'
+    - '@behavior: decrements countdown +0x2C, adds 0x400000 to word +0x3C, subtracts six from word +0x64 and adds six to word +0x68; on expiry rearms the countdown to 24 and increments dispatch byte +0x01.'
   - - 400
     - asm
     - func_801F2D90

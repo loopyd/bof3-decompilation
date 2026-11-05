@@ -357,6 +357,7 @@ func_801E4E10 = 0x801E4E10;
 func_801E4ECC = 0x801E4ECC;
 resetEnemyScratchWhenBit4 = 0x801E4F34;
 dispatchByte2TableB478 = 0x801E4F64;
+initializeFlippedWorkDecayAndAdvance = 0x801E4FA8;
 countdownWorkByte9DecayTripleEnemyReady = 0x801E50C0;
 func_801E5288 = 0x801E5288;
 stubHandler52E8 = 0x801E52E8;

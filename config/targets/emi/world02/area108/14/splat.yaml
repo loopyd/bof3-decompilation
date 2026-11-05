@@ -163,8 +163,9 @@ segments:
     - asm
     - func_801F4A98
   - - 7956
-    - asm
-    - func_801F4B14
+    - c
+    - dispatchWorkByte4Table63c4World02Area10814_801F4B14
+    - '@source: src/bof3/world/dispatchWorkByte4Table63c4World02Area10814_801F4B14.c'
   - - 8024
     - asm
     - func_801F4B58

@@ -15,6 +15,7 @@ sources = [
     "src/bof3/battle/passesBytePairGate.c",
     "src/bof3/battle/accumulateWorkCounter.c",
     "src/bof3/battle/advanceStageAndAccumulateWorkCounter.c",
+    "src/bof3/battle/countdownWorkByte9CopyPositionAndAdvanceStage.c",
     "src/bof3/battle/applyKindMaskSelection.c",
     "src/bof3/battle/armRecordFlag8ResetFields.c",
     "src/bof3/battle/armSecondaryGridAdvanceRoot.c",

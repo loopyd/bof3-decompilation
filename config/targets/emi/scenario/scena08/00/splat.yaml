@@ -57,8 +57,10 @@ segments:
     - asm
     - func_801F7164
   - - 1536
-    - asm
-    - func_801F7200
+    - c
+    - addRandomByteToWorkHalfword58AndAdvanceAtProgress11ScenarioScena0800_801F7200
+    - '@source: src/bof3/scenario/addRandomByteToWorkHalfword58AndAdvanceAtProgress11ScenarioScena0800_801F7200.c'
+    - '@behavior: Call helper 0x801F8534 and add the low byte of rand() to work halfword 0x58. At scenario progress 11, set work halfword 0x5A to 32 and increment work byte 1.'
   - - 1640
     - asm
     - func_801F7268

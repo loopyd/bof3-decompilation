@@ -110,8 +110,8 @@ segments:
     - asm
     - func_801FBC78
   - - 20748
-    - asm
-    - func_801FBD0C
+    - c
+    - invokeHelper1AndClearStateUnlessMode2ScenarioScena0900_801FBD0C
   - - 20844
     - asm
     - func_801FBD6C

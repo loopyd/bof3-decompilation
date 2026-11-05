@@ -135,8 +135,10 @@ segments:
     - '@source: src/bof3/world/area07714DispatchTables.c'
     - '@behavior: reads the non-volatile scratchpad work pointer cell 0x1F800044, takes the work record byte at +0x02 as an index and calls the handler pointer at that index of the local handler table based at 0x801F6284.'
   - - 8480
-    - asm
-    - func_801F4D20
+    - c
+    - selectPaletteBlocksByFlagMatchWorld02Area07714_801F4D20
+    - '@source: src/bof3/world/selectPaletteBlocksByFlagMatchWorld02Area07714_801F4D20.c'
+    - '@behavior: selects palette block 9 and work step 3 on a shared-word nibble match, otherwise block 1 and the next step, then copies a second palette block.'
   - - 8696
     - c
     - copyTwoPaletteBlocksAndAdvanceOnFlagMatchWorld02Area07714_801F4DF8

@@ -1464,8 +1464,10 @@ segments:
     - asm
     - func_800AE4D0
   - - 97652
-    - asm
-    - func_800AE574
+    - c
+    - countdownWorkByte9CopyPositionAndAdvanceStage
+    - '@source: src/bof3/battle/countdownWorkByte9CopyPositionAndAdvanceStage.c'
+    - '@behavior: Decrements work byte +0x09; on zero copies words +0x34 through +0x3C, calls func_800AF764, resets counters, adjusts halfwords +0x2E and +0x30, and advances work byte +0x01.'
   - - 97856
     - c
     - advanceStageAndAccumulateWorkCounter

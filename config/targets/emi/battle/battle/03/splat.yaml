@@ -1159,8 +1159,10 @@ segments:
     - dispatchByte2TableB478
     - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 82856
-    - asm
-    - func_801E4FA8
+    - c
+    - initializeFlippedWorkDecayAndAdvance
+    - '@source: src/bof3/battle/initializeFlippedWorkDecayAndAdvance.c'
+    - '@behavior: Initializes the mode-transformed work pair, toggles mode bit 1, seeds countdowns and the decay triple, submits the positional helper and cue 0x102, runs enemy readiness and advances work byte +0x02.'
   - - 83136
     - c
     - countdownWorkByte9DecayTripleEnemyReady

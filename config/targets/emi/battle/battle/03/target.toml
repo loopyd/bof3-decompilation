@@ -307,6 +307,7 @@ sources = [
     "src/bof3/battle/decrementWorkByte9SubmitEnemyCue.c",
     "src/bof3/battle/countdownWorkByteRetreatPairOrQueueEnemySlot.c",
     "src/bof3/battle/startWorkVariantEmiStreamAndAdvanceByte1.c",
+    "src/bof3/battle/initializeFlippedWorkDecayAndAdvance.c",
 ]
 support_sources = [
     "src/bof3/support/battle03_symbols.c",

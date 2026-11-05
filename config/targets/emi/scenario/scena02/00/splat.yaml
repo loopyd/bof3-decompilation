@@ -192,8 +192,8 @@ segments:
     - c
     - noopHandlerScenarioScena0200_801FD0C4
   - - 25804
-    - asm
-    - func_801FD0CC
+    - c
+    - clearSharedBytes6566AndRequestPrimaryState0BSubstate7ScenarioScena0200_801FD0CC
   - - 25876
     - asm
     - func_801FD114

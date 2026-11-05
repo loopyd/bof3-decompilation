@@ -9,6 +9,7 @@ load_address = 0x801F6C00
 
 sources = []
 support_sources = [
+    "src/bof3/scenario/invokeHelper1AndClearStateUnlessMode2ScenarioScena0900_801FBD0C.c",
     "src/bof3/scenario/dispatchCoordinateLookupHandlerScenarioScena0900_801FD280.c",
     "src/bof3/scenario/initializeRecordBankArmByte9AndAdvanceStateScenarioScena0900_801F73A0.c",
     "src/bof3/scenario/clearSelectedRecordBankLeadBytesScenarioScena0900_801F7574.c",

@@ -249,8 +249,8 @@ segments:
     - c
     - decrementEntrySpriteSlideAndSetState8World00Area03004_801D4E70
   - - 17480
-    - asm
-    - func_801D5048
+    - c
+    - advanceEntryPanelAndSpriteSlideAndSelectStateWorld00Area03004_801D5048
   - - 18132
     - c
     - drawEntryPanelsAndInitializeStateWorld00Area03004_801D52D4

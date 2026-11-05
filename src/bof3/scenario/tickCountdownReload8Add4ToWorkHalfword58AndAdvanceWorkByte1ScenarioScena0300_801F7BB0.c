@@ -1,0 +1,36 @@
+#include "bof3/bof3.h"
+
+extern u8 *D_1F800044;
+void func_801F7FFC(u8 *work);
+void func_801F8170(u8 *work);
+
+/* @source 0x801F7BB0
+ * @behavior Calls local helpers 0x801F7FFC and 0x801F8170 with the captured
+ * work pointer plus 0x0C, then adds 4 to that work object's halfword at
+ * 0x58. Decrements unsigned byte 9 of the current scratchpad work object;
+ * at zero reloads it with 8 and increments work byte 1. Captures the
+ * countdown pointer before the halfword store and reloads after each byte
+ * store that can alias its cell. Takes no arguments and returns no value.
+ * The halfword's wider role is unknown.
+ * @status exact
+ * @match 100.00
+ * @residual none
+ */
+void tickCountdownReload8Add4ToWorkHalfword58AndAdvanceWorkByte1ScenarioScena0300_801F7BB0(void) {
+  u8 *work;
+  u8 *helper_work;
+  u8 *countdown_work;
+  u32 halfword;
+
+  work = D_1F800044;
+  helper_work = work + 0x0C;
+  func_801F7FFC(helper_work);
+  func_801F8170(helper_work);
+  halfword = *(u16 *)(work + 0x58);
+  countdown_work = D_1F800044;
+  *(u16 *)(work + 0x58) = halfword + 4;
+  if (--countdown_work[9] == 0) {
+    D_1F800044[9] = 8;
+    D_1F800044[1]++;
+  }
+}
