@@ -243,6 +243,7 @@ adjustByteWith100Cap = 0x80165694;
 getEquipRecordBase = 0x80165D48;
 func_80166CB0 = 0x80166CB0;
 func_8016728C = 0x8016728C;
+releaseOwnerVoices = 0x8017301C;
 dequeueIntRpIrq = 0x8017F27C;
 D_8017F470 = 0x8017F470;
 D_8017F4B8 = 0x8017F4B8;

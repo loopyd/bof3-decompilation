@@ -570,6 +570,21 @@ u32 func_80166140(u32 arg0);
  * form observed at this call site, not a recovered callee contract.
  * @source 0x80164A44 */
 void func_80164A44(void* arg0);
+/* Main-exe slot setter called by this target's setFieldRecordSlotValue
+ * (src/bof3/ui/setFieldRecordSlotValue.c) with the helper group of the slot it
+ * is about to write, the new byte value, 1 and 0, and by emi/world00/area030/04
+ * with the same (group, value, 1, 0) shape; every reviewed call site drops the
+ * result, so the widths below are the widths observed at those call sites, not
+ * a recovered callee contract.
+ * @source 0x801665A0 */
+u8 func_801665A0(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
+/* Main-exe gate called by this target's setFieldRecordSlotValue with the same
+ * helper group it just passed to func_801665A0 and the record byte that the
+ * store has not replaced yet; the result is discarded here, and the reviewed
+ * call sites of func_801D3A24 test only its low byte, so the widths below are
+ * the widths observed at those call sites, not a recovered callee contract.
+ * @source 0x801650B4 */
+u8 func_801650B4(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 u32 func_801502D0(u32 arg0);
 /* Main-exe cue dispatcher called by this target's phase steps with a single
  * word cue id: func_801D3AE4 passes 0xD1, and the unlifted steps func_801D446C

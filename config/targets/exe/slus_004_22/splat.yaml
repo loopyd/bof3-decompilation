@@ -235,12 +235,12 @@ segments:
     subsegments:
       - [0xdc1d0, asm, func_801729D0]
   - [0xdc710, bin, post_emi_gap_0xdc710]
-  - name: cluster_5
+  - name: key_off_scan
     type: code
     start: 0xdc81c
     vram: 0x8017301c
     subsegments:
-      - [0xdc81c, asm, func_8017301C]
+      - [0xdc81c, c, releaseOwnerVoices, '@source: src/bof3/audio/releaseOwnerVoices.c']
   - [0xdc8b8, bin, post_emi_gap_0xdc8b8]
   - name: cluster_6
     type: code

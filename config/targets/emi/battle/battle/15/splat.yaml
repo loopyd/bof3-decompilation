@@ -450,8 +450,10 @@ segments:
     - asm
     - func_8009E844
   - - 33164
-    - asm
-    - func_8009E98C
+    - c
+    - setRecordField4Neg10000WhenPartyFlag4000
+    - '@source: src/bof3/battle/setRecordField4Neg10000WhenPartyFlag4000.c'
+    - '@behavior: Reads the active battler index byte D_80146394 and, for an index below 3 whose 0x140-stride party-record halfword at 0x80145F10 carries bit 0x4000, stores -10000 in the halfword at byte +0x04 of the record pointed to by D_8014639C.record, advances the byte count at 0x801462F1 and clears that 0x4000 bit from the battler through func_800A36F0; an index below 3 without the bit clears the record halfword to zero, and indexes 3 and above leave the record and the count untouched.'
   - - 33328
     - asm
     - func_8009EA30

@@ -7,7 +7,9 @@ binary = "out/binaries/emi/etc/commu02/08.bin"
 splat = "config/targets/emi/etc/commu02/08/splat.yaml"
 load_address = 0x801D0C00
 
-sources = []
+sources = [
+    "src/bof3/ui/findActiveRecordSlot.c",
+]
 support_sources = [
     "src/bof3/ui/countFlaggedFieldRecords_commu02_08.c",
     "src/bof3/ui/countActiveRecords_commu02_08.c",

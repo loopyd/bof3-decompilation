@@ -18,6 +18,7 @@ sources = [
     "src/bof3/bmagic/seedWorkWordTripletSetWord14AndAdvanceWorkByte2BmagicMagic13103_801F0BCC.c",
     "src/bof3/bmagic/advanceWorkWord14By20SetByteBAndAdvanceWorkByte2At200BmagicMagic13103_801F0C4C.c",
     "src/bof3/bmagic/add4ToWorkByte9AndAdvanceWorkByte2At40BmagicMagic13103_801F053C.c",
+    "src/bof3/bmagic/addMotionPairIntoHalfwordsDecrementCountdownSetByte9To24AdvanceWorkByte2BmagicMagic13103_801EFB64.c",
 ]
 support_sources = [
     "src/bof3/support/emi_bmagic_magic131_03_symbols.c",

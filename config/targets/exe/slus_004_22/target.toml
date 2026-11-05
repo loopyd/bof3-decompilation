@@ -32,6 +32,7 @@ sources = [
     "src/bof3/callback/dequeueIntRpIrq.c",
     "src/bof3/callback/dispatchCallbackSlots.c",
     "src/bof3/audio/dispatchSoundCue.c",
+    "src/bof3/audio/releaseOwnerVoices.c",
     "src/bof3/boot/displayBootExceptionDump.c",
     "src/bof3/render/drawFadeTile.c",
     "src/bof3/io/emiCdReadyCallback.c",

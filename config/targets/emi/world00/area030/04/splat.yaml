@@ -730,8 +730,10 @@ segments:
     - asm
     - func_801DD664
   - - 52172
-    - asm
-    - func_801DD7CC
+    - c
+    - stepSharedIndexAndLatchGateOnPadWorld00Area03004_801DD7CC
+    - '@source: src/bof3/world/stepSharedIndexAndLatchGateOnPadWorld00Area03004_801DD7CC.c'
+    - '@behavior: AREA030 pad handler (entry 2 of the 0x801E22E4 dispatch table selected by the shared byte D_80144286): it first submits the fixed func_8014F800 panel texture row (0x1D, 0x14, 0, 0xFF, 0x80010000 + the main-executable halfword D_800100E0); then, only while the shared state byte D_80144281 holds 0x0E and the shared pad gate byte 0x80144288 is clear, it reacts to the shared pad state D_80145AA8: a bit shared with the pressed mask D_80145AC4 dispatches cue 0x106, clears byte 4 of the work record published at the scratchpad cursor 0x1F800044 and decrements that record dispatch byte 3; the Cross bit 0x4000 publishes 0xFF into the gate byte and steps the shared index D_801442BC up over the 0..5 range; the Triangle bit 0x1000 publishes 1 into the gate byte and steps that index down, wrapping to 5 below zero.'
   - - 52492
     - c
     - func_801DD90C

@@ -276,6 +276,7 @@ sources = [
     "src/bof3/battle/runSelectionPassThenSetSelectedRecordFlag8000.c",
     "src/bof3/battle/panelStepRightClamp5B.c",
     "src/bof3/battle/panelStepLeftClampA3.c",
+    "src/bof3/battle/setRecordField4Neg10000WhenPartyFlag4000.c",
 ]
 support_sources = [
     "src/bof3/support/battle15_symbols.c",

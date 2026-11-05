@@ -90,8 +90,8 @@ segments:
     - c
     - countActiveRecords_commu02_08
   - - 29344
-    - asm
-    - func_801D7EA0
+    - c
+    - findActiveRecordSlot
   - - 29424
     - asm
     - func_801D7EF0

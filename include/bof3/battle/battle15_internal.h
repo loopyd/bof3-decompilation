@@ -232,6 +232,7 @@ extern volatile u8   D_801462EF; /* @source 0x801462EF @kind unknown */
 /* Shared active-record count (config/targets/shared/symbols.txt); adjustBattleWorkValuesForMode
  * re-reads it in both loop conditions. */
 extern volatile u8   localBattlerCount; /* @source 0x801462F0 @kind unknown */
+extern u8            D_801462F1; /* @source 0x801462F1 @kind unknown */
 extern volatile u8   D_80146303; /* @source 0x80146303 @kind unknown */
 extern volatile u16  D_80145AC8; /* @source 0x80145AC8 @kind unknown */
 /* sprintf work buffer of the panel label row: func_800B0498 formats the
@@ -300,6 +301,7 @@ extern u8 D_80145F18[]; /* @source 0x80145F18 @kind unknown */
 extern u8 D_80145F1A[]; /* @source 0x80145F1A @kind unknown */
 extern u8 D_80145F1C[]; /* @source 0x80145F1C @kind unknown */
 extern u8 D_80145F22[]; /* @source 0x80145F22 @kind unknown */
+extern u8 D_80145F10[]; /* @source 0x80145F10 @kind unknown */
 extern u8 D_80145F12[]; /* @source 0x80145F12 @kind unknown */
 extern u8 battleWorkRecordBase[]; /* @source 0x80145F04 @kind unknown */
 /* Party-slot position/colour band maintained by func_800A4458. Every address is

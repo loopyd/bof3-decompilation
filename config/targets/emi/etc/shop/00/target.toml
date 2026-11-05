@@ -114,6 +114,7 @@ sources = [
     "src/bof3/ui/func_801DB938_shop00.c",
     "src/bof3/ui/func_801D5D98.c",
     "src/bof3/ui/func_801E4E9C.c",
+    "src/bof3/ui/setFieldRecordSlotValue.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",
@@ -123,3 +124,9 @@ psyq_source = "src/bof3/support/shop00_psyq.c"
 headers = [
     "include/bof3/ui/shop00_internal.h",
 ]
+
+[[matching.section_placements]]
+function = 0x801D3828
+section = ".rodata"
+address = 0x801D0C04
+size = 0x18

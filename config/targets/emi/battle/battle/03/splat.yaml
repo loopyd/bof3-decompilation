@@ -1305,8 +1305,10 @@ segments:
     - '@source: src/bof3/battle/dispatchByte1PairFlagged.c'
     - '@behavior: Dispatches one of two local handlers by battle work state under a temporary global.'
   - - 88988
-    - asm
+    - c
     - func_801E679C
+    - '@source: src/bof3/battle/func_801E679C.c'
+    - '@behavior: Initializes the scratch work display bytes +0x24..+0x2C, takes +0x27 from the class-keyed byte table D_801EB4A4 plus 0xB0, sets +0x2A from the class byte +0x07 and half-row byte +0x08, advances work byte +0x01 and requests the D_801EB4B0 byte for that class and half-row before the shared idle helper.'
   - - 89324
     - c
     - clearQueuedSlotWhenReady

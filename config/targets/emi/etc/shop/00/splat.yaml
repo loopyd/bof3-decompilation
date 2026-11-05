@@ -33,14 +33,21 @@ segments:
 - - 10888
   - bin
   - header_retained_00002a88
+- name: header_code_801d3828
+  type: code
+  start: 11304
+  vram: 2149398568
+  subsegments:
+  - - 11304
+    - c
+    - setFieldRecordSlotValue
+    - '@source: src/bof3/ui/setFieldRecordSlotValue.c'
+    - '@behavior: writes the byte argument arg2 into one of the six consecutive bytes 0x0E..0x13 of the 164-byte field record selected from D_80144968 by the byte argument arg0, dispatching on the byte argument arg1: slot 0 keeps record byte 0x0E, slots 1..3 keep 0x0F..0x11 and slots 4..5 keep 0x12..0x13, and the unsigned bound 6 that guards the dispatch sends every larger arg1 to the slot 0 arm as well. Each arm first calls the main-exe slot setter func_801665A0 with that arm''s helper group (1 for slot 0, 2 for slots 1..3 and 3 for slots 4..5) and the new value, then calls the main-exe gate func_801650B4 with the same group and the record byte that the arm has not replaced yet, and only then stores the new value; both helper results are discarded.'
 - name: main
   type: code
-  start: 11640
-  vram: 2149398904
+  start: 11708
+  vram: 2149398972
   subsegments:
-  - - 11640
-    - asm
-    - func_801D3978
   - - 11708
     - c
     - dispatchUiPhaseTable

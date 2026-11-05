@@ -89,6 +89,14 @@ preserve original post-store rereads. Do not add volatility to force them.
 For preheader or delay-slot order, test block-local initialization or evidenced
 [operation-scope placement](#operation-scopes-and-loop-note-dependencies).
 
+A guarded dispatcher (`sltiu` bound, table base, one indexed load, `jr`) gives the
+dense switch shape directly: one arm per table word, in order, and the arm an
+out-of-range index reaches is the default, so that case carries the default's
+statements instead of a duplicate block. When the first seed already builds to the
+original `.text` size and differs only at address-bearing words, the source shape is
+settled; finish the symbol bindings and the reviewed table placement before probing
+more C.
+
 ### Operation scopes and loop-note dependencies
 
 Use when real initialization has the required lifetime but adjacent call arguments
@@ -114,6 +122,10 @@ passes before changing scope placement.
    address escapes and every path permit it. Preserve call, volatile and memory
    effects. Initialization needs a real later consumer. Empty scopes, dummy work,
    extra accesses and barrier substitutes remain forbidden.
+   A scope may hold one real store rather than an initializer: its `LOOP_END` note
+   flushes the pending memory lists, which keeps a following call's reload of an
+   earlier-read cell after that store; without the scope the bare store lets the
+   reload drop into the first load's delay slot.
 3. Compare plain initialization, PRE placement and proposed placement through
    `lift sweep`. Plain form may rematerialize a constant or drop saved registers;
    another placement may retain allocation while freeing argument order. Bind
@@ -147,7 +159,11 @@ differs. Diagnose before changing statement order; keep compiler/flags fixed.
    address casts only after proving target pointer width/conversion, ordered
    endpoints within one signed region, reachable stride progression and no
    wraparound. Re-prove these bounds for relocated copies; never cast solely
-   to select an opcode.
+   to select an opcode. A wrap test belongs to the compare, not the declaration:
+   when the original decrements a counter and branches on a signed below-zero
+   result, write `(s16)field < 0` and leave a shared unsigned declaration alone,
+   because an unsigned compare never reaches the wrap arm and a signed
+   re-declaration re-types every sibling handler.
 5. Confirm predicted setup, entry test and compare through `lift sweep`, then
    full function/readonly-byte gate and independent review. Freeze during review.
    Correct setup alone proves neither semantics nor exactness; this lever does
@@ -621,6 +637,11 @@ resolution through owning generated-layout tooling; no handwritten assembly work
 or unreviewed boundary change. m2ctx needs declarations/types/prototypes/macros/helpers,
 not unrelated bodies/static data that shift rodata. GNU assembler GTE spelling may
 use exact `.word` only in generated/SDK assembly, never C matching technique.
+
+A reviewed manifest placement row is comparison-link evidence only: payload address
+comes from the generated `linker.ld`, which can still group `.rodata` per segment, so
+when a compiler-emitted table sits inside a `bin` span, check the generated placement
+with the parent instead of reading payload placement from the row.
 
 Read the effective address of a dense symbol load, not the printed base. A
 `lui at,0x8015` with the displacement `0x930C` resolves to `0x8014930C` because the

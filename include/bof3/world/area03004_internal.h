@@ -11,6 +11,10 @@
  * chosen halfword offset by +0x80010000 to func_8014F800. */
 extern u16 D_800100A2;    /* @source 0x800100A2 @kind unknown */
 extern u16 D_800100A4;    /* @source 0x800100A4 @kind unknown */
+/* Main-executable VRAM halfword read per call by the AREA030 handler at
+ * 0x801DD7CC and submitted to func_8014F800 offset by the same +0x80010000
+ * base: (0x1D, 0x14, 0, 0xFF, base + halfword). */
+extern u16 D_800100E0;    /* @source 0x800100E0 @kind unknown */
 /* Shared mode byte; stored small mode values (4/6/7/...) and compared
  * against them by the area030 mode handlers. */
 extern u16 D_80143C40;    /* @source 0x80143C40 @kind unknown */
@@ -137,6 +141,15 @@ extern u8  D_80144286;    /* @source 0x80144286 @kind unknown */
  * bits and publishes the masked value back, and selects its main-executable
  * VRAM halfword through its bit 0. */
 extern u8  D_80144287;    /* @source 0x80144287 @kind unknown */
+/* Shared AREA030 pad gate/latch byte directly after D_80144287: 0x801DD7CC
+ * republishes 0xFF while the pad Cross bit D_80145AA8/0x4000 is set and 1
+ * while the Triangle bit 0x1000 is set, and both 0x801DD7CC and 0x801D56F4
+ * bail out while it reads nonzero. */
+extern u8  gateByteWorld00Area03004_80144288; /* @source 0x80144288 @kind unknown */
+/* Shared AREA030 list index stepped by the pad handlers: 0x801DD7CC cycles it
+ * over 0..5 on the Cross/Triangle bits and 0x801DD664 cycles it over 0..0x16
+ * before publishing 0x80144281 + 1. */
+extern u16 D_801442BC;    /* @source 0x801442BC @kind unknown */
 extern u8  D_80145E92;    /* @source 0x80145E92 @kind unknown */
 extern u8  D_80145E93;    /* @source 0x80145E93 @kind unknown */
 /* Shared AREA030 color-block row index byte:

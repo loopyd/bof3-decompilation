@@ -173,6 +173,7 @@ sources = [
     "src/bof3/world/drawEntryPanelsAndInitializeStateWorld00Area03004_801D52D4.c",
     "src/bof3/world/advancePanelTextCursor.c",
     "src/bof3/world/drawStatusBoxPair.c",
+    "src/bof3/world/stepSharedIndexAndLatchGateOnPadWorld00Area03004_801DD7CC.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",
