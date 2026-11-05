@@ -152,6 +152,75 @@ def render_context(function: FunctionId, manifest: TargetManifest) -> str:
     return "\n".join(lines) + "\n"
 
 
+_JUMP_TABLE_NAME = re.compile(r"(jtbl_[0-9A-Fa-f]{8}[A-Za-z0-9_]*)")
+
+
+def jump_table_assembly(
+    manifest: TargetManifest, address: int, assembly: Path
+) -> Path | None:
+    """Return an m2c input that supplies the jump tables this function reads.
+
+    m2c resolves a ``jr`` through a table symbol, and fails when the table's
+    bytes are not part of the input. A table usually sits outside the function -
+    this target keeps one in its header - so the entries are read from the
+    original payload and the arm addresses are labelled in a copy of the Splat
+    assembly. Nothing here is a lift input: it exists only for the decompiler.
+    """
+
+    text = assembly.read_text(encoding="utf-8", errors="replace")
+    tables = sorted(set(_JUMP_TABLE_NAME.findall(text)))
+    if not tables:
+        return None
+    root = repo_layout().root
+    binary = root / manifest.binary
+    try:
+        payload = binary.read_bytes()
+    except OSError:
+        return None
+    load_address = manifest.load_address
+    limit = load_address + len(payload)
+    labels: set[str] = set()
+    blocks: list[str] = []
+    for name in tables:
+        table = name.replace("jtbl_", "", 1)[:8]
+        table_address = int(table, 16)
+        offset = table_address - load_address
+        if offset < 0 or offset + 4 > len(payload):
+            return None
+        entries: list[int] = []
+        while offset + len(entries) * 4 + 4 <= len(payload):
+            value = int.from_bytes(
+                payload[offset + len(entries) * 4 : offset + len(entries) * 4 + 4], "little"
+            )
+            if not (load_address <= value < limit) or value % 4:
+                break
+            entries.append(value)
+        if not entries:
+            continue
+        rows = []
+        for value in entries:
+            label = f"lbl_{value:08X}"
+            labels.add(label)
+            rows.append(f"    .word {label}")
+        blocks.append(f"jlabel {name}\n" + "\n".join(rows))
+    if not blocks:
+        return None
+    lines = text.splitlines()
+    for label in sorted(labels):
+        name = label.replace("lbl_", "")
+        if any(re.match(rf"\s*{label}:", line) for line in lines):
+            continue
+        for index, line in enumerate(lines):
+            if f" {name} " in line and line.lstrip().startswith("/*"):
+                lines.insert(index, f"{label}:")
+                break
+    enriched = "\n".join(lines) + "\n\n" + "\n\n".join(blocks) + "\n"
+    destination = root / "out" / "m2c" / manifest.id.value / f"{assembly.stem}.jtbl.s"
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(enriched, encoding="utf-8")
+    return destination
+
+
 def asm_label(path: Path) -> str:
     """Return the first glabel of a Splat assembly file."""
     for line in path.read_text(encoding="utf-8", errors="replace").splitlines():

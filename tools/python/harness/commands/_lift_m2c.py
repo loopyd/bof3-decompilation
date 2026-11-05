@@ -20,6 +20,7 @@ from ..toolchain.m2c import (
     M2cToolchain,
     asm_label,
     context_path,
+    jump_table_assembly,
     render_context,
     splat_assembly,
 )
@@ -76,7 +77,8 @@ def run_m2c(args: argparse.Namespace) -> int:
         arguments.extend(("--context", extra))
     if args.void:
         arguments.append("--void")
-    arguments.append(str(assembly))
+    # A table this function jumps through lives outside it; m2c needs the bytes.
+    arguments.append(str(jump_table_assembly(manifest, function.address, assembly) or assembly))
     result = m2c.execute(arguments, capture_output=True, text=True)
     seed = re.sub(
         r"\bfunc_([0-9A-Fa-f]{8})\b",
