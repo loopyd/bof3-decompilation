@@ -348,8 +348,10 @@ segments:
     - asm
     - func_801FABA0
   - - 17768
-    - asm
-    - func_801FB168
+    - c
+    - waitForSharedCounterArmCountdownThenSetFlagBit3AndResetHandlerScenarioScena0800_801FB168
+    - '@source: src/bof3/scenario/waitForSharedCounterArmCountdownThenSetFlagBit3AndResetHandlerScenarioScena0800_801FB168.c'
+    - '@behavior: Overlay frame handler and entry 2 of the handler-pointer table at D_801FE970 that dispatchProgressHandlerScenarioScena0800_801FAB5C indexes with D_80146874: it drives the shared sub-state byte D_80146875 through three steps. Sub-state 0 stores 3 in D_80147ACF, clears the shared halfword D_80147AD6 and advances to 1. Sub-state 1 waits for the shared counter byte D_80146867 to read 0x12, then arms the shared countdown halfword D_80146876 with 0x10 and advances to 2. Sub-state 2 post-decrements that countdown and, when the pre-decrement value reads 0, sets scenario flag bit 3 through func_8015B580(D_8014686C, 3), seeds D_801448EE = 1, D_801448EB = 5 and D_801448EC = 3, and returns the overlay to handler 0 by clearing D_80146874 together with the sub-state byte. Any other sub-state value does nothing. It reads and writes no other memory and returns nothing; the 0x18-byte frame only keeps $ra across func_8015B580.'
   - - 18032
     - asm
     - func_801FB270

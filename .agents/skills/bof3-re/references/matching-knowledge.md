@@ -67,9 +67,13 @@ argument does not. The same holds for identical argument lists: writing the call
 both arms can produce the single original call site through cross-jumping, and it
 keeps the per-arm argument setup the original shows. Early returns versus initialized
 result changes `$v0` lifetime. When the guard wraps calls and stores and each side
-returns a different constant, put the work inside the `if` with the constant
-fallthrough return after the block: the work arm goes out of line behind `beq` while
-`j <epilogue>` keeps `move $v0,$zero` in its delay slot. A result local live across the
+ends in a different constant return or constant store, put the work inside the `if`
+with the constant arm after the block: the work arm goes out of line behind `beq` while
+`j <epilogue>` keeps `move $v0,$zero` in its delay slot. Read the arm order off the
+original as well: the arm the function falls into is the `if` body, and the arm the
+branch jumps to is the `else` or the block after an early return. Reversed arms keep
+frame and size and only invert the test and its target, so a `bnez` where the build
+emits `beqz` is this ordering choice, not a later rung. A result local live across the
 calls cost a saved register and frame bytes, and an early `return B;` before the block
 relocated that return out of line instead - `.text` size stayed equal and only the
 branch shape differed (`bne` to a trailing `move $v0,$zero`).
@@ -281,6 +285,12 @@ cell load or a record address computed from a cursor.
    time raised the score at that group's first mismatch and no further. Once every
    group has its own variable, a remaining tail mismatch is usually a value width
    on the indexed row, not another cursor.
+
+This split also repairs a partial, not only a seed. Once the branch layout matches, a
+residual that puts one call group's reload cursor in the neighbouring register while
+byte count and frame already agree is this lever, not another arm spelling. Splitting
+only the mismatching group measured the same bytes as splitting every group, so keep
+the narrowest split and spend no variants on the rest.
 
 ### Shared and branch-local cursor loads
 

@@ -281,8 +281,10 @@ segments:
     - asm
     - func_801D57B0
   - - 19800
-    - asm
-    - func_801D5958
+    - c
+    - advancePanelStepResourceAndReloadCountdownWorld00Area03004_801D5958
+    - '@source: src/bof3/world/advancePanelStepResourceAndReloadCountdownWorld00Area03004_801D5958.c'
+    - '@behavior: AREA030 panel-step resource handler (handler index 1 of the work-byte-3 table at 0x801E1FD4): while byte 9 of the work record published at the scratchpad cursor 0x1F800044 is nonzero it decrements that byte and runs the shared func_8014D978 helper; otherwise it reads byte 0xA of the same record as an index into the two-byte record table at 0x801E1FE8, restarts that index from the entry countdown byte when the entry resource byte is the 0xFF end marker, requests the entry resource through func_8014D6B8, reloads work byte 9 from the entry countdown byte and increments work byte 0xA; both paths end in the shared func_8014D4E0 helper.'
   - - 20040
     - c
     - func_801D5A48

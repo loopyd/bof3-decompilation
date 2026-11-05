@@ -20,6 +20,7 @@ sources = [
     "src/bof3/battle/accumulateEligibleTemplateWord.c",
     "src/bof3/battle/battle03DispatchTables.c",
     "src/bof3/battle/activatePanelTask.c",
+    "src/bof3/battle/activatePanelTaskUnlessBattlerInactive.c",
     "src/bof3/battle/advanceByte1WhenReady.c",
     "src/bof3/battle/advanceByte3UnlessFlag2.c",
     "src/bof3/battle/advanceByte3WhenReady2.c",

@@ -139,8 +139,10 @@ segments:
     - asm
     - func_801F44C4
   - - 6940
-    - asm
-    - func_801F471C
+    - c
+    - dispatchWorkByte4Table6778World04Area17213_801F471C
+    - '@source: src/bof3/world/dispatchWorkByte4Table6778World04Area17213_801F471C.c'
+    - '@behavior: Calls the local handler selected by the work byte at offset 0x04 of the record published at the scratchpad pointer cell 0x1F800044; the unchecked handler table based at 0x801F6778 holds the routines at 0x801F4760 and 0x801F47F0. Takes no arguments and returns nothing, and its 0x18-byte frame only keeps $ra across the call.'
   - - 7008
     - asm
     - func_801F4760

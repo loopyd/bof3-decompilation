@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = [
     "src/bof3/world/selectScratchState4Or13ByWorkWordWorld03Area13413_801F3744.c",
+    "src/bof3/world/selectScratchState6Or13ByWorkWordWorld03Area13413_801F3818.c",
 ]
 support_sources = [
     "src/bof3/world/selectScratchState8Or13ByWorkWordWorld03Area13413_801F2F90.c",

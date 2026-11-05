@@ -1,6 +1,8 @@
 D_1F800000 = 0x1F800000;
 battleWork = 0x1F800044;
 D_80033A08 = 0x80033A08;
+selectionSetupEnabled = 0x80097EB8;
+selectionSetupEnabledB = 0x8009AF7C;
 func_800A94A8 = 0x800A94A8;
 func_800A955C = 0x800A955C;
 D_800B6178 = 0x800B6178;
@@ -442,6 +444,7 @@ func_801E97A8 = 0x801E97A8;
 func_801E9910 = 0x801E9910;
 func_801E99AC = 0x801E99AC;
 func_801E9B18 = 0x801E9B18;
+activatePanelTaskUnlessBattlerInactive = 0x801E9F18;
 func_801E9FDC = 0x801E9FDC;
 activatePanelTask = 0x801EA174;
 commitQueuedPanelTask = 0x801EA1A4;

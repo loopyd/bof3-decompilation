@@ -73,8 +73,10 @@ segments:
     - dispatchStateByte2Table5954World02Area10313_801F3BD0
     - '@source: src/bof3/world/area10313DispatchTables.c'
   - - 4116
-    - asm
-    - func_801F3C14
+    - c
+    - initializeWorkFieldsAndAdvanceWorkByte2World02Area10313_801F3C14
+    - '@source: src/bof3/world/initializeWorkFieldsAndAdvanceWorkByte2World02Area10313_801F3C14.c'
+    - '@behavior: clears work-record byte 0x09, seeds the fixed-point position pair 0x570000/0x140000 at words 0x34/0x38 with halfword 0xFF00 at 0x3E and 0 at 0x32, clears byte 0x0B, then advances the byte-2 dispatch step.'
   - - 4204
     - asm
     - func_801F3C6C

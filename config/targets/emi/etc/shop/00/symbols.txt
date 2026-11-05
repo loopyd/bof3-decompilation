@@ -103,6 +103,7 @@ dispatchUiPhaseTable = 0x801D39BC;
 advanceUiPhaseOrSelectSavedStatePhase = 0x801D39F8;
 dispatchUiSubStepTable = 0x801D3AA8;
 func_801D3AE4 = 0x801D3AE4;
+retreatShopPanelRowThenAdvanceUiSubstep = 0x801D3C9C;
 drawShopPanelsThenDecrementUiSubstep = 0x801D3FD4;
 func_801D408C = 0x801D408C;
 func_801D41B0 = 0x801D41B0;

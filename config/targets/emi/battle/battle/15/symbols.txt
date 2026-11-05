@@ -136,6 +136,7 @@ func_8009FFB4 = 0x8009FFB4;
 func_8009FFE4 = 0x8009FFE4;
 func_8009FFF8 = 0x8009FFF8;
 storeHalvedSelectedValueWhenRollAccepted = 0x800A0244;
+storeSelectedValueSetRecordByte8To1WhenRollRejected = 0x800A0378;
 func_800A0A04 = 0x800A0A04;
 setFlag2000StoreDecrementedSlotCounter = 0x800A0A40;
 func_800A0BF4 = 0x800A0BF4;

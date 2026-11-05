@@ -1550,8 +1550,10 @@ segments:
     - asm
     - func_801E9CA8
   - - 103192
-    - asm
-    - func_801E9F18
+    - c
+    - activatePanelTaskUnlessBattlerInactive
+    - '@source: src/bof3/battle/activatePanelTaskUnlessBattlerInactive.c'
+    - '@behavior: Returns while the battle selection gate byte 0x801462EF is clear; with the gate set it reads panel byte +0x0A as a battler index and returns only when isBattlerInactiveOrFlag4000 reports that battler inactive while both selection setup predicates report disabled, otherwise it activates the panel task for the queued selection slot whose first byte D_801EB4D8 equals panel byte +0x0A and again when that slot byte carries bit 0x80.'
   - - 103388
     - c
     - func_801E9FDC

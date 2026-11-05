@@ -281,6 +281,7 @@ sources = [
     "src/bof3/battle/setRecordField4Neg10000WhenPartyFlag4000.c",
     "src/bof3/battle/storeHalvedSelectedValueWhenRollAccepted.c",
     "src/bof3/battle/storeSelectedValueWhenRollAccepted.c",
+    "src/bof3/battle/storeSelectedValueSetRecordByte8To1WhenRollRejected.c",
 ]
 support_sources = [
     "src/bof3/support/battle15_symbols.c",

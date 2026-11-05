@@ -636,6 +636,16 @@ void func_800AD074(u8 arg0);
 void adjustBattleWorkValuesForMode(void);
 void func_800A4458(void);
 void func_800A9BD8(u8 arg0);
+/* Owned by the SLUS address space (lifted as selectionSetupEnabled in
+ * emi/battle/battle/15); the selection setup predicate
+ * activatePanelTaskUnlessBattlerInactive asks for once the selected battler
+ * reads inactive. Only its low return byte is consumed. Address
+ * @source 0x80097EB8 */
+u8   selectionSetupEnabled(void);
+/* Owned by the SLUS address space (lifted as selectionSetupEnabledB in
+ * emi/battle/battle/15); the second selection setup predicate of the same
+ * handler. Address @source 0x8009AF7C */
+u8   selectionSetupEnabledB(void);
 /* Owned by the SLUS address space (asm span func_800A8F58 in
  * emi/battle/battle/15); only its low return byte is consumed, by the
  * default-class countdown handler submitRolledEffectAndAdvance and by the

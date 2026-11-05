@@ -534,7 +534,7 @@ void                           func_8009DE18(void);
 void                           func_8009DE8C(void);
 void                           func_8009E500(void);
 void                           func_8009F320(void);
-void                           func_800A0378(void);
+void                           storeSelectedValueSetRecordByte8To1WhenRollRejected(void);
 /* Damage modifier at 0x800A2880: the first argument is the 0x80146374 selection
  * byte, which the decoded body never reads; every call site passes the 0x80146394
  * battler byte second and the selected action's power byte third, and the fourth

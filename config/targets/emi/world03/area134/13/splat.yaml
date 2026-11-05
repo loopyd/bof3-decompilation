@@ -153,8 +153,10 @@ segments:
     - '@source: src/bof3/world/advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F37C4.c'
     - '@behavior: Publishes the work record at 0x80146920, adds 0x4000 four times to its word at offset 0x34, sets the saved record state byte to mode 5 and restores the scratchpad work pointer.'
   - - 3096
-    - asm
-    - func_801F3818
+    - c
+    - selectScratchState6Or13ByWorkWordWorld03Area13413_801F3818
+    - '@source: src/bof3/world/selectScratchState6Or13ByWorkWordWorld03Area13413_801F3818.c'
+    - '@behavior: Saves the scratchpad work pointer, publishes the record at 0x80146920, compares its signed word at offset 0x34 against the signed word at 0x80145EC4 and publishes 0x80145E90 at 0x80146250, then restores the saved pointer with a brief 0x80145E90 republish and a second restore; selects state byte 1 = 6 when the work word is smaller, otherwise 13 with byte 9 cleared through the reloaded scratchpad pointer.'
   - - 3224
     - c
     - advanceWorkWordAndSetScratchStateToMode7World03Area13413_801F3898
