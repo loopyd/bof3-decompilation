@@ -1648,8 +1648,8 @@ segments:
     - asm
     - func_800B0E6C
   - - 108228
-    - asm
-    - func_800B0EC4
+    - c
+    - panelStepLeftClamp11
   - - 108336
     - asm
     - func_800B0F30

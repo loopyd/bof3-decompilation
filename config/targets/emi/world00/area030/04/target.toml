@@ -9,6 +9,7 @@ load_address = 0x801d0c00
 
 
 sources = [
+    "src/bof3/world/decrementEntryPanelSlideInitializeRecordAndAdvanceStateWorld00Area03004_801D5398.c",
     "src/bof3/world/dispatchStateByte2OrClearWorkFlagsWorld00Area03004_801D56F4.c",
     "src/bof3/world/advanceEntryPanelAndSpriteSlideAndSelectStateWorld00Area03004_801D5048.c",
     "src/bof3/world/advanceEntrySpriteSlideAndAdvanceStateWorld00Area03004_801D4C84.c",

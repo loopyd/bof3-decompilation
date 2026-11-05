@@ -183,8 +183,10 @@ segments:
     - asm
     - func_801F1CBC
   - - 12492
-    - asm
-    - func_801F1CCC
+    - c
+    - copyWorkTripletSetByte9To10AndWord14To100ThenAdvanceWorkByte2BmagicMagic15103_801F1CCC
+    - '@source: src/bof3/bmagic/copyWorkTripletSetByte9To10AndWord14To100ThenAdvanceWorkByte2BmagicMagic15103_801F1CCC.c'
+    - '@behavior: Copies shared work words 0x34, 0x38 and 0x3C, sets work byte 9 to 0x10 and word 0x14 to 0x100, then reloads the scratchpad pointer and increments work byte 2.'
   - - 12584
     - c
     - advanceWorkWord14By80ThenIncrementWorkByte2At400BmagicMagic15103_801F1D28

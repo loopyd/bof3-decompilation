@@ -1169,8 +1169,10 @@ segments:
     - '@source: src/bof3/battle/countdownWorkByte9DecayTripleEnemyReady_battle03_801E50C0.c'
     - '@behavior: Counts down scratch work byte +0x09 and returns while it is nonzero; otherwise counts down work byte +0x0A, advancing work byte +0x02 when that expires and otherwise stepping the work triple +0x5D/+0x5E/+0x5F down by 0x10, integrating the motion pair +0x0C/+0x10 into +0x34/+0x38 and running enemyReadyOrHelper1.'
   - - 83420
-    - asm
-    - func_801E51DC
+    - c
+    - clearBattlerFlagsAndDecrement462F3
+    - '@source: src/bof3/battle/clearBattlerFlagsAndDecrement462F3.c'
+    - '@behavior: Clears battler action flags, decrements D_801462F3, sets D_80146328 bit 1 on zero, submits work, clears the pending bit and dispatch slots, and calls func_800ACFF4.'
   - - 83592
     - c
     - func_801E5288

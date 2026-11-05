@@ -135,8 +135,10 @@ segments:
     - asm
     - func_801F8490
   - - 6460
-    - asm
-    - func_801F853C
+    - c
+    - drawAndShrinkWorkHalfwordsThenAdvanceScenarioScena0300_801F853C
+    - '@source: src/bof3/scenario/drawAndShrinkWorkHalfwordsThenAdvanceScenarioScena0300_801F853C.c'
+    - '@behavior: Draws work then shrinks halfwords 0x12 and 0x14 and advances byte 1 when halfword 0x14 is negative.'
   - - 6620
     - c
     - invokeHelperScenarioScena0300_801F85DC

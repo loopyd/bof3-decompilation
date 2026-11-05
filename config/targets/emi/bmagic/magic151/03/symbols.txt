@@ -1,3 +1,4 @@
+g_battle_work = 0x1F800044;
 func_801EEC50 = 0x801EEC50;
 func_801EECB0 = 0x801EECB0;
 dispatchWorkByte2LocalPairBmagicMagic15103_801EEDE0 = 0x801EEDE0;
@@ -46,7 +47,7 @@ func_801F14D0 = 0x801F14D0;
 func_801F1C3C = 0x801F1C3C;
 T_801F1C7C = 0x801F1C7C;
 func_801F1CBC = 0x801F1CBC;
-func_801F1CCC = 0x801F1CCC;
+copyWorkTripletSetByte9To10AndWord14To100ThenAdvanceWorkByte2BmagicMagic15103_801F1CCC = 0x801F1CCC;
 advanceWorkWord14By80ThenIncrementWorkByte2At400BmagicMagic15103_801F1D28 = 0x801F1D28;
 func_801F1D60 = 0x801F1D60;
 func_801F1DC0 = 0x801F1DC0;

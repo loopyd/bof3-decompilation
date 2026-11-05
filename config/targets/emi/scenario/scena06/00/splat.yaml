@@ -126,8 +126,8 @@ segments:
     - c
     - setScenarioFlagBit0CScenarioScena0600_801FCF98
   - - 25536
-    - asm
-    - func_801FCFC0
+    - c
+    - clearProgressAndSharedStateBytesThenRequestPrimaryState4ScenarioScena0600_801FCFC0
   - - 25620
     - asm
     - func_801FD014

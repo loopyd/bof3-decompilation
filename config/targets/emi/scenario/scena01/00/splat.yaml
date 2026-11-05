@@ -180,8 +180,8 @@ segments:
     - c
     - clearTwoStateBytesThenRequestPrimaryState17Substate5ScenarioScena0100_801FD534
   - - 27004
-    - asm
-    - func_801FD57C
+    - c
+    - clearTwoStateBytesThenRequestPrimaryState17Substate2ScenarioScena0100_801FD57C
   - - 27076
     - asm
     - func_801FD5C4

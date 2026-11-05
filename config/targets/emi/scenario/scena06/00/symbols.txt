@@ -43,7 +43,7 @@ clearProgressAndSharedStateBytesThenRequestPrimaryState2ScenarioScena0600_801FCE
 func_801FCEC0 = 0x801FCEC0;
 func_801FCF30 = 0x801FCF30;
 setScenarioFlagBit0CScenarioScena0600_801FCF98 = 0x801FCF98;
-func_801FCFC0 = 0x801FCFC0;
+clearProgressAndSharedStateBytesThenRequestPrimaryState4ScenarioScena0600_801FCFC0 = 0x801FCFC0;
 func_801FD014 = 0x801FD014;
 func_801FD06C = 0x801FD06C;
 func_801FD0C4 = 0x801FD0C4;

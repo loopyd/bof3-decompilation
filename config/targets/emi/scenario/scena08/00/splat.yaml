@@ -79,8 +79,8 @@ segments:
     - asm
     - func_801F74E0
   - - 2428
-    - asm
-    - func_801F757C
+    - c
+    - addRandomByteToWorkHalfword58AndAdvanceAtProgress11ScenarioScena0800_801F757C
   - - 2532
     - asm
     - func_801F75E4

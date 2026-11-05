@@ -255,8 +255,8 @@ segments:
     - c
     - drawEntryPanelsAndInitializeStateWorld00Area03004_801D52D4
   - - 18328
-    - asm
-    - func_801D5398
+    - c
+    - decrementEntryPanelSlideInitializeRecordAndAdvanceStateWorld00Area03004_801D5398
   - - 18680
     - asm
     - func_801D54F8

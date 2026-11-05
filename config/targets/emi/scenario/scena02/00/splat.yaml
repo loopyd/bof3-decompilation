@@ -228,8 +228,8 @@ segments:
     - c
     - clearSharedBytes6566AndRequestPrimaryState0BScenarioScena0200_801FD330
   - - 26484
-    - asm
-    - func_801FD374
+    - c
+    - clearSharedBytes6566AndRequestPrimaryState0BSubstate5ScenarioScena0200_801FD374
   - - 26556
     - asm
     - func_801FD3BC

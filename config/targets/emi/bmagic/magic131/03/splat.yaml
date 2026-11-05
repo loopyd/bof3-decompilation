@@ -94,8 +94,8 @@ segments:
     - c
     - clearWorkByte9AndIncrementWorkByte2BmagicMagic13103_801F0178
   - - 5544
-    - asm
-    - func_801F01A8
+    - c
+    - add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic13103_801F01A8
   - - 5624
     - asm
     - func_801F01F8
