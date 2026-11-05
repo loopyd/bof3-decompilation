@@ -417,17 +417,34 @@ extern u8 D_801E6074;
  * row.
  * @source 0x801E60FC @kind unknown */
 extern u8 D_801E60FC;
-/* EMI-local off-screen id list and its count byte: the unlifted rebuild handler
- * func_801DE200 clears the count, then appends the id of every enabled 164-byte
- * field record that the visible list D_80144F5A does not already hold. The
- * selection swap swapSelectionIds indexes the list with the saved slot index
- * and rewrites every entry equal to the saved id. Both cells sit inside this
- * EMI's tail segment, so no undefined or target-map row exists for them; the
- * names are exact address labels.
+/* EMI-local off-screen id list and its count byte: the sub-step handler
+ * rebuildShopSlotLists clears the count, then appends the id of every enabled
+ * 164-byte field record that the visible list D_80144F5A does not already
+ * hold. The selection swap swapSelectionIds indexes the list with the saved
+ * slot index and rewrites every entry equal to the saved id. Both cells sit
+ * inside this EMI's tail segment, so no undefined or target-map row exists for
+ * them; the names are exact address labels.
  * @source 0x801E6244 @kind table */
 extern u8 D_801E6244[];
 /* @source 0x801E6250 @kind unknown */
 extern u8 D_801E6250;
+
+/* EMI-local slot pair lists written by the sub-step handler
+ * rebuildShopSlotLists: for slot index i below the visible-list length it sets
+ * D_801E6248[2 * i] to 1 and then clears every remaining pair byte up to the
+ * third slot to 0, and for every slot the off-screen list D_801E6244 fills it
+ * sets the sibling byte D_801E6249[2 * i] to 1. Both are written with `sb` at
+ * the two-byte slot stride, so each is declared as a byte array indexed by
+ * twice the slot. The pair byte D_801E6254 is re-armed with 0xFF by the same
+ * handler and is otherwise only a store target in this target, so its role is
+ * not recovered. They sit inside this EMI's tail segment, so no undefined or
+ * target-map row exists for them; the names are exact address labels.
+ * @source 0x801E6248 @kind table */
+extern u8 D_801E6248[];
+/* @source 0x801E6249 @kind table */
+extern u8 D_801E6249[];
+/* @source 0x801E6254 @kind unknown */
+extern u8 D_801E6254;
 
 /* Overlay-local kept-entry cursor of the save-slot collector
  * collectSaveSlotsThenCountFreeBlocks: it clears this byte before the scan,
@@ -1272,6 +1289,13 @@ extern u8 D_80181B10[];
  * emi/battle/battle/03 (41-word records) declare the same table. The address is
  * not owned by the shared map, so this target declares it locally and adds a
  * target-map row.
+ *
+ * The record's +5 byte is its id: the sub-step handler rebuildShopSlotLists
+ * reads it as its own byte list indexed by the record offset, and the id lists
+ * it fills (D_80144F5A, D_801E6244) are the values D_80181B10 maps back to a
+ * record index in the panel dispatchers. It is reached through this owning
+ * table with the +5 offset rather than a second symbol at 0x8014496D, because
+ * the original folds the offset into the same `%lo` immediate.
  * @source 0x80144968 @kind table */
 extern u8 D_80144968[];
 

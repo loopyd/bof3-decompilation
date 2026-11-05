@@ -91,8 +91,10 @@ segments:
     - '@source: src/bof3/scenario/tickCountdownSubtract8And64FromWorkHalfwordsAndAdvanceWorkByte1ScenarioScena0300_801F7CE0.c'
     - '@behavior: Calls two local helpers, subtracts 8 and 64 from captured work halfwords 0x5A and 0x5C, and ticks byte 9; at zero advances work byte 1.'
   - - 4480
-    - asm
-    - func_801F7D80
+    - c
+    - subtract8FromWorkHalfword58AndResetWorkStateWhenNegativeScenarioScena0300_801F7D80
+    - '@source: src/bof3/scenario/subtract8FromWorkHalfword58AndResetWorkStateWhenNegativeScenarioScena0300_801F7D80.c'
+    - '@behavior: Calls the local helpers 0x801F7FFC and 0x801F8170 with the captured work pointer plus 0x0C, then subtracts 8 from that work object halfword at 0x58; when the stored halfword reads negative it reloads the work pointer cell 0x1F800044, writes 1 to the object transition byte 0x06 and resets the work state through func_80196070.'
   - - 4592
     - c
     - dispatchWorkByte1HandlerScenarioScena0300_801F7DF0

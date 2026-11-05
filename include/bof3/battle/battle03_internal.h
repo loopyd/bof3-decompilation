@@ -758,7 +758,7 @@ void advanceBattlerCountdownsAndReleaseSuppression(void);
 void func_801D750C(s32 arg0, s32 arg1);
 void drawBattlerCountdownEntries(s16 arg0, s16 arg1);
 void func_801D7D10(u8 arg0, u16 arg1, u16 arg2, u16 arg3, u8 arg4, u8 arg5);
-void func_801D8270(s32 arg0, s32 arg1);
+void drawBattlePanelMessageStrip(s32 arg0, s32 arg1);
 void func_801D8450(u32 arg0);
 void func_801D8690(s32 arg0, s32 arg1, s32 arg2);
 void func_801D8AE4(s32 arg0, s32 arg1, s32 arg2);

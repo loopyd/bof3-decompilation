@@ -460,8 +460,10 @@ segments:
     - func_801DE1C4
     - '@source: src/bof3/ui/func_801DE1C4.c'
   - - 54784
-    - asm
-    - func_801DE200
+    - c
+    - rebuildShopSlotLists
+    - '@source: src/bof3/ui/rebuildShopSlotLists.c'
+    - '@behavior: shop sub-step handler reached as entry 0 of the sub-step table D_801E5BFC, which the phase dispatcher func_801DE1C4 indexes with the UI sub-step byte D_80148652: it reads the visible-list length through func_801BDB7C(0), clears the off-screen count byte D_801E6250 and appends the id byte (record offset +5) of every one of the eight 164-byte field records of D_80144968 whose low flag bit D_8014496F is set and whose id the visible list D_80144F5A does not already hold. It then sets the first byte of the three slot pairs D_801E6248 to 1 for the visible slots and clears the unused ones to 0, sets the sibling byte D_801E6249 of every slot the off-screen list fills to 1, re-arms the saved selection cursor pair D_8014865A/D_8014865D with the 0x7F no-slot sentinel and the current pair D_80148658/D_80148659 with kind 0 slot 0, re-arms D_801E6254 with 0xFF, arms the frame timer phaseTimer with 3, advances the UI sub-step byte and switches the frontend-local mode through func_8014ECAC with the bare constant 2.'
   - - 55240
     - c
     - func_801DE3C8

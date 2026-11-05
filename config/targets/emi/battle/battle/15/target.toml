@@ -282,6 +282,7 @@ sources = [
     "src/bof3/battle/storeHalvedSelectedValueWhenRollAccepted.c",
     "src/bof3/battle/storeSelectedValueWhenRollAccepted.c",
     "src/bof3/battle/storeSelectedValueSetRecordByte8To1WhenRollRejected.c",
+    "src/bof3/battle/runSelectionRollSetRecordByte8OrFlag2000ThenRefresh.c",
     "src/bof3/battle/copyOwnerRecordFieldsByMode.c",
     "src/bof3/battle/storePendingDamage9999OrEstimateThenClampZero.c",
     "src/bof3/battle/doubleEnemyRecordHalfwordsClampedToFFFF.c",

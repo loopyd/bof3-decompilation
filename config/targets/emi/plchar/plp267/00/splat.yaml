@@ -66,8 +66,8 @@ segments:
     - c
     - invokeHelperPlcharPlp26700_801CEE08
   - - 2600
-    - asm
-    - func_801CEE28
+    - c
+    - dispatchWorkByte2HandlerPlcharPlp26700_801CEE28
   - - 2668
     - asm
     - func_801CEE6C

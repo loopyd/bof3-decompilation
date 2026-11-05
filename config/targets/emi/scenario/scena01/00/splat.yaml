@@ -228,8 +228,8 @@ segments:
     - asm
     - func_801FDA6C
   - - 29756
-    - asm
-    - func_801FE03C
+    - c
+    - dispatchCoordinateLookupHandlerScenarioScena0100_801FE03C
   - - 29860
     - asm
     - func_801FE0A4

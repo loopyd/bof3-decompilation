@@ -53,5 +53,6 @@ support_sources = [
     "src/bof3/scenario/projectSharedCoordinatesIntoWorkRecordThenAdvanceScenarioScena0300_801F8640.c",
     "src/bof3/scenario/requestSubState6AndArmCountdown30WhenSharedNibbleIs15ScenarioScena0300_801FC5A4.c",
     "src/bof3/scenario/dispatchRoute63CoordinateLookupHandlerScenarioScena0300_801FCDB4.c",
+    "src/bof3/scenario/subtract8FromWorkHalfword58AndResetWorkStateWhenNegativeScenarioScena0300_801F7D80.c",
 ]
 psyq_source = "src/bof3/support/scena03_00_psyq.c"

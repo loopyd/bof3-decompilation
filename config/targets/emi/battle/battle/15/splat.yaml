@@ -708,8 +708,10 @@ segments:
     - asm
     - func_800A042C
   - - 40292
-    - asm
-    - func_800A0564
+    - c
+    - runSelectionRollSetRecordByte8OrFlag2000ThenRefresh
+    - '@source: src/bof3/battle/runSelectionRollSetRecordByte8OrFlag2000ThenRefresh.c'
+    - '@behavior: Runs the battle selection roll func_800A3A10 for the acting battler byte D_80146374 and selected battler byte D_80146394; a nonzero roll stores 1 in byte +0x08 of the selection record pointer D_8014639C.record and calls func_800AAC88 with effect kind 0 and the selected battler byte, while a zero roll raises bit 0x2000 in the flag word at 0x80145FB8 (stride 0x140) below index 3 or at 0x801EB734 (stride 0x118) rebased by -3 and calls func_800A9BD8 with the selected battler byte; both paths finish with the selection refresh pass func_800A3F28.'
   - - 40544
     - asm
     - func_800A0660

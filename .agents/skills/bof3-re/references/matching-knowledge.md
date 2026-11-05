@@ -329,6 +329,11 @@ the original reuses one cursor load across stores that the current build reloads
    delay: keep that access inline through the named cell, because a pointer local
    placed ahead of the neighbouring work raises the load, fills the slot the original
    leaves as `nop`, and moves the branch target earlier by one nop per group.
+   One function can need both spellings: when the original re-materialises the cell
+   for its leading statements and then shares one load for a later run, keep those
+   leading statements on the named cell and open the single pointer local at the
+   original's first shared load. The switch is a statement in the body, not a
+   function-wide choice.
 2. When a reload runs on one arm only, make it the last statement of that arm.
    Written after the `if`, both arms share it and the branch target lands eight
    bytes before the original target. Size stays equal because the instruction count
@@ -752,6 +757,11 @@ spans disassemble as `.word` runs or implausible instructions and belong to a da
 rodata segment change instead. Measure span sizes from the segment list rather than
 assuming a symbol name marks a function start: one `asm` span can hold several
 functions, and its first entry can begin mid-function.
+
+An address whose only in-image references are words of a code-pointer run has no
+`jal` caller; that is the dispatch shape, not missing evidence. Read its prototype
+off the code that consumes the run - the argument registers it fills and whether it
+reads the result - because the body can ignore arguments its caller still passes.
 
 ## Failure and capture
 

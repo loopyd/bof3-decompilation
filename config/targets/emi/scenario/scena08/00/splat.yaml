@@ -261,8 +261,10 @@ segments:
     - c
     - incrementWorkByte1SetCountdownScenarioScena0800_801F98B0
   - - 11488
-    - asm
-    - func_801F98E0
+    - c
+    - tickCountdownByte9SeedWorkWordsAndQueueCues202And203ScenarioScena0800_801F98E0
+    - '@source: src/bof3/scenario/tickCountdownByte9SeedWorkWordsAndQueueCues202And203ScenarioScena0800_801F98E0.c'
+    - '@behavior: Overlay per-frame work-state handler, entry 3 of the work-byte-1 handler sub-table at 0x801FE908 (entry 32 of the 51-entry run at 0x801FE894): decrement work byte 9 modulo 256 and, only when that countdown reaches zero, re-read the scratchpad work pointer from slot 0x44 and seed work words 0x34/0x38/0x3C with 0x510000/0x420000/0x2C00000, store 0x800000 in word 0x14, advance work byte 1 modulo 256 and queue the front-end cues 0x202 then 0x203. Takes no arguments, returns nothing and the 0x18-byte frame only keeps $ra across the two cue calls.'
   - - 11612
     - asm
     - func_801F995C

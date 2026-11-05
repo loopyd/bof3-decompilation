@@ -201,8 +201,10 @@ segments:
     - asm
     - func_801D8090
   - - 30320
-    - asm
-    - func_801D8270
+    - c
+    - drawBattlePanelMessageStrip
+    - '@source: src/bof3/battle/drawBattlePanelMessageStrip.c'
+    - '@behavior: Draws the narrow battle message-panel strip at the anchor (arg0, arg1): opens the 0x3C0-texture draw mode, emits the D_801EAE50 panel tile row 0x0A at (arg0, arg1 + 2) and the two quadrangle caps from D_801EAD30 rows 6 and 7 at (arg0, arg1) and (arg0, arg1 + 0x11), then outlines the rectangle inset to (arg0 + 2, arg1 + 2) through (arg0 + 0x65, arg1 + 0x10) with four semi-transparent sprite prims, drawing the top and left edges from texture page 1 and the right and bottom edges from texture page 0 with the red/green/blue channels of palette entry 1 of the CLUT bank byte D_80144952.'
   - - 30800
     - asm
     - func_801D8450
@@ -1530,7 +1532,7 @@ segments:
     - c
     - func_801E9538
     - '@source: src/bof3/battle/func_801E9538.c'
-    - '@behavior: Draws one battle panel message row: takes byte +0x0A of the state object published at 0x80148648 as the index of the 12-byte message slot entries bound at 0x801EB4F4 (the message view of the battleDispatchSlots entries, with the message stream pointer at +0x00 and the panel byte at +0x06), counts the tokens of that slot message through countMessageTokens, forwards the state object halfwords +0x04 (minus 0x10) and +0x06 to func_801D8270, then draws through func_8014F800 the state halfword +0x04 lowered by four per token and raised by 0x26, the state halfword +0x06 raised by 3, the slot panel byte, style 0x12 and the same slot message pointer.'
+    - '@behavior: Draws one battle panel message row: takes byte +0x0A of the state object published at 0x80148648 as the index of the 12-byte message slot entries bound at 0x801EB4F4 (the message view of the battleDispatchSlots entries, with the message stream pointer at +0x00 and the panel byte at +0x06), counts the tokens of that slot message through countMessageTokens, forwards the state object halfwords +0x04 (minus 0x10) and +0x06 to drawBattlePanelMessageStrip, then draws through func_8014F800 the state halfword +0x04 lowered by four per token and raised by 0x26, the state halfword +0x06 raised by 3, the slot panel byte, style 0x12 and the same slot message pointer.'
   - - 100876
     - c
     - func_801E960C

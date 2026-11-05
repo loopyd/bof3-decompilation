@@ -180,8 +180,8 @@ segments:
     - c
     - alternateTwoTickCounterPhasesScenarioScena0200_801FCBDC
   - - 24852
-    - asm
-    - func_801FCD14
+    - c
+    - publishWorkBaseAndSeedFrontEndRecordScenarioScena0200_801FCD14
   - - 25292
     - asm
     - func_801FCECC
