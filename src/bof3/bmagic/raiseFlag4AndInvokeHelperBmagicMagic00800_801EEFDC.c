@@ -9,8 +9,8 @@ extern volatile u16 D_801462E8; /* @source 0x801462E8 @kind unknown */
 
 /* @source 0x801EEFDC
  * @behavior Raises bit 0x4 of the shared battle global halfword at 0x801462E8
- * and then invokes the shared helper at 0x801E5988. The neighbouring
- * func_801F01E4 raises the same bit and invokes the same helper under a
+ * and then invokes the shared helper at 0x801E5988. The neighbouring entry at
+ * 0x801F01E4 raises the same bit and invokes the same helper under a
  * scratchpad byte-0x0B guard; this entry does it unconditionally. The original
  * materializes the halfword address once in a register (the address is used by
  * both the load and the store) and keeps it live across the call's delay slot,

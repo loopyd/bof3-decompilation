@@ -224,6 +224,7 @@ func_800AC704 = 0x800AC704;
 findOwnerRecord = 0x800AC754;
 func_800AC7D0 = 0x800AC7D0;
 clearOwnerRecordFlag40 = 0x800AC844;
+copyOwnerRecordFieldsByMode = 0x800AC870;
 clearOwnerRecordHead = 0x800AC934;
 func_800ACF80 = 0x800ACF80;
 func_800ACFF4 = 0x800ACFF4;

@@ -96,6 +96,13 @@ preserve original post-store rereads. Do not add volatility to force them.
 For preheader or delay-slot order, test block-local initialization or evidenced
 [operation-scope placement](#operation-scopes-and-loop-note-dependencies).
 
+Write a two-sided range guard as the inclusion conjunction the original branches on,
+`(x >= lo && x <= hi)`, not the exclusion disjunction `(x < lo || x > hi)`: the
+exclusion form emits the inverse test and swaps the arms behind it while size stays
+equal, so a wrong tail arm order there is a symptom of the range spelling rather
+than a second defect. Masks and a re-typed narrow index on that compared value
+measured neutral at the same residue.
+
 A guarded dispatcher (`sltiu` bound, table base, one indexed load, `jr`) gives the
 dense switch shape directly: one arm per table word, in order, and the arm an
 out-of-range index reaches is the default, so that case carries the default's
@@ -236,9 +243,12 @@ original fixes.
 
 Keep a narrow parameter narrow. Copying an `s16` argument into an `s32` local moves
 the sign extension to the entry block, where the original converts at each use site.
-Read the parameter directly and cast at the use instead. The mirror case is a cast
-used twice: `(s8)value` in both the call and the comparison lets one conversion serve
-both, while reassigning `value = (s8)value;` between them duplicates it.
+Read the parameter directly and cast at the use instead. The formal's own width
+decides this: a wide parameter cast to `s16` at each use is a different shape that
+moved the entry block, frame and size, so declare the narrow formal and leave the
+body's uses alone. The mirror case is a cast used twice: `(s8)value` in both the call
+and the comparison lets one conversion serve both, while reassigning
+`value = (s8)value;` between them duplicates it.
 
 ### Halfword read-modify-write
 

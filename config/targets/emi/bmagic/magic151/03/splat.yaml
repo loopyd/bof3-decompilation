@@ -58,8 +58,10 @@ segments:
     - asm
     - func_801EF138
   - - 1696
-    - asm
-    - func_801EF2A0
+    - c
+    - selectWorkRecordClearFlag40ThenAdvanceWorkByte1AndClearWorkBytes2And3BmagicMagic15103_801EF2A0
+    - '@source: src/bof3/bmagic/selectWorkRecordClearFlag40ThenAdvanceWorkByte1AndClearWorkBytes2And3BmagicMagic15103_801EF2A0.c'
+    - '@behavior: Selects the 0x140-byte-stride local work record at the battle selection byte 0x80146374, publishes it at the scratchpad work pointer cell 0x1F800044, clears bit 0x40 of that record byte 0, then restores the previous work object, increments its byte 1 and clears its bytes 2 and 3.'
   - - 1816
     - c
     - dispatchWorkByte3HandlerBmagicMagic15103_801EF318

@@ -181,8 +181,9 @@ segments:
     - asm
     - func_801F1844
   - - 11864
-    - asm
-    - func_801F1A58
+    - c
+    - reserveFirstFreeRecordBmagicMagic13103_801F1A58
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic13103_801F1A58.c'
   - - 11972
     - c
     - clearRecordBytes0Through4BmagicMagic13103_801F1AC4

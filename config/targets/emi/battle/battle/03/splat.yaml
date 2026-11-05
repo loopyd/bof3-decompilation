@@ -792,8 +792,10 @@ segments:
     - '@source: src/bof3/battle/battle03DispatchTables.c'
     - '@behavior: Dispatches the current local state-2 class byte through its table.'
   - - 68276
-    - asm
-    - func_801E16B4
+    - c
+    - initCastVoiceCountdownWhenTriggered
+    - '@source: src/bof3/battle/initCastVoiceCountdownWhenTriggered.c'
+    - '@behavior: Entry 0 of the cast-voice class table at 0x801EB224. Once the EXE-side EMI loader reports ready it arms the cast-voice countdown byte +0x09 of the scratch battle work from the trigger scan of the current actor: while the published local work record byte +0x119 reads 4, a record without flag 0x2 stores 0x1E when the scan submits and 0 when it does not, while a record with flag 0x2 scans only when the actor byte at 0x801463C9 equals that same byte or reads 7 or 8 and stores 0 when the scan submits; every other byte +0x119 value stores 0. It then selects the current kind from the global halfword 0x801463C0: a kind without the 0x800 mask re-arms the countdown from the byte table at 0x801EB23C indexed by the actor byte 0x801463C9 or the table at 0x801EB230 indexed by record byte +0x79, as the record flag 0x2 selects, submits the effect id scratch byte +0x08 + 0x2C through func_8014D8D4 and advances scratch battle work byte +0x02; a kind with that mask instead advances scratch battle work byte +0x01. Both paths finish with the second local readiness helper.'
   - - 68744
     - c
     - submitCastVoiceEvent

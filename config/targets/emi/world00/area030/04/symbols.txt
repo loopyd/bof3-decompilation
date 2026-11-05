@@ -144,6 +144,7 @@ decrementEntryPanelSlideInitializeRecordAndAdvanceStateWorld00Area03004_801D5398
 advanceEntryPanelSlideAndSelectStateWorld00Area03004_801D5574 = 0x801D5574;
 dispatchStateByte2OrClearWorkFlagsWorld00Area03004_801D56F4 = 0x801D56F4;
 dispatchStateByte3Table1fd4World00Area03004_801D576C = 0x801D576C;
+initializeTwoEntryRecordsAndAdvanceStateWorld00Area03004_801D57B0 = 0x801D57B0;
 advancePanelStepResourceAndReloadCountdownWorld00Area03004_801D5958 = 0x801D5958;
 func_801D5A48 = 0x801D5A48;
 func_801D5B48 = 0x801D5B48;

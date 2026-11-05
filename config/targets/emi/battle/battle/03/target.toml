@@ -147,6 +147,7 @@ sources = [
     "src/bof3/battle/func_801DCCB0.c",
     "src/bof3/battle/func_801DCD50.c",
     "src/bof3/battle/initDeferredBattlerCountdown.c",
+    "src/bof3/battle/initCastVoiceCountdownWhenTriggered.c",
     "src/bof3/battle/transformFirstPointPairByMode.c",
     "src/bof3/battle/func_801DD3CC.c",
     "src/bof3/battle/func_801DD800.c",

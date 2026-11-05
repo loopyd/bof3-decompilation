@@ -357,6 +357,14 @@ extern u16                          D_801EB09C[]; /* @source 0x801EB09C @kind un
 extern Battle03Handler              D_801EB46C[]; /* @source 0x801EB46C @kind unknown */
 extern u8                           D_801EB2E8[]; /* @source 0x801EB2E8 @kind unknown */
 extern u8                           D_801EB288[]; /* @source 0x801EB288 @kind unknown */
+/* Actor-keyed cast-voice countdown tables read by the countdown arming entry of
+ * the 0x801EB224 cast-voice class table: 0x801463C9 selects one and the local
+ * work record byte +0x79 the other. Each is reached symbol-relative (`lui
+ * $at,%hi(X)` + `addu $at,$at,index` + `lbu %lo(X)($at)`), so both bind as flat
+ * symbols the same way the D_801EB638 family binds the D_801EB630 record
+ * bytes. */
+extern u8                           D_801EB230[]; /* @source 0x801EB230 @kind unknown */
+extern u8                           D_801EB23C[]; /* @source 0x801EB23C @kind unknown */
 extern Battle03LocalWork            D_80145E90[]; /* @source 0x80145E90 @kind unknown */
 /* Fields of the D_80145E90 local work record selected by panel byte +0x0A in
  * func_801E9FDC: byte +0x08, halfword +0x2E, halfword +0x30 and byte +0x79. The
@@ -579,6 +587,10 @@ extern volatile u8  BATTLE_GLOBAL_BYTE_63BA; /* @source 0x801463BA @kind unknown
 extern volatile u16 BATTLE_GLOBAL_HALF_63C0; /* @source 0x801463C0 @kind unknown */
 extern u8           BATTLE_GLOBAL_BYTE_63C8; /* @source 0x801463C8 @kind unknown */
 extern u8           BATTLE_GLOBAL_BYTE_63C9; /* @source 0x801463C9 @kind unknown */
+/* @source 0x801463CD @kind unknown — trigger-table selector byte four bytes above
+ * BATTLE_GLOBAL_BYTE_63C9, the second argument of the cast-voice trigger scan
+ * (D_800B6178 slot index) run by the 0x801EB224 entry 0 handler. */
+extern u8           D_801463CD;
 extern Battle03SelectionKind D_801CA71C[]; /* @source 0x801CA71C @kind unknown */
 /* @source 0x801CA718 @kind unknown — 0x14-stride kind-keyed byte four bytes below
  * the D_801CA71C mask table; func_801E020C reaches it as its own displacement

@@ -8,7 +8,8 @@
  *           with 0, then forwards the same work-block index byte read signed to
  *           the shop panel helper func_801D8E2C as the even value
  *           (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 0 and 6;
- *           when the byte counter func_801D81B4(&D_80148656[5], 0xF) returns a
+ *           when the byte counter tickPhaseTimerThenAdvanceWorkCounter(
+ *           &D_80148656[5], 0xF) returns a
  *           nonzero low byte it publishes 1 << (s8)D_8014865D into the byte at
  *           D_80144981 + 164 * D_80145FCC[(s8)D_80148656[0] * 0x140], rebuilds
  *           that same 164-byte field record through func_80164A44 and rolls the
@@ -26,7 +27,7 @@ void func_801D7B74(void) {
   func_801D7E1C(work[0], 0x98, 0x3F, 0, D_8014865D);
   buildSlotList(0);
   func_801D8E2C(0x11, ((s8)work[0] * 54 + 0x3E) & 0xFFFE, 0x80, 0x34, 0, 6);
-  if ((u8)func_801D81B4(work + 5, 0xF)) {
+  if ((u8)tickPhaseTimerThenAdvanceWorkCounter(work + 5, 0xF)) {
     offset = (s8)work[0] * 0x140;
     record_offset = D_80145FCC[offset] * 164;
     D_80144981[record_offset] = 1 << (s8)D_8014865D;

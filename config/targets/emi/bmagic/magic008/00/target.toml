@@ -12,6 +12,7 @@ support_sources = [
     "src/bof3/bmagic/advanceWorkByte2WhenHelperReadyBmagicMagic00800_801F117C.c",
     "src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic00800_801F133C.c",
     "src/bof3/bmagic/seedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic00800_801F17BC.c",
+    "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic00800_801F01E4.c",
     "src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic00800_801EFCFC.c",
     "src/bof3/bmagic/subtractWorkColorTripletBy3ThenAdvanceWorkByte2WhenChannelIs80BmagicMagic00800_801F11C4.c",
     "src/bof3/bmagic/magic00800DispatchTables.c",

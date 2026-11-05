@@ -93,8 +93,8 @@ segments:
     - c
     - findActiveRecordSlot
   - - 29424
-    - asm
-    - func_801D7EF0
+    - c
+    - drawWindowFrame
   - - 29784
     - asm
     - func_801D8058

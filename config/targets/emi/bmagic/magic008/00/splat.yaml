@@ -44,7 +44,7 @@ segments:
     - c
     - raiseFlag4AndInvokeHelperBmagicMagic00800_801EEFDC
     - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperBmagicMagic00800_801EEFDC.c'
-    - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988, unconditionally; the neighbouring func_801F01E4 performs the same two steps under a scratchpad byte-0x0B guard. Reads and writes no other state.'
+    - '@behavior: Raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988, unconditionally; the neighbouring entry at 0x801F01E4 performs the same two steps under a scratchpad byte-0x0B guard. Reads and writes no other state.'
   - - 1040
     - asm
     - func_801EF010
@@ -119,8 +119,10 @@ segments:
     - asm
     - func_801F0018
   - - 5604
-    - asm
-    - func_801F01E4
+    - c
+    - raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic00800_801F01E4
+    - '@source: src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic00800_801F01E4.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and, only when the work object''s byte at offset 0xB is zero, raises bit 0x4 of the shared battle global halfword at 0x801462E8 and then invokes the shared helper at 0x801E5988 with no arguments. Its address is the third word (index 2) of the three-entry code pointer run at 0x801EEC4C, whose words are 0x801EFD90, 0x801F0018 and 0x801F01E4; the four sibling entries at 0x801EEFDC, 0x801EF728, 0x801EFA40 and 0x801EFCFC do the same raise-and-invoke unconditionally. The pointer cell is loaded before the 0x18-byte frame is created, that frame only keeps $ra across the helper call, and the halfword address stays in one register across the read-modify-write. Nothing is returned and no other state is read or written.'
   - - 5680
     - c
     - resolveKindResultCodeBmagicMagic00800_801F0230

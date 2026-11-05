@@ -41,7 +41,10 @@ Append the required fenced `acceptance-report`: actual commands/validation, risk
 
 Before first gate: evidence-backed name/module, complete ownership and canonical
 metadata. Unknown roles stay address-anchored; `@status`/`@match`/`@residual` reflect
-measurements. After PASS, confirm naming without rewriting correct source.
+measurements. Placeholder tags (`@status partial`, `@match 0.00`) fail the gate on
+byte-identical code, so write the measured tags in the same edit as the source
+instead of spending a gate cycle on metadata alone. After PASS, confirm naming
+without rewriting correct source.
 Later source/binding edit requires renewed gate.
 
 ## Gate batch (one pass, after all edits)

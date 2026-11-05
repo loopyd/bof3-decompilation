@@ -97,8 +97,8 @@ extern u8 D_80148651;
 extern u8 D_80148652;
 /* Shop work-block base read at entry by the phase steps func_801D7B74,
  * func_801D7CC8 and func_801D7D48: its first byte is the index passed to
- * func_801D7E1C and the byte at +5 is the counter handed to func_801D81B4
- * (read there with lbu and incremented). The phase handler func_801D4614 reads
+ * func_801D7E1C and the byte at +5 is the counter handed to
+ * tickPhaseTimerThenAdvanceWorkCounter (read there with lbu and incremented). The phase handler func_801D4614 reads
  * that same +5 byte with a signed byte load (lb), so it views it through an
  * explicit signed pointer; no target-map row exists for the byte itself.
  * Kept raw: the block's field roles are
@@ -116,7 +116,8 @@ extern u8 D_80148656[];
 extern u8 D_8014865D;
 /* Work-block byte at +5 of the block D_80148656, re-armed with 1 by the phase
  * step func_801D3AE4 when its frame timer wraps and read/incremented by the
- * byte-counter check func_801D81B4, which those steps hand the same address.
+ * byte-counter step tickPhaseTimerThenAdvanceWorkCounter, which those steps
+ * hand the same address.
  * Written with a folded `sb %lo(D_8014865B)(at)` in the original, so it is
  * declared as a scalar byte rather than through the D_80148656 array view. Not
  * owned by the shared map; declared locally with a target-map row.
@@ -543,15 +544,18 @@ void func_801D7E1C(u8 arg0, u16 arg1, u16 arg2, u8 arg3, u8 arg4);
  * masks the argument with andi 0xFF, so the parameter is a byte.
  * @source 0x801D8050 */
 void buildSlotList(u8 arg0);
-/* Shop byte-counter check in this EMI (unlifted) called by the sibling phase
- * steps func_801D7B74/func_801D7CC8/func_801D7D48 with the address of the
- * work-block byte D_8014865B and a limit byte: it reads that byte with lbu,
- * passes byte+0x63 to func_801502D0, re-arms phaseTimer while the byte is
- * nonzero, increments the byte and reports whether it now equals the limit by
- * returning 0 or 1 in a full word. The return is declared word-wide because
- * the callers mask it explicitly with andi 0xFF.
+/* Shop byte-counter step in this EMI (lifted: src/bof3/ui/
+ * tickPhaseTimerThenAdvanceWorkCounter.c) called by the sibling phase steps
+ * func_801D7B74/func_801D7CC8/func_801D7D48 with the address of the work-block
+ * byte D_8014865B and a limit byte: it reads that byte with lbu, submits the
+ * texture row 0x1C at row 0x14 through func_8014F800 with func_801502D0(byte +
+ * 0x63) as the fifth argument, counts phaseTimer down, re-arms the timer with
+ * 0x3C once the countdown reaches zero or the pad state D_80145AA8 is nonzero,
+ * increments the byte and reports whether it now equals the limit by returning
+ * 0 or 1 in a full word. The return is declared word-wide because the callers
+ * mask it explicitly with andi 0xFF.
  * @source 0x801D81B4 */
-u32 func_801D81B4(u8* arg0, u8 arg1);
+u32 tickPhaseTimerThenAdvanceWorkCounter(u8* arg0, u8 arg1);
 void func_801644D8(u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4, u32 arg5);
 /* Main-exe byte-result query called by this target's shop list/state rebuild
  * func_801E0F78 and by the unlifted handlers func_801DA77C and func_801DF9EC

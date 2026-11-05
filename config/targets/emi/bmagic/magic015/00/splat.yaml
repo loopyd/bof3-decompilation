@@ -96,8 +96,10 @@ segments:
     - asm
     - func_801EFDE8
   - - 4740
-    - asm
-    - func_801EFE84
+    - c
+    - decrementMotionCountdownAdjustMotionPairThenDecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic01500_801EFE84
+    - '@source: src/bof3/bmagic/decrementMotionCountdownAdjustMotionPairThenDecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic01500_801EFE84.c'
+    - '@behavior: Per-frame motion step of one handler of the overlay header handler table that starts at 0x801EEC04 and stores this function at 0x801EEC4C: it reads the scratchpad work object through the pointer cell 0x1F800044, decrements the countdown byte 0x9, adds 0x2000 to the 16.16 motion word 0x40 and subtracts 0x3000 from the motion word 0x44, then, when the new countdown byte is zero, decrements byte 0xB of the shared battle work record read through 0x801EB4E0 and advances work byte 2, the handler index. The cell is re-read before the second store group because a store through the record pointer may alias it.'
   - - 4860
     - c
     - invokeHelperBmagicMagic01500_801EFEFC

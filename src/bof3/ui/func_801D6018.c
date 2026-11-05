@@ -17,8 +17,9 @@ void func_801D6018(void) {
   func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
   if ((D_801490A4 & 0x2) != 0) {
     /* The original reads the work-block byte at +5 with a signed byte load
-     * (lb), while the work-block scanner func_801D81B4 reads the same byte
-     * with lbu, so the byte is viewed through an explicit signed pointer. */
+     * (lb), while the work-block scanner tickPhaseTimerThenAdvanceWorkCounter
+     * reads the same byte with lbu, so the byte is viewed through an explicit
+     * signed pointer. */
     if (*(s8 *)&D_80148656[5] == 0) {
       phaseTimer = 0;
       D_80148651 = D_80148651 + 1;
