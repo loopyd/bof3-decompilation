@@ -104,8 +104,8 @@ segments:
     - asm
     - func_801F03D4
   - - 6200
-    - asm
-    - func_801F0438
+    - c
+    - clearWorkBytesBmagicMagic07603_801F0438
   - - 6280
     - textbin
     - T_801F0488

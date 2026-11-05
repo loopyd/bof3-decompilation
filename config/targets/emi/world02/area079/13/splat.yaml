@@ -30,8 +30,8 @@ segments:
   vram: 2149527076
   subsegments:
   - - 548
-    - asm
-    - func_801F2E24
+    - c
+    - dispatchWorkByte4Table4c7cWorld02Area07913_801F2E24
   - - 616
     - asm
     - func_801F2E68

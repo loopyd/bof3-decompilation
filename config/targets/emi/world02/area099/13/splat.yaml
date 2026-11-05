@@ -33,8 +33,8 @@ segments:
     - asm
     - func_801F2C40
   - - 360
-    - asm
-    - func_801F2D68
+    - c
+    - dispatchWorkByte4Table4988World02Area09913_801F2D68
   - - 428
     - asm
     - func_801F2DAC

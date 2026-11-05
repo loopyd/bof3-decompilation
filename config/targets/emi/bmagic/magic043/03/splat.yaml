@@ -58,8 +58,10 @@ segments:
     - asm
     - func_801EF42C
   - - 2396
-    - asm
-    - func_801EF55C
+    - c
+    - addWorkMotionPairAndIncrementBytes9AThenAdvanceWorkByte2At10BmagicMagic04303_801EF55C
+    - '@source: src/bof3/bmagic/addWorkMotionPairAndIncrementBytes9AThenAdvanceWorkByte2At10BmagicMagic04303_801EF55C.c'
+    - '@behavior: Adds work motion words, increments byte 9 by one and byte 0xA by two, and advances byte 2 when byte 0xA equals 0x10.'
   - - 2528
     - c
     - incrementWorkByte9AndAddVelocityPairThenAdvanceWorkByte2At18BmagicMagic04303_801EF5E0

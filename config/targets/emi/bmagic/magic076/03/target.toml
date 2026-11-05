@@ -9,6 +9,7 @@ load_address = 0x801EEC00
 
 sources = []
 support_sources = [
+    "src/bof3/bmagic/clearWorkBytesBmagicMagic07603_801F0438.c",
     "src/bof3/support/magic076_03_psyq.c",
     "src/bof3/bmagic/magic07603DispatchTables.c",
 ]

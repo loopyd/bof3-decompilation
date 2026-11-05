@@ -94,8 +94,8 @@ segments:
     - asm
     - func_801F0828
   - - 7308
-    - asm
-    - func_801F088C
+    - c
+    - clearWorkBytesBmagicMagic12403_801F088C
   - - 7388
     - textbin
     - T_801F08DC
