@@ -274,6 +274,17 @@ the same storage fixes which value the pointer holds and where the second cell l
 lands. A byte view leaves both ambiguous, so the gap shows up as a displaced load rather
 than a wrong one. Check the original access order before widening the view.
 
+### Signed table index feeding a scaled offset
+
+When a signed table load feeds an index multiply, GCC 2.7.2 can allocate the offset and
+the value to the opposite registers from the original (`v0`/`v1` exchanged at each
+read-modify-write arm) while everything else matches. Three separate lanes reached this
+residual from different starting shapes, each retrying lvalue forms and each landing on
+the same exchange. Treat it as an allocation fact rather than a source-spelling problem:
+record the exchange and the arm count, and do not spend further candidates on it. The
+orphan frame that often accompanies it *is* source-shaped - reusing the computed offset
+as the next record address, as the exact sibling does, removes it.
+
 ## Allocator-sensitive functions
 
 Same-CFG near match plus narrow probe causing spills/frame/size/save-register/
