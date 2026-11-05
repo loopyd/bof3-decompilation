@@ -130,6 +130,7 @@ dispatchStateTableAce8 = 0x801D67B0;
 clearStateBytesAdvance = 0x801D67EC;
 queueEligibleWorkRecord = 0x801D6818;
 dispatchStateTableAcf4 = 0x801D6C84;
+armActiveLocalWorkAndInitBattleUi = 0x801D6CC0;
 advanceStateWhenLoaderGated = 0x801D6D90;
 dispatchStateTableAd00 = 0x801D6DE4;
 advanceStateWhenLoaderReady = 0x801D6EAC;

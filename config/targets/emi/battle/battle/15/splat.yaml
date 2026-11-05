@@ -1469,8 +1469,10 @@ segments:
     - asm
     - func_800AE474
   - - 97488
-    - asm
-    - func_800AE4D0
+    - c
+    - dispatchBattleWorkStateHandler
+    - '@source: src/bof3/battle/dispatchBattleWorkStateHandler.c'
+    - '@behavior: Copies the four battle work-state handlers at 0x800969C4 and dispatches the entry selected by scratchpad work byte 0x01; when work bytes 0x00 and 0x01 are both non-zero it then invokes func_800AE9C4 with work byte 0x04.'
   - - 97652
     - c
     - countdownWorkByte9CopyPositionAndAdvanceStage

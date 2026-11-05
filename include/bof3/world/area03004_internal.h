@@ -277,6 +277,9 @@ extern u8  D_801E238C[];  /* @source 0x801E238C @kind unknown */
 extern u8  D_801E2390[];  /* @source 0x801E2390 @kind unknown */
 extern u8* g_PrimCursor;    /* @source 0x8014598C @kind bss */
 extern s32 D_8014421C;     /* @source 0x8014421C @kind unknown */
+/* Shared AREA030 selection-step byte at the head of the 0x8014421C region: the
+ * dispatch step func_801DAFBC advances it once per pass through its gate. */
+extern u8  D_8014420D;     /* @source 0x8014420D @kind unknown */
 extern u16 D_80145AA8;     /* @source 0x80145AA8 @kind unknown */
 extern u16 D_80145AC2;     /* @source 0x80145AC2 @kind unknown */
 extern u16 D_80145AC4;     /* @source 0x80145AC4 @kind unknown */
@@ -456,6 +459,11 @@ void clearRecord(u8 record_index);
 /* Same-binary frontend selection-effect starter at 0x8015D4F8 (executable
  * space, called by the AREA030 selection step with (0, 0, 100, 8)). */
 void func_8015D4F8(u8 arg0, u8 arg1, s32 arg2, s32 arg3);
+/* Same-binary frontend selection-effect helper at 0x8015D404 (executable
+ * space): the AREA030 dispatch step func_801DAFBC calls it with both arguments
+ * zero, which is the same shape the commu00 and world00/area007 views declare
+ * as (effect index, value). */
+void func_8015D404(u32 arg0, s32 arg1);
 /* Same-binary sound-cue dispatcher at 0x8015DF18 (executable space): the
  * AREA030 panel step calls it with the fixed cue 0x102. */
 void func_8015DF18(u16 arg0);

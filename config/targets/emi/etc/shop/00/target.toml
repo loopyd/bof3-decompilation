@@ -116,6 +116,7 @@ sources = [
     "src/bof3/ui/func_801D5D98.c",
     "src/bof3/ui/func_801E4E9C.c",
     "src/bof3/ui/setFieldRecordSlotValue.c",
+    "src/bof3/ui/redrawPanelStripThenConditionallyAdvanceUiSubstep.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",

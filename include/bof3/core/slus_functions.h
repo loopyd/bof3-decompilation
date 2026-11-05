@@ -41,10 +41,12 @@ void drawGlyphString8x8(s16 x, s16 y, u16 clut, const u8* text);
 void dispatchSoundCue(u32 cue_id);
 /* Reviewed ASM helpers truncate sums before their 999/100 cap checks.
  * The byte helper also clears sign-bit sums. Neither is universal saturation.
- * INFERRED: adjustHalfwordWith999Cap keeps its Battle15 importer signature;
- * its parameter widths and return type remain unresolved. Both return a value. */
+ * The halfword helper reports a sign-extended s16: 999 - field and -field on
+ * the two saturation arms, 0 otherwise, so its declaration is not void. Its
+ * field is not volatile: the original reads its stored sum back from the
+ * register and lets the zeroing store follow a `negu` in a branch delay slot. */
 /* @source 0x801654F4 */
-void adjustHalfwordWith999Cap(volatile u16* target, s32 value);
+s16  adjustHalfwordWith999Cap(u16* target, s32 value);
 s32  adjustBoundedCounter(u8* counter, s32 delta);
 /* @source 0x80165694 */
 s32  adjustByteWith100Cap(volatile u8* target, s32 value);

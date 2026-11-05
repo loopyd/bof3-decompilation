@@ -245,6 +245,7 @@ func_800AE09C = 0x800AE09C;
 dispatchWorkTable6bf4 = 0x800AE34C;
 clearByte9AdvanceByte1 = 0x800AE390;
 func_800AE438 = 0x800AE438;
+dispatchBattleWorkStateHandler = 0x800AE4D0;
 countdownWorkByte9CopyPositionAndAdvanceStage = 0x800AE574;
 advanceStageAndAccumulateWorkCounter = 0x800AE640;
 accumulateWorkCounter = 0x800AE6C8;

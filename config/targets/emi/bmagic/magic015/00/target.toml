@@ -17,6 +17,7 @@ support_sources = [
     "src/emi/bmagic/magic015/00/magic01500DispatchTables.c",
     "src/bof3/bmagic/invokeHelperBmagicMagic01500_801EFEFC.c",
     "src/bof3/support/magic015_00_psyq.c",
+    "src/bof3/bmagic/seedWorkMotionFieldsWhenGlobalWorkByteBIs1BmagicMagic01500_801EFD7C.c",
 ]
 psyq_source = "src/bof3/support/magic015_00_psyq.c"
 

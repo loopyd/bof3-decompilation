@@ -171,7 +171,7 @@ segments:
     start: 0xcecf4
     vram: 0x801654f4
     subsegments:
-      - [0xcecf4, asm, adjustHalfwordWith999Cap]
+      - [0xcecf4, c, adjustHalfwordWith999Cap, '@source: src/bof3/equipment/adjustHalfwordWith999Cap.c']
   - [0xced70, bin, post_halfword_adjustment]
   - name: equipment_counter
     type: code

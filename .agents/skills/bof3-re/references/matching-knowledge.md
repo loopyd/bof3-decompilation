@@ -36,6 +36,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Byte-cell load hoisted above the record's word stores, extra live registers | Split the record view by access width: [record views](#scratchpad-cells-and-record-views) |
 | Indirect call loads the selected pointer but the original fills frame slots with the whole table | Assign the named extern table to a local of its aggregate type, then index the local; indexing the extern indexes the table in place |
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots), then name repeated scale products (#named-scale-products) |
+| Call result stored inside the next call's delay slot | The original stores a `jal` result into its outgoing argument slot right after that call, before the next call's argument setup. Bind the result to a local; nesting the call in the later argument list moves that store into the following `jal` delay slot |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
 | Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests |
 | Boolean result misses the return register; extra return copy | Trace [boolean return expansion](#boolean-return-expansion) before allocation |
@@ -187,11 +188,14 @@ Preserve the unresolved result; opt-in work remains untried, not exhausted.
 
 ## Representation and volatility
 
-Volatile store cannot move into jump delay slot. Narrow volatile pointee may cause
-`lbu` plus manual sign extension versus original `lb`. Remove unjustified qualifier
-only with semantic evidence; reviewed plain view may restore shape. Volatile pointer
-cell forces reload without qualifying pointee; use API reference. Never add volatility
-as arbitrary scheduler control. The shared scratchpad work cell is the one place this is
+Volatile store cannot move into jump delay slot. A volatile pointee also forces the
+post-store test to reload, so a field the original re-tests from the register it just
+stored - a saturation arm testing the sum it wrote - needs the plain view. Narrow
+volatile pointee may cause `lbu` plus manual sign extension versus original `lb`.
+Remove unjustified qualifier only with semantic evidence; reviewed plain view may
+restore shape. Volatile pointer cell forces reload without qualifying pointee; use
+API reference. Never add volatility as
+arbitrary scheduler control. The shared scratchpad work cell is the one place this is
 already decided: five byte-exact sources declare it `u8* volatile`, so when the original
 keeps consecutive handoff stores that no call separates, declare that cell volatile rather
 than inventing a barrier. Cite the siblings when you do, and leave any other cell alone. Original-proven ordering remains explicit evidence.
@@ -325,6 +329,9 @@ Stores follow the same rule. Each `sb` to a distinct fixed-address cell carries 
 register across the run instead has a shared base or aggregate view the original
 lacked. Inside one block, stores keep source statement order, and a constant
 re-materialised into one register between stores shows where its statement starts.
+A run of stores to one pointer cell that parks a different record and restores the
+saved value is real state: keep every publish and restore as a store to the cell and
+re-read the cell after the restore, because holding the record in a local drops the run.
 
 Reads follow it in the other direction. When the original materialises a fixed-address
 symbol once into a saved register and re-reads one byte of it before each call,

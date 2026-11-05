@@ -589,6 +589,10 @@ extern volatile u8  BATTLE_GLOBAL_BYTE_6323; /* @source 0x80146323 @kind unknown
 /* @source 0x80146324 @kind unknown — actor-phase byte read by
  * isBattlerEligibleForActorPhase. */
 extern u8           BATTLE_GLOBAL_BYTE_6324;
+/* @source 0x80146325 @kind unknown — battle front-end gate byte; its bit 0x40
+ * selects whether armActiveLocalWorkAndInitBattleUi resets the selection effect
+ * before it initializes the UI bundle. */
+extern u8           D_80146325;
 extern volatile u8  BATTLE_GLOBAL_BYTE_63CE; /* @source 0x801463CE @kind unknown */
 extern volatile u8  BATTLE_RANDOM_TABLE_AC58_DATA[]; /* @source 0x801EAC58 @kind unknown */
 extern volatile u8  BATTLE_RANDOM_TABLE_AC78_DATA[]; /* @source 0x801EAC78 @kind unknown */
@@ -647,6 +651,12 @@ void func_8015C088(void);
 /* Frontend cue dispatcher reached from startScratchWorkTransform with the
  * constant 0x205; same family/shape as func_8015DF18. */
 void func_8015D71C(u16 arg0);
+/* Owned by the SLUS address space (selection/display effect helpers in the
+ * 0x8015D3xx-0x8015D5xx front-end block); armActiveLocalWorkAndInitBattleUi
+ * calls both, the first with no arguments and the second with the recorded
+ * constant quadruple 0/1/0x64/0x64. */
+void func_8015D5D8(void);
+void func_8015D300(u32 arg0, u32 arg1, u32 arg2, u32 arg3);
 void func_8015DF18(u16 arg0);
 void func_801636A0(u32 arg0, u32 arg1);
 void func_80164A44(u32 arg0);

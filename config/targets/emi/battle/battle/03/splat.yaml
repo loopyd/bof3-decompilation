@@ -128,8 +128,10 @@ segments:
     - c
     - dispatchStateTableAcf4
   - - 24768
-    - asm
-    - func_801D6CC0
+    - c
+    - armActiveLocalWorkAndInitBattleUi
+    - '@source: src/bof3/battle/armActiveLocalWorkAndInitBattleUi.c'
+    - '@behavior: Restarts the local state chain of each of the three active party work records at state 2, resets the front-end selection effect while the 0x80146325 bit-0x40 gate is clear, initializes the battle UI bundle slot 0, queues the opening event cue and then advances the battle state byte 0x801462E2.'
   - - 24976
     - c
     - advanceStateWhenLoaderGated

@@ -209,8 +209,10 @@ segments:
     - asm
     - func_801F1090
   - - 9596
-    - asm
-    - func_801F117C
+    - c
+    - advanceWorkByte2WhenHelperReadyBmagicMagic00800_801F117C
+    - '@source: src/bof3/bmagic/advanceWorkByte2WhenHelperReadyBmagicMagic00800_801F117C.c'
+    - '@behavior: Entry 3 (index 3) of the six-entry pointer table at 0x801EEC94, which 0x801F0DA8 copies into its frame and dispatches on scratchpad work-object byte 2. Per frame it calls the shared readiness helper func_8014DAEC and tests its returned byte; while the helper reports not-ready the handler does nothing, and once it reports ready it re-reads the work-object pointer cell at 0x1F800044 and increments the work object''s state byte 2 with a byte-width add (lbu / addiu 1 / sb), advancing dispatch to table entry 4 (0x801F11C4). The function has a 0x18-byte frame holding the saved return address at 0x10, reads or writes no other state, and returns nothing.'
   - - 9668
     - c
     - subtractWorkColorTripletBy3ThenAdvanceWorkByte2WhenChannelIs80BmagicMagic00800_801F11C4

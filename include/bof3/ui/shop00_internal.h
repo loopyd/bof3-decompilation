@@ -792,6 +792,18 @@ void func_801DDFB0(s16 arg0, s16 arg1, u32 arg2, u8 arg3, u8 arg4);
  * @source 0x801DAB90 */
 void func_801DAB90(s32 arg0, s32 arg1, s32 arg2, s32 arg3, u8 arg4);
 
+/* Shop panel prompt helper in this EMI (unlifted); the sub-step handler
+ * redrawPanelStripThenConditionallyAdvanceUiSubstep calls it with no arguments
+ * and tests the low byte of the result. Its body submits the texture row 0x1C
+ * at row 0x16 through func_8014F800 with the value returned by
+ * func_801502D0(0xF), masks a coordinate through func_801647C4, then tests the
+ * input halfwords D_80145AC4 and D_80145AC2 against D_80145AA8, plays a cue
+ * through func_8015DF18 on each accepted test and toggles the work-block byte
+ * D_8014865B. Every return path loads $v0 with the constant 1 or 0, so the
+ * result is a whole word.
+ * @source 0x801DA678 */
+s32 func_801DA678(void);
+
 /* Shop panel row emitter in this EMI (unlifted); the phase step func_801D5390
  * calls it with the phase-relative row coordinate (phaseTimer * 80 + 0x20),
  * the constant 0x30 and the constant 0. The first argument is sign-extended

@@ -197,6 +197,7 @@ func_801DAE3C = 0x801DAE3C;
 func_801DAE84 = 0x801DAE84;
 func_801DAED4 = 0x801DAED4;
 func_801DAF18 = 0x801DAF18;
+func_801DAFBC = 0x801DAFBC;
 selectRecordValueAndSlot = 0x801DB04C;
 setActiveSlotValueFromFrameMask = 0x801DB0AC;
 func_801DB554 = 0x801DB554;

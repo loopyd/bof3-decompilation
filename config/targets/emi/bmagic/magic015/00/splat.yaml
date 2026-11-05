@@ -88,8 +88,10 @@ segments:
     - asm
     - func_801EFCC4
   - - 4476
-    - asm
-    - func_801EFD7C
+    - c
+    - seedWorkMotionFieldsWhenGlobalWorkByteBIs1BmagicMagic01500_801EFD7C
+    - '@source: src/bof3/bmagic/seedWorkMotionFieldsWhenGlobalWorkByteBIs1BmagicMagic01500_801EFD7C.c'
+    - '@behavior: Entry 0x11 of the overlay handler table at 0x801EEC04: only when byte 0xB of the shared battle work record read through 0x801EB4E0 equals 1 does it seed the scratchpad work object published at the pointer cell 0x1F800044. The seed sets both words of the 16.16 motion pair at offsets 0x40 and 0x44 to 0x10000, byte 0x48 to 2, byte 9 to 8, and then advances work byte 2, the handler index, with a byte-width read-modify-write. The cell is re-read before each store group because a store through the loaded pointer may alias it.'
   - - 4584
     - asm
     - func_801EFDE8

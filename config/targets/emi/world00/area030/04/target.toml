@@ -102,6 +102,7 @@ sources = [
     "src/bof3/world/func_801DAE84.c",
     "src/bof3/world/func_801DAED4.c",
     "src/bof3/world/func_801DAF18_area03004.c",
+    "src/bof3/world/func_801DAFBC_area03004.c",
     "src/bof3/world/selectRecordValueAndSlot.c",
     "src/bof3/world/setActiveSlotValueFromFrameMask.c",
     "src/bof3/world/func_801DB554_area03004.c",

@@ -26,6 +26,12 @@ typedef struct BattlePanelTaskDispatchTable {
   BattleSelectionHandler handlers[5];
 } BattlePanelTaskDispatchTable;
 
+/* The four battle work-state handlers at 0x800969C4, dispatched by work byte
+ * 0x01 in dispatchBattleWorkStateHandler. */
+typedef struct BattleWorkStateDispatchTable {
+  BattleSelectionHandler handlers[4];
+} BattleWorkStateDispatchTable;
+
 typedef struct BattleLocalPanelEntry {
   u8  owner_index;
   u8  unk_01;
@@ -166,6 +172,7 @@ extern BattleIdentityRecord D_800E4050[]; /* @source 0x800E4050 @kind unknown */
 u32 testWorkRangeAgainstRecord(BattleRange *range, u32 value);
 u32 func_800A99AC(void);
 u8 *findOwnerRecord(u8 id);
+void func_800AE9C4(u8 selector);
 
 /* Absolute-address globals. Bound via WEAK_SYMBOL_AT in symbols.c; values
  * equal the symbol-name addresses. */
@@ -722,8 +729,8 @@ extern u8 battleApParamStrings;
 /* @source 0x80096A04 @kind unknown */
 extern u8 battlePanelIndexFormat;
 
-/* @source 0x800969C4 @kind unknown */
-extern u8 battleWorkStateHandlerTable;
+/* @source 0x800969C4 @kind table */
+extern BattleWorkStateDispatchTable battleWorkStateHandlerTable;
 
 extern u8 D_801462EC; /* @source 0x801462EC @kind unknown */
 extern s16 D_8014930A; /* @source 0x8014930A @kind unknown */
