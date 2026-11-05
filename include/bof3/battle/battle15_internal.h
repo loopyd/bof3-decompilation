@@ -557,6 +557,10 @@ u8   resetSelectionApplyInput(s32 input_mask);
 u8   isBattlerInactiveOrFlag4000(u8 arg0);
 s16  func_800A4294(s32 kind);
 void func_800A4458(void);
+/* Selection-grid initialiser called by the confirm-selection substate step
+ * initSelectionGridArmRowThenAdvanceSubstate (0x80096FBC): rebuilds the
+ * 0x80148570 grid band from the active message-slot work record. */
+void func_80097EC0(void);
 void setupMode104ArmWorkBit2(void);
 void adjustBattleWorkValuesForMode(void);
 void func_800AAEBC(s16 target_index, u8 battler_index);

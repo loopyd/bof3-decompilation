@@ -277,8 +277,10 @@ segments:
     - '@source: src/bof3/scenario/seedWorkWordsAdvanceStateAndQueueCue20AScenarioScena0800_801F9CE0.c'
     - '@behavior: Seed work words 0x34/0x38/0x3C, clear word 0x14, advance byte 1, and dispatch sound cue 0x20A.'
   - - 12592
-    - asm
-    - func_801F9D30
+    - c
+    - updateWorkWordsAndClearFlagsAbove18FFFFScenarioScena0800_801F9D30
+    - '@source: src/bof3/scenario/updateWorkWordsAndClearFlagsAbove18FFFFScenarioScena0800_801F9D30.c'
+    - '@behavior: Per-frame work-state handler for work byte 1 == 11 (entry 11 of the 0x801FE908 handler sub-table, entry 40 of the 0x801FE894 run): add 0x10000 to work word 0x38, add word 0x14 into word 0x3C, subtract 0x200000 from word 0x14, call the overlay effect helper at 0x801F9F8C with work address 0x34/0x20/8/4, then reload the scratchpad work pointer and call the shared work-flag reset helper at 0x80196070 when the signed word 0x38 reads above 0x18FFFF.'
   - - 12732
     - c
     - dispatchWorkByte1HandlerScenarioScena0800_801F9DBC

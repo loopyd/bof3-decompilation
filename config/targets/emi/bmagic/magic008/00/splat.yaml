@@ -160,8 +160,10 @@ segments:
     - asm
     - func_801F0568
   - - 6652
-    - asm
-    - func_801F05FC
+    - c
+    - seedMotionTintAndChannelFieldsThenAdvanceWorkByte2BmagicMagic00800_801F05FC
+    - '@source: src/bof3/bmagic/seedMotionTintAndChannelFieldsThenAdvanceWorkByte2BmagicMagic00800_801F05FC.c'
+    - '@behavior: Entry 0 of the five-entry work-state table at 0x801EEC70 (0x801F05FC, 0x801F0710, 0x801F07D4, 0x801F0864, 0x801F08C4), which 0x801F0568 dispatches on scratchpad work-object byte 2. Per-entry seed for the tint/motion sequence: raises bit 0x20 of work byte 0, sets mode byte 0x5C and work byte 0x2B to 1, sets the signed tint triplet at 0x5D/0x5E/0x5F to -0x80, copies the shared fixed-point channel pair 0x80149308/0x8014930C into work words 0x34/0x38, copies the shared battle work record''s word 0x3C into work word 0x3C, sets the 16.16 motion pair at 0x40/0x44 to 0x18000/0x28000, sets work byte 0x48 to 2, copies the record''s byte 0x27, invokes the helper at 0x8015D71C with 0x100, re-seeds countdown work byte 9 with 0x20 and advances work byte 2. The original re-reads the scratchpad pointer cell before each store group, shares one load across the 0x34/0x38/0x48/0x40/0x44/0x3C run, and reads the record pointer cell twice. Reads or writes no other state.'
   - - 6928
     - asm
     - func_801F0710

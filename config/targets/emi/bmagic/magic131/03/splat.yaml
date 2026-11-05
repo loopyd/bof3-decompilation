@@ -115,8 +115,9 @@ segments:
     - c
     - seedWorkWordPairAndFlagsThenAdvanceWorkByte2BmagicMagic13103_801F04C0
   - - 6460
-    - asm
-    - func_801F053C
+    - c
+    - add4ToWorkByte9AndAdvanceWorkByte2At40BmagicMagic13103_801F053C
+    - '@source: src/bof3/bmagic/add4ToWorkByte9AndAdvanceWorkByte2At40BmagicMagic13103_801F053C.c'
   - - 6540
     - asm
     - func_801F058C

@@ -10,6 +10,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 [delay slots](#delay-slots-and-entry-copies), [representation](#representation-and-volatility),
 [allocation](#allocator-sensitive-functions), [orphan stack slots](#orphan-stack-slots),
 [named scale products](#named-scale-products),
+[repeated literals](#repeated-literals-through-one-narrow-value-local),
 [compiler](#compiler-evidence), [boolean returns](#boolean-return-expansion),
 [guard scheduling](#guard-scheduling-and-value-reuse),
 [CSE and operand order](#cse-lifetimes-and-commutative-targets),
@@ -36,6 +37,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Indirect call loads the selected pointer but the original fills frame slots with the whole table | Assign the named extern table to a local of its aggregate type, then index the local; indexing the extern indexes the table in place |
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots), then name repeated scale products (#named-scale-products) |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
+| Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests |
 | Boolean result misses the return register; extra return copy | Trace [boolean return expansion](#boolean-return-expansion) before allocation |
 | Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt. For displaced induction setup, inspect [explicit cursors](#explicit-cursors-and-signed-bounds) |
 | Global/BSS offsets | Audit COMMON/section/alignment/order/padding and following symbols |
@@ -301,6 +303,13 @@ register across the run instead has a shared base or aggregate view the original
 lacked. Inside one block, stores keep source statement order, and a constant
 re-materialised into one register between stores shows where its statement starts.
 
+Reads follow it in the other direction. When the original materialises a fixed-address
+symbol once into a saved register and re-reads one byte of it before each call,
+declare a local `u8 *` to that symbol so one base serves every read. Passing the symbol
+expression to each call instead emits its own `lui %hi`/`lbu %lo` pair and loses the
+shared base. A local that only re-types a promoted value (`u16 row = y;`) folds away
+and changes nothing.
+
 Give a work record a word-typed view before chasing pointer roles. A typed pointer over
 the same storage fixes which value the pointer holds and where the second cell load
 lands; a byte view leaves both ambiguous, so the gap shows up as a displaced load rather
@@ -412,6 +421,19 @@ frame without any body access to the extra bytes.
 array symbol for both row uses, then the named product. The named product also
 shrank the frame from 32 to the original 24 bytes, which no body instruction had
 shown.
+
+### Repeated literals through one narrow value local
+
+Use when a constant load occupies the register the original keeps for reloaded cell
+pointers and the same value is stored at several sites. Write those stores through
+one narrow value local - assign, store, reassign, store - so the literals become a
+single multi-definition quantity. Read `.lreg`/`.greg`/`.cse2` first: an inline
+constant can surface as its own quantity with several references, allocated over a
+pointer reload, and routing the writes through one `s8` local merges them into the
+earlier write's quantity and frees that register. Keep every store site, order and
+value exact; one different literal or an extra store splits the quantity again.
+Confirm with the complete live gate, and keep this as the matching form: restoring
+inline literals re-opens the exchange.
 
 ## Compiler evidence
 

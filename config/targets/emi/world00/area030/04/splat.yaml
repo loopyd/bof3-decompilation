@@ -415,8 +415,10 @@ segments:
     - asm
     - func_801D88E0
   - - 33136
-    - asm
-    - func_801D8D70
+    - c
+    - drawStatusBoxPair
+    - '@source: src/bof3/world/drawStatusBoxPair.c'
+    - '@behavior: draws the two stacked AREA030 status boxes at the requested origin: submits the inset panel rectangles 0x8A by 0x3A at y + 2 and 0x8A by 0x5C at y + 0x42 through func_801AE3F0 with the shared CLUT-bank byte D_80144952 as the trailing argument, selects graphics mode 9/1, and then repeats one box body at the rows y and y + 0x40, each drawing the 0x25 sprite at x, ten 0x26 sprites spaced eight pixels from x + 0x20, the 0x27 and 0x28 sprites at x + 0x70 and x + 0x88 on the box row, two func_801D799C text rows of width 0x1E (upper box) or 0x40 (lower box) at (x, row + 0x18) and (x + 0x88, row + 0x18), the 0x3C sprite at x on the row + 0x36 row, sixteen 0x3D sprites spaced eight pixels from x + 8 on that row and the 0x3E sprite at x + 0x88 on that row.'
   - - 34044
     - c
     - func_801D90FC

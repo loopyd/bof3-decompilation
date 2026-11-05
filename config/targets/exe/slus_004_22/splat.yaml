@@ -184,7 +184,7 @@ segments:
     start: 0xcee94
     vram: 0x80165694
     subsegments:
-      - [0xcee94, asm, adjustByteWith100Cap]
+      - [0xcee94, c, adjustByteWith100Cap, '@source: src/bof3/equipment/adjustByteWith100Cap.c']
   - [0xceeec, bin, pre_item_record_dispatch]
   - name: item_record_dispatch
     type: code

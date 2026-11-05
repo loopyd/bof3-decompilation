@@ -64,8 +64,10 @@ segments:
     - c
     - queueEvent4000RingTripleAndAdvance
   - - 1980
-    - asm
-    - func_80096FBC
+    - c
+    - initSelectionGridArmRowThenAdvanceSubstate
+    - '@source: src/bof3/battle/initSelectionGridArmRowThenAdvanceSubstate.c'
+    - '@behavior: Confirm-selection substate step 1: stores 4 into byte +0x01 of the active selection slot, re-initialises the 0x80148570 selection grid through func_80097EC0, stores 2 into the grid row byte 0x8014857B while bit 1 of the slot flag word +0x10 is set and bit 17 is clear, then advances the battle substate index 0x801462E3, clears the confirm-substate index 0x801462E4 and mirrors the work-record byte +0x05 into 0x80148656.'
   - - 2124
     - asm
     - func_8009704C

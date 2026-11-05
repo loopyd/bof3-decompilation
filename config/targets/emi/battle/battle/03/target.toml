@@ -312,6 +312,7 @@ sources = [
     "src/bof3/battle/clearBattlerFlagsAndDecrement462F3.c",
     "src/bof3/battle/countdownWorkByte9QueueSlotAndEmitEvent.c",
     "src/bof3/battle/submitRolledEffectAndAdvance.c",
+    "src/bof3/battle/callLocalReady2ThenSubmitRolledEffectAndAdvance.c",
 ]
 support_sources = [
     "src/bof3/support/battle03_symbols.c",

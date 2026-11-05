@@ -674,8 +674,10 @@ segments:
     - dispatchLocalByte2Table
     - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 61024
-    - asm
-    - func_801DFA60
+    - c
+    - callLocalReady2ThenSubmitRolledEffectAndAdvance
+    - '@source: src/bof3/battle/callLocalReady2ThenSubmitRolledEffectAndAdvance.c'
+    - '@behavior: Runs the second local readiness helper localReadyOrHelper2 and drops its result, then counts down the scratch work byte +0x09: once it expires it either submits effect variant 3 when the low byte of the func_800A8F58 gate is set, or reads the unsigned chance byte +0xAA of the D_80146250 record and rolls rand() % 100 against it, raising bit 0x80 of the battle global halfword 0x801462E8 and submitting variant 3 on a roll below the chance and variant 2 otherwise; both cases then submit effect variant 4 and increment scratch work byte +0x02. Handler index 0 of the local byte-2 handler table 0x801EB1B4 dispatched by dispatchLocalByte2Table. Takes no arguments and returns nothing.'
   - - 61284
     - c
     - raiseFlag4AndUpdateWhenLocalReady

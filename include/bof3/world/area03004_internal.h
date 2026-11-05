@@ -421,6 +421,10 @@ void func_801D95C4(u16 arg0, u16 arg1, u16 arg2, u16 arg3, u8 arg4);
 void func_801D9534(s16 arg0, u16 arg1, s16 arg2, s16 arg3, u8 arg4);
 void func_801D7C10(u16 arg0, u16 arg1, u8 arg2);
 void func_801D88E0(s16 arg0, s16 arg1);
+/* Target-local drawer of the two stacked AREA030 status boxes at 0x801D8D70:
+ * the left status column of func_801D88E0 runs it with (16 - 45 * count, 64)
+ * and the fixed (16, 64) panel steps call it through that column drawer. */
+void drawStatusBoxPair(s16 x, s16 y);
 void func_801D7EB0(s16 arg0, s16 arg1);
 void func_801D8364(s16 arg0, s16 arg1);
 void func_801D9740(u8 arg0, u8* arg1, u8 arg2, s16 arg3);

@@ -145,8 +145,10 @@ segments:
     - asm
     - func_801F0C30
   - - 8520
-    - asm
-    - func_801F0D48
+    - c
+    - seedWorkWordsAndCopyRecordByte27ThenAdvanceWorkByte2BmagicMagic01500_801F0D48
+    - '@source: src/bof3/bmagic/seedWorkWordsAndCopyRecordByte27ThenAdvanceWorkByte2BmagicMagic01500_801F0D48.c'
+    - '@behavior: Overlay handler seed: writes the scratchpad work object at the pointer cell 0x1F800044 word 0x14 = 0x80, word 0x20 = -0x10, byte 0x27 = byte 0x27 of the shared battle work record read through 0x801EB4E0, byte 9 = 0x14 and byte 0xA = 7, then advances work byte 2 with a byte-width read-modify-write whose store sits in the return delay slot. The cell is re-read before each store group because a store through the loaded pointer may alias it.'
   - - 8628
     - asm
     - func_801F0DB4

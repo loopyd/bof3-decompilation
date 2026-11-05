@@ -256,6 +256,7 @@ updateSelectionEffectFactor = 0x801DF7EC;
 callNextLocalHandler = 0x801DF8AC;
 func_801DF914 = 0x801DF914;
 dispatchLocalByte2Table = 0x801DFA1C;
+callLocalReady2ThenSubmitRolledEffectAndAdvance = 0x801DFA60;
 raiseFlag4AndUpdateWhenLocalReady = 0x801DFB64;
 dispatchScratchByte2Table = 0x801DFBDC;
 copyScratchToLocalWork = 0x801DFC20;

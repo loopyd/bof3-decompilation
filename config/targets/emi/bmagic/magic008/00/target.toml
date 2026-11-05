@@ -31,6 +31,7 @@ support_sources = [
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00800_801EF384.c",
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic00800_801EF75C.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic00800_801F0964.c",
+    "src/bof3/bmagic/seedMotionTintAndChannelFieldsThenAdvanceWorkByte2BmagicMagic00800_801F05FC.c",
     "src/bof3/support/magic008_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/magic008_00_psyq.c"

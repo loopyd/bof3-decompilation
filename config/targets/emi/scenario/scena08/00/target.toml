@@ -64,5 +64,6 @@ support_sources = [
     "src/bof3/scenario/addRandomByteToWorkHalfword58AndAdvanceAtProgress11ScenarioScena0800_801F7200.c",
     "src/bof3/scenario/addRandomByteToWorkHalfword58AndAdvanceAtProgress11ScenarioScena0800_801F757C.c",
     "src/bof3/scenario/updateWorkWordsAndClearFlagsAtF0000ScenarioScena0800_801F9C58.c",
+    "src/bof3/scenario/updateWorkWordsAndClearFlagsAbove18FFFFScenarioScena0800_801F9D30.c",
 ]
 psyq_source = "src/bof3/support/scena08_00_psyq.c"

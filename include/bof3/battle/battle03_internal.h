@@ -630,7 +630,8 @@ void func_800A4458(void);
 void func_800A9BD8(u8 arg0);
 /* Owned by the SLUS address space (asm span func_800A8F58 in
  * emi/battle/battle/15); only its low return byte is consumed, by the
- * default-class countdown handler submitRolledEffectAndAdvance. */
+ * default-class countdown handler submitRolledEffectAndAdvance and by the
+ * local byte-2 handler callLocalReady2ThenSubmitRolledEffectAndAdvance. */
 u8   func_800A8F58(void);
 /* Owned by the SLUS address space (boundary func_800A9820 in emi/battle/battle/15);
  * the first parameter is the zero-extended battle byte D_80146384. */
@@ -683,6 +684,7 @@ void forwardSelectedEffectId(void);
 void resetReadyAdvanceByte1(void);
 void callNextLocalHandler(void);
 void func_801DF914(void);
+void callLocalReady2ThenSubmitRolledEffectAndAdvance(void);
 void copyScratchToLocalWork(void);
 void waitReadyAdvanceSubstate3(void);
 extern Battle03Handler D_801EB1E0[]; /* @source 0x801EB1E0 @kind unknown */

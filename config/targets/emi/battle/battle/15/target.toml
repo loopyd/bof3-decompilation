@@ -9,6 +9,7 @@ load_address = 0x80096800
 
 sources = [
     "src/bof3/battle/panelStepLeftClamp11.c",
+    "src/bof3/battle/initSelectionGridArmRowThenAdvanceSubstate.c",
     "src/bof3/battle/panelTasksBattle15.c",
     "src/bof3/battle/runSelectionPassSetSelectedFlag4000ClearByteThenCallA9BD8.c",
     "src/bof3/battle/runSelectionPassSetSelectedFlag1000ThenCallA9BD8.c",
