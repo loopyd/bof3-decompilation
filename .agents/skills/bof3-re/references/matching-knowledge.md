@@ -272,6 +272,12 @@ name the cell: declare an extern at its fixed address so each access emits its o
 `lui 0x1F80` plus `lw 68(vN)`. Applies to any fixed-address data the original reloads
 per use; the named symbol in the map restores that repetition.
 
+Stores follow the same rule. Each `sb` to a distinct fixed-address cell carries its own
+`lui $at, %hi(sym)`, so declare one named extern per cell. A build that holds one base
+register across the run instead has a shared base or aggregate view the original
+lacked. Inside one block, stores keep source statement order, and a constant
+re-materialised into one register between stores shows where its statement starts.
+
 Give a work record a word-typed view before chasing pointer roles. A typed pointer over
 the same storage fixes which value the pointer holds and where the second cell load
 lands. A byte view leaves both ambiguous, so the gap shows up as a displaced load rather

@@ -19,6 +19,19 @@
 // themselves. `target` is the manifest target id used by the gate's second
 // argument and by the lane's write set.
 //
+// Stage order per lane:
+//   lift (model ladder) -> naming transaction (exact only) -> review (non-exact only)
+//     -> repair rounds -> review again
+// The ladder defaults to ["ninerouter/ds-combo", "ninerouter/gpt-combo"]; pass
+// `args.models` to reorder it and `args.model` for a single-rung run. Each rung gets
+// the previous rung's report, so it continues from measured evidence. A 100% gate
+// PASS ends the lane and goes straight to naming; the reviewer only sees a ladder
+// that ended non-exact.
+//
+// After every lane closes, one harvest child rewrites the bof3-re references from
+// this batch's exact results only ($skill-master authoring, $unslop prose, $caveman
+// compaction) and runs the skills tests plus the docs drift check. It never commits.
+//
 // Lessons encoded here (all measured in batches 001-005):
 //  - one target per lane, disjoint target-local write sets;
 //  - a `lift gate` PASS is exact, so NO review is spent on an exact selector;
@@ -36,11 +49,29 @@ if (rawLanes.length === 0) {
   return { ok: false, error: "bof3-lift-lanes: args.lanes must list at least one { key, target, refs } lane" };
 }
 
-// Optional explicit child model for this run (`args.model`), for example
-// "ninerouter/ds-combo". Empty keeps each agent's declared model.
-const laneModel =
-  typeof args.model === "string" && args.model.trim() ? args.model.trim() : "";
-const modelOption = laneModel ? { model: laneModel } : {};
+// Model ladder. The first model lifts; when it ends non-exact the SAME lane and
+// selectors are retried by the next model before any review is spent, so a reviewer
+// only sees the rung that the whole ladder failed to close. `args.models` overrides
+// the order; `args.model` is still accepted as a single-entry ladder.
+const DEFAULT_LADDER = ["ninerouter/ds-combo", "ninerouter/gpt-combo"];
+const requestedModels = Array.isArray(args.models)
+  ? args.models
+  : typeof args.model === "string" && args.model.trim()
+    ? [args.model]
+    : [];
+const modelLadder = (
+  requestedModels.length ? requestedModels : DEFAULT_LADDER
+).map((value) => String(value || "").trim()).filter(Boolean);
+if (modelLadder.length === 0) {
+  return { ok: false, error: "bof3-lift-lanes: args.models resolved to an empty model ladder" };
+}
+// Stage models: repair and review run on the last rung, which is the one expected to
+// carry a hard residual; naming runs on the first, where ordinary evidence suffices.
+const ladderModel = (index) => modelLadder[Math.min(index, modelLadder.length - 1)];
+const reviewModel = ladderModel(modelLadder.length - 1);
+const repairModel = ladderModel(modelLadder.length - 1);
+const namingModel = ladderModel(0);
+const harvestModel = ladderModel(0);
 
 const lanes = rawLanes.map((lane, index) => ({
   key: String(lane.key || `lane-${index + 1}`),
@@ -72,6 +103,120 @@ const resultContract = (lane) => [
   `Gate PASS must describe the final live gate, not an earlier attempt. Add evidence, naming,`,
   `ordered attempts and lever consumption as other fields, never as selector rows.`,
 ].join("\n");
+
+// Second and later ladder rungs. Same lane, same selectors, same write set: only the
+// model changes, and it starts from the previous rung's measured evidence.
+const liftRetryBrief = (lane, index, model, priorText) => [
+  `BOF3 lift+naming lane '${lane.key}' — target '${lane.target}' — ladder rung ${index + 1} on '${model}'.`,
+  ``,
+  `An earlier model lifted these same selectors and ended non-exact. Continue from its`,
+  `measured evidence; do not re-derive the function and do not repeat a variant the`,
+  `earlier rungs already measured.`,
+  ``,
+  `Registry refs (identical set, nothing added or substituted):`,
+  ...lane.refs.map((ref) => `  ${ref}`),
+  ``,
+  `Write set, levers, gate discipline and the result contract are exactly as a first rung:`,
+  `new/edited sources under src/bof3/ for '${lane.target}'; that target's own header if one`,
+  `exists; config/targets/'${lane.target}'/{splat.yaml,symbols.txt,target.toml}; your report`,
+  `out/lift-batches/${lane.key}-${lane.target.replace(/^emi\//, "").replace(/\//g, "-")}-${String(lane.refs[0] || "").split("@")[1] || "unaddressed"}.md.`,
+  ``,
+  `Read the earlier rung's report and ledger, reproduce its live diff for the retained`,
+  `candidate, and attack the first named residual with one change at a time. Keep the`,
+  `owning compiler and flags fixed. A 100% gate PASS ends the lane without review.`,
+  `Everything else goes to the reviewer once this ladder is exhausted.`,
+  ``,
+  `Earlier rung result (its final JSON):`,
+  String(priorText || ""),
+  resultContract(lane),
+  lane.note ? "Parent note for this lane:" : "",
+  lane.note || "",
+].filter((line, position, all) => !(line === "" && all[position - 1] === "")).join("\n");
+
+// Naming transaction for one exact lift. The namer owns identity edits; the native gate
+// stays the acceptance gate, so any applied rename must re-gate clean or be restored.
+const namingBrief = (lane, liftText, liftModel) => [
+  `BOF3 naming transaction for lane '${lane.key}' — target '${lane.target}'.`,
+  ``,
+  `The lift below passed its live gate on model '${liftModel}'. Apply one evidenced naming`,
+  `transaction per lifted selector (usually one), following the bof3-naming skill and its`,
+  `direct-editing, naming-style and byte-safe-cosmetics references. Nothing else in the`,
+  `target may move.`,
+  ``,
+  `Steps:`,
+  `1. 'bin/harness naming list ${lane.target} --json' — inspect the rows that cover the lifted`,
+  `   selector only. Read the retained source and its metadata block.`,
+  `2. Decide from evidence: current original bytes, callers/consumers, and same-target exact`,
+  `   siblings. An unevidenced role keeps its address-anchored name — "no-change" is a valid`,
+  `   and expected outcome; never invent a semantic name to fill the stage.`,
+  `3. If a rename is justified, update the whole owned surface together: function identifier,`,
+  `   filename, Splat label, symbols.txt row, target-private header declaration if one exists,`,
+  `   and every target-owned caller spelling. Keep the metadata @source block intact.`,
+  `4. Re-prove it: 'bin/harness naming check ${lane.target} <SELECTOR> --json' and then`,
+  `   'bin/harness lift gate --target ${lane.target} <SELECTOR>'. An applied rename MUST keep`,
+  `   the gate at 100% with identical bytes. If the gate regresses, restore the previous`,
+  `   spelling, re-gate, and report naming:"blocked" with restored:true.`,
+  `5. Do not touch config/symbol-naming-baseline.json, other targets, shared headers, the`,
+  `   index, caches, or Git.`,
+  ``,
+  `Return one JSON object (plain or in one json fence):`,
+  `{lane:"${lane.key}",target:"${lane.target}",selector:"<ref>",naming:"applied|no-change|blocked",`,
+  `gate:{verdict:"PASS|FAIL"},restored:true|false,name:"<final function name>",`,
+  `source_path:"...",source_sha256:"<64 lowercase hex>",evidence:"<one sentence>",harness_calls:{used:0}}.`,
+  ``,
+  `Exact lift to name:`,
+  String(liftText || ""),
+  lane.note ? "Parent note for this lane:" : "",
+  lane.note || "",
+].filter((line, position, all) => !(line === "" && all[position - 1] === "")).join("\n");
+
+// End-of-batch knowledge harvest. Exact lanes only: a partial teaches nothing portable.
+const harvestBrief = (board) => {
+  const exact = board.filter((row) => row.state === "complete" &&
+    ["exact-all", "exact-named"].includes(String(row.verdict)));
+  const named = board.filter((row) => String(row.verdict).startsWith("exact-naming-"));
+  return [
+    `BOF3 lift-batch knowledge harvest. Every lane in this batch has finished; you are the`,
+    `only writer now and no function is being lifted.`,
+    ``,
+    `Task: improve the shared lifting references from this batch's exact results. Use`,
+    `$skill-master for the authoring shape, $unslop for plain technical English, and`,
+    `$caveman for compaction so an agent reads the same knowledge in fewer tokens.`,
+    `Load each by name; they are installed skills, so use the one you are given rather`,
+    `than looking for a copy on disk.`,
+    ``,
+    `Files you may edit (and nothing else):`,
+    `  .agents/skills/bof3-re/references/matching-knowledge.md`,
+    `  .agents/skills/bof3-re/references/match-loop.md`,
+    `  .agents/skills/bof3-re/references/reverse/mission-protocol.md`,
+    `  .agents/skills/bof3-re/SKILL.md  (only to point at a reference you changed)`,
+    `Never touch src/, config/, include/, workflows, gates, caches, or Git.`,
+    ``,
+    `What counts as a lesson worth keeping:`,
+    `- it comes from a lane that ended 100% exact in this batch, or from a lever that was`,
+    `  measured and either worked or provably does not;`,
+    `- it is generic: a condition, a lever and its expected effect that another function can`,
+    `  use. Not a function name, not one target's address, not this batch's numbers;`,
+    `- it is not already stated. Search the references first; extend an existing rule rather`,
+    `  than appending a near-duplicate paragraph.`,
+    `Do NOT record anything from a partial lane, a lane error, or an unmeasured proposal.`,
+    `A failed experiment is only worth writing when it names the mechanism and the condition`,
+    `that made it fail, so a future lane can recognise that condition.`,
+    ``,
+    `Write at most three additions or rewrites. Prefer one sharp sentence over a section.`,
+    `Keep every existing contract, threshold, command and literal exact. Then run:`,
+    `  PYTHONPATH=tools/python .venv/bin/python -m pytest -q tools/python/tests/skills`,
+    `  bin/harness source docs`,
+    `and report both. Do not commit.`,
+    ``,
+    `Batch board:`,
+    JSON.stringify({ exact: exact, naming: named }, null, 2),
+    ``,
+    `Return one JSON object: {batch:"knowledge-harvest",added:[{file,rule,evidence}],`,
+    `rewritten:[{file,rule,why}],rejected:[{lesson,reason}],checks:{skills:"passed|failed",docs:"ok|drift"},`,
+    `harness_calls:{used:0}}.`,
+  ].join("\n");
+};
 
 const liftBrief = (lane) => [
   `BOF3 lift+naming lane '${lane.key}' — target '${lane.target}'.`,
@@ -302,25 +447,52 @@ const retainReport = (lane, key, result) => {
     artifactPaths: result.artifactPaths });
 };
 
-const laneChain = (lane) => {
-  const liftKey = `${lane.key}-lift`;
+// A rung is worth retrying only when the lane produced a measured partial and did not
+// classify any selector as data or blocked.
+const worthRetrying = (text) => {
+  const report = parseReport(text);
+  if (!report || !Array.isArray(report.results)) return false;
+  const rows = report.results;
+  if (rows.some((row) => row.outcome === "data" || row.outcome === "blocked")) return false;
+  return rows.some((row) => row.outcome === "partial");
+};
+
+// One rung of the model ladder. The first rung seeds the lift; each later rung gets the
+// previous rung's report plus the selector set, so it continues from measured evidence
+// instead of re-deriving the function. Non-exact rungs hand off; only a ladder that ends
+// non-exact reaches review.
+const liftRung = (lane, index, priorText) => {
+  const model = ladderModel(index);
+  const liftKey = `${lane.key}-lift-${index}`;
   return runs
     .run(liftKey, {
-      label: `Lift ${lane.key} (${lane.target})`,
+      label: `Lift ${lane.key} (${lane.target}) on ${model}`,
       agent: "bof3-lifter",
-      ...modelOption,
+      model,
       ...(lane.cwd ? { cwd: lane.cwd } : {}),
       output: false,
-      task: liftBrief(lane),
+      task: index === 0 ? liftBrief(lane) : liftRetryBrief(lane, index, model, priorText),
     })
     .then(
       (lift) => {
         retainReport(lane, liftKey, lift);
-        return finishLane(lane, lift);
+        const text = String((lift && lift.output) || "");
+        const state = resultState(lane, text);
+        const attempt = { text, state, model, rung: index + 1 };
+        // Only a measured partial earns another rung. A boundary proven data, or a lane
+        // that blocked on evidence it did not have, will answer the same way on any
+        // model; spending the second rung there buys nothing.
+        if (state === "exact" || state === "invalid" ||
+            !worthRetrying(text) || index + 1 >= modelLadder.length) {
+          return finishAttempt(lane, attempt);
+        }
+        return liftRung(lane, index + 1, text);
       },
       (error) => ({ lane: lane.key, target: lane.target, state: "lane-error", error: String(error).slice(0, 300) }),
     );
 };
+
+const laneChain = (lane) => liftRung(lane, 0, "");
 
 // Fail closed on incomplete membership or contradictory exact evidence. This is
 // report routing, not independent native verification; parent gates still own closure.
@@ -376,16 +548,60 @@ const resultState = (lane, text) => {
   return rows.every((row) => row.outcome === "exact") ? "exact" : "non-exact";
 };
 
-const finishLane = (lane, lift) => {
-  const text = String((lift && lift.output) || "");
-  const result = resultState(lane, text);
-  if (result === "invalid") {
-    return Promise.resolve({ lane: lane.key, target: lane.target, state: "blocked", verdict: "invalid-result" });
+// A lane reaches review only after every ladder rung ended non-exact.
+const finishAttempt = (lane, attempt) => {
+  if (attempt.state === "invalid") {
+    return Promise.resolve({ lane: lane.key, target: lane.target, state: "blocked",
+      verdict: "invalid-result", model: attempt.model, rung: attempt.rung });
   }
-  if (result === "exact") {
-    return Promise.resolve({ lane: lane.key, target: lane.target, state: "complete", verdict: "exact-all" });
+  if (attempt.state === "exact") return namingStage(lane, attempt.text, attempt.model);
+  return reviewOnce(lane, attempt.text, 1, new Set());
+};
+
+// Naming runs on an exact lift. The lift is already at 100%, so a naming edit that
+// regresses the gate must be restored by the namer; the lane stays complete either way
+// and the verdict records whether an identity was applied.
+const namingVerdict = (text) => {
+  const report = parseReport(text);
+  if (!report) return "invalid";
+  const naming = String(report.naming || "").trim();
+  if (!["applied", "no-change", "blocked"].includes(naming)) return "invalid";
+  if (naming === "applied") {
+    const gate = report.gate && report.gate.verdict;
+    const restored = report.restored === true;
+    if (gate !== "PASS" && !restored) return "regressed";
   }
-  return reviewOnce(lane, text, 1, new Set());
+  return naming;
+};
+
+const namingStage = (lane, liftText, liftModel) => {
+  const nameKey = `${lane.key}-name`;
+  return runs
+    .run(nameKey, {
+      label: `Name ${lane.key} (${lane.target}) after exact lift`,
+      agent: "bof3-namer",
+      model: namingModel,
+      ...(lane.cwd ? { cwd: lane.cwd } : {}),
+      output: false,
+      task: namingBrief(lane, liftText, liftModel),
+    })
+    .then(
+      (named) => {
+        retainReport(lane, nameKey, named);
+        const verdict = namingVerdict(String((named && named.output) || ""));
+        return {
+          lane: lane.key,
+          target: lane.target,
+          state: "complete",
+          verdict: verdict === "applied" ? "exact-named"
+            : verdict === "no-change" ? "exact-all"
+            : `exact-naming-${verdict}`,
+          model: liftModel,
+        };
+      },
+      (error) => ({ lane: lane.key, target: lane.target, state: "complete",
+        verdict: "exact-naming-error", error: String(error).slice(0, 300), model: liftModel }),
+    );
 };
 
 const reviewOnce = (lane, proposedText, round, triedRepairs) => {
@@ -394,7 +610,7 @@ const reviewOnce = (lane, proposedText, round, triedRepairs) => {
     .run(reviewKey, {
       label: `Review ${lane.key} non-exact lift`,
       agent: "bof3-reviewer",
-      ...modelOption,
+      model: reviewModel,
       ...(lane.cwd ? { cwd: lane.cwd } : {}),
       output: false,
       task: reviewBrief(lane, proposedText),
@@ -420,7 +636,7 @@ const reviewOnce = (lane, proposedText, round, triedRepairs) => {
           .run(repairKey, {
             label: `Repair ${lane.key} after review`,
             agent: "bof3-lifter",
-            ...modelOption,
+            model: repairModel,
             ...(lane.cwd ? { cwd: lane.cwd } : {}),
             output: false,
             task: repairBrief(lane, text, proposedText),
@@ -447,10 +663,32 @@ const reviewOnce = (lane, proposedText, round, triedRepairs) => {
 
 const board = await runs.all(lanes.map((lane) => laneChain(lane)));
 
+// Harvest only from exact results, and only once every lane has closed, so the child
+// writes references with no lift in flight. A harvest failure never fails the batch:
+// the lifts are already measured and the references are the improvable part.
+const exactRows = board.filter((row) => row.state === "complete" &&
+  ["exact-all", "exact-named"].includes(String(row.verdict)));
+const harvest = exactRows.length === 0
+  ? { state: "skipped", reason: "no exact lane in this batch" }
+  : await runs
+      .run("knowledge-harvest", {
+        label: "Harvest batch lessons into bof3-re references",
+        agent: "bof3-lifter",
+        model: harvestModel,
+        output: false,
+        task: harvestBrief(board),
+      })
+      .then(
+        (result) => ({ state: "complete", output: String((result && result.output) || "").slice(0, 6000) }),
+        (error) => ({ state: "error", error: String(error).slice(0, 300) }),
+      );
+
 return {
   lanes: lanes.length,
   complete: board.filter((row) => row.state === "complete").length,
   laneErrors: board.filter((row) => row.state === "lane-error").length,
+  models: modelLadder,
   board,
+  harvest,
   reports,
 };

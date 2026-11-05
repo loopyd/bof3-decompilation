@@ -222,8 +222,8 @@ segments:
     - c
     - setScenarioFlagBit0EScenarioScena0200_801FD2B8
   - - 26336
-    - asm
-    - func_801FD2E0
+    - c
+    - setProgress1ClearSharedBytes6566AndRequestPrimaryState7ScenarioScena0200_801FD2E0
   - - 26416
     - c
     - clearSharedBytes6566AndRequestPrimaryState0BScenarioScena0200_801FD330
