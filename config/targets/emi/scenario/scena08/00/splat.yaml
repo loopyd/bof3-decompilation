@@ -123,8 +123,8 @@ segments:
     - asm
     - func_801F7C08
   - - 4248
-    - asm
-    - func_801F7C98
+    - c
+    - tickCountdownByte9SubtractWorkWord38AndAdvanceWorkByte2ScenarioScena0800_801F7C98
   - - 4344
     - c
     - tickCountdownByte9AndAdvanceWorkByte2ScenarioScena0800_801F7CF8

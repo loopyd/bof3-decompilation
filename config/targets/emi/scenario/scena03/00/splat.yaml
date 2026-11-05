@@ -103,8 +103,10 @@ segments:
     - asm
     - func_801F8200
   - - 5860
-    - asm
-    - func_801F82E4
+    - c
+    - dispatchWorkByte1HandlerScenarioScena0300_801F82E4
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0300_801F82E4.c'
+    - '@behavior: Dispatches the overlay-local handler table at 0x801FCF94 using unsigned work-object byte 1 from scratchpad pointer cell 0x1F800044.'
   - - 5928
     - asm
     - func_801F8328

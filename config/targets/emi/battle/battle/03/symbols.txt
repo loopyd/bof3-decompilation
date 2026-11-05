@@ -257,6 +257,7 @@ func_801E020C = 0x801E020C;
 dispatchLocalSubstate3Table = 0x801E046C;
 startScratchWorkTransform = 0x801E04B0;
 countdownWorkByteAdvancePair = 0x801E0554;
+retreatWorkPairOrQueueSlot = 0x801E05EC;
 advanceByte3UnlessFlag2 = 0x801E06EC;
 dispatchSubstate3TableB1f4 = 0x801E0744;
 func_801E0B64 = 0x801E0B64;

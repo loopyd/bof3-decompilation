@@ -85,8 +85,9 @@ segments:
     - dispatchState02World03Area12114_801F34E0
     - '@source: src/bof3/world/area12114DispatchTables.c'
   - - 2340
-    - asm
-    - func_801F3524
+    - c
+    - setWorkHalfword2eAndAdvanceState2UnlessGatedWorld03Area12114_801F3524
+    - '@source: src/bof3/world/setWorkHalfword2eAndAdvanceState2UnlessGatedWorld03Area12114_801F3524.c'
   - - 2420
     - asm
     - func_801F3574

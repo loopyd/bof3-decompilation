@@ -264,6 +264,7 @@ sources = [
     "src/bof3/battle/runSelectionPassThenApplyMask8WhenRollClear.c",
     "src/bof3/battle/func_800A4BB4.c",
     "src/bof3/battle/dispatchPanelStateTable6e50.c",
+    "src/bof3/battle/dispatchPanelStateTable6e40.c",
     "src/bof3/battle/applyInputMask40ArmRecordField4Neg20Field6Neg4.c",
 ]
 support_sources = [

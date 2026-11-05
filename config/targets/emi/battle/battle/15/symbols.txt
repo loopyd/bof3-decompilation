@@ -267,6 +267,7 @@ func_800B2218 = 0x800B2218;
 dispatchPanelStateTable6e34 = 0x800B2258;
 func_800B22AC = 0x800B22AC;
 panelMoveLeftClamp53 = 0x800B22EC;
+dispatchPanelStateTable6e40 = 0x800B232C;
 func_800B23B8 = 0x800B23B8;
 func_800B23F8 = 0x800B23F8;
 panelStepRightClamp62 = 0x800B2438;

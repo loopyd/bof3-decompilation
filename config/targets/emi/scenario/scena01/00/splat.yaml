@@ -42,8 +42,8 @@ segments:
     - asm
     - func_801F73FC
   - - 2176
-    - asm
-    - func_801F7480
+    - c
+    - incrementWorkByte9Reload32AndAdvanceStateScenarioScena0100_801F7480
   - - 2348
     - c
     - decrementWorkByte9Reload252AndAdvanceStateScenarioScena0100_801F752C

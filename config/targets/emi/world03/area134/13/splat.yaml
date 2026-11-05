@@ -132,8 +132,10 @@ segments:
     - asm
     - func_801F3744
   - - 3012
-    - asm
-    - func_801F37C4
+    - c
+    - advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F37C4
+    - '@source: src/bof3/world/advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F37C4.c'
+    - '@behavior: Publishes the work record at 0x80146920, adds 0x4000 four times to its word at offset 0x34, sets the saved record state byte to mode 5 and restores the scratchpad work pointer.'
   - - 3096
     - asm
     - func_801F3818

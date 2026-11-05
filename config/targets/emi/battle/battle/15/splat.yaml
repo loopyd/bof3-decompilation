@@ -1722,8 +1722,10 @@ segments:
     - '@source: src/bof3/battle/panelMoveLeftClamp53.c'
     - '@behavior: Moves the panel left by 32 pixels, clamping it to x=83 and clearing its state.'
   - - 113452
-    - asm
-    - func_800B232C
+    - c
+    - dispatchPanelStateTable6e40
+    - '@source: src/bof3/battle/dispatchPanelStateTable6e40.c'
+    - '@behavior: Dispatches panel state through table 0x800B6E40 and forwards mapped fields to func_800B3324.'
   - - 113592
     - c
     - func_800B23B8

@@ -205,8 +205,10 @@ segments:
     - c
     - publishModeStatusWorld02Area07714_801F59DC
   - - 11784
-    - asm
-    - func_801F5A08
+    - c
+    - resetStatusAndMapScenarioProgressWorld02Area07714_801F5A08
+    - '@source: src/bof3/world/resetStatusAndMapScenarioProgressWorld02Area07714_801F5A08.c'
+    - '@behavior: resets the shared status halfword to 0xFFFF and maps shared mode 0/1 to scenario progress 1/0, leaving progress unchanged for other modes.'
   - - 11864
     - c
     - setStateQueueCue202World02Area07714_801F5A58
