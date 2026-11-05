@@ -16,9 +16,12 @@ description: Find and apply useful BOF3 macro extractions, review existing abstr
    Edit authorized source, headers and manifests directly. The harness only
    lists facts and checks mechanical results.
 4. Review parameter mapping, every use site and all semantic hazards. Run
-   `bin/harness macros check TARGET SELECTOR...` and the required live byte
-   gates for every affected consumer and target. Obtain independent review.
-   Missing coverage blocks acceptance.
+   `bin/harness macros check TARGET SELECTOR...` for the mechanical facts:
+   definition diagnostics, parameter shape, consumer identity and which other
+   targets consume a definition this one owns. It deliberately compiles nothing,
+   so byte evidence comes from one `bin/harness lift gate` per affected target
+   covering every affected selector. Obtain independent review. Missing coverage
+   blocks acceptance.
 5. Report selected scope, edits or no-op rationale, actual checks, review and
    remaining obligations. Preserve frozen campaign membership and attempt limits.
    A bounded extraction does not close a campaign.

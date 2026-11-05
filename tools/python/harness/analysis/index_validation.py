@@ -112,7 +112,11 @@ def _validate_source_inputs(connection, target, expected) -> None:
 
 
 def validate_status_index(
-    connection: sqlite3.Connection, root: Path, *, repository=None
+    connection: sqlite3.Connection,
+    root: Path,
+    *,
+    repository=None,
+    targets: Sequence[str] | None = None,
 ) -> None:
     """Validate status against the same repository-derived facts as connect()."""
     from harness.macros.index import macro_input_digest
@@ -128,10 +132,11 @@ def validate_status_index(
         elif repository.files.root != root.resolve():
             raise ValueError("captured repository root mismatch")
         manifests = repository.manifests
-        targets = connection.execute(
+        scope = _scoped_targets(targets, manifests)
+        indexed = connection.execute(
             "SELECT id, binary, binary_sha256, snapshot, snapshot_sha256 FROM targets"
         ).fetchall()
-        if {row[0] for row in targets} != set(manifests):
+        if {row[0] for row in indexed} != set(manifests):
             raise ValueError("stale reverse index target coverage; run just index")
 
         digest_file = repository.files.digest
@@ -169,7 +174,11 @@ def validate_status_index(
                 macro_input_digest(macros),
             )
 
-        derived = [derive(row) for row in targets]
+        derived = [
+            derive(row)
+            for row in indexed
+            if scope is None or row[0] in scope
+        ]
         for (
             target,
             expected_types,
@@ -234,14 +243,32 @@ def validate_status_index(
         raise ValueError("invalid reverse index; run just index") from exc
 
 
+def _scoped_targets(
+    scope: Sequence[str] | None, loaded: Mapping[str, object]
+) -> set[str] | None:
+    """Resolve an optional target scope, rejecting names the index lacks."""
+    if scope is None:
+        return None
+    wanted = {str(value) for value in scope}
+    unknown = sorted(wanted - set(loaded))
+    if unknown:
+        raise ValueError(f"unknown target: {', '.join(unknown)}")
+    return wanted
+
+
 def validate_index(
     connection: sqlite3.Connection,
     root: Path,
     *,
     manifests: Mapping[str, TargetManifest] | None = None,
     manifest_loader=None,
+    targets: Sequence[str] | None = None,
 ) -> None:
-    """Validate index structure and every repository-owned input fingerprint."""
+    """Validate index structure and the input fingerprints in scope.
+
+    ``targets`` limits the per-target work to the named targets, which is what a
+    target-scoped command reads. Omitted, every indexed target is validated.
+    """
     from harness.macros.index import macro_input_digest
     from harness.types.inputs import type_input_digest
 
@@ -263,7 +290,10 @@ def validate_index(
             )
         if set(loaded) != set(repository.manifests):
             raise ValueError("stale reverse index target coverage; run just index")
+        scope = _scoped_targets(targets, loaded)
         for target, manifest in loaded.items():
+            if scope is not None and target not in scope:
+                continue
             if manifest != repository.manifests[target]:
                 raise ValueError(
                     f"stale reverse index manifest for {target}; run just index"
@@ -291,6 +321,8 @@ def validate_index(
             snapshot_digest,
         ) in indexed:
             seen.add(target)
+            if scope is not None and target not in scope:
+                continue
             binary = repository_input(root, Path(binary_name))
             repository_input(root, Path(snapshot_name))
             if repository.files.digest(root / binary_name) != binary_digest:
@@ -348,8 +380,15 @@ def validate_index(
                 raise ValueError(
                     f"stale reverse index macro inputs for {target}; run just index"
                 )
-        if seen != set(loaded):
-            raise ValueError("stale reverse index target coverage; run just index")
+        if scope is None:
+            if seen != set(loaded):
+                raise ValueError(
+                    "stale reverse index target coverage; run just index"
+                )
+        elif not scope <= seen:
+            raise ValueError(
+                "stale reverse index target coverage; run just index"
+            )
     except (sqlite3.DatabaseError, ValueError, KeyError) as exc:
         if isinstance(exc, SnapshotBinaryError):
             raise ValueError(

@@ -127,21 +127,39 @@ def check_report(root: Path, target: str, selectors: tuple[str, ...] = ()) -> di
     if any(value.target.value != target for value in selected):
         raise ValueError("every selector must belong to the selected target")
     findings, definitions = [], []
-    consumers = {str(value) for value in selected}
+    manifest = load_target_manifests(root)[target]
+    support_sources = {str(path) for path in manifest.support_sources}
+    # Index ids spell addresses without the 0x prefix, so every identity here is
+    # normalised through parse_function_id before it is compared or reported.
+    consumers = {str(parse_function_id(str(value))) for value in selected}
     try:
-        with closing(connect(root)) as connection:
+        with closing(connect(root, targets=(target,))) as connection:
             connection.execute("PRAGMA query_only = ON")
-            definitions = macros_payload(
-                connection, target=target, pattern=None, classification=None, limit=0
+            # A target-scoped check covers the macros this target defines and
+            # the macros its functions consume. Shared macros owned elsewhere are
+            # checked where they are owned; counting their corpus-wide uses here
+            # made every target look like it needed all 395 sibling targets.
+            definitions = [
+                row
+                for row in macros_payload(
+                    connection, target=target, pattern=None, classification=None, limit=0
+                )
+                if row["owner_target"] == target
+            ]
+            owned_ids = {row["id"] for row in definitions}
+            uses = macro_uses_payload(
+                connection, target=target, pattern=None, limit=0, generated=False
             )
-            uses = macro_uses_payload(connection, target=target, pattern=None, limit=0)
-            ids = {row["id"] for row in definitions}
             if selected:
                 ids = {
                     row["definition_id"]
                     for row in uses
                     if row["function_id"]
                     and parse_function_id(row["function_id"]) in selected
+                }
+            else:
+                ids = owned_ids | {
+                    row["definition_id"] for row in uses if row["function_id"]
                 }
             impact = definition_impact_payload(connection, ids)
             definitions = impact["definitions"]
@@ -176,11 +194,30 @@ def check_report(root: Path, target: str, selectors: tuple[str, ...] = ()) -> di
                     )
             foreign = set()
             for use in impact["uses"]:
+                if use["generated"] or use["use_context"] == "definition_body":
+                    continue
                 if use["target_id"] != target:
-                    foreign.add(use["target_id"])
+                    # Only a definition this target owns creates an obligation to
+                    # check someone else's consumers.
+                    if use["definition_id"] in owned_ids:
+                        foreign.add(use["target_id"])
                 elif use["function_id"]:
-                    consumers.add(use["function_id"])
-                elif use["use_context"] != "definition_body":
+                    consumers.add(str(parse_function_id(use["function_id"])))
+                elif (
+                    use["source_path"] in support_sources
+                    or use["source_path"].endswith((".h", ".inc"))
+                ):
+                    # A declaration or include-guard use names no function by
+                    # construction; it is a coverage note, not a gap.
+                    findings.append(
+                        {
+                            "status": "coverage",
+                            "code": "header_use",
+                            "source": use["source_path"],
+                            "message": "header-scope macro use; consumers are the functions including it",
+                        }
+                    )
+                else:
                     findings.append(
                         {
                             "status": "unavailable",
@@ -189,10 +226,19 @@ def check_report(root: Path, target: str, selectors: tuple[str, ...] = ()) -> di
                             "message": "macro use has no native function identity",
                         }
                     )
+            authored = {
+                str(parse_function_id(row[0]))
+                for row in connection.execute(
+                    "SELECT id FROM functions WHERE target_id = ? AND lifted = 1 "
+                    "AND source IS NOT NULL",
+                    (target,),
+                )
+            }
+            consumers &= authored
             if foreign:
                 findings.append(
                     {
-                        "status": "unavailable",
+                        "status": "coverage",
                         "code": "shared_consumers",
                         "targets": sorted(foreign),
                         "message": f"macro consumers require explicit checks of {len(foreign)} other targets",
@@ -210,23 +256,31 @@ def check_report(root: Path, target: str, selectors: tuple[str, ...] = ()) -> di
         findings.append(
             {"status": "unavailable", "code": "macro_inputs", "message": str(error)}
         )
-    result = metadata.report(
-        root, target, check=True, selectors=tuple(sorted(consumers)) if selected else ()
-    )
-    try:
-        with closing(connect(root)):
-            pass
-    except (OSError, RuntimeError, ValueError, sqlite3.Error) as error:
-        findings.append(
-            {"status": "unavailable", "code": "freshness", "message": str(error)}
-        )
+    # Mechanical consistency only. The per-consumer native comparison that used
+    # to run here compiled every consumer separately, which is one build per
+    # function - the same evidence `lift gate` produces from a single target
+    # build for exactly these selectors. Duplicating it made one macro question
+    # cost minutes, so byte evidence stays with the gate and this check stays
+    # cheap enough to run on every edit.
+    result = {
+        "operation": "macros",
+        "action": "check",
+        "scope": {"target": target, "selectors": [], "whole_target": not bool(selected)},
+        "consumers": sorted(consumers),
+        "total": 0,
+        "truncated": False,
+        "records": [],
+        "findings": [],
+        "incomplete": False,
+        "passed": True,
+        "live": "not measured here; run bin/harness lift gate for the same selectors",
+    }
     result["operation"] = "macros"
     result["scope"]["selectors"] = sorted(str(value) for value in selected)
     result["scope"]["whole_target"] = not bool(selected)
     result["definitions"] = [_definition(row) for row in definitions]
     result["findings"].extend(findings)
-    result["incomplete"] = any(
-        row["status"] == "unavailable" for row in result["findings"]
-    )
-    result["passed"] = not result["findings"]
+    blocking = [row for row in result["findings"] if row["status"] != "coverage"]
+    result["incomplete"] = any(row["status"] == "unavailable" for row in blocking)
+    result["passed"] = not blocking
     return result

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import sqlite3
 from pathlib import Path
-from typing import Iterable, Mapping
+from typing import Iterable, Mapping, Sequence
 
 from ..domain.manifests import load_target_manifests
 from ..domain.manifests import TargetManifest
@@ -29,6 +29,7 @@ def connect(
     manifests: Mapping[str, TargetManifest] | None = None,
     shared: bool = False,
     allow_stale: bool = False,
+    targets: Sequence[str] | None = None,
 ) -> sqlite3.Connection:
     path = index_path(root)
     if not path.is_file():
@@ -50,6 +51,7 @@ def connect(
             root,
             manifests=manifests,
             manifest_loader=load_target_manifests,
+            targets=targets,
         )
     except BaseException:
         connection.close()
@@ -57,7 +59,9 @@ def connect(
     return connection
 
 
-def connect_status(root: Path) -> sqlite3.Connection:
+def connect_status(
+    root: Path, *, targets: Sequence[str] | None = None
+) -> sqlite3.Connection:
     """Open an index with lightweight validation equivalent for status facts."""
     path = index_path(root)
     if not path.is_file():
@@ -68,7 +72,7 @@ def connect_status(root: Path) -> sqlite3.Connection:
     connection.execute("PRAGMA foreign_keys = ON")
     connection.row_factory = sqlite3.Row
     try:
-        validate_status_index(connection, root)
+        validate_status_index(connection, root, targets=targets)
     except BaseException:
         connection.close()
         raise
