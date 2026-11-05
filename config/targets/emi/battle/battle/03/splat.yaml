@@ -1018,8 +1018,10 @@ segments:
     - dispatchByte2TableB404
     - '@source: src/bof3/battle/battle03DispatchTables.c'
   - - 77380
-    - asm
-    - func_801E3A44
+    - c
+    - decrementWorkByte9SubmitEnemyCue
+    - '@source: src/bof3/battle/decrementWorkByte9SubmitEnemyCue.c'
+    - '@behavior: Calls the enemy readiness helper, decrements scratch work byte +9, and on reaching zero submits the enemy first effect or its doubled cue byte combined with 0x600, then advances scratch work byte +2.'
   - - 77572
     - c
     - func_801E3B04

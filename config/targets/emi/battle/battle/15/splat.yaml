@@ -657,8 +657,10 @@ segments:
     - c
     - func_8009FED0
   - - 38644
-    - asm
-    - func_8009FEF4
+    - c
+    - storeHalvedAction66Modifier
+    - '@source: src/bof3/battle/storeHalvedAction66Modifier.c'
+    - '@behavior: Sets battle state 4 and action 0x66, stores that action modifier in selection-record field +0x04, then halves the signed halfword toward zero.'
   - - 38780
     - c
     - func_8009FF7C

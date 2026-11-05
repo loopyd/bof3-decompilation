@@ -141,8 +141,8 @@ segments:
     - asm
     - func_801FC1A4
   - - 22108
-    - asm
-    - func_801FC25C
+    - c
+    - requestPrimaryState7OnIndexedBoundsScenarioScena0200_801FC25C
   - - 22280
     - asm
     - func_801FC308

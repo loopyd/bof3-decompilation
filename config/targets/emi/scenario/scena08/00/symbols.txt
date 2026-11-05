@@ -1,3 +1,4 @@
+scenarioScena0800Work = 0x1F800044;
 dispatchWorkByte1HandlerScenarioScena0800_801F6F48 = 0x801F6F48;
 func_801F6F8C = 0x801F6F8C;
 func_801F6FC4 = 0x801F6FC4;
@@ -26,7 +27,7 @@ func_801F7B2C = 0x801F7B2C;
 func_801F7BA8 = 0x801F7BA8;
 func_801F7C08 = 0x801F7C08;
 func_801F7C98 = 0x801F7C98;
-func_801F7CF8 = 0x801F7CF8;
+tickCountdownByte9AndAdvanceWorkByte2ScenarioScena0800_801F7CF8 = 0x801F7CF8;
 func_801F7D54 = 0x801F7D54;
 findFreeWorkRecordScenarioScena0800_801F7DAC = 0x801F7DAC;
 clearWorkTableAt800E4800ScenarioScena0800_801F7DE8 = 0x801F7DE8;

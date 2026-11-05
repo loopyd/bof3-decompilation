@@ -63,8 +63,9 @@ segments:
     - dispatchStateByte1Table5f88World02Area09813_801F37D0
     - '@source: src/bof3/world/area09813DispatchTables.c'
   - - 3092
-    - asm
-    - func_801F3814
+    - c
+    - seedWorkWords64AndAdvanceStateWorld02Area09813_801F3814
+    - '@source: src/bof3/world/seedWorkWords64AndAdvanceStateWorld02Area09813_801F3814.c'
   - - 3192
     - asm
     - func_801F3878

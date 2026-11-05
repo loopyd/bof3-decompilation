@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/seedWorkWords64AndAdvanceStateWorld02Area09813_801F3814.c",
     "src/bof3/world/clearWorkTableAt800E4800World02Area09813_801F40A4.c",
     "src/bof3/world/area09813DispatchTables.c",
     "src/bof3/world/clearWorkTableAt800E4800World02Area09813_801F5240.c",

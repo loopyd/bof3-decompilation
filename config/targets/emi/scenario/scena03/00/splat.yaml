@@ -82,8 +82,8 @@ segments:
     - asm
     - func_801F7D80
   - - 4592
-    - asm
-    - func_801F7DF0
+    - c
+    - dispatchWorkByte1HandlerScenarioScena0300_801F7DF0
   - - 4660
     - c
     - queueCue209AndAdvanceWorkByte1ScenarioScena0300_801F7E34

@@ -127,6 +127,7 @@ sources = [
     "src/bof3/battle/func_8009FE98.c",
     "src/bof3/battle/func_8009FEAC.c",
     "src/bof3/battle/func_8009FED0.c",
+    "src/bof3/battle/storeHalvedAction66Modifier.c",
     "src/bof3/battle/func_8009FF7C_battle15.c",
     "src/bof3/battle/func_8009FFB4_battle15.c",
     "src/bof3/battle/func_8009FFE4.c",

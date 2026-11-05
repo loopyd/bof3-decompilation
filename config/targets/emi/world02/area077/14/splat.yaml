@@ -102,8 +102,10 @@ segments:
     - asm
     - func_801F40D4
   - - 5556
-    - asm
-    - func_801F41B4
+    - c
+    - seedWorkTable64World02Area07714_801F41B4
+    - '@source: src/bof3/world/seedWorkTable64World02Area07714_801F41B4.c'
+    - '@behavior: clears the shared halfword at 0x800E5500 and byte at 0x800E5502, then seeds 64 records of stride 0x34 at 0x800E4800 with scratch work words +0x34/+0x38/+0x3C and clears each record halfword +0x30.'
   - - 5664
     - asm
     - func_801F4220

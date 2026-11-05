@@ -319,6 +319,7 @@ func_801E3638 = 0x801E3638;
 func_801E383C = 0x801E383C;
 func_801E3980 = 0x801E3980;
 dispatchByte2TableB404 = 0x801E3A00;
+decrementWorkByte9SubmitEnemyCue = 0x801E3A44;
 func_801E3B04 = 0x801E3B04;
 dispatchByte2TableB40c = 0x801E3B68;
 resetScratchByte4Set2 = 0x801E3BAC;

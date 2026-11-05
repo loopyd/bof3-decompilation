@@ -295,6 +295,7 @@ sources = [
     "src/bof3/battle/snapshotBattlersAndAdvanceState.c",
     "src/bof3/battle/startEmiStreamSlotWhenLoaderReady.c",
     "src/bof3/battle/submitEffectThenAdvanceByte2WhenLoaderReady.c",
+    "src/bof3/battle/decrementWorkByte9SubmitEnemyCue.c",
 ]
 support_sources = [
     "src/bof3/support/battle03_symbols.c",

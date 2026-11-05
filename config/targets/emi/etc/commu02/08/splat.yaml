@@ -132,8 +132,8 @@ segments:
     - asm
     - func_801D9210
   - - 34480
-    - asm
-    - func_801D92B0
+    - c
+    - countFlaggedFieldRecords_commu02_08
   - - 34548
     - asm
     - func_801D92F4

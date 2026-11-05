@@ -815,6 +815,7 @@ void resetEnemyScratchWhenBit4(void);
 void func_801E531C(void);
 void submitEffectUnlessNeg1(u16 arg0);
 void countdownWorkByte9SubmitCue(void);
+void decrementWorkByte9SubmitEnemyCue(void);
 void applyGravityOrReset(void);
 void func_801E54EC(void);
 void resetEnemyScratchState(void);
