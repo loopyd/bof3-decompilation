@@ -31,8 +31,9 @@
 // A lane whose refs are existing partials passes `kind: "partial"` and starts on the
 // strongest rung: the cheap rung already produced that residual, so repeating it would
 // spend a child to relearn the report. `models` on a lane overrides the ladder for that
-// lane only. Naming runs on the model that reached exact; review and repair run on the
-// lane's strongest rung.
+// lane only. Naming always runs on the lowest rung, because it applies an identity from
+// evidence that already exists rather than searching for one; review and repair run on
+// the lane's strongest rung.
 //
 // After every lane closes, one harvest child rewrites the bof3-re references from
 // this batch's exact results only ($skill-master authoring, $unslop prose, $caveman
@@ -638,7 +639,9 @@ const namingStage = (lane, liftText, liftModel) => {
     .run(nameKey, {
       label: `Name ${lane.key} (${lane.target}) after exact lift`,
       agent: "bof3-namer",
-      model: liftModel,
+      // Naming is cheap: the evidence already exists and it applies one transaction, so
+      // it runs on the lowest rung whichever rung produced the exact lift.
+      model: laneModel(lane, 0),
       ...(lane.cwd ? { cwd: lane.cwd } : {}),
       output: false,
       task: namingBrief(lane, liftText, liftModel),
