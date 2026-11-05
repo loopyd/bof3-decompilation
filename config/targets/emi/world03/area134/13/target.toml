@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/advanceWorkWord38AndSetScratchStateToMode18World03Area13413_801F331C.c",
     "src/bof3/world/advanceWorkWordAndSetScratchStateToMode5World03Area13413_801F2E68.c",
     "src/bof3/world/area13413DispatchTables.c",
     "src/bof3/world/setScratchStateToMode1WhenPadMatchesWorld03Area13413_801F3E50.c",

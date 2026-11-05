@@ -1111,8 +1111,10 @@ segments:
     - asm
     - func_801E4B2C
   - - 82044
-    - asm
-    - func_801E4C7C
+    - c
+    - countdownWorkByte9SubmitCue
+    - '@source: src/bof3/battle/countdownWorkByte9SubmitCue.c'
+    - '@behavior: Counts down work byte +9; at zero submits an enemy-selected cue and advances byte +2, then checks enemy readiness.'
   - - 82228
     - c
     - advanceBytes12WhenReady3

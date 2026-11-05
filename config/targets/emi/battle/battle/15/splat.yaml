@@ -763,8 +763,10 @@ segments:
     - asm
     - func_800A1A30
   - - 45776
-    - asm
-    - func_800A1AD0
+    - c
+    - setRecordByte8To2StoreIndexedModifierField6
+    - '@source: src/bof3/battle/setRecordByte8To2StoreIndexedModifierField6.c'
+    - '@behavior: Sets selection record byte +0x08 to 2, applies the indexed battle modifier with element flag 1, and stores its result in record field +0x06.'
   - - 45880
     - asm
     - func_800A1B38

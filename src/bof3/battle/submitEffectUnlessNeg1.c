@@ -6,7 +6,7 @@
  * @match 100.00
  * @residual none
  */
-void submitEffectUnlessNeg1(s16 arg0) {
+void submitEffectUnlessNeg1(u16 arg0) {
   u16 effect_id;
 
   effect_id = (u16)arg0;

@@ -148,8 +148,9 @@ segments:
     - asm
     - func_801F0DF4
   - - 9460
-    - asm
-    - func_801F10F4
+    - c
+    - dispatchRecordByte1HandlerBmagicMagic13103_801F10F4
+    - '@source: src/bof3/bmagic/dispatchRecordByte1HandlerBmagicMagic13103_801F10F4.c'
   - - 9528
     - asm
     - func_801F1138

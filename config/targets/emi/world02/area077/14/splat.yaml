@@ -146,8 +146,10 @@ segments:
     - asm
     - func_801F515C
   - - 9884
-    - asm
-    - func_801F529C
+    - c
+    - copyPaletteBlock32World02Area07714_801F529C
+    - '@source: src/bof3/world/copyPaletteBlock32World02Area07714_801F529C.c'
+    - '@behavior: copies eight words forward within palette staging RAM at 0x80037800 using source and destination row/block coordinates with 0x200/0x20 byte strides, then sets the shared palette-stage byte at 0x80145988 to 1.'
   - - 9976
     - c
     - dispatchStateByte2Table62a8World02Area07714_801F52F8

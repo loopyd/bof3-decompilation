@@ -84,8 +84,10 @@ segments:
     - func_801D1B10
     - '@source: src/bof3/world/area03004DispatchSlotOne.c'
   - - 3924
-    - asm
-    - func_801D1B54
+    - c
+    - initializeWorkWordsAndAdvanceStateWorld00Area03004_801D1B54
+    - '@source: src/bof3/world/initializeWorkWordsAndAdvanceStateWorld00Area03004_801D1B54.c'
+    - '@behavior: Clears work words 0x0C, 0x10 and 0x1C, copies the unsigned selected-record byte 0 to work word 0x18 and advances state byte 1.'
   - - 3976
     - asm
     - func_801D1B88

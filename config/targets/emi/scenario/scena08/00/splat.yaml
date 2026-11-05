@@ -265,8 +265,10 @@ segments:
     - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0800_801F9DBC.c'
     - '@behavior: Overlay work-byte-1 dispatcher: takes the scratchpad work object reached through pointer slot 0x1F800044, reads its unsigned byte at offset 1, scales it by four and calls that entry of the overlay-local handler-pointer table at 0x801FE938 (entry 41 of the 51-entry run at 0x801FE894, holding 0x801F9E00, 0x801F9E50, 0x801F9EC4, 0x801F9F2C, 0x801F9F4C, 0x801F9F6C, 0x801FA19C, 0x801FE018, 0x801FE12C and 0x801FE170) with no arguments; reads no other state, writes none, and the 0x18-byte frame only keeps $ra across the indirect call. The 0x44 payload bytes are identical to this overlay''s work-byte-1 dispatchers at 0x801F6F48, 0x801F707C, 0x801F7928 and 0x801F95D4 apart from the loaded table word.'
   - - 12800
-    - asm
-    - func_801F9E00
+    - c
+    - seedWorkWords34AndCopyTo0CThenAdvanceStateScenarioScena0800_801F9E00
+    - '@source: src/bof3/scenario/seedWorkWords34AndCopyTo0CThenAdvanceStateScenarioScena0800_801F9E00.c'
+    - '@behavior: Seeds work words 0x34/0x38/0x3C with 0x198000/0x198000/0x4000000, copies them to 0x0C/0x10/0x14 with 0x40000 added to the first word, and increments work byte 1.'
   - - 12880
     - asm
     - func_801F9E50
