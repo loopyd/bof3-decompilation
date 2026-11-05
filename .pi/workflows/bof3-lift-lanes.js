@@ -98,15 +98,7 @@ const lanes = rawLanes.map((lane, index) => ({
   // Closed shapes from earlier runs, supplied by the parent. The workflow has no
   // filesystem, so the parent assembles this from prior reports; passing it in is what
   // makes a later run continue instead of rediscovering experiments.
-  ledger: Array.isArray(lane.ledger)
-    ? lane.ledger
-        .map((row) => ({
-          shape: String((row && row.shape) || "").trim(),
-          measured: String((row && row.measured) || "").trim(),
-          disposition: String((row && row.disposition) || "").trim(),
-        }))
-        .filter((row) => row.shape)
-    : [],
+  ledger: Array.isArray(lane.ledger) ? dedupeLedger(lane.ledger) : [],
   // Per-lane ladder override; empty means the batch ladder.
   models: Array.isArray(lane.models)
     ? lane.models.map((value) => String(value || "").trim()).filter(Boolean)
@@ -182,6 +174,54 @@ const liftRetryBrief = (lane, index, model, priorText) => [
   lane.note || "",
 ].filter((line, position, all) => !(line === "" && all[position - 1] === "")).join("\n");
 
+// Two shapes that measured the same thing are one closed class, not two experiments.
+// Carrying four rows of "42/46; 184->176" spends the closed-set budget on nothing, so
+// collapse rows whose measurement is identical and keep the first spelling of each.
+const ledgerKey = (row) => {
+  // Normalise the measurement to the numbers that identify the emitted class, so
+  // "42/46 instructions; 184->176", "42/46; 184->176" and "42/46; 184->176 bytes"
+  // are one key. Unit words are noise; hex offsets are not, so they survive.
+  const measured = String((row && row.measured) || "")
+    .toLowerCase()
+    .replace(/\b(?:instructions?|insns?|bytes?|b)\b/g, " ")
+    .replace(/\s*;\s*/g, ";")
+    .replace(/\s*(->|≥|<=|>=)\s*/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (measured) return `m:${measured}`;
+  return `s:${String((row && row.shape) || "").toLowerCase().replace(/\s+/g, " ").trim()
+    .replace(/[^a-z0-9 ]/g, "")
+    .split(" ").slice(0, 6).join(" ")}`;
+};
+
+const dedupeLedger = (rows) => {
+  const seen = new Map();
+  for (const row of rows) {
+    const shape = String((row && row.shape) || "").trim();
+    if (!shape) continue;
+    const entry = {
+      shape,
+      measured: String((row && row.measured) || "").trim(),
+      disposition: String((row && row.disposition) || "").trim(),
+      collapsed: 1,
+    };
+    const key = ledgerKey(entry);
+    const prior = seen.get(key);
+    if (!prior) {
+      seen.set(key, entry);
+      continue;
+    }
+    prior.collapsed += 1;
+    // Prefer the disposition that closes the class most strongly.
+    const rank = { retained: 3, superseded: 2, reverted: 1, "": 0 };
+    if ((rank[entry.disposition] || 0) > (rank[prior.disposition] || 0)) {
+      prior.shape = entry.shape;
+      prior.disposition = entry.disposition;
+    }
+  }
+  return [...seen.values()];
+};
+
 // Render the carried ledger as closed history the lane must not repeat.
 const carriedLedger = (lane) => {
   if (!lane.ledger.length) {
@@ -194,10 +234,12 @@ const carriedLedger = (lane) => {
   const rows = lane.ledger.slice(0, 40).map((row, index) => {
     const verdict = row.disposition ? ` [${row.disposition}]` : "";
     const measured = row.measured ? ` - ${row.measured}` : "";
-    return `  ${index + 1}. ${row.shape}${measured}${verdict}`;
+    const extra = row.collapsed > 1 ? ` (+${row.collapsed - 1} same measurement)` : "";
+    return `  ${index + 1}. ${row.shape}${measured}${verdict}${extra}`;
   });
+  const attempts = lane.ledger.reduce((sum, row) => sum + (row.collapsed || 1), 0);
   return [
-    `Carried ledger: ${lane.ledger.length} closed shape(s) from earlier runs.`,
+    `Carried ledger: ${lane.ledger.length} closed class(es) from ${attempts} earlier attempt(s).`,
     ...rows,
     `Every shape above is closed: do not author it again, in any spelling, and do not`,
     `re-measure it to confirm. Pick up at the residual those runs left open, say which`,

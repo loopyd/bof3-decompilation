@@ -19,7 +19,11 @@ subagent({
 ```
 
 Pass `ledger` on a lane to hand it the closed shapes from earlier runs: an array of
-`{shape, measured}` entries the parent assembles from the target's earlier reports. The
+`{shape, measured}` entries the parent assembles from the target's earlier reports.
+Rows whose measurement is the same emitted class - same instruction and byte counts, same
+first mismatch - are one closed class, not two experiments; the workflow collapses them
+and reports the attempt count behind each class. Four rows of `42/46; 184->176` describe
+one dead end, so assemble distinct measurements instead. The
 brief then lists them as closed history the lane must not re-author or re-measure, and
 requires it to say which shape it is deliberately not repeating. Assemble it before
 launch; the workflow cannot read files.
