@@ -138,8 +138,8 @@ segments:
     - asm
     - func_801FB0B8
   - - 17764
-    - asm
-    - func_801FB164
+    - c
+    - copyPaletteBlock32AndAdvanceSerialScenarioScena1300_801FB164
   - - 17844
     - asm
     - func_801FB1B4

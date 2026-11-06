@@ -84,8 +84,11 @@ segments:
     - c
     - dispatchStepHandler
   - - 17520
+    - c
+    - dispatchStepByte1TableD74
+  - - 17580
     - asm
-    - func_801D5070
+    - func_801D50AC
   - - 20176
     - asm
     - func_801D5AD0

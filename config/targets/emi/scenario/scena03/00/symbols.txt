@@ -23,7 +23,7 @@ subtract8FromWorkHalfword58AndResetWorkStateWhenNegativeScenarioScena0300_801F7D
 dispatchWorkByte1HandlerScenarioScena0300_801F7DF0 = 0x801F7DF0;
 queueCue209AndAdvanceWorkByte1ScenarioScena0300_801F7E34 = 0x801F7E34;
 func_801F7E6C = 0x801F7E6C;
-func_801F7F84 = 0x801F7F84;
+advanceProgressAndResetWorkStateWhenAllRecordByte6NonZeroScenarioScena0300_801F7F84 = 0x801F7F84;
 func_801F7FFC = 0x801F7FFC;
 func_801F8170 = 0x801F8170;
 func_801F8200 = 0x801F8200;

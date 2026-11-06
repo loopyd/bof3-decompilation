@@ -122,6 +122,7 @@ func_801D472C = 0x801D472C;
 func_801D4970 = 0x801D4970;
 func_801D4CF0 = 0x801D4CF0;
 func_801D4DB4 = 0x801D4DB4;
+drawShopPanelRowThenAcceptOrCancel = 0x801D50C0;
 func_801D5390 = 0x801D5390;
 drawShopValuePanelThenAcceptOrCancelSelection = 0x801D5AD0;
 func_801D5D98 = 0x801D5D98;

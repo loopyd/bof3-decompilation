@@ -112,8 +112,12 @@ segments:
     - func_801D25F0
     - '@source: src/bof3/world/func_801D25F0.c'
   - - 6728
-    - asm
+    - c
     - func_801D2648
+    - '@source: src/bof3/world/func_801D2648.c'
+  - - 7388
+    - asm
+    - func_801D28DC
   - - 7544
     - c
     - func_801D2978

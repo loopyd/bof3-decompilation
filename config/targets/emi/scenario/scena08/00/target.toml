@@ -45,6 +45,7 @@ support_sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0800_801F707C.c",
     "src/bof3/scenario/resetWorkFlagsOnZeroRefreshScenarioScena0800_801F7A9C.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena0800_801F7928.c",
+    "src/bof3/scenario/addExp10000ToCharacter4RecalcLevelSeedRecordBytesAndRebuildScenarioScena0800_801FDF84.c",
     "src/bof3/support/scena08_00_psyq.c",
     "src/bof3/scenario/tickCountdownAndAdvanceStateScenarioScena0800_801F8D18.c",
     "src/bof3/scenario/armEffectGroupThenResetEffectSlotsScenarioScena0800_801FE840.c",

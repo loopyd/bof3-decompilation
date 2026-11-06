@@ -285,6 +285,7 @@ func_801E0B64 = 0x801E0B64;
 func_801E0E0C = 0x801E0E0C;
 countdownWorkByte9QueueSlotAndEmitEvent = 0x801E0F0C;
 func_801E1050 = 0x801E1050;
+countdownWorkByte9ClearIdentityAndQueueEvent = 0x801E10C8;
 dispatchLocalState4Table = 0x801E1298;
 func_801E12DC = 0x801E12DC;
 resetWorkWhenFlag2000Clear = 0x801E13B8;

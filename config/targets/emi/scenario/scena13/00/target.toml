@@ -7,7 +7,9 @@ binary = "out/binaries/emi/scenario/scena13/00.bin"
 splat = "config/targets/emi/scenario/scena13/00/splat.yaml"
 load_address = 0x801F6C00
 
-sources = []
+sources = [
+    "src/bof3/scenario/copyPaletteBlock32AndAdvanceSerialScenarioScena1300_801FB164.c",
+]
 support_sources = [
     "src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectScenarioScena1300_801FBC88.c",
     "src/bof3/scenario/clearWorkTintArmCountdownAndAdvanceWorkByte1ScenarioScena1300_801F6EE8.c",

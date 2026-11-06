@@ -1,3 +1,4 @@
+paletteStageSerial = 0x80145988;
 dispatchWorkByte1HandlerScenarioScena1300_801F6EA4 = 0x801F6EA4;
 clearWorkTintArmCountdownAndAdvanceWorkByte1ScenarioScena1300_801F6EE8 = 0x801F6EE8;
 func_801F6F24 = 0x801F6F24;
@@ -34,7 +35,7 @@ func_801F9F18 = 0x801F9F18;
 func_801FA844 = 0x801FA844;
 func_801FAFA0 = 0x801FAFA0;
 func_801FB0B8 = 0x801FB0B8;
-func_801FB164 = 0x801FB164;
+copyPaletteBlock32AndAdvanceSerialScenarioScena1300_801FB164 = 0x801FB164;
 func_801FB1B4 = 0x801FB1B4;
 dispatchRecordCallbackScenarioScena1300_801FB350 = 0x801FB350;
 incrementWorkHalfword7EScenarioScena1300_801FB390 = 0x801FB390;

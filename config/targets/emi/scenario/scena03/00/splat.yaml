@@ -105,8 +105,10 @@ segments:
     - asm
     - func_801F7E6C
   - - 4996
-    - asm
-    - func_801F7F84
+    - c
+    - advanceProgressAndResetWorkStateWhenAllRecordByte6NonZeroScenarioScena0300_801F7F84
+    - '@source: src/bof3/scenario/advanceProgressAndResetWorkStateWhenAllRecordByte6NonZeroScenarioScena0300_801F7F84.c'
+    - '@behavior: Waits until none of the five record-pointer slots at work object + 0x0C reads zero at record byte 0x06, then increments the shared scenario progress byte g_ScenarioProgress and resets the work area through func_80196070.'
   - - 5116
     - asm
     - func_801F7FFC

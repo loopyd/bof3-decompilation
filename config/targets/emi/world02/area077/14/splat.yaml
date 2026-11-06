@@ -306,8 +306,10 @@ segments:
     - c
     - setWorld02Area07714_801F61DC
   - - 13808
-    - asm
-    - func_801F61F0
+    - c
+    - markSelectedFrontEndRecordActiveWithValueWorld02Area07714_801F61F0
+    - '@source: src/bof3/world/markSelectedFrontEndRecordActiveWithValueWorld02Area07714_801F61F0.c'
+    - '@behavior: reads the shared object index from func_8019601C, masks it to a byte and, unless that byte is 0xFF, marks the selected 0x74-byte front-end record at 0x80143FC8 active (byte +0 = 1) and stores the caller-supplied value in record byte +5.'
   - - 13904
     - textbin
     - D_801F6250

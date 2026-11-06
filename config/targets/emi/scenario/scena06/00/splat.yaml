@@ -99,8 +99,8 @@ segments:
     - asm
     - func_801FC718
   - - 24448
-    - asm
-    - func_801FCB80
+    - c
+    - publishWorkBaseAndSeedFrontEndRecordScenarioScena0600_801FCB80
   - - 24888
     - asm
     - func_801FCD38

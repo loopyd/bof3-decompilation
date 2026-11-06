@@ -409,8 +409,10 @@ segments:
     - asm
     - func_801FD704
   - - 29572
-    - asm
-    - func_801FDF84
+    - c
+    - addExp10000ToCharacter4RecalcLevelSeedRecordBytesAndRebuildScenarioScena0800_801FDF84
+    - '@source: src/bof3/scenario/addExp10000ToCharacter4RecalcLevelSeedRecordBytesAndRebuildScenarioScena0800_801FDF84.c'
+    - '@behavior: Overlay per-record callback that awards 10000 experience to the +0x08 experience word of character record 4 of the shared 0xA4-byte-stride record table at 0x80144968, addressed through 0x80144C00 so one materialised base serves the load, the store and the record base eight bytes earlier that the field-record rebuild helper func_80164A44 receives; it then runs the level recalculation func_801ADDD4 with record index 4, writes 7, 0x38, 0x21 and 0x0E into the record bytes at 0x80144C06 through 0x80144C09, rebuilds the record through func_80164A44 and finishes with the per-character helpers func_80165280 and func_8016534C, each called with the index 4 and two zero arguments. Takes no arguments and returns nothing; the 0x18-byte frame keeps $ra plus $s0 across the first call.'
   - - 29720
     - c
     - dispatchRecordCallbackScenarioScena0800_801FE018

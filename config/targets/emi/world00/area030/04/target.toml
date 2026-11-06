@@ -186,6 +186,7 @@ sources = [
     "src/bof3/world/restartPanelCountdownOnPadHoldAndPlayCueWorld00Area03004_801DB8F0.c",
     "src/bof3/world/choosePanelOpenStateOnPadPressWorld00Area03004_801DBBAC.c",
     "src/bof3/world/advancePanelMessageScrollAndArmEntry.c",
+    "src/bof3/world/func_801D2648.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",

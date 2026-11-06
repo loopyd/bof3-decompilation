@@ -62,9 +62,13 @@ global needs narrow evidenced local extern, not anonymous macro hiding ownership
 Interpret every delay slot on both paths before changing equal-valued arms; slot
 constant may be comparison operand, not selected result. Bounded matrix: ordered
 then nested/inverted equality; separate ungrouped cases; duplicated arm stores/
-returns; shared locals or labels. Advance only when measured evidence rejects
-eligible alternatives. Locals may change register web. GCC can normalize
-chain inversion regardless of spelling; another spelling alone is not new evidence.
+returns; shared locals or labels. When every arm re-tests one byte and stores,
+keep those cases ungrouped: arm stores stop the byte staying live, so separate
+`if` statements re-materialise the base and reload it per arm, while a `switch`
+or `if`/`else if` chain evaluates it once and drops that reload. Advance only
+when measured evidence rejects eligible alternatives. Locals may change register
+web. GCC can normalize chain inversion regardless of spelling; another spelling
+alone is not new evidence.
 
 Branch calls `if (cond) f(x+A); else f(x+B);` can merge into one `jal` where ternary
 argument does not. The same holds for identical argument lists: writing the call in

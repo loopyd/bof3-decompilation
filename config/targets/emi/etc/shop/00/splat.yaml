@@ -165,8 +165,10 @@ segments:
     - asm
     - func_801D4E74
   - - 17600
-    - asm
-    - func_801D50C0
+    - c
+    - drawShopPanelRowThenAcceptOrCancel
+    - '@source: src/bof3/ui/drawShopPanelRowThenAcceptOrCancel.c'
+    - '@behavior: shop sub-step handler at table entry 9 of the sub-step handler table D_801E530C: emits the shop panel strip through func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952, submits the texture row 0x1C at row 0x16 through func_8014F800 with func_801502D0(0x9F) as the fifth argument, draws the panel row through func_801D67B0(0x20, 0x30, 0) and, when the two-option prompt helper func_801DA678 reports a choice, either plays the accept cue 0x104 and arms D_801E60EC with 0x14, the sub-step byte with 0x13, phaseTimer with 2 and D_801E6094 with the sub-step value it read plus one while D_8014865B is nonzero, or plays the cancel cue 0x106 and steps the sub-step byte back by one while that byte is zero.'
   - - 17848
     - asm
     - func_801D51B8

@@ -118,6 +118,7 @@ sources = [
     "src/bof3/ui/func_801D4970.c",
     "src/bof3/ui/func_801DB938_shop00.c",
     "src/bof3/ui/func_801D5D98.c",
+    "src/bof3/ui/drawShopPanelRowThenAcceptOrCancel.c",
     "src/bof3/ui/func_801E4E9C.c",
     "src/bof3/ui/setFieldRecordSlotValue.c",
     "src/bof3/ui/redrawPanelStripThenConditionallyAdvanceUiSubstep.c",
