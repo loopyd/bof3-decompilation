@@ -7,6 +7,7 @@ const byId = (id) => document.getElementById(id);
 const percent = (count, total) => total ? `${(100 * count / total).toFixed(1)}%` : "—";
 let targets = [];
 let selectedKind = "exe";
+const collapsedFamilies = new Set();
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -78,6 +79,29 @@ function emiCard(target) {
   return article;
 }
 
+function emiFamily(name, members) {
+  const section = element("section", "family-group");
+  const heading = element("h2", "family-heading");
+  const button = element("button");
+  button.type = "button";
+  const grid = element("div", "card-grid");
+  grid.id = `emi-family-${encodeURIComponent(name)}`;
+  grid.hidden = collapsedFamilies.has(name);
+  button.setAttribute("aria-controls", grid.id);
+  button.setAttribute("aria-expanded", String(!grid.hidden));
+  button.append(element("span", "family-name", name.toUpperCase()), element("span", "family-count", `${members.length} targets`));
+  button.addEventListener("click", () => {
+    grid.hidden = !grid.hidden;
+    button.setAttribute("aria-expanded", String(!grid.hidden));
+    if (grid.hidden) collapsedFamilies.add(name);
+    else collapsedFamilies.delete(name);
+  });
+  heading.append(button);
+  grid.append(...members.map(emiCard));
+  section.append(heading, grid);
+  return section;
+}
+
 function renderTargets() {
   const query = byId("search").value.trim().toLowerCase();
   const family = byId("family").value;
@@ -90,11 +114,7 @@ function renderTargets() {
   if (selectedKind === "emi") {
     for (const name of [...new Set(selected.map((target) => target.family))]) {
       const members = selected.filter((target) => target.family === name);
-      const heading = element("div", "family-heading");
-      heading.append(element("h2", "", name.toUpperCase()), element("span", "", `${members.length} targets`));
-      const grid = element("div", "card-grid");
-      grid.append(...members.map(emiCard));
-      panel.append(heading, grid);
+      panel.append(emiFamily(name, members));
     }
   }
   byId("empty").hidden = selected.length > 0;

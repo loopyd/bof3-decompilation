@@ -56,5 +56,9 @@ branch. The original logo comes from
 III and its logo belong to Capcom. The page uses local system fonts and has no
 runtime font or script dependencies.
 
+Tap an EMI family heading, or focus it and press Enter or Space, to collapse or
+expand its cards. Families start expanded and keep their selected state when you
+change filters or tabs until the page reloads.
+
 To disable the hook, remove this clone's local `core.hooksPath` setting if its value
 is `.githooks`. This leaves the existing public page and branch history intact.
