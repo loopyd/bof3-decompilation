@@ -111,8 +111,9 @@ segments:
     - asm
     - func_801F42C4
   - - 6072
-    - asm
-    - func_801F43B8
+    - c
+    - advanceHalfword0aBy3InFrontByte1OrUngated2World04Area16713_801F43B8
+    - '@source: src/bof3/world/advanceHalfword0aBy3InFrontByte1OrUngated2World04Area16713_801F43B8.c'
   - - 6196
     - c
     - copyWords7a8cToWork34383cWorld04Area16713_801F4434

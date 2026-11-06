@@ -112,6 +112,6 @@ segments:
     - textbin
     - func_801F0878
   - - 7320
-    - asm
-    - func_801F0898
+    - textbin
+    - D_801F0898
 - - 7388

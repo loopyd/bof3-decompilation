@@ -66,8 +66,8 @@ segments:
     - c
     - getAndClearPlcharPlp24700_801CEE08
   - - 2584
-    - asm
-    - func_801CEE18
+    - c
+    - dispatchWorkByte2Tablefb1cPlcharPlp24700_801CEE18
   - - 2652
     - asm
     - func_801CEE5C
