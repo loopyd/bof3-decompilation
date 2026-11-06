@@ -15,8 +15,8 @@
  * overlay: the three in-overlay dispatchers load from 0x801F6D6C (shared progress
  * byte D_80146872), 0x801F6D78 (byte at 0x80146874) and 0x801F6D7C (record byte
  * at offset 0x7A), so this slot is only observed through the pointer word.
- * @status unverified
- * @match 0.00
+ * @status exact
+ * @match 100.00
  * @residual none
  */
 s32 noopCallbackReturningZero_scena18_801F6CF4(void) {

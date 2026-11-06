@@ -4,9 +4,9 @@ extern u8* volatile g_battle_work; /* @source 0x1F800044 @kind data */
 
 /* @source 0x801F0A28
  * @behavior clears scratchpad work area bytes at offsets 0x00-0x04.
- * @status unverified
- * @match 0.00
- * @residual not measured yet
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 void clearWorkBytesBmagicMagic00303_801F0A28(void) {
   g_battle_work[0] = 0;

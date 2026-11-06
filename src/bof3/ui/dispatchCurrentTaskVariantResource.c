@@ -4,6 +4,8 @@
  * its variant-state byte to its resource-id byte, then dispatches that ID.
  * @source 0x801F1638
  * @status exact
+ * @match 100.00
+ * @residual none
  */
 void dispatchCurrentTaskVariantResource(void) {
   Commu00TaskSlot *task;

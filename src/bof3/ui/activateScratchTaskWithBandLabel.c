@@ -3,6 +3,8 @@
 /* @source 0x801F0F08
  * @behavior activates a scratch task and selects its label from the battle-age band table
  * @status exact
+ * @match 100.00
+ * @residual none
  */
 void activateScratchTaskWithBandLabel(u8 source_index, u8 task_index, u8 record_kind_index) {
   volatile s8 *scratch;
