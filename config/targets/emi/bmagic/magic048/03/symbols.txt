@@ -1,6 +1,8 @@
+g_battle_work = 0x1F800044;
+func_8015D71C = 0x8015D71C;
 dispatchWorkByte1HandlerBmagicMagic04803_801EEC10 = 0x801EEC10;
 func_801EEC70 = 0x801EEC70;
-func_801EEDB0 = 0x801EEDB0;
+decrementWorkByte9ThenInvokeHelperAt100AndAdvanceWorkByte1WhenZeroBmagicMagic04803_801EEDB0 = 0x801EEDB0;
 func_801EEE10 = 0x801EEE10;
 dispatchStateByte1Tablef818BmagicMagic04803_801EEE70 = 0x801EEE70;
 func_801EEEB4 = 0x801EEEB4;

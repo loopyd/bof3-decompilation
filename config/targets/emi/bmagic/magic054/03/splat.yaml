@@ -54,8 +54,10 @@ segments:
     - asm
     - func_801EF19C
   - - 1592
-    - asm
-    - func_801EF238
+    - c
+    - seedWorkMotionFromBattlerRecordAndAdvanceWorkByte2BmagicMagic05403_801EF238
+    - '@source: src/bof3/bmagic/seedWorkMotionFromBattlerRecordAndAdvanceWorkByte2BmagicMagic05403_801EF238.c'
+    - '@behavior: Seeds the scratchpad work object published at the pointer cell 0x1F800044 for a battler motion. When bit 0x40 of the battle target byte 0x80146384 is set it copies the coordinate triplet (words 0, 4 and 8) of the 0x118-byte-stride enemy action record array at 0x801EB664 selected by work byte 0xB into work words 0x34, 0x38 and 0x3C; otherwise it copies the same three words of the 0x140-byte-stride party action record array at 0x80145EC4. It then sets the motion pair at 0x40 and 0x44 to 0x10000, byte 0x48 to 2, the motion velocity pair at 0xC and 0x10 to -0xC60 and 0x1080, the acceleration pair at 0x18 and 0x1C to 0x60 and -0x80, and advances work byte 2. The original re-reads work byte 0xB before each record load and re-reads the pointer cell before each of the three store groups, because a store through the loaded pointer may alias the cell. Leaf with no frame; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 1956
     - asm
     - func_801EF3A4

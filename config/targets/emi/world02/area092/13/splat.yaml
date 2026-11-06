@@ -63,8 +63,10 @@ segments:
     - asm
     - func_801F38B4
   - - 3680
-    - asm
-    - func_801F3A60
+    - c
+    - queueFrontendCue3DWorld02Area09213_801F3A60
+    - '@source: src/bof3/world/queueFrontendCue3DWorld02Area09213_801F3A60.c'
+    - '@behavior: Queues the frontend cue 0x3D with level 0x64 and shape 8 through the shared front cue helper func_80161C20 and returns; the overlay''s code-pointer run at 0x801F413C reaches it as its index 11 step handler, and it takes no arguments and reads no state.'
   - - 3720
     - textbin
     - D_801F3A88

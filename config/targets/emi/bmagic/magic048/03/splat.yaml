@@ -38,8 +38,10 @@ segments:
     - asm
     - func_801EEC70
   - - 432
-    - asm
-    - func_801EEDB0
+    - c
+    - decrementWorkByte9ThenInvokeHelperAt100AndAdvanceWorkByte1WhenZeroBmagicMagic04803_801EEDB0
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenInvokeHelperAt100AndAdvanceWorkByte1WhenZeroBmagicMagic04803_801EEDB0.c'
+    - '@behavior: Step 1 of this overlay''s work sequence: the handler the dispatcher at 0x801EEC10 selects through work byte 1, which the three-entry code pointer table at 0x801EEC04 binds at entry 1. It reads the scratchpad work-object pointer cell at 0x1F800044 once and decrements the work object''s byte at offset 0x9 with a byte-width read-modify-write, then tests the truncated byte it just stored. Only when that countdown reached zero does it invoke the main-executable helper at 0x8015D71C with the selector 0x100, re-read the pointer cell and increment the work object''s byte at offset 0x1, advancing the dispatch state to entry 2 (0x801EEE10). The 0x18-byte frame only keeps $ra across that call. Reads or writes no other state.'
   - - 528
     - asm
     - func_801EEE10

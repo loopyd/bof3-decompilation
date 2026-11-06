@@ -48,6 +48,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Both arms truncate the same value, then differ only in a constant, and the current build masks once before the branch | Repeat the truncation as its own statement inside each arm (`angle &= 0xFFFF;` then `angle += bias;`). One combined expression lets GCC share the mask across the arms and fill the branch delay slot, which came out two instructions short with identical memory events; the split arms keep a per-arm `andi` and the original's unfilled slot |
 | Three-term sum stays one instruction long, or the first divergence sits at a later term | Sweep the three associations `a + (b + c)`, `(a + b) + c`, `(b + c) + a` before touching guards, casts or truthiness spellings of that sum; the mirrored nesting stalled one instruction short with the divergence pushed to the last term, and the re-spellings measured neutral. When one term is a product minus a constant and several stores reuse it, name that bias as one `s32` local per store group instead of keeping the sum inline: the parenthesized form let GCC fold the constant into an earlier argument's `addiu` and drop the `move` that saved it, eight bytes short, and the unparenthesized form lost nine instructions at the original size |
 | `mult` plus `bgez`/`addiu (N-1)`/`sra log2(N)` around a scaled product | That triple is truncating signed division, not a shift: write `product / N` on a signed type. Shifting the product emits the bare `sra` and loses the sign-correction pair, so the divide spelling is what reproduces `mult` and the correction |
+| `subu`, `bgez` and `negu` chain in one guard | That chain is an absolute difference: write `d = a - b; if (d < 0) d = -d;` on an `s32` local and compare that magnitude against the bound. Keep each halfword's `<< 16` cell-start term inline in its own subtraction, since the original recomputes it per guard |
 | Boolean result misses the return register; extra return copy | Trace [boolean return expansion](#boolean-return-expansion) before allocation |
 | Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt. For displaced induction setup, inspect [explicit cursors](#explicit-cursors-and-signed-bounds) |
 | Global/BSS offsets | Audit COMMON/section/alignment/order/padding and following symbols |
@@ -109,9 +110,12 @@ initializer moved the first difference to instruction 0 at unchanged size, while
 spend no variant on the loop keyword.
 
 A shared test after value-producing arms extends a local across the join. Test
-per-arm checks branching to the existing common operation. For tail-merged stores,
-express the original subtraction, saturation and capped paths explicitly; retain
-sentinel exits and each path's memory effects. Duplicate no calls or volatile reads.
+per-arm checks branching to the existing common operation. When that common statement
+sits behind a further guard that only some paths reach, write it once at a `goto` label
+inside that guard and jump there from each arm's own test, so both arms share the one
+store the original branches to. For tail-merged stores, express the original
+subtraction, saturation and capped paths explicitly; retain sentinel exits and each
+path's memory effects. Duplicate no calls or volatile reads.
 
 For indexed fields, match the original calculation's branch boundary. A partial
 stride such as `four = slot << 2` before the branch, completed as

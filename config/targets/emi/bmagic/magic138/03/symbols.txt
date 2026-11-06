@@ -11,5 +11,5 @@ invokeHelperBmagicMagic13803_801EF50C = 0x801EF50C;
 func_801EF52C = 0x801EF52C;
 func_801EF5D0 = 0x801EF5D0;
 func_801EF6A4 = 0x801EF6A4;
-func_801EF6F8 = 0x801EF6F8;
+decrementGlobalWorkByteBAndInvokeHelperBmagicMagic13803_801EF6F8 = 0x801EF6F8;
 func_801EF72C = 0x801EF72C;

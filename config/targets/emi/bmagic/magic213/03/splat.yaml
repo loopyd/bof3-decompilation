@@ -47,8 +47,9 @@ segments:
     - asm
     - func_801EF048
   - - 1596
-    - asm
-    - func_801EF23C
+    - c
+    - incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic21303_801EF23C
+    - '@source: src/bof3/bmagic/incrementWorkByteARecordCountersThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic21303_801EF23C.c'
   - - 1864
     - asm
     - func_801EF348

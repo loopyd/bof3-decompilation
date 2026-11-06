@@ -46,8 +46,10 @@ segments:
     - dispatchStateByte1Tablef7a0BmagicMagic07503_801EEFF4
     - '@source: src/bof3/bmagic/magic07503DispatchTables.c'
   - - 1080
-    - asm
-    - func_801EF038
+    - c
+    - dispatchStateByte2Tablef7a4BmagicMagic07503_801EF038
+    - '@source: src/bof3/bmagic/dispatchStateByte2Tablef7a4BmagicMagic07503_801EF038.c'
+    - '@behavior: Step wrapper around one overlay work handler: publishes 0x800C3800 into the global at 0x801459F0, reads the work object published at the scratchpad pointer cell 0x1F800044, scales that object byte 2 by four and invokes the selected entry of the handler run based at 0x801EF7A4 (0x801EF0D0, 0x801EF2A8) with no arguments. After the handler returns it re-reads the pointer cell and, when the work object byte 0 and byte 2 are both non-zero, runs the shared main-executable service func_8014D290. It then publishes 0x800D3800 into 0x801459F0. Each literal reaches the cell through its own lui/ori pair and a lui %hi / sw %lo store; the 0x18-byte frame only keeps $ra across the two calls.'
   - - 1232
     - asm
     - func_801EF0D0

@@ -40,8 +40,10 @@ segments:
     - asm
     - func_801F2F0C
   - - 872
-    - asm
-    - func_801F2F68
+    - c
+    - advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16913_801F2F68
+    - '@source: src/bof3/world/advanceWorkByte2WhenCameraOutsideRecordCoordinateWindowWorld04Area16913_801F2F68.c'
+    - '@behavior: Advance work byte 2 when the camera is outside the record coordinate window, then draw.'
   - - 1144
     - asm
     - func_801F3078

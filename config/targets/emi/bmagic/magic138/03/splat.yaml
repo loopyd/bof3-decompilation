@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801EF6A4
   - - 2808
-    - asm
-    - func_801EF6F8
+    - c
+    - decrementGlobalWorkByteBAndInvokeHelperBmagicMagic13803_801EF6F8
+    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic13803_801EF6F8.c'
+    - '@behavior: Overlay header handler, index 8 of the handler-pointer run at 0x801EEC04 (the payload word at 0x801EEC24, its only in-image reference): reads the shared battle work record pointer at 0x801EB4E0 once, decrements that record''s byte 0xB by one at byte width with the store filling the call delay slot, then invokes the shared helper at 0x801E5988 unconditionally; takes no arguments, returns nothing, and the 0x18-byte frame only keeps $ra across the call.'
   - - 2860
     - asm
     - func_801EF72C

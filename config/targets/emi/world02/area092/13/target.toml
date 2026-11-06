@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/queueFrontendCue3DWorld02Area09213_801F3A60.c",
     "src/bof3/support/area092_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area092_13_psyq.c"
