@@ -63,8 +63,10 @@ segments:
     - asm
     - func_801D1678
   - - 3484
-    - asm
-    - func_801D199C
+    - c
+    - clearRecordActiveFlagsAt801D39A8ScenarioSce15ef100_801D199C
+    - '@source: src/bof3/scenario/clearRecordActiveFlagsAt801D39A8ScenarioSce15ef100_801D199C.c'
+    - '@behavior: Clears the lead byte of each of the 0x10 entries of the 0x18-byte-stride record table at 0x801D39A8, stepping the entry pointer by 0x18 and an unsigned byte counter by 1 in a bottom-tested loop; it takes no arguments and reads no other state.'
   - - 3528
     - asm
     - func_801D19C8

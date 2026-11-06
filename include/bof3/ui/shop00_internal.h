@@ -83,11 +83,24 @@ extern u8 D_8014840A;
 extern u8 D_8014840B;
 extern u16 D_8014840C;
 extern u16 D_8014840E;
+/* Leading byte of the second 0x24-byte panel record anchored at D_80148378; the
+ * sub-step handler publishNoteListPanelThenConfirmOrCancel stores 1 into it as a
+ * folded absolute byte, not through the record base.
+ * @source 0x8014839C @kind unknown */
+extern u8 D_8014839C;
 extern u8 D_8014839D;
 extern u8 D_8014839E;
 extern u8 D_8014839F;
 extern s16 D_801483A0;
 extern s16 D_801483A2;
+/* Two byte cells of the note-list selection block written only by the sub-step
+ * handler publishNoteListPanelThenConfirmOrCancel: D_801483A8 takes 0xFF and
+ * D_801483A9 stays zero when the handler initializes the panel records, and no
+ * other source of this target reads either cell.
+ * @source 0x801483A8 @kind unknown */
+extern u8 D_801483A8;
+/* @source 0x801483A9 @kind unknown */
+extern u8 D_801483A9;
 extern u8 D_80148624;
 extern u8 D_80148625;
 extern u8 D_80148626;
@@ -211,7 +224,10 @@ extern s8 D_8014865A;
  * hand the same address.
  * Written with a folded `sb %lo(D_8014865B)(at)` in the original, so it is
  * declared as a scalar byte rather than through the D_80148656 array view. Not
- * owned by the shared map; declared locally with a target-map row.
+ * owned by the shared map; declared locally with a target-map row. The sub-step
+ * handler publishNoteListPanelThenConfirmOrCancel reads it with a signed byte
+ * load for its published x offset, so that handler views it through an explicit
+ * signed pointer.
  * @source 0x8014865B @kind unknown */
 extern u8 D_8014865B;
 /* @source 0x8014865F @kind unknown */
@@ -706,6 +722,16 @@ extern u8 D_801E6260;
  * @source 0x801E6258
  * @kind unknown */
 extern u8 D_801E6258;
+
+/* Overlay-local list cursor between the head counter D_801E6258 and the list
+ * D_801E6264. The sub-step handler publishNoteListPanelThenConfirmOrCancel
+ * zeroes it and then uses it as the index of the first rebuilt entry it carries
+ * into D_80148382 and D_801483A6, and the sub-step siblings func_801DF9EC and
+ * func_801E006C read the same byte. Zero-filled in the shipped payload, so its
+ * value there is not observable and its role is not recovered.
+ * @source 0x801E625C
+ * @kind unknown */
+extern u8 D_801E625C;
 
 /* Overlay-local list of the field-record indices found by the shop list/state
  * rebuild func_801E0F78, appended at D_801E6258 and holding at most the eight

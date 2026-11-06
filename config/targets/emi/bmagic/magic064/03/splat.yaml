@@ -78,8 +78,10 @@ segments:
     - asm
     - func_801EF69C
   - - 2956
-    - asm
-    - func_801EF78C
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic06403_801EF78C
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06403_801EF78C.c'
+    - '@behavior: Dispatches one frame of the overlay work handler: reads the scratchpad work-object pointer cell at 0x1F800044, copies the four-entry code pointer table at 0x801EEC40 (0x801EF7F8, 0x801F009C, 0x801F0C38, 0x801F0D64) into its own 0x28-byte frame, and invokes the entry selected by the work-object byte at offset 1 with no arguments. Reads no other state and writes none; the frame only keeps $ra across the indirect call.'
   - - 3064
     - asm
     - func_801EF7F8

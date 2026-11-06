@@ -21,5 +21,6 @@ support_sources = [
     "src/bof3/bmagic/noopHandlerBmagicMagic06403_801EF0D8.c",
     "src/bof3/support/magic064_03_psyq.c",
     "src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic06403_801F0448.c",
+    "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic06403_801EF78C.c",
 ]
 psyq_source = "src/bof3/support/magic064_03_psyq.c"

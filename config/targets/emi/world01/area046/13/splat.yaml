@@ -30,8 +30,10 @@ segments:
     - asm
     - func_801F2C04
   - - 228
-    - asm
-    - func_801F2CE4
+    - c
+    - startStateEntry0BProgress0AOr0WhenMapRangeAndScenarioGateWorld01Area04613_801F2CE4
+    - '@source: src/bof3/world/startStateEntry0BProgress0AOr0WhenMapRangeAndScenarioGateWorld01Area04613_801F2CE4.c'
+    - '@behavior: rejects a second argument above 0x218000, a first argument whose high half is outside 0xE..0x10 and a nonzero shared selector func_80166140(4), then runs func_8015C088, stores 1 into the shared area status byte 0x80146865 and 0xB into the shared state-entry selector 0x801448EB, stores 0 into the progress byte 0x801448EC while the signed scenario byte 0x80146870 is below 8 and 0xA once it reaches 8, and returns 1 from either arm while every rejected path returns 0.'
   - - 392
     - c
     - invokeZeroArgWorld01Area04613_801F2D88

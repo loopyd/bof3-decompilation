@@ -30,8 +30,10 @@ segments:
     - asm
     - func_801F2C04
   - - 244
-    - asm
-    - func_801F2CF4
+    - c
+    - seedFrontEndRecordHandler25World01Area07113_801F2CF4
+    - '@source: src/bof3/world/seedFrontEndRecordHandler25World01Area07113_801F2CF4.c'
+    - '@behavior: claims one front-end record through the shared allocator func_8019601C, publishes the index in scratchpad byte 0x1F800000 and, unless the index is 0xFF, sets the record occupancy byte and writes handler selector 0x25.'
   - - 380
     - textbin
     - D_801F2D7C

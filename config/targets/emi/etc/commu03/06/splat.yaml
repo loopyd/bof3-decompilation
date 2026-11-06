@@ -30,8 +30,8 @@ segments:
     - textbin
     - D_801D0C04
   - - 1616
-    - asm
-    - func_801D1250
+    - c
+    - drawSoundTestPanelWithStereoLevelMeter
   - - 2836
     - c
     - drawGlyphStringQuadsCommu03_06

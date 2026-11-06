@@ -40,6 +40,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots), then name repeated scale products (#named-scale-products) |
 | Pointer read hoisted above a call, extra saved register, frame unchanged | Bind the call-derived scaled value to its own local before the pointer read; folding the mask/shift into the later address expression keeps the pointer live across the call |
 | Saved-register group differs at entry while one stack aggregate feeds repeated calls and some of its fields keep a literal | Assign every field at each update, including the fields whose value does not change. Each assignment is that field's definition, so a skipped field drops its literal's liveness, which moves the literal to a caller-saved register and removes its store (one measured partial 61/67 at 244 bytes, first difference at the entry group). Naming those literals as locals measured identical, so the lever is field coverage, not spelling |
+| Strided row stores whose scale the original re-reads from a published byte before the later rows | Keep the computed index in a local for the uses before that reload, and address each later row through the published byte (`D_row[(u32)*scratch * stride] = ...`). Read both ends off the original: the store that consumes the register without reloading it, and the `lbu` that precedes the first row which does reload |
 | Call result stored inside the next call's delay slot | The original stores a `jal` result into its outgoing argument slot right after that call, before the next call's argument setup. Bind the result to a local; nesting the call in the later argument list moves that store into the following `jal` delay slot |
 | A call result that also fills the stored cell builds the test one polarity off (`beqz` where the original `bnez`) and hoists the later store's constant above the first store | Bind the call result to that cell's own local, compare the local, and let both arm constants assign back to it (`s = wait(); if (s == 0) s = 0x0A; else s = 0x14;`). Testing the call inline in the `if` condition leaves the value in a register the call did not return it in. Arm order alone inverts a test without moving a constant, which separates the two causes. The same arm pair selected by an already-loaded byte instead of a call result needs no value local: read the byte into a local, then write one conditional expression straight into the cell (`cell = (gate != 0) ? 0x14 : 0xA;`), which matched on the first gate because the load's value and the selected constant keep their own registers. That local's own width is not part of the shape: a compare-and-store local carrying no arithmetic emitted the same `lbu` as `u8` and as `s32` across two exact bodies of the shape, so take the sibling's width and spend no variant on it |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
@@ -154,6 +155,13 @@ measured neutral at the same residue. A conjunction also folds rather than swaps
 arms when its low bound is `>= 0`, because that pair is exactly the unsigned bound:
 GCC emits one `sltiu` and lands two instructions short of the original's separate
 sign and magnitude tests, so write each test as its own early return.
+
+Unrelated reject tests around a block that itself calls are the opposite case: write
+them as one conjunction with a single `return 0` after that block. A ladder of early
+`return 0`s merges its returns into one block at the first reject position, so that
+block takes the slot the accepted block's call needs and the accept arms swap;
+measured at unchanged size with the first difference inside the reject region. Where
+the accepted block calls nothing further, the early-return ladder is what matches.
 
 A guarded dispatcher (`sltiu` bound, table base, one indexed load, `jr`) gives the
 dense switch shape directly: one arm per table word, in order, and the arm an

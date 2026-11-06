@@ -55,8 +55,10 @@ segments:
     - asm
     - func_801D0E38
   - - 684
-    - asm
-    - func_801D0EAC
+    - c
+    - dispatchWorkByte1HandlerScenarioSce15ef300_801D0EAC
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef300_801D0EAC.c'
+    - '@behavior: Overlay work-state dispatcher: it reads the work-object pointer cell at 0x1F800044 before it creates its 0x18-byte frame, takes that object unsigned byte at +0x1, scales it by four and calls that entry of the overlay handler run at 0x801D27D8 with no arguments, discarding the result. That run holds sixteen in-image code pointers, entry 0 = 0x801D0EF0 through entry 15 = 0x801D16BC at 0x801D2814, so work bytes 0 through 15 select handlers; the index is not bounded before the scaled load. It reads no other state and writes none, and the frame only keeps $ra at 0x10 across the indirect call. Neither a jal nor any word of this payload addresses 0x801D0EAC, so the overlay loader enters it from outside the payload. Its 68 bytes are the 17-instruction dispatcher shape the exact sibling dispatchWorkByte1HandlerScenarioSce15ef300_801D0D38 records, which differs only in the table-address low immediate.'
   - - 752
     - asm
     - func_801D0EF0

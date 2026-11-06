@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/startStateEntry0BProgress0AOr0WhenMapRangeAndScenarioGateWorld01Area04613_801F2CE4.c",
     "src/bof3/world/invokeZeroArgWorld01Area04613_801F2D88.c",
     "src/bof3/support/area046_13_psyq.c",
 ]

@@ -30,8 +30,10 @@ segments:
   vram: 2149526740
   subsegments:
   - - 212
-    - asm
-    - func_801F2CD4
+    - c
+    - claimFrontEndRecordHandler0BEveryEighthFrameWhileModeAtLeast7World00Area00113_801F2CD4
+    - '@source: src/bof3/world/claimFrontEndRecordHandler0BEveryEighthFrameWhileModeAtLeast7World00Area00113_801F2CD4.c'
+    - '@behavior: on every eighth frame, while the shared mode byte 0x80146866 reads at least 7, claims one front-end record through the shared allocator func_8019601C, publishes the index in scratchpad byte 0x1F800000 and, unless the index is 0xFF, sets the row occupancy byte, writes handler selector 0x0B, the word at +0x1C = 5 and the byte at +7 = 3.'
   - - 476
     - textbin
     - D_801F2DDC

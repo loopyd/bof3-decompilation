@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld03Area13313_801F2CEC.c",
     "src/bof3/world/copyModeByteWorld03Area13313_801F2DBC.c",
     "src/bof3/world/advanceCounter2By4World03Area13313_801F2D94.c",
     "src/bof3/world/retreatCounter2By4World03Area13313_801F2D6C.c",

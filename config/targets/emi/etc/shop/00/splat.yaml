@@ -568,8 +568,10 @@ segments:
     - func_801DFDB8
     - '@source: src/bof3/ui/func_801DFDB8.c'
   - - 61940
-    - asm
-    - func_801DFDF4
+    - c
+    - publishNoteListPanelThenConfirmOrCancel
+    - '@source: src/bof3/ui/publishNoteListPanelThenConfirmOrCancel.c'
+    - '@behavior: note-list sub-step handler reached as entry 0 of the sub-step table D_801E5CFC, which func_801DFDB8 dispatches with the UI sub-step byte D_80148652 as index: it publishes the note-list panel state (D_80148340 = 0x36, the visibility byte D_80148624 = 1, the x halfword D_80148628 = D_80148334 + (1 - D_8014865B) * 32 + 0xDE and the y halfword D_8014862A = D_80148336 + 5), then plays cue 0x101 and toggles the work-block byte D_8014865B when the pad state D_80145AA8 shares a bit with 0xA000. When the pad state shares the confirm mask D_80145AC2 and that byte is nonzero it plays cues 0x104 and 0x102, arms the list head counter D_801E625C with 0, calls func_801665A0 with (0, 0x58, 1, 0), initializes the two 0x24-byte panel records anchored at D_80148378 with the field run (7, 0xD, 2, -150, 0x74) and (7, 0xC, 2, 0x140, 0x3E), carries the first rebuilt list entry D_801E6264[D_801E625C] into both D_80148382 and the selected-record byte D_801483A6 with D_801483A7 and D_801483A9 zero and D_801483A8 set to 0xFF, and advances the UI sub-step byte D_80148652 by one. A confirm with that byte clear, and the cancel mask D_80145AC4 on its own, both play cue 0x106 and step the UI phase byte D_80148651 down by one.'
   - - 62504
     - c
     - tickPhaseTimer
