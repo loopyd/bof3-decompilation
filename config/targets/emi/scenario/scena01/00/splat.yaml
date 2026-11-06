@@ -39,8 +39,8 @@ segments:
     - c
     - dispatchWorkByte1HandlerScenarioScena0100_801F73B8
   - - 2044
-    - asm
-    - func_801F73FC
+    - c
+    - seedWorkObjectAndClearWorkTableThenAdvanceStateScenarioScena0100_801F73FC
   - - 2176
     - c
     - incrementWorkByte9Reload32AndAdvanceStateScenarioScena0100_801F7480

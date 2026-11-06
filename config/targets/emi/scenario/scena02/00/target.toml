@@ -59,5 +59,6 @@ support_sources = [
     "src/bof3/scenario/publishWorkBaseAndSeedFrontEndRecordScenarioScena0200_801FCD14.c",
     "src/bof3/scenario/publishWorkBaseAndSeedFrontEndRecord19ScenarioScena0200_801FCECC.c",
     "src/bof3/scenario/clearSkillListEntriesAfterAbilityCheckScenarioScena0200_801FD6FC.c",
+    "src/bof3/scenario/clearProgressAndSharedStateBytesThenRequestPrimaryState19Substate0AAndQueueCue106ScenarioScena0200_801FD5FC.c",
 ]
 psyq_source = "src/bof3/support/scena02_00_psyq.c"

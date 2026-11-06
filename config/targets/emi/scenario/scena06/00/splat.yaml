@@ -120,8 +120,8 @@ segments:
     - asm
     - func_801FCEC0
   - - 25392
-    - asm
-    - func_801FCF30
+    - c
+    - setSubstate0FClearProgressAndSharedStateBytesAndRequestPrimaryState2AndSetFlagBit4ScenarioScena0600_801FCF30
   - - 25496
     - c
     - setScenarioFlagBit0CScenarioScena0600_801FCF98

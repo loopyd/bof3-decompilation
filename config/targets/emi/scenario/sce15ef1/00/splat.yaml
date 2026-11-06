@@ -87,8 +87,10 @@ segments:
     - c
     - swapWords
   - - 5488
-    - asm
-    - func_801D2170
+    - c
+    - dispatchWorkByte1HandlerScenarioSce15ef100_801D2170
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D2170.c'
+    - '@behavior: Dispatches the overlay step from the work-record byte at offset 1 through the ten-word local code-pointer run at 0x801D3954; the record comes from the scratchpad pointer cell 0x1F800044 and takes no arguments.'
   - - 5556
     - asm
     - func_801D21B4

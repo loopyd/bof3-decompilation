@@ -149,8 +149,10 @@ segments:
     - asm
     - func_801D4A3C
   - - 16316
-    - asm
-    - func_801D4BBC
+    - c
+    - drawShopValuePanelThenPublishSaveSlotRecords
+    - '@source: src/bof3/ui/drawShopValuePanelThenPublishSaveSlotRecords.c'
+    - '@behavior: shop sub-step handler at table entry 5 of the sub-step handler table D_801E530C, which func_801D46A4 dispatches with the UI sub-step byte D_80148652 as index: emits the shop panel strip through func_801DAB90 with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte D_80144952 as the fifth argument, submits the texture row 0x1C at row 0x16 through func_8014F800 with the value returned by func_801502D0(D_801E60EC + 0x85) as its fifth argument, draws the sliding shop value panel through func_801DDFB0 at the origin (0x62, 0x4C) with the overlay flag byte D_801E60F8, the main-RAM byte D_8018E260 and the variant constant 1, then clears the panel through func_801EEC30 with five zero arguments. When the selected action id D_8018E228 is zero it collects the save-slot list through collectSaveSlotsThenCountFreeBlocks: while the collected entry count D_801E6078 is nonzero it rebuilds the three panel records through rebuildPanelRecordTable, arms that count with 3, clears the selected row byte D_801E6074 and advances the UI sub-step byte by one; otherwise it selects the action id 5 when the remaining-capacity byte D_801E60FC is nonzero and 4 when that byte is zero. That empty-list path and the nonzero action id both play the main-exe sound cue 0x107 through the cue dispatcher func_8015DF18 and arm the UI sub-step byte with 0xC.'
   - - 16624
     - c
     - func_801D4CF0

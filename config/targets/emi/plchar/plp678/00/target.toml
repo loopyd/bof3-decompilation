@@ -9,6 +9,7 @@ load_address = 0x801CE400
 
 sources = []
 support_sources = [
+    "src/bof3/plchar/dispatchWorkByte2Table0570PlcharPlp67800_801CE630.c",
     "src/bof3/plchar/invokeHelperPlcharPlp67800_801CE610.c",
     "src/bof3/support/plp678_00_psyq.c",
 ]

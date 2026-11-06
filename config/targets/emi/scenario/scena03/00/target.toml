@@ -56,5 +56,6 @@ support_sources = [
     "src/bof3/scenario/subtract8FromWorkHalfword58AndResetWorkStateWhenNegativeScenarioScena0300_801F7D80.c",
     "src/bof3/scenario/drawTickWorkByte9QueueCue208WhenByte9Is215Reload60AndAdvanceScenarioScena0300_801F87A4.c",
     "src/bof3/scenario/advanceProgressAndResetWorkStateWhenAllRecordByte6NonZeroScenarioScena0300_801F7F84.c",
+    "src/bof3/scenario/claimFiveFrontEndRecordsAndAdvanceWorkByte1ScenarioScena0300_801F7E6C.c",
 ]
 psyq_source = "src/bof3/support/scena03_00_psyq.c"

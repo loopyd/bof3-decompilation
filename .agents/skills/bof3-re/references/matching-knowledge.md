@@ -268,9 +268,11 @@ order differs; prove value equivalence and preserve all memory events.
 Pin a reload where the original reads it with a typed value local. Reading a cell
 straight into the store keeps the load next to that store, while assigning it to a
 `u8` local at an earlier statement pins the load at that statement and leaves the
-store later, which is the shape a record-arming block shows. A pointer local instead
-defers the dereference, so choose the local's type by which side of the load the
-original fixes.
+store later, which is the shape a record-arming block shows. That earlier position is
+also what lets the store fill a following branch or return delay slot; loading at the
+store instead puts the load and its delay `nop` next to it and leaves the slot empty.
+A pointer local instead defers the dereference, so choose the local's type by which
+side of the load the original fixes.
 
 Keep a narrow parameter narrow. Copying an `s16` argument into an `s32` local moves
 the sign extension to the entry block, where the original converts at each use site.
@@ -356,6 +358,14 @@ residual that puts one call group's reload cursor in the neighbouring register w
 byte count and frame already agree is this lever, not another arm spelling. Splitting
 only the mismatching group measured the same bytes as splitting every group, so keep
 the narrowest split and spend no variants on the rest.
+
+A reload per iteration is not a group. When the original interleaves a work-pointer
+reload between copies of one record's fields, keep those reads inline on the named
+cell and give a value local only to the copy whose store the original places later. A
+pointer local for that block measured a partial at unchanged size and instruction
+order: its reload attached to the preceding field load, and the byte-masked slot index
+then took the neighbouring register. Step 1 applies where a reload opens a store or
+call group, not between fields of one record.
 
 ### Shared and branch-local cursor loads
 

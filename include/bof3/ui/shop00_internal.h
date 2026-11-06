@@ -468,10 +468,11 @@ extern ShopPanelWords D_801E6098[];
 /* Overlay-local tail-data bytes shared by the D_801E530C phase-step family: the
  * sub-step handler func_801D472C clears D_801E6110 and D_801E6080, arms
  * D_801E60EC with 0x17 and archives the sub-step count in D_801E6094, while the
- * sibling steps func_801D47AC/func_801D4BBC read D_801E60EC and
- * func_801D4CF0/func_801D5D98 read D_801E6080/D_801E6110. All four are
- * zero-filled in the shipped payload, so their roles are not observable there;
- * each is kept as a raw byte at the width of the original access (sb/lbu).
+ * sibling steps func_801D47AC/drawShopValuePanelThenPublishSaveSlotRecords read
+ * D_801E60EC and func_801D4CF0/func_801D5D98 read D_801E6080/D_801E6110. All
+ * four are zero-filled in the shipped payload, so their roles are not
+ * observable there; each is kept as a raw byte at the width of the original
+ * access (sb/lbu).
  * @source 0x801E6080 @kind unknown */
 extern u8 D_801E6080;
 /* @source 0x801E6094 @kind unknown */
@@ -495,11 +496,12 @@ extern u8 D_801E6078;
  * collectSaveSlotsThenCountFreeBlocks: it stores the count returned by the
  * main-exe directory reader func_801EFCA8 there and re-reads it for the loop
  * test of every entry. The list navigation handlers func_801D4E74 and
- * func_801D69E0 step the same byte as the selected row of that list, and
- * func_801D4BBC clears it once the list has been published. Zero-filled in the
- * shipped payload, so its value there is not observable; kept as a raw byte at
- * the width of the original loads and stores. Not owned by the shared map, so
- * this target declares it locally and adds a target-map row.
+ * func_801D69E0 step the same byte as the selected row of that list, and the
+ * sub-step handler drawShopValuePanelThenPublishSaveSlotRecords clears it once
+ * the list has been published. Zero-filled in the shipped payload, so its value
+ * there is not observable; kept as a raw byte at the width of the original
+ * loads and stores. Not owned by the shared map, so this target declares it
+ * locally and adds a target-map row.
  * @source 0x801E6074 @kind unknown */
 extern u8 D_801E6074;
 
@@ -507,7 +509,8 @@ extern u8 D_801E6074;
  * collectSaveSlotsThenCountFreeBlocks publishes 0xF minus the blocks used by the
  * BOF3 entries it kept, so a nonzero value means the list has room for one more
  * entry. func_801D4E74 widens its cursor bound by one when this byte is nonzero
- * and D_801E6078 is not 3, and func_801D4BBC selects the id 5 instead of 4.
+ * and D_801E6078 is not 3, and the sub-step handler
+ * drawShopValuePanelThenPublishSaveSlotRecords selects the id 5 instead of 4.
  * Zero-filled in the shipped payload, so its value there is not observable;
  * kept as a raw byte at the width of the original loads and stores. Not owned
  * by the shared map, so this target declares it locally and adds a target-map
@@ -754,6 +757,21 @@ void func_801D7E1C(u8 arg0, u16 arg1, u16 arg2, u8 arg3, u8 arg4);
  * masks the argument with andi 0xFF, so the parameter is a byte.
  * @source 0x801D8050 */
 void buildSlotList(u8 arg0);
+/* Save-slot list rebuild of this EMI (lifted: src/bof3/ui/
+ * collectSaveSlotsThenCountFreeBlocks.c) called by the sub-step handler
+ * drawShopValuePanelThenPublishSaveSlotRecords with no arguments: it refills the
+ * 0x18-byte entry table D_8018E990 from the main-exe save-directory reader and
+ * republishes the used-block total into D_801E60FC and the kept-entry count into
+ * D_801E6078.
+ * @source 0x801D6F00 */
+void collectSaveSlotsThenCountFreeBlocks(void);
+/* Panel record rebuild of this EMI (lifted: src/bof3/ui/
+ * rebuildPanelRecordTable.c) called by the sub-step handler
+ * drawShopValuePanelThenPublishSaveSlotRecords with no arguments: it clears the
+ * three 0x1C-byte panel records of D_801E6098 and fills each from the entry of
+ * D_8018E990 its +0x11 byte selects.
+ * @source 0x801D7208 */
+void rebuildPanelRecordTable(void);
 /* Shop byte-counter step in this EMI (lifted: src/bof3/ui/
  * tickPhaseTimerThenAdvanceWorkCounter.c) called by the sibling phase steps
  * func_801D7B74/func_801D7CC8/func_801D7D48 with the address of the work-block
@@ -1402,6 +1420,19 @@ extern u8 D_80145FCC[];
  * @source 0x8018E260
  * @kind unknown */
 extern u8 D_8018E260;
+
+/* Main-RAM action id of the shop save/load panel: it is read and written as a
+ * whole word (`lw`/`sw`), so it is declared at word width. The sub-step handler
+ * drawShopValuePanelThenPublishSaveSlotRecords arms it with 5 while the
+ * remaining-capacity byte D_801E60FC leaves room for another entry and with 4
+ * when that byte is zero, and the sibling handlers func_801D47AC, func_801D4E74,
+ * func_801D51B8, func_801D543C, func_801D5894 and func_801D5CB0 read and rewrite
+ * it as the selected panel action, which takes the values 0..3, 6 and 0xA there.
+ * Its role beyond that selection is not recovered. It lies in main RAM outside
+ * this EMI's payload and is not owned by the shared map; the D_<address> name
+ * binds its own address, so no target-map row is added.
+ * @source 0x8018E228 @kind unknown */
+extern u32 D_8018E228;
 
 /* Main-RAM table of 0x18-byte entries scanned by rebuildPanelRecordTable:
  * for each of the three panel records it walks the entries in order, forms the

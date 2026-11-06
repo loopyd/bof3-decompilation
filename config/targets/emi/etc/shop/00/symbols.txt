@@ -120,6 +120,7 @@ func_801D46A4 = 0x801D46A4;
 func_801D46E0 = 0x801D46E0;
 func_801D472C = 0x801D472C;
 func_801D4970 = 0x801D4970;
+drawShopValuePanelThenPublishSaveSlotRecords = 0x801D4BBC;
 func_801D4CF0 = 0x801D4CF0;
 func_801D4DB4 = 0x801D4DB4;
 drawShopPanelRowThenAcceptOrCancel = 0x801D50C0;

@@ -102,8 +102,10 @@ segments:
     - c
     - queueCue209AndAdvanceWorkByte1ScenarioScena0300_801F7E34
   - - 4716
-    - asm
-    - func_801F7E6C
+    - c
+    - claimFiveFrontEndRecordsAndAdvanceWorkByte1ScenarioScena0300_801F7E6C
+    - '@source: src/bof3/scenario/claimFiveFrontEndRecordsAndAdvanceWorkByte1ScenarioScena0300_801F7E6C.c'
+    - '@behavior: Claims five front-end records into the five record-pointer slots at offset 0x0C of the work object published at scratchpad cell 0x1F800044, one record index per iteration from func_8019601C with 0xFF skipping the slot, seeds each claimed row of the 0x74-byte front-end record table at 0x80143FC8 and then advances work byte 0x01.'
   - - 4996
     - c
     - advanceProgressAndResetWorkStateWhenAllRecordByte6NonZeroScenarioScena0300_801F7F84
