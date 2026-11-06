@@ -128,6 +128,7 @@ sources = [
     "src/bof3/ui/rebuildShopSlotLists.c",
     "src/bof3/ui/func_801E4DF4.c",
     "src/bof3/ui/drawShopSlotListThenChargeOnConfirm.c",
+    "src/bof3/ui/drawNumberedShopSlotListThenPanelStrip.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",

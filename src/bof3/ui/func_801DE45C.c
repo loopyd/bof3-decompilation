@@ -2,7 +2,8 @@
 
 /* @source 0x801DE45C
  * @behavior calls the sprite-grid renderer func_801DBD24 with the main-RAM
- *           index byte D_80144953 and then func_801DEE64; afterwards it
+ *           index byte D_80144953 and then the shop slot-list renderer
+ *           drawNumberedShopSlotListThenPanelStrip; afterwards it
  *           decrements the frame timer phaseTimer through its address and,
  *           when the decremented byte reaches zero, reads the UI phase byte
  *           D_80148651 before re-arming phaseTimer with 3 and writing the
@@ -18,7 +19,7 @@ void func_801DE45C(void) {
   u8           phase;
 
   func_801DBD24(D_80144953);
-  func_801DEE64();
+  drawNumberedShopSlotListThenPanelStrip();
   /* The original materializes the timer address once and reuses that base for
    * the load, the decrement store and the re-arm store (lui+addiu / lbu / sb
    * through one register). */

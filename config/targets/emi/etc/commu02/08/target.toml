@@ -12,6 +12,7 @@ sources = [
     "src/bof3/ui/findFlaggedFieldRecordSlot.c",
     "src/bof3/ui/drawWindowFrame.c",
     "src/bof3/ui/drawSmallWindowFrame.c",
+    "src/bof3/ui/drawFlaggedFieldRecordList.c",
 ]
 support_sources = [
     "src/bof3/ui/countFlaggedFieldRecords_commu02_08.c",

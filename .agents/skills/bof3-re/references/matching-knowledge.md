@@ -82,6 +82,10 @@ branch shape differed (`bne` to a trailing `move $v0,$zero`).
 GCC loop rotation can move invariants: assigning inside loop body can permit late
 hoisting/preheader copies; moving before loop can lose them. Keep only measured
 semantically correct shape; record negative experiments before trying another shape.
+When the original's entry branch carries the loop index's zeroing in its delay slot,
+put the `index = 0;` statement before an explicit `if (count != 0)` guard and keep the
+body as `do`/`while`: the count is an unrestricted byte, so the guard is required, and
+the `do` supplies the latch compare the original shows.
 
 A shared test after value-producing arms extends a local across the join. Test
 per-arm checks branching to the existing common operation. For tail-merged stores,
@@ -213,7 +217,10 @@ API reference. Never add volatility as
 arbitrary scheduler control. The shared scratchpad work cell is the one place this is
 already decided: five byte-exact sources declare it `u8* volatile`, so when the original
 keeps consecutive handoff stores that no call separates, declare that cell volatile rather
-than inventing a barrier. Cite the siblings when you do, and leave any other cell alone. Original-proven ordering remains explicit evidence.
+than inventing a barrier. Cite the siblings when you do, and leave any other cell alone.
+Original-proven ordering remains explicit evidence. Where a store through the loaded
+pointer already separates the reads, the plain spelling measured identical bytes on that
+same cell, so the qualifier is not what carries the reload there.
 
 Signedness belongs to the use site, not the cell: read it off that site's load. One
 byte cell can need `*(s8*)&cell` where the original emits `lb` in a branch test and an

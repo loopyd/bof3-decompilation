@@ -90,8 +90,9 @@ segments:
     - asm
     - func_801F0034
   - - 5376
-    - asm
-    - func_801F0100
+    - c
+    - dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic13103_801F0100
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic13103_801F0100.c'
   - - 5496
     - c
     - clearWorkByte9AndIncrementWorkByte2BmagicMagic13103_801F0178

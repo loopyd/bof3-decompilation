@@ -31,3 +31,13 @@ Splat stubs use boundary name, not authored `@source` basename. Collision-rename
 source keeps `source_dir/<boundary-name>.c` as stub projection. Source filenames
 never substitute for metadata identity. Layout/classification/binding changes
 require separate owning authority, not spelling cleanup.
+
+## One row per address
+
+A target map holds one name per address. Two rows at the same address are rejected
+as an address collision, so a second binding for an existing cell — an aggregate
+view over a scalar, an alias, a differently typed extern — cannot be added
+alongside it. Two names at one address are legal only *across* layers, such as an
+SDK row and a target row. When a lift needs a differently typed view of a mapped
+cell, change the one row's type or leave the spelling alone; do not plan on a
+parallel name.

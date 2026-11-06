@@ -1119,8 +1119,10 @@ segments:
     - '@source: src/bof3/battle/integrateMotionOrSet2.c'
     - '@behavior: Advances local-work fields +0x40/+0x44 by +0x0C and then +0x0C by +0x18 while signed +0x40 is at most 0x13FFF; otherwise sets byte +0x03 to 2.'
   - - 80956
-    - asm
-    - func_801E483C
+    - c
+    - submitWorkAndSeedGravity
+    - '@source: src/bof3/battle/submitWorkAndSeedGravity.c'
+    - '@behavior: Runs the front-end cue 0x204, resubmits the current enemy work effect halfword +0x6 of the +0xE8 record while battle gate byte 0x801462EA is set, then submits the scratch work record and its positional effect with the 0xFF offsets and mode 0, seeds acceleration +0x1C with -0x2000, clears velocity +0x10 and advances scratch work byte +0x03 to 3.'
   - - 81108
     - c
     - applyGravityOrReset

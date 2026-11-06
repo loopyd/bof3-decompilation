@@ -36,8 +36,8 @@ segments:
     - asm
     - func_801CE628
   - - 812
-    - asm
-    - func_801CE72C
+    - c
+    - dispatchStateByte2Table0a60PlcharPlp02600_801CE72C
   - - 880
     - asm
     - func_801CE770

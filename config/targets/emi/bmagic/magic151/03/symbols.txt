@@ -23,7 +23,7 @@ setGlobalWorkByteBTo2ThenInvokeHelperWhenWorkByteBZeroBmagicMagic15103_801EFDC0 
 func_801EFE00 = 0x801EFE00;
 T_801EFE40 = 0x801EFE40;
 func_801EFE80 = 0x801EFE80;
-func_801EFE90 = 0x801EFE90;
+seedMotionChannelTripletTintAndCountdownThenAdvanceWorkByte2BmagicMagic15103_801EFE90 = 0x801EFE90;
 func_801EFF44 = 0x801EFF44;
 func_801EFF94 = 0x801EFF94;
 incrementWorkByte2WhenWorkByteBZeroBmagicMagic15103_801F00B4 = 0x801F00B4;

@@ -69,8 +69,8 @@ segments:
     - c
     - dispatchWorkByte2HandlerPlcharPlp26700_801CEE28
   - - 2668
-    - asm
-    - func_801CEE6C
+    - c
+    - dispatchWorkByte3HandlerPlcharPlp26700_801CEE6C
   - - 2736
     - asm
     - func_801CEEB0

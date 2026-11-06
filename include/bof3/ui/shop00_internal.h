@@ -1087,12 +1087,33 @@ void swapBytes(u8* arg0, u8* arg1);
  * @source 0x801E1BCC */
 void func_801E1BCC(void);
 
-/* Numeric list rebuilder in this EMI (unlifted) called by the phase step
- * func_801DE45C with no arguments; it reads phaseTimer and the value tables
- * through func_801D826C/sprintf/func_80150098 and finally emits the shop panel
- * strip through func_801DAB90.
+/* Shop slot-list renderer in this EMI (lifted: drawNumberedShopSlotListThenPanelStrip,
+ * 0x801DEE64); called by the phase step func_801DE45C with no arguments. It
+ * reads phaseTimer and the value tables through func_801D826C/sprintf/
+ * func_80150098, then emits the slidable off-screen slot region through
+ * func_801DF00C and the shop panel strip through func_801DAB90.
  * @source 0x801DEE64 */
-void func_801DEE64(void);
+void drawNumberedShopSlotListThenPanelStrip(void);
+
+/* Slidable shop slot region in this EMI (unlifted) drawn by
+ * drawNumberedShopSlotListThenPanelStrip: it submits the shaded region through
+ * func_801DC1F4 with the 0x12 by 0x15 size and then walks the off-screen count
+ * byte D_801E6250, drawing one row per off-screen field record. The caller
+ * passes the phase-derived x (0x96 + phaseTimer * 45 masked to 0xFFFF) and the
+ * y constant 0x3B; both are re-sign-extended at the entry of the body, so the
+ * widths below are the widths observed at that call site.
+ * @source 0x801DF00C */
+void func_801DF00C(u16 arg0, s32 arg1);
+
+/* Main-exe front-end text emitter (unlifted, outside this EMI's payload) that
+ * draws the shared text buffer D_80145AD4: drawNumberedShopSlotListThenPanelStrip
+ * passes the panel-relative signed x, the row y as a sign-extended halfword,
+ * the alignment constant 0 and the buffer, so the widths below are the widths
+ * observed at that call site, not a recovered callee contract. The address has
+ * no prototype in this target before this lift; it is bound by the generated
+ * undefined-symbol list, so no target-map row is added.
+ * @source 0x80150098 */
+void func_80150098(s32 arg0, s16 arg1, s32 arg2, u8* arg3);
 
 /* Shop list/state rebuild in this EMI (resets D_801E6258, refills the eight
  * D_801E6264 entries, then rewrites D_80148331/0x32/0x33); called by the phase
@@ -1357,6 +1378,14 @@ extern u8 D_8014496E;
  * is added.
  * @source 0x80145AD4 @kind unknown */
 extern u8 D_80145AD4[];
+
+/* EMI-local decimal format string "%d" passed to sprintf by
+ * drawNumberedShopSlotListThenPanelStrip: it formats the one-based ordinal of
+ * the visible slot whose row is being drawn into the shared text buffer. The
+ * payload holds it unmodified. Not owned by the shared map; declared locally
+ * with a target-map row.
+ * @source 0x801D0E60 @kind rodata */
+extern const char D_801D0E60[];
 
 /* EMI-local table of the ten full-width digit strings: the ten 4-byte char
  * pointers at 0x801E5434 point at the Shift-JIS "0".."9" strings of
