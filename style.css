@@ -494,24 +494,50 @@ h2,h3,p {
   margin-right:2px
 }
 .family-heading {
+  margin:0 0 14px;
+  font:normal 21px Georgia,serif;
+  color:#d5dce3
+}
+.family-group + .family-group {
+  margin-top:23px
+}
+.family-heading button {
   display:flex;
   align-items:center;
   gap:12px;
-  margin:29px 0 14px
+  width:100%;
+  min-height:44px;
+  padding:6px 0;
+  border:0;
+  background:none;
+  font:inherit;
+  color:inherit;
+  text-align:left
 }
-.family-heading:first-child {
-  margin-top:2px
+.family-heading button:hover {
+  color:var(--gold)
 }
-.family-heading h2 {
-  font:normal 21px Georgia,serif;
-  color:#d5dce3;
-  margin:0
-}
-.family-heading span {
+.family-heading .family-count {
   font-size:10px;
-  color:var(--muted)
+  font-family:"Segoe UI",Arial,sans-serif;
+  color:var(--muted);
+  white-space:nowrap
 }
-.family-heading:after {
+.family-heading button:before {
+  content:"";
+  width:7px;
+  height:7px;
+  border-right:1px solid var(--gold);
+  border-bottom:1px solid var(--gold);
+  transform:rotate(45deg);
+  flex-shrink:0;
+  margin:0 3px 4px 2px
+}
+.family-heading button[aria-expanded=false]:before {
+  transform:rotate(-45deg);
+  margin-bottom:0
+}
+.family-heading button:after {
   content:"";
   height:1px;
   flex:1;
@@ -852,7 +878,7 @@ footer>a {
   .target-card {
     padding:18px
   }
-  .family-heading h2 {
+  .family-heading {
     font-size:20px
   }
   .evidence-note {
