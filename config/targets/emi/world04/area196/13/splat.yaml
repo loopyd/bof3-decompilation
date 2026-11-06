@@ -34,8 +34,10 @@ segments:
     - asm
     - func_801F2C48
   - - 164
-    - asm
-    - func_801F2CA4
+    - c
+    - incrementWorkStepIfStateOneThenDrawWorld04Area19613_801F2CA4
+    - '@source: src/bof3/world/incrementWorkStepIfStateOneThenDrawWorld04Area19613_801F2CA4.c'
+    - '@behavior: advances work byte +2 when state byte 0x8014933B reads 1, then always calls the overlay draw routine at 0x801F3030 with mode 0.'
   - - 240
     - asm
     - func_801F2CF0

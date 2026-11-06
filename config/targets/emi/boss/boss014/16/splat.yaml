@@ -51,8 +51,8 @@ segments:
     - asm
     - func_800C1934
   - - 408
-    - asm
-    - func_800C1998
+    - c
+    - dispatchIndexedHandlerBossBoss01416_800C1998
   - - 464
     - c
     - noopHandlerBossBoss01416_800C19D0

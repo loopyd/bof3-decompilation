@@ -55,8 +55,10 @@ segments:
     - asm
     - func_801EF06C
   - - 1256
-    - asm
-    - func_801EF0E8
+    - c
+    - invokeHelperAt100AndAdvanceWorkByte2WhenWorkByte9Is10ElseAdd4ToWorkByte9ThenDrawAndRunHelperBmagicMagic16103_801EF0E8
+    - '@source: src/bof3/bmagic/invokeHelperAt100AndAdvanceWorkByte2WhenWorkByte9Is10ElseAdd4ToWorkByte9ThenDrawAndRunHelperBmagicMagic16103_801EF0E8.c'
+    - '@behavior: Work-byte-9 handler of this overlay''s step sequence. It reads the scratchpad work-object pointer cell at 0x1F800044 once before the 0x18-byte frame is created and loads the work object byte 0x9 through that pointer, comparing the truncated value against 0x10. When the byte equals 0x10 it invokes the main-executable helper at 0x8015D71C with the selector 0x100, re-reads the pointer cell and increments work byte 0x2, which advances the dispatch state. Otherwise it stores the loaded byte plus four back into work byte 0x9 through the pointer loaded at entry. Both paths then call this overlay''s drawing routine at 0x801EF1DC and the shared helper at 0x8014DAEC, and return. The frame only keeps $ra across those three calls; nothing is returned and no other state is read or written.'
   - - 1368
     - asm
     - func_801EF158

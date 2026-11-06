@@ -53,8 +53,9 @@ segments:
     - asm
     - func_801EF4AC
   - - 2384
-    - asm
-    - func_801EF550
+    - c
+    - decrementGlobalWorkByteBThenClearWorkBytesBmagicMagic12303_801EF550
+    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBThenClearWorkBytesBmagicMagic12303_801EF550.c'
   - - 2436
     - asm
     - func_801EF584

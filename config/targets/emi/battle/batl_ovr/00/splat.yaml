@@ -53,8 +53,10 @@ segments:
     - asm
     - func_801EF318
   - - 1972
-    - asm
-    - func_801EF3B4
+    - c
+    - emitTintedPanelSprite
+    - '@source: src/bof3/battle/emitTintedPanelSprite.c'
+    - '@behavior: Emits one 168x24 sprite panel at (0x4c, 0x30) sampled from the battle texture page GetTPage(1, 0, 0x340, 0x100) with CLUT (0, 0x1fa), stores the caller''s colour byte into r0/g0/b0, zeroes u0/v0, and appends the 0x14-byte SPRT under ordering-table index 2.'
   - - 2172
     - asm
     - func_801EF47C

@@ -11,5 +11,6 @@ sources = []
 support_sources = [
     "src/bof3/support/area166_13_psyq.c",
     "src/bof3/world/area16613DispatchTables.c",
+    "src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld04Area16613_801F3634.c",
 ]
 psyq_source = "src/bof3/support/area166_13_psyq.c"

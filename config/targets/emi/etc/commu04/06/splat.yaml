@@ -30,8 +30,8 @@ segments:
     - asm
     - func_801D0C04
   - - 92
-    - asm
-    - func_801D0C5C
+    - c
+    - dispatchByte1f294dTable1758Commu0406_801D0C5C
   - - 152
     - asm
     - func_801D0C98

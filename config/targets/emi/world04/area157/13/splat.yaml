@@ -59,8 +59,10 @@ segments:
     - asm
     - func_801F35E0
   - - 2840
-    - asm
-    - func_801F3718
+    - c
+    - advanceHalfword30By20AndAdvanceState2At100World04Area15713_801F3718
+    - '@source: src/bof3/world/advanceHalfword30By20AndAdvanceState2At100World04Area15713_801F3718.c'
+    - '@behavior: Byte-2 state handler 2 of the local handler table based at 0x801F3924, the word that table stores at 0x801F392C, for the work record published at the scratchpad pointer cell 0x1F800044: it adds 0x20 to the record halfword at 0x30 and, once that stored signed halfword reaches 0x100, advances the record state byte at 0x02 by one, loading the cell once for both.'
   - - 2912
     - asm
     - func_801F3760
