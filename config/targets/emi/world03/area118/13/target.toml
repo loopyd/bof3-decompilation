@@ -11,5 +11,6 @@ sources = []
 support_sources = [
     "src/bof3/support/area118_13_psyq.c",
     "src/bof3/world/area11813DispatchTables.c",
+    "src/bof3/world/findWorkPositionBoundsIndexWorld03Area11813_801F4C08.c",
 ]
 psyq_source = "src/bof3/support/area118_13_psyq.c"

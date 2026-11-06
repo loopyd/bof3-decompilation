@@ -100,7 +100,11 @@ semantically correct shape; record negative experiments before trying another sh
 When the original's entry branch carries the loop index's zeroing in its delay slot,
 put the `index = 0;` statement before an explicit `if (count != 0)` guard and keep the
 body as `do`/`while`: the count is an unrestricted byte, so the guard is required, and
-the `do` supplies the latch compare the original shows.
+the `do` supplies the latch compare the original shows. That zeroing also matters when
+the counter feeds a scale before the loop: folding `index = 0` into the `for`
+initializer moved the first difference to instruction 0 at unchanged size, while `for`,
+`do`/`while` and `continue`-per-bound-test spellings of the loop measured identical, so
+spend no variant on the loop keyword.
 
 A shared test after value-producing arms extends a local across the join. Test
 per-arm checks branching to the existing common operation. For tail-merged stores,
@@ -500,7 +504,11 @@ saved register and no differing body access is the shared base, not an orphan sl
 The accessor folds only while its address is not shared: a cell read again after a
 call keeps the constant live across it, so the base hoists into a callee-saved
 register and the frame grows with it, while the named map cell re-materialises per
-access.
+access. Two accesses to one cell then trade one instruction for one: the shared base
+makes the first access `lui`+`ori`+`lw 0(base)` and the second a bare `lw 0(base)`. So a
+body can keep the original byte count and still lose matched instructions with the
+first difference at instruction 0 - that pair is the accessor, not an allocation
+residual.
 
 Stores follow the same rule. Each `sb` to a distinct fixed-address cell carries its own
 `lui $at, %hi(sym)`, so declare one named extern per cell. That holds for one cell read

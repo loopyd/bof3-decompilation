@@ -73,8 +73,9 @@ segments:
     - asm
     - func_801F3130
   - - 1440
-    - asm
-    - func_801F31A0
+    - c
+    - dispatchWorkByte4Table41dcWorld04Area19113_801F31A0
+    - '@source: src/bof3/world/dispatchWorkByte4Table41dcWorld04Area19113_801F31A0.c'
   - - 1508
     - asm
     - func_801F31E4

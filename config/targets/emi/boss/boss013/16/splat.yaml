@@ -78,8 +78,8 @@ segments:
     - asm
     - func_800C1DF4
   - - 1624
-    - asm
-    - func_800C1E58
+    - c
+    - dispatchIndexedHandlerBossBoss01316_800C1E58
   - - 1680
     - asm
     - func_800C1E90

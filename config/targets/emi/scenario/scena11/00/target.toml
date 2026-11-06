@@ -36,5 +36,6 @@ support_sources = [
     "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState9ScenarioScena1100_801FA7F4.c",
     "src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState0EScenarioScena1100_801FA988.c",
     "src/bof3/scenario/armEffectGroupThenInvokeFourHelpersScenarioScena1100_801FAB74.c",
+    "src/bof3/scenario/dispatchWorkByte1HandlerThenPublishMode2ScenarioScena1100_801F70B4.c",
 ]
 psyq_source = "src/bof3/support/scena11_00_psyq.c"

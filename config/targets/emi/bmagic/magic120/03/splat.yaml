@@ -58,8 +58,9 @@ segments:
     - asm
     - func_801EF2EC
   - - 1908
-    - asm
-    - func_801EF374
+    - c
+    - incrementWorkByte9AndAdvanceWorkByte2At78BmagicMagic12003_801EF374
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceWorkByte2At78BmagicMagic12003_801EF374.c'
   - - 1988
     - asm
     - func_801EF3C4

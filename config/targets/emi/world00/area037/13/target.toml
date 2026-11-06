@@ -7,7 +7,9 @@ binary = "out/binaries/emi/world00/area037/13.bin"
 splat = "config/targets/emi/world00/area037/13/splat.yaml"
 load_address = 0x801F2C00
 
-sources = []
+sources = [
+    "src/bof3/world/setStatus60AndModeIndex6IfGateElseFFFFWorld00Area03713_801F3508.c",
+]
 support_sources = [
     "src/bof3/support/area037_13_psyq.c",
 ]

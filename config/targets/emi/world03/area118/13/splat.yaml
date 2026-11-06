@@ -116,8 +116,9 @@ segments:
     - asm
     - func_801F4B88
   - - 8200
-    - asm
-    - func_801F4C08
+    - c
+    - findWorkPositionBoundsIndexWorld03Area11813_801F4C08
+    - '@source: src/bof3/world/findWorkPositionBoundsIndexWorld03Area11813_801F4C08.c'
   - - 8400
     - asm
     - func_801F4CD0

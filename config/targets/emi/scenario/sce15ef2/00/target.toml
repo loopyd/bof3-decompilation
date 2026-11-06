@@ -10,6 +10,7 @@ load_address = 0x801D0C00
 sources = []
 support_sources = [
     "src/bof3/support/sce15ef2_00_psyq.c",
+    "src/bof3/scenario/armCountdown10ClearScreenPairAndAdvanceWorkByteScenarioSce15ef200_801D0F68.c",
     "src/bof3/scenario/armCountdownAndAdvanceWorkByte1ScenarioSce15ef200_801D10E8.c",
     "src/bof3/scenario/clearWorkTableAt800E4800ScenarioSce15ef200_801D15B0.c",
 ]

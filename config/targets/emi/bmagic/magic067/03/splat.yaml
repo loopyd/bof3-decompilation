@@ -103,8 +103,9 @@ segments:
     - asm
     - func_801F033C
   - - 6028
-    - asm
-    - func_801F038C
+    - c
+    - dispatchWorkByte2HandlerBmagicMagic06703_801F038C
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic06703_801F038C.c'
   - - 6124
     - asm
     - func_801F03EC
