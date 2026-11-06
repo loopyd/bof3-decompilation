@@ -192,8 +192,10 @@ segments:
     - '@source: src/bof3/ui/drawShopValuePanelThenAcceptOrCancelSelection.c'
     - '@behavior: emits the shop panel strip through func_801DAB90 with the fixed panel arguments 0x14, 0x12, 0x118 and 0x13 plus the main-RAM CLUT-bank byte D_80144952, submits the texture row 0x1C at row 0x16 through func_8014F800 with the value returned by func_801502D0(0x91) as its fifth argument, and draws the sliding shop value panel through func_801DDFB0 at (0x62, 0x4C) with the overlay flag byte D_801E60F8, the main-RAM byte D_8018E260 and the constant 1; when the two-option prompt helper func_801DA678 reports a choice through a nonzero low byte it plays the cue 0x104 through func_8015DF18, clears the work-block byte D_8014865B and advances the UI sub-step byte D_80148652 by one while that byte is nonzero, and otherwise plays the cue 0x106 and arms the sub-step byte with 4.'
   - - 20400
-    - asm
-    - func_801D5BB0
+    - c
+    - drawShopValuePanelThenArmAcceptTransition
+    - '@source: src/bof3/ui/drawShopValuePanelThenArmAcceptTransition.c'
+    - '@behavior: shop sub-step handler at table entry 0x10 of the sub-step handler table D_801E530C (dispatched through func_801D46A4 with the UI sub-step byte D_80148652 as index): emits the shop panel strip through this EMI''s panel strip emitter func_801DAB90 with the fixed panel arguments 0x14, 0x12, 0x118 and 0x13 plus the main-RAM CLUT-bank byte D_80144952 as the fifth argument, submits the texture row 0x1C at row 0x16 through func_8014F800 with the value returned by func_801502D0(0x92) as its fifth argument, and draws the sliding shop value panel through func_801DDFB0 at (0x62, 0x4C) with the overlay flag byte D_801E60F8, the main-RAM byte D_8018E260 and the constant 1; when the two-option prompt helper func_801DA678 reports a choice through a nonzero low byte it plays the accept cue 0x104 through func_8015DF18, reads the UI sub-step byte into a local, arms the overlay-local transition variant byte D_801E60EC with 0x15, sets the sub-step byte to 0x13 (the panel transition handler func_801D5E88, which switches on that variant byte), re-arms the frame timer phaseTimer with 2 and archives the value it read incremented by one into D_801E6094, which that transition handler restores into the sub-step byte once phaseTimer expires, while that work-block byte D_8014865B is nonzero, and otherwise plays the cue 0x106 and arms the sub-step byte with 4.'
   - - 20656
     - asm
     - func_801D5CB0

@@ -73,7 +73,10 @@ alone is not new evidence.
 Branch calls `if (cond) f(x+A); else f(x+B);` can merge into one `jal` where ternary
 argument does not. The same holds for identical argument lists: writing the call in
 both arms can produce the single original call site through cross-jumping, and it
-keeps the per-arm argument setup the original shows. Early returns versus initialized
+keeps the per-arm argument setup the original shows. Do not route that argument
+through one shared constant local: with one call it hoists the fall-through arm's
+constant above the test and fills the branch delay slot with `sw $ra`, three
+instructions short of the original. Early returns versus initialized
 result changes `$v0` lifetime. When the guard wraps calls and stores and each side
 ends in a different constant return or constant store, put the work inside the `if`
 with the constant arm after the block: the work arm goes out of line behind `beq` while
@@ -812,6 +815,9 @@ An address whose only in-image references are words of a code-pointer run has no
 `jal` caller; that is the dispatch shape, not missing evidence. Read its prototype
 off the code that consumes the run - the argument registers it fills and whether it
 reads the result - because the body can ignore arguments its caller still passes.
+An entry with no in-image reference at all is ordinary in an overlay, which is
+entered from outside its payload: its prologue and return paths prove the boundary,
+so a missing `jal` or table word is no reason to hold the lift.
 
 ## Failure and capture
 

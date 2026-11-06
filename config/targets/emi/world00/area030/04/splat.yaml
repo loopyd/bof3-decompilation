@@ -116,8 +116,10 @@ segments:
     - func_801D2648
     - '@source: src/bof3/world/func_801D2648.c'
   - - 7388
-    - asm
+    - c
     - func_801D28DC
+    - '@source: src/bof3/world/func_801D28DC.c'
+    - '@behavior: AREA030 mode-5 handler of the local work-record mode table 0x801E1D20 (dispatched through scratch work-record byte 1): requests the shared selection effect 3 through func_8014D8D4, or effect 2 when the selected record value D_8014421C is negative, then seeds the scratch work record published at the scratchpad cursor 0x1F800044 with the x word at +0x34, the y word at +0x38 and the halfword counter at +0x3E of the active 0x98-byte work record D_80146888[D_801E3208]; it finally releases the shared hold through func_8014D978 and runs the per-record scroll updater func_801E084C.'
   - - 7544
     - c
     - func_801D2978

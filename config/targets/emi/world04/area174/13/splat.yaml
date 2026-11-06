@@ -98,8 +98,10 @@ segments:
     - asm
     - func_801F3E68
   - - 4940
-    - asm
-    - func_801F3F4C
+    - c
+    - seedFrontEndRecordState3AndBytes5D70And5E30World04Area17413_801F3F4C
+    - '@source: src/bof3/world/seedFrontEndRecordState3AndBytes5D70And5E30World04Area17413_801F3F4C.c'
+    - '@behavior: Seeds the 0x74-byte front-end record row selected by work byte 0x0B of the object published at scratchpad 0x1F800044: record byte 0x01 = 3, byte 0x5D = 0x70, byte 0x5E = 0x30.'
   - - 5116
     - asm
     - func_801F3FFC

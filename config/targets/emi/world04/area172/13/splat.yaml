@@ -95,8 +95,10 @@ segments:
     - asm
     - func_801F36C0
   - - 3260
-    - asm
-    - func_801F38BC
+    - c
+    - clearWorkTableAt800E4800World04Area17213_801F38BC
+    - '@source: src/bof3/world/clearWorkTableAt800E4800World04Area17213_801F38BC.c'
+    - '@behavior: Clears the lead byte of each of the first 8 entries of the 0x18-byte-stride work table at 0x800E4800.'
   - - 3304
     - asm
     - func_801F38E8

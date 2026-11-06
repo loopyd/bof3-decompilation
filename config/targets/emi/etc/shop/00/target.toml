@@ -134,6 +134,7 @@ sources = [
     "src/bof3/ui/drawNumberedShopSlotListThenPanelStrip.c",
     "src/bof3/ui/drawShopSlotListWithSelectionCursors.c",
     "src/bof3/ui/prepareSaveDataImageAndPublishPanelRecord.c",
+    "src/bof3/ui/drawShopValuePanelThenArmAcceptTransition.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",

@@ -75,8 +75,8 @@ segments:
     - asm
     - func_801D4AE0
   - - 17060
-    - asm
-    - func_801D4EA4
+    - c
+    - drawThreeCardRowWithRaisedCard
   - - 17288
     - c
     - drawThreeCardRow

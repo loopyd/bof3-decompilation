@@ -65,8 +65,10 @@ segments:
     - asm
     - func_801F3264
   - - 1796
-    - asm
-    - func_801F3304
+    - c
+    - dispatchWorkByte1Table5750ThenDrawWhenStepNonzeroWorld02Area08213_801F3304
+    - '@source: src/bof3/world/dispatchWorkByte1Table5750ThenDrawWhenStepNonzeroWorld02Area08213_801F3304.c'
+    - '@behavior: overlay step dispatcher, loads the non-volatile scratchpad work pointer cell 0x1F800044, calls the handler at the record dispatch byte +0x01 of the five-entry local table at 0x801F5750, reloads the work cell and, only when the record dispatch byte +0x01 is still non-zero, calls the quad-drawing helper at 0x801F3500; takes no arguments and returns nothing.'
   - - 1900
     - c
     - setWorkHalfwordsIncrementWorkByte1World02Area08213_801F336C

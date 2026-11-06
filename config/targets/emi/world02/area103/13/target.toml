@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/world/addSignedTableStepToWord80149318World02Area10313_801F57B4.c",
     "src/bof3/world/advanceScenarioProgressWhenWorkByte79ClearWorld02Area10313_801F5778.c",
     "src/bof3/world/advanceHalfword0aBy17WhenWorkByte79NonzeroWorld02Area10313_801F5738.c",
+    "src/bof3/world/findWorkByte79CandidateIndexWorld02Area10313_801F56B0.c",
     "src/bof3/world/seedThreeRotatingQuadRecordsWorld02Area10313_801F349C.c",
     "src/bof3/support/area103_13_psyq.c",
 ]

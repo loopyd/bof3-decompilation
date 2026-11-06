@@ -16,6 +16,7 @@ sources = [
     "src/bof3/ui/drawThreeCardRow.c",
     "src/bof3/ui/dispatchStepHandler.c",
     "src/bof3/ui/dispatchStepByte1TableD74.c",
+    "src/bof3/ui/drawThreeCardRowWithRaisedCard.c",
 ]
 support_sources = [
     "src/bof3/ui/countFlaggedFieldRecords_commu02_08.c",

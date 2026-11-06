@@ -199,8 +199,9 @@ segments:
     - asm
     - func_801F4EE4
   - - 8972
-    - asm
-    - func_801F4F0C
+    - c
+    - decrementRecordHalfword0aUnlessMode5World02Area10814_801F4F0C
+    - '@source: src/bof3/world/decrementRecordHalfword0aUnlessMode5World02Area10814_801F4F0C.c'
   - - 9056
     - asm
     - func_801F4F60

@@ -4,7 +4,8 @@
 extern u8* area12114WorkCursor_1F800044;
 
 void func_801F5C7C(void);
-void func_801F5E2C(void);
+void alignWorkFacingByte8WithModeByteThenPublishPositionWorld03Area12114_801F5E2C(
+    void);
 
 /* @source 0x801F5FF8
  * @behavior Turn-step update of the work record published at the scratchpad
@@ -36,7 +37,7 @@ void advanceWord6cBy14AndSetState1WhenByte9ExpiresWorld03Area12114_801F5FF8(void
   FIELD_REF(u32, work, 0x6C) = (word + FIELD_REF(u32, work, 0x14)) & 0xFFFu;
   if (reload[9] == 0) {
     reload[1] = 1;
-    func_801F5E2C();
+    alignWorkFacingByte8WithModeByteThenPublishPositionWorld03Area12114_801F5E2C();
   } else {
     func_801F5C7C();
   }

@@ -30,5 +30,6 @@ support_sources = [
     "src/bof3/world/advanceWord6cBy14AndSetState1WhenByte9ExpiresWorld03Area12114_801F5FF8.c",
     "src/bof3/world/copySharedWordsToWork34383cThenDrawAndAdvanceState1WhenByte0aExpiresWorld03Area12114_801F6068.c",
     "src/bof3/support/area121_14_psyq.c",
+    "src/bof3/world/alignWorkFacingByte8WithModeByteThenPublishPositionWorld03Area12114_801F5E2C.c",
 ]
 psyq_source = "src/bof3/support/area121_14_psyq.c"
