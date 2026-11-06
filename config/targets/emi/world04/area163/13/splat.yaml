@@ -34,8 +34,10 @@ segments:
     - asm
     - func_801F2C48
   - - 440
-    - asm
-    - func_801F2DB8
+    - c
+    - advanceWorkByte2AndPlayCue200WhenCameraInsideRecordCoordinateWindowWorld04Area16313_801F2DB8
+    - '@source: src/bof3/world/advanceWorkByte2AndPlayCue200WhenCameraInsideRecordCoordinateWindowWorld04Area16313_801F2DB8.c'
+    - '@behavior: Advance work byte 2 and play cue 0x200 when the camera is inside the record coordinate window, then draw.'
   - - 760
     - asm
     - func_801F2EF8

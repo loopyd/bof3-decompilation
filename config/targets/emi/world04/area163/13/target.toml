@@ -11,5 +11,6 @@ sources = []
 support_sources = [
     "src/bof3/support/area163_13_psyq.c",
     "src/bof3/world/area16313DispatchTables.c",
+    "src/bof3/world/advanceWorkByte2AndPlayCue200WhenCameraInsideRecordCoordinateWindowWorld04Area16313_801F2DB8.c",
 ]
 psyq_source = "src/bof3/support/area163_13_psyq.c"

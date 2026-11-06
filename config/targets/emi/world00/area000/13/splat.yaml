@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801F2C8C
   - - 216
-    - asm
-    - func_801F2CD8
+    - c
+    - armWorkWithScratchByte8AndSetByte7To2World00Area00013_801F2CD8
+    - '@source: src/bof3/world/armWorkWithScratchByte8AndSetByte7To2World00Area00013_801F2CD8.c'
+    - '@behavior: Loads the scratch work record published at the scratchpad pointer cell 0x1F800044, passes the work-record pointer published through the global pointer cell 0x80148210 and work byte 8 of that record to the shared func_801ABBA8 helper, then reloads the 0x80148210 pointer cell and stores 2 in byte 7 of the record.'
   - - 280
     - asm
     - func_801F2D18

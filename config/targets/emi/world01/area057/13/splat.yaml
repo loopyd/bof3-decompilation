@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801F2D30
   - - 344
-    - asm
-    - func_801F2D58
+    - c
+    - invokeHelperByteArgWorld01Area05713_801F2D58
+    - '@source: src/bof3/world/invokeHelperByteArgWorld01Area05713_801F2D58.c'
+    - '@behavior: Thin overlay wrapper passing the shared main-RAM byte D_80145029, loaded unsigned, as the single argument of the shared EXE helper at 0x80161D74.'
 - - 384
   - bin
   - tail

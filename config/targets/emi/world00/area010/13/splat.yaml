@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801F2CB0
   - - 220
-    - asm
-    - func_801F2CDC
+    - c
+    - seedFrontEndRecordHandler1CFromWorkPositionWorld00Area01013_801F2CDC
+    - '@source: src/bof3/world/seedFrontEndRecordHandler1CFromWorkPositionWorld00Area01013_801F2CDC.c'
+    - '@behavior: claims one front-end record through the shared allocator func_8019601C and, unless the returned index is 0xFF, sets the record occupancy byte, writes handler selector 0x1C and copies the scratch work object position words 0x34/0x38.'
 - - 348
   - bin
   - tail

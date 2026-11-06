@@ -1,6 +1,6 @@
 dispatchStateByte2Table3418World04Area16413_801F2C04 = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
-func_801F2DB8 = 0x801F2DB8;
+advanceWorkByte2AndPlayCue200WhenCameraInsideRecordCoordinateWindowWorld04Area16413_801F2DB8 = 0x801F2DB8;
 func_801F2EF8 = 0x801F2EF8;
 func_801F2F54 = 0x801F2F54;
 func_801F3064 = 0x801F3064;

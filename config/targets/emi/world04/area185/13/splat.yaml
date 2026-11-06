@@ -36,8 +36,10 @@ segments:
     - c
     - invokeHelperArgWorld04Area18513_801F3328
   - - 1864
-    - asm
-    - func_801F3348
+    - c
+    - copySharedXToWorkXIfInRangeWorld04Area18513_801F3348
+    - '@source: src/bof3/world/copySharedXToWorkXIfInRangeWorld04Area18513_801F3348.c'
+    - '@behavior: Loads the shared X channel D_80149308 and, while it is at most 0x2E0000, stores it into the X field at offset 0x34 of the work record reached through the pointer slot at 0x1F800044.'
   - - 1912
     - asm
     - func_801F3378

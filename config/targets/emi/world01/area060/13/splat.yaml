@@ -40,8 +40,9 @@ segments:
     - asm
     - func_801F3288
   - - 1808
-    - asm
-    - func_801F3310
+    - c
+    - raiseWorldFlag2000World01Area06013_801F3310
+    - '@source: src/bof3/world/raiseWorldFlag2000World01Area06013_801F3310.c'
   - - 1840
     - textbin
     - D_801F3330

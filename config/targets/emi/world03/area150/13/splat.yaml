@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801F2CB0
   - - 220
-    - asm
-    - func_801F2CDC
+    - c
+    - setStatusFFFFAndByte801448EC0EIfGateElse0CWorld03Area15013_801F2CDC
+    - '@source: src/bof3/world/setStatusFFFFAndByte801448EC0EIfGateElse0CWorld03Area15013_801F2CDC.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 with a signed byte read (`lb`, so the cell is s8) into a local, stores 0xFFFF into the shared status halfword D_801490A8, then stores 0x0E into the shared state byte at 0x801448EC while the gate byte is nonzero and 0x0C when it is zero; the gate value stays in $v1, the selected constant is materialised in $v0, the nonzero arm fills the `bnez` delay slot and both arms share the single `sb`.'
   - - 268
     - asm
     - func_801F2D0C
