@@ -39,8 +39,8 @@ segments:
     - c
     - dispatchByte4e08Table4bd8Commu0107_801D0E44
   - - 640
-    - asm
-    - func_801D0E80
+    - c
+    - dispatchByte1f294dTable4be4Commu0107_801D0E80
   - - 700
     - asm
     - func_801D0EBC

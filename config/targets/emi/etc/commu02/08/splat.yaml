@@ -36,8 +36,8 @@ segments:
     - asm
     - func_801D2750
   - - 7060
-    - asm
-    - func_801D2794
+    - c
+    - drawCardRowWithSlotOffsets
   - - 7280
     - c
     - dealNineUniqueCardIds

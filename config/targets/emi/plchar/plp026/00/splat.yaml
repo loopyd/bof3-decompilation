@@ -99,8 +99,8 @@ segments:
     - c
     - dispatchStateByte2Table0a8cPlcharPlp02600_801CFB50
   - - 6036
-    - asm
-    - func_801CFB94
+    - c
+    - dispatchStateByte3Table0a94PlcharPlp02600_801CFB94
   - - 6104
     - asm
     - func_801CFBD8

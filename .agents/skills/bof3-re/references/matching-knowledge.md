@@ -878,7 +878,9 @@ still builds and links; the map and binding addresses are what settle it. A disp
 handler table follows that rule too: bind the symbol at the word its scaled index is
 added to, which can be an entry inside a longer in-image pointer run rather than the
 run's first word. Two exact dispatchers of one overlay differed only in that table
-immediate, so a run base is not automatically the table symbol.
+immediate, so a run base is not automatically the table symbol. A run can also cross
+a reviewed data-row boundary; that is no reason to split or extend a row, so declare
+the extern at the indexed word and leave both rows as reviewed.
 
 A Splat `asm` span is not automatically code. Disassemble the span against the target
 binary before treating it as a lift target:
@@ -896,6 +898,12 @@ reads the result - because the body can ignore arguments its caller still passes
 An entry with no in-image reference at all is ordinary in an overlay, which is
 entered from outside its payload: its prologue and return paths prove the boundary,
 so a missing `jal` or table word is no reason to hold the lift.
+
+When several dispatchers share one run, the word order names the caller. Number the
+entries from the run base, then compare each candidate dispatcher's base entry with
+the entry holding the function's own address: only a base at or below that entry can
+reach it, because a dispatcher indexes forward from its base. One surviving candidate
+is the caller, so no `jal` search is owed.
 
 ## Failure and capture
 

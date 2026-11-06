@@ -19,6 +19,7 @@ sources = [
     "src/bof3/ui/drawThreeCardRowWithRaisedCard.c",
     "src/bof3/ui/dealNineUniqueCardIds.c",
     "src/bof3/ui/drawThreeCardRowStates.c",
+    "src/bof3/ui/drawCardRowWithSlotOffsets.c",
 ]
 support_sources = [
     "src/bof3/ui/countFlaggedFieldRecords_commu02_08.c",

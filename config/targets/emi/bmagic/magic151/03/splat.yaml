@@ -175,8 +175,10 @@ segments:
     - asm
     - func_801F11E0
   - - 9884
-    - asm
-    - func_801F129C
+    - c
+    - incrementWorkByteBAdd4ToWorkByteAThenSetWorkByte9To8AndAdvanceWorkByte2At10BmagicMagic15103_801F129C
+    - '@source: src/bof3/bmagic/incrementWorkByteBAdd4ToWorkByteAThenSetWorkByte9To8AndAdvanceWorkByte2At10BmagicMagic15103_801F129C.c'
+    - '@behavior: Advances the scratchpad work object in three cell reads: increments work byte 0xB, re-reads the pointer cell 0x1F800044 and adds four to work byte 0xA, then re-reads the cell and tests work byte 0xA against 0x10; only when that byte equals 0x10 does it store 8 into work byte 9 through the pointer loaded for the test and re-read the cell to increment work byte 2.'
   - - 10008
     - asm
     - func_801F1318

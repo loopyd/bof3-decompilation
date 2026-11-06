@@ -83,8 +83,10 @@ segments:
     - asm
     - func_801EFC74
   - - 4848
-    - asm
-    - func_801EFEF0
+    - c
+    - setWorkByte9To15AndAdvanceWorkByte2WhenHelperReadyBmagicMagic13103_801EFEF0
+    - '@source: src/bof3/bmagic/setWorkByte9To15AndAdvanceWorkByte2WhenHelperReadyBmagicMagic13103_801EFEF0.c'
+    - '@behavior: Entry index 9 (the word at 0x801F1BE8) of the twelve-entry code pointer run at 0x801F1BC4 that the work-byte-1 dispatcher indexes, so it runs as that step handler while work byte 2 is still zero. It calls the shared readiness helper at 0x8014DAEC and tests the returned byte zero-extended; only when the helper reports ready does it re-materialize the scratchpad work-object pointer cell at 0x1F800044, store 0xF into work byte 9, then read the cell again and increment work byte 2 with a byte-width add, advancing dispatch to the next table entry at 0x801EFF48. The 0xF constant is materialized ahead of the guard branch, the 0x18-byte frame only keeps the return address at 0x10 across the helper call, and nothing is returned.'
   - - 4936
     - asm
     - func_801EFF48

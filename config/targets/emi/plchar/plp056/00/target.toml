@@ -13,6 +13,7 @@ sources = [
     "src/bof3/plchar/dispatchWorkByte2Table0888PlcharPlp05600_801CF728.c",
     "src/bof3/plchar/dispatchWorkByte2Table0864PlcharPlp05600_801CE72C.c",
     "src/bof3/plchar/dispatchWorkByte2Table0894PlcharPlp05600_801CF954.c",
+    "src/bof3/plchar/dispatchWorkByte3Table089cPlcharPlp05600_801CF998.c",
 ]
 support_sources = [
     "src/bof3/plchar/invokeHelperPlcharPlp05600_801CF934.c",
