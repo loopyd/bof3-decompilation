@@ -89,8 +89,16 @@ segments:
     - '@source: src/bof3/world/initializeWorkWordsAndAdvanceStateWorld00Area03004_801D1B54.c'
     - '@behavior: Clears work words 0x0C, 0x10 and 0x1C, copies the unsigned selected-record byte 0 to work word 0x18 and advances state byte 1.'
   - - 3976
+    - c
+    - drawGreenGradientBar
+    - '@source: src/bof3/world/drawGreenGradientBar.c'
+    - '@behavior: Builds the AREA030 two-strip green gradient bar at the shared primitive cursor g_PrimCursor: the upper Gouraud quad spans (arg0, arg1) to (arg0 + arg2, arg1) with black 0x00/0x00/0x00 on its top edge and 0x00/0x80/0x00 four rows below, the lower quad repeats that x pair one 4-row step down with those edge colours exchanged, and GpuAppendPrim appends each 0x24-byte quad under the caller graphics-mode byte arg3, with the cursor cell re-read before the second SetPolyG4.'
+  - - 4336
     - asm
-    - func_801D1B88
+    - func_801D1CF0
+  - - 4920
+    - asm
+    - func_801D1F38
   - - 5172
     - c
     - queueIconStrip

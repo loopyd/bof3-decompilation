@@ -188,6 +188,7 @@ sources = [
     "src/bof3/world/advancePanelMessageScrollAndArmEntry.c",
     "src/bof3/world/func_801D2648.c",
     "src/bof3/world/func_801D28DC.c",
+    "src/bof3/world/drawGreenGradientBar.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",

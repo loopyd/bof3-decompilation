@@ -179,6 +179,18 @@ extern u8 D_80148655;
 extern volatile u16 D_801490A4;
 
 /* Panel handler table indexed with the panel task root's state byte
+ * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by
+ * drawPanelStripThenSubmitTexture, which calls the selected handler with no
+ * arguments (framed jalr) and then draws the panel strip and this panel task's
+ * texture. The three pointer entries present in the shipped payload are
+ * panelNoop (0x801E2800), retreatPanelField6ToNeg20 (0x801E2948) and
+ * advancePanelField6To16 (0x801E2988); the table ends 0xC bytes in, where the
+ * pointer table D_801E5DC0 starts.
+ * @source 0x801E5DB4
+ * @kind table */
+extern void (*panelField6HandlerTable[])(void);
+
+/* Panel handler table indexed with the panel task root's state byte
  * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
  * sibling dispatcher func_801E29C8, which calls the selected handler with no
  * arguments (framed jalr) and then draws the panel at the same task root's

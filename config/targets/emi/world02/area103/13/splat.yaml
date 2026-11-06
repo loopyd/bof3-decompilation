@@ -137,8 +137,10 @@ segments:
     - dispatchStateByte2Table5a28World02Area10313_801F4F00
     - '@source: src/bof3/world/area10313DispatchTables.c'
   - - 9028
-    - asm
-    - func_801F4F44
+    - c
+    - drawWorkStepAndAdvanceWorkByte2At8World02Area10313_801F4F44
+    - '@source: src/bof3/world/drawWorkStepAndAdvanceWorkByte2At8World02Area10313_801F4F44.c'
+    - '@behavior: hands work-record byte 0x09 to the drawer func_801F5174 with 0x80 and then to the drawer func_801F53F0, increments byte 0x09 through its own reload of the scratchpad pointer cell 0x1F800044, and advances the byte-2 dispatch step when byte 0x09 has reached 8.'
   - - 9172
     - asm
     - func_801F4FD4

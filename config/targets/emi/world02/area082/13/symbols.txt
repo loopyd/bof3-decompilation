@@ -1,3 +1,4 @@
+workRecordCursor1F800044 = 0x1F800044;
 paletteStageSerial = 0x80145988;
 setWorkCountdownClearOriginIncrementWorkByte1World02Area08213_801F2C6C = 0x801F2C6C;
 decrementCountdownAdd4WorkWords64And68World02Area08213_801F2C9C = 0x801F2C9C;
@@ -10,6 +11,7 @@ clearWorkTableAt800E4800World02Area08213_801F3910 = 0x801F3910;
 dispatchStateByte2Table576cWorld02Area08213_801F3B5C = 0x801F3B5C;
 dispatchStateByte2Table57d0World02Area08213_801F49D4 = 0x801F49D4;
 initializeWorkFieldsWorld02Area08213_801F4A18 = 0x801F4A18;
+scalePaletteHalfFillScreenWhiteClearWorkByte9AdvanceWorkByte2AtScenarioProgress26World02Area08213_801F4A90 = 0x801F4A90;
 applyPaletteScaleSet8014933AIncrementWorkByte2World02Area08213_801F4AFC = 0x801F4AFC;
 fillScreenGradientAdvanceWorkByte2AtScenarioProgress29World02Area08213_801F4C34 = 0x801F4C34;
 fillScreenGradientAdvanceWorkByte2AtScenarioProgress37World02Area08213_801F5068 = 0x801F5068;

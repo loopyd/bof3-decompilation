@@ -3,7 +3,7 @@
 extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
 void func_801AFE18(void* arg0);
 void func_801AFF04(const void* arg0, void* arg1);
-void func_801F8108(s32 arg0, s32 arg1);
+void emitTwoDrawAreaMovesForCursorCellPairScenarioScena0800_801F8108(s32 arg0, s32 arg1);
 void func_801F823C(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
 void shiftTableEntriesAndInsertHeadValueScenarioScena0800_801F81F4(u16 arg0);
 
@@ -14,8 +14,9 @@ void shiftTableEntriesAndInsertHeadValueScenarioScena0800_801F81F4(u16 arg0);
  * 0x34/0x38/0x3C through the shared projector func_801AFF04 into a local
  * eight-byte screen pair, and stores that pair into the work object's halfwords
  * at offsets 0x2E (projected x) and 0x30 (projected y). It then calls
- * func_801F8108 with the signed halfword at 0x2E and the signed projected y,
- * which stamps two 0x18-byte cells at the projected position; shifts the
+ * emitTwoDrawAreaMovesForCursorCellPairScenarioScena0800_801F8108 with the
+ * signed halfword at 0x2E and the signed projected y, which moves the two
+ * 0x18-byte cells to the drawn frame at the projected position; shifts the
  * overlay angle table at 0x801FE9EC one entry through
  * shiftTableEntriesAndInsertHeadValueScenarioScena0800_801F81F4 with the work
  * object's unsigned halfword at 0x58 as the new head value; and finally calls
@@ -47,7 +48,8 @@ void projectWorkCursorStoreScreenPairAndDrawSpritePairAndRingScenarioScena0800_8
   *(u16*)(work + 0x2E) = sxy[0];
   screenY = sxy[1];
   *(u16*)(work + 0x30) = screenY;
-  func_801F8108(*(s16*)(work + 0x2E), (s16)screenY);
+  emitTwoDrawAreaMovesForCursorCellPairScenarioScena0800_801F8108(
+      *(s16*)(work + 0x2E), (s16)screenY);
   ringWork = scenarioScena0800Work;
   shiftTableEntriesAndInsertHeadValueScenarioScena0800_801F81F4(
       *(u16*)(ringWork + 0x58));

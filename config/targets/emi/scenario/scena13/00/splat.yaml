@@ -78,8 +78,8 @@ segments:
     - asm
     - func_801F763C
   - - 3416
-    - asm
-    - func_801F7958
+    - c
+    - convergeWorkRecordPairYOverCountdownThenAdvanceWorkByte1ScenarioScena1300_801F7958
   - - 3612
     - asm
     - func_801F7A1C

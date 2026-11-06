@@ -151,8 +151,10 @@ segments:
     - '@source: src/bof3/world/initializeWorkFieldsWorld02Area08213_801F4A18.c'
     - '@behavior: initializes scratch work fields, transforms saved words +0x0C/+0x10 into +0x34/+0x38 and advances byte +0x02; takes no arguments and returns nothing.'
   - - 7824
-    - asm
-    - func_801F4A90
+    - c
+    - scalePaletteHalfFillScreenWhiteClearWorkByte9AdvanceWorkByte2AtScenarioProgress26World02Area08213_801F4A90
+    - '@source: src/bof3/world/scalePaletteHalfFillScreenWhiteClearWorkByte9AdvanceWorkByte2AtScenarioProgress26World02Area08213_801F4A90.c'
+    - '@behavior: scales the 0x100-entry palette window by 0x40, clears the shared palette-stage byte at 0x8014933A, fills the whole screen with the solid white colour word -1 through the gradient fill helper at 0x801F5428, clears scratch work byte +0x09 and advances work byte +0x02; only runs when the shared scenario progress byte at 0x80146864 is 0x26, takes no arguments and returns nothing.'
   - - 7932
     - c
     - applyPaletteScaleSet8014933AIncrementWorkByte2World02Area08213_801F4AFC

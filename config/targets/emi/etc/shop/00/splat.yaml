@@ -697,8 +697,10 @@ segments:
     - panelNoop
     - '@source: src/bof3/ui/panelNoop.c'
   - - 72712
-    - asm
-    - func_801E2808
+    - c
+    - drawPanelStripThenSubmitTexture
+    - '@source: src/bof3/ui/drawPanelStripThenSubmitTexture.c'
+    - '@behavior: panel handler at entry 0 of the handler table D_801E5D68, which func_801E27BC dispatches with panel task byte 2: calls the handler panelField6HandlerTable[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then draws the shop panel strip through func_801DAB90 with the same task root x and field-6 halfwords, the constants 0x118 and 0x13 and the main-RAM CLUT-bank byte D_80144952. When the signed halfword at task offset 0x10 is nonzero it submits a texture through func_8014F800 at (x + 7, y + 3) with the constants 0 and 0xFF and the handle func_801502D0 of that id masked to 16 bits, and for the ids 0x36, 0x49, 0x4A and 0x52 it submits a second texture at the same position with the handle func_801502D0(0xF).'
   - - 73032
     - c
     - retreatPanelField6ToNeg20

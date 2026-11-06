@@ -244,8 +244,10 @@ segments:
     - c
     - clearStateQueueCue202World02Area07714_801F5A84
   - - 11948
-    - asm
-    - func_801F5AAC
+    - c
+    - publishWorkBaseAndSeedFrontEndRecordFromModeTableWorld02Area07714_801F5AAC
+    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordFromModeTableWorld02Area07714_801F5AAC.c'
+    - '@behavior: publishes the shared work base D_80145E90 as the scratchpad work cursor at 0x1F800044 and then seeds one front-end record of kind 3 through the shared allocator/seeder 0x8015CB18 with word +0x0C = 0, word +0x10 = the mode-indexed byte of the table at 0x801F6B28 and halfwords +0x2E/+0x30 from 0x80145EBE/0x80145EC0, storing the returned record index in work byte +0x0B unless the call reports 0xFF.'
   - - 12076
     - asm
     - func_801F5B2C

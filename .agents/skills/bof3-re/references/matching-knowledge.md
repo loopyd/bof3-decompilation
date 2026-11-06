@@ -43,7 +43,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | One hunk differing only in the register order of a single `beq`/`bne`, with size, count and frame already equal | Reverse the written operands of that compare so the held value is on the left (`value != table[index]`); comparison operands follow the written order, so this swap works where an arithmetic commutative respelling normalizes back |
 | Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests. The merge needs one loaded word: two non-zero tests on different byte fields of a record stay two loads, so keep that conjunction as written |
 | Both arms truncate the same value, then differ only in a constant, and the current build masks once before the branch | Repeat the truncation as its own statement inside each arm (`angle &= 0xFFFF;` then `angle += bias;`). One combined expression lets GCC share the mask across the arms and fill the branch delay slot, which came out two instructions short with identical memory events; the split arms keep a per-arm `andi` and the original's unfilled slot |
-| Three-term sum stays one instruction long, or the first divergence sits at a later term | Sweep the three associations `a + (b + c)`, `(a + b) + c`, `(b + c) + a` before touching guards, casts or truthiness spellings of that sum; the mirrored nesting stalled one instruction short with the divergence pushed to the last term, and the re-spellings measured neutral |
+| Three-term sum stays one instruction long, or the first divergence sits at a later term | Sweep the three associations `a + (b + c)`, `(a + b) + c`, `(b + c) + a` before touching guards, casts or truthiness spellings of that sum; the mirrored nesting stalled one instruction short with the divergence pushed to the last term, and the re-spellings measured neutral. When one term is a product minus a constant and several stores reuse it, name that bias as one `s32` local per store group instead of keeping the sum inline: the parenthesized form let GCC fold the constant into an earlier argument's `addiu` and drop the `move` that saved it, eight bytes short, and the unparenthesized form lost nine instructions at the original size |
 | Boolean result misses the return register; extra return copy | Trace [boolean return expansion](#boolean-return-expansion) before allocation |
 | Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt. For displaced induction setup, inspect [explicit cursors](#explicit-cursors-and-signed-bounds) |
 | Global/BSS offsets | Audit COMMON/section/alignment/order/padding and following symbols |
@@ -586,7 +586,15 @@ extra bytes.
 2. Name the product once as a scalar local and index the same array symbol through
    it in both places: `offset = span * 3;` then `D_x[offset + 2]` and
    `&D_x[offset]`. Keep the symbol name on both uses; a pointer local used for both
-   changes the base materialisation order and emits the base late.
+   changes the base materialisation order and emits the base late. A subscript
+   that carries a real row stride needs the named offset and a byte-typed base:
+   naming the product alone left the base hoisted as `lui`/`addiu` plus
+   `lw|sw 0(reg)`, and re-typing the base to `u8 *` with the byte sum still inline
+   measured the same, each 20 bytes short with the first divergence at the base
+   materialisation. Write the byte offset as its own local against the byte view
+   (`offset = slot * 152; ((u8 *)D_x)[offset] += ...;`) so every access re-derives
+   the base. Five respellings of the word-scaled subscript, including a named
+   `slot * 38` and a separate load/store value local, measured identical.
 3. An inline scale inside a fixed-address array subscript makes the whole symbol
    address loop-invariant. GCC hoists that base into a saved register before the
    loop and indexes from it, one instruction more than the original's per-iteration

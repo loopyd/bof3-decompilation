@@ -3,7 +3,7 @@
 extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
 void func_801AFE18(void* arg0);
 void func_801AFF04(const void* arg0, void* arg1);
-void func_801F8108(s32 arg0, s32 arg1);
+void emitTwoDrawAreaMovesForCursorCellPairScenarioScena0800_801F8108(s32 arg0, s32 arg1);
 void func_801F85F0(s32 arg0, s32 arg1, s16 arg2);
 
 /* @source 0x801F7688
@@ -16,10 +16,12 @@ void func_801F85F0(s32 arg0, s32 arg1, s16 arg2);
  * 0x2E (projected x) and 0x30 (projected y). It seeds halfword 0x32 with 0x140
  * and the countdown halfword 0x5A with 0x14, and increments work byte 1 modulo
  * 256 so the next frame dispatches entry 11 at 0x801F774C, which subtracts 16
- * from halfword 0x32 each frame while that countdown runs. It then draws the two
- * 0x18-byte cells through func_801F8108 with the signed halfwords 0x2E and 0x30
- * and lays out the ring through func_801F85F0 with the signed halfwords 0x2E,
- * 0x30 and 0x32, reloading the scratchpad work pointer once per call group.
+ * from halfword 0x32 each frame while that countdown runs. It then moves the
+ * two 0x18-byte cells through
+ * emitTwoDrawAreaMovesForCursorCellPairScenarioScena0800_801F8108 with the
+ * signed halfwords 0x2E and 0x30, and lays out the ring through func_801F85F0
+ * with the signed halfwords 0x2E, 0x30 and 0x32, reloading the scratchpad work
+ * pointer once per call group.
  * Takes no arguments and returns nothing. The callees' wider roles and the work
  * halfword meanings downstream of this seed remain unknown.
  * @status exact
@@ -50,7 +52,8 @@ void projectWorkCursorStoreScreenPairSeedHalfword32AndCountdown5AThenDrawAndAdva
   drawWork = scenarioScena0800Work;
   *(u16*)(work + 0x5A) = 0x14;
   *(u16*)(work + 0x30) = screenY;
-  func_801F8108(*(s16*)(drawWork + 0x2E), *(s16*)(drawWork + 0x30));
+  emitTwoDrawAreaMovesForCursorCellPairScenarioScena0800_801F8108(
+      *(s16*)(drawWork + 0x2E), *(s16*)(drawWork + 0x30));
   ringWork = scenarioScena0800Work;
   func_801F85F0(*(s16*)(ringWork + 0x2E), *(s16*)(ringWork + 0x30),
                 *(s16*)(ringWork + 0x32));

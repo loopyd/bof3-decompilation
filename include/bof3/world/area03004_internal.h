@@ -551,7 +551,7 @@ void func_801D1818(s16 arg0, s16 arg1, u8 arg2);
  * code 0x7C) verified in the shipped executable; absent from the SDK map, so it
  * stays target-local. */
 void func_8017AA08(SPRT_16* arg0);
-void func_801D1B88(s16 arg0, s16 arg1, s16 arg2, u8 arg3);
+void drawGreenGradientBar(s16 arg0, s16 arg1, s16 arg2, u8 arg3);
 void queueIconStrip(s16 arg0, s16 arg1, u8 arg2, s8 arg3);
 void func_801D2AE0(void);
 void func_801D2C34(s16 arg0, s16 arg1, s8 arg2, u8 arg3);

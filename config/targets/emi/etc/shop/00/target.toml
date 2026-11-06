@@ -137,6 +137,7 @@ sources = [
     "src/bof3/ui/prepareSaveDataImageAndPublishPanelRecord.c",
     "src/bof3/ui/drawShopValuePanelThenArmAcceptTransition.c",
     "src/bof3/ui/drawShopPanelRowThenArmAcceptTransition.c",
+    "src/bof3/ui/drawPanelStripThenSubmitTexture.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",
