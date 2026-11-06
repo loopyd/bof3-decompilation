@@ -126,8 +126,9 @@ segments:
     - asm
     - func_801F416C
   - - 5616
-    - asm
-    - func_801F41F0
+    - c
+    - dispatchStateByte3Table61ccWorld02Area08813_801F41F0
+    - '@source: src/bof3/world/dispatchStateByte3Table61ccWorld02Area08813_801F41F0.c'
   - - 5684
     - asm
     - func_801F4234

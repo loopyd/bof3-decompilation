@@ -83,8 +83,8 @@ segments:
     - asm
     - func_801F30B0
   - - 1740
-    - asm
-    - func_801F32CC
+    - c
+    - countdownScratchStateToMode13World01Area06813_801F32CC
   - - 1796
     - asm
     - func_801F3304

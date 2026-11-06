@@ -122,8 +122,10 @@ segments:
     - c
     - incrementWorkByte2World02Area10814_801F403C
   - - 5212
-    - asm
-    - func_801F405C
+    - c
+    - drawWorkQuadAdvanceWorkByte9At6dSetSharedByte1AdvanceScenarioProgressToFAndWorkByte2World02Area10814_801F405C
+    - '@source: src/bof3/world/drawWorkQuadAdvanceWorkByte9At6dSetSharedByte1AdvanceScenarioProgressToFAndWorkByte2World02Area10814_801F405C.c'
+    - '@behavior: runs only while the shared scenario progress byte at 0x80146864 reads 0x0E; passes work byte +0x09 of the record published through scratchpad pointer cell 0x1F800044 twice to the overlay quad helper at 0x801F4160, advances that byte by one, and once it reaches 0x6D stores 1 into the shared overlay state byte 0x8014933B, advances the progress byte to 0x0F and increments the record dispatch byte +0x02.'
   - - 5384
     - c
     - incrementWorkByte2World02Area10814_801F4108

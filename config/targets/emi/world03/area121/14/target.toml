@@ -33,5 +33,6 @@ support_sources = [
     "src/bof3/world/alignWorkFacingByte8WithModeByteThenPublishPositionWorld03Area12114_801F5E2C.c",
     "src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World03Area12114_801F3940.c",
     "src/bof3/world/drawShadedMeterFrameAndDepletingFillWorld03Area12114_801F5B90.c",
+    "src/bof3/world/decrementHalfword30By0aAndAdvanceState3Below0xC9OrTo3WhenGatedThenDrawHalfword30World03Area12114_801F3768.c",
 ]
 psyq_source = "src/bof3/support/area121_14_psyq.c"

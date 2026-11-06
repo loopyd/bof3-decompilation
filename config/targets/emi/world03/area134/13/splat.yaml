@@ -279,8 +279,10 @@ segments:
     - asm
     - func_801F4388
   - - 6144
-    - asm
-    - func_801F4400
+    - c
+    - advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World03Area13413_801F4400
+    - '@source: src/bof3/world/advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World03Area13413_801F4400.c'
+    - '@behavior: Entry 1 of the work-byte-1 handler table based at 0x801F5828, dispatched by dispatchStateByte1Table5828World03Area13413_801F4344: advances the record word at +0x1C published at scratchpad cell 0x1F800044 by 0x01000000 and clamps it to the word at +0x14 plus 0x08000000, sweeps the halfword at +0x20 down by 0x200, calls the overlay helper at 0x801F4B6C, then decrements countdown byte 9 and re-arms it with 0x10 while advancing work byte 1 to entry 2.'
   - - 6336
     - asm
     - func_801F44C0

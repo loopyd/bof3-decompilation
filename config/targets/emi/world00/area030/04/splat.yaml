@@ -712,8 +712,10 @@ segments:
     - '@source: src/bof3/world/func_801DC64C.c'
     - '@behavior: dispatches the byte at offset 3 of the scratch work-record cursor (0x1F800044) through the local handler table at 0x801E22BC.'
   - - 47760
-    - asm
+    - c
     - func_801DC690
+    - '@source: src/bof3/world/func_801DC690_area03004.c'
+    - '@behavior: AREA030 work-record dispatch step, handler 1 of the local table at 0x801E22BC selected by byte 3 of the scratch work record published at 0x1F800044: while the shared selection gate byte D_80144199_BYTE holds 3, it calls the frontend effect helper func_8015D404 with (0, 1), queues the frontend cue func_80161C20(0x28, 100, 8), dispatches sound cue 0x203 through func_8015DF18, requests state 5 from the target-local state helper func_801DDE94 and advances that record dispatch byte 3; the shared helper func_8014D978 runs unconditionally afterwards.'
   - - 47880
     - c
     - func_801DC708

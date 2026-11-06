@@ -192,6 +192,7 @@ sources = [
     "src/bof3/world/drawGreenGradientBar.c",
     "src/bof3/world/advancePanelFadeAndDrawGradientBarWorld00Area03004_801D1CF0.c",
     "src/bof3/world/drawAlternatingNameAndQueueIconStripWorld00Area03004_801D1F38.c",
+    "src/bof3/world/func_801DC690_area03004.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",

@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/world/advanceCounterWorld01Area06714_801F3EE4.c",
     "src/bof3/world/retreatCounter2World01Area06714_801F445C.c",
     "src/bof3/world/clearWorkRecordCountdownsAt800E4800World01Area06714_801F39AC.c",
+    "src/bof3/world/publishModeStatusFromTable539cAndProgress5World01Area06714_801F3E7C.c",
     "src/bof3/support/area067_14_psyq.c",
 ]
 psyq_source = "src/bof3/support/area067_14_psyq.c"

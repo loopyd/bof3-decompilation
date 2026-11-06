@@ -85,8 +85,10 @@ segments:
     - asm
     - func_801F3D68
   - - 4624
-    - asm
-    - func_801F3E10
+    - c
+    - rampWorkYPositionDrawOnFifthTickAndAdvanceWorkByte2At19World02Area10313_801F3E10
+    - '@source: src/bof3/world/rampWorkYPositionDrawOnFifthTickAndAdvanceWorkByte2At19World02Area10313_801F3E10.c'
+    - '@behavior: advances the work record''s fixed-point y word at 0x38 by 0x1000 while the signed halfword at 0x3A stays below 0x19 and otherwise advances work byte 0x02, drives the four-way block drawer func_801F4E70 with (shared frame counter 0x80143E6C / 5) & 3 when that counter is a multiple of five, then runs func_801F49A0 twice and the four-block drawer func_801F482C.'
   - - 4788
     - asm
     - func_801F3EB4

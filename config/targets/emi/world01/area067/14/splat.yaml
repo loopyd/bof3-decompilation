@@ -90,8 +90,10 @@ segments:
     - asm
     - func_801F3E50
   - - 4732
-    - asm
-    - func_801F3E7C
+    - c
+    - publishModeStatusFromTable539cAndProgress5World01Area06714_801F3E7C
+    - '@source: src/bof3/world/publishModeStatusFromTable539cAndProgress5World01Area06714_801F3E7C.c'
+    - '@behavior: publishes the mode-indexed halfword from the table at 0x801F539C into the shared status halfword and stores scenario progress 5 while the mode is 0 or 1'
   - - 4804
     - c
     - setWorkByte24Bit4World01Area06714_801F3EC4

@@ -1,7 +1,7 @@
 #include "bof3/bof3.h"
 
 void func_801F402C(void);
-void func_801F41F0(void);
+void dispatchStateByte3Table61ccWorld02Area08813_801F41F0(void);
 
 /* @source 0x801F4004
  * @behavior Thin overlay wrapper: calls the helpers at 0x801F402C and 0x801F41F0 in sequence and returns.
@@ -11,5 +11,5 @@ void func_801F41F0(void);
  */
 void invokeTwoHelpersWorld02Area08813_801F4004(void) {
   func_801F402C();
-  func_801F41F0();
+  dispatchStateByte3Table61ccWorld02Area08813_801F41F0();
 }

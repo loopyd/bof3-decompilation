@@ -121,7 +121,10 @@ Write a two-sided range guard as the inclusion conjunction the original branches
 exclusion form emits the inverse test and swaps the arms behind it while size stays
 equal, so a wrong tail arm order there is a symptom of the range spelling rather
 than a second defect. Masks and a re-typed narrow index on that compared value
-measured neutral at the same residue.
+measured neutral at the same residue. A conjunction also folds rather than swaps
+arms when its low bound is `>= 0`, because that pair is exactly the unsigned bound:
+GCC emits one `sltiu` and lands two instructions short of the original's separate
+sign and magnitude tests, so write each test as its own early return.
 
 A guarded dispatcher (`sltiu` bound, table base, one indexed load, `jr`) gives the
 dense switch shape directly: one arm per table word, in order, and the arm an
@@ -443,7 +446,10 @@ the original reuses one cursor load across stores that the current build reloads
    byte offsets emits the same stores yet blocks the delay-slot fill of the call
    that follows the run, leaving a `nop` where the original has the last store.
 5. Store a negative byte constant through an `s8*` pointer. `(u8)-100` folds to 156
-   and emits `li ...,156` where the original has `li ...,-100`.
+   and emits `li ...,156` where the original has `li ...,-100`. An addend needs the same
+   reading: `value - 1` emits `addiu ...,-1` where the original's bytes show
+   `addiu ...,0xFF`, and `value + 0xFF` stores the same truncated byte with the
+   original immediate.
 
 ### Scratchpad cells and record views
 
@@ -469,6 +475,10 @@ a hoisted-base residual here, so reach for this before allocation work. The
 fixed-address accessors of the [memory API](memory-api.md) are that same macro, and
 their fold can surface outside the body: a frame eight bytes larger with one extra
 saved register and no differing body access is the shared base, not an orphan slot.
+The accessor folds only while its address is not shared: a cell read again after a
+call keeps the constant live across it, so the base hoists into a callee-saved
+register and the frame grows with it, while the named map cell re-materialises per
+access.
 
 Stores follow the same rule. Each `sb` to a distinct fixed-address cell carries its own
 `lui $at, %hi(sym)`, so declare one named extern per cell. That holds for one cell read

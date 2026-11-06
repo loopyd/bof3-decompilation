@@ -194,8 +194,10 @@ segments:
     - asm
     - func_801F50C4
   - - 9508
-    - asm
-    - func_801F5124
+    - c
+    - fillScreenGradientAdjustWorkHalfword32AdvanceWorkByte2AtScenarioProgress3aWorld02Area08213_801F5124
+    - '@source: src/bof3/world/fillScreenGradientAdjustWorkHalfword32AdvanceWorkByte2AtScenarioProgress3aWorld02Area08213_801F5124.c'
+    - '@behavior: clears the shared palette-stage byte at 0x8014933A, paints the whole 0x140 x 0xF0 screen with the constant colour word 0x10001805 through the gradient fill helper at 0x801F5428, reduces the halfword +0x32 of the scratch work record published through 0x1F800044 by the signed quotient of the record word +0x14 divided by 10000 and masks that difference with 0xFFD, draws through the helper at 0x801F4430, and, only when the shared scenario progress byte at 0x80146864 is 0x3A, re-reads the work cell and advances that work record byte +0x02 by one.'
   - - 9660
     - asm
     - func_801F51BC

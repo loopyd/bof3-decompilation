@@ -28,6 +28,7 @@ support_sources = [
     "src/bof3/world/setWorkHalfword32To16WhenWorkTableIdleIncrementWorkByte1World02Area08213_801F3470.c",
     "src/bof3/world/dispatchWorkByte1Table5750ThenDrawWhenStepNonzeroWorld02Area08213_801F3304.c",
     "src/bof3/world/incrementWorkByte9SetWorkByteBTo2AdvanceWorkByte2WhenCountReaches17World02Area08213_801F3D04.c",
+    "src/bof3/world/fillScreenGradientAdjustWorkHalfword32AdvanceWorkByte2AtScenarioProgress3aWorld02Area08213_801F5124.c",
     "src/bof3/support/area082_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area082_13_psyq.c"
