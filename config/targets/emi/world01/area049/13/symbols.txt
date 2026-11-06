@@ -1,4 +1,4 @@
-func_80117004 = 0x80117004;
+dispatchWorkByte1Table818cWorld01Area04913_80117004 = 0x80117004;
 func_80117048 = 0x80117048;
 clearWorkFlagsWhenNoEntryHandledWorld01Area04913_801170A4 = 0x801170A4;
 func_801170D8 = 0x801170D8;

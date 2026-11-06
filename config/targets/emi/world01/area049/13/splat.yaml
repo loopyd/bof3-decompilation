@@ -27,8 +27,10 @@ segments:
   vram: 2148626436
   subsegments:
   - - 4
-    - asm
-    - func_80117004
+    - c
+    - dispatchWorkByte1Table818cWorld01Area04913_80117004
+    - '@source: src/bof3/world/dispatchWorkByte1Table818cWorld01Area04913_80117004.c'
+    - '@behavior: Overlay step dispatch: reads byte +1 of the work record published at the scratchpad pointer cell 0x1F800044 and calls the handler at that index of the overlay''s unchecked handler table based at 0x8011818C (thirteen in-image pointers, func_80117048 through func_80117DF0). Takes no arguments and returns nothing.'
   - - 72
     - asm
     - func_80117048

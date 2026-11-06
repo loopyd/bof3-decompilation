@@ -52,8 +52,9 @@ segments:
     - dispatchStateByte1Table041cBmagicMagic16903_801EF210
     - '@source: src/bof3/bmagic/magic16903DispatchTables.c'
   - - 1620
-    - asm
-    - func_801EF254
+    - c
+    - dispatchWorkByte2HandlerBmagicMagic16903_801EF254
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic16903_801EF254.c'
   - - 1740
     - asm
     - func_801EF2CC

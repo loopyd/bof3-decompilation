@@ -1,3 +1,4 @@
+g_battle_work = 0x1F800044;
 func_801EEC04 = 0x801EEC04;
 func_801EEC5C = 0x801EEC5C;
 func_801EEDD8 = 0x801EEDD8;
@@ -5,7 +6,7 @@ dispatchStateByte1Table0b74BmagicMagic17203_801EEE38 = 0x801EEE38;
 func_801EEE7C = 0x801EEE7C;
 func_801EF158 = 0x801EF158;
 func_801EF210 = 0x801EF210;
-func_801EF3A4 = 0x801EF3A4;
+add2ToWorkByteBAdd2ToWorkByteAWhenBelow10ThenDecrementWorkByte9AndAdvanceWorkByte2OnZeroBmagicMagic17203_801EF3A4 = 0x801EF3A4;
 func_801EF430 = 0x801EF430;
 func_801EF4BC = 0x801EF4BC;
 func_801EF518 = 0x801EF518;

@@ -110,8 +110,9 @@ segments:
     - asm
     - func_801F3C1C
   - - 4256
-    - asm
-    - func_801F3CA0
+    - c
+    - clearOverlayStateByteWorld03Area13213_801F3CA0
+    - '@source: src/bof3/world/clearOverlayStateByteWorld03Area13213_801F3CA0.c'
   - - 4272
     - asm
     - func_801F3CB0

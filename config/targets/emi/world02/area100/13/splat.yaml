@@ -57,8 +57,9 @@ segments:
     - asm
     - func_801F30B4
   - - 1288
-    - asm
-    - func_801F3108
+    - c
+    - advanceWorkOffsetAndVelocityThenDrawQuadAndAdvanceStateByte1PastLimitWorld02Area10013_801F3108
+    - '@source: src/bof3/world/advanceWorkOffsetAndVelocityThenDrawQuadAndAdvanceStateByte1PastLimitWorld02Area10013_801F3108.c'
   - - 1440
     - asm
     - func_801F31A0

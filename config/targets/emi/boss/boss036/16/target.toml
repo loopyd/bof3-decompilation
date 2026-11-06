@@ -16,6 +16,7 @@ support_sources = [
     "src/bof3/boss/zeroResultBossBoss03616_800C1DB0.c",
     "src/bof3/boss/noopHandlerBossBoss03616_800C1B64.c",
     "src/bof3/boss/noopHandlerBossBoss03616_800C1B5C.c",
+    "src/bof3/boss/dispatchIndexedHandlerBossBoss03616_800C1B24.c",
     "src/bof3/support/boss036_16_psyq.c",
 ]
 psyq_source = "src/bof3/support/boss036_16_psyq.c"
