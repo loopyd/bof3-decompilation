@@ -18,6 +18,7 @@ sources = [
     "src/bof3/ui/advanceUiPhaseOrSelectSavedStatePhase.c",
     "src/bof3/ui/dispatchUiSubStepTable.c",
     "src/bof3/ui/func_801D3AE4.c",
+    "src/bof3/ui/emitShopPanelStripAndAmountThenAdvanceUiSubstepOnGate.c",
     "src/bof3/ui/func_801D41B0.c",
     "src/bof3/ui/appendDimTileOrRedrawPanelStrip.c",
     "src/bof3/ui/func_801D4614_shop00.c",

@@ -177,8 +177,10 @@ segments:
     - asm
     - func_801FC6E0
   - - 23352
-    - asm
-    - func_801FC738
+    - c
+    - clearSharedStateBytesThenRequestPrimaryState8ScenarioScena1200_801FC738
+    - '@source: src/bof3/scenario/clearSharedStateBytesThenRequestPrimaryState8ScenarioScena1200_801FC738.c'
+    - '@behavior: Overlay per-record callback and entry 12 (the word at 0x801FD21C) of the 15-word record-callback table at 0x801FD1EC that dispatchRecordCallbackByByte7AScenarioScena1200_801FC574 selects with the record unsigned byte at offset 0x7A: it runs the shared front-end startup helper func_8015C088, clears the shared main-RAM state bytes 0x80146865, 0x80146866 and 0x80146867, clears the shared sub-state byte D_80146875 and requests primary scene state 8 by storing 8 in the shared primary state byte D_80146874. It takes no arguments, ignores the record pointer and second argument its dispatcher passes, reads no other state and writes nothing else; the 0x18-byte frame only keeps $ra across the call and the constant 8 is materialised once in $v0 to feed the last sb. The 76 bytes are the same helper-and-clear shape as the exact scena11 siblings clearSharedStateBytesThenRequestPrimaryState3/5/6 (0x801FA674, 0x801FA6C0, 0x801FA75C), differing only in the one stored constant.'
   - - 23428
     - asm
     - func_801FC784

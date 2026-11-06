@@ -44,5 +44,6 @@ support_sources = [
     "src/bof3/support/area077_14_psyq.c",
     "src/bof3/world/incrementWorkStepIfSharedFlag7SetWorld02Area07714_801F56C4.c",
     "src/bof3/world/markSelectedFrontEndRecordActiveWithValueWorld02Area07714_801F61F0.c",
+    "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area07714_801F5B2C.c",
 ]
 psyq_source = "src/bof3/support/area077_14_psyq.c"

@@ -28,7 +28,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Pointer load versus address calculation | Prove pointer versus array declaration |
 | Wrong relocation/base folding | Standalone symbol versus reviewed struct field/array |
 | `addu $at,index,$at` versus `addu $at,$at,index` | Named extern array can shift expansion to assembler; never pin scratch `$at` |
-| Fixed-address constant steals entry copy | Named extern binding can prevent constant-address CSE; verify entire register web |
+| Fixed-address constant steals entry copy | Named extern binding can prevent constant-address CSE; verify entire register web. A fixed-address scalar read and written back later steals it too: bare `g += 1` splits the symbol into `lui` plus displacement at each access, while one pointer local to it (`p = &g; *p = *p + 1;`) keeps the original's single base and clears that entry-block difference with it |
 | Saved copy moves to entry or commutative operands stay swapped | Trace [CSE lifetimes and commutative targets](#cse-lifetimes-and-commutative-targets) |
 | First mismatch stays at one entry-block offset through width, mask and cast probes | Reorder the loop-variable initializer statements (`i`, destination, source); declaration order does not move it. One measured order was exact, another moved the first mismatch later at a lower score |
 | Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler. One measured source is a narrowed `volatile` cell read into a wider index, where reading the cell through a non-volatile byte view drops the mask |

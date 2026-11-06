@@ -216,6 +216,17 @@ extern s8 D_8014865A;
 extern u8 D_8014865B;
 /* @source 0x8014865F @kind unknown */
 extern volatile u8  D_8014865F;
+/* Main-RAM byte displayed as ten times its value by the sub-step handler
+ * emitShopPanelStripAndAmountThenAdvanceUiSubstepOnGate, which formats the
+ * product into the shared text buffer D_80145AD4 with the "%d" string
+ * D_801D0C1C. The sub-step sibling func_801D3D84 scales the same cell the same
+ * way and compares the product against the main-RAM value D_80144F50 before
+ * subtracting it from that value, so the scaled cell is the charged amount of
+ * the shop screen; what the byte itself counts is not recovered, so it stays
+ * address-anchored at the original `lbu` width. Not owned by the shared map;
+ * declared locally with a target-map row.
+ * @source 0x80148699 @kind unknown */
+extern u8 D_80148699;
 /* Saved-state byte: archived into D_8014865F by the phase step, then set to
  * the -2 sentinel that forces the next phase. Read as a byte for the archive
  * and as a signed byte for the sentinel test.
@@ -935,6 +946,15 @@ u8 func_801650B4(s32 arg0, s32 arg1, s32 arg2, s32 arg3);
  * @source 0x8016BB6C */
 void func_8016BB6C(s32 arg0, s32 arg1);
 u32 func_801502D0(u32 arg0);
+/* Main-exe icon-record helper called by this target's sub-step handler
+ * emitShopPanelStripAndAmountThenAdvanceUiSubstepOnGate with the constants 0
+ * and 8 and the address of the text buffer it has just formatted, and by
+ * emi/etc/sisyou/00 (func_801D1444) with the constants 0 and 8 and the texture
+ * handle returned by func_801502D0. Both reviewed call sites pass a full word
+ * in the third argument register and drop the result, so the widths below are
+ * the widths observed at those call sites, not a recovered callee contract.
+ * @source 0x8016620C */
+void func_8016620C(u32 arg0, u32 arg1, u32 arg2);
 /* Main-exe cue dispatcher called by this target's phase steps with a single
  * word cue id: func_801D3AE4 passes 0xD1,
  * emitPanelStripThenRebuildShopStateOnClearGate passes 0xD5 and func_801D5D98
@@ -987,7 +1007,8 @@ void func_8014ECAC(u16 local_mode);
 s32 func_8014E640(u32 arg0);
 
 /* Main-exe sound cue dispatcher (lifted in src/bof3/audio/dispatchSoundCue.c)
- * called by the shop sub-step handler func_801E2084 with the cue id 0x102.
+ * called by the shop sub-step handlers func_801E2084 and
+ * emitShopPanelStripAndAmountThenAdvanceUiSubstepOnGate with the cue id 0x102.
  * The battle, scenario and world targets declare this address as
  * func_8015DF18(u16), so the width below is that reviewed call-site width.
  * @source 0x8015DF18 */
@@ -1676,6 +1697,15 @@ extern u8 D_80145AD4[];
  * with a target-map row.
  * @source 0x801D0E60 @kind rodata */
 extern const char D_801D0E60[];
+
+/* EMI-local decimal format string "%d" (the payload holds the two bytes `%d`
+ * and a terminator here) passed to sprintf by the sub-step handler
+ * emitShopPanelStripAndAmountThenAdvanceUiSubstepOnGate: it formats ten times
+ * the main-RAM byte D_80148699 into the shared text buffer D_80145AD4, which
+ * the same handler then submits through func_8016620C. Not owned by the shared
+ * map; declared locally with a target-map row.
+ * @source 0x801D0C1C @kind rodata */
+extern const char D_801D0C1C[];
 
 /* EMI-local table of the ten full-width digit strings: the ten 4-byte char
  * pointers at 0x801E5434 point at the Shift-JIS "0".."9" strings of

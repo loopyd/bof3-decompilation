@@ -117,8 +117,10 @@ segments:
     - asm
     - func_801F3C7C
   - - 4356
-    - asm
-    - func_801F3D04
+    - c
+    - incrementWorkByte9SetWorkByteBTo2AdvanceWorkByte2WhenCountReaches17World02Area08213_801F3D04
+    - '@source: src/bof3/world/incrementWorkByte9SetWorkByteBTo2AdvanceWorkByte2WhenCountReaches17World02Area08213_801F3D04.c'
+    - '@behavior: overlay per-frame handler, entry index 2 of the eight-pointer byte-2 handler table at 0x801F576C; advances the scratch work record byte +0x09 and, once that unsigned counter reaches 0x11, clears it, writes the byte 2 into the record +0x0B field so the draw helper at 0x801F4430 hands cue 0x201 plus that index to func_8015DF18, and advances the record +0x02 dispatch byte by one; every call then draws through 0x801F4430, takes no arguments and returns nothing.'
   - - 4492
     - asm
     - func_801F3D8C

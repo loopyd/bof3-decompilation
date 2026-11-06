@@ -121,6 +121,7 @@ sources = [
     "src/bof3/world/func_801DC514_area03004.c",
     "src/bof3/world/func_801DC568_area03004.c",
     "src/bof3/world/func_801DC590.c",
+    "src/bof3/world/func_801DC5D4_area03004.c",
     "src/bof3/world/func_801DC64C.c",
     "src/bof3/world/func_801DC708.c",
     "src/bof3/world/func_801DC7EC.c",

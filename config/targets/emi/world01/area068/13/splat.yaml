@@ -128,8 +128,8 @@ segments:
     - c
     - setStatusFFFFAndHandlerIndex3WhenGateWorld01Area06813_801F3930
   - - 3424
-    - asm
-    - func_801F3960
+    - c
+    - setStatusFFFFAndHandlerIndex5WhenGateWorld01Area06813_801F3960
   - - 3472
     - asm
     - func_801F3990

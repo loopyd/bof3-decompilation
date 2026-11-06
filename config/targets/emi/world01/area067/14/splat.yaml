@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801F38A0
   - - 3500
-    - asm
-    - func_801F39AC
+    - c
+    - clearWorkRecordCountdownsAt800E4800World01Area06714_801F39AC
+    - '@source: src/bof3/world/clearWorkRecordCountdownsAt800E4800World01Area06714_801F39AC.c'
+    - '@behavior: clears the +0xC countdown halfword of each of the 128 0xE-stride records at 0x800E4800'
   - - 3544
     - asm
     - func_801F39D8

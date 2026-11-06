@@ -145,8 +145,10 @@ segments:
     - asm
     - func_801F4FD4
   - - 9340
-    - asm
-    - func_801F507C
+    - c
+    - drawWorkRampStepAndAdvanceWorkByte2At19World02Area10313_801F507C
+    - '@source: src/bof3/world/drawWorkRampStepAndAdvanceWorkByte2At19World02Area10313_801F507C.c'
+    - '@behavior: reads the work record published through the scratchpad pointer cell 0x1F800044 and hands the drawer func_801F5174 (0x1F - byte 0x09) / 4 as a per-band step and (0x1F - byte 0x09) * 4 as a shade level, then increments byte 0x09 and, when a fresh cell read shows it has reached 0x19, clears byte 0x09 and advances the record''s work-byte-2 dispatch step.'
   - - 9500
     - asm
     - func_801F511C

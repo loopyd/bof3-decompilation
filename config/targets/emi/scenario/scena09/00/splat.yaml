@@ -242,8 +242,9 @@ segments:
     - asm
     - func_801FDB1C
   - - 28584
-    - asm
-    - func_801FDBA8
+    - c
+    - waitFlag3DThenSetFlag3DAndQueueCue203OrRequestPrimaryState8Substate6ScenarioScena0900_801FDBA8
+    - '@source: src/bof3/scenario/waitFlag3DThenSetFlag3DAndQueueCue203OrRequestPrimaryState8Substate6ScenarioScena0900_801FDBA8.c'
   - - 28700
     - c
     - waitFlag2CThenRequestPrimaryState9Substate14ScenarioScena0900_801FDC1C

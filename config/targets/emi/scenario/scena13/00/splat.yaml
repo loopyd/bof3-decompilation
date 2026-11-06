@@ -81,8 +81,8 @@ segments:
     - c
     - convergeWorkRecordPairYOverCountdownThenAdvanceWorkByte1ScenarioScena1300_801F7958
   - - 3612
-    - asm
-    - func_801F7A1C
+    - c
+    - bumpWorkRecordBytes5D5E5FOverCountdownThenAdvanceProgressAndWorkByte1ScenarioScena1300_801F7A1C
   - - 4132
     - asm
     - func_801F7C24
