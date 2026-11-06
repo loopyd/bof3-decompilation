@@ -58,8 +58,10 @@ segments:
     - asm
     - func_801EF250
   - - 2828
-    - asm
+    - c
     - func_801EF70C
+    - '@source: src/bof3/bmagic/func_801EF70C_bmagicMagic21803.c'
+    - '@behavior: returns 1 when the squared vertical span read from the scratchpad halfword at 0x1F800000 is at least the sum of the squared shifted 0x34 and 0x38 differences between the record in $a0 and the work object published at 0x1F800044, and 0 otherwise; leaf, no frame, no stores.'
   - - 2928
     - textbin
     - D_801EF770

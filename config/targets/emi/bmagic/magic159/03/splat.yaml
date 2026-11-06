@@ -40,8 +40,10 @@ segments:
     - dispatchStateByte1Tablef420BmagicMagic15903_801EEDE4
     - '@source: src/bof3/bmagic/magic15903DispatchTables.c'
   - - 552
-    - asm
-    - func_801EEE28
+    - c
+    - dispatchWorkByte2HandlerThenShiftMotionPairAndDrawWhenActiveBmagicMagic15903_801EEE28
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenShiftMotionPairAndDrawWhenActiveBmagicMagic15903_801EEE28.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 and calls the handler selected by the work object''s unsigned byte at offset 0x2 from the four-entry table based at 0x801EF424 (0x801EEEC8, 0x801EEF58, 0x801EEFC4, 0x801EF014); then re-reads the pointer cell and, only when the work object''s bytes at offsets 0x0 and 0x2 are both non-zero, calls the shared helper at 0x800AF764, re-reads the cell a third time, adds 8 to the halfword at offset 0x2E and subtracts 0x10 from the halfword at offset 0x30, and calls the overlay draw routine at 0x801EF08C with the 0x30 store in that call''s delay slot.'
   - - 712
     - asm
     - func_801EEEC8

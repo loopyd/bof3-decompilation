@@ -48,14 +48,10 @@ segments:
     - dispatchStateByte1Tablefa9cBmagicMagic05003_801EEF08
     - '@source: src/bof3/bmagic/magic05003DispatchTables.c'
   - - 844
-    - asm
-    - func_801EEF4C
-  - - 908
-    - textbin
-    - T_801EEF8C
-  - - 972
-    - asm
-    - func_801EEFCC
+    - c
+    - dispatchWorkByte2ThenCallUpdatePassesBmagicMagic05003_801EEF4C
+    - '@source: src/bof3/bmagic/dispatchWorkByte2ThenCallUpdatePassesBmagicMagic05003_801EEF4C.c'
+    - '@behavior: Handler installed as entry 0 of the byte-1 dispatch table at 0x801EFA9C: reads the work-record pointer from the scratchpad cell at 0x1F800044, calls the step handler that the record byte at offset 2 selects from the three-entry table at 0x801EFAF0 (0x801EEFDC, 0x801EF0E8, 0x801EF138), re-reads the work-record pointer after that call, and calls func_800AF764, func_801EF1B0, func_801EF4C4 and func_801EF898 in that order when the record byte at offset 2 and the record byte at offset 0 are both nonzero. Takes no arguments and returns nothing.'
   - - 988
     - asm
     - func_801EEFDC

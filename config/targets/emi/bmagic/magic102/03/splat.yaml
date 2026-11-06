@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EEC80
   - - 1560
-    - asm
-    - func_801EF218
+    - c
+    - advanceWorkByte1Every16FramesAndPublishSignedRampToHalfword8014932ABmagicMagic10203_801EF218
+    - '@source: src/bof3/bmagic/advanceWorkByte1Every16FramesAndPublishSignedRampToHalfword8014932ABmagicMagic10203_801EF218.c'
+    - '@behavior: Step handler 1 of this overlay''s four-word step run at 0x801EEC04 (0x801EEC80, 0x801EF218, 0x801EF2B8, 0x801EFD7C), which func_801EEC14 dispatches on unsigned work byte 0x01. It advances the scratchpad work object''s byte 0x09 through one pointer-cell read of 0x1F800044, and when the truncated count reaches 0x10 it clears byte 0x09 and increments work byte 0x01 so the dispatcher moves to handler 2. It then publishes mode 2 in D_80149333 and stores into D_8014932A the halved work byte 0x09 scaled by a sign taken from bit 0 of D_80143E6C. Leaf with no frame; takes no arguments and returns nothing.'
   - - 1720
     - asm
     - func_801EF2B8

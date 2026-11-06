@@ -1,3 +1,4 @@
+g_battle_work = 0x1F800044;
 func_801EEC04 = 0x801EEC04;
 func_801EEC5C = 0x801EEC5C;
 func_801EEDB8 = 0x801EEDB8;

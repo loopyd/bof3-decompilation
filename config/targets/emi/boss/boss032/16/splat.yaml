@@ -39,8 +39,10 @@ segments:
     - asm
     - func_800C18F0
   - - 376
-    - asm
-    - func_800C1978
+    - c
+    - dispatchIndexedHandlerBossBoss03216_800C1978
+    - '@source: src/bof3/boss/dispatchIndexedHandlerBossBoss03216_800C1978.c'
+    - '@behavior: Byte-indexed overlay dispatcher: masks the index argument with 0xFF, scales it by four and calls the handler selected from the 0x800C1C88 handler table, returning the selected handler result in the return register.'
   - - 432
     - c
     - noopHandlerBossBoss03216_800C19B0

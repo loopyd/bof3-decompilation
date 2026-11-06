@@ -1,6 +1,7 @@
+g_battle_work = 0x1F800044;
 func_801EEC14 = 0x801EEC14;
 func_801EEC80 = 0x801EEC80;
-func_801EF218 = 0x801EF218;
+advanceWorkByte1Every16FramesAndPublishSignedRampToHalfword8014932ABmagicMagic10203_801EF218 = 0x801EF218;
 func_801EF2B8 = 0x801EF2B8;
 func_801EFD7C = 0x801EFD7C;
 func_801EFEFC = 0x801EFEFC;

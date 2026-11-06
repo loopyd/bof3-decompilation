@@ -60,8 +60,8 @@ segments:
     - asm
     - func_801EF118
   - - 1624
-    - asm
-    - func_801EF258
+    - c
+    - activateUpTo8FreeRecordsBmagicMagic11603_801EF258
   - - 1704
     - textbin
     - T_801EF2A8

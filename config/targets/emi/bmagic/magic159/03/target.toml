@@ -11,5 +11,6 @@ sources = []
 support_sources = [
     "src/bof3/support/magic159_03_psyq.c",
     "src/bof3/bmagic/magic15903DispatchTables.c",
+    "src/bof3/bmagic/dispatchWorkByte2HandlerThenShiftMotionPairAndDrawWhenActiveBmagicMagic15903_801EEE28.c",
 ]
 psyq_source = "src/bof3/support/magic159_03_psyq.c"

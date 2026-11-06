@@ -16,6 +16,7 @@ support_sources = [
     "src/bof3/boss/noopHandlerBossBoss03816_800C1A2C.c",
     "src/bof3/boss/noopHandlerBossBoss03816_800C1A24.c",
     "src/bof3/boss/noopHandlerBossBoss03816_800C1A1C.c",
+    "src/bof3/boss/dispatchStateByte1Table0c60BossBoss03816_800C193C.c",
     "src/bof3/boss/noopHandlerBossBoss03816_800C1934.c",
     "src/bof3/boss/noopHandlerBossBoss03816_800C192C.c",
     "src/bof3/boss/noopHandlerBossBoss03816_800C1924.c",

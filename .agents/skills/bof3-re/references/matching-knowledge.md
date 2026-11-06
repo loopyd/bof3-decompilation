@@ -49,6 +49,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Three-term sum stays one instruction long, or the first divergence sits at a later term | Sweep the three associations `a + (b + c)`, `(a + b) + c`, `(b + c) + a` before touching guards, casts or truthiness spellings of that sum; the mirrored nesting stalled one instruction short with the divergence pushed to the last term, and the re-spellings measured neutral. When one term is a product minus a constant and several stores reuse it, name that bias as one `s32` local per store group instead of keeping the sum inline: the parenthesized form let GCC fold the constant into an earlier argument's `addiu` and drop the `move` that saved it, eight bytes short, and the unparenthesized form lost nine instructions at the original size |
 | `mult` plus `bgez`/`addiu (N-1)`/`sra log2(N)` around a scaled product | That triple is truncating signed division, not a shift: write `product / N` on a signed type. Shifting the product emits the bare `sra` and loses the sign-correction pair, so the divide spelling is what reproduces `mult` and the correction |
 | `subu`, `bgez` and `negu` chain in one guard | That chain is an absolute difference: write `d = a - b; if (d < 0) d = -d;` on an `s32` local and compare that magnitude against the bound. Keep each halfword's `<< 16` cell-start term inline in its own subtraction, since the original recomputes it per guard |
+| `andi 1`, `sll 1` and `addiu -1` ahead of one `mult` | The sign is arithmetic, not a select: write `s = (gate & 1) * 2 - 1;` on an `s32` and multiply the scaled value with it (`(u16)(s * (count >> 1))`), so a value the product consumes carries it instead of a branch on the bit |
 | Boolean result misses the return register; extra return copy | Trace [boolean return expansion](#boolean-return-expansion) before allocation |
 | Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt. For displaced induction setup, inspect [explicit cursors](#explicit-cursors-and-signed-bounds) |
 | Global/BSS offsets | Audit COMMON/section/alignment/order/padding and following symbols |
@@ -652,7 +653,9 @@ calculation with a compatible type. Preserve call order, signed multiplication,
 shifts and narrowing. The new result must have a genuine consumer. When the residual
 is a tail register exchange, write that result back into the same local before its
 consumer: a fresh local leaves both quantities live and the exchange survives, while
-the self-assignment merges them. Mask, shift and operand-order spellings of that tail
+the self-assignment merges them. Where the later result is a product of a
+separately loaded value, assign the product into the dead local and leave that
+load in its own scalar. Mask, shift and operand-order spellings of that tail
 stall at one hunk with the size already exact, so the residual belongs to this rung,
 not to another shaping attempt. Never add dummy uses to inflate liveness. Compatible
 locals can also serve mutually exclusive arms when each arm defines before use and no
@@ -680,9 +683,11 @@ original bytes is not exactness; inspect conversion, mask, frame and flow change
 
 Use this lever when the body matches but the frame differs, with no emitted body
 access to the extra bytes. First exclude ABI, call, aggregate and address-escape
-errors. In GCC 2.7.2, a folded address can leave an internal `USE` of a pseudo
-whose definition disappeared. Reload may allocate a slot for that pseudo even
-though the `USE` emits no instruction.
+errors. An indexed access to a strided record type is no aggregate error and can
+reserve that frame on its own, so try the record spelling before declaring a
+padding local. In GCC 2.7.2, a folded address can leave an internal `USE` of a
+pseudo whose definition disappeared. Reload may allocate a slot for that pseudo
+even though the `USE` emits no instruction.
 
 A bare prologue and epilogue with no saved register, every instruction outside them
 already matching, and an original frame larger than this body's own locals is a

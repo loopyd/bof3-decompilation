@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EEC90
   - - 300
-    - asm
-    - func_801EED2C
+    - c
+    - incrementWorkByteBRecordCountersAndWorkByte1WhenWorkByte9Is10BmagicMagic11700_801EED2C
+    - '@source: src/bof3/bmagic/incrementWorkByteBRecordCountersAndWorkByte1WhenWorkByte9Is10BmagicMagic11700_801EED2C.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once per access and increments the +0, +1 and (via 0x80145BD8) +2 counter bytes of the 12-byte record at 0x80145BD6 selected by the work object''s byte 0xB, then increments the work object''s byte at offset 0x9 and its byte at offset 0x1 when the truncated result reaches 0x10.'
   - - 576
     - asm
     - func_801EEE40
