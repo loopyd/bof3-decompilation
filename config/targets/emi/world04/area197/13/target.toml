@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/world/incrementWorkByte2World04Area19713_801F366C.c",
     "src/bof3/world/area19713DispatchTables.c",
+    "src/bof3/world/dispatchStateByte4Table4a80World04Area19713_801F3F3C.c",
     "src/bof3/world/invokeHelperWorld04Area19713_801F2E54.c",
     "src/bof3/support/area197_13_psyq.c",
 ]

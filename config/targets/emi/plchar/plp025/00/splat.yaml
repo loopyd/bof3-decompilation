@@ -105,8 +105,8 @@ segments:
     - asm
     - func_801CFE4C
   - - 6944
-    - asm
-    - func_801CFF20
+    - c
+    - dispatchWorkHalfword2cTableffecPlcharPlp02500_801CFF20
   - - 7012
     - asm
     - func_801CFF64

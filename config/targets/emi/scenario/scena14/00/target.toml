@@ -21,5 +21,6 @@ support_sources = [
     "src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectSlotScenarioScena1400_801FC1E8.c",
     "src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1400_801FBD78.c",
     "src/bof3/scenario/armEffectGroupThenClearWorkRecordsAndResetEffectSlotsScenarioScena1400_801FBDC4.c",
+    "src/bof3/scenario/addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800.c",
 ]
 psyq_source = "src/bof3/support/scena14_00_psyq.c"

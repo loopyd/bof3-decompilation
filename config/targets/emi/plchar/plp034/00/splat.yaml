@@ -69,8 +69,8 @@ segments:
     - asm
     - func_801CF338
   - - 3964
-    - asm
-    - func_801CF37C
+    - c
+    - dispatchWorkByte3Table0320PlcharPlp03400_801CF37C
   - - 4032
     - asm
     - func_801CF3C0

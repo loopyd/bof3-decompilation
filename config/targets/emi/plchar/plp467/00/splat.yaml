@@ -39,8 +39,8 @@ segments:
     - c
     - getAndClearPlcharPlp46700_801CE610
   - - 544
-    - asm
-    - func_801CE620
+    - c
+    - dispatchWorkByte2Table03b8PlcharPlp46700_801CE620
   - - 612
     - asm
     - func_801CE664

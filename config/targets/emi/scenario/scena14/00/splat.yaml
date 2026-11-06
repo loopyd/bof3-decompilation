@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801F7FB8
   - - 7168
-    - asm
-    - func_801F8800
+    - c
+    - addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800
+    - '@source: src/bof3/scenario/addSignedTableStepScaledByByteToHalfword8014932AScenarioScena1400_801F8800.c'
+    - '@behavior: Overlay step handler of this overlay: it takes the low two bits of the shared per-frame counter D_80143E6C as an index into the four-entry signed step row at 0x801FC44C (0x801FC44C through 0x801FC44F = 0, 1, 0, -1), publishes mode 2 in the shared status byte D_80149333, and adds that signed step times its unsigned byte argument to the shared halfword counter D_8014932A, wrapping modulo 65536. The argument scales the four-frame cycle and all three in-image jal sites of the address pass 4; they are 0x801F81B8 and 0x801F8258 inside func_801F7FB8 and 0x801F9620 inside func_801F9320, each reached on a D_80146876 countdown tick. It reads only D_80143E6C, writes D_80149333 and D_8014932A, returns nothing and uses no stack frame, being a leaf that keeps no saved register; the $a0 truncation to eight bits is the body''s own andi $a0, $a0, 0xFF. No image word holds the address itself.'
   - - 7248
     - asm
     - func_801F8850

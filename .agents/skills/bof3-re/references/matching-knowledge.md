@@ -336,7 +336,14 @@ the narrow local plainly.
 Mirror the width rule at the assignment: when a narrow callee return feeds a narrow
 cell, keep the accumulator local at the cell's width. A wider local converts the
 return where it is assigned and costs an `sll`/`sra` pair the original does not have,
-while the narrow local leaves the truncation to the store.
+while the narrow local leaves the truncation to the store. The accumulator's width
+also picks the load: scaling a signed byte element by a wider value through an `s8`
+local made GCC load it `lbu` and widen with `sll`/`sra` before the multiply, which
+overshot that body by eight bytes, while a word-wide `s32` local restored the
+original's single `lb` at the original size. Read an `lbu`-plus-widen pair as that
+accumulator width rather than the cell's signedness, and set the width by where the
+original converts: truncation at the store takes the cell's width, widening at the
+multiply takes the wider local.
 
 A narrow value built from a difference wants that split one step further: assign the
 base constant, subtract in place, then truncate with a self-assignment

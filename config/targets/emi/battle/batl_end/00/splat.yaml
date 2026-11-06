@@ -35,8 +35,10 @@ segments:
     - '@source: src/bof3/battle/dispatchSubstateTable0c98BatlEnd00_801EEC58.c'
     - '@behavior: Battle substate dispatch: reads the unsigned byte at 0x801462E3, scales it by four and calls the handler pointer at that index of the table based at 0x801F0C98 with no arguments; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 148
-    - asm
-    - func_801EEC94
+    - c
+    - dispatchSubstateTable0ca4BatlEnd00_801EEC94
+    - '@source: src/bof3/battle/dispatchSubstateTable0ca4BatlEnd00_801EEC94.c'
+    - '@behavior: Battle handler-run dispatch: reads the unsigned byte at 0x801462E4, scales it by four and calls the handler pointer at that index of this overlay''s handler run based at 0x801F0CA4 with no arguments; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 208
     - asm
     - func_801EECD0

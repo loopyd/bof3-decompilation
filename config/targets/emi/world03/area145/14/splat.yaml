@@ -87,8 +87,10 @@ segments:
     - asm
     - func_801F3980
   - - 4240
-    - asm
-    - func_801F3C90
+    - c
+    - setStatusFFFFAndScenarioProgress8IfGateElse0AState3Substate10World03Area14514_801F3C90
+    - '@source: src/bof3/world/setStatusFFFFAndScenarioProgress8IfGateElse0AState3Substate10World03Area14514_801F3C90.c'
+    - '@behavior: Overlay reset handler reading the shared gate byte D_801490C7, storing 0xFFFF into the shared status halfword D_801490A8, and then storing 8 into the shared scenario progress byte g_ScenarioProgress when the gate byte is nonzero or 0xA when it is zero, in which case it also requests primary state 3 with sub-state 10 through D_80146874 and D_80146875.'
   - - 4324
     - asm
     - func_801F3CE4
