@@ -175,6 +175,7 @@ func_801DEE20 = 0x801DEE20;
 drawNumberedShopSlotListThenPanelStrip = 0x801DEE64;
 swapBytesC = 0x801DF464;
 swapSelectionIds = 0x801DF478;
+drawShopSlotListWithSelectionCursors = 0x801DF6A8;
 appendFullscreenDimTileB = 0x801DF90C;
 func_801DF978 = 0x801DF978;
 func_801DF9B4 = 0x801DF9B4;

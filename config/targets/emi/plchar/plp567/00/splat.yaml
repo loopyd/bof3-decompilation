@@ -60,8 +60,8 @@ segments:
     - c
     - invokeHelperPlcharPlp56700_801CEC0C
   - - 2092
-    - asm
-    - func_801CEC2C
+    - c
+    - dispatchStateByte2Table07b0PlcharPlp56700_801CEC2C
   - - 2160
     - asm
     - func_801CEC70

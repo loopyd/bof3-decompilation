@@ -6,8 +6,8 @@
  *           global gate halfword D_80143C40 is clear it appends the fullscreen
  *           dim tile, re-arms phaseTimer with 2 and advances the UI sub-step
  *           byte D_80148652 by one; when the gate is set it calls
- *           func_801DF6A8 instead and leaves phaseTimer and D_80148652
- *           untouched.
+ *           drawShopSlotListWithSelectionCursors instead and leaves phaseTimer
+ *           and D_80148652 untouched.
  * @status exact
  * @match 100.00
  * @residual none
@@ -24,6 +24,6 @@ void func_801DE88C(void) {
     phaseTimer = 2;
     D_80148652 = previous + 1;
   } else {
-    func_801DF6A8();
+    drawShopSlotListWithSelectionCursors();
   }
 }

@@ -90,8 +90,10 @@ segments:
     - c
     - addRandomByteToWorkHalfword58AndAdvanceAtProgress11ScenarioScena0800_801F757C
   - - 2532
-    - asm
-    - func_801F75E4
+    - c
+    - addRandomByteToWorkHalfword58AndTickCountdown5ADecrement2CAnd32ThenResetWorkFlagsScenarioScena0800_801F75E4
+    - '@source: src/bof3/scenario/addRandomByteToWorkHalfword58AndTickCountdown5ADecrement2CAnd32ThenResetWorkFlagsScenarioScena0800_801F75E4.c'
+    - '@behavior: Overlay work-state handler, entry 9 of the twelve-entry handler sub-table at 0x801FE8A0 (entry 12 of the 51-entry run at 0x801FE894) that the work-byte-1 dispatcher at 0x801F707C selects with unsigned byte 1 of the scratchpad work object: it lays out the ring through helper 0x801F85F0 with the signed work halfwords 0x2E, 0x30 and 0x32, then adds the low byte of rand() to work halfword 0x58 modulo 65536 and, when the low two bits of work halfword 0x5A are clear, decrements work halfword 0x2C modulo 65536. It then decrements work halfword 0x32 by 1 and the 0x5A countdown modulo 65536, storing the countdown before the retreated halfword, and calls the shared work-flag reset helper at 0x80196070 when that countdown reaches zero. The scratchpad work pointer at 0x1F800044 is reloaded before the ring call, after the rand() call and after the guarded arm; the 0x18-byte frame only keeps $ra across those three calls. Takes no arguments and returns nothing. The helper''s wider role and the work fields'' meanings remain unknown; the shape and helper identity follow the byte-adjacent siblings 0x801F74E0, which drives the same 0x58/0x5A/0x2C/0x32 fields, and 0x801F774C, which calls the same helper and resets the work flags on countdown expiry.'
   - - 2696
     - c
     - projectWorkCursorStoreScreenPairSeedHalfword32AndCountdown5AThenDrawAndAdvanceScenarioScena0800_801F7688

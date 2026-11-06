@@ -475,7 +475,7 @@ segments:
     - c
     - func_801DE40C
     - '@source: src/bof3/ui/func_801DE40C_shop00.c'
-    - '@behavior: calls func_801DF6A8, then, when the global gate halfword D_80143C40 is clear, clears the UI sub-step byte D_80148652 and advances the UI phase byte D_80148651 by two.'
+    - '@behavior: calls drawShopSlotListWithSelectionCursors, then, when the global gate halfword D_80143C40 is clear, clears the UI sub-step byte D_80148652 and advances the UI phase byte D_80148651 by two.'
   - - 55388
     - c
     - func_801DE45C
@@ -492,7 +492,7 @@ segments:
     - c
     - func_801DE88C
     - '@source: src/bof3/ui/func_801DE88C_shop00.c'
-    - '@behavior: sub-step handler reached as entry 0 of the phase table D_801E5C08 (indexed by the UI sub-step byte D_80148652): when the global gate halfword D_80143C40 is clear it appends the fullscreen dim tile through appendFullscreenDimTileB, re-arms phaseTimer with 2 and advances D_80148652 by one; when the gate is set it calls func_801DF6A8 instead and leaves phaseTimer and D_80148652 untouched.'
+    - '@behavior: sub-step handler reached as entry 0 of the phase table D_801E5C08 (indexed by the UI sub-step byte D_80148652): when the global gate halfword D_80143C40 is clear it appends the fullscreen dim tile through appendFullscreenDimTileB, re-arms phaseTimer with 2 and advances D_80148652 by one; when the gate is set it calls drawShopSlotListWithSelectionCursors instead and leaves phaseTimer and D_80148652 untouched.'
   - - 56552
     - c
     - func_801DE8E8
@@ -521,8 +521,10 @@ segments:
     - swapSelectionIds
     - '@source: src/bof3/ui/swapSelectionIds.c'
   - - 60072
-    - asm
-    - func_801DF6A8
+    - c
+    - drawShopSlotListWithSelectionCursors
+    - '@source: src/bof3/ui/drawShopSlotListWithSelectionCursors.c'
+    - '@behavior: shop screen draw called with no arguments by the phase step func_801DE40C, the cursor/confirm handler func_801DE4C8 and the sub-step handler func_801DE88C: it emits the sprite grid through func_801DBD24 with the main-RAM index byte D_80144953, reads the visible-list length through func_801BDB7C(0), draws the shop panel strip through func_801DAB90 with the fixed panel arguments 0x14, 0x12, 0x118 and 0x13 plus the main-RAM CLUT-bank byte D_80144952, then draws every visible slot below that length through the field-list emitter func_801D826C with the fixed x 0x11, the even row offset (slot * 54 + 0x3E) & 0xFFFE, the field-record index D_80181B10[D_80144F5A[slot]] and bit 1 of that record''s flag byte shifted down to 0/1, formats the one-based slot ordinal through sprintf into the shared text buffer D_80145AD4 with the EMI-local "%d" format string D_801D0E60 and draws it through the main-exe text emitter func_80150098 at x 0x1A by the sign-extended row y slot * 54 + 0x43 with the alignment constant that same flag bit selects (7 set, 0 clear); afterwards it emits the off-screen slot region through func_801DF00C at (0x96, 0x3B) and marks both shop selections through func_801D8E2C with the D_801E5BC8[slot][column] coordinate pair and the sprite/palette constants 0x7E/0x30 or 0x80/0x34 chosen by that cell''s flag byte - first the saved pair D_8014865A/D_8014865D unless the saved kind byte still holds the 0x7F "no saved selection" sentinel, with the selection argument 0, then the live cursor pair D_80148658/D_80148659 with the selection argument 1.'
   - - 60684
     - c
     - appendFullscreenDimTileB

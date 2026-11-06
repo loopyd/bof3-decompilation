@@ -183,8 +183,8 @@ segments:
     - c
     - publishWorkBaseAndSeedFrontEndRecordScenarioScena0200_801FCD14
   - - 25292
-    - asm
-    - func_801FCECC
+    - c
+    - publishWorkBaseAndSeedFrontEndRecord19ScenarioScena0200_801FCECC
   - - 25732
     - c
     - dispatchRecordCallbackByByte7AScenarioScena0200_801FD084

@@ -1323,8 +1323,10 @@ segments:
     - asm
     - func_801E64B4
   - - 88568
-    - asm
-    - func_801E65F8
+    - c
+    - drawSlotFadeTileAndClearSlot
+    - '@source: src/bof3/battle/drawSlotFadeTileAndClearSlot.c'
+    - '@behavior: Advances the shared 0x8014932C channel by the queued slot word +0x0C, draws the 0x0B colour tile built from the slot level word +0x10 (replicated into all three 5-bit channels while the 0x80146374 progress byte is below 3, red channel only otherwise), publishes mode 2 at 0x80149333, steps the level down by 8 and clears the queued slot when its byte +0x09 countdown expires.'
   - - 88868
     - c
     - dispatchByte1PairFlagged

@@ -171,8 +171,8 @@ segments:
     - asm
     - func_801FD800
   - - 28948
-    - asm
-    - func_801FDD14
+    - c
+    - dispatchCoordinateLookupHandlerScenarioScena0600_801FDD14
   - - 29052
     - asm
     - func_801FDD7C

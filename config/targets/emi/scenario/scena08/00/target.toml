@@ -80,5 +80,6 @@ support_sources = [
     "src/bof3/scenario/projectWorkCursorStoreScreenPairSeedHalfword32AndCountdown5AThenDrawAndAdvanceScenarioScena0800_801F7688.c",
     "src/bof3/scenario/tickCountdownByte9SeedWorkWordsAndQueueCues202And203ScenarioScena0800_801F98E0.c",
     "src/bof3/scenario/updateWorkWord34At490000SeedWorkWords0CTo14AdvanceStateAndQueueCues202And203ScenarioScena0800_801F995C.c",
+    "src/bof3/scenario/addRandomByteToWorkHalfword58AndTickCountdown5ADecrement2CAnd32ThenResetWorkFlagsScenarioScena0800_801F75E4.c",
 ]
 psyq_source = "src/bof3/support/scena08_00_psyq.c"

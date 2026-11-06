@@ -12,6 +12,17 @@ typedef struct ShopPanelWords {
   u32 w[7];
 } ShopPanelWords;
 
+/* One 6-byte entry of the shop selection-cursor geometry table D_801E5BC8:
+ * the two halfwords are the position pair forwarded to the panel helper
+ * func_801D8E2C and the flag byte at +4 selects the sprite/palette constants
+ * of that call. The second raw byte at +5 is never read; it sets the stride. */
+typedef struct ShopSelectionCell {
+  u16 x;
+  u16 y;
+  u8 unk_04;
+  u8 unk_05;
+} ShopSelectionCell;
+
 /* @source 0x80148648
  * @kind unknown */
 extern PanelTask* D_80148648;
@@ -981,6 +992,17 @@ extern void (*D_801E5360[])(void);
  * func_801D7344 with the phase byte D_80148651 as index. */
 extern void (*D_801E545C[])(void);
 
+/* Shop selection-cursor geometry: 36 bytes of six 6-byte cells addressed as
+ * [slot][column] by drawShopSlotListWithSelectionCursors, which multiplies the
+ * saved/live slot cell by 12 and the kind cell by 6. The shipped payload holds
+ * three rows of two entries: column 0 at x 0x11 with y 0x3E/0x74/0xAA and
+ * column 1 at x 0x9D with y 0x41/0x75/0xA9, and the flag byte at +4 is 0 in
+ * column 0 and 1 in column 1. Read-only payload data, so no target-map row is
+ * added and the extracted rodata label carries the address.
+ * @source 0x801E5BC8
+ * @kind table */
+extern ShopSelectionCell D_801E5BC8[3][2];
+
 /* @source 0x801E5BEC
  * @kind table — UI phase handler pointers (this EMI); dispatched by
  * func_801DE188 with the phase byte D_80148651 as index. */
@@ -1050,12 +1072,12 @@ extern void (*D_801E5D5C[])(void);
  * with panel task byte 2 (g_PanelTaskRoot->unk_00[2]) as index. */
 extern void (*D_801E5D68[])(void);
 
-/* This-EMI helper (unlifted) called by the phase handler func_801DE40C before
- * it tests the global gate halfword D_80143C40: the caller sets no argument
- * registers and drops the result, so the call is argument- and return-free at
- * that site. Its body starts by reading the main-RAM byte D_80144953.
+/* Shop screen draw (lifted); called with no arguments by the phase step
+ * func_801DE40C, the cursor/confirm handler func_801DE4C8 and the sub-step
+ * handler func_801DE88C, all of which drop the result, so the call is
+ * argument- and return-free at those sites.
  * @source 0x801DF6A8 */
-void func_801DF6A8(void);
+void drawShopSlotListWithSelectionCursors(void);
 void appendFullscreenDimTile(void);
 void appendFullscreenDimTileB(void);
 void func_801DE8E8(void);

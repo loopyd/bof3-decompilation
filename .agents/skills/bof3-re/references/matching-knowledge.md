@@ -46,7 +46,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Global/BSS offsets | Audit COMMON/section/alignment/order/padding and following symbols |
 | Phantom read-only object | Local static constant versus existing shared extern ownership |
 | Load uses wrong argument register | Verify callee argument consumption and caller setup before allocator probes |
-| Missing read after a store | Recheck pointer reloads, source qualification and aliasing against original instructions |
+| Missing read after a store or an intervening call | Recheck pointer reloads, source qualification and aliasing against original instructions. A call that writes shared state, a formatter writing a shared buffer for instance, does not license holding one loaded cell in a local across it: two loads in the original are two accesses, so write the later use through the same address again |
 | Saved-register pair exchanged | Trace real value deaths, later reuse and merged allocator quantities |
 | Guard load/test displaced around a product/store chain | Trace [guard scheduling and value reuse](#guard-scheduling-and-value-reuse) before changing arithmetic |
 

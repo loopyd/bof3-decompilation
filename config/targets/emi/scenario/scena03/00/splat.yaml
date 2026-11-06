@@ -162,8 +162,10 @@ segments:
     - '@source: src/bof3/scenario/drawAndGrowWorkByte9ThenAdvanceScenarioScena0300_801F8710.c'
     - '@behavior: Draws using work byte 9, adds 15 with byte wrapping, then sets values above 60 to 255 and advances work byte 1.'
   - - 7076
-    - asm
-    - func_801F87A4
+    - c
+    - drawTickWorkByte9QueueCue208WhenByte9Is215Reload60AndAdvanceScenarioScena0300_801F87A4
+    - '@source: src/bof3/scenario/drawTickWorkByte9QueueCue208WhenByte9Is215Reload60AndAdvanceScenarioScena0300_801F87A4.c'
+    - '@behavior: Draws with the local helper using a radius of 0x3C carrying bit 0 of work byte 9, queues main-exe sound cue 0x208 when the reloaded work byte 9 is 0xD7, then decrements work byte 9 and re-arms it with 0x3C while advancing work byte 1 when the stored countdown reaches zero.'
   - - 7260
     - c
     - drawAndTickWorkByte9ScenarioScena0300_801F885C

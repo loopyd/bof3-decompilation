@@ -578,6 +578,13 @@ extern volatile u32 D_801459F0; /* @source 0x801459F0 @kind unknown */
 void func_801E679C(void);
 void clearQueuedSlotWhenReady(void);
 extern volatile u8  BATTLE_GLOBAL_BYTE_6374; /* @source 0x80146374 @kind unknown */
+/* @source 0x8014932C @kind unknown — shared 16-bit channel the queued-slot
+ * fade handlers accumulate by the slot word +0x0C: the fade-out handler at
+ * 0x801E65F8 adds it and its 0x801E64B4 twin subtracts it. */
+extern volatile u16 D_8014932C;
+/* @source 0x80149333 @kind unknown — mode byte the same fade handlers publish
+ * as 2, seven bytes above the channel above. */
+extern u8           D_80149333;
 extern volatile u8  D_801483C3; /* @source 0x801483C3 @kind unknown */
 extern u8           D_80146374; /* @source 0x80146374 @kind unknown */
 extern u8           D_80146375; /* @source 0x80146375 @kind unknown */
