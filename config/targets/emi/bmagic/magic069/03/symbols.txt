@@ -1,9 +1,10 @@
+g_battle_work = 0x1F800044;
 func_801EEC04 = 0x801EEC04;
 func_801EEC5C = 0x801EEC5C;
 func_801EEE30 = 0x801EEE30;
 dispatchStateByte1Table04f8BmagicMagic06903_801EEE90 = 0x801EEE90;
 func_801EEED4 = 0x801EEED4;
-func_801EF034 = 0x801EF034;
+decrementWorkCountdownThenSeedHalfwordsFromRecordSetWordCTo11AndByteATo20AdvanceWorkByte2BmagicMagic06903_801EF034 = 0x801EF034;
 func_801EF0C4 = 0x801EF0C4;
 func_801EF15C = 0x801EF15C;
 func_801EF1D0 = 0x801EF1D0;

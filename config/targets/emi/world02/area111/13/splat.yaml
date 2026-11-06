@@ -69,8 +69,9 @@ segments:
     - asm
     - func_801F33F8
   - - 2120
-    - asm
-    - func_801F3448
+    - c
+    - copySharedWord7b5cTo7ac4World02Area11113_801F3448
+    - '@source: src/bof3/world/copySharedWord7b5cTo7ac4World02Area11113_801F3448.c'
   - - 2144
     - asm
     - func_801F3460

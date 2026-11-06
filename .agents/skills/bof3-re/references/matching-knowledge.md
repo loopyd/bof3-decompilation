@@ -315,7 +315,12 @@ symbol. When the original loads one shared halfword ahead of an unrelated store 
 consumes it after a pointer-cell reload, bind it to a `u16` local at that earlier
 statement. Spelling that consuming store inline measured eight bytes longer with the
 first difference in the entry block, because the compiler then reloads the pointer
-cell again for the later stores.
+cell again for the later stores. Two independent loads keep that order too: a build
+four bytes over size whose first difference is the record load ahead of the
+pointer-cell reload is a statement-order residual, and issuing the reload first
+recovered the size. A local for the record base measured the same bytes either way,
+while the pinning value local stayed load-bearing: inlining it back cost two
+instructions at the original size.
 
 Keep a narrow parameter narrow. Copying an `s16` argument into an `s32` local moves
 the sign extension to the entry block, where the original converts at each use site.

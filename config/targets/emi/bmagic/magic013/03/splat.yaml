@@ -61,8 +61,8 @@ segments:
     - asm
     - func_801EF0A4
   - - 1440
-    - asm
-    - func_801EF1A0
+    - c
+    - add2ToWorkByte4AndAdvanceWorkByte2At10BmagicMagic01303_801EF1A0
   - - 1520
     - asm
     - func_801EF1F0

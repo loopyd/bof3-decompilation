@@ -43,8 +43,9 @@ segments:
     - asm
     - func_801EEED4
   - - 1076
-    - asm
-    - func_801EF034
+    - c
+    - decrementWorkCountdownThenSeedHalfwordsFromRecordSetWordCTo11AndByteATo20AdvanceWorkByte2BmagicMagic06903_801EF034
+    - '@source: src/bof3/bmagic/decrementWorkCountdownThenSeedHalfwordsFromRecordSetWordCTo11AndByteATo20AdvanceWorkByte2BmagicMagic06903_801EF034.c'
   - - 1220
     - asm
     - func_801EF0C4

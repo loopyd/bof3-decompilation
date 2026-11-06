@@ -52,8 +52,9 @@ segments:
     - asm
     - func_801F3158
   - - 1428
-    - asm
-    - func_801F3194
+    - c
+    - clearWorkTableByte15At800E4800World01Area05213_801F3194
+    - '@source: src/bof3/world/clearWorkTableByte15At800E4800World01Area05213_801F3194.c'
   - - 1472
     - asm
     - func_801F31C0

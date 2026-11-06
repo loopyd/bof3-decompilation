@@ -42,8 +42,8 @@ segments:
     - asm
     - func_800C191C
   - - 456
-    - asm
-    - func_800C19C8
+    - c
+    - dispatchIndexedHandlerBossBoss00216_800C19C8
   - - 512
     - asm
     - func_800C1A00

@@ -60,8 +60,8 @@ segments:
     - c
     - invokeHelperBossBoss03416_800C1D40
   - - 1376
-    - asm
-    - func_800C1D60
+    - c
+    - dispatchIndexedHandlerBossBoss03416_800C1D60
   - - 1432
     - c
     - noopHandlerBossBoss03416_800C1D98
