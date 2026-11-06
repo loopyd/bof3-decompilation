@@ -1,14 +1,19 @@
 {
-  "schema": "bof3.decomp-status/v1",
+  "schema": "bof3.decomp-status/v2",
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "e4a69a42ba701a1b9500960c181f3709720de54d",
-  "published_at": "2026-11-06T04:36:23.460611+00:00",
+  "revision": "94f527a19b2a80d178be77e25a8c78766b2bdf81",
+  "published_at": "2026-11-06T04:57:03.294549+00:00",
   "counts": {
     "completed": 3193,
     "partial": 135,
     "unlifted": 7203,
     "invalid": 9,
-    "total": 10531
+    "total": 10531,
+    "symbols": {
+      "named": 65376,
+      "raw": 57918,
+      "total": 123294
+    }
   },
   "targets": [
     {
@@ -21,7 +26,12 @@
       "partial": 0,
       "unlifted": 29,
       "invalid": 0,
-      "total": 32
+      "total": 32,
+      "symbols": {
+        "named": 161,
+        "raw": 153,
+        "total": 314
+      }
     },
     {
       "id": "emi/battle/batl_ovr/00",
@@ -33,7 +43,12 @@
       "partial": 0,
       "unlifted": 10,
       "invalid": 0,
-      "total": 11
+      "total": 11,
+      "symbols": {
+        "named": 159,
+        "raw": 135,
+        "total": 294
+      }
     },
     {
       "id": "emi/battle/batl_re2/01",
@@ -45,7 +60,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 1
+      "total": 1,
+      "symbols": {
+        "named": 158,
+        "raw": 127,
+        "total": 285
+      }
     },
     {
       "id": "emi/battle/battle/03",
@@ -57,7 +77,12 @@
       "partial": 23,
       "unlifted": 37,
       "invalid": 0,
-      "total": 375
+      "total": 375,
+      "symbols": {
+        "named": 436,
+        "raw": 417,
+        "total": 853
+      }
     },
     {
       "id": "emi/battle/battle/15",
@@ -69,7 +94,12 @@
       "partial": 27,
       "unlifted": 205,
       "invalid": 0,
-      "total": 493
+      "total": 493,
+      "symbols": {
+        "named": 341,
+        "raw": 527,
+        "total": 868
+      }
     },
     {
       "id": "emi/bmagic/magic001/00",
@@ -81,7 +111,12 @@
       "partial": 0,
       "unlifted": 30,
       "invalid": 0,
-      "total": 32
+      "total": 32,
+      "symbols": {
+        "named": 161,
+        "raw": 153,
+        "total": 314
+      }
     },
     {
       "id": "emi/bmagic/magic003/03",
@@ -93,7 +128,12 @@
       "partial": 0,
       "unlifted": 35,
       "invalid": 1,
-      "total": 36
+      "total": 36,
+      "symbols": {
+        "named": 161,
+        "raw": 158,
+        "total": 319
+      }
     },
     {
       "id": "emi/bmagic/magic004/03",
@@ -105,7 +145,12 @@
       "partial": 0,
       "unlifted": 16,
       "invalid": 0,
-      "total": 18
+      "total": 18,
+      "symbols": {
+        "named": 161,
+        "raw": 141,
+        "total": 302
+      }
     },
     {
       "id": "emi/bmagic/magic006/03",
@@ -117,7 +162,12 @@
       "partial": 0,
       "unlifted": 25,
       "invalid": 0,
-      "total": 26
+      "total": 26,
+      "symbols": {
+        "named": 161,
+        "raw": 149,
+        "total": 310
+      }
     },
     {
       "id": "emi/bmagic/magic008/00",
@@ -129,7 +179,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 65
+      "total": 65,
+      "symbols": {
+        "named": 188,
+        "raw": 161,
+        "total": 349
+      }
     },
     {
       "id": "emi/bmagic/magic009/03",
@@ -141,7 +196,12 @@
       "partial": 0,
       "unlifted": 15,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 160,
+        "raw": 140,
+        "total": 300
+      }
     },
     {
       "id": "emi/bmagic/magic010/00",
@@ -153,7 +213,12 @@
       "partial": 0,
       "unlifted": 3,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 161,
+        "raw": 129,
+        "total": 290
+      }
     },
     {
       "id": "emi/bmagic/magic012/00",
@@ -165,7 +230,12 @@
       "partial": 0,
       "unlifted": 10,
       "invalid": 0,
-      "total": 12
+      "total": 12,
+      "symbols": {
+        "named": 161,
+        "raw": 133,
+        "total": 294
+      }
     },
     {
       "id": "emi/bmagic/magic013/03",
@@ -177,7 +247,12 @@
       "partial": 0,
       "unlifted": 22,
       "invalid": 0,
-      "total": 24
+      "total": 24,
+      "symbols": {
+        "named": 162,
+        "raw": 145,
+        "total": 307
+      }
     },
     {
       "id": "emi/bmagic/magic015/00",
@@ -189,7 +264,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 49
+      "total": 49,
+      "symbols": {
+        "named": 173,
+        "raw": 161,
+        "total": 334
+      }
     },
     {
       "id": "emi/bmagic/magic017/03",
@@ -201,7 +281,12 @@
       "partial": 0,
       "unlifted": 14,
       "invalid": 0,
-      "total": 16
+      "total": 16,
+      "symbols": {
+        "named": 161,
+        "raw": 138,
+        "total": 299
+      }
     },
     {
       "id": "emi/bmagic/magic020/03",
@@ -213,7 +298,12 @@
       "partial": 0,
       "unlifted": 22,
       "invalid": 0,
-      "total": 25
+      "total": 25,
+      "symbols": {
+        "named": 161,
+        "raw": 147,
+        "total": 308
+      }
     },
     {
       "id": "emi/bmagic/magic021/03",
@@ -225,7 +315,12 @@
       "partial": 0,
       "unlifted": 19,
       "invalid": 0,
-      "total": 22
+      "total": 22,
+      "symbols": {
+        "named": 162,
+        "raw": 143,
+        "total": 305
+      }
     },
     {
       "id": "emi/bmagic/magic038/03",
@@ -237,7 +332,12 @@
       "partial": 0,
       "unlifted": 12,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 160,
+        "raw": 136,
+        "total": 296
+      }
     },
     {
       "id": "emi/bmagic/magic039/03",
@@ -249,7 +349,12 @@
       "partial": 0,
       "unlifted": 19,
       "invalid": 0,
-      "total": 21
+      "total": 21,
+      "symbols": {
+        "named": 160,
+        "raw": 145,
+        "total": 305
+      }
     },
     {
       "id": "emi/bmagic/magic040/03",
@@ -261,7 +366,12 @@
       "partial": 0,
       "unlifted": 16,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 159,
+        "raw": 140,
+        "total": 299
+      }
     },
     {
       "id": "emi/bmagic/magic041/03",
@@ -273,7 +383,12 @@
       "partial": 0,
       "unlifted": 19,
       "invalid": 0,
-      "total": 21
+      "total": 21,
+      "symbols": {
+        "named": 161,
+        "raw": 142,
+        "total": 303
+      }
     },
     {
       "id": "emi/bmagic/magic043/03",
@@ -285,7 +400,12 @@
       "partial": 0,
       "unlifted": 12,
       "invalid": 0,
-      "total": 15
+      "total": 15,
+      "symbols": {
+        "named": 163,
+        "raw": 135,
+        "total": 298
+      }
     },
     {
       "id": "emi/bmagic/magic044/03",
@@ -297,7 +417,12 @@
       "partial": 0,
       "unlifted": 16,
       "invalid": 0,
-      "total": 18
+      "total": 18,
+      "symbols": {
+        "named": 162,
+        "raw": 139,
+        "total": 301
+      }
     },
     {
       "id": "emi/bmagic/magic045/00",
@@ -309,7 +434,12 @@
       "partial": 0,
       "unlifted": 12,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 161,
+        "raw": 135,
+        "total": 296
+      }
     },
     {
       "id": "emi/bmagic/magic046/03",
@@ -321,7 +451,12 @@
       "partial": 0,
       "unlifted": 17,
       "invalid": 0,
-      "total": 20
+      "total": 20,
+      "symbols": {
+        "named": 162,
+        "raw": 141,
+        "total": 303
+      }
     },
     {
       "id": "emi/bmagic/magic048/03",
@@ -333,7 +468,12 @@
       "partial": 0,
       "unlifted": 11,
       "invalid": 0,
-      "total": 13
+      "total": 13,
+      "symbols": {
+        "named": 160,
+        "raw": 134,
+        "total": 294
+      }
     },
     {
       "id": "emi/bmagic/magic050/03",
@@ -345,7 +485,12 @@
       "partial": 0,
       "unlifted": 10,
       "invalid": 0,
-      "total": 12
+      "total": 12,
+      "symbols": {
+        "named": 161,
+        "raw": 135,
+        "total": 296
+      }
     },
     {
       "id": "emi/bmagic/magic052/03",
@@ -357,7 +502,12 @@
       "partial": 0,
       "unlifted": 7,
       "invalid": 0,
-      "total": 9
+      "total": 9,
+      "symbols": {
+        "named": 161,
+        "raw": 131,
+        "total": 292
+      }
     },
     {
       "id": "emi/bmagic/magic053/03",
@@ -369,7 +519,12 @@
       "partial": 0,
       "unlifted": 20,
       "invalid": 0,
-      "total": 23
+      "total": 23,
+      "symbols": {
+        "named": 162,
+        "raw": 144,
+        "total": 306
+      }
     },
     {
       "id": "emi/bmagic/magic054/03",
@@ -381,7 +536,12 @@
       "partial": 0,
       "unlifted": 12,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 161,
+        "raw": 135,
+        "total": 296
+      }
     },
     {
       "id": "emi/bmagic/magic055/03",
@@ -393,7 +553,12 @@
       "partial": 0,
       "unlifted": 14,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 158,
+        "raw": 137,
+        "total": 295
+      }
     },
     {
       "id": "emi/bmagic/magic056/03",
@@ -405,7 +570,12 @@
       "partial": 0,
       "unlifted": 27,
       "invalid": 0,
-      "total": 29
+      "total": 29,
+      "symbols": {
+        "named": 160,
+        "raw": 151,
+        "total": 311
+      }
     },
     {
       "id": "emi/bmagic/magic057/03",
@@ -417,7 +587,12 @@
       "partial": 0,
       "unlifted": 21,
       "invalid": 0,
-      "total": 23
+      "total": 23,
+      "symbols": {
+        "named": 160,
+        "raw": 145,
+        "total": 305
+      }
     },
     {
       "id": "emi/bmagic/magic058/03",
@@ -429,7 +604,12 @@
       "partial": 0,
       "unlifted": 18,
       "invalid": 0,
-      "total": 20
+      "total": 20,
+      "symbols": {
+        "named": 161,
+        "raw": 141,
+        "total": 302
+      }
     },
     {
       "id": "emi/bmagic/magic059/03",
@@ -441,7 +621,12 @@
       "partial": 0,
       "unlifted": 19,
       "invalid": 0,
-      "total": 21
+      "total": 21,
+      "symbols": {
+        "named": 161,
+        "raw": 142,
+        "total": 303
+      }
     },
     {
       "id": "emi/bmagic/magic060/00",
@@ -453,7 +638,12 @@
       "partial": 0,
       "unlifted": 32,
       "invalid": 0,
-      "total": 34
+      "total": 34,
+      "symbols": {
+        "named": 160,
+        "raw": 156,
+        "total": 316
+      }
     },
     {
       "id": "emi/bmagic/magic062/03",
@@ -465,7 +655,12 @@
       "partial": 0,
       "unlifted": 24,
       "invalid": 0,
-      "total": 26
+      "total": 26,
+      "symbols": {
+        "named": 160,
+        "raw": 147,
+        "total": 307
+      }
     },
     {
       "id": "emi/bmagic/magic063/03",
@@ -477,7 +672,12 @@
       "partial": 0,
       "unlifted": 25,
       "invalid": 0,
-      "total": 26
+      "total": 26,
+      "symbols": {
+        "named": 159,
+        "raw": 149,
+        "total": 308
+      }
     },
     {
       "id": "emi/bmagic/magic064/03",
@@ -489,7 +689,12 @@
       "partial": 0,
       "unlifted": 36,
       "invalid": 0,
-      "total": 46
+      "total": 46,
+      "symbols": {
+        "named": 169,
+        "raw": 162,
+        "total": 331
+      }
     },
     {
       "id": "emi/bmagic/magic065/00",
@@ -501,7 +706,12 @@
       "partial": 0,
       "unlifted": 11,
       "invalid": 0,
-      "total": 13
+      "total": 13,
+      "symbols": {
+        "named": 160,
+        "raw": 135,
+        "total": 295
+      }
     },
     {
       "id": "emi/bmagic/magic066/03",
@@ -513,7 +723,12 @@
       "partial": 0,
       "unlifted": 18,
       "invalid": 0,
-      "total": 20
+      "total": 20,
+      "symbols": {
+        "named": 160,
+        "raw": 142,
+        "total": 302
+      }
     },
     {
       "id": "emi/bmagic/magic067/03",
@@ -525,7 +740,12 @@
       "partial": 0,
       "unlifted": 25,
       "invalid": 0,
-      "total": 29
+      "total": 29,
+      "symbols": {
+        "named": 163,
+        "raw": 149,
+        "total": 312
+      }
     },
     {
       "id": "emi/bmagic/magic068/03",
@@ -537,7 +757,12 @@
       "partial": 0,
       "unlifted": 13,
       "invalid": 0,
-      "total": 15
+      "total": 15,
+      "symbols": {
+        "named": 160,
+        "raw": 137,
+        "total": 297
+      }
     },
     {
       "id": "emi/bmagic/magic069/03",
@@ -549,7 +774,12 @@
       "partial": 0,
       "unlifted": 22,
       "invalid": 0,
-      "total": 24
+      "total": 24,
+      "symbols": {
+        "named": 161,
+        "raw": 145,
+        "total": 306
+      }
     },
     {
       "id": "emi/bmagic/magic070/03",
@@ -561,7 +791,12 @@
       "partial": 0,
       "unlifted": 17,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 158,
+        "raw": 141,
+        "total": 299
+      }
     },
     {
       "id": "emi/bmagic/magic071/03",
@@ -573,7 +808,12 @@
       "partial": 0,
       "unlifted": 17,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 158,
+        "raw": 141,
+        "total": 299
+      }
     },
     {
       "id": "emi/bmagic/magic072/03",
@@ -585,7 +825,12 @@
       "partial": 0,
       "unlifted": 18,
       "invalid": 0,
-      "total": 18
+      "total": 18,
+      "symbols": {
+        "named": 158,
+        "raw": 141,
+        "total": 299
+      }
     },
     {
       "id": "emi/bmagic/magic073/03",
@@ -597,7 +842,12 @@
       "partial": 0,
       "unlifted": 21,
       "invalid": 0,
-      "total": 23
+      "total": 23,
+      "symbols": {
+        "named": 160,
+        "raw": 144,
+        "total": 304
+      }
     },
     {
       "id": "emi/bmagic/magic074/03",
@@ -609,7 +859,12 @@
       "partial": 0,
       "unlifted": 20,
       "invalid": 0,
-      "total": 22
+      "total": 22,
+      "symbols": {
+        "named": 160,
+        "raw": 145,
+        "total": 305
+      }
     },
     {
       "id": "emi/bmagic/magic075/03",
@@ -621,7 +876,12 @@
       "partial": 0,
       "unlifted": 11,
       "invalid": 0,
-      "total": 12
+      "total": 12,
+      "symbols": {
+        "named": 159,
+        "raw": 133,
+        "total": 292
+      }
     },
     {
       "id": "emi/bmagic/magic076/03",
@@ -633,7 +893,12 @@
       "partial": 0,
       "unlifted": 22,
       "invalid": 0,
-      "total": 25
+      "total": 25,
+      "symbols": {
+        "named": 164,
+        "raw": 144,
+        "total": 308
+      }
     },
     {
       "id": "emi/bmagic/magic078/03",
@@ -645,7 +910,12 @@
       "partial": 0,
       "unlifted": 24,
       "invalid": 0,
-      "total": 26
+      "total": 26,
+      "symbols": {
+        "named": 161,
+        "raw": 149,
+        "total": 310
+      }
     },
     {
       "id": "emi/bmagic/magic079/03",
@@ -657,7 +927,12 @@
       "partial": 0,
       "unlifted": 29,
       "invalid": 0,
-      "total": 30
+      "total": 30,
+      "symbols": {
+        "named": 159,
+        "raw": 152,
+        "total": 311
+      }
     },
     {
       "id": "emi/bmagic/magic080/00",
@@ -669,7 +944,12 @@
       "partial": 0,
       "unlifted": 5,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 158,
+        "raw": 129,
+        "total": 287
+      }
     },
     {
       "id": "emi/bmagic/magic081/03",
@@ -681,7 +961,12 @@
       "partial": 0,
       "unlifted": 17,
       "invalid": 0,
-      "total": 18
+      "total": 18,
+      "symbols": {
+        "named": 160,
+        "raw": 140,
+        "total": 300
+      }
     },
     {
       "id": "emi/bmagic/magic082/03",
@@ -693,7 +978,12 @@
       "partial": 0,
       "unlifted": 23,
       "invalid": 0,
-      "total": 25
+      "total": 25,
+      "symbols": {
+        "named": 160,
+        "raw": 147,
+        "total": 307
+      }
     },
     {
       "id": "emi/bmagic/magic083/03",
@@ -705,7 +995,12 @@
       "partial": 0,
       "unlifted": 22,
       "invalid": 0,
-      "total": 25
+      "total": 25,
+      "symbols": {
+        "named": 162,
+        "raw": 147,
+        "total": 309
+      }
     },
     {
       "id": "emi/bmagic/magic086/03",
@@ -717,7 +1012,12 @@
       "partial": 0,
       "unlifted": 28,
       "invalid": 0,
-      "total": 29
+      "total": 29,
+      "symbols": {
+        "named": 159,
+        "raw": 151,
+        "total": 310
+      }
     },
     {
       "id": "emi/bmagic/magic087/03",
@@ -729,7 +1029,12 @@
       "partial": 0,
       "unlifted": 19,
       "invalid": 0,
-      "total": 23
+      "total": 23,
+      "symbols": {
+        "named": 162,
+        "raw": 143,
+        "total": 305
+      }
     },
     {
       "id": "emi/bmagic/magic088/03",
@@ -741,7 +1046,12 @@
       "partial": 0,
       "unlifted": 22,
       "invalid": 0,
-      "total": 23
+      "total": 23,
+      "symbols": {
+        "named": 160,
+        "raw": 147,
+        "total": 307
+      }
     },
     {
       "id": "emi/bmagic/magic091/03",
@@ -753,7 +1063,12 @@
       "partial": 0,
       "unlifted": 14,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 158,
+        "raw": 137,
+        "total": 295
+      }
     },
     {
       "id": "emi/bmagic/magic092/03",
@@ -765,7 +1080,12 @@
       "partial": 0,
       "unlifted": 23,
       "invalid": 0,
-      "total": 25
+      "total": 25,
+      "symbols": {
+        "named": 161,
+        "raw": 146,
+        "total": 307
+      }
     },
     {
       "id": "emi/bmagic/magic093/03",
@@ -777,7 +1097,12 @@
       "partial": 0,
       "unlifted": 23,
       "invalid": 0,
-      "total": 26
+      "total": 26,
+      "symbols": {
+        "named": 163,
+        "raw": 147,
+        "total": 310
+      }
     },
     {
       "id": "emi/bmagic/magic094/03",
@@ -789,7 +1114,12 @@
       "partial": 0,
       "unlifted": 13,
       "invalid": 0,
-      "total": 13
+      "total": 13,
+      "symbols": {
+        "named": 158,
+        "raw": 135,
+        "total": 293
+      }
     },
     {
       "id": "emi/bmagic/magic095/03",
@@ -801,7 +1131,12 @@
       "partial": 0,
       "unlifted": 14,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 158,
+        "raw": 138,
+        "total": 296
+      }
     },
     {
       "id": "emi/bmagic/magic096/03",
@@ -813,7 +1148,12 @@
       "partial": 0,
       "unlifted": 18,
       "invalid": 0,
-      "total": 19
+      "total": 19,
+      "symbols": {
+        "named": 160,
+        "raw": 141,
+        "total": 301
+      }
     },
     {
       "id": "emi/bmagic/magic097/03",
@@ -825,7 +1165,12 @@
       "partial": 0,
       "unlifted": 15,
       "invalid": 0,
-      "total": 16
+      "total": 16,
+      "symbols": {
+        "named": 159,
+        "raw": 137,
+        "total": 296
+      }
     },
     {
       "id": "emi/bmagic/magic098/03",
@@ -837,7 +1182,12 @@
       "partial": 0,
       "unlifted": 13,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 159,
+        "raw": 136,
+        "total": 295
+      }
     },
     {
       "id": "emi/bmagic/magic099/03",
@@ -849,7 +1199,12 @@
       "partial": 0,
       "unlifted": 27,
       "invalid": 0,
-      "total": 28
+      "total": 28,
+      "symbols": {
+        "named": 159,
+        "raw": 150,
+        "total": 309
+      }
     },
     {
       "id": "emi/bmagic/magic100/03",
@@ -861,7 +1216,12 @@
       "partial": 0,
       "unlifted": 14,
       "invalid": 0,
-      "total": 15
+      "total": 15,
+      "symbols": {
+        "named": 160,
+        "raw": 138,
+        "total": 298
+      }
     },
     {
       "id": "emi/bmagic/magic101/03",
@@ -873,7 +1233,12 @@
       "partial": 0,
       "unlifted": 16,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 159,
+        "raw": 140,
+        "total": 299
+      }
     },
     {
       "id": "emi/bmagic/magic102/03",
@@ -885,7 +1250,12 @@
       "partial": 0,
       "unlifted": 10,
       "invalid": 0,
-      "total": 10
+      "total": 10,
+      "symbols": {
+        "named": 158,
+        "raw": 134,
+        "total": 292
+      }
     },
     {
       "id": "emi/bmagic/magic103/03",
@@ -897,7 +1267,12 @@
       "partial": 0,
       "unlifted": 23,
       "invalid": 0,
-      "total": 24
+      "total": 24,
+      "symbols": {
+        "named": 159,
+        "raw": 147,
+        "total": 306
+      }
     },
     {
       "id": "emi/bmagic/magic104/03",
@@ -909,7 +1284,12 @@
       "partial": 0,
       "unlifted": 19,
       "invalid": 0,
-      "total": 20
+      "total": 20,
+      "symbols": {
+        "named": 161,
+        "raw": 143,
+        "total": 304
+      }
     },
     {
       "id": "emi/bmagic/magic105/03",
@@ -921,7 +1301,12 @@
       "partial": 1,
       "unlifted": 14,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 162,
+        "raw": 138,
+        "total": 300
+      }
     },
     {
       "id": "emi/bmagic/magic106/03",
@@ -933,7 +1318,12 @@
       "partial": 0,
       "unlifted": 14,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 158,
+        "raw": 137,
+        "total": 295
+      }
     },
     {
       "id": "emi/bmagic/magic107/03",
@@ -945,7 +1335,12 @@
       "partial": 0,
       "unlifted": 18,
       "invalid": 0,
-      "total": 18
+      "total": 18,
+      "symbols": {
+        "named": 159,
+        "raw": 141,
+        "total": 300
+      }
     },
     {
       "id": "emi/bmagic/magic108/03",
@@ -957,7 +1352,12 @@
       "partial": 0,
       "unlifted": 15,
       "invalid": 0,
-      "total": 15
+      "total": 15,
+      "symbols": {
+        "named": 159,
+        "raw": 139,
+        "total": 298
+      }
     },
     {
       "id": "emi/bmagic/magic109/03",
@@ -969,7 +1369,12 @@
       "partial": 0,
       "unlifted": 7,
       "invalid": 0,
-      "total": 7
+      "total": 7,
+      "symbols": {
+        "named": 158,
+        "raw": 130,
+        "total": 288
+      }
     },
     {
       "id": "emi/bmagic/magic110/03",
@@ -981,7 +1386,12 @@
       "partial": 0,
       "unlifted": 29,
       "invalid": 0,
-      "total": 30
+      "total": 30,
+      "symbols": {
+        "named": 160,
+        "raw": 153,
+        "total": 313
+      }
     },
     {
       "id": "emi/bmagic/magic111/03",
@@ -993,7 +1403,12 @@
       "partial": 0,
       "unlifted": 17,
       "invalid": 0,
-      "total": 20
+      "total": 20,
+      "symbols": {
+        "named": 163,
+        "raw": 141,
+        "total": 304
+      }
     },
     {
       "id": "emi/bmagic/magic113/03",
@@ -1005,7 +1420,12 @@
       "partial": 0,
       "unlifted": 28,
       "invalid": 0,
-      "total": 31
+      "total": 31,
+      "symbols": {
+        "named": 161,
+        "raw": 152,
+        "total": 313
+      }
     },
     {
       "id": "emi/bmagic/magic114/03",
@@ -1017,7 +1437,12 @@
       "partial": 0,
       "unlifted": 27,
       "invalid": 0,
-      "total": 29
+      "total": 29,
+      "symbols": {
+        "named": 160,
+        "raw": 150,
+        "total": 310
+      }
     },
     {
       "id": "emi/bmagic/magic115/03",
@@ -1029,7 +1454,12 @@
       "partial": 0,
       "unlifted": 15,
       "invalid": 0,
-      "total": 16
+      "total": 16,
+      "symbols": {
+        "named": 160,
+        "raw": 138,
+        "total": 298
+      }
     },
     {
       "id": "emi/bmagic/magic116/03",
@@ -1041,7 +1471,12 @@
       "partial": 0,
       "unlifted": 10,
       "invalid": 0,
-      "total": 11
+      "total": 11,
+      "symbols": {
+        "named": 160,
+        "raw": 133,
+        "total": 293
+      }
     },
     {
       "id": "emi/bmagic/magic117/00",
@@ -1053,7 +1488,12 @@
       "partial": 0,
       "unlifted": 10,
       "invalid": 0,
-      "total": 10
+      "total": 10,
+      "symbols": {
+        "named": 158,
+        "raw": 133,
+        "total": 291
+      }
     },
     {
       "id": "emi/bmagic/magic118/03",
@@ -1065,7 +1505,12 @@
       "partial": 0,
       "unlifted": 15,
       "invalid": 0,
-      "total": 15
+      "total": 15,
+      "symbols": {
+        "named": 158,
+        "raw": 138,
+        "total": 296
+      }
     },
     {
       "id": "emi/bmagic/magic120/03",
@@ -1077,7 +1522,12 @@
       "partial": 0,
       "unlifted": 26,
       "invalid": 0,
-      "total": 27
+      "total": 27,
+      "symbols": {
+        "named": 159,
+        "raw": 150,
+        "total": 309
+      }
     },
     {
       "id": "emi/bmagic/magic121/03",
@@ -1089,7 +1539,12 @@
       "partial": 0,
       "unlifted": 14,
       "invalid": 0,
-      "total": 15
+      "total": 15,
+      "symbols": {
+        "named": 160,
+        "raw": 137,
+        "total": 297
+      }
     },
     {
       "id": "emi/bmagic/magic122/03",
@@ -1101,7 +1556,12 @@
       "partial": 0,
       "unlifted": 12,
       "invalid": 0,
-      "total": 13
+      "total": 13,
+      "symbols": {
+        "named": 159,
+        "raw": 135,
+        "total": 294
+      }
     },
     {
       "id": "emi/bmagic/magic123/03",
@@ -1113,7 +1573,12 @@
       "partial": 0,
       "unlifted": 11,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 162,
+        "raw": 135,
+        "total": 297
+      }
     },
     {
       "id": "emi/bmagic/magic124/03",
@@ -1125,7 +1590,12 @@
       "partial": 0,
       "unlifted": 19,
       "invalid": 0,
-      "total": 22
+      "total": 22,
+      "symbols": {
+        "named": 163,
+        "raw": 142,
+        "total": 305
+      }
     },
     {
       "id": "emi/bmagic/magic125/03",
@@ -1137,7 +1607,12 @@
       "partial": 0,
       "unlifted": 20,
       "invalid": 0,
-      "total": 23
+      "total": 23,
+      "symbols": {
+        "named": 163,
+        "raw": 143,
+        "total": 306
+      }
     },
     {
       "id": "emi/bmagic/magic126/03",
@@ -1149,7 +1624,12 @@
       "partial": 0,
       "unlifted": 34,
       "invalid": 0,
-      "total": 35
+      "total": 35,
+      "symbols": {
+        "named": 160,
+        "raw": 159,
+        "total": 319
+      }
     },
     {
       "id": "emi/bmagic/magic129/03",
@@ -1161,7 +1641,12 @@
       "partial": 0,
       "unlifted": 16,
       "invalid": 0,
-      "total": 19
+      "total": 19,
+      "symbols": {
+        "named": 163,
+        "raw": 139,
+        "total": 302
+      }
     },
     {
       "id": "emi/bmagic/magic130/03",
@@ -1173,7 +1658,12 @@
       "partial": 0,
       "unlifted": 16,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 159,
+        "raw": 140,
+        "total": 299
+      }
     },
     {
       "id": "emi/bmagic/magic131/03",
@@ -1185,7 +1675,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 52
+      "total": 52,
+      "symbols": {
+        "named": 182,
+        "raw": 160,
+        "total": 342
+      }
     },
     {
       "id": "emi/bmagic/magic132/03",
@@ -1197,7 +1692,12 @@
       "partial": 0,
       "unlifted": 16,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 159,
+        "raw": 139,
+        "total": 298
+      }
     },
     {
       "id": "emi/bmagic/magic137/03",
@@ -1209,7 +1709,12 @@
       "partial": 0,
       "unlifted": 22,
       "invalid": 0,
-      "total": 24
+      "total": 24,
+      "symbols": {
+        "named": 160,
+        "raw": 146,
+        "total": 306
+      }
     },
     {
       "id": "emi/bmagic/magic138/03",
@@ -1221,7 +1726,12 @@
       "partial": 0,
       "unlifted": 12,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 160,
+        "raw": 136,
+        "total": 296
+      }
     },
     {
       "id": "emi/bmagic/magic143/03",
@@ -1233,7 +1743,12 @@
       "partial": 0,
       "unlifted": 13,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 159,
+        "raw": 136,
+        "total": 295
+      }
     },
     {
       "id": "emi/bmagic/magic144/03",
@@ -1245,7 +1760,12 @@
       "partial": 0,
       "unlifted": 23,
       "invalid": 0,
-      "total": 25
+      "total": 25,
+      "symbols": {
+        "named": 161,
+        "raw": 146,
+        "total": 307
+      }
     },
     {
       "id": "emi/bmagic/magic145/03",
@@ -1257,7 +1777,12 @@
       "partial": 0,
       "unlifted": 9,
       "invalid": 0,
-      "total": 10
+      "total": 10,
+      "symbols": {
+        "named": 159,
+        "raw": 133,
+        "total": 292
+      }
     },
     {
       "id": "emi/bmagic/magic146/03",
@@ -1269,7 +1794,12 @@
       "partial": 0,
       "unlifted": 13,
       "invalid": 0,
-      "total": 16
+      "total": 16,
+      "symbols": {
+        "named": 161,
+        "raw": 137,
+        "total": 298
+      }
     },
     {
       "id": "emi/bmagic/magic150/03",
@@ -1281,7 +1811,12 @@
       "partial": 0,
       "unlifted": 17,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 159,
+        "raw": 140,
+        "total": 299
+      }
     },
     {
       "id": "emi/bmagic/magic151/03",
@@ -1293,7 +1828,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 50
+      "total": 50,
+      "symbols": {
+        "named": 174,
+        "raw": 163,
+        "total": 337
+      }
     },
     {
       "id": "emi/bmagic/magic154/03",
@@ -1305,7 +1845,12 @@
       "partial": 0,
       "unlifted": 15,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 160,
+        "raw": 139,
+        "total": 299
+      }
     },
     {
       "id": "emi/bmagic/magic158/03",
@@ -1317,7 +1862,12 @@
       "partial": 0,
       "unlifted": 9,
       "invalid": 0,
-      "total": 11
+      "total": 11,
+      "symbols": {
+        "named": 161,
+        "raw": 133,
+        "total": 294
+      }
     },
     {
       "id": "emi/bmagic/magic159/03",
@@ -1329,7 +1879,12 @@
       "partial": 0,
       "unlifted": 10,
       "invalid": 0,
-      "total": 11
+      "total": 11,
+      "symbols": {
+        "named": 159,
+        "raw": 133,
+        "total": 292
+      }
     },
     {
       "id": "emi/bmagic/magic161/03",
@@ -1341,7 +1896,12 @@
       "partial": 0,
       "unlifted": 11,
       "invalid": 0,
-      "total": 13
+      "total": 13,
+      "symbols": {
+        "named": 160,
+        "raw": 135,
+        "total": 295
+      }
     },
     {
       "id": "emi/bmagic/magic162/03",
@@ -1353,7 +1913,12 @@
       "partial": 0,
       "unlifted": 17,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 158,
+        "raw": 141,
+        "total": 299
+      }
     },
     {
       "id": "emi/bmagic/magic166/03",
@@ -1365,7 +1930,12 @@
       "partial": 0,
       "unlifted": 9,
       "invalid": 0,
-      "total": 11
+      "total": 11,
+      "symbols": {
+        "named": 161,
+        "raw": 132,
+        "total": 293
+      }
     },
     {
       "id": "emi/bmagic/magic167/03",
@@ -1377,7 +1947,12 @@
       "partial": 0,
       "unlifted": 22,
       "invalid": 0,
-      "total": 23
+      "total": 23,
+      "symbols": {
+        "named": 160,
+        "raw": 144,
+        "total": 304
+      }
     },
     {
       "id": "emi/bmagic/magic168/03",
@@ -1389,7 +1964,12 @@
       "partial": 0,
       "unlifted": 18,
       "invalid": 0,
-      "total": 18
+      "total": 18,
+      "symbols": {
+        "named": 158,
+        "raw": 141,
+        "total": 299
+      }
     },
     {
       "id": "emi/bmagic/magic169/03",
@@ -1401,7 +1981,12 @@
       "partial": 0,
       "unlifted": 21,
       "invalid": 0,
-      "total": 24
+      "total": 24,
+      "symbols": {
+        "named": 164,
+        "raw": 143,
+        "total": 307
+      }
     },
     {
       "id": "emi/bmagic/magic172/03",
@@ -1413,7 +1998,12 @@
       "partial": 0,
       "unlifted": 21,
       "invalid": 0,
-      "total": 22
+      "total": 22,
+      "symbols": {
+        "named": 159,
+        "raw": 144,
+        "total": 303
+      }
     },
     {
       "id": "emi/bmagic/magic173/03",
@@ -1425,7 +2015,12 @@
       "partial": 0,
       "unlifted": 18,
       "invalid": 0,
-      "total": 19
+      "total": 19,
+      "symbols": {
+        "named": 161,
+        "raw": 141,
+        "total": 302
+      }
     },
     {
       "id": "emi/bmagic/magic213/03",
@@ -1437,7 +2032,12 @@
       "partial": 0,
       "unlifted": 12,
       "invalid": 0,
-      "total": 16
+      "total": 16,
+      "symbols": {
+        "named": 164,
+        "raw": 134,
+        "total": 298
+      }
     },
     {
       "id": "emi/bmagic/magic216/00",
@@ -1449,7 +2049,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 6
+      "total": 6,
+      "symbols": {
+        "named": 158,
+        "raw": 129,
+        "total": 287
+      }
     },
     {
       "id": "emi/bmagic/magic218/03",
@@ -1461,7 +2066,12 @@
       "partial": 0,
       "unlifted": 10,
       "invalid": 0,
-      "total": 11
+      "total": 11,
+      "symbols": {
+        "named": 159,
+        "raw": 134,
+        "total": 293
+      }
     },
     {
       "id": "emi/bmagic/magic219/03",
@@ -1473,7 +2083,12 @@
       "partial": 0,
       "unlifted": 14,
       "invalid": 0,
-      "total": 15
+      "total": 15,
+      "symbols": {
+        "named": 159,
+        "raw": 138,
+        "total": 297
+      }
     },
     {
       "id": "emi/bmagic/magic220/03",
@@ -1485,7 +2100,12 @@
       "partial": 0,
       "unlifted": 23,
       "invalid": 0,
-      "total": 26
+      "total": 26,
+      "symbols": {
+        "named": 163,
+        "raw": 146,
+        "total": 309
+      }
     },
     {
       "id": "emi/bmagic/magic222/03",
@@ -1497,7 +2117,12 @@
       "partial": 0,
       "unlifted": 34,
       "invalid": 0,
-      "total": 35
+      "total": 35,
+      "symbols": {
+        "named": 160,
+        "raw": 158,
+        "total": 318
+      }
     },
     {
       "id": "emi/bmagic/magic223/03",
@@ -1509,7 +2134,12 @@
       "partial": 0,
       "unlifted": 16,
       "invalid": 0,
-      "total": 19
+      "total": 19,
+      "symbols": {
+        "named": 163,
+        "raw": 139,
+        "total": 302
+      }
     },
     {
       "id": "emi/bmagic/magic225/03",
@@ -1521,7 +2151,12 @@
       "partial": 0,
       "unlifted": 19,
       "invalid": 0,
-      "total": 21
+      "total": 21,
+      "symbols": {
+        "named": 161,
+        "raw": 142,
+        "total": 303
+      }
     },
     {
       "id": "emi/bmagic/magic226/03",
@@ -1533,7 +2168,12 @@
       "partial": 0,
       "unlifted": 26,
       "invalid": 0,
-      "total": 28
+      "total": 28,
+      "symbols": {
+        "named": 160,
+        "raw": 150,
+        "total": 310
+      }
     },
     {
       "id": "emi/boss/boss001/13",
@@ -1545,7 +2185,12 @@
       "partial": 0,
       "unlifted": 20,
       "invalid": 0,
-      "total": 28
+      "total": 28,
+      "symbols": {
+        "named": 166,
+        "raw": 145,
+        "total": 311
+      }
     },
     {
       "id": "emi/boss/boss002/16",
@@ -1557,7 +2202,12 @@
       "partial": 0,
       "unlifted": 23,
       "invalid": 0,
-      "total": 35
+      "total": 35,
+      "symbols": {
+        "named": 170,
+        "raw": 147,
+        "total": 317
+      }
     },
     {
       "id": "emi/boss/boss004/13",
@@ -1569,7 +2219,12 @@
       "partial": 0,
       "unlifted": 21,
       "invalid": 0,
-      "total": 25
+      "total": 25,
+      "symbols": {
+        "named": 162,
+        "raw": 146,
+        "total": 308
+      }
     },
     {
       "id": "emi/boss/boss007/16",
@@ -1581,7 +2236,12 @@
       "partial": 0,
       "unlifted": 9,
       "invalid": 0,
-      "total": 16
+      "total": 16,
+      "symbols": {
+        "named": 165,
+        "raw": 133,
+        "total": 298
+      }
     },
     {
       "id": "emi/boss/boss008/16",
@@ -1593,7 +2253,12 @@
       "partial": 0,
       "unlifted": 20,
       "invalid": 0,
-      "total": 49
+      "total": 49,
+      "symbols": {
+        "named": 187,
+        "raw": 145,
+        "total": 332
+      }
     },
     {
       "id": "emi/boss/boss012/16",
@@ -1605,7 +2270,12 @@
       "partial": 0,
       "unlifted": 13,
       "invalid": 0,
-      "total": 18
+      "total": 18,
+      "symbols": {
+        "named": 163,
+        "raw": 137,
+        "total": 300
+      }
     },
     {
       "id": "emi/boss/boss013/16",
@@ -1617,7 +2287,12 @@
       "partial": 0,
       "unlifted": 25,
       "invalid": 0,
-      "total": 29
+      "total": 29,
+      "symbols": {
+        "named": 162,
+        "raw": 149,
+        "total": 311
+      }
     },
     {
       "id": "emi/boss/boss014/16",
@@ -1629,7 +2304,12 @@
       "partial": 0,
       "unlifted": 11,
       "invalid": 0,
-      "total": 21
+      "total": 21,
+      "symbols": {
+        "named": 168,
+        "raw": 134,
+        "total": 302
+      }
     },
     {
       "id": "emi/boss/boss015/16",
@@ -1641,7 +2321,12 @@
       "partial": 0,
       "unlifted": 5,
       "invalid": 0,
-      "total": 10
+      "total": 10,
+      "symbols": {
+        "named": 163,
+        "raw": 129,
+        "total": 292
+      }
     },
     {
       "id": "emi/boss/boss017/16",
@@ -1653,7 +2338,12 @@
       "partial": 0,
       "unlifted": 7,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 165,
+        "raw": 131,
+        "total": 296
+      }
     },
     {
       "id": "emi/boss/boss018/16",
@@ -1665,7 +2355,12 @@
       "partial": 0,
       "unlifted": 34,
       "invalid": 0,
-      "total": 48
+      "total": 48,
+      "symbols": {
+        "named": 172,
+        "raw": 161,
+        "total": 333
+      }
     },
     {
       "id": "emi/boss/boss021/16",
@@ -1677,7 +2372,12 @@
       "partial": 0,
       "unlifted": 13,
       "invalid": 0,
-      "total": 18
+      "total": 18,
+      "symbols": {
+        "named": 163,
+        "raw": 137,
+        "total": 300
+      }
     },
     {
       "id": "emi/boss/boss022/13",
@@ -1689,7 +2389,12 @@
       "partial": 0,
       "unlifted": 9,
       "invalid": 0,
-      "total": 13
+      "total": 13,
+      "symbols": {
+        "named": 162,
+        "raw": 133,
+        "total": 295
+      }
     },
     {
       "id": "emi/boss/boss023/16",
@@ -1701,7 +2406,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 10
+      "total": 10,
+      "symbols": {
+        "named": 162,
+        "raw": 130,
+        "total": 292
+      }
     },
     {
       "id": "emi/boss/boss024/16",
@@ -1713,7 +2423,12 @@
       "partial": 0,
       "unlifted": 10,
       "invalid": 0,
-      "total": 20
+      "total": 20,
+      "symbols": {
+        "named": 168,
+        "raw": 134,
+        "total": 302
+      }
     },
     {
       "id": "emi/boss/boss025/13",
@@ -1725,7 +2440,12 @@
       "partial": 0,
       "unlifted": 31,
       "invalid": 0,
-      "total": 42
+      "total": 42,
+      "symbols": {
+        "named": 169,
+        "raw": 160,
+        "total": 329
+      }
     },
     {
       "id": "emi/boss/boss028/16",
@@ -1737,7 +2457,12 @@
       "partial": 0,
       "unlifted": 22,
       "invalid": 0,
-      "total": 29
+      "total": 29,
+      "symbols": {
+        "named": 166,
+        "raw": 146,
+        "total": 312
+      }
     },
     {
       "id": "emi/boss/boss029/16",
@@ -1749,7 +2474,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 11
+      "total": 11,
+      "symbols": {
+        "named": 163,
+        "raw": 129,
+        "total": 292
+      }
     },
     {
       "id": "emi/boss/boss030/16",
@@ -1761,7 +2491,12 @@
       "partial": 0,
       "unlifted": 10,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 165,
+        "raw": 133,
+        "total": 298
+      }
     },
     {
       "id": "emi/boss/boss031/13",
@@ -1773,7 +2508,12 @@
       "partial": 0,
       "unlifted": 9,
       "invalid": 0,
-      "total": 13
+      "total": 13,
+      "symbols": {
+        "named": 162,
+        "raw": 132,
+        "total": 294
+      }
     },
     {
       "id": "emi/boss/boss032/16",
@@ -1785,7 +2525,12 @@
       "partial": 0,
       "unlifted": 10,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 162,
+        "raw": 132,
+        "total": 294
+      }
     },
     {
       "id": "emi/boss/boss033/16",
@@ -1797,7 +2542,12 @@
       "partial": 0,
       "unlifted": 27,
       "invalid": 0,
-      "total": 31
+      "total": 31,
+      "symbols": {
+        "named": 162,
+        "raw": 150,
+        "total": 312
+      }
     },
     {
       "id": "emi/boss/boss034/16",
@@ -1809,7 +2559,12 @@
       "partial": 0,
       "unlifted": 22,
       "invalid": 0,
-      "total": 31
+      "total": 31,
+      "symbols": {
+        "named": 167,
+        "raw": 146,
+        "total": 313
+      }
     },
     {
       "id": "emi/boss/boss035/16",
@@ -1821,7 +2576,12 @@
       "partial": 0,
       "unlifted": 16,
       "invalid": 0,
-      "total": 26
+      "total": 26,
+      "symbols": {
+        "named": 168,
+        "raw": 141,
+        "total": 309
+      }
     },
     {
       "id": "emi/boss/boss036/16",
@@ -1833,7 +2593,12 @@
       "partial": 0,
       "unlifted": 22,
       "invalid": 0,
-      "total": 29
+      "total": 29,
+      "symbols": {
+        "named": 165,
+        "raw": 146,
+        "total": 311
+      }
     },
     {
       "id": "emi/boss/boss037/16",
@@ -1845,7 +2610,12 @@
       "partial": 0,
       "unlifted": 5,
       "invalid": 0,
-      "total": 10
+      "total": 10,
+      "symbols": {
+        "named": 163,
+        "raw": 129,
+        "total": 292
+      }
     },
     {
       "id": "emi/boss/boss038/16",
@@ -1857,7 +2627,12 @@
       "partial": 0,
       "unlifted": 10,
       "invalid": 0,
-      "total": 20
+      "total": 20,
+      "symbols": {
+        "named": 168,
+        "raw": 134,
+        "total": 302
+      }
     },
     {
       "id": "emi/boss/boss040/16",
@@ -1869,7 +2644,12 @@
       "partial": 0,
       "unlifted": 10,
       "invalid": 0,
-      "total": 20
+      "total": 20,
+      "symbols": {
+        "named": 168,
+        "raw": 134,
+        "total": 302
+      }
     },
     {
       "id": "emi/boss/boss042/16",
@@ -1881,7 +2661,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 11
+      "total": 11,
+      "symbols": {
+        "named": 163,
+        "raw": 129,
+        "total": 292
+      }
     },
     {
       "id": "emi/boss/boss049/16",
@@ -1893,7 +2678,12 @@
       "partial": 0,
       "unlifted": 10,
       "invalid": 0,
-      "total": 20
+      "total": 20,
+      "symbols": {
+        "named": 168,
+        "raw": 134,
+        "total": 302
+      }
     },
     {
       "id": "emi/boss/boss050/16",
@@ -1905,7 +2695,12 @@
       "partial": 0,
       "unlifted": 9,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 163,
+        "raw": 133,
+        "total": 296
+      }
     },
     {
       "id": "emi/boss/boss051/16",
@@ -1917,7 +2712,12 @@
       "partial": 0,
       "unlifted": 13,
       "invalid": 0,
-      "total": 19
+      "total": 19,
+      "symbols": {
+        "named": 164,
+        "raw": 137,
+        "total": 301
+      }
     },
     {
       "id": "emi/boss/boss052/16",
@@ -1929,7 +2729,12 @@
       "partial": 0,
       "unlifted": 13,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 162,
+        "raw": 138,
+        "total": 300
+      }
     },
     {
       "id": "emi/boss/boss054/16",
@@ -1941,7 +2746,12 @@
       "partial": 0,
       "unlifted": 18,
       "invalid": 0,
-      "total": 23
+      "total": 23,
+      "symbols": {
+        "named": 163,
+        "raw": 142,
+        "total": 305
+      }
     },
     {
       "id": "emi/boss/boss055/16",
@@ -1953,7 +2763,12 @@
       "partial": 0,
       "unlifted": 33,
       "invalid": 0,
-      "total": 45
+      "total": 45,
+      "symbols": {
+        "named": 172,
+        "raw": 157,
+        "total": 329
+      }
     },
     {
       "id": "emi/etc/bate/00",
@@ -1965,7 +2780,12 @@
       "partial": 0,
       "unlifted": 21,
       "invalid": 0,
-      "total": 22
+      "total": 22,
+      "symbols": {
+        "named": 160,
+        "raw": 146,
+        "total": 306
+      }
     },
     {
       "id": "emi/etc/bate/03",
@@ -1977,7 +2797,12 @@
       "partial": 0,
       "unlifted": 0,
       "invalid": 0,
-      "total": 0
+      "total": 0,
+      "symbols": {
+        "named": 158,
+        "raw": 128,
+        "total": 286
+      }
     },
     {
       "id": "emi/etc/commu00/00",
@@ -1989,7 +2814,12 @@
       "partial": 0,
       "unlifted": 12,
       "invalid": 2,
-      "total": 66
+      "total": 66,
+      "symbols": {
+        "named": 195,
+        "raw": 222,
+        "total": 417
+      }
     },
     {
       "id": "emi/etc/commu01/07",
@@ -2001,7 +2831,12 @@
       "partial": 0,
       "unlifted": 35,
       "invalid": 0,
-      "total": 36
+      "total": 36,
+      "symbols": {
+        "named": 159,
+        "raw": 159,
+        "total": 318
+      }
     },
     {
       "id": "emi/etc/commu02/08",
@@ -2013,7 +2848,12 @@
       "partial": 1,
       "unlifted": 38,
       "invalid": 0,
-      "total": 48
+      "total": 48,
+      "symbols": {
+        "named": 170,
+        "raw": 160,
+        "total": 330
+      }
     },
     {
       "id": "emi/etc/commu03/06",
@@ -2025,7 +2865,12 @@
       "partial": 1,
       "unlifted": 2,
       "invalid": 0,
-      "total": 3
+      "total": 3,
+      "symbols": {
+        "named": 161,
+        "raw": 125,
+        "total": 286
+      }
     },
     {
       "id": "emi/etc/commu04/06",
@@ -2037,7 +2882,12 @@
       "partial": 0,
       "unlifted": 11,
       "invalid": 0,
-      "total": 11
+      "total": 11,
+      "symbols": {
+        "named": 159,
+        "raw": 134,
+        "total": 293
+      }
     },
     {
       "id": "emi/etc/commu05/07",
@@ -2049,7 +2899,12 @@
       "partial": 0,
       "unlifted": 9,
       "invalid": 0,
-      "total": 9
+      "total": 9,
+      "symbols": {
+        "named": 158,
+        "raw": 134,
+        "total": 292
+      }
     },
     {
       "id": "emi/etc/game/00",
@@ -2061,7 +2916,12 @@
       "partial": 21,
       "unlifted": 299,
       "invalid": 0,
-      "total": 546
+      "total": 546,
+      "symbols": {
+        "named": 306,
+        "raw": 420,
+        "total": 726
+      }
     },
     {
       "id": "emi/etc/game/01",
@@ -2073,7 +2933,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 21
+      "total": 21,
+      "symbols": {
+        "named": 202,
+        "raw": 134,
+        "total": 336
+      }
     },
     {
       "id": "emi/etc/shisu/00",
@@ -2085,7 +2950,12 @@
       "partial": 0,
       "unlifted": 30,
       "invalid": 0,
-      "total": 31
+      "total": 31,
+      "symbols": {
+        "named": 160,
+        "raw": 154,
+        "total": 314
+      }
     },
     {
       "id": "emi/etc/shop/00",
@@ -2097,7 +2967,12 @@
       "partial": 4,
       "unlifted": 70,
       "invalid": 0,
-      "total": 231
+      "total": 231,
+      "symbols": {
+        "named": 242,
+        "raw": 369,
+        "total": 611
+      }
     },
     {
       "id": "emi/etc/sisyou/00",
@@ -2109,7 +2984,12 @@
       "partial": 3,
       "unlifted": 0,
       "invalid": 0,
-      "total": 46
+      "total": 46,
+      "symbols": {
+        "named": 172,
+        "raw": 223,
+        "total": 395
+      }
     },
     {
       "id": "emi/plchar/plp012/00",
@@ -2121,7 +3001,12 @@
       "partial": 0,
       "unlifted": 30,
       "invalid": 0,
-      "total": 30
+      "total": 30,
+      "symbols": {
+        "named": 158,
+        "raw": 152,
+        "total": 310
+      }
     },
     {
       "id": "emi/plchar/plp015/00",
@@ -2133,7 +3018,12 @@
       "partial": 0,
       "unlifted": 28,
       "invalid": 0,
-      "total": 28
+      "total": 28,
+      "symbols": {
+        "named": 158,
+        "raw": 150,
+        "total": 308
+      }
     },
     {
       "id": "emi/plchar/plp016/00",
@@ -2145,7 +3035,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 38
+      "total": 38,
+      "symbols": {
+        "named": 160,
+        "raw": 160,
+        "total": 320
+      }
     },
     {
       "id": "emi/plchar/plp025/00",
@@ -2157,7 +3052,12 @@
       "partial": 0,
       "unlifted": 31,
       "invalid": 0,
-      "total": 31
+      "total": 31,
+      "symbols": {
+        "named": 158,
+        "raw": 153,
+        "total": 311
+      }
     },
     {
       "id": "emi/plchar/plp026/00",
@@ -2169,7 +3069,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 41
+      "total": 41,
+      "symbols": {
+        "named": 163,
+        "raw": 160,
+        "total": 323
+      }
     },
     {
       "id": "emi/plchar/plp034/00",
@@ -2181,7 +3086,12 @@
       "partial": 0,
       "unlifted": 33,
       "invalid": 0,
-      "total": 34
+      "total": 34,
+      "symbols": {
+        "named": 160,
+        "raw": 155,
+        "total": 315
+      }
     },
     {
       "id": "emi/plchar/plp056/00",
@@ -2193,7 +3103,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 41
+      "total": 41,
+      "symbols": {
+        "named": 162,
+        "raw": 160,
+        "total": 322
+      }
     },
     {
       "id": "emi/plchar/plp247/00",
@@ -2205,7 +3120,12 @@
       "partial": 0,
       "unlifted": 24,
       "invalid": 0,
-      "total": 25
+      "total": 25,
+      "symbols": {
+        "named": 160,
+        "raw": 147,
+        "total": 307
+      }
     },
     {
       "id": "emi/plchar/plp257/00",
@@ -2217,7 +3137,12 @@
       "partial": 0,
       "unlifted": 30,
       "invalid": 0,
-      "total": 30
+      "total": 30,
+      "symbols": {
+        "named": 158,
+        "raw": 153,
+        "total": 311
+      }
     },
     {
       "id": "emi/plchar/plp267/00",
@@ -2229,7 +3154,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 41
+      "total": 41,
+      "symbols": {
+        "named": 163,
+        "raw": 160,
+        "total": 323
+      }
     },
     {
       "id": "emi/plchar/plp278/00",
@@ -2241,7 +3171,12 @@
       "partial": 0,
       "unlifted": 30,
       "invalid": 0,
-      "total": 30
+      "total": 30,
+      "symbols": {
+        "named": 158,
+        "raw": 152,
+        "total": 310
+      }
     },
     {
       "id": "emi/plchar/plp27a/00",
@@ -2253,7 +3188,12 @@
       "partial": 0,
       "unlifted": 21,
       "invalid": 0,
-      "total": 23
+      "total": 23,
+      "symbols": {
+        "named": 161,
+        "raw": 144,
+        "total": 305
+      }
     },
     {
       "id": "emi/plchar/plp349/00",
@@ -2265,7 +3205,12 @@
       "partial": 0,
       "unlifted": 24,
       "invalid": 0,
-      "total": 27
+      "total": 27,
+      "symbols": {
+        "named": 161,
+        "raw": 147,
+        "total": 308
+      }
     },
     {
       "id": "emi/plchar/plp457/00",
@@ -2277,7 +3222,12 @@
       "partial": 0,
       "unlifted": 24,
       "invalid": 0,
-      "total": 25
+      "total": 25,
+      "symbols": {
+        "named": 159,
+        "raw": 147,
+        "total": 306
+      }
     },
     {
       "id": "emi/plchar/plp467/00",
@@ -2289,7 +3239,12 @@
       "partial": 0,
       "unlifted": 33,
       "invalid": 0,
-      "total": 35
+      "total": 35,
+      "symbols": {
+        "named": 161,
+        "raw": 157,
+        "total": 318
+      }
     },
     {
       "id": "emi/plchar/plp478/00",
@@ -2301,7 +3256,12 @@
       "partial": 0,
       "unlifted": 22,
       "invalid": 0,
-      "total": 23
+      "total": 23,
+      "symbols": {
+        "named": 160,
+        "raw": 144,
+        "total": 304
+      }
     },
     {
       "id": "emi/plchar/plp567/00",
@@ -2313,7 +3273,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 41
+      "total": 41,
+      "symbols": {
+        "named": 162,
+        "raw": 160,
+        "total": 322
+      }
     },
     {
       "id": "emi/plchar/plp578/00",
@@ -2325,7 +3290,12 @@
       "partial": 0,
       "unlifted": 28,
       "invalid": 0,
-      "total": 28
+      "total": 28,
+      "symbols": {
+        "named": 158,
+        "raw": 150,
+        "total": 308
+      }
     },
     {
       "id": "emi/plchar/plp678/00",
@@ -2337,7 +3307,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 38
+      "total": 38,
+      "symbols": {
+        "named": 160,
+        "raw": 160,
+        "total": 320
+      }
     },
     {
       "id": "emi/scenario/sce10eff/00",
@@ -2349,7 +3324,12 @@
       "partial": 1,
       "unlifted": 0,
       "invalid": 0,
-      "total": 24
+      "total": 24,
+      "symbols": {
+        "named": 165,
+        "raw": 166,
+        "total": 331
+      }
     },
     {
       "id": "emi/scenario/sce15ef0/00",
@@ -2361,7 +3341,12 @@
       "partial": 0,
       "unlifted": 17,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 158,
+        "raw": 141,
+        "total": 299
+      }
     },
     {
       "id": "emi/scenario/sce15ef1/00",
@@ -2373,7 +3358,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 40
+      "total": 40,
+      "symbols": {
+        "named": 161,
+        "raw": 162,
+        "total": 323
+      }
     },
     {
       "id": "emi/scenario/sce15ef2/00",
@@ -2385,7 +3375,12 @@
       "partial": 0,
       "unlifted": 25,
       "invalid": 0,
-      "total": 27
+      "total": 27,
+      "symbols": {
+        "named": 160,
+        "raw": 148,
+        "total": 308
+      }
     },
     {
       "id": "emi/scenario/sce15ef3/00",
@@ -2397,7 +3392,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 44
+      "total": 44,
+      "symbols": {
+        "named": 166,
+        "raw": 162,
+        "total": 328
+      }
     },
     {
       "id": "emi/scenario/scena00/00",
@@ -2409,7 +3409,12 @@
       "partial": 2,
       "unlifted": 0,
       "invalid": 0,
-      "total": 63
+      "total": 63,
+      "symbols": {
+        "named": 178,
+        "raw": 247,
+        "total": 425
+      }
     },
     {
       "id": "emi/scenario/scena01/00",
@@ -2421,7 +3426,12 @@
       "partial": 1,
       "unlifted": 37,
       "invalid": 0,
-      "total": 72
+      "total": 72,
+      "symbols": {
+        "named": 198,
+        "raw": 161,
+        "total": 359
+      }
     },
     {
       "id": "emi/scenario/scena02/00",
@@ -2433,7 +3443,12 @@
       "partial": 1,
       "unlifted": 37,
       "invalid": 0,
-      "total": 86
+      "total": 86,
+      "symbols": {
+        "named": 208,
+        "raw": 161,
+        "total": 369
+      }
     },
     {
       "id": "emi/scenario/scena03/00",
@@ -2445,7 +3460,12 @@
       "partial": 1,
       "unlifted": 37,
       "invalid": 0,
-      "total": 83
+      "total": 83,
+      "symbols": {
+        "named": 215,
+        "raw": 165,
+        "total": 380
+      }
     },
     {
       "id": "emi/scenario/scena04/00",
@@ -2457,7 +3477,12 @@
       "partial": 0,
       "unlifted": 32,
       "invalid": 0,
-      "total": 44
+      "total": 44,
+      "symbols": {
+        "named": 171,
+        "raw": 158,
+        "total": 329
+      }
     },
     {
       "id": "emi/scenario/scena05/00",
@@ -2469,7 +3494,12 @@
       "partial": 0,
       "unlifted": 46,
       "invalid": 0,
-      "total": 72
+      "total": 72,
+      "symbols": {
+        "named": 185,
+        "raw": 169,
+        "total": 354
+      }
     },
     {
       "id": "emi/scenario/scena06/00",
@@ -2481,7 +3511,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 70
+      "total": 70,
+      "symbols": {
+        "named": 214,
+        "raw": 161,
+        "total": 375
+      }
     },
     {
       "id": "emi/scenario/scena07/00",
@@ -2493,7 +3528,12 @@
       "partial": 0,
       "unlifted": 77,
       "invalid": 0,
-      "total": 109
+      "total": 109,
+      "symbols": {
+        "named": 191,
+        "raw": 200,
+        "total": 391
+      }
     },
     {
       "id": "emi/scenario/scena08/00",
@@ -2505,7 +3545,12 @@
       "partial": 4,
       "unlifted": 37,
       "invalid": 0,
-      "total": 112
+      "total": 112,
+      "symbols": {
+        "named": 238,
+        "raw": 160,
+        "total": 398
+      }
     },
     {
       "id": "emi/scenario/scena09/00",
@@ -2517,7 +3562,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 89
+      "total": 89,
+      "symbols": {
+        "named": 217,
+        "raw": 163,
+        "total": 380
+      }
     },
     {
       "id": "emi/scenario/scena11/00",
@@ -2529,7 +3579,12 @@
       "partial": 0,
       "unlifted": 26,
       "invalid": 0,
-      "total": 52
+      "total": 52,
+      "symbols": {
+        "named": 184,
+        "raw": 151,
+        "total": 335
+      }
     },
     {
       "id": "emi/scenario/scena12/00",
@@ -2541,7 +3596,12 @@
       "partial": 0,
       "unlifted": 36,
       "invalid": 0,
-      "total": 67
+      "total": 67,
+      "symbols": {
+        "named": 190,
+        "raw": 163,
+        "total": 353
+      }
     },
     {
       "id": "emi/scenario/scena13/00",
@@ -2553,7 +3613,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 54
+      "total": 54,
+      "symbols": {
+        "named": 176,
+        "raw": 161,
+        "total": 337
+      }
     },
     {
       "id": "emi/scenario/scena14/00",
@@ -2565,7 +3630,12 @@
       "partial": 0,
       "unlifted": 33,
       "invalid": 0,
-      "total": 44
+      "total": 44,
+      "symbols": {
+        "named": 169,
+        "raw": 157,
+        "total": 326
+      }
     },
     {
       "id": "emi/scenario/scena15/00",
@@ -2577,7 +3647,12 @@
       "partial": 0,
       "unlifted": 67,
       "invalid": 0,
-      "total": 86
+      "total": 86,
+      "symbols": {
+        "named": 178,
+        "raw": 192,
+        "total": 370
+      }
     },
     {
       "id": "emi/scenario/scena16/00",
@@ -2589,7 +3664,12 @@
       "partial": 1,
       "unlifted": 4,
       "invalid": 4,
-      "total": 20
+      "total": 20,
+      "symbols": {
+        "named": 181,
+        "raw": 133,
+        "total": 314
+      }
     },
     {
       "id": "emi/scenario/scena18/00",
@@ -2601,7 +3681,12 @@
       "partial": 2,
       "unlifted": 1,
       "invalid": 1,
-      "total": 11
+      "total": 11,
+      "symbols": {
+        "named": 170,
+        "raw": 124,
+        "total": 294
+      }
     },
     {
       "id": "emi/scenario/scena19/00",
@@ -2613,7 +3698,12 @@
       "partial": 1,
       "unlifted": 0,
       "invalid": 0,
-      "total": 11
+      "total": 11,
+      "symbols": {
+        "named": 170,
+        "raw": 126,
+        "total": 296
+      }
     },
     {
       "id": "emi/world00/area000/13",
@@ -2625,7 +3715,12 @@
       "partial": 0,
       "unlifted": 5,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 161,
+        "raw": 129,
+        "total": 290
+      }
     },
     {
       "id": "emi/world00/area001/13",
@@ -2637,7 +3732,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 1
+      "total": 1,
+      "symbols": {
+        "named": 158,
+        "raw": 125,
+        "total": 283
+      }
     },
     {
       "id": "emi/world00/area002/09",
@@ -2649,7 +3749,12 @@
       "partial": 0,
       "unlifted": 2,
       "invalid": 0,
-      "total": 2
+      "total": 2,
+      "symbols": {
+        "named": 158,
+        "raw": 125,
+        "total": 283
+      }
     },
     {
       "id": "emi/world00/area003/13",
@@ -2661,7 +3766,12 @@
       "partial": 0,
       "unlifted": 8,
       "invalid": 0,
-      "total": 8
+      "total": 8,
+      "symbols": {
+        "named": 158,
+        "raw": 131,
+        "total": 289
+      }
     },
     {
       "id": "emi/world00/area004/09",
@@ -2673,7 +3783,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 1
+      "total": 1,
+      "symbols": {
+        "named": 158,
+        "raw": 125,
+        "total": 283
+      }
     },
     {
       "id": "emi/world00/area005/13",
@@ -2685,7 +3800,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 4
+      "total": 4,
+      "symbols": {
+        "named": 158,
+        "raw": 127,
+        "total": 285
+      }
     },
     {
       "id": "emi/world00/area007/13",
@@ -2697,7 +3817,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 9
+      "total": 9,
+      "symbols": {
+        "named": 166,
+        "raw": 126,
+        "total": 292
+      }
     },
     {
       "id": "emi/world00/area008/13",
@@ -2709,7 +3834,12 @@
       "partial": 1,
       "unlifted": 0,
       "invalid": 0,
-      "total": 48
+      "total": 48,
+      "symbols": {
+        "named": 185,
+        "raw": 175,
+        "total": 360
+      }
     },
     {
       "id": "emi/world00/area010/13",
@@ -2721,7 +3851,12 @@
       "partial": 0,
       "unlifted": 5,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 158,
+        "raw": 128,
+        "total": 286
+      }
     },
     {
       "id": "emi/world00/area011/13",
@@ -2733,7 +3868,12 @@
       "partial": 0,
       "unlifted": 3,
       "invalid": 0,
-      "total": 3
+      "total": 3,
+      "symbols": {
+        "named": 158,
+        "raw": 126,
+        "total": 284
+      }
     },
     {
       "id": "emi/world00/area012/13",
@@ -2745,7 +3885,12 @@
       "partial": 0,
       "unlifted": 2,
       "invalid": 0,
-      "total": 2
+      "total": 2,
+      "symbols": {
+        "named": 158,
+        "raw": 125,
+        "total": 283
+      }
     },
     {
       "id": "emi/world00/area013/13",
@@ -2757,7 +3902,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 6
+      "total": 6,
+      "symbols": {
+        "named": 158,
+        "raw": 129,
+        "total": 287
+      }
     },
     {
       "id": "emi/world00/area014/13",
@@ -2769,7 +3919,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 2
+      "total": 2,
+      "symbols": {
+        "named": 159,
+        "raw": 124,
+        "total": 283
+      }
     },
     {
       "id": "emi/world00/area015/13",
@@ -2781,7 +3936,12 @@
       "partial": 0,
       "unlifted": 8,
       "invalid": 0,
-      "total": 12
+      "total": 12,
+      "symbols": {
+        "named": 162,
+        "raw": 131,
+        "total": 293
+      }
     },
     {
       "id": "emi/world00/area016/13",
@@ -2793,7 +3953,12 @@
       "partial": 5,
       "unlifted": 0,
       "invalid": 0,
-      "total": 34
+      "total": 34,
+      "symbols": {
+        "named": 172,
+        "raw": 194,
+        "total": 366
+      }
     },
     {
       "id": "emi/world00/area018/13",
@@ -2805,7 +3970,12 @@
       "partial": 0,
       "unlifted": 3,
       "invalid": 0,
-      "total": 3
+      "total": 3,
+      "symbols": {
+        "named": 158,
+        "raw": 126,
+        "total": 284
+      }
     },
     {
       "id": "emi/world00/area019/13",
@@ -2817,7 +3987,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 8
+      "total": 8,
+      "symbols": {
+        "named": 162,
+        "raw": 127,
+        "total": 289
+      }
     },
     {
       "id": "emi/world00/area020/13",
@@ -2829,7 +4004,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 2
+      "total": 2,
+      "symbols": {
+        "named": 159,
+        "raw": 125,
+        "total": 284
+      }
     },
     {
       "id": "emi/world00/area021/13",
@@ -2841,7 +4021,12 @@
       "partial": 0,
       "unlifted": 3,
       "invalid": 0,
-      "total": 3
+      "total": 3,
+      "symbols": {
+        "named": 158,
+        "raw": 127,
+        "total": 285
+      }
     },
     {
       "id": "emi/world00/area022/13",
@@ -2853,7 +4038,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 4
+      "total": 4,
+      "symbols": {
+        "named": 158,
+        "raw": 127,
+        "total": 285
+      }
     },
     {
       "id": "emi/world00/area023/13",
@@ -2865,7 +4055,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 7
+      "total": 7,
+      "symbols": {
+        "named": 159,
+        "raw": 130,
+        "total": 289
+      }
     },
     {
       "id": "emi/world00/area024/14",
@@ -2877,7 +4072,12 @@
       "partial": 3,
       "unlifted": 0,
       "invalid": 0,
-      "total": 25
+      "total": 25,
+      "symbols": {
+        "named": 172,
+        "raw": 145,
+        "total": 317
+      }
     },
     {
       "id": "emi/world00/area025/13",
@@ -2889,7 +4089,12 @@
       "partial": 0,
       "unlifted": 2,
       "invalid": 0,
-      "total": 2
+      "total": 2,
+      "symbols": {
+        "named": 158,
+        "raw": 127,
+        "total": 285
+      }
     },
     {
       "id": "emi/world00/area026/13",
@@ -2901,7 +4106,12 @@
       "partial": 0,
       "unlifted": 0,
       "invalid": 0,
-      "total": 24
+      "total": 24,
+      "symbols": {
+        "named": 177,
+        "raw": 151,
+        "total": 328
+      }
     },
     {
       "id": "emi/world00/area027/13",
@@ -2913,7 +4123,12 @@
       "partial": 1,
       "unlifted": 0,
       "invalid": 0,
-      "total": 21
+      "total": 21,
+      "symbols": {
+        "named": 164,
+        "raw": 155,
+        "total": 319
+      }
     },
     {
       "id": "emi/world00/area028/13",
@@ -2925,7 +4140,12 @@
       "partial": 1,
       "unlifted": 0,
       "invalid": 0,
-      "total": 13
+      "total": 13,
+      "symbols": {
+        "named": 166,
+        "raw": 136,
+        "total": 302
+      }
     },
     {
       "id": "emi/world00/area029/13",
@@ -2937,7 +4157,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 2
+      "total": 2,
+      "symbols": {
+        "named": 160,
+        "raw": 124,
+        "total": 284
+      }
     },
     {
       "id": "emi/world00/area030/04",
@@ -2949,7 +4174,12 @@
       "partial": 19,
       "unlifted": 39,
       "invalid": 1,
-      "total": 225
+      "total": 225,
+      "symbols": {
+        "named": 211,
+        "raw": 423,
+        "total": 634
+      }
     },
     {
       "id": "emi/world00/area030/05",
@@ -2961,7 +4191,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 8
+      "total": 8,
+      "symbols": {
+        "named": 162,
+        "raw": 130,
+        "total": 292
+      }
     },
     {
       "id": "emi/world00/area032/13",
@@ -2973,7 +4208,12 @@
       "partial": 1,
       "unlifted": 0,
       "invalid": 0,
-      "total": 23
+      "total": 23,
+      "symbols": {
+        "named": 164,
+        "raw": 175,
+        "total": 339
+      }
     },
     {
       "id": "emi/world00/area033/13",
@@ -2985,7 +4225,12 @@
       "partial": 0,
       "unlifted": 28,
       "invalid": 0,
-      "total": 36
+      "total": 36,
+      "symbols": {
+        "named": 166,
+        "raw": 151,
+        "total": 317
+      }
     },
     {
       "id": "emi/world00/area034/13",
@@ -2997,7 +4242,12 @@
       "partial": 0,
       "unlifted": 5,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 159,
+        "raw": 129,
+        "total": 288
+      }
     },
     {
       "id": "emi/world00/area035/13",
@@ -3009,7 +4259,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 4
+      "total": 4,
+      "symbols": {
+        "named": 158,
+        "raw": 129,
+        "total": 287
+      }
     },
     {
       "id": "emi/world00/area036/13",
@@ -3021,7 +4276,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 7
+      "total": 7,
+      "symbols": {
+        "named": 159,
+        "raw": 130,
+        "total": 289
+      }
     },
     {
       "id": "emi/world00/area037/13",
@@ -3033,7 +4293,12 @@
       "partial": 0,
       "unlifted": 25,
       "invalid": 0,
-      "total": 25
+      "total": 25,
+      "symbols": {
+        "named": 158,
+        "raw": 149,
+        "total": 307
+      }
     },
     {
       "id": "emi/world01/area038/13",
@@ -3045,7 +4310,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 4
+      "total": 4,
+      "symbols": {
+        "named": 158,
+        "raw": 128,
+        "total": 286
+      }
     },
     {
       "id": "emi/world01/area039/13",
@@ -3057,7 +4327,12 @@
       "partial": 0,
       "unlifted": 13,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 162,
+        "raw": 137,
+        "total": 299
+      }
     },
     {
       "id": "emi/world01/area040/13",
@@ -3069,7 +4344,12 @@
       "partial": 0,
       "unlifted": 19,
       "invalid": 0,
-      "total": 19
+      "total": 19,
+      "symbols": {
+        "named": 158,
+        "raw": 143,
+        "total": 301
+      }
     },
     {
       "id": "emi/world01/area041/13",
@@ -3081,7 +4361,12 @@
       "partial": 0,
       "unlifted": 31,
       "invalid": 0,
-      "total": 37
+      "total": 37,
+      "symbols": {
+        "named": 164,
+        "raw": 158,
+        "total": 322
+      }
     },
     {
       "id": "emi/world01/area043/13",
@@ -3093,7 +4378,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 6
+      "total": 6,
+      "symbols": {
+        "named": 158,
+        "raw": 130,
+        "total": 288
+      }
     },
     {
       "id": "emi/world01/area044/13",
@@ -3105,7 +4395,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 6
+      "total": 6,
+      "symbols": {
+        "named": 158,
+        "raw": 130,
+        "total": 288
+      }
     },
     {
       "id": "emi/world01/area045/13",
@@ -3117,7 +4412,12 @@
       "partial": 0,
       "unlifted": 26,
       "invalid": 0,
-      "total": 34
+      "total": 34,
+      "symbols": {
+        "named": 166,
+        "raw": 149,
+        "total": 315
+      }
     },
     {
       "id": "emi/world01/area046/13",
@@ -3129,7 +4429,12 @@
       "partial": 0,
       "unlifted": 3,
       "invalid": 0,
-      "total": 4
+      "total": 4,
+      "symbols": {
+        "named": 159,
+        "raw": 127,
+        "total": 286
+      }
     },
     {
       "id": "emi/world01/area047/13",
@@ -3141,7 +4446,12 @@
       "partial": 0,
       "unlifted": 14,
       "invalid": 0,
-      "total": 15
+      "total": 15,
+      "symbols": {
+        "named": 159,
+        "raw": 138,
+        "total": 297
+      }
     },
     {
       "id": "emi/world01/area048/13",
@@ -3153,7 +4463,12 @@
       "partial": 0,
       "unlifted": 31,
       "invalid": 0,
-      "total": 35
+      "total": 35,
+      "symbols": {
+        "named": 162,
+        "raw": 156,
+        "total": 318
+      }
     },
     {
       "id": "emi/world01/area049/13",
@@ -3165,7 +4480,12 @@
       "partial": 0,
       "unlifted": 22,
       "invalid": 0,
-      "total": 25
+      "total": 25,
+      "symbols": {
+        "named": 161,
+        "raw": 146,
+        "total": 307
+      }
     },
     {
       "id": "emi/world01/area049/14",
@@ -3177,7 +4497,12 @@
       "partial": 0,
       "unlifted": 21,
       "invalid": 0,
-      "total": 28
+      "total": 28,
+      "symbols": {
+        "named": 165,
+        "raw": 146,
+        "total": 311
+      }
     },
     {
       "id": "emi/world01/area050/13",
@@ -3189,7 +4514,12 @@
       "partial": 0,
       "unlifted": 7,
       "invalid": 0,
-      "total": 7
+      "total": 7,
+      "symbols": {
+        "named": 158,
+        "raw": 130,
+        "total": 288
+      }
     },
     {
       "id": "emi/world01/area051/13",
@@ -3201,7 +4531,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 4
+      "total": 4,
+      "symbols": {
+        "named": 158,
+        "raw": 129,
+        "total": 287
+      }
     },
     {
       "id": "emi/world01/area052/13",
@@ -3213,7 +4548,12 @@
       "partial": 0,
       "unlifted": 24,
       "invalid": 0,
-      "total": 26
+      "total": 26,
+      "symbols": {
+        "named": 160,
+        "raw": 148,
+        "total": 308
+      }
     },
     {
       "id": "emi/world01/area053/13",
@@ -3225,7 +4565,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 3
+      "total": 3,
+      "symbols": {
+        "named": 160,
+        "raw": 124,
+        "total": 284
+      }
     },
     {
       "id": "emi/world01/area054/13",
@@ -3237,7 +4582,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 1
+      "total": 1,
+      "symbols": {
+        "named": 158,
+        "raw": 125,
+        "total": 283
+      }
     },
     {
       "id": "emi/world01/area055/13",
@@ -3249,7 +4599,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 6
+      "total": 6,
+      "symbols": {
+        "named": 158,
+        "raw": 130,
+        "total": 288
+      }
     },
     {
       "id": "emi/world01/area056/13",
@@ -3261,7 +4616,12 @@
       "partial": 0,
       "unlifted": 17,
       "invalid": 0,
-      "total": 21
+      "total": 21,
+      "symbols": {
+        "named": 162,
+        "raw": 141,
+        "total": 303
+      }
     },
     {
       "id": "emi/world01/area057/13",
@@ -3273,7 +4633,12 @@
       "partial": 0,
       "unlifted": 5,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 158,
+        "raw": 128,
+        "total": 286
+      }
     },
     {
       "id": "emi/world01/area058/13",
@@ -3285,7 +4650,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 1
+      "total": 1,
+      "symbols": {
+        "named": 158,
+        "raw": 125,
+        "total": 283
+      }
     },
     {
       "id": "emi/world01/area059/13",
@@ -3297,7 +4667,12 @@
       "partial": 0,
       "unlifted": 14,
       "invalid": 0,
-      "total": 15
+      "total": 15,
+      "symbols": {
+        "named": 159,
+        "raw": 137,
+        "total": 296
+      }
     },
     {
       "id": "emi/world01/area060/13",
@@ -3309,7 +4684,12 @@
       "partial": 0,
       "unlifted": 5,
       "invalid": 0,
-      "total": 6
+      "total": 6,
+      "symbols": {
+        "named": 159,
+        "raw": 128,
+        "total": 287
+      }
     },
     {
       "id": "emi/world01/area061/13",
@@ -3321,7 +4701,12 @@
       "partial": 0,
       "unlifted": 7,
       "invalid": 0,
-      "total": 7
+      "total": 7,
+      "symbols": {
+        "named": 158,
+        "raw": 129,
+        "total": 287
+      }
     },
     {
       "id": "emi/world01/area062/13",
@@ -3333,7 +4718,12 @@
       "partial": 0,
       "unlifted": 3,
       "invalid": 0,
-      "total": 3
+      "total": 3,
+      "symbols": {
+        "named": 158,
+        "raw": 126,
+        "total": 284
+      }
     },
     {
       "id": "emi/world01/area063/13",
@@ -3345,7 +4735,12 @@
       "partial": 0,
       "unlifted": 2,
       "invalid": 0,
-      "total": 3
+      "total": 3,
+      "symbols": {
+        "named": 160,
+        "raw": 124,
+        "total": 284
+      }
     },
     {
       "id": "emi/world01/area064/13",
@@ -3357,7 +4752,12 @@
       "partial": 0,
       "unlifted": 2,
       "invalid": 0,
-      "total": 3
+      "total": 3,
+      "symbols": {
+        "named": 160,
+        "raw": 124,
+        "total": 284
+      }
     },
     {
       "id": "emi/world01/area065/13",
@@ -3369,7 +4769,12 @@
       "partial": 0,
       "unlifted": 27,
       "invalid": 0,
-      "total": 35
+      "total": 35,
+      "symbols": {
+        "named": 166,
+        "raw": 150,
+        "total": 316
+      }
     },
     {
       "id": "emi/world01/area067/14",
@@ -3381,7 +4786,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 41
+      "total": 41,
+      "symbols": {
+        "named": 162,
+        "raw": 161,
+        "total": 323
+      }
     },
     {
       "id": "emi/world01/area068/13",
@@ -3393,7 +4803,12 @@
       "partial": 0,
       "unlifted": 37,
       "invalid": 0,
-      "total": 50
+      "total": 50,
+      "symbols": {
+        "named": 171,
+        "raw": 161,
+        "total": 332
+      }
     },
     {
       "id": "emi/world01/area069/13",
@@ -3405,7 +4820,12 @@
       "partial": 0,
       "unlifted": 5,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 160,
+        "raw": 129,
+        "total": 289
+      }
     },
     {
       "id": "emi/world01/area071/13",
@@ -3417,7 +4837,12 @@
       "partial": 0,
       "unlifted": 2,
       "invalid": 0,
-      "total": 2
+      "total": 2,
+      "symbols": {
+        "named": 158,
+        "raw": 126,
+        "total": 284
+      }
     },
     {
       "id": "emi/world01/area072/13",
@@ -3429,7 +4854,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 2
+      "total": 2,
+      "symbols": {
+        "named": 159,
+        "raw": 125,
+        "total": 284
+      }
     },
     {
       "id": "emi/world01/area073/13",
@@ -3441,7 +4871,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 2
+      "total": 2,
+      "symbols": {
+        "named": 159,
+        "raw": 125,
+        "total": 284
+      }
     },
     {
       "id": "emi/world01/area074/13",
@@ -3453,7 +4888,12 @@
       "partial": 0,
       "unlifted": 3,
       "invalid": 0,
-      "total": 3
+      "total": 3,
+      "symbols": {
+        "named": 158,
+        "raw": 127,
+        "total": 285
+      }
     },
     {
       "id": "emi/world02/area077/14",
@@ -3465,7 +4905,12 @@
       "partial": 3,
       "unlifted": 37,
       "invalid": 0,
-      "total": 76
+      "total": 76,
+      "symbols": {
+        "named": 210,
+        "raw": 164,
+        "total": 374
+      }
     },
     {
       "id": "emi/world02/area078/13",
@@ -3477,7 +4922,12 @@
       "partial": 0,
       "unlifted": 8,
       "invalid": 0,
-      "total": 10
+      "total": 10,
+      "symbols": {
+        "named": 160,
+        "raw": 131,
+        "total": 291
+      }
     },
     {
       "id": "emi/world02/area079/13",
@@ -3489,7 +4939,12 @@
       "partial": 0,
       "unlifted": 3,
       "invalid": 0,
-      "total": 4
+      "total": 4,
+      "symbols": {
+        "named": 160,
+        "raw": 126,
+        "total": 286
+      }
     },
     {
       "id": "emi/world02/area080/13",
@@ -3501,7 +4956,12 @@
       "partial": 0,
       "unlifted": 20,
       "invalid": 0,
-      "total": 22
+      "total": 22,
+      "symbols": {
+        "named": 160,
+        "raw": 145,
+        "total": 305
+      }
     },
     {
       "id": "emi/world02/area081/13",
@@ -3513,7 +4973,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 7
+      "total": 7,
+      "symbols": {
+        "named": 159,
+        "raw": 129,
+        "total": 288
+      }
     },
     {
       "id": "emi/world02/area082/13",
@@ -3525,7 +4990,12 @@
       "partial": 0,
       "unlifted": 38,
       "invalid": 0,
-      "total": 55
+      "total": 55,
+      "symbols": {
+        "named": 176,
+        "raw": 126,
+        "total": 302
+      }
     },
     {
       "id": "emi/world02/area084/13",
@@ -3537,7 +5007,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 1
+      "total": 1,
+      "symbols": {
+        "named": 158,
+        "raw": 126,
+        "total": 284
+      }
     },
     {
       "id": "emi/world02/area085/13",
@@ -3549,7 +5024,12 @@
       "partial": 0,
       "unlifted": 17,
       "invalid": 0,
-      "total": 24
+      "total": 24,
+      "symbols": {
+        "named": 165,
+        "raw": 142,
+        "total": 307
+      }
     },
     {
       "id": "emi/world02/area086/13",
@@ -3561,7 +5041,12 @@
       "partial": 0,
       "unlifted": 8,
       "invalid": 0,
-      "total": 9
+      "total": 9,
+      "symbols": {
+        "named": 159,
+        "raw": 132,
+        "total": 291
+      }
     },
     {
       "id": "emi/world02/area087/13",
@@ -3573,7 +5058,12 @@
       "partial": 0,
       "unlifted": 27,
       "invalid": 0,
-      "total": 35
+      "total": 35,
+      "symbols": {
+        "named": 166,
+        "raw": 150,
+        "total": 316
+      }
     },
     {
       "id": "emi/world02/area088/13",
@@ -3585,7 +5075,12 @@
       "partial": 0,
       "unlifted": 35,
       "invalid": 0,
-      "total": 49
+      "total": 49,
+      "symbols": {
+        "named": 172,
+        "raw": 159,
+        "total": 331
+      }
     },
     {
       "id": "emi/world02/area090/13",
@@ -3597,7 +5092,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 2
+      "total": 2,
+      "symbols": {
+        "named": 159,
+        "raw": 124,
+        "total": 283
+      }
     },
     {
       "id": "emi/world02/area091/13",
@@ -3609,7 +5109,12 @@
       "partial": 0,
       "unlifted": 16,
       "invalid": 0,
-      "total": 16
+      "total": 16,
+      "symbols": {
+        "named": 158,
+        "raw": 139,
+        "total": 297
+      }
     },
     {
       "id": "emi/world02/area092/13",
@@ -3621,7 +5126,12 @@
       "partial": 0,
       "unlifted": 12,
       "invalid": 0,
-      "total": 12
+      "total": 12,
+      "symbols": {
+        "named": 158,
+        "raw": 136,
+        "total": 294
+      }
     },
     {
       "id": "emi/world02/area093/13",
@@ -3633,7 +5143,12 @@
       "partial": 0,
       "unlifted": 0,
       "invalid": 0,
-      "total": 1
+      "total": 1,
+      "symbols": {
+        "named": 160,
+        "raw": 127,
+        "total": 287
+      }
     },
     {
       "id": "emi/world02/area094/13",
@@ -3645,7 +5160,12 @@
       "partial": 0,
       "unlifted": 20,
       "invalid": 0,
-      "total": 20
+      "total": 20,
+      "symbols": {
+        "named": 161,
+        "raw": 144,
+        "total": 305
+      }
     },
     {
       "id": "emi/world02/area095/13",
@@ -3657,7 +5177,12 @@
       "partial": 0,
       "unlifted": 13,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 159,
+        "raw": 137,
+        "total": 296
+      }
     },
     {
       "id": "emi/world02/area096/13",
@@ -3669,7 +5194,12 @@
       "partial": 0,
       "unlifted": 13,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 159,
+        "raw": 137,
+        "total": 296
+      }
     },
     {
       "id": "emi/world02/area097/13",
@@ -3681,7 +5211,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 4
+      "total": 4,
+      "symbols": {
+        "named": 158,
+        "raw": 128,
+        "total": 286
+      }
     },
     {
       "id": "emi/world02/area098/13",
@@ -3693,7 +5228,12 @@
       "partial": 0,
       "unlifted": 51,
       "invalid": 0,
-      "total": 60
+      "total": 60,
+      "symbols": {
+        "named": 172,
+        "raw": 175,
+        "total": 347
+      }
     },
     {
       "id": "emi/world02/area099/13",
@@ -3705,7 +5245,12 @@
       "partial": 0,
       "unlifted": 8,
       "invalid": 0,
-      "total": 9
+      "total": 9,
+      "symbols": {
+        "named": 160,
+        "raw": 132,
+        "total": 292
+      }
     },
     {
       "id": "emi/world02/area100/13",
@@ -3717,7 +5262,12 @@
       "partial": 0,
       "unlifted": 22,
       "invalid": 0,
-      "total": 30
+      "total": 30,
+      "symbols": {
+        "named": 166,
+        "raw": 147,
+        "total": 313
+      }
     },
     {
       "id": "emi/world02/area102/13",
@@ -3729,7 +5279,12 @@
       "partial": 0,
       "unlifted": 13,
       "invalid": 0,
-      "total": 15
+      "total": 15,
+      "symbols": {
+        "named": 160,
+        "raw": 137,
+        "total": 297
+      }
     },
     {
       "id": "emi/world02/area103/13",
@@ -3741,7 +5296,12 @@
       "partial": 0,
       "unlifted": 38,
       "invalid": 0,
-      "total": 48
+      "total": 48,
+      "symbols": {
+        "named": 169,
+        "raw": 163,
+        "total": 332
+      }
     },
     {
       "id": "emi/world02/area105/13",
@@ -3753,7 +5313,12 @@
       "partial": 0,
       "unlifted": 9,
       "invalid": 0,
-      "total": 10
+      "total": 10,
+      "symbols": {
+        "named": 159,
+        "raw": 133,
+        "total": 292
+      }
     },
     {
       "id": "emi/world02/area106/13",
@@ -3765,7 +5330,12 @@
       "partial": 0,
       "unlifted": 13,
       "invalid": 0,
-      "total": 14
+      "total": 14,
+      "symbols": {
+        "named": 159,
+        "raw": 137,
+        "total": 296
+      }
     },
     {
       "id": "emi/world02/area107/13",
@@ -3777,7 +5347,12 @@
       "partial": 0,
       "unlifted": 5,
       "invalid": 0,
-      "total": 6
+      "total": 6,
+      "symbols": {
+        "named": 159,
+        "raw": 129,
+        "total": 288
+      }
     },
     {
       "id": "emi/world02/area108/14",
@@ -3789,7 +5364,12 @@
       "partial": 0,
       "unlifted": 38,
       "invalid": 0,
-      "total": 56
+      "total": 56,
+      "symbols": {
+        "named": 180,
+        "raw": 163,
+        "total": 343
+      }
     },
     {
       "id": "emi/world02/area109/13",
@@ -3801,7 +5381,12 @@
       "partial": 0,
       "unlifted": 3,
       "invalid": 0,
-      "total": 3
+      "total": 3,
+      "symbols": {
+        "named": 158,
+        "raw": 127,
+        "total": 285
+      }
     },
     {
       "id": "emi/world02/area110/13",
@@ -3813,7 +5398,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 2
+      "total": 2,
+      "symbols": {
+        "named": 159,
+        "raw": 125,
+        "total": 284
+      }
     },
     {
       "id": "emi/world02/area111/13",
@@ -3825,7 +5415,12 @@
       "partial": 0,
       "unlifted": 23,
       "invalid": 0,
-      "total": 26
+      "total": 26,
+      "symbols": {
+        "named": 161,
+        "raw": 147,
+        "total": 308
+      }
     },
     {
       "id": "emi/world02/area112/13",
@@ -3837,7 +5432,12 @@
       "partial": 0,
       "unlifted": 19,
       "invalid": 0,
-      "total": 21
+      "total": 21,
+      "symbols": {
+        "named": 160,
+        "raw": 143,
+        "total": 303
+      }
     },
     {
       "id": "emi/world02/area113/13",
@@ -3849,7 +5449,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 6
+      "total": 6,
+      "symbols": {
+        "named": 158,
+        "raw": 129,
+        "total": 287
+      }
     },
     {
       "id": "emi/world03/area114/13",
@@ -3861,7 +5466,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 6
+      "total": 6,
+      "symbols": {
+        "named": 158,
+        "raw": 129,
+        "total": 287
+      }
     },
     {
       "id": "emi/world03/area115/13",
@@ -3873,7 +5483,12 @@
       "partial": 0,
       "unlifted": 26,
       "invalid": 0,
-      "total": 34
+      "total": 34,
+      "symbols": {
+        "named": 166,
+        "raw": 149,
+        "total": 315
+      }
     },
     {
       "id": "emi/world03/area116/13",
@@ -3885,7 +5500,12 @@
       "partial": 0,
       "unlifted": 12,
       "invalid": 0,
-      "total": 13
+      "total": 13,
+      "symbols": {
+        "named": 159,
+        "raw": 135,
+        "total": 294
+      }
     },
     {
       "id": "emi/world03/area117/13",
@@ -3897,7 +5517,12 @@
       "partial": 0,
       "unlifted": 26,
       "invalid": 0,
-      "total": 28
+      "total": 28,
+      "symbols": {
+        "named": 160,
+        "raw": 150,
+        "total": 310
+      }
     },
     {
       "id": "emi/world03/area118/13",
@@ -3909,7 +5534,12 @@
       "partial": 0,
       "unlifted": 26,
       "invalid": 0,
-      "total": 31
+      "total": 31,
+      "symbols": {
+        "named": 163,
+        "raw": 150,
+        "total": 313
+      }
     },
     {
       "id": "emi/world03/area119/13",
@@ -3921,7 +5551,12 @@
       "partial": 0,
       "unlifted": 31,
       "invalid": 0,
-      "total": 43
+      "total": 43,
+      "symbols": {
+        "named": 170,
+        "raw": 159,
+        "total": 329
+      }
     },
     {
       "id": "emi/world03/area120/13",
@@ -3933,7 +5568,12 @@
       "partial": 0,
       "unlifted": 24,
       "invalid": 0,
-      "total": 27
+      "total": 27,
+      "symbols": {
+        "named": 162,
+        "raw": 148,
+        "total": 310
+      }
     },
     {
       "id": "emi/world03/area121/14",
@@ -3945,7 +5585,12 @@
       "partial": 1,
       "unlifted": 38,
       "invalid": 0,
-      "total": 64
+      "total": 64,
+      "symbols": {
+        "named": 185,
+        "raw": 172,
+        "total": 357
+      }
     },
     {
       "id": "emi/world03/area123/13",
@@ -3957,7 +5602,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 1
+      "total": 1,
+      "symbols": {
+        "named": 158,
+        "raw": 127,
+        "total": 285
+      }
     },
     {
       "id": "emi/world03/area124/13",
@@ -3969,7 +5619,12 @@
       "partial": 0,
       "unlifted": 2,
       "invalid": 0,
-      "total": 3
+      "total": 3,
+      "symbols": {
+        "named": 159,
+        "raw": 125,
+        "total": 284
+      }
     },
     {
       "id": "emi/world03/area125/13",
@@ -3981,7 +5636,12 @@
       "partial": 0,
       "unlifted": 17,
       "invalid": 0,
-      "total": 19
+      "total": 19,
+      "symbols": {
+        "named": 160,
+        "raw": 140,
+        "total": 300
+      }
     },
     {
       "id": "emi/world03/area127/13",
@@ -3993,7 +5653,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 2
+      "total": 2,
+      "symbols": {
+        "named": 160,
+        "raw": 128,
+        "total": 288
+      }
     },
     {
       "id": "emi/world03/area128/13",
@@ -4005,7 +5670,12 @@
       "partial": 0,
       "unlifted": 9,
       "invalid": 0,
-      "total": 9
+      "total": 9,
+      "symbols": {
+        "named": 158,
+        "raw": 132,
+        "total": 290
+      }
     },
     {
       "id": "emi/world03/area130/13",
@@ -4017,7 +5687,12 @@
       "partial": 0,
       "unlifted": 28,
       "invalid": 0,
-      "total": 32
+      "total": 32,
+      "symbols": {
+        "named": 162,
+        "raw": 151,
+        "total": 313
+      }
     },
     {
       "id": "emi/world03/area131/13",
@@ -4029,7 +5704,12 @@
       "partial": 0,
       "unlifted": 11,
       "invalid": 0,
-      "total": 16
+      "total": 16,
+      "symbols": {
+        "named": 164,
+        "raw": 139,
+        "total": 303
+      }
     },
     {
       "id": "emi/world03/area132/13",
@@ -4041,7 +5721,12 @@
       "partial": 0,
       "unlifted": 22,
       "invalid": 0,
-      "total": 28
+      "total": 28,
+      "symbols": {
+        "named": 164,
+        "raw": 146,
+        "total": 310
+      }
     },
     {
       "id": "emi/world03/area133/13",
@@ -4053,7 +5738,12 @@
       "partial": 0,
       "unlifted": 2,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 161,
+        "raw": 129,
+        "total": 290
+      }
     },
     {
       "id": "emi/world03/area134/13",
@@ -4065,7 +5755,12 @@
       "partial": 1,
       "unlifted": 38,
       "invalid": 0,
-      "total": 94
+      "total": 94,
+      "symbols": {
+        "named": 215,
+        "raw": 164,
+        "total": 379
+      }
     },
     {
       "id": "emi/world03/area136/13",
@@ -4077,7 +5772,12 @@
       "partial": 0,
       "unlifted": 17,
       "invalid": 0,
-      "total": 17
+      "total": 17,
+      "symbols": {
+        "named": 158,
+        "raw": 140,
+        "total": 298
+      }
     },
     {
       "id": "emi/world03/area139/13",
@@ -4089,7 +5789,12 @@
       "partial": 0,
       "unlifted": 17,
       "invalid": 0,
-      "total": 19
+      "total": 19,
+      "symbols": {
+        "named": 160,
+        "raw": 141,
+        "total": 301
+      }
     },
     {
       "id": "emi/world03/area140/13",
@@ -4101,7 +5806,12 @@
       "partial": 0,
       "unlifted": 27,
       "invalid": 0,
-      "total": 30
+      "total": 30,
+      "symbols": {
+        "named": 161,
+        "raw": 150,
+        "total": 311
+      }
     },
     {
       "id": "emi/world03/area141/13",
@@ -4113,7 +5823,12 @@
       "partial": 0,
       "unlifted": 24,
       "invalid": 0,
-      "total": 25
+      "total": 25,
+      "symbols": {
+        "named": 159,
+        "raw": 148,
+        "total": 307
+      }
     },
     {
       "id": "emi/world03/area142/13",
@@ -4125,7 +5840,12 @@
       "partial": 0,
       "unlifted": 9,
       "invalid": 0,
-      "total": 9
+      "total": 9,
+      "symbols": {
+        "named": 158,
+        "raw": 132,
+        "total": 290
+      }
     },
     {
       "id": "emi/world03/area143/13",
@@ -4137,7 +5857,12 @@
       "partial": 0,
       "unlifted": 29,
       "invalid": 0,
-      "total": 36
+      "total": 36,
+      "symbols": {
+        "named": 165,
+        "raw": 155,
+        "total": 320
+      }
     },
     {
       "id": "emi/world03/area144/13",
@@ -4149,7 +5874,12 @@
       "partial": 0,
       "unlifted": 19,
       "invalid": 0,
-      "total": 24
+      "total": 24,
+      "symbols": {
+        "named": 163,
+        "raw": 143,
+        "total": 306
+      }
     },
     {
       "id": "emi/world03/area145/14",
@@ -4161,7 +5891,12 @@
       "partial": 0,
       "unlifted": 35,
       "invalid": 0,
-      "total": 43
+      "total": 43,
+      "symbols": {
+        "named": 166,
+        "raw": 161,
+        "total": 327
+      }
     },
     {
       "id": "emi/world03/area146/13",
@@ -4173,7 +5908,12 @@
       "partial": 0,
       "unlifted": 8,
       "invalid": 0,
-      "total": 9
+      "total": 9,
+      "symbols": {
+        "named": 159,
+        "raw": 132,
+        "total": 291
+      }
     },
     {
       "id": "emi/world03/area147/13",
@@ -4185,7 +5925,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 7
+      "total": 7,
+      "symbols": {
+        "named": 159,
+        "raw": 130,
+        "total": 289
+      }
     },
     {
       "id": "emi/world03/area148/13",
@@ -4197,7 +5942,12 @@
       "partial": 0,
       "unlifted": 30,
       "invalid": 0,
-      "total": 36
+      "total": 36,
+      "symbols": {
+        "named": 164,
+        "raw": 155,
+        "total": 319
+      }
     },
     {
       "id": "emi/world03/area149/13",
@@ -4209,7 +5959,12 @@
       "partial": 0,
       "unlifted": 14,
       "invalid": 0,
-      "total": 16
+      "total": 16,
+      "symbols": {
+        "named": 160,
+        "raw": 138,
+        "total": 298
+      }
     },
     {
       "id": "emi/world03/area150/13",
@@ -4221,7 +5976,12 @@
       "partial": 0,
       "unlifted": 5,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 158,
+        "raw": 129,
+        "total": 287
+      }
     },
     {
       "id": "emi/world03/area151/13",
@@ -4233,7 +5993,12 @@
       "partial": 0,
       "unlifted": 26,
       "invalid": 0,
-      "total": 34
+      "total": 34,
+      "symbols": {
+        "named": 166,
+        "raw": 149,
+        "total": 315
+      }
     },
     {
       "id": "emi/world04/area152/13",
@@ -4245,7 +6010,12 @@
       "partial": 0,
       "unlifted": 28,
       "invalid": 0,
-      "total": 36
+      "total": 36,
+      "symbols": {
+        "named": 166,
+        "raw": 150,
+        "total": 316
+      }
     },
     {
       "id": "emi/world04/area153/13",
@@ -4257,7 +6027,12 @@
       "partial": 0,
       "unlifted": 2,
       "invalid": 0,
-      "total": 3
+      "total": 3,
+      "symbols": {
+        "named": 159,
+        "raw": 124,
+        "total": 283
+      }
     },
     {
       "id": "emi/world04/area154/13",
@@ -4269,7 +6044,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 2
+      "total": 2,
+      "symbols": {
+        "named": 159,
+        "raw": 124,
+        "total": 283
+      }
     },
     {
       "id": "emi/world04/area155/13",
@@ -4281,7 +6061,12 @@
       "partial": 0,
       "unlifted": 2,
       "invalid": 0,
-      "total": 2
+      "total": 2,
+      "symbols": {
+        "named": 158,
+        "raw": 125,
+        "total": 283
+      }
     },
     {
       "id": "emi/world04/area156/13",
@@ -4293,7 +6078,12 @@
       "partial": 0,
       "unlifted": 1,
       "invalid": 0,
-      "total": 1
+      "total": 1,
+      "symbols": {
+        "named": 158,
+        "raw": 125,
+        "total": 283
+      }
     },
     {
       "id": "emi/world04/area157/13",
@@ -4305,7 +6095,12 @@
       "partial": 0,
       "unlifted": 11,
       "invalid": 0,
-      "total": 13
+      "total": 13,
+      "symbols": {
+        "named": 160,
+        "raw": 135,
+        "total": 295
+      }
     },
     {
       "id": "emi/world04/area158/13",
@@ -4317,7 +6112,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 7
+      "total": 7,
+      "symbols": {
+        "named": 159,
+        "raw": 130,
+        "total": 289
+      }
     },
     {
       "id": "emi/world04/area160/13",
@@ -4329,7 +6129,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 7
+      "total": 7,
+      "symbols": {
+        "named": 159,
+        "raw": 130,
+        "total": 289
+      }
     },
     {
       "id": "emi/world04/area161/13",
@@ -4341,7 +6146,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 7
+      "total": 7,
+      "symbols": {
+        "named": 160,
+        "raw": 129,
+        "total": 289
+      }
     },
     {
       "id": "emi/world04/area162/13",
@@ -4353,7 +6163,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 7
+      "total": 7,
+      "symbols": {
+        "named": 159,
+        "raw": 130,
+        "total": 289
+      }
     },
     {
       "id": "emi/world04/area163/13",
@@ -4365,7 +6180,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 7
+      "total": 7,
+      "symbols": {
+        "named": 159,
+        "raw": 131,
+        "total": 290
+      }
     },
     {
       "id": "emi/world04/area164/13",
@@ -4377,7 +6197,12 @@
       "partial": 0,
       "unlifted": 6,
       "invalid": 0,
-      "total": 7
+      "total": 7,
+      "symbols": {
+        "named": 159,
+        "raw": 131,
+        "total": 290
+      }
     },
     {
       "id": "emi/world04/area165/13",
@@ -4389,7 +6214,12 @@
       "partial": 0,
       "unlifted": 9,
       "invalid": 0,
-      "total": 11
+      "total": 11,
+      "symbols": {
+        "named": 160,
+        "raw": 133,
+        "total": 293
+      }
     },
     {
       "id": "emi/world04/area166/13",
@@ -4401,7 +6231,12 @@
       "partial": 0,
       "unlifted": 11,
       "invalid": 0,
-      "total": 13
+      "total": 13,
+      "symbols": {
+        "named": 160,
+        "raw": 136,
+        "total": 296
+      }
     },
     {
       "id": "emi/world04/area167/13",
@@ -4413,7 +6248,12 @@
       "partial": 0,
       "unlifted": 27,
       "invalid": 0,
-      "total": 34
+      "total": 34,
+      "symbols": {
+        "named": 165,
+        "raw": 152,
+        "total": 317
+      }
     },
     {
       "id": "emi/world04/area168/13",
@@ -4425,7 +6265,12 @@
       "partial": 0,
       "unlifted": 28,
       "invalid": 0,
-      "total": 32
+      "total": 32,
+      "symbols": {
+        "named": 162,
+        "raw": 152,
+        "total": 314
+      }
     },
     {
       "id": "emi/world04/area169/13",
@@ -4437,7 +6282,12 @@
       "partial": 0,
       "unlifted": 12,
       "invalid": 0,
-      "total": 13
+      "total": 13,
+      "symbols": {
+        "named": 159,
+        "raw": 136,
+        "total": 295
+      }
     },
     {
       "id": "emi/world04/area170/13",
@@ -4449,7 +6299,12 @@
       "partial": 0,
       "unlifted": 33,
       "invalid": 0,
-      "total": 37
+      "total": 37,
+      "symbols": {
+        "named": 162,
+        "raw": 157,
+        "total": 319
+      }
     },
     {
       "id": "emi/world04/area171/13",
@@ -4461,7 +6316,12 @@
       "partial": 0,
       "unlifted": 17,
       "invalid": 0,
-      "total": 18
+      "total": 18,
+      "symbols": {
+        "named": 159,
+        "raw": 141,
+        "total": 300
+      }
     },
     {
       "id": "emi/world04/area172/13",
@@ -4473,7 +6333,12 @@
       "partial": 0,
       "unlifted": 38,
       "invalid": 0,
-      "total": 52
+      "total": 52,
+      "symbols": {
+        "named": 172,
+        "raw": 163,
+        "total": 335
+      }
     },
     {
       "id": "emi/world04/area174/13",
@@ -4485,7 +6350,12 @@
       "partial": 0,
       "unlifted": 38,
       "invalid": 0,
-      "total": 45
+      "total": 45,
+      "symbols": {
+        "named": 165,
+        "raw": 164,
+        "total": 329
+      }
     },
     {
       "id": "emi/world04/area175/13",
@@ -4497,7 +6367,12 @@
       "partial": 0,
       "unlifted": 34,
       "invalid": 0,
-      "total": 62
+      "total": 62,
+      "symbols": {
+        "named": 186,
+        "raw": 158,
+        "total": 344
+      }
     },
     {
       "id": "emi/world04/area176/13",
@@ -4509,7 +6384,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 159,
+        "raw": 128,
+        "total": 287
+      }
     },
     {
       "id": "emi/world04/area177/13",
@@ -4521,7 +6401,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 159,
+        "raw": 128,
+        "total": 287
+      }
     },
     {
       "id": "emi/world04/area178/13",
@@ -4533,7 +6418,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 159,
+        "raw": 128,
+        "total": 287
+      }
     },
     {
       "id": "emi/world04/area179/13",
@@ -4545,7 +6435,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 159,
+        "raw": 128,
+        "total": 287
+      }
     },
     {
       "id": "emi/world04/area180/13",
@@ -4557,7 +6452,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 159,
+        "raw": 128,
+        "total": 287
+      }
     },
     {
       "id": "emi/world04/area181/13",
@@ -4569,7 +6469,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 159,
+        "raw": 128,
+        "total": 287
+      }
     },
     {
       "id": "emi/world04/area182/13",
@@ -4581,7 +6486,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 159,
+        "raw": 128,
+        "total": 287
+      }
     },
     {
       "id": "emi/world04/area183/13",
@@ -4593,7 +6503,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 159,
+        "raw": 128,
+        "total": 287
+      }
     },
     {
       "id": "emi/world04/area184/13",
@@ -4605,7 +6520,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 159,
+        "raw": 128,
+        "total": 287
+      }
     },
     {
       "id": "emi/world04/area185/13",
@@ -4617,7 +6537,12 @@
       "partial": 0,
       "unlifted": 5,
       "invalid": 0,
-      "total": 6
+      "total": 6,
+      "symbols": {
+        "named": 159,
+        "raw": 129,
+        "total": 288
+      }
     },
     {
       "id": "emi/world04/area186/13",
@@ -4629,7 +6554,12 @@
       "partial": 0,
       "unlifted": 3,
       "invalid": 0,
-      "total": 3
+      "total": 3,
+      "symbols": {
+        "named": 158,
+        "raw": 127,
+        "total": 285
+      }
     },
     {
       "id": "emi/world04/area187/13",
@@ -4641,7 +6571,12 @@
       "partial": 0,
       "unlifted": 4,
       "invalid": 0,
-      "total": 5
+      "total": 5,
+      "symbols": {
+        "named": 159,
+        "raw": 128,
+        "total": 287
+      }
     },
     {
       "id": "emi/world04/area188/13",
@@ -4653,7 +6588,12 @@
       "partial": 0,
       "unlifted": 36,
       "invalid": 0,
-      "total": 46
+      "total": 46,
+      "symbols": {
+        "named": 168,
+        "raw": 160,
+        "total": 328
+      }
     },
     {
       "id": "emi/world04/area191/13",
@@ -4665,7 +6605,12 @@
       "partial": 0,
       "unlifted": 25,
       "invalid": 0,
-      "total": 27
+      "total": 27,
+      "symbols": {
+        "named": 160,
+        "raw": 148,
+        "total": 308
+      }
     },
     {
       "id": "emi/world04/area192/13",
@@ -4677,7 +6622,12 @@
       "partial": 0,
       "unlifted": 15,
       "invalid": 0,
-      "total": 16
+      "total": 16,
+      "symbols": {
+        "named": 159,
+        "raw": 137,
+        "total": 296
+      }
     },
     {
       "id": "emi/world04/area193/13",
@@ -4689,7 +6639,12 @@
       "partial": 0,
       "unlifted": 8,
       "invalid": 0,
-      "total": 8
+      "total": 8,
+      "symbols": {
+        "named": 158,
+        "raw": 132,
+        "total": 290
+      }
     },
     {
       "id": "emi/world04/area196/13",
@@ -4701,7 +6656,12 @@
       "partial": 0,
       "unlifted": 11,
       "invalid": 0,
-      "total": 13
+      "total": 13,
+      "symbols": {
+        "named": 160,
+        "raw": 136,
+        "total": 296
+      }
     },
     {
       "id": "emi/world04/area197/13",
@@ -4713,7 +6673,12 @@
       "partial": 0,
       "unlifted": 30,
       "invalid": 0,
-      "total": 34
+      "total": 34,
+      "symbols": {
+        "named": 164,
+        "raw": 153,
+        "total": 317
+      }
     },
     {
       "id": "emi/world04/area198/13",
@@ -4725,7 +6690,12 @@
       "partial": 0,
       "unlifted": 20,
       "invalid": 0,
-      "total": 22
+      "total": 22,
+      "symbols": {
+        "named": 160,
+        "raw": 146,
+        "total": 306
+      }
     },
     {
       "id": "emi/world04/area199/13",
@@ -4737,7 +6707,12 @@
       "partial": 0,
       "unlifted": 14,
       "invalid": 0,
-      "total": 15
+      "total": 15,
+      "symbols": {
+        "named": 159,
+        "raw": 138,
+        "total": 297
+      }
     },
     {
       "id": "exe/logo",
@@ -4749,7 +6724,12 @@
       "partial": 0,
       "unlifted": 43,
       "invalid": 0,
-      "total": 55
+      "total": 55,
+      "symbols": {
+        "named": 52,
+        "raw": 148,
+        "total": 200
+      }
     },
     {
       "id": "exe/slus_004_22",
@@ -4761,7 +6741,12 @@
       "partial": 4,
       "unlifted": 59,
       "invalid": 0,
-      "total": 109
+      "total": 109,
+      "symbols": {
+        "named": 230,
+        "raw": 379,
+        "total": 609
+      }
     }
   ]
 }

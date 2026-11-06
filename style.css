@@ -9,6 +9,8 @@
   --completed:#58c6ae;
   --partial:#e6b65c;
   --unlifted:#42516a;
+  --named:#b4a2df;
+  --raw:#45435f;
   font-family:Inter,"Segoe UI",Arial,sans-serif;
   font-size:15px
 }
@@ -188,6 +190,7 @@ h1 em {
 .legend {
   display:flex;
   gap:20px;
+  flex-wrap:wrap;
   font-size:11px;
   color:var(--muted)
 }
@@ -209,6 +212,41 @@ h1 em {
 }
 .unlifted {
   background:var(--unlifted)
+}
+.named {
+  background:var(--named)
+}
+.raw {
+  background:var(--raw)
+}
+.legends {
+  display:grid;
+  gap:7px
+}
+.legend-label {
+  min-width:80px;
+  color:var(--text)
+}
+.metric-label {
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:5px;
+  color:var(--muted);
+  font-size:10px;
+  margin-bottom:8px
+}
+.symbol-progress {
+  border-top:1px solid var(--line);
+  margin-top:17px;
+  padding-top:13px
+}
+.symbol-progress .metric-label span:last-child {
+  color:var(--named)
+}
+.decomp-label {
+  margin-top:16px;
+  margin-bottom:0
 }
 .overview {
   display:grid;
@@ -517,7 +555,7 @@ h2,h3,p {
   display:flex;
   align-items:center;
   gap:12px;
-  margin-top:19px
+  margin-top:6px
 }
 .card-progress .bar {
   flex:1;
@@ -533,6 +571,9 @@ h2,h3,p {
   gap:5px;
   font-size:9px;
   margin-top:14px
+}
+.target-card .symbol-progress .bar {
+  height:5px
 }
 .target-card .target-path {
   font-size:8px

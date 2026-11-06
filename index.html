@@ -34,7 +34,7 @@
       <noscript><p class="error">Enable JavaScript to load the progress snapshot and use the tabs.</p></noscript>
 
       <section id="dashboard" aria-label="Decompilation progress" hidden>
-        <div class="section-heading"><p class="eyebrow">The reconstruction so far</p><div class="legend" aria-label="Status legend"><span><i class="completed"></i>Completed</span><span><i class="partial"></i>Partial</span><span><i class="unlifted"></i>Unlifted</span></div></div>
+        <div class="section-heading"><p class="eyebrow">The reconstruction so far</p><div class="legends"><div class="legend" aria-label="Decompilation legend"><span class="legend-label">Decompilation</span><span><i class="completed"></i>Completed</span><span><i class="partial"></i>Partial</span><span><i class="unlifted"></i>Unlifted</span></div><div class="legend" aria-label="Symbol legend"><span class="legend-label">Symbols</span><span><i class="named"></i>Named</span><span><i class="raw"></i>Raw address labels</span></div></div></div>
         <div class="overview">
           <div class="overview-main"><span class="overview-label">Indexed functions completed</span><div class="completion"><strong id="overall-percent"></strong><span id="overall-fraction"></span></div><div id="overall-bar"></div></div>
           <div id="overview-stats" class="overview-stats"></div>
@@ -53,7 +53,7 @@
         <p id="empty" class="empty" hidden>No targets match these filters.</p>
       </section>
 
-      <aside class="evidence-note"><span class="note-symbol" aria-hidden="true">i</span><div><h2>What these numbers mean</h2><p>Progress counts target-qualified functions in the reverse index, not bytes or whole-game coverage. Completed means indexed <code>exact</code> status. Partial means an indexed lift with work remaining. Unlifted includes invalid lift metadata, which receives no progress credit. These declarations do not establish a fresh native build or runtime acceptance.</p><p id="invalid-note"></p></div></aside>
+      <aside class="evidence-note"><span class="note-symbol" aria-hidden="true">i</span><div><h2>What these numbers mean</h2><p>Progress counts target-qualified functions in the reverse index, not bytes or whole-game coverage. Completed means indexed <code>exact</code> status. Partial means an indexed lift with work remaining. Unlifted includes invalid lift metadata, which receives no progress credit. These declarations do not establish a fresh native build or runtime acceptance.</p><p>Symbols count indexed function and data map entries once per target and address, excluding aliases. Raw address labels match the naming tool's <code>func_</code> and <code>D_</code> patterns. Named counts all remaining spellings; it does not prove semantic correctness or complete symbol discovery. Targets without indexed symbols have no symbol percentage.</p><p id="invalid-note"></p></div></aside>
     </main>
     <footer><div><span class="footer-name">Breath of Fire III</span><span>Community decompilation project</span></div><p>Breath of Fire III and its logo © Capcom.<br>This community project is not affiliated with Capcom.</p><a id="snapshot-link" href="status.json">Snapshot data <span aria-hidden="true">↗</span></a></footer>
   </div>
