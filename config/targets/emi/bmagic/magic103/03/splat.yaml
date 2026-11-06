@@ -49,8 +49,10 @@ segments:
     - asm
     - func_801EEF0C
   - - 916
-    - asm
-    - func_801EEF94
+    - c
+    - copyWorkWordPairAndHalfwordClearBytes9AThenAdvanceWorkByte2BmagicMagic10303_801EEF94
+    - '@source: src/bof3/bmagic/copyWorkWordPairAndHalfwordClearBytes9AThenAdvanceWorkByte2BmagicMagic10303_801EEF94.c'
+    - '@behavior: Copies the words at 0x34 and 0x38 and the halfword at 0x3E of the battle record published at 0x8014638C into the scratchpad work object published at the pointer cell 0x1F800044, clears work byte 9 and work byte 0xA, and advances work byte 2 by one. The halfword is held in a local so its store follows the byte 9 clear, and the pointer cell is re-read before that store and before the byte 0xA clear.'
   - - 1012
     - asm
     - func_801EEFF4

@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801EF6B8
   - - 3208
-    - asm
-    - func_801EF888
+    - c
+    - incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic22003_801EF888
+    - '@source: src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic22003_801EF888.c'
+    - '@behavior: Reads the shared battle work pointer at 0x801EB4E0 and, only when that work record byte at offset 0xB is below three (unsigned bound), reads the scratchpad work-object pointer cell at 0x1F800044 once and increments its byte at offset 0x2 by one.'
   - - 3276
     - asm
     - func_801EF8CC

@@ -12,6 +12,7 @@ support_sources = [
     "src/bof3/support/magic220_03_psyq.c",
     "src/bof3/bmagic/magic22003DispatchTables.c",
     "src/bof3/bmagic/clearWorkBytesBmagicMagic22003_801F068C.c",
+    "src/bof3/bmagic/incrementWorkByte2WhenGlobalWorkByteBBelow3BmagicMagic22003_801EF888.c",
 ]
 psyq_source = "src/bof3/support/magic220_03_psyq.c"
 

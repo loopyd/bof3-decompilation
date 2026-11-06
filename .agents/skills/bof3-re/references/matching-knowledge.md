@@ -40,7 +40,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots), then name repeated scale products (#named-scale-products) |
 | Pointer read hoisted above a call, extra saved register, frame unchanged | Bind the call-derived scaled value to its own local before the pointer read; folding the mask/shift into the later address expression keeps the pointer live across the call |
 | Call result stored inside the next call's delay slot | The original stores a `jal` result into its outgoing argument slot right after that call, before the next call's argument setup. Bind the result to a local; nesting the call in the later argument list moves that store into the following `jal` delay slot |
-| A call result that also fills the stored cell builds the test one polarity off (`beqz` where the original `bnez`) and hoists the later store's constant above the first store | Bind the call result to that cell's own local, compare the local, and let both arm constants assign back to it (`s = wait(); if (s == 0) s = 0x0A; else s = 0x14;`). Testing the call inline in the `if` condition leaves the value in a register the call did not return it in. Arm order alone inverts a test without moving a constant, which separates the two causes |
+| A call result that also fills the stored cell builds the test one polarity off (`beqz` where the original `bnez`) and hoists the later store's constant above the first store | Bind the call result to that cell's own local, compare the local, and let both arm constants assign back to it (`s = wait(); if (s == 0) s = 0x0A; else s = 0x14;`). Testing the call inline in the `if` condition leaves the value in a register the call did not return it in. Arm order alone inverts a test without moving a constant, which separates the two causes. The same arm pair selected by an already-loaded byte instead of a call result needs no value local: read the byte into a local of the original's width, then write one conditional expression straight into the cell (`cell = (gate != 0) ? 0x14 : 0xA;`), which matched on the first gate because the load's value and the selected constant keep their own registers |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
 | One hunk differing only in the register order of a single `beq`/`bne`, with size, count and frame already equal | Reverse the written operands of that compare so the held value is on the left (`value != table[index]`); comparison operands follow the written order, so this swap works where an arithmetic commutative respelling normalizes back |
 | Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests. The merge needs one loaded word: two non-zero tests on different byte fields of a record stay two loads, so keep that conjunction as written |
@@ -408,6 +408,12 @@ cell load or a record address computed from a cursor.
    used by both arms of an `if`/`else` stays a single quantity, so declare it
    inside each arm. That split made the already-close arm exact at unchanged byte
    count, while sharing the pointer kept that arm mismatched.
+   Only the reuse is the defect, not the missing variable. A group read once before
+   the next reload point measured the same bytes reached through the named cell as
+   through its own variable, so split where two groups share one, not every access:
+   routing the leading group through the later group's variable merges them into one
+   quantity and hands the leading group the later group's register (measured `v1`
+   against `a0` at unchanged size).
 2. Read the allocator dump before changing spelling. `.greg` reports the number of
    global pseudos, each conflict set and the register each pseudo receives.
 3. Give the variables distinct names. GCC then keeps separate quantities, so each
@@ -550,7 +556,13 @@ and reach that byte through a `u8*` derived from it:
 order alone still hoisted the byte load and kept extra live registers; the split view
 closed it, so this drift needs the wider representation change rather than another
 reorder. The same accesses read through signed words emit identical bytes, so
-signedness is not that lever.
+signedness is not that lever. The split can also sit inside one store run: a byte
+store the original makes through the copy group's base stays on the derived view, and
+the next store to that record re-reads the named cell, because a store through the
+derived pointer may alias the cell. Two exact bodies reached a byte cell through the
+derived view at the end of the word copy and the following byte store of that same
+record through the named cell; writing both on the local gives both stores one base and
+drops that reload.
 
 ### Signed table index feeding a scaled offset
 

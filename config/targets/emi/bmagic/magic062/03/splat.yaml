@@ -42,8 +42,9 @@ segments:
     - asm
     - func_801EEF68
   - - 1144
-    - asm
-    - func_801EF078
+    - c
+    - setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow2BmagicMagic06203_801EF078
+    - '@source: src/bof3/bmagic/setWorkByte9To8AndIncrementWorkByte1WhenWorkByteBBelow2BmagicMagic06203_801EF078.c'
   - - 1216
     - asm
     - func_801EF0C0

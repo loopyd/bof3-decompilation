@@ -49,8 +49,10 @@ segments:
     - asm
     - func_801F2E34
   - - 792
-    - asm
-    - func_801F2F18
+    - c
+    - setStatusFFFFIfGateElse68World04Area19113_801F2F18
+    - '@source: src/bof3/world/setStatusFFFFIfGateElse68World04Area19113_801F2F18.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 and stores 0xFFFF into the shared status halfword D_801490A8 while the gate byte is nonzero, and 0x68 when the gate byte is zero.'
   - - 832
     - asm
     - func_801F2F40
