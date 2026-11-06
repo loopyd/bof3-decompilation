@@ -21,31 +21,21 @@ extern u8 D_801448EB; /* @source 0x801448EB @kind data */
  *   main-RAM game-mode record table, read here with `lbu`. The two arguments
  *   carry no evidenced role, so the name keeps them structural.
  *
- * Shape: the 108-byte range is byte-identical to areas 176, 177, 178, 180,
- *   181, 182, 183, 184 and 185 at 0x801F3378 (payload span 0x778..0x7E4, one
- *   payload `cmp` per twin), and area177/13 already carries an exact source for
- *   it. The body holds no address-specific immediate, so that sibling's
- *   statement order, operand forms and declaration style are copied and this
- *   target's literals and symbol bindings are taken from the original bytes.
- *   The store sits in each arm because the original's single join `sb` is the
- *   cross-jumped tail of two arm stores; the matched arm order is the one the
- *   original falls into (0x1A) with the 6 arm as the jumped-to block.
- *
- * Residual: the first 17 instructions match. The tail is 8 bytes short: the
- *   original leaves the `bnez` delay slot empty (`nop`) and keeps an extra
- *   `j` to the join with the 0x1A constant in that jump's delay slot, while
- *   this profile folds the taken arm's constant into the branch delay slot and
- *   drops the jump. Fifteen clean-C spellings of the selection (ternary,
- *   if/else, per-arm stores, per-arm stores and returns, seeded value local,
- *   mirrored condition and arm order, direct-cell and local targets) all
- *   measured the same 100-byte 25-instruction body, and an `-O1` diagnostic of
- *   the same source measured the same tail, so the diff is not a select
- *   spelling. Every guard, load, conversion, store and return matches; the
- *   residual is branch-delay-slot filling plus a redundant join jump.
- * @status partial
- * @match 74.07
- * @residual Branch delay slot: original nop + extra j to the join, current
- *   fills the slot with the taken arm's constant and drops the jump.
+ * Shape: the 108-byte range is byte-identical to areas 176, 177, 178 and
+ *   180-185 at 0x801F3378 (payload span 0x778..0x7E4, one payload hash per
+ *   twin). Area177/13 carries an exact source for the same bytes and this body
+ *   copies its statement shape; the body holds no address-specific immediate,
+ *   so this target's literals and symbol bindings come from the original
+ *   bytes. The decisive part is the third guard written as a positive block
+ *   whose body holds the store select and its own `return 1`, with `return 0`
+ *   after the block: that keeps the at-least-8 arm inline and puts the below-8
+ *   arm out of line behind `j`, leaving the branch delay slot empty. An early
+ *   `return 0` guard followed by a function-level select instead merges both
+ *   arms into one store block, fills that delay slot and drops the `j`, which
+ *   measured 8 bytes short at 74.07%.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 s32 selectAreaStateForMatchedArgumentsWorld04Area17913_801F3378(u16 arg0,
                                                                 u16 arg1) {
@@ -55,13 +45,13 @@ s32 selectAreaStateForMatchedArgumentsWorld04Area17913_801F3378(u16 arg0,
   if (arg1 != 0xE) {
     return 0;
   }
-  if (D_80145E98 != 1) {
-    return 0;
+  if (D_80145E98 == 1) {
+    if (D_80146870 >= 8) {
+      D_801448EB = 0x1A;
+    } else {
+      D_801448EB = 6;
+    }
+    return 1;
   }
-  if (D_80146870 >= 8) {
-    D_801448EB = 0x1A;
-  } else {
-    D_801448EB = 6;
-  }
-  return 1;
+  return 0;
 }

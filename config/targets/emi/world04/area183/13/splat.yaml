@@ -30,8 +30,10 @@ segments:
   vram: 2149528280
   subsegments:
   - - 1752
-    - asm
-    - func_801F32D8
+    - c
+    - initAreaModuleAndQueueFrontCue20CWorld04Area18313_801F32D8
+    - '@source: src/bof3/world/initAreaModuleAndQueueFrontCue20CWorld04Area18313_801F32D8.c'
+    - '@behavior: World-overlay area-module entry: when the signed scenario-state byte 0x80146870 reads at least 8 it runs the shared record/effect setup routine 0x801EECA4, then clears the byte 0x801455C7, and when the front-side byte 0x80143F03 reads nonzero it requests frontend cue 0x20C through the shared frontend cue dispatcher 0x8015DF18.'
   - - 1832
     - c
     - invokeHelperArgWorld04Area18313_801F3328

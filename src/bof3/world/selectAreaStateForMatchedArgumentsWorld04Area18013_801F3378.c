@@ -34,28 +34,14 @@ extern u8 D_801448EB;
  *   main-RAM game-mode record, read here with `lbu`. The two arguments carry no
  *   evidenced role, so the name keeps them structural.
  *
- * Shape: the 108-byte span is byte-identical to the same function in
- *   emi/world04/area177/13 (one payload `cmp` of span 0x778..0x7E4 matches) and
- *   to areas 176 and 178 through 185, but no byte-identical twin in the tree is
- *   itself lifted and exact, so the body is seeded from this target's own bytes
- *   with the arm-store statement order and declaration style of the exact
- *   world04 gate sources.
- *
- * Residual: measured 74.07% (20/27 instructions, 108->100 bytes), first
- *   difference at instruction 2, the first guard's `bne` target. The three
- *   guards, both cells' loads and the select's own `slti`/branch operands match;
- *   the two missing instructions are the unfilled branch delay `nop` and the `j`
- *   over the below-8 arm. `.jump2` RTL for every measured clean-C shape already
- *   holds that shape (branch to the 6 arm, `j` to the join, arm value in the
- *   `j` delay slot), and `bin/harness lift sweep` shows the difference is made
- *   later by GCC 2.7.2 `reorg.c` `dbr_schedule`: it steals the arm constant out
- *   of the branch target block into the branch's delay slot, redirects the
- *   branch at the join and deletes the `j`. Steering `own_thread_p` or the steal
- *   refusal for that target block was not reachable from any measured clean-C
- *   spelling.
- * @status partial
- * @match 74.07
- * @residual branch delay slot filled from the target arm and the j over it deleted by dbr_schedule, 108->100 bytes
+ * Shape: the 108-byte span is byte-identical to the exact function in
+ *   emi/world04/area176/13. Keep the select and its success return inside the
+ *   positive game-mode guard, with the at-least-8 arm first. This preserves the
+ *   original's unfilled branch delay slot and the `j` over the below-8 arm;
+ *   a function-level select after an early failing guard loses both.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 s32 selectAreaStateForMatchedArgumentsWorld04Area18013_801F3378(u16 arg0,
                                                                 u16 arg1) {
@@ -65,13 +51,13 @@ s32 selectAreaStateForMatchedArgumentsWorld04Area18013_801F3378(u16 arg0,
   if (arg1 != 0xE) {
     return 0;
   }
-  if (D_80145E98 != 1) {
-    return 0;
+  if (D_80145E98 == 1) {
+    if (D_80146870 >= 8) {
+      D_801448EB = 0x1A;
+    } else {
+      D_801448EB = 6;
+    }
+    return 1;
   }
-  if (D_80146870 < 8) {
-    D_801448EB = 6;
-  } else {
-    D_801448EB = 0x1A;
-  }
-  return 1;
+  return 0;
 }

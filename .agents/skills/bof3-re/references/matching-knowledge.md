@@ -618,13 +618,16 @@ Reads follow it in the other direction. When the original materialises a fixed-a
 symbol once into a saved register and re-reads one byte of it before each call,
 declare a local `u8 *` to that symbol so one base serves every read. Passing the symbol
 expression to each call instead emits its own `lui %hi`/`lbu %lo` pair and loses the
-shared base. One read needs the same local when a store to another cell sits between
-the base and the read: the pointer copy takes the base load early enough to fill the
-preceding delay slot, while the inline symbol expression materialises the base after
-that store and costs two instructions. A cell that is loaded, stored and re-armed
-inside a guard wants it too: one base for all three uses is what lets the original
-keep the re-arm constant in both branch delay slots. A local that only re-types a promoted value
-(`u16 row = y;`) folds away and changes nothing.
+shared base. A cell that holds a pointer takes the address of the cell: `T **cell =
+&sym;` and `*cell` at each use. The value local (`T *p = sym;`) caches the pointee,
+so it drops the original's later reload along with the shared base. One read needs
+the same local when a store to another cell sits between the base and the read: the
+pointer copy takes the base load early enough to fill the preceding delay slot, while
+the inline symbol expression materialises the base after that store and costs two
+instructions. A cell that is loaded, stored and re-armed inside a guard wants it too:
+one base for all three uses is what lets the original keep the re-arm constant in both
+branch delay slots. A local that only re-types a promoted value (`u16 row = y;`) folds
+away and changes nothing.
 
 Give a work record a word-typed view before chasing pointer roles. A typed pointer over
 the same storage fixes which value the pointer holds and where the second cell load
@@ -825,8 +828,19 @@ lever rather than as an arm-order defect.
 Before more allocator/scheduler probes, inspect the actual compiler build recipe,
 relevant patches and source version. Bind diagnostic dumps to the source image,
 effective compiler and unchanged codegen flags. Locate the first differing pass:
-parameter expansion, combine, scheduling, local/global allocation or reload.
-Debug dumps and assembly-only diagnostics are not linked acceptance evidence.
+parameter expansion, combine, scheduling, jump optimization and delay-slot filling
+(`reorg.c`), local/global allocation or reload. Debug dumps and assembly-only
+diagnostics are not linked acceptance evidence.
+
+A conditional branch whose delay slot holds one arm's constant while the `j` over
+the other arm is gone, with the build short by that `j` and its `nop`, is `reorg.c`:
+`fill_slots_from_thread` steals the branch's own fall-through arm constant, then
+`relax_delay_slots` inverts the branch onto the join and deletes the `j`. That fill
+tests the candidate with `insn_sets_resource_p` against what stays live on the
+opposite thread, and a bare arm constant writes only the return register, so every
+arm spelling passes the test. No spelling of the arms refuses the steal: put the
+select inside a positive guard that owns the `return` so the arms have no shared
+join behind one branch, per [control flow](#control-flow).
 
 For GCC 2.7.2, inspect `local-alloc.c` quantity membership, births/deaths, classes,
 call crossings and hard-register suggestions. Its `combine_regs` can tie a dying

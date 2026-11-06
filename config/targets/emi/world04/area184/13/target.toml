@@ -11,5 +11,6 @@ sources = []
 support_sources = [
     "src/bof3/world/invokeHelperArgWorld04Area18413_801F3328.c",
     "src/bof3/support/area184_13_psyq.c",
+    "src/bof3/world/initAreaModuleAndQueueFrontCue20CWorld04Area18413_801F32D8.c",
 ]
 psyq_source = "src/bof3/support/area184_13_psyq.c"

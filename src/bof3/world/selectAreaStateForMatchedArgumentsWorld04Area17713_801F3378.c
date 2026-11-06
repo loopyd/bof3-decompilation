@@ -20,29 +20,18 @@ extern u8 D_801448EB; /* @source 0x801448EB @kind data */
  *   include/bof3/ui/shop00_internal.h. The two arguments carry no evidenced
  *   role, so the name keeps them structural.
  *
- * Shape: the 108-byte range is byte-identical across nine world04 area
- *   overlays (payload span 0x778..0x7E4 of areas 176, 178, 179, 180, 181, 182,
- *   183, 184 and 185 compared against this target), but every one of those
- *   rows is still an `asm` boundary, so there is no verified exact sibling
- *   source to clone or copy from and the body is seeded from this target's own
- *   bytes.
- *
- *   The two select arms are written as one store per arm so that the build
- *   keeps the original's `bnez` on the `slti` result and materialises both
- *   constants in `$v0`; a single conditional expression feeding the store
- *   instead builds `beqz` with the else constant in the branch delay slot.
- * @status partial
- * @match 74.07
- * @residual The original keeps `nop` in the branch delay slot and reaches the
- *   below-8 arm through an 8-byte `j`, so this build is 8 bytes short and ends
- *   at 20/27 instructions. The jump optimizer merges the two arms in both
- *   `jump` and `jump2` (verified in cc1 dumps of this source): it redirects the
- *   branch to the shared store and fills the branch delay slot with the below-8
- *   constant. Every probed clean-C spelling of the select reached the same
- *   merged body: conditional expression feeding the cell, conditional
- *   expression into a u8/s32 local, each arm assigning one local, one local
- *   reused for the comparison and the result, explicit `goto` joins, mirrored
- *   `>=` conditions, a `switch` on the comparison, and a cast at the store.
+ * Shape: the 108-byte range is byte-identical across the world04 area
+ *   overlays (payload span 0x778..0x7E4); the area176 member carries an exact
+ *   source for the same bytes, and this body copies its statement shape. The
+ *   decisive part is the third guard written as a positive block whose body
+ *   holds the store select and its own `return 1`, with `return 0` after the
+ *   block: that keeps the at-least-8 arm inline and puts the below-8 arm out
+ *   of line behind `j` with an unfilled branch delay slot. An early `return 0`
+ *   guard followed by a function-level select merges the two arms into one
+ *   store block and fills that delay slot, eight bytes short.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 s32 selectAreaStateForMatchedArgumentsWorld04Area17713_801F3378(u16 arg0, u16 arg1) {
   if (arg0 != 0x3F) {
@@ -51,13 +40,13 @@ s32 selectAreaStateForMatchedArgumentsWorld04Area17713_801F3378(u16 arg0, u16 ar
   if (arg1 != 0xE) {
     return 0;
   }
-  if (D_80145E98 != 1) {
-    return 0;
+  if (D_80145E98 == 1) {
+    if (D_80146870 >= 8) {
+      D_801448EB = 0x1A;
+    } else {
+      D_801448EB = 6;
+    }
+    return 1;
   }
-  if (D_80146870 < 8) {
-    D_801448EB = 6;
-  } else {
-    D_801448EB = 0x1A;
-  }
-  return 1;
+  return 0;
 }

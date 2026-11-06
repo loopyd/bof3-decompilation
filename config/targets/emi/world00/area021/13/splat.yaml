@@ -30,8 +30,10 @@ segments:
   vram: 2149526544
   subsegments:
   - - 16
-    - asm
-    - func_801F2C10
+    - c
+    - setStatus18IfGateElse17Or11ByWord80144F50World00Area02113_801F2C10
+    - '@source: src/bof3/world/setStatus18IfGateElse17Or11ByWord80144F50World00Area02113_801F2C10.c'
+    - '@behavior: Loads the shared gate byte 0x801490C7 with a signed byte read and stores 0x18 into the shared status halfword 0x801490A8 while the gate byte is nonzero; when it is zero it compares the main-RAM word 0x80144F50 unsigned against 0x14 and stores 0x17 below that bound, otherwise calls func_8016663C(0x14, 0) and stores 0x11.'
   - - 108
     - asm
     - func_801F2C6C

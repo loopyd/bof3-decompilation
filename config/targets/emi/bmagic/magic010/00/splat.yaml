@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801EEC14
   - - 128
-    - asm
-    - func_801EEC80
+    - c
+    - submitRecordStoreEffectByteBClearWorkByte9ThenAdvanceWorkByte1BmagicMagic01000_801EEC80
+    - '@source: src/bof3/bmagic/submitRecordStoreEffectByteBClearWorkByte9ThenAdvanceWorkByte1BmagicMagic01000_801EEC80.c'
+    - '@behavior: Loads the battle record pointer published at 0x8014638C once per call, submits it through func_80196718, submits its positional effect through func_8019651C with the 0/0/0 offsets and mode 1, stores the low return byte in work byte 0xB, then clears work byte 9 and advances work byte 1. The work-object pointer cell at 0x1F800044 is re-read for each of the three access groups.'
   - - 268
     - c
     - incrementWorkByteBRecordCountersAndWorkByte1WhenWorkByte9Is10BmagicMagic01000_801EED0C

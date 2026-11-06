@@ -33,30 +33,27 @@ extern u8 D_801448EB;
  *   emi/world04/area176/13, area177/13, area179/13 and area181/13 give this
  *   same overlay function at 0x801F3378.
  *
- * Shape: the 108-byte span is byte-identical to those sibling sources
- *   (`bin/harness lift clone --from emi/world04/area177/13@0x801F3378` reports
- *   108 identical bytes, and one payload `cmp` of span 0x778..0x7E4 matches
- *   areas 176, 177, 179, 180, 181, 182, 183, 184 and 185 while area174 and
- *   world03/area121/14 differ). This body holds no address-specific immediate,
- *   so the sibling statement order, operand forms and declaration style are
- *   copied and the literals and symbol bindings come from this target's bytes.
- * @status partial
- * @match 74.07
- * @residual The first 17 instructions match; the range builds 8 bytes short
- *   (20/27 instructions, first difference at +0x0008, the guard branch target).
- *   This per-arm store form is the shape whose post-jump2 RTL already equals
- *   the original: `slti / beq-v0-0 -> else / store 6 / goto join / else:
- *   store 26 / join:` cross-jumps into `slti / branch / single arm / j join /
- *   li 0x1A / join: sb` (probe.c.jump2), so the source shape and the shared
- *   store are settled. dbr then inverts that branch to the join and fills its
- *   delay slot with the below-8 constant (probe.c.dbr, `insn 118` sequence),
- *   which removes both the `j` and the `nop` the original keeps, and that is
- *   the whole residual. Sixteen clean-C select spellings (ternary, if/else and
- *   seeded-local forms, s8/u8/s32, both condition polarities, store-per-arm and
- *   store-at-join) measure 15/27 to 20/27 at the same 100 bytes with the same
- *   first difference, so no arm order, local type or store position closes it.
- *   Deferred evidence: a build-profile question (the delay-slot fill decision
- *   itself), which is parent-owned and not probed here.
+ * Shape: the 108-byte span is byte-identical to the already-exact source of
+ *   emi/world04/area176/13 (`bin/harness lift clone --from
+ *   emi/world04/area176/13@0x801F3378` reports 108 identical bytes, and one
+ *   payload `cmp` of span 0x778..0x7E4 matches areas 176, 177, 179, 180, 181,
+ *   182, 183, 184 and 185 while area174 and world03/area121/14 differ). This
+ *   body holds no address-specific immediate, so that sibling's statement
+ *   order, operand forms and declaration style are copied and the literals and
+ *   symbol bindings come from this target's bytes.
+ *
+ *   The third guard is the decisive shape. Written as a positive block whose
+ *   body holds the store select and its own `return 1`, with `return 0` after
+ *   the block, it keeps the at-least-8 arm inline and puts the below-8 arm out
+ *   of line behind `j` with an unfilled branch delay slot, which is the
+ *   original's 9-instruction tail. Seeded earlier from an early `return 0`
+ *   third guard at function level, this file measured 20/27 at 100 bytes with
+ *   the first difference at that tail: dbr inverts the branch to the join,
+ *   fills its delay slot with the below-8 constant and drops the `j` and the
+ *   `nop`.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 s32 selectAreaStateForMatchedArgumentsWorld04Area17813_801F3378(u16 arg0,
                                                                 u16 arg1) {
@@ -66,13 +63,13 @@ s32 selectAreaStateForMatchedArgumentsWorld04Area17813_801F3378(u16 arg0,
   if (arg1 != 0x0E) {
     return 0;
   }
-  if (D_80145E98 != 1) {
-    return 0;
+  if (D_80145E98 == 1) {
+    if (D_80146870 >= 8) {
+      D_801448EB = 0x1A;
+    } else {
+      D_801448EB = 6;
+    }
+    return 1;
   }
-  if (D_80146870 < 8) {
-    D_801448EB = 6;
-  } else {
-    D_801448EB = 0x1A;
-  }
-  return 1;
+  return 0;
 }

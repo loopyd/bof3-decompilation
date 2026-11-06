@@ -22,43 +22,36 @@ extern u8 D_801448EB; /* @source 0x801448EB @kind data */
  *   carry no evidenced role, so the name keeps them structural.
  *
  * Shape: the 108-byte range is byte-identical to the world04 area overlays at
- *   this address (payload span 0x778..0x7E4 compared across areas 176 through
- *   185; `lift clone` against emi/world04/area179/13@0x801F3378 reports the
- *   same 108 bytes), and the body holds no address-specific immediate. The
- *   comparison result is bound to the same local the arms overwrite, which is
- *   the measured best of fourteen probed clean-C select shapes: it keeps the
- *   original's `lb`/`slti`/`bnez` order and the single `sb`, but the owning
- *   profile's jump and delayed-branch passes still relax the select, so the
- *   original's out-of-line then-arm behind `j` with an unfilled branch delay
- *   (`bnez` / `nop` / `j` / `li 0x1A` / `li 6` / `sb`) is not reproduced and
- *   the body builds eight bytes short. Under
- *   -O2 -G0 -funsigned-char -msoft-float -gcoff the jump and delayed-branch
- *   passes delete that nop+j for every clean-C select shape measured, leaving
- *   the 5-instruction branch-around tail at 100 bytes, so the residual is the
- *   deleted delay slot and not a wrong operation or a wrong store value.
- * @status partial
- * @match 74.07
- * @residual Deleted nop+j: owning profile relaxes every clean-C select tail
+ *   this address (payload span 0x778..0x7E4 compared with areas 176 and 178
+ *   through 185; `cmp` against emi/world04/area176/13.bin matches all 108
+ *   bytes at the same load address), and the body holds no address-specific
+ *   immediate. The third guard is the decisive shape: written as a positive
+ *   block whose body holds the store select and its own `return 1`, with
+ *   `return 0` after the block, it keeps the at-least-8 arm inline and puts
+ *   the below-8 arm out of line behind `j` with an unfilled branch delay slot
+ *   (`slti` / `bnez` / `nop` / `j` / `li 0x1A` / `li 6` / `sb`). An early
+ *   `return 0` guard followed by the same select at function level let the
+ *   owning profile relax the diamond into one inverted branch and built eight
+ *   bytes short at 20/27.
+ * @status exact
+ * @match 100.00
+ * @residual none
  */
 s32 selectAreaStateForMatchedArgumentsWorld04Area18113_801F3378(u16 arg0,
                                                                 u16 arg1) {
-  s32 state;
-
   if (arg0 != 0x3F) {
     return 0;
   }
   if (arg1 != 0xE) {
     return 0;
   }
-  if (D_80145E98 != 1) {
-    return 0;
+  if (D_80145E98 == 1) {
+    if (D_80146870 >= 8) {
+      D_801448EB = 0x1A;
+    } else {
+      D_801448EB = 6;
+    }
+    return 1;
   }
-  state = D_80146870 < 8;
-  if (state) {
-    state = 6;
-  } else {
-    state = 0x1A;
-  }
-  D_801448EB = state;
-  return 1;
+  return 0;
 }
