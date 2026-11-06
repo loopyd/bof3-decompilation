@@ -203,8 +203,10 @@ segments:
     - asm
     - func_801F9338
   - - 11256
-    - asm
-    - func_801F97F8
+    - c
+    - armProgress10ThenWaitProgress40AndRequestPrimaryState1ScenarioScena0300_801F97F8
+    - '@source: src/bof3/scenario/armProgress10ThenWaitProgress40AndRequestPrimaryState1ScenarioScena0300_801F97F8.c'
+    - '@behavior: Slot 2 of the overlay primary-state handler table at 0x801FCFE0 (word 25 of the 32-word code-pointer run at 0x801FCF84): switches on the shared sub-state byte D_80146875; sub-state 0 runs the main-exe helper func_801BE1B0(1), stores 10 in g_ScenarioProgress and advances the sub-state to 1; sub-state 1 waits for that progress byte to read 0x28 and then requests primary state 1 by storing 1 in D_80146874, holding the sub-state at 1; any other value returns without a store. Reads nothing else and writes no other state; the 0x18-byte frame only keeps $ra and the one sub-state base register.'
   - - 11392
     - asm
     - func_801F9880

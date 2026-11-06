@@ -39,6 +39,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots), then name repeated scale products (#named-scale-products) |
 | Pointer read hoisted above a call, extra saved register, frame unchanged | Bind the call-derived scaled value to its own local before the pointer read; folding the mask/shift into the later address expression keeps the pointer live across the call |
 | Call result stored inside the next call's delay slot | The original stores a `jal` result into its outgoing argument slot right after that call, before the next call's argument setup. Bind the result to a local; nesting the call in the later argument list moves that store into the following `jal` delay slot |
+| A call result that also fills the stored cell builds the test one polarity off (`beqz` where the original `bnez`) and hoists the later store's constant above the first store | Bind the call result to that cell's own local, compare the local, and let both arm constants assign back to it (`s = wait(); if (s == 0) s = 0x0A; else s = 0x14;`). Testing the call inline in the `if` condition leaves the value in a register the call did not return it in. Arm order alone inverts a test without moving a constant, which separates the two causes |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
 | One hunk differing only in the register order of a single `beq`/`bne`, with size, count and frame already equal | Reverse the written operands of that compare so the held value is on the left (`value != table[index]`); comparison operands follow the written order, so this swap works where an arithmetic commutative respelling normalizes back |
 | Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests. The merge needs one loaded word: two non-zero tests on different byte fields of a record stay two loads, so keep that conjunction as written |
@@ -272,7 +273,12 @@ Use established halfword/aggregate views when field widths and consumers support
 them. Preserve public constness and ABI unless caller/callee evidence supports a
 change. Bitfields require target layout and codegen proof, not guessed packing.
 Regroup unsigned address sums through a row/base temporary when original addition
-order differs; prove value equivalence and preserve all memory events.
+order differs; prove value equivalence and preserve all memory events. Declare that
+temporary at the narrower unsigned width when two uses narrow it in opposite
+directions. A `u16` row that feeds one unsigned and one signed cast keeps the sum
+un-narrowed until each use and matched; the inline spelling stayed a couple of
+instructions short, an `s16` temporary that narrows at the assignment measured one
+instruction worse again, and an `s32` temporary lost the addition chain.
 
 Pin a reload where the original reads it with a typed value local. Reading a cell
 straight into the store keeps the load next to that store, while assigning it to a
@@ -640,7 +646,13 @@ pointer reload, and routing the writes through one `s8` local merges them into t
 earlier write's quantity and frees that register. Keep every store site, order and
 value exact; one different literal or an extra store splits the quantity again.
 Confirm with the complete live gate, and keep this as the matching form: restoring
-inline literals re-opens the exchange.
+inline literals re-opens the exchange. The arm-and-merged-tail form is worth trying
+before any dump: when one constant is stored inside a switch arm and again at the
+tail after the switch, assign it in each arm to one arm-local of the store width and
+store that local at both sites. Without the local the compiler loads the constant
+twice, and the first mismatch then sits at the case compare's target because the
+storing arm grew by that load, not at either store, so read that signature as this
+lever rather than as an arm-order defect.
 
 ## Compiler evidence
 

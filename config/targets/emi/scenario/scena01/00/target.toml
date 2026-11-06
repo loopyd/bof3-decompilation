@@ -46,5 +46,6 @@ support_sources = [
     "src/bof3/scenario/dispatchCoordinateLookupHandlerScenarioScena0100_801FE03C.c",
     "src/bof3/scenario/publishWorkBaseAndSeedFrontEndRecordScenarioScena0100_801FD28C.c",
     "src/bof3/scenario/bootProgressStateScenarioScena0100_801F8000.c",
+    "src/bof3/scenario/clearIndexedRecordFlagArmEffectGroupThenSetRecordByte5AndResetEffect9ScenarioScena0100_801FE10C.c",
 ]
 psyq_source = "src/bof3/support/scena01_00_psyq.c"

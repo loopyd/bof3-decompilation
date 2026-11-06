@@ -363,8 +363,10 @@ segments:
     - asm
     - func_801D86D4
   - - 32268
-    - asm
-    - func_801D8A0C
+    - c
+    - drawShopEquipPanel
+    - '@source: src/bof3/ui/drawShopEquipPanel.c'
+    - '@behavior: shop equipment panel reached from the panel state dispatcher func_801E2DB4 with the panel task root x and field-6 halfwords and the field-record index D_80181B10[D_80144F5A[task byte 0xA]]: draws the panel backing through func_801DBF18 with the size pair 9/10, the 16x16 icon through func_801644D8 at (x+7, y+5) with the constants 16, 16 and 0x80, and the EQUIP caption D_801E583C through func_8014F800 at (x+0x2E, y+7) with the mask 0xFF. It then selects the six equipped-item records of the 164-byte field record the index byte chooses - the weapon record of WEAPON_OBJECTS for record byte 0x0E, the armor records of ARMOR_OBJECTS for bytes 0x0F..0x11 and the accessory records of ACCESSORY_OBJECTS for bytes 0x12..0x13 - and for each of the six slots arms the cell at (x+5, y+13*slot+0x1C) through func_801AEA80 with the per-slot id byte D_801E5834 and 0, then submits that record again through func_8014F800 at (x+0x11, y+13*slot+0x1A) with the low byte of the mask func_801AF20C reports for it.'
   - - 32856
     - asm
     - func_801D8C58
@@ -773,7 +775,7 @@ segments:
     - c
     - func_801E2DB4
     - '@source: src/bof3/ui/func_801E2DB4_shop00.c'
-    - '@behavior: panel state dispatcher sibling of func_801E29C8 and func_801E2AB0: calls the handler D_801E5DF0[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then draws the shop panel through func_801D8A0C with the same task root''s x and field-6 halfwords and the byte D_80181B10[D_80144F5A[task byte 0xA]].'
+    - '@behavior: panel state dispatcher sibling of func_801E29C8 and func_801E2AB0: calls the handler D_801E5DF0[D_80148648->state] selected by the panel task root state byte with no arguments (framed jalr), then draws the shop panel through drawShopEquipPanel with the same task root''s x and field-6 halfwords and the byte D_80181B10[D_80144F5A[task byte 0xA]].'
   - - 74288
     - c
     - retreatPanelXToNeg150B

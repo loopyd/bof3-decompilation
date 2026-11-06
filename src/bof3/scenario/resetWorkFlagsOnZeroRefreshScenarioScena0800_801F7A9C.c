@@ -1,6 +1,6 @@
 #include "bof3/bof3.h"
 
-u32 func_801F8BF8(void);
+u32 tickAndRenderActiveWorkRecordsScenarioScena0800_801F8BF8(void);
 void func_80196070(void);
 
 /* @source 0x801F7A9C
@@ -22,7 +22,7 @@ void func_80196070(void);
  * @residual none
  */
 void resetWorkFlagsOnZeroRefreshScenarioScena0800_801F7A9C(void) {
-  if ((u8)func_801F8BF8() == 0) {
+  if ((u8)tickAndRenderActiveWorkRecordsScenarioScena0800_801F8BF8() == 0) {
     func_80196070();
   }
 }

@@ -125,8 +125,10 @@ segments:
     - asm
     - func_801D2D5C
   - - 8684
-    - asm
-    - func_801D2DEC
+    - c
+    - dispatchWorkByte1HandlerScenarioSce15ef100_801D2DEC
+    - '@source: src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D2DEC.c'
+    - '@behavior: Dispatches the overlay step from the work-record byte at offset 1 through the eleven-word local code-pointer run at 0x801D397C; the record comes from the scratchpad pointer cell 0x1F800044 and the entry takes no arguments.'
   - - 8752
     - asm
     - func_801D2E30

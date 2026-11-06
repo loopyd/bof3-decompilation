@@ -126,8 +126,8 @@ segments:
     - asm
     - func_801FBC6C
   - - 21284
-    - asm
-    - func_801FBF24
+    - c
+    - startFrontEndOnSharedByte3ElseReleaseAndAdvanceScenarioScena0200_801FBF24
   - - 21396
     - c
     - requestPrimaryState7OnIndexedBoundsScenarioScena0200_801FBF94

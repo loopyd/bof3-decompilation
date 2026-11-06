@@ -234,8 +234,8 @@ segments:
     - asm
     - func_801FE0A4
   - - 29964
-    - asm
-    - func_801FE10C
+    - c
+    - clearIndexedRecordFlagArmEffectGroupThenSetRecordByte5AndResetEffect9ScenarioScena0100_801FE10C
   - - 30128
     - asm
     - func_801FE1B0

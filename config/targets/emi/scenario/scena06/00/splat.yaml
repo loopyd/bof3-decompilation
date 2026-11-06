@@ -147,8 +147,8 @@ segments:
     - asm
     - func_801FD1C8
   - - 26164
-    - asm
-    - func_801FD234
+    - c
+    - clearProgressAndSharedByteThenWaitFlag23Substate0AOr14AndRequestPrimaryState10ScenarioScena0600_801FD234
   - - 26260
     - c
     - zeroResultScenarioScena0600_801FD294

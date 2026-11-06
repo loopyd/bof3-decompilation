@@ -10,6 +10,7 @@ load_address = 0x801D0C00
 sources = [
     "src/bof3/scenario/swapWords.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D2170.c",
+    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef100_801D2DEC.c",
 ]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioSce15ef100_801D369C.c",

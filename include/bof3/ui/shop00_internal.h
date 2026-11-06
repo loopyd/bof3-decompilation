@@ -303,8 +303,9 @@ extern void (*D_801E5DDC[])(void);
 /* Panel handler table indexed with the panel task root's state byte
  * (D_80148648->state, the shared g_PanelTaskRoot cell); dispatched by the
  * sibling dispatcher func_801E2DB4, which calls the selected handler with no
- * arguments (framed jalr) and then draws the shop panel through func_801D8A0C
- * with the same task root's x and field-6 halfwords and the byte
+ * arguments (framed jalr) and then draws the shop panel through
+ * drawShopEquipPanel with the same task root's x and field-6 halfwords and the
+ * byte
  * D_80181B10[D_80144F5A[task byte 0xA]]. The three pointer entries present in
  * the shipped payload are panelNoop (0x801E2800), retreatPanelXToNeg150B
  * (0x801E2E30) and advancePanelXTo15 (0x801E2E70); the table ends 0xC bytes
@@ -794,15 +795,33 @@ void func_801D95F4(u16 arg0, u16 arg1, u8 arg2, u8 arg3);
  * callee contract.
  * @source 0x801D9254 */
 void func_801D9254(u16 arg0, u16 arg1, u8 arg2, u8 arg3);
-/* Shop panel draw helper in this EMI (unlifted); the sibling dispatcher
- * func_801E2DB4 draws the panel through it with the panel task root's x and
- * field-6 halfwords and the main-RAM byte D_80181B10[D_80144F5A[task byte
- * 0xA]]. The body sign-extends its first two arguments from 16 bits and masks
- * the third to a byte, and the call site loads them with `lh`/`lh`/`lbu`; the
- * widths below are the widths observed at that call site, not a recovered
- * callee contract.
+/* Shop equipment panel of this EMI (lifted: src/bof3/ui/
+ * drawShopEquipPanel.c): the sibling dispatcher func_801E2DB4 draws the panel
+ * through it with the panel task root's x and field-6 halfwords and the
+ * main-RAM byte D_80181B10[D_80144F5A[task byte 0xA]], which selects one of the
+ * eight 164-byte field records of D_80144968. The body draws the panel backing
+ * with the size pair 9/10, one 16x16 icon, the EQUIP caption D_801E583C and the
+ * six equipped-item icon cells of that record (weapon for record byte 0x0E,
+ * armor for 0x0F..0x11, accessory for 0x12..0x13). The first two arguments are
+ * 16-bit because the only call site loads them with `lh`/`lh` and the body
+ * narrows them to 16 bits at every use; the third is loaded with `lbu` and
+ * masked to a byte.
  * @source 0x801D8A0C */
-void func_801D8A0C(s16 arg0, s16 arg1, u8 arg2);
+void drawShopEquipPanel(s16 x, s16 y, u8 index);
+/* Main-exe equipment-icon cell helper called once per equipped-item slot by
+ * drawShopEquipPanel with the cell anchor, the slot id byte of D_801E5834 and
+ * the constant 0. The call site zero-extends both coordinates (andi 0xFFFF) and
+ * leaves the id byte zero-extended by its `lbu` load, so the widths below are
+ * the widths observed at that call site, not a recovered callee contract.
+ * @source 0x801AEA80 */
+void func_801AEA80(u16 arg0, u16 arg1, u8 arg2, s32 arg3);
+/* Main-exe equipment-record mask query called by drawShopEquipPanel with one of
+ * the six item-record pointers it selected; the caller masks the result with
+ * 0xFF and hands it to func_8014F800 as that call's third argument, so the
+ * return is declared word-wide (the caller-side narrowing of a byte result) and
+ * the argument stays the record address it receives.
+ * @source 0x801AF20C */
+u32 func_801AF20C(const void* arg0);
 /* Flat-line rectangle border emitter (lifted: src/bof3/ui/
  * emitFlatLineRectangleBorder.c): draws the open three-point line (x+4, y) to
  * (x, y+4) to (x, y+h-1) with SetLineF3 and the closed four-corner border with
@@ -1549,7 +1568,8 @@ typedef struct ShopSlotEntry {
 extern ShopSlotEntry D_8018E990[];
 
 /* Main-RAM state-byte table read by the shop panel dispatcher func_801E2DB4 as
- * the third argument of func_801D8A0C, indexed by D_80144F5A[task byte 0xA].
+ * the third argument of drawShopEquipPanel, indexed by D_80144F5A[task byte
+ * 0xA].
  * The same address is declared as D_80181B10 by emi/battle/battle/03, which
  * indexes it with a battle state byte; kept raw because the byte meanings are
  * not recovered.
@@ -1572,6 +1592,23 @@ extern u8 D_80181B10[];
  * the original folds the offset into the same `%lo` immediate.
  * @source 0x80144968 @kind table */
 extern u8 D_80144968[];
+
+/* Six-slot id byte table of this EMI payload, read by drawShopEquipPanel as the
+ * third argument of func_801AEA80 once per equipped-item slot: the six bytes are
+ * 8, 0x0A, 9, 0x0B, 0x0C and 0x0C, the two bytes after them are never read, and
+ * the meaning of the ids is not recovered, so the table stays address-anchored
+ * at the original byte width and keeps the generated name it had as an asm
+ * reference.
+ * @source 0x801E5834 @kind table */
+extern u8 D_801E5834[];
+
+/* "EQUIP" caption of the shop equipment panel, handed to func_8014F800 by
+ * drawShopEquipPanel as its fifth argument. It sits in the same payload rodata
+ * run as the row captions D_801E5828 ("Def"), D_801E582C ("Int"),
+ * D_801E5830 ("Agl") and D_801E5844 ("EXP"); the name stays the generated one
+ * because only the text, not its owner, is recovered.
+ * @source 0x801E583C @kind data */
+extern const char D_801E583C[];
 
 /* Main-RAM byte inside each 164-byte field record, at offset +0x19: the phase
  * step func_801D7B74 writes 1 << (s8)D_8014865D into it for the record selected

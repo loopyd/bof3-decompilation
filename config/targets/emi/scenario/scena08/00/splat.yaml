@@ -219,8 +219,10 @@ segments:
     - '@source: src/bof3/scenario/seedClaimedWorkRecordFromWorkObjectScenarioScena0800_801F8B50.c'
     - '@behavior: Seeds the work record it receives in $a0: stores 1 in its claim byte 0, 0 in its state byte 1, 8 in its countdown byte 2, 0 in its byte 3, 0x40 in its re-arm byte 4 and clears its word 0x08, then copies the scratch work object at pointer slot 0x1F800044 into the record''s position triple - word 0x0C from work word 0x34, word 0x10 from work word 0x38 and word 0x14 from work word 0x3C - with ((rand() & 0xFF) << 11) - 0x40000 added to the two scattered words, re-reading the work pointer after each rand() call.'
   - - 8184
-    - asm
-    - func_801F8BF8
+    - c
+    - tickAndRenderActiveWorkRecordsScenarioScena0800_801F8BF8
+    - '@source: src/bof3/scenario/tickAndRenderActiveWorkRecordsScenarioScena0800_801F8BF8.c'
+    - '@behavior: Overlay per-frame pass over the 0x8 work records of the 0x1C-byte-stride table at 0x800E4800: it arms the sprite draw mode first (GetTPage(0, 1, 0x3C0, 0) for the texture page, SetDrawMode with the primitive published at g_PrimCursor, and func_8014E5A0 queueing the 0x0C-byte DR_MODE packet), then fills the 0x20-byte projection scratch through func_801AFE18, then sweeps the table with an unsigned byte counter and for each record whose claim byte at offset 0 reads non-zero calls the record''s work-state handler - the overlay-local pointer table at 0x801FE8FC indexed by the record''s state byte at offset 1, called with the record - and then emits the record''s sprite through func_801F8964 with the same record. It returns 1 once at least one record was handled and 0 when every entry is unclaimed, writes no memory of its own, and its 0x50-byte frame holds the 0x20-byte projection scratch, SetDrawMode''s fifth outgoing argument slot and the saved $ra plus $s0-$s3.'
   - - 8412
     - c
     - tickCountdownAdvanceWorkByte3ReloadFromByte4AndAdvanceStateScenarioScena0800_801F8CDC

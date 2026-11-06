@@ -2,7 +2,9 @@
 
 /* @source 0x801D0D7C
  * @behavior Entry 0 of the overlay's work-state handler table at 0x801D27CC
- * (D_801D27CC), which the dispatcher func_801D0D38 selects with the unsigned
+ * (D_801D27CC), which the dispatcher
+ * dispatchWorkByte1HandlerScenarioSce15ef300_801D0D38 selects with the
+ * unsigned
  * work byte at offset +0x1 of the scratchpad work object published at pointer
  * slot 0x1F800044 and calls with no arguments: it stores 8 into that object's
  * byte at +0x9 and then advances the same work byte at +0x1 to 1, so the next
