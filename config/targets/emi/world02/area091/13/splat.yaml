@@ -30,8 +30,8 @@ segments:
     - asm
     - func_801F2C04
   - - 132
-    - asm
-    - func_801F2C84
+    - c
+    - setStatusFFFFAndHandlerIndex3WhenGateWorld02Area09113_801F2C84
   - - 180
     - asm
     - func_801F2CB4

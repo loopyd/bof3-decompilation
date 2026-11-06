@@ -61,8 +61,9 @@ segments:
     - asm
     - func_801EF324
   - - 1928
-    - asm
-    - func_801EF388
+    - c
+    - decrementWorkByteBMask3FThenAdvanceWorkWord1CBy2AndIncrementWorkByte2At80BmagicMagic13203_801EF388
+    - '@source: src/bof3/bmagic/decrementWorkByteBMask3FThenAdvanceWorkWord1CBy2AndIncrementWorkByte2At80BmagicMagic13203_801EF388.c'
   - - 2016
     - asm
     - func_801EF3E0

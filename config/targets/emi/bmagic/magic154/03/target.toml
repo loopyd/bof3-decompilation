@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/bmagic/invokeHelperBmagicMagic15403_801EF6AC.c",
     "src/bof3/bmagic/magic15403DispatchTables.c",
+    "src/bof3/bmagic/incrementWorkByte9AndAdvanceMotionPairThenAdvanceWorkByte2At4BmagicMagic15403_801EF380.c",
     "src/bof3/support/magic154_03_psyq.c",
 ]
 psyq_source = "src/bof3/support/magic154_03_psyq.c"

@@ -55,8 +55,9 @@ segments:
     - asm
     - func_801EF1EC
   - - 1920
-    - asm
-    - func_801EF380
+    - c
+    - incrementWorkByte9AndAdvanceMotionPairThenAdvanceWorkByte2At4BmagicMagic15403_801EF380
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndAdvanceMotionPairThenAdvanceWorkByte2At4BmagicMagic15403_801EF380.c'
   - - 2020
     - asm
     - func_801EF3E4

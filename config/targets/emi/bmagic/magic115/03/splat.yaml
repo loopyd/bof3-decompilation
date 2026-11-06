@@ -36,8 +36,9 @@ segments:
     - asm
     - func_801EEC80
   - - 476
-    - asm
-    - func_801EEDDC
+    - c
+    - storeDoubleWorkByte9IntoWorkByteARecordTripletAndAdvanceWorkByte1WhenAtLeast6BmagicMagic11503_801EEDDC
+    - '@source: src/bof3/bmagic/storeDoubleWorkByte9IntoWorkByteARecordTripletAndAdvanceWorkByte1WhenAtLeast6BmagicMagic11503_801EEDDC.c'
   - - 688
     - asm
     - func_801EEEB0

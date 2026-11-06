@@ -87,8 +87,9 @@ segments:
     - asm
     - func_801EFB78
   - - 4060
-    - asm
-    - func_801EFBDC
+    - c
+    - clearWorkBytes0Through4BmagicMagic22303_801EFBDC
+    - '@source: src/bof3/bmagic/clearWorkBytes0Through4BmagicMagic22303_801EFBDC.c'
   - - 4140
     - textbin
     - T_801EFC2C

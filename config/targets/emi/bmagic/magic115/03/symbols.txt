@@ -1,6 +1,7 @@
+g_battle_work = 0x1F800044;
 func_801EEC14 = 0x801EEC14;
 func_801EEC80 = 0x801EEC80;
-func_801EEDDC = 0x801EEDDC;
+storeDoubleWorkByte9IntoWorkByteARecordTripletAndAdvanceWorkByte1WhenAtLeast6BmagicMagic11503_801EEDDC = 0x801EEDDC;
 func_801EEEB0 = 0x801EEEB0;
 func_801EEFF4 = 0x801EEFF4;
 dispatchStateByte1Tablef8bcBmagicMagic11503_801EF054 = 0x801EF054;

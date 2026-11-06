@@ -39,8 +39,8 @@ segments:
     - asm
     - func_801EEE20
   - - 652
-    - asm
-    - func_801EEE8C
+    - c
+    - incrementWorkByte1WhenWorkByteBIs1BmagicMagic11803_801EEE8C
   - - 704
     - asm
     - func_801EEEC0
