@@ -24,6 +24,7 @@ sources = [
     "src/bof3/bmagic/addMotionPairIntoHalfwordsDecrementCountdownSetByte9To6SeedMotionPairByModeAdvanceWorkByte2BmagicMagic13103_801EFA68.c",
     "src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic13103_801F1A58.c",
     "src/bof3/bmagic/dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic13103_801F14A0.c",
+    "src/bof3/bmagic/raiseFlag4AndInvokeHelperWhenWorkByteBZeroBmagicMagic13103_801EF61C.c",
 ]
 support_sources = [
     "src/bof3/support/emi_bmagic_magic131_03_symbols.c",

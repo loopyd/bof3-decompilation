@@ -13,6 +13,7 @@ support_sources = [
     "src/bof3/plchar/dispatchStateByte2Table0a60PlcharPlp02600_801CE72C.c",
     "src/bof3/plchar/dispatchStateByte2Table0a6cPlcharPlp02600_801CF12C.c",
     "src/bof3/plchar/dispatchStateByte2Table0a80PlcharPlp02600_801CF924.c",
+    "src/bof3/plchar/dispatchStateByte2Table0a8cPlcharPlp02600_801CFB50.c",
     "src/bof3/plchar/invokeHelperPlcharPlp02600_801CFB30.c",
     "src/bof3/support/plp026_00_psyq.c",
 ]

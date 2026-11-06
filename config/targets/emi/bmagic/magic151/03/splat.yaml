@@ -158,8 +158,10 @@ segments:
     - asm
     - func_801F0BA8
   - - 8272
-    - asm
-    - func_801F0C50
+    - c
+    - add4ToWorkByteAThenSetWorkByteBToOneAndAdvanceWorkByte2WhenAtLeast20BmagicMagic15103_801F0C50
+    - '@source: src/bof3/bmagic/add4ToWorkByteAThenSetWorkByteBToOneAndAdvanceWorkByte2WhenAtLeast20BmagicMagic15103_801F0C50.c'
+    - '@behavior: Advances the scratchpad work-object byte at offset 0xA by four modulo 256 through one load of the pointer cell at 0x1F800044, then tests the truncated byte it just stored against 0x20 unsigned; only when that byte is 0x20 or above does it re-read the pointer cell and store 1 into the object byte at offset 0xB, then re-read the cell and increment the object byte at offset 0x2.'
   - - 8368
     - asm
     - func_801F0CB0

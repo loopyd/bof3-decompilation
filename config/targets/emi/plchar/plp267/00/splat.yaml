@@ -120,8 +120,8 @@ segments:
     - asm
     - func_801CFDDC
   - - 6872
-    - asm
-    - func_801CFED8
+    - c
+    - dispatchWorkByte2Table09dcPlcharPlp26700_801CFED8
   - - 6940
     - asm
     - func_801CFF1C

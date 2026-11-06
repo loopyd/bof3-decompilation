@@ -93,6 +93,62 @@ extern u8 D_80148625;
 extern u8 D_80148626;
 extern u8 D_8014862E;
 
+/* Note-list cursor block of the shared front-end UI state, published and
+ * stepped by the sub-step handler stepNoteListCursorThenSwapSelectedNote.
+ * The two halfwords are the list panel's origin: the handler adds 7 to
+ * D_801483C4 for the published x cell D_80148628 and 0x1A plus 13 times the
+ * visible row to D_801483C6 for the published y cell D_8014862A, and the
+ * sub-step siblings func_801DF9EC and func_801E006C publish their own offsets
+ * from the same pair. D_801483CB is the flat cursor index into the 128-slot
+ * note bank D_8014546C, D_801483CA the index of the row the panel starts at,
+ * and D_801483CD the scroll step the handler arms with 0xF0 (-16) or 0x10
+ * (+16) when a move leaves the visible rows. None of the three addresses is
+ * owned by the shared map; the generated undefined-symbol list carries them,
+ * so no target-map row is added, and their roles are only partly recovered,
+ * so they stay address-anchored at the original byte width.
+ * @source 0x801483C4 @kind unknown */
+extern u16 D_801483C4;
+/* @source 0x801483C6 @kind unknown */
+extern u16 D_801483C6;
+/* @source 0x801483CA @kind unknown */
+extern u8 D_801483CA;
+/* @source 0x801483CB @kind unknown */
+extern u8 D_801483CB;
+/* @source 0x801483CD @kind unknown */
+extern u8 D_801483CD;
+/* Published cursor cells of the same block: D_80148624 is the visibility flag
+ * the handler arms with 1 and the two halfwords are the cursor position. That
+ * handler stores them, and the sub-step siblings func_801DF9EC, func_801DFDF4,
+ * func_801E006C, func_801E032C and func_801E09F4 read or store the same cells;
+ * emi/battle/battle/15 writes the halfword pair as a screen coordinate from its
+ * menu initializers, which is why the pair is kept as the original halfword
+ * width here. Not owned by the shared map; the generated undefined-symbol list
+ * carries the addresses, so no target-map row is added.
+ * @source 0x80148628 @kind unknown */
+extern u16 D_80148628;
+/* @source 0x8014862A @kind unknown */
+extern u16 D_8014862A;
+
+/* Selected field record and its skill-list entry as handed to the confirm arm
+ * of the note-list handler: D_801483A6 selects one of the 164-byte field
+ * records of D_80144968 and D_801483A7 the byte inside that record's +0x7A
+ * skill list (the D_801449E2 view). The sub-step siblings func_801DF9EC,
+ * func_801DFDF4, func_801E006C and func_801E032C step and read the same pair.
+ * Neither address is owned by the shared map; the generated undefined-symbol
+ * list carries them, so no target-map row is added.
+ * @source 0x801483A6 @kind unknown */
+extern u8 D_801483A6;
+/* @source 0x801483A7 @kind unknown */
+extern u8 D_801483A7;
+
+/* Shared pressed-button mask paired with D_80145AC4 in this target's pad
+ * tests: the note-list handler takes its confirm arm while the pad state
+ * D_80145AA8 shares a bit with this mask and its cancel arm while it shares
+ * one with D_80145AC4. Not owned by the shared map; the generated
+ * undefined-symbol list carries the address, so no target-map row is added.
+ * @source 0x80145AC2 @kind unknown */
+extern u16 D_80145AC2;
+
 /* Absolute-address globals (byte-width counters/flags). */
 /* Write-only in this target (7 stores, no loads); role unproven.
  * @source 0x80148650
@@ -901,6 +957,15 @@ u32 func_80163EA0(void);
  * 0x80143C40 is clear; the width below is the width of that lifted source.
  * @source 0x8014ECAC */
 void func_8014ECAC(u16 local_mode);
+
+/* Main-exe direction decoder called by this target's note-list sub-step
+ * handler with the pad state D_80145AA8 masked by 0x500C and by the sisyou/00
+ * selector handlers func_801D0DD4 and func_801D10AC with their own pad masks;
+ * the reviewed sisyou/00 call sites declare it s32 func_8014E640(u32) and test
+ * the returned word's 0x1000 and 0x4000 bits, so the widths below are those
+ * call-site widths, not a recovered callee contract.
+ * @source 0x8014E640 */
+s32 func_8014E640(u32 arg0);
 
 /* Main-exe sound cue dispatcher (lifted in src/bof3/audio/dispatchSoundCue.c)
  * called by the shop sub-step handler func_801E2084 with the cue id 0x102.

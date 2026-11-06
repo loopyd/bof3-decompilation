@@ -102,6 +102,7 @@ func_801D1B10 = 0x801D1B10;
 initializeWorkWordsAndAdvanceStateWorld00Area03004_801D1B54 = 0x801D1B54;
 drawGreenGradientBar = 0x801D1B88;
 advancePanelFadeAndDrawGradientBarWorld00Area03004_801D1CF0 = 0x801D1CF0;
+drawAlternatingNameAndQueueIconStripWorld00Area03004_801D1F38 = 0x801D1F38;
 queueIconStrip = 0x801D2034;
 func_801D20C8 = 0x801D20C8;
 func_801D210C = 0x801D210C;

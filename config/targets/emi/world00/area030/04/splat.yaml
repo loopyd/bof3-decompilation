@@ -99,8 +99,10 @@ segments:
     - '@source: src/bof3/world/advancePanelFadeAndDrawGradientBarWorld00Area03004_801D1CF0.c'
     - '@behavior: AREA030 message-panel fade step: advances the work fade-level word 0x0C by the work velocity word 0x18 under byte 1 of the active entry record 0x801E320C (mode 0 bounces the level at 0x00/0xFF and reverses the velocity, mode 1 wraps it to 0x00 at 0xFF, mode 2 moves the -1-floored accumulator word 0x10 and adds it to the fade level with the same bounce), then submits tpage draw mode 0/2, draws the message box func_801E0DCC(0x10, 2, 0x87, 0xB4) and the green gradient bar at (0x88, 0xCB) with the fade level scaled to the 0x60 ramp width, and finally, once the shared phase byte 0x80145E92 reads 3, arms the box halfwords 0x2E/0x30 with 0xB8/0xD1 and advances the work state byte 1.'
   - - 4920
-    - asm
-    - func_801D1F38
+    - c
+    - drawAlternatingNameAndQueueIconStripWorld00Area03004_801D1F38
+    - '@source: src/bof3/world/drawAlternatingNameAndQueueIconStripWorld00Area03004_801D1F38.c'
+    - '@behavior: AREA030 equipment-name step of the work-record handler table 0x801E1D10: bit 6 of the shared frame counter D_80143E6C selects which of the shared equipment index bytes 0x80145028/0x80145026 is drawn, submits that 20-byte record of the shared main-executable equipment table 0x801C9E7C as a twelve-character name run at (0x8A, 0xC8) through func_8014F800, then takes the signed byte difference between the message limit byte D_80143FCF and the active record byte 0x0F, clamps it to 0..4 and, while it is nonzero, queues the two-icon strip at (D_80143FF6 + 0x0A, D_80143FF8 - 0x18) with that value as the icon variant through queueIconStrip.'
   - - 5172
     - c
     - queueIconStrip

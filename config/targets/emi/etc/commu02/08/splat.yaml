@@ -42,8 +42,8 @@ segments:
     - c
     - dealNineUniqueCardIds
   - - 7432
-    - asm
-    - func_801D2908
+    - c
+    - drawThreeCardRowStates
   - - 7876
     - asm
     - func_801D2AC4

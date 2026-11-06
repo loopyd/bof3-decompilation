@@ -87,8 +87,8 @@ segments:
     - c
     - incrementWorkByte2BmagicMagic06403_801EF87C
   - - 3228
-    - asm
-    - func_801EF89C
+    - c
+    - dispatchWorkByte3HandlerBmagicMagic06403_801EF89C
   - - 3316
     - asm
     - func_801EF8F4

@@ -335,7 +335,11 @@ signedness picks that extension: `if ((s8)countdown == 8)` on the same `u8`
 accumulator emits `sll`/`sra` of the stored register before the compare, so a test
 against a signed-looking channel value takes a cast at the test and leaves the
 accumulator `u8`. A cell whose test has its own load takes the `s8` view on the cell
-expression at that test instead.
+expression at that test instead. An add-then-test cell takes its spelling from that
+test: one that re-reads the cell stays in place (`p[n] += 4; if (p[n] == limit)`),
+while an unsigned bound on the value just stored takes the `u8` accumulator. Two
+exact sources on one overlay differ in nothing else, so the cell's test decides
+before either form is probed.
 
 ### Scratch cursor group variables
 

@@ -15,6 +15,10 @@ extern u16 D_800100A4;    /* @source 0x800100A4 @kind unknown */
  * 0x801DD7CC and submitted to func_8014F800 offset by the same +0x80010000
  * base: (0x1D, 0x14, 0, 0xFF, base + halfword). */
 extern u16 D_800100E0;    /* @source 0x800100E0 @kind unknown */
+/* Shared main-executable equipment record table: the AREA030 name steps scale
+ * the selected equipment index by 20 bytes, the serialized record stride whose
+ * leading 0x0C bytes are the record name the shared text drawer prints. */
+extern u8  D_801C9E7C[];  /* @source 0x801C9E7C @kind table */
 /* Shared mode byte; stored small mode values (4/6/7/...) and compared
  * against them by the area030 mode handlers. */
 extern u16 D_80143C40;    /* @source 0x80143C40 @kind unknown */
@@ -119,6 +123,11 @@ extern s8  D_80143FCF;    /* @source 0x80143FCF @kind unknown */
  * companion as a plain scalar at its own address. */
 extern s32 D_80143FD8;    /* @source 0x80143FD8 @kind unknown */
 extern s32 D_80143FDC;    /* @source 0x80143FDC @kind unknown */
+/* Per-slot stored screen position halfwords: func_801D6128 writes the
+ * 0xF0/0xA6 pair through the same index base as the D_80143FCD step bytes, and
+ * the AREA030 name step offsets them by (+0x0A, -0x18) for its icon strip. */
+extern u16 D_80143FF6;    /* @source 0x80143FF6 @kind unknown */
+extern u16 D_80143FF8;    /* @source 0x80143FF8 @kind unknown */
 extern s32 D_80143FFC;    /* @source 0x80143FFC @kind unknown */
 extern s32 D_80144000;    /* @source 0x80144000 @kind unknown */
 extern s16 D_80144006;    /* @source 0x80144006 @kind unknown */
@@ -552,7 +561,7 @@ void func_801D1818(s16 arg0, s16 arg1, u8 arg2);
  * stays target-local. */
 void func_8017AA08(SPRT_16* arg0);
 void drawGreenGradientBar(s16 arg0, s16 arg1, s16 arg2, u8 arg3);
-void queueIconStrip(s16 arg0, s16 arg1, u8 arg2, s8 arg3);
+void queueIconStrip(s16 arg0, s16 arg1, u8 arg2, u8 arg3);
 void func_801D2AE0(void);
 void func_801D2C34(s16 arg0, s16 arg1, s8 arg2, u8 arg3);
 void func_801D3244(s16 arg0, s16 arg1, s32 arg2, s8 arg3, u8 arg4, u8 arg5);
