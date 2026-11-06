@@ -498,6 +498,13 @@ with `addiu`. A cell that owns a map row can still need a literal accessor at on
 site; the hi/lo pair and base register in that load separate the two forms before
 another local arrangement is tried.
 
+The form is per body, not per family or per cell, so count the original's cell loads
+before copying a sibling's spelling: a member that reads the cell once and reuses that
+base for its guard and its store stays exact through the constant-address accessor,
+while a member whose original reloads the cell after a store through the record needs
+the named extern. Copy a sibling's statement order and operand forms, not its cell
+access spelling.
+
 A shared header that maps a cell name to a macro over a constant address
 (`#define D_X g_Cell`) folds the same way, once, because the macro hides the
 symbol. `#undef` it in the source when the original reloads the cell per access and

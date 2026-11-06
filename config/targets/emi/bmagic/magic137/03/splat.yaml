@@ -70,8 +70,8 @@ segments:
     - asm
     - func_801EFC58
   - - 4288
-    - asm
-    - func_801EFCC0
+    - c
+    - clearWorkByte9SetWorkByteATo88AndIncrementWorkByte2BmagicMagic13703_801EFCC0
   - - 4352
     - asm
     - func_801EFD00

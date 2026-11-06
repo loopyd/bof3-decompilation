@@ -42,8 +42,9 @@ segments:
     - asm
     - func_801EEF38
   - - 1096
-    - asm
-    - func_801EF048
+    - c
+    - incrementWorkByte1WhenWorkByteBBelow2BmagicMagic16703_801EF048
+    - '@source: src/bof3/bmagic/incrementWorkByte1WhenWorkByteBBelow2BmagicMagic16703_801EF048.c'
   - - 1152
     - asm
     - func_801EF080

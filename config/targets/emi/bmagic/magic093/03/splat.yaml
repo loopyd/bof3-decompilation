@@ -93,8 +93,9 @@ segments:
     - asm
     - func_801EFEDC
   - - 5280
-    - asm
-    - func_801F00A0
+    - c
+    - add32ToWorkByte9AndAdvanceWorkByte2AtC0BmagicMagic09303_801F00A0
+    - '@source: src/bof3/bmagic/add32ToWorkByte9AndAdvanceWorkByte2AtC0BmagicMagic09303_801F00A0.c'
   - - 5360
     - asm
     - func_801F00F0

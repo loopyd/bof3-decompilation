@@ -68,8 +68,9 @@ segments:
     - asm
     - func_801EF554
   - - 2516
-    - asm
-    - func_801EF5D4
+    - c
+    - clearWorkFlag40AndCopyRecordTripletSetBytes9ATo1ThenAdvanceWorkByte2BmagicMagic14403_801EF5D4
+    - '@source: src/bof3/bmagic/clearWorkFlag40AndCopyRecordTripletSetBytes9ATo1ThenAdvanceWorkByte2BmagicMagic14403_801EF5D4.c'
   - - 2644
     - asm
     - func_801EF654
