@@ -26,7 +26,7 @@ decrementMotionCountdownAdjustMotionPairAndHalfwordThenCopyRecordTripletResetCou
 decrementMotionCountdownAdjustMotionPairThenDecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic01500_801EFE84 = 0x801EFE84;
 invokeHelperBmagicMagic01500_801EFEFC = 0x801EFEFC;
 func_801EFF1C = 0x801EFF1C;
-func_801EFFC0 = 0x801EFFC0;
+decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic01500_801EFFC0 = 0x801EFFC0;
 func_801F014C = 0x801F014C;
 func_801F0194 = 0x801F0194;
 func_801F0248 = 0x801F0248;

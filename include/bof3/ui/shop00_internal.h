@@ -1412,6 +1412,19 @@ void func_801E0F78(void);
  * @source 0x801EEC30 */
 void func_801EEC30(u32 arg0, void* arg1, u32 arg2, u32 arg3, u32 arg4);
 
+/* Main-exe gate (unlifted, outside this EMI's payload) tested by the sub-step
+ * handler drawShopValuePanelThenClearPanelAndArmActionId once the selected
+ * panel action id D_8018E228 reads 0 or 2: a nonzero result makes that handler
+ * play the cue 0x107 and re-arm the action id with 7, and a zero result re-arms
+ * it with 9. The call site sets no argument registers and branches on the
+ * returned word with a bare `beqz` (no low-byte mask), and only zero versus
+ * nonzero is consumed, so the prototype is argument-free and the return width
+ * below is the width observed at that call site, not a recovered callee
+ * contract. Its behavior is not recovered. The address had no prototype in
+ * this target before this lift; it is bound with a target-map row.
+ * @source 0x801EF200 */
+s32 func_801EF200(void);
+
 /* Shared flag-bank tester: the entry predicate func_801E4C2C passes the
  * main-RAM bank base D_80144F28 and the flag index 0x6C and treats a nonzero
  * return as "flag set". The two-argument (base, flag) prototype is the one
@@ -1553,8 +1566,10 @@ extern u8 D_8018E260;
  * drawShopValuePanelThenPublishSaveSlotRecords arms it with 5 while the
  * remaining-capacity byte D_801E60FC leaves room for another entry and with 4
  * when that byte is zero, and the sibling handlers func_801D47AC, func_801D4E74,
- * func_801D51B8, func_801D543C, func_801D5894 and func_801D5CB0 read and rewrite
- * it as the selected panel action, which takes the values 0..3, 6 and 0xA there.
+ * func_801D51B8, func_801D543C and func_801D5894 read and rewrite it as the
+ * selected panel action, which takes the values 0..3, 6 and 0xA there. The
+ * lifted handler drawShopValuePanelThenClearPanelAndArmActionId gates on it
+ * while it reads 0 or 2 and re-arms it with 7 or 9.
  * Its role beyond that selection is not recovered. It lies in main RAM outside
  * this EMI's payload and is not owned by the shared map; the D_<address> name
  * binds its own address, so no target-map row is added.

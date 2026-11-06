@@ -22,9 +22,10 @@ extern u16* D_80148210;
  * record byte 0 and stores 0 into work byte 4, and that arm leaves the
  * 0x80148210 halfword untouched. Work byte 4 is the selector the neighbouring
  * dispatchWorkByte4LocalHandlersWorld04Area17413_801F4AB4 indexes its two-entry
- * handler table with, and the table's first entry func_801F4B0C stores 1 back
- * into byte 4 while arming the same three level bytes, so this step returns the
- * record to that arming handler once the levels reach -0x80. Bytes 0x3E, 0x5D,
+ * handler table with, and the table's first entry
+ * advanceWorkCounterTripleBy2OrArmScratchWorkMin40LevelTripleWorld04Area17413_801F4B0C
+ * stores 1 back into byte 4 while arming the same three level bytes, so this
+ * step returns the record to that arming handler once the levels reach -0x80. Bytes 0x3E, 0x5D,
  * 0x5E, 0x5F and 0 are read back only by these handlers, so their roles stay
  * anchored to the original offsets. Takes no arguments, calls nothing and
  * returns nothing.

@@ -139,8 +139,10 @@ segments:
     - c
     - dispatchWorkByte4LocalHandlersWorld04Area17413_801F4AB4
   - - 7948
-    - asm
-    - func_801F4B0C
+    - c
+    - advanceWorkCounterTripleBy2OrArmScratchWorkMin40LevelTripleWorld04Area17413_801F4B0C
+    - '@source: src/bof3/world/advanceWorkCounterTripleBy2OrArmScratchWorkMin40LevelTripleWorld04Area17413_801F4B0C.c'
+    - '@behavior: Steps the scratch work record published at 0x1F800044 one more frame: halfword 0x3E += 8, then either adds 2 to each of the three counter bytes 0x0/0x1/0x2 of the 12-byte record selected by work byte 0x93 (each through its own reload of 0x80146884), or, once signed counter byte 0x0 has reached 0x1E, sets flag bit 0x20 of byte 0 and arms work byte 0x5C = 1, level bytes 0x5D/0x5E/0x5F = -0x40 and work byte 4 = 1; both arms then consume two units of halfword 0x0A of 0x80148210.'
   - - 8296
     - c
     - decrementScratchWorkLevelTripleBy4OrSetFlag40World04Area17413_801F4C68

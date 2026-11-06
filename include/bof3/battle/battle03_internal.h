@@ -791,7 +791,7 @@ void func_801D750C(s32 arg0, s32 arg1);
 void drawBattlerCountdownEntries(s16 arg0, s16 arg1);
 void func_801D7D10(u8 arg0, u16 arg1, u16 arg2, u16 arg3, u8 arg4, u8 arg5);
 void drawBattlePanelMessageStrip(s32 arg0, s32 arg1);
-void func_801D8450(u32 arg0);
+void drawBattleCommandStrip(u32 arg0);
 void func_801D8690(s32 arg0, s32 arg1, s32 arg2);
 void func_801D8AE4(s32 arg0, s32 arg1, s32 arg2);
 void func_801D8DF8(s32 arg0, s32 arg1, u32 arg2);
@@ -806,6 +806,16 @@ extern s8  D_80144952; /* @source 0x80144952 @kind unknown */
 extern u16 D_80033A08[]; /* @source 0x80033A08 @kind table */
 extern u16 D_801EAD30[]; /* @source 0x801EAD30 @kind table */
 extern u16 D_801EAE50[][2]; /* @source 0x801EAE50 @kind table */
+/* Byte views of the per-command data drawBattleCommandStrip reads with one
+ * 8-byte-scaled index: the signed strip anchor x halfword at 0x801EAEE8, the
+ * unsigned anchor y halfword at 0x801EAEEA and the 8-byte label rows of
+ * 0x801EAEB0 ("Atk", "Abl", "Use", "Exa", "Def", "Chg", "Esc"). The
+ * original reaches each with its own symbol-relative base (`lui $at,%hi(X)` +
+ * `addu $at,$at,index` + load `%lo(X)($at)`), so they bind as flat symbols the
+ * same way the D_801EB230 family binds the D_80145E90 record bytes. */
+extern u8  D_801EAEE8[]; /* @source 0x801EAEE8 @kind data */
+extern u8  D_801EAEEA[]; /* @source 0x801EAEEA @kind data */
+extern u8  D_801EAEB0[]; /* @source 0x801EAEB0 @kind data */
 /* Byte views of the 0x24-byte UI owner records scanned by func_801DA69C: every
  * record carries its mode byte at +0x33 and its kind byte at +0x3A, and the
  * scan reaches both with one 0x24-scaled index. */

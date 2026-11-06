@@ -101,8 +101,9 @@ segments:
     - c
     - clearWorkTableByte0At800E4800World04Area18813_801F3DB4
   - - 4576
-    - asm
-    - func_801F3DE0
+    - c
+    - claimFreeWorkRecordSeedPositionAndFadeWorld04Area18813_801F3DE0
+    - '@source: src/bof3/world/claimFreeWorkRecordSeedPositionAndFadeWorld04Area18813_801F3DE0.c'
   - - 4732
     - asm
     - func_801F3E7C

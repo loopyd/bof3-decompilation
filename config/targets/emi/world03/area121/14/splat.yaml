@@ -214,8 +214,10 @@ segments:
     - asm
     - func_801F5AA0
   - - 12176
-    - asm
-    - func_801F5B90
+    - c
+    - drawShadedMeterFrameAndDepletingFillWorld03Area12114_801F5B90
+    - '@source: src/bof3/world/drawShadedMeterFrameAndDepletingFillWorld03Area12114_801F5B90.c'
+    - '@behavior: Draws the AREA121 meter widget unless byte 0x8014832E holds none of bits 0x1B: a 0x50-by-0x20 shaded sprite at (0xDC, 0x10) through the fixed-size emitter at 0x801F5AA0, then a 64-pixel textured bar at (0xE4, 0x1D) through the bar emitter at 0x801F595C, whose two arguments are a width and a palette index. All three arms end in one shared bar call that each arm prepares. The arm taken when bit 0x40 of byte 0x80146871 is set draws the sprite at shade level 0, the palette-0 base bar, and then a full 0x40 bar with palette 1. The arm taken when byte 0x80145E9A is nonzero draws the sprite at shade level 1 or 2 selected by bit 2 of the shared frame counter 0x80143E6C and only the 0x40 palette-0 bar. The remaining arm draws the sprite at shade level 0, the palette-0 base bar, and then a palette-1 bar whose width is (0x40 - byte 0x80145E9B) & 0xFF, so the highlight recedes as that byte grows. Takes no arguments and returns nothing.'
   - - 12412
     - asm
     - func_801F5C7C

@@ -15,6 +15,7 @@ sources = [
     "src/bof3/world/selectScratchState12Or13ByWorkWordWorld03Area13413_801F3A94.c",
     "src/bof3/world/clearWorkTableOnFirstStepArmCountdownStampStepCountAndAdvanceWorkByte1World03Area13413_801F4214.c",
     "src/bof3/world/claimFreeWorkRecordSeedWorkPositionWorld03Area13413_801F48B0.c",
+    "src/bof3/world/claimWorkRecordEveryFourthCountdownTickThenAdvanceWorkByte1World03Area13413_801F4288.c",
 ]
 support_sources = [
     "src/bof3/world/selectScratchState8Or13ByWorkWordWorld03Area13413_801F2F90.c",

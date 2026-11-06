@@ -24,6 +24,7 @@ support_sources = [
     "src/bof3/bmagic/decrementMotionCountdownAdjustMotionPairThenDecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic01500_801EFE84.c",
     "src/bof3/bmagic/decrementMotionCountdownAdjustMotionPairAndHalfwordThenCopyRecordTripletResetCountdownAndAdvanceWorkByte2BmagicMagic01500_801EFDE8.c",
     "src/bof3/bmagic/decrementWorkCountdownThenSeedMotionFieldsAndSetTintWhenGlobalWorkByteBIsSetBmagicMagic01500_801F045C.c",
+    "src/bof3/bmagic/decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic01500_801EFFC0.c",
 ]
 psyq_source = "src/bof3/support/magic015_00_psyq.c"
 

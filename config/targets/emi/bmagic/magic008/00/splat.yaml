@@ -140,8 +140,10 @@ segments:
     - '@source: src/bof3/bmagic/magic00800DispatchTables.c'
     - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its state byte at offset 1 selects an entry of the overlay-local handler table at 0x801F1BEC (0x801F0294, 0x801F0568, 0x801F0964, 0x801F0DA8, 0x801F1294, 0x801F1708), and that entry is invoked with no arguments. It reads no state other than that byte and writes none; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 5780
-    - asm
-    - func_801F0294
+    - c
+    - dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBmagicMagic00800_801F0294
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBmagicMagic00800_801F0294.c'
+    - '@behavior: Entry 0 (index 0) of the six-entry work byte 1 table at 0x801F1BEC, which 0x801F0250 dispatches on the scratchpad work object state byte 1. Per frame it copies the six words of the overlay-local work-state table at 0x801EEC58 (0x801F0330, 0x801F037C, 0x801F03FC, 0x801F047C, 0x801F04DC, 0x801F0548) into its own 0x30-byte frame, invokes the entry selected by work byte 2 with no arguments, then re-reads the work-object pointer cell at 0x1F800044 and, when work flag byte 0 is non-zero, runs the shared main-executable service func_8014D290. The cell is re-materialised for the dispatch index and again after the indirect call, so it is read through the named target symbol. It returns nothing; the frame keeps $ra at 0x28.'
   - - 5936
     - c
     - initWorkMotionFieldsBmagicMagic00800_801F0330

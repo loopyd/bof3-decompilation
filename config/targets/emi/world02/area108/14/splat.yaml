@@ -95,8 +95,10 @@ segments:
     - asm
     - func_801F3A14
   - - 3692
-    - asm
-    - func_801F3A6C
+    - c
+    - fadeWorkTintTripletBy6AndAdvanceWorkByte1To6WhenCountdownExpiresWorld02Area10814_801F3A6C
+    - '@source: src/bof3/world/fadeWorkTintTripletBy6AndAdvanceWorkByte1To6WhenCountdownExpiresWorld02Area10814_801F3A6C.c'
+    - '@behavior: flash-fade step of the work record published at scratchpad pointer cell 0x1F800044: decrements its frame countdown byte +0x09, and while that stays non-zero subtracts 6 from its tint triplet at +0x5D, +0x5E and +0x5F with a fresh pointer load per channel group, otherwise stores 6 into its state byte +0x01; then calls the tile builder 0x801F3BA0 and the record walker 0x801F3C84.'
   - - 3864
     - asm
     - func_801F3B18

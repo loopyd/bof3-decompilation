@@ -18,5 +18,6 @@ support_sources = [
     "src/bof3/world/setStatusFFFFSubstate1EIfGateElse0AWorld04Area17413_801F4F6C.c",
     "src/bof3/world/seedFrontEndRecordState3AndBytes5D70And5E30World04Area17413_801F3F4C.c",
     "src/bof3/support/area174_13_psyq.c",
+    "src/bof3/world/advanceWorkCounterTripleBy2OrArmScratchWorkMin40LevelTripleWorld04Area17413_801F4B0C.c",
 ]
 psyq_source = "src/bof3/support/area174_13_psyq.c"

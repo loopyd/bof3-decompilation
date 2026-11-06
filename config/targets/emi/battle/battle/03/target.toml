@@ -332,6 +332,7 @@ sources = [
     "src/bof3/battle/drawColorTilePrim.c",
     "src/bof3/battle/drawBattlePanelMessageStrip.c",
     "src/bof3/battle/func_801D8090.c",
+    "src/bof3/battle/drawBattleCommandStrip.c",
     "src/bof3/battle/initBattleUiAndQueueFixedCue.c",
     "src/bof3/battle/submitWorkAndSeedGravity.c",
     "src/bof3/battle/countdownGroupSelectionAndRefreshTarget.c",

@@ -215,6 +215,15 @@ differs. Diagnose before changing statement order; keep compiler/flags fixed.
    Correct setup alone proves neither semantics nor exactness; this lever does
    not establish original C or universal compiler behavior.
 
+Spell the cursor as one source pointer and let the compiler derive an interior
+anchor. A second pointer declared at the record's interior offset added a third
+address anchor, an extra literal materialisation and sixteen bytes, while the exact
+body keeps the base pointer for the head accesses and reaches the tail group through
+the anchor the compiler derives, whose stores then read as negative displacements.
+The increment list is order-bearing in the same way: of two updates, the one that
+advances the anchor comes first, and the reversed list lost one instruction at the
+advance block with size unchanged.
+
 ## Delay slots and entry copies
 
 - Same-size branch/`jal`/`j` difference: identify exact instruction, live inputs/
@@ -303,6 +312,14 @@ cell, keep the accumulator local at the cell's width. A wider local converts the
 return where it is assigned and costs an `sll`/`sra` pair the original does not have,
 while the narrow local leaves the truncation to the store.
 
+A narrow value built from a difference wants that split one step further: assign the
+base constant, subtract in place, then truncate with a self-assignment
+(`w = 0x40; w -= limit; w = (u8)w;`). The one-expression `(u8)(0x40 - limit)` and the
+`& 0xFF` respelling both let GCC fold the constant and the mask and stayed two
+instructions short at the original size, and an arm-local narrow temporary copied
+into the wide local measured the same. A store to another cell written ahead of that
+staircase closed the remaining pair, while swapping declarations did not move it.
+
 ### Halfword read-modify-write
 
 Use when a scratch halfword is decremented or advanced and then compared, or when
@@ -368,7 +385,14 @@ cell load or a record address computed from a cursor.
    can take the register the original used. Renaming one variable in place does not
    split it.
 4. Place each reload where the original has it. A second read after the first
-   store also reproduces a load-delay `nop` that a merged read removes.
+   store also reproduces a load-delay `nop` that a merged read removes. Ordering
+   against an unrelated store is part of that placement: with the cell read written
+   after a halfword store the pointer took the register that store writes, its slot
+   stayed empty and the load dropped below the store, eight bytes long at an
+   unchanged frame; reading the cell pointer ahead of the store and deriving the
+   offset after it restored the original register and both filled slots. Moving the
+   index byte ahead instead of the pointer kept the same eight-byte loss, so the
+   value moved early is the cell pointer.
 5. Confirm with live asm-diff. Register choice inside later groups can still
    differ; the dump explains which quantity moved.
 6. Count the original's groups before naming variables. Splitting groups one at a

@@ -111,8 +111,10 @@ segments:
     - asm
     - func_801EFF1C
   - - 5056
-    - asm
-    - func_801EFFC0
+    - c
+    - decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic01500_801EFFC0
+    - '@source: src/bof3/bmagic/decrementWorkCountdownThenSeedWorkTintFromByteBRefreshWorkFromRecordAndAdvanceWorkByte2BmagicMagic01500_801EFFC0.c'
+    - '@behavior: Entry 20 of the overlay handler table at 0x801EEC04, the word the table stores at 0x801EEC54: it reads the scratchpad work object through the pointer cell 0x1F800044, decrements the countdown byte 9 and stores it back, keeping the decremented value in a byte local so the truncation supplies the compared value, and returns while the new countdown is nonzero. When it reaches zero it raises bit 0x20 of work byte 0, sets mode byte 0x5C to 1, sets the signed tint triplet at 0x5D, 0x5E and 0x5F to -20 * (work byte 0xB + 1), clears work byte 0x2B, copies byte 0x27 of the shared battle work record read through 0x801EB4E0, advances work byte 2, the handler index, by one when the acting battler byte 0x80146374 is a party member (below three) and by two otherwise, and copies record words 0x34, 0x38 and 0x3C into the same work-object offsets. The cell is re-read before each store group because a store through the loaded pointer may alias it, except for that last three-word copy, which shares one cell load.'
   - - 5452
     - asm
     - func_801F014C

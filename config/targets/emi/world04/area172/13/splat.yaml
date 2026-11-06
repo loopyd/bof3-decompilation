@@ -151,8 +151,10 @@ segments:
     - asm
     - func_801F4760
   - - 7152
-    - asm
-    - func_801F47F0
+    - c
+    - advanceScratchWorkLevelTripleAndAccumulatorsAtColorMarkerWorld04Area17213_801F47F0
+    - '@source: src/bof3/world/advanceScratchWorkLevelTripleAndAccumulatorsAtColorMarkerWorld04Area17213_801F47F0.c'
+    - '@behavior: Adds the work record steps at 0x0C and 0x10 to its 0x34 and 0x38 accumulators, then advances each of the signed level bytes 0x5D-0x5F by 2 while it stays below -0x40; when the word at 0x5C carries the 0xC0C0C000 colour marker it clears flag bit 0x20 and zeroes the 0x5C marker byte, the level triple and handler byte 0x04, otherwise it consumes two units of the countdown halfword at 0x7E of the work record at 0x80146884. Takes no arguments and returns nothing; its 0x18-byte frame is reserved without a saved register or a stack access.'
   - - 7452
     - c
     - stepScratchWorkAccumulatorsByPhaseTableAndSnapWorld04Area17213_801F491C
