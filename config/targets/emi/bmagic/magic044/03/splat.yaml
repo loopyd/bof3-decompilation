@@ -72,8 +72,10 @@ segments:
     - '@source: src/bof3/bmagic/insertEmptyRecordAtWorkByteBAndShiftRowRecordsUpBmagicMagic04403_801F0390.c'
     - '@behavior: Shifts the 4-byte records of the pair table at 0x801F0A38 from row work[0x4] one record higher for indices work[0xB] through work[0xA] - 1 and then writes the 0xFFFF, 0xFFFF null sentinel into record work[0xB] after re-reading the scratchpad work-object pointer cell at 0x1F800044; takes no arguments, returns nothing and is a leaf with no frame.'
   - - 6264
-    - asm
-    - func_801F0478
+    - c
+    - dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic04403_801F0478
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawWhenActiveBmagicMagic04403_801F0478.c'
+    - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 and uses the work-object byte at offset 0x2, scaled by four, to select one entry of the three-entry handler table at 0x801F0A2C, which it calls with no arguments; then re-reads the pointer cell and, when the work-object byte at offset 0x0 and the byte at offset 0x2 are both non-zero, calls the overlay primitive routine func_801F06D8.'
   - - 6384
     - asm
     - func_801F04F0

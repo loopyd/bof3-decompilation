@@ -11,5 +11,6 @@ sources = []
 support_sources = [
     "src/bof3/support/magic130_03_psyq.c",
     "src/bof3/bmagic/magic13003DispatchTables.c",
+    "src/bof3/bmagic/seedWorkHalfwordsFromSlotStrideAndTableSetWord14To20Byte9To3CThenAdvanceWorkByte2BmagicMagic13003_801EF354.c",
 ]
 psyq_source = "src/bof3/support/magic130_03_psyq.c"

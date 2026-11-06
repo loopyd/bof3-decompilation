@@ -67,8 +67,9 @@ segments:
     - asm
     - func_801F3764
   - - 2972
-    - asm
-    - func_801F379C
+    - c
+    - findWorkPositionBoundsIndexWorld04Area17113_801F379C
+    - '@source: src/bof3/world/findWorkPositionBoundsIndexWorld04Area17113_801F379C.c'
   - - 3176
     - asm
     - func_801F3868

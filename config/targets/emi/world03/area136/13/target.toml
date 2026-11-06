@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/retreatCounter2By2World03Area13613_801F3148.c",
     "src/bof3/support/area136_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area136_13_psyq.c"

@@ -32,7 +32,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Saved copy moves to entry or commutative operands stay swapped | Trace [CSE lifetimes and commutative targets](#cse-lifetimes-and-commutative-targets) |
 | First mismatch stays at one entry-block offset through width, mask and cast probes | Reorder the loop-variable initializer statements (`i`, destination, source); declaration order does not move it. One measured order was exact, another moved the first mismatch later at a lower score |
 | Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler. One measured source is a narrowed `volatile` cell read into a wider index, where reading the cell through a non-volatile byte view drops the mask |
-| One byte of a named byte group, addressed by a constant subscript | `G[1]` computes the element address in its own register (`lui v1,%hi`, `addiu v1,v1,%lo+1`, then `lbu 0(v1)`), so the first difference is that base register, while the original folds `lui` plus `%lo(X)`. Declare that byte as its own scalar extern at its absolute address: the load folds and each store re-materializes `$at`, which cleared the residual on the next gate |
+| One byte of a named byte group, addressed by a constant subscript or by a stride the body computes | `G[1]` computes the element address in its own register (`lui v1,%hi`, `addiu v1,v1,%lo+1`, then `lbu 0(v1)`), so the first difference is that base register, while the original folds `lui` plus `%lo(X)`. Declare that byte as its own scalar extern at its absolute address: the load folds and each store re-materializes `$at`, which cleared the residual on the next gate. The split is per byte, not per subscript kind: byte fields of one table record walked with a runtime stride need one extern each for the same reason, since every load then folds its own `%hi`/`%lo` |
 | `lh` plus `lhu` replaces `lh` plus register copy | Trace [narrow load sharing](#narrow-load-sharing-and-real-value-reuse), known bits and later definitions |
 | Byte-cell load hoisted above the record's word stores, extra live registers | Split the record view by access width: [record views](#scratchpad-cells-and-record-views) |
 | Indirect call loads the selected pointer but the original fills frame slots with the whole table | Assign the named extern table to a local of its aggregate type, then index the local; indexing the extern indexes the table in place. When the original copies only a leading prefix of a longer pointer run, size that extern's type to the copied words: the aggregate assignment emits one word load and store per declared element and nothing past it, while a type covering the whole run copies the neighbours |
@@ -403,11 +403,14 @@ adjacent fields of one record are updated in a row.
 Byte cells take a `u8` accumulator instead:
 `countdown = (u8)(p[n] - 1); p[n] = countdown; if (countdown == 0)` is the form
 whose `sb` is followed by `andi 0xff` and `bnez` on that stored register, with no
-second load of the cell. The exact countdown handlers across these overlays all
-use it, so the truncation, not a reload, supplies the compared value. The test's
-signedness picks that extension: `if ((s8)countdown == 8)` on the same `u8`
-accumulator emits `sll`/`sra` of the stored register before the compare, so a test
-against a signed-looking channel value takes a cast at the test and leaves the
+second load of the cell. The exact countdown handlers across these overlays keep
+that shape, so the truncation, not a reload, supplies the compared value. The local
+itself is not load-bearing: `if (--p[n] == 0)` emits the same `lbu`, `addiu -1`,
+`sb`, `andi 0xff` and `bnez` on the stored register. Both spellings reached exact
+on that class, so take the one the sibling shows and spend no probe on the other.
+The test's signedness picks that extension: `if ((s8)countdown == 8)` on the same
+`u8` accumulator emits `sll`/`sra` of the stored register before the compare, so a
+test against a signed-looking channel value takes a cast at the test and leaves the
 accumulator `u8`. That cast carries the conversion only against a nonzero constant.
 A zero test is sign-agnostic, so `if ((s8)accumulator == 0)` folds back to the `u8`
 build and keeps the same one-instruction residual at unchanged size; declare the
@@ -682,6 +685,10 @@ the frame, and it takes no use, since a use would change liveness instead. The b
 constrain only that size, so the name and type are a reconstruction choice rather
 than recovered source: flag the declaration for review and record what removing it
 leaves, which is the frame and offset residual with the body otherwise matching.
+An empty body is that cause at its limit: original bytes of only a prologue,
+`jr $ra` and a `nop` still take one declared local of the frame's size, so a frame
+on a function that reads and writes no state is this lever, not a missing call or
+a wrong boundary.
 
 1. Bind before/after dumps to the source and unchanged compiler settings. Trace
    the address definition, its death note and surviving `USE` through combine,

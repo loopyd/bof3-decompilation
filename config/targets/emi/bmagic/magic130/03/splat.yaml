@@ -64,8 +64,9 @@ segments:
     - asm
     - func_801EF284
   - - 1876
-    - asm
-    - func_801EF354
+    - c
+    - seedWorkHalfwordsFromSlotStrideAndTableSetWord14To20Byte9To3CThenAdvanceWorkByte2BmagicMagic13003_801EF354
+    - '@source: src/bof3/bmagic/seedWorkHalfwordsFromSlotStrideAndTableSetWord14To20Byte9To3CThenAdvanceWorkByte2BmagicMagic13003_801EF354.c'
   - - 2012
     - asm
     - func_801EF3DC

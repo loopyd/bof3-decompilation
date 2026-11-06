@@ -49,8 +49,8 @@ segments:
     - asm
     - func_801F2E10
   - - 600
-    - asm
-    - func_801F2E58
+    - c
+    - clearWorkHalfwords2eAnd30ThenAdvanceStateByte1World03Area12513_801F2E58
   - - 636
     - asm
     - func_801F2E7C

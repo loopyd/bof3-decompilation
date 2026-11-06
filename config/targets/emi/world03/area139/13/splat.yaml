@@ -55,8 +55,9 @@ segments:
     - asm
     - func_801F36DC
   - - 3708
-    - asm
-    - func_801F3A7C
+    - c
+    - noopWorld03Area13913_801F3A7C
+    - '@source: src/bof3/world/noopWorld03Area13913_801F3A7C.c'
   - - 3724
     - c
     - dispatchStateByte2Table4448World03Area13913_801F3A8C
