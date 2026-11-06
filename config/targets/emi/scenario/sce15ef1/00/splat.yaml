@@ -84,8 +84,8 @@ segments:
     - asm
     - func_801D2088
   - - 5432
-    - asm
-    - func_801D2138
+    - c
+    - swapWords
   - - 5488
     - asm
     - func_801D2170

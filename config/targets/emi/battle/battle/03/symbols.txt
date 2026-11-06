@@ -289,6 +289,7 @@ dispatchLocalState4Table = 0x801E1298;
 func_801E12DC = 0x801E12DC;
 resetWorkWhenFlag2000Clear = 0x801E13B8;
 dispatchAltState3Table = 0x801E1450;
+advanceWorkCountdownAndSubmitPendingEffects = 0x801E1494;
 func_801E15CC = 0x801E15CC;
 dispatchState2ClassTable = 0x801E1670;
 initCastVoiceCountdownWhenTriggered = 0x801E16B4;

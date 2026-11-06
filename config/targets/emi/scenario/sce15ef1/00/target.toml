@@ -7,7 +7,9 @@ binary = "out/binaries/emi/scenario/sce15ef1/00.bin"
 splat = "config/targets/emi/scenario/sce15ef1/00/splat.yaml"
 load_address = 0x801D0C00
 
-sources = []
+sources = [
+    "src/bof3/scenario/swapWords.c",
+]
 support_sources = [
     "src/bof3/scenario/invokeHelperScenarioSce15ef100_801D369C.c",
     "src/bof3/scenario/invokeHelperScenarioSce15ef100_801D2B44.c",

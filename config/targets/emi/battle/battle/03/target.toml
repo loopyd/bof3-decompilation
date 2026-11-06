@@ -36,6 +36,7 @@ sources = [
     "src/bof3/battle/advanceStateWhenLoaderGated.c",
     "src/bof3/battle/advanceStateWhenLoaderReady.c",
     "src/bof3/battle/advanceUiRingCheck.c",
+    "src/bof3/battle/advanceWorkCountdownAndSubmitPendingEffects.c",
     "src/bof3/battle/applyEnemyCounterDeltaOrDeplete.c",
     "src/bof3/battle/applyGravityOrReset.c",
     "src/bof3/battle/applyModeOffsetPairToWork_battle03.c",

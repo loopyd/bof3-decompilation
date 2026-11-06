@@ -81,8 +81,11 @@ segments:
     - c
     - drawThreeCardRow
   - - 17460
+    - c
+    - dispatchStepHandler
+  - - 17520
     - asm
-    - func_801D5034
+    - func_801D5070
   - - 20176
     - asm
     - func_801D5AD0

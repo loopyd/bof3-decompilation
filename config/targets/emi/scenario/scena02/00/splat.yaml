@@ -273,8 +273,8 @@ segments:
     - c
     - zeroResultScenarioScena0200_801FD6F4
   - - 27388
-    - asm
-    - func_801FD6FC
+    - c
+    - clearSkillListEntriesAfterAbilityCheckScenarioScena0200_801FD6FC
   - - 27520
     - asm
     - func_801FD780

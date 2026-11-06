@@ -26,6 +26,7 @@ sources = [
     "src/bof3/ui/shopValuePanelPhaseStep.c",
     "src/bof3/ui/func_801D4DB4_shop00.c",
     "src/bof3/ui/func_801D5390.c",
+    "src/bof3/ui/drawShopValuePanelThenAcceptOrCancelSelection.c",
     "src/bof3/ui/func_801D6018.c",
     "src/bof3/ui/func_801D60B0.c",
     "src/bof3/ui/func_801D6184.c",

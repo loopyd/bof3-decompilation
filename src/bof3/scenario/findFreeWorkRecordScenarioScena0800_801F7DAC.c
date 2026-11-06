@@ -13,10 +13,11 @@
  * scheduled into that back edge's delay slot, the exhausted path materializes
  * zero in $v0, and a found record leaves the loop through the lead-byte branch
  * with its copy in that branch's delay slot. The lead byte is the claim flag:
- * the only caller in this payload, func_801F802C at 0x801F8038, tests the
- * returned pointer for zero and then writes 1 to byte 0 and 0 to byte 2 of that
- * record and fills its words at 0x04/0x08/0x0C from the scratch work object
- * published at pointer slot 0x1F800044 + 0x44.
+ * the only caller in this payload,
+ * claimFreeWorkRecordSeedWorkPositionAndAngleVectorScenarioScena0800_801F802C
+ * at 0x801F8038, tests the returned pointer for zero and then writes 1 to byte
+ * 0 and 0 to byte 2 of that record and fills its words at 0x04/0x08/0x0C from
+ * the scratch work object published at pointer slot 0x1F800044 + 0x44.
  * @status exact
  * @match 100.00
  * @residual none

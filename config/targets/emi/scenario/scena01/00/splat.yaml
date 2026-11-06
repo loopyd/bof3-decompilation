@@ -81,8 +81,8 @@ segments:
     - c
     - dispatchProgressHandlerScenarioScena0100_801F7FC4
   - - 5120
-    - asm
-    - func_801F8000
+    - c
+    - bootProgressStateScenarioScena0100_801F8000
   - - 5200
     - asm
     - func_801F8050

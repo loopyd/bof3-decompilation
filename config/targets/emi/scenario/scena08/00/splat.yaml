@@ -175,8 +175,10 @@ segments:
     - asm
     - func_801F7E14
   - - 5164
-    - asm
-    - func_801F802C
+    - c
+    - claimFreeWorkRecordSeedWorkPositionAndAngleVectorScenarioScena0800_801F802C
+    - '@source: src/bof3/scenario/claimFreeWorkRecordSeedWorkPositionAndAngleVectorScenarioScena0800_801F802C.c'
+    - '@behavior: Claims a free work record and seeds it from the scratch work object: the overlay-local scan at 0x801F7DAC returns the first of the 0x40 entries of the 0x28-byte-stride record table at 0x800E4800 whose lead byte reads zero, and when every entry is claimed the function returns without writing. Otherwise it stores 1 in the record''s claim byte 0, clears its byte 2, and copies the work object published at pointer slot 0x1F800044 into the record - word 0x04 from work word 0x34, word 0x08 from work word 0x38 and word 0x0C from work word 0x3C arithmetic-shifted right by 8. The work object''s word 0x0C then selects a direction: the shared rotation helper func_801782FC (sine on the 0x1000-per-turn unit) of it is taken as an unsigned value, shifted right by 4, masked to 16 bits and biased by 0x800 when the reloaded work object''s byte 6 reads 7, else by 0x400; that angle is handed to the cosine companion func_801783C8 and to func_801782FC, three times each result lands in record words 0x14 and 0x18 and word 0x1C is cleared. Takes no arguments, returns nothing, and the 0x20-byte frame keeps $ra plus $s1 for the record and $s0 for the biased angle.'
   - - 5384
     - asm
     - func_801F8108

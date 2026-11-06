@@ -2,7 +2,7 @@
 #include "bof3/core/slus_variables.h"
 
 extern u8* scenarioScena0800Work; /* @source 0x1F800044 @kind unknown */
-void func_801F802C(void);
+void claimFreeWorkRecordSeedWorkPositionAndAngleVectorScenarioScena0800_801F802C(void);
 u32 func_801F7E14(void);
 
 /* @source 0x801F6FC4
@@ -22,7 +22,7 @@ void tickCountdownByte9Advance12BitWorkWord0CAndStateScenarioScena0800_801F6FC4(
   u8 countdown;
 
   if ((D_80143E6C & 3) == 0) {
-    func_801F802C();
+    claimFreeWorkRecordSeedWorkPositionAndAngleVectorScenarioScena0800_801F802C();
   }
   func_801F7E14();
   work = scenarioScena0800Work;

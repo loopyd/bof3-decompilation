@@ -41,6 +41,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Call result stored inside the next call's delay slot | The original stores a `jal` result into its outgoing argument slot right after that call, before the next call's argument setup. Bind the result to a local; nesting the call in the later argument list moves that store into the following `jal` delay slot |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
 | Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests. The merge needs one loaded word: two non-zero tests on different byte fields of a record stay two loads, so keep that conjunction as written |
+| Both arms truncate the same value, then differ only in a constant, and the current build masks once before the branch | Repeat the truncation as its own statement inside each arm (`angle &= 0xFFFF;` then `angle += bias;`). One combined expression lets GCC share the mask across the arms and fill the branch delay slot, which came out two instructions short with identical memory events; the split arms keep a per-arm `andi` and the original's unfilled slot |
 | Three-term sum stays one instruction long, or the first divergence sits at a later term | Sweep the three associations `a + (b + c)`, `(a + b) + c`, `(b + c) + a` before touching guards, casts or truthiness spellings of that sum; the mirrored nesting stalled one instruction short with the divergence pushed to the last term, and the re-spellings measured neutral |
 | Boolean result misses the return register; extra return copy | Trace [boolean return expansion](#boolean-return-expansion) before allocation |
 | Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt. For displaced induction setup, inspect [explicit cursors](#explicit-cursors-and-signed-bounds) |
@@ -184,7 +185,10 @@ differs. Diagnose before changing statement order; keep compiler/flags fixed.
    when the original decrements a counter and branches on a signed below-zero
    result, write `(s16)field < 0` and leave a shared unsigned declaration alone,
    because an unsigned compare never reaches the wrap arm and a signed
-   re-declaration re-types every sibling handler.
+   re-declaration re-types every sibling handler. A latch that zero-extends the
+   counter with `andi` before an unsigned `sltiu` bound is the same placement. The
+   compare reads the counter's low byte, so keep the counter wide and write
+   `((u8)i < 10)` at the test.
 5. Confirm predicted setup, entry test and compare through `lift sweep`, then
    full function/readonly-byte gate and independent review. Freeze during review.
    Correct setup alone proves neither semantics nor exactness; this lever does
@@ -401,8 +405,12 @@ and written back: keep `cell = cell - 1` as the bare symbol expression, which fo
 read into `lui`+`lbu %lo` and re-materialises `$at` for the store, because a pointer
 local gives that read and store one shared base instead. A build that holds one base
 register across the run instead has a shared base or aggregate view the original
-lacked. Inside one block, stores keep source statement order, and a constant
-re-materialised into one register between stores shows where its statement starts.
+lacked. Read the store's base register to pick the spelling. A store that
+re-materialises `$at` wants the bare symbol expression, while a store through the
+base the load already left in a saved register wants one pointer local for both
+accesses, even when the load sits in a guard test and the store in its arm. Inside
+one block, stores keep source statement order, and a constant re-materialised into
+one register between stores shows where its statement starts.
 A run of stores to one pointer cell that parks a different record and restores the
 saved value is real state: keep every publish and restore as a store to the cell and
 re-read the cell after the restore, because holding the record in a local drops the run.

@@ -63,8 +63,8 @@ segments:
     - c
     - dispatchStateByte2Table07b0PlcharPlp56700_801CEC2C
   - - 2160
-    - asm
-    - func_801CEC70
+    - c
+    - dispatchStateByte3Table07b8PlcharPlp56700_801CEC70
   - - 2228
     - asm
     - func_801CECB4
