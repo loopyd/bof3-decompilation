@@ -59,8 +59,8 @@ segments:
     - asm
     - func_801F30E0
   - - 2464
-    - asm
-    - func_801F35A0
+    - c
+    - setFlag40UntilWorkByte9ExpiresThenClearSelectedRecordsWorld02Area08513_801F35A0
   - - 2740
     - asm
     - func_801F36B4

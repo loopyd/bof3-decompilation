@@ -10,5 +10,6 @@ load_address = 0x801EEC00
 sources = []
 support_sources = [
     "src/bof3/support/magic070_03_psyq.c",
+    "src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic07003_801F006C.c",
 ]
 psyq_source = "src/bof3/support/magic070_03_psyq.c"

@@ -14,6 +14,7 @@ support_sources = [
     "src/bof3/world/invokeHelperWithWorkWorld02Area08513_801F3BA4.c",
     "src/bof3/world/advanceWorkHalfwordWorld02Area08513_801F3BCC.c",
     "src/bof3/world/invokeTwoHelpersWorld02Area08513_801F2EB0.c",
+    "src/bof3/world/setFlag40UntilWorkByte9ExpiresThenClearSelectedRecordsWorld02Area08513_801F35A0.c",
     "src/bof3/world/invokeHelperArgWorld02Area08513_801F3C1C.c",
     "src/bof3/support/area085_13_psyq.c",
 ]

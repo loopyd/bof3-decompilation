@@ -39,6 +39,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Small block copy builds as per-word `lw`/`sw` or as a byte loop, original moves it with `lwl`/`lwr` plus `swl`/`swr` pairs | Give the moved bytes one byte-array struct and assign the whole block through it: an unaligned word-pair move is what GCC 2.7.2 emits for a block copy whose type has alignment 1, so a `u32` view of the same bytes stays on aligned loads |
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots), then name repeated scale products (#named-scale-products) |
 | Pointer read hoisted above a call, extra saved register, frame unchanged | Bind the call-derived scaled value to its own local before the pointer read; folding the mask/shift into the later address expression keeps the pointer live across the call |
+| Saved-register group differs at entry while one stack aggregate feeds repeated calls and some of its fields keep a literal | Assign every field at each update, including the fields whose value does not change. Each assignment is that field's definition, so a skipped field drops its literal's liveness, which moves the literal to a caller-saved register and removes its store (one measured partial 61/67 at 244 bytes, first difference at the entry group). Naming those literals as locals measured identical, so the lever is field coverage, not spelling |
 | Call result stored inside the next call's delay slot | The original stores a `jal` result into its outgoing argument slot right after that call, before the next call's argument setup. Bind the result to a local; nesting the call in the later argument list moves that store into the following `jal` delay slot |
 | A call result that also fills the stored cell builds the test one polarity off (`beqz` where the original `bnez`) and hoists the later store's constant above the first store | Bind the call result to that cell's own local, compare the local, and let both arm constants assign back to it (`s = wait(); if (s == 0) s = 0x0A; else s = 0x14;`). Testing the call inline in the `if` condition leaves the value in a register the call did not return it in. Arm order alone inverts a test without moving a constant, which separates the two causes. The same arm pair selected by an already-loaded byte instead of a call result needs no value local: read the byte into a local of the original's width, then write one conditional expression straight into the cell (`cell = (gate != 0) ? 0x14 : 0xA;`), which matched on the first gate because the load's value and the selected constant keep their own registers |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
@@ -272,10 +273,12 @@ Original-proven ordering remains explicit evidence. Where a store through the lo
 pointer already separates the reads, the plain spelling measured identical bytes on that
 same cell, so the qualifier is not what carries the reload there: a store through the
 pointer that cell just supplied may alias the cell, so every access on the plain named
-cell re-reads it and the per-access reload comes out unflagged. Pick a sibling's cell
-spelling by its handoff pattern - consecutive stores that no call separates take the
-volatile cell, a reload per store group takes the plain one - and leave a cell that
-already has exact siblings on both counts alone.
+cell re-reads it and the per-access reload comes out unflagged. That alias covers any
+pointer cell, not only the scratchpad one: exact bodies reload an in-image cell before
+each byte store of a clear run, with every access on the plain named cell and no
+pointer local. Pick a sibling's cell spelling by its handoff pattern - consecutive
+stores that no call separates take the volatile cell, a reload per store group takes
+the plain one - and leave a cell that already has exact siblings on both counts alone.
 
 Signedness belongs to the use site, not the cell: read it off that site's load. One
 byte cell can need `*(s8*)&cell` where the original emits `lb` in a branch test and an

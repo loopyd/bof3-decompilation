@@ -69,8 +69,10 @@ segments:
     - asm
     - func_801EF4E0
   - - 2736
-    - asm
-    - func_801EF6B0
+    - c
+    - resetSlotCursorThenClearSlotStatesBmagicMagic15003_801EF6B0
+    - '@source: src/bof3/bmagic/resetSlotCursorThenClearSlotStatesBmagicMagic15003_801EF6B0.c'
+    - '@behavior: Publishes the eight-slot table base 0x801EFAB4 into the cursor cell 0x801EFAF4, then walks the eight 8-byte slots with an unsigned byte counter in a bottom-tested loop, clearing each slot leading state halfword and publishing the advanced cursor back into the cell after every slot; no arguments, no frame, no call, returns nothing.'
   - - 2808
     - asm
     - func_801EF6F8

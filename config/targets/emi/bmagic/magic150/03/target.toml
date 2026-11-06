@@ -10,5 +10,6 @@ load_address = 0x801EEC00
 sources = []
 support_sources = [
     "src/bof3/support/magic150_03_psyq.c",
+    "src/bof3/bmagic/resetSlotCursorThenClearSlotStatesBmagicMagic15003_801EF6B0.c",
 ]
 psyq_source = "src/bof3/support/magic150_03_psyq.c"

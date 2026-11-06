@@ -12,6 +12,7 @@ support_sources = [
     "src/bof3/world/noopHandlerWorld01Area05613_801F3464.c",
     "src/bof3/world/clearWorldFlagAndWorkByte4World01Area05613_801F3440.c",
     "src/bof3/world/area05613_gate_status.c",
+    "src/bof3/world/dispatchWorkByte4Table3898World01Area05613_801F3284.c",
     "src/bof3/support/area056_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area056_13_psyq.c"

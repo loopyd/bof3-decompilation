@@ -66,8 +66,9 @@ segments:
     - asm
     - func_801D1690
   - - 3348
-    - asm
-    - func_801D1914
+    - c
+    - drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914
+    - '@source: src/bof3/scenario/drawZigzagOfFiveProjectedSegmentsScenarioSce15ef000_801D1914.c'
   - - 3616
     - asm
     - func_801D1A20

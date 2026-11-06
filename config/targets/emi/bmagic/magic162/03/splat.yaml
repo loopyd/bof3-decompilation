@@ -78,8 +78,9 @@ segments:
     - asm
     - func_801EFFFC
   - - 5224
-    - asm
-    - func_801F0068
+    - c
+    - clearRecordBytes0Through4BmagicMagic16203_801F0068
+    - '@source: src/bof3/bmagic/clearRecordBytes0Through4BmagicMagic16203_801F0068.c'
   - - 5304
     - textbin
     - D_801F00B8
