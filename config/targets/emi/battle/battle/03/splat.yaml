@@ -141,8 +141,10 @@ segments:
     - c
     - dispatchStateTableAd00
   - - 25120
-    - asm
-    - func_801D6E20
+    - c
+    - initBattleUiAndQueueFixedCue
+    - '@source: src/bof3/battle/initBattleUiAndQueueFixedCue.c'
+    - '@behavior: Resets the front-end selection effect while the 0x80146325 bit-0x40 gate is clear, initializes the battle UI bundle slot 0, queues the fixed event cue 0x11 into dispatch slot 0 with mode 2, and then advances the battle state byte 0x801462E2.'
   - - 25260
     - c
     - advanceStateWhenLoaderReady

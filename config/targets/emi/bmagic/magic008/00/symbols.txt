@@ -19,7 +19,7 @@ clearRecordFlag40AndInvokeHelperWhenWorkByteBIsFFThenAdvanceWorkByte1BmagicMagic
 raiseFlag4AndInvokeHelperBmagicMagic00800_801EFA40 = 0x801EFA40;
 dispatchWorkByte1HandlerBmagicMagic00800_801EFA74 = 0x801EFA74;
 func_801EFAD4 = 0x801EFAD4;
-func_801EFC90 = 0x801EFC90;
+clearRecordFlag40AndInvokeHelperWhenWorkByteBIsFFThenAdvanceWorkByte1BmagicMagic00800_801EFC90 = 0x801EFC90;
 raiseFlag4AndInvokeHelperBmagicMagic00800_801EFCFC = 0x801EFCFC;
 dispatchWorkByte1HandlerBmagicMagic00800_801EFD30 = 0x801EFD30;
 func_801EFD90 = 0x801EFD90;

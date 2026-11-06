@@ -7,7 +7,9 @@ binary = "out/binaries/emi/bmagic/magic008/00.bin"
 splat = "config/targets/emi/bmagic/magic008/00/splat.yaml"
 load_address = 0x801EEC00
 
-sources = []
+sources = [
+    "src/bof3/bmagic/clearRecordFlag40AndInvokeHelperWhenWorkByteBIsFFThenAdvanceWorkByte1BmagicMagic00800_801EFC90.c",
+]
 support_sources = [
     "src/bof3/bmagic/clearRecordFlag40AndInvokeHelperWhenWorkByteBIsFFThenAdvanceWorkByte1BmagicMagic00800_801EF9D4.c",
     "src/bof3/bmagic/advanceWorkByte2WhenHelperReadyBmagicMagic00800_801F117C.c",

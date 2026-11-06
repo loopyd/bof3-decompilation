@@ -24,5 +24,6 @@ support_sources = [
     "src/bof3/world/loadWorkHalfwordsFromTable63a0World02Area10814_801F4998.c",
     "src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld02Area10814_801F4320.c",
     "src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld02Area10814_801F4360.c",
+    "src/bof3/world/addWorkDeltasAndExpireCountdownWorld02Area10814_801F3198.c",
 ]
 psyq_source = "src/bof3/support/area108_14_psyq.c"

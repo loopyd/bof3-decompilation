@@ -27,6 +27,7 @@ support_sources = [
     "src/bof3/world/dispatchState03World03Area12114_801F36A4.c",
     "src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld03Area12114_801F35D0.c",
     "src/bof3/world/advanceWord6cBy14AndSetState1WhenByte9ExpiresWorld03Area12114_801F5FF8.c",
+    "src/bof3/world/copySharedWordsToWork34383cThenDrawAndAdvanceState1WhenByte0aExpiresWorld03Area12114_801F6068.c",
     "src/bof3/support/area121_14_psyq.c",
 ]
 psyq_source = "src/bof3/support/area121_14_psyq.c"

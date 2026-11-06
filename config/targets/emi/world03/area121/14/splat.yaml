@@ -230,8 +230,9 @@ segments:
     - advanceWord6cBy14AndSetState1WhenByte9ExpiresWorld03Area12114_801F5FF8
     - '@source: src/bof3/world/advanceWord6cBy14AndSetState1WhenByte9ExpiresWorld03Area12114_801F5FF8.c'
   - - 13416
-    - asm
-    - func_801F6068
+    - c
+    - copySharedWordsToWork34383cThenDrawAndAdvanceState1WhenByte0aExpiresWorld03Area12114_801F6068
+    - '@source: src/bof3/world/copySharedWordsToWork34383cThenDrawAndAdvanceState1WhenByte0aExpiresWorld03Area12114_801F6068.c'
   - - 13556
     - asm
     - func_801F60F4

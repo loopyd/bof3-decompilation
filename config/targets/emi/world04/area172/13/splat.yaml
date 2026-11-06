@@ -161,8 +161,10 @@ segments:
     - '@source: src/bof3/world/armScratchWorkLevelTripleWorld04Area17213_801F4AAC.c'
     - '@behavior: Sets flag bit 0x20 of the scratch work record byte 0, writes 1 into its 0x5C marker byte, and writes -0x40 into the signed level bytes 0x5D-0x5F.'
   - - 7924
-    - asm
-    - func_801F4AF4
+    - c
+    - disarmScratchWorkLevelTripleWorld04Area17213_801F4AF4
+    - '@source: src/bof3/world/disarmScratchWorkLevelTripleWorld04Area17213_801F4AF4.c'
+    - '@behavior: Clears flag bit 0x20 of the scratch work record byte 0, writes 0 into its 0x5C marker byte, and zeroes the signed level bytes 0x5D-0x5F.'
   - - 7996
     - asm
     - func_801F4B3C

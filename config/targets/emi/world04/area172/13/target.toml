@@ -19,5 +19,6 @@ support_sources = [
     "src/bof3/world/queueSharedUiElement9x3Size50World04Area17213_801F4D58.c",
     "src/bof3/support/area172_13_psyq.c",
     "src/bof3/world/armScratchWorkLevelTripleWorld04Area17213_801F4AAC.c",
+    "src/bof3/world/disarmScratchWorkLevelTripleWorld04Area17213_801F4AF4.c",
 ]
 psyq_source = "src/bof3/support/area172_13_psyq.c"

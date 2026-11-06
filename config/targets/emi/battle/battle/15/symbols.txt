@@ -144,6 +144,7 @@ func_800A0A04 = 0x800A0A04;
 setFlag2000StoreDecrementedSlotCounter = 0x800A0A40;
 func_800A0BF4 = 0x800A0BF4;
 func_800A0C44 = 0x800A0C44;
+storeScaledAttackMinusSelectedHalfwordClampZero = 0x800A0D64;
 func_800A0E68 = 0x800A0E68;
 runSelectionPassThenSetSelectedRecordFlag8000 = 0x800A1414;
 runSelectionPassThenSetSelectedRecordFlag100 = 0x800A1704;

@@ -76,8 +76,10 @@ segments:
     - asm
     - func_801EFA28
   - - 3812
-    - asm
-    - func_801EFAE4
+    - c
+    - advanceWorkByte2ByPartyOrEnemyStepThenCopyRecordByte27SeedByte2BAndCopyRecordTripletBmagicMagic01500_801EFAE4
+    - '@source: src/bof3/bmagic/advanceWorkByte2ByPartyOrEnemyStepThenCopyRecordByte27SeedByte2BAndCopyRecordTripletBmagicMagic01500_801EFAE4.c'
+    - '@behavior: Entry 12 of the overlay handler table at 0x801EEC04, the word stored at 0x801EEC34: it advances work byte 2, the handler index, by one when the acting battler byte 0x80146374 is a party member (below three) and by two otherwise, storing the new value once after the branch with each arm re-materializing the scratchpad work pointer cell 0x1F800044, then refreshes the work object from the shared battle work record read through 0x801EB4E0 by copying byte 0x27, setting byte 0x2B to 1 and copying the words at 0x34, 0x38 and 0x3C. The cell is re-read before each store group because a store through the loaded pointer may alias it.'
   - - 3984
     - asm
     - func_801EFB90

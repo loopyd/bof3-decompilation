@@ -58,8 +58,10 @@ segments:
     - asm
     - func_801F30FC
   - - 1432
-    - asm
-    - func_801F3198
+    - c
+    - addWorkDeltasAndExpireCountdownWorld02Area10814_801F3198
+    - '@source: src/bof3/world/addWorkDeltasAndExpireCountdownWorld02Area10814_801F3198.c'
+    - '@behavior: adds the delta words at +0x14, +0x18 and +0x1C of the work record published at pointer cell 0x801F63EC into its position words at +0x04, +0x08 and +0x0C, decrements its countdown bytes at +0x03 and +0x02, and clears the record active byte at +0x00 when the +0x02 countdown reaches zero.'
   - - 1564
     - asm
     - func_801F321C

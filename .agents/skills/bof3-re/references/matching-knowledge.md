@@ -215,6 +215,12 @@ already decided: five byte-exact sources declare it `u8* volatile`, so when the 
 keeps consecutive handoff stores that no call separates, declare that cell volatile rather
 than inventing a barrier. Cite the siblings when you do, and leave any other cell alone. Original-proven ordering remains explicit evidence.
 
+Signedness belongs to the use site, not the cell: read it off that site's load. One
+byte cell can need `*(s8*)&cell` where the original emits `lb` in a branch test and an
+unsigned read where another function emits `lbu` on the same address, so a shared
+header's `u8` scalar fixes the address without proving the signedness. Declare the
+signed view locally at the use that shows `lb`.
+
 Unaligned fields/padding/SDK stack types follow type-application reference. For
 pooled member addresses, compare direct access through the existing member with
 an initialized pointer local serving one operation. Direct member access can retain

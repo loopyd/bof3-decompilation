@@ -1341,8 +1341,13 @@ extern u8 D_80144FC1;
 
 /* Main-RAM level byte formatted as the two digits of the `Lv.` field of the
  * same header row by func_801D7080, which loads it once per digit with `lbu` and
- * splits each load into tens and units. Not owned by the shared map, so this
- * target declares it locally and adds a target-map row.
+ * splits each load into tens and units. It is the +6 byte of the first 164-byte
+ * field record of D_80144968; the phase step
+ * drawShopSlotListThenChargeOnConfirm charges 10 per level of a record and
+ * reaches that byte through the owning table (D_80144968[record_offset + 6]),
+ * because the original folds the offset into the same `%lo` immediate. Not
+ * owned by the shared map, so this target declares it locally and adds a
+ * target-map row.
  * @source 0x8014496E @kind unknown */
 extern u8 D_8014496E;
 

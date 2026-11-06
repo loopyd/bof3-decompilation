@@ -751,8 +751,10 @@ segments:
     - asm
     - func_800A0C68
   - - 42340
-    - asm
-    - func_800A0D64
+    - c
+    - storeScaledAttackMinusSelectedHalfwordClampZero
+    - '@source: src/bof3/battle/storeScaledAttackMinusSelectedHalfwordClampZero.c'
+    - '@behavior: Stores the func_800A2880 scaling of the 0x14-row table byte for the active battler byte and base byte with element flag 0 into selection record halfword +0x04, subtracts the selected battler''s 0x140-stride party or 0x118-stride enemy work-record halfword, then clamps the stored halfword to zero when negative.'
   - - 42600
     - c
     - func_800A0E68
