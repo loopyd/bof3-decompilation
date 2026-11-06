@@ -31,7 +31,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Fixed-address constant steals entry copy | Named extern binding can prevent constant-address CSE; verify entire register web. A fixed-address scalar read and written back later steals it too: bare `g += 1` splits the symbol into `lui` plus displacement at each access, while one pointer local to it (`p = &g; *p = *p + 1;`) keeps the original's single base and clears that entry-block difference with it |
 | Saved copy moves to entry or commutative operands stay swapped | Trace [CSE lifetimes and commutative targets](#cse-lifetimes-and-commutative-targets) |
 | First mismatch stays at one entry-block offset through width, mask and cast probes | Reorder the loop-variable initializer statements (`i`, destination, source); declaration order does not move it. One measured order was exact, another moved the first mismatch later at a lower score |
-| Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler. One measured source is a narrowed `volatile` cell read into a wider index, where reading the cell through a non-volatile byte view drops the mask |
+| Extra sign extension or `andi` | Prove signedness/width/necessary mask; do not guess from decompiler. One measured source is a narrowed `volatile` cell read into a wider index, where reading the cell through a non-volatile byte view drops the mask. A redundant `andi 0xFF` on a byte the original's own load already zero-extended is a widening conversion written at the use, so cast there, and keep such a byte-validity guard as its two tests (`!((u32)mode < 2u || mode == 2)`) because folding them into `mode <= 2` emits one compare where the original has `sltiu` plus `addiu`/`bne` |
 | One byte of a named byte group, addressed by a constant subscript or by a stride the body computes | `G[1]` computes the element address in its own register (`lui v1,%hi`, `addiu v1,v1,%lo+1`, then `lbu 0(v1)`), so the first difference is that base register, while the original folds `lui` plus `%lo(X)`. Declare that byte as its own scalar extern at its absolute address: the load folds and each store re-materializes `$at`, which cleared the residual on the next gate. The split is per byte, not per subscript kind: byte fields of one table record walked with a runtime stride need one extern each for the same reason, since every load then folds its own `%hi`/`%lo` |
 | `lh` plus `lhu` replaces `lh` plus register copy | Trace [narrow load sharing](#narrow-load-sharing-and-real-value-reuse), known bits and later definitions |
 | Byte-cell load hoisted above the record's word stores, extra live registers | Split the record view by access width: [record views](#scratchpad-cells-and-record-views) |
@@ -94,7 +94,14 @@ constant above the test and fills the branch delay slot with `sw $ra`, three
 instructions short of the original. A signed pair such as `-1` and `0` fails one step
 worse: selecting it into a local drops the branch for a compare-and-negate, so the
 duplicated call is the spelling that keeps it. Early returns versus initialized
-result changes `$v0` lifetime. When the guard wraps calls and stores and each side
+result changes `$v0` lifetime. Two constants that share no high half still
+cross-jump, so per-arm stores do not save that select: every function-level
+spelling, counting a result local, a conditional expression written into the cell, a
+store in each arm and either polarity, came out short of the original.
+Nesting the select inside the positive guard block that carries the function's own
+`return 1` splits the arms again; in that block the arm order is the last variable,
+since the correct order leaves the branch delay slot unfilled and the mirrored
+nesting stays short at the same size. When the guard wraps calls and stores and each side
 ends in a different constant return or constant store, put the work inside the `if`
 with the constant arm after the block: the work arm goes out of line behind `beq` while
 `j <epilogue>` keeps `move $v0,$zero` in its delay slot. Read the arm order off the

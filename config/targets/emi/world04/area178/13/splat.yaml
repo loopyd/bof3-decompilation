@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801F3348
   - - 1912
-    - asm
-    - func_801F3378
+    - c
+    - selectAreaStateForMatchedArgumentsWorld04Area17813_801F3378
+    - '@source: src/bof3/world/selectAreaStateForMatchedArgumentsWorld04Area17813_801F3378.c'
+    - '@behavior: Overlay request gate that selects the shared area state byte 0x801448EB: it returns 0 unless the two zero-extended halfword arguments read 0x3F and 0x0E (each truncated with `andi 0xFFFF`, so both are u16) and the leading byte of the main-RAM game-mode record 0x80145E98 reads 1. On a match it stores 6 while the signed scenario byte 0x80146870 is below 8 and 0x1A otherwise, then returns 1. In the original the 0x1A `addiu` rides in the `j` delay slot, the below-8 arm is out of line and the `bnez` delay slot stays `nop`; every failing guard answers through the shared `jr $ra` with `addu $v0,$zero,$zero` in its branch delay slot. No calls and no frame.'
   - - 2020
     - asm
     - func_801F33E4

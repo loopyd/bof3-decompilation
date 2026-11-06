@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801F3348
   - - 1912
-    - asm
-    - func_801F3378
+    - c
+    - selectAreaStateForMatchedArgumentsWorld04Area17613_801F3378
+    - '@source: src/bof3/world/selectAreaStateForMatchedArgumentsWorld04Area17613_801F3378.c'
+    - '@behavior: selects the shared area state entry 0x801448EB from the signed scenario byte 0x80146870, returning 0 unless both halfword arguments read 0x3F and 0x0E and the leading byte of the main-RAM game-mode record 0x80145E98 reads 1, and on a match storing 6 when the scenario byte is below 8 and 0x1A otherwise before returning 1.'
   - - 2020
     - asm
     - func_801F33E4

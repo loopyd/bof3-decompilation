@@ -30,8 +30,10 @@ segments:
     - asm
     - func_801F2C04
   - - 152
-    - asm
-    - func_801F2C98
+    - c
+    - startStateEntry0DProgress0WhenMapRangeAndModeGateWorld02Area09713_801F2C98
+    - '@source: src/bof3/world/startStateEntry0DProgress0WhenMapRangeAndModeGateWorld02Area09713_801F2C98.c'
+    - '@behavior: Overlay gate that starts the shared state entry 0xD at progress 0: it rejects a second argument above 0x3A0000, a first argument whose high half is outside 0x30..0x32, a record-0 mode byte D_80145E98 outside 0..2 and a nonzero shared selector func_80166140(5), and on pass stores 1 into the mode flag D_80146867, 0xD into the shared state entry D_801448EB and 0 into the progress byte D_801448EC before returning 1; every rejected path returns 0.'
   - - 296
     - asm
     - func_801F2D28

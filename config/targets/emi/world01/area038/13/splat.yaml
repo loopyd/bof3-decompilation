@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801F2C94
   - - 608
-    - asm
-    - func_801F2E60
+    - c
+    - publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area03813_801F2E60
+    - '@source: src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area03813_801F2E60.c'
+    - '@behavior: while the shared selector byte 0x80144F5C reads zero, publishes work base 0x80146110 as the scratchpad cursor at 0x1F800044 and seeds front-end record kind 3 for the index the allocator returns in work byte 0x0B, with word +0x10 from the byte table 0x801F302C and halfwords +0x2E/+0x30 copied from that work base.'
   - - 1068
     - textbin
     - D_801F302C

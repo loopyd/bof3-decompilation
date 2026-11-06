@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801F3348
   - - 1912
-    - asm
-    - func_801F3378
+    - c
+    - selectAreaStateForMatchedArgumentsWorld04Area18113_801F3378
+    - '@source: src/bof3/world/selectAreaStateForMatchedArgumentsWorld04Area18113_801F3378.c'
+    - '@behavior: Selects the shared state-entry byte 0x801448EB from the signed scenario-state byte 0x80146870 once the overlay request matches: it returns 0 unless the first two zero-extended u16 arguments read 0x3F and 0xE and the leading byte of the main-RAM game-mode record 0x80145E98 reads 1, and on a match it stores 6 when the scenario-state byte is below 8 and 0x1A otherwise before returning 1.'
   - - 2020
     - asm
     - func_801F33E4

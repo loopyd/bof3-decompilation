@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801F2CE4
   - - 340
-    - asm
-    - func_801F2D54
+    - c
+    - clearWorkAnimBit0ClearScratchWorkByte0World00Area03513_801F2D54
+    - '@source: src/bof3/world/clearWorkAnimBit0ClearScratchWorkByte0World00Area03513_801F2D54.c'
+    - '@behavior: Clears bit 0 of the byte at offset 0x74 of the work record published at 0x80146884, then clears byte 0 of the scratchpad work record published at the pointer cell 0x1F800044.'
   - - 384
     - textbin
     - D_801F2D80

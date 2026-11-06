@@ -30,8 +30,10 @@ segments:
     - asm
     - func_801F2C04
   - - 44
-    - asm
-    - func_801F2C2C
+    - c
+    - retreatChannel932cByA00World00Area01913_801F2C2C
+    - '@source: src/bof3/world/retreatChannel932cByA00World00Area01913_801F2C2C.c'
+    - '@behavior: Reads the shared 16-bit channel at 0x8014932C, publishes mode 2 at the shared status byte 0x80149333 and writes the channel back retreated by 0xA00; the adjacent 0x801F2C04 twin adds it.'
   - - 84
     - c
     - invokeHelperArgWorld00Area01913_801F2C54
