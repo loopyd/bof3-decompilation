@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801F2C78
   - - 168
-    - asm
-    - func_801F2CA8
+    - c
+    - setStatus44AndModeIndex6IfGateElseFFFFWorld00Area00313_801F2CA8
+    - '@source: src/bof3/world/setStatus44AndModeIndex6IfGateElseFFFFWorld00Area00313_801F2CA8.c'
+    - '@behavior: Loads the shared gate byte D_801490C7 and, while that byte is nonzero, stores 0x44 into the shared status halfword D_801490A8 and 6 into the shared mode byte at 0x801D4285; when the gate byte is zero it stores 0xFFFF into D_801490A8 instead and touches nothing else.'
   - - 236
     - asm
     - func_801F2CEC

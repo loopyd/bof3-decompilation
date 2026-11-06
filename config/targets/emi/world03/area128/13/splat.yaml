@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801F2FD8
   - - 1072
-    - asm
-    - func_801F3030
+    - c
+    - seedWorkPositionSelectingYByWorkByte79ThenSetFacingByte8World03Area12813_801F3030
+    - '@source: src/bof3/world/seedWorkPositionSelectingYByWorkByte79ThenSetFacingByte8World03Area12813_801F3030.c'
+    - '@behavior: Seeds the scratch work record published at pointer cell 0x1F800044: word +0x34 takes 0x4E8000, word +0x3C is cleared, word +0x38 takes 0x88000 when byte +0x79 of the record published through 0x80146250 equals 2 and 0x80000 otherwise, and the reloaded cell receives 1 at byte +0x08.'
   - - 1148
     - asm
     - func_801F307C

@@ -53,8 +53,10 @@ segments:
     - dispatchStateByte2Table35b0World04Area16513_801F3418
     - '@source: src/bof3/world/area16513DispatchTables.c'
   - - 2140
-    - asm
-    - func_801F345C
+    - c
+    - loadWorkStepRowResetWorkFieldsAndAdvanceState2World04Area16513_801F345C
+    - '@source: src/bof3/world/loadWorkStepRowResetWorkFieldsAndAdvanceState2World04Area16513_801F345C.c'
+    - '@behavior: copies the two-byte row of the work step row table at 0x801F35C0 selected by the scratch work record halfword +0x36 into that halfword and into halfword +0x3A, sets halfwords +0x3E to -0x80 and +0x30 to 0x100, sets byte +0x08 from the halfword +0x3A zero test and advances the state byte +0x02.'
   - - 2248
     - asm
     - func_801F34C8

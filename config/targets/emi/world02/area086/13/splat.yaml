@@ -49,8 +49,10 @@ segments:
     - asm
     - func_801F3350
   - - 2296
-    - asm
-    - func_801F34F8
+    - c
+    - findWorkRecordIndexAtPositionWorld02Area08613_801F34F8
+    - '@source: src/bof3/world/findWorkRecordIndexAtPositionWorld02Area08613_801F34F8.c'
+    - '@behavior: Scans the byte record count at 0x80146254 entries of the 0x140-byte-stride local work table based at 0x80145E90 and returns the index of the first live record whose position box holds the point the two arguments describe: a live record multiplies its +0xC and +0x10 words by its +9 scale byte, adds the products to its +0x34 and +0x38 words, and matches when both sums are within (radius byte +0x70 + 2) << 15 of the two arguments shifted to 16.16; returns -1 when the count is zero or no record matches.'
   - - 2564
     - asm
     - func_801F3604

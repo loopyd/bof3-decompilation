@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801D0D4C
   - - 820
-    - asm
-    - func_801D0F34
+    - c
+    - advanceFairyProgressCommu0507_801D0F34
+    - '@source: src/bof3/ui/advanceFairyProgressCommu0507_801D0F34.c'
+    - '@behavior: Advances the shared fairy progress byte at 0x801448EC by one through the array base; word 2 of this overlay''s run at 0x801D1950.'
   - - 848
     - asm
     - func_801D0F50

@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/world/noopHandlerWorld02Area07813_801F2C70.c",
     "src/bof3/world/noopHandlerWorld02Area07813_801F2C68.c",
+    "src/bof3/world/setStatusFFFFAndScenarioProgress2BOr2CByGateWorld02Area07813_801F2CB8.c",
     "src/bof3/support/area078_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area078_13_psyq.c"

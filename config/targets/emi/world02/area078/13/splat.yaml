@@ -39,8 +39,8 @@ segments:
     - asm
     - func_801F2C78
   - - 184
-    - asm
-    - func_801F2CB8
+    - c
+    - setStatusFFFFAndScenarioProgress2BOr2CByGateWorld02Area07813_801F2CB8
   - - 248
     - asm
     - func_801F2CF8

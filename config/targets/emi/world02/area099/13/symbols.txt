@@ -1,7 +1,7 @@
 func_801F2C40 = 0x801F2C40;
 dispatchWorkByte4Table4988World02Area09913_801F2D68 = 0x801F2D68;
 func_801F2DAC = 0x801F2DAC;
-func_801F2DEC = 0x801F2DEC;
+stepWorkAccumulatorByPhaseTableConsumeCountdownThenClearHandlerByteWorld02Area09913_801F2DEC = 0x801F2DEC;
 func_801F2E58 = 0x801F2E58;
 func_801F2E9C = 0x801F2E9C;
 func_801F2FD4 = 0x801F2FD4;

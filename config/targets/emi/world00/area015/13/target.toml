@@ -13,6 +13,7 @@ support_sources = [
     "src/bof3/world/setWorld00Area01513_801F2CF8.c",
     "src/bof3/world/retreatCounter2By20World00Area01513_801F2D0C.c",
     "src/bof3/world/advanceCounter2By20World00Area01513_801F2D34.c",
+    "src/bof3/world/setStatusFFFFAndScenarioProgress64Or65ByGateWorld00Area01513_801F2CB8.c",
     "src/bof3/support/area015_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area015_13_psyq.c"

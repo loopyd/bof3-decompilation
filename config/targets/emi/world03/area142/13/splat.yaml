@@ -30,8 +30,10 @@ segments:
     - asm
     - func_801F2C04
   - - 96
-    - asm
-    - func_801F2C60
+    - c
+    - clearWorkByte9AndAdvanceWorkByte2World03Area14213_801F2C60
+    - '@source: src/bof3/world/clearWorkByte9AndAdvanceWorkByte2World03Area14213_801F2C60.c'
+    - '@behavior: Clears the scratchpad work-object byte at offset 0x09 with a zero byte store and then increments the work-object byte at offset 0x02 by one. The pointer cell at 0x1F800044 is read once per access, so the original re-materializes the cell address and reloads the work pointer for each of the two accesses: the zero byte is stored through the first load and the incremented byte through the second. The function takes no arguments and returns nothing.'
   - - 144
     - asm
     - func_801F2C90

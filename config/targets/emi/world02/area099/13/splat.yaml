@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801F2DAC
   - - 492
-    - asm
-    - func_801F2DEC
+    - c
+    - stepWorkAccumulatorByPhaseTableConsumeCountdownThenClearHandlerByteWorld02Area09913_801F2DEC
+    - '@source: src/bof3/world/stepWorkAccumulatorByPhaseTableConsumeCountdownThenClearHandlerByteWorld02Area09913_801F2DEC.c'
+    - '@behavior: Steps the work record published through the scratchpad pointer cell at 0x1F800044 by one entry of the signed 16-entry phase table at 0x801F4990: it subtracts the entry selected by the low nibble of the record phase byte at 0x0A, scaled by 0x800, from the word at 0x38, decrements that phase byte, and consumes two units of the halfword at 0x7E of the record published through 0x80146884; once the phase byte reads zero it instead clears the handler byte at 0x04.'
   - - 600
     - asm
     - func_801F2E58

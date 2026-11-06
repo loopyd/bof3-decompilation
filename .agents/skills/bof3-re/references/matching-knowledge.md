@@ -57,6 +57,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Load uses wrong argument register | Verify callee argument consumption and caller setup before allocator probes |
 | Original stores the same constant to one cell twice | Write both stores in the original order. The repeat is real bytes: one store leaves the build short and puts the first difference in that cell's block |
 | Missing read after a store or an intervening call | Recheck pointer reloads, source qualification and aliasing against original instructions. A call that writes shared state, a formatter writing a shared buffer for instance, does not license holding one loaded cell in a local across it: two loads in the original are two accesses, so write the later use through the same address again. A store through a pointer loaded from a second symbol is the harder case: one symbol read twice stays live across it because GCC proves the two objects distinct, so give one of the two reads an indirect form of that same address, a fixed-address dereference or accessor. Either read may carry it, since what forces the reload is that the pair differ; casting the storing record or spelling its base as a `u32` measured neutral |
+| Second read of one byte missing with no store between the two | That pair needs a volatile pointee on the pointer reaching the byte, keeping the record's word fields on plain typed views; see [representation](#representation-and-volatility) |
 | Saved-register pair exchanged | Trace real value deaths, later reuse and merged allocator quantities |
 | Guard load/test displaced around a product/store chain | Trace [guard scheduling and value reuse](#guard-scheduling-and-value-reuse) before changing arithmetic |
 
@@ -81,7 +82,11 @@ alone is not new evidence.
 Branch calls `if (cond) f(x+A); else f(x+B);` can merge into one `jal` where ternary
 argument does not. The same holds for identical argument lists: writing the call in
 both arms can produce the single original call site through cross-jumping, and it
-keeps the per-arm argument setup the original shows. Do not route that argument
+keeps the per-arm argument setup the original shows. Arm stores merge the same way:
+two stores into one cell whose constants share a high half cross-jump into the one
+join store with that half's `lui` filling the branch delay slot, so keep the store in
+each arm rather than selecting into a result local, which holds the value in a
+general register and one more register live. Do not route that argument
 through one shared constant local: with one call it hoists the fall-through arm's
 constant above the test and fills the branch delay slot with `sw $ra`, three
 instructions short of the original. Early returns versus initialized
@@ -266,7 +271,13 @@ Preserve the unresolved result; opt-in work remains untried, not exhausted.
 
 Volatile store cannot move into jump delay slot. A volatile pointee also forces the
 post-store test to reload, so a field the original re-tests from the register it just
-stored - a saturation arm testing the sum it wrote - needs the plain view. Narrow
+stored - a saturation arm testing the sum it wrote - needs the plain view. Without a
+store to separate them the mirror holds: a byte the original re-reads for its own
+decrement after a test already loaded it takes a volatile pointee on the pointer that
+reaches it, while that record's word fields stay plain through typed views whose cast
+drops the qualifier, so the scheduler still interleaves them. On the shared
+scratchpad cell this pointee qualifier sits beside the `u8* volatile` spelling below,
+which still governs reloads of the cell itself. Narrow
 volatile pointee may cause `lbu` plus manual sign extension versus original `lb`.
 Remove unjustified qualifier only with semantic evidence; reviewed plain view may
 restore shape. Volatile pointer cell forces reload without qualifying pointee; use
