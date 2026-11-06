@@ -318,7 +318,7 @@ segments:
     - c
     - drawShopSlotListThenChargeOnConfirm
     - '@source: src/bof3/ui/drawShopSlotListThenChargeOnConfirm.c'
-    - '@behavior: shop phase step at entry 3 of the phase handler table D_801E545C, which the phase dispatcher func_801D7344 selects with the UI phase byte D_80148651: builds the shop slot list through buildSlotList(0), submits the texture row 0x1C at row 0x15 through func_8014F800 with the value returned by func_801502D0(0x6D) as its fifth argument, sets up the field record through func_801D7E1C with the work-block index byte D_80148656[0], 0x98, 0x3F, 0 and the main-RAM byte D_8014865D, then draws the panel through func_801D8E2C with the even value (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 0 and 6. When the two-option prompt helper func_801DA678 reports a choice through a nonzero low byte it charges the selection: the work-block byte D_8014865B is re-armed with 0xC, the frame timer phaseTimer with 0x3C and the UI phase byte D_80148651 advanced by two, and 10 per level of the field record selected by D_80145FCC[(s8)D_80148656[0] * 0x140] is subtracted from the main-RAM value D_80144F50. When the prompt helper reports a choice while that selection byte is zero instead, it plays the cancel cue 0x106 through func_8015DF18 and rolls the UI phase byte back by two.'
+    - '@behavior: shop phase step at entry 3 of the phase handler table D_801E545C, which the phase dispatcher func_801D7344 selects with the UI phase byte D_80148651: builds the shop slot list through buildSlotList(0), submits the texture row 0x1C at row 0x15 through func_8014F800 with the value returned by func_801502D0(0x6D) as its fifth argument, sets up the field record through func_801D7E1C with the work-block index byte D_80148656[0], 0x98, 0x3F, 0 and the main-RAM byte D_8014865D, then draws the panel through emitFlatLineRectangleBorder with the even value (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 0 and 6. When the two-option prompt helper func_801DA678 reports a choice through a nonzero low byte it charges the selection: the work-block byte D_8014865B is re-armed with 0xC, the frame timer phaseTimer with 0x3C and the UI phase byte D_80148651 advanced by two, and 10 per level of the field record selected by D_80145FCC[(s8)D_80148656[0] * 0x140] is subtracted from the main-RAM value D_80144F50. When the prompt helper reports a choice while that selection byte is zero instead, it plays the cancel cue 0x106 through func_8015DF18 and rolls the UI phase byte back by two.'
   - - 28388
     - c
     - func_801D7AE4
@@ -328,7 +328,7 @@ segments:
     - c
     - func_801D7B74
     - '@source: src/bof3/ui/func_801D7B74_shop00.c'
-    - '@behavior: shop panel phase step sharing the entry sequence of the sibling steps func_801D7CC8 and func_801D7D48: calls func_801D7E1C with the work-block index byte D_80148656[0], 0x98, 0x3F, 0 and the main-RAM byte D_8014865D as the fifth argument, then buildSlotList with 0, then forwards the same work-block index byte read signed to the shop panel helper func_801D8E2C as the even value (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 0 and 6; when the byte counter tickPhaseTimerThenAdvanceWorkCounter(&D_80148656[5], 0xF) returns a nonzero low byte it publishes 1 << (s8)D_8014865D into the byte at D_80144981 + 164 * D_80145FCC[index * 0x140], rebuilds that same 164-byte field record through func_80164A44 and rolls the UI phase byte D_80148651 back by four.'
+    - '@behavior: shop panel phase step sharing the entry sequence of the sibling steps func_801D7CC8 and func_801D7D48: calls func_801D7E1C with the work-block index byte D_80148656[0], 0x98, 0x3F, 0 and the main-RAM byte D_8014865D as the fifth argument, then buildSlotList with 0, then forwards the same work-block index byte read signed to the shop panel helper emitFlatLineRectangleBorder as the even value (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 0 and 6; when the byte counter tickPhaseTimerThenAdvanceWorkCounter(&D_80148656[5], 0xF) returns a nonzero low byte it publishes 1 << (s8)D_8014865D into the byte at D_80144981 + 164 * D_80145FCC[index * 0x140], rebuilds that same 164-byte field record through func_80164A44 and rolls the UI phase byte D_80148651 back by four.'
   - - 28872
     - c
     - func_801D7CC8
@@ -338,7 +338,7 @@ segments:
     - c
     - func_801D7D48
     - '@source: src/bof3/ui/func_801D7D48.c'
-    - '@behavior: shop panel phase step sharing the entry sequence of the sibling steps func_801D7B74 and func_801D7CC8: calls func_801D7E1C with the work-block index byte D_80148656[0], 0x98, 0x3F, 0 and 0xFF, then buildSlotList with 0, then forwards the same work-block index byte read signed to the shop panel helper func_801D8E2C as the even value (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 1 and 6, and finally tests the byte counter tickPhaseTimerThenAdvanceWorkCounter(&D_80148656[5], D_8014865F); when that counter returns a nonzero low byte the step rolls the UI phase byte D_80148651 back by six.'
+    - '@behavior: shop panel phase step sharing the entry sequence of the sibling steps func_801D7B74 and func_801D7CC8: calls func_801D7E1C with the work-block index byte D_80148656[0], 0x98, 0x3F, 0 and 0xFF, then buildSlotList with 0, then forwards the same work-block index byte read signed to the shop panel helper emitFlatLineRectangleBorder as the even value (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 1 and 6, and finally tests the byte counter tickPhaseTimerThenAdvanceWorkCounter(&D_80148656[5], D_8014865F); when that counter returns a nonzero low byte the step rolls the UI phase byte D_80148651 back by six.'
   - - 29192
     - c
     - swapBytesB
@@ -369,8 +369,10 @@ segments:
     - asm
     - func_801D8C58
   - - 33324
-    - asm
-    - func_801D8E2C
+    - c
+    - emitFlatLineRectangleBorder
+    - '@source: src/bof3/ui/emitFlatLineRectangleBorder.c'
+    - '@behavior: flat-line rectangle border emitter: builds the three-byte colour-channel mask of the emitted border from the low three bits of the sixth argument, each set bit selecting the flat colour and each clear bit black, where the flat colour is 0x3F | (((D_80143E6C & 8) ? (D_80143E6C & 6) : (~D_80143E6C & 6)) << 5) when the fifth argument is set and 0xFF when it is zero; it then draws an open three-point flat line from (x+4, y) to (x, y+4) to (x, y+h-1) through SetLineF3 and the closed four-corner border (x+4, y), (x+w-1, y), (x+w-1, y+h-1), (x, y+h-1) through SetLineF4, queueing each 0x18/0x1C-byte primitive from the shared primitive cursor through appendRenderPrim(1, size).'
   - - 33728
     - asm
     - func_801D8FC0
@@ -538,7 +540,7 @@ segments:
     - c
     - drawShopSlotListWithSelectionCursors
     - '@source: src/bof3/ui/drawShopSlotListWithSelectionCursors.c'
-    - '@behavior: shop screen draw called with no arguments by the phase step func_801DE40C, the cursor/confirm handler func_801DE4C8 and the sub-step handler func_801DE88C: it emits the sprite grid through func_801DBD24 with the main-RAM index byte D_80144953, reads the visible-list length through func_801BDB7C(0), draws the shop panel strip through func_801DAB90 with the fixed panel arguments 0x14, 0x12, 0x118 and 0x13 plus the main-RAM CLUT-bank byte D_80144952, then draws every visible slot below that length through the field-list emitter func_801D826C with the fixed x 0x11, the even row offset (slot * 54 + 0x3E) & 0xFFFE, the field-record index D_80181B10[D_80144F5A[slot]] and bit 1 of that record''s flag byte shifted down to 0/1, formats the one-based slot ordinal through sprintf into the shared text buffer D_80145AD4 with the EMI-local "%d" format string D_801D0E60 and draws it through the main-exe text emitter func_80150098 at x 0x1A by the sign-extended row y slot * 54 + 0x43 with the alignment constant that same flag bit selects (7 set, 0 clear); afterwards it emits the off-screen slot region through func_801DF00C at (0x96, 0x3B) and marks both shop selections through func_801D8E2C with the D_801E5BC8[slot][column] coordinate pair and the sprite/palette constants 0x7E/0x30 or 0x80/0x34 chosen by that cell''s flag byte - first the saved pair D_8014865A/D_8014865D unless the saved kind byte still holds the 0x7F "no saved selection" sentinel, with the selection argument 0, then the live cursor pair D_80148658/D_80148659 with the selection argument 1.'
+    - '@behavior: shop screen draw called with no arguments by the phase step func_801DE40C, the cursor/confirm handler func_801DE4C8 and the sub-step handler func_801DE88C: it emits the sprite grid through func_801DBD24 with the main-RAM index byte D_80144953, reads the visible-list length through func_801BDB7C(0), draws the shop panel strip through func_801DAB90 with the fixed panel arguments 0x14, 0x12, 0x118 and 0x13 plus the main-RAM CLUT-bank byte D_80144952, then draws every visible slot below that length through the field-list emitter func_801D826C with the fixed x 0x11, the even row offset (slot * 54 + 0x3E) & 0xFFFE, the field-record index D_80181B10[D_80144F5A[slot]] and bit 1 of that record''s flag byte shifted down to 0/1, formats the one-based slot ordinal through sprintf into the shared text buffer D_80145AD4 with the EMI-local "%d" format string D_801D0E60 and draws it through the main-exe text emitter func_80150098 at x 0x1A by the sign-extended row y slot * 54 + 0x43 with the alignment constant that same flag bit selects (7 set, 0 clear); afterwards it emits the off-screen slot region through func_801DF00C at (0x96, 0x3B) and marks both shop selections through emitFlatLineRectangleBorder with the D_801E5BC8[slot][column] coordinate pair and the sprite/palette constants 0x7E/0x30 or 0x80/0x34 chosen by that cell''s flag byte - first the saved pair D_8014865A/D_8014865D unless the saved kind byte still holds the 0x7F "no saved selection" sentinel, with the selection argument 0, then the live cursor pair D_80148658/D_80148659 with the selection argument 1.'
   - - 60684
     - c
     - appendFullscreenDimTileB
@@ -743,7 +745,7 @@ segments:
     - c
     - func_801E2BC4
     - '@source: src/bof3/ui/func_801E2BC4_shop00.c'
-    - '@behavior: forwards the panel task''s x and field-6 halfwords, the u16 entry of the D_801E5DD8 table selected by task byte 0xA, the constant 0x34, task byte 0xB and the constant 6 to func_801D8E2C.'
+    - '@behavior: forwards the panel task''s x and field-6 halfwords, the u16 entry of the D_801E5DD8 table selected by task byte 0xA, the constant 0x34, task byte 0xB and the constant 6 to emitFlatLineRectangleBorder.'
   - - 73752
     - c
     - func_801E2C18

@@ -167,8 +167,10 @@ segments:
     - c
     - invokeHelperBmagicMagic00800_801F0548
   - - 6504
-    - asm
-    - func_801F0568
+    - c
+    - dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBmagicMagic00800_801F0568
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBmagicMagic00800_801F0568.c'
+    - '@behavior: Dispatches one frame of the overlay work handler from the scratchpad work object: the work-object pointer cell at 0x1F800044 is read, its byte at offset 2 selects an entry of the five-entry work-state table at 0x801EEC70 (0x801F05FC, 0x801F0710, 0x801F07D4, 0x801F0864, 0x801F08C4), and that entry is invoked with no arguments. As at 0x801EECF0, 0x801EF384, 0x801EF75C, 0x801F0964 and 0x801F0294, the five table words are copied into this dispatcher''s own 0x30-byte frame first, so the call target is read back from the copy. After the handler returns it re-reads the pointer cell and, when the work object''s flags byte 0 is non-zero, runs the shared main-executable service func_8014D290. It returns nothing; the frame keeps $ra at 0x28.'
   - - 6652
     - c
     - seedMotionTintAndChannelFieldsThenAdvanceWorkByte2BmagicMagic00800_801F05FC

@@ -13,9 +13,10 @@ typedef struct ShopPanelWords {
 } ShopPanelWords;
 
 /* One 6-byte entry of the shop selection-cursor geometry table D_801E5BC8:
- * the two halfwords are the position pair forwarded to the panel helper
- * func_801D8E2C and the flag byte at +4 selects the sprite/palette constants
- * of that call. The second raw byte at +5 is never read; it sets the stride. */
+ * the two halfwords are the position pair forwarded to the flat-line border
+ * emitter emitFlatLineRectangleBorder and the flag byte at +4 selects which of
+ * the two rectangle size pairs that call passes. The second raw byte at +5 is
+ * never read; it sets the stride. */
 typedef struct ShopSelectionCell {
   u16 x;
   u16 y;
@@ -37,6 +38,12 @@ extern u8 D_80143BB4;
 
 /* @source 0x80143C40 @kind unknown */
 extern volatile u16 D_80143C40;
+
+/* Shared frame-state word of the running executable, owned by the shared map.
+ * The flat-line border emitter emitFlatLineRectangleBorder reads it as one
+ * 32-bit load and derives its flat colour from bits 1 through 3.
+ * @source 0x80143E6C @kind unknown */
+extern s32 D_80143E6C;
 extern u8 D_80148330[];
 extern u8 D_80148331;
 extern u8 D_80148332;
@@ -740,12 +747,15 @@ void func_801D9254(u16 arg0, u16 arg1, u8 arg2, u8 arg3);
  * callee contract.
  * @source 0x801D8A0C */
 void func_801D8A0C(s16 arg0, s16 arg1, u8 arg2);
-/* Shop helper (this EMI, unlifted); func_801E2BC4 passes the panel task's
- * x/field-6, its D_801E5DD8 table entry, 0x34, task byte 0xB and 6. The widths
- * below are the widths observed at that call site (lhu/lbu arguments), not a
- * recovered callee contract.
+/* Flat-line rectangle border emitter (lifted: src/bof3/ui/
+ * emitFlatLineRectangleBorder.c): draws the open three-point line (x+4, y) to
+ * (x, y+4) to (x, y+h-1) with SetLineF3 and the closed four-corner border with
+ * SetLineF4, both with a per-channel colour taken from the low three bits of
+ * the channel mask. The first two arguments are 16-bit position coordinates
+ * and the third and fourth are the rectangle width and height; the fifth and
+ * sixth are read from the stack slots with lbu, so they stay byte parameters.
  * @source 0x801D8E2C */
-void func_801D8E2C(u16 arg0, u16 arg1, u16 arg2, s32 arg3, s32 arg4, s32 arg5);
+void emitFlatLineRectangleBorder(u16 x, u16 y, u16 w, u16 h, u8 colorEnable, u8 mask);
 /* This-target record rebuild helper (unlifted); func_801D6668 calls it once
  * with the constant 0 when the global gate halfword D_80143C40 is clear. It
  * walks the eight 0xA4-byte records at D_80144968 (the loop index masked to a

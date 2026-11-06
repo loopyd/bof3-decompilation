@@ -12,6 +12,7 @@ sources = [
     "src/bof3/ui/appendFullscreenDimTileB.c",
     "src/bof3/ui/dispatchCommand.c",
     "src/bof3/ui/emitPanelIconPrim_shop00.c",
+    "src/bof3/ui/emitFlatLineRectangleBorder.c",
     "src/bof3/ui/dispatchUiPhaseTable.c",
     "src/bof3/ui/advanceUiPhaseOrSelectSavedStatePhase.c",
     "src/bof3/ui/dispatchUiSubStepTable.c",

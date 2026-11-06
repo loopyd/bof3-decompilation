@@ -142,8 +142,10 @@ segments:
     - asm
     - func_801F4B0C
   - - 8296
-    - asm
-    - func_801F4C68
+    - c
+    - decrementScratchWorkLevelTripleBy4OrSetFlag40World04Area17413_801F4C68
+    - '@source: src/bof3/world/decrementScratchWorkLevelTripleBy4OrSetFlag40World04Area17413_801F4C68.c'
+    - '@behavior: Steps the scratch work record published at 0x1F800044 one more frame: halfword 0x3E += 8, then either level bytes 0x5D/0x5E/0x5F -= 4 plus halfword 0x0A of 0x80148210 -= 2, or, at level byte 0x5D == -0x80, flag bit 0x40 of byte 0 and work byte 4 = 0.'
   - - 8476
     - asm
     - func_801F4D1C

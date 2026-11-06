@@ -11,6 +11,7 @@ sources = [
     "src/bof3/bmagic/invokeHelperThenClearRecordFlag40WhenWorkByteBIsFFThenAdvanceWorkByte1BmagicMagic00800_801EEF6C.c",
     "src/bof3/bmagic/clearRecordFlag40AndInvokeHelperWhenWorkByteBIsFFThenAdvanceWorkByte1BmagicMagic00800_801EFC90.c",
     "src/bof3/bmagic/decrementMotionCountdownAndAdvanceMotionPairThenSeedWorkByte9FromHelperAFF98AndAdvanceWorkByte2BmagicMagic00800_801F037C.c",
+    "src/bof3/bmagic/dispatchWorkByte2HandlerThenInvokeSharedServiceWhenWorkByte0SetBmagicMagic00800_801F0568.c",
 ]
 support_sources = [
     "src/bof3/bmagic/clearRecordFlag40AndInvokeHelperWhenWorkByteBIsFFThenAdvanceWorkByte1BmagicMagic00800_801EF9D4.c",

@@ -308,8 +308,10 @@ segments:
     - asm
     - func_801F46EC
   - - 7344
-    - asm
-    - func_801F48B0
+    - c
+    - claimFreeWorkRecordSeedWorkPositionWorld03Area13413_801F48B0
+    - '@source: src/bof3/world/claimFreeWorkRecordSeedWorkPositionWorld03Area13413_801F48B0.c'
+    - '@behavior: Claims the first free entry of the 0x800E4800 work-record table through the overlay scan at 0x801F4938 and seeds it from the work object published at the scratchpad pointer cell 0x1F800044: lead byte 0 takes the published byte 6 stamp, bytes 1 and 2 clear, byte 3 and halfword 4 take 0x80, word 8 takes the published word 0x34 and word 0x0C the published word 0x38, with word 0x18 set to 0x1800 and words 0x10, 0x1C and 0x20 cleared.'
   - - 7480
     - c
     - findFreeWorkRecordAt800E4800World03Area13413_801F4938

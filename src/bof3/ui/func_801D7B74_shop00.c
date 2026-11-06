@@ -6,7 +6,7 @@
  *           the work-block index byte D_80148656[0], 0x98, 0x3F, 0 and the
  *           main-RAM byte D_8014865D as the fifth argument, then buildSlotList
  *           with 0, then forwards the same work-block index byte read signed to
- *           the shop panel helper func_801D8E2C as the even value
+ *           the shop panel helper emitFlatLineRectangleBorder as the even value
  *           (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 0 and 6;
  *           when the byte counter tickPhaseTimerThenAdvanceWorkCounter(
  *           &D_80148656[5], 0xF) returns a
@@ -26,7 +26,8 @@ void func_801D7B74(void) {
   work = D_80148656;
   func_801D7E1C(work[0], 0x98, 0x3F, 0, D_8014865D);
   buildSlotList(0);
-  func_801D8E2C(0x11, ((s8)work[0] * 54 + 0x3E) & 0xFFFE, 0x80, 0x34, 0, 6);
+  emitFlatLineRectangleBorder(0x11, ((s8)work[0] * 54 + 0x3E) & 0xFFFE, 0x80,
+                              0x34, 0, 6);
   if ((u8)tickPhaseTimerThenAdvanceWorkCounter(work + 5, 0xF)) {
     offset = (s8)work[0] * 0x140;
     record_offset = D_80145FCC[offset] * 164;

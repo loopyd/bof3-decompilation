@@ -27,5 +27,6 @@ support_sources = [
     "src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld02Area10814_801F4360.c",
     "src/bof3/world/addWorkDeltasAndExpireCountdownWorld02Area10814_801F3198.c",
     "src/bof3/world/decrementRecordHalfword0aUnlessMode5World02Area10814_801F4F0C.c",
+    "src/bof3/world/seedSixteenWorkRecordsWorld02Area10814_801F2FC8.c",
 ]
 psyq_source = "src/bof3/support/area108_14_psyq.c"

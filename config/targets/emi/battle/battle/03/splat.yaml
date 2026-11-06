@@ -651,8 +651,10 @@ segments:
     - c
     - stubHandlerEfdc
   - - 58340
-    - asm
-    - func_801DEFE4
+    - c
+    - forwardSelectedPresentationOffset
+    - '@source: src/bof3/battle/forwardSelectedPresentationOffset.c'
+    - '@behavior: Forwards one presentation offset of the current battle work: while the front-end gate byte 0x80146325 carries bit 0x20 and mode byte 0x801462E0 reads 5 with state byte 0x80146328 carrying bit 2 -- or, with that gate clear, under the same mode/state pair -- it stages the work route byte at scratch +0x4B or the effect base scratch byte +0x08 raised by 0x1C or 0x20 through func_8014D5F0 for the 0x800F0800 source of 0x1800 bytes and returns; otherwise it forwards the effect id scratch byte +0x08 raised by 0x1C while work halfword +0x80 carries bit 0x4000, by 0x30 while it carries bit 0x800, by 4, 0x18 or 8 through the 0x801462E8 bit-0x10 chain, by 0x14 while work word +0x124 carries bit 2, and otherwise by an offset selected from work byte +0x119 case 0 (0x18 or 4 on halfword +0x80 bits 0x20C0), case 1 (8), case 2 (0x14), case 4 (0x38, then 8 on the 0x801CA71C kind mask bit 0x800 of work halfword +0x11A, else 0x28) or case 5 (4), through func_8014D8D4.'
   - - 59212
     - c
     - forwardSelectedEffectId
@@ -662,7 +664,7 @@ segments:
     - c
     - resetReadyAdvanceByte1
     - '@source: src/bof3/battle/resetReadyAdvanceByte1.c'
-    - '@behavior: Calls func_801DEFE4 then localReadyOrHelper1 and increments scratchpad work byte +1.'
+    - '@behavior: Calls forwardSelectedPresentationOffset then localReadyOrHelper1 and increments scratchpad work byte +1.'
   - - 59384
     - c
     - func_801DF3F8
@@ -748,7 +750,7 @@ segments:
     - c
     - advanceByte3UnlessFlag2
     - '@source: src/bof3/battle/advanceByte3UnlessFlag2.c'
-    - '@behavior: Increments scratchpad work byte +3 and calls func_801DEFE4 unless local work flags +0x80 contain bit 2.'
+    - '@behavior: Increments scratchpad work byte +3 and calls forwardSelectedPresentationOffset unless local work flags +0x80 contain bit 2.'
   - - 64324
     - c
     - dispatchSubstate3TableB1f4

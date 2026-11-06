@@ -21,13 +21,13 @@
  *           that same flag bit selects (7 when set, 0 when clear). Afterwards
  *           it emits the slidable off-screen slot region through func_801DF00C
  *           at the fixed position (0x96, 0x3B) and marks both shop selections
- *           through func_801D8E2C with the D_801E5BC8[slot][column] coordinate
- *           pair, the sprite/palette constants 0x7E/0x30 when the cell's flag
- *           byte is set and 0x80/0x34 when it is clear: first the saved pair
- *           D_8014865A/D_8014865D unless the saved kind byte still holds the
- *           0x7F "no saved selection" sentinel, with the selection argument 0,
- *           then the live cursor pair D_80148658/D_80148659 with the selection
- *           argument 1.
+ *           through emitFlatLineRectangleBorder with the D_801E5BC8[slot]
+ *           [column] coordinate pair, the sprite/palette constants 0x7E/0x30
+ *           when the cell's flag byte is set and 0x80/0x34 when it is clear:
+ *           first the saved pair D_8014865A/D_8014865D unless the saved kind
+ *           byte still holds the 0x7F "no saved selection" sentinel, with the
+ *           selection argument 0, then the live cursor pair
+ *           D_80148658/D_80148659 with the selection argument 1.
  * @status exact
  * @match 100.00
  * @residual none
@@ -70,9 +70,9 @@ void drawShopSlotListWithSelectionCursors(void) {
 
     cell = &D_801E5BC8[*(s8*)&D_8014865D][D_8014865A];
     if (cell->unk_04 != 0) {
-      func_801D8E2C(cell->x, cell->y, 0x7E, 0x30, 0, 6);
+      emitFlatLineRectangleBorder(cell->x, cell->y, 0x7E, 0x30, 0, 6);
     } else {
-      func_801D8E2C(cell->x, cell->y, 0x80, 0x34, 0, 6);
+      emitFlatLineRectangleBorder(cell->x, cell->y, 0x80, 0x34, 0, 6);
     }
   }
   {
@@ -80,9 +80,9 @@ void drawShopSlotListWithSelectionCursors(void) {
 
     cell = &D_801E5BC8[D_80148659][D_80148658];
     if (cell->unk_04 != 0) {
-      func_801D8E2C(cell->x, cell->y, 0x7E, 0x30, 1, 6);
+      emitFlatLineRectangleBorder(cell->x, cell->y, 0x7E, 0x30, 1, 6);
     } else {
-      func_801D8E2C(cell->x, cell->y, 0x80, 0x34, 1, 6);
+      emitFlatLineRectangleBorder(cell->x, cell->y, 0x80, 0x34, 1, 6);
     }
   }
 }

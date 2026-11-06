@@ -114,8 +114,10 @@ segments:
     - asm
     - func_801F3840
   - - 3392
-    - asm
-    - func_801F3940
+    - c
+    - advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World03Area12114_801F3940
+    - '@source: src/bof3/world/advanceHalfword30By0aAndSetState3To0AtF0OrTo1UnlessGatedThenDrawHalfword30World03Area12114_801F3940.c'
+    - '@behavior: Byte-1 state handler 9 of the byte-1 handler table 0x801F67D8 for the work record published at the scratchpad pointer cell 0x1F800044. Adds 0x0A to work halfword 0x30 and compares the stored signed halfword against 0xF0, clearing state byte 0x03 once the height reaches that value. Unless the shared mode byte 0x801454F2 is set, the byte at 0x80143BB0 is 2, or bit 0x100 of halfword 0x80146258 is set, it then arms state byte 0x03 at 1 through a second read of the pointer cell. Finally it passes mode 0x5C and the signed work halfword 0x30 to the overlay emitter at 0x801F40DC.'
   - - 3568
     - asm
     - func_801F39F0

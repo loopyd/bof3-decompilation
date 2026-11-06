@@ -154,8 +154,10 @@ segments:
     - asm
     - func_801F47F0
   - - 7452
-    - asm
-    - func_801F491C
+    - c
+    - stepScratchWorkAccumulatorsByPhaseTableAndSnapWorld04Area17213_801F491C
+    - '@source: src/bof3/world/stepScratchWorkAccumulatorsByPhaseTableAndSnapWorld04Area17213_801F491C.c'
+    - '@behavior: While the shared scenario progress byte g_ScenarioProgress reads below 7, steps the work record published through the pointer cell 0x1F800044 by the signed 16-entry phase table at 0x801F6780: it adds that entry scaled by 0x800 to word 0x34, subtracts the same value from word 0x38, decrements the phase byte 0x0A that indexes the table, and consumes two units of the halfword at 0x122 of the record published through the global pointer cell 0x80146250; once the progress byte reads 7 or more it instead clears the low 15 bits of words 0x34 and 0x38. Takes no arguments and returns nothing.'
   - - 7644
     - asm
     - func_801F49DC

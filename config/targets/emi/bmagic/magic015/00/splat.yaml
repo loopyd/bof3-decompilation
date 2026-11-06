@@ -137,8 +137,10 @@ segments:
     - asm
     - func_801F0570
   - - 6740
-    - asm
-    - func_801F0654
+    - c
+    - incrementWorkCountdownThenSeedMotionPairAndSetTintFromWorkByteBAt4ThenAdvanceWorkByte2BmagicMagic01500_801F0654
+    - '@source: src/bof3/bmagic/incrementWorkCountdownThenSeedMotionPairAndSetTintFromWorkByteBAt4ThenAdvanceWorkByte2BmagicMagic01500_801F0654.c'
+    - '@behavior: Entry 27 of the overlay header handler table that starts at 0x801EEC04 and stores this function at 0x801EEC70: it increments the scratchpad work-object countdown byte 9 and returns while the new value is not four, then seeds the 16.16 motion pair at 0x40 and 0x44 with 0x8000 and 0x18000 and sets the signed tint triplet at 0x5D, 0x5E and 0x5F from work byte 0xB, -(byte 0xB * 16 + 0x30) for 0x5D and -(byte 0xB * 16 + 0x40) for 0x5E and 0x5F, while a zero work byte 0xB instead raises bit 0x20 of work byte 0, sets mode byte 0x5C to 1 and sets the triplet to 0x30, -0x40 and -0x40; both arms then advance work byte 2, the handler index. The cell at 0x1F800044 is re-read before each store group because a store through the loaded pointer may alias it.'
   - - 7024
     - asm
     - func_801F0770

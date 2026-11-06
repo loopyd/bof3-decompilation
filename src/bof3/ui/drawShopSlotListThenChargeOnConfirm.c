@@ -8,9 +8,9 @@
  *           the value returned by func_801502D0(0x6D) as its fifth argument,
  *           sets up the field record through func_801D7E1C with the work-block
  *           index byte D_80148656[0], 0x98, 0x3F, 0 and the main-RAM byte
- *           D_8014865D, then draws the panel through func_801D8E2C with the
- *           even value (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34,
- *           0 and 6.
+ *           D_8014865D, then draws the panel through
+ *           emitFlatLineRectangleBorder with the even value
+ *           (index * 54 + 0x3E) & 0xFFFE alongside 0x11, 0x80, 0x34, 0 and 6.
  *           When the two-option prompt helper func_801DA678 reports a choice
  *           through a nonzero low byte, the step charges the selection: it
  *           re-arms the work-block byte D_8014865B with 0xC, the frame timer
@@ -48,7 +48,8 @@ void drawShopSlotListThenChargeOnConfirm(void) {
   func_8014F800(0x1C, 0x15, 0, 0xFF, func_801502D0(0x6D));
   work = D_80148656;
   func_801D7E1C(work[0], 0x98, 0x3F, 0, D_8014865D);
-  func_801D8E2C(0x11, ((s8)work[0] * 54 + 0x3E) & 0xFFFE, 0x80, 0x34, 0, 6);
+  emitFlatLineRectangleBorder(0x11, ((s8)work[0] * 54 + 0x3E) & 0xFFFE, 0x80,
+                              0x34, 0, 6);
   if ((u8)func_801DA678()) {
     if (*(s8*)&D_8014865B) {
       value = &D_80144F50;

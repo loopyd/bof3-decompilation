@@ -120,6 +120,7 @@ sources = [
     "src/bof3/battle/findLocalWorkByKind.c",
     "src/bof3/battle/forwardEffectThenDispatchLocalReady.c",
     "src/bof3/battle/forwardPanelHalfwords.c",
+    "src/bof3/battle/forwardSelectedPresentationOffset.c",
     "src/bof3/battle/forwardSelectedEffectId.c",
     "src/bof3/battle/func_801D9AB4.c",
     "src/bof3/battle/func_801D9C80.c",
@@ -360,6 +361,12 @@ evidence = "Caller preserves the raw scratchpad flags in a1 through jal and supp
 [[companion_overlays.static_calls]]
 caller_address = 0x801DCDF0
 target_address = 0x800A2AE0
+
+[[matching.section_placements]]
+function = 0x801DEFE4
+section = ".rodata"
+address = 0x801D0CA0
+size = 0x18
 
 [[matching.section_placements]]
 function = 0x801E5CA4

@@ -747,7 +747,7 @@ u8   localReadyOrHelper2(void);
 void setState8WhenReady(void);
 void storeLocalReady2Result(void);
 void func_801DEF0C(void);
-void func_801DEFE4(void);
+void forwardSelectedPresentationOffset(void);
 void forwardSelectedEffectId(void);
 void resetReadyAdvanceByte1(void);
 void callNextLocalHandler(void);

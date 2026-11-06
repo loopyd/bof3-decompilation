@@ -159,6 +159,15 @@ passes before changing scope placement.
    flushes the pending memory lists, which keeps a following call's reload of an
    earlier-read cell after that store; without the scope the bare store lets the
    reload drop into the first load's delay slot.
+   The same note pins a constant rather than a reload: when block order and size
+   already match and one branch delay slot holds `nop` where the original loads a
+   literal, wrap that literal's real initialization in the scope. Its `LOOP_END`
+   then stays ahead of the following cursor reload, so the first scheduling pass
+   cannot move the constant above that load and the delay-slot pass fills the
+   empty slot with it. A volatile view over the same cursors recovered the block
+   order and still left that slot `nop`, and a baseline `.sched2` kept both
+   constants in the body while only the delay-slot pass hoisted one, so name the
+   pass from its dump before choosing this lever.
 3. Compare plain initialization, PRE placement and proposed placement through
    `lift sweep`. Plain form may rematerialize a constant or drop saved registers;
    another placement may retain allocation while freeing argument order. Bind
@@ -339,6 +348,10 @@ cell load or a record address computed from a cursor.
    with the registers the original used across its whole range. The same split
    applies to per-group record temporaries: a cursor shared by two store groups
    kept both in one register and left the block's tail mismatched.
+   Mutually exclusive arms split the same way: a record pointer declared once and
+   used by both arms of an `if`/`else` stays a single quantity, so declare it
+   inside each arm. That split made the already-close arm exact at unchanged byte
+   count, while sharing the pointer kept that arm mismatched.
 2. Read the allocator dump before changing spelling. `.greg` reports the number of
    global pseudos, each conflict set and the register each pseudo receives.
 3. Give the variables distinct names. GCC then keeps separate quantities, so each
