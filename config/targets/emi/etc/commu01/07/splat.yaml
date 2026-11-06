@@ -111,8 +111,8 @@ segments:
     - asm
     - func_801D42DC
   - - 14452
-    - asm
-    - func_801D4474
+    - c
+    - computeEntryListOriginY
   - - 14560
     - asm
     - func_801D44E0

@@ -88,8 +88,10 @@ segments:
     - asm
     - func_801EFF88
   - - 5120
-    - asm
-    - func_801F0000
+    - c
+    - clearWorkByte9AndIncrementWorkByte2BmagicMagic06000_801F0000
+    - '@source: src/bof3/bmagic/clearWorkByte9AndIncrementWorkByte2BmagicMagic06000_801F0000.c'
+    - '@behavior: Clears the scratchpad work-object byte at offset 0x9 with sb $zero, then re-reads the work-object pointer cell at 0x1F800044 and increments that object''s byte at offset 0x2 with a byte-width add (lbu, addiu $v0,$v0,1, sb in the $ra delay slot). Reads and writes no other state and the function has no frame.'
   - - 5168
     - asm
     - func_801F0030

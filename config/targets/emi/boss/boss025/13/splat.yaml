@@ -135,8 +135,8 @@ segments:
     - c
     - raiseFlagBit2ThenEnterFrontendMode4BossBoss02513_800C2B2C
   - - 4960
-    - asm
-    - func_800C2B60
+    - c
+    - publishBattleHooksBossBoss02513_800C2B60
   - - 5016
     - asm
     - func_800C2B98

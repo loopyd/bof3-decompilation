@@ -138,8 +138,8 @@ segments:
     - asm
     - func_800C2378
   - - 3064
-    - asm
-    - func_800C23F8
+    - c
+    - publishBattleHooksBossBoss01816_800C23F8
   - - 3120
     - asm
     - func_800C2430

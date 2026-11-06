@@ -317,6 +317,13 @@ body's uses alone. The mirror case is a cast used twice: `(s8)value` in both the
 and the comparison lets one conversion serve both, while reassigning
 `value = (s8)value;` between them duplicates it.
 
+The formal's width decides the exit the same way. When the original's tail
+sign-extends the return value with `sll`/`sra` of `$v0`, that conversion comes from a
+narrow declared return type: an `s32` local returned as `return (s16)local;` folds the
+cast away and leaves `j $31` plus `move $2,$4`, four bytes short, and widening the
+return type to `s32` reproduces the same loss. Declare the narrow return and return
+the narrow local plainly.
+
 Mirror the width rule at the assignment: when a narrow callee return feeds a narrow
 cell, keep the accumulator local at the cell's width. A wider local converts the
 return where it is assigned and costs an `sll`/`sra` pair the original does not have,
@@ -367,12 +374,15 @@ use it, so the truncation, not a reload, supplies the compared value. The test's
 signedness picks that extension: `if ((s8)countdown == 8)` on the same `u8`
 accumulator emits `sll`/`sra` of the stored register before the compare, so a test
 against a signed-looking channel value takes a cast at the test and leaves the
-accumulator `u8`. A cell whose test has its own load takes the `s8` view on the cell
-expression at that test instead. An add-then-test cell takes its spelling from that
-test: one that re-reads the cell stays in place (`p[n] += 4; if (p[n] == limit)`),
-while an unsigned bound on the value just stored takes the `u8` accumulator. Two
-exact sources on one overlay differ in nothing else, so the cell's test decides
-before either form is probed.
+accumulator `u8`. That cast carries the conversion only against a nonzero constant.
+A zero test is sign-agnostic, so `if ((s8)accumulator == 0)` folds back to the `u8`
+build and keeps the same one-instruction residual at unchanged size; declare the
+accumulator `s8` and store and test it plainly. A cell whose test has its own load
+takes the `s8` view on the cell expression at that test instead. An add-then-test
+cell takes its spelling from that test: one that re-reads the cell stays in place
+(`p[n] += 4; if (p[n] == limit)`), while an unsigned bound on the value just stored
+takes the `u8` accumulator. Two exact sources on one overlay differ in nothing else,
+so the cell's test decides before either form is probed.
 
 ### Scratch cursor group variables
 

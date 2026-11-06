@@ -133,8 +133,10 @@ segments:
     - asm
     - func_801F9CFC
   - - 12616
-    - asm
-    - func_801F9D48
+    - c
+    - dispatchRecordCallbackScenarioScena0400_801F9D48
+    - '@source: src/bof3/scenario/dispatchRecordCallbackScenarioScena0400_801F9D48.c'
+    - '@behavior: Per-record callback dispatcher: loads the record byte at offset 0x7A with lbu, scales it by four and calls that entry of the overlay-local callback-pointer table at 0x801FA224, passing the record pointer unchanged and the word held in the shared scenario flag cell D_8014686C; the 0x18-byte frame only keeps $ra across the indirect call.'
   - - 12680
     - c
     - setFlagBit0RecordCallbackScenarioScena0400_801F9D88
