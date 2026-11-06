@@ -33,8 +33,10 @@ segments:
     - asm
     - func_801D1AB8
   - - 4240
-    - asm
-    - func_801D1C90
+    - c
+    - initializeBateUiState
+    - '@source: src/bof3/ui/initializeBateUiState.c'
+    - '@behavior: initializes the shared BATE UI work block (head state bytes, panel origin and extent halfwords, the three panel records at 0x80148354/0x80148378/0x8014839C, the cursor block and the published record pointer D_801D8EE0) and publishes the index of the first of the first three shared party ids 0x80144F5A that is zero or seven into the cell at 0x8014833C'
   - - 4748
     - asm
     - func_801D1E8C

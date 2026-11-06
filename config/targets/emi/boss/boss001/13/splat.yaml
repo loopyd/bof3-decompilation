@@ -87,8 +87,8 @@ segments:
     - c
     - invokeHelperBossBoss00113_800C1DE0
   - - 1536
-    - asm
-    - func_800C1E00
+    - c
+    - dispatchIndexedHandlerBossBoss00113_800C1E00
   - - 1592
     - c
     - noopHandlerBossBoss00113_800C1E38

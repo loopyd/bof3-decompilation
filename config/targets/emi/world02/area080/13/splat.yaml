@@ -82,8 +82,8 @@ segments:
     - asm
     - func_801F3C94
   - - 4324
-    - asm
-    - func_801F3CE4
+    - c
+    - retreatCounter2By20World02Area08013_801F3CE4
   - - 4364
     - asm
     - func_801F3D0C

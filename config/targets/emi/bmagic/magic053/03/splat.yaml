@@ -95,8 +95,9 @@ segments:
     - asm
     - func_801F01C0
   - - 6292
-    - asm
-    - func_801F0494
+    - c
+    - reserveFirstFreeRecordBmagicMagic05303_801F0494
+    - '@source: src/bof3/bmagic/reserveFirstFreeRecordBmagicMagic05303_801F0494.c'
   - - 6392
     - c
     - clearWorkBytesBmagicMagic05303_801F04F8

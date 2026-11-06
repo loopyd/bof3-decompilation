@@ -10,6 +10,7 @@ load_address = 0x801D0C00
 sources = []
 support_sources = [
     "src/bof3/ui/sumLevelExpBate00_801D4FD0.c",
+    "src/bof3/ui/initializeBateUiState.c",
     "src/bof3/support/bate_00_psyq.c",
 ]
 psyq_source = "src/bof3/support/bate_00_psyq.c"

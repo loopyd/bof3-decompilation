@@ -60,8 +60,8 @@ segments:
     - asm
     - func_801F3198
   - - 1560
-    - asm
-    - func_801F3218
+    - c
+    - copyModeByteWorld02Area09413_801F3218
   - - 1584
     - asm
     - func_801F3230

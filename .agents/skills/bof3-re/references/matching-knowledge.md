@@ -384,7 +384,11 @@ adjacent fields of one record are updated in a row.
    let GCC hoist all the loads above the whole add chain; the all-in-place form
    matched on the next probe. Once every update is in place, the remaining store
    positions are free: interleaving the countdown store between two updates also
-   matched.
+   matched. Locals win instead when the original groups its own loads above its
+   adds and its last store fills the delay slot of a branch on the other value:
+   bind both new values, store the one that branch tests before that test, and
+   leave the last store as its own statement after the test so it alone can fill
+   the slot. Where the original's adds sit tells which side applies.
 5. Confirm with live asm-diff and the whole-function gate before retaining.
 
 Byte cells take a `u8` accumulator instead:

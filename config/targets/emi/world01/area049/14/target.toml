@@ -17,5 +17,6 @@ support_sources = [
     "src/bof3/world/setSharedByteOneIfByte80144F5CFourWorld01Area04914_801F33C4.c",
     "src/bof3/world/advanceCounterWorld01Area04914_801F33E8.c",
     "src/bof3/support/area049_14_psyq.c",
+    "src/bof3/world/findWorkPositionBoundsIndexWorld01Area04914_801F2D00.c",
 ]
 psyq_source = "src/bof3/support/area049_14_psyq.c"

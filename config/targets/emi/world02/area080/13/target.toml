@@ -10,6 +10,7 @@ load_address = 0x801F2C00
 sources = []
 support_sources = [
     "src/bof3/world/setTwoWorld02Area08013_801F3D34.c",
+    "src/bof3/world/retreatCounter2By20World02Area08013_801F3CE4.c",
     "src/bof3/world/area08013DispatchTables.c",
     "src/bof3/support/area080_13_psyq.c",
 ]

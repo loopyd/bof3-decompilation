@@ -39,8 +39,9 @@ segments:
     - asm
     - func_801F2CC0
   - - 256
-    - asm
-    - func_801F2D00
+    - c
+    - findWorkPositionBoundsIndexWorld01Area04914_801F2D00
+    - '@source: src/bof3/world/findWorkPositionBoundsIndexWorld01Area04914_801F2D00.c'
   - - 460
     - asm
     - func_801F2DCC

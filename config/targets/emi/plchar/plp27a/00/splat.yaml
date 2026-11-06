@@ -90,8 +90,8 @@ segments:
     - c
     - getAndClearPlcharPlp27a00_801CF868
   - - 5240
-    - asm
-    - func_801CF878
+    - c
+    - dispatchWorkHalfword2cTablef92cPlcharPlp27a00_801CF878
   - - 5308
     - asm
     - func_801CF8BC
