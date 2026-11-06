@@ -1,6 +1,7 @@
 "use strict";
 
 const states = ["completed", "partial", "unlifted"];
+const symbolStates = ["named", "raw"];
 const format = new Intl.NumberFormat("en-US");
 const byId = (id) => document.getElementById(id);
 const percent = (count, total) => total ? `${(100 * count / total).toFixed(1)}%` : "—";
@@ -14,13 +15,13 @@ function element(tag, className, text) {
   return node;
 }
 
-function progressBar(target) {
+function progressBar(target, categories = states, noun = "functions") {
   const bar = element("div", "bar");
   bar.setAttribute("role", "img");
   bar.setAttribute("aria-label", target.total
-    ? states.map((state) => `${format.format(target[state])} ${state}, ${percent(target[state], target.total)}`).join("; ")
-    : "No indexed functions");
-  for (const state of states) {
+    ? `Indexed ${noun}: ` + categories.map((state) => `${format.format(target[state])} ${state}, ${percent(target[state], target.total)}`).join("; ")
+    : `No indexed ${noun}`);
+  for (const state of categories) {
     const segment = element("span", state);
     segment.style.width = `${target.total ? 100 * target[state] / target.total : 0}%`;
     bar.append(segment);
@@ -28,14 +29,24 @@ function progressBar(target) {
   return bar;
 }
 
-function counts(target) {
+function counts(target, categories = states) {
   const row = element("div", "target-counts");
-  for (const state of states) {
+  for (const state of categories) {
     const label = element("span");
     label.append(element("i", state), element("strong", "", format.format(target[state])), ` ${state}`);
     row.append(label);
   }
   return row;
+}
+
+function symbolProgress(symbols) {
+  const section = element("div", "symbol-progress");
+  const label = element("div", "metric-label");
+  label.append(element("span", "", "Symbols"), element("span", "", symbols.total
+    ? `${percent(symbols.named, symbols.total)} named`
+    : "No indexed symbols"));
+  section.append(label, progressBar(symbols, symbolStates, "symbols"), counts(symbols, symbolStates));
+  return section;
 }
 
 function executable(target) {
@@ -49,7 +60,7 @@ function executable(target) {
   const completion = element("div", "target-percent", percent(target.completed, target.total));
   completion.append(element("small", "", target.total ? "completed" : "no indexed functions"));
   heading.append(identity, completion);
-  article.append(heading, progressBar(target), counts(target));
+  article.append(heading, element("div", "metric-label", "Decompilation"), progressBar(target), counts(target), symbolProgress(target.symbols));
   return article;
 }
 
@@ -61,8 +72,9 @@ function emiCard(target) {
   const value = element("span", "percent", percent(target.completed, target.total));
   value.title = target.total ? "Completed indexed functions" : "No indexed functions";
   progress.append(progressBar(target), value);
-  article.append(heading, element("p", "target-path", target.id), progress, counts(target));
+  article.append(heading, element("p", "target-path", target.id), element("div", "metric-label decomp-label", "Decompilation"), progress, counts(target));
   if (!target.total) article.append(element("p", "target-path", "No indexed functions"));
+  article.append(symbolProgress(target.symbols));
   return article;
 }
 
@@ -103,7 +115,7 @@ function selectTab(kind, focus = false) {
 }
 
 function validateSnapshot(snapshot) {
-  if (snapshot.schema !== "bof3.decomp-status/v1" || !/^[0-9a-f]{40,64}$/.test(snapshot.revision)
+  if (snapshot.schema !== "bof3.decomp-status/v2" || !/^[0-9a-f]{40,64}$/.test(snapshot.revision)
     || !Array.isArray(snapshot.targets) || !snapshot.targets.length || !Number.isFinite(Date.parse(snapshot.published_at))) {
     throw new Error("The progress snapshot has an unsupported format.");
   }
@@ -113,6 +125,11 @@ function validateSnapshot(snapshot) {
     if (!row || countKeys.some((key) => !Number.isSafeInteger(row[key]) || row[key] < 0)
       || states.reduce((total, key) => total + row[key], 0) !== row.total || row.invalid > row.unlifted) {
       throw new Error("The progress snapshot contains inconsistent counts.");
+    }
+    const symbols = row.symbols;
+    if (!symbols || [...symbolStates, "total"].some((key) => !Number.isSafeInteger(symbols[key]) || symbols[key] < 0)
+      || symbols.named + symbols.raw !== symbols.total) {
+      throw new Error("The progress snapshot contains inconsistent symbol counts.");
     }
   }
   for (const target of snapshot.targets) {
@@ -125,6 +142,9 @@ function validateSnapshot(snapshot) {
   }
   if (countKeys.some((key) => snapshot.targets.reduce((total, row) => total + row[key], 0) !== snapshot.counts[key])) {
     throw new Error("The progress totals do not match the targets.");
+  }
+  if ([...symbolStates, "total"].some((key) => snapshot.targets.reduce((total, row) => total + row.symbols[key], 0) !== snapshot.counts.symbols[key])) {
+    throw new Error("The symbol totals do not match the targets.");
   }
 }
 

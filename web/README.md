@@ -41,6 +41,15 @@ counts describe indexed declarations, not byte coverage, a fresh native build,
 or runtime acceptance. A target without indexed functions has no completion
 percentage.
 
+Each target also has a symbol naming bar. Its denominator is rows in the reverse
+index's `symbols` table, including function and data symbols once per target and
+address. The index excludes aliases. Raw names match
+`harness.naming.debt.classify_raw_symbol`, which recognizes address-based `func_`
+and `D_` spellings. Named means all other indexed spellings, not proven semantic
+correctness or complete symbol discovery. Targets without indexed symbols show
+no symbol percentage. Snapshot schema `bof3.decomp-status/v2` includes named, raw,
+and total symbol counts for each target and overall.
+
 Only HTML, CSS, JavaScript, the logo, status JSON, and `.nojekyll` reach the public
 branch. The original logo comes from
 `third_party/references/bof3-data-doc/src/DocAssets/Breathlogo.webp`. Breath of Fire
