@@ -571,6 +571,10 @@ void func_801DFFA8(void);
 void func_801DCC74(void);
 void func_801DCCB0(void);
 void func_801DCCF4(void); /* AREA030 handler-table entry 0 at 0x801E22F0 */
+/* Same-binary availability gate at 0x801650B4 (executable space): the AREA030
+ * panel step passes (0, active record byte 6 + 0x38, 1, 0) and branches on the
+ * byte-valued result. Body not lifted in this target. */
+u8 func_801650B4(u8 arg0, u8 arg1, u8 arg2, u8 arg3);
 /* Same-binary panel position submitter at 0x801647C4 (executable space): the
  * AREA030 flagged handler passes the panel id 0x1C and the masked flag byte
  * scaled by 16 plus 0x58 as an unsigned halfword pair, and discards the result. */

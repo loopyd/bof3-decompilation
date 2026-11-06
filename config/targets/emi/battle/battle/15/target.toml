@@ -13,6 +13,7 @@ sources = [
     "src/bof3/battle/panelTasksBattle15.c",
     "src/bof3/battle/runSelectionPassSetSelectedFlag4000ClearByteThenCallA9BD8.c",
     "src/bof3/battle/runSelectionPassSetSelectedFlag1000ThenCallA9BD8.c",
+    "src/bof3/battle/runSelectionRollSetRecordByte8OrFlag800ThenRefresh.c",
     "src/bof3/battle/runSelectionPassThenSetSelectedRecordFlag10000.c",
     "src/bof3/battle/runSelectionPassThenSetSelectedRecordFlag100.c",
     "src/bof3/battle/setRecordByte8To2StoreIndexedModifierField6.c",

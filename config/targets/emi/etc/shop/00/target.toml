@@ -126,6 +126,7 @@ sources = [
     "src/bof3/ui/collectSaveSlotsThenCountFreeBlocks.c",
     "src/bof3/ui/swapSelectionIds.c",
     "src/bof3/ui/rebuildShopSlotLists.c",
+    "src/bof3/ui/func_801E4DF4.c",
 ]
 support_sources = [
     "src/bof3/support/shop00_symbols.c",

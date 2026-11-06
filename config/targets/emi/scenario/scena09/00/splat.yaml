@@ -109,8 +109,10 @@ segments:
     - asm
     - func_801FAE0C
   - - 20600
-    - asm
-    - func_801FBC78
+    - c
+    - waitProgress3ThenSetFlagBit24AndRequestPrimaryState0ScenarioScena0900_801FBC78
+    - '@source: src/bof3/scenario/waitProgress3ThenSetFlagBit24AndRequestPrimaryState0ScenarioScena0900_801FBC78.c'
+    - '@behavior: Word 16 (the word stored at 0x801FE42C) of the seventeen-word in-image primary state table at 0x801FE3EC that dispatchPrimaryStateHandlerScenarioScena0900_801F83D8 (0x801F83D8) indexes with the signed shared primary state byte D_80146874 and invokes with no arguments, so no in-image jal targets this address and that table word is its only reference. It reads the shared sub-state byte D_80146875 once through one address taken into a local pointer, which keeps that base in $s0 across both calls: sub-state 0 runs the shared helper func_801BE1B0(2) and advances the sub-state byte to 1; sub-state 1, once the shared scenario progress byte g_ScenarioProgress (0x80146864) reads 3, sets scenario flag bit 0x24 of the shared flag word D_8014686C (0x8014686C, read with lw) through func_8015B580, runs the shared release helper func_8015C058 and then clears the sub-state byte and the primary state byte D_80146874 back to zero, which ends the state; every other sub-state value does nothing. It takes no arguments, reads no other state and writes no other byte, and its 0x18-byte frame only keeps $ra and $s0.'
   - - 20748
     - c
     - invokeHelper1AndClearStateUnlessMode2ScenarioScena0900_801FBD0C

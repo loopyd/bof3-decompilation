@@ -140,8 +140,10 @@ segments:
     - asm
     - func_801F7BA8
   - - 4104
-    - asm
-    - func_801F7C08
+    - c
+    - tickCountdownByte9SeedWorkDistancePairArmCountdownAdvanceWorkByte2AndQueueCue202ScenarioScena0800_801F7C08
+    - '@source: src/bof3/scenario/tickCountdownByte9SeedWorkDistancePairArmCountdownAdvanceWorkByte2AndQueueCue202ScenarioScena0800_801F7C08.c'
+    - '@behavior: Overlay per-frame work-state handler, entry 2 of the work-byte-2 handler table at 0x801FE8E4: decrement the work object countdown byte at offset 0x09 modulo 256 and return while it is non-zero; on expiry reload the scratchpad work pointer at 0x1F800044, store the position pair 0x640000/0x760000 in work words 0x34 and 0x38, publish the func_8015477C distance of that pair scaled by 0x10000 in work word 0x3C, re-arm the countdown byte at offset 0x09 with 0x20, increment work byte 2 modulo 256 and queue sound cue 0x202. The 0x18-byte frame only keeps $ra across its two calls.'
   - - 4248
     - c
     - tickCountdownByte9SubtractWorkWord38AndAdvanceWorkByte2ScenarioScena0800_801F7C98

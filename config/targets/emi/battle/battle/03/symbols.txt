@@ -147,6 +147,7 @@ func_801D750C = 0x801D750C;
 drawBattlerCountdownEntries = 0x801D7A40;
 func_801D7D10 = 0x801D7D10;
 drawBattlePanelStrip = 0x801D7EB0;
+func_801D8090 = 0x801D8090;
 drawBattlePanelMessageStrip = 0x801D8270;
 func_801D8450 = 0x801D8450;
 func_801D8690 = 0x801D8690;

@@ -160,8 +160,10 @@ segments:
     - asm
     - func_801F56B0
   - - 11064
-    - asm
-    - func_801F5738
+    - c
+    - advanceHalfword0aBy17WhenWorkByte79NonzeroWorld02Area10313_801F5738
+    - '@source: src/bof3/world/advanceHalfword0aBy17WhenWorkByte79NonzeroWorld02Area10313_801F5738.c'
+    - '@behavior: reads the +0x79 byte of the work record published through the global pointer cell 0x80146250 and, when that byte is nonzero, advances the halfword at offset 0x0A of the record published through 0x80148210 by 0x17.'
   - - 11128
     - c
     - advanceScenarioProgressWhenWorkByte79ClearWorld02Area10313_801F5778

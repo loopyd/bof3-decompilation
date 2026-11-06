@@ -48,8 +48,8 @@ segments:
     - asm
     - func_801F70DC
   - - 1432
-    - asm
-    - func_801F7198
+    - c
+    - dispatchWorkByte1HandlerScenarioScena1300_801F7198
   - - 1500
     - asm
     - func_801F71DC

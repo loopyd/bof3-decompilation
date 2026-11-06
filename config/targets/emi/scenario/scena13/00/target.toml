@@ -15,6 +15,7 @@ support_sources = [
     "src/bof3/scenario/dispatchRecordCallbackScenarioScena1300_801FB350.c",
     "src/bof3/scenario/dispatchScenarioStateHandlerScenarioScena1300_801F7D14.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1300_801F6EA4.c",
+    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioScena1300_801F7198.c",
     "src/bof3/scenario/incrementWorkHalfword7EScenarioScena1300_801FB390.c",
     "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena1300_801FBE98.c",
     "src/bof3/scenario/invokeHelperArgThenHelperScenarioScena1300_801FBEC0.c",

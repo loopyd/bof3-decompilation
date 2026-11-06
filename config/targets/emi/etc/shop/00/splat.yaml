@@ -938,8 +938,10 @@ segments:
     - '@source: src/bof3/ui/isSkillRecorded.c'
     - '@behavior: byte-list membership test over the seven 164-byte records at D_801449E2 and the 128-byte list at D_8014546C.'
   - - 82420
-    - asm
+    - c
     - func_801E4DF4
+    - '@source: src/bof3/ui/func_801E4DF4.c'
+    - '@behavior: shop panel emitter reached from the panel state dispatcher func_801E4338, which forwards the global panel task root: emits the 0x9A by 0x39 shaded panel rectangle through func_801AE3F0 at the task x and field-6 halfwords offset by 3 with the constant 0 and the main-RAM CLUT-bank byte D_80144952 as the two trailing stack arguments, draws the panel frame through func_801DD350 at the same task halfwords with the constants 0x12 and 6, and submits the texture row selected by the task byte at 0xA offset by 0x100 through func_8014F800 at (x + 0xE, field-6 + 4) with the constants 0 and 0xFF and the word returned by func_801502D0 as the fifth argument.'
   - - 82588
     - c
     - func_801E4E9C

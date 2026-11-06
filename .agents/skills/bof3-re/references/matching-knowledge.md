@@ -286,6 +286,12 @@ adjacent fields of one record are updated in a row.
    matched.
 5. Confirm with live asm-diff and the whole-function gate before retaining.
 
+Byte cells take a `u8` accumulator instead:
+`countdown = (u8)(p[n] - 1); p[n] = countdown; if (countdown == 0)` is the form
+whose `sb` is followed by `andi 0xff` and `bnez` on that stored register, with no
+second load of the cell. The exact countdown handlers across these overlays all
+use it, so the truncation, not a reload, supplies the compared value.
+
 ### Scratch cursor group variables
 
 Use when a function re-reads or re-derives a base before each store or call group and
@@ -747,7 +753,11 @@ Read the effective address of a dense symbol load, not the printed base. A
 `lui at,0x8015` with the displacement `0x930C` resolves to `0x8014930C` because the
 displacement is sign-extended, while `0x8015930C` would need the base `0x8016`. The
 same displacement therefore appears under two different bases, and a misnamed symbol
-still builds and links; the map and binding addresses are what settle it.
+still builds and links; the map and binding addresses are what settle it. A dispatched
+handler table follows that rule too: bind the symbol at the word its scaled index is
+added to, which can be an entry inside a longer in-image pointer run rather than the
+run's first word. Two exact dispatchers of one overlay differed only in that table
+immediate, so a run base is not automatically the table symbol.
 
 A Splat `asm` span is not automatically code. Disassemble the span against the target
 binary before treating it as a lift target:

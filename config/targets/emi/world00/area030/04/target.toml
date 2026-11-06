@@ -184,6 +184,7 @@ sources = [
     "src/bof3/world/initializeTwoEntryRecordsAndAdvanceStateWorld00Area03004_801D57B0.c",
     "src/bof3/world/drawArea030Panel.c",
     "src/bof3/world/restartPanelCountdownOnPadHoldAndPlayCueWorld00Area03004_801DB8F0.c",
+    "src/bof3/world/choosePanelOpenStateOnPadPressWorld00Area03004_801DBBAC.c",
 ]
 support_sources = [
     "src/bof3/support/area03004_symbols.c",
