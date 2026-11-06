@@ -39,8 +39,8 @@ segments:
     - asm
     - func_801D2794
   - - 7280
-    - asm
-    - func_801D2870
+    - c
+    - dealNineUniqueCardIds
   - - 7432
     - asm
     - func_801D2908

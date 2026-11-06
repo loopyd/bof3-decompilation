@@ -84,8 +84,8 @@ segments:
     - asm
     - func_801CF808
   - - 5412
-    - asm
-    - func_801CF924
+    - c
+    - dispatchStateByte2Table0a80PlcharPlp02600_801CF924
   - - 5480
     - asm
     - func_801CF968

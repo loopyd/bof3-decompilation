@@ -129,8 +129,10 @@ segments:
     - asm
     - func_801F0334
   - - 6236
-    - asm
-    - func_801F045C
+    - c
+    - decrementWorkCountdownThenSeedMotionFieldsAndSetTintWhenGlobalWorkByteBIsSetBmagicMagic01500_801F045C
+    - '@source: src/bof3/bmagic/decrementWorkCountdownThenSeedMotionFieldsAndSetTintWhenGlobalWorkByteBIsSetBmagicMagic01500_801F045C.c'
+    - '@behavior: Entry 25 of the overlay handler table at 0x801EEC04, the word stored at 0x801EEC68: it reads the scratchpad work object through the pointer cell 0x1F800044, decrements countdown byte 9 and stores it back, keeping the decremented value in a byte local so the truncation supplies the compared value, and returns while the new countdown is nonzero. When it reaches zero it copies byte 0x27 of the shared battle work record read through 0x801EB4E0, sets work byte 0x2B to one when record byte 0xB is zero, and, when record byte 0xB is nonzero, raises bit 0x20 of work byte 0, sets mode byte 0x5C to 1 and sets the signed tint triplet at 0x5D, 0x5E and 0x5F to -0x40 (0xC0 unsigned). It then seeds word 0x14 = 0x80, word 0x20 = -2, the 16.16 motion pair at 0x40 and 0x44 = 0x10000 and byte 0x48 = 2, re-seeds countdown byte 9 with 0x10 and advances work byte 2, the handler index. Each store group re-reads the cell because a store through the loaded pointer may alias it; the shared seed group takes the cell load the tint arm ends with when record byte 0xB is nonzero and the guard load when it is zero.'
   - - 6512
     - asm
     - func_801F0570

@@ -95,8 +95,10 @@ segments:
     - asm
     - func_801EFC68
   - - 4388
-    - asm
-    - func_801EFD24
+    - c
+    - decrementWorkByte9ThenSetGlobalWorkByteBToOneAndAdvanceWorkByte2WhenZeroBmagicMagic15103_801EFD24
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenSetGlobalWorkByteBToOneAndAdvanceWorkByte2WhenZeroBmagicMagic15103_801EFD24.c'
+    - '@behavior: Countdown step of the overlay work object: reads the scratchpad work-object pointer cell at 0x1F800044 once and decrements the work-object byte at offset 0x9 with a byte-width read-modify-write, then tests the truncated byte it just stored. Only when that byte reached zero does it store 1 into the byte at offset 0xB of the shared battle work record pointed to by 0x801EB4E0, re-read the pointer cell and increment the work-object state byte at offset 0x2. Leaf with no frame; takes no arguments, returns nothing and reads or writes no other state.'
   - - 4480
     - c
     - incrementWorkByte2WhenGlobalWorkByte1Is2BmagicMagic15103_801EFD80

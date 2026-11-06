@@ -169,8 +169,9 @@ segments:
     - asm
     - func_801F13A4
   - - 10400
-    - asm
-    - func_801F14A0
+    - c
+    - dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic13103_801F14A0
+    - '@source: src/bof3/bmagic/dispatchRecordByte2HandlerThenDecrementCountdownOrDrawWhenActiveBmagicMagic13103_801F14A0.c'
   - - 10556
     - asm
     - func_801F153C

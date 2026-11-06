@@ -423,6 +423,7 @@ dispatchByte1FiveTable = 0x801E6C84;
 func_801E6D28 = 0x801E6D28;
 initializeGroupFlagScratchAndRequest = 0x801E6E54;
 clearScratchByte1 = 0x801E6FA0;
+countdownGroupSelectionAndRefreshTarget = 0x801E6FB0;
 countdownScratchByte1ByGroupFlags = 0x801E71EC;
 dispatchByte1PairTable = 0x801E72A8;
 copyQueuedWorkToScratchAndRun = 0x801E72F4;

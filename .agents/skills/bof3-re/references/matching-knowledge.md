@@ -40,6 +40,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Pointer read hoisted above a call, extra saved register, frame unchanged | Bind the call-derived scaled value to its own local before the pointer read; folding the mask/shift into the later address expression keeps the pointer live across the call |
 | Call result stored inside the next call's delay slot | The original stores a `jal` result into its outgoing argument slot right after that call, before the next call's argument setup. Bind the result to a local; nesting the call in the later argument list moves that store into the following `jal` delay slot |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
+| One hunk differing only in the register order of a single `beq`/`bne`, with size, count and frame already equal | Reverse the written operands of that compare so the held value is on the left (`value != table[index]`); comparison operands follow the written order, so this swap works where an arithmetic commutative respelling normalizes back |
 | Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests. The merge needs one loaded word: two non-zero tests on different byte fields of a record stay two loads, so keep that conjunction as written |
 | Both arms truncate the same value, then differ only in a constant, and the current build masks once before the branch | Repeat the truncation as its own statement inside each arm (`angle &= 0xFFFF;` then `angle += bias;`). One combined expression lets GCC share the mask across the arms and fill the branch delay slot, which came out two instructions short with identical memory events; the split arms keep a per-arm `andi` and the original's unfilled slot |
 | Three-term sum stays one instruction long, or the first divergence sits at a later term | Sweep the three associations `a + (b + c)`, `(a + b) + c`, `(b + c) + a` before touching guards, casts or truthiness spellings of that sum; the mirrored nesting stalled one instruction short with the divergence pushed to the last term, and the re-spellings measured neutral |
@@ -82,11 +83,14 @@ ends in a different constant return or constant store, put the work inside the `
 with the constant arm after the block: the work arm goes out of line behind `beq` while
 `j <epilogue>` keeps `move $v0,$zero` in its delay slot. Read the arm order off the
 original as well: the arm the function falls into is the `if` body, and the arm the
-branch jumps to is the `else` or the block after an early return. Reversed arms keep
-frame and size and only invert the test and its target, so a `bnez` where the build
-emits `beqz` is this ordering choice, not a later rung. A result local live across the
-calls cost a saved register and frame bytes, and an early `return B;` before the block
-relocated that return out of line instead - `.text` size stayed equal and only the
+branch jumps to is the `else` or the block after an early return. Reversed arms that
+each end in their own return keep frame and size and only invert the test and its
+target, so a `bnez` where the build emits `beqz` is this ordering choice, not a later
+rung. When two arms rejoin a common tail instead, the inverse order is not
+size-neutral: skipping the arm written first needs its own `j`, which cost one
+instruction and four bytes at an unchanged frame. A result local live across
+the calls cost a saved register and frame bytes, and an early `return B;` before the
+block relocated that return out of line instead - `.text` size stayed equal and only the
 branch shape differed (`bne` to a trailing `move $v0,$zero`).
 GCC loop rotation can move invariants: assigning inside loop body can permit late
 hoisting/preheader copies; moving before loop can lose them. Keep only measured
@@ -404,7 +408,10 @@ A shared header that maps a cell name to a macro over a constant address
 symbol. `#undef` it in the source when the original reloads the cell per access and
 read the target-local symbol instead; unconditional `#undef` at outer body level is
 admissible for an ordinary function. Sibling sources on more than one target closed
-a hoisted-base residual here, so reach for this before allocation work.
+a hoisted-base residual here, so reach for this before allocation work. The
+fixed-address accessors of the [memory API](memory-api.md) are that same macro, and
+their fold can surface outside the body: a frame eight bytes larger with one extra
+saved register and no differing body access is the shared base, not an orphan slot.
 
 Stores follow the same rule. Each `sb` to a distinct fixed-address cell carries its own
 `lui $at, %hi(sym)`, so declare one named extern per cell. That holds for one cell read

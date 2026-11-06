@@ -333,6 +333,7 @@ sources = [
     "src/bof3/battle/func_801D8090.c",
     "src/bof3/battle/initBattleUiAndQueueFixedCue.c",
     "src/bof3/battle/submitWorkAndSeedGravity.c",
+    "src/bof3/battle/countdownGroupSelectionAndRefreshTarget.c",
 ]
 support_sources = [
     "src/bof3/support/battle03_symbols.c",

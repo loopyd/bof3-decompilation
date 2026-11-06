@@ -1405,8 +1405,10 @@ segments:
     - c
     - clearScratchByte1
   - - 91056
-    - asm
-    - func_801E6FB0
+    - c
+    - countdownGroupSelectionAndRefreshTarget
+    - '@source: src/bof3/battle/countdownGroupSelectionAndRefreshTarget.c'
+    - '@behavior: Advances the group selection from the 0x801462E8 bit 0x400 gate: it increments scratch byte +1 while the 0x80146374 progress byte matches or the fight stage 0x80146375/0x801463C0 pair reads 0x97/0xE1, and otherwise counts down scratch byte +0x0A, arms the next enabled 0x58 group bit with its D_801EB494 request byte or clears the queued slot bytes, clears scratch byte +1 when the selected record has no group bits or its battler is unavailable, and refreshes the queued work position.'
   - - 91628
     - c
     - countdownScratchByte1ByGroupFlags
