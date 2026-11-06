@@ -46,6 +46,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests. The merge needs one loaded word: two non-zero tests on different byte fields of a record stay two loads, so keep that conjunction as written |
 | Both arms truncate the same value, then differ only in a constant, and the current build masks once before the branch | Repeat the truncation as its own statement inside each arm (`angle &= 0xFFFF;` then `angle += bias;`). One combined expression lets GCC share the mask across the arms and fill the branch delay slot, which came out two instructions short with identical memory events; the split arms keep a per-arm `andi` and the original's unfilled slot |
 | Three-term sum stays one instruction long, or the first divergence sits at a later term | Sweep the three associations `a + (b + c)`, `(a + b) + c`, `(b + c) + a` before touching guards, casts or truthiness spellings of that sum; the mirrored nesting stalled one instruction short with the divergence pushed to the last term, and the re-spellings measured neutral. When one term is a product minus a constant and several stores reuse it, name that bias as one `s32` local per store group instead of keeping the sum inline: the parenthesized form let GCC fold the constant into an earlier argument's `addiu` and drop the `move` that saved it, eight bytes short, and the unparenthesized form lost nine instructions at the original size |
+| `mult` plus `bgez`/`addiu (N-1)`/`sra log2(N)` around a scaled product | That triple is truncating signed division, not a shift: write `product / N` on a signed type. Shifting the product emits the bare `sra` and loses the sign-correction pair, so the divide spelling is what reproduces `mult` and the correction |
 | Boolean result misses the return register; extra return copy | Trace [boolean return expansion](#boolean-return-expansion) before allocation |
 | Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt. For displaced induction setup, inspect [explicit cursors](#explicit-cursors-and-signed-bounds) |
 | Global/BSS offsets | Audit COMMON/section/alignment/order/padding and following symbols |
@@ -269,7 +270,12 @@ keeps consecutive handoff stores that no call separates, declare that cell volat
 than inventing a barrier. Cite the siblings when you do, and leave any other cell alone.
 Original-proven ordering remains explicit evidence. Where a store through the loaded
 pointer already separates the reads, the plain spelling measured identical bytes on that
-same cell, so the qualifier is not what carries the reload there.
+same cell, so the qualifier is not what carries the reload there: a store through the
+pointer that cell just supplied may alias the cell, so every access on the plain named
+cell re-reads it and the per-access reload comes out unflagged. Pick a sibling's cell
+spelling by its handoff pattern - consecutive stores that no call separates take the
+volatile cell, a reload per store group takes the plain one - and leave a cell that
+already has exact siblings on both counts alone.
 
 Signedness belongs to the use site, not the cell: read it off that site's load. One
 byte cell can need `*(s8*)&cell` where the original emits `lb` in a branch test and an
@@ -481,7 +487,10 @@ the original reuses one cursor load across stores that the current build reloads
    for its leading statements and then shares one load for a later run, keep those
    leading statements on the named cell and open the single pointer local at the
    original's first shared load. The switch is a statement in the body, not a
-   function-wide choice.
+   function-wide choice. The inverse split needs no local at all: when a guard read
+   and the arm's first store share one loaded base while later stores re-read the
+   cell, write every access on the named cell and the store's own possible aliasing
+   of the cell supplies those later reloads.
 2. When a reload runs on one arm only, make it the last statement of that arm.
    Written after the `if`, both arms share it and the branch target lands eight
    bytes before the original target. Size stays equal because the instruction count

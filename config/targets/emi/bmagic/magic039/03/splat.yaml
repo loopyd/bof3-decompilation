@@ -30,8 +30,10 @@ segments:
   vram: 2149510196
   subsegments:
   - - 52
-    - asm
-    - func_801EEC34
+    - c
+    - dispatchWorkByte1HandlerBmagicMagic03903_801EEC34
+    - '@source: src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic03903_801EEC34.c'
+    - '@behavior: Copies the three-entry code pointer run at 0x801EEC04 (0x801EEC94, 0x801EEEA8, 0x801EEEDC) into its own 0x28-byte frame and invokes the entry selected by work byte 1 of the scratchpad work record at 0x1F800044 with no arguments, leaving the selector unchecked.'
   - - 148
     - asm
     - func_801EEC94

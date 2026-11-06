@@ -96,8 +96,9 @@ segments:
     - asm
     - func_801EFD4C
   - - 4528
-    - asm
-    - func_801EFDB0
+    - c
+    - clearWorkBytesBmagicMagic02103_801EFDB0
+    - '@source: src/bof3/bmagic/clearWorkBytesBmagicMagic02103_801EFDB0.c'
   - - 4608
     - rodata
     - dispatchHandlerTable801EFE00

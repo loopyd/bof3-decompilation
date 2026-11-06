@@ -47,8 +47,9 @@ segments:
     - asm
     - func_801EF130
   - - 1728
-    - asm
-    - func_801EF2C0
+    - c
+    - clearWorkByte4SetWorkByte9To8SetWorkByteATo16AndIncrementWorkByte2WhenWorkByteBIs2BmagicMagic08703_801EF2C0
+    - '@source: src/bof3/bmagic/clearWorkByte4SetWorkByte9To8SetWorkByteATo16AndIncrementWorkByte2WhenWorkByteBIs2BmagicMagic08703_801EF2C0.c'
   - - 1828
     - asm
     - func_801EF324

@@ -76,8 +76,9 @@ segments:
     - asm
     - func_801F020C
   - - 5772
-    - asm
-    - func_801F028C
+    - c
+    - seedTintTripletClearCountdownSetByteATo2AndAdvanceWorkByte2BmagicMagic12403_801F028C
+    - '@source: src/bof3/bmagic/seedTintTripletClearCountdownSetByteATo2AndAdvanceWorkByte2BmagicMagic12403_801F028C.c'
   - - 5884
     - asm
     - func_801F02FC

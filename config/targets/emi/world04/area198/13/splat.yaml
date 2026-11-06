@@ -40,8 +40,9 @@ segments:
     - asm
     - func_801F2CB8
   - - 296
-    - asm
-    - func_801F2D28
+    - c
+    - scalePaletteBlocksWorld04Area19813_801F2D28
+    - '@source: src/bof3/world/scalePaletteBlocksWorld04Area19813_801F2D28.c'
   - - 516
     - asm
     - func_801F2E04
