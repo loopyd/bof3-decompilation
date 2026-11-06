@@ -7,7 +7,9 @@ binary = "out/binaries/emi/plchar/plp578/00.bin"
 splat = "config/targets/emi/plchar/plp578/00/splat.yaml"
 load_address = 0x801CE400
 
-sources = []
+sources = [
+    "src/bof3/plchar/dispatchWorkByte2TablefadcPlcharPlp57800_801CEC34.c",
+]
 support_sources = [
     "src/bof3/support/plp578_00_psyq.c",
 ]

@@ -84,8 +84,8 @@ segments:
     - asm
     - func_801CF330
   - - 4140
-    - asm
-    - func_801CF42C
+    - c
+    - dispatchWorkByte2Tableff14PlcharPlp25700_801CF42C
   - - 4208
     - asm
     - func_801CF470

@@ -85,8 +85,9 @@ segments:
     - asm
     - func_801EFF28
   - - 5096
-    - asm
-    - func_801EFFE8
+    - c
+    - copyRecordByte27ThenAdvanceWorkByte2BmagicMagic05603_801EFFE8
+    - '@source: src/bof3/bmagic/copyRecordByte27ThenAdvanceWorkByte2BmagicMagic05603_801EFFE8.c'
   - - 5156
     - asm
     - func_801F0024

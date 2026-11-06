@@ -57,8 +57,8 @@ segments:
     - asm
     - func_801CEB38
   - - 2100
-    - asm
-    - func_801CEC34
+    - c
+    - dispatchWorkByte2TablefadcPlcharPlp57800_801CEC34
   - - 2168
     - asm
     - func_801CEC78

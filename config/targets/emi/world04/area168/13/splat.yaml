@@ -109,8 +109,9 @@ segments:
     - asm
     - func_801F4764
   - - 7176
-    - asm
-    - func_801F4808
+    - c
+    - setStatusFFFFAndStateEntryWhenGateClearWorld04Area16813_801F4808
+    - '@source: src/bof3/world/setStatusFFFFAndStateEntryWhenGateClearWorld04Area16813_801F4808.c'
   - - 7240
     - asm
     - func_801F4848

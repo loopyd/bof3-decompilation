@@ -93,8 +93,8 @@ segments:
     - asm
     - func_801CF968
   - - 5732
-    - asm
-    - func_801CFA64
+    - c
+    - dispatchWorkByte2TablefcecPlcharPlp27800_801CFA64
   - - 5800
     - asm
     - func_801CFAA8

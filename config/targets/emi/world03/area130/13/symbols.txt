@@ -1,3 +1,7 @@
+workRecordCursor1F800044 = 0x1F800044;
+workSeedHalfword801469E6 = 0x801469E6;
+workSeedHalfword801469E8 = 0x801469E8;
+workSeedHalfword801469EA = 0x801469EA;
 dispatchStateByte1Table3ed8World03Area13013_801F2C1C = 0x801F2C1C;
 func_801F2C60 = 0x801F2C60;
 func_801F2CDC = 0x801F2CDC;
@@ -5,7 +9,7 @@ invokeHelperWorld03Area13013_801F2E10 = 0x801F2E10;
 func_801F2E30 = 0x801F2E30;
 func_801F30D0 = 0x801F30D0;
 dispatchStateByte1Table3ee4World03Area13013_801F31E8 = 0x801F31E8;
-func_801F322C = 0x801F322C;
+armCountdownByte9ClearWords0cAnd10SeedHalfwords2eTo32ThenAdvanceWorkByte1World03Area13013_801F322C = 0x801F322C;
 func_801F3284 = 0x801F3284;
 func_801F333C = 0x801F333C;
 func_801F33CC = 0x801F33CC;

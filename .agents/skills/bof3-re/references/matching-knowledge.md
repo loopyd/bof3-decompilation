@@ -306,7 +306,12 @@ store later, which is the shape a record-arming block shows. That earlier positi
 also what lets the store fill a following branch or return delay slot; loading at the
 store instead puts the load and its delay `nop` next to it and leaves the slot empty.
 A pointer local instead defers the dereference, so choose the local's type by which
-side of the load the original fixes.
+side of the load the original fixes. The same pin works for a scalar read from another
+symbol. When the original loads one shared halfword ahead of an unrelated store and
+consumes it after a pointer-cell reload, bind it to a `u16` local at that earlier
+statement. Spelling that consuming store inline measured eight bytes longer with the
+first difference in the entry block, because the compiler then reloads the pointer
+cell again for the later stores.
 
 Keep a narrow parameter narrow. Copying an `s16` argument into an `s32` local moves
 the sign extension to the entry block, where the original converts at each use site.
