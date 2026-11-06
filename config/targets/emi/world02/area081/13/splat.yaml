@@ -36,8 +36,8 @@ segments:
     - asm
     - func_801F2C94
   - - 276
-    - asm
-    - func_801F2D14
+    - c
+    - retreatCounter2By15World02Area08113_801F2D14
   - - 316
     - asm
     - func_801F2D3C

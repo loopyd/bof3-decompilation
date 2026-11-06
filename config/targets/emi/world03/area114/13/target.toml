@@ -10,5 +10,18 @@ load_address = 0x801F2C00
 sources = []
 support_sources = [
     "src/bof3/support/area114_13_psyq.c",
+    "src/bof3/world/startActionBySharedSelectorAndReturnNextStepWorld03Area11413_801F2E48.c",
 ]
 psyq_source = "src/bof3/support/area114_13_psyq.c"
+
+# The compiler-emitted 13-entry dispatch table of
+# startActionBySharedSelectorAndReturnNextStepWorld03Area11413_801F2E48 lives
+# where the original overlay links it, at 0x801F2C34 in this payload's leading
+# tabledata header (offset 0x34): that address is 4-mod-8 while the compiler's
+# `.align 3` asks for 8, so the placement route lowers only this section's
+# alignment. The table's entries are the function's own dispatch arm labels.
+[[matching.section_placements]]
+function = 0x801F2E48
+section = ".rodata"
+address = 0x801F2C34
+size = 0x34

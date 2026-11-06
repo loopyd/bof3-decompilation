@@ -42,8 +42,8 @@ segments:
     - asm
     - func_801F2D38
   - - 352
-    - asm
-    - func_801F2D60
+    - c
+    - advanceCounter2By18World00Area02313_801F2D60
   - - 392
     - c
     - setTwoWorld00Area02313_801F2D88

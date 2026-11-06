@@ -42,8 +42,10 @@ segments:
     - asm
     - func_801F2D04
   - - 328
-    - asm
-    - func_801F2D48
+    - c
+    - initArea11313State
+    - '@source: src/bof3/world/initArea11313State.c'
+    - '@behavior: runs the shared front-end startup helper at 0x8015C088 and then writes 4 to the shared mode byte at 0x801448EB and 6 to 0x801448ED, leaving 0x801448EC untouched.'
 - - 384
   - bin
   - tail

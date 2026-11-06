@@ -37,8 +37,10 @@ segments:
     - asm
     - func_801F2DB8
   - - 760
-    - asm
-    - func_801F2EF8
+    - c
+    - advanceHalfword30By20AndAdvanceState2At100ThenDrawWorld04Area16013_801F2EF8
+    - '@source: src/bof3/world/advanceHalfword30By20AndAdvanceState2At100ThenDrawWorld04Area16013_801F2EF8.c'
+    - '@behavior: Byte-2 state handler entry 2 of the handler table based at 0x801F3418 for the work record published at the scratchpad pointer cell 0x1F800044: it adds 0x20 to the record halfword at 0x30 and, once that stored signed halfword reaches 0x100, advances the record state byte at 0x02 by one, then calls the overlay draw routine at 0x801F30D4.'
   - - 852
     - asm
     - func_801F2F54

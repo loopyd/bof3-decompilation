@@ -37,8 +37,10 @@ segments:
     - asm
     - func_801F2DB8
   - - 760
-    - asm
-    - func_801F2EF8
+    - c
+    - decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld04Area15813_801F2EF8
+    - '@source: src/bof3/world/decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld04Area15813_801F2EF8.c'
+    - '@behavior: Byte-2 state handler entry 2 of the five-entry handler table based at 0x801F3420 for the work record published at the scratchpad pointer cell 0x1F800044: subtracts 0x20 from the record''s unsigned halfword at offset 0x30, stores the truncated halfword, and, once that stored value read as a signed halfword falls below -0xFF, increments the record''s state byte at offset 0x02 so the next frame dispatches entry 3 at 0x801F2F54; it then calls the overlay draw routine at 0x801F30D4, which reads the same halfword as a sprite screen offset.'
   - - 852
     - asm
     - func_801F2F54

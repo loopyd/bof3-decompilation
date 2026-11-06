@@ -45,8 +45,10 @@ segments:
     - asm
     - func_801F34A0
   - - 2880
-    - asm
-    - func_801F3740
+    - c
+    - stepAreaTaskArmWorkRecordAndQueueCuesWorld01Area04413_801F3740
+    - '@source: src/bof3/world/stepAreaTaskArmWorkRecordAndQueueCuesWorld01Area04413_801F3740.c'
+    - '@behavior: Steps the shared area task whose state byte is D_801448EC: state 0 waits on event flag 0x17 (modelling the mode byte D_80146867 bits 4-5 as level 0 or 2) and arms work record variant 7 or 3, sets state 1 and queues frontend cue 0x201, otherwise latches state 10; states 1 and 10 tick the animation records and, when flag 0x17 answers its polarity for the mode byte''s low two bits, arm variant 5 or 1 and queue cue 0x20E while the state still reads 1 and 0x201 otherwise, then latch state 0xB and advance any other state to 0x14 with cue 0x202 on state 1; state 11 ticks the records, queues cue 0x202 and latches 0x14 while the render gate byte D_80147A61 is clear; state 20 clears D_801448EB and the state byte and runs the shared release helper func_8015C058, and every state the table does not dispatch returns immediately.'
   - - 3516
     - asm
     - func_801F39BC

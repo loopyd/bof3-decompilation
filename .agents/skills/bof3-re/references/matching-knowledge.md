@@ -91,7 +91,9 @@ the store in each arm rather than selecting into a result local, which holds the
 value in a general register and one more register live. Do not route that argument
 through one shared constant local: with one call it hoists the fall-through arm's
 constant above the test and fills the branch delay slot with `sw $ra`, three
-instructions short of the original. Early returns versus initialized
+instructions short of the original. A signed pair such as `-1` and `0` fails one step
+worse: selecting it into a local drops the branch for a compare-and-negate, so the
+duplicated call is the spelling that keeps it. Early returns versus initialized
 result changes `$v0` lifetime. When the guard wraps calls and stores and each side
 ends in a different constant return or constant store, put the work inside the `if`
 with the constant arm after the block: the work arm goes out of line behind `beq` while
@@ -149,10 +151,16 @@ sign and magnitude tests, so write each test as its own early return.
 A guarded dispatcher (`sltiu` bound, table base, one indexed load, `jr`) gives the
 dense switch shape directly: one arm per table word, in order, and the arm an
 out-of-range index reaches is the default, so that case carries the default's
-statements instead of a duplicate block. When the first seed already builds to the
-original `.text` size and differs only at address-bearing words, the source shape is
-settled; finish the symbol bindings and the reviewed table placement before probing
-more C.
+statements instead of a duplicate block. Count the labels off that bound: a sparse
+`case 0:`/`default:` set builds a comparison chain and emits no table, which surfaces
+as a reviewed-`.rodata` placement refusal with no instruction count, so a `sltiu N`
+with no MIN subtraction and an N-entry table owes labels 0 through N-1. When the
+first seed already builds to the original `.text` size and differs only at
+address-bearing words, the source shape is settled; finish the symbol bindings and
+the reviewed table placement before probing more C. A table whose entries differ only
+in which block each case value reaches is part of that step, because the reviewed
+`.rodata` compares entry contents: when reshaping the arms leaves one differing table
+word at matching `.text` size, move the case labels and leave the bodies alone.
 
 ### Operation scopes and loop-note dependencies
 

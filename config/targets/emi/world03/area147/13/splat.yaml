@@ -37,8 +37,10 @@ segments:
     - asm
     - func_801F2DF4
   - - 820
-    - asm
-    - func_801F2F34
+    - c
+    - advanceHalfword30By10AndAdvanceState2At80ThenDrawWithHalfword32ModeWorld03Area14713_801F2F34
+    - '@source: src/bof3/world/advanceHalfword30By10AndAdvanceState2At80ThenDrawWithHalfword32ModeWorld03Area14713_801F2F34.c'
+    - '@behavior: Byte-2 state handler 2 of the local handler table at 0x801F358C: adds 0x10 to the work halfword at 0x30 of the record in scratchpad cell 0x1F800044, advances the state byte at 0x02 once the stored value reaches 0x80, and draws through 0x801F313C with mode -1 when the record halfword at 0x32 is zero, else mode 0.'
   - - 944
     - asm
     - func_801F2FB0

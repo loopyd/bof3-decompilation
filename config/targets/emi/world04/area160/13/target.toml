@@ -11,5 +11,6 @@ sources = []
 support_sources = [
     "src/bof3/support/area160_13_psyq.c",
     "src/bof3/world/area16013DispatchTables.c",
+    "src/bof3/world/advanceHalfword30By20AndAdvanceState2At100ThenDrawWorld04Area16013_801F2EF8.c",
 ]
 psyq_source = "src/bof3/support/area160_13_psyq.c"

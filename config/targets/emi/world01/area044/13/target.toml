@@ -9,6 +9,19 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/stepAreaTaskArmWorkRecordAndQueueCuesWorld01Area04413_801F3740.c",
     "src/bof3/support/area044_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area044_13_psyq.c"
+
+# The switch dispatches the state byte D_801448EC through this entry's own
+# twenty-one-word table at 0x801F2C5C in the reviewed leading table segment.
+# psyq gcc emits the jump table after `.rdata` + `.align 3`, so the section
+# carries 8-byte alignment while the reviewed address is 4-mod-8; the placement
+# route lowers only that section's alignment to the address's own alignment so
+# the table lands exactly and the emitted lui/lw relocation matches.
+[[matching.section_placements]]
+function = 0x801F3740
+section = ".rodata"
+address = 0x801F2C5C
+size = 0x54

@@ -36,8 +36,9 @@ segments:
     - asm
     - func_801F2D0C
   - - 552
-    - asm
-    - func_801F2E28
+    - c
+    - seedFrontEndRecordHandler37FromWorkPositionWorld01Area04313_801F2E28
+    - '@source: src/bof3/world/seedFrontEndRecordHandler37FromWorkPositionWorld01Area04313_801F2E28.c'
   - - 956
     - asm
     - func_801F2FBC
