@@ -39,8 +39,10 @@ segments:
     - asm
     - func_801EEE4C
   - - 796
-    - asm
-    - func_801EEF1C
+    - c
+    - raiseBattleTargetFlag20ClearBytes9AThenAdvanceWorkByte1BmagicMagic09403_801EEF1C
+    - '@source: src/bof3/bmagic/raiseBattleTargetFlag20ClearBytes9AThenAdvanceWorkByte1BmagicMagic09403_801EEF1C.c'
+    - '@behavior: Raises battler status flag 0x20 by passing the shared battle target byte at 0x80146384 and the flag word 0x20 to func_800A9610, then clears scratchpad work-object byte 9 and byte 0xA and advances work byte 1 by one; the work-object pointer cell at 0x1F800044 is re-read before each store group, the 0x18-byte frame only keeps $ra across the call, and it takes no arguments and returns nothing.'
   - - 892
     - asm
     - func_801EEF7C

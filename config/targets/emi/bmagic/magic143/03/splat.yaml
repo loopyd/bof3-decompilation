@@ -43,8 +43,9 @@ segments:
     - asm
     - func_801EEDB4
   - - 784
-    - asm
-    - func_801EEF10
+    - c
+    - seedWorkByteBRandomNibbleClearBytes9AThenAdvanceWorkByte2BmagicMagic14303_801EEF10
+    - '@source: src/bof3/bmagic/seedWorkByteBRandomNibbleClearBytes9AThenAdvanceWorkByte2BmagicMagic14303_801EEF10.c'
   - - 888
     - asm
     - func_801EEF78

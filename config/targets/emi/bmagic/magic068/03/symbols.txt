@@ -1,7 +1,8 @@
+g_battle_work = 0x1F800044;
 func_801EEC18 = 0x801EEC18;
 func_801EEC88 = 0x801EEC88;
 func_801EED50 = 0x801EED50;
-func_801EF44C = 0x801EF44C;
+decrementWorkByteAResetTo3EAndAdvanceWorkByte1OnZeroBmagicMagic06803_801EF44C = 0x801EF44C;
 func_801EF4A8 = 0x801EF4A8;
 func_801EF4EC = 0x801EF4EC;
 func_801EF55C = 0x801EF55C;

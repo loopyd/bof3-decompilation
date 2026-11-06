@@ -52,8 +52,10 @@ segments:
     - asm
     - func_801F31F4
   - - 1688
-    - asm
-    - func_801F3298
+    - c
+    - clearWorkTableByte14At800E4800World01Area04713_801F3298
+    - '@source: src/bof3/world/clearWorkTableByte14At800E4800World01Area04713_801F3298.c'
+    - '@behavior: zeroes byte 0x14 of each of the 0x10 records of the 0x18-byte-stride work table at 0x800E4800 with an unsigned byte counter in a bottom-tested loop; takes no arguments and returns nothing.'
   - - 1732
     - asm
     - func_801F32C4

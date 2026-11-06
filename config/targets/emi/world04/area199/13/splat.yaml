@@ -42,8 +42,8 @@ segments:
     - asm
     - func_801F2CE0
   - - 380
-    - asm
-    - func_801F2D7C
+    - c
+    - seedWorkTripletAndOverlayStateBytesWorld04Area19913_801F2D7C
   - - 488
     - asm
     - func_801F2DE8

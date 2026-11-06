@@ -46,8 +46,8 @@ segments:
     - asm
     - func_801F2DE0
   - - 708
-    - asm
-    - func_801F2EC4
+    - c
+    - copyWords7a8cToWork34383cWorld03Area14913_801F2EC4
   - - 764
     - asm
     - func_801F2EFC

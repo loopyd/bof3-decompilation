@@ -269,6 +269,9 @@ arbitrary scheduler control. The shared scratchpad work cell is the one place th
 already decided: five byte-exact sources declare it `u8* volatile`, so when the original
 keeps consecutive handoff stores that no call separates, declare that cell volatile rather
 than inventing a barrier. Cite the siblings when you do, and leave any other cell alone.
+Reading or writing that cell from another target still owes this target its own
+`@source`-tagged extern and map row: the no-copy rule bans borrowing a binding, not
+re-declaring a cell this target's own bytes show.
 Original-proven ordering remains explicit evidence. Where a store through the loaded
 pointer already separates the reads, the plain spelling measured identical bytes on that
 same cell, so the qualifier is not what carries the reload there: a store through the
