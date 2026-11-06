@@ -207,6 +207,7 @@ sources = [
     "src/bof3/battle/func_801E61F0_battle03.c",
     "src/bof3/battle/func_801E62BC.c",
     "src/bof3/battle/func_801E6420_battle03.c",
+    "src/bof3/battle/drawSlotFadeTileAndRearmCountdown.c",
     "src/bof3/battle/drawSlotFadeTileAndClearSlot.c",
     "src/bof3/battle/func_801E679C.c",
     "src/bof3/battle/func_801E6AA0.c",

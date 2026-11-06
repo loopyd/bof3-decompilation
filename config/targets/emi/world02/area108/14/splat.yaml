@@ -37,8 +37,10 @@ segments:
     - asm
     - func_801F2C88
   - - 200
-    - asm
-    - func_801F2CC8
+    - c
+    - advanceWorkByte1WhenNoRecordActiveWorld02Area10814_801F2CC8
+    - '@source: src/bof3/world/advanceWorkByte1WhenNoRecordActiveWorld02Area10814_801F2CC8.c'
+    - '@behavior: runs the 0x37-entry motion integrator at 0x801F34B8, walks the 16 records of the 0x28-byte-stride work table at 0x800E4800 through the handler table at 0x801F56F4, and advances the dispatch byte at +1 of the work record published at scratchpad pointer cell 0x1F800044 only when no record ran a handler.'
   - - 280
     - asm
     - func_801F2D18

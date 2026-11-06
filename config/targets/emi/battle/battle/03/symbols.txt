@@ -399,6 +399,7 @@ func_801E61F0 = 0x801E61F0;
 func_801E62BC = 0x801E62BC;
 dispatchSlotByte1TableF20 = 0x801E63C0;
 func_801E6420 = 0x801E6420;
+drawSlotFadeTileAndRearmCountdown = 0x801E64B4;
 drawSlotFadeTileAndClearSlot = 0x801E65F8;
 dispatchByte1PairFlagged = 0x801E6724;
 func_801E679C = 0x801E679C;

@@ -371,6 +371,92 @@ extern u16 D_80143F00;
  * @kind unknown */
 extern s8 D_80146870;
 
+/* Live save-data block (0x10B0 bytes) that the save-data prepare routine
+ * prepareSaveDataImageAndPublishPanelRecord fills from the scenario state and
+ * copies into the 0x1E00-byte memory-card image buffer at 0x800C1A00. The save
+ * format puts the flag bank D_80144F28 at byte +0x650, the u16 checksum that
+ * the routine clears and re-sums at +0x70 and the first party record at +0x90;
+ * the shop keeps its save-slot panel record at +0xCA0. Every access is
+ * byte-offset arithmetic from this base, so it stays a raw byte array. The
+ * address is owned by the shared map, so no target-map row is added.
+ * @source 0x801448D8 @kind table */
+extern u8 D_801448D8[];
+
+/* Story-progress bytes of the save header, copied to save-data offsets
+ * 0x20..0x23 by the prepare routine: the shared scenario-progress byte at
+ * 0x80146864 and the three following story bytes. The first is owned by the
+ * shared map; the three raw bytes are declared locally and auto-bind by their
+ * D_<address> names.
+ * @source 0x80146864 @kind unknown */
+extern u8 g_ScenarioProgress;
+/* @source 0x80146865 @kind unknown */
+extern u8 D_80146865;
+/* @source 0x80146866 @kind unknown */
+extern u8 D_80146866;
+/* @source 0x80146867 @kind unknown */
+extern u8 D_80146867;
+
+/* Save-header bytes written by the prepare routine, each named separately
+ * because the original materializes every address with its own `lui`/`sb`
+ * pair instead of indexing one base register: the story bytes at 0x20..0x23,
+ * the world-id halfword at +0x24 (D_801448FC), the game-mode record byte at
+ * +0x27 (D_801448FF), the player position words at +0x28/+0x2C and the
+ * cleared checksum halfword at +0x70 (D_80144948).
+ * @source 0x801448F8 @kind unknown */
+extern u8 D_801448F8;
+/* @source 0x801448F9 @kind unknown */
+extern u8 D_801448F9;
+/* @source 0x801448FA @kind unknown */
+extern u8 D_801448FA;
+/* @source 0x801448FB @kind unknown */
+extern u8 D_801448FB;
+/* @source 0x801448FC @kind unknown */
+extern u16 D_801448FC;
+/* @source 0x801448FF @kind unknown */
+extern u8 D_801448FF;
+/* @source 0x80144900 @kind unknown */
+extern u32 D_80144900;
+/* @source 0x80144904 @kind unknown */
+extern u32 D_80144904;
+/* @source 0x80144948 @kind unknown */
+extern u16 D_80144948;
+
+/* Main-RAM player position words (Q16 tile) published into save-data offsets
+ * 0x28/0x2C by the prepare routine.
+ * @source 0x80145EC4 @kind unknown */
+extern u32 D_80145EC4;
+/* @source 0x80145EC8 @kind unknown */
+extern u32 D_80145EC8;
+
+/* First byte of the main-RAM game-mode record table, copied to save-data
+ * offset 0x27 by the prepare routine at the width of the original `lbu`.
+ * @source 0x80145E98 @kind table */
+extern u8 D_80145E98[];
+
+/* Main-RAM block whose nine halfwords the prepare routine copies to save-data
+ * offset 0xCBC. The block sits just before the shared text buffer D_80145AD4
+ * and its role is not recovered, so it keeps its address name.
+ * @source 0x80145AB4 @kind table */
+extern u16 D_80145AB4[];
+
+/* u16 checksum cell of the memory-card image: the prepare routine stores the
+ * byte-sum over the 0x10B0 live save bytes there after copying them into the
+ * image buffer at the bare constant address 0x800C1A00 (the original
+ * materializes that base with `lui`/`ori`, i.e. as an integer, while this cell
+ * is a map symbol and keeps its own `lui`/`sh` pair).
+ * @source 0x800C1A70 @kind unknown */
+extern u16 D_800C1A70;
+
+/* Main-RAM byte that the prepare routine republishes from the shared world-flag
+ * halfword D_80146258 (stored as its low byte).
+ * @source 0x80145025 @kind unknown */
+extern u8 D_80145025;
+
+/* Shared world-flag halfword republished by the prepare routine into
+ * D_80145025; owned by the shared map, so no target-map row is added.
+ * @source 0x80146258 @kind unknown */
+extern u16 D_80146258;
+
 /* Overlay-local panel record table filled by func_801D6CE4: seven 32-bit words per
  * record (stride 0x1C bytes) taken from byte offset 0xCA0 of the shop state
  * block. Zero-filled in the shipped payload, so the record contents are not
@@ -574,6 +660,15 @@ void func_801AE3F0(u16 arg0, u16 arg1, u32 arg2, u32 arg3, u32 arg4,
  * at that call site, not a recovered callee contract.
  * @source 0x801EFCA8 */
 s32 func_801EFCA8(char* pattern, s32 limit);
+
+/* Main-exe front-end text emitter (executable space, unlifted) that draws the
+ * shop header row buffer D_80145AD4 at the alignment and row constants the
+ * save-data prepare routine passes. The widths below are the widths observed at
+ * that call site, not a recovered callee contract; the address had no
+ * prototype in this target before this lift and is bound with a target-map
+ * row.
+ * @source 0x801EF27C */
+void func_801EF27C(s32 arg0, s32 arg1, u8* arg2);
 
 extern const char D_801D0E58[];
 extern const char D_801D0E5C[];
@@ -1078,6 +1173,18 @@ extern void (*D_801E5D68[])(void);
  * argument- and return-free at those sites.
  * @source 0x801DF6A8 */
 void drawShopSlotListWithSelectionCursors(void);
+
+/* Shop header-row builder (lifted: func_801D7080_shop00.c); the save-data
+ * prepare routine calls it with no arguments before drawing the row through
+ * func_801EF27C.
+ * @source 0x801D7080 */
+void func_801D7080(void);
+
+/* Save-slot panel record copier (lifted: func_801D6CE4_shop00.c); the save-data
+ * prepare routine hands it the selected save slot D_801E6074 and the save-data
+ * block whose panel record at +0xCA0 is copied into that slot's record.
+ * @source 0x801D6CE4 */
+void func_801D6CE4(u8 arg0, u8* arg1);
 void appendFullscreenDimTile(void);
 void appendFullscreenDimTileB(void);
 void func_801DE8E8(void);

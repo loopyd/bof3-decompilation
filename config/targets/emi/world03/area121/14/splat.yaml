@@ -97,8 +97,9 @@ segments:
     - setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld03Area12114_801F35D0
     - '@source: src/bof3/world/setWorkState2To3When454f2Is2ThenDrawHalfword2eWorld03Area12114_801F35D0.c'
   - - 2592
-    - asm
-    - func_801F3620
+    - c
+    - decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld03Area12114_801F3620
+    - '@source: src/bof3/world/decrementHalfword2eBy10AndSetState2To0BelowMinus2fOrTo1Unless454f2Is2ThenDrawHalfword2eWorld03Area12114_801F3620.c'
   - - 2724
     - c
     - dispatchState03World03Area12114_801F36A4

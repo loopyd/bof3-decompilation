@@ -1320,8 +1320,10 @@ segments:
     - '@source: src/bof3/battle/func_801E6420_battle03.c'
     - '@behavior: Queues the 0x1E battle event with the message string selected by the 0x80146374 progress byte (Critical below 3, otherwise Lucky Strike), then raises the 0x801483C3 gate, stores 2 into queued slot byte +0x09, 0x100 into +0x0C and 0 into +0x10, and advances the slot state byte +0x01.'
   - - 88244
-    - asm
-    - func_801E64B4
+    - c
+    - drawSlotFadeTileAndRearmCountdown
+    - '@source: src/bof3/battle/drawSlotFadeTileAndRearmCountdown.c'
+    - '@behavior: Subtracts the queued slot word +0x0C from the shared 0x8014932C channel, draws the 0x0B colour tile built from the slot level word +0x10 (replicated into all three 5-bit channels while the 0x80146374 progress byte is below 3, red channel only otherwise), publishes mode 2 at 0x80149333, steps the level up by 8, and once the slot byte +0x09 countdown expires advances the slot state byte +0x01 and re-arms the countdown at 2.'
   - - 88568
     - c
     - drawSlotFadeTileAndClearSlot

@@ -47,8 +47,9 @@ segments:
     - asm
     - func_801F2FB8
   - - 2204
-    - asm
-    - func_801F349C
+    - c
+    - seedThreeRotatingQuadRecordsWorld02Area10313_801F349C
+    - '@source: src/bof3/world/seedThreeRotatingQuadRecordsWorld02Area10313_801F349C.c'
   - - 2348
     - asm
     - func_801F352C

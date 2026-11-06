@@ -35,6 +35,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | `lh` plus `lhu` replaces `lh` plus register copy | Trace [narrow load sharing](#narrow-load-sharing-and-real-value-reuse), known bits and later definitions |
 | Byte-cell load hoisted above the record's word stores, extra live registers | Split the record view by access width: [record views](#scratchpad-cells-and-record-views) |
 | Indirect call loads the selected pointer but the original fills frame slots with the whole table | Assign the named extern table to a local of its aggregate type, then index the local; indexing the extern indexes the table in place |
+| Small block copy builds as per-word `lw`/`sw` or as a byte loop, original moves it with `lwl`/`lwr` plus `swl`/`swr` pairs | Give the moved bytes one byte-array struct and assign the whole block through it: an unaligned word-pair move is what GCC 2.7.2 emits for a block copy whose type has alignment 1, so a `u32` view of the same bytes stays on aligned loads |
 | Frame/size mismatch | Correct calls/prototypes, address-taken locals, aggregate copies, lifetime and topology; trace unused frame bytes through [orphan stack slots](#orphan-stack-slots), then name repeated scale products (#named-scale-products) |
 | Pointer read hoisted above a call, extra saved register, frame unchanged | Bind the call-derived scaled value to its own local before the pointer read; folding the mask/shift into the later address expression keeps the pointer live across the call |
 | Call result stored inside the next call's delay slot | The original stores a `jal` result into its outgoing argument slot right after that call, before the next call's argument setup. Bind the result to a local; nesting the call in the later argument list moves that store into the following `jal` delay slot |
@@ -501,6 +502,15 @@ access to the extra bytes. First exclude ABI, call, aggregate and address-escape
 errors. In GCC 2.7.2, a folded address can leave an internal `USE` of a pseudo
 whose definition disappeared. Reload may allocate a slot for that pseudo even
 though the `USE` emits no instruction.
+
+A bare prologue and epilogue with no saved register, every instruction outside them
+already matching, and an original frame larger than this body's own locals is a
+second cause: the reservation comes from a declaration the original translation
+unit carried that emitted no code. One declared local of the missing size restores
+the frame, and it takes no use, since a use would change liveness instead. The bytes
+constrain only that size, so the name and type are a reconstruction choice rather
+than recovered source: flag the declaration for review and record what removing it
+leaves, which is the frame and offset residual with the body otherwise matching.
 
 1. Bind before/after dumps to the source and unchanged compiler settings. Trace
    the address definition, its death note and surviving `USE` through combine,

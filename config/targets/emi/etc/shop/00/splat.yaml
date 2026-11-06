@@ -256,8 +256,10 @@ segments:
     - asm
     - func_801D68D0
   - - 24032
-    - asm
-    - func_801D69E0
+    - c
+    - prepareSaveDataImageAndPublishPanelRecord
+    - '@source: src/bof3/ui/prepareSaveDataImageAndPublishPanelRecord.c'
+    - '@behavior: save-data prepare routine of the shop/status save screen, called by the save-write handler func_801D51B8 and the load handler func_801D5894: it draws the shop header row through func_801D7080 and func_801EF27C, copies the 16-byte scenario-state header D_80146870 into the head of the live save-data block D_801448D8 and publishes the save header fields (the scenario-progress bytes at +0x20..+0x23, the world id at +0x24, the game-mode record byte at +0x27, the player position words at +0x28/+0x2C, the cleared checksum halfword at +0x70 and nine halfwords at +0xCBC). It then rebuilds the save-slot panel record at +0xCA0 from the first party record at +0x90 and the play-time word at +0x6E8, replaces the first three party-order ids D_80144F5A with 0xB when an id equals the special case 4 unless the byte at +0x74C selects that case, stores the result of the flag test func_8015B5D4(&D_80144F28, 0x92) at +0x14 and republishes the world-flag halfword D_80146258 as a byte into D_80145025. Finally it copies the 0x10B0 live save bytes into the memory-card image buffer at 0x800C1A00, zero-fills the rest of its 0x1E00 bytes, stores the u16 byte-sum over the copied bytes at 0x800C1A70, extends the used-save count D_801E6078 when the selected slot D_801E6074 is the last one, and publishes the panel record for that slot through func_801D6CE4.'
   - - 24804
     - c
     - func_801D6CE4

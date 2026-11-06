@@ -207,8 +207,10 @@ segments:
     - asm
     - func_801F564C
   - - 10948
-    - asm
-    - func_801F56C4
+    - c
+    - incrementWorkStepIfSharedFlag7SetWorld02Area07714_801F56C4
+    - '@source: src/bof3/world/incrementWorkStepIfSharedFlag7SetWorld02Area07714_801F56C4.c'
+    - '@behavior: tests flag 7 of the main-RAM flag bank 0x80144F28 through the shared flag tester func_8015B5D4 and, when it reports the flag set, increments work byte +2 through the scratchpad work pointer cell 0x1F800044.'
   - - 11024
     - c
     - cycleTwoPaletteBlocksAndAdvanceStepWorld02Area07714_801F5710
