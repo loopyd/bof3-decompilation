@@ -13,6 +13,7 @@ support_sources = [
     "src/bof3/world/setTwoWorld01Area03913_801F2D38.c",
     "src/bof3/world/noopHandlerWorld01Area03913_801F2E94.c",
     "src/bof3/world/noopHandlerWorld01Area03913_801F2E8C.c",
+    "src/bof3/world/invokeHelperByteArgWorld01Area03913_801F2E9C.c",
     "src/bof3/support/area039_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area039_13_psyq.c"

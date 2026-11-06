@@ -64,8 +64,9 @@ segments:
     - asm
     - func_801F35A4
   - - 2544
-    - asm
-    - func_801F35F0
+    - c
+    - setWorkByte8To3When7Else7World02Area09513_801F35F0
+    - '@source: src/bof3/world/setWorkByte8To3When7Else7World02Area09513_801F35F0.c'
   - - 2584
     - asm
     - func_801F3618

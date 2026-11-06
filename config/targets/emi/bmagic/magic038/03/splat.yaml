@@ -62,8 +62,10 @@ segments:
     - asm
     - func_801EF710
   - - 3204
-    - asm
-    - func_801EF884
+    - c
+    - decrementGlobalWorkByteBAndInvokeHelperBmagicMagic03803_801EF884
+    - '@source: src/bof3/bmagic/decrementGlobalWorkByteBAndInvokeHelperBmagicMagic03803_801EF884.c'
+    - '@behavior: Work-byte-1 handler, entry 6 of this overlay''s handler-pointer table at 0x801EF9A4: reads the shared battle work record pointer at 0x801EB4E0 once, decrements that record''s byte 0xB by one at byte width with the store filling the call delay slot, then invokes the shared helper at 0x801E5988 unconditionally; takes no arguments, returns nothing, and the 0x18-byte frame only keeps $ra across the call.'
   - - 3256
     - c
     - dispatchStateByte2Tablef9d0BmagicMagic03803_801EF8B8

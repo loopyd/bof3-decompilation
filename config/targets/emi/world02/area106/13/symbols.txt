@@ -1,5 +1,5 @@
 dispatchStateByte2Table3eacWorld02Area10613_801F2C48 = 0x801F2C48;
-func_801F2C8C = 0x801F2C8C;
+setOverlayStateByte2AndAdvanceDispatchStateByteWorld02Area10613_801F2C8C = 0x801F2C8C;
 func_801F2CB4 = 0x801F2CB4;
 func_801F2D0C = 0x801F2D0C;
 func_801F2DDC = 0x801F2DDC;

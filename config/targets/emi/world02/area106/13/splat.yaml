@@ -34,8 +34,9 @@ segments:
     - dispatchStateByte2Table3eacWorld02Area10613_801F2C48
     - '@source: src/bof3/world/area10613DispatchTables.c'
   - - 140
-    - asm
-    - func_801F2C8C
+    - c
+    - setOverlayStateByte2AndAdvanceDispatchStateByteWorld02Area10613_801F2C8C
+    - '@source: src/bof3/world/setOverlayStateByte2AndAdvanceDispatchStateByteWorld02Area10613_801F2C8C.c'
   - - 180
     - asm
     - func_801F2CB4

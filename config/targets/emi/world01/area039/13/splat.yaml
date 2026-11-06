@@ -60,8 +60,8 @@ segments:
     - c
     - noopHandlerWorld01Area03913_801F2E94
   - - 668
-    - asm
-    - func_801F2E9C
+    - c
+    - invokeHelperByteArgWorld01Area03913_801F2E9C
   - - 708
     - asm
     - func_801F2EC4
