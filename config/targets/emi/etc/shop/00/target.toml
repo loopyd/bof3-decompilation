@@ -30,6 +30,7 @@ sources = [
     "src/bof3/ui/func_801D60B0.c",
     "src/bof3/ui/func_801D6184.c",
     "src/bof3/ui/func_801D6CE4_shop00.c",
+    "src/bof3/ui/drawThreeRowSelectorPanel.c",
     "src/bof3/ui/func_801D7080_shop00.c",
     "src/bof3/ui/rebuildPanelRecordTable.c",
     "src/bof3/ui/func_801DF9B4_shop00.c",

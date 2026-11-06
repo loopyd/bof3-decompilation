@@ -133,8 +133,10 @@ segments:
     - '@source: src/bof3/bmagic/incrementWorkByte2WhenWorkByteBZeroBmagicMagic15103_801F00B4.c'
     - '@behavior: Reads the scratchpad work-object pointer cell at 0x1F800044 once and increments the work-object byte at offset 0x2 only when its byte at offset 0xB is zero; the sibling incrementWorkByte2BmagicMagic06403_801EF87C increments that same byte unguarded.'
   - - 5352
-    - asm
-    - func_801F00E8
+    - c
+    - decrementWorkTintChannel5DThenIncrementWorkByte2WhenChannelIs8BmagicMagic15103_801F00E8
+    - '@source: src/bof3/bmagic/decrementWorkTintChannel5DThenIncrementWorkByte2WhenChannelIs8BmagicMagic15103_801F00E8.c'
+    - '@behavior: Decrements the scratchpad work-object tint channel byte at offset 0x5D by one and, only when the byte it stored sign-extends to 8, re-reads the work-object pointer cell 0x1F800044 and increments the work-object state byte at offset 0x2.'
   - - 5436
     - asm
     - func_801F013C

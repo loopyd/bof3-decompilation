@@ -322,6 +322,7 @@ sources = [
     "src/bof3/battle/submitRolledEffectAndAdvance.c",
     "src/bof3/battle/callLocalReady2ThenSubmitRolledEffectAndAdvance.c",
     "src/bof3/battle/initBattlerFieldRecordsAndAdvanceFrontState.c",
+    "src/bof3/battle/startSelectionEmiStreamAndAdvanceState.c",
     "src/bof3/battle/updateEnemyQueuedFlagAndRearmWorkState.c",
     "src/bof3/battle/drawBattlerCountdownEntries.c",
     "src/bof3/battle/drawBattlePanelStrip.c",

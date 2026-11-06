@@ -78,8 +78,11 @@ segments:
     - asm
     - func_801D4EA4
   - - 17288
+    - c
+    - drawThreeCardRow
+  - - 17460
     - asm
-    - func_801D4F88
+    - func_801D5034
   - - 20176
     - asm
     - func_801D5AD0

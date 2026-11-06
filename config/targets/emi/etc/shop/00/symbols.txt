@@ -135,6 +135,7 @@ setUiFlagsGated = 0x801D66C8;
 tickPhaseTimerThenAdvanceWorkCounterB = 0x801D66F8;
 prepareSaveDataImageAndPublishPanelRecord = 0x801D69E0;
 func_801D6CE4 = 0x801D6CE4;
+drawThreeRowSelectorPanel = 0x801D6D6C;
 appendFullscreenDimTile = 0x801D6E94;
 collectSaveSlotsThenCountFreeBlocks = 0x801D6F00;
 func_801D7080 = 0x801D7080;

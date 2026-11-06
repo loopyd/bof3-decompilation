@@ -133,8 +133,10 @@ segments:
     - asm
     - func_801F43C8
   - - 6156
-    - asm
-    - func_801F440C
+    - c
+    - armScratchWorkMin80LevelTripleWorld04Area17213_801F440C
+    - '@source: src/bof3/world/armScratchWorkMin80LevelTripleWorld04Area17213_801F440C.c'
+    - '@behavior: clears flag bit 0x40 and sets flag bit 0x20 of scratch work record byte 0, writes 1 into its 0x5C marker byte and -0x80 into its signed level bytes 0x5D-0x5F through a fresh cell load each, then reloads the cell to select handler byte 1, zero its 0x0C/0x10/0x14 words and set its 0x20 word to -8, and finally consumes two units of the halfword at 0x0A of the record published through the global pointer cell 0x80148210.'
   - - 6340
     - asm
     - func_801F44C4

@@ -170,8 +170,10 @@ segments:
     - asm
     - func_801F1088
   - - 9600
-    - asm
-    - func_801F1180
+    - c
+    - addWorkColorTripletBy16ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic01500_801F1180
+    - '@source: src/bof3/bmagic/addWorkColorTripletBy16ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2BmagicMagic01500_801F1180.c'
+    - '@behavior: Entry 37 of the overlay handler table at 0x801EEC04, the word stored at 0x801EEC98: it adds 0x10 to the three colour channels of the scratchpad work object at bytes 0x5D, 0x5E and 0x5F, re-reading the work pointer cell 0x1F800044 before each channel, then reads channel 0x5D back through a signed byte view and, when that value is -0x40 (0xC0 unsigned), decrements byte 0xB of the shared battle work record read through 0x801EB4E0 and advances work byte 2, the handler index, with a byte-width read-modify-write. The cell is re-read before that final group because a store through the record pointer may alias it.'
   - - 9776
     - c
     - invokeHelperBmagicMagic01500_801F1230

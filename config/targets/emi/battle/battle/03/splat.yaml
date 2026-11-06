@@ -171,8 +171,10 @@ segments:
     - '@source: src/bof3/battle/snapshotBattlersAndAdvanceState.c'
     - '@behavior: Copies the visible state of battlers 0, 1 and 2 into their templates, runs one shared front-end frame slice, starts EMI stream slot 0x256 and advances the battle state byte.'
   - - 26164
-    - asm
-    - func_801D7234
+    - c
+    - startSelectionEmiStreamAndAdvanceState
+    - '@source: src/bof3/battle/startSelectionEmiStreamAndAdvanceState.c'
+    - '@behavior: Runs the front-end hook published at D_801463A8 once the EXE-side EMI loader reports ready and, while the D_80146325 bit-0x40 gate is clear, resets the current front-end selection effect through func_8015D5D8 and then -- unless the D_80145029 selection index reads 0xFF -- stages the 0x80181EB8 entry it selects into the EMI loader state record (effect bytes D_80146855/D_80146856, 0x20 transfer bit of D_80146854 plus 0x40 while D_80146328 carries bit 0x10) and starts that entry stream slot through func_80161FDC after publishing it at D_801463B0; a 0xFF selection raises bit 0x08 of D_80146328 instead. Every path that passes the loader gate advances the battle front-end state byte 0x801462E2.'
   - - 26448
     - c
     - initBattlerFieldRecordsAndAdvanceFrontState

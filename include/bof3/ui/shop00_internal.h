@@ -991,7 +991,7 @@ void func_801E4E9C(PanelTask* task);
 void func_801E4FC8(u16 arg0, u16 arg1, u8 arg2, s32 arg3);
 
 /* Main-exe panel frame drawer called by this EMI's panel emitters
- * func_801D6D6C, func_801D7E1C, func_801E2F04, func_801E4DF4 and
+ * drawThreeRowSelectorPanel, func_801D7E1C, func_801E2F04, func_801E4DF4 and
  * func_801E4E9C with two sign-extended task halfwords (`lh`) and two small
  * constants. The widths below are the widths observed at those call sites, not
  * a recovered callee contract.
@@ -1056,15 +1056,21 @@ s32 func_801DA678(void);
  * @source 0x801D67B0 */
 void func_801D67B0(s16 arg0, s32 arg1, s32 arg2);
 
-/* Shop panel row draw helper in this EMI (unlifted); the phase step
- * func_801D408C draws the phase-relative row through it with
- * phaseTimer * 48 + 0x6E as the x coordinate and the y constant 0x4C. Both
- * arguments are plain word values at that call site (the x coordinate is
- * computed in a word register and the y constant is materialized as an
- * `li`), so no narrower width is proven; the widths below are the widths
- * observed at that call site, not a recovered callee contract.
+/* Shop three-row selector panel drawer (lifted:
+ * src/bof3/ui/drawThreeRowSelectorPanel.c); the phase steps
+ * retreatShopPanelRowThenAdvanceUiSubstep, func_801D3D84,
+ * drawShopPanelsThenDecrementUiSubstep, func_801D408C and func_801D46A4 call
+ * it with the panel row coordinate as the first argument (phaseTimer * 48 +
+ * 0x6E for the count-up step, 0x6E - phaseTimer * 48 for its countdown mirror,
+ * the fixed 0x6E for the others) and the y constant 0x4C. Both arguments are
+ * plain word values at those call sites (the x coordinate is computed in a
+ * word register and the y constant is materialized as an `li`), so no narrower
+ * width is proven; the widths below are the widths observed at those call
+ * sites, not a recovered callee contract. Its body emits the frame through
+ * func_801DD350 with 16-bit sign extensions (`sll`/`sra`), while
+ * func_801AE3F0 receives the same arguments truncated with `andi 0xFFFF`.
  * @source 0x801D6D6C */
-void func_801D6D6C(s32 arg0, s32 arg1);
+void drawThreeRowSelectorPanel(s32 arg0, s32 arg1);
 
 /* @source 0x801E5D2C
  * @kind table — shop command handler pointers (this EMI, text blob

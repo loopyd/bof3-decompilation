@@ -3,10 +3,10 @@
 /* @source 0x801D3FD4
  * @behavior shop UI sub-step handler at entry 4 of the sub-step table
  *           D_801E52D8, which the dispatcher func_801D3AA8 selects with the UI
- *           sub-step byte D_80148652: draws the shop panel row through
- *           func_801D6D6C at the fixed origin (0x6E, 0x4C), emits the shop
- *           panel strip through func_801DAB90 with the fixed panel arguments
- *           (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte
+ *           sub-step byte D_80148652: draws the three-row selector panel through
+ *           drawThreeRowSelectorPanel at the fixed origin (0x6E, 0x4C), emits
+ *           the shop panel strip through func_801DAB90 with the fixed panel
+ *           arguments (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte
  *           D_80144952 as the fifth argument, draws the message panel through
  *           func_801DA2F4 at (0x62, 0x28) with the constant 0 and the main-RAM
  *           value D_80144F50 when the saved-state byte D_8014865C is not the
@@ -34,7 +34,7 @@
  * the same shape as appendDimTileOrRedrawPanelStrip.
  */
 void drawShopPanelsThenDecrementUiSubstep(void) {
-  func_801D6D6C(0x6E, 0x4C);
+  drawThreeRowSelectorPanel(0x6E, 0x4C);
   func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
   if (D_8014865C != -1) {
     func_801DA2F4(0x62, 0x28, 0, D_80144F50);

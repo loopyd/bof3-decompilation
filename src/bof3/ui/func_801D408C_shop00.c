@@ -1,12 +1,13 @@
 #include "bof3/ui/shop00_internal.h"
 
 /* @source 0x801D408C
- * @behavior phase step sibling of func_801D4CF0: draws the phase-relative shop
- *           panel row through func_801D6D6C at x = phaseTimer * 48 + 0x6E with
- *           the y constant 0x4C, emits the shop panel strip through func_801DAB90
- *           with the fixed panel arguments (0x14, 0x12, 0x118, 0x13) and the
- *           main-RAM CLUT-bank byte D_80144952 as the fifth argument, draws the
- *           message panel through func_801DA2F4 at (0x62, 0x28) with the
+ * @behavior phase step sibling of func_801D4CF0: draws the phase-relative
+ *           three-row selector panel through drawThreeRowSelectorPanel at
+ *           x = phaseTimer * 48 + 0x6E with the y constant 0x4C, emits the shop
+ *           panel strip through func_801DAB90 with the fixed panel arguments
+ *           (0x14, 0x12, 0x118, 0x13) and the main-RAM CLUT-bank byte
+ *           D_80144952 as the fifth argument, draws the message panel through
+ *           func_801DA2F4 at (0x62, 0x28) with the
  *           constant 0 and the main-RAM value D_80144F50 when the saved-state
  *           byte D_8014865C is not -1, then advances the frame timer phaseTimer
  *           by one and, when the advanced byte reaches 6, either resets
@@ -34,7 +35,7 @@ void func_801D408C(void) {
    * unchanged; the qualified declaration in the shared header belongs to the
    * other shop phase steps). */
   timer = (u8*)&phaseTimer;
-  func_801D6D6C((*timer * 48) + 0x6E, 0x4C);
+  drawThreeRowSelectorPanel((*timer * 48) + 0x6E, 0x4C);
   func_801DAB90(0x14, 0x12, 0x118, 0x13, D_80144952);
   if (D_8014865C != -1) {
     func_801DA2F4(0x62, 0x28, 0, D_80144F50);

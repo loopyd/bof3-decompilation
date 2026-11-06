@@ -22,5 +22,6 @@ support_sources = [
     "src/bof3/bmagic/dispatchWorkByte1HandlerBmagicMagic15103_801EEC50.c",
     "src/bof3/bmagic/dispatchWorkByte2HandlerBmagicMagic15103_801EFA34.c",
     "src/bof3/bmagic/seedMotionChannelTripletTintAndCountdownThenAdvanceWorkByte2BmagicMagic15103_801EFE90.c",
+    "src/bof3/bmagic/decrementWorkTintChannel5DThenIncrementWorkByte2WhenChannelIs8BmagicMagic15103_801F00E8.c",
 ]
 psyq_source = "src/bof3/support/magic151_03_psyq.c"

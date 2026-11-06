@@ -284,8 +284,10 @@ segments:
     - '@source: 0x801F9A10'
     - '@behavior: Add work words 0x0C/0x10/0x14 to 0x34/0x38/0x3C, subtract 0x200000 from word 0x14, call helper 0x801F9F8C, and set countdown 60 and advance byte 1 when word 0x38 equals 0x4B0000.'
   - - 11968
-    - asm
-    - func_801F9AC0
+    - c
+    - tickCountdownByte9SeedWorkWords34To3CAnd0CTo14AdvanceStateAndQueueCues202And203ScenarioScena0800_801F9AC0
+    - '@source: src/bof3/scenario/tickCountdownByte9SeedWorkWords34To3CAnd0CTo14AdvanceStateAndQueueCues202And203ScenarioScena0800_801F9AC0.c'
+    - '@behavior: Per-frame work-state handler for work byte 1 == 6 (entry 6 of the 0x801FE908 handler sub-table, entry 35 of the 51-entry run at 0x801FE894): decrement work byte 9 modulo 256 and, only when that countdown reaches zero, re-read the scratchpad work pointer from slot 0x44, seed work words 0x34/0x38 with 0x4B0000, publish the 0x8015477C distance of that pair scaled by 0x10000 in word 0x3C, seed words 0x0C/0x10/0x14 with 0xFFFF4925/0xFFFF0000/0x4C30C4, advance work byte 1 modulo 256 and queue the front-end cues 0x202 then 0x203.'
   - - 12136
     - c
     - updateWorkWordsAndClearFlagsAt360000ScenarioScena0800_801F9B68

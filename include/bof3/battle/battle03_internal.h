@@ -332,6 +332,30 @@ extern u8                           D_80146854;
 extern u8                           D_80146874;
 /* @source 0x80146875 @kind unknown */
 extern u8                           D_80146875;
+/* @source 0x80145029 @kind unknown — shared EXE front-end selection index byte;
+ * startSelectionEmiStreamAndAdvanceState reads it and selects the 0x80181EB8
+ * entry with it. */
+extern u8                           D_80145029;
+/* @source 0x80146855 @kind unknown — first staged byte of the D_80146854 EMI
+ * loader state record; startSelectionEmiStreamAndAdvanceState copies it from
+ * the selected 0x80181EB8 entry. */
+extern u8                           D_80146855;
+/* @source 0x80146856 @kind unknown — second staged byte of the same EMI loader
+ * state record. */
+extern u8                           D_80146856;
+/* @source 0x801463B0 @kind unknown — halfword startSelectionEmiStreamAndAdvanceState
+ * publishes from the selected 0x80181EB8 entry before starting it through
+ * func_80161FDC; the batl_ovr/00 sibling publishes its own 0x2C there. */
+extern u16                          D_801463B0;
+/* @source 0x80181EB8 @kind table — runtime-filled 4-byte-stride front-end
+ * selection records: the EMI stream slot at +0x00 and the two staged effect
+ * bytes at +0x02/+0x03. startSelectionEmiStreamAndAdvanceState re-materialises
+ * the base for each access, so the three cells stay flat symbols. */
+extern u16                          D_80181EB8[];
+/* @source 0x80181EBA @kind table */
+extern const u8                     D_80181EBA[];
+/* @source 0x80181EBB @kind table */
+extern const u8                     D_80181EBB[];
 extern u8                           D_80144955; /* @source 0x80144955 @kind unknown */
 extern const u8                     D_801D0C98[]; /* @source 0x801D0C98 @kind unknown */
 extern volatile u32                 D_801463D0; /* @source 0x801463D0 @kind unknown */

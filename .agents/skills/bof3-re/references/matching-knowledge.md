@@ -40,7 +40,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Pointer read hoisted above a call, extra saved register, frame unchanged | Bind the call-derived scaled value to its own local before the pointer read; folding the mask/shift into the later address expression keeps the pointer live across the call |
 | Call result stored inside the next call's delay slot | The original stores a `jal` result into its outgoing argument slot right after that call, before the next call's argument setup. Bind the result to a local; nesting the call in the later argument list moves that store into the following `jal` delay slot |
 | `beq`/`bne`, return web or tail merge | Invert branches, early return versus result local, duplicate branch calls |
-| Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests |
+| Two bit tests on one word collapse into a single combined mask compare | `&&` on two distinct bits lets GCC merge them into `(x & (a\|b)) == a`; write nested `if`s to keep both tests. The merge needs one loaded word: two non-zero tests on different byte fields of a record stay two loads, so keep that conjunction as written |
 | Three-term sum stays one instruction long, or the first divergence sits at a later term | Sweep the three associations `a + (b + c)`, `(a + b) + c`, `(b + c) + a` before touching guards, casts or truthiness spellings of that sum; the mirrored nesting stalled one instruction short with the divergence pushed to the last term, and the re-spellings measured neutral |
 | Boolean result misses the return register; extra return copy | Trace [boolean return expansion](#boolean-return-expansion) before allocation |
 | Loop topology | Compare while/do/for/guarded loop/explicit labels; matched goto is not style debt. For displaced induction setup, inspect [explicit cursors](#explicit-cursors-and-signed-bounds) |
@@ -304,7 +304,12 @@ Byte cells take a `u8` accumulator instead:
 `countdown = (u8)(p[n] - 1); p[n] = countdown; if (countdown == 0)` is the form
 whose `sb` is followed by `andi 0xff` and `bnez` on that stored register, with no
 second load of the cell. The exact countdown handlers across these overlays all
-use it, so the truncation, not a reload, supplies the compared value.
+use it, so the truncation, not a reload, supplies the compared value. The test's
+signedness picks that extension: `if ((s8)countdown == 8)` on the same `u8`
+accumulator emits `sll`/`sra` of the stored register before the compare, so a test
+against a signed-looking channel value takes a cast at the test and leaves the
+accumulator `u8`. A cell whose test has its own load takes the `s8` view on the cell
+expression at that test instead.
 
 ### Scratch cursor group variables
 

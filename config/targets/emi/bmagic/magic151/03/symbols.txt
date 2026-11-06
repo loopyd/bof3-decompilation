@@ -27,7 +27,7 @@ seedMotionChannelTripletTintAndCountdownThenAdvanceWorkByte2BmagicMagic15103_801
 func_801EFF44 = 0x801EFF44;
 func_801EFF94 = 0x801EFF94;
 incrementWorkByte2WhenWorkByteBZeroBmagicMagic15103_801F00B4 = 0x801F00B4;
-func_801F00E8 = 0x801F00E8;
+decrementWorkTintChannel5DThenIncrementWorkByte2WhenChannelIs8BmagicMagic15103_801F00E8 = 0x801F00E8;
 func_801F013C = 0x801F013C;
 func_801F01BC = 0x801F01BC;
 func_801F026C = 0x801F026C;
