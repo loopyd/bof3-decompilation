@@ -82,11 +82,13 @@ alone is not new evidence.
 Branch calls `if (cond) f(x+A); else f(x+B);` can merge into one `jal` where ternary
 argument does not. The same holds for identical argument lists: writing the call in
 both arms can produce the single original call site through cross-jumping, and it
-keeps the per-arm argument setup the original shows. Arm stores merge the same way:
-two stores into one cell whose constants share a high half cross-jump into the one
-join store with that half's `lui` filling the branch delay slot, so keep the store in
-each arm rather than selecting into a result local, which holds the value in a
-general register and one more register live. Do not route that argument
+keeps the per-arm argument setup the original shows. Arms that each pass a
+different table base never cross-jump, so a dispatch whose arms differ only in that
+base keeps one call site per arm, each with its own setup. Arm stores merge the
+same way: two stores into one cell whose constants share a high half cross-jump
+into the one join store with that half's `lui` filling the branch delay slot, so keep
+the store in each arm rather than selecting into a result local, which holds the
+value in a general register and one more register live. Do not route that argument
 through one shared constant local: with one call it hoists the fall-through arm's
 constant above the test and fills the branch delay slot with `sw $ra`, three
 instructions short of the original. Early returns versus initialized
@@ -557,7 +559,11 @@ the named extern. Copy a sibling's statement order and operand forms, not its ce
 access spelling. Once the reload count agrees the spelling is free: a displacement
 that folds makes a named extern and the `SPAD_PTR_TABLE` accessor at that cell's own
 word emit the same `lui`/`lw` pair at each reload point, so neither spelling is owed
-a probe and the seeded sibling's form stands.
+a probe and the seeded sibling's form stands. One body can mix both: keep a
+read-modify-write pair on one pointer local and re-spell the named cell for each
+later access, because a store through that local may alias the cell and the
+original re-reads it there. Read each access's own `lui`/`lw` pair; running one
+local down the body shares that base and drops the later reloads.
 
 A shared header that maps a cell name to a macro over a constant address
 (`#define D_X g_Cell`) folds the same way, once, because the macro hides the

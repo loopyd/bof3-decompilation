@@ -54,8 +54,10 @@ segments:
     - asm
     - func_800C19C4
   - - 528
-    - asm
-    - func_800C1A10
+    - c
+    - clearOwnerRecordHeadsBossBoss02316_800C1A10
+    - '@source: src/bof3/boss/clearOwnerRecordHeadsBossBoss02316_800C1A10.c'
+    - '@behavior: Second shared battle hook of this overlay: calls the main-program helper at 0x800AC934 for owner ids 0, 1 and 2 in ascending order, then returns.'
   - - 576
     - textbin
     - D_800C1A40

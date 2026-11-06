@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EEC80
   - - 684
-    - asm
-    - func_801EEEAC
+    - c
+    - add2ToWorkByte9AdvanceWorkByte1AndSeedWorkByteACountdownAt54ThenInvokeDrawHelperBmagicMagic10903_801EEEAC
+    - '@source: src/bof3/bmagic/add2ToWorkByte9AdvanceWorkByte1AndSeedWorkByteACountdownAt54ThenInvokeDrawHelperBmagicMagic10903_801EEEAC.c'
+    - '@behavior: Step 1 of the four-word step run at 0x801EEC04: adds two to the scratchpad work object''s byte 0x09, and only when the truncated value reaches 0x54 re-reads the pointer cell at 0x1F800044 to increment work byte 0x01 and seed work byte 0x0A with 0x40; both paths then call this overlay''s draw routine at 0x801EF0F8 with the object''s word at 0x64.'
   - - 816
     - asm
     - func_801EEF30

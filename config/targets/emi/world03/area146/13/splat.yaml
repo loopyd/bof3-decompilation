@@ -39,8 +39,9 @@ segments:
     - asm
     - func_801F2C9C
   - - 336
-    - asm
-    - func_801F2D50
+    - c
+    - initArea14613State
+    - '@source: src/bof3/world/initArea14613State.c'
   - - 400
     - c
     - dispatchStateByte1Table3b00World03Area14613_801F2D90

@@ -30,8 +30,9 @@ segments:
     - asm
     - func_801F2C04
   - - 80
-    - asm
-    - func_801F2C50
+    - c
+    - setStatusFFFFAndHandlerIndex3WhenGateWorld01Area06113_801F2C50
+    - '@source: src/bof3/world/setStatusFFFFAndHandlerIndex3WhenGateWorld01Area06113_801F2C50.c'
   - - 128
     - asm
     - func_801F2C80
