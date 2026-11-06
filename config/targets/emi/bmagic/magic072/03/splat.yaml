@@ -51,8 +51,10 @@ segments:
     - asm
     - func_801EF2DC
   - - 1852
-    - asm
-    - func_801EF33C
+    - c
+    - dispatchWorkRecordByte1HandlerBmagicMagic07203_801EF33C
+    - '@source: src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic07203_801EF33C.c'
+    - '@behavior: Reads the work-record pointer cell at 0x801F17B4, scales that record''s unsigned byte at offset 1 by four, and invokes the selected entry of the code-pointer table based at 0x801F01B0 with no arguments; it keeps only $ra in a 0x18-byte frame and writes no state.'
   - - 1920
     - asm
     - func_801EF380

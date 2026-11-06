@@ -9,6 +9,7 @@ load_address = 0x801F2C00
 
 sources = []
 support_sources = [
+    "src/bof3/world/copyWorkByte6To832EAndIncrementWorkByte1World03Area14413_801F2D44.c",
     "src/bof3/world/incrementWorkByte1World03Area14413_801F2DD0.c",
     "src/bof3/world/area14413DispatchTables.c",
     "src/bof3/world/incrementWorkByte1World03Area14413_801F2DB0.c",

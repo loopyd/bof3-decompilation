@@ -64,8 +64,9 @@ segments:
     - asm
     - func_801F3730
   - - 3184
-    - asm
-    - func_801F3870
+    - c
+    - setStatus14IfGateElse13World02Area11213_801F3870
+    - '@source: src/bof3/world/setStatus14IfGateElse13World02Area11213_801F3870.c'
   - - 3224
     - asm
     - func_801F3898

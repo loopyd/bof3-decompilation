@@ -40,8 +40,9 @@ segments:
     - asm
     - func_801F2CFC
   - - 324
-    - asm
-    - func_801F2D44
+    - c
+    - copyWorkByte6To832EAndIncrementWorkByte1World03Area14413_801F2D44
+    - '@source: src/bof3/world/copyWorkByte6To832EAndIncrementWorkByte1World03Area14413_801F2D44.c'
   - - 368
     - c
     - incrementWorkByte1World03Area14413_801F2D70

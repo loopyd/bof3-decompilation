@@ -42,8 +42,8 @@ Append the required fenced `acceptance-report`: actual commands/validation, risk
    function's naming debt, so a stale `func_` entry for it in
    `config/symbol-naming-baseline.json` survives with the symbols check already
    passing: report it and leave the parent-owned baseline alone.
-3. Manifest `sources` claim.
-4. Per referenced fixed address: target-local `extern` (`@source`/`@kind`) + `WEAK_SYMBOL_AT` + a map row; per referenced function: a target-local prototype.
+3. Manifest claim. `sources` and `support_sources` are both claimed and compiled, and every `sources` entry must carry function metadata, so a target whose `sources` is empty takes the lift in `support_sources` beside its generated psyq file.
+4. Per referenced fixed address: target-local `extern` (`@source`/`@kind`) bound the way step 2's precedence selects rather than with a map row plus `WEAK_SYMBOL_AT`; per referenced function: a target-local prototype.
 
 Before first gate: evidence-backed name/module, complete ownership and canonical
 metadata. Unknown roles stay address-anchored; `@status`/`@match`/`@residual` reflect

@@ -74,8 +74,8 @@ segments:
     - dispatchStateByte2Table0080BmagicMagic06603_801EF834
     - '@source: src/bof3/bmagic/magic06603DispatchTables.c'
   - - 3192
-    - asm
-    - func_801EF878
+    - c
+    - clearSlotCountersAndWorkByte9ThenIncrementWorkByte2BmagicMagic06603_801EF878
   - - 3272
     - asm
     - func_801EF8C8

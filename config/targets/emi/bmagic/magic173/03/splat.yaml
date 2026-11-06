@@ -67,8 +67,10 @@ segments:
     - asm
     - func_801F02B0
   - - 6048
-    - asm
-    - func_801F03A0
+    - c
+    - insertEmptyRecordAtWorkByteBAndShiftRowRecordsUpBmagicMagic17303_801F03A0
+    - '@source: src/bof3/bmagic/insertEmptyRecordAtWorkByteBAndShiftRowRecordsUpBmagicMagic17303_801F03A0.c'
+    - '@behavior: Shifts the 4-byte records of the pair table at 0x801F09B0 from row work[0x4] one record higher for indices work[0xB] through work[0xA] - 1 and then writes the 0xFFFF, 0xFFFF null sentinel into record work[0xB] after re-reading the scratchpad work-object pointer cell at 0x1F800044; takes no arguments, returns nothing and is a leaf with no frame.'
   - - 6280
     - asm
     - func_801F0488

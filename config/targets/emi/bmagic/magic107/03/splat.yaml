@@ -45,8 +45,9 @@ segments:
     - asm
     - func_801EEE40
   - - 592
-    - asm
-    - func_801EEE50
+    - c
+    - clearWorkBytes9ABAndAdvanceWorkByte1BmagicMagic10703_801EEE50
+    - '@source: src/bof3/bmagic/clearWorkBytes9ABAndAdvanceWorkByte1BmagicMagic10703_801EEE50.c'
   - - 672
     - asm
     - func_801EEEA0

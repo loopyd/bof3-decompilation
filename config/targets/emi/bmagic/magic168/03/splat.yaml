@@ -51,8 +51,9 @@ segments:
     - asm
     - func_801EF2D8
   - - 1848
-    - asm
-    - func_801EF338
+    - c
+    - dispatchWorkRecordByte1HandlerBmagicMagic16803_801EF338
+    - '@source: src/bof3/bmagic/dispatchWorkRecordByte1HandlerBmagicMagic16803_801EF338.c'
   - - 1916
     - asm
     - func_801EF37C
