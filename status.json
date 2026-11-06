@@ -1,18 +1,18 @@
 {
   "schema": "bof3.decomp-status/v2",
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "5a3c05b42e2a4107df9623e81aa31393d6e7df2d",
-  "published_at": "2026-11-06T05:30:33.845705+00:00",
+  "revision": "0db410698ec167e4b612e32066160a7599798a6e",
+  "published_at": "2026-11-06T05:52:04.854681+00:00",
   "counts": {
-    "completed": 3212,
+    "completed": 3222,
     "partial": 136,
-    "unlifted": 7183,
+    "unlifted": 7173,
     "invalid": 9,
     "total": 10531,
     "symbols": {
-      "named": 65397,
-      "raw": 57905,
-      "total": 123302
+      "named": 65407,
+      "raw": 57897,
+      "total": 123304
     }
   },
   "targets": [
@@ -2963,15 +2963,15 @@
       "family": "etc",
       "archive": "shop",
       "entry": "00",
-      "completed": 159,
+      "completed": 160,
       "partial": 4,
-      "unlifted": 68,
+      "unlifted": 67,
       "invalid": 0,
       "total": 231,
       "symbols": {
-        "named": 244,
+        "named": 245,
         "raw": 369,
-        "total": 613
+        "total": 614
       }
     },
     {
@@ -3150,14 +3150,14 @@
       "family": "plchar",
       "archive": "plp267",
       "entry": "00",
-      "completed": 4,
+      "completed": 5,
       "partial": 0,
-      "unlifted": 37,
+      "unlifted": 36,
       "invalid": 0,
       "total": 41,
       "symbols": {
-        "named": 163,
-        "raw": 160,
+        "named": 164,
+        "raw": 159,
         "total": 323
       }
     },
@@ -3269,14 +3269,14 @@
       "family": "plchar",
       "archive": "plp567",
       "entry": "00",
-      "completed": 4,
+      "completed": 5,
       "partial": 0,
-      "unlifted": 37,
+      "unlifted": 36,
       "invalid": 0,
       "total": 41,
       "symbols": {
-        "named": 162,
-        "raw": 160,
+        "named": 163,
+        "raw": 159,
         "total": 322
       }
     },
@@ -3303,14 +3303,14 @@
       "family": "plchar",
       "archive": "plp678",
       "entry": "00",
-      "completed": 1,
+      "completed": 2,
       "partial": 0,
-      "unlifted": 37,
+      "unlifted": 36,
       "invalid": 0,
       "total": 38,
       "symbols": {
-        "named": 160,
-        "raw": 160,
+        "named": 161,
+        "raw": 159,
         "total": 320
       }
     },
@@ -3354,14 +3354,14 @@
       "family": "scenario",
       "archive": "sce15ef1",
       "entry": "00",
-      "completed": 3,
+      "completed": 4,
       "partial": 0,
-      "unlifted": 37,
+      "unlifted": 36,
       "invalid": 0,
       "total": 40,
       "symbols": {
-        "named": 161,
-        "raw": 162,
+        "named": 162,
+        "raw": 161,
         "total": 323
       }
     },
@@ -3388,14 +3388,14 @@
       "family": "scenario",
       "archive": "sce15ef3",
       "entry": "00",
-      "completed": 7,
+      "completed": 8,
       "partial": 0,
-      "unlifted": 37,
+      "unlifted": 36,
       "invalid": 0,
       "total": 44,
       "symbols": {
-        "named": 166,
-        "raw": 162,
+        "named": 167,
+        "raw": 161,
         "total": 328
       }
     },
@@ -3422,15 +3422,15 @@
       "family": "scenario",
       "archive": "scena01",
       "entry": "00",
-      "completed": 34,
+      "completed": 35,
       "partial": 1,
-      "unlifted": 37,
+      "unlifted": 36,
       "invalid": 0,
       "total": 72,
       "symbols": {
-        "named": 198,
+        "named": 199,
         "raw": 161,
-        "total": 359
+        "total": 360
       }
     },
     {
@@ -3439,14 +3439,14 @@
       "family": "scenario",
       "archive": "scena02",
       "entry": "00",
-      "completed": 48,
+      "completed": 49,
       "partial": 1,
-      "unlifted": 37,
+      "unlifted": 36,
       "invalid": 0,
       "total": 86,
       "symbols": {
-        "named": 208,
-        "raw": 161,
+        "named": 209,
+        "raw": 160,
         "total": 369
       }
     },
@@ -3456,14 +3456,14 @@
       "family": "scenario",
       "archive": "scena03",
       "entry": "00",
-      "completed": 45,
+      "completed": 46,
       "partial": 1,
-      "unlifted": 37,
+      "unlifted": 36,
       "invalid": 0,
       "total": 83,
       "symbols": {
-        "named": 215,
-        "raw": 165,
+        "named": 216,
+        "raw": 164,
         "total": 380
       }
     },
@@ -3507,14 +3507,14 @@
       "family": "scenario",
       "archive": "scena06",
       "entry": "00",
-      "completed": 33,
+      "completed": 34,
       "partial": 0,
-      "unlifted": 37,
+      "unlifted": 36,
       "invalid": 0,
       "total": 70,
       "symbols": {
-        "named": 214,
-        "raw": 161,
+        "named": 215,
+        "raw": 160,
         "total": 375
       }
     },
