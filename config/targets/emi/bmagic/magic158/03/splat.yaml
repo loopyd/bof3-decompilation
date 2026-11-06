@@ -46,8 +46,9 @@ segments:
     - asm
     - func_801EEFBC
   - - 1344
-    - asm
-    - func_801EF140
+    - c
+    - decrementWorkDistanceBy60AdvanceWorkBytes9AndAUpTo10ThenAdvanceWorkByte2WhenDistanceMatchesRecordBmagicMagic15803_801EF140
+    - '@source: src/bof3/bmagic/decrementWorkDistanceBy60AdvanceWorkBytes9AndAUpTo10ThenAdvanceWorkByte2WhenDistanceMatchesRecordBmagicMagic15803_801EF140.c'
   - - 1480
     - asm
     - func_801EF1C8

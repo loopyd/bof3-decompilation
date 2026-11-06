@@ -33,8 +33,8 @@ segments:
     - asm
     - func_800C1848
   - - 172
-    - asm
-    - func_800C18AC
+    - c
+    - dispatchIndexedHandlerBossBoss04916_800C18AC
   - - 228
     - c
     - noopHandlerBossBoss04916_800C18E4

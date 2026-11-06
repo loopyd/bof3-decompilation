@@ -65,6 +65,7 @@ sources = [
     "src/bof3/ui/selectUiMode14.c",
     "src/bof3/ui/selectUiMode23.c",
     "src/bof3/ui/setVariantTaskStatus.c",
+    "src/bof3/ui/resolveSlotBattleOutcomes.c",
 ]
 support_sources = [
     "src/bof3/support/commu00_symbols.c",

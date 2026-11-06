@@ -6,6 +6,6 @@ dispatchStateByte1Tablef414BmagicMagic14503_801EEE2C = 0x801EEE2C;
 func_801EEE70 = 0x801EEE70;
 func_801EEEE8 = 0x801EEEE8;
 func_801EF034 = 0x801EF034;
-func_801EF0A0 = 0x801EF0A0;
+incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic14503_801EF0A0 = 0x801EF0A0;
 func_801EF118 = 0x801EF118;
 D_801EF414 = 0x801EF414;

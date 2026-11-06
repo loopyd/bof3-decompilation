@@ -60,8 +60,10 @@ segments:
     - c
     - zeroResultBossBoss02213_800C1A40
   - - 584
-    - asm
-    - func_800C1A48
+    - c
+    - initBattleEntryStateBossBoss02213_800C1A48
+    - '@source: src/bof3/boss/initBattleEntryStateBossBoss02213_800C1A48.c'
+    - '@behavior: Battle-entry hook of this overlay, published into the shared battle-hook slot 0x801463A4 by the installer at 0x800C1A08: seeds the shared scenario progress byte with 12, stores the entry mode byte 3 into 0x80146255, stores 0x6A into 0x80145029, stores that same mode byte 3 into 0x80146255 a second time, raises bit 0x8 of the shared battle flag byte 0x80146328 through one address taken into a local pointer, clears bit 0x40 of 0x80146325 and runs initModeTuple530, which seeds the three-byte battle mode tuple.'
   - - 700
     - asm
     - func_800C1ABC

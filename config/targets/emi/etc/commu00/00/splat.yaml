@@ -50,8 +50,10 @@ segments:
     - asm
     - func_801EF784
   - - 3664
-    - asm
-    - func_801EFA50
+    - c
+    - resolveSlotBattleOutcomes
+    - '@source: src/bof3/ui/resolveSlotBattleOutcomes.c'
+    - '@behavior: Resolves the pending battle outcome of every armed local slot record: walks the eight stride-8 local record slots at 0x801457A8 carrying slot kind 0xD and, for each, walks the sixty stride-8 active-record entries at 0x801455C8, taking the present entry whose kind byte equals the slot index plus one and whose +3 outcome byte carries the 0x10 armed state. The low nibble of that outcome byte selects one of four per-kind record tables (0x801C8970/0x801C8974, 0x801C90E9/0x801C90F2, 0x801C98B1/0x801C98B8, 0x801C9E89/0x801C9E8E) indexed by the record state byte, giving a halfword bound and a byte flag; the bound selects the first of the eight six-byte band entries at 0x801F2530 whose threshold it does not reach, and the record is skipped unless the shared battle count at 0x8014502C minus its progress anchor reaches that entry requirement. The outcome byte keeps only its low nibble; a set table flag bit 3 stores outcome 0x30 directly, and otherwise the entry weight raises a success chance of the weight plus the weight times the record stride-9 byte over twenty, clamped to 0..100 as a signed halfword, which a rand() draw below it marks with outcome 0x20. A second draw below thirty minus twice that byte stores outcome 0x40 with record state 0x37, and every other draw marks outcome 0x30. Each resolved record appends notification kind 3 and its record index to the pending queue at 0x80145E60/0x80145E61 and advances the queue append byte at 0x80145E5D.'
   - - 4776
     - asm
     - func_801EFEA8

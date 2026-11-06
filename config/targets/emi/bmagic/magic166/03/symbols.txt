@@ -1,8 +1,9 @@
+g_battle_work = 0x1F800044;
 func_801EEC04 = 0x801EEC04;
 func_801EED04 = 0x801EED04;
 func_801EEE90 = 0x801EEE90;
 dispatchStateByte1Tablef718BmagicMagic16603_801EEEF0 = 0x801EEEF0;
-func_801EEF34 = 0x801EEF34;
+dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic16603_801EEF34 = 0x801EEF34;
 func_801EEFBC = 0x801EEFBC;
 func_801EF138 = 0x801EF138;
 func_801EF284 = 0x801EF284;

@@ -366,7 +366,7 @@ void advanceVillageExpansionTier(void);
 void func_801EF398(void);
 void func_801EF52C(void);
 void func_801EF784(void);
-void func_801EFA50(void);
+void resolveSlotBattleOutcomes(void);
 void func_801EFEA8(void);
 void func_801F00D4(void);
 void func_801F01F4(void);

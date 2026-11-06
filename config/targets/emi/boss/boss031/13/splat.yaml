@@ -60,8 +60,10 @@ segments:
     - asm
     - func_800C1A08
   - - 620
-    - asm
-    - func_800C1A6C
+    - c
+    - publishOwnerRecordAndRequestResourceThenSetWorkByte2ABossBoss03113_800C1A6C
+    - '@source: src/bof3/boss/publishOwnerRecordAndRequestResourceThenSetWorkByte2ABossBoss03113_800C1A6C.c'
+    - '@behavior: Owner-zero battle entry of this overlay: strips the 0x40 flag of the owner-0 work record, publishes that record as the shared battle-record cell 0x80146884 and as the scratchpad work-record cursor, requests resource 1, then stores 1 into the record byte at offset 0x2A.'
   - - 696
     - textbin
     - D_800C1AB8

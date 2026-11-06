@@ -40,8 +40,9 @@ segments:
     - dispatchStateByte1Tablef718BmagicMagic16603_801EEEF0
     - '@source: src/bof3/bmagic/magic16603DispatchTables.c'
   - - 820
-    - asm
-    - func_801EEF34
+    - c
+    - dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic16603_801EEF34
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawAndPopWhenActiveBmagicMagic16603_801EEF34.c'
   - - 956
     - asm
     - func_801EEFBC

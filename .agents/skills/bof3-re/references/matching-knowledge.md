@@ -55,6 +55,7 @@ Branches: [first diff](#first-diff-decisions), [control flow](#control-flow),
 | Global/BSS offsets | Audit COMMON/section/alignment/order/padding and following symbols |
 | Phantom read-only object | Local static constant versus existing shared extern ownership |
 | Load uses wrong argument register | Verify callee argument consumption and caller setup before allocator probes |
+| Original stores the same constant to one cell twice | Write both stores in the original order. The repeat is real bytes: one store leaves the build short and puts the first difference in that cell's block |
 | Missing read after a store or an intervening call | Recheck pointer reloads, source qualification and aliasing against original instructions. A call that writes shared state, a formatter writing a shared buffer for instance, does not license holding one loaded cell in a local across it: two loads in the original are two accesses, so write the later use through the same address again. A store through a pointer loaded from a second symbol is the harder case: one symbol read twice stays live across it because GCC proves the two objects distinct, so give one of the two reads an indirect form of that same address, a fixed-address dereference or accessor. Either read may carry it, since what forces the reload is that the pair differ; casting the storing record or spelling its base as a `u32` measured neutral |
 | Saved-register pair exchanged | Trace real value deaths, later reuse and merged allocator quantities |
 | Guard load/test displaced around a product/store chain | Trace [guard scheduling and value reuse](#guard-scheduling-and-value-reuse) before changing arithmetic |
@@ -542,7 +543,10 @@ before copying a sibling's spelling: a member that reads the cell once and reuse
 base for its guard and its store stays exact through the constant-address accessor,
 while a member whose original reloads the cell after a store through the record needs
 the named extern. Copy a sibling's statement order and operand forms, not its cell
-access spelling.
+access spelling. Once the reload count agrees the spelling is free: a displacement
+that folds makes a named extern and the `SPAD_PTR_TABLE` accessor at that cell's own
+word emit the same `lui`/`lw` pair at each reload point, so neither spelling is owed
+a probe and the seeded sibling's form stands.
 
 A shared header that maps a cell name to a macro over a constant address
 (`#define D_X g_Cell`) folds the same way, once, because the macro hides the

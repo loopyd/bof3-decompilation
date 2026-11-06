@@ -55,8 +55,10 @@ segments:
     - asm
     - func_801EF034
   - - 1184
-    - asm
-    - func_801EF0A0
+    - c
+    - incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic14503_801EF0A0
+    - '@source: src/bof3/bmagic/incrementWorkByte9AndDecrementWorkByteAThenDecrementGlobalWorkByteBAndInvokeHelperWhenZeroBmagicMagic14503_801EF0A0.c'
+    - '@behavior: Per-frame handler of the battle work object published at the scratchpad pointer cell 0x1F800044: increments its unsigned byte 0x09 by one at byte width, re-reads the cell, subtracts one from unsigned byte 0x0A and tests the stored byte truncated to eight bits, and only when that byte reaches zero reads the shared battle work record pointer at 0x801EB4E0, decrements that record''s byte 0x0B by one with the store filling the call delay slot and invokes the shared helper at 0x801E5988; takes no arguments, returns nothing, and the 0x18-byte frame only keeps $ra across the call.'
   - - 1304
     - asm
     - func_801EF118
