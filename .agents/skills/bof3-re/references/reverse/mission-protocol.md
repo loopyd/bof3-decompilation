@@ -34,7 +34,7 @@ Append the required fenced `acceptance-report`: actual commands/validation, risk
 
 ## Lift setup order (once, before the first `asm-diff`)
 
-1. Splat boundary `asm` → `c` with `@source`/`@behavior`.
+1. Splat boundary `asm` → `c` with `@source`/`@behavior`. When one `asm` row declares several functions, flip only the selected range and leave the rest as `asm` rows at the offsets its own endlabels already declare; relabelling the whole row to `c` claims the neighbours' bytes.
 2. Target map row `sym = 0xADDR;` (without it `asm-diff` cannot resolve the symbol).
 3. Manifest `sources` claim.
 4. Per referenced fixed address: target-local `extern` (`@source`/`@kind`) + `WEAK_SYMBOL_AT` + a map row; per referenced function: a target-local prototype.

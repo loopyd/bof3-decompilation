@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/ui/dispatchByte4e08Table4bd8Commu0107_801D0E44.c",
     "src/bof3/ui/dispatchByte1f294dTable4be4Commu0107_801D0E80.c",
+    "src/bof3/ui/dispatchByte1f294dTable4becCommu0107_801D1328.c",
     "src/bof3/support/commu01_07_psyq.c",
 ]
 psyq_source = "src/bof3/support/commu01_07_psyq.c"

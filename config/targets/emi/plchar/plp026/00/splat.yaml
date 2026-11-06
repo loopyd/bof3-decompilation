@@ -123,8 +123,8 @@ segments:
     - asm
     - func_801D0354
   - - 8256
-    - asm
-    - func_801D0440
+    - c
+    - dispatchStateByte3Table0aa8PlcharPlp02600_801D0440
   - - 8324
     - asm
     - func_801D0484

@@ -117,8 +117,8 @@ segments:
     - asm
     - func_801D0158
   - - 7748
-    - asm
-    - func_801D0244
+    - c
+    - dispatchWorkByte3Table08b0PlcharPlp05600_801D0244
   - - 7816
     - asm
     - func_801D0288

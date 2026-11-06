@@ -114,8 +114,8 @@ segments:
     - c
     - noopHandlerBossBoss01816_800C206C
   - - 2164
-    - asm
-    - func_800C2074
+    - c
+    - dispatchIndexedHandlerBossBoss01816_800C2074
   - - 2220
     - c
     - clearBossStateByteBossBoss01816_800C20AC

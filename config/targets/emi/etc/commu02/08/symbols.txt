@@ -18,6 +18,7 @@ drawThreeCardRowWithRaisedCard = 0x801D4EA4;
 drawThreeCardRow = 0x801D4F88;
 dispatchStepHandler = 0x801D5034;
 dispatchStepByte1TableD74 = 0x801D5070;
+setFrontLocalMode0AndAdvanceStepByte1 = 0x801D50AC;
 func_801D5AD0 = 0x801D5AD0;
 func_801D5B2C = 0x801D5B2C;
 countActiveRecords_commu02_08 = 0x801D7E64;

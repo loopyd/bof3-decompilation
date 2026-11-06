@@ -87,8 +87,13 @@ segments:
     - c
     - dispatchStepByte1TableD74
   - - 17580
+    - c
+    - setFrontLocalMode0AndAdvanceStepByte1
+    - '@source: src/bof3/ui/setFrontLocalMode0AndAdvanceStepByte1.c'
+    - '@behavior: requests frontend-local mode 0 through the main-exe setter func_8014ECAC and advances the byte-1 step index at 0x801F294D by one'
+  - - 17636
     - asm
-    - func_801D50AC
+    - func_801D50E4
   - - 20176
     - asm
     - func_801D5AD0

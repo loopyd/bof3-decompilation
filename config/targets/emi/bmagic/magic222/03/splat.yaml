@@ -121,8 +121,9 @@ segments:
     - asm
     - func_801F0584
   - - 6684
-    - asm
-    - func_801F061C
+    - c
+    - add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic22203_801F061C
+    - '@source: src/bof3/bmagic/add2ToWorkByte9AndAdvanceWorkByte2At10BmagicMagic22203_801F061C.c'
   - - 6764
     - asm
     - func_801F066C

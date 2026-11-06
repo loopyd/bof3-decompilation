@@ -48,8 +48,8 @@ segments:
     - asm
     - func_801D1158
   - - 1832
-    - asm
-    - func_801D1328
+    - c
+    - dispatchByte1f294dTable4becCommu0107_801D1328
   - - 1892
     - asm
     - func_801D1364
