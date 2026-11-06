@@ -102,8 +102,8 @@ segments:
     - asm
     - func_801CFBDC
   - - 6392
-    - asm
-    - func_801CFCF8
+    - c
+    - dispatchWorkHalfword2cTablefdc0PlcharPlp01200_801CFCF8
   - - 6460
     - asm
     - func_801CFD3C
@@ -111,6 +111,6 @@ segments:
     - textbin
     - func_801CFD80
   - - 6592
-    - asm
-    - func_801CFDC0
+    - textbin
+    - T_801CFDC0
 - - 6616

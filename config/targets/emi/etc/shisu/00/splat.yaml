@@ -33,8 +33,8 @@ segments:
     - asm
     - func_801D1CA4
   - - 4380
-    - asm
-    - func_801D1D1C
+    - c
+    - initializeShisuUiState
   - - 4660
     - c
     - clearByte80148330AndSetThreeBytesShisu00_801D1E34

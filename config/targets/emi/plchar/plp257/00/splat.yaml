@@ -75,8 +75,8 @@ segments:
     - asm
     - func_801CF124
   - - 3576
-    - asm
-    - func_801CF1F8
+    - c
+    - dispatchWorkByte2Tableff08PlcharPlp25700_801CF1F8
   - - 3644
     - asm
     - func_801CF23C
@@ -114,6 +114,6 @@ segments:
     - textbin
     - func_801CFEDC
   - - 6940
-    - asm
-    - func_801CFF1C
+    - textbin
+    - T_801CFF1C
 - - 6968

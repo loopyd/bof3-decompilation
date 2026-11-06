@@ -114,8 +114,10 @@ segments:
     - c
     - setTwoWorld01Area04113_801F3E20
   - - 4668
-    - asm
-    - func_801F3E3C
+    - c
+    - dispatchStateByte4Table567cWorld01Area04113_801F3E3C
+    - '@source: src/bof3/world/dispatchStateByte4Table567cWorld01Area04113_801F3E3C.c'
+    - '@behavior: reads the state byte at +4 of the work record published at the scratchpad pointer cell 0x1F800044 and calls the handler pointer at that index of the local handler table based at 0x801F567C.'
   - - 4736
     - asm
     - func_801F3E80

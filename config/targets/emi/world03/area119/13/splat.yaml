@@ -51,8 +51,9 @@ segments:
     - countdownScratchStateToMode6World03Area11913_801F2DC4
     - '@source: src/bof3/world/area11913_countdown.c'
   - - 508
-    - asm
-    - func_801F2DFC
+    - c
+    - retreatWorkWordAndSetScratchStateToMode7AndClearCountdownWorld03Area11913_801F2DFC
+    - '@source: src/bof3/world/retreatWorkWordAndSetScratchStateToMode7AndClearCountdownWorld03Area11913_801F2DFC.c'
   - - 592
     - asm
     - func_801F2E50

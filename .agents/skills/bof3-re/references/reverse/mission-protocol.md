@@ -38,7 +38,10 @@ Append the required fenced `acceptance-report`: actual commands/validation, risk
 2. Target map row under the boundary's own name, `sym = 0xADDR;` (without it
    `asm-diff` cannot resolve the symbol). A raw `func_` row left beside a semantic `c`
    label refuses the first gate with `expected exactly one defined function symbol`;
-   renaming that row cleared it with no body change.
+   renaming that row cleared it with no body change. That rename retires the
+   function's naming debt, so a stale `func_` entry for it in
+   `config/symbol-naming-baseline.json` survives with the symbols check already
+   passing: report it and leave the parent-owned baseline alone.
 3. Manifest `sources` claim.
 4. Per referenced fixed address: target-local `extern` (`@source`/`@kind`) + `WEAK_SYMBOL_AT` + a map row; per referenced function: a target-local prototype.
 

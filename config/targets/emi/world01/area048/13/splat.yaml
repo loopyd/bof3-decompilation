@@ -124,8 +124,10 @@ segments:
     - asm
     - func_801F4AB4
   - - 8000
-    - asm
-    - func_801F4B40
+    - c
+    - setFlagBit0AndClearModeWorld01Area04813_801F4B40
+    - '@source: src/bof3/world/setFlagBit0AndClearModeWorld01Area04813_801F4B40.c'
+    - '@behavior: sets bit 0 of the shared world flag byte 0x80147CC8 and writes 0 to the shared mode byte 0x8014686B; takes no arguments and returns nothing.'
   - - 8032
     - asm
     - func_801F4B60
