@@ -173,8 +173,8 @@ segments:
     - textbin
     - T_800C3534
   - - 7604
-    - asm
-    - func_800C35B4
+    - textbin
+    - D_800C35B4
   - - 7636
     - textbin
     - T_800C35D4

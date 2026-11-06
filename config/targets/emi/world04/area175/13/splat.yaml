@@ -225,8 +225,10 @@ segments:
     - asm
     - func_801F40AC
   - - 5636
-    - asm
-    - func_801F4204
+    - c
+    - dispatchWorkByte4Table5370World04Area17513_801F4204
+    - '@source: src/bof3/world/dispatchWorkByte4Table5370World04Area17513_801F4204.c'
+    - '@behavior: Overlay step dispatch: reads the work byte at offset 0x04 of the work record published at the scratchpad pointer cell 0x1F800044 and calls the handler pointer at that unchecked byte index of the local handler table based at 0x801F5370; takes no arguments, returns nothing and touches no other work byte.'
   - - 5704
     - c
     - startWorkCountdownMode1World04Area17513_801F4248

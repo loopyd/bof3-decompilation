@@ -27,5 +27,6 @@ support_sources = [
     "src/bof3/bmagic/add4ToWorkByteAThenSetWorkByteBToOneAndAdvanceWorkByte2WhenAtLeast20BmagicMagic15103_801F0C50.c",
     "src/bof3/bmagic/incrementWorkByteBAdd4ToWorkByteAThenSetWorkByte9To8AndAdvanceWorkByte2At10BmagicMagic15103_801F129C.c",
     "src/bof3/bmagic/publishWorkRecordSelectSequenceByte8Plus3CThenAdvanceWorkByte3BmagicMagic15103_801EEEA8.c",
+    "src/bof3/bmagic/seedWorkTripletTintRandomWordCAndCountdownThenAdvanceWorkByte2BmagicMagic15103_801F0BA8.c",
 ]
 psyq_source = "src/bof3/support/magic151_03_psyq.c"

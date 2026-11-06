@@ -163,7 +163,13 @@ passes before changing scope placement.
    A scope may hold one real store rather than an initializer: its `LOOP_END` note
    flushes the pending memory lists, which keeps a following call's reload of an
    earlier-read cell after that store; without the scope the bare store lets the
-   reload drop into the first load's delay slot.
+   reload drop into the first load's delay slot. A load group with no store of its
+   own takes the same scope for the mirror residual: when the build is one
+   instruction short and the first difference is a filled load delay slot,
+   single-definition live loads are being raised by the
+   [guard-scheduling](#guard-scheduling-and-value-reuse) boost and sunk past a later
+   store. Wrap the real loads in the scope; its `LOOP_END` stays between them and
+   that store and holds them ahead of it.
    The same note pins a constant rather than a reload: when block order and size
    already match and one branch delay slot holds `nop` where the original loads a
    literal, wrap that literal's real initialization in the scope. Its `LOOP_END`
@@ -906,6 +912,10 @@ An address whose only in-image references are words of a code-pointer run has no
 `jal` caller; that is the dispatch shape, not missing evidence. Read its prototype
 off the code that consumes the run - the argument registers it fills and whether it
 reads the result - because the body can ignore arguments its caller still passes.
+The store that publishes a code address reads the same way from the other side: bind
+the slot at the type its indirect call consumes and cast each stored callee whose own
+prototype differs; a slot whose call passes an index or discards a result needs no
+wrapper and no per-callee slot type.
 An entry with no in-image reference at all is ordinary in an overlay, which is
 entered from outside its payload: its prologue and return paths prove the boundary,
 so a missing `jal` or table word is no reason to hold the lift.

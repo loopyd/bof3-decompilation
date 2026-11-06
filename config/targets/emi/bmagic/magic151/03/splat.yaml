@@ -157,8 +157,10 @@ segments:
     - asm
     - func_801F0AC8
   - - 8104
-    - asm
-    - func_801F0BA8
+    - c
+    - seedWorkTripletTintRandomWordCAndCountdownThenAdvanceWorkByte2BmagicMagic15103_801F0BA8
+    - '@source: src/bof3/bmagic/seedWorkTripletTintRandomWordCAndCountdownThenAdvanceWorkByte2BmagicMagic15103_801F0BA8.c'
+    - '@behavior: Seeds one work step from the shared battle work record read through 0x801EB4E0: its words 0x34, 0x38 and 0x3C are copied into the scratchpad work object published at the pointer cell 0x1F800044 through one cell read, the 0x3C store filling the call delay slot. rand() is then called and its low five bits are stored into work word 0xC through a second cell read, the same pointer that stores 0x10 into work byte 0x5D. Work byte 0xB and work byte 9 are cleared and work byte 0xA is set to 4, each through its own cell read, and the trailing byte 2 increment re-reads the cell once more with its store in the return delay slot. Frame 0x18 with $ra only, because of the call; takes no arguments, returns nothing and reads or writes no other state.'
   - - 8272
     - c
     - add4ToWorkByteAThenSetWorkByteBToOneAndAdvanceWorkByte2WhenAtLeast20BmagicMagic15103_801F0C50

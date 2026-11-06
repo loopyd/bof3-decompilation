@@ -30,7 +30,7 @@ segments:
     - textbin
     - D_801D0C04
   - - 104
-    - asm
+    - c
     - func_801D0C68
   - - 172
     - asm

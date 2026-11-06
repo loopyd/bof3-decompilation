@@ -1,6 +1,7 @@
 workRecordAt80146920World03Area13413 = 0x80146920;
 D_80149328 = 0x80149328;
 D_8014932A = 0x8014932A;
+dispatchSoundCue = 0x8015DF18;
 dispatchStateByte1Table5744World03Area13413_801F2C04 = 0x801F2C04;
 func_801F2C48 = 0x801F2C48;
 func_801F2C78 = 0x801F2C78;
@@ -62,7 +63,7 @@ clearWorkTableOnFirstStepArmCountdownStampStepCountAndAdvanceWorkByte1World03Are
 claimWorkRecordEveryFourthCountdownTickThenAdvanceWorkByte1World03Area13413_801F4288 = 0x801F4288;
 clearWorkFlagsWhenNoCallbackRanWorld03Area13413_801F4310 = 0x801F4310;
 dispatchStateByte1Table5828World03Area13413_801F4344 = 0x801F4344;
-func_801F4388 = 0x801F4388;
+clearWorkTableSeedWorkWords34To3CAnd0CTo14DispatchCue208AndAdvanceWorkByte1World03Area13413_801F4388 = 0x801F4388;
 advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World03Area13413_801F4400 = 0x801F4400;
 func_801F44C0 = 0x801F44C0;
 invokeHelperWorld03Area13413_801F453C = 0x801F453C;

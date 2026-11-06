@@ -27,6 +27,7 @@ support_sources = [
     "src/bof3/world/startWorkCountdownMode1World04Area17513_801F4248.c",
     "src/bof3/world/setWorkByte9AndClearTintWorld04Area17513_801F3228.c",
     "src/bof3/world/setStatusFFFFSubstate2IfGateElse3World04Area17513_801F386C.c",
+    "src/bof3/world/dispatchWorkByte4Table5370World04Area17513_801F4204.c",
     "src/bof3/support/area175_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area175_13_psyq.c"
