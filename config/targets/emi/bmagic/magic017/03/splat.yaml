@@ -73,8 +73,9 @@ segments:
     - asm
     - func_801EF7E0
   - - 3252
-    - asm
-    - func_801EF8B4
+    - c
+    - addWorkColorTripletBy8ThenDecrementWorkByte9ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF8B4
+    - '@source: src/bof3/bmagic/addWorkColorTripletBy8ThenDecrementWorkByte9ThenDecrementGlobalWorkByteBAndAdvanceWorkByte2OnZeroBmagicMagic01703_801EF8B4.c'
   - - 3440
     - c
     - invokeHelperBmagicMagic01703_801EF970

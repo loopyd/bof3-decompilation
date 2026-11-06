@@ -63,8 +63,8 @@ segments:
     - asm
     - func_801F0018
   - - 5232
-    - asm
-    - func_801F0070
+    - c
+    - decrementWorkByte9WhenGlobalWorkByte1Is3ThenAdvanceWorkByte1WhenZeroBmagicMagic09503_801F0070
   - - 5336
     - asm
     - func_801F00D8

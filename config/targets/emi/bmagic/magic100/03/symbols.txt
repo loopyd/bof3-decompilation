@@ -1,6 +1,9 @@
+g_battle_work = 0x1F800044;
+func_800A9610 = 0x800A9610;
+D_80146384 = 0x80146384;
 func_801EEC10 = 0x801EEC10;
 func_801EEC70 = 0x801EEC70;
-func_801EED9C = 0x801EED9C;
+raiseBattleTargetFlag10WhenWorkByte9SetThenAdvanceWorkByte1BmagicMagic10003_801EED9C = 0x801EED9C;
 func_801EEDF8 = 0x801EEDF8;
 dispatchStateByte1TablefdccBmagicMagic10003_801EEE58 = 0x801EEE58;
 func_801EEE9C = 0x801EEE9C;

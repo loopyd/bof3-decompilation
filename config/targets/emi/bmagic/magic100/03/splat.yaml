@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EEC70
   - - 412
-    - asm
-    - func_801EED9C
+    - c
+    - raiseBattleTargetFlag10WhenWorkByte9SetThenAdvanceWorkByte1BmagicMagic10003_801EED9C
+    - '@source: src/bof3/bmagic/raiseBattleTargetFlag10WhenWorkByte9SetThenAdvanceWorkByte1BmagicMagic10003_801EED9C.c'
+    - '@behavior: Re-reads the scratchpad work-object pointer cell at 0x1F800044 and returns when the work object byte at offset 0x9 is zero; otherwise passes the shared battle target byte at 0x80146384 and the flag word 0x10 to func_800A9610, which raises that flag in the selected battlers status word, then re-reads the cell and increments the work object byte at offset 0x1.'
   - - 504
     - asm
     - func_801EEDF8

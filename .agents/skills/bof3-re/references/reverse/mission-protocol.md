@@ -43,7 +43,7 @@ Append the required fenced `acceptance-report`: actual commands/validation, risk
    `config/symbol-naming-baseline.json` survives with the symbols check already
    passing: report it and leave the parent-owned baseline alone.
 3. Manifest claim. `sources` and `support_sources` are both claimed and compiled, and every `sources` entry must carry function metadata, so a target whose `sources` is empty takes the lift in `support_sources` beside its generated psyq file.
-4. Per referenced fixed address: target-local `extern` (`@source`/`@kind`) bound the way step 2's precedence selects rather than with a map row plus `WEAK_SYMBOL_AT`; per referenced function: a target-local prototype.
+4. Per referenced fixed address: target-local `extern` (`@source`/`@kind`) bound the way step 2's precedence selects rather than with a map row plus `WEAK_SYMBOL_AT`, and that target's map row when the name is not `D_<ADDRESS>` and no generated `undefined_syms_auto.txt` row covers the address because the asm spelled it as a literal; the omission fails the link naming the symbol, before any instruction measurement. Per referenced function: a target-local prototype.
 
 Before first gate: evidence-backed name/module, complete ownership and canonical
 metadata. Unknown roles stay address-anchored; `@status`/`@match`/`@residual` reflect

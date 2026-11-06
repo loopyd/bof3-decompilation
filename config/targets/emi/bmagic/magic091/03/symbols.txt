@@ -1,6 +1,7 @@
+g_battle_work = 0x1F800044;
 func_801EEC10 = 0x801EEC10;
 func_801EECCC = 0x801EECCC;
-func_801EEE3C = 0x801EEE3C;
+incrementWorkBytes9AThenAdvanceWorkByte1At10BmagicMagic09103_801EEE3C = 0x801EEE3C;
 func_801EEEA8 = 0x801EEEA8;
 func_801EEF74 = 0x801EEF74;
 func_801EEFFC = 0x801EEFFC;

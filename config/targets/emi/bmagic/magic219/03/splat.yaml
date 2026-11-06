@@ -73,8 +73,9 @@ segments:
     - asm
     - func_801EF934
   - - 3480
-    - asm
-    - func_801EF998
+    - c
+    - clearWorkBytes0Through4BmagicMagic21903_801EF998
+    - '@source: src/bof3/bmagic/clearWorkBytes0Through4BmagicMagic21903_801EF998.c'
   - - 3560
     - textbin
     - D_801EF9E8

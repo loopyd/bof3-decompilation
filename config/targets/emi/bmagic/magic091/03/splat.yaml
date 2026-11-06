@@ -36,8 +36,10 @@ segments:
     - asm
     - func_801EECCC
   - - 572
-    - asm
-    - func_801EEE3C
+    - c
+    - incrementWorkBytes9AThenAdvanceWorkByte1At10BmagicMagic09103_801EEE3C
+    - '@source: src/bof3/bmagic/incrementWorkBytes9AThenAdvanceWorkByte1At10BmagicMagic09103_801EEE3C.c'
+    - '@behavior: Increments scratchpad work-object byte 0x09, re-reads the work pointer cell at 0x1F800044 and increments byte 0x0A, then re-reads the cell once more and increments work byte 0x01 only when work byte 0x09 equals 0x10. The pointer cell is loaded three times, byte 0x09 is tested with a zero-extended load, the 0x10 constant is materialized after that load and ahead of the guard branch, and the guard''s pointer load stays in one register for the increment in its arm. Leaf with no frame; nothing is returned.'
   - - 680
     - asm
     - func_801EEEA8

@@ -60,8 +60,8 @@ segments:
     - asm
     - func_801EF5F4
   - - 3348
-    - asm
-    - func_801EF914
+    - c
+    - reserveFirstFreeRecordBmagicMagic10603_801EF914
   - - 3440
     - asm
     - func_801EF970

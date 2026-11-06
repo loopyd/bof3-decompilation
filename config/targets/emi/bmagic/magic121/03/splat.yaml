@@ -55,8 +55,9 @@ segments:
     - asm
     - func_801EF2D4
   - - 1828
-    - asm
-    - func_801EF324
+    - c
+    - incrementWorkWordCAndAdvanceWorkByte2At2EBmagicMagic12103_801EF324
+    - '@source: src/bof3/bmagic/incrementWorkWordCAndAdvanceWorkByte2At2EBmagicMagic12103_801EF324.c'
   - - 1884
     - asm
     - func_801EF35C
