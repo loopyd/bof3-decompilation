@@ -1,14 +1,14 @@
 {
   "schema": "bof3.decomp-status/v1",
   "index_schema": "bof3.reverse-index/v18",
-  "revision": "f251cfeab1e2ce78388d6976790f2033b116964e",
-  "published_at": "2026-11-06T03:04:48.493224+00:00",
+  "revision": "a6dcbd31d8d53ada7d7b2aa97fce73798b12a283",
+  "published_at": "2026-11-06T03:38:58.346117+00:00",
   "counts": {
-    "completed": 3165,
-    "partial": 133,
-    "unlifted": 7229,
+    "completed": 3173,
+    "partial": 135,
+    "unlifted": 7220,
     "invalid": 9,
-    "total": 10527
+    "total": 10528
   },
   "targets": [
     {
@@ -54,8 +54,8 @@
       "archive": "battle",
       "entry": "03",
       "completed": 313,
-      "partial": 22,
-      "unlifted": 40,
+      "partial": 23,
+      "unlifted": 39,
       "invalid": 0,
       "total": 375
     },
@@ -125,9 +125,9 @@
       "family": "bmagic",
       "archive": "magic008",
       "entry": "00",
-      "completed": 27,
+      "completed": 28,
       "partial": 0,
-      "unlifted": 38,
+      "unlifted": 37,
       "invalid": 0,
       "total": 65
     },
@@ -185,9 +185,9 @@
       "family": "bmagic",
       "archive": "magic015",
       "entry": "00",
-      "completed": 11,
+      "completed": 12,
       "partial": 0,
-      "unlifted": 38,
+      "unlifted": 37,
       "invalid": 0,
       "total": 49
     },
@@ -1181,9 +1181,9 @@
       "family": "bmagic",
       "archive": "magic131",
       "entry": "03",
-      "completed": 14,
+      "completed": 15,
       "partial": 0,
-      "unlifted": 38,
+      "unlifted": 37,
       "invalid": 0,
       "total": 52
     },
@@ -1289,9 +1289,9 @@
       "family": "bmagic",
       "archive": "magic151",
       "entry": "03",
-      "completed": 12,
+      "completed": 13,
       "partial": 0,
-      "unlifted": 38,
+      "unlifted": 37,
       "invalid": 0,
       "total": 50
     },
@@ -2009,11 +2009,11 @@
       "family": "etc",
       "archive": "commu02",
       "entry": "08",
-      "completed": 6,
+      "completed": 7,
       "partial": 1,
       "unlifted": 38,
       "invalid": 0,
-      "total": 45
+      "total": 46
     },
     {
       "id": "emi/etc/commu03/06",
@@ -2094,8 +2094,8 @@
       "archive": "shop",
       "entry": "00",
       "completed": 155,
-      "partial": 3,
-      "unlifted": 73,
+      "partial": 4,
+      "unlifted": 72,
       "invalid": 0,
       "total": 231
     },
@@ -2165,9 +2165,9 @@
       "family": "plchar",
       "archive": "plp026",
       "entry": "00",
-      "completed": 3,
+      "completed": 4,
       "partial": 0,
-      "unlifted": 38,
+      "unlifted": 37,
       "invalid": 0,
       "total": 41
     },
@@ -2501,9 +2501,9 @@
       "family": "scenario",
       "archive": "scena08",
       "entry": "00",
-      "completed": 68,
+      "completed": 69,
       "partial": 4,
-      "unlifted": 40,
+      "unlifted": 39,
       "invalid": 0,
       "total": 112
     },
@@ -4469,9 +4469,9 @@
       "family": "world04",
       "archive": "area172",
       "entry": "13",
-      "completed": 13,
+      "completed": 14,
       "partial": 0,
-      "unlifted": 39,
+      "unlifted": 38,
       "invalid": 0,
       "total": 52
     },
