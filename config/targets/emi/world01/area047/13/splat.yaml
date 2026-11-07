@@ -60,8 +60,10 @@ segments:
     - asm
     - func_801F32C4
   - - 1804
-    - asm
-    - func_801F330C
+    - c
+    - updateWorkTableRecordsAndReportActiveWorld01Area04713_801F330C
+    - '@source: src/bof3/world/updateWorkTableRecordsAndReportActiveWorld01Area04713_801F330C.c'
+    - '@behavior: steps each active record of the 0x18-byte-stride work table at 0x800E4800 with sub-phase arming, countdown expiry and a per-record update call, and reports whether any record was active.'
   - - 2120
     - asm
     - func_801F3448

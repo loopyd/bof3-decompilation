@@ -12,5 +12,6 @@ support_sources = [
     "src/bof3/support/area047_13_psyq.c",
     "src/bof3/world/area04713DispatchTables.c",
     "src/bof3/world/clearWorkTableByte14At800E4800World01Area04713_801F3298.c",
+    "src/bof3/world/updateWorkTableRecordsAndReportActiveWorld01Area04713_801F330C.c",
 ]
 psyq_source = "src/bof3/support/area047_13_psyq.c"
