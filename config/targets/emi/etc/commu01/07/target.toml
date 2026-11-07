@@ -13,6 +13,7 @@ sources = [
     "src/bof3/ui/publishCommuEntryTextId.c",
     "src/bof3/ui/publishCommuEntryTextIdForRow.c",
     "src/bof3/ui/findActiveRecordSlotByKind.c",
+    "src/bof3/ui/drawSmallWindowFrameCommu0107_801D273C.c",
 ]
 support_sources = [
     "src/bof3/ui/dispatchByte4e08Table4bd8Commu0107_801D0E44.c",

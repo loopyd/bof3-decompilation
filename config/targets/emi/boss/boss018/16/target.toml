@@ -24,6 +24,7 @@ support_sources = [
     "src/bof3/boss/clearBossStateByteBossBoss01816_800C20AC.c",
     "src/bof3/boss/setBossStateFiveWhenStateFourBossBoss01816_800C1CA4.c",
     "src/bof3/boss/advanceWorkCursorOnFrameParityBossBoss01816_800C203C.c",
+    "src/bof3/boss/dispatchStateByte2Table2dacBossBoss01816_800C1FF8.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss01816_800C1C6C.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss01816_800C1B18.c",
     "src/bof3/boss/dispatchIndexedHandlerBossBoss01816_800C2074.c",

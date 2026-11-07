@@ -121,8 +121,10 @@ segments:
     - asm
     - func_801F0218
   - - 6404
-    - asm
-    - func_801F0504
+    - c
+    - dispatchWorkByte2HandlerThenDrawTwiceWhenActiveBmagicMagic22203_801F0504
+    - '@source: src/bof3/bmagic/dispatchWorkByte2HandlerThenDrawTwiceWhenActiveBmagicMagic22203_801F0504.c'
+    - '@behavior: Per-frame work-handler step, entry 3 of the sixteen-word code pointer run at 0x801F0D54 whose word at 0x801F0D60 holds this function address: it reads the scratchpad work object through the pointer cell at 0x1F800044 before it creates its frame, takes that object unsigned byte 2, scales it by four and calls that entry of the five-entry handler table at 0x801F0D98 (0x801F0584, 0x801F061C, 0x801F066C, 0x801F06C8, 0x801F0730) with no arguments. When that handler returns it re-reads the cell once for both gate bytes and, when work byte 0 and work byte 2 are both non-zero, calls this overlay drawing routine func_801F07A8 twice. The frame keeps only $ra; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 6532
     - asm
     - func_801F0584

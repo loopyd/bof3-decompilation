@@ -102,8 +102,8 @@ segments:
     - asm
     - func_800C1F28
   - - 2040
-    - asm
-    - func_800C1FF8
+    - c
+    - dispatchStateByte2Table2dacBossBoss01816_800C1FF8
   - - 2108
     - c
     - advanceWorkCursorOnFrameParityBossBoss01816_800C203C

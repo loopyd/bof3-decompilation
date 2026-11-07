@@ -43,8 +43,10 @@ segments:
     - '@source: src/bof3/scenario/invokeOriginHelperThenTickCountdownReload32AndAdvanceWorkByte1ScenarioSce15ef100_801D0D54.c'
     - '@behavior: Entry 2 of the overlay step-handler run at 0x801D3918: hands the work object behind scratchpad pointer cell 0x1F800044 to the overlay helper 0x801D147C as (origin block at +0x64, signed halfword at +0x2E, flag mask 6), ticks countdown byte +0x9 down by one, and when it reaches zero re-arms it with 0x20 and advances work byte +0x1 by one.'
   - - 472
-    - asm
-    - func_801D0DD8
+    - c
+    - advanceWorkHalfword2EAndOriginZInvokeOriginHelperTickCountdownReload32ThenResetRecordTableScenarioSce15ef100_801D0DD8
+    - '@source: src/bof3/scenario/advanceWorkHalfword2EAndOriginZInvokeOriginHelperTickCountdownReload32ThenResetRecordTableScenarioSce15ef100_801D0DD8.c'
+    - '@behavior: Entry 3 of the overlay step-handler run at 0x801D3918: subtracts 6 from the work halfword +0x2E, adds 0xC0000 to the origin word +0x6C, hands the origin block at +0x64, the signed halfword at +0x2E and the flag mask 6 to the overlay helper 0x801D147C, ticks countdown byte +0x9 down by one, and when it reaches zero re-arms it with 0x20, clears work byte +0x6, advances work byte +0x1, clears the active flags of the 0x18-byte-stride record table at 0x801D39A8, copies the origin triple +0x64/+0x68/+0x6C into the position triple +0x34/+0x38/+0x3C, re-seeds the first 0x10 of the 0x2C-byte-stride records at 0x801D3B28 through 0x801D1F68 and clears the halfword pair +0x28/+0x2A of the remaining 0x10.'
   - - 784
     - c
     - advanceWorkByte6ClaimRecordInvokeTwoHelpersAndOnProgress20RestoreMotionStateAndAdvanceWorkByte1ScenarioSce15ef100_801D0F10

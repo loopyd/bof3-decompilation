@@ -93,8 +93,10 @@ segments:
     - asm
     - func_801EFAAC
   - - 4012
-    - asm
-    - func_801EFBAC
+    - c
+    - decrementWorkByte9ThenQueueSlotSetByte1To3PublishWorkPointerAndAdvanceWorkByte2WhenZeroBmagicMagic15103_801EFBAC
+    - '@source: src/bof3/bmagic/decrementWorkByte9ThenQueueSlotSetByte1To3PublishWorkPointerAndAdvanceWorkByte2WhenZeroBmagicMagic15103_801EFBAC.c'
+    - '@behavior: Work-step handler of the overlay work object: the scratchpad work-object pointer cell at 0x1F800044 is read once, before the 0x18-byte frame is created, and the work-object byte at offset 0x9 is decremented with a byte-width read-modify-write whose truncated result is tested; the function returns while that byte is nonzero. On expiry it queues a battle action-slot entry through func_801E590C(1, 0x44), scales the returned index by the 0x78-byte entry stride, sets entry byte +0x01 to 3, and publishes the work-object pointer read from the cell again as the entry pointer word at +0x74. It then increments the work-object byte at offset 0xB, stores 4 into the work-object byte at offset 0x9 through a fresh cell read, and increments the work-object state byte at offset 0x2 through one more cell read, advancing the overlay work byte 2 handler sequence. Frame 0x18 with $ra only, because of the call; it takes no arguments, returns nothing and reads or writes no other state.'
   - - 4200
     - asm
     - func_801EFC68

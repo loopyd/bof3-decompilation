@@ -43,8 +43,10 @@ segments:
     - asm
     - func_801EEDDC
   - - 612
-    - asm
-    - func_801EEE64
+    - c
+    - copyRecordTripletMinus4000Plus4000000SetBytes9BTo10AndAToB0ThenAdvanceWorkByte2BmagicMagic07903_801EEE64
+    - '@source: src/bof3/bmagic/copyRecordTripletMinus4000Plus4000000SetBytes9BTo10AndAToB0ThenAdvanceWorkByte2BmagicMagic07903_801EEE64.c'
+    - '@behavior: Copies the words at 0x34, 0x38 and 0x3C of the battle record published at 0x8014638C into the scratchpad work object published at the pointer cell 0x1F800044, subtracting 0x4000 from the first two copies and adding 0x4000000 to the third, sets work byte 0x9 and work byte 0xB to 0x10 and work byte 0xA to 0xB0, then advances work byte 2 by one. The word at 0x3C is held in a local so its load precedes the byte 0xB store and its store follows it, and the pointer cell is re-read before the byte 0x9 store, before the byte 0xA store and again before the byte 2 advance.'
   - - 740
     - asm
     - func_801EEEE4

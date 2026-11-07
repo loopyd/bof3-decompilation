@@ -85,8 +85,10 @@ segments:
     - asm
     - func_801EF834
   - - 3140
-    - asm
-    - func_801EF844
+    - c
+    - offsetChannelPairByMotionPairCopyRecordWordSetByte9To10AndWord14To100ThenAdvanceWorkByte2BmagicMagic11003_801EF844
+    - '@source: src/bof3/bmagic/offsetChannelPairByMotionPairCopyRecordWordSetByte9To10AndWord14To100ThenAdvanceWorkByte2BmagicMagic11003_801EF844.c'
+    - '@behavior: Seeds work words 0xC and 0x10 with 0x60000, publishes the shared channel pair 0x80149308/0x8014930C plus those motions in work words 0x34 and 0x38, copies the shared battle record word 0x3C, sets work byte 9 to 0x10 and word 0x14 to 0x100, then advances work byte 2.'
   - - 3264
     - asm
     - func_801EF8C0
