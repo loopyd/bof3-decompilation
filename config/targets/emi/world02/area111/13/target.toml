@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/world/invokeHelperWorld02Area11113_801F2D80.c",
     "src/bof3/world/copySharedWord7b5cTo7ac4World02Area11113_801F3448.c",
+    "src/bof3/world/setStatusFFFFAndRequestPrimaryState5Substate0WhenGateClearWorld02Area11113_801F33F8.c",
     "src/bof3/world/area11113DispatchTables.c",
     "src/bof3/world/decrementHalfword0aUnlessPublishedWorkRecordSlotWorld02Area11113_801F3790.c",
     "src/bof3/support/area111_13_psyq.c",

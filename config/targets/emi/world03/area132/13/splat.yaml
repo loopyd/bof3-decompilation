@@ -100,8 +100,10 @@ segments:
     - asm
     - func_801F385C
   - - 3248
-    - asm
-    - func_801F38B0
+    - c
+    - tickAndDrawActiveWorkRecordsWorld03Area13213_801F38B0
+    - '@source: src/bof3/world/tickAndDrawActiveWorkRecordsWorld03Area13213_801F38B0.c'
+    - '@behavior: Per-frame pass over the 0x20 records of the 0x18-byte-stride work table based at 0x800E4800, walked through the published cursor cell 0x801F4A88: fills the 0x20-byte projection scratch through 0x801AFE18, then for each record whose claim byte at offset 0 reads non-zero advances the record word at +0x04 by 0x2000, grows the halfword at +0x14 by 8 and drops the byte at +3 by 2 when the work object at the scratchpad pointer cell 0x1F800044 has a zero state byte at +1, otherwise adds the angle helper 0x801783C8 result of its byte at +0x17 shifted left 8 to the word at +0x04 and the helper 0x801782FC result of the same shifted byte shifted left 8 to the word at +0x0C while still dropping the byte at +3 by 2, counts the byte at +2 down and clears the claim byte at 0 when it reaches zero, and draws the record through 0x801F3560 while latching one as the result; the cursor advances by 0x18 per record and the pass returns one when any record was handled.'
   - - 3620
     - asm
     - func_801F3A24

@@ -66,8 +66,10 @@ segments:
     - asm
     - func_801F33D0
   - - 2040
-    - asm
-    - func_801F33F8
+    - c
+    - setStatusFFFFAndRequestPrimaryState5Substate0WhenGateClearWorld02Area11113_801F33F8
+    - '@source: src/bof3/world/setStatusFFFFAndRequestPrimaryState5Substate0WhenGateClearWorld02Area11113_801F33F8.c'
+    - '@behavior: Stores 0xFFFF into the shared status halfword at 0x801490A8 on every path and, while the shared gate byte at 0x801490C7 is clear, runs the shared front-end startup helper and requests primary scene state 5 with secondary state 0.'
   - - 2120
     - c
     - copySharedWord7b5cTo7ac4World02Area11113_801F3448

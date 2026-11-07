@@ -13,6 +13,7 @@ support_sources = [
     "src/bof3/world/retreatCounter2By20World02Area08013_801F3CE4.c",
     "src/bof3/world/area08013DispatchTables.c",
     "src/bof3/world/resetRecordCursor800E486CAndClearCursorByteWorld02Area08013_801F3834.c",
+    "src/bof3/world/findFreeRecordAt800E486CWorld02Area08013_801F3B98.c",
     "src/bof3/support/area080_13_psyq.c",
 ]
 psyq_source = "src/bof3/support/area080_13_psyq.c"

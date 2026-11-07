@@ -46,8 +46,10 @@ segments:
     - asm
     - func_801F2DB4
   - - 864
-    - asm
-    - func_801F2F60
+    - c
+    - drawFadingTranslucentGouraudRingPairWorld01Area04713_801F2F60
+    - '@source: src/bof3/world/drawFadingTranslucentGouraudRingPairWorld01Area04713_801F2F60.c'
+    - '@behavior: projects the record three-word world descriptor through the shared projector func_801AFF04 and then makes two passes over the whole 12-bit turn, each pass handing the extent input pair built from the signed phase halfword at +0x10 plus or minus the amplitude halfword at +0x12 to func_801AFFD8 and emitting 32 translucent Gouraud quads of 0x80 of the turn around the projected point, with black leading vertices and the record countdown byte at +0x17 on the trailing ones, each linked as a 0x24-byte entry at ordering table index 1.'
   - - 1524
     - c
     - drawSharedPositionGouraudDiscWorld01Area04713_801F31F4

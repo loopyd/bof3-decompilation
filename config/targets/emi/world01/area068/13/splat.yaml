@@ -130,8 +130,10 @@ segments:
     - asm
     - func_801F386C
   - - 3272
-    - asm
-    - func_801F38C8
+    - c
+    - setStatus82Or83Or84AndModeIndex6ByGateOrLookupIndex1World01Area06813_801F38C8
+    - '@source: src/bof3/world/setStatus82Or83Or84AndModeIndex6ByGateOrLookupIndex1World01Area06813_801F38C8.c'
+    - '@behavior: Publishes the shared status halfword 0x801490A8 and the shared mode index byte 0x801D4285: while the gate byte 0x801490C7 is nonzero it stores 0x84 into the status and 6 into the mode index; otherwise it takes the main-executable lookup 0x80166438 of index 1 and stores 0x83 into the status and 6 into the mode index when that byte is below 0xF, or 0x82 into the status alone when it is 0xF or above. The 0x18-byte frame only keeps $ra across the lookup call.'
   - - 3376
     - c
     - setStatusFFFFAndHandlerIndex3WhenGateWorld01Area06813_801F3930

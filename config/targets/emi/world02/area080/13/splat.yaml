@@ -71,8 +71,10 @@ segments:
     - asm
     - func_801F395C
   - - 3992
-    - asm
-    - func_801F3B98
+    - c
+    - findFreeRecordAt800E486CWorld02Area08013_801F3B98
+    - '@source: src/bof3/world/findFreeRecordAt800E486CWorld02Area08013_801F3B98.c'
+    - '@behavior: publishes the 0x800E486C base of the eight-entry, 0x60-byte-stride record table as the shared cursor D_801F44A4, then walks that cursor one record per iteration and returns the first record whose lead byte reads zero while leaving the cursor on it, returning zero after all eight records read as in use; no arguments, no call, no other write'
   - - 4084
     - asm
     - func_801F3BF4

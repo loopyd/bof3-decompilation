@@ -109,8 +109,10 @@ segments:
     - '@source: src/bof3/world/advanceCounterWorld01Area06714_801F3EE4.c'
     - '@behavior: increments the shared 32-bit work counter at 0x801468BC by 0x800'
   - - 4864
-    - asm
-    - func_801F3F00
+    - c
+    - seedFrontEndRecordHandler2DFromWorkPositionWorld01Area06714_801F3F00
+    - '@source: src/bof3/world/seedFrontEndRecordHandler2DFromWorkPositionWorld01Area06714_801F3F00.c'
+    - '@behavior: seeds the front-end record claimed by func_8019601C with occupancy byte 1, handler selector 0x2D at +5 and the scratch work object position pair at +0x34/+0x38'
   - - 4992
     - asm
     - func_801F3F80

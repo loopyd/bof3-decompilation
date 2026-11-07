@@ -88,8 +88,10 @@ segments:
     - asm
     - func_801F35D4
   - - 2572
-    - asm
-    - func_801F360C
+    - c
+    - seedFrontEndRecordKind6CQueueCue209AndClearWorkAnimBit0ThenRequestPrimaryState4Substate30IfPartyByte5World01Area04914_801F360C
+    - '@source: src/bof3/world/seedFrontEndRecordKind6CQueueCue209AndClearWorkAnimBit0ThenRequestPrimaryState4Substate30IfPartyByte5World01Area04914_801F360C.c'
+    - '@behavior: Clears bit 0 of the byte at offset 0x74 of the work record published at 0x80146884. When the party byte of local work record 0 at 0x80145F09 holds 5, it claims a front-end record slot with 0x8019601C, masks the returned index to a byte and, unless it is 0xFF, marks the selected record of the 0x74-byte stride table at 0x80143FC8 with 1 at +0 and kind 0x6C at +5, then queues front-end cue 0x209 through 0x8015DF18, publishes the shared UI elements (0x0B, 0x55) and (0x0C, 0x55) with size 0xC0 through 0x801A4BC0 and requests primary state 4 and substate 0x1E through 0x80146874/0x80146875 while clearing g_ScenarioProgress; otherwise it only performs the masked store. Takes no arguments and returns nothing.'
   - - 2808
     - c
     - noopHandlerWorld01Area04914_801F36F8

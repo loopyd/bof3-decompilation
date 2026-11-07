@@ -107,8 +107,10 @@ segments:
     - asm
     - func_801F4340
   - - 6140
-    - asm
-    - func_801F43FC
+    - c
+    - setWorkByte9To9AndAdvanceWorkByte2WhenIndexedFlagSetThenDrawWorld03Area11813_801F43FC
+    - '@source: src/bof3/world/setWorkByte9To9AndAdvanceWorkByte2WhenIndexedFlagSetThenDrawWorld03Area11813_801F43FC.c'
+    - '@behavior: Byte-2 state handler that the last byte-2 dispatch table of this overlay (0x801F519C, indexed by the dispatcher at 0x801F410C) lists at entry 3, and that the handler at 0x801F4150 calls directly on the branch where its own probe of flag bank 0x80144ED0 reports clear. Reads the work record published at the scratchpad pointer cell 0x1F800044, takes its cursor byte 0x0B as an index into the four-byte flag-number table 0x801F5198 and probes that flag number in the flag bank at 0x80144ED0 through the shared flag tester func_8015B5D4. When the flag is set, stores 9 into the record byte at 0x09, which the neighbours at 0x801F4340 and 0x801F447C count down before advancing the same record state byte, and increments the record state byte at 0x02 so the next dispatch takes the following entry of the same table. Every path finishes with the overlay record draw routine 0x801F4634 called with mode 0 and size 0x40, and the record cell is reloaded for each of the three uses.'
   - - 6268
     - asm
     - func_801F447C

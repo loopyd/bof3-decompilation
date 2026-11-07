@@ -78,8 +78,10 @@ segments:
     - c
     - initModeTupleByBattleFlagAndSetScenarioProgressBossBoss02116_800C1C18
   - - 1124
-    - asm
-    - func_800C1C64
+    - c
+    - publishOwnerRecordClearWorkByte2AAndRequestResource4ThenClearOwnerHeads1And2BossBoss02116_800C1C64
+    - '@source: src/bof3/boss/publishOwnerRecordClearWorkByte2AAndRequestResource4ThenClearOwnerHeads1And2BossBoss02116_800C1C64.c'
+    - '@behavior: Owner-zero battle entry of this overlay: takes the owner-0 work record after stripping its 0x40 flag, publishes it into the scratchpad work-record cursor 0x1F800044, clears the record byte at offset 0x2A, requests resource 4, then clears the owner-record heads for ids 1 and 2 through the 0x800AC934 helper.'
   - - 1200
     - textbin
     - D_800C1CB0

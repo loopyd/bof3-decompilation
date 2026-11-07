@@ -8,7 +8,7 @@ extern u32 D_80145EC4[]; /* @source 0x80145EC4 @kind table */
  * the result as the offset it draws the record with. It takes the record
  * pointer in $a0 and its result is unused, so the call site agrees with a void
  * prototype. */
-void func_801F2F60(u8* record);
+void drawFadingTranslucentGouraudRingPairWorld01Area04713_801F2F60(u8* record);
 
 /* @source 0x801F330C
  * @behavior Overlay per-frame work-table step: walks the 0x10 records of the
@@ -76,7 +76,8 @@ u8 updateWorkTableRecordsAndReportActiveWorld01Area04713_801F330C(void) {
           if (--FIELD_REF(u8, record, 0x16) == 0) {
             FIELD_REF(u8, record, 0x14) = 0;
           }
-          func_801F2F60(record);
+          drawFadingTranslucentGouraudRingPairWorld01Area04713_801F2F60(
+              record);
           break;
       }
     }
