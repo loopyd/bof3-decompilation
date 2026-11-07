@@ -125,8 +125,10 @@ segments:
     - raiseWorldFlags1010World04Area17013_801F4A7C
     - '@source: src/bof3/world/raiseWorldFlags1010World04Area17013_801F4A7C.c'
   - - 7836
-    - asm
-    - func_801F4A9C
+    - c
+    - clearWorldFlags1010World04Area17013_801F4A9C
+    - '@source: src/bof3/world/clearWorldFlags1010World04Area17013_801F4A9C.c'
+    - '@behavior: Clears bits 0x0010 and 0x1000 of the shared world-flags halfword D_80146258 with one halfword read-modify-write: folded lui/lhu load, empty load delay slot, andi 0xEFEF, halfword store back through a re-materialised lui $at base; takes no arguments, returns nothing and keeps no frame.'
   - - 7868
     - asm
     - func_801F4ABC

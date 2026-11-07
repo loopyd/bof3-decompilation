@@ -16,6 +16,7 @@ support_sources = [
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef300_801D0EAC.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef300_801D1068.c",
     "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef300_801D13DC.c",
+    "src/bof3/scenario/dispatchWorkByte1HandlerScenarioSce15ef300_801D1588.c",
     "src/bof3/scenario/incrementWorkByte1ScenarioSce15ef300_801D1028.c",
     "src/bof3/scenario/incrementWorkByte1ScenarioSce15ef300_801D1008.c",
     "src/bof3/scenario/invokeHelperScenarioSce15ef300_801D16BC.c",

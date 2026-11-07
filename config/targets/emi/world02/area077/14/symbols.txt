@@ -73,7 +73,7 @@ publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area07714_801F
 retreatCounterAndQueueCue200World02Area07714_801F5D80 = 0x801F5D80;
 advanceCounterWorld02Area07714_801F5DC0 = 0x801F5DC0;
 setTwoWorld02Area07714_801F5DE8 = 0x801F5DE8;
-func_801F5E04 = 0x801F5E04;
+publishSecondWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area07714_801F5E04 = 0x801F5E04;
 func_801F5E84 = 0x801F5E84;
 func_801F5F04 = 0x801F5F04;
 func_801F5F84 = 0x801F5F84;

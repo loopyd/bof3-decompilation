@@ -163,8 +163,10 @@ segments:
     - '@source: src/bof3/world/applyPaletteScaleSet8014933AIncrementWorkByte2World02Area08213_801F4AFC.c'
     - '@behavior: applies the palette-scale helper at 0x801F5388 to the 0x100-entry palette window with the scale 0x80 (unity), stores 1 into the shared byte at 0x8014933A and then advances the scratch work record +0x02 byte by one.'
   - - 7996
-    - asm
-    - func_801F4B3C
+    - c
+    - fillScreenRampDownColorIncrementWorkByte9ResetWorkByte9At91AdvanceWorkByte2World02Area08213_801F4B3C
+    - '@source: src/bof3/world/fillScreenRampDownColorIncrementWorkByte9ResetWorkByte9At91AdvanceWorkByte2World02Area08213_801F4B3C.c'
+    - '@behavior: overlay step handler, entry index 3 of the sixteen-pointer step table based at 0x801F57D0; reads the scratchpad work record published through 0x1F800044 and fills the whole 0x140 x 0xF0 screen through the gradient fill helper at 0x801F5428 with a colour packed from record byte +0x09 (blue = 0x1F - level*27/100, green = 0x19 - level*27/100, red = level/17, bit 28 set) after clearing the shared palette-stage byte at 0x8014933A, then advances that byte +0x09, and, once a fresh cell read shows it has reached 0x5B, clears byte +0x09 and advances the record dispatch byte +0x02 by one.'
   - - 8244
     - c
     - fillScreenGradientAdvanceWorkByte2AtScenarioProgress29World02Area08213_801F4C34

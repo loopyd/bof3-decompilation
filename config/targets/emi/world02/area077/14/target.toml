@@ -48,5 +48,6 @@ support_sources = [
     "src/bof3/world/publishWorkBaseAndSeedFrontEndRecordKind2FromModeTableWorld02Area07714_801F5C00.c",
     "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area07714_801F5C80.c",
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld02Area07714_801F5D00.c",
+    "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld02Area07714_801F5E04.c",
 ]
 psyq_source = "src/bof3/support/area077_14_psyq.c"

@@ -14,6 +14,7 @@ support_sources = [
     "src/bof3/world/decrementCountdownAdd4WorkWords64And68World02Area08213_801F2C9C.c",
     "src/bof3/world/initializeWorkFieldsWorld02Area08213_801F4A18.c",
     "src/bof3/world/applyPaletteScaleSet8014933AIncrementWorkByte2World02Area08213_801F4AFC.c",
+    "src/bof3/world/fillScreenRampDownColorIncrementWorkByte9ResetWorkByte9At91AdvanceWorkByte2World02Area08213_801F4B3C.c",
     "src/bof3/world/fillScreenGradientAdvanceWorkByte2AtScenarioProgress29World02Area08213_801F4C34.c",
     "src/bof3/world/fillScreenGradientAdvanceWorkByte2AtScenarioProgress37World02Area08213_801F5068.c",
     "src/bof3/world/fillScreenGradientAdvanceWorkByte2AtScenarioProgress3bWorld02Area08213_801F527C.c",

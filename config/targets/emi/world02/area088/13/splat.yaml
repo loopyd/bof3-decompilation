@@ -132,8 +132,9 @@ segments:
     - dispatchStateByte3Table61ccWorld02Area08813_801F41F0
     - '@source: src/bof3/world/dispatchStateByte3Table61ccWorld02Area08813_801F41F0.c'
   - - 5684
-    - asm
-    - func_801F4234
+    - c
+    - setWorkHalfword30AndAdvanceState3UnlessGatedWorld02Area08813_801F4234
+    - '@source: src/bof3/world/setWorkHalfword30AndAdvanceState3UnlessGatedWorld02Area08813_801F4234.c'
   - - 5812
     - asm
     - func_801F42B4

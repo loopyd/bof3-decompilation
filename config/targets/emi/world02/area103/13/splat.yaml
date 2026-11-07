@@ -61,8 +61,10 @@ segments:
     - asm
     - func_801F3718
   - - 2976
-    - asm
-    - func_801F37A0
+    - c
+    - advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World02Area10313_801F37A0
+    - '@source: src/bof3/world/advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World02Area10313_801F37A0.c'
+    - '@behavior: advances the work record''s signed word at 0x1C by 0x1000000 and clamps it to the word at 0x14 plus 0x8000000, sweeps the halfword at 0x20 down by 0x200 around the helper call func_801F38DC, decrements countdown byte 0x09 and, when it reads zero, re-arms it with 0x10 and advances the work-byte-1 dispatch step.'
   - - 3168
     - asm
     - func_801F3860

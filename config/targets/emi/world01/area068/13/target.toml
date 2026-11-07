@@ -12,6 +12,7 @@ sources = [
     "src/bof3/world/countdownScratchStateToMode13World01Area06813_801F32CC.c",
     "src/bof3/world/incrementPadMatchCountAndArmState10World01Area06813_801F3538.c",
     "src/bof3/world/countdownStepArmState14Or10ByPad40Else11World01Area06813_801F36CC.c",
+    "src/bof3/world/stepWorkAccumulatorsByPhaseTableConsumeCountdownThenClearHandlerByteWorld01Area06813_801F3CB0.c",
 ]
 support_sources = [
     "src/bof3/world/noopHandlerWorld01Area06813_801F3E40.c",

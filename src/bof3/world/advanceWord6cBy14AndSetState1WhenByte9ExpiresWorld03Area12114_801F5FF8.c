@@ -3,7 +3,8 @@
 /* @source 0x1F800044 @kind unknown */
 extern u8* area12114WorkCursor_1F800044;
 
-void func_801F5C7C(void);
+void publishSharedPositionWordsToWorkThenDrawMeterWorld03Area12114_801F5C7C(
+    void);
 void alignWorkFacingByte8WithModeByteThenPublishPositionWorld03Area12114_801F5E2C(
     void);
 
@@ -39,6 +40,6 @@ void advanceWord6cBy14AndSetState1WhenByte9ExpiresWorld03Area12114_801F5FF8(void
     reload[1] = 1;
     alignWorkFacingByte8WithModeByteThenPublishPositionWorld03Area12114_801F5E2C();
   } else {
-    func_801F5C7C();
+    publishSharedPositionWordsToWorkThenDrawMeterWorld03Area12114_801F5C7C();
   }
 }

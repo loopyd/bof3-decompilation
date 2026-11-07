@@ -5,7 +5,8 @@ extern u8* area12114WorkCursor_1F800044;
 /* @source 0x80145E98 @kind unknown */
 extern u8 D_80145E98;
 
-void func_801F5C7C(void);
+void publishSharedPositionWordsToWorkThenDrawMeterWorld03Area12114_801F5C7C(
+    void);
 s32 func_801F5ECC(s32 facing, s32 mode);
 
 /* @source 0x801F5E2C
@@ -43,5 +44,5 @@ void alignWorkFacingByte8WithModeByteThenPublishPositionWorld03Area12114_801F5E2
     }
     *mode = area12114WorkCursor_1F800044[8];
   }
-  func_801F5C7C();
+  publishSharedPositionWordsToWorkThenDrawMeterWorld03Area12114_801F5C7C();
 }

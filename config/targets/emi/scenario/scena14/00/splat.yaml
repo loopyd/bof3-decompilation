@@ -41,8 +41,10 @@ segments:
     - asm
     - func_801F7028
   - - 3424
-    - asm
-    - func_801F7960
+    - c
+    - averagePaletteChannelsScenarioScena1400_801F7960
+    - '@source: src/bof3/scenario/averagePaletteChannelsScenarioScena1400_801F7960.c'
+    - '@behavior: Overlay palette helper: it rewrites the whole 0x80037800 shadow palette block, 0x20 rows of 0x100 halfwords, in place to grey by averaging each halfword''s three 5-bit channels and replicating the average into all three, keeping bit 15, then publishes 1 in the shared palette-stage serial 0x80145988. It takes no arguments and returns nothing, uses no stack frame, and no in-image jal targets it; the only image word holding the address is one entry of a code-pointer run in SCENA07''s payload at file offset 0x71B0.'
   - - 3608
     - asm
     - func_801F7A18
