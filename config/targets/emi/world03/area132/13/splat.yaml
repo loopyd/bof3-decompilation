@@ -71,8 +71,10 @@ segments:
     - dispatchStateByte1Table3e00WorldWorld03Area13213_801F307C
     - '@source: src/bof3/world/area13213DispatchTables.c'
   - - 1216
-    - asm
-    - func_801F30C0
+    - c
+    - seedWorkWords34To3CAnd0CTo14DispatchCue207AndAdvanceWorkByte1World03Area13213_801F30C0
+    - '@source: src/bof3/world/seedWorkWords34To3CAnd0CTo14DispatchCue207AndAdvanceWorkByte1World03Area13213_801F30C0.c'
+    - '@behavior: Entry 0 of the byte-1 handler table based at 0x801F3E00: loads the published work record through the pointer cell 0x1F800044, copies its saved words at +0x34, +0x38 and +0x3C into the record words at +0x0C, +0x10 and +0x14 and starts the word at +0x1C from that +0x3C copy, arms the countdown byte at +0x09 with 0x40, clears the halfword at +0x20, stores the 0x01000000 step in the word at +0x24, then advances the state byte at +0x01 and passes the cue 0x207 to 0x8015DF18.'
   - - 1324
     - c
     - advanceWorkWord1CClampedToWord14AndRearmCountdownThenAdvanceWorkByte1World03Area13213_801F312C

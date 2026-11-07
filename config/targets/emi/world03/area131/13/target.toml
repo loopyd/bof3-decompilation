@@ -11,6 +11,7 @@ sources = []
 support_sources = [
     "src/bof3/world/advanceCounter2By10World03Area13113_801F2DA0.c",
     "src/bof3/world/advanceCounter2By2World03Area13113_801F2E90.c",
+    "src/bof3/world/advanceCounter2By30World03Area13113_801F2E40.c",
     "src/bof3/world/copyModeByteWorld03Area13113_801F2EB8.c",
     "src/bof3/world/retreatCounter2By10World03Area13113_801F2D78.c",
     "src/bof3/world/retreatCounter3CloneWorld03Area13113_801F2ED0.c",

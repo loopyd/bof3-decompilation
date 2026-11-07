@@ -161,8 +161,10 @@ segments:
     - asm
     - func_801F451C
   - - 6588
-    - asm
-    - func_801F45BC
+    - c
+    - queueSharedUiElement25xBSize0World01Area06714_801F45BC
+    - '@source: src/bof3/world/queueSharedUiElement25xBSize0World01Area06714_801F45BC.c'
+    - '@behavior: queues the shared UI element at (0x25, 0xB) with size 0 through the shared marker queue func_801A4BC0'
   - - 6628
     - asm
     - func_801F45E4

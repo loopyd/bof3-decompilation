@@ -14,5 +14,6 @@ support_sources = [
     "src/bof3/world/findWorkPositionBoundsIndexWorld03Area11813_801F4C08.c",
     "src/bof3/world/setWorkState2To4WhenCameraOutsideRecordCoordinateWindowWorld03Area11813_801F3590.c",
     "src/bof3/world/decrementHalfword30By20AndAdvanceWorkByte2BelowMinusFfThenDrawWorld03Area11813_801F3534.c",
+    "src/bof3/world/stampRecordColumnCellsAndSetWorkStateTo4WhenCameraOutsideRecordWindowWorld03Area11813_801F3FD0.c",
 ]
 psyq_source = "src/bof3/support/area118_13_psyq.c"

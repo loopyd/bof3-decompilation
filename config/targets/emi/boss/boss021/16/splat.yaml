@@ -75,8 +75,8 @@ segments:
     - asm
     - func_800C1B08
   - - 1048
-    - asm
-    - func_800C1C18
+    - c
+    - initModeTupleByBattleFlagAndSetScenarioProgressBossBoss02116_800C1C18
   - - 1124
     - asm
     - func_800C1C64

@@ -47,6 +47,6 @@ func_801F3D40 = 0x801F3D40;
 publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld01Area06813_801F3DC0 = 0x801F3DC0;
 noopHandlerWorld01Area06813_801F3E40 = 0x801F3E40;
 func_801F3E48 = 0x801F3E48;
-func_801F3EC8 = 0x801F3EC8;
+publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06813_801F3EC8 = 0x801F3EC8;
 resetWorkRecordAndPublishRecordIndexThenState4Substate3World01Area06813_801F3F48 = 0x801F3F48;
 D_801F3FE4 = 0x801F3FE4;

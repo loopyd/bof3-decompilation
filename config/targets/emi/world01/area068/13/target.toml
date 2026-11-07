@@ -19,6 +19,7 @@ sources = [
     "src/bof3/world/publishSecondWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area06813_801F3A18.c",
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind4FromModeTableWorld01Area06813_801F3A98.c",
     "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind1FromModeTableWorld01Area06813_801F3DC0.c",
+    "src/bof3/world/publishThirdWorkBaseAndSeedFrontEndRecordKind3FromModeTableWorld01Area06813_801F3EC8.c",
 ]
 support_sources = [
     "src/bof3/world/noopHandlerWorld01Area06813_801F3E40.c",

@@ -114,8 +114,10 @@ segments:
     - clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate5IfPartyByte6World01Area04914_801F3884
     - '@source: src/bof3/world/clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate5IfPartyByte6World01Area04914_801F3884.c'
   - - 3336
-    - asm
-    - func_801F3908
+    - c
+    - clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate6IfPartyByte6World01Area04914_801F3908
+    - '@source: src/bof3/world/clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate6IfPartyByte6World01Area04914_801F3908.c'
+    - '@behavior: Clears bit 0 of the byte at offset 0x74 of the work record published at 0x80146884, then, when the party byte of local work record 0 at 0x80145F09 holds 6, runs the shared front-end startup helper 0x8015C088 and requests primary state 4 and substate 6 through the shared bytes 0x80146874 and 0x80146875; otherwise it only performs the masked store. Takes no arguments and returns nothing.'
   - - 3468
     - textbin
     - D_801F398C

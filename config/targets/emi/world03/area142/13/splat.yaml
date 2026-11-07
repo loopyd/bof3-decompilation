@@ -41,8 +41,10 @@ segments:
     - asm
     - func_801F2CB0
   - - 1304
-    - asm
-    - func_801F3118
+    - c
+    - drawSixteenBySixteenWarpGridTintedByWorkByte9WhenNearSharedPointWorld03Area14213_801F3118
+    - '@source: src/bof3/world/drawSixteenBySixteenWarpGridTintedByWorkByte9WhenNearSharedPointWorld03Area14213_801F3118.c'
+    - '@behavior: Overlay warp-grid drawer. It first measures the work record read through the pointer cell at 0x1F800044 against the shared point at 0x8014930A/0x8014930E: the halfwords at record offsets 0x36 and 0x3A are subtracted from those two shared halfwords, each difference is replaced by its magnitude, and the body returns as soon as their sum is not below 0x15. Otherwise it advances the record step byte at 0x09 by two, picks the draw-mode tpage argument by re-reading GetGraphType for graphics types 1 and 2 (0x2A5) and falling back to 0xB5, arms the shared cursor with SetDrawMode(g_PrimCursor, 0, 1, tpage, 0), and links a kind-1, 0xC-class grid-cell primitive at the record cursor pair 0x34/0x38. It then walks a sixteen by sixteen grid. The row loop re-reads the record once for the row tint, which is the complement of the step byte minus the row times sixteen, and takes the row parity as the selector into the overlay byte pair at 0x801F355C. Every cell takes the primitive cursor, seeds it with func_8017AA30, marks it semi-transparent and paints its colour bytes 0x04, 0x05 and 0x06 with the row tint. The cell phase is the column shifted left by eight, offset by the low byte of the shared frame counter at 0x80143E6C shifted left by four and multiplied by the selected signed parity byte; the sine of that phase, reduced by six and tripled, biased by -0x4000 and added to record word 0x34 shifted right by nine, becomes the scratch vector x, its cosine in the same form over record word 0x38 becomes y, and z is -0x180 minus twice the cell tint before complementing. RotTransPers projects the scratch vector into the primitive halfwords at 0x08 through two address-taken locals, the cell is linked again at 0xC, and the walk advances the column until sixteen, then the row until sixteen with the row bias grown by sixteen. The trailing epilogue re-runs the same tpage selection, arms SetDrawMode with dtd 0 and links the cursor once more. Takes no arguments and returns nothing.'
   - - 2068
     - asm
     - func_801F3414

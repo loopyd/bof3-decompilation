@@ -49,8 +49,10 @@ segments:
     - asm
     - func_801F2F60
   - - 1524
-    - asm
-    - func_801F31F4
+    - c
+    - drawSharedPositionGouraudDiscWorld01Area04713_801F31F4
+    - '@source: src/bof3/world/drawSharedPositionGouraudDiscWorld01Area04713_801F31F4.c'
+    - '@behavior: selects the texture page GetTPage(0, 1, 0x380, 0x100) for the current primitive cursor, appends its 0xC-byte draw-mode primitive, builds the shared three-word world position descriptor from D_80145EC4, D_80145EC8 and D_80145ECC plus 0x800000 on its own frame, and hands it to the fan drawer func_801F2DB4 with its signed halfword argument and the centre colour 0x60 against the rim colour 0, so the disc fades from grey at the projected centre to black at the rim.'
   - - 1688
     - c
     - clearWorkTableByte14At800E4800World01Area04713_801F3298

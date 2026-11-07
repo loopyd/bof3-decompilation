@@ -1,9 +1,10 @@
+D_1F800044 = 0x1F800044;
 func_8014D6B8 = 0x8014D6B8;
 func_801F2C04 = 0x801F2C04;
 clearWorkByte9AndAdvanceWorkByte2World03Area14213_801F2C60 = 0x801F2C60;
 func_801F2C90 = 0x801F2C90;
 func_801F2CB0 = 0x801F2CB0;
-func_801F3118 = 0x801F3118;
+drawSixteenBySixteenWarpGridTintedByWorkByte9WhenNearSharedPointWorld03Area14213_801F3118 = 0x801F3118;
 func_801F3414 = 0x801F3414;
 setWorkFlag40AndByte4To1WhenMode3ThenDecrementHalfword0aUnlessScenarioProgress1World03Area14213_801F3458 = 0x801F3458;
 clearWorkFlag40RequestResourceAndClearWorkByte4UnlessMode3ThenDecrementHalfword0aWorld03Area14213_801F34D0 = 0x801F34D0;

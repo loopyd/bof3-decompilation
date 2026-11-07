@@ -26,5 +26,5 @@ setTwoWorld01Area04914_801F3750 = 0x801F3750;
 func_801F376C = 0x801F376C;
 func_801F37EC = 0x801F37EC;
 clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate5IfPartyByte6World01Area04914_801F3884 = 0x801F3884;
-func_801F3908 = 0x801F3908;
+clearWorkAnimBit0ThenRunStartupAndRequestPrimaryState4Substate6IfPartyByte6World01Area04914_801F3908 = 0x801F3908;
 D_801F398C = 0x801F398C;

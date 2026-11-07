@@ -89,8 +89,10 @@ segments:
     - asm
     - func_801F3EEC
   - - 5072
-    - asm
-    - func_801F3FD0
+    - c
+    - stampRecordColumnCellsAndSetWorkStateTo4WhenCameraOutsideRecordWindowWorld03Area11813_801F3FD0
+    - '@source: src/bof3/world/stampRecordColumnCellsAndSetWorkStateTo4WhenCameraOutsideRecordWindowWorld03Area11813_801F3FD0.c'
+    - '@behavior: Byte-2 state handler that the second byte-2 dispatch table of this overlay (0x801F5184, indexed by the dispatcher at 0x801F3C10) lists at entry 3. Reads the work record published at the scratchpad pointer cell 0x1F800044 and compares its byte at offset 0x0A with the shared overlay state byte 0x8014933B; when they are equal the body is skipped and only the draw call runs. Otherwise it tests the camera against the record cell window: the shared camera word 0x80145EC4 against the record halfword at offset 0x36 through that cell centre ((halfword + 1) << 16) | 0x8000, and the shared camera word 0x80145EC8 against the record halfword at offset 0x3A through both the cell start (halfword << 16) and the next cell start ((halfword + 1) << 16), an absolute difference above 0x20000 meaning outside. Outside, it stamps 0x52 into the map byte of the record column at offset 0x36 for the row at offset 0x3A and again for the row below, through the resident map base pointer 0x8014931C scaled by the resident map row stride byte 0x80104000, then stores 4 into the record state byte at offset 0x02. Every path finishes with the overlay record draw routine 0x801F381C called with a zero mode argument.'
   - - 5388
     - c
     - dispatchStateByte2Table519cWorldWorld03Area11813_801F410C
